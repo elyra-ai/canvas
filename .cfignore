@@ -1,0 +1,9 @@
+/.sass-cache/
+/node_modules/
+/sass/
+/test/
+/.git/
+/.gitignore
+/.project
+/README.md
+/pen-test/

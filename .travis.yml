@@ -1,0 +1,16 @@
+---
+branches:
+  only:
+    - master
+language: node_js
+before_install:
+  - printf "registry=https://npm-registry.whitewater.ibm.com/\n//npm-registry.whitewater.ibm.com/:_authToken=${PRIVATE_NPM_TOKEN}" > .npmrc
+before_script:
+  - npm install grunt-cli -g
+#script: grunt build && npm test
+script: grunt build
+notifications:
+  slack:
+    rooms:
+      - ibm-cloudplatform:Z9veqAF1gkr7PunL4BC83icO#wml-canvas-builds
+group: bluezone

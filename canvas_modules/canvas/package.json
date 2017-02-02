@@ -1,0 +1,12 @@
+{
+  "name": "common-canvas",
+  "version": "0.0.1",
+  "private": true,
+  "main": "canvas-editor.js",
+  "dependencies": {
+
+  },
+  "devDependencies": {
+
+  }
+}

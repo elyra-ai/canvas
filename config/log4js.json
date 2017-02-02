@@ -1,0 +1,11 @@
+{
+	"levels": {
+		"application": "INFO",
+		"[all]": "ERROR"
+	},
+	"appenders": [
+		{
+			"type": "console"
+		}
+	]
+}

@@ -1,0 +1,24 @@
+{
+  "name": "common-canvas-demo",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node index.js",
+    "test": "grunt test"
+  },
+  "engines": {
+    "node": "4.4.1",
+    "npm": "2.14.20"
+  },
+  "dependencies": {
+    "common-canvas": "file:./common/canvas",
+    "common-prop-editor": "file:./common/prop-editor",
+    "express": "4.13.4",
+    "log4js": "0.6.38",
+    "nconf": "0.8.4"
+  },
+  "devDependencies": {
+    "eslint": "2.3.0",
+    "@dap/eslint-config-portal-common": "0.0.9"
+  }
+}
