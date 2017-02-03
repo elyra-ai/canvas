@@ -19,6 +19,11 @@
   },
   "devDependencies": {
     "eslint": "2.3.0",
-    "@dap/eslint-config-portal-common": "0.0.9"
+    "@dap/eslint-config-portal-common": "0.0.9",
+		"grunt": "0.4.5",
+    "grunt-contrib-clean": "1.0.0",
+    "grunt-env": "0.4.4",
+    "grunt-eslint": "18.0.0",
+    "grunt-jsonlint": "1.0.7"
   }
 }

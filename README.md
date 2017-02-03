@@ -15,7 +15,7 @@ cd <base dir>
 npm link canvas_modules/prop-editor
 npm link canvas_modules/canvas
 ```
-Use [this page](https://docs.npmjs.com/getting-started/fixing-npm-permissions) to fix node setup if installed as root:
+Use [this page](https://docs.npmjs.com/getting-started/fixing-npm-permissions) to fix node setup if installed as root.
 
 ```sh
 npm install
