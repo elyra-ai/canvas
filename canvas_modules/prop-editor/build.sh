@@ -1,6 +1,6 @@
 #!/bin/bash
 
-WORKING_DIR=pwd
+WORKING_DIR="$PWD"
 SCRIPT_DIR=$(dirname "$0")
 
 echo "cd $SCRIPT_DIR"
