@@ -5,6 +5,8 @@ branches:
 language: node_js
 before_install:
   - printf "registry=https://npm-registry.whitewater.ibm.com/\n//npm-registry.whitewater.ibm.com/:_authToken=${PRIVATE_NPM_TOKEN}" > .npmrc
+  - npm link canvas_modules/prop-editor
+  - npm link canvas_modules/canvas
 before_script:
   - npm install grunt-cli -g
   - export NODE_ENV=production
