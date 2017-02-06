@@ -8,8 +8,9 @@ before_install:
 before_script:
   - npm install grunt-cli -g
   - export NODE_ENV=production
-#script: grunt build && npm test
 script:
+  - ./canvas_modules/canvas/build.sh
+  - ./canvas_modules/prop-editor/build.sh
   - grunt build
 before_deploy:
   - npm install @dap/dap-deploy
@@ -20,7 +21,7 @@ deploy:
 #    on:
 #      branch: master
 notifications:
-  slack:
-    rooms:
-      - ibm-cloudplatform:Z9veqAF1gkr7PunL4BC83icO#wml-canvas-builds
+#  slack:
+#    rooms:
+#      - ibm-cloudplatform:Z9veqAF1gkr7PunL4BC83icO#wml-canvas-builds
 group: bluezone
