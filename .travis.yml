@@ -27,11 +27,11 @@ deploy:
 #      branch: master
   - provider: script
     skip_cleanup: true
-    script: ./scripts/publish_npm.sh
+    script: ./scripts/publish_modules.sh
     on:
       branch: release
 notifications:
-#  slack:
-#    rooms:
-#      - ibm-cloudplatform:Z9veqAF1gkr7PunL4BC83icO#wml-canvas-builds
+  slack:
+    rooms:
+      - ibm-cloudplatform:Z9veqAF1gkr7PunL4BC83icO#wml-canvas-builds
 group: bluezone

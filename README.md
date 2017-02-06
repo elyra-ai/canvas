@@ -1,4 +1,5 @@
-Â# wdp-abstract-canvas
+### wdp-abstract-canvas[![Build Status](https://travis.ibm.com/NGP-TWC/wdp-abstract-canvas.svg?token=Th1rZzgdEHjwEFgN1ZmM&branch=master)](https://travis.ibm.com/NGP-TWC/wdp-abstract-canvas)
+
 Abstract canvas UI tooling for the glass
 
 ## Developer Tools
