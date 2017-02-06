@@ -2,18 +2,20 @@
 branches:
   only:
     - master
+    - release
 language: node_js
 before_install:
   - printf "registry=https://npm-registry.whitewater.ibm.com/\n//npm-registry.whitewater.ibm.com/:_authToken=${PRIVATE_NPM_TOKEN}" > .npmrc
-  - npm link canvas_modules/prop-editor
-  - npm link canvas_modules/canvas
+  - npm link canvas_modules/common-properties
+  - npm link canvas_modules/common-canvas
+install:
   - npm install
 before_script:
   - npm install grunt-cli -g
   - export NODE_ENV=production
 script:
-  - ./canvas_modules/canvas/build.sh
-  - ./canvas_modules/prop-editor/build.sh
+  - ./canvas_modules/common-canvas/build.sh
+  - ./canvas_modules/common-properties/build.sh
   - grunt build
 before_deploy:
   - npm install @dap/dap-deploy
@@ -23,6 +25,11 @@ deploy:
 #    script: ./node_modules/@dap/dap-deploy/scripts/deploy.sh -a api.stage1.ng.bluemix.net -o MokshaCanvasShaper -s dev -d common-canvas-dev.stage1.mybluemix.net -p ./scripts/deploy/deploy.properties
 #    on:
 #      branch: master
+  - provider: script
+    skip_cleanup: true
+    script: ./scripts/publish_npm.sh
+    on:
+      branch: release
 notifications:
 #  slack:
 #    rooms:

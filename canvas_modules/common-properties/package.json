@@ -1,16 +1,15 @@
 {
-  "name": "common-canvas",
+  "name": "@wdp/common-properties",
   "version": "0.0.1",
   "main": "index.js",
 	"repository": {
-    "type": "git",
-    "url": "https://github.ibm.com/NGP-TWC/wdp-abstract-canvas"
-  },
+		"type": "git",
+		"url": "https://github.ibm.com/NGP-TWC/wdp-abstract-canvas"
+	},
 	"bugs": {
     "url": "https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues"
   },
   "dependencies": {
-
   },
   "devDependencies": {
 		"eslint": "2.3.0",

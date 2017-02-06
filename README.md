@@ -1,4 +1,4 @@
-# wdp-abstract-canvas
+Â# wdp-abstract-canvas
 Abstract canvas UI tooling for the glass
 
 ## Developer Tools
@@ -12,8 +12,8 @@ Abstract canvas UI tooling for the glass
 Link common canvas modules to test project:
 ```sh
 cd <base dir>
-npm link canvas_modules/prop-editor
-npm link canvas_modules/canvas
+npm link canvas_modules/common-properties
+npm link canvas_modules/common-canvas
 ```
 Use [this page](https://docs.npmjs.com/getting-started/fixing-npm-permissions) to fix node setup if installed as root.
 

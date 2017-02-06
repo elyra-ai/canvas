@@ -11,8 +11,8 @@
     "npm": "2.14.20"
   },
   "dependencies": {
-    "common-canvas": "file:./common/canvas",
-    "common-prop-editor": "file:./common/prop-editor",
+    "@wdp/common-canvas": "file:./canvas_modules/common-canvas",
+    "@wdp/common-prop-editor": "file:./canvas_modules/common-properties",
     "express": "4.13.4",
     "log4js": "0.6.38",
     "nconf": "0.8.4"
