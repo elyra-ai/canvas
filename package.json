@@ -24,6 +24,7 @@
     "grunt-contrib-clean": "1.0.0",
     "grunt-env": "0.4.4",
     "grunt-eslint": "18.0.0",
-    "grunt-jsonlint": "1.0.7"
+    "grunt-jsonlint": "1.0.7",
+		"grunt-yamllint": "0.2.0"
   }
 }
