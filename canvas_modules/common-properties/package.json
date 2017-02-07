@@ -2,6 +2,7 @@
   "name": "@wdp/common-properties",
   "version": "0.0.1",
   "main": "index.js",
+	"description": "WDP common-properties",
 	"repository": {
 		"type": "git",
 		"url": "https://github.ibm.com/NGP-TWC/wdp-abstract-canvas"

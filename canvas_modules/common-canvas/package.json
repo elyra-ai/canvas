@@ -2,6 +2,7 @@
   "name": "@wdp/common-canvas",
   "version": "0.0.1",
   "main": "index.js",
+	"description": "WDP common-canvas",
 	"repository": {
     "type": "git",
     "url": "https://github.ibm.com/NGP-TWC/wdp-abstract-canvas"
