@@ -26,3 +26,7 @@ Connect to canvas:
 ```
 http://localhost:3300
 ```
+
+## Creating "release" branch
+  - Copy scripts/create_release.sh to an empty directory
+  - Run ./create_release.sh <patch, minor, or major>

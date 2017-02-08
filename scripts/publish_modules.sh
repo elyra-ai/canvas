@@ -9,15 +9,12 @@ cd $SCRIPT_DIR
 
 echo "Publishing common-canvas to NPM"
 cd ../canvas_modules/common-canvas
-# Don't publish to npm yet
-#npm publish
-npm config ls
+npm publish
+
 cd ../../
 
 echo "Publishing common-properties to NPM"
 cd ../canvas_modules/common-properties
-# Don't publish to npm yet
-#npm publish
-npm config ls
+npm publish
 
 cd $WORKING_DIR

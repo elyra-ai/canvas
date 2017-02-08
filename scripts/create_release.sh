@@ -9,7 +9,7 @@ GIT_REPO="wdp-abstract-canvas"
 GIT_DIRECTORY="${GIT_REPO}_repo"
 RELEASE_BRANCH="release"
 if [[ "${UPDATE_TYPE}" != "patch" && "${UPDATE_TYPE}" != "minor" && "${UPDATE_TYPE}" != "major" ]]; then
-	echo "Invalid argument entered for update type.  Enter patch, minor, major"
+	echo "Invalid argument entered for update type.  Enter patch, minor, or major"
 	exit 1;
 fi
 
