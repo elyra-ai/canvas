@@ -12,8 +12,6 @@
 /* eslint quote-props: 0 */
 
 var codeCoverageDir = "reports/coverage";
-var IS_PRODUCTION = process.env.NODE_ENV === "production";
-var HMR_ENABLED = process.env.WDP_HMR === "true";
 
 module.exports = function(grunt) {
 	grunt.initConfig({
@@ -51,9 +49,6 @@ module.exports = function(grunt) {
 					codeCoverageDir
 				]
 			}
-		},
-		webpack: {
-			client: IS_PRODUCTION ? require("./webpack.config.prod") : require("./webpack.config.dev")
 		}
 	});
 
@@ -66,11 +61,6 @@ module.exports = function(grunt) {
 	grunt.registerTask("lint", ["eslint", "jsonlint", "yamllint", "sasslint"]);
 
 	var buildTasks = ["lint", "clean"];
-	if (IS_PRODUCTION) {
-		buildTasks = buildTasks.concat(["webpack"]);
-	} else if (!HMR_ENABLED) {
-		buildTasks.push("webpack");
-	}
 
 	grunt.registerTask("build", buildTasks);
 	grunt.registerTask("default", ["build"]);
