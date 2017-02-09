@@ -13,9 +13,11 @@ _[TBD]_
 ### Functions
 _[TBD]_
 ```
-• renderDiagram() - Renders a valid _diagram JSON_ document in the canvas. See the canvas diagram JSON schema.
+• renderDiagram() - Renders a valid _diagram JSON_ document in the canvas.
+  See the canvas diagram JSON schema.
 • setEventCallback() - Sets the callback function to be used for event notifications.
-• setPaletteItems() - Uses _Palette JSON_ (https://ibm.ent.box.com/folder/17889547923) to set the array of operations available in the canvas palette.
+• setPaletteItems() - Uses _Palette JSON_ (https://ibm.ent.box.com/folder/17889547923)
+  to set the array of operations available in the canvas palette.
 ```
 
 ### Events
