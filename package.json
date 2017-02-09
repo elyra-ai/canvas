@@ -12,19 +12,23 @@
   },
   "dependencies": {
     "@wdp/common-canvas": "file:./canvas_modules/common-canvas",
-    "@wdp/common-prop-editor": "file:./canvas_modules/common-properties",
+    "@wdp/common-properties": "file:./canvas_modules/common-properties",
     "express": "4.13.4",
     "log4js": "0.6.38",
     "nconf": "0.8.4"
   },
   "devDependencies": {
-    "eslint": "2.3.0",
     "@dap/eslint-config-portal-common": "0.0.9",
-		"grunt": "0.4.5",
+    "@dap/portal-common-i18n": "0.1.3",
+    "eslint": "2.3.0",
+    "grunt": "0.4.5",
     "grunt-contrib-clean": "1.0.0",
     "grunt-env": "0.4.4",
     "grunt-eslint": "18.0.0",
     "grunt-jsonlint": "1.0.7",
-		"grunt-yamllint": "0.2.0"
+    "grunt-sass-lint": "0.1.0",
+    "grunt-yamllint": "0.2.0",
+    "sass-lint": "1.5.1",
+    "stylelint": "4.4.0"
   }
 }

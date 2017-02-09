@@ -10,13 +10,15 @@
 
 /* eslint global-require: 0 */
 /* eslint quote-props: 0 */
+
 var codeCoverageDir = "reports/coverage";
 
 module.exports = function(grunt) {
 	grunt.initConfig({
 		eslint: {
 			node: {
-				src: ["index.js", "Gruntfile.js", "controllers/**/*.js", "lib/**/*.js"]
+				src: ["index.js", "Gruntfile.js", "controllers/**/*.js",
+				"models/**/*.js", "lib/**/*.js", "tests/**/*.js"]
 			}
 		},
 		jsonlint: {
@@ -34,6 +36,13 @@ module.exports = function(grunt) {
 				"manifest.yml"
 			]
 		},
+		sasslint: {
+			options: {
+				configFile: ".sass-lint.yml"
+			},
+			target: ["./src/styles/*.scss", "./src/styles/analyze/*.scss",
+				"./src/styles/home/*.scss", "./src/components/**/*.scss"]
+		},
 		clean: {
 			coverage: {
 				src: [
@@ -47,8 +56,11 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks("grunt-eslint");
 	grunt.loadNpmTasks("grunt-jsonlint");
 	grunt.loadNpmTasks("grunt-yamllint");
+	grunt.loadNpmTasks("grunt-webpack");
+	grunt.loadNpmTasks("grunt-sass-lint");
+	grunt.registerTask("lint", ["eslint", "jsonlint", "yamllint", "sasslint"]);
 
-	var buildTasks = ["clean", "eslint", "jsonlint", "yamllint"];
+	var buildTasks = ["lint", "clean"];
 
 	grunt.registerTask("build", buildTasks);
 	grunt.registerTask("default", ["build"]);

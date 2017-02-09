@@ -1,4 +1,4 @@
-### wdp-abstract-canvas[![Build Status](https://travis.ibm.com/NGP-TWC/wdp-abstract-canvas.svg?token=Th1rZzgdEHjwEFgN1ZmM&branch=master)](https://travis.ibm.com/NGP-TWC/wdp-abstract-canvas)
+## wdp-abstract-canvas[![Build Status](https://travis.ibm.com/NGP-TWC/wdp-abstract-canvas.svg?token=Th1rZzgdEHjwEFgN1ZmM&branch=master)](https://travis.ibm.com/NGP-TWC/wdp-abstract-canvas)
 
 ## Overview
 The WDP Common Canvas tooling consists of two Node JS modules:
@@ -50,3 +50,7 @@ Connect to canvas:
 ```
 http://localhost:3300
 ```
+
+## Creating "release" branch
+  - Copy scripts/create_release.sh to an empty directory
+  - Run ./create_release.sh <patch, minor, or major>
