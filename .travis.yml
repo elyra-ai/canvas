@@ -4,6 +4,7 @@ branches:
     - master
     - release
 language: node_js
+node_js: "4.4"
 before_install:
   - printf "registry=https://npm-registry.whitewater.ibm.com/\n//npm-registry.whitewater.ibm.com/:_authToken=${PRIVATE_NPM_TOKEN}" > .npmrc
   - cp .npmrc ./canvas_modules/common-canvas/
