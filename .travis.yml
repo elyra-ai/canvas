@@ -6,12 +6,15 @@ branches:
 language: node_js
 before_install:
   - printf "registry=https://npm-registry.whitewater.ibm.com/\n//npm-registry.whitewater.ibm.com/:_authToken=${PRIVATE_NPM_TOKEN}" > .npmrc
+  - cp .npmrc ./canvas_modules/common-canvas/
+  - cp .npmrc ./canvas_modules/common-properties/
+  - cp .npmrc ./canvas_modules/harness/
 before_script:
   - npm install grunt-cli -g
 #  - export NODE_ENV=production
 script:
-  - ./canvas_modules/common-canvas/scripts/build.sh
-  - ./canvas_modules/common-properties/scripts/build.sh
+  - ./canvas_modules/common-canvas/build.sh
+  - ./canvas_modules/common-properties/build.sh
   - ./canvas_modules/harness/build.sh
 before_deploy:
   - npm install @dap/dap-deploy
