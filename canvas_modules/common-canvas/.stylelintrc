@@ -1,6 +1,6 @@
 {
 	"ignoreFiles": [
-		".build/**/*.css"
+		"*"
   	],
 	"rules": {
 		"string-quotes": "double",

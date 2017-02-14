@@ -10,6 +10,8 @@ echo "npm install"
 npm install
 echo "grunt build"
 grunt build
+echo "Run jest tests"
+npm test
 
 echo "cd $WORKING_DIR"
 cd $WORKING_DIR

@@ -10,10 +10,10 @@
 var path = require("path");
 
 module.exports = {
-	context: path.join(__dirname, "/src/components"),
+	context: path.join(__dirname, "/src/"),
 
 	entry: {
-		lib: "./Canvas.jsx"
+		lib: "./common-canvas.jsx"
 	},
 	output: {
 		library: "Common-Canvas",
