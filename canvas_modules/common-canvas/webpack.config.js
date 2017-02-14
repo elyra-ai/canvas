@@ -19,7 +19,7 @@ module.exports = {
 		library: "Common-Canvas",
 		libraryTarget: "commonjs2",
 		filename: "common-canvas.js",
-		path: path.join(__dirname, "/lib")
+		path: path.join(__dirname, "/dist")
 	},
 
 

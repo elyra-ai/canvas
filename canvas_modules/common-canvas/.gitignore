@@ -28,13 +28,4 @@ build/Release
 # Dependency directory
 node_modules
 
-config/app-local.json
-
-/public/build/*
 /dist
-
-fingerprints.json
-
-# Pen test related
-pen-test/temp.json
-pen-test/cookies
