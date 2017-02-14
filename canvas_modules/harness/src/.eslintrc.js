@@ -7,9 +7,12 @@ module.exports = {
     },
     rules: {
         // Disable strict warning on ES6 Components
-        "strict": 0,
+      "strict": 0,
     	"global-require": 0,
-        "sort-imports": 0,
+      "sort-imports": 0,
     	"react/jsx-indent-props": [2, "tab"]
-    }
+    },
+  	"globals": {
+    		"document": true
+  	}
 };

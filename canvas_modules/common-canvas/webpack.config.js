@@ -16,10 +16,10 @@ module.exports = {
 		lib: "./Canvas.jsx"
 	},
 	output: {
-		library: "ReactList",
+		library: "Common-Canvas",
 		libraryTarget: "commonjs2",
 		filename: "common-canvas.js",
-		path: path.join(__dirname, "/dist")
+		path: path.join(__dirname, "/lib")
 	},
 
 
