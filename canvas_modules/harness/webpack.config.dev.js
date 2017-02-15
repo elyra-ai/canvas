@@ -70,7 +70,7 @@ var loaders = [
 		test: /\.s*css$/,
 		loaders: [
 			"style",
-			"css?modules&localIdentName=" + scope.getCssScope(),
+			"css",
 			"sass",
 			"postcss"
 		]
