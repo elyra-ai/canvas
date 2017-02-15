@@ -1,19 +1,132 @@
-import React, { Component } from "react";
-import "../styles/App.css";
+import React from 'react';
+import Isvg from 'react-inlinesvg'
+import ReactTooltip from 'react-tooltip'
 
-class App extends Component {
-	render() {
-		return (
-			<div className="App">
-				<div className="App-header">
-					<h2>Welcome to React</h2>
-				</div>
-				<p className="App-intro">
-					To get started, edit <code>src/App.js</code> and save to reload. Matt Test
-				</p>
-			</div>
-		);
-	}
+import '../styles/App.css'
+
+import Console from './components/console.jsx';
+import SidePanel from './components/sidepanel.jsx';
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      sidebarFormsOpen: false,
+      sidebarStylesOpen: false,
+      selectedPanel: null,
+      paletteEnabled: false,
+      logtext: ""
+    };
+
+    this.log = this.log.bind(this);
+    this.addNode = this.addNode.bind(this);
+    this.delete = this.delete.bind(this);
+    this.run = this.run.bind(this);
+    this.sidePanel = this.sidePanel.bind(this);
+    this.paletteNav = this.paletteNav.bind(this);
+    this.sidePanelStyles = this.sidePanelStyles.bind(this);
+  }
+
+  log(text) {
+    this.setState({logtext: text});
+  }
+
+  addNode() {
+    this.log("addNode() clicked");
+  }
+
+  delete() {
+    this.log("delete() clicked");
+  }
+
+  run() {
+    this.log("run() clicked");
+  }
+
+  palette() {
+    this.log("palette() clicked");
+    if(this.state.paletteEnabled) {
+      this.log("opening palette");
+    }
+  }
+
+  sidePanel() {
+    this.setState({
+      sidebarFormsOpen: !this.state.sidebarFormsOpen,
+      sidebarStylesOpen: false,
+      selectedPanel: "SIDE_PANEL_FORMS"
+    });
+    this.log("sidebarFormsOpen() clicked " + !this.state.sidebarFormsOpen);
+  }
+
+  sidePanelStyles() {
+    this.setState({
+      sidebarStylesOpen: !this.state.sidebarStylesOpen,
+      sidebarFormsOpen: false,
+      selectedPanel: "SIDE_PANEL_STYLES"
+    });
+    this.log("sidePanelStyles() clicked " + !this.state.sidebarStylesOpen);
+  }
+
+  paletteNav(enabled) {
+    this.setState({paletteEnabled: enabled});
+    this.log("palette in nav bar enabled: " + enabled);
+  }
+
+  render() {
+    var paletteClass = "palette-" + this.state.paletteEnabled;
+
+    var navBar = <div id="app-navbar">
+      <div className="navbar">
+        <nav id="action-bar">
+          <ul className="navbar">
+            <li className="navbar-li"><a id="title">Canvas Testbed</a></li>
+            <li className="navbar-li" data-tip="add node"><a onClick={this.addNode.bind(this)}>
+              <Isvg id="action-bar-add" src="/canvas/images/add-new_32.svg" />
+              </a>
+            </li>
+            <li className="navbar-li" data-tip="delete"><a onClick={this.delete.bind(this)}>
+                <Isvg id="action-bar-delete" src="/canvas/images/close_32.svg" />
+              </a>
+            </li>
+            <li className="navbar-li" data-tip="run"><a onClick={this.run.bind(this)}>
+                <Isvg id="action-bar-run" src="/canvas/images/play_32.svg" />
+              </a>
+            </li>
+            <li className="navbar-li nav-divider" id={paletteClass} data-tip="palette"><a onClick={this.palette.bind(this)}>
+                <Isvg id="action-bar-palette" src="/canvas/images/create-new_32.svg" />
+              </a>
+            </li>
+            <li className="navbar-li" id="action-bar-sidepanel-styles" data-tip="open side panel: styles"><a onClick={this.sidePanelStyles.bind(this)}>
+                <Isvg id="action-bar-panel-styles" src="/canvas/images/edit_32.svg" />
+              </a>
+            </li>
+            <li className="navbar-li nav-divider" id="action-bar-sidepanel" data-tip="open side panel: forms"><a onClick={this.sidePanel.bind(this)}>
+                <Isvg id="action-bar-panel" src="/canvas/images/justify_32.svg" />
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>;
+
+    var mainView = <div id="app-container">
+      {navBar}
+      <SidePanel
+        selectedPanel={this.state.selectedPanel}
+        showHideForms={this.state.sidebarFormsOpen}
+        showHideStyles={this.state.sidebarStylesOpen}
+        showHidePalette={this.paletteNav}
+        log={this.log}/>
+      <div id="canvas"></div>
+      <Console log={this.state.logtext}/>
+      <ReactTooltip place="bottom" effect="solid"/>
+    </div>
+
+    return (
+      <div>{mainView}</div>
+    );
+  }
 }
 
 export default App;
