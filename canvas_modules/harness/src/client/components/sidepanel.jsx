@@ -20,6 +20,8 @@ export default class SidePanel extends React.Component {
         break;
       case "SIDE_PANEL_STYLES":
         view = <SidePanelStyles
+          setLinkTypeStyle={this.props.setLinkTypeStyle}
+          selectedLinkTypeStyle={this.props.selectedLinkTypeStyle}
           log={this.props.log}/>
         break;
       default:
@@ -38,6 +40,8 @@ export default class SidePanel extends React.Component {
 SidePanel.propTypes = {
   showHideForms: React.PropTypes.bool,
   showHideStyles: React.PropTypes.bool,
+  setLinkTypeStyle: React.PropTypes.func,
+  selectedLinkTypeStyle: React.PropTypes.string,
   selectedPanel: React.PropTypes.string,
   showHidePalette: React.PropTypes.func,
   log: React.PropTypes.func

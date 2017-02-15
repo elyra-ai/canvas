@@ -11,26 +11,32 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      logtext: "",
+      paletteEnabled: false,
       sidebarFormsOpen: false,
       sidebarStylesOpen: false,
       selectedPanel: null,
-      paletteEnabled: false,
-      logtext: ""
+      selectedLinkTypeStyle: "STRAIGHT"
     };
 
     this.log = this.log.bind(this);
     this.addNode = this.addNode.bind(this);
     this.delete = this.delete.bind(this);
     this.run = this.run.bind(this);
-    this.sidePanel = this.sidePanel.bind(this);
-    this.paletteNav = this.paletteNav.bind(this);
+
+    this.palette = this.palette.bind(this);
+    this.paletteNavEnabled = this.paletteNavEnabled.bind(this);
+
+    this.sidePanelForms = this.sidePanelForms.bind(this);
     this.sidePanelStyles = this.sidePanelStyles.bind(this);
+    this.setLinkTypeStyle = this.setLinkTypeStyle.bind(this);
   }
 
   log(text) {
     this.setState({logtext: text});
   }
 
+  // Navbar
   addNode() {
     this.log("addNode() clicked");
   }
@@ -50,7 +56,13 @@ class App extends React.Component {
     }
   }
 
-  sidePanel() {
+  paletteNavEnabled(enabled) {
+    this.setState({paletteEnabled: enabled});
+    this.log("palette in nav bar enabled: " + enabled);
+  }
+
+  // Side Panel
+  sidePanelForms() {
     this.setState({
       sidebarFormsOpen: !this.state.sidebarFormsOpen,
       sidebarStylesOpen: false,
@@ -68,9 +80,10 @@ class App extends React.Component {
     this.log("sidePanelStyles() clicked " + !this.state.sidebarStylesOpen);
   }
 
-  paletteNav(enabled) {
-    this.setState({paletteEnabled: enabled});
-    this.log("palette in nav bar enabled: " + enabled);
+  // Styles
+  setLinkTypeStyle(selectedLink) {
+    this.setState({selectedLinkTypeStyle: selectedLink});
+    this.log("Link type style selected: " + selectedLink);
   }
 
   render() {
@@ -101,7 +114,7 @@ class App extends React.Component {
                 <Isvg id="action-bar-panel-styles" src="/canvas/images/edit_32.svg" />
               </a>
             </li>
-            <li className="navbar-li nav-divider" id="action-bar-sidepanel" data-tip="open side panel: forms"><a onClick={this.sidePanel.bind(this)}>
+            <li className="navbar-li nav-divider" id="action-bar-sidepanel" data-tip="open side panel: forms"><a onClick={this.sidePanelForms.bind(this)}>
                 <Isvg id="action-bar-panel" src="/canvas/images/justify_32.svg" />
               </a>
             </li>
@@ -115,8 +128,10 @@ class App extends React.Component {
       <SidePanel
         selectedPanel={this.state.selectedPanel}
         showHideForms={this.state.sidebarFormsOpen}
+        showHidePalette={this.paletteNavEnabled}
         showHideStyles={this.state.sidebarStylesOpen}
-        showHidePalette={this.paletteNav}
+        setLinkTypeStyle={this.setLinkTypeStyle}
+        selectedLinkTypeStyle={this.state.selectedLinkTypeStyle}
         log={this.log}/>
       <div id="canvas"></div>
       <Console log={this.state.logtext}/>
