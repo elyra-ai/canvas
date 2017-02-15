@@ -47,8 +47,8 @@
     "webpack": "1.12.14"
   },
   "peerDependencies": {
-    "react": "15.3.2",
-    "react-dom": "15.3.2"
+   "react": "0.14.8",
+   "react-dom": "0.14.8"
   },
   "publishConfig": {
     "registry": "https://npm-registry.whitewater.ibm.com"
