@@ -18,7 +18,7 @@ module.exports = function(grunt) {
 		eslint: {
 			node: {
 				src: ["index.js", "Gruntfile.js", "controllers/**/*.js",
-				"models/**/*.js", "lib/**/*.js", "tests/**/*.js"]
+				"models/**/*.js", "lib/**/*.js", "tests/**/*.js", "src/**/*.js", "src/**/*.jsx"]
 			}
 		},
 		jsonlint: {

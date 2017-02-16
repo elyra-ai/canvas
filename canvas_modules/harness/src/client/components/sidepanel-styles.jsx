@@ -1,56 +1,62 @@
-import React from 'react';
+import React from "react";
 
 export default class SidePanelStyles extends React.Component {
-  constructor(props) {
-    super(props);
+	constructor(props) {
+		super(props);
 
-    this.linkTypeOptionChange = this.linkTypeOptionChange.bind(this);
-  }
+		this.linkTypeOptionChange = this.linkTypeOptionChange.bind(this);
+	}
 
-  linkTypeOptionChange(changeEvent) {
-    this.props.setLinkTypeStyle(changeEvent.target.value);
-  }
+	linkTypeOptionChange(changeEvent) {
+		this.props.setLinkTypeStyle(changeEvent.target.value);
+	}
 
-  render() {
-    var selectedLinkTypeStyle = this.props.selectedLinkTypeStyle;
+	render() {
+		var selectedLinkTypeStyle = this.props.selectedLinkTypeStyle;
 
-    var divider = <div className="sidepanel-children sidepanel-divider"/>
+		var divider = (<div
+			className="sidepanel-children sidepanel-divider"
+		/>);
 
-    var linkStyle = <div className="sidepanel-children" id="sidepanel-style-links">
-      <form>
-        <div className="sidepanel-headers">Link Types</div>
-        <div className="sidepanel-radio">
-            <input type="radio" value="STRAIGHT"
-                  checked={selectedLinkTypeStyle === 'STRAIGHT'}
-                  onChange={this.linkTypeOptionChange} />
-                Straight
-        </div>
-        <div className="sidepanel-radio">
-            <input type="radio" value="CURVE"
-                  checked={selectedLinkTypeStyle === 'CURVE'}
-                  onChange={this.linkTypeOptionChange} />
-                Curve
-        </div>
-        <div className="sidepanel-radio">
-            <input type="radio" value="ELBOW"
-                  checked={selectedLinkTypeStyle === 'ELBOW'}
-                  onChange={this.linkTypeOptionChange} />
-                Elbow
-        </div>
-      </form>
-    </div>
+		var linkStyle = (<div className="sidepanel-children" id="sidepanel-style-links">
+			<form>
+				<div className="sidepanel-headers">Link Types</div>
+				<div className="sidepanel-radio">
+					<input type="radio"
+						value="STRAIGHT"
+						checked={ selectedLinkTypeStyle === "STRAIGHT" }
+						onChange={this.linkTypeOptionChange}
+					/>
+					Straight
+				</div>
+				<div className="sidepanel-radio">
+					<input type="radio" value="CURVE"
+						checked={ selectedLinkTypeStyle === "CURVE" }
+						onChange={this.linkTypeOptionChange}
+					/>
+					Curve
+				</div>
+				<div className="sidepanel-radio">
+					<input type="radio" value="ELBOW"
+						checked={ selectedLinkTypeStyle === "ELBOW" }
+						onChange={ this.linkTypeOptionChange }
+					/>
+					Elbow
+				</div>
+			</form>
+		</div>);
 
-    return (
-      <div>
-        {linkStyle}
-        {divider}
-      </div>
-    );
-  }
+		return (
+			<div>
+				{linkStyle}
+				{divider}
+			</div>
+		);
+	}
 }
 
 SidePanelStyles.propTypes = {
-  setLinkTypeStyle: React.PropTypes.func,
-  selectedLinkTypeStyle: React.PropTypes.string,
-  log: React.PropTypes.func
+	setLinkTypeStyle: React.PropTypes.func,
+	selectedLinkTypeStyle: React.PropTypes.string,
+	log: React.PropTypes.func
 };
