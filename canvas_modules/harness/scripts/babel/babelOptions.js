@@ -8,7 +8,8 @@
  */
 "use strict";
 
-var HMR_ENABLED = process.env.DAP_HMR === "true";
+// var HMR_ENABLED = process.env.DAP_HMR === "true";
+var HMR_ENABLED = true;
 
 var assign = require("object-assign");
 

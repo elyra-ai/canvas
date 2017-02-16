@@ -11,36 +11,26 @@
 
 // Modules
 
-var appConfig = require("./config/app.json");
 var path = require("path");
 var webpack = require("webpack");
 var I18NPlugin = require("@dap/portal-common-i18n").I18nPlugin;
 var babelOptions = require("./scripts/babel/babelOptions").babelClientOptions;
 var SassLintPlugin = require("sasslint-webpack-plugin");
 var constants = require("./lib/constants");
-var scope = require("./scripts/build/css-scope");
 
 // possibly not needed after removing html
 var HtmlWebpackPlugin = require("html-webpack-plugin");
 
 // Globals
 
-var HMR_ENABLED = process.env.HMR_ENABLED === "true";
+// var HMR_ENABLED = process.env.HMR_ENABLED === "true";
+var HMR_ENABLED = true;
 // Entry & Output files ------------------------------------------------------------>
 
 var entry = [
 	"babel-polyfill",
 	"./src/client/index.js"
 ];
-if (HMR_ENABLED) {
-
-	/* Setup HMR endpoint at /data/graphdb/__webpack_hmr. This is a
-	 * limitation of webpack. See:
-	 * https://github.com/webpack/webpack-dev-server/issues/252
-	 */
-	var hmrUrl = "https://localhost:" + appConfig.port.https + constants.APP_PATH + "/__webpack_hmr";
-	entry.unshift("webpack-hot-middleware/client?path=" + hmrUrl);
-}
 
 var output = {
 	path: path.join(__dirname, ".build"),

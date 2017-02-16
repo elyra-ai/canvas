@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 WORKING_DIR="$PWD"
 SCRIPT_DIR=$(dirname "$0")
 

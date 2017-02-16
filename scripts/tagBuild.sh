@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 TAG_NAME=$TRAVIS_BRANCH-$TRAVIS_BUILD_NUMBER
 
 echo "Setting github tag $TAG_NAME"

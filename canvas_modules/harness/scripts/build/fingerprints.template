@@ -1,5 +1,0 @@
-{
-<% _.forEach(files, function(file, idx) { %>
-	"<%= file.originalPath %>": "<%= file.versionedPath %>"<% if (idx !==files.length-1) { %>,<% } %>
-<% });%>
-}
