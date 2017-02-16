@@ -6,7 +6,8 @@ export default class SidePanelForms extends React.Component {
     super(props);
     this.state = {
       canvasDiagram: "",
-      canvasPalette: ""
+      canvasPalette: "",
+      palettejson: {}
     };
 
     this.onCanvasFileSelect = this.onCanvasFileSelect.bind(this);
@@ -36,8 +37,16 @@ export default class SidePanelForms extends React.Component {
     return false;
   }
 
-  parseCanvasDiagram() {
-    this.props.log("Ready to parse file: " + this.state.canvasDiagram.name);
+  submitCanvasDiagram() {
+    this.props.log("Submit file: " + this.state.canvasDiagram.name);
+    //read file
+    var fileReader = new FileReader();
+    fileReader.onload = function(e) {
+      var fileContent = fileReader.result;
+      var content = JSON.parse(fileContent);
+      this.props.setDiagramJSON(content);
+    }.bind(this);
+    fileReader.readAsText(this.state.canvasDiagram);
   }
 
   // Canvas Palette JSON
@@ -61,11 +70,21 @@ export default class SidePanelForms extends React.Component {
     return false;
   }
 
-  parseCanvasPalette() {
-    this.props.log("Ready to parse file: " + this.state.canvasPalette.name);
+  submitCanvasPalette() {
+    this.props.log("Submit file: " + this.state.canvasPalette.name);
+    //enable palette in nav
     if(this.isReadyToSubmitPaletteData()) {
       this.props.showHidePalette(true);
     }
+
+    //read file
+    var fileReader = new FileReader();
+    fileReader.onload = function(e) {
+      var fileContent = fileReader.result;
+      var content = JSON.parse(fileContent);
+      this.props.setPaletteJSON(content);
+    }.bind(this);
+    fileReader.readAsText(this.state.canvasPalette);
   }
 
   render() {
@@ -79,7 +98,7 @@ export default class SidePanelForms extends React.Component {
         />
         <Button light semantic
             disabled={!this.isReadyToSubmitCanvasData()}
-            onClick={this.parseCanvasDiagram.bind(this)}
+            onClick={this.submitCanvasDiagram.bind(this)}
           >
           Submit
         </Button>
@@ -94,7 +113,7 @@ export default class SidePanelForms extends React.Component {
         />
         <Button dark semantic
             disabled={!this.isReadyToSubmitPaletteData()}
-            onClick={this.parseCanvasPalette.bind(this)}
+            onClick={this.submitCanvasPalette.bind(this)}
             onChange={(e) => this.props.showHidePalette(e.target.checked)}
             >
             Submit
@@ -115,5 +134,7 @@ export default class SidePanelForms extends React.Component {
 
 SidePanelForms.propTypes = {
   showHidePalette: React.PropTypes.func,
+  setDiagramJSON: React.PropTypes.func,
+  setPaletteJSON: React.PropTypes.func,
   log: React.PropTypes.func
 };

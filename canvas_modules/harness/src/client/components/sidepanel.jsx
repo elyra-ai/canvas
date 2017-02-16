@@ -16,6 +16,8 @@ export default class SidePanel extends React.Component {
       case "SIDE_PANEL_FORMS":
         view = <SidePanelForms
           showHidePalette={this.props.showHidePalette}
+          setDiagramJSON={this.props.setDiagramJSON}
+          setPaletteJSON={this.props.setPaletteJSON}
           log={this.props.log}/>
         break;
       case "SIDE_PANEL_STYLES":
@@ -39,10 +41,12 @@ export default class SidePanel extends React.Component {
 
 SidePanel.propTypes = {
   showHideForms: React.PropTypes.bool,
+  showHidePalette: React.PropTypes.func,
   showHideStyles: React.PropTypes.bool,
+  setDiagramJSON: React.PropTypes.func,
+  setPaletteJSON: React.PropTypes.func,
   setLinkTypeStyle: React.PropTypes.func,
   selectedLinkTypeStyle: React.PropTypes.string,
   selectedPanel: React.PropTypes.string,
-  showHidePalette: React.PropTypes.func,
   log: React.PropTypes.func
 };

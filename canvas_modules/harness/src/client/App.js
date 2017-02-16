@@ -12,7 +12,10 @@ class App extends React.Component {
     super(props);
     this.state = {
       logtext: "",
-      paletteEnabled: false,
+      diagramJSON: {},
+      paletteNavEnabled: false,
+      paletteOpened: false,
+      paletteJSON: {},
       sidebarFormsOpen: false,
       sidebarStylesOpen: false,
       selectedPanel: null,
@@ -24,8 +27,11 @@ class App extends React.Component {
     this.delete = this.delete.bind(this);
     this.run = this.run.bind(this);
 
-    this.palette = this.palette.bind(this);
-    this.paletteNavEnabled = this.paletteNavEnabled.bind(this);
+    this.openPalette = this.openPalette.bind(this);
+    this.closePalette = this.closePalette.bind(this);
+    this.enabledPaletteNav = this.enabledPaletteNav.bind(this);
+    this.setPaletteJSON = this.setPaletteJSON.bind(this);
+    this.setDiagramJSON = this.setDiagramJSON.bind(this);
 
     this.sidePanelForms = this.sidePanelForms.bind(this);
     this.sidePanelStyles = this.sidePanelStyles.bind(this);
@@ -49,16 +55,31 @@ class App extends React.Component {
     this.log("run() clicked");
   }
 
-  palette() {
-    this.log("palette() clicked");
-    if(this.state.paletteEnabled) {
+  // Palette
+  openPalette() {
+    if(this.state.paletteNavEnabled) {
       this.log("opening palette");
+      this.setState({paletteOpened: true});
     }
   }
 
-  paletteNavEnabled(enabled) {
-    this.setState({paletteEnabled: enabled});
+  closePalette() {
+    this.setState({paletteOpened: false});
+  }
+
+  enabledPaletteNav(enabled) {
+    this.setState({paletteNavEnabled: enabled});
     this.log("palette in nav bar enabled: " + enabled);
+  }
+
+  setPaletteJSON(paletteJson) {
+    this.setState({paletteJSON: paletteJson});
+    this.log("set paletteJSON: " + JSON.stringify(paletteJson));
+  }
+
+  setDiagramJSON(diagramJson) {
+    this.setState({diagramJSON: diagramJson});
+    this.log("set diagramJSON: " + JSON.stringify(diagramJson));
   }
 
   // Side Panel
@@ -87,7 +108,7 @@ class App extends React.Component {
   }
 
   render() {
-    var paletteClass = "palette-" + this.state.paletteEnabled;
+    var paletteClass = "palette-" + this.state.paletteNavEnabled;
 
     var navBar = <div id="app-navbar">
       <div className="navbar">
@@ -106,7 +127,7 @@ class App extends React.Component {
                 <Isvg id="action-bar-run" src="/canvas/images/play_32.svg" />
               </a>
             </li>
-            <li className="navbar-li nav-divider" id={paletteClass} data-tip="palette"><a onClick={this.palette.bind(this)}>
+            <li className="navbar-li nav-divider" id={paletteClass} data-tip="palette"><a onClick={this.openPalette.bind(this)}>
                 <Isvg id="action-bar-palette" src="/canvas/images/create-new_32.svg" />
               </a>
             </li>
@@ -128,7 +149,9 @@ class App extends React.Component {
       <SidePanel
         selectedPanel={this.state.selectedPanel}
         showHideForms={this.state.sidebarFormsOpen}
-        showHidePalette={this.paletteNavEnabled}
+        showHidePalette={this.enabledPaletteNav}
+        setDiagramJSON={this.setDiagramJSON}
+        setPaletteJSON={this.setPaletteJSON}
         showHideStyles={this.state.sidebarStylesOpen}
         setLinkTypeStyle={this.setLinkTypeStyle}
         selectedLinkTypeStyle={this.state.selectedLinkTypeStyle}
