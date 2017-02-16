@@ -52,7 +52,7 @@ export default class SidePanelForms extends React.Component {
   // Canvas Palette JSON
   onCanvasPaletteSelect(evt) {
     this.setState({canvasPalette:''});
-    this.props.showHidePalette(false);
+    this.props.enableNavPalette(false);
     if(evt.target.files.length > 0) {
       var filename = evt.target.files[0].name;
       var fileExt = filename.substring(filename.lastIndexOf('.') + 1);
@@ -74,7 +74,7 @@ export default class SidePanelForms extends React.Component {
     this.props.log("Submit file: " + this.state.canvasPalette.name);
     //enable palette in nav
     if(this.isReadyToSubmitPaletteData()) {
-      this.props.showHidePalette(true);
+      this.props.enableNavPalette(true);
     }
 
     //read file
@@ -114,7 +114,7 @@ export default class SidePanelForms extends React.Component {
         <Button dark semantic
             disabled={!this.isReadyToSubmitPaletteData()}
             onClick={this.submitCanvasPalette.bind(this)}
-            onChange={(e) => this.props.showHidePalette(e.target.checked)}
+            onChange={(e) => this.props.enableNavPalette(e.target.checked)}
             >
             Submit
         </Button>
@@ -133,7 +133,7 @@ export default class SidePanelForms extends React.Component {
 }
 
 SidePanelForms.propTypes = {
-  showHidePalette: React.PropTypes.func,
+  enableNavPalette: React.PropTypes.func,
   setDiagramJSON: React.PropTypes.func,
   setPaletteJSON: React.PropTypes.func,
   log: React.PropTypes.func

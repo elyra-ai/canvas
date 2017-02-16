@@ -7,7 +7,7 @@ export default class SidePanel extends React.Component {
 
   render() {
     var panelSize = "0px";
-    if(this.props.showHideForms || this.props.showHideStyles) {
+    if(this.props.openSidepanelForms || this.props.openSidepanelStyles) {
       panelSize = "200px";
     }
 
@@ -15,7 +15,7 @@ export default class SidePanel extends React.Component {
     switch (this.props.selectedPanel) {
       case "SIDE_PANEL_FORMS":
         view = <SidePanelForms
-          showHidePalette={this.props.showHidePalette}
+          enableNavPalette={this.props.enableNavPalette}
           setDiagramJSON={this.props.setDiagramJSON}
           setPaletteJSON={this.props.setPaletteJSON}
           log={this.props.log}/>
@@ -40,9 +40,9 @@ export default class SidePanel extends React.Component {
 }
 
 SidePanel.propTypes = {
-  showHideForms: React.PropTypes.bool,
-  showHidePalette: React.PropTypes.func,
-  showHideStyles: React.PropTypes.bool,
+  enableNavPalette: React.PropTypes.func,
+  openSidepanelForms: React.PropTypes.bool,
+  openSidepanelStyles: React.PropTypes.bool,
   setDiagramJSON: React.PropTypes.func,
   setPaletteJSON: React.PropTypes.func,
   setLinkTypeStyle: React.PropTypes.func,

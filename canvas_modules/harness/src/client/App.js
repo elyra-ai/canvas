@@ -11,13 +11,13 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      logtext: "",
+      consoleout: [],
       diagramJSON: {},
+      paletteJSON: {},
       paletteNavEnabled: false,
       paletteOpened: false,
-      paletteJSON: {},
-      sidebarFormsOpen: false,
-      sidebarStylesOpen: false,
+      openSidepanelForms: false,
+      openSidepanelStyles: false,
       selectedPanel: null,
       selectedLinkTypeStyle: "STRAIGHT"
     };
@@ -29,7 +29,7 @@ class App extends React.Component {
 
     this.openPalette = this.openPalette.bind(this);
     this.closePalette = this.closePalette.bind(this);
-    this.enabledPaletteNav = this.enabledPaletteNav.bind(this);
+    this.enableNavPalette = this.enableNavPalette.bind(this);
     this.setPaletteJSON = this.setPaletteJSON.bind(this);
     this.setDiagramJSON = this.setDiagramJSON.bind(this);
 
@@ -39,7 +39,13 @@ class App extends React.Component {
   }
 
   log(text) {
-    this.setState({logtext: text});
+    this.setState({
+      consoleout: this.state.consoleout.concat(this.getTimestamp() + text)
+    });
+  }
+
+  getTimestamp(){
+    return new Date().toLocaleString() + ": ";
   }
 
   // Navbar
@@ -67,9 +73,9 @@ class App extends React.Component {
     this.setState({paletteOpened: false});
   }
 
-  enabledPaletteNav(enabled) {
+  enableNavPalette(enabled) {
     this.setState({paletteNavEnabled: enabled});
-    this.log("palette in nav bar enabled: " + enabled);
+    // this.log("palette in nav bar enabled: " + enabled);
   }
 
   setPaletteJSON(paletteJson) {
@@ -85,20 +91,20 @@ class App extends React.Component {
   // Side Panel
   sidePanelForms() {
     this.setState({
-      sidebarFormsOpen: !this.state.sidebarFormsOpen,
-      sidebarStylesOpen: false,
+      openSidepanelForms: !this.state.openSidepanelForms,
+      openSidepanelStyles: false,
       selectedPanel: "SIDE_PANEL_FORMS"
     });
-    this.log("sidebarFormsOpen() clicked " + !this.state.sidebarFormsOpen);
+    this.log("openSidepanelForms() clicked " + !this.state.openSidepanelForms);
   }
 
   sidePanelStyles() {
     this.setState({
-      sidebarStylesOpen: !this.state.sidebarStylesOpen,
-      sidebarFormsOpen: false,
+      openSidepanelStyles: !this.state.openSidepanelStyles,
+      openSidepanelForms: false,
       selectedPanel: "SIDE_PANEL_STYLES"
     });
-    this.log("sidePanelStyles() clicked " + !this.state.sidebarStylesOpen);
+    this.log("sidePanelStyles() clicked " + !this.state.openSidepanelStyles);
   }
 
   // Styles
@@ -148,16 +154,16 @@ class App extends React.Component {
       {navBar}
       <SidePanel
         selectedPanel={this.state.selectedPanel}
-        showHideForms={this.state.sidebarFormsOpen}
-        showHidePalette={this.enabledPaletteNav}
+        enableNavPalette={this.enableNavPalette}
+        openSidepanelForms={this.state.openSidepanelForms}
+        openSidepanelStyles={this.state.openSidepanelStyles}
         setDiagramJSON={this.setDiagramJSON}
         setPaletteJSON={this.setPaletteJSON}
-        showHideStyles={this.state.sidebarStylesOpen}
         setLinkTypeStyle={this.setLinkTypeStyle}
         selectedLinkTypeStyle={this.state.selectedLinkTypeStyle}
         log={this.log}/>
       <div id="canvas"></div>
-      <Console log={this.state.logtext}/>
+      <Console logs={this.state.consoleout}/>
       <ReactTooltip place="bottom" effect="solid"/>
     </div>
 

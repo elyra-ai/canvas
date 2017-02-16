@@ -4,23 +4,8 @@ export default class Console extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      consoleout: [],
       consoleHeight: "10px"
     };
-
-    // this.log = this.log.bind(this);
-  }
-
-  componentWillReceiveProps(newProps) {
-    if (newProps.log !== undefined && newProps.log !== null) {
-      this.setState({
-        consoleout: this.state.consoleout.concat(this.getTimestamp() + newProps.log)
-      });
-    }
-  }
-
-  getTimestamp(){
-    return new Date().toLocaleString() + ": ";
   }
 
   showHide() {
@@ -29,7 +14,7 @@ export default class Console extends React.Component {
   }
 
   render() {
-    const logs = this.state.consoleout.map((log, ind) => {
+    const logs = this.props.logs.map((log, ind) => {
       return (
         <li key={ind}>{log}</li>
       );
@@ -46,5 +31,5 @@ export default class Console extends React.Component {
 }
 
 Console.propTypes = {
-  log: React.PropTypes.string
+  logs: React.PropTypes.array
 };
