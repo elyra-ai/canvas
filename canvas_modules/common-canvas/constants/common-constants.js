@@ -11,15 +11,24 @@
 ** divested of its trade secrets, irrespective of what has been
 ** deposited with the U.S. Copyright Office.
 *****************************************************************/
+"use strict";
 
-export default {
+// Private Methods ------------------------------------------------------------>
 
-  DND_DATA_TEXT: "text",
-  DRAG_MOVE: "move",
-  DRAG_LINK: "link",
-  DRAG_SELECT_REGION: "selectRegion",
-
-  CANVAS_UI :{
-    HALO_RADIUS : 39
-  }
+function _defineConstant(name, value) {
+	Object.defineProperty(module.exports, name, {
+		value: value,
+		enumerable: true,
+		writable: false
+	});
 }
+
+// Public Methods ------------------------------------------------------------->
+_defineConstant("DND_DATA_TEXT", "text");
+_defineConstant("DRAG_MOVE", "move");
+_defineConstant("DRAG_LINK", "link");
+_defineConstant("DRAG_SELECT_REGION", "selectRegion");
+
+_defineConstant("CANVAS_UI", {
+	HALO_RADIUS : 39
+});
