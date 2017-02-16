@@ -16,5 +16,5 @@ npm start
 ```
 Connect to canvas:
 ```
-http://localhost:3300
+http://localhost:3001
 ```
