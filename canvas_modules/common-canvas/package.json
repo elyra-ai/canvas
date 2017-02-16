@@ -1,6 +1,6 @@
 {
   "name": "@wdp/common-canvas",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "WDP common-canvas",
   "repository": {
     "type": "git",
@@ -46,8 +46,8 @@
     "webpack": "1.12.14"
   },
   "peerDependencies": {
-   "react": ">=0.14.8 <=15.3.2",
-   "react-dom": ">=0.14.8 <=15.3.2"
+    "react": ">=0.14.8 <=15.3.2",
+    "react-dom": ">=0.14.8 <=15.3.2"
   },
   "publishConfig": {
     "registry": "https://npm-registry.whitewater.ibm.com"
