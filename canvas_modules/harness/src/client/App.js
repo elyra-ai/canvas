@@ -11,6 +11,9 @@ import React from "react";
 import Isvg from "react-inlinesvg";
 import ReactTooltip from "react-tooltip";
 
+import CommonCanvas from "../../../common-canvas/src/common-canvas.jsx";
+// import CommonCanvas from "@wdp/common-canvas";
+
 import "../styles/App.css";
 
 import Console from "./components/console.jsx";
@@ -34,14 +37,17 @@ class App extends React.Component {
 		this.state = {
 			consoleout: [],
 			consoleOpened: false,
-			diagramJSON: {},
+			diagramJSON: null,
 			paletteJSON: {},
 			paletteNavEnabled: false,
 			paletteOpened: false,
 			openSidepanelForms: false,
 			openSidepanelStyles: false,
 			selectedPanel: null,
-			selectedLinkTypeStyle: "STRAIGHT"
+			selectedLinkTypeStyle: "STRAIGHT",
+			initialSelection: null,
+			showContextMenu: false,
+			contextMenuInfo: {}
 		};
 
 		this.openConsole = this.openConsole.bind(this);
@@ -60,6 +66,14 @@ class App extends React.Component {
 		this.sidePanelForms = this.sidePanelForms.bind(this);
 		this.sidePanelStyles = this.sidePanelStyles.bind(this);
 		this.setLinkTypeStyle = this.setLinkTypeStyle.bind(this);
+
+		// required by common-canvas
+		this.openContextMenu = this.openContextMenu.bind(this);
+		this.closeContextMenu = this.closeContextMenu.bind(this);
+		this.contextMenuAction = this.contextMenuAction.bind(this);
+		this.editDiagramHandler = this.editDiagramHandler.bind(this);
+		this.nodeEditHandler = this.nodeEditHandler.bind(this);
+		this.refreshContent = this.refreshContent.bind(this);
 	}
 
 	getTimestamp() {
@@ -137,6 +151,167 @@ class App extends React.Component {
 		// this.log("palette in nav bar enabled: " + enabled);
 	}
 
+	// required by common-canvas
+	nodeEditHandler(nodeId) {
+		this.log("nodeEditHandler()");
+	}
+
+	openContextMenu(source) {
+		const NODE_CONTEXT_MENU = [
+				{ action: "editNode", label: this.getLabel("node-context.editNode", "Open") },
+				{ action: "disconnectNode", label: this.getLabel("node-context.disconnectNode", "Disconnect") },
+				{ action: "previewNode", label: this.getLabel("node-context.previewNode", "Preview") },
+				{ divider: true },
+				{ action: "createSuperNode", label: this.getLabel("node-context.createSuperNode", "Create supernode") },
+				{ divider: true },
+				{ action: "deleteObjects", label: this.getLabel("node-context.deleteNode", "Delete") },
+				{ divider: true },
+				{ action: "executeNode", label: this.getLabel("node-context.executeNode", "Execute") }
+		];
+
+		const APPLY_MODEL_NODE_CONTEXT_MENU = [
+				{ action: "editNode", label: this.getLabel("node-context.editNode", "Open") },
+				{ action: "viewModel", label: this.getLabel("node-context.viewModel", "View Model") },
+				{ action: "disconnectNode", label: this.getLabel("node-context.disconnectNode", "Disconnect") },
+				{ action: "previewNode", label: this.getLabel("node-context.previewNode", "Preview") },
+				{ divider: true },
+				{ action: "createSuperNode", label: this.getLabel("node-context.createSuperNode", "Create supernode") },
+				{ divider: true },
+				{ action: "deleteObjects", label: this.getLabel("node-context.deleteNode", "Delete") },
+				{ divider: true },
+				{ action: "executeNode", label: this.getLabel("node-context.executeNode", "Execute") }
+		];
+
+		const SUPER_NODE_CONTEXT_MENU = [
+				{ action: "editNode", label: this.getLabel("node-context.editNode", "Open") },
+				{ action: "disconnectNode", label: this.getLabel("node-context.disconnectNode", "Disconnect") },
+				{ divider: true },
+				{ action: "createSuperNode", label: this.getLabel("node-context.createSuperNode", "Create supernode") },
+				{ action: "expandSuperNode", label: this.getLabel("node-context.expandSuperNode", "Expand supernode") },
+				{ divider: true },
+				{ action: "deleteObjects", label: this.getLabel("node-context.deleteNode", "Delete") },
+				{ divider: true },
+				{ action: "executeNode", label: this.getLabel("node-context.executeNode", "Execute") }
+		];
+
+		const MULTI_SELECT_CONTEXT_MENU = [
+				{ action: "disconnectNode", label: this.getLabel("node-context.disconnectNode", "Disconnect") },
+				{ divider: true },
+				{ action: "createSuperNode", label: this.getLabel("node-context.createSuperNode", "Create supernode") },
+				{ divider: true },
+				{ action: "deleteObjects", label: this.getLabel("node-context.deleteNode", "Delete") }
+		];
+
+		const CANVAS_CONTEXT_MENU = [
+				{ action: "CC_selectAll", label: this.getLabel("canvas-context.selectAll", "Select All") },
+				{ divider: true },
+				{ action: "streamProperties", label: this.getLabel("canvas-context.streamProperties", "Options") }
+		];
+
+		const LINK_CONTEXT_MENU = [
+				{ action: "deleteLink", label: this.getLabel("link-context.deleteLink", "Delete") }
+		];
+
+		const COMMENT_CONTEXT_MENU = [
+				{ action: "deleteObjects", label: this.getLabel("comment-context.deleteComment", "Delete") }
+		];
+
+		let menuDefinition = null;
+		if (source.type === "canvas") {
+			menuDefinition = CANVAS_CONTEXT_MENU;
+
+		} else if (source.type === "link") {
+			menuDefinition = LINK_CONTEXT_MENU;
+
+		} else if (source.type === "node") {
+			if (source.selectedObjectIds) {
+				if (source.selectedObjectIds.length > 1) {
+					menuDefinition = MULTI_SELECT_CONTEXT_MENU;
+				} else if (source.targetObject.containsModel === true) {
+					menuDefinition = APPLY_MODEL_NODE_CONTEXT_MENU;
+				} else if (source.targetObject.subDiagramId) {
+					menuDefinition = SUPER_NODE_CONTEXT_MENU;
+				} else {
+					menuDefinition = NODE_CONTEXT_MENU;
+				}
+			}
+		} else if (source.type === "comment") {
+			if (source.selectedObjectIds) {
+				menuDefinition = COMMENT_CONTEXT_MENU;
+			}
+		}
+
+		if (menuDefinition) {
+			const contextMenuInfo = {
+				source: source,
+				menuDefinition: menuDefinition
+			};
+
+			this.setState({ showContextMenu: true, contextMenuInfo: contextMenuInfo });
+		}
+	}
+
+	closeContextMenu() {
+		this.setState({ showContextMenu: false, contextMenuInfo: {} });
+	}
+
+	editDiagramHandler(data) {
+		this.log("editDiagramHandler() aka applyDiagramEdit");
+	}
+
+	contextMenuAction(action, source) {
+		if (action === "streamProperties") {
+			this.toolbarHandler("streamProperties");
+		} else if (action === "deleteLink") {
+			this.applyDiagramEdit({
+				editType: "deleteLinks",
+				links: [source.id]
+			});
+		} else if (action === "editNode") {
+			this.nodeEditHandler(source.targetObject.id);
+		} else if (action === "viewModel") {
+			this.viewModelHandler(source.targetObject.id);
+		} else if (action === "disconnectNode") {
+			this.applyDiagramEdit({
+				editType: "disconnectNodes",
+				nodes: source.selectedObjectIds
+			});
+		} else if (action === "createSuperNode") {
+			this.applyDiagramEdit({
+				editType: "createSuperNode",
+				nodes: source.selectedObjectIds
+			});
+		} else if (action === "expandSuperNode") {
+			this.applyDiagramEdit({
+				editType: "expandSuperNode",
+				nodes: [source.targetObject.id]
+			});
+		} else if (action === "deleteObjects") {
+			this.applyDiagramEdit({
+				editType: "deleteObjects",
+				nodes: source.selectedObjectIds
+			});
+		} else if (action === "executeNode") {
+			this.execute({
+				streamId: this.state.streamId,
+				diagramId: this.state.diagramId,
+				nodeIds: [source.targetObject.id]
+			});
+		} else if (action === "previewNode") {
+			this.execute({
+				streamId: this.state.streamId,
+				diagramId: this.state.diagramId,
+				nodeIds: [source.targetObject.id],
+				action: "preview"
+			});
+		}
+		this.log("contextMenuAction()");
+	}
+
+	refreshContent(streamId, diagramId) {
+		this.log("refreshContent()");
+	}
+
 	render() {
 		var paletteClass = "palette-" + this.state.paletteNavEnabled;
 
@@ -204,6 +379,25 @@ class App extends React.Component {
 			</div>
 		</div>);
 
+		let commonCanvas = <div id="canvas"></div>;
+		if (this.state.diagramJSON !== null) {
+			commonCanvas = (<div id="canvas">
+				<CommonCanvas
+					stream={this.state.diagramJSON}
+					initialSelection={this.state.initialSelection}
+					paletteJSON={this.state.paletteJSON}
+					showContextMenu={this.state.showContextMenu}
+					contextMenuInfo={this.state.contextMenuInfo}
+					openContextMenu= {this.openContextMenu}
+					closeContextMenu= {this.closeContextMenu}
+					contextMenuAction= {this.contextMenuAction}
+					editDiagramHandler= {this.editDiagramHandler}
+					nodeEditHandler= {this.nodeEditHandler}
+					expandSuperNodeHandler= {this.refreshContent}
+				/>
+			</div>);
+		}
+
 		var mainView = (<div id="app-container">
 			{navBar}
 			<SidePanel
@@ -217,8 +411,7 @@ class App extends React.Component {
 				selectedLinkTypeStyle={this.state.selectedLinkTypeStyle}
 				log={this.log}
 			/>
-			<div id="canvas">
-			</div>
+			{commonCanvas}
 			<Console
 				consoleOpened={this.state.consoleOpened}
 				logs={this.state.consoleout}
