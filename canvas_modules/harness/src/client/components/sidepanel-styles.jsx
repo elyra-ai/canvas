@@ -9,6 +9,12 @@
 
 import React from "react";
 
+import {
+	CURVE,
+	ELBOW,
+	STRAIGHT
+} from "../constants/constants.js";
+
 export default class SidePanelStyles extends React.Component {
 	constructor(props) {
 		super(props);
@@ -32,22 +38,22 @@ export default class SidePanelStyles extends React.Component {
 				<div className="sidepanel-headers">Link Types</div>
 				<div className="sidepanel-radio">
 					<input type="radio"
-						value="STRAIGHT"
-						checked={ selectedLinkTypeStyle === "STRAIGHT" }
+						value={STRAIGHT}
+						checked={ selectedLinkTypeStyle === STRAIGHT }
 						onChange={this.linkTypeOptionChange}
 					/>
 					Straight
 				</div>
 				<div className="sidepanel-radio">
-					<input type="radio" value="CURVE"
-						checked={ selectedLinkTypeStyle === "CURVE" }
+					<input type="radio" value={CURVE}
+						checked={ selectedLinkTypeStyle === CURVE }
 						onChange={this.linkTypeOptionChange}
 					/>
 					Curve
 				</div>
 				<div className="sidepanel-radio">
-					<input type="radio" value="ELBOW"
-						checked={ selectedLinkTypeStyle === "ELBOW" }
+					<input type="radio" value={ELBOW}
+						checked={ selectedLinkTypeStyle === ELBOW }
 						onChange={ this.linkTypeOptionChange }
 					/>
 					Elbow

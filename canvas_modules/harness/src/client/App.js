@@ -16,11 +16,17 @@ import "../styles/App.css";
 import Console from "./components/console.jsx";
 import SidePanel from "./components/sidepanel.jsx";
 
+import {
+	SIDE_PANEL_FORMS,
+	SIDE_PANEL_STYLES
+} from "./constants/constants.js";
+
 class App extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			consoleout: [],
+			consoleOpened: false,
 			diagramJSON: {},
 			paletteJSON: {},
 			paletteNavEnabled: false,
@@ -31,7 +37,9 @@ class App extends React.Component {
 			selectedLinkTypeStyle: "STRAIGHT"
 		};
 
+		this.openConsole = this.openConsole.bind(this);
 		this.log = this.log.bind(this);
+
 		this.addNode = this.addNode.bind(this);
 		this.delete = this.delete.bind(this);
 		this.run = this.run.bind(this);
@@ -70,7 +78,7 @@ class App extends React.Component {
 		this.setState({
 			openSidepanelForms: !this.state.openSidepanelForms,
 			openSidepanelStyles: false,
-			selectedPanel: "SIDE_PANEL_FORMS"
+			selectedPanel: SIDE_PANEL_FORMS
 		});
 		this.log("openSidepanelForms() clicked " + !this.state.openSidepanelForms);
 	}
@@ -79,7 +87,7 @@ class App extends React.Component {
 		this.setState({
 			openSidepanelStyles: !this.state.openSidepanelStyles,
 			openSidepanelForms: false,
-			selectedPanel: "SIDE_PANEL_STYLES"
+			selectedPanel: SIDE_PANEL_STYLES
 		});
 		this.log("sidePanelStyles() clicked " + !this.state.openSidepanelStyles);
 	}
@@ -88,6 +96,10 @@ class App extends React.Component {
 		this.setState({
 			consoleout: this.state.consoleout.concat(this.getTimestamp() + text)
 		});
+	}
+
+	openConsole() {
+		this.setState({ consoleOpened: !this.state.consoleOpened });
 	}
 
 	addNode() {
@@ -128,7 +140,14 @@ class App extends React.Component {
 						<li className="navbar-li">
 							<a id="title">Canvas Testbed</a>
 						</li>
-						<li className="navbar-li" data-tip="add node">
+						<li className="navbar-li nav-divider" data-tip="console">
+							<a onClick={this.openConsole.bind(this)}>
+								<Isvg id="action-bar-console"
+									src="/canvas/images/list-view_32.svg"
+								/>
+							</a>
+						</li>
+						<li className="navbar-li nav-divider" data-tip="add node">
 							<a onClick={this.addNode.bind(this)}>
 								<Isvg id="action-bar-add"
 									src="/canvas/images/add-new_32.svg"
@@ -191,8 +210,12 @@ class App extends React.Component {
 				selectedLinkTypeStyle={this.state.selectedLinkTypeStyle}
 				log={this.log}
 			/>
-			<div id="canvas"></div>
-			<Console logs={this.state.consoleout} />
+			<div id="canvas">
+			</div>
+			<Console
+				consoleOpened={this.state.consoleOpened}
+				logs={this.state.consoleout}
+			/>
 			<ReactTooltip place="bottom" effect="solid" />
 		</div>);
 

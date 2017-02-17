@@ -6,16 +6,32 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
+"use strict";
 
-export default {
-	SIDE_PANEL_FORMS: "sidepanel-forms",
-	SIDE_PANEL_STYLES: "sidepanel-styles",
+// Private Methods ------------------------------------------------------------>
 
-	CONSOLE: {
-		MINIMIZED: "0px",
-		MAXIMIXED: "200px"
-	},
+function _defineConstant(name, value) {
+	Object.defineProperty(module.exports, name, {
+		value: value,
+		enumerable: true,
+		writable: false
+	});
+}
 
-	CONSOLE_MIN: "0px",
-	CONSOLE_MAX: "200px"
-};
+// Public Methods ------------------------------------------------------------->
+_defineConstant("CONSOLE", {
+	MINIMIZED: "10px",
+	MAXIMIXED: "200px"
+});
+
+_defineConstant("CURVE", "CURVE");
+_defineConstant("ELBOW", "ELBOW");
+_defineConstant("STRAIGHT", "STRAIGHT");
+
+
+_defineConstant("SIDE_PANEL", {
+	MINIMIZED: "0px",
+	MAXIMIXED: "200px"
+});
+_defineConstant("SIDE_PANEL_FORMS", "sidepanel-forms");
+_defineConstant("SIDE_PANEL_STYLES", "sidepanel-styles");

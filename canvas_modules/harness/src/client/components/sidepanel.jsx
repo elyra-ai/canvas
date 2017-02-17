@@ -12,17 +12,23 @@ import React from "react";
 import SidePanelForms from "./sidepanel-forms.jsx";
 import SidePanelStyles from "./sidepanel-styles.jsx";
 
+import {
+	SIDE_PANEL,
+	SIDE_PANEL_FORMS,
+	SIDE_PANEL_STYLES
+} from "../constants/constants.js";
+
 export default class SidePanel extends React.Component {
 
 	render() {
-		var panelSize = "0px";
+		var panelSize = SIDE_PANEL.MINIMIZED;
 		if (this.props.openSidepanelForms || this.props.openSidepanelStyles) {
-			panelSize = "200px";
+			panelSize = SIDE_PANEL.MAXIMIXED;
 		}
 
 		var view = null;
 		switch (this.props.selectedPanel) {
-		case "SIDE_PANEL_FORMS":
+		case SIDE_PANEL_FORMS:
 			view = (<SidePanelForms
 				enableNavPalette={this.props.enableNavPalette}
 				setDiagramJSON={this.props.setDiagramJSON}
@@ -30,7 +36,7 @@ export default class SidePanel extends React.Component {
 				log={this.props.log}
 			/>);
 			break;
-		case "SIDE_PANEL_STYLES":
+		case SIDE_PANEL_STYLES:
 			view = (<SidePanelStyles
 				setLinkTypeStyle={this.props.setLinkTypeStyle}
 				selectedLinkTypeStyle={this.props.selectedLinkTypeStyle}
