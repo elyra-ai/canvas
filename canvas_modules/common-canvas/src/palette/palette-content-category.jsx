@@ -12,8 +12,8 @@
 ** deposited with the U.S. Copyright Office.
 *****************************************************************/
 
-import React from 'react'
-import ReactDOM from 'react-dom'
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 class PaletteContentCategory extends React.Component {
   constructor(props) {

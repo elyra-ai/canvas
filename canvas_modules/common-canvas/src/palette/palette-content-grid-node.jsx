@@ -12,10 +12,10 @@
 ** deposited with the U.S. Copyright Office.
 *****************************************************************/
 
-import React from 'react'
-import ReactDOM from 'react-dom'
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-import {DND_DATA_TEXT} from '../../constants/common-constants.js'
+import {DND_DATA_TEXT} from '../../constants/common-constants.js';
 
 class PaletteContentNode extends React.Component {
   constructor(props) {

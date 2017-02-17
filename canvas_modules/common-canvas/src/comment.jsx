@@ -15,7 +15,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {DND_DATA_TEXT} from '../constants/common-constants.js';
-import {Tooltip,OverlayTrigger} from 'react-bootstrap';
 
 class Comment extends React.Component {
   constructor(props) {

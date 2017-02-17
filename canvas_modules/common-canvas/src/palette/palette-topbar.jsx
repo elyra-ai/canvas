@@ -12,10 +12,10 @@
 ** deposited with the U.S. Copyright Office.
 *****************************************************************/
 
-import React from 'react'
-import ReactDOM from 'react-dom'
-import Isvg from 'react-inlinesvg'
-import ThreeWayIcon from './three-way-icon.jsx'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Isvg from 'react-inlinesvg';
+import ThreeWayIcon from './three-way-icon.jsx';
 
 class PaletteTopbar extends React.Component {
   constructor(props) {

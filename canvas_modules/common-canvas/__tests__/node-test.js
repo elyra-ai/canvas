@@ -3,9 +3,9 @@ import Node from '../src/node.jsx';
 import {shallow, mount, render} from 'enzyme';
 import {expect, assert} from 'chai';
 import sinon from 'sinon';
-import chai from 'chai'
-import chaiEnzyme from 'chai-enzyme'
-chai.use(chaiEnzyme()) // Note the invocation at the end
+import chai from 'chai';
+import chaiEnzyme from 'chai-enzyme';
+chai.use(chaiEnzyme()); // Note the invocation at the end
 
 
 const nodeActionHandler = sinon.spy();

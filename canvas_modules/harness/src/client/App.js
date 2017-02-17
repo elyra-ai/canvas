@@ -20,6 +20,13 @@ import {
 	SIDE_PANEL_FORMS,
 	SIDE_PANEL_STYLES
 } from "./constants/constants.js";
+const listview32 = require("../graphics/list-view_32.svg");
+const addnew32 = require("../graphics/add-new_32.svg");
+const close32 = require("../graphics/close_32.svg");
+const play32 = require("../graphics/play_32.svg");
+const createNew32 = require("../graphics/create-new_32.svg");
+const edit32 = require("../graphics/edit_32.svg");
+const justify32 = require("../graphics/justify_32.svg");
 
 class App extends React.Component {
 	constructor(props) {
@@ -143,42 +150,42 @@ class App extends React.Component {
 						<li className="navbar-li nav-divider" data-tip="console">
 							<a onClick={this.openConsole.bind(this)}>
 								<Isvg id="action-bar-console"
-									src="/canvas/images/list-view_32.svg"
+									src={listview32}
 								/>
 							</a>
 						</li>
 						<li className="navbar-li nav-divider" data-tip="add node">
 							<a onClick={this.addNode.bind(this)}>
 								<Isvg id="action-bar-add"
-									src="/canvas/images/add-new_32.svg"
+									src={addnew32}
 								/>
 							</a>
 						</li>
 						<li className="navbar-li" data-tip="delete">
 							<a onClick={this.delete.bind(this)}>
 								<Isvg id="action-bar-delete"
-									src="/canvas/images/close_32.svg"
+									src={close32}
 								/>
 							</a>
 						</li>
 						<li className="navbar-li" data-tip="run">
 							<a onClick={this.run.bind(this)}>
 								<Isvg id="action-bar-run"
-									src="/canvas/images/play_32.svg"
+									src={play32}
 								/>
 							</a>
 						</li>
 						<li className="navbar-li nav-divider" id={paletteClass} data-tip="palette">
 							<a onClick={this.openPalette.bind(this)}>
 								<Isvg id="action-bar-palette"
-									src="/canvas/images/create-new_32.svg"
+									src={createNew32}
 								/>
 							</a>
 						</li>
 						<li className="navbar-li" id="action-bar-sidepanel-styles" data-tip="open side panel: styles">
 							<a onClick={this.sidePanelStyles.bind(this)}>
 								<Isvg id="action-bar-panel-styles"
-									src="/canvas/images/edit_32.svg"
+									src={edit32}
 								/>
 							</a>
 						</li>
@@ -188,7 +195,7 @@ class App extends React.Component {
 						>
 							<a onClick={this.sidePanelForms.bind(this)}>
 								<Isvg id="action-bar-panel"
-									src="/canvas/images/justify_32.svg"
+									src={justify32}
 								/>
 							</a>
 						</li>

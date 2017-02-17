@@ -12,19 +12,16 @@
 ** deposited with the U.S. Copyright Office.
 *****************************************************************/
 
-import React from 'react'
-import ReactDOM from 'react-dom'
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-import Node from './node.jsx'
-import Comment from './comment.jsx'
-import Link from './link.jsx'
-import SVGCanvas from './svg-canvas.jsx'
-import CommonContextMenu from './common-context-menu.jsx'
-import ContextMenuWrapper from './context-menu-wrapper.jsx'
-import {DND_DATA_TEXT, DRAG_MOVE, DRAG_LINK, DRAG_SELECT_REGION} from '../constants/common-constants.js'
-import {Grid, Row, Col,Popover} from 'react-bootstrap'
-import _ from 'underscore'
-import CanvasUtils from '../utils/canvas-utils.js'
+import Node from './node.jsx';
+import Comment from './comment.jsx';
+import SVGCanvas from './svg-canvas.jsx';
+import CommonContextMenu from './common-context-menu.jsx';
+import ContextMenuWrapper from './context-menu-wrapper.jsx';
+import {DND_DATA_TEXT, DRAG_MOVE, DRAG_LINK, DRAG_SELECT_REGION} from '../constants/common-constants.js';
+import CanvasUtils from '../utils/canvas-utils.js';
 
 
 const NODE_BORDER_SIZE = 2; // see main.css, .canvas-node
@@ -661,7 +658,7 @@ export default class DiagramCanvas extends React.Component {
 
   supernodeZoomIn(nodeId) {
     //console.log("supernodeZoomIn: " + nodeId);
-    this.props.expandSuperNodeHandler(this.props.stream.id, nodeId);
+    this.props.supernodeZoomInHandler(this.props.stream.id, nodeId);
   }
 
   selectObject(objectId, toggleSelection) {
@@ -1330,5 +1327,5 @@ DiagramCanvas.propTypes = {
   contextMenuAction: React.PropTypes.func.isRequired,
   editDiagramHandler: React.PropTypes.func.isRequired,
   nodeEditHandler: React.PropTypes.func.isRequired,
-  expandSuperNodeHandler: React.PropTypes.func.isRequired
+  supernodeZoomInHandler: React.PropTypes.func.isRequired
 };

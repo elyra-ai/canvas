@@ -12,9 +12,9 @@
 ** deposited with the U.S. Copyright Office.
 *****************************************************************/
 
-import React from 'react'
-import ReactDOM from 'react-dom'
-import PaletteContentListItem from './palette-content-list-item.jsx'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import PaletteContentListItem from './palette-content-list-item.jsx';
 
 class PaletteContentList extends React.Component {
   constructor(props) {

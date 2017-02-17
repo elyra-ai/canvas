@@ -1,0 +1,499 @@
+/****************************************************************
+** IBM Confidential
+**
+** OCO Source Materials
+**
+** SPSS Modeler
+**
+** (c) Copyright IBM Corp. 2017
+**
+** The source code for this program is not published or otherwise
+** divested of its trade secrets, irrespective of what has been
+** deposited with the U.S. Copyright Office.
+*****************************************************************/
+@CHARSET "ISO-8859-1";
+
+@font-face {
+    font-family: IBMHLVMedium;
+    src: url(./fonts/medium/helvetica-neue-medium.woff);
+}
+
+@font-face {
+    font-family: IBMHLVRoman;
+    src: url(./fonts/roman/helvetica-neue-roman.woff);
+}
+
+@font-face {
+    font-family: IBMHLVBold;
+    src: url(./fonts/bold/helvetica-neue-bold.woff);
+}
+@font-face {
+    font-family: IBMHLVlight;
+    src: url(./fonts/light/helvetica-neue-light.woff);
+}
+
+@font-face {
+    font-family: IBMHLVRoman;
+    src: url(./fonts/roman/helvetica-neue-roman.woff);
+}
+
+:root {
+  --white: #FFFFFF;
+  --black: #000000;
+  --ibm-magenta-50: #DB2780;
+  --ibm-magenta-60: #A6266E;
+  --ibm-teal-20: #6EEDD8;
+  --ibm-teal-30: #41D6C3;
+  --ibm-teal-40: #00B4A0;
+  --ibm-blue-10: #C0E6FF;
+  --ibm-blue-20: #7CC7FF;
+  --ibm-blue-30: #5AAAFA;
+  --ibm-blue-50: #4178BE;
+  --ibm-blue-60: #325c80;
+  --ibm-blue-80: #1D3649;
+  --ibm-blue-90: #152935;
+  --ibm-blue-70: #264A60;
+  --ibm-grey-50: #777677;
+  --ibm-grey-30: #AEAEAE;
+  --ibm-grey-10: #E0E0E0;
+  --ibm-cool-2: #F9F9FB;
+  --ibm-cool-gray-70: #3C4646;
+  --ibm-yellow-20: #FDD600;
+  --ibm-red-50: #E71D32;
+  --ibm-green-50: #4B8400;
+}
+
+/* SVG Canvas styles */
+
+.svg-canvas {
+  margin: '2px';
+  padding: '2px';
+  border: '1px solid black';
+  cursor: default;
+}
+
+.svg-canvas:focus {
+  outline: 1px solid transparent;
+}
+
+/* Canvas Styles */
+
+.canvas-zoom-controls {
+  position: absolute;
+  bottom: 96px;
+  left: 35px;
+  width: 48px;
+  height: 64px;
+}
+
+.canvas-zoom-controls img {
+  width: 24px;
+  height: 24px;
+}
+
+/* Node styles */
+
+.canvas-node {
+  cursor: 'move';
+  border: 2px solid transparent;
+  /* Prevent elements from being selectable */
+  /* This stops it being dragged incorrectly.*/
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+.canvas-node:focus {
+  outline: 1px dotted #9D005C;
+}
+
+.canvas-node.selected {
+  border: 2px dashed #60C3B9;
+}
+
+.canvas-node .node-icon {
+  display: block;
+  margin: auto;
+}
+
+.canvas-node .connector {
+}
+
+.canvas-node .cache-enabled {
+  background-image: url(../images/file_32.svg);
+  background-color: yellow;
+}
+
+.canvas-node .cache-full {
+  background-image: url(../images/file_32.svg);
+  background-color: green;
+}
+
+.canvas-node .supernode-zoom-in {
+  background-image: url(../images/zoom-in_32.svg);
+}
+
+.canvas-node p {
+  font-family: IBMHLVRoman;
+  font-size: 10pt;
+  white-space: nowrap;
+  color: rgb(0,0,0);
+  text-align: center;
+}
+
+.node-circle{
+
+}
+.node-inner-circle{
+
+}
+
+/* Comment styles */
+
+.canvas-comment {
+  cursor: 'move';
+  border: 2px solid transparent;
+  /* Prevent elements from being selectable */
+  /* This stops it being dragged incorrectly.*/
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+.canvas-comment:focus {
+  outline: 1px dotted #9D005C;
+}
+
+.canvas-comment.selected {
+  border: 2px dashed #60C3B9;
+}
+
+/* Link styles */
+
+.canvas-link {
+  border: 0;
+  margin: 0;
+  /* Prevent elements from being selectable */
+  /* This stops it being dragged incorrectly.*/
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+/* Palette styles */
+
+.palette-div {
+  position: absolute;
+  top: 80px;
+  left: 25px;
+  width: 351px;   /* Set default width to show two columns of nodes in grid view. */
+                  /* width = (2 * grid_node_width) + category_min_width + (2 * hoverZoneSize)*/
+  height: 376px;  /* If this is changed see palette-content height below */
+                  /* height = (3 * grid_node_height) + (2 * hoverZoneSize) + palette-topbar height + padding */
+  font: 12px sans-serif;
+  border: 3px solid transparent; /* transparent border provides sizing hover zone */
+  cursor: default; /* This stops Chrome displaying an I-beam cursor when dragging in the canvas. */
+  z-index: 2;
+}
+
+.palette-show-button {
+  position: absolute;
+  top: 90px;  /* palette-topbar has 10px padding */
+  left: 35px;  /* palette-topbar has 10px padding */
+  width: 48px;
+  height: 48px;
+  fill: #6eedd8;
+}
+
+#paletteTooltip {
+  position: fixed;  /* Override position to ensure the 'show palette' button tooltip is next to the button */
+}
+
+.palette-topbar {
+  height: 40px;
+  padding: 10px;
+  background-color:#1D2C3C;
+}
+
+.palette-topbar .left-navbar {
+  height:20px;
+  float:left;
+  vertical-align: middle;
+  /* Prevent elements from being selectable */
+  /* This stops it being dragged incorrectly.*/
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+.palette-topbar .right-navbar {
+  height:20px;
+  float:right;
+  vertical-align: middle;
+}
+
+.palette-topbar .secondary-action {
+  margin-left: 10px;
+  display: inline-block;
+  cursor: pointer;
+  width: 20px;
+}
+
+.palette-topbar .close-icon svg {
+  fill: #60C3B9;
+}
+
+.palette-content {
+  height: 330px;  /* palette-div height - topbar height - 6 pixels (for hover zone to aid drag sizing)*/
+  display: flex;
+  display:-webkit-flex;
+  background-color: white;
+  border-bottom: 1px solid lightgrey;
+  border-right: 1px solid lightgrey;
+}
+
+.palette-scroll {
+  overflow-y: auto;
+}
+
+.palette-categories {
+  font-family: IBMHLVRoman;
+  color: #e0e0e0;
+  background-color: #284B60;
+  font-size: 10pt;
+  width: 120px;
+  min-width: 120px; /* Set a min-width to ensure space for the scroll bar when it is displayed */
+}
+
+.palette-category {
+  padding: 10px;
+  border-width:0 0 0 2px;
+  /* Prevent elements from being selectable */
+  /* This stops it being dragged incorrectly.*/
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+.palette-category:hover {
+  color: #9D005C;
+}
+
+.palette-category-selected {
+  font-family: IBMHLVRoman;
+  font-size: 10pt;
+  color: #6eedd8;
+  background-color: #1C3648;
+  border-color: #60C3B9;
+  border-width:0 0 0 2px;
+  border-style: solid;
+  width:120px;
+  min-width: 120px;
+  padding-left:8px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+
+  /* Prevent elements from being selectable */
+  /* This stops it being dragged incorrectly.*/
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+.palette-grid-node-outer {
+  width: 112px;
+  height: 110px;
+  display: inline-block; /* This makes the nodes layout across and then down inside the content area. */
+  vertical-align: middle; /* This makes the contents of this div align in the middle vertically. */
+  text-align: center;     /* This makes the contents of this div (text and icon) align in the center horizontally. */
+  border-width: 1px;
+  border-color: lightgrey;
+  border-style: solid;
+  font-size: 10pt;
+  fill: #9D005C;
+  color: black;
+  /* Prevent elements from being selectable */
+  /* This stops it being dragged incorrectly.*/
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+.palette-grid-node-outer:hover {
+  border-color: #9D005C;
+  color: #9D005C;
+}
+
+.palette-grid-node-inner {
+  padding-top: 16px;
+}
+
+.palette-grid-node-icon svg {
+  display: inline-block;
+}
+
+.palette-grid-node-icon .node-icon {
+  width: 64px;
+  height: 64px;
+}
+
+.palette-grid-node-text {
+  font-family: IBMHLVRoman;
+  font-size: 10pt;
+  width: 100%;
+  padding-top: 6px;
+}
+
+.palette-content-list {
+  width: 100%;
+}
+
+.palette-list-item {
+  height: 50px;
+  border-width: 1px;
+  border-color: lightgrey;
+  border-style: solid;
+  font-family: IBMHLVRoman;
+  font-size: 10pt;
+  display: flex;
+  display:-webkit-flex;
+  fill: #9D005C;
+  color: black;
+  /* Prevent elements from being selectable */
+  /* This stops it being dragged incorrectly.*/
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+.palette-list-item:hover {
+  border-color: #9D005C;
+  color: #9D005C;
+}
+
+.palette-list-item-icon {
+  line-height: 54px; /* Must be same as containing div height plus half the icon size */
+  height: 32px;
+  width: 32px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.palette-list-item-text-div {
+}
+
+.palette-list-item-text-span {
+  line-height: 50px;  /* Must be same as containing div height */
+}
+
+.three-way-icon-div {
+  margin-left: 5px;
+  display: inline-block;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  /* Prevent elements from being selectable */
+  /* This stops it being dragged incorrectly.*/
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+
+/* Context Menu styles */
+
+.context-menu-popover {
+  min-width: 160px;
+  padding: 5px 0;
+  margin: 2px 0 0;
+  color: #f9f9fb;
+  text-align: left;
+  background-color: #1d3649;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, .15);
+  outline: none;
+  font-family: IBMHLVlight;
+}
+
+.context-menu-popover.popover>.arrow{
+  display: none !important;
+}
+.context-menu-popover.popover>.popover-content{
+  padding: 0px !important;
+}
+
+.customDivider {
+  height: 1px;
+  display: block;
+  margin: 0 2px;
+  overflow: hidden;
+  background-color: #8c8c8c;
+}
+
+/* Context Menu styles - used by react-contextmenu module */
+
+.react-context-menu {
+  min-width: 160px;
+  padding: 5px 0;
+  margin: 2px 0 0;
+  color: #f9f9fb;
+  text-align: left;
+  background-color: #1d3649;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: .25rem;
+  outline: none;
+  font-family: IBMHLVlight;
+}
+
+.react-context-menu-link {
+  display: inline-block;
+  width: 100%;
+  padding: 3px 10px;
+  clear: both;
+  color: #f9f9fb;
+  text-align: inherit;
+  white-space: nowrap;
+  background: 0 0;
+  border: 0;
+}
+
+.react-context-menu-link.active,
+.react-context-menu-link:hover {
+  /*color: #41d6c3;*/
+  color: #262626;
+  background-color: #41d6c3;
+  /*background-color: #152935;*/
+  /*border-color: #0275d8;*/
+  text-decoration: none;
+}
+
+.react-context-menu-item.submenu > a {
+  padding-right: 27px;
+}
+
+.react-context-menu-item.submenu > a:after {
+  content: "▶";
+  display: inline-block;
+  position: absolute;
+  right: 7px;
+}

@@ -12,10 +12,10 @@
 ** deposited with the U.S. Copyright Office.
 *****************************************************************/
 
-import React from 'react'
-import ReactDOM from 'react-dom'
-import PaletteTopbar from './palette-topbar.jsx'
-import PaletteContent from './palette-content.jsx'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import PaletteTopbar from './palette-topbar.jsx';
+import PaletteContent from './palette-content.jsx';
 
 
 class Palette extends React.Component {

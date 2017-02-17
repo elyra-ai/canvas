@@ -13,17 +13,12 @@ describe('CommonCanvas renders correctly', () => {
 
     it('all required props should have been defined', () => {
         const wrapper = createCommonCanvas();
-        expect(wrapper.stream).to.be.defined;
-        expect(wrapper.initialSelection).to.be.defined;
-        expect(wrapper.paletteJSON).to.be.defined;
-        expect(wrapper.showContextMenu).to.be.defined;
-        expect(wrapper.contextMenuInfo).to.be.defined;
-        expect(wrapper.openContextMenu).to.be.defined;
-        expect(wrapper.closeContextMenu).to.be.defined;
-        expect(wrapper.contextMenuAction).to.be.defined;
-        expect(wrapper.editDiagramHandler).to.be.defined;
-        expect(wrapper.nodeEditHandler).to.be.defined;
-        expect(wrapper.expandSuperNodeHandler).to.be.defined;
+
+        expect(JSON.stringify(wrapper.props().children[0].props.stream)).to.be.not.undefined;
+        expect(JSON.stringify(wrapper.props().children[0].props.initialSelection)).to.be.not.undefined;
+        expect(JSON.stringify(wrapper.props().children[0].props.paletteJSON)).to.be.not.undefined;
+        expect(JSON.stringify(wrapper.props().children[0].props.showContextMenu)).to.be.not.undefined;
+        expect(JSON.stringify(wrapper.props().children[0].props.contextMenuInfo)).to.be.not.undefined;
     });
 
     it('should render one <DialogEditor/> component', () => {
@@ -59,7 +54,7 @@ function createCommonCanvas() {
     const contextMenuAction = sinon.spy();
     const editDiagHandler = sinon.spy();
     const nodeEditHandler = sinon.spy();
-    const expandSuperNodeHandler = sinon.spy();
+    const supernodeZoomInHandler = sinon.spy();
     const wrapper = shallow(<CommonCanvas
     stream={stream}
     initialSelection={initSel}
@@ -71,7 +66,7 @@ function createCommonCanvas() {
     contextMenuAction={contextMenuAction}
     editDiagramHandler={editDiagHandler}
     nodeEditHandler={nodeEditHandler}
-    expandSuperNodeHandler={expandSuperNodeHandler}/>);
+    supernodeZoomInHandler={supernodeZoomInHandler}/>);
 
   return wrapper;
 }

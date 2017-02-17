@@ -14,7 +14,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {ContextMenu, MenuItem } from 'react-contextmenu';
+import { MenuItem } from 'react-contextmenu';
 
 class CommonContextMenu extends React.Component {
   constructor(props) {

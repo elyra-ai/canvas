@@ -12,11 +12,10 @@
 ** deposited with the U.S. Copyright Office.
 *****************************************************************/
 
-import React from 'react'
-import ReactDOM from 'react-dom'
-import { ContextMenuLayer } from 'react-contextmenu'
+import React from 'react';
+import ReactDOM from 'react-dom';
 import {DND_DATA_TEXT} from '../constants/common-constants.js';
-import {Tooltip,OverlayTrigger} from 'react-bootstrap'
+import {Tooltip,OverlayTrigger} from 'react-bootstrap';
 
 // export default class Node extends React.Component {
 class Node extends React.Component {

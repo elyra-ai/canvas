@@ -14,8 +14,6 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { ContextMenuLayer } from 'react-contextmenu';
-import {Popover} from 'react-bootstrap';
 import enhanceWithClickOutside from 'react-click-outside';
 
 
@@ -60,7 +58,7 @@ class ContextMenuWrapper extends React.Component {
 ContextMenuWrapper.propTypes = {
   positionLeft:React.PropTypes.number.isRequired,
   positionTop:React.PropTypes.number.isRequired,
-  contextMenu: React.PropTypes.array.isRequired,
+  contextMenu: React.PropTypes.object.isRequired,
   handleClickOutside:React.PropTypes.func
 };
 

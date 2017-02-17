@@ -12,9 +12,9 @@
 ** deposited with the U.S. Copyright Office.
 *****************************************************************/
 
-import React from 'react'
-import ReactDOM from 'react-dom'
-import PaletteContentGridNode from './palette-content-grid-node.jsx'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import PaletteContentGridNode from './palette-content-grid-node.jsx';
 
 
 class PaletteContentGrid extends React.Component {
