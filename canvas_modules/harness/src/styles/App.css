@@ -14,8 +14,8 @@
 #canvas {
   height: 100%;
   width: 100%;
-  z-index: -1;
   overflow: auto;
+  padding-top: 60px;
 }
 
 #title {
@@ -33,7 +33,7 @@
   padding: 0;
   overflow: hidden;
   background-color: #1D3649;
-  z-index: 2;
+  z-index: 3;
 }
 
 .navbar-li {
@@ -73,6 +73,7 @@
 #app-console {
   font-size: small;
   border-top: 10px solid #1D3649;
+  background-color: rgba(243, 243, 243, 0.8);
   position:fixed;
   bottom: -10px;
   width: 100%;
@@ -80,6 +81,7 @@
   -webkit-transition:height 2s;
   transition: height 2s;
   overflow-y: auto;
+  z-index: 1;
 }
 
 /*SidePanel*/
@@ -93,7 +95,7 @@
   transition: width 2s;
   color: #D2D2D2;
   /*overflow-x:auto;*/
-  z-index: 1;
+  z-index: 2;
   box-sizing: border-box;
   font-size: small;
 }

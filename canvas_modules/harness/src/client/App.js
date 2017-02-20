@@ -393,7 +393,7 @@ class App extends React.Component {
 					contextMenuAction= {this.contextMenuAction}
 					editDiagramHandler= {this.editDiagramHandler}
 					nodeEditHandler= {this.nodeEditHandler}
-					expandSuperNodeHandler= {this.refreshContent}
+					supernodeZoomInHandler= {this.refreshContent}
 				/>
 			</div>);
 		}

@@ -31,6 +31,7 @@ export default class SidePanelForms extends React.Component {
 
 	onCanvasFileSelect(evt) {
 		this.setState({ canvasDiagram: "" });
+		this.props.setDiagramJSON(null);
 		if (evt.target.files.length > 0) {
 			var filename = evt.target.files[0].name;
 			var fileExt = filename.substring(filename.lastIndexOf(".") + 1);
@@ -43,6 +44,7 @@ export default class SidePanelForms extends React.Component {
 
 	onCanvasPaletteSelect(evt) {
 		this.setState({ canvasPalette: "" });
+		this.props.setPaletteJSON({});
 		this.props.enableNavPalette(false);
 		if (evt.target.files.length > 0) {
 			var filename = evt.target.files[0].name;
