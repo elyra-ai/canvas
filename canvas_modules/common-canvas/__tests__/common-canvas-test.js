@@ -54,7 +54,7 @@ function createCommonCanvas() {
     const contextMenuAction = sinon.spy();
     const editDiagHandler = sinon.spy();
     const nodeEditHandler = sinon.spy();
-    const supernodeZoomInHandler = sinon.spy();
+    const decorationHandler = sinon.spy();
     const wrapper = shallow(<CommonCanvas
     stream={stream}
     initialSelection={initSel}
@@ -66,7 +66,7 @@ function createCommonCanvas() {
     contextMenuAction={contextMenuAction}
     editDiagramHandler={editDiagHandler}
     nodeEditHandler={nodeEditHandler}
-    supernodeZoomInHandler={supernodeZoomInHandler}/>);
+    decorationHandler={decorationHandler}/>);
 
   return wrapper;
 }

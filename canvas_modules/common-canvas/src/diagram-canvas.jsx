@@ -74,12 +74,8 @@ export default class DiagramCanvas extends React.Component {
 
     this.isSelected = this.isSelected.bind(this);
 
-    this.createSuperNode = this.createSuperNode.bind(this);
-
     this.deleteObjects = this.deleteObjects.bind(this);
     this.disconnectNodes = this.disconnectNodes.bind(this);
-    this.createSuperNodeFromNodes = this.createSuperNodeFromNodes.bind(this);
-    this.expandSuperNode = this.expandSuperNode.bind(this);
     this.moveNodes = this.moveNodes.bind(this);
 
     this.getSelectedObjectCount = this.getSelectedObjectCount.bind(this);
@@ -96,43 +92,6 @@ export default class DiagramCanvas extends React.Component {
 
     this.getConnctionArrowHeads = this.getConnctionArrowHeads.bind(this);
     this.createObjectStoreNodeAt = this.createObjectStoreNodeAt.bind(this);
-    /*
-    this.solidLineStyle = {
-      stroke: 'black',
-      fill: 'none',
-      markerMid: "url(#markerArrow)"
-    };
-    */
-
-    this.solidLineStyle = {
-      stroke: 'black',
-      fill: 'none',
-      strokeWidth: '2'
-    };
-
-    this.dependencyLineStyle = {
-      stroke: 'black',
-      fill: 'none',
-      strokeDasharray: '5, 5'
-    };
-
-    this.commentLineStyle = {
-      stroke: 'gray',
-      fill: 'none',
-      strokeDasharray: '7, 3'
-    };
-
-    this.selectLineStyle = {
-      stroke: 'grey',
-      fill: 'none',
-      strokeDasharray: '2, 2'
-    };
-
-    this.backgroundLineStyle = {
-      stroke: 'white',
-      fill: 'none',
-      strokeWidth: 10
-    }
   }
 
   componentDidMount() {
@@ -151,7 +110,6 @@ export default class DiagramCanvas extends React.Component {
   }
 
   getConnctionArrowHeads(positions) {
-
       return this.props.diagram.links.map((link, ind) => {
           // console.log(link);
           var posFrom = positions[link.source];
@@ -495,9 +453,6 @@ export default class DiagramCanvas extends React.Component {
     else if (action == 'connOut') {
       this.outputLink(node.id);
     }
-    else if (action == 'supernodeZoomIn') {
-      this.supernodeZoomIn(node.id);
-    }
   }
 
   contextMenuClicked(action) {
@@ -586,10 +541,6 @@ export default class DiagramCanvas extends React.Component {
     this.disconnectNodes(this.ensureSelected(nodeId));
   }
 
-  createSuperNode(nodeId) {
-    this.createSuperNodeFromNodes(this.ensureSelected(nodeId));
-  }
-
   moveNode(nodeId, offsetX, offsetY) {
     // console.log("moveNode():x=" + offsetX + ",y=" + offsetY);
     this.moveNodes(this.ensureSelected(nodeId), offsetX, offsetY);
@@ -656,11 +607,6 @@ export default class DiagramCanvas extends React.Component {
     }
   }
 
-  supernodeZoomIn(nodeId) {
-    //console.log("supernodeZoomIn: " + nodeId);
-    this.props.supernodeZoomInHandler(this.props.stream.id, nodeId);
-  }
-
   selectObject(objectId, toggleSelection) {
     // console.log("selectObject: " + objectId + ", toggle=" + toggleSelection);
     let index = this.state.selectedObjects.indexOf(objectId);
@@ -702,20 +648,6 @@ export default class DiagramCanvas extends React.Component {
     });
   }
 
-  createSuperNodeFromNodes(nodeIds) {
-    this.props.editDiagramHandler({
-      editType: 'createSuperNode',
-      nodes: nodeIds
-    });
-  }
-
-  expandSuperNode(nodeId) {
-    this.props.editDiagramHandler({
-      editType: 'expandSuperNode',
-      nodes: [nodeId]
-    });
-  }
-
   moveNodes(nodeIds, offsetX, offsetY) {
     this.props.editDiagramHandler({
       editType: 'moveObjects',
@@ -724,8 +656,6 @@ export default class DiagramCanvas extends React.Component {
       offsetY: offsetY
     })
   }
-
-  // ----------------------------------
 
   // Utility methods
 
@@ -1032,16 +962,16 @@ export default class DiagramCanvas extends React.Component {
       var lineStyle;
       if (!isBackground) {
         if (link.linkType == "object") {
-          lineStyle = this.dependencyLineStyle;
+          lineStyle = "dependencyLineStyle";
         }
         else if (link.linkType == "comment") {
-          lineStyle = this.commentLineStyle;
+          lineStyle = "commentLineStyle";
         }
         else {
-          lineStyle = this.solidLineStyle;
+          lineStyle = "solidLineStyle";
         }
       } else {
-        lineStyle = this.backgroundLineStyle;
+        lineStyle = "backgroundLineStyle";
       }
 
       let d = null;
@@ -1072,72 +1002,7 @@ export default class DiagramCanvas extends React.Component {
           id={link.id}
           key={key}
           d={d}
-          style={lineStyle}
-        />
-      );
-    });
-  }
-
-  makeLinks_old(positions) {
-    return this.props.diagram.links.map((link, ind) => {
-      // console.log(link);
-      var posFrom = positions[link.source];
-      var posTo = positions[link.target];
-
-      // Older streams where the comments don't have unique IDs may not
-      // have the comment IDs set correctly which in turn means the
-      // the 'posFrom' or 'posTo' settings many not be correct.
-      // For now, simply discard the link so we can still show the
-      // rest of the stream.
-      if (posFrom == undefined || posTo == undefined) {
-        return null;
-      }
-
-      /*
-      <line key={link.id}
-        x1={posFrom.outX} y1={posFrom.y} x2={posTo.inX} y2={posTo.y} style={lineStyle}
-        markerStart="url(#markerCircle)" markerEnd="url(#markerArrow)"/>
-      */
-
-      var lineStyle;
-      if (link.linkType == "object") {
-        lineStyle = this.dependencyLineStyle;
-      }
-      else if (link.linkType == "comment") {
-        lineStyle = this.commentLineStyle;
-      }
-      else {
-        lineStyle = this.solidLineStyle;
-      }
-
-      /*
-      var midX = (posTo.inX - posFrom.outX) /2;
-      var midY = (posTo.y - posFrom.y) /2;
-      var d="M" + posFrom.outX + "," + posFrom.y +
-        " l" + midX + "," + midY + " l" + midX + "," + midY;
-      */
-      let d = null;
-      let midX = null;
-      let midY = Math.round(posFrom.y + ((posTo.y - posFrom.y) /2));
-      let data = null;
-      if (link.linkType == "comment") {
-        data = {x1: posFrom.midX, y1: posFrom.y, x2: posTo.midX, y2: posTo.y};
-        d = this.getStraightPath(data, false);
-        midX = Math.round(posFrom.midX + ((posTo.midX - posFrom.midX) /2));
-      }
-      else {
-        data = {x1: posFrom.outX, y1: posFrom.y, x2: posTo.inX, y2: posTo.y};
-        d = this.getConnectorPath(data);
-        midX = Math.round(posFrom.outX + ((posTo.inX - posFrom.outX) /2));
-      }
-
-      let that = this;
-      return (
-        <path
-          id={link.id}
-          key={ind}
-          d={d}
-          style={lineStyle}
+          className={lineStyle}
         />
       );
     });
@@ -1205,6 +1070,7 @@ export default class DiagramCanvas extends React.Component {
                 nodeActionHandler={this.nodeAction.bind(this, node)}
                 onContextMenu={this.objectContextMenu.bind(this, "node", node)}
                 selected={this.state.selectedObjects.indexOf(node.id) >= 0}
+                decorationHandler={this.props.decorationHandler}
                 >
               </Node>;
 
@@ -1259,7 +1125,6 @@ export default class DiagramCanvas extends React.Component {
     let connectionLinks = this.makeLinksConnections(positions);
     viewLinks = (this.makeLinksBackgrounds(positions)).concat(connectionLinks);
     let connectionArrowHeads = this.getConnctionArrowHeads(positions);
-    //viewLinks = this.makeLinks_old(positions);
 
     let emptyDraggable = <div ref="emptyDraggable"></div>;
     let emptyCanvas = null;
@@ -1327,5 +1192,5 @@ DiagramCanvas.propTypes = {
   contextMenuAction: React.PropTypes.func.isRequired,
   editDiagramHandler: React.PropTypes.func.isRequired,
   nodeEditHandler: React.PropTypes.func.isRequired,
-  supernodeZoomInHandler: React.PropTypes.func.isRequired
+  decorationHandler: React.PropTypes.func.isRequired
 };

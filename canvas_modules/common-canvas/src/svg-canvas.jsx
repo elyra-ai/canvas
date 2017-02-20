@@ -106,26 +106,20 @@ export default class SVGCanvas extends React.Component {
     let viewLinks=[];
     // If necessary, draw the select region or link
     if (this.state.dragging) {
-      let selectLineStyle = {
-        stroke: 'grey',
-        fill: 'none',
-        strokeDasharray: '2, 2'
-      };
-
       if (this.state.dragMode == DRAG_SELECT_REGION) {
         let minX = Math.min(this.state.startX, this.state.endX);
         let minY = Math.min(this.state.startY, this.state.endY);
         let width = Math.abs(this.state.startX - this.state.endX);
         let height = Math.abs(this.state.startY - this.state.endY);
         viewLinks.push(<rect key={-1}
-            x={minX} y={minY} width={width} height={height} style={selectLineStyle} strokeWidth={1}
+            x={minX} y={minY} width={width} height={height} className='selectLineStyle'
           />);
       }
       else if (this.state.dragMode == DRAG_LINK) {
         viewLinks.push(<line key={-1}
             x1={this.state.startX} y1={this.state.startY}
             x2={this.state.endX} y2={this.state.endY}
-            style={selectLineStyle} strokeWidth={1}
+            className='selectLineStyle'
           />);
       }
     }

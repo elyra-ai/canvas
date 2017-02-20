@@ -121,20 +121,6 @@
 .canvas-node .connector {
 }
 
-.canvas-node .cache-enabled {
-  background-image: url(../images/file_32.svg);
-  background-color: yellow;
-}
-
-.canvas-node .cache-full {
-  background-image: url(../images/file_32.svg);
-  background-color: green;
-}
-
-.canvas-node .supernode-zoom-in {
-  background-image: url(../images/zoom-in_32.svg);
-}
-
 .canvas-node p {
   font-family: IBMHLVRoman;
   font-size: 10pt;
@@ -184,6 +170,36 @@
   -moz-user-select: none;
   -o-user-select: none;
   user-select: none;
+}
+
+.solidLineStyle {
+	stroke: black;
+	fill: none;
+	stroke-width: 2;
+}
+
+.dependencyLineStyle {
+	stroke: black;
+	fill: none;
+	stroke-dasharray: 5.5;
+}
+
+.commentLineStyle {
+	stroke: gray;
+	fill: none;
+	stroke-dasharray: 7.3;
+}
+
+.selectLineStyle {
+	stroke: gray;
+	fill: none;
+	stroke-dasharray: 2.2;
+}
+
+.backgroundLineStyle {
+	stroke: white;
+	fill: none;
+	strokeWidth: 10
 }
 
 /* Palette styles */

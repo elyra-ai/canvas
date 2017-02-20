@@ -42,6 +42,8 @@ class Node extends React.Component {
     this.handleMouseEnter = this.handleMouseEnter.bind(this);
     this.handleMouseLeave = this.handleMouseLeave.bind(this);
     this.handleMouseEnterInnerCircle = this.handleMouseEnterInnerCircle.bind(this);
+
+    this.getDecorationStyle = this.getDecorationStyle.bind(this);
   }
 
 
@@ -153,6 +155,27 @@ class Node extends React.Component {
     this.setState({ context: true });
   }
 
+  getDecorationStyle(position) {
+    var decorationStyle = {
+      position: 'absolute',
+      width: this.props.uiconf.connSize,
+      height: this.props.uiconf.connSize,
+      zIndex:1
+    };
+
+    if (position === "top-left") {
+      decorationStyle.top = 0;
+      decorationStyle.left = this.props.uiconf.connOffsets.inLeft;
+
+    }
+    else if (position === "top-right") {
+      decorationStyle.top = 0;
+      decorationStyle.right = this.props.uiconf.connOffsets.outRight;
+    }
+
+    return decorationStyle;
+  }
+
   render() {
     // console.log("Node.render()");
     // console.log(this.props.node);
@@ -180,24 +203,6 @@ class Node extends React.Component {
       height: this.props.uiconf.connSize,
       top: this.props.uiconf.connOffsets.top,
       right: this.props.uiconf.connOffsets.outRight,
-    };
-
-    var cacheStyle = {
-      position: 'absolute',
-      width: this.props.uiconf.connSize,
-      height: this.props.uiconf.connSize,
-      top: 0,
-      right: this.props.uiconf.connOffsets.outRight,
-      zIndex:1
-    };
-
-    var supernodeZoomInStyle = {
-      position: 'absolute',
-      width: this.props.uiconf.connSize,
-      height: this.props.uiconf.connSize,
-      top: 0,
-      left: this.props.uiconf.connOffsets.inLeft,
-      zIndex:1
     };
 
     let connectorImage = "/canvas/images/forward_32.svg";
@@ -236,14 +241,15 @@ class Node extends React.Component {
         />;
     }
 
-    var supernodeZoomIn = [];
-    if (this.props.node.subDiagramId) {
-      supernodeZoomIn = <img className="supernode-zoom-in" style={supernodeZoomInStyle} onClick={this.props.nodeActionHandler.bind(null, 'supernodeZoomIn')}/>;
-    }
-
-    var cache = [];
-    if (this.props.node.cacheState != "disabled") {
-      cache = <img className={"cache-" + this.props.node.cacheState} style={cacheStyle}/>;
+    var decorations = [];
+    if (this.props.decorationHandler) {
+      this.props.decorationHandler(this.props.node).map((d) =>
+        {
+          decorations.push(
+            <img className={d.className} style={this.getDecorationStyle(d.position)}
+              onClick={d.actionHandler}/>);
+        }
+      );
     }
 
     var className = "canvas-node";
@@ -289,7 +295,6 @@ class Node extends React.Component {
 
 
   let paddingCircleStyle = {
-
         top: cTop,
         left: cLeft,
         width: cWidth,
@@ -302,8 +307,8 @@ class Node extends React.Component {
 
   };
 
-  let circleStyle = (this.state.showCircle)
-    ? {
+  let circleStyle = (this.state.showCircle) ?
+    {
         top: cTop,
         left: cLeft,
         width: cWidth,
@@ -388,9 +393,6 @@ class Node extends React.Component {
       height: this.props.uiconf.iconSize
     };
 
-
-
-
     return (
       <div>
         {circle}
@@ -400,14 +402,12 @@ class Node extends React.Component {
           >
         <div>
           <div style={nodeIconPlaceholderStyle}/>
-          {supernodeZoomIn}
-          {cache}
+            {decorations}
+          </div>
+          <div style={{'textAlign':'center'}}>
+            {labelWithTooltipView}
+          </div>
         </div>
-        <div style={{'textAlign':'center'}}>
-          {labelWithTooltipView}
-        </div>
-
-      </div>
       </div>
     );
   }
@@ -419,7 +419,8 @@ Node.propTypes = {
   nodeActionHandler: React.PropTypes.func,
   onContextMenu: React.PropTypes.func,
   uiconf: React.PropTypes.object,
-  selected: React.PropTypes.bool
+  selected: React.PropTypes.bool,
+  decorationHandler: React.PropTypes.func
 };
 
 export default Node;
