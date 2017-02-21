@@ -14,7 +14,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {DND_DATA_TEXT} from '../../../constants/constants.js';
+import {DND_DATA_TEXT} from '../constants/common-constants.js';
 
 class Comment extends React.Component {
   constructor(props) {
@@ -251,7 +251,7 @@ class Comment extends React.Component {
             onDrop={this.drop}
             onContextMenu={this.props.onContextMenu}
           >
-            <div 
+            <div
               className={className}
               style={commentStyle}
               draggable="true"
