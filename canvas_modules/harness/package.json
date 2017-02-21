@@ -6,9 +6,9 @@
     "start": "node index.js",
     "test": "grunt test"
   },
-  "engines": {
-    "node": "4.4.1",
-    "npm": "2.14.20"
+	"engines": {
+    "node": "4.4.7",
+    "npm": "3.10.8"
   },
   "dependencies": {
     "@wdp/common-canvas": "file:../common-canvas",

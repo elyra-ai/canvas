@@ -11,7 +11,7 @@ var path = require("path");
 
 module.exports = {
 	context: path.join(__dirname, "/src/"),
-
+	devtool: "#inline-source-map",
 	entry: {
 		lib: "./common-canvas.jsx"
 	},
@@ -19,10 +19,9 @@ module.exports = {
 		library: "Common-Canvas",
 		libraryTarget: "commonjs2",
 		filename: "common-canvas.js",
-		path: path.join(__dirname, "/dist")
+		path: path.join(__dirname, "/dist"),
+		sourceMapFilename: "[file].map",
 	},
-
-
 	module: {
 		loaders: [
 			{
@@ -35,18 +34,7 @@ module.exports = {
 			}
 		]
 	},
-
-
 	resolve: {
-		extensions: ["", ".js", ".jsx"]
-	},
-
-	externals: {
-		react: {
-			root: "React",
-			commonjs: "react",
-			commonjs2: "react",
-			amd: "react"
-		}
+		extensions: [".js", ".jsx"]
 	}
 };
