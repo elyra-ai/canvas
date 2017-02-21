@@ -112,10 +112,7 @@ var postcss = [
 module.exports = {
 	entry: entry,
 	resolve: {
-		modulesDirectories: ["web_modules", "node_modules"],
-		alias: {
-			react: path.resolve("./node_modules/react")
-		}
+		modulesDirectories: ["web_modules", "node_modules"]
 	},
 	// Uncomment this to see details of Webpack build failures
 	// stats: {

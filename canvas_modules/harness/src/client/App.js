@@ -11,8 +11,8 @@ import React from "react";
 import Isvg from "react-inlinesvg";
 import ReactTooltip from "react-tooltip";
 
-import CommonCanvas from "../../../common-canvas/src/common-canvas.jsx";
-// import CommonCanvas from "@wdp/common-canvas";
+// import CommonCanvas from "../../../common-canvas/src/common-canvas.jsx";
+import CommonCanvas from "@wdp/common-canvas";
 
 import "../styles/App.css";
 
