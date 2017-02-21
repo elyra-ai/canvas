@@ -302,7 +302,7 @@ class Node extends React.Component {
         border: `${ 8 * zoom}px solid white`,
         position: 'absolute',
         borderRadius: '50%',
-
+        boxSizing: "border-box",
         backgroundColor : 'white'
 
   };
@@ -317,6 +317,7 @@ class Node extends React.Component {
         position: 'absolute',
         borderRadius: '50%',
         zIndex:1,
+        boxSizing: "border-box",
         //backgroundColor : 'yellow'
     }
     : {
@@ -327,6 +328,7 @@ class Node extends React.Component {
       position: 'absolute',
       borderRadius: '50%',
       zIndex:1,
+      boxSizing: "border-box",
       //backgroundColor : 'yellow'
     };
 
