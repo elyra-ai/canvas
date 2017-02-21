@@ -112,17 +112,13 @@ var postcss = [
 module.exports = {
 	entry: entry,
 	resolve: {
-		modulesDirectories: ["web_modules", "node_modules"]
+		modulesDirectories: ["web_modules", "node_modules"],
+		alias: {
+			"react": path.join(__dirname, "node_modules", "react"),
+			"react-dom": path.join(__dirname, "node_modules", "react-dom")
+		},
+		extensions: ["", ".js", ".jsx"]
 	},
-	// Uncomment this to see details of Webpack build failures
-	// stats: {
-	// 	errorDetails: true
-	// },
-	// Uncomment below to help debug a production build
-	// debug: true,
-	// devtool: "source-map",
-	// devtoolModuleFilenameTemplate: "[resource]",
-	// pathinfo: true,
 	output: output,
 	module: {
 		loaders: loaders

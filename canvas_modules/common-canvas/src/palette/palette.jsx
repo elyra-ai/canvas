@@ -98,13 +98,13 @@ class Palette extends React.Component {
 
   mouseDownOnTopBar(event){
     this.dragging = true;
-    let paletteDiv = ReactDOM.findDOMNode(this.refs.palette);
+    let paletteDiv = document.getElementById("palette-div");
     this.dragOffsetX = event.clientX - paletteDiv.offsetLeft;
     this.dragOffsetY = event.clientY - paletteDiv.offsetTop;
   }
 
   mouseDownOnPalette(event){
-    let paletteDiv = ReactDOM.findDOMNode(this.refs.palette);
+    let paletteDiv = document.getElementById("palette-div");
 
     if (this.verticalSizingHover !== "" ||
         this.horizontalSizingHover !== "") {
@@ -118,7 +118,7 @@ class Palette extends React.Component {
   }
 
   mouseMove (event){
-    let paletteDiv = ReactDOM.findDOMNode(this.refs.palette);
+    let paletteDiv = document.getElementById("palette-div");
     let canvasDiv = document.getElementById("canvas-div");
 
     // First, see if we are doing a sizing action (i.e. the user has
@@ -324,7 +324,7 @@ class Palette extends React.Component {
   // palette stays inside the canvas and is a size that allows it to fit
   // into the canvas.
   windowResize () {
-    let paletteDiv = ReactDOM.findDOMNode(this.refs.palette);
+    let paletteDiv = document.getElementById("palette-div");
     let canvasDiv = document.getElementById("canvas-div");
 
     if (canvasDiv) {
@@ -375,7 +375,7 @@ class Palette extends React.Component {
 
   // Called when the user double clicks the title bar.
   windowMaximize() {
-    let paletteDiv = ReactDOM.findDOMNode(this.refs.palette);
+    let paletteDiv = document.getElementById("palette-div");
     let canvasDiv = document.getElementById("canvas-div");
 
     if (canvasDiv) {
@@ -430,6 +430,7 @@ class Palette extends React.Component {
 
     return (
       <div className="palette-div"
+				   id="palette-div"
            ref="palette"
            onMouseDown={this.mouseDownOnPalette}
            style={{display : displayValue}}>
