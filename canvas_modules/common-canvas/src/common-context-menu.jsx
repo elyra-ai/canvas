@@ -14,7 +14,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { MenuItem } from 'react-contextmenu';
+import { MenuItem, SubMenu } from 'react-contextmenu';
 
 class CommonContextMenu extends React.Component {
   constructor(props) {
@@ -30,27 +30,39 @@ class CommonContextMenu extends React.Component {
     this.props.contextHandler(data.action);
   }
 
-  render() {
+  buildMenu(menuDefinition) {
     const customDivider = {
       className: 'customDivider'
     };
 
-    var menuItems = [];
-    for (var i = 0; i < this.props.menuDefinition.length; ++i) {
-      const divider = this.props.menuDefinition[i].divider;
+    let menuItems = [];
+    for (let i = 0; i < menuDefinition.length; ++i) {
+      const divider = menuDefinition[i].divider;
+      const submenu = menuDefinition[i].submenu;
       if (divider) {
         menuItems.push(<MenuItem attributes={customDivider} key={i+1} divider/>);
       }
+      else if (submenu) {
+        let submenuItems = this.buildMenu(menuDefinition[i].menu);
+        menuItems.push(<SubMenu title={menuDefinition[i].label}>
+            {submenuItems}
+          </SubMenu>);
+      }
       else {
-        let data = {action: this.props.menuDefinition[i].action};
+        let data = {action: menuDefinition[i].action};
         menuItems.push(<MenuItem
           data={data}
           onClick={this.itemSelected.bind(null, data)}
           key={i+1}>
-          {this.props.menuDefinition[i].label}
+          {menuDefinition[i].label}
         </MenuItem>);
       }
     }
+    return menuItems;
+  }
+
+  render() {
+    let menuItems = this.buildMenu(this.props.menuDefinition);
 
     return (
       <div>

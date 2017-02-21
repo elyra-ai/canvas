@@ -54,6 +54,7 @@ export default class DiagramCanvas extends React.Component {
       targetNodes: [],
       dragging: false,
       dragMode: null,
+	  editCommentInfo: {},
       zoom: INITIAL_ZOOM_OFFSET
     };
 
@@ -361,6 +362,7 @@ export default class DiagramCanvas extends React.Component {
     // Don't clear the selection if the canvas context menu is up
     if (!this.props.showContextMenu) {
       this.clearSelection();
+	  this.finalizedEditComment();
     }
   }
 
@@ -369,6 +371,9 @@ export default class DiagramCanvas extends React.Component {
   }
 
   objectContextMenu(objectType, object, event) {
+	// finalize edit of comments
+    this.finalizedEditComment()
+
     let canvasDiv = document.getElementById("canvas-div");
     let rect = canvasDiv.getBoundingClientRect();
 
@@ -392,13 +397,18 @@ export default class DiagramCanvas extends React.Component {
   }
 
   canvasContextMenu(event) {
+	// finalize edit of comments
+    this.finalizedEditComment();
+
     let mousePos = this.mouseCoords(event);
+    let selectedObjects = this.state.selectedObjects;
 
     event.preventDefault();
 
     if (event.target.id == "" || event.target.id == "empty-canvas") {
       this.props.openContextMenu({
         type: "canvas",
+        selectedObjectIds: selectedObjects,
         mousePos: mousePos});
     }
 
@@ -445,6 +455,10 @@ export default class DiagramCanvas extends React.Component {
           // Otherwise if the drag started on an output connector, assume the drop target is the target
           this.linkSelected([jsVal.id], [node.id]);
         }
+		else if (jsVal.connType == 'comment') {
+          // Otherwise if the drag started on an output connector, assume the drop target is the target
+          this.linkCommentSelected([jsVal.id], [node.id]);
+        }
       }
     }
     else if (action == 'connIn') {
@@ -470,11 +484,24 @@ export default class DiagramCanvas extends React.Component {
   }
 
   commentAction(comment, action, optionalArgs = []) {
-    //console.log("commentAction: " + action);
-    //console.log(comment);
     if (action == 'selected') {
       // The event is passed as the third arg
       this.selectObject(comment.id, optionalArgs.shiftKey);
+	} else if (action == 'editComment') {
+	  let editCommentInfo = {
+	    id: comment.id,
+	    text: comment.text
+	  }
+      this.setState({editCommentInfo: editCommentInfo});
+    } else if (action == 'changeComment') {
+      // save the new comment text change
+      if (this.state.editCommentInfo.id == comment.id) {
+        let editCommentInfo = {
+         id: comment.id,
+         text: optionalArgs.target.value
+        }
+        this.setState({editCommentInfo: editCommentInfo});
+      }
     }
   }
 
@@ -565,6 +592,15 @@ export default class DiagramCanvas extends React.Component {
     });
   }
 
+  linkCommentSelected(sources, targets) {
+    this.props.editDiagramHandler({
+      editType: 'linkComment',
+      nodes: sources,
+      targetNodes: targets,
+      linkType: 'comment'
+    });
+  }
+
   inputLink(nodeId) {
     // console.log("inputLink()");
     if (this.state.targetNodes.indexOf(nodeId) >= 0) {
@@ -629,6 +665,11 @@ export default class DiagramCanvas extends React.Component {
         selectedObjects: [objectId]
       });
     }
+
+    // finalize edit of comments
+    if (this.state.editCommentInfo.id !== undefined && objectId !== this.state.editCommentInfo.id) {
+        this.finalizedEditComment()
+    }
   }
 
   // Edit operation methods
@@ -657,6 +698,21 @@ export default class DiagramCanvas extends React.Component {
     })
   }
 
+  finalizedEditComment() {  
+      if (this.state.editCommentInfo.id !== undefined) {
+        var nodes = [this.state.editCommentInfo.id];  
+        this.props.editDiagramHandler({
+          editType: 'editComment',
+          nodes: nodes,
+          label: this.state.editCommentInfo.text
+        });
+      
+        this.setState({
+          editCommentInfo: {}
+        });
+      }
+    }
+ 
   // Utility methods
 
 
@@ -1092,6 +1148,11 @@ export default class DiagramCanvas extends React.Component {
       //console.log("Comment: " + comment.text);
       //console.log(comment);
 
+	  var editable = false;
+      if (this.state.editCommentInfo.id !== undefined ) {
+          editable=(this.state.editCommentInfo.id == comment.id);
+      }
+
       var viewComment = <Comment
                 key={comment.id}
                 comment={comment}
@@ -1100,6 +1161,7 @@ export default class DiagramCanvas extends React.Component {
                 commentActionHandler={this.commentAction.bind(this, comment)}
                 onContextMenu={this.objectContextMenu.bind(this, "comment", comment)}
                 selected={this.state.selectedObjects.indexOf(comment.id) >= 0}
+				editable={editable}
                 >
               </Comment>;
 

@@ -107,12 +107,12 @@ export default class CommonCanvas extends React.Component {
     }
 
     return (
-			<div className="fill-vertical">
-				{canvas}
-				{addButton}
-				{zoomControls}
-				{popupPalette}
-			</div>
+      <div className="fill-vertical">
+        {canvas}
+        {zoomControls}
+        {addButton}
+        {popupPalette}
+      </div>
 		);
 	}
 }

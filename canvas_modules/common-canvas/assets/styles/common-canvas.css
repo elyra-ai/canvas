@@ -158,6 +158,13 @@
   border: 2px dashed #60C3B9;
 }
 
+.comment-box{
+
+}
+.comment-inner-box{
+
+}
+
 /* Link styles */
 
 .canvas-link {
@@ -206,8 +213,8 @@
 
 .palette-div {
   position: absolute;
-  top: 80px;
-  left: 25px;
+  bottom: 20px;
+  left: 60px;
   width: 351px;   /* Set default width to show two columns of nodes in grid view. */
                   /* width = (2 * grid_node_width) + category_min_width + (2 * hoverZoneSize)*/
   height: 376px;  /* If this is changed see palette-content height below */
@@ -220,8 +227,8 @@
 
 .palette-show-button {
   position: absolute;
-  top: 90px;  /* palette-topbar has 10px padding */
-  left: 35px;  /* palette-topbar has 10px padding */
+  bottom: 0px;
+  left: 35px;
   width: 48px;
   height: 48px;
   fill: #6eedd8;
