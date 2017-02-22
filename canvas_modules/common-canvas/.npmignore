@@ -24,6 +24,3 @@ coverage
 
 # Dependency directory
 node_modules
-
-# Build directoy
-/dist
