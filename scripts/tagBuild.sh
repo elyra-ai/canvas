@@ -2,7 +2,9 @@
 
 set -e
 
-TAG_NAME=$TRAVIS_BRANCH-$TRAVIS_BUILD_NUMBER
+BUILDNUM="$1"
+
+TAG_NAME=$TRAVIS_BRANCH-$BUILDNUM
 
 echo "Setting github tag $TAG_NAME"
 git config --global user.email "builds@travis-ci.ibm.com"
