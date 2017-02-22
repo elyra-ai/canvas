@@ -59,7 +59,7 @@ class PaletteContentListItem extends React.Component {
            onDragOver={this.onDragOver}
            className="palette-list-item">
        <div className="palette-list-item-icon">
-         <img src={this.props.nodeTemplate.iconpath} alt={this.props.nodeTemplate.label}/>
+         <img src={this.props.nodeTemplate.image} alt={this.props.nodeTemplate.label}/>
        </div>
        <div className="palette-list-item-text-div">
          <span className="palette-list-item-text-span">

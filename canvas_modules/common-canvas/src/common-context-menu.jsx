@@ -25,9 +25,7 @@ class CommonContextMenu extends React.Component {
   }
 
   itemSelected(data) {
-    console.log("CanvasContextMenu.itemSelected");
-    console.log(data);
-    this.props.contextHandler(data.action);
+    this.props.contextHandler(data);
   }
 
   buildMenu(menuDefinition) {
@@ -40,7 +38,7 @@ class CommonContextMenu extends React.Component {
       const divider = menuDefinition[i].divider;
       const submenu = menuDefinition[i].submenu;
       if (divider) {
-        menuItems.push(<MenuItem attributes={customDivider} key={i+1} divider/>);
+        menuItems.push(<MenuItem attributes={customDivider} key={i+1} onClick={()=>{}} divider/>);
       }
       else if (submenu) {
         let submenuItems = this.buildMenu(menuDefinition[i].menu);
@@ -49,10 +47,8 @@ class CommonContextMenu extends React.Component {
           </SubMenu>);
       }
       else {
-        let data = {action: menuDefinition[i].action};
         menuItems.push(<MenuItem
-          data={data}
-          onClick={this.itemSelected.bind(null, data)}
+          onClick={this.itemSelected.bind(null, menuDefinition[i].action)}
           key={i+1}>
           {menuDefinition[i].label}
         </MenuItem>);

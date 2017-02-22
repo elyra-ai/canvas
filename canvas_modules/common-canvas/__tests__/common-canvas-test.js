@@ -14,11 +14,9 @@ describe('CommonCanvas renders correctly', () => {
     it('all required props should have been defined', () => {
         const wrapper = createCommonCanvas();
 
-        expect(JSON.stringify(wrapper.props().children[0].props.stream)).to.be.not.undefined;
+        expect(JSON.stringify(wrapper.props().children[0].props.diagram)).to.be.not.undefined;
         expect(JSON.stringify(wrapper.props().children[0].props.initialSelection)).to.be.not.undefined;
         expect(JSON.stringify(wrapper.props().children[0].props.paletteJSON)).to.be.not.undefined;
-        expect(JSON.stringify(wrapper.props().children[0].props.showContextMenu)).to.be.not.undefined;
-        expect(JSON.stringify(wrapper.props().children[0].props.contextMenuInfo)).to.be.not.undefined;
     });
 
     it('should render one <DialogEditor/> component', () => {
@@ -44,29 +42,23 @@ describe('CommonCanvas renders correctly', () => {
 });
 
 function createCommonCanvas() {
-    const stream = {};
-    const initSel = {};
-    const palJSON = {};
-    const showContextMenu = true;
-    const contextMenuInfo = {};
-    const openContextMenu = sinon.spy();
-    const closeContextMenu = sinon.spy();
-    const contextMenuAction = sinon.spy();
-    const editDiagHandler = sinon.spy();
-    const nodeEditHandler = sinon.spy();
+    const diagram = {};
+    const initialSelection = {};
+    const paletteJSON = {};
+    const contextMenuHandler = sinon.spy();
+    const contextMenuActionHandler = sinon.spy();
+    const editDiagramHandler = sinon.spy();
+    const nodeDblClickedHandler = sinon.spy();
     const decorationHandler = sinon.spy();
     const wrapper = shallow(<CommonCanvas
-    stream={stream}
-    initialSelection={initSel}
-    paletteJSON={palJSON}
-    showContextMenu={showContextMenu}
-    contextMenuInfo={contextMenuInfo}
-    openContextMenu={openContextMenu}
-    closeContextMenu={closeContextMenu}
-    contextMenuAction={contextMenuAction}
-    editDiagramHandler={editDiagHandler}
-    nodeEditHandler={nodeEditHandler}
-    decorationHandler={decorationHandler}/>);
+      diagram={diagram}
+      initialSelection={initialSelection}
+      paletteJSON={paletteJSON}
+      contextMenuHandler={contextMenuHandler}
+      contextMenuActionHandler={contextMenuActionHandler}
+      editDiagramHandler={editDiagramHandler}
+      nodeDblClickedHandler={nodeDblClickedHandler}
+      decorationHandler={decorationHandler}/>);
 
   return wrapper;
 }

@@ -44,6 +44,7 @@ class Node extends React.Component {
     this.handleMouseEnterInnerCircle = this.handleMouseEnterInnerCircle.bind(this);
 
     this.getDecorationStyle = this.getDecorationStyle.bind(this);
+    this.decorationClicked = this.decorationClicked.bind(this);
   }
 
 
@@ -146,13 +147,17 @@ class Node extends React.Component {
     //console.log("Node.nodeDblClicked()");
     //console.log(ev)
     ev.stopPropagation();
-    this.props.nodeActionHandler('editNode', ev);
+    this.props.nodeActionHandler('nodeDblClicked', ev);
   }
 
   showContext(ev) {
     console.log("showContext()");
     console.log(ev);
     this.setState({ context: true });
+  }
+
+  decorationClicked(id) {
+    this.props.decorationActionHandler(this.props.node, id);
   }
 
   getDecorationStyle(position) {
@@ -163,13 +168,20 @@ class Node extends React.Component {
       zIndex:1
     };
 
-    if (position === "top-left") {
+    if (position === "topLeft") {
       decorationStyle.top = 0;
       decorationStyle.left = this.props.uiconf.connOffsets.inLeft;
-
     }
-    else if (position === "top-right") {
+    else if (position === "topRight") {
       decorationStyle.top = 0;
+      decorationStyle.right = this.props.uiconf.connOffsets.outRight;
+    }
+    else if (position === "bottomLeft") {
+      decorationStyle.bottom = 0;
+      decorationStyle.left = this.props.uiconf.connOffsets.inLeft;
+    }
+    else if (position === "bottomRight") {
+      decorationStyle.bottom = 0;
       decorationStyle.right = this.props.uiconf.connOffsets.outRight;
     }
 
@@ -242,12 +254,17 @@ class Node extends React.Component {
     }
 
     var decorations = [];
-    if (this.props.decorationHandler) {
-      this.props.decorationHandler(this.props.node).map((d) =>
+    if (this.props.node.decorations) {
+      decorations = this.props.node.decorations.map((d) =>
         {
-          decorations.push(
-            <img className={d.className} style={this.getDecorationStyle(d.position)}
-              onClick={d.actionHandler}/>);
+          if (d.hotspot === true) {
+            return (<div className={d.className}
+              style={this.getDecorationStyle(d.position)}
+              onClick={this.decorationClicked.bind(this, d.id)}/>);
+          } else {
+            return (<div className={d.className}
+              style={this.getDecorationStyle(d.position)}/>);
+          }
         }
       );
     }
@@ -304,7 +321,6 @@ class Node extends React.Component {
         borderRadius: '50%',
         boxSizing: "border-box",
         backgroundColor : 'white'
-
   };
 
   let circleStyle = (this.state.showCircle) ?
@@ -316,8 +332,8 @@ class Node extends React.Component {
         border: `${ 7 * zoom}px solid #4178be`,
         position: 'absolute',
         borderRadius: '50%',
-        zIndex:1,
-        boxSizing: "border-box",
+        zIndex: 1,
+        boxSizing: "border-box"
         //backgroundColor : 'yellow'
     }
     : {
@@ -327,8 +343,8 @@ class Node extends React.Component {
       height: cHeight,
       position: 'absolute',
       borderRadius: '50%',
-      zIndex:1,
-      boxSizing: "border-box",
+      zIndex: 1,
+      boxSizing: "border-box"
       //backgroundColor : 'yellow'
     };
 
@@ -422,7 +438,7 @@ Node.propTypes = {
   onContextMenu: React.PropTypes.func,
   uiconf: React.PropTypes.object,
   selected: React.PropTypes.bool,
-  decorationHandler: React.PropTypes.func
+  decorationActionHandler: React.PropTypes.func
 };
 
 export default Node;

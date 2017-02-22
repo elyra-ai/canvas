@@ -60,7 +60,7 @@ class PaletteContentNode extends React.Component {
            className="palette-grid-node-outer">
         <div className="palette-grid-node-inner">
           <div className="palette-grid-node-icon">
-            <img className="node-icon" src={this.props.nodeTemplate.iconpath} alt={this.props.nodeTemplate.label}/>
+            <img className="node-icon" src={this.props.nodeTemplate.image} alt={this.props.nodeTemplate.label}/>
           </div>
           <div className="palette-grid-node-text">
             {this.props.nodeTemplate.label}

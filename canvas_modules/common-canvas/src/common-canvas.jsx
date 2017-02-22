@@ -25,6 +25,7 @@ export default class CommonCanvas extends React.Component {
     super(props);
 
     this.state = {
+      isPaletteOpen: false
     };
 
     this.openPalette = this.openPalette.bind(this);
@@ -67,21 +68,17 @@ export default class CommonCanvas extends React.Component {
     let addButton = <div></div>;
     let zoomControls = <div></div>;
 
-    if (this.props.stream !== null) {
+    if (this.props.diagram !== null) {
       canvas = <DiagramCanvas ref="canvas"
-                    stream={this.props.stream}
-                    diagram={this.props.stream.diagram}
+                    diagram={this.props.diagram}
                     initialSelection={this.props.initialSelection}
                     paletteJSON={this.props.paletteJSON}
                     openPaletteMethod={this.openPalette}
-                    showContextMenu={this.props.showContextMenu}
-                    contextMenuInfo={this.props.contextMenuInfo}
-                    openContextMenu={this.props.openContextMenu}
-                    closeContextMenu={this.props.closeContextMenu}
-                    contextMenuAction={this.props.contextMenuAction}
+                    contextMenuHandler={this.props.contextMenuHandler}
+                    contextMenuActionHandler={this.props.contextMenuActionHandler}
                     editDiagramHandler={this.props.editDiagramHandler}
-                    nodeEditHandler={this.props.nodeEditHandler}
-                    decorationHandler={this.props.decorationHandler}>
+                    nodeDblClickedHandler={this.props.nodeDblClickedHandler}
+                    decorationActionHandler={this.props.decorationActionHandler}>
                 </DiagramCanvas>;
       popupPalette = <Palette paletteJSON={this.props.paletteJSON}
                     showPalette={this.state.isPaletteOpen}
@@ -118,15 +115,12 @@ export default class CommonCanvas extends React.Component {
 }
 
 CommonCanvas.propTypes = {
-    stream: React.PropTypes.object,
+    diagram: React.PropTypes.object,
     initialSelection: React.PropTypes.object,
     paletteJSON: React.PropTypes.object,
-    showContextMenu: React.PropTypes.bool,
-    contextMenuInfo: React.PropTypes.object,
-    openContextMenu: React.PropTypes.func,
-    closeContextMenu: React.PropTypes.func.isRequired,
-    contextMenuAction: React.PropTypes.func.isRequired,
+    contextMenuHandler: React.PropTypes.func,
+    contextMenuActionHandler: React.PropTypes.func,
     editDiagramHandler: React.PropTypes.func,
-    nodeEditHandler: React.PropTypes.func,
-    decorationHandler: React.PropTypes.func
+    nodeDblClickedHandler: React.PropTypes.func,
+    decorationActionHandler: React.PropTypes.func
 };
