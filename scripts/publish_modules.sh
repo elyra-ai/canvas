@@ -13,10 +13,10 @@ echo "Publishing common-canvas to NPM"
 cd ../canvas_modules/common-canvas
 npm publish
 
-cd ../../
+cd ../
 
 echo "Publishing common-properties to NPM"
-cd ../canvas_modules/common-properties
+cd ./common-properties
 npm publish
 
 cd $WORKING_DIR
