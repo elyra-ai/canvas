@@ -6,12 +6,11 @@ set -e
 WORKING_DIR="$PWD"
 SCRIPT_DIR=$(dirname "$0")
 
-cd $SCRIPT_DIR
-cd ../canvas_modules/common-canvas
+cd ./canvas_modules/common-canvas
 # Get the build number from the package
 BUILDNUM=`node -p "require('./package.json').version"`
 # Tag the release build before publishing
-cd $SCRIPT_DIR
+cd ../../scripts
 ./tagBuild.sh $BUILDNUM
 
 echo "Publishing common-canvas $BUILDNUM to NPM"
