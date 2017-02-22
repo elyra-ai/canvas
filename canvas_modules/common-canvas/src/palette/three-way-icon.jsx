@@ -13,7 +13,6 @@
 *****************************************************************/
 
 import React from 'react';
-import ReactDOM from 'react-dom';
 
 class ThreeWayIcon extends React.Component {
   constructor(props) {

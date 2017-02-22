@@ -13,7 +13,6 @@
 *****************************************************************/
 
 import React from 'react';
-import ReactDOM from 'react-dom';
 import Isvg from 'react-inlinesvg';
 import ThreeWayIcon from './three-way-icon.jsx';
 

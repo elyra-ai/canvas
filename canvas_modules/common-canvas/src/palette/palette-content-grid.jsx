@@ -13,7 +13,6 @@
 *****************************************************************/
 
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PaletteContentGridNode from './palette-content-grid-node.jsx';
 
 

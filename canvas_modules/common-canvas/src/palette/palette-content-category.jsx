@@ -13,7 +13,6 @@
 *****************************************************************/
 
 import React from 'react';
-import ReactDOM from 'react-dom';
 
 class PaletteContentCategory extends React.Component {
   constructor(props) {

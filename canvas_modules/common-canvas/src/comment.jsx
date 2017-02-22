@@ -13,7 +13,6 @@
 *****************************************************************/
 
 import React from 'react';
-import ReactDOM from 'react-dom';
 import {DND_DATA_TEXT} from '../constants/common-constants.js';
 
 class Comment extends React.Component {
@@ -207,6 +206,12 @@ class Comment extends React.Component {
         //backgroundColor : 'yellow'
       };
 
+      if (this.props.cutable) {
+        commentStyle.zoom = 1;
+        commentStyle.filter = "alpha(opacity=50)";
+        commentStyle.opacity = 0.5;
+      };
+
       let innerBoxStyle =
          {
            top: bInnerTop,
@@ -282,6 +287,7 @@ Comment.propTypes = {
   fontSize: React.PropTypes.number,
   zoom: React.PropTypes.number,
   selected: React.PropTypes.bool,
+  cutable: React.PropTypes.bool,
   editable: React.PropTypes.bool
 };
 

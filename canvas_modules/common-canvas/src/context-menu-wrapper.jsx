@@ -13,7 +13,6 @@
 *****************************************************************/
 
 import React from 'react';
-import ReactDOM from 'react-dom';
 import enhanceWithClickOutside from 'react-click-outside';
 
 

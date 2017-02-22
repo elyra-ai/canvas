@@ -13,8 +13,6 @@
 *****************************************************************/
 
 import React from 'react';
-import ReactDOM from 'react-dom';
-
 import {DND_DATA_TEXT} from '../../constants/common-constants.js';
 
 class PaletteContentListItem extends React.Component {

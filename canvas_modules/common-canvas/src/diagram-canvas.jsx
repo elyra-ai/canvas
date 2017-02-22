@@ -13,7 +13,6 @@
 *****************************************************************/
 
 import React from 'react';
-import ReactDOM from 'react-dom';
 
 import Node from './node.jsx';
 import Comment from './comment.jsx';
@@ -1125,6 +1124,12 @@ export default class DiagramCanvas extends React.Component {
       zoom: zoom
     };
 
+    let cutableIds = [];
+    let clipboard = this.props.clipboardOwner.getClipboard();
+    if (clipboard !== null && clipboard.isCut && clipboard.diagramId == this.props.diagram.id) {
+      cutableIds = clipboard.objectIds;
+    }
+
     // TODO - pass a ref to the canvas (or a size config) rather than passing
     // multiple, individual, identical size params to every node
     viewNodes = this.props.diagram.nodes.map((node) => {
@@ -1138,6 +1143,7 @@ export default class DiagramCanvas extends React.Component {
                 nodeActionHandler={this.nodeAction.bind(this, node)}
                 onContextMenu={this.objectContextMenu.bind(this, "node", node)}
                 selected={this.state.selectedObjects.indexOf(node.id) >= 0}
+                cutable={cutableIds.indexOf(node.id) >= 0}
                 decorationActionHandler={this.props.decorationActionHandler}
                 >
               </Node>;
@@ -1173,7 +1179,8 @@ export default class DiagramCanvas extends React.Component {
                 commentActionHandler={this.commentAction.bind(this, comment)}
                 onContextMenu={this.objectContextMenu.bind(this, "comment", comment)}
                 selected={this.state.selectedObjects.indexOf(comment.id) >= 0}
-				editable={editable}
+                cutable={cutableIds.indexOf(comment.id) >= 0}
+				        editable={editable}
                 >
               </Comment>;
 
@@ -1257,6 +1264,7 @@ DiagramCanvas.propTypes = {
   diagram: React.PropTypes.object,
   initialSelection: React.PropTypes.array,
   paletteJSON: React.PropTypes.object.isRequired,
+  clipboardOwner: React.PropTypes.object.isRequired,
   openPaletteMethod: React.PropTypes.func.isRequired,
   contextMenuHandler: React.PropTypes.func.isRequired,
   contextMenuActionHandler: React.PropTypes.func.isRequired,

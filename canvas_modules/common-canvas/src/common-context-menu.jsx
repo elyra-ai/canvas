@@ -13,7 +13,6 @@
 *****************************************************************/
 
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { MenuItem, SubMenu } from 'react-contextmenu';
 
 class CommonContextMenu extends React.Component {

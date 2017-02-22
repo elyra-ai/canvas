@@ -13,7 +13,6 @@
 *****************************************************************/
 
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PaletteTopbar from './palette-topbar.jsx';
 import PaletteContent from './palette-content.jsx';
 
@@ -35,6 +34,7 @@ class Palette extends React.Component {
     this.mouseUp = this.mouseUp.bind(this);
     this.windowResize = this.windowResize.bind(this);
     this.windowMaximize = this.windowMaximize.bind(this);
+    this.getPaletteDiv = this.getPaletteDiv.bind(this);
 
     // These variables are used when dragging the palette.
     this.dragging = false;
@@ -98,13 +98,13 @@ class Palette extends React.Component {
 
   mouseDownOnTopBar(event){
     this.dragging = true;
-    let paletteDiv = document.getElementById("palette-div");
+    let paletteDiv = this.getPaletteDiv();
     this.dragOffsetX = event.clientX - paletteDiv.offsetLeft;
     this.dragOffsetY = event.clientY - paletteDiv.offsetTop;
   }
 
   mouseDownOnPalette(event){
-    let paletteDiv = document.getElementById("palette-div");
+    let paletteDiv = this.getPaletteDiv();
 
     if (this.verticalSizingHover !== "" ||
         this.horizontalSizingHover !== "") {
@@ -118,7 +118,7 @@ class Palette extends React.Component {
   }
 
   mouseMove (event){
-    let paletteDiv = document.getElementById("palette-div");
+    let paletteDiv = this.getPaletteDiv();
     let canvasDiv = document.getElementById("canvas-div");
 
     // First, see if we are doing a sizing action (i.e. the user has
@@ -324,7 +324,7 @@ class Palette extends React.Component {
   // palette stays inside the canvas and is a size that allows it to fit
   // into the canvas.
   windowResize () {
-    let paletteDiv = document.getElementById("palette-div");
+    let paletteDiv = this.getPaletteDiv();
     let canvasDiv = document.getElementById("canvas-div");
 
     if (canvasDiv) {
@@ -375,7 +375,7 @@ class Palette extends React.Component {
 
   // Called when the user double clicks the title bar.
   windowMaximize() {
-    let paletteDiv = document.getElementById("palette-div");
+    let paletteDiv = this.getPaletteDiv();
     let canvasDiv = document.getElementById("canvas-div");
 
     if (canvasDiv) {
@@ -421,6 +421,10 @@ class Palette extends React.Component {
     }
   }
 
+  getPaletteDiv() {
+    return this.refs.palette;
+  }
+
   showGrid (state) {
     this.setState({showGrid: state});
   }
@@ -430,7 +434,6 @@ class Palette extends React.Component {
 
     return (
       <div className="palette-div"
-				   id="palette-div"
            ref="palette"
            onMouseDown={this.mouseDownOnPalette}
            style={{display : displayValue}}>

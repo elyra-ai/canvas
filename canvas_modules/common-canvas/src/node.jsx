@@ -13,7 +13,6 @@
 *****************************************************************/
 
 import React from 'react';
-import ReactDOM from 'react-dom';
 import {DND_DATA_TEXT} from '../constants/common-constants.js';
 import {Tooltip,OverlayTrigger} from 'react-bootstrap';
 
@@ -360,6 +359,13 @@ class Node extends React.Component {
          //backgroundColor : 'red'
       };
 
+    let iconStyle = {};
+    if (this.props.cutable) {
+      iconStyle.zoom = 1;
+      iconStyle.filter = "alpha(opacity=50)";
+      iconStyle.opacity = 0.5;
+    };
+
     //console.log('ZOOM : '+zoom);
     //console.log('circleStyle :'+JSON.stringify(circleStyle));
     let circle = <div>
@@ -394,7 +400,7 @@ class Node extends React.Component {
         onDrop={this.drop}
         onContextMenu={this.props.onContextMenu}
         >
-        <img
+        <img style={iconStyle}
             src={this.props.node.iconpath} alt={this.props.label}
             width={this.props.uiconf.iconSize}
             height={this.props.uiconf.iconSize}
@@ -438,6 +444,7 @@ Node.propTypes = {
   onContextMenu: React.PropTypes.func,
   uiconf: React.PropTypes.object,
   selected: React.PropTypes.bool,
+  cutable: React.PropTypes.bool,
   decorationActionHandler: React.PropTypes.func
 };
 
