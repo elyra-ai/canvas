@@ -72,7 +72,6 @@ export default class CommonCanvas extends React.Component {
                     diagram={this.props.diagram}
                     initialSelection={this.props.initialSelection}
                     paletteJSON={this.props.paletteJSON}
-                    clipboardOwner={this.props.clipboardOwner}
                     openPaletteMethod={this.openPalette}
                     contextMenuHandler={this.props.contextMenuHandler}
                     contextMenuActionHandler={this.props.contextMenuActionHandler}
@@ -118,7 +117,6 @@ CommonCanvas.propTypes = {
     diagram: React.PropTypes.object,
     initialSelection: React.PropTypes.object,
     paletteJSON: React.PropTypes.object,
-    clipboardOwner: React.PropTypes.object,
     contextMenuHandler: React.PropTypes.func,
     contextMenuActionHandler: React.PropTypes.func,
     editDiagramHandler: React.PropTypes.func,

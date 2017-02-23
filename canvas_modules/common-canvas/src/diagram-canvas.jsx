@@ -1140,7 +1140,7 @@ export default class DiagramCanvas extends React.Component {
     };
 
     let cutableIds = [];
-    let clipboard = this.props.clipboardOwner.getClipboard();
+    let clipboard = null;
     if (clipboard !== null && clipboard.isCut && clipboard.diagramId == this.props.diagram.diagram.id) {
       cutableIds = clipboard.objectIds;
     }
@@ -1278,7 +1278,6 @@ DiagramCanvas.propTypes = {
   diagram: React.PropTypes.object,
   initialSelection: React.PropTypes.array,
   paletteJSON: React.PropTypes.object.isRequired,
-  clipboardOwner: React.PropTypes.object.isRequired,
   openPaletteMethod: React.PropTypes.func.isRequired,
   contextMenuHandler: React.PropTypes.func.isRequired,
   contextMenuActionHandler: React.PropTypes.func.isRequired,
