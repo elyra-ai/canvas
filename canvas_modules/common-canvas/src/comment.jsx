@@ -14,18 +14,19 @@
 
 import React from 'react';
 import {DND_DATA_TEXT} from '../constants/common-constants.js';
+import CanvasUtils from '../utils/canvas-utils.js';
 
 class Comment extends React.Component {
   constructor(props) {
     super(props);
 
-    let fontPxSize = Math.round(this.props.fontSize * (96/72));  // convert from pt to px 
+    let fontPxSize = Math.round(this.props.fontSize * (96/72));  // convert from pt to px
     let roundedHeight = Math.round(Math.ceil(this.props.comment.height/fontPxSize)*fontPxSize);
 
     this.state = {
       showBox: false,
       context: false,
-      value: this.props.comment.text,
+      value: this.props.comment.content,
       width: this.props.comment.width,
       height: roundedHeight
     };
@@ -51,8 +52,8 @@ class Comment extends React.Component {
     this.handleMouseEnterInnerBox = this.handleMouseEnterInnerBox.bind(this);
   }
 
-  
-  
+
+
   handleMouseEnterInnerBox(ev){
       this.setState({
         showBox:false
@@ -85,7 +86,7 @@ class Comment extends React.Component {
           JSON.stringify({
             operation: 'link',
             id: this.props.comment.id,
-            label: this.props.comment.text,
+            label: this.props.comment.content,
             connType: connType
            }));
       }
@@ -108,7 +109,7 @@ class Comment extends React.Component {
       JSON.stringify({
         operation: 'move',
         id: this.props.comment.id,
-        label: this.props.comment.text
+        label: this.props.comment.content
        }));
   }
 
@@ -132,9 +133,9 @@ class Comment extends React.Component {
 
   commentChange(ev) {
     // determine when to increase the height of the comment box based on the number of characters entered
-    let fontPxSize = Math.round(this.props.fontSize * (96/72));  // convert from pt to px 
-    let charPerLine = Math.round(this.state.width/fontPxSize) * 2;  // approximate the number of characters per line based on font size  
-    let linesNeeded = Math.round(ev.target.value.length/ charPerLine);  
+    let fontPxSize = Math.round(this.props.fontSize * (96/72));  // convert from pt to px
+    let charPerLine = Math.round(this.state.width/fontPxSize) * 2;  // approximate the number of characters per line based on font size
+    let linesNeeded = Math.round(ev.target.value.length/ charPerLine);
     let numLines = Math.round(this.state.height / fontPxSize);
     //console.log(" CharPerRow = "+ charPerLine +" width = "+this.state.width+" numlines = "+numLines +" height = "+ this.state.height+
     //        " stringFontlen ="+ev.target.value.length+" rowsNeeded = "+linesNeeded)
@@ -169,8 +170,6 @@ class Comment extends React.Component {
       width: Math.round(this.state.width * zoom),
       height: Math.round(this.state.height * zoom),
       fontSize: this.props.fontSize,
-      background: this.props.comment.background,
-      color: this.props.comment.foreground,
       lineHeight: 1.0,
       overflow: 'hidden'
     };
@@ -180,12 +179,24 @@ class Comment extends React.Component {
       left: zoom,
       width: Math.round(this.state.width * zoom),
       height: Math.round(this.state.height * zoom),
-      fontSize: this.props.fontSize,      
+      fontSize: this.props.fontSize,
       overflow: 'auto',
       lineHeight: 1.0
-    }    
+    }
 
     var className = "canvas-comment";
+
+		if (typeof(this.props.comment.style) !== "undefined" && this.props.comment.style) {
+			// first convert the style string into a JSON object
+			let styleObject = CanvasUtils.convertStyleStringToJSONObject(this.props.comment.style);
+			// then merge JSON objects
+			Object.assign(commentStyle, styleObject);
+			Object.assign(textareaStyle, styleObject);
+		}
+
+		var className = (typeof(this.props.comment.className) !== "undefined" && this.props.comment.className) ?
+			this.props.comment.className : "canvas-comment";
+
     if (this.props.selected) {
       className += " selected";
     }

@@ -84,9 +84,34 @@ function getLinePointOnHalo(data, zoom) {
     return posHalo;
 }
 
+/**
+ * Converts a string of key-value pairs separated by delimiter into a JSON object
+ * @param {String} data string with key-value pairs
+ * @param {String} delimiter delimiter char, default: semi-colon
+ * @return {Object} JSON object
+ */
+function convertStyleStringToJSONObject(data, delimiter) {
+	let delimiterChar = (delimiter) ? delimiter : ";";
+	if (data) {
+		var result = {};
+		let items = data.split(delimiterChar);
+		items.forEach( (item) => {
+			let element = item.split(":");
+			if (element.length == 2) {
+				// ignore any invalid styles
+				result[element[0].trim()] = element[1].trim();
+			}
+		});
+		return result;
+	} else {
+		return {};
+	}
+}
+
 module.exports = {
     findSlope: findSlope,
     findNewPoint: findNewPoint,
     getArrowheadPoints: getArrowheadPoints,
-    getLinePointOnHalo: getLinePointOnHalo
+    getLinePointOnHalo: getLinePointOnHalo,
+		convertStyleStringToJSONObject: convertStyleStringToJSONObject
 }

@@ -179,34 +179,34 @@
   user-select: none;
 }
 
-.solidLineStyle {
+.canvas-data-link {
 	stroke: black;
 	fill: none;
 	stroke-width: 2;
 }
 
-.dependencyLineStyle {
+.canvas-object-link {
 	stroke: black;
 	fill: none;
 	stroke-dasharray: 5.5;
 }
 
-.commentLineStyle {
+.canvas-comment-link {
 	stroke: gray;
 	fill: none;
 	stroke-dasharray: 7.3;
+}
+
+.canvas-background-link {
+	stroke: white;
+	fill: none;
+	strokeWidth: 10
 }
 
 .selectLineStyle {
 	stroke: gray;
 	fill: none;
 	stroke-dasharray: 2.2;
-}
-
-.backgroundLineStyle {
-	stroke: white;
-	fill: none;
-	strokeWidth: 10
 }
 
 /* Palette styles */

@@ -15,6 +15,7 @@
 import React from 'react';
 import {DND_DATA_TEXT} from '../constants/common-constants.js';
 import {Tooltip,OverlayTrigger} from 'react-bootstrap';
+import CanvasUtils from '../utils/canvas-utils.js';
 
 // export default class Node extends React.Component {
 class Node extends React.Component {
@@ -200,6 +201,17 @@ class Node extends React.Component {
       height: this.props.uiconf.nodeHeight
     };
 
+		if (typeof(this.props.node.style) !== "undefined" && this.props.node.style) {
+			// first convert the style string into a JSON object
+			let styleObject = CanvasUtils.convertStyleStringToJSONObject(this.props.node.style);
+			// then merge JSON objects
+			Object.assign(nodeStyle, styleObject);
+		}
+
+/*
+		in/out connector styles are currently not used because of the halo style.
+		However, we will need these connectors for the ports, so not removing the code.
+
     var connInBtnStyle = {
       position: 'absolute',
       width: this.props.uiconf.connSize,
@@ -252,6 +264,8 @@ class Node extends React.Component {
         />;
     }
 
+		*/
+
     var decorations = [];
     if (this.props.node.decorations) {
       decorations = this.props.node.decorations.map((d) =>
@@ -268,7 +282,9 @@ class Node extends React.Component {
       );
     }
 
-    var className = "canvas-node";
+		var className = (typeof(this.props.node.className) !== "undefined" && this.props.node.className) ?
+			this.props.node.className : "canvas-node";
+
     if (this.props.selected) {
       className += " selected";
     }
@@ -400,8 +416,9 @@ class Node extends React.Component {
         onDrop={this.drop}
         onContextMenu={this.props.onContextMenu}
         >
+
         <img style={iconStyle}
-            src={this.props.node.iconpath} alt={this.props.label}
+            src={this.props.node.image} alt={this.props.label}
             width={this.props.uiconf.iconSize}
             height={this.props.uiconf.iconSize}
             onClick={this.nodeClicked}

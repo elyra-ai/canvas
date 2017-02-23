@@ -32,8 +32,10 @@ const FONT_SIZE = 10; // see main.css, .canvas-node p
 const SELECT_REGION_DATA = "[]";
 
 
-const ZOOM_FACTORS = [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.25, 1.5, 1.75, 2.0, 2.4];
-const INITIAL_ZOOM_OFFSET = 6;  // corresponds to ZOOM_FACTOR[6] which is 1.0
+// const ZOOM_FACTORS = [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.25, 1.5, 1.75, 2.0, 2.4];
+const ZOOM_DEFAULT_VALUE = 100;
+const ZOOM_MAX_VALUE = 240;
+const ZOOM_MIN_VALUE = 40;
 
 export default class DiagramCanvas extends React.Component {
   constructor(props) {
@@ -46,6 +48,7 @@ export default class DiagramCanvas extends React.Component {
       selectedObjects = props.initialSelection;
     }
 
+		let zoomValue = props.diagram.zoom && !Number.isNaN(props.diagram.zoom) ? props.diagram.zoom : ZOOM_DEFAULT_VALUE;
     this.state = {
       nodes: [],
       selectedObjects: selectedObjects,
@@ -55,8 +58,8 @@ export default class DiagramCanvas extends React.Component {
       contextMenuInfo: {},
       dragging: false,
       dragMode: null,
-	  editCommentInfo: {},
-      zoom: INITIAL_ZOOM_OFFSET
+      editCommentInfo: {},
+      zoom: zoomValue
     };
 
     this.connectorType == "curve"; // "straight", "curve" or "elbow"
@@ -113,7 +116,7 @@ export default class DiagramCanvas extends React.Component {
   }
 
   getConnctionArrowHeads(positions) {
-      return this.props.diagram.links.map((link, ind) => {
+      return this.props.diagram.diagram.links.map((link, ind) => {
           // console.log(link);
           var posFrom = positions[link.source];
           var posTo = positions[link.target];
@@ -155,25 +158,39 @@ export default class DiagramCanvas extends React.Component {
   }
 
   zoomIn() {
-    let zoom = this.state.zoom + 1;
-    if (zoom >= ZOOM_FACTORS.length) {
-      zoom = ZOOM_FACTORS.length - 1;
+    let zoom = this.state.zoom + 10;
+    if (zoom >= ZOOM_MAX_VALUE) {
+      zoom = ZOOM_MAX_VALUE;
     }
+
+/* TODO: add call to editDiagramHandler once psapi supports zoom action
+		this.props.editDiagramHandler({
+			editType: 'zoomCanvas',
+			value: zoom
+		});
+*/
     this.setState({zoom: zoom});
   }
 
   zoomOut() {
-    let zoom = this.state.zoom - 1;
+    let zoom = this.state.zoom - 10;
 
     // Lower than this and things start to look funny...
-    if (zoom < 0) {
-      zoom = 0;
-    }
+    if (zoom < ZOOM_MIN_VALUE) {
+      zoom = ZOOM_MIN_VALUE;
+		}
+
+/* TODO: add call to editDiagramHandler once psapi supports zoom action
+		this.props.editDiagramHandler({
+			editType: 'zoomCanvas',
+			value: zoom
+		});
+*/
     this.setState({zoom: zoom});
   }
 
   zoom() {
-    return ZOOM_FACTORS[this.state.zoom];
+    return this.state.zoom/100;
   }
 
   // minInitialLine is the size of the vertical line protruding from the source
@@ -736,13 +753,13 @@ export default class DiagramCanvas extends React.Component {
   selectInRegion(minX, minY, maxX, maxY) {
     // console.log("region: " + minX + "," + minY + " and " + maxX + "," + maxY);
     var selection = [];
-    for (let node of this.props.diagram.nodes) {
+    for (let node of this.props.diagram.diagram.nodes) {
       //console.log(node);
       if (node.xPos > minX && node.xPos < maxX && node.yPos > minY && node.yPos < maxY) {
         selection = selection.concat(node.id);
       }
     }
-    for (let comment of this.props.diagram.comments) {
+    for (let comment of this.props.diagram.diagram.comments) {
       //console.log(comment);
       if (comment.xPos > minX && comment.xPos < maxX && comment.yPos > minY && comment.yPos < maxY) {
         selection = selection.concat(comment.id);
@@ -755,13 +772,13 @@ export default class DiagramCanvas extends React.Component {
 
   selectAll() {
     console.log("selectAll()");
-    console.log(this.props.diagram.nodes);
+    console.log(this.props.diagram.diagram.nodes);
 
     let selection = [];
-    for (let node of this.props.diagram.nodes) {
+    for (let node of this.props.diagram.diagram.nodes) {
       selection = selection.concat(node.id);
     }
-    for (let comment of this.props.diagram.comments) {
+    for (let comment of this.props.diagram.diagram.comments) {
       selection = selection.concat(comment.id);
     }
     console.log(selection);
@@ -772,7 +789,7 @@ export default class DiagramCanvas extends React.Component {
 
   nodesByID(nodeIds) {
     let selection = [];
-    for (let node of this.props.diagram.nodes) {
+    for (let node of this.props.diagram.diagram.nodes) {
       //console.log(node);
       if (nodeIds.indexOf(node.id) >= 0) {
         selection = selection.concat(node);
@@ -1018,7 +1035,7 @@ export default class DiagramCanvas extends React.Component {
   }
 
   makeALinkSet(positions, isBackground) {
-    return this.props.diagram.links.map((link, ind) => {
+    return this.props.diagram.diagram.links.map((link, ind) => {
       // console.log(link);
       var posFrom = positions[link.source];
       var posTo = positions[link.target];
@@ -1032,42 +1049,33 @@ export default class DiagramCanvas extends React.Component {
         return null;
       }
 
-      var lineStyle;
+      var className = isBackground ? "canvas-background-link" : "canvas-data-link";
       if (!isBackground) {
-        if (link.linkType == "object") {
-          lineStyle = "dependencyLineStyle";
+        if (link.className !== "undefined" && link.className !== null) {
+          className = link.className;
         }
-        else if (link.linkType == "comment") {
-          lineStyle = "commentLineStyle";
-        }
-        else {
-          lineStyle = "solidLineStyle";
-        }
-      } else {
-        lineStyle = "backgroundLineStyle";
-      }
+			}
+
+			var lineStyle = {};
+			if (typeof(link.style) !== "undefined" && link.style) {
+				// convert the style string into a JSON object
+				lineStyle = CanvasUtils.convertStyleStringToJSONObject(link.style);
+			}
 
       let d = null;
       let midX = null;
       let midY = Math.round(posFrom.y + ((posTo.y - posFrom.y) /2));
       let data = null;
-      if (link.linkType == "comment") {
-        data = {x1: posFrom.midX, y1: posFrom.y, x2: posTo.midX, y2: posTo.y};
-        d = this.getStraightPath(data, false);
-        midX = Math.round(posFrom.midX + ((posTo.midX - posFrom.midX) /2));
-      }
-      else {
-        data = {x1: posFrom.outX, y1: posFrom.y, x2: posTo.inX, y2: posTo.y};
 
-        let posHalo = CanvasUtils.getLinePointOnHalo(data,this.zoom());
+      data = {x1: posFrom.outX, y1: posFrom.y, x2: posTo.inX, y2: posTo.y};
 
-        let dataForLine = {x1: posFrom.outX, y1: posFrom.y, x2: posHalo.x, y2: posHalo.y};
+      let posHalo = CanvasUtils.getLinePointOnHalo(data,this.zoom());
 
-        d = this.getStraightPathForLinks(dataForLine);//this.getStraightPath(data, false);//this.getConnectorPath(data);
-        midX = Math.round(posFrom.outX + ((posTo.inX - posFrom.outX) /2));
-      }
+      let dataForLine = {x1: posFrom.outX, y1: posFrom.y, x2: posHalo.x, y2: posHalo.y};
 
-//
+      d = this.getStraightPathForLinks(dataForLine);//this.getStraightPath(data, false);//this.getConnectorPath(data);
+      midX = Math.round(posFrom.outX + ((posTo.inX - posFrom.outX) /2));
+
       let that = this;
       let key = isBackground ? ind : ind + 10000;
       return (
@@ -1075,7 +1083,8 @@ export default class DiagramCanvas extends React.Component {
           id={link.id}
           key={key}
           d={d}
-          className={lineStyle}
+          className={className}
+					style={lineStyle}
         />
       );
     });
@@ -1132,13 +1141,13 @@ export default class DiagramCanvas extends React.Component {
 
     let cutableIds = [];
     let clipboard = this.props.clipboardOwner.getClipboard();
-    if (clipboard !== null && clipboard.isCut && clipboard.diagramId == this.props.diagram.id) {
+    if (clipboard !== null && clipboard.isCut && clipboard.diagramId == this.props.diagram.diagram.id) {
       cutableIds = clipboard.objectIds;
     }
 
     // TODO - pass a ref to the canvas (or a size config) rather than passing
     // multiple, individual, identical size params to every node
-    viewNodes = this.props.diagram.nodes.map((node) => {
+    viewNodes = this.props.diagram.diagram.nodes.map((node) => {
       let x = Math.round(node.xPos * zoom);
       let y = Math.round(node.yPos * zoom);
 
@@ -1165,7 +1174,7 @@ export default class DiagramCanvas extends React.Component {
       );
     });
 
-    viewComments = this.props.diagram.comments.map((comment) => {
+    viewComments = this.props.diagram.diagram.comments.map((comment) => {
       let x = Math.round(comment.xPos * zoom);
       let y = Math.round(comment.yPos * zoom);
 
@@ -1216,7 +1225,7 @@ export default class DiagramCanvas extends React.Component {
     let emptyDraggable = <div ref="emptyDraggable"></div>;
     let emptyCanvas = null;
 
-    if (this.props.diagram.nodes.length == 0) {
+    if (this.props.diagram.diagram.nodes.length == 0) {
       emptyCanvas = <div id="empty-canvas" onContextMenu={this.canvasContextMenu}> <img src='/canvas/images/blank_canvas.png'></img></div>;
     }
 /*
@@ -1228,7 +1237,6 @@ export default class DiagramCanvas extends React.Component {
     // TODO - include link icons
     return (
       <div id="canvas-div" style={parentStyle}
-          timestamp={this.props.diagram.timestamp}
           draggable='true'
           onDragOver={this.dragOver}
           onDrop={this.drop}
