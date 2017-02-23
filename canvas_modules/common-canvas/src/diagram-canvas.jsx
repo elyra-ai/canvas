@@ -502,7 +502,9 @@ export default class DiagramCanvas extends React.Component {
 	} else if (action == 'editComment') {
 	  let editCommentInfo = {
 	    id: comment.id,
-	    text: comment.text
+	    text: comment.text,
+	    width: comment.width,
+        height: comment.height
 	  }
       this.setState({editCommentInfo: editCommentInfo});
     } else if (action == 'changeComment') {
@@ -510,7 +512,9 @@ export default class DiagramCanvas extends React.Component {
       if (this.state.editCommentInfo.id == comment.id) {
         let editCommentInfo = {
          id: comment.id,
-         text: optionalArgs.target.value
+         text: optionalArgs.target.value,
+         width: optionalArgs.width,
+         height: optionalArgs.height
         }
         this.setState({editCommentInfo: editCommentInfo});
       }
@@ -715,7 +719,9 @@ export default class DiagramCanvas extends React.Component {
         this.props.editDiagramHandler({
           editType: 'editComment',
           nodes: nodes,
-          label: this.state.editCommentInfo.text
+          label: this.state.editCommentInfo.text,
+          width: this.state.editCommentInfo.width,
+          height: this.state.editCommentInfo.height
         });
 
         this.setState({
@@ -1180,7 +1186,7 @@ export default class DiagramCanvas extends React.Component {
                 onContextMenu={this.objectContextMenu.bind(this, "comment", comment)}
                 selected={this.state.selectedObjects.indexOf(comment.id) >= 0}
                 cutable={cutableIds.indexOf(comment.id) >= 0}
-				        editable={editable}
+				editable={editable}
                 >
               </Comment>;
 

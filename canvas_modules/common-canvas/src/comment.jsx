@@ -18,10 +18,16 @@ import {DND_DATA_TEXT} from '../constants/common-constants.js';
 class Comment extends React.Component {
   constructor(props) {
     super(props);
+
+    let fontPxSize = Math.round(this.props.fontSize * (96/72));  // convert from pt to px 
+    let roundedHeight = Math.round(Math.ceil(this.props.comment.height/fontPxSize)*fontPxSize);
+
     this.state = {
       showBox: false,
       context: false,
-      value: this.props.comment.text
+      value: this.props.comment.text,
+      width: this.props.comment.width,
+      height: roundedHeight
     };
     this.dragStart = this.dragStart.bind(this);
     //this.drag = this.drag.bind(this);
@@ -45,6 +51,8 @@ class Comment extends React.Component {
     this.handleMouseEnterInnerBox = this.handleMouseEnterInnerBox.bind(this);
   }
 
+  
+  
   handleMouseEnterInnerBox(ev){
       this.setState({
         showBox:false
@@ -123,8 +131,28 @@ class Comment extends React.Component {
   }
 
   commentChange(ev) {
-      this.setState({value: ev.target.value});
-      this.props.commentActionHandler('changeComment', ev);
+    // determine when to increase the height of the comment box based on the number of characters entered
+    let fontPxSize = Math.round(this.props.fontSize * (96/72));  // convert from pt to px 
+    let charPerLine = Math.round(this.state.width/fontPxSize) * 2;  // approximate the number of characters per line based on font size  
+    let linesNeeded = Math.round(ev.target.value.length/ charPerLine);  
+    let numLines = Math.round(this.state.height / fontPxSize);
+    //console.log(" CharPerRow = "+ charPerLine +" width = "+this.state.width+" numlines = "+numLines +" height = "+ this.state.height+
+    //        " stringFontlen ="+ev.target.value.length+" rowsNeeded = "+linesNeeded)
+    //console.log("text ="+ev.target.value)
+    if (linesNeeded > numLines) {
+        this.setState({height: Math.round(this.state.height+fontPxSize)}); // increase the height by one Font size
+    }
+
+    this.setState({value: ev.target.value});
+
+    let evValues = {value: ev.target.value};
+    let optArg = {
+      target: evValues,
+      width: this.state.width,
+      height: this.state.height
+    }
+
+    this.props.commentActionHandler('changeComment', optArg);
   }
 
   showContext(ev) {
@@ -138,8 +166,8 @@ class Comment extends React.Component {
       position: 'absolute',
       top: zoom,
       left: zoom,
-      width: Math.round(this.props.comment.width * zoom),
-      height: Math.round(this.props.comment.height * zoom),
+      width: Math.round(this.state.width * zoom),
+      height: Math.round(this.state.height * zoom),
       fontSize: this.props.fontSize,
       background: this.props.comment.background,
       color: this.props.comment.foreground,
@@ -147,26 +175,31 @@ class Comment extends React.Component {
       overflow: 'hidden'
     };
 
+    var textareaStyle = {
+      top: zoom,
+      left: zoom,
+      width: Math.round(this.state.width * zoom),
+      height: Math.round(this.state.height * zoom),
+      fontSize: this.props.fontSize,      
+      overflow: 'auto',
+      lineHeight: 1.0
+    }    
+
     var className = "canvas-comment";
     if (this.props.selected) {
       className += " selected";
     }
 
-    var commentArea = <p>{this.state.value}</p>;
-    if (this.props.editable) {
-        commentArea = <textarea value={this.state.value} spellCheck="true" onChange={this.commentChange} ></textarea>;
-    }
-
     let bTop = Math.round(this.props.comment.yPos * zoom) - (10 * zoom);
     let bLeft = Math.round(this.props.comment.xPos * zoom) + (10 * zoom);
-    let bWidth = Math.round(this.props.comment.width * zoom) + (25 * zoom);
-    let bHeight = Math.round(this.props.comment.height * zoom) + (20 * zoom);
+    let bWidth = Math.round(this.state.width * zoom) + (25 * zoom);
+    let bHeight = Math.round(this.state.height * zoom) + (20 * zoom);
 
 
     let bInnerTop = Math.round(this.props.comment.yPos * zoom) - (zoom);
     let bInnerLeft = Math.round(this.props.comment.xPos * zoom) + (20 * zoom);
-    let bInnerWidth = Math.round(this.props.comment.width * zoom) + (5 * zoom);
-    let bInnerHeight = Math.round(this.props.comment.height * zoom) + (zoom);
+    let bInnerWidth = Math.round(this.state.width * zoom) + (5 * zoom);
+    let bInnerHeight = Math.round(this.state.height * zoom) + (zoom);
 
 
     let paddingBoxStyle = {
@@ -224,6 +257,37 @@ class Comment extends React.Component {
            //backgroundColor : 'red'
         };
 
+      let commentArea = this.props.editable ?
+        <textarea
+          className={className}
+          style={textareaStyle}
+          draggable="true"
+          onDragStart={this.dragStart}
+          onDragEnd={this.dragEnd}
+          onDrop={this.drop}
+          onClick={this.commentClicked}
+          onDoubleClick={this.commentDblClicked}
+          onContextMenu={this.props.onContextMenu}
+          value={this.state.value}
+          spellCheck="true"
+          onChange={this.commentChange}
+        >
+        </textarea>
+        :
+        <div
+          className={className}
+          style={commentStyle}
+          draggable="true"
+          onDragStart={this.dragStart}
+          onDragEnd={this.dragEnd}
+          onDrop={this.drop}
+          onClick={this.commentClicked}
+          onDoubleClick={this.commentDblClicked}
+          onContextMenu={this.props.onContextMenu}
+        >
+          {this.state.value}
+        </div>;
+
       let box =
         <div>
           <div
@@ -256,19 +320,7 @@ class Comment extends React.Component {
             onDrop={this.drop}
             onContextMenu={this.props.onContextMenu}
           >
-            <div
-              className={className}
-              style={commentStyle}
-              draggable="true"
-              onDragStart={this.dragStart}
-              onDragEnd={this.dragEnd}
-              onDrop={this.drop}
-              onClick={this.commentClicked}
-              onDoubleClick={this.commentDblClicked}
-              onContextMenu={this.props.onContextMenu}
-            >
-              {commentArea}
-            </div>
+            {commentArea}
           </div>
         </div>;
 
