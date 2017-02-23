@@ -1,6 +1,6 @@
 {
   "name": "@wdp/common-properties",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "main": "index.js",
   "description": "WDP common-properties",
   "repository": {
