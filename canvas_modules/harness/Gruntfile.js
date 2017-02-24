@@ -18,7 +18,7 @@ module.exports = function(grunt) {
 		eslint: {
 			node: {
 				src: ["index.js", "Gruntfile.js", "controllers/**/*.js",
-				"models/**/*.js", "lib/**/*.js", "tests/**/*.js"]
+				"models/**/*.js", "lib/**/*.js", "tests/**/*.js", "src/**/*.js", "src/**/*.jsx"]
 			}
 		},
 		jsonlint: {
@@ -49,6 +49,9 @@ module.exports = function(grunt) {
 					codeCoverageDir
 				]
 			}
+		},
+		webpack: {
+			client: require("./webpack.config.dev")
 		}
 	});
 
@@ -56,8 +59,8 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks("grunt-eslint");
 	grunt.loadNpmTasks("grunt-jsonlint");
 	grunt.loadNpmTasks("grunt-yamllint");
-	grunt.loadNpmTasks("grunt-webpack");
 	grunt.loadNpmTasks("grunt-sass-lint");
+	grunt.loadNpmTasks("grunt-webpack");
 	grunt.registerTask("lint", ["eslint", "jsonlint", "yamllint", "sasslint"]);
 
 	var buildTasks = ["lint", "clean"];

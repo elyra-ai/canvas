@@ -10,43 +10,46 @@
 var path = require("path");
 
 module.exports = {
-	context: path.join(__dirname, "/src/components"),
-
+	context: path.join(__dirname, "/src/"),
+	devtool: "#inline-source-map",
 	entry: {
-		lib: "./Canvas.jsx"
+		lib: "./common-canvas.jsx"
 	},
 	output: {
-		library: "ReactList",
+		library: "Common-Canvas",
 		libraryTarget: "commonjs2",
 		filename: "common-canvas.js",
-		path: path.join(__dirname, "/dist")
+		path: path.join(__dirname, "/dist"),
+		sourceMapFilename: "[file].map",
 	},
-
-
 	module: {
 		loaders: [
 			{
-				test: /\.jsx?$/,
+				test: /\.js(x?)$/,
 				exclude: /node_modules/,
 				loader: "babel-loader",
 				query: {
 					presets: ["react", "es2015"]
 				}
-			}
+			},
+			{
+				test: /\.svg$/,
+				loader: "url-loader"
+			},
+			{
+        test: /\.css$/,
+        loaders: [
+					"style-loader",
+					"css-loader"
+				]
+      }
 		]
 	},
-
-
 	resolve: {
-		extensions: ["", ".js", ".jsx"]
+		extensions: [".js", ".jsx"]
 	},
-
 	externals: {
-		react: {
-			root: "React",
-			commonjs: "react",
-			commonjs2: "react",
-			amd: "react"
-		}
+		"react": "react",
+		"react-dom": "react-dom"
 	}
 };

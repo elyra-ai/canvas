@@ -7,14 +7,12 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-// Modules
 import React from "react";
+import ReactDOM from "react-dom";
+import App from "./App";
+import "../styles/index.css";
 
-export default class Canvas extends React.Component {
-
-	render() {
-		return (
-			<h1>Replace me!</h1>
-		);
-	}
-}
+ReactDOM.render(
+	<App />,
+	document.getElementById("root")
+);

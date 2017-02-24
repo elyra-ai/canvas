@@ -1,0 +1,119 @@
+/****************************************************************
+** IBM Confidential
+**
+** OCO Source Materials
+**
+** SPSS Modeler
+**
+** (c) Copyright IBM Corp. 2017
+**
+** The source code for this program is not published or otherwise
+** divested of its trade secrets, irrespective of what has been
+** deposited with the U.S. Copyright Office.
+*****************************************************************/
+
+/* AP look and feel for field allocators */
+.column-allocation-panel {
+  display: block;
+  padding: 8px;
+  height: 100%;
+  width: 100%;
+}
+
+.column-allocation-panel .column-source-panel {
+  display: inline;
+  float: left;
+  min-height: 100%;
+  width: 40%;
+}
+
+.column-allocation-panel .column-controls-panel {
+  display: inline;
+  float: right;
+  min-height: 100%;
+  width: 50%;
+}
+
+.column-allocation-panel .column-controls-panel .column-controls-item {
+  display: inline;
+}
+
+.column-allocation-panel-row{
+  height: 340px;
+}
+
+.column-allocation-panel-column{
+  height: 100%;
+}
+
+.column-allocator {
+  display: inline;
+  outline:none !important;
+  border: none !important;
+  -webkit-box-shadow: none !important;
+  -moz-box-shadow: none !important;
+  box-shadow: none !important;
+  -webkit-focusring: none !important;
+}
+
+.column-source {
+  height: inherit !important;
+  outline:none !important;
+  border: none !important;
+  -webkit-box-shadow: none !important;
+  -moz-box-shadow: none !important;
+  box-shadow: none !important;
+  -webkit-focusring: none !important;
+}
+
+.column-source:focus{
+  color:#a6266e;
+}
+
+select option{
+  color: #a6266e;
+  width: 100%;
+}
+
+select option:active{
+  color: #f9f9fb;
+  box-shadow: inset 20px 20px #a6266e;
+}
+
+select option:checked{
+  color: #f9f9fb;
+  box-shadow: inset 20px 20px #a6266e;
+}
+
+select option:checked select:not(:focus){
+  color: #f9f9fb;
+  box-shadow: inset 20px 20px #a6266e;
+}
+
+#allocator-button{
+  background-color: #ffffff;
+  color: #a6266e;
+  font-weight: bold;
+  border: #a6266e solid 2px;
+  border-radius:4px;
+  transition: all .2s ease-in-out;
+  margin-left:5px;
+}
+
+#allocator-button:hover{
+  background-color: #a6266e;
+  color: #fff;
+}
+
+.field-allocator-button{
+  width: 10px !important;
+  height: 20px !important;
+  cursor: pointer !important;
+  margin:5px;
+  border-bottom: 2px solid #f9f9fb;
+}
+
+.field-allocator-button:hover{
+  border-bottom: 2px solid #a6266e;
+  box-sizing:border-box;
+}

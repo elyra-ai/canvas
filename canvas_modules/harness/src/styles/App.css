@@ -1,0 +1,117 @@
+/*******************************************************************************
+ * Licensed Materials - Property of IBM
+ * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ *
+ * Note to U.S. Government Users Restricted Rights:
+ * Use, duplication or disclosure restricted by GSA ADP Schedule
+ * Contract with IBM Corp.
+ *******************************************************************************/
+
+#app-container {
+  height: 100vh;
+}
+
+#canvas {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  padding-top: 60px;
+}
+
+#title {
+  background-color: #1D3649;
+  color: #FFFFFF;
+  width:auto;
+}
+
+/*Navbar*/
+.navbar {
+  position:fixed;
+  width:100%;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #1D3649;
+  z-index: 3;
+}
+
+.navbar-li {
+  float: left;
+}
+
+.navbar-li a, .palette-true a{
+  display: block;
+  text-align: center;
+  padding: 14px;
+  width:18px;
+  fill:#3FB8AF;
+}
+
+.navbar-li a:hover, .palette-true a:hover {
+  background-color: #111111;
+  color: #3FB8AF;
+}
+
+#palette-false a{
+  fill: #797979;
+}
+
+#palette-false a:hover {
+  background-color: #1D3649;
+}
+
+#action-bar-sidepanel, #action-bar-sidepanel-styles{
+  float:right;
+}
+
+.nav-divider {
+  border-left:1px solid #252525;
+}
+
+/*Console*/
+#app-console {
+  font-size: small;
+  border-top: 10px solid #1D3649;
+  background-color: rgba(243, 243, 243, 0.8);
+  position:fixed;
+  bottom: -10px;
+  width: 100%;
+  height: 10px;
+  -webkit-transition:height 2s;
+  transition: height 2s;
+  overflow-y: auto;
+  z-index: 1;
+}
+
+/*SidePanel*/
+#app-sidepanel {
+  background-color: #264A60;
+  padding-top: 60px;
+  position:fixed;
+  right: 0;
+  height: 100%;
+  -webkit-transition:width 2s;
+  transition: width 2s;
+  color: #D2D2D2;
+  /*overflow-x:auto;*/
+  z-index: 2;
+  box-sizing: border-box;
+  font-size: small;
+}
+
+.sidepanel-headers {
+  padding-bottom: 5px;
+}
+
+.sidepanel-children {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.sidepanel-divider {
+  width: 100%;
+  margin: 0 0 5px 0;
+  border-bottom:1px solid #252525;
+  padding: 5px 0 5px 0;
+}
