@@ -116,36 +116,34 @@ export default class DiagramCanvas extends React.Component {
   }
 
   getConnctionArrowHeads(positions) {
-      return this.props.diagram.diagram.links.map((link, ind) => {
-          // console.log(link);
-          var posFrom = positions[link.source];
-          var posTo = positions[link.target];
+    return this.props.diagram.diagram.links.map((link, ind) => {
+      // console.log(link);
+      var posFrom = positions[link.source];
+      var posTo = positions[link.target];
 
-          // Older diagrams where the comments don't have unique IDs may not
-          // have the comment IDs set correctly which in turn means the
-          // the 'posFrom' or 'posTo' settings many not be correct.
-          // For now, simply discard the link so we can still show the
-          // rest of the diagram.
-          if (posFrom == undefined || posTo == undefined) {
-              return null;
-          }
+      // Older diagrams where the comments don't have unique IDs may not
+      // have the comment IDs set correctly which in turn means the
+      // the 'posFrom' or 'posTo' settings many not be correct.
+      // For now, simply discard the link so we can still show the
+      // rest of the diagram.
+      if (posFrom == undefined || posTo == undefined) {
+        return null;
+      }
 
-          let data = {
-              x1: posFrom.outX,
-              y1: posFrom.y,
-              x2: posTo.inX,
-              y2: posTo.y
-          }
+      let data = {
+        x1: posFrom.outX,
+        y1: posFrom.y,
+        x2: posTo.inX,
+        y2: posTo.y
+      }
 
-          let arrow = CanvasUtils.getArrowheadPoints(data,this.zoom());
+      let arrow = CanvasUtils.getArrowheadPoints(data,this.zoom());
 
-          let d = arrow.p1.x + "," + arrow.p1.y + " " + arrow.p2.x  + "," + arrow.p2.y  + " " + arrow.p3.x + "," + arrow.p3.y;
+      let d = arrow.p1.x + "," + arrow.p1.y + " " + arrow.p2.x  + "," + arrow.p2.y  + " " + arrow.p3.x + "," + arrow.p3.y;
 
-          return (<polyline fill="none" stroke="black" strokeWidth="2" points={d}/>);
-      });
-
-
-    }
+      return (<polyline fill="none" stroke="black" strokeWidth="2" points={d}/>);
+    });
+  }
 
   handleClickOutsideContextMenu(event) {
     if (this.state.showContextMenu) {
@@ -178,7 +176,7 @@ export default class DiagramCanvas extends React.Component {
     // Lower than this and things start to look funny...
     if (zoom < ZOOM_MIN_VALUE) {
       zoom = ZOOM_MIN_VALUE;
-		}
+    }
 
 /* TODO: add call to editDiagramHandler once psapi supports zoom action
 		this.props.editDiagramHandler({
@@ -381,7 +379,8 @@ export default class DiagramCanvas extends React.Component {
     // Don't clear the selection if the canvas context menu is up
     if (!this.state.showContextMenu) {
       this.clearSelection();
-	  this.finalizedEditComment();
+      this.finalizedEditComment();
+      this.props.clickHandler({clickType: "SINGLE_CLICK", objectType: "canvas"});
     }
   }
 
@@ -464,7 +463,7 @@ export default class DiagramCanvas extends React.Component {
       this.removeNode(node.id);
     }
     else if (action == 'nodeDblClicked') {
-      this.nodeDblClicked(node.id);
+      this.props.clickHandler({clickType: "DOUBLE_CLICK", objectType: "node", id: node.id});
     }
     else if (action == 'selected') {
       // The event is passed as the third arg
@@ -484,7 +483,7 @@ export default class DiagramCanvas extends React.Component {
           // Otherwise if the drag started on an output connector, assume the drop target is the target
           this.linkSelected([jsVal.id], [node.id]);
         }
-		else if (jsVal.connType == 'comment') {
+        else if (jsVal.connType == 'comment') {
           // Otherwise if the drag started on an output connector, assume the drop target is the target
           this.linkCommentSelected([jsVal.id], [node.id]);
         }
@@ -516,13 +515,13 @@ export default class DiagramCanvas extends React.Component {
     if (action == 'selected') {
       // The event is passed as the third arg
       this.selectObject(comment.id, optionalArgs.shiftKey);
-	} else if (action == 'editComment') {
-	  let editCommentInfo = {
-	    id: comment.id,
-	    text: comment.text,
-	    width: comment.width,
+    } else if (action == 'editComment') {
+      let editCommentInfo = {
+        id: comment.id,
+        text: comment.text,
+        width: comment.width,
         height: comment.height
-	  }
+      }
       this.setState({editCommentInfo: editCommentInfo});
     } else if (action == 'changeComment') {
       // save the new comment text change
@@ -578,10 +577,8 @@ export default class DiagramCanvas extends React.Component {
       };
     }
 
-    //console.log(data);
     this.props.editDiagramHandler(data);
   }
-
 
   createObjectStoreNodeAt(x, y,data) {
     //set coordinates
@@ -604,11 +601,6 @@ export default class DiagramCanvas extends React.Component {
   moveNode(nodeId, offsetX, offsetY) {
     // console.log("moveNode():x=" + offsetX + ",y=" + offsetY);
     this.moveNodes(this.ensureSelected(nodeId), offsetX, offsetY);
-  }
-
-  nodeDblClicked(nodeId) {
-    this.ensureSelected(nodeId);
-    this.props.nodeDblClickedHandler(nodeId);
   }
 
   linkSelected(sources, targets) {
@@ -731,21 +723,21 @@ export default class DiagramCanvas extends React.Component {
   }
 
   finalizedEditComment() {
-      if (this.state.editCommentInfo.id !== undefined) {
-        var nodes = [this.state.editCommentInfo.id];
-        this.props.editDiagramHandler({
-          editType: 'editComment',
-          nodes: nodes,
-          label: this.state.editCommentInfo.text,
-          width: this.state.editCommentInfo.width,
-          height: this.state.editCommentInfo.height
-        });
+    if (this.state.editCommentInfo.id !== undefined) {
+      var nodes = [this.state.editCommentInfo.id];
+      this.props.editDiagramHandler({
+        editType: 'editComment',
+        nodes: nodes,
+        label: this.state.editCommentInfo.text,
+        width: this.state.editCommentInfo.width,
+        height: this.state.editCommentInfo.height
+      });
 
-        this.setState({
-          editCommentInfo: {}
-        });
-      }
+      this.setState({
+        editCommentInfo: {}
+      });
     }
+  }
 
   // Utility methods
 
@@ -1054,13 +1046,13 @@ export default class DiagramCanvas extends React.Component {
         if (link.className !== "undefined" && link.className !== null) {
           className = link.className;
         }
-			}
+      }
 
-			var lineStyle = {};
-			if (typeof(link.style) !== "undefined" && link.style) {
-				// convert the style string into a JSON object
-				lineStyle = CanvasUtils.convertStyleStringToJSONObject(link.style);
-			}
+      var lineStyle = {};
+      if (typeof(link.style) !== "undefined" && link.style) {
+        // convert the style string into a JSON object
+        lineStyle = CanvasUtils.convertStyleStringToJSONObject(link.style);
+      }
 
       let d = null;
       let midX = null;
@@ -1084,7 +1076,7 @@ export default class DiagramCanvas extends React.Component {
           key={key}
           d={d}
           className={className}
-					style={lineStyle}
+          style={lineStyle}
         />
       );
     });
@@ -1139,12 +1131,6 @@ export default class DiagramCanvas extends React.Component {
       zoom: zoom
     };
 
-    let cutableIds = [];
-    let clipboard = null;
-    if (clipboard !== null && clipboard.isCut && clipboard.diagramId == this.props.diagram.diagram.id) {
-      cutableIds = clipboard.objectIds;
-    }
-
     // TODO - pass a ref to the canvas (or a size config) rather than passing
     // multiple, individual, identical size params to every node
     viewNodes = this.props.diagram.diagram.nodes.map((node) => {
@@ -1158,7 +1144,6 @@ export default class DiagramCanvas extends React.Component {
                 nodeActionHandler={this.nodeAction.bind(this, node)}
                 onContextMenu={this.objectContextMenu.bind(this, "node", node)}
                 selected={this.state.selectedObjects.indexOf(node.id) >= 0}
-                cutable={cutableIds.indexOf(node.id) >= 0}
                 decorationActionHandler={this.props.decorationActionHandler}
                 >
               </Node>;
@@ -1194,10 +1179,9 @@ export default class DiagramCanvas extends React.Component {
                 commentActionHandler={this.commentAction.bind(this, comment)}
                 onContextMenu={this.objectContextMenu.bind(this, "comment", comment)}
                 selected={this.state.selectedObjects.indexOf(comment.id) >= 0}
-                cutable={cutableIds.indexOf(comment.id) >= 0}
-				editable={editable}
+                editable={editable}
                 >
-              </Comment>;
+            </Comment>;
 
       positions[comment.id] = this.getConnPoints(Math.round(comment.width/2 * zoom), Math.round(comment.height/2 * zoom), 0, zoom, comment);
 
@@ -1278,10 +1262,11 @@ DiagramCanvas.propTypes = {
   diagram: React.PropTypes.object,
   initialSelection: React.PropTypes.array,
   paletteJSON: React.PropTypes.object.isRequired,
+  clipboardOwner: React.PropTypes.object.isRequired,
   openPaletteMethod: React.PropTypes.func.isRequired,
   contextMenuHandler: React.PropTypes.func.isRequired,
   contextMenuActionHandler: React.PropTypes.func.isRequired,
   editDiagramHandler: React.PropTypes.func.isRequired,
-  nodeDblClickedHandler: React.PropTypes.func.isRequired,
+  clickHandler: React.PropTypes.func.isRequired,
   decorationActionHandler: React.PropTypes.func.isRequired
 };

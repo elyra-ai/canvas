@@ -156,8 +156,9 @@ class Node extends React.Component {
     this.setState({ context: true });
   }
 
-  decorationClicked(id) {
+  decorationClicked(id, ev) {
     this.props.decorationActionHandler(this.props.node, id);
+    ev.stopPropagation();
   }
 
   getDecorationStyle(position) {
@@ -376,11 +377,11 @@ class Node extends React.Component {
       };
 
     let iconStyle = {};
-    if (this.props.cutable) {
+    if (this.props.node.isCut) {
       iconStyle.zoom = 1;
       iconStyle.filter = "alpha(opacity=50)";
       iconStyle.opacity = 0.5;
-    };
+    }
 
     //console.log('ZOOM : '+zoom);
     //console.log('circleStyle :'+JSON.stringify(circleStyle));
@@ -461,7 +462,6 @@ Node.propTypes = {
   onContextMenu: React.PropTypes.func,
   uiconf: React.PropTypes.object,
   selected: React.PropTypes.bool,
-  cutable: React.PropTypes.bool,
   decorationActionHandler: React.PropTypes.func
 };
 

@@ -76,7 +76,7 @@ export default class CommonCanvas extends React.Component {
                     contextMenuHandler={this.props.contextMenuHandler}
                     contextMenuActionHandler={this.props.contextMenuActionHandler}
                     editDiagramHandler={this.props.editDiagramHandler}
-                    nodeDblClickedHandler={this.props.nodeDblClickedHandler}
+                    clickHandler={this.props.clickHandler}
                     decorationActionHandler={this.props.decorationActionHandler}>
                 </DiagramCanvas>;
       popupPalette = <Palette paletteJSON={this.props.paletteJSON}
@@ -120,6 +120,6 @@ CommonCanvas.propTypes = {
     contextMenuHandler: React.PropTypes.func,
     contextMenuActionHandler: React.PropTypes.func,
     editDiagramHandler: React.PropTypes.func,
-    nodeDblClickedHandler: React.PropTypes.func,
+    clickHandler: React.PropTypes.func,
     decorationActionHandler: React.PropTypes.func
 };

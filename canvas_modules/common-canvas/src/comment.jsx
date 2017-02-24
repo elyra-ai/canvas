@@ -52,55 +52,53 @@ class Comment extends React.Component {
     this.handleMouseEnterInnerBox = this.handleMouseEnterInnerBox.bind(this);
   }
 
-
-
   handleMouseEnterInnerBox(ev){
-      this.setState({
-        showBox:false
-      });
-    }
+    this.setState({
+      showBox:false
+    });
+  }
 
-    handleMouseLeave(ev){
-      this.setState({
-        showBox:false
-      });
-    }
+  handleMouseLeave(ev){
+    this.setState({
+      showBox:false
+    });
+  }
 
-    handleMouseEnter(ev){
-      this.setState({
-        showBox:true
-      });
-    }
+  handleMouseEnter(ev){
+    this.setState({
+      showBox:true
+    });
+  }
 
-    linkDragStart(connType, ev) {
-        ev.dataTransfer.effectAllowed = 'link';
+  linkDragStart(connType, ev) {
+    ev.dataTransfer.effectAllowed = 'link';
 
-        //avoiding halo's ghost image when dragging
-        let ghost = document.createElement("div");
-        ghost.style.height="1px";
-        ghost.style.width="1px";
-        document.body.appendChild(ghost);
-        ev.dataTransfer.setDragImage(ghost, 0, 0);
+    //avoiding halo's ghost image when dragging
+    let ghost = document.createElement("div");
+    ghost.style.height="1px";
+    ghost.style.width="1px";
+    document.body.appendChild(ghost);
+    ev.dataTransfer.setDragImage(ghost, 0, 0);
 
-        ev.dataTransfer.setData(DND_DATA_TEXT,
-          JSON.stringify({
-            operation: 'link',
-            id: this.props.comment.id,
-            label: this.props.comment.content,
-            connType: connType
-           }));
-      }
+    ev.dataTransfer.setData(DND_DATA_TEXT,
+      JSON.stringify({
+        operation: 'link',
+        id: this.props.comment.id,
+        label: this.props.comment.content,
+        connType: connType
+    }));
+  }
 
-      linkDragOver(ev) {
-        ev.preventDefault();
-      }
+  linkDragOver(ev) {
+    ev.preventDefault();
+  }
 
-      linkDragEnd(connType, ev) {
-      }
+  linkDragEnd(connType, ev) {
+  }
 
-      linkDrop(ev) {
-        this.drop(ev);
-      }
+  linkDrop(ev) {
+    this.drop(ev);
+  }
 
   dragStart(ev) {
     ev.dataTransfer.effectAllowed = 'move';
@@ -110,7 +108,7 @@ class Comment extends React.Component {
         operation: 'move',
         id: this.props.comment.id,
         label: this.props.comment.content
-       }));
+    }));
   }
 
   dragEnd(ev) {
@@ -151,7 +149,7 @@ class Comment extends React.Component {
       target: evValues,
       width: this.state.width,
       height: this.state.height
-    }
+    };
 
     this.props.commentActionHandler('changeComment', optArg);
   }
@@ -182,20 +180,18 @@ class Comment extends React.Component {
       fontSize: this.props.fontSize,
       overflow: 'auto',
       lineHeight: 1.0
+    };
+
+    if (typeof(this.props.comment.style) !== "undefined" && this.props.comment.style) {
+      // first convert the style string into a JSON object
+      let styleObject = CanvasUtils.convertStyleStringToJSONObject(this.props.comment.style);
+      // then merge JSON objects
+      Object.assign(commentStyle, styleObject);
+      Object.assign(textareaStyle, styleObject);
     }
 
-    var className = "canvas-comment";
-
-		if (typeof(this.props.comment.style) !== "undefined" && this.props.comment.style) {
-			// first convert the style string into a JSON object
-			let styleObject = CanvasUtils.convertStyleStringToJSONObject(this.props.comment.style);
-			// then merge JSON objects
-			Object.assign(commentStyle, styleObject);
-			Object.assign(textareaStyle, styleObject);
-		}
-
-		var className = (typeof(this.props.comment.className) !== "undefined" && this.props.comment.className) ?
-			this.props.comment.className : "canvas-comment";
+    var className = (typeof(this.props.comment.className) !== "undefined" && this.props.comment.className) ?
+      this.props.comment.className : "canvas-comment";
 
     if (this.props.selected) {
       className += " selected";
@@ -214,7 +210,6 @@ class Comment extends React.Component {
 
 
     let paddingBoxStyle = {
-
           top: bTop,
           left: bLeft,
           width: bWidth,
@@ -222,13 +217,12 @@ class Comment extends React.Component {
           border: `${ 8 * zoom}px solid white`,
           position: 'absolute',
           borderRadius: '0%',
-
           backgroundColor : 'white'
 
     };
 
-    let boxStyle = (this.state.showBox)
-      ? {
+    let boxStyle = (this.state.showBox) ?
+      {
           top: bTop,
           left: bLeft,
           width: bWidth,
@@ -250,11 +244,11 @@ class Comment extends React.Component {
         //backgroundColor : 'yellow'
       };
 
-      if (this.props.cutable) {
+      if (this.props.comment.isCut) {
         commentStyle.zoom = 1;
         commentStyle.filter = "alpha(opacity=50)";
         commentStyle.opacity = 0.5;
-      };
+      }
 
       let innerBoxStyle =
          {

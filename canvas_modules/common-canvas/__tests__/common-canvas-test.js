@@ -48,7 +48,7 @@ function createCommonCanvas() {
     const contextMenuHandler = sinon.spy();
     const contextMenuActionHandler = sinon.spy();
     const editDiagramHandler = sinon.spy();
-    const nodeDblClickedHandler = sinon.spy();
+    const clickHandler = sinon.spy();
     const decorationHandler = sinon.spy();
     const wrapper = shallow(<CommonCanvas
       diagram={diagram}
@@ -57,7 +57,7 @@ function createCommonCanvas() {
       contextMenuHandler={contextMenuHandler}
       contextMenuActionHandler={contextMenuActionHandler}
       editDiagramHandler={editDiagramHandler}
-      nodeDblClickedHandler={nodeDblClickedHandler}
+      clickHandler={clickHandler}
       decorationHandler={decorationHandler}/>);
 
   return wrapper;
