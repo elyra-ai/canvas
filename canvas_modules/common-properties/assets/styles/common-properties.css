@@ -1,0 +1,107 @@
+
+/****************************************************************
+** IBM Confidential
+**
+** OCO Source Materials
+**
+** SPSS Modeler
+**
+** (c) Copyright IBM Corp. 2017
+**
+** The source code for this program is not published or otherwise
+** divested of its trade secrets, irrespective of what has been
+** deposited with the U.S. Copyright Office.
+*****************************************************************/
+@CHARSET "ISO-8859-1";
+
+@font-face {
+    font-family: IBMHLVMedium;
+    src: url(./fonts/medium/helvetica-neue-medium.woff);
+}
+
+@font-face {
+    font-family: IBMHLVRoman;
+    src: url(./fonts/roman/helvetica-neue-roman.woff);
+}
+
+@font-face {
+    font-family: IBMHLVBold;
+    src: url(./fonts/bold/helvetica-neue-bold.woff);
+}
+@font-face {
+    font-family: IBMHLVlight;
+    src: url(./fonts/light/helvetica-neue-light.woff);
+}
+
+@font-face {
+    font-family: IBMHLVRoman;
+    src: url(./fonts/roman/helvetica-neue-roman.woff);
+}
+
+/* Property editing */
+
+.control-panel {
+  display: block;
+  padding: 8px;
+}
+
+.table-editor {
+  display: inline;
+}
+
+/* Basic control styles */
+
+.control {
+  display: inline;
+  position: relative;
+  padding-left: 30px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  padding:20px
+}
+
+/* Hide default browser input */
+
+input[type=radio]{
+  position: absolute;
+  z-index: -1;
+  opacity: 0;
+}
+
+/* Custom control */
+
+.control__indicator{
+  content: '' !important;
+  position: absolute !important;
+  top: 20px !important;
+  left: 0 !important;
+  height: 16px !important;
+  width: 16px !important;
+  /*background: grey !important;*/
+  border-radius: 50% !important;
+  transition: all .2s ease-in-out !important;
+  border: 1px solid #1d3649 !important;
+}
+
+/* Hover and focus */
+
+.control__indicator:hover{
+  background:#a6266e;
+  box-shadow: 0 0 0 0 rgba(124,199,255,.75),inset 0 0 0 3px #fff;
+  /*transform: scale(0);*/
+}
+
+.control input:checked ~ .control__indicator{
+  background:#a6266e !important;
+  height:17px !important;
+  width: 17px !important;
+  border: none !important;
+}
+
+.control__indicator:disabled{
+  border: 1px solid #aeaeae;
+}
+
+.well{
+  background-color:#f9f9fb;
+}
