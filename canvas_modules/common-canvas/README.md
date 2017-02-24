@@ -22,13 +22,7 @@ The configuration object is defined as:
 
   // When true, the internal canvas object model is enabled,
   // removing the need to track all canvas events externally
-  "useObjectModel": true|false,
-
-  // The size of each node, e.g.:
-  "nodeSize": {
-    "width": 48,
-    "height": 48
-  }
+  "useObjectModel": true|false
 }
 ```
 
