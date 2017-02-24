@@ -22,19 +22,8 @@ coverage
 # node-waf configuration
 .lock-wscript
 
-# Compiled binary addons (http://nodejs.org/api/addons.html)
-build/Release
-
 # Dependency directory
 node_modules
 
-config/app-local.json
-
-/public/build/*
-/.build
-
-fingerprints.json
-
-# Pen test related
-pen-test/temp.json
-pen-test/cookies
+# Build directoy
+/dist

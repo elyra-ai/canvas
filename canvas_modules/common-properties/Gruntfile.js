@@ -38,6 +38,9 @@ module.exports = function(grunt) {
 					codeCoverageDir
 				]
 			}
+		},
+		webpack: {
+			client: require("./webpack.config")
 		}
 	});
 
@@ -45,8 +48,9 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks("grunt-eslint");
 	grunt.loadNpmTasks("grunt-jsonlint");
 	grunt.loadNpmTasks("grunt-yamllint");
+	grunt.loadNpmTasks("grunt-webpack");
 
-	var buildTasks = ["clean", "eslint", "jsonlint", "yamllint"];
+	var buildTasks = ["clean", "eslint", "jsonlint", "yamllint", "webpack"];
 
 	grunt.registerTask("build", buildTasks);
 	grunt.registerTask("default", ["build"]);
