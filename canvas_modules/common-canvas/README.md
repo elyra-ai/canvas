@@ -6,6 +6,32 @@ _[TBD]_
 
 The `Common Canvas` exists for use in building canvas-like applications. The canvas is driven by an application-agnostic _Diagram JSON_ (https://ibm.ent.box.com/folder/17889516178), and fires UI events to the consuming application for document management.
 
+### Configuration
+Consumers configure the canvas to turn on functionality and control behavior.
+
+The configuration object is defined as:
+```
+{
+  // When true, full palette functionality is enabled
+  // and consumers need to provide Palette JSON for it
+  "includePalette": true|false,
+
+  // Governs auto layout functionality. When set to horizontal or
+  // vertical, nodes are automatically laid out when added or moved
+  "enableAutoLayout": "horizontal|vertical|none",
+
+  // When true, the internal canvas object model is enabled,
+  // removing the need to track all canvas events externally
+  "useObjectModel": true|false,
+
+  // The size of each node, e.g.:
+  "nodeSize": {
+    "width": 48,
+    "height": 48
+  }
+}
+```
+
 ### Functions
 _[TBD]_
 ```
