@@ -14,15 +14,20 @@ The configuration object is defined as:
 {
   // When true, full palette functionality is enabled
   // and consumers need to provide Palette JSON for it
-  "includePalette": true|false,
+  "enablePalette": true|false,
 
   // Governs auto layout functionality. When set to horizontal or
   // vertical, nodes are automatically laid out when added or moved
-  "enableAutoLayout": "horizontal|vertical|none",
+  "enableAutoLayout": true|false,
 
   // When true, the internal canvas object model is enabled,
   // removing the need to track all canvas events externally
   "useObjectModel": true|false
+
+  // Palette tooltip. This will be displayed when hovering over the icon
+  // that appears in the canvas which opens the palette. Only used when
+  // enablePalette is true.
+  "paletteTooltip": <string> or <react object to display a string>
 }
 ```
 
