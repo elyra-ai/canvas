@@ -18,7 +18,7 @@ The configuration object is defined as:
 
   // Governs auto layout functionality. When set to horizontal or
   // vertical, nodes are automatically laid out when added or moved
-  "enableAutoLayout": true|false,
+  "enableAutoLayout": "horizontal|vertical|none",
 
   // When true, the internal canvas object model is enabled,
   // removing the need to track all canvas events externally
