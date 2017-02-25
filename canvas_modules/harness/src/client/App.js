@@ -11,10 +11,12 @@
 import React from "react";
 import Isvg from "react-inlinesvg";
 import ReactTooltip from "react-tooltip";
+import { IntlProvider, FormattedMessage, addLocaleData } from "react-intl";
+import en from "react-intl/locale-data/en";
+var i18nData = require("../intl/en.js");
 
 // import CommonCanvas from "../../../common-canvas/src/common-canvas.jsx";
 import CommonCanvas from "@wdp/common-canvas";
-
 import "../styles/App.css";
 
 import Console from "./components/console.jsx";
@@ -72,15 +74,20 @@ class App extends React.Component {
 		this.contextMenuHandler = this.contextMenuHandler.bind(this);
 		this.contextMenuActionHandler = this.contextMenuActionHandler.bind(this);
 		this.editDiagramHandler = this.editDiagramHandler.bind(this);
-		this.nodeEditHandler = this.nodeEditHandler.bind(this);
+		this.clickHandler = this.clickHandler.bind(this);
 		this.decorationActionHandler = this.decorationActionHandler.bind(this);
 
 		this.applyDiagramEdit = this.applyDiagramEdit.bind(this);
+		this.nodeEditHandler = this.nodeEditHandler.bind(this);
 		this.refreshContent = this.refreshContent.bind(this);
 	}
 
+	componentDidMount() {
+		addLocaleData(en);
+	}
+
 	getLabel(labelId, defaultLabel) {
-		this.log("getLabel()");
+		return <FormattedMessage id={ labelId } defaultMessage={ defaultLabel } />;
 	}
 
 	getTimestamp() {
@@ -159,8 +166,15 @@ class App extends React.Component {
 	}
 
 	// required by common-canvas
+	clickHandler(source) {
+		this.log("clickHandler()");
+		if (source.clickType === "DOUBLE_CLICK" && source.objectType === "node") {
+			this.nodeEditHandler(source.id);
+		}
+	}
+
 	nodeEditHandler(nodeId) {
-		this.log("nodeEditHandler()");
+		this.log("nodeEditHandler() " + nodeId);
 	}
 
 	applyDiagramEdit(data, options) {
@@ -348,6 +362,9 @@ class App extends React.Component {
 	render() {
 		var paletteClass = "palette-" + this.state.paletteNavEnabled;
 
+		var locale = "en";
+		var messages = i18nData.messages;
+
 		var navBar = (<div id="app-navbar">
 			<div className="navbar">
 				<nav id="action-bar">
@@ -422,7 +439,7 @@ class App extends React.Component {
 					contextMenuHandler={this.contextMenuHandler}
 					contextMenuActionHandler= {this.contextMenuActionHandler}
 					editDiagramHandler= {this.editDiagramHandler}
-					nodeDblClickedHandler= {this.nodeEditHandler}
+					clickHandler= {this.clickHandler}
 					decorationActionHandler= {this.decorationActionHandler}
 				/>
 			</div>);
@@ -441,7 +458,9 @@ class App extends React.Component {
 				selectedLinkTypeStyle={this.state.selectedLinkTypeStyle}
 				log={this.log}
 			/>
-			{commonCanvas}
+			<IntlProvider key="IntlProvider" locale={ locale } messages={ messages }>
+				{commonCanvas}
+			</IntlProvider>
 			<Console
 				consoleOpened={this.state.consoleOpened}
 				logs={this.state.consoleout}

@@ -20,6 +20,7 @@
     "react-bootstrap": "0.29.5",
     "react-dom": "0.14.8",
     "react-inlinesvg": "0.4.2",
+    "react-intl": "2.2.3",
     "react-tooltip": "3.2.6",
     "path": "0.12.7"
   },
