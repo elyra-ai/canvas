@@ -41,7 +41,7 @@ class CommonContextMenu extends React.Component {
       }
       else if (submenu) {
         let submenuItems = this.buildMenu(menuDefinition[i].menu);
-        menuItems.push(<SubMenu title={menuDefinition[i].label}>
+        menuItems.push(<SubMenu title={menuDefinition[i].label} key={i+1}>
             {submenuItems}
           </SubMenu>);
       }

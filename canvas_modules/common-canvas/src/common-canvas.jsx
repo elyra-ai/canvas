@@ -38,7 +38,9 @@ export default class CommonCanvas extends React.Component {
   }
 
   openPalette() {
-    this.setState({isPaletteOpen: true});
+    if (this.props.config.enablePalette) {
+      this.setState({isPaletteOpen: true});
+    }
   }
 
   closePalette() {
@@ -79,21 +81,23 @@ export default class CommonCanvas extends React.Component {
                     clickHandler={this.props.clickHandler}
                     decorationActionHandler={this.props.decorationActionHandler}>
                 </DiagramCanvas>;
-      popupPalette = <Palette paletteJSON={this.props.paletteJSON}
+      if (this.props.config.enablePalette) {
+        popupPalette = <Palette paletteJSON={this.props.paletteJSON}
                     showPalette={this.state.isPaletteOpen}
                     closePalette={this.closePalette}
                     createTempNode={this.createTempNode}
                     deleteTempNode={this.deleteTempNode}>
                 </Palette>;
 
-      let paletteTooltip=<Tooltip id="paletteTooltip"><FormattedMessage id="tooltip.popupPaletteButton"/></Tooltip>;
+        let paletteTooltip=<Tooltip id="paletteTooltip">{this.props.config.paletteTooltip}</Tooltip>;
 
-      addButton =
-        <OverlayTrigger placement="right" overlay={paletteTooltip}>
-          <div className="palette-show-button">
-            <img src="/canvas/images/add-new_64.svg" onClick={this.openPalette}/>
-          </div>
-        </OverlayTrigger>;
+        addButton =
+          <OverlayTrigger placement="right" overlay={paletteTooltip}>
+            <div className="palette-show-button">
+              <img src="/canvas/images/add-new_64.svg" onClick={this.openPalette}/>
+            </div>
+          </OverlayTrigger>;
+      }
 
       zoomControls =
           <div className="canvas-zoom-controls">
@@ -114,8 +118,9 @@ export default class CommonCanvas extends React.Component {
 }
 
 CommonCanvas.propTypes = {
+    config: React.PropTypes.object,
     diagram: React.PropTypes.object,
-    initialSelection: React.PropTypes.object,
+    initialSelection: React.PropTypes.array,
     paletteJSON: React.PropTypes.object,
     contextMenuHandler: React.PropTypes.func,
     contextMenuActionHandler: React.PropTypes.func,

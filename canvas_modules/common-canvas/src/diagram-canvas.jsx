@@ -1262,7 +1262,6 @@ DiagramCanvas.propTypes = {
   diagram: React.PropTypes.object,
   initialSelection: React.PropTypes.array,
   paletteJSON: React.PropTypes.object.isRequired,
-  clipboardOwner: React.PropTypes.object.isRequired,
   openPaletteMethod: React.PropTypes.func.isRequired,
   contextMenuHandler: React.PropTypes.func.isRequired,
   contextMenuActionHandler: React.PropTypes.func.isRequired,
