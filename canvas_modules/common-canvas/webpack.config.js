@@ -33,7 +33,7 @@ module.exports = {
 				}
 			},
 			{
-				test: /\.svg$/,
+				test: /\.(woff|svg)$/,
 				loader: "url-loader"
 			},
 			{

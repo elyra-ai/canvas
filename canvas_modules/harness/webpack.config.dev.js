@@ -66,7 +66,7 @@ var loaders = [
 		]
 	},
 	{
-		test: /\.(?:png|jpg|svg)$/,
+		test: /\.(?:png|jpg|svg|woff)$/,
 		loaders: [
 			"file-loader?name=graphics/[hash].[ext]"
 		]
