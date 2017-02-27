@@ -1,6 +1,6 @@
 {
   "name": "@wdp/common-canvas",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "WDP common-canvas",
   "main": "dist/common-canvas.js",
   "repository": {
@@ -24,7 +24,7 @@
     "babel-preset-es2015": "6.22.0",
     "chai": "3.5.0",
     "chai-enzyme": "0.6.1",
-		"css-loader": "0.23.1",
+    "css-loader": "0.23.1",
     "enzyme": "2.6.0",
     "eslint": "2.3.0",
     "eslint-plugin-react": "4.2.1",
@@ -48,8 +48,8 @@
     "react-inlinesvg": "0.4.2",
     "react-intl": "2.2.3",
     "sinon": "1.17.7",
-		"style-loader": "0.13.0",
-		"url-loader": "0.5.7",
+    "style-loader": "0.13.0",
+    "url-loader": "0.5.7",
     "underscore": "1.8.3",
     "webpack": "2.2.1"
   },
