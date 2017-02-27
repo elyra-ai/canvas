@@ -41,7 +41,7 @@ class App extends React.Component {
 			consoleout: [],
 			consoleOpened: false,
 			diagramJSON: null,
-			paletteJSON: null,
+			paletteJSON: {},
 			paletteNavEnabled: false,
 			paletteOpened: false,
 			openSidepanelForms: false,
