@@ -41,7 +41,7 @@ class App extends React.Component {
 			consoleout: [],
 			consoleOpened: false,
 			diagramJSON: null,
-			paletteJSON: {},
+			paletteJSON: null,
 			paletteNavEnabled: false,
 			paletteOpened: false,
 			openSidepanelForms: false,
@@ -429,6 +429,13 @@ class App extends React.Component {
 			</div>
 		</div>);
 
+		var commonCanvasConfig = {
+			enablePalette: this.state.paletteNavEnabled, // true if palette json submitted
+			enableAutoLayout: "none",
+			useObjectModel: false,
+			paletteTooltip: "Click to show node palette"
+		};
+
 		let commonCanvas = <div id="canvas"></div>;
 		if (this.state.diagramJSON !== null) {
 			commonCanvas = (<div id="canvas">
@@ -441,6 +448,7 @@ class App extends React.Component {
 					editDiagramHandler= {this.editDiagramHandler}
 					clickHandler= {this.clickHandler}
 					decorationActionHandler= {this.decorationActionHandler}
+					config={commonCanvasConfig}
 				/>
 			</div>);
 		}
