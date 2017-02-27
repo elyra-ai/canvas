@@ -13,7 +13,7 @@
 *****************************************************************/
 @CHARSET "ISO-8859-1";
 
-@font-face {
+/*@font-face {
     font-family: IBMHLVMedium;
     src: url(./fonts/medium/helvetica-neue-medium.woff);
 }
@@ -35,7 +35,7 @@
 @font-face {
     font-family: IBMHLVRoman;
     src: url(./fonts/roman/helvetica-neue-roman.woff);
-}
+}*/
 
 :root {
   --white: #FFFFFF;
@@ -498,6 +498,8 @@
   white-space: nowrap;
   background: 0 0;
   border: 0;
+  line-height: 1.68;
+  text-decoration: none;
 }
 
 .react-context-menu-link.active,
