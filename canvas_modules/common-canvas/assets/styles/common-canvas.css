@@ -76,6 +76,14 @@
   outline: 1px solid transparent;
 }
 
+#empty-canvas {
+  width: 1400px;
+  height: 450px;
+  position: absolute;
+  left: 0%;
+  top: 0%;
+}
+
 /* Canvas Styles */
 
 .canvas-zoom-controls {

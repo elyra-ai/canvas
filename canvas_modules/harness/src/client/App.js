@@ -23,6 +23,7 @@ import Console from "./components/console.jsx";
 import SidePanel from "./components/sidepanel.jsx";
 
 import {
+	BLANK_CANVAS,
 	SIDE_PANEL_FORMS,
 	SIDE_PANEL_STYLES
 } from "./constants/constants.js";
@@ -436,22 +437,25 @@ class App extends React.Component {
 			paletteTooltip: "Click to show node palette"
 		};
 
-		let commonCanvas = <div id="canvas"></div>;
+		var canvasDiagram = BLANK_CANVAS;
+
 		if (this.state.diagramJSON !== null) {
-			commonCanvas = (<div id="canvas">
-				<CommonCanvas
-					diagram={this.state.diagramJSON}
-					initialSelection={this.state.initialSelection}
-					paletteJSON={this.state.paletteJSON}
-					contextMenuHandler={this.contextMenuHandler}
-					contextMenuActionHandler= {this.contextMenuActionHandler}
-					editDiagramHandler= {this.editDiagramHandler}
-					clickHandler= {this.clickHandler}
-					decorationActionHandler= {this.decorationActionHandler}
-					config={commonCanvasConfig}
-				/>
-			</div>);
+			canvasDiagram = this.state.diagramJSON;
 		}
+
+		var commonCanvas = (<div id="canvas">
+			<CommonCanvas
+				diagram={canvasDiagram}
+				initialSelection={this.state.initialSelection}
+				paletteJSON={this.state.paletteJSON}
+				contextMenuHandler={this.contextMenuHandler}
+				contextMenuActionHandler= {this.contextMenuActionHandler}
+				editDiagramHandler= {this.editDiagramHandler}
+				clickHandler= {this.clickHandler}
+				decorationActionHandler= {this.decorationActionHandler}
+				config={commonCanvasConfig}
+			/>
+		</div>);
 
 		var mainView = (<div id="app-container">
 			{navBar}
