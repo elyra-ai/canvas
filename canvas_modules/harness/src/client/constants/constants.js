@@ -20,7 +20,7 @@ function _defineConstant(name, value) {
 
 // Public Methods ------------------------------------------------------------->
 _defineConstant("CONSOLE", {
-	MINIMIZED: "10px",
+	MINIMIZED: "0px",
 	MAXIMIXED: "200px"
 });
 

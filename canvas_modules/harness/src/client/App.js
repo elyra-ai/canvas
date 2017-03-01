@@ -144,6 +144,8 @@ class App extends React.Component {
 		this.setState({
 			consoleout: this.state.consoleout.concat(this.getTimestamp() + text)
 		});
+		var objDiv = document.getElementById("app-console");
+		objDiv.scrollTop = objDiv.scrollHeight;
 	}
 
 	openConsole() {
