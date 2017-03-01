@@ -13,6 +13,12 @@
 import React from "react";
 import { FormControl, Button } from "react-bootstrap";
 
+import {
+	NONE,
+	HORIZONTAL,
+	VERTICAL
+} from "../constants/constants.js";
+
 export default class SidePanelForms extends React.Component {
 	constructor(props) {
 		super(props);
@@ -27,6 +33,9 @@ export default class SidePanelForms extends React.Component {
 
 		this.onCanvasPaletteSelect = this.onCanvasPaletteSelect.bind(this);
 		this.isReadyToSubmitPaletteData = this.isReadyToSubmitPaletteData.bind(this);
+
+		this.layoutDirectionOptionChange = this.layoutDirectionOptionChange.bind(this);
+		this.useObjectModel = this.useObjectModel.bind(this);
 	}
 
 	onCanvasFileSelect(evt) {
@@ -75,13 +84,6 @@ export default class SidePanelForms extends React.Component {
 		return false;
 	}
 
-	isReadyToSubmitPaletteData() {
-		if (this.state.canvasPalette !== "") {
-			return true;
-		}
-		return false;
-	}
-
 	submitCanvasPalette() {
 		this.props.log("Submit file: " + this.state.canvasPalette.name);
 		// enable palette in nav
@@ -97,6 +99,21 @@ export default class SidePanelForms extends React.Component {
 			this.props.setPaletteJSON(content);
 		}.bind(this);
 		fileReader.readAsText(this.state.canvasPalette);
+	}
+
+	isReadyToSubmitPaletteData() {
+		if (this.state.canvasPalette !== "") {
+			return true;
+		}
+		return false;
+	}
+
+	layoutDirectionOptionChange(changeEvent) {
+		this.props.setLayoutDirection(changeEvent.target.value);
+	}
+
+	useObjectModel(changeEvent) {
+		this.props.useObjectModel(changeEvent.target.checked);
 	}
 
 	render() {
@@ -142,12 +159,57 @@ export default class SidePanelForms extends React.Component {
 			</div>
 		</div>);
 
+		var selectedLayoutDirection = this.props.selectedLayoutDirection;
+		var layoutDirection = (<div className="sidepanel-children" id="sidepanel-layout-direction">
+			<form>
+				<div className="sidepanel-headers">Layout Direction</div>
+				<div className="sidepanel-radio">
+					<input className="sidepanel-radio-button" type="radio"
+						value={NONE}
+						checked={ selectedLayoutDirection === NONE }
+						onChange={this.layoutDirectionOptionChange}
+					/>
+					None
+				</div>
+				<div className="sidepanel-radio">
+					<input className="sidepanel-radio-button" type="radio" value={HORIZONTAL}
+						checked={ selectedLayoutDirection === HORIZONTAL }
+						onChange={this.layoutDirectionOptionChange}
+					/>
+					Horizontal
+				</div>
+				<div className="sidepanel-radio">
+					<input className="sidepanel-radio-button" type="radio" value={VERTICAL}
+						checked={ selectedLayoutDirection === VERTICAL }
+						onChange={ this.layoutDirectionOptionChange }
+					/>
+					Vertical
+				</div>
+			</form>
+		</div>);
+
+		var enableObjectModel = (<div className="sidepanel-children" id="sidepanel-object-model">
+			<form>
+				<div className="sidepanel-headers">Options</div>
+				<div className="sidepanel-checbox">
+					<input className="sidepanel-checkbox" type="checkbox"
+						value="useObjectModel"
+						onChange={this.useObjectModel}
+					/>
+					Use Object Model
+				</div>
+			</form>
+		</div>);
+
 		return (
 			<div>
 				{formInput}
 				{divider}
 				{paletteInput}
 				{divider}
+				{layoutDirection}
+				{divider}
+				{enableObjectModel}
 			</div>
 		);
 	}
@@ -157,5 +219,8 @@ SidePanelForms.propTypes = {
 	enableNavPalette: React.PropTypes.func,
 	setDiagramJSON: React.PropTypes.func,
 	setPaletteJSON: React.PropTypes.func,
+	setLayoutDirection: React.PropTypes.func,
+	selectedLayoutDirection: React.PropTypes.string,
+	useObjectModel: React.PropTypes.func,
 	log: React.PropTypes.func
 };

@@ -28,7 +28,6 @@ _defineConstant("CURVE", "CURVE");
 _defineConstant("ELBOW", "ELBOW");
 _defineConstant("STRAIGHT", "STRAIGHT");
 
-
 _defineConstant("SIDE_PANEL", {
 	MINIMIZED: "0px",
 	MAXIMIXED: "200px"
@@ -36,6 +35,9 @@ _defineConstant("SIDE_PANEL", {
 _defineConstant("SIDE_PANEL_FORMS", "sidepanel-forms");
 _defineConstant("SIDE_PANEL_STYLES", "sidepanel-styles");
 
+_defineConstant("NONE", "none");
+_defineConstant("HORIZONTAL", "horizontal");
+_defineConstant("VERTICAL", "vertical");
 
 _defineConstant("BLANK_CANVAS", {
 	"id": "abc651d6-9b88-423c-b01b-861f12d01489",
@@ -64,3 +66,5 @@ _defineConstant("BLANK_CANVAS", {
 		}
 	]
 });
+
+_defineConstant("PALETTE_TOOLTIP", "Click to show node palette");

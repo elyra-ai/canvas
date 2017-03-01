@@ -104,6 +104,10 @@
   padding-bottom: 5px;
 }
 
+.sidepanel-radio-button, .sidepanel-checkbox{
+	margin-right: 6px;
+}
+
 .sidepanel-children {
   padding-left: 10px;
   padding-right: 10px;

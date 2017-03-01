@@ -24,8 +24,11 @@ import SidePanel from "./components/sidepanel.jsx";
 
 import {
 	BLANK_CANVAS,
+	NONE,
+	PALETTE_TOOLTIP,
 	SIDE_PANEL_FORMS,
-	SIDE_PANEL_STYLES
+	SIDE_PANEL_STYLES,
+	STRAIGHT
 } from "./constants/constants.js";
 const listview32 = require("../graphics/list-view_32.svg");
 const addnew32 = require("../graphics/add-new_32.svg");
@@ -41,17 +44,19 @@ class App extends React.Component {
 		this.state = {
 			consoleout: [],
 			consoleOpened: false,
+			contextMenuInfo: {},
 			diagramJSON: null,
+			initialSelection: null,
+			objectModel: false,
+			openSidepanelForms: false,
+			openSidepanelStyles: false,
 			paletteJSON: {},
 			paletteNavEnabled: false,
 			paletteOpened: false,
-			openSidepanelForms: false,
-			openSidepanelStyles: false,
 			selectedPanel: null,
-			selectedLinkTypeStyle: "STRAIGHT",
-			initialSelection: null,
-			showContextMenu: false,
-			contextMenuInfo: {}
+			selectedLinkTypeStyle: STRAIGHT,
+			selectedLayoutDirection: NONE,
+			showContextMenu: false
 		};
 
 		this.openConsole = this.openConsole.bind(this);
@@ -70,6 +75,8 @@ class App extends React.Component {
 		this.sidePanelForms = this.sidePanelForms.bind(this);
 		this.sidePanelStyles = this.sidePanelStyles.bind(this);
 		this.setLinkTypeStyle = this.setLinkTypeStyle.bind(this);
+		this.setLayoutDirection = this.setLayoutDirection.bind(this);
+		this.useObjectModel = this.useObjectModel.bind(this);
 
 		// required by common-canvas
 		this.contextMenuHandler = this.contextMenuHandler.bind(this);
@@ -103,6 +110,11 @@ class App extends React.Component {
 	setDiagramJSON(diagramJson) {
 		this.setState({ diagramJSON: diagramJson });
 		this.log("set diagramJSON: " + JSON.stringify(diagramJson));
+	}
+
+	setLayoutDirection(selectedLayout) {
+		this.setState({ selectedLayoutDirection: selectedLayout });
+		this.log("Layout selected: " + selectedLayout);
 	}
 
 	setLinkTypeStyle(selectedLink) {
@@ -164,6 +176,11 @@ class App extends React.Component {
 	enableNavPalette(enabled) {
 		this.setState({ paletteNavEnabled: enabled });
 		// this.log("palette in nav bar enabled: " + enabled);
+	}
+
+	useObjectModel(objectModelEnabled) {
+		this.setState({ objectModel: objectModelEnabled });
+		this.log("use object model: " + objectModelEnabled);
 	}
 
 	// required by common-canvas
@@ -432,9 +449,9 @@ class App extends React.Component {
 
 		var commonCanvasConfig = {
 			enablePalette: this.state.paletteNavEnabled, // true if palette json submitted
-			enableAutoLayout: "none",
+			enableAutoLayout: this.state.selectedLayoutDirection,
 			useObjectModel: false,
-			paletteTooltip: "Click to show node palette"
+			paletteTooltip: PALETTE_TOOLTIP
 		};
 
 		var canvasDiagram = BLANK_CANVAS;
@@ -466,8 +483,11 @@ class App extends React.Component {
 				openSidepanelStyles={this.state.openSidepanelStyles}
 				setDiagramJSON={this.setDiagramJSON}
 				setPaletteJSON={this.setPaletteJSON}
+				setLayoutDirection={this.setLayoutDirection}
+				selectedLayoutDirection={this.state.selectedLayoutDirection}
 				setLinkTypeStyle={this.setLinkTypeStyle}
 				selectedLinkTypeStyle={this.state.selectedLinkTypeStyle}
+				useObjectModel={this.useObjectModel}
 				log={this.log}
 			/>
 			<IntlProvider key="IntlProvider" locale={ locale } messages={ messages }>

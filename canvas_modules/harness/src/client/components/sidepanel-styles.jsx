@@ -37,7 +37,7 @@ export default class SidePanelStyles extends React.Component {
 			<form>
 				<div className="sidepanel-headers">Link Types</div>
 				<div className="sidepanel-radio">
-					<input type="radio"
+					<input className="sidepanel-radio-button" type="radio"
 						value={STRAIGHT}
 						checked={ selectedLinkTypeStyle === STRAIGHT }
 						onChange={this.linkTypeOptionChange}
@@ -45,14 +45,14 @@ export default class SidePanelStyles extends React.Component {
 					Straight
 				</div>
 				<div className="sidepanel-radio">
-					<input type="radio" value={CURVE}
+					<input className="sidepanel-radio-button" type="radio" value={CURVE}
 						checked={ selectedLinkTypeStyle === CURVE }
 						onChange={this.linkTypeOptionChange}
 					/>
 					Curve
 				</div>
 				<div className="sidepanel-radio">
-					<input type="radio" value={ELBOW}
+					<input className="sidepanel-radio-button" type="radio" value={ELBOW}
 						checked={ selectedLinkTypeStyle === ELBOW }
 						onChange={ this.linkTypeOptionChange }
 					/>
