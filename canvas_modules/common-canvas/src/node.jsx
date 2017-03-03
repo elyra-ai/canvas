@@ -296,7 +296,7 @@ class Node extends React.Component {
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       fontSize: this.props.uiconf.fontSize,
-      display:'inline-block'
+      //display:'inline-block'
     };
 
     //TODO anything better to use as an id ?
@@ -315,14 +315,14 @@ class Node extends React.Component {
       </div>
     </OverlayTrigger>;
 
-  let cTop = Math.round(this.props.node.yPos * zoom) - (10 * zoom);
-  let cLeft = Math.round(this.props.node.xPos * zoom) + (10 * zoom);
+  let cTop = Math.round(this.props.node.yPos * zoom) - (13 * zoom);
+  let cLeft = Math.round(this.props.node.xPos * zoom) - (2 * zoom);
   let cWidth = (70 * zoom);
   let cHeight = cWidth;
 
 
-  let cInnerTop = Math.round(this.props.node.yPos * zoom) - (zoom);
-  let cInnerLeft = Math.round(this.props.node.xPos * zoom) + (20 * zoom);
+  let cInnerTop = Math.round(this.props.node.yPos * zoom) - (2 * zoom);
+  let cInnerLeft = Math.round(this.props.node.xPos * zoom) + (10 * zoom);
   let cInnerWidth = (50 * zoom);
   let cInnerHeight = cInnerWidth;
 

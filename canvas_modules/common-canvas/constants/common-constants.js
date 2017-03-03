@@ -30,5 +30,5 @@ _defineConstant("DRAG_LINK", "link");
 _defineConstant("DRAG_SELECT_REGION", "selectRegion");
 
 _defineConstant("CANVAS_UI", {
-	HALO_RADIUS : 39
+	HALO_RADIUS : 45
 });

@@ -13,7 +13,6 @@
 *****************************************************************/
 
 import React from 'react';
-import {FormattedMessage} from 'react-intl';
 import {OverlayTrigger, Tooltip} from 'react-bootstrap';
 import DiagramCanvas from './diagram-canvas.jsx';
 import Palette from './palette/palette.jsx';
@@ -94,7 +93,7 @@ export default class CommonCanvas extends React.Component {
         addButton =
           <OverlayTrigger placement="right" overlay={paletteTooltip}>
             <div className="palette-show-button">
-              <img src="/canvas/images/add-new_64.svg" onClick={this.openPalette}/>
+              <img src="/canvas/images/open_node_palette.svg" onClick={this.openPalette}/>
             </div>
           </OverlayTrigger>;
       }

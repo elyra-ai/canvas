@@ -97,7 +97,7 @@ export default class DiagramCanvas extends React.Component {
     this.handleClickOutsideContextMenu = this.handleClickOutsideContextMenu.bind(this);
 
     this.getConnctionArrowHeads = this.getConnctionArrowHeads.bind(this);
-    this.createObjectStoreNodeAt = this.createObjectStoreNodeAt.bind(this);
+    this.createNodeFromDataAt = this.createNodeFromDataAt.bind(this);
   }
 
   componentDidMount() {
@@ -161,12 +161,11 @@ export default class DiagramCanvas extends React.Component {
       zoom = ZOOM_MAX_VALUE;
     }
 
-/* TODO: add call to editDiagramHandler once psapi supports zoom action
 		this.props.editDiagramHandler({
 			editType: 'zoomCanvas',
 			value: zoom
 		});
-*/
+
     this.setState({zoom: zoom});
   }
 
@@ -178,12 +177,11 @@ export default class DiagramCanvas extends React.Component {
       zoom = ZOOM_MIN_VALUE;
     }
 
-/* TODO: add call to editDiagramHandler once psapi supports zoom action
 		this.props.editDiagramHandler({
 			editType: 'zoomCanvas',
 			value: zoom
 		});
-*/
+
     this.setState({zoom: zoom});
   }
 
@@ -299,11 +297,11 @@ export default class DiagramCanvas extends React.Component {
           Math.round((mousePos.x - (NODE_WIDTH/2)) / zoom),
           Math.round((mousePos.y - (NODE_HEIGHT/2)) / zoom));
       }
-      else if ((jsVal.operation == 'addToCanvas')) {
+      else if ((jsVal.operation == 'addToCanvas') || (jsVal.operation == 'addTableFromConnection')) {
         var mousePos = this.mouseCoords(event);
         //console.log(targetPos);
         //console.log('addToCanvas :'+JSON.stringify(mousePos));
-        this.createObjectStoreNodeAt(
+        this.createNodeFromDataAt(
           Math.round((mousePos.x - (NODE_WIDTH/2)) / zoom),
           Math.round((mousePos.y - (NODE_HEIGHT/2)) / zoom),
           jsVal.data);
@@ -580,12 +578,12 @@ export default class DiagramCanvas extends React.Component {
     this.props.editDiagramHandler(data);
   }
 
-  createObjectStoreNodeAt(x, y,data) {
+  createNodeFromDataAt(x, y,data) {
     //set coordinates
     data['offsetX'] = x;
     data['offsetY'] = y;
 
-    //console.log('DiagramCanvas.createObjectStoreNodeAt data :'+JSON.stringify(data));
+    //console.log('DiagramCanvas.createNodeFromDataAt data :'+JSON.stringify(data));
     this.props.editDiagramHandler(data);
   }
 
@@ -842,7 +840,7 @@ export default class DiagramCanvas extends React.Component {
   }
 
   getConnPoints(halfNodeWidth, halfIcon, connSize, zoom, node) {
-    let iconCentreX = halfNodeWidth + Math.round(node.xPos * zoom);
+    let iconCentreX = halfNodeWidth + (Math.round(node.xPos * zoom)-15);
 
     /*
     return {

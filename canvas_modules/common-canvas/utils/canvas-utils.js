@@ -1,6 +1,5 @@
 import {CANVAS_UI} from '../constants/common-constants.js'
 import _ from 'underscore';
-import moment from 'moment';
 
 
 //http://stackoverflow.com/questions/17456783/javascript-figure-out-point-y-by-angle-and-distance
@@ -32,6 +31,10 @@ function findSlope(sx, sy, ex, ey) {
  */
 function getArrowheadPoints(data, zoom) {
 
+  //console.log('getArrowheadPoints(data, zoom): CANVAS_UI.HALO_RADIUS '+CANVAS_UI.HALO_RADIUS+  ' data '+JSON.stringify(data)+' zoom '+zoom );
+
+
+
     let slope = findSlope(data.x1, data.y1, data.x2, data.y2);
 
     let linkLength = Math.sqrt((data.x2 -= data.x1) * data.x2 + (data.y2 -= data.y1) * data.y2);
@@ -56,7 +59,7 @@ function getArrowheadPoints(data, zoom) {
         p2,
         p3
     };
-    //console.log('CanvasUtils.getArrowheadPoints '+' CANVAS_UI.HALO_RADIUS '+CANVAS_UI.HALO_RADIUS+  ' data '+JSON.stringify(data)+' zoom '+zoom + 'posHalo '+JSON.stringify(arrowhead));
+    //console.log('CanvasUtils.getArrowheadPoints result '+JSON.stringify(arrowhead));
 
     return arrowhead;
 

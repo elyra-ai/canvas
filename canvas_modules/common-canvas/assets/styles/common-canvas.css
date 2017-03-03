@@ -13,7 +13,7 @@
 *****************************************************************/
 @CHARSET "ISO-8859-1";
 
-/*@font-face {
+@font-face {
     font-family: IBMHLVMedium;
     src: url(./fonts/medium/helvetica-neue-medium.woff);
 }
@@ -35,7 +35,7 @@
 @font-face {
     font-family: IBMHLVRoman;
     src: url(./fonts/roman/helvetica-neue-roman.woff);
-}*/
+}
 
 :root {
   --white: #FFFFFF;
@@ -76,14 +76,6 @@
   outline: 1px solid transparent;
 }
 
-#empty-canvas {
-  width: 1400px;
-  height: 450px;
-  position: absolute;
-  left: 0%;
-  top: 0%;
-}
-
 /* Canvas Styles */
 
 .canvas-zoom-controls {
@@ -119,6 +111,8 @@
 
 .canvas-node.selected {
   border: 2px dashed #60C3B9;
+  width: 66px !important;
+  
 }
 
 .canvas-node .node-icon {
@@ -506,8 +500,6 @@
   white-space: nowrap;
   background: 0 0;
   border: 0;
-  line-height: 1.68;
-  text-decoration: none;
 }
 
 .react-context-menu-link.active,
