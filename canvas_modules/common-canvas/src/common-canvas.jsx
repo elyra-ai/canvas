@@ -16,6 +16,7 @@ import React from 'react';
 import {OverlayTrigger, Tooltip} from 'react-bootstrap';
 import DiagramCanvas from './diagram-canvas.jsx';
 import Palette from './palette/palette.jsx';
+import ObjectModel from './object-model/object-model.js';
 
 
 export default class CommonCanvas extends React.Component {
@@ -26,6 +27,10 @@ export default class CommonCanvas extends React.Component {
       isPaletteOpen: false
     };
 
+    ObjectModel.subscribe(() => {
+      this.forceUpdate();
+    });
+
     this.openPalette = this.openPalette.bind(this);
     this.closePalette = this.closePalette.bind(this);
 
@@ -34,6 +39,12 @@ export default class CommonCanvas extends React.Component {
 
     this.zoomIn = this.zoomIn.bind(this);
     this.zoomOut = this.zoomOut.bind(this);
+
+    this.editDiagramHandler = this.editDiagramHandler.bind(this);
+    this.contextMenuActionHandler = this.contextMenuActionHandler.bind(this);
+    this.contextMenuHandler = this.contextMenuHandler.bind(this);
+    this.clickHandler = this.clickHandler.bind(this);
+    this.decorationActionHandler = this.decorationActionHandler.bind(this);
   }
 
   openPalette() {
@@ -62,26 +73,97 @@ export default class CommonCanvas extends React.Component {
     this.refs.canvas.zoomOut();
   }
 
-  render() {
-    let canvas = <div></div>;
-    let popupPalette = <div></div>;
-    let addButton = <div></div>;
-    let zoomControls = <div></div>;
+  editDiagramHandler(data) {
+    if (this.props.config.enableInternalObjectModel) {
+      switch (data.editType) {
+        case "createNode":
+          ObjectModel.createNode(data);
+          break;
+        case "moveObjects":
+          ObjectModel.moveObjects(data);
+          break;
+        case "editComment":
+          ObjectModel.editComment(data);
+          break;
+        case "linkNodes":
+          ObjectModel.linkNodes(data);
+          break;
+        case "linkComment":
+          ObjectModel.linkComment(data);
+          break;
+      }
+    }
 
-    if (this.props.diagram !== null) {
+    if (this.props.editDiagramHandler) {
+      this.props.editDiagramHandler(data);
+    }
+  }
+
+  contextMenuActionHandler(action, source) {
+    if (this.props.config.enableInternalObjectModel) {
+      switch (action) {
+        case "deleteObjects":
+          ObjectModel.deleteObjects(source);
+          break;
+        case "addComment":
+          ObjectModel.createComment(source);
+          break;
+        case "deleteLink":
+          ObjectModel.deleteLink(source);
+          break;
+        case "disconnectNode":
+          ObjectModel.disconnectNodes(source);
+          break;
+      }
+    }
+
+    if (this.props.contextMenuActionHandler) {
+      this.props.contextMenuActionHandler(action, source);
+    }
+  }
+
+  contextMenuHandler(source) {
+    if (this.props.contextMenuHandler) {
+      let menu = this.props.contextMenuHandler(source);
+      if (typeof menu !== 'undefined') {
+        return menu;
+      }
+    }
+    return null;
+  }
+
+  clickHandler(source) {
+    if (this.props.clickHandler) {
+      this.props.clickHandler(source);
+    }
+  }
+
+  decorationActionHandler(node, id) {
+    if (this.props.decorationActionHandler) {
+      this.props.decorationActionHandler(node, id);
+    }
+  }
+
+  render() {
+    let canvas = null;
+    let popupPalette = null;
+    let addButton = null;
+    let zoomControls = null;
+    let stream = ObjectModel.getStream();
+
+    if (stream !== null) {
       canvas = <DiagramCanvas ref="canvas"
-                    diagram={this.props.diagram}
-                    initialSelection={this.props.initialSelection}
-                    paletteJSON={this.props.paletteJSON}
+                    diagram={stream}
+                    paletteJSON={ObjectModel.getPaletteData()}
                     openPaletteMethod={this.openPalette}
-                    contextMenuHandler={this.props.contextMenuHandler}
-                    contextMenuActionHandler={this.props.contextMenuActionHandler}
-                    editDiagramHandler={this.props.editDiagramHandler}
-                    clickHandler={this.props.clickHandler}
-                    decorationActionHandler={this.props.decorationActionHandler}>
+                    contextMenuHandler={this.contextMenuHandler}
+                    contextMenuActionHandler={this.contextMenuActionHandler}
+                    editDiagramHandler={this.editDiagramHandler}
+                    clickHandler={this.clickHandler}
+                    decorationActionHandler={this.decorationActionHandler}>
                 </DiagramCanvas>;
       if (this.props.config.enablePalette) {
-        popupPalette = <Palette paletteJSON={this.props.paletteJSON}
+        popupPalette = <Palette paletteJSON={ObjectModel.getPaletteData()}
                     showPalette={this.state.isPaletteOpen}
                     closePalette={this.closePalette}
                     createTempNode={this.createTempNode}
@@ -118,9 +200,6 @@ export default class CommonCanvas extends React.Component {
 
 CommonCanvas.propTypes = {
     config: React.PropTypes.object,
-    diagram: React.PropTypes.object,
-    initialSelection: React.PropTypes.array,
-    paletteJSON: React.PropTypes.object,
     contextMenuHandler: React.PropTypes.func,
     contextMenuActionHandler: React.PropTypes.func,
     editDiagramHandler: React.PropTypes.func,

@@ -42,16 +42,11 @@ export default class DiagramCanvas extends React.Component {
     super(props);
 
     let selectedObjects = [];
-    // console.log("DiagramCanvas: initial selection=" + props.initialSelection);
-    if (props.initialSelection != undefined && props.initialSelection != null) {
-      // console.log("DiagramCanvas: setting initial selection");
-      selectedObjects = props.initialSelection;
-    }
 
 		let zoomValue = props.diagram.zoom && !Number.isNaN(props.diagram.zoom) ? props.diagram.zoom : ZOOM_DEFAULT_VALUE;
     this.state = {
       nodes: [],
-      selectedObjects: selectedObjects,
+      selectedObjects: [],
       sourceNodes: [],
       targetNodes: [],
       showContextMenu: false,
@@ -109,10 +104,6 @@ export default class DiagramCanvas extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
-    if (newProps.initialSelection != undefined && newProps.initialSelection != null) {
-      // console.log("DiagramCanvas: updating selection");
-      this.setState({ selectedObjects: newProps.initialSelection });
-    }
   }
 
   getConnctionArrowHeads(positions) {
@@ -1207,7 +1198,8 @@ export default class DiagramCanvas extends React.Component {
     let emptyDraggable = <div ref="emptyDraggable"></div>;
     let emptyCanvas = null;
 
-    if (this.props.diagram.diagram.nodes.length == 0) {
+    if (this.props.diagram.diagram.nodes.length == 0 &&
+        this.props.diagram.diagram.comments.length == 0) {
       emptyCanvas = <div id="empty-canvas" onContextMenu={this.canvasContextMenu}> <img src='/canvas/images/blank_canvas.png'></img></div>;
     }
 /*
@@ -1258,7 +1250,6 @@ export default class DiagramCanvas extends React.Component {
 
 DiagramCanvas.propTypes = {
   diagram: React.PropTypes.object,
-  initialSelection: React.PropTypes.array,
   paletteJSON: React.PropTypes.object.isRequired,
   openPaletteMethod: React.PropTypes.func.isRequired,
   contextMenuHandler: React.PropTypes.func.isRequired,

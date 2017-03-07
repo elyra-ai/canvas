@@ -6,19 +6,10 @@ import {shallow, mount, render} from 'enzyme';
 import {expect, assert} from 'chai';
 import sinon from 'sinon';
 import {OverlayTrigger} from 'react-bootstrap';
-
+import ObjectModel from '../src/object-model/object-model.js';
 
 
 describe('CommonCanvas renders correctly', () => {
-
-    it('all required props should have been defined', () => {
-        const config = {enablePalette: true};
-        const wrapper = createCommonCanvas(config);
-
-        expect(JSON.stringify(wrapper.props().children[0].props.diagram)).to.be.not.undefined;
-        expect(JSON.stringify(wrapper.props().children[0].props.initialSelection)).to.be.not.undefined;
-        expect(JSON.stringify(wrapper.props().children[0].props.paletteJSON)).to.be.not.undefined;
-    });
 
     it('should render one <DialogEditor/> component', () => {
         const config = {};
@@ -58,9 +49,8 @@ describe('CommonCanvas renders correctly', () => {
 });
 
 function createCommonCanvas(config) {
-    const diagram = {};
-    const initialSelection = [];
-    const paletteJSON = {};
+    ObjectModel.setStream({});
+    ObjectModel.setPaletteData({});
     const contextMenuHandler = sinon.spy();
     const contextMenuActionHandler = sinon.spy();
     const editDiagramHandler = sinon.spy();
@@ -68,9 +58,6 @@ function createCommonCanvas(config) {
     const decorationActionHandler = sinon.spy();
     const wrapper = shallow(<CommonCanvas
       config={config}
-      diagram={diagram}
-      initialSelection={initialSelection}
-      paletteJSON={paletteJSON}
       contextMenuHandler={contextMenuHandler}
       contextMenuActionHandler={contextMenuActionHandler}
       editDiagramHandler={editDiagramHandler}

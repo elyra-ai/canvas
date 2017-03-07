@@ -37,32 +37,6 @@
     src: url(./fonts/roman/helvetica-neue-roman.woff);
 }
 
-:root {
-  --white: #FFFFFF;
-  --black: #000000;
-  --ibm-magenta-50: #DB2780;
-  --ibm-magenta-60: #A6266E;
-  --ibm-teal-20: #6EEDD8;
-  --ibm-teal-30: #41D6C3;
-  --ibm-teal-40: #00B4A0;
-  --ibm-blue-10: #C0E6FF;
-  --ibm-blue-20: #7CC7FF;
-  --ibm-blue-30: #5AAAFA;
-  --ibm-blue-50: #4178BE;
-  --ibm-blue-60: #325c80;
-  --ibm-blue-80: #1D3649;
-  --ibm-blue-90: #152935;
-  --ibm-blue-70: #264A60;
-  --ibm-grey-50: #777677;
-  --ibm-grey-30: #AEAEAE;
-  --ibm-grey-10: #E0E0E0;
-  --ibm-cool-2: #F9F9FB;
-  --ibm-cool-gray-70: #3C4646;
-  --ibm-yellow-20: #FDD600;
-  --ibm-red-50: #E71D32;
-  --ibm-green-50: #4B8400;
-}
-
 /* SVG Canvas styles */
 
 .svg-canvas {
@@ -112,7 +86,6 @@
 .canvas-node.selected {
   border: 2px dashed #60C3B9;
   width: 66px !important;
-  
 }
 
 .canvas-node .node-icon {
@@ -141,6 +114,8 @@
 /* Comment styles */
 
 .canvas-comment {
+  background-color: #ffff99;
+  color: #000000;
   cursor: 'move';
   border: 2px solid transparent;
   /* Prevent elements from being selectable */

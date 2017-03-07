@@ -376,11 +376,11 @@ class Node extends React.Component {
          //backgroundColor : 'red'
       };
 
-    let iconStyle = {};
-    if (this.props.node.isCut) {
-      iconStyle.zoom = 1;
-      iconStyle.filter = "alpha(opacity=50)";
-      iconStyle.opacity = 0.5;
+    let customAttrs = {};
+    if (this.props.node.customAttrs) {
+      this.props.node.customAttrs.forEach((a) => {
+        customAttrs[a] = "";
+      });
     }
 
     //console.log('ZOOM : '+zoom);
@@ -418,7 +418,8 @@ class Node extends React.Component {
         onContextMenu={this.props.onContextMenu}
         >
 
-        <img style={iconStyle}
+        <img className="node-image"
+            {...customAttrs}
             src={this.props.node.image} alt={this.props.label}
             width={this.props.uiconf.iconSize}
             height={this.props.uiconf.iconSize}

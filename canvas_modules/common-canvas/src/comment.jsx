@@ -244,10 +244,11 @@ class Comment extends React.Component {
         //backgroundColor : 'yellow'
       };
 
-      if (this.props.comment.isCut) {
-        commentStyle.zoom = 1;
-        commentStyle.filter = "alpha(opacity=50)";
-        commentStyle.opacity = 0.5;
+      let customAttrs = {};
+      if (this.props.comment.customAttrs) {
+        this.props.comment.customAttrs.forEach((a) => {
+          customAttrs[a] = "";
+        });
       }
 
       let innerBoxStyle =
@@ -282,6 +283,7 @@ class Comment extends React.Component {
         <div
           className={className}
           style={commentStyle}
+          {...customAttrs}
           draggable="true"
           onDragStart={this.dragStart}
           onDragEnd={this.dragEnd}
