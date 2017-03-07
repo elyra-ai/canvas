@@ -22,7 +22,7 @@ The configuration object is defined as:
 
   // When true, the internal canvas object model is enabled,
   // removing the need to track all canvas events externally
-  "useObjectModel": true|false
+  "enableInternalObjectModel": true|false
 
   // Palette tooltip. This will be displayed when hovering over the icon
   // that appears in the canvas which opens the palette. Only used when
