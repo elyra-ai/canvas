@@ -46,6 +46,7 @@
   padding: 14px;
   width:18px;
   fill:#3FB8AF;
+  box-sizing: content-box;
 }
 
 .navbar-li a:hover, .palette-true a:hover {
@@ -66,7 +67,7 @@
 }
 
 .nav-divider {
-  border-left:1px solid #252525;
+  border-left:1px solid #264A60;
 }
 
 /*Console*/
@@ -82,6 +83,8 @@
   transition: height 2s;
   overflow-y: auto;
   z-index: 1;
+  padding-left: 1em;
+	line-height: 1.1;
 }
 
 /*SidePanel*/
@@ -93,7 +96,7 @@
   height: 100%;
   -webkit-transition:width 2s;
   transition: width 2s;
-  color: #D2D2D2;
+  color: #F9F9FB;
   /*overflow-x:auto;*/
   z-index: 2;
   box-sizing: border-box;
@@ -104,10 +107,6 @@
   padding-bottom: 5px;
 }
 
-.sidepanel-radio-button, .sidepanel-checkbox{
-	margin-right: 6px;
-}
-
 .sidepanel-children {
   padding-left: 10px;
   padding-right: 10px;
@@ -116,6 +115,16 @@
 .sidepanel-divider {
   width: 100%;
   margin: 0 0 5px 0;
-  border-bottom:1px solid #252525;
+  border-bottom:1px solid #1D3649;
   padding: 5px 0 5px 0;
+}
+
+/*Override ap-components-react styles*/
+.button {
+  line-height: 0.5;
+  margin-top: 2px;
+}
+
+.toggle__checkbox{
+  margin-top: 5px;
 }

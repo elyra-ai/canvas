@@ -10,6 +10,9 @@
 import React from "react";
 
 import {
+	RadioGroup
+} from "ap-components-react/dist/ap-components-react";
+import {
 	CURVE,
 	ELBOW,
 	STRAIGHT
@@ -22,43 +25,27 @@ export default class SidePanelStyles extends React.Component {
 		this.linkTypeOptionChange = this.linkTypeOptionChange.bind(this);
 	}
 
-	linkTypeOptionChange(changeEvent) {
-		this.props.setLinkTypeStyle(changeEvent.target.value);
+	linkTypeOptionChange(evt, obj) {
+		this.props.setLinkTypeStyle(obj.selected);
 	}
 
 	render() {
-		var selectedLinkTypeStyle = this.props.selectedLinkTypeStyle;
-
 		var divider = (<div
 			className="sidepanel-children sidepanel-divider"
 		/>);
 
 		var linkStyle = (<div className="sidepanel-children" id="sidepanel-style-links">
-			<form>
-				<div className="sidepanel-headers">Link Types</div>
-				<div className="sidepanel-radio">
-					<input className="sidepanel-radio-button" type="radio"
-						value={STRAIGHT}
-						checked={ selectedLinkTypeStyle === STRAIGHT }
-						onChange={this.linkTypeOptionChange}
-					/>
-					Straight
-				</div>
-				<div className="sidepanel-radio">
-					<input className="sidepanel-radio-button" type="radio" value={CURVE}
-						checked={ selectedLinkTypeStyle === CURVE }
-						onChange={this.linkTypeOptionChange}
-					/>
-					Curve
-				</div>
-				<div className="sidepanel-radio">
-					<input className="sidepanel-radio-button" type="radio" value={ELBOW}
-						checked={ selectedLinkTypeStyle === ELBOW }
-						onChange={ this.linkTypeOptionChange }
-					/>
-					Elbow
-				</div>
-			</form>
+			<div className="sidepanel-headers">Link Types</div>
+			<RadioGroup
+				dark
+				onChange={this.linkTypeOptionChange}
+				choices={[
+					STRAIGHT,
+					CURVE,
+					ELBOW
+				]}
+				selected={STRAIGHT}
+			/>
 		</div>);
 
 		return (
@@ -72,6 +59,5 @@ export default class SidePanelStyles extends React.Component {
 
 SidePanelStyles.propTypes = {
 	setLinkTypeStyle: React.PropTypes.func,
-	selectedLinkTypeStyle: React.PropTypes.string,
 	log: React.PropTypes.func
 };

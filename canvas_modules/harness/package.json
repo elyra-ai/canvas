@@ -13,6 +13,7 @@
   "dependencies": {
     "@wdp/common-canvas": "file:../common-canvas",
     "@wdp/common-properties": "file:../common-properties",
+    "ap-components-react": "3.0.6",
     "express": "4.13.4",
     "log4js": "0.6.38",
     "nconf": "0.8.4",

@@ -12,6 +12,7 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import "../styles/index.css";
 import "@wdp/common-canvas/assets/styles/common-canvas.css";
+import "ap-components-react/dist/ap-components-react.min.css";
 
 ReactDOM.render(
 	<App />,

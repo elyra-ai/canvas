@@ -11,7 +11,12 @@
 /* eslint no-undef: "error" */
 
 import React from "react";
-import { FormControl, Button } from "react-bootstrap";
+import { FormControl } from "react-bootstrap";
+import {
+	Button,
+	RadioGroup,
+	ToggleButton
+} from "ap-components-react/dist/ap-components-react";
 
 import {
 	NONE,
@@ -35,7 +40,7 @@ export default class SidePanelForms extends React.Component {
 		this.isReadyToSubmitPaletteData = this.isReadyToSubmitPaletteData.bind(this);
 
 		this.layoutDirectionOptionChange = this.layoutDirectionOptionChange.bind(this);
-		this.useObjectModel = this.useObjectModel.bind(this);
+		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
 	}
 
 	onCanvasFileSelect(evt) {
@@ -108,12 +113,12 @@ export default class SidePanelForms extends React.Component {
 		return false;
 	}
 
-	layoutDirectionOptionChange(changeEvent) {
-		this.props.setLayoutDirection(changeEvent.target.value);
+	layoutDirectionOptionChange(evt, obj) {
+		this.props.setLayoutDirection(obj.selected);
 	}
 
-	useObjectModel(changeEvent) {
-		this.props.useObjectModel(changeEvent.target.checked);
+	useInternalObjectModel(changeEvent) {
+		this.props.useInternalObjectModel(changeEvent.target.checked);
 	}
 
 	render() {
@@ -129,7 +134,7 @@ export default class SidePanelForms extends React.Component {
 					accept=".json"
 					ref="canvasDiagram" onChange={this.onCanvasFileSelect}
 				/>
-				<Button light semantic
+				<Button dark
 					disabled={!this.isReadyToSubmitCanvasData()}
 					onClick={this.submitCanvasDiagram.bind(this)}
 				>
@@ -149,7 +154,7 @@ export default class SidePanelForms extends React.Component {
 					ref="canvasPalette"
 					onChange={this.onCanvasPaletteSelect}
 				/>
-				<Button dark semantic
+				<Button dark
 					disabled={!this.isReadyToSubmitPaletteData()}
 					onClick={this.submitCanvasPalette.bind(this)}
 					onChange={(evt) => this.props.enableNavPalette(evt.target.checked)}
@@ -159,44 +164,28 @@ export default class SidePanelForms extends React.Component {
 			</div>
 		</div>);
 
-		var selectedLayoutDirection = this.props.selectedLayoutDirection;
 		var layoutDirection = (<div className="sidepanel-children" id="sidepanel-layout-direction">
-			<form>
-				<div className="sidepanel-headers">Layout Direction</div>
-				<div className="sidepanel-radio">
-					<input className="sidepanel-radio-button" type="radio"
-						value={NONE}
-						checked={ selectedLayoutDirection === NONE }
-						onChange={this.layoutDirectionOptionChange}
-					/>
-					None
-				</div>
-				<div className="sidepanel-radio">
-					<input className="sidepanel-radio-button" type="radio" value={HORIZONTAL}
-						checked={ selectedLayoutDirection === HORIZONTAL }
-						onChange={this.layoutDirectionOptionChange}
-					/>
-					Horizontal
-				</div>
-				<div className="sidepanel-radio">
-					<input className="sidepanel-radio-button" type="radio" value={VERTICAL}
-						checked={ selectedLayoutDirection === VERTICAL }
-						onChange={ this.layoutDirectionOptionChange }
-					/>
-					Vertical
-				</div>
-			</form>
+			<div className="sidepanel-headers">Layout Direction</div>
+			<RadioGroup
+				dark
+				onChange={this.layoutDirectionOptionChange}
+				choices={[
+					NONE,
+					HORIZONTAL,
+					VERTICAL
+				]}
+				selected={NONE}
+			/>
 		</div>);
 
 		var enableObjectModel = (<div className="sidepanel-children" id="sidepanel-object-model">
 			<form>
-				<div className="sidepanel-headers">Options</div>
-				<div className="sidepanel-checbox">
-					<input className="sidepanel-checkbox" type="checkbox"
-						value="useObjectModel"
-						onChange={this.useObjectModel}
+				<div className="sidepanel-headers">Use Object Model</div>
+				<div>
+					<ToggleButton dark
+						id="sidepanel-object-model-toggle"
+						onChange={this.useInternalObjectModel}
 					/>
-					Use Object Model
 				</div>
 			</form>
 		</div>);
@@ -220,7 +209,6 @@ SidePanelForms.propTypes = {
 	setDiagramJSON: React.PropTypes.func,
 	setPaletteJSON: React.PropTypes.func,
 	setLayoutDirection: React.PropTypes.func,
-	selectedLayoutDirection: React.PropTypes.string,
-	useObjectModel: React.PropTypes.func,
+	useInternalObjectModel: React.PropTypes.func,
 	log: React.PropTypes.func
 };

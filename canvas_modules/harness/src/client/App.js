@@ -47,7 +47,7 @@ class App extends React.Component {
 			contextMenuInfo: {},
 			diagramJSON: null,
 			initialSelection: null,
-			objectModel: false,
+			internalObjectModel: false,
 			openSidepanelForms: false,
 			openSidepanelStyles: false,
 			paletteJSON: {},
@@ -76,7 +76,7 @@ class App extends React.Component {
 		this.sidePanelStyles = this.sidePanelStyles.bind(this);
 		this.setLinkTypeStyle = this.setLinkTypeStyle.bind(this);
 		this.setLayoutDirection = this.setLayoutDirection.bind(this);
-		this.useObjectModel = this.useObjectModel.bind(this);
+		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
 
 		// required by common-canvas
 		this.contextMenuHandler = this.contextMenuHandler.bind(this);
@@ -180,9 +180,9 @@ class App extends React.Component {
 		// this.log("palette in nav bar enabled: " + enabled);
 	}
 
-	useObjectModel(objectModelEnabled) {
-		this.setState({ objectModel: objectModelEnabled });
-		this.log("use object model: " + objectModelEnabled);
+	useInternalObjectModel(enabled) {
+		this.setState({ internalObjectModel: enabled });
+		this.log("use internal object model: " + enabled);
 	}
 
 	// required by common-canvas
@@ -452,7 +452,7 @@ class App extends React.Component {
 		var commonCanvasConfig = {
 			enablePalette: this.state.paletteNavEnabled, // true if palette json submitted
 			enableAutoLayout: this.state.selectedLayoutDirection,
-			useObjectModel: false,
+			enableInternalObjectModel: this.state.internalObjectModel,
 			paletteTooltip: PALETTE_TOOLTIP
 		};
 
@@ -489,7 +489,7 @@ class App extends React.Component {
 				selectedLayoutDirection={this.state.selectedLayoutDirection}
 				setLinkTypeStyle={this.setLinkTypeStyle}
 				selectedLinkTypeStyle={this.state.selectedLinkTypeStyle}
-				useObjectModel={this.useObjectModel}
+				useInternalObjectModel={this.useInternalObjectModel}
 				log={this.log}
 			/>
 			<IntlProvider key="IntlProvider" locale={ locale } messages={ messages }>

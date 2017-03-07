@@ -34,15 +34,13 @@ export default class SidePanel extends React.Component {
 				setDiagramJSON={this.props.setDiagramJSON}
 				setPaletteJSON={this.props.setPaletteJSON}
 				setLayoutDirection={this.props.setLayoutDirection}
-				selectedLayoutDirection={this.props.selectedLayoutDirection}
-				useObjectModel={this.props.useObjectModel}
+				useInternalObjectModel={this.props.useInternalObjectModel}
 				log={this.props.log}
 			/>);
 			break;
 		case SIDE_PANEL_STYLES:
 			view = (<SidePanelStyles
 				setLinkTypeStyle={this.props.setLinkTypeStyle}
-				selectedLinkTypeStyle={this.props.selectedLinkTypeStyle}
 				log={this.props.log}
 			/>);
 			break;
@@ -66,10 +64,8 @@ SidePanel.propTypes = {
 	setDiagramJSON: React.PropTypes.func,
 	setPaletteJSON: React.PropTypes.func,
 	setLayoutDirection: React.PropTypes.func,
-	selectedLayoutDirection: React.PropTypes.string,
 	setLinkTypeStyle: React.PropTypes.func,
-	selectedLinkTypeStyle: React.PropTypes.string,
 	selectedPanel: React.PropTypes.string,
-	useObjectModel: React.PropTypes.func,
+	useInternalObjectModel: React.PropTypes.func,
 	log: React.PropTypes.func
 };

@@ -24,9 +24,9 @@ _defineConstant("CONSOLE", {
 	MAXIMIXED: "200px"
 });
 
-_defineConstant("CURVE", "CURVE");
-_defineConstant("ELBOW", "ELBOW");
-_defineConstant("STRAIGHT", "STRAIGHT");
+_defineConstant("CURVE", "curve");
+_defineConstant("ELBOW", "elbow");
+_defineConstant("STRAIGHT", "straight");
 
 _defineConstant("SIDE_PANEL", {
 	MINIMIZED: "0px",
@@ -59,12 +59,10 @@ _defineConstant("BLANK_CANVAS", {
 		"comments": [],
 		"links": []
 	},
-	"parents": [
-		{
-			"id": "abc651d6-9b88-423c-b01b-861f12d01489",
-			"label": "druglearn"
-		}
-	]
+	"parents": [{
+		"id": "abc651d6-9b88-423c-b01b-861f12d01489",
+		"label": "druglearn"
+	}]
 });
 
 _defineConstant("PALETTE_TOOLTIP", "Click to show node palette");
