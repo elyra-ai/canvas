@@ -13,12 +13,13 @@ module.exports = {
 	context: path.join(__dirname, "/src/"),
 	devtool: "#inline-source-map",
 	entry: {
-		lib: "./common-canvas.jsx"
+		canvas: "./common-canvas.jsx", 
+		objectmodel: "./object-model/object-model.js"
 	},
 	output: {
 		library: "Common-Canvas",
 		libraryTarget: "commonjs2",
-		filename: "common-canvas.js",
+		filename: "[name].js",
 		path: path.join(__dirname, "/dist"),
 		sourceMapFilename: "[file].map",
 	},
