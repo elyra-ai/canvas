@@ -274,6 +274,21 @@ export default class DiagramCanvas extends React.Component {
             this.moveNode(jsVal.id,
               Math.round((event.clientX - dragBounds.startX) / zoom),
               Math.round((event.clientY - dragBounds.startY) / zoom));
+
+            // if you move a comment box while it is in edit mode then you need
+            // to adjust the x,y position that is cached in the state
+            if (this.state.editCommentInfo.id !== undefined &&
+                  this.state.editCommentInfo.id == jsVal.id) {
+              let editCommentInfo = {
+                id: this.state.editCommentInfo.id,
+                text: this.state.editCommentInfo.text,
+                width: this.state.editCommentInfo.width,
+                height: this.state.editCommentInfo.height,
+        		    xPos: this.state.editCommentInfo.xPos+Math.round((event.clientX - dragBounds.startX) / zoom),
+                yPos: this.state.editCommentInfo.yPos+Math.round((event.clientY - dragBounds.startY) / zoom)
+              }
+              this.setState({editCommentInfo: editCommentInfo});
+            }
           }
         }
       }
@@ -421,6 +436,7 @@ export default class DiagramCanvas extends React.Component {
     if (event.target.id == "" || event.target.id == "empty-canvas") {
       cmInfo = this.props.contextMenuHandler({
         type: "canvas",
+		zoom: this.zoom(),
         selectedObjectIds: selectedObjects,
         mousePos: mousePos});
     }
@@ -507,9 +523,11 @@ export default class DiagramCanvas extends React.Component {
     } else if (action == 'editComment') {
       let editCommentInfo = {
         id: comment.id,
-        text: comment.text,
+        text: comment.content,
         width: comment.width,
-        height: comment.height
+        height: comment.height,
+		    xPos: comment.xPos,
+        yPos: comment.yPos
       }
       this.setState({editCommentInfo: editCommentInfo});
     } else if (action == 'changeComment') {
@@ -519,10 +537,23 @@ export default class DiagramCanvas extends React.Component {
          id: comment.id,
          text: optionalArgs.target.value,
          width: optionalArgs.width,
-         height: optionalArgs.height
+         height: optionalArgs.height,
+         xPos: optionalArgs.xPos,
+         yPos: optionalArgs.yPos
         }
         this.setState({editCommentInfo: editCommentInfo});
       }
+    } else if (action == 'resizeCommentBox') {
+      // save the new comment box size
+      this.props.editDiagramHandler({
+        editType: 'editComment',
+        nodes: optionalArgs.nodes,
+        label: optionalArgs.target.value,
+        width: optionalArgs.width,
+        height: optionalArgs.height,
+        offsetX: optionalArgs.xPos,
+        offsetY: optionalArgs.yPos
+      });
     }
   }
 
@@ -588,7 +619,7 @@ export default class DiagramCanvas extends React.Component {
   }
 
   moveNode(nodeId, offsetX, offsetY) {
-    // console.log("moveNode():x=" + offsetX + ",y=" + offsetY);
+    //console.log("moveNode():x=" + offsetX + ",y=" + offsetY);
     this.moveNodes(this.ensureSelected(nodeId), offsetX, offsetY);
   }
 
@@ -713,13 +744,17 @@ export default class DiagramCanvas extends React.Component {
 
   finalizedEditComment() {
     if (this.state.editCommentInfo.id !== undefined) {
+      //console.log("finalizedEditComment");
+      //console.log(this.state.editCommentInfo);
       var nodes = [this.state.editCommentInfo.id];
       this.props.editDiagramHandler({
         editType: 'editComment',
         nodes: nodes,
         label: this.state.editCommentInfo.text,
         width: this.state.editCommentInfo.width,
-        height: this.state.editCommentInfo.height
+        height: this.state.editCommentInfo.height,
+        offsetX: this.state.editCommentInfo.xPos,
+        offsetY: this.state.editCommentInfo.yPos
       });
 
       this.setState({
@@ -1152,7 +1187,7 @@ export default class DiagramCanvas extends React.Component {
       let x = Math.round(comment.xPos * zoom);
       let y = Math.round(comment.yPos * zoom);
 
-      //console.log("Comment: " + comment.text);
+      //console.log("Comment: " + comment.content);
       //console.log(comment);
 
 	  var editable = false;

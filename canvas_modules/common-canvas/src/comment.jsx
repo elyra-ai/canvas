@@ -20,15 +20,27 @@ class Comment extends React.Component {
   constructor(props) {
     super(props);
 
-    let fontPxSize = Math.round(this.props.fontSize * (96/72));  // convert from pt to px
-    let roundedHeight = Math.round(Math.ceil(this.props.comment.height/fontPxSize)*fontPxSize);
+    // There is a complexities to comments that can cause brittleness.
+    // The state of the comment is different from the object model in two cases.
+    // 1) while editing the comment box, the current state is kept in the comment
+    //    element until the editing is complete then the changed comment is sent to
+    //    the object model.  Editing a comment can change the width and height.
+    // 2) when resizing the comment box, the box height, width, x and y positions are
+    //    kept in the state until resizing is complete and then the changed dimensions
+    //    are sent to the object model.
+    // The case where this becomes complex is when the box is moved or resized while in
+    // edit mode.  The drop on the move is handled in diagram-canvas and the object model
+    // is updated from diagram-canvas.  This leads to complexity in ensuring that the 
+    // comment state is updated after a move.
 
     this.state = {
       showBox: false,
       context: false,
       value: this.props.comment.content,
       width: this.props.comment.width,
-      height: roundedHeight
+      height: this.props.comment.height,
+      xPos: this.props.comment.xPos,
+      yPos: this.props.comment.yPos
     };
     this.dragStart = this.dragStart.bind(this);
     //this.drag = this.drag.bind(this);
@@ -50,6 +62,278 @@ class Comment extends React.Component {
     this.handleMouseEnter = this.handleMouseEnter.bind(this);
     this.handleMouseLeave = this.handleMouseLeave.bind(this);
     this.handleMouseEnterInnerBox = this.handleMouseEnterInnerBox.bind(this);
+
+
+    this.mouseMove = this.mouseMove.bind(this);
+    this.setCursorStyle =this.setCursorStyle.bind(this);
+    this.getNewSize =this.getNewSize.bind(this);
+    this.mouseUp = this.mouseUp.bind(this);
+    this.mouseDownOnComment = this.mouseDownOnComment.bind(this);
+
+    // resizing of the comment box mode.  It is not a state variable because it will
+    // cause a jitter when I set the state and it renders in some cases.
+    this.resizingComment = false;
+
+    // verticalSizingAction and verticalSizingHover can be set to top or bottom
+    this.verticalSizingAction = "";
+    this.verticalSizingHover = "";
+
+    // horizontalSizingAction and horizontalSizingHover can be set to left or right
+    this.horizontalSizingAction = "";
+    this.hoizontalSizingHover = "";
+
+    // These variables store the comment dimensions
+    this.savedWidth = 0;
+    this.savedLeft = 0;
+    this.savedHeight = 0;
+    this.savedTop = 0;
+
+    // hoverZoneSize is the number of pixels around the comment where the
+    // sizing cursor will appear (which allows the user to size the window).
+    this.hoverZoneSize = 3;
+    this.totalHoverZoneSize = this.hoverZoneSize * 2;
+
+    // Need to control min width and min height in code to avoid CSS problems
+    this.minWidth = 128;
+    this.minHeight = 32;
+
+    // hackOffset is used to align the cursor to determine if one the right or bottom border.
+    this.cursorOffset = 4;  // px
+
+    window.addEventListener("mousemove", this.mouseMove, false);
+    window.addEventListener("mouseup", this.mouseUp, false);
+  }
+
+  componentDidMount() {
+  }
+
+  componentDidUpdate() {
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("mousemove", this.mouseMove);
+    window.removeEventListener("mouseup", this.mouseUp);
+  }
+
+  // mouseMove is an event handler whenver the mouse is moved.
+  // It handles the resizing of the comment box.  This will cache the
+  // new size in the local state and will not update the object model
+  // until the mouseUp event is fired.
+  mouseMove (event){
+    // First, see if we are doing a sizing action (i.e. the user has
+    // done mouse down when in sizing hover zone) and take appropriate
+    // sizing action.
+    if (this.resizingComment) {
+      let canvasDiv = document.getElementById("canvas-div");
+
+      let dimensions = this.getNewSize(this.verticalSizingAction,this.horizontalSizingAction,event,canvasDiv,
+        {savedWidth: this.savedWidth, savedLeft: this.savedLeft, minWidth: this.minWidth},
+        {savedHeight: this.savedHeight, savedTop: this.savedTop, minHeight: this.minHeight});
+
+      this.setState({
+        width: dimensions.newWidth,
+        height: dimensions.newHeight,
+        xPos: Math.round((dimensions.newLeft - (20 * this.props.zoom))/this.props.zoom),
+        yPos: Math.round((dimensions.newTop + this.props.zoom)/this.props.zoom)
+      });
+
+
+      // Finally, if no sizing or dragging is going on, we look to see if
+      // the user is hovering the pointer near the comment edges so we can
+      // display an appropriate sizing cursor.
+    } else {
+      let commentDiv = this.getCommentDiv();
+      this.setCursorStyle(commentDiv, this.getInnerBoxLeft(this.props.comment.xPos), this.getInnerBoxTop(this.props.comment.yPos), event);
+    }
+  }
+
+  // When resizing get the new size dimensions of the comment box
+  getNewSize(verticalSizingAction, horizontalSizingAction, event, canvasDiv,
+            widthVals,heightVals) {
+    // console.log("comment getNewSize");
+
+    let newWidth = widthVals.savedWidth;
+    let newLeft = widthVals.savedLeft;
+    let newHeight = heightVals.savedHeight;
+    let newTop = heightVals.savedTop;
+
+    let rect = canvasDiv.getBoundingClientRect();
+    let eventClientX = event.clientX - Math.round(rect.left);
+    let eventClientY = event.clientY - Math.round(rect.top);
+
+    if (horizontalSizingAction == "left") {
+      newWidth = widthVals.savedWidth - ((eventClientX - widthVals.savedLeft) / this.props.zoom);
+
+      if (newWidth <= widthVals.minWidth) {
+        newWidth = widthVals.minWidth;
+      } else {
+        newLeft = eventClientX;
+      }
+      //console.log("moving left eventClient x,y = "+eventClientX+","+eventClientY+" newLeft = " +newLeft+ " saveLeft = "+ widthVals.savedLeft+
+      //            " newWidth = "+newWidth+" savedWidth ="+widthVals.savedWidth)
+    }
+
+    if (horizontalSizingAction == "right") {
+      newWidth = (eventClientX - widthVals.savedLeft) / this.props.zoom;
+
+      if (newWidth <= widthVals.minWidth) {
+        newWidth = widthVals.minWidth;
+      }
+    }
+
+    if (verticalSizingAction == "top") {
+      newHeight = heightVals.savedHeight - ((eventClientY - heightVals.savedTop) / this.props.zoom);
+
+      if (newHeight <= heightVals.minHeight) {
+        newHeight = heightVals.minHeight  ;
+      } else {
+        newTop = eventClientY;
+      }
+
+    }
+
+    if (verticalSizingAction == "bottom") {
+      newHeight = (eventClientY - heightVals.savedTop) / this.props.zoom;
+
+      if (newHeight <= heightVals.minHeight) {
+        newHeight = heightVals.minHeight;
+      }
+      //console.log("moving bottom eventClient x,y = "+eventClientX+","+eventClientY+" newTop = " +newTop+ " saveTopt = "+ heightVals.savedTop+
+      //            " newHeight = "+newHeight+" savedWidth ="+widthVals.savedWidth+" minHeight = "+heightVals.minHeight);
+    }
+
+    return {newWidth: newWidth,newLeft: newLeft,newHeight: newHeight,newTop: newTop};
+  }
+
+  // Determine if the mouse is near a comment box edge and
+  // set the cursor style for resizing.
+  setCursorStyle(elementDiv, elementLeft, elementTop, event){
+    //console.log("setCursorStyle");
+
+    // adjust the event X,Y for sliding focus on multiple focus size canvas
+    let canvasDiv = document.getElementById("canvas-div");
+    let rect = canvasDiv.getBoundingClientRect();
+
+    let clientX = event.clientX - Math.round(rect.left);
+    let clientY = event.clientY - Math.round(rect.top);
+
+    if (clientX > elementLeft  &&
+        clientX < elementLeft  + (this.totalHoverZoneSize)) {
+      this.horizontalSizingHover = "left";
+
+    } else if (clientX < elementLeft + elementDiv.offsetWidth + this.cursorOffset &&
+               clientX > elementLeft + elementDiv.offsetWidth + this.cursorOffset  - this.totalHoverZoneSize) {
+      this.horizontalSizingHover = "right";
+
+    } else {
+      this.horizontalSizingHover = "";
+      this.horizontalSizingAction = "";
+    }
+
+    if (clientY > elementTop  &&
+        clientY < elementTop + this.totalHoverZoneSize) {
+      this.verticalSizingHover = "top";
+
+    } else if (clientY < elementTop + elementDiv.offsetHeight + this.cursorOffset  &&
+                clientY > elementTop + elementDiv.offsetHeight + this.cursorOffset - this.totalHoverZoneSize) {
+      this.verticalSizingHover = "bottom";
+
+    } else {
+      this.verticalSizingHover = "";
+      this.verticalSizingAction = "";
+    }
+
+    if (this.verticalSizingHover === "top") {
+      if (this.horizontalSizingHover === "left") {
+        elementDiv.style.cursor = "nwse-resize";
+      } else if (this.horizontalSizingHover === "right") {
+        elementDiv.style.cursor = "nesw-resize";
+      } else {
+        elementDiv.style.cursor = "ns-resize";
+      }
+    } else if (this.verticalSizingHover === "bottom") {
+      if (this.horizontalSizingHover === "left") {
+        elementDiv.style.cursor = "nesw-resize";
+      } else if (this.horizontalSizingHover === "right") {
+        elementDiv.style.cursor = "nwse-resize";
+      } else {
+        elementDiv.style.cursor = "ns-resize";
+      }
+    } else if (this.horizontalSizingHover === "left" ||
+               this.horizontalSizingHover === "right") {
+      elementDiv.style.cursor = "ew-resize";
+
+    } else {
+      elementDiv.style.cursor = "default";
+    }
+  //console.log("mouse mouseMove check if near comments edge "+this.horizontalSizingHover+" "+this.verticalSizingHover);
+  }
+
+  // when the mouse button is clicked up, then save the new comment box size
+  // to the object model
+  mouseUp(event) {
+    //console.log("Comment mouseUp resizing= "+this.resizingComment);
+    //console.log("State x,y = "+this.state.xPos+","+this.state.yPos);
+    // notify to save the resize values.
+    if (this.resizingComment) {
+      let evValues = {value: this.state.value};
+      let optArg = {
+        nodes: [this.props.comment.id],
+        target: evValues,
+        width: Math.round(this.state.width),
+        height: Math.round(this.state.height),
+        xPos: Math.round(this.state.xPos),
+        yPos: Math.round(this.state.yPos)
+      }
+
+      this.props.commentActionHandler('resizeCommentBox', optArg);
+
+      // if in edit mode,save the new x,y pos in the edit comment cache.
+      if (this.props.editable) {
+        this.props.commentActionHandler('changeComment', optArg);
+      }
+    }
+
+    // reset state variables
+    this.resizingComment = false;
+    this.verticalSizingAction = "";
+    this.horizontalSizingAction = "";
+    this.verticalSizingHover = "";
+    this.horizontalSizingHover = "";
+  }
+
+  // when the mouse button is clicked down and mouse is near an edge
+  // then start resizing.
+  mouseDownOnComment(event){
+    //console.log("Comment mouseDownOnComment")
+
+    let commentDiv = this.getCommentDiv();
+
+    // if near the edge of a the comment box then enter resizing mode.
+    if (this.verticalSizingHover !== "" ||
+        this.horizontalSizingHover !== "") {
+
+      // prevent other mouse down handlers from being invoked.
+      // only do this when resizing to prevent move of the box.
+      event.preventDefault();
+
+      this.resizingComment = true;
+      this.verticalSizingAction = this.verticalSizingHover;
+      this.horizontalSizingAction = this.horizontalSizingHover;
+
+      let zoom = this.props.zoom;
+
+      this.savedWidth = this.props.comment.width;
+      this.savedLeft = this.getInnerBoxLeft(this.props.comment.xPos);
+      this.savedHeight = this.props.comment.height;
+      this.savedTop = this.getInnerBoxTop(this.props.comment.yPos);
+
+    }
+  }
+
+
+  getCommentDiv() {
+    return this.refs.canvasCommentDiv;
   }
 
   handleMouseEnterInnerBox(ev){
@@ -101,14 +385,18 @@ class Comment extends React.Component {
   }
 
   dragStart(ev) {
-    ev.dataTransfer.effectAllowed = 'move';
+    //console.log("comment move started");
+    // if in resize mode then don't move the object
+    if (!this.resizingComment) {
+      ev.dataTransfer.effectAllowed = 'move';
 
-    ev.dataTransfer.setData(DND_DATA_TEXT,
-      JSON.stringify({
-        operation: 'move',
-        id: this.props.comment.id,
-        label: this.props.comment.content
-    }));
+      ev.dataTransfer.setData(DND_DATA_TEXT,
+        JSON.stringify({
+          operation: 'move',
+          id: this.props.comment.id,
+          label: this.props.comment.content
+      }));
+    }
   }
 
   dragEnd(ev) {
@@ -129,30 +417,50 @@ class Comment extends React.Component {
     this.props.commentActionHandler('editComment', ev);
   }
 
+ // when the adding text to the comment box, determine if the height needs
+  // to be increased.
   commentChange(ev) {
     // determine when to increase the height of the comment box based on the number of characters entered
     let fontPxSize = Math.round(this.props.fontSize * (96/72));  // convert from pt to px
-    let charPerLine = Math.round(this.state.width/fontPxSize) * 2;  // approximate the number of characters per line based on font size
+    let charPerLine = Math.round((this.state.width*this.props.zoom)/fontPxSize) * 2;  // approximate the number of characters per line based on font size
     let linesNeeded = Math.round(ev.target.value.length/ charPerLine);
-    let numLines = Math.round(this.state.height / fontPxSize);
-    //console.log(" CharPerRow = "+ charPerLine +" width = "+this.state.width+" numlines = "+numLines +" height = "+ this.state.height+
-    //        " stringFontlen ="+ev.target.value.length+" rowsNeeded = "+linesNeeded)
-    //console.log("text ="+ev.target.value)
+    let numLines = Math.round((this.state.height*this.props.zoom) / fontPxSize);
+
     if (linesNeeded > numLines) {
         this.setState({height: Math.round(this.state.height+fontPxSize)}); // increase the height by one Font size
     }
 
-    this.setState({value: ev.target.value});
+    // set the state x,y values to the object model values.
+    // if the comment box has been moved after a resize then edited,
+    // the state.x,y will not contain the moved x,y pos
+    // which is set in the object model.
+    this.setState({
+      value: ev.target.value,
+      xPos: this.props.comment.xPos,
+      yPos: this.props.comment.yPos
+    });
 
     let evValues = {value: ev.target.value};
     let optArg = {
       target: evValues,
       width: this.state.width,
-      height: this.state.height
-    };
+      height: this.state.height,
+      xPos: this.props.comment.xPos,
+      yPos: this.props.comment.yPos
+    }
 
     this.props.commentActionHandler('changeComment', optArg);
   }
+
+  getInnerBoxTop(yPos) {
+    return Math.round(yPos * this.props.zoom) - (this.props.zoom);
+  }
+
+  getInnerBoxLeft(xPos){
+    return Math.round(xPos * this.props.zoom) + (20 * this.props.zoom);
+  }
+
+
 
   showContext(ev) {
     this.setState({ context: true });
@@ -160,6 +468,15 @@ class Comment extends React.Component {
 
   render() {
     let zoom = this.props.zoom;
+
+    let xPosi = this.props.comment.xPos;
+    let yPosi = this.props.comment.yPos;
+
+    if (this.resizingComment) {
+      xPosi = this.state.xPos;
+      yPosi = this.state.yPos;
+    }
+
 
     var commentStyle = {
       position: 'absolute',
@@ -197,14 +514,13 @@ class Comment extends React.Component {
       className += " selected";
     }
 
-    let bTop = Math.round(this.props.comment.yPos * zoom) - (10 * zoom);
-    let bLeft = Math.round(this.props.comment.xPos * zoom) + (10 * zoom);
+    let bTop = Math.round(yPosi * zoom) - (10 * zoom);
+    let bLeft = Math.round(xPosi * zoom) + (10 * zoom);
     let bWidth = Math.round(this.state.width * zoom) + (25 * zoom);
     let bHeight = Math.round(this.state.height * zoom) + (20 * zoom);
 
-
-    let bInnerTop = Math.round(this.props.comment.yPos * zoom) - (zoom);
-    let bInnerLeft = Math.round(this.props.comment.xPos * zoom) + (20 * zoom);
+    let bInnerTop = this.getInnerBoxTop(yPosi);
+    let bInnerLeft = this.getInnerBoxLeft(xPosi);
     let bInnerWidth = Math.round(this.state.width * zoom) + (5 * zoom);
     let bInnerHeight = Math.round(this.state.height * zoom) + (zoom);
 
@@ -264,36 +580,16 @@ class Comment extends React.Component {
         };
 
       let commentArea = this.props.editable ?
-        <textarea
-          className={className}
-          style={textareaStyle}
-          draggable="true"
-          onDragStart={this.dragStart}
-          onDragEnd={this.dragEnd}
-          onDrop={this.drop}
-          onClick={this.commentClicked}
-          onDoubleClick={this.commentDblClicked}
-          onContextMenu={this.props.onContextMenu}
-          value={this.state.value}
-          spellCheck="true"
-          onChange={this.commentChange}
-        >
-        </textarea>
+          <textarea
+            style={textareaStyle}
+            draggable="true"
+            value={this.state.value}
+            spellCheck="true"
+            onChange={this.commentChange}
+          ></textarea>
         :
-        <div
-          className={className}
-          style={commentStyle}
-          {...customAttrs}
-          draggable="true"
-          onDragStart={this.dragStart}
-          onDragEnd={this.dragEnd}
-          onDrop={this.drop}
-          onClick={this.commentClicked}
-          onDoubleClick={this.commentDblClicked}
-          onContextMenu={this.props.onContextMenu}
-        >
-          {this.state.value}
-        </div>;
+          <div>{this.state.value}</div>
+        ;
 
       let box =
         <div>
@@ -327,7 +623,16 @@ class Comment extends React.Component {
             onDrop={this.drop}
             onContextMenu={this.props.onContextMenu}
           >
-            {commentArea}
+            <div
+              ref="canvasCommentDiv"
+              onMouseDown={this.mouseDownOnComment}
+              className={className}
+              style={commentStyle}
+              onClick={this.commentClicked}
+              onDoubleClick={this.commentDblClicked}
+            >
+              {commentArea}
+            </div>
           </div>
         </div>;
 
