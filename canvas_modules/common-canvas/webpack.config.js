@@ -11,15 +11,14 @@ var path = require("path");
 
 module.exports = {
 	context: path.join(__dirname, "/src/"),
-	devtool: "#inline-source-map",
+	devtool: "source-map",
 	entry: {
-		canvas: "./common-canvas.jsx", 
-		objectmodel: "./object-model/object-model.js"
+		lib: "./index.js"
 	},
 	output: {
 		library: "Common-Canvas",
 		libraryTarget: "commonjs2",
-		filename: "[name].js",
+		filename: "common-canvas.js",
 		path: path.join(__dirname, "/dist"),
 		sourceMapFilename: "[file].map",
 	},
@@ -30,11 +29,11 @@ module.exports = {
 				exclude: /node_modules/,
 				loader: "babel-loader",
 				query: {
-					presets: ["react", "es2015"]
+					presets: ["react", "es2015","stage-1"]
 				}
 			},
 			{
-				test: /\.(woff|svg)$/,
+				test: /\.(woff|svg|png)$/,
 				loader: "url-loader"
 			},
 			{

@@ -17,7 +17,10 @@ import {OverlayTrigger, Tooltip} from 'react-bootstrap';
 import DiagramCanvas from './diagram-canvas.jsx';
 import Palette from './palette/palette.jsx';
 import ObjectModel from './object-model/object-model.js';
-
+import ZoomIn24Icon from '../assets/images/zoom-in_24.svg';
+import ZoomOut24Icon from '../assets/images/zoom-out_24.svg';
+import OpenNodePaletteIcon from '../assets/images/open_node_palette.svg'
+import '../assets/styles/common-canvas.css';
 
 export default class CommonCanvas extends React.Component {
   constructor(props) {
@@ -175,15 +178,15 @@ export default class CommonCanvas extends React.Component {
         addButton =
           <OverlayTrigger placement="right" overlay={paletteTooltip}>
             <div className="palette-show-button">
-              <img src="/canvas/images/open_node_palette.svg" onClick={this.openPalette}/>
+              <img src={OpenNodePaletteIcon} onClick={this.openPalette}/>
             </div>
           </OverlayTrigger>;
       }
 
       zoomControls =
           <div className="canvas-zoom-controls">
-            <div><img src="/canvas/images/zoom-in_24.svg" onClick={this.zoomIn}/></div>
-            <div><img src="/canvas/images/zoom-out_24.svg" onClick={this.zoomOut}/></div>
+            <div><img src={ZoomIn24Icon} onClick={this.zoomIn}/></div>
+            <div><img src={ZoomOut24Icon} onClick={this.zoomOut}/></div>
           </div>;
     }
 

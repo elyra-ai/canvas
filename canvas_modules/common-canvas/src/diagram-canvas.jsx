@@ -21,6 +21,7 @@ import CommonContextMenu from './common-context-menu.jsx';
 import ContextMenuWrapper from './context-menu-wrapper.jsx';
 import {DND_DATA_TEXT, DRAG_MOVE, DRAG_LINK, DRAG_SELECT_REGION} from '../constants/common-constants.js';
 import CanvasUtils from '../utils/canvas-utils.js';
+import BlankCanvasImage from '../assets/images/blank_canvas.png'
 
 
 const NODE_BORDER_SIZE = 2; // see main.css, .canvas-node
@@ -1235,7 +1236,7 @@ export default class DiagramCanvas extends React.Component {
 
     if (this.props.diagram.diagram.nodes.length == 0 &&
         this.props.diagram.diagram.comments.length == 0) {
-      emptyCanvas = <div id="empty-canvas" onContextMenu={this.canvasContextMenu}> <img src='/canvas/images/blank_canvas.png'></img></div>;
+      emptyCanvas = <div id="empty-canvas" onContextMenu={this.canvasContextMenu}> <img src={BlankCanvasImage}></img></div>;
     }
 /*
 <marker id="markerArrow" markerWidth={13} markerHeight={13} refX={2} refY={6} orient="auto">

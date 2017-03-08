@@ -15,6 +15,13 @@
 import React from 'react';
 import Isvg from 'react-inlinesvg';
 import ThreeWayIcon from './three-way-icon.jsx';
+import Close32Image from '../../assets/images/close_32.svg'
+import PaletteGridSelectedIcon from "../../assets/images/palette_grid_selected.svg"
+import PaletteGridHoverIcon from "../../assets/images/palette_grid_hover.svg"
+import PaletteGridDeSelectedIcon from "../../assets/images/palette_grid_deselected.svg"
+import PaletteListSelectedIcon from "../../assets/images/palette_list_selected.svg"
+import PaletteListHoverIcon from "../../assets/images/palette_list_hover.svg"
+import PaletteListDeSelectedIcon from "../../assets/images/palette_list_deselected.svg"
 
 class PaletteTopbar extends React.Component {
   constructor(props) {
@@ -56,18 +63,18 @@ class PaletteTopbar extends React.Component {
           <span className="left-navbar">
             <ThreeWayIcon iconClickedMethod={this.gridViewSelected}
                           isSelected={this.props.showGrid}
-                          selectedIconName="/canvas/images/palette_grid_selected.svg"
-                          hoverIconName="/canvas/images/palette_grid_hover.svg"
-                          deselectedIconName="/canvas/images/palette_grid_deselected.svg"/>
+                          selectedIconName={PaletteGridSelectedIcon}
+                          hoverIconName={PaletteGridHoverIcon}
+                          deselectedIconName={PaletteGridDeSelectedIcon}/>
             <ThreeWayIcon iconClickedMethod={this.listViewSelected}
                           isSelected={!this.props.showGrid}
-                          selectedIconName="/canvas/images/palette_list_selected.svg"
-                          hoverIconName="/canvas/images/palette_list_hover.svg"
-                          deselectedIconName="/canvas/images/palette_list_deselected.svg"/>
+                          selectedIconName={PaletteListSelectedIcon}
+                          hoverIconName={PaletteListHoverIcon}
+                          deselectedIconName={PaletteListDeSelectedIcon}/>
           </span>
           <span className="right-navbar">
             <a className="secondary-action" onClick={this.close}>
-              <Isvg src='/canvas/images/close_32.svg' className="close-icon"/>
+              <Isvg src={Close32Icon} className="close-icon"/>
             </a>
           </span>
       </div>

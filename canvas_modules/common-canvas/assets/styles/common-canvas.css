@@ -15,26 +15,26 @@
 
 @font-face {
     font-family: IBMHLVMedium;
-    src: url(./fonts/medium/helvetica-neue-medium.woff);
+    src: url(~ap-components-react/dist/fonts/medium/helvetica-neue-medium.woff);
 }
 
 @font-face {
     font-family: IBMHLVRoman;
-    src: url(./fonts/roman/helvetica-neue-roman.woff);
+    src: url(~ap-components-react/dist/fonts/roman/helvetica-neue-roman.woff);
 }
 
 @font-face {
     font-family: IBMHLVBold;
-    src: url(./fonts/bold/helvetica-neue-bold.woff);
+    src: url(~ap-components-react/dist/fonts/bold/helvetica-neue-bold.woff);
 }
 @font-face {
     font-family: IBMHLVlight;
-    src: url(./fonts/light/helvetica-neue-light.woff);
+    src: url(~ap-components-react/dist/fonts/light/helvetica-neue-light.woff);
 }
 
 @font-face {
     font-family: IBMHLVRoman;
-    src: url(./fonts/roman/helvetica-neue-roman.woff);
+    src: url(~ap-components-react/dist/fonts/roman/helvetica-neue-roman.woff);
 }
 
 /* SVG Canvas styles */

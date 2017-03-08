@@ -15,28 +15,26 @@ import { IntlProvider, FormattedMessage, addLocaleData } from "react-intl";
 import en from "react-intl/locale-data/en";
 var i18nData = require("../intl/en.js");
 
-// import CommonCanvas from "../../../common-canvas/src/common-canvas.jsx";
-import CommonCanvas from "@wdp/common-canvas";
+import { CommonCanvas, ObjectModel } from "@wdp/common-canvas";
 import "../styles/App.css";
 
 import Console from "./components/console.jsx";
 import SidePanel from "./components/sidepanel.jsx";
 
 import {
-	BLANK_CANVAS,
 	NONE,
 	PALETTE_TOOLTIP,
 	SIDE_PANEL_FORMS,
 	SIDE_PANEL_STYLES,
 	STRAIGHT
 } from "./constants/constants.js";
-const listview32 = require("../graphics/list-view_32.svg");
-const addnew32 = require("../graphics/add-new_32.svg");
-const close32 = require("../graphics/close_32.svg");
-const play32 = require("../graphics/play_32.svg");
-const createNew32 = require("../graphics/create-new_32.svg");
-const edit32 = require("../graphics/edit_32.svg");
-const justify32 = require("../graphics/justify_32.svg");
+import listview32 from "../graphics/list-view_32.svg";
+import addnew32 from "../graphics/add-new_32.svg";
+import close32 from "../graphics/close_32.svg";
+import play32 from "../graphics/play_32.svg";
+import createNew32 from "../graphics/create-new_32.svg";
+import edit32 from "../graphics/edit_32.svg";
+import justify32 from "../graphics/justify_32.svg";
 
 class App extends React.Component {
 	constructor(props) {
@@ -45,12 +43,9 @@ class App extends React.Component {
 			consoleout: [],
 			consoleOpened: false,
 			contextMenuInfo: {},
-			diagramJSON: null,
-			initialSelection: null,
-			internalObjectModel: false,
+			internalObjectModel: true,
 			openSidepanelForms: false,
 			openSidepanelStyles: false,
-			paletteJSON: {},
 			paletteNavEnabled: false,
 			paletteOpened: false,
 			selectedPanel: null,
@@ -88,6 +83,8 @@ class App extends React.Component {
 		this.applyDiagramEdit = this.applyDiagramEdit.bind(this);
 		this.nodeEditHandler = this.nodeEditHandler.bind(this);
 		this.refreshContent = this.refreshContent.bind(this);
+
+		ObjectModel.clearStream();
 	}
 
 	componentDidMount() {
@@ -103,12 +100,14 @@ class App extends React.Component {
 	}
 
 	setPaletteJSON(paletteJson) {
-		this.setState({ paletteJSON: paletteJson });
+		// this.setState({ paletteJSON: paletteJson });
+		ObjectModel.setPaletteData(paletteJson);
 		this.log("set paletteJSON: " + JSON.stringify(paletteJson));
 	}
 
 	setDiagramJSON(diagramJson) {
-		this.setState({ diagramJSON: diagramJson });
+		// this.setState({ diagramJSON: diagramJson });
+		ObjectModel.setStream(diagramJson);
 		this.log("set diagramJSON: " + JSON.stringify(diagramJson));
 	}
 
@@ -456,23 +455,20 @@ class App extends React.Component {
 			paletteTooltip: PALETTE_TOOLTIP
 		};
 
-		var canvasDiagram = BLANK_CANVAS;
+		// var canvasDiagram = BLANK_CANVAS;
 
-		if (this.state.diagramJSON !== null) {
-			canvasDiagram = this.state.diagramJSON;
-		}
+		// if (this.state.diagramJSON !== null) {
+		// 	canvasDiagram = this.state.diagramJSON;
+		// }
 
 		var commonCanvas = (<div id="canvas">
 			<CommonCanvas
-				diagram={canvasDiagram}
-				initialSelection={this.state.initialSelection}
-				paletteJSON={this.state.paletteJSON}
+				config={commonCanvasConfig}
 				contextMenuHandler={this.contextMenuHandler}
 				contextMenuActionHandler= {this.contextMenuActionHandler}
 				editDiagramHandler= {this.editDiagramHandler}
 				clickHandler= {this.clickHandler}
 				decorationActionHandler= {this.decorationActionHandler}
-				config={commonCanvasConfig}
 			/>
 		</div>);
 
