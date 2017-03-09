@@ -19,8 +19,7 @@ import Palette from './palette/palette.jsx';
 import ObjectModel from './object-model/object-model.js';
 import ZoomIn24Icon from '../assets/images/zoom-in_24.svg';
 import ZoomOut24Icon from '../assets/images/zoom-out_24.svg';
-import OpenNodePaletteIcon from '../assets/images/open_node_palette.svg'
-import '../assets/styles/common-canvas.css';
+import OpenNodePaletteIcon from '../assets/images/open_node_palette.svg';
 
 export default class CommonCanvas extends React.Component {
   constructor(props) {
