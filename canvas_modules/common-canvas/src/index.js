@@ -1,4 +1,4 @@
-import '../assets/styles/common-canvas.css';
+import 'style-loader!css-loader!../assets/styles/common-canvas.css';
 
 export CommonCanvas from './common-canvas.jsx';
 export ObjectModel from './object-model/object-model';
