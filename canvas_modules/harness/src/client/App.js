@@ -22,6 +22,7 @@ import Console from "./components/console.jsx";
 import SidePanel from "./components/sidepanel.jsx";
 
 import {
+	BLANK_CANVAS,
 	NONE,
 	PALETTE_TOOLTIP,
 	SIDE_PANEL_FORMS,
@@ -84,7 +85,7 @@ class App extends React.Component {
 		this.nodeEditHandler = this.nodeEditHandler.bind(this);
 		this.refreshContent = this.refreshContent.bind(this);
 
-		ObjectModel.clearStream();
+		ObjectModel.setStream(BLANK_CANVAS);
 	}
 
 	componentDidMount() {
@@ -477,6 +478,7 @@ class App extends React.Component {
 			<SidePanel
 				selectedPanel={this.state.selectedPanel}
 				enableNavPalette={this.enableNavPalette}
+				internalObjectModel={this.state.internalObjectModel}
 				openSidepanelForms={this.state.openSidepanelForms}
 				openSidepanelStyles={this.state.openSidepanelStyles}
 				setDiagramJSON={this.setDiagramJSON}

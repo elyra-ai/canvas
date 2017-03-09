@@ -31,6 +31,7 @@ export default class SidePanel extends React.Component {
 		case SIDE_PANEL_FORMS:
 			view = (<SidePanelForms
 				enableNavPalette={this.props.enableNavPalette}
+				internalObjectModel={this.props.internalObjectModel}
 				setDiagramJSON={this.props.setDiagramJSON}
 				setPaletteJSON={this.props.setPaletteJSON}
 				setLayoutDirection={this.props.setLayoutDirection}
@@ -59,6 +60,7 @@ export default class SidePanel extends React.Component {
 
 SidePanel.propTypes = {
 	enableNavPalette: React.PropTypes.func,
+	internalObjectModel: React.PropTypes.func,
 	openSidepanelForms: React.PropTypes.bool,
 	openSidepanelStyles: React.PropTypes.bool,
 	setDiagramJSON: React.PropTypes.func,
