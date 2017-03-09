@@ -86,6 +86,7 @@ class App extends React.Component {
 		this.refreshContent = this.refreshContent.bind(this);
 
 		ObjectModel.setStream(BLANK_CANVAS);
+		ObjectModel.setPaletteData({});
 	}
 
 	componentDidMount() {
@@ -455,12 +456,6 @@ class App extends React.Component {
 			enableInternalObjectModel: this.state.internalObjectModel,
 			paletteTooltip: PALETTE_TOOLTIP
 		};
-
-		// var canvasDiagram = BLANK_CANVAS;
-
-		// if (this.state.diagramJSON !== null) {
-		// 	canvasDiagram = this.state.diagramJSON;
-		// }
 
 		var commonCanvas = (<div id="canvas">
 			<CommonCanvas

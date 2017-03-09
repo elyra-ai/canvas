@@ -60,7 +60,7 @@ export default class SidePanel extends React.Component {
 
 SidePanel.propTypes = {
 	enableNavPalette: React.PropTypes.func,
-	internalObjectModel: React.PropTypes.func,
+	internalObjectModel: React.PropTypes.bool,
 	openSidepanelForms: React.PropTypes.bool,
 	openSidepanelStyles: React.PropTypes.bool,
 	setDiagramJSON: React.PropTypes.func,
