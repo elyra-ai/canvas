@@ -18,6 +18,9 @@ import {FormattedMessage} from 'react-intl'
 import {Grid, Row, Col, Panel, Button, ButtonGroup} from 'react-bootstrap'
 import ColumnSource from './column-source.jsx'
 
+import MoveLeftIcon from '../../assets/images/move_left.svg';
+import MoveRightIcon from '../../assets/images/move_right.svg';
+
 var _ = require('underscore');
 
 export default class ColumnAllocationPanel extends React.Component {
@@ -103,8 +106,8 @@ export default class ColumnAllocationPanel extends React.Component {
       controlItems.push(
           <Row key={i}>
             <Col md={1} style={{"marginTop":"18px","top":"50%","transform":"translateY(70%)"}} >
-              <img className="field-allocator-button" src='/canvas/images/move_left.svg' onClick={this.deallocate.bind(this, controlName)}></img>
-              <img className="field-allocator-button" src='/canvas/images/move_right.svg' onClick={this.allocate.bind(this, controlName)}></img>
+              <img className="field-allocator-button" src={MoveLeftIcon} onClick={this.deallocate.bind(this, controlName)}></img>
+              <img className="field-allocator-button" src={MoveRightIcon} onClick={this.allocate.bind(this, controlName)}></img>
             </Col>
             <Col md={3}>
              {child}

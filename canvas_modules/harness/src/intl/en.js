@@ -23,5 +23,7 @@ export const messages = {
 	"canvas-context.selectAll": "Select all",
 	"canvas-context.streamProperties": "Options",
 
-	"tooltip.popupPaletteButton": "Click to show node palette"
+	"dialog.okBtn": "OK",
+	"dialog.cancelBtn": "Cancel",
+	"dialog.streamPropertiesTitle": "Properties Title"
 };

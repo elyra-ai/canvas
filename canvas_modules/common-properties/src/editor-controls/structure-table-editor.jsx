@@ -24,7 +24,7 @@ import EnumRenderer from '../renderers/enum-renderer.jsx'
 
 var _ = require('underscore');
 
-const TextCell = ({rowIndex, data, col, renderer, ...props}) => (
+const TextCell = ({rowIndex, data, col, renderer, props}) => (
   <Cell {...props}>
     {renderer.render(data[rowIndex][col])}
   </Cell>

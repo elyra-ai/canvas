@@ -62,7 +62,7 @@
   background-color: #1D3649;
 }
 
-#action-bar-sidepanel, #action-bar-sidepanel-styles{
+.action-bar-sidepanel {
   float:right;
 }
 

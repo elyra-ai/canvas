@@ -16,6 +16,8 @@ import en from "react-intl/locale-data/en";
 var i18nData = require("../intl/en.js");
 
 import { CommonCanvas, ObjectModel } from "@wdp/common-canvas";
+import CommonProperties from "../../../common-properties/src/common-properties.jsx";
+
 import "../styles/App.css";
 
 import Console from "./components/console.jsx";
@@ -25,10 +27,13 @@ import {
 	BLANK_CANVAS,
 	NONE,
 	PALETTE_TOOLTIP,
-	SIDE_PANEL_FORMS,
+	SIDE_PANEL_CANVAS,
 	SIDE_PANEL_STYLES,
-	STRAIGHT
+	SIDE_PANEL_MODAL,
+	STRAIGHT,
+	PROPERTIESINFO
 } from "./constants/constants.js";
+
 import listview32 from "../graphics/list-view_32.svg";
 import addnew32 from "../graphics/add-new_32.svg";
 import close32 from "../graphics/close_32.svg";
@@ -36,6 +41,8 @@ import play32 from "../graphics/play_32.svg";
 import createNew32 from "../graphics/create-new_32.svg";
 import edit32 from "../graphics/edit_32.svg";
 import justify32 from "../graphics/justify_32.svg";
+import template32 from "ibm-design-icons/dist/svg/object-based/template_32.svg";
+
 
 class App extends React.Component {
 	constructor(props) {
@@ -45,14 +52,18 @@ class App extends React.Component {
 			consoleOpened: false,
 			contextMenuInfo: {},
 			internalObjectModel: true,
-			openSidepanelForms: false,
+			openSidepanelCanvas: false,
 			openSidepanelStyles: false,
+			openSidepanelModal: false,
 			paletteNavEnabled: false,
 			paletteOpened: false,
+			propertiesInfo: {},
+			propertiesJson: null,
 			selectedPanel: null,
 			selectedLinkTypeStyle: STRAIGHT,
 			selectedLayoutDirection: NONE,
-			showContextMenu: false
+			showContextMenu: false,
+			showPropertiesDialog: false
 		};
 
 		this.openConsole = this.openConsole.bind(this);
@@ -65,16 +76,18 @@ class App extends React.Component {
 		this.openPalette = this.openPalette.bind(this);
 		this.closePalette = this.closePalette.bind(this);
 		this.enableNavPalette = this.enableNavPalette.bind(this);
-		this.setPaletteJSON = this.setPaletteJSON.bind(this);
 		this.setDiagramJSON = this.setDiagramJSON.bind(this);
+		this.setPaletteJSON = this.setPaletteJSON.bind(this);
+		this.setPropertiesJSON = this.setPropertiesJSON.bind(this);
 
-		this.sidePanelForms = this.sidePanelForms.bind(this);
+		this.sidePanelCanvas = this.sidePanelCanvas.bind(this);
 		this.sidePanelStyles = this.sidePanelStyles.bind(this);
+		this.sidePanelModal = this.sidePanelModal.bind(this);
 		this.setLinkTypeStyle = this.setLinkTypeStyle.bind(this);
 		this.setLayoutDirection = this.setLayoutDirection.bind(this);
 		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
 
-		// required by common-canvas
+		// common-canvas
 		this.contextMenuHandler = this.contextMenuHandler.bind(this);
 		this.contextMenuActionHandler = this.contextMenuActionHandler.bind(this);
 		this.editDiagramHandler = this.editDiagramHandler.bind(this);
@@ -82,8 +95,13 @@ class App extends React.Component {
 		this.decorationActionHandler = this.decorationActionHandler.bind(this);
 
 		this.applyDiagramEdit = this.applyDiagramEdit.bind(this);
+		this.applyPropertyChanges = this.applyPropertyChanges.bind(this);
 		this.nodeEditHandler = this.nodeEditHandler.bind(this);
 		this.refreshContent = this.refreshContent.bind(this);
+
+		// common-properties
+		this.openPropertiesEditorDialog = this.openPropertiesEditorDialog.bind(this);
+		this.closePropertiesEditorDialog = this.closePropertiesEditorDialog.bind(this);
 
 		ObjectModel.setStream(BLANK_CANVAS);
 		ObjectModel.setPaletteData({});
@@ -101,16 +119,19 @@ class App extends React.Component {
 		return new Date().toLocaleString() + ": ";
 	}
 
+	setDiagramJSON(diagramJson) {
+		ObjectModel.setStream(diagramJson);
+		this.log("set diagramJSON: " + JSON.stringify(diagramJson));
+	}
+
 	setPaletteJSON(paletteJson) {
-		// this.setState({ paletteJSON: paletteJson });
 		ObjectModel.setPaletteData(paletteJson);
 		this.log("set paletteJSON: " + JSON.stringify(paletteJson));
 	}
 
-	setDiagramJSON(diagramJson) {
-		// this.setState({ diagramJSON: diagramJson });
-		ObjectModel.setStream(diagramJson);
-		this.log("set diagramJSON: " + JSON.stringify(diagramJson));
+	setPropertiesJSON(propertiesJson) {
+		this.setState({ propertiesJson: propertiesJson });
+		this.log("set propertiesJSON: " + JSON.stringify(propertiesJson));
 	}
 
 	setLayoutDirection(selectedLayout) {
@@ -123,22 +144,31 @@ class App extends React.Component {
 		this.log("Link type style selected: " + selectedLink);
 	}
 
-	sidePanelForms() {
+	sidePanelCanvas() {
 		this.setState({
-			openSidepanelForms: !this.state.openSidepanelForms,
+			openSidepanelCanvas: !this.state.openSidepanelCanvas,
 			openSidepanelStyles: false,
-			selectedPanel: SIDE_PANEL_FORMS
+			openSidepanelModal: false,
+			selectedPanel: SIDE_PANEL_CANVAS
 		});
-		this.log("openSidepanelForms() clicked " + !this.state.openSidepanelForms);
 	}
 
 	sidePanelStyles() {
 		this.setState({
 			openSidepanelStyles: !this.state.openSidepanelStyles,
-			openSidepanelForms: false,
+			openSidepanelCanvas: false,
+			openSidepanelModal: false,
 			selectedPanel: SIDE_PANEL_STYLES
 		});
-		this.log("sidePanelStyles() clicked " + !this.state.openSidepanelStyles);
+	}
+
+	sidePanelModal() {
+		this.setState({
+			openSidepanelModal: !this.state.openSidepanelModal,
+			openSidepanelCanvas: false,
+			openSidepanelStyles: false,
+			selectedPanel: SIDE_PANEL_MODAL
+		});
 	}
 
 	log(text) {
@@ -186,7 +216,7 @@ class App extends React.Component {
 		this.log("use internal object model: " + enabled);
 	}
 
-	// required by common-canvas
+	// common-canvas
 	clickHandler(source) {
 		this.log("clickHandler()");
 		if (source.clickType === "DOUBLE_CLICK" && source.objectType === "node") {
@@ -196,10 +226,15 @@ class App extends React.Component {
 
 	nodeEditHandler(nodeId) {
 		this.log("nodeEditHandler() " + nodeId);
+		this.openPropertiesEditorDialog();
 	}
 
 	applyDiagramEdit(data, options) {
 		this.log("applyDiagramEdit() " + data.editType);
+	}
+
+	applyPropertyChanges(form, appData) {
+		this.log("applyPropertyChanges() " + appData);
 	}
 
 	contextMenuHandler(source) {
@@ -380,6 +415,29 @@ class App extends React.Component {
 		this.log("refreshContent()");
 	}
 
+	// common-properties
+	openPropertiesEditorDialog() {
+		// set test data if none provided
+		var properties = this.state.propertiesJson;
+		if (properties === null) {
+			properties = PROPERTIESINFO;
+		}
+
+		const propsInfo = {
+			title: <FormattedMessage id={ "dialog.streamPropertiesTitle" } />,
+			formData: properties.formData,
+			appData: properties.appData,
+			applyPropertyChanges: this.applyPropertyChanges,
+			closePropertiesDialog: this.closePropertiesEditorDialog,
+			additionalComponents: properties.additionalComponents
+		};
+		this.setState({ showPropertiesDialog: true, propertiesInfo: propsInfo });
+	}
+
+	closePropertiesEditorDialog() {
+		this.setState({ showPropertiesDialog: false, propertiesInfo: {} });
+	}
+
 	render() {
 		var paletteClass = "palette-" + this.state.paletteNavEnabled;
 
@@ -428,18 +486,29 @@ class App extends React.Component {
 								/>
 							</a>
 						</li>
-						<li className="navbar-li" id="action-bar-sidepanel-styles" data-tip="open side panel: styles">
+						// Sidepanel
+						<li className="navbar-li action-bar-sidepanel"
+							id="action-bar-sidepanel-modal" data-tip="Common Properties Modal"
+						>
+							<a onClick={this.sidePanelModal.bind(this) }>
+								<Isvg id="action-bar-panel-modal"
+									src={template32}
+								/>
+							</a>
+						</li>
+						<li className="navbar-li action-bar-sidepanel"
+							id="action-bar-sidepanel-styles" data-tip="Common Canvas Styles"
+						>
 							<a onClick={this.sidePanelStyles.bind(this) }>
 								<Isvg id="action-bar-panel-styles"
 									src={edit32}
 								/>
 							</a>
 						</li>
-						<li className="navbar-li nav-divider"
-							id="action-bar-sidepanel"
-							data-tip="open side panel: forms"
+						<li className="navbar-li nav-divider action-bar-sidepanel"
+							id="action-bar-sidepanel"	data-tip="Common Canvas"
 						>
-							<a onClick={this.sidePanelForms.bind(this) }>
+							<a onClick={this.sidePanelCanvas.bind(this) }>
 								<Isvg id="action-bar-panel"
 									src={justify32}
 								/>
@@ -468,25 +537,40 @@ class App extends React.Component {
 			/>
 		</div>);
 
+		var commonProperties = (<div id="common-properties">
+			<CommonProperties
+				showPropertiesDialog={this.state.showPropertiesDialog}
+				propertiesInfo={this.state.propertiesInfo}
+			/>
+		</div>);
+
 		var mainView = (<div id="app-container">
 			{navBar}
 			<SidePanel
 				selectedPanel={this.state.selectedPanel}
 				enableNavPalette={this.enableNavPalette}
 				internalObjectModel={this.state.internalObjectModel}
-				openSidepanelForms={this.state.openSidepanelForms}
+				openPropertiesEditorDialog={this.openPropertiesEditorDialog}
+				closePropertiesEditorDialog={this.closePropertiesEditorDialog}
+				openSidepanelCanvas={this.state.openSidepanelCanvas}
 				openSidepanelStyles={this.state.openSidepanelStyles}
+				openSidepanelModal={this.state.openSidepanelModal}
 				setDiagramJSON={this.setDiagramJSON}
 				setPaletteJSON={this.setPaletteJSON}
+				setPropertiesJSON={this.setPropertiesJSON}
 				setLayoutDirection={this.setLayoutDirection}
 				selectedLayoutDirection={this.state.selectedLayoutDirection}
 				setLinkTypeStyle={this.setLinkTypeStyle}
 				selectedLinkTypeStyle={this.state.selectedLinkTypeStyle}
+				showPropertiesDialog={this.state.showPropertiesDialog}
 				useInternalObjectModel={this.useInternalObjectModel}
 				log={this.log}
 			/>
 			<IntlProvider key="IntlProvider" locale={ locale } messages={ messages }>
 				{commonCanvas}
+			</IntlProvider>
+			<IntlProvider key="IntlProvider2" locale={ locale } messages={ messages }>
+				{commonProperties}
 			</IntlProvider>
 			<Console
 				consoleOpened={this.state.consoleOpened}

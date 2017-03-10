@@ -30,8 +30,7 @@ export default class SidePanelForms extends React.Component {
 		super(props);
 		this.state = {
 			canvasDiagram: "",
-			canvasPalette: "",
-			palettejson: {}
+			canvasPalette: ""
 		};
 
 		this.onCanvasFileSelect = this.onCanvasFileSelect.bind(this);
@@ -125,12 +124,12 @@ export default class SidePanelForms extends React.Component {
 	render() {
 		var divider = (<div className="sidepanel-children sidepanel-divider" />);
 
-		var formInput = (<div className="sidepanel-children" id="sidepanel-input">
-			<div className="formField">
-				<label className="formLabel">Canvas Diagram</label>
+		var canvasInput = (<div className="sidepanel-children" id="sidepanel-canvas-input">
+			<div className="canvasField">
+				<label className="canvasLabel">Canvas Diagram</label>
 				<FormControl
 					required="required"
-					id="formFileInput"
+					id="canvasFileInput"
 					type="file"
 					accept=".json"
 					ref="canvasDiagram" onChange={this.onCanvasFileSelect}
@@ -144,7 +143,7 @@ export default class SidePanelForms extends React.Component {
 			</div>
 		</div>);
 
-		var paletteInput = (<div className="sidepanel-children" id="sidepanel-palette">
+		var paletteInput = (<div className="sidepanel-children" id="sidepanel-palette-input">
 			<div className="formField">
 				<label className="formLabel">Canvas Palette</label>
 				<FormControl
@@ -194,7 +193,7 @@ export default class SidePanelForms extends React.Component {
 
 		return (
 			<div>
-				{formInput}
+				{canvasInput}
 				{divider}
 				{paletteInput}
 				{divider}

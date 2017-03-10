@@ -11,12 +11,17 @@
 ** divested of its trade secrets, irrespective of what has been
 ** deposited with the U.S. Copyright Office.
 *****************************************************************/
+"use strict";
 
-export default {
-
-  CHARACTER_LIMITS: {
-    NODE_PROPERTIES_DIALOG_TEXT_FIELD:128,
-    NODE_PROPERTIES_DIALOG_TEXT_AREA:1024
-  }
-
+function _defineConstant(name, value) {
+	Object.defineProperty(module.exports, name, {
+		value: value,
+		enumerable: true,
+		writable: false
+	});
 }
+
+_defineConstant("CHARACTER_LIMITS", {
+  NODE_PROPERTIES_DIALOG_TEXT_FIELD:128,
+  NODE_PROPERTIES_DIALOG_TEXT_AREA:1024
+});
