@@ -30,7 +30,6 @@ export default class SidePanelModal extends React.Component {
 	}
 
 	onPropertiesSelect(evt) {
-		this.setState({ commonProperties: "" });
 		this.props.setPropertiesJSON({});
 		if (evt.target.files.length > 0) {
 			var filename = evt.target.files[0].name;
