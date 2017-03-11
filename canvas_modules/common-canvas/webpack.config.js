@@ -35,7 +35,14 @@ module.exports = {
 			{
 				test: /\.(woff|svg|png)$/,
 				loader: "url-loader"
-			}
+			},
+			{
+        test: /\.css$/,
+        loaders: [
+					"style-loader",
+					"css-loader"
+				]
+      }
 		]
 	},
 	resolve: {

@@ -23,8 +23,6 @@ var HtmlWebpackPlugin = require("html-webpack-plugin");
 
 // Globals
 
-// var HMR_ENABLED = process.env.HMR_ENABLED === "true";
-var HMR_ENABLED = true;
 // Entry & Output files ------------------------------------------------------------>
 
 var entry = [
@@ -52,17 +50,17 @@ var loaders = [
 	},
 	{
 		test: /\.js(x?)$/,
-		loader: "babel",
+		loader: "babel-loader",
 		exclude: /node_modules/,
 		query: babelOptions
 	},
 	{
 		test: /\.s*css$/,
 		loaders: [
-			"style",
-			"css",
-			"sass",
-			"postcss"
+			"style-loader",
+			"css-loader",
+			"sass-loader",
+			"postcss-loader"
 		]
 	},
 	{
@@ -70,6 +68,11 @@ var loaders = [
 		loaders: [
 			"file-loader?name=graphics/[hash].[ext]"
 		]
+	},
+	{
+		test: /common-canvas*\.js$/,
+		loader: "source-map-loader",
+		enforce: "pre"
 	}
 ];
 
@@ -94,11 +97,9 @@ var plugins = [
 	new HtmlWebpackPlugin({
 		inject: true,
 		template: "index.html"
-	})
+	}),
+	new webpack.HotModuleReplacementPlugin()
 ];
-if (HMR_ENABLED) {
-	plugins.push(new webpack.HotModuleReplacementPlugin());
-}
 
 // Postcss ------------------------------------------------------------>
 
@@ -126,5 +127,5 @@ module.exports = {
 	plugins: plugins,
 	postcss: postcss,
 	debug: true,
-	devtool: "source-map"
+	devtool: "inline-source-map"
 };

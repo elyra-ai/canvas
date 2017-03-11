@@ -8,8 +8,7 @@
  */
 "use strict";
 
-// var HMR_ENABLED = process.env.DAP_HMR === "true";
-var HMR_ENABLED = true;
+const isProduction = process.env.NODE_ENV === "production";
 
 var assign = require("object-assign");
 
@@ -21,7 +20,7 @@ var babelClientOptions = assign({}, babelBaseOptions, {
 	cacheDirectory: true,
 	env: {
 		development: {
-			presets: HMR_ENABLED ? ["react-hmre"] : []
+			presets: !isProduction ? ["react-hmre"] : []
 		}
 	}
 });

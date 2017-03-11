@@ -17,8 +17,6 @@ const appConfig = require("./utils/app-config");
 const constants = require("./constants");
 const log4js = require("log4js");
 
-// const hmrEnabled = process.env.HMR_ENABLED === "true";
-const hmrEnabled = true;
 const isProduction = process.env.NODE_ENV === "production";
 
 const logger = log4js.getLogger("application");
@@ -34,7 +32,7 @@ function _create(callback) {
 	// See: http://expressjs.com/en/guide/behind-proxies.html
 	app.set("trust proxy", 1);
 	// Configure Development tools
-	if (hmrEnabled && !isProduction) {
+	if (!isProduction) {
 		logger.info("In development mode; using webpack with HMR");
 		_configureHmr(app);
 	}

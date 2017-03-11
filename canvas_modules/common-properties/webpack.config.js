@@ -11,7 +11,7 @@ var path = require("path");
 
 module.exports = {
 	context: path.join(__dirname, "/src/"),
-	devtool: "#inline-source-map",
+	devtool: "source-map",
 	entry: {
 		lib: "./common-properties.jsx"
 	},
