@@ -1,6 +1,6 @@
 {
   "name": "@wdp/common-properties",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "WDP common-properties",
   "main": "dist/common-properties.js",
   "repository": {
@@ -32,7 +32,7 @@
     "eslint": "2.3.0",
     "eslint-plugin-react": "4.2.1",
     "fetch-mock": "5.6.2",
-		"file-loader": "0.8.5",
+    "file-loader": "0.8.5",
     "fixed-data-table": "0.6.3",
     "grunt": "0.4.5",
     "grunt-contrib-clean": "1.0.0",
@@ -58,7 +58,7 @@
   "publishConfig": {
     "registry": "https://npm-registry.whitewater.ibm.com"
   },
-	"jest": {
+  "jest": {
     "moduleFileExtensions": [
       "js",
       "jsx"
