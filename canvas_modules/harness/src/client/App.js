@@ -90,8 +90,8 @@ class App extends React.Component {
 		// common-canvas
 		this.contextMenuHandler = this.contextMenuHandler.bind(this);
 		this.contextMenuActionHandler = this.contextMenuActionHandler.bind(this);
-		this.editDiagramHandler = this.editDiagramHandler.bind(this);
-		this.clickHandler = this.clickHandler.bind(this);
+		this.editActionHandler = this.editActionHandler.bind(this);
+		this.clickActionHandler = this.clickActionHandler.bind(this);
 		this.decorationActionHandler = this.decorationActionHandler.bind(this);
 
 		this.applyDiagramEdit = this.applyDiagramEdit.bind(this);
@@ -120,7 +120,7 @@ class App extends React.Component {
 	}
 
 	setDiagramJSON(diagramJson) {
-		ObjectModel.setStream(diagramJson);
+		ObjectModel.setCanvas(diagramJson);
 		this.log("set diagramJSON: " + JSON.stringify(diagramJson));
 	}
 
@@ -217,8 +217,8 @@ class App extends React.Component {
 	}
 
 	// common-canvas
-	clickHandler(source) {
-		this.log("clickHandler()");
+	clickActionHandler(source) {
+		this.log("clickActionHandler()");
 		if (source.clickType === "DOUBLE_CLICK" && source.objectType === "node") {
 			this.nodeEditHandler(source.id);
 		}
@@ -314,6 +314,22 @@ class App extends React.Component {
       { action: "deleteObjects", label: this.getLabel("comment-context.deleteComment", "Delete") }
 		];
 
+		const DEPLOY_CONTEXT_MENU = [
+			{ action: "editNode", label: this.getLabel("node-context.editNode", "Open") },
+			{ action: "disconnectNode", label: this.getLabel("node-context.disconnectNode", "Disconnect") },
+			{ action: "previewNode", label: this.getLabel("node-context.previewNode", "Preview") },
+			{ divider: true },
+			{ action: "createSuperNode", label: this.getLabel("node-context.createSuperNode", "Create supernode") },
+			{ divider: true },
+			{ submenu: true, label: this.getLabel("node-context.editMenu", "Edit"), menu: EDIT_SUB_MENU },
+			{ divider: true },
+			{ action: "deleteObjects", label: this.getLabel("node-context.deleteNode", "Delete") },
+			{ divider: true },
+			{ action: "deploy", label: this.getLabel("node-context.deploy", "Deploy") },
+			{ divider: true },
+			{ action: "executeNode", label: this.getLabel("node-context.executeNode", "Execute") }
+		];
+
 		let menuDefinition = null;
 		if (source.type === "canvas") {
 			menuDefinition = EMPTY_CLIPBOARD_CANVAS_CONTEXT_MENU;
@@ -327,6 +343,11 @@ class App extends React.Component {
 					menuDefinition = APPLY_MODEL_NODE_CONTEXT_MENU;
 				} else if (source.targetObject.subDiagramId) {
 					menuDefinition = SUPER_NODE_CONTEXT_MENU;
+				} else if (source.targetObject &&
+					source.targetObject.userData &&
+					source.targetObject.userData.deployable &&
+					(source.targetObject.userData.deployable === true)) {
+					menuDefinition = DEPLOY_CONTEXT_MENU;
 				} else {
 					menuDefinition = NODE_CONTEXT_MENU;
 				}
@@ -337,19 +358,11 @@ class App extends React.Component {
 			}
 		}
 
-		let contextMenuInfo = null;
-
-		if (menuDefinition) {
-			contextMenuInfo = {
-				source: source,
-				menuDefinition: menuDefinition
-			};
-		}
-		return contextMenuInfo;
+		return menuDefinition;
 	}
 
-	editDiagramHandler(data) {
-		this.log("editDiagramHandler()");
+	editActionHandler(data) {
+		this.log("editActionHandler()");
 	}
 
 	contextMenuActionHandler(action, source) {
@@ -531,8 +544,8 @@ class App extends React.Component {
 				config={commonCanvasConfig}
 				contextMenuHandler={this.contextMenuHandler}
 				contextMenuActionHandler= {this.contextMenuActionHandler}
-				editDiagramHandler= {this.editDiagramHandler}
-				clickHandler= {this.clickHandler}
+				editActionHandler= {this.editActionHandler}
+				clickActionHandler= {this.clickActionHandler}
 				decorationActionHandler= {this.decorationActionHandler}
 			/>
 		</div>);
