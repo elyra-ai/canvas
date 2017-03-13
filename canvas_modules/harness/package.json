@@ -18,7 +18,7 @@
     "log4js": "0.6.38",
     "nconf": "0.8.4",
     "react": "15.3.2",
-    "react-bootstrap": "0.29.5",
+    "react-bootstrap": "0.30.6",
     "react-dom": "15.3.2",
     "react-inlinesvg": "0.4.2",
     "react-intl": "2.2.3",

@@ -398,7 +398,7 @@ class Node extends React.Component {
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseLeave}
         ref='connOut'
-        node={this.props.node}
+        data-node={this.props.node}
         draggable="true"
         onDragStart={this.linkDragStart.bind(null, 'connOut')}
         onDragEnd={this.linkDragEnd.bind(null, 'connOut')}
