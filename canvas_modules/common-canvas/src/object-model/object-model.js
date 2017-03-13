@@ -134,6 +134,22 @@ const comments = (state = [], action) => {
           newComment
         ];
 
+    case 'EDIT_COMMENT':
+      return state.map((comment, index) => {
+        if (action.data.nodes.findIndex((actionId) => {return (actionId == comment.id);}) > -1) {
+          let newComment = Object.assign({}, comment);
+          newComment.content = action.data.label;
+          newComment.height = action.data.height;
+          newComment.width = action.data.width;
+          newComment.xPos = action.data.offsetX;
+          newComment.yPos = action.data.offsetY;
+          return newComment;
+        } else {
+          return comment;
+        }
+      });
+
+
     case 'ADD_COMMENT_ATTR':
       return state.map((comment, index) => {
         if (action.data.objIds.findIndex((actionId) => {return (actionId == comment.id);}) > -1) {
@@ -267,7 +283,7 @@ const diagram = (state = {}, action) => {
 };
 
 
-const stream = (state = {}, action) => {
+const canvas = (state = {}, action) => {
   switch (action.type) {
     case 'ADD_NODE':
     case 'DISCONNECT_NODES':
@@ -296,11 +312,11 @@ const reducer = (state = getInitialState(), action) => {
     case 'SET_PALETTE_DATA':
       return Object.assign({}, state, {paletteData: action.data});
 
-    case 'CLEAR_STREAM':
-      return Object.assign({}, state, {stream: null});
+    case 'CLEAR_CANVAS':
+      return Object.assign({}, state, {canvas: null});
 
-    case 'SET_STREAM':
-      return Object.assign({}, state, {stream: action.data});
+    case 'SET_CANVAS':
+      return Object.assign({}, state, {canvas: action.data});
 
     case 'ADD_NODE':
     case 'DISCONNECT_NODES':
@@ -314,7 +330,7 @@ const reducer = (state = getInitialState(), action) => {
     case 'EDIT_COMMENT':
     case 'ADD_COMMENT_ATTR':
     case 'REMOVE_COMMENT_ATTR':
-      return Object.assign({}, state, {stream: stream(state.stream, action)});
+      return Object.assign({}, state, {canvas: canvas(state.canvas, action)});
 
     default:
       return state;
@@ -327,7 +343,7 @@ const getInitialState = () => {
   let label = "New Canvas";
 
   return {
-    stream: {
+    canvas: {
       className: "canvas-image",
       id: uuid,
       diagram: {},
@@ -346,15 +362,12 @@ const getUUID = () => {
 
 
 const store = createStore(reducer);
-store.dispatch({type:"CLEAR_STREAM"});
+store.dispatch({type:"CLEAR_CANVAS"});
 store.dispatch({type:"CLEAR_PALETTE_DATA"});
 
 export default class ObjectModel  {
 
   // Standard methods
-  static getStream() {
-    return store.getState().stream
-  }
 
   static dispatch(action) {
     store.dispatch(action);
@@ -365,6 +378,7 @@ export default class ObjectModel  {
   }
 
   // Palette methods
+
   static clearPaletteData() {
     store.dispatch({type:"CLEAR_PALETTE_DATA"});
   }
@@ -389,14 +403,18 @@ export default class ObjectModel  {
     return outNodeType;
   }
 
-  // Stream methods
+  // Canvas methods
 
-  static clearStream() {
-    store.dispatch({type:"CLEAR_STREAM"});
+  static clearCanvas() {
+    store.dispatch({type:"CLEAR_CANVAS"});
   }
 
-  static setStream(stream) {
-    store.dispatch({type: "SET_STREAM", data: stream });
+  static setCanvas(canvas) {
+    store.dispatch({type: "SET_CANVAS", data: canvas });
+  }
+
+  static getCanvas() {
+    return store.getState().canvas
   }
 
   // Node AND comment methods
@@ -509,7 +527,7 @@ export default class ObjectModel  {
   // Utility functions
 
  static getNode(nodeId) {
-    let nodes = ObjectModel.getStream().diagram.nodes;
+    let nodes = ObjectModel.Canvas().diagram.nodes;
     return nodes.find((node) => {return (node.id === nodeId);});
   }
 
@@ -527,7 +545,11 @@ export default class ObjectModel  {
   }
 
   static connectionIsAllowed(srcNodeId, trgNodeId) {
-    let links = ObjectModel.getStream().diagram.links;
+    if (srcNodeId === trgNodeId) {
+      return false;
+    }
+
+    let links = ObjectModel.Canvas().diagram.links;
 
     let srcNode = ObjectModel.getNode(srcNodeId);
     let trgNode = ObjectModel.getNode(trgNodeId);
@@ -535,15 +557,20 @@ export default class ObjectModel  {
     let srcCount = 0;
     let trgCount = 0;
     links.forEach((link) => {
-      if (link.source === srcNodeId) {
-        srcCount++;
-      }
-      if (link.target === trgNodeId) {
-        trgCount++;
+      // Only count for links that are between data nodes
+      // i.e. don't count for links from/to comments.
+      if (this.isDataNode(link.source) &&
+          this.isDataNode(link.target)) {
+        if (link.source === srcNodeId) {
+          srcCount++;
+        }
+        if (link.target === trgNodeId) {
+          trgCount++;
+        }
       }
     });
 
-    if (srcCount < srcNode.outputPorts.length ||
+    if (srcCount < srcNode.outputPorts.length &&
         trgCount < trgNode.inputPorts.length) {
       return true;
     }

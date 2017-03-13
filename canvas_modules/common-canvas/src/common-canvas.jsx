@@ -21,6 +21,7 @@ import ZoomIn24Icon from '../assets/images/zoom-in_24.svg';
 import ZoomOut24Icon from '../assets/images/zoom-out_24.svg';
 import OpenNodePaletteIcon from '../assets/images/open_node_palette.svg';
 
+
 export default class CommonCanvas extends React.Component {
   constructor(props) {
     super(props);
@@ -42,10 +43,10 @@ export default class CommonCanvas extends React.Component {
     this.zoomIn = this.zoomIn.bind(this);
     this.zoomOut = this.zoomOut.bind(this);
 
-    this.editDiagramHandler = this.editDiagramHandler.bind(this);
+    this.editActionHandler = this.editActionHandler.bind(this);
     this.contextMenuActionHandler = this.contextMenuActionHandler.bind(this);
     this.contextMenuHandler = this.contextMenuHandler.bind(this);
-    this.clickHandler = this.clickHandler.bind(this);
+    this.clickActionHandler = this.clickActionHandler.bind(this);
     this.decorationActionHandler = this.decorationActionHandler.bind(this);
   }
 
@@ -75,7 +76,7 @@ export default class CommonCanvas extends React.Component {
     this.refs.canvas.zoomOut();
   }
 
-  editDiagramHandler(data) {
+  editActionHandler(data) {
     if (this.props.config.enableInternalObjectModel) {
       switch (data.editType) {
         case "createNode":
@@ -96,8 +97,8 @@ export default class CommonCanvas extends React.Component {
       }
     }
 
-    if (this.props.editDiagramHandler) {
-      this.props.editDiagramHandler(data);
+    if (this.props.editActionHandler) {
+      this.props.editActionHandler(data);
     }
   }
 
@@ -126,17 +127,17 @@ export default class CommonCanvas extends React.Component {
 
   contextMenuHandler(source) {
     if (this.props.contextMenuHandler) {
-      let menu = this.props.contextMenuHandler(source);
-      if (typeof menu !== 'undefined') {
-        return menu;
+      let menuDef = this.props.contextMenuHandler(source);
+      if (typeof menuDef !== 'undefined') {
+        return menuDef;
       }
     }
     return null;
   }
 
-  clickHandler(source) {
-    if (this.props.clickHandler) {
-      this.props.clickHandler(source);
+  clickActionHandler(source) {
+    if (this.props.clickActionHandler) {
+      this.props.clickActionHandler(source);
     }
   }
 
@@ -151,17 +152,17 @@ export default class CommonCanvas extends React.Component {
     let popupPalette = null;
     let addButton = null;
     let zoomControls = null;
-    let stream = ObjectModel.getStream();
+    let canvasJSON = ObjectModel.getCanvas();
 
-    if (stream !== null) {
+    if (canvasJSON !== null) {
       canvas = <DiagramCanvas ref="canvas"
-                    diagram={stream}
+                    canvas={canvasJSON}
                     paletteJSON={ObjectModel.getPaletteData()}
                     openPaletteMethod={this.openPalette}
                     contextMenuHandler={this.contextMenuHandler}
                     contextMenuActionHandler={this.contextMenuActionHandler}
-                    editDiagramHandler={this.editDiagramHandler}
-                    clickHandler={this.clickHandler}
+                    editActionHandler={this.editActionHandler}
+                    clickActionHandler={this.clickActionHandler}
                     decorationActionHandler={this.decorationActionHandler}>
                 </DiagramCanvas>;
       if (this.props.config.enablePalette) {
@@ -204,7 +205,7 @@ CommonCanvas.propTypes = {
     config: React.PropTypes.object,
     contextMenuHandler: React.PropTypes.func,
     contextMenuActionHandler: React.PropTypes.func,
-    editDiagramHandler: React.PropTypes.func,
-    clickHandler: React.PropTypes.func,
+    editActionHandler: React.PropTypes.func,
+    clickActionHandler: React.PropTypes.func,
     decorationActionHandler: React.PropTypes.func
 };

@@ -20,22 +20,10 @@ class Comment extends React.Component {
   constructor(props) {
     super(props);
 
-    // There is a complexities to comments that can cause brittleness.
-    // The state of the comment is different from the object model in two cases.
-    // 1) while editing the comment box, the current state is kept in the comment
-    //    element until the editing is complete then the changed comment is sent to
-    //    the object model.  Editing a comment can change the width and height.
-    // 2) when resizing the comment box, the box height, width, x and y positions are
-    //    kept in the state until resizing is complete and then the changed dimensions
-    //    are sent to the object model.
-    // The case where this becomes complex is when the box is moved or resized while in
-    // edit mode.  The drop on the move is handled in diagram-canvas and the object model
-    // is updated from diagram-canvas.  This leads to complexity in ensuring that the 
-    // comment state is updated after a move.
-
     this.state = {
       showBox: false,
       context: false,
+      editable: false,
       value: this.props.comment.content,
       width: this.props.comment.width,
       height: this.props.comment.height,
@@ -65,10 +53,10 @@ class Comment extends React.Component {
 
 
     this.mouseMove = this.mouseMove.bind(this);
-    this.setCursorStyle =this.setCursorStyle.bind(this);
-    this.getNewSize =this.getNewSize.bind(this);
     this.mouseUp = this.mouseUp.bind(this);
     this.mouseDownOnComment = this.mouseDownOnComment.bind(this);
+    this.blurFunction = this.blurFunction.bind(this);
+
 
     // resizing of the comment box mode.  It is not a state variable because it will
     // cause a jitter when I set the state and it renders in some cases.
@@ -131,8 +119,8 @@ class Comment extends React.Component {
         {savedHeight: this.savedHeight, savedTop: this.savedTop, minHeight: this.minHeight});
 
       this.setState({
-        width: dimensions.newWidth,
-        height: dimensions.newHeight,
+        width: Math.round(dimensions.newWidth),
+        height: Math.round(dimensions.newHeight),
         xPos: Math.round((dimensions.newLeft - (20 * this.props.zoom))/this.props.zoom),
         yPos: Math.round((dimensions.newTop + this.props.zoom)/this.props.zoom)
       });
@@ -189,7 +177,8 @@ class Comment extends React.Component {
       } else {
         newTop = eventClientY;
       }
-
+      //console.log("moving top eventClient x,y = "+eventClientX+","+eventClientY+" newTop = " +newTop+ " saveTopt = "+ heightVals.savedTop+
+      //            " newHeight = "+newHeight+" savedWidth ="+widthVals.savedWidth+" minHeight = "+heightVals.minHeight);
     }
 
     if (verticalSizingAction == "bottom") {
@@ -285,13 +274,7 @@ class Comment extends React.Component {
         xPos: Math.round(this.state.xPos),
         yPos: Math.round(this.state.yPos)
       }
-
-      this.props.commentActionHandler('resizeCommentBox', optArg);
-
-      // if in edit mode,save the new x,y pos in the edit comment cache.
-      if (this.props.editable) {
-        this.props.commentActionHandler('changeComment', optArg);
-      }
+      this.props.commentActionHandler('editComment', optArg);
     }
 
     // reset state variables
@@ -331,6 +314,24 @@ class Comment extends React.Component {
     }
   }
 
+  // when focus is lost then push edit comment changes to the object model
+  blurFunction(event){
+    if (this.state.editable) {
+      let evValues = {value: this.state.value};
+      let optArg = {
+        nodes: [this.props.comment.id],
+        target: evValues,
+        width: this.state.width,
+        height: this.state.height,
+        xPos: this.props.comment.xPos,
+        yPos: this.props.comment.yPos
+      }
+
+      this.props.commentActionHandler('editComment', optArg);
+
+      this.setState({editable: false});
+    }
+  }
 
   getCommentDiv() {
     return this.refs.canvasCommentDiv;
@@ -414,7 +415,11 @@ class Comment extends React.Component {
 
   commentDblClicked(ev) {
     ev.stopPropagation();
-    this.props.commentActionHandler('editComment', ev);
+    this.setState({ editable: true});
+
+    // set the focus on the new editable comment box
+    let textarea = document.getElementById(this.props.comment.id);
+    textarea.focus();
   }
 
  // when the adding text to the comment box, determine if the height needs
@@ -426,8 +431,9 @@ class Comment extends React.Component {
     let linesNeeded = Math.round(ev.target.value.length/ charPerLine);
     let numLines = Math.round((this.state.height*this.props.zoom) / fontPxSize);
 
+    let newHeight = this.state.height;
     if (linesNeeded > numLines) {
-        this.setState({height: Math.round(this.state.height+fontPxSize)}); // increase the height by one Font size
+        newHeight = Math.round(this.state.height+fontPxSize); // increase the height by one Font size
     }
 
     // set the state x,y values to the object model values.
@@ -436,20 +442,10 @@ class Comment extends React.Component {
     // which is set in the object model.
     this.setState({
       value: ev.target.value,
+      height: newHeight,
       xPos: this.props.comment.xPos,
       yPos: this.props.comment.yPos
     });
-
-    let evValues = {value: ev.target.value};
-    let optArg = {
-      target: evValues,
-      width: this.state.width,
-      height: this.state.height,
-      xPos: this.props.comment.xPos,
-      yPos: this.props.comment.yPos
-    }
-
-    this.props.commentActionHandler('changeComment', optArg);
   }
 
   getInnerBoxTop(yPos) {
@@ -460,13 +456,14 @@ class Comment extends React.Component {
     return Math.round(xPos * this.props.zoom) + (20 * this.props.zoom);
   }
 
-
-
   showContext(ev) {
     this.setState({ context: true });
   }
 
   render() {
+    //console.log("comment render()");
+    //console.log(this.props.comment);
+
     let zoom = this.props.zoom;
 
     let xPosi = this.props.comment.xPos;
@@ -475,36 +472,6 @@ class Comment extends React.Component {
     if (this.resizingComment) {
       xPosi = this.state.xPos;
       yPosi = this.state.yPos;
-    }
-
-
-    var commentStyle = {
-      position: 'absolute',
-      top: zoom,
-      left: zoom,
-      width: Math.round(this.state.width * zoom),
-      height: Math.round(this.state.height * zoom),
-      fontSize: this.props.fontSize,
-      lineHeight: 1.0,
-      overflow: 'hidden'
-    };
-
-    var textareaStyle = {
-      top: zoom,
-      left: zoom,
-      width: Math.round(this.state.width * zoom),
-      height: Math.round(this.state.height * zoom),
-      fontSize: this.props.fontSize,
-      overflow: 'auto',
-      lineHeight: 1.0
-    };
-
-    if (typeof(this.props.comment.style) !== "undefined" && this.props.comment.style) {
-      // first convert the style string into a JSON object
-      let styleObject = CanvasUtils.convertStyleStringToJSONObject(this.props.comment.style);
-      // then merge JSON objects
-      Object.assign(commentStyle, styleObject);
-      Object.assign(textareaStyle, styleObject);
     }
 
     var className = (typeof(this.props.comment.className) !== "undefined" && this.props.comment.className) ?
@@ -560,81 +527,111 @@ class Comment extends React.Component {
         //backgroundColor : 'yellow'
       };
 
-      let customAttrs = {};
-      if (this.props.comment.customAttrs) {
-        this.props.comment.customAttrs.forEach((a) => {
-          customAttrs[a] = "";
-        });
-      }
+    let innerBoxStyle =
+       {
+         top: bInnerTop,
+         left: bInnerLeft,
+         width: bInnerWidth,
+         height: bInnerHeight,
+         position: 'absolute',
+         borderRadius: '0',
+         zIndex:1,
+         //backgroundColor : 'red'
+      };
 
-      let innerBoxStyle =
-         {
-           top: bInnerTop,
-           left: bInnerLeft,
-           width: bInnerWidth,
-           height: bInnerHeight,
-           position: 'absolute',
-           borderRadius: '0',
-           zIndex:1,
-           //backgroundColor : 'red'
-        };
+    var commentStyle = {
+      position: 'absolute',
+      top: zoom,
+      left: zoom,
+      width: Math.round(this.state.width * zoom),
+      height: Math.round(this.state.height * zoom),
+      fontSize: this.props.fontSize,
+      lineHeight: 1.0,
+      overflow: 'hidden'
+    };
 
-      let commentArea = this.props.editable ?
-          <textarea
-            style={textareaStyle}
-            draggable="true"
-            value={this.state.value}
-            spellCheck="true"
-            onChange={this.commentChange}
-          ></textarea>
-        :
-          <div>{this.state.value}</div>
-        ;
+    var textareaStyle = {
+      top: zoom,
+      left: zoom,
+      width: Math.round(this.state.width * zoom),
+      height: Math.round(this.state.height * zoom),
+      fontSize: this.props.fontSize,
+      overflow: 'auto',
+      lineHeight: 1.0,
+      border: 'none'
+    };
 
-      let box =
-        <div>
-          <div
-            className="padding-box"
-            style={paddingBoxStyle}
-            >
-          </div>
+    if (typeof(this.props.comment.style) !== "undefined" && this.props.comment.style) {
+      // first convert the style string into a JSON object
+      let styleObject = CanvasUtils.convertStyleStringToJSONObject(this.props.comment.style);
+      // then merge JSON objects
+      Object.assign(commentStyle, styleObject);
+      Object.assign(textareaStyle, styleObject);
+    }
 
-          <div
-            className="comment-box"
-            style={boxStyle}
-            onMouseEnter={this.handleMouseEnter}
-            onMouseLeave={this.handleMouseLeave}
-            draggable="true"
-            onDragStart={this.linkDragStart.bind(null, 'comment')}
-            onDragEnd={this.linkDragEnd.bind(null, 'comment')}
-            onDrop={this.linkDrop}
-            onDragOver={this.linkDragOver}
-            onClick={this.props.commentActionHandler.bind(null, 'comment')}
+    let customAttrs = {};
+    if (this.props.comment.customAttrs) {
+      this.props.comment.customAttrs.forEach((a) => {
+        customAttrs[a] = "";
+      });
+    }
+
+    let readOnly = !this.state.editable;
+
+    let box =
+      <div>
+        <div
+          className="padding-box"
+          style={paddingBoxStyle}
           >
-          </div>
+        </div>
 
+        <div
+          className="comment-box"
+          style={boxStyle}
+          onMouseEnter={this.handleMouseEnter}
+          onMouseLeave={this.handleMouseLeave}
+          draggable="true"
+          onDragStart={this.linkDragStart.bind(null, 'comment')}
+          onDragEnd={this.linkDragEnd.bind(null, 'comment')}
+          onDrop={this.linkDrop}
+          onDragOver={this.linkDragOver}
+          onClick={this.props.commentActionHandler.bind(null, 'comment')}
+        >
+        </div>
+
+        <div
+          className="comment-inner-box"
+          style={innerBoxStyle}
+          onMouseEnter={this.handleMouseEnterInnerBox}
+          draggable="true"
+          onDragStart={this.dragStart}
+          onDragEnd={this.dragEnd}
+          onDrop={this.drop}
+          onContextMenu={this.props.onContextMenu}
+        >
           <div
-            className="comment-inner-box"
-            style={innerBoxStyle}
-            onMouseEnter={this.handleMouseEnterInnerBox}
-            draggable="true"
-            onDragStart={this.dragStart}
-            onDragEnd={this.dragEnd}
-            onDrop={this.drop}
-            onContextMenu={this.props.onContextMenu}
+            ref="canvasCommentDiv"
+            onMouseDown={this.mouseDownOnComment}
+            className={className}
+            style={commentStyle}
+            onClick={this.commentClicked}
+            onDoubleClick={this.commentDblClicked}
           >
-            <div
-              ref="canvasCommentDiv"
-              onMouseDown={this.mouseDownOnComment}
+            <textarea
+              id={this.props.comment.id}
               className={className}
-              style={commentStyle}
-              onClick={this.commentClicked}
-              onDoubleClick={this.commentDblClicked}
-            >
-              {commentArea}
-            </div>
+              style={textareaStyle}
+              draggable="true"
+              value={this.state.value}
+              spellCheck="true"
+              onChange={this.commentChange}
+              onBlur={this.blurFunction}
+              readOnly={readOnly}
+            ></textarea>
           </div>
-        </div>;
+        </div>
+      </div>;
 
     return (
           <div>
@@ -651,8 +648,7 @@ Comment.propTypes = {
   fontSize: React.PropTypes.number,
   zoom: React.PropTypes.number,
   selected: React.PropTypes.bool,
-  cutable: React.PropTypes.bool,
-  editable: React.PropTypes.bool
+  cutable: React.PropTypes.bool
 };
 
 export default Comment;

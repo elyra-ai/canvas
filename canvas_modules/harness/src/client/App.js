@@ -103,7 +103,7 @@ class App extends React.Component {
 		this.openPropertiesEditorDialog = this.openPropertiesEditorDialog.bind(this);
 		this.closePropertiesEditorDialog = this.closePropertiesEditorDialog.bind(this);
 
-		ObjectModel.setStream(BLANK_CANVAS);
+		ObjectModel.setCanvas(BLANK_CANVAS);
 		ObjectModel.setPaletteData({});
 	}
 

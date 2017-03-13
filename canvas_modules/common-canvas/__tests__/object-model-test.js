@@ -6,10 +6,10 @@ import ObjectModel from '../src/object-model/object-model.js';
 
 describe('ObjectModel handle model OK', () => {
 
-    it('should create a stream', () => {
-      console.log("should create a stream");
+    it('should create a canvas', () => {
+      console.log("should create a canvas");
 
-      let expectedStream =
+      let expectedCanvas =
            {zoom: 100,
             diagram:
               {name:"my diagram",
@@ -18,26 +18,26 @@ describe('ObjectModel handle model OK', () => {
               }
            };
 
-     deepFreeze(expectedStream);
+     deepFreeze(expectedCanvas);
 
       ObjectModel.dispatch({
-        type: "SET_STREAM",
-        data: expectedStream
+        type: "SET_CANVAS",
+        data: expectedCanvas
       });
 
-      let actualStream = ObjectModel.getStream();
+      let actualCanvas = ObjectModel.getCanvas();
 
-      console.log("Expected Stream = " + JSON.stringify(expectedStream));
-      console.log("Actual Stream   = " + JSON.stringify(actualStream));
+      console.log("Expected Canvas = " + JSON.stringify(expectedCanvas));
+      console.log("Actual Canvas   = " + JSON.stringify(actualCanvas));
 
-      expect(_.isEqual(expectedStream, actualStream)).to.be.true;
+      expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
     });
 
 
-    it('should clear a stream', () => {
-      console.log("should clear a stream");
+    it('should clear a canvas', () => {
+      console.log("should clear a canvas");
 
-      let startStream =
+      let startCanvas =
           {diagram:
             {nodes: [
                {id: "node1", xPos: 10, yPos: 10},
@@ -51,29 +51,29 @@ describe('ObjectModel handle model OK', () => {
             }
           };
 
-      deepFreeze(startStream);
+      deepFreeze(startCanvas);
 
       ObjectModel.dispatch({
-        type: "SET_STREAM",
-        data: startStream
+        type: "SET_CANVAS",
+        data: startCanvas
       });
 
-      ObjectModel.dispatch({type: "CLEAR_STREAM"});
+      ObjectModel.dispatch({type: "CLEAR_CANVAS"});
 
-      let expectedStream = null;
-      let actualStream = ObjectModel.getStream();
+      let expectedCanvas = null;
+      let actualCanvas = ObjectModel.getCanvas();
 
-      console.log("Expected Stream = " + JSON.stringify(expectedStream));
-      console.log("Actual Stream   = " + JSON.stringify(actualStream));
+      console.log("Expected Canvas = " + JSON.stringify(expectedCanvas));
+      console.log("Actual Canvas   = " + JSON.stringify(actualCanvas));
 
-      expect(_.isEqual(expectedStream, actualStream)).to.be.true;
+      expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
     });
 
 
     it('should move a node', () => {
       console.log("should move a node");
 
-      let startStream =
+      let startCanvas =
           {diagram:
             {nodes: [
                {id: "node1", xPos: 10, yPos: 10},
@@ -87,11 +87,11 @@ describe('ObjectModel handle model OK', () => {
             }
           };
 
-      deepFreeze(startStream);
+      deepFreeze(startCanvas);
 
       ObjectModel.dispatch({
-        type: "SET_STREAM",
-        data: startStream
+        type: "SET_CANVAS",
+        data: startCanvas
       });
 
       ObjectModel.dispatch({
@@ -101,7 +101,7 @@ describe('ObjectModel handle model OK', () => {
                offsetY: 7}
       });
 
-      let expectedStream =
+      let expectedCanvas =
           {diagram:
             {nodes: [
                {id: "node1", xPos: 15, yPos: 17},
@@ -116,18 +116,18 @@ describe('ObjectModel handle model OK', () => {
             }
           };
 
-      let actualStream = ObjectModel.getStream();
+      let actualCanvas = ObjectModel.getCanvas();
 
-      console.log("Expected Stream = " + JSON.stringify(expectedStream));
-      console.log("Actual Stream   = " + JSON.stringify(actualStream));
+      console.log("Expected Canvas = " + JSON.stringify(expectedCanvas));
+      console.log("Actual Canvas   = " + JSON.stringify(actualCanvas));
 
-      expect(_.isEqual(expectedStream, actualStream)).to.be.true;
+      expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
     });
 
     it('should delete a node', () => {
       console.log("should delete a node");
 
-      let startStream =
+      let startCanvas =
           {zoom: 100,
            diagram:
             {nodes: [
@@ -141,11 +141,11 @@ describe('ObjectModel handle model OK', () => {
             ]
         }};
 
-      deepFreeze(startStream);
+      deepFreeze(startCanvas);
 
       ObjectModel.dispatch({
-        type: "SET_STREAM",
-        data: startStream
+        type: "SET_CANVAS",
+        data: startCanvas
       });
 
       ObjectModel.dispatch({
@@ -153,7 +153,7 @@ describe('ObjectModel handle model OK', () => {
         data: {selectedObjectIds: ["node1", "node3", "comment1"]}
       });
 
-      let expectedStream =
+      let expectedCanvas =
           {zoom: 100,
            diagram:
             {nodes: [
@@ -165,19 +165,19 @@ describe('ObjectModel handle model OK', () => {
             links: []
         }};
 
-      let actualStream = ObjectModel.getStream();
+      let actualCanvas = ObjectModel.getCanvas();
 
-      console.log("Expected Stream = " + JSON.stringify(expectedStream));
-      console.log("Actual Stream   = " + JSON.stringify(actualStream));
+      console.log("Expected Canvas = " + JSON.stringify(expectedCanvas));
+      console.log("Actual Canvas   = " + JSON.stringify(actualCanvas));
 
-      expect(_.isEqual(expectedStream, actualStream)).to.be.true;
+      expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
     });
 
     it('should add a comment', () => {
       console.log("should add a comment");
 
 
-      let startStream =
+      let startCanvas =
           {zoom: 100,
            diagram: {
             nodes: [
@@ -192,11 +192,11 @@ describe('ObjectModel handle model OK', () => {
            }
           };
 
-      deepFreeze(startStream);
+      deepFreeze(startCanvas);
 
       ObjectModel.dispatch({
-        type: "SET_STREAM",
-        data: startStream
+        type: "SET_CANVAS",
+        data: startCanvas
       });
 
       ObjectModel.dispatch({
@@ -204,7 +204,7 @@ describe('ObjectModel handle model OK', () => {
         data: {id: "comment3", mousePos: {x: 200, y: 300}, selectedObjectIds: []}
       });
 
-      let expectedStream =
+      let expectedCanvas =
           {zoom: 100,
              diagram: {
                nodes: [
@@ -229,19 +229,19 @@ describe('ObjectModel handle model OK', () => {
           };
 
 
-      let actualStream = ObjectModel.getStream();
+      let actualCanvas = ObjectModel.getCanvas();
 
-      console.log("Expected Stream = " + JSON.stringify(expectedStream));
-      console.log("Actual Stream   = " + JSON.stringify(actualStream));
+      console.log("Expected Canvas = " + JSON.stringify(expectedCanvas));
+      console.log("Actual Canvas   = " + JSON.stringify(actualCanvas));
 
-      expect(_.isEqual(expectedStream, actualStream)).to.be.true;
+      expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
     });
 
 
     it('should add a link', () => {
       console.log("should add a link");
 
-      let startStream =
+      let startCanvas =
           {zoom: 100,
            diagram: {
             nodes: [
@@ -260,11 +260,11 @@ describe('ObjectModel handle model OK', () => {
            }
           };
 
-      deepFreeze(startStream);
+      deepFreeze(startCanvas);
 
       ObjectModel.dispatch({
-        type: "SET_STREAM",
-        data: startStream
+        type: "SET_CANVAS",
+        data: startCanvas
       });
 
       ObjectModel.dispatch({
@@ -278,7 +278,7 @@ describe('ObjectModel handle model OK', () => {
       });
 
 
-      let expectedStream =
+      let expectedCanvas =
           {zoom: 100,
              diagram: {
                nodes: [
@@ -299,18 +299,18 @@ describe('ObjectModel handle model OK', () => {
              }
           };
 
-      let actualStream = ObjectModel.getStream();
+      let actualCanvas = ObjectModel.getCanvas();
 
-      console.log("Expected Stream = " + JSON.stringify(expectedStream));
-      console.log("Actual Stream   = " + JSON.stringify(actualStream));
+      console.log("Expected Canvas = " + JSON.stringify(expectedCanvas));
+      console.log("Actual Canvas   = " + JSON.stringify(actualCanvas));
 
-      expect(_.isEqual(expectedStream, actualStream)).to.be.true;
+      expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
     });
 
     it('should delete a link', () => {
       console.log("should delete a link");
 
-      let startStream =
+      let startCanvas =
           {zoom: 100,
            diagram: {
             nodes: [
@@ -329,11 +329,11 @@ describe('ObjectModel handle model OK', () => {
            }
           };
 
-      deepFreeze(startStream);
+      deepFreeze(startCanvas);
 
       ObjectModel.dispatch({
-        type: "SET_STREAM",
-        data: startStream
+        type: "SET_CANVAS",
+        data: startCanvas
       });
 
       ObjectModel.dispatch({
@@ -341,7 +341,7 @@ describe('ObjectModel handle model OK', () => {
         data: {id: "link1"}
       });
 
-      let expectedStream =
+      let expectedCanvas =
           {zoom: 100,
              diagram: {
                nodes: [
@@ -359,18 +359,18 @@ describe('ObjectModel handle model OK', () => {
              }
           };
 
-      let actualStream = ObjectModel.getStream();
+      let actualCanvas = ObjectModel.getCanvas();
 
-      console.log("Expected Stream = " + JSON.stringify(expectedStream));
-      console.log("Actual Stream   = " + JSON.stringify(actualStream));
+      console.log("Expected Canvas = " + JSON.stringify(expectedCanvas));
+      console.log("Actual Canvas   = " + JSON.stringify(actualCanvas));
 
-      expect(_.isEqual(expectedStream, actualStream)).to.be.true;
+      expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
     });
 
     it('should delete a link when a node is deleted', () => {
       console.log("should delete a link when a node is deleted.");
 
-      let startStream =
+      let startCanvas =
           {zoom: 100,
            diagram: {
             nodes: [
@@ -389,11 +389,11 @@ describe('ObjectModel handle model OK', () => {
            }
           };
 
-      deepFreeze(startStream);
+      deepFreeze(startCanvas);
 
       ObjectModel.dispatch({
-        type: "SET_STREAM",
-        data: startStream
+        type: "SET_CANVAS",
+        data: startCanvas
       });
 
       ObjectModel.dispatch({
@@ -401,7 +401,7 @@ describe('ObjectModel handle model OK', () => {
         data: {selectedObjectIds: ["node1"]}
       });
 
-      let expectedStream =
+      let expectedCanvas =
           {zoom: 100,
              diagram: {
                nodes: [
@@ -418,12 +418,12 @@ describe('ObjectModel handle model OK', () => {
              }
           };
 
-      let actualStream = ObjectModel.getStream();
+      let actualCanvas = ObjectModel.getCanvas();
 
-      console.log("Expected Stream = " + JSON.stringify(expectedStream));
-      console.log("Actual Stream   = " + JSON.stringify(actualStream));
+      console.log("Expected Canvas = " + JSON.stringify(expectedCanvas));
+      console.log("Actual Canvas   = " + JSON.stringify(actualCanvas));
 
-      expect(_.isEqual(expectedStream, actualStream)).to.be.true;
+      expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
     });
 
 
