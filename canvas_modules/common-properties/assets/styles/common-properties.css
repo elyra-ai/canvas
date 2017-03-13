@@ -14,7 +14,7 @@
 *****************************************************************/
 @CHARSET "ISO-8859-1";
 
-/*@font-face {
+@font-face {
     font-family: IBMHLVMedium;
     src: url(~ap-components-react/dist/fonts/medium/helvetica-neue-medium.woff);
 }
@@ -36,7 +36,7 @@
 @font-face {
     font-family: IBMHLVRoman;
     src: url(~ap-components-react/dist/fonts/roman/helvetica-neue-roman.woff);
-}*/
+}
 
 /* Property editing */
 

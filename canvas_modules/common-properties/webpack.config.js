@@ -13,7 +13,7 @@ module.exports = {
 	context: path.join(__dirname, "/src/"),
 	devtool: "source-map",
 	entry: {
-		lib: "./common-properties.jsx"
+		lib: "./index.js"
 	},
 	output: {
 		library: "Common-Properties",
@@ -29,11 +29,11 @@ module.exports = {
 				exclude: /node_modules/,
 				loader: "babel-loader",
 				query: {
-					presets: ["react", "es2015", "stage-0"]
+					presets: ["react", "es2015","stage-1"]
 				}
 			},
 			{
-				test: /\.svg$/,
+				test: /\.(woff|svg|png)$/,
 				loader: "url-loader"
 			},
 			{
@@ -42,7 +42,13 @@ module.exports = {
 					"style-loader",
 					"css-loader"
 				]
-      }
+      },
+			{
+				test: /\.(?:png|jpg|svg|woff|ttf|woff2|eot)$/,
+				loaders: [
+					"file-loader?name=graphics/[hash].[ext]"
+				]
+			}
 		]
 	},
 	resolve: {

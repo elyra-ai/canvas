@@ -16,7 +16,7 @@ import en from "react-intl/locale-data/en";
 var i18nData = require("../intl/en.js");
 
 import { CommonCanvas, ObjectModel } from "@wdp/common-canvas";
-import CommonProperties from "../../../common-properties/src/common-properties.jsx";
+import { CommonProperties } from "@wdp/common-properties";
 
 import "../styles/App.css";
 
