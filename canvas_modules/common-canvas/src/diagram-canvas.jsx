@@ -135,7 +135,7 @@ export default class DiagramCanvas extends React.Component {
 
       let d = arrow.p1.x + "," + arrow.p1.y + " " + arrow.p2.x  + "," + arrow.p2.y  + " " + arrow.p3.x + "," + arrow.p3.y;
 
-      return (<polyline fill="none" stroke="black" strokeWidth="2" points={d}/>);
+      return (<polyline key={ind} fill="none" stroke="black" strokeWidth="2" points={d}/>);
     });
   }
 
@@ -1189,7 +1189,7 @@ export default class DiagramCanvas extends React.Component {
         {viewComments}
         {viewNodes}
 
-        <SVGCanvas ref="svg_canvas" x="0" y="0" width="100%" height="100%" background-color="blue" zoom={zoom}
+        <SVGCanvas ref="svg_canvas" x="0" y="0" width="100%" height="100%"
             onContextMenu={this.canvasContextMenu}>
           <defs>
             <marker id="markerCircle" markerWidth={42} markerHeight={42} refX={10} refY={10} markerUnits="strokeWidth">
