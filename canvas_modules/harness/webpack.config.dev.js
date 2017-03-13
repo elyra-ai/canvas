@@ -104,7 +104,7 @@ var plugins = [
 // Postcss ------------------------------------------------------------>
 
 var postcss = [
-	require("stylelint"),
+//	require("stylelint"),
 	require("autoprefixer")
 ];
 

@@ -8,6 +8,7 @@
  *******************************************************************************/
 "use strict";
 var path = require("path");
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
 	context: path.join(__dirname, "/src/"),
@@ -23,7 +24,7 @@ module.exports = {
 		sourceMapFilename: "[file].map",
 	},
 	module: {
-		loaders: [
+		rules: [
 			{
 				test: /\.js(x?)$/,
 				exclude: /node_modules/,
@@ -33,18 +34,25 @@ module.exports = {
 				}
 			},
 			{
-				test: /\.(woff|svg|png)$/,
-				loader: "url-loader"
+				test: /\.css$/,
+				use: ExtractTextPlugin.extract(
+					{
+						use: [
+							"css-loader",
+							"postcss-loader"
+						]
+					}
+				)
 			},
 			{
-        test: /\.css$/,
-        loaders: [
-					"style-loader",
-					"css-loader"
-				]
-      }
+				test: /\.(woff|svg|png)$/,
+				loader: "url-loader"
+			}
 		]
 	},
+	plugins: [
+    new ExtractTextPlugin('common-canvas.css')
+  ],
 	resolve: {
 		extensions: [".js", ".jsx"]
 	},
