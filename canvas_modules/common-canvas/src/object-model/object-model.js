@@ -527,7 +527,7 @@ export default class ObjectModel  {
   // Utility functions
 
  static getNode(nodeId) {
-    let nodes = ObjectModel.Canvas().diagram.nodes;
+    let nodes = ObjectModel.getCanvas().diagram.nodes;
     return nodes.find((node) => {return (node.id === nodeId);});
   }
 
@@ -549,7 +549,7 @@ export default class ObjectModel  {
       return false;
     }
 
-    let links = ObjectModel.Canvas().diagram.links;
+    let links = ObjectModel.getCanvas().diagram.links;
 
     let srcNode = ObjectModel.getNode(srcNodeId);
     let trgNode = ObjectModel.getNode(trgNodeId);
