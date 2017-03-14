@@ -30,7 +30,7 @@ export default class SidePanelModal extends React.Component {
 	}
 
 	onPropertiesSelect(evt) {
-		this.props.setPropertiesJSON({});
+		this.setState({ commonProperties: "" });
 		if (evt.target.files.length > 0) {
 			var filename = evt.target.files[0].name;
 			var fileExt = filename.substring(filename.lastIndexOf(".") + 1);
@@ -75,7 +75,7 @@ export default class SidePanelModal extends React.Component {
 
 		var propertiesInput = (<div className="sidepanel-children" id="sidepanel-input">
 			<div className="formField">
-				<label className="formLabel">Common Properties</label>
+				<div className="sidepanel-headers">Common Properties</div>
 				<FormControl
 					required="required"
 					id="formFileInput"

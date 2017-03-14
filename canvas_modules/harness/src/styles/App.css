@@ -25,7 +25,7 @@
 }
 
 /*Navbar*/
-.navbar {
+.app-navbar-items {
   position:fixed;
   width:100%;
   list-style-type: none;

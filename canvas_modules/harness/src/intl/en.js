@@ -25,5 +25,5 @@ export const messages = {
 
 	"dialog.okBtn": "OK",
 	"dialog.cancelBtn": "Cancel",
-	"dialog.streamPropertiesTitle": "Properties Title"
+	"dialog.nodePropertiesTitle": "Node Properties"
 };

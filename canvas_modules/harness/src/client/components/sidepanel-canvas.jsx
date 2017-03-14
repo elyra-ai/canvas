@@ -124,7 +124,7 @@ export default class SidePanelForms extends React.Component {
 
 		var canvasInput = (<div className="sidepanel-children" id="sidepanel-canvas-input">
 			<div className="canvasField">
-				<label className="canvasLabel">Canvas Diagram</label>
+				<div className="sidepanel-headers">Canvas Diagram</div>
 				<FormControl
 					required="required"
 					id="canvasFileInput"
@@ -143,7 +143,7 @@ export default class SidePanelForms extends React.Component {
 
 		var paletteInput = (<div className="sidepanel-children" id="sidepanel-palette-input">
 			<div className="formField">
-				<label className="formLabel">Canvas Palette</label>
+				<div className="sidepanel-headers">Canvas Palette</div>
 				<FormControl
 					required="required"
 					id="paletteJsonInput"

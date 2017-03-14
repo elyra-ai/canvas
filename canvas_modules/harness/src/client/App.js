@@ -131,6 +131,7 @@ class App extends React.Component {
 
 	setPropertiesJSON(propertiesJson) {
 		this.setState({ propertiesJson: propertiesJson });
+		this.openPropertiesEditorDialog();
 		this.log("set propertiesJSON: " + JSON.stringify(propertiesJson));
 	}
 
@@ -437,7 +438,7 @@ class App extends React.Component {
 		}
 
 		const propsInfo = {
-			title: <FormattedMessage id={ "dialog.streamPropertiesTitle" } />,
+			title: <FormattedMessage id={ "dialog.nodePropertiesTitle" } />,
 			formData: properties.formData,
 			appData: properties.appData,
 			applyPropertyChanges: this.applyPropertyChanges,
@@ -458,9 +459,9 @@ class App extends React.Component {
 		var messages = i18nData.messages;
 
 		var navBar = (<div id="app-navbar">
-			<div className="navbar">
+			<div className="app-navbar">
 				<nav id="action-bar">
-					<ul className="navbar">
+					<ul className="app-navbar-items">
 						<li className="navbar-li">
 							<a id="title">Canvas Testbed</a>
 						</li>
@@ -499,7 +500,6 @@ class App extends React.Component {
 								/>
 							</a>
 						</li>
-						// Sidepanel
 						<li className="navbar-li action-bar-sidepanel"
 							id="action-bar-sidepanel-modal" data-tip="Common Properties Modal"
 						>
