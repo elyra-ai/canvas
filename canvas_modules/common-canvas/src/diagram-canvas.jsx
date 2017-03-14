@@ -1076,7 +1076,7 @@ export default class DiagramCanvas extends React.Component {
     let connSize = Math.max(2, Math.round((ICON_SIZE / 4) * zoom));
     let fontSize = Math.max(Math.round(FONT_SIZE * zoom) + 3, 8);
     let nodeWidth = Math.round(NODE_WIDTH * zoom);
-    let halfNodeWidth = Math.round(NODE_WIDTH * zoom / 2);
+    let halfNodeWidth = Math.round(NODE_WIDTH * zoom - (zoom*connSize));
     let nodeHeight = Math.round(NODE_HEIGHT * zoom);
     let maxX = 28 * nodeWidth;
     let maxY = 10 * nodeHeight;
