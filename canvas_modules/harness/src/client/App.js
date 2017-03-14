@@ -18,8 +18,6 @@ var i18nData = require("../intl/en.js");
 import { CommonCanvas, ObjectModel } from "@wdp/common-canvas";
 import { CommonProperties } from "@wdp/common-properties";
 
-import "../styles/App.css";
-
 import Console from "./components/console.jsx";
 import SidePanel from "./components/sidepanel.jsx";
 
