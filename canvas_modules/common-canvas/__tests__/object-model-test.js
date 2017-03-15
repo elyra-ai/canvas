@@ -237,6 +237,66 @@ describe('ObjectModel handle model OK', () => {
       expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
     });
 
+    it('should edit a comment', () => {
+      console.log("should edit a comment");
+
+
+      let startCanvas =
+          {zoom: 100,
+           diagram: {
+            nodes: [
+              {id: "node1", xPos: 10, yPos: 10},
+              {id: "node2", xPos: 20, yPos: 20},
+              {id: "node3", xPos: 30, yPos: 30}
+            ],
+            comments: [
+              {id: "comment1", xPos: 50, yPos: 50},
+              {id: "comment2", xPos: 60, yPos: 60}
+            ]
+           }
+          };
+
+      deepFreeze(startCanvas);
+
+      ObjectModel.dispatch({
+        type: "SET_CANVAS",
+        data: startCanvas
+      });
+
+      ObjectModel.dispatch({
+        type: "EDIT_COMMENT",
+        data: {nodes: ["comment2"], offsetX: 425, offsetY: 125, height: 45, width: 250, label: "this is a new comment string"}
+      });
+
+      let expectedCanvas =
+          {zoom: 100,
+             diagram: {
+               nodes: [
+                {id: "node1", xPos: 10, yPos: 10},
+                {id: "node2", xPos: 20, yPos: 20},
+                {id: "node3", xPos: 30, yPos: 30}
+               ],
+               comments: [
+                {id: "comment1", xPos: 50, yPos: 50},
+                {id: "comment2",
+                 xPos: 425,
+                 yPos: 125,
+                 content: "this is a new comment string",
+                 height: 45,
+                 width: 250}
+               ]
+             }
+          };
+
+
+      let actualCanvas = ObjectModel.getCanvas();
+
+      console.log("Expected Canvas = " + JSON.stringify(expectedCanvas));
+      console.log("Actual Canvas   = " + JSON.stringify(actualCanvas));
+
+      expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+    });
+
 
     it('should add a link', () => {
       console.log("should add a link");

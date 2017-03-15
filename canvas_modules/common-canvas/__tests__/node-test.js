@@ -48,7 +48,7 @@ describe('Node renders correctly', () => {
         label={""}
         nodeActionHandler={nodeActionHandler}
         uiconf={uiconf}
-        selcted={true}/>
+        selected={true}/>
     );
     expect(wrapper.node).to.be.defined;
     expect(wrapper.label).to.be.defined;
@@ -64,7 +64,7 @@ describe('Node renders correctly', () => {
         label={""}
         nodeActionHandler={nodeActionHandler}
         uiconf={uiconf}
-        selcted={true}/>
+        selected={true}/>
     );
 
     expect(wrapper.find('.node-circle')).to.have.length(1);
@@ -77,7 +77,7 @@ describe('Node renders correctly', () => {
         label={""}
         nodeActionHandler={nodeActionHandler}
         uiconf={uiconf}
-        selcted={true}/>
+        selected={true}/>
     );
 
     expect(wrapper.find('.node-circle')).to.have.length(1);
@@ -90,7 +90,7 @@ describe('Node renders correctly', () => {
         label={""}
         nodeActionHandler={nodeActionHandler}
         uiconf={uiconf}
-        selcted={true}/>
+        selected={true}/>
     );
 
     expect(wrapper.find('.node-inner-circle')).to.have.length(1);
@@ -103,7 +103,7 @@ describe('Node renders correctly', () => {
         label={""}
         nodeActionHandler={nodeActionHandler}
         uiconf={uiconf}
-        selcted={true}/>
+        selected={true}/>
     );
 
     expect(wrapper.find('.padding-circle')).to.have.length(1);
@@ -117,7 +117,7 @@ describe('Node renders correctly', () => {
         label={""}
         nodeActionHandler={nodeActionHandler}
         uiconf={uiconf}
-        selcted={true}/>
+        selected={true}/>
     );
 
     //wrapper.setState({ showCircle: true });
@@ -134,7 +134,7 @@ describe('Node renders correctly', () => {
         label={""}
         nodeActionHandler={nodeActionHandler}
         uiconf={uiconf}
-        selcted={true}/>
+        selected={true}/>
     );
 
     //wrapper.setState({ showCircle: false });
