@@ -26,3 +26,11 @@ Connect to canvas:
 ```
 http://localhost:3001
 ```
+
+## UI test
+
+Ensure that the test harness is running.
+```sh
+cd <base dir>/canvas_modules/harness
+npm test
+```
