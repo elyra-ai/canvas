@@ -1,11 +1,5 @@
 module.exports = function() {
 
-  let testUrl = 'http://localhost:3001';
-
-  this.Given(/^I have visited canvas test harness$/,function () {
-    browser.url(testUrl);
-  });
-
   this.Then('I create a new comment', function () {
     browser.rightClick(".svg-canvas",200,450);
     var contextMenu = browser.$(".context-menu-popover");

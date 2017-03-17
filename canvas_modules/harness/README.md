@@ -29,8 +29,9 @@ http://localhost:3001
 
 ## UI test
 
-Ensure that the test harness is running.
+Ensure that the test harness is running.  You will need to specify the URL of the running test harness as a environment variable.
 ```sh
+export UI_TEST_URL=http://localhost:3001
 cd <base dir>/canvas_modules/harness
 npm test
 ```
