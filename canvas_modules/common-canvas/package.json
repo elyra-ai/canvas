@@ -5,7 +5,7 @@
   "main": "dist/common-canvas.js",
   "repository": {
     "type": "git",
-    "url": "https://github.ibm.com/NGP-TWC/wdp-abstract-canvas"
+    "url": "https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/tree/master/canvas_modules/common-canvas"
   },
   "bugs": {
     "url": "https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues"

@@ -5,7 +5,7 @@
   "main": "dist/common-properties.js",
   "repository": {
     "type": "git",
-    "url": "https://github.ibm.com/NGP-TWC/wdp-abstract-canvas"
+    "url": "https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/tree/master/canvas_modules/common-properties"
   },
   "bugs": {
     "url": "https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues"
