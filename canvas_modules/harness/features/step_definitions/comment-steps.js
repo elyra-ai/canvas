@@ -7,17 +7,15 @@ module.exports = function() {
   });
 
   this.Then('I create a new comment', function () {
-    browser.rightClick("#canvas-div",200,200);
-    browser.pause(2000);
+    browser.rightClick(".svg-canvas",200,450);
     var contextMenu = browser.$(".context-menu-popover");
     contextMenu.$$('.react-context-menu-item')[0].$('.react-context-menu-link').click();
-    browser.pause(2000);
   });
 
   this.Then('I add the value "$string"', function (commentValue) {
     browser.doubleClick("textarea");
     browser.setValue("textarea", commentValue);
-    browser.pause(2000);
+    browser.pause(500);
     browser.leftClick("#canvas-div",400,400);
   });
 
