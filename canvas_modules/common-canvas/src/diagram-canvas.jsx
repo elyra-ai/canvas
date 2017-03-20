@@ -13,13 +13,15 @@
 *****************************************************************/
 
 import React from 'react';
+import dagre from 'dagre';
 
 import Node from './node.jsx';
 import Comment from './comment.jsx';
 import SVGCanvas from './svg-canvas.jsx';
 import CommonContextMenu from './common-context-menu.jsx';
 import ContextMenuWrapper from './context-menu-wrapper.jsx';
-import {DND_DATA_TEXT, DRAG_MOVE, DRAG_LINK, DRAG_SELECT_REGION} from '../constants/common-constants.js';
+import {DND_DATA_TEXT, DRAG_MOVE, DRAG_LINK, DRAG_SELECT_REGION,
+	NONE, VERTICAL, DAGRE_HORIZONTAL, DAGRE_VERTICAL} from '../constants/common-constants.js';
 import CanvasUtils from '../utils/canvas-utils.js';
 import BlankCanvasImage from '../assets/images/blank_canvas.png'
 
@@ -89,6 +91,8 @@ export default class DiagramCanvas extends React.Component {
 
     this.zoomIn = this.zoomIn.bind(this);
     this.zoomOut = this.zoomOut.bind(this);
+
+    this.autoLayout = this.autoLayout.bind(this);
 
     this.canvasContextMenu = this.canvasContextMenu.bind(this);
     this.closeContextMenu = this.closeContextMenu.bind(this);
@@ -192,6 +196,67 @@ export default class DiagramCanvas extends React.Component {
   elbowSize() {
     return Math.round(10 * this.zoom());
   }
+
+	// Dagre AutoLayout
+	autoLayout(direction) {
+		var lookup = this.dagreAutolayout(direction);
+		let zoom = this.zoom();
+		this.props.canvas.diagram.nodes.map((node, ind:number) => {
+			var offsetX = lookup[node.id].value.x - node.xPos;
+			var offsetY = lookup[node.id].value.y - node.yPos;
+
+			this.moveNodes([node.id],
+				Math.round(offsetX / zoom),
+				Math.round(offsetY / zoom));
+		});
+	}
+
+	dagreAutolayout(direction) {
+		var edges = [];
+		edges = this.props.canvas.diagram.links.map((link, ind:number) => {
+			var edge = {"v":link.source,"w":link.target,"value":{"points":[]}};
+
+			return (
+				edge
+			);
+		});
+
+		var nodes = [];
+		nodes = this.props.canvas.diagram.nodes.map((node, ind:number) => {
+			var node = {"v":node.id, "value":{}};
+			return (
+				node
+			);
+		});
+
+		//possible values: TB, BT, LR, or RL, where T = top, B = bottom, L = left, and R = right.
+		//default TB for vertical layout
+		//set to LR for horizontal layout
+		var value = {};
+		var directionList = ["TB", "BT", "LR", "RL"];
+		if (directionList.indexOf(direction) >= 0) {
+			value = {"rankDir":direction};
+		}
+
+		var inputGraph = {nodes, edges, value};
+		// console.log("inputGraph is = " + JSON.stringify(inputGraph));
+
+		var g = dagre.graphlib.json.read(inputGraph);
+		g.graph().marginx = 100;
+		g.graph().marginy = 25;
+		g.graph().nodesep = 100; //distance to separate the nodes horiziontally
+		g.graph().ranksep = 100; //distance between each rank of nodes
+		dagre.layout(g);
+
+		var outputGraph = dagre.graphlib.json.write(g);
+		// console.log("outputGraph: " + JSON.stringify(outputGraph));
+
+		var lookup = {};
+		for (var i = 0, len = outputGraph.nodes.length; i < len; i++) {
+			lookup[outputGraph.nodes[i].v] = outputGraph.nodes[i];
+		}
+		return lookup;
+	}
 
   // ----------------------------------
 
@@ -1092,9 +1157,24 @@ export default class DiagramCanvas extends React.Component {
       zoom: zoom
     };
 
+		//create a lookup for nodes with updated coordinates
+		var lookup = {};
+		if(this.props.autoLayoutDirection !== NONE) {
+			if (this.props.autoLayoutDirection === VERTICAL) {
+				lookup = this.dagreAutolayout(DAGRE_VERTICAL);
+			} else {
+				lookup = this.dagreAutolayout(DAGRE_HORIZONTAL); //Default to HORIZONTAL
+			}
+		}
+
     // TODO - pass a ref to the canvas (or a size config) rather than passing
     // multiple, individual, identical size params to every node
     viewNodes = this.props.canvas.diagram.nodes.map((node) => {
+			if(this.props.autoLayoutDirection !== NONE) {
+				node.xPos = lookup[node.id].value.x;
+				node.yPos = lookup[node.id].value.y;
+			}
+
       let x = Math.round(node.xPos * zoom);
       let y = Math.round(node.yPos * zoom);
 
@@ -1219,6 +1299,7 @@ DiagramCanvas.propTypes = {
   canvas: React.PropTypes.object,
   paletteJSON: React.PropTypes.object.isRequired,
   openPaletteMethod: React.PropTypes.func.isRequired,
+  autoLayoutDirection: React.PropTypes.string.isRequired,
   contextMenuHandler: React.PropTypes.func.isRequired,
   contextMenuActionHandler: React.PropTypes.func.isRequired,
   editActionHandler: React.PropTypes.func.isRequired,

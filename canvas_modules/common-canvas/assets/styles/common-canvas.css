@@ -73,6 +73,20 @@
   height: 24px;
 }
 
+.canvas-autolayout-controls {
+  display: none;
+  position: absolute;
+  bottom: 35px;
+  left: 35px;
+  width: 48px;
+  height: 64px;
+}
+
+.canvas-autolayout-controls img {
+  width: 24px;
+  height: 24px;
+}
+
 /* Node styles */
 
 .canvas-node {

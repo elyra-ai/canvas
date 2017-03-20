@@ -17,10 +17,11 @@ import {OverlayTrigger, Tooltip} from 'react-bootstrap';
 import DiagramCanvas from './diagram-canvas.jsx';
 import Palette from './palette/palette.jsx';
 import ObjectModel from './object-model/object-model.js';
+import Flow24Icon from '../assets/images/flow_24.svg';
 import ZoomIn24Icon from '../assets/images/zoom-in_24.svg';
 import ZoomOut24Icon from '../assets/images/zoom-out_24.svg';
 import OpenNodePaletteIcon from '../assets/images/open_node_palette.svg';
-
+import { DAGRE_HORIZONTAL } from '../constants/common-constants.js';
 
 export default class CommonCanvas extends React.Component {
   constructor(props) {
@@ -42,6 +43,8 @@ export default class CommonCanvas extends React.Component {
 
     this.zoomIn = this.zoomIn.bind(this);
     this.zoomOut = this.zoomOut.bind(this);
+
+    this.enableAutoLayout = this.enableAutoLayout.bind(this);
 
     this.editActionHandler = this.editActionHandler.bind(this);
     this.contextMenuActionHandler = this.contextMenuActionHandler.bind(this);
@@ -74,6 +77,10 @@ export default class CommonCanvas extends React.Component {
 
   zoomOut() {
     this.refs.canvas.zoomOut();
+  }
+
+  enableAutoLayout() {
+    this.refs.canvas.autoLayout(DAGRE_HORIZONTAL); //Default to HORIZONTAL
   }
 
   editActionHandler(data) {
@@ -152,12 +159,14 @@ export default class CommonCanvas extends React.Component {
     let popupPalette = null;
     let addButton = null;
     let zoomControls = null;
+    let autoLayoutControls = null;
     let canvasJSON = ObjectModel.getCanvas();
 
     if (canvasJSON !== null) {
       canvas = <DiagramCanvas ref="canvas"
                     canvas={canvasJSON}
                     paletteJSON={ObjectModel.getPaletteData()}
+                    autoLayoutDirection={this.props.config.enableAutoLayout}
                     openPaletteMethod={this.openPalette}
                     contextMenuHandler={this.contextMenuHandler}
                     contextMenuActionHandler={this.contextMenuActionHandler}
@@ -188,12 +197,18 @@ export default class CommonCanvas extends React.Component {
             <div><img src={ZoomIn24Icon} onClick={this.zoomIn}/></div>
             <div><img src={ZoomOut24Icon} onClick={this.zoomOut}/></div>
           </div>;
+
+      autoLayoutControls =
+          <div className="canvas-autolayout-controls">
+            <div><img src={Flow24Icon} onClick={this.enableAutoLayout}/></div>
+          </div>;
     }
 
     return (
       <div className="fill-vertical">
         {canvas}
         {zoomControls}
+        {autoLayoutControls}
         {addButton}
         {popupPalette}
       </div>

@@ -32,3 +32,9 @@ _defineConstant("DRAG_SELECT_REGION", "selectRegion");
 _defineConstant("CANVAS_UI", {
 	HALO_RADIUS : 45
 });
+
+_defineConstant("NONE", "none");
+_defineConstant("HORIZONTAL", "horizonal");
+_defineConstant("VERTICAL", "vertical");
+_defineConstant("DAGRE_HORIZONTAL", "LR");
+_defineConstant("DAGRE_VERTICAL", "TB");
