@@ -8,12 +8,13 @@
  *******************************************************************************/
 "use strict";
 var path = require("path");
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
 	context: path.join(__dirname, "/src/"),
 	devtool: "source-map",
 	entry: {
-		lib: "./index.js"
+		 lib: "./index.js"
 	},
 	output: {
 		library: "Common-Properties",
@@ -33,24 +34,25 @@ module.exports = {
 				}
 			},
 			{
-				test: /\.(woff|svg|png)$/,
-				loader: "url-loader"
+				test: /\.css$/,
+				use: ExtractTextPlugin.extract(
+					{
+						use: [
+							"css-loader",
+							"postcss-loader"
+						]
+					}
+				)
 			},
 			{
-        test: /\.css$/,
-        loaders: [
-					"style-loader",
-					"css-loader"
-				]
-      },
-			{
-				test: /\.(?:png|jpg|svg|woff|ttf|woff2|eot)$/,
-				loaders: [
-					"file-loader?name=graphics/[hash].[ext]"
-				]
+				test: /\.(woff|woff2|ttf|svg|png|eot)$/,
+				loader: "url-loader"
 			}
 		]
 	},
+	plugins: [
+    new ExtractTextPlugin('common-properties.css')
+  ],
 	resolve: {
 		extensions: [".js", ".jsx"]
 	},
