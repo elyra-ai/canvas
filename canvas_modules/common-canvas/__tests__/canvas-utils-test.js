@@ -1,21 +1,7 @@
-import React from 'react';
-import {expect, assert} from 'chai';
-import sinon from 'sinon';
-import fetchMock from 'fetch-mock';
+import {assert} from 'chai';
 
 import CanvasUtils from '../utils/canvas-utils.js';
 
-const INPUT_ESCAPE = `line1
-line2
-line3`;
-
-const EXPECTED_RESULT_ESCAPE = 'line1\\nline2\\nline3';
-
-const INPUT_UNESCAPE = 'line1\\nline2\\nline3';
-
-const EXPECTED_RESULT_UNESCAPE = `line1
-line2
-line3`;
 
 describe('canvas-utils.js', () => {
 
@@ -60,15 +46,4 @@ describe('canvas-utils.js', () => {
         };
         assert.deepEqual(CanvasUtils.getLinePointOnHalo(dataParam, zoomParam), expectedPosHalo);
     });
-
-    it('escapeNewLineCharachtersForServer test', () => {
-
-        assert.deepEqual(CanvasUtils.escapeNewLineCharachtersForServer(INPUT_ESCAPE), EXPECTED_RESULT_ESCAPE);
-    });
-
-    it('unescapeNewLineCharachtersForUI test', () => {
-
-        assert.deepEqual(CanvasUtils.unescapeNewLineCharachtersForUI(INPUT_UNESCAPE), EXPECTED_RESULT_UNESCAPE);
-    });
-
 });

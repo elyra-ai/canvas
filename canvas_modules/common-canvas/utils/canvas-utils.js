@@ -14,7 +14,6 @@
 
 import {CANVAS_UI} from '../constants/common-constants.js';
 import _ from 'underscore';
-import moment from 'moment';
 
 
 
@@ -127,31 +126,10 @@ function convertStyleStringToJSONObject(data, delimiter) {
 	}
 }
 
-function getFormattedTimestamp(input) {
-  return (moment(input).local().format('D MMM YYYY, h:mm A'));
-}
-
-function unescapeNewLineCharachtersForUI(input){
-  //console.log('unescapeNewLineCharachtersForUI input :'+input);
-  var result = ((input)?input.replace(/\\n/g, "\n"):'');
-  //console.log('unescapeNewLineCharachtersForUI(): '+result);
-  return result;
-}
-
-function escapeNewLineCharachtersForServer(input){
-  //console.log('escapeNewLineCharachtersForServerForServer input :'+input);
-  var result = ((input)?input.replace(/\r?\n/g, "\\n"):'');
-  //console.log('escapeNewLineCharachters(): '+result);
-  return result;
-}
-
 module.exports = {
     findSlope: findSlope,
     findNewPoint: findNewPoint,
     getArrowheadPoints: getArrowheadPoints,
     getLinePointOnHalo: getLinePointOnHalo,
-		convertStyleStringToJSONObject: convertStyleStringToJSONObject,
-    getFormattedTimestamp:getFormattedTimestamp,
-    unescapeNewLineCharachtersForUI:unescapeNewLineCharachtersForUI,
-    escapeNewLineCharachtersForServer:escapeNewLineCharachtersForServer
+		convertStyleStringToJSONObject: convertStyleStringToJSONObject
 }
