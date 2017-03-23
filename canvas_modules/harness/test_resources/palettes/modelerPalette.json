@@ -205,6 +205,11 @@
               "name": "outPort",
               "label": "Output Port",
               "cardinality": "0:1"
+            },
+						{
+              "name": "outPort",
+              "label": "Output Port",
+              "cardinality": "0:1"
             }
           ]
         },
