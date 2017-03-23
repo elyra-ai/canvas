@@ -11,6 +11,8 @@ const express = require("express");
 
 const getCanvasDiagramController = require("./v1-get-canvas-diagram-controller");
 const postCanvasDiagramController = require("./v1-post-canvas-diagram-controller");
+const getEventLogController = require("./v1-get-event-log-controller");
+const postEventLogController = require("./v1-post-event-log-controller");
 
 // Globals
 
@@ -27,3 +29,5 @@ module.exports = router;
 
 router.get("/canvas", getCanvasDiagramController.get);
 router.post("/canvas", postCanvasDiagramController.post);
+router.get("/events", getEventLogController.get);
+router.post("/events", postEventLogController.post);

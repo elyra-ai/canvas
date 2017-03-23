@@ -69,7 +69,6 @@ export default class SidePanelForms extends React.Component {
 	}
 
 	submitCanvasDiagram() {
-		this.props.log("Submit file: " + this.state.canvasDiagram.name);
 		// read file
 		var fileReader = new FileReader();
 		fileReader.onload = function(evt) {
@@ -88,12 +87,10 @@ export default class SidePanelForms extends React.Component {
 	}
 
 	submitCanvasPalette() {
-		this.props.log("Submit file: " + this.state.canvasPalette.name);
 		// enable palette in nav
 		if (this.isReadyToSubmitPaletteData()) {
 			this.props.enableNavPalette(true);
 		}
-
 		// read file
 		var fileReader = new FileReader();
 		fileReader.onload = function(evt) {

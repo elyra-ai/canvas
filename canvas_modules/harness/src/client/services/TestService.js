@@ -47,6 +47,43 @@ class TestService {
 		);
 	}
 
+	getEventLog() {
+		var url = "/v1/test-harness/events";
+		var that = this;
+		var headers = {
+			"Accept": "application/json",
+			"Content-Type": "application/json",
+			"Cache-Control": "no-cache,no-store"
+		};
+		return that.handleRequest(
+			fetch(url, {
+				headers: headers,
+				method: "GET",
+				mode: "cors",
+				credentials: "include"
+			})
+		);
+	}
+
+	postEventLog(event) {
+		var url = "/v1/test-harness/events";
+		var that = this;
+		var headers = {
+			"Accept": "application/json",
+			"Content-Type": "application/json",
+			"Cache-Control": "no-cache,no-store"
+		};
+		return that.handleRequest(
+			fetch(url, {
+				headers: headers,
+				method: "POST",
+				mode: "cors",
+				credentials: "include",
+				body: JSON.stringify(event)
+			})
+		);
+	}
+
 	handleRequest(getPromise) {
 		return getPromise.then(function(response) {
 			if (!response.ok) {

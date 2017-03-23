@@ -6,7 +6,7 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-/* eslint complexity: ["error", 12] */
+/* eslint complexity: ["error", 13] */
 
 import React from "react";
 import Isvg from "react-inlinesvg";
@@ -109,11 +109,7 @@ class App extends React.Component {
 	componentDidMount() {
 		addLocaleData(en);
 		var canvas = ObjectModel.getCanvas();
-		var that = this;
-		TestService.postCanvas(canvas)
-		.then(function(res) {
-			that.log("editActionHandler() POST canvas");
-		});
+		TestService.postCanvas(canvas);
 	}
 
 	getLabel(labelId, defaultLabel) {
@@ -126,12 +122,12 @@ class App extends React.Component {
 
 	setDiagramJSON(diagramJson) {
 		ObjectModel.setCanvas(diagramJson);
-		this.log("set diagramJSON: " + JSON.stringify(diagramJson));
+		this.log("Canvas diagram set");
 	}
 
 	setPaletteJSON(paletteJson) {
 		ObjectModel.setPaletteData(paletteJson);
-		this.log("set paletteJSON: " + JSON.stringify(paletteJson));
+		this.log("Palette set");
 	}
 
 	setPropertiesJSON(propertiesJson) {
@@ -178,8 +174,11 @@ class App extends React.Component {
 	}
 
 	log(text) {
+		var that = this;
 		this.setState({
 			consoleout: this.state.consoleout.concat(this.getTimestamp() + text)
+		}, function() {
+			TestService.postEventLog(that.state.consoleout);
 		});
 		var objDiv = document.getElementById("app-console");
 		objDiv.scrollTop = objDiv.scrollHeight;
@@ -198,11 +197,7 @@ class App extends React.Component {
 	}
 
 	run() {
-		var that = this;
-		TestService.getCanvas()
-		.then(function(res) {
-			that.log("run() GET canvas: " + JSON.stringify(res));
-		});
+		this.log("run() clicked");
 	}
 
 	openPalette() {
@@ -228,11 +223,7 @@ class App extends React.Component {
 
 	postCanvas() {
 		var canvas = ObjectModel.getCanvas();
-		var that = this;
-		TestService.postCanvas(canvas)
-		.then(function(res) {
-			that.log("POST canvas");
-		});
+		TestService.postCanvas(canvas);
 	}
 
 	// common-canvas
@@ -381,7 +372,18 @@ class App extends React.Component {
 	}
 
 	editActionHandler(data) {
-		this.log("editActionHandler()");
+		var type = "";
+		if (data.nodeTypeId) {
+			type = data.nodeTypeId;
+		} else if (data.nodes) {
+			type = data.nodes[0];
+		}
+
+		if (data.targetNodes) {
+			type += " to " + data.targetNodes[0];
+		}
+
+		this.log("editActionHandler() " + data.editType + " " + type);
 		this.postCanvas();
 	}
 
@@ -399,23 +401,25 @@ class App extends React.Component {
 				height: 0
 			});
 		} else if (action === "deleteLink") {
-			this.log("action: deleteLink");
+			this.log("action: deleteLink " + source.id);
 		} else if (action === "editNode") {
-			this.log("action: editNode");
+			this.log("action: editNode " + source.targetObject.id);
 		} else if (action === "viewModel") {
-			this.log("action: viewModel");
+			this.log("action: viewModel " + source.targetObject.id);
 		} else if (action === "disconnectNode") {
-			this.log("action: disconnectNode");
+			this.log("action: disconnectNode " + source.selectedObjectIds);
 		} else if (action === "createSuperNode") {
-			this.log("action: createSuperNode");
+			this.log("action: createSuperNode " + source.selectedObjectIds);
 		} else if (action === "expandSuperNode") {
-			this.log("action: expandSuperNode");
+			this.log("action: expandSuperNode " + source.targetObject.id);
 		} else if (action === "deleteObjects") {
-			this.log("action: deleteObjects");
+			this.log("action: deleteObjects " + source.selectedObjectIds);
 		} else if (action === "executeNode") {
-			this.log("action: executeNode");
+			this.log("action: executeNode " + source.targetObject.id);
 		} else if (action === "previewNode") {
-			this.log("action: previewNode");
+			this.log("action: previewNode " + source.targetObject.id);
+		} else if (action === "deploy") {
+			this.log("action: deploy " + source.targetObject.id);
 		}
 		this.postCanvas();
 	}
