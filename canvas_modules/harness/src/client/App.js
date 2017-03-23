@@ -20,6 +20,7 @@ import { CommonProperties } from "@wdp/common-properties";
 
 import Console from "./components/console.jsx";
 import SidePanel from "./components/sidepanel.jsx";
+import TestService from "./services/TestService";
 
 import {
 	BLANK_CANVAS,
@@ -107,6 +108,12 @@ class App extends React.Component {
 
 	componentDidMount() {
 		addLocaleData(en);
+		var canvas = ObjectModel.getCanvas();
+		var that = this;
+		TestService.postCanvas(canvas)
+		.then(function(res) {
+			that.log("editActionHandler() POST canvas");
+		});
 	}
 
 	getLabel(labelId, defaultLabel) {
@@ -191,7 +198,11 @@ class App extends React.Component {
 	}
 
 	run() {
-		this.log("run() clicked");
+		var that = this;
+		TestService.getCanvas()
+		.then(function(res) {
+			that.log("run() GET canvas: " + JSON.stringify(res));
+		});
 	}
 
 	openPalette() {
@@ -213,6 +224,15 @@ class App extends React.Component {
 	useInternalObjectModel(enabled) {
 		this.setState({ internalObjectModel: enabled });
 		this.log("use internal object model: " + enabled);
+	}
+
+	postCanvas() {
+		var canvas = ObjectModel.getCanvas();
+		var that = this;
+		TestService.postCanvas(canvas)
+		.then(function(res) {
+			that.log("POST canvas");
+		});
 	}
 
 	// common-canvas
@@ -362,6 +382,7 @@ class App extends React.Component {
 
 	editActionHandler(data) {
 		this.log("editActionHandler()");
+		this.postCanvas();
 	}
 
 	contextMenuActionHandler(action, source) {
@@ -396,6 +417,7 @@ class App extends React.Component {
 		} else if (action === "previewNode") {
 			this.log("action: previewNode");
 		}
+		this.postCanvas();
 	}
 
 	decorationActionHandler(node, id) {

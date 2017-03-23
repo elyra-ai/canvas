@@ -6,8 +6,6 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-"use strict";
-
 // Globals
 
 // Private Methods ------------------------------------------------------------>
@@ -25,6 +23,8 @@ function _defineConstant(name, value) {
 _defineConstant("APP_NAME", "WDP Common Canvas");
 _defineConstant("APP_ID", "wdp-common-canvas");
 _defineConstant("APP_PATH", "/");
+_defineConstant("API_PATH_V1", "/v1/test-harness");
+_defineConstant("APP_SESSION_KEY", "keyboard cat");
 
 _defineConstant("PROCESS_EXIT_TIMEOUT", 5000); // ms (5 seconds)
 _defineConstant("FAILURE_EXIT_CODE", 1);

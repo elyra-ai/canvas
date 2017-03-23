@@ -6,20 +6,23 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-"use strict";
-
 // ESLint Rule Overrides
 
 /* eslint no-process-exit: 0 */
 var express = require("express");
+var session = require("express-session");
 var path = require("path");
 const appConfig = require("./utils/app-config");
 const constants = require("./constants");
 const log4js = require("log4js");
+const bodyParser = require("body-parser");
 
 const isProduction = process.env.NODE_ENV === "production";
 
 const logger = log4js.getLogger("application");
+
+// Controllers
+var testAPI = require("../controllers/v1-test-api.js");
 
 function _create(callback) {
 	var status = appConfig.init();
@@ -31,12 +34,29 @@ function _create(callback) {
 	var app = express();
 	// See: http://expressjs.com/en/guide/behind-proxies.html
 	app.set("trust proxy", 1);
+	app.use(session({
+		secret: constants.APP_SESSION_KEY,
+		resave: false,
+		saveUninitialized: true,
+		name: "testharness.sid"
+		// cookie: { httpOnly: false }
+	}));
 	// Configure Development tools
 	if (!isProduction) {
 		logger.info("In development mode; using webpack with HMR");
 		_configureHmr(app);
 	}
 	app.use(express.static(path.join(__dirname, "../public")));
+
+	const routerOptions = {
+		caseSensitive: true,
+		mergeParams: true
+	};
+	const v1Router = express.Router(routerOptions);
+	app.use(constants.API_PATH_V1, v1Router);
+	v1Router.use(bodyParser.json());
+	v1Router.use(constants.APP_PATH, testAPI);
+
 	callback(null, app);
 }
 function _configureHmr(app) {
