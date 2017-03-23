@@ -169,11 +169,12 @@ class App extends React.Component {
 		});
 	}
 
-	log(evt, data) {
+	log(evt, data, content) {
 		var event = {
 			"timestamp": new Date().toLocaleString(),
 			"event": evt,
-			"data": data
+			"data": data,
+			"content": content
 		};
 		var that = this;
 		this.setState({
@@ -374,6 +375,7 @@ class App extends React.Component {
 
 	editActionHandler(data) {
 		var type = "";
+		var content = null;
 		if (data.nodeTypeId) {
 			type = data.nodeTypeId;
 		} else if (data.nodes) {
@@ -384,7 +386,11 @@ class App extends React.Component {
 			type += " to " + data.targetNodes[0];
 		}
 
-		this.log("editActionHandler() " + data.editType, type);
+		if (data.label) {
+			content = data.label;
+		}
+
+		this.log("editActionHandler() " + data.editType, type, content);
 		this.postCanvas();
 	}
 
