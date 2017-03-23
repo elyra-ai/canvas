@@ -116,10 +116,6 @@ class App extends React.Component {
 		return <FormattedMessage id={ labelId } defaultMessage={ defaultLabel } />;
 	}
 
-	getTimestamp() {
-		return new Date().toLocaleString() + ": ";
-	}
-
 	setDiagramJSON(diagramJson) {
 		ObjectModel.setCanvas(diagramJson);
 		this.log("Canvas diagram set");
@@ -133,17 +129,17 @@ class App extends React.Component {
 	setPropertiesJSON(propertiesJson) {
 		this.setState({ propertiesJson: propertiesJson });
 		this.openPropertiesEditorDialog();
-		this.log("set propertiesJSON: " + JSON.stringify(propertiesJson));
+		this.log("set propertiesJSON", JSON.stringify(propertiesJson));
 	}
 
 	setLayoutDirection(selectedLayout) {
 		this.setState({ selectedLayoutDirection: selectedLayout });
-		this.log("Layout selected: " + selectedLayout);
+		this.log("Layout selected", selectedLayout);
 	}
 
 	setLinkTypeStyle(selectedLink) {
 		this.setState({ selectedLinkTypeStyle: selectedLink });
-		this.log("Link type style selected: " + selectedLink);
+		this.log("Link type style selected", selectedLink);
 	}
 
 	sidePanelCanvas() {
@@ -173,10 +169,15 @@ class App extends React.Component {
 		});
 	}
 
-	log(text) {
+	log(evt, data) {
+		var event = {
+			"timestamp": new Date().toLocaleString(),
+			"event": evt,
+			"data": data
+		};
 		var that = this;
 		this.setState({
-			consoleout: this.state.consoleout.concat(this.getTimestamp() + text)
+			consoleout: this.state.consoleout.concat(event)
 		}, function() {
 			TestService.postEventLog(that.state.consoleout);
 		});
@@ -218,7 +219,7 @@ class App extends React.Component {
 
 	useInternalObjectModel(enabled) {
 		this.setState({ internalObjectModel: enabled });
-		this.log("use internal object model: " + enabled);
+		this.log("use internal object model", enabled);
 	}
 
 	postCanvas() {
@@ -235,16 +236,16 @@ class App extends React.Component {
 	}
 
 	nodeEditHandler(nodeId) {
-		this.log("nodeEditHandler() " + nodeId);
+		this.log("nodeEditHandler()", nodeId);
 		this.openPropertiesEditorDialog();
 	}
 
 	applyDiagramEdit(data, options) {
-		this.log("applyDiagramEdit() " + data.editType);
+		this.log("applyDiagramEdit()", data.editType);
 	}
 
 	applyPropertyChanges(form, appData) {
-		this.log("applyPropertyChanges() " + appData);
+		this.log("applyPropertyChanges()", appData);
 	}
 
 	contextMenuHandler(source) {
@@ -383,7 +384,7 @@ class App extends React.Component {
 			type += " to " + data.targetNodes[0];
 		}
 
-		this.log("editActionHandler() " + data.editType + " " + type);
+		this.log("editActionHandler() " + data.editType, type);
 		this.postCanvas();
 	}
 
@@ -401,25 +402,25 @@ class App extends React.Component {
 				height: 0
 			});
 		} else if (action === "deleteLink") {
-			this.log("action: deleteLink " + source.id);
+			this.log("action: deleteLink", source.id);
 		} else if (action === "editNode") {
-			this.log("action: editNode " + source.targetObject.id);
+			this.log("action: editNode", source.targetObject.id);
 		} else if (action === "viewModel") {
-			this.log("action: viewModel " + source.targetObject.id);
+			this.log("action: viewModel", source.targetObject.id);
 		} else if (action === "disconnectNode") {
-			this.log("action: disconnectNode " + source.selectedObjectIds);
+			this.log("action: disconnectNode", source.selectedObjectIds);
 		} else if (action === "createSuperNode") {
-			this.log("action: createSuperNode " + source.selectedObjectIds);
+			this.log("action: createSuperNode", source.selectedObjectIds);
 		} else if (action === "expandSuperNode") {
-			this.log("action: expandSuperNode " + source.targetObject.id);
+			this.log("action: expandSuperNode", source.targetObject.id);
 		} else if (action === "deleteObjects") {
-			this.log("action: deleteObjects " + source.selectedObjectIds);
+			this.log("action: deleteObjects", source.selectedObjectIds);
 		} else if (action === "executeNode") {
-			this.log("action: executeNode " + source.targetObject.id);
+			this.log("action: executeNode", source.targetObject.id);
 		} else if (action === "previewNode") {
-			this.log("action: previewNode " + source.targetObject.id);
+			this.log("action: previewNode", source.targetObject.id);
 		} else if (action === "deploy") {
-			this.log("action: deploy " + source.targetObject.id);
+			this.log("action: deploy", source.targetObject.id);
 		}
 		this.postCanvas();
 	}

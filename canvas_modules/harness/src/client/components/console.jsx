@@ -21,8 +21,9 @@ export default class Console extends React.Component {
 		}
 
 		const logs = this.props.logs.map(function(log, ind) {
+			var line = JSON.stringify(log);
 			return (
-				<li key={ind}>{log}</li>
+				<li key={ind}>{line}</li>
 			);
 		});
 

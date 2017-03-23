@@ -50,7 +50,7 @@ export default class SidePanelForms extends React.Component {
 			var fileExt = filename.substring(filename.lastIndexOf(".") + 1);
 			if (fileExt === "json") {
 				this.setState({ canvasDiagram: evt.target.files[0] });
-				this.props.log("Canvas diagram JSON file selected: " + filename);
+				this.props.log("Canvas diagram JSON file selected", filename);
 			}
 		}
 	}
@@ -63,7 +63,7 @@ export default class SidePanelForms extends React.Component {
 			var fileExt = filename.substring(filename.lastIndexOf(".") + 1);
 			if (fileExt === "json") {
 				this.setState({ canvasPalette: evt.target.files[0] });
-				this.props.log("Canvas palette JSON file selected: " + filename);
+				this.props.log("Canvas palette JSON file selected", filename);
 			}
 		}
 	}
