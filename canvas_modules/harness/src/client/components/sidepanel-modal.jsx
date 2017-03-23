@@ -36,13 +36,13 @@ export default class SidePanelModal extends React.Component {
 			var fileExt = filename.substring(filename.lastIndexOf(".") + 1);
 			if (fileExt === "json") {
 				this.setState({ commonProperties: evt.target.files[0] });
-				this.props.log("Common Properties JSON file selected: " + filename);
+				this.props.log("Common Properties JSON file selected", filename);
 			}
 		}
 	}
 
 	submitPropertiesData() {
-		this.props.log("Submit file: " + this.state.commonProperties.name);
+		this.props.log("Submit common properties file", this.state.commonProperties.name);
 		// read file
 		var fileReader = new FileReader();
 		fileReader.onload = function(evt) {
