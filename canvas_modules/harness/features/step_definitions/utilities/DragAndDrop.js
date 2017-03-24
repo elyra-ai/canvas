@@ -3,11 +3,6 @@
 // Simulate dragging a node from the palette to the canvas
 function dragNodeDropOnCanvas(sourceElementClassName, index, dropClientX, dropClientY) {
   function simulateDragDrop(sourceNode , destinationNode, dropEventClientX, dropEventClientY) {
-
-      //var sourceNodeList = document.getElementsByClassName(sourceElementClassName);
-      //var sourceNode = sourceNodeList[index];
-      //var destinationNode = document.getElementById("canvas-div");
-     console.log("simulate");
       var EVENT_TYPES = {
           DRAG_END: 'dragend',
           DRAG_START: 'dragstart',
@@ -70,11 +65,6 @@ function dragNodeDropOnCanvas(sourceElementClassName, index, dropClientX, dropCl
 // simulate creating a link by dragging a node to a second node
 function dragNodeDropOnNode(index, destinationIndex, dropClientX, dropClientY) {
   function simulateDragDrop(sourceNode , destinationNode, dropEventClientX, dropEventClientY) {
-
-      //var sourceNodeList = document.getElementsByClassName(sourceElementClassName);
-      //var sourceNode = sourceNodeList[index];
-      //var destinationNode = document.getElementById("canvas-div");
-     console.log("simulate");
       var EVENT_TYPES = {
           DRAG_END: 'dragend',
           DRAG_START: 'dragstart',
@@ -136,11 +126,6 @@ function dragNodeDropOnNode(index, destinationIndex, dropClientX, dropClientY) {
 // simulate creating a link by dragging a comment to a second node
 function dragCommentDropOnNode(index, destinationIndex, dropClientX, dropClientY) {
   function simulateDragDrop(sourceNode , destinationNode, dropEventClientX, dropEventClientY) {
-
-      //var sourceNodeList = document.getElementsByClassName(sourceElementClassName);
-      //var sourceNode = sourceNodeList[index];
-      //var destinationNode = document.getElementById("canvas-div");
-     console.log("simulate");
       var EVENT_TYPES = {
           DRAG_END: 'dragend',
           DRAG_START: 'dragstart',
