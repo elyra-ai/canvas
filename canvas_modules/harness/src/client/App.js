@@ -129,7 +129,7 @@ class App extends React.Component {
 	setPropertiesJSON(propertiesJson) {
 		this.setState({ propertiesJson: propertiesJson });
 		this.openPropertiesEditorDialog();
-		this.log("set propertiesJSON", JSON.stringify(propertiesJson));
+		this.log("Properties set");
 	}
 
 	setLayoutDirection(selectedLayout) {
