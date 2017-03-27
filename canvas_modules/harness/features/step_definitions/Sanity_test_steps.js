@@ -19,7 +19,7 @@ import {validateObjecModel,validateEventLog,validateLinkEvent} from './utilities
 
 module.exports = function() {
 
-  let testUrl = process.env.TESTURL;
+  let testUrl = process.env.UI_TEST_URL;
   let getCanvasUrl = testUrl+"/v1/test-harness/canvas";
   let getEventLogUrl = testUrl+"/v1/test-harness/events";
 
