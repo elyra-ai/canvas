@@ -129,7 +129,7 @@ class App extends React.Component {
 	setPropertiesJSON(propertiesJson) {
 		this.setState({ propertiesJson: propertiesJson });
 		this.openPropertiesEditorDialog();
-		this.log("set propertiesJSON", JSON.stringify(propertiesJson));
+		this.log("Properties set");
 	}
 
 	setLayoutDirection(selectedLayout) {
@@ -375,7 +375,6 @@ class App extends React.Component {
 
 	editActionHandler(data) {
 		var type = "";
-		var content = null;
 		if (data.nodeTypeId) {
 			type = data.nodeTypeId;
 		} else if (data.nodes) {
@@ -386,11 +385,7 @@ class App extends React.Component {
 			type += " to " + data.targetNodes[0];
 		}
 
-		if (data.label) {
-			content = data.label;
-		}
-
-		this.log("editActionHandler() " + data.editType, type, content);
+		this.log("editActionHandler() " + data.editType, type, data.label);
 		this.postCanvas();
 	}
 
@@ -414,13 +409,13 @@ class App extends React.Component {
 		} else if (action === "viewModel") {
 			this.log("action: viewModel", source.targetObject.id);
 		} else if (action === "disconnectNode") {
-			this.log("action: disconnectNode", source.selectedObjectIds);
+			this.log("action: disconnectNode", source.selectedObjectIds, source.targetObject.objectData.label);
 		} else if (action === "createSuperNode") {
-			this.log("action: createSuperNode", source.selectedObjectIds);
+			this.log("action: createSuperNode", source.selectedObjectIds, source.targetObject.objectData.label);
 		} else if (action === "expandSuperNode") {
 			this.log("action: expandSuperNode", source.targetObject.id);
 		} else if (action === "deleteObjects") {
-			this.log("action: deleteObjects", source.selectedObjectIds);
+			this.log("action: deleteObjects", source.selectedObjectIds, source.targetObject.objectData.label);
 		} else if (action === "executeNode") {
 			this.log("action: executeNode", source.targetObject.id);
 		} else if (action === "previewNode") {
