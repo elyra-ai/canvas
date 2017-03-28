@@ -415,7 +415,11 @@ class App extends React.Component {
 		} else if (action === "expandSuperNode") {
 			this.log("action: expandSuperNode", source.targetObject.id);
 		} else if (action === "deleteObjects") {
-			this.log("action: deleteObjects", source.selectedObjectIds, source.targetObject.objectData.label);
+      if (source.targetObject.objectData === undefined) {
+        this.log("action: deleteObjects", source.selectedObjectIds, source.targetObject.content);
+      } else {
+        this.log("action: deleteObjects", source.selectedObjectIds, source.targetObject.objectData.label);
+      }
 		} else if (action === "executeNode") {
 			this.log("action: executeNode", source.targetObject.id);
 		} else if (action === "previewNode") {
