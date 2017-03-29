@@ -3,7 +3,7 @@ module.exports = function() {
 	/* global browser */
 	const baseFileDir = process.env.TRAVIS_BUILD_DIR;
 
-	this.Then(/^I have uploaded diagram "([^"]*)$/, function(diagramFile) {
+	this.Then(/^I have uploaded diagram "([^"]*)"$/, function(diagramFile) {
 		var canvasInput = browser.$("#canvasFileInput");
 		browser.pause(500);
 		// this will not work with relative paths
