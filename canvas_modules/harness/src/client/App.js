@@ -88,6 +88,7 @@ class App extends React.Component {
 
 		// common-canvas
 		this.contextMenuHandler = this.contextMenuHandler.bind(this);
+		this.deleteObjectsActionHandler = this.deleteObjectsActionHandler.bind(this);
 		this.contextMenuActionHandler = this.contextMenuActionHandler.bind(this);
 		this.editActionHandler = this.editActionHandler.bind(this);
 		this.clickActionHandler = this.clickActionHandler.bind(this);
@@ -415,11 +416,8 @@ class App extends React.Component {
 		} else if (action === "expandSuperNode") {
 			this.log("action: expandSuperNode", source.targetObject.id);
 		} else if (action === "deleteObjects") {
-      if (source.targetObject.objectData === undefined) {
-        this.log("action: deleteObjects", source.selectedObjectIds, source.targetObject.content);
-      } else {
-        this.log("action: deleteObjects", source.selectedObjectIds, source.targetObject.objectData.label);
-      }
+			// weird code to get around eslint complexity error
+			this.deleteObjectsActionHandler(source);
 		} else if (action === "executeNode") {
 			this.log("action: executeNode", source.targetObject.id);
 		} else if (action === "previewNode") {
@@ -428,6 +426,14 @@ class App extends React.Component {
 			this.log("action: deploy", source.targetObject.id);
 		}
 		this.postCanvas();
+	}
+
+	deleteObjectsActionHandler(source) {
+		if (typeof source.targetObject.objectData.label !== "undefined") {
+			this.log("action: deleteObjects", source.selectedObjectIds, source.targetObject.objectData.label);
+		} else {
+			this.log("action: deleteObjects", source.selectedObjectIds, source.targetObject.content);
+		}
 	}
 
 	decorationActionHandler(node, id) {

@@ -27,9 +27,11 @@ Testing updates to common-canvas or common-properties
 
 ## UI test
 
-Ensure that the test harness is running.  You will need to specify the URL of the running test harness as a environment variable.
+Ensure that the test harness is running.  You will need to specify the URL of the running test harness as a environment variable. You will
+also need to specify the base file directory of the location of the __test_resources__.  
 ```sh
 export UI_TEST_URL=http://localhost:3001
+export TRAVIS_BUILD_DIR="/Users/terryobrien/Github/wdp-abstract-canvas/canvas_modules/harness/"
 cd <base dir>/canvas_modules/harness
 npm test
 ```

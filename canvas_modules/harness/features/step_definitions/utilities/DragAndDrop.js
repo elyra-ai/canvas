@@ -1,190 +1,75 @@
-"use strict"
+function simulateDragDrop(sourceSelector, sourceIndex, destinationSelector, destinationIndex, dropEventClientX, dropEventClientY) {
+	var EVENT_TYPES = {
+		DRAG_END: "dragend",
+		DRAG_START: "dragstart",
+		DROP: "drop"
+	};
 
-// Simulate dragging a node from the palette to the canvas
-function dragNodeDropOnCanvas(sourceElementClassName, index, dropClientX, dropClientY) {
-  function simulateDragDrop(sourceNode , destinationNode, dropEventClientX, dropEventClientY) {
-      var EVENT_TYPES = {
-          DRAG_END: 'dragend',
-          DRAG_START: 'dragstart',
-          DROP: 'drop'
-      }
+/* global CustomEvent document */
 
-      function createCustomEvent(type, clientX, clientY) {
-          var event = new CustomEvent("CustomEvent")
-          event.initCustomEvent(type, true, true, null)
-          event.dataTransfer = {
-              data: {
-              },
-              setData: function(type, val) {
-                  this.data[type] = val
-              },
-              getData: function(type) {
-                  return this.data[type]
-              },
-              setDragImage: function(img,x,y) {
-                //console.log("setDragImage");
-              }
-          }
-          if(clientX) event.clientX = clientX;
-          if(clientY) event.clientY = clientY;
+	function createCustomEvent(type, clientX, clientY) {
+		var custEvent = new CustomEvent("CustomEvent");
+		custEvent.initCustomEvent(type, true, true, null);
+		custEvent.dataTransfer = {
+			data: {
+			},
+			setData: function(cType, val) {
+				this.data[cType] = val;
+			},
+			getData: function(cType) {
+				return this.data[cType];
+			},
+			setDragImage: function(img, xX, yY) {
+				// console.log("setDragImage");
+			}
+		};
+		if (clientX) {
+			custEvent.clientX = clientX;
+		}
+		if (clientY) {
+			custEvent.clientY = clientY;
+		}
 
-          return event
-      }
+		return custEvent;
+	}
 
-      function dispatchEvent(node, type, event) {
-          if (node.dispatchEvent) {
-              return node.dispatchEvent(event)
-          }
-          if (node.fireEvent) {
-              return node.fireEvent("on" + type, event)
-          }
-      }
+	function dispatchEvent(node, type, dispEvent) {
+		if (node.dispatchEvent) {
+			return node.dispatchEvent(dispEvent);
+		}
+		if (node.fireEvent) {
+			return node.fireEvent("on" + type, dispEvent);
+		}
+		return null;
+	}
 
-      var event = createCustomEvent(EVENT_TYPES.DRAG_START)
-      dispatchEvent(sourceNode, EVENT_TYPES.DRAG_START, event)
+	function getElementFromSelector(selector, index) {
+		var element;
+		if (selector.startsWith(".")) {
+			var elementList = document.getElementsByClassName(selector.slice(1));
+			element = elementList[index];
+		} else if (selector.startsWith("#")) {
+			element = document.getElementById(selector.slice(1));
+		}
+		return element;
+	}
 
-      var dropEvent = createCustomEvent(EVENT_TYPES.DROP, dropEventClientX, dropEventClientY)
-      dropEvent.dataTransfer = event.dataTransfer
-      dispatchEvent(destinationNode, EVENT_TYPES.DROP, dropEvent)
+	var sourceNode = getElementFromSelector(sourceSelector, sourceIndex);
+	var destinationNode = getElementFromSelector(destinationSelector, destinationIndex);
 
-      var dragEndEvent = createCustomEvent(EVENT_TYPES.DRAG_END)
-      dragEndEvent.dataTransfer = event.dataTransfer
-      dispatchEvent(sourceNode, EVENT_TYPES.DRAG_END, dragEndEvent)
+	var event = createCustomEvent(EVENT_TYPES.DRAG_START);
+	dispatchEvent(sourceNode, EVENT_TYPES.DRAG_START, event);
 
-  }
+	var dropEvent = createCustomEvent(EVENT_TYPES.DROP, dropEventClientX, dropEventClientY);
+	dropEvent.dataTransfer = event.dataTransfer;
+	dispatchEvent(destinationNode, EVENT_TYPES.DROP, dropEvent);
 
-  // if I embed simulateDragDrop here it works
-  var sourceNodeList = document.getElementsByClassName(sourceElementClassName);
-  var sourceNode = sourceNodeList[index];
-  var destinationNode = document.getElementById("canvas-div");
+	var dragEndEvent = createCustomEvent(EVENT_TYPES.DRAG_END);
+	dragEndEvent.dataTransfer = event.dataTransfer;
+	dispatchEvent(sourceNode, EVENT_TYPES.DRAG_END, dragEndEvent);
 
-  simulateDragDrop(sourceNode, destinationNode, dropClientX, dropClientY);
-}
-
-//----------------------
-// simulate creating a link by dragging a node to a second node
-function dragNodeDropOnNode(index, destinationIndex, dropClientX, dropClientY) {
-  function simulateDragDrop(sourceNode , destinationNode, dropEventClientX, dropEventClientY) {
-      var EVENT_TYPES = {
-          DRAG_END: 'dragend',
-          DRAG_START: 'dragstart',
-          DROP: 'drop'
-      }
-
-      function createCustomEvent(type, clientX, clientY) {
-          var event = new CustomEvent("CustomEvent")
-          event.initCustomEvent(type, true, true, null)
-          event.dataTransfer = {
-              data: {
-              },
-              setData: function(type, val) {
-                  this.data[type] = val
-              },
-              getData: function(type) {
-                  return this.data[type]
-              },
-              setDragImage: function(img,x,y) {
-                //console.log("setDragImage");
-              }
-          }
-          if(clientX) event.clientX = clientX;
-          if(clientY) event.clientY = clientY;
-
-          return event
-      }
-
-      function dispatchEvent(node, type, event) {
-          if (node.dispatchEvent) {
-              return node.dispatchEvent(event)
-          }
-          if (node.fireEvent) {
-              return node.fireEvent("on" + type, event)
-          }
-      }
-
-      var event = createCustomEvent(EVENT_TYPES.DRAG_START)
-      dispatchEvent(sourceNode, EVENT_TYPES.DRAG_START, event)
-
-      var dropEvent = createCustomEvent(EVENT_TYPES.DROP, dropEventClientX, dropEventClientY)
-      dropEvent.dataTransfer = event.dataTransfer
-      dispatchEvent(destinationNode, EVENT_TYPES.DROP, dropEvent)
-
-      var dragEndEvent = createCustomEvent(EVENT_TYPES.DRAG_END)
-      dragEndEvent.dataTransfer = event.dataTransfer
-      dispatchEvent(sourceNode, EVENT_TYPES.DRAG_END, dragEndEvent)
-
-  }
-    // if I embed simulateDragDrop here it works
-  var sourceNodeList = document.getElementsByClassName("node-circle");
-  var sourceNode = sourceNodeList[index];
-  var destinationNodeList = document.getElementsByClassName("node-inner-circle");
-  var destinationNode = destinationNodeList[destinationIndex];
-  simulateDragDrop(sourceNode , destinationNode, dropClientX, dropClientY);
-}
-
-//----------------------
-// simulate creating a link by dragging a comment to a second node
-function dragCommentDropOnNode(index, destinationIndex, dropClientX, dropClientY) {
-  function simulateDragDrop(sourceNode , destinationNode, dropEventClientX, dropEventClientY) {
-      var EVENT_TYPES = {
-          DRAG_END: 'dragend',
-          DRAG_START: 'dragstart',
-          DROP: 'drop'
-      }
-
-      function createCustomEvent(type, clientX, clientY) {
-          var event = new CustomEvent("CustomEvent")
-          event.initCustomEvent(type, true, true, null)
-          event.dataTransfer = {
-              data: {
-              },
-              setData: function(type, val) {
-                  this.data[type] = val
-              },
-              getData: function(type) {
-                  return this.data[type]
-              },
-              setDragImage: function(img,x,y) {
-                //console.log("setDragImage");
-              }
-          }
-          if(clientX) event.clientX = clientX;
-          if(clientY) event.clientY = clientY;
-
-          return event
-      }
-
-      function dispatchEvent(node, type, event) {
-          if (node.dispatchEvent) {
-              return node.dispatchEvent(event)
-          }
-          if (node.fireEvent) {
-              return node.fireEvent("on" + type, event)
-          }
-      }
-
-      var event = createCustomEvent(EVENT_TYPES.DRAG_START)
-      dispatchEvent(sourceNode, EVENT_TYPES.DRAG_START, event)
-
-      var dropEvent = createCustomEvent(EVENT_TYPES.DROP, dropEventClientX, dropEventClientY)
-      dropEvent.dataTransfer = event.dataTransfer
-      dispatchEvent(destinationNode, EVENT_TYPES.DROP, dropEvent)
-
-      var dragEndEvent = createCustomEvent(EVENT_TYPES.DRAG_END)
-      dragEndEvent.dataTransfer = event.dataTransfer
-      dispatchEvent(sourceNode, EVENT_TYPES.DRAG_END, dragEndEvent)
-
-  }
-    // if I embed simulateDragDrop here it works
-  var sourceNodeList = document.getElementsByClassName("comment-box");
-  var sourceNode = sourceNodeList[index];
-  var destinationNodeList = document.getElementsByClassName("node-inner-circle");
-  var destinationNode = destinationNodeList[destinationIndex];
-  simulateDragDrop(sourceNode , destinationNode, dropClientX, dropClientY);
 }
 
 module.exports = {
-    dragNodeDropOnNode: dragNodeDropOnNode,
-    dragNodeDropOnCanvas: dragNodeDropOnCanvas,
-    dragCommentDropOnNode: dragCommentDropOnNode
-}
+	simulateDragDrop: simulateDragDrop
+};

@@ -1,8 +1,9 @@
 module.exports = function() {
 
-  this.Given('I have opened the app side panel', function () {
-         var actionSidebar = browser.$('#action-bar-sidepanel');
-         actionSidebar.click('a');
-  });
+/* global browser */
 
-}
+	this.Given("I have toggled the app side panel", function() {
+		browser.$("#action-bar-sidepanel").click("a");
+	});
+
+};
