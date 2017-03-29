@@ -17,7 +17,7 @@ import { getHarnessData } from "./utilities/HTTPClient.js";
 /* global browser */
 
 module.exports = function() {
-	const testUrl = process.env.TESTURL;
+	const testUrl = process.env.UI_TEST_URL;
 	const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
 	const getEventLogUrl = testUrl + "/v1/test-harness/events";
 

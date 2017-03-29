@@ -20,7 +20,7 @@ import { simulateDragDrop } from "./utilities/DragandDrop.js";
 // common function to validate the number of links in the DOM, object model and event log
 //
 function validateLinkCount(linkCount, linkEvent) {
-	const testUrl = process.env.TESTURL;
+	const testUrl = process.env.UI_TEST_URL;
 	const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
 	const getEventLogUrl = testUrl + "/v1/test-harness/events";
 
