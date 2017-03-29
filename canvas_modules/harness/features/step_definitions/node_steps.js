@@ -518,4 +518,10 @@ module.exports = function() {
 		// var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
 		// console.log("warn event Log: " + eventLog.value);
 	});
+
+	// Then I pause for 5 seconds
+	//
+	this.Then(/^I pause for (\d+) seconds$/, function(seconds) {
+		browser.pause(Number(seconds) * 1000);
+	});
 };

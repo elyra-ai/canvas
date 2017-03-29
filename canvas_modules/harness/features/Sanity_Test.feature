@@ -30,6 +30,7 @@ Feature: Canvas sanity test
     Then I add comment 3 at location 550, 150 with the text "This is the functional test canvas that we build through automated test cases.  This comment is meant to simulate a typical comment for annotating the entire canvas."
 
     # Now delete everything and go back to empty canvas
+		Then I pause for 10 seconds
 
     Then I delete node 1 the "Var. File" node
     Then I validate there are 6 links on the canvas
@@ -54,3 +55,4 @@ Feature: Canvas sanity test
     # Verify that the diagram.json has no content.
     Then I expect the object model to be empty
 		Then I write out the event log
+		Then I pause for 5 seconds
