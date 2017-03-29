@@ -53,3 +53,4 @@ Feature: Canvas sanity test
 
     # Verify that the diagram.json has no content.
     Then I expect the object model to be empty
+		Then I write out the event log

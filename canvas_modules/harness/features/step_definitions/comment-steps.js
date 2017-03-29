@@ -59,6 +59,7 @@ module.exports = function() {
 	});
 
 	// Then I delete comment 1 linked to the "Derive" node with the comment text "This comment box should be linked to the derive node."
+	//
 	this.Then(/^I delete comment (\d+) linked to the "([^"]*)" node with the comment text "([^"]*)"$/,
 	function(commentIndex, nodeName, comment) {
 		var commentNumber = commentIndex - 1;

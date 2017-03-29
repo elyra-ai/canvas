@@ -17,6 +17,7 @@ import { simulateDragDrop } from "./utilities/DragandDrop.js";
 
 /* global browser */
 
+
 module.exports = function() {
 	const testUrl = process.env.TESTURL;
 	const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
@@ -454,12 +455,14 @@ module.exports = function() {
 	});
 
 	// Then I select node 4 the "Type" node
+	//
 	this.Then(/^I select node (\d+) the "([^"]*)" node$/, function(nodeIndex, nodeName) {
 		var nodeNumber = nodeIndex - 1;
 		browser.$("#canvas-div").$$(".node-inner-circle")[nodeNumber].click();
 	});
 
 	// Then I delete node 1 the "Var. File" node
+	//
 	this.Then(/^I delete node (\d+) the "([^"]*)" node$/, function(nodeIndex, nodeType) {
 		var nodeNumber = nodeIndex - 1;
 		browser.$("#canvas-div").$$(".node-inner-circle")[nodeNumber].rightClick();
@@ -488,6 +491,8 @@ module.exports = function() {
 		expect(returnVal.value).toBe(1);
 	});
 
+	// Then I expect the object model to be empty
+	//
 	this.Then(/^I expect the object model to be empty$/, function() {
 		// verify that the  node is in the internal object model
 		browser.timeoutsAsyncScript(5000);
@@ -496,4 +501,21 @@ module.exports = function() {
 		expect(returnVal.value).toBe(0);
 	});
 
+/* eslint no-console: ["error", { allow: ["warn"] }] */
+
+	// Then I write out the object model
+	//
+	this.Then(/^I write out the object model$/, function() {
+		browser.timeoutsAsyncScript(5000);
+		// var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
+		// console.log("warn Object Model: " + objectModel.value);
+	});
+
+	// Then I write out the event log
+	//
+	this.Then(/^I write out the event log$/, function() {
+		browser.timeoutsAsyncScript(5000);
+		// var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
+		// console.log("warn event Log: " + eventLog.value);
+	});
 };
