@@ -429,10 +429,12 @@ class App extends React.Component {
 	}
 
 	deleteObjectsActionHandler(source) {
-		if (typeof source.targetObject.objectData.label !== "undefined") {
+		if (typeof source.targetObject.objectData !== "undefined") {
 			this.log("action: deleteObjects", source.selectedObjectIds, source.targetObject.objectData.label);
-		} else {
+		} else if (typeof source.targetObject.content !== "undefined") {
 			this.log("action: deleteObjects", source.selectedObjectIds, source.targetObject.content);
+		} else {
+			this.log("action: deleteObjects", source.selectedObjectIds, "");
 		}
 	}
 

@@ -81,6 +81,9 @@ module.exports = function() {
 		browser.timeoutsAsyncScript(5000);
 		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
 		var returnVal = browser.execute(getObjectModelCount, objectModel.value, "comments", comment);
+		if (returnVal.value !== 0) {
+			console.log(objectModel.value);
+		}
 		expect(returnVal.value).toBe(0);
 
 		// verify that an event for a new comment is in the external object model event log
