@@ -54,10 +54,13 @@ export default class SidePanelModal extends React.Component {
 				selectedPropertiesDropdownFile: ""
 			});
 		} else {
+			var that = this;
 			this.setState({
 				selectedPropertiesDropdownFile: obj.selected,
 				commonProperties: "",
 				fileChooserVisible: false
+			}, function() {
+				that.getSelectedFile();
 			});
 		}
 	}
@@ -77,6 +80,15 @@ export default class SidePanelModal extends React.Component {
 		}
 	}
 
+	getSelectedFile() {
+		var that = this;
+		this.props.log("Submit common properties file", this.state.selectedPropertiesDropdownFile);
+		FormsService.getFileContent("properties", this.state.selectedPropertiesDropdownFile)
+		.then(function(res) {
+			that.props.setPropertiesJSON(res);
+		});
+	}
+
 	submitProperties() {
 		if (this.state.commonProperties.name) {
 			this.props.log("Submit common properties file", this.state.commonProperties.name);
@@ -89,12 +101,7 @@ export default class SidePanelModal extends React.Component {
 			}.bind(this);
 			fileReader.readAsText(this.state.commonProperties);
 		} else {
-			this.props.log("Submit common properties file", this.state.selectedPropertiesDropdownFile);
-			var that = this;
-			FormsService.getFileContent("properties", this.state.selectedPropertiesDropdownFile)
-			.then(function(res) {
-				that.props.setPropertiesJSON(res);
-			});
+			this.getSelectedFile();
 		}
 	}
 

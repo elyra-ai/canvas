@@ -103,10 +103,17 @@ export default class SidePanelForms extends React.Component {
 				selectedCanvasDropdownFile: ""
 			});
 		} else {
+			var that = this;
 			this.setState({
 				selectedCanvasDropdownFile: obj.selected,
 				canvasDiagram: "",
 				canvasFileChooserVisible: false
+			}, function() {
+				that.props.log("Submit canvas diagram", that.state.selectedPropertiesDropdownFile);
+				FormsService.getFileContent("diagrams", that.state.selectedCanvasDropdownFile)
+				.then(function(res) {
+					that.props.setDiagramJSON(res);
+				});
 			});
 		}
 	}
@@ -118,10 +125,21 @@ export default class SidePanelForms extends React.Component {
 				selectedPaletteDropdownFile: ""
 			});
 		} else {
+			var that = this;
 			this.setState({
 				selectedPaletteDropdownFile: obj.selected,
 				canvasPalette: "",
 				paletteFileChooserVisible: false
+			}, function() {
+				that.props.log("Submit canvas palette", that.state.selectedPaletteDropdownFile);
+				FormsService.getFileContent("palettes", that.state.selectedPaletteDropdownFile)
+				.then(function(res) {
+					that.props.setPaletteJSON(res);
+					// enable palette
+					if (that.isReadyToSubmitPaletteData()) {
+						that.props.enableNavPalette(true);
+					}
+				});
 			});
 		}
 	}
@@ -135,13 +153,6 @@ export default class SidePanelForms extends React.Component {
 				this.props.setDiagramJSON(content);
 			}.bind(this);
 			fileReader.readAsText(this.state.canvasDiagram);
-		} else {
-			this.props.log("Submit canvas diagram", this.state.selectedPropertiesDropdownFile);
-			var that = this;
-			FormsService.getFileContent("diagrams", this.state.selectedCanvasDropdownFile)
-			.then(function(res) {
-				that.props.setDiagramJSON(res);
-			});
 		}
 	}
 
@@ -161,15 +172,8 @@ export default class SidePanelForms extends React.Component {
 				this.props.setPaletteJSON(content);
 			}.bind(this);
 			fileReader.readAsText(this.state.canvasPalette);
-		} else {
-			this.props.log("Submit canvas palette", this.state.selectedPaletteDropdownFile);
-			var that = this;
-			FormsService.getFileContent("palettes", this.state.selectedPaletteDropdownFile)
-			.then(function(res) {
-				that.props.setPaletteJSON(res);
-			});
 		}
-		// enable palette in nav
+		// enable palette
 		if (this.isReadyToSubmitPaletteData()) {
 			this.props.enableNavPalette(true);
 		}
@@ -197,6 +201,7 @@ export default class SidePanelForms extends React.Component {
 		var canvasFileChooserVisible = <div></div>;
 		if (this.state.canvasFileChooserVisible) {
 			canvasFileChooserVisible = (<div>
+				{space}
 				<FormControl
 					required="required"
 					id="canvasFileInput"
@@ -206,12 +211,19 @@ export default class SidePanelForms extends React.Component {
 					onChange={this.onCanvasFileSelect}
 				/>
 				{space}
+				<Button dark
+					disabled={!this.isReadyToSubmitCanvasData()}
+					onClick={this.submitCanvas.bind(this)}
+				>
+					Submit
+				</Button>
 			</div>);
 		}
 
 		var paletteFileChooserVisible = <div></div>;
 		if (this.state.paletteFileChooserVisible) {
 			paletteFileChooserVisible = (<div>
+				{space}
 				<FormControl
 					required="required"
 					id="paletteJsonInput"
@@ -220,7 +232,14 @@ export default class SidePanelForms extends React.Component {
 					ref="canvasPalette"
 					onChange={this.onCanvasPaletteSelect}
 				/>
-			{space}
+				{space}
+				<Button dark
+					disabled={!this.isReadyToSubmitPaletteData()}
+					onClick={this.submitPalette.bind(this)}
+					onChange={(evt) => this.props.enableNavPalette(evt.target.checked)}
+				>
+					Submit
+				</Button>
 			</div>);
 		}
 
@@ -237,14 +256,7 @@ export default class SidePanelForms extends React.Component {
 					onSelect={this.onCanvasDropdownSelect.bind(this)}
 					value={this.state.selectedCanvasDropdownFile}
 				/>
-				{space}
 				{canvasFileChooserVisible}
-				<Button dark
-					disabled={!this.isReadyToSubmitCanvasData()}
-					onClick={this.submitCanvas.bind(this)}
-				>
-					Submit
-				</Button>
 			</div>
 		</div>);
 
@@ -261,15 +273,7 @@ export default class SidePanelForms extends React.Component {
 					onSelect={this.onPaletteDropdownSelect.bind(this)}
 					value={this.state.selectedPaletteDropdownFile}
 				/>
-				{space}
 				{paletteFileChooserVisible}
-				<Button dark
-					disabled={!this.isReadyToSubmitPaletteData()}
-					onClick={this.submitPalette.bind(this)}
-					onChange={(evt) => this.props.enableNavPalette(evt.target.checked)}
-				>
-					Submit
-				</Button>
 			</div>
 		</div>);
 
