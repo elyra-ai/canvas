@@ -8,6 +8,7 @@ module.exports = function() {
 		browser.pause(500);
 		// this will not work with relative paths
 		canvasInput.setValue(baseFileDir + diagramFile);
+		browser.pause(500);
 		browser.$(".canvasField").click("a");
 	});
 
@@ -16,6 +17,7 @@ module.exports = function() {
 		browser.pause(500);
 		// this will not work with relative paths
 		paletteInput.setValue(baseFileDir + paletteFile);
+		browser.pause(500);
 		browser.$("#sidepanel-palette-input").click("a");
 	});
 };

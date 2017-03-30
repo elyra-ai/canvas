@@ -184,7 +184,6 @@ module.exports = function() {
         "MsOSA0Myw2IDQ5LDYgNDksMi41IDU2LjUsNi44ICIvPg0KPHBvbHlnb24gY2xhc3M9InN0NCIgcG9pbnRzPSIzOC40LDEyIDQwLDEyIDQwLDggNDIsOCA0MiwxMiA0NC4xL" +
         "DEyIDQxLjIsMTYuOSAiLz4NCjxyZWN0IHg9IjQwIiB5PSIzLjQiIGNsYXNzPSJzdDQiIHdpZHRoPSIyIiBoZWlnaHQ9IjQuMiIvPg0KPHBvbHlnb24gY2xhc3M9InN0NCIg" +
         "cG9pbnRzPSIzNS4xLDQgMzMsNCAzMyw4IDMxLDggMzEsNCAyOS40LDQgMzIuMiwtMC45ICIvPg0KPHJlY3QgeD0iMzEiIHk9IjcuMiIgY2xhc3M9InN0NCIgd2lkdGg9IjI" +
-        
         "iIGhlaWdodD0iNC41Ii8+DQo8L3N2Zz4NCg==",
 		"Aggregate": "",
 		"Balance": "",
@@ -470,7 +469,8 @@ module.exports = function() {
 	this.Then(/^I add node (\d+) a "([^"]*)" node from the "([^"]*)" category onto the canvas at (\d+), (\d+)$/,
 	function(inNodeIndex, nodeType, nodeCategory, canvasX, canvasY) {
 		// click on the palette button to open it
-		browser.click(".palette-show-button");
+		// browser.click(".palette-show-button");
+		browser.$(".palette-show-button").click();
 		// select import categories
 		const categoryIndex = categoryPosition[nodeCategory];
 		browser.$(".palette-content").$("div")
