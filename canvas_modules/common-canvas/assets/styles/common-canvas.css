@@ -51,11 +51,11 @@
 }
 
 #empty-canvas {
-    width: 1400px;
+    width: 414px;
     height: 450px;
     position: absolute;
-    left: 0%;
-    top: 0%;
+    left: 27%;
+    top: 20%;
 }
 
 /* Canvas Styles */
