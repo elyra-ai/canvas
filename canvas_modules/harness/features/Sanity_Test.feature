@@ -7,7 +7,8 @@ Feature: Canvas sanity test
   Scenario: Sanity test empty canvas
     Given I am on the test harness
     Given I have toggled the app side panel
-    Given I have uploaded palette "test_resources/palettes/modelerPalette.json"
+    #Given I have uploaded palette "test_resources/palettes/modelerPalette.json"
+		Given I have uploaded predefined palette "modelerPalette.json"
 		Given I have toggled the app side panel
 
     Then I add node 1 a "Var. File" node from the "Import" category onto the canvas at 100, 200
