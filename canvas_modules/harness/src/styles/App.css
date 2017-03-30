@@ -120,10 +120,16 @@
   padding: 5px 0 5px 0;
 }
 
+.sidepanel-spacer {
+  width: 100%;
+  padding: 6px 0 0 0;
+}
+
 /*Override ap-components-react styles*/
 .button {
   line-height: 0.5;
   margin-top: 2px;
+  margin-bottom: 2px;
 }
 
 .toggle__checkbox{
@@ -132,4 +138,19 @@
 
 .radio--dark + label {
   font-weight: 100;
+}
+
+/* Dropdown menu */
+.select__button {
+	line-height: 1;
+}
+
+.select__options__item {
+	border-left: 1px solid #1D3649;
+	border-right: 1px solid #1D3649;
+	border-bottom: 1px solid #1D3649;
+}
+
+.select > .select__button > .select__button__arrow {
+	top: 10px;
 }

@@ -29,8 +29,7 @@ import {
 	SIDE_PANEL_CANVAS,
 	SIDE_PANEL_STYLES,
 	SIDE_PANEL_MODAL,
-	STRAIGHT,
-	PROPERTIESINFO
+	STRAIGHT
 } from "./constants/constants.js";
 
 import listview32 from "../graphics/list-view_32.svg";
@@ -469,11 +468,7 @@ class App extends React.Component {
 
 	// common-properties
 	openPropertiesEditorDialog() {
-		// set test data if none provided
 		var properties = this.state.propertiesJson;
-		if (properties === null) {
-			properties = PROPERTIESINFO;
-		}
 
 		const propsInfo = {
 			title: <FormattedMessage id={ "dialog.nodePropertiesTitle" } />,

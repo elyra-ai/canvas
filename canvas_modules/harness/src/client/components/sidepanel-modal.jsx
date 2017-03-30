@@ -14,19 +14,52 @@ import React from "react";
 import { FormControl } from "react-bootstrap";
 import {
 	Button,
-	ToggleButton
+	Dropdown
 } from "ap-components-react/dist/ap-components-react";
+import {
+	CHOOSE_FROM_LOCATION
+} from "../constants/constants.js";
+import FormsService from "../services/FormsService";
 
 export default class SidePanelModal extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			commonProperties: ""
+			commonProperties: "",
+			commonPropertiesFiles: [],
+			selectedPropertiesDropdownFile: "",
+			fileChooserVisible: false
 		};
 
 		this.onPropertiesSelect = this.onPropertiesSelect.bind(this);
-		this.isReadyToSubmitPropertiesData = this.isReadyToSubmitPropertiesData.bind(this);
+		this.isReadyToSubmitProperties = this.isReadyToSubmitProperties.bind(this);
 		this.openPropertiesEditorDialog = this.openPropertiesEditorDialog.bind(this);
+	}
+
+	componentWillMount() {
+		var that = this;
+
+		FormsService.getFiles("properties")
+		.then(function(res) {
+			var list = res;
+			list.unshift(CHOOSE_FROM_LOCATION);
+			that.setState({ commonPropertiesFiles: res });
+		});
+	}
+
+	onDropdownSelect(evt, obj) {
+		if (obj.selected === CHOOSE_FROM_LOCATION) {
+			this.setState({
+				fileChooserVisible: true,
+				selectedPropertiesDropdownFile: ""
+			});
+		} else {
+			this.setState({
+				selectedPropertiesDropdownFile: obj.selected,
+				commonProperties: "",
+				fileChooserVisible: false
+			});
+		}
 	}
 
 	onPropertiesSelect(evt) {
@@ -35,26 +68,45 @@ export default class SidePanelModal extends React.Component {
 			var filename = evt.target.files[0].name;
 			var fileExt = filename.substring(filename.lastIndexOf(".") + 1);
 			if (fileExt === "json") {
-				this.setState({ commonProperties: evt.target.files[0] });
+				this.setState({
+					commonProperties: evt.target.files[0],
+					selectedPropertiesDropdownFile: ""
+				});
 				this.props.log("Common Properties JSON file selected", filename);
 			}
 		}
 	}
 
-	submitPropertiesData() {
-		this.props.log("Submit common properties file", this.state.commonProperties.name);
-		// read file
-		var fileReader = new FileReader();
-		fileReader.onload = function(evt) {
-			var fileContent = fileReader.result;
-			var content = JSON.parse(fileContent);
-			this.props.setPropertiesJSON(content);
-		}.bind(this);
-		fileReader.readAsText(this.state.commonProperties);
+	submitProperties() {
+		if (this.state.commonProperties.name) {
+			this.props.log("Submit common properties file", this.state.commonProperties.name);
+			// read file
+			var fileReader = new FileReader();
+			fileReader.onload = function(evt) {
+				var fileContent = fileReader.result;
+				var content = JSON.parse(fileContent);
+				this.props.setPropertiesJSON(content);
+			}.bind(this);
+			fileReader.readAsText(this.state.commonProperties);
+		} else {
+			this.props.log("Submit common properties file", this.state.selectedPropertiesDropdownFile);
+			var that = this;
+			FormsService.getFileContent("properties", this.state.selectedPropertiesDropdownFile)
+			.then(function(res) {
+				that.props.setPropertiesJSON(res);
+			});
+		}
 	}
 
-	isReadyToSubmitPropertiesData() {
-		if (this.state.commonProperties !== "") {
+	isReadyToSubmitProperties() {
+		if (this.state.commonProperties !== "" || this.state.selectedPropertiesDropdownFile !== "") {
+			return true;
+		}
+		return false;
+	}
+
+	isReadyToSubmitPropertiesDropdownData() {
+		if (this.state.selectedPropertiesDropdownFile !== "") {
 			return true;
 		}
 		return false;
@@ -69,48 +121,53 @@ export default class SidePanelModal extends React.Component {
 	}
 
 	render() {
-		var divider = (<div
-			className="sidepanel-children sidepanel-divider"
-		/>);
+		// var divider = (<div
+		// 	className="sidepanel-children sidepanel-divider"
+		// />);
+		var space = (<div className="sidepanel-spacer" />);
 
-		var propertiesInput = (<div className="sidepanel-children" id="sidepanel-input">
-			<div className="formField">
-				<div className="sidepanel-headers">Common Properties</div>
+		var fileChooser = <div></div>;
+		if (this.state.fileChooserVisible) {
+			fileChooser = (<div>
 				<FormControl
 					required="required"
 					id="formFileInput"
 					type="file"
 					accept=".json"
-					ref="commonProperties" onChange={this.onPropertiesSelect}
+					ref="commonProperties"
+					onChange={this.onPropertiesSelect}
 				/>
-				<Button dark
-					disabled={!this.isReadyToSubmitPropertiesData()}
-					onClick={this.submitPropertiesData.bind(this)}
+				{space}
+			</div>);
+		}
+
+		var propertiesInput = (<div className="sidepanel-children" id="sidepanel-input">
+			<div className="formField">
+				<div className="sidepanel-headers">Common Properties</div>
+				<Dropdown
+					name="PropertiesDropdown"
+					text="Properties"
+					id="sidepanel-properties-dropdown"
+					maxVisibleItems={10}
+					dark
+					options={this.state.commonPropertiesFiles}
+					onSelect={this.onDropdownSelect.bind(this)}
+					value={this.state.selectedPropertiesDropdownFile}
+				/>
+				{space}
+				{fileChooser}
+				<Button data-compact dark
+					disabled={!this.isReadyToSubmitProperties()}
+					onClick={this.submitProperties.bind(this)}
 				>
-					Submit
+					Open Dialog
 				</Button>
 			</div>
-		</div>);
-
-		var enablePropertiesDialog = (<div className="sidepanel-children" id="sidepanel-properties-dialog">
-			<form>
-				<div className="sidepanel-headers">Properties Dialog</div>
-				<div>
-					<ToggleButton dark
-						id="sidepanel-properties-dialog-toggle"
-						checked={this.props.showPropertiesDialog}
-						onChange={this.openPropertiesEditorDialog}
-					/>
-				</div>
-			</form>
 		</div>);
 
 		return (
 			<div>
 				{propertiesInput}
-				{divider}
-				{enablePropertiesDialog}
-				{divider}
 			</div>
 		);
 	}
