@@ -1,9 +1,9 @@
 {
   "name": "@wdp/common-canvas",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "WDP common-canvas",
   "main": "dist/common-canvas.js",
-	"homepage": "https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/wiki/Common-Canvas-Documentation",
+  "homepage": "https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/wiki/Common-Canvas-Documentation",
   "repository": {
     "type": "git",
     "url": "https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/tree/master/canvas_modules/common-canvas"

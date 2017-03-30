@@ -60,6 +60,12 @@
   padding:20px
 }
 
+/* Override for block controls */
+.control-radio-block{
+	display: block;
+	margin-bottom: 2px;
+	padding:5px;
+}
 /* Hide default browser input */
 
 input[type=radio]{
@@ -81,6 +87,10 @@ input[type=radio]{
   border-radius: 50% !important;
   transition: all .2s ease-in-out !important;
   border: 1px solid #1d3649 !important;
+}
+/* Override for block controls */
+.control__indicator-block{
+	top: 7px !important;
 }
 
 /* Hover and focus */

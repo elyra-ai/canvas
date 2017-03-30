@@ -23,6 +23,7 @@ const logger = log4js.getLogger("application");
 
 // Controllers
 var testAPI = require("../controllers/v1-test-api.js");
+var formsAPI = require("../controllers/v1-forms-api.js");
 
 function _create(callback) {
 	var status = appConfig.init();
@@ -56,6 +57,7 @@ function _create(callback) {
 	app.use(constants.API_PATH_V1, v1Router);
 	v1Router.use(bodyParser.json());
 	v1Router.use(constants.APP_PATH, testAPI);
+	v1Router.use(constants.APP_PATH, formsAPI);
 
 	callback(null, app);
 }
