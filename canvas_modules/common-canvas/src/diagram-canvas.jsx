@@ -45,8 +45,6 @@ export default class DiagramCanvas extends React.Component {
   constructor(props) {
     super(props);
 
-    let selectedObjects = [];
-
 		let zoomValue = props.canvas.zoom && !Number.isNaN(props.canvas.zoom) ? props.canvas.zoom : ZOOM_DEFAULT_VALUE;
     this.state = {
       nodes: [],
@@ -432,11 +430,11 @@ export default class DiagramCanvas extends React.Component {
   }
 
   canvasClicked(event) {
-    // console.log("DiagramCanvas.canvasClicked(): x=" + event.clientX + ",y=" + event.clientY + ", target=" + event.target);
     // Don't clear the selection if the canvas context menu is up
     if (!this.state.showContextMenu) {
       this.clearSelection();
-      this.props.clickActionHandler({clickType: "SINGLE_CLICK", objectType: "canvas"});
+      // Pass in []. Don't use this.state.slectedObjects as the state may not be updated yet
+      this.props.clickActionHandler({clickType: "SINGLE_CLICK", objectType: "canvas", selectedObjectIds: []});
     }
   }
 
@@ -475,17 +473,15 @@ export default class DiagramCanvas extends React.Component {
   }
 
   canvasContextMenu(event) {
-
     let mousePos = this.mouseCoords(event);
-    let selectedObjects = this.state.selectedObjects;
 
     event.preventDefault();
 
     if (event.target.id == "" || event.target.id == "empty-canvas") {
       this.contextMenuSource = {
         type: "canvas",
-		zoom: this.zoom(),
-        selectedObjectIds: selectedObjects,
+        zoom: this.zoom(),
+        selectedObjectIds: this.state.selectedObjects,
         mousePos: mousePos};
     }
 
@@ -518,11 +514,12 @@ export default class DiagramCanvas extends React.Component {
       this.removeNode(node.id);
     }
     else if (action == 'nodeDblClicked') {
-      this.props.clickActionHandler({clickType: "DOUBLE_CLICK", objectType: "node", id: node.id});
+      this.props.clickActionHandler({clickType: "DOUBLE_CLICK", objectType: "node", id: node.id, selectedObjectIds: this.state.selectedObjects});
     }
     else if (action == 'selected') {
-      // The event is passed as the third arg
-      this.selectObject(node.id, optionalArgs.shiftKey);
+       // Use the returned value rather than this.state.selectedObjects becuase the state may not be immediately updated.
+      let selObjIds = this.selectObject(node.id, optionalArgs.shiftKey);
+      this.props.clickActionHandler({clickType: "SINGLE_CLICK", objectType: "node", id: node.id, selectedObjectIds: selObjIds});
     }
     else if (action == 'dropOnNode' && this.isDragging()) {
       // The event is passed as the third arg
@@ -570,7 +567,8 @@ export default class DiagramCanvas extends React.Component {
   commentAction(comment, action, optionalArgs = []) {
     if (action == 'selected') {
       // The event is passed as the third arg
-      this.selectObject(comment.id, optionalArgs.shiftKey);
+      let selObjIds = this.selectObject(comment.id, optionalArgs.shiftKey);
+      this.props.clickActionHandler({clickType: "SINGLE_CLICK", objectType: "comment", id: comment.id, selectedObjectIds: selObjIds});
     }  else if (action == 'editComment') {
       // save the changed comment
       this.props.editActionHandler({
@@ -716,27 +714,27 @@ export default class DiagramCanvas extends React.Component {
   }
 
   selectObject(objectId, toggleSelection) {
-    // console.log("selectObject: " + objectId + ", toggle=" + toggleSelection);
-    let index = this.state.selectedObjects.indexOf(objectId);
+    let selectedObjectIds = [objectId]
 
     if (toggleSelection) {
       // If already selected then remove otherwise add
       var selection = this.state.selectedObjects;
+      let index = selection.indexOf(objectId);
       if (index >= 0) {
         selection.splice(index, 1);
       }
       else {
         selection = selection.concat(objectId);
       };
-      this.setState({
-        selectedObjects: selection
-      });
+      selectedObjectIds = selection;
     }
-    else {
-      this.setState({
-        selectedObjects: [objectId]
-      });
-    }
+
+    this.setState({
+      selectedObjects: selectedObjectIds
+    });
+
+    //Return the list as well as set this.state.selectedObjects becuase the state may not be immediately updated.
+    return selectedObjectIds;
   }
 
   // Edit operation methods
@@ -786,6 +784,8 @@ export default class DiagramCanvas extends React.Component {
     this.setState({
       selectedObjects: selection
     });
+
+    this.props.clickActionHandler({clickType: "SINGLE_CLICK", objectType: "region", selectedObjectIds: selection});
   }
 
   selectAll() {
@@ -836,7 +836,6 @@ export default class DiagramCanvas extends React.Component {
   }
 
   clearSelection() {
-    // console.log("clearSelection()");
     this.setState({
       selectedObjects: []
     });
