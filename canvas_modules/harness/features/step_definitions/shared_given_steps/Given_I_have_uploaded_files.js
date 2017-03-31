@@ -22,8 +22,6 @@ module.exports = function() {
 		for (var idx = 0; idx < canvasFileOptions.length; idx++) {
 			if (canvasFileOptions[idx].getText() === diagramFile) {
 				canvasFileOptions[idx].click();
-				browser.pause(500);
-				browser.$(".canvasField").click("a");
 			}
 		}
 	});
@@ -75,8 +73,6 @@ module.exports = function() {
 		for (var idx = 0; idx < paletteFileOptions.length; idx++) {
 			if (paletteFileOptions[idx].getText() === paletteFile) {
 				paletteFileOptions[idx].click();
-				browser.pause(500);
-				browser.$("#sidepanel-palette-input").click("a");
 			}
 		}
 	});
