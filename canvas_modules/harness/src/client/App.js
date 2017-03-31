@@ -230,7 +230,7 @@ class App extends React.Component {
 
 	// common-canvas
 	clickActionHandler(source) {
-		this.log("clickActionHandler()");
+		this.log("clickActionHandler()", source);
 		if (source.clickType === "DOUBLE_CLICK" && source.objectType === "node") {
 			this.nodeEditHandler(source.id);
 		}
