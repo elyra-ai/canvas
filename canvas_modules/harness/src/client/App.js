@@ -310,7 +310,7 @@ class App extends React.Component {
 
 		const EMPTY_CLIPBOARD_CANVAS_CONTEXT_MENU = [
       { action: "addComment", label: this.getLabel("canvas-context.addComment", "New comment") },
-      { action: "CC_selectAll", label: this.getLabel("canvas-context.selectAll", "Select All") },
+      { action: "selectAll", label: this.getLabel("canvas-context.selectAll", "Select All") },
       { divider: true },
       { action: "cutSelection", label: this.getLabel("edit-context.cutSelection", "Cut") },
       { action: "copySelection", label: this.getLabel("edit-context.copySelection", "Copy") },
