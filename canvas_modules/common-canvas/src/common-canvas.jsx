@@ -205,7 +205,7 @@ export default class CommonCanvas extends React.Component {
     }
 
     return (
-      <div className="fill-vertical">
+      <div id="common-canvas" className="fill-vertical">
         {canvas}
         {zoomControls}
         {autoLayoutControls}

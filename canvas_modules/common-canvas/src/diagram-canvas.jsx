@@ -27,14 +27,20 @@ import BlankCanvasImage from '../assets/images/blank_canvas.png'
 
 
 
-const NODE_BORDER_SIZE = 2; // see main.css, .canvas-node
+const NODE_BORDER_SIZE = 2; // see common-canvas.css, .canvas-node
 const CELL_SIZE = 48;
 const NODE_WIDTH = 66;
 const NODE_HEIGHT = 80;
 const ICON_SIZE = 48;
-const FONT_SIZE = 10; // see main.css, .canvas-node p
+const FONT_SIZE = 10; // see common-canvas.css, .canvas-node p
 const SELECT_REGION_DATA = "[]";
 
+// context-menu sizing
+const CONTEXT_MENU_MARGIN = 2; // see common-canvas.css .react-context-menu margin
+const CONTEXT_MENU_BORDER = 1; // see common-canvas.css .react-context-menu border
+const CONTEXT_MENU_PADDING = 5; // see common-canvas.css .react-context-menu padding
+const CONTEXT_MENU_LINK_HEIGHT = 29; // see common-canvas.css .react-context-menu-link height
+const CONTEXT_MENU_MIN_WIDTH = 160; // see common-canvas.css .react-context-menu min-width
 
 // const ZOOM_FACTORS = [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.25, 1.5, 1.75, 2.0, 2.4];
 const ZOOM_DEFAULT_VALUE = 100;
@@ -467,6 +473,9 @@ export default class DiagramCanvas extends React.Component {
 
     const cmDef = this.props.contextMenuHandler(this.contextMenuSource);
 
+    // Reposition contextMenu if it will show off the screen
+    this.repositionContextMenu(this.contextMenuSource.mousePos, cmDef);
+
     if (cmDef !== null) {
       this.setState({showContextMenu: true, contextMenuDef: cmDef});
     }
@@ -495,10 +504,50 @@ export default class DiagramCanvas extends React.Component {
 
     let cmDef = this.props.contextMenuHandler(this.contextMenuSource);
 
+    // Reposition contextMenu if it will show off the screen
+    this.repositionContextMenu(mousePos, cmDef);
+
     if (cmDef !== null) {
       this.setState({showContextMenu: true, contextMenuDef: cmDef});
     }
   }
+
+  repositionContextMenu(mousePos, menu) {
+		var ccScrollTop = document.getElementById("common-canvas").scrollTop;
+		var ccScrollLeft = document.getElementById("common-canvas").scrollLeft;
+
+		var commonCanvasRect = document.getElementById("common-canvas").getBoundingClientRect();
+		var windowHeight = commonCanvasRect.height;
+		var windowWidth = commonCanvasRect.width;
+
+		var menuSize = this.calculateContextMenuSize(menu);
+
+		// Reposition contextMenu if it will show off the screen
+		if (Math.round(mousePos.y - ccScrollTop + menuSize.height) > windowHeight) {
+			this.contextMenuSource.mousePos.y = mousePos.y - menuSize.height;
+		}
+		if (Math.round(mousePos.x - ccScrollLeft + menuSize.width) > windowWidth) {
+			this.contextMenuSource.mousePos.x = mousePos.x - menuSize.width;
+		}
+  }
+
+	calculateContextMenuSize(menu) {
+		var numDividers = 0;
+		for (let i = 0; i < menu.length; ++i) {
+			const divider = menu[i].divider;
+			if (divider) {
+				numDividers++;
+			}
+		}
+
+		var menuSize = {
+			height: ((menu.length - numDividers) * CONTEXT_MENU_LINK_HEIGHT) +
+				(CONTEXT_MENU_MARGIN + CONTEXT_MENU_BORDER + CONTEXT_MENU_PADDING),
+			width: CONTEXT_MENU_MIN_WIDTH - (CONTEXT_MENU_MARGIN + CONTEXT_MENU_BORDER + CONTEXT_MENU_PADDING)
+		};
+
+		return menuSize;
+	}
 
   // ----------------------------------
   // Action Handlers

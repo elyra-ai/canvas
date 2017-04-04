@@ -39,6 +39,12 @@
 
 /* SVG Canvas styles */
 
+#common-canvas {
+	overflow: auto;
+	height: 100%;
+	width: 100%;
+}
+
 .svg-canvas {
   margin: '2px';
   padding: '2px';
@@ -61,7 +67,7 @@
 /* Canvas Styles */
 
 .canvas-zoom-controls {
-  position: absolute;
+  position: fixed;
   bottom: 96px;
   left: 35px;
   width: 48px;
@@ -75,7 +81,7 @@
 
 .canvas-autolayout-controls {
   display: none;
-  position: absolute;
+  position: fixed;
   bottom: 35px;
   left: 35px;
   width: 48px;
@@ -224,7 +230,7 @@
 }
 
 .palette-show-button {
-  position: absolute;
+  position: fixed;
   bottom: 15px;
   left: 35px;
   width: 48px;
@@ -469,7 +475,8 @@
   background-color: #8c8c8c;
 }
 
-/* Context Menu styles - used by react-contextmenu module */
+/* Context Menu styles - used by react-contextmenu module
+   Changes may affect diagram-canvas.jsx */
 
 .react-context-menu {
   min-width: 160px;
@@ -489,6 +496,7 @@
 .react-context-menu-link {
   display: inline-block;
   width: 100%;
+  height: 29px;
   padding: 3px 10px;
   clear: both;
   color: #f9f9fb;
