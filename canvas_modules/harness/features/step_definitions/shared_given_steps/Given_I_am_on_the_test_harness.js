@@ -1,4 +1,6 @@
 module.exports = function() {
+	
+	this.setDefaultTimeout(120 * 1000);
 
 	/* global browser */
 

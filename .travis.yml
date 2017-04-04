@@ -1,4 +1,6 @@
 ---
+dist: trusty
+sudo: required
 branches:
   only:
     - master
@@ -13,10 +15,15 @@ before_install:
 before_script:
   - npm install grunt-cli -g
 #  - export NODE_ENV=production
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 3 # give xvfb some time to start
 script:
   - ./canvas_modules/common-canvas/build.sh
   - ./canvas_modules/common-properties/build.sh
   - ./canvas_modules/harness/build.sh
+after-success:
+    - ./canvas_modules/harness/functional_test.sh
 before_deploy:
   - npm install @dap/dap-deploy
 deploy:

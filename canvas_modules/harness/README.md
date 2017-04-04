@@ -31,14 +31,14 @@ Ensure that the test harness is running.  You will need to specify the URL of th
 also need to specify the base file directory of the location of the __test_resources__.  
 ```sh
 export UI_TEST_URL=http://localhost:3001
-export TRAVIS_BUILD_DIR="/Users/terryobrien/Github/wdp-abstract-canvas/canvas_modules/harness/"
+export TRAVIS_BUILD_DIR="/Users/terryobrien/Github/wdp-abstract-canvas/"
 cd <base dir>/canvas_modules/harness
 npm test
 ```
 The default browser tested is Chrome.  You will need to add the location of Firefox to the PATH environment variable to be able
 to test with Firefox.  I have successfully tested with Firefox v45.8.  I am not sure if more recent version will work.
 ```sh
-export PATH=export PATH="/Applications/IBM Firefox.app/Contents/MacOS:/usr/local/opt/node@4/bin:"$PATH
+export PATH="/Applications/IBM Firefox.app/Contents/MacOS:/usr/local/opt/node@4/bin:"$PATH
 export UI_TEST_URL=http://localhost:3001
 cd <base dir>/canvas_modules/harness
 npm test -- --browser=firefox

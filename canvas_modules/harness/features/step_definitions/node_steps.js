@@ -13,7 +13,7 @@
 *****************************************************************/
 import { getEventLogCount, getObjectModelCount, isObjectModelEmpty } from "./utilities/validateUtil.js";
 import { getHarnessData } from "./utilities/HTTPClient.js";
-import { simulateDragDrop } from "./utilities/DragandDrop.js";
+import { simulateDragDrop } from "./utilities/DragAndDrop.js";
 
 /* global browser */
 
