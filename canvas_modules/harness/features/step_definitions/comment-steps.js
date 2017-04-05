@@ -84,7 +84,7 @@ module.exports = function() {
 		var returnVal = browser.execute(getObjectModelCount, objectModel.value, "comments", comment);
 		expect(returnVal.value).toBe(0);
 
-		// verify that an event for a new comment is in the external object model event log
+		// verify that an event for a deleted comment is in the external object model event log
 		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
 		returnVal = browser.execute(getEventLogCount, eventLog.value, "action: deleteObjects", 	comment);
 		expect(returnVal.value).toBe(1);

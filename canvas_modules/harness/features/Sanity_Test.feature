@@ -34,21 +34,13 @@ Feature: Canvas sanity test
 		Then I pause for 3 seconds
 
     Then I delete node 1 the "Var. File" node
-    Then I validate there are 6 links on the canvas
-    Then I delete comment link at 170, 200 between comment 1 and node 1 the "Derive" node
-    Then I validate there are 5 links on the canvas
+    #Then I delete comment link at 170, 200 between comment 1 and node 1 the "Derive" node
     Then I delete node 1 the "Derive" node
-    Then I validate there are 4 links on the canvas
     Then I delete comment 1 linked to the "Derive" node with the comment text "This comment box should be linked to the derive node."
-    Then I delete node link at 335, 188 between node 1 the "Filter" node and node 2 the "Type" node
-    Then I validate there are 3 links on the canvas
+    #Then I delete node link at 335, 188 between node 1 the "Filter" node and node 2 the "Type" node
     Then I delete node 1 the "Filter" node
     Then I delete comment 1 linked to the "Type" node with the comment text "this comment box should be linked to the type node"
-    # defect 111 prevents link from being deleted and the following to fail.  There should be 1 link left after this.
-    #Then I validate there are 3 links on the canvas
     Then I delete node 1 the "Type" node
-    # see defect 111 about, this should be 0 links
-    #Then I validate there are 0 links on the canvas
     Then I delete node 1 the "C5.0" node
     Then I delete node 1 the "Neural Net" node
     Then I delete comment 1 linked to the "Canvas" node with the comment text "This is the functional test canvas that we build through automated test cases.  This comment is meant to simulate a typical comment for annotating the entire canvas."

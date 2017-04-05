@@ -22,7 +22,7 @@ script:
   - ./canvas_modules/common-canvas/build.sh
   - ./canvas_modules/common-properties/build.sh
   - ./canvas_modules/harness/build.sh
-after-success:
+after_success:
     - ./canvas_modules/harness/functional_test.sh
 before_deploy:
   - npm install @dap/dap-deploy
