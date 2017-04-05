@@ -31,7 +31,7 @@ const nodes = (state = [], action) => {
         inputPorts: action.data.inputPorts,
         xPos: action.data.xPos,
         yPos: action.data.yPos,
-        objectData: {desccription: "", label: action.data.label}
+        objectData: {description: "", label: action.data.label}
       };
       return [
           ...state,
