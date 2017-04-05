@@ -33,7 +33,7 @@ class ContextMenuWrapper extends React.Component {
 
   render() {
     // Offset the context menu poisiton by 4 pixels. This moves the menu
-    // underneat the pointer. On Firefox this stops the menu from immediately
+    // underneath the pointer. On Firefox this stops the menu from immediately
     // disappearing becasue on FF the handleClickOutside is fired because the
     // mouse pointer is outside of the conetxt menu. On Chrome and Safari
     // (on the Mac) the system does not think the pointer is outside the menu.

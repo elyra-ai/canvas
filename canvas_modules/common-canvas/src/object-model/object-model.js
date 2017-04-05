@@ -498,16 +498,21 @@ export default class ObjectModel  {
   static linkNodes(data) {
     data.nodes.forEach((srcNodeId) => {
       data.targetNodes.forEach((trgNodeId) => {
-        if (ObjectModel.connectionIsAllowed(srcNodeId, trgNodeId)) {
-          let info = {};
-          info.id = getUUID();
-          info.linkType = data.linkType;
-          info.srcNodeId = srcNodeId;
-          info.trgNodeId = trgNodeId;
-          store.dispatch({type: "ADD_LINK", data: info});
-        }
+        this.linkNodesById(srcNodeId, trgNodeId);
       });
     });
+  }
+
+  static linkNodesById(srcNodeId, trgNodeId) {
+    if (ObjectModel.connectionIsAllowed(srcNodeId, trgNodeId)) {
+      let info = {};
+      info.id = getUUID();
+      info.linkType = data.linkType;
+      info.srcNodeId = srcNodeId;
+      info.trgNodeId = trgNodeId;
+      store.dispatch({type: "ADD_LINK", data: info});
+    }
+
   }
 
   static linkComment(data) {
