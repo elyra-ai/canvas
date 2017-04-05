@@ -87,7 +87,6 @@ class App extends React.Component {
 
 		// common-canvas
 		this.contextMenuHandler = this.contextMenuHandler.bind(this);
-		this.deleteObjectsActionHandler = this.deleteObjectsActionHandler.bind(this);
 		this.contextMenuActionHandler = this.contextMenuActionHandler.bind(this);
 		this.editActionHandler = this.editActionHandler.bind(this);
 		this.clickActionHandler = this.clickActionHandler.bind(this);
@@ -95,6 +94,7 @@ class App extends React.Component {
 
 		this.applyDiagramEdit = this.applyDiagramEdit.bind(this);
 		this.applyPropertyChanges = this.applyPropertyChanges.bind(this);
+		this.deleteObjectsActionHandler = this.deleteObjectsActionHandler.bind(this);
 		this.nodeEditHandler = this.nodeEditHandler.bind(this);
 		this.refreshContent = this.refreshContent.bind(this);
 
@@ -552,7 +552,7 @@ class App extends React.Component {
 							</a>
 						</li>
 						<li className="navbar-li nav-divider action-bar-sidepanel"
-							id="action-bar-sidepanel"	data-tip="Common Canvas"
+							id="action-bar-sidepanel-canvas"	data-tip="Common Canvas"
 						>
 							<a onClick={this.sidePanelCanvas.bind(this) }>
 								<Isvg id="action-bar-panel"

@@ -37,12 +37,12 @@ module.exports = function() {
 		browser.pause(1000);
 		specificComment.setValue("", comment);
 		browser.pause(500);
-		browser.leftClick("#canvas-div", 400, 400);
+		browser.leftClick("#common-canvas", 400, 400);
 
 		// Start Validation
 		browser.pause(500);
 		// verify commentis in the canvas DOM
-		var commentValue = browser.$("#canvas-div").$$("textarea")[index].getValue();
+		var commentValue = browser.$("#common-canvas").$$("textarea")[index].getValue();
 		expect(commentValue).toEqual(comment);
 
 		// verify that the comment is in the internal object model
@@ -63,14 +63,14 @@ module.exports = function() {
 	this.Then(/^I delete comment (\d+) linked to the "([^"]*)" node with the comment text "([^"]*)"$/,
 	function(commentIndex, nodeName, comment) {
 		var commentNumber = commentIndex - 1;
-		browser.$("#canvas-div").$$(".comment-inner-box")[commentNumber].rightClick();
+		browser.$("#common-canvas").$$(".comment-inner-box")[commentNumber].rightClick();
 		browser.$(".context-menu-popover").$$(".react-context-menu-item")[0].$(".react-context-menu-link").click();
 
 		// Start Validation
 		browser.pause(1000);
 		// verify comment is not in the canvas DOM
 		var count = 0;
-		var commentElements = browser.$("#canvas-div").$$("textarea");
+		var commentElements = browser.$("#common-canvas").$$("textarea");
 		for (var idx = 0; idx < commentElements.length; idx++) {
 			if (commentElements[idx] === comment) {
 				count++;
