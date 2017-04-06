@@ -1295,7 +1295,11 @@ export default class DiagramCanvas extends React.Component {
 
     if (this.props.canvas.diagram.nodes.length == 0 &&
         this.props.canvas.diagram.comments.length == 0) {
-      emptyCanvas = <div id="empty-canvas" onContextMenu={this.canvasContextMenu}> <img src={BlankCanvasImage}></img></div>;
+      emptyCanvas = <div id="empty-canvas" onContextMenu={this.canvasContextMenu}>
+				<img src={BlankCanvasImage} className="placeholder-image"></img>
+					<span className="placeholder-text">Your flow is empty!</span>
+					<span className="placeholder-link">Click here to take a tour</span>
+				</div>;
     }
 /*
 <marker id="markerArrow" markerWidth={13} markerHeight={13} refX={2} refY={6} orient="auto">

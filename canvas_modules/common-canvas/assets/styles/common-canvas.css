@@ -57,11 +57,37 @@
 }
 
 #empty-canvas {
-    width: 414px;
-    height: 450px;
+    width: 250px;
+    /*height: 450px;*/
     position: absolute;
-    left: 27%;
+    left: 31%;
     top: 20%;
+    float: right;
+}
+
+.placeholder-image {
+  margin-left:auto;
+  margin-right:auto;
+  display:block;
+}
+
+.placeholder-link{
+  display: block;
+  color: #1d3649;
+  opacity: 0.2;
+  font-size: 20px;
+  font-family: IBMHLVMedium;
+  text-align:center;
+  text-decoration:underline;
+}
+
+.placeholder-text {
+  display: block;
+  color: #1d3649;
+  opacity: 0.2;
+  font-size: 20px;
+  font-family: IBMHLVMedium;
+  text-align:center;
 }
 
 /* Canvas Styles */
