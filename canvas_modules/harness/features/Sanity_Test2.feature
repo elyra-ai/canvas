@@ -21,4 +21,6 @@ Feature: Canvas Sanity test from loaded file
     Then I delete node link at 380, 240 between node 3 the "Filter" node and node 4 the "Type" node
     Then I link node 6 the "Filter" node to node 7 the "Field Reorder" node for link 11 on the canvas
     Then I link node 8 the "Sort" node to node 1 the "Type" node for link 12 on the canvas
+    Then I select node 2 the "Derive" node
+    Then I disconnect links for node 3 a "C5.0" on the canvas
 		Then I pause for 3 seconds

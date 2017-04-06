@@ -11,7 +11,7 @@
 ** divested of its trade secrets, irrespective of what has been
 ** deposited with the U.S. Copyright Office.
 *****************************************************************/
-import { getEventLogCount, getObjectModelCount, isObjectModelEmpty } from "./utilities/validateUtil.js";
+import { getEventLogCount, getObjectModelCount, isObjectModelEmpty, deleteLinkInObjectModel, getNodeIdFromObjectModel } from "./utilities/validateUtil.js";
 import { getHarnessData } from "./utilities/HTTPClient.js";
 import { simulateDragDrop } from "./utilities/DragAndDrop.js";
 
@@ -514,6 +514,24 @@ module.exports = function() {
 		var nodeNumber = nodeIndex - 1;
 		browser.$("#canvas-div").$$(".node-inner-circle")[nodeNumber].click();
 	});
+      
+    // Then I disconnect links for node 1 a "Var. File" node on the canvas
+	//
+    this.Then(/^I disconnect links for node (\d+) a "([^"]*)" on the canvas$/, function (nodeIndex, nodeName) {
+        var nodeNumber = nodeIndex - 1;
+		browser.$("#canvas-div").$$(".node-inner-circle")[nodeNumber].rightClick();
+        browser.$(".context-menu-popover").$$(".react-context-menu-item")[1].$(".react-context-menu-link").click();
+        
+        
+        // verify that the link is Not in the internal object model
+		browser.pause(500);
+		browser.timeoutsAsyncScript(5000);
+		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
+		var nodeId = browser.execute(getNodeIdFromObjectModel, objectModel.value, nodeNumber);
+		var returnVal = browser.execute(deleteLinkInObjectModel, objectModel.value, nodeId.value);
+		expect(returnVal.value).toBe(0);
+    });
+    
 
 	// Then I delete node 1 the "Var. File" node
 	//
