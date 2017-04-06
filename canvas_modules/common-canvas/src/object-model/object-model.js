@@ -498,16 +498,16 @@ export default class ObjectModel  {
   static linkNodes(data) {
     data.nodes.forEach((srcNodeId) => {
       data.targetNodes.forEach((trgNodeId) => {
-        this.linkNodesById(srcNodeId, trgNodeId);
+        this.linkNodesById(srcNodeId, trgNodeId, data.linkType);
       });
     });
   }
 
-  static linkNodesById(srcNodeId, trgNodeId) {
+  static linkNodesById(srcNodeId, trgNodeId, linkType) {
     if (ObjectModel.connectionIsAllowed(srcNodeId, trgNodeId)) {
       let info = {};
       info.id = getUUID();
-      info.linkType = data.linkType;
+      info.linkType = linkType;
       info.srcNodeId = srcNodeId;
       info.trgNodeId = trgNodeId;
       store.dispatch({type: "ADD_LINK", data: info});
