@@ -384,6 +384,8 @@ export default class DiagramCanvas extends React.Component {
   }
 
   dragStart(event) {
+		// console.log("diagram-canvas dragStart()");
+
     this.closeContextMenu();
 
     let selectRegion = (event.dataTransfer.getData(DND_DATA_TEXT) == "");
@@ -694,7 +696,7 @@ export default class DiagramCanvas extends React.Component {
   }
 
   moveNode(nodeId, offsetX, offsetY) {
-    //console.log("moveNode():x=" + offsetX + ",y=" + offsetY);
+    // console.log("moveNode():x=" + offsetX + ",y=" + offsetY);
     this.moveNodes(this.ensureSelected(nodeId), offsetX, offsetY);
   }
 

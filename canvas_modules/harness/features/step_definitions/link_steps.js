@@ -35,7 +35,7 @@ module.exports = function() {
 	browser.execute(simulateDragDrop, ".node-circle", orgNodeNumber, ".node-inner-circle", destNodeNumber, 1, 1);
 
 	// Start Validation
-	browser.pause(500);
+	browser.pause(1500);
 	var linkCount = Number(canvasLinks);
 	// verify link is in the canvas DOM
 	var dataLinks = browser.$$(".canvas-data-link").length;
@@ -67,7 +67,7 @@ module.exports = function() {
 		browser.execute(simulateDragDrop, ".comment-box", commentIndex, ".node-inner-circle", nodeIndex, 1, 1);
 
 		// Start Validation
-		browser.pause(500);
+		browser.pause(1000);
 		var linkCount = Number(canvasLinks);
 		// verify link is in the canvas DOM
 		var dataLinks = browser.$$(".canvas-data-link").length;

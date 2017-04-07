@@ -13,6 +13,7 @@
 *****************************************************************/
 import { getEventLogCount, getObjectModelCount } from "./utilities/validateUtil.js";
 import { getHarnessData } from "./utilities/HTTPClient.js";
+import { simulateDragDrop } from "./utilities/DragAndDrop.js";
 
 /* global browser */
 
@@ -89,5 +90,14 @@ module.exports = function() {
 		returnVal = browser.execute(getEventLogCount, eventLog.value, "action: deleteObjects", 	comment);
 		expect(returnVal.value).toBe(1);
 	});
+
+	// Then I move comment 1 onto the canvas by 50, 50
+	// this moves the comment a delta of x +50px and y +50px
+	//
+	this.Then(/^I move comment (\d+) onto the canvas by \-?(\d+), \-?(\d+)$/,
+		function(nodeIndex, canvasX, canvasY) {
+			var nodeNumber = nodeIndex - 1;
+			browser.execute(simulateDragDrop, ".comment-inner-box", nodeNumber, "#canvas-div", 0, canvasX, canvasY);
+		});
 
 };

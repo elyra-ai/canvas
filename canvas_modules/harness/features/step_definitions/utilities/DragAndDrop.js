@@ -23,12 +23,8 @@ function simulateDragDrop(sourceSelector, sourceIndex, destinationSelector, dest
 				// console.log("setDragImage");
 			}
 		};
-		if (clientX) {
-			custEvent.clientX = clientX;
-		}
-		if (clientY) {
-			custEvent.clientY = clientY;
-		}
+		custEvent.clientX = clientX;
+		custEvent.clientY = clientY;
 
 		return custEvent;
 	}
@@ -57,13 +53,12 @@ function simulateDragDrop(sourceSelector, sourceIndex, destinationSelector, dest
 	var sourceNode = getElementFromSelector(sourceSelector, sourceIndex);
 	var destinationNode = getElementFromSelector(destinationSelector, destinationIndex);
 
-	var event = createCustomEvent(EVENT_TYPES.DRAG_START);
+	var event = createCustomEvent(EVENT_TYPES.DRAG_START, 0, 0);
 	dispatchEvent(sourceNode, EVENT_TYPES.DRAG_START, event);
 
 	var dropEvent = createCustomEvent(EVENT_TYPES.DROP, dropEventClientX, dropEventClientY);
 	dropEvent.dataTransfer = event.dataTransfer;
 	dispatchEvent(destinationNode, EVENT_TYPES.DROP, dropEvent);
-
 	var dragEndEvent = createCustomEvent(EVENT_TYPES.DRAG_END);
 	dragEndEvent.dataTransfer = event.dataTransfer;
 	dispatchEvent(sourceNode, EVENT_TYPES.DRAG_END, dragEndEvent);

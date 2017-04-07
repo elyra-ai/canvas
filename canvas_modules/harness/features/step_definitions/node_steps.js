@@ -476,7 +476,6 @@ module.exports = function() {
 		browser.$(".palette-content").$("div")
 		.$$("div")[categoryIndex].click();
 		// drag the var file node to the canvas
-		// browser.execute(dragNodeDropOnCanvas, "palette-grid-node-outer", nodeIndex, canvasX, canvasY );
 		const nodeIndex = nodePosition[nodeType];
 		browser.execute(simulateDragDrop, ".palette-grid-node-outer", nodeIndex, "#canvas-div", 0, canvasX, canvasY);
 		// close the palette
@@ -544,6 +543,15 @@ module.exports = function() {
 		returnVal = browser.execute(getEventLogCount, eventLog.value, "action: deleteObjects", nodeType);
 		expect(returnVal.value).toBe(1);
 	});
+
+	// Then I move node 1 a "Field Reorder" node onto the canvas by 50, 50
+	// this moves the node a delta of x +50px and y +50px
+	//
+	this.Then(/^I move node (\d+) a "([^"]*)" node onto the canvas by \-?(\d+), \-?(\d+)$/,
+		function(nodeIndex, nodeName, canvasX, canvasY) {
+			var nodeNumber = nodeIndex - 1;
+			browser.execute(simulateDragDrop, ".node-inner-circle", nodeNumber, "#canvas-div", 0, canvasX, canvasY);
+		});
 
 	// Then I expect the object model to be empty
 	//
