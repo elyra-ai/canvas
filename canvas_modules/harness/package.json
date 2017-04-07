@@ -26,7 +26,8 @@
     "react-dom": "15.3.2",
     "react-inlinesvg": "0.4.2",
     "react-intl": "2.2.3",
-    "react-tooltip": "3.2.6"
+    "react-tooltip": "3.2.6",
+    "react-file-download": "0.3.2"
   },
   "devDependencies": {
     "@dap/eslint-config-portal-common": "0.0.9",

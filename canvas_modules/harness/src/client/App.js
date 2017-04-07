@@ -11,6 +11,7 @@
 import React from "react";
 import Isvg from "react-inlinesvg";
 import ReactTooltip from "react-tooltip";
+import ReactFileDownload from "react-file-download";
 import { IntlProvider, FormattedMessage, addLocaleData } from "react-intl";
 import en from "react-intl/locale-data/en";
 var i18nData = require("../intl/en.js");
@@ -36,7 +37,7 @@ import listview32 from "../graphics/list-view_32.svg";
 import addnew32 from "../graphics/add-new_32.svg";
 import close32 from "../graphics/close_32.svg";
 import play32 from "../graphics/play_32.svg";
-import save32 from "../graphics/save_32.svg";
+import download32 from "../graphics/save_32.svg";
 import createNew32 from "../graphics/create-new_32.svg";
 import edit32 from "../graphics/edit_32.svg";
 import justify32 from "../graphics/justify_32.svg";
@@ -71,7 +72,7 @@ class App extends React.Component {
 		this.addNode = this.addNode.bind(this);
 		this.delete = this.delete.bind(this);
 		this.run = this.run.bind(this);
-		this.save = this.save.bind(this);
+		this.download = this.download.bind(this);
 
 		this.openPalette = this.openPalette.bind(this);
 		this.closePalette = this.closePalette.bind(this);
@@ -205,10 +206,10 @@ class App extends React.Component {
 		this.log("run() clicked");
 	}
 
-	save() {
-		// var canvas = ObjectModel.getCanvas();
-		// console.log(canvas);
-	}
+	download() {
+      var canvas = JSON.stringify(ObjectModel.getCanvas(),null, 2);
+			ReactFileDownload(canvas,'canvas.json');
+  }
 
 	openPalette() {
 		if (this.state.paletteNavEnabled) {
@@ -534,10 +535,10 @@ class App extends React.Component {
 								/>
 							</a>
 						</li>
-						<li className="navbar-li" data-tip="save">
-							<a onClick={this.save.bind(this) }>
-								<Isvg id="action-bar-save"
-									src={save32}
+						<li className="navbar-li" data-tip="download">
+							<a onClick={this.download.bind(this) }>
+								<Isvg id="action-bar-download"
+									src={download32}
 								/>
 							</a>
 						</li>
