@@ -206,8 +206,8 @@ class App extends React.Component {
 	}
 
 	save() {
-		//var canvas = ObjectModel.getCanvas();
-		console.log(canvas);
+		// var canvas = ObjectModel.getCanvas();
+		// console.log(canvas);
 	}
 
 	openPalette() {
