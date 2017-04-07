@@ -23,4 +23,6 @@ Feature: Canvas Sanity test from loaded file
     Then I link node 8 the "Sort" node to node 1 the "Type" node for link 12 on the canvas
     Then I select node 2 the "Derive" node
     Then I disconnect links for node 3 a "C5.0" on the canvas
+    Then I move node 4 a "Neural Net" node onto the canvas by 50, 50
+    Then I move comment 3 onto the canvas by 100, 100
 		Then I pause for 3 seconds
