@@ -118,6 +118,7 @@ class App extends React.Component {
 
 	setDiagramJSON(diagramJson) {
 		ObjectModel.setCanvas(diagramJson);
+		TestService.postCanvas(diagramJson);
 		this.log("Canvas diagram set");
 	}
 

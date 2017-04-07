@@ -42,6 +42,20 @@ function containLinkInObjectModel(objectModel, srcNodeId, destNodeId) {
 	return count;
 }
 
+// delete links in object model that have node ids.
+//
+function deleteLinkInObjectModel(objectModel, nodeId) {
+	var count = 0;
+	var omJson = JSON.parse(objectModel);
+	var links = omJson.diagram.links;
+	for (var lidx = 0; lidx < links.length; lidx++) {
+		if (links[lidx].source === nodeId) {
+			count++;
+		}
+	}
+	return count;
+}
+
 // return the comment id from the object model
 //
 function getCommentIdFromObjectModel(objectModel, commentIndex) {
@@ -124,6 +138,7 @@ function isObjectModelEmpty(objectModel) {
 module.exports = {
 	containLinkEvent: containLinkEvent,
 	containLinkInObjectModel: containLinkInObjectModel,
+    deleteLinkInObjectModel: deleteLinkInObjectModel,
 	getCommentIdFromObjectModel: getCommentIdFromObjectModel,
 	getEventLogCount: getEventLogCount,
 	getLinkEventCount: getLinkEventCount,
