@@ -36,6 +36,7 @@ import listview32 from "../graphics/list-view_32.svg";
 import addnew32 from "../graphics/add-new_32.svg";
 import close32 from "../graphics/close_32.svg";
 import play32 from "../graphics/play_32.svg";
+import save32 from "../graphics/save_32.svg";
 import createNew32 from "../graphics/create-new_32.svg";
 import edit32 from "../graphics/edit_32.svg";
 import justify32 from "../graphics/justify_32.svg";
@@ -70,6 +71,7 @@ class App extends React.Component {
 		this.addNode = this.addNode.bind(this);
 		this.delete = this.delete.bind(this);
 		this.run = this.run.bind(this);
+		this.save = this.save.bind(this);
 
 		this.openPalette = this.openPalette.bind(this);
 		this.closePalette = this.closePalette.bind(this);
@@ -201,6 +203,11 @@ class App extends React.Component {
 
 	run() {
 		this.log("run() clicked");
+	}
+
+	save() {
+		//var canvas = ObjectModel.getCanvas();
+		console.log(canvas);
 	}
 
 	openPalette() {
@@ -524,6 +531,13 @@ class App extends React.Component {
 							<a onClick={this.run.bind(this) }>
 								<Isvg id="action-bar-run"
 									src={play32}
+								/>
+							</a>
+						</li>
+						<li className="navbar-li" data-tip="save">
+							<a onClick={this.save.bind(this) }>
+								<Isvg id="action-bar-save"
+									src={save32}
 								/>
 							</a>
 						</li>
