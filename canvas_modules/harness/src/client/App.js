@@ -207,9 +207,9 @@ class App extends React.Component {
 	}
 
 	download() {
-      var canvas = JSON.stringify(ObjectModel.getCanvas(),null, 2);
-			ReactFileDownload(canvas,'canvas.json');
-  }
+      var canvas = JSON.stringify(ObjectModel.getCanvas(), null, 2);
+			ReactFileDownload(canvas, "canvas.json");
+	}
 
 	openPalette() {
 		if (this.state.paletteNavEnabled) {
