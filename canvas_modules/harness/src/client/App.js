@@ -207,7 +207,7 @@ class App extends React.Component {
 	}
 
 	download() {
-    var canvas = JSON.stringify(ObjectModel.getCanvas(), null, 2);
+		var canvas = JSON.stringify(ObjectModel.getCanvas(), null, 2);
 		ReactFileDownload(canvas, "canvas.json");
 	}
 
