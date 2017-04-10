@@ -79,6 +79,7 @@
   font-family: IBMHLVMedium;
   text-align:center;
   text-decoration:underline;
+  cursor: pointer;
 }
 
 .placeholder-text {

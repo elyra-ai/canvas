@@ -104,6 +104,8 @@ export default class DiagramCanvas extends React.Component {
 
     this.getConnctionArrowHeads = this.getConnctionArrowHeads.bind(this);
     this.createNodeFromDataAt = this.createNodeFromDataAt.bind(this);
+
+		this.handlePlaceholderLinkClick = this.handlePlaceholderLinkClick.bind(this);
   }
 
   componentDidMount() {
@@ -1158,6 +1160,17 @@ export default class DiagramCanvas extends React.Component {
     });
   }
 
+	handlePlaceholderLinkClick(e){
+console.log('handlePlaceholderLinkClick');
+if(chmln){
+   console.log('handlePlaceholderLinkClick: chmln available');
+   chmln.show('58dd4521aa443a000420799e');
+   }else{
+    console.log('handlePlaceholderLinkClick:no chmln');
+   }
+
+}
+
   render() {
     // Hard code for now but should eventually be picked up from the diagram
     // once we're using Modeler 18.1.
@@ -1300,7 +1313,8 @@ export default class DiagramCanvas extends React.Component {
       emptyCanvas = <div id="empty-canvas" onContextMenu={this.canvasContextMenu}>
 				<img src={BlankCanvasImage} className="placeholder-image"></img>
 					<span className="placeholder-text">Your flow is empty!</span>
-					<span className="placeholder-link">Click here to take a tour</span>
+						<span className="placeholder-link" onClick={this.handlePlaceholderLinkClick}
+>Click here to take a tour</span>
 				</div>;
     }
 /*
