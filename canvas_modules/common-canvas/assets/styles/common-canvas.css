@@ -246,8 +246,8 @@
   position: absolute;
   bottom: 35px;
   left: 60px;
-  width: 351px;   /* Set default width to show two columns of nodes in grid view. */
-                  /* width = (2 * grid_node_width) + category_min_width + (2 * hoverZoneSize)*/
+  width: 463px;   /* Set default width to show three columns of nodes in grid view. */
+                  /* width = (3 * grid_node_width) + category_min_width + (3 * hoverZoneSize)*/
   height: 376px;  /* If this is changed see palette-content height below */
                   /* height = (3 * grid_node_height) + (2 * hoverZoneSize) + palette-topbar height + padding */
   font: 12px sans-serif;
