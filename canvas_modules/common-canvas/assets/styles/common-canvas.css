@@ -246,7 +246,7 @@
   position: absolute;
   bottom: 35px;
   left: 60px;
-  width: 463px;   /* Set default width to show three columns of nodes in grid view. */
+  width: 473px;   /* Set default width to show three columns of nodes in grid view. */
                   /* width = (3 * grid_node_width) + category_min_width + (3 * hoverZoneSize)*/
   height: 376px;  /* If this is changed see palette-content height below */
                   /* height = (3 * grid_node_height) + (2 * hoverZoneSize) + palette-topbar height + padding */
@@ -323,8 +323,8 @@
   color: #e0e0e0;
   background-color: #284B60;
   font-size: 10pt;
-  width: 120px;
-  min-width: 120px; /* Set a min-width to ensure space for the scroll bar when it is displayed */
+  width: 130px;
+  min-width: 130px; /* Set a min-width to ensure space for the scroll bar when it is displayed */
 }
 
 .palette-category {
@@ -351,8 +351,8 @@
   border-color: #60C3B9;
   border-width:0 0 0 2px;
   border-style: solid;
-  width:120px;
-  min-width: 120px;
+  width:130px;
+  min-width: 130px;
   padding-left:8px;
   padding-top: 10px;
   padding-bottom: 10px;
