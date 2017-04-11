@@ -26,7 +26,6 @@ import CanvasUtils from '../utils/canvas-utils.js';
 import BlankCanvasImage from '../assets/images/blank_canvas.png'
 
 
-
 const NODE_BORDER_SIZE = 2; // see common-canvas.css, .canvas-node
 const CELL_SIZE = 48;
 const NODE_WIDTH = 66;
@@ -42,7 +41,6 @@ const CONTEXT_MENU_PADDING = 5; // see common-canvas.css .react-context-menu pad
 const CONTEXT_MENU_LINK_HEIGHT = 29; // see common-canvas.css .react-context-menu-link height
 const CONTEXT_MENU_MIN_WIDTH = 160; // see common-canvas.css .react-context-menu min-width
 
-// const ZOOM_FACTORS = [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.25, 1.5, 1.75, 2.0, 2.4];
 const ZOOM_DEFAULT_VALUE = 100;
 const ZOOM_MAX_VALUE = 240;
 const ZOOM_MIN_VALUE = 40;
@@ -105,15 +103,10 @@ export default class DiagramCanvas extends React.Component {
     this.getConnctionArrowHeads = this.getConnctionArrowHeads.bind(this);
     this.createNodeFromDataAt = this.createNodeFromDataAt.bind(this);
 
-		this.handlePlaceholderLinkClick = this.handlePlaceholderLinkClick.bind(this);
+    this.handlePlaceholderLinkClick = this.handlePlaceholderLinkClick.bind(this);
   }
 
   componentDidMount() {
-    // var markerNode = React.findDOMNode(this.refs.Triangle);
-    // markerNode.setAttribute('markerWidth', 10);
-    // markerNode.setAttribute('markerHeight', 10);
-    // markerNode.setAttribute('refX', 9);
-    // markerNode.setAttribute('refY', 5);
   }
 
   componentWillReceiveProps(newProps) {
@@ -165,10 +158,10 @@ export default class DiagramCanvas extends React.Component {
       zoom = ZOOM_MAX_VALUE;
     }
 
-		this.props.editActionHandler({
-			editType: 'zoomCanvas',
-			value: zoom
-		});
+    this.props.editActionHandler({
+      editType: 'zoomCanvas',
+      value: zoom
+    });
 
     this.setState({zoom: zoom});
   }
@@ -181,10 +174,10 @@ export default class DiagramCanvas extends React.Component {
       zoom = ZOOM_MIN_VALUE;
     }
 
-		this.props.editActionHandler({
-			editType: 'zoomCanvas',
-			value: zoom
-		});
+    this.props.editActionHandler({
+      editType: 'zoomCanvas',
+      value: zoom
+    });
 
     this.setState({zoom: zoom});
   }
@@ -203,66 +196,57 @@ export default class DiagramCanvas extends React.Component {
     return Math.round(10 * this.zoom());
   }
 
-	// Dagre AutoLayout
-	autoLayout(direction) {
-		var lookup = this.dagreAutolayout(direction);
-		let zoom = this.zoom();
-		this.props.canvas.diagram.nodes.map((node, ind:number) => {
-			var offsetX = lookup[node.id].value.x - node.xPos;
-			var offsetY = lookup[node.id].value.y - node.yPos;
+  // Dagre AutoLayout
+  autoLayout(direction) {
+    var lookup = this.dagreAutolayout(direction);
+    let zoom = this.zoom();
+    this.props.canvas.diagram.nodes.map((node, ind:number) => {
+      var offsetX = lookup[node.id].value.x - node.xPos;
+      var offsetY = lookup[node.id].value.y - node.yPos;
 
-			this.moveNodes([node.id],
-				Math.round(offsetX / zoom),
-				Math.round(offsetY / zoom));
-		});
-	}
+      this.moveNodes([node.id],
+        Math.round(offsetX / zoom),
+        Math.round(offsetY / zoom));
+    });
+  }
 
-	dagreAutolayout(direction) {
-		var edges = [];
-		edges = this.props.canvas.diagram.links.map((link, ind:number) => {
-			var edge = {"v":link.source,"w":link.target,"value":{"points":[]}};
+  dagreAutolayout(direction) {
+    var edges = [];
+    edges = this.props.canvas.diagram.links.map((link, ind:number) => {
+      return {"v":link.source,"w":link.target,"value":{"points":[]}};
+    });
 
-			return (
-				edge
-			);
-		});
+    var nodes = [];
+    nodes = this.props.canvas.diagram.nodes.map((node, ind:number) => {
+      return {"v":node.id, "value":{}};
+    });
 
-		var nodes = [];
-		nodes = this.props.canvas.diagram.nodes.map((node, ind:number) => {
-			var node = {"v":node.id, "value":{}};
-			return (
-				node
-			);
-		});
+    //possible values: TB, BT, LR, or RL, where T = top, B = bottom, L = left, and R = right.
+    //default TB for vertical layout
+    //set to LR for horizontal layout
+    var value = {};
+    var directionList = ["TB", "BT", "LR", "RL"];
+    if (directionList.indexOf(direction) >= 0) {
+      value = {"rankDir":direction};
+    }
 
-		//possible values: TB, BT, LR, or RL, where T = top, B = bottom, L = left, and R = right.
-		//default TB for vertical layout
-		//set to LR for horizontal layout
-		var value = {};
-		var directionList = ["TB", "BT", "LR", "RL"];
-		if (directionList.indexOf(direction) >= 0) {
-			value = {"rankDir":direction};
-		}
+    var inputGraph = {nodes, edges, value};
 
-		var inputGraph = {nodes, edges, value};
-		// console.log("inputGraph is = " + JSON.stringify(inputGraph));
+    var g = dagre.graphlib.json.read(inputGraph);
+    g.graph().marginx = 100;
+    g.graph().marginy = 25;
+    g.graph().nodesep = 100; //distance to separate the nodes horiziontally
+    g.graph().ranksep = 100; //distance between each rank of nodes
+    dagre.layout(g);
 
-		var g = dagre.graphlib.json.read(inputGraph);
-		g.graph().marginx = 100;
-		g.graph().marginy = 25;
-		g.graph().nodesep = 100; //distance to separate the nodes horiziontally
-		g.graph().ranksep = 100; //distance between each rank of nodes
-		dagre.layout(g);
+    var outputGraph = dagre.graphlib.json.write(g);
 
-		var outputGraph = dagre.graphlib.json.write(g);
-		// console.log("outputGraph: " + JSON.stringify(outputGraph));
-
-		var lookup = {};
-		for (var i = 0, len = outputGraph.nodes.length; i < len; i++) {
-			lookup[outputGraph.nodes[i].v] = outputGraph.nodes[i];
-		}
-		return lookup;
-	}
+    var lookup = {};
+    for (var i = 0, len = outputGraph.nodes.length; i < len; i++) {
+      lookup[outputGraph.nodes[i].v] = outputGraph.nodes[i];
+    }
+    return lookup;
+  }
 
   // ----------------------------------
 
@@ -279,22 +263,12 @@ export default class DiagramCanvas extends React.Component {
   }
 
   mouseCoords(event) {
-    //console.log("mouseCoords");
     let rect = event.currentTarget.getBoundingClientRect();
-    //console.log(event.clientX);
-    //console.log(event.clientY);
-    //console.log(rect);
+
     return {
       x: event.clientX - Math.round(rect.left),
       y: event.clientY - Math.round(rect.top)
     };
-
-    /*
-    return {
-      x: event.clientX + document.body.scrollLeft - document.body.clientLeft,
-      y: event.clientY + document.body.scrollTop - document.body.clientTop
-    };
-    */
   }
 
   getPosition(element) {
@@ -319,12 +293,7 @@ export default class DiagramCanvas extends React.Component {
   // Mouse event Handlers
 
   drop(event) {
-    // console.log("DiagramCanvas.drop(): x=" + event.clientX + ",y=" + event.clientY + ", target=" + event.target + ", currentTarget=" + event.currentTarget);
-    // console.log("DiagramCanvas.drop(): page x=" + event.pageX + ",page y=" + event.pageY);
-    // console.log(event);
-
     event.preventDefault();
-    //event.stopPropagation();
 
     let jsVal = this.getDNDJson(event);
     let zoom = this.zoom();
@@ -386,8 +355,6 @@ export default class DiagramCanvas extends React.Component {
   }
 
   dragStart(event) {
-		// console.log("diagram-canvas dragStart()");
-
     this.closeContextMenu();
 
     let selectRegion = (event.dataTransfer.getData(DND_DATA_TEXT) == "");
@@ -397,7 +364,6 @@ export default class DiagramCanvas extends React.Component {
 
     let dragMode = null;
 
-    // console.log(selectRegion);
     if (selectRegion) {
       // Need to force an update on the dataTransfer object
       event.dataTransfer.setData(DND_DATA_TEXT, SELECT_REGION_DATA);
@@ -423,19 +389,13 @@ export default class DiagramCanvas extends React.Component {
     }
     event.dataTransfer.effectAllowed = 'all';
 
-    // console.log("dragStart: dragMode=" + dragMode);
-
     this.refs.svg_canvas.notifyDragStart(dragMode, x, y);
   }
 
   drag(event) {
-    // console.log("DiagramCanvas.drag(): x=" + event.clientX + ",y=" + event.clientY);
-    //event.dataTransfer.dropEffect = 'move';
   }
 
   dragEnd(event) {
-    // console.log("DiagramCanvas.dragEnd(): x=" + event.clientX + ",y=" + event.clientY + ", target=" + event.target);
-
     this.refs.svg_canvas.notifyDragEnd();
   }
 
@@ -517,49 +477,46 @@ export default class DiagramCanvas extends React.Component {
   }
 
   repositionContextMenu(mousePos, menu) {
-		var ccScrollTop = document.getElementById("common-canvas").scrollTop;
-		var ccScrollLeft = document.getElementById("common-canvas").scrollLeft;
+    var ccScrollTop = document.getElementById("common-canvas").scrollTop;
+    var ccScrollLeft = document.getElementById("common-canvas").scrollLeft;
 
-		var commonCanvasRect = document.getElementById("common-canvas").getBoundingClientRect();
-		var windowHeight = commonCanvasRect.height;
-		var windowWidth = commonCanvasRect.width;
+    var commonCanvasRect = document.getElementById("common-canvas").getBoundingClientRect();
+    var windowHeight = commonCanvasRect.height;
+    var windowWidth = commonCanvasRect.width;
 
-		var menuSize = this.calculateContextMenuSize(menu);
+    var menuSize = this.calculateContextMenuSize(menu);
 
-		// Reposition contextMenu if it will show off the screen
-		if (Math.round(mousePos.y - ccScrollTop + menuSize.height) > windowHeight) {
-			this.contextMenuSource.mousePos.y = mousePos.y - menuSize.height;
-		}
-		if (Math.round(mousePos.x - ccScrollLeft + menuSize.width) > windowWidth) {
-			this.contextMenuSource.mousePos.x = mousePos.x - menuSize.width;
-		}
+    // Reposition contextMenu if it will show off the screen
+    if (Math.round(mousePos.y - ccScrollTop + menuSize.height) > windowHeight) {
+      this.contextMenuSource.mousePos.y = mousePos.y - menuSize.height;
+    }
+    if (Math.round(mousePos.x - ccScrollLeft + menuSize.width) > windowWidth) {
+      this.contextMenuSource.mousePos.x = mousePos.x - menuSize.width;
+    }
   }
 
-	calculateContextMenuSize(menu) {
-		var numDividers = 0;
-		for (let i = 0; i < menu.length; ++i) {
-			const divider = menu[i].divider;
-			if (divider) {
-				numDividers++;
-			}
-		}
+  calculateContextMenuSize(menu) {
+    var numDividers = 0;
+    for (let i = 0; i < menu.length; ++i) {
+      const divider = menu[i].divider;
+      if (divider) {
+        numDividers++;
+      }
+    }
 
-		var menuSize = {
-			height: ((menu.length - numDividers) * CONTEXT_MENU_LINK_HEIGHT) +
-				(CONTEXT_MENU_MARGIN + CONTEXT_MENU_BORDER + CONTEXT_MENU_PADDING),
-			width: CONTEXT_MENU_MIN_WIDTH - (CONTEXT_MENU_MARGIN + CONTEXT_MENU_BORDER + CONTEXT_MENU_PADDING)
-		};
+    var menuSize = {
+      height: ((menu.length - numDividers) * CONTEXT_MENU_LINK_HEIGHT) +
+        (CONTEXT_MENU_MARGIN + CONTEXT_MENU_BORDER + CONTEXT_MENU_PADDING),
+      width: CONTEXT_MENU_MIN_WIDTH - (CONTEXT_MENU_MARGIN + CONTEXT_MENU_BORDER + CONTEXT_MENU_PADDING)
+    };
 
-		return menuSize;
-	}
+    return menuSize;
+  }
 
   // ----------------------------------
   // Action Handlers
 
   nodeAction(node, action, optionalArgs = []) {
-    //console.log("nodeAction: " + action);
-    //console.log(node);
-
     if (action == 'moveNode') {
       this.moveNode(node.id, optionalArgs[0], optionalArgs[1]);
     }
@@ -651,7 +608,6 @@ export default class DiagramCanvas extends React.Component {
 
   // Deletes the temporary node used by drag and drop code.
   deleteTempNode() {
-    //this.canvasD3.deleteTempNode();
   }
 
   createNodeAt(nodeTypeId, label, sourceId, sourceObjectTypeId, x, y,data = {}) {
@@ -684,12 +640,10 @@ export default class DiagramCanvas extends React.Component {
     data['offsetX'] = x;
     data['offsetY'] = y;
 
-    //console.log('DiagramCanvas.createNodeFromDataAt data :'+JSON.stringify(data));
     this.props.editActionHandler(data);
   }
 
   removeNode(nodeId) {
-    // console.log("removeNode()");
     this.deleteObjects(this.ensureSelected(nodeId));
   }
 
@@ -725,9 +679,8 @@ export default class DiagramCanvas extends React.Component {
   }
 
   inputLink(nodeId) {
-    // console.log("inputLink()");
     if (this.state.targetNodes.indexOf(nodeId) >= 0) {
-      // console.log("Do nothing");
+      ; // Do nothing
     }
     else if (this.state.sourceNodes.length > 0) {
       // console.log("Time to link");
@@ -738,7 +691,6 @@ export default class DiagramCanvas extends React.Component {
       this.linkSelected(this.state.sourceNodes, [nodeId]);
     }
     else {
-      // console.log("Add to targets");
       this.setState({
         targetNodes: this.state.targetNodes.concat(nodeId)
       })
@@ -746,12 +698,10 @@ export default class DiagramCanvas extends React.Component {
   }
 
   outputLink(nodeId) {
-    //console.log("outputLink()");
     if (this.state.sourceNodes.indexOf(nodeId) >= 0) {
-      // console.log("Do nothing");
+      ; // Do nothing
     }
     else if (this.state.targetNodes.length > 0) {
-      // console.log("Time to link");
       // This is triggered by clicking on the output connector of
       // a node when multiple inputs connectors are selected. This signifies that
       // the user wants to link to the inputs of one or more nodes from the output
@@ -818,18 +768,14 @@ export default class DiagramCanvas extends React.Component {
 
   // Utility methods
 
-
   selectInRegion(minX, minY, maxX, maxY) {
-    // console.log("region: " + minX + "," + minY + " and " + maxX + "," + maxY);
     var selection = [];
     for (let node of this.props.canvas.diagram.nodes) {
-      //console.log(node);
       if (node.xPos > minX && node.xPos < maxX && node.yPos > minY && node.yPos < maxY) {
         selection = selection.concat(node.id);
       }
     }
     for (let comment of this.props.canvas.diagram.comments) {
-      //console.log(comment);
       if (comment.xPos > minX && comment.xPos < maxX && comment.yPos > minY && comment.yPos < maxY) {
         selection = selection.concat(comment.id);
       }
@@ -922,14 +868,6 @@ export default class DiagramCanvas extends React.Component {
   getConnPoints(halfNodeWidth, halfIcon, connSize, zoom, node) {
     let iconCentreX = halfNodeWidth + (Math.round(node.xPos * zoom)-15);
 
-    /*
-    return {
-      y: Math.round(node.yPos * zoom) + halfIcon,
-      inX: iconCentreX,
-      outX: iconCentreX
-    };
-    */
-
     return {
       y: Math.round(node.yPos * zoom) + halfIcon + NODE_BORDER_SIZE,
       inX: iconCentreX ,
@@ -940,26 +878,12 @@ export default class DiagramCanvas extends React.Component {
 
   getConnectorPath(data) {
     return this.getCurvePath(data);
-
-    /*
-    console.log("path type=" + this.connectorType);
-    if (this.connectorType == "curve") {
-      console.log("curve path");
-      return this.getCurvePath(data);
-    } else if (this.connectorType == "elbow") {
-      console.log("elbow path");
-      return this.getElbowPath(data);
-    } else {
-      console.log("straight path");
-      return this.getStraightPath(data, true);
-    }
-    */
   }
 
   // Returns the path string for the object passed in which descibes a
   // simple straight connector line and a jaunty zig zag line when the
   // source is further right than the target.
-  getStraightPath(data, zigZag){
+  getStraightPath(data, zigZag) {
     let path = "";
     let xDiff = data.x2 - data.x1;
     let yDiff = data.y2 - data.y1;
@@ -1087,12 +1011,6 @@ export default class DiagramCanvas extends React.Component {
     return path;
   }
 
-  // makeLinks(positions) {
-  //   let links = this.makeALinkSet(positions, false);
-  //   let bknds = this.makeALinkSet(positions, true);
-  //   return bknds.concat(links);
-  // }
-
   makeLinksConnections(positions) {
     let links = this.makeALinkSet(positions, false);
 
@@ -1160,16 +1078,13 @@ export default class DiagramCanvas extends React.Component {
     });
   }
 
-	handlePlaceholderLinkClick(e){
-console.log('handlePlaceholderLinkClick');
-if(chmln){
-   console.log('handlePlaceholderLinkClick: chmln available');
-   chmln.show('58dd4521aa443a000420799e');
-   }else{
-    console.log('handlePlaceholderLinkClick:no chmln');
-   }
-
-}
+  handlePlaceholderLinkClick(e){
+    if (chmln) {
+      chmln.show('58dd4521aa443a000420799e');
+    } else {
+      console.log('handlePlaceholderLinkClick:no chmln');
+    }
+  }
 
   render() {
     // Hard code for now but should eventually be picked up from the diagram
@@ -1220,23 +1135,23 @@ if(chmln){
       zoom: zoom
     };
 
-		//create a lookup for nodes with updated coordinates
-		var lookup = {};
-		if(this.props.autoLayoutDirection !== NONE) {
-			if (this.props.autoLayoutDirection === VERTICAL) {
-				lookup = this.dagreAutolayout(DAGRE_VERTICAL);
-			} else {
-				lookup = this.dagreAutolayout(DAGRE_HORIZONTAL); //Default to HORIZONTAL
-			}
-		}
+    // Create a lookup for nodes with updated coordinates
+    var lookup = {};
+    if (this.props.autoLayoutDirection !== NONE) {
+      if (this.props.autoLayoutDirection === VERTICAL) {
+        lookup = this.dagreAutolayout(DAGRE_VERTICAL);
+      } else {
+        lookup = this.dagreAutolayout(DAGRE_HORIZONTAL); //Default to HORIZONTAL
+      }
+    }
 
     // TODO - pass a ref to the canvas (or a size config) rather than passing
     // multiple, individual, identical size params to every node
     viewNodes = this.props.canvas.diagram.nodes.map((node) => {
-			if(this.props.autoLayoutDirection !== NONE) {
-				node.xPos = lookup[node.id].value.x;
-				node.yPos = lookup[node.id].value.y;
-			}
+      if (this.props.autoLayoutDirection !== NONE) {
+        node.xPos = lookup[node.id].value.x;
+        node.yPos = lookup[node.id].value.y;
+      }
 
       let x = Math.round(node.xPos * zoom);
       let y = Math.round(node.yPos * zoom);
@@ -1266,9 +1181,6 @@ if(chmln){
     viewComments = this.props.canvas.diagram.comments.map((comment) => {
       let x = Math.round(comment.xPos * zoom);
       let y = Math.round(comment.yPos * zoom);
-
-      //console.log("Comment: " + comment.content);
-      //console.log(comment);
 
       var viewComment = <Comment
                 key={comment.id}
@@ -1310,18 +1222,14 @@ if(chmln){
 
     if (this.props.canvas.diagram.nodes.length == 0 &&
         this.props.canvas.diagram.comments.length == 0) {
-      emptyCanvas = <div id="empty-canvas" onContextMenu={this.canvasContextMenu}>
-				<img src={BlankCanvasImage} className="placeholder-image"></img>
-					<span className="placeholder-text">Your flow is empty!</span>
-						<span className="placeholder-link" onClick={this.handlePlaceholderLinkClick}
->Click here to take a tour</span>
-				</div>;
+      emptyCanvas =
+        <div id="empty-canvas" onContextMenu={this.canvasContextMenu}>
+          <img src={BlankCanvasImage} className="placeholder-image"></img>
+          <span className="placeholder-text">Your flow is empty!</span>
+          <span className="placeholder-link" onClick={this.handlePlaceholderLinkClick}
+            >Click here to take a tour</span>
+        </div>;
     }
-/*
-<marker id="markerArrow" markerWidth={13} markerHeight={13} refX={2} refY={6} orient="auto">
-  <path d="M2,2 L2,11 L10,6 L2,2" fill="#f00"/>
-</marker>
-*/
 
     // TODO - include link icons
     return (
