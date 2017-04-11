@@ -93,6 +93,7 @@ describe('ObjectModel handle model OK', () => {
 				data: startCanvas
 			});
 
+			// imageName - Just for Testing
 			ObjectModel.dispatch({
 				type: "ADD_NODE",
 				data: {id: "node4",
