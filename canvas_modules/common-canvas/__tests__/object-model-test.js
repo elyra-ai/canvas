@@ -543,6 +543,64 @@ describe('ObjectModel handle model OK', () => {
       expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
     });
 
+		it('should delete a link when a comment is deleted', () => {
+			console.log("should delete a link when a comment is deleted.");
+
+			let startCanvas =
+					{zoom: 100,
+					 diagram: {
+						nodes: [
+							{id: "node1", xPos: 10, yPos: 10},
+							{id: "node2", xPos: 20, yPos: 20},
+							{id: "node3", xPos: 30, yPos: 30}
+						],
+						comments: [
+							{id: "comment1", xPos: 50, yPos: 50},
+							{id: "comment2", xPos: 60, yPos: 60}
+						],
+						links: [
+							{id: "link1", source: "node1", target: "node2"},
+							{id: "link2", source: "comment1", target: "node2"}
+						]
+					 }
+					};
+
+			deepFreeze(startCanvas);
+
+			ObjectModel.dispatch({
+				type: "SET_CANVAS",
+				data: startCanvas
+			});
+
+			ObjectModel.dispatch({
+				type: "DELETE_OBJECTS",
+				data: {selectedObjectIds: ["comment1"]}
+			});
+
+			let expectedCanvas =
+					{zoom: 100,
+						 diagram: {
+							 nodes: [
+								{id: "node1", xPos: 10, yPos: 10},
+								{id: "node2", xPos: 20, yPos: 20},
+								{id: "node3", xPos: 30, yPos: 30}
+							 ],
+							 comments: [
+								{id: "comment2", xPos: 60, yPos: 60}
+							],
+							links: [
+								{id: "link1", source: "node1", target: "node2"}
+							]
+						 }
+					};
+
+			let actualCanvas = ObjectModel.getCanvas();
+
+			console.log("Expected Canvas = " + JSON.stringify(expectedCanvas));
+			console.log("Actual Canvas   = " + JSON.stringify(actualCanvas));
+
+			expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		});
 
 
 });
