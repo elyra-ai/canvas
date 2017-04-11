@@ -20,11 +20,10 @@ function _post(req, res, next) {
 	logger.info("Posting canvas diagram");
 	if (req.body) {
 		req.session.canvas = req.body;
-		req.session.save();
 		res.status(constants.HTTP_STATUS_OK);
-		res.json(req.body);
+		res.json(req.body).end();
 	} else {
 		res.status(constants.HTTP_STATUS_NOT_FOUND);
-		res.json({ error: "Unable to post canvas" });
+		res.json({ error: "Unable to post canvas" }).end();
 	}
 }

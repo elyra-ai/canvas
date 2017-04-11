@@ -10,24 +10,6 @@
 import fetch from "isomorphic-fetch";
 
 class TestService {
-	getCanvas() {
-		var url = "/v1/test-harness/canvas";
-		var that = this;
-		var headers = {
-			"Accept": "application/json",
-			"Content-Type": "application/json",
-			"Cache-Control": "no-cache,no-store"
-		};
-		return that.handleRequest(
-			fetch(url, {
-				headers: headers,
-				method: "GET",
-				mode: "cors",
-				credentials: "include"
-			})
-		);
-	}
-
 	postCanvas(canvas) {
 		var url = "/v1/test-harness/canvas";
 		var that = this;
@@ -43,24 +25,6 @@ class TestService {
 				mode: "cors",
 				credentials: "include",
 				body: JSON.stringify(canvas)
-			})
-		);
-	}
-
-	getEventLog() {
-		var url = "/v1/test-harness/events";
-		var that = this;
-		var headers = {
-			"Accept": "application/json",
-			"Content-Type": "application/json",
-			"Cache-Control": "no-cache,no-store"
-		};
-		return that.handleRequest(
-			fetch(url, {
-				headers: headers,
-				method: "GET",
-				mode: "cors",
-				credentials: "include"
 			})
 		);
 	}
@@ -84,14 +48,32 @@ class TestService {
 		);
 	}
 
+	postSessionData(data) {
+		var url = "/v1/test-harness/data";
+		var that = this;
+		var headers = {
+			"Accept": "application/json",
+			"Content-Type": "application/json",
+			"Cache-Control": "no-cache,no-store"
+		};
+		return that.handleRequest(
+			fetch(url, {
+				headers: headers,
+				method: "POST",
+				mode: "cors",
+				credentials: "include",
+				body: JSON.stringify(data)
+			})
+		);
+	}
+
 	handleRequest(getPromise) {
 		return getPromise.then(function(response) {
 			if (!response.ok) {
 				console.log("handleRequest(): error response=" + response.statusText);
 			}
 			return response.json();
-		})
-		.catch(function(ex) {
+		}).catch(function(ex) {
 			console.error(ex);
 			return ex;
 		});

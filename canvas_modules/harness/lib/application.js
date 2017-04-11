@@ -35,13 +35,14 @@ function _create(callback) {
 	var app = express();
 	// See: http://expressjs.com/en/guide/behind-proxies.html
 	app.set("trust proxy", 1);
+
 	app.use(session({
 		secret: constants.APP_SESSION_KEY,
 		resave: false,
-		saveUninitialized: true,
+		saveUninitialized: false,
 		name: "testharness.sid"
-		// cookie: { httpOnly: false }
 	}));
+
 	// Configure Development tools
 	if (!isProduction) {
 		logger.info("In development mode; using webpack with HMR");

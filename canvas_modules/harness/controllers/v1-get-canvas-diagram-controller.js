@@ -20,9 +20,9 @@ function _get(req, res) {
 	logger.info("Retreiving canvas diagram");
 	if (req.session.canvas) {
 		res.status(constants.HTTP_STATUS_OK);
-		res.json(req.session.canvas);
+		res.json(req.session.canvas).end();
 	} else {
 		res.status(constants.HTTP_STATUS_NOT_FOUND);
-		res.json({ error: "Unable to find canvas" });
+		res.json({ error: "Unable to find canvas" }).end();
 	}
 }

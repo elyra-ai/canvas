@@ -20,12 +20,11 @@ function _post(req, res, next) {
 	logger.info("Posting event log");
 	if (req.body) {
 		req.session.events = req.body;
-		req.session.save();
 		res.status(constants.HTTP_STATUS_OK);
-		res.json(req.body);
+		res.json(req.body).end();
 	} else {
 		res.status(constants.HTTP_STATUS_NOT_FOUND);
-		res.json({ error: "Unable to post event log" });
+		res.json({ error: "Unable to post event log" }).end();
 	}
 	return;
 }

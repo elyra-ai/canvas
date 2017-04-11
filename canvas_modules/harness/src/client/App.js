@@ -111,8 +111,11 @@ class App extends React.Component {
 
 	componentDidMount() {
 		addLocaleData(en);
-		var canvas = ObjectModel.getCanvas();
-		TestService.postCanvas(canvas);
+		var sessionData = {
+			events: {},
+			canvas: ObjectModel.getCanvas()
+		};
+		TestService.postSessionData(sessionData);
 	}
 
 	getLabel(labelId, defaultLabel) {
@@ -184,7 +187,11 @@ class App extends React.Component {
 		this.setState({
 			consoleout: this.state.consoleout.concat(event)
 		}, function() {
-			TestService.postEventLog(that.state.consoleout);
+			var sessionData = {
+				events: that.state.consoleout,
+				canvas: ObjectModel.getCanvas()
+			};
+			TestService.postSessionData(sessionData);
 		});
 		var objDiv = document.getElementById("app-console");
 		objDiv.scrollTop = objDiv.scrollHeight;
@@ -230,11 +237,6 @@ class App extends React.Component {
 	useInternalObjectModel(enabled) {
 		this.setState({ internalObjectModel: enabled });
 		this.log("use internal object model", enabled);
-	}
-
-	postCanvas() {
-		var canvas = ObjectModel.getCanvas();
-		TestService.postCanvas(canvas);
 	}
 
 	// common-canvas
@@ -395,7 +397,6 @@ class App extends React.Component {
 		}
 
 		this.log("editActionHandler() " + data.editType, type, data.label);
-		this.postCanvas();
 	}
 
 	contextMenuActionHandler(action, source) {
@@ -433,7 +434,6 @@ class App extends React.Component {
 		} else if (action === "deploy") {
 			this.log("action: deploy", source.targetObject.id);
 		}
-		this.postCanvas();
 	}
 
 	deleteObjectsActionHandler(source) {
