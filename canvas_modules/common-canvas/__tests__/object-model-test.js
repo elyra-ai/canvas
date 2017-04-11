@@ -96,7 +96,7 @@ describe('ObjectModel handle model OK', () => {
 
       ObjectModel.dispatch({
         type: "MOVE_OBJECTS",
-        data: {nodes: ["node1", "node3", "comment2"],
+        data: {nodes: ["node1", "node2", "node3"],
                offsetX: 5,
                offsetY: 7}
       });
@@ -105,12 +105,12 @@ describe('ObjectModel handle model OK', () => {
           {diagram:
             {nodes: [
                {id: "node1", xPos: 15, yPos: 17},
-               {id: "node2", xPos: 20, yPos: 20},
+               {id: "node2", xPos: 25, yPos: 27},
                {id: "node3", xPos: 35, yPos: 37}
               ],
              comments: [
                {id: "comment1", xPos: 50, yPos: 50},
-               {id: "comment2", xPos: 65, yPos: 67}
+               {id: "comment2", xPos: 60, yPos: 60}
              ],
              links: []
             }
@@ -289,6 +289,60 @@ describe('ObjectModel handle model OK', () => {
              }
           };
 
+
+      let actualCanvas = ObjectModel.getCanvas();
+
+      console.log("Expected Canvas = " + JSON.stringify(expectedCanvas));
+      console.log("Actual Canvas   = " + JSON.stringify(actualCanvas));
+
+      expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+    });
+
+		it('should move a comment', () => {
+      console.log("should move a comment");
+
+      let startCanvas =
+          {diagram:
+            {nodes: [
+               {id: "node1", xPos: 10, yPos: 10},
+               {id: "node2", xPos: 20, yPos: 20},
+               {id: "node3", xPos: 30, yPos: 30}
+              ],
+             comments: [
+               {id: "comment1", xPos: 50, yPos: 50},
+               {id: "comment2", xPos: 60, yPos: 60}
+              ]
+            }
+          };
+
+      deepFreeze(startCanvas);
+
+      ObjectModel.dispatch({
+        type: "SET_CANVAS",
+        data: startCanvas
+      });
+
+      ObjectModel.dispatch({
+        type: "MOVE_OBJECTS",
+        data: {nodes: ["comment1", "comment2"],
+               offsetX: 5,
+               offsetY: 7}
+      });
+
+      let expectedCanvas =
+          {diagram:
+            {nodes: [
+               {id: "node1", xPos: 10, yPos: 10},
+               {id: "node2", xPos: 20, yPos: 20},
+               {id: "node3", xPos: 30, yPos: 30}
+              ],
+             comments: [
+               {id: "comment1", xPos: 55, yPos: 57},
+               {id: "comment2", xPos: 65, yPos: 67}
+             ],
+             links: []
+            }
+          };
 
       let actualCanvas = ObjectModel.getCanvas();
 
