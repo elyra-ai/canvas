@@ -69,6 +69,66 @@ describe('ObjectModel handle model OK', () => {
       expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
     });
 
+		it('should add a node', () => {
+			console.log("should add a node");
+
+			let startCanvas =
+					{diagram:
+						{nodes: [
+							 {id: "node1", xPos: 10, yPos: 10},
+							 {id: "node2", xPos: 20, yPos: 20},
+							 {id: "node3", xPos: 30, yPos: 30}
+							],
+						 comments: [
+							 {id: "comment1", xPos: 50, yPos: 50},
+							 {id: "comment2", xPos: 60, yPos: 60}
+							]
+						}
+					};
+
+			deepFreeze(startCanvas);
+
+			ObjectModel.dispatch({
+				type: "SET_CANVAS",
+				data: startCanvas
+			});
+
+			ObjectModel.dispatch({
+				type: "ADD_NODE",
+				data: {id: "node4",
+							 image: "imageName",
+							 inputPorts: [{name: "inPort", label: "Input Port", cardinality: "1:1"}],
+							 outputPorts: [{name: "outPort", label: "Output Port", cardinality: "1:1"}],
+			         xPos: 40,
+			         yPos: 40,
+			         label: "Type"}
+			});
+
+			let expectedCanvas =
+					{diagram:
+						{nodes: [
+							 {id: "node1", xPos: 10, yPos: 10},
+							 {id: "node2", xPos: 20, yPos: 20},
+							 {id: "node3", xPos: 30, yPos: 30},
+							 {id: "node4", className: "canvas-node",style: "", image: "imageName",
+							 outputPorts: [{name: "outPort", label: "Output Port", cardinality: "1:1"}],
+							 inputPorts: [{name: "inPort", label: "Input Port", cardinality: "1:1"}],
+							 xPos: 40, yPos: 40, objectData:{description:"", label:"Type"}}
+							],
+						 comments: [
+							 {id: "comment1", xPos: 50, yPos: 50},
+							 {id: "comment2", xPos: 60, yPos: 60}
+						 ]
+						}
+					};
+
+			let actualCanvas = ObjectModel.getCanvas();
+
+			console.log("Expected Canvas = " + JSON.stringify(expectedCanvas));
+			console.log("Actual Canvas   = " + JSON.stringify(actualCanvas));
+
+			expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		});
 
     it('should move a node', () => {
       console.log("should move a node");
@@ -173,66 +233,6 @@ describe('ObjectModel handle model OK', () => {
 
       expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
     });
-
-		it('should disconnect a node', () => {
-			console.log("should disconnect a node");
-
-			let startCanvas =
-					{zoom: 100,
-					 diagram: {
-						nodes: [
-							{id: "node1", xPos: 10, yPos: 10},
-							{id: "node2", xPos: 20, yPos: 20},
-							{id: "node3", xPos: 30, yPos: 30}
-						],
-						comments: [
-							{id: "comment1", xPos: 50, yPos: 50},
-							{id: "comment2", xPos: 60, yPos: 60}
-						],
-						links: [
-							{id: "link1", source: "node1", target: "node2"},
-							{id: "link2", source: "comment1", target: "node2"}
-						]
-					 }
-					};
-
-			deepFreeze(startCanvas);
-
-			ObjectModel.dispatch({
-				type: "SET_CANVAS",
-				data: startCanvas
-			});
-
-			ObjectModel.dispatch({
-				type: "DISCONNECT_NODES",
-				data: {selectedNodeIds: ["node1"]}
-			});
-
-			let expectedCanvas =
-					{zoom: 100,
-						 diagram: {
-							 nodes: [
-								{id: "node1", xPos: 10, yPos: 10},
-								{id: "node2", xPos: 20, yPos: 20},
-								{id: "node3", xPos: 30, yPos: 30}
-							 ],
-							 comments: [
-								{id: "comment1", xPos: 50, yPos: 50},
-								{id: "comment2", xPos: 60, yPos: 60}
-							],
-							links: [
-								{id: "link2", source: "comment1", target: "node2"}
-							]
-						 }
-					};
-
-			let actualCanvas = ObjectModel.getCanvas();
-
-			console.log("Expected Canvas = " + JSON.stringify(expectedCanvas));
-			console.log("Actual Canvas   = " + JSON.stringify(actualCanvas));
-
-			expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
-		});
 
     it('should add a comment', () => {
       console.log("should add a comment");
