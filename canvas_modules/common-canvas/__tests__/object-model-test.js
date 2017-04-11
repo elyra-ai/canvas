@@ -295,6 +295,130 @@ describe('ObjectModel handle model OK', () => {
 			expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
 		});
 
+		it('should add node attr', () => {
+			console.log("should add node attr");
+
+			let startCanvas =
+					{zoom: 100,
+					 diagram: {
+						nodes: [
+							{id: "node1", xPos: 10, yPos: 10},
+							{id: "node2", xPos: 20, yPos: 20},
+							{id: "node3", xPos: 30, yPos: 30}
+						],
+						comments: [
+							{id: "comment1", xPos: 50, yPos: 50},
+							{id: "comment2", xPos: 60, yPos: 60}
+						],
+						links: [
+							{id: "link1", source: "node1", target: "node2"},
+							{id: "link2", source: "comment1", target: "node2"}
+						]
+					 }
+					};
+
+			deepFreeze(startCanvas);
+
+			ObjectModel.dispatch({
+				type: "SET_CANVAS",
+				data: startCanvas
+			});
+
+			ObjectModel.dispatch({
+				type: "ADD_NODE_ATTR",
+				data: {objIds: ["node1"],
+							 attrName:"bgcolor"}
+			});
+
+			let expectedCanvas =
+					{zoom: 100,
+					 diagram: {
+						nodes: [
+							{id: "node1", xPos: 10, yPos: 10,"customAttrs":["bgcolor"]},
+							{id: "node2", xPos: 20, yPos: 20},
+							{id: "node3", xPos: 30, yPos: 30}
+						],
+						comments: [
+							{id: "comment1", xPos: 50, yPos: 50},
+							{id: "comment2", xPos: 60, yPos: 60}
+						],
+						links: [
+							{id: "link1", source: "node1", target: "node2"},
+							{id: "link2", source: "comment1", target: "node2"}
+						]
+					 }
+					};
+
+			let actualCanvas = ObjectModel.getCanvas();
+
+			console.log("Expected Canvas = " + JSON.stringify(expectedCanvas));
+			console.log("Actual Canvas   = " + JSON.stringify(actualCanvas));
+
+			expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		});
+
+		it('should remove node attr', () => {
+			console.log("should remove node attr");
+
+			let startCanvas =
+					{zoom: 100,
+					 diagram: {
+						nodes: [
+							{id: "node1", xPos: 10, yPos: 10, "customAttrs":["bgcolor"]},
+							{id: "node2", xPos: 20, yPos: 20},
+							{id: "node3", xPos: 30, yPos: 30}
+						],
+						comments: [
+							{id: "comment1", xPos: 50, yPos: 50},
+							{id: "comment2", xPos: 60, yPos: 60}
+						],
+						links: [
+							{id: "link1", source: "node1", target: "node2"},
+							{id: "link2", source: "comment1", target: "node2"}
+						]
+					 }
+					};
+
+			deepFreeze(startCanvas);
+
+			ObjectModel.dispatch({
+				type: "SET_CANVAS",
+				data: startCanvas
+			});
+
+			ObjectModel.dispatch({
+				type: "REMOVE_NODE_ATTR",
+				data: {objIds: ["node1"],
+							 attrName:"bgcolor"}
+			});
+
+			let expectedCanvas =
+					{zoom: 100,
+					 diagram: {
+						nodes: [
+							{id: "node1", xPos: 10, yPos: 10,"customAttrs":[]},
+							{id: "node2", xPos: 20, yPos: 20},
+							{id: "node3", xPos: 30, yPos: 30}
+						],
+						comments: [
+							{id: "comment1", xPos: 50, yPos: 50},
+							{id: "comment2", xPos: 60, yPos: 60}
+						],
+						links: [
+							{id: "link1", source: "node1", target: "node2"},
+							{id: "link2", source: "comment1", target: "node2"}
+						]
+					 }
+					};
+
+			let actualCanvas = ObjectModel.getCanvas();
+
+			console.log("Expected Canvas = " + JSON.stringify(expectedCanvas));
+			console.log("Actual Canvas   = " + JSON.stringify(actualCanvas));
+
+			expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		});
+
     it('should add a comment', () => {
       console.log("should add a comment");
 
@@ -528,6 +652,130 @@ describe('ObjectModel handle model OK', () => {
 
 		      expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
 
+			});
+
+			it('should add comment attr', () => {
+				console.log("should add comment attr");
+
+				let startCanvas =
+						{zoom: 100,
+						 diagram: {
+							nodes: [
+								{id: "node1", xPos: 10, yPos: 10},
+								{id: "node2", xPos: 20, yPos: 20},
+								{id: "node3", xPos: 30, yPos: 30}
+							],
+							comments: [
+								{id: "comment1", xPos: 50, yPos: 50},
+								{id: "comment2", xPos: 60, yPos: 60}
+							],
+							links: [
+								{id: "link1", source: "node1", target: "node2"},
+								{id: "link2", source: "comment1", target: "node2"}
+							]
+						 }
+						};
+
+				deepFreeze(startCanvas);
+
+				ObjectModel.dispatch({
+					type: "SET_CANVAS",
+					data: startCanvas
+				});
+
+				ObjectModel.dispatch({
+					type: "ADD_COMMENT_ATTR",
+					data: {objIds: ["comment1"],
+								 attrName:"bgcolor"}
+				});
+
+				let expectedCanvas =
+						{zoom: 100,
+						 diagram: {
+							nodes: [
+								{id: "node1", xPos: 10, yPos: 10},
+								{id: "node2", xPos: 20, yPos: 20},
+								{id: "node3", xPos: 30, yPos: 30}
+							],
+							comments: [
+								{id: "comment1", xPos: 50, yPos: 50, "customAttrs":["bgcolor"]},
+								{id: "comment2", xPos: 60, yPos: 60}
+							],
+							links: [
+								{id: "link1", source: "node1", target: "node2"},
+								{id: "link2", source: "comment1", target: "node2"}
+							]
+						 }
+						};
+
+				let actualCanvas = ObjectModel.getCanvas();
+
+				console.log("Expected Canvas = " + JSON.stringify(expectedCanvas));
+				console.log("Actual Canvas   = " + JSON.stringify(actualCanvas));
+
+				expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+			});
+
+			it('should remove comment attr', () => {
+				console.log("should remove comment attr");
+
+				let startCanvas =
+						{zoom: 100,
+						 diagram: {
+							nodes: [
+								{id: "node1", xPos: 10, yPos: 10},
+								{id: "node2", xPos: 20, yPos: 20},
+								{id: "node3", xPos: 30, yPos: 30}
+							],
+							comments: [
+								{id: "comment1", xPos: 50, yPos: 50, "customAttrs":["bgcolor"]},
+								{id: "comment2", xPos: 60, yPos: 60}
+							],
+							links: [
+								{id: "link1", source: "node1", target: "node2"},
+								{id: "link2", source: "comment1", target: "node2"}
+							]
+						 }
+						};
+
+				deepFreeze(startCanvas);
+
+				ObjectModel.dispatch({
+					type: "SET_CANVAS",
+					data: startCanvas
+				});
+
+				ObjectModel.dispatch({
+					type: "REMOVE_COMMENT_ATTR",
+					data: {objIds: ["comment1"],
+								 attrName:"bgcolor"}
+				});
+
+				let expectedCanvas =
+						{zoom: 100,
+						 diagram: {
+							nodes: [
+								{id: "node1", xPos: 10, yPos: 10},
+								{id: "node2", xPos: 20, yPos: 20},
+								{id: "node3", xPos: 30, yPos: 30}
+							],
+							comments: [
+								{id: "comment1", xPos: 50, yPos: 50,"customAttrs":[]},
+								{id: "comment2", xPos: 60, yPos: 60}
+							],
+							links: [
+								{id: "link1", source: "node1", target: "node2"},
+								{id: "link2", source: "comment1", target: "node2"}
+							]
+						 }
+						};
+
+				let actualCanvas = ObjectModel.getCanvas();
+
+				console.log("Expected Canvas = " + JSON.stringify(expectedCanvas));
+				console.log("Actual Canvas   = " + JSON.stringify(actualCanvas));
+
+				expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
 			});
 
     it('should add a link', () => {
