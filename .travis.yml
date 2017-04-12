@@ -40,5 +40,5 @@ deploy:
 notifications:
   slack:
     rooms:
-      - ibm-cloudplatform:Z9veqAF1gkr7PunL4BC83icO#wml-canvas-builds
+      - watsondataplatform:XVNawCZULSfgMLsovgn2Stkp#wdp-canvas-builds
 group: bluezone
