@@ -34,6 +34,12 @@ Delete @wdp from node_modules
 npm install
 ```
 
-### Creating "release" branch
+### Creating "release" branch (Ran every Friday)
   - Copy scripts/create_release.sh to an empty directory
   - Run ./create_release.sh <patch, minor, or major>
+
+### Committing breaking changes
+  - Increment the major version number in common-canvas/package.json ("version": "major.minor.patch")
+  - Reset the patch version to "0"
+  - In wml-canvas-ui make the needed updates
+  - Update the "major" version to match common-canvas
