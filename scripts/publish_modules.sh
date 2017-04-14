@@ -17,10 +17,10 @@ echo "Publishing common-canvas $BUILDNUM to NPM"
 cd ../canvas_modules/common-canvas
 npm publish
 
-cd ../
+# cd ../
 
-echo "Publishing common-properties $BUILDNUM to NPM"
-cd ./common-properties
-npm publish
+# echo "Publishing common-properties $BUILDNUM to NPM"
+# cd ./common-properties
+# npm publish
 
 cd $WORKING_DIR
