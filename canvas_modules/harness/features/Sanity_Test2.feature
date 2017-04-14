@@ -14,7 +14,7 @@ Feature: Canvas Sanity test from loaded file
 		Then I pause for 3 seconds
 		Then I add node 7 a "Field Reorder" node from the "Field Ops" category onto the canvas at 150, 450
 		Then I select node 7 the "Field Reorder" node
-		Then I add comment 4 at location 150, 600 with the text "Some text comment."
+		Then I add comment 4 at location 150, 500 with the text "Some text comment."
 		Then I add node 8 a "Sort" node from the "Record Ops" category onto the canvas at 300, 450
 		Then I link node 7 the "Field Reorder" node to node 8 the "Sort" node for link 10 on the canvas
 		Then I link comment 4 to node 8 the "Sort" node for link 11 on the canvas
