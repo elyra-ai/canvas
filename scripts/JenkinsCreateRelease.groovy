@@ -5,8 +5,8 @@ node ("${SLAVE_LABEL}") {
         checkout scm
     }
 
-    stage ('trigger create release script') {
+    stage ('trigger script to update release branch') {
 					println "---Triggering script to update release with master"
-					sh "scripts/create_release.sh patch"
+					sh "scripts/create_release.sh patch Y9CTMV866 Y9CTMV866@nomail.relay.ibm.com"
     }
 }
