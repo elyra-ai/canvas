@@ -49,7 +49,8 @@ export default class DiagramCanvas extends React.Component {
   constructor(props) {
     super(props);
 
-		let zoomValue = props.canvas.zoom && !Number.isNaN(props.canvas.zoom) ? props.canvas.zoom : ZOOM_DEFAULT_VALUE;
+    let zoomValue = props.canvas.zoom && !Number.isNaN(props.canvas.zoom) ? props.canvas.zoom : ZOOM_DEFAULT_VALUE;
+
     this.state = {
       nodes: [],
       selectedObjects: [],
@@ -428,7 +429,7 @@ export default class DiagramCanvas extends React.Component {
 
     // Note: Use selectedObjectIds instead of this.state.selectedObjects below
     // because this.state.selectedObjects state change, made in ensureSelected,
-    // may not by complete at this point.
+    // may not be complete at this point.
     this.contextMenuSource = {
       type: objectType,
       targetObject: object,
@@ -436,9 +437,6 @@ export default class DiagramCanvas extends React.Component {
       mousePos: {x: x, y: y}};
 
     const cmDef = this.props.contextMenuHandler(this.contextMenuSource);
-
-    // Reposition contextMenu if it will show off the screen
-    this.repositionContextMenu(this.contextMenuSource.mousePos, cmDef);
 
     if (cmDef !== null) {
       this.setState({showContextMenu: true, contextMenuDef: cmDef});
@@ -468,9 +466,6 @@ export default class DiagramCanvas extends React.Component {
 
     let cmDef = this.props.contextMenuHandler(this.contextMenuSource);
 
-    // Reposition contextMenu if it will show off the screen
-    this.repositionContextMenu(mousePos, cmDef);
-
     if (cmDef !== null) {
       this.setState({showContextMenu: true, contextMenuDef: cmDef});
     }
@@ -486,13 +481,19 @@ export default class DiagramCanvas extends React.Component {
 
     var menuSize = this.calculateContextMenuSize(menu);
 
+    let pos = {};
+    pos.x = mousePos.x;
+    pos.y = mousePos.y;
+
     // Reposition contextMenu if it will show off the screen
     if (Math.round(mousePos.y - ccScrollTop + menuSize.height) > windowHeight) {
-      this.contextMenuSource.mousePos.y = mousePos.y - menuSize.height;
+      pos.y = mousePos.y - menuSize.height;
     }
     if (Math.round(mousePos.x - ccScrollLeft + menuSize.width) > windowWidth) {
-      this.contextMenuSource.mousePos.x = mousePos.x - menuSize.width;
+      pos.x = mousePos.x - menuSize.width;
     }
+
+    return pos;
   }
 
   calculateContextMenuSize(menu) {
@@ -1094,14 +1095,17 @@ export default class DiagramCanvas extends React.Component {
     let contextMenuWrapper = null;
 
     if (this.state.showContextMenu) {
+      // Reposition contextMenu so that it does not show off the screen
+      let pos = this.repositionContextMenu(this.contextMenuSource.mousePos, this.state.contextMenuDef);
+
       let contextMenu = <CommonContextMenu
         menuDefinition={this.state.contextMenuDef}
         contextHandler={this.contextMenuClicked.bind(this)}/>;
 
       contextMenuWrapper =
         <ContextMenuWrapper
-          positionLeft={this.contextMenuSource.mousePos.x}
-          positionTop={this.contextMenuSource.mousePos.y}
+          positionLeft={pos.x}
+          positionTop={pos.y}
           contextMenu={contextMenu}
           handleClickOutside={
             this.handleClickOutsideContextMenu
