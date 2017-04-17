@@ -14,7 +14,6 @@
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-import {FormattedMessage} from 'react-intl'
 import PropertiesDialog from './properties-dialog.jsx'
 import EditorForm from './editor-controls/editor-form.jsx'
 

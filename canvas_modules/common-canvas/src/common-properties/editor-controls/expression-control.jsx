@@ -13,7 +13,6 @@
 *****************************************************************/
 
 import React from 'react'
-import {IntlProvider, FormattedMessage} from 'react-intl'
 import {TextField} from 'ap-components-react/dist/ap-components-react'
 
 import EditorControl from './editor-control.jsx'

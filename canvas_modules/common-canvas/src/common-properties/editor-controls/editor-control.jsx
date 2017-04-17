@@ -13,7 +13,6 @@
 *****************************************************************/
 
 import React from 'react'
-import {IntlProvider, FormattedMessage} from 'react-intl'
 import {Grid, Row, Col, Well, ListGroupItem, Table, tr, th, Button} from 'react-bootstrap'
 
 export default class EditorControl extends React.Component {

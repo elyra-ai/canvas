@@ -13,7 +13,6 @@
 *****************************************************************/
 
 import React from 'react'
-import {IntlProvider, FormattedMessage} from 'react-intl'
 import {Button, ButtonInput, ButtonToolbar, Form, Tab, Panel, Grid, Row, Col, Nav, NavItem} from 'react-bootstrap'
 
 import {Tabs} from 'ap-components-react/dist/ap-components-react'

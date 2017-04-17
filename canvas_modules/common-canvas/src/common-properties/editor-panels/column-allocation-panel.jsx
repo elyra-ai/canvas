@@ -14,7 +14,6 @@
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-import {FormattedMessage} from 'react-intl'
 import {Grid, Row, Col, Panel, Button, ButtonGroup} from 'react-bootstrap'
 import ColumnSource from './column-source.jsx'
 

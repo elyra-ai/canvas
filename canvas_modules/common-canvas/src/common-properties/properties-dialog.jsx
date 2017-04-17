@@ -13,7 +13,8 @@
 *****************************************************************/
 
 import React, {Component} from 'react';
-import {FormattedMessage} from 'react-intl'
+// reference react-intl.min.js to fix reference issue for util.js.map
+import {FormattedMessage} from 'react-intl/dist/react-intl.min.js'
 import {Modal} from 'react-bootstrap';
 import {Button} from 'ap-components-react/dist/ap-components-react'
 

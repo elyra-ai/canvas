@@ -13,7 +13,6 @@
 *****************************************************************/
 
 import React from 'react'
-import {IntlProvider, FormattedMessage} from 'react-intl'
 import {Button} from 'react-bootstrap'
 import FixedDataTable, {Cell} from 'fixed-data-table';
 

@@ -13,7 +13,6 @@
 *****************************************************************/
 
 import React from 'react'
-import {IntlProvider, FormattedMessage} from 'react-intl'
 import {FormControl} from 'react-bootstrap'
 import EditorControl from './editor-control.jsx'
 

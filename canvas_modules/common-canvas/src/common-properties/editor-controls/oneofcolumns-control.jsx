@@ -13,7 +13,6 @@
 *****************************************************************/
 
 import React from 'react'
-import {IntlProvider, FormattedMessage} from 'react-intl'
 import {FormControl} from 'react-bootstrap'
 import EditorControl from './editor-control.jsx'
 
@@ -43,7 +42,7 @@ export default class OneofcolumnsControl extends EditorControl {
 
     return (
       <FormControl
-        id={this.getControlID()} 
+        id={this.getControlID()}
         componentClass="select"
         name={this.props.control.name}
         help={this.props.control.additionalText}

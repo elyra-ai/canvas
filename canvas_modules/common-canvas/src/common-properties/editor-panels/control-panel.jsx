@@ -14,7 +14,8 @@
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-import {FormattedMessage} from 'react-intl'
+// reference react-intl.min.js to fix reference issue for util.js.map
+import {FormattedMessage} from 'react-intl/dist/react-intl.min.js'
 import {Panel} from 'react-bootstrap'
 
 export default class ControlPanel extends React.Component {

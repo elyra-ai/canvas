@@ -13,7 +13,6 @@
 *****************************************************************/
 
 import React from 'react'
-import {IntlProvider, FormattedMessage} from 'react-intl'
 import {Button} from 'react-bootstrap'
 
 import SubPanelInvoker from './sub-panel-invoker.jsx'
@@ -36,7 +35,7 @@ export default class SubPanelButton extends React.Component {
 
   onSubPanelHidden(applyChanges) {
     console.log("onSubPanelHidden(): applyChanges=" + applyChanges);
-    
+
     if (this.props.notifyFinishedEditing !== undefined) {
       this.props.notifyFinishedEditing(applyChanges);
     }
