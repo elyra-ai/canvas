@@ -16,7 +16,6 @@ import React, {Component} from 'react';
 import {FormattedMessage} from 'react-intl'
 import {Modal} from 'react-bootstrap';
 import {Button} from 'ap-components-react/dist/ap-components-react'
-import classnames from 'classnames'
 
 export default class PropertiesDialog extends Component {
   constructor(props) {
@@ -25,7 +24,6 @@ export default class PropertiesDialog extends Component {
 
   render() {
 
-    //TODO use classnames if need to modify as warning , erro etc.
     let modalClassName = 'modal__container';
     return (
 
