@@ -16,8 +16,7 @@ import { IntlProvider, FormattedMessage, addLocaleData } from "react-intl";
 import en from "react-intl/locale-data/en";
 var i18nData = require("../intl/en.js");
 
-import { CommonCanvas, ObjectModel } from "@wdp/common-canvas";
-import { CommonProperties } from "@wdp/common-properties";
+import { CommonCanvas, ObjectModel, CommonProperties } from "@wdp/common-canvas";
 
 import Console from "./components/console.jsx";
 import SidePanel from "./components/sidepanel.jsx";

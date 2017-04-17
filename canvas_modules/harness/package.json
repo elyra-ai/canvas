@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@wdp/common-canvas": "file:../common-canvas",
-    "@wdp/common-properties": "file:../common-properties",
     "ap-components-react": "3.0.6",
     "body-parser": "1.17.1",
     "express": "4.13.4",

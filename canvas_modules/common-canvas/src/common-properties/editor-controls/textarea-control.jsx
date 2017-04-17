@@ -15,12 +15,11 @@
 import React from 'react'
 import {IntlProvider, FormattedMessage} from 'react-intl'
 import {TextField} from 'ap-components-react/dist/ap-components-react'
-import Codemirror from 'react-codemirror'
-
-import EditorControl from './editor-control.jsx'
 import {CHARACTER_LIMITS} from '../constants/constants.js'
 
-export default class ExpressionControl extends EditorControl {
+import EditorControl from './editor-control.jsx'
+
+export default class TextareaControl extends EditorControl {
   constructor(props) {
     super(props);
     this.state = {
@@ -30,15 +29,8 @@ export default class ExpressionControl extends EditorControl {
     this.handleChange = this.handleChange.bind(this);
   }
 
-  /*
-  handleChange(text) {
-    this.setState({
-      controlValue: text
-    });
-  }
-  */
-
   handleChange(evt) {
+
     this.setState({
       controlValue: evt.target.value
     });
@@ -54,23 +46,7 @@ export default class ExpressionControl extends EditorControl {
   }
 
   render() {
-    /*
-    var options = {
-      lineNumbers: true
-    };
-
     return (
-      <Codemirror
-        id={this.getControlID()}
-        placeholder={this.props.control.additionalText}
-        onChange={this.handleChange}
-        value={this.state.controlValue}
-        options={options}/>
-    );
-    */
-
-    return (
-
       <TextField
         type="textarea"
         id={this.getControlID()}
@@ -84,6 +60,7 @@ export default class ExpressionControl extends EditorControl {
   }
 }
 
-ExpressionControl.propTypes = {
+
+TextareaControl.propTypes = {
   control: React.PropTypes.object
 };

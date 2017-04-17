@@ -35,19 +35,13 @@ else
 	exit 0;
 fi
 
-# Increment version in package.json for common-canvas and common-prop-editor
+# Increment version in package.json for common-canvas
 # patch, minor, or major
 echo "Update $UPDATE_TYPE in common-canvas"
 cd ./canvas_modules/common-canvas
 npm version $UPDATE_TYPE
 cd ../../
 git commit -m "Update $UPDATE_TYPE version for common-canvas" ./canvas_modules/common-canvas/package.json
-
-#echo "Update $UPDATE_TYPE in common-properties"
-#cd ./canvas_modules/common-properties
-#npm version $UPDATE_TYPE
-#cd ../../
-#git commit -m "Update $UPDATE_TYPE version for common-properties [ci skip]" ./canvas_modules/common-properties/package.json
 
 echo "Push changes to master"
 git push origin ${MASTER}

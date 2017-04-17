@@ -18,8 +18,8 @@ import {FormattedMessage} from 'react-intl'
 import {Grid, Row, Col, Panel, Button, ButtonGroup} from 'react-bootstrap'
 import ColumnSource from './column-source.jsx'
 
-import MoveLeftIcon from '../../assets/images/move_left.svg';
-import MoveRightIcon from '../../assets/images/move_right.svg';
+import MoveLeftIcon from '../../../assets/images/move_left.svg';
+import MoveRightIcon from '../../../assets/images/move_right.svg';
 
 var _ = require('underscore');
 

@@ -2,7 +2,6 @@
 
 set -e
 
-
 WORKING_DIR="$PWD"
 SCRIPT_DIR=$(dirname "$0")
 
@@ -16,11 +15,5 @@ cd ../../scripts
 echo "Publishing common-canvas $BUILDNUM to NPM"
 cd ../canvas_modules/common-canvas
 npm publish
-
-# cd ../
-
-# echo "Publishing common-properties $BUILDNUM to NPM"
-# cd ./common-properties
-# npm publish
 
 cd $WORKING_DIR

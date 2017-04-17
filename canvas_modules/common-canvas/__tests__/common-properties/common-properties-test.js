@@ -1,6 +1,6 @@
 import React from 'react';
-import CommonProperties from '../src/common-properties.jsx';
-import PropertiesDialog from '../src/properties-dialog.jsx';
+import CommonProperties from '../../src/common-properties/common-properties.jsx';
+import PropertiesDialog from '../../src/common-properties/properties-dialog.jsx';
 import {shallow, mount, render} from 'enzyme';
 import {expect, assert} from 'chai';
 import sinon from 'sinon';
