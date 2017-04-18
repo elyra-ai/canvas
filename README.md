@@ -5,9 +5,7 @@ The WDP Common Canvas tooling consists of two Node JS modules:
 
 1) A `Common Canvas` for use in building canvas-like applications. See [here](https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/tree/master/canvas_modules/common-canvas) for detailed API and event documentation.
 
-2) A `Common Properties` editor that can be used to easily surface sophisticated property editors. See [here](https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/tree/master/canvas_modules/common-properties) for API and usage documentation.
-
-3) Test harness
+2) Test harness
 See [here](https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/tree/master/canvas_modules/harness) for setting up local environment
 
 ### Using local version of common-canvas and/or common-properties
@@ -16,17 +14,14 @@ Clone wdp-abstract-canvas
 git clone git@github.ibm.com:NGP-TWC/wdp-abstract-canvas.git
 # Build common-canvas and common-properties
 ./<wdp-abstract-canvas>/canvas_modules/common-canvas/build.sh
-./<wdp-abstract-canvas>/canvas_modules/common-properties/build.sh
 ```
 In your application's package.json replace  
 ```
 "@wdp/common-canvas": "<verson>"  
-"@wdp/common-properties": "<version>"  
 ```
 with
 ```  
 "@wdp/common-canvas": "file:<wdp-abstract-canvas>/canvas_modules/common-canvas"  
-"@wdp/common-properties": "file:<wdp-abstract-canvas>/canvas_modules/common-properties"  
 ```
 Delete @wdp from node_modules
 ```sh
