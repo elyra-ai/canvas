@@ -14,7 +14,6 @@ npm start &
 
 # start running the test Cases
 sleep 2m
-export UI_TEST_URL="http://localhost:3001"
 echo "npm test"
 npm test
 

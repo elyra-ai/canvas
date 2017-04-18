@@ -13,6 +13,7 @@
 *****************************************************************/
 import { containLinkEvent, containLinkInObjectModel, getCommentIdFromObjectModel, getNodeIdFromObjectModel, getObjectModelCount } from "./utilities/validateUtil.js";
 import { getHarnessData } from "./utilities/HTTPClient.js";
+import { getURL } from "./utilities/test-config.js";
 import { simulateDragDrop } from "./utilities/DragAndDrop.js";
 
 /* global browser */
@@ -21,9 +22,6 @@ import { simulateDragDrop } from "./utilities/DragAndDrop.js";
 //   Test Cases
 // -------------------------------------
 module.exports = function() {
-	const testUrl = process.env.UI_TEST_URL;
-	const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
-	const getEventLogUrl = testUrl + "/v1/test-harness/events";
 
 	// Then I link node 1 the "Var. File" node to node 2 the "Derive" node for link 1 on the canvas
 	// The canvasLinks arg should include the number of comment links in addition to data links.
@@ -43,6 +41,9 @@ module.exports = function() {
 	expect(dataLinks + commentLinks).toEqual(linkCount);
 
 	// verify that the link is in the internal object model
+	const testUrl = getURL();
+	const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
+	const getEventLogUrl = testUrl + "/v1/test-harness/events";
 	browser.timeoutsAsyncScript(5000);
 	var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
 	var srcNodeId = browser.execute(getNodeIdFromObjectModel, objectModel.value, orgNodeNumber);
@@ -75,6 +76,9 @@ module.exports = function() {
 		expect(dataLinks + commentLinks).toEqual(linkCount);
 
 		// verify that the link is in the internal object model
+		const testUrl = getURL();
+		const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
+		const getEventLogUrl = testUrl + "/v1/test-harness/events";
 		browser.timeoutsAsyncScript(5000);
 		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
 		var srcNodeId = browser.execute(getCommentIdFromObjectModel, objectModel.value, commentIndex);
@@ -101,6 +105,8 @@ module.exports = function() {
 		browser.$(".context-menu-popover").$$(".react-context-menu-item")[0].$(".react-context-menu-link").click();
 
 		// verify that the link is Not in the internal object model
+		const testUrl = getURL();
+		const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
 		browser.pause(500);
 		browser.timeoutsAsyncScript(5000);
 		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
@@ -122,6 +128,8 @@ module.exports = function() {
 		browser.$(".context-menu-popover").$$(".react-context-menu-item")[0].$(".react-context-menu-link").click();
 
 		// verify that the link is Not in the internal object model
+		const testUrl = getURL();
+		const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
 		browser.pause(500);
 		browser.timeoutsAsyncScript(5000);
 		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
@@ -142,6 +150,8 @@ module.exports = function() {
 		expect(dataLinks + commentLinks).toEqual(linkCount);
 
 		// verify that the link is in the internal object model
+		const testUrl = getURL();
+		const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
 		browser.timeoutsAsyncScript(5000);
 		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
 		var returnVal = browser.execute(getObjectModelCount, objectModel.value, "links", linkCount);

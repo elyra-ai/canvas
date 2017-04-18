@@ -13,14 +13,12 @@
 *****************************************************************/
 import { getEventLogCount, getObjectModelCount } from "./utilities/validateUtil.js";
 import { getHarnessData } from "./utilities/HTTPClient.js";
+import { getURL } from "./utilities/test-config.js";
 import { simulateDragDrop } from "./utilities/DragAndDrop.js";
 
 /* global browser */
 
 module.exports = function() {
-	const testUrl = process.env.UI_TEST_URL;
-	const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
-	const getEventLogUrl = testUrl + "/v1/test-harness/events";
 
 	// Then I add comment 1 at location 150, 250 for link 3 on the canvas with the text "This comment box should be linked to the derive node."
 	//
@@ -47,6 +45,9 @@ module.exports = function() {
 		expect(commentValue).toEqual(comment);
 
 		// verify that the comment is in the internal object model
+		const testUrl = getURL();
+		const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
+		const getEventLogUrl = testUrl + "/v1/test-harness/events";
 		browser.timeoutsAsyncScript(5000);
 		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
 		var returnVal = browser.execute(getObjectModelCount, objectModel.value, "comments", comment);
@@ -80,6 +81,9 @@ module.exports = function() {
 		expect(count).toEqual(commentNumber);
 
 		// verify that the comment is in the internal object model
+		const testUrl = getURL();
+		const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
+		const getEventLogUrl = testUrl + "/v1/test-harness/events";
 		browser.timeoutsAsyncScript(5000);
 		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
 		var returnVal = browser.execute(getObjectModelCount, objectModel.value, "comments", comment);

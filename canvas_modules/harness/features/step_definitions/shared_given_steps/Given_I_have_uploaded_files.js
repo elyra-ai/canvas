@@ -1,8 +1,7 @@
+import { getBaseDir } from "../utilities/test-config.js";
 module.exports = function() {
 
 	/* global browser */
-	const baseFileDir = process.env.TRAVIS_BUILD_DIR;
-
 	this.Then(/^I have uploaded predefined diagram "([^"]*)"$/, function(diagramFile) {
 		browser.pause(500);
 		// need to clisk on the canvas drop down
@@ -48,7 +47,7 @@ module.exports = function() {
 				var canvasInput = browser.$("#canvasFileInput");
 				browser.pause(500);
 				// this will not work with relative paths
-				canvasInput.setValue(baseFileDir + diagramFile);
+				canvasInput.setValue(getBaseDir() + diagramFile);
 				browser.pause(500);
 				browser.$(".canvasField").click("a");
 			}
@@ -99,7 +98,7 @@ module.exports = function() {
 				browser.pause(500);
 
 				// this will not work with relative paths
-				paletteInput.setValue(baseFileDir + paletteFile);
+				paletteInput.setValue(getBaseDir() + paletteFile);
 				browser.pause(500);
 				browser.$("#sidepanel-palette-input").click("a");
 			}

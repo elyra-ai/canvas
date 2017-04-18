@@ -13,15 +13,14 @@
 *****************************************************************/
 import { deleteLinkInObjectModel, getEventLogCount, getNodeIdFromObjectModel, getObjectModelCount, isObjectModelEmpty } from "./utilities/validateUtil.js";
 import { getHarnessData } from "./utilities/HTTPClient.js";
+import { getURL } from "./utilities/test-config.js";
 import { simulateDragDrop } from "./utilities/DragAndDrop.js";
 
 /* global browser */
 
 
 module.exports = function() {
-	const testUrl = process.env.UI_TEST_URL;
-	const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
-	const getEventLogUrl = testUrl + "/v1/test-harness/events";
+
 	const categoryPosition = {
 		"Import": 0,
 		"Record Ops": 1,
@@ -493,6 +492,10 @@ module.exports = function() {
 		expect(imageName).toEqual(expectedImages[nodeType]);
 
 		// verify that the  node is in the internal object model
+		const testUrl = getURL();
+		const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
+		const getEventLogUrl = testUrl + "/v1/test-harness/events";
+
 		browser.timeoutsAsyncScript(5000);
 		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
 		var returnVal = browser.execute(getObjectModelCount, objectModel.value, "nodes", expectedImages[nodeType]);
@@ -523,6 +526,9 @@ module.exports = function() {
 
 
 		// verify that the link is Not in the internal object model
+		const testUrl = getURL();
+		const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
+
 		browser.pause(500);
 		browser.timeoutsAsyncScript(5000);
 		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
@@ -551,6 +557,10 @@ module.exports = function() {
 		expect(count).toBe(0);
 
 		// verify that the  node is in the internal object model
+		const testUrl = getURL();
+		const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
+		const getEventLogUrl = testUrl + "/v1/test-harness/events";
+
 		browser.timeoutsAsyncScript(5000);
 		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
 		var returnVal = browser.execute(getObjectModelCount, objectModel.value, "nodes", expectedImages[nodeType]);
@@ -575,6 +585,9 @@ module.exports = function() {
 	//
 	this.Then(/^I expect the object model to be empty$/, function() {
 		// verify that the  node is in the internal object model
+		const testUrl = getURL();
+		const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
+
 		browser.timeoutsAsyncScript(5000);
 		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
 		var returnVal = browser.execute(isObjectModelEmpty, objectModel.value);
