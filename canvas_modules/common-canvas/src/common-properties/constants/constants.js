@@ -25,3 +25,6 @@ _defineConstant("CHARACTER_LIMITS", {
   NODE_PROPERTIES_DIALOG_TEXT_FIELD:128,
   NODE_PROPERTIES_DIALOG_TEXT_AREA:1024
 });
+
+_defineConstant("OKAY", "OK");
+_defineConstant("CANCEL", "Cancel");

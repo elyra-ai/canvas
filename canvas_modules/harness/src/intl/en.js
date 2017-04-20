@@ -23,7 +23,5 @@ export const messages = {
 	"canvas-context.selectAll": "Select all",
 	"canvas-context.streamProperties": "Options",
 
-	"dialog.okBtn": "OK",
-	"dialog.cancelBtn": "Cancel",
 	"dialog.nodePropertiesTitle": "Node Properties"
 };
