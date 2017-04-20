@@ -13,6 +13,8 @@
 *****************************************************************/
 
 import React, {Component} from 'react';
+// reference react-intl.min.js to fix reference issue for util.js.map
+import {FormattedMessage} from 'react-intl/dist/react-intl.min.js'
 import {Modal} from 'react-bootstrap';
 import {Button} from 'ap-components-react/dist/ap-components-react'
 
@@ -48,7 +50,7 @@ export default class PropertiesDialog extends Component {
               semantic
               href=""
               onClick={this.props.okHandler} style={{'marginLeft': '10px'}} >
-              {this.props.messages.okBtn}
+              <FormattedMessage id="dialog.okBtn"/>
             </Button>
 
             <Button
@@ -56,7 +58,7 @@ export default class PropertiesDialog extends Component {
               href=""
               hyperlink
               onClick={this.props.cancelHandler}>
-              {this.props.messages.cancelBtn}
+              <FormattedMessage id="dialog.cancelBtn"/>
             </Button>
           </div>
         </div>

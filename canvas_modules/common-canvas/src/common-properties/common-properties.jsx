@@ -49,8 +49,7 @@ export default class CommonProperties extends React.Component {
             title={title}
             bsSize={size}
             okHandler={this.applyPropertiesEditing}
-            cancelHandler={this.props.propertiesInfo.closePropertiesDialog}
-            messages={this.props.messages}>{form}</PropertiesDialog>;
+            cancelHandler={this.props.propertiesInfo.closePropertiesDialog}>{form}</PropertiesDialog>;
     }
 
     return (
@@ -64,6 +63,5 @@ export default class CommonProperties extends React.Component {
 
 CommonProperties.propTypes = {
 	showPropertiesDialog: React.PropTypes.bool.isRequired,
-	propertiesInfo: React.PropTypes.object.isRequired,
-	messages: React.PropTypes.object.isRequired
+	propertiesInfo: React.PropTypes.object.isRequired
 };
