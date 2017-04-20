@@ -101,8 +101,10 @@ export default class StructurelisteditorControl extends StructureTableEditor {
     let remove = <Button bsSize="small" onClick={this.removeSelectedRows}>-</Button>;
 
     return <div id={this.getControlID()}>
-      {table}
-      <div><span>{add} {remove}</span></div>
+      <div id="structure-list-editor-table-buttons">
+	      {table}
+	      <div id="structure-list-editor-buttons-container"><span>{add} {remove}</span></div>
+			</div>
     </div>;
   }
 }

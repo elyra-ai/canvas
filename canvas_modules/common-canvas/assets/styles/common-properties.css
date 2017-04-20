@@ -115,3 +115,14 @@ input[type=radio]{
 .well{
   background-color:#f9f9fb;
 }
+
+/* Override bootstrap css */
+.container {
+	width: 100%;
+	height: 100%;
+}
+
+/* Override ap-components css */
+.modal__container .modal__buttons {
+  bottom: initial;
+}

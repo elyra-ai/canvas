@@ -38,10 +38,6 @@
   display: inline;
 }
 
-.column-allocation-panel-row{
-  height: 340px;
-}
-
 .column-allocation-panel-column{
   height: 100%;
 }
@@ -68,6 +64,14 @@
 
 .column-source:focus{
   color:#a6266e;
+}
+
+.column-structure-allocator-control-row-selected .public_fixedDataTableCell_main {
+	background-color: #60C3B9;
+}
+
+.public_fixedDataTable_main {
+	margin: auto;
 }
 
 select option{
@@ -106,14 +110,58 @@ select option:checked select:not(:focus){
 }
 
 .field-allocator-button{
-  width: 10px !important;
+  width: 12px !important;
   height: 20px !important;
   cursor: pointer !important;
   margin:5px;
-  border-bottom: 2px solid #f9f9fb;
+  border-right: 2px solid #f9f9fb;
+	transform: rotate(90deg);
 }
 
 .field-allocator-button:hover{
   border-bottom: 2px solid #a6266e;
   box-sizing:border-box;
+}
+
+#fixed-data-table-container{
+  width: 100%;
+  overflow-x: scroll;
+}
+
+#structure-list-editor-table-buttons .public_fixedDataTable_main {
+  margin: initial;
+}
+
+#structure-list-editor-buttons-container{
+  padding-top: 3px;
+}
+
+@media (max-width: 991px) {
+  .row {
+    margin-right: -30px;
+    margin-left: -30px;
+    display: grid;
+  }
+}
+
+@media (min-width: 992px) {
+  .column-allocation-panel-row{
+    height: 300px;
+  }
+  /*.col-md-1 {
+    transform: translateY(40%); /* column-allocation-panel.jsx */
+  /*}*/
+  .field-allocator-button{
+    width: 10px !important;
+    border-bottom: 2px solid #f9f9fb;
+    border-right: none;
+    transform: rotate(0deg);
+  }
+  .field-allocator-button:hover{
+    border-bottom: 2px solid #a6266e;
+    border-right: none;
+  }
+  #field-allocator-button-container.col-md-1 {
+    margin-left: 0% !important;
+  }
 }

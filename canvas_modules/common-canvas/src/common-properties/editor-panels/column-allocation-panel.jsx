@@ -104,11 +104,11 @@ export default class ColumnAllocationPanel extends React.Component {
 
       controlItems.push(
           <Row key={i}>
-            <Col md={1} style={{"marginTop":"18px","top":"50%","transform":"translateY(70%)"}} >
+            <Col md={1} id="field-allocator-button-container" style={{"marginTop":"18px","top":"50%","marginLeft":"40%"}} >
               <img className="field-allocator-button" src={MoveLeftIcon} onClick={this.deallocate.bind(this, controlName)}></img>
               <img className="field-allocator-button" src={MoveRightIcon} onClick={this.allocate.bind(this, controlName)}></img>
             </Col>
-            <Col md={3}>
+            <Col md={11}>
              {child}
             </Col>
           </Row>
@@ -128,7 +128,7 @@ export default class ColumnAllocationPanel extends React.Component {
         <Grid>
           <Row className="column-allocation-panel-row">
             <Col
-              md={2}
+              md={3}
               className="column-allocation-panel-column">
               <ColumnSource
                 id={'column-source.' + this.props.panel.id}
@@ -138,7 +138,7 @@ export default class ColumnAllocationPanel extends React.Component {
                 rows={this.props.children.length * 5}/>
             </Col>
             <Col
-              md={4}
+              md={9}
               className="column-allocation-panel-column">
               <Grid>
                 {controlItems}
