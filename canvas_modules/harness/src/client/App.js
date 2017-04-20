@@ -598,10 +598,16 @@ class App extends React.Component {
 			/>
 		</div>);
 
+		var translationMessages = {
+			okBtn: this.getLabel("dialog.okBtn", "OK"),
+			cancelBtn: this.getLabel("dialog.cancelBtn", "Cancel")
+		};
+
 		var commonProperties = (<div id="common-properties">
 			<CommonProperties
 				showPropertiesDialog={this.state.showPropertiesDialog}
 				propertiesInfo={this.state.propertiesInfo}
+				messages={translationMessages}
 			/>
 		</div>);
 
