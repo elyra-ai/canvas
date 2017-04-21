@@ -446,7 +446,7 @@ class App extends React.Component {
 	}
 
 	decorationActionHandler(node, id) {
-		this.log("decorationHandler()");
+		this.log("decorationHandler()", id);
 		if (id === "supernodeZoomIn") {
 			this.refreshContent("this.state.stream.id", "node.subDiagramId");
 		}

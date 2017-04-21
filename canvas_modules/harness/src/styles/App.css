@@ -153,3 +153,16 @@
 .select > .select__button > .select__button__arrow {
 	top: 10px;
 }
+
+.leftDecoration {
+  border: 1px solid black;
+}
+
+.rightDecoration {
+  border: 1px solid black;
+}
+
+.rightDecoration:hover {
+  border: 1px solid black;
+  background-color: black;
+}

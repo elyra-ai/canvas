@@ -171,19 +171,19 @@ class Node extends React.Component {
 
     if (position === "topLeft") {
       decorationStyle.top = 0;
-      decorationStyle.left = this.props.uiconf.connOffsets.inLeft;
+      decorationStyle.left = 0;
     }
     else if (position === "topRight") {
       decorationStyle.top = 0;
-      decorationStyle.right = this.props.uiconf.connOffsets.outRight;
+      decorationStyle.right = 0;
     }
     else if (position === "bottomLeft") {
       decorationStyle.bottom = 0;
-      decorationStyle.left = this.props.uiconf.connOffsets.inLeft;
+      decorationStyle.left = 0;
     }
     else if (position === "bottomRight") {
       decorationStyle.bottom = 0;
-      decorationStyle.right = this.props.uiconf.connOffsets.outRight;
+      decorationStyle.right = 0;
     }
 
     return decorationStyle;
@@ -442,9 +442,9 @@ class Node extends React.Component {
         <div
           className={className}
           style={nodeStyle}
-          >
-        <div>
-          <div style={nodeIconPlaceholderStyle}/>
+        >
+          <div>
+            <div style={nodeIconPlaceholderStyle}/>
             {decorations}
           </div>
           <div style={{'textAlign':'center'}}>
