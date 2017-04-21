@@ -87,6 +87,31 @@
 	word-wrap: break-word;
 }
 
+.console-pretty-json {
+	margin: 0px 10px 10px 0px;
+	border: none;
+	border-bottom: 1px dashed #ccc;
+}
+
+.console-entry {
+	list-style: none;
+}
+
+.console-entry:before {
+	content: "• ";
+	padding-right: 10px;
+}
+
+.console-entry:hover {
+	list-style: none;
+	background-color: #D8D8D8;
+}
+
+.console-entry:hover:before {
+	content: "+";
+	padding-right: 12px;
+}
+
 /*SidePanel*/
 #app-sidepanel {
   background-color: #264A60;

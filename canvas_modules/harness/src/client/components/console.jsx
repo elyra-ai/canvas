@@ -14,16 +14,34 @@ import {
 } from "../constants/constants.js";
 
 export default class Console extends React.Component {
+	showDetails(event) {
+		if (event.target.children.console_pretty_json_container) {
+			if (event.target.children.console_pretty_json_container.style.display === "none") {
+				event.target.children.console_pretty_json_container.style.display = "initial";
+			} else {
+				event.target.children.console_pretty_json_container.style.display = "none";
+			}
+		}
+	}
+
 	render() {
 		var consoleHeight = CONSOLE.MINIMIZED;
 		if (this.props.consoleOpened) {
 			consoleHeight = CONSOLE.MAXIMIXED;
 		}
 
+		var that = this;
 		const logs = this.props.logs.map(function(log, ind) {
-			var line = JSON.stringify(log);
+			var formatted = JSON.stringify(log, null, 2);
+			var entry = log.timestamp + ": " + log.event;
+
 			return (
-				<li key={ind}>{line}</li>
+				<li className="console-entry" key={ind} onClick={that.showDetails.bind(that) }>
+					{entry}
+					<div id="console_pretty_json_container" style={ { display: "none" } }>
+						<pre className="console-pretty-json">{formatted}</pre>
+					</div>
+				</li>
 			);
 		});
 

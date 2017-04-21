@@ -256,7 +256,11 @@ class App extends React.Component {
 	}
 
 	applyPropertyChanges(form, appData) {
-		this.log("applyPropertyChanges()", appData);
+		var data = {
+			form: form,
+			appData: appData
+		};
+		this.log("applyPropertyChanges()", data);
 	}
 
 	contextMenuHandler(source) {
