@@ -269,14 +269,17 @@ class Node extends React.Component {
 
     var decorations = [];
     if (this.props.node.decorations) {
-      decorations = this.props.node.decorations.map((d) =>
+      decorations = this.props.node.decorations.map((d, i) =>
         {
+          let key = "decoration_" + i;
           if (d.hotspot === true) {
             return (<div className={d.className}
+              key={key}
               style={this.getDecorationStyle(d.position)}
               onClick={this.decorationClicked.bind(this, d.id)}/>);
           } else {
             return (<div className={d.className}
+              key={key}
               style={this.getDecorationStyle(d.position)}/>);
           }
         }
