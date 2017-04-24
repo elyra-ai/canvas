@@ -561,14 +561,6 @@ class Comment extends React.Component {
       border: 'none'
     };
 
-    if (typeof(this.props.comment.style) !== "undefined" && this.props.comment.style) {
-      // first convert the style string into a JSON object
-      let styleObject = CanvasUtils.convertStyleStringToJSONObject(this.props.comment.style);
-      // then merge JSON objects
-      Object.assign(commentStyle, styleObject);
-      Object.assign(textareaStyle, styleObject);
-    }
-
     let customAttrs = {};
     if (this.props.comment.customAttrs) {
       this.props.comment.customAttrs.forEach((a) => {

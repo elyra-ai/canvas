@@ -101,7 +101,6 @@ export default class DiagramCanvas extends React.Component {
     this.closeContextMenu = this.closeContextMenu.bind(this);
     this.handleClickOutsideContextMenu = this.handleClickOutsideContextMenu.bind(this);
 
-    this.getConnctionArrowHeads = this.getConnctionArrowHeads.bind(this);
     this.createNodeFromDataAt = this.createNodeFromDataAt.bind(this);
 
     this.handlePlaceholderLinkClick = this.handlePlaceholderLinkClick.bind(this);
@@ -111,36 +110,6 @@ export default class DiagramCanvas extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
-  }
-
-  getConnctionArrowHeads(positions) {
-    return this.props.canvas.diagram.links.map((link, ind) => {
-      // console.log(link);
-      var posFrom = positions[link.source];
-      var posTo = positions[link.target];
-
-      // Older diagrams where the comments don't have unique IDs may not
-      // have the comment IDs set correctly which in turn means the
-      // the 'posFrom' or 'posTo' settings many not be correct.
-      // For now, simply discard the link so we can still show the
-      // rest of the diagram.
-      if (posFrom == undefined || posTo == undefined) {
-        return null;
-      }
-
-      let data = {
-        x1: posFrom.outX,
-        y1: posFrom.y,
-        x2: posTo.inX,
-        y2: posTo.y
-      }
-
-      let arrow = CanvasUtils.getArrowheadPoints(data,this.zoom());
-
-      let d = arrow.p1.x + "," + arrow.p1.y + " " + arrow.p2.x  + "," + arrow.p2.y  + " " + arrow.p3.x + "," + arrow.p3.y;
-
-      return (<polyline key={ind} fill="none" stroke="black" strokeWidth="2" points={d}/>);
-    });
   }
 
   handleClickOutsideContextMenu(event) {
@@ -1045,12 +1014,6 @@ export default class DiagramCanvas extends React.Component {
         }
       }
 
-      var lineStyle = {};
-      if (typeof(link.style) !== "undefined" && link.style) {
-        // convert the style string into a JSON object
-        lineStyle = CanvasUtils.convertStyleStringToJSONObject(link.style);
-      }
-
       let d = null;
       let midX = null;
       let midY = Math.round(posFrom.y + ((posTo.y - posFrom.y) /2));
@@ -1067,14 +1030,27 @@ export default class DiagramCanvas extends React.Component {
 
       let that = this;
       let key = isBackground ? ind : ind + 10000;
+
+      let arrow = CanvasUtils.getArrowheadPoints(data,this.zoom());
+      let arrowd = arrow.p1.x + "," + arrow.p1.y + " " + arrow.p2.x  + "," + arrow.p2.y  + " " + arrow.p3.x + "," + arrow.p3.y;
+
       return (
-        <path
-          id={link.id}
-          key={key}
-          d={d}
-          className={className}
-          style={lineStyle}
-        />
+        <svg key={"linkAndArrow" + key}>
+	        <path
+	          id={link.id}
+	          key={key}
+	          d={d}
+	          className={className}
+	        />
+          <polyline
+            key={"arrow" + key}
+            className={className + " link-arrow-head"}
+            fill="none"
+            stroke="black"
+            strokeWidth="2"
+            points={arrowd}
+          />
+        </svg>
       );
     });
   }
@@ -1219,7 +1195,6 @@ export default class DiagramCanvas extends React.Component {
     // Create the set of links to be displayed
     let connectionLinks = this.makeLinksConnections(positions);
     viewLinks = (this.makeLinksBackgrounds(positions)).concat(connectionLinks);
-    let connectionArrowHeads = this.getConnctionArrowHeads(positions);
 
     let emptyDraggable = <div ref="emptyDraggable"></div>;
     let emptyCanvas = null;
@@ -1264,7 +1239,6 @@ export default class DiagramCanvas extends React.Component {
             </marker>
           </defs>
           {viewLinks}
-          {connectionArrowHeads}
         </SVGCanvas>
 
         {emptyCanvas}

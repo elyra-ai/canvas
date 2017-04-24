@@ -240,6 +240,10 @@
 	stroke-dasharray: 2.2;
 }
 
+polyline.link-arrow-head {
+	stroke-dasharray: 0;
+}
+
 /* Palette styles */
 
 .palette-div {

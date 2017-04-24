@@ -202,13 +202,6 @@ class Node extends React.Component {
       height: this.props.uiconf.nodeHeight
     };
 
-		if (typeof(this.props.node.style) !== "undefined" && this.props.node.style) {
-			// first convert the style string into a JSON object
-			let styleObject = CanvasUtils.convertStyleStringToJSONObject(this.props.node.style);
-			// then merge JSON objects
-			Object.assign(nodeStyle, styleObject);
-		}
-
 /*
 		in/out connector styles are currently not used because of the halo style.
 		However, we will need these connectors for the ports, so not removing the code.
