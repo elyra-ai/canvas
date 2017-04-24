@@ -179,6 +179,8 @@
 	top: 10px;
 }
 
+/* This styles are used in the decoratorCanvas.json canvas file. */
+
 .leftDecoration {
   border: 1px solid black;
 }
@@ -190,4 +192,10 @@
 .rightDecoration:hover {
   border: 1px solid black;
   background-color: black;
+}
+
+/* This style is used in the customAttrs.json canvas file. */
+
+.node-image[data-attr1] {
+  border: 1px solid black;
 }
