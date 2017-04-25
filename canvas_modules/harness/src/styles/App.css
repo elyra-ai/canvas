@@ -199,3 +199,24 @@
 .node-image[data-attr1] {
   border: 1px solid black;
 }
+
+/* Override common-canvas styles with custom colors for customColorCanvas.json */
+.canvas-data-link.error {
+  stroke: #FF4500;
+}
+
+.canvas-data-link.warning {
+  stroke: #FFFF00;
+}
+
+.canvas-data-link.okay {
+  stroke: #008000;
+}
+
+.canvas-object-link.blue {
+  stroke: #0000FF;
+}
+
+.main-comment-box{
+  background-color: #2be2ca;
+}
