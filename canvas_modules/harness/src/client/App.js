@@ -16,7 +16,7 @@ import { IntlProvider, FormattedMessage, addLocaleData } from "react-intl";
 import en from "react-intl/locale-data/en";
 var i18nData = require("../intl/en.js");
 
-import { CommonCanvas, ObjectModel, CommonProperties } from "@wdp/common-canvas";
+import { CommonCanvas, ObjectModel, CommonProperties } from "common-canvas";
 
 import Console from "./components/console.jsx";
 import SidePanel from "./components/sidepanel.jsx";
@@ -103,7 +103,6 @@ class App extends React.Component {
 		// common-properties
 		this.openPropertiesEditorDialog = this.openPropertiesEditorDialog.bind(this);
 		this.closePropertiesEditorDialog = this.closePropertiesEditorDialog.bind(this);
-
 		ObjectModel.setCanvas(BLANK_CANVAS);
 		ObjectModel.setPaletteData({});
 	}

@@ -1,11 +1,10 @@
 ## harness
 
-## Enviroment setup
+## Environment setup
 
-Build common-canvas and common-properties projects (currently only common-canvas is used)
+Build common-canvas project
 ```sh
 ./canvas_modules/common-canvas/build.sh
-./canvas_modules/common-properties/build.sh
 cd canvas_modules/harness
 npm install
 npm start
@@ -15,14 +14,18 @@ Connect to canvas:
 http://localhost:3001
 ```
 
-Testing updates to common-canvas or common-properties
+Testing updates to common-canvas module
 ```sh
-# Run one or both builds depending on which files have been updated
+npm stop
 ./canvas_modules/common-canvas/build.sh
-# and/or
-./canvas_modules/common-properties/build.sh
 ./update-local-env.sh
+npm start
 # harness will automatically pick up changes so npm stop/npm start should not be needed
+```
+Testing without rebuilding.  Harness references common-canvas directly
+```sh
+export NODE_ENV=development
+# changes to common-canvas or harness will automatically be picked up by webpack
 ```
 
 ## UI test

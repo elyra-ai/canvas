@@ -15,11 +15,12 @@ var path = require("path");
 var webpack = require("webpack");
 var I18NPlugin = require("@dap/portal-common-i18n").I18nPlugin;
 var babelOptions = require("./scripts/babel/babelOptions").babelClientOptions;
-var SassLintPlugin = require("sasslint-webpack-plugin");
 var constants = require("./lib/constants");
 
 // possibly not needed after removing html
 var HtmlWebpackPlugin = require("html-webpack-plugin");
+
+const isDev = process.env.NODE_ENV === "development";
 
 // Globals
 
@@ -55,11 +56,10 @@ var loaders = [
 		query: babelOptions
 	},
 	{
-		test: /\.s*css$/,
+		test: /\.css$/,
 		loaders: [
 			"style-loader",
 			"css-loader",
-			"sass-loader",
 			"postcss-loader"
 		]
 	},
@@ -68,14 +68,16 @@ var loaders = [
 		loaders: [
 			"file-loader?name=graphics/[hash].[ext]"
 		]
-	},
-	{
-		test: /common-canvas*\.js$/,
-		loader: "source-map-loader",
-		enforce: "pre"
 	}
 ];
 
+if (!isDev) {
+	loaders.push({
+		test: /common-canvas*\.js$/,
+		loader: "source-map-loader",
+		enforce: "pre"
+	});
+}
 // Custom functions (for plugins) ------------------------------------->
 
 
@@ -83,14 +85,6 @@ var loaders = [
 
 var plugins = [
 	new webpack.optimize.OccurrenceOrderPlugin(),
-	new SassLintPlugin({
-		configFile: ".sass-lint.yml",
-		context: "./src/components",
-		glob: "**/*.scss",
-		quiet: false,
-		failOnWarning: true,
-		failOnError: true
-	}),
 	new I18NPlugin("en"),
 	new webpack.NoErrorsPlugin(),
 	// Generates an `index.html` file with the <script> injected.
@@ -109,14 +103,20 @@ var postcss = [
 ];
 
 // Exports ------------------------------------------------------------>
+var commonCanvas = "src/common-canvas.js";
+if (isDev) {
+	commonCanvas = "src/common-canvas-dev.js";
+}
 
 module.exports = {
 	entry: entry,
 	resolve: {
 		modulesDirectories: ["web_modules", "node_modules"],
+		root: path.resolve(__dirname),
 		alias: {
-			"react": path.join(__dirname, "node_modules", "react"),
-			"react-dom": path.join(__dirname, "node_modules", "react-dom")
+			"react": "node_modules/react",
+			"react-dom": "node_modules/react-dom",
+			"common-canvas": commonCanvas
 		},
 		extensions: ["", ".js", ".jsx"]
 	},
