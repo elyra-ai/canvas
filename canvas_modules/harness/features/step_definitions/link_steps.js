@@ -36,8 +36,8 @@ module.exports = function() {
 	browser.pause(1500);
 	var linkCount = Number(canvasLinks);
 	// verify link is in the canvas DOM
-	var dataLinks = browser.$$(".canvas-data-link").length;
-	var commentLinks = browser.$$(".canvas-comment-link").length;
+	var dataLinks = browser.$$(".canvas-data-link").length/2;
+	var commentLinks = browser.$$(".canvas-comment-link").length/2;
 	expect(dataLinks + commentLinks).toEqual(linkCount);
 
 	// verify that the link is in the internal object model
@@ -71,8 +71,8 @@ module.exports = function() {
 		browser.pause(1000);
 		var linkCount = Number(canvasLinks);
 		// verify link is in the canvas DOM
-		var dataLinks = browser.$$(".canvas-data-link").length;
-		var commentLinks = browser.$$(".canvas-comment-link").length;
+		var dataLinks = browser.$$(".canvas-data-link").length/2;
+		var commentLinks = browser.$$(".canvas-comment-link").length/2;
 		expect(dataLinks + commentLinks).toEqual(linkCount);
 
 		// verify that the link is in the internal object model
