@@ -57,14 +57,14 @@ export default class SidePanelForms extends React.Component {
 		FormsService.getFiles("diagrams")
 		.then(function(res) {
 			var list = res;
-			list.unshift(CHOOSE_FROM_LOCATION);
+			list.push(CHOOSE_FROM_LOCATION);
 			that.setState({ canvasFiles: res });
 		});
 
 		FormsService.getFiles("palettes")
 		.then(function(res) {
 			var list = res;
-			list.unshift(CHOOSE_FROM_LOCATION);
+			list.push(CHOOSE_FROM_LOCATION);
 			that.setState({ paletteFiles: res });
 		});
 	}
