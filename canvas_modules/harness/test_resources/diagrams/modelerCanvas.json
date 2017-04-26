@@ -1,7 +1,6 @@
 {
   "id": "153651d6-9b88-423c-b01b-861f12d01489",
   "className": "canvas-image",
-  "style": "",
   "zoom": 100,
   "objectData": {
     "label": "learning",
@@ -264,7 +263,6 @@
       {
         "id": "idGWRVT47XDV.id125TTEEIK7V",
         "className": "canvas-data-link",
-        "style": "",
         "source": "idGWRVT47XDV",
         "target": "id125TTEEIK7V",
         "userData": {
@@ -274,7 +272,6 @@
       {
         "id": "id5RYSYN9CV1H.idGWRVT47XDV",
         "className": "canvas-data-link",
-        "style": "",
         "source": "id5RYSYN9CV1H",
         "target": "idGWRVT47XDV",
         "userData": {
@@ -284,7 +281,6 @@
       {
         "id": "id5KIRGGJ3FYT.id125TTEEIK7V",
         "className": "canvas-object-link",
-        "style": "",
         "source": "id5KIRGGJ3FYT",
         "target": "id125TTEEIK7V",
         "userData": {
@@ -294,7 +290,6 @@
       {
         "id": "id6PXRG57DGIV.id2PZSCTRPRIJ",
         "className": "canvas-data-link",
-        "style": "",
         "source": "id6PXRG57DGIV",
         "target": "id2PZSCTRPRIJ",
         "userData": {
@@ -304,7 +299,6 @@
       {
         "id": "idGWRVT47XDV.id1ZZTZ3ZMYWL",
         "className": "canvas-data-link",
-        "style": "",
         "source": "idGWRVT47XDV",
         "target": "id1ZZTZ3ZMYWL",
         "userData": {
@@ -314,7 +308,6 @@
       {
         "id": "idGWRVT47XDV.id5KIRGGJ3FYT",
         "className": "canvas-data-link",
-        "style": "",
         "source": "idGWRVT47XDV",
         "target": "id5KIRGGJ3FYT",
         "userData": {
@@ -324,7 +317,6 @@
       {
         "id": "idGWRVT47XDV.id8I6RH2V91XW",
         "className": "canvas-data-link",
-        "style": "",
         "source": "idGWRVT47XDV",
         "target": "id8I6RH2V91XW",
         "userData": {
@@ -334,7 +326,6 @@
       {
         "id": "id8I6RH2V91XW.id1ZZTZ3ZMYWL",
         "className": "canvas-object-link",
-        "style": "",
         "source": "id8I6RH2V91XW",
         "target": "id1ZZTZ3ZMYWL",
         "userData": {
@@ -344,7 +335,6 @@
       {
         "id": "id2PZSCTRPRIJ.id5RYSYN9CV1H",
         "className": "canvas-data-link",
-        "style": "",
         "source": "id2PZSCTRPRIJ",
         "target": "id5RYSYN9CV1H",
         "userData": {

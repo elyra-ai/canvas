@@ -25,7 +25,6 @@ const nodes = (state = [], action) => {
       let newNode = {
         id: action.data.id,
         className: "canvas-node",
-        style: "",
         image: action.data.image,
         outputPorts: action.data.outputPorts,
         inputPorts: action.data.inputPorts,
@@ -122,7 +121,6 @@ const comments = (state = [], action) => {
       let newComment = {
         id: action.data.id,
         className: 'canvas-comment',
-        style: "",
         content: " ",
         height: 32,
         width: 128,
@@ -203,7 +201,6 @@ const links = (state = [], action) => {
       let newLink = {
         id: action.data.id,
         className: className,
-        style: "",
         source: action.data.srcNodeId,
         target: action.data.trgNodeId,
       };
@@ -225,7 +222,6 @@ const links = (state = [], action) => {
           createdLinks.push({
             id: action.data.linkIds[i],
             className: "canvas-comment-link",
-            style: "",
             source: action.data.id,
             target: action.data.selectedObjectIds[i],
           });
@@ -349,7 +345,6 @@ const getInitialState = () => {
       diagram: {},
       objectData: {created: time, updated: time, description: "", label: label} ,
       parents: [{id: uuid, label: label}],
-      style: "",
       userData: {},
       zoom: 100},
     paletteData: {}

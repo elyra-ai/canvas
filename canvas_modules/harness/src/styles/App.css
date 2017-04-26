@@ -194,6 +194,30 @@
   background-color: black;
 }
 
+
+/*  Override styles for comments in commentColorCanvas.json */
+
+.canvas-comment-1 {
+  background-color: #b98ba6;
+  color: #000;
+  border: 1px solid black;
+  text-align: center;
+}
+
+.canvas-comment-2 {
+  background-color: #a6c8e4;
+  color: #000;
+  border: 1px solid black;
+  text-align: center;
+}
+
+.canvas-comment-3 {
+  background-color: #80b1ac;
+  color: #000;
+  border: 1px solid black;
+  text-align: center;
+}
+
 /* This style is used in the customAttrs.json canvas file. */
 
 .node-image[data-attr1] {

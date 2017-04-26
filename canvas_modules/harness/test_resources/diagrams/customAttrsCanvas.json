@@ -1,7 +1,6 @@
 {
   "id": "153651d6-9b88-423c-b01b-861f12d01489",
   "className": "canvas-image",
-  "style": "",
   "zoom": 100,
   "objectData": {
     "label": "learning",
@@ -86,7 +85,6 @@
         "width": 200,
         "height": 150,
         "className": "",
-        "style": "",
         "content": "This canvas tests addition of custom attributes to a node. The node on the right has two custom attributes addded to it called data-attr1 and data-attr2. If you look at the dom in the debugger tools you should see them set on the node's image. The image on the right is shown with a black border if the data-attr1 custom attribute is applied correctly.",
         "userData": {
           "associatedIds": [

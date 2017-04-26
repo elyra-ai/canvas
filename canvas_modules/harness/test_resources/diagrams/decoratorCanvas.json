@@ -1,7 +1,6 @@
 {
   "id": "153651d6-9b88-423c-b01b-861f12d01489",
   "className": "canvas-image",
-  "style": "",
   "zoom": 100,
   "objectData": {
     "label": "learning",
@@ -144,8 +143,7 @@
         "width": 200,
         "height": 150,
         "className": "",
-        "style": "",
-        "content": "This canvas tests the layout of decorators. There should be one black box in each of the 4 positions. The two decorators to the right are hot spots so clicking them should output a decorationHandler() message to the test harness console.",
+        "content": " This canvas tests the layout of decorators. There should be one black box in each of the 4 positions. The two decorators to the right are hot spots so clicking them should output a decorationHandler() message to the test harness console.",
         "userData": {
           "associatedIds": [
              "id2PZSCTRPRIJ"

@@ -8,7 +8,7 @@ Feature: Canvas Sanity test from loaded file
     Given I am on the test harness
     Given I have toggled the app side panel
     Given I have uploaded palette "/test_resources/palettes/modelerPalette.json"
-    Given I have uploaded diagram "/test_resources/diagrams/modelerCanvasComments.json"
+    Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
     Given I have toggled the app side panel
 
 		Then I pause for 3 seconds

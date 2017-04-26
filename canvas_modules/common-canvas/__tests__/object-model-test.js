@@ -111,7 +111,7 @@ describe('ObjectModel handle model OK', () => {
 							 {id: "node1", xPos: 10, yPos: 10},
 							 {id: "node2", xPos: 20, yPos: 20},
 							 {id: "node3", xPos: 30, yPos: 30},
-							 {id: "node4", className: "canvas-node",style: "", image: "imageName",
+							 {id: "node4", className: "canvas-node", image: "imageName",
 							 outputPorts: [{name: "outPort", label: "Output Port", cardinality: "1:1"}],
 							 inputPorts: [{name: "inPort", label: "Input Port", cardinality: "1:1"}],
 							 xPos: 40, yPos: 40, objectData:{description:"", label:"Type"}}
@@ -463,7 +463,6 @@ describe('ObjectModel handle model OK', () => {
                 {id: "comment2", xPos: 60, yPos: 60},
                 {id: "comment3",
                  className: 'canvas-comment',
-                 style:"",
                  content: " ",
                  height: 32,
                  width: 128,
@@ -833,8 +832,8 @@ describe('ObjectModel handle model OK', () => {
               links: [
                 {id: "link1", source: "node1", target: "node2"},
                 {id: "link2", source: "comment1", target: "node2"},
-                {id: "link3", className: "canvas-data-link", style: "", source: "node2", target: "node3"},
-                {id: "link4", className: "canvas-comment-link", style: "", source: "comment1", target: "node2"}
+                {id: "link3", className: "canvas-data-link", source: "node2", target: "node3"},
+                {id: "link4", className: "canvas-comment-link", source: "comment1", target: "node2"}
               ]
              }
           };
