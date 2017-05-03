@@ -14,26 +14,7 @@
 
 import React from 'react'
 import {Button, ButtonInput, ButtonToolbar, Form, Tab, Panel, Grid, Row, Col, Nav, NavItem} from 'react-bootstrap'
-
 import {Tabs} from 'ap-components-react/dist/ap-components-react'
-
-/*
-import {
-  Breadcrumb,
-  Button,
-  Checkbox,
-  Code,
-  Dropdown,
-  Hyperlink,
-  Icon,
-  RadioGroup,
-  ResponsiveTable,
-  Slider,
-  TextField,
-  ToggleButton
-} from 'ap-components-react/dist/ap-components-react'
-*/
-
 import ControlItem from './control-item.jsx'
 import TextfieldControl from './textfield-control.jsx'
 import TextareaControl from './textarea-control.jsx'
@@ -60,7 +41,7 @@ export default class EditorForm extends React.Component {
     super(props);
     this.state = {
     };
-    this.valuesTable = props.form.data.currentProperties;
+    this.valuesTable = props.currentProperties;
 
     this.getControlValue = this.getControlValue.bind(this);
     this.updateControlValues = this.updateControlValues.bind(this);
@@ -319,24 +300,9 @@ export default class EditorForm extends React.Component {
   render() {
     var content = this.genUIContent(this.props.form.uiItems,
         "", this.getControlValue,
-        this.props.form.data.inputDataModel);
+        this.props.inputDataModel);
 
     var formButtons = [];
-
-    /*
-    // Ignore the server-supplied buttons for now.
-    for (var i=0;i < this.props.form.buttons.length;i++) {
-      var button = this.props.form.buttons[i];
-      var style = "default";
-      if (button.isPrimary) {
-        style = "primary";
-      }
-
-      var buttonInput = <Button key={"form-button-" + button.id} onClick={this.handleSubmit.bind(null, button.id)} bsStyle={style}>{button.text}</Button>
-      formButtons.push(buttonInput);
-    }
-    */
-
     return (
       <div className="well">
         <form id={"form-" + this.props.form.componentId} className="form-horizontal">
@@ -355,5 +321,7 @@ export default class EditorForm extends React.Component {
 
 EditorForm.propTypes = {
   form: React.PropTypes.object,
+	currentProperties: React.PropTypes.object,
+	inputDataModel: React.PropTypes.object,
   additionalComponents: React.PropTypes.object
 };

@@ -16,6 +16,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import PropertiesDialog from './properties-dialog.jsx'
 import EditorForm from './editor-controls/editor-form.jsx'
+import Form from './form/Form'
 
 export default class CommonProperties extends React.Component {
   constructor(props) {
@@ -35,15 +36,19 @@ export default class CommonProperties extends React.Component {
 
     this.props.propertiesInfo.applyPropertyChanges(settings, this.props.propertiesInfo.appData);
   }
-
+	generateForm(){
+		return Form.makeForm(this.props.propertiesInfo.operator, this.props.propertiesInfo.resources);
+	}
   render() {
     var propertiesDialog = [];
     if (this.props.showPropertiesDialog) {
       let form = <EditorForm ref="editorForm" key={Date()}
-                  form={this.props.propertiesInfo.formData}
+                  form={this.generateForm()}
+									currentProperties={this.props.propertiesInfo.currentProperties}
+									inputDataModel={this.props.propertiesInfo.inputDataModel}
                   additionalComponents={this.props.propertiesInfo.additionalComponents}/>;
       let title = this.props.propertiesInfo.title;
-      let size = this.props.propertiesInfo.formData.editorSize;
+      let size = form.editorSize;
       propertiesDialog = <PropertiesDialog
             onHide={this.props.propertiesInfo.closePropertiesDialog}
             title={title}

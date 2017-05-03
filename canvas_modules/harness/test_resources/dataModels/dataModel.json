@@ -1,0 +1,62 @@
+{
+  "inputDataModel": {
+    "columns": [
+      {
+        "name": "Age",
+        "label": "",
+        "storage": "Integer",
+        "measure": "Range",
+        "modelingRole": "Input"
+      },
+      {
+        "name": "Sex",
+        "label": "",
+        "storage": "String",
+        "measure": "Discrete",
+        "modelingRole": "Input"
+      },
+      {
+        "name": "BP",
+        "label": "",
+        "storage": "String",
+        "measure": "Discrete",
+        "modelingRole": "Input"
+      },
+      {
+        "name": "Cholesterol",
+        "label": "",
+        "storage": "String",
+        "measure": "Discrete",
+        "modelingRole": "Input"
+      },
+      {
+        "name": "Na",
+        "label": "",
+        "storage": "Real",
+        "measure": "Range",
+        "modelingRole": "Input"
+      },
+      {
+        "name": "K",
+        "label": "",
+        "storage": "Real",
+        "measure": "Range",
+        "modelingRole": "Input"
+      },
+      {
+        "name": "Drug",
+        "label": "",
+        "storage": "String",
+        "measure": "Discrete",
+        "modelingRole": "Input"
+      },
+      {
+        "name": "Na_to_K",
+        "label": "",
+        "storage": "Real",
+        "measure": "Range",
+        "modelingRole": "Input"
+      }
+    ]
+  }
+}
