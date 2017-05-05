@@ -9,7 +9,7 @@
 
  import {UIInfo} from "./UIInfo"
  import {ParameterDef, ParameterMetadata} from "./ParameterInfo"
- import {EditStyle} from "./constants"
+ import {EditStyle} from "./form-constants"
  import _ from "underscore";
 
 class StructureDef extends UIInfo{
@@ -19,9 +19,11 @@ class StructureDef extends UIInfo{
 		this.keyDefinition = keyDefinition;
 		this.parameterMetadata = parameterMetadata;
 	}
+
 	isEditStyleSubpanel(){
     return (this.editStyle() === EditStyle.SUBPANEL)
   }
+
 	parameterNames(){
 		let params = [];
 		if (this.parameterMetadata){
@@ -31,9 +33,11 @@ class StructureDef extends UIInfo{
 		}
 		return params;
 	}
+
   isEditStyleInlinel() {
     return (this.editStyle() === EditStyle.INLINE)
   }
+
 	keyAttributeIndex() {
 	if (this.keyDefinition) {
 		// Assume the key is always in the first column
@@ -45,6 +49,7 @@ class StructureDef extends UIInfo{
 		//propertyDefs.get.indexWhere { _.name == keyAttr }
 	//}
 	}
+
 	defaultStructure(addKeyDefinition){
 		//let defaults = propertyDefs.get.map { attribute => defaultAsJsString(attribute.defaultValue) }
 
@@ -71,10 +76,12 @@ class StructureDef extends UIInfo{
 		)
 	}
 }
+
 export class StructureMetadata{
 	constructor(structures){
 		this.structures = structures;
 	}
+
 	getStructure(name){
 		let structureDef;
 		this.structures.forEach(function(structure){
@@ -84,6 +91,7 @@ export class StructureMetadata{
 		})
 		return structureDef;
 	}
+
 	static makeStructureMetadata(structuresOp){
 		if (structuresOp){
 			let structures = [];

@@ -20,6 +20,7 @@ class ControlDef{
 		this.valueLabels = valueLabels;
 	}
 }
+
 export class Control extends ControlDef{
 	constructor(name, label, separateLabel, controlType, valueDef, role, additionalText, orientation, values, valueLabels, subControls, keyIndex, defaultRow, childItem) {
 		super(name, label, controlType, valueDef, role, additionalText, orientation, values, valueLabels);
@@ -30,6 +31,7 @@ export class Control extends ControlDef{
 		this.childItem = childItem;
 	}
 }
+
 export class SubControl extends ControlDef{
 	constructor(name, label, visible, width, controlType, valueDef, role, additionalText, orientation, values, valueLabels){
 		super(name, label, controlType, valueDef, role, additionalText, orientation, values, valueLabels);

@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 import {UIInfo} from "./UIInfo";
-import {Type, ParamRole} from "./constants";
+import {Type, ParamRole} from "./form-constants";
 import _ from "underscore";
 
 export class ParameterDef extends UIInfo{
@@ -23,12 +23,15 @@ export class ParameterDef extends UIInfo{
 		this.valueRestriction = valueRestriction;
 		this.default = defaultValue;
 	}
+
 	isList() {
 		return this.type.startsWith("array[")
 	}
+
 	isMapValue() {
 		return this.type.startsWith("map[")
 	}
+
 	propType(){
 		// If we don't recognize the base type as one of the built-in types, assume it's a structure
 		let value;
@@ -42,6 +45,7 @@ export class ParameterDef extends UIInfo{
 		}
 		return value;
 	}
+
 	getRole() {
 		if (this.role) {
 			return this.role
@@ -54,6 +58,7 @@ export class ParameterDef extends UIInfo{
 			return ParamRole.UNSPECIFIED
 		}
 	}
+
 	baseType() {
    let typ = this.type
    if (this.isList()) {
@@ -68,17 +73,21 @@ export class ParameterDef extends UIInfo{
      return typ;
    }
  }
+
 	structureType() {
 		return this.baseType();
 	}
+
 	getValidValues() {
 		if (this.getRole() === ParamRole.ENUM && this.valueRestriction) {
 			return this.valueRestriction
 		}
 	}
+
 	getValidValueCount(){
 		return (this.getValidValues() ? this.getValidValues().length : 0);
 	}
+
 	static makeParameterDef(paramOp){
 		return new ParameterDef(
 			_.propertyOf(paramOp)("name"),
@@ -96,11 +105,13 @@ export class ParameterDef extends UIInfo{
 		)
 	}
 }
+
  // PropertyProvider
 export class ParameterMetadata{
 	constructor( paramDefs){
 		this.paramDefs = paramDefs;
 	}
+
 	// Return a single parameter
 	getParameter(paramName){
 		let paramDef;
@@ -111,6 +122,7 @@ export class ParameterMetadata{
 		})
 		return paramDef;
 	}
+
 	// operation arguments
 	static makeParameterMetadata(opParameters){
 	if (opParameters){

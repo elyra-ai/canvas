@@ -7,7 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import {EditStyle, Size} from "./constants";
+import {EditStyle, Size} from "./form-constants";
 import _ from "underscore";
 
 export class ValueDef{
@@ -20,11 +20,13 @@ export class ValueDef{
 		return new ValueDef(parameter.propType(), parameter.isList(), parameter.isMapValue());
 	}
 }
+
 export class Label{
 	constructor(text){
 		this.text = text;
 	}
 }
+
 export class Button{
 	 constructor(id, text, isPrimary, url){
 		this.id = id;
@@ -33,6 +35,7 @@ export class Button{
 		this.url = url;
 	}
 }
+
 export class ControlPanel{
 	constructor(id, panelType, controls){
 		this.id = id;
@@ -40,6 +43,7 @@ export class ControlPanel{
 		this.uiItems = controls;
 	}
 }
+
 export class UIInfo{
 	constructor(label, description, resourceKey, uiHints){
 		this.label = label;
@@ -47,6 +51,7 @@ export class UIInfo{
 		this.resourceKey = resourceKey;
 		this.uiHints = uiHints;
 	}
+
 	/**
 	* Returns the value of an attribute from the property or the default value
 	* if no such attribute exists.
@@ -65,13 +70,16 @@ export class UIInfo{
 			return defaultValue
 		}
 	}
+
 	/**
 	* Returns the "additionalText" attribute which can be used to include additional
 	* text associated with the property control on the UI.
 	*/
-	getAdditionalText() {
+	getAdditionalText(l10nProvider) {
+		//TODO should return translated value
 		this.uiHintOrElse("additionalText")
 	}
+
 	/**
 	* Returns the "control" attribute which can be used to define which control should be used
 	* for editing a property. The control should be valid for the associated property.
@@ -79,12 +87,14 @@ export class UIInfo{
 	control(defaultControl) {
 		return this.uiHintOrElse("control", defaultControl);
 	}
+
 	/**
 	* Returns the "editStyle" attribute which can be used to define how structured values are edited.
 	*/
 	editStyle() {
 		return this.uiHintOrElse("editStyle", EditStyle.SUBPANEL)
 	}
+
 	/**
 	* Returns the "orientation" attribute which can be used to define how sub-items
 	* are laid out in the UI.
@@ -92,9 +102,11 @@ export class UIInfo{
 	orientation() {
 		return this.uiHintOrElse("orientation", undefined)
 	}
+
 	columns(defaultCol){
 		return this.uiHintOrElse("columns", defaultCol)
 	}
+
 	/**
    * Returns the "separatorBefore" attribute which can be used to insert a horizontal
    * separator before the control in the UI.
@@ -102,6 +114,7 @@ export class UIInfo{
   separatorBefore(){
     return this.uiHintOrElse("separatorBefore", false);
   }
+
   /**
    * Returns the "separatorAfter" attribute which can be used to insert a horizontal
    * separator before the control in the UI.
@@ -109,6 +122,7 @@ export class UIInfo{
   separatorAfter(){
     return this.uiHintOrElse("separatorAfter", false);
   }
+
 	/**
    * Returns the "dependsOn" attribute which is used for panel
    * selectors to identify which control they should use.
@@ -116,6 +130,7 @@ export class UIInfo{
   dependsOn() {
     return this.uiHintOrElse("dependsOn")
   }
+
 	/**
 	* Returns the "editorSize" attribute which can be used to define how large an item should be in the UI.
 	*/

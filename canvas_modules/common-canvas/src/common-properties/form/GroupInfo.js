@@ -8,7 +8,7 @@
  *******************************************************************************/
 
  import {UIInfo} from "./UIInfo"
- import {GroupType} from "./constants"
+ import {GroupType} from "./form-constants"
  import _ from "underscore";
 
 class Group extends UIInfo{

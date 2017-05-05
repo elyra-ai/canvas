@@ -6,7 +6,8 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
- import {ItemType} from "./constants"
+
+ import {ItemType} from "./form-constants"
 
 export class UIItem {
 	constructor(itemType, tabs, panel, control, text, secondaryText, dependsOn){
@@ -18,9 +19,11 @@ export class UIItem {
 		this.secondaryText = secondaryText;     // when ADDITIONAL_LINK (subpanel label)
 		this.dependsOn = dependsOn;          // when PANEL_SELECTOR (control to obtain value from)
 	}
+
 	static makePrimaryTabs(tabs){
 		return new UIItem(ItemType.PRIMARY_TABS, tabs, undefined, undefined, undefined, undefined, undefined);
 	}
+
 	static makeSubTabs(tabs){
 		return new UIItem(ItemType.SUB_TABS, tabs, undefined, undefined, undefined, undefined, undefined);
 	}

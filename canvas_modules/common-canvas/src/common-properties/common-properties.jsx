@@ -36,16 +36,20 @@ export default class CommonProperties extends React.Component {
 
     this.props.propertiesInfo.applyPropertyChanges(settings, this.props.propertiesInfo.appData);
   }
-	generateForm(){
-		return Form.makeForm(this.props.propertiesInfo.operator, this.props.propertiesInfo.resources);
+	
+	getForm(){
+		if (this.props.propertiesInfo.formData){
+			return this.props.propertiesInfo.formData;
+		}else if(this.props.propertiesInfo.operator) {
+			 return Form.makeForm(this.props.propertiesInfo.operator, this.props.propertiesInfo.inputDataModel, this.props.propertiesInfo.currentProperties,
+					this.props.propertiesInfo.resources);
+		}
 	}
   render() {
     var propertiesDialog = [];
     if (this.props.showPropertiesDialog) {
       let form = <EditorForm ref="editorForm" key={Date()}
-                  form={this.generateForm()}
-									currentProperties={this.props.propertiesInfo.currentProperties}
-									inputDataModel={this.props.propertiesInfo.inputDataModel}
+                  form={this.getForm()}
                   additionalComponents={this.props.propertiesInfo.additionalComponents}/>;
       let title = this.props.propertiesInfo.title;
       let size = form.editorSize;

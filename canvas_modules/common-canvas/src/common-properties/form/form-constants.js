@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Licensed Materials - Property of IBM
+ * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ *
+ * Note to U.S. Government Users Restricted Rights:
+ * Use, duplication or disclosure restricted by GSA ADP Schedule
+ * Contract with IBM Corp.
+ *******************************************************************************/
+
 const ItemType = {
 	CONTROL: "control",
 	ADDITIONAL_LINK: "additionalLink",
@@ -8,15 +17,18 @@ const ItemType = {
 	PRIMARY_TABS: "primaryTabs",
 	PANEL_SELECTOR: "panelSelector"
 }
+
 const EditStyle = {
 	INLINE: "inline",
 	SUBPANEL: "subpanel"
 }
+
 const Size = {
 	LARGE: "large",
 	MEDIUM: "medium",
 	SMALL: "small"
 }
+
 const GroupType = {
 	CONTROLS: "controls",
 	TABS: "tabs",
@@ -26,10 +38,12 @@ const GroupType = {
 	COLUMN_ALLOCATION: "columnAllocation",
 	PANEL_SELECTOR: "panelSelector"
 }
+
 const PanelType = {
 	GENERAL: "general",
 	COLUMN_ALLOCATION: "columnAllocation"
 }
+
 const ControlType = {
 	CUSTOM: "custom",
 	TEXTFIELD: "textfield",
@@ -49,7 +63,8 @@ const ControlType = {
 	ALLOCATEDSTRUCTURES: "allocatedstructures",
 	STRUCTUREEDITOR: "structureeditor",
 	STRUCTURELISTEDITOR: "structurelisteditor"
-};
+}
+
 const ParamRole = {
 	TEXT:"text",
 	ENUM: "enum",
@@ -64,7 +79,8 @@ const ParamRole = {
 	INTERVAL_SECOND: "interval_second",
 	CUSTOM: "custom",
 	UNSPECIFIED: ""
-};
+}
+
 const Type = {
 	BOOLEAN: "boolean",
 	INTEGER: "integer",
@@ -75,6 +91,7 @@ const Type = {
 	DATE: "date",
 	STRUCTURE: "structure"
 }
+
 function hasValue(Enum, value){
 	for(let key in Enum){
 		if (value === Enum[key]){
@@ -83,4 +100,5 @@ function hasValue(Enum, value){
 	}
 	return false;
 }
+
 export{ GroupType, PanelType, Type, ParamRole, ControlType, hasValue, EditStyle, Size, ItemType }

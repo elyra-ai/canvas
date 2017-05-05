@@ -6,11 +6,12 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
+
 import {ValueDef, Label, ControlPanel} from "./UIInfo";
 import {Control, SubControl} from "./ControlInfo";
 import {UIItem} from "./UIItem";
 import _ from "underscore";
-import {GroupType, PanelType, Type, ControlType, ParamRole} from "./constants"
+import {GroupType, PanelType, Type, ControlType, ParamRole} from "./form-constants"
 
 class EditorTab{
 	constructor(label, name, uiItem){
@@ -20,29 +21,29 @@ class EditorTab{
 	}
 }
 
-function _makePrimaryTab(operatorDef, group){
-	let label = operatorDef.name + " TODO translate";
-	return new EditorTab(label, group.name, _makeUIItem(operatorDef.parameterMetadata, group, operatorDef.structureMetadata))
+function makePrimaryTab(operatorDef, group, l10nProvider){
+	let label = l10nProvider.l10nLabel(operatorDef, operatorDef.name);
+	return new EditorTab(label, group.name, _makeUIItem(operatorDef.parameterMetadata, group, operatorDef.structureMetadata, l10nProvider))
 }
 
-function _makeUIItem(parameterMetadata, group, structureMetadata){
-	 let groupName = group.name;
+function _makeUIItem(parameterMetadata, group, structureMetadata, l10nProvider){
+	 let groupName = group.name;  //TODO Seems like this should be translated
 	 switch(group.groupType()) {
 		 case GroupType.CONTROLS :
-		 	return UIItem.makePanel(new ControlPanel(groupName, PanelType.GENERAL, _makeControls(parameterMetadata, group, structureMetadata)));
+		 	return UIItem.makePanel(new ControlPanel(groupName, PanelType.GENERAL, _makeControls(parameterMetadata, group, structureMetadata, l10nProvider)));
 		 case GroupType.COLUMN_ALLOCATION:
-			 return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_ALLOCATION, _makeControls(parameterMetadata, group, structureMetadata)));
+			 return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_ALLOCATION, _makeControls(parameterMetadata, group, structureMetadata, l10nProvider)));
 		 case GroupType.ADDITIONAL:
-			 let panel = new ControlPanel(groupName, PanelType.GENERAL, _makeControls(parameterMetadata, group, structureMetadata));
-			 let groupLabel = group.name + " TODO translate";
+			 let panel = new ControlPanel(groupName, PanelType.GENERAL, _makeControls(parameterMetadata, group, structureMetadata, l10nProvider));
+			 let groupLabel = l10nProvider.l10nLabel(group, group.name);
 			 return UIItem.makeAdditionalLink(groupLabel, groupLabel, panel);
 		 case GroupType.SUB_TABS:
 			 // Defines a sub-tab group where each child group represents a sub-tab.
 			 let subTabItems = [];
 			 group.subGroups.forEach(function(subGroup){
 				 let subGroupName = subGroup.name
-				 let groupItem = _makeUIItem(parameterMetadata, subGroup, structureMetadata)
-				 let groupLabel = subGroup.name + " TODO translate"
+				 let groupItem = _makeUIItem(parameterMetadata, subGroup, structureMetadata, l10nProvider)
+				 let groupLabel = l10nProvider.l10nLabel(subGroup, subGroup.name);
 				 subTabItems.push(new EditorTab(groupLabel, subGroupName, groupItem))
 			 })
 			 return UIItem.makeSubTabs(subTabItems);
@@ -51,15 +52,15 @@ function _makeUIItem(parameterMetadata, group, structureMetadata){
 			 let panSelSubItems = [];
 			 group.subGroups.forEach(function(subGroup){
 				let subGroupName = subGroup.name
-				let groupItem = _makeUIItem(parameterMetadata, subGroup, structureMetadata);
-				let groupLabel = subGroup.name + " TODO translate";
+				let groupItem = _makeUIItem(parameterMetadata, subGroup, structureMetadata, l10nProvider);
+				let groupLabel = l10nProvider.l10nLabel(subGroup, subGroup.name);
 				panSelSubItems.push(new EditorTab(groupLabel, subGroupName, groupItem));
 			})
 			 return UIItem.makePanelSelector(panSelSubItems, group.dependsOn());
 		 case GroupType.PANELS:
 			 let panSubItems = [];
 			 group.subGroups.forEach(function(subGroup){
-				 let groupItem = _makeUIItem(parameterMetadata, subGroup, structureMetadata);
+				 let groupItem = _makeUIItem(parameterMetadata, subGroup, structureMetadata, l10nProvider);
 				 panSubItems.push(groupItem);
 			 })
 			 return UIItem.makePanel(new ControlPanel(groupName, PanelType.GENERAL, panSubItems));
@@ -71,7 +72,7 @@ function _makeUIItem(parameterMetadata, group, structureMetadata){
  /**
  * Called on a base property group.
  */
-function _makeControls(parameterMetadata, group, structureMetadata) {
+function _makeControls(parameterMetadata, group, structureMetadata, l10nProvider) {
 	let uiItems = [];
 	group.parameterNames().forEach(function(paramName){
 		// Assume property definition exists
@@ -80,7 +81,7 @@ function _makeControls(parameterMetadata, group, structureMetadata) {
 		if (prop.propType() === Type.STRUCTURE && structureMetadata) {
 			structureDef = structureMetadata.getStructure(prop.structureType());
 		}
-		let control = UIItem.makeControl(_makeControl(parameterMetadata, paramName, group, structureDef))
+		let control = UIItem.makeControl(_makeControl(parameterMetadata, paramName, group, structureDef, l10nProvider))
 		if (prop.separatorBefore() || prop.separatorAfter()) {
 			var subItems = [];
 			if (prop.separatorBefore()) {
@@ -98,19 +99,20 @@ function _makeControls(parameterMetadata, group, structureMetadata) {
 	})
 	if (group.subGroups) {
 		group.subGroups.forEach(function(group){
-			let subGroup = _makeUIItem(parameterMetadata, group, structureMetadata);
+			let subGroup = _makeUIItem(parameterMetadata, group, structureMetadata, l10nProvider);
 			uiItems.push(subGroup);
 		});
 	}
 	return uiItems;
 }
-function _makeControl(parameterMetadata, paramName, group, structureDef){
+
+function _makeControl(parameterMetadata, paramName, group, structureDef, l10nProvider){
 	 // Assume the property is defined
 	 let parameter = parameterMetadata.getParameter(paramName)
 
-	 let additionalText = parameter.getAdditionalText();
+	 let additionalText = parameter.getAdditionalText(l10nProvider);
 	 let orientation = parameter.orientation();
-	 let controlLabel = new Label(parameter.name + " TODO translate");////ControlLabel(l10nLabel(property, property.name, l10nProvider))
+	 let controlLabel = new Label(l10nProvider.l10nLabel(parameter, parameter.name));
 
 	 // The role is used to modify the behaviour of certain controls
 	 let role;
@@ -239,26 +241,23 @@ function _makeControl(parameterMetadata, paramName, group, structureDef){
 				 if (structureDef) {
 					 if (structureDef.isEditStyleSubpanel()) {
 						// If we're not editing in-line then create a sub-panel that can be used to edit the attributes
-						let panel = new ControlPanel(structureDef.name, PanelType.GENERAL, _makeControls(structureDef.parameterMetadata, structureDef, undefined));
-						let groupLabel = structureDef.name + " TODO translate";
+						let panel = new ControlPanel(structureDef.name, PanelType.GENERAL, _makeControls(structureDef.parameterMetadata, structureDef, undefined, l10nProvider));
+						let groupLabel = l10nProvider.l10nLabel(structureDef, structureDef.name);
 						childItem = UIItem.makeAdditionalLink("...", groupLabel, panel);
 					 }
-
 					 keyIndex = structureDef.keyAttributeIndex();
-
 					 // The defaultRow allows the UI to create a new row with sensible settings
 					 // when needed
 					 defaultRow = structureDef.defaultStructure(parameter.isList());
-
 					 // For inline/row editing, create definitions for all the columns that can be edited
 					 subControls = [];
 					 structureDef.parameterMetadata.paramDefs.forEach(function(param){
-						 subControls.push(_makeSubControl(param));
+						 subControls.push(_makeSubControl(param, l10nProvider));
 					 })
 					 // If the property is a keyed property or a structure list then the key should not be included in the
 					 // structure definition. However it will still need to be included in the table column definitions.
 					 if ((parameter.isMapValue() || parameter.isList()) && structureDef.keyDefinition) {
-						 subControls.push(_makeSubControl(structureDef.keyDefinition))
+						 subControls.push(_makeSubControl(structureDef.keyDefinition, l10nProvider))
 					 }
 					 if (parameter.isList() || parameter.isMapValue()) {
 						 if (group.groupType() === GroupType.COLUMN_ALLOCATION) {
@@ -283,18 +282,17 @@ function _makeControl(parameterMetadata, paramName, group, structureDef){
 	 }
 	 let valueLabels = function(){
 		 if (parameter.getRole() === ParamRole.ENUM) {
-			 return _parameterValueLabels(parameter)
+			 return _parameterValueLabels(parameter, l10nProvider)
 		 }
 	}
 	return new Control(parameter.name, controlLabel, separateLabel, parameter.control(controlType), ValueDef.make(parameter),role, additionalText, orientation,
 		parameter.getValidValues(), valueLabels, subControls, keyIndex, defaultRow, childItem)
 }
 
-function _makeSubControl(parameter){
-	let additionalText = parameter.getAdditionalText();
+function _makeSubControl(parameter, l10nProvider){
+	let additionalText = parameter.getAdditionalText(l10nProvider);
 	let orientation = parameter.orientation();
-	let controlLabel = parameter.name + " TODO translate"//ControlLabel(l10nLabel(property, property.name, l10nProvider))
-
+	let controlLabel = l10nProvider.l10nLabel(parameter, parameter.name);
 	let role;
 	let controlType;
 	switch(parameter.propType()) {
@@ -336,14 +334,15 @@ function _makeSubControl(parameter){
 
 	let valueLabels;
 	if (parameter.getRole() === ParamRole.ENUM) {
-		valueLabels = _parameterValueLabels(parameter);
+		valueLabels = _parameterValueLabels(parameter, l10nProvider);
 	}
 
 	return new SubControl(parameter.name, controlLabel, parameter.visible,
 			parameter.columns(8), parameter.control(controlType), ValueDef.make(parameter),
 			role, additionalText, orientation, parameter.getValidValues(), valueLabels)
 }
-function _parameterValueLabels(parameter){
+
+function _parameterValueLabels(parameter, l10nProvider){
   if (_.has(parameter.valueRestriction, "labels")) {
       return parameter.valueRestriction.labels
     }
@@ -355,4 +354,5 @@ function _parameterValueLabels(parameter){
     //	}
     //}
 }
-module.exports.makePrimaryTab = _makePrimaryTab;
+
+module.exports.makePrimaryTab = makePrimaryTab;
