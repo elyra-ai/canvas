@@ -15,7 +15,6 @@
 import React from 'react'
 import {TextField} from 'ap-components-react/dist/ap-components-react'
 import EditorControl from './editor-control.jsx'
-import {CHARACTER_LIMITS} from '../constants/constants.js'
 
 export default class NumberfieldControl extends EditorControl {
   constructor(props) {
@@ -38,29 +37,24 @@ export default class NumberfieldControl extends EditorControl {
   }
 
   render() {
+		let disablePlaceHolder = true;
+		//only enable if additionText is available
+		if (this.props.control.additionalText){
+			disablePlaceHolder=false;
+		}
     return(
       <TextField
         type="number"
         id={this.getControlID()}
         placeholder={this.props.control.additionalText}
+				disabledPlaceholderAnimation={disablePlaceHolder}
         onChange={this.handleChange}
         value={this.state.controlValue}
-        maxLength={CHARACTER_LIMITS.NODE_PROPERTIES_DIALOG_TEXT_FIELD}
-        maxCount={CHARACTER_LIMITS.NODE_PROPERTIES_DIALOG_TEXT_FIELD}
+				numberInput="close"
+				onChange={e => this.setState({ controlValue: e.target.value })}
+  			onReset={() => this.setState({ controlValue: "0" })}
         />
     );
-
-    /*
-    return (
-      <Input
-        type="number"
-        id={this.getControlID()}
-        name={this.props.control.name}
-        help={this.props.control.additionalText}
-        onChange={this.handleChange}
-        value={this.state.controlValue}/>
-    );
-    */
   }
 }
 

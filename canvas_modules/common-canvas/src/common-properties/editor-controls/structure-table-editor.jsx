@@ -181,19 +181,19 @@ export default class StructureTableEditor extends EditorControl {
     }
 
     return (
-			<div id="fixed-data-table-container">
-	      <Table
-	        id={this.getControlID()}
-	        className="table-editor"
-	        headerHeight={HEADER_HEIGHT}
-	        rowHeight={ROW_HEIGHT}
-	        rowsCount={controlValue.length}
-	        width={totalWidth} height={180}
-	        rowClassNameGetter={this.getRowClassName}
-	        onRowClick={this.handleRowClick}
-	        {...this.props}>
-	        {columns}
-	      </Table>
+      <div id="fixed-data-table-container">
+        <Table
+          id={this.getControlID()}
+          className="table-editor"
+          headerHeight={HEADER_HEIGHT}
+          rowHeight={ROW_HEIGHT}
+          rowsCount={controlValue.length}
+          width={totalWidth} height={180}
+          rowClassNameGetter={this.getRowClassName}
+          onRowClick={this.handleRowClick}
+          {...this.props}>
+          {columns}
+        </Table>
       </div>
     );
   }

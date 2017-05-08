@@ -49,6 +49,12 @@ export default class ColumnSource extends React.Component {
     return this.state.selectedColumns;
   }
 
+	clearSelectedColumns() {
+		this.setState({
+			selectedColumns: []
+		});
+  }
+
   setAllocatedColumns(columnNames) {
     console.log("ColumnSource.setAllocatedColumns()");
     console.log(columnNames);

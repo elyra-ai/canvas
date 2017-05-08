@@ -67,11 +67,15 @@
 }
 
 .column-structure-allocator-control-row-selected .public_fixedDataTableCell_main {
-	background-color: #60C3B9;
+  background-color: #60C3B9;
 }
 
 .public_fixedDataTable_main {
-	margin: auto;
+  margin: auto;
+}
+
+.form-control {
+	color: #a6266e;
 }
 
 select option{
@@ -115,11 +119,11 @@ select option:checked select:not(:focus){
   cursor: pointer !important;
   margin:5px;
   border-right: 2px solid #f9f9fb;
-	transform: rotate(90deg);
+  transform: rotate(90deg);
 }
 
 .field-allocator-button:hover{
-  border-bottom: 2px solid #a6266e;
+  border-right: 2px solid #a6266e;
   box-sizing:border-box;
 }
 
@@ -148,9 +152,6 @@ select option:checked select:not(:focus){
   .column-allocation-panel-row{
     height: 300px;
   }
-  /*.col-md-1 {
-    transform: translateY(40%); /* column-allocation-panel.jsx */
-  /*}*/
   .field-allocator-button{
     width: 10px !important;
     border-bottom: 2px solid #f9f9fb;
