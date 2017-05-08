@@ -38,11 +38,17 @@ export default class TextfieldControl extends EditorControl {
   }
 
   render() {
+		let disablePlaceHolder = true;
+		//only enable if additionText is available
+		if (this.props.control.additionalText){
+			disablePlaceHolder=false;
+		}
     return (
       <TextField
         type="text"
         id={this.getControlID()}
-        placeholder={this.props.control.additionalText}
+        disabledPlaceholderAnimation={disablePlaceHolder}
+				placeholder={this.props.control.additionalText}
         onChange={this.handleChange}
         value={this.state.controlValue}
         maxCount={CHARACTER_LIMITS.NODE_PROPERTIES_DIALOG_TEXT_FIELD}

@@ -102,9 +102,9 @@ export default class StructurelisteditorControl extends StructureTableEditor {
 
     return <div id={this.getControlID()}>
       <div id="structure-list-editor-table-buttons">
-	      {table}
-	      <div id="structure-list-editor-buttons-container"><span>{add} {remove}</span></div>
-			</div>
+        {table}
+        <div id="structure-list-editor-buttons-container"><span>{add} {remove}</span></div>
+      </div>
     </div>;
   }
 }

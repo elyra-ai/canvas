@@ -83,7 +83,7 @@ export default class ColumnAllocationPanel extends React.Component {
     // so they can be made available in the column source.
     let selected = control.getSelectedColumns();
     control.removeColumns(selected, this.updateColumnSource.bind(this));
-
+		this.refs.columnSource.clearSelectedColumns();
     //this.updateColumnSource();
   }
 
