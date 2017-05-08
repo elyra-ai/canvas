@@ -29,26 +29,26 @@ export class UIItem {
 	}
 
 	static makePanelSelector(tabs, dependsOn){
-	  return new UIItem(ItemType.PANEL_SELECTOR, tabs, undefined, undefined, undefined, undefined, dependsOn);
+		return new UIItem(ItemType.PANEL_SELECTOR, tabs, undefined, undefined, undefined, undefined, dependsOn);
 	}
 
 	static makePanel(panel){
-	  return new UIItem(ItemType.PANEL, undefined, panel);
+		return new UIItem(ItemType.PANEL, undefined, panel);
 	}
 
 	static makeAdditionalLink(linkText, dialogText, panel){
-	  return new UIItem(ItemType.ADDITIONAL_LINK, undefined, panel, undefined, linkText, dialogText);
+		return new UIItem(ItemType.ADDITIONAL_LINK, undefined, panel, undefined, linkText, dialogText);
 	}
 
 	static makeControl(control){
-	  return new UIItem(ItemType.CONTROL, undefined, undefined, control);
+		return new UIItem(ItemType.CONTROL, undefined, undefined, control);
 	}
 
 	static makeHSeparator(label){
-	  return new UIItem(ItemType.HORIZONTAL_SEPARATOR, undefined, undefined, undefined, label);
+		return new UIItem(ItemType.HORIZONTAL_SEPARATOR, undefined, undefined, undefined, label);
 	}
 
 	static makeStaticText(label){
-	  return new UIItem(ItemType.STATIC_TEXT, undefined, undefined, undefined, label);
+		return new UIItem(ItemType.STATIC_TEXT, undefined, undefined, undefined, label);
 	}
 }

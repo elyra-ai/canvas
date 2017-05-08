@@ -86,7 +86,7 @@ function _makeControls(parameterMetadata, group, structureMetadata, l10nProvider
 		let prop = parameterMetadata.getParameter(paramName)
 		let structureDef;
 		if (prop.propType() === Type.STRUCTURE && structureMetadata) {
-			structureDef = structureMetadata.getStructure(prop.structureType());
+			structureDef = structureMetadata.getStructure(prop.baseType());
 		}
 		let control = UIItem.makeControl(_makeControl(parameterMetadata, paramName, group, structureDef, l10nProvider))
 		if (prop.separatorBefore() || prop.separatorAfter()) {
@@ -290,11 +290,10 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 				controlType = ControlType.TEXTAREA
 		 }
 	 }
-	 let valueLabels = function(){
-		 if (parameter.getRole() === ParamRole.ENUM) {
-			 return _parameterValueLabels(parameter, l10nProvider)
-		 }
-	}
+	 let valueLabels;
+	 if (parameter.getRole() === ParamRole.ENUM) {
+		 valueLabels =  _parameterValueLabels(parameter, l10nProvider);
+	 }
 	return new Control(parameter.name, controlLabel, separateLabel, parameter.control(controlType), ValueDef.make(parameter),role, additionalText, orientation,
 		parameter.getValidValues(), valueLabels, subControls, keyIndex, defaultRow, childItem)
 }
@@ -356,21 +355,24 @@ function _makeSubControl(parameter, l10nProvider){
 }
 
 function _parameterValueLabels(parameter, l10nProvider){
-	if (_.has(parameter.valueRestriction, "labels")) {
-		return parameter.valueRestriction.labels
-	}else {
-		let key;
-		if (_.has(parameter.valueRestriction, "labelsKey")){
-			key = parameter.valueRestriction.labelsKey;
-		}else if (parameter.resourceKey){
-			key = parameter.resourceKey;
-		}else {
-			key = parameter.name;
+	if (parameter.valueRestriction){
+		if (parameter.valueRestriction.labels) {
+			return parameter.valueRestriction.labels
+		}else if (parameter.valueRestriction.oneOf) {
+			let key;
+			if (parameter.valueRestriction.labelsKey){
+				key = parameter.valueRestriction.labelsKey;
+			}else if (parameter.resourceKey){
+				key = parameter.resourceKey;
+			}else {
+				key = parameter.name;
+			}
+			let paramLabels = [];
+			parameter.valueRestriction.oneOf.forEach(function(paramValue){
+				paramLabels.push(l10nProvider.l10nValueLabel(key, paramValue));
+			})
+			return paramLabels;
 		}
-		let paramLabels = [];
-		parameter.valueRestriction.forEach(function(paramValue){
-			paramLabels.push(l10nProvider.l10nValueLabel(key, paramValue));
-		})
 	}
 }
 

@@ -24,22 +24,9 @@ export default class Form{
 		this.data = data;
 	}
 
-	addUiItem(uiItem){
-		if (this.uiItems){
-			this.uiItems.push(uiItem);
-		}else{
-			this.uiItems = [uiItem];
-		}
-	}
-
-	addButton(button){
-		if (this.buttons){
-			this.buttons.push(button);
-		}else{
-			this.buttons = [button];
-		}
-	}
-
+	/**
+	* Returns a new Form
+	*/
 	static makeForm(operator, dataModel, currentParameters, resources){
 		if (operator){
 			let op = OperaterDef.makeOperaterDef(operator);

@@ -6,7 +6,7 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
- 
+
 import {StructureMetadata} from "./StructureInfo";
 import {GroupMetadata} from "./GroupInfo";
 import {ParameterMetadata} from "./ParameterInfo";
@@ -23,15 +23,17 @@ export class OperaterDef extends UIInfo{
 	}
 
 	static makeOperaterDef(operator){
-		let structureMetadata = StructureMetadata.makeStructureMetadata(_.propertyOf(operator.metadata)("structures"))
-		let parameterMetadata = ParameterMetadata.makeParameterMetadata(_.propertyOf(operator.metadata)("arguments"));
-		let groupMetadata = GroupMetadata.makeGroupMetadata(_.propertyOf(operator.metadata)("argumentGroups"))
-		return new OperaterDef(
-			_.propertyOf(operator)("name"),
-			_.propertyOf(operator.metadata)("uiHints"),
-			structureMetadata,
-			parameterMetadata,
-			groupMetadata
-		);
+		if (operator){
+			let structureMetadata = StructureMetadata.makeStructureMetadata(_.propertyOf(operator.metadata)("structures"))
+			let parameterMetadata = ParameterMetadata.makeParameterMetadata(_.propertyOf(operator.metadata)("arguments"));
+			let groupMetadata = GroupMetadata.makeGroupMetadata(_.propertyOf(operator.metadata)("argumentGroups"))
+			return new OperaterDef(
+				_.propertyOf(operator)("name"),
+				_.propertyOf(operator.metadata)("uiHints"),
+				structureMetadata,
+				parameterMetadata,
+				groupMetadata
+			)
+		}
 	}
 }

@@ -19,9 +19,11 @@ class Group extends UIInfo{
 		this.uiHints = uiHints;
 		this.subGroups = subGroups;
 	}
+
 	parameterNames(){
 		return this.parameters;
 	}
+
 	groupType(){
 		if (_.has(this.uiHints, "groupType")){
 			return this.uiHints.groupType;
@@ -29,25 +31,30 @@ class Group extends UIInfo{
 			return GroupType.CONTROLS;
 		}
 	}
+
 	static makeGroup(groupOp){
-		let subGroups;
-		if (_.has(groupOp,"subGroups")){
-			subGroups = [];
-			for (let group of groupOp.subGroups){
-				subGroups.push(Group.makeGroup(group));
+		if (groupOp){
+			let subGroups;
+			if (_.has(groupOp,"subGroups")){
+				subGroups = [];
+				for (let group of groupOp.subGroups){
+					subGroups.push(Group.makeGroup(group));
+				}
 			}
+			return new Group(
+				_.propertyOf(groupOp)("name"),
+				_.propertyOf(groupOp)("arguments"),
+				_.propertyOf(groupOp)("uiHints"),
+				subGroups)
 		}
-		return new Group(
-			_.propertyOf(groupOp)("name"),
-			_.propertyOf(groupOp)("arguments"),
-			_.propertyOf(groupOp)("uiHints"),
-			subGroups)
 	}
 }
+
 export class GroupMetadata{
 	constructor(groups){
 		this.groups = groups;
 	}
+
 	static makeGroupMetadata(groupsOp){
 		if (groupsOp){
 			let groups = [];

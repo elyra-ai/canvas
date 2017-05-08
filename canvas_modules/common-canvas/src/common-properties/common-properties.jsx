@@ -44,6 +44,7 @@ export default class CommonProperties extends React.Component {
 	}
 	render() {
 		let formData = this.getForm();
+		// console.info(JSON.stringify(formData));
 		var propertiesDialog = [];
 		if (this.props.showPropertiesDialog) {
 			let editorForm = <EditorForm ref="editorForm" key={Date()}

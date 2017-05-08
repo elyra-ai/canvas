@@ -13,15 +13,16 @@ export class L10nProvider {
 	constructor(resources){
 		this.resources = resources;
 	}
+
   /**
    * Look up a localised resource using the supplied key.
    */
   l10n(key){
+		let value;
 		if (this.resources) {
-			return _.propertyOf(this.resources)(key);
-		}else{
-			return key
+			value = _.propertyOf(this.resources)(key);
 		}
+		return (value ? value : key);
 	}
 
   /**

@@ -21,9 +21,12 @@ class StructureDef extends UIInfo{
 	}
 
 	isEditStyleSubpanel(){
-    return (this.editStyle() === EditStyle.SUBPANEL)
-  }
+		return (this.editStyle() === EditStyle.SUBPANEL)
+	}
 
+	/**
+	* Returns a array of parameter names
+	*/
 	parameterNames(){
 		let params = [];
 		if (this.parameterMetadata){
@@ -60,19 +63,14 @@ class StructureDef extends UIInfo{
 	}
 
 	static makeStructure(structureOp){
-		let paramDefs;
-		if (_.has(structureOp.metadata,"arguments")){
-			paramDefs = [];
-			for (let param of structureOp.metadata.arguments){
-				paramDefs.push(ParameterDef.makeParameterDef(param));
-			}
+		if (structureOp){
+			return new StructureDef(
+				_.propertyOf(structureOp)("name"),
+				ParameterDef.makeParameterDef(_.propertyOf(structureOp.metadata)("keyDefinition")),
+				ParameterMetadata.makeParameterMetadata(_.propertyOf(structureOp.metadata)("arguments")),
+				_.propertyOf(structureOp.metadata)("uiHints")
+			)
 		}
-		return new StructureDef(
-			_.propertyOf(structureOp)("name"),
-			ParameterDef.makeParameterDef(_.propertyOf(structureOp.metadata)("keyDefinition")),
-			ParameterMetadata.makeParameterMetadata(paramDefs),
-			_.propertyOf(structureOp.metadata)("uiHints")
-		)
 	}
 }
 

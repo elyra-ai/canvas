@@ -103,33 +103,36 @@ export class UIInfo{
 		return this.uiHintOrElse("orientation", undefined)
 	}
 
+	/**
+	* Returns the "columns" uihint or the default value if a "columns" hint has not been supplied.
+	*/
 	columns(defaultCol){
 		return this.uiHintOrElse("columns", defaultCol)
 	}
 
 	/**
-   * Returns the "separatorBefore" attribute which can be used to insert a horizontal
-   * separator before the control in the UI.
-   */
-  separatorBefore(){
-    return this.uiHintOrElse("separatorBefore", false);
-  }
-
-  /**
-   * Returns the "separatorAfter" attribute which can be used to insert a horizontal
-   * separator before the control in the UI.
-   */
-  separatorAfter(){
-    return this.uiHintOrElse("separatorAfter", false);
-  }
+	* Returns the "separatorBefore" attribute which can be used to insert a horizontal
+	* separator before the control in the UI.
+	*/
+	separatorBefore(){
+		return this.uiHintOrElse("separatorBefore", false);
+	}
 
 	/**
-   * Returns the "dependsOn" attribute which is used for panel
-   * selectors to identify which control they should use.
-   */
-  dependsOn() {
-    return this.uiHintOrElse("dependsOn")
-  }
+	* Returns the "separatorAfter" attribute which can be used to insert a horizontal
+	* separator before the control in the UI.
+	*/
+	separatorAfter(){
+		return this.uiHintOrElse("separatorAfter", false);
+	}
+
+	/**
+	* Returns the "dependsOn" attribute which is used for panel
+	* selectors to identify which control they should use.
+	*/
+	dependsOn() {
+		return this.uiHintOrElse("dependsOn")
+	}
 
 	/**
 	* Returns the "editorSize" attribute which can be used to define how large an item should be in the UI.
