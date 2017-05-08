@@ -34,30 +34,29 @@ class StructureDef extends UIInfo{
 		return params;
 	}
 
-  isEditStyleInlinel() {
-    return (this.editStyle() === EditStyle.INLINE)
-  }
+	isEditStyleInlinel() {
+		return (this.editStyle() === EditStyle.INLINE)
+	}
 
 	keyAttributeIndex() {
-	if (this.keyDefinition) {
-		// Assume the key is always in the first column
-		return 0;
-	}
-	// TODO need to fix
-	//else {
-		//let keyAttr = keyName.getOrElse("")
-		//propertyDefs.get.indexWhere { _.name == keyAttr }
-	//}
+		if (this.keyDefinition) {
+			// Assume the key is always in the first column
+			return 0;
+		}else {
+			return -1;
+		}
 	}
 
 	defaultStructure(addKeyDefinition){
-		//let defaults = propertyDefs.get.map { attribute => defaultAsJsString(attribute.defaultValue) }
-
-		//if (addKeyDefinition && keyDefinition) {
+		let defaults = [];
+		this.parameterMetadata.paramDefs.forEach(function(param){
+			defaults.push(_.propertyOf(param)("defaultValue"));
+		})
+		if (addKeyDefinition && this.keyDefinition) {
 			// Assume the key is always in the first column
-		//	defaults = defaultAsJsString(keyDefinition.defaultValue) +: defaults
-		//}
-		//new JsArray(defaults)
+			defaults.unshift(_.propertyOf(this.keyDefinition)("defaultValue"));
+		}
+		return defaults;
 	}
 
 	static makeStructure(structureOp){

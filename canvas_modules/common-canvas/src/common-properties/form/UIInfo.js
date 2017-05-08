@@ -76,7 +76,7 @@ export class UIInfo{
 	* text associated with the property control on the UI.
 	*/
 	getAdditionalText(l10nProvider) {
-		//TODO should return translated value
+		//TODO should return translated value.  New schema needs to handle this.
 		this.uiHintOrElse("additionalText")
 	}
 

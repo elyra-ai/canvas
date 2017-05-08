@@ -21,7 +21,7 @@ export class ParameterDef extends UIInfo{
 		this.visible = (visible ? visible : true) // Only used for properties within structures
 		this.range = range;
 		this.valueRestriction = valueRestriction;
-		this.default = defaultValue;
+		this.defaultValue = defaultValue;
 	}
 
 	isList() {

@@ -13,6 +13,10 @@ import {UIItem} from "./UIItem";
 import _ from "underscore";
 import {GroupType, PanelType, Type, ControlType, ParamRole} from "./form-constants"
 
+/**
+ * The Editor is the primary container for the editing controls. It defines the tabs within the
+ * form which themselves contain the controls and other UI artifacts.
+ */
 class EditorTab{
 	constructor(label, name, uiItem){
 		this.text = label;
@@ -21,8 +25,11 @@ class EditorTab{
 	}
 }
 
+/**
+* Creates tab based on operator definition
+*/
 function makePrimaryTab(operatorDef, group, l10nProvider){
-	let label = l10nProvider.l10nLabel(operatorDef, operatorDef.name);
+	let label = l10nProvider.l10nLabel(group, group.name);
 	return new EditorTab(label, group.name, _makeUIItem(operatorDef.parameterMetadata, group, operatorDef.structureMetadata, l10nProvider))
 }
 
@@ -106,6 +113,9 @@ function _makeControls(parameterMetadata, group, structureMetadata, l10nProvider
 	return uiItems;
 }
 
+/**
+ * Creates a control for the supplied property.
+ */
 function _makeControl(parameterMetadata, paramName, group, structureDef, l10nProvider){
 	 // Assume the property is defined
 	 let parameter = parameterMetadata.getParameter(paramName)
@@ -257,7 +267,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 					 // If the property is a keyed property or a structure list then the key should not be included in the
 					 // structure definition. However it will still need to be included in the table column definitions.
 					 if ((parameter.isMapValue() || parameter.isList()) && structureDef.keyDefinition) {
-						 subControls.push(_makeSubControl(structureDef.keyDefinition, l10nProvider))
+						 subControls.unshift(_makeSubControl(structureDef.keyDefinition, l10nProvider))
 					 }
 					 if (parameter.isList() || parameter.isMapValue()) {
 						 if (group.groupType() === GroupType.COLUMN_ALLOCATION) {
@@ -289,10 +299,13 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 		parameter.getValidValues(), valueLabels, subControls, keyIndex, defaultRow, childItem)
 }
 
+/**
+ * Creates a column control for the supplied property/attribute.
+ */
 function _makeSubControl(parameter, l10nProvider){
 	let additionalText = parameter.getAdditionalText(l10nProvider);
 	let orientation = parameter.orientation();
-	let controlLabel = l10nProvider.l10nLabel(parameter, parameter.name);
+	let controlLabel = new Label(l10nProvider.l10nLabel(parameter, parameter.name));
 	let role;
 	let controlType;
 	switch(parameter.propType()) {
@@ -343,16 +356,22 @@ function _makeSubControl(parameter, l10nProvider){
 }
 
 function _parameterValueLabels(parameter, l10nProvider){
-  if (_.has(parameter.valueRestriction, "labels")) {
-      return parameter.valueRestriction.labels
-    }
-		//TODO fix
-    //else {
-    //  let key = property.valueRestriction.get.labelsKey.getOrElse(property.resourceKey.getOrElse(property.name))
-  	//  property.valueRestriction.get.oneOf.get.map { propValue =>
-  	//    l10nProvider.l10nValueLabel(key, propValue)
-    //	}
-    //}
+	if (_.has(parameter.valueRestriction, "labels")) {
+		return parameter.valueRestriction.labels
+	}else {
+		let key;
+		if (_.has(parameter.valueRestriction, "labelsKey")){
+			key = parameter.valueRestriction.labelsKey;
+		}else if (parameter.resourceKey){
+			key = parameter.resourceKey;
+		}else {
+			key = parameter.name;
+		}
+		let paramLabels = [];
+		parameter.valueRestriction.forEach(function(paramValue){
+			paramLabels.push(l10nProvider.l10nValueLabel(key, paramValue));
+		})
+	}
 }
 
 module.exports.makePrimaryTab = makePrimaryTab;

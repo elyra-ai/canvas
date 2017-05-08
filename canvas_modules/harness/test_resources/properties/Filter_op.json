@@ -104,7 +104,13 @@
 		"filter.renameFields.label": "Rename Fields",
 		"RenameFieldEntry.label": "Rename",
 		"RenameFieldEntry.field.label": "Field",
-		"RenameFieldEntry.new_name.label": "New Name"
+		"RenameFieldEntry.new_name.label": "New Name",
+		"other-settings.label": "Other",
+		"other-settings.desc": "Other settings",
+		"filter-settings.label": "Filter",
+		"filter-settings.desc": "Filter settings",
+		"rename-settings.label": "Rename",
+		"rename-settings.desc": "Rename settings"
 	},
   "additionalComponents": {},
   "inputDataModel": {

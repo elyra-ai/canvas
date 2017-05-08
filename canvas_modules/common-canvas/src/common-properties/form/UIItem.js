@@ -21,11 +21,11 @@ export class UIItem {
 	}
 
 	static makePrimaryTabs(tabs){
-		return new UIItem(ItemType.PRIMARY_TABS, tabs, undefined, undefined, undefined, undefined, undefined);
+		return new UIItem(ItemType.PRIMARY_TABS, tabs);
 	}
 
 	static makeSubTabs(tabs){
-		return new UIItem(ItemType.SUB_TABS, tabs, undefined, undefined, undefined, undefined, undefined);
+		return new UIItem(ItemType.SUB_TABS, tabs);
 	}
 
 	static makePanelSelector(tabs, dependsOn){
@@ -33,22 +33,22 @@ export class UIItem {
 	}
 
 	static makePanel(panel){
-	  return new UIItem(ItemType.PANEL, undefined, panel, undefined, undefined, undefined, undefined);
+	  return new UIItem(ItemType.PANEL, undefined, panel);
 	}
 
 	static makeAdditionalLink(linkText, dialogText, panel){
-	  return new UIItem(ItemType.ADDITIONAL_LINK, undefined, panel, undefined, linkText, dialogText, undefined);
+	  return new UIItem(ItemType.ADDITIONAL_LINK, undefined, panel, undefined, linkText, dialogText);
 	}
 
 	static makeControl(control){
-	  return new UIItem(ItemType.CONTROL, undefined, undefined, control, undefined, undefined, undefined);
+	  return new UIItem(ItemType.CONTROL, undefined, undefined, control);
 	}
 
 	static makeHSeparator(label){
-	  return new UIItem(ItemType.HORIZONTAL_SEPARATOR, undefined, undefined, undefined, label, undefined, undefined);
+	  return new UIItem(ItemType.HORIZONTAL_SEPARATOR, undefined, undefined, undefined, label);
 	}
 
 	static makeStaticText(label){
-	  return new UIItem(ItemType.STATIC_TEXT, undefined, undefined, undefined, label, undefined, undefined);
+	  return new UIItem(ItemType.STATIC_TEXT, undefined, undefined, undefined, label);
 	}
 }
