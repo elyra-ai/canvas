@@ -17,7 +17,7 @@ import {GroupType, PanelType, Type, ControlType, ParamRole} from "./form-constan
  * The Editor is the primary container for the editing controls. It defines the tabs within the
  * form which themselves contain the controls and other UI artifacts.
  */
-class EditorTab{
+export class EditorTab{
 	constructor(label, name, uiItem){
 		this.text = label;
 		this.group = name;

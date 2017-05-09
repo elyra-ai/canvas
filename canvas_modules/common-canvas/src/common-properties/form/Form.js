@@ -28,22 +28,23 @@ export default class Form{
 	* Returns a new Form
 	*/
 	static makeForm(operator, dataModel, currentParameters, resources){
-		if (operator){
-			let op = OperaterDef.makeOperaterDef(operator);
+		let op = OperaterDef.makeOperaterDef(operator);
+		if (op){
 			let l10nProvider = new L10nProvider(resources);
 			let tabs = [];
-			for (let group of op.groupMetadata.groups){
-				tabs.push(makePrimaryTab(op, group, l10nProvider));
+			if (op.groupMetadata && op.groupMetadata.groups){
+				for (let group of op.groupMetadata.groups){
+					tabs.push(makePrimaryTab(op, group, l10nProvider));
+				}
 			}
 			// tabs.push(makeStandardTab(componentDef, BuiltInProvider(messages), CommonComponents.ANNOTATIONS_TAB_GROUP,
-      //  currentProperties));
-			let componentId = op.name
-			let label = l10nProvider.l10nLabel(op, op.name);
+			//  currentProperties));
 			let data = {
 				currentProperties: currentParameters,
 				inputDataModel: dataModel
 			}
-			return new Form(componentId, label, op.editorSizeHint(), [UIItem.makePrimaryTabs(tabs)], _defaultButtons(), data);
+			let name = _.propertyOf(op)("name");
+			return new Form(name, l10nProvider.l10nLabel(op, name) , op.editorSizeHint(), [UIItem.makePrimaryTabs(tabs)], _defaultButtons(), data);
 		}
 	}
 }
