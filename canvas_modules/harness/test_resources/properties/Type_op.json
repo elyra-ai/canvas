@@ -1,0 +1,274 @@
+{
+	"operator": {
+		"name": "type",
+		"metadata": {
+			"operatorType": "transformer",
+			"categories": ["fieldOp"],
+			"uiHints": {
+				"icon": "images/type.svg",
+				"editorSize": "large"
+			},
+
+			"structures": [{
+				"name": "TypeEntry",
+				"metadata": {
+					"keyDefinition": {
+						"name": "field",
+						"type": "string",
+						"role": "column",
+						"resourceKey": "TypeEntry.field",
+						"uiHints": {
+							"columns": 12
+						},
+						"default": ""
+					},
+					"arguments": [{
+							"name": "measure_type",
+							"type": "string",
+							"resourceKey": "TypeEntry.measure_type",
+							"valueRestriction": {
+								"oneOf": ["Default", "Range", "Discrete", "Flag", "Set", "OrderedSet", "Typeless", "Collection", "Geospatial"]
+							},
+							"default": "Default"
+						},
+						{
+							"name": "role",
+							"type": "string",
+							"resourceKey": "TypeEntry.role",
+							"valueRestriction": {
+								"oneOf": ["Input", "Target", "Both", "None", "Partition", "Split", "Frequency", "RecordID"]
+							},
+							"default": "Input"
+						},
+						{
+							"name": "value_mode",
+							"type": "string",
+							"resourceKey": "TypeEntry.value_mode",
+							"valueRestriction": {
+								"oneOf": ["Read", "Pass", "Specify", "Read+", "Current"]
+							},
+							"uiHints": {
+								"columns": 12
+							},
+							"default": "Read"
+						},
+						{
+							"name": "values",
+							"type": "array[string]",
+							"resourceKey": "TypeEntry.values",
+							"default": []
+						},
+						{
+							"name": "labels",
+							"type": "array[string]",
+							"resourceKey": "TypeEntry.labels",
+							"default": [],
+							"visible": false
+						},
+						{
+							"name": "max_string_length",
+							"type": "integer",
+							"resourceKey": "TypeEntry.max_string_length",
+							"default": 255,
+							"visible": false
+						},
+						{
+							"name": "check",
+							"type": "string",
+							"resourceKey": "TypeEntry.check",
+							"valueRestriction": {
+								"oneOf": ["None", "Nullify", "Coerce", "Discard", "Warn", "Abort"]
+							},
+							"default": "None",
+							"visible": false
+						},
+						{
+							"name": "description",
+							"type": "string",
+							"resourceKey": "TypeEntry.description",
+							"default": "",
+							"visible": false
+						}
+					],
+					"uiHints": {
+						"editStyle": "subpanel"
+					}
+				}
+			}],
+
+			"arguments": [{
+					"name": "default_value_mode",
+					"type": "string",
+					"valueRestriction": {
+						"oneOf": ["Read", "Pass"]
+					},
+					"default": "Read"
+				},
+				{
+					"name": "metadata",
+					"type": "array[TypeEntry]",
+					"resourceKey": "type_metadata"
+				}
+			],
+
+			"argumentGroups": [{
+				"name": "basic-settings",
+				"uiHints": {
+					"groupType": "panels"
+				},
+				"subGroups": [{
+						"name": "other-settings",
+						"arguments": ["default_value_mode"]
+					},
+					{
+						"name": "type-settings",
+						"uiHints": {
+							"groupType": "columnAllocation"
+						},
+						"arguments": ["metadata"]
+					}
+				]
+			}]
+		}
+	},
+	"resources": {
+		"type_metadata.label": "Types",
+		"TypeEntry.label": "Field Definition",
+		"TypeEntry.field.label": "Field",
+		"TypeEntry.values.label": "Values",
+		"TypeEntry.labels.label": "Value Labels",
+		"TypeEntry.max_string_length.label": "Max String Length",
+		"TypeEntry.description.label": "Description",
+
+		"TypeEntry.measure_type.label": "Measure",
+		"TypeEntry.measure_type.Default.label": "Default",
+		"TypeEntry.measure_type.Range.label": "Range",
+		"TypeEntry.measure_type.Discrete.label": "Discrete",
+		"TypeEntry.measure_type.Flag.label": "Flag",
+		"TypeEntry.measure_type.Set.label": "Set",
+		"TypeEntry.measure_type.OrderedSet.label": "Ordered Set",
+		"TypeEntry.measure_type.Typeless.label": "Typeless",
+		"TypeEntry.measure_type.Collection.label": "Collection",
+		"TypeEntry.measure_type.Geospatial.label": "Geospatial",
+
+		"TypeEntry.role.label": "Role",
+		"TypeEntry.role.Input.label": "Input",
+		"TypeEntry.role.Target.label": "Target",
+		"TypeEntry.role.Both.label": "Both",
+		"TypeEntry.role.None.label": "None",
+		"TypeEntry.role.Partition.label": "Partition",
+		"TypeEntry.role.Split.label": "Split",
+		"TypeEntry.role.Frequency.label": "Frequency",
+		"TypeEntry.role.RecordID.label": "Record ID",
+
+		"TypeEntry.value_mode.label": "Value mode",
+		"TypeEntry.value_mode.Read.label": "Read",
+		"TypeEntry.value_mode.Pass.label": "Pass",
+		"TypeEntry.value_mode.Specify.label": "Specify",
+		"TypeEntry.value_mode.Read+.label": "Extend",
+		"TypeEntry.value_mode.Current.label": "Current",
+
+		"TypeEntry.check.label": "Checking",
+		"TypeEntry.check.None.label": "None",
+		"TypeEntry.check.Nullify.label": "Nullify",
+		"TypeEntry.check.Coerce.label": "Coerce",
+		"TypeEntry.check.Discard.label": "Discard",
+		"TypeEntry.check.Warn.label": "Warn",
+		"TypeEntry.check.Abort.label": "Abort",
+
+		"default_value_mode.label": "Default mode",
+		"default_value_mode.Read.label": "Read metadata",
+		"default_value_mode.Pass.label": "Pass (do not scan)",
+
+		"other-settings.label": "Other",
+		"other-settings.desc": "Other settings",
+		"basic-settings.label": "Settings",
+		"basic-settings.desc": "Basic settings"
+	},
+	"additionalComponents": {},
+	"inputDataModel": {
+		"columns": [{
+				"name": "Age",
+				"label": "",
+				"storage": "Integer",
+				"measure": "Range",
+				"modelingRole": "Input"
+			},
+			{
+				"name": "Sex",
+				"label": "",
+				"storage": "String",
+				"measure": "Discrete",
+				"modelingRole": "Input"
+			},
+			{
+				"name": "BP",
+				"label": "",
+				"storage": "String",
+				"measure": "Discrete",
+				"modelingRole": "Input"
+			},
+			{
+				"name": "Cholesterol",
+				"label": "",
+				"storage": "String",
+				"measure": "Discrete",
+				"modelingRole": "Input"
+			},
+			{
+				"name": "Na",
+				"label": "",
+				"storage": "Real",
+				"measure": "Range",
+				"modelingRole": "Input"
+			},
+			{
+				"name": "K",
+				"label": "",
+				"storage": "Real",
+				"measure": "Range",
+				"modelingRole": "Input"
+			},
+			{
+				"name": "Drug",
+				"label": "",
+				"storage": "String",
+				"measure": "Discrete",
+				"modelingRole": "Input"
+			},
+			{
+				"name": "Na_to_K",
+				"label": "",
+				"storage": "Real",
+				"measure": "Range",
+				"modelingRole": "Input"
+			}
+		]
+	},
+	"appData": {},
+	"currentParameters": {
+		"annotation": [
+			""
+		],
+		"default_value_mode": [
+			"Read"
+		],
+		"use_custom_name": [
+			"true"
+		],
+		"metadata": [
+			"[\"Drug\",\"Set\",\"Target\",\"Specify\",\"[\\\"drugA\\\",\\\"drugB\\\",\\\"drugC\\\",\\\"drugX\\\",\\\"drugY\\\"]\",\"[]\",\"5\",\"None\",\"\"]",
+			"[\"Na\",\"Default\",\"Input\",\"Read\",\"[]\",\"[]\",\"\",\"None\",\"\"]",
+			"[\"Cholestrol\",\"Default\",\"Input\",\"Read\",\"[]\",\"[]\",\"\",\"None\",\"\"]",
+			"[\"Sex\",\"Flag\",\"Input\",\"Specify\",\"[\\\"F\\\",\\\"M\\\"]\",\"[]\",\"1\",\"None\",\"\"]",
+			"[\"K\",\"Default\",\"Input\",\"Read\",\"[]\",\"[]\",\"\",\"None\",\"\"]",
+			"[\"Age\",\"Range\",\"Input\",\"Specify\",\"[\\\"15\\\",\\\"74\\\"]\",\"[]\",\"-1\",\"None\",\"\"]",
+			"[\"BP\",\"Set\",\"Input\",\"Specify\",\"[\\\"HIGH\\\",\\\"LOW\\\",\\\"NORMAL\\\"]\",\"[]\",\"6\",\"None\",\"\"]",
+			"[\"Cholesterol\",\"Flag\",\"Input\",\"Specify\",\"[\\\"HIGH\\\",\\\"NORMAL\\\"]\",\"[]\",\"6\",\"None\",\"\"]",
+			"[\"Na_to_K\",\"Range\",\"Input\",\"Specify\",\"[\\\"6.268724\\\",\\\"38.246719\\\"]\",\"[]\",\"-1\",\"None\",\"\"]"
+		],
+		"custom_name": [
+			"Define Types"
+		]
+	}
+}

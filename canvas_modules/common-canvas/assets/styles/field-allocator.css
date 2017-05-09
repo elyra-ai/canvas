@@ -122,11 +122,6 @@ select option:checked select:not(:focus){
   transform: rotate(90deg);
 }
 
-.field-allocator-button:hover{
-  border-right: 2px solid #a6266e;
-  box-sizing:border-box;
-}
-
 #fixed-data-table-container{
   width: 100%;
   overflow-x: scroll;
@@ -145,6 +140,10 @@ select option:checked select:not(:focus){
     margin-right: -30px;
     margin-left: -30px;
     display: grid;
+  }
+  .field-allocator-button:hover{
+    border-bottom: none !important;
+    border-right: 2px solid #a6266e;
   }
 }
 
