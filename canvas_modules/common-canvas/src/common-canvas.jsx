@@ -14,6 +14,7 @@
 
 import React from 'react';
 import {OverlayTrigger, Tooltip} from 'react-bootstrap';
+import ContextMenuWrapper from './context-menu-wrapper.jsx';
 import DiagramCanvas from './diagram-canvas.jsx';
 import Palette from './palette/palette.jsx';
 import ObjectModel from './object-model/object-model.js';
@@ -23,17 +24,24 @@ import ZoomOut24Icon from '../assets/images/zoom-out_24.svg';
 import OpenNodePaletteIcon from '../assets/images/open_node_palette.svg';
 import { DAGRE_HORIZONTAL } from '../constants/common-constants.js';
 
+
 export default class CommonCanvas extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      isPaletteOpen: false
+      isPaletteOpen: false,
+      showContextMenu: false,
+      contextMenuDef: {}
     };
 
     ObjectModel.subscribe(() => {
       this.forceUpdate();
     });
+
+    this.contextMenuSource = null;
+    this.closeContextMenu = this.closeContextMenu.bind(this);
+    this.contextMenuClicked = this.contextMenuClicked.bind(this);
 
     this.openPalette = this.openPalette.bind(this);
     this.closePalette = this.closePalette.bind(this);
@@ -83,6 +91,21 @@ export default class CommonCanvas extends React.Component {
     this.refs.canvas.autoLayout(DAGRE_HORIZONTAL); //Default to HORIZONTAL
   }
 
+  closeContextMenu() {
+    this.contextMenuSource = null;
+    this.setState({ showContextMenu: false, contextMenuDef: {} });
+  }
+
+  contextMenuClicked(action) {
+    if (action == 'selectAll') {   // Common Canvas provided default action
+      ObjectModel.selectAll();
+    } else {
+      this.contextMenuActionHandler(action);
+    }
+
+    this.closeContextMenu();
+  }
+
   editActionHandler(data) {
     if (this.props.config.enableInternalObjectModel) {
       switch (data.editType) {
@@ -109,40 +132,51 @@ export default class CommonCanvas extends React.Component {
     }
   }
 
-  contextMenuActionHandler(action, source) {
+  contextMenuActionHandler(action) {
     if (this.props.config.enableInternalObjectModel) {
       switch (action) {
         case "deleteObjects":
-          ObjectModel.deleteObjects(source);
+          ObjectModel.deleteObjects(this.contextMenuSource);
           break;
         case "addComment":
-          ObjectModel.createComment(source);
+          ObjectModel.createComment(this.contextMenuSource);
           break;
         case "deleteLink":
-          ObjectModel.deleteLink(source);
+          ObjectModel.deleteLink(this.contextMenuSource);
           break;
         case "disconnectNode":
-          ObjectModel.disconnectNodes(source);
+          ObjectModel.disconnectNodes(this.contextMenuSource);
           break;
       }
     }
 
     if (this.props.contextMenuActionHandler) {
-      this.props.contextMenuActionHandler(action, source);
+      this.props.contextMenuActionHandler(action, this.contextMenuSource);
     }
   }
 
   contextMenuHandler(source) {
     if (this.props.contextMenuHandler) {
+      this.contextMenuSource = source;
       let menuDef = this.props.contextMenuHandler(source);
       if (typeof menuDef !== 'undefined') {
-        return menuDef;
+        this.setState({showContextMenu: true, contextMenuDef: menuDef});
       }
     }
-    return null;
   }
 
   clickActionHandler(source) {
+    if (source.clickType === "DOUBLE_CLICK" && source.objectType === "canvas") {
+      this.openPalette(event);
+    }
+    else if (source.clickType === "SINGLE_CLICK" && source.objectType === "canvas") {
+      // Don't clear the selection if the canvas context menu is up
+      if (!this.state.showContextMenu) {
+        ObjectModel.clearSelection();
+      }
+    }
+
+
     if (this.props.clickActionHandler) {
       this.props.clickActionHandler(source);
     }
@@ -160,20 +194,33 @@ export default class CommonCanvas extends React.Component {
     let addButton = null;
     let zoomControls = null;
     let autoLayoutControls = null;
+    let contextMenuWrapper = null;
     let canvasJSON = ObjectModel.getCanvas();
 
     if (canvasJSON !== null) {
+      if (this.state.showContextMenu) {
+        contextMenuWrapper =
+            <ContextMenuWrapper
+                containingDivId={"common-canvas"}
+                mousePos={this.contextMenuSource.mousePos}
+                contextMenuDef={this.state.contextMenuDef}
+                contextMenuClicked={this.contextMenuClicked}
+                closeContextMenu={this.closeContextMenu}
+            />;
+      }
+
       canvas = <DiagramCanvas ref="canvas"
                     canvas={canvasJSON}
                     paletteJSON={ObjectModel.getPaletteData()}
                     autoLayoutDirection={this.props.config.enableAutoLayout}
-                    openPaletteMethod={this.openPalette}
+                    closeContextMenu={this.closeContextMenu}
                     contextMenuHandler={this.contextMenuHandler}
-                    contextMenuActionHandler={this.contextMenuActionHandler}
                     editActionHandler={this.editActionHandler}
                     clickActionHandler={this.clickActionHandler}
                     decorationActionHandler={this.decorationActionHandler}>
-                </DiagramCanvas>;
+                 {contextMenuWrapper}
+               </DiagramCanvas>;
+
       if (this.props.config.enablePalette) {
         popupPalette = <Palette paletteJSON={ObjectModel.getPaletteData()}
                     showPalette={this.state.isPaletteOpen}
@@ -205,15 +252,15 @@ export default class CommonCanvas extends React.Component {
     }
 
     return (
-      <div id="common-canvas" className="fill-vertical">
+      <div id="common-canvas">
         {canvas}
         {zoomControls}
         {autoLayoutControls}
         {addButton}
         {popupPalette}
       </div>
-		);
-	}
+    );
+  }
 }
 
 CommonCanvas.propTypes = {

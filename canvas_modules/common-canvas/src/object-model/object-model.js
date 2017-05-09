@@ -12,7 +12,7 @@
 ** deposited with the U.S. Copyright Office.
 *****************************************************************/
 
-import { createStore } from 'redux';
+import { createStore, combineReducers } from 'redux';
 import CanvasUtils from '../../utils/canvas-utils.js';
 import uuid from 'node-uuid';
 
@@ -279,8 +279,14 @@ const diagram = (state = {}, action) => {
 };
 
 
-const canvas = (state = {}, action) => {
+const canvas = (state = getInitialCanvas(), action) => {
   switch (action.type) {
+    case 'CLEAR_CANVAS':
+      return null;
+
+    case 'SET_CANVAS':
+      return Object.assign({}, action.data);
+
     case 'ADD_NODE':
     case 'DISCONNECT_NODES':
     case 'ADD_NODE_ATTR':
@@ -299,55 +305,45 @@ const canvas = (state = {}, action) => {
   }
 };
 
-
-const reducer = (state = getInitialState(), action) => {
+const palette = (state = {}, action) => {
   switch (action.type) {
     case 'CLEAR_PALETTE_DATA':
-      return Object.assign({}, state, {paletteData: null});
+      return null;
 
     case 'SET_PALETTE_DATA':
-      return Object.assign({}, state, {paletteData: action.data});
-
-    case 'CLEAR_CANVAS':
-      return Object.assign({}, state, {canvas: null});
-
-    case 'SET_CANVAS':
-      return Object.assign({}, state, {canvas: action.data});
-
-    case 'ADD_NODE':
-    case 'DISCONNECT_NODES':
-    case 'ADD_NODE_ATTR':
-    case 'REMOVE_NODE_ATTR':
-    case 'MOVE_OBJECTS':
-    case 'DELETE_OBJECTS':
-    case 'ADD_LINK':
-    case 'DELETE_LINK':
-    case 'ADD_COMMENT':
-    case 'EDIT_COMMENT':
-    case 'ADD_COMMENT_ATTR':
-    case 'REMOVE_COMMENT_ATTR':
-      return Object.assign({}, state, {canvas: canvas(state.canvas, action)});
+      return Object.assign({}, action.data);
 
     default:
       return state;
   }
 };
 
-const getInitialState = () => {
+const selections = (state = [], action) => {
+  switch (action.type) {
+    case 'CLEAR_SELECTIONS':
+      return [];
+
+    case 'SET_SELECTIONS':
+      return [...action.data];
+
+    default:
+      return state;
+  }
+};
+
+const getInitialCanvas = () => {
   let uuid = getUUID();
   let time = new Date().milliseconds;
   let label = "New Canvas";
 
   return {
-    canvas: {
       className: "canvas-image",
       id: uuid,
       diagram: {},
       objectData: {created: time, updated: time, description: "", label: label} ,
       parents: [{id: uuid, label: label}],
       userData: {},
-      zoom: 100},
-    paletteData: {}
+      zoom: 100
   };
 };
 
@@ -355,10 +351,12 @@ const getUUID = () => {
   return uuid.v4();
 };
 
+const combinedReducer = combineReducers({canvas, palette, selections});
+const store = createStore(combinedReducer);
 
-const store = createStore(reducer);
 store.dispatch({type:"CLEAR_CANVAS"});
 store.dispatch({type:"CLEAR_PALETTE_DATA"});
+
 
 export default class ObjectModel  {
 
@@ -383,7 +381,7 @@ export default class ObjectModel  {
   }
 
   static getPaletteData() {
-    return store.getState().paletteData;
+    return store.getState().palette;
   }
 
   static getPaletteNode(nodeTypeId) {
@@ -401,10 +399,12 @@ export default class ObjectModel  {
   // Canvas methods
 
   static clearCanvas() {
+    this.clearSelection();
     store.dispatch({type:"CLEAR_CANVAS"});
   }
 
   static setCanvas(canvas) {
+    this.clearSelection();
     store.dispatch({type: "SET_CANVAS", data: canvas });
   }
 
@@ -447,6 +447,10 @@ export default class ObjectModel  {
     }
   }
 
+  static getNodes() {
+    return this.getCanvas().diagram.nodes;
+  }
+
   static addCustomAttrToNodes(objIds, attrName) {
     store.dispatch({type: "ADD_NODE_ATTR", data: {objIds: objIds, attrName: attrName}});
   }
@@ -470,6 +474,10 @@ export default class ObjectModel  {
       }
     });
     store.dispatch({type: "ADD_COMMENT", data: info});
+  }
+
+  static getComments() {
+    return this.getCanvas().diagram.comments;
   }
 
   static editComment(data) {
@@ -523,7 +531,6 @@ export default class ObjectModel  {
     });
   }
 
-
   // Utility functions
 
  static getNode(nodeId) {
@@ -576,5 +583,79 @@ export default class ObjectModel  {
     }
 
     return false;
+  }
+
+  // Methods to handle selections
+
+  static clearSelection() {
+    store.dispatch({type: "CLEAR_SELECTIONS"});
+  }
+
+  static getSelectedObjectIds() {
+    return store.getState().selections
+  }
+
+  static selectAll() {
+    let selections = [];
+    for (let node of this.getNodes()) {
+      selections.push(node.id);
+    }
+    for (let comment of this.getComments()) {
+      selections.push(comment.id);
+    }
+    store.dispatch({type: "SET_SELECTIONS", data: selections});
+  }
+
+  static isSelected(objectId) {
+    return this.getSelectedObjectIds().indexOf(objectId) >= 0;
+  }
+
+  static selectInRegion(minX, minY, maxX, maxY) {
+    var selections = [];
+    for (let node of this.getNodes()) {
+      if (node.xPos > minX && node.xPos < maxX && node.yPos > minY && node.yPos < maxY) {
+        selections.push(node.id);
+      }
+    }
+    for (let comment of this.getComments()) {
+      if (comment.xPos > minX && comment.xPos < maxX && comment.yPos > minY && comment.yPos < maxY) {
+        selections.push(comment.id);
+      }
+    }
+    store.dispatch({type: "SET_SELECTIONS", data: selections});
+
+    return this.getSelectedObjectIds();
+  }
+
+  // Either sets the target object as selected and removes any other
+  // selections or leaves as selected if this object is already selected.
+  static ensureSelected(objectId) {
+    let selections = this.getSelectedObjectIds();
+
+    // If the operation is about to be done to a non-selected object,
+    // make it the only selected object.
+    if (selections.indexOf(objectId) < 0) {
+      selections = [objectId];
+    }
+    store.dispatch({type: "SET_SELECTIONS", data: selections});
+
+    return this.getSelectedObjectIds();
+  }
+
+  static toggleSelection(objectId, toggleSelection) {
+    let selections = [objectId]
+
+    if (toggleSelection) {
+      // If already selected then remove otherwise add
+      if (this.isSelected(objectId)) {
+        selections = this.getSelectedObjectIds().splice(index, 1);
+      }
+      else {
+        selections = this.getSelectedObjectIds().concat(objectId);
+      };
+    }
+    store.dispatch({type: "SET_SELECTIONS", data: selections});
+
+    return this.getSelectedObjectIds();
   }
 }

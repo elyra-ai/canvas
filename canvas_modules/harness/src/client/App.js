@@ -114,6 +114,8 @@ class App extends React.Component {
 			canvas: ObjectModel.getCanvas()
 		};
 		TestService.postSessionData(sessionData);
+
+		// this.sidePanelCanvas();
 	}
 
 	getLabel(labelId, defaultLabel) {
@@ -596,7 +598,7 @@ class App extends React.Component {
 			paletteTooltip: PALETTE_TOOLTIP
 		};
 
-		var commonCanvas = (<div id="canvas">
+		var commonCanvas = (<div id="canvas-container">
 			<CommonCanvas
 				config={commonCanvasConfig}
 				contextMenuHandler={this.contextMenuHandler}

@@ -40,29 +40,30 @@
 /* SVG Canvas styles */
 
 #common-canvas {
-	overflow: auto;
-	height: 100%;
-	width: 100%;
-}
-
-.svg-canvas {
-  margin: '2px';
-  padding: '2px';
-  border: '1px solid black';
+  overflow: auto;
+  height: 100%;
+  width: 100%;
   cursor: default;
 }
 
-.svg-canvas:focus {
-  outline: 1px solid transparent;
+#canvas-div {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  cursor: default;
+}
+
+.svg-canvas {
+  cursor: default;
 }
 
 #empty-canvas {
-    width: 250px;
-    /*height: 450px;*/
-    position: absolute;
-    left: 31%;
-    top: 20%;
-    float: right;
+  width: 250px;
+  position: absolute;
+  left: 31%;
+  top: 20%;
+  float: right;
+  cursor: default;
 }
 
 .placeholder-image {
@@ -489,6 +490,8 @@ polyline.link-arrow-head {
   border: 1px solid rgba(0, 0, 0, .15);
   outline: none;
   font-family: IBMHLVlight;
+  position: absolute;
+  z-index: 2;
 }
 
 .context-menu-popover.popover>.arrow{
