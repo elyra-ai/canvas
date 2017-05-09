@@ -404,7 +404,11 @@ export default class DiagramCanvas extends React.Component {
       this.props.clickActionHandler({clickType: "DOUBLE_CLICK", objectType: "node", id: node.id, selectedObjectIds: ObjectModel.getSelectedObjectIds()});
     }
     else if (action == 'selected') {
-      ObjectModel.toggleSelection(node.id, optionalArgs.shiftKey);
+			if (optionalArgs.shiftKey) {
+				ObjectModel.selectSubGraph(node.id);
+		  } else {
+			  ObjectModel.toggleSelection(node.id, optionalArgs.metaKey);
+			}
       this.props.clickActionHandler({clickType: "SINGLE_CLICK", objectType: "node", id: node.id, selectedObjectIds:  ObjectModel.getSelectedObjectIds()});
     }
     else if (action == 'dropOnNode' && this.isDragging()) {
@@ -438,7 +442,7 @@ export default class DiagramCanvas extends React.Component {
   commentAction(comment, action, optionalArgs = []) {
     if (action == 'selected') {
       // The event is passed as the third arg
-      ObjectModel.toggleSelection(comment.id, optionalArgs.shiftKey);
+      ObjectModel.toggleSelection(comment.id, optionalArgs.metaKey);
       this.props.clickActionHandler({clickType: "SINGLE_CLICK", objectType: "comment", id: comment.id, selectedObjectIds:  ObjectModel.getSelectedObjectIds()});
     }  else if (action == 'editComment') {
       // save the changed comment

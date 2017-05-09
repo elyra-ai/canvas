@@ -1115,4 +1115,684 @@ describe('ObjectModel handle model OK', () => {
       expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
     });
 
+		it('should select toggle off comment', () => {
+      console.log("should select toggle off comment.");
+
+      let startCanvas =
+          {zoom: 100,
+           diagram: {
+            nodes: [
+              {id: "node1", xPos: 10, yPos: 10},
+              {id: "node2", xPos: 20, yPos: 20},
+              {id: "node3", xPos: 30, yPos: 30}
+            ],
+            comments: [
+              {id: "comment1", xPos: 50, yPos: 50},
+              {id: "comment2", xPos: 60, yPos: 60}
+            ],
+            links: [
+              {id: "link1", source: "node1", target: "node2"},
+              {id: "link2", source: "comment1", target: "node2"}
+            ]
+           }
+          };
+
+      deepFreeze(startCanvas);
+
+      ObjectModel.dispatch({
+        type: "SET_CANVAS",
+        data: startCanvas
+      });
+
+      ObjectModel.dispatch({
+        type: "SET_SELECTIONS",
+        data: ["comment1", "node3"]
+      });
+
+
+			ObjectModel.toggleSelection("comment1", true);
+
+
+      let expectedSelections = ["node3"];
+      let actualSelections = ObjectModel.getSelectedObjectIds();
+
+      console.log("Expected Selections = " + JSON.stringify(expectedSelections));
+      console.log("Actual Selections   = " + JSON.stringify(actualSelections));
+
+      expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
+    });
+
+		it('should select toggle on comment', () => {
+      console.log("should select toggle on comment.");
+
+      let startCanvas =
+          {zoom: 100,
+           diagram: {
+            nodes: [
+              {id: "node1", xPos: 10, yPos: 10},
+              {id: "node2", xPos: 20, yPos: 20},
+              {id: "node3", xPos: 30, yPos: 30}
+            ],
+            comments: [
+              {id: "comment1", xPos: 50, yPos: 50},
+              {id: "comment2", xPos: 60, yPos: 60}
+            ],
+            links: [
+              {id: "link1", source: "node1", target: "node2"},
+              {id: "link2", source: "comment1", target: "node2"}
+            ]
+           }
+          };
+
+      deepFreeze(startCanvas);
+
+      ObjectModel.dispatch({
+        type: "SET_CANVAS",
+        data: startCanvas
+      });
+
+      ObjectModel.dispatch({
+        type: "SET_SELECTIONS",
+        data: ["node3"]
+      });
+
+
+			ObjectModel.toggleSelection("comment1", true);
+
+
+      let expectedSelections = ["node3", "comment1"];
+      let actualSelections = ObjectModel.getSelectedObjectIds();
+
+      console.log("Expected Selections = " + JSON.stringify(expectedSelections));
+      console.log("Actual Selections   = " + JSON.stringify(actualSelections));
+
+      expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
+    });
+
+		it('should select toggle off node', () => {
+			console.log("should select toggle off node.");
+
+			let startCanvas =
+					{zoom: 100,
+					 diagram: {
+						nodes: [
+							{id: "node1", xPos: 10, yPos: 10},
+							{id: "node2", xPos: 20, yPos: 20},
+							{id: "node3", xPos: 30, yPos: 30}
+						],
+						comments: [
+							{id: "comment1", xPos: 50, yPos: 50},
+							{id: "comment2", xPos: 60, yPos: 60}
+						],
+						links: [
+							{id: "link1", source: "node1", target: "node2"},
+							{id: "link2", source: "comment1", target: "node2"}
+						]
+					 }
+					};
+
+			deepFreeze(startCanvas);
+
+			ObjectModel.dispatch({
+				type: "SET_CANVAS",
+				data: startCanvas
+			});
+
+			ObjectModel.dispatch({
+				type: "SET_SELECTIONS",
+				data: ["comment1", "node3"]
+			});
+
+
+			ObjectModel.toggleSelection("node3", true);
+
+
+			let expectedSelections = ["comment1"];
+			let actualSelections = ObjectModel.getSelectedObjectIds();
+
+			console.log("Expected Selections = " + JSON.stringify(expectedSelections));
+			console.log("Actual Selections   = " + JSON.stringify(actualSelections));
+
+			expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
+		});
+
+		it('should select toggle on node', () => {
+			console.log("should select toggle on node.");
+
+			let startCanvas =
+					{zoom: 100,
+					 diagram: {
+						nodes: [
+							{id: "node1", xPos: 10, yPos: 10},
+							{id: "node2", xPos: 20, yPos: 20},
+							{id: "node3", xPos: 30, yPos: 30}
+						],
+						comments: [
+							{id: "comment1", xPos: 50, yPos: 50},
+							{id: "comment2", xPos: 60, yPos: 60}
+						],
+						links: [
+							{id: "link1", source: "node1", target: "node2"},
+							{id: "link2", source: "comment1", target: "node2"}
+						]
+					 }
+					};
+
+			deepFreeze(startCanvas);
+
+			ObjectModel.dispatch({
+				type: "SET_CANVAS",
+				data: startCanvas
+			});
+
+			ObjectModel.dispatch({
+				type: "SET_SELECTIONS",
+				data: ["comment1"]
+			});
+
+
+			ObjectModel.toggleSelection("node3", true);
+
+
+			let expectedSelections = ["comment1", "node3"];
+			let actualSelections = ObjectModel.getSelectedObjectIds();
+
+			console.log("Expected Selections = " + JSON.stringify(expectedSelections));
+			console.log("Actual Selections   = " + JSON.stringify(actualSelections));
+
+			expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
+		});
+
+		it('should select nodes in a simple subgraph', () => {
+			console.log("should select nodes in a simple subgraph.");
+
+			let startCanvas =
+					{zoom: 100,
+					 diagram: {
+						nodes: [
+							{id: "node1", xPos: 10, yPos: 10},
+							{id: "node2", xPos: 20, yPos: 20},
+							{id: "node3", xPos: 30, yPos: 30},
+							{id: "node4", xPos: 40, yPos: 30}
+						],
+						comments: [
+							{id: "comment1", xPos: 50, yPos: 50},
+							{id: "comment2", xPos: 60, yPos: 60}
+						],
+						links: [
+							{id: "link1", source: "node1", target: "node2"},
+							{id: "link2", source: "node2", target: "node3"},
+							{id: "link3", source: "node3", target: "node4"},
+							{id: "link4", source: "comment1", target: "node2"}
+						]
+					 }
+					};
+
+			deepFreeze(startCanvas);
+
+			ObjectModel.dispatch({
+				type: "SET_CANVAS",
+				data: startCanvas
+			});
+
+			ObjectModel.dispatch({
+				type: "SET_SELECTIONS",
+				data: ["node2"]
+			});
+
+
+			ObjectModel.selectSubGraph("node4");
+
+
+			let expectedSelections = ["node2", "node4", "node3"];
+			let actualSelections = ObjectModel.getSelectedObjectIds();
+
+			console.log("Expected Selections = " + JSON.stringify(expectedSelections));
+			console.log("Actual Selections   = " + JSON.stringify(actualSelections));
+
+			expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
+		});
+
+	it('should select nodes in a fork subgraph', () => {
+		console.log("should select nodes in a fork subgraph.");
+
+		let startCanvas =
+				{zoom: 100,
+				 diagram: {
+					nodes: [
+						{id: "node1", xPos: 10, yPos: 10},
+						{id: "node2", xPos: 20, yPos: 20},
+						{id: "node3", xPos: 30, yPos: 30},
+						{id: "node4", xPos: 40, yPos: 30}
+					],
+					comments: [
+						{id: "comment1", xPos: 50, yPos: 50},
+						{id: "comment2", xPos: 60, yPos: 60}
+					],
+					links: [
+						{id: "link1", source: "node1", target: "node2"},
+						{id: "link2", source: "node2", target: "node3"},
+						{id: "link3", source: "node2", target: "node4"},
+						{id: "link4", source: "comment1", target: "node2"}
+					]
+				 }
+				};
+
+		deepFreeze(startCanvas);
+
+		ObjectModel.dispatch({
+			type: "SET_CANVAS",
+			data: startCanvas
+		});
+
+		ObjectModel.dispatch({
+			type: "SET_SELECTIONS",
+			data: ["node1"]
+		});
+
+
+		ObjectModel.selectSubGraph("node4");
+
+
+		let expectedSelections = ["node1", "node4", "node2"];
+		let actualSelections = ObjectModel.getSelectedObjectIds();
+
+		console.log("Expected Selections = " + JSON.stringify(expectedSelections));
+		console.log("Actual Selections   = " + JSON.stringify(actualSelections));
+
+		expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
+	});
+
+	it('should select nodes in a merge subgraph', () => {
+		console.log("should select nodes in a merge subgraph.");
+
+		let startCanvas =
+				{zoom: 100,
+				 diagram: {
+					nodes: [
+						{id: "node1", xPos: 10, yPos: 10},
+						{id: "node2", xPos: 20, yPos: 20},
+						{id: "node3", xPos: 30, yPos: 30},
+						{id: "node4", xPos: 40, yPos: 30}
+					],
+					comments: [
+						{id: "comment1", xPos: 50, yPos: 50},
+						{id: "comment2", xPos: 60, yPos: 60}
+					],
+					links: [
+						{id: "link1", source: "node1", target: "node3"},
+						{id: "link2", source: "node2", target: "node3"},
+						{id: "link3", source: "node3", target: "node4"},
+						{id: "link4", source: "comment1", target: "node2"}
+					]
+				 }
+				};
+
+		deepFreeze(startCanvas);
+
+		ObjectModel.dispatch({
+			type: "SET_CANVAS",
+			data: startCanvas
+		});
+
+		ObjectModel.dispatch({
+			type: "SET_SELECTIONS",
+			data: ["node1"]
+		});
+
+
+		ObjectModel.selectSubGraph("node4");
+
+
+		let expectedSelections = ["node1", "node4", "node3"];
+		let actualSelections = ObjectModel.getSelectedObjectIds();
+
+		console.log("Expected Selections = " + JSON.stringify(expectedSelections));
+		console.log("Actual Selections   = " + JSON.stringify(actualSelections));
+
+		expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
+	});
+
+	it('should select nodes in a simple partial subgraph', () => {
+		console.log("should select nodes in a simple partial subgraph.");
+
+		let startCanvas =
+				{zoom: 100,
+				 diagram: {
+					nodes: [
+						{id: "node1", xPos: 10, yPos: 10},
+						{id: "node2", xPos: 20, yPos: 20},
+						{id: "node3", xPos: 30, yPos: 30},
+						{id: "node4", xPos: 40, yPos: 30},
+						{id: "node5", xPos: 50, yPos: 30}
+					],
+					comments: [
+						{id: "comment1", xPos: 50, yPos: 50},
+						{id: "comment2", xPos: 60, yPos: 60}
+					],
+					links: [
+						{id: "link1", source: "node1", target: "node2"},
+						{id: "link2", source: "node2", target: "node3"},
+						{id: "link3", source: "node3", target: "node4"},
+						{id: "link5", source: "node4", target: "node5"},
+						{id: "link4", source: "comment1", target: "node2"}
+					]
+				 }
+				};
+
+		deepFreeze(startCanvas);
+
+		ObjectModel.dispatch({
+			type: "SET_CANVAS",
+			data: startCanvas
+		});
+
+		ObjectModel.dispatch({
+			type: "SET_SELECTIONS",
+			data: ["node2"]
+		});
+
+
+		ObjectModel.selectSubGraph("node4");
+
+
+		let expectedSelections = ["node2", "node4", "node3"];
+		let actualSelections = ObjectModel.getSelectedObjectIds();
+
+		console.log("Expected Selections = " + JSON.stringify(expectedSelections));
+		console.log("Actual Selections   = " + JSON.stringify(actualSelections));
+
+		expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
+	});
+
+	it('should select nodes in a complex subgraph', () => {
+		console.log("should select nodes in a complex subgraph.");
+
+		let startCanvas =
+				{zoom: 100,
+				 diagram: {
+					nodes: [
+						{id: "node1", xPos: 10, yPos: 10},
+						{id: "node2", xPos: 20, yPos: 20},
+						{id: "node3", xPos: 30, yPos: 30},
+						{id: "node4", xPos: 40, yPos: 30},
+						{id: "node5", xPos: 50, yPos: 30},
+						{id: "node6", xPos: 60, yPos: 30},
+						{id: "node7", xPos: 70, yPos: 30},
+						{id: "node8", xPos: 80, yPos: 30},
+						{id: "node9", xPos: 90, yPos: 30},
+						{id: "node10", xPos: 100, yPos: 30},
+						{id: "node11", xPos: 110, yPos: 30},
+						{id: "node12", xPos: 120, yPos: 30},
+						{id: "node13", xPos: 130, yPos: 30}
+					],
+					comments: [
+						{id: "comment1", xPos: 50, yPos: 50},
+						{id: "comment2", xPos: 60, yPos: 60}
+					],
+					links: [
+						{id: "link1", source: "node1", target: "node2"},
+						{id: "link2", source: "node2", target: "node3"},
+						{id: "link3", source: "node3", target: "node4"},
+						{id: "link5", source: "node4", target: "node9"},
+						{id: "link4", source: "comment1", target: "node7"},
+						{id: "link6", source: "node4", target: "node10"},
+						{id: "link7", source: "node4", target: "node11"},
+						{id: "link8", source: "node4", target: "node12"},
+						{id: "link9", source: "node9", target: "node10"},
+						{id: "link10", source: "node12", target: "node11"},
+						{id: "link11", source: "node11", target: "node13"},
+						{id: "link12", source: "node8", target: "node4"},
+						{id: "link13", source: "node1", target: "node5"},
+						{id: "link14", source: "node5", target: "node6"},
+						{id: "link15", source: "node1", target: "node7"},
+						{id: "link16", source: "node7", target: "node4"},
+						{id: "link17", source: "node6", target: "node4"}
+					]
+				 }
+				};
+
+		deepFreeze(startCanvas);
+
+		ObjectModel.dispatch({
+			type: "SET_CANVAS",
+			data: startCanvas
+		});
+
+		ObjectModel.dispatch({
+			type: "SET_SELECTIONS",
+			data: ["node1"]
+		});
+
+
+		ObjectModel.selectSubGraph("node13");
+
+
+		let expectedSelections = ["node1", "node13", "node2", "node3", "node4", "node11", "node12",
+															"node5", "node6", "node7"];
+		let actualSelections = ObjectModel.getSelectedObjectIds();
+
+		console.log("Expected Selections = " + JSON.stringify(expectedSelections));
+		console.log("Actual Selections   = " + JSON.stringify(actualSelections));
+
+		expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
+	});
+
+	it('should select nodes in a complex patial subgraph', () => {
+		console.log("should select nodes in a complex partial subgraph.");
+
+		let startCanvas =
+				{zoom: 100,
+				 diagram: {
+					nodes: [
+						{id: "node1", xPos: 10, yPos: 10},
+						{id: "node2", xPos: 20, yPos: 20},
+						{id: "node3", xPos: 30, yPos: 30},
+						{id: "node4", xPos: 40, yPos: 30},
+						{id: "node5", xPos: 50, yPos: 30},
+						{id: "node6", xPos: 60, yPos: 30},
+						{id: "node7", xPos: 70, yPos: 30},
+						{id: "node8", xPos: 80, yPos: 30},
+						{id: "node9", xPos: 90, yPos: 30},
+						{id: "node10", xPos: 100, yPos: 30},
+						{id: "node11", xPos: 110, yPos: 30},
+						{id: "node12", xPos: 120, yPos: 30},
+						{id: "node13", xPos: 130, yPos: 30}
+					],
+					comments: [
+						{id: "comment1", xPos: 50, yPos: 50},
+						{id: "comment2", xPos: 60, yPos: 60}
+					],
+					links: [
+						{id: "link1", source: "node1", target: "node2"},
+						{id: "link2", source: "node2", target: "node3"},
+						{id: "link3", source: "node3", target: "node4"},
+						{id: "link5", source: "node4", target: "node9"},
+						{id: "link4", source: "comment1", target: "node7"},
+						{id: "link6", source: "node4", target: "node10"},
+						{id: "link7", source: "node4", target: "node11"},
+						{id: "link8", source: "node4", target: "node12"},
+						{id: "link9", source: "node9", target: "node10"},
+						{id: "link10", source: "node12", target: "node11"},
+						{id: "link11", source: "node11", target: "node13"},
+						{id: "link12", source: "node8", target: "node4"},
+						{id: "link13", source: "node1", target: "node5"},
+						{id: "link14", source: "node5", target: "node6"},
+						{id: "link15", source: "node1", target: "node7"},
+						{id: "link16", source: "node7", target: "node4"},
+						{id: "link17", source: "node6", target: "node4"}
+					]
+				 }
+				};
+
+		deepFreeze(startCanvas);
+
+		ObjectModel.dispatch({
+			type: "SET_CANVAS",
+			data: startCanvas
+		});
+
+		ObjectModel.dispatch({
+			type: "SET_SELECTIONS",
+			data: ["node1"]
+		});
+
+
+		ObjectModel.selectSubGraph("node12");
+
+
+		let expectedSelections = ["node1", "node12", "node2", "node3", "node4",
+															"node5", "node6", "node7"];
+		let actualSelections = ObjectModel.getSelectedObjectIds();
+
+		console.log("Expected Selections = " + JSON.stringify(expectedSelections));
+		console.log("Actual Selections   = " + JSON.stringify(actualSelections));
+
+		expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
+	});
+
+	it('should select nodes in a complex single input subgraph', () => {
+		console.log("should select nodes in a complex single input subgraph.");
+
+		let startCanvas =
+				{zoom: 100,
+				 diagram: {
+					nodes: [
+						{id: "node1", xPos: 10, yPos: 10},
+						{id: "node2", xPos: 20, yPos: 20},
+						{id: "node3", xPos: 30, yPos: 30},
+						{id: "node4", xPos: 40, yPos: 30},
+						{id: "node5", xPos: 50, yPos: 30},
+						{id: "node6", xPos: 60, yPos: 30},
+						{id: "node7", xPos: 70, yPos: 30},
+						{id: "node8", xPos: 80, yPos: 30},
+						{id: "node9", xPos: 90, yPos: 30},
+						{id: "node10", xPos: 100, yPos: 30},
+						{id: "node11", xPos: 110, yPos: 30},
+						{id: "node12", xPos: 120, yPos: 30},
+						{id: "node13", xPos: 130, yPos: 30}
+					],
+					comments: [
+						{id: "comment1", xPos: 50, yPos: 50},
+						{id: "comment2", xPos: 60, yPos: 60}
+					],
+					links: [
+						{id: "link1", source: "node1", target: "node2"},
+						{id: "link2", source: "node2", target: "node3"},
+						{id: "link3", source: "node3", target: "node4"},
+						{id: "link5", source: "node4", target: "node9"},
+						{id: "link4", source: "comment1", target: "node7"},
+						{id: "link6", source: "node4", target: "node10"},
+						{id: "link7", source: "node4", target: "node11"},
+						{id: "link8", source: "node4", target: "node12"},
+						{id: "link9", source: "node9", target: "node10"},
+						{id: "link10", source: "node12", target: "node11"},
+						{id: "link11", source: "node11", target: "node13"},
+						{id: "link12", source: "node8", target: "node4"},
+						{id: "link13", source: "node1", target: "node5"},
+						{id: "link14", source: "node5", target: "node6"},
+						{id: "link15", source: "node1", target: "node7"},
+						{id: "link16", source: "node7", target: "node4"},
+						{id: "link17", source: "node6", target: "node4"}
+					]
+				 }
+				};
+
+		deepFreeze(startCanvas);
+
+		ObjectModel.dispatch({
+			type: "SET_CANVAS",
+			data: startCanvas
+		});
+
+		ObjectModel.dispatch({
+			type: "SET_SELECTIONS",
+			data: ["node8"]
+		});
+
+
+		ObjectModel.selectSubGraph("node11");
+
+
+		let expectedSelections = ["node8", "node11", "node4", "node12"];
+		let actualSelections = ObjectModel.getSelectedObjectIds();
+
+		console.log("Expected Selections = " + JSON.stringify(expectedSelections));
+		console.log("Actual Selections   = " + JSON.stringify(actualSelections));
+
+		expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
+	});
+
+	it('should select nodes in a complex subgraph starting with comment', () => {
+		console.log("should select nodes in a complex subgraph starting with comment.");
+
+		let startCanvas =
+				{zoom: 100,
+				 diagram: {
+					nodes: [
+						{id: "node1", xPos: 10, yPos: 10},
+						{id: "node2", xPos: 20, yPos: 20},
+						{id: "node3", xPos: 30, yPos: 30},
+						{id: "node4", xPos: 40, yPos: 30},
+						{id: "node5", xPos: 50, yPos: 30},
+						{id: "node6", xPos: 60, yPos: 30},
+						{id: "node7", xPos: 70, yPos: 30},
+						{id: "node8", xPos: 80, yPos: 30},
+						{id: "node9", xPos: 90, yPos: 30},
+						{id: "node10", xPos: 100, yPos: 30},
+						{id: "node11", xPos: 110, yPos: 30},
+						{id: "node12", xPos: 120, yPos: 30},
+						{id: "node13", xPos: 130, yPos: 30}
+					],
+					comments: [
+						{id: "comment1", xPos: 50, yPos: 50},
+						{id: "comment2", xPos: 60, yPos: 60}
+					],
+					links: [
+						{id: "link1", source: "node1", target: "node2"},
+						{id: "link2", source: "node2", target: "node3"},
+						{id: "link3", source: "node3", target: "node4"},
+						{id: "link5", source: "node4", target: "node9"},
+						{id: "link4", source: "comment1", target: "node7"},
+						{id: "link6", source: "node4", target: "node10"},
+						{id: "link7", source: "node4", target: "node11"},
+						{id: "link8", source: "node4", target: "node12"},
+						{id: "link9", source: "node9", target: "node10"},
+						{id: "link10", source: "node12", target: "node11"},
+						{id: "link11", source: "node11", target: "node13"},
+						{id: "link12", source: "node8", target: "node4"},
+						{id: "link13", source: "node1", target: "node5"},
+						{id: "link14", source: "node5", target: "node6"},
+						{id: "link15", source: "node1", target: "node7"},
+						{id: "link16", source: "node7", target: "node4"},
+						{id: "link17", source: "node6", target: "node4"}
+					]
+				 }
+				};
+
+		deepFreeze(startCanvas);
+
+		ObjectModel.dispatch({
+			type: "SET_CANVAS",
+			data: startCanvas
+		});
+
+		ObjectModel.dispatch({
+			type: "SET_SELECTIONS",
+			data: ["comment1"]
+		});
+
+
+		ObjectModel.selectSubGraph("node13");
+
+
+		let expectedSelections = ["comment1", "node13", "node7", "node4", "node11", "node12"];
+		let actualSelections = ObjectModel.getSelectedObjectIds();
+
+		console.log("Expected Selections = " + JSON.stringify(expectedSelections));
+		console.log("Actual Selections   = " + JSON.stringify(actualSelections));
+
+		expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
+	});
+
 });

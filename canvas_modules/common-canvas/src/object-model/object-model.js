@@ -648,7 +648,9 @@ export default class ObjectModel  {
     if (toggleSelection) {
       // If already selected then remove otherwise add
       if (this.isSelected(objectId)) {
-        selections = this.getSelectedObjectIds().splice(index, 1);
+				selections = this.getSelectedObjectIds();
+				let index = selections.indexOf(objectId);
+        selections.splice(index, 1);
       }
       else {
         selections = this.getSelectedObjectIds().concat(objectId);
@@ -658,4 +660,53 @@ export default class ObjectModel  {
 
     return this.getSelectedObjectIds();
   }
+
+	static findNodesInSubGraph(startNodeId,endNodeId,selection) {
+		let retval = false;
+
+		selection.push(startNodeId);
+		if (startNodeId === endNodeId) {
+			retval = true;
+		} else {
+			let links = ObjectModel.getCanvas().diagram.links;
+			for (let link of links) {
+				if (link.source == startNodeId) {
+					let newRetval = this.findNodesInSubGraph(link.target,endNodeId,selection);
+					if(newRetval !== true) {
+						 selection.pop();
+					}
+					// this handles the case where there are multiple outward paths.
+					// some of the outward paths coule be true and some false
+					// this will make sure that the node is in the selection list of one of the paths
+					// contains the end nodeId.
+					retval = retval || newRetval;
+				}
+			}
+		}
+
+		return retval;
+	}
+
+
+	static selectSubGraph(endNodeId) {
+		var selection = [endNodeId];
+		let currentSelectedObjects = this.getSelectedObjectIds();
+
+		// geta ll the nodes in the path from a currently selected object to the end node
+		for (let startNodeId of currentSelectedObjects) {
+			this.findNodesInSubGraph(startNodeId,endNodeId,selection);
+		}
+
+		// do not put multiple copies of a nodeId in selected nodeId list.
+		let selectedObjectIds = this.getSelectedObjectIds();
+		for (let selected of selection) {
+			if (!this.isSelected(selected)) {
+				selectedObjectIds.push(selected);
+			}
+		}
+
+		store.dispatch({type: "SET_SELECTIONS", data: selectedObjectIds});
+
+		return this.getSelectedObjectIds();
+	}
 }
