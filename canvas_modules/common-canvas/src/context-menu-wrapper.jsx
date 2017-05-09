@@ -34,7 +34,8 @@ class ContextMenuWrapper extends React.Component {
     this.props.closeContextMenu();
 
     // This stops the canvasClicked function from being fired which would
-    // clear any current selections.
+    // clear any current selections. The event here is a real event not a
+    // synthetic react mouse event.
     event.stopPropagation();
   }
 

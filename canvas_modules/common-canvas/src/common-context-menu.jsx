@@ -23,8 +23,12 @@ class CommonContextMenu extends React.Component {
     this.itemSelected = this.itemSelected.bind(this);
   }
 
-  itemSelected(data) {
+  itemSelected(data, event) {
     this.props.contextHandler(data);
+    // This stops the canvasClicked function from being fired which would
+    // clear any current selections.
+    event.stopPropagation();
+    event.nativeEvent.stopImmediatePropagation();
   }
 
   buildMenu(menuDefinition) {
