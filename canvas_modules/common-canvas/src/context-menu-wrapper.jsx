@@ -14,51 +14,100 @@
 
 import React from 'react';
 import enhanceWithClickOutside from 'react-click-outside';
+import CommonContextMenu from './common-context-menu.jsx';
 
+// context-menu sizing
+const CONTEXT_MENU_MARGIN = 2; // see common-canvas.css .react-context-menu margin
+const CONTEXT_MENU_BORDER = 1; // see common-canvas.css .react-context-menu border
+const CONTEXT_MENU_PADDING = 5; // see common-canvas.css .react-context-menu padding
+const CONTEXT_MENU_LINK_HEIGHT = 29; // see common-canvas.css .react-context-menu-link height
+const CONTEXT_MENU_MIN_WIDTH = 160; // see common-canvas.css .react-context-menu min-width
 
 class ContextMenuWrapper extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-
     };
-
   }
 
   handleClickOutside(event) {
-    if (this.props.handleClickOutside){
-      this.props.handleClickOutside(event);
+    this.props.closeContextMenu();
+
+    // This stops the canvasClicked function from being fired which would
+    // clear any current selections.
+    event.stopPropagation();
+  }
+
+  repositionContextMenu(mousePos, menuSize) {
+    let pos = {};
+    pos.x = mousePos.x;
+    pos.y = mousePos.y;
+
+    var containingDiv = document.getElementById(this.props.containingDivId);
+    var commonCanvasRect = containingDiv.getBoundingClientRect();
+
+    // Reposition contextMenu if it will show off the screen
+    if (Math.round(mousePos.y + menuSize.height) > commonCanvasRect.height - commonCanvasRect.top + containingDiv.scrollTop) {
+      pos.y = pos.y - menuSize.height;
     }
+    if (Math.round(mousePos.x + menuSize.width) > commonCanvasRect.width - commonCanvasRect.left + containingDiv.scrollLeft) {
+      pos.x = pos.x - menuSize.width;
+    }
+
+    return pos;
+  }
+
+  calculateContextMenuSize(menu) {
+    var numDividers = 0;
+    for (let i = 0; i < menu.length; ++i) {
+      const divider = menu[i].divider;
+      if (divider) {
+        numDividers++;
+      }
+    }
+
+    var menuSize = {
+      height: ((menu.length - numDividers) * CONTEXT_MENU_LINK_HEIGHT) +
+        (CONTEXT_MENU_MARGIN + CONTEXT_MENU_BORDER + CONTEXT_MENU_PADDING),
+      width: CONTEXT_MENU_MIN_WIDTH - (CONTEXT_MENU_MARGIN + CONTEXT_MENU_BORDER + CONTEXT_MENU_PADDING)
+    };
+
+    return menuSize;
   }
 
   render() {
-    // Offset the context menu poisiton by 4 pixels. This moves the menu
+    // Reposition contextMenu so that it does not show off the screen
+    var menuSize = this.calculateContextMenuSize(this.props.contextMenuDef);
+    let pos = this.repositionContextMenu(this.props.mousePos, menuSize);
+
+    // Offset the context menu poisiton by 5 pixels. This moves the menu
     // underneath the pointer. On Firefox this stops the menu from immediately
     // disappearing becasue on FF the handleClickOutside is fired because the
     // mouse pointer is outside of the conetxt menu. On Chrome and Safari
     // (on the Mac) the system does not think the pointer is outside the menu.
-    let s = {
-      position:'absolute',
-      left:this.props.positionLeft - 4 +'px',
-      top:this.props.positionTop - 4 +'px',
-      backgroundColor: '#1d3649',
-      zIndex: '100'
+    let posStyle = {
+      left: pos.x - 5 +'px',
+      top: pos.y - 5 +'px',
     };
 
+    let contextMenu = <CommonContextMenu
+          menuDefinition={this.props.contextMenuDef}
+          contextHandler={this.props.contextMenuClicked}/>;
 
     return (
-      <div className='context-menu-popover' style={s}>
-          {this.props.contextMenu}
+      <div className='context-menu-popover' style={posStyle}>
+        {contextMenu}
       </div>
     );
   }
 }
 
 ContextMenuWrapper.propTypes = {
-  positionLeft:React.PropTypes.number.isRequired,
-  positionTop:React.PropTypes.number.isRequired,
-  contextMenu: React.PropTypes.object.isRequired,
-  handleClickOutside:React.PropTypes.func
+  containingDivId:React.PropTypes.string.isRequired,
+  mousePos:React.PropTypes.object.isRequired,
+  contextMenuDef:React.PropTypes.array.isRequired,
+  contextMenuClicked:React.PropTypes.func.isRequired,
+  closeContextMenu:React.PropTypes.func.isRequired
 };
 
 export default enhanceWithClickOutside(ContextMenuWrapper);

@@ -18,12 +18,11 @@ import dagre from 'dagre';
 import Node from './node.jsx';
 import Comment from './comment.jsx';
 import SVGCanvas from './svg-canvas.jsx';
-import CommonContextMenu from './common-context-menu.jsx';
-import ContextMenuWrapper from './context-menu-wrapper.jsx';
 import {DND_DATA_TEXT, DRAG_MOVE, DRAG_LINK, DRAG_SELECT_REGION,
 	NONE, VERTICAL, DAGRE_HORIZONTAL, DAGRE_VERTICAL} from '../constants/common-constants.js';
 import CanvasUtils from '../utils/canvas-utils.js';
 import BlankCanvasImage from '../assets/images/blank_canvas.png'
+import ObjectModel from './object-model/object-model.js';
 
 
 const NODE_BORDER_SIZE = 2; // see common-canvas.css, .canvas-node
@@ -33,13 +32,6 @@ const NODE_HEIGHT = 80;
 const ICON_SIZE = 48;
 const FONT_SIZE = 10; // see common-canvas.css, .canvas-node p
 const SELECT_REGION_DATA = "[]";
-
-// context-menu sizing
-const CONTEXT_MENU_MARGIN = 2; // see common-canvas.css .react-context-menu margin
-const CONTEXT_MENU_BORDER = 1; // see common-canvas.css .react-context-menu border
-const CONTEXT_MENU_PADDING = 5; // see common-canvas.css .react-context-menu padding
-const CONTEXT_MENU_LINK_HEIGHT = 29; // see common-canvas.css .react-context-menu-link height
-const CONTEXT_MENU_MIN_WIDTH = 160; // see common-canvas.css .react-context-menu min-width
 
 const ZOOM_DEFAULT_VALUE = 100;
 const ZOOM_MAX_VALUE = 240;
@@ -53,41 +45,30 @@ export default class DiagramCanvas extends React.Component {
 
     this.state = {
       nodes: [],
-      selectedObjects: [],
       sourceNodes: [],
       targetNodes: [],
-      showContextMenu: false,
-      contextMenuDef: {},
       dragging: false,
       dragMode: null,
       zoom: zoomValue
     };
-
-    this.contextMenuSource = null;
 
     this.connectorType == "curve"; // "straight", "curve" or "elbow"
     this.getConnectorPath = this.getConnectorPath.bind(this);
 
     this.drop = this.drop.bind(this);
     this.dragOver = this.dragOver.bind(this);
-
     this.dragStart = this.dragStart.bind(this);
     this.drag = this.drag.bind(this);
     this.dragEnd = this.dragEnd.bind(this);
+
     this.canvasClicked = this.canvasClicked.bind(this);
     this.canvasDblClick = this.canvasDblClick.bind(this);
 
     this.isDragging = this.isDragging.bind(this);
 
-    this.isSelected = this.isSelected.bind(this);
-
     this.deleteObjects = this.deleteObjects.bind(this);
     this.disconnectNodes = this.disconnectNodes.bind(this);
     this.moveNodes = this.moveNodes.bind(this);
-
-    this.getSelectedObjectCount = this.getSelectedObjectCount.bind(this);
-    this.getSelectedObjectIds = this.getSelectedObjectIds.bind(this);
-    this.getSelectedObjects = this.getSelectedObjects.bind(this);
 
     this.createTempNode = this.createTempNode.bind(this);
     this.deleteTempNode = this.deleteTempNode.bind(this);
@@ -98,8 +79,6 @@ export default class DiagramCanvas extends React.Component {
     this.autoLayout = this.autoLayout.bind(this);
 
     this.canvasContextMenu = this.canvasContextMenu.bind(this);
-    this.closeContextMenu = this.closeContextMenu.bind(this);
-    this.handleClickOutsideContextMenu = this.handleClickOutsideContextMenu.bind(this);
 
     this.createNodeFromDataAt = this.createNodeFromDataAt.bind(this);
 
@@ -110,16 +89,6 @@ export default class DiagramCanvas extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
-  }
-
-  handleClickOutsideContextMenu(event) {
-    if (this.state.showContextMenu) {
-      this.closeContextMenu();
-    }
-
-    // This stops the canvasClicked function from being fired which would
-    // clear any current selections.
-    event.stopPropagation();
   }
 
   zoomIn() {
@@ -325,7 +294,7 @@ export default class DiagramCanvas extends React.Component {
   }
 
   dragStart(event) {
-    this.closeContextMenu();
+    this.props.closeContextMenu();
 
     let selectRegion = (event.dataTransfer.getData(DND_DATA_TEXT) == "");
 
@@ -370,20 +339,14 @@ export default class DiagramCanvas extends React.Component {
   }
 
   canvasClicked(event) {
-    // Don't clear the selection if the canvas context menu is up
-    if (!this.state.showContextMenu) {
-      this.clearSelection();
-      // Pass in []. Don't use this.state.slectedObjects as the state may not be updated yet
-      this.props.clickActionHandler({clickType: "SINGLE_CLICK", objectType: "canvas", selectedObjectIds: []});
-    }
+    this.props.clickActionHandler({clickType: "SINGLE_CLICK", objectType: "canvas", selectedObjectIds: ObjectModel.getSelectedObjectIds()});
   }
 
   canvasDblClick(event) {
-    this.props.openPaletteMethod(event);
+    this.props.clickActionHandler({clickType: "DOUBLE_CLICK", objectType: "canvas", selectedObjectIds: ObjectModel.getSelectedObjectIds()});
   }
 
   objectContextMenu(objectType, object, event) {
-
     let canvasDiv = document.getElementById("canvas-div");
     let rect = canvasDiv.getBoundingClientRect();
 
@@ -392,24 +355,13 @@ export default class DiagramCanvas extends React.Component {
 
     event.preventDefault();
 
-    // Either set the target object as selected and remove any other
-    // selections or leave as selected if this object is already selected.
-    const selectedObjectIds = this.ensureSelected(object.id);
-
-    // Note: Use selectedObjectIds instead of this.state.selectedObjects below
-    // because this.state.selectedObjects state change, made in ensureSelected,
-    // may not be complete at this point.
-    this.contextMenuSource = {
+    let contextMenuSource = {
       type: objectType,
       targetObject: object,
-      selectedObjectIds: selectedObjectIds,
+      selectedObjectIds: ObjectModel.ensureSelected(object.id),
       mousePos: {x: x, y: y}};
 
-    const cmDef = this.props.contextMenuHandler(this.contextMenuSource);
-
-    if (cmDef !== null) {
-      this.setState({showContextMenu: true, contextMenuDef: cmDef});
-    }
+    this.props.contextMenuHandler(contextMenuSource);
   }
 
   canvasContextMenu(event) {
@@ -417,70 +369,25 @@ export default class DiagramCanvas extends React.Component {
 
     event.preventDefault();
 
+    let contextMenuSource = null;
+
     if (event.target.id == "" || event.target.id == "empty-canvas") {
-      this.contextMenuSource = {
+      contextMenuSource = {
         type: "canvas",
         zoom: this.zoom(),
-        selectedObjectIds: this.state.selectedObjects,
+        selectedObjectIds: ObjectModel.getSelectedObjectIds(),
         mousePos: mousePos};
     }
 
     else {
       // Assume it's a link
-      this.contextMenuSource = {
+      contextMenuSource = {
         type: "link",
         id: event.target.id,
         mousePos: mousePos};
     }
 
-    let cmDef = this.props.contextMenuHandler(this.contextMenuSource);
-
-    if (cmDef !== null) {
-      this.setState({showContextMenu: true, contextMenuDef: cmDef});
-    }
-  }
-
-  repositionContextMenu(mousePos, menu) {
-    var ccScrollTop = document.getElementById("common-canvas").scrollTop;
-    var ccScrollLeft = document.getElementById("common-canvas").scrollLeft;
-
-    var commonCanvasRect = document.getElementById("common-canvas").getBoundingClientRect();
-    var windowHeight = commonCanvasRect.height;
-    var windowWidth = commonCanvasRect.width;
-
-    var menuSize = this.calculateContextMenuSize(menu);
-
-    let pos = {};
-    pos.x = mousePos.x;
-    pos.y = mousePos.y;
-
-    // Reposition contextMenu if it will show off the screen
-    if (Math.round(mousePos.y - ccScrollTop + menuSize.height) > windowHeight) {
-      pos.y = mousePos.y - menuSize.height;
-    }
-    if (Math.round(mousePos.x - ccScrollLeft + menuSize.width) > windowWidth) {
-      pos.x = mousePos.x - menuSize.width;
-    }
-
-    return pos;
-  }
-
-  calculateContextMenuSize(menu) {
-    var numDividers = 0;
-    for (let i = 0; i < menu.length; ++i) {
-      const divider = menu[i].divider;
-      if (divider) {
-        numDividers++;
-      }
-    }
-
-    var menuSize = {
-      height: ((menu.length - numDividers) * CONTEXT_MENU_LINK_HEIGHT) +
-        (CONTEXT_MENU_MARGIN + CONTEXT_MENU_BORDER + CONTEXT_MENU_PADDING),
-      width: CONTEXT_MENU_MIN_WIDTH - (CONTEXT_MENU_MARGIN + CONTEXT_MENU_BORDER + CONTEXT_MENU_PADDING)
-    };
-
-    return menuSize;
+    this.props.contextMenuHandler(contextMenuSource);
   }
 
   // ----------------------------------
@@ -494,12 +401,11 @@ export default class DiagramCanvas extends React.Component {
       this.removeNode(node.id);
     }
     else if (action == 'nodeDblClicked') {
-      this.props.clickActionHandler({clickType: "DOUBLE_CLICK", objectType: "node", id: node.id, selectedObjectIds: this.state.selectedObjects});
+      this.props.clickActionHandler({clickType: "DOUBLE_CLICK", objectType: "node", id: node.id, selectedObjectIds: ObjectModel.getSelectedObjectIds()});
     }
     else if (action == 'selected') {
-       // Use the returned value rather than this.state.selectedObjects becuase the state may not be immediately updated.
-      let selObjIds = this.selectObject(node.id, optionalArgs.shiftKey);
-      this.props.clickActionHandler({clickType: "SINGLE_CLICK", objectType: "node", id: node.id, selectedObjectIds: selObjIds});
+      ObjectModel.toggleSelection(node.id, optionalArgs.shiftKey);
+      this.props.clickActionHandler({clickType: "SINGLE_CLICK", objectType: "node", id: node.id, selectedObjectIds:  ObjectModel.getSelectedObjectIds()});
     }
     else if (action == 'dropOnNode' && this.isDragging()) {
       // The event is passed as the third arg
@@ -529,26 +435,11 @@ export default class DiagramCanvas extends React.Component {
     }
   }
 
-  closeContextMenu() {
-    this.contextMenuSource = null;
-    this.setState({ showContextMenu: false, contextMenuDef: {} });
-  }
-
-  contextMenuClicked(action) {
-    if (action == 'selectAll') {   // Common Canvas provided default action
-      this.selectAll();
-    } else {
-      this.props.contextMenuActionHandler(action, this.contextMenuSource);
-    }
-
-    this.closeContextMenu();
-  }
-
   commentAction(comment, action, optionalArgs = []) {
     if (action == 'selected') {
       // The event is passed as the third arg
-      let selObjIds = this.selectObject(comment.id, optionalArgs.shiftKey);
-      this.props.clickActionHandler({clickType: "SINGLE_CLICK", objectType: "comment", id: comment.id, selectedObjectIds: selObjIds});
+      ObjectModel.toggleSelection(comment.id, optionalArgs.shiftKey);
+      this.props.clickActionHandler({clickType: "SINGLE_CLICK", objectType: "comment", id: comment.id, selectedObjectIds:  ObjectModel.getSelectedObjectIds()});
     }  else if (action == 'editComment') {
       // save the changed comment
       this.props.editActionHandler({
@@ -614,16 +505,15 @@ export default class DiagramCanvas extends React.Component {
   }
 
   removeNode(nodeId) {
-    this.deleteObjects(this.ensureSelected(nodeId));
+    this.deleteObjects(ObjectModel.ensureSelected(nodeId));
   }
 
   disconnectNode(nodeId) {
-    this.disconnectNodes(this.ensureSelected(nodeId));
+    this.disconnectNodes(ObjectModel.ensureSelected(nodeId));
   }
 
   moveNode(nodeId, offsetX, offsetY) {
-    // console.log("moveNode():x=" + offsetX + ",y=" + offsetY);
-    this.moveNodes(this.ensureSelected(nodeId), offsetX, offsetY);
+    this.moveNodes(ObjectModel.ensureSelected(nodeId), offsetX, offsetY);
   }
 
   linkSelected(sources, targets) {
@@ -686,30 +576,6 @@ export default class DiagramCanvas extends React.Component {
     }
   }
 
-  selectObject(objectId, toggleSelection) {
-    let selectedObjectIds = [objectId]
-
-    if (toggleSelection) {
-      // If already selected then remove otherwise add
-      var selection = this.state.selectedObjects;
-      let index = selection.indexOf(objectId);
-      if (index >= 0) {
-        selection.splice(index, 1);
-      }
-      else {
-        selection = selection.concat(objectId);
-      };
-      selectedObjectIds = selection;
-    }
-
-    this.setState({
-      selectedObjects: selectedObjectIds
-    });
-
-    //Return the list as well as set this.state.selectedObjects becuase the state may not be immediately updated.
-    return selectedObjectIds;
-  }
-
   // Edit operation methods
 
   deleteObjects(nodeIds) {
@@ -736,93 +602,12 @@ export default class DiagramCanvas extends React.Component {
     })
   }
 
-  // Utility methods
-
   selectInRegion(minX, minY, maxX, maxY) {
-    var selection = [];
-    for (let node of this.props.canvas.diagram.nodes) {
-      if (node.xPos > minX && node.xPos < maxX && node.yPos > minY && node.yPos < maxY) {
-        selection = selection.concat(node.id);
-      }
-    }
-    for (let comment of this.props.canvas.diagram.comments) {
-      if (comment.xPos > minX && comment.xPos < maxX && comment.yPos > minY && comment.yPos < maxY) {
-        selection = selection.concat(comment.id);
-      }
-    }
-    this.setState({
-      selectedObjects: selection
-    });
-
-    this.props.clickActionHandler({clickType: "SINGLE_CLICK", objectType: "region", selectedObjectIds: selection});
+    this.props.clickActionHandler({
+      clickType: "SINGLE_CLICK",
+      objectType: "region",
+      selectedObjectIds: ObjectModel.selectInRegion(minX, minY, maxX, maxY)});
   }
-
-  selectAll() {
-    console.log("selectAll()");
-    console.log(this.props.canvas.diagram.nodes);
-
-    let selection = [];
-    for (let node of this.props.canvas.diagram.nodes) {
-      selection = selection.concat(node.id);
-    }
-    for (let comment of this.props.canvas.diagram.comments) {
-      selection = selection.concat(comment.id);
-    }
-    console.log(selection);
-    this.setState({
-      selectedObjects: selection
-    });
-  }
-
-  nodesByID(nodeIds) {
-    let selection = [];
-    for (let node of this.props.canvas.diagram.nodes) {
-      //console.log(node);
-      if (nodeIds.indexOf(node.id) >= 0) {
-        selection = selection.concat(node);
-      }
-    }
-    return selection;
-  }
-
-  isSelected(objectId) {
-    return this.state.selectedObjects.indexOf(objectId) >= 0;
-  }
-
-  ensureSelected(objectId) {
-    let selection = this.state.selectedObjects;
-
-    // If the operation is about to be done to a non-selected object,
-    // make it the only selected node.
-    if (selection.indexOf(objectId) < 0) {
-      selection = [objectId];
-      this.setState({
-        selectedObjects: selection
-      });
-    }
-
-    return selection;
-  }
-
-  clearSelection() {
-    this.setState({
-      selectedObjects: []
-    });
-  }
-
-  getSelectedObjectCount() {
-    return this.state.selectedObjects.length;
-  }
-
-  getSelectedObjectIds() {
-    return this.state.selectedObjects;
-  }
-
-  getSelectedObjects() {
-    return this.nodesByID(this.state.selectedObjects);
-  }
-
-  // ----------------------------------
 
   // Rendering
 
@@ -1068,27 +853,6 @@ export default class DiagramCanvas extends React.Component {
     // once we're using Modeler 18.1.
     let zoom = this.zoom();
 
-    let contextMenuWrapper = null;
-
-    if (this.state.showContextMenu) {
-      // Reposition contextMenu so that it does not show off the screen
-      let pos = this.repositionContextMenu(this.contextMenuSource.mousePos, this.state.contextMenuDef);
-
-      let contextMenu = <CommonContextMenu
-        menuDefinition={this.state.contextMenuDef}
-        contextHandler={this.contextMenuClicked.bind(this)}/>;
-
-      contextMenuWrapper =
-        <ContextMenuWrapper
-          positionLeft={pos.x}
-          positionTop={pos.y}
-          contextMenu={contextMenu}
-          handleClickOutside={
-            this.handleClickOutsideContextMenu
-          }/>
-      ;
-    }
-
     var viewNodes = [];
     var viewComments = [];
     var viewLinks = [];
@@ -1142,7 +906,7 @@ export default class DiagramCanvas extends React.Component {
                 uiconf={uiconf}
                 nodeActionHandler={this.nodeAction.bind(this, node)}
                 onContextMenu={this.objectContextMenu.bind(this, "node", node)}
-                selected={this.state.selectedObjects.indexOf(node.id) >= 0}
+                selected={ObjectModel.isSelected(node.id)}
                 decorationActionHandler={this.props.decorationActionHandler}
                 >
               </Node>;
@@ -1169,9 +933,7 @@ export default class DiagramCanvas extends React.Component {
                 fontSize={fontSize}
                 commentActionHandler={this.commentAction.bind(this, comment)}
                 onContextMenu={this.objectContextMenu.bind(this, "comment", comment)}
-                selected={this.state.selectedObjects.indexOf(comment.id) >= 0}
-
-                >
+                selected={ObjectModel.isSelected(comment.id)}>
             </Comment>;
 
       positions[comment.id] = this.getConnPoints(Math.round(comment.width/2 * zoom), Math.round(comment.height/2 * zoom), 0, zoom, comment);
@@ -1188,8 +950,6 @@ export default class DiagramCanvas extends React.Component {
     var parentStyle = {
       width:  maxX + (2 * nodeWidth),
       height: maxY + (2 * nodeHeight),
-      margin: '10px',
-      position: 'relative'
     };
 
     // Create the set of links to be displayed
@@ -1240,9 +1000,8 @@ export default class DiagramCanvas extends React.Component {
           </defs>
           {viewLinks}
         </SVGCanvas>
-
         {emptyCanvas}
-        {contextMenuWrapper}
+        {this.props.children}
         {emptyDraggable}
       </div>
     );
@@ -1252,10 +1011,9 @@ export default class DiagramCanvas extends React.Component {
 DiagramCanvas.propTypes = {
   canvas: React.PropTypes.object,
   paletteJSON: React.PropTypes.object.isRequired,
-  openPaletteMethod: React.PropTypes.func.isRequired,
   autoLayoutDirection: React.PropTypes.string.isRequired,
+  closeContextMenu:  React.PropTypes.func.isRequired,
   contextMenuHandler: React.PropTypes.func.isRequired,
-  contextMenuActionHandler: React.PropTypes.func.isRequired,
   editActionHandler: React.PropTypes.func.isRequired,
   clickActionHandler: React.PropTypes.func.isRequired,
   decorationActionHandler: React.PropTypes.func.isRequired

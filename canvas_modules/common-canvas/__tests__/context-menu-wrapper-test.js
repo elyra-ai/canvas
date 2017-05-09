@@ -9,34 +9,35 @@ describe('ContextMenuWrapper renders correctly', () => {
 
     var wrapper;
 
-    const contextMenuHandler = sinon.spy();
-    const _handleClickOutside = sinon.spy();
-    
+    const _contextMenuClicked = sinon.spy();
+    const _closeContextMenu = sinon.spy();
+
     const _menu = [
       {action: "item1", label: "Item 1"},
       {divider: true},
       {action: "item2", label: "Item 2"}
     ];
 
-    let contextMenu = <CommonContextMenu
-      menuDefinition={_menu}
-      contextHandler={contextMenuHandler}/>;
+    const _mousePos = {x: 100, y: 100};
 
     beforeEach(function() {
         wrapper = shallow(
           <ContextMenuWrapper
-            positionLeft={100}
-            positionTop={100}
-            contextMenu={contextMenu}
-            handleClickOutside={_handleClickOutside}>
+            containingDivId={"common-canvas"}
+            mousePos={_mousePos}
+            contextMenuDef={_menu}
+            contextMenuClicked={_contextMenuClicked}
+            closeContextMenu={_closeContextMenu}>
           </ContextMenuWrapper>
         );
     });
 
     it('all required props should have been defined', () => {
-        expect(wrapper.positionLeft).to.be.defined;
-        expect(wrapper.positionTop).to.be.defined;
-        expect(wrapper.contextMenu).to.be.defined;
+        expect(wrapper.containingDivId).to.be.defined;
+        expect(wrapper.mousePos).to.be.defined;
+        expect(wrapper.contextMenuDef).to.be.defined;
+        expect(wrapper.contextMenuClicked).to.be.defined;
+        expect(wrapper.closeContextMenu).to.be.defined;
     });
 
 

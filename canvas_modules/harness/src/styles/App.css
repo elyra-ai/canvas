@@ -11,7 +11,7 @@
   height: 100vh;
 }
 
-#canvas {
+#canvas-container {
   height: 100%;
   width: 100%;
   padding-top: 60px;
