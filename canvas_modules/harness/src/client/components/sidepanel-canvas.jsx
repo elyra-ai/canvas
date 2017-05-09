@@ -289,6 +289,18 @@ export default class SidePanelForms extends React.Component {
 				]}
 				selected={NONE}
 			/>
+			<Button compact dark
+				//disabled={!this.isReadyToSubmitCanvasData()}
+				//onClick={this.submitCanvas.bind(this)}
+			>
+				Layout Horizontal
+			</Button>
+			<Button compact dark
+				//disabled={!this.isReadyToSubmitCanvasData()}
+				//onClick={this.submitCanvas.bind(this)}
+			>
+				Layout Vertical
+			</Button>
 		</div>);
 
 		var enableObjectModel = (<div className="sidepanel-children" id="sidepanel-object-model">
