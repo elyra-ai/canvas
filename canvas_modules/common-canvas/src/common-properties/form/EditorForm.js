@@ -90,15 +90,13 @@ function _makeControls(parameterMetadata, group, structureMetadata, l10nProvider
 		}
 		let control = UIItem.makeControl(_makeControl(parameterMetadata, paramName, group, structureDef, l10nProvider))
 		if (prop.separatorBefore() || prop.separatorAfter()) {
-			var subItems = [];
 			if (prop.separatorBefore()) {
-				subItems.push(UIItem.makeHSeparator(undefined))
+				uiItems.push(UIItem.makeHSeparator())
 			}
-			subItems.push(control)
+			uiItems.push(control)
 			if (prop.separatorAfter()) {
-				subItems.push(UIItem.makeHSeparator(undefined))
+				uiItems.push(UIItem.makeHSeparator())
 			}
-			uiItems.push(subItems);
 		}
 		else {
 			uiItems.push(control);

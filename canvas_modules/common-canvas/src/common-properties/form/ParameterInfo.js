@@ -112,7 +112,7 @@ export class ParameterDef extends UIInfo{
 				_.propertyOf(paramOp)("visible"),
 				_.propertyOf(paramOp)("range"),
 				ValueRestriction.make(_.propertyOf(paramOp)("valueRestriction")),
-				_.propertyOf(paramOp)("default"),
+				JSON.stringify(_.propertyOf(paramOp)("default")),
 				_.propertyOf(paramOp)("uiHints")
 			)
 		}

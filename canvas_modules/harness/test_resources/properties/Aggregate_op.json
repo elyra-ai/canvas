@@ -1,0 +1,209 @@
+{
+  "operator": {
+    "name": "aggregate",
+    "metadata": {
+      "operatorType": "transformer",
+      "categories": [
+        "recordOp"
+      ],
+      "uiHints": {
+        "icon": "images/aggregate.svg",
+        "editorSize": "large"
+      },
+      "structures": [
+        {
+          "name": "AggregateOpEntry",
+          "metadata": {
+            "keyDefinition": {
+              "name": "field",
+              "type": "string",
+              "role": "column",
+              "resourceKey": "AggregateOpEntry.field",
+              "uiHints": {
+                "columns": 12
+              },
+              "default": ""
+            },
+            "arguments": [
+              {
+                "name": "operations",
+                "type": "array[string]",
+                "resourceKey": "AggregateOpEntry.operations",
+                "valueRestriction": {
+                  "oneOf": [
+                    "Sum",
+                    "Mean",
+                    "Min",
+                    "Max",
+                    "SDev",
+                    "Median",
+                    "Count",
+                    "Variance",
+                    "FirstQuartile",
+                    "ThirdQuartile"
+                  ]
+                },
+                "default": [
+                  "Min",
+                  "Max"
+                ],
+                "uiHints": {
+                  "columns": 32,
+                  "control": "checkboxset"
+                }
+              }
+            ],
+            "uiHints": {
+              "editStyle": "subpanel"
+            }
+          }
+        }
+      ],
+      "arguments": [
+        {
+          "name": "keys",
+          "type": "array[string]",
+          "role": "column",
+          "resourceKey": "aggregate_keys"
+        },
+        {
+          "name": "aggregates",
+          "type": "map[string,AggregateOpEntry]",
+          "resourceKey": "aggregate_ops"
+        },
+        {
+          "name": "inc_record_count",
+          "type": "boolean"
+        },
+        {
+          "name": "count_field",
+          "type": "string"
+        }
+      ],
+      "argumentGroups": [
+        {
+          "name": "basic-settings",
+          "uiHints": {
+            "groupType": "panels"
+          },
+          "subGroups": [
+            {
+              "name": "aggregation-settings",
+              "uiHints": {
+                "groupType": "columnAllocation"
+              },
+              "arguments": [
+                "keys",
+                "aggregates"
+              ]
+            },
+            {
+              "name": "other-settings",
+              "arguments": [
+                "inc_record_count",
+                "count_field"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "resources": {
+		"basic-settings.label": "Settings",
+		"basic-settings.desc": "Basic settings",
+		"aggregate.label": "Aggregate",
+		"aggregate.desc": "Provides summary information on groups of records",
+		"aggregate_keys.label": "Group by",
+		"aggregate_ops.label": "Aggregates",
+		"inc_record_count.label": "Include record count",
+		"count_field.label": "Record count field",
+		"AggregateOpEntry.label": "Aggregate Operations",
+		"AggregateOpEntry.field.label": "Field",
+		"AggregateOpEntry.operations.label": "Aggregate Operations",
+		"AggregateOpEntry.operations.Sum.label": "Sum",
+		"AggregateOpEntry.operations.Mean.label": "Mean",
+		"AggregateOpEntry.operations.Max.label": "Maximum",
+		"AggregateOpEntry.operations.Min.label": "Minimum",
+		"AggregateOpEntry.operations.SDev.label": "Std. Deviation",
+		"AggregateOpEntry.operations.Median.label": "Median",
+		"AggregateOpEntry.operations.Count.label": "Count",
+		"AggregateOpEntry.operations.Variance.label": "Variance",
+		"AggregateOpEntry.operations.FirstQuartile.label": "First Quartile",
+		"AggregateOpEntry.operations.ThirdQuartile.label": "Third Quartile"
+	},
+  "additionalComponents": {},
+  "inputDataModel": {
+    "columns": [
+      {
+        "name": "Age",
+        "label": "",
+        "storage": "Integer",
+        "measure": "Range",
+        "modelingRole": "Input"
+      },
+      {
+        "name": "Sex",
+        "label": "",
+        "storage": "String",
+        "measure": "Discrete",
+        "modelingRole": "Input"
+      },
+      {
+        "name": "BP",
+        "label": "",
+        "storage": "String",
+        "measure": "Discrete",
+        "modelingRole": "Input"
+      },
+      {
+        "name": "Cholesterol",
+        "label": "",
+        "storage": "String",
+        "measure": "Discrete",
+        "modelingRole": "Input"
+      },
+      {
+        "name": "Na",
+        "label": "",
+        "storage": "Real",
+        "measure": "Range",
+        "modelingRole": "Input"
+      },
+      {
+        "name": "K",
+        "label": "",
+        "storage": "Real",
+        "measure": "Range",
+        "modelingRole": "Input"
+      },
+      {
+        "name": "Drug",
+        "label": "",
+        "storage": "String",
+        "measure": "Discrete",
+        "modelingRole": "Target"
+      }
+    ]
+  },
+  "appData": {},
+  "currentParameters": {
+    "inc_record_count": [
+      "true"
+    ],
+    "aggregates": [],
+    "annotation": [
+      ""
+    ],
+    "count_field": [
+      "Record_Count"
+    ],
+    "use_custom_name": [
+      "false"
+    ],
+    "custom_name": [
+      ""
+    ],
+    "keys": []
+  }
+}

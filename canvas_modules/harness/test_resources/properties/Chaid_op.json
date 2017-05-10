@@ -1,0 +1,274 @@
+{
+  "operator": {
+    "name": "chaid",
+    "metadata": {
+      "operatorType": "estimator",
+      "categories": [
+        "modeling"
+      ],
+      "uiHints": {
+        "icon": "images/chaid.svg",
+        "editorSize": "large"
+      },
+      "arguments": [
+        {
+          "name": "custom_fields",
+          "type": "boolean",
+          "required": true
+        },
+        {
+          "name": "target",
+          "type": "string",
+          "role": "column",
+          "required": true
+        },
+        {
+          "name": "inputs",
+          "type": "array[string]",
+          "role": "column",
+          "required": true
+        },
+        {
+          "name": "weight_field",
+          "type": "string",
+          "role": "column"
+        },
+        {
+          "name": "objective",
+          "type": "string",
+          "valueRestriction": {
+            "oneOf": [
+              "standard",
+              "boosting",
+              "bagging"
+            ]
+          },
+          "uiHints": {
+            "orientation": "vertical"
+          }
+        },
+        {
+          "name": "method",
+          "type": "string",
+          "valueRestriction": {
+            "oneOf": [
+              "Chaid",
+              "ExhaustiveChaid"
+            ]
+          },
+          "resourceKey": "chaid_method"
+        },
+        {
+          "name": "use_max_depth",
+          "type": "boolean"
+        },
+        {
+          "name": "max_depth",
+          "type": "integer"
+        },
+        {
+          "name": "set_random_seed",
+          "type": "boolean",
+          "resourceKey": "use_random_seed"
+        },
+        {
+          "name": "seed",
+          "type": "integer",
+          "resourceKey": "random_seed"
+        }
+      ],
+      "argumentGroups": [
+        {
+          "name": "fields-settings",
+          "uiHints": {
+            "groupType": "panels"
+          },
+          "subGroups": [
+            {
+              "name": "use-custom",
+              "arguments": [
+                "custom_fields"
+              ]
+            },
+            {
+              "name": "field-allocation",
+              "uiHints": {
+                "groupType": "columnAllocation"
+              },
+              "arguments": [
+                "target",
+                "inputs",
+                "weight_field"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "build-options",
+          "uiHints": {
+            "groupType": "subTabs"
+          },
+          "subGroups": [
+            {
+              "name": "objectives-settings",
+              "arguments": [
+                "objective"
+              ]
+            },
+            {
+              "name": "basics-settings",
+              "arguments": [
+                "method",
+                "use_max_depth",
+                "max_depth"
+              ]
+            },
+            {
+              "name": "advanced-settings",
+              "arguments": [
+                "set_random_seed",
+                "seed"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "resources": {
+    "chaid.label": "CHAID",
+    "chaid.desc": "Builds a CHAID model",
+    "applychaid.label": "Apply CHAID",
+    "applychaid.desc": "Applies a CHAID model",
+    "custom_fields.label": "Use custom fields",
+    "fields.label": "Fields",
+    "overlay.label": "Overlay",
+    "target.label": "Target",
+    "target.desc": "The field to be predicted",
+    "inputs.label": "Inputs",
+    "inputs.desc": "The fields used to predict the target",
+    "weight_field.label": "Weight",
+    "weight_field.desc": "Field used to define the importance of each row",
+    "fields-settings.label": "Fields",
+    "build-options.label": "Build Options",
+    "objectives-settings.label": "Objectives",
+    "basics-settings.label": "Basics",
+    "ensembles-settings.label": "Ensembles",
+    "display-settings.label": "Display",
+    "quality-settings.label": "Quality",
+    "missing-values-settings.label": "Missing Values",
+    "objective.label": "What is your main objective?",
+    "objective.standard.label": "Create a standard model",
+    "objective.boosting.label": "Enhance model accuracy (boosting)",
+    "objective.bagging.label": "Enhance model stability (bagging)",
+    "chaid_method.label": "Tree growing algorithm",
+    "chaid_method.Chaid.label": "CHAID",
+    "chaid_method.ExhaustiveChaid.label": "Exhaustive CHAID",
+    "use_max_depth.label": "Use max. depth",
+    "max_depth.label": "Max. depth",
+    "use_random_seed.label": "Replicate results",
+    "random_seed.label": "Random seed",
+    "advanced-settings.label": "Advanced",
+    "advanced-settings.desc": "Advanced settings"
+  },
+  "additionalComponents": {},
+  "inputDataModel": {
+    "columns": [
+      {
+        "name": "Age",
+        "label": "",
+        "storage": "Integer",
+        "measure": "Range",
+        "modelingRole": "Input"
+      },
+      {
+        "name": "Sex",
+        "label": "",
+        "storage": "String",
+        "measure": "Discrete",
+        "modelingRole": "Input"
+      },
+      {
+        "name": "BP",
+        "label": "",
+        "storage": "String",
+        "measure": "Discrete",
+        "modelingRole": "Input"
+      },
+      {
+        "name": "Cholesterol",
+        "label": "",
+        "storage": "String",
+        "measure": "Discrete",
+        "modelingRole": "Input"
+      },
+      {
+        "name": "Na",
+        "label": "",
+        "storage": "Real",
+        "measure": "Range",
+        "modelingRole": "Input"
+      },
+      {
+        "name": "K",
+        "label": "",
+        "storage": "Real",
+        "measure": "Range",
+        "modelingRole": "Input"
+      },
+      {
+        "name": "Drug",
+        "label": "",
+        "storage": "String",
+        "measure": "Discrete",
+        "modelingRole": "Target"
+      }
+    ]
+  },
+  "appData": {},
+  "currentParameters": {
+    "weight_field": [
+      ""
+    ],
+    "method": [
+      "Chaid"
+    ],
+    "custom_fields": [
+      "false"
+    ],
+    "seed": [
+      "701499504"
+    ],
+    "max_depth": [
+      "5"
+    ],
+    "annotation": [
+      ""
+    ],
+    "use_max_depth": [
+      "true"
+    ],
+    "objective": [
+      "standard"
+    ],
+    "inputs": [
+      "Age",
+      "Sex",
+      "BP",
+      "Cholesterol",
+      "Na_to_K"
+    ],
+    "set_random_seed": [
+      "true"
+    ],
+    "use_custom_name": [
+      "false"
+    ],
+    "target": [
+      "Drug"
+    ],
+    "custom_name": [
+      ""
+    ]
+  }
+}

@@ -33,7 +33,7 @@
                 "uiHints": {
                   "columns": 32
                 },
-                "default": "true"
+                "default": true
               }
             ],
             "uiHints": {
