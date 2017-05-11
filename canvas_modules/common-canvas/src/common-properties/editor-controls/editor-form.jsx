@@ -34,6 +34,7 @@ import {
 } from 'ap-components-react/dist/ap-components-react'
 */
 
+import { CONDITION_ERROR_MESSAGE } from '../constants/constants.js'
 import ControlItem from './control-item.jsx'
 import TextfieldControl from './textfield-control.jsx'
 import TextareaControl from './textarea-control.jsx'
@@ -54,11 +55,20 @@ import StructurelisteditorControl from './structure-list-editor-control.jsx'
 import ColumnAllocationPanel from './../editor-panels/column-allocation-panel.jsx'
 import SelectorPanel from './../editor-panels/selector-panel.jsx'
 import SubPanelButton from './../editor-panels/sub-panel-button.jsx'
+import UiConditions from '../ui-conditions/ui-conditions.js'
+import UiConditionsParser from '../ui-conditions/ui-conditions-parser.js'
 
 export default class EditorForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      validateErrorMessage: [],
+      visibleDefinition: [],
+      enabledDefinitions: [],
+      validationDefinitions: [],
+      validationGroupDefinitions:[],
+      // controlValidations: {},
+      controlStates: {}
     };
     this.valuesTable = props.form.data.currentProperties;
 
@@ -66,12 +76,20 @@ export default class EditorForm extends React.Component {
     this.updateControlValues = this.updateControlValues.bind(this);
 
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleMouseLeave = this.handleMouseLeave.bind(this);
+    this.parseUiConditions = this.parseUiConditions.bind(this);
 
     this.getControlValues = this.getControlValues.bind(this);
     this.getControl = this.getControl.bind(this);
     this.genPanel = this.genPanel.bind(this);
     this.genUIContent = this.genUIContent.bind(this);
     this.genUIItem = this.genUIItem.bind(this);
+  }
+
+  componentDidMount() {
+    if(this.props.uiConditions){
+      this.parseUiConditions();
+    }
   }
 
   static tabId(component, id, hash) {
@@ -121,13 +139,31 @@ export default class EditorForm extends React.Component {
 
     // List of available controls is defined in models/editor/Control.scala
     if (control.controlType == "textfield") {
-      return <TextfieldControl control={control} key={controlId} ref={controlId} valueAccessor={controlValueAccessor}/>;
+      return <TextfieldControl control={control}
+				key={controlId}
+				ref={controlId}
+				valueAccessor={controlValueAccessor}
+				validationDefinitions={this.state.validationDefinitions}
+				controlStates={this.state.controlStates}
+				/>;
     }
     else if (control.controlType == "textarea") {
-      return <TextareaControl control={control} key={controlId} ref={controlId} valueAccessor={controlValueAccessor}/>;
+      return <TextareaControl control={control}
+				key={controlId}
+				ref={controlId}
+				valueAccessor={controlValueAccessor}
+				validationDefinitions={this.state.validationDefinitions}
+				controlStates={this.state.controlStates}
+				/>;
     }
     else if (control.controlType == "expression") {
-      return <ExpressionControl control={control} key={controlId} ref={controlId} valueAccessor={controlValueAccessor}/>;
+      return <ExpressionControl control={control}
+				key={controlId}
+				ref={controlId}
+				valueAccessor={controlValueAccessor}
+				validationDefinitions={this.state.validationDefinitions}
+				controlStates={this.state.controlStates}
+				/>;
     }
     else if (control.controlType == "passwordfield") {
       return <PasswordControl control={control} key={controlId} ref={controlId} valueAccessor={controlValueAccessor}/>;
@@ -186,9 +222,15 @@ export default class EditorForm extends React.Component {
 
   genControlItem(key, control, idPrefix, controlValueAccessor, inputDataModel) {
     //console.log("genControlItem");
+
+    var stateStyle = {};
+    if(this.state.controlStates[control.name] === "hidden"){
+      stateStyle["visibility"] = "hidden";
+    }
+
     var label = <span></span>;
     if (control.label && control.separateLabel) {
-      label = <label className="control-label">{control.label.text}</label>;
+      label = <label className="control-label" style={stateStyle} >{control.label.text}</label>;
     }
     var control = this.genControl(control, idPrefix, controlValueAccessor, inputDataModel);
     var controlItem = <ControlItem key={key} label={label} control={control}/>;
@@ -316,6 +358,165 @@ export default class EditorForm extends React.Component {
     this.props.submitMethod(buttonId, this.refs.form);
   }
 
+  handleMouseLeave(event) {
+    // visibleDefinition
+    if(this.state.visibleDefinition.length > 0) {
+      console.log("validate visible definitions");
+      var controlValues = this.getControlValues();
+
+      // convert the controlValues object structure to what UiConditions take
+      var userInput = {};
+      for(var key in controlValues) {
+        userInput[key] = controlValues[key][0];
+      }
+
+      for(let i = 0; i < this.state.visibleDefinition.length; i++) {
+        var definition = this.state.visibleDefinition[i];
+        try {
+          var output = UiConditions.validateInput(definition, userInput);
+
+          var tmp = this.state.controlStates;
+          if(output === true){ // control should be visible
+            for(let i = 0; i <  definition.visible.paramNames.length; i++) {
+              delete tmp[definition.visible.paramNames[i]];
+            }
+            this.setState({
+              controlStates : tmp
+            });
+          } else { // control should be hidden
+            for(let i = 0; i <  definition.visible.paramNames.length; i++) {
+              tmp[definition.visible.paramNames[i]] = "hidden";
+            }
+            this.setState({
+              controlStates : tmp
+            });
+          }
+        } catch(error) {
+          console.log("Error thrown in validation: " + error);
+        }
+      }
+      console.log("visible: " + JSON.stringify(this.state.controlStates));
+    }
+
+    // enabledDefinitions
+    if(this.state.enabledDefinitions.length > 0) {
+      console.log("validate enabled definitions");
+      var controlValues = this.getControlValues();
+
+      // convert the controlValues object structure to what UiConditions take
+      var userInput = {};
+      for(var key in controlValues) {
+        userInput[key] = controlValues[key][0];
+      }
+
+      for(let i = 0; i < this.state.enabledDefinitions.length; i++) {
+        var definition = this.state.enabledDefinitions[i];
+        try {
+          var output = UiConditions.validateInput(definition, userInput);
+
+          var tmp = this.state.controlStates;
+          if(output === true){ // control should be enabled
+            for(let i = 0; i <  definition.enabled.paramNames.length; i++) {
+              if(tmp[definition.enabled.paramNames[i]] !== "hidden") {
+                delete tmp[definition.enabled.paramNames[i]];
+              }
+            }
+            this.setState({
+              controlStates : tmp
+            });
+          } else { // control should be disabled
+            for(let i = 0; i <  definition.enabled.paramNames.length; i++) {
+              if(tmp[definition.enabled.paramNames[i]] !== "hidden") { // if control is hidden, no need to disable it
+                tmp[definition.enabled.paramNames[i]] = "disabled";
+              }
+            }
+            this.setState({
+              controlStates : tmp
+            });
+          }
+        } catch(error) {
+          console.log("Error thrown in validation: " + error);
+        }
+      }
+      console.log("enable: " + JSON.stringify(this.state.controlStates));
+    }
+
+    // validationGroupDefinitions
+    if(this.state.validationGroupDefinitions.length > 0) {
+      console.log("validate group definitions");
+      var validateErrorMessage = [];
+      var controlValues = this.getControlValues();
+
+      // convert the controlValues object structure to what UiConditions take
+      var userInput = {};
+      for(var key in controlValues) {
+        userInput[key] = controlValues[key][0];
+      }
+
+      for(let i = 0; i < this.state.validationGroupDefinitions.length; i++) {
+        var definition = this.state.validationGroupDefinitions[i];
+        try {
+          var output = UiConditions.validateInput(definition, userInput);
+
+          // var tmp = this.state.controlValidations;
+          if(output === true){
+            // tmp["group_validations_"+i] = true;
+            // this.setState({
+            //   controlValidations : tmp
+            // });
+          } else {
+            // tmp["group_validations_"+i] = false;
+            validateErrorMessage[i]= output;
+            // this.setState({
+            //   controlValidations : tmp
+            // });
+          }
+        } catch(error) {
+          console.log("Error thrown in validation: " + error);
+        }
+      }
+      this.setState({
+        validateErrorMessage: validateErrorMessage
+      });
+    }
+  }
+
+  parseUiConditions() {
+    var uiConditions = this.props.uiConditions;
+    var visibleDefinition = [];
+    var enabledDefinitions = [];
+    var validationDefinitions = [];
+    var validationGroupDefinitions = [];
+
+    for(let i = 0; i < uiConditions.length; i++){
+      if(uiConditions[i]["visible"]){
+        visibleDefinition.push(uiConditions[i]);
+      } else if(uiConditions[i]["enabled"]) {
+        enabledDefinitions.push(uiConditions[i]);
+      } else if(uiConditions[i]["validation"]) {
+        try {
+          var controls = UiConditionsParser.parseInput(uiConditions[i]["validation"]);
+          if(controls === "multi") {
+            validationGroupDefinitions.push(uiConditions[i]);
+          } else { // single control
+            validationDefinitions[controls] = uiConditions[i];
+          }
+        } catch (error) { // invalid
+          console.log("Error parsing ui conditions: " + error);
+        }
+      } else { // invalid
+        console.log("Invalid definition: " + JSON.stringify(uiConditions[i]));
+      }
+    }
+
+    this.setState({
+      visibleDefinition: visibleDefinition,
+      enabledDefinitions: enabledDefinitions,
+      validationDefinitions: validationDefinitions,
+      validationGroupDefinitions, validationGroupDefinitions
+    });
+  }
+
   render() {
     var content = this.genUIContent(this.props.form.uiItems,
         "", this.getControlValue,
@@ -336,16 +537,33 @@ export default class EditorForm extends React.Component {
       formButtons.push(buttonInput);
     }
     */
+    var errorMessage = <div
+      className="validation-error-message group-validation-error-message"
+      style={{ height: CONDITION_ERROR_MESSAGE.HIDDEN }}></div>
+    if (this.state.validateErrorMessage.length > 0) {
+      var errorMessages = this.state.validateErrorMessage.map(function(message, ind) {
+        return <p key={ind}>{message}</p>;
+      });
+      errorMessage = (<div
+        className="validation-error-message group-validation-error-message"
+        style={{ height: CONDITION_ERROR_MESSAGE.VISIBLE }}>
+        <div id="editor-form-validation" className="form__validation" style={{ "display": "block" }}>
+          <span className="form__validation--invalid">{errorMessages}</span>
+        </div>
+      </div>);
+    }
 
     return (
       <div className="well">
-        <form id={"form-" + this.props.form.componentId} className="form-horizontal">
+        <form id={"form-" + this.props.form.componentId} className="form-horizontal"
+          onMouseLeave={this.handleMouseLeave}>
           <div className="section--light">
           {content}
           </div>
           <div>
             <ButtonToolbar>{formButtons}</ButtonToolbar>
           </div>
+          {errorMessage}
         </form>
       </div>
     );
@@ -355,5 +573,6 @@ export default class EditorForm extends React.Component {
 
 EditorForm.propTypes = {
   form: React.PropTypes.object,
-  additionalComponents: React.PropTypes.object
+  additionalComponents: React.PropTypes.object,
+  uiConditions: React.PropTypes.array
 };

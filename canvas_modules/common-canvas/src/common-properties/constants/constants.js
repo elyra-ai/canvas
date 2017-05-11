@@ -26,5 +26,10 @@ _defineConstant("CHARACTER_LIMITS", {
   NODE_PROPERTIES_DIALOG_TEXT_AREA:1024
 });
 
+_defineConstant("CONDITION_ERROR_MESSAGE", {
+  HIDDEN:"0px",
+  VISIBLE:"25px"
+});
+
 _defineConstant("OKAY", "OK");
 _defineConstant("CANCEL", "Cancel");

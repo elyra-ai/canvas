@@ -45,21 +45,51 @@ export default class TextareaControl extends EditorControl {
   }
 
   render() {
+    var errorMessage = <div className="validation-error-message"></div>
+    if (this.state.validateErrorMessage && this.state.validateErrorMessage.text !== "") {
+      errorMessage = (<div className="validation-error-message">
+        <p className="form__validation" style={{ "display": "block" }}>
+          <span className="form__validation--invalid">{this.state.validateErrorMessage.text}</span>
+        </p>
+      </div>);
+    }
+
+    var controlName = this.getControlID().split(".")[1];
+    var stateDisabled = {};
+    var stateStyle = {};
+    if(typeof this.props.controlStates[controlName] !== "undefined") {
+      if(this.props.controlStates[controlName] === "disabled") {
+        stateDisabled["disabled"] = true;
+        stateStyle = { color: "#D8D8D8", borderColor: "#D8D8D8" };
+      } else if (this.props.controlStates[controlName] === "hidden") {
+        stateStyle["visibility"] = "hidden";
+      }
+    }
+
     return (
-      <TextField
-        type="textarea"
-        id={this.getControlID()}
-        placeholder={this.props.control.additionalText}
-        onChange={this.handleChange}
-        value={this.state.controlValue}
-        rows={4}
-        maxCount={CHARACTER_LIMITS.NODE_PROPERTIES_DIALOG_TEXT_AREA}
-        maxLength={CHARACTER_LIMITS.NODE_PROPERTIES_DIALOG_TEXT_AREA}/>
+      <div className="editor_control_area" style={stateStyle}>
+        <TextField {...stateDisabled}
+          style={stateStyle}
+          type="textarea"
+          id={this.getControlID()}
+          onBlur={this.validateInput}
+          onFocus={this.clearValidateMsg}
+          msg={this.state.validateErrorMessage}
+          placeholder={this.props.control.additionalText}
+          onChange={this.handleChange}
+          value={this.state.controlValue}
+          rows={4}
+          maxCount={CHARACTER_LIMITS.NODE_PROPERTIES_DIALOG_TEXT_AREA}
+          maxLength={CHARACTER_LIMITS.NODE_PROPERTIES_DIALOG_TEXT_AREA}
+        />
+        {errorMessage}
+      </div>
     );
   }
 }
 
 
 TextareaControl.propTypes = {
-  control: React.PropTypes.object
+  control: React.PropTypes.object,
+  controlStates: React.PropTypes.object
 };
