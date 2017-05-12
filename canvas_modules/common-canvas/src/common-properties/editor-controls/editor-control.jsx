@@ -14,16 +14,23 @@
 
 import React from 'react'
 import {Grid, Row, Col, Well, ListGroupItem, Table, tr, th, Button} from 'react-bootstrap'
+import UiConditions from '../ui-conditions/ui-conditions.js'
 
 export default class EditorControl extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      validateErrorMessage: {
+        type: "info",
+        text: ""
+      }
     };
     this.getControlID = this.getControlID.bind(this);
     this.setValueListener = this.setValueListener.bind(this);
     this.clearValueListener = this.clearValueListener.bind(this);
     this.notifyValueChanged = this.notifyValueChanged.bind(this);
+    this.validateInput = this.validateInput.bind(this);
+    this.clearValidateMsg = this.clearValidateMsg.bind(this);
 
     this._valueListener = null;
   }
@@ -51,6 +58,48 @@ export default class EditorControl extends React.Component {
     else {
       //console.log("notifyValueChanged(): no listener");
     }
+  }
+
+  validateInput(event) {
+    var controlName = this.getControlID().split(".")[1];
+    if(typeof this.props.controlStates[controlName] === "undefined" &&
+       this.props.validationDefinitions[controlName]){
+      var userInput = {
+        [controlName]: this.state.controlValue // event.target.value
+      };
+
+      try {
+        var output = UiConditions.validateInput(this.props.validationDefinitions[controlName], userInput);
+        console.log("validated input field " + controlName + " to be " + output);
+
+        if(output === true){
+          this.setState({
+            validateErrorMessage: {
+              type: "info",
+              text: ""
+            }
+          });
+        } else {
+          this.setState({
+            validateErrorMessage: {
+              type: "invalid",
+              text: output
+            }
+          });
+        }
+      } catch(error) {
+        console.log("Error thrown in validation: " + error);
+      }
+    }
+  }
+
+  clearValidateMsg() {
+    this.setState({
+      validateErrorMessage: {
+        type: "info",
+        text: ""
+      }
+    });
   }
 
   /*
@@ -147,5 +196,6 @@ export default class EditorControl extends React.Component {
 
 EditorControl.propTypes = {
   control: React.PropTypes.object.isRequired,
-  valueAccessor: React.PropTypes.func.isRequired
+  valueAccessor: React.PropTypes.func.isRequired,
+  validationDefinitions: React.PropTypes.array
 };

@@ -116,6 +116,29 @@ input[type=radio]{
   background-color:#f9f9fb;
 }
 
+/* Added for validations */
+.editor_control_area .haslabel {
+  margin: 0 0 25px 0;
+}
+
+.validation-error-message {
+  padding-top: 5px;
+}
+
+.group-validation-error-message {
+  margin-bottom: 0px;
+}
+
+#editor-form-validation {
+  margin: 0 0 0 10px;
+  overflow-x: scroll;
+}
+
+#editor-form-validation p {
+  margin: 0;
+  font-size: .875rem;
+}
+
 /* Override bootstrap css */
 .container {
 	width: 100%;
@@ -125,4 +148,8 @@ input[type=radio]{
 /* Override ap-components css */
 .modal__container .modal__buttons {
   bottom: initial;
+}
+
+span.form__validation--invalid {
+  color: #E71D32;
 }

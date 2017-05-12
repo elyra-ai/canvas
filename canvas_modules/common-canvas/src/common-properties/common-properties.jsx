@@ -37,7 +37,7 @@ export default class CommonProperties extends React.Component {
 	getForm(){
 		if (this.props.propertiesInfo.formData){
 			return this.props.propertiesInfo.formData;
-		}else if(this.props.propertiesInfo.operator) {
+		} else if(this.props.propertiesInfo.operator) {
 			 return Form.makeForm(this.props.propertiesInfo.operator, this.props.propertiesInfo.inputDataModel, this.props.propertiesInfo.currentProperties,
 					this.props.propertiesInfo.resources);
 		}
@@ -46,27 +46,35 @@ export default class CommonProperties extends React.Component {
 		let formData = this.getForm();
 		let propertiesDialog = [];
 		if (this.props.showPropertiesDialog) {
-			let editorForm = <EditorForm ref="editorForm" key={Date()}
+			let uiConditions = {};
+			if(typeof this.props.uiConditions !== "undefined") {
+				uiConditions = { uiConditions: this.props.uiConditions };
+			}
+
+			let editorForm = <EditorForm {...uiConditions}
+				ref="editorForm" key={Date()}
 				form={formData}
 				additionalComponents={this.props.propertiesInfo.additionalComponents}/>;
 			let title = this.props.propertiesInfo.title;
 			let size = formData.editorSize;
 			propertiesDialog = <PropertiesDialog
+				isInputValidated={this.isInputValidated}
 				onHide={this.props.propertiesInfo.closePropertiesDialog}
 				title={title}
 				bsSize={size}
 				okHandler={this.applyPropertiesEditing}
 				cancelHandler={this.props.propertiesInfo.closePropertiesDialog}>{editorForm}</PropertiesDialog>;
-			}
-			return (
-				<div>
-					{propertiesDialog}
-				</div>
-			);
 		}
+		return (
+			<div>
+				{propertiesDialog}
+			</div>
+		);
 	}
+}
 
 CommonProperties.propTypes = {
 	showPropertiesDialog: React.PropTypes.bool.isRequired,
-	propertiesInfo: React.PropTypes.object.isRequired
+	propertiesInfo: React.PropTypes.object.isRequired,
+	uiConditions: React.PropTypes.array
 };
