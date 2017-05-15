@@ -70,12 +70,14 @@ export default class EditorForm extends React.Component {
       validationDefinitions: [],
       validationGroupDefinitions:[],
       // controlValidations: {},
-      controlStates: {}
+      controlStates: {},
+      selectedRows: []
     };
 
     this.getControlValue = this.getControlValue.bind(this);
     this.updateControlValue = this.updateControlValue.bind(this);
     this.updateControlValues = this.updateControlValues.bind(this);
+    this.updateSelectedRows = this.updateSelectedRows.bind(this);
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleMouseLeave = this.handleMouseLeave.bind(this);
@@ -123,6 +125,12 @@ export default class EditorForm extends React.Component {
       }
     }
     this.setState({ valuesTable: values });
+  }
+
+  updateSelectedRows(selection) {
+    this.setState({
+      selectedRows: selection
+    });
   }
 
   getControlValues() {
@@ -218,6 +226,8 @@ export default class EditorForm extends React.Component {
         ref={controlId}
         valueAccessor={controlValueAccessor}
         updateControlValue={this.updateControlValue}
+        updateSelectedRows={this.updateSelectedRows}
+        selectedRows={this.state.selectedRows}
         buildUIItem={this.genUIItem}/>;
     }
     else if (control.controlType == "structureeditor") {
@@ -228,11 +238,20 @@ export default class EditorForm extends React.Component {
         ref={controlId}
         valueAccessor={controlValueAccessor}
         updateControlValue={this.updateControlValue}
+        updateSelectedRows={this.updateSelectedRows}
+        selectedRows={this.state.selectedRows}
         buildUIItem={this.genUIItem}/>;
     }
     else if (control.controlType == "structurelisteditor") {
       // console.log("structurelisteditor");
-      return <StructurelisteditorControl control={control} dataModel={inputDataModel} key={controlId} ref={controlId} valueAccessor={controlValueAccessor}
+      return <StructurelisteditorControl control={control}
+        dataModel={inputDataModel}
+        key={controlId}
+        ref={controlId}
+        valueAccessor={controlValueAccessor}
+        updateControlValue={this.updateControlValue}
+        updateSelectedRows={this.updateSelectedRows}
+        selectedRows={this.state.selectedRows}
         buildUIItem={this.genUIItem}/>;
     }
     else {
