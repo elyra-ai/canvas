@@ -81,10 +81,12 @@ export default class StructureTableEditor extends EditorControl {
     return this.state.controlValue;
   }
 
-  setCurrentControlValue(controlValue) {
+  setCurrentControlValue(targetControl, controlValue, updateControlValue) {
     this.setState({
       controlValue: controlValue,
       selectedRows: []
+    }, function() {
+      updateControlValue(targetControl, EditorControl.stringifyStructureStrings(controlValue));
     });
   }
 

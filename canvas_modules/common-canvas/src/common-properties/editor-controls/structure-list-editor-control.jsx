@@ -57,7 +57,7 @@ export default class StructurelisteditorControl extends StructureTableEditor {
           }
         }
       }
-      this.setCurrentControlValue(allValues);
+      this.setCurrentControlValue(this.props.control.name, allValues, this.props.updateControlValue);
     }
   }
 
@@ -71,7 +71,7 @@ export default class StructurelisteditorControl extends StructureTableEditor {
     rows.push(newRow);
     console.log(rows);
 
-    this.setCurrentControlValue(rows);
+    this.setCurrentControlValue(this.props.control.name, rows, this.props.updateControlValue);
   }
 
   removeSelectedRows() {
@@ -89,7 +89,7 @@ export default class StructurelisteditorControl extends StructureTableEditor {
       rows.splice(selected[i], 1);
     }
 
-    this.setCurrentControlValue(rows);
+    this.setCurrentControlValue(this.props.control.name, rows, this.props.updateControlValue);
   }
 
   render() {
