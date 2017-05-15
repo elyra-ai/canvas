@@ -87,6 +87,7 @@ export default class StructureTableEditor extends EditorControl {
       selectedRows: []
     }, function() {
       updateControlValue(targetControl, EditorControl.stringifyStructureStrings(controlValue));
+      this.props.updateSelectedRows([]);
     });
   }
 
