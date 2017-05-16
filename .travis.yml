@@ -1,10 +1,6 @@
 ---
 dist: trusty
 sudo: required
-branches:
-  only:
-    - master
-    - release
 language: node_js
 node_js: "4.4"
 before_install:
