@@ -58,7 +58,6 @@ export default class CommonProperties extends React.Component {
 			let title = this.props.propertiesInfo.title;
 			let size = formData.editorSize;
 			propertiesDialog = <PropertiesDialog
-				isInputValidated={this.isInputValidated}
 				onHide={this.props.propertiesInfo.closePropertiesDialog}
 				title={title}
 				bsSize={size}

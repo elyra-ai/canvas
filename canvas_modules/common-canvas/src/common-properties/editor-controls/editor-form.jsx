@@ -62,18 +62,22 @@ export default class EditorForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      formData: this.props.form,
+      valuesTable: this.props.form.data.currentProperties,
       validateErrorMessage: [],
       visibleDefinition: [],
       enabledDefinitions: [],
       validationDefinitions: [],
       validationGroupDefinitions:[],
       // controlValidations: {},
-      controlStates: {}
+      controlStates: {},
+      selectedRows: []
     };
-    this.valuesTable = props.form.data.currentProperties;
 
     this.getControlValue = this.getControlValue.bind(this);
+    this.updateControlValue = this.updateControlValue.bind(this);
     this.updateControlValues = this.updateControlValues.bind(this);
+    this.updateSelectedRows = this.updateSelectedRows.bind(this);
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleMouseLeave = this.handleMouseLeave.bind(this);
@@ -102,17 +106,31 @@ export default class EditorForm extends React.Component {
   }
 
   getControlValue(controlId) {
-    return this.valuesTable[controlId];
+    return this.state.valuesTable[controlId];
+  }
+
+  updateControlValue(controlId, controlValue) {
+    var values = this.state.valuesTable;
+    values[controlId] = controlValue;
+    this.setState({ valuesTable: values });
   }
 
   updateControlValues() {
+    var values = this.state.valuesTable;
     for (var ref in this.refs) {
       // Slightly hacky way of identifying non-control references with
       // 3 underscores...
       if (!(ref.startsWith('___'))) {
-        this.valuesTable[ref] = this.refs[ref].getControlValue();
+        values[ref] = this.refs[ref].getControlValue();
       }
     }
+    this.setState({ valuesTable: values });
+  }
+
+  updateSelectedRows(selection) {
+    this.setState({
+      selectedRows: selection
+    });
   }
 
   getControlValues() {
@@ -202,17 +220,38 @@ export default class EditorForm extends React.Component {
     }
     else if (control.controlType == "allocatedstructures") {
       // console.log("allocatedstructures");
-      return <ColumnStructureAllocatorControl control={control} dataModel={inputDataModel} key={controlId} ref={controlId} valueAccessor={controlValueAccessor}
+      return <ColumnStructureAllocatorControl control={control}
+        dataModel={inputDataModel}
+        key={controlId}
+        ref={controlId}
+        valueAccessor={controlValueAccessor}
+        updateControlValue={this.updateControlValue}
+        updateSelectedRows={this.updateSelectedRows}
+        selectedRows={this.state.selectedRows}
         buildUIItem={this.genUIItem}/>;
     }
     else if (control.controlType == "structureeditor") {
       // console.log("structureeditor");
-      return <StructureeditorControl control={control} dataModel={inputDataModel} key={controlId} ref={controlId} valueAccessor={controlValueAccessor}
+      return <StructureeditorControl control={control}
+        dataModel={inputDataModel}
+        key={controlId}
+        ref={controlId}
+        valueAccessor={controlValueAccessor}
+        updateControlValue={this.updateControlValue}
+        updateSelectedRows={this.updateSelectedRows}
+        selectedRows={this.state.selectedRows}
         buildUIItem={this.genUIItem}/>;
     }
     else if (control.controlType == "structurelisteditor") {
       // console.log("structurelisteditor");
-      return <StructurelisteditorControl control={control} dataModel={inputDataModel} key={controlId} ref={controlId} valueAccessor={controlValueAccessor}
+      return <StructurelisteditorControl control={control}
+        dataModel={inputDataModel}
+        key={controlId}
+        ref={controlId}
+        valueAccessor={controlValueAccessor}
+        updateControlValue={this.updateControlValue}
+        updateSelectedRows={this.updateSelectedRows}
+        selectedRows={this.state.selectedRows}
         buildUIItem={this.genUIItem}/>;
     }
     else {
@@ -518,16 +557,16 @@ export default class EditorForm extends React.Component {
   }
 
   render() {
-    var content = this.genUIContent(this.props.form.uiItems,
+    var content = this.genUIContent(this.state.formData.uiItems,
         "", this.getControlValue,
-        this.props.form.data.inputDataModel);
+        this.state.formData.data.inputDataModel);
 
     var formButtons = [];
 
     /*
     // Ignore the server-supplied buttons for now.
-    for (var i=0;i < this.props.form.buttons.length;i++) {
-      var button = this.props.form.buttons[i];
+    for (var i=0;i < this.state.formData.buttons.length;i++) {
+      var button = this.state.formData.buttons[i];
       var style = "default";
       if (button.isPrimary) {
         style = "primary";

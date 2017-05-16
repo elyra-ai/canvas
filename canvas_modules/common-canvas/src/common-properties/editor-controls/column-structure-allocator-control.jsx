@@ -65,7 +65,7 @@ export default class ColumnStructureAllocatorControl extends StructureTableEdito
           }
         }
       }
-      this.setCurrentControlValue(allValues);
+      this.setCurrentControlValue(this.props.control.name, allValues, this.props.updateControlValue);
     }
   }
 
@@ -137,7 +137,7 @@ export default class ColumnStructureAllocatorControl extends StructureTableEdito
 
     this._update_callback = callback;
 
-    this.setCurrentControlValue(rows);
+    this.setCurrentControlValue(this.props.control.name, rows, this.props.updateControlValue);
   }
 
   removeColumns(columnNames, callback) {
@@ -158,7 +158,7 @@ export default class ColumnStructureAllocatorControl extends StructureTableEdito
 
     this._update_callback = callback;
 
-    this.setCurrentControlValue(newRows);
+    this.setCurrentControlValue(this.props.control.name, newRows, this.props.updateControlValue);
   }
 
   render() {
@@ -174,5 +174,6 @@ export default class ColumnStructureAllocatorControl extends StructureTableEdito
 ColumnStructureAllocatorControl.propTypes = {
   buildUIItem: React.PropTypes.func,
   dataModel: React.PropTypes.object.isRequired,
-  control: React.PropTypes.object.isRequired
+  control: React.PropTypes.object.isRequired,
+  updateControlValue: React.PropTypes.func
 };
