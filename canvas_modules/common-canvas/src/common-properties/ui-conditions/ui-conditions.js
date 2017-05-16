@@ -315,6 +315,12 @@ function condition(data, userInput) {
 			} else {
 				throw "Insufficient parameter for condition op: notContains";
 			}
+		case "checked":
+			console.log("Condition checked: " + param + " is " + paramInput === "true");
+			return paramInput === "true";
+		case "notChecked":
+			console.log("Condition not checked: " + param + " is " + paramInput === "false");
+			return paramInput === "false";
 		default:
 			return false;
 	}

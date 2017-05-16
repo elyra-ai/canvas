@@ -190,7 +190,13 @@ export default class EditorForm extends React.Component {
       return <NumberfieldControl control={control} key={controlId} ref={controlId} valueAccessor={controlValueAccessor}/>;
     }
     else if (control.controlType == "checkbox") {
-      return <CheckboxControl control={control} key={controlId} ref={controlId} valueAccessor={controlValueAccessor}/>;
+      return <CheckboxControl control={control}
+        key={controlId}
+        ref={controlId}
+        valueAccessor={controlValueAccessor}
+        validationDefinitions={this.state.validationDefinitions}
+        controlStates={this.state.controlStates}
+        />;
     }
     else if (control.controlType == "checkboxset") {
       return <CheckboxsetControl control={control} key={controlId} ref={controlId} valueAccessor={controlValueAccessor}/>;
