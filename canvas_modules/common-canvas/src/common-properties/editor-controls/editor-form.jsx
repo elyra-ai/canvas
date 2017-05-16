@@ -212,11 +212,27 @@ export default class EditorForm extends React.Component {
     }
     else if (control.controlType == "allocatedcolumn") {
       // console.log("allocatedcolumn");
-      return <ColumnAllocatorControl control={control} dataModel={inputDataModel} multiColumn={false} key={controlId} ref={controlId} valueAccessor={controlValueAccessor}/>;
+      return <ColumnAllocatorControl control={control}
+        dataModel={inputDataModel}
+        multiColumn={false}
+        key={controlId}
+        ref={controlId}
+        valueAccessor={controlValueAccessor}
+        validationDefinitions={this.state.validationDefinitions}
+        controlStates={this.state.controlStates}
+        />;
     }
     else if (control.controlType == "allocatedcolumns") {
       // console.log("allocatedcolumns");
-      return <ColumnAllocatorControl control={control} dataModel={inputDataModel} multiColumn={true} key={controlId} ref={controlId} valueAccessor={controlValueAccessor}/>;
+      return <ColumnAllocatorControl control={control}
+        dataModel={inputDataModel}
+        multiColumn={true}
+        key={controlId}
+        ref={controlId}
+        valueAccessor={controlValueAccessor}
+        validationDefinitions={this.state.validationDefinitions}
+        controlStates={this.state.controlStates}
+        />;
     }
     else if (control.controlType == "allocatedstructures") {
       // console.log("allocatedstructures");
@@ -228,7 +244,8 @@ export default class EditorForm extends React.Component {
         updateControlValue={this.updateControlValue}
         updateSelectedRows={this.updateSelectedRows}
         selectedRows={this.state.selectedRows}
-        buildUIItem={this.genUIItem}/>;
+        buildUIItem={this.genUIItem}
+        />;
     }
     else if (control.controlType == "structureeditor") {
       // console.log("structureeditor");
@@ -240,7 +257,8 @@ export default class EditorForm extends React.Component {
         updateControlValue={this.updateControlValue}
         updateSelectedRows={this.updateSelectedRows}
         selectedRows={this.state.selectedRows}
-        buildUIItem={this.genUIItem}/>;
+        buildUIItem={this.genUIItem}
+        />;
     }
     else if (control.controlType == "structurelisteditor") {
       // console.log("structurelisteditor");
@@ -252,7 +270,8 @@ export default class EditorForm extends React.Component {
         updateControlValue={this.updateControlValue}
         updateSelectedRows={this.updateSelectedRows}
         selectedRows={this.state.selectedRows}
-        buildUIItem={this.genUIItem}/>;
+        buildUIItem={this.genUIItem}
+        />;
     }
     else {
       return <h6 key={controlId}>{controlId}</h6>;

@@ -214,50 +214,86 @@ function condition(data, userInput) {
 
 	switch(op) {
 		case "isEmpty":
-			console.log("Condition isEmpty: '" + paramInput + "' is " + (paramInput.trim().length === 0));
-			return paramInput.trim().length === 0;
+			if(typeof paramInput === "object") {
+				if(paramInput.length === 1) {
+					console.log("Condition isEmpty: '" + paramInput + "' is " + (paramInput[0].length === 0));
+					return paramInput[0].length === 0;
+				} else {
+					console.log("Condition isEmpty: '" + paramInput + "' is " + (paramInput.length === 0));
+					return paramInput.length === 0;
+				}
+			} else { // string
+				console.log("Condition isEmpty: '" + paramInput + "' is " + (paramInput.trim().length === 0));
+				return paramInput.trim().length === 0;
+			}
 		case "isNotEmpty":
-			console.log("Condition isNotEmpty: '" + paramInput + "' is " + (paramInput.trim().length !== 0));
-			return paramInput.trim().length !== 0;
+			if(typeof paramInput === "object") {
+				if(paramInput.length === 1) {
+					console.log("Condition isNotEmpty: '" + paramInput + "' is " + (paramInput[0].length !== 0));
+					return paramInput[0].length !== 0;
+				} else {
+					console.log("Condition isNotEmpty: '" + paramInput + "' is " + (paramInput.length !== 0));
+					return paramInput.length !== 0;
+				}
+			} else { // string
+				console.log("Condition isNotEmpty: '" + paramInput + "' is " + (paramInput.trim().length !== 0));
+				return paramInput.trim().length !== 0;
+			}
 		case "greaterThan":
-			if(param2 !== null && userInput[param2]) {
-				console.log("Condition greaterThan: " + paramInput + " > " + userInput[param2] + " is " + (paramInput > userInput[param2]));
-				return paramInput > userInput[param2];
-			} else if (value !== null) {
-				console.log("Condition greaterThan: " + paramInput + " > " + value + " is " + (paramInput > value));
-				return paramInput > value;
+			if(typeof paramInput === "object") {
+				return true;
 			} else {
-				throw "Insufficient parameter for condition op: greaterThan";
+				if(param2 !== null && userInput[param2]) {
+					console.log("Condition greaterThan: " + paramInput + " > " + userInput[param2] + " is " + (paramInput > userInput[param2]));
+					return paramInput > userInput[param2];
+				} else if (value !== null) {
+					console.log("Condition greaterThan: " + paramInput + " > " + value + " is " + (paramInput > value));
+					return paramInput > value;
+				} else {
+					throw "Insufficient parameter for condition op: greaterThan";
+				}
 			}
 		case "lessThan":
-			if(param2 !== null && userInput[param2]) {
-				console.log("Condition lessThan: " + paramInput + " < " + userInput[param2] + " is " + (paramInput < userInput[param2]));
-				return paramInput < userInput[param2];
-			} else if (value !== null) {
-				console.log("Condition lessThan: " + paramInput + " < " + value + " is " + (paramInput < value));
-				return paramInput < value;
+			if(typeof paramInput === "object") {
+				return true;
 			} else {
-				throw "Insufficient parameter for condition op: lessThan";
+				if(param2 !== null && userInput[param2]) {
+					console.log("Condition lessThan: " + paramInput + " < " + userInput[param2] + " is " + (paramInput < userInput[param2]));
+					return paramInput < userInput[param2];
+				} else if (value !== null) {
+					console.log("Condition lessThan: " + paramInput + " < " + value + " is " + (paramInput < value));
+					return paramInput < value;
+				} else {
+					throw "Insufficient parameter for condition op: lessThan";
+				}
 			}
 		case "equals":
-			if(param2 !== null && userInput[param2]) {
-				console.log("Condition equals: " + paramInput + " === " + userInput[param2] + " is " + (paramInput === userInput[param2]));
-				return paramInput === userInput[param2];
-			} else if (value !== null) {
-				console.log("Condition equals: " + paramInput + " === " + value + " is " + (paramInput === value));
-				return paramInput === value;
+			if(typeof paramInput === "object") {
+				return true;
 			} else {
-				throw "Insufficient parameter for condition op: equals";
+				if(param2 !== null && userInput[param2]) {
+					console.log("Condition equals: " + paramInput + " === " + userInput[param2] + " is " + (paramInput === userInput[param2]));
+					return paramInput === userInput[param2];
+				} else if (value !== null) {
+					console.log("Condition equals: " + paramInput + " === " + value + " is " + (paramInput === value));
+					return paramInput === value;
+				} else {
+					throw "Insufficient parameter for condition op: equals";
+				}
 			}
 		case "notEquals":
-			if(param2 !== null && userInput[param2]) {
-				console.log("Condition notEquals: " + paramInput + " !== " + userInput[param2] + " is " + (paramInput !== userInput[param2]));
-				return paramInput !== userInput[param2];
-			} else if (value !== null) {
-				console.log("Condition notEquals: " + paramInput + " !== " + value + " is " + (paramInput !== value));
-				return paramInput !== value;
+			if(typeof paramInput === "object") {
+				return true;
 			} else {
-				throw "Insufficient parameter for condition op: notEquals";
+				if(param2 !== null && userInput[param2]) {
+					console.log("Condition notEquals: " + paramInput + " !== " + userInput[param2] + " is " + (paramInput !== userInput[param2]));
+					return paramInput !== userInput[param2];
+				} else if (value !== null) {
+					console.log("Condition notEquals: " + paramInput + " !== " + value + " is " + (paramInput !== value));
+					return paramInput !== value;
+				} else {
+					throw "Insufficient parameter for condition op: notEquals";
+				}
 			}
 		case "contains":
 			if(param2 !== null && userInput[param2]) {
