@@ -6,7 +6,8 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-// "use strict";
+
+"use strict";
 
 /* eslint global-require: 0 */
 /* eslint quote-props: 0 */

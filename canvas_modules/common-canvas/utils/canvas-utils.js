@@ -12,29 +12,25 @@
 ** deposited with the U.S. Copyright Office.
 *****************************************************************/
 
-import {CANVAS_UI} from '../constants/common-constants.js';
-import _ from 'underscore';
+import { CANVAS_UI } from "../constants/common-constants.js";
+import _ from "underscore";
 
-
-
-//http://stackoverflow.com/questions/17456783/javascript-figure-out-point-y-by-angle-and-distance
+// http://stackoverflow.com/questions/17456783/javascript-figure-out-point-y-by-angle-and-distance
 function findNewPoint(x, y, angle, distance) {
-    var result = {};
-
-    result.x = Math.round(Math.cos(angle * Math.PI / 180) * distance + x);
-    result.y = Math.round(Math.sin(angle * Math.PI / 180) * distance + y);
-
-    return result;
+	var result = {};
+	result.x = Math.round(Math.cos(angle * Math.PI / 180) * distance + x);
+	result.y = Math.round(Math.sin(angle * Math.PI / 180) * distance + y);
+	return result;
 }
 
-//http://stackoverflow.com/questions/9614109/how-to-calculate-an-angle-from-points
+// http://stackoverflow.com/questions/9614109/how-to-calculate-an-angle-from-points
 function findSlope(sx, sy, ex, ey) {
-    var dy = ey - sy;
-    var dx = ex - sx;
-    var theta = Math.atan2(dy, dx); // range (-PI, PI]
-    theta *= 180 / Math.PI; // rads to degs, range (-180, 180]
-    //if (theta < 0) theta = 360 + theta; // range [0, 360)
-    return theta;
+	var dy = ey - sy;
+	var dx = ex - sx;
+	var theta = Math.atan2(dy, dx); // range (-PI, PI]
+	theta *= 180 / Math.PI; // rads to degs, range (-180, 180]
+    // if (theta < 0) theta = 360 + theta; // range [0, 360)
+	return theta;
 }
 
 
@@ -45,38 +41,23 @@ function findSlope(sx, sy, ex, ey) {
  * @return {Object} an object contains 3 points.
  */
 function getArrowheadPoints(data, zoom) {
+	const slope = findSlope(data.x1, data.y1, data.x2, data.y2);
+	const linkLength = Math.sqrt((data.x2 -= data.x1) * data.x2 + (data.y2 -= data.y1) * data.y2);
+	const distanceToArrow = Math.round(linkLength - (CANVAS_UI.HALO_RADIUS * zoom));
+	const p2 = findNewPoint(data.x1, data.y1, slope, distanceToArrow);
+  // TODO futher refine positioning logic
+	const p1Angle = slope + 160;
+	const p3Angle = slope - 160;
 
-  //console.log('getArrowheadPoints(data, zoom): CANVAS_UI.HALO_RADIUS '+CANVAS_UI.HALO_RADIUS+  ' data '+JSON.stringify(data)+' zoom '+zoom );
+	const p1 = findNewPoint(p2.x, p2.y, p1Angle, 10);
+	const p3 = findNewPoint(p2.x, p2.y, p3Angle, 10);
 
-
-
-    let slope = findSlope(data.x1, data.y1, data.x2, data.y2);
-
-    let linkLength = Math.sqrt((data.x2 -= data.x1) * data.x2 + (data.y2 -= data.y1) * data.y2);
-
-    let distanceToArrow = Math.round(linkLength - (CANVAS_UI.HALO_RADIUS * zoom));
-
-    let p2 = findNewPoint(data.x1, data.y1, slope, distanceToArrow);
-
-    //console.log('linkLength '+linkLength+'  p2.x '+p2.x+'  p2.y '+p2.y+'  distanceToArrow '+distanceToArrow);
-
-
-    //TODO futher refine positioning logic
-
-    let p1Angle = slope + 160;
-    let p3Angle = slope - 160;
-
-    let p1 = findNewPoint(p2.x, p2.y, p1Angle, 10);
-    let p3 = findNewPoint(p2.x, p2.y, p3Angle, 10);
-
-    let arrowhead = {
-        p1,
-        p2,
-        p3
-    };
-    //console.log('CanvasUtils.getArrowheadPoints result '+JSON.stringify(arrowhead));
-
-    return arrowhead;
+	const arrowhead = {
+		p1,
+		p2,
+		p3
+	};
+	return arrowhead;
 
 }
 
@@ -87,19 +68,12 @@ function getArrowheadPoints(data, zoom) {
  * @return {Object} an object contains x,y points.
  */
 function getLinePointOnHalo(data, zoom) {
-    let slope = findSlope(data.x1, data.y1, data.x2, data.y2);
-
-    let d = _.clone(data);
-    let linkLength = Math.sqrt((d.x2 -= d.x1) * d.x2 + (d.y2 -= d.y1) * d.y2);
-
-
-    let distanceToHalo = Math.round(linkLength - (CANVAS_UI.HALO_RADIUS * zoom));
-
-    let posHalo = findNewPoint(data.x1, data.y1, slope, distanceToHalo);
-
-    //console.log('CanvasUtils.getLinePointOnHalo '+' CANVAS_UI.HALO_RADIUS '+CANVAS_UI.HALO_RADIUS+' data '+JSON.stringify(data)+' zoom '+zoom + 'posHalo '+JSON.stringify(posHalo));
-
-    return posHalo;
+	const slope = findSlope(data.x1, data.y1, data.x2, data.y2);
+	const d = _.clone(data);
+	const linkLength = Math.sqrt((d.x2 -= d.x1) * d.x2 + (d.y2 -= d.y1) * d.y2);
+	const distanceToHalo = Math.round(linkLength - (CANVAS_UI.HALO_RADIUS * zoom));
+	const posHalo = findNewPoint(data.x1, data.y1, slope, distanceToHalo);
+	return posHalo;
 }
 
 /**
@@ -109,27 +83,27 @@ function getLinePointOnHalo(data, zoom) {
  * @return {Object} JSON object
  */
 function convertStyleStringToJSONObject(data, delimiter) {
-	let delimiterChar = (delimiter) ? delimiter : ";";
+	const delimiterChar = (delimiter) ? delimiter : ";";
 	if (data) {
 		var result = {};
-		let items = data.split(delimiterChar);
-		items.forEach( (item) => {
-			let element = item.split(":");
-			if (element.length == 2) {
+		const items = data.split(delimiterChar);
+		items.forEach((item) => {
+			const element = item.split(":");
+			if (element.length === 2) {
 				// ignore any invalid styles
 				result[element[0].trim()] = element[1].trim();
 			}
 		});
 		return result;
-	} else {
-		return {};
 	}
+	return {};
+
 }
 
 module.exports = {
-    findSlope: findSlope,
-    findNewPoint: findNewPoint,
-    getArrowheadPoints: getArrowheadPoints,
-    getLinePointOnHalo: getLinePointOnHalo,
-		convertStyleStringToJSONObject: convertStyleStringToJSONObject
-}
+	findSlope: findSlope,
+	findNewPoint: findNewPoint,
+	getArrowheadPoints: getArrowheadPoints,
+	getLinePointOnHalo: getLinePointOnHalo,
+	convertStyleStringToJSONObject: convertStyleStringToJSONObject
+};

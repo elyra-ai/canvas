@@ -1,20 +1,19 @@
-/*******************************************************************************
- * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2016. All Rights Reserved.
- *
- * Note to U.S. Government Users Restricted Rights:
- * Use, duplication or disclosure restricted by GSA ADP Schedule
- * Contract with IBM Corp.
- *******************************************************************************/
-"use strict";
-
 module.exports = {
-	"extends": "@dap/eslint-config-portal-common",
-	"env": {
-		"mocha": true
+	extends: [
+		"@dap/eslint-config-portal-common",
+		"@dap/eslint-config-portal-common/react"
+	].map(require.resolve),
+	env: {
+
 	},
 	rules: {
-		// Disallow Unused Expressions
-		"no-unused-expressions": "off"
+		// Disable strict warning on ES6 Components
+		"strict": 0,
+		"global-require": 0,
+		"sort-imports": 0,
+		"react/jsx-indent-props": [2, "tab"],
+		"max-len": [2, 180, 4],
+		"no-unused-expressions": 0,
+		"no-shadow": ["error", { "hoist": "functions" }]
 	}
 };
