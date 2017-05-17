@@ -5,10 +5,11 @@ module.exports = {
 		"camelcase": [
 			"error",
 			{ "properties": "never" }
-		]
+		],
+		"max-len": [2, 180, 4],
+		"id-length": ["error", { "min": 1 }],
 	},
 	env: {
-		jasmine: true,
 		jest: true
 	},
 	parserOptions: {

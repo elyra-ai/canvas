@@ -1,618 +1,633 @@
+/****************************************************************
+** IBM Confidential
+**
+** OCO Source Materials
+**
+** SPSS Modeler
+**
+** (c) Copyright IBM Corp. 2016
+**
+** The source code for this program is not published or otherwise
+** divested of its trade secrets, irrespective of what has been
+** deposited with the U.S. Copyright Office.
+*****************************************************************/
 
-import {expect, assert} from 'chai';
-import _ from 'underscore';
-import deepFreeze from 'deep-freeze';
-import ObjectModel from '../src/object-model/object-model.js';
+import { expect as chaiExpect } from "chai";
+import _ from "underscore";
+import deepFreeze from "deep-freeze";
+import ObjectModel from "../src/object-model/object-model.js";
+import log4js from "log4js";
 
-describe('ObjectModel handle model OK', () => {
+const logger = log4js.getLogger("object-model-test");
 
-    it('should create a canvas', () => {
-      console.log("should create a canvas");
+describe("ObjectModel handle model OK", () => {
 
-      let expectedCanvas =
-           {zoom: 100,
-            diagram:
-              {name:"my diagram",
-               nodes: [{id: "node1", name: "Node 1"},
-                       {id: "node2", name: "Node 2"}]
-              }
-           };
+	it("should create a canvas", () => {
+		logger.info("should create a canvas");
 
-     deepFreeze(expectedCanvas);
+		const expectedCanvas =
+			{ zoom: 100,
+				diagram:
+				{ name: "my diagram",
+					nodes: [{ id: "node1", name: "Node 1" },
+                       { id: "node2", name: "Node 2" }]
+				}
+			};
 
-      ObjectModel.dispatch({
-        type: "SET_CANVAS",
-        data: expectedCanvas
-      });
+		deepFreeze(expectedCanvas);
 
-      let actualCanvas = ObjectModel.getCanvas();
+		ObjectModel.dispatch({
+			type: "SET_CANVAS",
+			data: expectedCanvas
+		});
 
-      console.log("Expected Canvas = " + JSON.stringify(expectedCanvas));
-      console.log("Actual Canvas   = " + JSON.stringify(actualCanvas));
+		const actualCanvas = ObjectModel.getCanvas();
 
-      expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
-    });
+		logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas));
+		logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas));
+
+		chaiExpect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+	});
 
 
-    it('should clear a canvas', () => {
-      console.log("should clear a canvas");
+	it("should clear a canvas", () => {
+		logger.info("should clear a canvas");
 
-      let startCanvas =
-          {diagram:
-            {nodes: [
-               {id: "node1", xPos: 10, yPos: 10},
-               {id: "node2", xPos: 20, yPos: 20},
-               {id: "node3", xPos: 30, yPos: 30}
-              ],
-             comments: [
-               {id: "comment1", xPos: 50, yPos: 50},
-               {id: "comment2", xPos: 60, yPos: 60}
-              ]
-            }
-          };
+		const startCanvas =
+			{ diagram:
+			{ nodes: [
+               { id: "node1", xPos: 10, yPos: 10 },
+               { id: "node2", xPos: 20, yPos: 20 },
+               { id: "node3", xPos: 30, yPos: 30 }
+			],
+				comments: [
+               { id: "comment1", xPos: 50, yPos: 50 },
+               { id: "comment2", xPos: 60, yPos: 60 }
+				]
+			}
+			};
 
-      deepFreeze(startCanvas);
+		deepFreeze(startCanvas);
 
-      ObjectModel.dispatch({
-        type: "SET_CANVAS",
-        data: startCanvas
-      });
+		ObjectModel.dispatch({
+			type: "SET_CANVAS",
+			data: startCanvas
+		});
 
-      ObjectModel.dispatch({type: "CLEAR_CANVAS"});
+		ObjectModel.dispatch({ type: "CLEAR_CANVAS" });
 
-      let expectedCanvas = null;
-      let actualCanvas = ObjectModel.getCanvas();
+		const expectedCanvas = null;
+		const actualCanvas = ObjectModel.getCanvas();
 
-      console.log("Expected Canvas = " + JSON.stringify(expectedCanvas));
-      console.log("Actual Canvas   = " + JSON.stringify(actualCanvas));
+		logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas));
+		logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas));
 
-      expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
-    });
+		chaiExpect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+	});
 
-		it('should add a node', () => {
-			console.log("should add a node");
+	it("should add a node", () => {
+		logger.info("should add a node");
 
-			let startCanvas =
-					{diagram:
-						{nodes: [
-							 {id: "node1", xPos: 10, yPos: 10},
-							 {id: "node2", xPos: 20, yPos: 20},
-							 {id: "node3", xPos: 30, yPos: 30}
-							],
-						 comments: [
-							 {id: "comment1", xPos: 50, yPos: 50},
-							 {id: "comment2", xPos: 60, yPos: 60}
-							]
-						}
-					};
+		const startCanvas =
+			{ diagram:
+			{ nodes: [
+							{ id: "node1", xPos: 10, yPos: 10 },
+							{ id: "node2", xPos: 20, yPos: 20 },
+							{ id: "node3", xPos: 30, yPos: 30 }
+			],
+				comments: [
+							{ id: "comment1", xPos: 50, yPos: 50 },
+							{ id: "comment2", xPos: 60, yPos: 60 }
+				]
+			}
+			};
 
-			deepFreeze(startCanvas);
+		deepFreeze(startCanvas);
 
-			ObjectModel.dispatch({
-				type: "SET_CANVAS",
-				data: startCanvas
-			});
+		ObjectModel.dispatch({
+			type: "SET_CANVAS",
+			data: startCanvas
+		});
 
 			// imageName - Just for Testing
-			ObjectModel.dispatch({
-				type: "ADD_NODE",
-				data: {id: "node4",
-							 image: "imageName",
-							 inputPorts: [{name: "inPort", label: "Input Port", cardinality: "1:1"}],
-							 outputPorts: [{name: "outPort", label: "Output Port", cardinality: "1:1"}],
-			         xPos: 40,
-			         yPos: 40,
-			         label: "Type"}
-			});
-
-			let expectedCanvas =
-					{diagram:
-						{nodes: [
-							 {id: "node1", xPos: 10, yPos: 10},
-							 {id: "node2", xPos: 20, yPos: 20},
-							 {id: "node3", xPos: 30, yPos: 30},
-							 {id: "node4", className: "canvas-node", image: "imageName",
-							 outputPorts: [{name: "outPort", label: "Output Port", cardinality: "1:1"}],
-							 inputPorts: [{name: "inPort", label: "Input Port", cardinality: "1:1"}],
-							 xPos: 40, yPos: 40, objectData:{description:"", label:"Type"}}
-							],
-						 comments: [
-							 {id: "comment1", xPos: 50, yPos: 50},
-							 {id: "comment2", xPos: 60, yPos: 60}
-						 ]
-						}
-					};
-
-			let actualCanvas = ObjectModel.getCanvas();
-
-			console.log("Expected Canvas = " + JSON.stringify(expectedCanvas));
-			console.log("Actual Canvas   = " + JSON.stringify(actualCanvas));
-
-			expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		ObjectModel.dispatch({
+			type: "ADD_NODE",
+			data: { id: "node4",
+				image: "imageName",
+				inputPorts: [{ name: "inPort", label: "Input Port", cardinality: "1:1" }],
+				outputPorts: [{ name: "outPort", label: "Output Port", cardinality: "1:1" }],
+				xPos: 40,
+				yPos: 40,
+				label: "Type" }
 		});
 
-    it('should move a node', () => {
-      console.log("should move a node");
+		const expectedCanvas =
+			{ diagram:
+			{ nodes: [
+				{ id: "node1", xPos: 10, yPos: 10 },
+				{ id: "node2", xPos: 20, yPos: 20 },
+				{ id: "node3", xPos: 30, yPos: 30 },
+				{ id: "node4", className: "canvas-node", image: "imageName",
+					outputPorts: [{ name: "outPort", label: "Output Port", cardinality: "1:1" }],
+					inputPorts: [{ name: "inPort", label: "Input Port", cardinality: "1:1" }],
+					xPos: 40, yPos: 40, objectData: { description: "", label: "Type" } }
+			],
+				comments: [
+					{ id: "comment1", xPos: 50, yPos: 50 },
+					{ id: "comment2", xPos: 60, yPos: 60 }
+				]
+			}
+			};
 
-      let startCanvas =
-          {diagram:
-            {nodes: [
-               {id: "node1", xPos: 10, yPos: 10},
-               {id: "node2", xPos: 20, yPos: 20},
-               {id: "node3", xPos: 30, yPos: 30}
-              ],
-             comments: [
-               {id: "comment1", xPos: 50, yPos: 50},
-               {id: "comment2", xPos: 60, yPos: 60}
-              ]
-            }
-          };
+		const actualCanvas = ObjectModel.getCanvas();
 
-      deepFreeze(startCanvas);
+		logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas));
+		logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas));
 
-      ObjectModel.dispatch({
-        type: "SET_CANVAS",
-        data: startCanvas
-      });
+		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+	});
 
-      ObjectModel.dispatch({
-        type: "MOVE_OBJECTS",
-        data: {nodes: ["node1", "node2", "node3"],
-               offsetX: 5,
-               offsetY: 7}
-      });
+	it("should move a node", () => {
+		logger.info("should move a node");
 
-      let expectedCanvas =
-          {diagram:
-            {nodes: [
-               {id: "node1", xPos: 15, yPos: 17},
-               {id: "node2", xPos: 25, yPos: 27},
-               {id: "node3", xPos: 35, yPos: 37}
-              ],
-             comments: [
-               {id: "comment1", xPos: 50, yPos: 50},
-               {id: "comment2", xPos: 60, yPos: 60}
-             ],
-             links: []
-            }
-          };
+		const startCanvas =
+			{ diagram:
+			{ nodes: [
+               { id: "node1", xPos: 10, yPos: 10 },
+               { id: "node2", xPos: 20, yPos: 20 },
+               { id: "node3", xPos: 30, yPos: 30 }
+			],
+				comments: [
+               { id: "comment1", xPos: 50, yPos: 50 },
+               { id: "comment2", xPos: 60, yPos: 60 }
+				]
+			}
+			};
 
-      let actualCanvas = ObjectModel.getCanvas();
+		deepFreeze(startCanvas);
 
-      console.log("Expected Canvas = " + JSON.stringify(expectedCanvas));
-      console.log("Actual Canvas   = " + JSON.stringify(actualCanvas));
-
-      expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
-    });
-
-    it('should delete a node', () => {
-      console.log("should delete a node");
-
-      let startCanvas =
-          {zoom: 100,
-           diagram:
-            {nodes: [
-              {id: "node1", xPos: 10, yPos: 10},
-              {id: "node2", xPos: 20, yPos: 20},
-              {id: "node3", xPos: 30, yPos: 30}
-            ],
-            comments: [
-              {id: "comment1", xPos: 50, yPos: 50},
-              {id: "comment2", xPos: 60, yPos: 60}
-            ]
-        }};
-
-      deepFreeze(startCanvas);
-
-      ObjectModel.dispatch({
-        type: "SET_CANVAS",
-        data: startCanvas
-      });
-
-      ObjectModel.dispatch({
-        type: "DELETE_OBJECTS",
-        data: {selectedObjectIds: ["node1", "node3"]}
-      });
-
-      let expectedCanvas =
-          {zoom: 100,
-           diagram:
-            {nodes: [
-              {id: "node2", xPos: 20, yPos: 20}
-            ],
-            comments: [
-							 {id: "comment1", xPos: 50, yPos: 50},
-              {id: "comment2", xPos: 60, yPos: 60}
-            ],
-            links: []
-        }};
-
-      let actualCanvas = ObjectModel.getCanvas();
-
-      console.log("Expected Canvas = " + JSON.stringify(expectedCanvas));
-      console.log("Actual Canvas   = " + JSON.stringify(actualCanvas));
-
-      expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
-    });
-
-		it('should disconnect a node', () => {
-			console.log("should disconnect a node");
-
-			let startCanvas =
-					{zoom: 100,
-					 diagram: {
-						nodes: [
-							{id: "node1", xPos: 10, yPos: 10},
-							{id: "node2", xPos: 20, yPos: 20},
-							{id: "node3", xPos: 30, yPos: 30}
-						],
-						comments: [
-							{id: "comment1", xPos: 50, yPos: 50},
-							{id: "comment2", xPos: 60, yPos: 60}
-						],
-						links: [
-							{id: "link1", source: "node1", target: "node2"},
-							{id: "link2", source: "comment1", target: "node2"}
-						]
-					 }
-					};
-
-			deepFreeze(startCanvas);
-
-			ObjectModel.dispatch({
-				type: "SET_CANVAS",
-				data: startCanvas
-			});
-
-			ObjectModel.dispatch({
-				type: "DISCONNECT_NODES",
-				data: {selectedNodeIds: ["node1"]}
-			});
-
-			let expectedCanvas =
-					{zoom: 100,
-						 diagram: {
-							 nodes: [
-								{id: "node1", xPos: 10, yPos: 10},
-								{id: "node2", xPos: 20, yPos: 20},
-								{id: "node3", xPos: 30, yPos: 30}
-							 ],
-							 comments: [
-								{id: "comment1", xPos: 50, yPos: 50},
-								{id: "comment2", xPos: 60, yPos: 60}
-							],
-							links: [
-								{id: "link2", source: "comment1", target: "node2"}
-							]
-						 }
-					};
-
-			let actualCanvas = ObjectModel.getCanvas();
-
-			console.log("Expected Canvas = " + JSON.stringify(expectedCanvas));
-			console.log("Actual Canvas   = " + JSON.stringify(actualCanvas));
-
-			expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		ObjectModel.dispatch({
+			type: "SET_CANVAS",
+			data: startCanvas
 		});
 
-		it('should add node attr', () => {
-			console.log("should add node attr");
-
-			let startCanvas =
-					{zoom: 100,
-					 diagram: {
-						nodes: [
-							{id: "node1", xPos: 10, yPos: 10},
-							{id: "node2", xPos: 20, yPos: 20},
-							{id: "node3", xPos: 30, yPos: 30}
-						],
-						comments: [
-							{id: "comment1", xPos: 50, yPos: 50},
-							{id: "comment2", xPos: 60, yPos: 60}
-						],
-						links: [
-							{id: "link1", source: "node1", target: "node2"},
-							{id: "link2", source: "comment1", target: "node2"}
-						]
-					 }
-					};
-
-			deepFreeze(startCanvas);
-
-			ObjectModel.dispatch({
-				type: "SET_CANVAS",
-				data: startCanvas
-			});
-
-			ObjectModel.dispatch({
-				type: "ADD_NODE_ATTR",
-				data: {objIds: ["node1"],
-							 attrName:"bgcolor"}
-			});
-
-			let expectedCanvas =
-					{zoom: 100,
-					 diagram: {
-						nodes: [
-							{id: "node1", xPos: 10, yPos: 10,"customAttrs":["bgcolor"]},
-							{id: "node2", xPos: 20, yPos: 20},
-							{id: "node3", xPos: 30, yPos: 30}
-						],
-						comments: [
-							{id: "comment1", xPos: 50, yPos: 50},
-							{id: "comment2", xPos: 60, yPos: 60}
-						],
-						links: [
-							{id: "link1", source: "node1", target: "node2"},
-							{id: "link2", source: "comment1", target: "node2"}
-						]
-					 }
-					};
-
-			let actualCanvas = ObjectModel.getCanvas();
-
-			console.log("Expected Canvas = " + JSON.stringify(expectedCanvas));
-			console.log("Actual Canvas   = " + JSON.stringify(actualCanvas));
-
-			expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		ObjectModel.dispatch({
+			type: "MOVE_OBJECTS",
+			data: { nodes: ["node1", "node2", "node3"],
+				offsetX: 5,
+				offsetY: 7 }
 		});
 
-		it('should remove node attr', () => {
-			console.log("should remove node attr");
+		const expectedCanvas =
+			{ diagram:
+			{ nodes: [
+               { id: "node1", xPos: 15, yPos: 17 },
+               { id: "node2", xPos: 25, yPos: 27 },
+               { id: "node3", xPos: 35, yPos: 37 }
+			],
+				comments: [
+               { id: "comment1", xPos: 50, yPos: 50 },
+               { id: "comment2", xPos: 60, yPos: 60 }
+				],
+				links: []
+			}
+			};
 
-			let startCanvas =
-					{zoom: 100,
-					 diagram: {
-						nodes: [
-							{id: "node1", xPos: 10, yPos: 10, "customAttrs":["bgcolor"]},
-							{id: "node2", xPos: 20, yPos: 20},
-							{id: "node3", xPos: 30, yPos: 30}
-						],
-						comments: [
-							{id: "comment1", xPos: 50, yPos: 50},
-							{id: "comment2", xPos: 60, yPos: 60}
-						],
-						links: [
-							{id: "link1", source: "node1", target: "node2"},
-							{id: "link2", source: "comment1", target: "node2"}
-						]
-					 }
-					};
+		const actualCanvas = ObjectModel.getCanvas();
 
-			deepFreeze(startCanvas);
+		logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas));
+		logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas));
 
-			ObjectModel.dispatch({
-				type: "SET_CANVAS",
-				data: startCanvas
-			});
+		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+	});
 
-			ObjectModel.dispatch({
-				type: "REMOVE_NODE_ATTR",
-				data: {objIds: ["node1"],
-							 attrName:"bgcolor"}
-			});
+	it("should delete a node", () => {
+		logger.info("should delete a node");
 
-			let expectedCanvas =
-					{zoom: 100,
-					 diagram: {
-						nodes: [
-							{id: "node1", xPos: 10, yPos: 10,"customAttrs":[]},
-							{id: "node2", xPos: 20, yPos: 20},
-							{id: "node3", xPos: 30, yPos: 30}
-						],
-						comments: [
-							{id: "comment1", xPos: 50, yPos: 50},
-							{id: "comment2", xPos: 60, yPos: 60}
-						],
-						links: [
-							{id: "link1", source: "node1", target: "node2"},
-							{id: "link2", source: "comment1", target: "node2"}
-						]
-					 }
-					};
+		const startCanvas =
+			{ zoom: 100,
+				diagram:
+				{ nodes: [
+              { id: "node1", xPos: 10, yPos: 10 },
+              { id: "node2", xPos: 20, yPos: 20 },
+              { id: "node3", xPos: 30, yPos: 30 }
+				],
+					comments: [
+              { id: "comment1", xPos: 50, yPos: 50 },
+              { id: "comment2", xPos: 60, yPos: 60 }
+					]
+				} };
 
-			let actualCanvas = ObjectModel.getCanvas();
+		deepFreeze(startCanvas);
 
-			console.log("Expected Canvas = " + JSON.stringify(expectedCanvas));
-			console.log("Actual Canvas   = " + JSON.stringify(actualCanvas));
-
-			expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		ObjectModel.dispatch({
+			type: "SET_CANVAS",
+			data: startCanvas
 		});
 
-    it('should add a comment', () => {
-      console.log("should add a comment");
+		ObjectModel.dispatch({
+			type: "DELETE_OBJECTS",
+			data: { selectedObjectIds: ["node1", "node3"] }
+		});
+
+		const expectedCanvas =
+			{ zoom: 100,
+				diagram:
+				{ nodes: [
+              { id: "node2", xPos: 20, yPos: 20 }
+				],
+					comments: [
+							{ id: "comment1", xPos: 50, yPos: 50 },
+              { id: "comment2", xPos: 60, yPos: 60 }
+					],
+					links: []
+				} };
+
+		const actualCanvas = ObjectModel.getCanvas();
+
+		logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas));
+		logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas));
+
+		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+	});
+
+	it("should disconnect a node", () => {
+		logger.info("should disconnect a node");
+
+		const startCanvas =
+			{ zoom: 100,
+				diagram: {
+					nodes: [
+							{ id: "node1", xPos: 10, yPos: 10 },
+							{ id: "node2", xPos: 20, yPos: 20 },
+							{ id: "node3", xPos: 30, yPos: 30 }
+					],
+					comments: [
+							{ id: "comment1", xPos: 50, yPos: 50 },
+							{ id: "comment2", xPos: 60, yPos: 60 }
+					],
+					links: [
+							{ id: "link1", source: "node1", target: "node2" },
+							{ id: "link2", source: "comment1", target: "node2" }
+					]
+				}
+			};
+
+		deepFreeze(startCanvas);
+
+		ObjectModel.dispatch({
+			type: "SET_CANVAS",
+			data: startCanvas
+		});
+
+		ObjectModel.dispatch({
+			type: "DISCONNECT_NODES",
+			data: { selectedNodeIds: ["node1"] }
+		});
+
+		const expectedCanvas =
+			{ zoom: 100,
+				diagram: {
+					nodes: [
+								{ id: "node1", xPos: 10, yPos: 10 },
+								{ id: "node2", xPos: 20, yPos: 20 },
+								{ id: "node3", xPos: 30, yPos: 30 }
+					],
+					comments: [
+								{ id: "comment1", xPos: 50, yPos: 50 },
+								{ id: "comment2", xPos: 60, yPos: 60 }
+					],
+					links: [
+								{ id: "link2", source: "comment1", target: "node2" }
+					]
+				}
+			};
+
+		const actualCanvas = ObjectModel.getCanvas();
+
+		logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas));
+		logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas));
+
+		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+	});
+
+	it("should add node attr", () => {
+		logger.info("should add node attr");
+
+		const startCanvas =
+			{ zoom: 100,
+				diagram: {
+					nodes: [
+							{ id: "node1", xPos: 10, yPos: 10 },
+							{ id: "node2", xPos: 20, yPos: 20 },
+							{ id: "node3", xPos: 30, yPos: 30 }
+					],
+					comments: [
+							{ id: "comment1", xPos: 50, yPos: 50 },
+							{ id: "comment2", xPos: 60, yPos: 60 }
+					],
+					links: [
+							{ id: "link1", source: "node1", target: "node2" },
+							{ id: "link2", source: "comment1", target: "node2" }
+					]
+				}
+			};
+
+		deepFreeze(startCanvas);
+
+		ObjectModel.dispatch({
+			type: "SET_CANVAS",
+			data: startCanvas
+		});
+
+		ObjectModel.dispatch({
+			type: "ADD_NODE_ATTR",
+			data: { objIds: ["node1"],
+				attrName: "bgcolor" }
+		});
+
+		const expectedCanvas =
+			{ zoom: 100,
+				diagram: {
+					nodes: [
+							{ "id": "node1", "xPos": 10, "yPos": 10, "customAttrs": ["bgcolor"] },
+							{ id: "node2", xPos: 20, yPos: 20 },
+							{ id: "node3", xPos: 30, yPos: 30 }
+					],
+					comments: [
+							{ id: "comment1", xPos: 50, yPos: 50 },
+							{ id: "comment2", xPos: 60, yPos: 60 }
+					],
+					links: [
+							{ id: "link1", source: "node1", target: "node2" },
+							{ id: "link2", source: "comment1", target: "node2" }
+					]
+				}
+			};
+
+		const actualCanvas = ObjectModel.getCanvas();
+
+		logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas));
+		logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas));
+
+		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+	});
+
+	it("should remove node attr", () => {
+		logger.info("should remove node attr");
+
+		const startCanvas =
+			{ zoom: 100,
+				diagram: {
+					nodes: [
+							{ "id": "node1", "xPos": 10, "yPos": 10, "customAttrs": ["bgcolor"] },
+							{ id: "node2", xPos: 20, yPos: 20 },
+							{ id: "node3", xPos: 30, yPos: 30 }
+					],
+					comments: [
+							{ id: "comment1", xPos: 50, yPos: 50 },
+							{ id: "comment2", xPos: 60, yPos: 60 }
+					],
+					links: [
+							{ id: "link1", source: "node1", target: "node2" },
+							{ id: "link2", source: "comment1", target: "node2" }
+					]
+				}
+			};
+
+		deepFreeze(startCanvas);
+
+		ObjectModel.dispatch({
+			type: "SET_CANVAS",
+			data: startCanvas
+		});
+
+		ObjectModel.dispatch({
+			type: "REMOVE_NODE_ATTR",
+			data: { objIds: ["node1"],
+				attrName: "bgcolor" }
+		});
+
+		const expectedCanvas =
+			{ zoom: 100,
+				diagram: {
+					nodes: [
+							{ "id": "node1", "xPos": 10, "yPos": 10, "customAttrs": [] },
+							{ id: "node2", xPos: 20, yPos: 20 },
+							{ id: "node3", xPos: 30, yPos: 30 }
+					],
+					comments: [
+							{ id: "comment1", xPos: 50, yPos: 50 },
+							{ id: "comment2", xPos: 60, yPos: 60 }
+					],
+					links: [
+							{ id: "link1", source: "node1", target: "node2" },
+							{ id: "link2", source: "comment1", target: "node2" }
+					]
+				}
+			};
+
+		const actualCanvas = ObjectModel.getCanvas();
+
+		logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas));
+		logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas));
+
+		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+	});
+
+	it("should add a comment", () => {
+		logger.info("should add a comment");
 
 
-      let startCanvas =
-          {zoom: 100,
-           diagram: {
-            nodes: [
-              {id: "node1", xPos: 10, yPos: 10},
-              {id: "node2", xPos: 20, yPos: 20},
-              {id: "node3", xPos: 30, yPos: 30}
-            ],
-            comments: [
-              {id: "comment1", xPos: 50, yPos: 50},
-              {id: "comment2", xPos: 60, yPos: 60}
-            ]
-           }
-          };
+		const startCanvas =
+			{ zoom: 100,
+				diagram: {
+					nodes: [
+              { id: "node1", xPos: 10, yPos: 10 },
+              { id: "node2", xPos: 20, yPos: 20 },
+              { id: "node3", xPos: 30, yPos: 30 }
+					],
+					comments: [
+              { id: "comment1", xPos: 50, yPos: 50 },
+              { id: "comment2", xPos: 60, yPos: 60 }
+					]
+				}
+			};
 
-      deepFreeze(startCanvas);
+		deepFreeze(startCanvas);
 
-      ObjectModel.dispatch({
-        type: "SET_CANVAS",
-        data: startCanvas
-      });
+		ObjectModel.dispatch({
+			type: "SET_CANVAS",
+			data: startCanvas
+		});
 
-      ObjectModel.dispatch({
-        type: "ADD_COMMENT",
-        data: {id: "comment3", mousePos: {x: 200, y: 300}, selectedObjectIds: []}
-      });
+		ObjectModel.dispatch({
+			type: "ADD_COMMENT",
+			data: { id: "comment3", mousePos: { x: 200, y: 300 }, selectedObjectIds: [] }
+		});
 
-      let expectedCanvas =
-          {zoom: 100,
-             diagram: {
-               nodes: [
-                {id: "node1", xPos: 10, yPos: 10},
-                {id: "node2", xPos: 20, yPos: 20},
-                {id: "node3", xPos: 30, yPos: 30}
-               ],
-               comments: [
-                {id: "comment1", xPos: 50, yPos: 50},
-                {id: "comment2", xPos: 60, yPos: 60},
-                {id: "comment3",
-                 className: 'canvas-comment',
-                 content: " ",
-                 height: 32,
-                 width: 128,
-                 xPos: 200,
-                 yPos: 300}
-               ],
-               links: []
-             }
-          };
-
-
-      let actualCanvas = ObjectModel.getCanvas();
-
-      console.log("Expected Canvas = " + JSON.stringify(expectedCanvas));
-      console.log("Actual Canvas   = " + JSON.stringify(actualCanvas));
-
-      expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
-    });
-
-    it('should edit a comment', () => {
-      console.log("should edit a comment");
+		const expectedCanvas =
+			{ zoom: 100,
+				diagram: {
+					nodes: [
+                { id: "node1", xPos: 10, yPos: 10 },
+                { id: "node2", xPos: 20, yPos: 20 },
+                { id: "node3", xPos: 30, yPos: 30 }
+					],
+					comments: [
+                { id: "comment1", xPos: 50, yPos: 50 },
+                { id: "comment2", xPos: 60, yPos: 60 },
+						{ id: "comment3",
+							className: "canvas-comment",
+							content: " ",
+							height: 32,
+							width: 128,
+							xPos: 200,
+							yPos: 300 }
+					],
+					links: []
+				}
+			};
 
 
-      let startCanvas =
-          {zoom: 100,
-           diagram: {
-            nodes: [
-              {id: "node1", xPos: 10, yPos: 10},
-              {id: "node2", xPos: 20, yPos: 20},
-              {id: "node3", xPos: 30, yPos: 30}
-            ],
-            comments: [
-              {id: "comment1", xPos: 50, yPos: 50},
-              {id: "comment2", xPos: 60, yPos: 60}
-            ]
-           }
-          };
+		const actualCanvas = ObjectModel.getCanvas();
 
-      deepFreeze(startCanvas);
+		logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas));
+		logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas));
 
-      ObjectModel.dispatch({
-        type: "SET_CANVAS",
-        data: startCanvas
-      });
+		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+	});
 
-      ObjectModel.dispatch({
-        type: "EDIT_COMMENT",
-        data: {nodes: ["comment2"], offsetX: 425, offsetY: 125, height: 45, width: 250, label: "this is a new comment string"}
-      });
-
-      let expectedCanvas =
-          {zoom: 100,
-             diagram: {
-               nodes: [
-                {id: "node1", xPos: 10, yPos: 10},
-                {id: "node2", xPos: 20, yPos: 20},
-                {id: "node3", xPos: 30, yPos: 30}
-               ],
-               comments: [
-                {id: "comment1", xPos: 50, yPos: 50},
-                {id: "comment2",
-                 xPos: 425,
-                 yPos: 125,
-                 content: "this is a new comment string",
-                 height: 45,
-                 width: 250}
-               ]
-             }
-          };
+	it("should edit a comment", () => {
+		logger.info("should edit a comment");
 
 
-      let actualCanvas = ObjectModel.getCanvas();
+		const startCanvas =
+			{ zoom: 100,
+				diagram: {
+					nodes: [
+              { id: "node1", xPos: 10, yPos: 10 },
+              { id: "node2", xPos: 20, yPos: 20 },
+              { id: "node3", xPos: 30, yPos: 30 }
+					],
+					comments: [
+              { id: "comment1", xPos: 50, yPos: 50 },
+              { id: "comment2", xPos: 60, yPos: 60 }
+					]
+				}
+			};
 
-      console.log("Expected Canvas = " + JSON.stringify(expectedCanvas));
-      console.log("Actual Canvas   = " + JSON.stringify(actualCanvas));
+		deepFreeze(startCanvas);
 
-      expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
-    });
+		ObjectModel.dispatch({
+			type: "SET_CANVAS",
+			data: startCanvas
+		});
 
-		it('should move a comment', () => {
-      console.log("should move a comment");
+		ObjectModel.dispatch({
+			type: "EDIT_COMMENT",
+			data: { nodes: ["comment2"], offsetX: 425, offsetY: 125, height: 45, width: 250, label: "this is a new comment string" }
+		});
 
-      let startCanvas =
-          {diagram:
-            {nodes: [
-               {id: "node1", xPos: 10, yPos: 10},
-               {id: "node2", xPos: 20, yPos: 20},
-               {id: "node3", xPos: 30, yPos: 30}
-              ],
-             comments: [
-               {id: "comment1", xPos: 50, yPos: 50},
-               {id: "comment2", xPos: 60, yPos: 60}
-              ]
-            }
-          };
+		const expectedCanvas =
+			{ zoom: 100,
+				diagram: {
+					nodes: [
+                { id: "node1", xPos: 10, yPos: 10 },
+                { id: "node2", xPos: 20, yPos: 20 },
+                { id: "node3", xPos: 30, yPos: 30 }
+					],
+					comments: [
+                { id: "comment1", xPos: 50, yPos: 50 },
+						{ id: "comment2",
+							xPos: 425,
+							yPos: 125,
+							content: "this is a new comment string",
+							height: 45,
+							width: 250 }
+					]
+				}
+			};
 
-      deepFreeze(startCanvas);
 
-      ObjectModel.dispatch({
-        type: "SET_CANVAS",
-        data: startCanvas
-      });
+		const actualCanvas = ObjectModel.getCanvas();
 
-      ObjectModel.dispatch({
-        type: "MOVE_OBJECTS",
-        data: {nodes: ["comment1", "comment2"],
-               offsetX: 5,
-               offsetY: 7}
-      });
+		logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas));
+		logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas));
 
-      let expectedCanvas =
-          {diagram:
-            {nodes: [
-               {id: "node1", xPos: 10, yPos: 10},
-               {id: "node2", xPos: 20, yPos: 20},
-               {id: "node3", xPos: 30, yPos: 30}
-              ],
-             comments: [
-               {id: "comment1", xPos: 55, yPos: 57},
-               {id: "comment2", xPos: 65, yPos: 67}
-             ],
-             links: []
-            }
-          };
+		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+	});
 
-      let actualCanvas = ObjectModel.getCanvas();
+	it("should move a comment", () => {
+		logger.info("should move a comment");
 
-      console.log("Expected Canvas = " + JSON.stringify(expectedCanvas));
-      console.log("Actual Canvas   = " + JSON.stringify(actualCanvas));
+		const startCanvas =
+			{ diagram:
+			{ nodes: [
+               { id: "node1", xPos: 10, yPos: 10 },
+               { id: "node2", xPos: 20, yPos: 20 },
+               { id: "node3", xPos: 30, yPos: 30 }
+			],
+				comments: [
+               { id: "comment1", xPos: 50, yPos: 50 },
+               { id: "comment2", xPos: 60, yPos: 60 }
+				]
+			}
+			};
 
-      expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
-    });
+		deepFreeze(startCanvas);
 
-		it('should delete a comment', () => {
-		  console.log("should delete a comment");
+		ObjectModel.dispatch({
+			type: "SET_CANVAS",
+			data: startCanvas
+		});
 
-			  let startCanvas =
-			      {zoom: 100,
+		ObjectModel.dispatch({
+			type: "MOVE_OBJECTS",
+			data: { nodes: ["comment1", "comment2"],
+				offsetX: 5,
+				offsetY: 7 }
+		});
+
+		const expectedCanvas =
+			{ diagram:
+			{ nodes: [
+               { id: "node1", xPos: 10, yPos: 10 },
+               { id: "node2", xPos: 20, yPos: 20 },
+               { id: "node3", xPos: 30, yPos: 30 }
+			],
+				comments: [
+               { id: "comment1", xPos: 55, yPos: 57 },
+               { id: "comment2", xPos: 65, yPos: 67 }
+				],
+				links: []
+			}
+			};
+
+		const actualCanvas = ObjectModel.getCanvas();
+
+		logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas));
+		logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas));
+
+		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+	});
+
+	it("should delete a comment", () => {
+		logger.info("should delete a comment");
+		const startCanvas =
+			      { zoom: 100,
 			       diagram: {
-			        nodes: [
-			          {id: "node1", xPos: 10, yPos: 10},
-			          {id: "node2", xPos: 20, yPos: 20},
-			          {id: "node3", xPos: 30, yPos: 30}
+			        "nodes": [
+			          { id: "node1", xPos: 10, yPos: 10 },
+			          { id: "node2", xPos: 20, yPos: 20 },
+			          { id: "node3", xPos: 30, yPos: 30 }
 			        ],
-			        comments: [
-			          {id: "comment1", xPos: 50, yPos: 50},
-			          {id: "comment2", xPos: 60, yPos: 60},
-								{id: "comment3", xPos: 70, yPos: 70},
+			        "comments": [
+			          { id: "comment1", xPos: 50, yPos: 50 },
+			          { id: "comment2", xPos: 60, yPos: 60 },
+								{ id: "comment3", xPos: 70, yPos: 70 },
 			        ],
-							"links":[]
+				"links": []
 			       }
 			      };
 
@@ -625,758 +640,426 @@ describe('ObjectModel handle model OK', () => {
 
 				  ObjectModel.dispatch({
 				    type: "DELETE_OBJECTS",
-				    data: {selectedObjectIds: ["comment1", "comment2"]}
+				    data: { selectedObjectIds: ["comment1", "comment2"] }
 				  });
 
-					let expectedCanvas =
-							{zoom: 100,
+		const expectedCanvas =
+			{ zoom: 100,
 							 diagram: {
-								nodes: [
-									{id: "node1", xPos: 10, yPos: 10},
-									{id: "node2", xPos: 20, yPos: 20},
-									{id: "node3", xPos: 30, yPos: 30}
+								"nodes": [
+									{ id: "node1", xPos: 10, yPos: 10 },
+									{ id: "node2", xPos: 20, yPos: 20 },
+									{ id: "node3", xPos: 30, yPos: 30 }
 								],
-								comments: [
-									{id: "comment3", xPos: 70, yPos: 70}
+								"comments": [
+									{ id: "comment3", xPos: 70, yPos: 70 }
 								],
-								"links":[]
+								"links": []
 							 }
-							};
+			};
 
 
-		      let actualCanvas = ObjectModel.getCanvas();
+		      const actualCanvas = ObjectModel.getCanvas();
 
-		      console.log("Expected Canvas = " + JSON.stringify(expectedCanvas));
-		      console.log("Actual Canvas   = " + JSON.stringify(actualCanvas));
+		      logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas));
+		      logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas));
 
 		      expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
 
-			});
+	});
 
-			it('should add comment attr', () => {
-				console.log("should add comment attr");
+	it("should add comment attr", () => {
+		logger.info("should add comment attr");
 
-				let startCanvas =
-						{zoom: 100,
+		const startCanvas =
+			{ zoom: 100,
 						 diagram: {
 							nodes: [
-								{id: "node1", xPos: 10, yPos: 10},
-								{id: "node2", xPos: 20, yPos: 20},
-								{id: "node3", xPos: 30, yPos: 30}
+								{ id: "node1", xPos: 10, yPos: 10 },
+								{ id: "node2", xPos: 20, yPos: 20 },
+								{ id: "node3", xPos: 30, yPos: 30 }
 							],
 							comments: [
-								{id: "comment1", xPos: 50, yPos: 50},
-								{id: "comment2", xPos: 60, yPos: 60}
+								{ id: "comment1", xPos: 50, yPos: 50 },
+								{ id: "comment2", xPos: 60, yPos: 60 }
 							],
 							links: [
-								{id: "link1", source: "node1", target: "node2"},
-								{id: "link2", source: "comment1", target: "node2"}
+								{ id: "link1", source: "node1", target: "node2" },
+								{ id: "link2", source: "comment1", target: "node2" }
 							]
 						 }
-						};
+			};
 
-				deepFreeze(startCanvas);
+		deepFreeze(startCanvas);
 
-				ObjectModel.dispatch({
-					type: "SET_CANVAS",
-					data: startCanvas
-				});
+		ObjectModel.dispatch({
+			type: "SET_CANVAS",
+			data: startCanvas
+		});
 
-				ObjectModel.dispatch({
-					type: "ADD_COMMENT_ATTR",
-					data: {objIds: ["comment1"],
-								 attrName:"bgcolor"}
-				});
+		ObjectModel.dispatch({
+			type: "ADD_COMMENT_ATTR",
+			data: { objIds: ["comment1"],
+								 attrName: "bgcolor" }
+		});
 
-				let expectedCanvas =
-						{zoom: 100,
+		const expectedCanvas =
+			{ zoom: 100,
 						 diagram: {
 							nodes: [
-								{id: "node1", xPos: 10, yPos: 10},
-								{id: "node2", xPos: 20, yPos: 20},
-								{id: "node3", xPos: 30, yPos: 30}
+								{ id: "node1", xPos: 10, yPos: 10 },
+								{ id: "node2", xPos: 20, yPos: 20 },
+								{ id: "node3", xPos: 30, yPos: 30 }
 							],
 							comments: [
-								{id: "comment1", xPos: 50, yPos: 50, "customAttrs":["bgcolor"]},
-								{id: "comment2", xPos: 60, yPos: 60}
+								{ "id": "comment1", "xPos": 50, "yPos": 50, "customAttrs": ["bgcolor"] },
+								{ id: "comment2", xPos: 60, yPos: 60 }
 							],
 							links: [
-								{id: "link1", source: "node1", target: "node2"},
-								{id: "link2", source: "comment1", target: "node2"}
+								{ id: "link1", source: "node1", target: "node2" },
+								{ id: "link2", source: "comment1", target: "node2" }
 							]
 						 }
-						};
+			};
 
-				let actualCanvas = ObjectModel.getCanvas();
+		const actualCanvas = ObjectModel.getCanvas();
 
-				console.log("Expected Canvas = " + JSON.stringify(expectedCanvas));
-				console.log("Actual Canvas   = " + JSON.stringify(actualCanvas));
+		logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas));
+		logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas));
 
-				expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
-			});
+		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+	});
 
-			it('should remove comment attr', () => {
-				console.log("should remove comment attr");
+	it("should remove comment attr", () => {
+		logger.info("should remove comment attr");
 
-				let startCanvas =
-						{zoom: 100,
+		const startCanvas =
+			{ zoom: 100,
 						 diagram: {
 							nodes: [
-								{id: "node1", xPos: 10, yPos: 10},
-								{id: "node2", xPos: 20, yPos: 20},
-								{id: "node3", xPos: 30, yPos: 30}
+								{ id: "node1", xPos: 10, yPos: 10 },
+								{ id: "node2", xPos: 20, yPos: 20 },
+								{ id: "node3", xPos: 30, yPos: 30 }
 							],
 							comments: [
-								{id: "comment1", xPos: 50, yPos: 50, "customAttrs":["bgcolor"]},
-								{id: "comment2", xPos: 60, yPos: 60}
+								{ "id": "comment1", "xPos": 50, "yPos": 50, "customAttrs": ["bgcolor"] },
+								{ id: "comment2", xPos: 60, yPos: 60 }
 							],
 							links: [
-								{id: "link1", source: "node1", target: "node2"},
-								{id: "link2", source: "comment1", target: "node2"}
+								{ id: "link1", source: "node1", target: "node2" },
+								{ id: "link2", source: "comment1", target: "node2" }
 							]
 						 }
-						};
+			};
 
-				deepFreeze(startCanvas);
+		deepFreeze(startCanvas);
 
-				ObjectModel.dispatch({
-					type: "SET_CANVAS",
-					data: startCanvas
-				});
+		ObjectModel.dispatch({
+			type: "SET_CANVAS",
+			data: startCanvas
+		});
 
-				ObjectModel.dispatch({
-					type: "REMOVE_COMMENT_ATTR",
-					data: {objIds: ["comment1"],
-								 attrName:"bgcolor"}
-				});
+		ObjectModel.dispatch({
+			type: "REMOVE_COMMENT_ATTR",
+			data: { objIds: ["comment1"],
+								 attrName: "bgcolor" }
+		});
 
-				let expectedCanvas =
-						{zoom: 100,
+		const expectedCanvas =
+			{ zoom: 100,
 						 diagram: {
 							nodes: [
-								{id: "node1", xPos: 10, yPos: 10},
-								{id: "node2", xPos: 20, yPos: 20},
-								{id: "node3", xPos: 30, yPos: 30}
+								{ id: "node1", xPos: 10, yPos: 10 },
+								{ id: "node2", xPos: 20, yPos: 20 },
+								{ id: "node3", xPos: 30, yPos: 30 }
 							],
 							comments: [
-								{id: "comment1", xPos: 50, yPos: 50,"customAttrs":[]},
-								{id: "comment2", xPos: 60, yPos: 60}
+								{ "id": "comment1", "xPos": 50, "yPos": 50, "customAttrs": [] },
+								{ id: "comment2", xPos: 60, yPos: 60 }
 							],
 							links: [
-								{id: "link1", source: "node1", target: "node2"},
-								{id: "link2", source: "comment1", target: "node2"}
+								{ id: "link1", source: "node1", target: "node2" },
+								{ id: "link2", source: "comment1", target: "node2" }
 							]
 						 }
-						};
+			};
 
-				let actualCanvas = ObjectModel.getCanvas();
+		const actualCanvas = ObjectModel.getCanvas();
 
-				console.log("Expected Canvas = " + JSON.stringify(expectedCanvas));
-				console.log("Actual Canvas   = " + JSON.stringify(actualCanvas));
+		logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas));
+		logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas));
 
-				expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
-			});
+		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+	});
 
-    it('should add a link', () => {
-      console.log("should add a link");
+	it("should add a link", () => {
+		logger.info("should add a link");
 
-      let startCanvas =
-          {zoom: 100,
-           diagram: {
-            nodes: [
-              {id: "node1", xPos: 10, yPos: 10},
-              {id: "node2", xPos: 20, yPos: 20},
-              {id: "node3", xPos: 30, yPos: 30}
-            ],
-            comments: [
-              {id: "comment1", xPos: 50, yPos: 50},
-              {id: "comment2", xPos: 60, yPos: 60}
-            ],
-            links: [
-              {id: "link1", source: "node1", target: "node2"},
-              {id: "link2", source: "comment1", target: "node2"}
-            ]
-           }
-          };
+		const startCanvas =
+			{ zoom: 100,
+				diagram: {
+					nodes: [
+              { id: "node1", xPos: 10, yPos: 10 },
+              { id: "node2", xPos: 20, yPos: 20 },
+              { id: "node3", xPos: 30, yPos: 30 }
+					],
+					comments: [
+              { id: "comment1", xPos: 50, yPos: 50 },
+              { id: "comment2", xPos: 60, yPos: 60 }
+					],
+					links: [
+              { id: "link1", source: "node1", target: "node2" },
+              { id: "link2", source: "comment1", target: "node2" }
+					]
+				}
+			};
 
-      deepFreeze(startCanvas);
+		deepFreeze(startCanvas);
 
-      ObjectModel.dispatch({
-        type: "SET_CANVAS",
-        data: startCanvas
-      });
+		ObjectModel.dispatch({
+			type: "SET_CANVAS",
+			data: startCanvas
+		});
 
-      ObjectModel.dispatch({
-        type: "ADD_LINK",
-        data: {id: "link3", linkType: "data", srcNodeId: "node2", trgNodeId: "node3"}
-      });
+		ObjectModel.dispatch({
+			type: "ADD_LINK",
+			data: { id: "link3", linkType: "data", srcNodeId: "node2", trgNodeId: "node3" }
+		});
 
-      ObjectModel.dispatch({
-        type: "ADD_LINK",
-        data: {id: "link4", linkType: "comment", srcNodeId: "comment1", trgNodeId: "node2"}
-      });
+		ObjectModel.dispatch({
+			type: "ADD_LINK",
+			data: { id: "link4", linkType: "comment", srcNodeId: "comment1", trgNodeId: "node2" }
+		});
 
 
-      let expectedCanvas =
-          {zoom: 100,
-             diagram: {
-               nodes: [
-                {id: "node1", xPos: 10, yPos: 10},
-                {id: "node2", xPos: 20, yPos: 20},
-                {id: "node3", xPos: 30, yPos: 30}
-               ],
-               comments: [
-                {id: "comment1", xPos: 50, yPos: 50},
-                {id: "comment2", xPos: 60, yPos: 60}
-              ],
-              links: [
-                {id: "link1", source: "node1", target: "node2"},
-                {id: "link2", source: "comment1", target: "node2"},
-                {id: "link3", className: "canvas-data-link", source: "node2", target: "node3"},
-                {id: "link4", className: "canvas-comment-link", source: "comment1", target: "node2"}
-              ]
-             }
-          };
+		const expectedCanvas =
+			{ zoom: 100,
+				diagram: {
+					nodes: [
+                { id: "node1", xPos: 10, yPos: 10 },
+                { id: "node2", xPos: 20, yPos: 20 },
+                { id: "node3", xPos: 30, yPos: 30 }
+					],
+					comments: [
+                { id: "comment1", xPos: 50, yPos: 50 },
+                { id: "comment2", xPos: 60, yPos: 60 }
+					],
+					links: [
+                { id: "link1", source: "node1", target: "node2" },
+                { id: "link2", source: "comment1", target: "node2" },
+                { id: "link3", className: "canvas-data-link", source: "node2", target: "node3" },
+                { id: "link4", className: "canvas-comment-link", source: "comment1", target: "node2" }
+					]
+				}
+			};
 
-      let actualCanvas = ObjectModel.getCanvas();
+		const actualCanvas = ObjectModel.getCanvas();
 
-      console.log("Expected Canvas = " + JSON.stringify(expectedCanvas));
-      console.log("Actual Canvas   = " + JSON.stringify(actualCanvas));
+		logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas));
+		logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas));
 
-      expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
-    });
+		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+	});
 
-    it('should delete a link', () => {
-      console.log("should delete a link");
+	it("should delete a link", () => {
+		logger.info("should delete a link");
 
-      let startCanvas =
-          {zoom: 100,
-           diagram: {
-            nodes: [
-              {id: "node1", xPos: 10, yPos: 10},
-              {id: "node2", xPos: 20, yPos: 20},
-              {id: "node3", xPos: 30, yPos: 30}
-            ],
-            comments: [
-              {id: "comment1", xPos: 50, yPos: 50},
-              {id: "comment2", xPos: 60, yPos: 60}
-            ],
-            links: [
-              {id: "link1", source: "node1", target: "node2"},
-              {id: "link2", source: "comment1", target: "node2"}
-            ]
-           }
-          };
+		const startCanvas =
+			{ zoom: 100,
+				diagram: {
+					nodes: [
+              { id: "node1", xPos: 10, yPos: 10 },
+              { id: "node2", xPos: 20, yPos: 20 },
+              { id: "node3", xPos: 30, yPos: 30 }
+					],
+					comments: [
+              { id: "comment1", xPos: 50, yPos: 50 },
+              { id: "comment2", xPos: 60, yPos: 60 }
+					],
+					links: [
+              { id: "link1", source: "node1", target: "node2" },
+              { id: "link2", source: "comment1", target: "node2" }
+					]
+				}
+			};
 
-      deepFreeze(startCanvas);
+		deepFreeze(startCanvas);
 
-      ObjectModel.dispatch({
-        type: "SET_CANVAS",
-        data: startCanvas
-      });
+		ObjectModel.dispatch({
+			type: "SET_CANVAS",
+			data: startCanvas
+		});
 
-      ObjectModel.dispatch({
-        type: "DELETE_LINK",
-        data: {id: "link1"}
-      });
+		ObjectModel.dispatch({
+			type: "DELETE_LINK",
+			data: { id: "link1" }
+		});
 
-      let expectedCanvas =
-          {zoom: 100,
-             diagram: {
-               nodes: [
-                {id: "node1", xPos: 10, yPos: 10},
-                {id: "node2", xPos: 20, yPos: 20},
-                {id: "node3", xPos: 30, yPos: 30}
-               ],
-               comments: [
-                {id: "comment1", xPos: 50, yPos: 50},
-                {id: "comment2", xPos: 60, yPos: 60}
-              ],
-              links: [
-                {id: "link2", source: "comment1", target: "node2"}
-              ]
-             }
-          };
+		const expectedCanvas =
+			{ zoom: 100,
+				diagram: {
+					nodes: [
+                { id: "node1", xPos: 10, yPos: 10 },
+                { id: "node2", xPos: 20, yPos: 20 },
+                { id: "node3", xPos: 30, yPos: 30 }
+					],
+					comments: [
+                { id: "comment1", xPos: 50, yPos: 50 },
+                { id: "comment2", xPos: 60, yPos: 60 }
+					],
+					links: [
+                { id: "link2", source: "comment1", target: "node2" }
+					]
+				}
+			};
 
-      let actualCanvas = ObjectModel.getCanvas();
+		const actualCanvas = ObjectModel.getCanvas();
 
-      console.log("Expected Canvas = " + JSON.stringify(expectedCanvas));
-      console.log("Actual Canvas   = " + JSON.stringify(actualCanvas));
+		logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas));
+		logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas));
 
-      expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
-    });
+		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+	});
 
-    it('should delete a link when a node is deleted', () => {
-      console.log("should delete a link when a node is deleted.");
+	it("should delete a link when a node is deleted", () => {
+		logger.info("should delete a link when a node is deleted.");
 
-      let startCanvas =
-          {zoom: 100,
-           diagram: {
-            nodes: [
-              {id: "node1", xPos: 10, yPos: 10},
-              {id: "node2", xPos: 20, yPos: 20},
-              {id: "node3", xPos: 30, yPos: 30}
-            ],
-            comments: [
-              {id: "comment1", xPos: 50, yPos: 50},
-              {id: "comment2", xPos: 60, yPos: 60}
-            ],
-            links: [
-              {id: "link1", source: "node1", target: "node2"},
-              {id: "link2", source: "comment1", target: "node2"}
-            ]
-           }
-          };
+		const startCanvas =
+			{ zoom: 100,
+				diagram: {
+					nodes: [
+              { id: "node1", xPos: 10, yPos: 10 },
+              { id: "node2", xPos: 20, yPos: 20 },
+              { id: "node3", xPos: 30, yPos: 30 }
+					],
+					comments: [
+              { id: "comment1", xPos: 50, yPos: 50 },
+              { id: "comment2", xPos: 60, yPos: 60 }
+					],
+					links: [
+              { id: "link1", source: "node1", target: "node2" },
+              { id: "link2", source: "comment1", target: "node2" }
+					]
+				}
+			};
 
-      deepFreeze(startCanvas);
+		deepFreeze(startCanvas);
 
-      ObjectModel.dispatch({
-        type: "SET_CANVAS",
-        data: startCanvas
-      });
+		ObjectModel.dispatch({
+			type: "SET_CANVAS",
+			data: startCanvas
+		});
 
-      ObjectModel.dispatch({
-        type: "DELETE_OBJECTS",
-        data: {selectedObjectIds: ["node1"]}
-      });
+		ObjectModel.dispatch({
+			type: "DELETE_OBJECTS",
+			data: { selectedObjectIds: ["node1"] }
+		});
 
-      let expectedCanvas =
-          {zoom: 100,
-             diagram: {
-               nodes: [
-                {id: "node2", xPos: 20, yPos: 20},
-                {id: "node3", xPos: 30, yPos: 30}
-               ],
-               comments: [
-                {id: "comment1", xPos: 50, yPos: 50},
-                {id: "comment2", xPos: 60, yPos: 60}
-              ],
-              links: [
-                {id: "link2", source: "comment1", target: "node2"}
-              ]
-             }
-          };
+		const expectedCanvas =
+			{ zoom: 100,
+				diagram: {
+					nodes: [
+                { id: "node2", xPos: 20, yPos: 20 },
+                { id: "node3", xPos: 30, yPos: 30 }
+					],
+					comments: [
+                { id: "comment1", xPos: 50, yPos: 50 },
+                { id: "comment2", xPos: 60, yPos: 60 }
+					],
+					links: [
+                { id: "link2", source: "comment1", target: "node2" }
+					]
+				}
+			};
 
-      let actualCanvas = ObjectModel.getCanvas();
+		const actualCanvas = ObjectModel.getCanvas();
 
-      console.log("Expected Canvas = " + JSON.stringify(expectedCanvas));
-      console.log("Actual Canvas   = " + JSON.stringify(actualCanvas));
+		logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas));
+		logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas));
 
-      expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
-    });
+		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+	});
 
-		it('should delete a link when a comment is deleted', () => {
-			console.log("should delete a link when a comment is deleted.");
+	it("should delete a link when a comment is deleted", () => {
+		logger.info("should delete a link when a comment is deleted.");
 
-			let startCanvas =
-					{zoom: 100,
+		const startCanvas =
+			{ zoom: 100,
 					 diagram: {
 						nodes: [
-							{id: "node1", xPos: 10, yPos: 10},
-							{id: "node2", xPos: 20, yPos: 20},
-							{id: "node3", xPos: 30, yPos: 30}
+							{ id: "node1", xPos: 10, yPos: 10 },
+							{ id: "node2", xPos: 20, yPos: 20 },
+							{ id: "node3", xPos: 30, yPos: 30 }
 						],
 						comments: [
-							{id: "comment1", xPos: 50, yPos: 50},
-							{id: "comment2", xPos: 60, yPos: 60}
+							{ id: "comment1", xPos: 50, yPos: 50 },
+							{ id: "comment2", xPos: 60, yPos: 60 }
 						],
 						links: [
-							{id: "link1", source: "node1", target: "node2"},
-							{id: "link2", source: "comment1", target: "node2"}
+							{ id: "link1", source: "node1", target: "node2" },
+							{ id: "link2", source: "comment1", target: "node2" }
 						]
 					 }
-					};
+			};
 
-			deepFreeze(startCanvas);
+		deepFreeze(startCanvas);
 
-			ObjectModel.dispatch({
-				type: "SET_CANVAS",
-				data: startCanvas
-			});
+		ObjectModel.dispatch({
+			type: "SET_CANVAS",
+			data: startCanvas
+		});
 
-			ObjectModel.dispatch({
-				type: "DELETE_OBJECTS",
-				data: {selectedObjectIds: ["comment1"]}
-			});
+		ObjectModel.dispatch({
+			type: "DELETE_OBJECTS",
+			data: { selectedObjectIds: ["comment1"] }
+		});
 
-			let expectedCanvas =
-					{zoom: 100,
+		const expectedCanvas =
+			{ zoom: 100,
 						 diagram: {
 							 nodes: [
-								{id: "node1", xPos: 10, yPos: 10},
-								{id: "node2", xPos: 20, yPos: 20},
-								{id: "node3", xPos: 30, yPos: 30}
+								{ id: "node1", xPos: 10, yPos: 10 },
+								{ id: "node2", xPos: 20, yPos: 20 },
+								{ id: "node3", xPos: 30, yPos: 30 }
 							 ],
 							 comments: [
-								{id: "comment2", xPos: 60, yPos: 60}
+								{ id: "comment2", xPos: 60, yPos: 60 }
 							],
 							links: [
-								{id: "link1", source: "node1", target: "node2"}
+								{ id: "link1", source: "node1", target: "node2" }
 							]
 						 }
-					};
+			};
 
-			let actualCanvas = ObjectModel.getCanvas();
+		const actualCanvas = ObjectModel.getCanvas();
 
-			console.log("Expected Canvas = " + JSON.stringify(expectedCanvas));
-			console.log("Actual Canvas   = " + JSON.stringify(actualCanvas));
+		logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas));
+		logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas));
 
-			expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
-		});
+		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+	});
 
-    it('should select an object', () => {
-      console.log("should select an object.");
+	it("should select an object", () => {
+		logger.info("should select an object.");
 
-      let startCanvas =
-          {zoom: 100,
-           diagram: {
-            nodes: [
-              {id: "node1", xPos: 10, yPos: 10},
-              {id: "node2", xPos: 20, yPos: 20},
-              {id: "node3", xPos: 30, yPos: 30}
-            ],
-            comments: [
-              {id: "comment1", xPos: 50, yPos: 50},
-              {id: "comment2", xPos: 60, yPos: 60}
-            ],
-            links: [
-              {id: "link1", source: "node1", target: "node2"},
-              {id: "link2", source: "comment1", target: "node2"}
-            ]
-           }
-          };
-
-      deepFreeze(startCanvas);
-
-      ObjectModel.dispatch({
-        type: "SET_CANVAS",
-        data: startCanvas
-      });
-
-      ObjectModel.dispatch({
-        type: "SET_SELECTIONS",
-        data: ["comment1", "node3"]
-      });
-
-      let expectedSelections = ["comment1", "node3"];
-      let actualSelections = ObjectModel.getSelectedObjectIds();
-
-      console.log("Expected Selections = " + JSON.stringify(expectedSelections));
-      console.log("Actual Selections   = " + JSON.stringify(actualSelections));
-
-      expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
-    });
-
-    it('should clear current selections', () => {
-      console.log("should clear current selections.");
-
-      let startCanvas =
-          {zoom: 100,
-           diagram: {
-            nodes: [
-              {id: "node1", xPos: 10, yPos: 10},
-              {id: "node2", xPos: 20, yPos: 20},
-              {id: "node3", xPos: 30, yPos: 30}
-            ],
-            comments: [
-              {id: "comment1", xPos: 50, yPos: 50},
-              {id: "comment2", xPos: 60, yPos: 60}
-            ],
-            links: [
-              {id: "link1", source: "node1", target: "node2"},
-              {id: "link2", source: "comment1", target: "node2"}
-            ]
-           }
-          };
-
-      deepFreeze(startCanvas);
-
-      ObjectModel.dispatch({
-        type: "SET_CANVAS",
-        data: startCanvas
-      });
-
-      ObjectModel.dispatch({
-        type: "SET_SELECTIONS",
-        data: ["comment1", "node3"]
-      });
-
-      ObjectModel.dispatch({
-        type: "CLEAR_SELECTIONS"
-      });
-
-
-      let expectedSelections = [];
-      let actualSelections = ObjectModel.getSelectedObjectIds();
-
-      console.log("Expected Selections = " + JSON.stringify(expectedSelections));
-      console.log("Actual Selections   = " + JSON.stringify(actualSelections));
-
-      expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
-    });
-
-		it('should select toggle off comment', () => {
-      console.log("should select toggle off comment.");
-
-      let startCanvas =
-          {zoom: 100,
-           diagram: {
-            nodes: [
-              {id: "node1", xPos: 10, yPos: 10},
-              {id: "node2", xPos: 20, yPos: 20},
-              {id: "node3", xPos: 30, yPos: 30}
-            ],
-            comments: [
-              {id: "comment1", xPos: 50, yPos: 50},
-              {id: "comment2", xPos: 60, yPos: 60}
-            ],
-            links: [
-              {id: "link1", source: "node1", target: "node2"},
-              {id: "link2", source: "comment1", target: "node2"}
-            ]
-           }
-          };
-
-      deepFreeze(startCanvas);
-
-      ObjectModel.dispatch({
-        type: "SET_CANVAS",
-        data: startCanvas
-      });
-
-      ObjectModel.dispatch({
-        type: "SET_SELECTIONS",
-        data: ["comment1", "node3"]
-      });
-
-
-			ObjectModel.toggleSelection("comment1", true);
-
-
-      let expectedSelections = ["node3"];
-      let actualSelections = ObjectModel.getSelectedObjectIds();
-
-      console.log("Expected Selections = " + JSON.stringify(expectedSelections));
-      console.log("Actual Selections   = " + JSON.stringify(actualSelections));
-
-      expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
-    });
-
-		it('should select toggle on comment', () => {
-      console.log("should select toggle on comment.");
-
-      let startCanvas =
-          {zoom: 100,
-           diagram: {
-            nodes: [
-              {id: "node1", xPos: 10, yPos: 10},
-              {id: "node2", xPos: 20, yPos: 20},
-              {id: "node3", xPos: 30, yPos: 30}
-            ],
-            comments: [
-              {id: "comment1", xPos: 50, yPos: 50},
-              {id: "comment2", xPos: 60, yPos: 60}
-            ],
-            links: [
-              {id: "link1", source: "node1", target: "node2"},
-              {id: "link2", source: "comment1", target: "node2"}
-            ]
-           }
-          };
-
-      deepFreeze(startCanvas);
-
-      ObjectModel.dispatch({
-        type: "SET_CANVAS",
-        data: startCanvas
-      });
-
-      ObjectModel.dispatch({
-        type: "SET_SELECTIONS",
-        data: ["node3"]
-      });
-
-
-			ObjectModel.toggleSelection("comment1", true);
-
-
-      let expectedSelections = ["node3", "comment1"];
-      let actualSelections = ObjectModel.getSelectedObjectIds();
-
-      console.log("Expected Selections = " + JSON.stringify(expectedSelections));
-      console.log("Actual Selections   = " + JSON.stringify(actualSelections));
-
-      expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
-    });
-
-		it('should select toggle off node', () => {
-			console.log("should select toggle off node.");
-
-			let startCanvas =
-					{zoom: 100,
-					 diagram: {
-						nodes: [
-							{id: "node1", xPos: 10, yPos: 10},
-							{id: "node2", xPos: 20, yPos: 20},
-							{id: "node3", xPos: 30, yPos: 30}
-						],
-						comments: [
-							{id: "comment1", xPos: 50, yPos: 50},
-							{id: "comment2", xPos: 60, yPos: 60}
-						],
-						links: [
-							{id: "link1", source: "node1", target: "node2"},
-							{id: "link2", source: "comment1", target: "node2"}
-						]
-					 }
-					};
-
-			deepFreeze(startCanvas);
-
-			ObjectModel.dispatch({
-				type: "SET_CANVAS",
-				data: startCanvas
-			});
-
-			ObjectModel.dispatch({
-				type: "SET_SELECTIONS",
-				data: ["comment1", "node3"]
-			});
-
-
-			ObjectModel.toggleSelection("node3", true);
-
-
-			let expectedSelections = ["comment1"];
-			let actualSelections = ObjectModel.getSelectedObjectIds();
-
-			console.log("Expected Selections = " + JSON.stringify(expectedSelections));
-			console.log("Actual Selections   = " + JSON.stringify(actualSelections));
-
-			expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
-		});
-
-		it('should select toggle on node', () => {
-			console.log("should select toggle on node.");
-
-			let startCanvas =
-					{zoom: 100,
-					 diagram: {
-						nodes: [
-							{id: "node1", xPos: 10, yPos: 10},
-							{id: "node2", xPos: 20, yPos: 20},
-							{id: "node3", xPos: 30, yPos: 30}
-						],
-						comments: [
-							{id: "comment1", xPos: 50, yPos: 50},
-							{id: "comment2", xPos: 60, yPos: 60}
-						],
-						links: [
-							{id: "link1", source: "node1", target: "node2"},
-							{id: "link2", source: "comment1", target: "node2"}
-						]
-					 }
-					};
-
-			deepFreeze(startCanvas);
-
-			ObjectModel.dispatch({
-				type: "SET_CANVAS",
-				data: startCanvas
-			});
-
-			ObjectModel.dispatch({
-				type: "SET_SELECTIONS",
-				data: ["comment1"]
-			});
-
-
-			ObjectModel.toggleSelection("node3", true);
-
-
-			let expectedSelections = ["comment1", "node3"];
-			let actualSelections = ObjectModel.getSelectedObjectIds();
-
-			console.log("Expected Selections = " + JSON.stringify(expectedSelections));
-			console.log("Actual Selections   = " + JSON.stringify(actualSelections));
-
-			expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
-		});
-
-		it('should select nodes in a simple subgraph', () => {
-			console.log("should select nodes in a simple subgraph.");
-
-			let startCanvas =
-					{zoom: 100,
-					 diagram: {
-						nodes: [
-							{id: "node1", xPos: 10, yPos: 10},
-							{id: "node2", xPos: 20, yPos: 20},
-							{id: "node3", xPos: 30, yPos: 30},
-							{id: "node4", xPos: 40, yPos: 30}
-						],
-						comments: [
-							{id: "comment1", xPos: 50, yPos: 50},
-							{id: "comment2", xPos: 60, yPos: 60}
-						],
-						links: [
-							{id: "link1", source: "node1", target: "node2"},
-							{id: "link2", source: "node2", target: "node3"},
-							{id: "link3", source: "node3", target: "node4"},
-							{id: "link4", source: "comment1", target: "node2"}
-						]
-					 }
-					};
-
-			deepFreeze(startCanvas);
-
-			ObjectModel.dispatch({
-				type: "SET_CANVAS",
-				data: startCanvas
-			});
-
-			ObjectModel.dispatch({
-				type: "SET_SELECTIONS",
-				data: ["node2"]
-			});
-
-
-			ObjectModel.selectSubGraph("node4");
-
-
-			let expectedSelections = ["node2", "node4", "node3"];
-			let actualSelections = ObjectModel.getSelectedObjectIds();
-
-			console.log("Expected Selections = " + JSON.stringify(expectedSelections));
-			console.log("Actual Selections   = " + JSON.stringify(actualSelections));
-
-			expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
-		});
-
-	it('should select nodes in a fork subgraph', () => {
-		console.log("should select nodes in a fork subgraph.");
-
-		let startCanvas =
-				{zoom: 100,
-				 diagram: {
+		const startCanvas =
+			{ zoom: 100,
+				diagram: {
 					nodes: [
-						{id: "node1", xPos: 10, yPos: 10},
-						{id: "node2", xPos: 20, yPos: 20},
-						{id: "node3", xPos: 30, yPos: 30},
-						{id: "node4", xPos: 40, yPos: 30}
+              { id: "node1", xPos: 10, yPos: 10 },
+              { id: "node2", xPos: 20, yPos: 20 },
+              { id: "node3", xPos: 30, yPos: 30 }
 					],
 					comments: [
-						{id: "comment1", xPos: 50, yPos: 50},
-						{id: "comment2", xPos: 60, yPos: 60}
+              { id: "comment1", xPos: 50, yPos: 50 },
+              { id: "comment2", xPos: 60, yPos: 60 }
 					],
 					links: [
-						{id: "link1", source: "node1", target: "node2"},
-						{id: "link2", source: "node2", target: "node3"},
-						{id: "link3", source: "node2", target: "node4"},
-						{id: "link4", source: "comment1", target: "node2"}
+              { id: "link1", source: "node1", target: "node2" },
+              { id: "link2", source: "comment1", target: "node2" }
 					]
-				 }
-				};
+				}
+			};
 
 		deepFreeze(startCanvas);
 
@@ -1387,46 +1070,39 @@ describe('ObjectModel handle model OK', () => {
 
 		ObjectModel.dispatch({
 			type: "SET_SELECTIONS",
-			data: ["node1"]
+			data: ["comment1", "node3"]
 		});
 
+		const expectedSelections = ["comment1", "node3"];
+		const actualSelections = ObjectModel.getSelectedObjectIds();
 
-		ObjectModel.selectSubGraph("node4");
-
-
-		let expectedSelections = ["node1", "node4", "node2"];
-		let actualSelections = ObjectModel.getSelectedObjectIds();
-
-		console.log("Expected Selections = " + JSON.stringify(expectedSelections));
-		console.log("Actual Selections   = " + JSON.stringify(actualSelections));
+		logger.info("Expected Selections = " + JSON.stringify(expectedSelections));
+		logger.info("Actual Selections   = " + JSON.stringify(actualSelections));
 
 		expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
 	});
 
-	it('should select nodes in a merge subgraph', () => {
-		console.log("should select nodes in a merge subgraph.");
+	it("should clear current selections", () => {
+		logger.info("should clear current selections.");
 
-		let startCanvas =
-				{zoom: 100,
-				 diagram: {
+		const startCanvas =
+			{ zoom: 100,
+				diagram: {
 					nodes: [
-						{id: "node1", xPos: 10, yPos: 10},
-						{id: "node2", xPos: 20, yPos: 20},
-						{id: "node3", xPos: 30, yPos: 30},
-						{id: "node4", xPos: 40, yPos: 30}
+              { id: "node1", xPos: 10, yPos: 10 },
+              { id: "node2", xPos: 20, yPos: 20 },
+              { id: "node3", xPos: 30, yPos: 30 }
 					],
 					comments: [
-						{id: "comment1", xPos: 50, yPos: 50},
-						{id: "comment2", xPos: 60, yPos: 60}
+              { id: "comment1", xPos: 50, yPos: 50 },
+              { id: "comment2", xPos: 60, yPos: 60 }
 					],
 					links: [
-						{id: "link1", source: "node1", target: "node3"},
-						{id: "link2", source: "node2", target: "node3"},
-						{id: "link3", source: "node3", target: "node4"},
-						{id: "link4", source: "comment1", target: "node2"}
+              { id: "link1", source: "node1", target: "node2" },
+              { id: "link2", source: "comment1", target: "node2" }
 					]
-				 }
-				};
+				}
+			};
 
 		deepFreeze(startCanvas);
 
@@ -1437,48 +1113,235 @@ describe('ObjectModel handle model OK', () => {
 
 		ObjectModel.dispatch({
 			type: "SET_SELECTIONS",
-			data: ["node1"]
+			data: ["comment1", "node3"]
+		});
+
+		ObjectModel.dispatch({
+			type: "CLEAR_SELECTIONS"
 		});
 
 
-		ObjectModel.selectSubGraph("node4");
+		const expectedSelections = [];
+		const actualSelections = ObjectModel.getSelectedObjectIds();
 
-
-		let expectedSelections = ["node1", "node4", "node3"];
-		let actualSelections = ObjectModel.getSelectedObjectIds();
-
-		console.log("Expected Selections = " + JSON.stringify(expectedSelections));
-		console.log("Actual Selections   = " + JSON.stringify(actualSelections));
+		logger.info("Expected Selections = " + JSON.stringify(expectedSelections));
+		logger.info("Actual Selections   = " + JSON.stringify(actualSelections));
 
 		expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
 	});
 
-	it('should select nodes in a simple partial subgraph', () => {
-		console.log("should select nodes in a simple partial subgraph.");
+	it("should select toggle off comment", () => {
+		logger.info("should select toggle off comment.");
 
-		let startCanvas =
-				{zoom: 100,
-				 diagram: {
+		const startCanvas =
+			{ zoom: 100,
+				diagram: {
 					nodes: [
-						{id: "node1", xPos: 10, yPos: 10},
-						{id: "node2", xPos: 20, yPos: 20},
-						{id: "node3", xPos: 30, yPos: 30},
-						{id: "node4", xPos: 40, yPos: 30},
-						{id: "node5", xPos: 50, yPos: 30}
+              { id: "node1", xPos: 10, yPos: 10 },
+              { id: "node2", xPos: 20, yPos: 20 },
+              { id: "node3", xPos: 30, yPos: 30 }
 					],
 					comments: [
-						{id: "comment1", xPos: 50, yPos: 50},
-						{id: "comment2", xPos: 60, yPos: 60}
+              { id: "comment1", xPos: 50, yPos: 50 },
+              { id: "comment2", xPos: 60, yPos: 60 }
 					],
 					links: [
-						{id: "link1", source: "node1", target: "node2"},
-						{id: "link2", source: "node2", target: "node3"},
-						{id: "link3", source: "node3", target: "node4"},
-						{id: "link5", source: "node4", target: "node5"},
-						{id: "link4", source: "comment1", target: "node2"}
+              { id: "link1", source: "node1", target: "node2" },
+              { id: "link2", source: "comment1", target: "node2" }
 					]
-				 }
-				};
+				}
+			};
+
+		deepFreeze(startCanvas);
+
+		ObjectModel.dispatch({
+			type: "SET_CANVAS",
+			data: startCanvas
+		});
+
+		ObjectModel.dispatch({
+			type: "SET_SELECTIONS",
+			data: ["comment1", "node3"]
+		});
+
+
+		ObjectModel.toggleSelection("comment1", true);
+
+
+		const expectedSelections = ["node3"];
+		const actualSelections = ObjectModel.getSelectedObjectIds();
+
+		logger.info("Expected Selections = " + JSON.stringify(expectedSelections));
+		logger.info("Actual Selections   = " + JSON.stringify(actualSelections));
+
+		expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
+	});
+
+	it("should select toggle on comment", () => {
+		logger.info("should select toggle on comment.");
+
+		const startCanvas =
+			{ zoom: 100,
+				diagram: {
+					nodes: [
+              { id: "node1", xPos: 10, yPos: 10 },
+              { id: "node2", xPos: 20, yPos: 20 },
+              { id: "node3", xPos: 30, yPos: 30 }
+					],
+					comments: [
+              { id: "comment1", xPos: 50, yPos: 50 },
+              { id: "comment2", xPos: 60, yPos: 60 }
+					],
+					links: [
+              { id: "link1", source: "node1", target: "node2" },
+              { id: "link2", source: "comment1", target: "node2" }
+					]
+				}
+			};
+
+		deepFreeze(startCanvas);
+
+		ObjectModel.dispatch({
+			type: "SET_CANVAS",
+			data: startCanvas
+		});
+
+		ObjectModel.dispatch({
+			type: "SET_SELECTIONS",
+			data: ["node3"]
+		});
+
+
+		ObjectModel.toggleSelection("comment1", true);
+
+
+		const expectedSelections = ["node3", "comment1"];
+		const actualSelections = ObjectModel.getSelectedObjectIds();
+
+		logger.info("Expected Selections = " + JSON.stringify(expectedSelections));
+		logger.info("Actual Selections   = " + JSON.stringify(actualSelections));
+
+		expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
+	});
+
+	it("should select toggle off node", () => {
+		logger.info("should select toggle off node.");
+
+		const startCanvas =
+			{ zoom: 100,
+					 diagram: {
+						nodes: [
+							{ id: "node1", xPos: 10, yPos: 10 },
+							{ id: "node2", xPos: 20, yPos: 20 },
+							{ id: "node3", xPos: 30, yPos: 30 }
+						],
+						comments: [
+							{ id: "comment1", xPos: 50, yPos: 50 },
+							{ id: "comment2", xPos: 60, yPos: 60 }
+						],
+						links: [
+							{ id: "link1", source: "node1", target: "node2" },
+							{ id: "link2", source: "comment1", target: "node2" }
+						]
+					 }
+			};
+
+		deepFreeze(startCanvas);
+
+		ObjectModel.dispatch({
+			type: "SET_CANVAS",
+			data: startCanvas
+		});
+
+		ObjectModel.dispatch({
+			type: "SET_SELECTIONS",
+			data: ["comment1", "node3"]
+		});
+
+
+		ObjectModel.toggleSelection("node3", true);
+
+
+		const expectedSelections = ["comment1"];
+		const actualSelections = ObjectModel.getSelectedObjectIds();
+
+		logger.info("Expected Selections = " + JSON.stringify(expectedSelections));
+		logger.info("Actual Selections   = " + JSON.stringify(actualSelections));
+
+		expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
+	});
+
+	it("should select toggle on node", () => {
+		logger.info("should select toggle on node.");
+
+		const startCanvas =
+			{ zoom: 100,
+					 diagram: {
+						nodes: [
+							{ id: "node1", xPos: 10, yPos: 10 },
+							{ id: "node2", xPos: 20, yPos: 20 },
+							{ id: "node3", xPos: 30, yPos: 30 }
+						],
+						comments: [
+							{ id: "comment1", xPos: 50, yPos: 50 },
+							{ id: "comment2", xPos: 60, yPos: 60 }
+						],
+						links: [
+							{ id: "link1", source: "node1", target: "node2" },
+							{ id: "link2", source: "comment1", target: "node2" }
+						]
+					 }
+			};
+
+		deepFreeze(startCanvas);
+
+		ObjectModel.dispatch({
+			type: "SET_CANVAS",
+			data: startCanvas
+		});
+
+		ObjectModel.dispatch({
+			type: "SET_SELECTIONS",
+			data: ["comment1"]
+		});
+
+
+		ObjectModel.toggleSelection("node3", true);
+
+
+		const expectedSelections = ["comment1", "node3"];
+		const actualSelections = ObjectModel.getSelectedObjectIds();
+
+		logger.info("Expected Selections = " + JSON.stringify(expectedSelections));
+		logger.info("Actual Selections   = " + JSON.stringify(actualSelections));
+
+		expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
+	});
+
+	it("should select nodes in a simple subgraph", () => {
+		logger.info("should select nodes in a simple subgraph.");
+
+		const startCanvas =
+			{ zoom: 100,
+					 diagram: {
+						nodes: [
+							{ id: "node1", xPos: 10, yPos: 10 },
+							{ id: "node2", xPos: 20, yPos: 20 },
+							{ id: "node3", xPos: 30, yPos: 30 },
+							{ id: "node4", xPos: 40, yPos: 30 }
+						],
+						comments: [
+							{ id: "comment1", xPos: 50, yPos: 50 },
+							{ id: "comment2", xPos: 60, yPos: 60 }
+						],
+						links: [
+							{ id: "link1", source: "node1", target: "node2" },
+							{ id: "link2", source: "node2", target: "node3" },
+							{ id: "link3", source: "node3", target: "node4" },
+							{ id: "link4", source: "comment1", target: "node2" }
+						]
+					 }
+			};
 
 		deepFreeze(startCanvas);
 
@@ -1496,61 +1359,213 @@ describe('ObjectModel handle model OK', () => {
 		ObjectModel.selectSubGraph("node4");
 
 
-		let expectedSelections = ["node2", "node4", "node3"];
-		let actualSelections = ObjectModel.getSelectedObjectIds();
+		const expectedSelections = ["node2", "node4", "node3"];
+		const actualSelections = ObjectModel.getSelectedObjectIds();
 
-		console.log("Expected Selections = " + JSON.stringify(expectedSelections));
-		console.log("Actual Selections   = " + JSON.stringify(actualSelections));
+		logger.info("Expected Selections = " + JSON.stringify(expectedSelections));
+		logger.info("Actual Selections   = " + JSON.stringify(actualSelections));
 
 		expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
 	});
 
-	it('should select nodes in a complex subgraph', () => {
-		console.log("should select nodes in a complex subgraph.");
+	it("should select nodes in a fork subgraph", () => {
+		logger.info("should select nodes in a fork subgraph.");
 
-		let startCanvas =
-				{zoom: 100,
+		const startCanvas =
+			{ zoom: 100,
 				 diagram: {
 					nodes: [
-						{id: "node1", xPos: 10, yPos: 10},
-						{id: "node2", xPos: 20, yPos: 20},
-						{id: "node3", xPos: 30, yPos: 30},
-						{id: "node4", xPos: 40, yPos: 30},
-						{id: "node5", xPos: 50, yPos: 30},
-						{id: "node6", xPos: 60, yPos: 30},
-						{id: "node7", xPos: 70, yPos: 30},
-						{id: "node8", xPos: 80, yPos: 30},
-						{id: "node9", xPos: 90, yPos: 30},
-						{id: "node10", xPos: 100, yPos: 30},
-						{id: "node11", xPos: 110, yPos: 30},
-						{id: "node12", xPos: 120, yPos: 30},
-						{id: "node13", xPos: 130, yPos: 30}
+						{ id: "node1", xPos: 10, yPos: 10 },
+						{ id: "node2", xPos: 20, yPos: 20 },
+						{ id: "node3", xPos: 30, yPos: 30 },
+						{ id: "node4", xPos: 40, yPos: 30 }
 					],
 					comments: [
-						{id: "comment1", xPos: 50, yPos: 50},
-						{id: "comment2", xPos: 60, yPos: 60}
+						{ id: "comment1", xPos: 50, yPos: 50 },
+						{ id: "comment2", xPos: 60, yPos: 60 }
 					],
 					links: [
-						{id: "link1", source: "node1", target: "node2"},
-						{id: "link2", source: "node2", target: "node3"},
-						{id: "link3", source: "node3", target: "node4"},
-						{id: "link5", source: "node4", target: "node9"},
-						{id: "link4", source: "comment1", target: "node7"},
-						{id: "link6", source: "node4", target: "node10"},
-						{id: "link7", source: "node4", target: "node11"},
-						{id: "link8", source: "node4", target: "node12"},
-						{id: "link9", source: "node9", target: "node10"},
-						{id: "link10", source: "node12", target: "node11"},
-						{id: "link11", source: "node11", target: "node13"},
-						{id: "link12", source: "node8", target: "node4"},
-						{id: "link13", source: "node1", target: "node5"},
-						{id: "link14", source: "node5", target: "node6"},
-						{id: "link15", source: "node1", target: "node7"},
-						{id: "link16", source: "node7", target: "node4"},
-						{id: "link17", source: "node6", target: "node4"}
+						{ id: "link1", source: "node1", target: "node2" },
+						{ id: "link2", source: "node2", target: "node3" },
+						{ id: "link3", source: "node2", target: "node4" },
+						{ id: "link4", source: "comment1", target: "node2" }
 					]
 				 }
-				};
+			};
+
+		deepFreeze(startCanvas);
+
+		ObjectModel.dispatch({
+			type: "SET_CANVAS",
+			data: startCanvas
+		});
+
+		ObjectModel.dispatch({
+			type: "SET_SELECTIONS",
+			data: ["node1"]
+		});
+
+
+		ObjectModel.selectSubGraph("node4");
+
+
+		const expectedSelections = ["node1", "node4", "node2"];
+		const actualSelections = ObjectModel.getSelectedObjectIds();
+
+		logger.info("Expected Selections = " + JSON.stringify(expectedSelections));
+		logger.info("Actual Selections   = " + JSON.stringify(actualSelections));
+
+		expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
+	});
+
+	it("should select nodes in a merge subgraph", () => {
+		logger.info("should select nodes in a merge subgraph.");
+
+		const startCanvas =
+			{ zoom: 100,
+				 diagram: {
+					nodes: [
+						{ id: "node1", xPos: 10, yPos: 10 },
+						{ id: "node2", xPos: 20, yPos: 20 },
+						{ id: "node3", xPos: 30, yPos: 30 },
+						{ id: "node4", xPos: 40, yPos: 30 }
+					],
+					comments: [
+						{ id: "comment1", xPos: 50, yPos: 50 },
+						{ id: "comment2", xPos: 60, yPos: 60 }
+					],
+					links: [
+						{ id: "link1", source: "node1", target: "node3" },
+						{ id: "link2", source: "node2", target: "node3" },
+						{ id: "link3", source: "node3", target: "node4" },
+						{ id: "link4", source: "comment1", target: "node2" }
+					]
+				 }
+			};
+
+		deepFreeze(startCanvas);
+
+		ObjectModel.dispatch({
+			type: "SET_CANVAS",
+			data: startCanvas
+		});
+
+		ObjectModel.dispatch({
+			type: "SET_SELECTIONS",
+			data: ["node1"]
+		});
+
+
+		ObjectModel.selectSubGraph("node4");
+
+
+		const expectedSelections = ["node1", "node4", "node3"];
+		const actualSelections = ObjectModel.getSelectedObjectIds();
+
+		logger.info("Expected Selections = " + JSON.stringify(expectedSelections));
+		logger.info("Actual Selections   = " + JSON.stringify(actualSelections));
+
+		expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
+	});
+
+	it("should select nodes in a simple partial subgraph", () => {
+		logger.info("should select nodes in a simple partial subgraph.");
+
+		const startCanvas =
+			{ zoom: 100,
+				 diagram: {
+					nodes: [
+						{ id: "node1", xPos: 10, yPos: 10 },
+						{ id: "node2", xPos: 20, yPos: 20 },
+						{ id: "node3", xPos: 30, yPos: 30 },
+						{ id: "node4", xPos: 40, yPos: 30 },
+						{ id: "node5", xPos: 50, yPos: 30 }
+					],
+					comments: [
+						{ id: "comment1", xPos: 50, yPos: 50 },
+						{ id: "comment2", xPos: 60, yPos: 60 }
+					],
+					links: [
+						{ id: "link1", source: "node1", target: "node2" },
+						{ id: "link2", source: "node2", target: "node3" },
+						{ id: "link3", source: "node3", target: "node4" },
+						{ id: "link5", source: "node4", target: "node5" },
+						{ id: "link4", source: "comment1", target: "node2" }
+					]
+				 }
+			};
+
+		deepFreeze(startCanvas);
+
+		ObjectModel.dispatch({
+			type: "SET_CANVAS",
+			data: startCanvas
+		});
+
+		ObjectModel.dispatch({
+			type: "SET_SELECTIONS",
+			data: ["node2"]
+		});
+
+
+		ObjectModel.selectSubGraph("node4");
+
+
+		const expectedSelections = ["node2", "node4", "node3"];
+		const actualSelections = ObjectModel.getSelectedObjectIds();
+
+		logger.info("Expected Selections = " + JSON.stringify(expectedSelections));
+		logger.info("Actual Selections   = " + JSON.stringify(actualSelections));
+
+		expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
+	});
+
+	it("should select nodes in a complex subgraph", () => {
+		logger.info("should select nodes in a complex subgraph.");
+
+		const startCanvas =
+			{ zoom: 100,
+				 diagram: {
+					nodes: [
+						{ id: "node1", xPos: 10, yPos: 10 },
+						{ id: "node2", xPos: 20, yPos: 20 },
+						{ id: "node3", xPos: 30, yPos: 30 },
+						{ id: "node4", xPos: 40, yPos: 30 },
+						{ id: "node5", xPos: 50, yPos: 30 },
+						{ id: "node6", xPos: 60, yPos: 30 },
+						{ id: "node7", xPos: 70, yPos: 30 },
+						{ id: "node8", xPos: 80, yPos: 30 },
+						{ id: "node9", xPos: 90, yPos: 30 },
+						{ id: "node10", xPos: 100, yPos: 30 },
+						{ id: "node11", xPos: 110, yPos: 30 },
+						{ id: "node12", xPos: 120, yPos: 30 },
+						{ id: "node13", xPos: 130, yPos: 30 }
+					],
+					comments: [
+						{ id: "comment1", xPos: 50, yPos: 50 },
+						{ id: "comment2", xPos: 60, yPos: 60 }
+					],
+					links: [
+						{ id: "link1", source: "node1", target: "node2" },
+						{ id: "link2", source: "node2", target: "node3" },
+						{ id: "link3", source: "node3", target: "node4" },
+						{ id: "link5", source: "node4", target: "node9" },
+						{ id: "link4", source: "comment1", target: "node7" },
+						{ id: "link6", source: "node4", target: "node10" },
+						{ id: "link7", source: "node4", target: "node11" },
+						{ id: "link8", source: "node4", target: "node12" },
+						{ id: "link9", source: "node9", target: "node10" },
+						{ id: "link10", source: "node12", target: "node11" },
+						{ id: "link11", source: "node11", target: "node13" },
+						{ id: "link12", source: "node8", target: "node4" },
+						{ id: "link13", source: "node1", target: "node5" },
+						{ id: "link14", source: "node5", target: "node6" },
+						{ id: "link15", source: "node1", target: "node7" },
+						{ id: "link16", source: "node7", target: "node4" },
+						{ id: "link17", source: "node6", target: "node4" }
+					]
+				 }
+			};
 
 		deepFreeze(startCanvas);
 
@@ -1568,62 +1583,62 @@ describe('ObjectModel handle model OK', () => {
 		ObjectModel.selectSubGraph("node13");
 
 
-		let expectedSelections = ["node1", "node13", "node2", "node3", "node4", "node11", "node12",
-															"node5", "node6", "node7"];
-		let actualSelections = ObjectModel.getSelectedObjectIds();
+		const expectedSelections = ["node1", "node13", "node2", "node3", "node4", "node11", "node12",
+			"node5", "node6", "node7"];
+		const actualSelections = ObjectModel.getSelectedObjectIds();
 
-		console.log("Expected Selections = " + JSON.stringify(expectedSelections));
-		console.log("Actual Selections   = " + JSON.stringify(actualSelections));
+		logger.info("Expected Selections = " + JSON.stringify(expectedSelections));
+		logger.info("Actual Selections   = " + JSON.stringify(actualSelections));
 
 		expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
 	});
 
-	it('should select nodes in a complex patial subgraph', () => {
-		console.log("should select nodes in a complex partial subgraph.");
+	it("should select nodes in a complex patial subgraph", () => {
+		logger.info("should select nodes in a complex partial subgraph.");
 
-		let startCanvas =
-				{zoom: 100,
+		const startCanvas =
+			{ zoom: 100,
 				 diagram: {
 					nodes: [
-						{id: "node1", xPos: 10, yPos: 10},
-						{id: "node2", xPos: 20, yPos: 20},
-						{id: "node3", xPos: 30, yPos: 30},
-						{id: "node4", xPos: 40, yPos: 30},
-						{id: "node5", xPos: 50, yPos: 30},
-						{id: "node6", xPos: 60, yPos: 30},
-						{id: "node7", xPos: 70, yPos: 30},
-						{id: "node8", xPos: 80, yPos: 30},
-						{id: "node9", xPos: 90, yPos: 30},
-						{id: "node10", xPos: 100, yPos: 30},
-						{id: "node11", xPos: 110, yPos: 30},
-						{id: "node12", xPos: 120, yPos: 30},
-						{id: "node13", xPos: 130, yPos: 30}
+						{ id: "node1", xPos: 10, yPos: 10 },
+						{ id: "node2", xPos: 20, yPos: 20 },
+						{ id: "node3", xPos: 30, yPos: 30 },
+						{ id: "node4", xPos: 40, yPos: 30 },
+						{ id: "node5", xPos: 50, yPos: 30 },
+						{ id: "node6", xPos: 60, yPos: 30 },
+						{ id: "node7", xPos: 70, yPos: 30 },
+						{ id: "node8", xPos: 80, yPos: 30 },
+						{ id: "node9", xPos: 90, yPos: 30 },
+						{ id: "node10", xPos: 100, yPos: 30 },
+						{ id: "node11", xPos: 110, yPos: 30 },
+						{ id: "node12", xPos: 120, yPos: 30 },
+						{ id: "node13", xPos: 130, yPos: 30 }
 					],
 					comments: [
-						{id: "comment1", xPos: 50, yPos: 50},
-						{id: "comment2", xPos: 60, yPos: 60}
+						{ id: "comment1", xPos: 50, yPos: 50 },
+						{ id: "comment2", xPos: 60, yPos: 60 }
 					],
 					links: [
-						{id: "link1", source: "node1", target: "node2"},
-						{id: "link2", source: "node2", target: "node3"},
-						{id: "link3", source: "node3", target: "node4"},
-						{id: "link5", source: "node4", target: "node9"},
-						{id: "link4", source: "comment1", target: "node7"},
-						{id: "link6", source: "node4", target: "node10"},
-						{id: "link7", source: "node4", target: "node11"},
-						{id: "link8", source: "node4", target: "node12"},
-						{id: "link9", source: "node9", target: "node10"},
-						{id: "link10", source: "node12", target: "node11"},
-						{id: "link11", source: "node11", target: "node13"},
-						{id: "link12", source: "node8", target: "node4"},
-						{id: "link13", source: "node1", target: "node5"},
-						{id: "link14", source: "node5", target: "node6"},
-						{id: "link15", source: "node1", target: "node7"},
-						{id: "link16", source: "node7", target: "node4"},
-						{id: "link17", source: "node6", target: "node4"}
+						{ id: "link1", source: "node1", target: "node2" },
+						{ id: "link2", source: "node2", target: "node3" },
+						{ id: "link3", source: "node3", target: "node4" },
+						{ id: "link5", source: "node4", target: "node9" },
+						{ id: "link4", source: "comment1", target: "node7" },
+						{ id: "link6", source: "node4", target: "node10" },
+						{ id: "link7", source: "node4", target: "node11" },
+						{ id: "link8", source: "node4", target: "node12" },
+						{ id: "link9", source: "node9", target: "node10" },
+						{ id: "link10", source: "node12", target: "node11" },
+						{ id: "link11", source: "node11", target: "node13" },
+						{ id: "link12", source: "node8", target: "node4" },
+						{ id: "link13", source: "node1", target: "node5" },
+						{ id: "link14", source: "node5", target: "node6" },
+						{ id: "link15", source: "node1", target: "node7" },
+						{ id: "link16", source: "node7", target: "node4" },
+						{ id: "link17", source: "node6", target: "node4" }
 					]
 				 }
-				};
+			};
 
 		deepFreeze(startCanvas);
 
@@ -1641,62 +1656,62 @@ describe('ObjectModel handle model OK', () => {
 		ObjectModel.selectSubGraph("node12");
 
 
-		let expectedSelections = ["node1", "node12", "node2", "node3", "node4",
-															"node5", "node6", "node7"];
-		let actualSelections = ObjectModel.getSelectedObjectIds();
+		const expectedSelections = ["node1", "node12", "node2", "node3", "node4",
+			"node5", "node6", "node7"];
+		const actualSelections = ObjectModel.getSelectedObjectIds();
 
-		console.log("Expected Selections = " + JSON.stringify(expectedSelections));
-		console.log("Actual Selections   = " + JSON.stringify(actualSelections));
+		logger.info("Expected Selections = " + JSON.stringify(expectedSelections));
+		logger.info("Actual Selections   = " + JSON.stringify(actualSelections));
 
 		expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
 	});
 
-	it('should select nodes in a complex single input subgraph', () => {
-		console.log("should select nodes in a complex single input subgraph.");
+	it("should select nodes in a complex single input subgraph", () => {
+		logger.info("should select nodes in a complex single input subgraph.");
 
-		let startCanvas =
-				{zoom: 100,
+		const startCanvas =
+			{ zoom: 100,
 				 diagram: {
 					nodes: [
-						{id: "node1", xPos: 10, yPos: 10},
-						{id: "node2", xPos: 20, yPos: 20},
-						{id: "node3", xPos: 30, yPos: 30},
-						{id: "node4", xPos: 40, yPos: 30},
-						{id: "node5", xPos: 50, yPos: 30},
-						{id: "node6", xPos: 60, yPos: 30},
-						{id: "node7", xPos: 70, yPos: 30},
-						{id: "node8", xPos: 80, yPos: 30},
-						{id: "node9", xPos: 90, yPos: 30},
-						{id: "node10", xPos: 100, yPos: 30},
-						{id: "node11", xPos: 110, yPos: 30},
-						{id: "node12", xPos: 120, yPos: 30},
-						{id: "node13", xPos: 130, yPos: 30}
+						{ id: "node1", xPos: 10, yPos: 10 },
+						{ id: "node2", xPos: 20, yPos: 20 },
+						{ id: "node3", xPos: 30, yPos: 30 },
+						{ id: "node4", xPos: 40, yPos: 30 },
+						{ id: "node5", xPos: 50, yPos: 30 },
+						{ id: "node6", xPos: 60, yPos: 30 },
+						{ id: "node7", xPos: 70, yPos: 30 },
+						{ id: "node8", xPos: 80, yPos: 30 },
+						{ id: "node9", xPos: 90, yPos: 30 },
+						{ id: "node10", xPos: 100, yPos: 30 },
+						{ id: "node11", xPos: 110, yPos: 30 },
+						{ id: "node12", xPos: 120, yPos: 30 },
+						{ id: "node13", xPos: 130, yPos: 30 }
 					],
 					comments: [
-						{id: "comment1", xPos: 50, yPos: 50},
-						{id: "comment2", xPos: 60, yPos: 60}
+						{ id: "comment1", xPos: 50, yPos: 50 },
+						{ id: "comment2", xPos: 60, yPos: 60 }
 					],
 					links: [
-						{id: "link1", source: "node1", target: "node2"},
-						{id: "link2", source: "node2", target: "node3"},
-						{id: "link3", source: "node3", target: "node4"},
-						{id: "link5", source: "node4", target: "node9"},
-						{id: "link4", source: "comment1", target: "node7"},
-						{id: "link6", source: "node4", target: "node10"},
-						{id: "link7", source: "node4", target: "node11"},
-						{id: "link8", source: "node4", target: "node12"},
-						{id: "link9", source: "node9", target: "node10"},
-						{id: "link10", source: "node12", target: "node11"},
-						{id: "link11", source: "node11", target: "node13"},
-						{id: "link12", source: "node8", target: "node4"},
-						{id: "link13", source: "node1", target: "node5"},
-						{id: "link14", source: "node5", target: "node6"},
-						{id: "link15", source: "node1", target: "node7"},
-						{id: "link16", source: "node7", target: "node4"},
-						{id: "link17", source: "node6", target: "node4"}
+						{ id: "link1", source: "node1", target: "node2" },
+						{ id: "link2", source: "node2", target: "node3" },
+						{ id: "link3", source: "node3", target: "node4" },
+						{ id: "link5", source: "node4", target: "node9" },
+						{ id: "link4", source: "comment1", target: "node7" },
+						{ id: "link6", source: "node4", target: "node10" },
+						{ id: "link7", source: "node4", target: "node11" },
+						{ id: "link8", source: "node4", target: "node12" },
+						{ id: "link9", source: "node9", target: "node10" },
+						{ id: "link10", source: "node12", target: "node11" },
+						{ id: "link11", source: "node11", target: "node13" },
+						{ id: "link12", source: "node8", target: "node4" },
+						{ id: "link13", source: "node1", target: "node5" },
+						{ id: "link14", source: "node5", target: "node6" },
+						{ id: "link15", source: "node1", target: "node7" },
+						{ id: "link16", source: "node7", target: "node4" },
+						{ id: "link17", source: "node6", target: "node4" }
 					]
 				 }
-				};
+			};
 
 		deepFreeze(startCanvas);
 
@@ -1714,61 +1729,61 @@ describe('ObjectModel handle model OK', () => {
 		ObjectModel.selectSubGraph("node11");
 
 
-		let expectedSelections = ["node8", "node11", "node4", "node12"];
-		let actualSelections = ObjectModel.getSelectedObjectIds();
+		const expectedSelections = ["node8", "node11", "node4", "node12"];
+		const actualSelections = ObjectModel.getSelectedObjectIds();
 
-		console.log("Expected Selections = " + JSON.stringify(expectedSelections));
-		console.log("Actual Selections   = " + JSON.stringify(actualSelections));
+		logger.info("Expected Selections = " + JSON.stringify(expectedSelections));
+		logger.info("Actual Selections   = " + JSON.stringify(actualSelections));
 
 		expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
 	});
 
-	it('should select nodes in a complex subgraph starting with comment', () => {
-		console.log("should select nodes in a complex subgraph starting with comment.");
+	it("should select nodes in a complex subgraph starting with comment", () => {
+		logger.info("should select nodes in a complex subgraph starting with comment.");
 
-		let startCanvas =
-				{zoom: 100,
+		const startCanvas =
+			{ zoom: 100,
 				 diagram: {
 					nodes: [
-						{id: "node1", xPos: 10, yPos: 10},
-						{id: "node2", xPos: 20, yPos: 20},
-						{id: "node3", xPos: 30, yPos: 30},
-						{id: "node4", xPos: 40, yPos: 30},
-						{id: "node5", xPos: 50, yPos: 30},
-						{id: "node6", xPos: 60, yPos: 30},
-						{id: "node7", xPos: 70, yPos: 30},
-						{id: "node8", xPos: 80, yPos: 30},
-						{id: "node9", xPos: 90, yPos: 30},
-						{id: "node10", xPos: 100, yPos: 30},
-						{id: "node11", xPos: 110, yPos: 30},
-						{id: "node12", xPos: 120, yPos: 30},
-						{id: "node13", xPos: 130, yPos: 30}
+						{ id: "node1", xPos: 10, yPos: 10 },
+						{ id: "node2", xPos: 20, yPos: 20 },
+						{ id: "node3", xPos: 30, yPos: 30 },
+						{ id: "node4", xPos: 40, yPos: 30 },
+						{ id: "node5", xPos: 50, yPos: 30 },
+						{ id: "node6", xPos: 60, yPos: 30 },
+						{ id: "node7", xPos: 70, yPos: 30 },
+						{ id: "node8", xPos: 80, yPos: 30 },
+						{ id: "node9", xPos: 90, yPos: 30 },
+						{ id: "node10", xPos: 100, yPos: 30 },
+						{ id: "node11", xPos: 110, yPos: 30 },
+						{ id: "node12", xPos: 120, yPos: 30 },
+						{ id: "node13", xPos: 130, yPos: 30 }
 					],
 					comments: [
-						{id: "comment1", xPos: 50, yPos: 50},
-						{id: "comment2", xPos: 60, yPos: 60}
+						{ id: "comment1", xPos: 50, yPos: 50 },
+						{ id: "comment2", xPos: 60, yPos: 60 }
 					],
 					links: [
-						{id: "link1", source: "node1", target: "node2"},
-						{id: "link2", source: "node2", target: "node3"},
-						{id: "link3", source: "node3", target: "node4"},
-						{id: "link5", source: "node4", target: "node9"},
-						{id: "link4", source: "comment1", target: "node7"},
-						{id: "link6", source: "node4", target: "node10"},
-						{id: "link7", source: "node4", target: "node11"},
-						{id: "link8", source: "node4", target: "node12"},
-						{id: "link9", source: "node9", target: "node10"},
-						{id: "link10", source: "node12", target: "node11"},
-						{id: "link11", source: "node11", target: "node13"},
-						{id: "link12", source: "node8", target: "node4"},
-						{id: "link13", source: "node1", target: "node5"},
-						{id: "link14", source: "node5", target: "node6"},
-						{id: "link15", source: "node1", target: "node7"},
-						{id: "link16", source: "node7", target: "node4"},
-						{id: "link17", source: "node6", target: "node4"}
+						{ id: "link1", source: "node1", target: "node2" },
+						{ id: "link2", source: "node2", target: "node3" },
+						{ id: "link3", source: "node3", target: "node4" },
+						{ id: "link5", source: "node4", target: "node9" },
+						{ id: "link4", source: "comment1", target: "node7" },
+						{ id: "link6", source: "node4", target: "node10" },
+						{ id: "link7", source: "node4", target: "node11" },
+						{ id: "link8", source: "node4", target: "node12" },
+						{ id: "link9", source: "node9", target: "node10" },
+						{ id: "link10", source: "node12", target: "node11" },
+						{ id: "link11", source: "node11", target: "node13" },
+						{ id: "link12", source: "node8", target: "node4" },
+						{ id: "link13", source: "node1", target: "node5" },
+						{ id: "link14", source: "node5", target: "node6" },
+						{ id: "link15", source: "node1", target: "node7" },
+						{ id: "link16", source: "node7", target: "node4" },
+						{ id: "link17", source: "node6", target: "node4" }
 					]
 				 }
-				};
+			};
 
 		deepFreeze(startCanvas);
 
@@ -1786,11 +1801,11 @@ describe('ObjectModel handle model OK', () => {
 		ObjectModel.selectSubGraph("node13");
 
 
-		let expectedSelections = ["comment1", "node13", "node7", "node4", "node11", "node12"];
-		let actualSelections = ObjectModel.getSelectedObjectIds();
+		const expectedSelections = ["comment1", "node13", "node7", "node4", "node11", "node12"];
+		const actualSelections = ObjectModel.getSelectedObjectIds();
 
-		console.log("Expected Selections = " + JSON.stringify(expectedSelections));
-		console.log("Actual Selections   = " + JSON.stringify(actualSelections));
+		logger.info("Expected Selections = " + JSON.stringify(expectedSelections));
+		logger.info("Actual Selections   = " + JSON.stringify(actualSelections));
 
 		expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
 	});

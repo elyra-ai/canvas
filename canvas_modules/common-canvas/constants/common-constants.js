@@ -11,7 +11,6 @@
 ** divested of its trade secrets, irrespective of what has been
 ** deposited with the U.S. Copyright Office.
 *****************************************************************/
-"use strict";
 
 // Private Methods ------------------------------------------------------------>
 
@@ -30,7 +29,7 @@ _defineConstant("DRAG_LINK", "link");
 _defineConstant("DRAG_SELECT_REGION", "selectRegion");
 
 _defineConstant("CANVAS_UI", {
-	HALO_RADIUS : 45
+	HALO_RADIUS: 45
 });
 
 _defineConstant("NONE", "none");
