@@ -11,5 +11,9 @@ module.exports = {
     	"global-require": 0,
         "sort-imports": 0,
     	"react/jsx-indent-props": [2, "tab"]
+    },
+    "globals": {
+            "document": true,
+            "window": true
     }
 };
