@@ -7,7 +7,6 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 /* eslint global-require:0 */
-"use strict";
 
 // Modules
 
@@ -27,9 +26,11 @@ const isDev = process.env.NODE_ENV === "development";
 // Entry & Output files ------------------------------------------------------------>
 
 var entry = [
+	"webpack-hot-middleware/client",
 	"babel-polyfill",
 	"./src/client/index.js"
 ];
+
 
 var output = {
 	path: path.join(__dirname, ".build"),

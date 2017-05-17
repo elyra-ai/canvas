@@ -1,19 +1,12 @@
 ---
 dist: trusty
 sudo: required
-branches:
-  only:
-    - master
-    - release
 language: node_js
 node_js: "4.4"
 before_install:
-  - printf "registry=https://npm-registry.whitewater.ibm.com/\n//npm-registry.whitewater.ibm.com/:_authToken=${PRIVATE_NPM_TOKEN}" > .npmrc
-  - cp .npmrc ./canvas_modules/common-canvas/
-  - cp .npmrc ./canvas_modules/harness/
+  - ./scripts/setEnv.sh
 before_script:
   - npm install grunt-cli -g
-#  - export NODE_ENV=production
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
@@ -22,14 +15,12 @@ script:
   - ./canvas_modules/harness/build.sh
 after_success:
     - ./canvas_modules/harness/functional_test.sh
-before_deploy:
-  - npm install @dap/dap-deploy
 deploy:
-#  - provider: script
-#    skip_cleanup: true
-#    script: ./node_modules/@dap/dap-deploy/scripts/deploy.sh -a api.stage1.ng.bluemix.net -o MokshaCanvasShaper -s dev -d common-canvas-dev.stage1.mybluemix.net -p ./scripts/deploy/deploy.properties
-#    on:
-#      branch: master
+  - provider: script
+    skip_cleanup: true
+    script: ./scripts/publish_modules.sh
+    on:
+      branch: master
   - provider: script
     skip_cleanup: true
     script: ./scripts/publish_modules.sh
