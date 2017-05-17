@@ -15,7 +15,7 @@ function parseInput(definition) {
 		// remove duplicates in paramsList array
 		var uniqueList = Array.from(new Set(paramsList));
 		if (uniqueList.length > 1) {
-			return "multi";
+			return uniqueList;
 		} else { // return single control; this will never be an empty list
 			var controlName = uniqueList[0];
 			return controlName;

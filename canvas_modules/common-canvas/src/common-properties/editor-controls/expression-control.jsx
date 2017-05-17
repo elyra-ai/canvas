@@ -68,7 +68,7 @@ export default class ExpressionControl extends EditorControl {
     */
     var errorMessage = <div className="validation-error-message"></div>
     if (this.state.validateErrorMessage && this.state.validateErrorMessage.text !== "") {
-      errorMessage = (<div className="validation-error-message">
+      errorMessage = (<div className="validation-error-message validation-error-message-padding">
         <p className="form__validation" style={{ "display": "block" }}>
           <span className="form__validation--invalid">{this.state.validateErrorMessage.text}</span>
         </p>

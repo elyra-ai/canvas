@@ -121,7 +121,7 @@ input[type=radio]{
   margin: 0 0 25px 0;
 }
 
-.validation-error-message {
+.validation-error-message-padding {
   padding-top: 5px;
 }
 

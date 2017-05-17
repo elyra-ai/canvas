@@ -37,23 +37,51 @@ export default class NumberfieldControl extends EditorControl {
   }
 
   render() {
+    var errorMessage = <div className="validation-error-message" style={{ "margin-top": "0px" }}></div>
+    if (this.state.validateErrorMessage && this.state.validateErrorMessage.text !== "") {
+      errorMessage = (<div className="validation-error-message" style={{ "margin-top": "20px" }}>
+        <p className="form__validation" style={{ "display": "block" }}>
+          <span className="form__validation--invalid">{this.state.validateErrorMessage.text}</span>
+        </p>
+      </div>);
+    }
+
+    var controlName = this.getControlID().split(".")[1];
+    var stateDisabled = {};
+    var stateStyle = {};
+    if(typeof this.props.controlStates[controlName] !== "undefined") {
+      if(this.props.controlStates[controlName] === "disabled") {
+        stateDisabled["disabled"] = true;
+        stateStyle = { color: "#D8D8D8", borderColor: "#D8D8D8" };
+      } else if (this.props.controlStates[controlName] === "hidden") {
+        stateStyle["visibility"] = "hidden";
+      }
+    }
+
 		let disablePlaceHolder = true;
 		//only enable if additionText is available
-		if (this.props.control.additionalText){
-			disablePlaceHolder=false;
-		}
+    if (this.props.control.additionalText||
+       (this.state.validateErrorMessage && this.state.validateErrorMessage.text !== "")){
+      disablePlaceHolder=false;
+    }
     return(
-      <TextField
-        type="number"
-        id={this.getControlID()}
-        placeholder={this.props.control.additionalText}
-				disabledPlaceholderAnimation={disablePlaceHolder}
-        onChange={this.handleChange}
-        value={this.state.controlValue}
-				numberInput="close"
-				onChange={e => this.setState({ controlValue: e.target.value })}
-  			onReset={() => this.setState({ controlValue: "0" })}
+      <div className="editor_control_area" style={stateStyle}>
+        <TextField {...stateDisabled}
+          style={stateStyle}
+          type="number"
+          id={this.getControlID()}
+          onBlur={this.validateInput}
+          onFocus={this.clearValidateMsg}
+          placeholder={this.props.control.additionalText}
+          disabledPlaceholderAnimation={disablePlaceHolder}
+          onChange={this.handleChange}
+          value={this.state.controlValue}
+          numberInput="close"
+          onChange={e => this.setState({ controlValue: e.target.value })}
+          onReset={() => this.setState({ controlValue: "0" })}
         />
+        {errorMessage}
+      </div>
     );
   }
 }

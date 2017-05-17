@@ -243,12 +243,12 @@ function condition(data, userInput) {
 			if(typeof paramInput === "object") {
 				return true;
 			} else {
-				if(param2 !== null && userInput[param2]) {
-					console.log("Condition greaterThan: " + paramInput + " > " + userInput[param2] + " is " + (paramInput > userInput[param2]));
-					return paramInput > userInput[param2];
-				} else if (value !== null) {
-					console.log("Condition greaterThan: " + paramInput + " > " + value + " is " + (paramInput > value));
-					return paramInput > value;
+				if(param2 !== null && userInput[param2] && !isNaN(paramInput) && ~isNaN(userInput[param2])) {
+					console.log("Condition greaterThan: " + paramInput + " > " + userInput[param2] + " is " + (parseInt(paramInput) > parseInt(userInput[param2])));
+					return parseInt(paramInput) > parseInt(userInput[param2]);
+				} else if (value !== null && !isNaN(value)) {
+					console.log("Condition greaterThan: " + paramInput + " > " + value + " is " + (parseInt(paramInput) > parseInt(value)));
+					return parseInt(paramInput) > parseInt(value);
 				} else {
 					throw "Insufficient parameter for condition op: greaterThan";
 				}
@@ -257,12 +257,12 @@ function condition(data, userInput) {
 			if(typeof paramInput === "object") {
 				return true;
 			} else {
-				if(param2 !== null && userInput[param2]) {
-					console.log("Condition lessThan: " + paramInput + " < " + userInput[param2] + " is " + (paramInput < userInput[param2]));
-					return paramInput < userInput[param2];
-				} else if (value !== null) {
-					console.log("Condition lessThan: " + paramInput + " < " + value + " is " + (paramInput < value));
-					return paramInput < value;
+				if(param2 !== null && userInput[param2] && !isNaN(paramInput) && ~isNaN(userInput[param2])) {
+					console.log("Condition lessThan: " + paramInput + " < " + userInput[param2] + " is " + (parseInt(paramInput) < parseInt(userInput[param2])));
+					return parseInt(paramInput) < parseInt(userInput[param2]);
+				} else if (value !== null && !isNaN(value)) {
+					console.log("Condition lessThan: " + paramInput + " < " + value + " is " + (parseInt(paramInput) < parseInt(value)));
+					return parseInt(paramInput) < parseInt(value);
 				} else {
 					throw "Insufficient parameter for condition op: lessThan";
 				}
@@ -272,11 +272,11 @@ function condition(data, userInput) {
 				return true;
 			} else {
 				if(param2 !== null && userInput[param2]) {
-					console.log("Condition equals: " + paramInput + " === " + userInput[param2] + " is " + (paramInput === userInput[param2]));
-					return paramInput === userInput[param2];
+					console.log("Condition equals: " + paramInput + " == " + userInput[param2] + " is " + (paramInput == userInput[param2]));
+					return paramInput == userInput[param2];
 				} else if (value !== null) {
-					console.log("Condition equals: " + paramInput + " === " + value + " is " + (paramInput === value));
-					return paramInput === value;
+					console.log("Condition equals: " + paramInput + " == " + value + " is " + (paramInput == value));
+					return paramInput == value;
 				} else {
 					throw "Insufficient parameter for condition op: equals";
 				}
@@ -286,11 +286,11 @@ function condition(data, userInput) {
 				return true;
 			} else {
 				if(param2 !== null && userInput[param2]) {
-					console.log("Condition notEquals: " + paramInput + " !== " + userInput[param2] + " is " + (paramInput !== userInput[param2]));
-					return paramInput !== userInput[param2];
+					console.log("Condition notEquals: " + paramInput + " != " + userInput[param2] + " is " + (paramInput != userInput[param2]));
+					return paramInput != userInput[param2];
 				} else if (value !== null) {
-					console.log("Condition notEquals: " + paramInput + " !== " + value + " is " + (paramInput !== value));
-					return paramInput !== value;
+					console.log("Condition notEquals: " + paramInput + " != " + value + " is " + (paramInput != value));
+					return paramInput != value;
 				} else {
 					throw "Insufficient parameter for condition op: notEquals";
 				}

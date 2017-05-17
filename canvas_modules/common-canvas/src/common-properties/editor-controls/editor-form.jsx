@@ -187,7 +187,13 @@ export default class EditorForm extends React.Component {
       return <PasswordControl control={control} key={controlId} ref={controlId} valueAccessor={controlValueAccessor}/>;
     }
     else if (control.controlType == "numberfield") {
-      return <NumberfieldControl control={control} key={controlId} ref={controlId} valueAccessor={controlValueAccessor}/>;
+      return <NumberfieldControl control={control}
+        key={controlId}
+        ref={controlId}
+        valueAccessor={controlValueAccessor}
+        validationDefinitions={this.state.validationDefinitions}
+        controlStates={this.state.controlStates}
+        />;
     }
     else if (control.controlType == "checkbox") {
       return <CheckboxControl control={control}
@@ -518,25 +524,37 @@ export default class EditorForm extends React.Component {
       }
 
       for(let i = 0; i < this.state.validationGroupDefinitions.length; i++) {
-        var definition = this.state.validationGroupDefinitions[i];
-        try {
-          var output = UiConditions.validateInput(definition, userInput);
-
-          // var tmp = this.state.controlValidations;
-          if(output === true){
-            // tmp["group_validations_"+i] = true;
-            // this.setState({
-            //   controlValidations : tmp
-            // });
+        var groupDefinition = this.state.validationGroupDefinitions[i];
+        var params = groupDefinition.params;
+        var evaluate = false;
+        for(let j = 0; j < params.length; j++) {
+          if(typeof this.state.controlStates[params[j]] === "undefined") {
+            evaluate = true;
           } else {
-            // tmp["group_validations_"+i] = false;
-            validateErrorMessage[i]= output;
-            // this.setState({
-            //   controlValidations : tmp
-            // });
+            evaluate = false;
           }
-        } catch(error) {
-          console.log("Error thrown in validation: " + error);
+        }
+
+        if(evaluate) {
+          try {
+            var output = UiConditions.validateInput(groupDefinition.definition, userInput);
+
+            // var tmp = this.state.controlValidations;
+            if(output === true){
+              // tmp["group_validations_"+i] = true;
+              // this.setState({
+              //   controlValidations : tmp
+              // });
+            } else {
+              // tmp["group_validations_"+i] = false;
+              validateErrorMessage[i]= output;
+              // this.setState({
+              //   controlValidations : tmp
+              // });
+            }
+          } catch(error) {
+            console.log("Error thrown in validation: " + error);
+          }
         }
       }
       this.setState({
@@ -560,8 +578,12 @@ export default class EditorForm extends React.Component {
       } else if(uiConditions[i]["validation"]) {
         try {
           var controls = UiConditionsParser.parseInput(uiConditions[i]["validation"]);
-          if(controls === "multi") {
-            validationGroupDefinitions.push(uiConditions[i]);
+          if(typeof controls === "object") {
+            var groupDef = {
+              "params": controls,
+              "definition": uiConditions[i]
+            };
+            validationGroupDefinitions.push(groupDef);
           } else { // single control
             validationDefinitions[controls] = uiConditions[i];
           }
