@@ -12,50 +12,42 @@
 ** deposited with the U.S. Copyright Office.
 *****************************************************************/
 
-import React from 'react';
+import React from "react";
 
 class PaletteContentCategory extends React.Component {
-  constructor(props) {
-    super(props);
+	constructor(props) {
+		super(props);
 
-    this.state = {
-    };
+		this.state = {
+		};
 
-    this.categorySelected = this.categorySelected.bind(this);
-  }
+		this.categorySelected = this.categorySelected.bind(this);
+	}
 
-  componentDidMount() {
-  }
 
-  componentDidUpdate() {
-  }
+	categorySelected(event) {
+		this.props.categorySelectedMethod(event);
+	}
 
-  componentWillUnmount() {
-  }
+	render() {
+		var style = "palette-category";
 
-  categorySelected(event) {
-    this.props.categorySelectedMethod(event);
-  }
+		if (this.props.selectedCategory === this.props.categoryName) {
+			style = "palette-category-selected";
+		}
 
-  render() {
-    var style = "palette-category";
-
-    if (this.props.selectedCategory === this.props.categoryName) {
-      style = "palette-category-selected";
-    }
-
-    return (
-      <div className={style} onClick={this.categorySelected}>
-        {this.props.categoryName}
-      </div>
-    );
-  }
+		return (
+			<div className={style} onClick={this.categorySelected}>
+				{this.props.categoryName}
+			</div>
+		);
+	}
 }
 
 PaletteContentCategory.propTypes = {
-  categoryName: React.PropTypes.string.isRequired,
-  selectedCategory: React.PropTypes.string.isRequired,
-  categorySelectedMethod: React.PropTypes.func.isRequired
+	categoryName: React.PropTypes.string.isRequired,
+	selectedCategory: React.PropTypes.string.isRequired,
+	categorySelectedMethod: React.PropTypes.func.isRequired
 };
 
 export default PaletteContentCategory;

@@ -12,44 +12,48 @@
 ** deposited with the U.S. Copyright Office.
 *****************************************************************/
 
-import React from 'react';
-import PaletteContentGridNode from './palette-content-grid-node.jsx';
+import React from "react";
+import PaletteContentGridNode from "./palette-content-grid-node.jsx";
 
 
 class PaletteContentGrid extends React.Component {
-  constructor(props) {
-    super(props);
+	constructor(props) {
+		super(props);
 
-    this.state = {
-    };
-  }
+		this.state = {
+		};
+	}
 
-  render() {
-    var gridNodes = [];
+	render() {
+		var gridNodes = [];
 
-    for (var i = 0; i < this.props.paletteJSON.length; i++) {
-      gridNodes.push(
-        <PaletteContentGridNode key={"pal_grid_node_" + i}
-                                nodeTemplate={this.props.paletteJSON[i]}
-                                createTempNode={this.props.createTempNode}
-                                deleteTempNode={this.props.deleteTempNode}>
-        </PaletteContentGridNode>
-      );
-    }
+		for (var idx = 0; idx < this.props.paletteJSON.length; idx++) {
+			gridNodes.push(
+				<PaletteContentGridNode key={"pal_grid_node_" + idx}
+					nodeTemplate={this.props.paletteJSON[idx]}
+					createTempNode={this.props.createTempNode}
+					deleteTempNode={this.props.deleteTempNode}
+				/>
+			);
+		}
 
-    let displayValue = this.props.show ? 'block' : 'none';
+		const displayValue = this.props.show ? "block" : "none";
 
-    return (
-      <div width="100%" className="palette-scroll"
-           style={{display : displayValue}}>
-        {gridNodes}
-      </div>
-    );
-  }
+		return (
+			<div width="100%" className="palette-scroll"
+				style={{ display: displayValue }}
+			>
+				{gridNodes}
+			</div>
+		);
+	}
 }
 
 PaletteContentGrid.propTypes = {
-  paletteJSON: React.PropTypes.array.isRequired
+	paletteJSON: React.PropTypes.array.isRequired,
+	createTempNode: React.PropTypes.func.isRequired,
+	deleteTempNode: React.PropTypes.func.isRequired,
+	show: React.PropTypes.string.isRequired
 };
 
 export default PaletteContentGrid;

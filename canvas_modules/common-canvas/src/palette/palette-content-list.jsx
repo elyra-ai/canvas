@@ -12,56 +12,51 @@
 ** deposited with the U.S. Copyright Office.
 *****************************************************************/
 
-import React from 'react';
-import PaletteContentListItem from './palette-content-list-item.jsx';
+import React from "react";
+import PaletteContentListItem from "./palette-content-list-item.jsx";
 
 class PaletteContentList extends React.Component {
-  constructor(props) {
-    super(props);
+	constructor(props) {
+		super(props);
 
-    this.state = {
-    };
-  }
+		this.state = {
+		};
+	}
 
-  componentDidMount() {
-  }
+	render() {
+		var contentItems = [];
 
-  componentDidUpdate() {
-  }
+		for (var idx = 0; idx < this.props.paletteJSON.length; idx++) {
+			var itemKey = "item_" + idx;
 
-  componentWillUnmount() {
-  }
+			contentItems.push(
+				<div key={itemKey}>
+					<PaletteContentListItem
+						nodeTemplate={this.props.paletteJSON[idx]}
+						createTempNode={this.props.createTempNode}
+						deleteTempNode={this.props.deleteTempNode}
+					/>
+				</div>
+			);
+		}
 
-  render() {
-    var contentItems = [];
+		const displayValue = this.props.show ? "block" : "none";
 
-    for (var i = 0; i < this.props.paletteJSON.length; i++) {
-      var itemKey = "item_" + i;
-
-      contentItems.push(
-        <div key={itemKey}>
-          <PaletteContentListItem
-               nodeTemplate={this.props.paletteJSON[i]}
-               createTempNode={this.props.createTempNode}
-               deleteTempNode={this.props.deleteTempNode}>
-          </PaletteContentListItem>
-        </div>
-      );
-    }
-
-    let displayValue = this.props.show ? 'block' : 'none';
-
-    return (
-      <div width="100%" draggable="false" className="palette-content-list palette-scroll"
-           style={{display : displayValue}}>
-        {contentItems}
-      </div>
-    );
-  }
+		return (
+			<div width="100%" draggable="false" className="palette-content-list palette-scroll"
+				style={{ display: displayValue }}
+			>
+				{contentItems}
+			</div>
+		);
+	}
 }
 
 PaletteContentList.propTypes = {
-  paletteJSON: React.PropTypes.array.isRequired
+	paletteJSON: React.PropTypes.array.isRequired,
+	createTempNode: React.PropTypes.func.isRequired,
+	deleteTempNode: React.PropTypes.func.isRequired,
+	show: React.PropTypes.string.isRequired
 };
 
 export default PaletteContentList;

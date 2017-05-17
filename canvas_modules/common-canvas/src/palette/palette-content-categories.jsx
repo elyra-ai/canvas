@@ -12,50 +12,43 @@
 ** deposited with the U.S. Copyright Office.
 *****************************************************************/
 
-import React from 'react';
-import PaletteContentCategory from './palette-content-category.jsx';
+import React from "react";
+import PaletteContentCategory from "./palette-content-category.jsx";
 
 class PaletteContentCategories extends React.Component {
-  constructor(props) {
-    super(props);
+	constructor(props) {
+		super(props);
 
-    this.state = {
-    };
-  }
+		this.state = {
+		};
+	}
 
-  componentDidMount() {
-  }
+	render() {
+		var catDivs = [];
 
-  componentDidUpdate() {
-  }
+		for (var idx = 0; idx < this.props.categories.length; idx++) {
+			catDivs.push(
+				<PaletteContentCategory
+					key={this.props.categories[idx]}
+					categoryName={this.props.categories[idx]}
+					selectedCategory={this.props.selectedCategory}
+					categorySelectedMethod={this.props.categorySelectedMethod}
+				/>
+			);
+		}
 
-  componentWillUnmount() {
-  }
-
-  render() {
-    var catDivs = [];
-
-    for (var i = 0; i < this.props.categories.length; i++) {
-      catDivs.push(
-          <PaletteContentCategory
-            key={this.props.categories[i]}
-            categoryName={this.props.categories[i]}
-            selectedCategory={this.props.selectedCategory}
-            categorySelectedMethod={this.props.categorySelectedMethod}>
-          </PaletteContentCategory>
-      );
-    }
-
-    return (
-      <div className="palette-categories palette-scroll">
-        {catDivs}
-      </div>
-    );
-  }
+		return (
+			<div className="palette-categories palette-scroll">
+				{catDivs}
+			</div>
+		);
+	}
 }
 
 PaletteContentCategories.propTypes = {
-  categories: React.PropTypes.array.isRequired
+	categories: React.PropTypes.array.isRequired,
+	selectedCategory: React.PropTypes.string.isRequired,
+	categorySelectedMethod: React.PropTypes.func.isRequired
 };
 
 export default PaletteContentCategories;
