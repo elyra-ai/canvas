@@ -6,17 +6,21 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-"use strict";
 
 /* eslint global-require: 0 */
-/* eslint quote-props: 0 */
+
 var codeCoverageDir = "reports/coverage";
 
 module.exports = function(grunt) {
 	grunt.initConfig({
 		eslint: {
 			node: {
-				src: ["index.js", "Gruntfile.js", "controllers/**/*.js", "lib/**/*.js"]
+				src: ["Gruntfile.js", "__mocks__/**/*.js", "__tests__/**/*.js", "constants/**/*.js", "utils/**/*.js"]
+			},
+			browser: {
+				files: {
+					src: ["src/**/*.js", "src/**/*.jsx"]
+				}
 			}
 		},
 		jsonlint: {
@@ -30,6 +34,8 @@ module.exports = function(grunt) {
 		},
 		yamllint: {
 			all: [
+				".travis.yml",
+				"manifest.yml"
 			]
 		},
 		clean: {

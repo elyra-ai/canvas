@@ -12,100 +12,96 @@
 ** deposited with the U.S. Copyright Office.
 *****************************************************************/
 
-import React from 'react';
-import PaletteContentCategories from './palette-content-categories.jsx';
-import PaletteContentGrid from './palette-content-grid.jsx';
-import PaletteContentList from './palette-content-list.jsx';
+import React from "react";
+import PaletteContentCategories from "./palette-content-categories.jsx";
+import PaletteContentGrid from "./palette-content-grid.jsx";
+import PaletteContentList from "./palette-content-list.jsx";
 
 class PaletteContent extends React.Component {
-  constructor(props) {
-    super(props);
+	constructor(props) {
+		super(props);
 
-    this.state = {
-      selectedCategory: ""
-    };
+		this.state = {
+			selectedCategory: ""
+		};
 
-    this.categorySelected = this.categorySelected.bind(this);
-    this.getCategories = this.getCategories.bind(this);
-    this.getJSONForSelectedCategory = this.getJSONForSelectedCategory.bind(this);
-  }
+		this.categorySelected = this.categorySelected.bind(this);
+		this.getCategories = this.getCategories.bind(this);
+		this.getJSONForSelectedCategory = this.getJSONForSelectedCategory.bind(this);
+	}
 
-  componentWillReceiveProps() {
-    // We get the paletteJSON after the initial render so set the
-    // default selected category when it is recieved.
-    if (this.props.paletteJSON &&
-        this.props.paletteJSON.categories &&
-        this.props.paletteJSON.categories.length > 0 &&
-        this.state.selectedCategory === "") {
-      this.setState({selectedCategory: this.props.paletteJSON.categories[0].label});
-    }
-  }
+	componentWillReceiveProps() {
+		// We get the paletteJSON after the initial render so set the
+		// default selected category when it is recieved.
+		if (this.props.paletteJSON &&
+				this.props.paletteJSON.categories &&
+				this.props.paletteJSON.categories.length > 0 &&
+				this.state.selectedCategory === "") {
+			this.setState({ selectedCategory: this.props.paletteJSON.categories[0].label });
+		}
+	}
 
-  componentDidUpdate() {
-  }
+	getCategories(categories) {
+		var out = [];
 
-  componentWillUnmount() {
-  }
+		if (categories) {
+			for (var idx = 0; idx < categories.length; idx++) {
+				if (out.indexOf(categories[idx].label) === -1) {
+					out.push(categories[idx].label);
+				}
+			}
+		}
+		return out;
+	}
 
-  categorySelected(event) {
-    this.setState({selectedCategory: event.target.firstChild.data});
-  }
+	getJSONForSelectedCategory(categories) {
+		var out = [];
 
-  getCategories(categories) {
-    var out = [];
+		if (categories) {
+			for (var idx = 0; idx < categories.length; idx++) {
+				if (categories[idx].label === this.state.selectedCategory) {
+					out = categories[idx].nodetypes;
+				}
+			}
+		}
+		return out;
+	}
 
-    if (categories) {
-      for (var i = 0; i < categories.length; i++) {
-        if (out.indexOf(categories[i].label) == -1) {
-          out.push(categories[i].label);
-        }
-      }
-    }
-    return out;
-  }
+	categorySelected(catSelEvent) {
+		this.setState({ selectedCategory: catSelEvent.target.firstChild.data });
+	}
 
-  getJSONForSelectedCategory(categories) {
-    var out = [];
+	render() {
 
-    if (categories) {
-      for (var i = 0; i < categories.length; i++) {
-        if (categories[i].label === this.state.selectedCategory) {
-          out = categories[i].nodetypes;
-        }
-      }
-    }
-    return out;
-  }
+		var cats = this.getCategories(this.props.paletteJSON.categories);
+		var categoryJSON = this.getJSONForSelectedCategory(this.props.paletteJSON.categories);
 
-  render() {
-
-    var cats = this.getCategories(this.props.paletteJSON.categories);
-    var categoryJSON = this.getJSONForSelectedCategory(this.props.paletteJSON.categories);
-
-    return (
-      <div className="palette-content" ref="palettecontent">
-        <PaletteContentCategories categories={cats}
-                                  selectedCategory={this.state.selectedCategory}
-                                  categorySelectedMethod={this.categorySelected}>
-        </PaletteContentCategories>
-        <PaletteContentGrid show={this.props.showGrid}
-                            paletteJSON={categoryJSON}
-                            createTempNode={this.props.createTempNode}
-                            deleteTempNode={this.props.deleteTempNode}>
-        </PaletteContentGrid>
-        <PaletteContentList show={!this.props.showGrid}
-                            paletteJSON={categoryJSON}
-                            createTempNode={this.props.createTempNode}
-                            deleteTempNode={this.props.deleteTempNode}>
-        </PaletteContentList>
-      </div>
-    );
-  }
+		return (
+			<div className="palette-content" ref="palettecontent">
+				<PaletteContentCategories categories={cats}
+					selectedCategory={this.state.selectedCategory}
+					categorySelectedMethod={this.categorySelected}
+				/>
+				<PaletteContentGrid show={this.props.showGrid}
+					paletteJSON={categoryJSON}
+					createTempNode={this.props.createTempNode}
+					deleteTempNode={this.props.deleteTempNode}
+				/>
+				<PaletteContentList show={!this.props.showGrid}
+					paletteJSON={categoryJSON}
+					createTempNode={this.props.createTempNode}
+					deleteTempNode={this.props.deleteTempNode}
+				/>
+			</div>
+		);
+	}
 }
 
 PaletteContent.propTypes = {
-  paletteJSON: React.PropTypes.object.isRequired,
-  showGrid: React.PropTypes.bool.isRequired
+	paletteJSON: React.PropTypes.object.isRequired,
+	showGrid: React.PropTypes.bool.isRequired,
+	createTempNode: React.PropTypes.func.isRequired,
+	deleteTempNode: React.PropTypes.func.isRequired
 };
 
 export default PaletteContent;

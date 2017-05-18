@@ -1,68 +1,84 @@
-import React from 'react';
-import CommonCanvas from '../src/common-canvas.jsx';
-import DiagramCanvas from '../src/diagram-canvas.jsx';
-import Palette from '../src/palette/palette.jsx';
-import {shallow, mount, render} from 'enzyme';
-import {expect, assert} from 'chai';
-import sinon from 'sinon';
-import {OverlayTrigger} from 'react-bootstrap';
-import ObjectModel from '../src/object-model/object-model.js';
+/****************************************************************
+** IBM Confidential
+**
+** OCO Source Materials
+**
+** SPSS Modeler
+**
+** (c) Copyright IBM Corp. 2016
+**
+** The source code for this program is not published or otherwise
+** divested of its trade secrets, irrespective of what has been
+** deposited with the U.S. Copyright Office.
+*****************************************************************/
+
+import React from "react";
+import CommonCanvas from "../src/common-canvas.jsx";
+import DiagramCanvas from "../src/diagram-canvas.jsx";
+import Palette from "../src/palette/palette.jsx";
+import { shallow } from "enzyme";
+import { expect } from "chai";
+import sinon from "sinon";
+import { OverlayTrigger } from "react-bootstrap";
+import ObjectModel from "../src/object-model/object-model.js";
 
 
-describe('CommonCanvas renders correctly', () => {
+describe("CommonCanvas renders correctly", () => {
 
-    it('should render one <DialogEditor/> component', () => {
-        const config = {enableAutoLayout: "none"};
-        const wrapper = createCommonCanvas(config);
-        expect(wrapper.find(DiagramCanvas)).to.have.length(1);
-    });
+	it("should render one <DialogEditor/> component", () => {
+		const config = { enableAutoLayout: "none" };
+		const wrapper = createCommonCanvas(config);
+		expect(wrapper.find(DiagramCanvas)).to.have.length(1);
+	});
 
-    it('should render one <Palette/> component when Palette is enabled', () => {
-        const config = {enablePalette: true, enableAutoLayout: "none"};
-        const wrapper = createCommonCanvas(config);
-        expect(wrapper.find(Palette)).to.have.length(1);
-    });
+	it("should render one <Palette/> component when Palette is enabled", () => {
+		const config = { enablePalette: true, enableAutoLayout: "none" };
+		const wrapper = createCommonCanvas(config);
+		expect(wrapper.find(Palette)).to.have.length(1);
+	});
 
-    it('should render one <OverlayTrigger/> component when Palette is enabled', () => {
-        const config = {enablePalette: true, enableAutoLayout: "none"};
-        const wrapper = createCommonCanvas(config);
-        expect(wrapper.find(OverlayTrigger)).to.have.length(1);
-    });
+	it("should render one <OverlayTrigger/> component when Palette is enabled", () => {
+		const config = { enablePalette: true, enableAutoLayout: "none" };
+		const wrapper = createCommonCanvas(config);
+		expect(wrapper.find(OverlayTrigger)).to.have.length(1);
+	});
 
-    it('should not render any <Palette/> component when Palette is disabled', () => {
-        const config = {enablePalette: false, enableAutoLayout: "none"};
-        const wrapper = createCommonCanvas(config);
-        expect(wrapper.find(Palette)).to.have.length(0);
-    });
+	it("should not render any <Palette/> component when Palette is disabled", () => {
+		const config = { enablePalette: false, enableAutoLayout: "none" };
+		const wrapper = createCommonCanvas(config);
+		expect(wrapper.find(Palette)).to.have.length(0);
+	});
 
-    it('should not render any <OverlayTrigger/> component when Palette is disabled', () => {
-        const config = {enablePalette: false, enableAutoLayout: "none"};
-        const wrapper = createCommonCanvas(config);
-        expect(wrapper.find(OverlayTrigger)).to.have.length(0);
-    });
+	it("should not render any <OverlayTrigger/> component when Palette is disabled", () => {
+		const config = { enablePalette: false, enableAutoLayout: "none" };
+		const wrapper = createCommonCanvas(config);
+		expect(wrapper.find(OverlayTrigger)).to.have.length(0);
+	});
 
-    it('should render a `.canvas-zoom-controls`', () => {
-        const config = {enableAutoLayout: "none"};
-        const wrapper = createCommonCanvas(config);
-        expect(wrapper.find('.canvas-zoom-controls')).to.have.length(1);
-    });
+	it("should render a `.canvas-zoom-controls`", () => {
+		const config = { enableAutoLayout: "none" };
+		const wrapper = createCommonCanvas(config);
+		expect(wrapper.find(".canvas-zoom-controls")).to.have.length(1);
+	});
 });
 
 function createCommonCanvas(config) {
-    ObjectModel.setCanvas({});
-    ObjectModel.setPaletteData({});
-    const contextMenuHandler = sinon.spy();
-    const contextMenuActionHandler = sinon.spy();
-    const editDiagramHandler = sinon.spy();
-    const clickHandler = sinon.spy();
-    const decorationActionHandler = sinon.spy();
-    const wrapper = shallow(<CommonCanvas
-      config={config}
-      contextMenuHandler={contextMenuHandler}
-      contextMenuActionHandler={contextMenuActionHandler}
-      editDiagramHandler={editDiagramHandler}
-      clickHandler={clickHandler}
-      decorationActionHandler={decorationActionHandler}/>);
-
-  return wrapper;
+	ObjectModel.setCanvas({});
+	ObjectModel.setPaletteData({});
+	const contextMenuHandler = sinon.spy();
+	const contextMenuActionHandler = sinon.spy();
+	const editDiagramHandler = sinon.spy();
+	const clickHandler = sinon.spy();
+	const decorationActionHandler = sinon.spy();
+	const wrapper = shallow(
+		<CommonCanvas
+			config={config}
+			contextMenuHandler={contextMenuHandler}
+			contextMenuActionHandler={contextMenuActionHandler}
+			editDiagramHandler={editDiagramHandler}
+			clickHandler={clickHandler}
+			decorationActionHandler={decorationActionHandler}
+		/>
+	);
+	return wrapper;
 }
