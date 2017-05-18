@@ -12,7 +12,7 @@
 ** deposited with the U.S. Copyright Office.
 *****************************************************************/
 /* eslint no-empty-function: ["error", { "allow": ["arrowFunctions"] }] */
-/* eslint id-length: ["error", { "min": 1 }] */
+/* eslint no-shadow: ["error", { "allow": ["event"] }] */
 
 import React from "react";
 import { MenuItem, SubMenu } from "react-contextmenu";

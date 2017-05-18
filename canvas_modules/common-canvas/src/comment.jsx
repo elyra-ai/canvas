@@ -11,7 +11,9 @@
 ** divested of its trade secrets, irrespective of what has been
 ** deposited with the U.S. Copyright Office.
 *****************************************************************/
+
 /* eslint complexity: ["error", 13] */
+/* eslint no-shadow: ["error", { "allow": ["Comment"] }] */
 
 import { DND_DATA_TEXT } from "../constants/common-constants.js";
 import React from "react";

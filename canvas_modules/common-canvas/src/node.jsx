@@ -11,7 +11,7 @@
 ** divested of its trade secrets, irrespective of what has been
 ** deposited with the U.S. Copyright Office.
 *****************************************************************/
-/* eslint id-length: ["error", { "min": 1 }] */
+/* eslint no-shadow: ["error", { "allow": ["Node"] }] */
 /* eslint no-console: ["error", { allow: ["log"] }] */
 
 import React from "react";

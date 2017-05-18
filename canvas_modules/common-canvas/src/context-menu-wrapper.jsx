@@ -11,7 +11,8 @@
 ** divested of its trade secrets, irrespective of what has been
 ** deposited with the U.S. Copyright Office.
 *****************************************************************/
-/* eslint id-length: ["error", { "min": 1 }] */
+
+/* eslint no-shadow: ["error", { "allow": ["event"] }] */
 
 import React from "react";
 import enhanceWithClickOutside from "react-click-outside";

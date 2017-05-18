@@ -11,10 +11,11 @@
 ** divested of its trade secrets, irrespective of what has been
 ** deposited with the U.S. Copyright Office.
 *****************************************************************/
-/* eslint id-length: ["error", { "min": 1 }] */
+
 /* eslint complexity: ["error", 13] */
 /* global chmln */
 /* eslint no-console: ["error", { allow: ["log"] }] */
+/* eslint no-shadow: ["error", { "allow": ["Node", "Comment"] }] */
 
 import React from "react";
 import dagre from "dagre";
