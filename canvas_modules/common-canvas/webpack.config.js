@@ -6,7 +6,7 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-"use strict";
+
 var path = require("path");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
@@ -21,12 +21,12 @@ module.exports = {
 		libraryTarget: "commonjs2",
 		filename: "common-canvas.js",
 		path: path.join(__dirname, "/dist"),
-		sourceMapFilename: "[file].map",
+		sourceMapFilename: "[file].map"
 	},
 	module: {
 		rules: [
 			{
-				enforce: 'pre',
+				enforce: "pre",
 				test: /\.js$/,
 				exclude: /node_modules\/intl-/,
 				loader: "source-map-loader"
@@ -36,7 +36,7 @@ module.exports = {
 				exclude: /node_modules/,
 				loader: "babel-loader",
 				query: {
-					presets: ["react", "es2015","stage-1"]
+					presets: ["react", "es2015", "stage-1"]
 				}
 			},
 			{
@@ -57,8 +57,8 @@ module.exports = {
 		]
 	},
 	plugins: [
-    new ExtractTextPlugin('common-canvas.css')
-  ],
+		new ExtractTextPlugin("common-canvas.css")
+	],
 	resolve: {
 		extensions: [".js", ".jsx"]
 	},

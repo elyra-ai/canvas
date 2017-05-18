@@ -625,7 +625,7 @@ describe("ObjectModel handle model OK", () => {
 					"comments": [
 						{ id: "comment1", xPos: 50, yPos: 50 },
 						{ id: "comment2", xPos: 60, yPos: 60 },
-						{ id: "comment3", xPos: 70, yPos: 70 },
+						{ id: "comment3", xPos: 70, yPos: 70 }
 					],
 					"links": []
 				}
