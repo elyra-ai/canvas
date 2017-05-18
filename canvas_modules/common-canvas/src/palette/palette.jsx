@@ -485,7 +485,7 @@ class Palette extends React.Component {
 
 Palette.propTypes = {
 	paletteJSON: React.PropTypes.object.isRequired,
-	showPalette: React.PropTypes.string.isRequired,
+	showPalette: React.PropTypes.bool.isRequired,
 	closePalette: React.PropTypes.func.isRequired,
 	createTempNode: React.PropTypes.func.isRequired,
 	deleteTempNode: React.PropTypes.func.isRequired
