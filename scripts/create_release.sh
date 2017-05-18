@@ -21,9 +21,8 @@ git clone git@github.ibm.com:${GIT_ORG}/${GIT_REPO}.git ${GIT_DIRECTORY}
 cd $WORKING_DIR/$GIT_DIRECTORY
 git checkout ${RELEASE_BRANCH}
 if [[ $(git diff --name-status ${MASTER}..${RELEASE_BRANCH}) ]]; then
-	echo "Changes found between ${MASTER} and ${RELEASE_BRANCH}"
-	git checkout ${MASTER}
-	git branch -d ${RELEASE_BRANCH}
+	echo "Changes found between ${MASTER} and ${RELEASE_BRANCH}.  Merge branches."
+	git merge ${MASTER}
 	git push origin ${RELEASE_BRANCH} --force
 else
 	echo "No changes found between ${MASTER} and ${RELEASE_BRANCH}"
