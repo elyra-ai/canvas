@@ -18,7 +18,6 @@ import PaletteContent from "./palette-content.jsx";
 
 // eslint override
 /* global window document */
-/* eslint no-shadow: ["error", { "allow": ["event"] }] */
 
 class Palette extends React.Component {
 	constructor(props) {
@@ -102,8 +101,8 @@ class Palette extends React.Component {
 
 	// Adjusts the mouse position from the event so it is NOT outside the
 	// canvas when doing a bottom sizing operation.
-	getAdjustedMousePositionBottom(event, canvasDiv) {
-		let eventClientY = event.clientY;
+	getAdjustedMousePositionBottom(ev, canvasDiv) {
+		let eventClientY = ev.clientY;
 
 		if (eventClientY > canvasDiv.offsetTop + canvasDiv.offsetHeight - this.hoverZoneSize) {
 			eventClientY = canvasDiv.offsetTop + canvasDiv.offsetHeight - this.hoverZoneSize;
@@ -113,8 +112,8 @@ class Palette extends React.Component {
 
 	// Adjusts the mouse position from the event so it is NOT outside the
 	// canvas when doing a left sizing operation.
-	getAdjustedMousePositionLeft(event, canvasDiv) {
-		let eventClientX = event.clientX;
+	getAdjustedMousePositionLeft(ev, canvasDiv) {
+		let eventClientX = ev.clientX;
 
 		if (eventClientX < canvasDiv.offsetLeft + this.hoverZoneSize) {
 			eventClientX = canvasDiv.offsetLeft + this.hoverZoneSize;
@@ -124,8 +123,8 @@ class Palette extends React.Component {
 
 	// Adjusts the mouse position from the event so it is NOT outside the
 	// canvas when doing a right sizing operation.
-	getAdjustedMousePositionRight(event, canvasDiv) {
-		let eventClientX = event.clientX;
+	getAdjustedMousePositionRight(ev, canvasDiv) {
+		let eventClientX = ev.clientX;
 
 		if (eventClientX > canvasDiv.offsetLeft + canvasDiv.offsetWidth - this.hoverZoneSize) {
 			eventClientX = canvasDiv.offsetLeft + canvasDiv.offsetWidth - this.hoverZoneSize;
@@ -135,8 +134,8 @@ class Palette extends React.Component {
 
 	// Adjusts the mouse position from the event so it is NOT outside the
 	// canvas when doing a top sizing operation.
-	getAdjustedMousePositionTop(event, canvasDiv) {
-		let eventClientY = event.clientY;
+	getAdjustedMousePositionTop(ev, canvasDiv) {
+		let eventClientY = ev.clientY;
 
 		if (eventClientY < canvasDiv.offsetTop + this.hoverZoneSize) {
 			eventClientY = canvasDiv.offsetTop + this.hoverZoneSize;
@@ -147,10 +146,10 @@ class Palette extends React.Component {
 	getPaletteDiv() {
 		return this.refs.palette;
 	}
-	setResizingCursors(event) {
+	setResizingCursors(ev) {
 		const paletteDiv = this.getPaletteDiv();
 
-		this.setSizingHoverEdge(event, paletteDiv);
+		this.setSizingHoverEdge(ev, paletteDiv);
 
 		if (this.verticalSizingHover === "top") {
 			if (this.horizontalSizingHover === "left") {
@@ -188,13 +187,13 @@ class Palette extends React.Component {
 		contentDiv.childNodes[2].style.height = newContentHeight;
 	}
 
-	setSizingHoverEdge(event, paletteDiv) {
-		if (event.clientX > paletteDiv.offsetLeft &&
-				event.clientX < paletteDiv.offsetLeft + (this.totalHoverZoneSize)) {
+	setSizingHoverEdge(ev, paletteDiv) {
+		if (ev.clientX > paletteDiv.offsetLeft &&
+				ev.clientX < paletteDiv.offsetLeft + (this.totalHoverZoneSize)) {
 			this.horizontalSizingHover = "left";
 
-		} else if (event.clientX < paletteDiv.offsetLeft + paletteDiv.offsetWidth &&
-					event.clientX > paletteDiv.offsetLeft + paletteDiv.offsetWidth - this.totalHoverZoneSize) {
+		} else if (ev.clientX < paletteDiv.offsetLeft + paletteDiv.offsetWidth &&
+					ev.clientX > paletteDiv.offsetLeft + paletteDiv.offsetWidth - this.totalHoverZoneSize) {
 			this.horizontalSizingHover = "right";
 
 		} else {
@@ -202,12 +201,12 @@ class Palette extends React.Component {
 			this.horizontalSizingAction = "";
 		}
 
-		if (event.clientY > paletteDiv.offsetTop &&
-				event.clientY < paletteDiv.offsetTop + this.totalHoverZoneSize) {
+		if (ev.clientY > paletteDiv.offsetTop &&
+				ev.clientY < paletteDiv.offsetTop + this.totalHoverZoneSize) {
 			this.verticalSizingHover = "top";
 
-		} else if (event.clientY < paletteDiv.offsetTop + paletteDiv.offsetHeight + this.hackPaletteOffset &&
-				event.clientY > paletteDiv.offsetTop + paletteDiv.offsetHeight +
+		} else if (ev.clientY < paletteDiv.offsetTop + paletteDiv.offsetHeight + this.hackPaletteOffset &&
+				ev.clientY > paletteDiv.offsetTop + paletteDiv.offsetHeight +
 													this.hackPaletteOffset - this.totalHoverZoneSize) {
 			this.verticalSizingHover = "bottom";
 
@@ -217,14 +216,14 @@ class Palette extends React.Component {
 		}
 	}
 
-	mouseDownOnTopBar(event) {
+	mouseDownOnTopBar(ev) {
 		this.dragging = true;
 		const paletteDiv = this.getPaletteDiv();
-		this.dragOffsetX = event.clientX - paletteDiv.offsetLeft;
-		this.dragOffsetY = event.clientY - paletteDiv.offsetTop;
+		this.dragOffsetX = ev.clientX - paletteDiv.offsetLeft;
+		this.dragOffsetY = ev.clientY - paletteDiv.offsetTop;
 	}
 
-	mouseDownOnPalette(event) {
+	mouseDownOnPalette(ev) {
 		const paletteDiv = this.getPaletteDiv();
 
 		if (this.verticalSizingHover !== "" ||
@@ -238,25 +237,25 @@ class Palette extends React.Component {
 		}
 	}
 
-	mouseMove(event) {
+	mouseMove(ev) {
 		// First, see if we are doing a sizing action (i.e. the user has
 		// done mouse down when in sizing hover zone) and take appropriate
 		// sizing action.
 		if (this.verticalSizingAction !== "" ||
 				this.horizontalSizingAction !== "") {
-			this.resizePalette(event);
+			this.resizePalette(ev);
 
 			// Now, if no sizing behavior is going on we handle topbar drag
 			// behavior (after the sizing behaviors) so sizing takes
 			// precedence over dragging the window.
 		} else if (this.dragging === true) {
-			this.movePalette(event);
+			this.movePalette(ev);
 
 			// Finally, if no sizing or dragging is going on, we look to see if
 			// the user is hovering the pointer near the palette edges so we can
 			// display an appropriate sizing cursor.
 		} else {
-			this.setResizingCursors(event);
+			this.setResizingCursors(ev);
 		}
 	}
 
@@ -268,7 +267,7 @@ class Palette extends React.Component {
 		this.horizontalSizingHover = "";
 	}
 
-	resizePalette(event) {
+	resizePalette(ev) {
 		const paletteDiv = this.getPaletteDiv();
 		const canvasDiv = document.getElementById("canvas-div");
 
@@ -277,7 +276,7 @@ class Palette extends React.Component {
 		this.isMaximized = false;
 
 		if (this.horizontalSizingAction === "left") {
-			const eventClientX = this.getAdjustedMousePositionLeft(event, canvasDiv);
+			const eventClientX = this.getAdjustedMousePositionLeft(ev, canvasDiv);
 			const newWidth = this.savedWidth - (eventClientX - this.savedLeft);
 
 			if (newWidth <= this.minWidth) {
@@ -289,7 +288,7 @@ class Palette extends React.Component {
 		}
 
 		if (this.horizontalSizingAction === "right") {
-			const eventClientX = this.getAdjustedMousePositionRight(event, canvasDiv);
+			const eventClientX = this.getAdjustedMousePositionRight(ev, canvasDiv);
 			let newWidth = (eventClientX - this.savedLeft);
 
 			if (newWidth <= this.minWidth) {
@@ -299,7 +298,7 @@ class Palette extends React.Component {
 		}
 
 		if (this.verticalSizingAction === "top") {
-			const eventClientY = this.getAdjustedMousePositionTop(event, canvasDiv);
+			const eventClientY = this.getAdjustedMousePositionTop(ev, canvasDiv);
 			const newHeight = this.savedHeight - (eventClientY - this.savedTop);
 
 			if (newHeight <= this.minHeight) {
@@ -313,7 +312,7 @@ class Palette extends React.Component {
 		}
 
 		if (this.verticalSizingAction === "bottom") {
-			const eventClientY = this.getAdjustedMousePositionBottom(event, canvasDiv);
+			const eventClientY = this.getAdjustedMousePositionBottom(ev, canvasDiv);
 			let newHeight = eventClientY - this.savedTop - this.hackPaletteOffset;
 
 			if (newHeight <= this.minHeight) {
@@ -324,12 +323,12 @@ class Palette extends React.Component {
 		}
 	}
 
-	movePalette(event) {
+	movePalette(ev) {
 		const paletteDiv = this.getPaletteDiv();
 		const canvasDiv = document.getElementById("canvas-div");
 
-		let newLeft = event.clientX - this.dragOffsetX;
-		let newTop = event.clientY - this.dragOffsetY;
+		let newLeft = ev.clientX - this.dragOffsetX;
+		let newTop = ev.clientY - this.dragOffsetY;
 
 		if (newLeft < canvasDiv.offsetLeft + this.hoverZoneSize) {
 			newLeft = canvasDiv.offsetLeft + this.hoverZoneSize;

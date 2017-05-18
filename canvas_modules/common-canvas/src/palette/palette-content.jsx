@@ -67,8 +67,8 @@ class PaletteContent extends React.Component {
 		return out;
 	}
 
-	categorySelected(event) {
-		this.setState({ selectedCategory: event.target.firstChild.data });
+	categorySelected(catSelEvent) {
+		this.setState({ selectedCategory: catSelEvent.target.firstChild.data });
 	}
 
 	render() {

@@ -40,8 +40,8 @@ class ThreeWayIcon extends React.Component {
 		this.setState({ hover: false });
 	}
 
-	mouseDown(event) {
-		event.stopPropagation();
+	mouseDown(mouseDownEvent) {
+		mouseDownEvent.stopPropagation();
 	}
 
 	render() {

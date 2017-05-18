@@ -37,16 +37,16 @@ class PaletteTopbar extends React.Component {
 		this.listViewSelected = this.listViewSelected.bind(this);
 	}
 
-	mouseDown(event) {
-		this.props.mouseDownMethod(event);
+	mouseDown(mouseDownEvent) {
+		this.props.mouseDownMethod(mouseDownEvent);
 	}
 
-	doubleClick(event) {
-		this.props.windowMaximizeMethod(event);
+	doubleClick(doubleClickEvent) {
+		this.props.windowMaximizeMethod(doubleClickEvent);
 	}
 
-	close(event) {
-		this.props.closeMethod(event);
+	close(closeEvent) {
+		this.props.closeMethod(closeEvent);
 	}
 
 	gridViewSelected() {

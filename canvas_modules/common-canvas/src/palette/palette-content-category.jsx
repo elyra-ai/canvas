@@ -25,8 +25,8 @@ class PaletteContentCategory extends React.Component {
 	}
 
 
-	categorySelected(event) {
-		this.props.categorySelectedMethod(event);
+	categorySelected(catSelEvent) {
+		this.props.categorySelectedMethod(catSelEvent);
 	}
 
 	render() {
