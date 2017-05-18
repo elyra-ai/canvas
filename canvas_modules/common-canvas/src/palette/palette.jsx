@@ -18,6 +18,7 @@ import PaletteContent from "./palette-content.jsx";
 
 // eslint override
 /* global window document */
+/* eslint no-shadow: ["error", { "allow": ["event"] }] */
 
 class Palette extends React.Component {
 	constructor(props) {
@@ -99,6 +100,123 @@ class Palette extends React.Component {
 		window.removeEventListener("resize", this.windowResize);
 	}
 
+	// Adjusts the mouse position from the event so it is NOT outside the
+	// canvas when doing a bottom sizing operation.
+	getAdjustedMousePositionBottom(event, canvasDiv) {
+		let eventClientY = event.clientY;
+
+		if (eventClientY > canvasDiv.offsetTop + canvasDiv.offsetHeight - this.hoverZoneSize) {
+			eventClientY = canvasDiv.offsetTop + canvasDiv.offsetHeight - this.hoverZoneSize;
+		}
+		return eventClientY;
+	}
+
+	// Adjusts the mouse position from the event so it is NOT outside the
+	// canvas when doing a left sizing operation.
+	getAdjustedMousePositionLeft(event, canvasDiv) {
+		let eventClientX = event.clientX;
+
+		if (eventClientX < canvasDiv.offsetLeft + this.hoverZoneSize) {
+			eventClientX = canvasDiv.offsetLeft + this.hoverZoneSize;
+		}
+		return eventClientX;
+	}
+
+	// Adjusts the mouse position from the event so it is NOT outside the
+	// canvas when doing a right sizing operation.
+	getAdjustedMousePositionRight(event, canvasDiv) {
+		let eventClientX = event.clientX;
+
+		if (eventClientX > canvasDiv.offsetLeft + canvasDiv.offsetWidth - this.hoverZoneSize) {
+			eventClientX = canvasDiv.offsetLeft + canvasDiv.offsetWidth - this.hoverZoneSize;
+		}
+		return eventClientX;
+	}
+
+	// Adjusts the mouse position from the event so it is NOT outside the
+	// canvas when doing a top sizing operation.
+	getAdjustedMousePositionTop(event, canvasDiv) {
+		let eventClientY = event.clientY;
+
+		if (eventClientY < canvasDiv.offsetTop + this.hoverZoneSize) {
+			eventClientY = canvasDiv.offsetTop + this.hoverZoneSize;
+		}
+		return eventClientY;
+	}
+
+	getPaletteDiv() {
+		return this.refs.palette;
+	}
+	setResizingCursors(event) {
+		const paletteDiv = this.getPaletteDiv();
+
+		this.setSizingHoverEdge(event, paletteDiv);
+
+		if (this.verticalSizingHover === "top") {
+			if (this.horizontalSizingHover === "left") {
+				paletteDiv.style.cursor = "nwse-resize";
+			} else if (this.horizontalSizingHover === "right") {
+				paletteDiv.style.cursor = "nesw-resize";
+			} else {
+				paletteDiv.style.cursor = "ns-resize";
+			}
+		} else if (this.verticalSizingHover === "bottom") {
+			if (this.horizontalSizingHover === "left") {
+				paletteDiv.style.cursor = "nesw-resize";
+			} else if (this.horizontalSizingHover === "right") {
+				paletteDiv.style.cursor = "nwse-resize";
+			} else {
+				paletteDiv.style.cursor = "ns-resize";
+			}
+		} else if (this.horizontalSizingHover === "left" ||
+							this.horizontalSizingHover === "right") {
+			paletteDiv.style.cursor = "ew-resize";
+
+		} else {
+			paletteDiv.style.cursor = "default";
+		}
+	}
+
+	// Sets the size of the content div, and the divs inside content div, so
+	// they adopt the same height as the palette.
+	setContentDivHeight(paletteDiv, newHeight) {
+		const newContentHeight = (newHeight - this.topbarHeight - this.totalHoverZoneSize) + "px";
+		const contentDiv = paletteDiv.childNodes[1];
+		contentDiv.style.height = newContentHeight;
+		contentDiv.childNodes[0].style.height = newContentHeight;
+		contentDiv.childNodes[1].style.height = newContentHeight;
+		contentDiv.childNodes[2].style.height = newContentHeight;
+	}
+
+	setSizingHoverEdge(event, paletteDiv) {
+		if (event.clientX > paletteDiv.offsetLeft &&
+				event.clientX < paletteDiv.offsetLeft + (this.totalHoverZoneSize)) {
+			this.horizontalSizingHover = "left";
+
+		} else if (event.clientX < paletteDiv.offsetLeft + paletteDiv.offsetWidth &&
+					event.clientX > paletteDiv.offsetLeft + paletteDiv.offsetWidth - this.totalHoverZoneSize) {
+			this.horizontalSizingHover = "right";
+
+		} else {
+			this.horizontalSizingHover = "";
+			this.horizontalSizingAction = "";
+		}
+
+		if (event.clientY > paletteDiv.offsetTop &&
+				event.clientY < paletteDiv.offsetTop + this.totalHoverZoneSize) {
+			this.verticalSizingHover = "top";
+
+		} else if (event.clientY < paletteDiv.offsetTop + paletteDiv.offsetHeight + this.hackPaletteOffset &&
+				event.clientY > paletteDiv.offsetTop + paletteDiv.offsetHeight +
+													this.hackPaletteOffset - this.totalHoverZoneSize) {
+			this.verticalSizingHover = "bottom";
+
+		} else {
+			this.verticalSizingHover = "";
+			this.verticalSizingAction = "";
+		}
+	}
+
 	mouseDownOnTopBar(event) {
 		this.dragging = true;
 		const paletteDiv = this.getPaletteDiv();
@@ -140,6 +258,14 @@ class Palette extends React.Component {
 		} else {
 			this.setResizingCursors(event);
 		}
+	}
+
+	mouseUp() {
+		this.dragging = false;
+		this.verticalSizingAction = "";
+		this.horizontalSizingAction = "";
+		this.verticalSizingHover = "";
+		this.horizontalSizingHover = "";
 	}
 
 	resizePalette(event) {
@@ -220,129 +346,6 @@ class Palette extends React.Component {
 
 		paletteDiv.style.left = newLeft + "px";
 		paletteDiv.style.top = newTop + "px";
-	}
-
-	setResizingCursors(event) {
-		const paletteDiv = this.getPaletteDiv();
-
-		this.setSizingHoverEdge(event, paletteDiv);
-
-		if (this.verticalSizingHover === "top") {
-			if (this.horizontalSizingHover === "left") {
-				paletteDiv.style.cursor = "nwse-resize";
-			} else if (this.horizontalSizingHover === "right") {
-				paletteDiv.style.cursor = "nesw-resize";
-			} else {
-				paletteDiv.style.cursor = "ns-resize";
-			}
-		} else if (this.verticalSizingHover === "bottom") {
-			if (this.horizontalSizingHover === "left") {
-				paletteDiv.style.cursor = "nesw-resize";
-			} else if (this.horizontalSizingHover === "right") {
-				paletteDiv.style.cursor = "nwse-resize";
-			} else {
-				paletteDiv.style.cursor = "ns-resize";
-			}
-		} else if (this.horizontalSizingHover === "left" ||
-							this.horizontalSizingHover === "right") {
-			paletteDiv.style.cursor = "ew-resize";
-
-		} else {
-			paletteDiv.style.cursor = "default";
-		}
-	}
-
-	setSizingHoverEdge(event, paletteDiv) {
-		if (event.clientX > paletteDiv.offsetLeft &&
-				event.clientX < paletteDiv.offsetLeft + (this.totalHoverZoneSize)) {
-			this.horizontalSizingHover = "left";
-
-		} else if (event.clientX < paletteDiv.offsetLeft + paletteDiv.offsetWidth &&
-					event.clientX > paletteDiv.offsetLeft + paletteDiv.offsetWidth - this.totalHoverZoneSize) {
-			this.horizontalSizingHover = "right";
-
-		} else {
-			this.horizontalSizingHover = "";
-			this.horizontalSizingAction = "";
-		}
-
-		if (event.clientY > paletteDiv.offsetTop &&
-				event.clientY < paletteDiv.offsetTop + this.totalHoverZoneSize) {
-			this.verticalSizingHover = "top";
-
-		} else if (event.clientY < paletteDiv.offsetTop + paletteDiv.offsetHeight + this.hackPaletteOffset &&
-				event.clientY > paletteDiv.offsetTop + paletteDiv.offsetHeight +
-													this.hackPaletteOffset - this.totalHoverZoneSize) {
-			this.verticalSizingHover = "bottom";
-
-		} else {
-			this.verticalSizingHover = "";
-			this.verticalSizingAction = "";
-		}
-	}
-
-	// Sets the size of the content div, and the divs inside content div, so
-	// they adopt the same height as the palette.
-	setContentDivHeight(paletteDiv, newHeight) {
-		const newContentHeight = (newHeight - this.topbarHeight - this.totalHoverZoneSize) + "px";
-		const contentDiv = paletteDiv.childNodes[1];
-		contentDiv.style.height = newContentHeight;
-		contentDiv.childNodes[0].style.height = newContentHeight;
-		contentDiv.childNodes[1].style.height = newContentHeight;
-		contentDiv.childNodes[2].style.height = newContentHeight;
-	}
-
-
-	// Adjusts the mouse position from the event so it is NOT outside the
-	// canvas when doing a left sizing operation.
-	getAdjustedMousePositionLeft(event, canvasDiv) {
-		let eventClientX = event.clientX;
-
-		if (eventClientX < canvasDiv.offsetLeft + this.hoverZoneSize) {
-			eventClientX = canvasDiv.offsetLeft + this.hoverZoneSize;
-		}
-		return eventClientX;
-	}
-
-	// Adjusts the mouse position from the event so it is NOT outside the
-	// canvas when doing a right sizing operation.
-	getAdjustedMousePositionRight(event, canvasDiv) {
-		let eventClientX = event.clientX;
-
-		if (eventClientX > canvasDiv.offsetLeft + canvasDiv.offsetWidth - this.hoverZoneSize) {
-			eventClientX = canvasDiv.offsetLeft + canvasDiv.offsetWidth - this.hoverZoneSize;
-		}
-		return eventClientX;
-	}
-
-	// Adjusts the mouse position from the event so it is NOT outside the
-	// canvas when doing a top sizing operation.
-	getAdjustedMousePositionTop(event, canvasDiv) {
-		let eventClientY = event.clientY;
-
-		if (eventClientY < canvasDiv.offsetTop + this.hoverZoneSize) {
-			eventClientY = canvasDiv.offsetTop + this.hoverZoneSize;
-		}
-		return eventClientY;
-	}
-
-	// Adjusts the mouse position from the event so it is NOT outside the
-	// canvas when doing a bottom sizing operation.
-	getAdjustedMousePositionBottom(event, canvasDiv) {
-		let eventClientY = event.clientY;
-
-		if (eventClientY > canvasDiv.offsetTop + canvasDiv.offsetHeight - this.hoverZoneSize) {
-			eventClientY = canvasDiv.offsetTop + canvasDiv.offsetHeight - this.hoverZoneSize;
-		}
-		return eventClientY;
-	}
-
-	mouseUp() {
-		this.dragging = false;
-		this.verticalSizingAction = "";
-		this.horizontalSizingAction = "";
-		this.verticalSizingHover = "";
-		this.horizontalSizingHover = "";
 	}
 
 	// Called when the browser window is resized.We need to make sure the
@@ -450,10 +453,6 @@ class Palette extends React.Component {
 				this.isMaximized = true;
 			}
 		}
-	}
-
-	getPaletteDiv() {
-		return this.refs.palette;
 	}
 
 	showGrid(state) {
