@@ -12,11 +12,12 @@
 ** deposited with the U.S. Copyright Office.
 *****************************************************************/
 /* eslint no-shadow: ["error", { "allow": ["Node"] }] */
-/* eslint no-console: ["error", { allow: ["log"] }] */
 
 import React from "react";
 import { DND_DATA_TEXT } from "../constants/common-constants.js";
 import { Tooltip, OverlayTrigger } from "react-bootstrap";
+import logger from "../utils/logger";
+
 
 // export default class Node extends React.Component {
 class Node extends React.Component {
@@ -79,18 +80,18 @@ class Node extends React.Component {
 
 	handleMouseLeave(ev) {
 		this.setState({ showCircle: false });
-		// console.log("handleMouseLeave");
+		// logger.info("handleMouseLeave");
 	}
 
 	handleMouseEnter(ev) {
 		this.setState({ showCircle: true });
-		// console.log("handleMouseEnter");
+		// logger.info("handleMouseEnter");
 	}
 
 	dragStart(ev) {
 		// ev.preventDefault();
 		ev.dataTransfer.effectAllowed = "move";
-		// console.log("Node.dragStart(): x=" + ev.clientX + ",y=" + ev.clientY + ", node.id=" + this.props.node.id );
+		// logger.info("Node.dragStart(): x=" + ev.clientX + ",y=" + ev.clientY + ", node.id=" + this.props.node.id );
 		// var invImg = document.getElementById("invisibleDiv"); // defined in canvas.jsx
 		// ev.dataTransfer.setDragImage(invImg, 0, 0);
 		ev.dataTransfer.setData(DND_DATA_TEXT, JSON.stringify({
@@ -101,14 +102,14 @@ class Node extends React.Component {
 	}
 
 	dragEnd(ev) {
-		// console.log("Node.dragEnd(): x=" + ev.clientX + ",y=" + ev.clientY);
-		// console.log(ev);
+		// logger.info("Node.dragEnd(): x=" + ev.clientX + ",y=" + ev.clientY);
+		// logger.info(ev);
 	}
 
 	drop(ev) {
-		// console.log("Node.drop()");
-		// console.log(ev);
-		// console.log(ev.dataTransfer.getData(DND_DATA_TEXT));
+		// logger.info("Node.drop()");
+		// logger.info(ev);
+		// logger.info(ev.dataTransfer.getData(DND_DATA_TEXT));
 		this.props.nodeActionHandler("dropOnNode", ev);
 	}
 
@@ -122,7 +123,7 @@ class Node extends React.Component {
 	}
 
 	linkDragStart(connType, ev) {
-		// console.log("Node.linkDragStart(): x=" + ev.clientX + ",
+		// logger.info("Node.linkDragStart(): x=" + ev.clientX + ",
 		// y=" + ev.clientY + ", node.id=" + this.props.node.id );
 		ev.dataTransfer.effectAllowed = "link";
 
@@ -147,31 +148,31 @@ class Node extends React.Component {
 	}
 
 	linkDragEnd(connType, ev) {
-		console.log("Node.linkDragEnd()");
+		logger.info("Node.linkDragEnd()");
 	}
 
 	linkDrop(ev) {
-		console.log("Node.linkDrop()");
+		logger.info("Node.linkDrop()");
 		this.drop(ev);
 	}
 
 	nodeClicked(ev) {
-		// console.log("Node.nodeClicked()");
+		// logger.info("Node.nodeClicked()");
 		ev.stopPropagation();
 		// node is already bound
 		this.props.nodeActionHandler("selected", ev);
 	}
 
 	nodeDblClicked(ev) {
-		// console.log("Node.nodeDblClicked()");
-		// console.log(ev)
+		// logger.info("Node.nodeDblClicked()");
+		// logger.info(ev)
 		ev.stopPropagation();
 		this.props.nodeActionHandler("nodeDblClicked", ev);
 	}
 
 	showContext(ev) {
-		console.log("showContext()");
-		console.log(ev);
+		logger.info("showContext()");
+		logger.info(ev);
 		this.setState({ context: true });
 	}
 
@@ -181,8 +182,8 @@ class Node extends React.Component {
 	}
 
 	render() {
-		// console.log("Node.render()");
-		// console.log(this.props.node);
+		 logger.info("Node.render()");
+		// logger.info(this.props.node);
 		const zoom = this.props.uiconf.zoom;
 
 		var nodeStyle = {
@@ -361,8 +362,8 @@ class Node extends React.Component {
 			});
 		}
 
-		// console.log("ZOOM : "+zoom);
-		// console.log("circleStyle :"+JSON.stringify(circleStyle));
+		// logger.info("ZOOM : "+zoom);
+		// logger.info("circleStyle :"+JSON.stringify(circleStyle));
 		const circle = (<div>
 
 			<div className="padding-circle" style={paddingCircleStyle}></div>

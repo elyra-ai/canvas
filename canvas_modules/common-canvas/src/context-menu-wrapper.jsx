@@ -12,8 +12,6 @@
 ** deposited with the U.S. Copyright Office.
 *****************************************************************/
 
-/* eslint no-shadow: ["error", { "allow": ["event"] }] */
-
 import React from "react";
 import enhanceWithClickOutside from "react-click-outside";
 import CommonContextMenu from "./common-context-menu.jsx";
@@ -31,13 +29,13 @@ class ContextMenuWrapper extends React.Component {
 		this.state = {};
 	}
 
-	handleClickOutside(event) {
+	handleClickOutside(clickOutsideEvent) {
 		this.props.closeContextMenu();
 
 		// This stops the canvasClicked function from being fired which would
 		// clear any current selections. The event here is a real event not a
 		// synthetic react mouse event.
-		event.stopPropagation();
+		clickOutsideEvent.stopPropagation();
 	}
 
 	repositionContextMenu(mousePos, menuSize) {

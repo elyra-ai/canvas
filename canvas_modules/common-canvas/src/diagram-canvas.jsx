@@ -14,7 +14,6 @@
 
 /* eslint complexity: ["error", 13] */
 /* global chmln */
-/* eslint no-console: ["error", { allow: ["log"] }] */
 /* eslint no-shadow: ["error", { "allow": ["Node", "Comment"] }] */
 
 import React from "react";
@@ -36,6 +35,7 @@ import {
 import CanvasUtils from "../utils/canvas-utils.js";
 import BlankCanvasImage from "../assets/images/blank_canvas.png";
 import ObjectModel from "./object-model/object-model.js";
+import logger from "../utils/logger";
 
 const NODE_BORDER_SIZE = 2; // see common-canvas.css, .canvas-node
 // const CELL_SIZE = 48;
@@ -106,7 +106,7 @@ export default class DiagramCanvas extends React.Component {
 		try {
 			return JSON.parse(event.dataTransfer.getData(DND_DATA_TEXT));
 		} catch (e) {
-			console.log(e);
+			logger.info(e);
 			return null;
 		}
 	}
@@ -396,15 +396,15 @@ export default class DiagramCanvas extends React.Component {
 				}
 			} else if ((jsVal.operation === "createFromTemplate") || jsVal.operation === "createFromObject") {
 				var mousePos2 = this.mouseCoords(event);
-				// console.log(targetPos);
-				// console.log(mousePos);
+				// logger.info(targetPos);
+				// logger.info(mousePos);
 				this.createNodeAt(jsVal.typeId, jsVal.label, jsVal.sourceId, jsVal.sourceObjectTypeId,
 					Math.round((mousePos2.x - (NODE_WIDTH / 2)) / zoom),
 					Math.round((mousePos2.y - (NODE_HEIGHT / 2)) / zoom));
 			} else if ((jsVal.operation === "addToCanvas") || (jsVal.operation === "addTableFromConnection")) {
 				var mousePos = this.mouseCoords(event);
-				// console.log(targetPos);
-				// console.log("addToCanvas :"+JSON.stringify(mousePos));
+				// logger.info(targetPos);
+				// logger.info("addToCanvas :"+JSON.stringify(mousePos));
 				this.createNodeFromDataAt(Math.round((mousePos.x - (NODE_WIDTH / 2)) / zoom),
 				Math.round((mousePos.y - (NODE_HEIGHT / 2)) / zoom), jsVal.data);
 			}
@@ -412,7 +412,7 @@ export default class DiagramCanvas extends React.Component {
 	}
 
 	dragOver(event) {
-		// console.log("DiagramCanvas.dragOver: x=" + event.clientX + ",y=" + event.clientY);
+		// logger.info("DiagramCanvas.dragOver: x=" + event.clientX + ",y=" + event.clientY);
 		event.preventDefault();
 		event.dataTransfer.dropEffect = "move";
 		// event.target.style.cursor = "move";
@@ -559,9 +559,9 @@ export default class DiagramCanvas extends React.Component {
 			});
 		} else if (action === "dropOnNode" && this.isDragging()) {
 			// The event is passed as the third arg
-			// console.log("Handling dropOnNode:");
+			// logger.info("Handling dropOnNode:");
 			const jsVal = this.getDNDJson(optionalArgs);
-			// console.log(jsVal);
+			// logger.info(jsVal);
 			if (jsVal !== null) {
 				if (jsVal.connType === "connIn") {
 					// If the drag started on an input connector, assume the drop target is the source
@@ -687,7 +687,7 @@ export default class DiagramCanvas extends React.Component {
 		if (this.state.targetNodes.indexOf(nodeId) >= 0) {
 			// Do nothing
 		} else if (this.state.sourceNodes.length > 0) {
-			// console.log("Time to link");
+			// logger.info("Time to link");
 			// This is triggered by clicking on the input connector of
 			// a node when multiple output connectors are selected. This signifies that
 			// the user wants to link from the outputs of one or more nodes to the input
@@ -710,7 +710,7 @@ export default class DiagramCanvas extends React.Component {
 			// of a single source node.
 			this.linkSelected([nodeId], this.state.targetNodes);
 		} else {
-			// console.log("Add to sources");
+			// logger.info("Add to sources");
 			this.setState({ sourceNodes: this.state.sourceNodes.concat(nodeId) });
 		}
 	}
@@ -718,7 +718,7 @@ export default class DiagramCanvas extends React.Component {
 	// Edit operation methods
 
 	deleteObjects(nodeIds) {
-		// console.log("deleteObjects(): " + nodeIds);
+		// logger.info("deleteObjects(): " + nodeIds);
 		this.props.editActionHandler({
 			editType: "deleteObjects", nodes: nodeIds
 		});
@@ -760,7 +760,7 @@ export default class DiagramCanvas extends React.Component {
 
 	makeALinkSet(positions, isBackground) {
 		return this.props.canvas.diagram.links.map((link, ind) => {
-			// console.log(link);
+			// logger.info(link);
 			var posFrom = positions[link.source];
 			var posTo = positions[link.target];
 
@@ -836,7 +836,7 @@ export default class DiagramCanvas extends React.Component {
 		if (chmln) {
 			chmln.show("58dd4521aa443a000420799e");
 		} else {
-			console.log("handlePlaceholderLinkClick:no chmln");
+			logger.info("handlePlaceholderLinkClick:no chmln");
 		}
 	}
 

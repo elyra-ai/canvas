@@ -202,7 +202,7 @@ export default class CommonCanvas extends React.Component {
 					containingDivId={"common-canvas"}
 					mousePos={this.contextMenuSource.mousePos}
 					contextMenuDef={this.state.contextMenuDef} c
-					ontextMenuClicked={this.contextMenuClicked}
+					contextMenuClicked={this.contextMenuClicked}
 					closeContextMenu={this.closeContextMenu}
 				/>);
 			}

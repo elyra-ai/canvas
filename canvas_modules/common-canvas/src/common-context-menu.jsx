@@ -12,7 +12,6 @@
 ** deposited with the U.S. Copyright Office.
 *****************************************************************/
 /* eslint no-empty-function: ["error", { "allow": ["arrowFunctions"] }] */
-/* eslint no-shadow: ["error", { "allow": ["event"] }] */
 
 import React from "react";
 import { MenuItem, SubMenu } from "react-contextmenu";
@@ -24,13 +23,13 @@ class CommonContextMenu extends React.Component {
 		this.itemSelected = this.itemSelected.bind(this);
 	}
 
-	itemSelected(data, event) {
+	itemSelected(data, selectedEvent) {
 		this.props.contextHandler(data);
 		// This stops the canvasClicked function from being fired which would
 		// clear any current selections.
-		if (event) {
-			event.stopPropagation();
-			event.nativeEvent.stopImmediatePropagation();
+		if (selectedEvent) {
+			selectedEvent.stopPropagation();
+			selectedEvent.nativeEvent.stopImmediatePropagation();
 		}
 	}
 
