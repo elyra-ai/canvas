@@ -1,6 +1,6 @@
 {
   "name": "@wdp/common-canvas",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "description": "WDP common-canvas",
   "main": "dist/common-canvas.js",
   "homepage": "https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/wiki/Common-Canvas-Documentation",
@@ -79,7 +79,7 @@
       "js",
       "jsx"
     ],
-		"modulePathIgnorePatterns": [
+    "modulePathIgnorePatterns": [
       "/lib/",
       "/.build/",
       "/node_modules/",
