@@ -12,12 +12,10 @@
 ** deposited with the U.S. Copyright Office.
 *****************************************************************/
 
-var stylelint = require("stylelint");
 var autoprefixer = require("autoprefixer");
 
 module.exports = {
 	plugins: [
-		stylelint,
 		autoprefixer
 	]
 };
