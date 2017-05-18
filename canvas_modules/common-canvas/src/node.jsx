@@ -182,7 +182,7 @@ class Node extends React.Component {
 	}
 
 	render() {
-		 logger.info("Node.render()");
+		// logger.info("Node.render()");
 		// logger.info(this.props.node);
 		const zoom = this.props.uiconf.zoom;
 
