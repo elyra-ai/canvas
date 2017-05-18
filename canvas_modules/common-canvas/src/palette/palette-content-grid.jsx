@@ -53,7 +53,7 @@ PaletteContentGrid.propTypes = {
 	paletteJSON: React.PropTypes.array.isRequired,
 	createTempNode: React.PropTypes.func.isRequired,
 	deleteTempNode: React.PropTypes.func.isRequired,
-	show: React.PropTypes.string.isRequired
+	show: React.PropTypes.bool.isRequired
 };
 
 export default PaletteContentGrid;
