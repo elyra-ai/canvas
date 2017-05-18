@@ -87,12 +87,12 @@ function createPalette() {
 	const createTempNodeCallback = sinon.spy();
 	const deleteTempNodeCallback = sinon.spy();
 	const popupPalette = shallow(
-    <Palette paletteJSON={paletteSpec}
-	showPalette
-	closePalette={closePaletteCallback}
-	createTempNode={createTempNodeCallback}
-	deleteTempNode={deleteTempNodeCallback}>
-    </Palette>
+		<Palette paletteJSON={paletteSpec}
+			showPalette
+			closePalette={closePaletteCallback}
+			createTempNode={createTempNodeCallback}
+			deleteTempNode={deleteTempNodeCallback}
+		/>
   );
 	return popupPalette;
 }

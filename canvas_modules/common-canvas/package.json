@@ -47,6 +47,7 @@
     "grunt-webpack": "2.0.1",
     "grunt-yamllint": "0.2.0",
     "jest": "17.0.3",
+    "log4js": "0.6.38",
     "node-uuid": "1.4.7",
     "path": "0.12.7",
     "postcss-loader": "1.3.3",
@@ -77,6 +78,12 @@
     "moduleFileExtensions": [
       "js",
       "jsx"
+    ],
+		"modulePathIgnorePatterns": [
+      "/lib/",
+      "/.build/",
+      "/node_modules/",
+      "/.eslintrc.js"
     ],
     "verbose": true,
     "moduleNameMapper": {

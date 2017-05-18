@@ -19,20 +19,15 @@ import { expect } from "chai";
 import sinon from "sinon";
 
 describe("ContextMenuWrapper renders correctly", () => {
-
 	var wrapper;
-
 	const _contextMenuClicked = sinon.spy();
 	const _closeContextMenu = sinon.spy();
-
 	const _menu = [
 		{ action: "item1", label: "Item 1" },
 		{ divider: true },
 		{ action: "item2", label: "Item 2" }
 	];
-
 	const _mousePos = { x: 100, y: 100 };
-
 	beforeEach(function() {
 		wrapper = shallow(
 			<ContextMenuWrapper
@@ -40,7 +35,7 @@ describe("ContextMenuWrapper renders correctly", () => {
 				mousePos={_mousePos}
 				contextMenuDef={_menu}
 				contextMenuClicked={_contextMenuClicked}
-				closeContextMenu={_closeContextMenu}>
+				closeContextMenu={_closeContextMenu}
 			/>
 		);
 	});
@@ -52,6 +47,4 @@ describe("ContextMenuWrapper renders correctly", () => {
 		expect(wrapper.contextMenuClicked).to.be.defined;
 		expect(wrapper.closeContextMenu).to.be.defined;
 	});
-
-
 });

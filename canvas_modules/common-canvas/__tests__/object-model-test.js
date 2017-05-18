@@ -12,7 +12,7 @@
 ** deposited with the U.S. Copyright Office.
 *****************************************************************/
 
-import { expect as chaiExpect } from "chai";
+import { expect } from "chai";
 import _ from "underscore";
 import deepFreeze from "deep-freeze";
 import ObjectModel from "../src/object-model/object-model.js";
@@ -46,7 +46,7 @@ describe("ObjectModel handle model OK", () => {
 		logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas));
 		logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas));
 
-		chaiExpect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
 	});
 
 
@@ -82,7 +82,7 @@ describe("ObjectModel handle model OK", () => {
 		logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas));
 		logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas));
 
-		chaiExpect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
 	});
 
 	it("should add a node", () => {
@@ -615,56 +615,50 @@ describe("ObjectModel handle model OK", () => {
 	it("should delete a comment", () => {
 		logger.info("should delete a comment");
 		const startCanvas =
-			      { zoom: 100,
-			       diagram: {
-			        "nodes": [
-			          { id: "node1", xPos: 10, yPos: 10 },
-			          { id: "node2", xPos: 20, yPos: 20 },
-			          { id: "node3", xPos: 30, yPos: 30 }
-			        ],
-			        "comments": [
-			          { id: "comment1", xPos: 50, yPos: 50 },
-			          { id: "comment2", xPos: 60, yPos: 60 },
-								{ id: "comment3", xPos: 70, yPos: 70 },
-			        ],
-				"links": []
-			       }
-			      };
-
-			  deepFreeze(startCanvas);
-
-			  ObjectModel.dispatch({
-			    type: "SET_CANVAS",
-			    data: startCanvas
-			  });
-
-				  ObjectModel.dispatch({
-				    type: "DELETE_OBJECTS",
-				    data: { selectedObjectIds: ["comment1", "comment2"] }
-				  });
+			{ zoom: 100,
+				diagram: {
+					"nodes": [
+						{ id: "node1", xPos: 10, yPos: 10 },
+						{ id: "node2", xPos: 20, yPos: 20 },
+						{ id: "node3", xPos: 30, yPos: 30 }
+					],
+					"comments": [
+						{ id: "comment1", xPos: 50, yPos: 50 },
+						{ id: "comment2", xPos: 60, yPos: 60 },
+						{ id: "comment3", xPos: 70, yPos: 70 },
+					],
+					"links": []
+				}
+			};
+		deepFreeze(startCanvas);
+		ObjectModel.dispatch({
+			type: "SET_CANVAS",
+			data: startCanvas
+		});
+		ObjectModel.dispatch({
+			type: "DELETE_OBJECTS",
+			data: { selectedObjectIds: ["comment1", "comment2"] }
+		});
 
 		const expectedCanvas =
 			{ zoom: 100,
-							 diagram: {
-								"nodes": [
+				diagram: {
+					"nodes": [
 									{ id: "node1", xPos: 10, yPos: 10 },
 									{ id: "node2", xPos: 20, yPos: 20 },
 									{ id: "node3", xPos: 30, yPos: 30 }
-								],
-								"comments": [
+					],
+					"comments": [
 									{ id: "comment3", xPos: 70, yPos: 70 }
-								],
-								"links": []
-							 }
+					],
+					"links": []
+				}
 			};
 
-
-		      const actualCanvas = ObjectModel.getCanvas();
-
-		      logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas));
-		      logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas));
-
-		      expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		const actualCanvas = ObjectModel.getCanvas();
+		logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas));
+		logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas));
+		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
 
 	});
 
@@ -673,21 +667,21 @@ describe("ObjectModel handle model OK", () => {
 
 		const startCanvas =
 			{ zoom: 100,
-						 diagram: {
-							nodes: [
+				diagram: {
+					nodes: [
 								{ id: "node1", xPos: 10, yPos: 10 },
 								{ id: "node2", xPos: 20, yPos: 20 },
 								{ id: "node3", xPos: 30, yPos: 30 }
-							],
-							comments: [
+					],
+					comments: [
 								{ id: "comment1", xPos: 50, yPos: 50 },
 								{ id: "comment2", xPos: 60, yPos: 60 }
-							],
-							links: [
+					],
+					links: [
 								{ id: "link1", source: "node1", target: "node2" },
 								{ id: "link2", source: "comment1", target: "node2" }
-							]
-						 }
+					]
+				}
 			};
 
 		deepFreeze(startCanvas);
@@ -700,26 +694,26 @@ describe("ObjectModel handle model OK", () => {
 		ObjectModel.dispatch({
 			type: "ADD_COMMENT_ATTR",
 			data: { objIds: ["comment1"],
-								 attrName: "bgcolor" }
+				attrName: "bgcolor" }
 		});
 
 		const expectedCanvas =
 			{ zoom: 100,
-						 diagram: {
-							nodes: [
+				diagram: {
+					nodes: [
 								{ id: "node1", xPos: 10, yPos: 10 },
 								{ id: "node2", xPos: 20, yPos: 20 },
 								{ id: "node3", xPos: 30, yPos: 30 }
-							],
-							comments: [
+					],
+					comments: [
 								{ "id": "comment1", "xPos": 50, "yPos": 50, "customAttrs": ["bgcolor"] },
 								{ id: "comment2", xPos: 60, yPos: 60 }
-							],
-							links: [
+					],
+					links: [
 								{ id: "link1", source: "node1", target: "node2" },
 								{ id: "link2", source: "comment1", target: "node2" }
-							]
-						 }
+					]
+				}
 			};
 
 		const actualCanvas = ObjectModel.getCanvas();
@@ -735,21 +729,21 @@ describe("ObjectModel handle model OK", () => {
 
 		const startCanvas =
 			{ zoom: 100,
-						 diagram: {
-							nodes: [
+				diagram: {
+					nodes: [
 								{ id: "node1", xPos: 10, yPos: 10 },
 								{ id: "node2", xPos: 20, yPos: 20 },
 								{ id: "node3", xPos: 30, yPos: 30 }
-							],
-							comments: [
+					],
+					comments: [
 								{ "id": "comment1", "xPos": 50, "yPos": 50, "customAttrs": ["bgcolor"] },
 								{ id: "comment2", xPos: 60, yPos: 60 }
-							],
-							links: [
+					],
+					links: [
 								{ id: "link1", source: "node1", target: "node2" },
 								{ id: "link2", source: "comment1", target: "node2" }
-							]
-						 }
+					]
+				}
 			};
 
 		deepFreeze(startCanvas);
@@ -762,26 +756,26 @@ describe("ObjectModel handle model OK", () => {
 		ObjectModel.dispatch({
 			type: "REMOVE_COMMENT_ATTR",
 			data: { objIds: ["comment1"],
-								 attrName: "bgcolor" }
+				attrName: "bgcolor" }
 		});
 
 		const expectedCanvas =
 			{ zoom: 100,
-						 diagram: {
-							nodes: [
+				diagram: {
+					nodes: [
 								{ id: "node1", xPos: 10, yPos: 10 },
 								{ id: "node2", xPos: 20, yPos: 20 },
 								{ id: "node3", xPos: 30, yPos: 30 }
-							],
-							comments: [
+					],
+					comments: [
 								{ "id": "comment1", "xPos": 50, "yPos": 50, "customAttrs": [] },
 								{ id: "comment2", xPos: 60, yPos: 60 }
-							],
-							links: [
+					],
+					links: [
 								{ id: "link1", source: "node1", target: "node2" },
 								{ id: "link2", source: "comment1", target: "node2" }
-							]
-						 }
+					]
+				}
 			};
 
 		const actualCanvas = ObjectModel.getCanvas();
@@ -985,21 +979,21 @@ describe("ObjectModel handle model OK", () => {
 
 		const startCanvas =
 			{ zoom: 100,
-					 diagram: {
-						nodes: [
+				diagram: {
+					nodes: [
 							{ id: "node1", xPos: 10, yPos: 10 },
 							{ id: "node2", xPos: 20, yPos: 20 },
 							{ id: "node3", xPos: 30, yPos: 30 }
-						],
-						comments: [
+					],
+					comments: [
 							{ id: "comment1", xPos: 50, yPos: 50 },
 							{ id: "comment2", xPos: 60, yPos: 60 }
-						],
-						links: [
+					],
+					links: [
 							{ id: "link1", source: "node1", target: "node2" },
 							{ id: "link2", source: "comment1", target: "node2" }
-						]
-					 }
+					]
+				}
 			};
 
 		deepFreeze(startCanvas);
@@ -1016,19 +1010,19 @@ describe("ObjectModel handle model OK", () => {
 
 		const expectedCanvas =
 			{ zoom: 100,
-						 diagram: {
-							 nodes: [
+				diagram: {
+					nodes: [
 								{ id: "node1", xPos: 10, yPos: 10 },
 								{ id: "node2", xPos: 20, yPos: 20 },
 								{ id: "node3", xPos: 30, yPos: 30 }
-							 ],
-							 comments: [
+					],
+					comments: [
 								{ id: "comment2", xPos: 60, yPos: 60 }
-							],
-							links: [
+					],
+					links: [
 								{ id: "link1", source: "node1", target: "node2" }
-							]
-						 }
+					]
+				}
 			};
 
 		const actualCanvas = ObjectModel.getCanvas();
@@ -1229,21 +1223,21 @@ describe("ObjectModel handle model OK", () => {
 
 		const startCanvas =
 			{ zoom: 100,
-					 diagram: {
-						nodes: [
+				diagram: {
+					nodes: [
 							{ id: "node1", xPos: 10, yPos: 10 },
 							{ id: "node2", xPos: 20, yPos: 20 },
 							{ id: "node3", xPos: 30, yPos: 30 }
-						],
-						comments: [
+					],
+					comments: [
 							{ id: "comment1", xPos: 50, yPos: 50 },
 							{ id: "comment2", xPos: 60, yPos: 60 }
-						],
-						links: [
+					],
+					links: [
 							{ id: "link1", source: "node1", target: "node2" },
 							{ id: "link2", source: "comment1", target: "node2" }
-						]
-					 }
+					]
+				}
 			};
 
 		deepFreeze(startCanvas);
@@ -1276,21 +1270,21 @@ describe("ObjectModel handle model OK", () => {
 
 		const startCanvas =
 			{ zoom: 100,
-					 diagram: {
-						nodes: [
+				diagram: {
+					nodes: [
 							{ id: "node1", xPos: 10, yPos: 10 },
 							{ id: "node2", xPos: 20, yPos: 20 },
 							{ id: "node3", xPos: 30, yPos: 30 }
-						],
-						comments: [
+					],
+					comments: [
 							{ id: "comment1", xPos: 50, yPos: 50 },
 							{ id: "comment2", xPos: 60, yPos: 60 }
-						],
-						links: [
+					],
+					links: [
 							{ id: "link1", source: "node1", target: "node2" },
 							{ id: "link2", source: "comment1", target: "node2" }
-						]
-					 }
+					]
+				}
 			};
 
 		deepFreeze(startCanvas);
@@ -1323,24 +1317,24 @@ describe("ObjectModel handle model OK", () => {
 
 		const startCanvas =
 			{ zoom: 100,
-					 diagram: {
-						nodes: [
+				diagram: {
+					nodes: [
 							{ id: "node1", xPos: 10, yPos: 10 },
 							{ id: "node2", xPos: 20, yPos: 20 },
 							{ id: "node3", xPos: 30, yPos: 30 },
 							{ id: "node4", xPos: 40, yPos: 30 }
-						],
-						comments: [
+					],
+					comments: [
 							{ id: "comment1", xPos: 50, yPos: 50 },
 							{ id: "comment2", xPos: 60, yPos: 60 }
-						],
-						links: [
+					],
+					links: [
 							{ id: "link1", source: "node1", target: "node2" },
 							{ id: "link2", source: "node2", target: "node3" },
 							{ id: "link3", source: "node3", target: "node4" },
 							{ id: "link4", source: "comment1", target: "node2" }
-						]
-					 }
+					]
+				}
 			};
 
 		deepFreeze(startCanvas);
@@ -1373,7 +1367,7 @@ describe("ObjectModel handle model OK", () => {
 
 		const startCanvas =
 			{ zoom: 100,
-				 diagram: {
+				diagram: {
 					nodes: [
 						{ id: "node1", xPos: 10, yPos: 10 },
 						{ id: "node2", xPos: 20, yPos: 20 },
@@ -1390,7 +1384,7 @@ describe("ObjectModel handle model OK", () => {
 						{ id: "link3", source: "node2", target: "node4" },
 						{ id: "link4", source: "comment1", target: "node2" }
 					]
-				 }
+				}
 			};
 
 		deepFreeze(startCanvas);
@@ -1423,7 +1417,7 @@ describe("ObjectModel handle model OK", () => {
 
 		const startCanvas =
 			{ zoom: 100,
-				 diagram: {
+				diagram: {
 					nodes: [
 						{ id: "node1", xPos: 10, yPos: 10 },
 						{ id: "node2", xPos: 20, yPos: 20 },
@@ -1440,7 +1434,7 @@ describe("ObjectModel handle model OK", () => {
 						{ id: "link3", source: "node3", target: "node4" },
 						{ id: "link4", source: "comment1", target: "node2" }
 					]
-				 }
+				}
 			};
 
 		deepFreeze(startCanvas);
@@ -1473,7 +1467,7 @@ describe("ObjectModel handle model OK", () => {
 
 		const startCanvas =
 			{ zoom: 100,
-				 diagram: {
+				diagram: {
 					nodes: [
 						{ id: "node1", xPos: 10, yPos: 10 },
 						{ id: "node2", xPos: 20, yPos: 20 },
@@ -1492,7 +1486,7 @@ describe("ObjectModel handle model OK", () => {
 						{ id: "link5", source: "node4", target: "node5" },
 						{ id: "link4", source: "comment1", target: "node2" }
 					]
-				 }
+				}
 			};
 
 		deepFreeze(startCanvas);
@@ -1525,7 +1519,7 @@ describe("ObjectModel handle model OK", () => {
 
 		const startCanvas =
 			{ zoom: 100,
-				 diagram: {
+				diagram: {
 					nodes: [
 						{ id: "node1", xPos: 10, yPos: 10 },
 						{ id: "node2", xPos: 20, yPos: 20 },
@@ -1564,7 +1558,7 @@ describe("ObjectModel handle model OK", () => {
 						{ id: "link16", source: "node7", target: "node4" },
 						{ id: "link17", source: "node6", target: "node4" }
 					]
-				 }
+				}
 			};
 
 		deepFreeze(startCanvas);
@@ -1598,7 +1592,7 @@ describe("ObjectModel handle model OK", () => {
 
 		const startCanvas =
 			{ zoom: 100,
-				 diagram: {
+				diagram: {
 					nodes: [
 						{ id: "node1", xPos: 10, yPos: 10 },
 						{ id: "node2", xPos: 20, yPos: 20 },
@@ -1637,7 +1631,7 @@ describe("ObjectModel handle model OK", () => {
 						{ id: "link16", source: "node7", target: "node4" },
 						{ id: "link17", source: "node6", target: "node4" }
 					]
-				 }
+				}
 			};
 
 		deepFreeze(startCanvas);
@@ -1671,7 +1665,7 @@ describe("ObjectModel handle model OK", () => {
 
 		const startCanvas =
 			{ zoom: 100,
-				 diagram: {
+				diagram: {
 					nodes: [
 						{ id: "node1", xPos: 10, yPos: 10 },
 						{ id: "node2", xPos: 20, yPos: 20 },
@@ -1710,7 +1704,7 @@ describe("ObjectModel handle model OK", () => {
 						{ id: "link16", source: "node7", target: "node4" },
 						{ id: "link17", source: "node6", target: "node4" }
 					]
-				 }
+				}
 			};
 
 		deepFreeze(startCanvas);
@@ -1743,7 +1737,7 @@ describe("ObjectModel handle model OK", () => {
 
 		const startCanvas =
 			{ zoom: 100,
-				 diagram: {
+				diagram: {
 					nodes: [
 						{ id: "node1", xPos: 10, yPos: 10 },
 						{ id: "node2", xPos: 20, yPos: 20 },
@@ -1782,7 +1776,7 @@ describe("ObjectModel handle model OK", () => {
 						{ id: "link16", source: "node7", target: "node4" },
 						{ id: "link17", source: "node6", target: "node4" }
 					]
-				 }
+				}
 			};
 
 		deepFreeze(startCanvas);

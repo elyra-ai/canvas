@@ -7,10 +7,8 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-"use strict";
-
 /* eslint global-require: 0 */
-/* eslint quote-props: 0 */
+
 var codeCoverageDir = "reports/coverage";
 
 module.exports = function(grunt) {
