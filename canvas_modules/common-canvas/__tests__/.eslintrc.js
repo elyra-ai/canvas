@@ -10,6 +10,6 @@ module.exports = {
 		"sort-imports": 0,
 		"react/jsx-indent-props": [2, "tab"],
 		"no-unused-expressions": 0,
-		"no-shadow": ["error", { "hoist": "functions" }]
+		"no-shadow": ["error", { "allow": ["expect"] }]
 	}
 };
