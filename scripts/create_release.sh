@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+echo "Add github to known hosts"
+ssh -o StrictHostKeyChecking=no -T git@github.ibm.com
+
 WORKING_DIR="$PWD"
 SCRIPT_DIR=$(dirname "$0")
 GIT_ORG="NGP-TWC"
