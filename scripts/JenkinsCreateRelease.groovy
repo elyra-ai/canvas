@@ -12,12 +12,12 @@ node ("${SLAVE_LABEL}") {
 	stage ('trigger script to update release branch') {
 		try {
 				sshagent(['62a4e963-e7a4-4fc5-8530-0b1b9d72d789']) {
-					sh 'scripts/create_release.sh patch Y9CTMV866 Y9CTMV866@nomail.relay.ibm.com'
+					sh 'scripts/create_release.sh'
 				}
 		} catch (err) {
 			println "----ERROR: Failure when creating release branch"
 			println "Jenkins Errror: ${err}"
-			sh 'scripts/post_to_slack.sh'
+			// sh 'scripts/post_to_slack.sh'
 			currentBuild.result = 'FAILURE'
 		}
 	}
