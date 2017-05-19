@@ -66,6 +66,14 @@ class Palette extends React.Component {
 		this.hoverZoneSize = 3;
 		this.totalHoverZoneSize = this.hoverZoneSize * 2;
 
+		// Need to control resizing of palette with snap to grid.
+		this.grid_node_width = 112;   // from common-canvas.css
+		this.grid_node_height = 135;	// from common-canvas.css
+		this.adjustedWidth = 137;     // default width - (default content node grid width)
+		this.adjustedHeight = 40;     // default heigth - (default content node grid height)
+		this.snapToWidth = this.snapToWidth.bind(this);
+		this.snapToHeight = this.snapToHeight.bind(this);
+
 		// Need to control min width and min height in code to avoid CSS problems
 		this.topbarHeight = 40;
 		this.minWidth = 238; // minWidth = grid_node_width + category_min_width + (2 * hoverZoneSize)
@@ -80,6 +88,7 @@ class Palette extends React.Component {
 		// Correction for palette cursor position
 		// Used in both hoverzone detection and mouseMove vertical resize at bottom of paletteDiv
 		this.hackPaletteOffset = 48;
+		this.hackPaletteTopOffset = this.hackPaletteOffset + 6;
 
 		window.addEventListener("mousemove", this.mouseMove, false);
 		window.addEventListener("mouseup", this.mouseUp, false);
@@ -201,8 +210,8 @@ class Palette extends React.Component {
 			this.horizontalSizingAction = "";
 		}
 
-		if (ev.clientY > paletteDiv.offsetTop &&
-				ev.clientY < paletteDiv.offsetTop + this.totalHoverZoneSize) {
+		if (ev.clientY > paletteDiv.offsetTop + this.hackPaletteTopOffset &&
+				ev.clientY < paletteDiv.offsetTop + this.hackPaletteTopOffset + this.totalHoverZoneSize) {
 			this.verticalSizingHover = "top";
 
 		} else if (ev.clientY < paletteDiv.offsetTop + paletteDiv.offsetHeight + this.hackPaletteOffset &&
@@ -260,6 +269,22 @@ class Palette extends React.Component {
 	}
 
 	mouseUp() {
+		const paletteDiv = this.getPaletteDiv();
+
+		if (this.horizontalSizingAction !== "") {
+			const oldWidth = paletteDiv.style.width.substring(0, paletteDiv.style.width.indexOf("px"));
+			if (oldWidth !== "") {
+				paletteDiv.style.width = this.snapToWidth(oldWidth) + "px";
+			}
+		}
+		if (this.verticalSizingAction !== "") {
+			const oldHeight = paletteDiv.style.height.substring(0, paletteDiv.style.height.indexOf("px"));
+			if (oldHeight !== "") {
+				const newHeight = this.snapToHeight(oldHeight);
+				paletteDiv.style.height = newHeight + "px";
+				this.setContentDivHeight(paletteDiv, newHeight);
+			}
+		}
 		this.dragging = false;
 		this.verticalSizingAction = "";
 		this.horizontalSizingAction = "";
@@ -306,7 +331,7 @@ class Palette extends React.Component {
 				this.setContentDivHeight(paletteDiv, this.minHeight);
 			} else {
 				paletteDiv.style.height = newHeight + "px";
-				paletteDiv.style.top = eventClientY + "px";
+				paletteDiv.style.top = (eventClientY - this.dragOffsetY) + "px";
 				this.setContentDivHeight(paletteDiv, newHeight);
 			}
 		}
@@ -321,6 +346,17 @@ class Palette extends React.Component {
 			paletteDiv.style.height = newHeight + "px";
 			this.setContentDivHeight(paletteDiv, newHeight);
 		}
+	}
+
+	// Calculate snap to grid width
+	snapToWidth(newWidth) {
+		const snapWidth = Math.round((newWidth - this.adjustedWidth) / this.grid_node_width) * this.grid_node_width;
+		return (snapWidth + this.adjustedWidth);
+	}
+	// Calculate snap to grid width
+	snapToHeight(newHeight) {
+		const snapHeight = Math.round((newHeight - this.adjustedHeight) / this.grid_node_height) * this.grid_node_height;
+		return (snapHeight + this.adjustedHeight);
 	}
 
 	movePalette(ev) {
