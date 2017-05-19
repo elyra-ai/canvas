@@ -17,7 +17,7 @@ node ("${SLAVE_LABEL}") {
 		} catch (err) {
 			println "----ERROR: Failure when creating release branch"
 			println "Jenkins Errror: ${err}"
-			// sh 'scripts/post_to_slack.sh'
+			sh 'scripts/post_to_slack.sh'
 			currentBuild.result = 'FAILURE'
 		}
 	}
