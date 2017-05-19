@@ -1,8 +1,10 @@
 #!/bin/bash
-set -e
+SCRIPTNAME=`basename "$0"`
+echo "RUNNING SCRIPT: ${SCRIPTNAME}"
 
 echo "Add github to known hosts"
 ssh -o StrictHostKeyChecking=no -T git@github.ibm.com
+
 
 echo "Setting local variables"
 WORKING_DIR="$PWD"
