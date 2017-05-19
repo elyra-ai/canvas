@@ -8,7 +8,6 @@ ssh -o StrictHostKeyChecking=no -T git@github.ibm.com
 
 echo "Setting local variables"
 WORKING_DIR="$PWD"
-SCRIPT_DIR=$(dirname "$0")
 GIT_ORG="NGP-TWC"
 GIT_REPO="wdp-abstract-canvas"
 GIT_DIRECTORY="${GIT_REPO}_repo"
