@@ -12,8 +12,7 @@ node ("${SLAVE_LABEL}") {
 	stage ('trigger script to update release branch') {
 		try {
 				sshagent(['62a4e963-e7a4-4fc5-8530-0b1b9d72d789']) {
-					println "---Triggering script to update release with master"
-					sh "scripts/create_release.sh patch Y9CTMV866 Y9CTMV866@nomail.relay.ibm.com"
+					sh 'scripts/create_release.sh patch Y9CTMV866 Y9CTMV866@nomail.relay.ibm.com'
 				}
 		} catch (err) {
 			println "----ERROR: Failure when creating release branch"
