@@ -6,7 +6,7 @@ WORKING_DIR="$PWD"
 LATEST_BUILDNUM="$1"
 echo "Setting local variables"
 WORKING_DIR="$PWD"
-GIT_ORG="mwhoward"
+GIT_ORG="NGP-TWC"
 GIT_REPO="wml-canvas-ui"
 GIT_DIRECTORY="${GIT_REPO}_repo"
 MASTER="master"
@@ -14,8 +14,8 @@ GIT_USER="Y9CTMV866"
 GIT_USER_EMAIL="Y9CTMV866@nomail.relay.ibm.com"
 
 # clone wml-canvas-ui
-#git config --global user.name "${GIT_USER}"
-#git config --global user.email "${GIT_USER_EMAIL}"
+git config --global user.name "${GIT_USER}"
+git config --global user.email "${GIT_USER_EMAIL}"
 echo "GIT user set as: Username: ${GIT_USER} # Email: ${GIT_USER_EMAIL}"
 
 echo "Clone wml-canvas-ui"
@@ -35,7 +35,7 @@ echo "Current major ${CURRENT_MJR_NUM}. Latest major ${LATEST_MJR_NUM}"
 # check to see if major version has changed.
 if [[ ${CURRENT_MJR_NUM} == ${LATEST_MJR_NUM} ]]; then
 	# sed to update common-canvas version number
-	sed -i '' 's|"@wdp/common-canvas.*|"@wdp/common-canvas": "'${LATEST_BUILDNUM}'",|g' package.json
+	sed -i 's|"@wdp/common-canvas.*|"@wdp/common-canvas": "'${LATEST_BUILDNUM}'",|g' package.json
 	# commit single change to wml-canvas-ui
 	git status
 	git add package.json
