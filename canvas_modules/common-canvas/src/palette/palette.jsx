@@ -41,6 +41,8 @@ class Palette extends React.Component {
 		this.movePalette = this.movePalette.bind(this);
 		this.setResizingCursors = this.setResizingCursors.bind(this);
 		this.setSizingHoverEdge = this.setSizingHoverEdge.bind(this);
+		this.snapToWidth = this.snapToWidth.bind(this);
+		this.snapToHeight = this.snapToHeight.bind(this);
 
 		// These variables are used when dragging the palette.
 		this.dragging = false;
@@ -68,11 +70,11 @@ class Palette extends React.Component {
 
 		// Need to control resizing of palette with snap to grid.
 		this.grid_node_width = 112;   // from common-canvas.css
-		this.grid_node_height = 135;	// from common-canvas.css
+		this.grid_node_height = 134;	// from common-canvas.css
+		this.list_node_height = 50;	  // from common-canvas.css
 		this.adjustedWidth = 137;     // default width - (default content node grid width)
-		this.adjustedHeight = 40;     // default heigth - (default content node grid height)
-		this.snapToWidth = this.snapToWidth.bind(this);
-		this.snapToHeight = this.snapToHeight.bind(this);
+		this.adjustedHeight = 51;     // default heigth - (default content node grid height) + padding to avoid scroll bar
+		this.adjustedScrollBarWidth = 15;
 
 		// Need to control min width and min height in code to avoid CSS problems
 		this.topbarHeight = 40;
@@ -271,20 +273,33 @@ class Palette extends React.Component {
 	mouseUp() {
 		const paletteDiv = this.getPaletteDiv();
 
-		if (this.horizontalSizingAction !== "") {
-			const oldWidth = paletteDiv.style.width.substring(0, paletteDiv.style.width.indexOf("px"));
-			if (oldWidth !== "") {
-				paletteDiv.style.width = this.snapToWidth(oldWidth) + "px";
+		// snap to grid adjustment to width
+		if (this.state.showGrid && this.horizontalSizingAction !== "") {
+			let newWidth = paletteDiv.style.width.substring(0, paletteDiv.style.width.indexOf("px"));
+			if (newWidth !== "") {
+				newWidth = this.snapToWidth(newWidth);
+			}
+			paletteDiv.style.width = newWidth + "px";
+
+			// adjust the width if the content enters a scrolling situation
+			const scrollDiv = paletteDiv.childNodes[1].childNodes[1];
+			if (scrollDiv.clientHeight < scrollDiv.scrollHeight) {
+				paletteDiv.style.width = (newWidth + this.adjustedScrollBarWidth) + "px";
 			}
 		}
+
+		// snap to grid adjustment to height
 		if (this.verticalSizingAction !== "") {
 			const oldHeight = paletteDiv.style.height.substring(0, paletteDiv.style.height.indexOf("px"));
 			if (oldHeight !== "") {
-				const newHeight = this.snapToHeight(oldHeight);
+				const gridHeight = this.state.showGrid ? this.grid_node_height : this.list_node_height;
+
+				const newHeight = this.snapToHeight(oldHeight, gridHeight);
 				paletteDiv.style.height = newHeight + "px";
 				this.setContentDivHeight(paletteDiv, newHeight);
 			}
 		}
+
 		this.dragging = false;
 		this.verticalSizingAction = "";
 		this.horizontalSizingAction = "";
@@ -354,8 +369,8 @@ class Palette extends React.Component {
 		return (snapWidth + this.adjustedWidth);
 	}
 	// Calculate snap to grid width
-	snapToHeight(newHeight) {
-		const snapHeight = Math.round((newHeight - this.adjustedHeight) / this.grid_node_height) * this.grid_node_height;
+	snapToHeight(newHeight, gridHeight) {
+		const snapHeight = Math.round((newHeight - this.adjustedHeight) / gridHeight) * gridHeight;
 		return (snapHeight + this.adjustedHeight);
 	}
 
