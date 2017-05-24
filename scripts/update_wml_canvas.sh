@@ -39,6 +39,7 @@ if [[ ${CURRENT_MJR_NUM} == ${LATEST_MJR_NUM} ]]; then
 	# commit single change to wml-canvas-ui
 	git status
 	git add package.json
+	git pull
 	git commit -m "Update common-canvas version to ${LATEST_BUILDNUM}"
 	echo "Push changes to master"
 	git push origin ${MASTER}

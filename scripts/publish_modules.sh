@@ -45,7 +45,7 @@ if [[ ${TRAVIS_BRANCH} == ${MASTER} ]]; then
 	# Update Artifactory npm repository for master builds
 	npm publish --registry ${ARTIFACTORY_NPM_REPO}
 	cd $WORKING_DIR/scripts
-	./update_wml-canvas.sh $BUILDNUM
+	./update_wml_canvas.sh $BUILDNUM
 elif [[ ${TRAVIS_BRANCH} == ${RELEASE_BRANCH} ]]; then
 	# Update Whitewater npm repository for master builds
 	npm publish --registry https://npm-registry.whitewater.ibm.com/
