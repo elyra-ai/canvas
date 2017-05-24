@@ -35,9 +35,6 @@ function _getErrorMessage(prefix, errorObject, id) {
 		} else {
 			message = "Message unavailable";
 		}
-	} else {
-		// Error message
-		message = "Undefined exception";
 	}
 
 	var errorMessage = "[" + prefix + "]: " +

@@ -13,46 +13,41 @@
 *****************************************************************/
 
 export default class EnumRenderer {
-  constructor(values, valueLabels, isMultiple) {
-    this.values = values;
-    this.valueLabels = valueLabels;
-    this.isMultiple = isMultiple;
+	constructor(values, valueLabels, isMultiple) {
+		this.values = values;
+		this.valueLabels = valueLabels;
+		this.isMultiple = isMultiple;
 
-    let valuesMap = {};
-    for (let i=0; i < values.length; ++i) {
-      valuesMap[values[i]] = valueLabels[i];
-    }
+		const valuesMap = {};
+		for (let i = 0; i < values.length; ++i) {
+			valuesMap[values[i]] = valueLabels[i];
+		}
 
-    this.valuesMap = valuesMap;
-  }
+		this.valuesMap = valuesMap;
+	}
 
-  render(value) {
-    if (this.isMultiple) {
-      let parsedValues = JSON.parse(value);
-      let rendered = "[";
-      for (let i=0; i < parsedValues.length; ++i) {
-        let rawval = parsedValues[i];
-        if (i > 0) {
-          rendered += ","
-        }
-        let val = this.valuesMap[rawval];
-        if (rendered === undefined) {
-          rendered += "<" + rawval + ">";
-        }
-        else {
-          rendered += val;
-        }
-      }
-      return rendered + "]";
-    }
-    else {
-      let rendered = this.valuesMap[value];
-      if (rendered === undefined) {
-        return "<" + value + ">";
-      }
-      else {
-        return rendered;
-      }
-    }
-  }
+	render(value) {
+		if (this.isMultiple) {
+			const parsedValues = JSON.parse(value);
+			let multiRendered = "[";
+			for (let i = 0; i < parsedValues.length; ++i) {
+				const rawval = parsedValues[i];
+				if (i > 0) {
+					multiRendered += ",";
+				}
+				const val = this.valuesMap[rawval];
+				if (typeof multiRendered === "undefined") {
+					multiRendered += "<" + rawval + ">";
+				} else {
+					multiRendered += val;
+				}
+			}
+			return multiRendered + "]";
+		}
+		const rendered = this.valuesMap[value];
+		if (typeof rendered === "undefined") {
+			return "<" + value + ">";
+		}
+		return rendered;
+	}
 }

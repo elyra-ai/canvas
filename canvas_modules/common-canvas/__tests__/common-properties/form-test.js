@@ -15,10 +15,6 @@
 import { expect } from "chai";
 import _ from "underscore";
 import Form from "../../src/common-properties/form/Form";
-import { ControlPanel, Label, ValueDef } from "../../src/common-properties/form/UIInfo";
-import { Control, SubControl } from "../../src/common-properties/form/ControlInfo";
-import { UIItem } from "../../src/common-properties/form/UIItem";
-import { EditorTab } from "../../src/common-properties/form/EditorForm";
 
 const resources = {
 	"balance.label": "Balance",
@@ -51,25 +47,93 @@ var undefinedVar;
 describe("Correct form should be created", () => {
 	it("should create a form with a structure without key", () => {
 
-		const factorUIItem = new UIItem("control", undefinedVar, undefinedVar,
-			new Control("factor", new Label("Factor"), true, "numberfield", new ValueDef("double", false, false)));
-		const conditionUIItem = new UIItem("control", undefinedVar, undefinedVar,
-			new Control("condition", new Label("Condition"), true, "expression", new ValueDef("string", false, false)));
-
-		const directivesChildItem = new UIItem("additionalLink", undefinedVar, new ControlPanel("BalanceEntry", "general", [factorUIItem, conditionUIItem]), undefinedVar,
-			"...", "Balance Settings");
-		const directivesSubControls = [new SubControl("factor", new Label("Factor"), true, 16, "numberfield", new ValueDef("double", false, false)),
-			new SubControl("condition", new Label("Condition"), true, 32, "textfield", new ValueDef("string", false, false))];
-		const directivesUIItem = new UIItem("control", undefinedVar, undefinedVar,
-			new Control("directives", new Label("Balance Directives"), true, "structurelisteditor", new ValueDef("structure", true, false),
-			undefinedVar, undefinedVar, undefinedVar, undefinedVar, undefinedVar, directivesSubControls, -1, ["1", "true"], directivesChildItem));
-
-		const trainingDataOnlyUIItem = new UIItem("control", undefinedVar, undefinedVar,
-			new Control("training_data_only", new Label("Only balance training data"), false, "checkbox", new ValueDef("boolean", false, false)));
-
-		const basicSettingsUIItem = new UIItem("panel", undefinedVar, new ControlPanel("basic-settings", "general", [directivesUIItem, trainingDataOnlyUIItem]));
-		const settingsTab = new EditorTab("Settings", "basic-settings", basicSettingsUIItem);
-		const primaryTabs = new UIItem("primaryTabs", [settingsTab]);
+		const primaryTabs = {
+			"itemType": "primaryTabs",
+			"tabs": [{
+				"text": "Settings",
+				"group": "basic-settings",
+				"content": {
+					"itemType": "panel",
+					"panel": {
+						"id": "basic-settings",
+						"panelType": "general",
+						"uiItems": [
+							{
+								"itemType": "control",
+								"control": {
+									"name": "directives",
+									"label": { "text": "Balance Directives" },
+									"controlType": "structurelisteditor",
+									"valueDef": { "propType": "structure", "isList": true, "isMap": false },
+									"separateLabel": true,
+									"subControls": [
+										{
+											"name": "factor",
+											"label": { "text": "Factor" },
+											"controlType": "numberfield",
+											"valueDef": { "propType": "double", "isList": false, "isMap": false },
+											"visible": true,
+											"width": 16
+										},
+										{
+											"name": "condition",
+											"label": { "text": "Condition" },
+											"controlType": "textfield",
+											"valueDef": { "propType": "string", "isList": false, "isMap": false },
+											"visible": true,
+											"width": 32
+										}],
+									"keyIndex": -1,
+									"defaultRow": ["1", "true"],
+									"childItem": {
+										"itemType": "additionalLink",
+										"panel": {
+											"id": "BalanceEntry",
+											"panelType": "general",
+											"uiItems": [
+												{
+													"itemType": "control",
+													"control": {
+														"name": "factor",
+														"label": { "text": "Factor" },
+														"controlType": "numberfield",
+														"valueDef": { "propType": "double", "isList": false, "isMap": false },
+														"separateLabel": true
+													}
+												},
+												{
+													"itemType": "control",
+													"control": {
+														"name": "condition",
+														"label": { "text": "Condition" },
+														"controlType": "expression",
+														"valueDef": { "propType": "string", "isList": false, "isMap": false },
+														"separateLabel": true
+													}
+												}
+											]
+										},
+										"text": "...",
+										"secondaryText": "Balance Settings"
+									}
+								}
+							},
+							{
+								"itemType": "control",
+								"control": {
+									"name": "training_data_only",
+									"label": { "text": "Only balance training data" },
+									"controlType": "checkbox",
+									"valueDef": { "propType": "boolean", "isList": false, "isMap": false },
+									"separateLabel": false
+								}
+							}
+						]
+					}
+				}
+			}
+		]
+		};
 		const expectedForm = new Form("balance", "Balance", "large", [primaryTabs], buttons, {});
 
 		const paramSpec = {
@@ -173,8 +237,10 @@ describe("Correct form should be created", () => {
 	);
 
 	it("should create a form with tabs since there is missing data", () => {
-
-		const primaryTabs = new UIItem("primaryTabs", []);
+		const primaryTabs = {
+			"itemType": "primaryTabs",
+			"tabs": []
+		};
 		const expectedForm = new Form(undefinedVar, "undefined.label", "large", [primaryTabs], buttons, {});
 
 		const paramSpec = {

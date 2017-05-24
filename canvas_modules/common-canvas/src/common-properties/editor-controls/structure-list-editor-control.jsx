@@ -12,105 +12,101 @@
 ** deposited with the U.S. Copyright Office.
 *****************************************************************/
 
-import React from 'react'
-import {Button} from 'react-bootstrap'
-import {Table, Column, Cell} from 'fixed-data-table'
-import EditorControl from './editor-control.jsx'
-import StructureTableEditor from './structure-table-editor.jsx'
-
-import SubPanelCell from '../editor-panels/sub-panel-cell.jsx'
-import TextRenderer from '../renderers/text-renderer.jsx'
-import EnumRenderer from '../renderers/enum-renderer.jsx'
-
-var _ = require('underscore');
+import logger from "../../../utils/logger";
+import React from "react";
+import { Button } from "react-bootstrap";
+import StructureTableEditor from "./structure-table-editor.jsx";
 
 export default class StructurelisteditorControl extends StructureTableEditor {
-  constructor(props) {
-    super(props);
+	constructor(props) {
+		super(props);
 
-    this.addRow = this.addRow.bind(this);
-    this.removeSelectedRows = this.removeSelectedRows.bind(this);
+		this.addRow = this.addRow.bind(this);
+		this.removeSelectedRows = this.removeSelectedRows.bind(this);
 
-    this.stopEditingRow = this.stopEditingRow.bind(this);
-  }
+		this.stopEditingRow = this.stopEditingRow.bind(this);
+	}
 
-  stopEditingRow(rowIndex, applyChanges) {
-    console.log("stopEditingRow: row=" + rowIndex + ", applyChanges=" + applyChanges);
+	stopEditingRow(rowIndex, applyChanges) {
+		logger.info("stopEditingRow: row=" + rowIndex + ", applyChanges=" + applyChanges);
 
-    if (applyChanges) {
-      let subControlId = this.getSubControlId();
-      let allValues = this.getCurrentControlValue();
-      for (var i=0;i < this.props.control.subControls.length;i++) {
-        let columnControl = this.props.control.subControls[i];
-        let lookupKey = subControlId + columnControl.name;
-        // console.log("Accessing sub-control " + lookupKey);
-        let control = this.refs[lookupKey];
-        // console.log(control);
-        if (control !== undefined) {
-          let controlValue = control.getControlValue();
-          console.log("Control value=" + controlValue);
-          if (columnControl.valueDef.isList === true) {
-            allValues[rowIndex][i] = JSON.stringify(controlValue);
-          }
-          else {
-            allValues[rowIndex][i] = controlValue[0];
-          }
-        }
-      }
-      this.setCurrentControlValue(this.props.control.name, allValues, this.props.updateControlValue);
-    }
-  }
+		if (applyChanges) {
+			const subControlId = this.getSubControlId();
+			const allValues = this.getCurrentControlValue();
+			for (var i = 0; i < this.props.control.subControls.length; i++) {
+				const columnControl = this.props.control.subControls[i];
+				const lookupKey = subControlId + columnControl.name;
+				// logger.info("Accessing sub-control " + lookupKey);
+				const control = this.refs[lookupKey];
+				// logger.info(control);
+				if (typeof control !== "undefined") {
+					const controlValue = control.getControlValue();
+					logger.info("Control value=" + controlValue);
+					if (columnControl.valueDef.isList === true) {
+						allValues[rowIndex][i] = JSON.stringify(controlValue);
+					} else {
+						allValues[rowIndex][i] = controlValue[0];
+					}
+				}
+			}
+			this.setCurrentControlValue(this.props.control.name, allValues, this.props.updateControlValue);
+		}
+	}
 
-  addRow() {
-    console.log("addRow");
+	addRow() {
+		logger.info("addRow");
 
-    let newRow = JSON.parse(JSON.stringify(this.props.control.defaultRow));
-    console.log(newRow);
-    console.log(this.getCurrentControlValue());
-    let rows = this.getCurrentControlValue();
-    rows.push(newRow);
-    console.log(rows);
+		const newRow = JSON.parse(JSON.stringify(this.props.control.defaultRow));
+		logger.info(newRow);
+		logger.info(this.getCurrentControlValue());
+		const rows = this.getCurrentControlValue();
+		rows.push(newRow);
+		logger.info(rows);
 
-    this.setCurrentControlValue(this.props.control.name, rows, this.props.updateControlValue);
-  }
+		this.setCurrentControlValue(this.props.control.name, rows, this.props.updateControlValue);
+	}
 
-  removeSelectedRows() {
-    console.log("removeSelectedRows");
+	removeSelectedRows() {
+		logger.info("removeSelectedRows");
 
-    let rows = this.getCurrentControlValue();
+		const rows = this.getCurrentControlValue();
 
-    // Sort descending to ensure lower indices don't get
-    // changed when values are deleted
-    let selected = this.getSelectedRows().sort(function(a, b) {return b-a});
+		// Sort descending to ensure lower indices don"t get
+		// changed when values are deleted
+		const selected = this.getSelectedRows().sort(function(a, b) {
+			return b - a;
+		});
 
-    console.log(selected);
+		logger.info(selected);
 
-    for (let i=0;i < selected.length;i++) {
-      rows.splice(selected[i], 1);
-    }
+		for (let i = 0; i < selected.length; i++) {
+			rows.splice(selected[i], 1);
+		}
 
-    this.setCurrentControlValue(this.props.control.name, rows, this.props.updateControlValue);
-  }
+		this.setCurrentControlValue(this.props.control.name, rows, this.props.updateControlValue);
+	}
 
-  render() {
-    console.log("StructurelisteditorControl.render()");
-    console.log(this.getCurrentControlValue());
+	render() {
+		logger.info("StructurelisteditorControl.render()");
+		logger.info(this.getCurrentControlValue());
 
-    let table = this.createTable();
-    let add = <Button bsSize="small" onClick={this.addRow}>+</Button>;
-    let remove = <Button bsSize="small" onClick={this.removeSelectedRows}>-</Button>;
+		const table = this.createTable();
+		const add = <Button bsSize="small" onClick={this.addRow}>+</Button>;
+		const remove = <Button bsSize="small" onClick={this.removeSelectedRows}>-</Button>;
 
-    return <div id={this.getControlID()}>
-      <div id="structure-list-editor-table-buttons">
-        {table}
-        <div id="structure-list-editor-buttons-container"><span>{add} {remove}</span></div>
-      </div>
-    </div>;
-  }
+		return (<div id={this.getControlID()}>
+			<div id="structure-list-editor-table-buttons">
+				{table}
+				<div id="structure-list-editor-buttons-container">
+					<span>{add} {remove}</span>
+				</div>
+			</div>
+		</div>);
+	}
 }
 
 StructurelisteditorControl.propTypes = {
-  buildUIItem: React.PropTypes.func,
-  dataModel: React.PropTypes.array.isRequired,
-  control: React.PropTypes.object.isRequired
+	buildUIItem: React.PropTypes.func,
+	dataModel: React.PropTypes.array.isRequired,
+	control: React.PropTypes.object.isRequired
 };

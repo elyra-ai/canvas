@@ -7,56 +7,64 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import {UIInfo} from "./UIInfo";
-import {Type, ParamRole} from "./form-constants";
+import { UIInfo } from "./UIInfo";
+import {
+	Type,
+	ParamRole
+} from "./form-constants";
 import _ from "underscore";
 
-class ValueRestriction{
-	constructor(oneOf, labels, labelsKey){
+class ValueRestriction {
+	constructor(oneOf, labels, labelsKey) {
 		this.oneOf = oneOf;
 		this.labels = labels;
 		this.labelsKey = labelsKey;
 	}
 
-	static make(restrictionOp){
+	static make(restrictionOp) {
 		return new ValueRestriction(
 			_.propertyOf(restrictionOp)("oneOf"),
 			_.propertyOf(restrictionOp)("labels"),
 			_.propertyOf(restrictionOp)("labelsKey")
-		)
+		);
 	}
 }
 
-export class ParameterDef extends UIInfo{
-	constructor(name, label, description, type, required, resourceKey, role, visible, range, valueRestriction, defaultValue, uiHints){
-		super(label, description, resourceKey, uiHints);
-		this.name = name;
+export class ParameterDef extends UIInfo {
+	constructor(cname, label, description, type, required, resourceKey, role, visible, range, valueRestriction, defaultValue, uiHints) {
+		super({
+			label: label,
+			description: description,
+			resourceKey: resourceKey,
+			uiHints: uiHints
+		});
+		this.name = cname;
 		this.type = type;
 		this.required = required;
 		this.role = role;
-		this.visible = (visible ? visible : true) // Only used for properties within structures
+		this.visible = (visible ? visible : true); // Only used for properties within structures
 		this.range = range;
 		this.valueRestriction = valueRestriction;
 		this.defaultValue = defaultValue;
 	}
 
 	isList() {
-		return this.type.startsWith("array[")
+		return this.type.startsWith("array[");
 	}
 
 	isMapValue() {
-		return this.type.startsWith("map[")
+		return this.type.startsWith("map[");
 	}
 
-	propType(){
+	propType() {
 		// If we don't recognize the base type as one of the built-in types, assume it's a structure
 		let value;
-		for(let key in Type){
-			if (this.baseType() === Type[key]){
+		for (const key in Type) {
+			if (this.baseType() === Type[key]) {
 				value = Type[key];
 			}
 		}
-		if (!value){
+		if (!value) {
 			value = Type.STRUCTURE;
 		}
 		return value;
@@ -64,43 +72,43 @@ export class ParameterDef extends UIInfo{
 
 	getRole() {
 		if (this.role) {
-			return this.role
-		}else if (this.valueRestriction.oneOf) {
+			return this.role;
+		} else if (this.valueRestriction.oneOf) {
 			// Assume valueRestriction implies ENUM
-			return ParamRole.ENUM
-		}else {
-			return ParamRole.UNSPECIFIED
+			return ParamRole.ENUM;
 		}
+		return ParamRole.UNSPECIFIED;
 	}
 
 	/**
-	* Returns the type of a parameter.
-	*/
+	 * Returns the type of a parameter.
+	 */
 	baseType() {
-		let typ = this.type
+		const typ = this.type;
 		if (this.isList()) {
 			// "array[<value-type>]" so remove the leading "array[" and trailing "]"
-			return typ.substring(6, this.type.length-1)
-		}else if (this.isMapValue()) {
+			return typ.substring(6, this.type.length - 1);
+		} else if (this.isMapValue()) {
 			// "map[<key-type>,<value-type>]" so remove everything up to and including "," and drop the trailing "]"
-			return typ.substring(typ.indexOf(",")+ 1, this.type.length-1)
-		}else {
-			return typ;
+			return typ.substring(typ.indexOf(",") + 1, this.type.length - 1);
 		}
+		return typ;
 	}
 
 	getValidValues() {
+		var undef;
 		if (this.getRole() === ParamRole.ENUM && this.valueRestriction) {
-			return this.valueRestriction.oneOf
+			return this.valueRestriction.oneOf;
 		}
+		return undef;
 	}
 
-	getValidValueCount(){
+	getValidValueCount() {
 		return (this.getValidValues() ? this.getValidValues().length : 0);
 	}
 
-	static makeParameterDef(paramOp){
-		if (paramOp){
+	static makeParameterDef(paramOp) {
+		if (paramOp) {
 			return new ParameterDef(
 				_.propertyOf(paramOp)("name"),
 				_.propertyOf(paramOp)("label"),
@@ -114,36 +122,41 @@ export class ParameterDef extends UIInfo{
 				ValueRestriction.make(_.propertyOf(paramOp)("valueRestriction")),
 				JSON.stringify(_.propertyOf(paramOp)("default")),
 				_.propertyOf(paramOp)("uiHints")
-			)
+			);
 		}
+		return null;
 	}
 }
 
- // PropertyProvider
-export class ParameterMetadata{
-	constructor( paramDefs){
+// PropertyProvider
+export class ParameterMetadata {
+	constructor(paramDefs) {
 		this.paramDefs = paramDefs;
 	}
 
 	// Return a single parameter
-	getParameter(paramName){
+	getParameter(paramName) {
 		let paramDef;
-		this.paramDefs.forEach(function(param){
-			if (param.name === paramName){
+		this.paramDefs.forEach(function(param) {
+			if (param.name === paramName) {
 				paramDef = param;
 			}
-		})
+		});
 		return paramDef;
 	}
 
 	// operation arguments
-	static makeParameterMetadata(opParameters){
-		if (opParameters){
-			let paramDefs = [];
-			for (let param of opParameters){
-				paramDefs.push(ParameterDef.makeParameterDef(param));
+	static makeParameterMetadata(opParameters) {
+		if (opParameters) {
+			const paramDefs = [];
+			for (const param of opParameters) {
+				const paramDef = ParameterDef.makeParameterDef(param);
+				if (paramDef !== null) {
+					paramDefs.push(ParameterDef.makeParameterDef(param));
+				}
 			}
-			return new ParameterMetadata(paramDefs)
+			return new ParameterMetadata(paramDefs);
 		}
+		return null;
 	}
 }

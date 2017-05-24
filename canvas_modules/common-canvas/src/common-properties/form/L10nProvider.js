@@ -10,14 +10,14 @@
 import _ from "underscore";
 
 export class L10nProvider {
-	constructor(resources){
+	constructor(resources) {
 		this.resources = resources;
 	}
 
-  /**
-   * Look up a localised resource using the supplied key.
-   */
-  l10n(key){
+	/**
+	 * Look up a localised resource using the supplied key.
+	 */
+	l10n(key) {
 		let value;
 		if (this.resources) {
 			value = _.propertyOf(this.resources)(key);
@@ -25,49 +25,43 @@ export class L10nProvider {
 		return (value ? value : key);
 	}
 
-  /**
-   * Look up a localised resource label using the supplied base key with ".label" appended.
-   */
-  l10nLabel(uiObject, key){
-		if (uiObject.label){
+	/**
+	 * Look up a localised resource label using the supplied base key with ".label" appended.
+	 */
+	l10nLabel(uiObject, key) {
+		if (uiObject.label) {
 			return uiObject.label;
-		}else{
-			if (uiObject.resourceKey){
-				return this.l10n(uiObject.resourceKey + ".label");
-			}else{
-				return this.l10n(key + ".label");
-			}
 		}
-  }
+		if (uiObject.resourceKey) {
+			return this.l10n(uiObject.resourceKey + ".label");
+		}
+		return this.l10n(key + ".label");
+	}
 
-  /**
-   * Look up a localised resource description/tooltip using the supplied base key with ".desc" appended.
-   */
-  l10nDesc(uiObject, key){
-		if (uiObject.description){
+	/**
+	 * Look up a localised resource description/tooltip using the supplied base key with ".desc" appended.
+	 */
+	l10nDesc(uiObject, key) {
+		if (uiObject.description) {
 			return uiObject.description;
-		}else{
-			if (uiObject.resourceKey){
-				return this.l10n(uiObject.resourceKey + ".desc");
-			}else{
-				return this.l10n(key + ".desc");
-			}
 		}
-  }
+		if (uiObject.resourceKey) {
+			return this.l10n(uiObject.resourceKey + ".desc");
+		}
+		return this.l10n(key + ".desc");
+	}
 
-  /**
-   * Look up a localised resource label for an enumerated value using the supplied
-   * base key with the value and ".label" appended e.g. "measurement.continous.label".
-   */
-  l10nValueLabel(baseKey, value) {
-    let lookupKey = baseKey + "." + value + ".label"
-    let result = this.l10n(lookupKey)
-    // If the key is returned unchanged then assume lookup failed so use the base value
-    if (result === lookupKey) {
+	/**
+	 * Look up a localised resource label for an enumerated value using the supplied
+	 * base key with the value and ".label" appended e.g. "measurement.continous.label".
+	 */
+	l10nValueLabel(baseKey, value) {
+		const lookupKey = baseKey + "." + value + ".label";
+		const result = this.l10n(lookupKey);
+		// If the key is returned unchanged then assume lookup failed so use the base value
+		if (result === lookupKey) {
 			return value;
 		}
-    else {
-      return result
-    }
-  }
+		return result;
+	}
 }

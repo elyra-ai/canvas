@@ -7,48 +7,89 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
- import {ItemType} from "./form-constants"
+import { ItemType } from "./form-constants";
 
 export class UIItem {
-	constructor(itemType, tabs, panel, control, text, secondaryText, dependsOn){
-		this.itemType = itemType;
-		this.tabs = tabs;      // when PRIMARY_TABS, SUB_TABS or PANEL_SELECTOR
-		this.panel = panel;       // when PANEL or ADDITIONAL_LINK
-		this.control = control;          // when CONTROL
-		this.text = text;              // when ADDITIONAL_LINK (link label), STATIC_TEXT or HORIZONTAL_SEPARATOR
-		this.secondaryText = secondaryText;     // when ADDITIONAL_LINK (subpanel label)
-		this.dependsOn = dependsOn;          // when PANEL_SELECTOR (control to obtain value from)
+	constructor(elements) {
+		if (elements.itemType) {
+			this.itemType = elements.itemType;
+		}
+		if (elements.tabs) {
+			this.tabs = elements.tabs; // when PRIMARY_TABS, SUB_TABS or PANEL_SELECTOR
+		}
+		if (elements.panel) {
+			this.panel = elements.panel; // when PANEL or ADDITIONAL_LINK
+		}
+		if (elements.control) {
+			this.control = elements.control; // when CONTROL
+		}
+		if (elements.text) {
+			this.text = elements.text; // when ADDITIONAL_LINK (link label), STATIC_TEXT or HORIZONTAL_SEPARATOR
+		}
+		if (elements.secondaryText) {
+			this.secondaryText = elements.secondaryText; // when ADDITIONAL_LINK (subpanel label)
+		}
+		if (elements.dependsOn) {
+			this.dependsOn = elements.dependsOn; // when PANEL_SELECTOR (control to obtain value from)
+		}
 	}
 
-	static makePrimaryTabs(tabs){
-		return new UIItem(ItemType.PRIMARY_TABS, tabs);
+	static makePrimaryTabs(tabs) {
+		return new UIItem({
+			itemType: ItemType.PRIMARY_TABS,
+			tabs: tabs
+		});
 	}
 
-	static makeSubTabs(tabs){
-		return new UIItem(ItemType.SUB_TABS, tabs);
+	static makeSubTabs(tabs) {
+		return new UIItem({
+			itemType: ItemType.SUB_TABS,
+			tabs: tabs
+		});
 	}
 
-	static makePanelSelector(tabs, dependsOn){
-		return new UIItem(ItemType.PANEL_SELECTOR, tabs, undefined, undefined, undefined, undefined, dependsOn);
+	static makePanelSelector(tabs, dependsOn) {
+		return new UIItem({
+			itemType: ItemType.PANEL_SELECTOR,
+			tabs: tabs,
+			dependsOn: dependsOn
+		});
 	}
 
-	static makePanel(panel){
-		return new UIItem(ItemType.PANEL, undefined, panel);
+	static makePanel(panel) {
+		return new UIItem({
+			itemType: ItemType.PANEL,
+			panel: panel
+		});
 	}
 
-	static makeAdditionalLink(linkText, dialogText, panel){
-		return new UIItem(ItemType.ADDITIONAL_LINK, undefined, panel, undefined, linkText, dialogText);
+	static makeAdditionalLink(text, dialogText, panel) {
+		return new UIItem({
+			itemType: ItemType.ADDITIONAL_LINK,
+			panel: panel,
+			text: text,
+			secondaryText: dialogText
+		});
 	}
 
-	static makeControl(control){
-		return new UIItem(ItemType.CONTROL, undefined, undefined, control);
+	static makeControl(control) {
+		return new UIItem({
+			itemType: ItemType.CONTROL,
+			control: control
+		});
 	}
 
-	static makeHSeparator(label){
-		return new UIItem(ItemType.HORIZONTAL_SEPARATOR, undefined, undefined, undefined, label);
+	static makeHSeparator(label) {
+		return new UIItem({
+			itemType: ItemType.HORIZONTAL_SEPARATOR,
+			label: label
+		});
 	}
 
-	static makeStaticText(label){
-		return new UIItem(ItemType.STATIC_TEXT, undefined, undefined, undefined, label);
+	static makeStaticText(label) {
+		return new UIItem({
+			itemType: ItemType.STATIC_TEXT,
+			label: label
+		});
 	}
 }

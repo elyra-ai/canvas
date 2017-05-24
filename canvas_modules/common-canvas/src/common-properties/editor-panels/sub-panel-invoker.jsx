@@ -12,63 +12,65 @@
 ** deposited with the U.S. Copyright Office.
 *****************************************************************/
 
-import React from 'react'
-import {Button} from 'react-bootstrap'
+/* eslint "react/prop-types": [2, { ignore: ["children"] }] */
 
-import PropertiesDialog from '../properties-dialog.jsx'
+import React from "react";
+
+import PropertiesDialog from "../properties-dialog.jsx";
 
 export default class SubPanelInvoker extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      panel: null,
-      title: null,
-      hideHandler: null,
-      subPanelVisible: false
-    };
-    this.showSubDialog = this.showSubDialog.bind(this);
-    this.hideSubDialog = this.hideSubDialog.bind(this);
-  }
+	constructor(props) {
+		super(props);
+		this.state = {
+			panel: null,
+			title: null,
+			hideHandler: null,
+			subPanelVisible: false
+		};
+		this.showSubDialog = this.showSubDialog.bind(this);
+		this.hideSubDialog = this.hideSubDialog.bind(this);
+	}
 
-  showSubDialog(title, panel, hideHandler) {
-    //console.log("showSubDialog()");
-    this.setState({
-      panel: panel,
-      title: title,
-      hideHandler: hideHandler,
-      subPanelVisible: true
-    });
-  }
+	showSubDialog(title, panel, hideHandler) {
+		this.setState({
+			panel: panel,
+			title: title,
+			hideHandler: hideHandler,
+			subPanelVisible: true
+		});
+	}
 
-  hideSubDialog(applyChanges) {
-    //console.log("hideSubDialog(): " + applyChanges);
-    this.state.hideHandler(applyChanges);
-    this.setState({
-      panel: null,
-      title: null,
-      hideHandler: null,
-      subPanelVisible: false
-    });
-  }
+	hideSubDialog(applyChanges) {
+		this.state.hideHandler(applyChanges);
+		this.setState({
+			panel: null,
+			title: null,
+			hideHandler: null,
+			subPanelVisible: false
+		});
+	}
 
-  render() {
-    var propertiesDialog = [];
+	render() {
+		var propertiesDialog = [];
 
-    if (this.state.subPanelVisible) {
-      propertiesDialog = <PropertiesDialog
-            onHide={this.hideSubDialog.bind(this, false)}
-            title={this.state.title}
-            okHandler={this.hideSubDialog.bind(this, true)}
-            cancelHandler={this.hideSubDialog.bind(this, false)}>{this.state.panel}</PropertiesDialog>;
-    }
+		if (this.state.subPanelVisible) {
+			propertiesDialog = (<PropertiesDialog
+				onHide={this.hideSubDialog.bind(this, false)}
+				title={this.state.title}
+				okHandler={this.hideSubDialog.bind(this, true)}
+				cancelHandler={this.hideSubDialog.bind(this, false)}
+			>
+				{this.state.panel}
+			</PropertiesDialog>);
+		}
 
-    return (
-      <div>
-      {propertiesDialog}
-      {this.props.children}
-      </div>
-    );
-  }
+		return (
+			<div>
+				{propertiesDialog}
+				{this.props.children}
+			</div>
+		);
+	}
 }
 
 SubPanelInvoker.propTypes = {

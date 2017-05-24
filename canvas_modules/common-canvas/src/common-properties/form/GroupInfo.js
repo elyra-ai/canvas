@@ -7,61 +7,68 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
- import {UIInfo} from "./UIInfo"
- import {GroupType} from "./form-constants"
+ import { UIInfo } from "./UIInfo";
+ import { GroupType } from "./form-constants";
  import _ from "underscore";
 
-class Group extends UIInfo{
-	constructor(name, parameters, uiHints, subGroups){
-		super(undefined, undefined, undefined, uiHints);
-		this.name = name;
+class Group extends UIInfo {
+	constructor(cname, parameters, uiHints, subGroups) {
+		super({ uiHints: uiHints });
+		this.name = cname;
 		this.parameters = parameters;
 		this.uiHints = uiHints;
 		this.subGroups = subGroups;
 	}
 
-	parameterNames(){
+	parameterNames() {
 		return this.parameters;
 	}
 
-	groupType(){
-		if (_.has(this.uiHints, "groupType")){
+	groupType() {
+		if (_.has(this.uiHints, "groupType")) {
 			return this.uiHints.groupType;
-		}else{
-			return GroupType.CONTROLS;
 		}
+		return GroupType.CONTROLS;
 	}
 
-	static makeGroup(groupOp){
-		if (groupOp){
+	static makeGroup(groupOp) {
+		if (groupOp) {
 			let subGroups;
-			if (_.has(groupOp,"subGroups")){
+			if (_.has(groupOp, "subGroups")) {
 				subGroups = [];
-				for (let group of groupOp.subGroups){
-					subGroups.push(Group.makeGroup(group));
+				for (const group of groupOp.subGroups) {
+					const newGroup = Group.makeGroup(group);
+					if (newGroup !== null) {
+						subGroups.push(newGroup);
+					}
 				}
 			}
 			return new Group(
 				_.propertyOf(groupOp)("name"),
 				_.propertyOf(groupOp)("arguments"),
 				_.propertyOf(groupOp)("uiHints"),
-				subGroups)
+				subGroups);
 		}
+		return null;
 	}
 }
 
-export class GroupMetadata{
-	constructor(groups){
+export class GroupMetadata {
+	constructor(groups) {
 		this.groups = groups;
 	}
 
-	static makeGroupMetadata(groupsOp){
-		if (groupsOp){
-			let groups = [];
-			for (let group of groupsOp){
-				groups.push(Group.makeGroup(group));
+	static makeGroupMetadata(groupsOp) {
+		if (groupsOp) {
+			const groups = [];
+			for (const group of groupsOp) {
+				const newGroup = Group.makeGroup(group);
+				if (newGroup !== null) {
+					groups.push(newGroup);
+				}
 			}
 			return new GroupMetadata(groups);
 		}
+		return null;
 	}
 }

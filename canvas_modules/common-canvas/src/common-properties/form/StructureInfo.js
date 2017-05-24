@@ -7,30 +7,33 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
- import {UIInfo} from "./UIInfo"
- import {ParameterDef, ParameterMetadata} from "./ParameterInfo"
- import {EditStyle} from "./form-constants"
- import _ from "underscore";
+import { UIInfo } from "./UIInfo";
+import {
+	ParameterDef,
+	ParameterMetadata
+} from "./ParameterInfo";
+import { EditStyle } from "./form-constants";
+import _ from "underscore";
 
-class StructureDef extends UIInfo{
-	constructor(name, keyDefinition, parameterMetadata, uiHints){
-		super(undefined, undefined, undefined, uiHints);
-		this.name = name;
+class StructureDef extends UIInfo {
+	constructor(cname, keyDefinition, parameterMetadata, uiHints) {
+		super({ uiHints: uiHints });
+		this.name = cname;
 		this.keyDefinition = keyDefinition;
 		this.parameterMetadata = parameterMetadata;
 	}
 
-	isEditStyleSubpanel(){
-		return (this.editStyle() === EditStyle.SUBPANEL)
+	isEditStyleSubpanel() {
+		return (this.editStyle() === EditStyle.SUBPANEL);
 	}
 
 	/**
-	* Returns a array of parameter names
-	*/
-	parameterNames(){
-		let params = [];
-		if (this.parameterMetadata){
-			for(let param of this.parameterMetadata.paramDefs){
+	 * Returns a array of parameter names
+	 */
+	parameterNames() {
+		const params = [];
+		if (this.parameterMetadata) {
+			for (const param of this.parameterMetadata.paramDefs) {
 				params.push(param.name);
 			}
 		}
@@ -38,23 +41,22 @@ class StructureDef extends UIInfo{
 	}
 
 	isEditStyleInlinel() {
-		return (this.editStyle() === EditStyle.INLINE)
+		return (this.editStyle() === EditStyle.INLINE);
 	}
 
 	keyAttributeIndex() {
 		if (this.keyDefinition) {
 			// Assume the key is always in the first column
 			return 0;
-		}else {
-			return -1;
 		}
+		return -1;
 	}
 
-	defaultStructure(addKeyDefinition){
-		let defaults = [];
-		this.parameterMetadata.paramDefs.forEach(function(param){
+	defaultStructure(addKeyDefinition) {
+		const defaults = [];
+		this.parameterMetadata.paramDefs.forEach(function(param) {
 			defaults.push(_.propertyOf(param)("defaultValue"));
-		})
+		});
 		if (addKeyDefinition && this.keyDefinition) {
 			// Assume the key is always in the first column
 			defaults.unshift(_.propertyOf(this.keyDefinition)("defaultValue"));
@@ -62,40 +64,45 @@ class StructureDef extends UIInfo{
 		return defaults;
 	}
 
-	static makeStructure(structureOp){
-		if (structureOp){
+	static makeStructure(structureOp) {
+		if (structureOp) {
 			return new StructureDef(
 				_.propertyOf(structureOp)("name"),
 				ParameterDef.makeParameterDef(_.propertyOf(structureOp.metadata)("keyDefinition")),
 				ParameterMetadata.makeParameterMetadata(_.propertyOf(structureOp.metadata)("arguments")),
 				_.propertyOf(structureOp.metadata)("uiHints")
-			)
+			);
 		}
+		return null;
 	}
 }
 
-export class StructureMetadata{
-	constructor(structures){
+export class StructureMetadata {
+	constructor(structures) {
 		this.structures = structures;
 	}
 
-	getStructure(name){
+	getStructure(structName) {
 		let structureDef;
-		this.structures.forEach(function(structure){
-			if (structure.name === name){
+		this.structures.forEach(function(structure) {
+			if (structure.name === structName) {
 				structureDef = structure;
 			}
-		})
+		});
 		return structureDef;
 	}
 
-	static makeStructureMetadata(structuresOp){
-		if (structuresOp){
-			let structures = [];
-			for (let structure of structuresOp){
-				structures.push(StructureDef.makeStructure(structure));
+	static makeStructureMetadata(structuresOp) {
+		if (structuresOp) {
+			const structures = [];
+			for (const structure of structuresOp) {
+				const struct = StructureDef.makeStructure(structure);
+				if (struct !== null) {
+					structures.push(struct);
+				}
 			}
 			return new StructureMetadata(structures);
 		}
+		return null;
 	}
 }

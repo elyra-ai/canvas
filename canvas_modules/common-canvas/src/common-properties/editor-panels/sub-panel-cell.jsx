@@ -12,59 +12,66 @@
 ** deposited with the U.S. Copyright Office.
 *****************************************************************/
 
-import React from 'react'
-import {Button} from 'react-bootstrap'
-import FixedDataTable, {Cell} from 'fixed-data-table';
+import logger from "../../../utils/logger";
+import React from "react";
+import { Button } from "react-bootstrap";
+import { Cell } from "fixed-data-table";
 
-import SubPanelInvoker from './sub-panel-invoker.jsx'
+import SubPanelInvoker from "./sub-panel-invoker.jsx";
 
 export default class SubPanelCell extends React.Component {
-  constructor(props) {
-    super(props);
-    this.showSubPanel = this.showSubPanel.bind(this);
-    this.onSubPanelHidden = this.onSubPanelHidden.bind(this);
-    this.getRowIndex = this.getRowIndex.bind(this);
-  }
+	constructor(props) {
+		super(props);
+		this.showSubPanel = this.showSubPanel.bind(this);
+		this.onSubPanelHidden = this.onSubPanelHidden.bind(this);
+		this.getRowIndex = this.getRowIndex.bind(this);
+	}
 
-  getRowIndex() {
-    return this.props.rowIndex;
-  }
+	onSubPanelHidden(applyChanges) {
+		logger.info("Cell.onSubPanelHidden(): applyChanges=" + applyChanges);
+		this.props.notifyFinishedEditing(this.props.rowIndex, applyChanges);
+	}
 
-  showSubPanel() {
-    console.log("Cell.showSubPanel(): row=" + this.props.rowIndex + ", col=" + this.props.col);
-    // this.props.data[this.props.rowIndex][this.props.col]
+	getRowIndex() {
+		return this.props.rowIndex;
+	}
 
-    // Have to tell the owner table which row is about to be edited so it
-    // can return the correct values when the controls request their values.
-    this.props.notifyStartEditing(this.props.rowIndex);
+	showSubPanel() {
+		logger.info("Cell.showSubPanel(): row=" + this.props.rowIndex + ", col=" + this.props.col);
+		// this.props.data[this.props.rowIndex][this.props.col]
 
-    this.refs.invoker.showSubDialog(this.props.title, this.props.panel, this.onSubPanelHidden);
-  }
+		// Have to tell the owner table which row is about to be edited so it
+		// can return the correct values when the controls request their values.
+		this.props.notifyStartEditing(this.props.rowIndex);
 
-  onSubPanelHidden(applyChanges) {
-    console.log("Cell.onSubPanelHidden(): applyChanges=" + applyChanges);
-    this.props.notifyFinishedEditing(this.props.rowIndex, applyChanges);
-  }
+		this.refs.invoker.showSubDialog(this.props.title, this.props.panel, this.onSubPanelHidden);
+	}
 
-  render() {
-    console.log("SubPanelCell.render()");
-    return (
-      <SubPanelInvoker ref="invoker">
-        <Cell>
-          <Button style={{"display":"inline"}} bsSize="xsmall" onClick={this.showSubPanel}>{this.props.label}</Button>
-        </Cell>
-      </SubPanelInvoker>
-    );
-  }
+	render() {
+		logger.info("SubPanelCell.render()");
+		return (
+			<SubPanelInvoker ref="invoker">
+				<Cell>
+					<Button
+						style={{ "display": "inline" }}
+						bsSize="xsmall"
+						onClick={this.showSubPanel}
+					>
+						{this.props.label}
+					</Button>
+				</Cell>
+			</SubPanelInvoker>
+		);
+	}
 }
 
 SubPanelCell.propTypes = {
-  data : React.PropTypes.array.isRequired,
-  rowIndex : React.PropTypes.number,
-  col : React.PropTypes.number,
-  label: React.PropTypes.string.isRequired,
-  title: React.PropTypes.string.isRequired,
-  panel: React.PropTypes.object.isRequired,
-  notifyStartEditing: React.PropTypes.func.isRequired,
-  notifyFinishedEditing: React.PropTypes.func.isRequired
+	data: React.PropTypes.array.isRequired,
+	rowIndex: React.PropTypes.number,
+	col: React.PropTypes.number,
+	label: React.PropTypes.string.isRequired,
+	title: React.PropTypes.string.isRequired,
+	panel: React.PropTypes.object.isRequired,
+	notifyStartEditing: React.PropTypes.func.isRequired,
+	notifyFinishedEditing: React.PropTypes.func.isRequired
 };

@@ -12,90 +12,84 @@
 ** deposited with the U.S. Copyright Office.
 *****************************************************************/
 
-import React from 'react'
-import {FormControl} from 'react-bootstrap'
-import ReactDOM from 'react-dom'
+import logger from "../../../utils/logger";
+import React from "react";
+import { FormControl } from "react-bootstrap";
+import ReactDOM from "react-dom";
 
-import EditorControl from './../editor-controls/editor-control.jsx'
-
-var _ = require('underscore');
+import EditorControl from "./../editor-controls/editor-control.jsx";
 
 export default class ColumnSource extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectedColumns: [],
-      allocatedColumns: []
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.getSelectedColumns = this.getSelectedColumns.bind(this);
-    this.setAllocatedColumns = this.setAllocatedColumns.bind(this);
-  }
+	constructor(props) {
+		super(props);
+		this.state = {
+			selectedColumns: [],
+			allocatedColumns: []
+		};
+		this.handleChange = this.handleChange.bind(this);
+		this.getSelectedColumns = this.getSelectedColumns.bind(this);
+		this.setAllocatedColumns = this.setAllocatedColumns.bind(this);
+	}
 
-  handleChange(evt) {
-    let select = ReactDOM.findDOMNode(this.refs.input);
-    let values = [].filter.call(select.options, function (o) {
-      return o.selected;
-    }).map(function (o) {
-      return o.value;
-    });
-    //console.log('values ----------> '+JSON.stringify(values));
-    this.setState({
-      selectedColumns: values
-    });
-  }
+	getSelectedColumns() {
+		return this.state.selectedColumns;
+	}
 
-  getSelectedColumns() {
-    return this.state.selectedColumns;
-  }
+	setAllocatedColumns(columnNames) {
+		logger.info("ColumnSource.setAllocatedColumns()");
+		logger.info(columnNames);
+		this.setState({ allocatedColumns: columnNames });
+	}
+
+	handleChange(evt) {
+		const select = ReactDOM.findDOMNode(this.refs.input);
+		const values = [].filter.call(select.options, function(o) {
+			return o.selected;
+		}).map(function(o) {
+			return o.value;
+		});
+		// logger.info("values ----------> "+JSON.stringify(values));
+		this.setState({ selectedColumns: values });
+	}
 
 	clearSelectedColumns() {
-		this.setState({
-			selectedColumns: []
+		this.setState({ selectedColumns: [] });
+	}
+
+
+	render() {
+		// logger.info("ColumnSource.render");
+		// logger.info(this.props.dataModel.columns);
+
+		var allocatedColumns = this.state.allocatedColumns;
+		var availableColumns = this.props.dataModel.columns.filter(function(column) {
+			return allocatedColumns.indexOf(column.name) < 0;
 		});
-  }
+		// logger.info(availableColumns);
 
-  setAllocatedColumns(columnNames) {
-    console.log("ColumnSource.setAllocatedColumns()");
-    console.log(columnNames);
-    this.setState({
-      allocatedColumns: columnNames
-    });
-  }
+		var options = EditorControl.genColumnSelectOptions(availableColumns, this.state.selectedColumns, false);
 
-  render() {
-    //console.log("ColumnSource.render");
-    //console.log(this.props.dataModel.columns);
+		// logger.info("ColumnSource.render: options");
+		// logger.info(options);
 
-    var allocatedColumns = this.state.allocatedColumns;
-    var availableColumns = this.props.dataModel.columns.filter( function( column ) {
-      return allocatedColumns.indexOf(column.name) < 0;
-    });
-    //console.log(availableColumns);
-
-    var options = EditorControl.genColumnSelectOptions(availableColumns, this.state.selectedColumns, false);
-
-    //console.log("ColumnSource.render: options");
-    //console.log(options);
-
-    return (
-      <FormControl
-        className="column-source"
-        componentClass="select"
-        multiple
-        name={this.props.name}
-        rows={this.props.rows}
-        onChange={this.handleChange}
-        value={this.state.selectedColumns}
-        ref="input">
-        {options}
-      </FormControl>
-    );
-  }
+		return (
+			<FormControl
+				className="column-source"
+				componentClass="select"
+				multiple name={this.props.name}
+				rows={this.props.rows}
+				onChange={this.handleChange}
+				value={this.state.selectedColumns}
+				ref="input"
+			>
+				{options}
+			</FormControl>
+		);
+	}
 }
 
 ColumnSource.propTypes = {
-  name: React.PropTypes.string,
-  rows: React.PropTypes.number,
-  dataModel: React.PropTypes.object
+	name: React.PropTypes.string,
+	rows: React.PropTypes.number,
+	dataModel: React.PropTypes.object
 };

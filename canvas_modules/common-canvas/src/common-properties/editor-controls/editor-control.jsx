@@ -12,190 +12,195 @@
 ** deposited with the U.S. Copyright Office.
 *****************************************************************/
 
-import React from 'react'
-import {Grid, Row, Col, Well, ListGroupItem, Table, tr, th, Button} from 'react-bootstrap'
-import UiConditions from '../ui-conditions/ui-conditions.js'
+import logger from "../../../utils/logger";
+import React from "react";
+import UiConditions from "../ui-conditions/ui-conditions.js";
 
 export default class EditorControl extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      validateErrorMessage: {
-        type: "info",
-        text: ""
-      }
-    };
-    this.getControlID = this.getControlID.bind(this);
-    this.setValueListener = this.setValueListener.bind(this);
-    this.clearValueListener = this.clearValueListener.bind(this);
-    this.notifyValueChanged = this.notifyValueChanged.bind(this);
-    this.validateInput = this.validateInput.bind(this);
-    this.clearValidateMsg = this.clearValidateMsg.bind(this);
 
-    this._valueListener = null;
-  }
+	static splitNewlines(text) {
+		return text.split("\n");
+	}
 
-  getControlID() {
-    return "editor-control." + this.props.control.name;
-  }
+	static joinNewlines(list) {
+		return list.join("\n");
+	}
 
-  setValueListener(listener) {
-    // Listener is expected to define handleValueChanged(controlName, value);
-    this._valueListener = listener;
-  }
+	static genSelectOptions(control, selectedValues) {
+		var options = [];
+		for (var i = 0; i < control.values.length; i++) {
+			options.push(
+				<option key={i} value={control.values[i]}>{control.valueLabels[i]}</option>
+			);
+		}
+		return options;
+	}
 
-  clearValueListener() {
-    this._valueListener = null;
-  }
+	static genColumnSelectOptions(columns, selectedValues, includeEmpty) {
+		var options = [];
+		if (includeEmpty) {
+			options.push(
+				<option key={-1} value={""}>...</option>
+			);
+		}
 
-  notifyValueChanged(controlName, value) {
-    //console.log("notifyValueChanged(): control=" + controlName);
-    //console.log(value);
-    if (this._valueListener !== null) {
-      //console.log("notifyValueChanged(): notifying value listener");
-      this._valueListener.handleValueChanged(controlName, value);
-    }
-    else {
-      //console.log("notifyValueChanged(): no listener");
-    }
-  }
+		for (var i = 0; i < columns.length; i++) {
+			options.push(
+				<option key={i} value={columns[i].name}>{columns[i].name}</option>
+			);
+		}
+		return options;
+	}
 
-  validateInput(event) {
-    var controlName = this.getControlID().split(".")[1];
-    if(typeof this.props.controlStates[controlName] === "undefined" &&
-       this.props.validationDefinitions[controlName]){
-      var userInput = {
-        [controlName]: this.state.controlValue // event.target.value
-      };
+	static genStringSelectOptions(values, selectedValues) {
+		var options = [];
+		for (var i = 0; i < values.length; i++) {
+			options.push(
+				<option key={i} value={values[i]}>{values[i]}</option>
+			);
+		}
+		return options;
+	}
 
-      try {
-        var output = UiConditions.validateInput(this.props.validationDefinitions[controlName], userInput);
-        console.log("validated input field " + controlName + " to be " + output);
+	// Structures are supplied to the UI as an array of strings where each string represents
+	// an array of values within the structure. This parses those sub-strings into individual arrays.
+	static parseStructureStrings(values) {
+		var structures = [];
+		for (var i = 0; i < values.length; i++) {
+			structures.push(JSON.parse(values[i]));
+		}
+		return structures;
+	}
 
-        if(output === true){
-          this.setState({
-            validateErrorMessage: {
-              type: "info",
-              text: ""
-            }
-          });
-        } else {
-          this.setState({
-            validateErrorMessage: {
-              type: "invalid",
-              text: output
-            }
-          });
-        }
-      } catch(error) {
-        console.log("Error thrown in validation: " + error);
-      }
-    }
-  }
+	// Structures are returned from the UI as an array of strings where each string represents
+	// an array of values within the structure. This converts each array of row values into a JSON string.
+	static stringifyStructureStrings(values) {
+		var structures = [];
+		for (var i = 0; i < values.length; i++) {
+			structures.push(JSON.stringify(values[i]));
+		}
+		return structures;
+	}
 
-  clearValidateMsg() {
-    this.setState({
-      validateErrorMessage: {
-        type: "info",
-        text: ""
-      }
-    });
-  }
+	static handleTableRowClick(evt, rowIndex, selection) {
+		// logger.info(selection);
+		var selected = selection;
+		const index = selected.indexOf(rowIndex);
 
-  /*
-   * Sub-classes must override this function to return the value of the control as an array of strings.
-   */
-  getControlValue() {
-    return [];
-  }
+		if (evt.shiftKey === true) {
+			// If already selected then remove otherwise add
+			if (index >= 0) {
+				selected.splice(index, 1);
+			} else {
+				selected = selected.concat(rowIndex);
+			}
+		} else {
+			selected = [rowIndex];
+		}
 
-  static splitNewlines(text) {
-    return text.split("\n");
-  }
+		return selected;
+	}
 
-  static joinNewlines(list) {
-    return list.join("\n");
-  }
+	constructor(props) {
+		super(props);
+		this.state = {
+			validateErrorMessage: {
+				type: "info",
+				text: ""
+			}
+		};
+		this.getControlID = this.getControlID.bind(this);
+		this.setValueListener = this.setValueListener.bind(this);
+		this.clearValueListener = this.clearValueListener.bind(this);
+		this.notifyValueChanged = this.notifyValueChanged.bind(this);
+		this.validateInput = this.validateInput.bind(this);
+		this.clearValidateMsg = this.clearValidateMsg.bind(this);
 
-  static genSelectOptions(control, selectedValues) {
-    var options = [];
-    for (var i=0;i<control.values.length;i++) {
-      options.push(<option key={i}
-        value={control.values[i]}>{control.valueLabels[i]}</option>);
-    }
-    return options;
-  }
+		this._valueListener = null;
+	}
 
-  static genColumnSelectOptions(columns, selectedValues, includeEmpty) {
-    var options = [];
-    if (includeEmpty) {
-      options.push(<option key={-1} value={""}>...</option>);
-    }
+	getControlID() {
+		return "editor-control." + this.props.control.name;
+	}
 
-    for (var i=0;i<columns.length;i++) {
-      options.push(<option key={i} value={columns[i].name}>{columns[i].name}</option>);
-    }
-    return options;
-  }
+	/*
+	 * Sub-classes must override this function to return the value of the control as an array of strings.
+	 */
+	getControlValue() {
+		return [];
+	}
 
-  static genStringSelectOptions(values, selectedValues) {
-    var options = [];
-    for (var i=0;i<values.length;i++) {
-      options.push(<option key={i} value={values[i]}>{values[i]}</option>);
-    }
-    return options;
-  }
+	setValueListener(listener) {
+		// Listener is expected to define handleValueChanged(controlName, value);
+		this._valueListener = listener;
+	}
 
-  // Structures are supplied to the UI as an array of strings where each string represents
-  // an array of values within the structure. This parses those sub-strings into individual arrays.
-  static parseStructureStrings(values) {
-    var structures = [];
-    for (var i=0;i<values.length;i++) {
-      structures.push(JSON.parse(values[i]));
-    }
-    return structures;
-  }
+	clearValueListener() {
+		this._valueListener = null;
+	}
 
-  // Structures are returned from the UI as an array of strings where each string represents
-  // an array of values within the structure. This converts each array of row values into a JSON string.
-  static stringifyStructureStrings(values) {
-    var structures = [];
-    for (var i=0;i<values.length;i++) {
-      structures.push(JSON.stringify(values[i]));
-    }
-    return structures;
-  }
+	notifyValueChanged(controlName, value) {
+		// logger.info("notifyValueChanged(): control=" + controlName);
+		// logger.info(value);
+		if (this._valueListener !== null) {
+			// logger.info("notifyValueChanged(): notifying value listener");
+			this._valueListener.handleValueChanged(controlName, value);
+		} else {
+			// logger.info("notifyValueChanged(): no listener");
+		}
+	}
 
-  static handleTableRowClick(evt, rowIndex, selection) {
-    //console.log(selection);
-    let index = selection.indexOf(rowIndex);
+	validateInput(evt) {
+		var controlName = this.getControlID().split(".")[1];
+		if (typeof this.props.controlStates[controlName] === "undefined" && this.props.validationDefinitions[controlName]) {
+			var userInput = {
+				[controlName]: this.state.controlValue // evt.target.value
+			};
 
-    if (evt.shiftKey === true) {
-      // If already selected then remove otherwise add
-      if (index >= 0) {
-        selection.splice(index, 1);
-      }
-      else {
-        selection = selection.concat(rowIndex);
-      };
-    }
-    else {
-      selection = [rowIndex];
-    }
+			try {
+				var output = UiConditions.validateInput(this.props.validationDefinitions[controlName], userInput);
+				logger.info("validated input field " + controlName + " to be " + output);
 
-    return selection;
-  }
+				if (output === true) {
+					this.setState({
+						validateErrorMessage: {
+							type: "info",
+							text: ""
+						}
+					});
+				} else {
+					this.setState({
+						validateErrorMessage: {
+							type: "invalid",
+							text: output
+						}
+					});
+				}
+			} catch (error) {
+				logger.info("Error thrown in validation: " + error);
+			}
+		}
+	}
 
-  render() {
-    return (
-      <div>
-      </div>
-    );
-  }
+	clearValidateMsg() {
+		this.setState({
+			validateErrorMessage: {
+				type: "info",
+				text: ""
+			}
+		});
+	}
+
+	render() {
+		return (
+			<div></div>
+		);
+	}
 }
 
 EditorControl.propTypes = {
-  control: React.PropTypes.object.isRequired,
-  valueAccessor: React.PropTypes.func.isRequired,
-  validationDefinitions: React.PropTypes.array
+	control: React.PropTypes.object.isRequired,
+	controlStates: React.PropTypes.object,
+	valueAccessor: React.PropTypes.func.isRequired,
+	validationDefinitions: React.PropTypes.array
 };

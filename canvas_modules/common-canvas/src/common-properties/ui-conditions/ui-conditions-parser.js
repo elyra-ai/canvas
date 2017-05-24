@@ -16,27 +16,26 @@ function parseInput(definition) {
 		var uniqueList = Array.from(new Set(paramsList));
 		if (uniqueList.length > 1) {
 			return uniqueList;
-		} else { // return single control; this will never be an empty list
-			var controlName = uniqueList[0];
-			return controlName;
 		}
-	} else {
-		throw "Invalid validation schema";
+		// return single control; this will never be an empty list
+		var controlName = uniqueList[0];
+		return controlName;
 	}
+	throw new Error("Invalid validation schema");
 }
 
 /**
  * Evaluate Definition
  */
 function evaluate(data, paramsList) {
-	if(data.or) {
+	if (data.or) {
 		or(data.or, paramsList);
 	} else if (data.and) {
 		and(data.and, paramsList);
 	} else if (data.op && data.param) { // condition
 		condition(data, paramsList);
 	} else {
-		throw "Failed to parse definition";
+		throw new Error("Failed to parse definition");
 	}
 }
 
@@ -45,7 +44,7 @@ function evaluate(data, paramsList) {
  */
 function or(data, paramsList) {
 	for (let i = 0; i < data.length; i++) {
-		evaluate(data[i], paramsList)
+		evaluate(data[i], paramsList);
 	}
 }
 
@@ -66,7 +65,7 @@ function and(data, paramsList) {
  */
 function condition(data, paramsList) {
 	paramsList.push(data.param);
-	if(data.param2) {
+	if (data.param2) {
 		paramsList.push(data.param2);
 	}
 }

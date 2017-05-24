@@ -1,20 +1,19 @@
 /****************************************************************
-** IBM Confidential
-**
-** OCO Source Materials
-**
-** NextGen Workbench
-**
-** (c) Copyright IBM Corp. 2017
-**
-** The source code for this program is not published or otherwise
-** divested of its trade secrets, irrespective of what has been
-** deposited with the U.S. Copyright Office.
-*****************************************************************/
-"use strict";
+ ** IBM Confidential
+ **
+ ** OCO Source Materials
+ **
+ ** NextGen Workbench
+ **
+ ** (c) Copyright IBM Corp. 2017
+ **
+ ** The source code for this program is not published or otherwise
+ ** divested of its trade secrets, irrespective of what has been
+ ** deposited with the U.S. Copyright Office.
+ *****************************************************************/
 
-function _defineConstant(name, value) {
-	Object.defineProperty(module.exports, name, {
+function _defineConstant(key, value) {
+	Object.defineProperty(module.exports, key, {
 		value: value,
 		enumerable: true,
 		writable: false
@@ -22,13 +21,13 @@ function _defineConstant(name, value) {
 }
 
 _defineConstant("CHARACTER_LIMITS", {
-  NODE_PROPERTIES_DIALOG_TEXT_FIELD:128,
-  NODE_PROPERTIES_DIALOG_TEXT_AREA:1024
+	NODE_PROPERTIES_DIALOG_TEXT_FIELD: 128,
+	NODE_PROPERTIES_DIALOG_TEXT_AREA: 1024
 });
 
 _defineConstant("CONDITION_ERROR_MESSAGE", {
-  HIDDEN:"0px",
-  VISIBLE:"25px"
+	HIDDEN: "0px",
+	VISIBLE: "25px"
 });
 
 _defineConstant("OKAY", "OK");

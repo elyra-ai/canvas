@@ -13,10 +13,7 @@
 *****************************************************************/
 
 export default class TextRenderer {
-  constructor() {
-  }
-
-  render(value) {
-    return value;
-  }
+	render(value) {
+		return value;
+	}
 }

@@ -7,10 +7,11 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-class ControlDef{
-	constructor(name, label, controlType, valueDef, role, additionalText, orientation, values, valueLabels) {
-    this.name = name;
-		this.label = label
+
+class ControlDef {
+	constructor(cname, label, controlType, valueDef, role, additionalText, orientation, values, valueLabels) {
+		this.name = cname;
+		this.label = label;
 		this.controlType = controlType;
 		this.valueDef = valueDef;
 		this.role = role;
@@ -21,9 +22,9 @@ class ControlDef{
 	}
 }
 
-export class Control extends ControlDef{
-	constructor(name, label, separateLabel, controlType, valueDef, role, additionalText, orientation, values, valueLabels, subControls, keyIndex, defaultRow, childItem) {
-		super(name, label, controlType, valueDef, role, additionalText, orientation, values, valueLabels);
+export class Control extends ControlDef {
+	constructor(cname, label, separateLabel, controlType, valueDef, role, additionalText, orientation, values, valueLabels, subControls, keyIndex, defaultRow, childItem) {
+		super(cname, label, controlType, valueDef, role, additionalText, orientation, values, valueLabels);
 		this.separateLabel = separateLabel;
 		this.subControls = subControls;
 		this.keyIndex = keyIndex;
@@ -32,9 +33,9 @@ export class Control extends ControlDef{
 	}
 }
 
-export class SubControl extends ControlDef{
-	constructor(name, label, visible, width, controlType, valueDef, role, additionalText, orientation, values, valueLabels){
-		super(name, label, controlType, valueDef, role, additionalText, orientation, values, valueLabels);
+export class SubControl extends ControlDef {
+	constructor(cname, label, visible, width, controlType, valueDef, role, additionalText, orientation, values, valueLabels) {
+		super(cname, label, controlType, valueDef, role, additionalText, orientation, values, valueLabels);
 		this.visible = visible;
 		this.width = width;
 	}

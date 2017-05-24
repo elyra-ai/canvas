@@ -16,18 +16,18 @@ const ItemType = {
 	SUB_TABS: "subTabs",
 	PRIMARY_TABS: "primaryTabs",
 	PANEL_SELECTOR: "panelSelector"
-}
+};
 
 const EditStyle = {
 	INLINE: "inline",
 	SUBPANEL: "subpanel"
-}
+};
 
 const Size = {
 	LARGE: "large",
 	MEDIUM: "medium",
 	SMALL: "small"
-}
+};
 
 const GroupType = {
 	CONTROLS: "controls",
@@ -37,12 +37,12 @@ const GroupType = {
 	ADDITIONAL: "additional",
 	COLUMN_ALLOCATION: "columnAllocation",
 	PANEL_SELECTOR: "panelSelector"
-}
+};
 
 const PanelType = {
 	GENERAL: "general",
 	COLUMN_ALLOCATION: "columnAllocation"
-}
+};
 
 const ControlType = {
 	CUSTOM: "custom",
@@ -63,10 +63,10 @@ const ControlType = {
 	ALLOCATEDSTRUCTURES: "allocatedstructures",
 	STRUCTUREEDITOR: "structureeditor",
 	STRUCTURELISTEDITOR: "structurelisteditor"
-}
+};
 
 const ParamRole = {
-	TEXT:"text",
+	TEXT: "text",
 	ENUM: "enum",
 	COLUMN: "column",
 	NEW_COLUMN: "new_column",
@@ -79,7 +79,7 @@ const ParamRole = {
 	INTERVAL_SECOND: "interval_second",
 	CUSTOM: "custom",
 	UNSPECIFIED: ""
-}
+};
 
 const Type = {
 	BOOLEAN: "boolean",
@@ -90,15 +90,15 @@ const Type = {
 	PASSWORD: "password",
 	DATE: "date",
 	STRUCTURE: "structure"
-}
+};
 
-function hasValue(Enum, value){
-	for(let key in Enum){
-		if (value === Enum[key]){
-			return true
+function hasValue(Enum, value) {
+	for (var key in Enum) {
+		if (value === Enum[key]) {
+			return true;
 		}
 	}
 	return false;
 }
 
-export{ GroupType, PanelType, Type, ParamRole, ControlType, hasValue, EditStyle, Size, ItemType }
+export { GroupType, PanelType, Type, ParamRole, ControlType, hasValue, EditStyle, Size, ItemType };
