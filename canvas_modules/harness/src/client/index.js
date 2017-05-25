@@ -10,6 +10,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "ap-components-react/dist/ap-components-react.min.css";
 import "@wdp/common-canvas/dist/common-canvas.css";
 import "../styles/App.css";
