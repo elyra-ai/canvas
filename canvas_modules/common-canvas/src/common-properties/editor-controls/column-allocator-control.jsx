@@ -73,8 +73,7 @@ export default class ColumnAllocatorControl extends EditorControl {
 		// logger.info(currentColumns);
 		if (this.props.multiColumn) {
 			currentColumns = _.union(currentColumns, columnNames);
-		}
-		if (columnNames.length === 1) {
+		} else if (columnNames.length === 1) {
 			currentColumns = columnNames;
 		}
 		// logger.info(currentColumns);
