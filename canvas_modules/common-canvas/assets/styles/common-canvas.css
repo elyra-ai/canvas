@@ -100,6 +100,13 @@
   left: 35px;
   width: 48px;
   height: 64px;
+	/* Prevent elements from being selectable */
+  /* This stops it being dragged incorrectly.*/
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
 }
 
 .canvas-zoom-controls img {
@@ -174,7 +181,7 @@
   cursor: 'move';
   border: 2px solid transparent;
   /* Prevent elements from being selectable */
-  /* This stops it being dragged incorrectly.*/
+  /* This stops it being dragged incorrectly. */
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
@@ -253,12 +260,19 @@ polyline.link-arrow-head {
   left: 60px;
   width: 473px;   /* Set default width to show three columns of nodes in grid view. */
                   /* width = (3 * grid_node_width) + category_min_width + (3 * hoverZoneSize)*/
-  height: 376px;  /* If this is changed see palette-content height below */
+  height: 450px;  /* If this is changed see palette-content height below */
                   /* height = (3 * grid_node_height) + (2 * hoverZoneSize) + palette-topbar height + padding */
   font: 12px sans-serif;
   border: 3px solid transparent; /* transparent border provides sizing hover zone */
   cursor: default; /* This stops Chrome displaying an I-beam cursor when dragging in the canvas. */
   z-index: 2;
+	/* Prevent elements from being selectable */
+  /* This stops it being dragged incorrectly.*/
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
 }
 
 .palette-show-button {
@@ -268,6 +282,13 @@ polyline.link-arrow-head {
   width: 48px;
   height: 48px;
   fill: #6eedd8;
+	/* Prevent elements from being selectable */
+  /* This stops it being dragged incorrectly.*/
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
 }
 
 #paletteTooltip {
@@ -311,7 +332,7 @@ polyline.link-arrow-head {
 }
 
 .palette-content {
-  height: 330px;  /* palette-div height - topbar height - 6 pixels (for hover zone to aid drag sizing)*/
+  height: 404px;  /* palette-div height - topbar height - 6 pixels (for hover zone to aid drag sizing)*/
   display: flex;
   display:-webkit-flex;
   background-color: white;
