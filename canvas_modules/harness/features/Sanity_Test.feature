@@ -16,6 +16,8 @@ Feature: Canvas sanity test
     Then I link node 1 the "Var. File" node to node 2 the "Derive" node for link 1 on the canvas
     Then I select node 2 the "Derive" node
     Then I add comment 1 at location 100, 250 with the text "This comment box should be linked to the derive node."
+		
+		Then I link comment 2 to node 6 the "Neural Net" node for link 7 on the canvas
     Then I add node 3 a "Filter" node from the "Field Ops" category onto the canvas at 300, 200
     Then I link node 2 the "Derive" node to node 3 the "Filter" node for link 3 on the canvas
     Then I add node 4 a "Type" node from the "Field Ops" category onto the canvas at 400, 200

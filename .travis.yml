@@ -16,8 +16,8 @@ script:
 after_success:
     - "cd ./canvas_modules/harness"
     - npm start &
-    - sleep 2m
-    - npm test
+    - sleep 2m # give time for test harness to start
+    - npm test # run functional test
     - "cd ../.."
 deploy:
   - provider: script
