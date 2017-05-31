@@ -13,12 +13,12 @@ before_script:
 script:
   - ./canvas_modules/common-canvas/build.sh
   - ./canvas_modules/harness/build.sh
+  - "cd ./canvas_modules/harness"
+  - npm start &
+  - sleep 2m # give time for test harness to start
+  - npm test # run functional test
+  - "cd ../.."
 after_success:
-    - "cd ./canvas_modules/harness"
-    - npm start &
-    - sleep 2m # give time for test harness to start
-    - npm test # run functional test
-    - "cd ../.."
 deploy:
   - provider: script
     skip_cleanup: true
