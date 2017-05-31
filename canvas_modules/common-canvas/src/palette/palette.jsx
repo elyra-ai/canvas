@@ -82,8 +82,8 @@ class Palette extends React.Component {
 
 		// Correction for palette cursor position
 		// Used in both hoverzone detection and mouseMove vertical resize at bottom of paletteDiv
-		this.hackPaletteOffset = 48;
-		this.hackPaletteTopOffset = this.hackPaletteOffset + 6;
+		this.hackPaletteOffset = 46;
+		this.hackPaletteTopOffset = this.hackPaletteOffset + 4;
 
 		window.addEventListener("mousemove", this.mouseMove, false);
 		window.addEventListener("mouseup", this.mouseUp, false);
