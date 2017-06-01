@@ -857,8 +857,9 @@ export default class DiagramCanvas extends React.Component {
 		const nodeWidth = Math.round(NODE_WIDTH * zoom);
 		const halfNodeWidth = Math.round(NODE_WIDTH * zoom - (zoom * connSize));
 		const nodeHeight = Math.round(NODE_HEIGHT * zoom);
-		let maxX = 28 * nodeWidth;
-		let maxY = 10 * nodeHeight;
+
+		let maxX = 28 * NODE_WIDTH;
+		let maxY = 10 * NODE_HEIGHT;
 		const connOffsets = this.getConnPointOffsets(halfNodeWidth, halfIcon, connSize);
 
 		const uiconf = {
@@ -940,6 +941,7 @@ export default class DiagramCanvas extends React.Component {
 			width: maxX + (2 * nodeWidth),
 			height: maxY + (2 * nodeHeight)
 		};
+
 
 		// Create the set of links to be displayed
 		const connectionLinks = this.makeLinksConnections(positions);
