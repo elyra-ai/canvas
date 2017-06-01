@@ -17,6 +17,7 @@ script:
   - npm start &
   - sleep 2m # give time for test harness to start
   - npm test -- --screenshotsOnError=false
+  -" cd ../.."
 after_success:
 deploy:
   - provider: script
