@@ -13,8 +13,7 @@ before_script:
 script:
   - ./canvas_modules/common-canvas/build.sh
   - ./canvas_modules/harness/build.sh
-after_success:
-    - ./canvas_modules/harness/functional_test.sh
+  - ./canvas_modules/harness/functional_test.sh
 deploy:
   - provider: script
     skip_cleanup: true
