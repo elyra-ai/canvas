@@ -14,7 +14,6 @@ script:
   - ./canvas_modules/common-canvas/build.sh
   - ./canvas_modules/harness/build.sh
   - ./canvas_modules/harness/functional_test.sh
-after_success:
 deploy:
   - provider: script
     skip_cleanup: true
