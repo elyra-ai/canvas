@@ -15,7 +15,7 @@ npm start &
 # start running the test Cases
 sleep 2m
 echo "npm test"
-npm test
+npm test -- --screenshotsOnError=false
 
 echo "cd $WORKING_DIR"
 cd $WORKING_DIR
