@@ -149,6 +149,11 @@
   padding: 6px 0 0 0;
 }
 
+#buttonOneTimeLayoutHorizontal , #buttonOneTimeLayoutVertical{
+  width: 100%;
+  text-align: center;
+}
+
 /*Override ap-components-react styles*/
 .button {
   line-height: 0.5;

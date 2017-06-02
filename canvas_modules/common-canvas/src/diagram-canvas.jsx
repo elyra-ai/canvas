@@ -17,7 +17,6 @@
 /* eslint no-shadow: ["error", { "allow": ["Node", "Comment"] }] */
 
 import React from "react";
-import dagre from "dagre";
 
 import Node from "./node.jsx";
 import Comment from "./comment.jsx";
@@ -26,11 +25,7 @@ import {
 	DND_DATA_TEXT,
 	DRAG_MOVE,
 	DRAG_LINK,
-	DRAG_SELECT_REGION,
-	NONE,
-	VERTICAL,
-	DAGRE_HORIZONTAL,
-	DAGRE_VERTICAL
+	DRAG_SELECT_REGION
 } from "../constants/common-constants.js";
 import CanvasUtils from "../utils/canvas-utils.js";
 import BlankCanvasImage from "../assets/images/blank_canvas.png";
@@ -88,8 +83,6 @@ export default class DiagramCanvas extends React.Component {
 
 		this.zoomIn = this.zoomIn.bind(this);
 		this.zoomOut = this.zoomOut.bind(this);
-
-		this.autoLayout = this.autoLayout.bind(this);
 
 		this.canvasContextMenu = this.canvasContextMenu.bind(this);
 
@@ -307,67 +300,6 @@ export default class DiagramCanvas extends React.Component {
 
 	elbowSize() {
 		return Math.round(10 * this.zoom());
-	}
-
-	// Dagre AutoLayout
-	autoLayout(direction) {
-		var lookup = this.dagreAutolayout(direction);
-		const zoom = this.zoom();
-		// eslint-disable-next-line array-callback-return
-		this.props.canvas.diagram.nodes.map((node, ind) => {
-			var offsetX = lookup[node.id].value.x - node.xPos;
-			var offsetY = lookup[node.id].value.y - node.yPos;
-
-			this.moveNodes([node.id], Math.round(offsetX / zoom), Math.round(offsetY / zoom));
-		});
-	}
-
-	dagreAutolayout(direction) {
-		var edges = [];
-		edges = this.props.canvas.diagram.links.map((link, ind) => ({
-			"v": link.source,
-			"w": link.target,
-			"value": {
-				"points": []
-			}
-		}));
-
-		var nodes = [];
-		nodes = this.props.canvas.diagram.nodes.map((node, ind) => ({
-			"v": node.id, "value": {}
-		}));
-
-		// possible values: TB, BT, LR, or RL, where T = top, B = bottom, L = left, and R = right.
-		// default TB for vertical layout
-		// set to LR for horizontal layout
-		var value = {};
-		var directionList = ["TB", "BT", "LR", "RL"];
-		if (directionList.indexOf(direction) >= 0) {
-			value = {
-				"rankDir": direction
-			};
-		}
-
-		var inputGraph = {
-			nodes,
-			edges,
-			value
-		};
-
-		var g = dagre.graphlib.json.read(inputGraph);
-		g.graph().marginx = 100;
-		g.graph().marginy = 25;
-		g.graph().nodesep = 100; // distance to separate the nodes horiziontally
-		g.graph().ranksep = 100; // distance between each rank of nodes
-		dagre.layout(g);
-
-		var outputGraph = dagre.graphlib.json.write(g);
-
-		var lookup = {};
-		for (var i = 0, len = outputGraph.nodes.length; i < len; i++) {
-			lookup[outputGraph.nodes[i].v] = outputGraph.nodes[i];
-		}
-		return lookup;
 	}
 
 	// Mouse event Handlers
@@ -872,23 +804,9 @@ export default class DiagramCanvas extends React.Component {
 			zoom: zoom
 		};
 
-		// Create a lookup for nodes with updated coordinates
-		var lookup = {};
-		if (this.props.autoLayoutDirection !== NONE) {
-			if (this.props.autoLayoutDirection === VERTICAL) {
-				lookup = this.dagreAutolayout(DAGRE_VERTICAL);
-			} else {
-				lookup = this.dagreAutolayout(DAGRE_HORIZONTAL); // Default to HORIZONTAL
-			}
-		}
-
 		// TODO - pass a ref to the canvas (or a size config) rather than passing
 		// multiple, individual, identical size params to every node
 		viewNodes = this.props.canvas.diagram.nodes.map((node) => {
-			if (this.props.autoLayoutDirection !== NONE) {
-				node.xPos = lookup[node.id].value.x;
-				node.yPos = lookup[node.id].value.y;
-			}
 
 			const x = Math.round(node.xPos * zoom);
 			const y = Math.round(node.yPos * zoom);
@@ -1027,7 +945,6 @@ export default class DiagramCanvas extends React.Component {
 DiagramCanvas.propTypes = {
 	canvas: React.PropTypes.object,
 	paletteJSON: React.PropTypes.object.isRequired,
-	autoLayoutDirection: React.PropTypes.string.isRequired,
 	closeContextMenu: React.PropTypes.func.isRequired,
 	contextMenuHandler: React.PropTypes.func.isRequired,
 	editActionHandler: React.PropTypes.func.isRequired,

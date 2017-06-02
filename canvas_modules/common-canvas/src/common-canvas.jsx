@@ -18,11 +18,9 @@ import ContextMenuWrapper from "./context-menu-wrapper.jsx";
 import DiagramCanvas from "./diagram-canvas.jsx";
 import Palette from "./palette/palette.jsx";
 import ObjectModel from "./object-model/object-model.js";
-import Flow24Icon from "../assets/images/flow_24.svg";
 import ZoomIn24Icon from "../assets/images/zoom-in_24.svg";
 import ZoomOut24Icon from "../assets/images/zoom-out_24.svg";
 import OpenNodePaletteIcon from "../assets/images/open_node_palette.svg";
-import { DAGRE_HORIZONTAL } from "../constants/common-constants.js";
 
 export default class CommonCanvas extends React.Component {
 	constructor(props) {
@@ -50,8 +48,6 @@ export default class CommonCanvas extends React.Component {
 
 		this.zoomIn = this.zoomIn.bind(this);
 		this.zoomOut = this.zoomOut.bind(this);
-
-		this.enableAutoLayout = this.enableAutoLayout.bind(this);
 
 		this.editActionHandler = this.editActionHandler.bind(this);
 		this.contextMenuActionHandler = this.contextMenuActionHandler.bind(this);
@@ -84,10 +80,6 @@ export default class CommonCanvas extends React.Component {
 
 	zoomOut() {
 		this.refs.canvas.zoomOut();
-	}
-
-	enableAutoLayout() {
-		this.refs.canvas.autoLayout(DAGRE_HORIZONTAL); // Default to HORIZONTAL
 	}
 
 	closeContextMenu() {
@@ -192,7 +184,6 @@ export default class CommonCanvas extends React.Component {
 		let popupPalette = null;
 		let addButton = null;
 		let zoomControls = null;
-		let autoLayoutControls = null;
 		let contextMenuWrapper = null;
 		const canvasJSON = ObjectModel.getCanvas();
 
@@ -211,7 +202,6 @@ export default class CommonCanvas extends React.Component {
 				ref="canvas"
 				canvas={canvasJSON}
 				paletteJSON={ObjectModel.getPaletteData()}
-				autoLayoutDirection={this.props.config.enableAutoLayout}
 				closeContextMenu={this.closeContextMenu}
 				contextMenuHandler={this.contextMenuHandler}
 				editActionHandler={this.editActionHandler}
@@ -244,16 +234,12 @@ export default class CommonCanvas extends React.Component {
 				<div><img src={ZoomOut24Icon} onClick={this.zoomOut} /></div>
 			</div>);
 
-			autoLayoutControls = (<div className="canvas-autolayout-controls">
-				<div><img src={Flow24Icon} onClick={this.enableAutoLayout} /></div>
-			</div>);
 		}
 
 		return (
 			<div id="common-canvas">
 				{canvas}
 				{zoomControls}
-				{autoLayoutControls}
 				{addButton}
 				{popupPalette}
 			</div>

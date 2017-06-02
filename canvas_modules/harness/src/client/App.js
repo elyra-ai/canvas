@@ -60,7 +60,6 @@ class App extends React.Component {
 			propertiesJson: null,
 			selectedPanel: null,
 			selectedLinkTypeStyle: STRAIGHT,
-			selectedLayoutDirection: NONE,
 			showContextMenu: false,
 			showPropertiesDialog: false
 		};
@@ -85,6 +84,7 @@ class App extends React.Component {
 		this.sidePanelModal = this.sidePanelModal.bind(this);
 		this.setLinkTypeStyle = this.setLinkTypeStyle.bind(this);
 		this.setLayoutDirection = this.setLayoutDirection.bind(this);
+		this.setOneTimeLayoutDirection = this.setOneTimeLayoutDirection.bind(this);
 		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
 
 		// common-canvas
@@ -142,8 +142,15 @@ class App extends React.Component {
 	}
 
 	setLayoutDirection(selectedLayout) {
-		this.setState({ selectedLayoutDirection: selectedLayout });
+		ObjectModel.fixedAutoLayout(selectedLayout);
 		this.log("Layout selected", selectedLayout);
+	}
+
+	setOneTimeLayoutDirection(selectedOneTimeLayout) {
+		if (ObjectModel.fixedLayout === NONE) {
+			ObjectModel.autoLayout(selectedOneTimeLayout);
+			this.log("One Time Layout selected", selectedOneTimeLayout);
+		}
 	}
 
 	setLinkTypeStyle(selectedLink) {
@@ -593,7 +600,6 @@ class App extends React.Component {
 
 		var commonCanvasConfig = {
 			enablePalette: this.state.paletteNavEnabled, // true if palette json submitted
-			enableAutoLayout: this.state.selectedLayoutDirection,
 			enableInternalObjectModel: this.state.internalObjectModel,
 			paletteTooltip: PALETTE_TOOLTIP
 		};
@@ -631,7 +637,7 @@ class App extends React.Component {
 				setPaletteJSON={this.setPaletteJSON}
 				setPropertiesJSON={this.setPropertiesJSON}
 				setLayoutDirection={this.setLayoutDirection}
-				selectedLayoutDirection={this.state.selectedLayoutDirection}
+				setOneTimeLayoutDirection={this.setOneTimeLayoutDirection}
 				setLinkTypeStyle={this.setLinkTypeStyle}
 				selectedLinkTypeStyle={this.state.selectedLinkTypeStyle}
 				showPropertiesDialog={this.state.showPropertiesDialog}

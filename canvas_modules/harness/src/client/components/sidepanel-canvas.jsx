@@ -38,7 +38,8 @@ export default class SidePanelForms extends React.Component {
 			canvasFiles: [],
 			paletteFiles: [],
 			selectedCanvasDropdownFile: "",
-			selectedPaletteDropdownFile: ""
+			selectedPaletteDropdownFile: "",
+			oneTimeLayout: NONE
 		};
 
 		this.onCanvasFileSelect = this.onCanvasFileSelect.bind(this);
@@ -48,6 +49,9 @@ export default class SidePanelForms extends React.Component {
 		this.isReadyToSubmitPaletteData = this.isReadyToSubmitPaletteData.bind(this);
 
 		this.layoutDirectionOptionChange = this.layoutDirectionOptionChange.bind(this);
+		this.oneTimeHorizontalLayout = this.oneTimeHorizontalLayout.bind(this);
+		this.oneTimeVerticalLayout = this.oneTimeVerticalLayout.bind(this);
+		this.disableOneTimeLayoutButtons = this.disableOneTimeLayoutButtons.bind(this);
 		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
 	}
 
@@ -144,6 +148,21 @@ export default class SidePanelForms extends React.Component {
 		}
 	}
 
+	oneTimeHorizontalLayout() {
+		this.props.setOneTimeLayoutDirection(HORIZONTAL);
+	}
+
+	oneTimeVerticalLayout() {
+		this.props.setOneTimeLayoutDirection(VERTICAL);
+	}
+
+	disableOneTimeLayoutButtons() {
+		if (this.state.oneTimeLayout !== NONE) {
+			return true;
+		}
+		return false;
+	}
+
 	submitCanvas() {
 		if (this.state.canvasDiagram !== "") {
 			var fileReader = new FileReader();
@@ -188,6 +207,9 @@ export default class SidePanelForms extends React.Component {
 
 	layoutDirectionOptionChange(evt, obj) {
 		this.props.setLayoutDirection(obj.selected);
+		this.setState({
+			oneTimeLayout: obj.selected
+		});
 	}
 
 	useInternalObjectModel(changeEvent) {
@@ -278,7 +300,7 @@ export default class SidePanelForms extends React.Component {
 		</div>);
 
 		var layoutDirection = (<div className="sidepanel-children" id="sidepanel-layout-direction">
-			<div className="sidepanel-headers">Layout Direction</div>
+			<div className="sidepanel-headers">Fixed Layout</div>
 			<RadioGroup
 				dark
 				onChange={this.layoutDirectionOptionChange}
@@ -289,17 +311,23 @@ export default class SidePanelForms extends React.Component {
 				]}
 				selected={NONE}
 			/>
-			<Button compact dark
-				disabled={!this.isReadyToSubmitCanvasData()}
-				onClick={this.submitCanvas.bind(this)}
+		</div>);
+
+		var layoutOnDemand = (<div className="sidepanel-children" id="sidepanel-oneTime-layout-direction">
+		<div className="sidepanel-headers">Layout on Demand</div>
+			<Button dark
+				id="buttonOneTimeLayoutHorizontal"
+				disabled={this.disableOneTimeLayoutButtons()}
+				onClick={this.oneTimeHorizontalLayout}
 			>
-				Layout Horizontal
+				Horizontal
 			</Button>
-			<Button compact dark
-				disabled={!this.isReadyToSubmitCanvasData()}
-				onClick={this.submitCanvas.bind(this)}
+			<Button dark
+				id="buttonOneTimeLayoutVertical"
+				disabled={this.disableOneTimeLayoutButtons()}
+				onClick={this.oneTimeVerticalLayout}
 			>
-				Layout Vertical
+				Vertical
 			</Button>
 		</div>);
 
@@ -324,6 +352,8 @@ export default class SidePanelForms extends React.Component {
 				{divider}
 				{layoutDirection}
 				{divider}
+				{layoutOnDemand}
+				{divider}
 				{enableObjectModel}
 			</div>
 		);
@@ -336,6 +366,7 @@ SidePanelForms.propTypes = {
 	setDiagramJSON: React.PropTypes.func,
 	setPaletteJSON: React.PropTypes.func,
 	setLayoutDirection: React.PropTypes.func,
+	setOneTimeLayoutDirection: React.PropTypes.func,
 	useInternalObjectModel: React.PropTypes.func,
 	log: React.PropTypes.func
 };

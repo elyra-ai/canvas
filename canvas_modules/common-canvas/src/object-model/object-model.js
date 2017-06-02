@@ -14,6 +14,8 @@
 
 import { createStore, combineReducers } from "redux";
 import uuid from "node-uuid";
+import { NONE, VERTICAL, DAGRE_HORIZONTAL, DAGRE_VERTICAL } from "../../constants/common-constants.js";
+import dagre from "dagre";
 
 /* eslint arrow-body-style: ["error", "always"] */
 /* eslint complexity: ["error", 15] */
@@ -428,14 +430,76 @@ export default class ObjectModel {
 		return store.getState().canvas;
 	}
 
+	static fixedAutoLayout(fixedLayoutDirection) {
+		this.autoLayout(fixedLayoutDirection);
+		ObjectModel.fixedLayout = fixedLayoutDirection;
+	}
+
+	static autoLayout(layoutDirection) {
+		var canvasData = this.getCanvas();
+		var lookup = {};
+		if (layoutDirection === VERTICAL) {
+			lookup = this.dagreAutolayout(DAGRE_VERTICAL, canvasData);
+		} else {
+			lookup = this.dagreAutolayout(DAGRE_HORIZONTAL, canvasData);
+		}
+		var newNodes = canvasData.diagram.nodes.map((node) => {
+			return Object.assign({}, node, { xPos: lookup[node.id].value.x, yPos: lookup[node.id].value.y });
+		});
+		var newDiagram = Object.assign({ }, canvasData.diagram, { nodes: newNodes });
+		var newCanvas = Object.assign({ }, canvasData, { diagram: newDiagram });
+		this.setCanvas(newCanvas);
+	}
+
+	static dagreAutolayout(direction, canvasData) {
+		var edges = canvasData.diagram.links.map((link) => {
+			return { "v": link.source, "w": link.target, "value": { "points": [] } };
+		});
+
+		var nodesData = canvasData.diagram.nodes.map((node) => {
+			return { "v": node.id, "value": { } };
+		});
+
+		// possible values: TB, BT, LR, or RL, where T = top, B = bottom, L = left, and R = right.
+		// default TB for vertical layout
+		// set to LR for horizontal layout
+		var value = { };
+		var directionList = ["TB", "BT", "LR", "RL"];
+		if (directionList.indexOf(direction) >= 0) {
+			value = { "rankDir": direction };
+		}
+
+		var inputGraph = { nodes: nodesData, edges: edges, value: value };
+
+		var g = dagre.graphlib.json.read(inputGraph);
+		g.graph().marginx = 100;
+		g.graph().marginy = 25;
+		g.graph().nodesep = 100; // distance to separate the nodes horiziontally
+		g.graph().ranksep = 100; // distance between each rank of nodes
+		dagre.layout(g);
+
+		var outputGraph = dagre.graphlib.json.write(g);
+
+		var lookup = { };
+		for (var i = 0, len = outputGraph.nodes.length; i < len; i++) {
+			lookup[outputGraph.nodes[i].v] = outputGraph.nodes[i];
+		}
+		return lookup;
+	}
+
 // Node AND comment methods
 
 	static moveObjects(data) {
-		store.dispatch({ type: "MOVE_OBJECTS", data: data });
+		if (ObjectModel.fixedLayout === NONE) {
+			store.dispatch({ type: "MOVE_OBJECTS", data: data });
+		}
 	}
 
 	static deleteObjects(source) {
 		store.dispatch({ type: "DELETE_OBJECTS", data: source });
+		if (ObjectModel.fixedLayout !== NONE) {
+			this.autoLayout(ObjectModel.fixedLayout);
+		}
 	}
 
 	static disconnectNodes(source) {
@@ -444,6 +508,9 @@ export default class ObjectModel {
 
 		const newSource = Object.assign({}, source, { selectedNodeIds: selectedNodeIds });
 		store.dispatch({ type: "DISCONNECT_NODES", data: newSource });
+		if (ObjectModel.fixedLayout !== NONE) {
+			this.autoLayout(ObjectModel.fixedLayout);
+		}
 	}
 
 // Node methods
@@ -460,6 +527,9 @@ export default class ObjectModel {
 			info.inputPorts = nodeType.inputPorts || [];
 			info.outputPorts = nodeType.outputPorts || [];
 			store.dispatch({ type: "ADD_NODE", data: info });
+		}
+		if (ObjectModel.fixedLayout !== NONE) {
+			this.autoLayout(ObjectModel.fixedLayout);
 		}
 	}
 
@@ -490,6 +560,9 @@ export default class ObjectModel {
 			}
 		});
 		store.dispatch({ type: "ADD_COMMENT", data: info });
+		if (ObjectModel.fixedLayout !== NONE) {
+			this.autoLayout(ObjectModel.fixedLayout);
+		}
 	}
 
 	static getComments() {
@@ -512,6 +585,9 @@ export default class ObjectModel {
 
 	static deleteLink(source) {
 		store.dispatch({ type: "DELETE_LINK", data: source });
+		if (ObjectModel.fixedLayout !== NONE) {
+			this.autoLayout(ObjectModel.fixedLayout);
+		}
 	}
 
 	static linkNodes(data) {
@@ -531,7 +607,9 @@ export default class ObjectModel {
 			info.trgNodeId = trgNodeId;
 			store.dispatch({ type: "ADD_LINK", data: info });
 		}
-
+		if (ObjectModel.fixedLayout !== NONE) {
+			this.autoLayout(ObjectModel.fixedLayout);
+		}
 	}
 
 	static linkComment(data) {
@@ -545,6 +623,9 @@ export default class ObjectModel {
 				store.dispatch({ type: "ADD_LINK", data: info });
 			});
 		});
+		if (ObjectModel.fixedLayout !== NONE) {
+			this.autoLayout(ObjectModel.fixedLayout);
+		}
 	}
 
 // Utility functions
@@ -727,3 +808,5 @@ export default class ObjectModel {
 		return this.getSelectedObjectIds();
 	}
 }
+
+ObjectModel.fixedLayout = NONE;
