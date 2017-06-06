@@ -58,10 +58,11 @@
 }
 
 #empty-canvas {
-  width: 250px;
   position: absolute;
-  left: 31%;
-  top: 20%;
+  left: 0%;
+  top: 0%;
+  padding-left: 32%;
+  padding-top: 10%;
   float: right;
   cursor: default;
 }
