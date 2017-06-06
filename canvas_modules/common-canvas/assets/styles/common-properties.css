@@ -153,8 +153,3 @@ input[type=radio]{
 span.form__validation--invalid {
   color: #E71D32;
 }
-/* Override for ap-components css */
-.public_fixedDataTableRow_highlighted,
-.public_fixedDataTableRow_highlighted .public_fixedDataTableCell_main {
-  background-color: #f6f7f8;
-}
