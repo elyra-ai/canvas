@@ -170,3 +170,153 @@ input[type=radio]{
 span.form__validation--invalid {
   color: #E71D32;
 }
+
+
+/* Field Picker */
+/*.field-picker-toolbar{
+	margin-bottom: 5px;
+}*/
+
+#field-picker-back-button {
+  height: 32px;
+  width: 32px;
+  border: none;
+  padding: 0;
+  padding-left: 9px;
+  padding-top: 2px;
+}
+
+#field-picker-search {
+	width: 45%;
+	float: left;
+}
+
+#field-picker-search-icon {
+	width: 5%;
+	height: 32px;
+	float: left;
+	fill: #A91560;
+	border-bottom: 2px solid #777677;
+	padding-bottom: 1px;
+}
+
+#field-picker-search:focus {
+  border-bottom: 2px solid #777677;
+}
+
+#field-picker-filter-list{
+	list-style-type: none;
+	float: left;
+	margin-top: 3px;
+  margin-bottom: 0px;
+  width:40%;
+  height: 32px;
+}
+
+#filter-list-title {
+	width: 40px;
+	height: 32px;
+}
+
+.filter-list-li {
+	float: left;
+  display: block;
+  width:14px;
+  fill:#A91560;
+	margin-right: 2px;
+	padding: 2px;
+}
+
+.filter-list-li-icon:hover {
+	background-color:#EAEAEA;
+}
+
+#field-picker-table {
+	width: 100%;
+}
+
+#add-fields-button {
+	border: none;
+	float: right;
+	padding-top: 2px;
+	padding-right: 10px;
+	padding-left: 10px;
+	text-decoration: underline;
+}
+
+#reset-fields-button {
+	border: none;
+	float: right;
+	height: 32px;
+	width: 90px;
+	padding-right: 0px;
+}
+
+#reset-fields-button-label {
+	float: left;
+	padding-top: 5px;
+	padding-right: 5px;
+	text-decoration: underline;
+}
+
+#reset-fields-button-icon {
+	float: left;
+	width: 20px;
+  fill: #A91560;
+}
+
+#reset-fields-button:hover #reset-fields-button-icon{
+	fill: #FFFFFF;
+}
+
+#remove-fields-button {
+	float: right;
+	border: none;
+	margin-top: 2px;
+	margin-bottom: 2px;
+	padding-top: 4px;
+	height: 30.75px;
+	width: 33px;
+	fill: #A91560;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+#remove-fields-button:hover {
+	background-color: #A91560;
+	fill: #FFFFFF;
+}
+
+#field-picker-table-container {
+  height: 222.75px;
+  width: 100%;
+  overflow: scroll;
+  position: sticky;
+  background-color: #FFFFFF;
+  border: 1px #D8D8D8 solid;
+  padding: 0 15px 0 15px;
+	margin-top: 40px;
+	color: #000000;
+}
+
+th div div label, td div div label {
+  padding-bottom: 10px;
+}
+
+.field-picker-data-type-icon {
+	width: 15px;
+	height: 15px;
+	float: left;
+	margin-right: 5px;
+	margin-top: 3px;
+	fill: #A91560;
+}
+
+.reactable-header-sortable:focus {
+	outline: none;
+}
+
+#field-picker-table-container>table>thead>tr>th,
+#field-picker-table-container>table>tbody>tr>td {
+  padding: 5px;
+}

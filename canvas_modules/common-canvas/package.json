@@ -58,6 +58,7 @@
     "react-click-outside": "2.2.0",
     "react-dom": "15.3.2",
     "react-inlinesvg": "0.4.2",
+    "reactable": "0.14.1",
     "redux": "3.6.0",
     "sinon": "1.17.7",
     "source-map-loader": "0.2.0",

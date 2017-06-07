@@ -36,9 +36,12 @@ import SomeofselectControl from "./someofselect-control.jsx";
 import OneofcolumnsControl from "./oneofcolumns-control.jsx";
 import SomeofcolumnsControl from "./someofcolumns-control.jsx";
 import ColumnAllocatorControl from "./column-allocator-control.jsx";
+import ColumnAllocatorControlNew from "./column-allocator-control-new.jsx";
 import ColumnStructureAllocatorControl from "./column-structure-allocator-control.jsx";
+import ColumnStructureAllocatorControlNew from "./column-structure-allocator-control-new.jsx";
 import StructureeditorControl from "./structureeditor-control.jsx";
 import StructurelisteditorControl from "./structure-list-editor-control.jsx";
+import FieldPicker from "./field-picker.jsx";
 import ColumnAllocationPanel from "./../editor-panels/column-allocation-panel.jsx";
 import SelectorPanel from "./../editor-panels/selector-panel.jsx";
 import SubPanelButton from "./../editor-panels/sub-panel-button.jsx";
@@ -66,7 +69,10 @@ export default class EditorForm extends React.Component {
 			validationGroupDefinitions: [],
 			// controlValidations: {},
 			controlStates: {},
-			selectedRows: []
+			selectedRows: [],
+			showFieldPicker: false,
+			fieldPickerControl: {},
+			activeTabId: ""
 		};
 
 		this.getControlValue = this.getControlValue.bind(this);
@@ -83,6 +89,9 @@ export default class EditorForm extends React.Component {
 		this.genPanel = this.genPanel.bind(this);
 		this.genUIContent = this.genUIContent.bind(this);
 		this.genUIItem = this.genUIItem.bind(this);
+
+		this.closeFieldPicker = this.closeFieldPicker.bind(this);
+		this.openFieldPicker = this.openFieldPicker.bind(this);
 	}
 
 	componentDidMount() {
@@ -224,6 +233,7 @@ export default class EditorForm extends React.Component {
 				key={controlId}
 				ref={controlId}
 				valueAccessor={controlValueAccessor}
+				openFieldPicker={this.openFieldPicker}
 			/>);
 		} else if (control.controlType === "allocatedcolumn") {
 			// logger.info("allocatedcolumn");
@@ -246,6 +256,17 @@ export default class EditorForm extends React.Component {
 				validationDefinitions={this.state.validationDefinitions}
 				controlStates={this.state.controlStates}
 			/>);
+		} else if (control.controlType === "allocatedcolumnsnew") {
+			return (<ColumnAllocatorControlNew control={control}
+				dataModel={inputDataModel}
+				multiColumn
+				key={controlId}
+				ref={controlId}
+				valueAccessor={controlValueAccessor}
+				validationDefinitions={this.state.validationDefinitions}
+				controlStates={this.state.controlStates}
+				openFieldPicker={this.openFieldPicker}
+			/>);
 		} else if (control.controlType === "allocatedstructures") {
 			// logger.info("allocatedstructures");
 			return (<ColumnStructureAllocatorControl control={control}
@@ -257,6 +278,18 @@ export default class EditorForm extends React.Component {
 				updateSelectedRows={this.updateSelectedRows}
 				selectedRows={this.state.selectedRows}
 				buildUIItem={this.genUIItem}
+			/>);
+		} else if (control.controlType === "allocatedstructuresnew") {
+			return (<ColumnStructureAllocatorControlNew control={control}
+				dataModel={inputDataModel}
+				key={controlId}
+				ref={controlId}
+				valueAccessor={controlValueAccessor}
+				updateControlValue={this.updateControlValue}
+				updateSelectedRows={this.updateSelectedRows}
+				selectedRows={this.state.selectedRows}
+				buildUIItem={this.genUIItem}
+				openFieldPicker={this.openFieldPicker}
 			/>);
 		} else if (control.controlType === "structureeditor") {
 			// logger.info("structureeditor");
@@ -307,6 +340,7 @@ export default class EditorForm extends React.Component {
 		// logger.info("genPrimaryTabs");
 		// logger.info(tabs);
 		const tabContent = [];
+		let initialTab = "";
 		for (var i = 0; i < tabs.length; i++) {
 			const tab = tabs[i];
 			const panelItems = this.genUIItem(i, tab.content, idPrefix, controlValueAccessor, datasetMetadata);
@@ -316,13 +350,37 @@ export default class EditorForm extends React.Component {
 				// logger.info("TabGroup=" + tab.group);
 				// logger.info(additionalComponent);
 			}
+			if (i === 0) {
+				initialTab = "primary-tab." + tab.group;
+			}
+
 			tabContent.push(
-				<Tabs.Panel id={"primary-tab." + tab.group} key={i} title={tab.text}>{panelItems}{additionalComponent}</Tabs.Panel>
+				<Tabs.Panel
+					id={"primary-tab." + tab.group}
+					key={i}
+					title={tab.text}
+				>
+				{panelItems}
+				{additionalComponent}
+				</Tabs.Panel>
 			);
 		}
 
+		const that = this;
 		return (
-			<Tabs key={key} defaultActiveKey={0} animation={false}>{tabContent}</Tabs>
+			<Tabs key={key}
+				defaultActiveKey={0}
+				animation={false}
+				isTabActive={function active(id) {
+					if (that.state.activeTabId === "") {
+						return id === initialTab;
+					}
+					return id === that.state.activeTabId;
+				}}
+				onTabClickHandler={(e, id) => this.setState({ activeTabId: id })}
+			>
+			{tabContent}
+			</Tabs>
 		);
 	}
 
@@ -435,6 +493,20 @@ export default class EditorForm extends React.Component {
 	handleSubmit(buttonId) {
 		// logger.info(buttonId);
 		this.props.submitMethod(buttonId, this.refs.form);
+	}
+
+	closeFieldPicker() {
+		this.setState({
+			fieldPickerControl: {},
+			showFieldPicker: false
+		});
+	}
+
+	openFieldPicker(evt) {
+		this.setState({
+			fieldPickerControl: JSON.parse(evt.currentTarget.dataset.control),
+			showFieldPicker: true
+		});
 	}
 
 	handleMouseLeave(evt) {
@@ -613,6 +685,19 @@ export default class EditorForm extends React.Component {
 
 	render() {
 		var content = this.genUIContent(this.state.formData.uiItems, "", this.getControlValue, this.state.formData.data.datasetMetadata);
+
+		if (this.state.showFieldPicker) {
+			var currentControlValues = this.getControlValues();
+			content = (<div id="field-picker-table">
+				<FieldPicker
+					closeFieldPicker={this.closeFieldPicker}
+					currentControlValues={currentControlValues}
+					dataModel={this.state.formData.data.inputDataModel}
+					updateControlValue={this.updateControlValue}
+					control={this.state.fieldPickerControl}
+				/>
+			</div>);
+		}
 
 		var formButtons = [];
 
