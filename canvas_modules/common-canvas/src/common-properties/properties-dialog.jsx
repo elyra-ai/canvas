@@ -21,43 +21,42 @@ export default class PropertiesDialog extends Component {
 
 	render() {
 		const modalClassName = "modal__container";
+
 		return (
-
-			<Modal className="ap-container" {...this.props}
-				show
-				keyboard
-				backdrop="static"
-				onHide={this.props.cancelHandler}
-			>
-				<div className={modalClassName}>
-					<div className="modal-title"
-						style={{ "paddingBottom": "10px" }}
-					>
-						<h2>
-							{this.props.title}
-						</h2>
-					</div>
-					<div className="modal-children">
-						{this.props.children}
-					</div>
-					<div className="modal__buttons">
-						<Button
-							semantic href=""
-							onClick={this.props.okHandler}
-							style={{ "marginLeft": "10px" }}
+				<Modal className="ap-container" {...this.props}
+					show
+					keyboard
+					backdrop="static"
+					onHide={this.props.cancelHandler}
+				>
+					<div className={modalClassName}>
+						<div className="modal-title"
+							style={{ "paddingBottom": "10px" }}
 						>
-							{OKAY}
-						</Button>
+							<h2>
+								{this.props.title}
+							</h2>
+						</div>
+						<div className="modal-children">
+							{this.props.children}
+						</div>
+						<div className="modal__buttons">
+							<Button
+								semantic href=""
+								onClick={this.props.okHandler}
+								style={{ "marginLeft": "10px" }}
+							>
+								{OKAY}
+							</Button>
 
-						<Button semantic href="" hyperlink onClick={this.props.cancelHandler}>
-							{CANCEL}
-						</Button>
+							<Button semantic href="" hyperlink onClick={this.props.cancelHandler}>
+								{CANCEL}
+							</Button>
+						</div>
 					</div>
-				</div>
 
-			</Modal>
-
-		);
+				</Modal>
+			);
 	}
 }
 

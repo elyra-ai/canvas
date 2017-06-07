@@ -8,7 +8,7 @@
       ],
       "uiHints": {
         "icon": "images/binning.svg",
-        "editorSize": "large"
+        "editorSize": "medium"
       },
       "arguments": [
         {

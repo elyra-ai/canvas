@@ -14,6 +14,7 @@
 
 import React from "react";
 import PropertiesDialog from "./properties-dialog.jsx";
+import PropertiesEditing from "./properties-editing.jsx";
 import EditorForm from "./editor-controls/editor-form.jsx";
 import Form from "./form/Form";
 
@@ -64,18 +65,35 @@ export default class CommonProperties extends React.Component {
 					form={formData}
 					additionalComponents={this.props.propertiesInfo.additionalComponents}
 				/>);
+
 				const title = this.props.propertiesInfo.title;
 				const size = formData.editorSize;
-				propertiesDialog = (<PropertiesDialog
-					onHide={this.props.propertiesInfo.closePropertiesDialog}
-					title={title}
-					bsSize={size}
-					okHandler={this.applyPropertiesEditing}
-					cancelHandler={this.props.propertiesInfo.closePropertiesDialog}
-				>
-					{editorForm}
-				</PropertiesDialog>);
+
+				if (this.props.useModalDialog) {
+					propertiesDialog = (<PropertiesDialog
+						onHide={this.props.propertiesInfo.closePropertiesDialog}
+						title={title}
+						bsSize={size}
+						okHandler={this.applyPropertiesEditing}
+						cancelHandler={this.props.propertiesInfo.closePropertiesDialog}
+					>
+						{editorForm}
+					</PropertiesDialog>);
+				} else {
+					propertiesDialog = (<PropertiesEditing
+						applyLabel={this.props.applyLabel}
+						rejectLabel={this.props.rejectLabel}
+						bsSize={size}
+						title={title}
+						okHandler={this.applyPropertiesEditing}
+						cancelHandler={this.props.propertiesInfo.closePropertiesDialog}
+					>
+						{editorForm}
+					</PropertiesEditing>);
+				}
+
 			}
+
 			return (
 				<div>
 					{propertiesDialog}
@@ -86,8 +104,15 @@ export default class CommonProperties extends React.Component {
 	}
 }
 
+CommonProperties.defaultProps = {
+	useModalDialog: true
+};
+
 CommonProperties.propTypes = {
 	showPropertiesDialog: React.PropTypes.bool.isRequired,
+	applyLabel: React.PropTypes.string,
+	rejectLabel: React.PropTypes.string,
+	useModalDialog: React.PropTypes.bool,
 	propertiesInfo: React.PropTypes.object.isRequired,
 	uiConditions: React.PropTypes.array
 };

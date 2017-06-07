@@ -14,6 +14,7 @@ import React from "react";
 import { FormControl } from "react-bootstrap";
 import {
 	Button,
+	ToggleButton,
 	Dropdown
 } from "ap-components-react/dist/ap-components-react";
 import {
@@ -34,6 +35,7 @@ export default class SidePanelModal extends React.Component {
 		this.onPropertiesSelect = this.onPropertiesSelect.bind(this);
 		this.isReadyToSubmitProperties = this.isReadyToSubmitProperties.bind(this);
 		this.openPropertiesEditorDialog = this.openPropertiesEditorDialog.bind(this);
+		this.useModalPropertiesDialog = this.useModalPropertiesDialog.bind(this);
 	}
 
 	componentWillMount() {
@@ -127,6 +129,10 @@ export default class SidePanelModal extends React.Component {
 		}
 	}
 
+	useModalPropertiesDialog(changeEvent) {
+		this.props.useModalPropertiesDialog(changeEvent.target.checked);
+	}
+
 	render() {
 		// var divider = (<div
 		// 	className="sidepanel-children sidepanel-divider"
@@ -169,6 +175,17 @@ export default class SidePanelModal extends React.Component {
 				>
 					Open Dialog
 				</Button>
+
+				<form>
+					<div className="sidepanel-headers">Modal Dialog</div>
+					<div>
+						<ToggleButton dark
+							id="sidepanel-modal-dialog-toggle"
+							checked={this.props.modalPropertiesDialog}
+							onChange={this.useModalPropertiesDialog}
+						/>
+					</div>
+				</form>
 			</div>
 		</div>);
 
@@ -185,5 +202,7 @@ SidePanelModal.propTypes = {
 	closePropertiesEditorDialog: React.PropTypes.func,
 	openPropertiesEditorDialog: React.PropTypes.func,
 	setPropertiesJSON: React.PropTypes.func,
+	useModalPropertiesDialog: React.PropTypes.func,
+	modalPropertiesDialog: React.PropTypes.bool,
 	showPropertiesDialog: React.PropTypes.bool
 };

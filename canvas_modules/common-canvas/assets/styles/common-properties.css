@@ -39,6 +39,23 @@
 }
 
 /* Property editing */
+.properties-editing {
+		position: absolute;
+		border: thin solid black;
+		overflow: scroll;
+}
+
+.properties-title {
+
+}
+
+.properties-body {
+
+}
+
+.properties-buttons {
+
+}
 
 .control-panel {
   display: block;

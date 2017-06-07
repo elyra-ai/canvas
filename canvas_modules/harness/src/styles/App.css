@@ -249,3 +249,22 @@
 .main-comment-box{
   background-color: #2be2ca;
 }
+
+.properties-editing {
+	top: 75px;
+	left: 75px;
+	min-width: 700px;
+	z-index: 2;
+}
+
+.properties-large {
+	width: 70%;
+}
+
+.properties-medium {
+	width: 55%;
+}
+
+.properties-small {
+	width: 40%;
+}

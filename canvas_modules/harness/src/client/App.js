@@ -51,6 +51,7 @@ class App extends React.Component {
 			consoleOpened: false,
 			contextMenuInfo: {},
 			internalObjectModel: true,
+			modalPropertiesDialog: true,
 			openSidepanelCanvas: false,
 			openSidepanelStyles: false,
 			openSidepanelModal: false,
@@ -86,6 +87,7 @@ class App extends React.Component {
 		this.setLayoutDirection = this.setLayoutDirection.bind(this);
 		this.setOneTimeLayoutDirection = this.setOneTimeLayoutDirection.bind(this);
 		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
+		this.useModalPropertiesDialog = this.useModalPropertiesDialog.bind(this);
 
 		// common-canvas
 		this.contextMenuHandler = this.contextMenuHandler.bind(this);
@@ -246,6 +248,11 @@ class App extends React.Component {
 	useInternalObjectModel(enabled) {
 		this.setState({ internalObjectModel: enabled });
 		this.log("use internal object model", enabled);
+	}
+
+	useModalPropertiesDialog(enabled) {
+		this.setState({ modalPropertiesDialog: enabled });
+		this.log("use modal properties dialog", enabled);
 	}
 
 	// common-canvas
@@ -619,6 +626,9 @@ class App extends React.Component {
 			<CommonProperties
 				showPropertiesDialog={this.state.showPropertiesDialog}
 				propertiesInfo={this.state.propertiesInfo}
+				useModalDialog={this.state.modalPropertiesDialog}
+				applyLabel="Apply"
+				rejectLabel="Reject"
 			/>
 		</div>);
 
@@ -628,6 +638,7 @@ class App extends React.Component {
 				selectedPanel={this.state.selectedPanel}
 				enableNavPalette={this.enableNavPalette}
 				internalObjectModel={this.state.internalObjectModel}
+				modalPropertiesDialog={this.state.modalPropertiesDialog}
 				openPropertiesEditorDialog={this.openPropertiesEditorDialog}
 				closePropertiesEditorDialog={this.closePropertiesEditorDialog}
 				openSidepanelCanvas={this.state.openSidepanelCanvas}
@@ -642,14 +653,16 @@ class App extends React.Component {
 				selectedLinkTypeStyle={this.state.selectedLinkTypeStyle}
 				showPropertiesDialog={this.state.showPropertiesDialog}
 				useInternalObjectModel={this.useInternalObjectModel}
+				useModalPropertiesDialog={this.useModalPropertiesDialog}
 				log={this.log}
 			/>
-			<IntlProvider key="IntlProvider" locale={ locale } messages={ messages }>
-				{commonCanvas}
-			</IntlProvider>
 			<IntlProvider key="IntlProvider2" locale={ locale } messages={ messages }>
 				{commonProperties}
 			</IntlProvider>
+			<IntlProvider key="IntlProvider" locale={ locale } messages={ messages }>
+				{commonCanvas}
+			</IntlProvider>
+
 			<Console
 				consoleOpened={this.state.consoleOpened}
 				logs={this.state.consoleout}

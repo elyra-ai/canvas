@@ -57,6 +57,8 @@ export default class SidePanel extends React.Component {
 				openPropertiesEditorDialog={this.props.openPropertiesEditorDialog}
 				setPropertiesJSON={this.props.setPropertiesJSON}
 				showPropertiesDialog={this.props.showPropertiesDialog}
+				modalPropertiesDialog={this.props.modalPropertiesDialog}
+				useModalPropertiesDialog={this.props.useModalPropertiesDialog}
 			/>);
 			break;
 		default:
@@ -89,5 +91,7 @@ SidePanel.propTypes = {
 	selectedPanel: React.PropTypes.string,
 	showPropertiesDialog: React.PropTypes.bool,
 	useInternalObjectModel: React.PropTypes.func,
+	modalPropertiesDialog: React.PropTypes.bool,
+	useModalPropertiesDialog: React.PropTypes.func,
 	log: React.PropTypes.func
 };
