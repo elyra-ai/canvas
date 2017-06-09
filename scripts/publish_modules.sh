@@ -31,13 +31,10 @@ cd ./canvas_modules/common-canvas
 BUILDNUM=`node -p "require('./package.json').version"`
 cd $WORKING_DIR
 
-# Only tag release builds
-if [[ ${TRAVIS_BRANCH} == ${RELEASE_BRANCH} ]]; then
-	# Tag the release build before publishing
-	cd ./scripts
-	./tagBuild.sh $BUILDNUM
-	cd $WORKING_DIR
-fi
+# Tag the builds before publishing
+cd ./scripts
+./tagBuild.sh $BUILDNUM
+cd $WORKING_DIR
 
 echo "Publishing common-canvas $BUILDNUM to NPM"
 cd ./canvas_modules/common-canvas
