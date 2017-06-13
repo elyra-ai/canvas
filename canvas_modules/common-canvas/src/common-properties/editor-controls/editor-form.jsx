@@ -311,7 +311,7 @@ export default class EditorForm extends React.Component {
 			const tab = tabs[i];
 			const panelItems = this.genUIItem(i, tab.content, idPrefix, controlValueAccessor, inputDataModel);
 			let additionalComponent = null;
-			if (this.props.additionalComponents !== null) {
+			if (this.props.additionalComponents) {
 				additionalComponent = this.props.additionalComponents[tab.group];
 				// logger.info("TabGroup=" + tab.group);
 				// logger.info(additionalComponent);

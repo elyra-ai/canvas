@@ -1,0 +1,219 @@
+{
+  "currentParameters": {
+    "custom_fields": [
+      "false"
+    ],
+    "target": [],
+    "inputs": [],
+    "max_depth": [
+      "5"
+    ],
+    "min_impurity": [
+      "0.0001"
+    ],
+    "impurity_measure": [
+      "Gini"
+    ]
+  },
+  "parameters": [
+    {
+      "name": "custom_fields",
+      "type": "boolean"
+    },
+    {
+      "name": "target",
+      "type": "string",
+      "role": "column"
+    },
+    {
+      "name": "inputs",
+      "type": "array[string]",
+      "role": "column"
+    },
+    {
+      "name": "max_depth",
+      "type": "integer",
+      "default": 5
+    },
+    {
+      "name": "min_impurity",
+      "type": "double",
+      "default": 0.0001
+    },
+    {
+      "name": "impurity_measure",
+      "type": "string",
+      "enum": [
+        "Gini",
+        "Twoing",
+        "Ordered"
+      ],
+      "default": "Gini"
+    }
+  ],
+  "uihints": {
+    "name": "cart",
+    "icon": "./cart.svg",
+    "parameter_info": [
+      {
+        "name": "target",
+        "label": {
+          "default": "Target"
+        },
+        "description": {
+          "default": "Target (predicted) field"
+        }
+      },
+      {
+        "name": "inputs",
+        "label": {
+          "default": "Inputs"
+        },
+        "description": {
+          "default": "Input (predictor) fields"
+        }
+      },
+      {
+        "name": "max_depth",
+        "label": {
+          "default": "Max. depth"
+        },
+        "description": {
+          "default": "Maximum tree depth"
+        }
+      },
+      {
+        "name": "min_impurity",
+        "label": {
+          "default": "Minimum change in impurity"
+        },
+        "description": {
+          "default": "Minimum change in impurity"
+        }
+      },
+      {
+        "name": "impurity_measure",
+        "label": {
+          "default": "Impurity measure for categorical targets"
+        },
+        "description": {
+          "default": "Impurity measure for categorical targets"
+        }
+      }
+    ],
+    "group_info": [
+      {
+        "name": "fields-settings",
+        "type": "panels",
+        "group_info": [
+          {
+            "name": "use-custom",
+            "parameters": [
+              "custom_fields"
+            ]
+          },
+          {
+            "name": "field-allocation",
+            "type": "columnAllocation",
+            "parameters": [
+              "target",
+              "inputs"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "build-options",
+        "type": "subTabs",
+        "group_info": [
+          {
+            "name": "basics-settings",
+            "parameters": [
+              "max_depth"
+            ]
+          },
+          {
+            "name": "advanced-settings",
+            "parameters": [
+              "min_impurity",
+              "impurity_measure"
+            ]
+          }
+        ]
+      }
+    ],
+    "conditions": [
+      {
+        "validation": {
+          "fail-message": {
+            "type": "error",
+            "resourceKey": "target_not_empty",
+            "focusParam": "target"
+          },
+          "evaluate": {
+            "condition": {
+              "param": "target",
+              "op": "isNotEmpty"
+            }
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail-message": {
+            "type": "error",
+            "resourceKey": "inputs_not_empty",
+            "focusParam": "inputs"
+          },
+          "evaluate": {
+            "condition": {
+              "param": "inputs",
+              "op": "isNotEmpty"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "inputDataModel": {
+    "columns": [
+      {
+        "name": "integer2",
+        "storage": "Integer",
+        "measure": "Range",
+        "modelingRole": "Input"
+      },
+      {
+        "name": "double4",
+        "storage": "Double",
+        "measure": "Range",
+        "modelingRole": "Input"
+      },
+      {
+        "name": "string1",
+        "storage": "string",
+        "measure": "Set",
+        "modelingRole": "Input"
+      }
+    ]
+  },
+  "resources": {
+    "name": "C&RT",
+    "target.label": "Target",
+    "target.desc": "Target (predicted) field",
+    "inputs.label": "Condition",
+    "inputs.desc": "Enter a conditional expression for filtering rows",
+    "max_depth.label": "Max. depth",
+    "max_depth.desc": "Maximum tree depth",
+    "min_impurity.label": "Minimum change in impurity",
+    "min_impurity.desc": "Minimum change in impurity",
+    "impurity_measure.label": "Impurity measure for categorical targets",
+    "impurity_measure.desc": "Impurity measure for categorical targets",
+    "target_not_empty": "The 'Target' field cannot be empty",
+    "inputs_not_empty": "The 'Inputs' field cannot be empty",
+    "fields-settings.label": "Settings",
+    "build-options.label": "Build Options",
+    "basics-settings.label": "Basics",
+    "advanced-settings.label": "Advanced"
+  }
+}

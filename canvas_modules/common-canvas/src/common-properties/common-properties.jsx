@@ -17,6 +17,7 @@ import PropertiesDialog from "./properties-dialog.jsx";
 import PropertiesEditing from "./properties-editing.jsx";
 import EditorForm from "./editor-controls/editor-form.jsx";
 import Form from "./form/Form";
+import _ from "underscore";
 
 export default class CommonProperties extends React.Component {
 	constructor(props) {
@@ -28,14 +29,10 @@ export default class CommonProperties extends React.Component {
 	}
 
 	getForm() {
-		if (this.props.propertiesInfo.operator) {
-			return Form.makeForm(
-				this.props.propertiesInfo.operator,
-				this.props.propertiesInfo.inputDataModel,
-				this.props.propertiesInfo.currentProperties,
-				this.props.propertiesInfo.resources);
+		if (this.props.propertiesInfo.formData) {
+			return this.props.propertiesInfo.formData;
 		}
-		return this.props.propertiesInfo.formData;
+		return Form.makeForm(this.props.propertiesInfo.propertyDef);
 	}
 
 	applyPropertiesEditing() {
@@ -49,16 +46,16 @@ export default class CommonProperties extends React.Component {
 
 	render() {
 		const formData = this.getForm();
+		console.log(JSON.stringify(formData));
 		if (formData !== null) {
 			let propertiesDialog = [];
 			if (this.props.showPropertiesDialog) {
 				let uiConditions = {};
-				if (typeof this.props.uiConditions !== "undefined") {
+				if (_.has(this.props.propertiesInfo.propertyDef.uihints, "conditions")) {
 					uiConditions = {
-						uiConditions: this.props.uiConditions
+						uiConditions: this.props.propertiesInfo.propertyDef.uihints.conditions
 					};
 				}
-
 				const editorForm = (<EditorForm {...uiConditions}
 					ref="editorForm"
 					key={Date()}
@@ -91,9 +88,7 @@ export default class CommonProperties extends React.Component {
 						{editorForm}
 					</PropertiesEditing>);
 				}
-
 			}
-
 			return (
 				<div>
 					{propertiesDialog}
@@ -113,6 +108,5 @@ CommonProperties.propTypes = {
 	applyLabel: React.PropTypes.string,
 	rejectLabel: React.PropTypes.string,
 	useModalDialog: React.PropTypes.bool,
-	propertiesInfo: React.PropTypes.object.isRequired,
-	uiConditions: React.PropTypes.array
+	propertiesInfo: React.PropTypes.object.isRequired
 };

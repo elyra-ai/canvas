@@ -7,17 +7,12 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import { UIInfo } from "./UIInfo";
-import {
-	ParameterDef,
-	ParameterMetadata
-} from "./ParameterInfo";
+import { ParameterDef, ParameterMetadata } from "./ParameterInfo";
 import { EditStyle } from "./form-constants";
 import _ from "underscore";
 
-class StructureDef extends UIInfo {
+class StructureDef {
 	constructor(cname, keyDefinition, parameterMetadata, uiHints) {
-		super({ uiHints: uiHints });
 		this.name = cname;
 		this.keyDefinition = keyDefinition;
 		this.parameterMetadata = parameterMetadata;

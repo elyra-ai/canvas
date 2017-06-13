@@ -1,0 +1,90 @@
+{
+  "currentParameters": {
+    "mode": [
+      "Include"
+    ],
+    "condition": [
+      ""
+    ]
+  },
+  "parameters": [
+    {
+      "name": "mode",
+      "enum": [
+        "Include",
+        "Discard"
+      ],
+      "type": "string",
+      "default": "Include"
+    },
+    {
+      "name": "condition",
+      "type": "string",
+      "default": "",
+      "role": "expression"
+    }
+  ],
+  "uihints": {
+    "name": "Select",
+    "icon": "./select.svg",
+    "parameter_info": [
+      {
+        "name": "mode",
+        "label": {
+          "default": "Mode"
+        },
+        "description": {
+          "default": "Include or discard rows"
+        },
+        "orientation": "horizontal"
+      },
+      {
+        "name": "condition",
+        "label": {
+          "default": "Condition"
+        },
+        "description": {
+          "default": "Enter a conditional expression to be applied to each row"
+        },
+        "orientation": "horizontal"
+      }
+    ],
+    "group_info": [
+      {
+        "name": "basic-settings",
+        "label": {
+          "default": "Settings"
+        },
+        "parameters": [
+          "mode",
+          "condition"
+        ]
+      }
+    ],
+    "conditions": [
+      {
+        "validation": {
+          "fail-message": {
+            "type": "warning",
+            "resourceKey": "condition_not_empty",
+            "focusParam": "condition"
+          },
+          "evaluate": {
+            "condition": {
+              "param": "condition",
+              "op": "isNotEmpty"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "resources": {
+    "name": "Select",
+    "select_mode.label": "Mode",
+    "select_mode.desc": "Include or discard rows",
+    "condition.label": "Condition",
+    "condition.desc": "Enter a conditional expression for filtering rows",
+    "condition_not_empty": "The 'Condition' expression cannot be empty"
+  }
+}
