@@ -3,6 +3,10 @@ dist: trusty
 sudo: false
 language: node_js
 node_js: "4.4"
+addons:
+  apt:
+    packages:
+      - google-chrome-stable
 before_install:
   - ./scripts/setEnv.sh
 before_script:
