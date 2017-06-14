@@ -13,6 +13,7 @@ before_script:
 script:
   - ./canvas_modules/common-canvas/build.sh
   - ./canvas_modules/harness/build.sh
+  - "google-chrome --version"
   - ./canvas_modules/harness/functional_test.sh
 deploy:
   - provider: script
