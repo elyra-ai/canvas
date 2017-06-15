@@ -8,30 +8,17 @@
  *******************************************************************************/
 
 import { ItemType } from "./form-constants";
+import _ from "underscore";
 
 export class UIItem {
 	constructor(elements) {
-		if (elements.itemType) {
-			this.itemType = elements.itemType;
-		}
-		if (elements.tabs) {
-			this.tabs = elements.tabs; // when PRIMARY_TABS, SUB_TABS or PANEL_SELECTOR
-		}
-		if (elements.panel) {
-			this.panel = elements.panel; // when PANEL or ADDITIONAL_LINK
-		}
-		if (elements.control) {
-			this.control = elements.control; // when CONTROL
-		}
-		if (elements.text) {
-			this.text = elements.text; // when ADDITIONAL_LINK (link label), STATIC_TEXT or HORIZONTAL_SEPARATOR
-		}
-		if (elements.secondaryText) {
-			this.secondaryText = elements.secondaryText; // when ADDITIONAL_LINK (subpanel label)
-		}
-		if (elements.dependsOn) {
-			this.dependsOn = elements.dependsOn; // when PANEL_SELECTOR (control to obtain value from)
-		}
+		this.itemType = _.propertyOf(elements)("itemType");
+		this.tabs = _.propertyOf(elements)("tabs"); // when PRIMARY_TABS, SUB_TABS or PANEL_SELECTOR
+		this.panel = _.propertyOf(elements)("panel"); // when PANEL or ADDITIONAL_LINK
+		this.control = _.propertyOf(elements)("control"); // when CONTROL
+		this.text = _.propertyOf(elements)("text"); // when ADDITIONAL_LINK (link label), STATIC_TEXT or HORIZONTAL_SEPARATOR
+		this.secondaryText = _.propertyOf(elements)("secondaryText"); // when ADDITIONAL_LINK (subpanel label)
+		this.dependsOn = _.propertyOf(elements)("dependsOn"); // when PANEL_SELECTOR (control to obtain value from)
 	}
 
 	static makePrimaryTabs(tabs) {

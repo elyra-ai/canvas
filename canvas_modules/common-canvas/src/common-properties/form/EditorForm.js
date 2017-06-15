@@ -10,25 +10,9 @@
  /* eslint complexity: ["error", 37] */
  /* eslint max-depth: ["error", 5] */
 
-import {
-	ValueDef,
-	Label,
-	ControlPanel
-} from "./UIInfo";
-import {
-	Control,
-	SubControl
-} from "./ControlInfo";
-import {
-	UIItem
-} from "./UIItem";
-import {
-	GroupType,
-	PanelType,
-	Type,
-	ControlType,
-	ParamRole
-} from "./form-constants";
+import { Control, SubControl } from "./ControlInfo";
+import { UIItem } from "./UIItem";
+import { GroupType, PanelType, Type, ControlType, ParamRole } from "./form-constants";
 
 /**
  * The Editor is the primary container for the editing controls. It defines the tabs within the
@@ -42,16 +26,39 @@ export class EditorTab {
 	}
 }
 
+class ValueDef {
+	constructor(propType, isList, isMap) {
+		this.propType = propType;
+		this.isList = isList;
+		this.isMap = isMap;
+	}
+	static make(parameter) {
+		return new ValueDef(parameter.propType(), parameter.isList(), parameter.isMapValue());
+	}
+}
+class Label {
+	constructor(text) {
+		this.text = text;
+	}
+}
+class ControlPanel {
+	constructor(id, panelType, controls) {
+		this.id = id;
+		this.panelType = panelType;
+		this.uiItems = controls;
+	}
+}
+
 /**
- * Creates tab based on operator definition
+ * Creates tab based on parameter definition
  */
-function makePrimaryTab(operatorDef, group, l10nProvider) {
+function makePrimaryTab(propertyDef, group, l10nProvider) {
 	const label = l10nProvider.l10nLabel(group, group.name);
-	return new EditorTab(label, group.name, _makeUIItem(operatorDef.parameterMetadata, group, operatorDef.structureMetadata, l10nProvider));
+	return new EditorTab(label, group.name, _makeUIItem(propertyDef.parameterMetadata, group, propertyDef.structureMetadata, l10nProvider));
 }
 
 function _makeUIItem(parameterMetadata, group, structureMetadata, l10nProvider) {
-	const groupName = group.name; // TODO Seems like this should be translated
+	const groupName = group.name;
 	let groupItem = null;
 	let groupLabel = null;
 	switch (group.groupType()) {
@@ -84,7 +91,7 @@ function _makeUIItem(parameterMetadata, group, structureMetadata, l10nProvider) 
 			groupLabel = l10nProvider.l10nLabel(subGroup, subGroup.name);
 			panSelSubItems.push(new EditorTab(groupLabel, subGroupName, groupItem));
 		});
-		return UIItem.makePanelSelector(panSelSubItems, group.dependsOn());
+		return UIItem.makePanelSelector(panSelSubItems, group.dependsOn);
 	}
 	case GroupType.PANELS: {
 		const panSubItems = [];
@@ -141,7 +148,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	const parameter = parameterMetadata.getParameter(paramName);
 
 	const additionalText = parameter.getAdditionalText(l10nProvider);
-	const orientation = parameter.orientation();
+	const orientation = parameter.orientation;
 	const controlLabel = new Label(l10nProvider.l10nLabel(parameter, parameter.name));
 
 	// The role is used to modify the behaviour of certain controls
@@ -297,7 +304,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 					controlType = ControlType.STRUCTUREEDITOR;
 				}
 			} else {
-				controlType = ControlType.TEXTFIELD; // TODO - how to handle an undefined structure
+				controlType = ControlType.TEXTFIELD;
 			}
 			break;
 		default:
@@ -312,7 +319,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	return new Control(parameter.name,
 		controlLabel,
 		separateLabel,
-		parameter.control(controlType),
+		parameter.getControl(controlType),
 		ValueDef.make(parameter),
 		role, additionalText,
 		orientation,
@@ -330,7 +337,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
  */
 function _makeSubControl(parameter, l10nProvider) {
 	const additionalText = parameter.getAdditionalText(l10nProvider);
-	const orientation = parameter.orientation();
+	const orientation = parameter.orientation;
 	const controlLabel = new Label(l10nProvider.l10nLabel(parameter, parameter.name));
 	let role;
 	let controlType;
@@ -380,7 +387,7 @@ function _makeSubControl(parameter, l10nProvider) {
 		controlLabel,
 		parameter.visible,
 		parameter.columns(8),
-		parameter.control(controlType),
+		parameter.getControl(controlType),
 		ValueDef.make(parameter),
 		role,
 		additionalText,
@@ -392,23 +399,17 @@ function _makeSubControl(parameter, l10nProvider) {
 
 function _parameterValueLabels(parameter, l10nProvider) {
 	if (parameter.valueRestriction) {
-		if (parameter.valueRestriction.labels) {
-			return parameter.valueRestriction.labels;
-		} else if (parameter.valueRestriction.oneOf) {
-			let key;
-			if (parameter.valueRestriction.labelsKey) {
-				key = parameter.valueRestriction.labelsKey;
-			} else if (parameter.resourceKey) {
-				key = parameter.resourceKey;
-			} else {
-				key = parameter.name;
-			}
-			const paramLabels = [];
-			parameter.valueRestriction.oneOf.forEach(function(paramValue) {
-				paramLabels.push(l10nProvider.l10nValueLabel(key, paramValue));
-			});
-			return paramLabels;
+		let key;
+		if (parameter.resourceKey) {
+			key = parameter.resourceKey;
+		} else {
+			key = parameter.name;
 		}
+		const paramLabels = [];
+		parameter.getValidValues().forEach(function(paramValue) {
+			paramLabels.push(l10nProvider.l10nValueLabel(key, paramValue));
+		});
+		return paramLabels;
 	}
 }
 

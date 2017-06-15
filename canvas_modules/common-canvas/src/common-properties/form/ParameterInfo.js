@@ -7,53 +7,41 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import { UIInfo } from "./UIInfo";
-import {
-	Type,
-	ParamRole
-} from "./form-constants";
+import { Separator } from "./form-constants";
+import { Type, ParamRole, EditStyle } from "./form-constants";
+import { ResourceDef } from "./L10nProvider";
 import _ from "underscore";
 
-class ValueRestriction {
-	constructor(oneOf, labels, labelsKey) {
-		this.oneOf = oneOf;
-		this.labels = labels;
-		this.labelsKey = labelsKey;
-	}
-
-	static make(restrictionOp) {
-		return new ValueRestriction(
-			_.propertyOf(restrictionOp)("oneOf"),
-			_.propertyOf(restrictionOp)("labels"),
-			_.propertyOf(restrictionOp)("labelsKey")
-		);
-	}
-}
-
-export class ParameterDef extends UIInfo {
-	constructor(cname, label, description, type, required, resourceKey, role, visible, range, valueRestriction, defaultValue, uiHints) {
-		super({
-			label: label,
-			description: description,
-			resourceKey: resourceKey,
-			uiHints: uiHints
-		});
+export class ParameterDef {
+	constructor(cname, label, description, type, role, valueRestriction, defaultValue, control, orientation, style, width, charLimit, placeHolderText, separator) {
 		this.name = cname;
+		this.label = ResourceDef.make(label);
+		this.description = ResourceDef.make(description);
 		this.type = type;
-		this.required = required;
 		this.role = role;
-		this.visible = (visible ? visible : true); // Only used for properties within structures
-		this.range = range;
-		this.valueRestriction = valueRestriction;
+		this.valueRestriction = valueRestriction; // enum
 		this.defaultValue = defaultValue;
+		this.control = control;
+		this.orientation = orientation;
+		this.style = style;
+		this.width = width;
+		this.charLimit = charLimit;
+		this.placeHolderText = placeHolderText; // additionalText
+		this.separator = separator;
 	}
 
 	isList() {
-		return this.type.startsWith("array[");
+		if (this.type) {
+			return this.type.startsWith("array[");
+		}
+		return false;
 	}
 
 	isMapValue() {
-		return this.type.startsWith("map[");
+		if (this.type) {
+			return this.type.startsWith("map[");
+		}
+		return false;
 	}
 
 	propType() {
@@ -73,7 +61,7 @@ export class ParameterDef extends UIInfo {
 	getRole() {
 		if (this.role) {
 			return this.role;
-		} else if (this.valueRestriction.oneOf) {
+		} else if (this.valueRestriction) {
 			// Assume valueRestriction implies ENUM
 			return ParamRole.ENUM;
 		}
@@ -91,6 +79,8 @@ export class ParameterDef extends UIInfo {
 		} else if (this.isMapValue()) {
 			// "map[<key-type>,<value-type>]" so remove everything up to and including "," and drop the trailing "]"
 			return typ.substring(typ.indexOf(",") + 1, this.type.length - 1);
+		} else if (this.valueRestriction && !this.type) { // assume String for enums
+			return Type.STRING;
 		}
 		return typ;
 	}
@@ -98,7 +88,7 @@ export class ParameterDef extends UIInfo {
 	getValidValues() {
 		var undef;
 		if (this.getRole() === ParamRole.ENUM && this.valueRestriction) {
-			return this.valueRestriction.oneOf;
+			return this.valueRestriction;
 		}
 		return undef;
 	}
@@ -107,25 +97,92 @@ export class ParameterDef extends UIInfo {
 		return (this.getValidValues() ? this.getValidValues().length : 0);
 	}
 
-	static makeParameterDef(paramOp) {
-		if (paramOp) {
+	/**
+	 * Returns the "additionalText" attribute which can be used to include additional
+	 * text associated with the property control on the UI.
+	 */
+	getAdditionalText(l10nProvider) {
+		// TODO should return translated value.  New schema needs to handle this.
+		return this.placeHolderText;
+	}
+
+	/**
+	 * Returns the "control" attribute which can be used to define which control should be used
+	 * for editing a property. The control should be valid for the associated property.
+	 */
+	getControl(defaultControl) {
+		return (this.control ? this.control : defaultControl);
+	}
+
+	/**
+	 * Returns the "editStyle" attribute which can be used to define how structured values are edited.
+	 */
+	editStyle() {
+		return EditStyle.SUBPANEL;
+	}
+
+	/**
+	 * Returns the "columns" uihint or the default value if a "columns" hint has not been supplied.
+	 */
+	columns(defaultCol) {
+		return (this.width ? this.width : defaultCol);
+	}
+
+	/**
+	 * Returns the "separatorAfter" attribute which can be used to insert a horizontal
+	 * separator before the control in the UI.
+	 */
+	separatorAfter() {
+		if (this.separator === Separator.AFTER) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Returns the "separatorBefore" attribute which can be used to insert a horizontal
+	 * separator before the control in the UI.
+	 */
+	separatorBefore() {
+		if (this.separator === Separator.BEFORE) {
+			return true;
+		}
+		return false;
+	}
+
+	static makeParameterDef(param, uihint) {
+		if (param) {
 			return new ParameterDef(
-				_.propertyOf(paramOp)("name"),
-				_.propertyOf(paramOp)("label"),
-				_.propertyOf(paramOp)("description"),
-				_.propertyOf(paramOp)("type"),
-				_.propertyOf(paramOp)("required"),
-				_.propertyOf(paramOp)("resourceKey"),
-				_.propertyOf(paramOp)("role"),
-				_.propertyOf(paramOp)("visible"),
-				_.propertyOf(paramOp)("range"),
-				ValueRestriction.make(_.propertyOf(paramOp)("valueRestriction")),
-				JSON.stringify(_.propertyOf(paramOp)("default")),
-				_.propertyOf(paramOp)("uiHints")
+				_.propertyOf(param)("name"),
+				_.propertyOf(uihint)("label"),
+				_.propertyOf(uihint)("description"),
+				_.propertyOf(param)("type"),
+				_.propertyOf(param)("role"),
+				_.propertyOf(param)("enum"),
+				JSON.stringify(_.propertyOf(param)("default")),
+				_.propertyOf(uihint)("control"),
+				_.propertyOf(uihint)("orientation"),
+				_.propertyOf(uihint)("style"),
+				_.propertyOf(uihint)("width"),
+				_.propertyOf(uihint)("char_limit"),
+				_.propertyOf(uihint)("place_holder_text"),
+				_.propertyOf(uihint)("separator")
 			);
 		}
 		return null;
 	}
+}
+
+// searches uihints to match up with parameter
+function getParamUIHint(paramName, uihints) {
+	if (uihints) {
+		for (const uihint of uihints) {
+			if (paramName === uihint.name) {
+				return uihint;
+			}
+		}
+	}
+	return null;
 }
 
 // PropertyProvider
@@ -146,13 +203,13 @@ export class ParameterMetadata {
 	}
 
 	// operation arguments
-	static makeParameterMetadata(opParameters) {
-		if (opParameters) {
+	static makeParameterMetadata(parameters, uihintsParams) {
+		if (parameters) {
 			const paramDefs = [];
-			for (const param of opParameters) {
-				const paramDef = ParameterDef.makeParameterDef(param);
-				if (paramDef !== null) {
-					paramDefs.push(ParameterDef.makeParameterDef(param));
+			for (const param of parameters) {
+				const paramDef = ParameterDef.makeParameterDef(param, getParamUIHint(param.name, uihintsParams));
+				if (paramDef) {
+					paramDefs.push(paramDef);
 				}
 			}
 			return new ParameterMetadata(paramDefs);

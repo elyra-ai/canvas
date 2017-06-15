@@ -7,8 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import { Button } from "./UIInfo";
-import { OperaterDef } from "./OperatorDef";
+import { PropertyDef } from "./PropertyDef";
 import _ from "underscore";
 import { makePrimaryTab } from "./EditorForm";
 import { UIItem } from "./UIItem";
@@ -27,26 +26,27 @@ export default class Form {
 	/**
 	* Returns a new Form
 	*/
-	static makeForm(operator, dataModel, currentParameters, resources) {
-		const op = OperaterDef.makeOperaterDef(operator);
-		if (op !== null) {
-			const l10nProvider = new L10nProvider(resources);
+	static makeForm(paramDef) {
+		const propDef = PropertyDef.makePropertyDef(_.propertyOf(paramDef)("parameters"), _.propertyOf(paramDef)("uihints"));
+		if (propDef) {
+			const l10nProvider = new L10nProvider(_.propertyOf(paramDef)("resources"));
 			const tabs = [];
-			if (op.groupMetadata && op.groupMetadata.groups) {
-				for (const group of op.groupMetadata.groups) {
-					tabs.push(makePrimaryTab(op, group, l10nProvider));
+			if (propDef.groupMetadata && propDef.groupMetadata.groups) {
+				for (const group of propDef.groupMetadata.groups) {
+					tabs.push(makePrimaryTab(propDef, group, l10nProvider));
 				}
 			}
 			// tabs.push(makeStandardTab(componentDef, BuiltInProvider(messages), CommonComponents.ANNOTATIONS_TAB_GROUP,
 			//  currentProperties));
 			const data = {
-				currentProperties: currentParameters,
-				inputDataModel: dataModel
+				currentProperties: _.propertyOf(paramDef)("currentProperties"), // TODO change to currentParameters when supported
+				inputDataModel: _.propertyOf(paramDef)("inputDataModel"), // TODO change to dataSetMetadata when supported
+				conditions: _.propertyOf(paramDef)("conditions")
 			};
-			const formName = _.propertyOf(op)("name");
+			const formName = _.propertyOf(propDef)("name");
 			return new Form(formName,
-				l10nProvider.l10nLabel(op, formName),
-				op.editorSizeHint(),
+				l10nProvider.l10nLabel(propDef, formName),
+				propDef.editorSizeHint(),
 				[UIItem.makePrimaryTabs(tabs)],
 				_defaultButtons(),
 				data);
@@ -59,4 +59,13 @@ function _defaultButtons() {
 	const okBtn = new Button("ok", "OK", true, "");
 	const cancelBtn = new Button("cancel", "Cancel", false, "");
 	return [okBtn, cancelBtn];
+}
+
+class Button {
+	constructor(id, text, isPrimary, url) {
+		this.id = id;
+		this.text = text;
+		this.isPrimary = isPrimary;
+		this.url = url;
+	}
 }

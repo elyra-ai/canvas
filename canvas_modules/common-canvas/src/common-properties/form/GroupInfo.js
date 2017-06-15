@@ -7,16 +7,18 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
- import { UIInfo } from "./UIInfo";
- import { GroupType } from "./form-constants";
- import _ from "underscore";
+import { GroupType } from "./form-constants";
+import { ResourceDef } from "./L10nProvider";
+import _ from "underscore";
 
-class Group extends UIInfo {
-	constructor(cname, parameters, uiHints, subGroups) {
-		super({ uiHints: uiHints });
+class Group {
+	constructor(cname, parameters, type, label, flow, dependsOn, subGroups) {
 		this.name = cname;
 		this.parameters = parameters;
-		this.uiHints = uiHints;
+		this.type = type;
+		this.label = ResourceDef.make(label);
+		this.flow = flow; // currently not part of form.json spec
+		this.dependsOn = dependsOn;
 		this.subGroups = subGroups;
 	}
 
@@ -25,18 +27,15 @@ class Group extends UIInfo {
 	}
 
 	groupType() {
-		if (_.has(this.uiHints, "groupType")) {
-			return this.uiHints.groupType;
-		}
-		return GroupType.CONTROLS;
+		return (this.type ? this.type : GroupType.CONTROLS);
 	}
 
-	static makeGroup(groupOp) {
-		if (groupOp) {
+	static makeGroup(uiGroup) {
+		if (uiGroup) {
 			let subGroups;
-			if (_.has(groupOp, "subGroups")) {
+			if (_.has(uiGroup, "group_info")) {
 				subGroups = [];
-				for (const group of groupOp.subGroups) {
+				for (const group of uiGroup.group_info) {
 					const newGroup = Group.makeGroup(group);
 					if (newGroup !== null) {
 						subGroups.push(newGroup);
@@ -44,9 +43,12 @@ class Group extends UIInfo {
 				}
 			}
 			return new Group(
-				_.propertyOf(groupOp)("name"),
-				_.propertyOf(groupOp)("arguments"),
-				_.propertyOf(groupOp)("uiHints"),
+				_.propertyOf(uiGroup)("name"),
+				_.propertyOf(uiGroup)("parameters"),
+				_.propertyOf(uiGroup)("type"),
+				_.propertyOf(uiGroup)("label"),
+				_.propertyOf(uiGroup)("flow"),
+				_.propertyOf(uiGroup)("depends_on"),
 				subGroups);
 		}
 		return null;
@@ -58,10 +60,10 @@ export class GroupMetadata {
 		this.groups = groups;
 	}
 
-	static makeGroupMetadata(groupsOp) {
-		if (groupsOp) {
+	static makeGroupMetadata(uiGroups) {
+		if (uiGroups) {
 			const groups = [];
-			for (const group of groupsOp) {
+			for (const group of uiGroups) {
 				const newGroup = Group.makeGroup(group);
 				if (newGroup !== null) {
 					groups.push(newGroup);

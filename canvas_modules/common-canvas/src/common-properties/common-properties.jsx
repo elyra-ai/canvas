@@ -28,14 +28,10 @@ export default class CommonProperties extends React.Component {
 	}
 
 	getForm() {
-		if (this.props.propertiesInfo.operator) {
-			return Form.makeForm(
-				this.props.propertiesInfo.operator,
-				this.props.propertiesInfo.inputDataModel,
-				this.props.propertiesInfo.currentProperties,
-				this.props.propertiesInfo.resources);
+		if (this.props.propertiesInfo.formData) {
+			return this.props.propertiesInfo.formData;
 		}
-		return this.props.propertiesInfo.formData;
+		return Form.makeForm(this.props.propertiesInfo.propertyDef);
 	}
 
 	applyPropertiesEditing() {
@@ -52,23 +48,14 @@ export default class CommonProperties extends React.Component {
 		if (formData !== null) {
 			let propertiesDialog = [];
 			if (this.props.showPropertiesDialog) {
-				let uiConditions = {};
-				if (typeof this.props.uiConditions !== "undefined") {
-					uiConditions = {
-						uiConditions: this.props.uiConditions
-					};
-				}
-
-				const editorForm = (<EditorForm {...uiConditions}
+				const editorForm = (<EditorForm
 					ref="editorForm"
 					key={Date()}
 					form={formData}
 					additionalComponents={this.props.propertiesInfo.additionalComponents}
 				/>);
-
 				const title = this.props.propertiesInfo.title;
 				const size = formData.editorSize;
-
 				if (this.props.useModalDialog) {
 					propertiesDialog = (<PropertiesDialog
 						onHide={this.props.propertiesInfo.closePropertiesDialog}
@@ -91,9 +78,7 @@ export default class CommonProperties extends React.Component {
 						{editorForm}
 					</PropertiesEditing>);
 				}
-
 			}
-
 			return (
 				<div>
 					{propertiesDialog}
@@ -113,6 +98,5 @@ CommonProperties.propTypes = {
 	applyLabel: React.PropTypes.string,
 	rejectLabel: React.PropTypes.string,
 	useModalDialog: React.PropTypes.bool,
-	propertiesInfo: React.PropTypes.object.isRequired,
-	uiConditions: React.PropTypes.array
+	propertiesInfo: React.PropTypes.object.isRequired
 };

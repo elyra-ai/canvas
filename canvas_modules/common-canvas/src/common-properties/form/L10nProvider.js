@@ -17,12 +17,18 @@ export class L10nProvider {
 	/**
 	 * Look up a localised resource using the supplied key.
 	 */
-	l10n(key) {
+	l10n(key, defaultVal) {
 		let value;
 		if (this.resources) {
 			value = _.propertyOf(this.resources)(key);
 		}
-		return (value ? value : key);
+		if (value) {
+			return value;
+		}
+		if (defaultVal) {
+			return defaultVal;
+		}
+		return key;
 	}
 
 	/**
@@ -30,12 +36,14 @@ export class L10nProvider {
 	 */
 	l10nLabel(uiObject, key) {
 		if (uiObject.label) {
-			return uiObject.label;
+			if (uiObject.label.resourceKey) {
+				return this.l10n(uiObject.label.resourceKey);
+			}
+			if (uiObject.label.default) {
+				return uiObject.label.default;
+			}
 		}
-		if (uiObject.resourceKey) {
-			return this.l10n(uiObject.resourceKey + ".label");
-		}
-		return this.l10n(key + ".label");
+		return this.l10n(key + ".label", key);
 	}
 
 	/**
@@ -43,10 +51,12 @@ export class L10nProvider {
 	 */
 	l10nDesc(uiObject, key) {
 		if (uiObject.description) {
-			return uiObject.description;
-		}
-		if (uiObject.resourceKey) {
-			return this.l10n(uiObject.resourceKey + ".desc");
+			if (uiObject.description.resourceKey) {
+				return this.l10n(uiObject.description.resourceKey);
+			}
+			if (uiObject.description.default) {
+				return uiObject.description.default;
+			}
 		}
 		return this.l10n(key + ".desc");
 	}
@@ -57,11 +67,15 @@ export class L10nProvider {
 	 */
 	l10nValueLabel(baseKey, value) {
 		const lookupKey = baseKey + "." + value + ".label";
-		const result = this.l10n(lookupKey);
-		// If the key is returned unchanged then assume lookup failed so use the base value
-		if (result === lookupKey) {
-			return value;
-		}
-		return result;
+		return this.l10n(lookupKey, value);
+	}
+}
+export class ResourceDef {
+	constructor(defaultText, resourceKey) {
+		this.default = defaultText;
+		this.resourceKey = resourceKey;
+	}
+	static make(resourceObj) {
+		return new ResourceDef(_.propertyOf(resourceObj)("default"), _.propertyOf(resourceObj)("resourceKey"));
 	}
 }
