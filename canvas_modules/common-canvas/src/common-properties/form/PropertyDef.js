@@ -13,9 +13,12 @@ import { Size } from "./form-constants";
 import _ from "underscore";
 
 export class PropertyDef {
-	constructor(cname, icon, structureMetadata, parameterMetadata, groupMetadata) {
+	constructor(cname, icon, editorSize, label, description, structureMetadata, parameterMetadata, groupMetadata) {
 		this.name = cname;
 		this.icon = icon;
+		this.editorSize = editorSize;
+		this.label = label;
+		this.description = description;
 		this.structureMetadata = structureMetadata;
 		this.parameterMetadata = parameterMetadata;
 		this.groupMetadata = groupMetadata;
@@ -23,11 +26,12 @@ export class PropertyDef {
 
 	/**
 	 * Returns the "editorSize" attribute which can be used to define how large an item should be in the UI.
+	 * default to Large editor
 	 */
 	editorSizeHint() {
-		// See: https://github.com/react-bootstrap/react-bootstrap/issues/2259
-		// Size.valueOf(uiHintStringOrElse("editorSize", ""))
-		// React dialogs can be either large or small (medium not supported)
+		if (this.editorSize) {
+			return this.editorSize;
+		}
 		return Size.LARGE;
 	}
 
@@ -40,6 +44,9 @@ export class PropertyDef {
 			return new PropertyDef(
 				_.propertyOf(uihints)("name"),
 				_.propertyOf(uihints)("icon"),
+				_.propertyOf(uihints)("editorSize"),
+				_.propertyOf(uihints)("label"),
+				_.propertyOf(uihints)("description"),
 				structureMetadata,
 				parameterMetadata,
 				groupMetadata

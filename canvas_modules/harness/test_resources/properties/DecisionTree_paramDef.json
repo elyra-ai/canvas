@@ -1,6 +1,6 @@
 {
-  "currentParameters": {
-    "target": [
+  "currentProperties": {
+    "targetField": [
       "string1"
     ],
     "inputFieldList": [
@@ -49,7 +49,6 @@
     },
     {
       "name": "impurity",
-      "type": "string",
       "enum": [
         "gini",
         "entropy"
@@ -84,6 +83,7 @@
   ],
   "uihints": {
     "icon": "images/modelbuildspark.svg",
+		"name": "decisiontree",
     "label": {
       "default": "Decision Tree Classifier"
     },
@@ -339,8 +339,8 @@
     ]
   },
   "resources": {
-    "name.label": "Decision Tree Classification Model",
-    "name.desc": "Fitted Decision Tree Classifier Model",
+    "decisiontree.label": "Decision Tree Classification Model",
+    "decisiontree.desc": "Fitted Decision Tree Classifier Model",
     "checkpointInterval.label": "Checkpoint Interval",
     "checkpointInterval.desc": "Set checkpoint interval (>= 1) or disable checkpoint (-1). Ex) 10 means that the cache will get checkpointed every 10 iterations",
     "impurity.label": "Impurity",
@@ -355,7 +355,7 @@
     "minInstancesPerNode.desc": "Minimum number of instances each child must have after split. If a split causes the left or right child to have fewer than minInstancesPerNode, the split will be discarded as invalid (>= 1)",
     "seed.label": "Seed",
     "seed.desc": "Random seed",
-    "settings.label": "Settings",
+		"fields-settings.label": "Settings",
     "checkpoint-interval-not-valid": "The checkpoint interval value must either be >= 1 or -1 to disable",
     "max-bins-not-valid": "Max bins must be >= 2 and >= number of categories in any categorical feature",
     "max-depth-not-valid": "The max depth parameter must be greater than or equal to zero",

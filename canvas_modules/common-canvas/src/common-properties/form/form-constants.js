@@ -92,6 +92,11 @@ const Type = {
 	STRUCTURE: "structure"
 };
 
+const Separator = {
+	BEFORE: "before",
+	AFTER: "after"
+};
+
 function hasValue(Enum, value) {
 	for (var key in Enum) {
 		if (value === Enum[key]) {
@@ -101,4 +106,4 @@ function hasValue(Enum, value) {
 	return false;
 }
 
-export { GroupType, PanelType, Type, ParamRole, ControlType, hasValue, EditStyle, Size, ItemType };
+export { GroupType, PanelType, Type, ParamRole, ControlType, hasValue, EditStyle, Size, ItemType, Separator };

@@ -86,7 +86,7 @@ export default class EditorForm extends React.Component {
 	}
 
 	componentDidMount() {
-		if (this.props.uiConditions) {
+		if (this.props.form.conditions) {
 			this.parseUiConditions();
 		}
 	}
@@ -572,7 +572,7 @@ export default class EditorForm extends React.Component {
 	}
 
 	parseUiConditions() {
-		var uiConditions = this.props.uiConditions;
+		var uiConditions = this.props.form.conditions;
 		var visibleDefinition = [];
 		var enabledDefinitions = [];
 		var validationDefinitions = [];
@@ -667,6 +667,5 @@ export default class EditorForm extends React.Component {
 EditorForm.propTypes = {
 	form: React.PropTypes.object,
 	additionalComponents: React.PropTypes.object,
-	submitMethod: React.PropTypes.func,
-	uiConditions: React.PropTypes.array
+	submitMethod: React.PropTypes.func
 };

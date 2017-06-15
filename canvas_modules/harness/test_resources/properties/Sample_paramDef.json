@@ -1,5 +1,5 @@
 {
-  "currentParameters": {
+  "currentProperties": {
     "mode": [
       "Include"
     ],
@@ -29,7 +29,6 @@
         "Include",
         "Discard"
       ],
-      "type": "string",
       "default": "Include"
     },
     {
@@ -39,7 +38,6 @@
         "OneInN",
         "RandomPct"
       ],
-      "type": "string",
       "default": "First"
     },
     {
@@ -69,7 +67,7 @@
     }
   ],
   "uihints": {
-    "name": "Sample",
+    "name": "sample",
     "icon": "./sample.svg",
     "parameter_info": [
       {
@@ -130,7 +128,8 @@
         "description": {
           "default": "Set a maximum for the number of sampled rows",
           "resourceKey": "use_max_sample_size.desc"
-        }
+        },
+				"separator": "before"
       },
       {
         "name": "maximum_size",
@@ -240,7 +239,7 @@
   "resources": {
     "basic-settings.label": "Settings",
     "basic-settings.desc": "Basic settings",
-    "name": "Sample",
+    "sample.label": "Sample",
     "sample_mode.label": "Mode",
     "sample_mode.desc": "Include or discard rows",
     "sample_type.label": "Sample",

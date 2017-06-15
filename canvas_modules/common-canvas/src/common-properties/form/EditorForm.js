@@ -304,7 +304,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 					controlType = ControlType.STRUCTUREEDITOR;
 				}
 			} else {
-				controlType = ControlType.TEXTFIELD; // TODO - how to handle an undefined structure
+				controlType = ControlType.TEXTFIELD;
 			}
 			break;
 		default:

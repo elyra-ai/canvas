@@ -7,13 +7,13 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-
+import { Separator } from "./form-constants";
 import { Type, ParamRole, EditStyle } from "./form-constants";
 import { ResourceDef } from "./L10nProvider";
 import _ from "underscore";
 
 export class ParameterDef {
-	constructor(cname, label, description, type, role, valueRestriction, defaultValue, control, orientation, style, width, charLimit, placeHolderText) {
+	constructor(cname, label, description, type, role, valueRestriction, defaultValue, control, orientation, style, width, charLimit, placeHolderText, separator) {
 		this.name = cname;
 		this.label = ResourceDef.make(label);
 		this.description = ResourceDef.make(description);
@@ -27,14 +27,21 @@ export class ParameterDef {
 		this.width = width;
 		this.charLimit = charLimit;
 		this.placeHolderText = placeHolderText; // additionalText
+		this.separator = separator;
 	}
 
 	isList() {
-		return this.type.startsWith("array[");
+		if (this.type) {
+			return this.type.startsWith("array[");
+		}
+		return false;
 	}
 
 	isMapValue() {
-		return this.type.startsWith("map[");
+		if (this.type) {
+			return this.type.startsWith("map[");
+		}
+		return false;
 	}
 
 	propType() {
@@ -72,6 +79,8 @@ export class ParameterDef {
 		} else if (this.isMapValue()) {
 			// "map[<key-type>,<value-type>]" so remove everything up to and including "," and drop the trailing "]"
 			return typ.substring(typ.indexOf(",") + 1, this.type.length - 1);
+		} else if (this.valueRestriction && !this.type) { // assume String for enums
+			return Type.STRING;
 		}
 		return typ;
 	}
@@ -124,7 +133,7 @@ export class ParameterDef {
 	 * separator before the control in the UI.
 	 */
 	separatorAfter() {
-		if (this.separator === "after") {
+		if (this.separator === Separator.AFTER) {
 			return true;
 		}
 		return false;
@@ -135,28 +144,29 @@ export class ParameterDef {
 	 * separator before the control in the UI.
 	 */
 	separatorBefore() {
-		if (this.separator === "before") {
+		if (this.separator === Separator.BEFORE) {
 			return true;
 		}
 		return false;
 	}
 
-	static makeParameterDef(paramOp, uihint) {
-		if (paramOp) {
+	static makeParameterDef(param, uihint) {
+		if (param) {
 			return new ParameterDef(
-				_.propertyOf(paramOp)("name"),
+				_.propertyOf(param)("name"),
 				_.propertyOf(uihint)("label"),
 				_.propertyOf(uihint)("description"),
-				_.propertyOf(paramOp)("type"),
-				_.propertyOf(paramOp)("role"),
-				_.propertyOf(paramOp)("enum"),
-				JSON.stringify(_.propertyOf(paramOp)("default")),
-				_.propertyOf(paramOp)("control"),
-				_.propertyOf(paramOp)("orientation"),
-				_.propertyOf(paramOp)("style"),
-				_.propertyOf(paramOp)("width"),
-				_.propertyOf(paramOp)("char_limit"),
-				_.propertyOf(paramOp)("place_holder_text")
+				_.propertyOf(param)("type"),
+				_.propertyOf(param)("role"),
+				_.propertyOf(param)("enum"),
+				JSON.stringify(_.propertyOf(param)("default")),
+				_.propertyOf(uihint)("control"),
+				_.propertyOf(uihint)("orientation"),
+				_.propertyOf(uihint)("style"),
+				_.propertyOf(uihint)("width"),
+				_.propertyOf(uihint)("char_limit"),
+				_.propertyOf(uihint)("place_holder_text"),
+				_.propertyOf(uihint)("separator")
 			);
 		}
 		return null;

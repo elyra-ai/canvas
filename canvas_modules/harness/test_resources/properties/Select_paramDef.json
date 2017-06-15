@@ -1,5 +1,5 @@
 {
-  "currentParameters": {
+  "currentProperties": {
     "mode": [
       "Include"
     ],
@@ -14,7 +14,6 @@
         "Include",
         "Discard"
       ],
-      "type": "string",
       "default": "Include"
     },
     {
@@ -25,7 +24,7 @@
     }
   ],
   "uihints": {
-    "name": "Select",
+    "name": "select",
     "icon": "./select.svg",
     "parameter_info": [
       {
@@ -80,7 +79,7 @@
     ]
   },
   "resources": {
-    "name": "Select",
+    "select.label": "Select",
     "select_mode.label": "Mode",
     "select_mode.desc": "Include or discard rows",
     "condition.label": "Condition",

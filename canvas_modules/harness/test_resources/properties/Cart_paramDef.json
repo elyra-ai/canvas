@@ -1,8 +1,5 @@
 {
-  "currentParameters": {
-    "custom_fields": [
-      "false"
-    ],
+  "currentPropertiess": {
     "target": [],
     "inputs": [],
     "max_depth": [
@@ -16,10 +13,6 @@
     ]
   },
   "parameters": [
-    {
-      "name": "custom_fields",
-      "type": "boolean"
-    },
     {
       "name": "target",
       "type": "string",
@@ -42,7 +35,6 @@
     },
     {
       "name": "impurity_measure",
-      "type": "string",
       "enum": [
         "Gini",
         "Twoing",
@@ -106,12 +98,6 @@
         "name": "fields-settings",
         "type": "panels",
         "group_info": [
-          {
-            "name": "use-custom",
-            "parameters": [
-              "custom_fields"
-            ]
-          },
           {
             "name": "field-allocation",
             "type": "columnAllocation",
@@ -198,11 +184,11 @@
     ]
   },
   "resources": {
-    "name": "C&RT",
+		"cart.label": "C&RT",
     "target.label": "Target",
     "target.desc": "Target (predicted) field",
-    "inputs.label": "Condition",
-    "inputs.desc": "Enter a conditional expression for filtering rows",
+    "inputs.label": "Inputs",
+    "inputs.desc": "Input (predictor) fields",
     "max_depth.label": "Max. depth",
     "max_depth.desc": "Maximum tree depth",
     "min_impurity.label": "Minimum change in impurity",

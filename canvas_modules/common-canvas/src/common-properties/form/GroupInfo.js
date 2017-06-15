@@ -7,18 +7,17 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
- import { GroupType } from "./form-constants";
- import { ResourceDef } from "./L10nProvider";
- import _ from "underscore";
+import { GroupType } from "./form-constants";
+import { ResourceDef } from "./L10nProvider";
+import _ from "underscore";
 
 class Group {
-	constructor(cname, parameters, type, label, flow, separator, dependsOn, subGroups) {
+	constructor(cname, parameters, type, label, flow, dependsOn, subGroups) {
 		this.name = cname;
 		this.parameters = parameters;
 		this.type = type;
 		this.label = ResourceDef.make(label);
 		this.flow = flow; // currently not part of form.json spec
-		this.separator = separator;
 		this.dependsOn = dependsOn;
 		this.subGroups = subGroups;
 	}
@@ -29,28 +28,6 @@ class Group {
 
 	groupType() {
 		return (this.type ? this.type : GroupType.CONTROLS);
-	}
-
-	/**
-	 * Returns the "separatorAfter" attribute which can be used to insert a horizontal
-	 * separator before the control in the UI.
-	 */
-	separatorAfter() {
-		if (this.separator === "after") {
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Returns the "separatorBefore" attribute which can be used to insert a horizontal
-	 * separator before the control in the UI.
-	 */
-	separatorBefore() {
-		if (this.separator === "before") {
-			return true;
-		}
-		return false;
 	}
 
 	static makeGroup(uiGroup) {
@@ -71,7 +48,6 @@ class Group {
 				_.propertyOf(uiGroup)("type"),
 				_.propertyOf(uiGroup)("label"),
 				_.propertyOf(uiGroup)("flow"),
-				_.propertyOf(uiGroup)("separator"),
 				_.propertyOf(uiGroup)("depends_on"),
 				subGroups);
 		}

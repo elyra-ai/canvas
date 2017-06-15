@@ -17,7 +17,6 @@ import PropertiesDialog from "./properties-dialog.jsx";
 import PropertiesEditing from "./properties-editing.jsx";
 import EditorForm from "./editor-controls/editor-form.jsx";
 import Form from "./form/Form";
-import _ from "underscore";
 
 export default class CommonProperties extends React.Component {
 	constructor(props) {
@@ -46,26 +45,17 @@ export default class CommonProperties extends React.Component {
 
 	render() {
 		const formData = this.getForm();
-		console.log(JSON.stringify(formData));
 		if (formData !== null) {
 			let propertiesDialog = [];
 			if (this.props.showPropertiesDialog) {
-				let uiConditions = {};
-				if (_.has(this.props.propertiesInfo.propertyDef.uihints, "conditions")) {
-					uiConditions = {
-						uiConditions: this.props.propertiesInfo.propertyDef.uihints.conditions
-					};
-				}
-				const editorForm = (<EditorForm {...uiConditions}
+				const editorForm = (<EditorForm
 					ref="editorForm"
 					key={Date()}
 					form={formData}
 					additionalComponents={this.props.propertiesInfo.additionalComponents}
 				/>);
-
 				const title = this.props.propertiesInfo.title;
 				const size = formData.editorSize;
-
 				if (this.props.useModalDialog) {
 					propertiesDialog = (<PropertiesDialog
 						onHide={this.props.propertiesInfo.closePropertiesDialog}
