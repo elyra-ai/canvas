@@ -1,26 +1,12 @@
 {
-  "currentProperties": {
-    "mode": [
-      "Include"
-    ],
-    "sample_type": [
-      "First"
-    ],
-    "first_n": [
-      "1000"
-    ],
-    "one_in_n": [
-      "100"
-    ],
-    "rand_pct": [
-      "50"
-    ],
-    "use_max_size": [
-      "true"
-    ],
-    "maximum_size": [
-      "10000"
-    ]
+  "currentParameters": {
+    "mode": "Include",
+    "sample_type": "First",
+    "first_n": 100,
+    "one_in_n": 100,
+    "rand_pct": 50,
+    "use_max_size": true,
+    "maximum_size": 10000
   },
   "parameters": [
     {

@@ -1,33 +1,14 @@
 {
-  "currentProperties": {
-    "targetField": [
-      "string1"
-    ],
-    "inputFieldList": [
-      "integer2",
-      "double4"
-    ],
-    "checkpointInterval": [
-      "-1"
-    ],
-    "impurity": [
-      "entropy"
-    ],
-    "maxBins": [
-      "24"
-    ],
-    "maxDepth": [
-      "7"
-    ],
-    "minInfoGain": [
-      "0"
-    ],
-    "minInstancesPerNode": [
-      "2"
-    ],
-    "seed": [
-      "12345"
-    ]
+  "currentParameters": {
+    "targetField": "string1",
+    "inputFieldList": ["integer2","double4"],
+    "checkpointInterval": -1,
+    "impurity": "entropy",
+    "maxBins": 24,
+    "maxDepth": 7,
+    "minInfoGain": 0,
+    "minInstancesPerNode": 2,
+    "seed": 12345
   },
   "parameters": [
     {

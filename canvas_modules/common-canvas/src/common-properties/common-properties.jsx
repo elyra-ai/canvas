@@ -28,14 +28,53 @@ export default class CommonProperties extends React.Component {
 	}
 
 	getForm() {
-		if (this.props.propertiesInfo.formData) {
-			return this.props.propertiesInfo.formData;
+		let formData = {};
+		if (this.props.propertiesInfo.formData && Object.keys(this.props.propertiesInfo.formData).length !== 0) {
+			formData = this.props.propertiesInfo.formData;
+		} else if (this.props.propertiesInfo.propertyDef) {
+			formData = Form.makeForm(this.props.propertiesInfo.propertyDef);
 		}
-		return Form.makeForm(this.props.propertiesInfo.propertyDef);
+		// TODO: Temporary conversion to older property set as arrays of string values
+		if (formData.data && !formData.data.currentProperties && formData.data.currentParameters) {
+			formData.data.currentProperties = this.parametersToProperties(formData.data.currentParameters);
+		}
+		return formData;
+	}
+
+	/**
+	 * Converts the newer style parameters definition to
+	 * the older properties definition.
+	 */
+	parametersToProperties(currentParameters) {
+		if (!currentParameters || this.toType(currentParameters) !== "object") {
+			return {};
+		}
+		const retVal = {};
+		for (const propertyName in currentParameters) {
+			if (currentParameters.hasOwnProperty(propertyName)) {
+				const prop = currentParameters[propertyName];
+				const type = this.toType(prop);
+				if (type === "string") {
+					retVal[propertyName] = [prop];
+				} else if (type === "array") {
+					retVal[propertyName] = prop;
+				} else {
+					retVal[propertyName] = [prop.toString()];
+				}
+			}
+		}
+		return retVal;
+	}
+
+	/**
+	 * A better type identifier than a simple 'typeOf' call.
+	 */
+	toType(obj) {
+		return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
 	}
 
 	applyPropertiesEditing() {
-		var settings = this.refs.editorForm.getControlValues();
+		const settings = this.refs.editorForm.getControlValues();
 		// May need to close the dialog inside the callback in
 		// case of validation errors
 		this.props.propertiesInfo.closePropertiesDialog();

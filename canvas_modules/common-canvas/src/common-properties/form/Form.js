@@ -39,7 +39,7 @@ export default class Form {
 			// tabs.push(makeStandardTab(componentDef, BuiltInProvider(messages), CommonComponents.ANNOTATIONS_TAB_GROUP,
 			//  currentProperties));
 			const data = {
-				currentProperties: _.propertyOf(paramDef)("currentProperties"), // TODO change to currentParameters when supported
+				currentParameters: _.propertyOf(paramDef)("currentParameters"),
 				inputDataModel: _.propertyOf(paramDef)("inputDataModel"), // TODO change to dataSetMetadata when supported
 				conditions: _.propertyOf(paramDef)("conditions")
 			};

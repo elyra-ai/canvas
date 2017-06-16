@@ -414,15 +414,15 @@ describe("Correct form should be created", () => {
 			]
 		};
 		const data = {
-			"currentProperties": {
-				"boolean_param": ["true"]
+			"currentParameters": {
+				"boolean_param": true
 			}
 		};
 		const expectedForm = new Form("TestOp", "TestOp", "small", [primaryTabs], buttons, data);
 
 		const paramSpec = {
-			"currentProperties": {
-				"boolean_param": ["true"]
+			"currentParameters": {
+				"boolean_param": true
 			},
 			"parameters": [
 				{
@@ -443,8 +443,6 @@ describe("Correct form should be created", () => {
 			}
 		};
 		const generatedForm = Form.makeForm(paramSpec);
-		// console.info("Expected: " + JSON.stringify(expectedForm));
-		// console.info("Actual: " + JSON.stringify(generatedForm));
 		// Work around since comparing the objects directly doesn't work.
 		expect(_.isEqual(JSON.parse(JSON.stringify(expectedForm)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
 	}

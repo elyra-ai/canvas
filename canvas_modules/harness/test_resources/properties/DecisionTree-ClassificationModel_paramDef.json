@@ -1,26 +1,12 @@
 {
-  "currentProperties": {
-    "checkpointInterval": [
-      "-1"
-    ],
-    "impurity": [
-      "entropy"
-    ],
-    "maxBins": [
-      "24"
-    ],
-    "maxDepth": [
-      "7"
-    ],
-    "minInfoGain": [
-      "0.0"
-    ],
-    "minInstancesPerNode": [
-      "2"
-    ],
-    "seed": [
-      "12345"
-    ]
+  "currentParameters": {
+    "checkpointInterval": -1,
+    "impurity": "entropy",
+    "maxBins": 24,
+    "maxDepth": 7,
+    "minInfoGain": 0.0,
+    "minInstancesPerNode": 2,
+    "seed": 12345
   },
   "parameters": [
     {

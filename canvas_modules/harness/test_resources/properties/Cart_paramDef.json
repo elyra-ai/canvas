@@ -1,16 +1,10 @@
 {
-  "currentProperties": {
-    "target": [],
+  "currentParameters": {
+    "target": "",
     "inputs": [],
-    "max_depth": [
-      "5"
-    ],
-    "min_impurity": [
-      "0.0001"
-    ],
-    "impurity_measure": [
-      "Gini"
-    ]
+    "max_depth": 5,
+    "min_impurity": 0.0001,
+    "impurity_measure": "Gini"
   },
   "parameters": [
     {
