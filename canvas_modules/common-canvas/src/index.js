@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import "./../assets/styles/common-canvas.css";
+import "./../assets/styles/common-canvas-d3.css";
 import "./../assets/styles/common-properties.css";
 import "./../assets/styles/field-allocator.css";
 import CommonCanvas from "./common-canvas.jsx";

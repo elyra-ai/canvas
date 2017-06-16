@@ -83,9 +83,9 @@
         "xPos": 10,
         "yPos": 10,
         "width": 200,
-        "height": 150,
+        "height": 180,
         "className": "",
-        "content": "This canvas tests addition of custom attributes to a node. The node on the right has two custom attributes addded to it called data-attr1 and data-attr2. If you look at the dom in the debugger tools you should see them set on the node's image. The image on the right is shown with a black border if the data-attr1 custom attribute is applied correctly.",
+        "content": "This canvas tests addition of custom attributes to a node. The node on the right has two custom attributes addded to it called data-attr1 and data-attr2. If you look at the dom in the debugger tools you should see them set on the node's image. The node on the right is shown with a faded out image if the data-attr1 custom attribute is applied correctly.",
         "userData": {
           "associatedIds": [
              "id2PZSCTRPRIJ"

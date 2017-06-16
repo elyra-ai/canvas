@@ -6,12 +6,14 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
+/* eslint no-console: "off" */
 
-
-import { containLinkEvent, containLinkInObjectModel, getCommentIdFromObjectModel, getNodeIdFromObjectModel, getObjectModelCount } from "./utilities/validateUtil.js";
+import { containLinkEvent, containLinkInObjectModel, getCommentIdFromObjectModel,
+					getCommentIdFromObjectModelUsingText, getNodeIdFromObjectModel,
+					getObjectModelCount } from "./utilities/validateUtil.js";
+import { getRenderingEngine, getURL } from "./utilities/test-config.js";
+import { simulateD3LinkCreation, simulateDragDrop } from "./utilities/DragAndDrop.js";
 import { getHarnessData } from "./utilities/HTTPClient.js";
-import { getURL } from "./utilities/test-config.js";
-import { simulateDragDrop } from "./utilities/DragAndDrop.js";
 
 /* global browser */
 
@@ -19,58 +21,29 @@ import { simulateDragDrop } from "./utilities/DragAndDrop.js";
 //   Test Cases
 // -------------------------------------
 module.exports = function() {
-
 	// Then I link node 1 the "Var. File" node to node 2 the "Derive" node for link 1 on the canvas
 	// The canvasLinks arg should include the number of comment links in addition to data links.
 	//
 	this.Then(/^I link node (\d+) the "([^"]*)" node to node (\d+) the "([^"]*)" node for link (\d+) on the canvas$/,
   function(srcNodeIndex, srcNodeName, destNodeIndex, destNodeName, canvasLinks) {
-	var orgNodeNumber = srcNodeIndex - 1;
-	var destNodeNumber = destNodeIndex - 1;
-	browser.execute(simulateDragDrop, ".node-circle", orgNodeNumber, ".node-inner-circle", destNodeNumber, 1, 1);
+	try {
+		var orgNodeNumber = srcNodeIndex - 1;
+		var destNodeNumber = destNodeIndex - 1;
 
-	// Start Validation
-	browser.pause(1500);
-	var linkCount = Number(canvasLinks);
-	// verify link is in the canvas DOM
-	var dataLinks = browser.$$(".canvas-data-link").length / 2;
-	var commentLinks = browser.$$(".canvas-comment-link").length / 2;
-	expect(dataLinks + commentLinks).toEqual(linkCount);
-
-	// verify that the link is in the internal object model
-	const testUrl = getURL();
-	const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
-	const getEventLogUrl = testUrl + "/v1/test-harness/events";
-	browser.timeoutsAsyncScript(5000);
-	var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
-	var srcNodeId = browser.execute(getNodeIdFromObjectModel, objectModel.value, orgNodeNumber);
-	var destNodeId = browser.execute(getNodeIdFromObjectModel, objectModel.value, destNodeNumber);
-	var returnVal = browser.execute(containLinkInObjectModel, objectModel.value, srcNodeId.value, destNodeId.value);
-	expect(returnVal.value).toBe(1);
-
-	// verify that an event for a new link is in the external object model event log
-	var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
-	returnVal = browser.execute(containLinkEvent, eventLog.value, srcNodeId.value, destNodeId.value,
-															"editActionHandler() linkNodes");
-	expect(returnVal.value).toBe(1);
-
-});
-
-	// Then I link comment 2 to node 6 the "Neural Net" node for link 7 on the canvas
-	//
-	this.Then(/^I link comment (\d+) to node (\d+) the "([^"]*)" node for link (\d+) on the canvas$/,
-	function(commentNumber, nodeNumber, nodeName, canvasLinks) {
-		var commentIndex = commentNumber - 1;
-		var nodeIndex = nodeNumber - 1;
-		browser.execute(simulateDragDrop, ".comment-box", commentIndex, ".node-inner-circle", nodeIndex, 1, 1);
-
-		// Start Validation
-		browser.pause(1000);
 		var linkCount = Number(canvasLinks);
-		// verify link is in the canvas DOM
-		var dataLinks = browser.$$(".canvas-data-link").length / 2;
-		var commentLinks = browser.$$(".canvas-comment-link").length / 2;
-		expect(dataLinks + commentLinks).toEqual(linkCount);
+
+		if (getRenderingEngine() === "D3") {
+			browser.execute(simulateD3LinkCreation, ".d3-node-halo", orgNodeNumber, ".node-group", destNodeNumber, 1, 1);
+			browser.pause(1500);
+			var links = browser.$$(".d3-selectable-link").length / 2; // Divide by 2 because the line and arrow head use this class
+			expect(links).toEqual(linkCount);
+		} else {
+			browser.execute(simulateDragDrop, ".node-circle", orgNodeNumber, ".node-inner-circle", destNodeNumber, 1, 1);
+			browser.pause(1500);
+			var dataLinks = browser.$$(".canvas-data-link").length / 2;
+			var commentLinks = browser.$$(".canvas-comment-link").length / 2;
+			expect(dataLinks + commentLinks).toEqual(linkCount);
+		}
 
 		// verify that the link is in the internal object model
 		const testUrl = getURL();
@@ -78,7 +51,63 @@ module.exports = function() {
 		const getEventLogUrl = testUrl + "/v1/test-harness/events";
 		browser.timeoutsAsyncScript(5000);
 		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
-		var srcNodeId = browser.execute(getCommentIdFromObjectModel, objectModel.value, commentIndex);
+		var srcNodeId = browser.execute(getNodeIdFromObjectModel, objectModel.value, orgNodeNumber);
+		var destNodeId = browser.execute(getNodeIdFromObjectModel, objectModel.value, destNodeNumber);
+		var returnVal = browser.execute(containLinkInObjectModel, objectModel.value, srcNodeId.value, destNodeId.value);
+		expect(returnVal.value).toBe(1);
+
+		// verify that an event for a new link is in the external object model event log
+		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
+		returnVal = browser.execute(containLinkEvent, eventLog.value, srcNodeId.value, destNodeId.value,
+																"editActionHandler() linkNodes");
+		expect(returnVal.value).toBe(1);
+	} catch (err) {
+		console.log("Error = " + err);
+		throw err;
+	}
+
+});
+
+	// Then I link comment 2 to node 6 the "Neural Net" node for link 7 on the canvas
+	//
+	this.Then(/^I link comment (\d+) with text "([^"]*)" to node (\d+) the "([^"]*)" node for link (\d+) on the canvas$/,
+	function(commentNumber, commentText, nodeNumber, nodeName, canvasLinks) {
+		var commentIndex = commentNumber - 1;
+		var nodeIndex = nodeNumber - 1;
+		var linkCount = Number(canvasLinks);
+
+		if (getRenderingEngine() === "D3") {
+			// For D3, we cannot rely on index position of comments because they get messed up
+			// when pusshing commnets to be underneath nodes and links. Therefore we look for the
+			// text of the comment being deleted.
+			var commentElements = browser.$("#common-canvas").$$(".comment-group");
+			for (let idx = 0; idx < commentElements.length; idx++) {
+				if (commentElements[idx].getAttribute("textContent") === commentText) {
+					commentIndex = idx;
+				}
+			}
+			browser.execute(simulateD3LinkCreation, ".d3-comment-halo", commentIndex, ".node-group", nodeIndex, 1, 1);
+			browser.pause(1500);
+			var links = browser.$$(".d3-selectable-link").length / 2; // Divide by 2 because the line and arrow head use this class
+			expect(links).toEqual(linkCount);
+		} else {
+			browser.execute(simulateDragDrop, ".comment-box", commentIndex, ".node-inner-circle", nodeIndex, 1, 1);
+			browser.pause(1000);
+			// verify link is in the canvas DOM
+			var dataLinks = browser.$$(".canvas-data-link").length / 2;
+			var commentLinks = browser.$$(".canvas-comment-link").length / 2;
+			expect(dataLinks + commentLinks).toEqual(linkCount);
+		}
+
+		browser.pause(2000);
+
+		// verify that the link is in the internal object model
+		const testUrl = getURL();
+		const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
+		const getEventLogUrl = testUrl + "/v1/test-harness/events";
+		browser.timeoutsAsyncScript(5000);
+		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
+		var srcNodeId = browser.execute(getCommentIdFromObjectModelUsingText, objectModel.value, commentText);
 		var destNodeId = browser.execute(getNodeIdFromObjectModel, objectModel.value, nodeIndex);
 		var returnVal = browser.execute(containLinkInObjectModel, objectModel.value, srcNodeId.value, destNodeId.value);
 		expect(returnVal.value).toBe(1);

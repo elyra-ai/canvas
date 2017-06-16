@@ -10,7 +10,8 @@
 import React from "react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import ContextMenuWrapper from "./context-menu-wrapper.jsx";
-import DiagramCanvas from "./diagram-canvas.jsx";
+import DiagramCanvasLegacy from "./diagram-canvas.jsx";
+import DiagramCanvasD3 from "./diagram-canvas-d3.jsx";
 import Palette from "./palette/palette.jsx";
 import ObjectModel from "./object-model/object-model.js";
 import ZoomIn24Icon from "../assets/images/zoom-in_24.svg";
@@ -186,25 +187,41 @@ export default class CommonCanvas extends React.Component {
 			if (this.state.showContextMenu) {
 				contextMenuWrapper = (<ContextMenuWrapper
 					containingDivId={"common-canvas"}
-					mousePos={this.contextMenuSource.mousePos}
-					contextMenuDef={this.state.contextMenuDef} c
+					mousePos={this.contextMenuSource.cmPos}
+					contextMenuDef={this.state.contextMenuDef}
 					contextMenuClicked={this.contextMenuClicked}
 					closeContextMenu={this.closeContextMenu}
 				/>);
 			}
 
-			canvas = (<DiagramCanvas
-				ref="canvas"
-				canvas={canvasJSON}
-				paletteJSON={ObjectModel.getPaletteData()}
-				closeContextMenu={this.closeContextMenu}
-				contextMenuHandler={this.contextMenuHandler}
-				editActionHandler={this.editActionHandler}
-				clickActionHandler={this.clickActionHandler}
-				decorationActionHandler={this.decorationActionHandler}
-			>
-				{contextMenuWrapper}
-			</DiagramCanvas>);
+			if (this.props.config.enableRenderingEngine === "D3") {
+				canvas = (<DiagramCanvasD3
+					ref="canvas"
+					canvas={canvasJSON}
+					paletteJSON={ObjectModel.getPaletteData()}
+					config={this.props.config}
+					closeContextMenu={this.closeContextMenu}
+					contextMenuHandler={this.contextMenuHandler}
+					editActionHandler={this.editActionHandler}
+					clickActionHandler={this.clickActionHandler}
+					decorationActionHandler={this.decorationActionHandler}
+				>
+					{contextMenuWrapper}
+				</DiagramCanvasD3>);
+			} else {
+				canvas = (<DiagramCanvasLegacy
+					ref="canvas"
+					canvas={canvasJSON}
+					paletteJSON={ObjectModel.getPaletteData()}
+					closeContextMenu={this.closeContextMenu}
+					contextMenuHandler={this.contextMenuHandler}
+					editActionHandler={this.editActionHandler}
+					clickActionHandler={this.clickActionHandler}
+					decorationActionHandler={this.decorationActionHandler}
+				>
+					{contextMenuWrapper}
+				</DiagramCanvasLegacy>);
+			}
 
 			if (this.props.config.enablePalette) {
 				popupPalette = (<Palette

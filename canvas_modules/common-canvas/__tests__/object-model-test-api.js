@@ -6,7 +6,7 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-
+ /* eslint no-console: "off" */
 
 import log4js from "log4js";
 import deepFreeze from "deep-freeze";
@@ -46,6 +46,8 @@ describe("ObjectModel API handle model OK", () => {
 		const expectedCanvas = addNodeHorizontalLayoutCanvas;
 		const actualCanvas = ObjectModel.getCanvas();
 
+		// Delete ID because IDs are generated at runtime and therefore won't be
+		// the same between expected and actual.
 		delete actualCanvas.diagram.nodes[3].id;
 
 		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
@@ -67,6 +69,8 @@ describe("ObjectModel API handle model OK", () => {
 		const expectedCanvas = addNodeVerticalLayoutCanvas;
 		const actualCanvas = ObjectModel.getCanvas();
 
+		// Delete ID because IDs are generated at runtime and therefore won't be
+		// the same between expected and actual.
 		delete actualCanvas.diagram.nodes[3].id;
 
 		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
@@ -137,6 +141,7 @@ describe("ObjectModel API handle model OK", () => {
 		ObjectModel.autoLayout(VERTICAL);
 
 		ObjectModel.moveObjects(moveVarNode);
+
 
 		const expectedCanvas = moveNodeVerticalLayoutCanvas;
 		const actualCanvas = ObjectModel.getCanvas();

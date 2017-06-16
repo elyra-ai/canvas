@@ -52,7 +52,7 @@
             "cardinality": "0:1"
           }
         ],
-        "xPos": 200,
+        "xPos": 250,
         "yPos": 25,
         "objectData": {
           "description": "",
@@ -77,7 +77,7 @@
             "cardinality": "0:1"
           }
         ],
-        "xPos": 300,
+        "xPos": 400,
         "yPos": 25,
         "objectData": {
           "description": "",

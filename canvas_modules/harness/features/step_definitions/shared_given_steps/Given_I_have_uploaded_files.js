@@ -65,7 +65,7 @@ module.exports = function() {
 
 	this.Then(/^I have uploaded predefined palette "([^"]*)"$/, function(paletteFile) {
 		// need to clisk on the palette drop down
-		browser.pause(500);
+		browser.pause(2000);
 		browser.$("#sidepanel-palette-input")
 						.$(".formField")
 						.$(".select")
@@ -87,7 +87,7 @@ module.exports = function() {
 
 	this.Then(/^I have uploaded palette "([^"]*)"$/, function(paletteFile) {
 		// need to clisk on the palette drop down
-		browser.pause(500);
+		browser.pause(2000);
 		browser.$("#sidepanel-palette-input")
 						.$(".formField")
 						.$(".select")

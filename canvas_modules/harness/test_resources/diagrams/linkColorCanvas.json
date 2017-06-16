@@ -70,8 +70,8 @@
             "cardinality": "0:1"
           }
         ],
-        "xPos": 306,
-        "yPos": 185,
+        "xPos": 335,
+        "yPos": 184,
         "objectData": {
           "description": "",
           "label": "Select"
@@ -94,8 +94,8 @@
           }
         ],
         "image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjEzLjUgLTE2LjcgNDkuOCA0NS43IiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDEzLjUgLTE2LjcgNDkuOCA0NS43OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+DQo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPg0KCS5zdDB7ZmlsbDojRThDMDE4O30NCgkuc3Qxe2ZpbGw6I0ZERDYwMDt9DQoJLnN0MntmaWxsOiNGQ0RENUU7fQ0KCS5zdDN7ZmlsbDojRDFBRjI0O30NCgkuc3Q0e2ZpbGw6IzFEMzY0OTt9DQoJLnN0NXtmaWxsOm5vbmU7c3Ryb2tlOiMxNTI5MzU7c3Ryb2tlLXdpZHRoOjI7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDZ7ZmlsbDpub25lO3N0cm9rZTojRjlGOUZCO3N0cm9rZS1taXRlcmxpbWl0OjEwO30NCgkuc3Q3e2ZpbGw6IzQxRDZDMzt9DQo8L3N0eWxlPg0KPHBvbHlsaW5lIGNsYXNzPSJzdDAiIHBvaW50cz0iMzkuMywyNy4xIDQ3LjMsNS4yIDMxLDUuMyAiLz4NCjxwb2x5bGluZSBjbGFzcz0ic3QxIiBwb2ludHM9IjM5LjUsLTE1LjQgMzEsNSA0OCw1ICIvPg0KPHBvbHlsaW5lIGNsYXNzPSJzdDAiIHBvaW50cz0iMzkuMSwtMTUuNCA0Ny4xLDUuOSA2MS40LC0yLjcgIi8+DQo8cG9seWxpbmUgY2xhc3M9InN0MiIgcG9pbnRzPSIzOS40LC0xNS40IDMxLjQsNS45IDE3LjEsLTIuNyAiLz4NCjxwb2x5bGluZSBjbGFzcz0ic3QxIiBwb2ludHM9IjE3LjIsLTIuOCAzMS42LDUuNiAzOS4zLDI3LjEgIi8+DQo8Zz4NCgkNCgkJPGltYWdlIHN0eWxlPSJvdmVyZmxvdzp2aXNpYmxlO29wYWNpdHk6MC42NjsiIHdpZHRoPSIyOSIgaGVpZ2h0PSIzNyIgeGxpbms6aHJlZj0iZGF0YTppbWFnZS9wbmc7YmFzZTY0LGlWQk9SdzBLR2dvQUFBQU5TVWhFVWdBQUFCMEFBQUFsQ0FZQUFBQyt1dUxQQUFBQUNYQklXWE1BQUFzU0FBQUxFZ0hTM1g3OEFBQUEKR1hSRldIUlRiMlowZDJGeVpRQkJaRzlpWlNCSmJXRm5aVkpsWVdSNWNjbGxQQUFBQkQ5SlJFRlVlTnE4bDExUEcwY1VobmRtMS9oVApCY1d5VFV6ak5HbUNDRFFmRnpRSXRYZTk3VVZ2NEMvd0U3aUVYNEhFWDREYmlzdUdpMG9WU1VYVVNIV1FxbElsQ3FZMVFsVnNZK09QCjNlMXpuTFZscUkwLzJHU2wxY3lzeCtlZDg3N3ZtZGsxakk5M0tkZDExZnI2dXBaV3h1MGZQZ2FhQUoyZW5nYm9CdVB4dUM2WHkzWWsKRXFtdXJhM1ZsVkt1OWp1N3JhMHRrellTREFiVHNXQnM3dXpzN0xIbFdIZUt4ZUpuS3lzcmxreXkvQUpiV2xyU2MzTnpnYjI5dlpobApXVGZKNkN0SE96UEtWWTVqT0ZtdDlGazZuUzR4dDJINVJXV01xMXF0eGszVHZHMDR4Z3dnanczWGlEUGxUelE5YjlpTjgxd3Vaek8rCkZyMXRLcVBSNkpSdDIwOGN4L2xPRy9vSFF4dmZBL2pJbTNkb21NWWhDM3BQcHZhb1JtcFRpVTRmcUhTVkFEeDFEZmNCWUxlZ05rei8KaEdjLzAvN0lnbjViV0ZqNGQzbDUyUjVXMHpZWXE0NjJxSVM2QndSK3FnejFpRmEwRE5EbUFUOXdsZnVyMXZxdlNxVlNCTkJwQmJKRwowUTJnRFBkOU1ud0lWOU5NdWNPZEJIaU10Z0R3Rzh6emd2WlZLQlRLYzlkRnk0RkJCYkJVS29VcGdTUTAzU1hRTkVaNXlFLzNBY3pRCmlsbWkzS0x2T2ZjeDRiUG9tMlZoeDdPenM1WE9MQWNCVlpLaEFGckttb2V1YndnNEM5anREckJBYzZKU0ZVRGVrZTArOC9iUStwQWEKTFY0RzdBdEtsZ285UW5TbkhOZFp3Sm5mb3BjQXhqeXdsdnRyQUlxT0x4M2xQSk1XaytXVHllUUZXbHZYbFNVRE5RcXpoS0FxaFg1ZgpFSGlLeHhPeXZYbDB5djRxbVJUSjlGQXlwTjFuL083azVLVENvcDF1Y2E4Q1ZkbHNOdEJvTkNZSU5BV2xDWjZGdmYrMFNzM2h0M0tuCmpzdy9ucCtmTDI5dmI5dTlBdmNFbGZLUTBxQ2JJY3NaMnB2Y29TNkFGM1NzMVdwZGRSd0VWRTFPVGxxcytnYUI3d0Z6ajJjM1BBOG8KVDZkNlcwZkRlVWIvWmFGUXlIT3FkTld4cjVFNkRDUzd6UXpteVhoT2JTNVNkR1F4VFIwQmJPb296aFVkTnpZMm5INWxxUHNZS0VGZQpUZk1RTk9CbE9aS08vVURWenM1TzAwQnNZV25BeEVBaGdOUjFkTHlTWG85YUtZa1VPNC9zT2ltQWdtUWt1RVBWNDhDWmRsS3J0RXA3CjFNcmlocTdIUVVHN1V1dHRjOWZTc1NlOVBhZ055TWwvV2NkZSsrclFtWGFoZGh4QTBXcWtldXgxbVozVTh0b3hGZzZISjZIMkNlRysKOW5haEd0a2VVS3MvMGY3QytPM1IwZEZBOWRnM1U2RTJsVW9GQ1N5YnUreEFDZm8ybFBxaVkxZlFTeHVDWkRnRzJEOW9PSEk5OWpOUworMFRoekJUWFRnQmNnTkxmNmUveSswajFlQ1ZvNjBSQnkxdTRkaHJEeEtBNFIvam5HR3FvZlhWUWV0c25pdHR3dnlTN05GcFdlZjZICjdkcXYvZEx4QXVpSGltaStDU1R4c3B3bW1pd1B1Si83cWVPRmtpRXJYYS9YSTdRWlU1bDNjV3NCNDd6UXB0Nm5IbzhUaVVSMWQzZlgKOVJPMHFTbHZleTZ2bDBKcERzSlAwZklWNHlNL2RmemZoK3ZxNm1wTU1tWDhPVzBlVTcxWlhGeDgzL29NOFB2U2NrektCeXZPL1p2eAphOFp2eDhmSFMzN3JlQ0ZUNy9WRHlRZHJ1cFkyYzJNNWUzTnpzeUZmek1ZbnV0U25BUGxQZ0FFQUZMbktoQmpqYzJZQUFBQUFTVVZPClJLNUNZSUk9IiB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIDM3IC00KSI+DQoJPC9pbWFnZT4NCgk8Zz4NCgkJPHBvbHlsaW5lIGNsYXNzPSJzdDMiIHBvaW50cz0iNjEuMywtMi44IDQ2LjksNS42IDM5LjIsMjcuMSAJCSIvPg0KCTwvZz4NCjwvZz4NCjxnPg0KCQ0KCQk8aW1hZ2Ugc3R5bGU9Im92ZXJmbG93OnZpc2libGU7b3BhY2l0eTowLjY2OyIgd2lkdGg9IjI0IiBoZWlnaHQ9IjIzIiB4bGluazpocmVmPSJkYXRhOmltYWdlL3BuZztiYXNlNjQsaVZCT1J3MEtHZ29BQUFBTlNVaEVVZ0FBQUJnQUFBQVhDQVlBQUFBUklZOHRBQUFBQ1hCSVdYTUFBQXNTQUFBTEVnSFMzWDc4QUFBQQpHWFJGV0hSVGIyWjBkMkZ5WlFCQlpHOWlaU0JKYldGblpWSmxZV1I1Y2NsbFBBQUFBMHRKUkVGVWVOcTBsZDFPRTFFUXgvZnNMdjJrCmJYQXBCQUtDZHlhb1VTekdDNGtZREJmY3cxdndETUNiY00xVGNPT0ZpWWwzSlVhTmlVVm9pLzFLU3orM2UveE5hUW1VUWhIakpwTXoKNSt6TWYyYitPMmZXTVA3K1VmL0RXRzFzYkpnTEN3dFdxVlN5WXJGWW16TjNaMmZIKytjQWdKaTVYRzdFc1oxdzNWK1BlcDRYNUxoYwpxVlNLS3lzcnRjM05UUW1pN3hXQXJLMTRQQjZNUnFNVGJPY0JuMU5hUlpXbGpselgvYUsxVGplYnpiTGpPSzJicXJGdUNyeS92Mi9WCmFyV1F6K2ViWmI4RThLbzI5QnVsMUJQMms2WmhCcFNwTEwvZjM4N244ODM1K2ZsMk1wblVReXZvVVFKd3hMYnRLYkpjQk93ZDRJc0MKak5oSUFjOGZCRTFxcFQ5aTg1bXpvMFFpVWUybnpPcW5oQ1VVaVVTbXlQUXgraXRBM2dLV1FIK0lSSkVBRWtZZUlPUEtVQ0dDdDdDdgpwVklwbHlEdDlmVjFmWEJ3b0s4RWtNd0ZQQmdNenBpbXVVVFdxK3lYQVgrSzgzUVhWT3pGemdJMEFMaWNSVWdpekg0RVA5T3lMSmZ2CjBseGJXMnRMRUx0SGxkQVNDb1hpdHJKZlVQSjdIQ1RyS1FGZ1A5SUZ2cUFXY0FrV0p2Z3N0bjdXQ1loNVJJd1B5Q2Z3VG5qZjdEZ0IKSUlzWVRYdktlNG0raUQ3SCtSaTZydy84OG1OaUUyS2RCdndaNjJzcWYwNkhUY0tFVDNBN0ZlenU3cXB3T056SnlQQ01jVElhNDJXUQpJTllkTHFFRWtlUkdvYk5IMVVYemRETGIzdDdXWjJkbmJaNGEyeElpYS91MkMzU2xGWlVTdXhiV0JZS2xxQ0JQaXpjNVB3OGdTcmxjCmxvTXNiZmVOb3d6U3VHc0FmYzV4SGY5VDFKTkFJRkJhWGw1MjVWV1BXMDFydGVqN0lyZjFXQXpGb2VzNEZCOUtXcXhGN2VsajlGT1kKcVBjdVhhK0xERG1RRjJJZ2h2QlpSSThSd3h3eVVpU1BScWRxMC9pS25zbG1zNDI5dlQxdFhPNE83b0hPWkRJTk1SQkRjZWc2NnJ2UwpJOVVMQzhKR3orOXkrOTJIcGx2cHVVSlJQMDNFLzBXUVFuYzgrQWJSZEpHOW9kSzA1elY2K2l2bzBGU3RWdXRVY0VJM0pYSDR6bkVhCnlROFNFc2l4U3FYSE1zSWJqY1lWZXE1VklDL1M2YlE3TXpPVFk1b2VrdGtFZ1FxZEM2Z0hmR2pTSmtnRjdWQ1NRbXI5STN0UWQ2aXQKclMwZlY5MWhjTTF5YVJ3b0c2RWFkY01GYTVwdE02OTg2aWRKNVdEaDFnbzZlY2tmaXZVM0E2dUNibk1KYjVwRkJxUGR3ODUxUnAyNgovS2Y3dSs2Mi9sYnlEV1ZPRGJ0cE1tcGtHZ3hxNlQ4Q0RBQ29SZTNRcklub3pBQUFBQUJKUlU1RXJrSmdnZz09IiB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIDE3IDgpIj4NCgk8L2ltYWdlPg0KCTxnPg0KCQk8cG9seWdvbiBjbGFzcz0ic3Q0IiBwb2ludHM9IjIzLjksMjUgMjEuMSwxNi4xIDI4LjQsMTAuNyAzNS43LDE2LjIgMzIuOSwyNSAJCSIvPg0KCQk8cG9seWdvbiBjbGFzcz0ic3Q1IiBwb2ludHM9IjIzLjksMjUgMjEuMSwxNi4xIDI4LjQsMTAuNyAzNS43LDE2LjIgMzIuOSwyNSAJCSIvPg0KCTwvZz4NCjwvZz4NCjxsaW5lIGNsYXNzPSJzdDYiIHgxPSIyOSIgeTE9IjE0LjIiIHgyPSIzMi40IiB5Mj0iMTYuOSIvPg0KPGxpbmUgY2xhc3M9InN0NiIgeDE9IjMyLjQiIHkxPSIxNy41IiB4Mj0iMzEuMSIgeTI9IjIxLjMiLz4NCjxsaW5lIGNsYXNzPSJzdDYiIHgxPSIzMi4yIiB5MT0iMTcuMyIgeDI9IjI4LjgiIHkyPSIxOC4zIi8+DQo8bGluZSBjbGFzcz0ic3Q2IiB4MT0iMjgiIHkxPSIxNC4yIiB4Mj0iMjQuMyIgeTI9IjE2LjgiLz4NCjxsaW5lIGNsYXNzPSJzdDYiIHgxPSIyOC45IiB5MT0iMTguOSIgeDI9IjMwLjUiIHkyPSIyMS42Ii8+DQo8bGluZSBjbGFzcz0ic3Q2IiB4MT0iMjguMyIgeTE9IjE4LjkiIHgyPSIyNi40IiB5Mj0iMjEuNiIvPg0KPGxpbmUgY2xhc3M9InN0NiIgeDE9IjI1LjgiIHkxPSIyMS40IiB4Mj0iMjQuMyIgeTI9IjE3LjYiLz4NCjxsaW5lIGNsYXNzPSJzdDYiIHgxPSIyNyIgeTE9IjIxLjUiIHgyPSIzMSIgeTI9IjIxLjUiLz4NCjxsaW5lIGNsYXNzPSJzdDYiIHgxPSIyOC42IiB5MT0iMTcuOSIgeDI9IjI4LjYiIHkyPSIxNC40Ii8+DQo8Y2lyY2xlIGNsYXNzPSJzdDciIGN4PSIyOC41IiBjeT0iMTQiIHI9IjAuOCIvPg0KPGNpcmNsZSBjbGFzcz0ic3Q3IiBjeD0iMzIuNiIgY3k9IjE3LjEiIHI9IjAuOCIvPg0KPGNpcmNsZSBjbGFzcz0ic3Q3IiBjeD0iMzAuOSIgY3k9IjIyLjIiIHI9IjAuOCIvPg0KPGNpcmNsZSBjbGFzcz0ic3Q3IiBjeD0iMjYuMiIgY3k9IjIyLjIiIHI9IjAuOCIvPg0KPGNpcmNsZSBjbGFzcz0ic3Q3IiBjeD0iMjguNSIgY3k9IjE4LjQiIHI9IjAuOCIvPg0KPGNpcmNsZSBjbGFzcz0ic3Q3IiBjeD0iMjQuMSIgY3k9IjE3LjEiIHI9IjAuOCIvPg0KPC9zdmc+DQo=",
-        "xPos": 406,
-        "yPos": 235,
+        "xPos": 488,
+        "yPos": 231,
         "className": "canvas-node",
         "objectData": {
           "label": "Drug",
@@ -133,7 +133,7 @@
             "cardinality": "0:1"
           }
         ],
-        "xPos": 306,
+        "xPos": 344,
         "yPos": 285,
         "objectData": {
           "description": "",
@@ -158,8 +158,8 @@
             "cardinality": "0:1"
           }
         ],
-        "xPos": 306,
-        "yPos": 385,
+        "xPos": 339,
+        "yPos": 382,
         "objectData": {
           "description": "",
           "label": "Multiplot"
@@ -202,8 +202,8 @@
             "cardinality": "0:1"
           }
         ],
-        "xPos": 406,
-        "yPos": 385,
+        "xPos": 469,
+        "yPos": 386,
         "objectData": {
           "description": "",
           "label": "Table"
@@ -213,16 +213,16 @@
     "comments": [
       {
         "id": "a2ff2663-5fb0-4f62-a2d3-1b5902229ef5",
-        "className": "canvas-comment",
+        "className": "custom-canvas-comment",
         "content": "The link between these nodes should be blue",
         "height": 49,
         "width": 128,
-        "xPos": 443,
-        "yPos": 120
+        "xPos": 467,
+        "yPos": 109
       },
       {
         "id": "8409e559-de6d-40bb-911a-c2c52c4f4340",
-        "className": "canvas-comment",
+        "className": "custom-canvas-comment",
         "content": "The link between these nodes should be green",
         "height": 49,
         "width": 128,
@@ -231,7 +231,7 @@
       },
       {
         "id": "9411f736-d31d-4cad-8a21-d3ae32a0728e",
-        "className": "canvas-comment",
+        "className": "custom-canvas-comment",
         "content": "The link between these nodes should be yellow",
         "height": 49,
         "width": 128,
@@ -240,21 +240,21 @@
       },
       {
         "id": "d513f210-7203-40a6-b4f5-87163e17320b",
-        "className": "canvas-comment",
+        "className": "custom-canvas-comment",
         "content": "The link between these nodes should be red",
         "height": 49,
         "width": 128,
-        "xPos": 331,
+        "xPos": 359,
         "yPos": 514
       },
       {
         "id": "0f8167e9-abdb-44ad-9e1c-1b85d5197ec6",
-        "className": "canvas-comment main-comment-box",
+        "className": "custom-canvas-comment custom-comment-box",
         "content": "This canvas shows an example of how to set custom colors",
         "height": 76,
         "width": 128,
-        "xPos": 590,
-        "yPos": 298
+        "xPos": 613,
+        "yPos": 294
       }
     ],
     "links": [

@@ -53,7 +53,7 @@
           }
         ],
         "xPos": 100,
-        "yPos": 125,
+        "yPos": 175,
         "objectData": {
           "description": "",
           "label": "Select"
@@ -78,7 +78,7 @@
           }
         ],
         "xPos": 100,
-        "yPos": 225,
+        "yPos": 325,
         "objectData": {
           "description": "",
           "label": "Sort"
@@ -106,7 +106,7 @@
             "cardinality": "0:1"
           }
         ],
-        "xPos": 200,
+        "xPos": 250,
         "yPos": 25,
         "objectData": {
           "description": "",
