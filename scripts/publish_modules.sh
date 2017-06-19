@@ -16,10 +16,11 @@ if [[ ${TRAVIS_BRANCH} == ${MASTER} ]]; then
 	echo "Update patch version of common-canvas"
 	cd ./canvas_modules/common-canvas
 	npm version patch
+	BUILDNUM=`node -p "require('./package.json').version"`
 	cd $WORKING_DIR
 	git status
 	git add ./canvas_modules/common-canvas/package.json
-	git commit -m "Update $UPDATE_TYPE version for common-canvas [skip ci]"
+	git commit -m "Update version for common-canvas to version $BUILDNUM [skip ci]"
 
 	echo "Push changes to master"
 	git push origin ${MASTER}
