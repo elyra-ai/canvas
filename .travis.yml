@@ -8,6 +8,7 @@ addons:
     packages:
       - google-chrome-stable
 before_install:
+  - npm -g install npm@4.6.1
   - ./scripts/setEnv.sh
 before_script:
   - npm install grunt-cli -g
