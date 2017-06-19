@@ -8,8 +8,8 @@ addons:
     packages:
       - google-chrome-stable
 before_install:
-  - npm -g install npm@4.6.1
   - ./scripts/setEnv.sh
+  - npm install npm@4.6.1 -g
 before_script:
   - npm install grunt-cli -g
   - "export DISPLAY=:99.0"
