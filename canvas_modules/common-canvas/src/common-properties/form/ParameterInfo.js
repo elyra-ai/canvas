@@ -26,7 +26,7 @@ export class ParameterDef {
 		this.style = style;
 		this.width = width;
 		this.charLimit = charLimit;
-		this.placeHolderText = placeHolderText; // additionalText
+		this.placeHolderText = ResourceDef.make(placeHolderText); // additionalText
 		this.separator = separator;
 	}
 
@@ -102,8 +102,7 @@ export class ParameterDef {
 	 * text associated with the property control on the UI.
 	 */
 	getAdditionalText(l10nProvider) {
-		// TODO should return translated value.  New schema needs to handle this.
-		return this.placeHolderText;
+		return l10nProvider.l10nResource(this.placeHolderText);
 	}
 
 	/**

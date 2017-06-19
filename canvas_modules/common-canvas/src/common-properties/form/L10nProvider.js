@@ -18,12 +18,11 @@ export class L10nProvider {
 	 * Look up a localised resource using the supplied key.
 	 */
 	l10n(key, defaultVal) {
-		let value;
 		if (this.resources) {
-			value = _.propertyOf(this.resources)(key);
-		}
-		if (value) {
-			return value;
+			const value = _.propertyOf(this.resources)(key);
+			if (value) {
+				return value;
+			}
 		}
 		if (defaultVal) {
 			return defaultVal;
@@ -32,33 +31,32 @@ export class L10nProvider {
 	}
 
 	/**
+	 * Look up a localised resource.  Check for resource first, then fall back to default value
+	 */
+	l10nResource(resourceObj) {
+		let text;
+		if (resourceObj) {
+			if (resourceObj.resourceKey) {
+				text = this.l10n(resourceObj.resourceKey);
+			} else if (resourceObj.default) {
+				text = resourceObj.default;
+			}
+		}
+		return text;
+	}
+
+	/**
 	 * Look up a localised resource label using the supplied base key with ".label" appended.
 	 */
 	l10nLabel(uiObject, key) {
-		if (uiObject.label) {
-			if (uiObject.label.resourceKey) {
-				return this.l10n(uiObject.label.resourceKey);
-			}
-			if (uiObject.label.default) {
-				return uiObject.label.default;
-			}
-		}
-		return this.l10n(key + ".label", key);
+		return this.l10nResource(uiObject.label) ? this.l10nResource(uiObject.label) : this.l10n(key + ".label", key);
 	}
 
 	/**
 	 * Look up a localised resource description/tooltip using the supplied base key with ".desc" appended.
 	 */
 	l10nDesc(uiObject, key) {
-		if (uiObject.description) {
-			if (uiObject.description.resourceKey) {
-				return this.l10n(uiObject.description.resourceKey);
-			}
-			if (uiObject.description.default) {
-				return uiObject.description.default;
-			}
-		}
-		return this.l10n(key + ".desc");
+		return this.l10nResource(uiObject.description) ? this.l10nResource(uiObject.description) : this.l10n(key + ".desc", key);
 	}
 
 	/**
