@@ -137,6 +137,7 @@ describe("Correct form should be created", () => {
 																	"isList": false,
 																	"isMap": false
 																},
+																"additionalText": "Int place holder: default",
 																"separateLabel": true
 															}
 														},
@@ -217,6 +218,7 @@ describe("Correct form should be created", () => {
 														"isList": false,
 														"isMap": false
 													},
+													"additionalText": "Place holder text: resource",
 													"separateLabel": true
 												}
 											}
@@ -298,6 +300,10 @@ describe("Correct form should be created", () => {
 						"description": {
 							"default": "String desciption: default"
 						},
+						"place_holder_text": {
+							"default": "String place holder: default",
+							"resourceKey": "str_param.place_holder_text"
+						},
 						"separator": "before"
 					},
 					{
@@ -309,6 +315,9 @@ describe("Correct form should be created", () => {
 						"description": {
 							"default": "Int description: default",
 							"resourceKey": "int_param.desc"
+						},
+						"place_holder_text": {
+							"default": "Int place holder: default"
 						},
 						"separator": "after"
 					}
@@ -367,7 +376,8 @@ describe("Correct form should be created", () => {
 				"testOp.label": "TestOp label: resource",
 				"enum_param.label": "Enum label: resource",
 				"enum_param.Include.label": "Include: resource",
-				"column-settings.label": "Field Settings label: resource"
+				"column-settings.label": "Field Settings label: resource",
+				"str_param.place_holder_text": "Place holder text: resource"
 			}
 		};
 		const generatedForm = Form.makeForm(paramSpec);
@@ -443,6 +453,8 @@ describe("Correct form should be created", () => {
 			}
 		};
 		const generatedForm = Form.makeForm(paramSpec);
+		// console.info("Expected: " + JSON.stringify(expectedForm));
+		// console.info("Actual: " + JSON.stringify(generatedForm));
 		// Work around since comparing the objects directly doesn't work.
 		expect(_.isEqual(JSON.parse(JSON.stringify(expectedForm)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
 	}
