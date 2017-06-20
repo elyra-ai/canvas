@@ -16,7 +16,7 @@
 // import logger from "../../../utils/logger";
 import React from "react";
 import EditorControl from "./editor-control.jsx";
-import { Table } from "Reactable";
+import { Table } from "reactable";
 import {
 	Button,
 	Checkbox,
