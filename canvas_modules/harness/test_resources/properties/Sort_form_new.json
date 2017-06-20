@@ -62,7 +62,7 @@
                           },
                           "visible": true,
                           "width": 16,
-                          "controlType": "oneofselect",
+                          "controlType": "toggletext",
                           "valueDef": {
                             "propType": "string",
                             "isList": false,
@@ -75,6 +75,10 @@
                           "valueLabels": [
                             "Ascending",
                             "Descending"
+                          ],
+													"valueIcons": [
+                            "/images/up-triangle.svg",
+                            "/images/down-triangle.svg"
                           ]
                         }
                       ],
@@ -82,42 +86,7 @@
                       "defaultRow": [
                         "",
                         "Ascending"
-                      ],
-                      "childItem": {
-                        "itemType": "additionalLink",
-                        "panel": {
-                          "id": "SortEntry",
-                          "panelType": "general",
-                          "uiItems": [
-                            {
-                              "itemType": "control",
-                              "control": {
-                                "name": "sort_order",
-                                "label": {
-                                  "text": "Order"
-                                },
-                                "separateLabel": true,
-                                "controlType": "radioset",
-                                "valueDef": {
-                                  "propType": "string",
-                                  "isList": false,
-                                  "isMap": false
-                                },
-                                "values": [
-                                  "Ascending",
-                                  "Descending"
-                                ],
-                                "valueLabels": [
-                                  "Ascending",
-                                  "Descending"
-                                ]
-                              }
-                            }
-                          ]
-                        },
-                        "text": "...",
-                        "secondaryText": "Sort"
-                      }
+                      ]
                     }
                   }
                 ]

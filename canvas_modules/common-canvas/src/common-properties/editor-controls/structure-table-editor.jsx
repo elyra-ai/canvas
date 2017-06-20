@@ -20,6 +20,7 @@ import EditorControl from "./editor-control.jsx";
 import SubPanelCell from "../editor-panels/sub-panel-cell.jsx";
 import TextRenderer from "../renderers/text-renderer.jsx";
 import EnumRenderer from "../renderers/enum-renderer.jsx";
+import ToggletextRenderer from "../renderers/toggletext-renderer.jsx";
 
 var _ = require("underscore");
 
@@ -27,6 +28,11 @@ var _ = require("underscore");
 const TextCell = ({ rowIndex, data, col, renderer, props }) => (
 	<Cell {...props}>
 		{renderer.render(data[rowIndex][col])}
+	</Cell>
+);
+const LinkCell = ({ rowIndex, data, col, renderer, props }) => (
+	<Cell {...props}>
+		{renderer.render(data[rowIndex][col], rowIndex)}
 	</Cell>
 );
 
@@ -157,10 +163,17 @@ export default class StructureTableEditor extends EditorControl {
 			if (columnDef.visible) {
 				const header = <Cell>{columnDef.label.text}</Cell>;
 				let renderer = defaultRenderer;
-				if (columnDef.valueDef.propType === "enum") {
+				var cell;
+				if (columnDef.controlType === "toggletext") {
+					renderer = new ToggletextRenderer(columnDef, this.props.control, controlValue,
+																						i, this.props.updateControlValue, this.setCurrentControlValue);
+					cell = <LinkCell data={controlValue} col={i} renderer={renderer} />;
+				} else if (columnDef.valueDef.propType === "enum") {
 					renderer = new EnumRenderer(columnDef.values, columnDef.valueLabels, columnDef.valueDef.isList);
+					cell = <TextCell data={controlValue} col={i} renderer={renderer} />;
+				} else {
+					cell = <TextCell data={controlValue} col={i} renderer={renderer} />;
 				}
-				const cell = <TextCell data={controlValue} col={i} renderer={renderer} />;
 
 				totalWidth += (CHAR_WIDTH * columnDef.width);
 				columns.push(<Column key={i} header={header} cell={cell} width={CHAR_WIDTH * columnDef.width} />);
@@ -177,7 +190,7 @@ export default class StructureTableEditor extends EditorControl {
 
 			const subItemButton = this.props.buildUIItem(subControlId, this.props.control.childItem, subControlId, this.getEditingRowValue, this.props.dataModel);
 			// Hack to decompose the button into our own in-table link
-			const cell = (<SubPanelCell data={controlValue}
+			const subCell = (<SubPanelCell data={controlValue}
 				col={this.props.control.subControls.length}
 				label={subItemButton.props.label}
 				title={subItemButton.props.title}
@@ -189,7 +202,7 @@ export default class StructureTableEditor extends EditorControl {
 			totalWidth += (CHAR_WIDTH * buttonWidth);
 			columns.push(<Column header={header}
 				key={columns.length}
-				cell={cell}
+				cell={subCell}
 				width={CHAR_WIDTH * buttonWidth}
 			/>);
 		}

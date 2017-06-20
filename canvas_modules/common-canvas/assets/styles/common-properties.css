@@ -320,3 +320,9 @@ th div div label, td div div label {
 #field-picker-table-container>table>tbody>tr>td {
   padding: 5px;
 }
+
+.toggletext_control {
+	color: #a6266e;
+	font-weight: bold;
+	text-decoration: underline;
+}
