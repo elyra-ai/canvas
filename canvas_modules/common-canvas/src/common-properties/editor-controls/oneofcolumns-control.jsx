@@ -36,7 +36,7 @@ export default class OneofcolumnsControl extends EditorControl {
 	}
 
 	render() {
-		var options = EditorControl.genColumnSelectOptions(this.props.dataModel.columns, [this.state.controlValue], true);
+		var options = EditorControl.genColumnSelectOptions(this.props.dataModel.fields, [this.state.controlValue], true);
 
 		return (
 			<FormControl id={this.getControlID()}

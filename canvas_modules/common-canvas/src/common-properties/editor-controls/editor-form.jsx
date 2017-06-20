@@ -137,7 +137,7 @@ export default class EditorForm extends React.Component {
 		this.setState({ selectedRows: selection });
 	}
 
-	genControl(control, idPrefix, controlValueAccessor, inputDataModel) {
+	genControl(control, idPrefix, controlValueAccessor, datasetMetadata) {
 		const controlId = idPrefix + control.name;
 
 		// List of available controls is defined in models/editor/Control.scala
@@ -213,14 +213,14 @@ export default class EditorForm extends React.Component {
 			/>);
 		} else if (control.controlType === "oneofcolumns") {
 			return (<OneofcolumnsControl control={control}
-				dataModel={inputDataModel}
+				dataModel={datasetMetadata}
 				key={controlId}
 				ref={controlId}
 				valueAccessor={controlValueAccessor}
 			/>);
 		} else if (control.controlType === "someofcolumns") {
 			return (<SomeofcolumnsControl control={control}
-				dataModel={inputDataModel}
+				dataModel={datasetMetadata}
 				key={controlId}
 				ref={controlId}
 				valueAccessor={controlValueAccessor}
@@ -228,7 +228,7 @@ export default class EditorForm extends React.Component {
 		} else if (control.controlType === "allocatedcolumn") {
 			// logger.info("allocatedcolumn");
 			return (<ColumnAllocatorControl control={control}
-				dataModel={inputDataModel}
+				dataModel={datasetMetadata}
 				key={controlId}
 				ref={controlId}
 				valueAccessor={controlValueAccessor}
@@ -238,7 +238,7 @@ export default class EditorForm extends React.Component {
 		} else if (control.controlType === "allocatedcolumns") {
 			// logger.info("allocatedcolumns");
 			return (<ColumnAllocatorControl control={control}
-				dataModel={inputDataModel}
+				dataModel={datasetMetadata}
 				multiColumn
 				key={controlId}
 				ref={controlId}
@@ -249,7 +249,7 @@ export default class EditorForm extends React.Component {
 		} else if (control.controlType === "allocatedstructures") {
 			// logger.info("allocatedstructures");
 			return (<ColumnStructureAllocatorControl control={control}
-				dataModel={inputDataModel}
+				dataModel={datasetMetadata}
 				key={controlId}
 				ref={controlId}
 				valueAccessor={controlValueAccessor}
@@ -261,7 +261,7 @@ export default class EditorForm extends React.Component {
 		} else if (control.controlType === "structureeditor") {
 			// logger.info("structureeditor");
 			return (<StructureeditorControl control={control}
-				dataModel={inputDataModel}
+				dataModel={datasetMetadata}
 				key={controlId}
 				ref={controlId}
 				valueAccessor={controlValueAccessor}
@@ -273,7 +273,7 @@ export default class EditorForm extends React.Component {
 		} else if (control.controlType === "structurelisteditor") {
 			// logger.info("structurelisteditor");
 			return (<StructurelisteditorControl control={control}
-				dataModel={inputDataModel}
+				dataModel={datasetMetadata}
 				key={controlId} ref={controlId}
 				valueAccessor={controlValueAccessor}
 				updateControlValue={this.updateControlValue}
@@ -285,7 +285,7 @@ export default class EditorForm extends React.Component {
 		return <h6 key={controlId}>{controlId}</h6>;
 	}
 
-	genControlItem(key, control, idPrefix, controlValueAccessor, inputDataModel) {
+	genControlItem(key, control, idPrefix, controlValueAccessor, datasetMetadata) {
 		// logger.info("genControlItem");
 
 		var stateStyle = {};
@@ -297,19 +297,19 @@ export default class EditorForm extends React.Component {
 		if (control.label && control.separateLabel) {
 			label = <label className="control-label" style={stateStyle}>{control.label.text}</label>;
 		}
-		var controlObj = this.genControl(control, idPrefix, controlValueAccessor, inputDataModel);
+		var controlObj = this.genControl(control, idPrefix, controlValueAccessor, datasetMetadata);
 		var controlItem = <ControlItem key={key} label={label} control={controlObj} />;
 		// logger.info(controlItem);
 		return controlItem;
 	}
 
-	genPrimaryTabs(key, tabs, idPrefix, controlValueAccessor, inputDataModel) {
+	genPrimaryTabs(key, tabs, idPrefix, controlValueAccessor, datasetMetadata) {
 		// logger.info("genPrimaryTabs");
 		// logger.info(tabs);
 		const tabContent = [];
 		for (var i = 0; i < tabs.length; i++) {
 			const tab = tabs[i];
-			const panelItems = this.genUIItem(i, tab.content, idPrefix, controlValueAccessor, inputDataModel);
+			const panelItems = this.genUIItem(i, tab.content, idPrefix, controlValueAccessor, datasetMetadata);
 			let additionalComponent = null;
 			if (this.props.additionalComponents) {
 				additionalComponent = this.props.additionalComponents[tab.group];
@@ -326,13 +326,13 @@ export default class EditorForm extends React.Component {
 		);
 	}
 
-	genSubTabs(key, tabs, idPrefix, controlValueAccessor, inputDataModel) {
+	genSubTabs(key, tabs, idPrefix, controlValueAccessor, datasetMetadata) {
 		// logger.info("genSubTabs");
 		const subTabs = [];
 		for (let i = 0; i < tabs.length; i++) {
 			const tab = tabs[i];
 			subTabs.push(
-				<Tabs.Panel key={i} id={"sub-tab." + tab.group} title={tab.text}>{this.genUIItem(i, tab.content, idPrefix, controlValueAccessor, inputDataModel)}</Tabs.Panel>
+				<Tabs.Panel key={i} id={"sub-tab." + tab.group} title={tab.text}>{this.genUIItem(i, tab.content, idPrefix, controlValueAccessor, datasetMetadata)}</Tabs.Panel>
 			);
 		}
 
@@ -343,13 +343,13 @@ export default class EditorForm extends React.Component {
 		);
 	}
 
-	genPanelSelector(key, tabs, idPrefix, controlValueAccessor, inputDataModel, dependsOn) {
+	genPanelSelector(key, tabs, idPrefix, controlValueAccessor, datasetMetadata, dependsOn) {
 		// logger.info("genPanelSelector: dependsOn=" + dependsOn);
 		const subPanels = {};
 		for (let i = 0; i < tabs.length; i++) {
 			const tab = tabs[i];
 			// logger.info("Sub-panel: group=" + tab.group + ", title=" + tab.text);
-			subPanels[tab.group] = <div className="control-panel" key={tab.group}>{this.genUIItem(i, tab.content, idPrefix, controlValueAccessor, inputDataModel)}</div>;
+			subPanels[tab.group] = <div className="control-panel" key={tab.group}>{this.genUIItem(i, tab.content, idPrefix, controlValueAccessor, datasetMetadata)}</div>;
 		}
 
 		return (
@@ -362,27 +362,27 @@ export default class EditorForm extends React.Component {
 		);
 	}
 
-	genUIContent(uiItems, idPrefix, controlValueAccessor, inputDataModel) {
+	genUIContent(uiItems, idPrefix, controlValueAccessor, datasetMetadata) {
 		// logger.info("genUIContent");
 		var uiContent = [];
 		for (var i = 0; i < uiItems.length; i++) {
 			var uiItem = uiItems[i];
 			// logger.info(uiItem);
-			uiContent.push(this.genUIItem(i, uiItem, idPrefix, controlValueAccessor, inputDataModel));
+			uiContent.push(this.genUIItem(i, uiItem, idPrefix, controlValueAccessor, datasetMetadata));
 		}
 		return uiContent;
 	}
 
-	genUIItem(key, uiItem, idPrefix, controlValueAccessor, inputDataModel) {
+	genUIItem(key, uiItem, idPrefix, controlValueAccessor, datasetMetadata) {
 		// logger.info("genUIItem");
 		// logger.info(uiItem);
 
 		if (uiItem.itemType === "control") {
-			return this.genControlItem(key, uiItem.control, idPrefix, controlValueAccessor, inputDataModel);
+			return this.genControlItem(key, uiItem.control, idPrefix, controlValueAccessor, datasetMetadata);
 		} else if (uiItem.itemType === "additionalLink") {
 			// logger.info ("Additional link");
 			// logger.info(uiItem);
-			var subPanel = this.genPanel(key, uiItem.panel, idPrefix, controlValueAccessor, inputDataModel);
+			var subPanel = this.genPanel(key, uiItem.panel, idPrefix, controlValueAccessor, datasetMetadata);
 			return (<SubPanelButton id={"sub-panel-button." + key}
 				label={uiItem.text}
 				title={uiItem.secondaryText}
@@ -393,21 +393,21 @@ export default class EditorForm extends React.Component {
 		} else if (uiItem.itemType === "hSeparator") {
 			return <hr id={"h-separator." + key} />;
 		} else if (uiItem.itemType === "panel") {
-			return this.genPanel(key, uiItem.panel, idPrefix, controlValueAccessor, inputDataModel);
+			return this.genPanel(key, uiItem.panel, idPrefix, controlValueAccessor, datasetMetadata);
 		} else if (uiItem.itemType === "subTabs") {
-			return this.genSubTabs(key, uiItem.tabs, idPrefix, controlValueAccessor, inputDataModel);
+			return this.genSubTabs(key, uiItem.tabs, idPrefix, controlValueAccessor, datasetMetadata);
 		} else if (uiItem.itemType === "primaryTabs") {
-			return this.genPrimaryTabs(key, uiItem.tabs, idPrefix, controlValueAccessor, inputDataModel);
+			return this.genPrimaryTabs(key, uiItem.tabs, idPrefix, controlValueAccessor, datasetMetadata);
 		} else if (uiItem.itemType === "panelSelector") {
-			return this.genPanelSelector(key, uiItem.tabs, idPrefix, controlValueAccessor, inputDataModel, uiItem.dependsOn);
+			return this.genPanelSelector(key, uiItem.tabs, idPrefix, controlValueAccessor, datasetMetadata, uiItem.dependsOn);
 		}
 		return <div>Unknown: {uiItem.itemType}</div>;
 	}
 
-	genPanel(key, panel, idPrefix, controlValueAccessor, inputDataModel) {
+	genPanel(key, panel, idPrefix, controlValueAccessor, datasetMetadata) {
 		// logger.info("genPanel");
 		// logger.info(panel);
-		const content = this.genUIContent(panel.uiItems, idPrefix, controlValueAccessor, inputDataModel);
+		const content = this.genUIContent(panel.uiItems, idPrefix, controlValueAccessor, datasetMetadata);
 		const id = "panel." + key;
 		var uiObject;
 		if (panel.panelType === "columnAllocation") {
@@ -415,7 +415,7 @@ export default class EditorForm extends React.Component {
 				id={id}
 				key={key}
 				panel={panel}
-				dataModel={inputDataModel}
+				dataModel={datasetMetadata}
 				controlAccessor={this.getControl}
 			>
 				{content}
@@ -612,7 +612,7 @@ export default class EditorForm extends React.Component {
 	}
 
 	render() {
-		var content = this.genUIContent(this.state.formData.uiItems, "", this.getControlValue, this.state.formData.data.inputDataModel);
+		var content = this.genUIContent(this.state.formData.uiItems, "", this.getControlValue, this.state.formData.data.datasetMetadata);
 
 		var formButtons = [];
 

@@ -416,8 +416,8 @@
           ""
         ]
       },
-      "inputDataModel": {
-        "columns": []
+      "datasetMetadata": {
+        "fields": []
       }
     }
   },

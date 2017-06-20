@@ -381,8 +381,8 @@
           "5"
         ]
       },
-      "inputDataModel": {
-        "columns": []
+			"datasetMetadata": {
+        "fields": []
       }
     }
   },

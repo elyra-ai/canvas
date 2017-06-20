@@ -157,8 +157,8 @@
           ""
         ]
       },
-      "inputDataModel": {
-        "columns": []
+      "datasetMetadata": {
+        "fields": []
       }
     }
   },

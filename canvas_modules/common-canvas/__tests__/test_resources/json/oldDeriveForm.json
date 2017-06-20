@@ -197,70 +197,56 @@
           "Na_to_K"
         ]
       },
-			"datasetMetadata": {
-        "fields": [
+      "inputDataModel": {
+        "columns": [
           {
             "name": "Age",
-            "type": "integer",
-						"metadata": {
-							"description": "",
-            	"measure": "range",
-            	"role": "input"
-						}
+            "label": "",
+            "storage": "Integer",
+            "measure": "Range",
+            "modelingRole": "Input"
           },
           {
             "name": "Sex",
-            "type": "string",
-						"metadata": {
-							"description": "",
-            	"measure": "discrete",
-            	"role": "input"
-						}
+            "label": "",
+            "storage": "String",
+            "measure": "Discrete",
+            "modelingRole": "Input"
           },
           {
             "name": "BP",
-            "type": "string",
-						"metadata": {
-							"description": "",
-            	"measure": "discrete",
-            	"role": "input"
-						}
+            "label": "",
+            "storage": "String",
+            "measure": "Discrete",
+            "modelingRole": "Input"
           },
           {
             "name": "Cholesterol",
-            "type": "string",
-						"metadata": {
-							"description": "",
-            	"measure": "discrete",
-            	"role": "input"
-						}
+            "label": "",
+            "storage": "String",
+            "measure": "Discrete",
+            "modelingRole": "Input"
           },
           {
             "name": "Na",
-            "type": "double",
-						"metadata": {
-							"description": "",
-            	"measure": "range",
-            	"role": "input"
-						}
+            "label": "",
+            "storage": "Real",
+            "measure": "Range",
+            "modelingRole": "Input"
           },
           {
             "name": "K",
-            "type": "double",
-						"metadata": {
-							"description": "",
-            	"measure": "range",
-            	"role": "input"
-						}
+            "label": "",
+            "storage": "Real",
+            "measure": "Range",
+            "modelingRole": "Input"
           },
           {
             "name": "Drug",
-            "type": "string",
-						"metadata": {
-							"description": "",
-            	"measure": "discrete",
-            	"role": "input"
-						}
+            "label": "",
+            "storage": "String",
+            "measure": "Discrete",
+            "modelingRole": "Input"
           }
         ]
       }

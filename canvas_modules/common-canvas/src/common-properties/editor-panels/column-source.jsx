@@ -59,11 +59,11 @@ export default class ColumnSource extends React.Component {
 
 	render() {
 		// logger.info("ColumnSource.render");
-		// logger.info(this.props.dataModel.columns);
+		// logger.info(this.props.dataModel.fields);
 
 		var allocatedColumns = this.state.allocatedColumns;
-		var availableColumns = this.props.dataModel.columns.filter(function(column) {
-			return allocatedColumns.indexOf(column.name) < 0;
+		var availableColumns = this.props.dataModel.fields.filter(function(field) {
+			return allocatedColumns.indexOf(field.name) < 0;
 		});
 		// logger.info(availableColumns);
 

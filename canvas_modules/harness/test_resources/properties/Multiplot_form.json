@@ -370,8 +370,8 @@
           ""
         ]
       },
-      "inputDataModel": {
-        "columns": []
+      "datasetMetadata": {
+        "fields": []
       }
     }
   },

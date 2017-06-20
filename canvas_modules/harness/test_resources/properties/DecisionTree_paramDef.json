@@ -297,25 +297,34 @@
       }
     ]
   },
-  "inputDataModel": {
-    "columns": [
+	"datasetMetadata": {
+    "fields": [
       {
         "name": "integer2",
-        "storage": "Integer",
-        "measure": "Range",
-        "modelingRole": "Input"
+        "type": "integer",
+				"metadata": {
+					"description": "",
+      		"measure": "range",
+        	"role": "input"
+				}
       },
       {
         "name": "double4",
-        "storage": "Double",
-        "measure": "Range",
-        "modelingRole": "Input"
+        "type": "double",
+				"metadata": {
+					"description": "",
+        	"measure": "range",
+        	"role": "input"
+				}
       },
       {
         "name": "string1",
-        "storage": "string",
-        "measure": "Set",
-        "modelingRole": "Input"
+        "type": "string",
+				"metadata": {
+					"description": "",
+        	"measure": "set",
+        	"role": "input"
+				}
       }
     ]
   },

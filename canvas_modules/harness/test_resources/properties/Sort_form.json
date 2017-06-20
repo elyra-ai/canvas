@@ -216,8 +216,8 @@
         ],
         "keys": []
       },
-      "inputDataModel": {
-        "columns": []
+			"datasetMetadata": {
+        "fields": []
       }
     }
   },

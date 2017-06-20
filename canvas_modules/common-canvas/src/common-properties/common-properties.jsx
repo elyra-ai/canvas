@@ -38,6 +38,10 @@ export default class CommonProperties extends React.Component {
 		if (formData.data && !formData.data.currentProperties && formData.data.currentParameters) {
 			formData.data.currentProperties = this.parametersToProperties(formData.data.currentParameters);
 		}
+		// TODO: This can be removed once the WML Play service generates dtasetMetadata instead of inputDataModel
+		if (formData.data && formData.data.inputDataModel && !formData.data.datasetMetadata) {
+			formData.data.datasetMetadata = this.convertInputDataModel(formData.data.inputDataModel);
+		}
 		return formData;
 	}
 
@@ -67,10 +71,57 @@ export default class CommonProperties extends React.Component {
 	}
 
 	/**
-	 * A better type identifier than a simple 'typeOf' call.
+	 * A better type identifier than a simple 'typeOf' call:
+	 * 	toType({a: 4}); //"object"
+	 *	toType([1, 2, 3]); //"array"
+	 *	(function() {console.log(toType(arguments))})(); //arguments
+	 *	toType(new ReferenceError); //"error"
+	 *	toType(new Date); //"date"
+	 *	toType(/a-z/); //"regexp"
+	 *	toType(Math); //"math"
+	 *	toType(JSON); //"json"
+	 *	toType(new Number(4)); //"number"
+	 *	toType(new String("abc")); //"string"
+	 *	toType(new Boolean(true)); //"boolean"
 	 */
 	toType(obj) {
 		return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
+	}
+
+	/**
+	 * Converts old style Modeler inputDataModel into newer datasetMetadata
+	 */
+	convertInputDataModel(dataModel) {
+		const datasetMetadata = {};
+		datasetMetadata.fields = [];
+		if (dataModel && dataModel.columns) {
+			for (const column of dataModel.columns) {
+				const field = {};
+				field.name = column.name;
+				field.type = this.convertType(column.storage);
+				field.metadata = {};
+				field.metadata.description = "";
+				if (column.measure) {
+					field.metadata.measure = column.measure.toLowerCase();
+				}
+				if (column.modelingRole) {
+					field.metadata.role = column.modelingRole.toLowerCase();
+				}
+				datasetMetadata.fields.push(field);
+			}
+		}
+		return datasetMetadata;
+	}
+
+	/**
+	 * Converts from Modeler storage to WML type.
+	 */
+	convertType(storage) {
+		let retVal = storage.toLowerCase();
+		if (storage === "Real") {
+			retVal = "double";
+		}
+		return retVal;
 	}
 
 	applyPropertiesEditing() {

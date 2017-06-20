@@ -349,8 +349,8 @@
         ],
         "key_fields": []
       },
-      "inputDataModel": {
-        "columns": []
+      "datasetMetadata": {
+        "fields": []
       }
     }
   },

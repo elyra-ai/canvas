@@ -36,7 +36,7 @@ export default class EditorControl extends React.Component {
 		return options;
 	}
 
-	static genColumnSelectOptions(columns, selectedValues, includeEmpty) {
+	static genColumnSelectOptions(fields, selectedValues, includeEmpty) {
 		var options = [];
 		if (includeEmpty) {
 			options.push(
@@ -44,9 +44,9 @@ export default class EditorControl extends React.Component {
 			);
 		}
 
-		for (var i = 0; i < columns.length; i++) {
+		for (var i = 0; i < fields.length; i++) {
 			options.push(
-				<option key={i} value={columns[i].name}>{columns[i].name}</option>
+				<option key={i} value={fields[i].name}>{fields[i].name}</option>
 			);
 		}
 		return options;

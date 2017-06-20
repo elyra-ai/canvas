@@ -267,8 +267,8 @@
           ""
         ]
       },
-      "inputDataModel": {
-        "columns": []
+      "datasetMetadata": {
+        "fields": []
       }
     }
   },

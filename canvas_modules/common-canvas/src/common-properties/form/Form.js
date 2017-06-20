@@ -40,7 +40,7 @@ export default class Form {
 			//  currentProperties));
 			const data = {
 				currentParameters: _.propertyOf(paramDef)("currentParameters"),
-				inputDataModel: _.propertyOf(paramDef)("inputDataModel"), // TODO change to dataSetMetadata when supported
+				datasetMetadata: _.propertyOf(paramDef)("datasetMetadata"),
 				conditions: _.propertyOf(paramDef)("conditions")
 			};
 			const formName = _.propertyOf(propDef)("name");
