@@ -17,10 +17,23 @@
 import logger from "../../../utils/logger";
 import React from "react";
 import StructureTableEditor from "./structure-table-editor.jsx";
+import {
+	Grid,
+	Row,
+	Col
+} from "react-bootstrap";
 
 import { Button } from "ap-components-react/dist/ap-components-react";
 import Isvg from "react-inlinesvg";
 import remove32 from "../../../assets/images/remove_32.svg";
+import TopMoveIconEnable from "../../../assets/images/top_enabled.svg";
+import UpMoveIconEnable from "../../../assets/images/up_enabled.svg";
+import DownMoveIconEnable from "../../../assets/images/down_enabled.svg";
+import BottomMoveIconEnable from "../../../assets/images/bottom_enabled.svg";
+import TopMoveIconDisable from "../../../assets/images/top_disabled.svg";
+import UpMoveIconDisable from "../../../assets/images/up_disabled.svg";
+import DownMoveIconDisable from "../../../assets/images/down_disabled.svg";
+import BottomMoveIconDisable from "../../../assets/images/bottom_disabled.svg";
 
 var _ = require("underscore");
 
@@ -38,6 +51,7 @@ export default class ColumnStructureAllocatorControlNew extends StructureTableEd
 		this.stopEditingRow = this.stopEditingRow.bind(this);
 
 		this.indexOfRow = this.indexOfRow.bind(this);
+		this.getTableRowMoveImages = this.getTableRowMoveImages.bind(this);
 	}
 
 	stopEditingRow(rowIndex, applyChanges) {
@@ -160,28 +174,145 @@ export default class ColumnStructureAllocatorControlNew extends StructureTableEd
 		this.setCurrentControlValue(this.props.control.name, newRows, this.props.updateControlValue);
 	}
 
+	topMoveRow(evt) {
+		const selected = this.getSelectedRows();
+		const controlValue = this.getCurrentControlValue();
+		for (var selectedRow of selected) {
+			if (selectedRow !== 0) {
+				const tmpRow = controlValue[selectedRow];
+				controlValue.splice(selectedRow, 1);
+				controlValue.unshift(tmpRow);
+			}
+		}
+		this.setCurrentControlValue(this.props.control.name, controlValue, this.props.updateControlValue);
+	}
+
+	upMoveRow(evt) {
+		const selected = this.getSelectedRows();
+		const controlValue = this.getCurrentControlValue();
+		for (var selectedRow of selected) {
+			if (selectedRow !== 0) {
+				const tmpRow = controlValue[selectedRow - 1];
+				controlValue[selectedRow - 1] = controlValue[selectedRow];
+				controlValue[selectedRow] = tmpRow;
+			}
+		}
+		this.setCurrentControlValue(this.props.control.name, controlValue, this.props.updateControlValue);
+	}
+
+	downMoveRow(evt) {
+		const selected = this.getSelectedRows();
+		const controlValue = this.getCurrentControlValue();
+		for (var selectedRow of selected) {
+			if (selectedRow !== controlValue.length - 1) {
+				const tmpRow = controlValue[selectedRow + 1];
+				controlValue[selectedRow + 1] = controlValue[selectedRow];
+				controlValue[selectedRow] = tmpRow;
+			}
+		}
+		this.setCurrentControlValue(this.props.control.name, controlValue, this.props.updateControlValue);
+	}
+
+	bottomMoveRow(evt) {
+		const selected = this.getSelectedRows();
+		const controlValue = this.getCurrentControlValue();
+		for (var selectedRow of selected) {
+			if (selectedRow !== controlValue.length - 1) {
+				const tmpRow = controlValue[selectedRow];
+				controlValue.splice(selectedRow, 1);
+				controlValue.push(tmpRow);
+			}
+		}
+		this.setCurrentControlValue(this.props.control.name, controlValue, this.props.updateControlValue);
+	}
+
+  // enabled the move up and down arrows based on which row is selected
+	getTableRowMoveImages() {
+		const selected = this.getSelectedRows();
+		const controlValue = this.getCurrentControlValue();
+		let topEnabled = false;
+		let bottomEnabled = false;
+		if (selected.length !== 0) {
+			for (var selectedRow of selected) {
+				if (selectedRow !== 0) {
+					topEnabled = true;
+				}
+				if (selectedRow !== controlValue.length - 1) {
+					bottomEnabled = true;
+				}
+			}
+		}
+		const topImages = topEnabled ? (
+			<div>
+				<img className="table-row-move-button" src={TopMoveIconEnable} onClick={this.topMoveRow.bind(this)} />
+				<img className="table-row-move-button" src={UpMoveIconEnable} onClick={this.upMoveRow.bind(this)} />
+			</div>
+		)
+		: (
+			<div>
+				<img className="table-row-move-button-disable" src={TopMoveIconDisable} />
+				<img className="table-row-move-button-disable" src={UpMoveIconDisable} />
+			</div>
+		);
+		const bottomImages = bottomEnabled ? (
+			<div>
+				<img className="table-row-move-button" src={DownMoveIconEnable} onClick={this.downMoveRow.bind(this)} />
+				<img className="table-row-move-button" src={BottomMoveIconEnable} onClick={this.bottomMoveRow.bind(this)} />
+			</div>
+		)
+		: (
+			<div>
+				<img className="table-row-move-button-disable" src={DownMoveIconDisable} />
+				<img className="table-row-move-button-disable" src={BottomMoveIconDisable} />
+			</div>
+		);
+		return [topImages, bottomImages];
+	}
+
 	render() {
 		if (this._update_callback !== null) {
 			this._update_callback();
 			this._update_callback = null;
 		}
 
-		var content = (<div>
-				<Button
-					id="add-fields-button"
-					secondary icon="plus"
-					onClick={this.props.openFieldPicker}
-					data-control={JSON.stringify(this.props.control)}
+		var moveCol = <Col />;
+		if (typeof this.props.control.isRowMoveable !== "undefined" && this.props.control.isRowMoveable) {
+			const moveImages = this.getTableRowMoveImages();
+			moveCol = (
+				<Col
+					id="table-row-move-button-container"
+					md={1}
 				>
-					Add Fields
-				</Button>
-				<div id="remove-fields-button" className="button">
-					<Isvg id="remove-fields-button"
-						src={remove32}
-					/>
-				</div>
-				{this.createTable()}
-			</div>
+				{moveImages}
+				</Col>
+			);
+		}
+
+		var content = (<Grid>
+			<Row className="structure-table-row">
+				<Col md={11}>
+					<Row className="structure-table-button-row">
+						<Button
+							id="add-fields-button"
+							secondary icon="plus"
+							onClick={this.props.openFieldPicker}
+							data-control={JSON.stringify(this.props.control)}
+						>
+							Add Fields
+						</Button>
+						<div id="remove-fields-button" className="button">
+							<Isvg id="remove-fields-button"
+								src={remove32}
+							/>
+						</div>
+					</Row>
+					<Row className="structure-table-content-row">
+						{this.createTable()}
+					</Row>
+				</Col>
+				{moveCol}
+			</Row>
+			</Grid>
 		);
 
 		return (

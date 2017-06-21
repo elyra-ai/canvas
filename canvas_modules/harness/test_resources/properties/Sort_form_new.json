@@ -35,6 +35,7 @@
                       },
                       "separateLabel": true,
                       "controlType": "allocatedstructuresnew",
+											"isRowMoveable" : true,
                       "valueDef": {
                         "propType": "structure",
                         "isList": true,
@@ -184,6 +185,11 @@
         ],
         "keys": [
           "[\"Na\",\"Ascending\"]",
+					"[\"Age\",\"Ascending\"]",
+					"[\"Sex\",\"Ascending\"]",
+					"[\"BP\",\"Ascending\"]",
+					"[\"Cholesterol\",\"Ascending\"]",
+					"[\"K\",\"Ascending\"]",
           "[\"Drug\",\"Descending\"]"
         ]
       },

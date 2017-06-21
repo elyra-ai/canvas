@@ -241,6 +241,7 @@ span.form__validation--invalid {
 	padding-top: 2px;
 	padding-right: 10px;
 	padding-left: 10px;
+	margin-right: 16px;
 	text-decoration: underline;
 }
 
@@ -319,6 +320,25 @@ th div div label, td div div label {
 #field-picker-table-container>table>thead>tr>th,
 #field-picker-table-container>table>tbody>tr>td {
   padding: 5px;
+}
+
+/* Column Structure Allocator */
+#table-row-move-button-container.col-md-1 {
+	margin-top: 70px;
+	top: 50%;
+	padding: 12px;
+}
+
+.table-row-move-button .table-row-move-button-disable{
+	width: 10px !important;
+	border-bottom: 2px solid #f9f9fb;
+	border-right: none;
+	transform: rotate(0deg);
+}
+
+.table-row-move-button:hover{
+	border-bottom: 2px solid #a6266e;
+	border-right: none;
 }
 
 .toggletext_control {
