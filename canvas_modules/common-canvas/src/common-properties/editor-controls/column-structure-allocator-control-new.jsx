@@ -51,7 +51,12 @@ export default class ColumnStructureAllocatorControlNew extends StructureTableEd
 		this.stopEditingRow = this.stopEditingRow.bind(this);
 
 		this.indexOfRow = this.indexOfRow.bind(this);
+
 		this.getTableRowMoveImages = this.getTableRowMoveImages.bind(this);
+		this.topMoveRow = this.topMoveRow.bind(this);
+		this.upMoveRow = this.upMoveRow.bind(this);
+		this.downMoveRow = this.downMoveRow.bind(this);
+		this.bottomMoveRow = this.bottomMoveRow.bind(this);
 	}
 
 	stopEditingRow(rowIndex, applyChanges) {
@@ -175,20 +180,22 @@ export default class ColumnStructureAllocatorControlNew extends StructureTableEd
 	}
 
 	topMoveRow(evt) {
-		const selected = this.getSelectedRows();
+		var selected = this.getSelectedRows().sort();
 		const controlValue = this.getCurrentControlValue();
-		for (var selectedRow of selected) {
-			if (selectedRow !== 0) {
-				const tmpRow = controlValue[selectedRow];
-				controlValue.splice(selectedRow, 1);
-				controlValue.unshift(tmpRow);
+		for (var firstRow = selected[0]; firstRow > 0; firstRow--) {
+			for (var i = 0; i <= selected.length - 1; i++) {
+				const selectedRow = selected.shift();
+				const tmpRow = controlValue[selectedRow - 1];
+				controlValue[selectedRow - 1] = controlValue[selectedRow];
+				controlValue[selectedRow] = tmpRow;
+				selected.push(selectedRow - 1);
 			}
 		}
 		this.setCurrentControlValue(this.props.control.name, controlValue, this.props.updateControlValue);
 	}
 
 	upMoveRow(evt) {
-		const selected = this.getSelectedRows();
+		const selected = this.getSelectedRows().sort();
 		const controlValue = this.getCurrentControlValue();
 		for (var selectedRow of selected) {
 			if (selectedRow !== 0) {
@@ -201,9 +208,10 @@ export default class ColumnStructureAllocatorControlNew extends StructureTableEd
 	}
 
 	downMoveRow(evt) {
-		const selected = this.getSelectedRows();
+		const selected = this.getSelectedRows().sort();
 		const controlValue = this.getCurrentControlValue();
-		for (var selectedRow of selected) {
+		for (var i = selected.length - 1; i >= 0; i--) {
+			const selectedRow = selected[i];
 			if (selectedRow !== controlValue.length - 1) {
 				const tmpRow = controlValue[selectedRow + 1];
 				controlValue[selectedRow + 1] = controlValue[selectedRow];
@@ -214,13 +222,15 @@ export default class ColumnStructureAllocatorControlNew extends StructureTableEd
 	}
 
 	bottomMoveRow(evt) {
-		const selected = this.getSelectedRows();
+		var selected = this.getSelectedRows().sort();
 		const controlValue = this.getCurrentControlValue();
-		for (var selectedRow of selected) {
-			if (selectedRow !== controlValue.length - 1) {
-				const tmpRow = controlValue[selectedRow];
-				controlValue.splice(selectedRow, 1);
-				controlValue.push(tmpRow);
+		for (var lastRow = selected[selected.length - 1]; lastRow < controlValue.length - 1; lastRow++) {
+			for (var i = selected.length - 1; i >= 0; i--) {
+				const selectedRow = selected.pop();
+				const tmpRow = controlValue[selectedRow + 1];
+				controlValue[selectedRow + 1] = controlValue[selectedRow];
+				controlValue[selectedRow] = tmpRow;
+				selected.unshift(selectedRow + 1);
 			}
 		}
 		this.setCurrentControlValue(this.props.control.name, controlValue, this.props.updateControlValue);
@@ -244,8 +254,8 @@ export default class ColumnStructureAllocatorControlNew extends StructureTableEd
 		}
 		const topImages = topEnabled ? (
 			<div>
-				<img className="table-row-move-button" src={TopMoveIconEnable} onClick={this.topMoveRow.bind(this)} />
-				<img className="table-row-move-button" src={UpMoveIconEnable} onClick={this.upMoveRow.bind(this)} />
+				<img className="table-row-move-button" src={TopMoveIconEnable} onClick={this.topMoveRow} />
+				<img className="table-row-move-button" src={UpMoveIconEnable} onClick={this.upMoveRow} />
 			</div>
 		)
 		: (
@@ -256,8 +266,8 @@ export default class ColumnStructureAllocatorControlNew extends StructureTableEd
 		);
 		const bottomImages = bottomEnabled ? (
 			<div>
-				<img className="table-row-move-button" src={DownMoveIconEnable} onClick={this.downMoveRow.bind(this)} />
-				<img className="table-row-move-button" src={BottomMoveIconEnable} onClick={this.bottomMoveRow.bind(this)} />
+				<img className="table-row-move-button" src={DownMoveIconEnable} onClick={this.downMoveRow} />
+				<img className="table-row-move-button" src={BottomMoveIconEnable} onClick={this.bottomMoveRow} />
 			</div>
 		)
 		: (
