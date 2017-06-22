@@ -121,6 +121,23 @@ export default class ColumnAllocatorControlNew extends EditorControl {
 		return this.state.controlValue;
 	}
 
+	removeSelected() {
+		const rows = this.getCurrentControlValue();
+		const newRows = [];
+		const selected = this.state.selectedRows;
+		for (var i = 0; i < rows.length; i++) {
+			if (selected.indexOf(i) < 0) {
+				newRows.push(rows[i]);
+			}
+		}
+		this.setCurrentControlValue(this.props.control.name, newRows, this.props.updateControlValue);
+	}
+
+	selectionChanged(selection) {
+		const opacity = selection.length > 0 ? 1.0 : 0.4;
+		document.getElementById("remove-fields-button").setAttribute("opacity", opacity);
+	}
+
 	render() {
 		logger.info("AllocationControl.render");
 		// logger.info(this.state);
@@ -169,8 +186,8 @@ export default class ColumnAllocatorControlNew extends EditorControl {
 					>
 						Add Fields
 					</Button>
-					<div id="remove-fields-button" className="button">
-						<Isvg id="remove-fields-button"
+					<div id="remove-fields-button" className="button" onClick={this.removeSelected}>
+						<Isvg id="remove-fields-button-image"
 							src={remove32}
 						/>
 					</div>
@@ -205,8 +222,8 @@ export default class ColumnAllocatorControlNew extends EditorControl {
 				>
 					Add Fields
 				</Button>
-				<div id="remove-fields-button" className="button">
-					<Isvg id="remove-fields-button"
+				<div id="remove-fields-button" className="button" onClick={this.removeSelected}>
+					<Isvg id="remove-fields-button-image"
 						src={remove32}
 					/>
 				</div>

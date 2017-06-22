@@ -47,7 +47,7 @@ export default class ColumnStructureAllocatorControlNew extends StructureTableEd
 		this.getAllocatedColumns = this.getAllocatedColumns.bind(this);
 		this.addColumns = this.addColumns.bind(this);
 		this.removeColumns = this.removeColumns.bind(this);
-
+		this.removeSelected = this.removeSelected.bind(this);
 		this.stopEditingRow = this.stopEditingRow.bind(this);
 
 		this.indexOfRow = this.indexOfRow.bind(this);
@@ -177,6 +177,25 @@ export default class ColumnStructureAllocatorControlNew extends StructureTableEd
 		this._update_callback = callback;
 
 		this.setCurrentControlValue(this.props.control.name, newRows, this.props.updateControlValue);
+	}
+	removeSelected() {
+		const rows = this.getCurrentControlValue();
+		const newRows = [];
+		const selected = this.getSelectedRows();
+		for (var i = 0; i < rows.length; i++) {
+			if (selected.indexOf(i) < 0) {
+				newRows.push(rows[i]);
+			}
+		}
+		this.setCurrentControlValue(this.props.control.name, newRows, this.props.updateControlValue);
+	}
+
+	selectionChanged(selection) {
+		const opacity = "opacity:" + (selection.length > 0
+			? 1.0
+			: 0.4);
+		document.getElementById("remove-fields-button").style.cssText = opacity;
+		document.getElementById("remove-fields-button").setAttribute("disabled", selection.length === 0);
 	}
 
 	topMoveRow(evt) {
@@ -310,7 +329,7 @@ export default class ColumnStructureAllocatorControlNew extends StructureTableEd
 						>
 							Add Fields
 						</Button>
-						<div id="remove-fields-button" className="button">
+						<div id="remove-fields-button" className="button" onClick={this.removeSelected}>
 							<Isvg id="remove-fields-button"
 								src={remove32}
 							/>

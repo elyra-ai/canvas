@@ -76,6 +76,7 @@ export default class StructureTableEditor extends EditorControl {
 			controlValue: EditorControl.parseStructureStrings(nextProps.valueAccessor(nextProps.control.name)),
 			selectedRows: nextProps.selectedRows
 		});
+		this.selectionChanged(nextProps.selectedRows);
 	}
 
 	/* Returns the public representation of the control value. */
@@ -97,7 +98,7 @@ export default class StructureTableEditor extends EditorControl {
 			selectedRows: []
 		}, function() {
 			updateControlValue(targetControl, EditorControl.stringifyStructureStrings(controlValue));
-			that.props.updateSelectedRows([]);
+			that.updateSelectedRows([]);
 		});
 	}
 
@@ -140,9 +141,17 @@ export default class StructureTableEditor extends EditorControl {
 
 	handleRowClick(evt, rowIndex) {
 		const selection = EditorControl.handleTableRowClick(evt, rowIndex, this.state.selectedRows);
-
 		// logger.info(selection);
+		this.updateSelectedRows(selection);
+	}
+
+	updateSelectedRows(selection) {
 		this.props.updateSelectedRows(selection);
+		this.selectionChanged(selection);
+	}
+
+	selectionChanged(selection) {
+		// A no-op in this class
 	}
 
 	getRowClassName(rowIndex) {

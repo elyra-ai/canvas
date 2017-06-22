@@ -283,9 +283,14 @@ span.form__validation--invalid {
 	padding-right: 5px;
 }
 
-#remove-fields-button:hover {
+#remove-fields-button:hover[disabled=false] {
 	background-color: #A91560;
 	fill: #FFFFFF;
+}
+
+#remove-fields-button:hover[disabled=true] {
+	background-color: transparent;
+	cursor: default;
 }
 
 #field-picker-table-container {
