@@ -82,9 +82,10 @@ function _configureHmr(app) {
 		noInfo: true,
 		publicPath: "/"
 	}));
-
 	hmrRouter.use(require("webpack-hot-middleware")(compiler));
 	app.use(constants.APP_PATH, hmrRouter);
+	// load images and styles from asserts folder in development mode
+	app.use(express.static(path.join(__dirname, "../assets")));
 }
 
 module.exports.create = _create;
