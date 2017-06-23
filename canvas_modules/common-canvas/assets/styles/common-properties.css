@@ -270,7 +270,7 @@ span.form__validation--invalid {
 	fill: #FFFFFF;
 }
 
-#remove-fields-button {
+#remove-fields-button, #remove-fields-button-upper {
 	float: right;
 	border: none;
 	margin-top: 2px;
@@ -283,14 +283,18 @@ span.form__validation--invalid {
 	padding-right: 5px;
 }
 
-#remove-fields-button:hover[disabled=false] {
+#remove-fields-button:hover[disabled=false], #remove-fields-button-upper:hover[disabled=false] {
 	background-color: #A91560;
 	fill: #FFFFFF;
 }
 
-#remove-fields-button:hover[disabled=true] {
+#remove-fields-button:hover[disabled=true], #remove-fields-button-upper:hover[disabled=true] {
 	background-color: transparent;
 	cursor: default;
+}
+
+#removeFieldTip, #addFieldTip {
+	position: fixed;
 }
 
 #field-picker-table-container {

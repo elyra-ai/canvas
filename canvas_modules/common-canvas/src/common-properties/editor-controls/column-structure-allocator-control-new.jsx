@@ -17,12 +17,7 @@
 import logger from "../../../utils/logger";
 import React from "react";
 import StructureTableEditor from "./structure-table-editor.jsx";
-import {
-	Grid,
-	Row,
-	Col
-} from "react-bootstrap";
-
+import { Grid,	Row, Col, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Button } from "ap-components-react/dist/ap-components-react";
 import Isvg from "react-inlinesvg";
 import remove32 from "../../../assets/images/remove_32.svg";
@@ -194,9 +189,7 @@ export default class ColumnStructureAllocatorControlNew extends StructureTableEd
 	}
 
 	selectionChanged(selection) {
-		const opacity = "opacity:" + (selection.length > 0
-			? 1.0
-			: 0.4);
+		const opacity = "opacity:" + (selection.length > 0 ? 1.0 : 0.4);
 		document.getElementById("remove-fields-button").style.cssText = opacity;
 		document.getElementById("remove-fields-button").setAttribute("disabled", selection.length === 0);
 	}
@@ -323,23 +316,27 @@ export default class ColumnStructureAllocatorControlNew extends StructureTableEd
 			);
 		}
 
+		const addTooltip = <Tooltip id="addFieldTip">Select columns to add</Tooltip>;
+		const removeTooltip = <Tooltip id="removeFieldTip">Remove selected columns</Tooltip>;
 		var content = (<Grid>
 			<Row className="structure-table-row">
 				<Col md={11}>
 					<Row className="structure-table-button-row">
-						<Button
-							id="add-fields-button"
-							secondary icon="plus"
-							onClick={this.props.openFieldPicker}
-							data-control={JSON.stringify(this.props.control)}
-						>
-							Add Fields
-						</Button>
-						<div id="remove-fields-button" className="button" onClick={this.removeSelected}>
-							<Isvg id="remove-fields-button"
-								src={remove32}
-							/>
-						</div>
+						<OverlayTrigger placement="top" overlay={addTooltip}>
+							<Button
+								id="add-fields-button"
+								icon="plus"
+								onClick={this.props.openFieldPicker}
+								data-control={JSON.stringify(this.props.control)}
+							>
+								Add Fields
+							</Button>
+						</OverlayTrigger>
+						<OverlayTrigger placement="top" overlay={removeTooltip}>
+							<div id="remove-fields-button" className="button" onClick={this.removeSelected}>
+								<Isvg id="remove-fields-button" src={remove32} />
+							</div>
+						</OverlayTrigger>
 					</Row>
 					<Row className="structure-table-content-row">
 						{this.createTable()}

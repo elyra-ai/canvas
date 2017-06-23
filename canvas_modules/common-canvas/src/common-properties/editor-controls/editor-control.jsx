@@ -199,7 +199,7 @@ export default class EditorControl extends React.Component {
 
 	render() {
 		return (
-			<div></div>
+			<div key="editor-control"></div>
 		);
 	}
 }

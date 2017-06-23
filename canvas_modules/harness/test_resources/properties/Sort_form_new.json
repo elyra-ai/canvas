@@ -12,7 +12,7 @@
   "formData": {
     "componentId": "sort",
     "label": "Sort",
-    "editorSize": "medium",
+    "editorSize": "large",
     "uiItems": [
       {
         "itemType": "primaryTabs",

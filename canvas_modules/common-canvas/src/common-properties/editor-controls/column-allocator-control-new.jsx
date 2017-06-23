@@ -14,7 +14,7 @@
 
 import logger from "../../../utils/logger";
 import React from "react";
-import { FormControl } from "react-bootstrap";
+import { FormControl, OverlayTrigger, Tooltip } from "react-bootstrap";
 import EditorControl from "./editor-control.jsx";
 import ReactDOM from "react-dom";
 import { Button } from "ap-components-react/dist/ap-components-react";
@@ -40,6 +40,12 @@ export default class ColumnAllocatorControlNew extends EditorControl {
 		this.addColumns = this.addColumns.bind(this);
 		this.removeColumns = this.removeColumns.bind(this);
 		this.handleChangeMultiColumn = this.handleChangeMultiColumn.bind(this);
+		this.removeSelected = this.removeSelected.bind(this);
+		this.selectionChanged = this.selectionChanged.bind(this);
+	}
+
+	componentDidMount() {
+		this.selectionChanged([]);
 	}
 
 	handleChangeMultiColumn(evt) {
@@ -50,10 +56,12 @@ export default class ColumnAllocatorControlNew extends EditorControl {
 			return o.value;
 		});
 		this.setState({ selectedValues: values });
+		this.selectionChanged(values);
 	}
 
 	handleChange(evt) {
 		this.setState({ selectedValues: evt.target.value });
+		this.selectionChanged(evt.target.value);
 	}
 
 	// Selected columns are those that are referenced by values in the control that have
@@ -122,20 +130,25 @@ export default class ColumnAllocatorControlNew extends EditorControl {
 	}
 
 	removeSelected() {
-		const rows = this.getCurrentControlValue();
+		const rows = this.getControlValue();
 		const newRows = [];
-		const selected = this.state.selectedRows;
+		const selected = this.state.selectedValues;
 		for (var i = 0; i < rows.length; i++) {
-			if (selected.indexOf(i) < 0) {
+			if (selected.indexOf(rows[i]) < 0) {
 				newRows.push(rows[i]);
 			}
 		}
-		this.setCurrentControlValue(this.props.control.name, newRows, this.props.updateControlValue);
+		const newState = {};
+		newState.controlValue = newRows;
+		newState.selectedValues = [];
+		this.setState(newState);
+		this.selectionChanged(newState.selectedValues);
 	}
 
 	selectionChanged(selection) {
-		const opacity = selection.length > 0 ? 1.0 : 0.4;
-		document.getElementById("remove-fields-button").setAttribute("opacity", opacity);
+		const opacity = "opacity:" + (selection.length > 0 ? 1.0 : 0.4);
+		document.getElementById("remove-fields-button-upper").style.cssText = opacity;
+		document.getElementById("remove-fields-button-upper").setAttribute("disabled", selection.length === 0);
 	}
 
 	render() {
@@ -175,22 +188,26 @@ export default class ColumnAllocatorControlNew extends EditorControl {
 			}
 		}
 
+		const addTooltip = <Tooltip id="addFieldTip">Select columns to add</Tooltip>;
+		const removeTooltip = <Tooltip id="removeFieldTip">Remove selected columns</Tooltip>;
 		if (this.props.multiColumn) {
 			return (
 				<div>
-					<Button
-						id="add-fields-button"
-						secondary icon="plus"
-						onClick={this.props.openFieldPicker}
-						data-control={JSON.stringify(this.props.control)}
-					>
-						Add Fields
-					</Button>
-					<div id="remove-fields-button" className="button" onClick={this.removeSelected}>
-						<Isvg id="remove-fields-button-image"
-							src={remove32}
-						/>
-					</div>
+					<OverlayTrigger placement="top" overlay={addTooltip}>
+						<Button
+							id="add-fields-button"
+							icon="plus"
+							onClick={this.props.openFieldPicker}
+							data-control={JSON.stringify(this.props.control)}
+						>
+							Add Fields
+						</Button>
+					</OverlayTrigger>
+					<OverlayTrigger placement="top" overlay={removeTooltip}>
+						<div id="remove-fields-button-upper" className="button" onClick={this.removeSelected}>
+							<Isvg id="remove-fields-button-upper-image" src={remove32} />
+						</div>
+					</OverlayTrigger>
 					<div className="editor_control_area" style={stateStyle}>
 						<FormControl {...stateDisabled}
 							id={this.getControlID()}
@@ -214,19 +231,21 @@ export default class ColumnAllocatorControlNew extends EditorControl {
 		}
 		return (
 			<div>
-				<Button
-					id="add-fields-button"
-					secondary icon="plus"
-					onClick={this.props.openFieldPicker}
-					data-control={JSON.stringify(this.props.control)}
-				>
-					Add Fields
-				</Button>
-				<div id="remove-fields-button" className="button" onClick={this.removeSelected}>
-					<Isvg id="remove-fields-button-image"
-						src={remove32}
-					/>
-				</div>
+				<OverlayTrigger placement="top" overlay={addTooltip}>
+					<Button
+						id="add-fields-button"
+						secondary icon="plus"
+						onClick={this.props.openFieldPicker}
+						data-control={JSON.stringify(this.props.control)}
+					>
+						Add Fields
+					</Button>
+				</OverlayTrigger>
+				<OverlayTrigger placement="top" overlay={removeTooltip}>
+					<div id="remove-fields-button-upper" className="button" onClick={this.removeSelected}>
+						<Isvg id="remove-fields-button-upper-image" src={remove32} />
+					</div>
+				</OverlayTrigger>
 				<div className="editor_control_area" style={stateStyle}>
 					<FormControl {...stateDisabled}
 						id={this.getControlID()}
