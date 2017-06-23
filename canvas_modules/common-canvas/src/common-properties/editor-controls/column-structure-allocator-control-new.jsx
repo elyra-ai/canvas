@@ -37,6 +37,9 @@ import BottomMoveIconDisable from "../../../assets/images/bottom_disabled.svg";
 
 var _ = require("underscore");
 
+const ARROW_HEIGHT = 14;
+const ARROW_WIDTH = 14;
+
 export default class ColumnStructureAllocatorControlNew extends StructureTableEditor {
 	constructor(props) {
 		super(props);
@@ -210,34 +213,37 @@ export default class ColumnStructureAllocatorControlNew extends StructureTableEd
 				selected.push(selectedRow - 1);
 			}
 		}
-		this.setCurrentControlValue(this.props.control.name, controlValue, this.props.updateControlValue);
+		this.setCurrentControlValueSelected(this.props.control.name, controlValue, this.props.updateControlValue, selected);
 	}
 
 	upMoveRow(evt) {
 		const selected = this.getSelectedRows().sort();
 		const controlValue = this.getCurrentControlValue();
-		for (var selectedRow of selected) {
+		for (var i = 0; i <= selected.length - 1; i++) {
+			const selectedRow = selected.shift();
 			if (selectedRow !== 0) {
 				const tmpRow = controlValue[selectedRow - 1];
 				controlValue[selectedRow - 1] = controlValue[selectedRow];
 				controlValue[selectedRow] = tmpRow;
+				selected.push(selectedRow - 1);
 			}
 		}
-		this.setCurrentControlValue(this.props.control.name, controlValue, this.props.updateControlValue);
+		this.setCurrentControlValueSelected(this.props.control.name, controlValue, this.props.updateControlValue, selected);
 	}
 
 	downMoveRow(evt) {
 		const selected = this.getSelectedRows().sort();
 		const controlValue = this.getCurrentControlValue();
 		for (var i = selected.length - 1; i >= 0; i--) {
-			const selectedRow = selected[i];
+			const selectedRow = selected.pop();
 			if (selectedRow !== controlValue.length - 1) {
 				const tmpRow = controlValue[selectedRow + 1];
 				controlValue[selectedRow + 1] = controlValue[selectedRow];
 				controlValue[selectedRow] = tmpRow;
+				selected.unshift(selectedRow + 1);
 			}
 		}
-		this.setCurrentControlValue(this.props.control.name, controlValue, this.props.updateControlValue);
+		this.setCurrentControlValueSelected(this.props.control.name, controlValue, this.props.updateControlValue, selected);
 	}
 
 	bottomMoveRow(evt) {
@@ -252,7 +258,7 @@ export default class ColumnStructureAllocatorControlNew extends StructureTableEd
 				selected.unshift(selectedRow + 1);
 			}
 		}
-		this.setCurrentControlValue(this.props.control.name, controlValue, this.props.updateControlValue);
+		this.setCurrentControlValueSelected(this.props.control.name, controlValue, this.props.updateControlValue, selected);
 	}
 
   // enabled the move up and down arrows based on which row is selected
@@ -273,26 +279,26 @@ export default class ColumnStructureAllocatorControlNew extends StructureTableEd
 		}
 		const topImages = topEnabled ? (
 			<div>
-				<img className="table-row-move-button" src={TopMoveIconEnable} onClick={this.topMoveRow} />
-				<img className="table-row-move-button" src={UpMoveIconEnable} onClick={this.upMoveRow} />
+				<img className="table-row-move-button" src={TopMoveIconEnable} height={ARROW_HEIGHT} width={ARROW_WIDTH} onClick={this.topMoveRow} />
+				<img className="table-row-move-button" src={UpMoveIconEnable} height={ARROW_HEIGHT} width={ARROW_WIDTH} onClick={this.upMoveRow} />
 			</div>
 		)
 		: (
 			<div>
-				<img className="table-row-move-button-disable" src={TopMoveIconDisable} />
-				<img className="table-row-move-button-disable" src={UpMoveIconDisable} />
+				<img className="table-row-move-button-disable" height={ARROW_HEIGHT} width={ARROW_WIDTH} src={TopMoveIconDisable} />
+				<img className="table-row-move-button-disable" height={ARROW_HEIGHT} width={ARROW_WIDTH} src={UpMoveIconDisable} />
 			</div>
 		);
 		const bottomImages = bottomEnabled ? (
 			<div>
-				<img className="table-row-move-button" src={DownMoveIconEnable} onClick={this.downMoveRow} />
-				<img className="table-row-move-button" src={BottomMoveIconEnable} onClick={this.bottomMoveRow} />
+				<img className="table-row-move-button" src={DownMoveIconEnable} height={ARROW_HEIGHT} width={ARROW_WIDTH} onClick={this.downMoveRow} />
+				<img className="table-row-move-button" src={BottomMoveIconEnable} height={ARROW_HEIGHT} width={ARROW_WIDTH} onClick={this.bottomMoveRow} />
 			</div>
 		)
 		: (
 			<div>
-				<img className="table-row-move-button-disable" src={DownMoveIconDisable} />
-				<img className="table-row-move-button-disable" src={BottomMoveIconDisable} />
+				<img className="table-row-move-button-disable" height={ARROW_HEIGHT} width={ARROW_WIDTH} src={DownMoveIconDisable} />
+				<img className="table-row-move-button-disable" height={ARROW_HEIGHT} width={ARROW_WIDTH} src={BottomMoveIconDisable} />
 			</div>
 		);
 		return [topImages, bottomImages];

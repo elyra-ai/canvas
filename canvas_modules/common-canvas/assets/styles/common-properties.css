@@ -329,9 +329,10 @@ th div div label, td div div label {
 
 /* Column Structure Allocator */
 #table-row-move-button-container.col-md-1 {
+	width: 16px !important;
 	margin-top: 70px;
 	top: 50%;
-	padding: 12px;
+	padding: 0;
 }
 
 .table-row-move-button .table-row-move-button-disable{

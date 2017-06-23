@@ -91,6 +91,17 @@ export default class StructureTableEditor extends EditorControl {
 		return this.state.controlValue;
 	}
 
+	setCurrentControlValueSelected(targetControl, controlValue, updateControlValue, selectedRows) {
+		var that = this;
+		this.setState({
+			controlValue: controlValue,
+			selectedRows: selectedRows
+		}, function() {
+			updateControlValue(targetControl, EditorControl.stringifyStructureStrings(controlValue));
+			that.props.updateSelectedRows(selectedRows);
+		});
+	}
+
 	setCurrentControlValue(targetControl, controlValue, updateControlValue) {
 		var that = this;
 		this.setState({
@@ -216,6 +227,9 @@ export default class StructureTableEditor extends EditorControl {
 			/>);
 		}
 
+		const selected = this.getSelectedRows().sort();
+		const scrollToRow = (typeof selected !== "undefined" && selected.length !== 0) ? selected[0] : 0;
+
 		return (
 			<div id="fixed-data-table-container">
 				<Table id={this.getControlID()}
@@ -227,6 +241,7 @@ export default class StructureTableEditor extends EditorControl {
 					height={180}
 					rowClassNameGetter={this.getRowClassName}
 					onRowClick={this.handleRowClick} {...this.props}
+					scrollToRow={scrollToRow}
 				>
 					{columns}
 				</Table>
