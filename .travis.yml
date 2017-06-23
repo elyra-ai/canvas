@@ -16,9 +16,9 @@ before_script:
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
 script:
-  - ./canvas_modules/common-canvas/build.sh
-  - ./canvas_modules/harness/build.sh
-  - ./canvas_modules/harness/functional_test.sh
+  - travis_wait ./canvas_modules/common-canvas/build.sh
+  - travis_wait ./canvas_modules/harness/build.sh
+  - travis_wait ./canvas_modules/harness/functional_test.sh
 deploy:
   - provider: script
     skip_cleanup: true

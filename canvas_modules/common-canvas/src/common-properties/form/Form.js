@@ -41,7 +41,7 @@ export default class Form {
 			const data = {
 				currentParameters: _.propertyOf(paramDef)("currentParameters"),
 				datasetMetadata: _.propertyOf(paramDef)("datasetMetadata"),
-				conditions: _.propertyOf(paramDef)("conditions")
+				conditions: _.propertyOf(paramDef.uihints)("conditions")
 			};
 			const formName = _.propertyOf(propDef)("name");
 			return new Form(formName,

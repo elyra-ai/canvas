@@ -325,6 +325,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 		orientation,
 		parameter.getValidValues(),
 		valueLabels,
+		parameter.charLimit,
 		subControls,
 		keyIndex,
 		defaultRow,
@@ -393,7 +394,8 @@ function _makeSubControl(parameter, l10nProvider) {
 		additionalText,
 		orientation,
 		parameter.getValidValues(),
-		valueLabels
+		valueLabels,
+		parameter.charLimit
 	);
 }
 

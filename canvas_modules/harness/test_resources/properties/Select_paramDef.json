@@ -41,7 +41,11 @@
         "description": {
           "default": "Enter a conditional expression to be applied to each row"
         },
-        "orientation": "horizontal"
+        "orientation": "horizontal",
+        "place_holder_text": {
+          "default": "Enter condition"
+        },
+        "char_limit": 2048
       }
     ],
     "group_info": [

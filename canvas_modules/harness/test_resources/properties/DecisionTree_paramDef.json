@@ -189,7 +189,7 @@
         ]
       }
     ],
-    "conditions1": [
+    "conditions": [
       {
         "validation": {
           "fail-message": {

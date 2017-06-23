@@ -40,7 +40,9 @@
                         "propType": "string",
                         "isList": false,
                         "isMap": false
-                      }
+                      },
+                      "charLimit": 100,
+                      "additionalText": "Enter file name"
                     }
                   },
                   {

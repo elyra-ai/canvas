@@ -129,7 +129,13 @@ export default class EditorControl extends React.Component {
 	getControlValue() {
 		return [];
 	}
-
+	getCharLimit(defaultLimit) {
+		let limit = defaultLimit;
+		if (this.props.control.charLimit) {
+			limit = this.props.control.charLimit;
+		}
+		return limit;
+	}
 	setValueListener(listener) {
 		// Listener is expected to define handleValueChanged(controlName, value);
 		this._valueListener = listener;

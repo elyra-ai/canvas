@@ -50,28 +50,21 @@ export default class TextfieldControl extends EditorControl {
 				stateStyle.visibility = "hidden";
 			}
 		}
-
-		let disablePlaceHolder = true;
-		// only enable if additionText is available
-		if (this.props.control.additionalText || (this.state.validateErrorMessage && this.state.validateErrorMessage.text !== "")) {
-			disablePlaceHolder = false;
-		}
-
+		const charLimit = this.getCharLimit(CHARACTER_LIMITS.NODE_PROPERTIES_DIALOG_TEXT_FIELD);
 		return (
 			<div className="editor_control_area" style={stateStyle}>
 				<TextField {...stateDisabled}
 					style={stateStyle}
-					type="text"
 					id={this.getControlID()}
 					onBlur={this.validateInput}
 					onFocus={this.clearValidateMsg}
 					msg={this.state.validateErrorMessage}
-					disabledPlaceholderAnimation={disablePlaceHolder}
+					disabledPlaceholderAnimation
 					placeholder={this.props.control.additionalText}
 					onChange={this.handleChange}
 					value={this.state.controlValue}
-					maxCount={CHARACTER_LIMITS.NODE_PROPERTIES_DIALOG_TEXT_FIELD}
-					maxLength={CHARACTER_LIMITS.NODE_PROPERTIES_DIALOG_TEXT_FIELD}
+					maxCount={charLimit}
+					maxLength={charLimit}
 				/>
 			</div>
 		);

@@ -65,7 +65,7 @@ export default class ExpressionControl extends EditorControl {
 				stateStyle.visibility = "hidden";
 			}
 		}
-
+		const charLimit = this.getCharLimit(CHARACTER_LIMITS.NODE_PROPERTIES_DIALOG_TEXT_AREA);
 		return (
 			<div className="editor_control_area" style={stateStyle}>
 				<TextField {...stateDisabled}
@@ -79,8 +79,8 @@ export default class ExpressionControl extends EditorControl {
 					onChange={this.handleChange}
 					value={this.state.controlValue}
 					rows={4}
-					maxCount={CHARACTER_LIMITS.NODE_PROPERTIES_DIALOG_TEXT_AREA}
-					maxLength={CHARACTER_LIMITS.NODE_PROPERTIES_DIALOG_TEXT_AREA}
+					maxCount={charLimit}
+					maxLength={charLimit}
 				/>
 				{errorMessage}
 			</div>

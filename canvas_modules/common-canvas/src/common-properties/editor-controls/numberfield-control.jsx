@@ -60,12 +60,6 @@ export default class NumberfieldControl extends EditorControl {
 				stateStyle.visibility = "hidden";
 			}
 		}
-
-		let disablePlaceHolder = true;
-		// only enable if additionText is available
-		if (this.props.control.additionalText || (this.state.validateErrorMessage && this.state.validateErrorMessage.text !== "")) {
-			disablePlaceHolder = false;
-		}
 		return (
 			<div className="editor_control_area" style={stateStyle}>
 				<TextField {...stateDisabled}
@@ -75,7 +69,7 @@ export default class NumberfieldControl extends EditorControl {
 					onBlur={this.validateInput}
 					onFocus={this.clearValidateMsg}
 					placeholder={this.props.control.additionalText}
-					disabledPlaceholderAnimation={disablePlaceHolder}
+					disabledPlaceholderAnimation
 					onChange={this.handleChange}
 					value={this.state.controlValue}
 					numberInput="close"
