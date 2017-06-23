@@ -13,7 +13,7 @@
 *****************************************************************/
 /* eslint complexity: ["error", 14] */
 
-// import logger from "../../../utils/logger";
+import logger from "../../../utils/logger";
 import React from "react";
 import EditorControl from "./editor-control.jsx";
 import { Table } from "reactable";
@@ -66,33 +66,33 @@ export default class FieldPicker extends EditorControl {
 	}
 
 	componentWillMount() {
-		const columns = this.state.data.columns;
-		const filterList = ["Date", "Integer", "Real", "String", "Time", "Timestamp"];
+		const fields = this.state.data.fields;
+		const filterList = ["date", "integer", "double", "string", "time", "timestamp"];
 		var filters = [];
 
 		for (let i = 0; i < filterList.length; i++) {
-			for (let j = 0; j < columns.length; j++) {
-				var column = columns[j];
+			for (let j = 0; j < fields.length; j++) {
+				var field = fields[j];
 
-				if (filterList[i] === column.storage) {
+				if (filterList[i] === field.type) {
 					switch (filterList[i]) {
-					case "Date":
-						filters.push({ "type": "Date", "icon": dateSvgIcon });
+					case "date":
+						filters.push({ "type": "date", "icon": dateSvgIcon });
 						break;
-					case "Integer":
-						filters.push({ "type": "Integer", "icon": integerSvgIcon });
+					case "integer":
+						filters.push({ "type": "tnteger", "icon": integerSvgIcon });
 						break;
-					case "Real":
-						filters.push({ "type": "Real", "icon": realSvgIcon });
+					case "double":
+						filters.push({ "type": "double", "icon": realSvgIcon });
 						break;
-					case "String":
-						filters.push({ "type": "String", "icon": stringSvgIcon });
+					case "string":
+						filters.push({ "type": "string", "icon": stringSvgIcon });
 						break;
-					case "Time":
-						filters.push({ "type": "Time", "icon": timeSvgIcon });
+					case "time":
+						filters.push({ "type": "time", "icon": timeSvgIcon });
 						break;
-					case "Timestamp":
-						filters.push({ "type": "Timestamp", "icon": timestampSvgIcon });
+					case "timestamp":
+						filters.push({ "type": "timestamp", "icon": timestampSvgIcon });
 						break;
 					default:
 					}
@@ -112,11 +112,11 @@ export default class FieldPicker extends EditorControl {
 
 	// reactable
 	getTableData() {
-		const columns = this.state.data.columns;
+		const fields = this.state.data.fields;
 		const tableData = [];
-		console.log(JSON.stringify("control vals: " + this.state.newControlValues));
-		for (let i = 0; i < columns.length; i++) {
-			var column = columns[i];
+		logger.info(JSON.stringify("control vals: " + this.state.newControlValues));
+		for (let i = 0; i < fields.length; i++) {
+			var field = fields[i];
 			var checked = false;
 
 			if (this.state.checkedAll) {
@@ -129,23 +129,23 @@ export default class FieldPicker extends EditorControl {
 					} else {
 						key = this.state.newControlValues[j];
 					}
-					if (key.indexOf(column.name) >= 0) {
+					if (key.indexOf(field.name) >= 0) {
 						checked = true;
 						break;
 					}
 				}
 			}
 
-			if (this.state.filterIcons.length === 0 || this.state.filterIcons.indexOf(column.storage) < 0) {
+			if (this.state.filterIcons.length === 0 || this.state.filterIcons.indexOf(field.type) < 0) {
 				var typeIcon = <div></div>;
 
-				switch (column.storage) {
-				case "Date": typeIcon = dateSvgIcon; break;
-				case "Integer": typeIcon = integerSvgIcon; break;
-				case "Real": typeIcon = realSvgIcon; break;
-				case "String": typeIcon = stringSvgIcon; break;
-				case "Time": typeIcon = timeSvgIcon; break;
-				case "Timestamp": typeIcon = timestampSvgIcon; break;
+				switch (field.type) {
+				case "date": typeIcon = dateSvgIcon; break;
+				case "integer": typeIcon = integerSvgIcon; break;
+				case "double": typeIcon = realSvgIcon; break;
+				case "string": typeIcon = stringSvgIcon; break;
+				case "time": typeIcon = timeSvgIcon; break;
+				case "timestamp": typeIcon = timestampSvgIcon; break;
 				default:
 				}
 
@@ -154,12 +154,12 @@ export default class FieldPicker extends EditorControl {
 					<Checkbox id={"field-picker-checkbox-" + i}
 						checked={checked}
 						onChange={this.handleFieldChecked}
-						data-name={column.name}
+						data-name={field.name}
 					/></div>,
-					"fieldName": column.name,
+					"fieldName": field.name,
 					"dataType": <div>
 						<div className="field-picker-data-type-icon">{typeIcon}</div>
-						{column.storage}
+						{field.type}
 					</div>
 				});
 			}
@@ -175,7 +175,7 @@ export default class FieldPicker extends EditorControl {
 	handleCheckAll(evt) {
 		const selectAll = [];
 		if (evt.target.checked) {
-			const data = this.state.data.columns;
+			const data = this.state.data.fields;
 			for (let i = 0; i < data.length; i++) {
 				const selected = this.state.newControlValues.filter(function(element) {
 					return element.indexOf(data[i].name) > -1;
@@ -188,7 +188,7 @@ export default class FieldPicker extends EditorControl {
 						selectAll.push(JSON.parse(selected)[0]);
 					}
 				} else if (this.props.control.defaultRow) { // add remaining fields
-					selectAll.push([data[i].name, this.props.control.defaultRow]);
+					selectAll.push([data[i].name, this.props.control.defaultRow[0]]);
 				} else {
 					selectAll.push([data[i].name]);
 				}
@@ -204,7 +204,7 @@ export default class FieldPicker extends EditorControl {
 		const current = this.state.newControlValues;
 		let selectedField = [];
 		if (this.props.control.defaultRow) {
-			selectedField = EditorControl.stringifyStructureStrings([[evt.currentTarget.dataset.name, this.props.control.defaultRow]]);
+			selectedField = EditorControl.stringifyStructureStrings([[evt.currentTarget.dataset.name, this.props.control.defaultRow[0]]]);
 		} else {
 			selectedField = [evt.currentTarget.dataset.name];
 		}
@@ -215,7 +215,10 @@ export default class FieldPicker extends EditorControl {
 				return element !== selectedField[0];
 			});
 
-			this.setState({ newControlValues: modified });
+			this.setState({
+				newControlValues: modified,
+				checkedAll: false
+			});
 		}
 	}
 
@@ -224,7 +227,7 @@ export default class FieldPicker extends EditorControl {
 	}
 
 	handleReset() {
-		if (this.state.initialControlValues.length !== this.state.data.columns.length) {
+		if (this.state.initialControlValues.length !== this.state.data.fields.length) {
 			this.setState({ checkedAll: false });
 		}
 		this.setState({
@@ -237,7 +240,7 @@ export default class FieldPicker extends EditorControl {
 			evt.currentTarget.style.fill = "#D8D8D8";
 
 			const type = evt.currentTarget.dataset.type;
-			console.log("filter type deselected: " + type);
+			logger.info("filter type deselected: " + type);
 
 			const iconsSelected = this.state.filterIcons;
 			iconsSelected.push(type);
@@ -320,7 +323,7 @@ export default class FieldPicker extends EditorControl {
 
 		let checkedAll = this.state.checkedAll;
 		// check all box should be checked if all is selected
-		if (this.state.data.columns.length === this.state.newControlValues.length) {
+		if (this.state.data.fields.length === this.state.newControlValues.length) {
 			checkedAll = true;
 		} else {
 			checkedAll = false;

@@ -35,7 +35,7 @@
                       },
                       "separateLabel": true,
                       "controlType": "allocatedstructuresnew",
-											"isRowMoveable" : true,
+                      "isRowMoveable": true,
                       "valueDef": {
                         "propType": "structure",
                         "isList": true,
@@ -77,7 +77,7 @@
                             "Ascending",
                             "Descending"
                           ],
-													"valueIcons": [
+                          "valueIcons": [
                             "/images/up-triangle.svg",
                             "/images/down-triangle.svg"
                           ]
@@ -85,7 +85,6 @@
                       ],
                       "keyIndex": 0,
                       "defaultRow": [
-                        "",
                         "Ascending"
                       ]
                     }
@@ -185,64 +184,74 @@
         ],
         "keys": [
           "[\"Na\",\"Ascending\"]",
-					"[\"Age\",\"Ascending\"]",
-					"[\"Sex\",\"Ascending\"]",
-					"[\"BP\",\"Ascending\"]",
-					"[\"Cholesterol\",\"Ascending\"]",
-					"[\"K\",\"Ascending\"]",
-          "[\"Drug\",\"Descending\"]"
+					"[\"Drug\",\"Descending\"]",
+          "[\"Cholesterol\",\"Ascending\"]"
         ]
       },
-      "inputDataModel": {
-        "columns": [
+      "datasetMetadata": {
+        "fields": [
           {
             "name": "Age",
-            "label": "",
-            "storage": "Integer",
-            "measure": "Range",
-            "modelingRole": "Input"
+            "type": "integer",
+            "metadata": {
+              "description": "",
+              "measure": "range",
+              "role": "input"
+            }
           },
           {
             "name": "Sex",
-            "label": "",
-            "storage": "String",
-            "measure": "Discrete",
-            "modelingRole": "Input"
+            "type": "string",
+            "metadata": {
+              "description": "",
+              "measure": "discrete",
+              "role": "input"
+            }
           },
           {
             "name": "BP",
-            "label": "",
-            "storage": "String",
-            "measure": "Discrete",
-            "modelingRole": "Input"
+            "type": "string",
+            "metadata": {
+              "description": "",
+              "measure": "discrete",
+              "role": "input"
+            }
           },
           {
             "name": "Cholesterol",
-            "label": "",
-            "storage": "String",
-            "measure": "Discrete",
-            "modelingRole": "Input"
+            "type": "string",
+            "metadata": {
+              "description": "",
+              "measure": "discrete",
+              "role": "input"
+            }
           },
           {
             "name": "Na",
-            "label": "",
-            "storage": "Real",
-            "measure": "Range",
-            "modelingRole": "Input"
+            "type": "double",
+            "metadata": {
+              "description": "",
+              "measure": "range",
+              "role": "input"
+            }
           },
           {
             "name": "K",
-            "label": "",
-            "storage": "Real",
-            "measure": "Range",
-            "modelingRole": "Input"
+            "type": "double",
+            "metadata": {
+              "description": "",
+              "measure": "range",
+              "role": "input"
+            }
           },
           {
             "name": "Drug",
-            "label": "",
-            "storage": "String",
-            "measure": "Discrete",
-            "modelingRole": "Input"
+            "type": "string",
+            "metadata": {
+              "description": "",
+              "measure": "discrete",
+              "role": "input"
+            }
           }
         ]
       }

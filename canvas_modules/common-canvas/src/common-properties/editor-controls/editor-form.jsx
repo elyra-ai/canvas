@@ -258,7 +258,7 @@ export default class EditorForm extends React.Component {
 			/>);
 		} else if (control.controlType === "allocatedcolumnsnew") {
 			return (<ColumnAllocatorControlNew control={control}
-				dataModel={inputDataModel}
+				dataModel={datasetMetadata}
 				multiColumn
 				key={controlId}
 				ref={controlId}
@@ -281,7 +281,7 @@ export default class EditorForm extends React.Component {
 			/>);
 		} else if (control.controlType === "allocatedstructuresnew") {
 			return (<ColumnStructureAllocatorControlNew control={control}
-				dataModel={inputDataModel}
+				dataModel={datasetMetadata}
 				key={controlId}
 				ref={controlId}
 				valueAccessor={controlValueAccessor}
@@ -691,8 +691,9 @@ export default class EditorForm extends React.Component {
 			content = (<div id="field-picker-table">
 				<FieldPicker
 					closeFieldPicker={this.closeFieldPicker}
+					getControlValue={this.getControlValue}
 					currentControlValues={currentControlValues}
-					dataModel={this.state.formData.data.inputDataModel}
+					dataModel={this.state.formData.data.datasetMetadata}
 					updateControlValue={this.updateControlValue}
 					control={this.state.fieldPickerControl}
 				/>
