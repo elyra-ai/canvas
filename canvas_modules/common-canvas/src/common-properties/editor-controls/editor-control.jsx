@@ -87,7 +87,7 @@ export default class EditorControl extends React.Component {
 		var selected = selection;
 		const index = selected.indexOf(rowIndex);
 
-		if (evt.shiftKey === true) {
+		if (evt.metaKey === true || evt.ctrlKey === true) {
 			// If already selected then remove otherwise add
 			if (index >= 0) {
 				selected.splice(index, 1);
