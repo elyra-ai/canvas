@@ -12,7 +12,7 @@
   "formData": {
     "componentId": "neuralnetwork",
     "label": "Neural Net",
-    "editorSize": "large",
+    "editorSize": "medium",
     "uiItems": [
       {
         "itemType": "primaryTabs",
@@ -55,7 +55,7 @@
                     "itemType": "panel",
                     "panel": {
                       "id": "field-allocation",
-                      "panelType": "columnAllocation",
+                      "panelType": "columnAllocationNew",
                       "uiItems": [
                         {
                           "itemType": "control",
@@ -65,7 +65,7 @@
                               "text": "Targets"
                             },
                             "separateLabel": true,
-                            "controlType": "allocatedcolumns",
+                            "controlType": "allocatedcolumnsnew",
                             "valueDef": {
                               "propType": "string",
                               "isList": true,
@@ -81,7 +81,7 @@
                               "text": "Inputs"
                             },
                             "separateLabel": true,
-                            "controlType": "allocatedcolumns",
+                            "controlType": "allocatedcolumnsnew",
                             "valueDef": {
                               "propType": "string",
                               "isList": true,

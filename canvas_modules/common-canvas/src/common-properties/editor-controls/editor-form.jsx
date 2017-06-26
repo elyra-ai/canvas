@@ -75,6 +75,8 @@ export default class EditorForm extends React.Component {
 			activeTabId: ""
 		};
 
+		this.sharedDataModel = [];
+
 		this.getControlValue = this.getControlValue.bind(this);
 		this.updateControlValue = this.updateControlValue.bind(this);
 		this.updateControlValues = this.updateControlValues.bind(this);
@@ -478,6 +480,23 @@ export default class EditorForm extends React.Component {
 			>
 				{content}
 			</ColumnAllocationPanel>);
+		} else if (panel.panelType === "columnAllocationNew") {
+			this.sharedDataModel = [];
+			const currentControlValues = this.getControlValues();
+			for (let i = 0; i < panel.uiItems.length; i++) {
+				const controlName = panel.uiItems[i].control.name;
+				const controlValues = currentControlValues[controlName];
+				this.sharedDataModel.push({
+					"controlName": controlName,
+					"controlValues": controlValues
+				});
+			}
+			uiObject = (<div id={id}
+				className="control-panel"
+				key={key}
+			>
+				{content}
+			</div>);
 		} else {
 			uiObject = (<div id={id}
 				className="control-panel"
@@ -687,13 +706,50 @@ export default class EditorForm extends React.Component {
 		var content = this.genUIContent(this.state.formData.uiItems, "", this.getControlValue, this.state.formData.data.datasetMetadata);
 
 		if (this.state.showFieldPicker) {
-			var currentControlValues = this.getControlValues();
+			const currentControlValues = this.getControlValues();
+			const data = this.state.formData.data.datasetMetadata;
+			const filteredData = JSON.parse(JSON.stringify(data)); // deep copy
+
+			let sharedDataModelPanel = false;
+			for (let h = 0; h < this.sharedDataModel.length; h++) {
+				if (this.state.fieldPickerControl.name === this.sharedDataModel[h].controlName) {
+					sharedDataModelPanel = true;
+					break;
+				}
+			}
+
+			if (sharedDataModelPanel) {
+				const temp = [];
+				for (let i = 0; i < this.sharedDataModel.length; i++) {
+					const controlDataValues = this.sharedDataModel[i];
+					if (controlDataValues.controlName !== this.state.fieldPickerControl.name) {
+						// only remove from the main list the values that are in other controls
+						const values = controlDataValues.controlValues;
+						for (let j = 0; j < values.length; j++) {
+							temp.push(data.fields.filter(function(element) {
+								return values[j].split(",")[0].indexOf(element.name) > -1;
+							})[0]);
+							// logger.info("Temp is: " + JSON.stringify(temp));
+						}
+					}
+				}
+
+				if (temp.length > 0) {
+					for (let k = 0; k < temp.length; k++) { // filteredData is overwriting this.state.formData.data.inputDataModel
+						filteredData.fields = filteredData.fields.filter(function(element) {
+							return element.name !== temp[k].name;
+						});
+						// logger.info("filteredData.fields is: " + JSON.stringify(filteredData.fields));
+					}
+				}
+			}
+
 			content = (<div id="field-picker-table">
 				<FieldPicker
 					closeFieldPicker={this.closeFieldPicker}
 					getControlValue={this.getControlValue}
 					currentControlValues={currentControlValues}
-					dataModel={this.state.formData.data.datasetMetadata}
+					dataModel={filteredData}
 					updateControlValue={this.updateControlValue}
 					control={this.state.fieldPickerControl}
 				/>

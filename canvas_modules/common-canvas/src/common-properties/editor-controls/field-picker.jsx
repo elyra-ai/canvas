@@ -12,6 +12,7 @@
 ** deposited with the U.S. Copyright Office.
 *****************************************************************/
 /* eslint complexity: ["error", 14] */
+/* eslint max-depth: ["error", 5] */
 
 import logger from "../../../utils/logger";
 import React from "react";
@@ -185,34 +186,54 @@ export default class FieldPicker extends EditorControl {
 					if (this.props.control.defaultRow) {
 						selectAll.push(JSON.parse(selected));
 					} else {
-						selectAll.push(JSON.parse(selected)[0]);
+						selectAll.push(selected[0]);
 					}
 				} else if (this.props.control.defaultRow) { // add remaining fields
 					selectAll.push([data[i].name, this.props.control.defaultRow[0]]);
 				} else {
-					selectAll.push([data[i].name]);
+					selectAll.push(data[i].name);
 				}
 			}
 		}
-		this.setState({
-			newControlValues: EditorControl.stringifyStructureStrings(selectAll),
-			checkedAll: evt.target.checked
-		});
+
+		if (this.props.control.defaultRow) {
+			this.setState({
+				newControlValues: EditorControl.stringifyStructureStrings(selectAll),
+				checkedAll: evt.target.checked
+			});
+		} else {
+			this.setState({
+				newControlValues: selectAll,
+				checkedAll: evt.target.checked
+			});
+		}
 	}
 
 	handleFieldChecked(evt) {
 		const current = this.state.newControlValues;
+		const initialControlValues = this.state.initialControlValues;
+		const selectedFieldName = evt.currentTarget.dataset.name;
 		let selectedField = [];
-		if (this.props.control.defaultRow) {
-			selectedField = EditorControl.stringifyStructureStrings([[evt.currentTarget.dataset.name, this.props.control.defaultRow[0]]]);
-		} else {
-			selectedField = [evt.currentTarget.dataset.name];
+		// if selectedField is in the original list, grab that row instead of generating new selectedField
+		for (let i = 0; i < initialControlValues.length; i++) {
+			if (initialControlValues[i].split(",")[0].indexOf(selectedFieldName) > -1) {
+				selectedField = initialControlValues[i];
+				break;
+			}
 		}
+		if (selectedField.length === 0) {
+			if (this.props.control.defaultRow) {
+				selectedField = EditorControl.stringifyStructureStrings([[selectedFieldName, this.props.control.defaultRow[0]]])[0];
+			} else {
+				selectedField = [selectedFieldName];
+			}
+		}
+
 		if (evt.target.checked) {
-			this.setState({ newControlValues: current.concat(selectedField[0]) });
+			this.setState({ newControlValues: current.concat(selectedField) });
 		} else {
 			const modified = current.filter(function(element) {
-				return element !== selectedField[0];
+				return element !== selectedField;
 			});
 
 			this.setState({
@@ -294,15 +315,17 @@ export default class FieldPicker extends EditorControl {
 
 		const search = (
 			<div>
-				<TextField
-					type="search"
-					id="field-picker-search"
-					className="field-picker-toolbar"
-					placeholder="Search for a field"
-					disabledPlaceholderAnimation
-					onChange={this.handleFilterChange}
-					value={this.state.filterKeyword}
-				/>
+				<div id="field-picker-search-bar">
+					<TextField
+						type="search"
+						id="field-picker-search"
+						className="field-picker-toolbar"
+						placeholder="Search for a field"
+						disabledPlaceholderAnimation
+						onChange={this.handleFilterChange}
+						value={this.state.filterKeyword}
+					/>
+				</div>
 				<div id="field-picker-search-icon"
 					className="field-picker-toolbar"
 				>

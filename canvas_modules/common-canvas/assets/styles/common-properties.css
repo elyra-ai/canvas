@@ -186,8 +186,14 @@ span.form__validation--invalid {
   padding-top: 2px;
 }
 
-#field-picker-search {
+#field-picker-search-bar {
+	height: 32px;
 	width: 45%;
+	float: left;
+}
+
+#field-picker-search {
+	width: 100%;
 	float: left;
 }
 
@@ -196,8 +202,6 @@ span.form__validation--invalid {
 	height: 32px;
 	float: left;
 	fill: #A91560;
-	border-bottom: 2px solid #777677;
-	padding-bottom: 1px;
 }
 
 #field-picker-search:focus {

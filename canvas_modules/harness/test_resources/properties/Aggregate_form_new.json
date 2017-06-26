@@ -30,7 +30,7 @@
                     "itemType": "panel",
                     "panel": {
                       "id": "aggregation-settings",
-                      "panelType": "general",
+                      "panelType": "columnAllocationNew",
                       "uiItems": [
                         {
                           "itemType": "control",
@@ -324,56 +324,70 @@
           "Drug"
         ]
       },
-      "inputDataModel": {
-        "columns": [
+      "datasetMetadata": {
+        "fields": [
           {
             "name": "Age",
-            "label": "",
-            "storage": "Integer",
-            "measure": "Range",
-            "modelingRole": "Input"
+            "type": "integer",
+            "metadata": {
+              "description": "",
+              "measure": "range",
+              "role": "input"
+            }
           },
           {
             "name": "Sex",
-            "label": "",
-            "storage": "String",
-            "measure": "Discrete",
-            "modelingRole": "Input"
+            "type": "string",
+            "metadata": {
+              "description": "",
+              "measure": "discrete",
+              "role": "input"
+            }
           },
           {
             "name": "BP",
-            "label": "",
-            "storage": "String",
-            "measure": "Discrete",
-            "modelingRole": "Input"
+            "type": "string",
+            "metadata": {
+              "description": "",
+              "measure": "discrete",
+              "role": "input"
+            }
           },
           {
             "name": "Cholesterol",
-            "label": "",
-            "storage": "String",
-            "measure": "Discrete",
-            "modelingRole": "Input"
+            "type": "string",
+            "metadata": {
+              "description": "",
+              "measure": "discrete",
+              "role": "input"
+            }
           },
           {
             "name": "Na",
-            "label": "",
-            "storage": "Real",
-            "measure": "Range",
-            "modelingRole": "Input"
+            "type": "double",
+            "metadata": {
+              "description": "",
+              "measure": "range",
+              "role": "input"
+            }
           },
           {
             "name": "K",
-            "label": "",
-            "storage": "Real",
-            "measure": "Range",
-            "modelingRole": "Input"
+            "type": "double",
+            "metadata": {
+              "description": "",
+              "measure": "range",
+              "role": "input"
+            }
           },
           {
             "name": "Drug",
-            "label": "",
-            "storage": "String",
-            "measure": "Discrete",
-            "modelingRole": "Input"
+            "type": "string",
+            "metadata": {
+              "description": "",
+              "measure": "discrete",
+              "role": "input"
+            }
           }
         ]
       }
