@@ -367,5 +367,9 @@ th div div label, td div div label {
     background: white !important;
     border: 1px solid #e0e0e0;
 		border-bottom: 1px solid #e0e0e0 !important;
-		height: 250px;
+		min-height: 250px;
+}
+
+.tabs__tabpanel[id$=build-options-panel] {
+	padding-top: 20px;
 }
