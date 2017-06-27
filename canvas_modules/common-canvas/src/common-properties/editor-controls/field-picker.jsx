@@ -225,7 +225,7 @@ export default class FieldPicker extends EditorControl {
 			if (this.props.control.defaultRow) {
 				selectedField = EditorControl.stringifyStructureStrings([[selectedFieldName, this.props.control.defaultRow[0]]])[0];
 			} else {
-				selectedField = [selectedFieldName];
+				selectedField = selectedFieldName;
 			}
 		}
 
