@@ -142,7 +142,8 @@ export default class ColumnAllocatorControlNew extends EditorControl {
 		newState.controlValue = newRows;
 		newState.selectedValues = [];
 		this.setState(newState);
-		this.selectionChanged(newState.selectedValues);
+		this.props.updateControlValue(this.props.control.name, newRows);
+		this.selectionChanged([]);
 	}
 
 	selectionChanged(selection) {

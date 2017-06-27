@@ -268,6 +268,7 @@ export default class EditorForm extends React.Component {
 				validationDefinitions={this.state.validationDefinitions}
 				controlStates={this.state.controlStates}
 				openFieldPicker={this.openFieldPicker}
+				updateControlValue={this.updateControlValue}
 			/>);
 		} else if (control.controlType === "allocatedstructures") {
 			// logger.info("allocatedstructures");
