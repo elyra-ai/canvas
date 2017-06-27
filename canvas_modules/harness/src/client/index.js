@@ -15,8 +15,11 @@ import "ap-components-react/dist/ap-components-react.min.css";
 import "@wdp/common-canvas/dist/common-canvas.css";
 import "../styles/App.css";
 import "../styles/index.css";
+import { IntlProvider } from "react-intl";
 
 ReactDOM.render(
-	<App />,
+	<IntlProvider locale="en">
+		<App />
+	</IntlProvider>,
 	document.getElementById("root")
 );
