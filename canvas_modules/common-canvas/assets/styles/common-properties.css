@@ -361,3 +361,11 @@ th div div label, td div div label {
 	text-decoration: underline;
 	cursor: pointer;
 }
+
+.tabs--vertical .tabs__list--vertical {
+    display: block;
+    background: white !important;
+    border: 1px solid #e0e0e0;
+		border-bottom: 1px solid #e0e0e0 !important;
+		height: 250px;
+}
