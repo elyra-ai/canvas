@@ -21,6 +21,7 @@ import SubPanelCell from "../editor-panels/sub-panel-cell.jsx";
 import TextRenderer from "../renderers/text-renderer.jsx";
 import EnumRenderer from "../renderers/enum-renderer.jsx";
 import ToggletextRenderer from "../renderers/toggletext-renderer.jsx";
+import OneofselectRenderer from "../renderers/oneofselect-renderer.jsx";
 
 var _ = require("underscore");
 
@@ -186,6 +187,10 @@ export default class StructureTableEditor extends EditorControl {
 				var cell;
 				if (columnDef.controlType === "toggletext") {
 					renderer = new ToggletextRenderer(columnDef, this.props.control, controlValue,
+																						i, this.props.updateControlValue, this.setCurrentControlValue);
+					cell = <LinkCell data={controlValue} col={i} renderer={renderer} />;
+				} else if (columnDef.controlType === "oneofselect") {
+					renderer = new OneofselectRenderer(columnDef, this.props.control, controlValue,
 																						i, this.props.updateControlValue, this.setCurrentControlValue);
 					cell = <LinkCell data={controlValue} col={i} renderer={renderer} />;
 				} else if (columnDef.valueDef.propType === "enum") {
