@@ -274,25 +274,25 @@ span.form__validation--invalid {
 	fill: #FFFFFF;
 }
 
-#remove-fields-button, #remove-fields-button-upper {
+[id^=remove-fields-button] {
 	float: right;
-	border: none;
-	margin-top: 2px;
-	margin-bottom: 2px;
-	padding-top: 4px;
+	border: none !important;
+	margin-top: 2px !important;
+	margin-bottom: 2px !important;
+	padding-top: 4px !important;
 	height: 30.75px;
 	width: 33px;
 	fill: #A91560;
-	padding-left: 5px;
-	padding-right: 5px;
+	padding-left: 5px !important;
+	padding-right: 5px !important;
 }
 
-#remove-fields-button:hover[disabled=false], #remove-fields-button-upper:hover[disabled=false] {
+[id^=remove-fields-button]:hover[disabled=false] {
 	background-color: #A91560;
 	fill: #FFFFFF;
 }
 
-#remove-fields-button:hover[disabled=true], #remove-fields-button-upper:hover[disabled=true] {
+[id^=remove-fields-button]:hover[disabled=true] {
 	background-color: transparent;
 	cursor: default;
 }

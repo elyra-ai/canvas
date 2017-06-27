@@ -148,8 +148,13 @@ export default class ColumnAllocatorControlNew extends EditorControl {
 
 	selectionChanged(selection) {
 		const opacity = "opacity:" + (selection.length > 0 ? 1.0 : 0.4);
-		document.getElementById("remove-fields-button-upper").style.cssText = opacity;
-		document.getElementById("remove-fields-button-upper").setAttribute("disabled", selection.length === 0);
+		const id = this.removeButtonId();
+		document.getElementById(id).style.cssText = opacity;
+		document.getElementById(id).setAttribute("disabled", selection.length === 0);
+	}
+
+	removeButtonId() {
+		return "remove-fields-button_" + this.props.control.name;
 	}
 
 	render() {
@@ -205,7 +210,7 @@ export default class ColumnAllocatorControlNew extends EditorControl {
 						</Button>
 					</OverlayTrigger>
 					<OverlayTrigger placement="top" overlay={removeTooltip}>
-						<div id="remove-fields-button-upper" className="button" onClick={this.removeSelected}>
+						<div id={this.removeButtonId()} className="button" onClick={this.removeSelected}>
 							<Isvg id="remove-fields-button-upper-image" src={remove32} />
 						</div>
 					</OverlayTrigger>
@@ -243,7 +248,7 @@ export default class ColumnAllocatorControlNew extends EditorControl {
 					</Button>
 				</OverlayTrigger>
 				<OverlayTrigger placement="top" overlay={removeTooltip}>
-					<div id="remove-fields-button-upper" className="button" onClick={this.removeSelected}>
+					<div id={this.removeButtonId()} className="button" onClick={this.removeSelected}>
 						<Isvg id="remove-fields-button-upper-image" src={remove32} />
 					</div>
 				</OverlayTrigger>
