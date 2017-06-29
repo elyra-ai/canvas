@@ -373,3 +373,11 @@ th div div label, td div div label {
 .tabs__tabpanel[id$=build-options-panel] {
 	padding-top: 20px;
 }
+
+#add-fields-button > span > svg:not(:root) {
+	overflow: visible;
+}
+
+.column-structure-allocator-control-row-selected .public_fixedDataTableCell_main {
+    background-color: #e0e0e0 !important;
+}
