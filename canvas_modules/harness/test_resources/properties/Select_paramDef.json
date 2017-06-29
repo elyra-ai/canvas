@@ -65,7 +65,10 @@
         "validation": {
           "fail-message": {
             "type": "warning",
-            "resourceKey": "condition_not_empty",
+            "message": {
+              "default": "The 'Condition' expression cannot be empty",
+              "resourceKey": "condition_not_empty"
+            },
             "focusParam": "condition"
           },
           "evaluate": {

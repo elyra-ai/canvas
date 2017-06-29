@@ -127,7 +127,10 @@
         "validation": {
           "fail-message": {
             "type": "error",
-            "resourceKey": "target_not_empty",
+            "message": {
+              "default": "The 'Target' field cannot be empty",
+              "resourceKey": "target_not_empty"
+            },
             "focusParam": "target"
           },
           "evaluate": {
@@ -142,7 +145,10 @@
         "validation": {
           "fail-message": {
             "type": "error",
-            "resourceKey": "inputs_not_empty",
+            "message": {
+              "default": "The 'Inputs' field cannot be empty",
+              "resourceKey": "inputs_not_empty"
+            },
             "focusParam": "inputs"
           },
           "evaluate": {
@@ -160,34 +166,34 @@
       {
         "name": "integer2",
         "type": "integer",
-				"metadata": {
-					"description": "",
-      		"measure": "range",
-        	"role": "input"
-				}
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "role": "input"
+        }
       },
       {
         "name": "double4",
         "type": "double",
-				"metadata": {
-					"description": "",
-        	"measure": "range",
-        	"role": "input"
-				}
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "role": "input"
+        }
       },
       {
         "name": "string1",
         "type": "string",
-				"metadata": {
-					"description": "",
-        	"measure": "set",
-        	"role": "input"
-				}
+        "metadata": {
+          "description": "",
+          "measure": "set",
+          "role": "input"
+        }
       }
     ]
   },
   "resources": {
-		"cart.label": "C&RT",
+    "cart.label": "C&RT",
     "target.label": "Target",
     "target.desc": "Target (predicted) field",
     "inputs.label": "Inputs",

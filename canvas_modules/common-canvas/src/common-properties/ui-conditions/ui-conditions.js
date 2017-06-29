@@ -149,8 +149,8 @@ function evaluate(data, userInput) {
 		return or(data.or, userInput);
 	} else if (data.and) {
 		return and(data.and, userInput);
-	} else if (data.op && data.param) { // condition
-		return condition(data, userInput);
+	} else if (data.condition) { // condition
+		return condition(data.condition, userInput);
 	}
 	throw new Error("Failed to parse definition");
 }
@@ -327,13 +327,8 @@ function condition(data, userInput) {
  * @return {String} failed message
  */
 function failedMessage(failedErrorMessage) {
-	if (failedErrorMessage.focusParam && failedErrorMessage.message) {
-		// if(failedErrorMessage.message.default && failedErrorMessage.message.resourceKey) {
-		// 	return failedErrorMessage.focusParam + ": " +
-		// 	failedErrorMessage.message.default + ". " +
-		// 	failedErrorMessage.message.resourceKey;
-		// }
-		return "FailedMessage: " + failedErrorMessage.message.default;
+	if (failedErrorMessage.focusParam && failedErrorMessage.message.default) {
+		return failedErrorMessage.message.default;
 	}
 	return "Failed to parse failedMessage";
 }

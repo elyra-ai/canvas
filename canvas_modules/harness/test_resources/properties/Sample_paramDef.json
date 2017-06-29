@@ -115,7 +115,7 @@
           "default": "Set a maximum for the number of sampled rows",
           "resourceKey": "use_max_sample_size.desc"
         },
-				"separator": "before"
+        "separator": "before"
       },
       {
         "name": "maximum_size",
@@ -180,7 +180,10 @@
         "validation": {
           "fail-message": {
             "type": "error",
-            "resourceKey": "rand_pct_not_empty",
+            "message": {
+              "default": "The random percent value cannot be empty",
+              "resourceKey": "rand_pct_not_empty"
+            },
             "focusParam": "rand_pct"
           },
           "evaluate": {
@@ -193,14 +196,10 @@
                 }
               },
               {
-                "and": [
-                  {
-                    "condition": {
-                      "param": "rand_pct",
-                      "op": "isNotEmpty"
-                    }
-                  }
-                ]
+                "condition": {
+                  "param": "rand_pct",
+                  "op": "isNotEmpty"
+                }
               }
             ]
           }

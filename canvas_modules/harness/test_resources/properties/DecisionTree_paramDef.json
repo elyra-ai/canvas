@@ -1,7 +1,10 @@
 {
   "currentParameters": {
     "targetField": "string1",
-    "inputFieldList": ["integer2","double4"],
+    "inputFieldList": [
+      "integer2",
+      "double4"
+    ],
     "checkpointInterval": -1,
     "impurity": "entropy",
     "maxBins": 24,
@@ -64,7 +67,7 @@
   ],
   "uihints": {
     "icon": "images/modelbuildspark.svg",
-		"name": "decisiontree",
+    "name": "decisiontree",
     "label": {
       "default": "Decision Tree Classifier"
     },
@@ -194,7 +197,9 @@
         "validation": {
           "fail-message": {
             "type": "error",
-            "resourceKey": "input-field-list_not_empty",
+            "message": {
+              "default": "Input field list must have at least 1 field",
+            },
             "focusParam": "inputFieldList"
           },
           "evaluate": {
@@ -209,7 +214,9 @@
         "validation": {
           "fail-message": {
             "type": "error",
-            "resourceKey": "target-field_not_empty",
+						"message": {
+							"default": "Target field can't be empty"
+						},
             "focusParam": "targetField"
           },
           "evaluate": {
@@ -224,7 +231,10 @@
         "validation": {
           "fail-message": {
             "type": "error",
-            "resourceKey": "checkpoint-interval-not-valid",
+						"message": {
+							"default": "The checkpoint interval value must either be >= 1 or -1 to disable",
+							"resourceKey": "checkpoint-interval-not-valid"
+						},
             "focusParam": "checkpointInterval"
           },
           "evaluate": {
@@ -240,7 +250,10 @@
         "validation": {
           "fail-message": {
             "type": "error",
-            "resourceKey": "max-bins-not-valid",
+						"message": {
+							"default": "Max bins must be >= 2 and >= number of categories in any categorical feature",
+							"resourceKey": "max-bins-not-valid"
+						},
             "focusParam": "maxBins"
           },
           "evaluate": {
@@ -256,7 +269,10 @@
         "validation": {
           "fail-message": {
             "type": "error",
-            "resourceKey": "max-depth-not-valid",
+						"message": {
+							"default": "The max depth parameter must be greater than or equal to zero",
+							"resourceKey": "max-depth-not-valid"
+						},
             "focusParam": "maxDepth"
           },
           "evaluate": {
@@ -272,7 +288,10 @@
         "validation": {
           "fail-message": {
             "type": "error",
-            "resourceKey": "min-instances-per-node-not-valid",
+						"message": {
+							"default": "The minimum instances per node value must be >= 1",
+							"resourceKey": "min-instances-per-node-not-valid"
+						},
             "focusParam": "minInstancesPerNode"
           },
           "evaluate": {
@@ -297,34 +316,34 @@
       }
     ]
   },
-	"datasetMetadata": {
+  "datasetMetadata": {
     "fields": [
       {
         "name": "integer2",
         "type": "integer",
-				"metadata": {
-					"description": "",
-      		"measure": "range",
-        	"role": "input"
-				}
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "role": "input"
+        }
       },
       {
         "name": "double4",
         "type": "double",
-				"metadata": {
-					"description": "",
-        	"measure": "range",
-        	"role": "input"
-				}
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "role": "input"
+        }
       },
       {
         "name": "string1",
         "type": "string",
-				"metadata": {
-					"description": "",
-        	"measure": "set",
-        	"role": "input"
-				}
+        "metadata": {
+          "description": "",
+          "measure": "set",
+          "role": "input"
+        }
       }
     ]
   },
@@ -345,7 +364,7 @@
     "minInstancesPerNode.desc": "Minimum number of instances each child must have after split. If a split causes the left or right child to have fewer than minInstancesPerNode, the split will be discarded as invalid (>= 1)",
     "seed.label": "Seed",
     "seed.desc": "Random seed",
-		"fields-settings.label": "Settings",
+    "fields-settings.label": "Settings",
     "checkpoint-interval-not-valid": "The checkpoint interval value must either be >= 1 or -1 to disable",
     "max-bins-not-valid": "Max bins must be >= 2 and >= number of categories in any categorical feature",
     "max-depth-not-valid": "The max depth parameter must be greater than or equal to zero",

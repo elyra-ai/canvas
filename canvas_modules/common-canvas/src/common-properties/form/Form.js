@@ -12,6 +12,7 @@ import _ from "underscore";
 import { makePrimaryTab } from "./EditorForm";
 import { UIItem } from "./UIItem";
 import { L10nProvider } from "./L10nProvider";
+import Conditions from "./Conditions";
 
 export default class Form {
 	constructor(componentId, label, editorSize, uiItems, buttons, data) {
@@ -41,7 +42,7 @@ export default class Form {
 			const data = {
 				currentParameters: _.propertyOf(paramDef)("currentParameters"),
 				datasetMetadata: _.propertyOf(paramDef)("datasetMetadata"),
-				conditions: _.propertyOf(paramDef.uihints)("conditions")
+				conditions: Conditions.translateMessages(_.propertyOf(paramDef.uihints)("conditions"), l10nProvider)
 			};
 			const formName = _.propertyOf(propDef)("name");
 			return new Form(formName,
