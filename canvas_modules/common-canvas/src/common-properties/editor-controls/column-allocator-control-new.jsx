@@ -206,7 +206,7 @@ export default class ColumnAllocatorControlNew extends EditorControl {
 							onClick={this.props.openFieldPicker}
 							data-control={JSON.stringify(this.props.control)}
 						>
-							Add Fields
+							Add Columns
 						</Button>
 					</OverlayTrigger>
 					<OverlayTrigger placement="top" overlay={removeTooltip}>
@@ -223,7 +223,6 @@ export default class ColumnAllocatorControlNew extends EditorControl {
 							rows={4}
 							name={this.props.control.name}
 							style={stateStyle}
-							help={this.props.control.additionalText}
 							onChange={this.handleChangeMultiColumn}
 							value={this.state.selectedValues}
 							ref="input"
@@ -244,7 +243,7 @@ export default class ColumnAllocatorControlNew extends EditorControl {
 						onClick={this.props.openFieldPicker}
 						data-control={JSON.stringify(this.props.control)}
 					>
-						Add Fields
+						Add Columns
 					</Button>
 				</OverlayTrigger>
 				<OverlayTrigger placement="top" overlay={removeTooltip}>
@@ -260,7 +259,6 @@ export default class ColumnAllocatorControlNew extends EditorControl {
 						rows={1}
 						name={this.props.control.name}
 						style={stateStyle}
-						help={this.props.control.additionalText}
 						onChange={this.handleChange}
 						value={this.state.selectedValues}
 						ref="input"

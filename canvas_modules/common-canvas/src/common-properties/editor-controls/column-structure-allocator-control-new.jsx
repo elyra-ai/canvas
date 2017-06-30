@@ -329,7 +329,7 @@ export default class ColumnStructureAllocatorControlNew extends StructureTableEd
 								onClick={this.props.openFieldPicker}
 								data-control={JSON.stringify(this.props.control)}
 							>
-								Add Fields
+								Add Columns
 							</Button>
 						</OverlayTrigger>
 						<OverlayTrigger placement="top" overlay={removeTooltip}>

@@ -43,7 +43,7 @@ export default class ToggletextControl extends React.Component {
 
 		let icon = "";
 		if (typeof this.iconsMap[this.props.value] !== "undefined") {
-			icon = <img src={this.iconsMap[this.props.value]} />;
+			icon = <img src={this.iconsMap[this.props.value]} className="toggletext_image" />;
 		}
 
 		return (
