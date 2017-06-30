@@ -12,7 +12,6 @@
   "formData": {
     "componentId": "neuralnetwork",
     "label": "Neural Net",
-    "editorSize": "medium",
     "uiItems": [
       {
         "itemType": "primaryTabs",
