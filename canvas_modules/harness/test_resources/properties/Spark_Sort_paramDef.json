@@ -1,0 +1,170 @@
+{
+  "currentParameters": {
+    "annotation": "",
+    "use_custom_name": true,
+    "custom_name": "",
+    "keys": [
+      "[\"Na\",\"Ascending\"]",
+      "[\"Drug\",\"Descending\"]",
+      "[\"Cholesterol\",\"Ascending\"]"
+    ]
+  },
+  "parameters": [
+    {
+      "name": "keys",
+      "type": "array[SortEntry]"
+    }
+  ],
+  "complex_types": [
+    {
+      "name": "SortEntry",
+      "key_definition": {
+        "name": "field",
+        "type": "string",
+        "role": "column",
+        "default": ""
+      },
+      "parameters": [
+        {
+          "name": "sort_order",
+          "enum": [
+            "Ascending",
+            "Descending"
+          ],
+          "default": "Ascending"
+        }
+      ]
+    }
+  ],
+  "uihints": {
+    "icon": "images/sort.svg",
+    "name": "sort",
+    "label": {
+      "resourceKey": "sort.label"
+    },
+    "description": {
+      "resourceKey": "sort.desc"
+    },
+    "editorSize": "large",
+    "parameter_info": [
+      {
+        "name": "keys",
+        "label": {
+          "default": "Sort by"
+        }
+      }
+    ],
+    "structure_info": [
+      {
+        "name": "SortEntry",
+				"type": "subpanel",
+        "key_definition": {
+          "name": "field",
+					"width": 28,
+					"label": {
+						"resourceKey": "SortEntry.field.label"
+					}
+        },
+        "parameters": [
+          {
+            "name": "sort_order",
+						"width": 16,
+						"resourceKey": "SortEntry.sort_order",
+						"label": {
+							"resourceKey": "SortEntry.sort_order.label"
+						}
+          }
+        ]
+      }
+    ],
+    "group_info": [
+      {
+        "name": "basic-settings",
+        "label": {
+          "default": "basic-settings"
+        },
+        "type": "columnAllocation",
+        "parameters": [
+          "keys"
+        ]
+      }
+    ]
+  },
+  "datasetMetadata": {
+    "fields": [
+      {
+        "name": "Age",
+        "type": "integer",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "role": "input"
+        }
+      },
+      {
+        "name": "Sex",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "role": "input"
+        }
+      },
+      {
+        "name": "BP",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "role": "input"
+        }
+      },
+      {
+        "name": "Cholesterol",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "role": "input"
+        }
+      },
+      {
+        "name": "Na",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "role": "input"
+        }
+      },
+      {
+        "name": "K",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "role": "input"
+        }
+      },
+      {
+        "name": "Drug",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "role": "input"
+        }
+      }
+    ]
+  },
+  "resources": {
+		"sort.label": "Sort",
+		"sort.desc": "Sorts the data",
+    "sort.keys.label": "Sort by",
+    "SortEntry.label": "Sort",
+    "SortEntry.field.label": "Field",
+    "SortEntry.sort_order.label": "Order",
+    "SortEntry.sort_order.Ascending.label": "Ascending",
+    "SortEntry.sort_order.Descending.label": "Descending"
+  }
+}
