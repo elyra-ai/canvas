@@ -13,7 +13,7 @@ import { ResourceDef } from "./L10nProvider";
 import _ from "underscore";
 
 export class ParameterDef {
-	constructor(cname, label, description, type, role, valueRestriction, defaultValue, control, orientation, style, width, charLimit, placeHolderText, separator) {
+	constructor(cname, label, description, type, role, valueRestriction, defaultValue, control, orientation, style, width, charLimit, placeHolderText, separator, visible) {
 		this.name = cname;
 		this.label = ResourceDef.make(label);
 		this.description = ResourceDef.make(description);
@@ -28,6 +28,7 @@ export class ParameterDef {
 		this.charLimit = charLimit;
 		this.placeHolderText = ResourceDef.make(placeHolderText); // additionalText
 		this.separator = separator;
+		this.visible = (visible ? visible : true);
 	}
 
 	isList() {
@@ -165,7 +166,8 @@ export class ParameterDef {
 				_.propertyOf(uihint)("width"),
 				_.propertyOf(uihint)("char_limit"),
 				_.propertyOf(uihint)("place_holder_text"),
-				_.propertyOf(uihint)("separator")
+				_.propertyOf(uihint)("separator"),
+				_.propertyOf(uihint)("visible")
 			);
 		}
 		return null;
