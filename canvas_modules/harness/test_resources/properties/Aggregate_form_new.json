@@ -30,7 +30,7 @@
                     "itemType": "panel",
                     "panel": {
                       "id": "aggregation-settings",
-                      "panelType": "columnAllocationNew",
+                      "panelType": "columnSelection",
                       "uiItems": [
                         {
                           "itemType": "control",

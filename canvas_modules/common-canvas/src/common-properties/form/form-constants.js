@@ -36,12 +36,14 @@ const GroupType = {
 	PANELS: "panels",
 	ADDITIONAL: "additional",
 	COLUMN_ALLOCATION: "columnAllocation",
+	COLUMN_SELECTION: "columnSelection",
 	PANEL_SELECTOR: "panelSelector"
 };
 
 const PanelType = {
 	GENERAL: "general",
-	COLUMN_ALLOCATION: "columnAllocation"
+	COLUMN_ALLOCATION: "columnAllocation",
+	COLUMN_SELECTION: "columnSelection"
 };
 
 const ControlType = {
@@ -60,7 +62,9 @@ const ControlType = {
 	SOMEOFCOLUMNS: "someofcolumns",
 	ALLOCATEDCOLUMN: "allocatedcolumn",
 	ALLOCATEDCOLUMNS: "allocatedcolumns",
+	COLUMNSELECT: "columnselect",
 	ALLOCATEDSTRUCTURES: "allocatedstructures",
+	STRUCTURETABLE: "structuretable",
 	STRUCTUREEDITOR: "structureeditor",
 	STRUCTURELISTEDITOR: "structurelisteditor"
 };

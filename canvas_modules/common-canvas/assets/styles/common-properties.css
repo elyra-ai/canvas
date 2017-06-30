@@ -385,3 +385,7 @@ th div div label, td div div label {
 .toggletext_image {
 	padding-right: 3px;
 }
+
+.column-allocator {
+    min-height: 200px;
+}

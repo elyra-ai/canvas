@@ -220,7 +220,7 @@ export default class ColumnSelectControl extends EditorControl {
 							className="column-allocator"
 							componentClass="select"
 							multiple
-							rows={4}
+							rows={6}
 							name={this.props.control.name}
 							style={stateStyle}
 							onChange={this.handleChangeMultiColumn}

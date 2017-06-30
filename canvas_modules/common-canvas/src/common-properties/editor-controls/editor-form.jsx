@@ -481,7 +481,7 @@ export default class EditorForm extends React.Component {
 			>
 				{content}
 			</ColumnAllocationPanel>);
-		} else if (panel.panelType === "columnAllocationNew") {
+		} else if (panel.panelType === "columnSelection") {
 			this.sharedDataModel = [];
 			const currentControlValues = this.getControlValues();
 			for (let i = 0; i < panel.uiItems.length; i++) {

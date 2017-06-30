@@ -66,6 +66,8 @@ function _makeUIItem(parameterMetadata, group, structureMetadata, l10nProvider) 
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.GENERAL, _makeControls(parameterMetadata, group, structureMetadata, l10nProvider)));
 	case GroupType.COLUMN_ALLOCATION:
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_ALLOCATION, _makeControls(parameterMetadata, group, structureMetadata, l10nProvider)));
+	case GroupType.COLUMN_SELECTION:
+		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_SELECTION, _makeControls(parameterMetadata, group, structureMetadata, l10nProvider)));
 	case GroupType.ADDITIONAL: {
 		const panel = new ControlPanel(groupName, PanelType.GENERAL, _makeControls(parameterMetadata, group, structureMetadata, l10nProvider));
 		groupLabel = l10nProvider.l10nLabel(group, group.name);
@@ -154,14 +156,13 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	// The role is used to modify the behaviour of certain controls
 	let role;
 	let separateLabel = true;
-
 	let subControls;
 	let keyIndex;
 	let defaultRow;
 	let childItem;
+	let controlType;
 
 	// The control type defines the basic UI element that should be used to edit the property
-	let controlType;
 	if (parameter.getRole() === ParamRole.CUSTOM) {
 		controlType = ControlType.CUSTOM;
 	} else {
@@ -182,6 +183,8 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 				case ParamRole.COLUMN:
 					if (group.groupType() === GroupType.COLUMN_ALLOCATION) {
 						controlType = ControlType.ALLOCATEDCOLUMNS;
+					} else if (group.groupType() === GroupType.COLUMN_SELECTION) {
+						controlType = ControlType.COLUMNSELECT;
 					} else {
 						controlType = ControlType.SOMEOFCOLUMNS;
 					}
@@ -267,18 +270,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 		case Type.STRUCTURE:
 			if (structureDef) {
 				if (structureDef.isEditStyleSubpanel()) {
-					var structureMetadata;
-					// If we"re not editing in-line then create a sub-panel that can be used to edit the attributes
-					const panel = new ControlPanel(
-						structureDef.name,
-						PanelType.GENERAL,
-						_makeControls(structureDef.parameterMetadata,
-							structureDef,
-							structureMetadata,
-							l10nProvider)
-					);
-					const groupLabel = l10nProvider.l10nLabel(structureDef, structureDef.name);
-					childItem = UIItem.makeAdditionalLink("...", groupLabel, panel);
+					childItem = _makeEditStyleSubPanel(structureDef, l10nProvider);
 				}
 				keyIndex = structureDef.keyAttributeIndex();
 				// The defaultRow allows the UI to create a new row with sensible settings
@@ -297,6 +289,8 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 				if (parameter.isList() || parameter.isMapValue()) {
 					if (group.groupType() === GroupType.COLUMN_ALLOCATION) {
 						controlType = ControlType.ALLOCATEDSTRUCTURES;
+					} else if (group.groupType() === GroupType.COLUMN_SELECTION) {
+						controlType = ControlType.STRUCTURETABLE;
 					} else {
 						controlType = ControlType.STRUCTURELISTEDITOR;
 					}
@@ -331,6 +325,21 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 		defaultRow,
 		childItem
 	);
+}
+
+function _makeEditStyleSubPanel(structureDef, l10nProvider) {
+	var structureMetadata;
+	// If we"re not editing in-line then create a sub-panel that can be used to edit the attributes
+	const panel = new ControlPanel(
+		structureDef.name,
+		PanelType.GENERAL,
+		_makeControls(structureDef.parameterMetadata,
+			structureDef,
+			structureMetadata,
+			l10nProvider)
+	);
+	const groupLabel = l10nProvider.l10nLabel(structureDef, structureDef.name);
+	return UIItem.makeAdditionalLink("...", groupLabel, panel);
 }
 
 /**

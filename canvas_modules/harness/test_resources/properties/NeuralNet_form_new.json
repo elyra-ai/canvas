@@ -54,7 +54,7 @@
                     "itemType": "panel",
                     "panel": {
                       "id": "field-allocation",
-                      "panelType": "columnAllocationNew",
+                      "panelType": "columnSelection",
                       "uiItems": [
                         {
                           "itemType": "control",
