@@ -169,29 +169,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 		switch (parameter.propType()) {
 		case Type.STRING:
 			if (parameter.isList()) {
-				switch (parameter.getRole()) {
-				case ParamRole.TEXT:
-					controlType = ControlType.TEXTAREA;
-					break;
-				case ParamRole.ENUM:
-					if (parameter.getValidValueCount() < 5) {
-						controlType = ControlType.CHECKBOXSET;
-					} else {
-						controlType = ControlType.SOMEOFSELECT;
-					}
-					break;
-				case ParamRole.COLUMN:
-					if (group.groupType() === GroupType.COLUMN_ALLOCATION) {
-						controlType = ControlType.ALLOCATEDCOLUMNS;
-					} else if (group.groupType() === GroupType.COLUMN_SELECTION) {
-						controlType = ControlType.COLUMNSELECT;
-					} else {
-						controlType = ControlType.SOMEOFCOLUMNS;
-					}
-					break;
-				default:
-					controlType = ControlType.TEXTAREA;
-				}
+				controlType = _processListParameter(parameter, group);
 			} else {
 				switch (parameter.getRole()) {
 				case ParamRole.TEXT:
@@ -325,6 +303,34 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 		defaultRow,
 		childItem
 	);
+}
+
+function _processListParameter(parameter, group) {
+	let controlType;
+	switch (parameter.getRole()) {
+	case ParamRole.TEXT:
+		controlType = ControlType.TEXTAREA;
+		break;
+	case ParamRole.ENUM:
+		if (parameter.getValidValueCount() < 5) {
+			controlType = ControlType.CHECKBOXSET;
+		} else {
+			controlType = ControlType.SOMEOFSELECT;
+		}
+		break;
+	case ParamRole.COLUMN:
+		if (group.groupType() === GroupType.COLUMN_ALLOCATION) {
+			controlType = ControlType.ALLOCATEDCOLUMNS;
+		} else if (group.groupType() === GroupType.COLUMN_SELECTION) {
+			controlType = ControlType.COLUMNSELECT;
+		} else {
+			controlType = ControlType.SOMEOFCOLUMNS;
+		}
+		break;
+	default:
+		controlType = ControlType.TEXTAREA;
+	}
+	return controlType;
 }
 
 function _makeEditStyleSubPanel(structureDef, l10nProvider) {
