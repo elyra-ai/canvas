@@ -3,11 +3,7 @@
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 13 13" style="enable-background:new 0 0 13 13;" xml:space="preserve">
 <style type="text/css">
-	.Drop_x0020_Shadow{fill:none;}
-	.Outer_x0020_Glow_x0020_5_x0020_pt{fill:none;}
-	.Blue_x0020_Neon{fill:none;stroke:#8AACDA;stroke-width:7;stroke-linecap:round;stroke-linejoin:round;}
-	.Chrome_x0020_Highlight{fill:url(#SVGID_1_);stroke:#FFFFFF;stroke-width:0.3629;stroke-miterlimit:1;}
-	.Jive_GS{fill:#FFDD00;}
+	.st0{fill:#A6266E;}
 	.st1{fill:none;}
 	.st2{fill:#FFFFFF;}
 	.st3{font-family:'HelvNeueBoldforIBM';}
@@ -19,7 +15,7 @@
 	<stop  offset="0.6292" style="stop-color:#545454"/>
 	<stop  offset="0.9831" style="stop-color:#3E3E3E"/>
 </linearGradient>
-<rect x="1.5" y="1.5" width="10" height="10"/>
-<rect x="4" y="3.8" width="5" height="5.4"/>
+<rect x="1.5" y="1.5" class="st0" width="10" height="10"/>
+<rect x="4" y="3.8" class="st1" width="5" height="5.4"/>
 <text transform="matrix(1 0 0 1 4.0137 8.8187)" class="st2 st3 st4">A</text>
 </svg>

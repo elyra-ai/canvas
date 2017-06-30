@@ -28,24 +28,25 @@ import Isvg from "react-inlinesvg";
 import search32 from "../../../assets/images/search_32.svg";
 import reset32 from "../../../assets/images/reset_32.svg";
 
-import dateIcon from "../../../assets/images/date_icon.svg";
-import integerIcon from "../../../assets/images/integer_icon.svg";
-import realIcon from "../../../assets/images/real_icon.svg";
-import stringIcon from "../../../assets/images/string_icon.svg";
-import timeIcon from "../../../assets/images/time_icon.svg";
-import timestampIcon from "../../../assets/images/timestamp_icon.svg";
+import { DATA_TYPES } from "../constants/constants.js";
 
-const dateSvgIcon = (<Isvg id="filter-date-icon" key="filter-date-icon" src={dateIcon} />);
-const integerSvgIcon = (<Isvg id="filter-integer-icon" key="filter-integer-icon" src={integerIcon} />);
-const realSvgIcon = (<Isvg id="filter-real-icon" key="filter-real-icon" src={realIcon} />);
-const stringSvgIcon = (<Isvg id="filter-string-icon" key="filter-string-icon"	src={stringIcon} />);
-const timeSvgIcon = (<Isvg id="filter-time-icon" key="filter-time-icon"	src={timeIcon} />);
-const timestampSvgIcon = (<Isvg id="filter-timestamp-icon" key="filter-timestamp-icon" src={timestampIcon} />);
+import dateEnabledIcon from "../../../assets/images/date-enabled-icon.svg";
+import integerEnabledIcon from "../../../assets/images/integer-enabled-icon.svg";
+import doubleEnabledIcon from "../../../assets/images/double-enabled-icon.svg";
+import stringEnabledIcon from "../../../assets/images/string-enabled-icon.svg";
+import timeEnabledIcon from "../../../assets/images/time-enabled-icon.svg";
+import timestampEnabledIcon from "../../../assets/images/timestamp-enabled-icon.svg";
+
+import dateDisabledIcon from "../../../assets/images/date-disabled-icon.svg";
+import integerDisabledIcon from "../../../assets/images/integer-disabled-icon.svg";
+import doubleDisabledIcon from "../../../assets/images/double-disabled-icon.svg";
+import stringDisabledIcon from "../../../assets/images/string-disabled-icon.svg";
+import timeDisabledIcon from "../../../assets/images/time-disabled-icon.svg";
+import timestampDisabledIcon from "../../../assets/images/timestamp-disabled-icon.svg";
 
 export default class FieldPicker extends EditorControl {
 	constructor(props) {
 		super(props);
-
 		this.state = {
 			checkedAll: false,
 			controlName: "",
@@ -56,6 +57,20 @@ export default class FieldPicker extends EditorControl {
 			initialControlValues: [],
 			newControlValues: []
 		};
+
+		this.dateEnabledIcon = dateEnabledIcon;
+		this.integerEnabledIcon = integerEnabledIcon;
+		this.doubleEnabledIcon = doubleEnabledIcon;
+		this.stringEnabledIcon = stringEnabledIcon;
+		this.timeEnabledIcon = timeEnabledIcon;
+		this.timestampEnabledIcon = timestampEnabledIcon;
+
+		this.dateDisabledIcon = dateDisabledIcon;
+		this.integerDisabledIcon = integerDisabledIcon;
+		this.doubleDisabledIcon = doubleDisabledIcon;
+		this.stringDisabledIcon = stringDisabledIcon;
+		this.timeDisabledIcon = timeDisabledIcon;
+		this.timestampDisabledIcon = timestampDisabledIcon;
 
 		this.filterType = this.filterType.bind(this);
 		this.getTableData = this.getTableData.bind(this);
@@ -68,35 +83,21 @@ export default class FieldPicker extends EditorControl {
 
 	componentWillMount() {
 		const fields = this.state.data.fields;
-		const filterList = ["date", "integer", "double", "string", "time", "timestamp"];
-		var filters = [];
+		const filterList = DATA_TYPES;
+		const filters = [];
 
 		for (let i = 0; i < filterList.length; i++) {
 			for (let j = 0; j < fields.length; j++) {
 				var field = fields[j];
 
 				if (filterList[i] === field.type) {
-					switch (filterList[i]) {
-					case "date":
-						filters.push({ "type": "date", "icon": dateSvgIcon });
-						break;
-					case "integer":
-						filters.push({ "type": "tnteger", "icon": integerSvgIcon });
-						break;
-					case "double":
-						filters.push({ "type": "double", "icon": realSvgIcon });
-						break;
-					case "string":
-						filters.push({ "type": "string", "icon": stringSvgIcon });
-						break;
-					case "time":
-						filters.push({ "type": "time", "icon": timeSvgIcon });
-						break;
-					case "timestamp":
-						filters.push({ "type": "timestamp", "icon": timestampSvgIcon });
-						break;
-					default:
-					}
+					filters.push({
+						"type": field.type,
+						"icon": {
+							"enabled": <img src={this[field.type + "EnabledIcon"]} />,
+							"disabled": <img src={this[field.type + "DisabledIcon"]} />
+						}
+					});
 					break;
 				}
 			}
@@ -138,18 +139,6 @@ export default class FieldPicker extends EditorControl {
 			}
 
 			if (this.state.filterIcons.length === 0 || this.state.filterIcons.indexOf(field.type) < 0) {
-				var typeIcon = <div></div>;
-
-				switch (field.type) {
-				case "date": typeIcon = dateSvgIcon; break;
-				case "integer": typeIcon = integerSvgIcon; break;
-				case "double": typeIcon = realSvgIcon; break;
-				case "string": typeIcon = stringSvgIcon; break;
-				case "time": typeIcon = timeSvgIcon; break;
-				case "timestamp": typeIcon = timestampSvgIcon; break;
-				default:
-				}
-
 				tableData.push({
 					"checkbox": <div className="field-picker-checkbox">
 					<Checkbox id={"field-picker-checkbox-" + i}
@@ -159,7 +148,9 @@ export default class FieldPicker extends EditorControl {
 					/></div>,
 					"fieldName": field.name,
 					"dataType": <div>
-						<div className="field-picker-data-type-icon">{typeIcon}</div>
+						<div className={"field-picker-data-type-icon field-picker-data-" + field.type + "-type-icon"}>
+							<img src={this[field.type + "EnabledIcon"]} />
+						</div>
 						{field.type}
 					</div>
 				});
@@ -257,30 +248,19 @@ export default class FieldPicker extends EditorControl {
 	}
 
 	filterType(evt) {
-		if (evt.currentTarget.style.fill === "") {
-			evt.currentTarget.style.fill = "#D8D8D8";
-
-			const type = evt.currentTarget.dataset.type;
-			logger.info("filter type deselected: " + type);
-
-			const iconsSelected = this.state.filterIcons;
+		const type = evt.currentTarget.dataset.type;
+		const iconsSelected = this.state.filterIcons;
+		const index = iconsSelected.indexOf(type);
+		if (index < 0) {
 			iconsSelected.push(type);
-			this.setState({ filterIcons: iconsSelected });
-
-		} else { // reset
-			evt.currentTarget.style.fill = "";
-
-			const iconsDeselected = this.state.filterIcons;
-			const index = iconsDeselected.indexOf(evt.currentTarget.dataset.type);
-			if (index > -1) {
-				iconsDeselected.splice(index, 1);
-			}
-			this.setState({ filterIcons: iconsDeselected });
+		} else {
+			iconsSelected.splice(index, 1);
 		}
+		this.setState({ filterIcons: iconsSelected });
 	}
 
 	render() {
-		var header = (
+		const header = (
 			<div>
 				<Button
 					id="field-picker-back-button"
@@ -300,16 +280,38 @@ export default class FieldPicker extends EditorControl {
 			</div>
 		);
 
-		var that = this;
+		const that = this;
 		const filters = this.state.filterList.map(function(filter, ind) {
-			return (
-				<li className="filter-list-li filter-list-li-icon"
+			let enabled = true;
+			for (let i = 0; i < that.state.filterIcons.length; i++) {
+				if (filter.type === that.state.filterIcons[i]) {
+					enabled = false;
+					break;
+				}
+			}
+			let row = (
+				<li className={"filter-list-li filter-list-li-icon filter-list-data-" + filter.type + "-enabled-icon"}
 					key={"filters" + ind}
 					data-type={filter.type}
 					onClick={that.filterType.bind(that)}
 				>
-					{filter.icon}
+					{filter.icon.enabled}
 				</li>
+			);
+			if (!enabled) {
+				row = (
+					<li className={"filter-list-li filter-list-li-icon filter-list-data-" + filter.type + "-disabled-icon"}
+						key={"filters" + ind}
+						data-type={filter.type}
+						onClick={that.filterType.bind(that)}
+					>
+						{filter.icon.disabled}
+					</li>
+				);
+			}
+
+			return (
+				row
 			);
 		});
 
@@ -365,7 +367,7 @@ export default class FieldPicker extends EditorControl {
 
 		const tableData = this.getTableData();
 
-		var table = (<div id="field-picker-table-container">
+		const table = (<div id="field-picker-table-container">
 			<Table className="table" id="table"
 				sortable
 				filterable={["fieldName"]}
