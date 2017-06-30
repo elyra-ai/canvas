@@ -40,7 +40,7 @@
                               "text": "Group by"
                             },
                             "separateLabel": true,
-                            "controlType": "allocatedcolumnsnew",
+                            "controlType": "columnselect",
                             "valueDef": {
                               "propType": "string",
                               "isList": true,
@@ -56,7 +56,7 @@
                               "text": "Aggregates"
                             },
                             "separateLabel": true,
-                            "controlType": "allocatedstructuresnew",
+                            "controlType": "structuretable",
                             "valueDef": {
                               "propType": "structure",
                               "isList": false,

@@ -23,7 +23,7 @@ import remove32 from "../../../assets/images/remove_32.svg";
 
 var _ = require("underscore");
 
-export default class ColumnAllocatorControlNew extends EditorControl {
+export default class ColumnSelectControl extends EditorControl {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -272,7 +272,7 @@ export default class ColumnAllocatorControlNew extends EditorControl {
 	}
 }
 
-ColumnAllocatorControlNew.propTypes = {
+ColumnSelectControl.propTypes = {
 	multiColumn: React.PropTypes.bool.isRequired,
 	dataModel: React.PropTypes.object.isRequired,
 	control: React.PropTypes.object.isRequired,

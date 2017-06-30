@@ -54,7 +54,7 @@
                               "text": "Select Fields"
                             },
                             "separateLabel": true,
-                            "controlType": "allocatedcolumnsnew",
+                            "controlType": "columnselect",
                             "valueDef": {
                               "propType": "string",
                               "isList": true,
@@ -86,7 +86,7 @@
                         "text": "Rename Fields"
                       },
                       "separateLabel": true,
-                      "controlType": "allocatedstructuresnew",
+                      "controlType": "structuretable",
                       "valueDef": {
                         "propType": "structure",
                         "isList": false,

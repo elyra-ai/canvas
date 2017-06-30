@@ -34,7 +34,7 @@
                         "text": "Fill in fields"
                       },
                       "separateLabel": true,
-                      "controlType": "allocatedcolumnsnew",
+                      "controlType": "columnselect",
                       "valueDef": {
                         "propType": "string",
                         "isList": true,

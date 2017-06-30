@@ -36,9 +36,9 @@ import SomeofselectControl from "./someofselect-control.jsx";
 import OneofcolumnsControl from "./oneofcolumns-control.jsx";
 import SomeofcolumnsControl from "./someofcolumns-control.jsx";
 import ColumnAllocatorControl from "./column-allocator-control.jsx";
-import ColumnAllocatorControlNew from "./column-allocator-control-new.jsx";
+import ColumnSelectControl from "./column-select-control.jsx";
 import ColumnStructureAllocatorControl from "./column-structure-allocator-control.jsx";
-import ColumnStructureAllocatorControlNew from "./column-structure-allocator-control-new.jsx";
+import ColumnStructureTableControl from "./column-structure-table-control.jsx";
 import StructureeditorControl from "./structureeditor-control.jsx";
 import StructurelisteditorControl from "./structure-list-editor-control.jsx";
 import FieldPicker from "./field-picker.jsx";
@@ -258,8 +258,8 @@ export default class EditorForm extends React.Component {
 				validationDefinitions={this.state.validationDefinitions}
 				controlStates={this.state.controlStates}
 			/>);
-		} else if (control.controlType === "allocatedcolumnsnew") {
-			return (<ColumnAllocatorControlNew control={control}
+		} else if (control.controlType === "columnselect") {
+			return (<ColumnSelectControl control={control}
 				dataModel={datasetMetadata}
 				multiColumn
 				key={controlId}
@@ -282,8 +282,8 @@ export default class EditorForm extends React.Component {
 				selectedRows={this.state.selectedRows}
 				buildUIItem={this.genUIItem}
 			/>);
-		} else if (control.controlType === "allocatedstructuresnew") {
-			return (<ColumnStructureAllocatorControlNew control={control}
+		} else if (control.controlType === "structuretable") {
+			return (<ColumnStructureTableControl control={control}
 				dataModel={datasetMetadata}
 				key={controlId}
 				ref={controlId}

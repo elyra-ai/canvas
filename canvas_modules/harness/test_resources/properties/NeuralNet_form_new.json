@@ -65,7 +65,7 @@
                               "text": "Targets"
                             },
                             "separateLabel": true,
-                            "controlType": "allocatedcolumnsnew",
+                            "controlType": "columnselect",
                             "valueDef": {
                               "propType": "string",
                               "isList": true,
@@ -81,7 +81,7 @@
                               "text": "Inputs"
                             },
                             "separateLabel": true,
-                            "controlType": "allocatedcolumnsnew",
+                            "controlType": "columnselect",
                             "valueDef": {
                               "propType": "string",
                               "isList": true,

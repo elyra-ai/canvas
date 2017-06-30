@@ -48,9 +48,19 @@
         "label": {
           "default": "Settings"
         },
-        "parameters": [
-          "mode",
-          "selected_fields"
+				"type": "panels",
+				"group_info": [
+          {
+            "name": "fields",
+            "type": "columnAllocation",
+            "label": {
+              "default": "Columns"
+            },
+						"parameters": [
+		          "mode",
+		          "selected_fields"
+		        ]
+          }
         ]
       }
     ],
@@ -144,7 +154,7 @@
     "mode.label": "Mode",
     "mode.desc": "Include or discard rows",
 		"mode.Include.label": "Include selected columns",
-		"mode.Exclude.label": "Discard selected columns",
+		"mode.Exclude.label": "Discard the selected columns",
     "selected_fields.label": "Columns",
     "selected_fields.desc": "Select columns to include or exclude",
     "selected_fields_not_empty": "The 'Columns' field cannot be empty"

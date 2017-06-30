@@ -34,7 +34,7 @@
                         "text": "Sort by"
                       },
                       "separateLabel": true,
-                      "controlType": "allocatedstructuresnew",
+                      "controlType": "structuretable",
                       "isRowMoveable": true,
                       "valueDef": {
                         "propType": "structure",

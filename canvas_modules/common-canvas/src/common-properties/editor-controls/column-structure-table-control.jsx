@@ -35,7 +35,7 @@ var _ = require("underscore");
 const ARROW_HEIGHT = 14;
 const ARROW_WIDTH = 14;
 
-export default class ColumnStructureAllocatorControlNew extends StructureTableEditor {
+export default class ColumnStructureTableControl extends StructureTableEditor {
 	constructor(props) {
 		super(props);
 
@@ -355,7 +355,7 @@ export default class ColumnStructureAllocatorControlNew extends StructureTableEd
 	}
 }
 
-ColumnStructureAllocatorControlNew.propTypes = {
+ColumnStructureTableControl.propTypes = {
 	buildUIItem: React.PropTypes.func,
 	dataModel: React.PropTypes.object.isRequired,
 	control: React.PropTypes.object.isRequired,
