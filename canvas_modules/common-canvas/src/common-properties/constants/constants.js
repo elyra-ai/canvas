@@ -32,3 +32,12 @@ _defineConstant("CONDITION_ERROR_MESSAGE", {
 
 _defineConstant("OKAY", "OK");
 _defineConstant("CANCEL", "Cancel");
+
+_defineConstant("DATA_TYPES", [
+	"integer",
+	"double",
+	"string",
+	"date",
+	"time",
+	"timestamp"
+]);
