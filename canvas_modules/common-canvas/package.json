@@ -56,6 +56,7 @@
     "react-bootstrap": "0.30.6",
     "react-contextmenu": "1.6.3",
     "react-click-outside": "2.2.0",
+    "react-dropdown": "1.2.5",
     "react-dom": "15.3.2",
     "react-inlinesvg": "0.4.2",
     "reactable": "0.14.1",
