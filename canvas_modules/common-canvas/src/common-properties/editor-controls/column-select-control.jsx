@@ -26,9 +26,14 @@ var _ = require("underscore");
 export default class ColumnSelectControl extends EditorControl {
 	constructor(props) {
 		super(props);
+		const ctrlValue = props.valueAccessor(props.control.name);
+		const selections = [];
+		for (let i = 0; i < this.props.selectedRows.length; i++) {
+			selections.push(ctrlValue[this.props.selectedRows[i]]);
+		}
 		this.state = {
-			controlValue: props.valueAccessor(props.control.name),
-			selectedValues: []
+			controlValue: ctrlValue,
+			selectedValues: selections
 		};
 
 		this._update_callback = null;
@@ -45,7 +50,8 @@ export default class ColumnSelectControl extends EditorControl {
 	}
 
 	componentDidMount() {
-		this.selectionChanged([]);
+		this.selectionChanged(this.state.selectedValues);
+		ReactDOM.findDOMNode(this.refs.input).focus();
 	}
 
 	handleChangeMultiColumn(evt) {

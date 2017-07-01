@@ -176,6 +176,7 @@ export default class ColumnStructureTableControl extends StructureTableEditor {
 
 		this.setCurrentControlValue(this.props.control.name, newRows, this.props.updateControlValue);
 	}
+
 	removeSelected() {
 		const rows = this.getCurrentControlValue();
 		const newRows = [];
@@ -189,6 +190,7 @@ export default class ColumnStructureTableControl extends StructureTableEditor {
 	}
 
 	selectionChanged(selection) {
+		StructureTableEditor.prototype.selectionChanged.call(this, selection);
 		const opacity = "opacity:" + (selection.length > 0 ? 1.0 : 0.4);
 		document.getElementById("remove-fields-button").style.cssText = opacity;
 		document.getElementById("remove-fields-button").setAttribute("disabled", selection.length === 0);

@@ -257,6 +257,7 @@ export default class EditorForm extends React.Component {
 				valueAccessor={controlValueAccessor}
 				validationDefinitions={this.state.validationDefinitions}
 				controlStates={this.state.controlStates}
+				selectedRows={this.state.selectedRows}
 			/>);
 		} else if (control.controlType === "columnselect") {
 			return (<ColumnSelectControl control={control}
@@ -269,6 +270,7 @@ export default class EditorForm extends React.Component {
 				controlStates={this.state.controlStates}
 				openFieldPicker={this.openFieldPicker}
 				updateControlValue={this.updateControlValue}
+				selectedRows={this.state.selectedRows}
 			/>);
 		} else if (control.controlType === "allocatedstructures") {
 			// logger.info("allocatedstructures");
@@ -516,16 +518,21 @@ export default class EditorForm extends React.Component {
 	}
 
 	closeFieldPicker() {
+		if (this.state.postPickCallback) {
+			this.state.postPickCallback();
+		}
 		this.setState({
 			fieldPickerControl: {},
-			showFieldPicker: false
+			showFieldPicker: false,
+			postPickCallback: null
 		});
 	}
 
-	openFieldPicker(evt) {
+	openFieldPicker(evt, postPickerCallback) {
 		this.setState({
 			fieldPickerControl: JSON.parse(evt.currentTarget.dataset.control),
-			showFieldPicker: true
+			showFieldPicker: true,
+			postPickCallback: postPickerCallback
 		});
 	}
 
@@ -753,25 +760,12 @@ export default class EditorForm extends React.Component {
 					dataModel={filteredData}
 					updateControlValue={this.updateControlValue}
 					control={this.state.fieldPickerControl}
+					updateSelectedRows={this.updateSelectedRows}
 				/>
 			</div>);
 		}
 
 		var formButtons = [];
-
-		/*
-    // Ignore the server-supplied buttons for now.
-    for (var i=0;i < this.state.formData.buttons.length;i++) {
-      var button = this.state.formData.buttons[i];
-      var style = "default";
-      if (button.isPrimary) {
-        style = "primary";
-      }
-
-      var buttonInput = <Button key={"form-button-" + button.id} onClick={this.handleSubmit.bind(null, button.id)} bsStyle={style}>{button.text}</Button>
-      formButtons.push(buttonInput);
-    }
-    */
 		var errorMessage = (<div
 			className="validation-error-message group-validation-error-message"
 			style={{ height: CONDITION_ERROR_MESSAGE.HIDDEN }}

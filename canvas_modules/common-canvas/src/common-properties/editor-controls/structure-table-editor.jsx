@@ -22,13 +22,14 @@ import TextRenderer from "../renderers/text-renderer.jsx";
 import EnumRenderer from "../renderers/enum-renderer.jsx";
 import ToggletextRenderer from "../renderers/toggletext-renderer.jsx";
 import OneofselectRenderer from "../renderers/oneofselect-renderer.jsx";
+import TextBoxRenderer from "../renderers/textbox-renderer.jsx";
 
 var _ = require("underscore");
 
 /* eslint-disable react/prop-types */
 const TextCell = ({ rowIndex, data, col, renderer, props }) => (
 	<Cell {...props}>
-		{renderer.render(data[rowIndex][col])}
+		{renderer.render(data[rowIndex][col], rowIndex)}
 	</Cell>
 );
 const LinkCell = ({ rowIndex, data, col, renderer, props }) => (
@@ -53,6 +54,7 @@ export default class StructureTableEditor extends EditorControl {
 
 		this._editing_row = 0;
 		this._subControlId = "___" + props.control.name + "_";
+		this.scrollToSelection = true;
 
 		this.getEditingRow = this.getEditingRow.bind(this);
 		this.startEditingRow = this.startEditingRow.bind(this);
@@ -78,6 +80,19 @@ export default class StructureTableEditor extends EditorControl {
 			selectedRows: nextProps.selectedRows
 		});
 		this.selectionChanged(nextProps.selectedRows);
+	}
+
+	componentDidUpdate() {
+		this.scrollToSelection = false;
+	}
+
+	componentDidMount() {
+
+		/* eslint-disable react/no-did-mount-set-state */
+		// This is needed in order to trigger the proper plumbing for scrollToRow to work
+		this.setState({ renderToggle: !this.state.renderToggle });
+
+		/* eslint-enable react/no-did-mount-set-state */
 	}
 
 	/* Returns the public representation of the control value. */
@@ -155,6 +170,7 @@ export default class StructureTableEditor extends EditorControl {
 		const selection = EditorControl.handleTableRowClick(evt, rowIndex, this.state.selectedRows);
 		// logger.info(selection);
 		this.updateSelectedRows(selection);
+		evt.stopPropagation();
 	}
 
 	updateSelectedRows(selection) {
@@ -163,7 +179,8 @@ export default class StructureTableEditor extends EditorControl {
 	}
 
 	selectionChanged(selection) {
-		// A no-op in this class
+		this.scrollToSelection = true;
+		this.render();
 	}
 
 	getRowClassName(rowIndex) {
@@ -195,6 +212,10 @@ export default class StructureTableEditor extends EditorControl {
 					cell = <LinkCell data={controlValue} col={i} renderer={renderer} />;
 				} else if (columnDef.valueDef.propType === "enum") {
 					renderer = new EnumRenderer(columnDef.values, columnDef.valueLabels, columnDef.valueDef.isList);
+					cell = <TextCell data={controlValue} col={i} renderer={renderer} />;
+				} else if (columnDef.controlType === "textbox") {
+					renderer = new TextBoxRenderer(columnDef, this.props.control, controlValue,
+																						i, this.props.updateControlValue, this.setCurrentControlValue);
 					cell = <TextCell data={controlValue} col={i} renderer={renderer} />;
 				} else {
 					cell = <TextCell data={controlValue} col={i} renderer={renderer} />;
@@ -233,7 +254,12 @@ export default class StructureTableEditor extends EditorControl {
 		}
 
 		const selected = this.getSelectedRows().sort();
-		const scrollToRow = (typeof selected !== "undefined" && selected.length !== 0) ? selected[0] : 0;
+
+		/* eslint-disable no-undefined */
+		const scrollToRow = (typeof selected !== "undefined" && selected.length !== 0 && this.scrollToSelection)
+			? selected[0] : undefined;
+
+		/* eslint-enable no-undefined */
 
 		return (
 			<div id="fixed-data-table-container">

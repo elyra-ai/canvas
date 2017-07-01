@@ -79,6 +79,7 @@ export default class FieldPicker extends EditorControl {
 		this.handleFieldChecked = this.handleFieldChecked.bind(this);
 		this.handleFilterChange = this.handleFilterChange.bind(this);
 		this.handleReset = this.handleReset.bind(this);
+		this.getNewSelections = this.getNewSelections.bind(this);
 	}
 
 	componentWillMount() {
@@ -161,7 +162,21 @@ export default class FieldPicker extends EditorControl {
 
 	handleBack() {
 		this.props.updateControlValue(this.state.controlName, this.state.newControlValues);
+		this.props.updateSelectedRows(this.getNewSelections());
 		this.props.closeFieldPicker();
+	}
+
+	/**
+	 * Returns any new columns that were not a part of the original set.
+	 */
+	getNewSelections() {
+		const deltas = [];
+		for (let i = 0; i < this.state.newControlValues.length; i++) {
+			if (this.state.initialControlValues.indexOf(this.state.newControlValues[i]) < 0) {
+				deltas.push(i);
+			}
+		}
+		return deltas;
 	}
 
 	handleCheckAll(evt) {

@@ -49,6 +49,7 @@ const PanelType = {
 const ControlType = {
 	CUSTOM: "custom",
 	TEXTFIELD: "textfield",
+	TEXTBOX: "textbox",
 	PASSWORDFIELD: "passwordfield",
 	TEXTAREA: "textarea",
 	EXPRESSION: "expression",

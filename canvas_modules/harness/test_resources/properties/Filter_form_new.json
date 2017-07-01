@@ -114,7 +114,7 @@
                           },
                           "visible": true,
                           "width": 22,
-                          "controlType": "textfield",
+                          "controlType": "textbox",
                           "valueDef": {
                             "propType": "string",
                             "isList": false,
@@ -125,34 +125,7 @@
                       "keyIndex": 0,
                       "defaultRow": [
                         ""
-                      ],
-                      "childItem": {
-                        "itemType": "additionalLink",
-                        "panel": {
-                          "id": "RenameFieldEntry",
-                          "panelType": "general",
-                          "uiItems": [
-                            {
-                              "itemType": "control",
-                              "control": {
-                                "name": "new_name",
-                                "label": {
-                                  "text": "New Name"
-                                },
-                                "separateLabel": true,
-                                "controlType": "textfield",
-                                "valueDef": {
-                                  "propType": "string",
-                                  "isList": false,
-                                  "isMap": false
-                                }
-                              }
-                            }
-                          ]
-                        },
-                        "text": "...",
-                        "secondaryText": "Rename"
-                      }
+                      ]
                     }
                   }
                 ]
