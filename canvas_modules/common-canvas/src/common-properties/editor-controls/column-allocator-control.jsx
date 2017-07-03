@@ -126,7 +126,7 @@ export default class ColumnAllocatorControl extends EditorControl {
 		const includeEmpty = !this.state.controlValue || this.state.controlValue.length === 0;
 		const availableFields = this.props.availableFieldsAccessor
 			?	this.props.availableFieldsAccessor(this.props.control.name)
-			: this.props.dataModel.fields;
+			: this.props.dataModel;
 		var options = EditorControl.genColumnSelectOptions(availableFields.fields,
 			this.state.selectedValues, includeEmpty);
 

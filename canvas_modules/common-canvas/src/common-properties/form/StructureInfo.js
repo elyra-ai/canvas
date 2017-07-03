@@ -11,15 +11,16 @@ import { ParameterDef, ParameterMetadata } from "./ParameterInfo";
 import { EditStyle } from "./form-constants";
 import _ from "underscore";
 
-class StructureDef {
-	constructor(cname, keyDefinition, parameterMetadata, uiHints) {
+export class StructureDef {
+	constructor(cname, keyDefinition, parameterMetadata, editStyle) {
 		this.name = cname;
 		this.keyDefinition = keyDefinition;
 		this.parameterMetadata = parameterMetadata;
+		this.editStyle = editStyle;
 	}
 
 	isEditStyleSubpanel() {
-		return (this.editStyle() === EditStyle.SUBPANEL);
+		return (this.editStyle === EditStyle.SUBPANEL);
 	}
 
 	/**
@@ -36,7 +37,7 @@ class StructureDef {
 	}
 
 	isEditStyleInlinel() {
-		return (this.editStyle() === EditStyle.INLINE);
+		return (this.editStyle === EditStyle.INLINE);
 	}
 
 	keyAttributeIndex() {
@@ -59,13 +60,15 @@ class StructureDef {
 		return defaults;
 	}
 
-	static makeStructure(structureOp) {
+	static makeStructure(structureOp, structureUI) {
 		if (structureOp) {
 			return new StructureDef(
 				_.propertyOf(structureOp)("name"),
-				ParameterDef.makeParameterDef(_.propertyOf(structureOp.metadata)("keyDefinition")),
-				ParameterMetadata.makeParameterMetadata(_.propertyOf(structureOp.metadata)("arguments")),
-				_.propertyOf(structureOp.metadata)("uiHints")
+				ParameterDef.makeParameterDef(_.propertyOf(structureOp.metadata)("keyDefinition"),
+					_.propertyOf(structureUI)("keyDefinition")),
+				ParameterMetadata.makeParameterMetadata(_.propertyOf(structureOp.metadata)("arguments"),
+					_.propertyOf(structureUI)("arguments")),
+				_.propertyOf(structureUI)("editStyle")
 			);
 		}
 		return null;
@@ -87,11 +90,21 @@ export class StructureMetadata {
 		return structureDef;
 	}
 
-	static makeStructureMetadata(structuresOp) {
+	static getUIHintStruct(structuresUIHints, structName) {
+		for (const structure of structuresUIHints) {
+			if (structure.name === structName) {
+				return structure;
+			}
+		}
+		return null;
+	}
+
+	static makeStructureMetadata(structuresOp, structuresUIHints) {
 		if (structuresOp) {
 			const structures = [];
 			for (const structure of structuresOp) {
-				const struct = StructureDef.makeStructure(structure);
+				const struct = StructureDef.makeStructure(structure,
+					StructureMetadata.getUIHintStruct(structuresUIHints, structure.name));
 				if (struct !== null) {
 					structures.push(struct);
 				}
@@ -100,4 +113,5 @@ export class StructureMetadata {
 		}
 		return null;
 	}
+
 }

@@ -132,7 +132,6 @@ export default class CommonProperties extends React.Component {
 		this.props.propertiesInfo.applyPropertyChanges(settings, this.props.propertiesInfo.appData);
 	}
 
-
 	render() {
 		const formData = this.getForm();
 		if (formData !== null) {

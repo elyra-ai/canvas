@@ -1,0 +1,165 @@
+{
+  "currentParameters": {
+		"renamed_fields": ["[\"Age\", \"Age\"]", "[\"BP\", \"BP-1\"]"]
+  },
+	"structures": [
+		{
+			"name": "RenameFieldEntry",
+			"metadata": {
+				"keyDefinition": {
+					"name": "field",
+					"type": "string",
+					"role": "column"
+				},
+				"arguments": [
+					{
+						"name": "new_name",
+						"type": "string",
+						"role": "new_column"
+					}
+				]
+			}
+		}
+	],
+	"parameters": [
+		{
+			"name": "renamed_fields",
+			"type": "map[string,RenameFieldEntry]",
+			"role": "column",
+			"default": []
+		}
+	],
+  "uihints": {
+    "name": "rename",
+    "icon": "./rename.svg",
+		"structure_info": [
+			{
+				"name": "RenameFieldEntry",
+				"keyDefinition": {
+					"name": "field",
+					"resourceKey": "RenameFieldEntry.field",
+					"columns": 22
+				},
+				"arguments": [
+					{
+						"name": "new_name",
+						"resourceKey": "RenameFieldEntry.new_name",
+						"columns": 22
+					}
+				],
+				"editStyle": "inline"
+			}
+		],
+    "parameter_info": [
+      {
+        "name": "renamed_fields",
+        "label": {
+          "default": "Rename columns"
+        },
+        "description": {
+          "default": "Rename columns in the active dataset"
+        }
+      }
+    ],
+    "group_info": [
+      {
+        "name": "basic-settings",
+        "label": {
+          "default": "Settings"
+        },
+				"type": "columnSelection",
+				"parameters": [ "renamed_fields" ]
+      }
+    ],
+    "conditions": [
+      {
+        "validation": {
+          "fail-message": {
+            "type": "error",
+            "resourceKey": "output_name_not_empty",
+            "focusParam": "renamed_fields"
+          },
+          "evaluate": {
+            "condition": {
+              "param": "renamed_fields",
+              "op": "isNotEmpty"
+            }
+          }
+        }
+      }
+    ]
+  },
+	"datasetMetadata": {
+		"fields": [
+			{
+				"name": "Age",
+				"type": "integer",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"role": "input"
+				}
+			},
+			{
+				"name": "Sex",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "discrete",
+					"role": "input"
+				}
+			},
+			{
+				"name": "BP",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "discrete",
+					"role": "input"
+				}
+			},
+			{
+				"name": "Cholesterol",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "discrete",
+					"role": "input"
+				}
+			},
+			{
+				"name": "Na",
+				"type": "double",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"role": "input"
+				}
+			},
+			{
+				"name": "K",
+				"type": "double",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"role": "input"
+				}
+			},
+			{
+				"name": "Drug",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "discrete",
+					"role": "input"
+				}
+			}
+		]
+	},
+  "resources": {
+    "rename.label": "Rename Columns",
+		"RenameFieldEntry.field.label": "Input Name",
+		"RenameFieldEntry.new_name.label": "Output Name",
+    "output_name_not_empty": "The 'Output Name' field cannot be empty"
+  }
+}

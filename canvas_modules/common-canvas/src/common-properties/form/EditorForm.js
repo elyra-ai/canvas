@@ -248,7 +248,8 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 			break;
 		case Type.STRUCTURE:
 			if (structureDef) {
-				if (structureDef.isEditStyleSubpanel()) {
+				const editStyleSubpanel = structureDef.isEditStyleSubpanel();
+				if (editStyleSubpanel) {
 					childItem = _makeEditStyleSubPanel(structureDef, l10nProvider);
 				}
 				keyIndex = structureDef.keyAttributeIndex();
@@ -258,12 +259,12 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 				// For inline/row editing, create definitions for all the columns that can be edited
 				subControls = [];
 				structureDef.parameterMetadata.paramDefs.forEach(function(param) {
-					subControls.push(_makeSubControl(param, l10nProvider));
+					subControls.push(_makeSubControl(param, l10nProvider, editStyleSubpanel));
 				});
 				// If the property is a keyed property or a structure list then the key should not be included in the
 				// structure definition. However it will still need to be included in the table column definitions.
 				if ((parameter.isMapValue() || parameter.isList()) && structureDef.keyDefinition) {
-					subControls.unshift(_makeSubControl(structureDef.keyDefinition, l10nProvider));
+					subControls.unshift(_makeSubControl(structureDef.keyDefinition, l10nProvider, editStyleSubpanel));
 				}
 				if (parameter.isList() || parameter.isMapValue()) {
 					if (group.groupType() === GroupType.COLUMN_ALLOCATION) {
@@ -352,7 +353,7 @@ function _makeEditStyleSubPanel(structureDef, l10nProvider) {
 /**
  * Creates a column control for the supplied property/attribute.
  */
-function _makeSubControl(parameter, l10nProvider) {
+function _makeSubControl(parameter, l10nProvider, editStyleSubpanel) {
 	const additionalText = parameter.getAdditionalText(l10nProvider);
 	const orientation = parameter.orientation;
 	const controlLabel = new Label(l10nProvider.l10nLabel(parameter, parameter.name));
@@ -366,6 +367,9 @@ function _makeSubControl(parameter, l10nProvider) {
 			break;
 		case ParamRole.COLUMN:
 			controlType = ControlType.ONEOFCOLUMNS;
+			break;
+		case ParamRole.NEW_COLUMN:
+			controlType = editStyleSubpanel ? ControlType.TEXTFIELD : ControlType.TEXTBOX;
 			break;
 		default:
 			controlType = ControlType.TEXTFIELD;

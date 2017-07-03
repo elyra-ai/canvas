@@ -13,7 +13,9 @@ import { ResourceDef } from "./L10nProvider";
 import _ from "underscore";
 
 export class ParameterDef {
-	constructor(cname, label, description, type, role, valueRestriction, defaultValue, control, orientation, style, width, charLimit, placeHolderText, separator) {
+	constructor(cname, label, description, type, role, valueRestriction, defaultValue,
+		control, orientation, style, width, charLimit, placeHolderText, separator,
+		resourceKey, visible) {
 		this.name = cname;
 		this.label = ResourceDef.make(label);
 		this.description = ResourceDef.make(description);
@@ -28,6 +30,12 @@ export class ParameterDef {
 		this.charLimit = charLimit;
 		this.placeHolderText = ResourceDef.make(placeHolderText); // additionalText
 		this.separator = separator;
+		this.resourceKey = resourceKey;
+		if (typeof visible !== "boolean") {
+			this.visible = true;
+		} else {
+			this.visible = visible;
+		}
 	}
 
 	isList() {
@@ -151,6 +159,9 @@ export class ParameterDef {
 
 	static makeParameterDef(param, uihint) {
 		if (param) {
+			if (uihint && uihint.columns && !uihint.width) {
+				uihint.width = uihint.columns;
+			}
 			return new ParameterDef(
 				_.propertyOf(param)("name"),
 				_.propertyOf(uihint)("label"),
@@ -165,7 +176,9 @@ export class ParameterDef {
 				_.propertyOf(uihint)("width"),
 				_.propertyOf(uihint)("char_limit"),
 				_.propertyOf(uihint)("place_holder_text"),
-				_.propertyOf(uihint)("separator")
+				_.propertyOf(uihint)("separator"),
+				_.propertyOf(uihint)("resourceKey"),
+				_.propertyOf(uihint)("visible")
 			);
 		}
 		return null;
