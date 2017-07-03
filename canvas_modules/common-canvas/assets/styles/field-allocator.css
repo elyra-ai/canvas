@@ -46,6 +46,7 @@
   display: inline;
   outline:none !important;
   border: .25px solid #e0e0e0 !important;
+	padding: 6px 2px;
   -webkit-box-shadow: none !important;
   -moz-box-shadow: none !important;
   box-shadow: none !important;
@@ -76,6 +77,7 @@
 
 .form-control {
 	color: #a6266e;
+	padding: 4px 2px;
 }
 
 .Dropdown-root {
@@ -167,27 +169,34 @@
   padding: 8px 10px;
 }
 
-select option{
+select option {
   color: #a6266e;
   width: 100%;
+	padding-top: 2px;
+	padding-bottom: 2px;
 }
 
-select option:active{
+select option:active {
   color: #f9f9fb;
   box-shadow: inset 20px 20px #a6266e;
 }
 
-select option:checked{
+select option:checked {
   color: #f9f9fb;
-  box-shadow: inset 20px 20px #a6266e;
+	box-shadow: inset 20px 20px #e0e0e0;
 }
 
-select option:checked select:not(:focus){
+select option:checked select:not(:focus) {
   color: #f9f9fb;
-  box-shadow: inset 20px 20px #a6266e;
+  box-shadow: inset 20px 20px #e0e0e0;
 }
 
-#allocator-button{
+select:-internal-list-box option:checked {
+    background-color: #e0e0e0;
+    color: green;
+}
+
+#allocator-button {
   background-color: #ffffff;
   color: #a6266e;
   font-weight: bold;
@@ -197,12 +206,12 @@ select option:checked select:not(:focus){
   margin-left:5px;
 }
 
-#allocator-button:hover{
+#allocator-button:hover {
   background-color: #a6266e;
   color: #fff;
 }
 
-.field-allocator-button{
+.field-allocator-button {
   width: 12px !important;
   height: 20px !important;
   cursor: pointer !important;
@@ -211,7 +220,7 @@ select option:checked select:not(:focus){
   transform: rotate(90deg);
 }
 
-#fixed-data-table-container{
+#fixed-data-table-container {
   width: 100%;
   overflow-x: scroll;
 }
@@ -220,7 +229,7 @@ select option:checked select:not(:focus){
   margin: initial;
 }
 
-#structure-list-editor-buttons-container{
+#structure-list-editor-buttons-container {
   padding-top: 3px;
 }
 

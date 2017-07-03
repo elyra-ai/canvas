@@ -40,7 +40,7 @@ export default class EditorControl extends React.Component {
 		var options = [];
 		if (includeEmpty) {
 			options.push(
-				<option key={-1} value={""}>...</option>
+				<option key={-1} disabled value={""}>...</option>
 			);
 		}
 

@@ -1,6 +1,6 @@
 {
   "currentParameters": {
-    "targetField": "string1",
+    "targetField": [],
     "inputFieldList": ["integer2","double4"],
     "checkpointInterval": -1,
     "impurity": "entropy",
@@ -11,16 +11,16 @@
     "seed": 12345
   },
   "parameters": [
+		{
+      "name": "targetField",
+      "type": "string",
+      "default": "",
+      "role": "column"
+    },
     {
       "name": "inputFieldList",
       "type": "array[string]",
       "default": [],
-      "role": "column"
-    },
-    {
-      "name": "targetField",
-      "type": "string",
-      "default": "",
       "role": "column"
     },
     {
@@ -71,8 +71,16 @@
     "description": {
       "default": "Fit a Decision Tree Classifier Model"
     },
-    "editorSize": "large",
     "parameter_info": [
+			{
+        "name": "targetField",
+        "label": {
+          "default": "Target column"
+        },
+        "description": {
+          "default": "Select a target column"
+        }
+      },
       {
         "name": "inputFieldList",
         "label": {
@@ -80,15 +88,6 @@
         },
         "description": {
           "default": "Select one or more input columns"
-        }
-      },
-      {
-        "name": "targetField",
-        "label": {
-          "default": "Target column"
-        },
-        "description": {
-          "default": "Select a target column"
         }
       },
       {
@@ -162,13 +161,13 @@
         "group_info": [
           {
             "name": "fields",
-            "type": "columnAllocation",
+            "type": "columnSelection",
             "label": {
               "default": "Fields"
             },
             "parameters": [
-              "inputFieldList",
-              "targetField"
+							"targetField",
+              "inputFieldList"
             ]
           }
         ]
@@ -345,7 +344,7 @@
     "minInstancesPerNode.desc": "Minimum number of instances each child must have after split. If a split causes the left or right child to have fewer than minInstancesPerNode, the split will be discarded as invalid (>= 1)",
     "seed.label": "Seed",
     "seed.desc": "Random seed",
-		"fields-settings.label": "Settings",
+		"fields-settings.label": "Fields",
     "checkpoint-interval-not-valid": "The checkpoint interval value must either be >= 1 or -1 to disable",
     "max-bins-not-valid": "Max bins must be >= 2 and >= number of categories in any categorical feature",
     "max-depth-not-valid": "The max depth parameter must be greater than or equal to zero",

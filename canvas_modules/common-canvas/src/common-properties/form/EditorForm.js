@@ -183,7 +183,8 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 					}
 					break;
 				case ParamRole.COLUMN:
-					if (group.groupType() === GroupType.COLUMN_ALLOCATION) {
+					if (group.groupType() === GroupType.COLUMN_ALLOCATION ||
+							group.groupType() === GroupType.COLUMN_SELECTION) {
 						controlType = ControlType.ALLOCATEDCOLUMN;
 					} else {
 						controlType = ControlType.ONEOFCOLUMNS;
