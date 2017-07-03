@@ -22,9 +22,11 @@ export default class CommonProperties extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			showPropertiesDialog: false
+			showPropertiesDialog: false,
+			showPropertiesButtons: true
 		};
 		this.applyPropertiesEditing = this.applyPropertiesEditing.bind(this);
+		this.showPropertiesButtons = this.showPropertiesButtons.bind(this);
 	}
 
 	getForm() {
@@ -132,6 +134,10 @@ export default class CommonProperties extends React.Component {
 		this.props.propertiesInfo.applyPropertyChanges(settings, this.props.propertiesInfo.appData);
 	}
 
+	showPropertiesButtons(state) {
+		this.setState({ showPropertiesButtons: state });
+	}
+
 	render() {
 		const formData = this.getForm();
 		if (formData !== null) {
@@ -139,9 +145,10 @@ export default class CommonProperties extends React.Component {
 			if (this.props.showPropertiesDialog) {
 				const editorForm = (<EditorForm
 					ref="editorForm"
-					key={Date()}
+					key="editor-form-key"
 					form={formData}
 					additionalComponents={this.props.propertiesInfo.additionalComponents}
+					showPropertiesButtons={this.showPropertiesButtons}
 				/>);
 				const title = <div>{formData.label}</div>;
 				const size = formData.editorSize;
@@ -152,6 +159,7 @@ export default class CommonProperties extends React.Component {
 						bsSize={size}
 						okHandler={this.applyPropertiesEditing}
 						cancelHandler={this.props.propertiesInfo.closePropertiesDialog}
+						showPropertiesButtons={this.state.showPropertiesButtons}
 					>
 						{editorForm}
 					</PropertiesDialog>);
@@ -163,6 +171,7 @@ export default class CommonProperties extends React.Component {
 						title={title}
 						okHandler={this.applyPropertiesEditing}
 						cancelHandler={this.props.propertiesInfo.closePropertiesDialog}
+						showPropertiesButtons={this.state.showPropertiesButtons}
 					>
 						{editorForm}
 					</PropertiesEditing>);

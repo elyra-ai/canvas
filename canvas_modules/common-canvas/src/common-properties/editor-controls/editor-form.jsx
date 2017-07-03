@@ -575,6 +575,7 @@ export default class EditorForm extends React.Component {
 	}
 
 	closeFieldPicker() {
+		this.props.showPropertiesButtons(true);
 		if (this.state.postPickCallback) {
 			this.state.postPickCallback();
 		}
@@ -586,6 +587,7 @@ export default class EditorForm extends React.Component {
 	}
 
 	openFieldPicker(evt, postPickerCallback) {
+		this.props.showPropertiesButtons(false);
 		this.setState({
 			fieldPickerControl: JSON.parse(evt.currentTarget.dataset.control),
 			showFieldPicker: true,
@@ -775,6 +777,7 @@ export default class EditorForm extends React.Component {
 			const filteredDataset = this.getFilteredDataset(this.state.fieldPickerControl.name);
 			content = (<div id="field-picker-table">
 				<FieldPicker
+					key="field-picker-control"
 					closeFieldPicker={this.closeFieldPicker}
 					getControlValue={this.getControlValue}
 					currentControlValues={currentControlValues}
@@ -825,5 +828,6 @@ export default class EditorForm extends React.Component {
 EditorForm.propTypes = {
 	form: React.PropTypes.object,
 	additionalComponents: React.PropTypes.object,
-	submitMethod: React.PropTypes.func
+	submitMethod: React.PropTypes.func,
+	showPropertiesButtons: React.PropTypes.func
 };
