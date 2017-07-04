@@ -15,7 +15,8 @@
 					{
 						"name": "new_name",
 						"type": "string",
-						"role": "new_column"
+						"role": "new_column",
+						"default": ""
 					}
 				]
 			}
@@ -158,8 +159,8 @@
 	},
   "resources": {
     "rename.label": "Rename Columns",
-		"RenameFieldEntry.field.label": "Input Name",
-		"RenameFieldEntry.new_name.label": "Output Name",
+		"field.label": "Input name",
+		"new_name.label": "Output name",
     "output_name_not_empty": "The 'Output Name' field cannot be empty"
   }
 }

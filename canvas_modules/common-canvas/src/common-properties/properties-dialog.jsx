@@ -72,5 +72,5 @@ PropertiesDialog.propTypes = {
 	okHandler: React.PropTypes.func,
 	title: React.PropTypes.object,
 	children: React.PropTypes.element,
-	showPropertiesButtons: React.PropTypes.boolean
+	showPropertiesButtons: React.PropTypes.bool
 };

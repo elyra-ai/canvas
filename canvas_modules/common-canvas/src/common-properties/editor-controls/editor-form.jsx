@@ -99,7 +99,7 @@ export default class EditorForm extends React.Component {
 	}
 
 	componentDidMount() {
-		if (this.props.form.conditions) {
+		if (this.props.form.data.conditions) {
 			this.parseUiConditions();
 		}
 	}
@@ -730,7 +730,7 @@ export default class EditorForm extends React.Component {
 	}
 
 	parseUiConditions() {
-		var uiConditions = this.props.form.conditions;
+		var uiConditions = this.props.form.data.conditions;
 		var visibleDefinition = [];
 		var enabledDefinitions = [];
 		var validationDefinitions = [];

@@ -37,8 +37,12 @@ export default class TextBoxRenderer {
 
 	render(value, rowIndex) {
 		// const val = this.controlValue[rowIndex][this.columnIndex];
+		let val = value;
+		if (!val || val === "\"\"") {
+			val = "";
+		}
 		return (
-			<input type="text" value={value} onChange={this.handleChange(rowIndex)} className="inline-textbox" />
+			<input type="text" value={val} onChange={this.handleChange(rowIndex)} className="inline-textbox" />
 		);
 	}
 }

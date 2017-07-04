@@ -164,7 +164,7 @@ export default class ColumnSelectControl extends EditorControl {
 	}
 
 	render() {
-		logger.info("AllocationControl.render");
+		// logger.info("AllocationControl.render");
 		// logger.info(this.state);
 		var options = EditorControl.genStringSelectOptions(this.state.controlValue, this.state.selectedValues);
 		// logger.info(options);

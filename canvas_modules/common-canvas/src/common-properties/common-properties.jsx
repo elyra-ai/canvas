@@ -187,9 +187,11 @@ export default class CommonProperties extends React.Component {
 	}
 }
 
+/*
 CommonProperties.defaultProps = {
 	useModalDialog: true
 };
+*/
 
 CommonProperties.propTypes = {
 	showPropertiesDialog: React.PropTypes.bool.isRequired,

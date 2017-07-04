@@ -1,7 +1,7 @@
 {
   "currentParameters": {
     "targetField": [],
-    "inputFieldList": ["integer2","double4"],
+    "inputFieldList": ["Age","BP"],
     "checkpointInterval": -1,
     "impurity": "entropy",
     "maxBins": 24,
@@ -297,35 +297,71 @@
     ]
   },
 	"datasetMetadata": {
-    "fields": [
-      {
-        "name": "integer2",
-        "type": "integer",
+		"fields": [
+			{
+				"name": "Age",
+				"type": "integer",
 				"metadata": {
 					"description": "",
-      		"measure": "range",
-        	"role": "input"
+					"measure": "range",
+					"role": "input"
 				}
-      },
-      {
-        "name": "double4",
-        "type": "double",
+			},
+			{
+				"name": "Sex",
+				"type": "string",
 				"metadata": {
 					"description": "",
-        	"measure": "range",
-        	"role": "input"
+					"measure": "discrete",
+					"role": "input"
 				}
-      },
-      {
-        "name": "string1",
-        "type": "string",
+			},
+			{
+				"name": "BP",
+				"type": "string",
 				"metadata": {
 					"description": "",
-        	"measure": "set",
-        	"role": "input"
+					"measure": "discrete",
+					"role": "input"
 				}
-      }
-    ]
+			},
+			{
+				"name": "Cholesterol",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "discrete",
+					"role": "input"
+				}
+			},
+			{
+				"name": "Na",
+				"type": "double",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"role": "input"
+				}
+			},
+			{
+				"name": "K",
+				"type": "double",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"role": "input"
+				}
+			},
+			{
+				"name": "Drug",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "discrete",
+					"role": "input"
+				}
+			}
+		]
   },
   "resources": {
     "decisiontree.label": "Decision Tree Classification Model",
