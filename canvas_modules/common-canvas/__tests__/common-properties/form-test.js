@@ -16,6 +16,7 @@ import { expect } from "chai";
 import _ from "underscore";
 import Form from "../../src/common-properties/form/Form";
 import formResource from "../test_resources/json/form-test.json";
+import formStructuredTable from "../test_resources/json/form-structure-test.json";
 
 const buttons = [{ id: "ok", text: "OK", isPrimary: true, url: "" }, { id: "cancel", text: "Cancel", isPrimary: false, url: "" }];
 
@@ -99,6 +100,15 @@ describe("Correct form should be created", () => {
 		// console.info("Actual: " + JSON.stringify(generatedForm));
 		// Work around since comparing the objects directly doesn't work.
 		expect(_.isEqual(JSON.parse(JSON.stringify(expectedForm)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
+	}
+	);
+
+	it("should create a form with a structure", () => {
+		const generatedForm = Form.makeForm(formStructuredTable.paramDef);
+		// console.info("Expected: " + JSON.stringify(formStructuredTable.expectedResult));
+		// console.info("Actual: " + JSON.stringify(generatedForm));
+		// Work around since comparing the objects directly doesn't work.
+		expect(_.isEqual(JSON.parse(JSON.stringify(formStructuredTable.expectedResult)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
 	}
 	);
 });
