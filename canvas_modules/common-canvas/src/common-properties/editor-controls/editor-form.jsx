@@ -178,9 +178,13 @@ export default class EditorForm extends React.Component {
 	}
 
 	updateControlValue(controlId, controlValue) {
+		const that = this;
 		var values = this.state.valuesTable;
 		values[controlId] = controlValue;
 		this.setState({ valuesTable: values });
+		setTimeout(() => {
+			that.getControl(controlId).validateInput();
+		}, 200);
 	}
 
 	updateControlValues() {
@@ -209,6 +213,7 @@ export default class EditorForm extends React.Component {
 				ref={controlId}
 				valueAccessor={controlValueAccessor}
 				validationDefinitions={this.state.validationDefinitions}
+				updateControlValue={this.updateControlValue}
 				controlStates={this.state.controlStates}
 			/>);
 		} else if (control.controlType === "textarea") {
@@ -217,6 +222,7 @@ export default class EditorForm extends React.Component {
 				ref={controlId}
 				valueAccessor={controlValueAccessor}
 				validationDefinitions={this.state.validationDefinitions}
+				updateControlValue={this.updateControlValue}
 				controlStates={this.state.controlStates}
 			/>);
 		} else if (control.controlType === "expression") {
@@ -225,12 +231,14 @@ export default class EditorForm extends React.Component {
 				ref={controlId}
 				valueAccessor={controlValueAccessor}
 				validationDefinitions={this.state.validationDefinitions}
+				updateControlValue={this.updateControlValue}
 				controlStates={this.state.controlStates}
 			/>);
 		} else if (control.controlType === "passwordfield") {
 			return (<PasswordControl control={control}
 				key={controlId}
 				ref={controlId}
+				updateControlValue={this.updateControlValue}
 				valueAccessor={controlValueAccessor}
 			/>);
 		} else if (control.controlType === "numberfield") {
@@ -238,6 +246,7 @@ export default class EditorForm extends React.Component {
 				key={controlId}
 				ref={controlId}
 				valueAccessor={controlValueAccessor}
+				updateControlValue={this.updateControlValue}
 				validationDefinitions={this.state.validationDefinitions}
 				controlStates={this.state.controlStates}
 			/>);
@@ -245,6 +254,7 @@ export default class EditorForm extends React.Component {
 			return (<CheckboxControl control={control}
 				key={controlId}
 				ref={controlId}
+				updateControlValue={this.updateControlValue}
 				valueAccessor={controlValueAccessor}
 				validationDefinitions={this.state.validationDefinitions}
 				controlStates={this.state.controlStates}
@@ -253,24 +263,28 @@ export default class EditorForm extends React.Component {
 			return (<CheckboxsetControl control={control}
 				key={controlId}
 				ref={controlId}
+				updateControlValue={this.updateControlValue}
 				valueAccessor={controlValueAccessor}
 			/>);
 		} else if (control.controlType === "radioset") {
 			return (<RadiosetControl control={control}
 				key={controlId}
 				ref={controlId}
+				updateControlValue={this.updateControlValue}
 				valueAccessor={controlValueAccessor}
 			/>);
 		} else if (control.controlType === "oneofselect") {
 			return (<OneofselectControl control={control}
 				key={controlId}
 				ref={controlId}
+				updateControlValue={this.updateControlValue}
 				valueAccessor={controlValueAccessor}
 			/>);
 		} else if (control.controlType === "someofselect") {
 			return (<SomeofselectControl control={control}
 				key={controlId}
 				ref={controlId}
+				updateControlValue={this.updateControlValue}
 				valueAccessor={controlValueAccessor}
 			/>);
 		} else if (control.controlType === "oneofcolumns") {
@@ -278,6 +292,7 @@ export default class EditorForm extends React.Component {
 				dataModel={datasetMetadata}
 				key={controlId}
 				ref={controlId}
+				updateControlValue={this.updateControlValue}
 				valueAccessor={controlValueAccessor}
 			/>);
 		} else if (control.controlType === "someofcolumns") {
@@ -285,6 +300,7 @@ export default class EditorForm extends React.Component {
 				dataModel={datasetMetadata}
 				key={controlId}
 				ref={controlId}
+				updateControlValue={this.updateControlValue}
 				valueAccessor={controlValueAccessor}
 				openFieldPicker={this.openFieldPicker}
 			/>);
@@ -310,6 +326,7 @@ export default class EditorForm extends React.Component {
 				valueAccessor={controlValueAccessor}
 				validationDefinitions={this.state.validationDefinitions}
 				controlStates={this.state.controlStates}
+				updateControlValue={this.updateControlValue}
 				selectedRows={this.state.selectedRows}
 			/>);
 		} else if (control.controlType === "columnselect") {
@@ -345,6 +362,8 @@ export default class EditorForm extends React.Component {
 				valueAccessor={controlValueAccessor}
 				updateControlValue={this.updateControlValue}
 				updateSelectedRows={this.updateSelectedRows}
+				validationDefinitions={this.state.validationDefinitions}
+				controlStates={this.state.controlStates}
 				selectedRows={this.state.selectedRows}
 				buildUIItem={this.genUIItem}
 				openFieldPicker={this.openFieldPicker}

@@ -63,10 +63,12 @@
     "conditions": [
       {
         "validation": {
-          "fail-message": {
+          "fail_message": {
             "type": "warning",
-            "resourceKey": "condition_not_empty",
-            "focusParam": "condition"
+            "focusParam": "condition",
+						"message": {
+							"resourceKey": "condition_not_empty"
+						}
           },
           "evaluate": {
             "condition": {

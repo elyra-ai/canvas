@@ -29,6 +29,7 @@ export default class TextfieldControl extends EditorControl {
 
 	handleChange(evt) {
 		this.setState({ controlValue: evt.target.value });
+		this.props.updateControlValue(this.props.control.name, evt.target.value);
 	}
 
 	getControlValue() {
@@ -73,5 +74,6 @@ export default class TextfieldControl extends EditorControl {
 
 TextfieldControl.propTypes = {
 	control: React.PropTypes.object,
-	controlStates: React.PropTypes.object
+	controlStates: React.PropTypes.object,
+	updateControlValue: React.PropTypes.func
 };

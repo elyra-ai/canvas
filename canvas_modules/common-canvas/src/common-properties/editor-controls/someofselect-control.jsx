@@ -36,6 +36,7 @@ export default class SomeofselectControl extends EditorControl {
 		});
 		this.setState({ controlValue: values });
 		this.notifyValueChanged(this.props.control.name, values);
+		this.props.updateControlValue(this.props.control.name, values);
 	}
 
 	getControlValue() {
@@ -61,5 +62,6 @@ export default class SomeofselectControl extends EditorControl {
 }
 
 SomeofselectControl.propTypes = {
-	control: React.PropTypes.object
+	control: React.PropTypes.object,
+	updateControlValue: React.PropTypes.func
 };

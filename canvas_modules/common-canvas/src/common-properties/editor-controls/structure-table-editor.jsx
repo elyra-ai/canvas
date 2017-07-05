@@ -281,4 +281,6 @@ export default class StructureTableEditor extends EditorControl {
 	}
 }
 
-StructureTableEditor.propTypes = {};
+StructureTableEditor.propTypes = {
+	updateControlValue: React.PropTypes.func
+};

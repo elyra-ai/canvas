@@ -16,6 +16,7 @@ import React from "react";
 import PropertiesDialog from "./properties-dialog.jsx";
 import PropertiesEditing from "./properties-editing.jsx";
 import EditorForm from "./editor-controls/editor-form.jsx";
+import PropertyUtil from "./util/property-utils.js";
 import Form from "./form/Form";
 
 export default class CommonProperties extends React.Component {
@@ -52,14 +53,14 @@ export default class CommonProperties extends React.Component {
 	 * the older properties definition.
 	 */
 	parametersToProperties(currentParameters) {
-		if (!currentParameters || this.toType(currentParameters) !== "object") {
+		if (!currentParameters || PropertyUtil.toType(currentParameters) !== "object") {
 			return {};
 		}
 		const retVal = {};
 		for (const propertyName in currentParameters) {
 			if (currentParameters.hasOwnProperty(propertyName)) {
 				const prop = currentParameters[propertyName];
-				const type = this.toType(prop);
+				const type = PropertyUtil.toType(prop);
 				if (type === "string") {
 					retVal[propertyName] = [prop];
 				} else if (type === "array") {
@@ -70,24 +71,6 @@ export default class CommonProperties extends React.Component {
 			}
 		}
 		return retVal;
-	}
-
-	/**
-	 * A better type identifier than a simple 'typeOf' call:
-	 * 	toType({a: 4}); //"object"
-	 *	toType([1, 2, 3]); //"array"
-	 *	(function() {console.log(toType(arguments))})(); //arguments
-	 *	toType(new ReferenceError); //"error"
-	 *	toType(new Date); //"date"
-	 *	toType(/a-z/); //"regexp"
-	 *	toType(Math); //"math"
-	 *	toType(JSON); //"json"
-	 *	toType(new Number(4)); //"number"
-	 *	toType(new String("abc")); //"string"
-	 *	toType(new Boolean(true)); //"boolean"
-	 */
-	toType(obj) {
-		return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
 	}
 
 	/**

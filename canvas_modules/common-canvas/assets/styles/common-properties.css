@@ -245,7 +245,7 @@ span.form__validation--invalid {
 	padding-top: 2px;
 	padding-right: 10px;
 	padding-left: 10px;
-	margin-right: 16px;
+	margin-right: 0px;
 	text-decoration: underline;
 }
 
@@ -389,6 +389,10 @@ th div div label, td div div label {
 	min-height: 150px;
 }
 
+.error-border {
+	border: .25px solid #ff0000 !important;
+}
+
 .inline-textbox {
 	border: none;
 	border-bottom: 2px solid #aeaeae;
@@ -407,3 +411,9 @@ th div div label, td div div label {
 	border-right: .25px solid #e0e0e0 !important;
 	border-bottom: .25px solid #e0e0e0 !important;
 }
+
+/*
+.form-control:focus {
+	border-color: #a6266e;
+}
+*/

@@ -39,13 +39,13 @@
 				"keyDefinition": {
 					"name": "field",
 					"resourceKey": "RenameFieldEntry.field",
-					"columns": 22
+					"columns": 26
 				},
 				"arguments": [
 					{
 						"name": "new_name",
 						"resourceKey": "RenameFieldEntry.new_name",
-						"columns": 22
+						"columns": 26
 					}
 				],
 				"editStyle": "inline"
@@ -75,10 +75,12 @@
     "conditions": [
       {
         "validation": {
-          "fail-message": {
+          "fail_message": {
             "type": "error",
-            "resourceKey": "output_name_not_empty",
-            "focusParam": "renamed_fields"
+            "focusParam": "renamed_fields",
+						"message":{
+							 "resourceKey":"output_name_not_empty"
+						}
           },
           "evaluate": {
             "condition": {

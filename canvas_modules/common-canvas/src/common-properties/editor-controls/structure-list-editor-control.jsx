@@ -108,5 +108,6 @@ export default class StructurelisteditorControl extends StructureTableEditor {
 StructurelisteditorControl.propTypes = {
 	buildUIItem: React.PropTypes.func,
 	dataModel: React.PropTypes.array.isRequired,
-	control: React.PropTypes.object.isRequired
+	control: React.PropTypes.object.isRequired,
+	updateControlValue: React.PropTypes.func
 };

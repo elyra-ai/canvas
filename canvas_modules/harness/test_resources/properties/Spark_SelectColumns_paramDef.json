@@ -68,10 +68,13 @@
     "conditions": [
       {
         "validation": {
-          "fail-message": {
+          "fail_message": {
             "type": "error",
             "resourceKey": "selected_fields_not_empty",
-            "focusParam": "selected_fields"
+            "focusParam": "selected_fields",
+						"message":{
+							 "resourceKey":"input_field_list_not_empty"
+						}
           },
           "evaluate": {
             "condition": {

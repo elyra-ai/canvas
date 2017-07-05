@@ -305,6 +305,20 @@ export default class ColumnStructureTableControl extends StructureTableEditor {
 			this._update_callback = null;
 		}
 
+		let className = {};
+		var errorMessage = <div className="validation-error-message"></div>;
+		if (this.state.validateErrorMessage && this.state.validateErrorMessage.text !== "") {
+			// stateStyle.borderColor = "#FF0000 !important";
+			className += " error-border";
+			errorMessage = (
+				<div className="validation-error-message">
+					<p className="form__validation" style={{ "display": "block", "margin": "0px" }} >
+						<span className="form__validation--invalid">{this.state.validateErrorMessage.text}</span>
+					</p>
+				</div>
+			);
+		}
+
 		var moveCol = <Col />;
 		if (typeof this.props.control.isRowMoveable !== "undefined" && this.props.control.isRowMoveable) {
 			const moveImages = this.getTableRowMoveImages();
@@ -342,6 +356,7 @@ export default class ColumnStructureTableControl extends StructureTableEditor {
 					</Row>
 					<Row className="structure-table-content-row">
 						{this.createTable()}
+						{errorMessage}
 					</Row>
 				</Col>
 				{moveCol}

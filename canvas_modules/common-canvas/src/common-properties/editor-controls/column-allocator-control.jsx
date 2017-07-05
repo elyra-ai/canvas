@@ -209,5 +209,6 @@ export default class ColumnAllocatorControl extends EditorControl {
 ColumnAllocatorControl.propTypes = {
 	dataModel: React.PropTypes.object.isRequired,
 	control: React.PropTypes.object.isRequired,
-	controlStates: React.PropTypes.object
+	controlStates: React.PropTypes.object,
+	updateControlValue: React.PropTypes.func
 };

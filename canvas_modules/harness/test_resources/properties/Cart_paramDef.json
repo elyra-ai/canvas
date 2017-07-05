@@ -125,10 +125,12 @@
     "conditions": [
       {
         "validation": {
-          "fail-message": {
+          "fail_message": {
             "type": "error",
-            "resourceKey": "target_not_empty",
-            "focusParam": "target"
+            "focusParam": "target",
+						"message": {
+							"resourceKey": "target_not_empty"
+						}
           },
           "evaluate": {
             "condition": {
@@ -140,10 +142,12 @@
       },
       {
         "validation": {
-          "fail-message": {
+          "fail_message": {
             "type": "error",
-            "resourceKey": "inputs_not_empty",
-            "focusParam": "inputs"
+            "focusParam": "inputs",
+						"message": {
+							"resourceKey": "inputs_not_empty"
+						}
           },
           "evaluate": {
             "condition": {

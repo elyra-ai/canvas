@@ -199,10 +199,12 @@
 	   "conditions":[
 	      {
 	         "validation":{
-	            "fail-message":{
+	            "fail_message":{
 	               "type":"error",
-	               "resourceKey":"input-field-list_not_empty",
-	               "focusParam":"inputFieldList"
+	               "focusParam":"inputFieldList",
+								 "message":{
+										"resourceKey":"input_field_list_not_empty"
+								 }
 	            },
 	            "evaluate":{
 	               "condition":{
@@ -214,10 +216,12 @@
 	      },
 	      {
 	         "validation":{
-	            "fail-message":{
+	            "fail_message":{
 	               "type":"error",
-	               "resourceKey":"target-field_not_empty",
-	               "focusParam":"targetField"
+	               "focusParam":"targetField",
+								 "message":{
+										"resourceKey":"target_field_not_empty"
+								 }
 	            },
 	            "evaluate":{
 	               "condition":{
@@ -229,10 +233,12 @@
 	      },
 	      {
 	         "validation":{
-	            "fail-message":{
+	            "fail_message":{
 	               "type":"error",
-	               "resourceKey":"elastic-net-param-not-valid",
-	               "focusParam":"elasticNetParam"
+	               "focusParam":"elasticNetParam",
+								 "message":{
+										"resourceKey":"elastic_net_param_not_valid"
+								 }
 	            },
 	            "evaluate":{
 	               "and":[
@@ -278,10 +284,12 @@
 	      },
 	      {
 	         "validation":{
-	            "fail-message":{
+	            "fail_message":{
 	               "type":"error",
-	               "resourceKey":"max-iter-not-valid",
-	               "focusParam":"maxIter"
+	               "focusParam":"maxIter",
+								 "message":{
+										"resourceKey":"max_iter_not_valid"
+								 }
 	            },
 	            "evaluate":{
 	               "or":[
@@ -305,10 +313,12 @@
 	      },
 	      {
 	         "validation":{
-	            "fail-message":{
+	            "fail_message":{
 	               "type":"error",
-	               "resourceKey":"reg-param-not-valid",
-	               "focusParam":"regParam"
+	               "focusParam":"regParam",
+								 "message":{
+										"resourceKey":"reg_param_not_valid"
+								 }
 	            },
 	            "evaluate":{
 	               "or":[
@@ -400,6 +410,34 @@
 		]
   },
   "resources": {
-
-  }
+	   "org.apache.spark.ml.regression.LinearRegression.label": "Linear Regression",
+	   "org.apache.spark.ml.regression.LinearRegression.desc": "Fit a Linear Regression Model",
+	   "inputFieldList.label": "Input columns",
+	   "inputFieldList.desc": "Select one or more input columns",
+	   "targetField.label": "Target column",
+	   "targetField.desc": "Select a target column",
+	   "elasticNetParam.label": "Elastic net parameter",
+	   "elasticNetParam.desc": "Elastic net mixing parameter (>= 0 and  <= 1). For alpha = 0, the penalty is an L2 penalty. For alpha = 1, it is an L1 penalty",
+	   "fitIntercept.label": "Fit intercept",
+	   "fitIntercept.desc": "Whether to fit an intercept term",
+	   "maxIter.label": "Maximum iterations for convergence",
+	   "maxIter.desc": "Maximum iterations for convergence (>= 0)",
+	   "regParam.label": "Regularization parameter",
+	   "regParam.desc": "Regularization parameter (>= 0)",
+	   "solver.label": "Solver",
+	   "solver.desc": "The solver algorithm for optimization",
+	   "standardization.label": "Standardization",
+	   "standardization.desc": "Whether to standardize the training features before fitting the model",
+	   "tol.label": "Tolerance",
+	   "tol.desc": "The convergence tolerance for iterative algorithms",
+	   "weightCol.label": "Weight column",
+	   "weightCol.desc": "Weight column name. If this is not set or empty, all instance weights sre treated as 1.0.",
+	   "fields.label": "Fields",
+	   "advancedParams.label": "Advanced Parameters",
+	   "input_field_list_not_empty": "Select one or more input fields",
+	   "target_field_not_empty": "Select a target field",
+	   "elastic_net_param_not_valid": "The elastic net parameter value must be >= 0 and <= 1",
+	   "max_iter_not_valid": "Max iterations must be greater than or equal to zero",
+	   "reg_param_not_valid": "The regularization parameter must be greater than or equal to zero"
+	}
 }

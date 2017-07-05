@@ -116,8 +116,6 @@ class App extends React.Component {
 			canvas: ObjectModel.getCanvas()
 		};
 		TestService.postSessionData(sessionData);
-
-		// this.sidePanelCanvas();
 	}
 
 	getLabel(labelId, defaultLabel) {

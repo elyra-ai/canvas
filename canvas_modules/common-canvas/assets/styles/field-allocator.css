@@ -45,7 +45,7 @@
 .column-allocator {
   display: inline;
   outline:none !important;
-  border: .25px solid #e0e0e0 !important;
+  border: .25px solid #e0e0e0;
 	padding: 6px 2px;
   -webkit-box-shadow: none !important;
   -moz-box-shadow: none !important;

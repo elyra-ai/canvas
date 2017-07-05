@@ -12,7 +12,7 @@
 ** deposited with the U.S. Copyright Office.
 *****************************************************************/
 
-import logger from "../../../utils/logger";
+// import logger from "../../../utils/logger";
 import React from "react";
 import { FormControl, OverlayTrigger, Tooltip } from "react-bootstrap";
 import EditorControl from "./editor-control.jsx";
@@ -174,8 +174,24 @@ export default class ColumnSelectControl extends EditorControl {
 			this._update_callback = null;
 		}
 
+		const stateStyle = {};
+		const controlName = this.getControlID().split(".")[1];
+		const stateDisabled = {};
+		let className = "column-allocator";
+		if (typeof this.props.controlStates[controlName] !== "undefined") {
+			if (this.props.controlStates[controlName] === "disabled") {
+				stateDisabled.disabled = true;
+				stateStyle.color = "#D8D8D8";
+				stateStyle.borderColor = "#D8D8D8";
+			} else if (this.props.controlStates[controlName] === "hidden") {
+				stateStyle.visibility = "hidden";
+			}
+		}
+
 		var errorMessage = <div className="validation-error-message"></div>;
 		if (this.state.validateErrorMessage && this.state.validateErrorMessage.text !== "") {
+			// stateStyle.borderColor = "#FF0000 !important";
+			className += " error-border";
 			errorMessage = (
 				<div className="validation-error-message">
 					<p className="form__validation" style={{ "display": "block", "margin": "0px" }} >
@@ -183,21 +199,6 @@ export default class ColumnSelectControl extends EditorControl {
 					</p>
 				</div>
 			);
-		}
-
-		var controlName = this.getControlID().split(".")[1];
-		var stateDisabled = {};
-		var stateStyle = {};
-		if (typeof this.props.controlStates[controlName] !== "undefined") {
-			if (this.props.controlStates[controlName] === "disabled") {
-				stateDisabled.disabled = true;
-				stateStyle = {
-					color: "#D8D8D8",
-					borderColor: "#D8D8D8"
-				};
-			} else if (this.props.controlStates[controlName] === "hidden") {
-				stateStyle.visibility = "hidden";
-			}
 		}
 
 		const addTooltip = <Tooltip id="addFieldTip">Select columns to add</Tooltip>;
@@ -223,7 +224,7 @@ export default class ColumnSelectControl extends EditorControl {
 					<div className="editor_control_area" style={stateStyle}>
 						<FormControl {...stateDisabled}
 							id={this.getControlID()}
-							className="column-allocator"
+							className={className}
 							componentClass="select"
 							multiple
 							rows={6}
@@ -240,6 +241,7 @@ export default class ColumnSelectControl extends EditorControl {
 				</div>
 			);
 		}
+
 		return (
 			<div>
 				<OverlayTrigger placement="top" overlay={addTooltip}>
@@ -260,7 +262,7 @@ export default class ColumnSelectControl extends EditorControl {
 				<div className="editor_control_area" style={stateStyle}>
 					<FormControl {...stateDisabled}
 						id={this.getControlID()}
-						className="column-allocator"
+						className={className}
 						componentClass="select"
 						rows={1}
 						name={this.props.control.name}
@@ -282,5 +284,6 @@ ColumnSelectControl.propTypes = {
 	multiColumn: React.PropTypes.bool.isRequired,
 	dataModel: React.PropTypes.object.isRequired,
 	control: React.PropTypes.object.isRequired,
-	controlStates: React.PropTypes.object
+	controlStates: React.PropTypes.object,
+	updateControlValue: React.PropTypes.func
 };
