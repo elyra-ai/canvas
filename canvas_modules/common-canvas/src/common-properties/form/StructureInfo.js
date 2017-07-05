@@ -12,19 +12,19 @@ import { EditStyle } from "./form-constants";
 import _ from "underscore";
 
 class StructureDef {
-	constructor(cname, keyDefinition, parameterMetadata, type) {
+	constructor(cname, keyDefinition, parameterMetadata, editStyle) {
 		this.name = cname;
 		this.keyDefinition = keyDefinition;
 		this.parameterMetadata = parameterMetadata;
-		this.type = type;
+		this.editStyle = editStyle;
 	}
 
 	isEditStyleSubpanel() {
-		return (this.type === EditStyle.SUBPANEL);
+		return (this.editStyle === EditStyle.SUBPANEL);
 	}
 
 	isEditStyleInlinel() {
-		return (this.type === EditStyle.INLINE);
+		return (this.editStyle === EditStyle.INLINE);
 	}
 
 	/**
@@ -66,7 +66,7 @@ class StructureDef {
 				_.propertyOf(structure)("name"),
 				ParameterDef.makeParameterDef(_.propertyOf(structure)("key_definition"), _.propertyOf(uihints)("key_definition")),
 				ParameterMetadata.makeParameterMetadata(_.propertyOf(structure)("parameters"), _.propertyOf(uihints)("parameters")),
-				_.propertyOf(structure)("type")
+				_.propertyOf(structure)("editStyle")
 			);
 		}
 		return null;

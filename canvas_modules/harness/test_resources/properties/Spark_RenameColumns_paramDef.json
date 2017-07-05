@@ -46,7 +46,7 @@
 						"columns": 26
 					}
 				],
-				"type": "inline"
+				"editStyle": "inline"
 			}
 		],
     "parameter_info": [

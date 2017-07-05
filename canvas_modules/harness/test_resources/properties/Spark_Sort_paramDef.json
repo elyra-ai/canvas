@@ -57,7 +57,7 @@
     "structure_info": [
       {
         "name": "SortEntry",
-        "type": "inline",
+        "editStyle": "inline",
         "key_definition": {
           "name": "field",
           "width": 28,
