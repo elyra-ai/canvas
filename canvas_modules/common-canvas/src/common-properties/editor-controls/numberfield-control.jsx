@@ -28,6 +28,7 @@ export default class NumberfieldControl extends EditorControl {
 
 	handleChange(evt) {
 		this.setState({ controlValue: evt.target.value });
+		this.props.updateControlValue(this.props.control.name, evt.target.value);
 	}
 
 	getControlValue() {
@@ -35,17 +36,6 @@ export default class NumberfieldControl extends EditorControl {
 	}
 
 	render() {
-		var errorMessage = <div className="validation-error-message" style={{ "marginTop": "0px" }}></div>;
-		if (this.state.validateErrorMessage && this.state.validateErrorMessage.text !== "") {
-			errorMessage = (
-				<div className="validation-error-message" style={{ "marginTop": "20px" }}>
-					<p className="form__validation" style={{ "display": "block" }}>
-						<span className="form__validation--invalid">{this.state.validateErrorMessage.text}</span>
-					</p>
-				</div>
-			);
-		}
-
 		var controlName = this.getControlID().split(".")[1];
 		var stateDisabled = {};
 		var stateStyle = {};
@@ -60,8 +50,22 @@ export default class NumberfieldControl extends EditorControl {
 				stateStyle.visibility = "hidden";
 			}
 		}
+
+		let className = "editor_control_area";
+		var errorMessage = <div className="validation-error-message" style={{ "marginTop": "0px" }}></div>;
+		if (this.state.validateErrorMessage && this.state.validateErrorMessage.text !== "") {
+			className += " error-border";
+			errorMessage = (
+				<div className="validation-error-message" style={{ "marginTop": "20px" }}>
+					<p className="form__validation" style={{ "display": "block" }}>
+						<span className="form__validation--invalid">{this.state.validateErrorMessage.text}</span>
+					</p>
+				</div>
+			);
+		}
+
 		return (
-			<div className="editor_control_area" style={stateStyle}>
+			<div className={className} style={stateStyle}>
 				<TextField {...stateDisabled}
 					style={stateStyle}
 					type="number"
@@ -83,5 +87,6 @@ export default class NumberfieldControl extends EditorControl {
 }
 
 NumberfieldControl.propTypes = {
-	control: React.PropTypes.object
+	control: React.PropTypes.object,
+	updateControlValue: React.PropTypes.func
 };

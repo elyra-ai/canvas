@@ -1,44 +1,64 @@
 {
   "currentParameters": {
-    "mode": "Include",
-    "selected_fields": []
+		"renamed_fields": ["[\"Age\", \"Age\"]", "[\"BP\", \"BP-1\"]"]
   },
-  "parameters": [
-    {
-      "name": "mode",
-      "enum": [
-        "Include",
-        "Discard"
-      ],
-      "default": "Include"
-    },
+	"structures": [
 		{
-			"name": "selected_fields",
-			"type": "array[string]",
-			"role": "column"
+			"name": "RenameFieldEntry",
+			"metadata": {
+				"keyDefinition": {
+					"name": "field",
+					"type": "string",
+					"role": "column"
+				},
+				"arguments": [
+					{
+						"name": "new_name",
+						"type": "string",
+						"role": "new_column",
+						"default": ""
+					}
+				]
+			}
 		}
-  ],
+	],
+	"parameters": [
+		{
+			"name": "renamed_fields",
+			"type": "map[string,RenameFieldEntry]",
+			"role": "column",
+			"default": []
+		}
+	],
   "uihints": {
-    "name": "select",
-    "icon": "./select.svg",
+    "name": "rename",
+    "icon": "./rename.svg",
+		"structure_info": [
+			{
+				"name": "RenameFieldEntry",
+				"keyDefinition": {
+					"name": "field",
+					"resourceKey": "RenameFieldEntry.field",
+					"columns": 26
+				},
+				"arguments": [
+					{
+						"name": "new_name",
+						"resourceKey": "RenameFieldEntry.new_name",
+						"columns": 26
+					}
+				],
+				"editStyle": "inline"
+			}
+		],
     "parameter_info": [
       {
-        "name": "mode",
+        "name": "renamed_fields",
         "label": {
-          "default": "Mode"
+          "default": "Rename columns"
         },
         "description": {
-          "default": "Include or discard rows"
-        },
-        "orientation": "horizontal"
-      },
-      {
-        "name": "selected_fields",
-        "label": {
-          "default": "Columns"
-        },
-        "description": {
-          "default": "Select columns to include or exclude"
+          "default": "Rename columns in the active dataset"
         }
       }
     ],
@@ -48,21 +68,8 @@
         "label": {
           "default": "Settings"
         },
-				"type": "panels",
-				"group_info": [
-					{
-						"name": "other-settings",
-						"parameters": [ "mode" ]
-					},
-          {
-            "name": "fields",
-            "type": "columnSelection",
-            "label": {
-              "default": "Columns"
-            },
-						"parameters": [ "selected_fields" ]
-          }
-        ]
+				"type": "columnSelection",
+				"parameters": [ "renamed_fields" ]
       }
     ],
     "conditions": [
@@ -70,15 +77,14 @@
         "validation": {
           "fail_message": {
             "type": "error",
-            "resourceKey": "selected_fields_not_empty",
-            "focusParam": "selected_fields",
+            "focusParam": "renamed_fields",
 						"message":{
-							 "resourceKey":"input_field_list_not_empty"
+							 "resourceKey":"output_name_not_empty"
 						}
           },
           "evaluate": {
             "condition": {
-              "param": "selected_fields",
+              "param": "renamed_fields",
               "op": "isNotEmpty"
             }
           }
@@ -154,13 +160,9 @@
 		]
 	},
   "resources": {
-    "select.label": "Select Columns",
-    "mode.label": "Mode",
-    "mode.desc": "Include or discard rows",
-		"mode.Include.label": "Include selected columns",
-		"mode.Discard.label": "Discard selected columns",
-    "selected_fields.label": "Columns",
-    "selected_fields.desc": "Select columns to include or exclude",
-    "selected_fields_not_empty": "The 'Columns' field cannot be empty"
+    "rename.label": "Rename Columns",
+		"field.label": "Input name",
+		"new_name.label": "Output name",
+    "output_name_not_empty": "The 'Output Name' field cannot be empty"
   }
 }

@@ -36,6 +36,7 @@ export class PropertyDef {
 		return Size.LARGE;
 	}
 
+
 	static makePropertyDef(parameters, structures, uihints) {
 		if (parameters) {
 			// structures aren't in current spec

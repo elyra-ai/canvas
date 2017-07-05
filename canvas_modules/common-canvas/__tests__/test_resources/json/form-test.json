@@ -250,7 +250,7 @@
                         "Discard"
                       ],
                       "valueLabels": [
-                        "Include: resource",
+                        "Include",
                         "Discard"
                       ],
                       "separateLabel": true

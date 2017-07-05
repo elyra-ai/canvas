@@ -40,7 +40,7 @@ export default class EditorControl extends React.Component {
 		var options = [];
 		if (includeEmpty) {
 			options.push(
-				<option key={-1} value={""}>...</option>
+				<option key={-1} disabled value={""}>...</option>
 			);
 		}
 
@@ -94,10 +94,18 @@ export default class EditorControl extends React.Component {
 			} else {
 				selected = selected.concat(rowIndex);
 			}
+		} else if (evt.shiftKey === true) {
+			const anchor = selected.length > 0 ? selected[0] : rowIndex;
+			const start = anchor > rowIndex ? rowIndex : anchor;
+			const end = (anchor > rowIndex ? anchor : rowIndex) + 1;
+			const newSelns = [];
+			for (let i = start; i < end; i++) {
+				newSelns.push(i);
+			}
+			selected = newSelns;
 		} else {
 			selected = [rowIndex];
 		}
-
 		return selected;
 	}
 

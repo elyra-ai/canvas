@@ -143,10 +143,12 @@
     "conditions": [
       {
         "validation": {
-          "fail-message": {
+          "fail_message": {
             "type": "error",
-            "resourceKey": "checkpoint-interval-not-valid",
-            "focusParam": "checkpointInterval"
+            "focusParam": "checkpointInterval",
+						"message": {
+							"resourceKey": "checkpoint_interval_not_valid"
+						}
           },
           "evaluate": {
             "or": [
@@ -177,10 +179,12 @@
       },
       {
         "validation": {
-          "fail-message": {
+          "fail_message": {
             "type": "error",
-            "resourceKey": "max-bins-not-valid",
-            "focusParam": "maxBins"
+            "focusParam": "maxBins",
+						"message": {
+							"resourceKey": "max_bins_not_valid"
+						}
           },
           "evaluate": {
             "or": {
@@ -195,10 +199,12 @@
       },
       {
         "validation": {
-          "fail-message": {
+          "fail_message": {
             "type": "error",
-            "resourceKey": "max-depth-not-valid",
-            "focusParam": "maxDepth"
+            "focusParam": "maxDepth",
+						"message": {
+							"resourceKey": "max_depth_not_valid"
+						}
           },
           "evaluate": {
             "or": {
@@ -213,10 +219,12 @@
       },
       {
         "validation": {
-          "fail-message": {
+          "fail_message": {
             "type": "error",
-            "resourceKey": "min-instances-per-node-not-valid",
-            "focusParam": "minInstancesPerNode"
+            "focusParam": "minInstancesPerNode",
+						"message": {
+							"resourceKey": "max_depth_not_valid"
+						}
           },
           "evaluate": {
             "or": {
@@ -248,9 +256,9 @@
     "minInstancesPerNode.desc": "Minimum number of instances each child must have after split. If a split causes the left or right child to have fewer than minInstancesPerNode, the split will be discarded as invalid (>= 1)",
     "seed.label": "Seed",
     "seed.desc": "Random seed",
-    "checkpoint-interval-not-valid": "The checkpoint interval value must either be >= 1 or -1 to disable",
-    "max-bins-not-valid": "Max bins must be >= 2 and >= number of categories in any categorical feature",
-    "max-depth-not-valid": "The max depth parameter must be greater than or equal to zero",
-    "min-instances-per-node-not-valid": "The minimum instances per node value must be >= 1"
+    "checkpoint_interval_not_valid": "The checkpoint interval value must either be >= 1 or -1 to disable",
+    "max_bins_not_valid": "Max bins must be >= 2 and >= number of categories in any categorical feature",
+    "max_depth_not_valid": "The max depth parameter must be greater than or equal to zero",
+    "min_instances_per_node_not_valid": "The minimum instances per node value must be >= 1"
   }
 }

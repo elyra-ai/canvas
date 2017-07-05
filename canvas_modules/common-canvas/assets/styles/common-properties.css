@@ -245,7 +245,7 @@ span.form__validation--invalid {
 	padding-top: 2px;
 	padding-right: 10px;
 	padding-left: 10px;
-	margin-right: 16px;
+	margin-right: 0px;
 	text-decoration: underline;
 }
 
@@ -378,7 +378,7 @@ th div div label, td div div label {
 }
 
 .column-structure-allocator-control-row-selected .public_fixedDataTableCell_main {
-    background-color: #f9f9fb !important;
+	background-color: #e0e0e0 !important;
 }
 
 .toggletext_image {
@@ -386,5 +386,34 @@ th div div label, td div div label {
 }
 
 .column-allocator {
-    min-height: 150px;
+	min-height: 150px;
 }
+
+.error-border {
+	border: .25px solid #ff0000 !important;
+}
+
+.inline-textbox {
+	border: none;
+	border-bottom: 2px solid #aeaeae;
+}
+
+.column-structure-allocator-control-row-selected .inline-textbox {
+	background-color: #e0e0e0;
+}
+
+.public_fixedDataTable_header .public_fixedDataTableCell_main {
+	background-color: #f9f9fb !important;
+}
+
+.fixedDataTableLayout_rowsContainer {
+	border-left: .25px solid #e0e0e0 !important;
+	border-right: .25px solid #e0e0e0 !important;
+	border-bottom: .25px solid #e0e0e0 !important;
+}
+
+/*
+.form-control:focus {
+	border-color: #a6266e;
+}
+*/

@@ -75,7 +75,7 @@ export default class EditorForm extends React.Component {
 			activeTabId: ""
 		};
 
-		this.sharedDataModel = [];
+		this.sharedCtrlNames = [];
 
 		this.getControlValue = this.getControlValue.bind(this);
 		this.updateControlValue = this.updateControlValue.bind(this);
@@ -94,16 +94,68 @@ export default class EditorForm extends React.Component {
 
 		this.closeFieldPicker = this.closeFieldPicker.bind(this);
 		this.openFieldPicker = this.openFieldPicker.bind(this);
+		this.getFilteredDataset = this.getFilteredDataset.bind(this);
+		this.generateSharedControlNames = this.generateSharedControlNames.bind(this);
 	}
 
 	componentDidMount() {
-		if (this.props.form.conditions) {
+		if (this.props.form.data.conditions) {
 			this.parseUiConditions();
 		}
 	}
 
 	getControl(propertyName) {
 		return this.refs[propertyName];
+	}
+
+	/**
+	 * Retrieves a filtered data model in which all fields that are already
+	 * in use by other controls are already filtered out.
+	 *
+	 * @param skipControlName Name of control to skip when checking field controls
+	 * @return Filtered dataset metadata with fields in use removed
+	 */
+	getFilteredDataset(skipControlName) {
+		const data = this.state.formData.data.datasetMetadata;
+		if (!this.sharedCtrlNames) {
+			return data;
+		}
+		const filteredDataset = JSON.parse(JSON.stringify(data)); // deep copy
+
+		let sharedDataModelPanel = false;
+		for (let h = 0; h < this.sharedCtrlNames.length; h++) {
+			if (skipControlName === this.sharedCtrlNames[h].controlName) {
+				sharedDataModelPanel = true;
+				break;
+			}
+		}
+
+		if (sharedDataModelPanel) {
+			const temp = [];
+			for (let i = 0; i < this.sharedCtrlNames.length; i++) {
+				const ctrlName = this.sharedCtrlNames[i].controlName;
+				if (ctrlName !== skipControlName) {
+					// only remove from the main list the values that are in other controls
+					const values = this.state.valuesTable[ctrlName];
+					for (let j = 0; j < values.length; j++) {
+						temp.push(data.fields.filter(function(element) {
+							return values[j].split(",")[0].indexOf(element.name) > -1;
+						})[0]);
+						// logger.info("Temp is: " + JSON.stringify(temp));
+					}
+				}
+			}
+
+			if (temp.length > 0) {
+				for (let k = 0; k < temp.length; k++) {
+					filteredDataset.fields = filteredDataset.fields.filter(function(element) {
+						return element && temp[k] && element.name !== temp[k].name;
+					});
+					// logger.info("filteredData.fields is: " + JSON.stringify(filteredData.fields));
+				}
+			}
+		}
+		return filteredDataset;
 	}
 
 	getControlValue(controlId) {
@@ -125,11 +177,14 @@ export default class EditorForm extends React.Component {
 		return values;
 	}
 
-
 	updateControlValue(controlId, controlValue) {
+		const that = this;
 		var values = this.state.valuesTable;
 		values[controlId] = controlValue;
 		this.setState({ valuesTable: values });
+		setTimeout(() => {
+			that.getControl(controlId).validateInput();
+		}, 200);
 	}
 
 	updateControlValues() {
@@ -158,6 +213,7 @@ export default class EditorForm extends React.Component {
 				ref={controlId}
 				valueAccessor={controlValueAccessor}
 				validationDefinitions={this.state.validationDefinitions}
+				updateControlValue={this.updateControlValue}
 				controlStates={this.state.controlStates}
 			/>);
 		} else if (control.controlType === "textarea") {
@@ -166,6 +222,7 @@ export default class EditorForm extends React.Component {
 				ref={controlId}
 				valueAccessor={controlValueAccessor}
 				validationDefinitions={this.state.validationDefinitions}
+				updateControlValue={this.updateControlValue}
 				controlStates={this.state.controlStates}
 			/>);
 		} else if (control.controlType === "expression") {
@@ -174,12 +231,14 @@ export default class EditorForm extends React.Component {
 				ref={controlId}
 				valueAccessor={controlValueAccessor}
 				validationDefinitions={this.state.validationDefinitions}
+				updateControlValue={this.updateControlValue}
 				controlStates={this.state.controlStates}
 			/>);
 		} else if (control.controlType === "passwordfield") {
 			return (<PasswordControl control={control}
 				key={controlId}
 				ref={controlId}
+				updateControlValue={this.updateControlValue}
 				valueAccessor={controlValueAccessor}
 			/>);
 		} else if (control.controlType === "numberfield") {
@@ -187,6 +246,7 @@ export default class EditorForm extends React.Component {
 				key={controlId}
 				ref={controlId}
 				valueAccessor={controlValueAccessor}
+				updateControlValue={this.updateControlValue}
 				validationDefinitions={this.state.validationDefinitions}
 				controlStates={this.state.controlStates}
 			/>);
@@ -194,6 +254,7 @@ export default class EditorForm extends React.Component {
 			return (<CheckboxControl control={control}
 				key={controlId}
 				ref={controlId}
+				updateControlValue={this.updateControlValue}
 				valueAccessor={controlValueAccessor}
 				validationDefinitions={this.state.validationDefinitions}
 				controlStates={this.state.controlStates}
@@ -202,24 +263,28 @@ export default class EditorForm extends React.Component {
 			return (<CheckboxsetControl control={control}
 				key={controlId}
 				ref={controlId}
+				updateControlValue={this.updateControlValue}
 				valueAccessor={controlValueAccessor}
 			/>);
 		} else if (control.controlType === "radioset") {
 			return (<RadiosetControl control={control}
 				key={controlId}
 				ref={controlId}
+				updateControlValue={this.updateControlValue}
 				valueAccessor={controlValueAccessor}
 			/>);
 		} else if (control.controlType === "oneofselect") {
 			return (<OneofselectControl control={control}
 				key={controlId}
 				ref={controlId}
+				updateControlValue={this.updateControlValue}
 				valueAccessor={controlValueAccessor}
 			/>);
 		} else if (control.controlType === "someofselect") {
 			return (<SomeofselectControl control={control}
 				key={controlId}
 				ref={controlId}
+				updateControlValue={this.updateControlValue}
 				valueAccessor={controlValueAccessor}
 			/>);
 		} else if (control.controlType === "oneofcolumns") {
@@ -227,6 +292,7 @@ export default class EditorForm extends React.Component {
 				dataModel={datasetMetadata}
 				key={controlId}
 				ref={controlId}
+				updateControlValue={this.updateControlValue}
 				valueAccessor={controlValueAccessor}
 			/>);
 		} else if (control.controlType === "someofcolumns") {
@@ -234,6 +300,7 @@ export default class EditorForm extends React.Component {
 				dataModel={datasetMetadata}
 				key={controlId}
 				ref={controlId}
+				updateControlValue={this.updateControlValue}
 				valueAccessor={controlValueAccessor}
 				openFieldPicker={this.openFieldPicker}
 			/>);
@@ -245,6 +312,8 @@ export default class EditorForm extends React.Component {
 				ref={controlId}
 				valueAccessor={controlValueAccessor}
 				validationDefinitions={this.state.validationDefinitions}
+				updateControlValue={this.updateControlValue}
+				availableFieldsAccessor={this.getFilteredDataset}
 				controlStates={this.state.controlStates}
 			/>);
 		} else if (control.controlType === "allocatedcolumns") {
@@ -257,6 +326,8 @@ export default class EditorForm extends React.Component {
 				valueAccessor={controlValueAccessor}
 				validationDefinitions={this.state.validationDefinitions}
 				controlStates={this.state.controlStates}
+				updateControlValue={this.updateControlValue}
+				selectedRows={this.state.selectedRows}
 			/>);
 		} else if (control.controlType === "columnselect") {
 			return (<ColumnSelectControl control={control}
@@ -269,6 +340,7 @@ export default class EditorForm extends React.Component {
 				controlStates={this.state.controlStates}
 				openFieldPicker={this.openFieldPicker}
 				updateControlValue={this.updateControlValue}
+				selectedRows={this.state.selectedRows}
 			/>);
 		} else if (control.controlType === "allocatedstructures") {
 			// logger.info("allocatedstructures");
@@ -290,6 +362,8 @@ export default class EditorForm extends React.Component {
 				valueAccessor={controlValueAccessor}
 				updateControlValue={this.updateControlValue}
 				updateSelectedRows={this.updateSelectedRows}
+				validationDefinitions={this.state.validationDefinitions}
+				controlStates={this.state.controlStates}
 				selectedRows={this.state.selectedRows}
 				buildUIItem={this.genUIItem}
 				openFieldPicker={this.openFieldPicker}
@@ -465,6 +539,18 @@ export default class EditorForm extends React.Component {
 		return <div>Unknown: {uiItem.itemType}</div>;
 	}
 
+	generateSharedControlNames(panel) {
+		if (!this.sharedCtrlNames || this.sharedCtrlNames.length === 0) {
+			this.sharedCtrlNames = [];
+			for (let i = 0; i < panel.uiItems.length; i++) {
+				const controlName = panel.uiItems[i].control.name;
+				this.sharedCtrlNames.push({
+					"controlName": controlName
+				});
+			}
+		}
+	}
+
 	genPanel(key, panel, idPrefix, controlValueAccessor, datasetMetadata) {
 		// logger.info("genPanel");
 		// logger.info(panel);
@@ -472,6 +558,7 @@ export default class EditorForm extends React.Component {
 		const id = "panel." + key;
 		var uiObject;
 		if (panel.panelType === "columnAllocation") {
+			this.generateSharedControlNames(panel);
 			uiObject = (<ColumnAllocationPanel
 				id={id}
 				key={key}
@@ -482,16 +569,7 @@ export default class EditorForm extends React.Component {
 				{content}
 			</ColumnAllocationPanel>);
 		} else if (panel.panelType === "columnSelection") {
-			this.sharedDataModel = [];
-			const currentControlValues = this.getControlValues();
-			for (let i = 0; i < panel.uiItems.length; i++) {
-				const controlName = panel.uiItems[i].control.name;
-				const controlValues = currentControlValues[controlName];
-				this.sharedDataModel.push({
-					"controlName": controlName,
-					"controlValues": controlValues
-				});
-			}
+			this.generateSharedControlNames(panel);
 			uiObject = (<div id={id}
 				className="control-panel"
 				key={key}
@@ -516,16 +594,23 @@ export default class EditorForm extends React.Component {
 	}
 
 	closeFieldPicker() {
+		this.props.showPropertiesButtons(true);
+		if (this.state.postPickCallback) {
+			this.state.postPickCallback();
+		}
 		this.setState({
 			fieldPickerControl: {},
-			showFieldPicker: false
+			showFieldPicker: false,
+			postPickCallback: null
 		});
 	}
 
-	openFieldPicker(evt) {
+	openFieldPicker(evt, postPickerCallback) {
+		this.props.showPropertiesButtons(false);
 		this.setState({
 			fieldPickerControl: JSON.parse(evt.currentTarget.dataset.control),
-			showFieldPicker: true
+			showFieldPicker: true,
+			postPickCallback: postPickerCallback
 		});
 	}
 
@@ -664,7 +749,7 @@ export default class EditorForm extends React.Component {
 	}
 
 	parseUiConditions() {
-		var uiConditions = this.props.form.conditions;
+		var uiConditions = this.props.form.data.conditions;
 		var visibleDefinition = [];
 		var enabledDefinitions = [];
 		var validationDefinitions = [];
@@ -708,70 +793,22 @@ export default class EditorForm extends React.Component {
 
 		if (this.state.showFieldPicker) {
 			const currentControlValues = this.getControlValues();
-			const data = this.state.formData.data.datasetMetadata;
-			const filteredData = JSON.parse(JSON.stringify(data)); // deep copy
-
-			let sharedDataModelPanel = false;
-			for (let h = 0; h < this.sharedDataModel.length; h++) {
-				if (this.state.fieldPickerControl.name === this.sharedDataModel[h].controlName) {
-					sharedDataModelPanel = true;
-					break;
-				}
-			}
-
-			if (sharedDataModelPanel) {
-				const temp = [];
-				for (let i = 0; i < this.sharedDataModel.length; i++) {
-					const controlDataValues = this.sharedDataModel[i];
-					if (controlDataValues.controlName !== this.state.fieldPickerControl.name) {
-						// only remove from the main list the values that are in other controls
-						const values = controlDataValues.controlValues;
-						for (let j = 0; j < values.length; j++) {
-							temp.push(data.fields.filter(function(element) {
-								return values[j].split(",")[0].indexOf(element.name) > -1;
-							})[0]);
-							// logger.info("Temp is: " + JSON.stringify(temp));
-						}
-					}
-				}
-
-				if (temp.length > 0) {
-					for (let k = 0; k < temp.length; k++) { // filteredData is overwriting this.state.formData.data.inputDataModel
-						filteredData.fields = filteredData.fields.filter(function(element) {
-							return element.name !== temp[k].name;
-						});
-						// logger.info("filteredData.fields is: " + JSON.stringify(filteredData.fields));
-					}
-				}
-			}
-
+			const filteredDataset = this.getFilteredDataset(this.state.fieldPickerControl.name);
 			content = (<div id="field-picker-table">
 				<FieldPicker
+					key="field-picker-control"
 					closeFieldPicker={this.closeFieldPicker}
 					getControlValue={this.getControlValue}
 					currentControlValues={currentControlValues}
-					dataModel={filteredData}
+					dataModel={filteredDataset}
 					updateControlValue={this.updateControlValue}
 					control={this.state.fieldPickerControl}
+					updateSelectedRows={this.updateSelectedRows}
 				/>
 			</div>);
 		}
 
 		var formButtons = [];
-
-		/*
-    // Ignore the server-supplied buttons for now.
-    for (var i=0;i < this.state.formData.buttons.length;i++) {
-      var button = this.state.formData.buttons[i];
-      var style = "default";
-      if (button.isPrimary) {
-        style = "primary";
-      }
-
-      var buttonInput = <Button key={"form-button-" + button.id} onClick={this.handleSubmit.bind(null, button.id)} bsStyle={style}>{button.text}</Button>
-      formButtons.push(buttonInput);
-    }
-    */
 		var errorMessage = (<div
 			className="validation-error-message group-validation-error-message"
 			style={{ height: CONDITION_ERROR_MESSAGE.HIDDEN }}
@@ -810,5 +847,6 @@ export default class EditorForm extends React.Component {
 EditorForm.propTypes = {
 	form: React.PropTypes.object,
 	additionalComponents: React.PropTypes.object,
-	submitMethod: React.PropTypes.func
+	submitMethod: React.PropTypes.func,
+	showPropertiesButtons: React.PropTypes.func
 };

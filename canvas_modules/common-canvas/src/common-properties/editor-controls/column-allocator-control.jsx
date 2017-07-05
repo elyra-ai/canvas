@@ -12,7 +12,7 @@
 ** deposited with the U.S. Copyright Office.
 *****************************************************************/
 
-import logger from "../../../utils/logger";
+// import logger from "../../../utils/logger";
 import React from "react";
 import { FormControl } from "react-bootstrap";
 import EditorControl from "./editor-control.jsx";
@@ -50,7 +50,10 @@ export default class ColumnAllocatorControl extends EditorControl {
 	}
 
 	handleChange(evt) {
-		this.setState({ selectedValues: evt.target.value });
+		this.setState({ selectedValues: evt.target.value, controlValue: [evt.target.value] });
+		if (this.props.updateControlValue) {
+			this.props.updateControlValue(this.props.control.name, [evt.target.value]);
+		}
 	}
 
 	// Selected columns are those that are referenced by values in the control that have
@@ -97,7 +100,7 @@ export default class ColumnAllocatorControl extends EditorControl {
 			currentColumns = _.difference(currentColumns, columnNames);
 		} else {
 			// Always remove the current value
-			currentColumns = [""];
+			currentColumns = [];
 		}
 		// logger.info(currentColumns);
 
@@ -119,10 +122,13 @@ export default class ColumnAllocatorControl extends EditorControl {
 	}
 
 	render() {
-		logger.info("AllocationControl.render");
-		// logger.info(this.state);
-		var options = EditorControl.genStringSelectOptions(this.state.controlValue, this.state.selectedValues);
-		// logger.info(options);
+		// logger.info("AllocationControl.render");
+		const includeEmpty = !this.state.controlValue || this.state.controlValue.length === 0;
+		const availableFields = this.props.availableFieldsAccessor
+			?	this.props.availableFieldsAccessor(this.props.control.name)
+			: this.props.dataModel;
+		var options = EditorControl.genColumnSelectOptions(availableFields.fields,
+			this.state.selectedValues, includeEmpty);
 
 		if (this._update_callback !== null) {
 			this._update_callback();
@@ -156,6 +162,7 @@ export default class ColumnAllocatorControl extends EditorControl {
 		}
 
 		if (this.props.multiColumn) {
+			// help={this.props.control.additionalText}
 			return (
 				<div className="editor_control_area" style={stateStyle}>
 					<FormControl {...stateDisabled}
@@ -166,7 +173,6 @@ export default class ColumnAllocatorControl extends EditorControl {
 						rows={4}
 						name={this.props.control.name}
 						style={stateStyle}
-						help={this.props.control.additionalText}
 						onChange={this.handleChangeMultiColumn}
 						value={this.state.selectedValues}
 						ref="input"
@@ -177,6 +183,8 @@ export default class ColumnAllocatorControl extends EditorControl {
 				</div>
 			);
 		}
+		const currentSeln = includeEmpty ? -1 : this.state.controlValue[0];
+		// help={this.props.control.additionalText}
 		return (
 			<div className="editor_control_area" style={stateStyle}>
 				<FormControl {...stateDisabled}
@@ -186,9 +194,8 @@ export default class ColumnAllocatorControl extends EditorControl {
 					rows={1}
 					name={this.props.control.name}
 					style={stateStyle}
-					help={this.props.control.additionalText}
 					onChange={this.handleChange}
-					value={this.state.selectedValues}
+					value={currentSeln}
 					ref="input"
 				>
 					{options}
@@ -200,8 +207,8 @@ export default class ColumnAllocatorControl extends EditorControl {
 }
 
 ColumnAllocatorControl.propTypes = {
-	multiColumn: React.PropTypes.bool.isRequired,
 	dataModel: React.PropTypes.object.isRequired,
 	control: React.PropTypes.object.isRequired,
-	controlStates: React.PropTypes.object
+	controlStates: React.PropTypes.object,
+	updateControlValue: React.PropTypes.func
 };

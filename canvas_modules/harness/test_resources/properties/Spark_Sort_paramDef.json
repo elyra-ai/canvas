@@ -57,22 +57,23 @@
     "structure_info": [
       {
         "name": "SortEntry",
-				"type": "subpanel",
+        "type": "subpanel",
         "key_definition": {
           "name": "field",
-					"width": 28,
-					"label": {
-						"resourceKey": "SortEntry.field.label"
-					}
+          "width": 28,
+          "label": {
+            "resourceKey": "SortEntry.field.label"
+          }
         },
         "parameters": [
           {
             "name": "sort_order",
-						"width": 16,
-						"resourceKey": "SortEntry.sort_order",
-						"label": {
-							"resourceKey": "SortEntry.sort_order.label"
-						}
+            "width": 16,
+            "resourceKey": "SortEntry.sort_order",
+            "label": {
+              "resourceKey": "SortEntry.sort_order.label"
+            },
+            "type": "toggletext"
           }
         ]
       }
@@ -158,8 +159,8 @@
     ]
   },
   "resources": {
-		"sort.label": "Sort",
-		"sort.desc": "Sorts the data",
+    "sort.label": "Sort",
+    "sort.desc": "Sorts the data",
     "sort.keys.label": "Sort by",
     "SortEntry.label": "Sort",
     "SortEntry.field.label": "Field",

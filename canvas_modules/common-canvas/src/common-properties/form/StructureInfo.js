@@ -27,7 +27,7 @@ class StructureDef {
 	}
 
 	isEditStyleSubpanel() {
-		return (this.editStyle() === EditStyle.SUBPANEL);
+		return (this.editStyle === EditStyle.SUBPANEL);
 	}
 
 	/**
@@ -44,7 +44,7 @@ class StructureDef {
 	}
 
 	isEditStyleInlinel() {
-		return (this.editStyle() === EditStyle.INLINE);
+		return (this.editStyle === EditStyle.INLINE);
 	}
 
 	keyAttributeIndex() {
@@ -107,6 +107,7 @@ export class StructureMetadata {
 		return structureDef;
 	}
 
+
 	static makeStructureMetadata(structures, uihintsStructures) {
 		if (structures) {
 			const structureDefs = [];
@@ -120,4 +121,5 @@ export class StructureMetadata {
 		}
 		return null;
 	}
+
 }

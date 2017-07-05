@@ -30,6 +30,7 @@ export default class OneofselectControl extends EditorControl {
 		} else {
 			this.notifyValueChanged(this.props.control.name, evt.value);
 			this.setState({ controlValue: evt.value });
+			this.props.updateControlValue(this.props.control.name, evt.value);
 		}
 	}
 	// Added to prevent entire row being selected in table

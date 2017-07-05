@@ -178,10 +178,12 @@
     "conditions": [
       {
         "validation": {
-          "fail-message": {
+          "fail_message": {
             "type": "error",
-            "resourceKey": "rand_pct_not_empty",
-            "focusParam": "rand_pct"
+            "focusParam": "rand_pct",
+						"message": {
+							"resourceKey": "rand_pct_not_empty"
+						}
           },
           "evaluate": {
             "or": [
