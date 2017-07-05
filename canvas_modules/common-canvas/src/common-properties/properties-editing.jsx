@@ -24,21 +24,21 @@ export default class PropertiesEditing extends Component {
 		const classSize = (typeof this.props.bsSize === "undefined") ? "large" : this.props.bsSize;
 		const propertyEditingClass = "properties-editing properties-" + classSize;
 
-		let buttons = <div></div>;
-		if (this.props.showPropertiesButtons) {
-			buttons = (<div>
-				<Button
-					semantic href=""
-					onClick={this.props.okHandler}
-					style={{ "marginLeft": "10px" }}
-				>
-					{applyButtonLabel}
-				</Button>
+		let buttons = (<div>
+			<Button
+				semantic href=""
+				onClick={this.props.okHandler}
+				style={{ "marginLeft": "10px" }}
+			>
+				{applyButtonLabel}
+			</Button>
 
-				<Button semantic href="" hyperlink onClick={this.props.cancelHandler}>
-					{rejectButtonLabel}
-				</Button>
-			</div>);
+			<Button semantic href="" hyperlink onClick={this.props.cancelHandler}>
+				{rejectButtonLabel}
+			</Button>
+		</div>);
+		if (this.props.showPropertiesButtons === false) {
+			buttons = <div></div>;
 		}
 
 		return (

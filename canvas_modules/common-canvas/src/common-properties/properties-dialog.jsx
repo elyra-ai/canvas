@@ -22,21 +22,21 @@ export default class PropertiesDialog extends Component {
 	render() {
 		const modalClassName = "modal__container";
 
-		let buttons = <div></div>;
-		if (this.props.showPropertiesButtons) {
-			buttons = (<div>
-				<Button
-					semantic href=""
-					onClick={this.props.okHandler}
-					style={{ "marginLeft": "10px" }}
-				>
-					{OKAY}
-				</Button>
+		let buttons = (<div>
+			<Button
+				semantic href=""
+				onClick={this.props.okHandler}
+				style={{ "marginLeft": "10px" }}
+			>
+				{OKAY}
+			</Button>
 
-				<Button semantic href="" hyperlink onClick={this.props.cancelHandler}>
-					{CANCEL}
-				</Button>
-			</div>);
+			<Button semantic href="" hyperlink onClick={this.props.cancelHandler}>
+				{CANCEL}
+			</Button>
+		</div>);
+		if (this.props.showPropertiesButtons === false) {
+			buttons = <div></div>;
 		}
 
 		return (
