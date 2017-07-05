@@ -155,7 +155,7 @@
       "target.desc": "Target field description: resource",
       "testOp.label": "TestOp label: resource",
       "enum_param.label": "Enum label: resource",
-      "enum_param.Include.label": "Include: resource",
+      "enum_param.key.Include.label": "Include: resource",
       "column-settings.label": "Field Settings label: resource",
       "str_param.place_holder_text": "Place holder text: resource"
     }
@@ -250,7 +250,7 @@
                         "Discard"
                       ],
                       "valueLabels": [
-                        "Include",
+                        "Include: resource",
                         "Discard"
                       ],
                       "separateLabel": true

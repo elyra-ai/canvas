@@ -36,7 +36,8 @@ export class PropertyDef {
 		return Size.LARGE;
 	}
 
-	static makePropertyDef(structures, parameters, uihints) {
+
+	static makePropertyDef(parameters, structures, uihints) {
 		if (parameters) {
 			// structures aren't in current spec
 			const structureMetadata = StructureMetadata.makeStructureMetadata(structures, _.propertyOf(uihints)("structure_info"));

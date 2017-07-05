@@ -11,7 +11,7 @@ import { ParameterDef, ParameterMetadata } from "./ParameterInfo";
 import { EditStyle } from "./form-constants";
 import _ from "underscore";
 
-export class StructureDef {
+class StructureDef {
 	constructor(cname, keyDefinition, parameterMetadata, editStyle) {
 		this.name = cname;
 		this.keyDefinition = keyDefinition;
@@ -21,6 +21,10 @@ export class StructureDef {
 
 	isEditStyleSubpanel() {
 		return (this.editStyle === EditStyle.SUBPANEL);
+	}
+
+	isEditStyleInlinel() {
+		return (this.editStyle === EditStyle.INLINE);
 	}
 
 	/**
@@ -36,10 +40,6 @@ export class StructureDef {
 		return params;
 	}
 
-	isEditStyleInlinel() {
-		return (this.editStyle === EditStyle.INLINE);
-	}
-
 	keyAttributeIndex() {
 		if (this.keyDefinition) {
 			// Assume the key is always in the first column
@@ -51,28 +51,38 @@ export class StructureDef {
 	defaultStructure(addKeyDefinition) {
 		const defaults = [];
 		this.parameterMetadata.paramDefs.forEach(function(param) {
-			defaults.push(_.propertyOf(param)("defaultValue"));
+			defaults.push(param.defaultValue);
 		});
 		if (addKeyDefinition && this.keyDefinition) {
 			// Assume the key is always in the first column
-			defaults.unshift(_.propertyOf(this.keyDefinition)("defaultValue"));
+			defaults.unshift(this.keyDefinition.defaultValue);
 		}
 		return defaults;
 	}
 
-	static makeStructure(structureOp, structureUI) {
-		if (structureOp) {
+	static makeStructure(structure, uihints) {
+		if (structure) {
 			return new StructureDef(
-				_.propertyOf(structureOp)("name"),
-				ParameterDef.makeParameterDef(_.propertyOf(structureOp.metadata)("keyDefinition"),
-					_.propertyOf(structureUI)("keyDefinition")),
-				ParameterMetadata.makeParameterMetadata(_.propertyOf(structureOp.metadata)("arguments"),
-					_.propertyOf(structureUI)("arguments")),
-				_.propertyOf(structureUI)("editStyle")
+				_.propertyOf(structure)("name"),
+				ParameterDef.makeParameterDef(_.propertyOf(structure)("key_definition"), _.propertyOf(uihints)("key_definition")),
+				ParameterMetadata.makeParameterMetadata(_.propertyOf(structure)("parameters"), _.propertyOf(uihints)("parameters")),
+				_.propertyOf(structure)("editStyle")
 			);
 		}
 		return null;
 	}
+}
+
+// searches uihints to match up with parameter
+function getStructureUIHint(structureName, uihints) {
+	if (uihints) {
+		for (const uihint of uihints) {
+			if (structureName === uihint.name) {
+				return uihint;
+			}
+		}
+	}
+	return null;
 }
 
 export class StructureMetadata {
@@ -90,26 +100,17 @@ export class StructureMetadata {
 		return structureDef;
 	}
 
-	static getUIHintStruct(structuresUIHints, structName) {
-		for (const structure of structuresUIHints) {
-			if (structure.name === structName) {
-				return structure;
-			}
-		}
-		return null;
-	}
 
-	static makeStructureMetadata(structuresOp, structuresUIHints) {
-		if (structuresOp) {
-			const structures = [];
-			for (const structure of structuresOp) {
-				const struct = StructureDef.makeStructure(structure,
-					StructureMetadata.getUIHintStruct(structuresUIHints, structure.name));
+	static makeStructureMetadata(structures, uihintsStructures) {
+		if (structures) {
+			const structureDefs = [];
+			for (const structure of structures) {
+				const struct = StructureDef.makeStructure(structure, getStructureUIHint(structure.name, uihintsStructures));
 				if (struct !== null) {
-					structures.push(struct);
+					structureDefs.push(struct);
 				}
 			}
-			return new StructureMetadata(structures);
+			return new StructureMetadata(structureDefs);
 		}
 		return null;
 	}

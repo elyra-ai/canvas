@@ -27,9 +27,7 @@ export default class Form {
 	* Returns a new Form
 	*/
 	static makeForm(paramDef) {
-		const propDef = PropertyDef.makePropertyDef(
-			_.propertyOf(paramDef)("structures"),
-			_.propertyOf(paramDef)("parameters"),
+		const propDef = PropertyDef.makePropertyDef(_.propertyOf(paramDef)("parameters"), _.propertyOf(paramDef)("complex_types"),
 			_.propertyOf(paramDef)("uihints"));
 		if (propDef) {
 			const l10nProvider = new L10nProvider(_.propertyOf(paramDef)("resources"));
