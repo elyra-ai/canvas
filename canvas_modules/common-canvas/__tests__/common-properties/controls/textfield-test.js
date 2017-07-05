@@ -89,7 +89,7 @@ describe("textfield-control renders correctly", () => {
 		);
 		const input = wrapper.find(".text");
 		input.simulate("change", { target: { value: "My new value" } });
-		expect(wrapper.state.controlValue).to.equal("My new value");
+		expect(wrapper.state().controlValue).to.equal("My new value");
 	});
 
 	it("should set correct maxLength in `TextfieldControl`", () => {

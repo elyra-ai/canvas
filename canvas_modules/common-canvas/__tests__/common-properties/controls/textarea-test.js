@@ -18,6 +18,7 @@ chai.use(chaiEnzyme()); // Note the invocation at the end
 
 
 const control = {
+	name: "test-areafield",
 	charLimit: 256,
 	additionalText: "Add comment",
 	valueDef: {
