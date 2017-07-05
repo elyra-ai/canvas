@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 import { Separator } from "./form-constants";
-import { Type, ParamRole, EditStyle } from "./form-constants";
+import { Type, ParamRole } from "./form-constants";
 import { ResourceDef } from "./L10nProvider";
 import _ from "underscore";
 
@@ -115,13 +115,6 @@ export class ParameterDef {
 	 */
 	getControl(defaultControl) {
 		return (this.control ? this.control : defaultControl);
-	}
-
-	/**
-	 * Returns the "editStyle" attribute which can be used to define how structured values are edited.
-	 */
-	editStyle() {
-		return EditStyle.SUBPANEL;
 	}
 
 	/**

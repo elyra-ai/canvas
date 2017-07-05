@@ -19,15 +19,12 @@ class StructureDef {
 		this.type = type;
 	}
 
-	/**
-	 * Returns the "editStyle" attribute which can be used to define how structured values are edited.
-	 */
-	editStyle() {
-		return EditStyle.SUBPANEL;
+	isEditStyleSubpanel() {
+		return (this.type === EditStyle.SUBPANEL);
 	}
 
-	isEditStyleSubpanel() {
-		return (this.editStyle === EditStyle.SUBPANEL);
+	isEditStyleInlinel() {
+		return (this.type === EditStyle.INLINE);
 	}
 
 	/**
@@ -41,10 +38,6 @@ class StructureDef {
 			}
 		}
 		return params;
-	}
-
-	isEditStyleInlinel() {
-		return (this.editStyle === EditStyle.INLINE);
 	}
 
 	keyAttributeIndex() {

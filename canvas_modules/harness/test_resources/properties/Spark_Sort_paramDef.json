@@ -57,7 +57,7 @@
     "structure_info": [
       {
         "name": "SortEntry",
-        "type": "subpanel",
+        "type": "inline",
         "key_definition": {
           "name": "field",
           "width": 28,
@@ -82,9 +82,9 @@
       {
         "name": "basic-settings",
         "label": {
-          "default": "basic-settings"
+          "default": "Settings"
         },
-        "type": "columnAllocation",
+        "type": "columnSelection",
         "parameters": [
           "keys"
         ]

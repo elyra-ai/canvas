@@ -2,24 +2,22 @@
   "currentParameters": {
 		"renamed_fields": ["[\"Age\", \"Age\"]", "[\"BP\", \"BP-1\"]"]
   },
-	"structures": [
+	"complex_types": [
 		{
 			"name": "RenameFieldEntry",
-			"metadata": {
-				"keyDefinition": {
-					"name": "field",
+			"key_definition": {
+				"name": "field",
+				"type": "string",
+				"role": "column"
+			},
+			"parameters": [
+				{
+					"name": "new_name",
 					"type": "string",
-					"role": "column"
-				},
-				"arguments": [
-					{
-						"name": "new_name",
-						"type": "string",
-						"role": "new_column",
-						"default": ""
-					}
-				]
-			}
+					"role": "new_column",
+					"default": ""
+				}
+			]
 		}
 	],
 	"parameters": [
@@ -36,19 +34,19 @@
 		"structure_info": [
 			{
 				"name": "RenameFieldEntry",
-				"keyDefinition": {
+				"key_definition": {
 					"name": "field",
 					"resourceKey": "RenameFieldEntry.field",
 					"columns": 26
 				},
-				"arguments": [
+				"parameters": [
 					{
 						"name": "new_name",
 						"resourceKey": "RenameFieldEntry.new_name",
 						"columns": 26
 					}
 				],
-				"editStyle": "inline"
+				"type": "inline"
 			}
 		],
     "parameter_info": [
