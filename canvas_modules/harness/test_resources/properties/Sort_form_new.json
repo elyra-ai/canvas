@@ -185,6 +185,9 @@
         "keys": [
           "[\"Na\",\"Ascending\"]",
 					"[\"Drug\",\"Descending\"]",
+					"[\"Sex\",\"Ascending\"]",
+					"[\"Age\",\"Descending\"]",
+					"[\"BP\",\"Ascending\"]",
           "[\"Cholesterol\",\"Ascending\"]"
         ]
       },

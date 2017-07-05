@@ -17,15 +17,14 @@
 import logger from "../../../utils/logger";
 import React from "react";
 import EditorControl from "./editor-control.jsx";
-import { Table } from "reactable";
+import FlexibleTable from "./flexible-table.jsx";
+import { Tr, Td } from "reactable";
 import {
 	Button,
-	Checkbox,
-	TextField
+	Checkbox
 } from "ap-components-react/dist/ap-components-react";
 
 import Isvg from "react-inlinesvg";
-import search32 from "../../../assets/images/search_32.svg";
 import reset32 from "../../../assets/images/reset_32.svg";
 
 import { DATA_TYPES } from "../constants/constants.js";
@@ -52,7 +51,6 @@ export default class FieldPicker extends EditorControl {
 			controlName: "",
 			data: this.props.dataModel,
 			filterIcons: [],
-			filterKeyword: "",
 			filterList: [],
 			initialControlValues: [],
 			newControlValues: []
@@ -77,7 +75,6 @@ export default class FieldPicker extends EditorControl {
 		this.handleBack = this.handleBack.bind(this);
 		this.handleCheckAll = this.handleCheckAll.bind(this);
 		this.handleFieldChecked = this.handleFieldChecked.bind(this);
-		this.handleFilterChange = this.handleFilterChange.bind(this);
 		this.handleReset = this.handleReset.bind(this);
 		this.getNewSelections = this.getNewSelections.bind(this);
 	}
@@ -140,21 +137,23 @@ export default class FieldPicker extends EditorControl {
 			}
 
 			if (this.state.filterIcons.length === 0 || this.state.filterIcons.indexOf(field.type) < 0) {
-				tableData.push({
-					"checkbox": <div className="field-picker-checkbox">
+				const columns = [
+					<Td column="checkbox"><div className="field-picker-checkbox">
 					<Checkbox id={"field-picker-checkbox-" + i}
 						checked={checked}
 						onChange={this.handleFieldChecked}
 						data-name={field.name}
-					/></div>,
-					"fieldName": field.name,
-					"dataType": <div>
+					/></div></Td>,
+					<Td column="fieldName">{field.name}</Td>,
+					<Td column="dataType"><div>
 						<div className={"field-picker-data-type-icon field-picker-data-" + field.type + "-type-icon"}>
 							<img src={this[field.type + "EnabledIcon"]} />
 						</div>
 						{field.type}
-					</div>
-				});
+					</div></Td>
+				];
+
+				tableData.push(<Tr >{columns}</Tr>);
 			}
 		}
 		return tableData;
@@ -249,10 +248,6 @@ export default class FieldPicker extends EditorControl {
 		}
 	}
 
-	handleFilterChange(evt) {
-		this.setState({ filterKeyword: evt.target.value });
-	}
-
 	handleReset() {
 		if (this.state.initialControlValues.length !== this.state.data.fields.length) {
 			this.setState({ checkedAll: false });
@@ -332,24 +327,6 @@ export default class FieldPicker extends EditorControl {
 
 		const search = (
 			<div>
-				<div id="field-picker-search-bar">
-					<TextField
-						type="search"
-						id="field-picker-search"
-						className="field-picker-toolbar"
-						placeholder="Search for a field"
-						disabledPlaceholderAnimation
-						onChange={this.handleFilterChange}
-						value={this.state.filterKeyword}
-					/>
-				</div>
-				<div id="field-picker-search-icon"
-					className="field-picker-toolbar"
-				>
-					<Isvg id="field-picker-search-icon"
-						src={search32}
-					/>
-				</div>
 				<div >
 					<ul id="field-picker-filter-list">
 						<li id="filter-list-title" className="filter-list-li">
@@ -369,29 +346,26 @@ export default class FieldPicker extends EditorControl {
 			checkedAll = false;
 		}
 
-		const headers = [
-			{ "key": "checkbox", "label": <div className="field-picker-checkbox">
-					<Checkbox id={"field-picker-checkbox-all"}
-						onChange={this.handleCheckAll}
-						checked={checkedAll}
-					/>
-				</div> },
-			{ "key": "fieldName", "label": "Field name" },
-			{ "key": "dataType", "label": "Data type" }
-		];
+		const headers = [];
+		headers.push({ "key": "checkbox", "label": <div className="field-picker-checkbox">
+				<Checkbox id={"field-picker-checkbox-all"}
+					onChange={this.handleCheckAll}
+					checked={checkedAll}
+				/>
+		</div> });
+		headers.push({ "key": "fieldName", "label": "Field name" });
+		headers.push({ "key": "dataType", "label": "Data type" });
 
 		const tableData = this.getTableData();
 
-		const table = (<div id="field-picker-table-container">
-			<Table className="table" id="table"
-				sortable
+		const table = (
+			<FlexibleTable className="table" id="table"
+				sortable={["fieldName"]}
 				filterable={["fieldName"]}
-				hideFilterInput
-				filterBy={this.state.filterKeyword}
 				columns={headers}
 				data={tableData}
 			/>
-		</div>);
+		);
 
 		return (
 			<div>

@@ -16,7 +16,7 @@
 
 import logger from "../../../utils/logger";
 import React from "react";
-import StructureTableEditor from "./structure-table-editor.jsx";
+import StructureTableEditor from "./column-structure-table-editor.jsx";
 import { Grid,	Row, Col, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Button } from "ap-components-react/dist/ap-components-react";
 import Isvg from "react-inlinesvg";
@@ -213,32 +213,38 @@ export default class ColumnStructureTableControl extends StructureTableEditor {
 
 	upMoveRow(evt) {
 		const selected = this.getSelectedRows().sort();
-		const controlValue = this.getCurrentControlValue();
-		for (var i = 0; i <= selected.length - 1; i++) {
-			const selectedRow = selected.shift();
-			if (selectedRow !== 0) {
-				const tmpRow = controlValue[selectedRow - 1];
-				controlValue[selectedRow - 1] = controlValue[selectedRow];
-				controlValue[selectedRow] = tmpRow;
-				selected.push(selectedRow - 1);
+		// only move up if not already at the top especially for multiple selected
+		if (selected.length !== 0 && selected[0] !== 0) {
+			const controlValue = this.getCurrentControlValue();
+			for (var i = 0; i <= selected.length - 1; i++) {
+				const selectedRow = selected.shift();
+				if (selectedRow !== 0) {
+					const tmpRow = controlValue[selectedRow - 1];
+					controlValue[selectedRow - 1] = controlValue[selectedRow];
+					controlValue[selectedRow] = tmpRow;
+					selected.push(selectedRow - 1);
+				}
 			}
+			this.setCurrentControlValueSelected(this.props.control.name, controlValue, this.props.updateControlValue, selected);
 		}
-		this.setCurrentControlValueSelected(this.props.control.name, controlValue, this.props.updateControlValue, selected);
 	}
 
 	downMoveRow(evt) {
 		const selected = this.getSelectedRows().sort();
 		const controlValue = this.getCurrentControlValue();
-		for (var i = selected.length - 1; i >= 0; i--) {
-			const selectedRow = selected.pop();
-			if (selectedRow !== controlValue.length - 1) {
-				const tmpRow = controlValue[selectedRow + 1];
-				controlValue[selectedRow + 1] = controlValue[selectedRow];
-				controlValue[selectedRow] = tmpRow;
-				selected.unshift(selectedRow + 1);
+		// only move down if not already at the end especially for multiple selected
+		if (selected.length !== 0 && selected[selected.length - 1] !== controlValue.length - 1) {
+			for (var i = selected.length - 1; i >= 0; i--) {
+				const selectedRow = selected.pop();
+				if (selectedRow !== controlValue.length - 1) {
+					const tmpRow = controlValue[selectedRow + 1];
+					controlValue[selectedRow + 1] = controlValue[selectedRow];
+					controlValue[selectedRow] = tmpRow;
+					selected.unshift(selectedRow + 1);
+				}
 			}
+			this.setCurrentControlValueSelected(this.props.control.name, controlValue, this.props.updateControlValue, selected);
 		}
-		this.setCurrentControlValueSelected(this.props.control.name, controlValue, this.props.updateControlValue, selected);
 	}
 
 	bottomMoveRow(evt) {
@@ -262,7 +268,7 @@ export default class ColumnStructureTableControl extends StructureTableEditor {
 		const controlValue = this.getCurrentControlValue();
 		let topEnabled = false;
 		let bottomEnabled = false;
-		if (selected.length !== 0) {
+		if (selected.length !== 0 && selected.length !== controlValue.length) {
 			for (var selectedRow of selected) {
 				if (selectedRow !== 0) {
 					topEnabled = true;

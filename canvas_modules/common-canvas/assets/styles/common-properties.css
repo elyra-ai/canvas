@@ -173,9 +173,6 @@ span.form__validation--invalid {
 
 
 /* Field Picker */
-/*.field-picker-toolbar{
-	margin-bottom: 5px;
-}*/
 
 #field-picker-back-button {
   height: 32px;
@@ -186,31 +183,11 @@ span.form__validation--invalid {
   padding-top: 2px;
 }
 
-#field-picker-search-bar {
-	height: 32px;
-	width: 45%;
-	float: left;
-}
 
-#field-picker-search {
-	width: 100%;
-	float: left;
-}
-
-#field-picker-search-icon {
-	width: 5%;
-	height: 32px;
-	float: left;
-	fill: #A91560;
-}
-
-#field-picker-search:focus {
-  border-bottom: 2px solid #777677;
-}
 
 #field-picker-filter-list{
 	list-style-type: none;
-	float: left;
+	float: right;
 	margin-top: 3px;
   margin-bottom: 0px;
   width:40%;
@@ -243,7 +220,7 @@ span.form__validation--invalid {
 	border: none;
 	float: right;
 	padding-top: 2px;
-	padding-right: 10px;
+	padding-right: 0px;
 	padding-left: 10px;
 	margin-right: 0px;
 	text-decoration: underline;
@@ -301,22 +278,6 @@ span.form__validation--invalid {
 	position: fixed;
 }
 
-#field-picker-table-container {
-  height: 222.75px;
-  width: 100%;
-  overflow: scroll;
-  position: sticky;
-  background-color: #FFFFFF;
-  border: 1px #D8D8D8 solid;
-  padding: 0 15px 0 15px;
-	margin-top: 40px;
-	color: #000000;
-}
-
-th div div label, td div div label {
-  padding-bottom: 10px;
-}
-
 .field-picker-data-type-icon {
 	width: 15px;
 	height: 15px;
@@ -325,19 +286,16 @@ th div div label, td div div label {
 	fill: #A91560;
 }
 
-.reactable-header-sortable:focus {
-	outline: none;
-}
-
-#field-picker-table-container>table>thead>tr>th,
-#field-picker-table-container>table>tbody>tr>td {
-  padding: 5px;
-}
 
 /* Column Structure Allocator */
+.table-selected-row {
+	background-color: #60C3B9;
+}
+
 #table-row-move-button-container.col-md-1 {
 	width: 16px !important;
 	margin-top: 70px;
+	margin-left: 12px;
 	top: 50%;
 	padding: 0;
 }
@@ -360,6 +318,78 @@ th div div label, td div div label {
 	text-decoration: underline;
 	cursor: pointer;
 }
+
+.toggletext_icon {
+	padding-right: 2px;
+}
+
+.sort_icon-column {
+	padding-left: 2px;
+}
+
+/* Flexible Table */
+/*.flexible-table-toolbar{
+	margin-bottom: 5px;
+}*/
+
+#flexible-table-container {
+	height: 222.75px;
+  width: 100%;
+	overflow: scroll;
+  position: sticky;
+  background-color: #FFFFFF;
+  border: 1px #D8D8D8 solid;
+  padding: 0 15px 0 15px;
+	color: #000000;
+}
+
+th div div label, td div div label {
+  padding-bottom: 10px;
+}
+
+.reactable-header-sortable:focus {
+	outline: none;
+}
+
+#flexible-table-container>table>thead>tr>th {
+  padding: 5px;
+}
+
+#flexible-table-container>table>tbody>tr>td {
+  padding: 5px;
+	overflow-wrap: break-word;
+  word-wrap: break-word;
+  -ms-word-break: break-all;
+  word-break: break-all;
+  word-break: break-word;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+#flexible-table-search-bar {
+	height: 32px;
+	width: 45%;
+	float: left;
+}
+
+#flexible-table-search {
+	width: 100%;
+	float: left;
+}
+
+#flexible-table-search-icon {
+	width: 20px;
+	height: 20px;
+	float: left;
+	fill: #A91560;
+}
+
+#flexible-table-search:focus {
+  border-bottom: 2px solid #777677;
+}
+/* end Flexible table */
 
 .tabs--vertical .tabs__list--vertical {
     display: block;
