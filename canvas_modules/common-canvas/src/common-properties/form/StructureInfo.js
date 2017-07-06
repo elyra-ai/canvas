@@ -12,11 +12,12 @@ import { EditStyle } from "./form-constants";
 import _ from "underscore";
 
 class StructureDef {
-	constructor(cname, keyDefinition, parameterMetadata, editStyle) {
+	constructor(cname, keyDefinition, parameterMetadata, editStyle, moveableRows) {
 		this.name = cname;
 		this.keyDefinition = keyDefinition;
 		this.parameterMetadata = parameterMetadata;
 		this.editStyle = editStyle;
+		this.moveableRows = moveableRows;
 	}
 
 	isEditStyleSubpanel() {
@@ -66,7 +67,8 @@ class StructureDef {
 				_.propertyOf(structure)("name"),
 				ParameterDef.makeParameterDef(_.propertyOf(structure)("key_definition"), _.propertyOf(uihints)("key_definition")),
 				ParameterMetadata.makeParameterMetadata(_.propertyOf(structure)("parameters"), _.propertyOf(uihints)("parameters")),
-				_.propertyOf(structure)("editStyle")
+				_.propertyOf(uihints)("editStyle"),
+				_.propertyOf(uihints)("moveableRows")
 			);
 		}
 		return null;

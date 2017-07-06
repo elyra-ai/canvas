@@ -326,7 +326,7 @@ export default class ColumnStructureTableControl extends StructureTableEditor {
 		}
 
 		var moveCol = <Col />;
-		if (typeof this.props.control.isRowMoveable !== "undefined" && this.props.control.isRowMoveable) {
+		if (typeof this.props.control.moveableRows !== "undefined" && this.props.control.moveableRows) {
 			const moveImages = this.getTableRowMoveImages();
 			moveCol = (
 				<Col

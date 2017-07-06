@@ -161,6 +161,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	let defaultRow;
 	let childItem;
 	let controlType;
+	let moveableRows;
 
 	// The control type defines the basic UI element that should be used to edit the property
 	if (parameter.getRole() === ParamRole.CUSTOM) {
@@ -271,6 +272,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 						controlType = ControlType.ALLOCATEDSTRUCTURES;
 					} else if (group.groupType() === GroupType.COLUMN_SELECTION) {
 						controlType = ControlType.STRUCTURETABLE;
+						moveableRows = structureDef.moveableRows; // only support in STRUCTURETABLE
 					} else {
 						controlType = ControlType.STRUCTURELISTEDITOR;
 					}
@@ -304,7 +306,8 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 		subControls,
 		keyIndex,
 		defaultRow,
-		childItem
+		childItem,
+		moveableRows
 	);
 }
 

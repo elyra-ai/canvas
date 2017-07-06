@@ -35,7 +35,7 @@
                       },
                       "separateLabel": true,
                       "controlType": "structuretable",
-                      "isRowMoveable": true,
+                      "moveableRows": true,
                       "valueDef": {
                         "propType": "structure",
                         "isList": true,
@@ -184,10 +184,10 @@
         ],
         "keys": [
           "[\"Na\",\"Ascending\"]",
-					"[\"Drug\",\"Descending\"]",
-					"[\"Sex\",\"Ascending\"]",
-					"[\"Age\",\"Descending\"]",
-					"[\"BP\",\"Ascending\"]",
+          "[\"Drug\",\"Descending\"]",
+          "[\"Sex\",\"Ascending\"]",
+          "[\"Age\",\"Descending\"]",
+          "[\"BP\",\"Ascending\"]",
           "[\"Cholesterol\",\"Ascending\"]"
         ]
       },
