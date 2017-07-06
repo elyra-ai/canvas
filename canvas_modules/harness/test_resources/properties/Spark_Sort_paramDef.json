@@ -73,7 +73,11 @@
             "label": {
               "resourceKey": "SortEntry.sort_order.label"
             },
-            "type": "toggletext"
+            "control": "toggletext",
+            "valueIcons": [
+              "/images/up-triangle.svg",
+              "/images/down-triangle.svg"
+            ]
           }
         ]
       }
