@@ -45,6 +45,7 @@ export default class StructureTableEditor extends EditorControl {
 		this.getControlValue = this.getControlValue.bind(this);
 		this.getCurrentControlValue = this.getCurrentControlValue.bind(this);
 		this.setCurrentControlValue = this.setCurrentControlValue.bind(this);
+		this.setCurrentControlValueSelected = this.setCurrentControlValueSelected.bind(this);
 		this.getSelectedRows = this.getSelectedRows.bind(this);
 		this.getSubControlId = this.getSubControlId.bind(this);
 
@@ -217,7 +218,8 @@ export default class StructureTableEditor extends EditorControl {
 							value={controlValue[rowIndex][colIndex]}
 							updateControlValue={this.props.updateControlValue}
 							columnIndex={colIndex}
-							setCurrentControlValue={this.setCurrentControlValue}
+							setCurrentControlValueSelected={this.setCurrentControlValueSelected}
+							selectedRows={this.getSelectedRows()}
 							tableControl
 						/></Td>);
 					} else if (columnDef.valueDef.propType === "enum") {

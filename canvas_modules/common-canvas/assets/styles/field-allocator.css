@@ -86,10 +86,9 @@
 
 .Dropdown-control {
 	color: #a6266e;
-	width: 50%;
+	width: 100%;
 	border-bottom: 2px solid #a6266e;
 	padding: 0 1em 0 0 ;
-	line-height: 34px;
 	font-weight: 500;
 	position: relative;
   overflow: hidden;
@@ -97,6 +96,14 @@
   cursor: default;
   outline: none;
   transition: all 200ms ease;
+}
+
+.Dropdown-control-table .Dropdown-arrow{
+  top: 10px;
+}
+
+.Dropdown-control-panel {
+	width: 50%;
 }
 
 .Dropdown-control:hover {
@@ -132,7 +139,7 @@
   overflow-y: auto;
   position: absolute;
   top: 100%;
-  width: 50%;
+  width: 100%;
   z-index: 1000;
   -webkit-overflow-scrolling: touch;
 }

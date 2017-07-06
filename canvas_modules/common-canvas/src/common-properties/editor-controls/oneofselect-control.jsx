@@ -26,7 +26,7 @@ export default class OneofselectControl extends EditorControl {
 	handleChange(evt) {
 		if (this.props.tableControl) {
 			this.props.controlValue[this.props.rowIndex][this.props.columnIndex] = evt.value;
-			this.props.setCurrentControlValue(this.props.control.name, this.props.controlValue, this.props.updateControlValue);
+			this.props.setCurrentControlValueSelected(this.props.control.name, this.props.controlValue, this.props.updateControlValue, this.props.selectedRows);
 		} else {
 			this.notifyValueChanged(this.props.control.name, evt.value);
 			this.setState({ controlValue: evt.value });
@@ -43,50 +43,47 @@ export default class OneofselectControl extends EditorControl {
 		return [this.state.controlValue];
 	}
 
-	render() {
+	genSelectOptions(control, selectedValue) {
 		var options = [];
-		var dropdownOption = [];
-		var optionsLength;
+		var selectedOption = [];
+		const optionsLength = control.values.length;
+		for (var j = 0; j < optionsLength; j++) {
+			options.push({
+				value: control.values[j],
+				label: control.valueLabels[j]
+			});
+		}
+		options.forEach((option) => {
+			if (option.value === selectedValue) {
+				selectedOption = option;
+			} else {
+				selectedOption = selectedValue;
+			}
+		});
+		return {
+			options: options,
+			selectedOption: selectedOption
+		};
+	}
+
+	render() {
+		var dropDown = {};
+		var className = "Dropdown-control-panel";
 		if (this.props.tableControl) {
-			optionsLength = this.props.columnDef.values.length;
-			for (var i = 0; i < optionsLength; i++) {
-				options.push({
-					value: this.props.columnDef.values[i],
-					label: this.props.columnDef.valueLabels[i]
-				});
-			}
-			options.forEach((option) => {
-				if (option.value === this.props.value) {
-					dropdownOption = option;
-				}
-			});
+			dropDown = this.genSelectOptions(this.props.columnDef, this.props.value);
+			className = "Dropdown-control-table";
 		} else {
-			optionsLength = this.props.control.values.length;
-			for (var j = 0; j < optionsLength; j++) {
-				options.push({
-					value: this.props.control.values[j],
-					label: this.props.control.valueLabels[j]
-				});
-			}
-			options.forEach((option) => {
-				if (option.value === this.state.controlValue) {
-					dropdownOption = option;
-				} else {
-					dropdownOption = this.state.controlValue;
-					if (dropdownOption.length === 0) {
-						dropdownOption = this.props.control.additionalText;
-					}
-				}
-			});
+			dropDown = this.genSelectOptions(this.props.control, this.state.controlValue);
 		}
 
 		return (
-			<div onClick={this.onClick.bind(this)}>
+			<div onClick={this.onClick.bind(this)} className={className}>
 					<Dropdown id={this.getControlID()}
 						name={this.props.control.name}
-						options={options}
+						options={dropDown.options}
 						onChange={this.handleChange}
-						value={dropdownOption}
+						value={dropDown.selectedOption}
+						placeholder={this.props.control.additionalText}
 						ref="input"
 					/>
 			</div>
@@ -98,11 +95,12 @@ OneofselectControl.propTypes = {
 	control: React.PropTypes.object.isRequired,
 	// Optional used when embedded in table
 	tableControl: React.PropTypes.bool,
-	setCurrentControlValue: React.PropTypes.func,
 	rowIndex: React.PropTypes.number,
 	columnIndex: React.PropTypes.number,
 	controlValue: React.PropTypes.array,
 	columnDef: React.PropTypes.object,
 	value: React.PropTypes.string,
-	updateControlValue: React.PropTypes.func
+	updateControlValue: React.PropTypes.func,
+	setCurrentControlValueSelected: React.PropTypes.func,
+	selectedRows: React.PropTypes.array
 };
