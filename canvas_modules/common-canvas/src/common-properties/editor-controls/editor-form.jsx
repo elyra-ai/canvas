@@ -96,6 +96,7 @@ export default class EditorForm extends React.Component {
 		this.openFieldPicker = this.openFieldPicker.bind(this);
 		this.getFilteredDataset = this.getFilteredDataset.bind(this);
 		this.generateSharedControlNames = this.generateSharedControlNames.bind(this);
+		this.getSelectedRows = this.getSelectedRows.bind(this);
 	}
 
 	componentDidMount() {

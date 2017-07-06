@@ -51,15 +51,26 @@ export default class TextfieldControl extends EditorControl {
 				stateStyle.visibility = "hidden";
 			}
 		}
+		let className = "editor_control_area";
+		var errorMessage = <div className="validation-error-message" style={{ "marginTop": "0px" }}></div>;
+		if (this.state.validateErrorMessage && this.state.validateErrorMessage.text !== "") {
+			className += " error-border";
+			errorMessage = (
+				<div className="validation-error-message" style={{ "marginTop": "20px" }}>
+					<p className="form__validation" style={{ "display": "block" }}>
+						<span className="form__validation--invalid">{this.state.validateErrorMessage.text}</span>
+					</p>
+				</div>
+			);
+		}
 		const charLimit = this.getCharLimit(CHARACTER_LIMITS.NODE_PROPERTIES_DIALOG_TEXT_FIELD);
 		return (
-			<div className="editor_control_area" style={stateStyle}>
+			<div className={className} style={stateStyle}>
 				<TextField {...stateDisabled}
 					style={stateStyle}
 					id={this.getControlID()}
 					onBlur={this.validateInput}
 					onFocus={this.clearValidateMsg}
-					msg={this.state.validateErrorMessage}
 					disabledPlaceholderAnimation
 					placeholder={this.props.control.additionalText}
 					onChange={this.handleChange}
@@ -67,6 +78,7 @@ export default class TextfieldControl extends EditorControl {
 					maxCount={charLimit}
 					maxLength={charLimit}
 				/>
+				{errorMessage}
 			</div>
 		);
 	}

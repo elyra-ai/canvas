@@ -231,6 +231,23 @@
 	            }
 	         }
 	      },
+				{
+	         "validation":{
+	            "fail_message":{
+	               "type":"error",
+	               "focusParam":"solver",
+								 "message":{
+										"resourceKey":"solver_not_empty"
+								 }
+	            },
+	            "evaluate":{
+	               "condition":{
+	                  "param":"solver",
+	                  "op":"isNotEmpty"
+	               }
+	            }
+	         }
+	      },
 	      {
 	         "validation":{
 	            "fail_message":{
@@ -435,6 +452,7 @@
 	   "fields.label": "Fields",
 	   "advancedParams.label": "Advanced Parameters",
 	   "input_field_list_not_empty": "Select one or more input fields",
+		 "solver_not_empty": "The Solver value cannot be empty",
 	   "target_field_not_empty": "Select a target field",
 	   "elastic_net_param_not_valid": "The elastic net parameter value must be >= 0 and <= 1",
 	   "max_iter_not_valid": "Max iterations must be greater than or equal to zero",
