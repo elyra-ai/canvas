@@ -24,6 +24,7 @@ export default class NumberfieldControl extends EditorControl {
 		};
 		this.getControlValue = this.getControlValue.bind(this);
 		this.handleChange = this.handleChange.bind(this);
+		this.clearValue = this.clearValue.bind(this);
 	}
 
 	handleChange(evt) {
@@ -33,6 +34,14 @@ export default class NumberfieldControl extends EditorControl {
 
 	getControlValue() {
 		return [this.state.controlValue];
+	}
+
+	clearValue() {
+		const that = this;
+		this.setState({ controlValue: "" },
+		function() {
+			that.validateInput();
+		});
 	}
 
 	render() {
@@ -78,7 +87,7 @@ export default class NumberfieldControl extends EditorControl {
 					value={this.state.controlValue}
 					numberInput="close"
 					onChange={(e) => this.setState({ controlValue: e.target.value })}
-					onReset={() => this.setState({ controlValue: "0" })}
+					onReset={() => this.clearValue()}
 				/>
 				{errorMessage}
 			</div>
