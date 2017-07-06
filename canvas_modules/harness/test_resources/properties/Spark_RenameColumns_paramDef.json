@@ -1,54 +1,57 @@
 {
   "currentParameters": {
-		"renamed_fields": ["[\"Age\", \"Age\"]", "[\"BP\", \"BP-1\"]"]
+    "renamed_fields": [
+      "[\"Age\", \"Age\"]",
+      "[\"BP\", \"BP-1\"]"
+    ]
   },
-	"complex_types": [
-		{
-			"name": "RenameFieldEntry",
-			"key_definition": {
-				"name": "field",
-				"type": "string",
-				"role": "column"
-			},
-			"parameters": [
-				{
-					"name": "new_name",
-					"type": "string",
-					"role": "new_column",
-					"default": ""
-				}
-			]
-		}
-	],
-	"parameters": [
-		{
-			"name": "renamed_fields",
-			"type": "map[string,RenameFieldEntry]",
-			"role": "column",
-			"default": []
-		}
-	],
+  "complex_types": [
+    {
+      "name": "RenameFieldEntry",
+      "key_definition": {
+        "name": "field",
+        "type": "string",
+        "role": "column"
+      },
+      "parameters": [
+        {
+          "name": "new_name",
+          "type": "string",
+          "role": "new_column",
+          "default": ""
+        }
+      ]
+    }
+  ],
+  "parameters": [
+    {
+      "name": "renamed_fields",
+      "type": "map[string,RenameFieldEntry]",
+      "role": "column",
+      "default": []
+    }
+  ],
   "uihints": {
     "name": "rename",
     "icon": "./rename.svg",
-		"structure_info": [
-			{
-				"name": "RenameFieldEntry",
-				"key_definition": {
-					"name": "field",
-					"resourceKey": "RenameFieldEntry.field",
-					"columns": 26
-				},
-				"parameters": [
-					{
-						"name": "new_name",
-						"resourceKey": "RenameFieldEntry.new_name",
-						"columns": 26
-					}
-				],
-				"editStyle": "inline"
-			}
-		],
+    "structure_info": [
+      {
+        "name": "RenameFieldEntry",
+        "key_definition": {
+          "name": "field",
+          "resourceKey": "RenameFieldEntry.field",
+          "columns": 26
+        },
+        "parameters": [
+          {
+            "name": "new_name",
+            "resourceKey": "RenameFieldEntry.new_name",
+            "columns": 26
+          }
+        ],
+        "editStyle": "inline"
+      }
+    ],
     "parameter_info": [
       {
         "name": "renamed_fields",
@@ -66,8 +69,10 @@
         "label": {
           "default": "Settings"
         },
-				"type": "columnSelection",
-				"parameters": [ "renamed_fields" ]
+        "type": "columnSelection",
+        "parameters": [
+          "renamed_fields"
+        ]
       }
     ],
     "conditions": [
@@ -76,9 +81,9 @@
           "fail_message": {
             "type": "error",
             "focusParam": "renamed_fields",
-						"message":{
-							 "resourceKey":"output_name_not_empty"
-						}
+            "message": {
+              "resourceKey": "output_name_not_empty"
+            }
           },
           "evaluate": {
             "condition": {
@@ -90,77 +95,77 @@
       }
     ]
   },
-	"datasetMetadata": {
-		"fields": [
-			{
-				"name": "Age",
-				"type": "integer",
-				"metadata": {
-					"description": "",
-					"measure": "range",
-					"role": "input"
-				}
-			},
-			{
-				"name": "Sex",
-				"type": "string",
-				"metadata": {
-					"description": "",
-					"measure": "discrete",
-					"role": "input"
-				}
-			},
-			{
-				"name": "BP",
-				"type": "string",
-				"metadata": {
-					"description": "",
-					"measure": "discrete",
-					"role": "input"
-				}
-			},
-			{
-				"name": "Cholesterol",
-				"type": "string",
-				"metadata": {
-					"description": "",
-					"measure": "discrete",
-					"role": "input"
-				}
-			},
-			{
-				"name": "Na",
-				"type": "double",
-				"metadata": {
-					"description": "",
-					"measure": "range",
-					"role": "input"
-				}
-			},
-			{
-				"name": "K",
-				"type": "double",
-				"metadata": {
-					"description": "",
-					"measure": "range",
-					"role": "input"
-				}
-			},
-			{
-				"name": "Drug",
-				"type": "string",
-				"metadata": {
-					"description": "",
-					"measure": "discrete",
-					"role": "input"
-				}
-			}
-		]
-	},
+  "datasetMetadata": {
+    "fields": [
+      {
+        "name": "Age",
+        "type": "integer",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "role": "input"
+        }
+      },
+      {
+        "name": "Sex",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "role": "input"
+        }
+      },
+      {
+        "name": "BP",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "role": "input"
+        }
+      },
+      {
+        "name": "Cholesterol",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "role": "input"
+        }
+      },
+      {
+        "name": "Na",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "role": "input"
+        }
+      },
+      {
+        "name": "K",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "role": "input"
+        }
+      },
+      {
+        "name": "Drug",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "role": "input"
+        }
+      }
+    ]
+  },
   "resources": {
     "rename.label": "Rename Columns",
-		"field.label": "Input name",
-		"new_name.label": "Output name",
+    "field.label": "Input name",
+    "new_name.label": "Output name",
     "output_name_not_empty": "The 'Output Name' field cannot be empty"
   }
 }

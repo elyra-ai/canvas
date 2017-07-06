@@ -25,154 +25,154 @@
               "panel": {
                 "id": "basic-settings",
                 "panelType": "general",
-								"uiItems": [
-									{
-										"itemType": "panel",
-										"panel": {
-											"id": "mode-settings",
-											"panelType": "general",
-											"uiItems": [
-												{
-													"itemType": "control",
-													"control": {
-														"name": "mode",
-														"label": {
-															"text": "Mode"
-														},
-														"separateLabel": true,
-														"controlType": "radioset",
-														"valueDef": {
-															"propType": "string",
-															"isList": false,
-															"isMap": false
-														},
-														"values": [
-															"Custom",
-															"Auto"
-														],
-														"valueLabels": [
-															"Custom order",
-															"Automatic sort"
-														]
-													}
-												}
-											]
-										}
-									},
+                "uiItems": [
                   {
-										"itemType": "panelSelector",
+                    "itemType": "panel",
+                    "panel": {
+                      "id": "mode-settings",
+                      "panelType": "general",
+                      "uiItems": [
+                        {
+                          "itemType": "control",
+                          "control": {
+                            "name": "mode",
+                            "label": {
+                              "text": "Mode"
+                            },
+                            "separateLabel": true,
+                            "controlType": "radioset",
+                            "valueDef": {
+                              "propType": "string",
+                              "isList": false,
+                              "isMap": false
+                            },
+                            "values": [
+                              "Custom",
+                              "Auto"
+                            ],
+                            "valueLabels": [
+                              "Custom order",
+                              "Automatic sort"
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "itemType": "panelSelector",
                     "tabs": [
-											{
-												"text": "Custom.label",
+                      {
+                        "text": "Custom.label",
                         "group": "Custom",
                         "content": {
-			                    "itemType": "control",
-			                    "control": {
-			                      "name": "fieldOrder",
-			                      "separateLabel": true,
-			                      "controlType": "structuretable",
-														"isRowMoveable" : true,
-			                      "valueDef": {
-			                        "propType": "structure",
-			                        "isList": true,
-			                        "isMap": false
-			                      },
-			                      "subControls": [
-			                        {
-			                          "name": "field",
-			                          "label": {
-			                            "text": "Field"
-			                          },
-			                          "visible": true,
-			                          "width": 28,
-			                          "controlType": "oneofcolumns",
-			                          "valueDef": {
-			                            "propType": "string",
-			                            "isList": false,
-			                            "isMap": false
-			                          }
-			                        },
-			                        {
-			                          "name": "field_type",
-			                          "label": {
-			                            "text": "Type"
-			                          },
-			                          "visible": true,
-			                          "width": 16,
-			                          "controlType": "oneofcolumns",
-			                          "valueDef": {
-			                            "propType": "string",
-			                            "isList": false,
-			                            "isMap": false
-			                          }
-			                        }
-			                      ],
-			                      "keyIndex": 0,
-			                      "defaultRow": [
-			                        "-- All Remaining Fields --",
-			                        ""
-			                      ]
-													}
-		                    }
-                  		},
-											{
-												"text": "Auto.label",
-												"group": "Auto",
-												"content": {
-													"itemType": "panel",
-													"panel": {
-														"id": "Auto",
-														"panelType": "general",
-														"uiItems": [
-															{
-																"itemType": "control",
-																"control": {
-																	"name": "sort_by",
-																	"label": {
-																		"text": "Sort by"
-																	},
-																	"separateLabel": true,
-																	"controlType": "radioset",
-																	"valueDef": {
-																		"propType": "string",
-																		"isList": false,
-																		"isMap": false
-																	},
-																	"values": [
-																		"Name",
-																		"Type",
-																		"Storage"
-																	],
-																	"valueLabels": [
-																		"Name",
-																		"Type",
-																		"Storage"
-																	]
-																}
-															},
-															{
-																"itemType": "control",
-																"control": {
-																	"name": "ascending",
-																	"label": {
-																		"text": "Ascending?"
-																	},
-																	"separateLabel": false,
-																	"controlType": "checkbox",
-																	"valueDef": {
-																		"propType": "boolean",
-																		"isList": false,
-																		"isMap": false
-																	}
-																}
-															}
-														]
-													}
-												}
-											}
-										],
-										"dependsOn": "mode"
-									}
+                          "itemType": "control",
+                          "control": {
+                            "name": "fieldOrder",
+                            "separateLabel": true,
+                            "controlType": "structuretable",
+                            "moveableRows": true,
+                            "valueDef": {
+                              "propType": "structure",
+                              "isList": true,
+                              "isMap": false
+                            },
+                            "subControls": [
+                              {
+                                "name": "field",
+                                "label": {
+                                  "text": "Field"
+                                },
+                                "visible": true,
+                                "width": 28,
+                                "controlType": "oneofcolumns",
+                                "valueDef": {
+                                  "propType": "string",
+                                  "isList": false,
+                                  "isMap": false
+                                }
+                              },
+                              {
+                                "name": "field_type",
+                                "label": {
+                                  "text": "Type"
+                                },
+                                "visible": true,
+                                "width": 16,
+                                "controlType": "oneofcolumns",
+                                "valueDef": {
+                                  "propType": "string",
+                                  "isList": false,
+                                  "isMap": false
+                                }
+                              }
+                            ],
+                            "keyIndex": 0,
+                            "defaultRow": [
+                              "-- All Remaining Fields --",
+                              ""
+                            ]
+                          }
+                        }
+                      },
+                      {
+                        "text": "Auto.label",
+                        "group": "Auto",
+                        "content": {
+                          "itemType": "panel",
+                          "panel": {
+                            "id": "Auto",
+                            "panelType": "general",
+                            "uiItems": [
+                              {
+                                "itemType": "control",
+                                "control": {
+                                  "name": "sort_by",
+                                  "label": {
+                                    "text": "Sort by"
+                                  },
+                                  "separateLabel": true,
+                                  "controlType": "radioset",
+                                  "valueDef": {
+                                    "propType": "string",
+                                    "isList": false,
+                                    "isMap": false
+                                  },
+                                  "values": [
+                                    "Name",
+                                    "Type",
+                                    "Storage"
+                                  ],
+                                  "valueLabels": [
+                                    "Name",
+                                    "Type",
+                                    "Storage"
+                                  ]
+                                }
+                              },
+                              {
+                                "itemType": "control",
+                                "control": {
+                                  "name": "ascending",
+                                  "label": {
+                                    "text": "Ascending?"
+                                  },
+                                  "separateLabel": false,
+                                  "controlType": "checkbox",
+                                  "valueDef": {
+                                    "propType": "boolean",
+                                    "isList": false,
+                                    "isMap": false
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    ],
+                    "dependsOn": "mode"
+                  }
                 ]
               }
             }
@@ -257,19 +257,19 @@
     ],
     "data": {
       "currentProperties": {
-				"annotation": [
+        "annotation": [
           ""
         ],
-				"sort_by": [
+        "sort_by": [
           "Name"
         ],
-				"ascending": [
+        "ascending": [
           "true"
         ],
         "use_custom_name": [
           "true"
         ],
-				"mode": [
+        "mode": [
           "Custom"
         ],
         "custom_name": [
@@ -277,11 +277,11 @@
         ],
         "fieldOrder": [
           "[\"Na\",\"Range\"]",
-					"[\"-- All Remaining Fields --\",\"\"]",
-					"[\"Sex\",\"Discrete\"]"
+          "[\"-- All Remaining Fields --\",\"\"]",
+          "[\"Sex\",\"Discrete\"]"
         ]
       },
-			"datasetMetadata": {
+      "datasetMetadata": {
         "fields": [
           {
             "name": "Age",

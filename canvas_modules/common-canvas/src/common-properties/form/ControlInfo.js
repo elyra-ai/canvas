@@ -26,13 +26,14 @@ class ControlDef {
 
 export class Control extends ControlDef {
 	constructor(cname, label, separateLabel, controlType, valueDef, role, additionalText, orientation, values, valueLabels, valueIcons, charLimit,
-		subControls, keyIndex, defaultRow, childItem) {
+		subControls, keyIndex, defaultRow, childItem, moveableRows) {
 		super(cname, label, controlType, valueDef, role, additionalText, orientation, values, valueLabels, valueIcons, charLimit);
 		this.separateLabel = separateLabel;
 		this.subControls = subControls;
 		this.keyIndex = keyIndex;
 		this.defaultRow = defaultRow;
 		this.childItem = childItem;
+		this.moveableRows = moveableRows;
 	}
 }
 

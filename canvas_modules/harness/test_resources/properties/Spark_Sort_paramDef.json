@@ -58,6 +58,7 @@
       {
         "name": "SortEntry",
         "editStyle": "inline",
+        "moveableRows": true,
         "key_definition": {
           "name": "field",
           "width": 28,
