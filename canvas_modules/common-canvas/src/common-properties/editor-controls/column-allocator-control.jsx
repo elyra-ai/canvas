@@ -123,12 +123,18 @@ export default class ColumnAllocatorControl extends EditorControl {
 
 	render() {
 		// logger.info("AllocationControl.render");
-		const includeEmpty = !this.state.controlValue || this.state.controlValue.length === 0;
-		const availableFields = this.props.availableFieldsAccessor
-			?	this.props.availableFieldsAccessor(this.props.control.name)
-			: this.props.dataModel;
-		var options = EditorControl.genColumnSelectOptions(availableFields.fields,
-			this.state.selectedValues, includeEmpty);
+		let options;
+		let includeEmpty = false;
+		if (this.props.multiColumn) {
+			options = EditorControl.genStringSelectOptions(this.state.controlValue, this.state.selectedValues);
+		} else {
+			includeEmpty = !this.state.controlValue || this.state.controlValue.length === 0;
+			const availableFields = this.props.availableFieldsAccessor
+				?	this.props.availableFieldsAccessor(this.props.control.name)
+				: this.props.dataModel;
+			options = EditorControl.genColumnSelectOptions(availableFields.fields,
+				this.state.selectedValues, includeEmpty);
+		}
 
 		if (this._update_callback !== null) {
 			this._update_callback();

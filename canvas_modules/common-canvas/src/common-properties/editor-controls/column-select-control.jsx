@@ -157,6 +157,11 @@ export default class ColumnSelectControl extends EditorControl {
 		const id = this.removeButtonId();
 		document.getElementById(id).style.cssText = opacity;
 		document.getElementById(id).setAttribute("disabled", selection.length === 0);
+		const indices = [];
+		for (const seln of selection) {
+			indices.push(this.state.controlValue.indexOf(seln));
+		}
+		this.props.updateSelectedRows(this.props.control.name, indices);
 	}
 
 	removeButtonId() {

@@ -69,7 +69,7 @@ export default class EditorForm extends React.Component {
 			validationGroupDefinitions: [],
 			// controlValidations: {},
 			controlStates: {},
-			selectedRows: [],
+			selectedRows: {},
 			showFieldPicker: false,
 			fieldPickerControl: {},
 			activeTabId: ""
@@ -177,6 +177,13 @@ export default class EditorForm extends React.Component {
 		return values;
 	}
 
+	getSelectedRows(controlName) {
+		if (!this.state.selectedRows[controlName]) {
+			this.state.selectedRows[controlName] = [];
+		}
+		return this.state.selectedRows[controlName];
+	}
+
 	updateControlValue(controlId, controlValue) {
 		const that = this;
 		var values = this.state.valuesTable;
@@ -199,8 +206,10 @@ export default class EditorForm extends React.Component {
 		this.setState({ valuesTable: values });
 	}
 
-	updateSelectedRows(selection) {
-		this.setState({ selectedRows: selection });
+	updateSelectedRows(controlName, selection) {
+		const selectedRows = this.state.selectedRows;
+		selectedRows[controlName] = selection;
+		this.setState({ selectedRows: selectedRows });
 	}
 
 	genControl(control, idPrefix, controlValueAccessor, datasetMetadata) {
@@ -327,7 +336,7 @@ export default class EditorForm extends React.Component {
 				validationDefinitions={this.state.validationDefinitions}
 				controlStates={this.state.controlStates}
 				updateControlValue={this.updateControlValue}
-				selectedRows={this.state.selectedRows}
+				selectedRows={this.getSelectedRows(control.name)}
 			/>);
 		} else if (control.controlType === "columnselect") {
 			return (<ColumnSelectControl control={control}
@@ -340,7 +349,8 @@ export default class EditorForm extends React.Component {
 				controlStates={this.state.controlStates}
 				openFieldPicker={this.openFieldPicker}
 				updateControlValue={this.updateControlValue}
-				selectedRows={this.state.selectedRows}
+				updateSelectedRows={this.updateSelectedRows}
+				selectedRows={this.getSelectedRows(control.name)}
 			/>);
 		} else if (control.controlType === "allocatedstructures") {
 			// logger.info("allocatedstructures");
@@ -350,8 +360,10 @@ export default class EditorForm extends React.Component {
 				ref={controlId}
 				valueAccessor={controlValueAccessor}
 				updateControlValue={this.updateControlValue}
+				validationDefinitions={this.state.validationDefinitions}
+				controlStates={this.state.controlStates}
 				updateSelectedRows={this.updateSelectedRows}
-				selectedRows={this.state.selectedRows}
+				selectedRows={this.getSelectedRows(control.name)}
 				buildUIItem={this.genUIItem}
 			/>);
 		} else if (control.controlType === "structuretable") {
@@ -364,7 +376,7 @@ export default class EditorForm extends React.Component {
 				updateSelectedRows={this.updateSelectedRows}
 				validationDefinitions={this.state.validationDefinitions}
 				controlStates={this.state.controlStates}
-				selectedRows={this.state.selectedRows}
+				selectedRows={this.getSelectedRows(control.name)}
 				buildUIItem={this.genUIItem}
 				openFieldPicker={this.openFieldPicker}
 			/>);
@@ -377,7 +389,7 @@ export default class EditorForm extends React.Component {
 				valueAccessor={controlValueAccessor}
 				updateControlValue={this.updateControlValue}
 				updateSelectedRows={this.updateSelectedRows}
-				selectedRows={this.state.selectedRows}
+				selectedRows={this.getSelectedRows(control.name)}
 				buildUIItem={this.genUIItem}
 			/>);
 		} else if (control.controlType === "structurelisteditor") {
@@ -388,7 +400,7 @@ export default class EditorForm extends React.Component {
 				valueAccessor={controlValueAccessor}
 				updateControlValue={this.updateControlValue}
 				updateSelectedRows={this.updateSelectedRows}
-				selectedRows={this.state.selectedRows}
+				selectedRows={this.getSelectedRows(control.name)}
 				buildUIItem={this.genUIItem}
 			/>);
 		}

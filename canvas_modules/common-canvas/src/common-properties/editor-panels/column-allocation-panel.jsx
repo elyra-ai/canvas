@@ -44,24 +44,23 @@ export default class ColumnAllocationPanel extends React.Component {
 
 	updateColumnSource() {
 		logger.info("updateColumnSource()");
-		let allocatedFields = [];
-
-		for (var i = 0; i < this.props.children.length; i++) {
-			const child = this.props.children[i];
-
-			// Child should be a ControlItem so access the control ref
-			const controlName = child.props.control.ref;
-			// logger.info("Allocator=" + controlName);
-			const control = this.props.controlAccessor(controlName);
-			// logger.info(control);
-			const allocated = control.getAllocatedColumns();
-			// logger.info(allocated);
-			allocatedFields = _.union(allocatedFields, allocated);
-		}
-
-		// logger.info(allocatedFields);
-		this.refs.columnSource.setAllocatedColumns(allocatedFields);
-		// this.setState({allocatedColumns: allocatedFields});
+		const that = this;
+		setTimeout(() => {
+			let allocatedFields = [];
+			for (var i = 0; i < that.props.children.length; i++) {
+				const child = that.props.children[i];
+				// Child should be a ControlItem so access the control ref
+				const controlName = child.props.control.ref;
+				// logger.info("Allocator=" + controlName);
+				const control = that.props.controlAccessor(controlName);
+				// logger.info(control);
+				const allocated = control.getAllocatedColumns();
+				// logger.info(allocated);
+				allocatedFields = _.union(allocatedFields, allocated);
+			}
+			// logger.info(allocatedFields);
+			that.refs.columnSource.setAllocatedColumns(allocatedFields);
+		}, 10);
 	}
 
 	allocate(targetControl) {

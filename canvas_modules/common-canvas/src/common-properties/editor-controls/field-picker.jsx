@@ -161,7 +161,7 @@ export default class FieldPicker extends EditorControl {
 
 	handleBack() {
 		this.props.updateControlValue(this.state.controlName, this.state.newControlValues);
-		this.props.updateSelectedRows(this.getNewSelections());
+		this.props.updateSelectedRows(this.state.controlName, this.getNewSelections());
 		this.props.closeFieldPicker();
 	}
 
