@@ -12,6 +12,7 @@ import _ from "underscore";
 import { makePrimaryTab } from "./EditorForm";
 import { UIItem } from "./UIItem";
 import { L10nProvider } from "./L10nProvider";
+import Conditions from "./Conditions";
 
 export default class Form {
 	constructor(componentId, label, editorSize, uiItems, buttons, data) {
@@ -38,11 +39,10 @@ export default class Form {
 				}
 			}
 
-			const uiConditions = loadConditionResources(_.propertyOf(paramDef.uihints)("conditions"), l10nProvider);
 			const data = {
 				currentParameters: _.propertyOf(paramDef)("currentParameters"),
 				datasetMetadata: _.propertyOf(paramDef)("datasetMetadata"),
-				conditions: uiConditions
+				conditions: Conditions.translateMessages(_.propertyOf(paramDef.uihints)("conditions"), l10nProvider)
 			};
 			const formName = _.propertyOf(propDef)("name");
 			return new Form(formName,
@@ -54,22 +54,6 @@ export default class Form {
 		}
 		return null;
 	}
-}
-
-function loadConditionResources(conditions, l10nProvider) {
-	if (!conditions) {
-		return conditions;
-	}
-	for (const condition of conditions) {
-		if (condition.validation && condition.validation.fail_message &&
-				condition.validation.fail_message.message) {
-			const message = condition.validation.fail_message.message;
-			if (message.resourceKey && !message.default) {
-				message.default = l10nProvider.l10n(message.resourceKey);
-			}
-		}
-	}
-	return conditions;
 }
 
 function _defaultButtons() {

@@ -1,29 +1,24 @@
-/****************************************************************
-** IBM Confidential
-**
-** OCO Source Materials
-**
-** NextGen Workbench
-**
-** (c) Copyright IBM Corp. 2017
-**
-** The source code for this program is not published or otherwise
-** divested of its trade secrets, irrespective of what has been
-** deposited with the U.S. Copyright Office.
-*****************************************************************/
+/*******************************************************************************
+ * Licensed Materials - Property of IBM
+ * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ *
+ * Note to U.S. Government Users Restricted Rights:
+ * Use, duplication or disclosure restricted by GSA ADP Schedule
+ * Contract with IBM Corp.
+ *******************************************************************************/
 
 import { expect } from "chai";
 import _ from "underscore";
 import Form from "../../src/common-properties/form/Form";
 import formResource from "../test_resources/json/form-test.json";
 import formStructuredTable from "../test_resources/json/form-structure-test.json";
+import conditionResource from "../test_resources/json/form-test-condition.json";
 
 const buttons = [{ id: "ok", text: "OK", isPrimary: true, url: "" }, { id: "cancel", text: "Cancel", isPrimary: false, url: "" }];
 
 describe("Correct form should be created", () => {
-	it("should create a form with a structure without key", () => {
-		const paramSpec = formResource.paramDef;
-		const generatedForm = Form.makeForm(paramSpec);
+	it("should create a form with basic options", () => {
+		const generatedForm = Form.makeForm(formResource.paramDef);
 		// console.info("Expected: " + JSON.stringify(formResource.expectedResult));
 		// console.info("Actual: " + JSON.stringify(generatedForm));
 		// Work around since comparing the objects directly doesn't work.
@@ -31,7 +26,7 @@ describe("Correct form should be created", () => {
 	}
 	);
 
-	it("should create a form with tabs since there is missing data", () => {
+	it("should create a form with minimum paramSpec options", () => {
 		const primaryTabs = {
 			"itemType": "primaryTabs",
 			"tabs": [
@@ -111,4 +106,12 @@ describe("Correct form should be created", () => {
 		expect(_.isEqual(JSON.parse(JSON.stringify(formStructuredTable.expectedResult)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
 	}
 	);
+	it("should create a form with translated condition message", () => {
+		const generatedForm = Form.makeForm(conditionResource.paramDef);
+		// console.info("Expected: " + JSON.stringify(formResource.expectedResult));
+		// console.info("Actual: " + JSON.stringify(generatedForm));
+		// Work around since comparing the objects directly doesn't work.
+		expect(_.isEqual(JSON.parse(JSON.stringify(conditionResource.expectedResult)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
+
+	});
 });

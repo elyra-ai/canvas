@@ -1,5 +1,10 @@
 {
   "currentParameters": {
+    "targetField": "string1",
+    "inputFieldList": [
+      "integer2",
+      "double4"
+    ],
     "checkpointInterval": -1,
     "impurity": "entropy",
     "maxBins": 24,
@@ -9,6 +14,18 @@
     "seed": 12345
   },
   "parameters": [
+    {
+      "name": "inputFieldList",
+      "type": "array[string]",
+      "default": [],
+      "role": "column"
+    },
+    {
+      "name": "targetField",
+      "type": "string",
+      "default": "",
+      "role": "column"
+    },
     {
       "name": "checkpointInterval",
       "type": "integer",
@@ -49,16 +66,34 @@
     }
   ],
   "uihints": {
-    "name": "org.apache.spark.ml.classification.DecisionTreeClassificationModel",
-    "icon": "images/modelnuggetspark.svg",
+    "icon": "images/modelbuildspark.svg",
+    "name": "decisiontree",
     "label": {
-      "default": "Decision Tree Classification Model"
+      "default": "Decision Tree Classifier"
     },
     "description": {
-      "default": "Fitted Decision Tree Classifier Model"
+      "default": "Fit a Decision Tree Classifier Model"
     },
     "editorSize": "large",
     "parameter_info": [
+      {
+        "name": "inputFieldList",
+        "label": {
+          "default": "Input columns"
+        },
+        "description": {
+          "default": "Select one or more input columns"
+        }
+      },
+      {
+        "name": "targetField",
+        "label": {
+          "default": "Target column"
+        },
+        "description": {
+          "default": "Select a target column"
+        }
+      },
       {
         "name": "checkpointInterval",
         "label": {
@@ -125,9 +160,26 @@
     ],
     "group_info": [
       {
-        "name": "settings",
+        "name": "fields-settings",
+        "type": "panels",
+        "group_info": [
+          {
+            "name": "fields",
+            "type": "columnAllocation",
+            "label": {
+              "default": "Fields"
+            },
+            "parameters": [
+              "inputFieldList",
+              "targetField"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "advancedParams",
         "label": {
-          "default": "Settings"
+          "default": "Advanced Parameters"
         },
         "parameters": [
           "checkpointInterval",
@@ -143,7 +195,41 @@
     "conditions": [
       {
         "validation": {
-          "fail_message": {
+          "fail-message": {
+            "type": "error",
+            "message": {
+              "default": "Input field list must have at least 1 field"
+            },
+            "focusParam": "inputFieldList"
+          },
+          "evaluate": {
+            "condition": {
+              "param": "inputFieldList",
+              "op": "isNotEmpty"
+            }
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail-message": {
+            "type": "error",
+            "message": {
+              "default": "Target field can't be empty"
+            },
+            "focusParam": "targetField"
+          },
+          "evaluate": {
+            "condition": {
+              "param": "targetField",
+              "op": "isNotEmpty"
+            }
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail-message": {
             "type": "error",
             "message": {
               "default": "The checkpoint interval value must either be >= 1 or -1 to disable",
@@ -152,35 +238,17 @@
             "focusParam": "checkpointInterval"
           },
           "evaluate": {
-            "or": [
-              {
-                "condition": {
-                  "param": "checkpointInterval",
-                  "op": "greaterThan",
-                  "value": 1
-                }
-              },
-              {
-                "condition": {
-                  "param": "checkpointInterval",
-                  "op": "equals",
-                  "value": 1
-                }
-              },
-              {
-                "condition": {
-                  "param": "checkpointInterval",
-                  "op": "equals",
-                  "value": -1
-                }
-              }
-            ]
+            "condition": {
+              "param": "checkpointInterval",
+              "op": "equals",
+              "value": -1
+            }
           }
         }
       },
       {
         "validation": {
-          "fail_message": {
+          "fail-message": {
             "type": "error",
             "message": {
               "default": "Max bins must be >= 2 and >= number of categories in any categorical feature",
@@ -199,7 +267,7 @@
       },
       {
         "validation": {
-          "fail_message": {
+          "fail-message": {
             "type": "error",
             "message": {
               "default": "The max depth parameter must be greater than or equal to zero",
@@ -218,7 +286,7 @@
       },
       {
         "validation": {
-          "fail_message": {
+          "fail-message": {
             "type": "error",
             "message": {
               "default": "The minimum instances per node value must be >= 1",
@@ -227,19 +295,61 @@
             "focusParam": "minInstancesPerNode"
           },
           "evaluate": {
-            "condition": {
-              "param": "minInstancesPerNode",
-              "op": "equals",
-              "value": 1
-            }
+            "or": [
+              {
+                "condition": {
+                  "param": "minInstancesPerNode",
+                  "op": "greaterThan",
+                  "value": 1
+                }
+              },
+              {
+                "condition": {
+                  "param": "minInstancesPerNode",
+                  "op": "equals",
+                  "value": 1
+                }
+              }
+            ]
           }
         }
       }
     ]
   },
+  "datasetMetadata": {
+    "fields": [
+      {
+        "name": "integer2",
+        "type": "integer",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "role": "input"
+        }
+      },
+      {
+        "name": "double4",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "role": "input"
+        }
+      },
+      {
+        "name": "string1",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "set",
+          "role": "input"
+        }
+      }
+    ]
+  },
   "resources": {
-    "org.apache.spark.ml.classification.DecisionTreeClassificationModel.label": "Decision Tree Classifier",
-    "org.apache.spark.ml.classification.DecisionTreeClassificationModel.desc": "Fit a Decision Tree Classifier Model",
+    "decisiontree.label": "Decision Tree Classification Model",
+    "decisiontree.desc": "Fitted Decision Tree Classifier Model",
     "checkpointInterval.label": "Checkpoint Interval",
     "checkpointInterval.desc": "Set checkpoint interval (>= 1) or disable checkpoint (-1). Ex) 10 means that the cache will get checkpointed every 10 iterations",
     "impurity.label": "Impurity",
@@ -254,9 +364,10 @@
     "minInstancesPerNode.desc": "Minimum number of instances each child must have after split. If a split causes the left or right child to have fewer than minInstancesPerNode, the split will be discarded as invalid (>= 1)",
     "seed.label": "Seed",
     "seed.desc": "Random seed",
-    "checkpoint_interval_not_valid": "The checkpoint interval value must either be >= 1 or -1 to disable",
-    "max_bins_not_valid": "Max bins must be >= 2 and >= number of categories in any categorical feature",
-    "max_depth_not_valid": "The max depth parameter must be greater than or equal to zero",
-    "min_instances_per_node_not_valid": "The minimum instances per node value must be >= 1"
+    "fields-settings.label": "Settings",
+    "checkpoint-interval-not-valid": "The checkpoint interval value must either be >= 1 or -1 to disable",
+    "max-bins-not-valid": "Max bins must be >= 2 and >= number of categories in any categorical feature",
+    "max-depth-not-valid": "The max depth parameter must be greater than or equal to zero",
+    "min-instances-per-node-not-valid": "The minimum instances per node value must be >= 1"
   }
 }

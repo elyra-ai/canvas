@@ -149,7 +149,7 @@ function evaluate(data, userInput) {
 		return or(data.or, userInput);
 	} else if (data.and) {
 		return and(data.and, userInput);
-	} else if (data.condition && data.condition.op && data.condition.param) { // condition
+	} else if (data.condition) { // condition
 		return condition(data.condition, userInput);
 	}
 	throw new Error("Failed to parse definition");

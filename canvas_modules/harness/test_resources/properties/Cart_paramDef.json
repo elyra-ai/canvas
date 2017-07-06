@@ -127,10 +127,11 @@
         "validation": {
           "fail_message": {
             "type": "error",
-            "focusParam": "target",
-						"message": {
-							"resourceKey": "target_not_empty"
-						}
+            "message": {
+              "default": "The 'Target' field cannot be empty",
+              "resourceKey": "target_not_empty"
+            },
+            "focusParam": "target"
           },
           "evaluate": {
             "condition": {
@@ -144,10 +145,11 @@
         "validation": {
           "fail_message": {
             "type": "error",
-            "focusParam": "inputs",
-						"message": {
-							"resourceKey": "inputs_not_empty"
-						}
+            "message": {
+              "default": "The 'Inputs' field cannot be empty",
+              "resourceKey": "inputs_not_empty"
+            },
+            "focusParam": "inputs"
           },
           "evaluate": {
             "condition": {
@@ -164,34 +166,34 @@
       {
         "name": "integer2",
         "type": "integer",
-				"metadata": {
-					"description": "",
-      		"measure": "range",
-        	"role": "input"
-				}
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "role": "input"
+        }
       },
       {
         "name": "double4",
         "type": "double",
-				"metadata": {
-					"description": "",
-        	"measure": "range",
-        	"role": "input"
-				}
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "role": "input"
+        }
       },
       {
         "name": "string1",
         "type": "string",
-				"metadata": {
-					"description": "",
-        	"measure": "set",
-        	"role": "input"
-				}
+        "metadata": {
+          "description": "",
+          "measure": "set",
+          "role": "input"
+        }
       }
     ]
   },
   "resources": {
-		"cart.label": "C&RT",
+    "cart.label": "C&RT",
     "target.label": "Target",
     "target.desc": "Target (predicted) field",
     "inputs.label": "Inputs",

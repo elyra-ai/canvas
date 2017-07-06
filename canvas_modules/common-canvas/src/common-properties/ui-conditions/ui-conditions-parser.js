@@ -32,7 +32,7 @@ function evaluate(data, paramsList) {
 		or(data.or, paramsList);
 	} else if (data.and) {
 		and(data.and, paramsList);
-	} else if (data.condition && data.condition.op && data.condition.param) { // condition
+	} else if (data.condition) { // condition
 		condition(data.condition, paramsList);
 	} else {
 		throw new Error("Failed to parse definition");

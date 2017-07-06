@@ -1,0 +1,183 @@
+{
+  "paramDef": {
+    "parameters": [
+      {
+        "name": "int_param",
+        "type": "integer"
+      },
+      {
+        "name": "exp_param",
+        "type": "string",
+        "default": "",
+        "role": "expression"
+      }
+    ],
+    "uihints": {
+      "name": "cond_test",
+      "group_info": [
+        {
+          "name": "basic-settings",
+          "label": {
+            "default": "Settings"
+          },
+          "parameters": [
+            "int_param",
+            "exp_param"
+          ]
+        }
+      ],
+      "conditions": [
+        {
+          "validation": {
+            "fail-message": {
+              "type": "warning",
+              "message": {
+                "default": "Expression cannot be empty: Default",
+                "resourceKey": "exp_param_not_empty"
+              },
+              "focusParam": "exp_param"
+            },
+            "evaluate": {
+              "condition": {
+                "param": "exp_param",
+                "op": "isNotEmpty"
+              }
+            }
+          }
+        },
+        {
+          "validation": {
+            "fail-message": {
+              "type": "error",
+              "message": {
+                "default": "int_param value must greaterThan 1: default"
+              },
+              "focusParam": "int_param"
+            },
+            "evaluate": {
+              "condition": {
+                "param": "int_param",
+                "op": "greaterThan",
+                "value": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "resources": {
+      "exp_param_not_empty": "Expression cannot be empty: Resource"
+    }
+  },
+  "expectedResult": {
+    "componentId": "cond_test",
+    "label": "cond_test",
+    "editorSize": "large",
+    "uiItems": [
+      {
+        "itemType": "primaryTabs",
+        "tabs": [
+          {
+            "text": "Settings",
+            "group": "basic-settings",
+            "content": {
+              "itemType": "panel",
+              "panel": {
+                "id": "basic-settings",
+                "panelType": "general",
+                "uiItems": [
+                  {
+                    "itemType": "control",
+                    "control": {
+                      "name": "int_param",
+                      "label": {
+                        "text": "int_param"
+                      },
+                      "controlType": "numberfield",
+                      "valueDef": {
+                        "propType": "integer",
+                        "isList": false,
+                        "isMap": false
+                      },
+                      "separateLabel": true
+                    }
+                  },
+                  {
+                    "itemType": "control",
+                    "control": {
+                      "name": "exp_param",
+                      "label": {
+                        "text": "exp_param"
+                      },
+                      "controlType": "expression",
+                      "valueDef": {
+                        "propType": "string",
+                        "isList": false,
+                        "isMap": false
+                      },
+                      "separateLabel": true
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "buttons": [
+      {
+        "id": "ok",
+        "text": "OK",
+        "isPrimary": true,
+        "url": ""
+      },
+      {
+        "id": "cancel",
+        "text": "Cancel",
+        "isPrimary": false,
+        "url": ""
+      }
+    ],
+    "data": {
+      "conditions": [
+        {
+          "validation": {
+            "fail-message": {
+              "type": "warning",
+              "message": {
+                "default": "Expression cannot be empty: Resource",
+                "resourceKey": "exp_param_not_empty"
+              },
+              "focusParam": "exp_param"
+            },
+            "evaluate": {
+              "condition": {
+                "param": "exp_param",
+                "op": "isNotEmpty"
+              }
+            }
+          }
+        },
+        {
+          "validation": {
+            "fail-message": {
+              "type": "error",
+              "message": {
+                "default": "int_param value must greaterThan 1: default"
+              },
+              "focusParam": "int_param"
+            },
+            "evaluate": {
+              "condition": {
+                "param": "int_param",
+                "op": "greaterThan",
+                "value": 1
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
