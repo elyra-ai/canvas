@@ -9,7 +9,7 @@
 
 
 class ControlDef {
-	constructor(cname, label, controlType, valueDef, role, additionalText, orientation, values, valueLabels, charLimit) {
+	constructor(cname, label, controlType, valueDef, role, additionalText, orientation, values, valueLabels, valueIcons, charLimit) {
 		this.name = cname;
 		this.label = label;
 		this.controlType = controlType;
@@ -19,14 +19,15 @@ class ControlDef {
 		this.orientation = orientation;
 		this.values = values;
 		this.valueLabels = valueLabels;
+		this.valueIcons = valueIcons;
 		this.charLimit = charLimit;
 	}
 }
 
 export class Control extends ControlDef {
-	constructor(cname, label, separateLabel, controlType, valueDef, role, additionalText, orientation, values, valueLabels, charLimit,
+	constructor(cname, label, separateLabel, controlType, valueDef, role, additionalText, orientation, values, valueLabels, valueIcons, charLimit,
 		subControls, keyIndex, defaultRow, childItem) {
-		super(cname, label, controlType, valueDef, role, additionalText, orientation, values, valueLabels, charLimit);
+		super(cname, label, controlType, valueDef, role, additionalText, orientation, values, valueLabels, valueIcons, charLimit);
 		this.separateLabel = separateLabel;
 		this.subControls = subControls;
 		this.keyIndex = keyIndex;
@@ -36,8 +37,8 @@ export class Control extends ControlDef {
 }
 
 export class SubControl extends ControlDef {
-	constructor(cname, label, visible, width, controlType, valueDef, role, additionalText, orientation, values, valueLabels, charLimit) {
-		super(cname, label, controlType, valueDef, role, additionalText, orientation, values, valueLabels, charLimit);
+	constructor(cname, label, visible, width, controlType, valueDef, role, additionalText, orientation, values, valueLabels, valueIcons, charLimit) {
+		super(cname, label, controlType, valueDef, role, additionalText, orientation, values, valueLabels, valueIcons, charLimit);
 		this.visible = visible;
 		this.width = width;
 	}

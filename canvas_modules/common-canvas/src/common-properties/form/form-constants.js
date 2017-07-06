@@ -67,7 +67,8 @@ const ControlType = {
 	ALLOCATEDSTRUCTURES: "allocatedstructures",
 	STRUCTURETABLE: "structuretable",
 	STRUCTUREEDITOR: "structureeditor",
-	STRUCTURELISTEDITOR: "structurelisteditor"
+	STRUCTURELISTEDITOR: "structurelisteditor",
+	TOGGLETEXT: "toggletext"
 };
 
 const ParamRole = {
