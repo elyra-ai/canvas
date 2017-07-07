@@ -8,24 +8,14 @@
  *******************************************************************************/
 
 import { ParameterDef, ParameterMetadata } from "./ParameterInfo";
-import { EditStyle } from "./form-constants";
 import _ from "underscore";
 
 class StructureDef {
-	constructor(cname, keyDefinition, parameterMetadata, editStyle, moveableRows) {
+	constructor(cname, keyDefinition, parameterMetadata, moveableRows) {
 		this.name = cname;
 		this.keyDefinition = keyDefinition;
 		this.parameterMetadata = parameterMetadata;
-		this.editStyle = editStyle;
 		this.moveableRows = moveableRows;
-	}
-
-	isEditStyleSubpanel() {
-		return (this.editStyle === EditStyle.SUBPANEL);
-	}
-
-	isEditStyleInlinel() {
-		return (this.editStyle === EditStyle.INLINE);
 	}
 
 	/**
@@ -67,7 +57,6 @@ class StructureDef {
 				_.propertyOf(structure)("name"),
 				ParameterDef.makeParameterDef(_.propertyOf(structure)("key_definition"), _.propertyOf(uihints)("key_definition")),
 				ParameterMetadata.makeParameterMetadata(_.propertyOf(structure)("parameters"), _.propertyOf(uihints)("parameters")),
-				_.propertyOf(uihints)("editStyle"),
 				_.propertyOf(uihints)("moveableRows")
 			);
 		}

@@ -294,7 +294,7 @@ span.form__validation--invalid {
 
 /* Column Structure Allocator */
 .table-selected-row {
-	background-color: #60C3B9;
+	background-color: #e0e0e0 !important;
 }
 
 #table-row-move-button-container.col-md-1 {
@@ -445,11 +445,7 @@ th div div label, td div div label {
 	background-color: #f9f9fb !important;
 }
 
-.fixedDataTableLayout_rowsContainer {
-	border-left: .25px solid #e0e0e0 !important;
-	border-right: .25px solid #e0e0e0 !important;
-	border-bottom: .25px solid #e0e0e0 !important;
-}
+
 
 /*
 .form-control:focus {

@@ -20,8 +20,9 @@ import { CHARACTER_LIMITS } from "../constants/constants.js";
 export default class TextfieldControl extends EditorControl {
 	constructor(props) {
 		super(props);
+		const value = props.valueAccessor ? props.valueAccessor(props.control.name)[0] : props.value;
 		this.state = {
-			controlValue: props.valueAccessor(props.control.name)[0]
+			controlValue: value
 		};
 		this.getControlValue = this.getControlValue.bind(this);
 		this.handleChange = this.handleChange.bind(this);
@@ -29,7 +30,10 @@ export default class TextfieldControl extends EditorControl {
 
 	handleChange(evt) {
 		this.setState({ controlValue: evt.target.value });
-		this.props.updateControlValue(this.props.control.name, evt.target.value);
+		if (this.props.updateControlValue) {
+			const ctrlName = this.props.columnDef ? this.props.columnDef.name : this.props.control.name;
+			this.props.updateControlValue(ctrlName, evt.target.value, this.props.rowIndex);
+		}
 	}
 
 	getControlValue() {
@@ -40,7 +44,7 @@ export default class TextfieldControl extends EditorControl {
 		var controlName = this.getControlID().split(".")[1];
 		var stateDisabled = {};
 		var stateStyle = {};
-		if (typeof this.props.controlStates[controlName] !== "undefined") {
+		if (this.props.controlStates && typeof this.props.controlStates[controlName] !== "undefined") {
 			if (this.props.controlStates[controlName] === "disabled") {
 				stateDisabled.disabled = true;
 				stateStyle = {
@@ -64,6 +68,14 @@ export default class TextfieldControl extends EditorControl {
 			);
 		}
 		const charLimit = this.getCharLimit(CHARACTER_LIMITS.NODE_PROPERTIES_DIALOG_TEXT_FIELD);
+		let displayedCharLimit;
+		let cellvalue = this.state.controlValue;
+		if (!this.props.inTable) {
+			displayedCharLimit = charLimit;
+		} else {
+			cellvalue = this.props.value;
+		}
+		cellvalue = cellvalue ? cellvalue : "";
 		return (
 			<div className={className} style={stateStyle}>
 				<TextField {...stateDisabled}
@@ -74,8 +86,8 @@ export default class TextfieldControl extends EditorControl {
 					disabledPlaceholderAnimation
 					placeholder={this.props.control.additionalText}
 					onChange={this.handleChange}
-					value={this.state.controlValue}
-					maxCount={charLimit}
+					value={cellvalue}
+					maxCount={displayedCharLimit}
 					maxLength={charLimit}
 				/>
 				{errorMessage}

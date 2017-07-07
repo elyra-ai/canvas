@@ -114,7 +114,7 @@
                           },
                           "visible": true,
                           "width": 22,
-                          "controlType": "textbox",
+                          "controlType": "textfield",
                           "valueDef": {
                             "propType": "string",
                             "isList": false,

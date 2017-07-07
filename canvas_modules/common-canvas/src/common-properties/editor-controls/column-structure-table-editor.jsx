@@ -17,7 +17,8 @@ import React from "react";
 import { Tr, Td } from "reactable";
 import EditorControl from "./editor-control.jsx";
 import ToggletextControl from "./toggletext-control.jsx";
-import OneofselectControl from "../editor-controls/oneofselect-control.jsx";
+import OneofselectControl from "./oneofselect-control.jsx";
+import TextfieldControl from "./textfield-control.jsx";
 import FlexibleTable from "./flexible-table.jsx";
 
 var _ = require("underscore");
@@ -26,7 +27,7 @@ var _ = require("underscore");
 /* eslint-enable react/prop-types */
 /* eslint complexity: ["error", 12] */
 
-export default class StructureTableEditor extends EditorControl {
+export default class ColumnStructureTableEditor extends EditorControl {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -54,6 +55,8 @@ export default class StructureTableEditor extends EditorControl {
 		this.enumRenderCell = this.enumRenderCell.bind(this);
 
 		this.createTable = this.createTable.bind(this);
+		this.getCellValue = this.getCellValue.bind(this);
+		this.updateControlValue = this.updateControlValue.bind(this);
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -188,6 +191,76 @@ export default class StructureTableEditor extends EditorControl {
 		return rendered;
 	}
 
+	getCellValue(rowIndex, colIndex) {
+		const controlValue = this.getCurrentControlValue();
+		return controlValue[rowIndex][colIndex];
+	}
+
+	updateControlValue(ctrlName, value, rowIndex) {
+		const controlValue = this.getCurrentControlValue();
+		let col = -1;
+		for (var colIndex = 0; colIndex < this.props.control.subControls.length; colIndex++) {
+			if (this.props.control.subControls[colIndex].name === ctrlName) {
+				col = colIndex;
+				break;
+			}
+		}
+		if (col > -1) {
+			controlValue[rowIndex][col] = value;
+			this.props.updateControlValue(this.props.control.name, EditorControl.stringifyStructureStrings(controlValue));
+		}
+	}
+
+	_makeCell(columnDef, controlValue, rowIndex, colIndex) {
+		let cell;
+		const inTable = true;
+		if (columnDef.controlType === "toggletext" && columnDef.editStyle !== "subpanel") {
+			cell = (<Td column={columnDef.name}><ToggletextControl
+				rowIndex={rowIndex}
+				control={this.props.control}
+				values={columnDef.values}
+				valueLabels={columnDef.valueLabels}
+				valueIcons={columnDef.valueIcons}
+				controlValue={controlValue}
+				value={controlValue[rowIndex][colIndex]}
+				updateControlValue={this.props.updateControlValue}
+				columnIndex={colIndex}
+				setCurrentControlValueSelected={this.setCurrentControlValueSelected}
+				getSelectedRows={this.getSelectedRows}
+				tableControl
+			/></Td>);
+		} else if (columnDef.controlType === "oneofselect" && columnDef.editStyle !== "subpanel") {
+			cell = (<Td column={columnDef.name}><OneofselectControl
+				rowIndex={rowIndex}
+				control={this.props.control}
+				columnDef={columnDef}
+				controlValue={controlValue}
+				value={controlValue[rowIndex][colIndex]}
+				updateControlValue={this.props.updateControlValue}
+				columnIndex={colIndex}
+				setCurrentControlValueSelected={this.setCurrentControlValueSelected}
+				selectedRows={this.getSelectedRows()}
+				tableControl
+			/></Td>);
+		} else if (columnDef.valueDef.propType === "enum" && columnDef.editStyle !== "subpanel") {
+			cell = <Td column={columnDef.name}>this.enumRenderCell(controlValue[rowIndex][colIndex], columnDef)</Td>;
+		} else if (columnDef.controlType === "textfield" && columnDef.editStyle !== "subpanel") {
+			cell = (<Td column={columnDef.name}><TextfieldControl
+				rowIndex={rowIndex}
+				control={this.props.control}
+				columnDef={columnDef}
+				value={controlValue[rowIndex][colIndex]}
+				updateControlValue={this.updateControlValue}
+				columnIndex={colIndex}
+				setCurrentControlValue={this.setCurrentControlValue}
+				inTable={inTable}
+			/></Td>);
+		} else {
+			cell = <Td column={columnDef.name}>{controlValue[rowIndex][colIndex]}</Td>;
+		}
+		return cell;
+	}
+
 	createTable() {
 		var rows = [];
 		const controlValue = this.getCurrentControlValue();
@@ -196,47 +269,11 @@ export default class StructureTableEditor extends EditorControl {
 			for (var colIndex = 0; colIndex < this.props.control.subControls.length; colIndex++) {
 				const columnDef = this.props.control.subControls[colIndex];
 				if (columnDef.visible) {
-					var cell;
-
-					if (columnDef.controlType === "toggletext") {
-						cell = (<Td column={columnDef.name}><ToggletextControl
-							rowIndex={rowIndex}
-							control={this.props.control}
-							values={columnDef.values}
-							valueLabels={columnDef.valueLabels}
-							valueIcons={columnDef.valueIcons}
-							controlValue={controlValue}
-							value={controlValue[rowIndex][colIndex]}
-							updateControlValue={this.props.updateControlValue}
-							columnIndex={colIndex}
-							setCurrentControlValueSelected={this.setCurrentControlValueSelected}
-							getSelectedRows={this.getSelectedRows}
-							tableControl
-						/></Td>);
-					} else if (columnDef.controlType === "oneofselect") {
-						cell = (<Td column={columnDef.name}><OneofselectControl
-							rowIndex={rowIndex}
-							control={this.props.control}
-							columnDef={columnDef}
-							controlValue={controlValue}
-							value={controlValue[rowIndex][colIndex]}
-							updateControlValue={this.props.updateControlValue}
-							columnIndex={colIndex}
-							setCurrentControlValueSelected={this.setCurrentControlValueSelected}
-							selectedRows={this.getSelectedRows()}
-							tableControl
-						/></Td>);
-					} else if (columnDef.valueDef.propType === "enum") {
-						cell = <Td column={columnDef.name}>this.enumRenderCell(controlValue[rowIndex][colIndex], columnDef)</Td>;
-					} else {
-						cell = <Td column={columnDef.name}>{controlValue[rowIndex][colIndex]}</Td>;
-					}
-					columns.push(cell);
+					columns.push(this._makeCell(columnDef, controlValue, rowIndex, colIndex));
 				}
 			}
 			rows.push(<Tr key={rowIndex} onClick={this.handleRowClick.bind(this, rowIndex)} className={this.getRowClassName(rowIndex)}>{columns}</Tr>);
 		}
-
 
 		var headers = [];
 		var sortFields = [];
@@ -278,4 +315,4 @@ export default class StructureTableEditor extends EditorControl {
 	}
 }
 
-StructureTableEditor.propTypes = {};
+ColumnStructureTableEditor.propTypes = {};

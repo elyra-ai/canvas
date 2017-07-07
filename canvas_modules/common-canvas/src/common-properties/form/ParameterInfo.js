@@ -15,7 +15,7 @@ import _ from "underscore";
 export class ParameterDef {
 	constructor(cname, label, description, type, role, valueRestriction, defaultValue,
 		control, orientation, style, width, charLimit, placeHolderText, separator,
-		resourceKey, visible, valueIcons) {
+		resourceKey, visible, valueIcons, editStyle) {
 		this.name = cname;
 		this.label = ResourceDef.make(label);
 		this.description = ResourceDef.make(description);
@@ -31,8 +31,9 @@ export class ParameterDef {
 		this.placeHolderText = ResourceDef.make(placeHolderText); // additionalText
 		this.separator = separator;
 		this.resourceKey = resourceKey;
-		this.visible = (visible ? visible : true);
+		this.visible = (typeof visible === "boolean" ? visible : true);
 		this.valueIcons = valueIcons;
+		this.editStyle = editStyle;
 	}
 
 	isList() {
@@ -169,7 +170,8 @@ export class ParameterDef {
 				_.propertyOf(uihint)("separator"),
 				_.propertyOf(uihint)("resourceKey"),
 				_.propertyOf(uihint)("visible"),
-				_.propertyOf(uihint)("valueIcons")
+				_.propertyOf(uihint)("valueIcons"),
+				_.propertyOf(uihint)("editStyle")
 			);
 		}
 		return null;

@@ -58,7 +58,6 @@
 	    "structure_info": [
 	      {
 	        "name": "SortEntry",
-	        "editStyle": "inline",
 	        "moveableRows": true,
 	        "key_definition": {
 	          "name": "field",
@@ -245,7 +244,8 @@
 	                          "/images/down-triangle.svg"
 	                        ],
 	                        "visible": true,
-	                        "width": 16
+	                        "width": 16,
+													"editStyle":"inline"
 	                      }
 	                    ],
 	                    "keyIndex": 0,

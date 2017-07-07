@@ -20,7 +20,6 @@ import EditorControl from "./editor-control.jsx";
 import SubPanelCell from "../editor-panels/sub-panel-cell.jsx";
 import TextRenderer from "../renderers/text-renderer.jsx";
 import EnumRenderer from "../renderers/enum-renderer.jsx";
-import TextBoxRenderer from "../renderers/textbox-renderer.jsx";
 
 var _ = require("underscore");
 
@@ -197,10 +196,6 @@ export default class StructureTableEditor extends EditorControl {
 				var cell;
 				if (columnDef.valueDef.propType === "enum") {
 					renderer = new EnumRenderer(columnDef.values, columnDef.valueLabels, columnDef.valueDef.isList);
-					cell = <TextCell data={controlValue} col={i} renderer={renderer} />;
-				} else if (columnDef.controlType === "textbox") {
-					renderer = new TextBoxRenderer(columnDef, this.props.control, controlValue,
-																						i, this.props.updateControlValue, this.setCurrentControlValue);
 					cell = <TextCell data={controlValue} col={i} renderer={renderer} />;
 				} else {
 					cell = <TextCell data={controlValue} col={i} renderer={renderer} />;

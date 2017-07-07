@@ -1,0 +1,210 @@
+{
+  "title": {
+    "key": null,
+    "ref": null,
+    "props": {
+      "id": "dialog.nodePropertiesTitle",
+      "tagName": "span",
+      "values": {}
+    },
+    "_owner": null,
+    "_store": {}
+  },
+	"formData": {
+   "componentId":"rename",
+   "label":"Rename Columns",
+   "editorSize":"large",
+   "uiItems":[
+      {
+         "itemType":"primaryTabs",
+         "tabs":[
+            {
+               "text":"Settings",
+               "group":"basic-settings",
+               "content":{
+                  "itemType":"panel",
+                  "panel":{
+                     "id":"basic-settings",
+                     "panelType":"columnSelection",
+                     "uiItems":[
+                        {
+                           "itemType":"control",
+                           "control":{
+                              "name":"renamed_fields",
+                              "label":{
+                                 "text":"Rename columns"
+                              },
+                              "controlType":"structuretable",
+															"moveableRows": true,
+                              "valueDef":{
+                                 "propType":"structure",
+                                 "isList":false,
+                                 "isMap":true
+                              },
+                              "separateLabel":true,
+                              "subControls":[
+                                 {
+                                    "name":"field",
+                                    "label":{
+                                       "text":"Input name"
+                                    },
+                                    "controlType":"oneofcolumns",
+                                    "valueDef":{
+                                       "propType":"string",
+                                       "isList":false,
+                                       "isMap":false
+                                    },
+                                    "visible":true,
+                                    "width":26
+                                 },
+                                 {
+                                    "name":"new_name",
+                                    "label":{
+                                       "text":"Output name"
+                                    },
+                                    "controlType":"textfield",
+                                    "valueDef":{
+                                       "propType":"string",
+                                       "isList":false,
+                                       "isMap":false
+                                    },
+                                    "visible":true,
+                                    "width":26,
+                                    "editStyle":"inline"
+                                 }
+                              ],
+                              "keyIndex":0,
+                              "defaultRow":[
+                                 null
+                              ]
+                           }
+                        }
+                     ]
+                  }
+               }
+            }
+         ]
+      }
+   ],
+   "buttons":[
+      {
+         "id":"ok",
+         "text":"OK",
+         "isPrimary":true,
+         "url":""
+      },
+      {
+         "id":"cancel",
+         "text":"Cancel",
+         "isPrimary":false,
+         "url":""
+      }
+   ],
+   "data":{
+      "currentParameters":{
+         "renamed_fields":[
+            "[\"Age\", \"Age\"]",
+            "[\"BP\", \"BP-1\"]"
+         ]
+      },
+      "datasetMetadata":{
+         "fields":[
+            {
+               "name":"Age",
+               "type":"integer",
+               "metadata":{
+                  "description":"",
+                  "measure":"range",
+                  "role":"input"
+               }
+            },
+            {
+               "name":"Sex",
+               "type":"string",
+               "metadata":{
+                  "description":"",
+                  "measure":"discrete",
+                  "role":"input"
+               }
+            },
+            {
+               "name":"BP",
+               "type":"string",
+               "metadata":{
+                  "description":"",
+                  "measure":"discrete",
+                  "role":"input"
+               }
+            },
+            {
+               "name":"Cholesterol",
+               "type":"string",
+               "metadata":{
+                  "description":"",
+                  "measure":"discrete",
+                  "role":"input"
+               }
+            },
+            {
+               "name":"Na",
+               "type":"double",
+               "metadata":{
+                  "description":"",
+                  "measure":"range",
+                  "role":"input"
+               }
+            },
+            {
+               "name":"K",
+               "type":"double",
+               "metadata":{
+                  "description":"",
+                  "measure":"range",
+                  "role":"input"
+               }
+            },
+            {
+               "name":"Drug",
+               "type":"string",
+               "metadata":{
+                  "description":"",
+                  "measure":"discrete",
+                  "role":"input"
+               }
+            }
+         ]
+      },
+      "conditions":[
+         {
+            "validation":{
+               "fail_message":{
+                  "type":"error",
+                  "focusParam":"renamed_fields",
+                  "message":{
+                     "resourceKey":"output_name_not_empty",
+                     "default":"The 'Output Name' field cannot be empty"
+                  }
+               },
+               "evaluate":{
+                  "condition":{
+                     "param":"renamed_fields",
+                     "op":"isNotEmpty"
+                  }
+               }
+            }
+         }
+      ],
+      "currentProperties":{
+         "renamed_fields":[
+            "[\"Age\", \"Age\"]",
+            "[\"BP\", \"BP-1\"]"
+         ]
+      }
+   }
+},
+"appData": {
+	"nodeId": "id4JBTXCW9LBR",
+	"updateUrl": "streams/153651d6-9b88-423c-b01b-861f12d01489/diagrams/153651d6-9b88-423c-b01b-861f12d01489/nodes/id4JBTXCW9LBR"
+},
+"additionalComponents": null
+}

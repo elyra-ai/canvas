@@ -17,8 +17,7 @@
         {
           "name": "new_name",
           "type": "string",
-          "role": "new_column",
-          "default": ""
+          "role": "new_column"
         }
       ]
     }
@@ -46,10 +45,10 @@
           {
             "name": "new_name",
             "resourceKey": "RenameFieldEntry.new_name",
-            "columns": 26
+            "columns": 26,
+		        "editStyle": "inline"
           }
-        ],
-        "editStyle": "inline"
+        ]
       }
     ],
     "parameter_info": [

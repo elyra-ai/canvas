@@ -48,7 +48,7 @@
               "name": "new_name",
               "resourceKey": "RenameFieldEntry.new_name",
               "columns": 26,
-		          "editStyle": "inline"
+		          "editStyle": "subpanel"
             }
           ]
         }
@@ -229,7 +229,7 @@
                           },
                           "visible": true,
                           "width": 26,
-													"editStyle":"inline"
+													"editStyle":"subpanel"
                         }
                       ],
                       "keyIndex": 0,

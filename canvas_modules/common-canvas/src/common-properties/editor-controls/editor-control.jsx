@@ -166,7 +166,8 @@ export default class EditorControl extends React.Component {
 
 	validateInput(evt) {
 		var controlName = this.getControlID().split(".")[1];
-		if (typeof this.props.controlStates[controlName] === "undefined" && this.props.validationDefinitions[controlName]) {
+		if (this.props.controlStates && typeof this.props.controlStates[controlName] === "undefined" &&
+					this.props.validationDefinitions[controlName]) {
 			var userInput = {
 				[controlName]: this.state.controlValue // evt.target.value
 			};

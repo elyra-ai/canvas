@@ -12,7 +12,7 @@
 
 import { Control, SubControl } from "./ControlInfo";
 import { UIItem } from "./UIItem";
-import { GroupType, PanelType, Type, ControlType, ParamRole } from "./form-constants";
+import { GroupType, PanelType, Type, ControlType, ParamRole, EditStyle } from "./form-constants";
 
 /**
  * The Editor is the primary container for the editing controls. It defines the tabs within the
@@ -249,8 +249,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 			break;
 		case Type.STRUCTURE:
 			if (structureDef) {
-				const editStyleSubpanel = structureDef.isEditStyleSubpanel();
-				if (editStyleSubpanel) {
+				if (structureDef.editStyle === EditStyle.SUBPANEL) {
 					childItem = _makeEditStyleSubPanel(structureDef, l10nProvider);
 				}
 				keyIndex = structureDef.keyAttributeIndex();
@@ -260,12 +259,12 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 				// For inline/row editing, create definitions for all the columns that can be edited
 				subControls = [];
 				structureDef.parameterMetadata.paramDefs.forEach(function(param) {
-					subControls.push(_makeSubControl(param, l10nProvider, editStyleSubpanel));
+					subControls.push(_makeSubControl(param, l10nProvider, false));
 				});
 				// If the property is a keyed property or a structure list then the key should not be included in the
 				// structure definition. However it will still need to be included in the table column definitions.
 				if ((parameter.isMapValue() || parameter.isList()) && structureDef.keyDefinition) {
-					subControls.unshift(_makeSubControl(structureDef.keyDefinition, l10nProvider, editStyleSubpanel));
+					subControls.unshift(_makeSubControl(structureDef.keyDefinition, l10nProvider, true));
 				}
 				if (parameter.isList() || parameter.isMapValue()) {
 					if (group.groupType() === GroupType.COLUMN_ALLOCATION) {
@@ -357,7 +356,7 @@ function _makeEditStyleSubPanel(structureDef, l10nProvider) {
 /**
  * Creates a column control for the supplied property/attribute.
  */
-function _makeSubControl(parameter, l10nProvider, editStyleSubpanel) {
+function _makeSubControl(parameter, l10nProvider, isKeyField) {
 	const additionalText = parameter.getAdditionalText(l10nProvider);
 	const orientation = parameter.orientation;
 	const controlLabel = new Label(l10nProvider.l10nLabel(parameter, parameter.name));
@@ -373,7 +372,7 @@ function _makeSubControl(parameter, l10nProvider, editStyleSubpanel) {
 			controlType = ControlType.ONEOFCOLUMNS;
 			break;
 		case ParamRole.NEW_COLUMN:
-			controlType = editStyleSubpanel ? ControlType.TEXTFIELD : ControlType.TEXTBOX;
+			controlType = ControlType.TEXTFIELD;
 			break;
 		default:
 			controlType = ControlType.TEXTFIELD;
@@ -420,7 +419,9 @@ function _makeSubControl(parameter, l10nProvider, editStyleSubpanel) {
 		parameter.getValidValues(),
 		valueLabels,
 		parameter.valueIcons,
-		parameter.charLimit
+		parameter.charLimit,
+		parameter.editStyle,
+		isKeyField
 	);
 }
 

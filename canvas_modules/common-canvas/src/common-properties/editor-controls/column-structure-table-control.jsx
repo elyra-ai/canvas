@@ -16,7 +16,7 @@
 
 import logger from "../../../utils/logger";
 import React from "react";
-import StructureTableEditor from "./column-structure-table-editor.jsx";
+import ColumnStructureTableEditor from "./column-structure-table-editor.jsx";
 import { Grid,	Row, Col, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Button } from "ap-components-react/dist/ap-components-react";
 import Isvg from "react-inlinesvg";
@@ -35,7 +35,7 @@ var _ = require("underscore");
 const ARROW_HEIGHT = 14;
 const ARROW_WIDTH = 14;
 
-export default class ColumnStructureTableControl extends StructureTableEditor {
+export default class ColumnStructureTableControl extends ColumnStructureTableEditor {
 	constructor(props) {
 		super(props);
 
@@ -190,7 +190,7 @@ export default class ColumnStructureTableControl extends StructureTableEditor {
 	}
 
 	selectionChanged(selection) {
-		StructureTableEditor.prototype.selectionChanged.call(this, selection);
+		ColumnStructureTableEditor.prototype.selectionChanged.call(this, selection);
 		const opacity = "opacity:" + (selection.length > 0 ? 1.0 : 0.4);
 		document.getElementById("remove-fields-button").style.cssText = opacity;
 		document.getElementById("remove-fields-button").setAttribute("disabled", selection.length === 0);
@@ -311,7 +311,7 @@ export default class ColumnStructureTableControl extends StructureTableEditor {
 			this._update_callback = null;
 		}
 
-		let className = {};
+		let className = "structure-table-content-row";
 		var errorMessage = <div className="validation-error-message"></div>;
 		if (this.state.validateErrorMessage && this.state.validateErrorMessage.text !== "") {
 			// stateStyle.borderColor = "#FF0000 !important";
@@ -340,6 +340,7 @@ export default class ColumnStructureTableControl extends StructureTableEditor {
 
 		const addTooltip = <Tooltip id="addFieldTip">Select columns to add</Tooltip>;
 		const removeTooltip = <Tooltip id="removeFieldTip">Remove selected columns</Tooltip>;
+		const table = this.createTable();
 		var content = (<Grid>
 			<Row className="structure-table-row">
 				<Col md={11}>
@@ -360,8 +361,8 @@ export default class ColumnStructureTableControl extends StructureTableEditor {
 							</div>
 						</OverlayTrigger>
 					</Row>
-					<Row className="structure-table-content-row">
-						{this.createTable()}
+					<Row className={className}>
+						{table}
 						{errorMessage}
 					</Row>
 				</Col>
