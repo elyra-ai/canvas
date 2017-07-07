@@ -279,6 +279,10 @@ span.form__validation--invalid {
 	position: fixed;
 }
 
+.filter-icons-tooltips {
+	position: fixed !important;
+}
+
 .field-picker-data-type-icon {
 	width: 15px;
 	height: 15px;

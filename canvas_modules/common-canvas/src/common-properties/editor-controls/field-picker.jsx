@@ -18,6 +18,7 @@ import logger from "../../../utils/logger";
 import React from "react";
 import EditorControl from "./editor-control.jsx";
 import FlexibleTable from "./flexible-table.jsx";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Tr, Td } from "reactable";
 import {
 	Button,
@@ -317,24 +318,29 @@ export default class FieldPicker extends EditorControl {
 					break;
 				}
 			}
+			const tooltip = <Tooltip className="filter-icons-tooltips" id={"filter-tooltip-" + filter.type}>{filter.type}</Tooltip>;
 			let row = (
-				<li className={"filter-list-li filter-list-li-icon filter-list-data-" + filter.type + "-enabled-icon"}
-					key={"filters" + ind}
-					data-type={filter.type}
-					onClick={that.filterType.bind(that)}
-				>
-					{filter.icon.enabled}
-				</li>
-			);
-			if (!enabled) {
-				row = (
-					<li className={"filter-list-li filter-list-li-icon filter-list-data-" + filter.type + "-disabled-icon"}
+				<OverlayTrigger placement="top" overlay={tooltip}>
+					<li className={"filter-list-li filter-list-li-icon filter-list-data-" + filter.type + "-enabled-icon"}
 						key={"filters" + ind}
 						data-type={filter.type}
 						onClick={that.filterType.bind(that)}
 					>
-						{filter.icon.disabled}
+						{filter.icon.enabled}
 					</li>
+				</OverlayTrigger>
+			);
+			if (!enabled) {
+				row = (
+					<OverlayTrigger placement="top" overlay={tooltip}>
+						<li className={"filter-list-li filter-list-li-icon filter-list-data-" + filter.type + "-disabled-icon"}
+							key={"filters" + ind}
+							data-type={filter.type}
+							onClick={that.filterType.bind(that)}
+						>
+							{filter.icon.disabled}
+						</li>
+					</OverlayTrigger>
 				);
 			}
 
