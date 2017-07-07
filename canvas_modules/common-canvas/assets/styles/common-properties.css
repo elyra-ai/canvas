@@ -245,6 +245,7 @@ span.form__validation--invalid {
 	float: left;
 	width: 20px;
   fill: #A91560;
+	margin-top: -2px;
 }
 
 #reset-fields-button:hover #reset-fields-button-icon{
@@ -377,6 +378,7 @@ th div div label, td div div label {
 #flexible-table-search {
 	width: 100%;
 	float: left;
+	padding-bottom: 2px;
 }
 
 #flexible-table-search-icon {

@@ -24,10 +24,10 @@ import {
 	Checkbox
 } from "ap-components-react/dist/ap-components-react";
 
-import Isvg from "react-inlinesvg";
-import reset32 from "../../../assets/images/reset_32.svg";
-
 import { DATA_TYPES } from "../constants/constants.js";
+
+import resetIcon from "../../../assets/images/reset_32.svg";
+import resetHoverIcon from "../../../assets/images/reset_32_hover.svg";
 
 import dateEnabledIcon from "../../../assets/images/date-enabled-icon.svg";
 import integerEnabledIcon from "../../../assets/images/integer-enabled-icon.svg";
@@ -53,7 +53,8 @@ export default class FieldPicker extends EditorControl {
 			filterIcons: [],
 			filterList: [],
 			initialControlValues: [],
-			newControlValues: []
+			newControlValues: [],
+			hoverResetIcon: false
 		};
 
 		this.dateEnabledIcon = dateEnabledIcon;
@@ -77,6 +78,8 @@ export default class FieldPicker extends EditorControl {
 		this.handleFieldChecked = this.handleFieldChecked.bind(this);
 		this.handleReset = this.handleReset.bind(this);
 		this.getNewSelections = this.getNewSelections.bind(this);
+		this.mouseEnterResetButton = this.mouseEnterResetButton.bind(this);
+		this.mouseLeaveResetButton = this.mouseLeaveResetButton.bind(this);
 	}
 
 	componentWillMount() {
@@ -138,14 +141,14 @@ export default class FieldPicker extends EditorControl {
 
 			if (this.state.filterIcons.length === 0 || this.state.filterIcons.indexOf(field.type) < 0) {
 				const columns = [
-					<Td column="checkbox"><div className="field-picker-checkbox">
+					<Td key="field-picker-column-checkbox" column="checkbox"><div className="field-picker-checkbox">
 					<Checkbox id={"field-picker-checkbox-" + i}
 						checked={checked}
 						onChange={this.handleFieldChecked}
 						data-name={field.name}
 					/></div></Td>,
-					<Td column="fieldName">{field.name}</Td>,
-					<Td column="dataType"><div>
+					<Td key="field-picker-column-fieldname" column="fieldName">{field.name}</Td>,
+					<Td key="field-picker-column-datatype" column="dataType"><div>
 						<div className={"field-picker-data-type-icon field-picker-data-" + field.type + "-type-icon"}>
 							<img src={this[field.type + "EnabledIcon"]} />
 						</div>
@@ -153,7 +156,7 @@ export default class FieldPicker extends EditorControl {
 					</div></Td>
 				];
 
-				tableData.push(<Tr >{columns}</Tr>);
+				tableData.push(<Tr key="field-picker-data-rows" className="field-picker-data-rows">{columns}</Tr>);
 			}
 		}
 		return tableData;
@@ -217,7 +220,7 @@ export default class FieldPicker extends EditorControl {
 	handleFieldChecked(evt) {
 		const current = this.state.newControlValues;
 		const initialControlValues = this.state.initialControlValues;
-		const selectedFieldName = evt.currentTarget.dataset.name;
+		const selectedFieldName = evt.currentTarget.getAttribute("data-name");
 		let selectedField = [];
 		// if selectedField is in the original list, grab that row instead of generating new selectedField
 		for (let i = 0; i < initialControlValues.length; i++) {
@@ -258,7 +261,7 @@ export default class FieldPicker extends EditorControl {
 	}
 
 	filterType(evt) {
-		const type = evt.currentTarget.dataset.type;
+		const type = evt.currentTarget.getAttribute("data-type");
 		const iconsSelected = this.state.filterIcons;
 		const index = iconsSelected.indexOf(type);
 		if (index < 0) {
@@ -269,7 +272,20 @@ export default class FieldPicker extends EditorControl {
 		this.setState({ filterIcons: iconsSelected });
 	}
 
+	mouseEnterResetButton() {
+		this.setState({ hoverResetIcon: true });
+	}
+
+	mouseLeaveResetButton() {
+		this.setState({ hoverResetIcon: false });
+	}
+
 	render() {
+		let resetIconImage = (<img src={resetIcon} />);
+		if (this.state.hoverResetIcon) {
+			resetIconImage = (<img src={resetHoverIcon} />);
+		}
+
 		const header = (
 			<div>
 				<Button
@@ -281,10 +297,12 @@ export default class FieldPicker extends EditorControl {
 				<div id="reset-fields-button"
 					className="button"
 					onClick={this.handleReset}
+					onMouseEnter={this.mouseEnterResetButton}
+					onMouseLeave={this.mouseLeaveResetButton}
 				>
 					<div id="reset-fields-button-label">Reset</div>
 					<div id="reset-fields-button-icon">
-						<Isvg src={reset32} />
+						{resetIconImage}
 					</div>
 				</div>
 			</div>
