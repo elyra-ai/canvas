@@ -202,12 +202,16 @@ export default class StructureTableEditor extends EditorControl {
 						cell = (<Td column={columnDef.name}><ToggletextControl
 							rowIndex={rowIndex}
 							control={this.props.control}
-							columnDef={columnDef}
+							values={columnDef.values}
+							valueLabels={columnDef.valueLabels}
+							valueIcons={columnDef.valueIcons}
 							controlValue={controlValue}
 							value={controlValue[rowIndex][colIndex]}
 							updateControlValue={this.props.updateControlValue}
 							columnIndex={colIndex}
-							setCurrentControlValue={this.setCurrentControlValue}
+							setCurrentControlValueSelected={this.setCurrentControlValueSelected}
+							getSelectedRows={this.getSelectedRows}
+							tableControl
 						/></Td>);
 					} else if (columnDef.controlType === "oneofselect") {
 						cell = (<Td column={columnDef.name}><OneofselectControl

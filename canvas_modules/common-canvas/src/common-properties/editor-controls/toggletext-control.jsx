@@ -13,58 +13,75 @@
 *****************************************************************/
 
 import React from "react";
+import EditorControl from "./editor-control.jsx";
 
-export default class ToggletextControl extends React.Component {
+export default class ToggletextControl extends EditorControl {
 	constructor(props) {
 		super(props);
+		if (!props.tableControl) {
+			this.state = { controlValue: props.valueAccessor(props.control.name)[0] };
+		}
 		this.valuesMap = {};
 		this.iconsMap = {};
-		for (let i = 0; i < this.props.columnDef.values.length; ++i) {
-			this.valuesMap[this.props.columnDef.values[i]] = this.props.columnDef.valueLabels[i];
-			if (typeof this.props.columnDef.valueIcons !== "undefined") {
-				this.iconsMap[this.props.columnDef.values[i]] = this.props.columnDef.valueIcons[i];
+		for (let i = 0; i < this.props.values.length; ++i) {
+			this.valuesMap[this.props.values[i]] = this.props.valueLabels[i];
+			if (typeof this.props.valueIcons !== "undefined") {
+				this.iconsMap[this.props.values[i]] = this.props.valueIcons[i];
 			}
 		}
 	}
 
 	onClick(evt) {
-		evt.stopPropagation();
-		const newValue = (this.props.value === this.props.columnDef.values[0]) ? this.props.columnDef.values[1] : this.props.columnDef.values[0];
-		var newControlValue = this.props.controlValue;
-		newControlValue[this.props.rowIndex][this.props.columnIndex] = newValue;
-		this.props.setCurrentControlValue(this.props.control.name, newControlValue, this.props.updateControlValue);
+		evt.stopPropagation();  // prevents row selection change when clicking on toggletext
+		const renderValue = (this.props.tableControl) ? this.props.value : this.state.controlValue;
+		const newValue = (renderValue === this.props.values[0]) ? this.props.values[1] : this.props.values[0];
+		if (this.props.tableControl) {
+			var newControlValue = this.props.controlValue;
+			newControlValue[this.props.rowIndex][this.props.columnIndex] = newValue;
+			this.props.setCurrentControlValueSelected(this.props.control.name, newControlValue, this.props.updateControlValue, this.props.getSelectedRows());
+		} else {
+			this.notifyValueChanged(this.props.control.name, newValue);
+			this.setState({ controlValue: newValue });
+			this.props.updateControlValue(this.props.control.name, newValue);
+		}
 	}
 
 	render() {
-		let rendered = this.valuesMap[this.props.value];
+		const renderValue = (this.props.tableControl) ? this.props.value : this.state.controlValue;
+		let rendered = (this.props.tableControl) ? this.valuesMap[renderValue] : this.valuesMap[renderValue];
 		if (typeof rendered === "undefined") {
-			rendered = this.props.value;
+			rendered = renderValue;
 		}
 
 		let icon = "";
-		if (typeof this.iconsMap[this.props.value] !== "undefined") {
-			icon = <img className="toggletext_icon" src={this.iconsMap[this.props.value]} />;
+		if (typeof this.iconsMap[renderValue] !== "undefined") {
+			icon = <img className="toggletext_icon" src={this.iconsMap[renderValue]} onClick={this.onClick.bind(this)} />;
 
 		}
 
 		return (
-			<div className="toggletext_control"
-				onClick={this.onClick.bind(this)}
-			>
+			<div className="toggletext_control">
 				{icon}
-				{rendered}
+				<u onClick={this.onClick.bind(this)} className="toggletext_text">
+					{rendered}
+				</u>
 			</div>
 		);
 	}
 }
 
 ToggletextControl.propTypes = {
-	rowIndex: React.PropTypes.number,
-	columnIndex: React.PropTypes.number,
-	control: React.PropTypes.object,
-	controlValue: React.PropTypes.array,
-	columnDef: React.PropTypes.object,
-	value: React.PropTypes.string,
-	updateControlValue: React.PropTypes.func,
-	setCurrentControlValue: React.PropTypes.func
+	rowIndex: React.PropTypes.number, 										// required when tableControl yes
+	columnIndex: React.PropTypes.number, 									// required when tableControl yes
+	control: React.PropTypes.object.isRequired,
+	controlValue: React.PropTypes.array.isRequired,
+	values: React.PropTypes.array.isRequired,
+	valueLabels: React.PropTypes.array.isRequired,
+	valueIcons: React.PropTypes.array,
+	value: React.PropTypes.string, 												// required when tableControl yes
+	updateControlValue: React.PropTypes.func.isRequired,
+	setCurrentControlValueSelected: React.PropTypes.func,	// required when tableControl yes
+	getSelectedRows: React.PropTypes.func, 								// required when tableControl yes
+	valueAccessor: React.PropTypes.func, 									// required when tableControl no
+	tableControl: React.PropTypes.bool
 };

@@ -316,12 +316,15 @@ span.form__validation--invalid {
 .toggletext_control {
 	color: #a6266e;
 	font-weight: bold;
-	text-decoration: underline;
-	cursor: pointer;
 }
 
 .toggletext_icon {
 	padding-right: 2px;
+	cursor: pointer;
+}
+
+.toggletext_text {
+	cursor: pointer;
 }
 
 .sort_icon-column {

@@ -24,6 +24,7 @@ import { Tabs } from "ap-components-react/dist/ap-components-react";
 import { CONDITION_ERROR_MESSAGE } from "../constants/constants.js";
 import ControlItem from "./control-item.jsx";
 import TextfieldControl from "./textfield-control.jsx";
+import ToggletextControl from "./toggletext-control.jsx";
 import TextareaControl from "./textarea-control.jsx";
 import ExpressionControl from "./expression-control.jsx";
 import PasswordControl from "./password-control.jsx";
@@ -243,6 +244,16 @@ export default class EditorForm extends React.Component {
 				validationDefinitions={this.state.validationDefinitions}
 				updateControlValue={this.updateControlValue}
 				controlStates={this.state.controlStates}
+			/>);
+		} else if (control.controlType === "toggletext") {
+			return (<ToggletextControl control={control}
+				updateControlValue={this.updateControlValue}
+				valueAccessor={controlValueAccessor}
+				updateControlValue={this.updateControlValue}
+				values={control.values}
+				valueLabels={control.valueLabels}
+				valueIcons={control.valueIcons}
+
 			/>);
 		} else if (control.controlType === "passwordfield") {
 			return (<PasswordControl control={control}

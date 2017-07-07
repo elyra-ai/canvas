@@ -20,18 +20,12 @@ import EditorControl from "./editor-control.jsx";
 import SubPanelCell from "../editor-panels/sub-panel-cell.jsx";
 import TextRenderer from "../renderers/text-renderer.jsx";
 import EnumRenderer from "../renderers/enum-renderer.jsx";
-import ToggletextRenderer from "../renderers/toggletext-renderer.jsx";
 import TextBoxRenderer from "../renderers/textbox-renderer.jsx";
 
 var _ = require("underscore");
 
 /* eslint-disable react/prop-types */
 const TextCell = ({ rowIndex, data, col, renderer, props }) => (
-	<Cell {...props}>
-		{renderer.render(data[rowIndex][col], rowIndex)}
-	</Cell>
-);
-const LinkCell = ({ rowIndex, data, col, renderer, props }) => (
 	<Cell {...props}>
 		{renderer.render(data[rowIndex][col], rowIndex)}
 	</Cell>
@@ -201,11 +195,7 @@ export default class StructureTableEditor extends EditorControl {
 				const header = <Cell>{columnDef.label.text}</Cell>;
 				let renderer = defaultRenderer;
 				var cell;
-				if (columnDef.controlType === "toggletext") {
-					renderer = new ToggletextRenderer(columnDef, this.props.control, controlValue,
-																						i, this.props.updateControlValue, this.setCurrentControlValue);
-					cell = <LinkCell data={controlValue} col={i} renderer={renderer} />;
-				} else if (columnDef.valueDef.propType === "enum") {
+				if (columnDef.valueDef.propType === "enum") {
 					renderer = new EnumRenderer(columnDef.values, columnDef.valueLabels, columnDef.valueDef.isList);
 					cell = <TextCell data={controlValue} col={i} renderer={renderer} />;
 				} else if (columnDef.controlType === "textbox") {
