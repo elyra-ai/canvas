@@ -217,6 +217,7 @@
 	                          "isList": false,
 	                          "isMap": false
 	                        },
+													"role":"column",
 	                        "visible": true,
 	                        "width": 28
 	                      },
@@ -231,6 +232,7 @@
 	                          "isList": false,
 	                          "isMap": false
 	                        },
+													"role":"enum",
 	                        "values": [
 	                          "Ascending",
 	                          "Descending"
@@ -250,8 +252,8 @@
 	                    ],
 	                    "keyIndex": 0,
 	                    "defaultRow": [
-	                      "\"\"",
-	                      "\"Ascending\""
+	                      "",
+	                      "Ascending"
 	                    ],
 	                    "moveableRows": true
 	                  }

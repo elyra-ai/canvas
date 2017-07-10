@@ -101,6 +101,7 @@
                           "visible": true,
                           "width": 22,
                           "controlType": "oneofcolumns",
+													"role": "column",
                           "valueDef": {
                             "propType": "string",
                             "isList": false,
@@ -115,6 +116,7 @@
                           "visible": true,
                           "width": 22,
                           "controlType": "textfield",
+													"role": "new_column",
                           "valueDef": {
                             "propType": "string",
                             "isList": false,
@@ -123,9 +125,7 @@
                         }
                       ],
                       "keyIndex": 0,
-                      "defaultRow": [
-                        ""
-                      ]
+                      "defaultRow": [null]
                     }
                   }
                 ]

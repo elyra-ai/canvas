@@ -70,7 +70,7 @@ export default class TextfieldControl extends EditorControl {
 		const charLimit = this.getCharLimit(CHARACTER_LIMITS.NODE_PROPERTIES_DIALOG_TEXT_FIELD);
 		let displayedCharLimit;
 		let cellvalue = this.state.controlValue;
-		if (!this.props.inTable) {
+		if (!this.props.tableControl) {
 			displayedCharLimit = charLimit;
 		} else {
 			cellvalue = this.props.value;

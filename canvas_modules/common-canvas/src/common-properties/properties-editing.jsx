@@ -69,5 +69,5 @@ PropertiesEditing.propTypes = {
 	applyLabel: React.PropTypes.string,
 	rejectLabel: React.PropTypes.string,
 	children: React.PropTypes.element,
-	showPropertiesButtons: React.PropTypes.boolean
+	showPropertiesButtons: React.PropTypes.bool
 };

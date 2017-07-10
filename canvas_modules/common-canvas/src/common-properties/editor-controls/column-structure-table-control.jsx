@@ -208,6 +208,9 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 				selected.push(selectedRow - 1);
 			}
 		}
+		if (selected.length > 0) {
+			this.setScrollToRow(selected[0], true);
+		}
 		this.setCurrentControlValueSelected(this.props.control.name, controlValue, this.props.updateControlValue, selected);
 	}
 
@@ -225,6 +228,7 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 					selected.push(selectedRow - 1);
 				}
 			}
+			this.setScrollToRow(selected[0], true);
 			this.setCurrentControlValueSelected(this.props.control.name, controlValue, this.props.updateControlValue, selected);
 		}
 	}
@@ -243,6 +247,7 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 					selected.unshift(selectedRow + 1);
 				}
 			}
+			this.setScrollToRow(selected[selected.length - 1], false);
 			this.setCurrentControlValueSelected(this.props.control.name, controlValue, this.props.updateControlValue, selected);
 		}
 	}
@@ -259,45 +264,38 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 				selected.unshift(selectedRow + 1);
 			}
 		}
+		if (selected.length > 0) {
+			this.setScrollToRow(selected[selected.length - 1], false);
+		}
 		this.setCurrentControlValueSelected(this.props.control.name, controlValue, this.props.updateControlValue, selected);
 	}
 
   // enabled the move up and down arrows based on which row is selected
 	getTableRowMoveImages() {
-		const selected = this.getSelectedRows();
+		const selected = this.getSelectedRows().sort();
 		const controlValue = this.getCurrentControlValue();
-		let topEnabled = false;
-		let bottomEnabled = false;
-		if (selected.length !== 0 && selected.length !== controlValue.length) {
-			for (var selectedRow of selected) {
-				if (selectedRow !== 0) {
-					topEnabled = true;
-				}
-				if (selectedRow !== controlValue.length - 1) {
-					bottomEnabled = true;
-				}
-			}
-		}
+		const topEnabled = selected[0] !== 0;
+		const bottomEnabled = selected[selected.length - 1] !== controlValue.length - 1;
 		const topImages = topEnabled ? (
-			<div>
+			<div key="topImages">
 				<img className="table-row-move-button" src={TopMoveIconEnable} height={ARROW_HEIGHT} width={ARROW_WIDTH} onClick={this.topMoveRow} />
 				<img className="table-row-move-button" src={UpMoveIconEnable} height={ARROW_HEIGHT} width={ARROW_WIDTH} onClick={this.upMoveRow} />
 			</div>
 		)
 		: (
-			<div>
+			<div key="topImages">
 				<img className="table-row-move-button-disable" height={ARROW_HEIGHT} width={ARROW_WIDTH} src={TopMoveIconDisable} />
 				<img className="table-row-move-button-disable" height={ARROW_HEIGHT} width={ARROW_WIDTH} src={UpMoveIconDisable} />
 			</div>
 		);
 		const bottomImages = bottomEnabled ? (
-			<div>
+			<div key="bottomImages">
 				<img className="table-row-move-button" src={DownMoveIconEnable} height={ARROW_HEIGHT} width={ARROW_WIDTH} onClick={this.downMoveRow} />
 				<img className="table-row-move-button" src={BottomMoveIconEnable} height={ARROW_HEIGHT} width={ARROW_WIDTH} onClick={this.bottomMoveRow} />
 			</div>
 		)
 		: (
-			<div>
+			<div key="bottomImages">
 				<img className="table-row-move-button-disable" height={ARROW_HEIGHT} width={ARROW_WIDTH} src={DownMoveIconDisable} />
 				<img className="table-row-move-button-disable" height={ARROW_HEIGHT} width={ARROW_WIDTH} src={BottomMoveIconDisable} />
 			</div>

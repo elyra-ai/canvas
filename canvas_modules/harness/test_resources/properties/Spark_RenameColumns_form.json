@@ -49,6 +49,8 @@
                                        "text":"Input name"
                                     },
                                     "controlType":"oneofcolumns",
+																		"isSortable": true,
+																		"role": "column",
                                     "valueDef":{
                                        "propType":"string",
                                        "isList":false,
@@ -63,6 +65,8 @@
                                        "text":"Output name"
                                     },
                                     "controlType":"textfield",
+																		"isSortable": true,
+																		"role": "new_column",
                                     "valueDef":{
                                        "propType":"string",
                                        "isList":false,
@@ -165,6 +169,33 @@
             },
             {
                "name":"Drug",
+               "type":"string",
+               "metadata":{
+                  "description":"",
+                  "measure":"discrete",
+                  "role":"input"
+               }
+            },
+						{
+               "name":"Cp",
+               "type":"double",
+               "metadata":{
+                  "description":"",
+                  "measure":"range",
+                  "role":"input"
+               }
+            },
+						{
+               "name":"Returns",
+               "type":"integer",
+               "metadata":{
+                  "description":"",
+                  "measure":"range",
+                  "role":"input"
+               }
+            },
+						{
+               "name":"Tag",
                "type":"string",
                "metadata":{
                   "description":"",

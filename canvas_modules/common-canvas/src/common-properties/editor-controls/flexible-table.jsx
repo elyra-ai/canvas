@@ -49,6 +49,13 @@ export default class FlexibleTable extends React.Component {
 
 		this.handleFilterChange = this.handleFilterChange.bind(this);
 		this.scrollToRow = this.scrollToRow.bind(this);
+		this.onSort = this.onSort.bind(this);
+	}
+
+	onSort(spec) {
+		if (this.props.onSort) {
+			this.props.onSort(spec);
+		}
 	}
 
 	sortHeaderClick(columnName, evt) {
@@ -63,15 +70,18 @@ export default class FlexibleTable extends React.Component {
 
 	handleFilterChange(evt) {
 		this.setState({ filterKeyword: evt.target.value });
+		if (this.props.onFilter) {
+			this.props.onFilter(evt.target.value);
+		}
 	}
 
-	scrollToRow() {
+	scrollToRow(alignTop) {
 		var element = document.getElementById("table");
-		if (element) {
+		if (element && typeof this.props.scrollToRow === "number") {
 			var tableBody = element.getElementsByClassName("reactable-data");
 			var tableRows = tableBody[0].getElementsByTagName("tr");
 			if (tableRows.length !== 0 && this.props.scrollToRow <= tableRows.length - 1) {
-				tableRows[this.props.scrollToRow].scrollIntoView(false);
+				tableRows[this.props.scrollToRow].scrollIntoView(alignTop);
 			}
 		}
 	}
@@ -121,43 +131,67 @@ export default class FlexibleTable extends React.Component {
 						src={search32}
 					/>
 				</div>
-				<div id="flexible-table-container">
-					<Table
-						key="flexible-table"
-						className="table"
-						id="table"
-						sortable={this.props.sortable}
-						filterable={this.props.filterable}
-						hideFilterInput
-						filterBy={this.state.filterKeyword}
-					>
-						<Thead key="flexible-table-thead">
-							{headers}
-						</Thead>
-						{this.props.data}
-					</Table>
+				<div>
+					<div className="flexible-header-container">
+						<Table
+							key="flexible-table"
+							className="flexible-table-header"
+							id="table-header"
+							sortable={this.props.sortable}
+							filterable={this.props.filterable}
+							hideFilterInput
+							filterBy={this.state.filterKeyword}
+							onSort={this.onSort}
+							onFilter={this.onFilter}
+						>
+							<Thead key="flexible-table-thead">
+								{headers}
+							</Thead>
+						</Table>
 					</div>
+					<div id="flexible-table-container">
+						<Table
+							key="flexible-table"
+							className="table"
+							id="table"
+							hideTableHeader
+						>
+							{this.props.data}
+						</Table>
+					</div>
+				</div>
 				</div>
 			);
 		} else {
 			renderTable = (
-				<div id="flexible-table-container">
-				<Table
-					className="table"
-					id="table"
-					sortable={this.props.sortable}
-				>
-					<Thead key="flexible-table-thead">
-						{headers}
-					</Thead>
-					{this.props.data}
-				</Table>
-			</div>
-			);
+				<div>
+					<div>
+						<Table
+							className="flexible-table-header"
+							id="table-header"
+							sortable={this.props.sortable}
+							onSort={this.onSort}
+							onFilter={this.onFilter}
+						>
+							<Thead key="flexible-table-thead">
+								{headers}
+							</Thead>
+						</Table>
+					</div>
+					<div id="flexible-table-container">
+						<Table
+							className="table"
+							id="table"
+							hideTableHeader
+						>
+							{this.props.data}
+						</Table>
+					</div>
+				</div>);
 		}
 
-		if (typeof this.props.scrollToRow !== "undefined") {
-			this.scrollToRow();
+		if (typeof this.props.scrollToRow !== "undefined" && this.props.scrollToRow !== null) {
+			this.scrollToRow(this.props.alignTop);
 		}
 
 		return (
@@ -175,5 +209,8 @@ FlexibleTable.propTypes = {
 	filterable: React.PropTypes.array,
 	filterBy: React.PropTypes.string,
 	hideFilterInput: React.PropTypes.func,
-	scrollToRow: React.PropTypes.number
+	scrollToRow: React.PropTypes.number,
+	onSort: React.PropTypes.func,
+	onFilter: React.PropTypes.func,
+	alignTop: React.PropTypes.bool
 };

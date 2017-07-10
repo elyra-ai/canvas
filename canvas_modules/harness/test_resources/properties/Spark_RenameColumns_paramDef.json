@@ -158,7 +158,34 @@
           "measure": "discrete",
           "role": "input"
         }
-      }
+      },
+			{
+				 "name":"Cp",
+				 "type":"double",
+				 "metadata":{
+						"description":"",
+						"measure":"range",
+						"role":"input"
+				 }
+			},
+			{
+				 "name":"Returns",
+				 "type":"integer",
+				 "metadata":{
+						"description":"",
+						"measure":"range",
+						"role":"input"
+				 }
+			},
+			{
+				 "name":"Tag",
+				 "type":"string",
+				 "metadata":{
+						"description":"",
+						"measure":"discrete",
+						"role":"input"
+				 }
+			}
     ]
   },
   "resources": {

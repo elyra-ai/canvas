@@ -107,7 +107,7 @@ describe("Correct form should be created", () => {
 
 	it("should create a form with a structure with moveableRows and valueIcons", () => {
 		const generatedForm = Form.makeForm(formStructuredTable2.paramDef);
-		// console.info("Expected: " + JSON.stringify(formStructuredTable.expectedResult));
+		// console.info("Expected: " + JSON.stringify(formStructuredTable2.expectedResult));
 		// console.info("Actual: " + JSON.stringify(generatedForm));
 		expect(_.isEqual(JSON.parse(JSON.stringify(formStructuredTable2.expectedResult)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
 	});
@@ -117,14 +117,13 @@ describe("Correct form should be created", () => {
 		// console.info("Expected: " + JSON.stringify(conditionResource.expectedResult));
 		// console.info("Actual: " + JSON.stringify(generatedForm));
 		expect(_.isEqual(JSON.parse(JSON.stringify(conditionResource.expectedResult)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
-
 	});
 
 	it("should create a form with editStyle set to subpanel", () => {
 		const generatedForm = Form.makeForm(editStyleResource.paramDef);
-		// console.info("Expected: " + JSON.stringify(conditionResource.expectedResult));
+		// console.info("Expected: " + JSON.stringify(editStyleResource.expectedResult));
 		// console.info("Actual: " + JSON.stringify(generatedForm));
 		expect(_.isEqual(JSON.parse(JSON.stringify(editStyleResource.expectedResult)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
-
 	});
+
 });

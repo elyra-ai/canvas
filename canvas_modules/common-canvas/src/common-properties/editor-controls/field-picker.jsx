@@ -44,6 +44,8 @@ import stringDisabledIcon from "../../../assets/images/string-disabled-icon.svg"
 import timeDisabledIcon from "../../../assets/images/time-disabled-icon.svg";
 import timestampDisabledIcon from "../../../assets/images/timestamp-disabled-icon.svg";
 
+var _ = require("underscore");
+
 export default class FieldPicker extends EditorControl {
 	constructor(props) {
 		super(props);
@@ -51,6 +53,7 @@ export default class FieldPicker extends EditorControl {
 			checkedAll: false,
 			controlName: "",
 			data: this.props.dataModel,
+			fields: this.props.dataModel.fields,
 			filterIcons: [],
 			filterList: [],
 			initialControlValues: [],
@@ -81,6 +84,8 @@ export default class FieldPicker extends EditorControl {
 		this.getNewSelections = this.getNewSelections.bind(this);
 		this.mouseEnterResetButton = this.mouseEnterResetButton.bind(this);
 		this.mouseLeaveResetButton = this.mouseLeaveResetButton.bind(this);
+		this.onSort = this.onSort.bind(this);
+		this.onFilter = this.onFilter.bind(this);
 	}
 
 	componentWillMount() {
@@ -116,7 +121,7 @@ export default class FieldPicker extends EditorControl {
 
 	// reactable
 	getTableData() {
-		const fields = this.state.data.fields;
+		const fields = this.state.fields;
 		const tableData = [];
 		logger.info(JSON.stringify("control vals: " + this.state.newControlValues));
 		for (let i = 0; i < fields.length; i++) {
@@ -141,23 +146,24 @@ export default class FieldPicker extends EditorControl {
 			}
 
 			if (this.state.filterIcons.length === 0 || this.state.filterIcons.indexOf(field.type) < 0) {
-				const columns = [
-					<Td key="field-picker-column-checkbox" column="checkbox"><div className="field-picker-checkbox">
-					<Checkbox id={"field-picker-checkbox-" + i}
-						checked={checked}
-						onChange={this.handleFieldChecked}
-						data-name={field.name}
-					/></div></Td>,
-					<Td key="field-picker-column-fieldname" column="fieldName">{field.name}</Td>,
-					<Td key="field-picker-column-datatype" column="dataType"><div>
-						<div className={"field-picker-data-type-icon field-picker-data-" + field.type + "-type-icon"}>
-							<img src={this[field.type + "EnabledIcon"]} />
-						</div>
-						{field.type}
-					</div></Td>
-				];
-
-				tableData.push(<Tr key="field-picker-data-rows" className="field-picker-data-rows">{columns}</Tr>);
+				if (!this.state.filterText || field.name.indexOf(this.state.filterText) > -1) {
+					const columns = [
+						<Td key="field-picker-column-checkbox" column="checkbox"><div className="field-picker-checkbox">
+						<Checkbox id={"field-picker-checkbox-" + i}
+							checked={checked}
+							onChange={this.handleFieldChecked}
+							data-name={field.name}
+						/></div></Td>,
+						<Td key="field-picker-column-fieldname" column="fieldName">{field.name}</Td>,
+						<Td key="field-picker-column-datatype" column="dataType"><div>
+							<div className={"field-picker-data-type-icon field-picker-data-" + field.type + "-type-icon"}>
+								<img src={this[field.type + "EnabledIcon"]} />
+							</div>
+							{field.type}
+						</div></Td>
+					];
+					tableData.push(<Tr key="field-picker-data-rows" className="field-picker-data-rows">{columns}</Tr>);
+				}
 			}
 		}
 		return tableData;
@@ -185,7 +191,7 @@ export default class FieldPicker extends EditorControl {
 	handleCheckAll(evt) {
 		const selectAll = [];
 		if (evt.target.checked) {
-			const data = this.state.data.fields;
+			const data = this.state.fields;
 			for (let i = 0; i < data.length; i++) {
 				const selected = this.state.newControlValues.filter(function(element) {
 					return element.indexOf(data[i].name) > -1;
@@ -198,7 +204,14 @@ export default class FieldPicker extends EditorControl {
 						selectAll.push(selected[0]);
 					}
 				} else if (this.props.control.defaultRow) { // add remaining fields
-					selectAll.push([data[i].name, this.props.control.defaultRow[0]]);
+					const index = this.props.control.valueDef.isMap ? 0 : 1;
+					let defaultValue = this.props.control.defaultRow[index];
+					// Set the default name to the column name for role==="new_column"
+					if ((typeof defaultValue === "undefined" || defaultValue === null) &&
+								this.props.control.subControls[1].role === "new_column") {
+						defaultValue = data[i].name;
+					}
+					selectAll.push([data[i].name, defaultValue]);
 				} else {
 					selectAll.push(data[i].name);
 				}
@@ -232,7 +245,15 @@ export default class FieldPicker extends EditorControl {
 		}
 		if (selectedField.length === 0) {
 			if (this.props.control.defaultRow) {
-				selectedField = EditorControl.stringifyStructureStrings([[selectedFieldName, this.props.control.defaultRow[0]]])[0];
+				const index = this.props.control.valueDef.isMap ? 0 : 1;
+				let defaultValue = this.props.control.defaultRow[index];
+				// Set the default name to the column name for role==="new_column"
+				if ((typeof defaultValue === "undefined" || defaultValue === null) &&
+							this.props.control.subControls[1].role === "new_column") {
+					defaultValue = selectedFieldName;
+				}
+				selectedField = EditorControl.stringifyStructureStrings(
+					[[selectedFieldName, defaultValue]])[0];
 			} else {
 				selectedField = selectedFieldName;
 			}
@@ -281,6 +302,21 @@ export default class FieldPicker extends EditorControl {
 		this.setState({ hoverResetIcon: false });
 	}
 
+	onFilter(filterString) {
+		this.setState({ filterText: filterString });
+	}
+
+	onSort(spec) {
+		let controlValue = this.state.fields;
+		controlValue = _.sortBy(controlValue, function(field) {
+			return spec.column === "fieldName" ? field.name : field.type;
+		});
+		if (spec.direction > 0) {
+			controlValue = controlValue.reverse();
+		}
+		this.setState({ fields: controlValue });
+	}
+
 	render() {
 		let resetIconImage = (<img src={resetIcon} />);
 		if (this.state.hoverResetIcon) {
@@ -319,34 +355,21 @@ export default class FieldPicker extends EditorControl {
 				}
 			}
 			const tooltip = <Tooltip className="filter-icons-tooltips" id={"filter-tooltip-" + filter.type}>{filter.type}</Tooltip>;
-			let row = (
-				<OverlayTrigger placement="top" overlay={tooltip}>
-					<li className={"filter-list-li filter-list-li-icon filter-list-data-" + filter.type + "-enabled-icon"}
-						key={"filters" + ind}
+			const icon = enabled ? filter.icon.enabled : filter.icon.disabled;
+			const className = enabled
+				? "filter-list-li filter-list-li-icon filter-list-data-" + filter.type + "-enabled-icon"
+				: "filter-list-li filter-list-li-icon filter-list-data-" + filter.type + "-disabled-icon";
+			const row = (
+				<OverlayTrigger placement="top" overlay={tooltip} key={"filters" + ind}>
+					<li className={className}
 						data-type={filter.type}
 						onClick={that.filterType.bind(that)}
 					>
-						{filter.icon.enabled}
+						{icon}
 					</li>
 				</OverlayTrigger>
 			);
-			if (!enabled) {
-				row = (
-					<OverlayTrigger placement="top" overlay={tooltip}>
-						<li className={"filter-list-li filter-list-li-icon filter-list-data-" + filter.type + "-disabled-icon"}
-							key={"filters" + ind}
-							data-type={filter.type}
-							onClick={that.filterType.bind(that)}
-						>
-							{filter.icon.disabled}
-						</li>
-					</OverlayTrigger>
-				);
-			}
-
-			return (
-				row
-			);
+			return (row);
 		});
 
 		const search = (
@@ -384,10 +407,12 @@ export default class FieldPicker extends EditorControl {
 
 		const table = (
 			<FlexibleTable className="table" id="table"
-				sortable={["fieldName"]}
+				sortable={["fieldName", "dataType"]}
 				filterable={["fieldName"]}
+				onFilter={this.onFilter}
 				columns={headers}
 				data={tableData}
+				onSort={this.onSort}
 			/>
 		);
 

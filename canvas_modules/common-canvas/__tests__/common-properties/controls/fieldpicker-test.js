@@ -287,7 +287,7 @@ describe("field-picker-control renders correctly", () => {
 			/>
 		);
 		const input = wrapper.find("#flexible-table-search");
-		input.simulate("change", { target: { value: "time" } });
+		input.simulate("change", { target: { value: "Time" } });
 		expect(wrapper.find(".field-picker-data-rows")).to.have.length(2);
 	});
 

@@ -57,10 +57,19 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		this.createTable = this.createTable.bind(this);
 		this.getCellValue = this.getCellValue.bind(this);
 		this.updateControlValue = this.updateControlValue.bind(this);
+		this.onFilter = this.onFilter.bind(this);
+		this.onSort = this.onSort.bind(this);
+		this.setScrollToRow = this.setScrollToRow.bind(this);
+		this.includeInFilter = this.includeInFilter.bind(this);
+
+		if (this.props.selectedRows && this.props.selectedRows.length > 0) {
+			this.scrollToRow = this.props.selectedRows[this.props.selectedRows.length - 1];
+			this.alignTop = true;
+		}
 	}
 
 	componentWillReceiveProps(nextProps) {
-		logger.info("componentWillReceiveProps");
+		// logger.info("componentWillReceiveProps");
 		this.setState({
 			controlValue: EditorControl.parseStructureStrings(nextProps.valueAccessor(nextProps.control.name)),
 			selectedRows: nextProps.selectedRows
@@ -100,6 +109,11 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			updateControlValue(targetControl, EditorControl.stringifyStructureStrings(controlValue));
 			that.updateSelectedRows(that.props.control.name, []);
 		});
+	}
+
+	setScrollToRow(row, alignTop) {
+		this.scrollToRow = row;
+		this.alignTop = alignTop;
 	}
 
 	getSelectedRows() {
@@ -211,11 +225,35 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		}
 	}
 
+	onFilter(filterString) {
+		this.setState({ filterText: filterString });
+	}
+
+	onSort(spec) {
+		let controlValue = this.getCurrentControlValue();
+		let col = -1;
+		for (var colIndex = 0; colIndex < this.props.control.subControls.length; colIndex++) {
+			if (this.props.control.subControls[colIndex].name === spec.column) {
+				col = colIndex;
+				break;
+			}
+		}
+		if (col > -1) {
+			controlValue = _.sortBy(controlValue, function(row) {
+				return row[col];
+			});
+			if (spec.direction > 0) {
+				controlValue = controlValue.reverse();
+			}
+			this.setCurrentControlValueSelected(this.props.control.name, controlValue, this.props.updateControlValue, []);
+		}
+	}
+
 	_makeCell(columnDef, controlValue, rowIndex, colIndex) {
 		let cell;
 		const inTable = true;
 		if (columnDef.controlType === "toggletext" && columnDef.editStyle !== "subpanel") {
-			cell = (<Td column={columnDef.name}><ToggletextControl
+			cell = (<Td key={colIndex} column={columnDef.name}><ToggletextControl
 				rowIndex={rowIndex}
 				control={this.props.control}
 				values={columnDef.values}
@@ -230,7 +268,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 				tableControl
 			/></Td>);
 		} else if (columnDef.controlType === "oneofselect" && columnDef.editStyle !== "subpanel") {
-			cell = (<Td column={columnDef.name}><OneofselectControl
+			cell = (<Td key={colIndex} column={columnDef.name}><OneofselectControl
 				rowIndex={rowIndex}
 				control={this.props.control}
 				columnDef={columnDef}
@@ -243,9 +281,9 @@ export default class ColumnStructureTableEditor extends EditorControl {
 				tableControl
 			/></Td>);
 		} else if (columnDef.valueDef.propType === "enum" && columnDef.editStyle !== "subpanel") {
-			cell = <Td column={columnDef.name}>this.enumRenderCell(controlValue[rowIndex][colIndex], columnDef)</Td>;
+			cell = <Td key={colIndex} column={columnDef.name}>this.enumRenderCell(controlValue[rowIndex][colIndex], columnDef)</Td>;
 		} else if (columnDef.controlType === "textfield" && columnDef.editStyle !== "subpanel") {
-			cell = (<Td column={columnDef.name}><TextfieldControl
+			cell = (<Td key={colIndex} column={columnDef.name}><TextfieldControl
 				rowIndex={rowIndex}
 				control={this.props.control}
 				columnDef={columnDef}
@@ -253,31 +291,59 @@ export default class ColumnStructureTableEditor extends EditorControl {
 				updateControlValue={this.updateControlValue}
 				columnIndex={colIndex}
 				setCurrentControlValue={this.setCurrentControlValue}
-				inTable={inTable}
+				tableControl={inTable}
 			/></Td>);
 		} else {
-			cell = <Td column={columnDef.name}>{controlValue[rowIndex][colIndex]}</Td>;
+			cell = <Td key={colIndex} column={columnDef.name}>{controlValue[rowIndex][colIndex]}</Td>;
 		}
 		return cell;
 	}
 
-	createTable() {
-		var rows = [];
+	/**
+	 * Returns true if the given row should be included
+	 * in the current filter output.
+	 */
+	includeInFilter(rowIndex) {
+		// If no search text, include all
+		if (!this.state.filterText || this.state.filterText.length === 0) {
+			return true;
+		}
 		const controlValue = this.getCurrentControlValue();
-		for (var rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
-			var columns = [];
+		for (let i = 0; i < this.filterFields.length; i++) {
 			for (var colIndex = 0; colIndex < this.props.control.subControls.length; colIndex++) {
 				const columnDef = this.props.control.subControls[colIndex];
-				if (columnDef.visible) {
-					columns.push(this._makeCell(columnDef, controlValue, rowIndex, colIndex));
+				if (columnDef.name === this.filterFields[i]) {
+					const value = controlValue[rowIndex][colIndex];
+					if (value.indexOf(this.state.filterText) > -1) {
+						return true;
+					}
+					break;
 				}
 			}
-			rows.push(<Tr key={rowIndex} onClick={this.handleRowClick.bind(this, rowIndex)} className={this.getRowClassName(rowIndex)}>{columns}</Tr>);
+		}
+		return false;
+	}
+
+	createTable() {
+		const that = this;
+		const rows = [];
+		const controlValue = this.getCurrentControlValue();
+		for (var rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
+			const columns = [];
+			if (this.includeInFilter(rowIndex)) {
+				for (var colIndex = 0; colIndex < this.props.control.subControls.length; colIndex++) {
+					const columnDef = this.props.control.subControls[colIndex];
+					if (columnDef.visible) {
+						columns.push(this._makeCell(columnDef, controlValue, rowIndex, colIndex));
+					}
+				}
+				rows.push(<Tr key={rowIndex} onClick={this.handleRowClick.bind(this, rowIndex)} className={this.getRowClassName(rowIndex)}>{columns}</Tr>);
+			}
 		}
 
-		var headers = [];
-		var sortFields = [];
-		var filterFields = [];
+		const headers = [];
+		const sortFields = [];
+		const filterFields = [];
 		for (var j = 0; j < this.props.control.subControls.length; j++) {
 			const columnDef = this.props.control.subControls[j];
 			if (columnDef.visible) {
@@ -290,23 +356,22 @@ export default class ColumnStructureTableEditor extends EditorControl {
 				}
 			}
 		}
+		this.filterFields = filterFields;
 
-		const selected = this.getSelectedRows().sort();
-		const table = ((typeof selected !== "undefined" && selected.length !== 0)
-		? <FlexibleTable
-			sortable={sortFields}
-			filterable={filterFields}
-			columns={headers}
-			data={rows}
-			scrollToRow={selected[selected.length - 1]}
-		/>
-		: <FlexibleTable
-			sortable={sortFields}
-			filterable={filterFields}
-			columns={headers}
-			data={rows}
-		/>);
-
+		const table =	(
+			<FlexibleTable
+				sortable={sortFields}
+				filterable={filterFields}
+				columns={headers}
+				data={rows}
+				scrollToRow={this.scrollToRow}
+				alignTop={this.alignTop}
+				onFilter={this.onFilter}
+				onSort={this.onSort}
+			/>);
+		setTimeout(function() {
+			that.scrollToRow = null;
+		}, 500);
 		return (
 			<div>
 				{table}

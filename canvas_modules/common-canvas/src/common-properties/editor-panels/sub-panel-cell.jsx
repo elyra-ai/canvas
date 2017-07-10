@@ -48,7 +48,7 @@ export default class SubPanelCell extends React.Component {
 	}
 
 	render() {
-		logger.info("SubPanelCell.render()");
+		// logger.info("SubPanelCell.render()");
 		return (
 			<SubPanelInvoker ref="invoker">
 				<Cell>

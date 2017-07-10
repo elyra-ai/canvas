@@ -213,6 +213,7 @@
                             "isList": false,
                             "isMap": false
                           },
+													"role":"column",
                           "visible": true,
                           "width": 26
                         },
@@ -227,6 +228,7 @@
                             "isList": false,
                             "isMap": false
                           },
+													"role":"new_column",
                           "visible": true,
                           "width": 26,
 													"editStyle":"subpanel"
@@ -234,7 +236,7 @@
                       ],
                       "keyIndex": 0,
                       "defaultRow": [
-                        "\"\""
+                        ""
                       ]
                     }
                   }

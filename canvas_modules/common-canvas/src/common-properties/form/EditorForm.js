@@ -364,7 +364,8 @@ function _makeSubControl(parameter, l10nProvider, isKeyField) {
 	let controlType;
 	switch (parameter.propType()) {
 	case Type.STRING:
-		switch (parameter.getRole()) {
+		role = parameter.getRole();
+		switch (role) {
 		case ParamRole.ENUM:
 			controlType = ControlType.ONEOFSELECT;
 			break;

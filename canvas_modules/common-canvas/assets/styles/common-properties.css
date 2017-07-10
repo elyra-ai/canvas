@@ -175,23 +175,29 @@ span.form__validation--invalid {
 /* Field Picker */
 
 #field-picker-back-button {
-  height: 32px;
-  width: 32px;
-  border: none;
-  padding: 0;
-  padding-left: 9px;
-  padding-top: 2px;
+	height: 32px;
+	width: 32px;
+	border: none;
+	padding: 0;
+	padding-left: 9px;
+	padding-top: 2px;
 }
-
-
 
 #field-picker-filter-list{
 	list-style-type: none;
 	float: right;
 	margin-top: 3px;
-  margin-bottom: 0px;
-  width:40%;
-  height: 32px;
+	margin-bottom: 0px;
+	width:40%;
+	height: 32px;
+}
+
+#field-picker-back-button svg.icon {
+	overflow: visible;
+}
+
+.reactable-th-checkbox>.field-picker-checkbox {
+	margin-left: 20px;
 }
 
 #filter-list-title {
@@ -201,9 +207,9 @@ span.form__validation--invalid {
 
 .filter-list-li {
 	float: left;
-  display: block;
-  width:14px;
-  fill:#A91560;
+	display: block;
+	width:14px;
+	fill:#A91560;
 	margin-right: 2px;
 	padding: 2px;
 }
@@ -344,7 +350,7 @@ span.form__validation--invalid {
 	height: 222.75px;
   width: 100%;
 	overflow: scroll;
-  position: sticky;
+  position: relative;
   background-color: #FFFFFF;
   border: 1px #D8D8D8 solid;
   padding: 0 15px 0 15px;
@@ -398,6 +404,27 @@ th div div label, td div div label {
 #flexible-table-search:focus {
   border-bottom: 2px solid #777677;
 }
+
+th.reactable-th-field {
+	padding-left: 15px;
+}
+
+.flexible-table-header {
+	width: 100%;
+	max-width: 100%;
+	border: 1px #D8D8D8 solid;
+	border-bottom: none;
+	background-color: white;
+}
+
+.table>tbody>tr:nth-child(1)>td {
+	border-top: none;
+}
+
+tr.reactable-column-header {
+	height: 30px;
+}
+
 /* end Flexible table */
 
 .tabs--vertical .tabs__list--vertical {

@@ -123,7 +123,6 @@ export default class CommonProperties extends React.Component {
 
 	render() {
 		const formData = this.getForm();
-		console.log(JSON.stringify(formData));
 		if (formData !== null) {
 			let propertiesDialog = [];
 			if (this.props.showPropertiesDialog) {

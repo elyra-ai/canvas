@@ -66,7 +66,7 @@ export default class StructureTableEditor extends EditorControl {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		logger.info("componentWillReceiveProps");
+		// logger.info("componentWillReceiveProps");
 		this.setState({
 			controlValue: EditorControl.parseStructureStrings(nextProps.valueAccessor(nextProps.control.name)),
 			selectedRows: nextProps.selectedRows

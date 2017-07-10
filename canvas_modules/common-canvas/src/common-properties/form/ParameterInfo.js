@@ -153,6 +153,7 @@ export class ParameterDef {
 			if (uihint && uihint.columns && !uihint.width) {
 				uihint.width = uihint.columns;
 			}
+			// JSON.stringify(_.propertyOf(param)("default")),
 			return new ParameterDef(
 				_.propertyOf(param)("name"),
 				_.propertyOf(uihint)("label"),
@@ -160,7 +161,7 @@ export class ParameterDef {
 				_.propertyOf(param)("type"),
 				_.propertyOf(param)("role"),
 				_.propertyOf(param)("enum"),
-				JSON.stringify(_.propertyOf(param)("default")),
+				_.propertyOf(param)("default"),
 				_.propertyOf(uihint)("control"),
 				_.propertyOf(uihint)("orientation"),
 				_.propertyOf(uihint)("style"),

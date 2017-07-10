@@ -93,7 +93,7 @@ export default class ColumnAllocationPanel extends React.Component {
 	}
 
 	render() {
-		logger.info("ColumnAllocator.render()");
+		// logger.info("ColumnAllocator.render()");
 
 		const controlItems = [];
 		for (var i = 0; i < this.props.children.length; i++) {
