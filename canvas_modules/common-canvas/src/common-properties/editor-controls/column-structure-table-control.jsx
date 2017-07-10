@@ -17,7 +17,7 @@
 import logger from "../../../utils/logger";
 import React from "react";
 import ColumnStructureTableEditor from "./column-structure-table-editor.jsx";
-import { Grid,	Row, Col, OverlayTrigger, Tooltip } from "react-bootstrap";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Button } from "ap-components-react/dist/ap-components-react";
 import Isvg from "react-inlinesvg";
 import remove32 from "../../../assets/images/remove_32.svg";
@@ -325,26 +325,29 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 			);
 		}
 
-		var moveCol = <Col />;
+		var moveCol = <tc />;
 		if (typeof this.props.control.moveableRows !== "undefined" && this.props.control.moveableRows) {
 			const moveImages = this.getTableRowMoveImages();
 			moveCol = (
-				<Col
+				<div
 					id="table-row-move-button-container"
-					md={1}
 				>
 				{moveImages}
-				</Col>
+				</div>
 			);
 		}
 
 		const addTooltip = <Tooltip id="addFieldTip">Select columns to add</Tooltip>;
 		const removeTooltip = <Tooltip id="removeFieldTip">Remove selected columns</Tooltip>;
 		const table = this.createTable();
-		var content = (<Grid>
-			<Row className="structure-table-row">
-				<Col md={11}>
-					<Row className="structure-table-button-row">
+		var content = (<table id="structure-table">
+			<colgroup>
+				<col className="structure-table-first-column" />
+				<col className="structure-table-second-column" />
+			</colgroup>
+			<tbody>
+				<tr className="structure-table-button-row">
+					<td>
 						<OverlayTrigger placement="top" overlay={addTooltip}>
 							<Button
 								id="add-fields-button"
@@ -360,15 +363,19 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 								<Isvg id="remove-fields-button" src={remove32} />
 							</div>
 						</OverlayTrigger>
-					</Row>
-					<Row className={className}>
+					</td>
+				</tr>
+				<tr className="structure-table-content-row">
+					<td>
 						{table}
 						{errorMessage}
-					</Row>
-				</Col>
-				{moveCol}
-			</Row>
-			</Grid>
+					</td>
+					<td>
+						{moveCol}
+					</td>
+				</tr>
+			</tbody>
+		</table>
 		);
 
 		return (
