@@ -297,9 +297,9 @@ span.form__validation--invalid {
 	background-color: #e0e0e0 !important;
 }
 
-#table-row-move-button-container.col-md-1 {
+#table-row-move-button-container {
 	width: 16px !important;
-	margin-top: 70px;
+	margin-top: 0px;
 	margin-left: 12px;
 	top: 50%;
 	padding: 0;
@@ -445,6 +445,17 @@ th div div label, td div div label {
 	background-color: #f9f9fb !important;
 }
 
+#structure-table {
+    width: 100% !important;
+}
+
+.structure-table-first-column {
+	width: 100%;
+}
+
+.structure-table-second-column {
+	width: 16px !important;
+}
 
 
 /*
