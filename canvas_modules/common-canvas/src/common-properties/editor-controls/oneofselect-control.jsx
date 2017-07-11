@@ -93,6 +93,7 @@ export default class OneofselectControl extends EditorControl {
 
 OneofselectControl.propTypes = {
 	control: React.PropTypes.object.isRequired,
+	updateControlValue: React.PropTypes.func,
 	// Optional used when embedded in table
 	tableControl: React.PropTypes.bool,
 	rowIndex: React.PropTypes.number,
@@ -100,7 +101,6 @@ OneofselectControl.propTypes = {
 	controlValue: React.PropTypes.array,
 	columnDef: React.PropTypes.object,
 	value: React.PropTypes.string,
-	updateControlValue: React.PropTypes.func,
 	setCurrentControlValueSelected: React.PropTypes.func,
 	selectedRows: React.PropTypes.array
 };

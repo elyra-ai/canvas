@@ -97,7 +97,12 @@ export default class TextfieldControl extends EditorControl {
 }
 
 TextfieldControl.propTypes = {
-	control: React.PropTypes.object,
+	control: React.PropTypes.object.isRequired,
 	controlStates: React.PropTypes.object,
-	updateControlValue: React.PropTypes.func
+	updateControlValue: React.PropTypes.func,
+	// Optional used when embedded in table
+	tableControl: React.PropTypes.bool,
+	rowIndex: React.PropTypes.number,
+	columnDef: React.PropTypes.object,
+	value: React.PropTypes.string
 };

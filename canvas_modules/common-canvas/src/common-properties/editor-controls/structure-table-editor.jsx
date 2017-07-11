@@ -67,11 +67,15 @@ export default class StructureTableEditor extends EditorControl {
 
 	componentWillReceiveProps(nextProps) {
 		// logger.info("componentWillReceiveProps");
-		this.setState({
-			controlValue: EditorControl.parseStructureStrings(nextProps.valueAccessor(nextProps.control.name)),
-			selectedRows: nextProps.selectedRows
-		});
-		this.selectionChanged(nextProps.selectedRows);
+		const propVal = nextProps.valueAccessor(nextProps.control.name);
+		// Added since in subpanel a simple control will try to update the parameter control value incorrectly
+		if (Array.isArray(propVal)) {
+			this.setState({
+				controlValue: EditorControl.parseStructureStrings(propVal),
+				selectedRows: nextProps.selectedRows
+			});
+			this.selectionChanged(nextProps.selectedRows);
+		}
 	}
 
 	componentDidUpdate() {
