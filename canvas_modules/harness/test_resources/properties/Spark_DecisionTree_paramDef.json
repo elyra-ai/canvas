@@ -238,11 +238,29 @@
                   }
                },
                "evaluate":{
-                  "condition":{
-                     "param":"checkpointInterval",
-                     "op":"equals",
-                     "value":-1
-                  }
+								 "or": [
+									 {
+										 "condition": {
+											 "param": "checkpointInterval",
+											 "op": "greaterThan",
+											 "value": 1
+										 }
+									 },
+									 {
+										 "condition": {
+											 "param": "checkpointInterval",
+											 "op": "equals",
+											 "value": 1
+										 }
+									 },
+									 {
+										 "condition": {
+											 "param": "checkpointInterval",
+											 "op": "equals",
+											 "value": -1
+										 }
+									 }
+								 ]
                }
             }
          },
@@ -256,11 +274,22 @@
                   }
                },
                "evaluate":{
-                  "condition":{
-                     "param":"maxBins",
-                     "op":"equals",
-                     "value":2
-                  }
+								 "or":[
+										{
+											 "condition":{
+													"param":"maxBins",
+													"op":"greaterThan",
+													"value":2
+											 }
+										},
+										{
+											 "condition":{
+													"param":"maxBins",
+													"op":"equals",
+													"value":2
+											 }
+										}
+								 ]
                }
             }
          },
@@ -274,11 +303,22 @@
                   }
                },
                "evaluate":{
-                  "condition":{
-                     "param":"maxDepth",
-                     "op":"equals",
-                     "value":0
-                  }
+								 "or":[
+									 {
+											"condition":{
+												 "param":"maxDepth",
+												 "op":"greaterThan",
+												 "value":0
+											}
+									 },
+									 {
+											"condition":{
+												 "param":"maxDepth",
+												 "op":"equals",
+												 "value":0
+											}
+									 }
+								 ]
                }
             }
          },

@@ -147,7 +147,7 @@
             "type": "error",
             "message": {
               "default": "The checkpoint interval value must either be >= 1 or -1 to disable",
-              "resourceKey": "checkpoint-interval-not-valid"
+              "resourceKey": "checkpoint_interval_not_valid"
             },
             "focusParam": "checkpointInterval"
           },
@@ -184,16 +184,27 @@
             "type": "error",
             "message": {
               "default": "Max bins must be >= 2 and >= number of categories in any categorical feature",
-              "resourceKey": "max-bins-not-valid"
+              "resourceKey": "max_bins_not_valid"
             },
             "focusParam": "maxBins"
           },
           "evaluate": {
-            "condition": {
-              "param": "maxBins",
-              "op": "equals",
-              "value": 2
-            }
+						"or":[
+							 {
+									"condition":{
+										 "param":"maxBins",
+										 "op":"greaterThan",
+										 "value":2
+									}
+							 },
+							 {
+									"condition":{
+										 "param":"maxBins",
+										 "op":"equals",
+										 "value":2
+									}
+							 }
+						]
           }
         }
       },
@@ -203,16 +214,27 @@
             "type": "error",
             "message": {
               "default": "The max depth parameter must be greater than or equal to zero",
-              "resourceKey": "max-depth-not-valid"
+              "resourceKey": "max_depth_not_valid"
             },
             "focusParam": "maxDepth"
           },
           "evaluate": {
-            "condition": {
-              "param": "maxDepth",
-              "op": "equals",
-              "value": 0
-            }
+						"or":[
+							{
+								 "condition":{
+										"param":"maxDepth",
+										"op":"greaterThan",
+										"value":0
+								 }
+							},
+							{
+								 "condition":{
+										"param":"maxDepth",
+										"op":"equals",
+										"value":0
+								 }
+							}
+						]
           }
         }
       },
@@ -222,16 +244,27 @@
             "type": "error",
             "message": {
               "default": "The minimum instances per node value must be >= 1",
-              "resourceKey": "min-instances-per-node-not-valid"
+              "resourceKey": "min_instances_per_node_not_valid"
             },
             "focusParam": "minInstancesPerNode"
           },
           "evaluate": {
-            "condition": {
-              "param": "minInstancesPerNode",
-              "op": "equals",
-              "value": 1
-            }
+						"or":[
+							 {
+									"condition":{
+										 "param":"minInstancesPerNode",
+										 "op":"greaterThan",
+										 "value":1
+									}
+							 },
+							 {
+									"condition":{
+										 "param":"minInstancesPerNode",
+										 "op":"equals",
+										 "value":1
+									}
+							 }
+						]
           }
         }
       }

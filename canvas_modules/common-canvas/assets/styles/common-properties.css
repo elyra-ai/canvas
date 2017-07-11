@@ -347,7 +347,7 @@ span.form__validation--invalid {
 }*/
 
 #flexible-table-container {
-	height: 222.75px;
+	height: 180px;
   width: 100%;
 	overflow: scroll;
   position: relative;
@@ -452,7 +452,7 @@ tr.reactable-column-header {
 }
 
 .column-allocator {
-	min-height: 130px;
+	min-height: 100px;
 }
 
 .error-border {
@@ -484,9 +484,7 @@ tr.reactable-column-header {
 	width: 16px !important;
 }
 
-
-/*
-.form-control:focus {
-	border-color: #a6266e;
+.required-control-indicator {
+	color: #a6266e;
+	font-weight: bold;
 }
-*/

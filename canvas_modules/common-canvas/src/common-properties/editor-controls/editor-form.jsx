@@ -420,16 +420,18 @@ export default class EditorForm extends React.Component {
 	}
 
 	genControlItem(key, control, idPrefix, controlValueAccessor, datasetMetadata) {
-		// logger.info("genControlItem");
-
 		var stateStyle = {};
 		if (this.state.controlStates[control.name] === "hidden") {
 			stateStyle.visibility = "hidden";
 		}
-
 		var label = <span></span>;
 		if (control.label && control.separateLabel) {
-			label = <label className="control-label" style={stateStyle}>{control.label.text}</label>;
+			if (control.required) {
+				label = (<div><label className="control-label" style={stateStyle}>{control.label.text}</label>
+									<span className="required-control-indicator">*</span></div>);
+			} else {
+				label = <label className="control-label" style={stateStyle}>{control.label.text}</label>;
+			}
 		}
 		var controlObj = this.genControl(control, idPrefix, controlValueAccessor, datasetMetadata);
 		var controlItem = <ControlItem key={key} label={label} control={controlObj} />;

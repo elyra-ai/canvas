@@ -29,7 +29,7 @@
       "conditions": [
         {
           "validation": {
-            "fail-message": {
+            "fail_message": {
               "type": "warning",
               "message": {
                 "default": "Expression cannot be empty: Default",
@@ -47,7 +47,7 @@
         },
         {
           "validation": {
-            "fail-message": {
+            "fail_message": {
               "type": "error",
               "message": {
                 "default": "int_param value must greaterThan 1: default"
@@ -99,7 +99,8 @@
                         "isList": false,
                         "isMap": false
                       },
-                      "separateLabel": true
+                      "separateLabel": true,
+                      "required":true
                     }
                   },
                   {
@@ -115,7 +116,8 @@
                         "isList": false,
                         "isMap": false
                       },
-                      "separateLabel": true
+                      "separateLabel": true,
+                      "required":true
                     }
                   }
                 ]
@@ -143,7 +145,7 @@
       "conditions": [
         {
           "validation": {
-            "fail-message": {
+            "fail_message": {
               "type": "warning",
               "message": {
                 "default": "Expression cannot be empty: Resource",
@@ -161,7 +163,7 @@
         },
         {
           "validation": {
-            "fail-message": {
+            "fail_message": {
               "type": "error",
               "message": {
                 "default": "int_param value must greaterThan 1: default"

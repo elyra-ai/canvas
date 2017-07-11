@@ -31,7 +31,7 @@ class ControlDef {
 export class Control extends ControlDef {
 	constructor(cname, label, separateLabel, controlType, valueDef, role, additionalText, orientation,
 		values, valueLabels, valueIcons, sortable, filterable, charLimit, subControls, keyIndex, defaultRow,
-		childItem, moveableRows) {
+		childItem, moveableRows, required) {
 		super(cname, label, controlType, valueDef, role, additionalText, orientation, values,
 					valueLabels, valueIcons, sortable, filterable, charLimit);
 		this.separateLabel = separateLabel;
@@ -40,6 +40,7 @@ export class Control extends ControlDef {
 		this.defaultRow = defaultRow;
 		this.childItem = childItem;
 		this.moveableRows = moveableRows;
+		this.required = required;
 	}
 }
 

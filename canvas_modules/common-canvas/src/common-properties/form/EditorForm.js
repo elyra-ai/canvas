@@ -52,24 +52,24 @@ class ControlPanel {
 /**
  * Creates tab based on parameter definition
  */
-function makePrimaryTab(propertyDef, group, l10nProvider) {
+function makePrimaryTab(propertyDef, group, l10nProvider, conditions) {
 	const label = l10nProvider.l10nLabel(group, group.name);
-	return new EditorTab(label, group.name, _makeUIItem(propertyDef.parameterMetadata, group, propertyDef.structureMetadata, l10nProvider));
+	return new EditorTab(label, group.name, _makeUIItem(propertyDef.parameterMetadata, group, propertyDef.structureMetadata, l10nProvider, conditions));
 }
 
-function _makeUIItem(parameterMetadata, group, structureMetadata, l10nProvider) {
+function _makeUIItem(parameterMetadata, group, structureMetadata, l10nProvider, conditions) {
 	const groupName = group.name;
 	let groupItem = null;
 	let groupLabel = null;
 	switch (group.groupType()) {
 	case GroupType.CONTROLS:
-		return UIItem.makePanel(new ControlPanel(groupName, PanelType.GENERAL, _makeControls(parameterMetadata, group, structureMetadata, l10nProvider)));
+		return UIItem.makePanel(new ControlPanel(groupName, PanelType.GENERAL, _makeControls(parameterMetadata, group, structureMetadata, l10nProvider, conditions)));
 	case GroupType.COLUMN_ALLOCATION:
-		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_ALLOCATION, _makeControls(parameterMetadata, group, structureMetadata, l10nProvider)));
+		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_ALLOCATION, _makeControls(parameterMetadata, group, structureMetadata, l10nProvider, conditions)));
 	case GroupType.COLUMN_SELECTION:
-		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_SELECTION, _makeControls(parameterMetadata, group, structureMetadata, l10nProvider)));
+		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_SELECTION, _makeControls(parameterMetadata, group, structureMetadata, l10nProvider, conditions)));
 	case GroupType.ADDITIONAL: {
-		const panel = new ControlPanel(groupName, PanelType.GENERAL, _makeControls(parameterMetadata, group, structureMetadata, l10nProvider));
+		const panel = new ControlPanel(groupName, PanelType.GENERAL, _makeControls(parameterMetadata, group, structureMetadata, l10nProvider, conditions));
 		groupLabel = l10nProvider.l10nLabel(group, group.name);
 		return UIItem.makeAdditionalLink(groupLabel, groupLabel, panel);
 	}
@@ -78,7 +78,7 @@ function _makeUIItem(parameterMetadata, group, structureMetadata, l10nProvider) 
 		const subTabItems = [];
 		group.subGroups.forEach(function(subGroup) {
 			const subGroupName = subGroup.name;
-			groupItem = _makeUIItem(parameterMetadata, subGroup, structureMetadata, l10nProvider);
+			groupItem = _makeUIItem(parameterMetadata, subGroup, structureMetadata, l10nProvider, conditions);
 			groupLabel = l10nProvider.l10nLabel(subGroup, subGroup.name);
 			subTabItems.push(new EditorTab(groupLabel, subGroupName, groupItem));
 		});
@@ -89,7 +89,7 @@ function _makeUIItem(parameterMetadata, group, structureMetadata, l10nProvider) 
 		const panSelSubItems = [];
 		group.subGroups.forEach(function(subGroup) {
 			const subGroupName = subGroup.name;
-			groupItem = _makeUIItem(parameterMetadata, subGroup, structureMetadata, l10nProvider);
+			groupItem = _makeUIItem(parameterMetadata, subGroup, structureMetadata, l10nProvider, conditions);
 			groupLabel = l10nProvider.l10nLabel(subGroup, subGroup.name);
 			panSelSubItems.push(new EditorTab(groupLabel, subGroupName, groupItem));
 		});
@@ -98,7 +98,7 @@ function _makeUIItem(parameterMetadata, group, structureMetadata, l10nProvider) 
 	case GroupType.PANELS: {
 		const panSubItems = [];
 		group.subGroups.forEach(function(subGroup) {
-			groupItem = _makeUIItem(parameterMetadata, subGroup, structureMetadata, l10nProvider);
+			groupItem = _makeUIItem(parameterMetadata, subGroup, structureMetadata, l10nProvider, conditions);
 			panSubItems.push(groupItem);
 		});
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.GENERAL, panSubItems));
@@ -111,7 +111,7 @@ function _makeUIItem(parameterMetadata, group, structureMetadata, l10nProvider) 
 /**
  * Called on a base property group.
  */
-function _makeControls(parameterMetadata, group, structureMetadata, l10nProvider) {
+function _makeControls(parameterMetadata, group, structureMetadata, l10nProvider, conditions) {
 	const uiItems = [];
 	group.parameterNames().forEach(function(paramName) {
 		// Assume property definition exists
@@ -120,7 +120,7 @@ function _makeControls(parameterMetadata, group, structureMetadata, l10nProvider
 		if (prop.propType() === Type.STRUCTURE && structureMetadata) {
 			structureDef = structureMetadata.getStructure(prop.baseType());
 		}
-		const control = UIItem.makeControl(_makeControl(parameterMetadata, paramName, group, structureDef, l10nProvider));
+		const control = UIItem.makeControl(_makeControl(parameterMetadata, paramName, group, structureDef, l10nProvider, conditions));
 		if (prop.separatorBefore() || prop.separatorAfter()) {
 			if (prop.separatorBefore()) {
 				uiItems.push(UIItem.makeHSeparator());
@@ -135,7 +135,7 @@ function _makeControls(parameterMetadata, group, structureMetadata, l10nProvider
 	});
 	if (group.subGroups) {
 		group.subGroups.forEach(function(eachGroup) {
-			const subGroup = _makeUIItem(parameterMetadata, eachGroup, structureMetadata, l10nProvider);
+			const subGroup = _makeUIItem(parameterMetadata, eachGroup, structureMetadata, l10nProvider, conditions);
 			uiItems.push(subGroup);
 		});
 	}
@@ -143,14 +143,32 @@ function _makeControls(parameterMetadata, group, structureMetadata, l10nProvider
 }
 
 /**
+ * Returns true if the control is required.
+ * NOTE: This code needs work - possibly introduce an explicit 'required' parameter
+ */
+function isControlRequired(paramName, conditions) {
+	if (conditions) {
+		for (const condition of conditions) {
+			if (condition.validation &&
+					condition.validation.fail_message &&
+					paramName === condition.validation.fail_message.focusParam) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+/**
  * Creates a control for the supplied property.
  */
-function _makeControl(parameterMetadata, paramName, group, structureDef, l10nProvider) {
+function _makeControl(parameterMetadata, paramName, group, structureDef, l10nProvider, conditions) {
 	// Assume the property is defined
 	const parameter = parameterMetadata.getParameter(paramName);
 
 	const additionalText = parameter.getAdditionalText(l10nProvider);
 	const orientation = parameter.orientation;
+	const required = isControlRequired(paramName, conditions);
 	const controlLabel = new Label(l10nProvider.l10nLabel(parameter, parameter.name));
 
 	// The role is used to modify the behaviour of certain controls
@@ -308,7 +326,8 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 		keyIndex,
 		defaultRow,
 		childItem,
-		moveableRows
+		moveableRows,
+		required
 	);
 }
 
