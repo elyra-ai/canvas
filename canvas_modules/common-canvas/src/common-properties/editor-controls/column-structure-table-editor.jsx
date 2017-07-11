@@ -251,7 +251,6 @@ export default class ColumnStructureTableEditor extends EditorControl {
 
 	_makeCell(columnDef, controlValue, rowIndex, colIndex) {
 		let cell;
-		const inTable = true;
 		if (columnDef.controlType === "toggletext" && columnDef.editStyle !== "subpanel") {
 			cell = (<Td key={colIndex} column={columnDef.name}><ToggletextControl
 				rowIndex={rowIndex}
@@ -289,9 +288,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 				columnDef={columnDef}
 				value={controlValue[rowIndex][colIndex]}
 				updateControlValue={this.updateControlValue}
-				columnIndex={colIndex}
-				setCurrentControlValue={this.setCurrentControlValue}
-				tableControl={inTable}
+				tableControl
 			/></Td>);
 		} else {
 			cell = <Td key={colIndex} column={columnDef.name}>{controlValue[rowIndex][colIndex]}</Td>;
