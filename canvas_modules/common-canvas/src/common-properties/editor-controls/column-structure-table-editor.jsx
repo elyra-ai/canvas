@@ -347,11 +347,11 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		for (var j = 0; j < this.props.control.subControls.length; j++) {
 			const columnDef = this.props.control.subControls[j];
 			if (columnDef.visible) {
-				if (columnDef.isSortable) {
+				if (columnDef.sortable) {
 					sortFields.push(columnDef.name);
 				}
 				headers.push({ "key": columnDef.name, "label": columnDef.label.text });
-				if (columnDef.isFilterable) {
+				if (columnDef.filterable) {
 					filterFields.push(columnDef.name);
 				}
 			}

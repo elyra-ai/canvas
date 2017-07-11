@@ -301,6 +301,8 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 		parameter.getValidValues(),
 		valueLabels,
 		parameter.valueIcons,
+		parameter.sortable,
+		parameter.filterable,
 		parameter.charLimit,
 		subControls,
 		keyIndex,
@@ -420,6 +422,8 @@ function _makeSubControl(parameter, l10nProvider, isKeyField) {
 		parameter.getValidValues(),
 		valueLabels,
 		parameter.valueIcons,
+		parameter.sortable,
+		parameter.filterable,
 		parameter.charLimit,
 		parameter.editStyle,
 		isKeyField

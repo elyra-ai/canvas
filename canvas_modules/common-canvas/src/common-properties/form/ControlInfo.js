@@ -11,7 +11,7 @@ import { EditStyle } from "./form-constants";
 
 class ControlDef {
 	constructor(cname, label, controlType, valueDef, role, additionalText, orientation,
-		values, valueLabels, valueIcons, charLimit) {
+		values, valueLabels, valueIcons, sortable, filterable, charLimit) {
 		this.name = cname;
 		this.label = label;
 		this.controlType = controlType;
@@ -22,16 +22,18 @@ class ControlDef {
 		this.values = values;
 		this.valueLabels = valueLabels;
 		this.valueIcons = valueIcons;
+		this.sortable = sortable;
+		this.filterable = filterable;
 		this.charLimit = charLimit;
 	}
 }
 
 export class Control extends ControlDef {
 	constructor(cname, label, separateLabel, controlType, valueDef, role, additionalText, orientation,
-		values, valueLabels, valueIcons, charLimit, subControls, keyIndex, defaultRow, childItem,
-		moveableRows) {
+		values, valueLabels, valueIcons, sortable, filterable, charLimit, subControls, keyIndex, defaultRow,
+		childItem, moveableRows) {
 		super(cname, label, controlType, valueDef, role, additionalText, orientation, values,
-					valueLabels, valueIcons, charLimit);
+					valueLabels, valueIcons, sortable, filterable, charLimit);
 		this.separateLabel = separateLabel;
 		this.subControls = subControls;
 		this.keyIndex = keyIndex;
@@ -43,9 +45,9 @@ export class Control extends ControlDef {
 
 export class SubControl extends ControlDef {
 	constructor(cname, label, visible, width, controlType, valueDef, role, additionalText,
-		orientation, values, valueLabels, valueIcons, charLimit, editStyle, isKeyField) {
+		orientation, values, valueLabels, valueIcons, sortable, filterable, charLimit, editStyle, isKeyField) {
 		super(cname, label, controlType, valueDef, role, additionalText, orientation,
-			values, valueLabels, valueIcons, charLimit);
+			values, valueLabels, valueIcons, sortable, filterable, charLimit);
 		this.visible = visible;
 		this.width = width;
 		if (editStyle) {
