@@ -441,11 +441,11 @@ export default class EditorForm extends React.Component {
 	}
 
 	genControlItem(key, control, idPrefix, controlValueAccessor, datasetMetadata) {
-		var stateStyle = {};
+		const stateStyle = {};
 		if (this.state.controlStates[control.name] === "hidden") {
 			stateStyle.visibility = "hidden";
 		}
-		var label = <span></span>;
+		let label = <span></span>;
 		if (control.label && control.separateLabel) {
 			if (control.required) {
 				label = (<div><label className="control-label" style={stateStyle}>{control.label.text}</label>
@@ -454,8 +454,12 @@ export default class EditorForm extends React.Component {
 				label = <label className="control-label" style={stateStyle}>{control.label.text}</label>;
 			}
 		}
+		let description;
+		if (control.description && control.description.placement === "on_panel") {
+			description = <div className="control-description">{control.description.text}</div>;
+		}
 		var controlObj = this.genControl(control, idPrefix, controlValueAccessor, datasetMetadata);
-		var controlItem = <ControlItem key={key} label={label} control={controlObj} />;
+		var controlItem = <ControlItem key={key} label={label} description={description} control={controlObj} />;
 		// logger.info(controlItem);
 		return controlItem;
 	}

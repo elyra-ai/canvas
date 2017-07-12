@@ -100,7 +100,7 @@
                         "isMap": false
                       },
                       "separateLabel": true,
-                      "required":true
+                      "required": true
                     }
                   },
                   {
@@ -117,7 +117,7 @@
                         "isMap": false
                       },
                       "separateLabel": true,
-                      "required":true
+                      "required": true
                     }
                   }
                 ]

@@ -29,6 +29,7 @@ export default class ControlItem extends React.Component {
 		return (
 			<div>
 				{this.props.label}
+				{this.props.description}
 				{this.props.control}
 			</div>
 		);
@@ -37,5 +38,6 @@ export default class ControlItem extends React.Component {
 
 ControlItem.propTypes = {
 	control: React.PropTypes.object,
-	label: React.PropTypes.object
+	label: React.PropTypes.object,
+	description: React.PropTypes.object
 };

@@ -483,3 +483,7 @@ tr.reactable-column-header {
 	color: #a6266e;
 	font-weight: bold;
 }
+
+.control-description {
+	font-size: 12px;
+}

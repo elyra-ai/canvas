@@ -38,6 +38,9 @@ export class L10nProvider {
 		if (resourceObj) {
 			if (resourceObj.resourceKey) {
 				text = this.l10n(resourceObj.resourceKey);
+				if ((!text || text === resourceObj.resourceKey) && resourceObj.default) {
+					text = resourceObj.default;
+				}
 			} else if (resourceObj.default) {
 				text = resourceObj.default;
 			}
@@ -68,12 +71,20 @@ export class L10nProvider {
 		return this.l10n(lookupKey, value);
 	}
 }
+
 export class ResourceDef {
-	constructor(defaultText, resourceKey) {
+	constructor(defaultText, resourceKey, placement) {
 		this.default = defaultText;
 		this.resourceKey = resourceKey;
+		if (placement) {
+			this.placement = placement;
+		}
 	}
+
 	static make(resourceObj) {
-		return new ResourceDef(_.propertyOf(resourceObj)("default"), _.propertyOf(resourceObj)("resourceKey"));
+		return new ResourceDef(
+			_.propertyOf(resourceObj)("default"),
+			_.propertyOf(resourceObj)("resourceKey"),
+			_.propertyOf(resourceObj)("placement"));
 	}
 }

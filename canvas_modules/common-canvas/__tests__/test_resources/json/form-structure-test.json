@@ -48,7 +48,7 @@
               "name": "new_name",
               "resourceKey": "RenameFieldEntry.new_name",
               "columns": 26,
-		          "editStyle": "inline"
+              "editStyle": "inline"
             }
           ]
         }
@@ -194,6 +194,10 @@
                       "label": {
                         "text": "Rename columns"
                       },
+                      "description": {
+                        "text": "Rename columns in the active dataset",
+                        "placement": "as_tooltip"
+                      },
                       "controlType": "structuretable",
                       "valueDef": {
                         "propType": "structure",
@@ -213,7 +217,7 @@
                             "isList": false,
                             "isMap": false
                           },
-													"role": "column",
+                          "role": "column",
                           "visible": true,
                           "width": 26
                         },
@@ -228,17 +232,17 @@
                             "isList": false,
                             "isMap": false
                           },
-													"role": "new_column",
+                          "role": "new_column",
                           "visible": true,
                           "width": 26,
-													"editStyle":"inline"
+                          "editStyle": "inline"
                         }
                       ],
                       "keyIndex": 0,
                       "defaultRow": [
                         ""
                       ],
-											"required":true
+                      "required": true
                     }
                   }
                 ]

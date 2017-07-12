@@ -217,7 +217,7 @@
                             "isList": false,
                             "isMap": false
                           },
-                          "role":"column",
+                          "role": "column",
                           "visible": true,
                           "width": 28
                         },
@@ -232,7 +232,7 @@
                             "isList": false,
                             "isMap": false
                           },
-                          "role":"enum",
+                          "role": "enum",
                           "values": [
                             "Ascending",
                             "Descending"
@@ -247,7 +247,7 @@
                           ],
                           "visible": true,
                           "width": 16,
-                          "editStyle":"inline"
+                          "editStyle": "inline"
                         }
                       ],
                       "keyIndex": 0,
@@ -256,7 +256,7 @@
                         "Ascending"
                       ],
                       "moveableRows": true,
-                      "required":false
+                      "required": false
                     }
                   }
                 ]
