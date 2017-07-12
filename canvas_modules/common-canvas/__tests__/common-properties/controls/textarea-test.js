@@ -18,8 +18,12 @@ chai.use(chaiEnzyme()); // Note the invocation at the end
 
 
 const control = {
+	name: "test-areafield",
 	charLimit: 256,
-	additionalText: "Add comment"
+	additionalText: "Add comment",
+	valueDef: {
+		isList: false
+	}
 };
 const control2 = {
 };
@@ -31,7 +35,11 @@ function valueAccessor() {
 	return ["Test value"];
 }
 
-describe("textfield-control renders correctly", () => {
+function updateControlValue(id, controlValue) {
+	expect(id).to.equal(controlId);
+}
+
+describe("textarea-control renders correctly", () => {
 
 	it("props should have been defined", () => {
 		const wrapper = shallow(
@@ -41,6 +49,7 @@ describe("textfield-control renders correctly", () => {
 				valueAccessor={valueAccessor}
 				validationDefinitions={validationDefinitions}
 				controlStates={controlStates}
+				updateControlValue={updateControlValue}
 			/>
 		);
 
@@ -60,6 +69,7 @@ describe("textfield-control renders correctly", () => {
 				valueAccessor={valueAccessor}
 				validationDefinitions={validationDefinitions}
 				controlStates={controlStates}
+				updateControlValue={updateControlValue}
 			/>
 		);
 		const input = wrapper.find(".text");
@@ -74,6 +84,7 @@ describe("textfield-control renders correctly", () => {
 				valueAccessor={valueAccessor}
 				validationDefinitions={validationDefinitions}
 				controlStates={controlStates}
+				updateControlValue={updateControlValue}
 			/>
 		);
 		const input = wrapper.find(".text");
@@ -89,6 +100,7 @@ describe("textfield-control renders correctly", () => {
 				valueAccessor={valueAccessor}
 				validationDefinitions={validationDefinitions}
 				controlStates={controlStates}
+				updateControlValue={updateControlValue}
 			/>
 		);
 		const input = wrapper.find(".text");
@@ -103,6 +115,7 @@ describe("textfield-control renders correctly", () => {
 				valueAccessor={valueAccessor}
 				validationDefinitions={validationDefinitions}
 				controlStates={controlStates}
+				updateControlValue={updateControlValue}
 			/>
 		);
 		const input = wrapper.find(".text");
@@ -117,6 +130,7 @@ describe("textfield-control renders correctly", () => {
 				valueAccessor={valueAccessor}
 				validationDefinitions={validationDefinitions}
 				controlStates={controlStates}
+				updateControlValue={updateControlValue}
 			/>
 		);
 		const input = wrapper.find(".text");
@@ -131,6 +145,7 @@ describe("textfield-control renders correctly", () => {
 				valueAccessor={valueAccessor}
 				validationDefinitions={validationDefinitions}
 				controlStates={controlStates}
+				updateControlValue={updateControlValue}
 			/>
 		);
 		const input = wrapper.find(".text");

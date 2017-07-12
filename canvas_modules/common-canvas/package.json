@@ -1,6 +1,6 @@
 {
   "name": "@wdp/common-canvas",
-  "version": "0.1.43",
+  "version": "1.0.0",
   "description": "WDP common-canvas",
   "main": "dist/common-canvas.js",
   "license": "IPL-1.0",
@@ -56,8 +56,10 @@
     "react-bootstrap": "0.30.6",
     "react-contextmenu": "1.6.3",
     "react-click-outside": "2.2.0",
+    "react-dropdown": "1.2.5",
     "react-dom": "15.3.2",
     "react-inlinesvg": "0.4.2",
+    "reactable": "0.14.1",
     "redux": "3.6.0",
     "sinon": "1.17.7",
     "source-map-loader": "0.2.0",

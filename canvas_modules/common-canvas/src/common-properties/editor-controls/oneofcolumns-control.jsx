@@ -29,6 +29,7 @@ export default class OneofcolumnsControl extends EditorControl {
 	handleChange(evt) {
 		this.setState({ controlValue: evt.target.value });
 		this.notifyValueChanged(this.props.control.name, evt.target.value);
+		this.props.updateControlValue(this.props.control.name, evt.target.value);
 	}
 
 	getControlValue() {
@@ -55,5 +56,6 @@ export default class OneofcolumnsControl extends EditorControl {
 
 OneofcolumnsControl.propTypes = {
 	dataModel: React.PropTypes.object,
-	control: React.PropTypes.object
+	control: React.PropTypes.object,
+	updateControlValue: React.PropTypes.func
 };

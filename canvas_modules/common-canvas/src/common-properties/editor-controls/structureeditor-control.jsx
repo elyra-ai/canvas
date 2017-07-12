@@ -36,6 +36,7 @@ export default class StructureeditorControl extends EditorControl {
 	handleChange(evt) {
 		this.setState({ controlValue: evt.target.value });
 		this.notifyValueChanged(this.props.control.name, evt.target.value);
+		this.props.updateControlValue(this.props.control.name, JSON.stringify(evt.target.value));
 	}
 
 	getControlValue() {
@@ -112,5 +113,6 @@ export default class StructureeditorControl extends EditorControl {
 }
 
 StructureeditorControl.propTypes = {
-	control: React.PropTypes.object
+	control: React.PropTypes.object,
+	updateControlValue: React.PropTypes.func
 };

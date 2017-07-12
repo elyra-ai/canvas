@@ -1,0 +1,363 @@
+{
+  "paramDef": {
+    "currentParameters": {
+      "annotation": "",
+      "use_custom_name": true,
+      "custom_name": "",
+      "keys": [
+        "[\"Na\",\"Ascending\"]",
+        "[\"Drug\",\"Descending\"]",
+        "[\"Cholesterol\",\"Ascending\"]"
+      ]
+    },
+    "parameters": [
+      {
+        "name": "keys",
+        "type": "array[SortEntry]"
+      }
+    ],
+    "complex_types": [
+      {
+        "name": "SortEntry",
+        "key_definition": {
+          "name": "field",
+          "type": "string",
+          "role": "column",
+          "default": ""
+        },
+        "parameters": [
+          {
+            "name": "sort_order",
+            "enum": [
+              "Ascending",
+              "Descending"
+            ],
+            "default": "Ascending"
+          }
+        ]
+      }
+    ],
+    "uihints": {
+      "icon": "images/sort.svg",
+      "name": "sort",
+      "label": {
+        "resourceKey": "sort.label"
+      },
+      "description": {
+        "resourceKey": "sort.desc"
+      },
+      "editorSize": "large",
+      "parameter_info": [
+        {
+          "name": "keys",
+          "label": {
+            "default": "Sort by"
+          }
+        }
+      ],
+      "structure_info": [
+        {
+          "name": "SortEntry",
+          "moveableRows": true,
+          "key_definition": {
+            "name": "field",
+            "width": 28,
+            "label": {
+              "resourceKey": "SortEntry.field.label"
+            }
+          },
+          "parameters": [
+            {
+              "name": "sort_order",
+              "width": 16,
+              "resourceKey": "SortEntry.sort_order",
+              "label": {
+                "resourceKey": "SortEntry.sort_order.label"
+              },
+              "control": "toggletext",
+              "valueIcons": [
+                "/images/up-triangle.svg",
+                "/images/down-triangle.svg"
+              ]
+            }
+          ]
+        }
+      ],
+      "group_info": [
+        {
+          "name": "basic-settings",
+          "label": {
+            "default": "Settings"
+          },
+          "type": "columnSelection",
+          "parameters": [
+            "keys"
+          ]
+        }
+      ]
+    },
+    "datasetMetadata": {
+      "fields": [
+        {
+          "name": "Age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "role": "input"
+          }
+        },
+        {
+          "name": "Sex",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "role": "input"
+          }
+        },
+        {
+          "name": "Cholesterol",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "role": "input"
+          }
+        },
+        {
+          "name": "Na",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "role": "input"
+          }
+        },
+        {
+          "name": "K",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "role": "input"
+          }
+        },
+        {
+          "name": "Drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "role": "input"
+          }
+        }
+      ]
+    },
+    "resources": {
+      "sort.label": "Sort",
+      "sort.desc": "Sorts the data",
+      "sort.keys.label": "Sort by",
+      "SortEntry.label": "Sort",
+      "SortEntry.field.label": "Field",
+      "SortEntry.sort_order.label": "Order",
+      "SortEntry.sort_order.Ascending.label": "Ascending",
+      "SortEntry.sort_order.Descending.label": "Descending"
+    }
+  },
+  "expectedResult": {
+    "componentId": "sort",
+    "label": "Sort",
+    "editorSize": "large",
+    "uiItems": [
+      {
+        "itemType": "primaryTabs",
+        "tabs": [
+          {
+            "text": "Settings",
+            "group": "basic-settings",
+            "content": {
+              "itemType": "panel",
+              "panel": {
+                "id": "basic-settings",
+                "panelType": "columnSelection",
+                "uiItems": [
+                  {
+                    "itemType": "control",
+                    "control": {
+                      "name": "keys",
+                      "label": {
+                        "text": "Sort by"
+                      },
+                      "controlType": "structuretable",
+                      "valueDef": {
+                        "propType": "structure",
+                        "isList": true,
+                        "isMap": false
+                      },
+                      "separateLabel": true,
+                      "subControls": [
+                        {
+                          "name": "field",
+                          "label": {
+                            "text": "Field"
+                          },
+                          "controlType": "oneofcolumns",
+                          "valueDef": {
+                            "propType": "string",
+                            "isList": false,
+                            "isMap": false
+                          },
+                          "role":"column",
+                          "visible": true,
+                          "width": 28
+                        },
+                        {
+                          "name": "sort_order",
+                          "label": {
+                            "text": "Order"
+                          },
+                          "controlType": "toggletext",
+                          "valueDef": {
+                            "propType": "string",
+                            "isList": false,
+                            "isMap": false
+                          },
+                          "role":"enum",
+                          "values": [
+                            "Ascending",
+                            "Descending"
+                          ],
+                          "valueLabels": [
+                            "Ascending",
+                            "Descending"
+                          ],
+                          "valueIcons": [
+                            "/images/up-triangle.svg",
+                            "/images/down-triangle.svg"
+                          ],
+                          "visible": true,
+                          "width": 16,
+                          "editStyle":"inline"
+                        }
+                      ],
+                      "keyIndex": 0,
+                      "defaultRow": [
+                        "",
+                        "Ascending"
+                      ],
+                      "moveableRows": true,
+                      "required":false
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "buttons": [
+      {
+        "id": "ok",
+        "text": "OK",
+        "isPrimary": true,
+        "url": ""
+      },
+      {
+        "id": "cancel",
+        "text": "Cancel",
+        "isPrimary": false,
+        "url": ""
+      }
+    ],
+    "data": {
+      "currentParameters": {
+        "annotation": "",
+        "use_custom_name": true,
+        "custom_name": "",
+        "keys": [
+          "[\"Na\",\"Ascending\"]",
+          "[\"Drug\",\"Descending\"]",
+          "[\"Cholesterol\",\"Ascending\"]"
+        ]
+      },
+      "datasetMetadata": {
+        "fields": [
+          {
+            "name": "Age",
+            "type": "integer",
+            "metadata": {
+              "description": "",
+              "measure": "range",
+              "role": "input"
+            }
+          },
+          {
+            "name": "Sex",
+            "type": "string",
+            "metadata": {
+              "description": "",
+              "measure": "discrete",
+              "role": "input"
+            }
+          },
+          {
+            "name": "BP",
+            "type": "string",
+            "metadata": {
+              "description": "",
+              "measure": "discrete",
+              "role": "input"
+            }
+          },
+          {
+            "name": "Cholesterol",
+            "type": "string",
+            "metadata": {
+              "description": "",
+              "measure": "discrete",
+              "role": "input"
+            }
+          },
+          {
+            "name": "Na",
+            "type": "double",
+            "metadata": {
+              "description": "",
+              "measure": "range",
+              "role": "input"
+            }
+          },
+          {
+            "name": "K",
+            "type": "double",
+            "metadata": {
+              "description": "",
+              "measure": "range",
+              "role": "input"
+            }
+          },
+          {
+            "name": "Drug",
+            "type": "string",
+            "metadata": {
+              "description": "",
+              "measure": "discrete",
+              "role": "input"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

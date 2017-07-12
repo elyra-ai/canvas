@@ -27,22 +27,15 @@ export default class CheckboxControl extends EditorControl {
 	}
 
 	handleChange(evt) {
-		var newValue;
-		if (evt.target.checked) {
-			newValue = "true";
-		} else {
-			newValue = "false";
-		}
-
+		var newValue = evt.target.checked ? newValue = "true" : newValue = "false";
 		var that = this;
 		this.setState({
 			controlValue: newValue
 		}, function() {
 			that.validateInput();
 		});
-		this.notifyValueChanged(this.props.control.name, evt.target.checked
-			? "true"
-			: "false");
+		this.notifyValueChanged(this.props.control.name, newValue);
+		this.props.updateControlValue(this.props.control.name, newValue);
 	}
 
 	getControlValue() {
@@ -91,5 +84,6 @@ export default class CheckboxControl extends EditorControl {
 }
 
 CheckboxControl.propTypes = {
-	control: React.PropTypes.object
+	control: React.PropTypes.object,
+	updateControlValue: React.PropTypes.func
 };

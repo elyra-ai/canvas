@@ -28,21 +28,22 @@ export default class Form {
 	* Returns a new Form
 	*/
 	static makeForm(paramDef) {
-		const propDef = PropertyDef.makePropertyDef(_.propertyOf(paramDef)("parameters"), _.propertyOf(paramDef)("uihints"));
+		const propDef = PropertyDef.makePropertyDef(_.propertyOf(paramDef)("parameters"), _.propertyOf(paramDef)("complex_types"),
+			_.propertyOf(paramDef)("uihints"));
+		const conditions = _.propertyOf(paramDef.uihints)("conditions");
 		if (propDef) {
 			const l10nProvider = new L10nProvider(_.propertyOf(paramDef)("resources"));
 			const tabs = [];
 			if (propDef.groupMetadata && propDef.groupMetadata.groups) {
 				for (const group of propDef.groupMetadata.groups) {
-					tabs.push(makePrimaryTab(propDef, group, l10nProvider));
+					tabs.push(makePrimaryTab(propDef, group, l10nProvider, conditions));
 				}
 			}
-			// tabs.push(makeStandardTab(componentDef, BuiltInProvider(messages), CommonComponents.ANNOTATIONS_TAB_GROUP,
-			//  currentProperties));
+
 			const data = {
 				currentParameters: _.propertyOf(paramDef)("currentParameters"),
 				datasetMetadata: _.propertyOf(paramDef)("datasetMetadata"),
-				conditions: Conditions.translateMessages(_.propertyOf(paramDef.uihints)("conditions"), l10nProvider)
+				conditions: Conditions.translateMessages(conditions, l10nProvider)
 			};
 			const formName = _.propertyOf(propDef)("name");
 			return new Form(formName,

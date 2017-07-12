@@ -8,18 +8,14 @@
  *******************************************************************************/
 
 import { ParameterDef, ParameterMetadata } from "./ParameterInfo";
-import { EditStyle } from "./form-constants";
 import _ from "underscore";
 
 class StructureDef {
-	constructor(cname, keyDefinition, parameterMetadata, uiHints) {
+	constructor(cname, keyDefinition, parameterMetadata, moveableRows) {
 		this.name = cname;
 		this.keyDefinition = keyDefinition;
 		this.parameterMetadata = parameterMetadata;
-	}
-
-	isEditStyleSubpanel() {
-		return (this.editStyle() === EditStyle.SUBPANEL);
+		this.moveableRows = moveableRows;
 	}
 
 	/**
@@ -35,10 +31,6 @@ class StructureDef {
 		return params;
 	}
 
-	isEditStyleInlinel() {
-		return (this.editStyle() === EditStyle.INLINE);
-	}
-
 	keyAttributeIndex() {
 		if (this.keyDefinition) {
 			// Assume the key is always in the first column
@@ -50,26 +42,38 @@ class StructureDef {
 	defaultStructure(addKeyDefinition) {
 		const defaults = [];
 		this.parameterMetadata.paramDefs.forEach(function(param) {
-			defaults.push(_.propertyOf(param)("defaultValue"));
+			defaults.push(param.defaultValue);
 		});
 		if (addKeyDefinition && this.keyDefinition) {
 			// Assume the key is always in the first column
-			defaults.unshift(_.propertyOf(this.keyDefinition)("defaultValue"));
+			defaults.unshift(this.keyDefinition.defaultValue);
 		}
 		return defaults;
 	}
 
-	static makeStructure(structureOp) {
-		if (structureOp) {
+	static makeStructure(structure, uihints) {
+		if (structure) {
 			return new StructureDef(
-				_.propertyOf(structureOp)("name"),
-				ParameterDef.makeParameterDef(_.propertyOf(structureOp.metadata)("keyDefinition")),
-				ParameterMetadata.makeParameterMetadata(_.propertyOf(structureOp.metadata)("arguments")),
-				_.propertyOf(structureOp.metadata)("uiHints")
+				_.propertyOf(structure)("name"),
+				ParameterDef.makeParameterDef(_.propertyOf(structure)("key_definition"), _.propertyOf(uihints)("key_definition")),
+				ParameterMetadata.makeParameterMetadata(_.propertyOf(structure)("parameters"), _.propertyOf(uihints)("parameters")),
+				_.propertyOf(uihints)("moveableRows")
 			);
 		}
 		return null;
 	}
+}
+
+// searches uihints to match up with parameter
+function getStructureUIHint(structureName, uihints) {
+	if (uihints) {
+		for (const uihint of uihints) {
+			if (structureName === uihint.name) {
+				return uihint;
+			}
+		}
+	}
+	return null;
 }
 
 export class StructureMetadata {
@@ -87,17 +91,19 @@ export class StructureMetadata {
 		return structureDef;
 	}
 
-	static makeStructureMetadata(structuresOp) {
-		if (structuresOp) {
-			const structures = [];
-			for (const structure of structuresOp) {
-				const struct = StructureDef.makeStructure(structure);
+
+	static makeStructureMetadata(structures, uihintsStructures) {
+		if (structures) {
+			const structureDefs = [];
+			for (const structure of structures) {
+				const struct = StructureDef.makeStructure(structure, getStructureUIHint(structure.name, uihintsStructures));
 				if (struct !== null) {
-					structures.push(struct);
+					structureDefs.push(struct);
 				}
 			}
-			return new StructureMetadata(structures);
+			return new StructureMetadata(structureDefs);
 		}
 		return null;
 	}
+
 }

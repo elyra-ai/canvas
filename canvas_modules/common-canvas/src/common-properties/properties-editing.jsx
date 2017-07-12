@@ -24,6 +24,23 @@ export default class PropertiesEditing extends Component {
 		const classSize = (typeof this.props.bsSize === "undefined") ? "large" : this.props.bsSize;
 		const propertyEditingClass = "properties-editing properties-" + classSize;
 
+		let buttons = (<div>
+			<Button
+				semantic href=""
+				onClick={this.props.okHandler}
+				style={{ "marginLeft": "10px" }}
+			>
+				{applyButtonLabel}
+			</Button>
+
+			<Button semantic href="" hyperlink onClick={this.props.cancelHandler}>
+				{rejectButtonLabel}
+			</Button>
+		</div>);
+		if (this.props.showPropertiesButtons === false) {
+			buttons = <div></div>;
+		}
+
 		return (
 			<div className={propertyEditingClass} >
 				<div className="properties-title"
@@ -37,17 +54,7 @@ export default class PropertiesEditing extends Component {
 					{this.props.children}
 				</div>
 				<div className="properties-buttons">
-					<Button
-						semantic href=""
-						onClick={this.props.okHandler}
-						style={{ "marginLeft": "10px" }}
-					>
-						{applyButtonLabel}
-					</Button>
-
-					<Button semantic href="" hyperlink onClick={this.props.cancelHandler}>
-						{rejectButtonLabel}
-					</Button>
+					{buttons}
 				</div>
 			</div>
 		);
@@ -61,5 +68,6 @@ PropertiesEditing.propTypes = {
 	title: React.PropTypes.object,
 	applyLabel: React.PropTypes.string,
 	rejectLabel: React.PropTypes.string,
-	children: React.PropTypes.element
+	children: React.PropTypes.element,
+	showPropertiesButtons: React.PropTypes.bool
 };

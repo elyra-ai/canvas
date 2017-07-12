@@ -20,8 +20,9 @@ import { CHARACTER_LIMITS } from "../constants/constants.js";
 export default class TextfieldControl extends EditorControl {
 	constructor(props) {
 		super(props);
+		const value = props.valueAccessor ? props.valueAccessor(props.control.name)[0] : props.value;
 		this.state = {
-			controlValue: props.valueAccessor(props.control.name)[0]
+			controlValue: value
 		};
 		this.getControlValue = this.getControlValue.bind(this);
 		this.handleChange = this.handleChange.bind(this);
@@ -29,6 +30,10 @@ export default class TextfieldControl extends EditorControl {
 
 	handleChange(evt) {
 		this.setState({ controlValue: evt.target.value });
+		if (this.props.updateControlValue) {
+			const ctrlName = this.props.columnDef ? this.props.columnDef.name : this.props.control.name;
+			this.props.updateControlValue(ctrlName, evt.target.value, this.props.rowIndex);
+		}
 	}
 
 	getControlValue() {
@@ -39,7 +44,7 @@ export default class TextfieldControl extends EditorControl {
 		var controlName = this.getControlID().split(".")[1];
 		var stateDisabled = {};
 		var stateStyle = {};
-		if (typeof this.props.controlStates[controlName] !== "undefined") {
+		if (this.props.controlStates && typeof this.props.controlStates[controlName] !== "undefined") {
 			if (this.props.controlStates[controlName] === "disabled") {
 				stateDisabled.disabled = true;
 				stateStyle = {
@@ -50,28 +55,54 @@ export default class TextfieldControl extends EditorControl {
 				stateStyle.visibility = "hidden";
 			}
 		}
+		let className = "editor_control_area";
+		var errorMessage = <div className="validation-error-message" style={{ "marginTop": "0px" }}></div>;
+		if (this.state.validateErrorMessage && this.state.validateErrorMessage.text !== "") {
+			className += " error-border";
+			errorMessage = (
+				<div className="validation-error-message" style={{ "marginTop": "20px" }}>
+					<p className="form__validation" style={{ "display": "block" }}>
+						<span className="form__validation--invalid">{this.state.validateErrorMessage.text}</span>
+					</p>
+				</div>
+			);
+		}
 		const charLimit = this.getCharLimit(CHARACTER_LIMITS.NODE_PROPERTIES_DIALOG_TEXT_FIELD);
+		let displayedCharLimit;
+		let cellvalue = this.state.controlValue;
+		if (!this.props.tableControl) {
+			displayedCharLimit = charLimit;
+		} else {
+			cellvalue = this.props.value;
+		}
+		cellvalue = cellvalue ? cellvalue : "";
 		return (
-			<div className="editor_control_area" style={stateStyle}>
+			<div className={className} style={stateStyle}>
 				<TextField {...stateDisabled}
 					style={stateStyle}
 					id={this.getControlID()}
 					onBlur={this.validateInput}
 					onFocus={this.clearValidateMsg}
-					msg={this.state.validateErrorMessage}
 					disabledPlaceholderAnimation
 					placeholder={this.props.control.additionalText}
 					onChange={this.handleChange}
-					value={this.state.controlValue}
-					maxCount={charLimit}
+					value={cellvalue}
+					maxCount={displayedCharLimit}
 					maxLength={charLimit}
 				/>
+				{errorMessage}
 			</div>
 		);
 	}
 }
 
 TextfieldControl.propTypes = {
-	control: React.PropTypes.object,
-	controlStates: React.PropTypes.object
+	control: React.PropTypes.object.isRequired,
+	controlStates: React.PropTypes.object,
+	updateControlValue: React.PropTypes.func,
+	// Optional used when embedded in table
+	tableControl: React.PropTypes.bool,
+	rowIndex: React.PropTypes.number,
+	columnDef: React.PropTypes.object,
+	value: React.PropTypes.string
 };

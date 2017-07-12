@@ -7,9 +7,11 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
+import { EditStyle } from "./form-constants";
 
 class ControlDef {
-	constructor(cname, label, controlType, valueDef, role, additionalText, orientation, values, valueLabels, charLimit) {
+	constructor(cname, label, controlType, valueDef, role, additionalText, orientation,
+		values, valueLabels, valueIcons, sortable, filterable, charLimit) {
 		this.name = cname;
 		this.label = label;
 		this.controlType = controlType;
@@ -19,26 +21,40 @@ class ControlDef {
 		this.orientation = orientation;
 		this.values = values;
 		this.valueLabels = valueLabels;
+		this.valueIcons = valueIcons;
+		this.sortable = sortable;
+		this.filterable = filterable;
 		this.charLimit = charLimit;
 	}
 }
 
 export class Control extends ControlDef {
-	constructor(cname, label, separateLabel, controlType, valueDef, role, additionalText, orientation, values, valueLabels, charLimit,
-		subControls, keyIndex, defaultRow, childItem) {
-		super(cname, label, controlType, valueDef, role, additionalText, orientation, values, valueLabels, charLimit);
+	constructor(cname, label, separateLabel, controlType, valueDef, role, additionalText, orientation,
+		values, valueLabels, valueIcons, sortable, filterable, charLimit, subControls, keyIndex, defaultRow,
+		childItem, moveableRows, required) {
+		super(cname, label, controlType, valueDef, role, additionalText, orientation, values,
+					valueLabels, valueIcons, sortable, filterable, charLimit);
 		this.separateLabel = separateLabel;
 		this.subControls = subControls;
 		this.keyIndex = keyIndex;
 		this.defaultRow = defaultRow;
 		this.childItem = childItem;
+		this.moveableRows = moveableRows;
+		this.required = required;
 	}
 }
 
 export class SubControl extends ControlDef {
-	constructor(cname, label, visible, width, controlType, valueDef, role, additionalText, orientation, values, valueLabels, charLimit) {
-		super(cname, label, controlType, valueDef, role, additionalText, orientation, values, valueLabels, charLimit);
+	constructor(cname, label, visible, width, controlType, valueDef, role, additionalText,
+		orientation, values, valueLabels, valueIcons, sortable, filterable, charLimit, editStyle, isKeyField) {
+		super(cname, label, controlType, valueDef, role, additionalText, orientation,
+			values, valueLabels, valueIcons, sortable, filterable, charLimit);
 		this.visible = visible;
 		this.width = width;
+		if (editStyle) {
+			this.editStyle = editStyle;
+		} else if (!isKeyField) {
+			this.editStyle = EditStyle.INLINE;
+		}
 	}
 }

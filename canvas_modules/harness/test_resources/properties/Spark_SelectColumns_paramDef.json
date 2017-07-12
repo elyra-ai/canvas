@@ -1,0 +1,166 @@
+{
+  "currentParameters": {
+    "mode": "Include",
+    "selected_fields": []
+  },
+  "parameters": [
+    {
+      "name": "mode",
+      "enum": [
+        "Include",
+        "Discard"
+      ],
+      "default": "Include"
+    },
+		{
+			"name": "selected_fields",
+			"type": "array[string]",
+			"role": "column"
+		}
+  ],
+  "uihints": {
+    "name": "select",
+    "icon": "./select.svg",
+    "parameter_info": [
+      {
+        "name": "mode",
+        "label": {
+          "default": "Mode"
+        },
+        "description": {
+          "default": "Include or discard rows"
+        },
+        "orientation": "horizontal"
+      },
+      {
+        "name": "selected_fields",
+        "label": {
+          "default": "Columns"
+        },
+        "description": {
+          "default": "Select columns to include or exclude"
+        }
+      }
+    ],
+    "group_info": [
+      {
+        "name": "basic-settings",
+        "label": {
+          "default": "Settings"
+        },
+				"type": "panels",
+				"group_info": [
+					{
+						"name": "other-settings",
+						"parameters": [ "mode" ]
+					},
+          {
+            "name": "fields",
+            "type": "columnSelection",
+            "label": {
+              "default": "Columns"
+            },
+						"parameters": [ "selected_fields" ]
+          }
+        ]
+      }
+    ],
+    "conditions": [
+      {
+        "validation": {
+          "fail_message": {
+            "type": "error",
+            "resourceKey": "selected_fields_not_empty",
+            "focusParam": "selected_fields",
+						"message":{
+							 "resourceKey":"input_field_list_not_empty"
+						}
+          },
+          "evaluate": {
+            "condition": {
+              "param": "selected_fields",
+              "op": "isNotEmpty"
+            }
+          }
+        }
+      }
+    ]
+  },
+	"datasetMetadata": {
+		"fields": [
+			{
+				"name": "Age",
+				"type": "integer",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"role": "input"
+				}
+			},
+			{
+				"name": "Sex",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "discrete",
+					"role": "input"
+				}
+			},
+			{
+				"name": "BP",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "discrete",
+					"role": "input"
+				}
+			},
+			{
+				"name": "Cholesterol",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "discrete",
+					"role": "input"
+				}
+			},
+			{
+				"name": "Na",
+				"type": "double",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"role": "input"
+				}
+			},
+			{
+				"name": "K",
+				"type": "double",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"role": "input"
+				}
+			},
+			{
+				"name": "Drug",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "discrete",
+					"role": "input"
+				}
+			}
+		]
+	},
+  "resources": {
+    "select.label": "Select Columns",
+    "mode.label": "Mode",
+    "mode.desc": "Include or discard rows",
+		"mode.Include.label": "Include selected columns",
+		"mode.Discard.label": "Discard selected columns",
+    "selected_fields.label": "Columns",
+    "selected_fields.desc": "Select columns to include or exclude",
+    "selected_fields_not_empty": "The 'Columns' field cannot be empty"
+  }
+}

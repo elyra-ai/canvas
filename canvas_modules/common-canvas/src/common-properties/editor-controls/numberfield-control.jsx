@@ -24,28 +24,27 @@ export default class NumberfieldControl extends EditorControl {
 		};
 		this.getControlValue = this.getControlValue.bind(this);
 		this.handleChange = this.handleChange.bind(this);
+		this.clearValue = this.clearValue.bind(this);
 	}
 
 	handleChange(evt) {
 		this.setState({ controlValue: evt.target.value });
+		this.props.updateControlValue(this.props.control.name, evt.target.value);
 	}
 
 	getControlValue() {
 		return [this.state.controlValue];
 	}
 
-	render() {
-		var errorMessage = <div className="validation-error-message" style={{ "marginTop": "0px" }}></div>;
-		if (this.state.validateErrorMessage && this.state.validateErrorMessage.text !== "") {
-			errorMessage = (
-				<div className="validation-error-message" style={{ "marginTop": "20px" }}>
-					<p className="form__validation" style={{ "display": "block" }}>
-						<span className="form__validation--invalid">{this.state.validateErrorMessage.text}</span>
-					</p>
-				</div>
-			);
-		}
+	clearValue() {
+		const that = this;
+		this.setState({ controlValue: "" },
+		function() {
+			that.validateInput();
+		});
+	}
 
+	render() {
 		var controlName = this.getControlID().split(".")[1];
 		var stateDisabled = {};
 		var stateStyle = {};
@@ -60,8 +59,22 @@ export default class NumberfieldControl extends EditorControl {
 				stateStyle.visibility = "hidden";
 			}
 		}
+
+		let className = "editor_control_area";
+		var errorMessage = <div className="validation-error-message" style={{ "marginTop": "0px" }}></div>;
+		if (this.state.validateErrorMessage && this.state.validateErrorMessage.text !== "") {
+			className += " error-border";
+			errorMessage = (
+				<div className="validation-error-message" style={{ "marginTop": "20px" }}>
+					<p className="form__validation" style={{ "display": "block" }}>
+						<span className="form__validation--invalid">{this.state.validateErrorMessage.text}</span>
+					</p>
+				</div>
+			);
+		}
+
 		return (
-			<div className="editor_control_area" style={stateStyle}>
+			<div className={className} style={stateStyle}>
 				<TextField {...stateDisabled}
 					style={stateStyle}
 					type="number"
@@ -74,7 +87,7 @@ export default class NumberfieldControl extends EditorControl {
 					value={this.state.controlValue}
 					numberInput="close"
 					onChange={(e) => this.setState({ controlValue: e.target.value })}
-					onReset={() => this.setState({ controlValue: "0" })}
+					onReset={() => this.clearValue()}
 				/>
 				{errorMessage}
 			</div>
@@ -83,5 +96,6 @@ export default class NumberfieldControl extends EditorControl {
 }
 
 NumberfieldControl.propTypes = {
-	control: React.PropTypes.object
+	control: React.PropTypes.object,
+	updateControlValue: React.PropTypes.func
 };

@@ -8,12 +8,14 @@
  *******************************************************************************/
 
 import { Separator } from "./form-constants";
-import { Type, ParamRole, EditStyle } from "./form-constants";
+import { Type, ParamRole } from "./form-constants";
 import { ResourceDef } from "./L10nProvider";
 import _ from "underscore";
 
 export class ParameterDef {
-	constructor(cname, label, description, type, role, valueRestriction, defaultValue, control, orientation, style, width, charLimit, placeHolderText, separator) {
+	constructor(cname, label, description, type, role, valueRestriction, defaultValue,
+		control, orientation, style, width, charLimit, placeHolderText, separator,
+		resourceKey, visible, valueIcons, sortable, filterable, editStyle) {
 		this.name = cname;
 		this.label = ResourceDef.make(label);
 		this.description = ResourceDef.make(description);
@@ -28,6 +30,12 @@ export class ParameterDef {
 		this.charLimit = charLimit;
 		this.placeHolderText = ResourceDef.make(placeHolderText); // additionalText
 		this.separator = separator;
+		this.resourceKey = resourceKey;
+		this.visible = (typeof visible === "boolean" ? visible : true);
+		this.valueIcons = valueIcons;
+		this.sortable = sortable;
+		this.filterable = filterable;
+		this.editStyle = editStyle;
 	}
 
 	isList() {
@@ -114,13 +122,6 @@ export class ParameterDef {
 	}
 
 	/**
-	 * Returns the "editStyle" attribute which can be used to define how structured values are edited.
-	 */
-	editStyle() {
-		return EditStyle.SUBPANEL;
-	}
-
-	/**
 	 * Returns the "columns" uihint or the default value if a "columns" hint has not been supplied.
 	 */
 	columns(defaultCol) {
@@ -151,6 +152,10 @@ export class ParameterDef {
 
 	static makeParameterDef(param, uihint) {
 		if (param) {
+			if (uihint && uihint.columns && !uihint.width) {
+				uihint.width = uihint.columns;
+			}
+			// JSON.stringify(_.propertyOf(param)("default")),
 			return new ParameterDef(
 				_.propertyOf(param)("name"),
 				_.propertyOf(uihint)("label"),
@@ -158,14 +163,20 @@ export class ParameterDef {
 				_.propertyOf(param)("type"),
 				_.propertyOf(param)("role"),
 				_.propertyOf(param)("enum"),
-				JSON.stringify(_.propertyOf(param)("default")),
+				_.propertyOf(param)("default"),
 				_.propertyOf(uihint)("control"),
 				_.propertyOf(uihint)("orientation"),
 				_.propertyOf(uihint)("style"),
 				_.propertyOf(uihint)("width"),
 				_.propertyOf(uihint)("char_limit"),
 				_.propertyOf(uihint)("place_holder_text"),
-				_.propertyOf(uihint)("separator")
+				_.propertyOf(uihint)("separator"),
+				_.propertyOf(uihint)("resourceKey"),
+				_.propertyOf(uihint)("visible"),
+				_.propertyOf(uihint)("valueIcons"),
+				_.propertyOf(uihint)("sortable"),
+				_.propertyOf(uihint)("filterable"),
+				_.propertyOf(uihint)("editStyle")
 			);
 		}
 		return null;

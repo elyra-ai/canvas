@@ -4,7 +4,6 @@
     "ref": null,
     "props": {
       "id": "dialog.nodePropertiesTitle",
-      "tagName": "span",
       "values": {}
     },
     "_owner": null,
@@ -201,7 +200,10 @@
         "condition": [
           "@BLANK(@FIELD)"
         ],
-        "fields": [],
+        "fields": [
+					"Sex",
+        	"BP"
+				],
         "use_custom_name": [
           "false"
         ],
@@ -209,14 +211,78 @@
           ""
         ]
       },
-      "datasetMetadata": {
-        "fields": []
+			"datasetMetadata": {
+        "fields": [
+          {
+            "name": "Age",
+            "type": "integer",
+						"metadata": {
+							"description": "",
+            	"measure": "range",
+            	"role": "input"
+						}
+          },
+          {
+            "name": "Sex",
+            "type": "string",
+						"metadata": {
+							"description": "",
+            	"measure": "discrete",
+            	"role": "input"
+						}
+          },
+          {
+            "name": "BP",
+            "type": "string",
+						"metadata": {
+							"description": "",
+            	"measure": "discrete",
+            	"role": "input"
+						}
+          },
+          {
+            "name": "Cholesterol",
+            "type": "string",
+						"metadata": {
+							"description": "",
+            	"measure": "discrete",
+            	"role": "input"
+						}
+          },
+          {
+            "name": "Na",
+            "type": "double",
+            "metadata": {
+              "description": "",
+            	"measure": "range",
+            	"role": "input"
+            }
+          },
+          {
+            "name": "K",
+            "type": "double",
+            "metadata": {
+              "description": "",
+              "measure": "range",
+              "role": "input"
+            }
+          },
+          {
+            "name": "Drug",
+            "type": "string",
+            "metadata": {
+              "description": "",
+              "measure": "discrete",
+              "role": "input"
+            }
+          }
+        ]
       }
     }
   },
   "appData": {
-    "nodeId": "id1K6SVAP5P39",
-    "updateUrl": "streams/153651d6-9b88-423c-b01b-861f12d01489/diagrams/153651d6-9b88-423c-b01b-861f12d01489/nodes/id1K6SVAP5P39"
+    "nodeId": "id4BESVRC4LTA",
+    "updateUrl": "streams/153651d6-9b88-423c-b01b-861f12d01489/diagrams/153651d6-9b88-423c-b01b-861f12d01489/nodes/id4BESVRC4LTA"
   },
   "additionalComponents": null
 }

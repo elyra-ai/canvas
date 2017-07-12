@@ -26,7 +26,7 @@ var _ = require("underscore");
 /* eslint-disable react/prop-types */
 const TextCell = ({ rowIndex, data, col, renderer, props }) => (
 	<Cell {...props}>
-		{renderer.render(data[rowIndex][col])}
+		{renderer.render(data[rowIndex][col], rowIndex)}
 	</Cell>
 );
 
@@ -46,6 +46,7 @@ export default class StructureTableEditor extends EditorControl {
 
 		this._editing_row = 0;
 		this._subControlId = "___" + props.control.name + "_";
+		this.scrollToSelection = true;
 
 		this.getEditingRow = this.getEditingRow.bind(this);
 		this.startEditingRow = this.startEditingRow.bind(this);
@@ -65,11 +66,29 @@ export default class StructureTableEditor extends EditorControl {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		logger.info("componentWillReceiveProps");
-		this.setState({
-			controlValue: EditorControl.parseStructureStrings(nextProps.valueAccessor(nextProps.control.name)),
-			selectedRows: nextProps.selectedRows
-		});
+		// logger.info("componentWillReceiveProps");
+		const propVal = nextProps.valueAccessor(nextProps.control.name);
+		// Added since in subpanel a simple control will try to update the parameter control value incorrectly
+		if (Array.isArray(propVal)) {
+			this.setState({
+				controlValue: EditorControl.parseStructureStrings(propVal),
+				selectedRows: nextProps.selectedRows
+			});
+			this.selectionChanged(nextProps.selectedRows);
+		}
+	}
+
+	componentDidUpdate() {
+		this.scrollToSelection = false;
+	}
+
+	componentDidMount() {
+
+		/* eslint-disable react/no-did-mount-set-state */
+		// This is needed in order to trigger the proper plumbing for scrollToRow to work
+		this.setState({ renderToggle: !this.state.renderToggle });
+
+		/* eslint-enable react/no-did-mount-set-state */
 	}
 
 	/* Returns the public representation of the control value. */
@@ -84,6 +103,17 @@ export default class StructureTableEditor extends EditorControl {
 		return this.state.controlValue;
 	}
 
+	setCurrentControlValueSelected(targetControl, controlValue, updateControlValue, selectedRows) {
+		var that = this;
+		this.setState({
+			controlValue: controlValue,
+			selectedRows: selectedRows
+		}, function() {
+			updateControlValue(targetControl, EditorControl.stringifyStructureStrings(controlValue));
+			that.props.updateSelectedRows(that.props.control.name, selectedRows);
+		});
+	}
+
 	setCurrentControlValue(targetControl, controlValue, updateControlValue) {
 		var that = this;
 		this.setState({
@@ -91,7 +121,7 @@ export default class StructureTableEditor extends EditorControl {
 			selectedRows: []
 		}, function() {
 			updateControlValue(targetControl, EditorControl.stringifyStructureStrings(controlValue));
-			that.props.updateSelectedRows([]);
+			that.updateSelectedRows(that.props.control.name, []);
 		});
 	}
 
@@ -134,9 +164,19 @@ export default class StructureTableEditor extends EditorControl {
 
 	handleRowClick(evt, rowIndex) {
 		const selection = EditorControl.handleTableRowClick(evt, rowIndex, this.state.selectedRows);
-
 		// logger.info(selection);
-		this.props.updateSelectedRows(selection);
+		this.updateSelectedRows(this.props.control.name, selection);
+		evt.stopPropagation();
+	}
+
+	updateSelectedRows(ctrlName, selection) {
+		this.props.updateSelectedRows(ctrlName, selection);
+		this.selectionChanged(selection);
+	}
+
+	selectionChanged(selection) {
+		this.scrollToSelection = true;
+		this.render();
 	}
 
 	getRowClassName(rowIndex) {
@@ -157,10 +197,13 @@ export default class StructureTableEditor extends EditorControl {
 			if (columnDef.visible) {
 				const header = <Cell>{columnDef.label.text}</Cell>;
 				let renderer = defaultRenderer;
+				var cell;
 				if (columnDef.valueDef.propType === "enum") {
 					renderer = new EnumRenderer(columnDef.values, columnDef.valueLabels, columnDef.valueDef.isList);
+					cell = <TextCell data={controlValue} col={i} renderer={renderer} />;
+				} else {
+					cell = <TextCell data={controlValue} col={i} renderer={renderer} />;
 				}
-				const cell = <TextCell data={controlValue} col={i} renderer={renderer} />;
 
 				totalWidth += (CHAR_WIDTH * columnDef.width);
 				columns.push(<Column key={i} header={header} cell={cell} width={CHAR_WIDTH * columnDef.width} />);
@@ -177,7 +220,7 @@ export default class StructureTableEditor extends EditorControl {
 
 			const subItemButton = this.props.buildUIItem(subControlId, this.props.control.childItem, subControlId, this.getEditingRowValue, this.props.dataModel);
 			// Hack to decompose the button into our own in-table link
-			const cell = (<SubPanelCell data={controlValue}
+			const subCell = (<SubPanelCell data={controlValue}
 				col={this.props.control.subControls.length}
 				label={subItemButton.props.label}
 				title={subItemButton.props.title}
@@ -189,10 +232,18 @@ export default class StructureTableEditor extends EditorControl {
 			totalWidth += (CHAR_WIDTH * buttonWidth);
 			columns.push(<Column header={header}
 				key={columns.length}
-				cell={cell}
+				cell={subCell}
 				width={CHAR_WIDTH * buttonWidth}
 			/>);
 		}
+
+		const selected = this.getSelectedRows().sort();
+
+		/* eslint-disable no-undefined */
+		const scrollToRow = (typeof selected !== "undefined" && selected.length !== 0 && this.scrollToSelection)
+			? selected[0] : undefined;
+
+		/* eslint-enable no-undefined */
 
 		return (
 			<div id="fixed-data-table-container">
@@ -205,6 +256,7 @@ export default class StructureTableEditor extends EditorControl {
 					height={180}
 					rowClassNameGetter={this.getRowClassName}
 					onRowClick={this.handleRowClick} {...this.props}
+					scrollToRow={scrollToRow}
 				>
 					{columns}
 				</Table>
@@ -213,4 +265,6 @@ export default class StructureTableEditor extends EditorControl {
 	}
 }
 
-StructureTableEditor.propTypes = {};
+StructureTableEditor.propTypes = {
+	updateControlValue: React.PropTypes.func
+};

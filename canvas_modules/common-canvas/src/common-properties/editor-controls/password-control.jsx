@@ -28,6 +28,7 @@ export default class PasswordControl extends EditorControl {
 
 	handleChange(evt) {
 		this.setState({ controlValue: evt.target.value });
+		this.props.updateControlValue(this.props.control.name, evt.target.value);
 	}
 
 	getControlValue() {
@@ -35,15 +36,34 @@ export default class PasswordControl extends EditorControl {
 	}
 
 	render() {
-		return (<TextField type="password"
-			id={this.getControlID()}
-			placeholder={this.props.control.additionalText}
-			onChange={this.handleChange}
-			value={this.state.controlValue}
-		/>);
+		let className = "editor_control_area";
+		var errorMessage = <div className="validation-error-message" style={{ "marginTop": "0px" }}></div>;
+		if (this.state.validateErrorMessage && this.state.validateErrorMessage.text !== "") {
+			className += " error-border";
+			errorMessage = (
+				<div className="validation-error-message" style={{ "marginTop": "20px" }}>
+					<p className="form__validation" style={{ "display": "block" }}>
+						<span className="form__validation--invalid">{this.state.validateErrorMessage.text}</span>
+					</p>
+				</div>
+			);
+		}
+
+		return (
+		<div className={className}>
+			<TextField type="password"
+				id={this.getControlID()}
+				placeholder={this.props.control.additionalText}
+				onChange={this.handleChange}
+				onBlur={this.validateInput}
+				value={this.state.controlValue}
+			/>
+			{errorMessage}
+		</div>);
 	}
 }
 
 PasswordControl.propTypes = {
-	control: React.PropTypes.object
+	control: React.PropTypes.object,
+	updateControlValue: React.PropTypes.func
 };

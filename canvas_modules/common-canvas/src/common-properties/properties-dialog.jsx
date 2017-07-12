@@ -22,6 +22,23 @@ export default class PropertiesDialog extends Component {
 	render() {
 		const modalClassName = "modal__container";
 
+		let buttons = (<div>
+			<Button
+				semantic href=""
+				onClick={this.props.okHandler}
+				style={{ "marginLeft": "10px" }}
+			>
+				{OKAY}
+			</Button>
+
+			<Button semantic href="" hyperlink onClick={this.props.cancelHandler}>
+				{CANCEL}
+			</Button>
+		</div>);
+		if (this.props.showPropertiesButtons === false) {
+			buttons = <div></div>;
+		}
+
 		return (
 				<Modal className="ap-container" {...this.props}
 					show
@@ -41,17 +58,7 @@ export default class PropertiesDialog extends Component {
 							{this.props.children}
 						</div>
 						<div className="modal__buttons">
-							<Button
-								semantic href=""
-								onClick={this.props.okHandler}
-								style={{ "marginLeft": "10px" }}
-							>
-								{OKAY}
-							</Button>
-
-							<Button semantic href="" hyperlink onClick={this.props.cancelHandler}>
-								{CANCEL}
-							</Button>
+							{buttons}
 						</div>
 					</div>
 
@@ -64,5 +71,6 @@ PropertiesDialog.propTypes = {
 	cancelHandler: React.PropTypes.func,
 	okHandler: React.PropTypes.func,
 	title: React.PropTypes.object,
-	children: React.PropTypes.element
+	children: React.PropTypes.element,
+	showPropertiesButtons: React.PropTypes.bool
 };

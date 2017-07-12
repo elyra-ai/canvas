@@ -16,15 +16,18 @@ import React from "react";
 import PropertiesDialog from "./properties-dialog.jsx";
 import PropertiesEditing from "./properties-editing.jsx";
 import EditorForm from "./editor-controls/editor-form.jsx";
+import PropertyUtil from "./util/property-utils.js";
 import Form from "./form/Form";
 
 export default class CommonProperties extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			showPropertiesDialog: false
+			showPropertiesDialog: false,
+			showPropertiesButtons: true
 		};
 		this.applyPropertiesEditing = this.applyPropertiesEditing.bind(this);
+		this.showPropertiesButtons = this.showPropertiesButtons.bind(this);
 	}
 
 	getForm() {
@@ -50,14 +53,14 @@ export default class CommonProperties extends React.Component {
 	 * the older properties definition.
 	 */
 	parametersToProperties(currentParameters) {
-		if (!currentParameters || this.toType(currentParameters) !== "object") {
+		if (!currentParameters || PropertyUtil.toType(currentParameters) !== "object") {
 			return {};
 		}
 		const retVal = {};
 		for (const propertyName in currentParameters) {
 			if (currentParameters.hasOwnProperty(propertyName)) {
 				const prop = currentParameters[propertyName];
-				const type = this.toType(prop);
+				const type = PropertyUtil.toType(prop);
 				if (type === "string") {
 					retVal[propertyName] = [prop];
 				} else if (type === "array") {
@@ -68,24 +71,6 @@ export default class CommonProperties extends React.Component {
 			}
 		}
 		return retVal;
-	}
-
-	/**
-	 * A better type identifier than a simple 'typeOf' call:
-	 * 	toType({a: 4}); //"object"
-	 *	toType([1, 2, 3]); //"array"
-	 *	(function() {console.log(toType(arguments))})(); //arguments
-	 *	toType(new ReferenceError); //"error"
-	 *	toType(new Date); //"date"
-	 *	toType(/a-z/); //"regexp"
-	 *	toType(Math); //"math"
-	 *	toType(JSON); //"json"
-	 *	toType(new Number(4)); //"number"
-	 *	toType(new String("abc")); //"string"
-	 *	toType(new Boolean(true)); //"boolean"
-	 */
-	toType(obj) {
-		return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
 	}
 
 	/**
@@ -132,6 +117,9 @@ export default class CommonProperties extends React.Component {
 		this.props.propertiesInfo.applyPropertyChanges(settings, this.props.propertiesInfo.appData);
 	}
 
+	showPropertiesButtons(state) {
+		this.setState({ showPropertiesButtons: state });
+	}
 
 	render() {
 		const formData = this.getForm();
@@ -140,11 +128,12 @@ export default class CommonProperties extends React.Component {
 			if (this.props.showPropertiesDialog) {
 				const editorForm = (<EditorForm
 					ref="editorForm"
-					key={Date()}
+					key="editor-form-key"
 					form={formData}
 					additionalComponents={this.props.propertiesInfo.additionalComponents}
+					showPropertiesButtons={this.showPropertiesButtons}
 				/>);
-				const title = this.props.propertiesInfo.title;
+				const title = <div>{formData.label}</div>;
 				const size = formData.editorSize;
 				if (this.props.useModalDialog) {
 					propertiesDialog = (<PropertiesDialog
@@ -153,6 +142,7 @@ export default class CommonProperties extends React.Component {
 						bsSize={size}
 						okHandler={this.applyPropertiesEditing}
 						cancelHandler={this.props.propertiesInfo.closePropertiesDialog}
+						showPropertiesButtons={this.state.showPropertiesButtons}
 					>
 						{editorForm}
 					</PropertiesDialog>);
@@ -164,6 +154,7 @@ export default class CommonProperties extends React.Component {
 						title={title}
 						okHandler={this.applyPropertiesEditing}
 						cancelHandler={this.props.propertiesInfo.closePropertiesDialog}
+						showPropertiesButtons={this.state.showPropertiesButtons}
 					>
 						{editorForm}
 					</PropertiesEditing>);
@@ -179,9 +170,11 @@ export default class CommonProperties extends React.Component {
 	}
 }
 
+/*
 CommonProperties.defaultProps = {
 	useModalDialog: true
 };
+*/
 
 CommonProperties.propTypes = {
 	showPropertiesDialog: React.PropTypes.bool.isRequired,

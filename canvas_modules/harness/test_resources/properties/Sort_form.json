@@ -214,10 +214,90 @@
         "custom_name": [
           ""
         ],
-        "keys": []
+        "keys": [
+					"[\"Na\",\"Ascending\"]",
+					"[\"Drug\",\"Descending\"]",
+					"[\"Sex\",\"Ascending\"]",
+					"[\"Age\",\"Descending\"]",
+					"[\"BP\",\"Ascending\"]",
+					"[\"Cholesterol\",\"Ascending\"]"
+				]
       },
 			"datasetMetadata": {
-        "fields": []
+        "fields": [
+          {
+            "name": "Age",
+            "type": "integer",
+						"metadata": {
+							"description": "",
+            	"measure": "range",
+            	"role": "input"
+						}
+          },
+          {
+            "name": "Sex",
+            "type": "string",
+						"metadata": {
+							"description": "",
+            	"measure": "discrete",
+            	"role": "input"
+						}
+          },
+          {
+            "name": "BP",
+            "type": "string",
+						"metadata": {
+							"description": "",
+            	"measure": "discrete",
+            	"role": "input"
+						}
+          },
+          {
+            "name": "Cholesterol",
+            "type": "string",
+						"metadata": {
+							"description": "",
+            	"measure": "discrete",
+            	"role": "input"
+						}
+          },
+          {
+            "name": "Na",
+            "type": "double",
+						"metadata": {
+							"description": "",
+            	"measure": "range",
+            	"role": "input"
+						}
+          },
+          {
+            "name": "K",
+            "type": "double",
+						"metadata": {
+							"description": "",
+            	"measure": "range",
+            	"role": "input"
+						}
+          },
+          {
+            "name": "Drug",
+            "type": "string",
+						"metadata": {
+							"description": "",
+            	"measure": "discrete",
+            	"role": "input"
+						}
+          },
+          {
+            "name": "Na_to_K",
+            "type": "double",
+						"metadata": {
+							"description": "",
+            	"measure": "range",
+            	"role": "input"
+						}
+          }
+        ]
       }
     }
   },

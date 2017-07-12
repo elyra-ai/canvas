@@ -12,7 +12,7 @@ import React from "react";
 import Isvg from "react-inlinesvg";
 import ReactTooltip from "react-tooltip";
 import ReactFileDownload from "react-file-download";
-import { IntlProvider, FormattedMessage, addLocaleData } from "react-intl";
+import { IntlProvider, FormattedMessage, addLocaleData, injectIntl, intlShape } from "react-intl";
 import en from "react-intl/locale-data/en";
 var i18nData = require("../intl/en.js");
 
@@ -116,12 +116,14 @@ class App extends React.Component {
 			canvas: ObjectModel.getCanvas()
 		};
 		TestService.postSessionData(sessionData);
-
-		// this.sidePanelCanvas();
 	}
 
 	getLabel(labelId, defaultLabel) {
 		return <FormattedMessage id={ labelId } defaultMessage={ defaultLabel } />;
+	}
+
+	getLabelString(labelId, defaultLabel) {
+		return this.props.intl.formatMessage({ id: labelId, defaultMessage: defaultLabel });
 	}
 
 	setDiagramJSON(diagramJson) {
@@ -293,7 +295,7 @@ class App extends React.Component {
 			{ divider: true },
       { action: "createSuperNode", label: this.getLabel("node-context.createSuperNode", "Create supernode") },
       { divider: true },
-      { submenu: true, label: this.getLabel("node-context.editMenu", "Edit"), menu: EDIT_SUB_MENU },
+      { submenu: true, label: this.getLabelString("node-context.editMenu", "Edit"), menu: EDIT_SUB_MENU },
       { divider: true },
       { action: "deleteObjects", label: this.getLabel("node-context.deleteNode", "Delete") },
       { divider: true },
@@ -672,4 +674,8 @@ class App extends React.Component {
 	}
 }
 
-export default App;
+App.propTypes = {
+	intl: intlShape.isRequired
+};
+
+export default injectIntl(App);

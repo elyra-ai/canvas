@@ -29,8 +29,12 @@ export default class TextareaControl extends EditorControl {
 	}
 
 	handleChange(evt) {
-
 		this.setState({ controlValue: evt.target.value });
+		if (this.props.control.valueDef && this.props.control.valueDef.isList) {
+			this.props.updateControlValue(this.props.control.name, EditorControl.splitNewlines(evt.target.value));
+		} else {
+			this.props.updateControlValue(this.props.control.name, evt.target.value);
+		}
 	}
 
 	getControlValue() {
@@ -91,5 +95,6 @@ export default class TextareaControl extends EditorControl {
 
 TextareaControl.propTypes = {
 	control: React.PropTypes.object,
-	controlStates: React.PropTypes.object
+	controlStates: React.PropTypes.object,
+	updateControlValue: React.PropTypes.func
 };
