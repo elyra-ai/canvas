@@ -37,6 +37,7 @@ import SomeofselectControl from "./someofselect-control.jsx";
 import OneofcolumnsControl from "./oneofcolumns-control.jsx";
 import SomeofcolumnsControl from "./someofcolumns-control.jsx";
 import ColumnAllocatorControl from "./column-allocator-control.jsx";
+import FieldAllocatorControl from "./field-allocator-control.jsx";
 import ColumnSelectControl from "./column-select-control.jsx";
 import ColumnStructureAllocatorControl from "./column-structure-allocator-control.jsx";
 import ColumnStructureTableControl from "./column-structure-table-control.jsx";
@@ -340,6 +341,31 @@ export default class EditorForm extends React.Component {
 		} else if (control.controlType === "allocatedcolumns") {
 			// logger.info("allocatedcolumns");
 			return (<ColumnAllocatorControl control={control}
+				dataModel={datasetMetadata}
+				multiColumn
+				key={controlId}
+				ref={controlId}
+				valueAccessor={controlValueAccessor}
+				validationDefinitions={this.state.validationDefinitions}
+				controlStates={this.state.controlStates}
+				updateControlValue={this.updateControlValue}
+				selectedRows={this.getSelectedRows(control.name)}
+			/>);
+		} else if (control.controlType === "allocatedfield") {
+			// logger.info("allocatedfield");
+			return (<FieldAllocatorControl control={control}
+				dataModel={datasetMetadata}
+				key={controlId}
+				ref={controlId}
+				valueAccessor={controlValueAccessor}
+				validationDefinitions={this.state.validationDefinitions}
+				updateControlValue={this.updateControlValue}
+				availableFieldsAccessor={this.getFilteredDataset}
+				controlStates={this.state.controlStates}
+			/>);
+		} else if (control.controlType === "allocatedfields") {
+			// logger.info("allocatedfields");
+			return (<FieldAllocatorControl control={control}
 				dataModel={datasetMetadata}
 				multiColumn
 				key={controlId}

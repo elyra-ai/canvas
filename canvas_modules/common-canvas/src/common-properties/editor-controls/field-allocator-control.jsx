@@ -20,7 +20,7 @@ import ReactDOM from "react-dom";
 
 var _ = require("underscore");
 
-export default class ColumnAllocatorControl extends EditorControl {
+export default class FieldAllocatorControl extends EditorControl {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -125,7 +125,18 @@ export default class ColumnAllocatorControl extends EditorControl {
 
 	render() {
 		// logger.info("AllocationControl.render");
-		const options = EditorControl.genStringSelectOptions(this.state.controlValue, this.state.selectedValues);
+		let options;
+		let includeEmpty = false;
+		if (this.props.multiColumn) {
+			options = EditorControl.genStringSelectOptions(this.state.controlValue, this.state.selectedValues);
+		} else {
+			includeEmpty = !this.state.controlValue || this.state.controlValue.length === 0;
+			const availableFields = this.props.availableFieldsAccessor
+				?	this.props.availableFieldsAccessor(this.props.control.name)
+				: this.props.dataModel;
+			options = EditorControl.genColumnSelectOptions(availableFields.fields,
+				this.state.selectedValues, includeEmpty);
+		}
 
 		if (this._update_callback !== null) {
 			this._update_callback();
@@ -180,7 +191,7 @@ export default class ColumnAllocatorControl extends EditorControl {
 				</div>
 			);
 		}
-		const currentSeln = this.state.controlValue[0];
+		const currentSeln = includeEmpty ? -1 : this.state.controlValue[0];
 		// help={this.props.control.additionalText}
 		return (
 			<div className="editor_control_area" style={stateStyle}>
@@ -203,7 +214,7 @@ export default class ColumnAllocatorControl extends EditorControl {
 	}
 }
 
-ColumnAllocatorControl.propTypes = {
+FieldAllocatorControl.propTypes = {
 	dataModel: React.PropTypes.object.isRequired,
 	control: React.PropTypes.object.isRequired,
 	controlStates: React.PropTypes.object,

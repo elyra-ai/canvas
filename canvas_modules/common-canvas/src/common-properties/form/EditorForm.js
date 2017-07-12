@@ -68,6 +68,10 @@ function _makeUIItem(parameterMetadata, group, structureMetadata, l10nProvider, 
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_ALLOCATION, _makeControls(parameterMetadata, group, structureMetadata, l10nProvider, conditions)));
 	case GroupType.COLUMN_SELECTION:
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_SELECTION, _makeControls(parameterMetadata, group, structureMetadata, l10nProvider, conditions)));
+	case GroupType.FIELD_ALLOCATION:
+		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_ALLOCATION, _makeControls(parameterMetadata, group, structureMetadata, l10nProvider, conditions)));
+	case GroupType.FIELD_SELECTION:
+		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_SELECTION, _makeControls(parameterMetadata, group, structureMetadata, l10nProvider, conditions)));
 	case GroupType.ADDITIONAL: {
 		const panel = new ControlPanel(groupName, PanelType.GENERAL, _makeControls(parameterMetadata, group, structureMetadata, l10nProvider, conditions));
 		groupLabel = l10nProvider.l10nLabel(group, group.name);
@@ -205,6 +209,9 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 					if (group.groupType() === GroupType.COLUMN_ALLOCATION ||
 							group.groupType() === GroupType.COLUMN_SELECTION) {
 						controlType = ControlType.ALLOCATEDCOLUMN;
+					} else if (group.groupType() === GroupType.FIELD_ALLOCATION ||
+							group.groupType() === GroupType.FIELD_SELECTION) {
+						controlType = ControlType.ALLOCATEDFIELD;
 					} else {
 						controlType = ControlType.ONEOFCOLUMNS;
 					}
@@ -347,7 +354,9 @@ function _processListParameter(parameter, group) {
 	case ParamRole.COLUMN:
 		if (group.groupType() === GroupType.COLUMN_ALLOCATION) {
 			controlType = ControlType.ALLOCATEDCOLUMNS;
-		} else if (group.groupType() === GroupType.COLUMN_SELECTION) {
+		} else if (group.groupType() === GroupType.FIELD_ALLOCATION) {
+			controlType = ControlType.ALLOCATEDFIELDS;
+		} else if (group.groupType() === GroupType.COLUMN_SELECTION || group.groupType() === GroupType.FIELD_SELECTION) {
 			controlType = ControlType.COLUMNSELECT;
 		} else {
 			controlType = ControlType.SOMEOFCOLUMNS;

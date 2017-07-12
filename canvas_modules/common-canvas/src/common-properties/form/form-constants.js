@@ -37,6 +37,8 @@ const GroupType = {
 	ADDITIONAL: "additional",
 	COLUMN_ALLOCATION: "columnAllocation",
 	COLUMN_SELECTION: "columnSelection",
+	FIELD_ALLOCATION: "fieldAllocation",
+	FIELD_SELECTION: "fieldSelection",
 	PANEL_SELECTOR: "panelSelector"
 };
 
@@ -62,6 +64,8 @@ const ControlType = {
 	SOMEOFCOLUMNS: "someofcolumns",
 	ALLOCATEDCOLUMN: "allocatedcolumn",
 	ALLOCATEDCOLUMNS: "allocatedcolumns",
+	ALLOCATEDFIELD: "allocatedfield",
+	ALLOCATEDFIELDS: "allocatedfields",
 	COLUMNSELECT: "columnselect",
 	ALLOCATEDSTRUCTURES: "allocatedstructures",
 	STRUCTURETABLE: "structuretable",
