@@ -1,16 +1,13 @@
-/****************************************************************
-** IBM Confidential
-**
-** OCO Source Materials
-**
-** SPSS Modeler
-**
-** (c) Copyright IBM Corp. 2017
-**
-** The source code for this program is not published or otherwise
-** divested of its trade secrets, irrespective of what has been
-** deposited with the U.S. Copyright Office.
-*****************************************************************/
+/*******************************************************************************
+ * Licensed Materials - Property of IBM
+ * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ *
+ * Note to U.S. Government Users Restricted Rights:
+ * Use, duplication or disclosure restricted by GSA ADP Schedule
+ * Contract with IBM Corp.
+ *******************************************************************************/
+
+
 import { containLinkEvent, containLinkInObjectModel, getCommentIdFromObjectModel, getNodeIdFromObjectModel, getObjectModelCount } from "./utilities/validateUtil.js";
 import { getHarnessData } from "./utilities/HTTPClient.js";
 import { getURL } from "./utilities/test-config.js";
@@ -36,8 +33,8 @@ module.exports = function() {
 	browser.pause(1500);
 	var linkCount = Number(canvasLinks);
 	// verify link is in the canvas DOM
-	var dataLinks = browser.$$(".canvas-data-link").length/2;
-	var commentLinks = browser.$$(".canvas-comment-link").length/2;
+	var dataLinks = browser.$$(".canvas-data-link").length / 2;
+	var commentLinks = browser.$$(".canvas-comment-link").length / 2;
 	expect(dataLinks + commentLinks).toEqual(linkCount);
 
 	// verify that the link is in the internal object model
@@ -71,8 +68,8 @@ module.exports = function() {
 		browser.pause(1000);
 		var linkCount = Number(canvasLinks);
 		// verify link is in the canvas DOM
-		var dataLinks = browser.$$(".canvas-data-link").length/2;
-		var commentLinks = browser.$$(".canvas-comment-link").length/2;
+		var dataLinks = browser.$$(".canvas-data-link").length / 2;
+		var commentLinks = browser.$$(".canvas-comment-link").length / 2;
 		expect(dataLinks + commentLinks).toEqual(linkCount);
 
 		// verify that the link is in the internal object model

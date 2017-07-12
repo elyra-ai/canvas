@@ -7,7 +7,6 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 /* eslint global-require:0 */
-"use strict";
 
 var scope = require("./scripts/build/css-scope");
 
