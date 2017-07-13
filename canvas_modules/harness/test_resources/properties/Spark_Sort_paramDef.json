@@ -50,7 +50,11 @@
       {
         "name": "keys",
         "label": {
-          "default": "Sort by"
+          "resourceKey": "sort.keys.label"
+        },
+        "description": {
+          "resourceKey": "sort.keys.desc",
+          "placement": "on_panel"
         }
       }
     ],
@@ -166,6 +170,7 @@
     "sort.label": "Sort",
     "sort.desc": "Sorts the data",
     "sort.keys.label": "Sort by",
+    "sort.keys.desc": "Use arrows to reorder the sorting priority",
     "SortEntry.label": "Sort",
     "SortEntry.field.label": "Field",
     "SortEntry.sort_order.label": "Order",
