@@ -215,7 +215,8 @@
                           "valueDef": {
                             "propType": "string",
                             "isList": false,
-                            "isMap": false
+                            "isMap": false,
+                            "defaultValue": ""
                           },
                           "role": "column",
                           "visible": true,
@@ -230,7 +231,8 @@
                           "valueDef": {
                             "propType": "string",
                             "isList": false,
-                            "isMap": false
+                            "isMap": false,
+                            "defaultValue": "Ascending"
                           },
                           "role": "enum",
                           "values": [

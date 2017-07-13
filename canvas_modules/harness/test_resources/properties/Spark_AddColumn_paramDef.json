@@ -1,0 +1,191 @@
+{
+  "currentParameters": {
+    "colName": "",
+    "col": "",
+    "measurement": ""
+  },
+  "parameters": [
+    {
+      "name": "colName",
+      "type": "string",
+      "default": "",
+      "role": "new_column"
+    },
+    {
+      "name": "col",
+      "type": "string",
+      "default": "",
+      "role": "expression"
+    },
+    {
+      "name": "measurement",
+      "enum": [
+        "Default",
+        "Continuous",
+        "Categorical"
+      ],
+      "default": "Default"
+    }
+  ],
+  "uihints": {
+    "name": "org.apache.spark.ml.ibm.transformers.AddColumn",
+    "icon": "images/transformationspark.svg",
+    "parameter_info": [
+      {
+        "name": "colName",
+        "orientation": "horizontal"
+      },
+      {
+        "name": "measurement",
+        "control": "oneofselect"
+      }
+    ],
+    "group_info": [
+      {
+        "name": "settings",
+        "label": {
+          "default": "Settings"
+        },
+        "parameters": [
+          "colName",
+          "col",
+          "measurement"
+        ]
+      }
+    ],
+    "conditions": [
+      {
+        "validation": {
+          "fail_message": {
+            "type": "error",
+            "focusParam": "colName",
+            "message": {
+              "resourceKey": "colname_not_empty"
+            }
+          },
+          "evaluate": {
+            "condition": {
+              "param": "colName",
+              "op": "isNotEmpty"
+            }
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail_message": {
+            "type": "error",
+            "focusParam": "colName",
+            "message": {
+              "resourceKey": "colname_not_unique"
+            }
+          },
+          "evaluate": {
+            "condition": {
+              "param": "colName",
+              "op": "colNotExists"
+            }
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail_message": {
+            "type": "error",
+            "focusParam": "col",
+            "message": {
+              "resourceKey": "col_not_empty"
+            }
+          },
+          "evaluate": {
+            "condition": {
+              "param": "col",
+              "op": "isNotEmpty"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "datasetMetadata": {
+    "fields": [
+      {
+        "name": "Age",
+        "type": "integer",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "role": "input"
+        }
+      },
+      {
+        "name": "Sex",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "role": "input"
+        }
+      },
+      {
+        "name": "BP",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "role": "input"
+        }
+      },
+      {
+        "name": "Cholesterol",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "role": "input"
+        }
+      },
+      {
+        "name": "Na",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "role": "input"
+        }
+      },
+      {
+        "name": "K",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "role": "input"
+        }
+      },
+      {
+        "name": "Drug",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "role": "input"
+        }
+      }
+    ]
+  },
+  "resources": {
+    "org.apache.spark.ml.ibm.transformers.AddColumn.label": "Add Column",
+    "org.apache.spark.ml.ibm.transformers.AddColumn.desc": "Create a new column with a computed value",
+    "colName.label": "Column name",
+    "colName.desc": "The new column name",
+    "col.label": "Expression",
+    "col.desc": "The computed column value",
+    "measurement.label": "Measurement",
+    "measurement.desc": "Measurement level for the column",
+    "settings.label": "Settings",
+    "colname_not_empty": "The new column name cannot be empty",
+    "col_not_empty": "The computed column value cannot be empty",
+    "colname_not_unique": "The column name already exists in the dataset"
+  }
+}

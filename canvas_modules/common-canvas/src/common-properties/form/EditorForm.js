@@ -27,13 +27,15 @@ export class EditorTab {
 }
 
 class ValueDef {
-	constructor(propType, isList, isMap) {
+	constructor(propType, isList, isMap, defaultValue) {
 		this.propType = propType;
 		this.isList = isList;
 		this.isMap = isMap;
+		this.defaultValue = defaultValue;
 	}
 	static make(parameter) {
-		return new ValueDef(parameter.propType(), parameter.isList(), parameter.isMapValue());
+		return new ValueDef(parameter.propType(), parameter.isList(),
+			parameter.isMapValue(), parameter.defaultValue);
 	}
 }
 
@@ -46,7 +48,9 @@ class Label {
 class Description {
 	constructor(text, placement) {
 		this.text = text;
-		this.placement = placement ? placement : "as_tooltip";
+		if (placement) {
+			this.placement = placement;
+		}
 	}
 }
 

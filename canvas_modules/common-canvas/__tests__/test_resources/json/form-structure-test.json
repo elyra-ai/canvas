@@ -195,14 +195,14 @@
                         "text": "Rename columns"
                       },
                       "description": {
-                        "text": "Rename columns in the active dataset",
-                        "placement": "as_tooltip"
+                        "text": "Rename columns in the active dataset"
                       },
                       "controlType": "structuretable",
                       "valueDef": {
                         "propType": "structure",
                         "isList": false,
-                        "isMap": true
+                        "isMap": true,
+                        "defaultValue": []
                       },
                       "separateLabel": true,
                       "subControls": [
@@ -230,7 +230,8 @@
                           "valueDef": {
                             "propType": "string",
                             "isList": false,
-                            "isMap": false
+                            "isMap": false,
+                            "defaultValue": ""
                           },
                           "role": "new_column",
                           "visible": true,

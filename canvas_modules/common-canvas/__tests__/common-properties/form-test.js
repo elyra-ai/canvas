@@ -118,6 +118,7 @@ describe("Correct form should be created", () => {
 		const generatedForm = Form.makeForm(conditionResource.paramDef);
 		// console.info("Expected: " + JSON.stringify(conditionResource.expectedResult));
 		// console.info("Actual  : " + JSON.stringify(generatedForm) + "\n\n");
+		// console.info("\n\n");
 		expect(_.isEqual(JSON.parse(JSON.stringify(conditionResource.expectedResult)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
 	});
 
@@ -125,6 +126,7 @@ describe("Correct form should be created", () => {
 		const generatedForm = Form.makeForm(editStyleResource.paramDef);
 		// console.info("Expected: " + JSON.stringify(editStyleResource.expectedResult));
 		// console.info("Actual  : " + JSON.stringify(generatedForm) + "\n\n");
+		// console.info("\n\n");
 		expect(_.isEqual(JSON.parse(JSON.stringify(editStyleResource.expectedResult)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
 	});
 
