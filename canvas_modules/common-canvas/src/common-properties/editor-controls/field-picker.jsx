@@ -319,7 +319,7 @@ export default class FieldPicker extends EditorControl {
 		}
 
 		const header = (
-			<div>
+			<div className="field-picker-top-row">
 				<Button
 					id="field-picker-back-button"
 					back icon="back"

@@ -453,26 +453,27 @@ export default class EditorForm extends React.Component {
 		}
 		let label = <span></span>;
 		if (control.label && control.separateLabel) {
+			let description;
+			if (control.description && control.description.placement === "on_panel") {
+				description = <div className="control-description">{control.description.text}</div>;
+			}
+			let className = "";
+			if (control.controlType === "columnselect" || control.controlType === "structuretable") {
+				className = "label-container";
+			}
 			if (control.required) {
-				label = (<div><label className="control-label" style={stateStyle}>{control.label.text}</label>
-									<span className="required-control-indicator">*</span></div>);
+				label = (<div className={className}><label className="control-label" style={stateStyle}>{control.label.text}</label>
+			<span className="required-control-indicator">*</span>{description}</div>);
 			} else {
-				label = <label className="control-label" style={stateStyle}>{control.label.text}</label>;
+				label = (<div className={className}><label className="control-label" style={stateStyle}>{control.label.text}</label>{description}</div>);
 			}
 		}
-		let description;
-		if (control.description && control.description.placement === "on_panel") {
-			description = <div className="control-description">{control.description.text}</div>;
-		}
 		var controlObj = this.genControl(control, idPrefix, controlValueAccessor, datasetMetadata);
-		var controlItem = <ControlItem key={key} label={label} description={description} control={controlObj} />;
-		// logger.info(controlItem);
+		var controlItem = <ControlItem key={key} label={label} control={controlObj} />;
 		return controlItem;
 	}
 
 	genPrimaryTabs(key, tabs, idPrefix, controlValueAccessor, datasetMetadata) {
-		// logger.info("genPrimaryTabs");
-		// logger.info(tabs);
 		const tabContent = [];
 		let initialTab = "";
 		for (var i = 0; i < tabs.length; i++) {
