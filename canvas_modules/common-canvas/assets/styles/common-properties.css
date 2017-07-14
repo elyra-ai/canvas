@@ -264,6 +264,10 @@ span.form__validation--invalid {
 	fill: #A91560;
 	padding-left: 5px !important;
 	padding-right: 5px !important;
+	opacity: 0.4;
+}
+[id^=remove-fields-button-enabled] {
+	opacity: 1;
 }
 
 [id^=remove-fields-button]:hover[disabled=false] {

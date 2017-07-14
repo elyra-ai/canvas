@@ -26,6 +26,8 @@ export default class ColumnStructureTableEditor extends EditorControl {
 	constructor(props) {
 		super(props);
 		this.state = {
+			enableRemoveIcon: false,
+			hoverRemoveIcon: false,
 			controlValue: EditorControl.parseStructureStrings(props.valueAccessor(props.control.name)),
 			selectedRows: this.props.selectedRows
 		};

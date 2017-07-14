@@ -14,8 +14,8 @@ import React from "react";
 import ColumnStructureTableEditor from "./column-structure-table-editor.jsx";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Button } from "ap-components-react/dist/ap-components-react";
-import Isvg from "react-inlinesvg";
 import remove32 from "../../../assets/images/remove_32.svg";
+import remove32hover from "../../../assets/images/remove_32_hover.svg";
 import TopMoveIconEnable from "../../../assets/images/top_enabled.svg";
 import UpMoveIconEnable from "../../../assets/images/up_enabled.svg";
 import DownMoveIconEnable from "../../../assets/images/down_enabled.svg";
@@ -44,6 +44,9 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 		this.stopEditingRow = this.stopEditingRow.bind(this);
 
 		this.indexOfRow = this.indexOfRow.bind(this);
+
+		this.mouseEnterRemoveButton = this.mouseEnterRemoveButton.bind(this);
+		this.mouseLeaveRemoveButton = this.mouseLeaveRemoveButton.bind(this);
 
 		this.getTableRowMoveImages = this.getTableRowMoveImages.bind(this);
 		this.topMoveRow = this.topMoveRow.bind(this);
@@ -186,9 +189,15 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 
 	selectionChanged(selection) {
 		ColumnStructureTableEditor.prototype.selectionChanged.call(this, selection);
-		const opacity = "opacity:" + (selection.length > 0 ? 1.0 : 0.4);
-		document.getElementById("remove-fields-button").style.cssText = opacity;
-		document.getElementById("remove-fields-button").setAttribute("disabled", selection.length === 0);
+		this.setState({ enableRemoveIcon: (selection.length !== 0) });
+	}
+
+	mouseEnterRemoveButton() {
+		this.setState({ hoverRemoveIcon: true });
+	}
+
+	mouseLeaveRemoveButton() {
+		this.setState({ hoverRemoveIcon: false });
 	}
 
 	topMoveRow(evt) {
@@ -269,8 +278,8 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 	getTableRowMoveImages() {
 		const selected = this.getSelectedRows().sort();
 		const controlValue = this.getCurrentControlValue();
-		const topEnabled = selected[0] !== 0;
-		const bottomEnabled = selected[selected.length - 1] !== controlValue.length - 1;
+		const topEnabled = (selected.length !== 0 && selected[0] !== 0);
+		const bottomEnabled = (selected.length !== 0 && selected[selected.length - 1] !== controlValue.length - 1);
 		const topImages = topEnabled ? (
 			<div key="topImages">
 				<img className="table-row-move-button" src={TopMoveIconEnable} height={ARROW_HEIGHT} width={ARROW_WIDTH} onClick={this.topMoveRow} />
@@ -330,6 +339,30 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 			);
 		}
 
+		let removeIconImage = (<img src={remove32} />);
+		if (this.state.hoverRemoveIcon) {
+			removeIconImage = (<img src={remove32hover} />);
+		}
+		let removeIcon = (<div id="remove-fields-button"
+			className="button"
+			onClick={this.removeSelected}
+			onMouseEnter={this.mouseEnterRemoveButton}
+			onMouseLeave={this.mouseLeaveRemoveButton}
+			disabled
+		>
+			{removeIconImage}
+		</div>);
+		if (this.state.enableRemoveIcon) {
+			removeIcon = (<div id="remove-fields-button-enabled"
+				className="button"
+				onClick={this.removeSelected}
+				onMouseEnter={this.mouseEnterRemoveButton}
+				onMouseLeave={this.mouseLeaveRemoveButton}
+				disabled={false}
+			>
+				{removeIconImage}
+			</div>);
+		}
 		const addTooltip = <Tooltip id="addFieldTip">Select columns to add</Tooltip>;
 		const removeTooltip = <Tooltip id="removeFieldTip">Remove selected columns</Tooltip>;
 		const table = this.createTable();
@@ -352,9 +385,7 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 							</Button>
 						</OverlayTrigger>
 						<OverlayTrigger placement="top" overlay={removeTooltip}>
-							<div id="remove-fields-button" className="button" onClick={this.removeSelected}>
-								<Isvg id="remove-fields-button" src={remove32} />
-							</div>
+							{removeIcon}
 						</OverlayTrigger>
 					</td>
 				</tr>
