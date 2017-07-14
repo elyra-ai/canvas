@@ -13,8 +13,8 @@ import { FormControl, OverlayTrigger, Tooltip } from "react-bootstrap";
 import EditorControl from "./editor-control.jsx";
 import ReactDOM from "react-dom";
 import { Button } from "ap-components-react/dist/ap-components-react";
-import Isvg from "react-inlinesvg";
 import remove32 from "../../../assets/images/remove_32.svg";
+import remove32hover from "../../../assets/images/remove_32_hover.svg";
 
 var _ = require("underscore");
 
@@ -27,6 +27,7 @@ export default class ColumnSelectControl extends EditorControl {
 			selections.push(ctrlValue[this.props.selectedRows[i]]);
 		}
 		this.state = {
+			hoverRemoveIcon: false,
 			controlValue: ctrlValue,
 			selectedValues: selections
 		};
@@ -42,6 +43,8 @@ export default class ColumnSelectControl extends EditorControl {
 		this.handleChangeMultiColumn = this.handleChangeMultiColumn.bind(this);
 		this.removeSelected = this.removeSelected.bind(this);
 		this.selectionChanged = this.selectionChanged.bind(this);
+		this.mouseEnterRemoveButton = this.mouseEnterRemoveButton.bind(this);
+		this.mouseLeaveRemoveButton = this.mouseLeaveRemoveButton.bind(this);
 	}
 
 	componentDidMount() {
@@ -148,15 +151,20 @@ export default class ColumnSelectControl extends EditorControl {
 	}
 
 	selectionChanged(selection) {
-		const opacity = "opacity:" + (selection.length > 0 ? 1.0 : 0.4);
-		const id = this.removeButtonId();
-		document.getElementById(id).style.cssText = opacity;
-		document.getElementById(id).setAttribute("disabled", selection.length === 0);
 		const indices = [];
 		for (const seln of selection) {
 			indices.push(this.state.controlValue.indexOf(seln));
 		}
 		this.props.updateSelectedRows(this.props.control.name, indices);
+		this.setState({ enableRemoveIcon: (selection.length !== 0) });
+	}
+
+	mouseEnterRemoveButton() {
+		this.setState({ hoverRemoveIcon: true });
+	}
+
+	mouseLeaveRemoveButton() {
+		this.setState({ hoverRemoveIcon: false });
 	}
 
 	removeButtonId() {
@@ -201,6 +209,30 @@ export default class ColumnSelectControl extends EditorControl {
 			);
 		}
 
+		let removeIconImage = (<img src={remove32} />);
+		if (this.state.hoverRemoveIcon) {
+			removeIconImage = (<img src={remove32hover} />);
+		}
+		let removeIcon = (<div id="remove-fields-button"
+			className="button"
+			onClick={this.removeSelected}
+			onMouseEnter={this.mouseEnterRemoveButton}
+			onMouseLeave={this.mouseLeaveRemoveButton}
+			disabled
+		>
+			{removeIconImage}
+		</div>);
+		if (this.state.enableRemoveIcon) {
+			removeIcon = (<div id="remove-fields-button-enabled"
+				className="button"
+				onClick={this.removeSelected}
+				onMouseEnter={this.mouseEnterRemoveButton}
+				onMouseLeave={this.mouseLeaveRemoveButton}
+				disabled={false}
+			>
+				{removeIconImage}
+			</div>);
+		}
 		const addTooltip = <Tooltip id="addFieldTip">Select columns to add</Tooltip>;
 		const removeTooltip = <Tooltip id="removeFieldTip">Remove selected columns</Tooltip>;
 		if (this.props.multiColumn) {
@@ -217,9 +249,7 @@ export default class ColumnSelectControl extends EditorControl {
 						</Button>
 					</OverlayTrigger>
 					<OverlayTrigger placement="top" overlay={removeTooltip}>
-						<div id={this.removeButtonId()} className="button" onClick={this.removeSelected}>
-							<Isvg id="remove-fields-button-upper-image" src={remove32} />
-						</div>
+						{removeIcon}
 					</OverlayTrigger>
 					<div className="editor_control_area" style={stateStyle}>
 						<FormControl {...stateDisabled}
@@ -255,9 +285,7 @@ export default class ColumnSelectControl extends EditorControl {
 					</Button>
 				</OverlayTrigger>
 				<OverlayTrigger placement="top" overlay={removeTooltip}>
-					<div id={this.removeButtonId()} className="button" onClick={this.removeSelected}>
-						<Isvg id="remove-fields-button-upper-image" src={remove32} />
-					</div>
+					{removeIcon}
 				</OverlayTrigger>
 				<div className="editor_control_area" style={stateStyle}>
 					<FormControl {...stateDisabled}
