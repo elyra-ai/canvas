@@ -161,16 +161,24 @@ export default class EditorControl extends React.Component {
 
 	validateInput(evt) {
 		var controlName = this.getControlID().split(".")[1];
-		if (this.props.controlStates && typeof this.props.controlStates[controlName] === "undefined" &&
-					this.props.validationDefinitions[controlName]) {
+		if (!this.props.validationDefinitions) {
+			return;
+		}
+		const validations = this.props.validationDefinitions[controlName];
+		if (this.props.controlStates && typeof this.props.controlStates[controlName] === "undefined" && validations) {
 			var userInput = {
 				[controlName]: this.state.controlValue // evt.target.value
 			};
 
 			try {
-				var output = UiConditions.validateInput(this.props.validationDefinitions[controlName], userInput);
-				logger.info("validated input field " + controlName + " to be " + output);
-
+				let output;
+				for (const validation of validations) {
+					output = UiConditions.validateInput(validation, userInput, this.props.dataModel);
+					logger.info("validated input field " + controlName + " to be " + output);
+					if (output !== true) {
+						break;
+					}
+				}
 				if (output === true) {
 					this.setState({
 						validateErrorMessage: {
@@ -212,5 +220,6 @@ EditorControl.propTypes = {
 	control: React.PropTypes.object.isRequired,
 	controlStates: React.PropTypes.object,
 	valueAccessor: React.PropTypes.func.isRequired,
-	validationDefinitions: React.PropTypes.array
+	validationDefinitions: React.PropTypes.array,
+	dataModel: React.PropTypes.object
 };

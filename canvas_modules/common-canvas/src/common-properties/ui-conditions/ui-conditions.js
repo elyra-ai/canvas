@@ -10,10 +10,10 @@
 
 import logger from "../../../utils/logger";
 
-function validateInput(definition, userInput) {
+function validateInput(definition, userInput, dataModel) {
 	var data = definition;
 	if (data.validation) {
-		return validation(data.validation, userInput);
+		return validation(data.validation, userInput, dataModel);
 	} else if (data.enabled) {
 		return enabled(data.enabled, userInput);
 	} else if (data.visible) {
@@ -49,12 +49,12 @@ function validateInput(definition, userInput) {
  *	 }
  * @return {boolean} true if valid, failMessage if false.
  */
-function validation(validationData, userInput) {
+function validation(validationData, userInput, dataModel) {
 	logger.info("Validation check");
 	// var data = JSON.parse(validationData);
 	var data = validationData;
 	if (data.fail_message && data.evaluate) {
-		return evaluate(data.evaluate, userInput) || failedMessage(data.fail_message);
+		return evaluate(data.evaluate, userInput, dataModel) || failedMessage(data.fail_message);
 	}
 	throw new Error("Invalid validation schema");
 }
@@ -144,13 +144,13 @@ function visible(visibleData, userInput) {
 /**
  * Evaluate Definition
  */
-function evaluate(data, userInput) {
+function evaluate(data, userInput, dataModel) {
 	if (data.or) {
-		return or(data.or, userInput);
+		return or(data.or, userInput, dataModel);
 	} else if (data.and) {
-		return and(data.and, userInput);
+		return and(data.and, userInput, dataModel);
 	} else if (data.condition) { // condition
-		return condition(data.condition, userInput);
+		return condition(data.condition, userInput, dataModel);
 	}
 	throw new Error("Failed to parse definition");
 }
@@ -159,11 +159,13 @@ function evaluate(data, userInput) {
  * The 'or' condition. Any sub-condition evaluates to true.
  * Can nest any number of additional conditional types.
  * @param {Object} data an array of items
+ * @param {string} userInput User-entered value to evaluate
+ * @param {Object} dataModel optional dataset metadata
  * @return {boolean}
  */
-function or(data, userInput) {
+function or(data, userInput, dataModel) {
 	for (let i = 0; i < data.length; i++) {
-		if (evaluate(data[i], userInput) === true) {
+		if (evaluate(data[i], userInput, dataModel) === true) {
 			logger.info("Or is true");
 			return true;
 		}
@@ -176,11 +178,13 @@ function or(data, userInput) {
  * The 'and' condition. All sub-conditions evaluate to true.
  * Can nest any number of additional conditional types.
  * @param {Object} data an array of items
+ * @param {string} userInput User-entered value to evaluate
+ * @param {Object} dataModel optional dataset metadata
  * @return {boolean}
  */
-function and(data, userInput) {
+function and(data, userInput, dataModel) {
 	for (let i = 0; i < data.length; i++) {
-		if (evaluate(data[i], userInput) === false) {
+		if (evaluate(data[i], userInput, dataModel) === false) {
 			logger.info("And is false");
 			return false;
 		}
@@ -195,9 +199,10 @@ function and(data, userInput) {
  * @param {Object} param required parameter the condition checks for
  * @param {Object} param2 optional parameter the condition checks for
  * @param {Object} value optional value the condition checks for
+ * @param {Object} dataModel optional dataset metadata
  * @return {boolean} true if the parameter(s) satisfy the condition
  */
-function condition(data, userInput) {
+function condition(data, userInput, dataModel) {
 	var op = data.op;
 	var param = data.param;
 	var param2 = data.param2 ? data.param2 : null;
@@ -230,6 +235,8 @@ function condition(data, userInput) {
 		return _handleChecked(paramInput, param);
 	case "notChecked":
 		return _handleNotChecked(paramInput, param);
+	case "colNotExists":
+		return _handleColNotExists(paramInput, dataModel);
 	default:
 		return false;
 	}
@@ -365,6 +372,19 @@ function _handleChecked(paramInput, param) {
 function _handleNotChecked(paramInput, param) {
 	logger.info("Condition not checked: " + param + " is " + paramInput === "false");
 	return paramInput === "false";
+}
+
+function _handleColNotExists(paramInput, dataModel) {
+	logger.info("Condition col not exists: paramInput === " + paramInput);
+	if (!dataModel) {
+		return true;
+	}
+	for (const field of dataModel.fields) {
+		if (field.name === paramInput) {
+			return false;
+		}
+	}
+	return true;
 }
 
 /**

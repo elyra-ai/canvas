@@ -322,6 +322,9 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		const that = this;
 		const rows = [];
 		const controlValue = this.getCurrentControlValue();
+		const headers = [];
+		const sortFields = [];
+		const filterFields = [];
 		for (var rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
 			const columns = [];
 			if (this.includeInFilter(rowIndex)) {
@@ -335,9 +338,6 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			}
 		}
 
-		const headers = [];
-		const sortFields = [];
-		const filterFields = [];
 		for (var j = 0; j < this.props.control.subControls.length; j++) {
 			const columnDef = this.props.control.subControls[j];
 			if (columnDef.visible) {

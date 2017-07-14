@@ -19,6 +19,9 @@ export default class OneofselectControl extends EditorControl {
 		} else {
 			this.state = { controlValue: props.valueAccessor(props.control.name)[0] };
 		}
+		if (!this.state.controlValue && typeof props.control.valueDef.defaultValue !== "undefined") {
+			this.state.controlValue = props.control.valueDef.defaultValue;
+		}
 		this.getControlValue = this.getControlValue.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 	}

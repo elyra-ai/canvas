@@ -181,10 +181,10 @@ span.form__validation--invalid {
 #field-picker-filter-list{
 	list-style-type: none;
 	float: right;
-	margin-top: 3px;
+	margin-top: 10px;
 	margin-bottom: 0px;
 	width:40%;
-	height: 32px;
+	height: 22px;
 }
 
 #field-picker-back-button svg.icon {
@@ -364,10 +364,6 @@ th div div label, td div div label {
 	outline: none;
 }
 
-#flexible-table-container>table>thead>tr>th {
-  padding: 5px;
-}
-
 #flexible-table-container>table>tbody>tr>td {
   padding: 5px;
 	overflow-wrap: break-word;
@@ -381,16 +377,22 @@ th div div label, td div div label {
   hyphens: auto;
 }
 
+.field-picker-top-row {
+	margin-bottom: 6px;
+}
+
 #flexible-table-search-bar {
 	height: 32px;
 	width: 45%;
 	float: left;
+	margin: 5px 0 2px 5px;
 }
 
 #flexible-table-search {
 	width: 100%;
 	float: left;
 	padding-bottom: 2px;
+	border-bottom-width: 1px;
 }
 
 #flexible-table-search-icon {
@@ -398,6 +400,7 @@ th div div label, td div div label {
 	height: 20px;
 	float: left;
 	fill: #A91560;
+	margin-top: 4px;
 }
 
 #flexible-table-search:focus {
@@ -408,12 +411,17 @@ th.reactable-th-field {
 	padding-left: 15px;
 }
 
+#table-header {
+	width: 100%;
+	border: 1px #D8D8D8 solid;
+	border-bottom: none;
+	background-color: #f9f9fb;
+}
+
 .flexible-table-header {
 	width: 100%;
 	max-width: 100%;
-	border: 1px #D8D8D8 solid;
-	border-bottom: none;
-	background-color: white;
+	background-color: transparent;
 }
 
 .table>tbody>tr:nth-child(1)>td {
@@ -486,4 +494,12 @@ tr.reactable-column-header {
 .required-control-indicator {
 	color: #a6266e;
 	font-weight: bold;
+}
+
+.label-container {
+	float: left;
+}
+
+.control-description {
+	font-size: 12px;
 }

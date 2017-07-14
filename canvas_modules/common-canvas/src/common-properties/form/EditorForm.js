@@ -27,20 +27,33 @@ export class EditorTab {
 }
 
 class ValueDef {
-	constructor(propType, isList, isMap) {
+	constructor(propType, isList, isMap, defaultValue) {
 		this.propType = propType;
 		this.isList = isList;
 		this.isMap = isMap;
+		this.defaultValue = defaultValue;
 	}
 	static make(parameter) {
-		return new ValueDef(parameter.propType(), parameter.isList(), parameter.isMapValue());
+		return new ValueDef(parameter.propType(), parameter.isList(),
+			parameter.isMapValue(), parameter.defaultValue);
 	}
 }
+
 class Label {
 	constructor(text) {
 		this.text = text;
 	}
 }
+
+class Description {
+	constructor(text, placement) {
+		this.text = text;
+		if (placement) {
+			this.placement = placement;
+		}
+	}
+}
+
 class ControlPanel {
 	constructor(id, panelType, controls) {
 		this.id = id;
@@ -163,6 +176,56 @@ function isControlRequired(paramName, conditions) {
 	return false;
 }
 
+function _makeStringControl(parameter, group) {
+	let controlType;
+	let role;
+	if (parameter.isList()) {
+		controlType = _processListParameter(parameter, group);
+	} else {
+		switch (parameter.getRole()) {
+		case ParamRole.TEXT:
+			controlType = ControlType.TEXTAREA;
+			break;
+		case ParamRole.ENUM:
+			if (parameter.getValidValueCount() < 5) {
+				controlType = ControlType.RADIOSET;
+			} else {
+				controlType = ControlType.ONEOFSELECT;
+			}
+			break;
+		case ParamRole.COLUMN:
+			if (group.groupType() === GroupType.COLUMN_ALLOCATION ||
+					group.groupType() === GroupType.COLUMN_SELECTION) {
+				controlType = ControlType.ALLOCATEDCOLUMN;
+			} else if (group.groupType() === GroupType.FIELD_ALLOCATION ||
+					group.groupType() === GroupType.FIELD_SELECTION) {
+				controlType = ControlType.ALLOCATEDFIELD;
+			} else {
+				controlType = ControlType.ONEOFCOLUMNS;
+			}
+			break;
+		case ParamRole.EXPRESSION:
+			controlType = ControlType.EXPRESSION;
+			break;
+		case ParamRole.EMAIL:
+			role = ParamRole.EMAIL;
+			controlType = ControlType.TEXTFIELD;
+			break;
+		case ParamRole.URL:
+			role = ParamRole.URL;
+			controlType = ControlType.TEXTFIELD;
+			break;
+		case ParamRole.COLOR:
+			role = ParamRole.COLOR;
+			controlType = ControlType.TEXTFIELD;
+			break;
+		default:
+			controlType = ControlType.TEXTFIELD;
+		}
+	}
+	return { controlType: controlType, role: role };
+}
+
 /**
  * Creates a control for the supplied property.
  */
@@ -174,6 +237,13 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	const orientation = parameter.orientation;
 	const required = isControlRequired(paramName, conditions);
 	const controlLabel = new Label(l10nProvider.l10nLabel(parameter, parameter.name));
+	let controlDesc;
+	if (parameter.description &&
+		((parameter.description.default && parameter.description.default.length > 0) ||
+		(parameter.description.resourceKey))) {
+		controlDesc = new Description(l10nProvider.l10nDesc(parameter, parameter.name),
+			parameter.description ? parameter.description.placement : null);
+	}
 
 	// The role is used to modify the behaviour of certain controls
 	let role;
@@ -185,57 +255,18 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	let controlType;
 	let moveableRows;
 
+
 	// The control type defines the basic UI element that should be used to edit the property
 	if (parameter.getRole() === ParamRole.CUSTOM) {
 		controlType = ControlType.CUSTOM;
 	} else {
 		switch (parameter.propType()) {
-		case Type.STRING:
-			if (parameter.isList()) {
-				controlType = _processListParameter(parameter, group);
-			} else {
-				switch (parameter.getRole()) {
-				case ParamRole.TEXT:
-					controlType = ControlType.TEXTAREA;
-					break;
-				case ParamRole.ENUM:
-					if (parameter.getValidValueCount() < 5) {
-						controlType = ControlType.RADIOSET;
-					} else {
-						controlType = ControlType.ONEOFSELECT;
-					}
-					break;
-				case ParamRole.COLUMN:
-					if (group.groupType() === GroupType.COLUMN_ALLOCATION ||
-							group.groupType() === GroupType.COLUMN_SELECTION) {
-						controlType = ControlType.ALLOCATEDCOLUMN;
-					} else if (group.groupType() === GroupType.FIELD_ALLOCATION ||
-							group.groupType() === GroupType.FIELD_SELECTION) {
-						controlType = ControlType.ALLOCATEDFIELD;
-					} else {
-						controlType = ControlType.ONEOFCOLUMNS;
-					}
-					break;
-				case ParamRole.EXPRESSION:
-					controlType = ControlType.EXPRESSION;
-					break;
-				case ParamRole.EMAIL:
-					role = ParamRole.EMAIL;
-					controlType = ControlType.TEXTFIELD;
-					break;
-				case ParamRole.URL:
-					role = ParamRole.URL;
-					controlType = ControlType.TEXTFIELD;
-					break;
-				case ParamRole.COLOR:
-					role = ParamRole.COLOR;
-					controlType = ControlType.TEXTFIELD;
-					break;
-				default:
-					controlType = ControlType.TEXTFIELD;
-				}
-			}
+		case Type.STRING: {
+			const returnObject = _makeStringControl(parameter, group);
+			controlType = returnObject.controlType;
+			role = returnObject.role;
 			break;
+		}
 		case Type.PASSWORD:
 			controlType = ControlType.PASSWORDFIELD;
 			break;
@@ -319,6 +350,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	return new Control(parameter.name,
 		controlLabel,
 		separateLabel,
+		controlDesc,
 		parameter.getControl(controlType),
 		ValueDef.make(parameter),
 		role, additionalText,
@@ -390,6 +422,14 @@ function _makeSubControl(parameter, l10nProvider, isKeyField) {
 	const additionalText = parameter.getAdditionalText(l10nProvider);
 	const orientation = parameter.orientation;
 	const controlLabel = new Label(l10nProvider.l10nLabel(parameter, parameter.name));
+	let controlDesc;
+	if (parameter.description &&
+		((parameter.description.default && parameter.description.default.length > 0) ||
+		(parameter.description.resourceKey))) {
+		controlDesc = new Description(l10nProvider.l10nDesc(parameter, parameter.name),
+			parameter.description ? parameter.description.placement : null);
+	}
+
 	let role;
 	let controlType;
 	switch (parameter.propType()) {
@@ -440,6 +480,7 @@ function _makeSubControl(parameter, l10nProvider, isKeyField) {
 
 	return new SubControl(parameter.name,
 		controlLabel,
+		controlDesc,
 		parameter.visible,
 		parameter.columns(8),
 		parameter.getControl(controlType),

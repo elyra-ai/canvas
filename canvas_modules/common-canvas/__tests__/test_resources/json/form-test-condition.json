@@ -100,7 +100,7 @@
                         "isMap": false
                       },
                       "separateLabel": true,
-                      "required":true
+                      "required": true
                     }
                   },
                   {
@@ -114,10 +114,11 @@
                       "valueDef": {
                         "propType": "string",
                         "isList": false,
-                        "isMap": false
+                        "isMap": false,
+                        "defaultValue": ""
                       },
                       "separateLabel": true,
-                      "required":true
+                      "required": true
                     }
                   }
                 ]

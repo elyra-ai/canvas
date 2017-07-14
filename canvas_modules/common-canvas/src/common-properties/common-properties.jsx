@@ -13,6 +13,7 @@ import PropertiesEditing from "./properties-editing.jsx";
 import EditorForm from "./editor-controls/editor-form.jsx";
 import PropertyUtil from "./util/property-utils.js";
 import Form from "./form/Form";
+import logger from "../../utils/logger";
 
 export default class CommonProperties extends React.Component {
 	constructor(props) {
@@ -117,7 +118,12 @@ export default class CommonProperties extends React.Component {
 	}
 
 	render() {
-		const formData = this.getForm();
+		let formData;
+		try {
+			formData = this.getForm();
+		} catch (error) {
+			logger.error("Error generating form: " + error);
+		}
 		if (formData !== null) {
 			let propertiesDialog = [];
 			if (this.props.showPropertiesDialog) {

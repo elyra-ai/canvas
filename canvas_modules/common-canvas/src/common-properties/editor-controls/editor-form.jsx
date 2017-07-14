@@ -44,6 +44,7 @@ import SelectorPanel from "./../editor-panels/selector-panel.jsx";
 import SubPanelButton from "./../editor-panels/sub-panel-button.jsx";
 import UiConditions from "../ui-conditions/ui-conditions.js";
 import UiConditionsParser from "../ui-conditions/ui-conditions-parser.js";
+import PropertyUtil from "../util/property-utils.js";
 
 export default class EditorForm extends React.Component {
 
@@ -216,6 +217,7 @@ export default class EditorForm extends React.Component {
 		// List of available controls is defined in models/editor/Control.scala
 		if (control.controlType === "textfield") {
 			return (<TextfieldControl control={control}
+				dataModel={datasetMetadata}
 				key={controlId}
 				ref={controlId}
 				valueAccessor={controlValueAccessor}
@@ -225,6 +227,7 @@ export default class EditorForm extends React.Component {
 			/>);
 		} else if (control.controlType === "textarea") {
 			return (<TextareaControl control={control}
+				dataModel={datasetMetadata}
 				key={controlId}
 				ref={controlId}
 				valueAccessor={controlValueAccessor}
@@ -234,6 +237,7 @@ export default class EditorForm extends React.Component {
 			/>);
 		} else if (control.controlType === "expression") {
 			return (<ExpressionControl control={control}
+				dataModel={datasetMetadata}
 				key={controlId}
 				ref={controlId}
 				valueAccessor={controlValueAccessor}
@@ -249,7 +253,6 @@ export default class EditorForm extends React.Component {
 				values={control.values}
 				valueLabels={control.valueLabels}
 				valueIcons={control.valueIcons}
-
 			/>);
 		} else if (control.controlType === "passwordfield") {
 			return (<PasswordControl control={control}
@@ -260,6 +263,7 @@ export default class EditorForm extends React.Component {
 			/>);
 		} else if (control.controlType === "numberfield") {
 			return (<NumberfieldControl control={control}
+				dataModel={datasetMetadata}
 				key={controlId}
 				ref={controlId}
 				valueAccessor={controlValueAccessor}
@@ -292,6 +296,7 @@ export default class EditorForm extends React.Component {
 			/>);
 		} else if (control.controlType === "oneofselect") {
 			return (<OneofselectControl control={control}
+				dataModel={datasetMetadata}
 				key={controlId}
 				ref={controlId}
 				updateControlValue={this.updateControlValue}
@@ -299,6 +304,7 @@ export default class EditorForm extends React.Component {
 			/>);
 		} else if (control.controlType === "someofselect") {
 			return (<SomeofselectControl control={control}
+				dataModel={datasetMetadata}
 				key={controlId}
 				ref={controlId}
 				updateControlValue={this.updateControlValue}
@@ -441,28 +447,33 @@ export default class EditorForm extends React.Component {
 	}
 
 	genControlItem(key, control, idPrefix, controlValueAccessor, datasetMetadata) {
-		var stateStyle = {};
+		const stateStyle = {};
 		if (this.state.controlStates[control.name] === "hidden") {
 			stateStyle.visibility = "hidden";
 		}
-		var label = <span></span>;
+		let label = <span></span>;
 		if (control.label && control.separateLabel) {
+			let description;
+			if (control.description && control.description.placement === "on_panel") {
+				description = <div className="control-description">{control.description.text}</div>;
+			}
+			let className = "";
+			if (control.controlType === "columnselect" || control.controlType === "structuretable") {
+				className = "label-container";
+			}
 			if (control.required) {
-				label = (<div><label className="control-label" style={stateStyle}>{control.label.text}</label>
-									<span className="required-control-indicator">*</span></div>);
+				label = (<div className={className}><label className="control-label" style={stateStyle}>{control.label.text}</label>
+			<span className="required-control-indicator">*</span>{description}</div>);
 			} else {
-				label = <label className="control-label" style={stateStyle}>{control.label.text}</label>;
+				label = (<div className={className}><label className="control-label" style={stateStyle}>{control.label.text}</label>{description}</div>);
 			}
 		}
 		var controlObj = this.genControl(control, idPrefix, controlValueAccessor, datasetMetadata);
 		var controlItem = <ControlItem key={key} label={label} control={controlObj} />;
-		// logger.info(controlItem);
 		return controlItem;
 	}
 
 	genPrimaryTabs(key, tabs, idPrefix, controlValueAccessor, datasetMetadata) {
-		// logger.info("genPrimaryTabs");
-		// logger.info(tabs);
 		const tabContent = [];
 		let initialTab = "";
 		for (var i = 0; i < tabs.length; i++) {
@@ -816,7 +827,10 @@ export default class EditorForm extends React.Component {
 						};
 						validationGroupDefinitions.push(groupDef);
 					} else { // single control
-						validationDefinitions[controls] = uiConditions[i];
+						if (PropertyUtil.toType(validationDefinitions[controls]) !== "array") {
+							validationDefinitions[controls] = [];
+						}
+						validationDefinitions[controls].push(uiConditions[i]);
 					}
 				} catch (error) { // invalid
 					logger.info("Error parsing ui conditions: " + error);

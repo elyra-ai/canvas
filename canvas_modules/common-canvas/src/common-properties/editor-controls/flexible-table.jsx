@@ -127,10 +127,9 @@ export default class FlexibleTable extends React.Component {
 					/>
 				</div>
 				<div>
-					<div className="flexible-header-container">
+					<div className="flexible-table-header">
 						<Table
 							key="flexible-table"
-							className="flexible-table-header"
 							id="table-header"
 							sortable={this.props.sortable}
 							filterable={this.props.filterable}
@@ -160,9 +159,8 @@ export default class FlexibleTable extends React.Component {
 		} else {
 			renderTable = (
 				<div>
-					<div>
+					<div className="flexible-table-header">
 						<Table
-							className="flexible-table-header"
 							id="table-header"
 							sortable={this.props.sortable}
 							onSort={this.onSort}

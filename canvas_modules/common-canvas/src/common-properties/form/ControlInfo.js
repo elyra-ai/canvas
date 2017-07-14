@@ -10,47 +10,84 @@
 import { EditStyle } from "./form-constants";
 
 class ControlDef {
-	constructor(cname, label, controlType, valueDef, role, additionalText, orientation,
-		values, valueLabels, valueIcons, sortable, filterable, charLimit) {
+	constructor(cname, label, description, controlType, valueDef, role, additionalText,
+		orientation, values, valueLabels, valueIcons, sortable, filterable, charLimit) {
 		this.name = cname;
 		this.label = label;
+		if (description) {
+			this.description = description;
+		}
 		this.controlType = controlType;
 		this.valueDef = valueDef;
-		this.role = role;
-		this.additionalText = additionalText;
-		this.orientation = orientation;
-		this.values = values;
-		this.valueLabels = valueLabels;
-		this.valueIcons = valueIcons;
-		this.sortable = sortable;
-		this.filterable = filterable;
-		this.charLimit = charLimit;
+		if (role) {
+			this.role = role;
+		}
+		if (additionalText) {
+			this.additionalText = additionalText;
+		}
+		if (orientation) {
+			this.orientation = orientation;
+		}
+		if (values) {
+			this.values = values;
+		}
+		if (valueLabels) {
+			this.valueLabels = valueLabels;
+		}
+		if (valueIcons) {
+			this.valueIcons = valueIcons;
+		}
+		if (typeof sortable === "boolean") {
+			this.sortable = sortable;
+		}
+		if (typeof filterable === "boolean") {
+			this.filterable = filterable;
+		}
+		if (charLimit) {
+			this.charLimit = charLimit;
+		}
 	}
 }
 
 export class Control extends ControlDef {
-	constructor(cname, label, separateLabel, controlType, valueDef, role, additionalText, orientation,
+	constructor(cname, label, separateLabel, description, controlType, valueDef, role, additionalText, orientation,
 		values, valueLabels, valueIcons, sortable, filterable, charLimit, subControls, keyIndex, defaultRow,
 		childItem, moveableRows, required) {
-		super(cname, label, controlType, valueDef, role, additionalText, orientation, values,
+		super(cname, label, description, controlType, valueDef, role, additionalText, orientation, values,
 					valueLabels, valueIcons, sortable, filterable, charLimit);
 		this.separateLabel = separateLabel;
-		this.subControls = subControls;
-		this.keyIndex = keyIndex;
-		this.defaultRow = defaultRow;
-		this.childItem = childItem;
-		this.moveableRows = moveableRows;
-		this.required = required;
+		if (subControls) {
+			this.subControls = subControls;
+		}
+		if (typeof keyIndex === "number") {
+			this.keyIndex = keyIndex;
+		}
+		if (defaultRow) {
+			this.defaultRow = defaultRow;
+		}
+		if (childItem) {
+			this.childItem = childItem;
+		}
+		if (typeof moveableRows === "boolean") {
+			this.moveableRows = moveableRows;
+		}
+		if (typeof required === "boolean") {
+			this.required = required;
+		}
 	}
 }
 
 export class SubControl extends ControlDef {
-	constructor(cname, label, visible, width, controlType, valueDef, role, additionalText,
+	constructor(cname, label, description, visible, width, controlType, valueDef, role, additionalText,
 		orientation, values, valueLabels, valueIcons, sortable, filterable, charLimit, editStyle, isKeyField) {
-		super(cname, label, controlType, valueDef, role, additionalText, orientation,
+		super(cname, label, description, controlType, valueDef, role, additionalText, orientation,
 			values, valueLabels, valueIcons, sortable, filterable, charLimit);
-		this.visible = visible;
-		this.width = width;
+		if (typeof visible === "boolean") {
+			this.visible = visible;
+		}
+		if (typeof width === "number") {
+			this.width = width;
+		}
 		if (editStyle) {
 			this.editStyle = editStyle;
 		} else if (!isKeyField) {

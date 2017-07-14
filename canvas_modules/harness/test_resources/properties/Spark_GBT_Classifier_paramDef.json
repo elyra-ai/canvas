@@ -217,7 +217,7 @@
 						"group_info":[
 							 {
 									"name":"fields",
-									"type":"columnSelection",
+									"type":"fieldSelection",
 									"label":{
 										 "default":"Fields"
 									},

@@ -1,78 +1,46 @@
 {
   "paramDef": {
     "currentParameters": {
-      "renamed_fields": [
-        "[\"Age\", \"Age\"]",
-        "[\"BP\", \"BP-1\"]"
-      ]
+      "cols": []
     },
-    "complex_types": [
-      {
-        "name": "RenameFieldEntry",
-        "key_definition": {
-          "name": "field",
-          "type": "string",
-          "role": "column"
-        },
-        "parameters": [
-          {
-            "name": "new_name",
-            "type": "string",
-            "role": "new_column",
-            "default": ""
-          }
-        ]
-      }
-    ],
     "parameters": [
       {
-        "name": "renamed_fields",
-        "type": "map[string,RenameFieldEntry]",
-        "role": "column",
-        "default": []
+        "name": "cols",
+        "type": "array[string]",
+        "default": [],
+        "role": "column"
       }
     ],
     "uihints": {
-      "name": "rename",
-      "icon": "./rename.svg",
-      "structure_info": [
-        {
-          "name": "RenameFieldEntry",
-          "key_definition": {
-            "name": "field",
-            "resourceKey": "RenameFieldEntry.field",
-            "columns": 26
-          },
-          "parameters": [
-            {
-              "name": "new_name",
-              "resourceKey": "RenameFieldEntry.new_name",
-              "columns": 26,
-              "editStyle": "inline"
-            }
-          ]
-        }
-      ],
+      "name": "org.apache.spark.ml.ibm.transformers.Distinct",
+      "icon": "images/transformationspark.svg",
+      "label": {
+        "default": "Distinct"
+      },
+      "description": {
+        "default": "Remove rows to leave only rows with distinct combinations of rows"
+      },
       "parameter_info": [
         {
-          "name": "renamed_fields",
+          "name": "cols",
           "label": {
-            "default": "Rename columns"
+            "default": "Distinct"
           },
           "description": {
-            "default": "Rename columns in the active dataset"
+            "default": "Only the first row for each value of the columns added below will be included in the data table. Duplicate rows with the same value will be discarded.",
+            "placement": "on_panel"
           }
         }
       ],
       "group_info": [
         {
-          "name": "basic-settings",
+          "name": "settings",
+          "type": "columnSelection",
           "label": {
             "default": "Settings"
           },
-          "type": "columnSelection",
           "parameters": [
-            "renamed_fields"
+            "cols"
           ]
         }
       ],
@@ -81,14 +49,14 @@
           "validation": {
             "fail_message": {
               "type": "error",
-              "focusParam": "renamed_fields",
+              "focusParam": "cols",
               "message": {
-                "resourceKey": "output_name_not_empty"
+                "resourceKey": "cols_not_empty"
               }
             },
             "evaluate": {
               "condition": {
-                "param": "renamed_fields",
+                "param": "cols",
                 "op": "isNotEmpty"
               }
             }
@@ -164,15 +132,19 @@
       ]
     },
     "resources": {
-      "rename.label": "Rename Columns",
-      "field.label": "Input name",
-      "new_name.label": "Output name",
-      "output_name_not_empty": "The 'Output Name' field cannot be empty"
+      "select.label": "Select Columns",
+      "mode.label": "Mode",
+      "mode.desc": "Include or discard rows",
+      "mode.Include.label": "Include selected columns",
+      "mode.Discard.label": "Discard selected columns",
+      "selected_fields.label": "Columns",
+      "selected_fields.desc": "Select columns to include or exclude",
+      "cols_not_empty": "The 'Column Name' field cannot be empty"
     }
   },
   "expectedResult": {
-    "componentId": "rename",
-    "label": "Rename Columns",
+    "componentId": "org.apache.spark.ml.ibm.transformers.Distinct",
+    "label": "Distinct",
     "editorSize": "large",
     "uiItems": [
       {
@@ -180,69 +152,32 @@
         "tabs": [
           {
             "text": "Settings",
-            "group": "basic-settings",
+            "group": "settings",
             "content": {
               "itemType": "panel",
               "panel": {
-                "id": "basic-settings",
+                "id": "settings",
                 "panelType": "columnSelection",
                 "uiItems": [
                   {
                     "itemType": "control",
                     "control": {
-                      "name": "renamed_fields",
+                      "name": "cols",
                       "label": {
-                        "text": "Rename columns"
+                        "text": "Distinct"
                       },
                       "description": {
-                        "text": "Rename columns in the active dataset"
+                        "text": "Only the first row for each value of the columns added below will be included in the data table. Duplicate rows with the same value will be discarded.",
+                        "placement": "on_panel"
                       },
-                      "controlType": "structuretable",
+                      "controlType": "columnselect",
                       "valueDef": {
-                        "propType": "structure",
-                        "isList": false,
-                        "isMap": true,
+                        "propType": "string",
+                        "isList": true,
+                        "isMap": false,
                         "defaultValue": []
                       },
                       "separateLabel": true,
-                      "subControls": [
-                        {
-                          "name": "field",
-                          "label": {
-                            "text": "Input name"
-                          },
-                          "controlType": "oneofcolumns",
-                          "valueDef": {
-                            "propType": "string",
-                            "isList": false,
-                            "isMap": false
-                          },
-                          "role": "column",
-                          "visible": true,
-                          "width": 26
-                        },
-                        {
-                          "name": "new_name",
-                          "label": {
-                            "text": "Output name"
-                          },
-                          "controlType": "textfield",
-                          "valueDef": {
-                            "propType": "string",
-                            "isList": false,
-                            "isMap": false,
-                            "defaultValue": ""
-                          },
-                          "role": "new_column",
-                          "visible": true,
-                          "width": 26,
-                          "editStyle": "inline"
-                        }
-                      ],
-                      "keyIndex": 0,
-                      "defaultRow": [
-                        ""
-                      ],
                       "required": true
                     }
                   }
@@ -269,10 +204,7 @@
     ],
     "data": {
       "currentParameters": {
-        "renamed_fields": [
-          "[\"Age\", \"Age\"]",
-          "[\"BP\", \"BP-1\"]"
-        ]
+        "cols": []
       },
       "datasetMetadata": {
         "fields": [
@@ -346,15 +278,15 @@
           "validation": {
             "fail_message": {
               "type": "error",
-              "focusParam": "renamed_fields",
+              "focusParam": "cols",
               "message": {
-                "resourceKey": "output_name_not_empty",
-                "default": "The 'Output Name' field cannot be empty"
+                "resourceKey": "cols_not_empty",
+                "default": "The 'Column Name' field cannot be empty"
               }
             },
             "evaluate": {
               "condition": {
-                "param": "renamed_fields",
+                "param": "cols",
                 "op": "isNotEmpty"
               }
             }
