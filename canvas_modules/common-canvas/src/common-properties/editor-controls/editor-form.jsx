@@ -864,6 +864,7 @@ export default class EditorForm extends React.Component {
 					updateControlValue={this.updateControlValue}
 					control={this.state.fieldPickerControl}
 					updateSelectedRows={this.updateSelectedRows}
+					title={this.props.form.label}
 				/>
 			</div>);
 		}

@@ -61,6 +61,7 @@
   display: inline;
 }
 
+
 /* Basic control styles */
 
 .control {
@@ -191,8 +192,8 @@ span.form__validation--invalid {
 	overflow: visible;
 }
 
-.reactable-th-checkbox>.field-picker-checkbox {
-	margin-left: 20px;
+.reactable-th-checkbox {
+	padding-left: 15px;
 }
 
 #filter-list-title {
@@ -215,6 +216,11 @@ span.form__validation--invalid {
 
 #field-picker-table {
 	width: 100%;
+}
+
+#field-picker-table #table-header {
+	border: 1px solid #d8d8d8;
+	border-bottom: none;
 }
 
 #add-fields-button {
@@ -351,7 +357,7 @@ span.form__validation--invalid {
 	overflow: scroll;
   position: relative;
   background-color: #FFFFFF;
-  border: 1px #D8D8D8 solid;
+  border: 1px solid #d8d8d8;
   padding: 0 15px 0 15px;
 	color: #000000;
 }
@@ -364,8 +370,12 @@ th div div label, td div div label {
 	outline: none;
 }
 
-#flexible-table-container>table>tbody>tr>td {
+#flexible-table-container>table>thead>tr>th {
   padding: 5px;
+}
+
+#flexible-table-container>table>tbody>.field-picker-data-rows>td {
+  padding: 5px 0 5px 0;
 	overflow-wrap: break-word;
   word-wrap: break-word;
   -ms-word-break: break-all;
@@ -407,21 +417,18 @@ th div div label, td div div label {
   border-bottom: 2px solid #777677;
 }
 
-th.reactable-th-field {
-	padding-left: 15px;
-}
-
-#table-header {
-	width: 100%;
-	border: 1px #D8D8D8 solid;
-	border-bottom: none;
-	background-color: #f9f9fb;
-}
-
 .flexible-table-header {
 	width: 100%;
-	max-width: 100%;
-	background-color: transparent;
+	background-color: #f9f9fb;
+	padding: 0 0px 0 0px;
+}
+
+.flexible-table-header-container {
+	width: 100%;
+	border: 1px solid #d8d8d8;
+	border-bottom: none;
+	background-color: #f9f9fb;
+	padding: 0 15px 0 15px;
 }
 
 .table>tbody>tr:nth-child(1)>td {
@@ -430,6 +437,10 @@ th.reactable-th-field {
 
 tr.reactable-column-header {
 	height: 30px;
+}
+
+#table-header {
+	width: 100%;
 }
 
 /* end Flexible table */
@@ -502,4 +513,8 @@ tr.reactable-column-header {
 
 .control-description {
 	font-size: 12px;
+}
+
+tbody.reactable-data {
+	border-bottom: 1px solid #d8d8d8;
 }

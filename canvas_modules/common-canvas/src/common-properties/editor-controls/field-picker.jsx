@@ -115,7 +115,7 @@ export default class FieldPicker extends EditorControl {
 	}
 
 	// reactable
-	getTableData() {
+	getTableData(headers) {
 		const fields = this.state.fields;
 		const tableData = [];
 		logger.info(JSON.stringify("control vals: " + this.state.newControlValues));
@@ -143,14 +143,14 @@ export default class FieldPicker extends EditorControl {
 			if (this.state.filterIcons.length === 0 || this.state.filterIcons.indexOf(field.type) < 0) {
 				if (!this.state.filterText || field.name.indexOf(this.state.filterText) > -1) {
 					const columns = [
-						<Td key="field-picker-column-checkbox" column="checkbox"><div className="field-picker-checkbox">
+						<Td key="field-picker-column-checkbox" column="checkbox" style={{ "width": "18%" }}><div className="field-picker-checkbox">
 						<Checkbox id={"field-picker-checkbox-" + i}
 							checked={checked}
 							onChange={this.handleFieldChecked}
 							data-name={field.name}
 						/></div></Td>,
-						<Td key="field-picker-column-fieldname" column="fieldName">{field.name}</Td>,
-						<Td key="field-picker-column-datatype" column="dataType"><div>
+						<Td key="field-picker-column-fieldname" column="fieldName" style={{ "width": "42%" }}>{field.name}</Td>,
+						<Td key="field-picker-column-datatype" column="dataType" style={{ "width": "40%" }}><div>
 							<div className={"field-picker-data-type-icon field-picker-data-" + field.type + "-type-icon"}>
 								<img src={this[field.type + "EnabledIcon"]} />
 							</div>
@@ -318,6 +318,8 @@ export default class FieldPicker extends EditorControl {
 			resetIconImage = (<img src={resetHoverIcon} />);
 		}
 
+		const title = this.props.title ? this.props.title : "Node";
+		const label = "Select Fields for " + title;
 		const header = (
 			<div className="field-picker-top-row">
 				<Button
@@ -325,7 +327,7 @@ export default class FieldPicker extends EditorControl {
 					back icon="back"
 					onClick={this.handleBack}
 				/>
-				<label className="control-label">Select Fields for Node</label>
+				<label className="control-label">{label}</label>
 				<div id="reset-fields-button"
 					className="button"
 					onClick={this.handleReset}
@@ -394,11 +396,11 @@ export default class FieldPicker extends EditorControl {
 					onChange={this.handleCheckAll}
 					checked={checkedAll}
 				/>
-		</div> });
-		headers.push({ "key": "fieldName", "label": "Field name" });
-		headers.push({ "key": "dataType", "label": "Data type" });
+		</div>, "width": 20 });
+		headers.push({ "key": "fieldName", "label": "Field name", "width": 40 });
+		headers.push({ "key": "dataType", "label": "Data type", "width": 40 });
 
-		const tableData = this.getTableData();
+		const tableData = this.getTableData(headers);
 
 		const table = (
 			<FlexibleTable className="table" id="table"
@@ -426,5 +428,6 @@ FieldPicker.propTypes = {
 	currentControlValues: React.PropTypes.object.isRequired,
 	dataModel: React.PropTypes.object.isRequired,
 	updateControlValue: React.PropTypes.func,
-	control: React.PropTypes.object
+	control: React.PropTypes.object,
+	title: React.PropTypes.string
 };

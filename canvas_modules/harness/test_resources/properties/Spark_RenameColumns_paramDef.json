@@ -39,14 +39,16 @@
         "key_definition": {
           "name": "field",
           "resourceKey": "RenameFieldEntry.field",
-          "columns": 26
+          "columns": 26,
+					"sortable": true
         },
         "parameters": [
           {
             "name": "new_name",
             "resourceKey": "RenameFieldEntry.new_name",
             "columns": 26,
-		        "editStyle": "inline"
+		        "editStyle": "inline",
+						"sortable": true
           }
         ]
       }

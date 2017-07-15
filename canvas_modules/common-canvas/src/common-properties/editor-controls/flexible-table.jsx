@@ -27,6 +27,20 @@ const ARROW_HEIGHT = 10;
 const ARROW_WIDTH = 10;
 
 export default class FlexibleTable extends React.Component {
+
+	static calculateColumnWidths(columns) {
+		const widths = [];
+		let totalWidth = 0;
+		for (const columnDef of columns) {
+			totalWidth += columnDef.width ? columnDef.width : 100;
+		}
+		for (const columnDef of columns) {
+			const size = columnDef.width ? columnDef.width : 100;
+			widths.push(Math.floor(size / totalWidth * 100) + "%");
+		}
+		return widths;
+	}
+
 	constructor(props) {
 		super(props);
 
@@ -85,18 +99,20 @@ export default class FlexibleTable extends React.Component {
 		// go through the header and add the sort direction and convert to use reactable.Th element
 		const headers = [];
 		let searchLabel = "";
+		const columnWidths = FlexibleTable.calculateColumnWidths(this.props.columns);
 		for (var j = 0; j < this.props.columns.length; j++) {
 			const columnDef = this.props.columns[j];
+			const columnStyle = { "width": columnWidths[j] };
 			if (typeof this.state.columnSortDir[columnDef.key] !== "undefined") {
 				const arrowIcon = ((this.state.columnSortDir[columnDef.key] === sortDir.ASC) ? SortAscendingIcon : SortDescendingIcon);
-				headers.push(<Th key={"flexible-table-headers" + j} column={columnDef.key}>
+				headers.push(<Th key={"flexible-table-headers" + j} column={columnDef.key} style={columnStyle}>
 					<div className="flexible-table-column" onClick={this.sortHeaderClick.bind(this, columnDef.key)}>
 						{columnDef.label}
 						<img className="sort_icon-column"src={arrowIcon} height={ARROW_HEIGHT} width={ARROW_WIDTH} />
 					</div>
 					</Th>);
 			} else {
-				headers.push(<Th key={"flexible-table-headers" + j} column={columnDef.key}>{columnDef.label}</Th>);
+				headers.push(<Th key={"flexible-table-headers" + j} column={columnDef.key} style={columnStyle}>{columnDef.label}</Th>);
 			}
 			if (typeof this.props.filterable !== "undefined" && this.props.filterable[0] === columnDef.key) {
 				searchLabel = columnDef.label;
@@ -159,7 +175,7 @@ export default class FlexibleTable extends React.Component {
 		} else {
 			renderTable = (
 				<div>
-					<div className="flexible-table-header">
+					<div className="flexible-table-header-container">
 						<Table
 							id="table-header"
 							sortable={this.props.sortable}

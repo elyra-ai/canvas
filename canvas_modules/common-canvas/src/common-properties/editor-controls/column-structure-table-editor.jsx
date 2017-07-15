@@ -246,10 +246,12 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		}
 	}
 
-	_makeCell(columnDef, controlValue, rowIndex, colIndex) {
+	_makeCell(columnDef, controlValue, rowIndex, colIndex, colWidth) {
 		let cell;
+		let columnStyle = { "width": colWidth, "padding": "0 0 0 0" };
 		if (columnDef.controlType === "toggletext" && columnDef.editStyle !== "subpanel") {
-			cell = (<Td key={colIndex} column={columnDef.name}><ToggletextControl
+			columnStyle = { "width": colWidth, "padding": "8px 0 0px 0" };
+			cell = (<Td key={colIndex} column={columnDef.name} style={columnStyle}><ToggletextControl
 				rowIndex={rowIndex}
 				control={this.props.control}
 				values={columnDef.values}
@@ -264,7 +266,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 				tableControl
 			/></Td>);
 		} else if (columnDef.controlType === "oneofselect" && columnDef.editStyle !== "subpanel") {
-			cell = (<Td key={colIndex} column={columnDef.name}><OneofselectControl
+			cell = (<Td key={colIndex} column={columnDef.name} style={columnStyle}><OneofselectControl
 				rowIndex={rowIndex}
 				control={this.props.control}
 				columnDef={columnDef}
@@ -277,9 +279,9 @@ export default class ColumnStructureTableEditor extends EditorControl {
 				tableControl
 			/></Td>);
 		} else if (columnDef.valueDef.propType === "enum" && columnDef.editStyle !== "subpanel") {
-			cell = <Td key={colIndex} column={columnDef.name}>this.enumRenderCell(controlValue[rowIndex][colIndex], columnDef)</Td>;
+			cell = <Td key={colIndex} column={columnDef.name} style={columnStyle}>this.enumRenderCell(controlValue[rowIndex][colIndex], columnDef)</Td>;
 		} else if (columnDef.controlType === "textfield" && columnDef.editStyle !== "subpanel") {
-			cell = (<Td key={colIndex} column={columnDef.name}><TextfieldControl
+			cell = (<Td key={colIndex} column={columnDef.name} style={columnStyle}><TextfieldControl
 				rowIndex={rowIndex}
 				control={this.props.control}
 				columnDef={columnDef}
@@ -288,7 +290,8 @@ export default class ColumnStructureTableEditor extends EditorControl {
 				tableControl
 			/></Td>);
 		} else {
-			cell = <Td key={colIndex} column={columnDef.name}>{controlValue[rowIndex][colIndex]}</Td>;
+			columnStyle = { "width": colWidth, "padding": "6px 0 10px 0" };
+			cell = <Td key={colIndex} column={columnDef.name} style={columnStyle}>{controlValue[rowIndex][colIndex]}</Td>;
 		}
 		return cell;
 	}
@@ -321,36 +324,37 @@ export default class ColumnStructureTableEditor extends EditorControl {
 	createTable() {
 		const that = this;
 		const rows = [];
-		const controlValue = this.getCurrentControlValue();
 		const headers = [];
 		const sortFields = [];
 		const filterFields = [];
-		for (var rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
-			const columns = [];
-			if (this.includeInFilter(rowIndex)) {
-				for (var colIndex = 0; colIndex < this.props.control.subControls.length; colIndex++) {
-					const columnDef = this.props.control.subControls[colIndex];
-					if (columnDef.visible) {
-						columns.push(this._makeCell(columnDef, controlValue, rowIndex, colIndex));
-					}
-				}
-				rows.push(<Tr key={rowIndex} onClick={this.handleRowClick.bind(this, rowIndex)} className={this.getRowClassName(rowIndex)}>{columns}</Tr>);
-			}
-		}
-
 		for (var j = 0; j < this.props.control.subControls.length; j++) {
 			const columnDef = this.props.control.subControls[j];
 			if (columnDef.visible) {
 				if (columnDef.sortable) {
 					sortFields.push(columnDef.name);
 				}
-				headers.push({ "key": columnDef.name, "label": columnDef.label.text });
+				headers.push({ "key": columnDef.name, "label": columnDef.label.text, "width": columnDef.width });
 				if (columnDef.filterable) {
 					filterFields.push(columnDef.name);
 				}
 			}
 		}
 		this.filterFields = filterFields;
+
+		const controlValue = this.getCurrentControlValue();
+		const columnWidths = FlexibleTable.calculateColumnWidths(headers);
+		for (var rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
+			const columns = [];
+			if (this.includeInFilter(rowIndex)) {
+				for (var colIndex = 0; colIndex < this.props.control.subControls.length; colIndex++) {
+					const columnDef = this.props.control.subControls[colIndex];
+					if (columnDef.visible) {
+						columns.push(this._makeCell(columnDef, controlValue, rowIndex, colIndex, columnWidths[colIndex]));
+					}
+				}
+				rows.push(<Tr key={rowIndex} onClick={this.handleRowClick.bind(this, rowIndex)} className={this.getRowClassName(rowIndex)}>{columns}</Tr>);
+			}
+		}
 
 		const table =	(
 			<FlexibleTable
