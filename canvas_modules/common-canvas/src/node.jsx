@@ -15,7 +15,6 @@
 
 import React from "react";
 import { DND_DATA_TEXT } from "../constants/common-constants.js";
-import { Tooltip, OverlayTrigger } from "react-bootstrap";
 import logger from "../utils/logger";
 
 
@@ -285,20 +284,16 @@ class Node extends React.Component {
 			width: "5em",
 			overflow: "hidden",
 			textOverflow: "ellipsis",
-			fontSize: this.props.uiconf.fontSize
+			fontSize: this.props.uiconf.fontSize,
+			zIndex: "10"
 		};
 
 		// TODO anything better to use as an id ?
-		const labelWithTooltipView = (<OverlayTrigger overlay={
-			<Tooltip id = { this.props.node.objectData.label }>
-				{ this.props.node.objectData.label }
-			</Tooltip>
-		} placement="top" delayShow={300} delayHide={150}
-		>
-			<div style={labelStyle}>
+		const labelWithTooltipView =
+			(<div style={labelStyle} data-toggle="tooltip" data-placement="left" title={this.props.node.objectData.label}>
 				{this.props.node.objectData.label}
-			</div>
-		</OverlayTrigger>);
+			</div>);
+
 
 		const cTop = Math.round(this.props.node.yPos * zoom) - (13 * zoom);
 		const cLeft = Math.round(this.props.node.xPos * zoom) - (2 * zoom);
@@ -397,6 +392,9 @@ class Node extends React.Component {
 					height={this.props.uiconf.iconSize}
 					onClick={this.nodeClicked}
 					onDoubleClick={this.nodeDblClicked}
+					data-toggle="tooltip"
+					data-placement="left"
+					title={this.props.node.objectData.label}
 				/>
 			</div>
 		</div>);
