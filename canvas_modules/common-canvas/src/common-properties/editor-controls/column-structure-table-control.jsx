@@ -282,8 +282,12 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 		const bottomEnabled = (selected.length !== 0 && selected[selected.length - 1] !== controlValue.length - 1);
 		const topImages = topEnabled ? (
 			<div key="topImages">
-				<img className="table-row-move-button" src={TopMoveIconEnable} height={ARROW_HEIGHT} width={ARROW_WIDTH} onClick={this.topMoveRow} />
-				<img className="table-row-move-button" src={UpMoveIconEnable} height={ARROW_HEIGHT} width={ARROW_WIDTH} onClick={this.upMoveRow} />
+				<div onClick={this.topMoveRow}>
+					<img className="table-row-move-button" src={TopMoveIconEnable} height={ARROW_HEIGHT} width={ARROW_WIDTH} />
+				</div>
+				<div onClick={this.upMoveRow}>
+					<img className="table-row-move-button" src={UpMoveIconEnable} height={ARROW_HEIGHT} width={ARROW_WIDTH} />
+				</div>
 			</div>
 		)
 		: (
@@ -294,8 +298,12 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 		);
 		const bottomImages = bottomEnabled ? (
 			<div key="bottomImages">
-				<img className="table-row-move-button" src={DownMoveIconEnable} height={ARROW_HEIGHT} width={ARROW_WIDTH} onClick={this.downMoveRow} />
-				<img className="table-row-move-button" src={BottomMoveIconEnable} height={ARROW_HEIGHT} width={ARROW_WIDTH} onClick={this.bottomMoveRow} />
+				<div onClick={this.downMoveRow}>
+					<img className="table-row-move-button" src={DownMoveIconEnable} height={ARROW_HEIGHT} width={ARROW_WIDTH} />
+				</div>
+				<div onClick={this.bottomMoveRow}>
+					<img className="table-row-move-button" src={BottomMoveIconEnable} height={ARROW_HEIGHT} width={ARROW_WIDTH} />
+				</div>
 			</div>
 		)
 		: (

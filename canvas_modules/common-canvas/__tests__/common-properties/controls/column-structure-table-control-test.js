@@ -276,6 +276,182 @@ describe("ColumnStructureTableControl renders correctly", () => {
 		expect(buttonContainer.at(2).find(".table-row-move-button-disable")).to.have.length(2);
 	});
 
+	it("should select top row and move down one row", () => {
+		const wrapper = mount(
+			<ColumnStructureTableControl control={control}
+				dataModel={datasetMetadata}
+				key={controlId}
+				ref={controlId}
+				valueAccessor={valueAccessor}
+				updateControlValue={updateControlValue}
+				updateSelectedRows={updateSelectedRows}
+				validationDefinitions={validationDefinitions}
+				controlStates={controlStates}
+				selectedRows={getSelectedRowsTop(control.name)}
+				buildUIItem={genUIItem}
+				openFieldPicker={openFieldPicker}
+			/>
+		);
+
+		// select the first row in the table
+		let tableBody = wrapper.find("#flexible-table-container");
+		expect(tableBody).to.have.length(1);
+		let tableData = tableBody.find(".reactable-data").children();
+		expect(tableData).to.have.length(6);
+		tableData.first().simulate("click");
+
+		// validate the proper buttons are enabled/disabled
+		const buttonContainer = wrapper.find("#table-row-move-button-container").find("div");
+		expect(buttonContainer).to.have.length(5);
+		expect(buttonContainer.at(1).find(".table-row-move-button-disable")).to.have.length(2);
+		expect(buttonContainer.at(2).find(".table-row-move-button")).to.have.length(2);
+		buttonContainer.at(3).simulate("click");
+
+		// validate the first row is moved
+		tableBody = wrapper.find("#flexible-table-container");
+		expect(tableBody).to.have.length(1);
+		tableData = tableBody.find(".reactable-data").children();
+		expect(tableData).to.have.length(6);
+		expect(tableData.at(0).children()
+										.at(0)
+										.text()).to.equal("Drug");
+		expect(tableData.at(1).children()
+										.at(0)
+										.text()).to.equal("Na");
+	});
+
+	it("should select top row and move down to bottom row", () => {
+		const wrapper = mount(
+			<ColumnStructureTableControl control={control}
+				dataModel={datasetMetadata}
+				key={controlId}
+				ref={controlId}
+				valueAccessor={valueAccessor}
+				updateControlValue={updateControlValue}
+				updateSelectedRows={updateSelectedRows}
+				validationDefinitions={validationDefinitions}
+				controlStates={controlStates}
+				selectedRows={getSelectedRowsTop(control.name)}
+				buildUIItem={genUIItem}
+				openFieldPicker={openFieldPicker}
+			/>
+		);
+
+		// select the first row in the table
+		let tableBody = wrapper.find("#flexible-table-container");
+		expect(tableBody).to.have.length(1);
+		let tableData = tableBody.find(".reactable-data").children();
+		expect(tableData).to.have.length(6);
+		tableData.first().simulate("click");
+
+		// validate the proper buttons are enabled/disabled
+		const buttonContainer = wrapper.find("#table-row-move-button-container").find("div");
+		expect(buttonContainer).to.have.length(5);
+		expect(buttonContainer.at(1).find(".table-row-move-button-disable")).to.have.length(2);
+		expect(buttonContainer.at(2).find(".table-row-move-button")).to.have.length(2);
+		buttonContainer.at(4).simulate("click");
+
+		// validate the first row is moved
+		tableBody = wrapper.find("#flexible-table-container");
+		expect(tableBody).to.have.length(1);
+		tableData = tableBody.find(".reactable-data").children();
+		expect(tableData).to.have.length(6);
+		expect(tableData.at(0).children()
+										.at(0)
+										.text()).to.equal("Drug");
+		expect(tableData.at(5).children()
+										.at(0)
+										.text()).to.equal("Na");
+	});
+
+	it("should select bottom row and move up one row", () => {
+		const wrapper = mount(
+			<ColumnStructureTableControl control={control}
+				dataModel={datasetMetadata}
+				key={controlId}
+				ref={controlId}
+				valueAccessor={valueAccessor}
+				updateControlValue={updateControlValue}
+				updateSelectedRows={updateSelectedRows}
+				validationDefinitions={validationDefinitions}
+				controlStates={controlStates}
+				selectedRows={getSelectedRowsBottom(control.name)}
+				buildUIItem={genUIItem}
+				openFieldPicker={openFieldPicker}
+			/>
+		);
+
+		// select the last row in the table
+		let tableBody = wrapper.find("#flexible-table-container");
+		expect(tableBody).to.have.length(1);
+		let tableData = tableBody.find(".reactable-data").children();
+		expect(tableData).to.have.length(6);
+		tableData.at(5).simulate("click");
+
+		// validate the proper buttons are enabled/disabled
+		const buttonContainer = wrapper.find("#table-row-move-button-container").find("div");
+		expect(buttonContainer).to.have.length(5);
+		expect(buttonContainer.at(1).find(".table-row-move-button")).to.have.length(2);
+		expect(buttonContainer.at(4).find(".table-row-move-button-disable")).to.have.length(2);
+		buttonContainer.at(3).simulate("click");
+
+		// validate the first row is moved
+		tableBody = wrapper.find("#flexible-table-container");
+		expect(tableBody).to.have.length(1);
+		tableData = tableBody.find(".reactable-data").children();
+		expect(tableData).to.have.length(6);
+		expect(tableData.at(4).children()
+										.at(0)
+										.text()).to.equal("Cholesterol");
+		expect(tableData.at(5).children()
+										.at(0)
+										.text()).to.equal("BP");
+	});
+
+	it("should select bottom row and move up to top row", () => {
+		const wrapper = mount(
+			<ColumnStructureTableControl control={control}
+				dataModel={datasetMetadata}
+				key={controlId}
+				ref={controlId}
+				valueAccessor={valueAccessor}
+				updateControlValue={updateControlValue}
+				updateSelectedRows={updateSelectedRows}
+				validationDefinitions={validationDefinitions}
+				controlStates={controlStates}
+				selectedRows={getSelectedRowsBottom(control.name)}
+				buildUIItem={genUIItem}
+				openFieldPicker={openFieldPicker}
+			/>
+		);
+
+		// select the last row in the table
+		let tableBody = wrapper.find("#flexible-table-container");
+		expect(tableBody).to.have.length(1);
+		let tableData = tableBody.find(".reactable-data").children();
+		expect(tableData).to.have.length(6);
+		tableData.at(5).simulate("click");
+
+		// validate the proper buttons are enabled/disabled
+		const buttonContainer = wrapper.find("#table-row-move-button-container").find("div");
+		expect(buttonContainer).to.have.length(5);
+		expect(buttonContainer.at(1).find(".table-row-move-button")).to.have.length(2);
+		expect(buttonContainer.at(4).find(".table-row-move-button-disable")).to.have.length(2);
+		buttonContainer.at(2).simulate("click");
+
+		// validate the last row is moved
+		tableBody = wrapper.find("#flexible-table-container");
+		expect(tableBody).to.have.length(1);
+		tableData = tableBody.find(".reactable-data").children();
+		expect(tableData).to.have.length(6);
+		expect(tableData.at(0).children()
+										.at(0)
+										.text()).to.equal("Cholesterol");
+		expect(tableData.at(5).children()
+										.at(0)
+										.text()).to.equal("BP");
+	});
+
 	it("should select top row and correct move buttons enabled `ColumnStructureTableControl`", () => {
 		const wrapper = mount(
 			<ColumnStructureTableControl control={control}
@@ -302,7 +478,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 
 		// validate the proper buttons are enabled/disabled
 		const buttonContainer = wrapper.find("#table-row-move-button-container").find("div");
-		expect(buttonContainer).to.have.length(3);
+		expect(buttonContainer).to.have.length(5);
 		expect(buttonContainer.at(1).find(".table-row-move-button-disable")).to.have.length(2);
 		expect(buttonContainer.at(2).find(".table-row-move-button")).to.have.length(2);
 	});
@@ -333,9 +509,9 @@ describe("ColumnStructureTableControl renders correctly", () => {
 
 		// validate the proper buttons are enabled/disabled
 		const buttonContainer = wrapper.find("#table-row-move-button-container").find("div");
-		expect(buttonContainer).to.have.length(3);
+		expect(buttonContainer).to.have.length(5);
 		expect(buttonContainer.at(1).find(".table-row-move-button")).to.have.length(2);
-		expect(buttonContainer.at(2).find(".table-row-move-button-disable")).to.have.length(2);
+		expect(buttonContainer.at(4).find(".table-row-move-button-disable")).to.have.length(2);
 	});
 
 	it("should select middle row and all move buttons enabled `ColumnStructureTableControl`", () => {
@@ -364,9 +540,9 @@ describe("ColumnStructureTableControl renders correctly", () => {
 
 		// validate the proper buttons are enabled/disabled
 		const buttonContainer = wrapper.find("#table-row-move-button-container").find("div");
-		expect(buttonContainer).to.have.length(3);
+		expect(buttonContainer).to.have.length(7);
 		expect(buttonContainer.at(1).find(".table-row-move-button")).to.have.length(2);
-		expect(buttonContainer.at(2).find(".table-row-move-button")).to.have.length(2);
+		expect(buttonContainer.at(4).find(".table-row-move-button")).to.have.length(2);
 	});
 
 	it("should select add columns button and field picker should display", () => {
