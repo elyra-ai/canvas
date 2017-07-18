@@ -1,0 +1,158 @@
+{
+  "currentParameters": {
+    "mode": "Include",
+    "conditionExpr": ""
+  },
+  "parameters": [
+    {
+      "name": "mode",
+      "enum": [
+        "Include",
+        "Discard"
+      ],
+      "default": "Include"
+    },
+    {
+      "name": "conditionExpr",
+      "type": "string",
+      "default": "",
+      "role": "expression"
+    }
+  ],
+  "uihints": {
+    "name": "org.apache.spark.ml.ibm.transformers.Filter",
+    "icon": "images/transformationspark.svg",
+    "parameter_info": [
+      {
+        "name": "mode",
+        "label": {
+          "default": "Mode"
+        },
+        "description": {
+          "default": "Include or discard rows"
+        },
+        "orientation": "horizontal"
+      },
+      {
+        "name": "conditionExpr",
+        "label": {
+          "default": "Condition"
+        },
+        "description": {
+          "default": "Enter a boolean expression to use for filtering rows"
+        }
+      }
+    ],
+    "group_info": [
+      {
+        "name": "basic-settings",
+        "label": {
+          "default": "Settings"
+        },
+        "type": "controls",
+        "parameters": [
+          "mode",
+          "conditionExpr"
+        ]
+      }
+    ],
+    "conditions": [
+      {
+        "validation": {
+          "fail_message": {
+            "type": "error",
+            "focusParam": "conditionExpr",
+            "message": {
+              "resourceKey": "condition_expression_not_empty"
+            }
+          },
+          "evaluate": {
+            "condition": {
+              "param": "conditionExpr",
+              "op": "isNotEmpty"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "datasetMetadata": {
+    "fields": [
+      {
+        "name": "Age",
+        "type": "integer",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "role": "input"
+        }
+      },
+      {
+        "name": "Sex",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "role": "input"
+        }
+      },
+      {
+        "name": "BP",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "role": "input"
+        }
+      },
+      {
+        "name": "Cholesterol",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "role": "input"
+        }
+      },
+      {
+        "name": "Na",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "role": "input"
+        }
+      },
+      {
+        "name": "K",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "role": "input"
+        }
+      },
+      {
+        "name": "Drug",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "role": "input"
+        }
+      }
+    ]
+  },
+  "resources": {
+    "org.apache.spark.ml.ibm.transformers.Filter.label": "Filter Rows",
+    "org.apache.spark.ml.ibm.transformers.Filter.desc": "Filter rows according to a condition",
+    "mode.label": "Mode",
+    "mode.desc": "Include or discard rows",
+    "mode.Include.label": "Include",
+    "mode.Discard.label": "Discard",
+    "conditionExpr.label": "Condition",
+    "conditionExpr.desc": "The filter condition",
+    "settings.label": "Settings",
+    "condition_expression_not_empty": "The condition expression cannot be empty"
+  }
+}
