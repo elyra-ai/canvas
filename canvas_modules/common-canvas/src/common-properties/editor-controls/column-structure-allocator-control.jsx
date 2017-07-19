@@ -157,13 +157,32 @@ export default class ColumnStructureAllocatorControl extends StructureTableEdito
 			this._update_callback = null;
 		}
 
-		return this.createTable();
+		const controlName = this.getControlID().split(".")[1];
+		const conditionProps = {
+			controlName: controlName,
+			controlType: "table"
+		};
+		const conditionState = this.getConditionMsgState(conditionProps);
+
+		const errorMessage = conditionState.message;
+		// const stateDisabled = conditionState.disabled;
+		const stateStyle = conditionState.style;
+
+		return (
+			<div style={stateStyle}>
+				{this.createTable()}
+				{errorMessage}
+			</div>
+		);
 	}
 }
 
 ColumnStructureAllocatorControl.propTypes = {
 	buildUIItem: React.PropTypes.func,
 	dataModel: React.PropTypes.object.isRequired,
-	control: React.PropTypes.object.isRequired,
+	controlStates: React.PropTypes.object,
+	validationDefinitions: React.PropTypes.object,
+	updateValidationErrorMessage: React.PropTypes.func,
+	retrieveValidationErrorMessage: React.PropTypes.func,
 	updateControlValue: React.PropTypes.func
 };

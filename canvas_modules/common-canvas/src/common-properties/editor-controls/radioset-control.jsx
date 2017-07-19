@@ -33,6 +33,17 @@ export default class RadiosetControl extends EditorControl {
 	}
 
 	render() {
+		const controlName = this.getControlID().split(".")[1];
+		const conditionProps = {
+			controlName: controlName,
+			controlType: "selection"
+		};
+		const conditionState = this.getConditionMsgState(conditionProps);
+
+		const errorMessage = conditionState.message;
+		const stateDisabled = conditionState.disabled;
+		const stateStyle = conditionState.style;
+
 		var buttons = [];
 		let cssClasses = "control";
 		let cssIndicator = "control__indicator";
@@ -44,8 +55,9 @@ export default class RadiosetControl extends EditorControl {
 			var val = this.props.control.values[i];
 			var checked = val === this.state.controlValue;
 			buttons.push(
-				<label key={i} className={cssClasses}>
+				<label key={i} className={cssClasses} style={stateStyle}>
 					<input type="radio"
+						{...stateDisabled}
 						name={this.props.control.name}
 						value={val}
 						onChange={this.handleChange}
@@ -57,12 +69,22 @@ export default class RadiosetControl extends EditorControl {
 			);
 		}
 		return (
-			<div id={this.getControlID()} className="radio">{buttons}</div>
+			<div id={this.getControlID()}
+				className="radio"
+				style={stateStyle}
+			>
+				{buttons}
+				{errorMessage}
+			</div>
 		);
 	}
 }
 
 RadiosetControl.propTypes = {
 	control: React.PropTypes.object,
+	controlStates: React.PropTypes.object,
+	validationDefinitions: React.PropTypes.object,
+	updateValidationErrorMessage: React.PropTypes.func,
+	retrieveValidationErrorMessage: React.PropTypes.func,
 	updateControlValue: React.PropTypes.func
 };

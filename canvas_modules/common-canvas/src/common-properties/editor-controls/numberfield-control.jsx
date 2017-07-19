@@ -40,42 +40,29 @@ export default class NumberfieldControl extends EditorControl {
 	}
 
 	render() {
-		var controlName = this.getControlID().split(".")[1];
-		var stateDisabled = {};
-		var stateStyle = {};
-		if (typeof this.props.controlStates[controlName] !== "undefined") {
-			if (this.props.controlStates[controlName] === "disabled") {
-				stateDisabled.disabled = true;
-				stateStyle = {
-					color: "#D8D8D8",
-					borderColor: "#D8D8D8"
-				};
-			} else if (this.props.controlStates[controlName] === "hidden") {
-				stateStyle.visibility = "hidden";
-			}
-		}
+		const controlName = this.getControlID().split(".")[1];
+		const conditionProps = {
+			controlName: controlName,
+			controlType: "number"
+		};
+		const conditionState = this.getConditionMsgState(conditionProps);
 
-		let className = "editor_control_area";
-		var errorMessage = <div className="validation-error-message" style={{ "marginTop": "0px" }}></div>;
-		if (this.state.validateErrorMessage && this.state.validateErrorMessage.text !== "") {
-			className += " error-border";
-			errorMessage = (
-				<div className="validation-error-message" style={{ "marginTop": "20px" }}>
-					<p className="form__validation" style={{ "display": "block" }}>
-						<span className="form__validation--invalid">{this.state.validateErrorMessage.text}</span>
-					</p>
-				</div>
-			);
-		}
+		const errorMessage = conditionState.message;
+		const stateDisabled = conditionState.disabled;
+		const stateStyle = conditionState.style;
 
 		return (
-			<div className={className} style={stateStyle}>
+			<div className="editor_control_area" style={stateStyle}>
 				<TextField {...stateDisabled}
 					style={stateStyle}
 					type="number"
 					id={this.getControlID()}
 					onBlur={this.validateInput}
-					onFocus={this.clearValidateMsg}
+					onKeyUp={
+						(evt) => {
+							this.validateInput();
+						}
+					}
 					placeholder={this.props.control.additionalText}
 					disabledPlaceholderAnimation
 					onChange={this.handleChange}
@@ -92,5 +79,10 @@ export default class NumberfieldControl extends EditorControl {
 
 NumberfieldControl.propTypes = {
 	control: React.PropTypes.object,
+	controlStates: React.PropTypes.object,
+	validationDefinitions: React.PropTypes.object,
+	validateConditions: React.PropTypes.func,
+	updateValidationErrorMessage: React.PropTypes.func,
+	retrieveValidationErrorMessage: React.PropTypes.func,
 	updateControlValue: React.PropTypes.func
 };

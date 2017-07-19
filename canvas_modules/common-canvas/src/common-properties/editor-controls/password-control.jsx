@@ -31,22 +31,22 @@ export default class PasswordControl extends EditorControl {
 	}
 
 	render() {
-		let className = "editor_control_area";
-		var errorMessage = <div className="validation-error-message" style={{ "marginTop": "0px" }}></div>;
-		if (this.state.validateErrorMessage && this.state.validateErrorMessage.text !== "") {
-			className += " error-border";
-			errorMessage = (
-				<div className="validation-error-message" style={{ "marginTop": "20px" }}>
-					<p className="form__validation" style={{ "display": "block" }}>
-						<span className="form__validation--invalid">{this.state.validateErrorMessage.text}</span>
-					</p>
-				</div>
-			);
-		}
+		const controlName = this.getControlID().split(".")[1];
+		const conditionProps = {
+			controlName: controlName,
+			controlType: "textfield"
+		};
+		const conditionState = this.getConditionMsgState(conditionProps);
+
+		const errorMessage = conditionState.message;
+		const stateDisabled = conditionState.disabled;
+		const stateStyle = conditionState.style;
 
 		return (
-		<div className={className}>
-			<TextField type="password"
+		<div className="editor_control_area" style={stateStyle}>
+			<TextField {...stateDisabled}
+				style={stateStyle}
+				type="password"
 				id={this.getControlID()}
 				placeholder={this.props.control.additionalText}
 				onChange={this.handleChange}
@@ -60,5 +60,9 @@ export default class PasswordControl extends EditorControl {
 
 PasswordControl.propTypes = {
 	control: React.PropTypes.object,
+	controlStates: React.PropTypes.object,
+	validationDefinitions: React.PropTypes.object,
+	updateValidationErrorMessage: React.PropTypes.func,
+	retrieveValidationErrorMessage: React.PropTypes.func,
 	updateControlValue: React.PropTypes.func
 };

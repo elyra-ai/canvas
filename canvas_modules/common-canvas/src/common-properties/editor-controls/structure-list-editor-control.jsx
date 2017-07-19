@@ -85,17 +85,29 @@ export default class StructurelisteditorControl extends StructureTableEditor {
 		logger.info("StructurelisteditorControl.render()");
 		logger.info(this.getCurrentControlValue());
 
-		const table = this.createTable();
-		const add = <Button bsSize="small" onClick={this.addRow}>+</Button>;
-		const remove = <Button bsSize="small" onClick={this.removeSelectedRows}>-</Button>;
+		const controlName = this.getControlID().split(".")[1];
+		const conditionProps = {
+			controlName: controlName,
+			controlType: "table"
+		};
+		const conditionState = this.getConditionMsgState(conditionProps);
 
-		return (<div id={this.getControlID()}>
-			<div id="structure-list-editor-table-buttons">
+		const errorMessage = conditionState.message;
+		const stateDisabled = conditionState.disabled;
+		const stateStyle = conditionState.style;
+
+		const table = this.createTable();
+		const add = <Button bsSize="small" onClick={this.addRow} {...stateDisabled}>+</Button>;
+		const remove = <Button bsSize="small" onClick={this.removeSelectedRows} {...stateDisabled}>-</Button>;
+
+		return (<div id={this.getControlID()} style={stateStyle}>
+			<div id="structure-list-editor-table-buttons" style={stateStyle}>
 				{table}
 				<div id="structure-list-editor-buttons-container">
 					<span>{add} {remove}</span>
 				</div>
 			</div>
+			{errorMessage}
 		</div>);
 	}
 }
@@ -104,5 +116,9 @@ StructurelisteditorControl.propTypes = {
 	buildUIItem: React.PropTypes.func,
 	dataModel: React.PropTypes.array.isRequired,
 	control: React.PropTypes.object.isRequired,
+	controlStates: React.PropTypes.object,
+	validationDefinitions: React.PropTypes.object,
+	updateValidationErrorMessage: React.PropTypes.func,
+	retrieveValidationErrorMessage: React.PropTypes.func,
 	updateControlValue: React.PropTypes.func
 };

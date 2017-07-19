@@ -40,31 +40,17 @@ export default class TextareaControl extends EditorControl {
 	}
 
 	render() {
-		var errorMessage = <div className="validation-error-message"></div>;
-		if (this.state.validateErrorMessage && this.state.validateErrorMessage.text !== "") {
-			errorMessage = (
-				<div className="validation-error-message validation-error-message-padding">
-					<p className="form__validation" style={{ "display": "block" }}>
-						<span className="form__validation--invalid">{this.state.validateErrorMessage.text}</span>
-					</p>
-				</div>
-			);
-		}
+		const controlName = this.getControlID().split(".")[1];
+		const conditionProps = {
+			controlName: controlName,
+			controlType: "textfieldbox"
+		};
+		const conditionState = this.getConditionMsgState(conditionProps);
 
-		var controlName = this.getControlID().split(".")[1];
-		var stateDisabled = {};
-		var stateStyle = {};
-		if (typeof this.props.controlStates[controlName] !== "undefined") {
-			if (this.props.controlStates[controlName] === "disabled") {
-				stateDisabled.disabled = true;
-				stateStyle = {
-					color: "#D8D8D8",
-					borderColor: "#D8D8D8"
-				};
-			} else if (this.props.controlStates[controlName] === "hidden") {
-				stateStyle.visibility = "hidden";
-			}
-		}
+		const errorMessage = conditionState.message;
+		const stateDisabled = conditionState.disabled;
+		const stateStyle = conditionState.style;
+
 		const charLimit = this.getCharLimit(CHARACTER_LIMITS.NODE_PROPERTIES_DIALOG_TEXT_AREA);
 		return (
 			<div className="editor_control_area" style={stateStyle}>
@@ -73,7 +59,6 @@ export default class TextareaControl extends EditorControl {
 					type="textarea"
 					id={this.getControlID()}
 					onBlur={this.validateInput}
-					onFocus={this.clearValidateMsg}
 					msg={this.state.validateErrorMessage}
 					placeholder={this.props.control.additionalText}
 					onChange={this.handleChange}
@@ -91,5 +76,8 @@ export default class TextareaControl extends EditorControl {
 TextareaControl.propTypes = {
 	control: React.PropTypes.object,
 	controlStates: React.PropTypes.object,
+	validationDefinitions: React.PropTypes.object,
+	updateValidationErrorMessage: React.PropTypes.func,
+	retrieveValidationErrorMessage: React.PropTypes.func,
 	updateControlValue: React.PropTypes.func
 };

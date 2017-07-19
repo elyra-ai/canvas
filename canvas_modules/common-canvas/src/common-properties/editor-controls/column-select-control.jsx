@@ -182,32 +182,16 @@ export default class ColumnSelectControl extends EditorControl {
 			this._update_callback = null;
 		}
 
-		const stateStyle = {};
 		const controlName = this.getControlID().split(".")[1];
-		const stateDisabled = {};
-		let className = "column-allocator";
-		if (typeof this.props.controlStates[controlName] !== "undefined") {
-			if (this.props.controlStates[controlName] === "disabled") {
-				stateDisabled.disabled = true;
-				stateStyle.color = "#D8D8D8";
-				stateStyle.borderColor = "#D8D8D8";
-			} else if (this.props.controlStates[controlName] === "hidden") {
-				stateStyle.visibility = "hidden";
-			}
-		}
+		const conditionProps = {
+			controlName: controlName,
+			controlType: "selection"
+		};
+		const conditionState = this.getConditionMsgState(conditionProps);
 
-		var errorMessage = <div className="validation-error-message"></div>;
-		if (this.state.validateErrorMessage && this.state.validateErrorMessage.text !== "") {
-			// stateStyle.borderColor = "#FF0000 !important";
-			className += " error-border";
-			errorMessage = (
-				<div className="validation-error-message">
-					<p className="form__validation" style={{ "display": "block", "margin": "0px" }} >
-						<span className="form__validation--invalid">{this.state.validateErrorMessage.text}</span>
-					</p>
-				</div>
-			);
-		}
+		const errorMessage = conditionState.message;
+		const stateDisabled = conditionState.disabled;
+		const stateStyle = conditionState.style;
 
 		let removeIconImage = (<img src={remove32} />);
 		if (this.state.hoverRemoveIcon) {
@@ -254,7 +238,7 @@ export default class ColumnSelectControl extends EditorControl {
 					<div className="editor_control_area" style={stateStyle}>
 						<FormControl {...stateDisabled}
 							id={this.getControlID()}
-							className={className}
+							className="column-allocator"
 							componentClass="select"
 							multiple
 							rows={6}
@@ -290,7 +274,7 @@ export default class ColumnSelectControl extends EditorControl {
 				<div className="editor_control_area" style={stateStyle}>
 					<FormControl {...stateDisabled}
 						id={this.getControlID()}
-						className={className}
+						className="column-allocator"
 						componentClass="select"
 						rows={1}
 						name={this.props.control.name}
@@ -313,5 +297,8 @@ ColumnSelectControl.propTypes = {
 	dataModel: React.PropTypes.object.isRequired,
 	control: React.PropTypes.object.isRequired,
 	controlStates: React.PropTypes.object,
+	validationDefinitions: React.PropTypes.object,
+	updateValidationErrorMessage: React.PropTypes.func,
+	retrieveValidationErrorMessage: React.PropTypes.func,
 	updateControlValue: React.PropTypes.func
 };

@@ -39,27 +39,16 @@ export default class CheckboxControl extends EditorControl {
 
 	render() {
 		var checked = this.state.controlValue === "true";
-		var errorMessage = <div className="validation-error-message"></div>;
-		if (this.state.validateErrorMessage && this.state.validateErrorMessage.text !== "") {
-			errorMessage = (
-				<div className="validation-error-message" style={{ "marginTop": "15px" }}>
-					<p className="form__validation" style={{ "display": "block" }}>
-						<span className="form__validation--invalid">{this.state.validateErrorMessage.text}</span>
-					</p>
-				</div>
-			);
-		}
+		const controlName = this.getControlID().split(".")[1];
+		const conditionProps = {
+			controlName: controlName,
+			controlType: "selection"
+		};
+		const conditionState = this.getConditionMsgState(conditionProps);
 
-		var controlName = this.getControlID().split(".")[1];
-		var stateDisabled = {};
-		var stateStyle = {};
-		if (typeof this.props.controlStates[controlName] !== "undefined") {
-			if (this.props.controlStates[controlName] === "disabled") {
-				stateDisabled.disabled = true;
-			} else if (this.props.controlStates[controlName] === "hidden") {
-				stateStyle.visibility = "hidden";
-			}
-		}
+		const errorMessage = conditionState.message;
+		const stateDisabled = conditionState.disabled;
+		const stateStyle = conditionState.style;
 
 		var cb = (<Checkbox {...stateDisabled}
 			style={stateStyle}
@@ -80,5 +69,9 @@ export default class CheckboxControl extends EditorControl {
 
 CheckboxControl.propTypes = {
 	control: React.PropTypes.object,
+	controlStates: React.PropTypes.object,
+	validationDefinitions: React.PropTypes.object,
+	updateValidationErrorMessage: React.PropTypes.func,
+	retrieveValidationErrorMessage: React.PropTypes.func,
 	updateControlValue: React.PropTypes.func
 };

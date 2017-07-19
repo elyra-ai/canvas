@@ -56,12 +56,30 @@ export default class CheckboxsetControl extends EditorControl {
 	}
 
 	render() {
+		const controlName = this.getControlID().split(".")[1];
+		const conditionProps = {
+			controlName: controlName,
+			controlType: "selection"
+		};
+		const conditionState = this.getConditionMsgState(conditionProps);
+
+		const errorMessage = conditionState.message;
+		const stateDisabled = conditionState.disabled;
+		const stateStyle = conditionState.style;
+
 		var buttons = [];
 
 		for (var i = 0; i < this.props.control.values.length; i++) {
 			var val = this.props.control.values[i];
 			var checked = (this.state.controlValue.indexOf(val) >= 0);
+			var classType = "";
+			if (this.state.validateErrorMessage && this.state.validateErrorMessage.type) {
+				classType = this.state.validateErrorMessage.type;
+			}
 			buttons.push(<Checkbox ref={val}
+				{...stateDisabled}
+				className={"checkboxset-ui-conditions-state-" + classType}
+				style={stateStyle}
 				id={val}
 				name={this.props.control.valueLabels[i]}
 				onChange={this.handleChange}
@@ -70,12 +88,24 @@ export default class CheckboxsetControl extends EditorControl {
 		}
 
 		return (
-			<div id={this.getControlID()} className="checkbox">{buttons}</div>
+			<div style={stateStyle}>
+				<div id={this.getControlID()}
+					className="checkbox"
+					style={stateStyle}
+				>
+					{buttons}
+				</div>
+				{errorMessage}
+			</div>
 		);
 	}
 }
 
 CheckboxsetControl.propTypes = {
 	control: React.PropTypes.object,
+	controlStates: React.PropTypes.object,
+	validationDefinitions: React.PropTypes.object,
+	updateValidationErrorMessage: React.PropTypes.func,
+	retrieveValidationErrorMessage: React.PropTypes.func,
 	updateControlValue: React.PropTypes.func
 };

@@ -16,7 +16,6 @@ import { ButtonToolbar, Panel } from "react-bootstrap";
 
 import { Tabs } from "ap-components-react/dist/ap-components-react";
 
-import { CONDITION_ERROR_MESSAGE } from "../constants/constants.js";
 import ControlItem from "./control-item.jsx";
 import TextfieldControl from "./textfield-control.jsx";
 import ToggletextControl from "./toggletext-control.jsx";
@@ -44,7 +43,6 @@ import SelectorPanel from "./../editor-panels/selector-panel.jsx";
 import SubPanelButton from "./../editor-panels/sub-panel-button.jsx";
 import UiConditions from "../ui-conditions/ui-conditions.js";
 import UiConditionsParser from "../ui-conditions/ui-conditions-parser.js";
-import PropertyUtil from "../util/property-utils.js";
 
 export default class EditorForm extends React.Component {
 
@@ -60,12 +58,11 @@ export default class EditorForm extends React.Component {
 		this.state = {
 			formData: this.props.form,
 			valuesTable: this.props.form.data.currentProperties,
-			validateErrorMessage: [],
+			controlErrorMessages: {},
 			visibleDefinition: [],
 			enabledDefinitions: [],
 			validationDefinitions: [],
 			validationGroupDefinitions: [],
-			// controlValidations: {},
 			controlStates: {},
 			selectedRows: {},
 			showFieldPicker: false,
@@ -81,8 +78,10 @@ export default class EditorForm extends React.Component {
 		this.updateSelectedRows = this.updateSelectedRows.bind(this);
 
 		this.handleSubmit = this.handleSubmit.bind(this);
-		this.handleMouseLeave = this.handleMouseLeave.bind(this);
+		this.validateConditions = this.validateConditions.bind(this);
 		this.parseUiConditions = this.parseUiConditions.bind(this);
+		this.updateValidationErrorMessage = this.updateValidationErrorMessage.bind(this);
+		this.retrieveValidationErrorMessage = this.retrieveValidationErrorMessage.bind(this);
 
 		this.getControlValues = this.getControlValues.bind(this);
 		this.getControl = this.getControl.bind(this);
@@ -97,10 +96,14 @@ export default class EditorForm extends React.Component {
 		this.getSelectedRows = this.getSelectedRows.bind(this);
 	}
 
-	componentDidMount() {
+	componentWillMount() {
 		if (this.props.form.data.conditions) {
 			this.parseUiConditions(this.props.form.data.conditions);
 		}
+	}
+
+	componentDidMount() {
+		this.validateConditions();
 	}
 
 	getControl(propertyName) {
@@ -213,7 +216,6 @@ export default class EditorForm extends React.Component {
 
 	genControl(control, idPrefix, controlValueAccessor, datasetMetadata) {
 		const controlId = idPrefix + control.name;
-
 		// List of available controls is defined in models/editor/Control.scala
 		if (control.controlType === "textfield") {
 			return (<TextfieldControl control={control}
@@ -224,6 +226,10 @@ export default class EditorForm extends React.Component {
 				validationDefinitions={this.state.validationDefinitions}
 				updateControlValue={this.updateControlValue}
 				controlStates={this.state.controlStates}
+				validateConditions={this.validateConditions}
+				getControlValues={this.getControlValues}
+				updateValidationErrorMessage={this.updateValidationErrorMessage}
+				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
 		} else if (control.controlType === "textarea") {
 			return (<TextareaControl control={control}
@@ -234,6 +240,10 @@ export default class EditorForm extends React.Component {
 				validationDefinitions={this.state.validationDefinitions}
 				updateControlValue={this.updateControlValue}
 				controlStates={this.state.controlStates}
+				validateConditions={this.validateConditions}
+				getControlValues={this.getControlValues}
+				updateValidationErrorMessage={this.updateValidationErrorMessage}
+				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
 		} else if (control.controlType === "expression") {
 			return (<ExpressionControl control={control}
@@ -244,6 +254,10 @@ export default class EditorForm extends React.Component {
 				validationDefinitions={this.state.validationDefinitions}
 				updateControlValue={this.updateControlValue}
 				controlStates={this.state.controlStates}
+				validateConditions={this.validateConditions}
+				getControlValues={this.getControlValues}
+				updateValidationErrorMessage={this.updateValidationErrorMessage}
+				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
 		} else if (control.controlType === "toggletext") {
 			return (<ToggletextControl control={control}
@@ -260,6 +274,12 @@ export default class EditorForm extends React.Component {
 				ref={controlId}
 				updateControlValue={this.updateControlValue}
 				valueAccessor={controlValueAccessor}
+				validationDefinitions={this.state.validationDefinitions}
+				controlStates={this.state.controlStates}
+				validateConditions={this.validateConditions}
+				getControlValues={this.getControlValues}
+				updateValidationErrorMessage={this.updateValidationErrorMessage}
+				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
 		} else if (control.controlType === "numberfield") {
 			return (<NumberfieldControl control={control}
@@ -270,6 +290,10 @@ export default class EditorForm extends React.Component {
 				updateControlValue={this.updateControlValue}
 				validationDefinitions={this.state.validationDefinitions}
 				controlStates={this.state.controlStates}
+				validateConditions={this.validateConditions}
+				getControlValues={this.getControlValues}
+				updateValidationErrorMessage={this.updateValidationErrorMessage}
+				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
 		} else if (control.controlType === "checkbox") {
 			return (<CheckboxControl control={control}
@@ -279,6 +303,10 @@ export default class EditorForm extends React.Component {
 				valueAccessor={controlValueAccessor}
 				validationDefinitions={this.state.validationDefinitions}
 				controlStates={this.state.controlStates}
+				validateConditions={this.validateConditions}
+				getControlValues={this.getControlValues}
+				updateValidationErrorMessage={this.updateValidationErrorMessage}
+				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
 		} else if (control.controlType === "checkboxset") {
 			return (<CheckboxsetControl control={control}
@@ -286,6 +314,12 @@ export default class EditorForm extends React.Component {
 				ref={controlId}
 				updateControlValue={this.updateControlValue}
 				valueAccessor={controlValueAccessor}
+				validationDefinitions={this.state.validationDefinitions}
+				controlStates={this.state.controlStates}
+				validateConditions={this.validateConditions}
+				getControlValues={this.getControlValues}
+				updateValidationErrorMessage={this.updateValidationErrorMessage}
+				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
 		} else if (control.controlType === "radioset") {
 			return (<RadiosetControl control={control}
@@ -293,6 +327,12 @@ export default class EditorForm extends React.Component {
 				ref={controlId}
 				updateControlValue={this.updateControlValue}
 				valueAccessor={controlValueAccessor}
+				validationDefinitions={this.state.validationDefinitions}
+				controlStates={this.state.controlStates}
+				validateConditions={this.validateConditions}
+				getControlValues={this.getControlValues}
+				updateValidationErrorMessage={this.updateValidationErrorMessage}
+				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
 		} else if (control.controlType === "oneofselect") {
 			return (<OneofselectControl control={control}
@@ -301,6 +341,12 @@ export default class EditorForm extends React.Component {
 				ref={controlId}
 				updateControlValue={this.updateControlValue}
 				valueAccessor={controlValueAccessor}
+				validationDefinitions={this.state.validationDefinitions}
+				controlStates={this.state.controlStates}
+				validateConditions={this.validateConditions}
+				getControlValues={this.getControlValues}
+				updateValidationErrorMessage={this.updateValidationErrorMessage}
+				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
 		} else if (control.controlType === "someofselect") {
 			return (<SomeofselectControl control={control}
@@ -309,6 +355,10 @@ export default class EditorForm extends React.Component {
 				ref={controlId}
 				updateControlValue={this.updateControlValue}
 				valueAccessor={controlValueAccessor}
+				validateConditions={this.validateConditions}
+				getControlValues={this.getControlValues}
+				updateValidationErrorMessage={this.updateValidationErrorMessage}
+				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
 		} else if (control.controlType === "oneofcolumns") {
 			return (<OneofcolumnsControl control={control}
@@ -317,6 +367,10 @@ export default class EditorForm extends React.Component {
 				ref={controlId}
 				updateControlValue={this.updateControlValue}
 				valueAccessor={controlValueAccessor}
+				validateConditions={this.validateConditions}
+				getControlValues={this.getControlValues}
+				updateValidationErrorMessage={this.updateValidationErrorMessage}
+				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
 		} else if (control.controlType === "someofcolumns") {
 			return (<SomeofcolumnsControl control={control}
@@ -325,7 +379,12 @@ export default class EditorForm extends React.Component {
 				ref={controlId}
 				updateControlValue={this.updateControlValue}
 				valueAccessor={controlValueAccessor}
-				openFieldPicker={this.openFieldPicker}
+				validationDefinitions={this.state.validationDefinitions}
+				controlStates={this.state.controlStates}
+				validateConditions={this.validateConditions}
+				getControlValues={this.getControlValues}
+				updateValidationErrorMessage={this.updateValidationErrorMessage}
+				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
 		} else if (control.controlType === "allocatedcolumn") {
 			// logger.info("allocatedcolumn");
@@ -338,6 +397,10 @@ export default class EditorForm extends React.Component {
 				updateControlValue={this.updateControlValue}
 				availableFieldsAccessor={this.getFilteredDataset}
 				controlStates={this.state.controlStates}
+				validateConditions={this.validateConditions}
+				getControlValues={this.getControlValues}
+				updateValidationErrorMessage={this.updateValidationErrorMessage}
+				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
 		} else if (control.controlType === "allocatedcolumns") {
 			// logger.info("allocatedcolumns");
@@ -351,6 +414,10 @@ export default class EditorForm extends React.Component {
 				controlStates={this.state.controlStates}
 				updateControlValue={this.updateControlValue}
 				selectedRows={this.getSelectedRows(control.name)}
+				validateConditions={this.validateConditions}
+				getControlValues={this.getControlValues}
+				updateValidationErrorMessage={this.updateValidationErrorMessage}
+				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
 		} else if (control.controlType === "allocatedfield") {
 			// logger.info("allocatedfield");
@@ -363,6 +430,10 @@ export default class EditorForm extends React.Component {
 				updateControlValue={this.updateControlValue}
 				availableFieldsAccessor={this.getFilteredDataset}
 				controlStates={this.state.controlStates}
+				validateConditions={this.validateConditions}
+				getControlValues={this.getControlValues}
+				updateValidationErrorMessage={this.updateValidationErrorMessage}
+				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
 		} else if (control.controlType === "allocatedfields") {
 			// logger.info("allocatedfields");
@@ -376,6 +447,10 @@ export default class EditorForm extends React.Component {
 				controlStates={this.state.controlStates}
 				updateControlValue={this.updateControlValue}
 				selectedRows={this.getSelectedRows(control.name)}
+				validateConditions={this.validateConditions}
+				getControlValues={this.getControlValues}
+				updateValidationErrorMessage={this.updateValidationErrorMessage}
+				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
 		} else if (control.controlType === "columnselect") {
 			return (<ColumnSelectControl control={control}
@@ -390,6 +465,12 @@ export default class EditorForm extends React.Component {
 				updateControlValue={this.updateControlValue}
 				updateSelectedRows={this.updateSelectedRows}
 				selectedRows={this.getSelectedRows(control.name)}
+				validationDefinitions={this.state.validationDefinitions}
+				controlStates={this.state.controlStates}
+				validateConditions={this.validateConditions}
+				getControlValues={this.getControlValues}
+				updateValidationErrorMessage={this.updateValidationErrorMessage}
+				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
 		} else if (control.controlType === "allocatedstructures") {
 			// logger.info("allocatedstructures");
@@ -404,6 +485,10 @@ export default class EditorForm extends React.Component {
 				updateSelectedRows={this.updateSelectedRows}
 				selectedRows={this.getSelectedRows(control.name)}
 				buildUIItem={this.genUIItem}
+				validateConditions={this.validateConditions}
+				getControlValues={this.getControlValues}
+				updateValidationErrorMessage={this.updateValidationErrorMessage}
+				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
 		} else if (control.controlType === "structuretable") {
 			return (<ColumnStructureTableControl control={control}
@@ -418,6 +503,10 @@ export default class EditorForm extends React.Component {
 				selectedRows={this.getSelectedRows(control.name)}
 				buildUIItem={this.genUIItem}
 				openFieldPicker={this.openFieldPicker}
+				validateConditions={this.validateConditions}
+				getControlValues={this.getControlValues}
+				updateValidationErrorMessage={this.updateValidationErrorMessage}
+				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
 		} else if (control.controlType === "structureeditor") {
 			// logger.info("structureeditor");
@@ -441,6 +530,12 @@ export default class EditorForm extends React.Component {
 				updateSelectedRows={this.updateSelectedRows}
 				selectedRows={this.getSelectedRows(control.name)}
 				buildUIItem={this.genUIItem}
+				validationDefinitions={this.state.validationDefinitions}
+				controlStates={this.state.controlStates}
+				validateConditions={this.validateConditions}
+				getControlValues={this.getControlValues}
+				updateValidationErrorMessage={this.updateValidationErrorMessage}
+				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
 		}
 		return <h6 key={controlId}>{controlId}</h6>;
@@ -462,8 +557,11 @@ export default class EditorForm extends React.Component {
 				className = "label-container";
 			}
 			if (control.required) {
-				label = (<div className={className}><label className="control-label" style={stateStyle}>{control.label.text}</label>
-			<span className="required-control-indicator">*</span>{description}</div>);
+				label = (<div className={className}>
+					<label className="control-label" style={stateStyle}>{control.label.text}</label>
+					<span className="required-control-indicator" style={stateStyle}>*</span>
+					{description}
+				</div>);
 			} else {
 				label = (<div className={className}><label className="control-label" style={stateStyle}>{control.label.text}</label>{description}</div>);
 			}
@@ -672,7 +770,7 @@ export default class EditorForm extends React.Component {
 		});
 	}
 
-	handleMouseLeave(evt) {
+	validateConditions() {
 		var controlValues = {};
 		var userInput = {};
 
@@ -710,7 +808,7 @@ export default class EditorForm extends React.Component {
 					logger.info("Error thrown in validation: " + error);
 				}
 			}
-			logger.info("visible: " + JSON.stringify(this.state.controlStates));
+			// logger.info("visible: " + JSON.stringify(this.state.controlStates));
 		}
 
 		// enabledDefinitions
@@ -751,66 +849,26 @@ export default class EditorForm extends React.Component {
 					logger.info("Error thrown in validation: " + error);
 				}
 			}
-			logger.info("enable: " + JSON.stringify(this.state.controlStates));
+			// logger.info("enable: " + JSON.stringify(this.state.controlStates));
 		}
+	}
 
-		// validationGroupDefinitions
-		if (this.state.validationGroupDefinitions.length > 0) {
-			logger.info("validate group definitions");
-			var validateErrorMessage = [];
-			controlValues = this.getControlValues();
+	retrieveValidationErrorMessage(controlName) {
+		return this.state.controlErrorMessages[controlName];
+	}
 
-			// convert the controlValues object structure to what UiConditions take
-			userInput = {};
-			for (var key in controlValues) {
-				if (key) {
-					userInput[key] = controlValues[key][0];
-				}
-			}
-
-			for (let i = 0; i < this.state.validationGroupDefinitions.length; i++) {
-				var groupDefinition = this.state.validationGroupDefinitions[i];
-				var params = groupDefinition.params;
-				var evaluate = false;
-				for (let j = 0; j < params.length; j++) {
-					if (typeof this.state.controlStates[params[j]] === "undefined") {
-						evaluate = true;
-					} else {
-						evaluate = false;
-					}
-				}
-
-				if (evaluate) {
-					try {
-						var output = UiConditions.validateInput(groupDefinition.definition, userInput);
-
-						// var tmp = this.state.controlValidations;
-						if (output === true) {
-							// tmp["group_validations_"+i] = true;
-							// this.setState({
-							//   controlValidations : tmp
-							// });
-						} else {
-							// tmp["group_validations_"+i] = false;
-							validateErrorMessage[i] = output;
-							// this.setState({
-							//   controlValidations : tmp
-							// });
-						}
-					} catch (error) {
-						logger.info("Error thrown in validation: " + error);
-					}
-				}
-			}
-			this.setState({ validateErrorMessage: validateErrorMessage });
-		}
+	updateValidationErrorMessage(controlName, message) {
+		const tmp = this.state.controlErrorMessages;
+		tmp[controlName] = message;
+		this.setState({
+			controlErrorMessages: tmp
+		});
 	}
 
 	parseUiConditions(uiConditions) {
 		var visibleDefinition = [];
 		var enabledDefinitions = [];
 		var validationDefinitions = [];
-		var validationGroupDefinitions = [];
 
 		for (let i = 0; i < uiConditions.length; i++) {
 			if (uiConditions[i].visible) {
@@ -820,17 +878,22 @@ export default class EditorForm extends React.Component {
 			} else if (uiConditions[i].validation) {
 				try {
 					var controls = UiConditionsParser.parseInput(uiConditions[i].validation);
-					if (typeof controls === "object") {
-						var groupDef = {
-							"params": controls,
-							"definition": uiConditions[i]
-						};
-						validationGroupDefinitions.push(groupDef);
+					var groupDef = {
+						"params": controls,
+						"definition": uiConditions[i]
+					};
+					if (Array.isArray(controls) === true) {
+						for (let j = 0; j < controls.length; j++) {
+							if (typeof validationDefinitions[controls[j]] === "undefined") {
+								validationDefinitions[controls[j]] = [];
+							}
+							validationDefinitions[controls[j]].push(groupDef);
+						}
 					} else { // single control
-						if (PropertyUtil.toType(validationDefinitions[controls]) !== "array") {
+						if (typeof validationDefinitions[controls] === "undefined") {
 							validationDefinitions[controls] = [];
 						}
-						validationDefinitions[controls].push(uiConditions[i]);
+						validationDefinitions[controls].push(groupDef);
 					}
 				} catch (error) { // invalid
 					logger.info("Error parsing ui conditions: " + error);
@@ -843,8 +906,7 @@ export default class EditorForm extends React.Component {
 		this.setState({
 			visibleDefinition: visibleDefinition,
 			enabledDefinitions: enabledDefinitions,
-			validationDefinitions: validationDefinitions,
-			validationGroupDefinitions: validationGroupDefinitions
+			validationDefinitions: validationDefinitions
 		});
 	}
 
@@ -870,35 +932,15 @@ export default class EditorForm extends React.Component {
 		}
 
 		var formButtons = [];
-		var errorMessage = (<div
-			className="validation-error-message group-validation-error-message"
-			style={{ height: CONDITION_ERROR_MESSAGE.HIDDEN }}
-		/>);
-		if (this.state.validateErrorMessage.length > 0) {
-			var errorMessages = this.state.validateErrorMessage.map(function(message, ind) {
-				return <p key={ind}>{message}</p>;
-			});
-			errorMessage = (
-				<div className="validation-error-message group-validation-error-message"
-					style={{ height: CONDITION_ERROR_MESSAGE.VISIBLE }}
-				>
-					<div id="editor-form-validation" className="form__validation" style={{ "display": "block" }} >
-						<span className="form__validation--invalid">{errorMessages}</span>
-					</div>
-				</div>
-			);
-		}
-
 		return (
 			<div className="well">
-				<form id={"form-" + this.props.form.componentId} className="form-horizontal" onMouseLeave={this.handleMouseLeave}>
+				<form id={"form-" + this.props.form.componentId} className="form-horizontal">
 					<div className="section--light">
 						{content}
 					</div>
 					<div>
 						<ButtonToolbar>{formButtons}</ButtonToolbar>
 					</div>
-					{errorMessage}
 				</form>
 			</div>
 		);

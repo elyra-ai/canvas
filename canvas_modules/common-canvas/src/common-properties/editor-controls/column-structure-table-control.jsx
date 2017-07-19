@@ -321,19 +321,16 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 			this._update_callback = null;
 		}
 
-		let className = "structure-table-content-row";
-		var errorMessage = <div className="validation-error-message"></div>;
-		if (this.state.validateErrorMessage && this.state.validateErrorMessage.text !== "") {
-			// stateStyle.borderColor = "#FF0000 !important";
-			className += " error-border";
-			errorMessage = (
-				<div className="validation-error-message">
-					<p className="form__validation" style={{ "display": "block", "margin": "0px" }} >
-						<span className="form__validation--invalid">{this.state.validateErrorMessage.text}</span>
-					</p>
-				</div>
-			);
-		}
+		const controlName = this.getControlID().split(".")[1];
+		const conditionProps = {
+			controlName: controlName,
+			controlType: "table"
+		};
+		const conditionState = this.getConditionMsgState(conditionProps);
+
+		const errorMessage = conditionState.message;
+		// const stateDisabled = conditionState.disabled;
+		const stateStyle = conditionState.style;
 
 		var moveCol = <tc />;
 		if (typeof this.props.control.moveableRows !== "undefined" && this.props.control.moveableRows) {
@@ -397,7 +394,7 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 						</OverlayTrigger>
 					</td>
 				</tr>
-				<tr className="structure-table-content-row">
+				<tr className="structure-table-content-row" style={stateStyle}>
 					<td>
 						{table}
 						{errorMessage}
@@ -422,5 +419,9 @@ ColumnStructureTableControl.propTypes = {
 	buildUIItem: React.PropTypes.func,
 	dataModel: React.PropTypes.object.isRequired,
 	control: React.PropTypes.object.isRequired,
+	controlStates: React.PropTypes.object,
+	validationDefinitions: React.PropTypes.object,
+	updateValidationErrorMessage: React.PropTypes.func,
+	retrieveValidationErrorMessage: React.PropTypes.func,
 	updateControlValue: React.PropTypes.func
 };

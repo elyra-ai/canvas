@@ -39,18 +39,34 @@ export default class SomeofcolumnsControl extends EditorControl {
 	}
 
 	render() {
+		const controlName = this.getControlID().split(".")[1];
+		const conditionProps = {
+			controlName: controlName,
+			controlType: "selection"
+		};
+		const conditionState = this.getConditionMsgState(conditionProps);
+
+		const errorMessage = conditionState.message;
+		const stateDisabled = conditionState.disabled;
+		const stateStyle = conditionState.style;
+
 		var options = EditorControl.genColumnSelectOptions(this.props.dataModel.fields, this.state.controlValue, false);
 		return (
-			<FormControl id={this.getControlID()}
-				componentClass="select"
-				multiple name={this.props.control.name}
-				help={this.props.control.additionalText}
-				onChange={this.handleChange}
-				value={this.state.controlValue}
-				ref="input"
-			>
-				{options}
-			</FormControl>
+			<div style={stateStyle}>
+				<FormControl id={this.getControlID()}
+					{...stateDisabled}
+					style={stateStyle}
+					componentClass="select"
+					multiple name={this.props.control.name}
+					help={this.props.control.additionalText}
+					onChange={this.handleChange}
+					value={this.state.controlValue}
+					ref="input"
+				>
+					{options}
+				</FormControl>
+				{errorMessage}
+			</div>
 		);
 	}
 }
@@ -58,5 +74,9 @@ export default class SomeofcolumnsControl extends EditorControl {
 SomeofcolumnsControl.propTypes = {
 	dataModel: React.PropTypes.object,
 	control: React.PropTypes.object,
-	updateControlValue: React.PropTypes.func
+	updateControlValue: React.PropTypes.func,
+	controlStates: React.PropTypes.object,
+	updateValidationErrorMessage: React.PropTypes.func,
+	retrieveValidationErrorMessage: React.PropTypes.func,
+	validationDefinitions: React.PropTypes.object
 };

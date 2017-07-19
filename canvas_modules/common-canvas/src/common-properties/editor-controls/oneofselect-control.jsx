@@ -70,6 +70,17 @@ export default class OneofselectControl extends EditorControl {
 	}
 
 	render() {
+		const controlName = this.getControlID().split(".")[1];
+		const conditionProps = {
+			controlName: controlName,
+			controlType: "dropdown"
+		};
+		const conditionState = this.getConditionMsgState(conditionProps);
+
+		const errorMessage = conditionState.message;
+		const stateDisabled = conditionState.disabled;
+		const stateStyle = conditionState.style;
+
 		var dropDown = {};
 		var className = "Dropdown-control-panel";
 		if (this.props.tableControl) {
@@ -80,15 +91,18 @@ export default class OneofselectControl extends EditorControl {
 		}
 
 		return (
-			<div onClick={this.onClick.bind(this)} className={className}>
-					<Dropdown id={this.getControlID()}
+			<div onClick={this.onClick.bind(this)} className={className} style={stateStyle}>
+					<Dropdown {...stateDisabled}
+						id={this.getControlID()}
 						name={this.props.control.name}
 						options={dropDown.options}
 						onChange={this.handleChange}
+						onBlur={this.validateInput}
 						value={dropDown.selectedOption}
 						placeholder={this.props.control.additionalText}
 						ref="input"
 					/>
+					{errorMessage}
 			</div>
 		);
 	}
@@ -105,5 +119,9 @@ OneofselectControl.propTypes = {
 	columnDef: React.PropTypes.object,
 	value: React.PropTypes.string,
 	setCurrentControlValueSelected: React.PropTypes.func,
-	selectedRows: React.PropTypes.array
+	selectedRows: React.PropTypes.array,
+	controlStates: React.PropTypes.object,
+	validationDefinitions: React.PropTypes.object,
+	updateValidationErrorMessage: React.PropTypes.func,
+	retrieveValidationErrorMessage: React.PropTypes.func
 };

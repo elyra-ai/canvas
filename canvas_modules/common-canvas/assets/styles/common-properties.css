@@ -54,7 +54,8 @@
 
 .control-panel {
   display: block;
-  padding: 8px;
+  padding-left: 8px;
+  padding-right: 8px;
 }
 
 .table-editor {
@@ -134,22 +135,68 @@ input[type=radio]{
   margin: 0 0 25px 0;
 }
 
-.validation-error-message-padding {
-  padding-top: 5px;
+.validation-error-message {
+  color: #1D3649;
 }
 
-.group-validation-error-message {
-  margin-bottom: 0px;
+.text__counter {
+  color: #777677
 }
 
-#editor-form-validation {
-  margin: 0 0 0 10px;
-  overflow-x: scroll;
+.validation-error-message-color-error,
+.validation-error-message-color-warning,
+.validation-error-message-color-info {
+	font-size: .875rem;
 }
 
-#editor-form-validation p {
-  margin: 0;
-  font-size: .875rem;
+.form__validation.validation-error-message-type-number,
+.form__validation.validation-error-message-type-table,
+p.form__validation.validation-error-message-color-warning.validation-error-message-type-selection {
+	margin-top: 5px;
+	width: 93%;
+}
+
+.form__validation.validation-error-message-type-textfield,
+.form__validation.validation-error-message-type-textfieldbox {
+	margin-top: -20px;
+	width: 90%;
+}
+
+.form__validation.validation-error-message-type-dropdown {
+	margin-top: 3px;
+	width: 89%;
+}
+
+.validation-error-message-icon {
+	width: 20px;
+	height: 20px;
+  margin-right: 0.3em;
+	float: left;
+}
+
+.validation-error-message-icon-table,
+.validation-error-message-icon-number {
+  margin-top: 3px;
+}
+
+.form__validation.validation-error-message-type-selection {
+	margin-top: 2px;
+	width: 93%;
+}
+
+.validation-error-message-icon-textfield,
+.validation-error-message-icon-textfieldbox {
+  margin-top: -22px;
+	height: 23px;
+}
+
+.validation-warning-message-icon-textfieldbox {
+	margin-top: -24px;
+	height: 25px;
+}
+
+.modal__container .modal__buttons {
+  bottom: initial;
 }
 
 /* Override bootstrap css */
@@ -157,16 +204,6 @@ input[type=radio]{
 	width: 100%;
 	height: 100%;
 }
-
-/* Override ap-components css */
-.modal__container .modal__buttons {
-  bottom: initial;
-}
-
-span.form__validation--invalid {
-  color: #E71D32;
-}
-
 
 /* Field Picker */
 

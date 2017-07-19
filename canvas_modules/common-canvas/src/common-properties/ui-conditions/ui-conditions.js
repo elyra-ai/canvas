@@ -166,11 +166,11 @@ function evaluate(data, userInput, dataModel) {
 function or(data, userInput, dataModel) {
 	for (let i = 0; i < data.length; i++) {
 		if (evaluate(data[i], userInput, dataModel) === true) {
-			logger.info("Or is true");
+			// logger.info("Or is true");
 			return true;
 		}
 	}
-	logger.info("Or is false");
+	// logger.info("Or is false");
 	return false;
 }
 
@@ -185,11 +185,11 @@ function or(data, userInput, dataModel) {
 function and(data, userInput, dataModel) {
 	for (let i = 0; i < data.length; i++) {
 		if (evaluate(data[i], userInput, dataModel) === false) {
-			logger.info("And is false");
+			// logger.info("And is false");
 			return false;
 		}
 	}
-	logger.info("And is true");
+	// logger.info("And is true");
 	return true;
 }
 
@@ -245,28 +245,28 @@ function condition(data, userInput, dataModel) {
 function _handleEmpty(paramInput) {
 	if (typeof paramInput === "object") {
 		if (paramInput.length === 1) {
-			logger.info("Condition isEmpty: '" + paramInput + "' is " + (paramInput[0].length === 0));
+			// logger.info("Condition isEmpty: '" + paramInput + "' is " + (paramInput[0].length === 0));
 			return paramInput[0].length === 0;
 		}
-		logger.info("Condition isEmpty: '" + paramInput + "' is " + (paramInput.length === 0));
+		// logger.info("Condition isEmpty: '" + paramInput + "' is " + (paramInput.length === 0));
 		return paramInput.length === 0;
 	}
 	// string
-	logger.info("Condition isEmpty: '" + paramInput + "' is " + (paramInput.trim().length === 0));
+	// logger.info("Condition isEmpty: '" + paramInput + "' is " + (paramInput.trim().length === 0));
 	return paramInput.trim().length === 0;
 }
 
 function _handleNotEmpty(paramInput) {
 	if (typeof paramInput === "object") {
 		if (paramInput.length === 1) {
-			logger.info("Condition isNotEmpty: '" + paramInput + "' is " + (paramInput[0].length !== 0));
+			// logger.info("Condition isNotEmpty: '" + paramInput + "' is " + (paramInput[0].length !== 0));
 			return paramInput[0].length !== 0;
 		}
-		logger.info("Condition isNotEmpty: '" + paramInput + "' is " + (paramInput.length !== 0));
+		// logger.info("Condition isNotEmpty: '" + paramInput + "' is " + (paramInput.length !== 0));
 		return paramInput.length !== 0;
 	}
 	// string
-	logger.info("Condition isNotEmpty: '" + paramInput + "' is " + (paramInput.trim().length !== 0));
+	// logger.info("Condition isNotEmpty: '" + paramInput + "' is " + (paramInput.trim().length !== 0));
 	return paramInput.trim().length !== 0;
 }
 
@@ -277,12 +277,12 @@ function _handleGreaterThan(paramInput, userInput, param2, value) {
 	if (param2 !== null && userInput[param2] && !isNaN(paramInput) && !isNaN(userInput[param2])) {
 		const parsedInput = parseFloat(paramInput);
 		const isGreater = !isNaN(parsedInput) && parsedInput > parseFloat(userInput[param2]);
-		logger.info("Condition greaterThan: " + paramInput + " > " + userInput[param2] + " is " + (isGreater));
+		// logger.info("Condition greaterThan: " + paramInput + " > " + userInput[param2] + " is " + (isGreater));
 		return isGreater;
 	} else if (value !== null && !isNaN(value)) {
 		const parsedInput = parseFloat(paramInput);
 		const isGreater = !isNaN(parsedInput) && parsedInput > parseFloat(value);
-		logger.info("Condition greaterThan: " + paramInput + " > " + value + " is " + (isGreater));
+		// logger.info("Condition greaterThan: " + paramInput + " > " + value + " is " + (isGreater));
 		return isGreater;
 	}
 	throw new Error("Insufficient parameter for condition op: greaterThan");
@@ -295,12 +295,12 @@ function _handleLessThan(paramInput, userInput, param2, value) {
 	if (param2 !== null && userInput[param2] && !isNaN(paramInput) && !isNaN(userInput[param2])) {
 		const parsedInput = parseFloat(paramInput);
 		const isLess = !isNaN(parsedInput) && parsedInput < parseFloat(userInput[param2]);
-		logger.info("Condition lessThan: " + paramInput + " < " + userInput[param2] + " is " + (isLess));
+		// logger.info("Condition lessThan: " + paramInput + " < " + userInput[param2] + " is " + (isLess));
 		return isLess;
 	} else if (value !== null && !isNaN(value)) {
 		const parsedInput = parseFloat(paramInput);
 		const isLess = !isNaN(parsedInput) && parsedInput < parseFloat(value);
-		logger.info("Condition lessThan: " + paramInput + " < " + value + " is " + (isLess));
+		// logger.info("Condition lessThan: " + paramInput + " < " + value + " is " + (isLess));
 		return isLess;
 	}
 	throw new Error("Insufficient parameter for condition op: lessThan");
@@ -311,14 +311,14 @@ function _handleEquals(paramInput, userInput, param2, value) {
 		return true;
 	}
 	if (param2 !== null && userInput[param2]) {
-		logger.info("Condition equals: " + paramInput + " == " + userInput[param2] + " is " + (paramInput === userInput[param2]));
+		// logger.info("Condition equals: " + paramInput + " == " + userInput[param2] + " is " + (paramInput === userInput[param2]));
 		return paramInput === userInput[param2];
 	} else if (value !== null) {
 		let inputValue = paramInput;
 		if (typeof value === "number" && typeof paramInput === "string") {
 			inputValue = parseFloat(paramInput);
 		}
-		logger.info("Condition equals: " + paramInput + " == " + value + " is " + (inputValue === value));
+		// logger.info("Condition equals: " + paramInput + " == " + value + " is " + (inputValue === value));
 		return inputValue === value;
 	}
 	throw new Error("Insufficient parameter for condition op: equals");
@@ -329,14 +329,14 @@ function _handleNotEquals(paramInput, userInput, param2, value) {
 		return true;
 	}
 	if (param2 !== null && userInput[param2]) {
-		logger.info("Condition notEquals: " + paramInput + " != " + userInput[param2] + " is " + (paramInput !== userInput[param2]));
+		// logger.info("Condition notEquals: " + paramInput + " != " + userInput[param2] + " is " + (paramInput !== userInput[param2]));
 		return paramInput !== userInput[param2];
 	} else if (value !== null) {
 		let inputValue = paramInput;
 		if (typeof value === "number" && typeof paramInput === "string") {
 			inputValue = parseFloat(paramInput);
 		}
-		logger.info("Condition notEquals: " + paramInput + " != " + value + " is " + (inputValue !== value));
+		// logger.info("Condition notEquals: " + paramInput + " != " + value + " is " + (inputValue !== value));
 		return inputValue !== value;
 	}
 	throw new Error("Insufficient parameter for condition op: notEquals");
@@ -344,10 +344,10 @@ function _handleNotEquals(paramInput, userInput, param2, value) {
 
 function _handleContains(paramInput, userInput, param2, value) {
 	if (param2 !== null && userInput[param2]) {
-		logger.info("Condition contains: " + paramInput + " contains " + userInput[param2] + " is " + (paramInput.indexOf(userInput[param2]) >= 0));
+		// logger.info("Condition contains: " + paramInput + " contains " + userInput[param2] + " is " + (paramInput.indexOf(userInput[param2]) >= 0));
 		return paramInput.indexOf(userInput[param2]) >= 0;
 	} else if (value !== null) {
-		logger.info("Condition contains: " + paramInput + " contains " + value + " is " + (paramInput.indexOf(value) >= 0));
+		// logger.info("Condition contains: " + paramInput + " contains " + value + " is " + (paramInput.indexOf(value) >= 0));
 		return paramInput.indexOf(value) >= 0;
 	}
 	throw new Error("Insufficient parameter for condition op: contains");
@@ -355,27 +355,27 @@ function _handleContains(paramInput, userInput, param2, value) {
 
 function _handleNotContains(paramInput, userInput, param2, value) {
 	if (param2 !== null && userInput[param2]) {
-		logger.info("Condition notContains: " + paramInput + " notContains " + userInput[param2] + " is " + (paramInput.indexOf(userInput[param2]) < 0));
+		// logger.info("Condition notContains: " + paramInput + " notContains " + userInput[param2] + " is " + (paramInput.indexOf(userInput[param2]) < 0));
 		return !paramInput.indexOf(userInput[param2]) < 0;
 	} else if (value !== null) {
-		logger.info("Condition notContains: " + paramInput + " notContains " + value + " is " + (paramInput.indexOf(value) < 0));
+		// logger.info("Condition notContains: " + paramInput + " notContains " + value + " is " + (paramInput.indexOf(value) < 0));
 		return paramInput.indexOf(value) < 0;
 	}
 	throw new Error("Insufficient parameter for condition op: notContains");
 }
 
 function _handleChecked(paramInput, param) {
-	logger.info("Condition checked: " + param + " is " + paramInput === "true");
-	return paramInput === "true";
+	// logger.info("Condition checked: " + param + " is " + (paramInput !== "" && paramInput === "true") || (paramInput !== "" && paramInput !== "false");
+	return (paramInput !== "" && paramInput === "true") || (paramInput !== "" && paramInput !== "false");
 }
 
 function _handleNotChecked(paramInput, param) {
-	logger.info("Condition not checked: " + param + " is " + paramInput === "false");
-	return paramInput === "false";
+	// logger.info("Condition not checked: " + param + " is " + (paramInput !== "" && paramInput === "false") || paramInput === "";
+	return (paramInput !== "" && paramInput === "false") || paramInput === "";
 }
 
 function _handleColNotExists(paramInput, dataModel) {
-	logger.info("Condition col not exists: paramInput === " + paramInput);
+	// logger.info("Condition col not exists: paramInput === " + paramInput);
 	if (!dataModel) {
 		return true;
 	}
@@ -394,7 +394,10 @@ function _handleColNotExists(paramInput, dataModel) {
  */
 function failedMessage(failedErrorMessage) {
 	if (failedErrorMessage.focusParam && failedErrorMessage.message) {
-		return failedErrorMessage.message.default;
+		return {
+			"text": failedErrorMessage.message.default,
+			"type": failedErrorMessage.type
+		};
 	}
 	return "Failed to parse failedMessage";
 }

@@ -6,10 +6,14 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
+/* eslint max-depth: ["error", 7] */
+/* eslint complexity: ["error", 17] */
 
 import logger from "../../../utils/logger";
 import React from "react";
+import ValidationMessage from "./validation-message.jsx";
 import UiConditions from "../ui-conditions/ui-conditions.js";
+import { DEFAULT_VALIDATION_MESSAGE, VALIDATION_MESSAGE } from "../constants/constants.js";
 
 export default class EditorControl extends React.Component {
 
@@ -106,18 +110,11 @@ export default class EditorControl extends React.Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {
-			validateErrorMessage: {
-				type: "info",
-				text: ""
-			}
-		};
 		this.getControlID = this.getControlID.bind(this);
 		this.setValueListener = this.setValueListener.bind(this);
 		this.clearValueListener = this.clearValueListener.bind(this);
 		this.notifyValueChanged = this.notifyValueChanged.bind(this);
 		this.validateInput = this.validateInput.bind(this);
-		this.clearValidateMsg = this.clearValidateMsg.bind(this);
 
 		this._valueListener = null;
 	}
@@ -132,6 +129,62 @@ export default class EditorControl extends React.Component {
 	getControlValue() {
 		return [];
 	}
+
+
+	getConditionMsgState(conditionProps) {
+		let message = DEFAULT_VALIDATION_MESSAGE;
+		if (this.props.retrieveValidationErrorMessage) {
+			message = this.props.retrieveValidationErrorMessage(conditionProps.controlName);
+		}
+		let errorMessage = (<ValidationMessage
+			validateErrorMessage={message}
+			controlType={conditionProps.controlType}
+		/>);
+		const stateDisabled = {};
+		let stateStyle = {};
+
+		if (typeof message !== "undefined") {
+			switch (message.type) {
+			case "warning":
+				stateStyle = {
+					color: VALIDATION_MESSAGE.WARNING,
+					borderColor: VALIDATION_MESSAGE.WARNING
+				};
+				break;
+			case "error":
+				stateStyle = {
+					color: VALIDATION_MESSAGE.ERROR,
+					borderColor: VALIDATION_MESSAGE.ERROR
+				};
+				break;
+			default:
+			}
+		}
+
+		if (this.props.controlStates && typeof this.props.controlStates[conditionProps.controlName] !== "undefined") {
+			switch (this.props.controlStates[conditionProps.controlName]) {
+			case "disabled":
+				stateDisabled.disabled = true;
+				stateStyle = {
+					color: VALIDATION_MESSAGE.DISABLED,
+					borderColor: VALIDATION_MESSAGE.DISABLED
+				};
+				break;
+			case "hidden":
+				stateStyle.visibility = "hidden";
+				break;
+			default:
+			}
+			errorMessage = <div></div>;
+		}
+
+		return {
+			message: errorMessage,
+			disabled: stateDisabled,
+			style: stateStyle
+		};
+	}
+
 	getCharLimit(defaultLimit) {
 		let limit = defaultLimit;
 		if (this.props.control.charLimit) {
@@ -159,54 +212,71 @@ export default class EditorControl extends React.Component {
 		}
 	}
 
-	validateInput(evt) {
+	validateInput() {
 		var controlName = this.getControlID().split(".")[1];
 		if (!this.props.validationDefinitions) {
 			return;
 		}
+		if (this.props.validateConditions) {
+			this.props.validateConditions(); // run visible and enabled condition validations
+		}
+
 		const validations = this.props.validationDefinitions[controlName];
 		if (this.props.controlStates && typeof this.props.controlStates[controlName] === "undefined" && validations) {
-			var userInput = {
-				[controlName]: this.state.controlValue // evt.target.value
-			};
-
 			try {
-				let output;
-				for (const validation of validations) {
-					output = UiConditions.validateInput(validation, userInput, this.props.dataModel);
-					logger.info("validated input field " + controlName + " to be " + output);
-					if (output !== true) {
-						break;
+				const userInput = {
+					[controlName]: this.state.controlValue
+				};
+
+				const controlValues = this.props.getControlValues();
+				for (const key in controlValues) {
+					if (typeof controlValues[key][0] === "undefined") {
+						userInput[key] = [];
+					} else {
+						userInput[key] = controlValues[key][0];
 					}
 				}
-				if (output === true) {
-					this.setState({
-						validateErrorMessage: {
-							type: "info",
-							text: ""
+
+				let evaluate = true;
+				let output = false;
+				let errorMessage = DEFAULT_VALIDATION_MESSAGE;
+				for (const validation of validations) {
+					if (typeof validation.params === "object") {
+						for (const control of validation.params) {
+							if (typeof this.props.controlStates[control] !== "undefined") {
+								evaluate = false;
+								break;
+							}
 						}
-					});
-				} else {
-					this.setState({
-						validateErrorMessage: {
-							type: "invalid",
-							text: output
+					}
+
+					if (evaluate) {
+						output = UiConditions.validateInput(validation.definition, userInput, this.props.dataModel);
+						// logger.info("validated input field " + controlName + " to be " + JSON.stringify(output));
+						if (typeof output === "object") {
+							errorMessage = {
+								type: output.type,
+								text: output.text
+							};
 						}
-					});
+						if (typeof validation.params === "object") {
+							for (const control of validation.params) {
+								let groupMessage = errorMessage;
+								if (output === true) {
+									groupMessage = DEFAULT_VALIDATION_MESSAGE;
+								}
+								if (control !== controlName) {
+									this.props.updateValidationErrorMessage(control, groupMessage);
+								}
+							}
+						}
+						this.props.updateValidationErrorMessage(controlName, errorMessage);
+					}
 				}
 			} catch (error) {
 				logger.info("Error thrown in validation: " + error);
 			}
 		}
-	}
-
-	clearValidateMsg() {
-		this.setState({
-			validateErrorMessage: {
-				type: "info",
-				text: ""
-			}
-		});
 	}
 
 	render() {
@@ -221,5 +291,9 @@ EditorControl.propTypes = {
 	controlStates: React.PropTypes.object,
 	valueAccessor: React.PropTypes.func.isRequired,
 	validationDefinitions: React.PropTypes.array,
-	dataModel: React.PropTypes.object
+	validateConditions: React.PropTypes.func,
+	updateValidationErrorMessage: React.PropTypes.func,
+	retrieveValidationErrorMessage: React.PropTypes.func,
+	dataModel: React.PropTypes.object,
+	getControlValues: React.PropTypes.func
 };

@@ -22,7 +22,18 @@ _defineConstant("CHARACTER_LIMITS", {
 
 _defineConstant("CONDITION_ERROR_MESSAGE", {
 	HIDDEN: "0px",
-	VISIBLE: "25px"
+	VISIBLE: "30px"
+});
+
+_defineConstant("DEFAULT_VALIDATION_MESSAGE", {
+	type: "info",
+	text: ""
+});
+
+_defineConstant("VALIDATION_MESSAGE", {
+	WARNING: "#FDD600",
+	ERROR: "#E71D32",
+	DISABLED: "#D8D8D8"
 });
 
 _defineConstant("OKAY", "OK");
