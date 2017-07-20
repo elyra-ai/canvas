@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 var nconf = require("nconf");
+var renderingEngine = "D3";
 
 // eslint-disable-line global-require
 function getURL() {
@@ -33,8 +34,17 @@ function getBaseDir() {
 	return (typeof configDir === "undefined") ? process.env.PWD : configDir;
 }
 
+function setRenderingEngine(engine) {
+	renderingEngine = engine;
+}
+
+function getRenderingEngine() {
+	return renderingEngine;
+}
 
 module.exports = {
 	getURL: getURL,
-	getBaseDir: getBaseDir
+	getBaseDir: getBaseDir,
+	setRenderingEngine: setRenderingEngine,
+	getRenderingEngine: getRenderingEngine
 };

@@ -27,9 +27,10 @@ import {
 	NONE,
 	PALETTE_TOOLTIP,
 	SIDE_PANEL_CANVAS,
-	SIDE_PANEL_STYLES,
 	SIDE_PANEL_MODAL,
-	STRAIGHT
+	D3_ENGINE,
+	HALO_CONNECTION,
+	CURVE_LINKS
 } from "./constants/constants.js";
 
 import listview32 from "../graphics/list-view_32.svg";
@@ -38,10 +39,10 @@ import close32 from "../graphics/close_32.svg";
 import play32 from "../graphics/play_32.svg";
 import download32 from "../graphics/save_32.svg";
 import createNew32 from "../graphics/create-new_32.svg";
-import edit32 from "../graphics/edit_32.svg";
 import justify32 from "../graphics/justify_32.svg";
 import template32 from "ibm-design-icons/dist/svg/object-based/template_32.svg";
 
+const CANVAS_SIZE_LIMIT = 100000;
 
 class App extends React.Component {
 	constructor(props) {
@@ -53,14 +54,15 @@ class App extends React.Component {
 			internalObjectModel: true,
 			modalPropertiesDialog: true,
 			openSidepanelCanvas: false,
-			openSidepanelStyles: false,
 			openSidepanelModal: false,
 			paletteNavEnabled: false,
 			paletteOpened: false,
 			propertiesInfo: {},
 			propertiesJson: null,
 			selectedPanel: null,
-			selectedLinkTypeStyle: STRAIGHT,
+			selectedRenderingEngine: D3_ENGINE,
+			selectedConnectionType: HALO_CONNECTION,
+			selectedLinkType: CURVE_LINKS,
 			showContextMenu: false,
 			showPropertiesDialog: false
 		};
@@ -81,13 +83,14 @@ class App extends React.Component {
 		this.setPropertiesJSON = this.setPropertiesJSON.bind(this);
 
 		this.sidePanelCanvas = this.sidePanelCanvas.bind(this);
-		this.sidePanelStyles = this.sidePanelStyles.bind(this);
 		this.sidePanelModal = this.sidePanelModal.bind(this);
-		this.setLinkTypeStyle = this.setLinkTypeStyle.bind(this);
 		this.setLayoutDirection = this.setLayoutDirection.bind(this);
 		this.setOneTimeLayoutDirection = this.setOneTimeLayoutDirection.bind(this);
 		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
 		this.useModalPropertiesDialog = this.useModalPropertiesDialog.bind(this);
+		this.setRenderingEngine = this.setRenderingEngine.bind(this);
+		this.setConnectionType = this.setConnectionType.bind(this);
+		this.setLinkType = this.setLinkType.bind(this);
 
 		// common-canvas
 		this.contextMenuHandler = this.contextMenuHandler.bind(this);
@@ -113,24 +116,40 @@ class App extends React.Component {
 		addLocaleData(en);
 		var sessionData = {
 			events: {},
-			canvas: ObjectModel.getCanvas()
+			canvas: this.getCanvasIfNotTooBig()
 		};
 		TestService.postSessionData(sessionData);
-	}
 
-	getLabel(labelId, defaultLabel) {
-		return <FormattedMessage id={ labelId } defaultMessage={ defaultLabel } />;
+		// this.sidePanelCanvas();
 	}
 
 	getLabelString(labelId, defaultLabel) {
 		return this.props.intl.formatMessage({ id: labelId, defaultMessage: defaultLabel });
 	}
 
-	setDiagramJSON(diagramJson) {
+	getLabel(labelId, defaultLabel) {
+		return (<FormattedMessage id={ labelId } defaultMessage={ defaultLabel } />);
+	}
+
+	// Returns the canvas provided it is not bigger than the size limit characters.
+	// If it is, returns empty string.  This is a workaround for the issue
+	// where we start to get errors (Error: request entity too large) in the
+	// test harness when the canvas is too big.
+	getCanvasIfNotTooBig() {
+		var canvas = ObjectModel.getCanvas();
+		if (JSON.stringify(canvas).length > CANVAS_SIZE_LIMIT) {
+			return "";
+		}
+		return canvas;
+	}
+
+	setDiagramJSON(canvasJson) {
 		ObjectModel.setCanvas(BLANK_CANVAS);
 		this.forceUpdate();
-		ObjectModel.setCanvas(diagramJson);
-		TestService.postCanvas(diagramJson);
+		ObjectModel.setCanvas(canvasJson);
+		if (JSON.stringify(canvasJson) <= CANVAS_SIZE_LIMIT) { // Only send the Canvas if it is small enough.
+			TestService.postCanvas(canvasJson);
+		}
 		this.log("Canvas diagram set");
 	}
 
@@ -157,26 +176,26 @@ class App extends React.Component {
 		}
 	}
 
-	setLinkTypeStyle(selectedLink) {
-		this.setState({ selectedLinkTypeStyle: selectedLink });
-		this.log("Link type style selected", selectedLink);
+	setRenderingEngine(selectedEngine) {
+		this.setState({ selectedRenderingEngine: selectedEngine });
+		this.log("Rendering Engine selected", selectedEngine);
+	}
+
+	setConnectionType(selectedConnectionType) {
+		this.setState({ selectedConnectionType: selectedConnectionType });
+		this.log("Connection Type selected", selectedConnectionType);
+	}
+
+	setLinkType(selectedLinkType) {
+		this.setState({ selectedLinkType: selectedLinkType });
+		this.log("Link type selected", selectedLinkType);
 	}
 
 	sidePanelCanvas() {
 		this.setState({
 			openSidepanelCanvas: !this.state.openSidepanelCanvas,
-			openSidepanelStyles: false,
 			openSidepanelModal: false,
 			selectedPanel: SIDE_PANEL_CANVAS
-		});
-	}
-
-	sidePanelStyles() {
-		this.setState({
-			openSidepanelStyles: !this.state.openSidepanelStyles,
-			openSidepanelCanvas: false,
-			openSidepanelModal: false,
-			selectedPanel: SIDE_PANEL_STYLES
 		});
 	}
 
@@ -184,7 +203,6 @@ class App extends React.Component {
 		this.setState({
 			openSidepanelModal: !this.state.openSidepanelModal,
 			openSidepanelCanvas: false,
-			openSidepanelStyles: false,
 			selectedPanel: SIDE_PANEL_MODAL
 		});
 	}
@@ -202,7 +220,7 @@ class App extends React.Component {
 		}, function() {
 			var sessionData = {
 				events: that.state.consoleout,
-				canvas: ObjectModel.getCanvas()
+				canvas: that.getCanvasIfNotTooBig()
 			};
 			TestService.postSessionData(sessionData);
 		});
@@ -580,15 +598,6 @@ class App extends React.Component {
 								/>
 							</a>
 						</li>
-						<li className="navbar-li action-bar-sidepanel"
-							id="action-bar-sidepanel-styles" data-tip="Common Canvas Styles"
-						>
-							<a onClick={this.sidePanelStyles.bind(this) }>
-								<Isvg id="action-bar-panel-styles"
-									src={edit32}
-								/>
-							</a>
-						</li>
 						<li className="navbar-li nav-divider action-bar-sidepanel"
 							id="action-bar-sidepanel-canvas"	data-tip="Common Canvas"
 						>
@@ -605,6 +614,9 @@ class App extends React.Component {
 
 		var commonCanvasConfig = {
 			enablePalette: this.state.paletteNavEnabled, // true if palette json submitted
+			enableRenderingEngine: this.state.selectedRenderingEngine,
+			enableConnectionType: this.state.selectedConnectionType,
+			enableLinkType: this.state.selectedLinkType,
 			enableInternalObjectModel: this.state.internalObjectModel,
 			paletteTooltip: PALETTE_TOOLTIP
 		};
@@ -640,18 +652,18 @@ class App extends React.Component {
 				openPropertiesEditorDialog={this.openPropertiesEditorDialog}
 				closePropertiesEditorDialog={this.closePropertiesEditorDialog}
 				openSidepanelCanvas={this.state.openSidepanelCanvas}
-				openSidepanelStyles={this.state.openSidepanelStyles}
 				openSidepanelModal={this.state.openSidepanelModal}
 				setDiagramJSON={this.setDiagramJSON}
 				setPaletteJSON={this.setPaletteJSON}
 				setPropertiesJSON={this.setPropertiesJSON}
 				setLayoutDirection={this.setLayoutDirection}
 				setOneTimeLayoutDirection={this.setOneTimeLayoutDirection}
-				setLinkTypeStyle={this.setLinkTypeStyle}
-				selectedLinkTypeStyle={this.state.selectedLinkTypeStyle}
 				showPropertiesDialog={this.state.showPropertiesDialog}
 				useInternalObjectModel={this.useInternalObjectModel}
 				useModalPropertiesDialog={this.useModalPropertiesDialog}
+				setRenderingEngine={this.setRenderingEngine}
+				setConnectionType={this.setConnectionType}
+				setLinkType={this.setLinkType}
 				log={this.log}
 			/>
 			<IntlProvider key="IntlProvider2" locale={ locale } messages={ messages }>

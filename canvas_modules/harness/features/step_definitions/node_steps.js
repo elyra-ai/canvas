@@ -6,10 +6,11 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
+/* eslint no-console: "off" */
 
 import { deleteLinkInObjectModel, getEventLogCount, getNodeIdFromObjectModel, getObjectModelCount, isObjectModelEmpty } from "./utilities/validateUtil.js";
+import { getRenderingEngine, getURL } from "./utilities/test-config.js";
 import { getHarnessData } from "./utilities/HTTPClient.js";
-import { getURL } from "./utilities/test-config.js";
 import { simulateDragDrop } from "./utilities/DragAndDrop.js";
 
 /* global browser */
@@ -463,61 +464,81 @@ module.exports = function() {
 	//
 	this.Then(/^I add node (\d+) a "([^"]*)" node from the "([^"]*)" category onto the canvas at (\d+), (\d+)$/,
 	function(inNodeIndex, nodeType, nodeCategory, canvasX, canvasY) {
-		// click on the palette button to open it
-		// browser.click(".palette-show-button");
-		browser.$(".palette-show-button").click();
-		// select import categories
-		const categoryIndex = categoryPosition[nodeCategory];
-		browser.$(".palette-content").$("div")
-		.$$("div")[categoryIndex].click();
-		// drag the var file node to the canvas
-		const nodeIndex = nodePosition[nodeType];
-		browser.execute(simulateDragDrop, ".palette-grid-node-outer", nodeIndex, "#canvas-div", 0, canvasX, canvasY);
-		// close the palette
-		browser.$(".palette-topbar").$(".right-navbar")
-		.$(".secondary-action")
-		.click();
+		try {
+			// click on the palette button to open it
+			// browser.click(".palette-show-button");
+			browser.$(".palette-show-button").click();
+			// select import categories
+			const categoryIndex = categoryPosition[nodeCategory];
+			browser.$(".palette-content").$("div")
+			.$$("div")[categoryIndex].click();
+			// drag the var file node to the canvas
+			const nodeIndex = nodePosition[nodeType];
+			browser.execute(simulateDragDrop, ".palette-grid-node-outer", nodeIndex, "#canvas-div", 0, canvasX, canvasY);
+			// close the palette
+			browser.$(".palette-topbar").$(".right-navbar")
+				.$(".secondary-action")
+				.click();
 
+			// Start validation
+			browser.pause(1000);
+			var nodeNumber = inNodeIndex - 1;
 
-		// Start validation
-		browser.pause(1000);
-		var nodeNumber = inNodeIndex - 1;
+			// verify node is in the canvas DOM
+			var imageName;
+			if (getRenderingEngine() === "D3") {
+				imageName = browser.$("#canvas-div").$$(".node-image")[nodeNumber].getAttribute("href");
+			} else {
+				imageName = browser.$("#canvas-div").$$(".node-inner-circle")[nodeNumber].$("img").getAttribute("src");
+			}
 
-		// verify node is in the canvas DOM
-		var imageName = browser.$("#canvas-div").$$(".node-inner-circle")[nodeNumber].$("img").getAttribute("src");
-		expect(imageName).toEqual(expectedImages[nodeType]);
+			expect(imageName).toEqual(expectedImages[nodeType]);
 
-		// verify that the  node is in the internal object model
-		const testUrl = getURL();
-		const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
-		const getEventLogUrl = testUrl + "/v1/test-harness/events";
+			// verify that the  node is in the internal object model
+			const testUrl = getURL();
+			const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
+			const getEventLogUrl = testUrl + "/v1/test-harness/events";
 
-		browser.timeoutsAsyncScript(5000);
-		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
-		var returnVal = browser.execute(getObjectModelCount, objectModel.value, "nodes", expectedImages[nodeType]);
-		expect(returnVal.value).toBe(1);
+			browser.timeoutsAsyncScript(5000);
+			var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
+			var returnVal = browser.execute(getObjectModelCount, objectModel.value, "nodes", expectedImages[nodeType]);
+			expect(returnVal.value).toBe(1);
 
-		// verify that an event for a new  node is in the external object model event log
-		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
-		returnVal = browser.execute(getEventLogCount, eventLog.value, "editActionHandler() createNode", expectedEventData[nodeType]);
-		if (returnVal.value !== 1) {
-			// console.log(eventLog.value);
+			// verify that an event for a new  node is in the external object model event log
+			var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
+			returnVal = browser.execute(getEventLogCount, eventLog.value, "editActionHandler() createNode", expectedEventData[nodeType]);
+			if (returnVal.value !== 1) {
+				// console.log(eventLog.value);
+			}
+			expect(returnVal.value).toBe(1);
+		} catch (err) {
+			console.log("Error = " + err);
+			throw err;
 		}
-		expect(returnVal.value).toBe(1);
 	});
 
 	// Then I select node 4 the "Type" node
 	//
 	this.Then(/^I select node (\d+) the "([^"]*)" node$/, function(nodeIndex, nodeName) {
 		var nodeNumber = nodeIndex - 1;
-		browser.$("#canvas-div").$$(".node-inner-circle")[nodeNumber].click();
+		if (getRenderingEngine() === "D3") {
+			browser.$("#canvas-div").$$(".node-group")[nodeNumber].click();
+		} else {
+			browser.$("#canvas-div").$$(".node-inner-circle")[nodeNumber].click();
+		}
 	});
 
   // Then I disconnect links for node 1 a "Var. File" node on the canvas
 	//
 	this.Then(/^I disconnect links for node (\d+) a "([^"]*)" on the canvas$/, function(nodeIndex, nodeName) {
 		var nodeNumber = nodeIndex - 1;
-		browser.$("#canvas-div").$$(".node-inner-circle")[nodeNumber].rightClick();
+
+		if (getRenderingEngine() === "D3") {
+			browser.$("#canvas-div").$$(".node-group")[nodeNumber].rightClick();
+		} else {
+			browser.$("#canvas-div").$$(".node-inner-circle")[nodeNumber].rightClick();
+		}
+
 		browser.$(".context-menu-popover").$$(".react-context-menu-item")[1].$(".react-context-menu-link").click();
 
 
@@ -538,14 +559,27 @@ module.exports = function() {
 	//
 	this.Then(/^I delete node (\d+) the "([^"]*)" node$/, function(nodeIndex, nodeType) {
 		var nodeNumber = nodeIndex - 1;
-		browser.$("#canvas-div").$$(".node-inner-circle")[nodeNumber].rightClick();
+		var nodeSelector;
+		if (getRenderingEngine() === "D3") {
+			nodeSelector = ".node-group";
+		} else {
+			nodeSelector = ".node-inner-circle";
+		}
+		browser.$("#canvas-div").$$(nodeSelector)[nodeNumber].rightClick();
 		browser.$(".context-menu-popover").$$(".react-context-menu-item")[10].$(".react-context-menu-link").click();
 
 		// verify node is not the canvas DOM
 		var count = 0;
-		var nodeList = browser.$("#canvas-div").$$(".node-inner-circle");
+		var nodeList = browser.$("#canvas-div").$$(nodeSelector);
 		for (var idx = 0; idx < nodeList.length; idx++) {
-			var imageName = browser.$("#canvas-div").$$(".node-inner-circle")[idx].$("img").getAttribute("src");
+			var imageName;
+			if (getRenderingEngine() === "D3") {
+				imageName = browser.$("#canvas-div").$$(nodeSelector)[idx].$("image").getAttribute("href");
+			} else {
+				imageName = browser.$("#canvas-div").$$(nodeSelector)[idx].$("img").getAttribute("src");
+			}
+
+			// console.log("Image # = " + idx + " image = " + imageName);
 			if (imageName === expectedImages[nodeType]) {
 				count++;
 			}
@@ -574,7 +608,11 @@ module.exports = function() {
 	this.Then(/^I move node (\d+) a "([^"]*)" node onto the canvas by \-?(\d+), \-?(\d+)$/,
 		function(nodeIndex, nodeName, canvasX, canvasY) {
 			var nodeNumber = nodeIndex - 1;
-			browser.execute(simulateDragDrop, ".node-inner-circle", nodeNumber, "#canvas-div", 0, canvasX, canvasY);
+			if (getRenderingEngine() === "D3") {
+				browser.execute(simulateDragDrop, ".node-group", nodeNumber, "#canvas-div", 0, canvasX, canvasY);
+			} else {
+				browser.execute(simulateDragDrop, ".node-inner-circle", nodeNumber, "#canvas-div", 0, canvasX, canvasY);
+			}
 		});
 
 	// Then I expect the object model to be empty
@@ -589,8 +627,6 @@ module.exports = function() {
 		var returnVal = browser.execute(isObjectModelEmpty, objectModel.value);
 		expect(returnVal.value).toBe(0);
 	});
-
-/* eslint no-console: ["error", { allow: ["warn"] }] */
 
 	// Then I write out the object model
 	//

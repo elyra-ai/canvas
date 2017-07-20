@@ -13,7 +13,7 @@ module.exports = function() {
 	/* global browser */
 	this.Then(/^I have uploaded predefined diagram "([^"]*)"$/, function(diagramFile) {
 		browser.pause(500);
-		// need to clisk on the canvas drop down
+		// need to click on the canvas drop down
 		browser.$("#sidepanel-canvas-input")
 						.$(".canvasField")
 						.$(".select")
@@ -36,7 +36,7 @@ module.exports = function() {
 
 	this.Then(/^I have uploaded diagram "([^"]*)"$/, function(diagramFile) {
 		browser.pause(500);
-		// need to clisk on the canvas drop down
+		// need to click on the canvas drop down
 		browser.$("#sidepanel-canvas-input")
 						.$(".canvasField")
 						.$(".select")
@@ -64,8 +64,8 @@ module.exports = function() {
 	});
 
 	this.Then(/^I have uploaded predefined palette "([^"]*)"$/, function(paletteFile) {
-		// need to clisk on the palette drop down
-		browser.pause(500);
+		// need to click on the palette drop down
+		browser.pause(2000);
 		browser.$("#sidepanel-palette-input")
 						.$(".formField")
 						.$(".select")
@@ -86,8 +86,8 @@ module.exports = function() {
 	});
 
 	this.Then(/^I have uploaded palette "([^"]*)"$/, function(paletteFile) {
-		// need to clisk on the palette drop down
-		browser.pause(500);
+		// need to click on the palette drop down
+		browser.pause(2000);
 		browser.$("#sidepanel-palette-input")
 						.$(".formField")
 						.$(".select")

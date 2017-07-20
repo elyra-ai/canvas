@@ -339,6 +339,11 @@ const selections = (state = [], action) => {
 	case "SET_SELECTIONS":
 		return [...action.data];
 
+	case "DELETE_OBJECTS":
+		return state.filter((objId) => {
+			return action.data.selectedObjectIds.indexOf(objId) === -1;
+		});
+
 	default:
 		return state;
 	}
@@ -417,7 +422,13 @@ export default class ObjectModel {
 	}
 
 	static setCanvas(newCanvas) {
-		this.clearSelection();
+		const currentCanvas = this.getCanvas();
+		// In some instances, with an external object model, the same canvas may
+		// be set multiple times. Consequently, we only clear the selections if
+		// we're given a completely new canvas.
+		if (newCanvas && currentCanvas && newCanvas.id !== currentCanvas.id) {
+			this.clearSelection();
+		}
 		store.dispatch({ type: "SET_CANVAS", data: newCanvas });
 	}
 
@@ -469,8 +480,8 @@ export default class ObjectModel {
 		var g = dagre.graphlib.json.read(inputGraph);
 		g.graph().marginx = 100;
 		g.graph().marginy = 25;
-		g.graph().nodesep = 100; // distance to separate the nodes horiziontally
-		g.graph().ranksep = 100; // distance between each rank of nodes
+		g.graph().nodesep = 150; // distance to separate the nodes horiziontally
+		g.graph().ranksep = 150; // distance between each rank of nodes
 		dagre.layout(g);
 
 		var outputGraph = dagre.graphlib.json.write(g);
@@ -655,6 +666,10 @@ export default class ObjectModel {
 		const srcNode = ObjectModel.getNode(srcNodeId);
 		const trgNode = ObjectModel.getNode(trgNodeId);
 
+		if (this.linkAlreadyExists(srcNodeId, trgNodeId, diagramLinks)) {
+			return false;
+		}
+
 		let srcCount = 0;
 		let trgCount = 0;
 		diagramLinks.forEach((link) => {
@@ -671,12 +686,31 @@ export default class ObjectModel {
 			}
 		});
 
-		if (srcCount < srcNode.outputPorts.length &&
-			trgCount < trgNode.inputPorts.length) {
+		// TODO - Remove these two lines below whe we've decided how to disallow
+		// connections. Should this be based on cardinality? If more than one
+		// input or output port is allowed we will need the link to
+		// know which port it is linking.
+		srcCount = 0;
+		trgCount = 0;
+
+		if (srcNode.outputPorts && srcCount < srcNode.outputPorts.length &&
+				trgNode.inputPorts && trgCount < trgNode.inputPorts.length) {
 			return true;
 		}
 
 		return false;
+	}
+
+	static linkAlreadyExists(srcNodeId, trgNodeId, diagramLinks) {
+		let exists = false;
+
+		diagramLinks.forEach((link) => {
+			if (link.source === srcNodeId &&
+					link.target === trgNodeId) {
+				exists = true;
+			}
+		});
+		return exists;
 	}
 
 // Methods to handle selections

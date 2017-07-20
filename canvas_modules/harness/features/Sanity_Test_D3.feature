@@ -5,12 +5,13 @@ Feature: Canvas sanity test
   As a human
   I want to create a canvas
   So I can build a graph
+	@watch
 
-  Scenario: Sanity test empty canvas with the Legacy rendering engine
+  Scenario: Sanity test empty canvas with D3 rendering engine
     Given I am on the test harness
     Given I have toggled the app side panel
 		Given I have uploaded predefined palette "modelerPalette.json"
-		Given I have selected the "Legacy" rendering engine
+		Given I have selected the "D3" rendering engine
 		Given I have toggled the app side panel
 
     Then I add node 1 a "Var. File" node from the "Import" category onto the canvas at 100, 200

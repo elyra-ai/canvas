@@ -58,6 +58,19 @@ function getCommentIdFromObjectModel(objectModel, commentIndex) {
 	return omJson.diagram.comments[commentIndex].id;
 }
 
+// return the comment id from the object model
+//
+function getCommentIdFromObjectModelUsingText(objectModel, commentText) {
+	var omJson = JSON.parse(objectModel);
+	var id = -1;
+	omJson.diagram.comments.forEach(function(com) {
+		if (com.content === commentText) {
+			id = com.id;
+		}
+	});
+	return id;
+}
+
 // count the number of events in event log
 //
 function getEventLogCount(eventLog, eventType, eventData) {
@@ -135,6 +148,7 @@ module.exports = {
 	containLinkInObjectModel: containLinkInObjectModel,
 	deleteLinkInObjectModel: deleteLinkInObjectModel,
 	getCommentIdFromObjectModel: getCommentIdFromObjectModel,
+	getCommentIdFromObjectModelUsingText: getCommentIdFromObjectModelUsingText,
 	getEventLogCount: getEventLogCount,
 	getLinkEventCount: getLinkEventCount,
 	getNodeIdFromObjectModel: getNodeIdFromObjectModel,

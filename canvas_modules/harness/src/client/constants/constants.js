@@ -24,21 +24,26 @@ _defineConstant("CONSOLE", {
 	MAXIMIXED: "200px"
 });
 
-_defineConstant("CURVE", "curve");
-_defineConstant("ELBOW", "elbow");
-_defineConstant("STRAIGHT", "straight");
-
 _defineConstant("SIDE_PANEL", {
 	MINIMIZED: "0px",
 	MAXIMIXED: "230px"
 });
 _defineConstant("SIDE_PANEL_CANVAS", "sidepanel-canvas");
-_defineConstant("SIDE_PANEL_STYLES", "sidepanel-styles");
 _defineConstant("SIDE_PANEL_MODAL", "sidepanel-modal");
 
 _defineConstant("NONE", "none");
 _defineConstant("HORIZONTAL", "horizontal");
 _defineConstant("VERTICAL", "vertical");
+
+_defineConstant("LEGACY_ENGINE", "Legacy");
+_defineConstant("D3_ENGINE", "D3");
+
+_defineConstant("HALO_CONNECTION", "Halo");
+_defineConstant("PORTS_CONNECTION", "Ports");
+
+_defineConstant("CURVE_LINKS", "Curve");
+_defineConstant("ELBOW_LINKS", "Elbow");
+_defineConstant("STRAIGHT_LINKS", "Straight");
 
 _defineConstant("CHOOSE_FROM_LOCATION", "Choose from location...");
 

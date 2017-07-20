@@ -1,0 +1,272 @@
+/****************************************************************
+** IBM Confidential
+**
+** OCO Source Materials
+**
+** SPSS Modeler
+**
+** (c) Copyright IBM Corp. 2017
+**
+** The source code for this program is not published or otherwise
+** divested of its trade secrets, irrespective of what has been
+** deposited with the U.S. Copyright Office.
+*****************************************************************/
+@CHARSET "ISO-8859-1";
+
+/* Canvas styles */
+
+.d3-svg-canvas-div {
+	cursor: default;
+	height: 100%;
+}
+
+/* Pull-out region rectangle used for object selection */
+.d3-region-selector {
+	stroke: gray;
+	fill: transparent;
+	stroke-dasharray: 2.2;
+}
+
+/* Node styles */
+
+.d3-obj-rect {
+	stroke-width: 0;
+	fill: transparent;
+}
+
+/* Node selection highlight rectangle */
+.d3-obj-rect-selected {
+	stroke: #60C3B9;
+	stroke-dasharray: 5,5;
+	stroke-width: 2;
+	fill: transparent;
+}
+
+.d3-node-rect-outline {
+	stroke: #adc5e4;
+	stroke-width: 2;
+	fill: #e3ebf6;
+}
+
+.d3-node-label {
+	font-family: sans-serif;
+	font-size: 13px;
+	/* Prevent elements from being selectable */
+	/* This stops it being dragged incorrectly.*/
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+}
+
+.d3-label-outline {
+	fill: #e0e0e0;
+	stroke: #aeaeae;
+	stroke-width: 2;
+}
+
+.d3-decorator-outline {
+	fill: #e0e0e0;
+	stroke: #aeaeae;
+	stroke-width: 2;
+}
+
+.d3-decorator-image {
+	pointer-events: none; /* Allows mouse events (eg. hover) to go through to decorator rectangle */
+}
+
+.d3-node-halo {
+	fill: none;
+	stroke: transparent;
+	stroke-width: 8;
+}
+
+.d3-node-halo:hover {
+	fill: none;
+	stroke: #4178be;
+	stroke-width: 8;
+}
+
+/* Styles for ports */
+
+.d3-node-port-output {
+	stroke: #a2bde0;  /* Blue */
+	fill: #f9f9fb;    /* White */
+	stroke-width: 2;
+}
+
+.d3-node-port-output[connected=yes] {
+	stroke: #a2bde0;  /* Blue */
+	fill: #e3ebf6;    /* Light blue */
+	stroke-width: 2;
+}
+
+.d3-node-port-output:hover {
+  fill: #4178be;   /* Dark blue */
+}
+
+.d3-node-port-input {
+	stroke: #a2bde0;  /* Blue */
+	fill: #f9f9fb;    /* White */
+	stroke-width: 2;
+}
+
+.d3-node-port-input[connected=yes] {
+	stroke: #a2bde0;  /* Blue */
+	fill: #e3ebf6;    /* Light blue */
+	stroke-width: 2;
+}
+
+/* Ports - Target node arrow styles */
+
+.d3-node-port-input-arrow {
+	stroke: transparent;
+	fill: transparent;
+}
+
+.d3-node-port-input-arrow[connected=yes] {
+	stroke: #4178be; /* Dark blue */
+	fill: transparent;
+}
+
+/* Ports - New connection dynamic line styles. */
+
+.d3-new-connection-line[linkType=nodeLink] {
+  stroke: #4178be;   /* Dark blue */
+	stroke-width: 2;
+	stroke-dasharray: 10 10;
+	fill: none;
+}
+
+.d3-new-connection-start[linkType=nodeLink] {
+	stroke: #4178be;   /* Dark blue */
+	fill: #FFFFFF;   /* White */
+}
+
+.d3-new-connection-blob[linkType=nodeLink] {
+	stroke: #4178be;   /* Dark blue */
+	fill: #4178be;   /* Dark blue */
+}
+
+.d3-comment-port-circle {
+	stroke: #c5ccd6;
+	stroke-width: 2;
+	fill: #c5ccd6;
+}
+
+.d3-new-connection-line[linkType=commentLink] {
+	stroke: gray;
+	stroke-width: 2;
+	stroke-dasharray: 10 10;
+	fill: none;
+}
+
+.d3-new-connection-blob[linkType=commentLink] {
+	stroke: gray;
+	fill: white;
+}
+
+.d3-new-connection-arrow[linkType=commentLink] {
+	stroke: gray;
+	stroke-width: 2;
+	fill: transparent;
+}
+
+/* Halo - Temporary connector line pulled out from halo */
+
+.d3-node-connector {
+	stroke: gray;
+	stroke-dasharray: 2.2;
+}
+
+/* Comment styles */
+
+.d3-comment-display {
+	font-family: sans-serif;
+	font-size: 13px;  /* Must be the same as font size in .comment-entry */
+	position: absolute;
+	padding: 2;
+	/* Prevent elements from being selectable */
+	/* This stops it being dragged incorrectly.*/
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+}
+
+.d3-comment-entry {
+	font-family: sans-serif;
+	font-size: 13px;  /* Must be the same as font size in .comment-display */
+	position: absolute;
+	border: none;
+	padding-top: 2px;
+	padding-left: 0px;
+	padding-right: 0px;
+	overflow: hidden;
+	line-height: 105%;  /* Set so that entry text is displayed the same as display text */
+	white-space: pre-line;
+	word-wrap: normal;
+	word-break: break-word;
+	background-color: transparent;
+}
+
+.d3-comment-halo {
+	fill: none;
+	stroke: transparent;
+	stroke-width: 8;
+}
+
+.d3-comment-halo:hover {
+	fill: none;
+	stroke: #4178be;
+	stroke-width: 8;
+}
+
+/* Link styles */
+
+.d3-comment-link {
+	stroke: gray;
+	fill: none;
+	stroke-width:2;
+	stroke-dasharray: 7.3;
+}
+
+.d3-comment-link-arrow-head {
+	stroke: gray;
+	stroke-width: 2;
+	fill: transparent;
+	stroke-dasharray: 0;
+}
+
+.d3-data-link {
+	stroke: black;
+	fill: none;
+	stroke-width: 2;
+}
+
+.d3-data-link-arrow-head {
+	stroke: black;
+	stroke-width: 2;
+	fill: transparent;
+	stroke-dasharray: 0;
+}
+
+.d3-link-selection-area {
+	fill: none;
+	stroke: transparent;
+	stroke-width: 6;
+}
+
+/* When pointer hovers over the link's selectable area this style will be applied. */
+/* The ~ styles mean that any d3-selectable-link sibling which comes after the
+/* selectable area in the DOM will be styled this way. We use the g to make these
+/* style selectors more specific (to CSS) than any styles applied from the canvas JSON. */
+g .d3-comment-link:hover,
+g .d3-data-link:hover,
+g .d3-selectable-link:hover,
+g .d3-selectable-link:hover ~ .d3-selectable-link,      /* Colors arrow head when hovering over line. */
+g .d3-link-selection-area:hover ~ .d3-selectable-link { /* Colors arrow head when hovering over line selection area. */
+	stroke: #60C3B9;
+}

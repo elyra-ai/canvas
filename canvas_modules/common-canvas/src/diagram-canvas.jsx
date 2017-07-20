@@ -413,8 +413,12 @@ export default class DiagramCanvas extends React.Component {
 		const canvasDiv = document.getElementById("canvas-div");
 		const rect = canvasDiv.getBoundingClientRect();
 
-		const x = event.clientX - Math.round(rect.left);
-		const y = event.clientY - Math.round(rect.top);
+		const cmPos = {
+			x: event.clientX - Math.round(rect.left),
+			y: event.clientY - Math.round(rect.top)
+		};
+
+		const mousePos = { x: cmPos.x * this.zoom(), y: cmPos.y * this.zoom() };
 
 		event.preventDefault();
 
@@ -422,17 +426,16 @@ export default class DiagramCanvas extends React.Component {
 			type: objectType,
 			targetObject: object,
 			selectedObjectIds: ObjectModel.ensureSelected(object.id),
-			mousePos: {
-				x: x,
-				y: y
-			}
+			cmPos: cmPos,
+			mousePos: mousePos
 		};
 
 		this.props.contextMenuHandler(contextMenuSource);
 	}
 
 	canvasContextMenu(event) {
-		const mousePos = this.mouseCoords(event);
+		const cmPos = this.mouseCoords(event);
+		const mousePos = { x: cmPos.x / this.zoom(), y: cmPos.y / this.zoom() };
 
 		event.preventDefault();
 
@@ -443,6 +446,7 @@ export default class DiagramCanvas extends React.Component {
 				type: "canvas",
 				zoom: this.zoom(),
 				selectedObjectIds: ObjectModel.getSelectedObjectIds(),
+				cmPos: cmPos,
 				mousePos: mousePos
 			};
 		} else {
@@ -450,6 +454,7 @@ export default class DiagramCanvas extends React.Component {
 			contextMenuSource = {
 				type: "link",
 				id: event.target.id,
+				cmPos: cmPos,
 				mousePos: mousePos
 			};
 		}

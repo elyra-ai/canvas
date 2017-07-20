@@ -23,7 +23,14 @@ import {
 	NONE,
 	HORIZONTAL,
 	VERTICAL,
-	CHOOSE_FROM_LOCATION
+	CHOOSE_FROM_LOCATION,
+	LEGACY_ENGINE,
+	D3_ENGINE,
+	HALO_CONNECTION,
+	PORTS_CONNECTION,
+	CURVE_LINKS,
+	ELBOW_LINKS,
+	STRAIGHT_LINKS
 } from "../constants/constants.js";
 import FormsService from "../services/FormsService";
 
@@ -53,6 +60,9 @@ export default class SidePanelForms extends React.Component {
 		this.oneTimeVerticalLayout = this.oneTimeVerticalLayout.bind(this);
 		this.disableOneTimeLayoutButtons = this.disableOneTimeLayoutButtons.bind(this);
 		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
+		this.renderingEngineOptionChange = this.renderingEngineOptionChange.bind(this);
+		this.connectionTypeOptionChange = this.connectionTypeOptionChange.bind(this);
+		this.linkTypeOptionChange = this.linkTypeOptionChange.bind(this);
 	}
 
 	componentWillMount() {
@@ -216,6 +226,17 @@ export default class SidePanelForms extends React.Component {
 		this.props.useInternalObjectModel(changeEvent.target.checked);
 	}
 
+	connectionTypeOptionChange(evt, obj) {
+		this.props.setConnectionType(obj.selected);
+	}
+
+	linkTypeOptionChange(evt, obj) {
+		this.props.setLinkType(obj.selected);
+	}
+	renderingEngineOptionChange(evt, obj) {
+		this.props.setRenderingEngine(obj.selected);
+	}
+
 	render() {
 		var divider = (<div className="sidepanel-children sidepanel-divider" />);
 		var space = (<div className="sidepanel-spacer" />);
@@ -344,6 +365,46 @@ export default class SidePanelForms extends React.Component {
 			</form>
 		</div>);
 
+		var renderingEngine = (<div className="sidepanel-children" id="sidepanel-rendering-engine">
+			<div className="sidepanel-headers">Rendering Engine</div>
+			<RadioGroup name="rendering_radio"
+				dark
+				onChange={this.renderingEngineOptionChange}
+				choices={[
+					D3_ENGINE,
+					LEGACY_ENGINE
+				]}
+				selected={D3_ENGINE}
+			/>
+		</div>);
+
+		var connectionType = (<div className="sidepanel-children" id="sidepanel-connection-type">
+			<div className="sidepanel-headers">Connection Type (for 'D3')</div>
+			<RadioGroup name="connection_type_radio"
+				dark
+				onChange={this.connectionTypeOptionChange}
+				choices={[
+					HALO_CONNECTION,
+					PORTS_CONNECTION
+				]}
+				selected={HALO_CONNECTION}
+			/>
+		</div>);
+
+		var linkType = (<div className="sidepanel-children" id="sidepanel-link-type">
+			<div className="sidepanel-headers">Link Type (for 'Ports')</div>
+			<RadioGroup name="link_type_radio"
+				dark
+				onChange={this.linkTypeOptionChange}
+				choices={[
+					CURVE_LINKS,
+					ELBOW_LINKS,
+					STRAIGHT_LINKS
+				]}
+				selected={CURVE_LINKS}
+			/>
+		</div>);
+
 		return (
 			<div>
 				{canvasInput}
@@ -355,6 +416,12 @@ export default class SidePanelForms extends React.Component {
 				{layoutOnDemand}
 				{divider}
 				{enableObjectModel}
+				{divider}
+				{renderingEngine}
+				{divider}
+				{connectionType}
+				{divider}
+				{linkType}
 			</div>
 		);
 	}
@@ -368,5 +435,8 @@ SidePanelForms.propTypes = {
 	setLayoutDirection: React.PropTypes.func,
 	setOneTimeLayoutDirection: React.PropTypes.func,
 	useInternalObjectModel: React.PropTypes.func,
+	setRenderingEngine: React.PropTypes.func,
+	setConnectionType: React.PropTypes.func,
+	setLinkType: React.PropTypes.func,
 	log: React.PropTypes.func
 };

@@ -6,12 +6,12 @@ Feature: Canvas Sanity test from loaded file
   I want to load a canvas
   So I can add more flow to the canvas
 @watch
-  Scenario: Sanity test from loaded file with the Legacy rendering engine
+  Scenario: Sanity test from loaded file with D3 rendering engine
     Given I am on the test harness
     Given I have toggled the app side panel
     Given I have uploaded palette "/test_resources/palettes/modelerPalette.json"
     Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
-    Given I have selected the "Legacy" rendering engine
+    Given I have selected the "D3" rendering engine
     Given I have toggled the app side panel
 
 		Then I pause for 3 seconds
