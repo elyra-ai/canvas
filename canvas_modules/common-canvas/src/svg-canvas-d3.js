@@ -1387,7 +1387,7 @@ export default class CanvasD3Layout {
 						}
 					})
 					.on("dblclick", function(d) { // Use function keyword so 'this' pointer references the DOM text object
-						this.consoleLog("Comment Group - double click");
+						that.consoleLog("Comment Group - double click");
 						d3.event.stopPropagation();
 						d3.event.preventDefault();
 
@@ -1421,12 +1421,12 @@ export default class CanvasD3Layout {
 								.style("top", yPos + "px")
 								.style("transform", that.getTextAreaTransform())
 								.on("keyup", function() {
-									this.consoleLog("Text area - Key up");
+									that.consoleLog("Text area - Key up");
 									that.editingCommentChangesPending = true;
 									that.autoSizeTextArea(this, datum);
 								})
 								.on("paste", function() {
-									this.consoleLog("Text area - Paste - Scroll Ht = " + this.scrollHeight);
+									that.consoleLog("Text area - Paste - Scroll Ht = " + this.scrollHeight);
 									that.editingCommentChangesPending = true;
 									// Allow some time for pasted text (from context menu) to be
 									// loaded into the text area. Otherwise the text is not there
@@ -1434,7 +1434,7 @@ export default class CanvasD3Layout {
 									setTimeout(that.autoSizeTextArea.bind(that), 500, this, datum);
 								})
 								.on("blur", function() {
-									this.consoleLog("Text area - blur");
+									that.consoleLog("Text area - blur");
 									var commentObj = that.getComment(id);
 									commentObj.content = this.value;
 									d3.select(`#comment_grp_${commentObj.id}`).remove();
@@ -2412,6 +2412,6 @@ export default class CanvasD3Layout {
 	}
 
 	consoleLog(msg) {
-		// console.log(msg);
+		console.log(msg);
 	}
 }
