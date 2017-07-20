@@ -45,7 +45,7 @@ module.exports = function() {
 		specificComment.doubleClick();
 		browser.pause(1000);
 		if (getRenderingEngine() === "D3") {
-			specificComment.$("textarea").setValue("", comment); // For D3, the text area is cretaed by the double click
+			specificComment.$("textarea").setValue("", comment); // For D3, the text area is created by the double click
 		} else {
 			specificComment.setValue("", comment);
 		}
@@ -87,7 +87,7 @@ module.exports = function() {
 
 		if (getRenderingEngine() === "D3") {
 			// For D3, we cannot rely on index position of comments because they get messed up
-			// when pusshing commnets to be underneath nodes and links. Therefore we look for the
+			// when pushing comments to be underneath nodes and links. Therefore we look for the
 			// text of the comment being deleted.
 			commentElements = browser.$("#common-canvas").$$(".comment-group");
 			var index = 0;
@@ -149,7 +149,7 @@ module.exports = function() {
 			var commentNumber = commentIndex - 1;
 			if (getRenderingEngine() === "D3") {
 				// For D3, we cannot rely on index position of comments because they get messed up
-				// when pusshing commnets to be underneath nodes and links. Therefore we look for the
+				// when pushing comments to be underneath nodes and links. Therefore we look for the
 				// text of the comment being deleted.
 				var commentElements = browser.$("#common-canvas").$$(".comment-group");
 				var index = 0;

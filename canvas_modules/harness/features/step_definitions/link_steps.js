@@ -78,7 +78,7 @@ module.exports = function() {
 
 		if (getRenderingEngine() === "D3") {
 			// For D3, we cannot rely on index position of comments because they get messed up
-			// when pusshing commnets to be underneath nodes and links. Therefore we look for the
+			// when pushing comments to be underneath nodes and links. Therefore we look for the
 			// text of the comment being deleted.
 			var commentElements = browser.$("#common-canvas").$$(".comment-group");
 			for (let idx = 0; idx < commentElements.length; idx++) {

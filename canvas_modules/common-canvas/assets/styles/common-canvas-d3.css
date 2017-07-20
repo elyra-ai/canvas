@@ -262,7 +262,7 @@
 /* When pointer hovers over the link's selectable area this style will be applied. */
 /* The ~ styles mean that any d3-selectable-link sibling which comes after the
 /* selectable area in the DOM will be styled this way. We use the g to make these
-/* style selectors more specific (to CSS) than any styles appled form the canvas JSON. */
+/* style selectors more specific (to CSS) than any styles applied from the canvas JSON. */
 g .d3-comment-link:hover,
 g .d3-data-link:hover,
 g .d3-selectable-link:hover,

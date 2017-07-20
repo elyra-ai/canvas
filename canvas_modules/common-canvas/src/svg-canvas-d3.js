@@ -20,7 +20,7 @@ export default class CanvasD3Layout {
 	constructor(canvasJSON, canvasSelector, canvasWidth, canvasHeight,
 							editActionHandler, contextMenuHandler, clickActionHandler,
 							decorationActionHandler, config) {
-		// Make a copy of canvasJSON becuase we will need to update it (when moving
+		// Make a copy of canvasJSON because we will need to update it (when moving
 		// nodes and comments and when sizing comments in real time) without updating the
 		// canvasJSON in the ObjectModel until we're done.
 		this.canvasJSON = this.cloneCanvasJSON(canvasJSON);
@@ -52,7 +52,7 @@ export default class CanvasD3Layout {
 		// allow mousedown and mousemove messages to go through to the canvas to
 		// do region selection. Therefore I had to implement region selection in
 		// the zoom methods. This has the side effect that, when a region is
-		// selected, d3.event.trasnform.x and d3.event.transform.y are incremeneted
+		// selected, d3.event.transform.x and d3.event.transform.y are incremented
 		// even though the objects in the canvas have not moved. The values below
 		// are used to store the current transform x and y amounts at the beginning
 		// of the region selection and then restore those amounts at the end of
@@ -60,7 +60,7 @@ export default class CanvasD3Layout {
 		this.regionStartTransformX = 0;
 		this.regionStartTransformY = 0;
 
-		// Variables for for dynamically drawing a new link line
+		// Variables for dynamically drawing a new link line
 		this.drawingNewLink = false;
 		this.drawingNewLinkSrcId = null;
 		this.drawingNewLinkAction = null;
@@ -174,7 +174,7 @@ export default class CanvasD3Layout {
 			this.linkType = config.enableLinkType;
 			this.clearCanvas();
 		}
-		// Make a copy of canvasJSON becuase we will need to update it (when moving
+		// Make a copy of canvasJSON because we will need to update it (when moving
 		// nodes and comments and when sizing comments in real time) without updating the
 		// canvasJSON in the ObjectModel until we're done.
 		this.canvasJSON = this.cloneCanvasJSON(canvasJSON);
@@ -185,7 +185,7 @@ export default class CanvasD3Layout {
 	}
 
 		// Copies the canvas JSON because the canvas info is updated by the d3 code when
-	// real time actions are performed like moving nodes or comments or resinzing
+	// real time actions are performed like moving nodes or comments or resizing
 	// comments.
 	cloneCanvasJSON(canvasJSON) {
 		return JSON.parse(JSON.stringify(canvasJSON));
@@ -477,13 +477,13 @@ export default class CanvasD3Layout {
 				this.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "canvas", selectedObjectIds: ObjectModel.getSelectedObjectIds() });
 				// TODO - The decision to clear selection (commented out code below) is currently made by common-canvas
 				// This 'to do' is to move that decision from there to here. To do that we need to have a callback function
-				// to the ask the react code if a context men uis currenly on dsiplay or not.
+				// to the ask the react code if a context menu is currently on display or not.
 				// if (ObjectModel.getSelectedObjectIds().length > 0) {
 				// 	ObjectModel.clearSelection();
 				// }
 			} else {
 				// If a text area is open, any pending changes need to be saved before
-				// the zoomCanvas edit action occurs becasue that will cause a refresh
+				// the zoomCanvas edit action occurs because that will cause a refresh
 				// from the objectmodel's canvasJSON which would remove any pending changes.
 				this.savePendingCommentChanges();
 				this.consoleLog("editActionHandler - zoomCanvas");
@@ -672,7 +672,7 @@ export default class CanvasD3Layout {
 					.attr("id", (d) => `node_grp_${d.id}`)
 					.attr("class", "obj-group node-group")
 					.attr("transform", (d) => `translate(${d.xPos}, ${d.yPos})`)
-					// Use mouse down instead of click becasue it gets called before drag start.
+					// Use mouse down instead of click because it gets called before drag start.
 					.on("mousedown", (d) => {
 						this.consoleLog("Node Group - mouse down");
 						d3.event.stopPropagation(); // Prevent mousedown event going through to canvas
@@ -692,8 +692,8 @@ export default class CanvasD3Layout {
 					})
 					.on("mousemove", (d) => {
 						// this.consoleLog("Node Group - mouse move");
-						// Don't stop propogation. Mouse move messages must be allowd to
-						// propogate to canvas zoom operation.
+						// Don't stop propogation. Mouse move messages must be allowed to
+						// propagate to canvas zoom operation.
 					})
 					.on("mouseup", (d) => {
 						d3.event.stopPropagation();
@@ -1337,7 +1337,7 @@ export default class CanvasD3Layout {
 					.attr("id", (d) => `comment_grp_${d.id}`)
 					.attr("class", "obj-group comment-group")
 					.attr("transform", (d) => `translate(${d.xPos}, ${d.yPos})`)
-					// Use mouse down instead of click becasue it gets called before drag start.
+					// Use mouse down instead of click because it gets called before drag start.
 					.on("mousedown", (d) => {
 						this.consoleLog("Comment Group - mouse down");
 						d3.event.stopPropagation(); // Prevent mousedown event going through to canvas
@@ -1356,7 +1356,7 @@ export default class CanvasD3Layout {
 						// from common canvas, if we uncomment this line it prevents the
 						// double click event going to the comment group object. This seems
 						// to be a timing issue since the same problem is not evident with the
-						// simialr code for the Node group object.
+						// similar code for the Node group object.
 						// this.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "comment", id: d.id, selectedObjectIds: ObjectModel.getSelectedObjectIds() });
 						this.consoleLog("Comment Group - finished mouse down");
 					})
@@ -1614,7 +1614,7 @@ export default class CanvasD3Layout {
 
 	// Returns the comment sizing direction (i.e. one of n, s, e, w, nw, ne,
 	// sw or se) based on the current mouse position and the position and
-	// dirmensions of the comment box.
+	// dimensions of the comment box.
 	getCommentSizingDirection(d) {
 		var xPart = "";
 		var yPart = "";
@@ -1734,7 +1734,7 @@ export default class CanvasD3Layout {
 	}
 
 	// Returns an array of lines which is the text passed in broken up by
-	// teh occurance of new line characters.
+	// the occurrence of new line characters.
 	splitOnLineBreak(text) {
 		var newLines = [];
 		var line = "";
@@ -2244,14 +2244,14 @@ export default class CanvasD3Layout {
 		return this.getStraightPath(data);
 	}
 
-	// Returns the path string for the object passed in which descibes a
+	// Returns the path string for the object passed in which describes a
 	// simple straight connector line from source to target. This is used for
 	// connectors from comments to data nodes.
 	getStraightPath(data) {
 		return "M " + data.x1 + " " + data.y1 + " L " + data.x2 + " " + data.y2;
 	}
 
-	// Returns the path string for the object passed in which descibes a
+	// Returns the path string for the object passed in which describes a
 	// simple straight connector line and a jaunty zig zag line when the
 	// source is further right than the target.
 	getLighteningPath(data) {
@@ -2280,7 +2280,7 @@ export default class CanvasD3Layout {
 		return path;
 	}
 
-	// Returns the path string for the object passed in which descibes a
+	// Returns the path string for the object passed in which describes a
 	// cubic bezier curved connector line.
 	// getCurvePath(data) {
 	// 	let corner1X = data.x1 + (data.x2 - data.x1) / 2;
@@ -2300,7 +2300,7 @@ export default class CanvasD3Layout {
 	// 	return path;
 	// }
 
-	// Returns the path string for the object passed in which descibes a
+	// Returns the path string for the object passed in which describes a
 	// quadratic bezier curved connector line.
 	getCurvePath(data) {
 		const xDiff = data.x2 - data.x1;
@@ -2339,7 +2339,7 @@ export default class CanvasD3Layout {
 		return path;
 	}
 
-	// Returns the path string for the object passed in which descibes a
+	// Returns the path string for the object passed in which describes a
 	// curved connector line using elbows and straight lines.
 	getElbowPath(data) {
 

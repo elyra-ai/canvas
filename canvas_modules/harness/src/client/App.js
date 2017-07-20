@@ -132,7 +132,7 @@ class App extends React.Component {
 	}
 
 	// Returns the canvas provided it is not bigger than the size limit characters.
-	// If it is, returns empty string.  This is a workaround for the isssues
+	// If it is, returns empty string.  This is a workaround for the issue
 	// where we start to get errors (Error: request entity too large) in the
 	// test harness when the canvas is too big.
 	getCanvasIfNotTooBig() {
