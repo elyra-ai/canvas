@@ -35,9 +35,9 @@
 
 /* Property editing */
 .properties-editing {
-		position: absolute;
-		border: thin solid black;
-		overflow: scroll;
+    position: absolute;
+    border: thin solid black;
+    overflow: scroll;
 }
 
 .properties-title {
@@ -54,8 +54,7 @@
 
 .control-panel {
   display: block;
-  padding-left: 8px;
-  padding-right: 8px;
+  padding: 0 8px 8px 8px;
 }
 
 .table-editor {
@@ -76,9 +75,9 @@
 
 /* Override for block controls */
 .control-radio-block{
-	display: block;
-	margin-bottom: 2px;
-	padding:5px;
+  display: block;
+  margin-bottom: 2px;
+  padding:5px;
 }
 /* Hide default browser input */
 
@@ -86,6 +85,10 @@ input[type=radio]{
   position: absolute;
   z-index: -1;
   opacity: 0;
+}
+
+.radio {
+  padding-bottom: 10px;
 }
 
 /* Custom control */
@@ -104,7 +107,7 @@ input[type=radio]{
 }
 /* Override for block controls */
 .control__indicator-block{
-	top: 7px !important;
+  top: 7px !important;
 }
 
 /* Hover and focus */
@@ -208,195 +211,195 @@ p.form__validation.validation-error-message-color-warning.validation-error-messa
 /* Field Picker */
 
 #field-picker-back-button {
-	height: 32px;
-	width: 32px;
-	border: none;
-	padding: 0;
-	padding-left: 9px;
-	padding-top: 2px;
+  height: 32px;
+  width: 32px;
+  border: none;
+  padding: 0;
+  padding-left: 9px;
+  padding-top: 2px;
 }
 
 #field-picker-filter-list{
-	list-style-type: none;
-	float: right;
-	margin-top: 10px;
-	margin-bottom: 0px;
-	width:40%;
-	height: 22px;
+  list-style-type: none;
+  float: right;
+  margin-top: 10px;
+  margin-bottom: 0px;
+  width:40%;
+  height: 22px;
 }
 
 #field-picker-back-button svg.icon {
-	overflow: visible;
+  overflow: visible;
 }
 
 .reactable-th-checkbox {
-	padding-left: 15px;
+  padding-left: 15px;
 }
 
 #filter-list-title {
-	width: 40px;
-	height: 32px;
+  width: 40px;
+  height: 32px;
 }
 
 .filter-list-li {
-	float: left;
-	display: block;
-	width:14px;
-	fill:#A91560;
-	margin-right: 2px;
-	padding: 2px;
+  float: left;
+  display: block;
+  width:14px;
+  fill:#A91560;
+  margin-right: 2px;
+  padding: 2px;
 }
 
 .filter-list-li-icon:hover {
-	background-color:#EAEAEA;
+  background-color:#EAEAEA;
 }
 
 #field-picker-table {
-	width: 100%;
+  width: 100%;
 }
 
 #field-picker-table #table-header {
-	border: 1px solid #d8d8d8;
-	border-bottom: none;
+  border: 1px solid #d8d8d8;
+  border-bottom: none;
 }
 
 #add-fields-button {
-	border: none;
-	float: right;
-	padding-top: 2px;
-	padding-right: 0px;
-	padding-left: 10px;
-	margin-right: 0px;
-	text-decoration: underline;
+  border: none;
+  float: right;
+  padding-top: 2px;
+  padding-right: 0px;
+  padding-left: 10px;
+  margin-right: 0px;
+  text-decoration: underline;
 }
 
 #reset-fields-button {
-	border: none;
-	float: right;
-	height: 32px;
-	width: 90px;
-	padding-right: 0px;
+  border: none;
+  float: right;
+  height: 32px;
+  width: 90px;
+  padding-right: 0px;
 }
 
 #reset-fields-button-label {
-	float: left;
-	padding-top: 5px;
-	padding-right: 5px;
-	text-decoration: underline;
+  float: left;
+  padding-top: 5px;
+  padding-right: 5px;
+  text-decoration: underline;
 }
 
 #reset-fields-button-icon {
-	float: left;
-	width: 20px;
+  float: left;
+  width: 20px;
   fill: #A91560;
-	margin-top: -2px;
+  margin-top: -2px;
 }
 
 #reset-fields-button:hover #reset-fields-button-icon{
-	fill: #FFFFFF;
+  fill: #FFFFFF;
 }
 
 [id^=remove-fields-button] {
-	float: right;
-	border: none !important;
-	margin-top: 2px !important;
-	margin-bottom: 2px !important;
-	padding-top: 4px !important;
-	height: 30.75px;
-	width: 33px;
-	fill: #A91560;
-	padding-left: 5px !important;
-	padding-right: 5px !important;
-	opacity: 0.4;
+  float: right;
+  border: none !important;
+  margin-top: 2px !important;
+  margin-bottom: 2px !important;
+  padding-top: 4px !important;
+  height: 30.75px;
+  width: 33px;
+  fill: #A91560;
+  padding-left: 5px !important;
+  padding-right: 5px !important;
+  opacity: 0.4;
 }
 [id^=remove-fields-button-enabled] {
-	opacity: 1;
+  opacity: 1;
 }
 
 [id^=remove-fields-button]:hover[disabled=false] {
-	background-color: #A91560;
-	fill: #FFFFFF;
+  background-color: #A91560;
+  fill: #FFFFFF;
 }
 
 [id^=remove-fields-button]:hover[disabled=true] {
-	background-color: transparent;
-	cursor: default;
+  background-color: transparent;
+  cursor: default;
 }
 
 #removeFieldTip, #addFieldTip {
-	position: fixed;
+  position: fixed;
 }
 
 .filter-icons-tooltips {
-	position: fixed !important;
+  position: fixed !important;
 }
 
 .field-picker-data-type-icon {
-	width: 15px;
-	height: 15px;
-	float: left;
-	margin-right: 5px;
-	fill: #A91560;
+  width: 15px;
+  height: 15px;
+  float: left;
+  margin-right: 5px;
+  fill: #A91560;
 }
 
 
 /* Column Structure Allocator */
 .table-selected-row {
-	background-color: #e0e0e0 !important;
+  background-color: #e0e0e0 !important;
 }
 
 #table-row-move-button-container {
-	width: 16px !important;
-	margin-top: 0px;
-	margin-left: 12px;
-	top: 50%;
-	padding: 0;
+  width: 16px !important;
+  margin-top: 0px;
+  margin-left: 12px;
+  top: 50%;
+  padding: 0;
 }
 
 .table-row-move-button .table-row-move-button-disable{
-	width: 10px !important;
-	border-bottom: 2px solid #f9f9fb;
-	border-right: none;
-	transform: rotate(0deg);
+  width: 10px !important;
+  border-bottom: 2px solid #f9f9fb;
+  border-right: none;
+  transform: rotate(0deg);
 }
 
 .table-row-move-button:hover{
-	border-bottom: 2px solid #a6266e;
-	border-right: none;
+  border-bottom: 2px solid #a6266e;
+  border-right: none;
 }
 
 .toggletext_control {
-	color: #a6266e;
-	font-weight: bold;
+  color: #a6266e;
+  font-weight: bold;
 }
 
 .toggletext_icon {
-	padding-right: 2px;
-	cursor: pointer;
+  padding-right: 2px;
+  cursor: pointer;
 }
 
 .toggletext_text {
-	cursor: pointer;
+  cursor: pointer;
 }
 
 .sort_icon-column {
-	padding-left: 2px;
+  padding-left: 2px;
 }
 
 /* Flexible Table */
 /*.flexible-table-toolbar{
-	margin-bottom: 5px;
+  margin-bottom: 5px;
 }*/
 
 #flexible-table-container {
-	height: 180px;
+  height: 180px;
   width: 100%;
-	overflow: scroll;
+  overflow: scroll;
   position: relative;
   background-color: #FFFFFF;
   border: 1px solid #d8d8d8;
   padding: 0 15px 0 15px;
-	color: #000000;
+  color: #000000;
 }
 
 th div div label, td div div label {
@@ -404,7 +407,7 @@ th div div label, td div div label {
 }
 
 .reactable-header-sortable:focus {
-	outline: none;
+  outline: none;
 }
 
 #flexible-table-container>table>thead>tr>th {
@@ -427,29 +430,29 @@ th div div label, td div div label {
 }
 
 .field-picker-top-row {
-	margin-bottom: 6px;
+  margin-bottom: 6px;
 }
 
 #flexible-table-search-bar {
-	height: 32px;
-	width: 45%;
-	float: left;
-	margin: 5px 0 2px 5px;
+  height: 32px;
+  width: 45%;
+  float: left;
+  margin: 5px 0 2px 5px;
 }
 
 #flexible-table-search {
-	width: 100%;
-	float: left;
-	padding-bottom: 2px;
-	border-bottom-width: 1px;
+  width: 100%;
+  float: left;
+  padding-bottom: 2px;
+  border-bottom-width: 1px;
 }
 
 #flexible-table-search-icon {
-	width: 20px;
-	height: 20px;
-	float: left;
-	fill: #A91560;
-	margin-top: 4px;
+  width: 20px;
+  height: 20px;
+  float: left;
+  fill: #A91560;
+  margin-top: 4px;
 }
 
 #flexible-table-search:focus {
@@ -457,29 +460,29 @@ th div div label, td div div label {
 }
 
 .flexible-table-header {
-	width: 100%;
-	background-color: #f9f9fb;
-	padding: 0 0px 0 0px;
+  width: 100%;
+  background-color: #f9f9fb;
+  padding: 0 0px 0 0px;
 }
 
 .flexible-table-header-container {
-	width: 100%;
-	border: 1px solid #d8d8d8;
-	border-bottom: none;
-	background-color: #f9f9fb;
-	padding: 0 15px 0 15px;
+  width: 100%;
+  border: 1px solid #d8d8d8;
+  border-bottom: none;
+  background-color: #f9f9fb;
+  padding: 0 15px 0 15px;
 }
 
 .table>tbody>tr:nth-child(1)>td {
-	border-top: none;
+  border-top: none;
 }
 
 tr.reactable-column-header {
-	height: 30px;
+  height: 30px;
 }
 
 #table-header {
-	width: 100%;
+  width: 100%;
 }
 
 /* end Flexible table */
@@ -488,45 +491,45 @@ tr.reactable-column-header {
     display: block;
     background: white !important;
     border: 1px solid #e0e0e0;
-		border-bottom: 1px solid #e0e0e0 !important;
-		min-height: 250px;
+    border-bottom: 1px solid #e0e0e0 !important;
+    min-height: 250px;
 }
 
 .tabs__tabpanel[id$=build-options-panel] {
-	padding-top: 20px;
+  padding-top: 20px;
 }
 
 #add-fields-button > span > svg:not(:root) {
-	overflow: visible;
+  overflow: visible;
 }
 
 .column-structure-allocator-control-row-selected .public_fixedDataTableCell_main {
-	background-color: #e0e0e0 !important;
+  background-color: #e0e0e0 !important;
 }
 
 .toggletext_image {
-	padding-right: 3px;
+  padding-right: 3px;
 }
 
 .column-allocator {
-	min-height: 100px;
+  min-height: 100px;
 }
 
 .error-border {
-	border: .25px solid #ff0000 !important;
+  border: .25px solid #ff0000 !important;
 }
 
 .inline-textbox {
-	border: none;
-	border-bottom: 2px solid #aeaeae;
+  border: none;
+  border-bottom: 2px solid #aeaeae;
 }
 
 .column-structure-allocator-control-row-selected .inline-textbox {
-	background-color: #e0e0e0;
+  background-color: #e0e0e0;
 }
 
 .public_fixedDataTable_header .public_fixedDataTableCell_main {
-	background-color: #f9f9fb !important;
+  background-color: #f9f9fb !important;
 }
 
 #structure-table {
@@ -534,38 +537,55 @@ tr.reactable-column-header {
 }
 
 .structure-table-first-column {
-	width: 100%;
+  width: 100%;
 }
 
 .structure-table-second-column {
-	width: 16px !important;
+  width: 16px !important;
 }
 
 .required-control-indicator {
-	color: #a6266e;
-	font-weight: bold;
+  color: #a6266e;
+  font-weight: bold;
+}
+
+.checkbox-panel label {
+  margin-bottom: 0 !important;
 }
 
 .label-container {
-	float: left;
+  float: left;
 }
 
 .control-description {
-	font-size: 12px;
+  font-size: 12px;
 }
 
 tbody.reactable-data {
-	border-bottom: 1px solid #d8d8d8;
+  border-bottom: 1px solid #d8d8d8;
 }
 
 .number--dark, .number--light {
-	padding: .05em 25px .15em 0 !important;
+  padding: .05em 25px .15em 0 !important;
 }
 
 .number--dark+.number__close, .number--light+.number__close {
-	top: 0px !important;
+  top: 0px !important;
 }
 
 .editor_control_area {
-	margin-bottom: 5px;
+  margin-bottom: 5px;
+}
+
+.checkbox-panel {
+  padding-top: 18px;
+}
+
+.checkbox-controls {
+  padding-left: 5px;
+}
+
+.number-generator {
+  color: #aeaeae;
+  text-decoration: underline;
 }

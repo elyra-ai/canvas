@@ -106,7 +106,7 @@ export default class CommonProperties extends React.Component {
 	}
 
 	applyPropertiesEditing() {
-		const settings = this.refs.editorForm.getControlValues();
+		const settings = this.refs.editorForm.getControlValues(true);
 		// May need to close the dialog inside the callback in
 		// case of validation errors
 		this.props.propertiesInfo.closePropertiesDialog();

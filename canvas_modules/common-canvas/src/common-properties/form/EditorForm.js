@@ -40,8 +40,11 @@ class ValueDef {
 }
 
 class Label {
-	constructor(text) {
+	constructor(text, numberGenerator) {
 		this.text = text;
+		if (numberGenerator) {
+			this.numberGenerator = numberGenerator;
+		}
 	}
 }
 
@@ -55,10 +58,13 @@ class Description {
 }
 
 class ControlPanel {
-	constructor(id, panelType, controls) {
+	constructor(id, panelType, controls, group) {
 		this.id = id;
 		this.panelType = panelType;
 		this.uiItems = controls;
+		if (group) {
+			this.group = group;
+		}
 	}
 }
 
@@ -119,6 +125,10 @@ function _makeUIItem(parameterMetadata, group, structureMetadata, l10nProvider, 
 			panSubItems.push(groupItem);
 		});
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.GENERAL, panSubItems));
+	}
+	case GroupType.CHECKBOX_PANEL: {
+		return UIItem.makeCheckboxPanel(new ControlPanel(groupName, PanelType.CHECKBOX_ENABLEMENT,
+			_makeControls(parameterMetadata, group, structureMetadata, l10nProvider, conditions), group));
 	}
 	default:
 		return UIItem.makeStaticText("(Unknown group type '" + group.groupType() + "')");
@@ -236,7 +246,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	const additionalText = parameter.getAdditionalText(l10nProvider);
 	const orientation = parameter.orientation;
 	const required = isControlRequired(paramName, conditions);
-	const controlLabel = new Label(l10nProvider.l10nLabel(parameter, parameter.name));
+	const controlLabel = new Label(l10nProvider.l10nLabel(parameter, parameter.name), parameter.numberGenerator);
 	let controlDesc;
 	if (parameter.description &&
 		((parameter.description.default && parameter.description.default.length > 0) ||
@@ -254,7 +264,6 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	let childItem;
 	let controlType;
 	let moveableRows;
-
 
 	// The control type defines the basic UI element that should be used to edit the property
 	if (parameter.getRole() === ParamRole.CUSTOM) {

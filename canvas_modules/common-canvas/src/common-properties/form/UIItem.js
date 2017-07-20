@@ -79,4 +79,11 @@ export class UIItem {
 			label: label
 		});
 	}
+
+	static makeCheckboxPanel(panel) {
+		return new UIItem({
+			itemType: ItemType.CHECKBOX_SELECTOR,
+			panel: panel
+		});
+	}
 }

@@ -43,6 +43,8 @@ import SelectorPanel from "./../editor-panels/selector-panel.jsx";
 import SubPanelButton from "./../editor-panels/sub-panel-button.jsx";
 import UiConditions from "../ui-conditions/ui-conditions.js";
 import UiConditionsParser from "../ui-conditions/ui-conditions-parser.js";
+import CheckboxSelectionPanel from "../editor-panels/checkbox-selection-panel.jsx";
+
 
 export default class EditorForm extends React.Component {
 
@@ -61,7 +63,7 @@ export default class EditorForm extends React.Component {
 			controlErrorMessages: {},
 			visibleDefinition: [],
 			enabledDefinitions: [],
-			validationDefinitions: [],
+			validationDefinitions: {},
 			validationGroupDefinitions: [],
 			controlStates: {},
 			selectedRows: {},
@@ -94,6 +96,7 @@ export default class EditorForm extends React.Component {
 		this.getFilteredDataset = this.getFilteredDataset.bind(this);
 		this.generateSharedControlNames = this.generateSharedControlNames.bind(this);
 		this.getSelectedRows = this.getSelectedRows.bind(this);
+		this.setControlState = this.setControlState.bind(this);
 	}
 
 	componentWillMount() {
@@ -164,18 +167,20 @@ export default class EditorForm extends React.Component {
 		return this.state.valuesTable[controlId];
 	}
 
-	getControlValues() {
+	getControlValues(removeDisabled) {
 		var values = {};
 		for (var ref in this.refs) {
-			// Slightly hacky way of identifying non-control references with
-			// 3 underscores...
+			// Slightly hacky way of identifying non-control references with 3 underscores...
 			if (!(ref.startsWith("___"))) {
-				// logger.info(this.refs[ref]);
-				// logger.info(this.refs[ref].getControlValue());
-				values[ref] = this.refs[ref].getControlValue();
+				const stateValue = this.state.controlStates[ref];
+				const skip = removeDisabled && stateValue === "disabled";
+				if (!skip) {
+					// logger.info(this.refs[ref]);
+					// logger.info(this.refs[ref].getControlValue());
+					values[ref] = this.refs[ref].getControlValue();
+				}
 			}
 		}
-		// logger.info(values);
 		return values;
 	}
 
@@ -186,14 +191,24 @@ export default class EditorForm extends React.Component {
 		return this.state.selectedRows[controlName];
 	}
 
+	/**
+	 * Sets the control state. Supported states are:
+	 * "disabled", "hidden", and undefined.
+	 */
+	setControlState(controlName, state) {
+		const tempState = this.state.controlStates;
+		tempState[controlName] = state;
+		this.setState({ controlStates: tempState });
+	}
+
 	updateControlValue(controlId, controlValue) {
 		const that = this;
 		var values = this.state.valuesTable;
 		values[controlId] = controlValue;
-		this.setState({ valuesTable: values });
-		setTimeout(() => {
-			that.getControl(controlId).validateInput();
-		}, 200);
+		this.setState({ valuesTable: values },
+			function() {
+				that.getControl(controlId).validateInput();
+			});
 	}
 
 	updateControlValues() {
@@ -264,6 +279,7 @@ export default class EditorForm extends React.Component {
 				updateControlValue={this.updateControlValue}
 				valueAccessor={controlValueAccessor}
 				updateControlValue={this.updateControlValue}
+				controlStates={this.state.controlStates}
 				values={control.values}
 				valueLabels={control.valueLabels}
 				valueIcons={control.valueIcons}
@@ -354,6 +370,7 @@ export default class EditorForm extends React.Component {
 				key={controlId}
 				ref={controlId}
 				updateControlValue={this.updateControlValue}
+				controlStates={this.state.controlStates}
 				valueAccessor={controlValueAccessor}
 				validateConditions={this.validateConditions}
 				getControlValues={this.getControlValues}
@@ -366,6 +383,7 @@ export default class EditorForm extends React.Component {
 				key={controlId}
 				ref={controlId}
 				updateControlValue={this.updateControlValue}
+				controlStates={this.state.controlStates}
 				valueAccessor={controlValueAccessor}
 				validateConditions={this.validateConditions}
 				getControlValues={this.getControlValues}
@@ -465,8 +483,6 @@ export default class EditorForm extends React.Component {
 				updateControlValue={this.updateControlValue}
 				updateSelectedRows={this.updateSelectedRows}
 				selectedRows={this.getSelectedRows(control.name)}
-				validationDefinitions={this.state.validationDefinitions}
-				controlStates={this.state.controlStates}
 				validateConditions={this.validateConditions}
 				getControlValues={this.getControlValues}
 				updateValidationErrorMessage={this.updateValidationErrorMessage}
@@ -516,6 +532,7 @@ export default class EditorForm extends React.Component {
 				ref={controlId}
 				valueAccessor={controlValueAccessor}
 				updateControlValue={this.updateControlValue}
+				controlStates={this.state.controlStates}
 				updateSelectedRows={this.updateSelectedRows}
 				selectedRows={this.getSelectedRows(control.name)}
 				buildUIItem={this.genUIItem}
@@ -545,7 +562,20 @@ export default class EditorForm extends React.Component {
 		const stateStyle = {};
 		if (this.state.controlStates[control.name] === "hidden") {
 			stateStyle.visibility = "hidden";
+		} else if (this.state.controlStates[control.name] === "disabled") {
+			stateStyle.color = "#D8D8D8";
 		}
+
+		const that = this;
+		function generateNumber() {
+			const generator = control.label.numberGenerator;
+			const min = generator.range && generator.range.min ? generator.range.min : 10000;
+			const max = generator.range && generator.range.max ? generator.range.max : 99999;
+			const newValue = Math.floor(Math.random() * (max - min + 1) + min);
+			that.state.valuesTable[control.name] = [String(newValue)];
+			that.refs[control.name].setState({ controlValue: newValue });
+		}
+
 		let label = <span></span>;
 		if (control.label && control.separateLabel) {
 			let description;
@@ -556,15 +586,22 @@ export default class EditorForm extends React.Component {
 			if (control.controlType === "columnselect" || control.controlType === "structuretable") {
 				className = "label-container";
 			}
+			let requiredIndicator;
 			if (control.required) {
-				label = (<div className={className}>
-					<label className="control-label" style={stateStyle}>{control.label.text}</label>
-					<span className="required-control-indicator" style={stateStyle}>*</span>
-					{description}
-				</div>);
-			} else {
-				label = (<div className={className}><label className="control-label" style={stateStyle}>{control.label.text}</label>{description}</div>);
+				requiredIndicator = <span className="required-control-indicator" style={stateStyle}>*</span>;
 			}
+			let numberGenerator;
+			if (control.label.numberGenerator) {
+				numberGenerator = (<label>{'\u00A0\u00A0'}<a className="number-generator" onClick={generateNumber} style={stateStyle}>
+													{control.label.numberGenerator.label.default}
+													</a></label>);
+			}
+			label = (<div className={className}>
+				<label className="control-label" style={stateStyle}>{control.label.text}</label>
+				{requiredIndicator}
+				{numberGenerator}
+				{description}
+			</div>);
 		}
 		var controlObj = this.genControl(control, idPrefix, controlValueAccessor, datasetMetadata);
 		var controlItem = <ControlItem key={key} label={label} control={controlObj} />;
@@ -691,6 +728,8 @@ export default class EditorForm extends React.Component {
 			return this.genPrimaryTabs(key, uiItem.tabs, idPrefix, controlValueAccessor, datasetMetadata);
 		} else if (uiItem.itemType === "panelSelector") {
 			return this.genPanelSelector(key, uiItem.tabs, idPrefix, controlValueAccessor, datasetMetadata, uiItem.dependsOn);
+		} else if (uiItem.itemType === "checkboxSelector") {
+			return this.genPanel(key, uiItem.panel, idPrefix, controlValueAccessor, datasetMetadata);
 		}
 		return <div>Unknown: {uiItem.itemType}</div>;
 	}
@@ -732,6 +771,17 @@ export default class EditorForm extends React.Component {
 			>
 				{content}
 			</div>);
+		} else if (panel.panelType === "checkboxEnablement") {
+			uiObject = (<CheckboxSelectionPanel
+				id={id}
+				key={key}
+				panel={panel}
+				dataModel={datasetMetadata}
+				controlAccessor={this.getControl}
+				controlStateModifier={this.setControlState}
+			>
+				{content}
+			</CheckboxSelectionPanel>);
 		} else {
 			uiObject = (<div id={id}
 				className="control-panel"
@@ -868,7 +918,7 @@ export default class EditorForm extends React.Component {
 	parseUiConditions(uiConditions) {
 		var visibleDefinition = [];
 		var enabledDefinitions = [];
-		var validationDefinitions = [];
+		var validationDefinitions = {};
 
 		for (let i = 0; i < uiConditions.length; i++) {
 			if (uiConditions[i].visible) {

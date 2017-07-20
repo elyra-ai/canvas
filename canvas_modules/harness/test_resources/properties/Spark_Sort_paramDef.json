@@ -9,12 +9,6 @@
       "[\"Cholesterol\",\"Ascending\"]"
     ]
   },
-  "parameters": [
-    {
-      "name": "keys",
-      "type": "array[SortEntry]"
-    }
-  ],
   "complex_types": [
     {
       "name": "SortEntry",
@@ -36,9 +30,15 @@
       ]
     }
   ],
+  "parameters": [
+    {
+      "name": "keys",
+      "type": "array[SortEntry]"
+    }
+  ],
   "uihints": {
-    "icon": "images/sort.svg",
-    "name": "sort",
+    "name": "org.ibm.spark.ibm.transformers.Sort",
+    "icon": "images/transformationspark.svg",
     "label": {
       "resourceKey": "sort.label"
     },
