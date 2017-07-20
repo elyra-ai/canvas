@@ -165,7 +165,7 @@ export default class CanvasD3Layout {
 	}
 
 	setCanvas(canvasJSON, config) {
-		console.log("Set Canvas. Id = " + canvasJSON.id);
+		this.consoleLog("Set Canvas. Id = " + canvasJSON.id);
 		var startTime = Date.now();
 		if (canvasJSON.id !== this.canvasJSON.id ||
 				this.connectionType !== config.enableConnectionType ||
@@ -181,7 +181,7 @@ export default class CanvasD3Layout {
 		// this.zoomTransform = d3.zoomIdentity.translate(0, 0).scale(1); // Reset zoom parameters
 		this.initializeDimensions();
 		this.displayCanvas();
-		console.log("Set Canvas. Elapsed time = " + (Date.now() - startTime));
+		this.consoleLog("Set Canvas. Elapsed time = " + (Date.now() - startTime));
 	}
 
 		// Copies the canvas JSON because the canvas info is updated by the d3 code when
@@ -192,14 +192,14 @@ export default class CanvasD3Layout {
 	}
 
 	clearCanvas() {
-		console.log("Clearing Canvas. Id = " + this.canvasJSON.id);
+		this.consoleLog("Clearing Canvas. Id = " + this.canvasJSON.id);
 		ObjectModel.clearSelection();
 		this.canvas.selectAll("g").remove();
 		this.canvasSVG.call(this.zoom.transform, d3.zoomIdentity); // Reset the SVG zoom and scale
 	}
 
 	displayCanvas() {
-		// console.log("Displaying Canvas. Id = " + this.canvasJSON.id);
+		// this.consoleLog("Displaying Canvas. Id = " + this.canvasJSON.id);
 		this.displayComments(); // Show comments first so they appear under nodes, if there is overlap.
 		this.displayNodes();
 		this.drawLines();
@@ -320,7 +320,7 @@ export default class CanvasD3Layout {
 	}
 
 	createCanvas() {
-		// console.log("Create Canvas");
+		// this.consoleLog("Create Canvas");
 
 		this.canvasSVG = d3.select(this.canvasSelector)
 			.append("svg")
@@ -329,29 +329,29 @@ export default class CanvasD3Layout {
 				.attr("class", "svg-area")
 				.call(this.zoom)
 				// .on("mousedown.zoom", () => {
-				// 	console.log("Zoom - mousedown");
+				// 	this.consoleLog("Zoom - mousedown");
 				// })
 				.on("mousemove.zoom", () => {
-					// console.log("Zoom - mousemove");
+					// this.consoleLog("Zoom - mousemove");
 					if (this.drawingNewLink === true) {
 						this.drawNewLink();
 					}
 				})
 				.on("mouseup.zoom", () => {
-					console.log("Zoom - mouseup");
+					this.consoleLog("Zoom - mouseup");
 					if (this.drawingNewLink === true) {
 						this.stopDrawingNewLink();
 					}
 				})
 				.on("dblclick.zoom", () => {
-					console.log("Zoom - double click");
+					this.consoleLog("Zoom - double click");
 					this.clickActionHandler({
 						clickType: "DOUBLE_CLICK",
 						objectType: "canvas",
 						selectedObjectIds: ObjectModel.getSelectedObjectIds() });
 				})
 				.on("contextmenu.zoom", (d) => {
-					console.log("Zoom - context menu");
+					this.consoleLog("Zoom - context menu");
 					d3.event.preventDefault();  // Stop the browser context menu appearing
 					this.contextMenuHandler({
 						type: "canvas",
@@ -364,24 +364,24 @@ export default class CanvasD3Layout {
 		this.canvas = this.canvasSVG
 			.append("g")
 				.on("mousedown", () => {
-					console.log("Canvas - mouse down");
+					this.consoleLog("Canvas - mouse down");
 				})
 				.on("mousemove", () => {
-					// console.log("Canvas - mouse move");
+					// this.consoleLog("Canvas - mouse move");
 				})
 				.on("mouseup", () => {
-					console.log("Canvas - mouse up");
+					this.consoleLog("Canvas - mouse up");
 				})
 				.on("dblclick", () => {
-					console.log("Canvas - double click");
+					this.consoleLog("Canvas - double click");
 				})
 				.on("contextmenu", () => {
-					console.log("Canvas - context menu");
+					this.consoleLog("Canvas - context menu");
 				});
 	}
 
 	zoomStart() {
-		console.log("Zoom start - x = " + d3.event.transform.x + " y = " + d3.event.transform.y);
+		this.consoleLog("Zoom start - x = " + d3.event.transform.x + " y = " + d3.event.transform.y);
 
 		if (d3.event.sourceEvent && d3.event.sourceEvent.shiftKey) {
 			d3.regionSelect = true;
@@ -400,7 +400,7 @@ export default class CanvasD3Layout {
 	}
 
 	zoomAction() {
-		console.log("Zoom action - x = " + d3.event.transform.x + " y = " + d3.event.transform.y);
+		// this.consoleLog("Zoom action - x = " + d3.event.transform.x + " y = " + d3.event.transform.y);
 		if (d3.regionSelect === true) {
 			const transPos = this.getTransformedMousePos();
 			d3.region.width = transPos.x - d3.region.startX;
@@ -441,7 +441,7 @@ export default class CanvasD3Layout {
 	}
 
 	zoomEnd() {
-		console.log("Zoom end - x = " + d3.event.transform.x + " y = " + d3.event.transform.y);
+		this.consoleLog("Zoom end - x = " + d3.event.transform.x + " y = " + d3.event.transform.y);
 
 		if (this.drawingNewLink) {
 			this.stopDrawingNewLink();
@@ -486,7 +486,7 @@ export default class CanvasD3Layout {
 				// the zoomCanvas edit action occurs becasue that will cause a refresh
 				// from the objectmodel's canvasJSON which would remove any pending changes.
 				this.savePendingCommentChanges();
-				console.log("editActionHandler - zoomCanvas");
+				this.consoleLog("editActionHandler - zoomCanvas");
 				this.editActionHandler({ editType: "zoomCanvas", value: d3.event.transform.k });
 			}
 		}
@@ -571,7 +571,7 @@ export default class CanvasD3Layout {
 	}
 
 	dragStart(d) {
-		console.log("Drag start");
+		this.consoleLog("Drag start");
 		d3.dragOffsetX = 0;
 		d3.dragOffsetY = 0;
 		d3.dragging = true;
@@ -579,7 +579,7 @@ export default class CanvasD3Layout {
 	}
 
 	dragMove() {
-		// console.log("Drag move");
+		// this.consoleLog("Drag move");
 		if (d3.commentSizing) {
 			this.resizeComment();
 		} else if (d3.dragging) {
@@ -611,21 +611,21 @@ export default class CanvasD3Layout {
 	}
 
 	dragEnd() {
-		console.log("Drag end");
+		this.consoleLog("Drag end");
 		if (d3.commentSizing) {
 			this.endCommentSizing();
 		} else if (d3.dragging) {
 			d3.dragging = false;
 			if (d3.dragOffsetX !== 0 ||
 					d3.dragOffsetY !== 0) {
-				console.log("editActionHandler - moveObjects");
+				this.consoleLog("editActionHandler - moveObjects");
 				this.editActionHandler({ editType: "moveObjects", nodes: ObjectModel.getSelectedObjectIds(), offsetX: d3.dragOffsetX, offsetY: d3.dragOffsetY });
 			}
 		}
 	}
 
 	displayNodes() {
-		// console.log("Displaying nodes");
+		// this.consoleLog("Displaying nodes");
 		const that = this;
 
 		var nodeGroupSel = this.canvas.selectAll(".node-group")
@@ -674,7 +674,7 @@ export default class CanvasD3Layout {
 					.attr("transform", (d) => `translate(${d.xPos}, ${d.yPos})`)
 					// Use mouse down instead of click becasue it gets called before drag start.
 					.on("mousedown", (d) => {
-						console.log("Node Group - mouse down");
+						this.consoleLog("Node Group - mouse down");
 						d3.event.stopPropagation(); // Prevent mousedown event going through to canvas
 						if (!ObjectModel.isSelected(d.id)) {
 							if (d3.event.shiftKey) {
@@ -688,28 +688,28 @@ export default class CanvasD3Layout {
 							}
 						}
 						this.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "node", id: d.id, selectedObjectIds: ObjectModel.getSelectedObjectIds() });
-						console.log("Node Group - finished mouse down");
+						this.consoleLog("Node Group - finished mouse down");
 					})
 					.on("mousemove", (d) => {
-						// console.log("Node Group - mouse move");
+						// this.consoleLog("Node Group - mouse move");
 						// Don't stop propogation. Mouse move messages must be allowd to
 						// propogate to canvas zoom operation.
 					})
 					.on("mouseup", (d) => {
 						d3.event.stopPropagation();
-						console.log("Node Group - mouse up");
+						this.consoleLog("Node Group - mouse up");
 						if (this.drawingNewLink === true) {
 							this.completeNewLink(d);
 						}
 					})
 					.on("dblclick", (d) => {
-						console.log("Node Group - double click");
+						this.consoleLog("Node Group - double click");
 						d3.event.stopPropagation();
 						var selObjIds = ObjectModel.getSelectedObjectIds();
 						this.clickActionHandler({ clickType: "DOUBLE_CLICK", objectType: "node", id: d.id, selectedObjectIds: selObjIds });
 					})
 					.on("contextmenu", (d) => {
-						console.log("Node Group - context menu");
+						this.consoleLog("Node Group - context menu");
 						d3.event.stopPropagation();
 						d3.event.preventDefault();
 						this.contextMenuHandler({
@@ -850,7 +850,7 @@ export default class CanvasD3Layout {
 				.attr("cy", this.haloCenterY)
 				.attr("r", this.haloRadius)
 				.on("mousedown", (d) => {
-					console.log("Halo - mouse down");
+					this.consoleLog("Halo - mouse down");
 					d3.event.stopPropagation();
 					this.drawingNewLink = true;
 					this.drawingNewLinkSrcId = d.id;
@@ -1137,10 +1137,10 @@ export default class CanvasD3Layout {
 
 		if (trgNode !== null) {
 			if (this.drawingNewLinkAction === "node-node") {
-				console.log("editActionHandler - linkNodes");
+				this.consoleLog("editActionHandler - linkNodes");
 				this.editActionHandler({ editType: "linkNodes", nodes: [this.drawingNewLinkSrcId], targetNodes: [trgNode.id], linkType: "data" });
 			} else {
-				console.log("editActionHandler - linkComment");
+				this.consoleLog("editActionHandler - linkComment");
 				this.editActionHandler({ editType: "linkComment", nodes: [this.drawingNewLinkSrcId], targetNodes: [trgNode.id], linkType: "comment" });
 			}
 		}
@@ -1266,7 +1266,7 @@ export default class CanvasD3Layout {
 	}
 
 	displayComments() {
-		// console.log("Displaying comments");
+		// this.consoleLog("Displaying comments");
 		const that = this;
 
 		var commentGroupSel = this.canvas.selectAll(".comment-group")
@@ -1339,7 +1339,7 @@ export default class CanvasD3Layout {
 					.attr("transform", (d) => `translate(${d.xPos}, ${d.yPos})`)
 					// Use mouse down instead of click becasue it gets called before drag start.
 					.on("mousedown", (d) => {
-						console.log("Comment Group - mouse down");
+						this.consoleLog("Comment Group - mouse down");
 						d3.event.stopPropagation(); // Prevent mousedown event going through to canvas
 						if (!ObjectModel.isSelected(d.id)) {
 							if (d3.event.shiftKey) {
@@ -1358,7 +1358,7 @@ export default class CanvasD3Layout {
 						// to be a timing issue since the same problem is not evident with the
 						// simialr code for the Node group object.
 						// this.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "comment", id: d.id, selectedObjectIds: ObjectModel.getSelectedObjectIds() });
-						console.log("Comment Group - finished mouse down");
+						this.consoleLog("Comment Group - finished mouse down");
 					})
 					.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
 						if (that.connectionType === "Ports") {
@@ -1387,7 +1387,7 @@ export default class CanvasD3Layout {
 						}
 					})
 					.on("dblclick", function(d) { // Use function keyword so 'this' pointer references the DOM text object
-						console.log("Comment Group - double click");
+						this.consoleLog("Comment Group - double click");
 						d3.event.stopPropagation();
 						d3.event.preventDefault();
 
@@ -1421,12 +1421,12 @@ export default class CanvasD3Layout {
 								.style("top", yPos + "px")
 								.style("transform", that.getTextAreaTransform())
 								.on("keyup", function() {
-									console.log("Text area - Key up");
+									this.consoleLog("Text area - Key up");
 									that.editingCommentChangesPending = true;
 									that.autoSizeTextArea(this, datum);
 								})
 								.on("paste", function() {
-									console.log("Text area - Paste - Scroll Ht = " + this.scrollHeight);
+									this.consoleLog("Text area - Paste - Scroll Ht = " + this.scrollHeight);
 									that.editingCommentChangesPending = true;
 									// Allow some time for pasted text (from context menu) to be
 									// loaded into the text area. Otherwise the text is not there
@@ -1434,7 +1434,7 @@ export default class CanvasD3Layout {
 									setTimeout(that.autoSizeTextArea.bind(that), 500, this, datum);
 								})
 								.on("blur", function() {
-									console.log("Text area - blur");
+									this.consoleLog("Text area - blur");
 									var commentObj = that.getComment(id);
 									commentObj.content = this.value;
 									d3.select(`#comment_grp_${commentObj.id}`).remove();
@@ -1448,7 +1448,7 @@ export default class CanvasD3Layout {
 						that.clickActionHandler({ clickType: "DOUBLE_CLICK", objectType: "comment", id: d.id, selectedObjectIds: ObjectModel.getSelectedObjectIds() });
 					})
 					.on("contextmenu", (d) => {
-						console.log("Comment Group - context menu");
+						this.consoleLog("Comment Group - context menu");
 						d3.event.stopPropagation();
 						d3.event.preventDefault();
 						this.contextMenuHandler({
@@ -1530,7 +1530,7 @@ export default class CanvasD3Layout {
 				.attr("width", (d) => d.width + (2 * this.haloCommentGap))
 				.attr("height", (d) => d.height + (2 * this.haloCommentGap))
 				.on("mousedown", (d) => {
-					console.log("Comment Halo - mouse down");
+					this.consoleLog("Comment Halo - mouse down");
 					d3.event.stopPropagation();
 					this.drawingNewLink = true;
 					this.drawingNewLinkSrcId = d.id;
@@ -1546,7 +1546,7 @@ export default class CanvasD3Layout {
 	}
 
 	autoSizeTextArea(textArea, datum) {
-		console.log("autoSizeTextArea textAreaHt = " + this.textAreaHeight + " scroll ht = " + textArea.scrollHeight);
+		this.consoleLog("autoSizeTextArea textAreaHt = " + this.textAreaHeight + " scroll ht = " + textArea.scrollHeight);
 		if (this.textAreaHeight < textArea.scrollHeight) {
 			this.textAreaHeight = textArea.scrollHeight;
 			this.zoomTextAreaCenterY = datum.yPos + (this.textAreaHeight / 2);
@@ -1583,7 +1583,7 @@ export default class CanvasD3Layout {
 				offsetX: this.removePx(textArea.style.left) - this.commentWidthPadding,
 				offsetY: this.removePx(textArea.style.top)
 			};
-			console.log("editActionHandler - editComment");
+			this.consoleLog("editActionHandler - editComment");
 			this.editActionHandler(data);
 		}
 	}
@@ -1717,7 +1717,7 @@ export default class CanvasD3Layout {
 			offsetX: commentObj.xPos,
 			offsetY: commentObj.yPos
 		};
-		console.log("editActionHandler - editComment");
+		this.consoleLog("editActionHandler - editComment");
 		this.editActionHandler(data);
 	}
 
@@ -1937,7 +1937,7 @@ export default class CanvasD3Layout {
 	}
 
 	drawLines() {
-		// console.log("Drawing lines");
+		// this.consoleLog("Drawing lines");
 		var lineArray = this.buildLineArray();
 
 		this.canvas.selectAll(".link-group").remove();
@@ -1956,10 +1956,10 @@ export default class CanvasD3Layout {
 						d3.event.stopPropagation(); // Prevent mousedown event going through to canvas
 					})
 					.on("mouseup", () => {
-						console.log("Line - mouse up");
+						this.consoleLog("Line - mouse up");
 					})
 					.on("contextmenu", (d) => {
-						// console.log("Context menu on canvas background.");
+						// this.consoleLog("Context menu on canvas background.");
 						d3.event.stopPropagation();
 						d3.event.preventDefault();
 						this.contextMenuHandler({
@@ -2042,11 +2042,11 @@ export default class CanvasD3Layout {
 			}
 
 			if (srcNode === null) {
-				console.log("Error drawing a link. A link was provided in the Canvas data that does not have a valid source node/comment.");
+				this.consoleLog("Error drawing a link. A link was provided in the Canvas data that does not have a valid source node/comment.");
 			}
 
 			if (trgNode === null) {
-				console.log("Error drawing a link. A link was provided in the Canvas data that does not have a valid target node.");
+				this.consoleLog("Error drawing a link. A link was provided in the Canvas data that does not have a valid target node.");
 			}
 
 			// Only proceed if we have a source and a target node/comment.
@@ -2409,5 +2409,9 @@ export default class CanvasD3Layout {
 		path += "L " + data.x2 + " " + data.y2;
 
 		return path;
+	}
+
+	consoleLog(msg) {
+		// console.log(msg);
 	}
 }
