@@ -169,23 +169,6 @@ function _makeControls(parameterMetadata, group, structureMetadata, l10nProvider
 	return uiItems;
 }
 
-/**
- * Returns true if the control is required.
- * NOTE: This code needs work - possibly introduce an explicit 'required' parameter
- */
-function isControlRequired(paramName, conditions) {
-	if (conditions) {
-		for (const condition of conditions) {
-			if (condition.validation &&
-					condition.validation.fail_message &&
-					paramName === condition.validation.fail_message.focusParam) {
-				return true;
-			}
-		}
-	}
-	return false;
-}
-
 function _makeStringControl(parameter, group) {
 	let controlType;
 	let role;
@@ -245,7 +228,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 
 	const additionalText = parameter.getAdditionalText(l10nProvider);
 	const orientation = parameter.orientation;
-	const required = isControlRequired(paramName, conditions);
+	const required = parameter.required;
 	const controlLabel = new Label(l10nProvider.l10nLabel(parameter, parameter.name), parameter.numberGenerator);
 	let controlDesc;
 	if (parameter.description &&

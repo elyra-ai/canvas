@@ -9,13 +9,15 @@
       "name": "colName",
       "type": "string",
       "default": "",
-      "role": "new_column"
+      "role": "new_column",
+      "required": true
     },
     {
       "name": "col",
       "type": "string",
       "default": "",
-      "role": "expression"
+      "role": "expression",
+      "required": true
     },
     {
       "name": "measurement",

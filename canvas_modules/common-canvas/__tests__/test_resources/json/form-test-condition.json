@@ -3,7 +3,8 @@
     "parameters": [
       {
         "name": "int_param",
-        "type": "integer"
+        "type": "integer",
+        "required": true
       },
       {
         "name": "exp_param",
@@ -117,8 +118,7 @@
                         "isMap": false,
                         "defaultValue": ""
                       },
-                      "separateLabel": true,
-                      "required": true
+                      "separateLabel": true
                     }
                   }
                 ]

@@ -161,256 +161,251 @@
     }
   },
   "expectedResult": {
-    "componentId": "TestOp",
-    "label": "TestOp label: resource",
-    "editorSize": "large",
-    "uiItems": [
+   "componentId":"TestOp",
+   "label":"TestOp label: resource",
+   "editorSize":"large",
+   "uiItems":[
       {
-        "itemType": "primaryTabs",
-        "tabs": [
-          {
-            "text": "Field Settings label: resource",
-            "group": "fields-settings",
-            "content": {
-              "itemType": "panel",
-              "panel": {
-                "id": "fields-settings",
-                "panelType": "general",
-                "uiItems": [
-                  {
-                    "itemType": "panel",
-                    "panel": {
-                      "id": "field-allocation",
-                      "panelType": "columnAllocation",
-                      "uiItems": [
+         "itemType":"primaryTabs",
+         "tabs":[
+            {
+               "text":"Field Settings label: resource",
+               "group":"fields-settings",
+               "content":{
+                  "itemType":"panel",
+                  "panel":{
+                     "id":"fields-settings",
+                     "panelType":"general",
+                     "uiItems":[
                         {
-                          "itemType": "control",
-                          "control": {
-                            "name": "target",
-                            "label": {
-                              "text": "Target label: resource"
-                            },
-                            "controlType": "allocatedcolumn",
-                            "valueDef": {
-                              "propType": "string",
-                              "isList": false,
-                              "isMap": false
-                            },
-                            "separateLabel": true,
-                            "required": false
-                          }
+                           "itemType":"panel",
+                           "panel":{
+                              "id":"field-allocation",
+                              "panelType":"columnAllocation",
+                              "uiItems":[
+                                 {
+                                    "itemType":"control",
+                                    "control":{
+                                       "name":"target",
+                                       "label":{
+                                          "text":"Target label: resource"
+                                       },
+                                       "controlType":"allocatedcolumn",
+                                       "valueDef":{
+                                          "propType":"string",
+                                          "isList":false,
+                                          "isMap":false
+                                       },
+                                       "separateLabel":true
+                                    }
+                                 },
+                                 {
+                                    "itemType":"control",
+                                    "control":{
+                                       "name":"inputs",
+                                       "label":{
+                                          "text":"inputs"
+                                       },
+                                       "controlType":"allocatedcolumns",
+                                       "valueDef":{
+                                          "propType":"string",
+                                          "isList":true,
+                                          "isMap":false
+                                       },
+                                       "separateLabel":true
+                                    }
+                                 }
+                              ]
+                           }
+                        }
+                     ]
+                  }
+               }
+            },
+            {
+               "text":"Parameter Settings label: default",
+               "group":"settings",
+               "content":{
+                  "itemType":"panel",
+                  "panel":{
+                     "id":"settings",
+                     "panelType":"general",
+                     "uiItems":[
+                        {
+                           "itemType":"control",
+                           "control":{
+                              "name":"enum_param",
+                              "label":{
+                                 "text":"Enum label: resource"
+                              },
+                              "description":{
+                                 "text":"Enum description: default"
+                              },
+                              "controlType":"radioset",
+                              "valueDef":{
+                                 "propType":"string",
+                                 "isList":false,
+                                 "isMap":false,
+                                 "defaultValue":"Include"
+                              },
+                              "orientation":"horizontal",
+                              "values":[
+                                 "Include",
+                                 "Discard"
+                              ],
+                              "valueLabels":[
+                                 "Include: resource",
+                                 "Discard"
+                              ],
+                              "separateLabel":true
+                           }
                         },
                         {
-                          "itemType": "control",
-                          "control": {
-                            "name": "inputs",
-                            "label": {
-                              "text": "inputs"
-                            },
-                            "controlType": "allocatedcolumns",
-                            "valueDef": {
-                              "propType": "string",
-                              "isList": true,
-                              "isMap": false
-                            },
-                            "separateLabel": true,
-                            "required": false
-                          }
-                        }
-                      ]
-                    }
-                  }
-                ]
-              }
-            }
-          },
-          {
-            "text": "Parameter Settings label: default",
-            "group": "settings",
-            "content": {
-              "itemType": "panel",
-              "panel": {
-                "id": "settings",
-                "panelType": "general",
-                "uiItems": [
-                  {
-                    "itemType": "control",
-                    "control": {
-                      "name": "enum_param",
-                      "label": {
-                        "text": "Enum label: resource"
-                      },
-                      "description": {
-                        "text": "Enum description: default"
-                      },
-                      "controlType": "radioset",
-                      "valueDef": {
-                        "propType": "string",
-                        "isList": false,
-                        "isMap": false,
-                        "defaultValue": "Include"
-                      },
-                      "orientation": "horizontal",
-                      "values": [
-                        "Include",
-                        "Discard"
-                      ],
-                      "valueLabels": [
-                        "Include: resource",
-                        "Discard"
-                      ],
-                      "separateLabel": true,
-                      "required": false
-                    }
-                  },
-                  {
-                    "itemType": "panelSelector",
-                    "tabs": [
-                      {
-                        "text": "Include",
-                        "group": "Include",
-                        "content": {
-                          "itemType": "panel",
-                          "panel": {
-                            "id": "Include",
-                            "panelType": "general",
-                            "uiItems": [
+                           "itemType":"panelSelector",
+                           "tabs":[
                               {
-                                "itemType": "control",
-                                "control": {
-                                  "name": "int_param",
-                                  "label": {
-                                    "text": "Int label: default"
-                                  },
-                                  "description": {
-                                    "text": "Int description: default"
-                                  },
-                                  "controlType": "numberfield",
-                                  "valueDef": {
-                                    "propType": "integer",
-                                    "isList": false,
-                                    "isMap": false,
-                                    "defaultValue": 1000
-                                  },
-                                  "additionalText": "Int place holder: default",
-                                  "separateLabel": true,
-                                  "required": false
-                                }
+                                 "text":"Include",
+                                 "group":"Include",
+                                 "content":{
+                                    "itemType":"panel",
+                                    "panel":{
+                                       "id":"Include",
+                                       "panelType":"general",
+                                       "uiItems":[
+                                          {
+                                             "itemType":"control",
+                                             "control":{
+                                                "name":"int_param",
+                                                "label":{
+                                                   "text":"Int label: default"
+                                                },
+                                                "description":{
+                                                   "text":"Int description: default"
+                                                },
+                                                "controlType":"numberfield",
+                                                "valueDef":{
+                                                   "propType":"integer",
+                                                   "isList":false,
+                                                   "isMap":false,
+                                                   "defaultValue":1000
+                                                },
+                                                "additionalText":"Int place holder: default",
+                                                "separateLabel":true
+                                             }
+                                          },
+                                          {
+                                             "itemType":"hSeparator"
+                                          }
+                                       ]
+                                    }
+                                 }
                               },
                               {
-                                "itemType": "hSeparator"
+                                 "text":"Discard",
+                                 "group":"Discard",
+                                 "content":{
+                                    "itemType":"panel",
+                                    "panel":{
+                                       "id":"Discard",
+                                       "panelType":"general",
+                                       "uiItems":[
+                                          {
+                                             "itemType":"control",
+                                             "control":{
+                                                "name":"double_param",
+                                                "label":{
+                                                   "text":"double_param"
+                                                },
+                                                "controlType":"numberfield",
+                                                "valueDef":{
+                                                   "propType":"double",
+                                                   "isList":false,
+                                                   "isMap":false,
+                                                   "defaultValue":50
+                                                },
+                                                "separateLabel":true
+                                             }
+                                          }
+                                       ]
+                                    }
+                                 }
                               }
-                            ]
-                          }
-                        }
-                      },
-                      {
-                        "text": "Discard",
-                        "group": "Discard",
-                        "content": {
-                          "itemType": "panel",
-                          "panel": {
-                            "id": "Discard",
-                            "panelType": "general",
-                            "uiItems": [
-                              {
-                                "itemType": "control",
-                                "control": {
-                                  "name": "double_param",
-                                  "label": {
-                                    "text": "double_param"
-                                  },
-                                  "controlType": "numberfield",
-                                  "valueDef": {
-                                    "propType": "double",
-                                    "isList": false,
-                                    "isMap": false,
-                                    "defaultValue": 50
-                                  },
-                                  "separateLabel": true,
-                                  "required": false
-                                }
-                              }
-                            ]
-                          }
-                        }
-                      }
-                    ],
-                    "dependsOn": "enum_param"
-                  },
-                  {
-                    "itemType": "panel",
-                    "panel": {
-                      "id": "boolean-settings",
-                      "panelType": "general",
-                      "uiItems": [
-                        {
-                          "itemType": "control",
-                          "control": {
-                            "name": "boolean_param",
-                            "label": {
-                              "text": "boolean_param"
-                            },
-                            "controlType": "checkbox",
-                            "valueDef": {
-                              "propType": "boolean",
-                              "isList": false,
-                              "isMap": false,
-                              "defaultValue": false
-                            },
-                            "separateLabel": false,
-                            "required": false
-                          }
+                           ],
+                           "dependsOn":"enum_param"
                         },
                         {
-                          "itemType": "hSeparator"
-                        },
-                        {
-                          "itemType": "control",
-                          "control": {
-                            "name": "str_param",
-                            "label": {
-                              "text": "String label: default"
-                            },
-                            "description": {
-                              "text": "String desciption: default"
-                            },
-                            "controlType": "textfield",
-                            "valueDef": {
-                              "propType": "string",
-                              "isList": false,
-                              "isMap": false
-                            },
-                            "additionalText": "Place holder text: resource",
-                            "charLimit": 64,
-                            "separateLabel": true,
-                            "required": false
-                          }
+                           "itemType":"panel",
+                           "panel":{
+                              "id":"boolean-settings",
+                              "panelType":"general",
+                              "uiItems":[
+                                 {
+                                    "itemType":"control",
+                                    "control":{
+                                       "name":"boolean_param",
+                                       "label":{
+                                          "text":"boolean_param"
+                                       },
+                                       "controlType":"checkbox",
+                                       "valueDef":{
+                                          "propType":"boolean",
+                                          "isList":false,
+                                          "isMap":false,
+                                          "defaultValue":false
+                                       },
+                                       "separateLabel":false
+                                    }
+                                 },
+                                 {
+                                    "itemType":"hSeparator"
+                                 },
+                                 {
+                                    "itemType":"control",
+                                    "control":{
+                                       "name":"str_param",
+                                       "label":{
+                                          "text":"String label: default"
+                                       },
+                                       "description":{
+                                          "text":"String desciption: default"
+                                       },
+                                       "controlType":"textfield",
+                                       "valueDef":{
+                                          "propType":"string",
+                                          "isList":false,
+                                          "isMap":false
+                                       },
+                                       "additionalText":"Place holder text: resource",
+                                       "charLimit":64,
+                                       "separateLabel":true
+                                    }
+                                 }
+                              ]
+                           }
                         }
-                      ]
-                    }
+                     ]
                   }
-                ]
-              }
+               }
             }
-          }
-        ]
+         ]
       }
-    ],
-    "buttons": [
+   ],
+   "buttons":[
       {
-        "id": "ok",
-        "text": "OK",
-        "isPrimary": true,
-        "url": ""
+         "id":"ok",
+         "text":"OK",
+         "isPrimary":true,
+         "url":""
       },
       {
-        "id": "cancel",
-        "text": "Cancel",
-        "isPrimary": false,
-        "url": ""
+         "id":"cancel",
+         "text":"Cancel",
+         "isPrimary":false,
+         "url":""
       }
-    ],
-    "data": {}
-  }
+   ],
+   "data":{
+
+   }
+}
 }

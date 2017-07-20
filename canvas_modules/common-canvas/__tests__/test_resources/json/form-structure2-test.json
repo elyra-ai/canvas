@@ -257,8 +257,7 @@
                         "",
                         "Ascending"
                       ],
-                      "moveableRows": true,
-                      "required": false
+                      "moveableRows": true
                     }
                   }
                 ]

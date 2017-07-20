@@ -12,22 +12,26 @@
         "true",
         "false"
       ],
-      "default": false
+      "default": false,
+      "required": true
     },
     {
       "name": "samplingRatio",
       "type": "double",
-      "default": 1
+      "default": 1,
+      "required": true
     },
     {
       "name": "samplingSize",
       "type": "long",
-      "default": -1
+      "default": -1,
+      "required": true
     },
     {
       "name": "samplingSeed",
       "type": "integer",
-      "default": -1
+      "default": -1,
+      "required": false
     }
   ],
   "uihints": {

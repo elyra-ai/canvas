@@ -8,7 +8,8 @@
         "name": "cols",
         "type": "array[string]",
         "default": [],
-        "role": "column"
+        "role": "column",
+        "required": true
       }
     ],
     "uihints": {

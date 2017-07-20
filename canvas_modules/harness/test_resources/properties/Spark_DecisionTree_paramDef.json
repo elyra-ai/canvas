@@ -18,13 +18,15 @@
       "name": "targetField",
       "type": "string",
       "default": "",
-      "role": "column"
+      "role": "column",
+      "required": true
     },
     {
       "name": "inputFieldList",
       "type": "array[string]",
       "default": [],
-      "role": "column"
+      "role": "column",
+      "required": true
     },
     {
       "name": "checkpointInterval",

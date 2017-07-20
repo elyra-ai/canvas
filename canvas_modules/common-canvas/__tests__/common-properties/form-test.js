@@ -24,7 +24,9 @@ describe("Correct form should be created", () => {
 	it("should create a form with basic options", () => {
 		const generatedForm = Form.makeForm(formResource.paramDef);
 		// console.info("Expected: " + JSON.stringify(formResource.expectedResult));
-		// console.info("Actual  : " + JSON.stringify(generatedForm) + "\n\n");
+		// console.info("Actual  : " + JSON.stringify(generatedForm));
+		// console.info("\n\n");
+
 		// Work around since comparing the objects directly doesn't wor// k.
 		expect(_.isEqual(JSON.parse(JSON.stringify(formResource.expectedResult)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
 	});
@@ -55,8 +57,7 @@ describe("Correct form should be created", () => {
 											"isList": false,
 											"isMap": false
 										},
-										"separateLabel": false,
-										"required": false
+										"separateLabel": false
 									}
 								}
 							]
@@ -97,6 +98,7 @@ describe("Correct form should be created", () => {
 		const generatedForm = Form.makeForm(paramSpec);
 		// console.info("Expected: " + JSON.stringify(expectedForm));
 		// console.info("Actual  : " + JSON.stringify(generatedForm) + "\n\n");
+		// console.info("\n\n");
 		expect(_.isEqual(JSON.parse(JSON.stringify(expectedForm)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
 	});
 
@@ -104,6 +106,7 @@ describe("Correct form should be created", () => {
 		const generatedForm = Form.makeForm(formStructuredTable.paramDef);
 		// console.info("Expected: " + JSON.stringify(formStructuredTable.expectedResult));
 		// console.info("Actual  : " + JSON.stringify(generatedForm) + "\n\n");
+		// console.info("\n\n");
 		expect(_.isEqual(JSON.parse(JSON.stringify(formStructuredTable.expectedResult)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
 	});
 
@@ -134,6 +137,7 @@ describe("Correct form should be created", () => {
 		const generatedForm = Form.makeForm(placementResource.paramDef);
 		// console.info("Expected: " + JSON.stringify(placementResource.expectedResult));
 		// console.info("Actual  : " + JSON.stringify(generatedForm) + "\n\n");
+		// console.info("\n\n");
 		expect(_.isEqual(JSON.parse(JSON.stringify(placementResource.expectedResult)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
 	});
 

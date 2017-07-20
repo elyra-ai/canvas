@@ -15,7 +15,7 @@ import _ from "underscore";
 export class ParameterDef {
 	constructor(cname, label, description, type, role, valueRestriction, defaultValue,
 		control, orientation, style, width, charLimit, placeHolderText, separator,
-		resourceKey, visible, valueIcons, sortable, filterable, editStyle, numberGenerator) {
+		resourceKey, visible, valueIcons, sortable, filterable, editStyle, required, numberGenerator) {
 		this.name = cname;
 		this.label = ResourceDef.make(label);
 		this.description = ResourceDef.make(description);
@@ -36,6 +36,7 @@ export class ParameterDef {
 		this.sortable = sortable;
 		this.filterable = filterable;
 		this.editStyle = editStyle;
+		this.required = required;
 		if (numberGenerator) {
 			this.numberGenerator = numberGenerator;
 		}
@@ -180,6 +181,7 @@ export class ParameterDef {
 				_.propertyOf(uihint)("sortable"),
 				_.propertyOf(uihint)("filterable"),
 				_.propertyOf(uihint)("editStyle"),
+				_.propertyOf(param)("required"),
 				_.propertyOf(uihint)("number_generator")
 			);
 		}

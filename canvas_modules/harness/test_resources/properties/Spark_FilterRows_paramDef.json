@@ -16,7 +16,8 @@
       "name": "conditionExpr",
       "type": "string",
       "default": "",
-      "role": "expression"
+      "role": "expression",
+      "required": true
     }
   ],
   "uihints": {
