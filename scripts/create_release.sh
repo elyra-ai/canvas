@@ -1,10 +1,28 @@
 #!/bin/bash
-SCRIPTNAME=`basename "$0"`
-echo "RUNNING SCRIPT: ${SCRIPTNAME}"
 
+#-------------------------------------------------------------
+# IBM Confidential
+# OCO Source Materials
+
+# (C) Copyright IBM Corp. 2017
+# The source code for this program is not published or
+# otherwise divested of its trade secrets, irrespective of
+# what has been deposited with the U.S. Copyright Office.
+#-------------------------------------------------------------
+
+# Add github to known hosts
+# Note: ssh returns non-zero code because github doesn't support shell access.
+# We don't care about this... but because we use -e option at the top
+# of the script, it fails the script completely.
+# This is a workaround so that this command doesnt hit the fail-on-error stuff.
+# - Thought we could have used the other trick: <cmd> || true
+set +e # Disable error checking
 echo "Add github to known hosts"
 ssh -o StrictHostKeyChecking=no -T git@github.ibm.com
+set -e # Re-enable fail-on-error checking
 
+SCRIPTNAME=`basename "$0"`
+echo "RUNNING SCRIPT: ${SCRIPTNAME}"
 
 echo "Setting local variables"
 WORKING_DIR="$PWD"
