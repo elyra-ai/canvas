@@ -600,7 +600,8 @@ describe("ColumnStructureTableControl renders correctly", () => {
 		tableData.first().simulate("click");
 
 		// ensure removed button is enabled and select it
-		const enabledRemoveColumnButton = wrapper.find(".structure-table-button-row").find("div");
+		const enabledRemoveColumnButton = wrapper.find(".structure-table-button-row").find("div")
+			.last();
 		expect(enabledRemoveColumnButton).to.have.length(1);
 		expect(enabledRemoveColumnButton.prop("id")).to.equal("remove-fields-button-enabled");
 		enabledRemoveColumnButton.simulate("click");

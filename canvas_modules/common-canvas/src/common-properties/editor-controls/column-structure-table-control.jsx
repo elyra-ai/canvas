@@ -371,6 +371,19 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 		const addTooltip = <Tooltip id="addFieldTip">Select columns to add</Tooltip>;
 		const removeTooltip = <Tooltip id="removeFieldTip">Remove selected columns</Tooltip>;
 		const table = this.createTable();
+		let label;
+		if (this.props.control.label && this.props.control.separateLabel) {
+			if (!(this.props.control.description && this.props.control.description.placement === "on_panel")) {
+				let requiredIndicator;
+				if (this.props.control.required) {
+					requiredIndicator = <span className="required-control-indicator" style={stateStyle}>*</span>;
+				}
+				label = (<div className={"label-container"}>
+					<label className="control-label" style={stateStyle}>{this.props.control.label.text}</label>
+					{requiredIndicator}
+				</div>);
+			}
+		}
 		var content = (<table id="structure-table">
 			<colgroup>
 				<col className="structure-table-first-column" />
@@ -379,6 +392,7 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 			<tbody>
 				<tr className="structure-table-button-row">
 					<td>
+						{label}
 						<OverlayTrigger placement="top" overlay={addTooltip}>
 							<Button
 								id="add-fields-button"

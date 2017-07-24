@@ -115,6 +115,9 @@ export default class EditorControl extends React.Component {
 		this.clearValueListener = this.clearValueListener.bind(this);
 		this.notifyValueChanged = this.notifyValueChanged.bind(this);
 		this.validateInput = this.validateInput.bind(this);
+		this.shouldEvaluate = this.shouldEvaluate.bind(this);
+		this.getCurrentTableCoordinates = this.getCurrentTableCoordinates.bind(this);
+		this.getUserInput = this.getUserInput.bind(this);
 
 		this._valueListener = null;
 	}
@@ -135,6 +138,9 @@ export default class EditorControl extends React.Component {
 		let message = DEFAULT_VALIDATION_MESSAGE;
 		if (this.props.retrieveValidationErrorMessage) {
 			message = this.props.retrieveValidationErrorMessage(conditionProps.controlName);
+			if (typeof message === "undefined") {
+				message = { type: "info", text: "" };
+			}
 		}
 		let errorMessage = (<ValidationMessage
 			validateErrorMessage={message}
@@ -192,6 +198,29 @@ export default class EditorControl extends React.Component {
 		}
 		return limit;
 	}
+
+	getCurrentTableCoordinates() {
+		if (typeof this.rowIndex === "number" && typeof this.colIndex === "number") {
+			return { rowIndex: this.rowIndex, colIndex: this.colIndex, skipVal: this.skipVal };
+		}
+		return {};
+	}
+
+	getUserInput() {
+		const userInput = {};
+		const controlValues = this.props.getControlValues();
+		for (const key in controlValues) {
+			if (typeof controlValues[key][0] === "undefined") {
+				userInput[key] = [];
+			} else if (this.props.control.controlType === "structuretable") {
+				userInput[key] = EditorControl.parseStructureStrings(controlValues[key]);
+			} else {
+				userInput[key] = controlValues[key][0];
+			}
+		}
+		return userInput;
+	}
+
 	setValueListener(listener) {
 		// Listener is expected to define handleValueChanged(controlName, value);
 		this._valueListener = listener;
@@ -212,6 +241,19 @@ export default class EditorControl extends React.Component {
 		}
 	}
 
+	shouldEvaluate(validation) {
+		let evaluate = true;
+		if (typeof validation.params === "object") {
+			for (const control of validation.params) {
+				if (typeof this.props.controlStates[control] !== "undefined") {
+					evaluate = false;
+					break;
+				}
+			}
+		}
+		return evaluate;
+	}
+
 	validateInput() {
 		var controlName = this.getControlID().split(".")[1];
 		if (!this.props.validationDefinitions) {
@@ -224,34 +266,14 @@ export default class EditorControl extends React.Component {
 		const validations = this.props.validationDefinitions[controlName];
 		if (this.props.controlStates && typeof this.props.controlStates[controlName] === "undefined" && validations) {
 			try {
-				const userInput = {
-					[controlName]: this.state.controlValue
-				};
-
-				const controlValues = this.props.getControlValues();
-				for (const key in controlValues) {
-					if (typeof controlValues[key][0] === "undefined") {
-						userInput[key] = [];
-					} else {
-						userInput[key] = controlValues[key][0];
-					}
-				}
-
-				let evaluate = true;
+				const userInput = this.getUserInput();
 				let output = false;
 				let errorMessage = DEFAULT_VALIDATION_MESSAGE;
-				for (const validation of validations) {
-					if (typeof validation.params === "object") {
-						for (const control of validation.params) {
-							if (typeof this.props.controlStates[control] !== "undefined") {
-								evaluate = false;
-								break;
-							}
-						}
-					}
 
-					if (evaluate) {
-						output = UiConditions.validateInput(validation.definition, userInput, this.props.dataModel);
+				for (const validation of validations) {
+					if (this.shouldEvaluate(validation)) {
+						const coordinates = this.getCurrentTableCoordinates();
+						output = UiConditions.validateInput(validation.definition, userInput, this.props.dataModel, coordinates);
 						// logger.info("validated input field " + controlName + " to be " + JSON.stringify(output));
 						if (typeof output === "object") {
 							errorMessage = {
@@ -271,6 +293,11 @@ export default class EditorControl extends React.Component {
 							}
 						}
 						this.props.updateValidationErrorMessage(controlName, errorMessage);
+
+						if (typeof output === "object" && errorMessage.type === "error") {
+							// Break on the first error
+							break;
+						}
 					}
 				}
 			} catch (error) {

@@ -9,11 +9,13 @@
 /* eslint complexity: ["error", 34] */
 
 import logger from "../../../utils/logger";
+import PropertyUtils from "../util/property-utils.js";
 
-function validateInput(definition, userInput, dataModel) {
+
+function validateInput(definition, userInput, dataModel, cellCoordinates) {
 	var data = definition;
 	if (data.validation) {
-		return validation(data.validation, userInput, dataModel);
+		return validation(data.validation, userInput, dataModel, cellCoordinates);
 	} else if (data.enabled) {
 		return enabled(data.enabled, userInput);
 	} else if (data.visible) {
@@ -24,7 +26,7 @@ function validateInput(definition, userInput, dataModel) {
 
 /**
  * A single validation. The fail_message is displayed upon validation failure.
- * @param {Object} data contains an object that adheres to the validation_definition
+ * @param {Object} validationData contains an object that adheres to the validation_definition
  *	 "validation_definition": {
  *		 "properties": {
  *			 "validation": {
@@ -47,21 +49,24 @@ function validateInput(definition, userInput, dataModel) {
  *		 },
  *		 "required": ["validation"]
  *	 }
- * @return {boolean} true if valid, failMessage if false.
+ * @param {Any} userInput Contains the control value entered by the user
+ * @param {Object} dataModel Optional data model
+ * @param {Object} cellCoordinates Cell coordinates for tables
+ * @return {boolean} true if valid, failMessage {Object} if false.
  */
-function validation(validationData, userInput, dataModel) {
+function validation(validationData, userInput, dataModel, cellCoordinates) {
 	logger.info("Validation check");
 	// var data = JSON.parse(validationData);
 	var data = validationData;
 	if (data.fail_message && data.evaluate) {
-		return evaluate(data.evaluate, userInput, dataModel) || failedMessage(data.fail_message);
+		return evaluate(data.evaluate, userInput, dataModel, cellCoordinates) || failedMessage(data.fail_message);
 	}
 	throw new Error("Invalid validation schema");
 }
 
 /**
  * Enablement test. Disables controls if evaluate is false.
- * @param {Object} data contains an object that adheres to the enabled_definition
+ * @param {Object} enabledData contains an object that adheres to the enabled_definition
  *	 "enabled_definition": {
  *		 "properties": {
  *			 "enabled": {
@@ -144,13 +149,13 @@ function visible(visibleData, userInput) {
 /**
  * Evaluate Definition
  */
-function evaluate(data, userInput, dataModel) {
+function evaluate(data, userInput, dataModel, cellCoordinates) {
 	if (data.or) {
-		return or(data.or, userInput, dataModel);
+		return or(data.or, userInput, dataModel, cellCoordinates);
 	} else if (data.and) {
-		return and(data.and, userInput, dataModel);
+		return and(data.and, userInput, dataModel, cellCoordinates);
 	} else if (data.condition) { // condition
-		return condition(data.condition, userInput, dataModel);
+		return condition(data.condition, userInput, dataModel, cellCoordinates);
 	}
 	throw new Error("Failed to parse definition");
 }
@@ -161,11 +166,12 @@ function evaluate(data, userInput, dataModel) {
  * @param {Object} data an array of items
  * @param {string} userInput User-entered value to evaluate
  * @param {Object} dataModel optional dataset metadata
+ * @param {Object} cellCoordinates optional cell coordinates for tables
  * @return {boolean}
  */
-function or(data, userInput, dataModel) {
+function or(data, userInput, dataModel, cellCoordinates) {
 	for (let i = 0; i < data.length; i++) {
-		if (evaluate(data[i], userInput, dataModel) === true) {
+		if (evaluate(data[i], userInput, dataModel, cellCoordinates) === true) {
 			// logger.info("Or is true");
 			return true;
 		}
@@ -180,11 +186,12 @@ function or(data, userInput, dataModel) {
  * @param {Object} data an array of items
  * @param {string} userInput User-entered value to evaluate
  * @param {Object} dataModel optional dataset metadata
+ * @param {Object} cellCoordinates optional cell coordinates for tables
  * @return {boolean}
  */
-function and(data, userInput, dataModel) {
+function and(data, userInput, dataModel, cellCoordinates) {
 	for (let i = 0; i < data.length; i++) {
-		if (evaluate(data[i], userInput, dataModel) === false) {
+		if (evaluate(data[i], userInput, dataModel, cellCoordinates) === false) {
 			// logger.info("And is false");
 			return false;
 		}
@@ -200,9 +207,10 @@ function and(data, userInput, dataModel) {
  * @param {Object} param2 optional parameter the condition checks for
  * @param {Object} value optional value the condition checks for
  * @param {Object} dataModel optional dataset metadata
+ * @param {Object} cellCoordinates optional cell coordinates for tables
  * @return {boolean} true if the parameter(s) satisfy the condition
  */
-function condition(data, userInput, dataModel) {
+function condition(data, userInput, dataModel, cellCoordinates) {
 	var op = data.op;
 	var param = data.param;
 	var param2 = data.param2 ? data.param2 : null;
@@ -236,9 +244,12 @@ function condition(data, userInput, dataModel) {
 	case "notChecked":
 		return _handleNotChecked(paramInput, param);
 	case "colNotExists":
-		return _handleColNotExists(paramInput, dataModel);
+		return _handleColNotExists(paramInput, dataModel, cellCoordinates);
+	case "cellNotEmpty":
+		return _handleCellNotEmpty(paramInput, cellCoordinates);
 	default:
-		return false;
+		logger.warn("Ignoring unknown condition operation '" + op + "'");
+		return true;
 	}
 }
 
@@ -374,17 +385,45 @@ function _handleNotChecked(paramInput, param) {
 	return (paramInput !== "" && paramInput === "false") || paramInput === "";
 }
 
-function _handleColNotExists(paramInput, dataModel) {
+function _handleColNotExists(paramInput, dataModel, cellCoordinates) {
 	// logger.info("Condition col not exists: paramInput === " + paramInput);
 	if (!dataModel) {
 		return true;
 	}
-	for (const field of dataModel.fields) {
-		if (field.name === paramInput) {
-			return false;
+	let value = paramInput;
+	if (PropertyUtils.toType(paramInput) === "array" && cellCoordinates &&
+			PropertyUtils.toType(cellCoordinates.rowIndex) === "number" &&
+			PropertyUtils.toType(cellCoordinates.colIndex) === "number" &&
+			cellCoordinates.rowIndex > -1 && cellCoordinates.colIndex > -1 &&
+			paramInput.length > cellCoordinates.rowIndex &&
+			paramInput[cellCoordinates.rowIndex].length > cellCoordinates.colIndex) {
+		value = paramInput[cellCoordinates.rowIndex][cellCoordinates.colIndex];
+	}
+	if (!cellCoordinates || cellCoordinates.skipVal !== value) {
+		for (const field of dataModel.fields) {
+			if (field.name === value) {
+				return false;
+			}
 		}
 	}
 	return true;
+}
+
+function _handleCellNotEmpty(paramInput, cellCoordinates) {
+	let value = paramInput;
+	if (PropertyUtils.toType(paramInput) === "array" && cellCoordinates) {
+		if (PropertyUtils.toType(cellCoordinates.rowIndex) === "number" &&
+				PropertyUtils.toType(cellCoordinates.colIndex) === "number" &&
+				cellCoordinates.rowIndex > -1 && cellCoordinates.colIndex > -1 &&
+				paramInput.length > cellCoordinates.rowIndex &&
+				paramInput[cellCoordinates.rowIndex].length > cellCoordinates.colIndex) {
+			value = paramInput[cellCoordinates.rowIndex][cellCoordinates.colIndex];
+		} else {
+			// An empty array means there are no rows to test
+			return true;
+		}
+	}
+	return PropertyUtils.toType(value) !== "undefined" && String(value).length > 0;
 }
 
 /**

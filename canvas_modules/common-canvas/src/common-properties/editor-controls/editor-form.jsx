@@ -582,10 +582,6 @@ export default class EditorForm extends React.Component {
 			if (control.description && control.description.placement === "on_panel") {
 				description = <div className="control-description">{control.description.text}</div>;
 			}
-			let className = "";
-			if (control.controlType === "columnselect" || control.controlType === "structuretable") {
-				className = "label-container";
-			}
 			let requiredIndicator;
 			if (control.required) {
 				requiredIndicator = <span className="required-control-indicator" style={stateStyle}>*</span>;
@@ -596,12 +592,19 @@ export default class EditorForm extends React.Component {
 													{control.label.numberGenerator.label.default}
 													</a></label>);
 			}
-			label = (<div className={className}>
-				<label className="control-label" style={stateStyle}>{control.label.text}</label>
-				{requiredIndicator}
-				{numberGenerator}
-				{description}
-			</div>);
+			// structuretable labels w/o descriptions are created elsewhere
+			if (control.controlType !== "structuretable" || description) {
+				let className = "";
+				if (control.controlType === "columnselect" || control.controlType === "structuretable") {
+					className = "label-container";
+				}
+				label = (<div className={className}>
+					<label className="control-label" style={stateStyle}>{control.label.text}</label>
+					{requiredIndicator}
+					{numberGenerator}
+					{description}
+				</div>);
+			}
 		}
 		var controlObj = this.genControl(control, idPrefix, controlValueAccessor, datasetMetadata);
 		var controlItem = <ControlItem key={key} label={label} control={controlObj} />;

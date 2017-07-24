@@ -43,7 +43,7 @@ export default class TextfieldControl extends EditorControl {
 		};
 		const conditionState = this.getConditionMsgState(conditionProps);
 
-		const errorMessage = conditionState.message;
+		const errorMessage = !this.props.columnDef ? conditionState.message : null;
 		const stateDisabled = conditionState.disabled;
 		const stateStyle = conditionState.style;
 

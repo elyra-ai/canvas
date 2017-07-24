@@ -216,6 +216,9 @@ export default class ColumnStructureTableEditor extends EditorControl {
 				break;
 			}
 		}
+		this.colIndex = col;
+		this.rowIndex = col > -1 ? rowIndex : -1;
+		this.skipVal = col > -1 ? controlValue[rowIndex][0] : null;
 		if (col > -1) {
 			controlValue[rowIndex][col] = value;
 			this.props.updateControlValue(this.props.control.name, EditorControl.stringifyStructureStrings(controlValue));
@@ -281,12 +284,17 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		} else if (columnDef.valueDef.propType === "enum" && columnDef.editStyle !== "subpanel") {
 			cell = <Td key={colIndex} column={columnDef.name} style={columnStyle}>this.enumRenderCell(controlValue[rowIndex][colIndex], columnDef)</Td>;
 		} else if (columnDef.controlType === "textfield" && columnDef.editStyle !== "subpanel") {
+			let retrieveFunc;
+			if (rowIndex === this.rowIndex && colIndex === this.colIndex) {
+				retrieveFunc = this.props.retrieveValidationErrorMessage;
+			}
 			cell = (<Td key={colIndex} column={columnDef.name} style={columnStyle}><TextfieldControl
 				rowIndex={rowIndex}
 				control={this.props.control}
 				columnDef={columnDef}
 				value={controlValue[rowIndex][colIndex]}
 				updateControlValue={this.updateControlValue}
+				retrieveValidationErrorMessage={retrieveFunc}
 				tableControl
 			/></Td>);
 		} else {

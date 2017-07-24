@@ -80,6 +80,23 @@
       {
         "validation": {
           "fail_message": {
+            "type": "warning",
+            "focusParam": "renamed_fields",
+            "message": {
+              "resourceKey": "no_rename_selections"
+            }
+          },
+          "evaluate": {
+            "condition": {
+              "param": "renamed_fields",
+              "op": "isNotEmpty"
+            }
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail_message": {
             "type": "error",
             "focusParam": "renamed_fields",
             "message": {
@@ -89,7 +106,24 @@
           "evaluate": {
             "condition": {
               "param": "renamed_fields",
-              "op": "isNotEmpty"
+              "op": "cellNotEmpty"
+            }
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail_message": {
+            "type": "error",
+            "focusParam": "renamed_fields",
+            "message": {
+              "resourceKey": "column_name_already_exists"
+            }
+          },
+          "evaluate": {
+            "condition": {
+              "param": "renamed_fields",
+              "op": "colNotExists"
             }
           }
         }
@@ -194,6 +228,8 @@
     "rename.label": "Rename Columns",
     "field.label": "Input name",
     "new_name.label": "Output name",
-    "output_name_not_empty": "The 'Output Name' field cannot be empty"
+    "no_rename_selections": "There are no selected columns to rename",
+    "output_name_not_empty": "The 'Output Name' field cannot be empty",
+    "column_name_already_exists": "The given column name is already in use in the current dataset"
   }
 }

@@ -25,7 +25,7 @@ export default class RadiosetControl extends EditorControl {
 			this.setState({ controlValue: evt.target.value });
 		}
 		this.notifyValueChanged(this.props.control.name, evt.target.value);
-		this.props.updateControlValue(this.props.control.name, evt.target.value);
+		this.props.updateControlValue(this.props.control.name, [evt.target.value]);
 	}
 
 	getControlValue() {
