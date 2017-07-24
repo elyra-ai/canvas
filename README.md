@@ -30,8 +30,6 @@ npm install
 ```
 
 ### Updating "release" branch (Weekly Jenkins Job: [link](https://analytics-canvas-jenkins.swg-devops.com/view/canvas_utils/job/Abstract-Canvas_Promote-Release))
-  - Copy scripts/create_release.sh to an empty directory
-  - Run ./create_release.sh <patch, minor, or major>
 
 ### Committing breaking changes
   - Increment the major version number in common-canvas/package.json ("version": "major.minor.patch")
