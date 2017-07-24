@@ -185,10 +185,14 @@ export default class FieldPicker extends EditorControl {
 
 	handleCheckAll(evt) {
 		const selectAll = [];
+		const that = this;
 		if (evt.target.checked) {
 			const data = this.state.fields;
 			for (let i = 0; i < data.length; i++) {
 				const selected = this.state.newControlValues.filter(function(element) {
+					if (that.props.control.defaultRow) {
+						return JSON.parse(element)[0].indexOf(data[i].name) > -1;
+					}
 					return element.indexOf(data[i].name) > -1;
 				});
 				if (selected.length > 0) {
