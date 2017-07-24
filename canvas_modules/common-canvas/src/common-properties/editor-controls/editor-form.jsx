@@ -592,8 +592,18 @@ export default class EditorForm extends React.Component {
 													{control.label.numberGenerator.label.default}
 													</a></label>);
 			}
-			// structuretable labels w/o descriptions are created elsewhere
-			if (control.controlType !== "structuretable" || description) {
+			let hasFilter = false;
+			if (control.subControls) {
+				for (const subControl of control.subControls) {
+					if (subControl.filterable) {
+						hasFilter = true;
+						break;
+					}
+				}
+			}
+			// structuretable labels w/o descriptions and filtering are created elsewhere
+			const isStructureTable = control.controlType === "structuretable";
+			if (!isStructureTable || description || hasFilter) {
 				let className = "";
 				if (control.controlType === "columnselect" || control.controlType === "structuretable") {
 					className = "label-container";

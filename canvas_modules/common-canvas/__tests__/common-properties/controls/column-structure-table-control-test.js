@@ -242,7 +242,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 		);
 
 		expect(wrapper.find("#structure-table")).to.have.length(1);
-		const buttons = wrapper.find(".structure-table-button-row");
+		const buttons = wrapper.find(".structure-table-content-row");
 		expect(buttons).to.have.length(1);
 		expect(buttons.find("#add-fields-button")).to.have.length(1);
 		expect(buttons.find("#remove-fields-button")).to.have.length(1);
@@ -600,8 +600,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 		tableData.first().simulate("click");
 
 		// ensure removed button is enabled and select it
-		const enabledRemoveColumnButton = wrapper.find(".structure-table-button-row").find("div")
-			.last();
+		const enabledRemoveColumnButton = wrapper.find("#remove-fields-button-enabled");
 		expect(enabledRemoveColumnButton).to.have.length(1);
 		expect(enabledRemoveColumnButton.prop("id")).to.equal("remove-fields-button-enabled");
 		enabledRemoveColumnButton.simulate("click");

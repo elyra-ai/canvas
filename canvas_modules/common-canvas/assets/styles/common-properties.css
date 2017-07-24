@@ -396,9 +396,9 @@ p.form__validation.validation-error-message-color-warning.validation-error-messa
   width: 100%;
   overflow: scroll;
   position: relative;
-  background-color: #FFFFFF;
   border: 1px solid #d8d8d8;
-  padding: 0 15px 0 15px;
+  background-color: #FFFFFF;
+  padding: 0;
   color: #000000;
 }
 
@@ -467,10 +467,8 @@ th div div label, td div div label {
 
 .flexible-table-header-container {
   width: 100%;
-  border: 1px solid #d8d8d8;
-  border-bottom: none;
   background-color: #f9f9fb;
-  padding: 0 15px 0 15px;
+  padding: 0;
 }
 
 .table>tbody>tr:nth-child(1)>td {
@@ -588,4 +586,17 @@ tbody.reactable-data {
 .number-generator {
   color: #aeaeae;
   text-decoration: underline;
+}
+
+.filter-header-border {
+  border: 1px solid #d8d8d8;
+  border-bottom: none;
+}
+
+.left-padding-15 {
+  padding-left: 15px;
+}
+
+#flexible-table-container>table>tbody>.field-picker-data-rows>td[label=checkbox] {
+    padding-left: 15px;
 }

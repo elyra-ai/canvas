@@ -12,10 +12,6 @@
 import logger from "../../../utils/logger";
 import React from "react";
 import ColumnStructureTableEditor from "./column-structure-table-editor.jsx";
-import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import { Button } from "ap-components-react/dist/ap-components-react";
-import remove32 from "../../../assets/images/remove_32.svg";
-import remove32hover from "../../../assets/images/remove_32_hover.svg";
 import TopMoveIconEnable from "../../../assets/images/top_enabled.svg";
 import UpMoveIconEnable from "../../../assets/images/up_enabled.svg";
 import DownMoveIconEnable from "../../../assets/images/down_enabled.svg";
@@ -53,6 +49,7 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 		this.upMoveRow = this.upMoveRow.bind(this);
 		this.downMoveRow = this.downMoveRow.bind(this);
 		this.bottomMoveRow = this.bottomMoveRow.bind(this);
+		this.hasFilter = this.hasFilter.bind(this);
 	}
 
 	stopEditingRow(rowIndex, applyChanges) {
@@ -315,6 +312,17 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 		return [topImages, bottomImages];
 	}
 
+	hasFilter() {
+		let hasFilter = false;
+		for (const subControl of this.props.control.subControls) {
+			if (subControl.filterable) {
+				hasFilter = true;
+				break;
+			}
+		}
+		return hasFilter;
+	}
+
 	render() {
 		if (this._update_callback !== null) {
 			this._update_callback();
@@ -344,32 +352,6 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 			);
 		}
 
-		let removeIconImage = (<img src={remove32} />);
-		if (this.state.hoverRemoveIcon) {
-			removeIconImage = (<img src={remove32hover} />);
-		}
-		let removeIcon = (<div id="remove-fields-button"
-			className="button"
-			onClick={this.removeSelected}
-			onMouseEnter={this.mouseEnterRemoveButton}
-			onMouseLeave={this.mouseLeaveRemoveButton}
-			disabled
-		>
-			{removeIconImage}
-		</div>);
-		if (this.state.enableRemoveIcon) {
-			removeIcon = (<div id="remove-fields-button-enabled"
-				className="button"
-				onClick={this.removeSelected}
-				onMouseEnter={this.mouseEnterRemoveButton}
-				onMouseLeave={this.mouseLeaveRemoveButton}
-				disabled={false}
-			>
-				{removeIconImage}
-			</div>);
-		}
-		const addTooltip = <Tooltip id="addFieldTip">Select columns to add</Tooltip>;
-		const removeTooltip = <Tooltip id="removeFieldTip">Remove selected columns</Tooltip>;
 		const table = this.createTable();
 		let label;
 		if (this.props.control.label && this.props.control.separateLabel) {
@@ -390,24 +372,6 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 				<col className="structure-table-second-column" />
 			</colgroup>
 			<tbody>
-				<tr className="structure-table-button-row">
-					<td>
-						{label}
-						<OverlayTrigger placement="top" overlay={addTooltip}>
-							<Button
-								id="add-fields-button"
-								icon="plus"
-								onClick={this.props.openFieldPicker}
-								data-control={JSON.stringify(this.props.control)}
-							>
-								Add Columns
-							</Button>
-						</OverlayTrigger>
-						<OverlayTrigger placement="top" overlay={removeTooltip}>
-							{removeIcon}
-						</OverlayTrigger>
-					</td>
-				</tr>
 				<tr className="structure-table-content-row" style={stateStyle}>
 					<td>
 						{table}

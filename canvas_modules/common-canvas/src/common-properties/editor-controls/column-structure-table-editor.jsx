@@ -10,11 +10,15 @@
 import logger from "../../../utils/logger";
 import React from "react";
 import { Tr, Td } from "reactable";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { Button } from "ap-components-react/dist/ap-components-react";
 import EditorControl from "./editor-control.jsx";
 import ToggletextControl from "./toggletext-control.jsx";
 import OneofselectControl from "./oneofselect-control.jsx";
 import TextfieldControl from "./textfield-control.jsx";
 import FlexibleTable from "./flexible-table.jsx";
+import remove32 from "../../../assets/images/remove_32.svg";
+import remove32hover from "../../../assets/images/remove_32_hover.svg";
 
 var _ = require("underscore");
 
@@ -58,6 +62,8 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		this.onSort = this.onSort.bind(this);
 		this.setScrollToRow = this.setScrollToRow.bind(this);
 		this.includeInFilter = this.includeInFilter.bind(this);
+		this.makeAddRemoveButtonPanel = this.makeAddRemoveButtonPanel.bind(this);
+		this.makeLabel = this.makeLabel.bind(this);
 
 		if (this.props.selectedRows && this.props.selectedRows.length > 0) {
 			this.scrollToRow = this.props.selectedRows[this.props.selectedRows.length - 1];
@@ -298,7 +304,8 @@ export default class ColumnStructureTableEditor extends EditorControl {
 				tableControl
 			/></Td>);
 		} else {
-			columnStyle = { "width": colWidth, "padding": "6px 0 10px 0" };
+			const padding = colIndex === 0 ? "6px 0 10px 15px" : "6px 0 10px 0";
+			columnStyle = { "width": colWidth, "padding": padding };
 			cell = <Td key={colIndex} column={columnDef.name} style={columnStyle}>{controlValue[rowIndex][colIndex]}</Td>;
 		}
 		return cell;
@@ -327,6 +334,66 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			}
 		}
 		return false;
+	}
+
+	makeLabel(stateStyle) {
+		let label;
+		if (this.props.control.label && this.props.control.separateLabel && !this.hasFilter()) {
+			if (!(this.props.control.description && this.props.control.description.placement === "on_panel")) {
+				let requiredIndicator;
+				if (this.props.control.required) {
+					requiredIndicator = <span className="required-control-indicator" style={stateStyle}>*</span>;
+				}
+				label = (<div className={"label-container"}>
+					<label className="control-label" style={stateStyle}>{this.props.control.label.text}</label>
+					{requiredIndicator}
+				</div>);
+			}
+		}
+	}
+
+	makeAddRemoveButtonPanel() {
+		let removeIconImage = (<img src={remove32} />);
+		if (this.state.hoverRemoveIcon) {
+			removeIconImage = (<img src={remove32hover} />);
+		}
+		let removeIcon = (<div id="remove-fields-button"
+			className="button"
+			onClick={this.removeSelected}
+			onMouseEnter={this.mouseEnterRemoveButton}
+			onMouseLeave={this.mouseLeaveRemoveButton}
+			disabled
+		>
+			{removeIconImage}
+		</div>);
+		if (this.state.enableRemoveIcon) {
+			removeIcon = (<div id="remove-fields-button-enabled"
+				className="button"
+				onClick={this.removeSelected}
+				onMouseEnter={this.mouseEnterRemoveButton}
+				onMouseLeave={this.mouseLeaveRemoveButton}
+				disabled={false}
+			>
+				{removeIconImage}
+			</div>);
+		}
+		const addTooltip = <Tooltip id="addFieldTip">Select columns to add</Tooltip>;
+		const removeTooltip = <Tooltip id="removeFieldTip">Remove selected columns</Tooltip>;
+		return (<div>
+			<OverlayTrigger placement="top" overlay={addTooltip}>
+				<Button
+					id="add-fields-button"
+					icon="plus"
+					onClick={this.props.openFieldPicker}
+					data-control={JSON.stringify(this.props.control)}
+				>
+					Add Columns
+				</Button>
+			</OverlayTrigger>
+			<OverlayTrigger placement="top" overlay={removeTooltip}>
+				{removeIcon}
+			</OverlayTrigger>
+		</div>);
 	}
 
 	createTable() {
@@ -374,6 +441,8 @@ export default class ColumnStructureTableEditor extends EditorControl {
 				alignTop={this.alignTop}
 				onFilter={this.onFilter}
 				onSort={this.onSort}
+				label={this.makeLabel()}
+				topRightPanel={this.makeAddRemoveButtonPanel()}
 			/>);
 		setTimeout(function() {
 			that.scrollToRow = null;
