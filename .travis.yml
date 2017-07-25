@@ -24,12 +24,12 @@ deploy:
     skip_cleanup: true
     script: ./scripts/publish_modules.sh
     on:
-      branch: master
+      branch: master-0.1
   - provider: script
     skip_cleanup: true
     script: ./scripts/publish_modules.sh
     on:
-      branch: release
+      branch: release-0.1
 notifications:
   slack:
     rooms:

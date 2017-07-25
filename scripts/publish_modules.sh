@@ -3,8 +3,8 @@
 set -e
 
 WORKING_DIR="$PWD"
-RELEASE_BRANCH="release"
-MASTER="master"
+RELEASE_BRANCH="release-0.1"
+MASTER="master-0.1"
 
 # Update package.json version on master only
 if [[ ${TRAVIS_BRANCH} == ${MASTER} ]]; then
