@@ -40,13 +40,31 @@ export default class CanvasD3Layout {
 		this.minScaleExtent = 0.2;
 		this.maxScaleExtent = 2;
 
+		// Allows us to track the sizing behavior of comments
+		this.commentSizing = true;
+		this.commentSizingId = 0;
+		this.commentSizingDirection = "";
+
+		// Allows us to record the drag behavior or nodes and comments.
+		this.dragging = true;
+		this.dragOffsetX = 0;
+		this.dragOffsetY = 0;
+
 		// Placeholder to save transform info as we are zooming
 		this.zoomTransform = d3.zoomIdentity.translate(0, 0).scale(1);
+
+		// Allows us to record the start point of the current zoom.
+		this.zoomStartPoint = { x: 0, y: 0, k: 0 };
 
 		// Center position of text area used for editing comments. These are used
 		// when zooming a text area.
 		this.zoomTextAreaCenterX = 0;
 		this.zoomTextAreaCenterY = 0;
+
+
+		// Used to monitor the region selection rectangle.
+		this.regionSelect = true;
+		this.region = { startX: 0, startY: 0, width: 0, height: 0 };
 
 		// I was not able to figure out how to use the zoom filter method to
 		// allow mousedown and mousemove messages to go through to the canvas to
@@ -384,27 +402,27 @@ export default class CanvasD3Layout {
 		this.consoleLog("Zoom start - x = " + d3.event.transform.x + " y = " + d3.event.transform.y);
 
 		if (d3.event.sourceEvent && d3.event.sourceEvent.shiftKey) {
-			d3.regionSelect = true;
+			this.regionSelect = true;
 			this.regionStartTransformX = d3.event.transform.x;
 			this.regionStartTransformY = d3.event.transform.y;
 			const transPos = this.getTransformedMousePos();
-			d3.region = {
+			this.region = {
 				startX: transPos.x,
 				startY: transPos.y,
 				width: 0,
 				height: 0
 			};
 		} else {
-			d3.zoomStartPoint = { x: d3.event.transform.x, y: d3.event.transform.y, k: d3.event.transform.k };
+			this.zoomStartPoint = { x: d3.event.transform.x, y: d3.event.transform.y, k: d3.event.transform.k };
 		}
 	}
 
 	zoomAction() {
 		// this.consoleLog("Zoom action - x = " + d3.event.transform.x + " y = " + d3.event.transform.y);
-		if (d3.regionSelect === true) {
+		if (this.regionSelect === true) {
 			const transPos = this.getTransformedMousePos();
-			d3.region.width = transPos.x - d3.region.startX;
-			d3.region.height = transPos.y - d3.region.startY;
+			this.region.width = transPos.x - this.region.startX;
+			this.region.height = transPos.y - this.region.startY;
 			this.drawRegionSelector();
 
 		} else {
@@ -415,7 +433,7 @@ export default class CanvasD3Layout {
 			// If we are not zooming we must be dragging so, if the canvas rectangle
 			// (nodes and comments) is smaller than the SVG area then don't let the
 			// canvas be dragged out of the SVG area.
-			if (k === d3.zoomStartPoint.k) {
+			if (k === this.zoomStartPoint.k) {
 				const canv = this.getCanvasDimensionsAdjustedForScale(k);
 				const zoomSvgRect = this.canvasSVG.node().getBoundingClientRect();
 
@@ -448,8 +466,8 @@ export default class CanvasD3Layout {
 			this.drawingNewLink = false;
 		}
 
-		if (d3.regionSelect === true) {
-			d3.regionSelect = false;
+		if (this.regionSelect === true) {
+			this.regionSelect = false;
 
 			this.removeRegionSelector();
 
@@ -461,8 +479,8 @@ export default class CanvasD3Layout {
 			ObjectModel.clearSelection();
 
 			// Only select objects if region selector area dimensions are > 5.
-			if (Math.abs(d3.region.width) > 5 &&
-					Math.abs(d3.region.height) > 5) {
+			if (Math.abs(this.region.width) > 5 &&
+					Math.abs(this.region.height) > 5) {
 				var { startX, startY, width, height } = this.getRegionDimensions();
 				ObjectModel.selectInRegion(startX, startY, startX + width, startY + height);
 				this.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "region", selectedObjectIds: ObjectModel.getSelectedObjectIds() });
@@ -472,8 +490,8 @@ export default class CanvasD3Layout {
 		} else {
 			// If mouse hasn't moved very far we make this equivalent to a click
 			// on the canvas.
-			if (Math.abs(d3.event.transform.x - d3.zoomStartPoint.x) < 2 &&
-					Math.abs(d3.event.transform.y - d3.zoomStartPoint.y) < 2) {
+			if (Math.abs(d3.event.transform.x - this.zoomStartPoint.x) < 2 &&
+					Math.abs(d3.event.transform.y - this.zoomStartPoint.y) < 2) {
 				this.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "canvas", selectedObjectIds: ObjectModel.getSelectedObjectIds() });
 				// TODO - The decision to clear selection (commented out code below) is currently made by common-canvas
 				// This 'to do' is to move that decision from there to here. To do that we need to have a callback function
@@ -553,18 +571,18 @@ export default class CanvasD3Layout {
 	// where startX and startY are always the top left corner of the region
 	// and width and height are therefore always positive.
 	getRegionDimensions() {
-		var startX = d3.region.startX;
-		var startY = d3.region.startY;
-		var width = d3.region.width;
-		var height = d3.region.height;
+		var startX = this.region.startX;
+		var startY = this.region.startY;
+		var width = this.region.width;
+		var height = this.region.height;
 
 		if (width < 0) {
 			width = Math.abs(width);
-			startX = d3.region.startX - width;
+			startX = this.region.startX - width;
 		}
 		if (height < 0) {
 			height = Math.abs(height);
-			startY = d3.region.startY - height;
+			startY = this.region.startY - height;
 		}
 
 		return { startX, startY, width, height };
@@ -572,19 +590,19 @@ export default class CanvasD3Layout {
 
 	dragStart(d) {
 		this.consoleLog("Drag start");
-		d3.dragOffsetX = 0;
-		d3.dragOffsetY = 0;
-		d3.dragging = true;
+		this.dragging = true;
+		this.dragOffsetX = 0;
+		this.dragOffsetY = 0;
 		// Note: Comment resizing is started by the comment highlight rectangle.
 	}
 
 	dragMove() {
 		// this.consoleLog("Drag move");
-		if (d3.commentSizing) {
+		if (this.commentSizing) {
 			this.resizeComment();
-		} else if (d3.dragging) {
-			d3.dragOffsetX += d3.event.dx;
-			d3.dragOffsetY += d3.event.dy;
+		} else if (this.dragging) {
+			this.dragOffsetX += d3.event.dx;
+			this.dragOffsetY += d3.event.dy;
 
 			var objs = [];
 			this.canvasJSON.diagram.nodes.forEach((node) => {
@@ -612,14 +630,14 @@ export default class CanvasD3Layout {
 
 	dragEnd() {
 		this.consoleLog("Drag end");
-		if (d3.commentSizing) {
+		if (this.commentSizing) {
 			this.endCommentSizing();
-		} else if (d3.dragging) {
-			d3.dragging = false;
-			if (d3.dragOffsetX !== 0 ||
-					d3.dragOffsetY !== 0) {
+		} else if (this.dragging) {
+			this.dragging = false;
+			if (this.dragOffsetX !== 0 ||
+					this.dragOffsetY !== 0) {
 				this.consoleLog("editActionHandler - moveObjects");
-				this.editActionHandler({ editType: "moveObjects", nodes: ObjectModel.getSelectedObjectIds(), offsetX: d3.dragOffsetX, offsetY: d3.dragOffsetY });
+				this.editActionHandler({ editType: "moveObjects", nodes: ObjectModel.getSelectedObjectIds(), offsetX: this.dragOffsetX, offsetY: this.dragOffsetY });
 			}
 		}
 	}
@@ -1472,13 +1490,13 @@ export default class CanvasD3Layout {
 				return ObjectModel.isSelected(d.id) ? "d3-obj-rect d3-obj-rect-selected" : "d3-obj-rect";
 			})
 			.on("mousedown", (d) => {
-				d3.commentSizing = true;
-				d3.commentSizingId = d.id;
+				this.commentSizing = true;
+				this.commentSizingId = d.id;
 				// Note - comment resizing and finalization of size is handled by drag functions.
 			})
 			.on("mousemove", (d) => {
-				d3.commentSizingDirection = this.getCommentSizingDirection(d);
-				that.displaySizingCursor(d.id, d3.commentSizingDirection);
+				this.commentSizingDirection = this.getCommentSizingDirection(d);
+				this.displaySizingCursor(d.id, this.commentSizingDirection);
 			});
 
 		// Background rectangle for comment
@@ -1668,20 +1686,20 @@ export default class CanvasD3Layout {
 	// then redraws the comment and lines (the line positions may move based
 	// on the comment size change).
 	resizeComment() {
-		var commentObj = this.getComment(d3.commentSizingId);
+		var commentObj = this.getComment(this.commentSizingId);
 		var { xPos, yPos, width, height } = commentObj;
 
-		if (d3.commentSizingDirection.indexOf("e") > -1) {
+		if (this.commentSizingDirection.indexOf("e") > -1) {
 			width += d3.event.dx;
 		}
-		if (d3.commentSizingDirection.indexOf("s") > -1) {
+		if (this.commentSizingDirection.indexOf("s") > -1) {
 			height += d3.event.dy;
 		}
-		if (d3.commentSizingDirection.indexOf("n") > -1) {
+		if (this.commentSizingDirection.indexOf("n") > -1) {
 			yPos += d3.event.dy;
 			height -= d3.event.dy;
 		}
-		if (d3.commentSizingDirection.indexOf("w") > -1) {
+		if (this.commentSizingDirection.indexOf("w") > -1) {
 			xPos += d3.event.dx;
 			width -= d3.event.dx;
 		}
@@ -1698,7 +1716,7 @@ export default class CanvasD3Layout {
 		commentObj.width = width;
 		commentObj.height = height;
 
-		d3.select(`#comment_grp_${d3.commentSizingId}`).remove();
+		d3.select(`#comment_grp_${this.commentSizingId}`).remove();
 		this.displayComments();
 		this.drawLines();
 	}
@@ -1706,8 +1724,8 @@ export default class CanvasD3Layout {
 	// Finalises the sizing of a comment by calling editActionHandler
 	// with an editComment action.
 	endCommentSizing() {
-		d3.commentSizing = false;
-		var commentObj = this.getComment(d3.commentSizingId);
+		this.commentSizing = false;
+		var commentObj = this.getComment(this.commentSizingId);
 		const data = {
 			editType: "editComment",
 			nodes: [commentObj.id],
