@@ -35,11 +35,14 @@ export default class PropertiesDialog extends Component {
 		}
 
 		return (
-				<Modal className="ap-container" {...this.props}
+				<Modal className="ap-container"
 					show
 					keyboard
 					backdrop="static"
 					onHide={this.props.cancelHandler}
+					bsSize={this.props.bsSize}
+					children={this.props.children}
+					title={this.props.title}
 				>
 					<div className={modalClassName}>
 						<div className="modal-title"
@@ -65,6 +68,7 @@ export default class PropertiesDialog extends Component {
 PropertiesDialog.propTypes = {
 	cancelHandler: React.PropTypes.func,
 	okHandler: React.PropTypes.func,
+	bsSize: React.PropTypes.string,
 	title: React.PropTypes.object,
 	children: React.PropTypes.element,
 	showPropertiesButtons: React.PropTypes.bool
