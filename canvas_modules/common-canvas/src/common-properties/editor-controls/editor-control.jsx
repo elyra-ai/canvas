@@ -212,8 +212,6 @@ export default class EditorControl extends React.Component {
 		for (const key in controlValues) {
 			if (typeof controlValues[key][0] === "undefined") {
 				userInput[key] = [];
-			} else if (this.props.control.controlType === "structuretable") {
-				userInput[key] = EditorControl.parseStructureStrings(controlValues[key]);
 			} else {
 				userInput[key] = controlValues[key][0];
 			}

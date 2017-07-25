@@ -352,7 +352,7 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 			);
 		}
 
-		const table = this.createTable();
+		const table = this.createTable(stateStyle);
 		let label;
 		if (this.props.control.label && this.props.control.separateLabel) {
 			if (!(this.props.control.description && this.props.control.description.placement === "on_panel")) {
