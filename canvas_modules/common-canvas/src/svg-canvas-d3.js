@@ -41,12 +41,12 @@ export default class CanvasD3Layout {
 		this.maxScaleExtent = 2;
 
 		// Allows us to track the sizing behavior of comments
-		this.commentSizing = true;
+		this.commentSizing = false;
 		this.commentSizingId = 0;
 		this.commentSizingDirection = "";
 
 		// Allows us to record the drag behavior or nodes and comments.
-		this.dragging = true;
+		this.dragging = false;
 		this.dragOffsetX = 0;
 		this.dragOffsetY = 0;
 
@@ -63,7 +63,7 @@ export default class CanvasD3Layout {
 
 
 		// Used to monitor the region selection rectangle.
-		this.regionSelect = true;
+		this.regionSelect = false;
 		this.region = { startX: 0, startY: 0, width: 0, height: 0 };
 
 		// I was not able to figure out how to use the zoom filter method to
