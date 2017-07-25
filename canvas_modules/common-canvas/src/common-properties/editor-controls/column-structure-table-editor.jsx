@@ -350,6 +350,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 				</div>);
 			}
 		}
+		return label;
 	}
 
 	makeAddRemoveButtonPanel() {
@@ -396,7 +397,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		</div>);
 	}
 
-	createTable() {
+	createTable(stateStyle) {
 		const that = this;
 		const rows = [];
 		const headers = [];
@@ -441,7 +442,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 				alignTop={this.alignTop}
 				onFilter={this.onFilter}
 				onSort={this.onSort}
-				label={this.makeLabel()}
+				label={this.makeLabel(stateStyle)}
 				topRightPanel={this.makeAddRemoveButtonPanel()}
 			/>);
 		setTimeout(function() {
