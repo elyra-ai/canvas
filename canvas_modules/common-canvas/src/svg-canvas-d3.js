@@ -1939,6 +1939,7 @@ export default class CanvasD3Layout {
 	drawLines() {
 		// this.consoleLog("Drawing lines");
 		var lineArray = this.buildLineArray();
+		lineArray = this.addConnectionPaths(lineArray);
 
 		this.canvas.selectAll(".link-group").remove();
 
@@ -1973,12 +1974,12 @@ export default class CanvasD3Layout {
 
 		// Link selection area
 		linkGroup.append("path")
-			.attr("d", (d) => this.getConnectorPath(d))
+			.attr("d", (d) => d.path)
 			.attr("class", "d3-link-selection-area");
 
 		// Link line
 		linkGroup.append("path")
-				.attr("d", (d) => this.getConnectorPath(d))
+				.attr("d", (d) => d.path)
 				.attr("class", (d) => {
 					var classStr;
 					if (d.type === "commentLink") {
@@ -2074,6 +2075,15 @@ export default class CanvasD3Layout {
 			}
 		});
 
+		return lineArray;
+	}
+
+	// Calculates the connection path to draw connections for the current config
+	// settings and adds them to the line array.
+	addConnectionPaths(lineArray) {
+		lineArray.forEach((line, i) => {
+			lineArray[i].path = this.getConnectorPath(line);
+		});
 		return lineArray;
 	}
 
