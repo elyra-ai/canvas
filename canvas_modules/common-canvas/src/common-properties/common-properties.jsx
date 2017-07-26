@@ -136,7 +136,7 @@ export default class CommonProperties extends React.Component {
 				/>);
 				const title = <div>{formData.label}</div>;
 				const size = formData.editorSize;
-				if (this.props.useModalDialog) {
+				if (typeof this.props.useModalDialog === "undefined" || this.props.useModalDialog) {
 					propertiesDialog = (<PropertiesDialog
 						onHide={this.props.propertiesInfo.closePropertiesDialog}
 						title={title}
