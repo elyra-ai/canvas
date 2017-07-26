@@ -10,6 +10,7 @@
 // import logger from "../../../utils/logger";
 import React from "react";
 import { FormControl } from "react-bootstrap";
+import Dropdown from "react-dropdown";
 import EditorControl from "./editor-control.jsx";
 import ReactDOM from "react-dom";
 
@@ -45,9 +46,11 @@ export default class FieldAllocatorControl extends EditorControl {
 	}
 
 	handleChange(evt) {
-		this.setState({ selectedValues: evt.target.value, controlValue: [evt.target.value] });
-		if (this.props.updateControlValue) {
-			this.props.updateControlValue(this.props.control.name, [evt.target.value]);
+		if (evt.value !== "...") {
+			this.setState({ selectedValues: evt.value, controlValue: [evt.value] });
+			if (this.props.updateControlValue) {
+				this.props.updateControlValue(this.props.control.name, [evt.value]);
+			}
 		}
 	}
 
@@ -129,8 +132,8 @@ export default class FieldAllocatorControl extends EditorControl {
 			const availableFields = this.props.availableFieldsAccessor
 				?	this.props.availableFieldsAccessor(this.props.control.name)
 				: this.props.dataModel;
-			options = EditorControl.genColumnSelectOptions(availableFields.fields,
-				this.state.selectedValues, includeEmpty);
+			options = EditorControl.genColumnSelectDropdownOptions(availableFields.fields,
+				this.state.selectedValues);
 		}
 
 		if (this._update_callback !== null) {
@@ -186,23 +189,20 @@ export default class FieldAllocatorControl extends EditorControl {
 				</div>
 			);
 		}
-		const currentSeln = includeEmpty ? -1 : this.state.controlValue[0];
+		const currentSeln = includeEmpty ? "..." : this.state.controlValue[0];
 		// help={this.props.control.additionalText}
 		return (
 			<div className="editor_control_area" style={stateStyle}>
-				<FormControl {...stateDisabled}
+				<Dropdown {...stateDisabled}
 					id={this.getControlID()}
-					className="column-allocator"
-					componentClass="select"
-					rows={1}
 					name={this.props.control.name}
-					style={stateStyle}
+					options={options}
 					onChange={this.handleChange}
+					onBlur={this.validateInput}
 					value={currentSeln}
+					placeholder={this.props.control.additionalText}
 					ref="input"
-				>
-					{options}
-				</FormControl>
+				/>
 				{errorMessage}
 			</div>
 		);
