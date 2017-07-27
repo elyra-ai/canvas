@@ -519,17 +519,17 @@ export default class CanvasD3Layout {
 		var canvBottom = -Infinity;
 
 		d3.selectAll(".node-group").each((d) => {
-			canvLeft = Math.min(canvLeft, d.xPos - this.highLightGap);
-			canvTop = Math.min(canvTop, d.yPos - this.highLightGap);
-			canvRight = Math.max(canvRight, d.xPos + this.nodeWidth + this.highLightGap);
-			canvBottom = Math.max(canvBottom, d.yPos + this.nodeHeight + this.highLightGap);
+			canvLeft = Math.min(canvLeft, d.x_pos - this.highLightGap);
+			canvTop = Math.min(canvTop, d.y_pos - this.highLightGap);
+			canvRight = Math.max(canvRight, d.x_pos + this.nodeWidth + this.highLightGap);
+			canvBottom = Math.max(canvBottom, d.y_pos + this.nodeHeight + this.highLightGap);
 		});
 
 		d3.selectAll(".comment-group").each((d) => {
-			canvLeft = Math.min(canvLeft, d.xPos - this.highLightGap);
-			canvTop = Math.min(canvTop, d.yPos - this.highLightGap);
-			canvRight = Math.max(canvRight, d.xPos + d.width + this.highLightGap);
-			canvBottom = Math.max(canvBottom, d.yPos + d.height + this.highLightGap);
+			canvLeft = Math.min(canvLeft, d.x_pos - this.highLightGap);
+			canvTop = Math.min(canvTop, d.y_pos - this.highLightGap);
+			canvRight = Math.max(canvRight, d.x_pos + d.width + this.highLightGap);
+			canvBottom = Math.max(canvBottom, d.y_pos + d.height + this.highLightGap);
 		});
 
 		const canvWidth = canvRight - canvLeft;
@@ -618,8 +618,8 @@ export default class CanvasD3Layout {
 			});
 
 			objs.forEach(function(d) {
-				d.xPos += d3.event.dx;
-				d.yPos += d3.event.dy;
+				d.x_pos += d3.event.dx;
+				d.y_pos += d3.event.dy;
 			});
 
 			this.displayNodes();
@@ -654,7 +654,7 @@ export default class CanvasD3Layout {
 		nodeGroupSel.each(function(d) {
 
 			d3.select(`#node_grp_${d.id}`)
-				.attr("transform", `translate(${d.xPos}, ${d.yPos})`)
+				.attr("transform", `translate(${d.x_pos}, ${d.y_pos})`)
 				.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
 
 			d3.select(`#node_rect_${d.id}`)
@@ -689,7 +689,7 @@ export default class CanvasD3Layout {
 				.append("g")
 					.attr("id", (d) => `node_grp_${d.id}`)
 					.attr("class", "obj-group node-group")
-					.attr("transform", (d) => `translate(${d.xPos}, ${d.yPos})`)
+					.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 					// Use mouse down instead of click because it gets called before drag start.
 					.on("mousedown", (d) => {
 						this.consoleLog("Node Group - mouse down");
@@ -792,7 +792,7 @@ export default class CanvasD3Layout {
 						this.drawingNewLink = true;
 						this.drawingNewLinkSrcId = d.id;
 						this.drawingNewLinkAction = "node-node";
-						this.drawingNewLinkStartPos = { x: d.xPos + this.nodeWidth, y: d.yPos + this.portPosY };
+						this.drawingNewLinkStartPos = { x: d.x_pos + this.nodeWidth, y: d.y_pos + this.portPosY };
 						this.drawingNewLinkArray = [];
 						this.drawNewLink();
 					});
@@ -1068,8 +1068,8 @@ export default class CanvasD3Layout {
 		const srcComment = this.getComment(this.drawingNewLinkSrcId);
 
 		this.drawingNewLinkStartPos = this.getOuterCoord(
-			srcComment.xPos - this.linkGap,
-			srcComment.yPos - this.linkGap,
+			srcComment.x_pos - this.linkGap,
+			srcComment.y_pos - this.linkGap,
 			srcComment.width + (this.linkGap * 2),
 			srcComment.height + (this.linkGap * 2),
 			srcComment.width / 2 + this.linkGap,
@@ -1273,10 +1273,10 @@ export default class CanvasD3Layout {
 		var node = null;
 		this.canvas.selectAll(".node-group")
 			.each(function(d) {
-				if (pos.x >= d.xPos - that.portRadius &&  // Target port sticks out by its radius so need to allow for it.
-						pos.x <= d.xPos + that.nodeWidth &&
-						pos.y >= d.yPos &&
-						pos.y <= d.yPos + that.nodeHeight) {
+				if (pos.x >= d.x_pos - that.portRadius &&  // Target port sticks out by its radius so need to allow for it.
+						pos.x <= d.x_pos + that.nodeWidth &&
+						pos.y >= d.y_pos &&
+						pos.y <= d.y_pos + that.nodeHeight) {
 					node = d;
 				}
 			});
@@ -1296,7 +1296,7 @@ export default class CanvasD3Layout {
 
 			// Comment group object
 			d3.select(`#comment_grp_${d.id}`)
-				.attr("transform", `translate(${d.xPos}, ${d.yPos})`)
+				.attr("transform", `translate(${d.x_pos}, ${d.y_pos})`)
 				.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
 
 			// Comment selection highlighting and sizing outline
@@ -1354,7 +1354,7 @@ export default class CanvasD3Layout {
 				.append("g")
 					.attr("id", (d) => `comment_grp_${d.id}`)
 					.attr("class", "obj-group comment-group")
-					.attr("transform", (d) => `translate(${d.xPos}, ${d.yPos})`)
+					.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 					// Use mouse down instead of click because it gets called before drag start.
 					.on("mousedown", (d) => {
 						this.consoleLog("Comment Group - mouse down");
@@ -1393,7 +1393,7 @@ export default class CanvasD3Layout {
 											that.drawingNewLink = true;
 											that.drawingNewLinkSrcId = d.id;
 											that.drawingNewLinkAction = "comment-node";
-											that.drawingNewLinkStartPos = { x: d.xPos - that.highLightGap, y: d.yPos - that.highLightGap };
+											that.drawingNewLinkStartPos = { x: d.x_pos - that.highLightGap, y: d.y_pos - that.highLightGap };
 											that.drawingNewLinkArray = [];
 											that.drawNewLink();
 										});
@@ -1417,15 +1417,15 @@ export default class CanvasD3Layout {
 						var id = d.id;
 						var width = d.width - (2 * that.commentWidthPadding);
 						var height = d.height;
-						var xPos = d.xPos + that.commentWidthPadding;
-						var yPos = d.yPos;
+						var xPos = d.x_pos + that.commentWidthPadding;
+						var yPos = d.y_pos;
 						var content = d.content;
 
 						that.textAreaHeight = 0; // Save for comparison later
 						that.editingComment = true;
 
-						that.zoomTextAreaCenterX = d.xPos + (d.width / 2);
-						that.zoomTextAreaCenterY = d.yPos + (d.height / 2);
+						that.zoomTextAreaCenterX = d.x_pos + (d.width / 2);
+						that.zoomTextAreaCenterY = d.y_pos + (d.height / 2);
 
 						d3.select(that.canvasSelector)
 							.append("textarea")
@@ -1567,7 +1567,7 @@ export default class CanvasD3Layout {
 		this.consoleLog("autoSizeTextArea textAreaHt = " + this.textAreaHeight + " scroll ht = " + textArea.scrollHeight);
 		if (this.textAreaHeight < textArea.scrollHeight) {
 			this.textAreaHeight = textArea.scrollHeight;
-			this.zoomTextAreaCenterY = datum.yPos + (this.textAreaHeight / 2);
+			this.zoomTextAreaCenterY = datum.y_pos + (this.textAreaHeight / 2);
 			var comment = this.getComment(datum.id);
 			comment.height = this.textAreaHeight;
 			d3.select(`#text_area_${datum.id}`)
@@ -1639,14 +1639,14 @@ export default class CanvasD3Layout {
 
 		const transPos = this.getTransformedMousePos();
 
-		if (transPos.x < d.xPos + this.cornerResizeArea) {
+		if (transPos.x < d.x_pos + this.cornerResizeArea) {
 			xPart = "w";
-		} else if (transPos.x > d.xPos + d.width - this.cornerResizeArea) {
+		} else if (transPos.x > d.x_pos + d.width - this.cornerResizeArea) {
 			xPart = "e";
 		}
-		if (transPos.y < d.yPos + this.cornerResizeArea) {
+		if (transPos.y < d.y_pos + this.cornerResizeArea) {
 			yPart = "n";
-		} else if (transPos.y > d.yPos + d.height - this.cornerResizeArea) {
+		} else if (transPos.y > d.y_pos + d.height - this.cornerResizeArea) {
 			yPart = "s";
 		}
 
@@ -1687,7 +1687,10 @@ export default class CanvasD3Layout {
 	// on the comment size change).
 	resizeComment() {
 		var commentObj = this.getComment(this.commentSizingId);
-		var { xPos, yPos, width, height } = commentObj;
+		var width = commentObj.width;
+		var height = commentObj.height;
+		var xPos = commentObj.x_pos;
+		var yPos = commentObj.y_pos;
 
 		if (this.commentSizingDirection.indexOf("e") > -1) {
 			width += d3.event.dx;
@@ -1711,8 +1714,8 @@ export default class CanvasD3Layout {
 			return;
 		}
 
-		commentObj.xPos = xPos;
-		commentObj.yPos = yPos;
+		commentObj.x_pos = xPos;
+		commentObj.y_pos = yPos;
 		commentObj.width = width;
 		commentObj.height = height;
 
@@ -1732,8 +1735,8 @@ export default class CanvasD3Layout {
 			label: commentObj.content,
 			width: commentObj.width,
 			height: commentObj.height,
-			offsetX: commentObj.xPos,
-			offsetY: commentObj.yPos
+			offsetX: commentObj.x_pos,
+			offsetY: commentObj.y_pos
 		};
 		this.consoleLog("editActionHandler - editComment");
 		this.editActionHandler(data);
@@ -2107,16 +2110,16 @@ export default class CanvasD3Layout {
 
 	isSourceOverlappingTarget(srcNode, trgNode, type) {
 		if (type === "nodeLink" &&
-				((srcNode.xPos + this.nodeWidth + this.linkGap >= trgNode.xPos - this.linkGap &&
-					trgNode.xPos + this.nodeWidth + this.linkGap >= srcNode.xPos - this.linkGap) &&
-					(srcNode.yPos + this.nodeHeight + this.linkGap >= trgNode.yPos - this.linkGap &&
-					trgNode.yPos + this.nodeHeight + this.linkGap >= srcNode.yPos - this.linkGap))) {
+				((srcNode.x_pos + this.nodeWidth + this.linkGap >= trgNode.x_pos - this.linkGap &&
+					trgNode.x_pos + this.nodeWidth + this.linkGap >= srcNode.x_pos - this.linkGap) &&
+					(srcNode.y_pos + this.nodeHeight + this.linkGap >= trgNode.y_pos - this.linkGap &&
+					trgNode.y_pos + this.nodeHeight + this.linkGap >= srcNode.y_pos - this.linkGap))) {
 			return true;
 		} else if (type === "commentLink" &&
-				((srcNode.xPos + srcNode.width + this.linkGap >= trgNode.xPos - this.linkGap &&
-					trgNode.xPos + this.nodeWidth + this.linkGap >= srcNode.xPos - this.linkGap) &&
-					(srcNode.yPos + srcNode.height + this.linkGap >= trgNode.yPos - this.linkGap &&
-					trgNode.yPos + this.nodeHeight + this.linkGap >= srcNode.yPos - this.linkGap))) {
+				((srcNode.x_pos + srcNode.width + this.linkGap >= trgNode.x_pos - this.linkGap &&
+					trgNode.x_pos + this.nodeWidth + this.linkGap >= srcNode.x_pos - this.linkGap) &&
+					(srcNode.y_pos + srcNode.height + this.linkGap >= trgNode.y_pos - this.linkGap &&
+					trgNode.y_pos + this.nodeHeight + this.linkGap >= srcNode.y_pos - this.linkGap))) {
 			return true;
 		}
 
@@ -2125,56 +2128,56 @@ export default class CanvasD3Layout {
 
 	getNodeLinkCoordsForPorts(srcNode, trgNode) {
 		return {
-			x1: srcNode.xPos + this.nodeWidth,
-			y1: srcNode.yPos + this.portPosY,
-			x2: trgNode.xPos,
-			y2: trgNode.yPos + this.portPosY };
+			x1: srcNode.x_pos + this.nodeWidth,
+			y1: srcNode.y_pos + this.portPosY,
+			x2: trgNode.x_pos,
+			y2: trgNode.y_pos + this.portPosY };
 	}
 
 	getNodeLinkCoordsForHalo(srcNode, trgNode) {
 		const startPos = this.getOuterCoord(
-			srcNode.xPos - this.linkGap,
-			srcNode.yPos - this.linkGap,
+			srcNode.x_pos - this.linkGap,
+			srcNode.y_pos - this.linkGap,
 			this.nodeWidth + (this.linkGap * 2),
 			this.nodeHeight + (this.linkGap * 2),
 			this.imagePosX + (this.imageWidth / 2) + this.linkGap,
 			this.imagePosY + (this.imageHeight / 2) + this.linkGap,
-			trgNode.xPos + (this.nodeWidth / 2),
-			trgNode.yPos + (this.nodeHeight / 2));
+			trgNode.x_pos + (this.nodeWidth / 2),
+			trgNode.y_pos + (this.nodeHeight / 2));
 
 		const endPos = this.getOuterCoord(
-			trgNode.xPos - this.linkGap,
-			trgNode.yPos - this.linkGap,
+			trgNode.x_pos - this.linkGap,
+			trgNode.y_pos - this.linkGap,
 			this.nodeWidth + (this.linkGap * 2),
 			this.nodeHeight + (this.linkGap * 2),
 			this.imagePosX + (this.imageWidth / 2) + this.linkGap,
 			this.imagePosY + (this.imageHeight / 2) + this.linkGap,
-			srcNode.xPos + (this.nodeWidth / 2),
-			srcNode.yPos + (this.nodeHeight / 2));
+			srcNode.x_pos + (this.nodeWidth / 2),
+			srcNode.y_pos + (this.nodeHeight / 2));
 
 		return { x1: startPos.x, y1: startPos.y, x2: endPos.x, y2: endPos.y };
 	}
 
 	getCommentLinkCoords(srcNode, trgNode) {
 		const startPos = this.getOuterCoord(
-			srcNode.xPos - this.linkGap,
-			srcNode.yPos - this.linkGap,
+			srcNode.x_pos - this.linkGap,
+			srcNode.y_pos - this.linkGap,
 			srcNode.width + (this.linkGap * 2),
 			srcNode.height + (this.linkGap * 2),
 			(srcNode.width / 2) + this.linkGap,
 			(srcNode.height / 2) + this.linkGap,
-			trgNode.xPos + (this.nodeWidth / 2),
-			trgNode.yPos + (this.nodeHeight / 2));
+			trgNode.x_pos + (this.nodeWidth / 2),
+			trgNode.y_pos + (this.nodeHeight / 2));
 
 		const endPos = this.getOuterCoord(
-			trgNode.xPos - this.linkGap,
-			trgNode.yPos - this.linkGap,
+			trgNode.x_pos - this.linkGap,
+			trgNode.y_pos - this.linkGap,
 			this.nodeWidth + (this.linkGap * 2),
 			this.nodeHeight + (this.linkGap * 2),
 			this.imagePosX + (this.imageWidth / 2) + this.linkGap,
 			this.imagePosY + (this.imageHeight / 2) + this.linkGap,
-			srcNode.xPos + (srcNode.width / 2),
-			srcNode.yPos + (srcNode.height / 2));
+			srcNode.x_pos + (srcNode.width / 2),
+			srcNode.y_pos + (srcNode.height / 2));
 
 		return { x1: startPos.x, y1: startPos.y, x2: endPos.x, y2: endPos.y };
 	}

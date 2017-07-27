@@ -233,7 +233,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	let controlDesc;
 	if (parameter.description &&
 		((parameter.description.default && parameter.description.default.length > 0) ||
-		(parameter.description.resourceKey))) {
+		(parameter.description.resource_key))) {
 		controlDesc = new Description(l10nProvider.l10nDesc(parameter, parameter.name),
 			parameter.description ? parameter.description.placement : null);
 	}
@@ -417,7 +417,7 @@ function _makeSubControl(parameter, l10nProvider, isKeyField) {
 	let controlDesc;
 	if (parameter.description &&
 		((parameter.description.default && parameter.description.default.length > 0) ||
-		(parameter.description.resourceKey))) {
+		(parameter.description.resource_key))) {
 		controlDesc = new Description(l10nProvider.l10nDesc(parameter, parameter.name),
 			parameter.description ? parameter.description.placement : null);
 	}
@@ -494,8 +494,8 @@ function _makeSubControl(parameter, l10nProvider, isKeyField) {
 function _parameterValueLabels(parameter, l10nProvider) {
 	if (parameter.valueRestriction) {
 		let key;
-		if (parameter.resourceKey) {
-			key = parameter.resourceKey;
+		if (parameter.resource_key) {
+			key = parameter.resource_key;
 		} else {
 			key = parameter.name;
 		}

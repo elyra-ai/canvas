@@ -205,7 +205,7 @@
 						"metadata": {
 							"description": "",
             	"measure": "range",
-            	"role": "input"
+            	"modeling_role": "input"
 						}
           },
           {
@@ -214,7 +214,7 @@
 						"metadata": {
 							"description": "",
             	"measure": "discrete",
-            	"role": "input"
+            	"modeling_role": "input"
 						}
           },
           {
@@ -223,7 +223,7 @@
 						"metadata": {
 							"description": "",
             	"measure": "discrete",
-            	"role": "input"
+            	"modeling_role": "input"
 						}
           },
           {
@@ -232,7 +232,7 @@
 						"metadata": {
 							"description": "",
             	"measure": "discrete",
-            	"role": "input"
+            	"modeling_role": "input"
 						}
           },
           {
@@ -241,7 +241,7 @@
 						"metadata": {
 							"description": "",
             	"measure": "range",
-            	"role": "input"
+            	"modeling_role": "input"
 						}
           },
           {
@@ -250,7 +250,7 @@
 						"metadata": {
 							"description": "",
             	"measure": "range",
-            	"role": "input"
+            	"modeling_role": "input"
 						}
           },
           {
@@ -259,7 +259,7 @@
 						"metadata": {
 							"description": "",
             	"measure": "discrete",
-            	"role": "input"
+            	"modeling_role": "input"
 						}
           }
         ]
@@ -324,7 +324,7 @@
 							"type": "warning",
 							"message": {
 								"default": "Either Measurement:Range is selected or Expression should contain '/'",
-								"resourceKey": "formula_expr_not_valid"
+								"resource_key": "formula_expr_not_valid"
 							},
 							"focusParam": "formula_expr"
 						},
@@ -354,7 +354,7 @@
 							"type": "error",
 							"message": {
 								"default": "Field cannot be empty nor contain \"quotes\"",
-								"resourceKey": "new_name"
+								"resource_key": "new_name"
 							},
 							"focusParam": "new_name"
 						},
@@ -390,7 +390,7 @@
 							"type": "error",
 							"message": {
 								"default": "Field cannot contain \"quote(s)\"",
-								"resourceKey": "formula_expr"
+								"resource_key": "formula_expr"
 							},
 							"focusParam": "formula_expr"
 						},
@@ -420,7 +420,7 @@
 							"type": "warning",
 							"message": {
 								"default": "Field cannot contain ttt",
-								"resourceKey": "formula_expr"
+								"resource_key": "formula_expr"
 							},
 							"focusParam": "formula_expr"
 						},
@@ -439,7 +439,7 @@
 							"type": "error",
 							"message": {
 								"default": "Field cannot be default",
-								"resourceKey": "formula_measure_type"
+								"resource_key": "formula_measure_type"
 							},
 							"focusParam": "formula_measure_type"
 						},
@@ -458,7 +458,7 @@
 							"type": "error",
 							"message": {
 								"default": "Field cannot contain \"quotes\"",
-								"resourceKey": "custom_name"
+								"resource_key": "custom_name"
 							},
 							"focusParam": "custom_name"
 						},
@@ -488,7 +488,7 @@
 							"type": "error",
 							"message": {
 								"default": "Field cannot be empty nor contain \"quotes\"",
-								"resourceKey": "annotation"
+								"resource_key": "annotation"
 							},
 							"focusParam": "annotations"
 						},
@@ -524,7 +524,7 @@
 							"type": "warning",
 							"message": {
 								"default": "Annotation is empty when there is a custom name",
-								"resourceKey": "custom_name"
+								"resource_key": "custom_name"
 							},
 							"focusParam": "custom_name"
 						},

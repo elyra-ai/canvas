@@ -84,7 +84,7 @@ describe("Correct form should be created", () => {
 				}
 			],
 			"uihints": {
-				"name": "TestOp",
+				"id": "TestOp",
 				"icon": "./test.svg",
 				"editorSize": "small",
 				"group_info": [

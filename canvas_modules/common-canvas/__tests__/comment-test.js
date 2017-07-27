@@ -25,8 +25,8 @@ const zoom = 2;
 
 const comment = {
 	"id": "id2PZSCTRPRIJ",
-	"xPos": 270,
-	"yPos": 232,
+	"x_pos": 270,
+	"y_pos": 232,
 	"height": 45,
 	"width": 200,
 	"content": "this is the content of this comment",

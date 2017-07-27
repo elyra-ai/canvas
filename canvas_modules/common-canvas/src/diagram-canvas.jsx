@@ -197,10 +197,10 @@ export default class DiagramCanvas extends React.Component {
 	}
 
 	getConnPoints(halfNodeWidth, halfIcon, connSize, zoom, node) {
-		const iconCentreX = halfNodeWidth + (Math.round(node.xPos * zoom) - 15);
+		const iconCentreX = halfNodeWidth + (Math.round(node.x_pos * zoom) - 15);
 
 		return {
-			y: Math.round(node.yPos * zoom) + halfIcon + NODE_BORDER_SIZE,
+			y: Math.round(node.y_pos * zoom) + halfIcon + NODE_BORDER_SIZE,
 			inX: iconCentreX,
 			outX: iconCentreX,
 			midX: iconCentreX
@@ -531,8 +531,8 @@ export default class DiagramCanvas extends React.Component {
 				label: optionalArgs.target.value,
 				width: optionalArgs.width,
 				height: optionalArgs.height,
-				offsetX: optionalArgs.xPos,
-				offsetY: optionalArgs.yPos
+				offsetX: optionalArgs.x_pos,
+				offsetY: optionalArgs.y_pos
 			});
 		}
 	}
@@ -808,8 +808,8 @@ export default class DiagramCanvas extends React.Component {
 		// multiple, individual, identical size params to every node
 		viewNodes = this.props.canvas.diagram.nodes.map((node) => {
 
-			const x = Math.round(node.xPos * zoom);
-			const y = Math.round(node.yPos * zoom);
+			const x = Math.round(node.x_pos * zoom);
+			const y = Math.round(node.y_pos * zoom);
 
 			var viewNode = (<Node
 				key={node.id}
@@ -831,8 +831,8 @@ export default class DiagramCanvas extends React.Component {
 		});
 
 		viewComments = this.props.canvas.diagram.comments.map((comment) => {
-			const x = Math.round(comment.xPos * zoom);
-			const y = Math.round(comment.yPos * zoom);
+			const x = Math.round(comment.x_pos * zoom);
+			const y = Math.round(comment.y_pos * zoom);
 
 			var viewComment = (<Comment
 				key={comment.id}

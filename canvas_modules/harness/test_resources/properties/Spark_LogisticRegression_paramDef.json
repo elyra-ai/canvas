@@ -62,7 +62,7 @@
     }
   ],
   "uihints": {
-    "name": "org.apache.spark.ml.classification.LogisticRegression",
+    "id": "org.apache.spark.ml.classification.LogisticRegression",
     "icon": "images/modelbuildspark.svg",
     "label": {
       "default": "Logistic Regression"
@@ -188,7 +188,7 @@
             "type": "error",
             "focusParam": "inputFieldList",
             "message": {
-              "resourceKey": "input_field_list_not_empty"
+              "resource_key": "input_field_list_not_empty"
             }
           },
           "evaluate": {
@@ -205,7 +205,7 @@
             "type": "error",
             "focusParam": "targetField",
             "message": {
-              "resourceKey": "target_field_not_empty"
+              "resource_key": "target_field_not_empty"
             }
           },
           "evaluate": {
@@ -222,7 +222,7 @@
             "type": "error",
             "focusParam": "elasticNetParam",
             "message": {
-              "resourceKey": "elastic_net_param_not_valid"
+              "resource_key": "elastic_net_param_not_valid"
             }
           },
           "evaluate": {
@@ -273,7 +273,7 @@
             "type": "error",
             "focusParam": "maxIter",
             "message": {
-              "resourceKey": "max_iter_not_valid"
+              "resource_key": "max_iter_not_valid"
             }
           },
           "evaluate": {
@@ -302,7 +302,7 @@
             "type": "error",
             "focusParam": "regParam",
             "message": {
-              "resourceKey": "reg_param_not_valid"
+              "resource_key": "reg_param_not_valid"
             }
           },
           "evaluate": {
@@ -331,7 +331,7 @@
             "type": "error",
             "focusParam": "threshold",
             "message": {
-              "resourceKey": "threshold_param_not_valid"
+              "resource_key": "threshold_param_not_valid"
             }
           },
           "evaluate": {
@@ -386,7 +386,7 @@
         "metadata": {
           "description": "",
           "measure": "range",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -395,7 +395,7 @@
         "metadata": {
           "description": "",
           "measure": "discrete",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -404,7 +404,7 @@
         "metadata": {
           "description": "",
           "measure": "discrete",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -413,7 +413,7 @@
         "metadata": {
           "description": "",
           "measure": "discrete",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -422,7 +422,7 @@
         "metadata": {
           "description": "",
           "measure": "range",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -431,7 +431,7 @@
         "metadata": {
           "description": "",
           "measure": "range",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -440,7 +440,7 @@
         "metadata": {
           "description": "",
           "measure": "discrete",
-          "role": "input"
+          "modeling_role": "input"
         }
       }
     ]

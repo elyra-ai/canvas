@@ -30,7 +30,7 @@
     }
   ],
   "uihints": {
-    "name": "org.apache.spark.ml.ibm.transformers.AddColumn",
+    "id": "org.apache.spark.ml.ibm.transformers.AddColumn",
     "icon": "images/transformationspark.svg",
     "parameter_info": [
       {
@@ -62,7 +62,7 @@
             "type": "error",
             "focusParam": "colName",
             "message": {
-              "resourceKey": "colname_not_empty"
+              "resource_key": "colname_not_empty"
             }
           },
           "evaluate": {
@@ -79,7 +79,7 @@
             "type": "error",
             "focusParam": "colName",
             "message": {
-              "resourceKey": "colname_not_unique"
+              "resource_key": "colname_not_unique"
             }
           },
           "evaluate": {
@@ -96,7 +96,7 @@
             "type": "error",
             "focusParam": "col",
             "message": {
-              "resourceKey": "col_not_empty"
+              "resource_key": "col_not_empty"
             }
           },
           "evaluate": {
@@ -117,7 +117,7 @@
         "metadata": {
           "description": "",
           "measure": "range",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -126,7 +126,7 @@
         "metadata": {
           "description": "",
           "measure": "discrete",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -135,7 +135,7 @@
         "metadata": {
           "description": "",
           "measure": "discrete",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -144,7 +144,7 @@
         "metadata": {
           "description": "",
           "measure": "discrete",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -153,7 +153,7 @@
         "metadata": {
           "description": "",
           "measure": "range",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -162,7 +162,7 @@
         "metadata": {
           "description": "",
           "measure": "range",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -171,7 +171,7 @@
         "metadata": {
           "description": "",
           "measure": "discrete",
-          "role": "input"
+          "modeling_role": "input"
         }
       }
     ]

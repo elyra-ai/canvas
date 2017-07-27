@@ -40,7 +40,7 @@ const filteredDataset = {
 			"metadata": {
 				"description": "",
 				"measure": "range",
-				"role": "input"
+				"modeling_role": "input"
 			}
 		},
 		{
@@ -49,7 +49,7 @@ const filteredDataset = {
 			"metadata": {
 				"description": "",
 				"measure": "discrete",
-				"role": "input"
+				"modeling_role": "input"
 			}
 		},
 		{
@@ -58,7 +58,7 @@ const filteredDataset = {
 			"metadata": {
 				"description": "",
 				"measure": "discrete",
-				"role": "input"
+				"modeling_role": "input"
 			}
 		},
 		{
@@ -67,7 +67,7 @@ const filteredDataset = {
 			"metadata": {
 				"description": "",
 				"measure": "discrete",
-				"role": "input"
+				"modeling_role": "input"
 			}
 		},
 		{
@@ -76,7 +76,7 @@ const filteredDataset = {
 			"metadata": {
 				"description": "",
 				"measure": "range",
-				"role": "input"
+				"modeling_role": "input"
 			}
 		},
 		{
@@ -85,7 +85,7 @@ const filteredDataset = {
 			"metadata": {
 				"description": "",
 				"measure": "range",
-				"role": "input"
+				"modeling_role": "input"
 			}
 		},
 		{
@@ -94,7 +94,7 @@ const filteredDataset = {
 			"metadata": {
 				"description": "",
 				"measure": "discrete",
-				"role": "input"
+				"modeling_role": "input"
 			}
 		},
 		{
@@ -103,7 +103,7 @@ const filteredDataset = {
 			"metadata": {
 				"description": "",
 				"measure": "discrete",
-				"role": "input"
+				"modeling_role": "input"
 			}
 		},
 		{
@@ -112,7 +112,7 @@ const filteredDataset = {
 			"metadata": {
 				"description": "",
 				"measure": "discrete",
-				"role": "input"
+				"modeling_role": "input"
 			}
 		},
 		{
@@ -121,7 +121,7 @@ const filteredDataset = {
 			"metadata": {
 				"description": "",
 				"measure": "discrete",
-				"role": "input"
+				"modeling_role": "input"
 			}
 		}
 	]

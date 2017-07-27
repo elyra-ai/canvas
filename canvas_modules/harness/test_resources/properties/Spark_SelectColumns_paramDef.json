@@ -21,7 +21,7 @@
     }
   ],
   "uihints": {
-    "name": "select",
+    "id": "org.ibm.spark.ibm.transformers.SelectColumns",
     "icon": "./select.svg",
     "parameter_info": [
       {
@@ -78,7 +78,7 @@
             "type": "error",
             "focusParam": "selected_fields",
             "message": {
-              "resourceKey": "selected_fields_not_empty"
+              "resource_key": "selected_fields_not_empty"
             }
           },
           "evaluate": {
@@ -121,7 +121,7 @@
         "metadata": {
           "description": "",
           "measure": "range",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -130,7 +130,7 @@
         "metadata": {
           "description": "",
           "measure": "discrete",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -139,7 +139,7 @@
         "metadata": {
           "description": "",
           "measure": "discrete",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -148,7 +148,7 @@
         "metadata": {
           "description": "",
           "measure": "discrete",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -157,7 +157,7 @@
         "metadata": {
           "description": "",
           "measure": "range",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -166,7 +166,7 @@
         "metadata": {
           "description": "",
           "measure": "range",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -175,13 +175,13 @@
         "metadata": {
           "description": "",
           "measure": "discrete",
-          "role": "input"
+          "modeling_role": "input"
         }
       }
     ]
   },
   "resources": {
-    "select.label": "Select Columns",
+    "org.ibm.spark.ibm.transformers.SelectColumns.label": "Select Columns",
     "mode.label": "Mode",
     "mode.desc": "Include or discard columns",
     "mode.Include.label": "Include selected columns",

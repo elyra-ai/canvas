@@ -24,8 +24,8 @@ class Comment extends React.Component {
 			value: this.props.comment.content,
 			width: this.props.comment.width,
 			height: this.props.comment.height,
-			xPos: this.props.comment.xPos,
-			yPos: this.props.comment.yPos
+			x_pos: this.props.comment.x_pos,
+			y_pos: this.props.comment.y_pos
 		};
 		this.dragStart = this.dragStart.bind(this);
 		this.drop = this.drop.bind(this);
@@ -254,8 +254,8 @@ class Comment extends React.Component {
 			this.setState({
 				width: Math.round(dimensions.newWidth),
 				height: Math.round(dimensions.newHeight),
-				xPos: Math.round((dimensions.newLeft - (20 * this.props.zoom)) / this.props.zoom),
-				yPos: Math.round((dimensions.newTop + this.props.zoom) / this.props.zoom)
+				x_pos: Math.round((dimensions.newLeft - (20 * this.props.zoom)) / this.props.zoom),
+				y_pos: Math.round((dimensions.newTop + this.props.zoom) / this.props.zoom)
 			});
 
 			// Finally, if no sizing or dragging is going on, we look to see if
@@ -264,8 +264,8 @@ class Comment extends React.Component {
 		} else {
 			const commentDiv = this.getCommentDiv();
 			this.setCursorStyle(commentDiv,
-				this.getInnerBoxLeft(this.props.comment.xPos),
-				this.getInnerBoxTop(this.props.comment.yPos),
+				this.getInnerBoxLeft(this.props.comment.x_pos),
+				this.getInnerBoxTop(this.props.comment.y_pos),
 				event);
 		}
 	}
@@ -274,7 +274,7 @@ class Comment extends React.Component {
 	// to the object model
 	mouseUp(event) {
 		// console.log("Comment mouseUp resizing= "+this.resizingComment);
-		// console.log("State x,y = "+this.state.xPos+","+this.state.yPos);
+		// console.log("State x,y = "+this.state.x_pos+","+this.state.y_pos);
 		// notify to save the resize values.
 		if (this.resizingComment) {
 			const evValues = {
@@ -285,8 +285,8 @@ class Comment extends React.Component {
 				target: evValues,
 				width: Math.round(this.state.width),
 				height: Math.round(this.state.height),
-				xPos: Math.round(this.state.xPos),
-				yPos: Math.round(this.state.yPos)
+				x_pos: Math.round(this.state.x_pos),
+				y_pos: Math.round(this.state.y_pos)
 			};
 			this.props.commentActionHandler("editComment", optArg);
 		}
@@ -315,9 +315,9 @@ class Comment extends React.Component {
 			this.horizontalSizingAction = this.horizontalSizingHover;
 
 			this.savedWidth = this.props.comment.width;
-			this.savedLeft = this.getInnerBoxLeft(this.props.comment.xPos);
+			this.savedLeft = this.getInnerBoxLeft(this.props.comment.x_pos);
 			this.savedHeight = this.props.comment.height;
-			this.savedTop = this.getInnerBoxTop(this.props.comment.yPos);
+			this.savedTop = this.getInnerBoxTop(this.props.comment.y_pos);
 
 		}
 	}
@@ -333,8 +333,8 @@ class Comment extends React.Component {
 				target: evValues,
 				width: this.state.width,
 				height: this.state.height,
-				xPos: this.props.comment.xPos,
-				yPos: this.props.comment.yPos
+				x_pos: this.props.comment.x_pos,
+				y_pos: this.props.comment.y_pos
 			};
 
 			this.props.commentActionHandler("editComment", optArg);
@@ -442,8 +442,8 @@ class Comment extends React.Component {
 		this.setState({
 			value: ev.target.value,
 			height: newHeight,
-			xPos: this.props.comment.xPos,
-			yPos: this.props.comment.yPos }
+			x_pos: this.props.comment.x_pos,
+			y_pos: this.props.comment.y_pos }
 		);
 	}
 
@@ -457,12 +457,12 @@ class Comment extends React.Component {
 
 		const zoom = this.props.zoom;
 
-		let xPosi = this.props.comment.xPos;
-		let yPosi = this.props.comment.yPos;
+		let xPosi = this.props.comment.x_pos;
+		let yPosi = this.props.comment.y_pos;
 
 		if (this.resizingComment) {
-			xPosi = this.state.xPos;
-			yPosi = this.state.yPos;
+			xPosi = this.state.x_pos;
+			yPosi = this.state.y_pos;
 		}
 
 		var className = (typeof (this.props.comment.className) !== "undefined" && this.props.comment.className)

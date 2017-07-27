@@ -30,7 +30,7 @@ export class ParameterDef {
 		this.charLimit = charLimit;
 		this.placeHolderText = ResourceDef.make(placeHolderText); // additionalText
 		this.separator = separator;
-		this.resourceKey = resourceKey;
+		this.resource_key = resourceKey;
 		this.visible = (typeof visible === "boolean" ? visible : true);
 		this.valueIcons = valueIcons;
 		this.sortable = sortable;
@@ -175,7 +175,7 @@ export class ParameterDef {
 				_.propertyOf(uihint)("char_limit"),
 				_.propertyOf(uihint)("place_holder_text"),
 				_.propertyOf(uihint)("separator"),
-				_.propertyOf(uihint)("resourceKey"),
+				_.propertyOf(uihint)("resource_key"),
 				_.propertyOf(uihint)("visible"),
 				_.propertyOf(uihint)("valueIcons"),
 				_.propertyOf(uihint)("sortable"),
