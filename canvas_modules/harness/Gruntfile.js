@@ -9,6 +9,7 @@
 /* eslint global-require: 0 */
 /* eslint quote-props: 0 */
 
+var IS_PRODUCTION = process.env.NODE_ENV === "production";
 var codeCoverageDir = "reports/coverage";
 
 module.exports = function(grunt) {
@@ -46,10 +47,26 @@ module.exports = function(grunt) {
 				src: [
 					codeCoverageDir
 				]
+			},
+			build: {
+				src: [".build"]
+			}
+		},
+		copy: {
+			graphics: {
+				files: [{
+					expand: true,
+					flatten: false,
+					cwd: "./assets",
+					src: [
+						"images/*"
+					],
+					dest: ".build"
+				}]
 			}
 		},
 		webpack: {
-			client: require("./webpack.config.dev")
+			client: IS_PRODUCTION ? require("./webpack.config.prod") : require("./webpack.config.dev")
 		}
 	});
 
@@ -59,10 +76,13 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks("grunt-yamllint");
 	grunt.loadNpmTasks("grunt-sass-lint");
 	grunt.loadNpmTasks("grunt-webpack");
+	grunt.loadNpmTasks("grunt-contrib-copy");
 	grunt.registerTask("lint", ["eslint", "jsonlint", "yamllint", "sasslint"]);
 
-	var buildTasks = ["lint", "clean"];
-
+	var buildTasks = ["clean", "lint", "copy:graphics"];
+	if (IS_PRODUCTION) {
+		buildTasks = buildTasks.concat(["webpack"]);
+	}
 	grunt.registerTask("build", buildTasks);
 	grunt.registerTask("default", ["build"]);
 };

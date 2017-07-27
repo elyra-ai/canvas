@@ -15,8 +15,6 @@ var webpack = require("webpack");
 var I18NPlugin = require("@dap/portal-common-i18n").I18nPlugin;
 var babelOptions = require("./scripts/babel/babelOptions").babelClientOptions;
 var constants = require("./lib/constants");
-
-// possibly not needed after removing html
 var HtmlWebpackPlugin = require("html-webpack-plugin");
 
 const isDev = process.env.NODE_ENV === "development";

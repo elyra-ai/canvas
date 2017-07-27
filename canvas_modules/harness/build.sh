@@ -10,6 +10,7 @@ cd $SCRIPT_DIR
 # install require modules
 echo "npm install"
 npm install
+export NODE_ENV=production
 echo "grunt build"
 grunt build
 

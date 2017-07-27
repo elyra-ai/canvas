@@ -31,7 +31,7 @@ node_modules
 config/app-local.json
 
 /public
-/dist
+/.build
 
 fingerprints.json
 

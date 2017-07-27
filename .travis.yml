@@ -30,6 +30,8 @@ deploy:
     script: ./scripts/publish_modules.sh
     on:
       branch: release
+after_deploy:
+  - ./scripts/bluemix_deploy.sh
 notifications:
   slack:
     rooms:
