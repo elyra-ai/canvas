@@ -16,7 +16,7 @@ var webpack = require("webpack");
 var I18NPlugin = require("@dap/portal-common-i18n").I18nPlugin;
 var babelOptions = require("./scripts/babel/babelOptions").babelClientOptions;
 var constants = require("./lib/constants");
-var SassLintPlugin = require("sasslint-webpack-plugin");
+var HtmlWebpackPlugin = require("html-webpack-plugin");
 
 // Entry & Output files ------------------------------------------------------------>
 
@@ -26,10 +26,10 @@ var entry = {
 };
 
 var output = {
-	path: path.join(__dirname, "dist"),
+	path: path.join(__dirname, ".build"),
 	publicPath: constants.APP_PATH,
-	filename: "/js/[name].[hash].js",
-	chunkFilename: "/js/chunk.[name].[id].[chunkhash].js"
+	filename: "js/[name].[hash].js",
+	chunkFilename: "js/chunk.[name].[id].[chunkhash].js"
 };
 
 
@@ -49,16 +49,15 @@ var loaders = [
 	{
 		test: /\.s*css$/,
 		loaders: [
-			"style",
-			"css",
-			"sass",
-			"postcss"
+			"style-loader",
+			"css-loader",
+			"postcss-loader"
 		]
 	},
 	{
 		test: /\.(?:png|jpg|svg|woff|ttf|woff2|eot)$/,
 		loaders: [
-			"file?name=graphics/[hash].[ext]"
+			"file-loader?name=graphics/[hash].[ext]"
 		]
 	}
 ];
@@ -71,14 +70,6 @@ var plugins = [
 	}),
 	new webpack.optimize.OccurenceOrderPlugin(),
 	new I18NPlugin("en"),
-	new SassLintPlugin({
-		configFile: ".sass-lint.yml",
-		context: "./src/components",
-		glob: "**/*.scss",
-		quiet: false,
-		failOnWarning: true,
-		failOnError: true
-	}),
 	new webpack.optimize.UglifyJsPlugin({
 		compress: {
 			warnings: false
@@ -87,15 +78,14 @@ var plugins = [
 	new webpack.optimize.CommonsChunkPlugin({
 		name: "vendor"
 	}),
-	new webpack.NoErrorsPlugin()
+	new webpack.NoErrorsPlugin(),
+	// Generates an `index.html` file with the <script> injected.
+	new HtmlWebpackPlugin({
+		inject: true,
+		template: "index.html"
+	})
 ];
 
-// Postcss ------------------------------------------------------------>
-
-var postcss = [
-	require("stylelint"),
-	require("autoprefixer")
-];
 
 // Exports ------------------------------------------------------------>
 
@@ -103,20 +93,26 @@ var postcss = [
 module.exports = {
 	entry: entry,
 	// Uncomment this to see details of Webpack build failures
-	stats: {
-		errorDetails: true
-	},
+	// stats: {
+	// 	errorDetails: true
+	// },
 	// Uncomment below to help debug a production build
 	// debug: true,
 	// devtool: "source-map",
 	// devtoolModuleFilenameTemplate: "[resource]",
 	resolve: {
-		modulesDirectories: ["web_modules", "node_modules"]
+		modulesDirectories: ["web_modules", "node_modules"],
+		root: path.resolve(__dirname),
+		alias: {
+			"react": "node_modules/react",
+			"react-dom": "node_modules/react-dom",
+			"common-canvas": "src/common-canvas.js"
+		},
+		extensions: ["", ".js", ".jsx"]
 	},
 	output: output,
 	module: {
 		loaders: loaders
 	},
-	plugins: plugins,
-	postcss: postcss
+	plugins: plugins
 };

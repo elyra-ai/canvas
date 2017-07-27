@@ -48,7 +48,7 @@ function _create(callback) {
 		logger.info("In development mode; using webpack with HMR");
 		_configureHmr(app);
 	}
-	app.use(express.static(path.join(__dirname, "../public")));
+	app.use(express.static(path.join(__dirname, "../.build")));
 
 	const routerOptions = {
 		caseSensitive: true,

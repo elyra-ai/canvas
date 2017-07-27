@@ -31,12 +31,11 @@ application.create(function(err, app) {
 		return;
 	}
 
-	var port = nconf.get("port");
-
+	var port = process.env.PORT || nconf.get("port").http;
 	// HTTP
 
-	http.createServer(app).listen(port.http, function() {
-		logger.info("Express server listening on HTTP port " + port.http);
+	http.createServer(app).listen(port, function() {
+		logger.info("Express server listening on HTTP port " + port);
 	});
 
 });

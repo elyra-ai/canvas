@@ -1,0 +1,8 @@
+---
+applications:
+- name: wdp-common-canvas
+  host: wdp-common-canvas
+  memory: 512M
+  instances: 1
+  path: .
+  command: npm start

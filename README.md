@@ -5,8 +5,9 @@ The WDP Common Canvas tooling consists of two Node JS modules:
 
 1) A `Common Canvas` for use in building canvas-like applications. See [here](https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/tree/master/canvas_modules/common-canvas) for detailed API and event documentation.
 
-2) Test harness
-See [here](https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/tree/master/canvas_modules/harness) for setting up local environment
+2) `Test harness`  
+See [here](https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/tree/master/canvas_modules/harness) for setting up local environment  
+Demo link [https://wdp-common-canvas-dev.stage1.mybluemix.net/](https://wdp-common-canvas-dev.stage1.mybluemix.net/)
 
 ### Using local version of common-canvas and/or common-properties
 Clone wdp-abstract-canvas

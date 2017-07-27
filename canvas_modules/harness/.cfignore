@@ -1,12 +1,10 @@
-/.sass-cache/
 /node_modules/*
-!/node_modules/common-canvas
-!/node_modules/common-prop-editor
-/sass/
+!/node_modules/@wdp
+/node_modules/@wdp/*
+!/node_modules/@wdp/common-canvas
 /test/
 /.git/
 /.gitignore
 /.project
 /README.md
-/pen-test/
-/canvas_modules/
+/features
