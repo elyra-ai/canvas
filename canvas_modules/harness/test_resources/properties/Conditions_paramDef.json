@@ -293,7 +293,7 @@
     }
 	],
   "uihints": {
-    "name": "Conditions.test",
+    "id": "Conditions.test",
     "icon": "images/modelbuildspark.svg",
 		"editorSize": "medium",
     "label": {
@@ -525,7 +525,7 @@
 				"name": "columnSelectSharedWithInput",
 				"label": {
 					"default": "Column Select Shared with Sort",
-					"resourceKey": "columnSelectSharedWithInput.label"
+					"resource_key": "columnSelectSharedWithInput.label"
 				},
 				"description": {
 					"default": "Shared input list with below control"
@@ -558,16 +558,16 @@
           "name": "field",
           "width": 28,
           "label": {
-            "resourceKey": "structuretableSortOrder.field.label"
+            "resource_key": "structuretableSortOrder.field.label"
           }
         },
         "parameters": [
           {
             "name": "structuretable_sort_order",
             "width": 16,
-            "resourceKey": "structuretableSortOrder.sort_order",
+            "resource_key": "structuretableSortOrder.sort_order",
             "label": {
-              "resourceKey": "structuretableSortOrder.sort_order.label"
+              "resource_key": "structuretableSortOrder.sort_order.label"
             },
             "control": "toggletext",
             "valueIcons": [
@@ -582,7 +582,7 @@
         "key_definition": {
           "name": "field",
           "label": {
-						"resourceKey": "structuretableRenameFields.field.label"
+						"resource_key": "structuretableRenameFields.field.label"
 					},
           "columns": 26
         },
@@ -590,7 +590,7 @@
           {
             "name": "new_name",
             "label": {
-							"resourceKey": "structuretableRenameFields.new_name.label"
+							"resource_key": "structuretableRenameFields.new_name.label"
 						},
             "columns": 26,
 		        "editStyle": "inline"
@@ -603,16 +603,16 @@
           "name": "field",
           "width": 16,
           "label": {
-            "resourceKey": "structurelisteditorTableInput.field.label"
+            "resource_key": "structurelisteditorTableInput.field.label"
           }
         },
         "parameters": [
           {
             "name": "structurelisteditorTableInput",
             "width": 200,
-            "resourceKey": "structurelisteditorTableInput.sort_order",
+            "resource_key": "structurelisteditorTableInput.sort_order",
             "label": {
-              "resourceKey": "structurelisteditorTableInput.sort_order.label"
+              "resource_key": "structurelisteditorTableInput.sort_order.label"
             },
             "control": "textfield"
           }
@@ -760,7 +760,7 @@
             "type": "error",
             "focusParam": "numberfieldCheckpointInterval",
             "message": {
-              "resourceKey": "numberfield_checkpoint_interval_not_valid"
+              "resource_key": "numberfield_checkpoint_interval_not_valid"
             }
           },
           "evaluate": {
@@ -789,7 +789,7 @@
             "type": "error",
             "focusParam": "numberfieldMaxBins",
             "message": {
-              "resourceKey": "numberfield_max_bins_not_valid"
+              "resource_key": "numberfield_max_bins_not_valid"
             }
           },
           "evaluate": {
@@ -818,7 +818,7 @@
             "type": "warning",
             "focusParam": "numberfieldMinInstancesPerNode",
             "message": {
-              "resourceKey": "numberfield_min_instances_per_node_not_valid"
+              "resource_key": "numberfield_min_instances_per_node_not_valid"
             }
           },
           "evaluate": {
@@ -836,7 +836,7 @@
             "type": "error",
             "focusParam": "numberfieldMinInfoGain",
             "message": {
-              "resourceKey": "numberfield_min_info_gain_not_valid"
+              "resource_key": "numberfield_min_info_gain_not_valid"
             }
           },
           "evaluate": {
@@ -854,7 +854,7 @@
             "type": "error",
             "focusParam": "numberfieldSeed",
             "message": {
-              "resourceKey": "numberfield_seed_not_valid"
+              "resource_key": "numberfield_seed_not_valid"
             }
           },
           "evaluate": {
@@ -873,7 +873,7 @@
 						"type": "error",
 						"focusParam": "columnSelectInputFieldList",
 						"message": {
-							"resourceKey": "column_select_input_field_list_not_empty"
+							"resource_key": "column_select_input_field_list_not_empty"
 						}
 					},
 					"evaluate": {
@@ -890,7 +890,7 @@
 						"type": "error",
 						"focusParam": "oneofcolumnsList",
 						"message": {
-							"resourceKey": "one_of_columns_list_not_empty"
+							"resource_key": "one_of_columns_list_not_empty"
 						}
 					},
 					"evaluate": {
@@ -908,7 +908,7 @@
 						"type": "warning",
 						"focusParam": "someofcolumnsList",
 						"message": {
-							"resourceKey": "some_of_columns_list_not_empty"
+							"resource_key": "some_of_columns_list_not_empty"
 						}
 					},
 					"evaluate": {
@@ -926,7 +926,7 @@
 						"type": "warning",
 						"message": {
 							"default": "No data types are selected",
-							"resourceKey": "checkbox_types_not_empty"
+							"resource_key": "checkbox_types_not_empty"
 						},
 						"focusParam": "checkboxTypes"
 					},
@@ -944,7 +944,7 @@
 						"type": "warning",
 						"message": {
 							"default": "Warning: selected tiger",
-							"resourceKey": "one_of_select_animals_not_empty"
+							"resource_key": "one_of_select_animals_not_empty"
 						},
 						"focusParam": "oneofselectAnimals"
 					},
@@ -963,7 +963,7 @@
 						"type": "warning",
 						"message": {
 							"default": "Warning: selected three",
-							"resourceKey": "some_of_select_animals_not_three"
+							"resource_key": "some_of_select_animals_not_three"
 						},
 						"focusParam": "someofselectNumbers"
 					},
@@ -982,7 +982,7 @@
 						"type": "error",
 						"message": {
 							"default": "Checkbox single should be checked if a Data Type is selected",
-							"resourceKey": "checkbox_single_not_empty"
+							"resource_key": "checkbox_single_not_empty"
 						},
 						"focusParam": "checkboxSingle"
 					},
@@ -1043,7 +1043,7 @@
 						"type": "warning",
 						"message": {
 							"default": "Are you sure you want to choose yellow?",
-							"resourceKey": "radiosetColor"
+							"resource_key": "radiosetColor"
 						},
 						"focusParam": "radiosetColor"
 					},
@@ -1093,7 +1093,7 @@
 						"type": "error",
 						"focusParam": "passwordField",
 						"message": {
-							"resourceKey": "password_not_empty"
+							"resource_key": "password_not_empty"
 						}
 					},
 					"evaluate": {
@@ -1123,7 +1123,7 @@
 						"type": "error",
 						"message": {
 							"default": "Name cannot contain /",
-							"resourceKey": "textfield_name_not_valid_one"
+							"resource_key": "textfield_name_not_valid_one"
 						},
 						"focusParam": "textfieldName"
 					},
@@ -1142,7 +1142,7 @@
 						"type": "error",
 						"message": {
 							"default": "Name cannot contain double or single \"quotes\"",
-							"resourceKey": "textfield_name_not_valid_two"
+							"resource_key": "textfield_name_not_valid_two"
 						},
 						"focusParam": "textfieldName"
 					},
@@ -1172,7 +1172,7 @@
 						"type": "warning",
 						"message": {
 							"default": "Description cannot contain /, double or single \"quotes\"",
-							"resourceKey": "textarea_description_not_valid"
+							"resource_key": "textarea_description_not_valid"
 						},
 						"focusParam": "textareaDescription"
 					},
@@ -1209,7 +1209,7 @@
 						"type": "error",
 						"message": {
 							"default": "Expression cannot contain /, double or single \"quotes\"",
-							"resourceKey": "expression_box_not_valid"
+							"resource_key": "expression_box_not_valid"
 						},
 						"focusParam": "expressionBox"
 					},
@@ -1247,7 +1247,7 @@
 						"type": "error",
 						"focusParam": "structuretableRenameFields",
 						"message": {
-							"resourceKey": "structuretable_rename_fields_not_empty"
+							"resource_key": "structuretable_rename_fields_not_empty"
 						}
 					},
 					"evaluate": {
@@ -1268,7 +1268,7 @@
         "metadata": {
           "description": "",
           "measure": "range",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -1277,7 +1277,7 @@
         "metadata": {
           "description": "",
           "measure": "discrete",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -1286,7 +1286,7 @@
         "metadata": {
           "description": "",
           "measure": "discrete",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -1295,7 +1295,7 @@
         "metadata": {
           "description": "",
           "measure": "discrete",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -1304,7 +1304,7 @@
         "metadata": {
           "description": "",
           "measure": "range",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -1313,7 +1313,7 @@
         "metadata": {
           "description": "",
           "measure": "range",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -1322,7 +1322,7 @@
         "metadata": {
           "description": "",
           "measure": "discrete",
-          "role": "input"
+          "modeling_role": "input"
         }
       }
     ]

@@ -31,21 +31,21 @@
     }
   ],
   "uihints": {
-    "name": "rename",
+    "id": "org.ibm.spark.ibm.transformers.RenameColumns",
     "icon": "./rename.svg",
     "structure_info": [
       {
         "name": "RenameFieldEntry",
         "key_definition": {
           "name": "field",
-          "resourceKey": "RenameFieldEntry.field",
+          "resource_key": "RenameFieldEntry.field",
           "columns": 26,
 					"sortable": true
         },
         "parameters": [
           {
             "name": "new_name",
-            "resourceKey": "RenameFieldEntry.new_name",
+            "resource_key": "RenameFieldEntry.new_name",
             "columns": 26,
 		        "editStyle": "inline",
 						"sortable": true
@@ -83,7 +83,7 @@
             "type": "warning",
             "focusParam": "renamed_fields",
             "message": {
-              "resourceKey": "no_rename_selections"
+              "resource_key": "no_rename_selections"
             }
           },
           "evaluate": {
@@ -100,7 +100,7 @@
             "type": "error",
             "focusParam": "renamed_fields",
             "message": {
-              "resourceKey": "output_name_not_empty"
+              "resource_key": "output_name_not_empty"
             }
           },
           "evaluate": {
@@ -117,7 +117,7 @@
             "type": "error",
             "focusParam": "renamed_fields",
             "message": {
-              "resourceKey": "column_name_already_exists"
+              "resource_key": "column_name_already_exists"
             }
           },
           "evaluate": {
@@ -138,7 +138,7 @@
         "metadata": {
           "description": "",
           "measure": "range",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -147,7 +147,7 @@
         "metadata": {
           "description": "",
           "measure": "discrete",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -156,7 +156,7 @@
         "metadata": {
           "description": "",
           "measure": "discrete",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -165,7 +165,7 @@
         "metadata": {
           "description": "",
           "measure": "discrete",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -174,7 +174,7 @@
         "metadata": {
           "description": "",
           "measure": "range",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -183,7 +183,7 @@
         "metadata": {
           "description": "",
           "measure": "range",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -192,7 +192,7 @@
         "metadata": {
           "description": "",
           "measure": "discrete",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
 			{
@@ -201,7 +201,7 @@
 				 "metadata":{
 						"description":"",
 						"measure":"range",
-						"role":"input"
+						"modeling_role":"input"
 				 }
 			},
 			{
@@ -210,7 +210,7 @@
 				 "metadata":{
 						"description":"",
 						"measure":"range",
-						"role":"input"
+						"modeling_role":"input"
 				 }
 			},
 			{
@@ -219,7 +219,7 @@
 				 "metadata":{
 						"description":"",
 						"measure":"discrete",
-						"role":"input"
+						"modeling_role":"input"
 				 }
 			}
     ]

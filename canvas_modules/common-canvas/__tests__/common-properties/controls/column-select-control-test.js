@@ -87,7 +87,7 @@ const datasetMetadata = {
 			"metadata": {
 				"description": "",
 				"measure": "range",
-				"role": "input"
+				"modeling_role": "input"
 			}
 		},
 		{
@@ -96,7 +96,7 @@ const datasetMetadata = {
 			"metadata": {
 				"description": "",
 				"measure": "discrete",
-				"role": "input"
+				"modeling_role": "input"
 			}
 		},
 		{
@@ -105,7 +105,7 @@ const datasetMetadata = {
 			"metadata": {
 				"description": "",
 				"measure": "discrete",
-				"role": "input"
+				"modeling_role": "input"
 			}
 		},
 		{
@@ -114,7 +114,7 @@ const datasetMetadata = {
 			"metadata": {
 				"description": "",
 				"measure": "discrete",
-				"role": "input"
+				"modeling_role": "input"
 			}
 		},
 		{
@@ -123,7 +123,7 @@ const datasetMetadata = {
 			"metadata": {
 				"description": "",
 				"measure": "range",
-				"role": "input"
+				"modeling_role": "input"
 			}
 		},
 		{
@@ -132,7 +132,7 @@ const datasetMetadata = {
 			"metadata": {
 				"description": "",
 				"measure": "range",
-				"role": "input"
+				"modeling_role": "input"
 			}
 		},
 		{
@@ -141,7 +141,7 @@ const datasetMetadata = {
 			"metadata": {
 				"description": "",
 				"measure": "discrete",
-				"role": "input"
+				"modeling_role": "input"
 			}
 		}
 	]

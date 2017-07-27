@@ -43,7 +43,7 @@
       "name": "TestOp",
       "label": {
         "default": "TestOp label: default",
-        "resourceKey": "testOp.label"
+        "resource_key": "testOp.label"
       },
       "icon": "./test.svg",
       "editorSize": "large",
@@ -52,13 +52,13 @@
           "name": "enum_param",
           "label": {
             "default": "Enum label: default",
-            "resourceKey": "enum_param.label"
+            "resource_key": "enum_param.label"
           },
           "description": {
             "default": "Enum description: default",
-            "resourceKey": "enum_param.desc"
+            "resource_key": "enum_param.desc"
           },
-          "resourceKey": "enum_param.key",
+          "resource_key": "enum_param.key",
           "orientation": "horizontal"
         },
         {
@@ -71,7 +71,7 @@
           },
           "place_holder_text": {
             "default": "String place holder: default",
-            "resourceKey": "str_param.place_holder_text"
+            "resource_key": "str_param.place_holder_text"
           },
           "char_limit": 64,
           "separator": "before"
@@ -80,11 +80,11 @@
           "name": "int_param",
           "label": {
             "default": "Int label: default",
-            "resourceKey": "int_param.label"
+            "resource_key": "int_param.label"
           },
           "description": {
             "default": "Int description: default",
-            "resourceKey": "int_param.desc"
+            "resource_key": "int_param.desc"
           },
           "place_holder_text": {
             "default": "Int place holder: default"
@@ -97,7 +97,7 @@
           "name": "fields-settings",
           "label": {
             "default": "Field Settings label: default",
-            "resourceKey": "column-settings.label"
+            "resource_key": "column-settings.label"
           },
           "type": "panels",
           "group_info": [

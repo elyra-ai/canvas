@@ -182,8 +182,8 @@ class Node extends React.Component {
 
 		var nodeStyle = {
 			position: "absolute",
-			top: Math.round(this.props.node.yPos * zoom),
-			left: Math.round(this.props.node.xPos * zoom),
+			top: Math.round(this.props.node.y_pos * zoom),
+			left: Math.round(this.props.node.x_pos * zoom),
 			width: this.props.uiconf.nodeWidth,
 			height: this.props.uiconf.nodeHeight
 		};
@@ -290,13 +290,13 @@ class Node extends React.Component {
 			</div>);
 
 
-		const cTop = Math.round(this.props.node.yPos * zoom) - (13 * zoom);
-		const cLeft = Math.round(this.props.node.xPos * zoom) - (2 * zoom);
+		const cTop = Math.round(this.props.node.y_pos * zoom) - (13 * zoom);
+		const cLeft = Math.round(this.props.node.x_pos * zoom) - (2 * zoom);
 		const cWidth = (70 * zoom);
 		const cHeight = cWidth;
 
-		const cInnerTop = Math.round(this.props.node.yPos * zoom) - (2 * zoom);
-		const cInnerLeft = Math.round(this.props.node.xPos * zoom) + (10 * zoom);
+		const cInnerTop = Math.round(this.props.node.y_pos * zoom) - (2 * zoom);
+		const cInnerLeft = Math.round(this.props.node.x_pos * zoom) + (10 * zoom);
 		const cInnerWidth = (50 * zoom);
 		const cInnerHeight = cInnerWidth;
 

@@ -41,8 +41,8 @@ const node = {
 	"iconpath": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiP…IyNy4zIiBjbGFzcz0ic3Q0IiB3aWR0aD0iNy43IiBoZWlnaHQ9IjEuOSIvPg0KPC9zdmc+DQo=",
 	"inConnector": true,
 	"outConnector": true,
-	"xPos": 270,
-	"yPos": 232,
+	"x_pos": 270,
+	"y_pos": 232,
 	"enabled": true,
 	"cacheState": "disabled",
 	"containsModel": false

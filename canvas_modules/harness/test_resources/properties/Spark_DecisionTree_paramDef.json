@@ -68,7 +68,7 @@
     }
   ],
   "uihints": {
-    "name": "org.apache.spark.ml.classification.DecisionTreeClassifier",
+    "id": "org.apache.spark.ml.classification.DecisionTreeClassifier",
     "icon": "images/modelbuildspark.svg",
     "label": {
       "default": "Decision Tree Classifier"
@@ -200,7 +200,7 @@
             "type": "error",
             "focusParam": "inputFieldList",
             "message": {
-              "resourceKey": "input_field_list_not_empty"
+              "resource_key": "input_field_list_not_empty"
             }
           },
           "evaluate": {
@@ -217,7 +217,7 @@
             "type": "error",
             "focusParam": "targetField",
             "message": {
-              "resourceKey": "target_field_not_empty"
+              "resource_key": "target_field_not_empty"
             }
           },
           "evaluate": {
@@ -234,7 +234,7 @@
             "type": "error",
             "focusParam": "checkpointInterval",
             "message": {
-              "resourceKey": "checkpoint_interval_not_valid"
+              "resource_key": "checkpoint_interval_not_valid"
             }
           },
           "evaluate": {
@@ -270,7 +270,7 @@
             "type": "error",
             "focusParam": "maxBins",
             "message": {
-              "resourceKey": "max_bins_not_valid"
+              "resource_key": "max_bins_not_valid"
             }
           },
           "evaluate": {
@@ -299,7 +299,7 @@
             "type": "error",
             "focusParam": "maxDepth",
             "message": {
-              "resourceKey": "max_depth_not_valid"
+              "resource_key": "max_depth_not_valid"
             }
           },
           "evaluate": {
@@ -328,7 +328,7 @@
             "type": "error",
             "focusParam": "minInstancesPerNode",
             "message": {
-              "resourceKey": "min_instances_per_node_not_valid"
+              "resource_key": "min_instances_per_node_not_valid"
             }
           },
           "evaluate": {
@@ -361,7 +361,7 @@
         "metadata": {
           "description": "",
           "measure": "range",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -370,7 +370,7 @@
         "metadata": {
           "description": "",
           "measure": "discrete",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -379,7 +379,7 @@
         "metadata": {
           "description": "",
           "measure": "discrete",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -388,7 +388,7 @@
         "metadata": {
           "description": "",
           "measure": "discrete",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -397,7 +397,7 @@
         "metadata": {
           "description": "",
           "measure": "range",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -406,7 +406,7 @@
         "metadata": {
           "description": "",
           "measure": "range",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -415,7 +415,7 @@
         "metadata": {
           "description": "",
           "measure": "discrete",
-          "role": "input"
+          "modeling_role": "input"
         }
       }
     ]

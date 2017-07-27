@@ -52,7 +52,7 @@
               "type": "error",
               "focusParam": "cols",
               "message": {
-                "resourceKey": "cols_not_empty"
+                "resource_key": "cols_not_empty"
               }
             },
             "evaluate": {
@@ -73,7 +73,7 @@
           "metadata": {
             "description": "",
             "measure": "range",
-            "role": "input"
+            "modeling_role": "input"
           }
         },
         {
@@ -82,7 +82,7 @@
           "metadata": {
             "description": "",
             "measure": "discrete",
-            "role": "input"
+            "modeling_role": "input"
           }
         },
         {
@@ -91,7 +91,7 @@
           "metadata": {
             "description": "",
             "measure": "discrete",
-            "role": "input"
+            "modeling_role": "input"
           }
         },
         {
@@ -100,7 +100,7 @@
           "metadata": {
             "description": "",
             "measure": "discrete",
-            "role": "input"
+            "modeling_role": "input"
           }
         },
         {
@@ -109,7 +109,7 @@
           "metadata": {
             "description": "",
             "measure": "range",
-            "role": "input"
+            "modeling_role": "input"
           }
         },
         {
@@ -118,7 +118,7 @@
           "metadata": {
             "description": "",
             "measure": "range",
-            "role": "input"
+            "modeling_role": "input"
           }
         },
         {
@@ -127,7 +127,7 @@
           "metadata": {
             "description": "",
             "measure": "discrete",
-            "role": "input"
+            "modeling_role": "input"
           }
         }
       ]
@@ -215,7 +215,7 @@
             "metadata": {
               "description": "",
               "measure": "range",
-              "role": "input"
+              "modeling_role": "input"
             }
           },
           {
@@ -224,7 +224,7 @@
             "metadata": {
               "description": "",
               "measure": "discrete",
-              "role": "input"
+              "modeling_role": "input"
             }
           },
           {
@@ -233,7 +233,7 @@
             "metadata": {
               "description": "",
               "measure": "discrete",
-              "role": "input"
+              "modeling_role": "input"
             }
           },
           {
@@ -242,7 +242,7 @@
             "metadata": {
               "description": "",
               "measure": "discrete",
-              "role": "input"
+              "modeling_role": "input"
             }
           },
           {
@@ -251,7 +251,7 @@
             "metadata": {
               "description": "",
               "measure": "range",
-              "role": "input"
+              "modeling_role": "input"
             }
           },
           {
@@ -260,7 +260,7 @@
             "metadata": {
               "description": "",
               "measure": "range",
-              "role": "input"
+              "modeling_role": "input"
             }
           },
           {
@@ -269,7 +269,7 @@
             "metadata": {
               "description": "",
               "measure": "discrete",
-              "role": "input"
+              "modeling_role": "input"
             }
           }
         ]
@@ -281,7 +281,7 @@
               "type": "error",
               "focusParam": "cols",
               "message": {
-                "resourceKey": "cols_not_empty",
+                "resource_key": "cols_not_empty",
                 "default": "The 'Column Name' field cannot be empty"
               }
             },

@@ -27,8 +27,8 @@
           }
         ],
         "inputPorts": [],
-        "xPos": 82,
-        "yPos": 133,
+        "x_pos": 82,
+        "y_pos": 133,
         "objectData": {
           "description": "",
           "label": "Var. File"
@@ -52,8 +52,8 @@
             "cardinality": "0:1"
           }
         ],
-        "xPos": 100,
-        "yPos": 175,
+        "x_pos": 100,
+        "y_pos": 175,
         "objectData": {
           "description": "",
           "label": "Select"
@@ -77,8 +77,8 @@
             "cardinality": "0:1"
           }
         ],
-        "xPos": 100,
-        "yPos": 325,
+        "x_pos": 100,
+        "y_pos": 325,
         "objectData": {
           "description": "",
           "label": "Sort"

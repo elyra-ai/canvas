@@ -44,7 +44,7 @@ export class PropertyDef {
 			const parameterMetadata = ParameterMetadata.makeParameterMetadata(parameters, _.propertyOf(uihints)("parameter_info"));
 			const groupMetadata = GroupMetadata.makeGroupMetadata(_.propertyOf(uihints)("group_info"));
 			return new PropertyDef(
-				_.propertyOf(uihints)("name"),
+				_.propertyOf(uihints)("id"),
 				_.propertyOf(uihints)("icon"),
 				_.propertyOf(uihints)("editorSize"),
 				_.propertyOf(uihints)("label"),

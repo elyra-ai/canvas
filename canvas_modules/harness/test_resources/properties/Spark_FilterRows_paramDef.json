@@ -21,7 +21,7 @@
     }
   ],
   "uihints": {
-    "name": "org.apache.spark.ml.ibm.transformers.Filter",
+    "id": "org.apache.spark.ml.ibm.transformers.Filter",
     "icon": "images/transformationspark.svg",
     "parameter_info": [
       {
@@ -64,7 +64,7 @@
             "type": "error",
             "focusParam": "conditionExpr",
             "message": {
-              "resourceKey": "condition_expression_not_empty"
+              "resource_key": "condition_expression_not_empty"
             }
           },
           "evaluate": {
@@ -85,7 +85,7 @@
         "metadata": {
           "description": "",
           "measure": "range",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -94,7 +94,7 @@
         "metadata": {
           "description": "",
           "measure": "discrete",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -103,7 +103,7 @@
         "metadata": {
           "description": "",
           "measure": "discrete",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -112,7 +112,7 @@
         "metadata": {
           "description": "",
           "measure": "discrete",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -121,7 +121,7 @@
         "metadata": {
           "description": "",
           "measure": "range",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -130,7 +130,7 @@
         "metadata": {
           "description": "",
           "measure": "range",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -139,7 +139,7 @@
         "metadata": {
           "description": "",
           "measure": "discrete",
-          "role": "input"
+          "modeling_role": "input"
         }
       }
     ]

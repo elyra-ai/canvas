@@ -26,8 +26,8 @@
           }
         ],
         "inputPorts": [],
-        "xPos": 92,
-        "yPos": 14.999998092651367,
+        "x_pos": 92,
+        "y_pos": 14.999998092651367,
         "objectData": {
           "description": "",
           "label": "Var. File"
@@ -45,8 +45,8 @@
           }
         ],
         "inputPorts": [],
-        "xPos": 184,
-        "yPos": 15.999996185302734,
+        "x_pos": 184,
+        "y_pos": 15.999996185302734,
         "objectData": {
           "description": "",
           "label": "Database"
@@ -64,8 +64,8 @@
           }
         ],
         "inputPorts": [],
-        "xPos": 277,
-        "yPos": 14.999996185302734,
+        "x_pos": 277,
+        "y_pos": 14.999996185302734,
         "objectData": {
           "description": "",
           "label": "Object Store"
@@ -83,8 +83,8 @@
           }
         ],
         "inputPorts": [],
-        "xPos": 91,
-        "yPos": 108,
+        "x_pos": 91,
+        "y_pos": 108,
         "objectData": {
           "description": "",
           "label": "User Input"
@@ -108,8 +108,8 @@
             "cardinality": "0:1"
           }
         ],
-        "xPos": 185,
-        "yPos": 113,
+        "x_pos": 185,
+        "y_pos": 113,
         "objectData": {
           "description": "",
           "label": "Select"
@@ -133,8 +133,8 @@
             "cardinality": "0:1"
           }
         ],
-        "xPos": 277,
-        "yPos": 111,
+        "x_pos": 277,
+        "y_pos": 111,
         "objectData": {
           "description": "",
           "label": "Sample"
@@ -158,8 +158,8 @@
             "cardinality": "0:1"
           }
         ],
-        "xPos": 88,
-        "yPos": 216,
+        "x_pos": 88,
+        "y_pos": 216,
         "objectData": {
           "description": "",
           "label": "Merge"
@@ -183,8 +183,8 @@
             "cardinality": "0:1"
           }
         ],
-        "xPos": 179,
-        "yPos": 216,
+        "x_pos": 179,
+        "y_pos": 216,
         "objectData": {
           "description": "",
           "label": "Sort"
@@ -208,8 +208,8 @@
             "cardinality": "0:1"
           }
         ],
-        "xPos": 276,
-        "yPos": 216,
+        "x_pos": 276,
+        "y_pos": 216,
         "objectData": {
           "description": "",
           "label": "Aggregate"
@@ -238,8 +238,8 @@
             "cardinality": "0:1"
           }
         ],
-        "xPos": 91,
-        "yPos": 314,
+        "x_pos": 91,
+        "y_pos": 314,
         "objectData": {
           "description": "",
           "label": "Filler"
@@ -263,8 +263,8 @@
             "cardinality": "0:1"
           }
         ],
-        "xPos": 179,
-        "yPos": 315,
+        "x_pos": 179,
+        "y_pos": 315,
         "objectData": {
           "description": "",
           "label": "Type"
@@ -288,8 +288,8 @@
             "cardinality": "0:1"
           }
         ],
-        "xPos": 276,
-        "yPos": 316,
+        "x_pos": 276,
+        "y_pos": 316,
         "objectData": {
           "description": "",
           "label": "Filter"
@@ -313,8 +313,8 @@
             "cardinality": "0:1"
           }
         ],
-        "xPos": 536,
-        "yPos": 17.999996185302734,
+        "x_pos": 536,
+        "y_pos": 17.999996185302734,
         "objectData": {
           "description": "",
           "label": "Partition"
@@ -338,8 +338,8 @@
             "cardinality": "0:1"
           }
         ],
-        "xPos": 635,
-        "yPos": 18.999996185302734,
+        "x_pos": 635,
+        "y_pos": 18.999996185302734,
         "objectData": {
           "description": "",
           "label": "Derive"
@@ -363,8 +363,8 @@
             "cardinality": "0:1"
           }
         ],
-        "xPos": 724,
-        "yPos": 18.999996185302734,
+        "x_pos": 724,
+        "y_pos": 18.999996185302734,
         "objectData": {
           "description": "",
           "label": "Field Reorder"
@@ -388,8 +388,8 @@
             "cardinality": "0:1"
           }
         ],
-        "xPos": 541,
-        "yPos": 111.00000762939453,
+        "x_pos": 541,
+        "y_pos": 111.00000762939453,
         "objectData": {
           "description": "",
           "label": "Multiplot"
@@ -413,8 +413,8 @@
             "cardinality": "0:1"
           }
         ],
-        "xPos": 641,
-        "yPos": 111.00000762939453,
+        "x_pos": 641,
+        "y_pos": 111.00000762939453,
         "objectData": {
           "description": "",
           "label": "Histogram"
@@ -438,8 +438,8 @@
             "cardinality": "0:1"
           }
         ],
-        "xPos": 726,
-        "yPos": 111.00000381469727,
+        "x_pos": 726,
+        "y_pos": 111.00000381469727,
         "objectData": {
           "description": "",
           "label": "Distribution"
@@ -457,8 +457,8 @@
             "cardinality": "0:1"
           }
         ],
-        "xPos": 539,
-        "yPos": 217.00000762939453,
+        "x_pos": 539,
+        "y_pos": 217.00000762939453,
         "objectData": {
           "description": "",
           "label": "C5.0"
@@ -476,8 +476,8 @@
             "cardinality": "0:1"
           }
         ],
-        "xPos": 638,
-        "yPos": 219.00000762939453,
+        "x_pos": 638,
+        "y_pos": 219.00000762939453,
         "objectData": {
           "description": "",
           "label": "C&R Tree"
@@ -495,8 +495,8 @@
             "cardinality": "0:1"
           }
         ],
-        "xPos": 729,
-        "yPos": 219.00000762939453,
+        "x_pos": 729,
+        "y_pos": 219.00000762939453,
         "objectData": {
           "description": "",
           "label": "Linear"
@@ -514,8 +514,8 @@
             "cardinality": "0:1"
           }
         ],
-        "xPos": 538,
-        "yPos": 318.00000762939453,
+        "x_pos": 538,
+        "y_pos": 318.00000762939453,
         "objectData": {
           "description": "",
           "label": "Logistic"
@@ -533,8 +533,8 @@
             "cardinality": "0:1"
           }
         ],
-        "xPos": 641,
-        "yPos": 319.00000762939453,
+        "x_pos": 641,
+        "y_pos": 319.00000762939453,
         "objectData": {
           "description": "",
           "label": "Neural Net"
@@ -552,8 +552,8 @@
             "cardinality": "0:1"
           }
         ],
-        "xPos": 726,
-        "yPos": 319.00000762939453,
+        "x_pos": 726,
+        "y_pos": 319.00000762939453,
         "objectData": {
           "description": "",
           "label": "Random Trees"
@@ -577,8 +577,8 @@
             "cardinality": "0:1"
           }
         ],
-        "xPos": 879,
-        "yPos": 33.000003814697266,
+        "x_pos": 879,
+        "y_pos": 33.000003814697266,
         "objectData": {
           "description": "",
           "label": "Table"
@@ -602,8 +602,8 @@
             "cardinality": "0:1"
           }
         ],
-        "xPos": 976,
-        "yPos": 31.000003814697266,
+        "x_pos": 976,
+        "y_pos": 31.000003814697266,
         "objectData": {
           "description": "",
           "label": "Data Audit"
@@ -627,8 +627,8 @@
             "cardinality": "0:1"
           }
         ],
-        "xPos": 1062,
-        "yPos": 31.000003814697266,
+        "x_pos": 1062,
+        "y_pos": 31.000003814697266,
         "objectData": {
           "description": "",
           "label": "Analysis"
@@ -646,8 +646,8 @@
             "cardinality": "0:1"
           }
         ],
-        "xPos": 880,
-        "yPos": 117.00000381469727,
+        "x_pos": 880,
+        "y_pos": 117.00000381469727,
         "objectData": {
           "description": "",
           "label": "Object Store"

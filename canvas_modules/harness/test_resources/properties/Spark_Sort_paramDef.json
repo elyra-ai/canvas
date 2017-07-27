@@ -37,23 +37,23 @@
     }
   ],
   "uihints": {
-    "name": "org.ibm.spark.ibm.transformers.Sort",
+    "id": "org.ibm.spark.ibm.transformers.Sort",
     "icon": "images/transformationspark.svg",
     "label": {
-      "resourceKey": "sort.label"
+      "resource_key": "sort.label"
     },
     "description": {
-      "resourceKey": "sort.desc"
+      "resource_key": "sort.desc"
     },
     "editorSize": "large",
     "parameter_info": [
       {
         "name": "keys",
         "label": {
-          "resourceKey": "sort.keys.label"
+          "resource_key": "sort.keys.label"
         },
         "description": {
-          "resourceKey": "sort.keys.desc",
+          "resource_key": "sort.keys.desc",
           "placement": "on_panel"
         }
       }
@@ -66,16 +66,16 @@
           "name": "field",
           "width": 28,
           "label": {
-            "resourceKey": "SortEntry.field.label"
+            "resource_key": "SortEntry.field.label"
           }
         },
         "parameters": [
           {
             "name": "sort_order",
             "width": 16,
-            "resourceKey": "SortEntry.sort_order",
+            "resource_key": "SortEntry.sort_order",
             "label": {
-              "resourceKey": "SortEntry.sort_order.label"
+              "resource_key": "SortEntry.sort_order.label"
             },
             "control": "toggletext",
             "valueIcons": [
@@ -107,7 +107,7 @@
         "metadata": {
           "description": "",
           "measure": "range",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -116,7 +116,7 @@
         "metadata": {
           "description": "",
           "measure": "discrete",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -125,7 +125,7 @@
         "metadata": {
           "description": "",
           "measure": "discrete",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -134,7 +134,7 @@
         "metadata": {
           "description": "",
           "measure": "discrete",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -143,7 +143,7 @@
         "metadata": {
           "description": "",
           "measure": "range",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -152,7 +152,7 @@
         "metadata": {
           "description": "",
           "measure": "range",
-          "role": "input"
+          "modeling_role": "input"
         }
       },
       {
@@ -161,7 +161,7 @@
         "metadata": {
           "description": "",
           "measure": "discrete",
-          "role": "input"
+          "modeling_role": "input"
         }
       }
     ]

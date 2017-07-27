@@ -24,8 +24,8 @@ const nodes = (state = [], action) => {
 			image: action.data.image,
 			outputPorts: action.data.outputPorts,
 			inputPorts: action.data.inputPorts,
-			xPos: action.data.xPos,
-			yPos: action.data.yPos,
+			x_pos: action.data.xPos,
+			y_pos: action.data.yPos,
 			objectData: { description: "", label: action.data.label }
 		};
 		return [
@@ -41,9 +41,9 @@ const nodes = (state = [], action) => {
 				if (action.data.nodes.findIndex((actionNodeId) => {
 					return (actionNodeId === node.id);
 				}) > -1) {
-					const xPos = node.xPos + action.data.offsetX;
-					const yPos = node.yPos + action.data.offsetY;
-					return Object.assign({}, node, { xPos: xPos, yPos: yPos });
+					const xPos = node.x_pos + action.data.offsetX;
+					const yPos = node.y_pos + action.data.offsetY;
+					return Object.assign({}, node, { x_pos: xPos, y_pos: yPos });
 				}
 				return node;
 			});
@@ -104,9 +104,9 @@ const comments = (state = [], action) => {
 				if (action.data.nodes.findIndex((actionNodeId) => {
 					return (actionNodeId === comment.id);
 				}) > -1) {
-					const xPos = comment.xPos + action.data.offsetX;
-					const yPos = comment.yPos + action.data.offsetY;
-					return Object.assign({}, comment, { xPos: xPos, yPos: yPos });
+					const xPos = comment.x_pos + action.data.offsetX;
+					const yPos = comment.y_pos + action.data.offsetY;
+					return Object.assign({}, comment, { x_pos: xPos, y_pos: yPos });
 				}
 				return comment;
 			});
@@ -129,8 +129,8 @@ const comments = (state = [], action) => {
 			content: " ",
 			height: 32,
 			width: 128,
-			xPos: action.data.mousePos.x,
-			yPos: action.data.mousePos.y
+			x_pos: action.data.mousePos.x,
+			y_pos: action.data.mousePos.y
 		};
 		return [
 			...state,
@@ -147,8 +147,8 @@ const comments = (state = [], action) => {
 				newComment.content = action.data.label;
 				newComment.height = action.data.height;
 				newComment.width = action.data.width;
-				newComment.xPos = action.data.offsetX;
-				newComment.yPos = action.data.offsetY;
+				newComment.x_pos = action.data.offsetX;
+				newComment.y_pos = action.data.offsetY;
 				return newComment;
 			}
 			return comment;
@@ -450,7 +450,7 @@ export default class ObjectModel {
 			lookup = this.dagreAutolayout(DAGRE_HORIZONTAL, canvasData);
 		}
 		var newNodes = canvasData.diagram.nodes.map((node) => {
-			return Object.assign({}, node, { xPos: lookup[node.id].value.x, yPos: lookup[node.id].value.y });
+			return Object.assign({}, node, { x_pos: lookup[node.id].value.x, y_pos: lookup[node.id].value.y });
 		});
 		var newDiagram = Object.assign({ }, canvasData.diagram, { nodes: newNodes });
 		var newCanvas = Object.assign({ }, canvasData, { diagram: newDiagram });
@@ -527,8 +527,8 @@ export default class ObjectModel {
 			const info = {};
 			info.id = getUUID();
 			info.label = data.label;
-			info.xPos = data.offsetX;
-			info.yPos = data.offsetY;
+			info.x_pos = data.offsetX;
+			info.y_pos = data.offsetY;
 			info.image = nodeType.image;
 			info.inputPorts = nodeType.inputPorts || [];
 			info.outputPorts = nodeType.outputPorts || [];
@@ -741,12 +741,12 @@ export default class ObjectModel {
 	static selectInRegion(minX, minY, maxX, maxY) {
 		var regionSelections = [];
 		for (const node of this.getNodes()) {
-			if (node.xPos > minX && node.xPos < maxX && node.yPos > minY && node.yPos < maxY) {
+			if (node.x_pos > minX && node.x_pos < maxX && node.y_pos > minY && node.y_pos < maxY) {
 				regionSelections.push(node.id);
 			}
 		}
 		for (const comment of this.getComments()) {
-			if (comment.xPos > minX && comment.xPos < maxX && comment.yPos > minY && comment.yPos < maxY) {
+			if (comment.x_pos > minX && comment.x_pos < maxX && comment.y_pos > minY && comment.y_pos < maxY) {
 				regionSelections.push(comment.id);
 			}
 		}

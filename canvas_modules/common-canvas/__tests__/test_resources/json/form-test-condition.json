@@ -34,7 +34,7 @@
               "type": "warning",
               "message": {
                 "default": "Expression cannot be empty: Default",
-                "resourceKey": "exp_param_not_empty"
+                "resource_key": "exp_param_not_empty"
               },
               "focusParam": "exp_param"
             },
@@ -150,7 +150,7 @@
               "type": "warning",
               "message": {
                 "default": "Expression cannot be empty: Resource",
-                "resourceKey": "exp_param_not_empty"
+                "resource_key": "exp_param_not_empty"
               },
               "focusParam": "exp_param"
             },
