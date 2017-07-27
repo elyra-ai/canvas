@@ -531,8 +531,8 @@ export default class DiagramCanvas extends React.Component {
 				label: optionalArgs.target.value,
 				width: optionalArgs.width,
 				height: optionalArgs.height,
-				offsetX: optionalArgs.xPos,
-				offsetY: optionalArgs.yPos
+				offsetX: optionalArgs.x_pos,
+				offsetY: optionalArgs.y_pos
 			});
 		}
 	}
