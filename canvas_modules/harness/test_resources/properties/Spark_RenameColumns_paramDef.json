@@ -225,7 +225,7 @@
     ]
   },
   "resources": {
-    "rename.label": "Rename Columns",
+    "org.ibm.spark.ibm.transformers.RenameColumns.label": "Rename Columns",
     "field.label": "Input name",
     "new_name.label": "Output name",
     "no_rename_selections": "There are no selected columns to rename",

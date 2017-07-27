@@ -181,7 +181,7 @@
     ]
   },
   "resources": {
-    "select.label": "Select Columns",
+    "org.ibm.spark.ibm.transformers.SelectColumns.label": "Select Columns",
     "mode.label": "Mode",
     "mode.desc": "Include or discard columns",
     "mode.Include.label": "Include selected columns",

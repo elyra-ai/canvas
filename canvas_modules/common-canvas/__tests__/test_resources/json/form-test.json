@@ -40,7 +40,7 @@
       }
     ],
     "uihints": {
-      "name": "TestOp",
+      "id": "TestOp",
       "label": {
         "default": "TestOp label: default",
         "resource_key": "testOp.label"

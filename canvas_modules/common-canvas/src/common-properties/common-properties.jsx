@@ -86,7 +86,7 @@ export default class CommonProperties extends React.Component {
 					field.metadata.measure = column.measure.toLowerCase();
 				}
 				if (column.modelingRole) {
-					field.metadata.role = column.modelingRole.toLowerCase();
+					field.metadata.modeling_role = column.modelingRole.toLowerCase();
 				}
 				datasetMetadata.fields.push(field);
 			}

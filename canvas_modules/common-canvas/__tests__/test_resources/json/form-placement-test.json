@@ -13,7 +13,7 @@
       }
     ],
     "uihints": {
-      "name": "org.apache.spark.ml.ibm.transformers.Distinct",
+      "id": "org.apache.spark.ml.ibm.transformers.Distinct",
       "icon": "images/transformationspark.svg",
       "label": {
         "default": "Distinct"

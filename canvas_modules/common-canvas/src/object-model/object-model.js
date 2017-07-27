@@ -24,8 +24,8 @@ const nodes = (state = [], action) => {
 			image: action.data.image,
 			outputPorts: action.data.outputPorts,
 			inputPorts: action.data.inputPorts,
-			x_pos: action.data.xPos,
-			y_pos: action.data.yPos,
+			x_pos: action.data.x_pos,
+			y_pos: action.data.y_pos,
 			objectData: { description: "", label: action.data.label }
 		};
 		return [

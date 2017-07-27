@@ -33,7 +33,7 @@
       }
     ],
     "uihints": {
-      "name": "rename",
+      "id": "rename",
       "icon": "./rename.svg",
       "structure_info": [
         {

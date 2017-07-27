@@ -14,7 +14,7 @@
       }
     ],
     "uihints": {
-      "name": "cond_test",
+      "id": "cond_test",
       "group_info": [
         {
           "name": "basic-settings",

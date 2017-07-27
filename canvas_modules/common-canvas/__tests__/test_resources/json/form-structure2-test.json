@@ -39,7 +39,7 @@
     ],
     "uihints": {
       "icon": "images/sort.svg",
-      "name": "sort",
+      "id": "sort",
       "label": {
         "resource_key": "sort.label"
       },

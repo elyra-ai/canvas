@@ -40,6 +40,8 @@ describe("CommonProperties converts property sets correctly", () => {
 		const form = wrapper.instance().getForm();
 		const newDatasetMetadata = form.data.datasetMetadata;
 		const expectedDatasetMetadata = deriveDatasetMetadata;
+		// console.log("Expected1: " + JSON.stringify(expectedDatasetMetadata));
+		// console.log("Actual1  : " + JSON.stringify(newDatasetMetadata));
 		expect(_.isEqual(JSON.parse(JSON.stringify(expectedDatasetMetadata)),
 			JSON.parse(JSON.stringify(newDatasetMetadata)))).to.be.true;
 	});

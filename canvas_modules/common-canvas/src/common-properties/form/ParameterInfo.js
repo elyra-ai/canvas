@@ -15,7 +15,7 @@ import _ from "underscore";
 export class ParameterDef {
 	constructor(cname, label, description, type, role, valueRestriction, defaultValue,
 		control, orientation, style, width, charLimit, placeHolderText, separator,
-		resource_key, visible, valueIcons, sortable, filterable, editStyle, required, numberGenerator) {
+		resourceKey, visible, valueIcons, sortable, filterable, editStyle, required, numberGenerator) {
 		this.name = cname;
 		this.label = ResourceDef.make(label);
 		this.description = ResourceDef.make(description);
@@ -30,7 +30,7 @@ export class ParameterDef {
 		this.charLimit = charLimit;
 		this.placeHolderText = ResourceDef.make(placeHolderText); // additionalText
 		this.separator = separator;
-		this.resource_key = resource_key;
+		this.resource_key = resourceKey;
 		this.visible = (typeof visible === "boolean" ? visible : true);
 		this.valueIcons = valueIcons;
 		this.sortable = sortable;
@@ -161,7 +161,7 @@ export class ParameterDef {
 			}
 			// JSON.stringify(_.propertyOf(param)("default")),
 			return new ParameterDef(
-				_.propertyOf(param)("id"),
+				_.propertyOf(param)("name"),
 				_.propertyOf(uihint)("label"),
 				_.propertyOf(uihint)("description"),
 				_.propertyOf(param)("type"),
