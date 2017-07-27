@@ -143,9 +143,6 @@ function _makeControls(parameterMetadata, group, structureMetadata, l10nProvider
 	group.parameterNames().forEach(function(paramName) {
 		// Assume property definition exists
 		const prop = parameterMetadata.getParameter(paramName);
-		if (!prop) {
-			console.log("################ Can't get prop for parameter: " + paramName);
-		}
 		let structureDef;
 		if (prop.propType() === Type.STRUCTURE && structureMetadata) {
 			structureDef = structureMetadata.getStructure(prop.baseType());

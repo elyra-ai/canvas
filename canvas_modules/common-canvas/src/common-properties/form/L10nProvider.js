@@ -73,9 +73,9 @@ export class L10nProvider {
 }
 
 export class ResourceDef {
-	constructor(defaultText, resource_key, placement) {
+	constructor(defaultText, resourceKey, placement) {
 		this.default = defaultText;
-		this.resource_key = resource_key;
+		this.resource_key = resourceKey;
 		if (placement) {
 			this.placement = placement;
 		}

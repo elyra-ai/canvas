@@ -93,12 +93,12 @@ class Comment extends React.Component {
 		return this.refs.canvasCommentDiv;
 	}
 
-	getInnerBoxTop(y_pos) {
-		return Math.round(y_pos * this.props.zoom) - (this.props.zoom);
+	getInnerBoxTop(yPos) {
+		return Math.round(yPos * this.props.zoom) - (this.props.zoom);
 	}
 
-	getInnerBoxLeft(x_pos) {
-		return Math.round(x_pos * this.props.zoom) + (20 * this.props.zoom);
+	getInnerBoxLeft(xPos) {
+		return Math.round(xPos * this.props.zoom) + (20 * this.props.zoom);
 	}
 
 	// When resizing get the new size dimensions of the comment box
@@ -457,12 +457,12 @@ class Comment extends React.Component {
 
 		const zoom = this.props.zoom;
 
-		let x_posi = this.props.comment.x_pos;
-		let y_posi = this.props.comment.y_pos;
+		let xPosi = this.props.comment.x_pos;
+		let yPosi = this.props.comment.y_pos;
 
 		if (this.resizingComment) {
-			x_posi = this.state.x_pos;
-			y_posi = this.state.y_pos;
+			xPosi = this.state.x_pos;
+			yPosi = this.state.y_pos;
 		}
 
 		var className = (typeof (this.props.comment.className) !== "undefined" && this.props.comment.className)
@@ -473,13 +473,13 @@ class Comment extends React.Component {
 			className += " selected";
 		}
 
-		const bTop = Math.round(y_posi * zoom) - (10 * zoom);
-		const bLeft = Math.round(x_posi * zoom) + (10 * zoom);
+		const bTop = Math.round(yPosi * zoom) - (10 * zoom);
+		const bLeft = Math.round(xPosi * zoom) + (10 * zoom);
 		const bWidth = Math.round(this.state.width * zoom) + (25 * zoom);
 		const bHeight = Math.round(this.state.height * zoom) + (20 * zoom);
 
-		const bInnerTop = this.getInnerBoxTop(y_posi);
-		const bInnerLeft = this.getInnerBoxLeft(x_posi);
+		const bInnerTop = this.getInnerBoxTop(yPosi);
+		const bInnerLeft = this.getInnerBoxLeft(xPosi);
 		const bInnerWidth = Math.round(this.state.width * zoom) + (5 * zoom);
 		const bInnerHeight = Math.round(this.state.height * zoom) + (zoom);
 
