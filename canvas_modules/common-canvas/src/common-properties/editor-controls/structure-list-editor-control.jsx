@@ -85,7 +85,7 @@ export default class StructurelisteditorControl extends StructureTableEditor {
 		logger.info("StructurelisteditorControl.render()");
 		logger.info(this.getCurrentControlValue());
 
-		const controlName = this.getControlID().split(".")[1];
+		const controlName = this.getControlID().split("-")[2];
 		const conditionProps = {
 			controlName: controlName,
 			controlType: "table"
@@ -114,10 +114,10 @@ export default class StructurelisteditorControl extends StructureTableEditor {
 
 StructurelisteditorControl.propTypes = {
 	buildUIItem: React.PropTypes.func,
-	dataModel: React.PropTypes.array.isRequired,
+	dataModel: React.PropTypes.object.isRequired,
 	control: React.PropTypes.object.isRequired,
 	controlStates: React.PropTypes.object,
-	validationDefinitions: React.PropTypes.object,
+	validationDefinitions: React.PropTypes.array,
 	updateValidationErrorMessage: React.PropTypes.func,
 	retrieveValidationErrorMessage: React.PropTypes.func,
 	updateControlValue: React.PropTypes.func

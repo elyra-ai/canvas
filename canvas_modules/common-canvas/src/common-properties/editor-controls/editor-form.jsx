@@ -63,8 +63,7 @@ export default class EditorForm extends React.Component {
 			controlErrorMessages: {},
 			visibleDefinition: [],
 			enabledDefinitions: [],
-			validationDefinitions: {},
-			validationGroupDefinitions: [],
+			validationDefinitions: [],
 			controlStates: {},
 			selectedRows: {},
 			showFieldPicker: false,
@@ -931,7 +930,7 @@ export default class EditorForm extends React.Component {
 	parseUiConditions(uiConditions) {
 		var visibleDefinition = [];
 		var enabledDefinitions = [];
-		var validationDefinitions = {};
+		var validationDefinitions = [];
 
 		for (let i = 0; i < uiConditions.length; i++) {
 			if (uiConditions[i].visible) {

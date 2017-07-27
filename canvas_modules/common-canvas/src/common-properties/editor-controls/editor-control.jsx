@@ -51,6 +51,19 @@ export default class EditorControl extends React.Component {
 		return options;
 	}
 
+	static genColumnSelectDropdownOptions(fields, selectedValues) {
+		var options = [];
+
+		for (var j = 0; j < fields.length; j++) {
+			options.push({
+				value: fields[j].name,
+				label: fields[j].name
+			});
+		}
+
+		return options;
+	}
+
 	static genStringSelectOptions(values, selectedValues) {
 		var options = [];
 		for (var i = 0; i < values.length; i++) {
@@ -123,7 +136,7 @@ export default class EditorControl extends React.Component {
 	}
 
 	getControlID() {
-		return "editor-control." + this.props.control.name;
+		return "editor-control-" + this.props.control.name;
 	}
 
 	/*
@@ -139,7 +152,7 @@ export default class EditorControl extends React.Component {
 		if (this.props.retrieveValidationErrorMessage) {
 			message = this.props.retrieveValidationErrorMessage(conditionProps.controlName);
 			if (typeof message === "undefined") {
-				message = { type: "info", text: "" };
+				message = DEFAULT_VALIDATION_MESSAGE;
 			}
 		}
 		let errorMessage = (<ValidationMessage
@@ -253,7 +266,7 @@ export default class EditorControl extends React.Component {
 	}
 
 	validateInput() {
-		var controlName = this.getControlID().split(".")[1];
+		var controlName = this.getControlID().split("-")[2];
 		if (!this.props.validationDefinitions) {
 			return;
 		}

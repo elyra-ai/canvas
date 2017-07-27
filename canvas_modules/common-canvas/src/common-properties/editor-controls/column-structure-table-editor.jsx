@@ -358,26 +358,23 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		if (this.state.hoverRemoveIcon) {
 			removeIconImage = (<img src={remove32hover} />);
 		}
-		let removeIcon = (<div id="remove-fields-button"
+
+		let removeIconId = "remove-fields-button";
+		if (this.state.enableRemoveIcon) {
+			removeIconId = "remove-fields-button-enabled";
+		}
+
+		const removeIcon = (<div id={removeIconId}
 			className="button"
 			onClick={this.removeSelected}
+			onBlur={this.validateInput}
 			onMouseEnter={this.mouseEnterRemoveButton}
 			onMouseLeave={this.mouseLeaveRemoveButton}
 			disabled
 		>
 			{removeIconImage}
 		</div>);
-		if (this.state.enableRemoveIcon) {
-			removeIcon = (<div id="remove-fields-button-enabled"
-				className="button"
-				onClick={this.removeSelected}
-				onMouseEnter={this.mouseEnterRemoveButton}
-				onMouseLeave={this.mouseLeaveRemoveButton}
-				disabled={false}
-			>
-				{removeIconImage}
-			</div>);
-		}
+
 		const addTooltip = <Tooltip id="addFieldTip">Select columns to add</Tooltip>;
 		const removeTooltip = <Tooltip id="removeFieldTip">Remove selected columns</Tooltip>;
 		return (<div>

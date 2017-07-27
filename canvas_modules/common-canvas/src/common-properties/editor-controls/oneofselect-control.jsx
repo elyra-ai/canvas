@@ -70,7 +70,7 @@ export default class OneofselectControl extends EditorControl {
 	}
 
 	render() {
-		const controlName = this.getControlID().split(".")[1];
+		const controlName = this.getControlID().split("-")[2];
 		const conditionProps = {
 			controlName: controlName,
 			controlType: "dropdown"
@@ -121,7 +121,7 @@ OneofselectControl.propTypes = {
 	setCurrentControlValueSelected: React.PropTypes.func,
 	selectedRows: React.PropTypes.array,
 	controlStates: React.PropTypes.object,
-	validationDefinitions: React.PropTypes.object,
+	validationDefinitions: React.PropTypes.array,
 	updateValidationErrorMessage: React.PropTypes.func,
 	retrieveValidationErrorMessage: React.PropTypes.func
 };

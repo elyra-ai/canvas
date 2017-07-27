@@ -36,7 +36,7 @@ export default class TextfieldControl extends EditorControl {
 	}
 
 	render() {
-		const controlName = this.getControlID().split(".")[1];
+		const controlName = this.getControlID().split("-")[2];
 		const conditionProps = {
 			controlName: controlName,
 			controlType: "textfield"
@@ -78,7 +78,7 @@ export default class TextfieldControl extends EditorControl {
 TextfieldControl.propTypes = {
 	control: React.PropTypes.object.isRequired,
 	controlStates: React.PropTypes.object,
-	validationDefinitions: React.PropTypes.object,
+	validationDefinitions: React.PropTypes.array,
 	validateConditions: React.PropTypes.func,
 	updateValidationErrorMessage: React.PropTypes.func,
 	retrieveValidationErrorMessage: React.PropTypes.func,

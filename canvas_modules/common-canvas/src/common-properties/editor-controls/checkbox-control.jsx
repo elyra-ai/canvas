@@ -39,7 +39,7 @@ export default class CheckboxControl extends EditorControl {
 
 	render() {
 		var checked = this.state.controlValue === "true";
-		const controlName = this.getControlID().split(".")[1];
+		const controlName = this.getControlID().split("-")[2];
 		const conditionProps = {
 			controlName: controlName,
 			controlType: "selection"
@@ -55,6 +55,7 @@ export default class CheckboxControl extends EditorControl {
 			id={this.getControlID()}
 			name={this.props.control.label.text}
 			onChange={this.handleChange}
+			onBlur={this.validateInput}
 			checked={checked}
 		/>);
 
@@ -70,7 +71,7 @@ export default class CheckboxControl extends EditorControl {
 CheckboxControl.propTypes = {
 	control: React.PropTypes.object,
 	controlStates: React.PropTypes.object,
-	validationDefinitions: React.PropTypes.object,
+	validationDefinitions: React.PropTypes.array,
 	updateValidationErrorMessage: React.PropTypes.func,
 	retrieveValidationErrorMessage: React.PropTypes.func,
 	updateControlValue: React.PropTypes.func

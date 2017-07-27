@@ -193,6 +193,7 @@ p.form__validation.validation-error-message-color-warning.validation-error-messa
 	height: 23px;
 }
 
+.validation-warning-message-icon-textfield,
 .validation-warning-message-icon-textfieldbox {
 	margin-top: -24px;
 	height: 25px;

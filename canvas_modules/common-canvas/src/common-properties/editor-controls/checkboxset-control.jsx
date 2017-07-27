@@ -56,7 +56,7 @@ export default class CheckboxsetControl extends EditorControl {
 	}
 
 	render() {
-		const controlName = this.getControlID().split(".")[1];
+		const controlName = this.getControlID().split("-")[2];
 		const conditionProps = {
 			controlName: controlName,
 			controlType: "selection"
@@ -81,8 +81,10 @@ export default class CheckboxsetControl extends EditorControl {
 				className={"checkboxset-ui-conditions-state-" + classType}
 				style={stateStyle}
 				id={val}
+				key={val + i}
 				name={this.props.control.valueLabels[i]}
 				onChange={this.handleChange}
+				onBlur={this.validateInput}
 				checked={checked}
 			/>);
 		}
@@ -104,7 +106,7 @@ export default class CheckboxsetControl extends EditorControl {
 CheckboxsetControl.propTypes = {
 	control: React.PropTypes.object,
 	controlStates: React.PropTypes.object,
-	validationDefinitions: React.PropTypes.object,
+	validationDefinitions: React.PropTypes.array,
 	updateValidationErrorMessage: React.PropTypes.func,
 	retrieveValidationErrorMessage: React.PropTypes.func,
 	updateControlValue: React.PropTypes.func
