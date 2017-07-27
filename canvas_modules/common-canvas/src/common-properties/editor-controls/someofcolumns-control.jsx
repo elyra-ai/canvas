@@ -10,7 +10,6 @@
 import React from "react";
 import { FormControl } from "react-bootstrap";
 import EditorControl from "./editor-control.jsx";
-import ReactDOM from "react-dom";
 
 export default class SomeofcolumnsControl extends EditorControl {
 	constructor(props) {
@@ -23,8 +22,7 @@ export default class SomeofcolumnsControl extends EditorControl {
 	}
 
 	handleChange(evt) {
-		const select = ReactDOM.findDOMNode(this.refs.input);
-		const values = [].filter.call(select.options, function(o) {
+		const values = [].filter.call(evt.target.options, function(o) {
 			return o.selected;
 		}).map(function(o) {
 			return o.value;
@@ -39,7 +37,7 @@ export default class SomeofcolumnsControl extends EditorControl {
 	}
 
 	render() {
-		const controlName = this.getControlID().split(".")[1];
+		const controlName = this.getControlID().split("-")[2];
 		const conditionProps = {
 			controlName: controlName,
 			controlType: "selection"
@@ -58,8 +56,8 @@ export default class SomeofcolumnsControl extends EditorControl {
 					style={stateStyle}
 					componentClass="select"
 					multiple name={this.props.control.name}
-					help={this.props.control.additionalText}
 					onChange={this.handleChange}
+					onBlur={this.validateInput}
 					value={this.state.controlValue}
 					ref="input"
 				>
@@ -78,5 +76,5 @@ SomeofcolumnsControl.propTypes = {
 	controlStates: React.PropTypes.object,
 	updateValidationErrorMessage: React.PropTypes.func,
 	retrieveValidationErrorMessage: React.PropTypes.func,
-	validationDefinitions: React.PropTypes.object
+	validationDefinitions: React.PropTypes.array
 };

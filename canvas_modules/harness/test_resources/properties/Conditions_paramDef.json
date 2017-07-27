@@ -295,7 +295,6 @@
   "uihints": {
     "name": "Conditions.test",
     "icon": "images/modelbuildspark.svg",
-		"editorSize": "medium",
     "label": {
       "default": "Conditions Test"
     },

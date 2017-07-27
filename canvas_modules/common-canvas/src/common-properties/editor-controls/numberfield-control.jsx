@@ -40,7 +40,7 @@ export default class NumberfieldControl extends EditorControl {
 	}
 
 	render() {
-		const controlName = this.getControlID().split(".")[1];
+		const controlName = this.getControlID().split("-")[2];
 		const conditionProps = {
 			controlName: controlName,
 			controlType: "number"
@@ -80,7 +80,7 @@ export default class NumberfieldControl extends EditorControl {
 NumberfieldControl.propTypes = {
 	control: React.PropTypes.object,
 	controlStates: React.PropTypes.object,
-	validationDefinitions: React.PropTypes.object,
+	validationDefinitions: React.PropTypes.array,
 	validateConditions: React.PropTypes.func,
 	updateValidationErrorMessage: React.PropTypes.func,
 	retrieveValidationErrorMessage: React.PropTypes.func,

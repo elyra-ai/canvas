@@ -53,12 +53,15 @@ export default class ColumnSelectControl extends EditorControl {
 	}
 
 	handleChangeMultiColumn(evt) {
-		const select = ReactDOM.findDOMNode(this.refs.input);
-		const values = [].filter.call(select.options, function(o) {
-			return o.selected;
-		}).map(function(o) {
-			return o.value;
-		});
+		let values = [];
+		if (typeof evt.target.options !== "undefined") {
+			values = [].filter.call(evt.target.options, function(o) {
+				return o.selected;
+			}).map(function(o) {
+				return o.value;
+			});
+		}
+
 		this.setState({ selectedValues: values });
 		this.selectionChanged(values);
 	}
@@ -182,7 +185,7 @@ export default class ColumnSelectControl extends EditorControl {
 			this._update_callback = null;
 		}
 
-		const controlName = this.getControlID().split(".")[1];
+		const controlName = this.getControlID().split("-")[2];
 		const conditionProps = {
 			controlName: controlName,
 			controlType: "selection"
@@ -245,6 +248,7 @@ export default class ColumnSelectControl extends EditorControl {
 							name={this.props.control.name}
 							style={stateStyle}
 							onChange={this.handleChangeMultiColumn}
+							onBlur={this.validateInput}
 							value={this.state.selectedValues}
 							ref="input"
 						>
@@ -280,6 +284,7 @@ export default class ColumnSelectControl extends EditorControl {
 						name={this.props.control.name}
 						style={stateStyle}
 						onChange={this.handleChange}
+						onBlur={this.validateInput}
 						value={this.state.selectedValues}
 						ref="input"
 					>
@@ -297,7 +302,7 @@ ColumnSelectControl.propTypes = {
 	dataModel: React.PropTypes.object.isRequired,
 	control: React.PropTypes.object.isRequired,
 	controlStates: React.PropTypes.object,
-	validationDefinitions: React.PropTypes.object,
+	validationDefinitions: React.PropTypes.array,
 	updateValidationErrorMessage: React.PropTypes.func,
 	retrieveValidationErrorMessage: React.PropTypes.func,
 	updateControlValue: React.PropTypes.func

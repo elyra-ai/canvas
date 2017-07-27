@@ -32,7 +32,7 @@ export default class OneofcolumnsControl extends EditorControl {
 	}
 
 	render() {
-		const controlName = this.getControlID().split(".")[1];
+		const controlName = this.getControlID().split("-")[2];
 		const conditionProps = {
 			controlName: controlName,
 			controlType: "selection"
@@ -52,7 +52,6 @@ export default class OneofcolumnsControl extends EditorControl {
 					style={stateStyle}
 					componentClass="select"
 					name={this.props.control.name}
-					help={this.props.control.additionalText}
 					onChange={this.handleChange}
 					value={this.state.controlValue}
 					ref="input"

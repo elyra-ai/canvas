@@ -127,7 +127,7 @@ export default class ColumnAllocatorControl extends EditorControl {
 			this._update_callback = null;
 		}
 
-		const controlName = this.getControlID().split(".")[1];
+		const controlName = this.getControlID().split("-")[2];
 		const conditionProps = {
 			controlName: controlName,
 			controlType: "selection"
@@ -187,7 +187,7 @@ ColumnAllocatorControl.propTypes = {
 	dataModel: React.PropTypes.object.isRequired,
 	control: React.PropTypes.object.isRequired,
 	controlStates: React.PropTypes.object,
-	validationDefinitions: React.PropTypes.object,
+	validationDefinitions: React.PropTypes.array,
 	updateValidationErrorMessage: React.PropTypes.func,
 	retrieveValidationErrorMessage: React.PropTypes.func,
 	updateControlValue: React.PropTypes.func

@@ -1,0 +1,1771 @@
+{
+  "componentId": "Conditions-test",
+  "label": "Conditions Test",
+  "uiItems": [
+    {
+      "itemType": "primaryTabs",
+      "tabs": [
+        {
+          "text": "Numbers",
+          "group": "Numberfield",
+          "content": {
+            "itemType": "panel",
+            "panel": {
+              "id": "Numberfield",
+              "panelType": "general",
+              "uiItems": [
+                {
+                  "itemType": "control",
+                  "control": {
+                    "name": "numberfieldCheckpointInterval",
+                    "label": {
+                      "text": "Checkpoint Interval"
+                    },
+                    "description": {
+                      "text": "Set checkpoint interval (>= 1) or disable checkpoint (-1). Ex) 10 means that the cache will get checkpointed every 10 iterations"
+                    },
+                    "controlType": "numberfield",
+                    "valueDef": {
+                      "propType": "integer",
+                      "isList": false,
+                      "isMap": false,
+                      "defaultValue": -1
+                    },
+                    "separateLabel": true,
+                    "required": true
+                  }
+                },
+                {
+                  "itemType": "control",
+                  "control": {
+                    "name": "numberfieldImpurity",
+                    "label": {
+                      "text": "Impurity"
+                    },
+                    "description": {
+                      "text": "Criterion used for information gain calculation (case-insensitive). Supported: \"entropy\" and \"gini\""
+                    },
+                    "controlType": "radioset",
+                    "valueDef": {
+                      "propType": "string",
+                      "isList": false,
+                      "isMap": false,
+                      "defaultValue": "gini"
+                    },
+                    "orientation": "vertical",
+                    "values": [
+                      "gini",
+                      "entropy"
+                    ],
+                    "valueLabels": [
+                      "gini",
+                      "entropy"
+                    ],
+                    "separateLabel": true,
+                    "required": false
+                  }
+                },
+                {
+                  "itemType": "control",
+                  "control": {
+                    "name": "numberfieldMaxBins",
+                    "label": {
+                      "text": "Maximum number of bins"
+                    },
+                    "description": {
+                      "text": "Maximum number of bins used for discretizing continuous features and for choosing how to split on features at each node. More bins give higher granularity. Must be >= 2 and >= number of categories in any categorical feature"
+                    },
+                    "controlType": "numberfield",
+                    "valueDef": {
+                      "propType": "integer",
+                      "isList": false,
+                      "isMap": false,
+                      "defaultValue": 32
+                    },
+                    "separateLabel": true,
+                    "required": true
+                  }
+                },
+                {
+                  "itemType": "control",
+                  "control": {
+                    "name": "numberfieldMaxDepth",
+                    "label": {
+                      "text": "Maximum depth of the tree"
+                    },
+                    "description": {
+                      "text": "Maximum depth of the tree (>= 0). Ex) depth 0 means 1 leaf node; depth 1 means 1 internal node + 2 leaf nodes"
+                    },
+                    "controlType": "numberfield",
+                    "valueDef": {
+                      "propType": "integer",
+                      "isList": false,
+                      "isMap": false,
+                      "defaultValue": 5
+                    },
+                    "separateLabel": true,
+                    "required": false
+                  }
+                },
+                {
+                  "itemType": "control",
+                  "control": {
+                    "name": "numberfieldMinInfoGain",
+                    "label": {
+                      "text": "Minimum information gain"
+                    },
+                    "description": {
+                      "text": "Minimum information gain for a split to be considered at a tree node"
+                    },
+                    "controlType": "numberfield",
+                    "valueDef": {
+                      "propType": "double",
+                      "isList": false,
+                      "isMap": false,
+                      "defaultValue": 0
+                    },
+                    "separateLabel": true,
+                    "required": true
+                  }
+                },
+                {
+                  "itemType": "control",
+                  "control": {
+                    "name": "numberfieldMinInstancesPerNode",
+                    "label": {
+                      "text": "Minimum instances per node"
+                    },
+                    "description": {
+                      "text": "Minimum number of instances each child must have after split. If a split causes the left or right child to have fewer than minInstancesPerNode, the split will be discarded as invalid (>= 1)"
+                    },
+                    "controlType": "numberfield",
+                    "valueDef": {
+                      "propType": "integer",
+                      "isList": false,
+                      "isMap": false,
+                      "defaultValue": 1
+                    },
+                    "separateLabel": true,
+                    "required": true
+                  }
+                },
+                {
+                  "itemType": "control",
+                  "control": {
+                    "name": "numberfieldSeed",
+                    "label": {
+                      "text": "Seed"
+                    },
+                    "description": {
+                      "text": "Random seed"
+                    },
+                    "controlType": "numberfield",
+                    "valueDef": {
+                      "propType": "integer",
+                      "isList": false,
+                      "isMap": false,
+                      "defaultValue": 12345
+                    },
+                    "separateLabel": true,
+                    "required": true
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "text": "Columns",
+          "group": "Columns",
+          "content": {
+            "itemType": "panel",
+            "panel": {
+              "id": "Columns",
+              "panelType": "general",
+              "uiItems": [
+                {
+                  "itemType": "panel",
+                  "panel": {
+                    "id": "columnAllocator",
+                    "panelType": "columnSelection",
+                    "uiItems": [
+                      {
+                        "itemType": "control",
+                        "control": {
+                          "name": "columnSelectSharedWithInput",
+                          "label": {
+                            "text": "Input List Shared with Below Control"
+                          },
+                          "description": {
+                            "text": "Shared input list with below control"
+                          },
+                          "controlType": "columnselect",
+                          "valueDef": {
+                            "propType": "string",
+                            "isList": true,
+                            "isMap": false,
+                            "defaultValue": []
+                          },
+                          "separateLabel": true,
+                          "required": false
+                        }
+                      },
+                      {
+                        "itemType": "control",
+                        "control": {
+                          "name": "columnSelectInputFieldList",
+                          "label": {
+                            "text": "Column Select Input"
+                          },
+                          "description": {
+                            "text": "Select one or more input columns"
+                          },
+                          "controlType": "columnselect",
+                          "valueDef": {
+                            "propType": "string",
+                            "isList": true,
+                            "isMap": false,
+                            "defaultValue": []
+                          },
+                          "separateLabel": true,
+                          "required": true
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "itemType": "panel",
+                  "panel": {
+                    "id": "List",
+                    "panelType": "general",
+                    "uiItems": [
+                      {
+                        "itemType": "control",
+                        "control": {
+                          "name": "oneofcolumnsList",
+                          "label": {
+                            "text": "One of Columns list"
+                          },
+                          "description": {
+                            "text": "One of Columns list"
+                          },
+                          "controlType": "oneofcolumns",
+                          "valueDef": {
+                            "propType": "string",
+                            "isList": false,
+                            "isMap": false,
+                            "defaultValue": ""
+                          },
+                          "separateLabel": true,
+                          "required": true
+                        }
+                      },
+                      {
+                        "itemType": "control",
+                        "control": {
+                          "name": "someofcolumnsList",
+                          "label": {
+                            "text": "Some of Columns list"
+                          },
+                          "description": {
+                            "text": "Some of Columns list"
+                          },
+                          "controlType": "someofcolumns",
+                          "valueDef": {
+                            "propType": "string",
+                            "isList": true,
+                            "isMap": false,
+                            "defaultValue": ""
+                          },
+                          "separateLabel": true,
+                          "required": true
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "text": "Selects",
+          "group": "Selects",
+          "content": {
+            "itemType": "panel",
+            "panel": {
+              "id": "Selects",
+              "panelType": "general",
+              "uiItems": [
+                {
+                  "itemType": "control",
+                  "control": {
+                    "name": "checkboxTypes",
+                    "label": {
+                      "text": "Data Types"
+                    },
+                    "controlType": "checkboxset",
+                    "valueDef": {
+                      "propType": "string",
+                      "isList": true,
+                      "isMap": false,
+                      "defaultValue": ""
+                    },
+                    "values": [
+                      "integer",
+                      "string",
+                      "boolean"
+                    ],
+                    "valueLabels": [
+                      "integer",
+                      "string",
+                      "boolean"
+                    ],
+                    "separateLabel": true,
+                    "required": true
+                  }
+                },
+                {
+                  "itemType": "control",
+                  "control": {
+                    "name": "oneofselectAnimals",
+                    "label": {
+                      "text": "Animals"
+                    },
+                    "description": {
+                      "text": "Pick an Animal"
+                    },
+                    "controlType": "oneofselect",
+                    "valueDef": {
+                      "propType": "string",
+                      "isList": false,
+                      "isMap": false,
+                      "defaultValue": "bear"
+                    },
+                    "values": [
+                      "lion",
+                      "bear",
+                      "wolf",
+                      "horse",
+                      "tiger",
+                      "monkey"
+                    ],
+                    "valueLabels": [
+                      "lion",
+                      "bear",
+                      "wolf",
+                      "horse",
+                      "tiger",
+                      "monkey"
+                    ],
+                    "separateLabel": true,
+                    "required": true
+                  }
+                },
+                {
+                  "itemType": "control",
+                  "control": {
+                    "name": "oneofselectPets",
+                    "label": {
+                      "text": "Pets"
+                    },
+                    "description": {
+                      "text": "Pick a pet"
+                    },
+                    "controlType": "oneofselect",
+                    "valueDef": {
+                      "propType": "string",
+                      "isList": false,
+                      "isMap": false,
+                      "defaultValue": "turtle"
+                    },
+                    "values": [
+                      "dog",
+                      "cat",
+                      "fish",
+                      "hamster",
+                      "turtle"
+                    ],
+                    "valueLabels": [
+                      "dog",
+                      "cat",
+                      "fish",
+                      "hamster",
+                      "turtle"
+                    ],
+                    "separateLabel": true,
+                    "required": false
+                  }
+                },
+                {
+                  "itemType": "control",
+                  "control": {
+                    "name": "someofselectNumbers",
+                    "label": {
+                      "text": "Number"
+                    },
+                    "description": {
+                      "text": "Choose your numbers"
+                    },
+                    "controlType": "someofselect",
+                    "valueDef": {
+                      "propType": "string",
+                      "isList": true,
+                      "isMap": false,
+                      "defaultValue": "Three"
+                    },
+                    "values": [
+                      "One",
+                      "Two",
+                      "Three",
+                      "Four",
+                      "Five",
+                      "Six",
+                      "Seven",
+                      "Eight",
+                      "Nine",
+                      "Ten"
+                    ],
+                    "valueLabels": [
+                      "One",
+                      "Two",
+                      "Three",
+                      "Four",
+                      "Five",
+                      "Six",
+                      "Seven",
+                      "Eight",
+                      "Nine",
+                      "Ten"
+                    ],
+                    "separateLabel": true,
+                    "required": true
+                  }
+                },
+                {
+                  "itemType": "control",
+                  "control": {
+                    "name": "checkboxSingle",
+                    "label": {
+                      "text": "Single Checkbox"
+                    },
+                    "description": {
+                      "text": "Single Checkbox"
+                    },
+                    "controlType": "checkbox",
+                    "valueDef": {
+                      "propType": "boolean",
+                      "isList": false,
+                      "isMap": false,
+                      "defaultValue": ""
+                    },
+                    "values": [
+                      "Single Checkbox"
+                    ],
+                    "valueLabels": [
+                      "Single Checkbox"
+                    ],
+                    "separateLabel": false,
+                    "required": true
+                  }
+                },
+                {
+                  "itemType": "control",
+                  "control": {
+                    "name": "checkboxEnable",
+                    "label": {
+                      "text": "Enable"
+                    },
+                    "description": {
+                      "text": "Enable check"
+                    },
+                    "controlType": "checkbox",
+                    "valueDef": {
+                      "propType": "boolean",
+                      "isList": false,
+                      "isMap": false,
+                      "defaultValue": ""
+                    },
+                    "values": [
+                      "Enable"
+                    ],
+                    "valueLabels": [
+                      "Enable"
+                    ],
+                    "separateLabel": false,
+                    "required": false
+                  }
+                },
+                {
+                  "itemType": "control",
+                  "control": {
+                    "name": "radiosetColor",
+                    "label": {
+                      "text": "Color"
+                    },
+                    "description": {
+                      "text": "Pick a color"
+                    },
+                    "controlType": "radioset",
+                    "valueDef": {
+                      "propType": "string",
+                      "isList": false,
+                      "isMap": false,
+                      "defaultValue": "red"
+                    },
+                    "orientation": "horizontal",
+                    "values": [
+                      "red",
+                      "yellow",
+                      "blue"
+                    ],
+                    "valueLabels": [
+                      "red",
+                      "yellow",
+                      "blue"
+                    ],
+                    "separateLabel": true,
+                    "required": true
+                  }
+                },
+                {
+                  "itemType": "panelSelector",
+                  "tabs": [
+                    {
+                      "text": "red",
+                      "group": "red",
+                      "content": {
+                        "itemType": "panel",
+                        "panel": {
+                          "id": "red",
+                          "panelType": "general",
+                          "uiItems": [
+                            {
+                              "itemType": "control",
+                              "control": {
+                                "name": "apples",
+                                "label": {
+                                  "text": "Apples"
+                                },
+                                "description": {
+                                  "text": "Number of Apples"
+                                },
+                                "controlType": "numberfield",
+                                "valueDef": {
+                                  "propType": "integer",
+                                  "isList": false,
+                                  "isMap": false,
+                                  "defaultValue": 1000
+                                },
+                                "separateLabel": true,
+                                "required": false
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "text": "yellow",
+                      "group": "yellow",
+                      "content": {
+                        "itemType": "panel",
+                        "panel": {
+                          "id": "yellow",
+                          "panelType": "general",
+                          "uiItems": [
+                            {
+                              "itemType": "control",
+                              "control": {
+                                "name": "lemons",
+                                "label": {
+                                  "text": "Lemons"
+                                },
+                                "description": {
+                                  "text": "Number of Lemons"
+                                },
+                                "controlType": "numberfield",
+                                "valueDef": {
+                                  "propType": "integer",
+                                  "isList": false,
+                                  "isMap": false,
+                                  "defaultValue": 10
+                                },
+                                "separateLabel": true,
+                                "required": false
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "text": "blue",
+                      "group": "blue",
+                      "content": {
+                        "itemType": "panel",
+                        "panel": {
+                          "id": "blue",
+                          "panelType": "general",
+                          "uiItems": [
+                            {
+                              "itemType": "control",
+                              "control": {
+                                "name": "berries",
+                                "label": {
+                                  "text": "Berries"
+                                },
+                                "description": {
+                                  "text": "Number of Berries"
+                                },
+                                "controlType": "numberfield",
+                                "valueDef": {
+                                  "propType": "double",
+                                  "isList": false,
+                                  "isMap": false,
+                                  "defaultValue": 50
+                                },
+                                "separateLabel": true,
+                                "required": false
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ],
+                  "dependsOn": "radiosetColor"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "text": "Textfields",
+          "group": "Textfields",
+          "content": {
+            "itemType": "panel",
+            "panel": {
+              "id": "Textfields",
+              "panelType": "general",
+              "uiItems": [
+                {
+                  "itemType": "control",
+                  "control": {
+                    "name": "passwordField",
+                    "label": {
+                      "text": "Password"
+                    },
+                    "description": {
+                      "text": "Enter your password"
+                    },
+                    "controlType": "passwordfield",
+                    "valueDef": {
+                      "propType": "password",
+                      "isList": false,
+                      "isMap": false,
+                      "defaultValue": ""
+                    },
+                    "separateLabel": true,
+                    "required": true
+                  }
+                },
+                {
+                  "itemType": "control",
+                  "control": {
+                    "name": "textfieldName",
+                    "label": {
+                      "text": "Name"
+                    },
+                    "description": {
+                      "text": "Enter your name"
+                    },
+                    "controlType": "textfield",
+                    "valueDef": {
+                      "propType": "string",
+                      "isList": false,
+                      "isMap": false,
+                      "defaultValue": ""
+                    },
+                    "separateLabel": true,
+                    "required": true
+                  }
+                },
+                {
+                  "itemType": "control",
+                  "control": {
+                    "name": "textareaDescription",
+                    "label": {
+                      "text": "Description"
+                    },
+                    "description": {
+                      "text": "Enter a description"
+                    },
+                    "controlType": "textarea",
+                    "valueDef": {
+                      "propType": "string",
+                      "isList": true,
+                      "isMap": false,
+                      "defaultValue": ""
+                    },
+                    "separateLabel": true,
+                    "required": true
+                  }
+                },
+                {
+                  "itemType": "control",
+                  "control": {
+                    "name": "expressionBox",
+                    "label": {
+                      "text": "Expression"
+                    },
+                    "description": {
+                      "text": "Expression box"
+                    },
+                    "controlType": "expression",
+                    "valueDef": {
+                      "propType": "string",
+                      "isList": false,
+                      "isMap": false,
+                      "defaultValue": ""
+                    },
+                    "separateLabel": true,
+                    "required": true
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "text": "Tables",
+          "group": "Tables",
+          "content": {
+            "itemType": "panel",
+            "panel": {
+              "id": "Tables",
+              "panelType": "general",
+              "uiItems": [
+                {
+                  "itemType": "panel",
+                  "panel": {
+                    "id": "structuretableSortOrder",
+                    "panelType": "columnSelection",
+                    "uiItems": [
+                      {
+                        "itemType": "control",
+                        "control": {
+                          "name": "structuretableSortOrder",
+                          "label": {
+                            "text": "Sort by"
+                          },
+                          "controlType": "structuretable",
+                          "valueDef": {
+                            "propType": "structure",
+                            "isList": true,
+                            "isMap": false
+                          },
+                          "separateLabel": true,
+                          "subControls": [
+                            {
+                              "name": "field",
+                              "label": {
+                                "text": "Field"
+                              },
+                              "controlType": "oneofcolumns",
+                              "valueDef": {
+                                "propType": "string",
+                                "isList": false,
+                                "isMap": false,
+                                "defaultValue": ""
+                              },
+                              "role": "column",
+                              "visible": true,
+                              "width": 28
+                            },
+                            {
+                              "name": "structuretable_sort_order",
+                              "label": {
+                                "text": "Order"
+                              },
+                              "controlType": "toggletext",
+                              "valueDef": {
+                                "propType": "string",
+                                "isList": false,
+                                "isMap": false,
+                                "defaultValue": "Ascending"
+                              },
+                              "role": "enum",
+                              "values": [
+                                "Ascending",
+                                "Descending"
+                              ],
+                              "valueLabels": [
+                                "Ascending",
+                                "Descending"
+                              ],
+                              "valueIcons": [
+                                "/images/up-triangle.svg",
+                                "/images/down-triangle.svg"
+                              ],
+                              "visible": true,
+                              "width": 16,
+                              "editStyle": "inline"
+                            }
+                          ],
+                          "keyIndex": 0,
+                          "defaultRow": [
+                            "",
+                            "Ascending"
+                          ],
+                          "moveableRows": true,
+                          "required": false
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "itemType": "panel",
+                  "panel": {
+                    "id": "structuretableSortOrder",
+                    "panelType": "columnSelection",
+                    "uiItems": [
+                      {
+                        "itemType": "control",
+                        "control": {
+                          "name": "structuretableRenameFields",
+                          "label": {
+                            "text": "Rename Field"
+                          },
+                          "controlType": "structuretable",
+                          "valueDef": {
+                            "propType": "structure",
+                            "isList": true,
+                            "isMap": false,
+                            "defaultValue": []
+                          },
+                          "separateLabel": true,
+                          "subControls": [
+                            {
+                              "name": "field",
+                              "label": {
+                                "text": "Input name"
+                              },
+                              "controlType": "oneofcolumns",
+                              "valueDef": {
+                                "propType": "string",
+                                "isList": false,
+                                "isMap": false
+                              },
+                              "role": "column",
+                              "visible": true,
+                              "width": 26
+                            },
+                            {
+                              "name": "new_name",
+                              "label": {
+                                "text": "Output name"
+                              },
+                              "controlType": "textfield",
+                              "valueDef": {
+                                "propType": "string",
+                                "isList": false,
+                                "isMap": false
+                              },
+                              "role": "new_column",
+                              "visible": true,
+                              "width": 26,
+                              "editStyle": "inline"
+                            }
+                          ],
+                          "keyIndex": 0,
+                          "defaultRow": [
+                            null,
+                            null
+                          ],
+                          "required": true
+                        }
+                      },
+                      {
+                        "itemType": "control",
+                        "control": {
+                          "name": "structurelisteditorTableInput",
+                          "label": {
+                            "text": "Table Input"
+                          },
+                          "controlType": "structuretable",
+                          "valueDef": {
+                            "propType": "structure",
+                            "isList": true,
+                            "isMap": false
+                          },
+                          "separateLabel": true,
+                          "subControls": [
+                            {
+                              "name": "field",
+                              "label": {
+                                "text": "Field"
+                              },
+                              "controlType": "textfield",
+                              "valueDef": {
+                                "propType": "string",
+                                "isList": false,
+                                "isMap": false,
+                                "defaultValue": ""
+                              },
+                              "role": "textfield",
+                              "visible": true,
+                              "width": 16
+                            },
+                            {
+                              "name": "Storage",
+                              "label": {
+                                "text": "Storage"
+                              },
+                              "controlType": "oneofselect",
+                              "valueDef": {
+                                "propType": "string",
+                                "isList": false,
+                                "isMap": false,
+                                "defaultValue": "String"
+                              },
+                              "role": "enum",
+                              "values": [
+                                "String",
+                                "Integer",
+                                "Real",
+                                "Time",
+                                "Date",
+                                "Timestamp"
+                              ],
+                              "valueLabels": [
+                                "String",
+                                "Integer",
+                                "Real",
+                                "Time",
+                                "Date",
+                                "Timestamp"
+                              ],
+                              "visible": true,
+                              "width": 8,
+                              "editStyle": "inline"
+                            }
+                          ],
+                          "keyIndex": 0,
+                          "defaultRow": [
+                            "",
+                            "String"
+                          ],
+                          "required": false
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "itemType": "panel",
+                  "panel": {
+                    "id": "List",
+                    "panelType": "general",
+                    "uiItems": [
+                      {
+                        "itemType": "control",
+                        "control": {
+                          "name": "structurelisteditorTableInput",
+                          "label": {
+                            "text": "Table Input"
+                          },
+                          "controlType": "structurelisteditor",
+                          "valueDef": {
+                            "propType": "structure",
+                            "isList": true,
+                            "isMap": false
+                          },
+                          "separateLabel": true,
+                          "subControls": [
+                            {
+                              "name": "field",
+                              "label": {
+                                "text": "Field"
+                              },
+                              "controlType": "textfield",
+                              "valueDef": {
+                                "propType": "string",
+                                "isList": false,
+                                "isMap": false,
+                                "defaultValue": ""
+                              },
+                              "role": "textfield",
+                              "visible": true,
+                              "width": 16
+                            },
+                            {
+                              "name": "Storage",
+                              "label": {
+                                "text": "Storage"
+                              },
+                              "controlType": "oneofselect",
+                              "valueDef": {
+                                "propType": "string",
+                                "isList": false,
+                                "isMap": false,
+                                "defaultValue": "String"
+                              },
+                              "role": "enum",
+                              "values": [
+                                "String",
+                                "Integer",
+                                "Real",
+                                "Time",
+                                "Date",
+                                "Timestamp"
+                              ],
+                              "valueLabels": [
+                                "String",
+                                "Integer",
+                                "Real",
+                                "Time",
+                                "Date",
+                                "Timestamp"
+                              ],
+                              "visible": true,
+                              "width": 8,
+                              "editStyle": "inline"
+                            }
+                          ],
+                          "keyIndex": 0,
+                          "defaultRow": [
+                            "",
+                            "String"
+                          ],
+                          "required": false
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "buttons": [
+    {
+      "id": "ok",
+      "text": "OK",
+      "isPrimary": true,
+      "url": ""
+    },
+    {
+      "id": "cancel",
+      "text": "Cancel",
+      "isPrimary": false,
+      "url": ""
+    }
+  ],
+  "data": {
+    "currentParameters": {
+      "columnSelectInputFieldList": [
+        "Age",
+        "BP"
+      ],
+      "oneofcolumnsList": [],
+      "someofcolumnsList": [],
+      "numberfieldCheckpointInterval": -1,
+      "numberfieldImpurity": "entropy",
+      "numberfieldMaxBins": 24,
+      "numberfieldMaxDepth": 7,
+      "numberfieldMinInfoGain": 0,
+      "numberfieldMinInstancesPerNode": 2,
+      "numberfieldSeed": 12345,
+      "checkboxTypes": [],
+      "oneofselectAnimals": [],
+      "oneofselectPets": "turtle",
+      "someofselectNumbers": [],
+      "checkboxSingle": "",
+      "checkboxEnable": "",
+      "radiosetColor": "blue",
+      "apples": 100,
+      "lemons": 100,
+      "berries": 50,
+      "passwordField": "",
+      "textfieldName": "",
+      "textareaDescription": "",
+      "expressionBox": "",
+      "columnSelectSharedWithInput": [
+        "Sex"
+      ],
+      "structuretableSortOrder": [
+        "[\"Cholesterol\",\"Ascending\"]"
+      ],
+      "structuretableRenameFields": [
+        "[\"Age\", \"Age\"]",
+        "[\"BP\", \"BP-1\"]"
+      ],
+      "structurelisteditorTableInput": [
+        "[\"Age\",\"Integer\"]"
+      ]
+    },
+    "datasetMetadata": {
+      "fields": [
+        {
+          "name": "Age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "role": "input"
+          }
+        },
+        {
+          "name": "Sex",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "role": "input"
+          }
+        },
+        {
+          "name": "Cholesterol",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "role": "input"
+          }
+        },
+        {
+          "name": "Na",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "role": "input"
+          }
+        },
+        {
+          "name": "K",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "role": "input"
+          }
+        },
+        {
+          "name": "Drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "role": "input"
+          }
+        }
+      ]
+    },
+    "conditions": [
+      {
+        "validation": {
+          "fail_message": {
+            "type": "error",
+            "focusParam": "numberfieldCheckpointInterval",
+            "message": {
+              "resourceKey": "numberfield_checkpoint_interval_not_valid",
+              "default": "The checkpoint interval value must either be >= 1 or -1 to disable"
+            }
+          },
+          "evaluate": {
+            "or": [
+              {
+                "condition": {
+                  "param": "numberfieldCheckpointInterval",
+                  "op": "equals",
+                  "value": -1
+                }
+              },
+              {
+                "condition": {
+                  "param": "numberfieldCheckpointInterval",
+                  "op": "greaterThan",
+                  "value": 0
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail_message": {
+            "type": "error",
+            "focusParam": "numberfieldMaxBins",
+            "message": {
+              "resourceKey": "numberfield_max_bins_not_valid",
+              "default": "Maximum number of bins must be >= 2 or Maximum depth of the tree > 0"
+            }
+          },
+          "evaluate": {
+            "or": [
+              {
+                "condition": {
+                  "param": "numberfieldMaxBins",
+                  "op": "greaterThan",
+                  "value": 1
+                }
+              },
+              {
+                "condition": {
+                  "param": "numberfieldMaxDepth",
+                  "op": "greaterThan",
+                  "value": 0
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail_message": {
+            "type": "warning",
+            "focusParam": "numberfieldMinInstancesPerNode",
+            "message": {
+              "resourceKey": "numberfield_min_instances_per_node_not_valid",
+              "default": "The minimum instances per node value must be >= 1"
+            }
+          },
+          "evaluate": {
+            "condition": {
+              "param": "numberfieldMinInstancesPerNode",
+              "op": "greaterThan",
+              "value": 0
+            }
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail_message": {
+            "type": "error",
+            "focusParam": "numberfieldMinInfoGain",
+            "message": {
+              "resourceKey": "numberfield_min_info_gain_not_valid",
+              "default": "Cannot be less than 0"
+            }
+          },
+          "evaluate": {
+            "condition": {
+              "param": "numberfieldMinInfoGain",
+              "op": "greaterThan",
+              "value": 0
+            }
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail_message": {
+            "type": "error",
+            "focusParam": "numberfieldSeed",
+            "message": {
+              "resourceKey": "numberfield_seed_not_valid",
+              "default": "This is an example of a very long error message that someone might enter. The message text will wrap around to the next line as shown here."
+            }
+          },
+          "evaluate": {
+            "condition": {
+              "param": "numberfieldSeed",
+              "op": "contains",
+              "value": "123"
+            }
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail_message": {
+            "type": "error",
+            "focusParam": "columnSelectInputFieldList",
+            "message": {
+              "resourceKey": "column_select_input_field_list_not_empty",
+              "default": "Select one or more input fields."
+            }
+          },
+          "evaluate": {
+            "condition": {
+              "param": "columnSelectInputFieldList",
+              "op": "isNotEmpty"
+            }
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail_message": {
+            "type": "error",
+            "focusParam": "oneofcolumnsList",
+            "message": {
+              "resourceKey": "one_of_columns_list_not_empty",
+              "default": "Cannot have Sex selected"
+            }
+          },
+          "evaluate": {
+            "condition": {
+              "param": "oneofcolumnsList",
+              "op": "contains",
+              "value": "Sex"
+            }
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail_message": {
+            "type": "warning",
+            "focusParam": "someofcolumnsList",
+            "message": {
+              "resourceKey": "some_of_columns_list_not_empty",
+              "default": "Field must be selected"
+            }
+          },
+          "evaluate": {
+            "condition": {
+              "param": "someofcolumnsList",
+              "op": "isNotEmpty"
+            }
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail_message": {
+            "type": "warning",
+            "message": {
+              "default": "No data types are selected",
+              "resourceKey": "checkbox_types_not_empty"
+            },
+            "focusParam": "checkboxTypes"
+          },
+          "evaluate": {
+            "condition": {
+              "param": "checkboxTypes",
+              "op": "isNotEmpty"
+            }
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail_message": {
+            "type": "warning",
+            "message": {
+              "default": "Warning: selected tiger",
+              "resourceKey": "one_of_select_animals_not_empty"
+            },
+            "focusParam": "oneofselectAnimals"
+          },
+          "evaluate": {
+            "condition": {
+              "param": "oneofselectAnimals",
+              "op": "notContains",
+              "value": "tiger"
+            }
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail_message": {
+            "type": "warning",
+            "message": {
+              "default": "Warning: selected three",
+              "resourceKey": "some_of_select_animals_not_three"
+            },
+            "focusParam": "someofselectNumbers"
+          },
+          "evaluate": {
+            "condition": {
+              "param": "someofselectNumbers",
+              "op": "notContains",
+              "value": "three"
+            }
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail_message": {
+            "type": "error",
+            "message": {
+              "default": "Checkbox single should be checked if data type is selected",
+              "resourceKey": "checkbox_single_not_empty"
+            },
+            "focusParam": "checkboxSingle"
+          },
+          "evaluate": {
+            "or": [
+              {
+                "and": [
+                  {
+                    "condition": {
+                      "param": "checkboxTypes",
+                      "op": "isNotEmpty"
+                    }
+                  },
+                  {
+                    "condition": {
+                      "param": "checkboxSingle",
+                      "op": "checked"
+                    }
+                  }
+                ]
+              },
+              {
+                "and": [
+                  {
+                    "condition": {
+                      "param": "checkboxTypes",
+                      "op": "isEmpty"
+                    }
+                  },
+                  {
+                    "condition": {
+                      "param": "checkboxSingle",
+                      "op": "notChecked"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "enabled": {
+          "paramNames": [
+            "radiosetColor"
+          ],
+          "evaluate": {
+            "condition": {
+              "param": "checkboxEnable",
+              "op": "checked"
+            }
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail_message": {
+            "type": "warning",
+            "message": {
+              "default": "Are you sure you want to choose yellow?",
+              "resourceKey": "radiosetColor"
+            },
+            "focusParam": "radiosetColor"
+          },
+          "evaluate": {
+            "condition": {
+              "param": "radiosetColor",
+              "op": "notEquals",
+              "value": "yellow"
+            }
+          }
+        }
+      },
+      {
+        "visible": {
+          "paramNames": [
+            "oneofselectPets"
+          ],
+          "evaluate": {
+            "condition": {
+              "param": "oneofselectAnimals",
+              "op": "notContains",
+              "value": "lion"
+            }
+          }
+        }
+      },
+      {
+        "visible": {
+          "paramNames": [
+            "textfieldName",
+            "textareaDescription",
+            "expressionBox"
+          ],
+          "evaluate": {
+            "condition": {
+              "param": "passwordField",
+              "op": "contains",
+              "value": "password"
+            }
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail_message": {
+            "type": "error",
+            "focusParam": "passwordField",
+            "message": {
+              "resourceKey": "password_not_empty",
+              "default": "Password cannot be empty, enter \"password\""
+            }
+          },
+          "evaluate": {
+            "condition": {
+              "param": "passwordField",
+              "op": "isNotEmpty"
+            }
+          }
+        }
+      },
+      {
+        "enabled": {
+          "paramNames": [
+            "expressionBox"
+          ],
+          "evaluate": {
+            "condition": {
+              "param": "textfieldName",
+              "op": "isNotEmpty"
+            }
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail_message": {
+            "type": "error",
+            "message": {
+              "default": "Name cannot contain /",
+              "resourceKey": "textfield_name_not_valid_one"
+            },
+            "focusParam": "textfieldName"
+          },
+          "evaluate": {
+            "condition": {
+              "param": "textfieldName",
+              "op": "notContains",
+              "value": "/"
+            }
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail_message": {
+            "type": "error",
+            "message": {
+              "default": "Name cannot contain double or single \"quotes\"",
+              "resourceKey": "textfield_name_not_valid_two"
+            },
+            "focusParam": "textfieldName"
+          },
+          "evaluate": {
+            "and": [
+              {
+                "condition": {
+                  "param": "textfieldName",
+                  "op": "notContains",
+                  "value": "\""
+                }
+              },
+              {
+                "condition": {
+                  "param": "textfieldName",
+                  "op": "notContains",
+                  "value": "'"
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail_message": {
+            "type": "warning",
+            "message": {
+              "default": "Description cannot contain /, double or single \"quotes\"",
+              "resourceKey": "textarea_description_not_valid"
+            },
+            "focusParam": "textareaDescription"
+          },
+          "evaluate": {
+            "and": [
+              {
+                "condition": {
+                  "param": "textareaDescription",
+                  "op": "notContains",
+                  "value": "/"
+                }
+              },
+              {
+                "condition": {
+                  "param": "textareaDescription",
+                  "op": "notContains",
+                  "value": "\""
+                }
+              },
+              {
+                "condition": {
+                  "param": "textareaDescription",
+                  "op": "notContains",
+                  "value": "'"
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail_message": {
+            "type": "error",
+            "message": {
+              "default": "Expression cannot contain /, double or single \"quotes\"",
+              "resourceKey": "expression_box_not_valid"
+            },
+            "focusParam": "expressionBox"
+          },
+          "evaluate": {
+            "and": [
+              {
+                "condition": {
+                  "param": "expressionBox",
+                  "op": "notContains",
+                  "value": "/"
+                }
+              },
+              {
+                "condition": {
+                  "param": "expressionBox",
+                  "op": "notContains",
+                  "value": "\""
+                }
+              },
+              {
+                "condition": {
+                  "param": "expressionBox",
+                  "op": "notContains",
+                  "value": "'"
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail_message": {
+            "type": "error",
+            "focusParam": "structuretableRenameFields",
+            "message": {
+              "resourceKey": "structuretable_rename_fields_not_empty",
+              "default": "The 'Output Name' field cannot be empty"
+            }
+          },
+          "evaluate": {
+            "condition": {
+              "param": "structuretableRenameFields",
+              "op": "isNotEmpty"
+            }
+          }
+        }
+      }
+    ],
+    "currentProperties": {
+      "columnSelectInputFieldList": [
+        "Age",
+        "BP"
+      ],
+      "oneofcolumnsList": [],
+      "someofcolumnsList": [],
+      "numberfieldCheckpointInterval": [
+        "-1"
+      ],
+      "numberfieldImpurity": [
+        "entropy"
+      ],
+      "numberfieldMaxBins": [
+        "24"
+      ],
+      "numberfieldMaxDepth": [
+        "7"
+      ],
+      "numberfieldMinInfoGain": [
+        "0"
+      ],
+      "numberfieldMinInstancesPerNode": [
+        "2"
+      ],
+      "numberfieldSeed": [
+        "12345"
+      ],
+      "checkboxTypes": [],
+      "oneofselectAnimals": [],
+      "oneofselectPets": [
+        "turtle"
+      ],
+      "someofselectNumbers": [],
+      "checkboxSingle": [
+        ""
+      ],
+      "checkboxEnable": [
+        ""
+      ],
+      "radiosetColor": [
+        "blue"
+      ],
+      "apples": [
+        "100"
+      ],
+      "lemons": [
+        "100"
+      ],
+      "berries": [
+        "50"
+      ],
+      "passwordField": [
+        ""
+      ],
+      "textfieldName": [
+        ""
+      ],
+      "textareaDescription": [
+        ""
+      ],
+      "expressionBox": [
+        ""
+      ],
+      "columnSelectSharedWithInput": [
+        "Sex"
+      ],
+      "structuretableSortOrder": [
+        "[\"Cholesterol\",\"Ascending\"]"
+      ],
+      "structuretableRenameFields": [
+        "[\"Age\", \"Age\"]",
+        "[\"BP\", \"BP-1\"]"
+      ],
+      "structurelisteditorTableInput": [
+        "[\"Age\",\"Integer\"]"
+      ]
+    }
+  }
+}

@@ -39,7 +39,7 @@ export default class SomeofselectControl extends EditorControl {
 	}
 
 	render() {
-		const controlName = this.getControlID().split(".")[1];
+		const controlName = this.getControlID().split("-")[2];
 		const conditionProps = {
 			controlName: controlName,
 			controlType: "selection"
@@ -59,7 +59,6 @@ export default class SomeofselectControl extends EditorControl {
 					style={stateStyle}
 					componentClass="select"
 					multiple name={this.props.control.name}
-					help={this.props.control.additionalText}
 					onChange={this.handleChange}
 					value={this.state.controlValue}
 					ref="input"
@@ -78,5 +77,5 @@ SomeofselectControl.propTypes = {
 	controlStates: React.PropTypes.object,
 	updateValidationErrorMessage: React.PropTypes.func,
 	retrieveValidationErrorMessage: React.PropTypes.func,
-	validationDefinitions: React.PropTypes.object
+	validationDefinitions: React.PropTypes.array
 };

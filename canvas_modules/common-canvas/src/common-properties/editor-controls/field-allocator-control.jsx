@@ -152,7 +152,7 @@ export default class FieldAllocatorControl extends EditorControl {
 			);
 		}
 
-		var controlName = this.getControlID().split(".")[1];
+		var controlName = this.getControlID().split("-")[2];
 		var stateDisabled = {};
 		var stateStyle = {};
 		if (typeof this.props.controlStates[controlName] !== "undefined") {
