@@ -429,11 +429,19 @@ class App extends React.Component {
 		if (data.nodeTypeId) {
 			type = data.nodeTypeId;
 		} else if (data.nodes) {
-			type = data.nodes[0];
+			if (data.nodes[0].id) {
+				type = data.nodes[0].id;  // Node link
+			} else {
+				type = data.nodes[0];   // Comment link
+			}
 		}
 
 		if (data.targetNodes) {
-			type += " to " + data.targetNodes[0];
+			if (data.targetNodes[0].id) {
+				type += " to " + data.targetNodes[0].id;  // Node link
+			} else {
+				type += " to " + data.targetNodes[0];   // Comment link
+			}
 		}
 
 		this.log("editActionHandler() " + data.editType, type, data.label);

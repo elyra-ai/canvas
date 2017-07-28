@@ -120,8 +120,8 @@
   position:fixed;
   right: 0;
   height: 100%;
-  -webkit-transition:width 2s;
-  transition: width 2s;
+  -webkit-transition:width 0.5s;
+  transition: width 0.5s;
   color: #F9F9FB;
   overflow: scroll;
   z-index: 2;

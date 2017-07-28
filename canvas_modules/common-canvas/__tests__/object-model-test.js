@@ -797,7 +797,7 @@ describe("ObjectModel handle model OK", () => {
               { id: "comment2", x_pos: 60, y_pos: 60 }
 					],
 					links: [
-              { id: "link1", source: "node1", target: "node2" },
+              { id: "link1", source: "node1", sourcePort: "srcPort1", target: "node2", targetPort: "trgPort2" },
               { id: "link2", source: "comment1", target: "node2" }
 					]
 				}
@@ -812,7 +812,7 @@ describe("ObjectModel handle model OK", () => {
 
 		ObjectModel.dispatch({
 			type: "ADD_LINK",
-			data: { id: "link3", linkType: "data", srcNodeId: "node2", trgNodeId: "node3" }
+			data: { id: "link3", linkType: "data", srcNodeId: "node2", srcNodePortId: "srcPort2", trgNodeId: "node3", trgNodePortId: "trgPort3" }
 		});
 
 		ObjectModel.dispatch({
@@ -834,9 +834,9 @@ describe("ObjectModel handle model OK", () => {
                 { id: "comment2", x_pos: 60, y_pos: 60 }
 					],
 					links: [
-                { id: "link1", source: "node1", target: "node2" },
+                { id: "link1", source: "node1", sourcePort: "srcPort1", target: "node2", targetPort: "trgPort2" },
                 { id: "link2", source: "comment1", target: "node2" },
-                { id: "link3", className: "canvas-data-link", source: "node2", target: "node3" },
+                { id: "link3", className: "canvas-data-link", source: "node2", sourcePort: "srcPort2", target: "node3", targetPort: "trgPort3" },
                 { id: "link4", className: "canvas-comment-link", source: "comment1", target: "node2" }
 					]
 				}

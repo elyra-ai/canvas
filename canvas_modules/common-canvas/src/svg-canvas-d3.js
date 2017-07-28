@@ -81,6 +81,7 @@ export default class CanvasD3Layout {
 		// Variables for dynamically drawing a new link line
 		this.drawingNewLink = false;
 		this.drawingNewLinkSrcId = null;
+		this.drawingNewLinkSrcPortId = null;
 		this.drawingNewLinkAction = null;
 		this.drawingNewLinkStartPos = null;
 		this.drawingNewLinkArray = [];
@@ -221,7 +222,7 @@ export default class CanvasD3Layout {
 		this.displayComments(); // Show comments first so they appear under nodes, if there is overlap.
 		this.displayNodes();
 		this.drawLines();
-		// this.showBoundingRectangles(); // TODO - Remove later
+		// this.showBoundingRectangles(); // This can be uncommented for debugging to see bondaries.
 	}
 
 	// Display bounding rectangles aroud the SVG area and the canvas area defined
@@ -662,8 +663,19 @@ export default class CanvasD3Layout {
 				.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
 
 			if (that.connectionType === "Ports") {
-				d3.select(`#src_circle_${d.id}`)
-					.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
+				if (d.outputPorts && d.outputPorts.length > 0) {
+					d.outputPorts.forEach((port, i) => {
+						d3.select(`#src_circle_${d.id}_${d.outputPorts[i].name}`)
+							.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
+					});
+				}
+
+				if (d.inputPorts && d.inputPorts.length > 0) {
+					d.inputPorts.forEach((port, i) => {
+						d3.select(`#trg_circle_${d.id}_${d.inputPorts[i].name}`)
+							.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
+					});
+				}
 			}
 
 			d3.select(`#node_image_${d.id}`)
@@ -685,7 +697,7 @@ export default class CanvasD3Layout {
 				});
 		});
 
-		var nodeGroup = nodeGroupSel.enter()
+		var nodeGroups = nodeGroupSel.enter()
 				.append("g")
 					.attr("id", (d) => `node_grp_${d.id}`)
 					.attr("class", "obj-group node-group")
@@ -741,7 +753,7 @@ export default class CanvasD3Layout {
 					.call(this.drag);   // Must put drag after mousedown listener so mousedown gets called first.
 
 		// Node selection highlighting outline
-		nodeGroup.append("rect")
+		nodeGroups.append("rect")
 			.attr("id", (d) => `node_rect_${d.id}`)
 			.attr("width", this.nodeWidth + (2 * this.highLightGap))
 			.attr("height", this.nodeHeight + (2 * this.highLightGap))
@@ -753,7 +765,7 @@ export default class CanvasD3Layout {
 
 		if (this.connectionType === "Ports") {
 			// Node outline
-			nodeGroup.append("rect")
+			nodeGroups.append("rect")
 				.attr("width", this.nodeWidth)
 				.attr("height", this.nodeHeight)
 				.attr("x", 0)
@@ -761,41 +773,72 @@ export default class CanvasD3Layout {
 				.attr("class", "d3-node-rect-outline");
 
 			// Input ports
-			nodeGroup.filter((d) => d.inputPorts && d.inputPorts.length > 0)
-				.append("circle")
-					.attr("id", (d) => `trg_circle_${d.id}`)
-					.attr("cx", 0)
-					.attr("cy", this.portPosY)
-					.attr("r", this.portRadius)
-					.attr("class", "d3-node-port-input")
-					.attr("connected", "no");
+			nodeGroups
+				.each((d) => {
+					if (d.inputPorts && d.inputPorts.length > 0) {
+						d.inputPorts.forEach((port, i) => {
+							var cy;
+							if (d.inputPorts.length === 1) {
+								cy = this.portPosY;
+							} else {
+								cy = (this.nodeHeight / (d.inputPorts.length + 1)) * (i + 1);
+							}
+							// Circle for input port
+							var nodeGroup = d3.select(`#node_grp_${d.id}`);
+							nodeGroup.append("circle")
+									.attr("id", `trg_circle_${d.id}_${d.inputPorts[i].name}`)
+									.attr("portId", d.inputPorts[i].name) // This is needed by getNodeInputPortAtMousePos
+									.attr("cx", 0)
+									.attr("cy", cy)
+									.attr("r", this.portRadius)
+									.attr("class", "d3-node-port-input")
+									.attr("connected", "no");
 
-			// Arrow for input port
-			nodeGroup.filter((d) => d.inputPorts && d.inputPorts.length > 0)
-				.append("path")
-					.attr("id", (d) => `trg_arrow_${d.id}`)
-					.attr("d", (d) => that.getArrowShapePath(d))
-					.attr("class", "d3-node-port-input-arrow")
-					.attr("connected", "no");
+							// Arrow for input port
+							nodeGroup.append("path")
+									.attr("id", `trg_arrow_${d.id}_${d.inputPorts[i].name}`)
+									.attr("d", that.getArrowShapePath(cy))
+									.attr("class", "d3-node-port-input-arrow")
+									.attr("connected", "no");
+						});
+					}
+				});
 
 			// Output ports
-			nodeGroup.filter((d) => d.outputPorts && d.outputPorts.length > 0)
-				.append("circle")
-					.attr("id", (d) => `src_circle_${d.id}`)
-					.attr("cx", this.nodeWidth)
-					.attr("cy", this.portPosY)
-					.attr("r", this.portRadius)
-					.attr("class", "d3-node-port-output")
-					.on("mousedown", (d) => {
-						d3.event.stopPropagation(); // Stops the node drag behavior when clicking on the handle/circle
-						d3.event.preventDefault();
-						this.drawingNewLink = true;
-						this.drawingNewLinkSrcId = d.id;
-						this.drawingNewLinkAction = "node-node";
-						this.drawingNewLinkStartPos = { x: d.x_pos + this.nodeWidth, y: d.y_pos + this.portPosY };
-						this.drawingNewLinkArray = [];
-						this.drawNewLink();
-					});
+			nodeGroups
+				.each((d) => {
+					if (d.outputPorts && d.outputPorts.length > 0) {
+						d.outputPorts.forEach((port, i) => {
+							var cy;
+							if (d.outputPorts.length === 1) {
+								cy = this.portPosY;
+							} else {
+								cy = (this.nodeHeight / (d.outputPorts.length + 1)) * (i + 1);
+							}
+							// Circle for input port
+							var nodeGroup = d3.select(`#node_grp_${d.id}`);
+
+							nodeGroup
+								.append("circle")
+									.attr("id", `src_circle_${d.id}_${d.outputPorts[i].name}`)
+									.attr("cx", this.nodeWidth)
+									.attr("cy", cy)
+									.attr("r", this.portRadius)
+									.attr("class", "d3-node-port-output")
+									.on("mousedown", (cd) => {
+										d3.event.stopPropagation(); // Stops the node drag behavior when clicking on the handle/circle
+										d3.event.preventDefault();
+										this.drawingNewLink = true;
+										this.drawingNewLinkSrcId = cd.id;
+										this.drawingNewLinkSrcPortId = port.name;
+										this.drawingNewLinkAction = "node-node";
+										this.drawingNewLinkStartPos = { x: cd.x_pos + this.nodeWidth, y: cd.y_pos + cy };
+										this.drawingNewLinkArray = [];
+										this.drawNewLink();
+									});
+						});
+					}
+				});
 		}
 
 		// Image outline
@@ -807,7 +850,7 @@ export default class CanvasD3Layout {
 		// 	.attr("class", "d3-node-rect-outline");
 
 		// Node image
-		nodeGroup.append("image")
+		nodeGroups.append("image")
 			.attr("id", function(d) { return `node_image_${d.id}`; })
 			.attr("xlink:href", function(d) { return d.image; })
 			.attr("width", this.imageWidth)
@@ -833,7 +876,7 @@ export default class CanvasD3Layout {
 		// 	.attr("class", "d3-label-outline");
 
 		// Label
-		nodeGroup.append("text")
+		nodeGroups.append("text")
 			.text(function(d) {
 				var textObj = d3.select(this);
 				return that.trimLabelToWidth(d.objectData.label, that.labelWidth, textObj);
@@ -861,7 +904,7 @@ export default class CanvasD3Layout {
 
 		// Halo
 		if (this.connectionType === "Halo") {
-			nodeGroup.append("circle")
+			nodeGroups.append("circle")
 				.attr("id", function(d) { return `node_halo_${d.id}`; })
 				.attr("class", "d3-node-halo")
 				.attr("cx", this.haloCenterX)
@@ -880,22 +923,22 @@ export default class CanvasD3Layout {
 		}
 
 		// Decorators
-		this.addDecorator(nodeGroup, "topLeft", this.leftDecoratorX, this.topDecoratorY);
-		this.addDecorator(nodeGroup, "topRight", this.rightDecoratorX, this.topDecoratorY);
-		this.addDecorator(nodeGroup, "bottomLeft", this.leftDecoratorX, this.bottomDecoratorY);
-		this.addDecorator(nodeGroup, "bottomRight", this.rightDecoratorX, this.bottomDecoratorY);
+		this.addDecorator(nodeGroups, "topLeft", this.leftDecoratorX, this.topDecoratorY);
+		this.addDecorator(nodeGroups, "topRight", this.rightDecoratorX, this.topDecoratorY);
+		this.addDecorator(nodeGroups, "bottomLeft", this.leftDecoratorX, this.bottomDecoratorY);
+		this.addDecorator(nodeGroups, "bottomRight", this.rightDecoratorX, this.bottomDecoratorY);
 
 		// Remove any nodes that are no longer in the diagram.nodes array.
 		nodeGroupSel.exit().remove();
 	}
 
-	setTrgLineStatus(targetId, newStatus) {
-		d3.select(`#trg_circle_${targetId}`).attr("connected", newStatus);
-		d3.select(`#trg_arrow_${targetId}`).attr("connected", newStatus);
+	setTrgPortStatus(trgId, trgPortId, newStatus) {
+		d3.select(`#trg_circle_${trgId}_${trgPortId}`).attr("connected", newStatus); // Use * wildcard to select all ports
+		d3.select(`#trg_arrow_${trgId}_${trgPortId}`).attr("connected", newStatus); // Use * wildcard to select all ports
 	}
 
-	setSrcLineStatus(targetId, newStatus) {
-		d3.select(`#src_circle_${targetId}`).attr("connected", newStatus);
+	setSrcPortStatus(srcId, srcPortId, newStatus) {
+		d3.select(`#src_circle_${srcId}_${srcPortId}`).attr("connected", newStatus); // Use * wildcard to select all ports
 	}
 
 	// Adds a decorator to the nodeGroup passed in of the type passed in at the
@@ -1143,28 +1186,32 @@ export default class CanvasD3Layout {
 	}
 
 	completeNewLink(trgNode) {
-		// If we completed a connection remove the new line
-		// objects.
+		// If we completed a connection remove the new line objects.
 		this.removeNewLink();
-
-
-		if (this.connectionType === "Ports") {
-			this.setTrgLineStatus(trgNode.id);
-			this.setSrcLineStatus(this.drawingNewLinkSrcId);
-		}
 
 		if (trgNode !== null) {
 			if (this.drawingNewLinkAction === "node-node") {
+				var trgPortId = this.getNodeInputPortAtMousePos();
+				trgPortId = trgPortId || trgNode.inputPorts[0].name;
 				this.consoleLog("editActionHandler - linkNodes");
-				this.editActionHandler({ editType: "linkNodes", nodes: [this.drawingNewLinkSrcId], targetNodes: [trgNode.id], linkType: "data" });
+				this.editActionHandler({
+					editType: "linkNodes",
+					nodes: [{ "id": this.drawingNewLinkSrcId, "portId": this.drawingNewLinkSrcPortId }],
+					targetNodes: [{ "id": trgNode.id, "portId": trgPortId }],
+					linkType: "data" });
 			} else {
 				this.consoleLog("editActionHandler - linkComment");
-				this.editActionHandler({ editType: "linkComment", nodes: [this.drawingNewLinkSrcId], targetNodes: [trgNode.id], linkType: "comment" });
+				this.editActionHandler({
+					editType: "linkComment",
+					nodes: [this.drawingNewLinkSrcId],
+					targetNodes: [trgNode.id],
+					linkType: "comment" });
 			}
 		}
 
 		this.drawingNewLink = false;
 		this.drawingNewLinkSrcId = null;
+		this.drawingNewLinkSrcPortId = null;
 		this.drawingNewLinkAction = null;
 		this.drawingNewLinkStartPos = null;
 		this.drawingNewLinkArray = [];
@@ -1182,6 +1229,7 @@ export default class CanvasD3Layout {
 		this.removeNewLink();
 		this.drawingNewLink = false;
 		this.drawingNewLinkSrcId = null;
+		this.drawingNewLinkSrcPortId = null;
 		this.drawingNewLinkAction = null;
 		this.drawingNewLinkStartPos = null;
 		this.drawingNewLinkArray = [];
@@ -1195,6 +1243,7 @@ export default class CanvasD3Layout {
 
 		this.drawingNewLink = false;
 		this.drawingNewLinkSrcId = null;
+		this.drawingNewLinkSrcPortId = null;
 		this.drawingNewLinkAction = null;
 		this.drawingNewLinkStartPos = null;
 		this.drawingNewLinkArray = [];
@@ -1283,6 +1332,25 @@ export default class CanvasD3Layout {
 		return node;
 	}
 
+	getNodeInputPortAtMousePos() {
+		const that = this;
+		var pos = this.getTransformedMousePos();
+		var portId = null;
+		this.canvas.selectAll(".d3-node-port-input")
+			.each(function(d) {                         // Use function keyword so 'this' pointer references the dom object
+				var cx = d.x_pos + this.cx.baseVal.value;
+				var cy = d.y_pos + this.cy.baseVal.value;
+				if (pos.x >= cx - that.portRadius && // Target port sticks out by its radius so need to allow for it.
+						pos.x <= cx + that.portRadius &&
+						pos.y >= cy - that.portRadius &&
+						pos.y <= cy + that.portRadius) {
+					portId = this.getAttribute("portId");
+				}
+			});
+		return portId;
+	}
+
+
 	displayComments() {
 		// this.consoleLog("Displaying comments");
 		const that = this;
@@ -1350,7 +1418,7 @@ export default class CanvasD3Layout {
 
 		});
 
-		var commentGroup = commentGroupSel.enter()
+		var commentGroups = commentGroupSel.enter()
 				.append("g")
 					.attr("id", (d) => `comment_grp_${d.id}`)
 					.attr("class", "obj-group comment-group")
@@ -1392,6 +1460,7 @@ export default class CanvasD3Layout {
 											d3.event.preventDefault();
 											that.drawingNewLink = true;
 											that.drawingNewLinkSrcId = d.id;
+											this.drawingNewLinkSrcPortId = null;
 											that.drawingNewLinkAction = "comment-node";
 											that.drawingNewLinkStartPos = { x: d.x_pos - that.highLightGap, y: d.y_pos - that.highLightGap };
 											that.drawingNewLinkArray = [];
@@ -1480,7 +1549,7 @@ export default class CanvasD3Layout {
 					.call(this.drag);	 // Must put drag after mousedown listener so mousedown gets called first.
 
 		// Comment selection highlighting and sizing outline
-		commentGroup.append("rect")
+		commentGroups.append("rect")
 			.attr("id", (d) => `comment_rect_${d.id}`)
 			.attr("width", (d) => d.width + (2 * this.highLightGap))
 			.attr("height", (d) => d.height + (2 * this.highLightGap))
@@ -1500,7 +1569,7 @@ export default class CanvasD3Layout {
 			});
 
 		// Background rectangle for comment
-		commentGroup.append("rect")
+		commentGroups.append("rect")
 			.attr("id", (d) => `comment_box_${d.id}`)
 			.attr("width", (d) => d.width)
 			.attr("height", (d) => d.height)
@@ -1518,7 +1587,7 @@ export default class CanvasD3Layout {
 
 
 		// Clip path to clip the comment text to the comment rectangle
-		commentGroup.append("clipPath")
+		commentGroups.append("clipPath")
 			.attr("id", (d) => `comment_clip_${d.id}`)
 				.append("rect")
 					.attr("width", (d) => d.width - (2 * that.commentWidthPadding))
@@ -1527,7 +1596,7 @@ export default class CanvasD3Layout {
 					.attr("y", 0);
 
 		// Comment text
-		commentGroup.append("text")
+		commentGroups.append("text")
 			.attr("id", (d) => `comment_text_${d.id}`)
 			.each(function(d) {
 				var textObj = d3.select(this);
@@ -1540,7 +1609,7 @@ export default class CanvasD3Layout {
 
 		// Halo
 		if (this.connectionType === "Halo") {
-			commentGroup.append("rect")
+			commentGroups.append("rect")
 				.attr("id", (d) => `comment_halo_${d.id}`)
 				.attr("class", "d3-comment-halo")
 				.attr("x", 0 - this.haloCommentGap)
@@ -1552,6 +1621,7 @@ export default class CanvasD3Layout {
 					d3.event.stopPropagation();
 					this.drawingNewLink = true;
 					this.drawingNewLinkSrcId = d.id;
+					this.drawingNewLinkSrcPortId = null;
 					this.drawingNewLinkAction = "comment-node";
 					this.drawingNewLinkStartPos = this.getTransformedMousePos();
 					this.drawingNewLinkArray = [];
@@ -2033,8 +2103,8 @@ export default class CanvasD3Layout {
 			d3.selectAll(".d3-node-port-input-arrow").attr("connected", "no");
 			lineArray.forEach((line) => {
 				if (line.type === "nodeLink") {
-					this.setTrgLineStatus(line.trg.id, "yes");
-					this.setSrcLineStatus(line.src.id, "yes");
+					this.setTrgPortStatus(line.trg.id, line.trgPortId, "yes");
+					this.setSrcPortStatus(line.src.id, line.srcPortId, "yes");
 				}
 			});
 		}
@@ -2075,12 +2145,16 @@ export default class CanvasD3Layout {
 			if (srcNode && trgNode) {
 				if (!this.isSourceOverlappingTarget(srcNode, trgNode, type)) {
 					var coords = {};
+					var srcPortId;
+					var trgPortId;
 
 					if (type === "nodeLink") {
 						if (this.connectionType === "Halo") {
 							coords = this.getNodeLinkCoordsForHalo(srcNode, trgNode);
 						} else {
-							coords = this.getNodeLinkCoordsForPorts(srcNode, trgNode);
+							srcPortId = this.getSourcePortId(link, srcNode);
+							trgPortId = this.getTargetPortId(link, trgNode);
+							coords = this.getNodeLinkCoordsForPorts(srcNode, srcPortId, trgNode, trgPortId);
 						}
 					} else {
 						coords = this.getCommentLinkCoords(srcNode, trgNode);
@@ -2091,12 +2165,42 @@ export default class CanvasD3Layout {
 													"className": link.className,
 													"type": type,
 													"src": srcNode,
-													"trg": trgNode });
+													"srcPortId": srcPortId,
+													"trg": trgNode,
+													"trgPortId": trgPortId });
 				}
 			}
 		});
 
 		return lineArray;
+	}
+
+	// Returns a source port Id if one exists in the link, otherwise defaults
+	// to the first available port on the source node.
+	getSourcePortId(link, srcNode) {
+		var srcPortId;
+		if (link.sourcePort) {
+			srcPortId = link.sourcePort;
+		} else if (srcNode.outputPorts && srcNode.outputPorts.length > 0) {
+			srcPortId = srcNode.outputPorts[0].name;
+		} else {
+			srcPortId = null;
+		}
+		return srcPortId;
+	}
+
+	// Returns a target port Id if one exists in the link, otherwise defaults
+	// to the first available port on the target node.
+	getTargetPortId(link, trgNode) {
+		var trgPortId;
+		if (link.targetPort) {
+			trgPortId = link.targetPort;
+		} else if (trgNode.inputPorts && trgNode.inputPorts.length > 0) {
+			trgPortId = trgNode.inputPorts[0].name;
+		} else {
+			trgPortId = null;
+		}
+		return trgPortId;
 	}
 
 	// Calculates the connection path to draw connections for the current config
@@ -2126,12 +2230,29 @@ export default class CanvasD3Layout {
 		return false;
 	}
 
-	getNodeLinkCoordsForPorts(srcNode, trgNode) {
+	getNodeLinkCoordsForPorts(srcNode, srcPortId, trgNode, trgPortId) {
+		var srcY = this.portPosY;
+		var trgY = this.portPosY;
+
+		if (srcNode.outputPorts && srcNode.outputPorts.length > 1) {
+			var srcPortPos = srcNode.outputPorts.findIndex((p) => p.name === srcPortId);
+			if (srcPortPos > -1) {
+				srcY = (this.nodeHeight / (srcNode.outputPorts.length + 1)) * (srcPortPos + 1);
+			}
+		}
+
+		if (trgNode.inputPorts && trgNode.inputPorts.length > 1) {
+			var trgPortPos = trgNode.inputPorts.findIndex((p) => p.name === trgPortId);
+			if (trgPortPos > -1) {
+				trgY = (this.nodeHeight / (trgNode.inputPorts.length + 1)) * (trgPortPos + 1);
+			}
+		}
+
 		return {
 			x1: srcNode.x_pos + this.nodeWidth,
-			y1: srcNode.y_pos + this.portPosY,
+			y1: srcNode.y_pos + srcY,
 			x2: trgNode.x_pos,
-			y2: trgNode.y_pos + this.portPosY };
+			y2: trgNode.y_pos + trgY };
 	}
 
 	getNodeLinkCoordsForHalo(srcNode, trgNode) {
@@ -2236,10 +2357,10 @@ export default class CanvasD3Layout {
 	}
 
 	// Returns arrow shape for Ports presentation.
-	getArrowShapePath() {
-		let path = "M -2 " + (this.portPosY - 3);
-		path += " L 2 " + this.portPosY;
-		path += " L -2 " + (this.portPosY + 3);
+	getArrowShapePath(cy) {
+		let path = "M -2 " + (cy - 3);
+		path += " L 2 " + cy;
+		path += " L -2 " + (cy + 3);
 		return path;
 	}
 

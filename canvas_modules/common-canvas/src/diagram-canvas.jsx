@@ -500,7 +500,7 @@ export default class DiagramCanvas extends React.Component {
 					this.linkSelected([node.id], [jsVal.id]);
 				} else if (jsVal.connType === "connOut") {
 					// Otherwise if the drag started on an output connector, assume the drop target is the target
-					this.linkSelected([jsVal.id], [node.id]);
+					this.linkSelected([{ "id": jsVal.id }], [{ "id": node.id }]);
 				} else if (jsVal.connType === "comment") {
 					// Otherwise if the drag started on an output connector, assume the drop target is the target
 					this.linkCommentSelected([jsVal.id], [node.id]);

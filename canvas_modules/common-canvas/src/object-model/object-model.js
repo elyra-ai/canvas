@@ -215,6 +215,10 @@ const links = (state = [], action) => {
 			source: action.data.srcNodeId,
 			target: action.data.trgNodeId
 		};
+
+		if (action.data.linkType === "data") {
+			Object.assign(newLink, { "sourcePort": action.data.srcNodePortId, "targetPort": action.data.trgNodePortId });
+		}
 		return [
 			...state,
 			newLink
@@ -597,20 +601,22 @@ export default class ObjectModel {
 	}
 
 	static linkNodes(data) {
-		data.nodes.forEach((srcNodeId) => {
-			data.targetNodes.forEach((trgNodeId) => {
-				this.linkNodesById(srcNodeId, trgNodeId, data.linkType);
+		data.nodes.forEach((srcInfo) => {
+			data.targetNodes.forEach((trgInfo) => {
+				this.linkNodesById(srcInfo, trgInfo, data.linkType);
 			});
 		});
 	}
 
-	static linkNodesById(srcNodeId, trgNodeId, linkType) {
-		if (ObjectModel.connectionIsAllowed(srcNodeId, trgNodeId)) {
+	static linkNodesById(srcInfo, trgInfo, linkType) {
+		if (ObjectModel.connectionIsAllowed(srcInfo, trgInfo)) {
 			const info = {};
 			info.id = getUUID();
 			info.linkType = linkType;
-			info.srcNodeId = srcNodeId;
-			info.trgNodeId = trgNodeId;
+			info.srcNodeId = srcInfo.id;
+			info.srcNodePortId = srcInfo.portId;
+			info.trgNodeId = trgInfo.id;
+			info.trgNodePortId = trgInfo.portId;
 			store.dispatch({ type: "ADD_LINK", data: info });
 		}
 		if (ObjectModel.fixedLayout !== NONE) {
@@ -656,17 +662,17 @@ export default class ObjectModel {
 		});
 	}
 
-	static connectionIsAllowed(srcNodeId, trgNodeId) {
-		if (srcNodeId === trgNodeId) {
+	static connectionIsAllowed(srcNodeInfo, trgNodeInfo) {
+		if (srcNodeInfo.id === trgNodeInfo.id) {
 			return false;
 		}
 
 		const diagramLinks = ObjectModel.getCanvas().diagram.links;
 
-		const srcNode = ObjectModel.getNode(srcNodeId);
-		const trgNode = ObjectModel.getNode(trgNodeId);
+		const srcNode = ObjectModel.getNode(srcNodeInfo.id);
+		const trgNode = ObjectModel.getNode(trgNodeInfo.id);
 
-		if (this.linkAlreadyExists(srcNodeId, trgNodeId, diagramLinks)) {
+		if (this.linkAlreadyExists(srcNodeInfo, trgNodeInfo, diagramLinks)) {
 			return false;
 		}
 
@@ -677,10 +683,10 @@ export default class ObjectModel {
 			// i.e. don't count for links from/to comments.
 			if (this.isDataNode(link.source) &&
 			this.isDataNode(link.target)) {
-				if (link.source === srcNodeId) {
+				if (link.source === srcNodeInfo.id) {
 					srcCount++;
 				}
-				if (link.target === trgNodeId) {
+				if (link.target === trgNodeInfo.id) {
 					trgCount++;
 				}
 			}
@@ -701,12 +707,14 @@ export default class ObjectModel {
 		return false;
 	}
 
-	static linkAlreadyExists(srcNodeId, trgNodeId, diagramLinks) {
+	static linkAlreadyExists(srcNodeInfo, trgNodeInfo, diagramLinks) {
 		let exists = false;
 
 		diagramLinks.forEach((link) => {
-			if (link.source === srcNodeId &&
-					link.target === trgNodeId) {
+			if (link.source === srcNodeInfo.id &&
+					(link.sourcePort && link.sourcePort === srcNodeInfo.portId) &&
+					link.target === trgNodeInfo.id &&
+					(link.targetPort && link.targetPort === trgNodeInfo.portId)) {
 				exists = true;
 			}
 		});
