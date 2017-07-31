@@ -1,6 +1,6 @@
 {
   "paramDef": {
-    "currentParameters": {
+    "current_parameters": {
       "annotation": "",
       "use_custom_name": true,
       "custom_name": "",
@@ -46,21 +46,21 @@
       "description": {
         "resource_key": "sort.desc"
       },
-      "editorSize": "large",
+      "editor_size": "large",
       "parameter_info": [
         {
-          "name": "keys",
+          "parameter_ref": "keys",
           "label": {
             "default": "Sort by"
           }
         }
       ],
-      "structure_info": [
+      "complex_type_info": [
         {
-          "name": "SortEntry",
-          "moveableRows": true,
+          "complex_type_ref": "SortEntry",
+          "moveable_rows": true,
           "key_definition": {
-            "name": "field",
+            "parameter_ref": "field",
             "width": 28,
             "label": {
               "resource_key": "SortEntry.field.label"
@@ -68,14 +68,14 @@
           },
           "parameters": [
             {
-              "name": "sort_order",
+              "parameter_ref": "sort_order",
               "width": 16,
               "resource_key": "SortEntry.sort_order",
               "label": {
                 "resource_key": "SortEntry.sort_order.label"
               },
               "control": "toggletext",
-              "valueIcons": [
+              "value_icons": [
                 "/images/up-triangle.svg",
                 "/images/down-triangle.svg"
               ]
@@ -85,18 +85,18 @@
       ],
       "group_info": [
         {
-          "name": "basic-settings",
+          "id": "basic-settings",
           "label": {
             "default": "Settings"
           },
           "type": "columnSelection",
-          "parameters": [
+          "parameter_refs": [
             "keys"
           ]
         }
       ]
     },
-    "datasetMetadata": {
+    "dataset_metadata": {
       "fields": [
         {
           "name": "Age",

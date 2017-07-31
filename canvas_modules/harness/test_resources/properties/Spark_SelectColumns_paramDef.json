@@ -1,5 +1,5 @@
 {
-  "currentParameters": {
+  "current_parameters": {
     "mode": "Include",
     "selected_fields": []
   },
@@ -25,7 +25,7 @@
     "icon": "./select.svg",
     "parameter_info": [
       {
-        "name": "mode",
+        "parameter_ref": "mode",
         "label": {
           "default": "Mode"
         },
@@ -35,7 +35,7 @@
         "orientation": "horizontal"
       },
       {
-        "name": "selected_fields",
+        "parameter_ref": "selected_fields",
         "label": {
           "default": "Columns"
         },
@@ -46,25 +46,25 @@
     ],
     "group_info": [
       {
-        "name": "basic-settings",
+        "id": "basic-settings",
         "label": {
           "default": "Settings"
         },
         "type": "panels",
         "group_info": [
           {
-            "name": "other-settings",
-            "parameters": [
+            "id": "other-settings",
+            "parameter_refs": [
               "mode"
             ]
           },
           {
-            "name": "fields",
+            "id": "fields",
             "type": "columnSelection",
             "label": {
               "default": "Columns"
             },
-            "parameters": [
+            "parameter_refs": [
               "selected_fields"
             ]
           }
@@ -76,7 +76,7 @@
         "validation": {
           "fail_message": {
             "type": "error",
-            "focusParam": "selected_fields",
+            "focus_parameter_ref": "selected_fields",
             "message": {
               "resource_key": "selected_fields_not_empty"
             }
@@ -85,7 +85,7 @@
             "or": [
              {
                "condition": {
-                 "param": "mode",
+                 "parameter_ref": "mode",
                  "op": "equals",
                  "value": "Discard"
                }
@@ -94,14 +94,14 @@
                "and": [
                  {
                    "condition": {
-                     "param": "mode",
+                     "parameter_ref": "mode",
                      "op": "equals",
                      "value": "Include"
                    }
                  },
                  {
                    "condition": {
-                     "param": "selected_fields",
+                     "parameter_ref": "selected_fields",
                      "op": "isNotEmpty"
                    }
                  }
@@ -113,7 +113,7 @@
       }
     ]
   },
-  "datasetMetadata": {
+  "dataset_metadata": {
     "fields": [
       {
         "name": "Age",

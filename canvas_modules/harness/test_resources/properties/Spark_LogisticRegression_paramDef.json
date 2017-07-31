@@ -1,5 +1,5 @@
 {
-  "currentParameters": {
+  "current_parameters": {
     "targetField": [],
     "inputFieldList": [],
     "elasticNetParam": 0,
@@ -72,7 +72,7 @@
     },
     "parameter_info": [
       {
-        "name": "targetField",
+        "parameter_ref": "targetField",
         "label": {
           "default": "Target column"
         },
@@ -81,7 +81,7 @@
         }
       },
       {
-        "name": "inputFieldList",
+        "parameter_ref": "inputFieldList",
         "label": {
           "default": "Input columns"
         },
@@ -90,7 +90,7 @@
         }
       },
       {
-        "name": "elasticNetParam",
+        "parameter_ref": "elasticNetParam",
         "label": {
           "default": "Elastic net parameter"
         },
@@ -99,7 +99,7 @@
         }
       },
       {
-        "name": "fitIntercept",
+        "parameter_ref": "fitIntercept",
         "label": {
           "default": "Fit intercept"
         },
@@ -108,7 +108,7 @@
         }
       },
       {
-        "name": "maxIter",
+        "parameter_ref": "maxIter",
         "label": {
           "default": "Maximum iterations for convergence"
         },
@@ -117,7 +117,7 @@
         }
       },
       {
-        "name": "regParam",
+        "parameter_ref": "regParam",
         "label": {
           "default": "Regularization parameter"
         },
@@ -126,7 +126,7 @@
         }
       },
       {
-        "name": "standardization",
+        "parameter_ref": "standardization",
         "label": {
           "default": "Standardization"
         },
@@ -135,7 +135,7 @@
         }
       },
       {
-        "name": "threshold",
+        "parameter_ref": "threshold",
         "label": {
           "default": "Threshold"
         },
@@ -144,7 +144,7 @@
         }
       },
       {
-        "name": "tol",
+        "parameter_ref": "tol",
         "label": {
           "default": "Tolerance"
         },
@@ -155,22 +155,22 @@
     ],
     "group_info": [
       {
-        "name": "fields",
+        "id": "fields",
         "type": "fieldSelection",
         "label": {
           "default": "Fields"
         },
-        "parameters": [
+        "parameter_refs": [
           "targetField",
           "inputFieldList"
         ]
       },
       {
-        "name": "advancedParams",
+        "id": "advancedParams",
         "label": {
           "default": "Advanced Parameters"
         },
-        "parameters": [
+        "parameter_refs": [
           "elasticNetParam",
           "fitIntercept",
           "maxIter",
@@ -186,14 +186,14 @@
         "validation": {
           "fail_message": {
             "type": "error",
-            "focusParam": "inputFieldList",
+            "focus_parameter_ref": "inputFieldList",
             "message": {
               "resource_key": "input_field_list_not_empty"
             }
           },
           "evaluate": {
             "condition": {
-              "param": "inputFieldList",
+              "parameter_ref": "inputFieldList",
               "op": "isNotEmpty"
             }
           }
@@ -203,14 +203,14 @@
         "validation": {
           "fail_message": {
             "type": "error",
-            "focusParam": "targetField",
+            "focus_parameter_ref": "targetField",
             "message": {
               "resource_key": "target_field_not_empty"
             }
           },
           "evaluate": {
             "condition": {
-              "param": "targetField",
+              "parameter_ref": "targetField",
               "op": "isNotEmpty"
             }
           }
@@ -220,7 +220,7 @@
         "validation": {
           "fail_message": {
             "type": "error",
-            "focusParam": "elasticNetParam",
+            "focus_parameter_ref": "elasticNetParam",
             "message": {
               "resource_key": "elastic_net_param_not_valid"
             }
@@ -231,14 +231,14 @@
                 "or": [
                   {
                     "condition": {
-                      "param": "elasticNetParam",
+                      "parameter_ref": "elasticNetParam",
                       "op": "greaterThan",
                       "value": 0
                     }
                   },
                   {
                     "condition": {
-                      "param": "elasticNetParam",
+                      "parameter_ref": "elasticNetParam",
                       "op": "equals",
                       "value": 0
                     }
@@ -249,14 +249,14 @@
                 "or": [
                   {
                     "condition": {
-                      "param": "elasticNetParam",
+                      "parameter_ref": "elasticNetParam",
                       "op": "lessThan",
                       "value": 1
                     }
                   },
                   {
                     "condition": {
-                      "param": "elasticNetParam",
+                      "parameter_ref": "elasticNetParam",
                       "op": "equals",
                       "value": 1
                     }
@@ -271,7 +271,7 @@
         "validation": {
           "fail_message": {
             "type": "error",
-            "focusParam": "maxIter",
+            "focus_parameter_ref": "maxIter",
             "message": {
               "resource_key": "max_iter_not_valid"
             }
@@ -280,14 +280,14 @@
             "or": [
               {
                 "condition": {
-                  "param": "maxIter",
+                  "parameter_ref": "maxIter",
                   "op": "greaterThan",
                   "value": 0
                 }
               },
               {
                 "condition": {
-                  "param": "maxIter",
+                  "parameter_ref": "maxIter",
                   "op": "equals",
                   "value": 0
                 }
@@ -300,7 +300,7 @@
         "validation": {
           "fail_message": {
             "type": "error",
-            "focusParam": "regParam",
+            "focus_parameter_ref": "regParam",
             "message": {
               "resource_key": "reg_param_not_valid"
             }
@@ -309,14 +309,14 @@
             "or": [
               {
                 "condition": {
-                  "param": "regParam",
+                  "parameter_ref": "regParam",
                   "op": "greaterThan",
                   "value": 0
                 }
               },
               {
                 "condition": {
-                  "param": "regParam",
+                  "parameter_ref": "regParam",
                   "op": "equals",
                   "value": 0
                 }
@@ -329,7 +329,7 @@
         "validation": {
           "fail_message": {
             "type": "error",
-            "focusParam": "threshold",
+            "focus_parameter_ref": "threshold",
             "message": {
               "resource_key": "threshold_param_not_valid"
             }
@@ -340,14 +340,14 @@
                 "or": [
                   {
                     "condition": {
-                      "param": "threshold",
+                      "parameter_ref": "threshold",
                       "op": "greaterThan",
                       "value": 0
                     }
                   },
                   {
                     "condition": {
-                      "param": "threshold",
+                      "parameter_ref": "threshold",
                       "op": "equals",
                       "value": 0
                     }
@@ -358,14 +358,14 @@
                 "or": [
                   {
                     "condition": {
-                      "param": "threshold",
+                      "parameter_ref": "threshold",
                       "op": "lessThan",
                       "value": 1
                     }
                   },
                   {
                     "condition": {
-                      "param": "threshold",
+                      "parameter_ref": "threshold",
                       "op": "equals",
                       "value": 1
                     }
@@ -378,7 +378,7 @@
       }
     ]
   },
-  "datasetMetadata": {
+  "dataset_metadata": {
     "fields": [
       {
         "name": "Age",

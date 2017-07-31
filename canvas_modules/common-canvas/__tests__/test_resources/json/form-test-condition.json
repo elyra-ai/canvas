@@ -17,11 +17,11 @@
       "id": "cond_test",
       "group_info": [
         {
-          "name": "basic-settings",
+          "id": "basic-settings",
           "label": {
             "default": "Settings"
           },
-          "parameters": [
+          "parameter_refs": [
             "int_param",
             "exp_param"
           ]
@@ -36,11 +36,11 @@
                 "default": "Expression cannot be empty: Default",
                 "resource_key": "exp_param_not_empty"
               },
-              "focusParam": "exp_param"
+              "focus_parameter_ref": "exp_param"
             },
             "evaluate": {
               "condition": {
-                "param": "exp_param",
+                "parameter_ref": "exp_param",
                 "op": "isNotEmpty"
               }
             }
@@ -53,11 +53,11 @@
               "message": {
                 "default": "int_param value must greaterThan 1: default"
               },
-              "focusParam": "int_param"
+              "focus_parameter_ref": "int_param"
             },
             "evaluate": {
               "condition": {
-                "param": "int_param",
+                "parameter_ref": "int_param",
                 "op": "greaterThan",
                 "value": 1
               }
@@ -152,11 +152,11 @@
                 "default": "Expression cannot be empty: Resource",
                 "resource_key": "exp_param_not_empty"
               },
-              "focusParam": "exp_param"
+              "focus_parameter_ref": "exp_param"
             },
             "evaluate": {
               "condition": {
-                "param": "exp_param",
+                "parameter_ref": "exp_param",
                 "op": "isNotEmpty"
               }
             }
@@ -169,11 +169,11 @@
               "message": {
                 "default": "int_param value must greaterThan 1: default"
               },
-              "focusParam": "int_param"
+              "focus_parameter_ref": "int_param"
             },
             "evaluate": {
               "condition": {
-                "param": "int_param",
+                "parameter_ref": "int_param",
                 "op": "greaterThan",
                 "value": 1
               }

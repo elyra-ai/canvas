@@ -1,11 +1,11 @@
 {
-  "currentParameters": {
+  "current_parameters": {
     "columnSelectInputFieldList": [
       "Age",
       "BP"
     ],
-		"oneofcolumnsList": [],
-		"someofcolumnsList": [],
+    "oneofcolumnsList": [],
+    "someofcolumnsList": [],
     "numberfieldCheckpointInterval": -1,
     "numberfieldImpurity": "entropy",
     "numberfieldMaxBins": 24,
@@ -13,33 +13,33 @@
     "numberfieldMinInfoGain": 0,
     "numberfieldMinInstancesPerNode": 2,
     "numberfieldSeed": 12345,
-		"checkboxTypes": [],
-		"oneofselectAnimals": [],
-		"oneofselectPets": "turtle",
-		"someofselectNumbers": [],
-		"checkboxSingle": "",
-		"checkboxEnable": "",
-		"radiosetColor": "blue",
+    "checkboxTypes": [],
+    "oneofselectAnimals": [],
+    "oneofselectPets": "turtle",
+    "someofselectNumbers": [],
+    "checkboxSingle": "",
+    "checkboxEnable": "",
+    "radiosetColor": "blue",
     "apples": 100,
     "lemons": 100,
     "berries": 50,
-		"passwordField": "",
-		"textfieldName": "",
-		"textareaDescription": "",
-		"expressionBox": "",
-		"columnSelectSharedWithInput": [
-			"Sex"
-		],
-		"structuretableSortOrder": [
-			"[\"Cholesterol\",\"Ascending\"]"
-		],
-		"structuretableRenameFields": [
-			"[\"Age\", \"Age\"]",
+    "passwordField": "",
+    "textfieldName": "",
+    "textareaDescription": "",
+    "expressionBox": "",
+    "columnSelectSharedWithInput": [
+      "Sex"
+    ],
+    "structuretableSortOrder": [
+      "[\"Cholesterol\",\"Ascending\"]"
+    ],
+    "structuretableRenameFields": [
+      "[\"Age\", \"Age\"]",
       "[\"BP\", \"BP-1\"]"
-		],
-		"structurelisteditorTableInput": [
-			"[\"Age\",\"Integer\"]"
-		]
+    ],
+    "structurelisteditorTableInput": [
+      "[\"Age\",\"Integer\"]"
+    ]
   },
   "parameters": [
     {
@@ -48,15 +48,15 @@
       "default": [],
       "role": "column"
     },
-		{
+    {
       "name": "oneofcolumnsList",
-			"type": "string",
+      "type": "string",
       "default": "",
       "role": "column"
     },
-		{
+    {
       "name": "someofcolumnsList",
-			"type": "array[string]",
+      "type": "array[string]",
       "default": "",
       "role": "column"
     },
@@ -98,78 +98,78 @@
       "type": "integer",
       "default": 12345
     },
-		{
+    {
       "name": "checkboxTypes",
-			"type": "array[string]",
-			"enum": [
-				"integer",
-				"string",
-				"boolean"
-			],
+      "type": "array[string]",
+      "enum": [
+        "integer",
+        "string",
+        "boolean"
+      ],
       "default": ""
     },
-		{
-			"name": "oneofselectAnimals",
-			"enum": [
-				"lion",
-				"bear",
-				"wolf",
-				"horse",
-				"tiger",
-				"monkey"
-			],
-			"default": "bear"
-		},
-		{
-			"name": "oneofselectPets",
-			"enum": [
-				"dog",
-				"cat",
-				"fish",
-				"hamster",
-				"turtle"
-			],
-			"default": "turtle"
-		},
-		{
+    {
+      "name": "oneofselectAnimals",
+      "enum": [
+        "lion",
+        "bear",
+        "wolf",
+        "horse",
+        "tiger",
+        "monkey"
+      ],
+      "default": "bear"
+    },
+    {
+      "name": "oneofselectPets",
+      "enum": [
+        "dog",
+        "cat",
+        "fish",
+        "hamster",
+        "turtle"
+      ],
+      "default": "turtle"
+    },
+    {
       "name": "someofselectNumbers",
-			"type": "array[string]",
-			"enum": [
-				"One",
-				"Two",
-				"Three",
-				"Four",
-				"Five",
-				"Six",
-				"Seven",
-				"Eight",
-				"Nine",
-				"Ten"
-			],
+      "type": "array[string]",
+      "enum": [
+        "One",
+        "Two",
+        "Three",
+        "Four",
+        "Five",
+        "Six",
+        "Seven",
+        "Eight",
+        "Nine",
+        "Ten"
+      ],
       "default": "Three"
     },
-		{
-			"name": "checkboxSingle",
-			"type": "boolean",
-			"enum": [
-				"Single Checkbox"
-			],
-			"default": ""
-		},
-		{
-			"name": "checkboxEnable",
-			"type": "boolean",
-			"enum": [
-				"Enable"
-			],
-			"default": ""
-		},
-		{
+    {
+      "name": "checkboxSingle",
+      "type": "boolean",
+      "enum": [
+        "Single Checkbox"
+      ],
+      "default": ""
+    },
+    {
+      "name": "checkboxEnable",
+      "type": "boolean",
+      "enum": [
+        "Enable"
+      ],
+      "default": ""
+    },
+    {
       "name": "radiosetColor",
-			"enum": [
+      "enum": [
         "red",
         "yellow",
-				"blue"
+        "blue"
       ],
       "default": "red"
     },
@@ -188,53 +188,53 @@
       "type": "double",
       "default": 50
     },
-		{
-			"name": "passwordField",
-			"type": "password",
+    {
+      "name": "passwordField",
+      "type": "password",
       "default": "",
       "role": "new_column"
-		},
-		{
+    },
+    {
       "name": "textfieldName",
-			"type": "string",
+      "type": "string",
       "default": "",
       "role": "new_column"
     },
-		{
+    {
       "name": "textareaDescription",
-			"type": "array[string]",
+      "type": "array[string]",
       "default": "",
       "role": "new_column"
     },
-		{
+    {
       "name": "expressionBox",
-			"type": "string",
+      "type": "string",
       "default": "",
       "role": "expression"
     },
-		{
-			"name": "columnSelectSharedWithInput",
-			"type": "array[string]",
-			"default": [],
-			"role": "column"
-		},
-		{
-			"name": "structuretableSortOrder",
+    {
+      "name": "columnSelectSharedWithInput",
+      "type": "array[string]",
+      "default": [],
+      "role": "column"
+    },
+    {
+      "name": "structuretableSortOrder",
       "type": "array[structuretableSortOrder]"
-		},
-		{
-			"name": "structuretableRenameFields",
+    },
+    {
+      "name": "structuretableRenameFields",
       "type": "array[structuretableRenameFields]",
-			"role": "column",
-			"default": []
-		},
-		{
-			"name": "structurelisteditorTableInput",
+      "role": "column",
+      "default": []
+    },
+    {
+      "name": "structurelisteditorTableInput",
       "type": "array[structurelisteditorTableInput]"
-		}
+    }
   ],
-	"complex_types": [
-		{
+  "complex_types": [
+    {
       "name": "structuretableSortOrder",
       "key_definition": {
         "name": "field",
@@ -253,7 +253,7 @@
         }
       ]
     },
-		{
+    {
       "name": "structuretableRenameFields",
       "key_definition": {
         "name": "field",
@@ -268,7 +268,7 @@
         }
       ]
     },
-		{
+    {
       "name": "structurelisteditorTableInput",
       "key_definition": {
         "name": "field",
@@ -280,18 +280,18 @@
         {
           "name": "Storage",
           "enum": [
-						"String",
-						"Integer",
-						"Real",
-						"Time",
-						"Date",
-						"Timestamp"
+            "String",
+            "Integer",
+            "Real",
+            "Time",
+            "Date",
+            "Timestamp"
           ],
           "default": "String"
         }
       ]
     }
-	],
+  ],
   "uihints": {
     "id": "Conditions.test",
     "icon": "images/modelbuildspark.svg",
@@ -303,7 +303,7 @@
     },
     "parameter_info": [
       {
-        "name": "columnSelectInputFieldList",
+        "parameter_ref": "columnSelectInputFieldList",
         "label": {
           "default": "Column Select Input"
         },
@@ -311,26 +311,26 @@
           "default": "Select one or more input columns"
         }
       },
-			{
-				"name": "oneofcolumnsList",
-				"label": {
-          "default": "One of Columns list"
-        },
-        "description": {
-          "default": "One of Columns list"
-        }
-			},
-			{
-				"name": "someofcolumnsList",
-				"label": {
-          "default": "Some of Columns list"
-        },
-        "description": {
-          "default": "Some of Columns list"
-        }
-			},
       {
-        "name": "numberfieldCheckpointInterval",
+        "parameter_ref": "oneofcolumnsList",
+        "label": {
+          "default": "One of Columns list"
+        },
+        "description": {
+          "default": "One of Columns list"
+        }
+      },
+      {
+        "parameter_ref": "someofcolumnsList",
+        "label": {
+          "default": "Some of Columns list"
+        },
+        "description": {
+          "default": "Some of Columns list"
+        }
+      },
+      {
+        "parameter_ref": "numberfieldCheckpointInterval",
         "label": {
           "default": "Checkpoint Interval"
         },
@@ -339,17 +339,17 @@
         }
       },
       {
-        "name": "numberfieldImpurity",
+        "parameter_ref": "numberfieldImpurity",
         "label": {
           "default": "Impurity"
         },
         "description": {
           "default": "Criterion used for information gain calculation (case-insensitive). Supported: \"entropy\" and \"gini\""
         },
-				"orientation": "vertical"
+        "orientation": "vertical"
       },
       {
-        "name": "numberfieldMaxBins",
+        "parameter_ref": "numberfieldMaxBins",
         "label": {
           "default": "Maximum number of bins"
         },
@@ -358,7 +358,7 @@
         }
       },
       {
-        "name": "numberfieldMaxDepth",
+        "parameter_ref": "numberfieldMaxDepth",
         "label": {
           "default": "Maximum depth of the tree"
         },
@@ -367,7 +367,7 @@
         }
       },
       {
-        "name": "numberfieldMinInfoGain",
+        "parameter_ref": "numberfieldMinInfoGain",
         "label": {
           "default": "Minimum information gain"
         },
@@ -376,7 +376,7 @@
         }
       },
       {
-        "name": "numberfieldMinInstancesPerNode",
+        "parameter_ref": "numberfieldMinInstancesPerNode",
         "label": {
           "default": "Minimum instances per node"
         },
@@ -385,7 +385,7 @@
         }
       },
       {
-        "name": "numberfieldSeed",
+        "parameter_ref": "numberfieldSeed",
         "label": {
           "default": "Seed"
         },
@@ -393,18 +393,18 @@
           "default": "Random seed"
         }
       },
-			{
-        "name": "radiosetColor",
+      {
+        "parameter_ref": "radiosetColor",
         "label": {
           "default": "Color"
         },
         "description": {
           "default": "Pick a color"
         },
-				"orientation": "horizontal"
+        "orientation": "horizontal"
       },
-			{
-        "name": "apples",
+      {
+        "parameter_ref": "apples",
         "label": {
           "default": "Apples"
         },
@@ -413,7 +413,7 @@
         }
       },
       {
-        "name": "lemons",
+        "parameter_ref": "lemons",
         "label": {
           "default": "Lemons"
         },
@@ -422,7 +422,7 @@
         }
       },
       {
-        "name": "berries",
+        "parameter_ref": "berries",
         "label": {
           "default": "Berries"
         },
@@ -430,35 +430,35 @@
           "default": "Number of Berries"
         }
       },
-			{
-				"name": "checkboxSingle",
-				"label": {
-					"default": "Single Checkbox"
-				},
-				"description": {
-					"default": "Single Checkbox"
-				}
-			},
-			{
-				"name": "checkboxEnable",
-				"label": {
-					"default": "Enable"
-				},
-				"description": {
-					"default": "Enable check"
-				}
-			},
-			{
-				"name": "checkboxType",
-				"label": {
-					"default": "Data Types"
-				},
-				"description": {
-					"default": "Choose your Data Types"
-				}
-			},
-			{
-        "name": "someofselectNumbers",
+      {
+        "parameter_ref": "checkboxSingle",
+        "label": {
+          "default": "Single Checkbox"
+        },
+        "description": {
+          "default": "Single Checkbox"
+        }
+      },
+      {
+        "parameter_ref": "checkboxEnable",
+        "label": {
+          "default": "Enable"
+        },
+        "description": {
+          "default": "Enable check"
+        }
+      },
+      {
+        "parameter_ref": "checkboxType",
+        "label": {
+          "default": "Data Types"
+        },
+        "description": {
+          "default": "Choose your Data Types"
+        }
+      },
+      {
+        "parameter_ref": "someofselectNumbers",
         "label": {
           "default": "Number"
         },
@@ -466,8 +466,8 @@
           "default": "Choose your numbers"
         }
       },
-			{
-        "name": "oneofselectAnimals",
+      {
+        "parameter_ref": "oneofselectAnimals",
         "label": {
           "default": "Animals"
         },
@@ -475,8 +475,8 @@
           "default": "Pick an Animal"
         }
       },
-			{
-        "name": "oneofselectPets",
+      {
+        "parameter_ref": "oneofselectPets",
         "label": {
           "default": "Pets"
         },
@@ -484,17 +484,17 @@
           "default": "Pick a pet"
         }
       },
-			{
-				"name": "passwordField",
-				"label": {
+      {
+        "parameter_ref": "passwordField",
+        "label": {
           "default": "Password"
         },
         "description": {
           "default": "Enter your password"
         }
-			},
-			{
-        "name": "textfieldName",
+      },
+      {
+        "parameter_ref": "textfieldName",
         "label": {
           "default": "Name"
         },
@@ -502,8 +502,8 @@
           "default": "Enter your name"
         }
       },
-			{
-        "name": "textareaDescription",
+      {
+        "parameter_ref": "textareaDescription",
         "label": {
           "default": "Description"
         },
@@ -511,8 +511,8 @@
           "default": "Enter a description"
         }
       },
-			{
-        "name": "expressionBox",
+      {
+        "parameter_ref": "expressionBox",
         "label": {
           "default": "Expression"
         },
@@ -520,41 +520,41 @@
           "default": "Expression box"
         }
       },
-			{
-				"name": "columnSelectSharedWithInput",
-				"label": {
-					"default": "Column Select Shared with Sort",
-					"resource_key": "columnSelectSharedWithInput.label"
-				},
-				"description": {
-					"default": "Shared input list with below control"
-				}
-			},
-			{
-				"name": "structuretableSortOrder",
+      {
+        "parameter_ref": "columnSelectSharedWithInput",
+        "label": {
+          "default": "Column Select Shared with Sort",
+          "resource_key": "columnSelectSharedWithInput.label"
+        },
+        "description": {
+          "default": "Shared input list with below control"
+        }
+      },
+      {
+        "parameter_ref": "structuretableSortOrder",
         "label": {
           "default": "Sort by"
         }
-			},
-			{
-				"name": "structuretableRenameFields",
-				"label": {
-					"default": "Rename Field"
-				}
-			},
-			{
-				"name": "structurelisteditorTableInput",
-				"label": {
+      },
+      {
+        "parameter_ref": "structuretableRenameFields",
+        "label": {
+          "default": "Rename Field"
+        }
+      },
+      {
+        "parameter_ref": "structurelisteditorTableInput",
+        "label": {
           "default": "Table Input"
         }
-			}
+      }
     ],
-		"structure_info": [
+    "complex_type_info": [
       {
-        "name": "structuretableSortOrder",
-        "moveableRows": true,
+        "complex_type_ref": "structuretableSortOrder",
+        "moveable_rows": true,
         "key_definition": {
-          "name": "field",
+          "parameter_refs": "field",
           "width": 28,
           "label": {
             "resource_key": "structuretableSortOrder.field.label"
@@ -562,44 +562,44 @@
         },
         "parameters": [
           {
-            "name": "structuretable_sort_order",
+            "parameter_ref": "structuretable_sort_order",
             "width": 16,
             "resource_key": "structuretableSortOrder.sort_order",
             "label": {
               "resource_key": "structuretableSortOrder.sort_order.label"
             },
             "control": "toggletext",
-            "valueIcons": [
+            "value_icons": [
               "/images/up-triangle.svg",
               "/images/down-triangle.svg"
             ]
           }
         ]
       },
-			{
-        "name": "structuretableRenameFields",
+      {
+        "complex_type_ref": "structuretableRenameFields",
         "key_definition": {
-          "name": "field",
+          "parameter_ref": "field",
           "label": {
-						"resource_key": "structuretableRenameFields.field.label"
-					},
+            "resource_key": "structuretableRenameFields.field.label"
+          },
           "columns": 26
         },
         "parameters": [
           {
-            "name": "new_name",
+            "parameter_ref": "new_name",
             "label": {
-							"resource_key": "structuretableRenameFields.new_name.label"
-						},
+              "resource_key": "structuretableRenameFields.new_name.label"
+            },
             "columns": 26,
-		        "editStyle": "inline"
+            "edit_style": "inline"
           }
         ]
       },
-			{
-				"name": "structurelisteditorTableInput",
-				"key_definition": {
-          "name": "field",
+      {
+        "complex_type_ref": "structurelisteditorTableInput",
+        "key_definition": {
+          "parameter_ref": "field",
           "width": 10,
           "label": {
             "resource_key": "structurelisteditorTableInput.field.label"
@@ -607,7 +607,7 @@
         },
         "parameters": [
           {
-            "name": "structurelisteditorTableInput",
+            "parameter_ref": "structurelisteditorTableInput",
             "width": 30,
             "resource_key": "structurelisteditorTableInput.sort_order",
             "label": {
@@ -616,668 +616,664 @@
             "control": "textfield"
           }
         ]
-			}
+      }
     ],
     "group_info": [
-			{
-				"name": "Numberfield",
-				"label": {
-					"default": "Numbers"
-				},
-				"parameters": [
-					"numberfieldCheckpointInterval",
-					"numberfieldImpurity",
-					"numberfieldMaxBins",
-					"numberfieldMaxDepth",
-					"numberfieldMinInfoGain",
-					"numberfieldMinInstancesPerNode",
-					"numberfieldSeed"
-				]
-			},
       {
-        "name": "Columns",
+        "id": "Numberfield",
+        "label": {
+          "default": "Numbers"
+        },
+        "parameter_refs": [
+          "numberfieldCheckpointInterval",
+          "numberfieldImpurity",
+          "numberfieldMaxBins",
+          "numberfieldMaxDepth",
+          "numberfieldMinInfoGain",
+          "numberfieldMinInstancesPerNode",
+          "numberfieldSeed"
+        ]
+      },
+      {
+        "id": "Columns",
         "type": "panels",
         "group_info": [
           {
-            "name": "columnAllocator",
-						"type": "columnSelection",
+            "id": "columnAllocator",
+            "type": "columnSelection",
             "label": {
               "default": "Columns"
             },
-            "parameters": [
-							"columnSelectSharedWithInput",
+            "parameter_refs": [
+              "columnSelectSharedWithInput",
               "columnSelectInputFieldList"
             ]
           },
-					{
-						"name": "List",
-						"label": {
-							"default": "List"
-						},
-						"parameters": [
-							"oneofcolumnsList",
-							"someofcolumnsList"
-						]
-					}
+          {
+            "id": "List",
+            "label": {
+              "default": "List"
+            },
+            "parameter_refs": [
+              "oneofcolumnsList",
+              "someofcolumnsList"
+            ]
+          }
         ]
       },
-			{
-				"name": "Selects",
-				"label": {
-					"default": "Selects"
-				},
-				"parameters": [
-					"checkboxTypes",
-					"oneofselectAnimals",
-					"oneofselectPets",
-					"someofselectNumbers",
-					"checkboxSingle",
-					"checkboxEnable",
-					"radiosetColor"
-				],
+      {
+        "id": "Selects",
+        "label": {
+          "default": "Selects"
+        },
+        "parameter_refs": [
+          "checkboxTypes",
+          "oneofselectAnimals",
+          "oneofselectPets",
+          "someofselectNumbers",
+          "checkboxSingle",
+          "checkboxEnable",
+          "radiosetColor"
+        ],
         "group_info": [
           {
-            "name": "mode-settings",
+            "id": "mode-settings",
             "type": "panelSelector",
-            "depends_on": "radiosetColor",
+            "depends_on_ref": "radiosetColor",
             "group_info": [
               {
-                "name": "red",
-                "parameters": [
+                "id": "red",
+                "parameter_refs": [
                   "apples"
                 ]
               },
               {
-                "name": "yellow",
-                "parameters": [
+                "id": "yellow",
+                "parameter_refs": [
                   "lemons"
                 ]
               },
               {
-                "name": "blue",
-                "parameters": [
+                "id": "blue",
+                "parameter_refs": [
                   "berries"
                 ]
               }
             ]
           }
         ]
-			},
-			{
-				"name": "Textfields",
-				"label": {
-					"default": "Textfields"
-				},
-				"parameters": [
-					"passwordField",
-					"textfieldName",
-					"textareaDescription",
-					"expressionBox"
-				]
-			},
-			{
-				"name": "Tables",
-				"type": "panels",
-				"group_info": [
-					{
-						"name": "structuretableSortOrder",
-						"type": "columnSelection",
-						"label": {
-							"default": "Columns"
-						},
-						"parameters": [
-							"structuretableSortOrder"
-						]
-					},
-					{
-						"name": "structuretableSortOrder",
-						"label": {
-							"default": "Tables"
-						},
-						"type": "columnSelection",
-						"parameters": [
-							"structuretableRenameFields",
-							"structurelisteditorTableInput"
-						]
-					},
-					{
-						"name": "List",
-						"label": {
-							"default": "List"
-						},
-						"parameters": [
-							"structurelisteditorTableInput"
-						]
-					}
-				]
-			}
+      },
+      {
+        "id": "Textfields",
+        "label": {
+          "default": "Textfields"
+        },
+        "parameter_refs": [
+          "passwordField",
+          "textfieldName",
+          "textareaDescription",
+          "expressionBox"
+        ]
+      },
+      {
+        "id": "Tables",
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "structuretableSortOrder",
+            "type": "columnSelection",
+            "label": {
+              "default": "Columns"
+            },
+            "parameter_refs": [
+              "structuretableSortOrder"
+            ]
+          },
+          {
+            "id": "structuretableRenameFields",
+            "label": {
+              "default": "Tables"
+            },
+            "type": "columnSelection",
+            "parameter_refs": [
+              "structuretableRenameFields",
+              "structurelisteditorTableInput"
+            ]
+          },
+          {
+            "id": "List",
+            "label": {
+              "default": "List"
+            },
+            "parameter_refs": [
+              "structurelisteditorTableInput"
+            ]
+          }
+        ]
+      }
     ],
     "conditions": [
-			{
+      {
         "validation": {
           "fail_message": {
             "type": "error",
-            "focusParam": "numberfieldCheckpointInterval",
+            "focus_parameter_ref": "numberfieldCheckpointInterval",
             "message": {
               "resource_key": "numberfield_checkpoint_interval_not_valid"
             }
           },
           "evaluate": {
-						"or": [
-	            {
-								"condition": {
-		              "param": "numberfieldCheckpointInterval",
-		              "op": "equals",
-		              "value": -1
-		            }
-							},
-							{
-								"condition": {
-		              "param": "numberfieldCheckpointInterval",
-		              "op": "greaterThan",
-		              "value": 0
-		            }
-							}
-						]
+            "or": [
+              {
+                "condition": {
+                  "parameter_ref": "numberfieldCheckpointInterval",
+                  "op": "equals",
+                  "value": -1
+                }
+              },
+              {
+                "condition": {
+                  "parameter_ref": "numberfieldCheckpointInterval",
+                  "op": "greaterThan",
+                  "value": 0
+                }
+              }
+            ]
           }
         }
       },
-			{
+      {
         "validation": {
           "fail_message": {
             "type": "error",
-            "focusParam": "numberfieldImpurity",
+            "focus_parameter_ref": "numberfieldImpurity",
             "message": {
               "resource_key": "numberfieldImpurity_invalid"
             }
           },
           "evaluate": {
-						"condition": {
-              "param": "numberfieldImpurity",
+            "condition": {
+              "parameter_ref": "numberfieldImpurity",
               "op": "notEquals",
               "value": "gini"
             }
           }
         }
       },
-			{
+      {
         "validation": {
           "fail_message": {
             "type": "error",
-            "focusParam": "numberfieldMaxBins",
+            "focus_parameter_ref": "numberfieldMaxBins",
             "message": {
               "resource_key": "numberfield_max_bins_not_valid"
             }
           },
           "evaluate": {
-						"or" : [
-	            {
-								"condition": {
-		              "param": "numberfieldMaxBins",
-		              "op": "greaterThan",
-		              "value": 1
-		            }
-							},
-							{
-								"condition": {
-		              "param": "numberfieldMaxDepth",
-		              "op": "greaterThan",
-		              "value": 0
-		            }
-							}
-						]
+            "or": [
+              {
+                "condition": {
+                  "parameter_ref": "numberfieldMaxBins",
+                  "op": "greaterThan",
+                  "value": 1
+                }
+              },
+              {
+                "condition": {
+                  "parameter_ref": "numberfieldMaxDepth",
+                  "op": "greaterThan",
+                  "value": 0
+                }
+              }
+            ]
           }
         }
       },
-			{
+      {
         "validation": {
           "fail_message": {
             "type": "warning",
-            "focusParam": "numberfieldMinInstancesPerNode",
+            "focus_parameter_ref": "numberfieldMinInstancesPerNode",
             "message": {
               "resource_key": "numberfield_min_instances_per_node_not_valid"
             }
           },
           "evaluate": {
             "condition": {
-              "param": "numberfieldMinInstancesPerNode",
+              "parameter_ref": "numberfieldMinInstancesPerNode",
               "op": "greaterThan",
               "value": 0
             }
           }
         }
       },
-			{
+      {
         "validation": {
           "fail_message": {
             "type": "error",
-            "focusParam": "numberfieldMinInfoGain",
+            "focus_parameter_ref": "numberfieldMinInfoGain",
             "message": {
               "resource_key": "numberfield_min_info_gain_not_valid"
             }
           },
           "evaluate": {
             "condition": {
-              "param": "numberfieldMinInfoGain",
+              "parameter_ref": "numberfieldMinInfoGain",
               "op": "greaterThan",
               "value": 0
             }
           }
         }
       },
-			{
+      {
         "validation": {
           "fail_message": {
             "type": "error",
-            "focusParam": "numberfieldSeed",
+            "focus_parameter_ref": "numberfieldSeed",
             "message": {
               "resource_key": "numberfield_seed_not_valid"
             }
           },
           "evaluate": {
             "condition": {
-              "param": "numberfieldSeed",
+              "parameter_ref": "numberfieldSeed",
               "op": "contains",
               "value": "123"
             }
           }
         }
       },
-
-			{
-				"validation": {
-					"fail_message": {
-						"type": "error",
-						"focusParam": "columnSelectInputFieldList",
-						"message": {
-							"resource_key": "column_select_input_field_list_not_empty"
-						}
-					},
-					"evaluate": {
-						"condition": {
-							"param": "columnSelectInputFieldList",
-							"op": "isNotEmpty"
-						}
-					}
-				}
-			},
-			{
-				"validation": {
-					"fail_message": {
-						"type": "error",
-						"focusParam": "oneofcolumnsList",
-						"message": {
-							"resource_key": "one_of_columns_list_not_empty"
-						}
-					},
-					"evaluate": {
-						"condition": {
-							"param": "oneofcolumnsList",
-							"op": "contains",
-							"value": "Sex"
-						}
-					}
-				}
-			},
-			{
-				"validation": {
-					"fail_message": {
-						"type": "warning",
-						"focusParam": "someofcolumnsList",
-						"message": {
-							"resource_key": "some_of_columns_list_not_empty"
-						}
-					},
-					"evaluate": {
-						"condition": {
-							"param": "someofcolumnsList",
-							"op": "isNotEmpty"
-						}
-					}
-				}
-			},
-
-			{
-				"validation": {
-					"fail_message": {
-						"type": "warning",
-						"message": {
-							"default": "No data types are selected",
-							"resource_key": "checkbox_types_not_empty"
-						},
-						"focusParam": "checkboxTypes"
-					},
-					"evaluate": {
-						"condition": {
-							"param": "checkboxTypes",
-							"op": "isNotEmpty"
-						}
-					}
-				}
-			},
-			{
-				"validation": {
-					"fail_message": {
-						"type": "warning",
-						"message": {
-							"default": "Warning: selected tiger",
-							"resource_key": "one_of_select_animals_not_empty"
-						},
-						"focusParam": "oneofselectAnimals"
-					},
-					"evaluate": {
-						"condition": {
-							"param": "oneofselectAnimals",
-							"op": "notContains",
-							"value": "tiger"
-						}
-					}
-				}
-			},
-			{
-				"validation": {
-					"fail_message": {
-						"type": "warning",
-						"message": {
-							"default": "Warning: selected three",
-							"resource_key": "some_of_select_animals_not_three"
-						},
-						"focusParam": "someofselectNumbers"
-					},
-					"evaluate": {
-						"condition": {
-							"param": "someofselectNumbers",
-							"op": "notContains",
-							"value": "three"
-						}
-					}
-				}
-			},
-			{
-				"validation": {
-					"fail_message": {
-						"type": "error",
-						"message": {
-							"default": "Checkbox single should be checked if a Data Type is selected",
-							"resource_key": "checkbox_single_not_empty"
-						},
-						"focusParam": "checkboxSingle"
-					},
-					"evaluate": {
-						"or" : [
-							{
-								"and": [
-									{
-										"condition": {
-											"param": "checkboxTypes",
-											"op": "isNotEmpty"
-										}
-									},
-									{
-										"condition": {
-											"param": "checkboxSingle",
-											"op": "checked"
-										}
-									}
-								]
-							},
-							{
-								"and": [
-									{
-										"condition": {
-											"param": "checkboxTypes",
-											"op": "isEmpty"
-										}
-									},
-									{
-										"condition": {
-											"param": "checkboxSingle",
-											"op": "notChecked"
-										}
-									}
-								]
-							}
-						]
-					}
-				}
-			},
-			{
-				"enabled": {
-					"paramNames": [
-						"radiosetColor"
-					],
-					"evaluate": {
-						"condition": {
-							"param": "checkboxEnable",
-							"op": "checked"
-						}
-					}
-				}
-			},
-			{
-				"validation": {
-					"fail_message": {
-						"type": "warning",
-						"message": {
-							"default": "Are you sure you want to choose yellow?",
-							"resource_key": "radiosetColor"
-						},
-						"focusParam": "radiosetColor"
-					},
-					"evaluate": {
-						"condition": {
-							"param": "radiosetColor",
-							"op": "notEquals",
-							"value": "yellow"
-						}
-					}
-				}
-			},
-			{
-				"visible": {
-					"paramNames": [
-						"oneofselectPets"
-					],
-					"evaluate": {
-						"condition": {
-							"param": "oneofselectAnimals",
-							"op": "notContains",
-							"value": "lion"
-						}
-					}
-				}
-			},
-
-			{
-				"visible": {
-					"paramNames": [
-						"textfieldName",
-						"textareaDescription",
-						"expressionBox"
-					],
-					"evaluate": {
-						"condition": {
-							"param": "passwordField",
-							"op": "contains",
-							"value": "password"
-						}
-					}
-				}
-			},
-			{
-				"validation": {
-					"fail_message": {
-						"type": "error",
-						"focusParam": "passwordField",
-						"message": {
-							"resource_key": "password_not_empty"
-						}
-					},
-					"evaluate": {
-						"condition": {
-							"param": "passwordField",
-							"op": "isNotEmpty"
-						}
-					}
-				}
-			},
-			{
-				"enabled": {
-					"paramNames": [
-						"expressionBox"
-					],
-					"evaluate": {
-						"condition": {
-							"param": "textfieldName",
-							"op": "isNotEmpty"
-						}
-					}
-				}
-			},
-			{
-				"validation": {
-					"fail_message": {
-						"type": "error",
-						"message": {
-							"default": "Name cannot contain /",
-							"resource_key": "textfield_name_not_valid_one"
-						},
-						"focusParam": "textfieldName"
-					},
-					"evaluate": {
-						"condition": {
-							"param": "textfieldName",
-							"op": "notContains",
-							"value": "/"
-						}
-					}
-				}
-			},
-			{
-				"validation": {
-					"fail_message": {
-						"type": "error",
-						"message": {
-							"default": "Name cannot contain double or single \"quotes\"",
-							"resource_key": "textfield_name_not_valid_two"
-						},
-						"focusParam": "textfieldName"
-					},
-					"evaluate": {
-						"and": [
-							{
-								"condition": {
-									"param": "textfieldName",
-									"op": "notContains",
-									"value": "\""
-								}
-							},
-							{
-								"condition": {
-									"param": "textfieldName",
-									"op": "notContains",
-									"value": "'"
-								}
-							}
-						]
-					}
-				}
-			},
-			{
-				"validation": {
-					"fail_message": {
-						"type": "warning",
-						"message": {
-							"default": "Description cannot contain /, double or single \"quotes\"",
-							"resource_key": "textarea_description_not_valid"
-						},
-						"focusParam": "textareaDescription"
-					},
-					"evaluate": {
-						"and": [
-							{
-								"condition": {
-									"param": "textareaDescription",
-									"op": "notContains",
-									"value": "/"
-								}
-							},
-							{
-								"condition": {
-									"param": "textareaDescription",
-									"op": "notContains",
-									"value": "\""
-								}
-							},
-							{
-								"condition": {
-									"param": "textareaDescription",
-									"op": "notContains",
-									"value": "'"
-								}
-							}
-						]
-					}
-				}
-			},
-			{
-				"validation": {
-					"fail_message": {
-						"type": "error",
-						"message": {
-							"default": "Expression cannot contain /, double or single \"quotes\"",
-							"resource_key": "expression_box_not_valid"
-						},
-						"focusParam": "expressionBox"
-					},
-					"evaluate": {
-						"and": [
-							{
-								"condition": {
-									"param": "expressionBox",
-									"op": "notContains",
-									"value": "/"
-								}
-							},
-							{
-								"condition": {
-									"param": "expressionBox",
-									"op": "notContains",
-									"value": "\""
-								}
-							},
-							{
-								"condition": {
-									"param": "expressionBox",
-									"op": "notContains",
-									"value": "'"
-								}
-							}
-						]
-					}
-				}
-			},
-
-			{
-				"validation": {
-					"fail_message": {
-						"type": "error",
-						"focusParam": "structuretableRenameFields",
-						"message": {
-							"resource_key": "structuretable_rename_fields_not_empty"
-						}
-					},
-					"evaluate": {
-						"condition": {
-							"param": "structuretableRenameFields",
-							"op": "isNotEmpty"
-						}
-					}
-				}
-			}
+      {
+        "validation": {
+          "fail_message": {
+            "type": "error",
+            "focus_parameter_ref": "columnSelectInputFieldList",
+            "message": {
+              "resource_key": "column_select_input_field_list_not_empty"
+            }
+          },
+          "evaluate": {
+            "condition": {
+              "parameter_ref": "columnSelectInputFieldList",
+              "op": "isNotEmpty"
+            }
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail_message": {
+            "type": "error",
+            "focus_parameter_ref": "oneofcolumnsList",
+            "message": {
+              "resource_key": "one_of_columns_list_not_empty"
+            }
+          },
+          "evaluate": {
+            "condition": {
+              "parameter_ref": "oneofcolumnsList",
+              "op": "contains",
+              "value": "Sex"
+            }
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail_message": {
+            "type": "warning",
+            "focus_parameter_ref": "someofcolumnsList",
+            "message": {
+              "resource_key": "some_of_columns_list_not_empty"
+            }
+          },
+          "evaluate": {
+            "condition": {
+              "parameter_ref": "someofcolumnsList",
+              "op": "isNotEmpty"
+            }
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail_message": {
+            "type": "warning",
+            "message": {
+              "default": "No data types are selected",
+              "resource_key": "checkbox_types_not_empty"
+            },
+            "focus_parameter_ref": "checkboxTypes"
+          },
+          "evaluate": {
+            "condition": {
+              "parameter_ref": "checkboxTypes",
+              "op": "isNotEmpty"
+            }
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail_message": {
+            "type": "warning",
+            "message": {
+              "default": "Warning: selected tiger",
+              "resource_key": "one_of_select_animals_not_empty"
+            },
+            "focus_parameter_ref": "oneofselectAnimals"
+          },
+          "evaluate": {
+            "condition": {
+              "parameter_ref": "oneofselectAnimals",
+              "op": "notContains",
+              "value": "tiger"
+            }
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail_message": {
+            "type": "warning",
+            "message": {
+              "default": "Warning: selected three",
+              "resource_key": "some_of_select_animals_not_three"
+            },
+            "focus_parameter_ref": "someofselectNumbers"
+          },
+          "evaluate": {
+            "condition": {
+              "parameter_ref": "someofselectNumbers",
+              "op": "notContains",
+              "value": "three"
+            }
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail_message": {
+            "type": "error",
+            "message": {
+              "default": "Checkbox single should be checked if a Data Type is selected",
+              "resource_key": "checkbox_single_not_empty"
+            },
+            "focus_parameter_ref": "checkboxSingle"
+          },
+          "evaluate": {
+            "or": [
+              {
+                "and": [
+                  {
+                    "condition": {
+                      "parameter_ref": "checkboxTypes",
+                      "op": "isNotEmpty"
+                    }
+                  },
+                  {
+                    "condition": {
+                      "parameter_ref": "checkboxSingle",
+                      "op": "checked"
+                    }
+                  }
+                ]
+              },
+              {
+                "and": [
+                  {
+                    "condition": {
+                      "parameter_ref": "checkboxTypes",
+                      "op": "isEmpty"
+                    }
+                  },
+                  {
+                    "condition": {
+                      "parameter_ref": "checkboxSingle",
+                      "op": "notChecked"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "enabled": {
+          "parameter_refs": [
+            "radiosetColor"
+          ],
+          "evaluate": {
+            "condition": {
+              "parameter_ref": "checkboxEnable",
+              "op": "checked"
+            }
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail_message": {
+            "type": "warning",
+            "message": {
+              "default": "Are you sure you want to choose yellow?",
+              "resource_key": "radiosetColor"
+            },
+            "focus_parameter_ref": "radiosetColor"
+          },
+          "evaluate": {
+            "condition": {
+              "parameter_ref": "radiosetColor",
+              "op": "notEquals",
+              "value": "yellow"
+            }
+          }
+        }
+      },
+      {
+        "visible": {
+          "parameter_refs": [
+            "oneofselectPets"
+          ],
+          "evaluate": {
+            "condition": {
+              "parameter_ref": "oneofselectAnimals",
+              "op": "notContains",
+              "value": "lion"
+            }
+          }
+        }
+      },
+      {
+        "visible": {
+          "parameter_refs": [
+            "textfieldName",
+            "textareaDescription",
+            "expressionBox"
+          ],
+          "evaluate": {
+            "condition": {
+              "parameter_ref": "passwordField",
+              "op": "contains",
+              "value": "password"
+            }
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail_message": {
+            "type": "error",
+            "focus_parameter_ref": "passwordField",
+            "message": {
+              "resource_key": "password_not_empty"
+            }
+          },
+          "evaluate": {
+            "condition": {
+              "parameter_ref": "passwordField",
+              "op": "isNotEmpty"
+            }
+          }
+        }
+      },
+      {
+        "enabled": {
+          "parameter_refs": [
+            "expressionBox"
+          ],
+          "evaluate": {
+            "condition": {
+              "parameter_ref": "textfieldName",
+              "op": "isNotEmpty"
+            }
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail_message": {
+            "type": "error",
+            "message": {
+              "default": "Name cannot contain /",
+              "resource_key": "textfield_name_not_valid_one"
+            },
+            "focus_parameter_ref": "textfieldName"
+          },
+          "evaluate": {
+            "condition": {
+              "parameter_ref": "textfieldName",
+              "op": "notContains",
+              "value": "/"
+            }
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail_message": {
+            "type": "error",
+            "message": {
+              "default": "Name cannot contain double or single \"quotes\"",
+              "resource_key": "textfield_name_not_valid_two"
+            },
+            "focus_parameter_ref": "textfieldName"
+          },
+          "evaluate": {
+            "and": [
+              {
+                "condition": {
+                  "parameter_ref": "textfieldName",
+                  "op": "notContains",
+                  "value": "\""
+                }
+              },
+              {
+                "condition": {
+                  "parameter_ref": "textfieldName",
+                  "op": "notContains",
+                  "value": "'"
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail_message": {
+            "type": "warning",
+            "message": {
+              "default": "Description cannot contain /, double or single \"quotes\"",
+              "resource_key": "textarea_description_not_valid"
+            },
+            "focus_parameter_ref": "textareaDescription"
+          },
+          "evaluate": {
+            "and": [
+              {
+                "condition": {
+                  "parameter_ref": "textareaDescription",
+                  "op": "notContains",
+                  "value": "/"
+                }
+              },
+              {
+                "condition": {
+                  "parameter_ref": "textareaDescription",
+                  "op": "notContains",
+                  "value": "\""
+                }
+              },
+              {
+                "condition": {
+                  "parameter_ref": "textareaDescription",
+                  "op": "notContains",
+                  "value": "'"
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail_message": {
+            "type": "error",
+            "message": {
+              "default": "Expression cannot contain /, double or single \"quotes\"",
+              "resource_key": "expression_box_not_valid"
+            },
+            "focus_parameter_ref": "expressionBox"
+          },
+          "evaluate": {
+            "and": [
+              {
+                "condition": {
+                  "parameter_ref": "expressionBox",
+                  "op": "notContains",
+                  "value": "/"
+                }
+              },
+              {
+                "condition": {
+                  "parameter_ref": "expressionBox",
+                  "op": "notContains",
+                  "value": "\""
+                }
+              },
+              {
+                "condition": {
+                  "parameter_ref": "expressionBox",
+                  "op": "notContains",
+                  "value": "'"
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "validation": {
+          "fail_message": {
+            "type": "error",
+            "focus_parameter_ref": "structuretableRenameFields",
+            "message": {
+              "resource_key": "structuretable_rename_fields_not_empty"
+            }
+          },
+          "evaluate": {
+            "condition": {
+              "parameter_ref": "structuretableRenameFields",
+              "op": "isNotEmpty"
+            }
+          }
+        }
+      }
     ]
   },
-  "datasetMetadata": {
+  "dataset_metadata": {
     "fields": [
       {
         "name": "Age",
@@ -1345,97 +1341,84 @@
     ]
   },
   "resources": {
-		"columnSelectInputFieldList.label": "Column Select Input columns",
+    "columnSelectInputFieldList.label": "Column Select Input columns",
     "columnSelectInputFieldList.desc": "Select one or more input columns",
-
-		"oneofcolumnsList.label":"",
-		"oneofcolumnsList.desc":"",
-		"someofcolumnsList.label":"",
-		"someofcolumnsList.desc":"",
-
+    "oneofcolumnsList.label": "",
+    "oneofcolumnsList.desc": "",
+    "someofcolumnsList.label": "",
+    "someofcolumnsList.desc": "",
     "column_select_input_field_list_not_empty": "Select one or more input fields. This is sample text to show how an error or warning message will display text if provided a long description",
-		"one_of_columns_list_not_empty": "Cannot have Sex selected",
+    "one_of_columns_list_not_empty": "Cannot have Sex selected",
     "some_of_columns_list_not_empty": "Field must be selected",
-
-		"numberfieldCheckpointInterval.label": "Checkpoint Interval",
-		"numberfieldCheckpointInterval.desc": "Set checkpoint interval (>= 1) or disable checkpoint (-1). Ex) 10 means that the cache will get checkpointed every 10 iterations",
-		"numberfieldImpurity.label": "Impurity",
-		"numberfieldImpurity.desc": "Criterion used for information gain calculation (case-insensitive). Supported: \"entropy\" and \"gini\"",
-		"numberfieldMaxBins.label": "Maximum number of bins",
-		"numberfieldMaxBins.desc": "Maximum number of bins used for discretizing continuous features and for choosing how to split on features at each node. More bins give higher granularity. Must be >= 2 and >= number of categories in any categorical feature",
-		"numberfieldMaxDepth.label": "Maximum depth of the tree",
-		"numberfieldMaxDepth.desc": "Maximum depth of the tree (>= 0). Ex) depth 0 means 1 leaf node; depth 1 means 1 internal node + 2 leaf nodes",
-		"numberfieldMinInfoGain.label": "Minimum information gain",
-		"numberfieldMinInfoGain.desc": "Minimum information gain for a split to be considered at a tree node",
-		"numberfieldMinInstancesPerNode.label": "Minimum instances per node",
-		"numberfieldMinInstancesPerNode.desc": "Minimum number of instances each child must have after split. If a split causes the left or right child to have fewer than minInstancesPerNode, the split will be discarded as invalid (>= 1)",
-		"numberfieldSeed.label": "Seed",
-		"numberfieldSeed.desc": "Random seed",
-
+    "numberfieldCheckpointInterval.label": "Checkpoint Interval",
+    "numberfieldCheckpointInterval.desc": "Set checkpoint interval (>= 1) or disable checkpoint (-1). Ex) 10 means that the cache will get checkpointed every 10 iterations",
+    "numberfieldImpurity.label": "Impurity",
+    "numberfieldImpurity.desc": "Criterion used for information gain calculation (case-insensitive). Supported: \"entropy\" and \"gini\"",
+    "numberfieldMaxBins.label": "Maximum number of bins",
+    "numberfieldMaxBins.desc": "Maximum number of bins used for discretizing continuous features and for choosing how to split on features at each node. More bins give higher granularity. Must be >= 2 and >= number of categories in any categorical feature",
+    "numberfieldMaxDepth.label": "Maximum depth of the tree",
+    "numberfieldMaxDepth.desc": "Maximum depth of the tree (>= 0). Ex) depth 0 means 1 leaf node; depth 1 means 1 internal node + 2 leaf nodes",
+    "numberfieldMinInfoGain.label": "Minimum information gain",
+    "numberfieldMinInfoGain.desc": "Minimum information gain for a split to be considered at a tree node",
+    "numberfieldMinInstancesPerNode.label": "Minimum instances per node",
+    "numberfieldMinInstancesPerNode.desc": "Minimum number of instances each child must have after split. If a split causes the left or right child to have fewer than minInstancesPerNode, the split will be discarded as invalid (>= 1)",
+    "numberfieldSeed.label": "Seed",
+    "numberfieldSeed.desc": "Random seed",
     "numberfield_checkpoint_interval_not_valid": "The checkpoint interval value must either be >= 1 or -1 to disable",
-		"numberfieldImpurity_invalid": "invalid: gini is selected",
+    "numberfieldImpurity_invalid": "invalid: gini is selected",
     "numberfield_max_bins_not_valid": "Maximum number of bins must be >= 2 or Maximum depth of the tree > 0",
     "numberfield_min_instances_per_node_not_valid": "The minimum instances per node value must be >= 1",
-		"numberfield_min_info_gain_not_valid": "Cannot be less than 0",
-		"numberfield_seed_not_valid": "This is an example of a very long error message that someone might enter. The message text will wrap around to the next line as shown here.",
-
-		"checkboxTypes.label": "Data Types",
-		"checkboxTypes.desc": "",
-		"someofselectNumbers.label": "",
-		"someofselectNumbers.desc": "",
-		"oneofselectAnimals.label": "",
-		"oneofselectAnimals.desc": "",
-		"oneofselectPets.label": "",
-		"oneofselectPets.desc": "",
-		"checkboxSingle.label": "",
-		"checkboxSingle.desc": "",
-		"checkboxEnable.label": "",
-		"checkboxEnable.desc": "",
-		"radiosetColor.label": "",
-		"radiosetColor.desc": "",
-		"apples.label": "",
-		"apples.desc": "",
-		"lemons.label": "",
-		"lemons.desc": "",
-		"berries.label": "",
-		"berries.desc": "",
-
-		"checkbox_types_not_empty": "No data types are selected",
-		"checkbox_single_not_empty": "Checkbox single should be checked if data type is selected",
-		"one_of_select_animals_not_empty": "Warning: selected tiger",
-		"some_of_select_animals_not_three": "Warning: selected three",
-
-		"passwordField.label":"",
-		"passwordField.desc":"",
-		"textfieldName.label":"",
-		"textfieldName.desc":"",
-		"textareaDescription.label":"",
-		"textareaDescription.desc":"",
-		"expressionBox.label":"",
-		"expressionBox.desc":"",
-
-		"password_not_empty": "Password cannot be empty, enter \"password\"",
-		"textarea_description_not_valid": "Description cannot contain /, double or single \"quotes\"",
-		"textfield_name_not_valid_one": "Name cannot contain /",
-		"textfield_name_not_valid_two": "Name cannot contain double or single \"quotes\"",
-		"expression_box_not_valid": "Expression cannot contain /, double or single \"quotes\"",
-
-		"columnSelectSharedWithInput.label": "Input List Shared with Below Control",
-		"columnSelectSharedWithInput.desc": "Shared input list with sort by",
-
+    "numberfield_min_info_gain_not_valid": "Cannot be less than 0",
+    "numberfield_seed_not_valid": "This is an example of a very long error message that someone might enter. The message text will wrap around to the next line as shown here.",
+    "checkboxTypes.label": "Data Types",
+    "checkboxTypes.desc": "",
+    "someofselectNumbers.label": "",
+    "someofselectNumbers.desc": "",
+    "oneofselectAnimals.label": "",
+    "oneofselectAnimals.desc": "",
+    "oneofselectPets.label": "",
+    "oneofselectPets.desc": "",
+    "checkboxSingle.label": "",
+    "checkboxSingle.desc": "",
+    "checkboxEnable.label": "",
+    "checkboxEnable.desc": "",
+    "radiosetColor.label": "",
+    "radiosetColor.desc": "",
+    "apples.label": "",
+    "apples.desc": "",
+    "lemons.label": "",
+    "lemons.desc": "",
+    "berries.label": "",
+    "berries.desc": "",
+    "checkbox_types_not_empty": "No data types are selected",
+    "checkbox_single_not_empty": "Checkbox single should be checked if data type is selected",
+    "one_of_select_animals_not_empty": "Warning: selected tiger",
+    "some_of_select_animals_not_three": "Warning: selected three",
+    "passwordField.label": "",
+    "passwordField.desc": "",
+    "textfieldName.label": "",
+    "textfieldName.desc": "",
+    "textareaDescription.label": "",
+    "textareaDescription.desc": "",
+    "expressionBox.label": "",
+    "expressionBox.desc": "",
+    "password_not_empty": "Password cannot be empty, enter \"password\"",
+    "textarea_description_not_valid": "Description cannot contain /, double or single \"quotes\"",
+    "textfield_name_not_valid_one": "Name cannot contain /",
+    "textfield_name_not_valid_two": "Name cannot contain double or single \"quotes\"",
+    "expression_box_not_valid": "Expression cannot contain /, double or single \"quotes\"",
+    "columnSelectSharedWithInput.label": "Input List Shared with Below Control",
+    "columnSelectSharedWithInput.desc": "Shared input list with sort by",
     "structuretableSortOrder.label": "Sort",
     "structuretableSortOrder.field.label": "Field",
     "structuretableSortOrder.sort_order.label": "Order",
     "structuretableSortOrder.sort_order.Ascending.label": "Ascending",
     "structuretableSortOrder.sort_order.Descending.label": "Descending",
-
-		"structuretableRenameFields.rename.label": "Rename Columns",
-		"structuretableRenameFields.field.label": "Input name",
-		"structuretableRenameFields.new_name.label": "Output name",
-
-		"structuretable_rename_fields_not_empty": "The 'Output Name' field cannot be empty",
-
-		"structurelisteditorTableInput.label": "Sort",
+    "structuretableRenameFields.rename.label": "Rename Columns",
+    "structuretableRenameFields.field.label": "Input name",
+    "structuretableRenameFields.new_name.label": "Output name",
+    "structuretable_rename_fields_not_empty": "The 'Output Name' field cannot be empty",
+    "structurelisteditorTableInput.label": "Sort",
     "structurelisteditorTableInput.field.label": "Field",
     "structurelisteditorTableInput.sort_order.label": "Order",
     "structurelisteditorTableInput.sort_order.Ascending.label": "Ascending",

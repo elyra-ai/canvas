@@ -530,7 +530,7 @@ class App extends React.Component {
 		const propsInfo = {
 			title: <FormattedMessage id={ "dialog.nodePropertiesTitle" } />,
 			formData: properties.formData,
-			propertyDef: properties,
+			parameterDef: properties,
 			applyPropertyChanges: this.applyPropertyChanges,
 			closePropertiesDialog: this.closePropertiesEditorDialog,
 			additionalComponents: properties.additionalComponents

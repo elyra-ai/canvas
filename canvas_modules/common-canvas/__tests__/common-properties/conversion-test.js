@@ -56,10 +56,10 @@ function createCommonProperties1(useModalDialog) {
 	propertiesInfo.title = <div><h2>"Test Title"</h2></div>;
 	propertiesInfo.formData = {};
 	propertiesInfo.appData = {};
-	propertiesInfo.propertyDef = {};
-	propertiesInfo.propertyDef.parameters = [];
-	propertiesInfo.propertyDef.uihints = {};
-	propertiesInfo.propertyDef.currentParameters = {
+	propertiesInfo.parameterDef = {};
+	propertiesInfo.parameterDef.parameters = [];
+	propertiesInfo.parameterDef.uihints = {};
+	propertiesInfo.parameterDef.current_parameters = {
 		"string": "string",
 		"number": 234,
 		"array": ["AAA", "BBB", "CCC"]

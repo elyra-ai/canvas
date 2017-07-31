@@ -1,6 +1,6 @@
 {
   "paramDef": {
-    "currentParameters": {
+    "current_parameters": {
       "renamed_fields": [
         "[\"Age\", \"Age\"]",
         "[\"BP\", \"BP-1\"]"
@@ -35,19 +35,19 @@
     "uihints": {
       "id": "rename",
       "icon": "./rename.svg",
-      "structure_info": [
+      "complex_type_info": [
         {
-          "name": "RenameFieldEntry",
+          "complex_type_ref": "RenameFieldEntry",
           "key_definition": {
-            "name": "field",
+            "parameter_ref": "field",
             "resource_key": "RenameFieldEntry.field",
-            "columns": 26
+            "width": 26
           },
           "parameters": [
             {
-              "name": "new_name",
+              "parameter_ref": "new_name",
               "resource_key": "RenameFieldEntry.new_name",
-              "columns": 26,
+              "width": 26,
               "editStyle": "inline"
             }
           ]
@@ -55,7 +55,7 @@
       ],
       "parameter_info": [
         {
-          "name": "renamed_fields",
+          "parameter_ref": "renamed_fields",
           "label": {
             "default": "Rename columns"
           },
@@ -66,12 +66,12 @@
       ],
       "group_info": [
         {
-          "name": "basic-settings",
+          "id": "basic-settings",
           "label": {
             "default": "Settings"
           },
           "type": "columnSelection",
-          "parameters": [
+          "parameter_refs": [
             "renamed_fields"
           ]
         }
@@ -81,14 +81,14 @@
           "validation": {
             "fail_message": {
               "type": "error",
-              "focusParam": "renamed_fields",
+              "focus_parameter_ref": "renamed_fields",
               "message": {
                 "resource_key": "output_name_not_empty"
               }
             },
             "evaluate": {
               "condition": {
-                "param": "renamed_fields",
+                "parameter_ref": "renamed_fields",
                 "op": "isNotEmpty"
               }
             }
@@ -96,7 +96,7 @@
         }
       ]
     },
-    "datasetMetadata": {
+    "dataset_metadata": {
       "fields": [
         {
           "name": "Age",
@@ -345,7 +345,7 @@
           "validation": {
             "fail_message": {
               "type": "error",
-              "focusParam": "renamed_fields",
+              "focus_parameter_ref": "renamed_fields",
               "message": {
                 "resource_key": "output_name_not_empty",
                 "default": "The 'Output Name' field cannot be empty"
@@ -353,7 +353,7 @@
             },
             "evaluate": {
               "condition": {
-                "param": "renamed_fields",
+                "parameter_ref": "renamed_fields",
                 "op": "isNotEmpty"
               }
             }

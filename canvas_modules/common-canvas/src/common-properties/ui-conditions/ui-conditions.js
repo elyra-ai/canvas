@@ -73,7 +73,7 @@ function validation(validationData, userInput, dataModel, cellCoordinates) {
  *				 "description": "Enablement test. Disables controls if evaluate is false.",
  *				 "type": "object",
  *				 "properties": {
- *					 "paramNames": {
+ *					 "parameter_refs": {
  *						 "description": "Array of parameter names affected by this operation",
  *						 "type": "array",
  *						 "minItems": 1,
@@ -88,7 +88,7 @@ function validation(validationData, userInput, dataModel, cellCoordinates) {
  *						 "$ref": "#/definitions/evaluate_definition"
  *					 }
  *				 },
- *				"required": ["paramNames, evaluate"]
+ *				"required": ["parameter_refs, evaluate"]
  *			 }
  *		 },
  *		"required": ["enabled"]
@@ -99,7 +99,7 @@ function enabled(enabledData, userInput) {
 	logger.info("Enablement check");
 	// var data = JSON.parse(enabledData);
 	var data = enabledData;
-	if (data.paramNames && data.evaluate) {
+	if (data.parameter_refs && data.evaluate) {
 		return evaluate(data.evaluate, userInput);
 	}
 	throw new Error("Invalid enabled schema");
@@ -114,7 +114,7 @@ function enabled(enabledData, userInput) {
  *				 "description": "Visibility test. Hides controls if evaluate is false.",
  *				 "type": "object",
  *				 "properties": {
- *					 "paramNames": {
+ *					 "parameter_refs": {
  *						 "description": "Array of parameter names affected by this operation",
  *						 "type": "array",
  *						 "minItems": 1,
@@ -129,7 +129,7 @@ function enabled(enabledData, userInput) {
  *						 "$ref": "#/definitions/evaluate_definition"
  *					 }
  *				 },
- *				"required": ["paramNames, evaluate"]
+ *				"required": ["parameter_refs, evaluate"]
  *			 }
  *		 },
  *		"required": ["visible"]
@@ -140,7 +140,7 @@ function visible(visibleData, userInput) {
 	logger.info("Visibility check");
 	// var data = JSON.parse(visibleData);
 	var data = visibleData;
-	if (data.paramNames && data.evaluate) {
+	if (data.parameter_refs && data.evaluate) {
 		return evaluate(data.evaluate, userInput);
 	}
 	throw new Error("Invalid visible schema");
@@ -202,18 +202,18 @@ function and(data, userInput, dataModel, cellCoordinates) {
 
 /**
  * A parameter condition. Evaluates to true or false.
- * @param {Object} op A single operator for the properties of the condition.
- * @param {Object} param required parameter the condition checks for
- * @param {Object} param2 optional parameter the condition checks for
- * @param {Object} value optional value the condition checks for
+ * @param {Object} data.op A single operator for the properties of the condition.
+ * @param {Object} data.parameter_ref required parameter the condition checks for
+ * @param {Object} data.parameter_2_ref optional parameter the condition checks for
+ * @param {Object} data.value optional value the condition checks for
  * @param {Object} dataModel optional dataset metadata
  * @param {Object} cellCoordinates optional cell coordinates for tables
  * @return {boolean} true if the parameter(s) satisfy the condition
  */
 function condition(data, userInput, dataModel, cellCoordinates) {
 	var op = data.op;
-	var param = data.param;
-	var param2 = data.param2 ? data.param2 : null;
+	var param = data.parameter_ref;
+	var param2 = data.parameter_2_ref ? data.parameter_2_ref : null;
 	var value = typeof data.value !== "undefined" ? data.value : null;
 
 	// validate if userInput has param's input
@@ -428,11 +428,11 @@ function _handleCellNotEmpty(paramInput, cellCoordinates) {
 
 /**
  *
- * @param {Object} failedMessage message object with "focusParam" and "message"
+ * @param {Object} failedMessage message object with "focus_parameter_ref" and "message"
  * @return {String} failed message
  */
 function failedMessage(failedErrorMessage) {
-	if (failedErrorMessage.focusParam && failedErrorMessage.message) {
+	if (failedErrorMessage.focus_parameter_ref && failedErrorMessage.message) {
 		return {
 			"text": failedErrorMessage.message.default,
 			"type": failedErrorMessage.type

@@ -1,5 +1,5 @@
 {
-  "currentParameters": {
+  "current_parameters": {
     "cols": []
   },
   "parameters": [
@@ -22,7 +22,7 @@
     },
     "parameter_info": [
       {
-        "name": "cols",
+        "parameter_ref": "cols",
         "label": {
           "default": "Distinct"
         },
@@ -34,12 +34,12 @@
     ],
     "group_info": [
       {
-        "name": "settings",
+        "id": "settings",
         "type": "columnSelection",
         "label": {
           "default": "Settings"
         },
-        "parameters": [
+        "parameter_refs": [
           "cols"
         ]
       }
@@ -49,14 +49,14 @@
         "validation": {
           "fail_message": {
             "type": "error",
-            "focusParam": "cols",
+            "focus_parameter_ref": "cols",
             "message": {
               "resource_key": "cols_not_empty"
             }
           },
           "evaluate": {
             "condition": {
-              "param": "cols",
+              "parameter_ref": "cols",
               "op": "isNotEmpty"
             }
           }
@@ -64,7 +64,7 @@
       }
     ]
   },
-  "datasetMetadata": {
+  "dataset_metadata": {
     "fields": [
       {
         "name": "Age",

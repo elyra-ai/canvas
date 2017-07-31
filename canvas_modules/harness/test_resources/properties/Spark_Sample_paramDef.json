@@ -1,5 +1,5 @@
 {
-  "currentParameters": {
+  "current_parameters": {
     "withReplacement": false,
     "samplingRatio": 1,
     "samplingSize": -1,
@@ -45,7 +45,7 @@
     },
     "parameter_info": [
       {
-        "name": "withReplacement",
+        "parameter_ref": "withReplacement",
         "label": {
           "default": "Sample"
         },
@@ -56,7 +56,7 @@
         "resource_key": "withReplace"
       },
       {
-        "name": "samplingRatio",
+        "parameter_ref": "samplingRatio",
         "label": {
           "default": "Sample Ratio"
         },
@@ -65,7 +65,7 @@
         }
       },
       {
-        "name": "samplingSize",
+        "parameter_ref": "samplingSize",
         "label": {
           "default": "Maximum sample size"
         },
@@ -74,7 +74,7 @@
         }
       },
       {
-        "name": "samplingSeed",
+        "parameter_ref": "samplingSeed",
         "label": {
           "default": "Seed"
         },
@@ -95,37 +95,37 @@
     ],
     "group_info": [
       {
-        "name": "settings",
+        "id": "settings",
         "label": {
           "default": "Settings"
         },
         "type": "panels",
         "group_info": [
           {
-            "name": "basic-settings",
+            "id": "basic-settings",
             "type": "controls",
-            "parameters": [
+            "parameter_refs": [
               "withReplacement",
               "samplingRatio"
             ]
           },
           {
-            "name": "sample-size",
+            "id": "sample-size",
             "type": "checkboxPanel",
             "label": {
               "default": "Use maximum sample size"
             },
-            "parameters": [
+            "parameter_refs": [
               "samplingSize"
             ]
           },
           {
-            "name": "sample-seed",
+            "id": "sample-seed",
             "type": "checkboxPanel",
             "label": {
               "default": "Repeatable partition assignment"
             },
-            "parameters": [
+            "parameter_refs": [
               "samplingSeed"
             ]
           }
@@ -137,14 +137,14 @@
         "validation": {
           "fail_message": {
             "type": "error",
-            "focusParam": "samplingSize",
+            "focus_parameter_ref": "samplingSize",
             "message": {
               "resource_key": "sampling-size_not_empty"
             }
           },
           "evaluate": {
             "condition": {
-              "param": "samplingSize",
+              "parameter_ref": "samplingSize",
               "op": "isNotEmpty"
             }
           }
@@ -154,14 +154,14 @@
         "validation": {
           "fail_message": {
             "type": "error",
-            "focusParam": "samplingRatio",
+            "focus_parameter_ref": "samplingRatio",
             "message": {
               "resource_key": "sampling-ratio_not_empty"
             }
           },
           "evaluate": {
             "condition": {
-              "param": "samplingRatio",
+              "parameter_ref": "samplingRatio",
               "op": "isNotEmpty"
             }
           }
@@ -169,7 +169,7 @@
       }
     ]
   },
-  "datasetMetadata": {
+  "dataset_metadata": {
     "fields": [
       {
         "name": "Age",

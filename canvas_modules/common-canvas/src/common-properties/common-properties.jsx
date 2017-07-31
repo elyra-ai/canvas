@@ -30,8 +30,8 @@ export default class CommonProperties extends React.Component {
 		let formData = {};
 		if (this.props.propertiesInfo.formData && Object.keys(this.props.propertiesInfo.formData).length !== 0) {
 			formData = this.props.propertiesInfo.formData;
-		} else if (this.props.propertiesInfo.propertyDef) {
-			formData = Form.makeForm(this.props.propertiesInfo.propertyDef);
+		} else if (this.props.propertiesInfo.parameterDef) {
+			formData = Form.makeForm(this.props.propertiesInfo.parameterDef);
 		}
 		// TODO: Temporary conversion to older property set as arrays of string values
 		if (formData.data && !formData.data.currentProperties && formData.data.currentParameters) {
@@ -123,6 +123,7 @@ export default class CommonProperties extends React.Component {
 			formData = this.getForm();
 		} catch (error) {
 			logger.error("Error generating form: " + error);
+			formData = null;
 		}
 		if (formData !== null) {
 			let propertiesDialog = [];

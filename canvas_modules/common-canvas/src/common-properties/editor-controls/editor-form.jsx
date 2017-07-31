@@ -856,13 +856,13 @@ export default class EditorForm extends React.Component {
 
 					var visTmp = this.state.controlStates;
 					if (visOutput === true) { // control should be visible
-						for (let j = 0; j < visDefinition.visible.paramNames.length; j++) {
-							delete visTmp[visDefinition.visible.paramNames[j]];
+						for (let j = 0; j < visDefinition.visible.parameter_refs.length; j++) {
+							delete visTmp[visDefinition.visible.parameter_refs[j]];
 						}
 						this.setState({ controlStates: visTmp });
 					} else { // control should be hidden
-						for (let j = 0; j < visDefinition.visible.paramNames.length; j++) {
-							visTmp[visDefinition.visible.paramNames[j]] = "hidden";
+						for (let j = 0; j < visDefinition.visible.parameter_refs.length; j++) {
+							visTmp[visDefinition.visible.parameter_refs[j]] = "hidden";
 						}
 						this.setState({ controlStates: visTmp });
 					}
@@ -893,16 +893,16 @@ export default class EditorForm extends React.Component {
 
 					var tmp = this.state.controlStates;
 					if (enbOutput === true) { // control should be enabled
-						for (let j = 0; j < definition.enabled.paramNames.length; j++) {
-							if (tmp[definition.enabled.paramNames[j]] !== "hidden") {
-								delete tmp[definition.enabled.paramNames[j]];
+						for (let j = 0; j < definition.enabled.parameter_refs.length; j++) {
+							if (tmp[definition.enabled.parameter_refs[j]] !== "hidden") {
+								delete tmp[definition.enabled.parameter_refs[j]];
 							}
 						}
 						this.setState({ controlStates: tmp });
 					} else { // control should be disabled
-						for (let j = 0; j < definition.enabled.paramNames.length; j++) {
-							if (tmp[definition.enabled.paramNames[j]] !== "hidden") { // if control is hidden, no need to disable it
-								tmp[definition.enabled.paramNames[j]] = "disabled";
+						for (let j = 0; j < definition.enabled.parameter_refs.length; j++) {
+							if (tmp[definition.enabled.parameter_refs[j]] !== "hidden") { // if control is hidden, no need to disable it
+								tmp[definition.enabled.parameter_refs[j]] = "disabled";
 							}
 						}
 						this.setState({ controlStates: tmp });

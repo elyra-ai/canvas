@@ -64,9 +64,9 @@ function and(data, paramsList) {
  * A parameter condition.
  */
 function condition(data, paramsList) {
-	paramsList.push(data.param);
-	if (data.param2) {
-		paramsList.push(data.param2);
+	paramsList.push(data.parameter_ref);
+	if (data.parameter_2_ref) {
+		paramsList.push(data.parameter_2_ref);
 	}
 }
 

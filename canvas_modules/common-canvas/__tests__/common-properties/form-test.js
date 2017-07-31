@@ -74,7 +74,7 @@ describe("Correct form should be created", () => {
 		const expectedForm = new Form("TestOp", "TestOp", "small", [primaryTabs], buttons, data);
 
 		const paramSpec = {
-			"currentParameters": {
+			"current_parameters": {
 				"boolean_param": true
 			},
 			"parameters": [
@@ -86,11 +86,11 @@ describe("Correct form should be created", () => {
 			"uihints": {
 				"id": "TestOp",
 				"icon": "./test.svg",
-				"editorSize": "small",
+				"editor_size": "small",
 				"group_info": [
 					{
-						"name": "settings",
-						"parameters": ["boolean_param"]
+						"id": "settings",
+						"parameter_refs": ["boolean_param"]
 					}
 				]
 			}
@@ -110,7 +110,7 @@ describe("Correct form should be created", () => {
 		expect(_.isEqual(JSON.parse(JSON.stringify(formStructuredTable.expectedResult)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
 	});
 
-	it("should create a form with a structure with moveableRows and valueIcons", () => {
+	it("should create a form with a structure with moveable_rows and value_icons", () => {
 		const generatedForm = Form.makeForm(formStructuredTable2.paramDef);
 		// console.info("Expected: " + JSON.stringify(formStructuredTable2.expectedResult));
 		// console.info("Actual  : " + JSON.stringify(generatedForm) + "\n\n");

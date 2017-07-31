@@ -1,5 +1,5 @@
 {
-  "currentParameters": {
+  "current_parameters": {
     "mode": "Include",
     "conditionExpr": ""
   },
@@ -25,7 +25,7 @@
     "icon": "images/transformationspark.svg",
     "parameter_info": [
       {
-        "name": "mode",
+        "parameter_ref": "mode",
         "label": {
           "default": "Mode"
         },
@@ -35,7 +35,7 @@
         "orientation": "horizontal"
       },
       {
-        "name": "conditionExpr",
+        "parameter_ref": "conditionExpr",
         "label": {
           "default": "Condition"
         },
@@ -46,12 +46,12 @@
     ],
     "group_info": [
       {
-        "name": "basic-settings",
+        "id": "basic-settings",
         "label": {
           "default": "Settings"
         },
         "type": "controls",
-        "parameters": [
+        "parameter_refs": [
           "mode",
           "conditionExpr"
         ]
@@ -62,14 +62,14 @@
         "validation": {
           "fail_message": {
             "type": "error",
-            "focusParam": "conditionExpr",
+            "focus_parameter_ref": "conditionExpr",
             "message": {
               "resource_key": "condition_expression_not_empty"
             }
           },
           "evaluate": {
             "condition": {
-              "param": "conditionExpr",
+              "parameter_ref": "conditionExpr",
               "op": "isNotEmpty"
             }
           }
@@ -77,7 +77,7 @@
       }
     ]
   },
-  "datasetMetadata": {
+  "dataset_metadata": {
     "fields": [
       {
         "name": "Age",

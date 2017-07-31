@@ -1,5 +1,5 @@
 {
-  "currentParameters": {
+  "current_parameters": {
     "targetField": [],
     "inputFieldList": [
       "Age",
@@ -102,7 +102,7 @@
     },
     "parameter_info": [
       {
-        "name": "targetField",
+        "parameter_ref": "targetField",
         "label": {
           "default": "Target column"
         },
@@ -111,7 +111,7 @@
         }
       },
       {
-        "name": "inputFieldList",
+        "parameter_ref": "inputFieldList",
         "label": {
           "default": "Input columns"
         },
@@ -120,7 +120,7 @@
         }
       },
       {
-        "name": "checkpointInterval",
+        "parameter_ref": "checkpointInterval",
         "label": {
           "default": "Checkpoint Interval"
         },
@@ -129,7 +129,7 @@
         }
       },
       {
-        "name": "impurity",
+        "parameter_ref": "impurity",
         "label": {
           "default": "Impurity"
         },
@@ -138,7 +138,7 @@
         }
       },
       {
-        "name": "lossType",
+        "parameter_ref": "lossType",
         "label": {
           "default": "Loss Type"
         },
@@ -147,7 +147,7 @@
         }
       },
       {
-        "name": "maxBins",
+        "parameter_ref": "maxBins",
         "label": {
           "default": "Maximum number of bins"
         },
@@ -156,7 +156,7 @@
         }
       },
       {
-        "name": "maxDepth",
+        "parameter_ref": "maxDepth",
         "label": {
           "default": "Maximum depth of the tree"
         },
@@ -165,7 +165,7 @@
         }
       },
       {
-        "name": "maxIter",
+        "parameter_ref": "maxIter",
         "label": {
           "default": "Maximum iterations for convergence"
         },
@@ -174,7 +174,7 @@
         }
       },
       {
-        "name": "minInfoGain",
+        "parameter_ref": "minInfoGain",
         "label": {
           "default": "Minimum information gain"
         },
@@ -183,7 +183,7 @@
         }
       },
       {
-        "name": "minInstancesPerNode",
+        "parameter_ref": "minInstancesPerNode",
         "label": {
           "default": "Minimum instances per node"
         },
@@ -192,7 +192,7 @@
         }
       },
       {
-        "name": "seed",
+        "parameter_ref": "seed",
         "label": {
           "default": "Seed"
         },
@@ -211,7 +211,7 @@
         }
       },
       {
-        "name": "stepSize",
+        "parameter_ref": "stepSize",
         "label": {
           "default": "Step size"
         },
@@ -220,7 +220,7 @@
         }
       },
       {
-        "name": "subsamplingRate",
+        "parameter_ref": "subsamplingRate",
         "label": {
           "default": "Subsampling Rate"
         },
@@ -231,16 +231,16 @@
     ],
     "group_info": [
       {
-        "name": "fields_settings",
+        "id": "fields_settings",
         "type": "panels",
         "group_info": [
           {
-            "name": "fields",
+            "id": "fields",
             "type": "fieldSelection",
             "label": {
               "default": "Fields"
             },
-            "parameters": [
+            "parameter_refs": [
               "targetField",
               "inputFieldList"
             ]
@@ -248,11 +248,11 @@
         ]
       },
       {
-        "name": "advancedParams",
+        "id": "advancedParams",
         "label": {
           "default": "Advanced Parameters"
         },
-        "parameters": [
+        "parameter_refs": [
           "checkpointInterval",
           "impurity",
           "lossType",
@@ -272,14 +272,14 @@
         "validation": {
           "fail_message": {
             "type": "error",
-            "focusParam": "inputFieldList",
+            "focus_parameter_ref": "inputFieldList",
             "message": {
               "resource_key": "input_field_list_not_empty"
             }
           },
           "evaluate": {
             "condition": {
-              "param": "inputFieldList",
+              "parameter_ref": "inputFieldList",
               "op": "isNotEmpty"
             }
           }
@@ -289,14 +289,14 @@
         "validation": {
           "fail_message": {
             "type": "error",
-            "focusParam": "targetField",
+            "focus_parameter_ref": "targetField",
             "message": {
               "resource_key": "target_field_not_empty"
             }
           },
           "evaluate": {
             "condition": {
-              "param": "targetField",
+              "parameter_ref": "targetField",
               "op": "isNotEmpty"
             }
           }
@@ -306,7 +306,7 @@
         "validation": {
           "fail_message": {
             "type": "error",
-            "focusParam": "checkpointInterval",
+            "focus_parameter_ref": "checkpointInterval",
             "message": {
               "resource_key": "checkpoint_interval_not_valid"
             }
@@ -315,21 +315,21 @@
             "or": [
               {
                 "condition": {
-                  "param": "checkpointInterval",
+                  "parameter_ref": "checkpointInterval",
                   "op": "greaterThan",
                   "value": 1
                 }
               },
               {
                 "condition": {
-                  "param": "checkpointInterval",
+                  "parameter_ref": "checkpointInterval",
                   "op": "equals",
                   "value": 1
                 }
               },
               {
                 "condition": {
-                  "param": "checkpointInterval",
+                  "parameter_ref": "checkpointInterval",
                   "op": "equals",
                   "value": -1
                 }
@@ -342,7 +342,7 @@
         "validation": {
           "fail_message": {
             "type": "error",
-            "focusParam": "maxBins",
+            "focus_parameter_ref": "maxBins",
             "message": {
               "resource_key": "max_bins_not_valid"
             }
@@ -351,14 +351,14 @@
             "or": [
               {
                 "condition": {
-                  "param": "maxBins",
+                  "parameter_ref": "maxBins",
                   "op": "greaterThan",
                   "value": 2
                 }
               },
               {
                 "condition": {
-                  "param": "maxBins",
+                  "parameter_ref": "maxBins",
                   "op": "equals",
                   "value": 2
                 }
@@ -371,7 +371,7 @@
         "validation": {
           "fail_message": {
             "type": "error",
-            "focusParam": "maxDepth",
+            "focus_parameter_ref": "maxDepth",
             "message": {
               "resource_key": "max_depth_not_valid"
             }
@@ -380,14 +380,14 @@
             "or": [
               {
                 "condition": {
-                  "param": "maxDepth",
+                  "parameter_ref": "maxDepth",
                   "op": "greaterThan",
                   "value": 0
                 }
               },
               {
                 "condition": {
-                  "param": "maxDepth",
+                  "parameter_ref": "maxDepth",
                   "op": "equals",
                   "value": 0
                 }
@@ -400,7 +400,7 @@
         "validation": {
           "fail_message": {
             "type": "error",
-            "focusParam": "maxIter",
+            "focus_parameter_ref": "maxIter",
             "message": {
               "resource_key": "max_iter_not_valid"
             }
@@ -409,14 +409,14 @@
             "or": [
               {
                 "condition": {
-                  "param": "maxIter",
+                  "parameter_ref": "maxIter",
                   "op": "greaterThan",
                   "value": 0
                 }
               },
               {
                 "condition": {
-                  "param": "maxIter",
+                  "parameter_ref": "maxIter",
                   "op": "equals",
                   "value": 0
                 }
@@ -429,7 +429,7 @@
         "validation": {
           "fail_message": {
             "type": "error",
-            "focusParam": "minInstancesPerNode",
+            "focus_parameter_ref": "minInstancesPerNode",
             "message": {
               "resource_key": "min_instances_per_node_not_valid"
             }
@@ -438,14 +438,14 @@
             "or": [
               {
                 "condition": {
-                  "param": "minInstancesPerNode",
+                  "parameter_ref": "minInstancesPerNode",
                   "op": "greaterThan",
                   "value": 1
                 }
               },
               {
                 "condition": {
-                  "param": "minInstancesPerNode",
+                  "parameter_ref": "minInstancesPerNode",
                   "op": "equals",
                   "value": 1
                 }
@@ -458,7 +458,7 @@
         "validation": {
           "fail_message": {
             "type": "error",
-            "focusParam": "subsamplingRate",
+            "focus_parameter_ref": "subsamplingRate",
             "message": {
               "resource_key": "subsampling_rate_not_valid"
             }
@@ -467,7 +467,7 @@
             "and": [
               {
                 "condition": {
-                  "param": "subsamplingRate",
+                  "parameter_ref": "subsamplingRate",
                   "op": "greaterThan",
                   "value": 0
                 }
@@ -476,14 +476,14 @@
                 "or": [
                   {
                     "condition": {
-                      "param": "subsamplingRate",
+                      "parameter_ref": "subsamplingRate",
                       "op": "lessThan",
                       "value": 1
                     }
                   },
                   {
                     "condition": {
-                      "param": "subsamplingRate",
+                      "parameter_ref": "subsamplingRate",
                       "op": "equals",
                       "value": 1
                     }
@@ -496,7 +496,7 @@
       }
     ]
   },
-  "datasetMetadata": {
+  "dataset_metadata": {
     "fields": [
       {
         "name": "Age",

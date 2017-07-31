@@ -46,10 +46,10 @@
         "resource_key": "testOp.label"
       },
       "icon": "./test.svg",
-      "editorSize": "large",
+      "editor_size": "large",
       "parameter_info": [
         {
-          "name": "enum_param",
+          "parameter_ref": "enum_param",
           "label": {
             "default": "Enum label: default",
             "resource_key": "enum_param.label"
@@ -62,7 +62,7 @@
           "orientation": "horizontal"
         },
         {
-          "name": "str_param",
+          "parameter_ref": "str_param",
           "label": {
             "default": "String label: default"
           },
@@ -77,7 +77,7 @@
           "separator": "before"
         },
         {
-          "name": "int_param",
+          "parameter_ref": "int_param",
           "label": {
             "default": "Int label: default",
             "resource_key": "int_param.label"
@@ -94,7 +94,7 @@
       ],
       "group_info": [
         {
-          "name": "fields-settings",
+          "id": "fields-settings",
           "label": {
             "default": "Field Settings label: default",
             "resource_key": "column-settings.label"
@@ -102,9 +102,9 @@
           "type": "panels",
           "group_info": [
             {
-              "name": "field-allocation",
+              "id": "field-allocation",
               "type": "columnAllocation",
-              "parameters": [
+              "parameter_refs": [
                 "target",
                 "inputs"
               ]
@@ -112,36 +112,36 @@
           ]
         },
         {
-          "name": "settings",
+          "id": "settings",
           "label": {
             "default": "Parameter Settings label: default"
           },
-          "parameters": [
+          "parameter_refs": [
             "enum_param"
           ],
           "group_info": [
             {
-              "name": "enum-settings",
+              "id": "enum-settings",
               "type": "panelSelector",
-              "depends_on": "enum_param",
+              "depends_on_ref": "enum_param",
               "group_info": [
                 {
-                  "name": "Include",
-                  "parameters": [
+                  "id": "Include",
+                  "parameter_refs": [
                     "int_param"
                   ]
                 },
                 {
-                  "name": "Discard",
-                  "parameters": [
+                  "id": "Discard",
+                  "parameter_refs": [
                     "double_param"
                   ]
                 }
               ]
             },
             {
-              "name": "boolean-settings",
-              "parameters": [
+              "id": "boolean-settings",
+              "parameter_refs": [
                 "boolean_param",
                 "str_param"
               ]

@@ -11,6 +11,7 @@ import { GroupMetadata } from "./GroupInfo";
 import { ParameterMetadata } from "./ParameterInfo";
 import { StructureMetadata } from "./StructureInfo";
 import { Size } from "./form-constants";
+import { ResourceDef } from "./L10nProvider";
 import _ from "underscore";
 
 export class PropertyDef {
@@ -18,8 +19,8 @@ export class PropertyDef {
 		this.name = cname;
 		this.icon = icon;
 		this.editorSize = editorSize;
-		this.label = label;
-		this.description = description;
+		this.label = ResourceDef.make(label);
+		this.description = ResourceDef.make(description);
 		this.structureMetadata = structureMetadata;
 		this.parameterMetadata = parameterMetadata;
 		this.groupMetadata = groupMetadata;
@@ -40,13 +41,13 @@ export class PropertyDef {
 	static makePropertyDef(parameters, structures, uihints) {
 		if (parameters) {
 			// structures aren't in current spec
-			const structureMetadata = StructureMetadata.makeStructureMetadata(structures, _.propertyOf(uihints)("structure_info"));
+			const structureMetadata = StructureMetadata.makeStructureMetadata(structures, _.propertyOf(uihints)("complex_type_info"));
 			const parameterMetadata = ParameterMetadata.makeParameterMetadata(parameters, _.propertyOf(uihints)("parameter_info"));
 			const groupMetadata = GroupMetadata.makeGroupMetadata(_.propertyOf(uihints)("group_info"));
 			return new PropertyDef(
 				_.propertyOf(uihints)("id"),
 				_.propertyOf(uihints)("icon"),
-				_.propertyOf(uihints)("editorSize"),
+				_.propertyOf(uihints)("editor_size"),
 				_.propertyOf(uihints)("label"),
 				_.propertyOf(uihints)("description"),
 				structureMetadata,

@@ -1,5 +1,5 @@
 {
-  "currentParameters": {
+  "current_parameters": {
     "colName": "",
     "col": "",
     "measurement": ""
@@ -34,21 +34,21 @@
     "icon": "images/transformationspark.svg",
     "parameter_info": [
       {
-        "name": "colName",
+        "parameter_ref": "colName",
         "orientation": "horizontal"
       },
       {
-        "name": "measurement",
+        "parameter_ref": "measurement",
         "control": "oneofselect"
       }
     ],
     "group_info": [
       {
-        "name": "settings",
+        "id": "settings",
         "label": {
           "default": "Settings"
         },
-        "parameters": [
+        "parameter_refs": [
           "colName",
           "col",
           "measurement"
@@ -60,14 +60,14 @@
         "validation": {
           "fail_message": {
             "type": "error",
-            "focusParam": "colName",
+            "focus_parameter_ref": "colName",
             "message": {
               "resource_key": "colname_not_empty"
             }
           },
           "evaluate": {
             "condition": {
-              "param": "colName",
+              "parameter_ref": "colName",
               "op": "isNotEmpty"
             }
           }
@@ -77,14 +77,14 @@
         "validation": {
           "fail_message": {
             "type": "error",
-            "focusParam": "colName",
+            "focus_parameter_ref": "colName",
             "message": {
               "resource_key": "colname_not_unique"
             }
           },
           "evaluate": {
             "condition": {
-              "param": "colName",
+              "parameter_ref": "colName",
               "op": "colNotExists"
             }
           }
@@ -94,14 +94,14 @@
         "validation": {
           "fail_message": {
             "type": "error",
-            "focusParam": "col",
+            "focus_parameter_ref": "col",
             "message": {
               "resource_key": "col_not_empty"
             }
           },
           "evaluate": {
             "condition": {
-              "param": "col",
+              "parameter_ref": "col",
               "op": "isNotEmpty"
             }
           }
@@ -109,7 +109,7 @@
       }
     ]
   },
-  "datasetMetadata": {
+  "dataset_metadata": {
     "fields": [
       {
         "name": "Age",

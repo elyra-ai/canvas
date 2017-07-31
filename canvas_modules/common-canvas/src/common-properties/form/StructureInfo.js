@@ -57,7 +57,7 @@ class StructureDef {
 				_.propertyOf(structure)("name"),
 				ParameterDef.makeParameterDef(_.propertyOf(structure)("key_definition"), _.propertyOf(uihints)("key_definition")),
 				ParameterMetadata.makeParameterMetadata(_.propertyOf(structure)("parameters"), _.propertyOf(uihints)("parameters")),
-				_.propertyOf(uihints)("moveableRows")
+				_.propertyOf(uihints)("moveable_rows")
 			);
 		}
 		return null;
@@ -68,7 +68,7 @@ class StructureDef {
 function getStructureUIHint(structureName, uihints) {
 	if (uihints) {
 		for (const uihint of uihints) {
-			if (structureName === uihint.name) {
+			if (structureName === uihint.complex_type_ref) {
 				return uihint;
 			}
 		}

@@ -12,12 +12,11 @@ import { ResourceDef } from "./L10nProvider";
 import _ from "underscore";
 
 class Group {
-	constructor(cname, parameters, type, label, flow, dependsOn, subGroups) {
+	constructor(cname, parameters, type, label, dependsOn, subGroups) {
 		this.name = cname;
 		this.parameters = parameters;
 		this.type = type;
 		this.label = ResourceDef.make(label);
-		this.flow = flow; // currently not part of form.json spec
 		this.dependsOn = dependsOn;
 		this.subGroups = subGroups;
 	}
@@ -43,12 +42,11 @@ class Group {
 				}
 			}
 			return new Group(
-				_.propertyOf(uiGroup)("name"),
-				_.propertyOf(uiGroup)("parameters"),
+				_.propertyOf(uiGroup)("id"),
+				_.propertyOf(uiGroup)("parameter_refs"),
 				_.propertyOf(uiGroup)("type"),
 				_.propertyOf(uiGroup)("label"),
-				_.propertyOf(uiGroup)("flow"),
-				_.propertyOf(uiGroup)("depends_on"),
+				_.propertyOf(uiGroup)("depends_on_ref"),
 				subGroups);
 		}
 		return null;

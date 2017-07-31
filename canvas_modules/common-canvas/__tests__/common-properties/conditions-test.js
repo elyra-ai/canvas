@@ -39,9 +39,9 @@ validationDefinitions.numberfieldCheckpointInterval = [
 			"validation": {
 				"fail_message": {
 					"type": "error",
-					"focusParam": "numberfieldCheckpointInterval",
+					"focus_parameter_ref": "numberfieldCheckpointInterval",
 					"message": {
-						"resourceKey": "numberfield_checkpoint_interval_not_valid",
+						"resource_key": "numberfield_checkpoint_interval_not_valid",
 						"default": "The checkpoint interval value must either be >= 1 or -1 to disable"
 					}
 				},
@@ -49,14 +49,14 @@ validationDefinitions.numberfieldCheckpointInterval = [
 					"or": [
 						{
 							"condition": {
-								"param": "numberfieldCheckpointInterval",
+								"parameter_ref": "numberfieldCheckpointInterval",
 								"op": "equals",
 								"value": -1
 							}
 						},
 						{
 							"condition": {
-								"param": "numberfieldCheckpointInterval",
+								"parameter_ref": "numberfieldCheckpointInterval",
 								"op": "greaterThan",
 								"value": 0
 							}
@@ -77,9 +77,9 @@ validationDefinitions.numberfieldMaxBins = [
 			"validation": {
 				"fail_message": {
 					"type": "error",
-					"focusParam": "numberfieldMaxBins",
+					"focus_parameter_ref": "numberfieldMaxBins",
 					"message": {
-						"resourceKey": "numberfield_max_bins_not_valid",
+						"resource_key": "numberfield_max_bins_not_valid",
 						"default": "Maximum number of bins must be >= 2 or Maximum depth of the tree > 0"
 					}
 				},
@@ -87,14 +87,14 @@ validationDefinitions.numberfieldMaxBins = [
 					"or": [
 						{
 							"condition": {
-								"param": "numberfieldMaxBins",
+								"parameter_ref": "numberfieldMaxBins",
 								"op": "greaterThan",
 								"value": 1
 							}
 						},
 						{
 							"condition": {
-								"param": "numberfieldMaxDepth",
+								"parameter_ref": "numberfieldMaxDepth",
 								"op": "greaterThan",
 								"value": 0
 							}
@@ -115,9 +115,9 @@ validationDefinitions.numberfieldMaxDepth = [
 			"validation": {
 				"fail_message": {
 					"type": "error",
-					"focusParam": "numberfieldMaxBins",
+					"focus_parameter_ref": "numberfieldMaxBins",
 					"message": {
-						"resourceKey": "numberfield_max_bins_not_valid",
+						"resource_key": "numberfield_max_bins_not_valid",
 						"default": "Maximum number of bins must be >= 2 or Maximum depth of the tree > 0"
 					}
 				},
@@ -125,14 +125,14 @@ validationDefinitions.numberfieldMaxDepth = [
 					"or": [
 						{
 							"condition": {
-								"param": "numberfieldMaxBins",
+								"parameter_ref": "numberfieldMaxBins",
 								"op": "greaterThan",
 								"value": 1
 							}
 						},
 						{
 							"condition": {
-								"param": "numberfieldMaxDepth",
+								"parameter_ref": "numberfieldMaxDepth",
 								"op": "greaterThan",
 								"value": 0
 							}
@@ -150,15 +150,15 @@ validationDefinitions.numberfieldMinInstancesPerNode = [
 			"validation": {
 				"fail_message": {
 					"type": "warning",
-					"focusParam": "numberfieldMinInstancesPerNode",
+					"focus_parameter_ref": "numberfieldMinInstancesPerNode",
 					"message": {
-						"resourceKey": "numberfield_min_instances_per_node_not_valid",
+						"resource_key": "numberfield_min_instances_per_node_not_valid",
 						"default": "The minimum instances per node value must be >= 1"
 					}
 				},
 				"evaluate": {
 					"condition": {
-						"param": "numberfieldMinInstancesPerNode",
+						"parameter_ref": "numberfieldMinInstancesPerNode",
 						"op": "greaterThan",
 						"value": 0
 					}
@@ -174,15 +174,15 @@ validationDefinitions.numberfieldMinInfoGain = [
 			"validation": {
 				"fail_message": {
 					"type": "error",
-					"focusParam": "numberfieldMinInfoGain",
+					"focus_parameter_ref": "numberfieldMinInfoGain",
 					"message": {
-						"resourceKey": "numberfield_min_info_gain_not_valid",
+						"resource_key": "numberfield_min_info_gain_not_valid",
 						"default": "Cannot be less than 0"
 					}
 				},
 				"evaluate": {
 					"condition": {
-						"param": "numberfieldMinInfoGain",
+						"parameter_ref": "numberfieldMinInfoGain",
 						"op": "greaterThan",
 						"value": 0
 					}
@@ -198,15 +198,15 @@ validationDefinitions.numberfieldSeed = [
 			"validation": {
 				"fail_message": {
 					"type": "error",
-					"focusParam": "numberfieldSeed",
+					"focus_parameter_ref": "numberfieldSeed",
 					"message": {
-						"resourceKey": "numberfield_seed_not_valid",
+						"resource_key": "numberfield_seed_not_valid",
 						"default": "This is an example of a very long error message that someone might enter. The message text will wrap around to the next line as shown here."
 					}
 				},
 				"evaluate": {
 					"condition": {
-						"param": "numberfieldSeed",
+						"parameter_ref": "numberfieldSeed",
 						"op": "contains",
 						"value": "123"
 					}
@@ -222,15 +222,15 @@ validationDefinitions.columnSelectInputFieldList = [
 			"validation": {
 				"fail_message": {
 					"type": "error",
-					"focusParam": "columnSelectInputFieldList",
+					"focus_parameter_ref": "columnSelectInputFieldList",
 					"message": {
-						"resourceKey": "column_select_input_field_list_not_empty",
+						"resource_key": "column_select_input_field_list_not_empty",
 						"default": "Select one or more input fields."
 					}
 				},
 				"evaluate": {
 					"condition": {
-						"param": "columnSelectInputFieldList",
+						"parameter_ref": "columnSelectInputFieldList",
 						"op": "isNotEmpty"
 					}
 				}
@@ -245,15 +245,15 @@ validationDefinitions.oneofcolumnsList = [
 			"validation": {
 				"fail_message": {
 					"type": "error",
-					"focusParam": "oneofcolumnsList",
+					"focus_parameter_ref": "oneofcolumnsList",
 					"message": {
-						"resourceKey": "one_of_columns_list_not_empty",
+						"resource_key": "one_of_columns_list_not_empty",
 						"default": "Cannot have Sex selected"
 					}
 				},
 				"evaluate": {
 					"condition": {
-						"param": "oneofcolumnsList",
+						"parameter_ref": "oneofcolumnsList",
 						"op": "contains",
 						"value": "Sex"
 					}
@@ -269,15 +269,15 @@ validationDefinitions.someofcolumnsList = [
 			"validation": {
 				"fail_message": {
 					"type": "warning",
-					"focusParam": "someofcolumnsList",
+					"focus_parameter_ref": "someofcolumnsList",
 					"message": {
-						"resourceKey": "some_of_columns_list_not_empty",
+						"resource_key": "some_of_columns_list_not_empty",
 						"default": "Field must be selected"
 					}
 				},
 				"evaluate": {
 					"condition": {
-						"param": "someofcolumnsList",
+						"parameter_ref": "someofcolumnsList",
 						"op": "isNotEmpty"
 					}
 				}
@@ -294,13 +294,13 @@ validationDefinitions.checkboxTypes = [
 					"type": "warning",
 					"message": {
 						"default": "No data types are selected",
-						"resourceKey": "checkbox_types_not_empty"
+						"resource_key": "checkbox_types_not_empty"
 					},
-					"focusParam": "checkboxTypes"
+					"focus_parameter_ref": "checkboxTypes"
 				},
 				"evaluate": {
 					"condition": {
-						"param": "checkboxTypes",
+						"parameter_ref": "checkboxTypes",
 						"op": "isNotEmpty"
 					}
 				}
@@ -318,9 +318,9 @@ validationDefinitions.checkboxTypes = [
 					"type": "error",
 					"message": {
 						"default": "Checkbox single should be checked if data type is selected",
-						"resourceKey": "checkbox_single_not_empty"
+						"resource_key": "checkbox_single_not_empty"
 					},
-					"focusParam": "checkboxSingle"
+					"focus_parameter_ref": "checkboxSingle"
 				},
 				"evaluate": {
 					"or": [
@@ -328,13 +328,13 @@ validationDefinitions.checkboxTypes = [
 							"and": [
 								{
 									"condition": {
-										"param": "checkboxTypes",
+										"parameter_ref": "checkboxTypes",
 										"op": "isNotEmpty"
 									}
 								},
 								{
 									"condition": {
-										"param": "checkboxSingle",
+										"parameter_ref": "checkboxSingle",
 										"op": "checked"
 									}
 								}
@@ -344,13 +344,13 @@ validationDefinitions.checkboxTypes = [
 							"and": [
 								{
 									"condition": {
-										"param": "checkboxTypes",
+										"parameter_ref": "checkboxTypes",
 										"op": "isEmpty"
 									}
 								},
 								{
 									"condition": {
-										"param": "checkboxSingle",
+										"parameter_ref": "checkboxSingle",
 										"op": "notChecked"
 									}
 								}
@@ -371,13 +371,13 @@ validationDefinitions.oneofselectAnimals = [
 					"type": "warning",
 					"message": {
 						"default": "Warning: selected tiger",
-						"resourceKey": "one_of_select_animals_not_empty"
+						"resource_key": "one_of_select_animals_not_empty"
 					},
-					"focusParam": "oneofselectAnimals"
+					"focus_parameter_ref": "oneofselectAnimals"
 				},
 				"evaluate": {
 					"condition": {
-						"param": "oneofselectAnimals",
+						"parameter_ref": "oneofselectAnimals",
 						"op": "notContains",
 						"value": "tiger"
 					}
@@ -395,13 +395,13 @@ validationDefinitions.someofselectNumbers = [
 					"type": "warning",
 					"message": {
 						"default": "Warning: selected three",
-						"resourceKey": "some_of_select_animals_not_three"
+						"resource_key": "some_of_select_animals_not_three"
 					},
-					"focusParam": "someofselectNumbers"
+					"focus_parameter_ref": "someofselectNumbers"
 				},
 				"evaluate": {
 					"condition": {
-						"param": "someofselectNumbers",
+						"parameter_ref": "someofselectNumbers",
 						"op": "notContains",
 						"value": "three"
 					}
@@ -422,9 +422,9 @@ validationDefinitions.checkboxSingle = [
 					"type": "error",
 					"message": {
 						"default": "Checkbox single should be checked if data type is selected",
-						"resourceKey": "checkbox_single_not_empty"
+						"resource_key": "checkbox_single_not_empty"
 					},
-					"focusParam": "checkboxSingle"
+					"focus_parameter_ref": "checkboxSingle"
 				},
 				"evaluate": {
 					"or": [
@@ -432,13 +432,13 @@ validationDefinitions.checkboxSingle = [
 							"and": [
 								{
 									"condition": {
-										"param": "checkboxTypes",
+										"parameter_ref": "checkboxTypes",
 										"op": "isNotEmpty"
 									}
 								},
 								{
 									"condition": {
-										"param": "checkboxSingle",
+										"parameter_ref": "checkboxSingle",
 										"op": "checked"
 									}
 								}
@@ -448,13 +448,13 @@ validationDefinitions.checkboxSingle = [
 							"and": [
 								{
 									"condition": {
-										"param": "checkboxTypes",
+										"parameter_ref": "checkboxTypes",
 										"op": "isEmpty"
 									}
 								},
 								{
 									"condition": {
-										"param": "checkboxSingle",
+										"parameter_ref": "checkboxSingle",
 										"op": "notChecked"
 									}
 								}
@@ -475,13 +475,13 @@ validationDefinitions.radiosetColor = [
 					"type": "warning",
 					"message": {
 						"default": "Are you sure you want to choose yellow?",
-						"resourceKey": "radiosetColor"
+						"resource_key": "radiosetColor"
 					},
-					"focusParam": "radiosetColor"
+					"focus_parameter_ref": "radiosetColor"
 				},
 				"evaluate": {
 					"condition": {
-						"param": "radiosetColor",
+						"parameter_ref": "radiosetColor",
 						"op": "notEquals",
 						"value": "yellow"
 					}
@@ -497,15 +497,15 @@ validationDefinitions.passwordField = [
 			"validation": {
 				"fail_message": {
 					"type": "error",
-					"focusParam": "passwordField",
+					"focus_parameter_ref": "passwordField",
 					"message": {
-						"resourceKey": "password_not_empty",
+						"resource_key": "password_not_empty",
 						"default": "Password cannot be empty, enter \"password\""
 					}
 				},
 				"evaluate": {
 					"condition": {
-						"param": "passwordField",
+						"parameter_ref": "passwordField",
 						"op": "isNotEmpty"
 					}
 				}
@@ -522,13 +522,13 @@ validationDefinitions.textfieldName = [
 					"type": "error",
 					"message": {
 						"default": "Name cannot contain /",
-						"resourceKey": "textfield_name_not_valid_one"
+						"resource_key": "textfield_name_not_valid_one"
 					},
-					"focusParam": "textfieldName"
+					"focus_parameter_ref": "textfieldName"
 				},
 				"evaluate": {
 					"condition": {
-						"param": "textfieldName",
+						"parameter_ref": "textfieldName",
 						"op": "notContains",
 						"value": "/"
 					}
@@ -544,22 +544,22 @@ validationDefinitions.textfieldName = [
 					"type": "error",
 					"message": {
 						"default": "Name cannot contain double or single \"quotes\"",
-						"resourceKey": "textfield_name_not_valid_two"
+						"resource_key": "textfield_name_not_valid_two"
 					},
-					"focusParam": "textfieldName"
+					"focus_parameter_ref": "textfieldName"
 				},
 				"evaluate": {
 					"and": [
 						{
 							"condition": {
-								"param": "textfieldName",
+								"parameter_ref": "textfieldName",
 								"op": "notContains",
 								"value": "\""
 							}
 						},
 						{
 							"condition": {
-								"param": "textfieldName",
+								"parameter_ref": "textfieldName",
 								"op": "notContains",
 								"value": "'"
 							}
@@ -579,29 +579,29 @@ validationDefinitions.textareaDescription = [
 					"type": "warning",
 					"message": {
 						"default": "Description cannot contain /, double or single \"quotes\"",
-						"resourceKey": "textarea_description_not_valid"
+						"resource_key": "textarea_description_not_valid"
 					},
-					"focusParam": "textareaDescription"
+					"focus_parameter_ref": "textareaDescription"
 				},
 				"evaluate": {
 					"and": [
 						{
 							"condition": {
-								"param": "textareaDescription",
+								"parameter_ref": "textareaDescription",
 								"op": "notContains",
 								"value": "/"
 							}
 						},
 						{
 							"condition": {
-								"param": "textareaDescription",
+								"parameter_ref": "textareaDescription",
 								"op": "notContains",
 								"value": "\""
 							}
 						},
 						{
 							"condition": {
-								"param": "textareaDescription",
+								"parameter_ref": "textareaDescription",
 								"op": "notContains",
 								"value": "'"
 							}
@@ -621,29 +621,29 @@ validationDefinitions.expressionBox = [
 					"type": "error",
 					"message": {
 						"default": "Expression cannot contain /, double or single \"quotes\"",
-						"resourceKey": "expression_box_not_valid"
+						"resource_key": "expression_box_not_valid"
 					},
-					"focusParam": "expressionBox"
+					"focus_parameter_ref": "expressionBox"
 				},
 				"evaluate": {
 					"and": [
 						{
 							"condition": {
-								"param": "expressionBox",
+								"parameter_ref": "expressionBox",
 								"op": "notContains",
 								"value": "/"
 							}
 						},
 						{
 							"condition": {
-								"param": "expressionBox",
+								"parameter_ref": "expressionBox",
 								"op": "notContains",
 								"value": "\""
 							}
 						},
 						{
 							"condition": {
-								"param": "expressionBox",
+								"parameter_ref": "expressionBox",
 								"op": "notContains",
 								"value": "'"
 							}
@@ -661,15 +661,15 @@ validationDefinitions.structuretableRenameFields = [
 			"validation": {
 				"fail_message": {
 					"type": "error",
-					"focusParam": "structuretableRenameFields",
+					"focus_parameter_ref": "structuretableRenameFields",
 					"message": {
-						"resourceKey": "structuretable_rename_fields_not_empty",
+						"resource_key": "structuretable_rename_fields_not_empty",
 						"default": "The 'Output Name' field cannot be empty"
 					}
 				},
 				"evaluate": {
 					"condition": {
-						"param": "structuretableRenameFields",
+						"parameter_ref": "structuretableRenameFields",
 						"op": "isNotEmpty"
 					}
 				}

@@ -41,13 +41,12 @@ export default class Form {
 			}
 
 			const data = {
-				currentParameters: _.propertyOf(paramDef)("currentParameters"),
-				datasetMetadata: _.propertyOf(paramDef)("datasetMetadata"),
+				currentParameters: _.propertyOf(paramDef)("current_parameters"),
+				datasetMetadata: _.propertyOf(paramDef)("dataset_metadata"),
 				conditions: Conditions.translateMessages(conditions, l10nProvider)
 			};
-			const formName = _.propertyOf(propDef)("name");
-			return new Form(formName,
-				l10nProvider.l10nLabel(propDef, formName),
+			return new Form(propDef.name,
+				l10nProvider.l10nLabel(propDef, propDef.name),
 				propDef.editorSizeHint(),
 				[UIItem.makePrimaryTabs(tabs)],
 				_defaultButtons(),
