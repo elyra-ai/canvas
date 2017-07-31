@@ -51,7 +51,7 @@ if [[ ${CURRENT_MJR_NUM} == ${LATEST_MJR_NUM} ]]; then
 	git add package.json
 	git pull
 	git commit -m "Update common-canvas version to ${LATEST_BUILDNUM}"
-	echo "Push changes to master"
+	echo "Push changes to ${MASTER}"
 	git push origin ${MASTER}
 else
 	echo "Major version changed.  User needs to manually update package.json with ${LATEST_BUILDNUM}"

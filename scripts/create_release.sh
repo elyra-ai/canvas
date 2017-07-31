@@ -29,7 +29,7 @@ WORKING_DIR="$PWD"
 GIT_ORG="NGP-TWC"
 GIT_REPO="wdp-abstract-canvas"
 GIT_DIRECTORY="${GIT_REPO}_repo"
-RELEASE_BRANCH="release"
+RELEASE="release"
 MASTER="master"
 GIT_USER="Y9CTMV866"
 GIT_USER_EMAIL="Y9CTMV866@nomail.relay.ibm.com"
@@ -42,13 +42,13 @@ echo "Clone wdp-abstract-canvas"
 git clone git@github.ibm.com:${GIT_ORG}/${GIT_REPO}.git ${GIT_DIRECTORY}
 
 cd $WORKING_DIR/$GIT_DIRECTORY
-git checkout ${RELEASE_BRANCH}
-if [[ $(git diff --name-status ${MASTER}..${RELEASE_BRANCH}) ]]; then
-	echo "Changes found between ${MASTER} and ${RELEASE_BRANCH}.  Merge branches."
+git checkout ${RELEASE}
+if [[ $(git diff --name-status ${MASTER}..${RELEASE}) ]]; then
+	echo "Changes found between ${MASTER} and ${RELEASE}.  Merge branches."
 	git checkout ${MASTER}
-	git push origin HEAD:${RELEASE_BRANCH} --force
+	git push origin HEAD:${RELEASE} --force
 else
-	echo "No changes found between ${MASTER} and ${RELEASE_BRANCH}"
+	echo "No changes found between ${MASTER} and ${RELEASE}"
 	exit 0;
 fi
 

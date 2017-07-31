@@ -12,8 +12,11 @@
 
 set -e
 
+MASTER="master"
+
 # only set when deploying to Artifactory.
 if [[ ${TRAVIS_BRANCH} == ${MASTER} ]]; then
+	echo "Setting Artifactory .npmrc config"
 	printf "@wdp:registry=https://na.artifactory.swg-devops.com/artifactory/api/npm/analytics-canvas-npm-local/\n" > .npmrc
 	printf "//na.artifactory.swg-devops.com/artifactory/api/npm/analytics-canvas-npm-local/:_password=${ARTIFACTORY_NPM_TOKEN}\n" >> .npmrc
 	printf "//na.artifactory.swg-devops.com/artifactory/api/npm/analytics-canvas-npm-local/:username=${ARTIFACTORY_NPM_USERNAME}\n" >> .npmrc

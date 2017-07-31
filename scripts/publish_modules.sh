@@ -13,7 +13,7 @@
 set -e
 
 WORKING_DIR="$PWD"
-RELEASE_BRANCH="release"
+RELEASE="release"
 MASTER="master"
 
 # Update package.json version on master only
@@ -51,11 +51,11 @@ echo "Publishing common-canvas $BUILDNUM to NPM"
 cd ./canvas_modules/common-canvas
 if [[ ${TRAVIS_BRANCH} == ${MASTER} ]]; then
 	# Update Artifactory npm repository for master builds
-	echo "Publishing to Artifactory"
+	echo "Publishing to Artifactory: ${ARTIFACTORY_NPM_REPO}"
 	npm publish --registry ${ARTIFACTORY_NPM_REPO}
 	cd $WORKING_DIR/scripts
 	./update_wml_canvas.sh $BUILDNUM
-elif [[ ${TRAVIS_BRANCH} == ${RELEASE_BRANCH} ]]; then
+elif [[ ${TRAVIS_BRANCH} == ${RELEASE} ]]; then
 	# Update Whitewater npm repository for master builds
 	echo "Publishing to Whitewater NPM"
 	npm publish --registry https://npm-registry.whitewater.ibm.com/
