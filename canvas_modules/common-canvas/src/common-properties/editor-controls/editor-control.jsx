@@ -14,6 +14,7 @@ import React from "react";
 import ValidationMessage from "./validation-message.jsx";
 import ValidationIcon from "./validation-icon.jsx";
 import UiConditions from "../ui-conditions/ui-conditions.js";
+import PropertyUtils from "../util/property-utils.js";
 import { DEFAULT_VALIDATION_MESSAGE, VALIDATION_MESSAGE } from "../constants/constants.js";
 
 export default class EditorControl extends React.Component {
@@ -237,6 +238,8 @@ export default class EditorControl extends React.Component {
 		for (const key in controlValues) {
 			if (typeof controlValues[key][0] === "undefined") {
 				userInput[key] = [];
+			} else if (this.isEncodedFieldValue(controlValues[key][0])) {
+				userInput[key] = EditorControl.parseStructureStrings(controlValues[key]);
 			} else {
 				userInput[key] = controlValues[key][0];
 			}
@@ -251,6 +254,11 @@ export default class EditorControl extends React.Component {
 
 	clearValueListener() {
 		this._valueListener = null;
+	}
+
+	isEncodedFieldValue(value) {
+		return PropertyUtils.toType(value) === "string" &&
+						value.startsWith("[\"") && value.endsWith("\"]");
 	}
 
 	notifyValueChanged(controlName, value) {
