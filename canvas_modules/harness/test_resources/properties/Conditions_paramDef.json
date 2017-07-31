@@ -600,7 +600,7 @@
 				"name": "structurelisteditorTableInput",
 				"key_definition": {
           "name": "field",
-          "width": 16,
+          "width": 10,
           "label": {
             "resource_key": "structurelisteditorTableInput.field.label"
           }
@@ -608,7 +608,7 @@
         "parameters": [
           {
             "name": "structurelisteditorTableInput",
-            "width": 200,
+            "width": 30,
             "resource_key": "structurelisteditorTableInput.sort_order",
             "label": {
               "resource_key": "structurelisteditorTableInput.sort_order.label"
@@ -779,6 +779,24 @@
 		            }
 							}
 						]
+          }
+        }
+      },
+			{
+        "validation": {
+          "fail_message": {
+            "type": "error",
+            "focusParam": "numberfieldImpurity",
+            "message": {
+              "resource_key": "numberfieldImpurity_invalid"
+            }
+          },
+          "evaluate": {
+						"condition": {
+              "param": "numberfieldImpurity",
+              "op": "notEquals",
+              "value": "gini"
+            }
           }
         }
       },
@@ -1355,6 +1373,7 @@
 		"numberfieldSeed.desc": "Random seed",
 
     "numberfield_checkpoint_interval_not_valid": "The checkpoint interval value must either be >= 1 or -1 to disable",
+		"numberfieldImpurity_invalid": "invalid: gini is selected",
     "numberfield_max_bins_not_valid": "Maximum number of bins must be >= 2 or Maximum depth of the tree > 0",
     "numberfield_min_instances_per_node_not_valid": "The minimum instances per node value must be >= 1",
 		"numberfield_min_info_gain_not_valid": "Cannot be less than 0",

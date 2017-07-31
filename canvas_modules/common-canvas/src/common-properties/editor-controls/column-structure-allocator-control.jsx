@@ -165,12 +165,22 @@ export default class ColumnStructureAllocatorControl extends StructureTableEdito
 		const conditionState = this.getConditionMsgState(conditionProps);
 
 		const errorMessage = conditionState.message;
+		const messageType = conditionState.messageType;
+		const icon = conditionState.icon;
 		// const stateDisabled = conditionState.disabled;
 		const stateStyle = conditionState.style;
 
+		let controlIconContainerClass = "some-of-column-control-icon-container";
+		if (messageType !== "info") {
+			controlIconContainerClass = "some-of-column-control-icon-container-enabled";
+		}
+
 		return (
 			<div style={stateStyle}>
-				{this.createTable()}
+				<div id={controlIconContainerClass}>
+					{this.createTable()}
+					{icon}
+				</div>
 				{errorMessage}
 			</div>
 		);

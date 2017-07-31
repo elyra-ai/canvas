@@ -59,14 +59,20 @@ export default class CheckboxsetControl extends EditorControl {
 		const controlName = this.getControlID().split("-")[2];
 		const conditionProps = {
 			controlName: controlName,
-			controlType: "selection"
+			controlType: "checkbox"
 		};
 		const conditionState = this.getConditionMsgState(conditionProps);
 
 		const errorMessage = conditionState.message;
+		const messageType = conditionState.messageType;
+		const icon = conditionState.icon;
 		const stateDisabled = conditionState.disabled;
 		const stateStyle = conditionState.style;
 
+		let controlIconContainerClass = "control-icon-container";
+		if (messageType !== "info") {
+			controlIconContainerClass = "control-icon-container-enabled";
+		}
 		var buttons = [];
 
 		for (var i = 0; i < this.props.control.values.length; i++) {
@@ -91,11 +97,14 @@ export default class CheckboxsetControl extends EditorControl {
 
 		return (
 			<div style={stateStyle}>
-				<div id={this.getControlID()}
-					className="checkbox"
-					style={stateStyle}
-				>
-					{buttons}
+				<div id={controlIconContainerClass}>
+					<div id={this.getControlID()}
+						className="checkbox"
+						style={stateStyle}
+					>
+						{buttons}
+					</div>
+					{icon}
 				</div>
 				{errorMessage}
 			</div>

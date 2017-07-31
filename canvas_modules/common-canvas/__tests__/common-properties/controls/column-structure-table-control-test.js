@@ -245,7 +245,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 		const buttons = wrapper.find(".structure-table-content-row");
 		expect(buttons).to.have.length(1);
 		expect(buttons.find("#add-fields-button")).to.have.length(1);
-		expect(buttons.find("#remove-fields-button")).to.have.length(1);
+		expect(buttons.find("#remove-fields-button-disabled")).to.have.length(1);
 		const tableContent = wrapper.find(".structure-table-content-row");
 		expect(tableContent).to.have.length(1);
 		expect(tableContent.find("#table-row-move-button-container")).to.have.length(1);
@@ -589,7 +589,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 		);
 
 		// ensure the remove column button is disabled
-		const removeColumnButton = wrapper.find("#remove-fields-button");
+		const removeColumnButton = wrapper.find("#remove-fields-button-disabled");
 		expect(removeColumnButton).to.have.length(1);
 
 		// select the first row in the table

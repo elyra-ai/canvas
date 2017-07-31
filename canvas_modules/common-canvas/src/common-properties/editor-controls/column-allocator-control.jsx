@@ -135,9 +135,15 @@ export default class ColumnAllocatorControl extends EditorControl {
 		const conditionState = this.getConditionMsgState(conditionProps);
 
 		const errorMessage = conditionState.message;
+		const messageType = conditionState.messageType;
+		const icon = conditionState.icon;
 		const stateDisabled = conditionState.disabled;
 		const stateStyle = conditionState.style;
 
+		let controlIconContainerClass = "control-icon-container";
+		if (messageType !== "info") {
+			controlIconContainerClass = "control-icon-container-enabled";
+		}
 		if (this.props.multiColumn) {
 			// help={this.props.control.additionalText}
 			return (
@@ -164,19 +170,22 @@ export default class ColumnAllocatorControl extends EditorControl {
 		// help={this.props.control.additionalText}
 		return (
 			<div className="editor_control_area" style={stateStyle}>
-				<FormControl {...stateDisabled}
-					id={this.getControlID()}
-					className="column-allocator"
-					componentClass="select"
-					rows={1}
-					name={this.props.control.name}
-					style={stateStyle}
-					onChange={this.handleChange}
-					value={currentSeln}
-					ref="input"
-				>
-					{options}
-				</FormControl>
+				<div id={controlIconContainerClass}>
+					<FormControl {...stateDisabled}
+						id={this.getControlID()}
+						className="column-allocator"
+						componentClass="select"
+						rows={1}
+						name={this.props.control.name}
+						style={stateStyle}
+						onChange={this.handleChange}
+						value={currentSeln}
+						ref="input"
+					>
+						{options}
+					</FormControl>
+					{icon}
+				</div>
 				{errorMessage}
 			</div>
 		);

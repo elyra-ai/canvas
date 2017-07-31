@@ -19,6 +19,7 @@ import TextfieldControl from "./textfield-control.jsx";
 import FlexibleTable from "./flexible-table.jsx";
 import remove32 from "../../../assets/images/remove_32.svg";
 import remove32hover from "../../../assets/images/remove_32_hover.svg";
+import remove32disabled from "../../../assets/images/remove_32_disabled.svg";
 
 var _ = require("underscore");
 
@@ -336,16 +337,16 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		return false;
 	}
 
-	makeLabel(stateStyle) {
+	makeLabel() {
 		let label;
 		if (this.props.control.label && this.props.control.separateLabel && !this.hasFilter()) {
 			if (!(this.props.control.description && this.props.control.description.placement === "on_panel")) {
 				let requiredIndicator;
 				if (this.props.control.required) {
-					requiredIndicator = <span className="required-control-indicator" style={stateStyle}>*</span>;
+					requiredIndicator = <span className="required-control-indicator">*</span>;
 				}
 				label = (<div className={"label-container"}>
-					<label className="control-label" style={stateStyle}>{this.props.control.label.text}</label>
+					<label className="control-label">{this.props.control.label.text}</label>
 					{requiredIndicator}
 				</div>);
 			}
@@ -354,17 +355,16 @@ export default class ColumnStructureTableEditor extends EditorControl {
 	}
 
 	makeAddRemoveButtonPanel() {
+		let removeFieldsButtonId = "remove-fields-button-enabled";
 		let removeIconImage = (<img src={remove32} />);
-		if (this.state.hoverRemoveIcon) {
+		if (!this.state.enableRemoveIcon) {
+			removeIconImage = (<img src={remove32disabled} />);
+			removeFieldsButtonId = "remove-fields-button-disabled";
+		} else if (this.state.hoverRemoveIcon) {
 			removeIconImage = (<img src={remove32hover} />);
 		}
 
-		let removeIconId = "remove-fields-button";
-		if (this.state.enableRemoveIcon) {
-			removeIconId = "remove-fields-button-enabled";
-		}
-
-		const removeIcon = (<div id={removeIconId}
+		const removeIcon = (<div id={removeFieldsButtonId}
 			className="button"
 			onClick={this.removeSelected}
 			onBlur={this.validateInput}
@@ -441,6 +441,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 				onSort={this.onSort}
 				label={this.makeLabel(stateStyle)}
 				topRightPanel={this.makeAddRemoveButtonPanel()}
+				validationStyle={stateStyle}
 			/>);
 		setTimeout(function() {
 			that.scrollToRow = null;

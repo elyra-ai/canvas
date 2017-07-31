@@ -603,7 +603,7 @@ export default class EditorForm extends React.Component {
 			// structuretable labels w/o descriptions and filtering are created elsewhere
 			const isStructureTable = control.controlType === "structuretable";
 			if (!isStructureTable || description || hasFilter) {
-				let className = "";
+				let className = "default-label-container";
 				if (control.controlType === "columnselect" || control.controlType === "structuretable") {
 					className = "label-container";
 				}

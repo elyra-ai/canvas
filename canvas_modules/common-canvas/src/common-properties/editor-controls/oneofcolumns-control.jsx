@@ -40,24 +40,34 @@ export default class OneofcolumnsControl extends EditorControl {
 		const conditionState = this.getConditionMsgState(conditionProps);
 
 		const errorMessage = conditionState.message;
+		const messageType = conditionState.messageType;
+		const icon = conditionState.icon;
 		const stateDisabled = conditionState.disabled;
 		const stateStyle = conditionState.style;
+
+		let controlIconContainerClass = "control-icon-container";
+		if (messageType !== "info") {
+			controlIconContainerClass = "control-icon-container-enabled";
+		}
 
 		var options = EditorControl.genColumnSelectOptions(this.props.dataModel.fields, [this.state.controlValue], true);
 
 		return (
 			<div style={stateStyle}>
-				<FormControl id={this.getControlID()}
-					{...stateDisabled}
-					style={stateStyle}
-					componentClass="select"
-					name={this.props.control.name}
-					onChange={this.handleChange}
-					value={this.state.controlValue}
-					ref="input"
-				>
-					{options}
-				</FormControl>
+				<div id={controlIconContainerClass}>
+					<FormControl id={this.getControlID()}
+						{...stateDisabled}
+						style={stateStyle}
+						componentClass="select"
+						name={this.props.control.name}
+						onChange={this.handleChange}
+						value={this.state.controlValue}
+						ref="input"
+					>
+						{options}
+					</FormControl>
+					{icon}
+				</div>
 				{errorMessage}
 			</div>
 		);

@@ -337,8 +337,15 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 		const conditionState = this.getConditionMsgState(conditionProps);
 
 		const errorMessage = conditionState.message;
+		const messageType = conditionState.messageType;
+		const icon = conditionState.icon;
 		// const stateDisabled = conditionState.disabled;
 		const stateStyle = conditionState.style;
+
+		let controlIconContainerClass = "control-icon-container";
+		if (messageType !== "info") {
+			controlIconContainerClass = "control-icon-container-enabled";
+		}
 
 		var moveCol = <tc />;
 		if (typeof this.props.control.moveableRows !== "undefined" && this.props.control.moveableRows) {
@@ -358,10 +365,10 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 			if (!(this.props.control.description && this.props.control.description.placement === "on_panel")) {
 				let requiredIndicator;
 				if (this.props.control.required) {
-					requiredIndicator = <span className="required-control-indicator" style={stateStyle}>*</span>;
+					requiredIndicator = <span className="required-control-indicator">*</span>;
 				}
 				label = (<div className={"label-container"}>
-					<label className="control-label" style={stateStyle}>{this.props.control.label.text}</label>
+					<label className="control-label">{this.props.control.label.text}</label>
 					{requiredIndicator}
 				</div>);
 			}
@@ -374,7 +381,10 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 			<tbody>
 				<tr className="structure-table-content-row" style={stateStyle}>
 					<td>
-						{table}
+						<div id={controlIconContainerClass}>
+							{table}
+							{icon}
+						</div>
 						{errorMessage}
 					</td>
 					<td>

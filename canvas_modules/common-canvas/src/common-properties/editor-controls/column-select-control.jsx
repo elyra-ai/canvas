@@ -15,6 +15,7 @@ import ReactDOM from "react-dom";
 import { Button } from "ap-components-react/dist/ap-components-react";
 import remove32 from "../../../assets/images/remove_32.svg";
 import remove32hover from "../../../assets/images/remove_32_hover.svg";
+import remove32disabled from "../../../assets/images/remove_32_disabled.svg";
 
 var _ = require("underscore");
 
@@ -163,15 +164,13 @@ export default class ColumnSelectControl extends EditorControl {
 	}
 
 	mouseEnterRemoveButton() {
-		this.setState({ hoverRemoveIcon: true });
+		if (this.state.enableRemoveIcon) {
+			this.setState({ hoverRemoveIcon: true });
+		}
 	}
 
 	mouseLeaveRemoveButton() {
 		this.setState({ hoverRemoveIcon: false });
-	}
-
-	removeButtonId() {
-		return "remove-fields-button_" + this.props.control.name;
 	}
 
 	render() {
@@ -193,14 +192,25 @@ export default class ColumnSelectControl extends EditorControl {
 		const conditionState = this.getConditionMsgState(conditionProps);
 
 		const errorMessage = conditionState.message;
+		const messageType = conditionState.messageType;
+		const icon = conditionState.icon;
 		const stateDisabled = conditionState.disabled;
 		const stateStyle = conditionState.style;
 
+		let controlIconContainerClass = "column-select-control-icon-container";
+		if (messageType !== "info") {
+			controlIconContainerClass = "column-select-control-icon-container-enabled";
+		}
+
+		let removeFieldsButtonId = "remove-fields-button-enabled";
 		let removeIconImage = (<img src={remove32} />);
-		if (this.state.hoverRemoveIcon) {
+		if (!this.state.enableRemoveIcon) {
+			removeIconImage = (<img src={remove32disabled} />);
+			removeFieldsButtonId = "remove-fields-button-disabled";
+		} else if (this.state.hoverRemoveIcon) {
 			removeIconImage = (<img src={remove32hover} />);
 		}
-		let removeIcon = (<div id="remove-fields-button"
+		let removeIcon = (<div id={removeFieldsButtonId}
 			className="button"
 			onClick={this.removeSelected}
 			onMouseEnter={this.mouseEnterRemoveButton}
@@ -210,7 +220,7 @@ export default class ColumnSelectControl extends EditorControl {
 			{removeIconImage}
 		</div>);
 		if (this.state.enableRemoveIcon) {
-			removeIcon = (<div id="remove-fields-button-enabled"
+			removeIcon = (<div id={removeFieldsButtonId}
 				className="button"
 				onClick={this.removeSelected}
 				onMouseEnter={this.mouseEnterRemoveButton}
@@ -239,21 +249,24 @@ export default class ColumnSelectControl extends EditorControl {
 						{removeIcon}
 					</OverlayTrigger>
 					<div className="editor_control_area" style={stateStyle}>
-						<FormControl {...stateDisabled}
-							id={this.getControlID()}
-							className="column-allocator"
-							componentClass="select"
-							multiple
-							rows={6}
-							name={this.props.control.name}
-							style={stateStyle}
-							onChange={this.handleChangeMultiColumn}
-							onBlur={this.validateInput}
-							value={this.state.selectedValues}
-							ref="input"
-						>
-							{options}
-						</FormControl>
+						<div id={controlIconContainerClass}>
+							<FormControl {...stateDisabled}
+								id={this.getControlID()}
+								className="column-allocator"
+								componentClass="select"
+								multiple
+								rows={6}
+								name={this.props.control.name}
+								style={stateStyle}
+								onChange={this.handleChangeMultiColumn}
+								onBlur={this.validateInput}
+								value={this.state.selectedValues}
+								ref="input"
+							>
+								{options}
+							</FormControl>
+							{icon}
+						</div>
 						{errorMessage}
 					</div>
 				</div>
@@ -276,20 +289,23 @@ export default class ColumnSelectControl extends EditorControl {
 					{removeIcon}
 				</OverlayTrigger>
 				<div className="editor_control_area" style={stateStyle}>
-					<FormControl {...stateDisabled}
-						id={this.getControlID()}
-						className="column-allocator"
-						componentClass="select"
-						rows={1}
-						name={this.props.control.name}
-						style={stateStyle}
-						onChange={this.handleChange}
-						onBlur={this.validateInput}
-						value={this.state.selectedValues}
-						ref="input"
-					>
-						{options}
-					</FormControl>
+					<div id={controlIconContainerClass}>
+						<FormControl {...stateDisabled}
+							id={this.getControlID()}
+							className="column-allocator"
+							componentClass="select"
+							rows={1}
+							name={this.props.control.name}
+							style={stateStyle}
+							onChange={this.handleChange}
+							onBlur={this.validateInput}
+							value={this.state.selectedValues}
+							ref="input"
+						>
+							{options}
+						</FormControl>
+						{icon}
+					</div>
 					{errorMessage}
 				</div>
 			</div>

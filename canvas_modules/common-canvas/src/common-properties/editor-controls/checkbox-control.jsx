@@ -42,13 +42,20 @@ export default class CheckboxControl extends EditorControl {
 		const controlName = this.getControlID().split("-")[2];
 		const conditionProps = {
 			controlName: controlName,
-			controlType: "selection"
+			controlType: "checkbox"
 		};
 		const conditionState = this.getConditionMsgState(conditionProps);
 
 		const errorMessage = conditionState.message;
+		const messageType = conditionState.messageType;
+		const icon = conditionState.icon;
 		const stateDisabled = conditionState.disabled;
 		const stateStyle = conditionState.style;
+
+		let controlIconContainerClass = "control-icon-container";
+		if (messageType !== "info") {
+			controlIconContainerClass = "control-icon-container-enabled";
+		}
 
 		var cb = (<Checkbox {...stateDisabled}
 			style={stateStyle}
@@ -61,7 +68,10 @@ export default class CheckboxControl extends EditorControl {
 
 		return (
 			<div className="checkbox editor_control_area" style={stateStyle}>
-				{cb}
+				<div id={controlIconContainerClass}>
+					{cb}
+					{icon}
+				</div>
 				{errorMessage}
 			</div>
 		);

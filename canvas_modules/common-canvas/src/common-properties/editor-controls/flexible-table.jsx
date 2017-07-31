@@ -120,6 +120,20 @@ export default class FlexibleTable extends React.Component {
 			}
 		}
 
+		let headerStyle = {};
+		let tableStyle = {};
+		if (this.props.validationStyle && this.props.validationStyle.borderColor) {
+			headerStyle = {
+				borderTopColor: this.props.validationStyle.borderColor,
+				borderLeftColor: this.props.validationStyle.borderColor,
+				borderRightColor: this.props.validationStyle.borderColor
+			};
+			tableStyle = {
+				borderBottomColor: this.props.validationStyle.borderColor,
+				borderLeftColor: this.props.validationStyle.borderColor,
+				borderRightColor: this.props.validationStyle.borderColor
+			};
+		}
 		let renderTable = "";
 		if (typeof this.props.filterable !== "undefined" && this.props.filterable.length !== 0) {
 			const placeHolder = "Search in column " + searchLabel;
@@ -148,6 +162,7 @@ export default class FlexibleTable extends React.Component {
 				<div>
 					<div className="flexible-table-header">
 							<Table className="filter-header-border"
+								style={headerStyle}
 								key="flexible-table"
 								id="table-header"
 								sortable={this.props.sortable}
@@ -162,7 +177,7 @@ export default class FlexibleTable extends React.Component {
 								</Thead>
 							</Table>
 					</div>
-					<div id="flexible-table-container">
+					<div id="flexible-table-container" style={tableStyle}>
 						<Table
 							key="flexible-table"
 							className="table"
@@ -182,6 +197,7 @@ export default class FlexibleTable extends React.Component {
 					{this.props.topRightPanel}
 					<div className="flexible-table-header-container">
 						<Table className="filter-header-border"
+							style={headerStyle}
 							id="table-header"
 							sortable={this.props.sortable}
 							onSort={this.onSort}
@@ -192,7 +208,7 @@ export default class FlexibleTable extends React.Component {
 							</Thead>
 						</Table>
 					</div>
-					<div id="flexible-table-container">
+					<div id="flexible-table-container" style={tableStyle}>
 						<Table
 							className="table"
 							id="table"
@@ -228,5 +244,6 @@ FlexibleTable.propTypes = {
 	onFilter: React.PropTypes.func,
 	alignTop: React.PropTypes.bool,
 	label: React.PropTypes.object,
-	topRightPanel: React.PropTypes.object
+	topRightPanel: React.PropTypes.object,
+	validationStyle: React.PropTypes.object
 };

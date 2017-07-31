@@ -48,24 +48,34 @@ export default class ExpressionControl extends EditorControl {
 		const conditionState = this.getConditionMsgState(conditionProps);
 
 		const errorMessage = conditionState.message;
+		const messageType = conditionState.messageType;
+		const icon = conditionState.icon;
 		const stateDisabled = conditionState.disabled;
 		const stateStyle = conditionState.style;
+
+		let controlIconContainerClass = "control-icon-container";
+		if (messageType !== "info") {
+			controlIconContainerClass = "control-icon-container-enabled";
+		}
 
 		const charLimit = this.getCharLimit(CHARACTER_LIMITS.NODE_PROPERTIES_DIALOG_TEXT_AREA);
 		return (
 			<div className="editor_control_area" style={stateStyle}>
-				<TextField {...stateDisabled}
-					style={stateStyle}
-					type="textarea"
-					id={this.getControlID()}
-					onBlur={this.validateInput}
-					placeholder={this.props.control.additionalText}
-					onChange={this.handleChange}
-					value={this.state.controlValue}
-					rows={4}
-					maxCount={charLimit}
-					maxLength={charLimit}
-				/>
+				<div id={controlIconContainerClass}>
+					<TextField {...stateDisabled}
+						style={stateStyle}
+						type="textarea"
+						id={this.getControlID()}
+						onBlur={this.validateInput}
+						placeholder={this.props.control.additionalText}
+						onChange={this.handleChange}
+						value={this.state.controlValue}
+						rows={4}
+						maxCount={charLimit}
+						maxLength={charLimit}
+					/>
+					{icon}
+				</div>
 				{errorMessage}
 			</div>
 		);

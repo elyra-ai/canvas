@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2016. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -920,7 +920,7 @@ describe("condition messages renders correctly with checkbox control", () => {
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
 			JSON.parse(JSON.stringify(checkboxSingleErrorMessages)))).to.be.true;
 
-		expect(wrapper.find(".validation-error-message-icon-selection")).to.have.length(2);
+		expect(wrapper.find(".validation-error-message-icon-checkbox")).to.have.length(2);
 		expect(wrapper.find(".validation-error-message-color-error")).to.have.length(2);
 
 		checkbox.simulate("change", { target: { checked: false, id: "string" } });
@@ -939,7 +939,7 @@ describe("condition messages renders correctly with checkbox control", () => {
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
 			JSON.parse(JSON.stringify(checkboxTypesWarningMessages)))).to.be.true;
 
-		expect(wrapper.find(".validation-warning-message-icon-selection")).to.have.length(1);
+		expect(wrapper.find(".validation-warning-message-icon-checkbox")).to.have.length(1);
 		expect(wrapper.find(".validation-error-message-color-warning")).to.have.length(1);
 	});
 });
@@ -1033,7 +1033,7 @@ describe("condition messages renders correctly with radioSet control", () => {
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
 			JSON.parse(JSON.stringify(radiosetColorWarningMessages)))).to.be.true;
 
-		expect(wrapper.find(".validation-warning-message-icon-selection")).to.have.length(1);
+		expect(wrapper.find(".validation-warning-message-icon-checkbox")).to.have.length(1);
 		expect(wrapper.find(".validation-error-message-color-warning")).to.have.length(1);
 
 		expect(checkbox).to.have.length(1);

@@ -78,8 +78,15 @@ export default class OneofselectControl extends EditorControl {
 		const conditionState = this.getConditionMsgState(conditionProps);
 
 		const errorMessage = conditionState.message;
+		const messageType = conditionState.messageType;
+		const icon = conditionState.icon;
 		const stateDisabled = conditionState.disabled;
 		const stateStyle = conditionState.style;
+
+		let controlIconContainerClass = "control-icon-container";
+		if (messageType !== "info") {
+			controlIconContainerClass = "control-icon-container-enabled";
+		}
 
 		var dropDown = {};
 		var className = "Dropdown-control-panel";
@@ -91,18 +98,25 @@ export default class OneofselectControl extends EditorControl {
 		}
 
 		return (
-			<div onClick={this.onClick.bind(this)} className={className} style={stateStyle}>
-					<Dropdown {...stateDisabled}
-						id={this.getControlID()}
-						name={this.props.control.name}
-						options={dropDown.options}
-						onChange={this.handleChange}
-						onBlur={this.validateInput}
-						value={dropDown.selectedOption}
-						placeholder={this.props.control.additionalText}
-						ref="input"
-					/>
-					{errorMessage}
+			<div id="oneofselect-control-container">
+				<div id={controlIconContainerClass}>
+					<div>
+						<div onClick={this.onClick.bind(this)} className={className} style={stateStyle}>
+							<Dropdown {...stateDisabled}
+								id={this.getControlID()}
+								name={this.props.control.name}
+								options={dropDown.options}
+								onChange={this.handleChange}
+								onBlur={this.validateInput}
+								value={dropDown.selectedOption}
+								placeholder={this.props.control.additionalText}
+								ref="input"
+							/>
+						</div>
+					</div>
+					{icon}
+				</div>
+				{errorMessage}
 			</div>
 		);
 	}

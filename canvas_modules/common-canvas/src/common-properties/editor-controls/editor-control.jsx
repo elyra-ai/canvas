@@ -12,6 +12,7 @@
 import logger from "../../../utils/logger";
 import React from "react";
 import ValidationMessage from "./validation-message.jsx";
+import ValidationIcon from "./validation-icon.jsx";
 import UiConditions from "../ui-conditions/ui-conditions.js";
 import { DEFAULT_VALIDATION_MESSAGE, VALIDATION_MESSAGE } from "../constants/constants.js";
 
@@ -22,7 +23,10 @@ export default class EditorControl extends React.Component {
 	}
 
 	static joinNewlines(list) {
-		return list.join("\n");
+		if (Array.isArray(list)) {
+			return list.join("\n");
+		}
+		return "";
 	}
 
 	static genSelectOptions(control, selectedValues) {
@@ -159,20 +163,26 @@ export default class EditorControl extends React.Component {
 			validateErrorMessage={message}
 			controlType={conditionProps.controlType}
 		/>);
+		const errorIcon = (<ValidationIcon
+			validateErrorMessage={message}
+			controlType={conditionProps.controlType}
+		/>);
 		const stateDisabled = {};
 		let stateStyle = {};
 
+		let messageType = "info";
 		if (typeof message !== "undefined") {
+			messageType = message.type;
 			switch (message.type) {
 			case "warning":
 				stateStyle = {
-					color: VALIDATION_MESSAGE.WARNING,
+					// color: VALIDATION_MESSAGE.WARNING,
 					borderColor: VALIDATION_MESSAGE.WARNING
 				};
 				break;
 			case "error":
 				stateStyle = {
-					color: VALIDATION_MESSAGE.ERROR,
+					// color: VALIDATION_MESSAGE.ERROR,
 					borderColor: VALIDATION_MESSAGE.ERROR
 				};
 				break;
@@ -199,6 +209,8 @@ export default class EditorControl extends React.Component {
 
 		return {
 			message: errorMessage,
+			messageType: messageType,
+			icon: errorIcon,
 			disabled: stateDisabled,
 			style: stateStyle
 		};

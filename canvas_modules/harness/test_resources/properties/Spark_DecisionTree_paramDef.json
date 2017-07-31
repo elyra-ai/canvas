@@ -217,13 +217,14 @@
             "type": "error",
             "focusParam": "targetField",
             "message": {
-              "resource_key": "target_field_not_empty"
+              "resource_key": "target_field_not_equals_drug"
             }
           },
           "evaluate": {
             "condition": {
               "param": "targetField",
-              "op": "isNotEmpty"
+              "op": "notEquals",
+              "value": "Drug"
             }
           }
         }
@@ -443,7 +444,7 @@
     "seed.desc": "Random seed",
     "fields_settings.label": "Fields",
     "input_field_list_not_empty": "Select one or more input fields",
-    "target_field_not_empty": "Select a target field",
+    "target_field_not_equals_drug": "Do not select Drug",
     "checkpoint_interval_not_valid": "The checkpoint interval value must either be >= 1 or -1 to disable",
     "max_bins_not_valid": "Max bins must be >= 2 and >= number of categories in any categorical feature",
     "max_depth_not_valid": "The max depth parameter must be greater than or equal to zero",

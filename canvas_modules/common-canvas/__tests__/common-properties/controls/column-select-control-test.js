@@ -227,7 +227,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 		);
 
 		expect(wrapper.find("#add-fields-button")).to.have.length(1);
-		expect(wrapper.find("#remove-fields-button")).to.have.length(1);
+		expect(wrapper.find("#remove-fields-button-disabled")).to.have.length(1);
 		expect(wrapper.find(".editor_control_area")).to.have.length(1);
 	});
 

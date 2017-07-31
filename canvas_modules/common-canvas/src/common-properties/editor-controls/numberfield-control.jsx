@@ -48,29 +48,38 @@ export default class NumberfieldControl extends EditorControl {
 		const conditionState = this.getConditionMsgState(conditionProps);
 
 		const errorMessage = conditionState.message;
+		const messageType = conditionState.messageType;
+		const icon = conditionState.icon;
 		const stateDisabled = conditionState.disabled;
 		const stateStyle = conditionState.style;
 
+		let controlIconContainerClass = "control-icon-container";
+		if (messageType !== "info") {
+			controlIconContainerClass = "control-icon-container-enabled";
+		}
+
 		return (
 			<div className="editor_control_area" style={stateStyle}>
-				<TextField {...stateDisabled}
-					style={stateStyle}
-					type="number"
-					id={this.getControlID()}
-					onBlur={this.validateInput}
-					onKeyUp={
-						(evt) => {
-							this.validateInput();
+				<div id={controlIconContainerClass}>
+					<TextField {...stateDisabled}
+						style={stateStyle}
+						type="number"
+						id={this.getControlID()}
+						onBlur={this.validateInput}
+						onKeyUp={
+							(evt) => {
+								this.validateInput();
+							}
 						}
-					}
-					placeholder={this.props.control.additionalText}
-					disabledPlaceholderAnimation
-					onChange={this.handleChange}
-					value={this.state.controlValue}
-					numberInput="close"
-					onChange={(e) => this.setState({ controlValue: e.target.value })}
-					onReset={() => this.clearValue()}
-				/>
+						placeholder={this.props.control.additionalText}
+						disabledPlaceholderAnimation
+						onChange={this.handleChange}
+						value={this.state.controlValue}
+						onChange={(e) => this.setState({ controlValue: e.target.value })}
+						onReset={() => this.clearValue()}
+					/>
+					{icon}
+				</div>
 				{errorMessage}
 			</div>
 		);

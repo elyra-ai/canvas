@@ -141,50 +141,45 @@ export default class FieldAllocatorControl extends EditorControl {
 			this._update_callback = null;
 		}
 
-		var errorMessage = <div className="validation-error-message"></div>;
-		if (this.state.validateErrorMessage && this.state.validateErrorMessage.text !== "") {
-			errorMessage = (
-				<div className="validation-error-message">
-					<p className="form__validation" style={{ "display": "block", "margin": "0px" }} >
-						<span className="form__validation--invalid">{this.state.validateErrorMessage.text}</span>
-					</p>
-				</div>
-			);
-		}
-
 		var controlName = this.getControlID().split("-")[2];
-		var stateDisabled = {};
-		var stateStyle = {};
-		if (typeof this.props.controlStates[controlName] !== "undefined") {
-			if (this.props.controlStates[controlName] === "disabled") {
-				stateDisabled.disabled = true;
-				stateStyle = {
-					color: "#D8D8D8",
-					borderColor: "#D8D8D8"
-				};
-			} else if (this.props.controlStates[controlName] === "hidden") {
-				stateStyle.visibility = "hidden";
-			}
+		const conditionProps = {
+			controlName: controlName,
+			controlType: "selection"
+		};
+		const conditionState = this.getConditionMsgState(conditionProps);
+
+		const errorMessage = conditionState.message;
+		const messageType = conditionState.messageType;
+		const icon = conditionState.icon;
+		const stateDisabled = conditionState.disabled;
+		const stateStyle = conditionState.style;
+
+		let controlIconContainerClass = "control-icon-container";
+		if (messageType !== "info") {
+			controlIconContainerClass = "control-icon-container-enabled";
 		}
 
 		if (this.props.multiColumn) {
 			// help={this.props.control.additionalText}
 			return (
 				<div className="editor_control_area" style={stateStyle}>
-					<FormControl {...stateDisabled}
-						id={this.getControlID()}
-						className="column-allocator"
-						componentClass="select"
-						multiple
-						rows={4}
-						name={this.props.control.name}
-						style={stateStyle}
-						onChange={this.handleChangeMultiColumn}
-						value={this.state.selectedValues}
-						ref="input"
-					>
-						{options}
-					</FormControl>
+					<div id={controlIconContainerClass}>
+						<FormControl {...stateDisabled}
+							id={this.getControlID()}
+							className="column-allocator"
+							componentClass="select"
+							multiple
+							rows={4}
+							name={this.props.control.name}
+							style={stateStyle}
+							onChange={this.handleChangeMultiColumn}
+							value={this.state.selectedValues}
+							ref="input"
+						>
+							{options}
+						</FormControl>
+						{icon}
+					</div>
 					{errorMessage}
 				</div>
 			);
@@ -193,16 +188,19 @@ export default class FieldAllocatorControl extends EditorControl {
 		// help={this.props.control.additionalText}
 		return (
 			<div className="editor_control_area" style={stateStyle}>
-				<Dropdown {...stateDisabled}
-					id={this.getControlID()}
-					name={this.props.control.name}
-					options={options}
-					onChange={this.handleChange}
-					onBlur={this.validateInput}
-					value={currentSeln}
-					placeholder={this.props.control.additionalText}
-					ref="input"
-				/>
+				<div id={controlIconContainerClass}>
+					<Dropdown {...stateDisabled}
+						id={this.getControlID()}
+						name={this.props.control.name}
+						options={options}
+						onChange={this.handleChange}
+						onBlur={this.validateInput}
+						value={currentSeln}
+						placeholder={this.props.control.additionalText}
+						ref="input"
+					/>
+					{icon}
+				</div>
 				{errorMessage}
 			</div>
 		);

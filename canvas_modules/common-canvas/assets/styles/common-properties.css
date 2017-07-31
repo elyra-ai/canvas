@@ -170,33 +170,51 @@ p.form__validation.validation-error-message-color-warning.validation-error-messa
 	width: 89%;
 }
 
+.form__validation.validation-error-message-type-checkbox {
+	margin-top: 0px;
+}
+
+input.number,
+#column-select-control-icon-container,
+#some-of-column-control-icon-container,
+#radioset-control-container {
+	width: 100%;
+}
+
+#column-select-control-icon-container-enabled,
+#some-of-column-control-icon-container-enabled {
+	display: inline-flex;
+	width: calc(100% + 24px);
+}
+
+#control-icon-container-enabled {
+	display: inline-flex;
+	width: 100%;
+}
+
+#control-icon-container-enabled > div:first-of-type {
+  width: 100%;
+}
+
+#control-icon-container-enabled > * {
+	flex-shrink: 0;
+}
+
 .validation-error-message-icon {
 	width: 20px;
 	height: 20px;
-  margin-right: 0.3em;
-	float: left;
+	margin-left: 4px;
 }
 
 .validation-error-message-icon-table,
-.validation-error-message-icon-number {
-  margin-top: 3px;
+.validation-warning-message-icon-table {
+	position: relative;
+	top: 45px;
 }
 
 .form__validation.validation-error-message-type-selection {
 	margin-top: 2px;
 	width: 93%;
-}
-
-.validation-error-message-icon-textfield,
-.validation-error-message-icon-textfieldbox {
-  margin-top: -22px;
-	height: 23px;
-}
-
-.validation-warning-message-icon-textfield,
-.validation-warning-message-icon-textfieldbox {
-	margin-top: -24px;
-	height: 25px;
 }
 
 .modal__container .modal__buttons {
@@ -311,20 +329,10 @@ p.form__validation.validation-error-message-color-warning.validation-error-messa
   fill: #A91560;
   padding-left: 5px !important;
   padding-right: 5px !important;
-  opacity: 0.4;
-}
-[id^=remove-fields-button-enabled] {
-  opacity: 1;
 }
 
-[id^=remove-fields-button]:hover[disabled=false] {
-  background-color: #A91560;
-  fill: #FFFFFF;
-}
-
-[id^=remove-fields-button]:hover[disabled=true] {
-  background-color: transparent;
-  cursor: default;
+#remove-fields-button-disabled {
+	background-color: transparent;
 }
 
 #removeFieldTip, #addFieldTip {
@@ -554,6 +562,11 @@ tr.reactable-column-header {
 
 .label-container {
   float: left;
+	clear: both;
+}
+
+.default-label-container {
+	clear: both;
 }
 
 .control-description {

@@ -44,8 +44,15 @@ export default class TextfieldControl extends EditorControl {
 		const conditionState = this.getConditionMsgState(conditionProps);
 
 		const errorMessage = !this.props.columnDef ? conditionState.message : null;
+		const messageType = conditionState.messageType;
+		const icon = conditionState.icon;
 		const stateDisabled = conditionState.disabled;
 		const stateStyle = conditionState.style;
+
+		let controlIconContainerClass = "control-icon-container";
+		if (messageType !== "info") {
+			controlIconContainerClass = "control-icon-container-enabled";
+		}
 
 		const charLimit = this.getCharLimit(CHARACTER_LIMITS.NODE_PROPERTIES_DIALOG_TEXT_FIELD);
 		let displayedCharLimit;
@@ -58,17 +65,20 @@ export default class TextfieldControl extends EditorControl {
 		cellvalue = cellvalue ? cellvalue : "";
 		return (
 			<div className="editor_control_area" style={stateStyle}>
-				<TextField {...stateDisabled}
-					style={stateStyle}
-					id={this.getControlID()}
-					onBlur={this.validateInput}
-					disabledPlaceholderAnimation
-					placeholder={this.props.control.additionalText}
-					onChange={this.handleChange}
-					value={cellvalue}
-					maxCount={displayedCharLimit}
-					maxLength={charLimit}
-				/>
+				<div id={controlIconContainerClass}>
+					<TextField {...stateDisabled}
+						style={stateStyle}
+						id={this.getControlID()}
+						onBlur={this.validateInput}
+						disabledPlaceholderAnimation
+						placeholder={this.props.control.additionalText}
+						onChange={this.handleChange}
+						value={cellvalue}
+						maxCount={displayedCharLimit}
+						maxLength={charLimit}
+					/>
+					{icon}
+				</div>
 				{errorMessage}
 			</div>
 		);

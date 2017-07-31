@@ -93,19 +93,29 @@ export default class StructurelisteditorControl extends StructureTableEditor {
 		const conditionState = this.getConditionMsgState(conditionProps);
 
 		const errorMessage = conditionState.message;
+		const messageType = conditionState.messageType;
+		const icon = conditionState.icon;
 		const stateDisabled = conditionState.disabled;
 		const stateStyle = conditionState.style;
+
+		let controlIconContainerClass = "control-icon-container";
+		if (messageType !== "info") {
+			controlIconContainerClass = "control-icon-container-enabled";
+		}
 
 		const table = this.createTable();
 		const add = <Button bsSize="small" onClick={this.addRow} {...stateDisabled}>+</Button>;
 		const remove = <Button bsSize="small" onClick={this.removeSelectedRows} {...stateDisabled}>-</Button>;
 
 		return (<div id={this.getControlID()} style={stateStyle}>
-			<div id="structure-list-editor-table-buttons" style={stateStyle}>
-				{table}
-				<div id="structure-list-editor-buttons-container">
-					<span>{add} {remove}</span>
+			<div id={controlIconContainerClass}>
+				<div id="structure-list-editor-table-buttons" style={stateStyle}>
+					{table}
+					<div id="structure-list-editor-buttons-container">
+						<span>{add} {remove}</span>
+					</div>
 				</div>
+				{icon}
 			</div>
 			{errorMessage}
 		</div>);

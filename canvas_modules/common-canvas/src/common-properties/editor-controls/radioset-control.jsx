@@ -36,13 +36,20 @@ export default class RadiosetControl extends EditorControl {
 		const controlName = this.getControlID().split("-")[2];
 		const conditionProps = {
 			controlName: controlName,
-			controlType: "selection"
+			controlType: "checkbox"
 		};
 		const conditionState = this.getConditionMsgState(conditionProps);
 
 		const errorMessage = conditionState.message;
+		const messageType = conditionState.messageType;
+		const icon = conditionState.icon;
 		const stateDisabled = conditionState.disabled;
 		const stateStyle = conditionState.style;
+
+		let controlIconContainerClass = "control-icon-container";
+		if (messageType !== "info") {
+			controlIconContainerClass = "control-icon-container-enabled";
+		}
 
 		var buttons = [];
 		let cssClasses = "control";
@@ -55,7 +62,7 @@ export default class RadiosetControl extends EditorControl {
 			var val = this.props.control.values[i];
 			var checked = val === this.state.controlValue;
 			buttons.push(
-				<label key={i} className={cssClasses} style={stateStyle}>
+				<label key={i} className={cssClasses}>
 					<input type="radio"
 						{...stateDisabled}
 						name={this.props.control.name}
@@ -74,7 +81,10 @@ export default class RadiosetControl extends EditorControl {
 				className="radio"
 				style={stateStyle}
 			>
-				{buttons}
+				<div id={controlIconContainerClass}>
+					<div id="radioset-control-container">{buttons}</div>
+					{icon}
+				</div>
 				{errorMessage}
 			</div>
 		);
