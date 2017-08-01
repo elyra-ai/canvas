@@ -9,8 +9,8 @@
 /* eslint no-console: "off" */
 
 import { containLinkEvent, containLinkInObjectModel, getCommentIdFromObjectModel,
-					getCommentIdFromObjectModelUsingText, getNodeIdFromObjectModel,
-					getObjectModelCount } from "./utilities/validateUtil.js";
+					getCommentIdFromObjectModelUsingText, getCommentIndexFromCanvasUsingText,
+					getNodeIdFromObjectModel, getObjectModelCount } from "./utilities/validateUtil.js";
 import { getRenderingEngine, getURL } from "./utilities/test-config.js";
 import { simulateD3LinkCreation, simulateDragDrop } from "./utilities/DragAndDrop.js";
 import { getHarnessData } from "./utilities/HTTPClient.js";
@@ -80,12 +80,7 @@ module.exports = function() {
 			// For D3, we cannot rely on index position of comments because they get messed up
 			// when pushing comments to be underneath nodes and links. Therefore we look for the
 			// text of the comment being deleted.
-			var commentElements = browser.$("#common-canvas").$$(".comment-group");
-			for (let idx = 0; idx < commentElements.length; idx++) {
-				if (commentElements[idx].getAttribute("textContent") === commentText) {
-					commentIndex = idx;
-				}
-			}
+			commentIndex = getCommentIndexFromCanvasUsingText(commentText);
 			browser.execute(simulateD3LinkCreation, ".d3-comment-halo", commentIndex, ".node-group", nodeIndex, 1, 1);
 			browser.pause(1500);
 			var links = browser.$$(".d3-selectable-link").length / 2; // Divide by 2 because the line and arrow head use this class

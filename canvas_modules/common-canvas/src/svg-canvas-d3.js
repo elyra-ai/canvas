@@ -1370,17 +1370,25 @@ export default class CanvasD3Layout {
 			// Comment selection highlighting and sizing outline
 			d3.select(`#comment_rect_${d.id}`)
 				.attr("height", d.height + (2 * that.highLightGap))
+				.attr("width", d.width + (2 * that.highLightGap))
 				.attr("class", ObjectModel.isSelected(d.id) ? "d3-obj-rect d3-obj-rect-selected" : "d3-obj-rect")
 				.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
 
+			// Clip path for text
+			d3.select(`#comment_clip__path_${d.id}`)
+				.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
+
 			// Clip rectangle for text
-			d3.select(`#comment_clip_${d.id}`)
+			d3.select(`#comment_clip_rect_${d.id}`)
 				.attr("height", d.height)
+				.attr("width", d.width - (2 * that.commentWidthPadding))
 				.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
 
 			// Background rectangle for comment
 			d3.select(`#comment_box_${d.id}`)
 				.attr("height", d.height)
+				.attr("width", d.width)
+				.attr("class", d.className || "canvas-comment") // Use common-canvas.css style since that is the default.
 				.datum((cd) => that.getComment(cd.id)) // Set the __data__ to the updated data
 				.each(function(cd) {
 					if (cd.customAttrs) {
@@ -1397,23 +1405,21 @@ export default class CanvasD3Layout {
 					.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
 			}
 
-			// TODO - can't get this update code to work becaue of clippath etc. Instead,
-			// the text is updated by removing the comment group object during the onBlur
-			// event.
-			// d3.select(`#comment_text_${d.id}`)
-			// 	.datum((cd) => that.getComment(cd.id)) // Set the __data__ to the updated data
-			// 	.style("stroke", null)
-			// 	.style("fill", null)
-			// 	.each(function(cd) {
-			// 		var textObj = d3.select(this);
-			// 		textObj.selectAll("tspan").remove();
-			// 		that.displayWordWrappedText(textObj, cd.content, cd.width - (2 * that.commentWidthPadding));
-			// 	});
+			// Comment text
+			d3.select(`#comment_text_${d.id}`)
+				.datum((cd) => that.getComment(cd.id)) // Set the __data__ to the updated data
+				.style("stroke", that.editingCommentId === d.id ? "transparent" : null) // Cancel the setting of stroke to null if not editing
+				.style("fill", that.editingCommentId === d.id ? "transparent" : null)   // Cancel the setting of fill to null if not editing
+				.each(function(cd) {
+					var textObj = d3.select(this);
+					textObj.selectAll("tspan").remove();
+					that.displayWordWrappedText(textObj, cd.content, cd.width - (2 * that.commentWidthPadding));
+				});
 
 			// Comment halo
 			d3.select(`#comment_halo_${d.id}`)
-				.attr("height", d.height)
-				.attr("height", (cd) => cd.height + (2 * that.haloCommentGap))
+				.attr("width", d.width + (2 * that.haloCommentGap))
+				.attr("height", d.height + (2 * that.haloCommentGap))
 				.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
 
 		});
@@ -1490,8 +1496,9 @@ export default class CanvasD3Layout {
 						var yPos = d.y_pos;
 						var content = d.content;
 
-						that.textAreaHeight = 0; // Save for comparison later
+						that.textAreaHeight = 0; // Save for comparison during auto-resize
 						that.editingComment = true;
+						that.editingCommentId = id;
 
 						that.zoomTextAreaCenterX = d.x_pos + (d.width / 2);
 						that.zoomTextAreaCenterY = d.y_pos + (d.height / 2);
@@ -1524,7 +1531,6 @@ export default class CanvasD3Layout {
 									that.consoleLog("Text area - blur");
 									var commentObj = that.getComment(id);
 									commentObj.content = this.value;
-									d3.select(`#comment_grp_${commentObj.id}`).remove();
 									that.displayComments();
 									that.saveCommentChanges(this);
 									that.closeCommentTextArea();
@@ -1588,8 +1594,9 @@ export default class CanvasD3Layout {
 
 		// Clip path to clip the comment text to the comment rectangle
 		commentGroups.append("clipPath")
-			.attr("id", (d) => `comment_clip_${d.id}`)
+			.attr("id", (d) => `comment_clip_path_${d.id}`)
 				.append("rect")
+					.attr("id", (d) => `comment_clip_rect_${d.id}`)
 					.attr("width", (d) => d.width - (2 * that.commentWidthPadding))
 					.attr("height", (d) => d.height)
 					.attr("x", 0 + that.commentWidthPadding)
@@ -1602,7 +1609,7 @@ export default class CanvasD3Layout {
 				var textObj = d3.select(this);
 				that.displayWordWrappedText(textObj, d.content, d.width - (2 * that.commentWidthPadding));
 			})
-			.attr("clip-path", (d) => `url(#comment_clip_${d.id})`)
+			.attr("clip-path", (d) => `url(#comment_clip_path_${d.id})`)
 			.attr("xml:space", "preserve")
 			.attr("x", 0 + that.commentWidthPadding)
 			.attr("y", 0);
@@ -1688,6 +1695,7 @@ export default class CanvasD3Layout {
 	// Closes the text area and switched off all flags connected with text editing.
 	closeCommentTextArea() {
 		this.editingComment = false;
+		this.editingCommentId = "";
 		this.editingCommentChangesPending = false;
 		d3.select(this.canvasSelector).select("textarea")
 			.remove();

@@ -126,7 +126,7 @@ const comments = (state = [], action) => {
 		const newComment = {
 			id: action.data.id,
 			className: "canvas-comment",
-			content: " ",
+			content: "",
 			height: 32,
 			width: 128,
 			x_pos: action.data.mousePos.x,

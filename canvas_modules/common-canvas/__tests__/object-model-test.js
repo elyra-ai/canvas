@@ -474,7 +474,7 @@ describe("ObjectModel handle model OK", () => {
                 { id: "comment2", x_pos: 60, y_pos: 60 },
 						{ id: "comment3",
 							className: "canvas-comment",
-							content: " ",
+							content: "",
 							height: 32,
 							width: 128,
 							x_pos: 200,

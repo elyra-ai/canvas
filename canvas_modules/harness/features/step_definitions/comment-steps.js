@@ -8,7 +8,7 @@
  *******************************************************************************/
 /* eslint no-console: "off" */
 
-import { getEventLogCount, getObjectModelCount } from "./utilities/validateUtil.js";
+import { getEventLogCount, getObjectModelCount, getCommentIndexFromCanvasUsingText } from "./utilities/validateUtil.js";
 import { getHarnessData } from "./utilities/HTTPClient.js";
 import { getRenderingEngine } from "./utilities/test-config.js";
 import { getURL } from "./utilities/test-config.js";
@@ -47,6 +47,7 @@ module.exports = function() {
 		if (getRenderingEngine() === "D3") {
 			specificComment.$("textarea").setValue("", comment); // For D3, the text area is created by the double click
 		} else {
+			specificComment.click();
 			specificComment.setValue("", comment);
 		}
 
@@ -58,10 +59,15 @@ module.exports = function() {
 		// verify commentis in the canvas DOM
 		var commentValue;
 		if (getRenderingEngine() === "D3") {
-			commentValue = browser.$("#common-canvas").$$(".comment-group")[index].getAttribute("textContent");
+			// For D3, we cannot rely on index position of comments because they get messed up
+			// when pushing comments to be underneath nodes and links. Therefore we look for the
+			// text of the comment being deleted.
+			var comIndex = getCommentIndexFromCanvasUsingText(comment);
+			commentValue = browser.$("#common-canvas").$$(".comment-group")[comIndex].getAttribute("textContent");
 		} else {
 			commentValue = browser.$("#common-canvas").$$("textarea")[index].getValue();
 		}
+		console.log("Commentvalue " + commentValue);
 		expect(commentValue).toEqual(comment);
 
 		// verify that the comment is in the internal object model
@@ -89,13 +95,7 @@ module.exports = function() {
 			// For D3, we cannot rely on index position of comments because they get messed up
 			// when pushing comments to be underneath nodes and links. Therefore we look for the
 			// text of the comment being deleted.
-			commentElements = browser.$("#common-canvas").$$(".comment-group");
-			var index = 0;
-			for (let idx = 0; idx < commentElements.length; idx++) {
-				if (commentElements[idx].getAttribute("textContent") === commentText) {
-					index = idx;
-				}
-			}
+			var index = getCommentIndexFromCanvasUsingText(commentText);
 			browser.$("#common-canvas").$$(".comment-group")[index].rightClick();
 		} else {
 			browser.$("#common-canvas").$$(".comment-inner-box")[commentNumber].rightClick();
@@ -151,13 +151,7 @@ module.exports = function() {
 				// For D3, we cannot rely on index position of comments because they get messed up
 				// when pushing comments to be underneath nodes and links. Therefore we look for the
 				// text of the comment being deleted.
-				var commentElements = browser.$("#common-canvas").$$(".comment-group");
-				var index = 0;
-				for (let idx = 0; idx < commentElements.length; idx++) {
-					if (commentElements[idx].getAttribute("textContent") === commentText) {
-						index = idx;
-					}
-				}
+				var index = getCommentIndexFromCanvasUsingText(commentText);
 				browser.execute(simulateDragDrop, ".comment-group", index, "#canvas-div", 0, canvasX, canvasY);
 			} else {
 				browser.execute(simulateDragDrop, ".comment-inner-box", commentNumber, "#canvas-div", 0, canvasX, canvasY);

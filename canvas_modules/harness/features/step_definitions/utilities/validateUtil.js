@@ -7,6 +7,9 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
+
+/* global browser */
+
 // find the number of link events in event log
 //
 function containLinkEvent(eventLog, srcNodeId, destNodeId, eventType) {
@@ -69,6 +72,20 @@ function getCommentIdFromObjectModelUsingText(objectModel, commentText) {
 		}
 	});
 	return id;
+}
+
+// For D3, we cannot rely on index position of comments because they get messed up
+// when pushing comments to be underneath nodes and links. Therefore we look for the
+// text of the comment being deleted.
+function getCommentIndexFromCanvasUsingText(commentText) {
+	var commentElements = browser.$("#common-canvas").$$(".comment-group");
+	var comIndex = 0;
+	for (let idx = 0; idx < commentElements.length; idx++) {
+		if (commentElements[idx].getAttribute("textContent") === commentText) {
+			comIndex = idx;
+		}
+	}
+	return comIndex;
 }
 
 // count the number of events in event log
@@ -149,6 +166,7 @@ module.exports = {
 	deleteLinkInObjectModel: deleteLinkInObjectModel,
 	getCommentIdFromObjectModel: getCommentIdFromObjectModel,
 	getCommentIdFromObjectModelUsingText: getCommentIdFromObjectModelUsingText,
+	getCommentIndexFromCanvasUsingText: getCommentIndexFromCanvasUsingText,
 	getEventLogCount: getEventLogCount,
 	getLinkEventCount: getLinkEventCount,
 	getNodeIdFromObjectModel: getNodeIdFromObjectModel,
