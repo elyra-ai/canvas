@@ -242,196 +242,196 @@
           "seed"
         ]
       }
-    ],
-    "conditions": [
-      {
-        "validation": {
-          "fail_message": {
-            "type": "error",
-            "focus_parameter_ref": "inputFieldList",
-            "message": {
-              "resource_key": "input_field_list_not_empty"
-            }
-          },
-          "evaluate": {
-            "condition": {
-              "parameter_ref": "inputFieldList",
-              "op": "isNotEmpty"
-            }
+    ]
+  },
+  "conditions": [
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "inputFieldList",
+          "message": {
+            "resource_key": "input_field_list_not_empty"
           }
-        }
-      },
-      {
-        "validation": {
-          "fail_message": {
-            "type": "error",
-            "focus_parameter_ref": "targetField",
-            "message": {
-              "resource_key": "target_field_not_empty"
-            }
-          },
-          "evaluate": {
-            "condition": {
-              "parameter_ref": "targetField",
-              "op": "isNotEmpty"
-            }
-          }
-        }
-      },
-      {
-        "validation": {
-          "fail_message": {
-            "type": "error",
-            "focus_parameter_ref": "checkpointInterval",
-            "message": {
-              "resource_key": "checkpoint_interval_not_valid"
-            }
-          },
-          "evaluate": {
-            "or": [
-              {
-                "condition": {
-                  "parameter_ref": "checkpointInterval",
-                  "op": "greaterThan",
-                  "value": 1
-                }
-              },
-              {
-                "condition": {
-                  "parameter_ref": "checkpointInterval",
-                  "op": "equals",
-                  "value": 1
-                }
-              },
-              {
-                "condition": {
-                  "parameter_ref": "checkpointInterval",
-                  "op": "equals",
-                  "value": -1
-                }
-              }
-            ]
-          }
-        }
-      },
-      {
-        "validation": {
-          "fail_message": {
-            "type": "error",
-            "focus_parameter_ref": "maxBins",
-            "message": {
-              "resource_key": "max_bins_not_valid"
-            }
-          },
-          "evaluate": {
-            "or": [
-              {
-                "condition": {
-                  "parameter_ref": "maxBins",
-                  "op": "greaterThan",
-                  "value": 2
-                }
-              },
-              {
-                "condition": {
-                  "parameter_ref": "maxBins",
-                  "op": "equals",
-                  "value": 2
-                }
-              }
-            ]
-          }
-        }
-      },
-      {
-        "validation": {
-          "fail_message": {
-            "type": "error",
-            "focus_parameter_ref": "maxDepth",
-            "message": {
-              "resource_key": "max_depth_not_valid"
-            }
-          },
-          "evaluate": {
-            "or": [
-              {
-                "condition": {
-                  "parameter_ref": "maxDepth",
-                  "op": "greaterThan",
-                  "value": 0
-                }
-              },
-              {
-                "condition": {
-                  "parameter_ref": "maxDepth",
-                  "op": "equals",
-                  "value": 0
-                }
-              }
-            ]
-          }
-        }
-      },
-      {
-        "validation": {
-          "fail_message": {
-            "type": "error",
-            "focus_parameter_ref": "minInstancesPerNode",
-            "message": {
-              "resource_key": "min_instances_per_node_not_valid"
-            }
-          },
-          "evaluate": {
-            "or": [
-              {
-                "condition": {
-                  "parameter_ref": "minInstancesPerNode",
-                  "op": "greaterThan",
-                  "value": 1
-                }
-              },
-              {
-                "condition": {
-                  "parameter_ref": "minInstancesPerNode",
-                  "op": "equals",
-                  "value": 1
-                }
-              }
-            ]
-          }
-        }
-      },
-      {
-        "validation": {
-          "fail_message": {
-            "type": "error",
-            "focus_parameter_ref": "numTrees",
-            "message": {
-              "resource_key": "num_trees_not_valid"
-            }
-          },
-          "evaluate": {
-            "or": [
-              {
-                "condition": {
-                  "parameter_ref": "numTrees",
-                  "op": "greaterThan",
-                  "value": 0
-                }
-              },
-              {
-                "condition": {
-                  "parameter_ref": "numTrees",
-                  "op": "equals",
-                  "value": 0
-                }
-              }
-            ]
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "inputFieldList",
+            "op": "isNotEmpty"
           }
         }
       }
-    ]
-  },
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "targetField",
+          "message": {
+            "resource_key": "target_field_not_empty"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "targetField",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "checkpointInterval",
+          "message": {
+            "resource_key": "checkpoint_interval_not_valid"
+          }
+        },
+        "evaluate": {
+          "or": [
+            {
+              "condition": {
+                "parameter_ref": "checkpointInterval",
+                "op": "greaterThan",
+                "value": 1
+              }
+            },
+            {
+              "condition": {
+                "parameter_ref": "checkpointInterval",
+                "op": "equals",
+                "value": 1
+              }
+            },
+            {
+              "condition": {
+                "parameter_ref": "checkpointInterval",
+                "op": "equals",
+                "value": -1
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "maxBins",
+          "message": {
+            "resource_key": "max_bins_not_valid"
+          }
+        },
+        "evaluate": {
+          "or": [
+            {
+              "condition": {
+                "parameter_ref": "maxBins",
+                "op": "greaterThan",
+                "value": 2
+              }
+            },
+            {
+              "condition": {
+                "parameter_ref": "maxBins",
+                "op": "equals",
+                "value": 2
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "maxDepth",
+          "message": {
+            "resource_key": "max_depth_not_valid"
+          }
+        },
+        "evaluate": {
+          "or": [
+            {
+              "condition": {
+                "parameter_ref": "maxDepth",
+                "op": "greaterThan",
+                "value": 0
+              }
+            },
+            {
+              "condition": {
+                "parameter_ref": "maxDepth",
+                "op": "equals",
+                "value": 0
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "minInstancesPerNode",
+          "message": {
+            "resource_key": "min_instances_per_node_not_valid"
+          }
+        },
+        "evaluate": {
+          "or": [
+            {
+              "condition": {
+                "parameter_ref": "minInstancesPerNode",
+                "op": "greaterThan",
+                "value": 1
+              }
+            },
+            {
+              "condition": {
+                "parameter_ref": "minInstancesPerNode",
+                "op": "equals",
+                "value": 1
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "numTrees",
+          "message": {
+            "resource_key": "num_trees_not_valid"
+          }
+        },
+        "evaluate": {
+          "or": [
+            {
+              "condition": {
+                "parameter_ref": "numTrees",
+                "op": "greaterThan",
+                "value": 0
+              }
+            },
+            {
+              "condition": {
+                "parameter_ref": "numTrees",
+                "op": "equals",
+                "value": 0
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "dataset_metadata": {
     "fields": [
       {

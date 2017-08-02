@@ -15,13 +15,14 @@ import { L10nProvider } from "./L10nProvider";
 import Conditions from "./Conditions";
 
 export default class Form {
-	constructor(componentId, label, editorSize, uiItems, buttons, data) {
+	constructor(componentId, label, editorSize, uiItems, buttons, data, conditions) {
 		this.componentId = componentId;
 		this.label = label;
 		this.editorSize = editorSize;
 		this.uiItems = uiItems;
 		this.buttons = buttons;
 		this.data = data;
+		this.conditions = conditions;
 	}
 
 	/**
@@ -30,7 +31,7 @@ export default class Form {
 	static makeForm(paramDef) {
 		const propDef = PropertyDef.makePropertyDef(_.propertyOf(paramDef)("parameters"), _.propertyOf(paramDef)("complex_types"),
 			_.propertyOf(paramDef)("uihints"));
-		const conditions = _.propertyOf(paramDef.uihints)("conditions");
+		const conditions = _.propertyOf(paramDef)("conditions");
 		if (propDef) {
 			const l10nProvider = new L10nProvider(_.propertyOf(paramDef)("resources"));
 			const tabs = [];
@@ -42,15 +43,15 @@ export default class Form {
 
 			const data = {
 				currentParameters: _.propertyOf(paramDef)("current_parameters"),
-				datasetMetadata: _.propertyOf(paramDef)("dataset_metadata"),
-				conditions: Conditions.translateMessages(conditions, l10nProvider)
+				datasetMetadata: _.propertyOf(paramDef)("dataset_metadata")
 			};
 			return new Form(propDef.name,
 				l10nProvider.l10nLabel(propDef, propDef.name),
 				propDef.editorSizeHint(),
 				[UIItem.makePrimaryTabs(tabs)],
 				_defaultButtons(),
-				data);
+				data,
+				Conditions.translateMessages(conditions, l10nProvider));
 		}
 		return null;
 	}

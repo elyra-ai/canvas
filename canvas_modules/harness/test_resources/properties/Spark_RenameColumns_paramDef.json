@@ -75,61 +75,61 @@
           "renamed_fields"
         ]
       }
-    ],
-    "conditions": [
-      {
-        "validation": {
-          "fail_message": {
-            "type": "warning",
-            "focus_parameter_ref": "renamed_fields",
-            "message": {
-              "resource_key": "no_rename_selections"
-            }
-          },
-          "evaluate": {
-            "condition": {
-              "parameter_ref": "renamed_fields",
-              "op": "isNotEmpty"
-            }
+    ]
+  },
+  "conditions": [
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "renamed_fields",
+          "message": {
+            "resource_key": "no_rename_selections"
           }
-        }
-      },
-      {
-        "validation": {
-          "fail_message": {
-            "type": "error",
-            "focus_parameter_ref": "renamed_fields",
-            "message": {
-              "resource_key": "output_name_not_empty"
-            }
-          },
-          "evaluate": {
-            "condition": {
-              "parameter_ref": "renamed_fields",
-              "op": "cellNotEmpty"
-            }
-          }
-        }
-      },
-      {
-        "validation": {
-          "fail_message": {
-            "type": "error",
-            "focus_parameter_ref": "renamed_fields",
-            "message": {
-              "resource_key": "column_name_already_exists"
-            }
-          },
-          "evaluate": {
-            "condition": {
-              "parameter_ref": "renamed_fields",
-              "op": "colNotExists"
-            }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "renamed_fields",
+            "op": "isNotEmpty"
           }
         }
       }
-    ]
-  },
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "renamed_fields",
+          "message": {
+            "resource_key": "output_name_not_empty"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "renamed_fields",
+            "op": "cellNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "renamed_fields",
+          "message": {
+            "resource_key": "column_name_already_exists"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "renamed_fields",
+            "op": "colNotExists"
+          }
+        }
+      }
+    }
+  ],
   "dataset_metadata": {
     "fields": [
       {

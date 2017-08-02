@@ -43,27 +43,27 @@
           "cols"
         ]
       }
-    ],
-    "conditions": [
-      {
-        "validation": {
-          "fail_message": {
-            "type": "error",
-            "focus_parameter_ref": "cols",
-            "message": {
-              "resource_key": "cols_not_empty"
-            }
-          },
-          "evaluate": {
-            "condition": {
-              "parameter_ref": "cols",
-              "op": "isNotEmpty"
-            }
+    ]
+  },
+  "conditions": [
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "cols",
+          "message": {
+            "resource_key": "cols_not_empty"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "cols",
+            "op": "isNotEmpty"
           }
         }
       }
-    ]
-  },
+    }
+  ],
   "dataset_metadata": {
     "fields": [
       {

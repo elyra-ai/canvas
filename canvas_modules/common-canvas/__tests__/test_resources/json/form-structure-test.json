@@ -75,27 +75,27 @@
             "renamed_fields"
           ]
         }
-      ],
-      "conditions": [
-        {
-          "validation": {
-            "fail_message": {
-              "type": "error",
-              "focus_parameter_ref": "renamed_fields",
-              "message": {
-                "resource_key": "output_name_not_empty"
-              }
-            },
-            "evaluate": {
-              "condition": {
-                "parameter_ref": "renamed_fields",
-                "op": "isNotEmpty"
-              }
+      ]
+    },
+    "conditions": [
+      {
+        "validation": {
+          "fail_message": {
+            "type": "error",
+            "focus_parameter_ref": "renamed_fields",
+            "message": {
+              "resource_key": "output_name_not_empty"
+            }
+          },
+          "evaluate": {
+            "condition": {
+              "parameter_ref": "renamed_fields",
+              "op": "isNotEmpty"
             }
           }
         }
-      ]
-    },
+      }
+    ],
     "dataset_metadata": {
       "fields": [
         {
@@ -266,6 +266,26 @@
         "url": ""
       }
     ],
+    "conditions": [
+      {
+        "validation": {
+          "fail_message": {
+            "type": "error",
+            "focus_parameter_ref": "renamed_fields",
+            "message": {
+              "resource_key": "output_name_not_empty",
+              "default": "The 'Output Name' field cannot be empty"
+            }
+          },
+          "evaluate": {
+            "condition": {
+              "parameter_ref": "renamed_fields",
+              "op": "isNotEmpty"
+            }
+          }
+        }
+      }
+    ],
     "data": {
       "currentParameters": {
         "renamed_fields": [
@@ -339,27 +359,7 @@
             }
           }
         ]
-      },
-      "conditions": [
-        {
-          "validation": {
-            "fail_message": {
-              "type": "error",
-              "focus_parameter_ref": "renamed_fields",
-              "message": {
-                "resource_key": "output_name_not_empty",
-                "default": "The 'Output Name' field cannot be empty"
-              }
-            },
-            "evaluate": {
-              "condition": {
-                "parameter_ref": "renamed_fields",
-                "op": "isNotEmpty"
-              }
-            }
-          }
-        }
-      ]
+      }
     }
   }
 }

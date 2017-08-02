@@ -30,6 +30,7 @@ formData.editorSize = CONDITIONS_TEST_FORM_DATA.editorSize;
 formData.uiItems = CONDITIONS_TEST_FORM_DATA.uiItems;
 formData.buttons = CONDITIONS_TEST_FORM_DATA.buttons;
 formData.data = CONDITIONS_TEST_FORM_DATA.data;
+formData.conditions = CONDITIONS_TEST_FORM_DATA.conditions;
 
 const validationDefinitions = [];
 validationDefinitions.numberfieldCheckpointInterval = [

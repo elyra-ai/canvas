@@ -56,27 +56,27 @@
           "conditionExpr"
         ]
       }
-    ],
-    "conditions": [
-      {
-        "validation": {
-          "fail_message": {
-            "type": "error",
-            "focus_parameter_ref": "conditionExpr",
-            "message": {
-              "resource_key": "condition_expression_not_empty"
-            }
-          },
-          "evaluate": {
-            "condition": {
-              "parameter_ref": "conditionExpr",
-              "op": "isNotEmpty"
-            }
-          }
-        }
-      }
     ]
   },
+	"conditions": [
+		{
+			"validation": {
+				"fail_message": {
+					"type": "error",
+					"focus_parameter_ref": "conditionExpr",
+					"message": {
+						"resource_key": "condition_expression_not_empty"
+					}
+				},
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "conditionExpr",
+						"op": "isNotEmpty"
+					}
+				}
+			}
+		}
+	],
   "dataset_metadata": {
     "fields": [
       {

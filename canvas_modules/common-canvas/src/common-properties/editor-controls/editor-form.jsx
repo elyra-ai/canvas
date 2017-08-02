@@ -99,8 +99,8 @@ export default class EditorForm extends React.Component {
 	}
 
 	componentWillMount() {
-		if (this.props.form.data.conditions) {
-			this.parseUiConditions(this.props.form.data.conditions);
+		if (this.props.form.conditions) {
+			this.parseUiConditions(this.props.form.conditions);
 		}
 	}
 

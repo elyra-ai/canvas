@@ -131,44 +131,44 @@
           }
         ]
       }
-    ],
-    "conditions": [
-      {
-        "validation": {
-          "fail_message": {
-            "type": "error",
-            "focus_parameter_ref": "samplingSize",
-            "message": {
-              "resource_key": "sampling-size_not_empty"
-            }
-          },
-          "evaluate": {
-            "condition": {
-              "parameter_ref": "samplingSize",
-              "op": "isNotEmpty"
-            }
+    ]
+  },
+  "conditions": [
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "samplingSize",
+          "message": {
+            "resource_key": "sampling-size_not_empty"
           }
-        }
-      },
-      {
-        "validation": {
-          "fail_message": {
-            "type": "error",
-            "focus_parameter_ref": "samplingRatio",
-            "message": {
-              "resource_key": "sampling-ratio_not_empty"
-            }
-          },
-          "evaluate": {
-            "condition": {
-              "parameter_ref": "samplingRatio",
-              "op": "isNotEmpty"
-            }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "samplingSize",
+            "op": "isNotEmpty"
           }
         }
       }
-    ]
-  },
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "samplingRatio",
+          "message": {
+            "resource_key": "sampling-ratio_not_empty"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "samplingRatio",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    }
+  ],
   "dataset_metadata": {
     "fields": [
       {

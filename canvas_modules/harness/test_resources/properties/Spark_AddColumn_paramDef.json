@@ -54,61 +54,61 @@
           "measurement"
         ]
       }
-    ],
-    "conditions": [
-      {
-        "validation": {
-          "fail_message": {
-            "type": "error",
-            "focus_parameter_ref": "colName",
-            "message": {
-              "resource_key": "colname_not_empty"
-            }
-          },
-          "evaluate": {
-            "condition": {
-              "parameter_ref": "colName",
-              "op": "isNotEmpty"
-            }
+    ]
+  },
+  "conditions": [
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "colName",
+          "message": {
+            "resource_key": "colname_not_empty"
           }
-        }
-      },
-      {
-        "validation": {
-          "fail_message": {
-            "type": "error",
-            "focus_parameter_ref": "colName",
-            "message": {
-              "resource_key": "colname_not_unique"
-            }
-          },
-          "evaluate": {
-            "condition": {
-              "parameter_ref": "colName",
-              "op": "colNotExists"
-            }
-          }
-        }
-      },
-      {
-        "validation": {
-          "fail_message": {
-            "type": "error",
-            "focus_parameter_ref": "col",
-            "message": {
-              "resource_key": "col_not_empty"
-            }
-          },
-          "evaluate": {
-            "condition": {
-              "parameter_ref": "col",
-              "op": "isNotEmpty"
-            }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "colName",
+            "op": "isNotEmpty"
           }
         }
       }
-    ]
-  },
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "colName",
+          "message": {
+            "resource_key": "colname_not_unique"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "colName",
+            "op": "colNotExists"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "col",
+          "message": {
+            "resource_key": "col_not_empty"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "col",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    }
+  ],
   "dataset_metadata": {
     "fields": [
       {

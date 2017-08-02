@@ -1067,6 +1067,518 @@
       "url": ""
     }
   ],
+  "conditions": [
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "numberfieldCheckpointInterval",
+          "message": {
+            "resource_key": "numberfield_checkpoint_interval_not_valid",
+            "default": "The checkpoint interval value must either be >= 1 or -1 to disable"
+          }
+        },
+        "evaluate": {
+          "or": [
+            {
+              "condition": {
+                "parameter_ref": "numberfieldCheckpointInterval",
+                "op": "equals",
+                "value": -1
+              }
+            },
+            {
+              "condition": {
+                "parameter_ref": "numberfieldCheckpointInterval",
+                "op": "greaterThan",
+                "value": 0
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "numberfieldMaxBins",
+          "message": {
+            "resource_key": "numberfield_max_bins_not_valid",
+            "default": "Maximum number of bins must be >= 2 or Maximum depth of the tree > 0"
+          }
+        },
+        "evaluate": {
+          "or": [
+            {
+              "condition": {
+                "parameter_ref": "numberfieldMaxBins",
+                "op": "greaterThan",
+                "value": 1
+              }
+            },
+            {
+              "condition": {
+                "parameter_ref": "numberfieldMaxDepth",
+                "op": "greaterThan",
+                "value": 0
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "numberfieldMinInstancesPerNode",
+          "message": {
+            "resource_key": "numberfield_min_instances_per_node_not_valid",
+            "default": "The minimum instances per node value must be >= 1"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "numberfieldMinInstancesPerNode",
+            "op": "greaterThan",
+            "value": 0
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "numberfieldMinInfoGain",
+          "message": {
+            "resource_key": "numberfield_min_info_gain_not_valid",
+            "default": "Cannot be less than 0"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "numberfieldMinInfoGain",
+            "op": "greaterThan",
+            "value": 0
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "numberfieldSeed",
+          "message": {
+            "resource_key": "numberfield_seed_not_valid",
+            "default": "This is an example of a very long error message that someone might enter. The message text will wrap around to the next line as shown here."
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "numberfieldSeed",
+            "op": "contains",
+            "value": "123"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "columnSelectInputFieldList",
+          "message": {
+            "resource_key": "column_select_input_field_list_not_empty",
+            "default": "Select one or more input fields."
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "columnSelectInputFieldList",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "oneofcolumnsList",
+          "message": {
+            "resource_key": "one_of_columns_list_not_empty",
+            "default": "Cannot have Sex selected"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "oneofcolumnsList",
+            "op": "contains",
+            "value": "Sex"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "someofcolumnsList",
+          "message": {
+            "resource_key": "some_of_columns_list_not_empty",
+            "default": "Field must be selected"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "someofcolumnsList",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "message": {
+            "default": "No data types are selected",
+            "resource_key": "checkbox_types_not_empty"
+          },
+          "focus_parameter_ref": "checkboxTypes"
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "checkboxTypes",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "message": {
+            "default": "Warning: selected tiger",
+            "resource_key": "one_of_select_animals_not_empty"
+          },
+          "focus_parameter_ref": "oneofselectAnimals"
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "oneofselectAnimals",
+            "op": "notContains",
+            "value": "tiger"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "message": {
+            "default": "Warning: selected three",
+            "resource_key": "some_of_select_animals_not_three"
+          },
+          "focus_parameter_ref": "someofselectNumbers"
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "someofselectNumbers",
+            "op": "notContains",
+            "value": "three"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "message": {
+            "default": "Checkbox single should be checked if data type is selected",
+            "resource_key": "checkbox_single_not_empty"
+          },
+          "focus_parameter_ref": "checkboxSingle"
+        },
+        "evaluate": {
+          "or": [
+            {
+              "and": [
+                {
+                  "condition": {
+                    "parameter_ref": "checkboxTypes",
+                    "op": "isNotEmpty"
+                  }
+                },
+                {
+                  "condition": {
+                    "parameter_ref": "checkboxSingle",
+                    "op": "checked"
+                  }
+                }
+              ]
+            },
+            {
+              "and": [
+                {
+                  "condition": {
+                    "parameter_ref": "checkboxTypes",
+                    "op": "isEmpty"
+                  }
+                },
+                {
+                  "condition": {
+                    "parameter_ref": "checkboxSingle",
+                    "op": "notChecked"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "radiosetColor"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "checkboxEnable",
+            "op": "checked"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "message": {
+            "default": "Are you sure you want to choose yellow?",
+            "resource_key": "radiosetColor"
+          },
+          "focus_parameter_ref": "radiosetColor"
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "radiosetColor",
+            "op": "notEquals",
+            "value": "yellow"
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "oneofselectPets"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "oneofselectAnimals",
+            "op": "notContains",
+            "value": "lion"
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "textfieldName",
+          "textareaDescription",
+          "expressionBox"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "passwordField",
+            "op": "contains",
+            "value": "password"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "passwordField",
+          "message": {
+            "resource_key": "password_not_empty",
+            "default": "Password cannot be empty, enter \"password\""
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "passwordField",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "expressionBox"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "textfieldName",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "message": {
+            "default": "Name cannot contain /",
+            "resource_key": "textfield_name_not_valid_one"
+          },
+          "focus_parameter_ref": "textfieldName"
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "textfieldName",
+            "op": "notContains",
+            "value": "/"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "message": {
+            "default": "Name cannot contain double or single \"quotes\"",
+            "resource_key": "textfield_name_not_valid_two"
+          },
+          "focus_parameter_ref": "textfieldName"
+        },
+        "evaluate": {
+          "and": [
+            {
+              "condition": {
+                "parameter_ref": "textfieldName",
+                "op": "notContains",
+                "value": "\""
+              }
+            },
+            {
+              "condition": {
+                "parameter_ref": "textfieldName",
+                "op": "notContains",
+                "value": "'"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "message": {
+            "default": "Description cannot contain /, double or single \"quotes\"",
+            "resource_key": "textarea_description_not_valid"
+          },
+          "focus_parameter_ref": "textareaDescription"
+        },
+        "evaluate": {
+          "and": [
+            {
+              "condition": {
+                "parameter_ref": "textareaDescription",
+                "op": "notContains",
+                "value": "/"
+              }
+            },
+            {
+              "condition": {
+                "parameter_ref": "textareaDescription",
+                "op": "notContains",
+                "value": "\""
+              }
+            },
+            {
+              "condition": {
+                "parameter_ref": "textareaDescription",
+                "op": "notContains",
+                "value": "'"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "message": {
+            "default": "Expression cannot contain /, double or single \"quotes\"",
+            "resource_key": "expression_box_not_valid"
+          },
+          "focus_parameter_ref": "expressionBox"
+        },
+        "evaluate": {
+          "and": [
+            {
+              "condition": {
+                "parameter_ref": "expressionBox",
+                "op": "notContains",
+                "value": "/"
+              }
+            },
+            {
+              "condition": {
+                "parameter_ref": "expressionBox",
+                "op": "notContains",
+                "value": "\""
+              }
+            },
+            {
+              "condition": {
+                "parameter_ref": "expressionBox",
+                "op": "notContains",
+                "value": "'"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "structuretableRenameFields",
+          "message": {
+            "resource_key": "structuretable_rename_fields_not_empty",
+            "default": "The 'Output Name' field cannot be empty"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "structuretableRenameFields",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    }
+  ],
   "data": {
     "currentParameters": {
       "columnSelectInputFieldList": [
@@ -1177,518 +1689,6 @@
         }
       ]
     },
-    "conditions": [
-      {
-        "validation": {
-          "fail_message": {
-            "type": "error",
-            "focus_parameter_ref": "numberfieldCheckpointInterval",
-            "message": {
-              "resource_key": "numberfield_checkpoint_interval_not_valid",
-              "default": "The checkpoint interval value must either be >= 1 or -1 to disable"
-            }
-          },
-          "evaluate": {
-            "or": [
-              {
-                "condition": {
-                  "parameter_ref": "numberfieldCheckpointInterval",
-                  "op": "equals",
-                  "value": -1
-                }
-              },
-              {
-                "condition": {
-                  "parameter_ref": "numberfieldCheckpointInterval",
-                  "op": "greaterThan",
-                  "value": 0
-                }
-              }
-            ]
-          }
-        }
-      },
-      {
-        "validation": {
-          "fail_message": {
-            "type": "error",
-            "focus_parameter_ref": "numberfieldMaxBins",
-            "message": {
-              "resource_key": "numberfield_max_bins_not_valid",
-              "default": "Maximum number of bins must be >= 2 or Maximum depth of the tree > 0"
-            }
-          },
-          "evaluate": {
-            "or": [
-              {
-                "condition": {
-                  "parameter_ref": "numberfieldMaxBins",
-                  "op": "greaterThan",
-                  "value": 1
-                }
-              },
-              {
-                "condition": {
-                  "parameter_ref": "numberfieldMaxDepth",
-                  "op": "greaterThan",
-                  "value": 0
-                }
-              }
-            ]
-          }
-        }
-      },
-      {
-        "validation": {
-          "fail_message": {
-            "type": "warning",
-            "focus_parameter_ref": "numberfieldMinInstancesPerNode",
-            "message": {
-              "resource_key": "numberfield_min_instances_per_node_not_valid",
-              "default": "The minimum instances per node value must be >= 1"
-            }
-          },
-          "evaluate": {
-            "condition": {
-              "parameter_ref": "numberfieldMinInstancesPerNode",
-              "op": "greaterThan",
-              "value": 0
-            }
-          }
-        }
-      },
-      {
-        "validation": {
-          "fail_message": {
-            "type": "error",
-            "focus_parameter_ref": "numberfieldMinInfoGain",
-            "message": {
-              "resource_key": "numberfield_min_info_gain_not_valid",
-              "default": "Cannot be less than 0"
-            }
-          },
-          "evaluate": {
-            "condition": {
-              "parameter_ref": "numberfieldMinInfoGain",
-              "op": "greaterThan",
-              "value": 0
-            }
-          }
-        }
-      },
-      {
-        "validation": {
-          "fail_message": {
-            "type": "error",
-            "focus_parameter_ref": "numberfieldSeed",
-            "message": {
-              "resource_key": "numberfield_seed_not_valid",
-              "default": "This is an example of a very long error message that someone might enter. The message text will wrap around to the next line as shown here."
-            }
-          },
-          "evaluate": {
-            "condition": {
-              "parameter_ref": "numberfieldSeed",
-              "op": "contains",
-              "value": "123"
-            }
-          }
-        }
-      },
-      {
-        "validation": {
-          "fail_message": {
-            "type": "error",
-            "focus_parameter_ref": "columnSelectInputFieldList",
-            "message": {
-              "resource_key": "column_select_input_field_list_not_empty",
-              "default": "Select one or more input fields."
-            }
-          },
-          "evaluate": {
-            "condition": {
-              "parameter_ref": "columnSelectInputFieldList",
-              "op": "isNotEmpty"
-            }
-          }
-        }
-      },
-      {
-        "validation": {
-          "fail_message": {
-            "type": "error",
-            "focus_parameter_ref": "oneofcolumnsList",
-            "message": {
-              "resource_key": "one_of_columns_list_not_empty",
-              "default": "Cannot have Sex selected"
-            }
-          },
-          "evaluate": {
-            "condition": {
-              "parameter_ref": "oneofcolumnsList",
-              "op": "contains",
-              "value": "Sex"
-            }
-          }
-        }
-      },
-      {
-        "validation": {
-          "fail_message": {
-            "type": "warning",
-            "focus_parameter_ref": "someofcolumnsList",
-            "message": {
-              "resource_key": "some_of_columns_list_not_empty",
-              "default": "Field must be selected"
-            }
-          },
-          "evaluate": {
-            "condition": {
-              "parameter_ref": "someofcolumnsList",
-              "op": "isNotEmpty"
-            }
-          }
-        }
-      },
-      {
-        "validation": {
-          "fail_message": {
-            "type": "warning",
-            "message": {
-              "default": "No data types are selected",
-              "resource_key": "checkbox_types_not_empty"
-            },
-            "focus_parameter_ref": "checkboxTypes"
-          },
-          "evaluate": {
-            "condition": {
-              "parameter_ref": "checkboxTypes",
-              "op": "isNotEmpty"
-            }
-          }
-        }
-      },
-      {
-        "validation": {
-          "fail_message": {
-            "type": "warning",
-            "message": {
-              "default": "Warning: selected tiger",
-              "resource_key": "one_of_select_animals_not_empty"
-            },
-            "focus_parameter_ref": "oneofselectAnimals"
-          },
-          "evaluate": {
-            "condition": {
-              "parameter_ref": "oneofselectAnimals",
-              "op": "notContains",
-              "value": "tiger"
-            }
-          }
-        }
-      },
-      {
-        "validation": {
-          "fail_message": {
-            "type": "warning",
-            "message": {
-              "default": "Warning: selected three",
-              "resource_key": "some_of_select_animals_not_three"
-            },
-            "focus_parameter_ref": "someofselectNumbers"
-          },
-          "evaluate": {
-            "condition": {
-              "parameter_ref": "someofselectNumbers",
-              "op": "notContains",
-              "value": "three"
-            }
-          }
-        }
-      },
-      {
-        "validation": {
-          "fail_message": {
-            "type": "error",
-            "message": {
-              "default": "Checkbox single should be checked if data type is selected",
-              "resource_key": "checkbox_single_not_empty"
-            },
-            "focus_parameter_ref": "checkboxSingle"
-          },
-          "evaluate": {
-            "or": [
-              {
-                "and": [
-                  {
-                    "condition": {
-                      "parameter_ref": "checkboxTypes",
-                      "op": "isNotEmpty"
-                    }
-                  },
-                  {
-                    "condition": {
-                      "parameter_ref": "checkboxSingle",
-                      "op": "checked"
-                    }
-                  }
-                ]
-              },
-              {
-                "and": [
-                  {
-                    "condition": {
-                      "parameter_ref": "checkboxTypes",
-                      "op": "isEmpty"
-                    }
-                  },
-                  {
-                    "condition": {
-                      "parameter_ref": "checkboxSingle",
-                      "op": "notChecked"
-                    }
-                  }
-                ]
-              }
-            ]
-          }
-        }
-      },
-      {
-        "enabled": {
-          "parameter_refs": [
-            "radiosetColor"
-          ],
-          "evaluate": {
-            "condition": {
-              "parameter_ref": "checkboxEnable",
-              "op": "checked"
-            }
-          }
-        }
-      },
-      {
-        "validation": {
-          "fail_message": {
-            "type": "warning",
-            "message": {
-              "default": "Are you sure you want to choose yellow?",
-              "resource_key": "radiosetColor"
-            },
-            "focus_parameter_ref": "radiosetColor"
-          },
-          "evaluate": {
-            "condition": {
-              "parameter_ref": "radiosetColor",
-              "op": "notEquals",
-              "value": "yellow"
-            }
-          }
-        }
-      },
-      {
-        "visible": {
-          "parameter_refs": [
-            "oneofselectPets"
-          ],
-          "evaluate": {
-            "condition": {
-              "parameter_ref": "oneofselectAnimals",
-              "op": "notContains",
-              "value": "lion"
-            }
-          }
-        }
-      },
-      {
-        "visible": {
-          "parameter_refs": [
-            "textfieldName",
-            "textareaDescription",
-            "expressionBox"
-          ],
-          "evaluate": {
-            "condition": {
-              "parameter_ref": "passwordField",
-              "op": "contains",
-              "value": "password"
-            }
-          }
-        }
-      },
-      {
-        "validation": {
-          "fail_message": {
-            "type": "error",
-            "focus_parameter_ref": "passwordField",
-            "message": {
-              "resource_key": "password_not_empty",
-              "default": "Password cannot be empty, enter \"password\""
-            }
-          },
-          "evaluate": {
-            "condition": {
-              "parameter_ref": "passwordField",
-              "op": "isNotEmpty"
-            }
-          }
-        }
-      },
-      {
-        "enabled": {
-          "parameter_refs": [
-            "expressionBox"
-          ],
-          "evaluate": {
-            "condition": {
-              "parameter_ref": "textfieldName",
-              "op": "isNotEmpty"
-            }
-          }
-        }
-      },
-      {
-        "validation": {
-          "fail_message": {
-            "type": "error",
-            "message": {
-              "default": "Name cannot contain /",
-              "resource_key": "textfield_name_not_valid_one"
-            },
-            "focus_parameter_ref": "textfieldName"
-          },
-          "evaluate": {
-            "condition": {
-              "parameter_ref": "textfieldName",
-              "op": "notContains",
-              "value": "/"
-            }
-          }
-        }
-      },
-      {
-        "validation": {
-          "fail_message": {
-            "type": "error",
-            "message": {
-              "default": "Name cannot contain double or single \"quotes\"",
-              "resource_key": "textfield_name_not_valid_two"
-            },
-            "focus_parameter_ref": "textfieldName"
-          },
-          "evaluate": {
-            "and": [
-              {
-                "condition": {
-                  "parameter_ref": "textfieldName",
-                  "op": "notContains",
-                  "value": "\""
-                }
-              },
-              {
-                "condition": {
-                  "parameter_ref": "textfieldName",
-                  "op": "notContains",
-                  "value": "'"
-                }
-              }
-            ]
-          }
-        }
-      },
-      {
-        "validation": {
-          "fail_message": {
-            "type": "warning",
-            "message": {
-              "default": "Description cannot contain /, double or single \"quotes\"",
-              "resource_key": "textarea_description_not_valid"
-            },
-            "focus_parameter_ref": "textareaDescription"
-          },
-          "evaluate": {
-            "and": [
-              {
-                "condition": {
-                  "parameter_ref": "textareaDescription",
-                  "op": "notContains",
-                  "value": "/"
-                }
-              },
-              {
-                "condition": {
-                  "parameter_ref": "textareaDescription",
-                  "op": "notContains",
-                  "value": "\""
-                }
-              },
-              {
-                "condition": {
-                  "parameter_ref": "textareaDescription",
-                  "op": "notContains",
-                  "value": "'"
-                }
-              }
-            ]
-          }
-        }
-      },
-      {
-        "validation": {
-          "fail_message": {
-            "type": "error",
-            "message": {
-              "default": "Expression cannot contain /, double or single \"quotes\"",
-              "resource_key": "expression_box_not_valid"
-            },
-            "focus_parameter_ref": "expressionBox"
-          },
-          "evaluate": {
-            "and": [
-              {
-                "condition": {
-                  "parameter_ref": "expressionBox",
-                  "op": "notContains",
-                  "value": "/"
-                }
-              },
-              {
-                "condition": {
-                  "parameter_ref": "expressionBox",
-                  "op": "notContains",
-                  "value": "\""
-                }
-              },
-              {
-                "condition": {
-                  "parameter_ref": "expressionBox",
-                  "op": "notContains",
-                  "value": "'"
-                }
-              }
-            ]
-          }
-        }
-      },
-      {
-        "validation": {
-          "fail_message": {
-            "type": "error",
-            "focus_parameter_ref": "structuretableRenameFields",
-            "message": {
-              "resource_key": "structuretable_rename_fields_not_empty",
-              "default": "The 'Output Name' field cannot be empty"
-            }
-          },
-          "evaluate": {
-            "condition": {
-              "parameter_ref": "structuretableRenameFields",
-              "op": "isNotEmpty"
-            }
-          }
-        }
-      }
-    ],
     "currentProperties": {
       "columnSelectInputFieldList": [
         "Age",

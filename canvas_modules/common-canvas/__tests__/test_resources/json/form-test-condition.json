@@ -26,46 +26,46 @@
             "exp_param"
           ]
         }
-      ],
-      "conditions": [
-        {
-          "validation": {
-            "fail_message": {
-              "type": "warning",
-              "message": {
-                "default": "Expression cannot be empty: Default",
-                "resource_key": "exp_param_not_empty"
-              },
-              "focus_parameter_ref": "exp_param"
+      ]
+    },
+    "conditions": [
+      {
+        "validation": {
+          "fail_message": {
+            "type": "warning",
+            "message": {
+              "default": "Expression cannot be empty: Default",
+              "resource_key": "exp_param_not_empty"
             },
-            "evaluate": {
-              "condition": {
-                "parameter_ref": "exp_param",
-                "op": "isNotEmpty"
-              }
-            }
-          }
-        },
-        {
-          "validation": {
-            "fail_message": {
-              "type": "error",
-              "message": {
-                "default": "int_param value must greaterThan 1: default"
-              },
-              "focus_parameter_ref": "int_param"
-            },
-            "evaluate": {
-              "condition": {
-                "parameter_ref": "int_param",
-                "op": "greaterThan",
-                "value": 1
-              }
+            "focus_parameter_ref": "exp_param"
+          },
+          "evaluate": {
+            "condition": {
+              "parameter_ref": "exp_param",
+              "op": "isNotEmpty"
             }
           }
         }
-      ]
-    },
+      },
+      {
+        "validation": {
+          "fail_message": {
+            "type": "error",
+            "message": {
+              "default": "int_param value must greaterThan 1: default"
+            },
+            "focus_parameter_ref": "int_param"
+          },
+          "evaluate": {
+            "condition": {
+              "parameter_ref": "int_param",
+              "op": "greaterThan",
+              "value": 1
+            }
+          }
+        }
+      }
+    ],
     "resources": {
       "exp_param_not_empty": "Expression cannot be empty: Resource"
     }
@@ -142,45 +142,44 @@
         "url": ""
       }
     ],
-    "data": {
-      "conditions": [
-        {
-          "validation": {
-            "fail_message": {
-              "type": "warning",
-              "message": {
-                "default": "Expression cannot be empty: Resource",
-                "resource_key": "exp_param_not_empty"
-              },
-              "focus_parameter_ref": "exp_param"
+    "conditions": [
+      {
+        "validation": {
+          "fail_message": {
+            "type": "warning",
+            "message": {
+              "default": "Expression cannot be empty: Resource",
+              "resource_key": "exp_param_not_empty"
             },
-            "evaluate": {
-              "condition": {
-                "parameter_ref": "exp_param",
-                "op": "isNotEmpty"
-              }
-            }
-          }
-        },
-        {
-          "validation": {
-            "fail_message": {
-              "type": "error",
-              "message": {
-                "default": "int_param value must greaterThan 1: default"
-              },
-              "focus_parameter_ref": "int_param"
-            },
-            "evaluate": {
-              "condition": {
-                "parameter_ref": "int_param",
-                "op": "greaterThan",
-                "value": 1
-              }
+            "focus_parameter_ref": "exp_param"
+          },
+          "evaluate": {
+            "condition": {
+              "parameter_ref": "exp_param",
+              "op": "isNotEmpty"
             }
           }
         }
-      ]
-    }
+      },
+      {
+        "validation": {
+          "fail_message": {
+            "type": "error",
+            "message": {
+              "default": "int_param value must greaterThan 1: default"
+            },
+            "focus_parameter_ref": "int_param"
+          },
+          "evaluate": {
+            "condition": {
+              "parameter_ref": "int_param",
+              "op": "greaterThan",
+              "value": 1
+            }
+          }
+        }
+      }
+    ],
+    "data": {}
   }
 }
