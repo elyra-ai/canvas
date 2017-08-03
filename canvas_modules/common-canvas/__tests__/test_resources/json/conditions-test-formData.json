@@ -199,7 +199,7 @@
                           "description": {
                             "text": "Shared input list with below control"
                           },
-                          "controlType": "columnselect",
+                          "controlType": "selectcolumns",
                           "valueDef": {
                             "propType": "string",
                             "isList": true,
@@ -220,7 +220,7 @@
                           "description": {
                             "text": "Select one or more input columns"
                           },
-                          "controlType": "columnselect",
+                          "controlType": "selectcolumns",
                           "valueDef": {
                             "propType": "string",
                             "isList": true,

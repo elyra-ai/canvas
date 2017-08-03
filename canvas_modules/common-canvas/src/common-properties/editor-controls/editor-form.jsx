@@ -436,8 +436,8 @@ export default class EditorForm extends React.Component {
 				updateValidationErrorMessage={this.updateValidationErrorMessage}
 				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
-		} else if (control.controlType === "allocatedfield") {
-			// logger.info("allocatedfield");
+		} else if (control.controlType === "selectcolumn") {
+			// logger.info("selectcolumn");
 			return (<FieldAllocatorControl control={control}
 				dataModel={datasetMetadata}
 				key={controlId}
@@ -452,24 +452,7 @@ export default class EditorForm extends React.Component {
 				updateValidationErrorMessage={this.updateValidationErrorMessage}
 				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
-		} else if (control.controlType === "allocatedfields") {
-			// logger.info("allocatedfields");
-			return (<FieldAllocatorControl control={control}
-				dataModel={datasetMetadata}
-				multiColumn
-				key={controlId}
-				ref={controlId}
-				valueAccessor={controlValueAccessor}
-				validationDefinitions={this.state.validationDefinitions}
-				controlStates={this.state.controlStates}
-				updateControlValue={this.updateControlValue}
-				selectedRows={this.getSelectedRows(control.name)}
-				validateConditions={this.validateConditions}
-				getControlValues={this.getControlValues}
-				updateValidationErrorMessage={this.updateValidationErrorMessage}
-				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
-			/>);
-		} else if (control.controlType === "columnselect") {
+		} else if (control.controlType === "selectcolumns") {
 			return (<ColumnSelectControl control={control}
 				dataModel={datasetMetadata}
 				multiColumn
@@ -604,7 +587,7 @@ export default class EditorForm extends React.Component {
 			const isStructureTable = control.controlType === "structuretable";
 			if (!isStructureTable || description || hasFilter) {
 				let className = "default-label-container";
-				if (control.controlType === "columnselect" || control.controlType === "structuretable") {
+				if (control.controlType === "selectcolumns" || control.controlType === "structuretable") {
 					className = "label-container";
 				}
 				label = (<div className={className}>
@@ -783,7 +766,7 @@ export default class EditorForm extends React.Component {
 			>
 				{content}
 			</div>);
-		} else if (panel.panelType === "checkboxEnablement") {
+		} else if (panel.panelType === "checkboxPanel") {
 			uiObject = (<CheckboxSelectionPanel
 				id={id}
 				key={key}

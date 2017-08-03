@@ -172,7 +172,7 @@
     "group_info": [
       {
         "id": "fields",
-        "type": "fieldSelection",
+        "type": "columnSelection",
         "label": {
           "default": "Fields"
         },

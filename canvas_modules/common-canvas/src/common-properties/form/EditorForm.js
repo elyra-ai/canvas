@@ -13,6 +13,7 @@
 import { Control, SubControl } from "./ControlInfo";
 import { UIItem } from "./UIItem";
 import { GroupType, PanelType, Type, ControlType, ParamRole, EditStyle } from "./form-constants";
+import logger from "../../../utils/logger";
 
 /**
  * The Editor is the primary container for the editing controls. It defines the tabs within the
@@ -87,10 +88,6 @@ function _makeUIItem(parameterMetadata, group, structureMetadata, l10nProvider, 
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_ALLOCATION, _makeControls(parameterMetadata, group, structureMetadata, l10nProvider, conditions)));
 	case GroupType.COLUMN_SELECTION:
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_SELECTION, _makeControls(parameterMetadata, group, structureMetadata, l10nProvider, conditions)));
-	case GroupType.FIELD_ALLOCATION:
-		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_ALLOCATION, _makeControls(parameterMetadata, group, structureMetadata, l10nProvider, conditions)));
-	case GroupType.FIELD_SELECTION:
-		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_SELECTION, _makeControls(parameterMetadata, group, structureMetadata, l10nProvider, conditions)));
 	case GroupType.ADDITIONAL: {
 		const panel = new ControlPanel(groupName, PanelType.GENERAL, _makeControls(parameterMetadata, group, structureMetadata, l10nProvider, conditions));
 		groupLabel = l10nProvider.l10nLabel(group, group.name);
@@ -127,7 +124,7 @@ function _makeUIItem(parameterMetadata, group, structureMetadata, l10nProvider, 
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.GENERAL, panSubItems));
 	}
 	case GroupType.CHECKBOX_PANEL: {
-		return UIItem.makeCheckboxPanel(new ControlPanel(groupName, PanelType.CHECKBOX_ENABLEMENT,
+		return UIItem.makeCheckboxPanel(new ControlPanel(groupName, PanelType.CHECKBOX_PANEL,
 			_makeControls(parameterMetadata, group, structureMetadata, l10nProvider, conditions), group));
 	}
 	default:
@@ -187,14 +184,10 @@ function _makeStringControl(parameter, group) {
 			}
 			break;
 		case ParamRole.COLUMN:
-			if (group.groupType() === GroupType.COLUMN_ALLOCATION ||
-					group.groupType() === GroupType.COLUMN_SELECTION) {
+			if (group.groupType() === GroupType.COLUMN_ALLOCATION) {
 				controlType = ControlType.ALLOCATEDCOLUMN;
-			} else if (group.groupType() === GroupType.FIELD_ALLOCATION ||
-					group.groupType() === GroupType.FIELD_SELECTION) {
-				controlType = ControlType.ALLOCATEDFIELD;
 			} else {
-				controlType = ControlType.ONEOFCOLUMNS;
+				controlType = ControlType.SELECTCOLUMN;
 			}
 			break;
 		case ParamRole.EXPRESSION:
@@ -324,6 +317,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 						controlType = ControlType.STRUCTURELISTEDITOR;
 					}
 				} else {
+					logger.warn("Complex types should be arrays or maps.  Found: " + parameter.propType());
 					controlType = ControlType.STRUCTUREEDITOR;
 				}
 			} else {
@@ -378,12 +372,8 @@ function _processListParameter(parameter, group) {
 	case ParamRole.COLUMN:
 		if (group.groupType() === GroupType.COLUMN_ALLOCATION) {
 			controlType = ControlType.ALLOCATEDCOLUMNS;
-		} else if (group.groupType() === GroupType.FIELD_ALLOCATION) {
-			controlType = ControlType.ALLOCATEDFIELDS;
-		} else if (group.groupType() === GroupType.COLUMN_SELECTION || group.groupType() === GroupType.FIELD_SELECTION) {
-			controlType = ControlType.COLUMNSELECT;
 		} else {
-			controlType = ControlType.SOMEOFCOLUMNS;
+			controlType = ControlType.SELECTCOLUMNS;
 		}
 		break;
 	default:
@@ -432,7 +422,7 @@ function _makeSubControl(parameter, l10nProvider, isKeyField) {
 			controlType = ControlType.ONEOFSELECT;
 			break;
 		case ParamRole.COLUMN:
-			controlType = ControlType.ONEOFCOLUMNS;
+			controlType = ControlType.SELECTCOLUMN;
 			break;
 		case ParamRole.NEW_COLUMN:
 			controlType = ControlType.TEXTFIELD;

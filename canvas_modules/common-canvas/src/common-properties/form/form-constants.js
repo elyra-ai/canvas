@@ -36,10 +36,10 @@ const GroupType = {
 	SUB_TABS: "subTabs",
 	PANELS: "panels",
 	ADDITIONAL: "additional",
-	COLUMN_ALLOCATION: "columnAllocation",
+	COLUMN_ALLOCATION: "columnAllocation", // deprecated
 	COLUMN_SELECTION: "columnSelection",
-	FIELD_ALLOCATION: "fieldAllocation",
-	FIELD_SELECTION: "fieldSelection",
+//	FIELD_ALLOCATION: "fieldAllocation", // should be removed
+//	FIELD_SELECTION: "fieldSelection", // should be removed
 	PANEL_SELECTOR: "panelSelector",
 	CHECKBOX_PANEL: "checkboxPanel"
 };
@@ -48,7 +48,7 @@ const PanelType = {
 	GENERAL: "general",
 	COLUMN_ALLOCATION: "columnAllocation",
 	COLUMN_SELECTION: "columnSelection",
-	CHECKBOX_ENABLEMENT: "checkboxEnablement"
+	CHECKBOX_PANEL: "checkboxPanel"
 };
 
 const ControlType = {
@@ -63,14 +63,16 @@ const ControlType = {
 	CHECKBOXSET: "checkboxset",
 	ONEOFSELECT: "oneofselect",
 	SOMEOFSELECT: "someofselect",
-	ONEOFCOLUMNS: "oneofcolumns",
-	SOMEOFCOLUMNS: "someofcolumns",
-	ALLOCATEDCOLUMN: "allocatedcolumn",
-	ALLOCATEDCOLUMNS: "allocatedcolumns",
-	ALLOCATEDFIELD: "allocatedfield",
-	ALLOCATEDFIELDS: "allocatedfields",
-	COLUMNSELECT: "columnselect",
-	ALLOCATEDSTRUCTURES: "allocatedstructures",
+	SELECTCOLUMN: "selectcolumn",
+	SELECTCOLUMNS: "selectcolumns",
+	ONEOFCOLUMNS: "oneofcolumns", // deprecate, replace with SELECTCOLUMN
+	SOMEOFCOLUMNS: "someofcolumns", // deprecated, replaced by SELECTCOLUMNS
+	ALLOCATEDCOLUMN: "allocatedcolumn", // deprecated, replaced by SELECTCOLUMN
+	ALLOCATEDCOLUMNS: "allocatedcolumns", // deprecated, replaced by SELECTCOLUMNS
+//	ALLOCATEDFIELD: "allocatedfield", // for single fields change to selectcolumn
+//	ALLOCATEDFIELDS: "allocatedfields", // remove, replaced by SELECTCOLUMNS
+//	COLUMNSELECT: "columnselect", // for list change to selectcolumns
+	ALLOCATEDSTRUCTURES: "allocatedstructures", // deprecated, replaced by structuretable
 	STRUCTURETABLE: "structuretable",
 	STRUCTUREEDITOR: "structureeditor",
 	STRUCTURELISTEDITOR: "structurelisteditor",
