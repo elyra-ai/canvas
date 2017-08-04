@@ -111,6 +111,15 @@ export default class CommonCanvas extends React.Component {
 			case "linkComment":
 				ObjectModel.linkComment(data);
 				break;
+			case "deleteSelectedObjects":
+				ObjectModel.deleteSelectedObjects();
+				break;
+			case "undo":
+				// TODO - plug in undo method
+				break;
+			case "redo":
+				// TODO - plug in redo method
+				break;
 			default:
 			}
 		}

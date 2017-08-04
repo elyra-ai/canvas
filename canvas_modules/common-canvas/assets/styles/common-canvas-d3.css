@@ -187,6 +187,7 @@
 	font-size: 13px;  /* Must be the same as font size in .comment-entry */
 	position: absolute;
 	padding: 2;
+	pointer-events: none;   /* This prevents strange problems with div focus that occur when the text is clicked. */
 	/* Prevent elements from being selectable */
 	/* This stops it being dragged incorrectly.*/
 	-webkit-user-select: none;

@@ -52,6 +52,7 @@ export default class DiagramCanvas extends React.Component {
 												this.props.clickActionHandler,
 												this.props.decorationActionHandler,
 												this.props.config);
+		document.getElementById("d3-svg-canvas-div").focus(); // Set focus on div so keybord events go there.
 	}
 
 	componentDidUpdate() {
@@ -188,7 +189,11 @@ export default class DiagramCanvas extends React.Component {
 			</div>);
 		}
 
-		const svgCanvas = (<div className="d3-svg-canvas-div" id="d3-svg-canvas-div" />);
+		// Set tabindex to -1 so the focus (see componentDidMount above) can go to
+		// the div (which allows keyboard events to go there) and using -1 means
+		// the user cannot tab to the div. Keyboard events are handled in svg-canvas-d3.js.
+		// https://stackoverflow.com/questions/32911355/whats-the-tabindex-1-in-bootstrap-for
+		const svgCanvas = (<div tabIndex="-1" className="d3-svg-canvas-div" id="d3-svg-canvas-div" />);
 
 		return (
 			<div

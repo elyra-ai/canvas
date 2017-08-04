@@ -844,6 +844,10 @@ export default class ObjectModel {
 
 		return this.getSelectedObjectIds();
 	}
+
+	static deleteSelectedObjects() {
+		this.deleteObjects({ "selectedObjectIds": this.getSelectedObjectIds() });
+	}
 }
 
 ObjectModel.fixedLayout = NONE;

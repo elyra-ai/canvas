@@ -15,6 +15,15 @@
 const d3 = require("d3");
 import ObjectModel from "./object-model/object-model.js";
 
+const BACKSPACE_KEY = 8;
+const DELETE_KEY = 46;
+const Z_KEY = 90;
+// TODO - Implement nudge behavior for moving nodes and comments
+// const LEFT_ARROW_KEY = 37;
+// const UP_ARROW_KEY = 38;
+// const RIGHT_ARROW_KEY = 39;
+// const DOWN_ARROW_KEY = 40;
+
 export default class CanvasD3Layout {
 
 	constructor(canvasJSON, canvasSelector, canvasWidth, canvasHeight,
@@ -341,7 +350,26 @@ export default class CanvasD3Layout {
 	createCanvas() {
 		// this.consoleLog("Create Canvas");
 
-		this.canvasSVG = d3.select(this.canvasSelector)
+		// Add a listener to canvas div to catch delete key presses. The containing
+		// canvas div must have tabindex set and the focus set on the div.
+		const canvasDiv = d3.select(this.canvasSelector)
+			.on("keydown", () => {
+				if (d3.event.keyCode === BACKSPACE_KEY ||
+						d3.event.keyCode === DELETE_KEY) {
+					console.log("Key Delete");
+					if (!this.editingComment) {
+						d3.event.stopPropagation();  // Some browsers interpret Delete as 'Back to previous page'. So prevent that.
+						d3.event.preventDefault();
+						this.editActionHandler({ editType: "deleteSelectedObjects" });
+					}
+				} else if (this.isCmndCtrlPressed() && !d3.event.shiftKey && d3.event.keyCode === Z_KEY) {
+					this.editActionHandler({ editType: "undo" });
+				} else if (this.isCmndCtrlPressed() && d3.event.shiftKey && d3.event.keyCode === Z_KEY) {
+					this.editActionHandler({ editType: "redo" });
+				}
+			});
+
+		this.canvasSVG = canvasDiv
 			.append("svg")
 				.attr("width", this.svg_canvas_width)
 				.attr("height", this.svg_canvas_height)
