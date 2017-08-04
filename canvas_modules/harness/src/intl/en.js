@@ -31,6 +31,8 @@ export const messages = {
 	"canvas-context.pasteClipboard": "Paste",
 	"canvas-context.selectAll": "Select all",
 	"canvas-context.streamProperties": "Options",
+	"canvas-context.undo": "Undo",
+	"canvas-context.redo": "Redo",
 
 	"dialog.nodePropertiesTitle": "Node Properties"
 };

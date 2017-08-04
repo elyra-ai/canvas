@@ -14,5 +14,6 @@ import "./../assets/styles/field-allocator.css";
 import CommonCanvas from "./common-canvas.jsx";
 import ObjectModel from "./object-model/object-model";
 import CommonProperties from "./common-properties/common-properties.jsx";
+import CommandStack from "./command-stack/command-stack";
 
-export { CommonCanvas, ObjectModel, CommonProperties };
+export { CommonCanvas, ObjectModel, CommonProperties, CommandStack };

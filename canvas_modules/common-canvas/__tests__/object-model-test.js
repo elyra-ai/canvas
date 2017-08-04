@@ -220,9 +220,19 @@ describe("ObjectModel handle model OK", () => {
 			data: startCanvas
 		});
 
-		ObjectModel.dispatch({
+		/* ObjectModel.dispatch({
 			type: "DELETE_OBJECTS",
 			data: { selectedObjectIds: ["node1", "node3"] }
+		}); */
+
+		ObjectModel.dispatch({
+			type: "DELETE_OBJECT",
+			data: "node1"
+		});
+
+		ObjectModel.dispatch({
+			type: "DELETE_OBJECT",
+			data: "node3"
 		});
 
 		const expectedCanvas =
@@ -456,9 +466,18 @@ describe("ObjectModel handle model OK", () => {
 			data: startCanvas
 		});
 
-		ObjectModel.dispatch({
+		/* ObjectModel.dispatch({
 			type: "ADD_COMMENT",
 			data: { id: "comment3", mousePos: { x: 200, y: 300 }, selectedObjectIds: [] }
+			className: "canvas-comment",
+			content: " ",
+			height: 32,
+			width: 128,
+		});*/
+
+		ObjectModel.dispatch({
+			type: "ADD_COMMENT",
+			data: { id: "comment3",	x_pos: 200,	y_pos: 300,	selectedObjectIds: []	}
 		});
 
 		const expectedCanvas =
@@ -472,13 +491,7 @@ describe("ObjectModel handle model OK", () => {
 					comments: [
                 { id: "comment1", x_pos: 50, y_pos: 50 },
                 { id: "comment2", x_pos: 60, y_pos: 60 },
-						{ id: "comment3",
-							className: "canvas-comment",
-							content: "",
-							height: 32,
-							width: 128,
-							x_pos: 200,
-							y_pos: 300 }
+								{ id: "comment3",	x_pos: 200,	y_pos: 300 }
 					],
 					links: []
 				}
@@ -490,7 +503,7 @@ describe("ObjectModel handle model OK", () => {
 		logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas));
 		logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas));
 
-		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(_.isEqual(JSON.stringify(expectedCanvas), JSON.stringify(actualCanvas))).to.be.true;
 	});
 
 	it("should edit a comment", () => {
@@ -550,7 +563,7 @@ describe("ObjectModel handle model OK", () => {
 		logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas));
 		logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas));
 
-		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(_.isEqual(JSON.stringify(expectedCanvas), JSON.stringify(actualCanvas))).to.be.true;
 	});
 
 	it("should move a comment", () => {
@@ -630,9 +643,20 @@ describe("ObjectModel handle model OK", () => {
 			type: "SET_CANVAS",
 			data: startCanvas
 		});
-		ObjectModel.dispatch({
+
+		/* ObjectModel.dispatch({
 			type: "DELETE_OBJECTS",
 			data: { selectedObjectIds: ["comment1", "comment2"] }
+		});*/
+
+		ObjectModel.dispatch({
+			type: "DELETE_OBJECT",
+			data: "comment1"
+		});
+
+		ObjectModel.dispatch({
+			type: "DELETE_OBJECT",
+			data: "comment2"
 		});
 
 		const expectedCanvas =
@@ -940,8 +964,8 @@ describe("ObjectModel handle model OK", () => {
 		});
 
 		ObjectModel.dispatch({
-			type: "DELETE_OBJECTS",
-			data: { selectedObjectIds: ["node1"] }
+			type: "DELETE_OBJECT",
+			data: "node1"
 		});
 
 		const expectedCanvas =
@@ -999,8 +1023,8 @@ describe("ObjectModel handle model OK", () => {
 		});
 
 		ObjectModel.dispatch({
-			type: "DELETE_OBJECTS",
-			data: { selectedObjectIds: ["comment1"] }
+			type: "DELETE_OBJECT",
+			data: "comment1"
 		});
 
 		const expectedCanvas =

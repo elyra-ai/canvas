@@ -14,6 +14,16 @@ import DiagramCanvasLegacy from "./diagram-canvas.jsx";
 import DiagramCanvasD3 from "./diagram-canvas-d3.jsx";
 import Palette from "./palette/palette.jsx";
 import ObjectModel from "./object-model/object-model.js";
+import CommandStack from "./command-stack/command-stack.js";
+import CreateNodeAction from "./command-actions/createNodeAction.js";
+import CreateCommentAction from "./command-actions/createCommentAction.js";
+import LinkNodesAction from "./command-actions/linkNodesAction.js";
+import LinkCommentAction from "./command-actions/linkCommentAction.js";
+import DeleteObjectsAction from "./command-actions/deleteObjectsAction.js";
+import DeleteLinkAction from "./command-actions/deleteLinkAction.js";
+import DisconnectNodesAction from "./command-actions/disconnectNodesAction.js";
+import MoveObjectsAction from "./command-actions/moveObjectsAction.js";
+import EditCommentAction from "./command-actions/editCommentAction.js";
 import ZoomIn24Icon from "../assets/images/zoom-in_24.svg";
 import ZoomOut24Icon from "../assets/images/zoom-out_24.svg";
 import OpenNodePaletteIcon from "../assets/images/open_node_palette.svg";
@@ -96,29 +106,42 @@ export default class CommonCanvas extends React.Component {
 	editActionHandler(data) {
 		if (this.props.config.enableInternalObjectModel) {
 			switch (data.editType) {
-			case "createNode":
-				ObjectModel.createNode(data);
+			case "createNode": {
+				const node = ObjectModel.createNode(data);
+				const command = new CreateNodeAction(node);
+				CommandStack.do(command);
 				break;
-			case "moveObjects":
-				ObjectModel.moveObjects(data);
+			}
+			case "moveObjects": {
+				const command = new MoveObjectsAction(data);
+				CommandStack.do(command);
 				break;
-			case "editComment":
-				ObjectModel.editComment(data);
+			}
+			case "editComment": {
+				const command = new EditCommentAction(data);
+				CommandStack.do(command);
 				break;
-			case "linkNodes":
-				ObjectModel.linkNodes(data);
+			}
+			case "linkNodes": {
+				const linkNodesList = ObjectModel.createNodeLinks(data);
+				const command = new LinkNodesAction(linkNodesList);
+				CommandStack.do(command);
 				break;
-			case "linkComment":
-				ObjectModel.linkComment(data);
+			}
+			case "linkComment": {
+				const linkCommentList = ObjectModel.createCommentLinks(data);
+				const command = new LinkCommentAction(linkCommentList);
+				CommandStack.do(command);
 				break;
+			}
 			case "deleteSelectedObjects":
 				ObjectModel.deleteSelectedObjects();
 				break;
 			case "undo":
-				// TODO - plug in undo method
+				CommandStack.undo();
 				break;
 			case "redo":
-				// TODO - plug in redo method
+				CommandStack.redo();
 				break;
 			default:
 			}
@@ -132,17 +155,32 @@ export default class CommonCanvas extends React.Component {
 	contextMenuActionHandler(action) {
 		if (this.props.config.enableInternalObjectModel) {
 			switch (action) {
-			case "deleteObjects":
-				ObjectModel.deleteObjects(this.contextMenuSource);
+			case "deleteObjects": {
+				const command = new DeleteObjectsAction(this.contextMenuSource);
+				CommandStack.do(command);
 				break;
-			case "addComment":
-				ObjectModel.createComment(this.contextMenuSource);
+			}
+			case "addComment": {
+				const comment = ObjectModel.createComment(this.contextMenuSource);
+				const command = new CreateCommentAction(comment);
+				CommandStack.do(command);
 				break;
-			case "deleteLink":
-				ObjectModel.deleteLink(this.contextMenuSource);
+			}
+			case "deleteLink": {
+				const command = new DeleteLinkAction(this.contextMenuSource);
+				CommandStack.do(command);
 				break;
-			case "disconnectNode":
-				ObjectModel.disconnectNodes(this.contextMenuSource);
+			}
+			case "disconnectNode": {
+				const command = new DisconnectNodesAction(this.contextMenuSource);
+				CommandStack.do(command);
+				break;
+			}
+			case "undo":
+				CommandStack.undo();
+				break;
+			case "redo":
+				CommandStack.redo();
 				break;
 			default:
 			}

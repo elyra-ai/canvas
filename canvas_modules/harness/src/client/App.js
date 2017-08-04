@@ -16,7 +16,7 @@ import { IntlProvider, FormattedMessage, addLocaleData, injectIntl, intlShape } 
 import en from "react-intl/locale-data/en";
 var i18nData = require("../intl/en.js");
 
-import { CommonCanvas, ObjectModel, CommonProperties } from "common-canvas";
+import { CommonCanvas, ObjectModel, CommonProperties, CommandStack } from "common-canvas";
 
 import Console from "./components/console.jsx";
 import SidePanel from "./components/sidepanel.jsx";
@@ -40,6 +40,8 @@ import play32 from "../graphics/play_32.svg";
 import download32 from "../graphics/save_32.svg";
 import createNew32 from "../graphics/create-new_32.svg";
 import justify32 from "../graphics/justify_32.svg";
+import undo from "../graphics/undo.svg";
+import redo from "../graphics/redo.svg";
 import template32 from "ibm-design-icons/dist/svg/object-based/template_32.svg";
 
 const CANVAS_SIZE_LIMIT = 100000;
@@ -74,6 +76,8 @@ class App extends React.Component {
 		this.delete = this.delete.bind(this);
 		this.run = this.run.bind(this);
 		this.download = this.download.bind(this);
+		this.undo = this.undo.bind(this);
+		this.redo = this.redo.bind(this);
 
 		this.openPalette = this.openPalette.bind(this);
 		this.closePalette = this.closePalette.bind(this);
@@ -249,6 +253,14 @@ class App extends React.Component {
 		ReactFileDownload(canvas, "canvas.json");
 	}
 
+	undo() {
+		CommandStack.undo();
+	}
+
+	redo() {
+		CommandStack.redo();
+	}
+
 	openPalette() {
 		if (this.state.paletteNavEnabled) {
 			this.log("opening palette");
@@ -365,6 +377,9 @@ class App extends React.Component {
       { divider: true },
       { action: "cutSelection", label: this.getLabel("edit-context.cutSelection", "Cut") },
       { action: "copySelection", label: this.getLabel("edit-context.copySelection", "Copy") },
+			{ divider: true },
+      { action: "undo", label: this.getLabel("canvas-context.undo", "Undo") },
+      { action: "redo", label: this.getLabel("canvas-context.redo", "Redo") },
       { divider: true },
       { action: "streamProperties", label: this.getLabel("canvas-context.streamProperties", "Options") }
 		];
@@ -587,6 +602,20 @@ class App extends React.Component {
 							<a onClick={this.download.bind(this) }>
 								<Isvg id="action-bar-download"
 									src={download32}
+								/>
+							</a>
+						</li>
+						<li className="navbar-li" data-tip="undo">
+							<a onClick={this.undo.bind(this) }>
+								<Isvg id="action-bar-undo"
+									src={undo}
+								/>
+							</a>
+						</li>
+						<li className="navbar-li" data-tip="redo">
+							<a onClick={this.redo.bind(this) }>
+								<Isvg id="action-bar-redo"
+									src={redo}
 								/>
 							</a>
 						</li>

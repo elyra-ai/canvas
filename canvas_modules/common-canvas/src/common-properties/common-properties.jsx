@@ -13,6 +13,8 @@ import PropertiesEditing from "./properties-editing.jsx";
 import EditorForm from "./editor-controls/editor-form.jsx";
 import PropertyUtil from "./util/property-utils.js";
 import Form from "./form/Form";
+import CommandStack from "../command-stack/command-stack.js";
+import CommonPropertiesAction from "../command-actions/commonPropertiesAction.js";
 import logger from "../../utils/logger";
 
 export default class CommonProperties extends React.Component {
@@ -22,8 +24,10 @@ export default class CommonProperties extends React.Component {
 			showPropertiesDialog: false,
 			showPropertiesButtons: true
 		};
+		this.initialCurrentProperties = "empty";
 		this.applyPropertiesEditing = this.applyPropertiesEditing.bind(this);
 		this.showPropertiesButtons = this.showPropertiesButtons.bind(this);
+		this.cancelHandler = this.cancelHandler.bind(this);
 	}
 
 	getForm() {
@@ -110,7 +114,16 @@ export default class CommonProperties extends React.Component {
 		// May need to close the dialog inside the callback in
 		// case of validation errors
 		this.props.propertiesInfo.closePropertiesDialog();
-		this.props.propertiesInfo.applyPropertyChanges(settings, this.props.propertiesInfo.appData);
+		// this.props.propertiesInfo.applyPropertyChanges(settings, this.props.propertiesInfo.appData);
+		const command = new CommonPropertiesAction(settings, this.initialCurrentProperties,
+												this.props.propertiesInfo.appData, this.props.propertiesInfo.applyPropertyChanges);
+		CommandStack.do(command);
+		this.initialCurrentProperties = "empty";
+	}
+
+	cancelHandler() {
+		this.initialCurrentProperties = "empty";
+		this.props.propertiesInfo.closePropertiesDialog();
 	}
 
 	showPropertiesButtons(state) {
@@ -128,6 +141,11 @@ export default class CommonProperties extends React.Component {
 		if (formData !== null) {
 			let propertiesDialog = [];
 			if (this.props.showPropertiesDialog) {
+				if (this.initialCurrentProperties === "empty" &&
+						typeof formData.data !== "undefined" &&
+						typeof formData.data.currentProperties !== "undefined") {
+					this.initialCurrentProperties = JSON.parse(JSON.stringify(formData.data.currentProperties));
+				}
 				const editorForm = (<EditorForm
 					ref="editorForm"
 					key="editor-form-key"
@@ -143,7 +161,7 @@ export default class CommonProperties extends React.Component {
 						title={title}
 						bsSize={size}
 						okHandler={this.applyPropertiesEditing}
-						cancelHandler={this.props.propertiesInfo.closePropertiesDialog}
+						cancelHandler={this.cancelHandler}
 						showPropertiesButtons={this.state.showPropertiesButtons}
 					>
 						{editorForm}
@@ -155,7 +173,7 @@ export default class CommonProperties extends React.Component {
 						bsSize={size}
 						title={title}
 						okHandler={this.applyPropertiesEditing}
-						cancelHandler={this.props.propertiesInfo.closePropertiesDialog}
+						cancelHandler={this.cancelHandler}
 						showPropertiesButtons={this.state.showPropertiesButtons}
 					>
 						{editorForm}

@@ -41,7 +41,8 @@ describe("ObjectModel API handle model OK", () => {
 		ObjectModel.setCanvas(startCanvas);
 		ObjectModel.fixedAutoLayout(HORIZONTAL);
 		ObjectModel.setPaletteData(paletteJson);
-		ObjectModel.createNode(filterNode);
+		const node = ObjectModel.createNode(filterNode);
+		ObjectModel.addNode(node);
 
 		const expectedCanvas = addNodeHorizontalLayoutCanvas;
 		const actualCanvas = ObjectModel.getCanvas();
@@ -64,7 +65,8 @@ describe("ObjectModel API handle model OK", () => {
 		ObjectModel.setCanvas(startCanvas);
 		ObjectModel.fixedAutoLayout(VERTICAL);
 		ObjectModel.setPaletteData(paletteJson);
-		ObjectModel.createNode(filterNode);
+		const node = ObjectModel.createNode(filterNode);
+		ObjectModel.addNode(node);
 
 		const expectedCanvas = addNodeVerticalLayoutCanvas;
 		const actualCanvas = ObjectModel.getCanvas();

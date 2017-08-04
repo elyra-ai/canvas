@@ -50,13 +50,9 @@ const nodes = (state = [], action) => {
 		}
 		return state;
 
-	case "DELETE_OBJECTS":
+	case "DELETE_OBJECT":
 		return state.filter((node) => {
-			const index =
-			action.data.selectedObjectIds.findIndex((selId) => {
-				return (node.id === selId);
-			});
-			return index === -1; // filter will return all objects NOT found in selectedObjectIds
+			return node.id !== action.data; // filter will return all objects NOT found
 		});
 
 	case "ADD_NODE_ATTR":
@@ -113,24 +109,20 @@ const comments = (state = [], action) => {
 		}
 		return state;
 
-	case "DELETE_OBJECTS":
+	case "DELETE_OBJECT":
 		return state.filter((node) => {
-			const index =
-			action.data.selectedObjectIds.findIndex((selId) => {
-				return (node.id === selId);
-			});
-			return index === -1; // filter will return all objects NOT found in selectedObjectIds
+			return node.id !== action.data; // filter will return all objects NOT found
 		});
 
 	case "ADD_COMMENT": {
 		const newComment = {
 			id: action.data.id,
-			className: "canvas-comment",
-			content: "",
-			height: 32,
-			width: 128,
-			x_pos: action.data.mousePos.x,
-			y_pos: action.data.mousePos.y
+			className: action.data.className,
+			content: action.data.content,
+			height: action.data.height,
+			width: action.data.width,
+			x_pos: action.data.x_pos,
+			y_pos: action.data.y_pos
 		};
 		return [
 			...state,
@@ -153,7 +145,6 @@ const comments = (state = [], action) => {
 			}
 			return comment;
 		});
-
 
 	case "ADD_COMMENT_ATTR":
 		return state.map((comment, index) => {
@@ -192,15 +183,10 @@ const comments = (state = [], action) => {
 
 const links = (state = [], action) => {
 	switch (action.type) {
-	case "DELETE_OBJECTS":
+	case "DELETE_OBJECT":
 		return state.filter((link) => {
-			const index =
-			action.data.selectedObjectIds.findIndex((selId) => {
-				return (link.source === selId ||  // If node being deleted is either source or target of link remove this link
-					link.target === selId);
-			});
-
-			return index === -1; // filter will return all links NOT involved in selectedObjectIds
+			return (link.source !== action.data &&  // If node being deleted is either source or target of link remove this link
+				link.target !== action.data);
 		});
 
 	case "ADD_LINK": {
@@ -271,7 +257,7 @@ const diagram = (state = {}, action) => {
 		return Object.assign({}, state, { nodes: nodes(state.nodes, action) });
 
 	case "MOVE_OBJECTS":
-	case "DELETE_OBJECTS":
+	case "DELETE_OBJECT":
 		return Object.assign({}, state, { nodes: nodes(state.nodes, action),
                    comments: comments(state.comments, action),
                    links: links(state.links, action) });
@@ -309,7 +295,7 @@ const canvas = (state = getInitialCanvas(), action) => {
 	case "ADD_NODE_ATTR":
 	case "REMOVE_NODE_ATTR":
 	case "MOVE_OBJECTS":
-	case "DELETE_OBJECTS":
+	case "DELETE_OBJECT":
 	case "ADD_LINK":
 	case "DELETE_LINK":
 	case "ADD_COMMENT":
@@ -343,9 +329,9 @@ const selections = (state = [], action) => {
 	case "SET_SELECTIONS":
 		return [...action.data];
 
-	case "DELETE_OBJECTS":
+	case "DELETE_OBJECT":
 		return state.filter((objId) => {
-			return action.data.selectedObjectIds.indexOf(objId) === -1;
+			return action.data !== objId;
 		});
 
 	default:
@@ -506,7 +492,13 @@ export default class ObjectModel {
 	}
 
 	static deleteObjects(source) {
-		store.dispatch({ type: "DELETE_OBJECTS", data: source });
+		source.selectedObjectIds.forEach((selId) => {
+			this.deleteObject(selId);
+		});
+	}
+
+	static deleteObject(id) {
+		store.dispatch({ type: "DELETE_OBJECT", data: id });
 		if (ObjectModel.fixedLayout !== NONE) {
 			this.autoLayout(ObjectModel.fixedLayout);
 		}
@@ -527,8 +519,8 @@ export default class ObjectModel {
 
 	static createNode(data) {
 		const nodeType = ObjectModel.getPaletteNode(data.nodeTypeId);
+		const info = {};
 		if (nodeType !== null) {
-			const info = {};
 			info.id = getUUID();
 			info.label = data.label;
 			info.x_pos = data.offsetX;
@@ -536,11 +528,20 @@ export default class ObjectModel {
 			info.image = nodeType.image;
 			info.inputPorts = nodeType.inputPorts || [];
 			info.outputPorts = nodeType.outputPorts || [];
-			store.dispatch({ type: "ADD_NODE", data: info });
 		}
+		return info;
+	}
+
+	static addNode(info) {
+		store.dispatch({ type: "ADD_NODE", data: info });
+
 		if (ObjectModel.fixedLayout !== NONE) {
 			this.autoLayout(ObjectModel.fixedLayout);
 		}
+	}
+
+	static deleteNode(id) {
+		this.deleteObject(id);
 	}
 
 	static getNodes() {
@@ -558,21 +559,38 @@ export default class ObjectModel {
 // Comment methods
 
 	static createComment(source) {
-		const info = {};
-		info.id = getUUID();
-		info.linkIds = [];
-		info.mousePos = source.mousePos;
-		info.selectedObjectIds = [];
+		const info = {
+			id: getUUID(),
+			className: "canvas-comment",
+			content: " ",
+			height: 32,
+			width: 128,
+			x_pos: source.mousePos.x,
+			y_pos: source.mousePos.y,
+			linkIds: [],
+			selectedObjectIds: []
+		};
 		source.selectedObjectIds.forEach((objId) => {
 			if (this.isDataNode(objId)) { // Only add links to data nodes, not comments
 				info.selectedObjectIds.push(objId);
 				info.linkIds.push(getUUID());
 			}
 		});
+		return info;
+	}
+
+	static addComment(info) {
+		if (typeof info.selectedObjectIds === "undefined") {
+			info.selectedObjectIds = [];
+		}
 		store.dispatch({ type: "ADD_COMMENT", data: info });
 		if (ObjectModel.fixedLayout !== NONE) {
 			this.autoLayout(ObjectModel.fixedLayout);
 		}
+	}
+
+	static deleteComment(id) {
+		this.deleteObject(id);
 	}
 
 	static getComments() {
@@ -580,6 +598,17 @@ export default class ObjectModel {
 	}
 
 	static editComment(data) {
+		store.dispatch({ type: "EDIT_COMMENT", data: data });
+	}
+
+  // use updateComment when you have the comment structure from the state object.
+	// this method will format the input to be compatable with editComment interface.
+	static updateComment(data) {
+		data.editType = "editComment";
+		data.nodes = [data.id];
+		data.offsetX = data.x_pos;
+		data.offsetY = data.y_pos;
+		data.label = data.content;
 		store.dispatch({ type: "EDIT_COMMENT", data: data });
 	}
 
@@ -600,31 +629,40 @@ export default class ObjectModel {
 		}
 	}
 
-	static linkNodes(data) {
+	static createNodeLinks(data) {
+		const linkNodeList = [];
 		data.nodes.forEach((srcInfo) => {
 			data.targetNodes.forEach((trgInfo) => {
-				this.linkNodesById(srcInfo, trgInfo, data.linkType);
+				if (ObjectModel.connectionIsAllowed(srcInfo, trgInfo)) {
+					const info = {};
+					info.id = getUUID();
+					info.linkType = data.linkType;
+					info.srcNodeId = srcInfo.id;
+					info.srcNodePortId = srcInfo.portId;
+					info.trgNodeId = trgInfo.id;
+					info.trgNodePortId = trgInfo.portId;
+					linkNodeList.push(info);
+				}
 			});
+		});
+		return linkNodeList;
+	}
+
+	static addNodeLinks(linkNodeList) {
+		linkNodeList.forEach((linkNode) => {
+			this.linkNodesById(linkNode);
 		});
 	}
 
-	static linkNodesById(srcInfo, trgInfo, linkType) {
-		if (ObjectModel.connectionIsAllowed(srcInfo, trgInfo)) {
-			const info = {};
-			info.id = getUUID();
-			info.linkType = linkType;
-			info.srcNodeId = srcInfo.id;
-			info.srcNodePortId = srcInfo.portId;
-			info.trgNodeId = trgInfo.id;
-			info.trgNodePortId = trgInfo.portId;
-			store.dispatch({ type: "ADD_LINK", data: info });
-		}
+	static linkNodesById(info) {
+		store.dispatch({ type: "ADD_LINK", data: info });
 		if (ObjectModel.fixedLayout !== NONE) {
 			this.autoLayout(ObjectModel.fixedLayout);
 		}
 	}
 
-	static linkComment(data) {
+	static createCommentLinks(data) {
+		const linkCommentList = [];
 		data.nodes.forEach((srcNodeId) => {
 			data.targetNodes.forEach((trgNodeId) => {
 				const info = {};
@@ -632,12 +670,41 @@ export default class ObjectModel {
 				info.linkType = data.linkType;
 				info.srcNodeId = srcNodeId;
 				info.trgNodeId = trgNodeId;
-				store.dispatch({ type: "ADD_LINK", data: info });
+				linkCommentList.push(info);
 			});
+		});
+		return linkCommentList;
+	}
+
+	static linkComment(linkCommentList) {
+		linkCommentList.forEach((linkComment) => {
+			store.dispatch({ type: "ADD_LINK", data: linkComment });
 		});
 		if (ObjectModel.fixedLayout !== NONE) {
 			this.autoLayout(ObjectModel.fixedLayout);
 		}
+	}
+
+	static getLinksContainingId(id) {
+		const linksList = this.getCanvas().diagram.links;
+		const linksContaining = linksList.filter((link) => {
+			return (link.id === id || link.source === id || link.target === id);
+		});
+		const returnLinks = linksContaining.map((link) => {
+			var newLink = {};
+			newLink.id = link.id;
+			newLink.srcNodeId = link.source;
+			newLink.trgNodeId = link.target;
+			if (link.className === "canvas-data-link") {
+				newLink.linkType = "data";
+				newLink.srcNodePortId = link.sourcePort;
+				newLink.trgNodePortId = link.targetPort;
+			} else {
+				newLink.linkType = "comment";
+			}
+			return newLink;
+		});
+		return returnLinks;
 	}
 
 // Utility functions
@@ -646,6 +713,13 @@ export default class ObjectModel {
 		const diagramNodes = ObjectModel.getCanvas().diagram.nodes;
 		return diagramNodes.find((node) => {
 			return (node.id === nodeId);
+		});
+	}
+
+	static getComment(commentId) {
+		const diagramComments = ObjectModel.getCanvas().diagram.comments;
+		return diagramComments.find((comment) => {
+			return (comment.id === commentId);
 		});
 	}
 

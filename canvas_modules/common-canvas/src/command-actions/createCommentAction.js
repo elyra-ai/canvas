@@ -6,7 +6,26 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
+import Action from "../command-stack/action.js";
+import ObjectModel from "../object-model/object-model.js";
 
-import { CommonCanvas, ObjectModel, CommonProperties, CommandStack } from "../../common-canvas/src/index";
+export default class CreateCommentAction extends Action {
+	constructor(data) {
+		super(data);
+		this.data = data;
+	}
 
-export { CommonCanvas, ObjectModel, CommonProperties, CommandStack };
+// Standard methods
+	do() {
+		ObjectModel.addComment(this.data);
+	}
+
+	undo() {
+		ObjectModel.deleteComment(this.data.id);
+	}
+
+	redo() {
+		ObjectModel.addComment(this.data);
+	}
+
+}

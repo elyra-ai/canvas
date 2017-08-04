@@ -7,6 +7,20 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import { CommonCanvas, ObjectModel, CommonProperties, CommandStack } from "../../common-canvas/src/index";
+/* eslint no-empty-function: ["error", { "allow": ["methods"] }] */
 
-export { CommonCanvas, ObjectModel, CommonProperties, CommandStack };
+class Action {
+
+// Standard methods
+	do() {
+	}
+
+	undo() {
+	}
+
+	redo() {
+	}
+
+}
+
+export default Action;
