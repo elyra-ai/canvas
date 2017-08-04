@@ -5,7 +5,7 @@
   },
   "parameters": [
     {
-      "name": "mode",
+      "id": "mode",
       "enum": [
         "Include",
         "Discard"
@@ -14,7 +14,7 @@
       "required": true
     },
     {
-      "name": "selected_fields",
+      "id": "selected_fields",
       "type": "array[string]",
       "role": "column",
       "required": true

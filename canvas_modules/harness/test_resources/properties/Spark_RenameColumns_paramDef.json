@@ -7,15 +7,15 @@
   },
   "complex_types": [
     {
-      "name": "RenameFieldEntry",
+      "id": "RenameFieldEntry",
       "key_definition": {
-        "name": "field",
+        "id": "field",
         "type": "string",
         "role": "column"
       },
       "parameters": [
         {
-          "name": "new_name",
+          "id": "new_name",
           "type": "string",
           "role": "new_column"
         }
@@ -24,7 +24,7 @@
   ],
   "parameters": [
     {
-      "name": "renamed_fields",
+      "id": "renamed_fields",
       "type": "map[string,RenameFieldEntry]",
       "role": "column",
       "default": []

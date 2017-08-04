@@ -5,7 +5,7 @@
   },
   "parameters": [
     {
-      "name": "mode",
+      "id": "mode",
       "enum": [
         "Include",
         "Discard"
@@ -13,7 +13,7 @@
       "default": "Include"
     },
     {
-      "name": "conditionExpr",
+      "id": "conditionExpr",
       "type": "string",
       "default": "",
       "role": "expression",

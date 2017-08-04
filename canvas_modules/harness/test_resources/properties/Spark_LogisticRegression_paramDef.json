@@ -12,51 +12,51 @@
   },
   "parameters": [
     {
-      "name": "targetField",
+      "id": "targetField",
       "type": "string",
       "default": "",
       "role": "column",
       "required": true
     },
     {
-      "name": "inputFieldList",
+      "id": "inputFieldList",
       "type": "array[string]",
       "default": [],
       "role": "column",
       "required": true
     },
     {
-      "name": "elasticNetParam",
+      "id": "elasticNetParam",
       "type": "double",
       "default": 0
     },
     {
-      "name": "fitIntercept",
+      "id": "fitIntercept",
       "type": "boolean",
       "default": true
     },
     {
-      "name": "maxIter",
+      "id": "maxIter",
       "type": "integer",
       "default": 100
     },
     {
-      "name": "regParam",
+      "id": "regParam",
       "type": "double",
       "default": 0
     },
     {
-      "name": "standardization",
+      "id": "standardization",
       "type": "boolean",
       "default": true
     },
     {
-      "name": "threshold",
+      "id": "threshold",
       "type": "double",
       "default": 0.5
     },
     {
-      "name": "tol",
+      "id": "tol",
       "type": "double",
       "default": 0.000001
     }

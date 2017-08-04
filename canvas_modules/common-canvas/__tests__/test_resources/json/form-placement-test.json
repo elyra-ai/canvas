@@ -5,7 +5,7 @@
     },
     "parameters": [
       {
-        "name": "cols",
+        "id": "cols",
         "type": "array[string]",
         "default": [],
         "role": "column",
