@@ -1,6 +1,6 @@
 {
   "name": "@wdp/common-canvas",
-  "version": "1.0.43",
+  "version": "1.0.44",
   "description": "WDP common-canvas",
   "main": "dist/common-canvas.js",
   "license": "IPL-1.0",
