@@ -6,21 +6,21 @@
   },
   "parameters": [
     {
-      "name": "colName",
+      "id": "colName",
       "type": "string",
       "default": "",
       "role": "new_column",
       "required": true
     },
     {
-      "name": "col",
+      "id": "col",
       "type": "string",
       "default": "",
       "role": "expression",
       "required": true
     },
     {
-      "name": "measurement",
+      "id": "measurement",
       "enum": [
         "Default",
         "Continuous",

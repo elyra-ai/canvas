@@ -54,7 +54,7 @@ class StructureDef {
 	static makeStructure(structure, uihints) {
 		if (structure) {
 			return new StructureDef(
-				_.propertyOf(structure)("name"),
+				_.propertyOf(structure)("id"),
 				ParameterDef.makeParameterDef(_.propertyOf(structure)("key_definition"), _.propertyOf(uihints)("key_definition")),
 				ParameterMetadata.makeParameterMetadata(_.propertyOf(structure)("parameters"), _.propertyOf(uihints)("parameters")),
 				_.propertyOf(uihints)("moveable_rows")
@@ -96,7 +96,7 @@ export class StructureMetadata {
 		if (structures) {
 			const structureDefs = [];
 			for (const structure of structures) {
-				const struct = StructureDef.makeStructure(structure, getStructureUIHint(structure.name, uihintsStructures));
+				const struct = StructureDef.makeStructure(structure, getStructureUIHint(structure.id, uihintsStructures));
 				if (struct !== null) {
 					structureDefs.push(struct);
 				}

@@ -43,30 +43,30 @@
   },
   "parameters": [
     {
-      "name": "columnSelectInputFieldList",
+      "id": "columnSelectInputFieldList",
       "type": "array[string]",
       "default": [],
       "role": "column"
     },
     {
-      "name": "oneofcolumnsList",
+      "id": "oneofcolumnsList",
       "type": "string",
       "default": "",
       "role": "column"
     },
     {
-      "name": "someofcolumnsList",
+      "id": "someofcolumnsList",
       "type": "array[string]",
       "default": "",
       "role": "column"
     },
     {
-      "name": "numberfieldCheckpointInterval",
+      "id": "numberfieldCheckpointInterval",
       "type": "integer",
       "default": -1
     },
     {
-      "name": "numberfieldImpurity",
+      "id": "numberfieldImpurity",
       "enum": [
         "gini",
         "entropy"
@@ -74,32 +74,32 @@
       "default": "gini"
     },
     {
-      "name": "numberfieldMaxBins",
+      "id": "numberfieldMaxBins",
       "type": "integer",
       "default": 32
     },
     {
-      "name": "numberfieldMaxDepth",
+      "id": "numberfieldMaxDepth",
       "type": "integer",
       "default": 5
     },
     {
-      "name": "numberfieldMinInfoGain",
+      "id": "numberfieldMinInfoGain",
       "type": "double",
       "default": 0
     },
     {
-      "name": "numberfieldMinInstancesPerNode",
+      "id": "numberfieldMinInstancesPerNode",
       "type": "integer",
       "default": 1
     },
     {
-      "name": "numberfieldSeed",
+      "id": "numberfieldSeed",
       "type": "integer",
       "default": 12345
     },
     {
-      "name": "checkboxTypes",
+      "id": "checkboxTypes",
       "type": "array[string]",
       "enum": [
         "integer",
@@ -109,7 +109,7 @@
       "default": ""
     },
     {
-      "name": "oneofselectAnimals",
+      "id": "oneofselectAnimals",
       "enum": [
         "lion",
         "bear",
@@ -121,7 +121,7 @@
       "default": "bear"
     },
     {
-      "name": "oneofselectPets",
+      "id": "oneofselectPets",
       "enum": [
         "dog",
         "cat",
@@ -132,7 +132,7 @@
       "default": "turtle"
     },
     {
-      "name": "someofselectNumbers",
+      "id": "someofselectNumbers",
       "type": "array[string]",
       "enum": [
         "One",
@@ -149,7 +149,7 @@
       "default": "Three"
     },
     {
-      "name": "checkboxSingle",
+      "id": "checkboxSingle",
       "type": "boolean",
       "enum": [
         "Single Checkbox"
@@ -157,7 +157,7 @@
       "default": ""
     },
     {
-      "name": "checkboxEnable",
+      "id": "checkboxEnable",
       "type": "boolean",
       "enum": [
         "Enable"
@@ -165,7 +165,7 @@
       "default": ""
     },
     {
-      "name": "radiosetColor",
+      "id": "radiosetColor",
       "enum": [
         "red",
         "yellow",
@@ -174,77 +174,77 @@
       "default": "red"
     },
     {
-      "name": "apples",
+      "id": "apples",
       "type": "integer",
       "default": 1000
     },
     {
-      "name": "lemons",
+      "id": "lemons",
       "type": "integer",
       "default": 10
     },
     {
-      "name": "berries",
+      "id": "berries",
       "type": "double",
       "default": 50
     },
     {
-      "name": "passwordField",
+      "id": "passwordField",
       "type": "password",
       "default": "",
       "role": "new_column"
     },
     {
-      "name": "textfieldName",
+      "id": "textfieldName",
       "type": "string",
       "default": "",
       "role": "new_column"
     },
     {
-      "name": "textareaDescription",
+      "id": "textareaDescription",
       "type": "array[string]",
       "default": "",
       "role": "new_column"
     },
     {
-      "name": "expressionBox",
+      "id": "expressionBox",
       "type": "string",
       "default": "",
       "role": "expression"
     },
     {
-      "name": "columnSelectSharedWithInput",
+      "id": "columnSelectSharedWithInput",
       "type": "array[string]",
       "default": [],
       "role": "column"
     },
     {
-      "name": "structuretableSortOrder",
+      "id": "structuretableSortOrder",
       "type": "array[structuretableSortOrder]"
     },
     {
-      "name": "structuretableRenameFields",
+      "id": "structuretableRenameFields",
       "type": "array[structuretableRenameFields]",
       "role": "column",
       "default": []
     },
     {
-      "name": "structurelisteditorTableInput",
+      "id": "structurelisteditorTableInput",
       "type": "array[structurelisteditorTableInput]"
     }
   ],
   "complex_types": [
     {
-      "name": "structuretableSortOrder",
+      "id": "structuretableSortOrder",
       "key_definition": {
-        "name": "field",
+        "id": "field",
         "type": "string",
         "role": "column",
         "default": ""
       },
       "parameters": [
         {
-          "name": "structuretable_sort_order",
+          "id": "structuretable_sort_order",
           "enum": [
             "Ascending",
             "Descending"
@@ -254,31 +254,31 @@
       ]
     },
     {
-      "name": "structuretableRenameFields",
+      "id": "structuretableRenameFields",
       "key_definition": {
-        "name": "field",
+        "id": "field",
         "type": "string",
         "role": "column"
       },
       "parameters": [
         {
-          "name": "new_name",
+          "id": "new_name",
           "type": "string",
           "role": "new_column"
         }
       ]
     },
     {
-      "name": "structurelisteditorTableInput",
+      "id": "structurelisteditorTableInput",
       "key_definition": {
-        "name": "field",
+        "id": "field",
         "type": "string",
         "role": "textfield",
         "default": ""
       },
       "parameters": [
         {
-          "name": "Storage",
+          "id": "Storage",
           "enum": [
             "String",
             "Integer",

@@ -2,12 +2,12 @@
   "paramDef": {
     "parameters": [
       {
-        "name": "int_param",
+        "id": "int_param",
         "type": "integer",
         "required": true
       },
       {
-        "name": "exp_param",
+        "id": "exp_param",
         "type": "string",
         "default": "",
         "role": "expression"

@@ -18,21 +18,21 @@
   },
   "parameters": [
     {
-      "name": "targetField",
+      "id": "targetField",
       "type": "string",
       "default": "",
       "role": "column",
       "required": true
     },
     {
-      "name": "inputFieldList",
+      "id": "inputFieldList",
       "type": "array[string]",
       "default": [],
       "role": "column",
       "required": true
     },
     {
-      "name": "featureSubsetStrategy",
+      "id": "featureSubsetStrategy",
       "enum": [
         "auto",
         "all",
@@ -44,12 +44,12 @@
       "default": "auto"
     },
     {
-      "name": "checkpointInterval",
+      "id": "checkpointInterval",
       "type": "integer",
       "default": -1
     },
     {
-      "name": "impurity",
+      "id": "impurity",
       "enum": [
         "gini",
         "entropy"
@@ -57,32 +57,32 @@
       "default": "gini"
     },
     {
-      "name": "maxBins",
+      "id": "maxBins",
       "type": "integer",
       "default": 32
     },
     {
-      "name": "maxDepth",
+      "id": "maxDepth",
       "type": "integer",
       "default": 5
     },
     {
-      "name": "minInfoGain",
+      "id": "minInfoGain",
       "type": "double",
       "default": 0
     },
     {
-      "name": "minInstancesPerNode",
+      "id": "minInstancesPerNode",
       "type": "integer",
       "default": 1
     },
     {
-      "name": "numTrees",
+      "id": "numTrees",
       "type": "integer",
       "default": 20
     },
     {
-      "name": "seed",
+      "id": "seed",
       "type": "integer",
       "default": 12345
     }

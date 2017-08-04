@@ -2,17 +2,17 @@
   "paramDef": {
     "parameters": [
       {
-        "name": "target",
+        "id": "target",
         "type": "string",
         "role": "column"
       },
       {
-        "name": "inputs",
+        "id": "inputs",
         "type": "array[string]",
         "role": "column"
       },
       {
-        "name": "enum_param",
+        "id": "enum_param",
         "enum": [
           "Include",
           "Discard"
@@ -20,21 +20,21 @@
         "default": "Include"
       },
       {
-        "name": "str_param",
+        "id": "str_param",
         "type": "string"
       },
       {
-        "name": "int_param",
+        "id": "int_param",
         "type": "integer",
         "default": 1000
       },
       {
-        "name": "double_param",
+        "id": "double_param",
         "type": "double",
         "default": 50
       },
       {
-        "name": "boolean_param",
+        "id": "boolean_param",
         "type": "boolean",
         "default": false
       }

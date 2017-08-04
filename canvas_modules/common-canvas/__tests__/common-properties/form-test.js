@@ -79,7 +79,7 @@ describe("Correct form should be created", () => {
 			},
 			"parameters": [
 				{
-					"name": "boolean_param",
+					"id": "boolean_param",
 					"type": "boolean"
 				}
 			],

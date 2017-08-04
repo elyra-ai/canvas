@@ -7,7 +7,7 @@
   },
   "parameters": [
     {
-      "name": "withReplacement",
+      "id": "withReplacement",
       "enum": [
         "true",
         "false"
@@ -16,19 +16,19 @@
       "required": true
     },
     {
-      "name": "samplingRatio",
+      "id": "samplingRatio",
       "type": "double",
       "default": 1,
       "required": true
     },
     {
-      "name": "samplingSize",
+      "id": "samplingSize",
       "type": "long",
       "default": -1,
       "required": true
     },
     {
-      "name": "samplingSeed",
+      "id": "samplingSeed",
       "type": "integer",
       "default": -1,
       "required": false

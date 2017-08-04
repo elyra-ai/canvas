@@ -156,7 +156,7 @@ export class ParameterDef {
 	static makeParameterDef(param, uihint) {
 		if (param) {
 			return new ParameterDef(
-				_.propertyOf(param)("name"),
+				_.propertyOf(param)("id"),
 				_.propertyOf(uihint)("label"),
 				_.propertyOf(uihint)("description"),
 				_.propertyOf(param)("type"),
@@ -217,7 +217,7 @@ export class ParameterMetadata {
 		if (parameters) {
 			const paramDefs = [];
 			for (const param of parameters) {
-				const paramDef = ParameterDef.makeParameterDef(param, getParamUIHint(param.name, uihintsParams));
+				const paramDef = ParameterDef.makeParameterDef(param, getParamUIHint(param.id, uihintsParams));
 				if (paramDef) {
 					paramDefs.push(paramDef);
 				}
