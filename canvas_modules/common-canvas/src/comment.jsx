@@ -413,7 +413,7 @@ class Comment extends React.Component {
 
 	commentDblClicked(ev) {
 		ev.stopPropagation();
-		this.setState({ editable: true });
+		this.setState({ editable: true, value: this.props.comment.content });
 
 		// set the focus on the new editable comment box
 		const textarea = document.getElementById(this.props.comment.id);
@@ -556,6 +556,7 @@ class Comment extends React.Component {
 		}
 
 		const readOnly = !this.state.editable;
+		const commentValue = (this.state.editable) ? this.state.value : this.props.comment.content;
 
 		const box = (<div>
 			<div className="padding-box" style={paddingBoxStyle}></div>
@@ -593,7 +594,7 @@ class Comment extends React.Component {
 						className={className}
 						style={textareaStyle}
 						draggable="true"
-						value={this.state.value}
+						value={commentValue}
 						spellCheck="true"
 						onChange={this.commentChange}
 						onBlur={this.blurFunction}

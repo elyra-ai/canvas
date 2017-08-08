@@ -150,6 +150,7 @@ class App extends React.Component {
 	setDiagramJSON(canvasJson) {
 		ObjectModel.setCanvas(BLANK_CANVAS);
 		this.forceUpdate();
+		CommandStack.clearCommandStack();
 		ObjectModel.setCanvas(canvasJson);
 		if (JSON.stringify(canvasJson) <= CANVAS_SIZE_LIMIT) { // Only send the Canvas if it is small enough.
 			TestService.postCanvas(canvasJson);
