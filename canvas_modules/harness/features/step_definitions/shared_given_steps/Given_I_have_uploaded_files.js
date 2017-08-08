@@ -113,4 +113,29 @@ module.exports = function() {
 			}
 		}
 	});
+
+	this.Then(/^I have uploaded JSON for common-properties "([^"]*)"$/, function(diagramFile) {
+		browser.pause(500);
+		// need to click on the common-properties drop down
+		browser.$("#sidepanel-input")
+						.$(".formField")
+						.$(".select")
+						.$("button")
+						.click("svg");
+		// get the list of drop down options.
+		browser.pause(500);
+		var commonPropertiesOptions = browser
+														.$("#sidepanel-input")
+														.$(".formField")
+														.$(".select")
+														.$(".select__options")
+														.$$("button");
+
+		for (var idx = 0; idx < commonPropertiesOptions.length; idx++) {
+			if (commonPropertiesOptions[idx].getText() === diagramFile) {
+				commonPropertiesOptions[idx].click();
+			}
+		}
+	});
+
 };

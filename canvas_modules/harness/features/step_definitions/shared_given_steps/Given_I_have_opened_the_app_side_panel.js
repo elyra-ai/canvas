@@ -15,4 +15,8 @@ module.exports = function() {
 		browser.$("#action-bar-sidepanel-canvas").click("a");
 	});
 
+	this.Given("I have toggled the app side common-properties panel", function() {
+		browser.$("#action-bar-sidepanel-modal").click("a");
+	});
+
 };
