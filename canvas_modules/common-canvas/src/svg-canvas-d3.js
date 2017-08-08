@@ -1559,9 +1559,9 @@ export default class CanvasD3Layout {
 									that.consoleLog("Text area - blur");
 									var commentObj = that.getComment(id);
 									commentObj.content = this.value;
-									that.displayComments();
 									that.saveCommentChanges(this);
 									that.closeCommentTextArea();
+									that.displayComments();
 								});
 
 						// Note: Couldn't get focus to work through d3, so used dom instead.
