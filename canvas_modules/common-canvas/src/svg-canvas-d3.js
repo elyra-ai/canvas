@@ -354,18 +354,19 @@ export default class CanvasD3Layout {
 		// canvas div must have tabindex set and the focus set on the div.
 		const canvasDiv = d3.select(this.canvasSelector)
 			.on("keydown", () => {
-				if (d3.event.keyCode === BACKSPACE_KEY ||
-						d3.event.keyCode === DELETE_KEY) {
-					console.log("Key Delete");
-					if (!this.editingComment) {
-						d3.event.stopPropagation();  // Some browsers interpret Delete as 'Back to previous page'. So prevent that.
-						d3.event.preventDefault();
+				// Only catch key pressses when NOT editing because, while editing,
+				// the test area needs to receive key presses for undo, redo, delete etc.
+				if (!this.editingComment) {
+					d3.event.stopPropagation();  // Some browsers interpret Delete as 'Back to previous page'. So prevent that.
+					d3.event.preventDefault();
+					if (d3.event.keyCode === BACKSPACE_KEY ||
+							d3.event.keyCode === DELETE_KEY) {
 						this.editActionHandler({ editType: "deleteSelectedObjects" });
+					} else if (this.isCmndCtrlPressed() && !d3.event.shiftKey && d3.event.keyCode === Z_KEY) {
+						this.editActionHandler({ editType: "undo" });
+					} else if (this.isCmndCtrlPressed() && d3.event.shiftKey && d3.event.keyCode === Z_KEY) {
+						this.editActionHandler({ editType: "redo" });
 					}
-				} else if (this.isCmndCtrlPressed() && !d3.event.shiftKey && d3.event.keyCode === Z_KEY) {
-					this.editActionHandler({ editType: "undo" });
-				} else if (this.isCmndCtrlPressed() && d3.event.shiftKey && d3.event.keyCode === Z_KEY) {
-					this.editActionHandler({ editType: "redo" });
 				}
 			});
 
