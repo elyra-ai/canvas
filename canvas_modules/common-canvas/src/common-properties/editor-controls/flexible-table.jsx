@@ -28,7 +28,8 @@ const ARROW_WIDTH = 10;
 
 export default class FlexibleTable extends React.Component {
 
-	static calculateColumnWidths(columns) {
+	static calculateColumnWidths(columns, availWidth) {
+
 		const widths = [];
 		let totalWidth = 0;
 		for (const columnDef of columns) {
@@ -36,7 +37,7 @@ export default class FlexibleTable extends React.Component {
 		}
 		for (const columnDef of columns) {
 			const size = columnDef.width ? columnDef.width : 100;
-			widths.push(Math.floor(size / totalWidth * 100) + "%");
+			widths.push(Math.floor(size / totalWidth * availWidth) + "%");
 		}
 		return widths;
 	}
@@ -99,10 +100,13 @@ export default class FlexibleTable extends React.Component {
 		// go through the header and add the sort direction and convert to use reactable.Th element
 		const headers = [];
 		let searchLabel = "";
-		const columnWidths = FlexibleTable.calculateColumnWidths(this.props.columns);
+		// calculate for all columns except the last which is used for the scroll bar
+		const columnWidths = FlexibleTable.calculateColumnWidths(this.props.columns.slice(0, -1), 98);
 		for (var j = 0; j < this.props.columns.length; j++) {
 			const columnDef = this.props.columns[j];
-			const columnStyle = { "width": columnWidths[j] };
+			// Last header column is for scroll bar.  Always set to 2%
+			const columnWidth = j === this.props.columns.length - 1 ? "2%" : columnWidths[j];
+			const columnStyle = { "width": columnWidth };
 			const className = j === 0 ? "left-padding-15" : "";
 			if (typeof this.state.columnSortDir[columnDef.key] !== "undefined") {
 				const arrowIcon = ((this.state.columnSortDir[columnDef.key] === sortDir.ASC) ? SortAscendingIcon : SortDescendingIcon);

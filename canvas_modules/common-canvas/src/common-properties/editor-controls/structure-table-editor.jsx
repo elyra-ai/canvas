@@ -7,7 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import logger from "../../../utils/logger";
+// import logger from "../../../utils/logger";
 import React from "react";
 import { Table, Column, Cell } from "fixed-data-table";
 import EditorControl from "./editor-control.jsx";
@@ -88,8 +88,8 @@ export default class StructureTableEditor extends EditorControl {
 
 	/* Returns the public representation of the control value. */
 	getControlValue() {
-		logger.info("getControlValue()");
-		logger.info(EditorControl.stringifyStructureStrings(this.state.controlValue));
+		// logger.info("getControlValue()");
+		// logger.info(EditorControl.stringifyStructureStrings(this.state.controlValue));
 		return EditorControl.stringifyStructureStrings(this.state.controlValue);
 	}
 

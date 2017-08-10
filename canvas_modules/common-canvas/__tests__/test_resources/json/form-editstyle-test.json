@@ -20,6 +20,11 @@
             "type": "string",
             "role": "new_column",
             "default": ""
+          },
+          {
+            "id": "new_label",
+            "type": "string",
+            "default": ""
           }
         ]
       }
@@ -40,15 +45,27 @@
           "complex_type_ref": "RenameFieldEntry",
           "key_definition": {
             "parameter_ref": "field",
-            "resource_key": "RenameFieldEntry.field",
+            "label": {
+              "resource_key": "RenameFieldEntry.field"
+            },
             "width": 26
           },
           "parameters": [
             {
               "parameter_ref": "new_name",
-              "resource_key": "RenameFieldEntry.new_name",
+              "label": {
+                "resource_key": "RenameFieldEntry.new_name"
+              },
               "width": 26,
               "edit_style": "subpanel"
+            },
+            {
+              "parameter_ref": "new_label",
+              "label": {
+                "resource_key": "RenameFieldEntry.new_label"
+              },
+              "width": 26,
+              "edit_style": "inline"
             }
           ]
         }
@@ -165,8 +182,9 @@
     },
     "resources": {
       "rename.label": "Rename Columns",
-      "field.label": "Input name",
-      "new_name.label": "Output name",
+      "RenameFieldEntry.field": "Input name",
+      "RenameFieldEntry.new_name": "Output name",
+      "RenameFieldEntry.new_label": "New Label",
       "output_name_not_empty": "The 'Output Name' field cannot be empty"
     }
   },
@@ -237,12 +255,57 @@
                           "visible": true,
                           "width": 26,
                           "editStyle": "subpanel"
+                        },
+                        {
+                          "name": "new_label",
+                          "label": {
+                            "text": "New Label"
+                          },
+                          "controlType": "textfield",
+                          "valueDef": {
+                            "propType": "string",
+                            "isList": false,
+                            "isMap": false,
+                            "defaultValue": ""
+                          },
+                          "visible": true,
+                          "width": 26,
+                          "editStyle": "inline"
                         }
                       ],
                       "keyIndex": 0,
                       "defaultRow": [
+                        "",
                         ""
-                      ]
+                      ],
+                      "childItem": {
+                        "itemType": "additionalLink",
+                        "panel": {
+                          "id": "RenameFieldEntry",
+                          "panelType": "general",
+                          "uiItems": [
+                            {
+                              "itemType": "control",
+                              "control": {
+                                "name": "new_name",
+                                "label": {
+                                  "text": "Output name"
+                                },
+                                "controlType": "textfield",
+                                "valueDef": {
+                                  "propType": "string",
+                                  "isList": false,
+                                  "isMap": false,
+                                  "defaultValue": ""
+                                },
+                                "separateLabel": true
+                              }
+                            }
+                          ]
+                        },
+                        "text": "...",
+                        "secondaryText": "RenameFieldEntry"
+                      }
                     }
                   }
                 ]
@@ -264,26 +327,6 @@
         "text": "Cancel",
         "isPrimary": false,
         "url": ""
-      }
-    ],
-    "conditions": [
-      {
-        "validation": {
-          "fail_message": {
-            "type": "error",
-            "focus_parameter_ref": "renamed_fields",
-            "message": {
-              "resource_key": "output_name_not_empty",
-              "default": "The 'Output Name' field cannot be empty"
-            }
-          },
-          "evaluate": {
-            "condition": {
-              "parameter_ref": "renamed_fields",
-              "op": "isNotEmpty"
-            }
-          }
-        }
       }
     ],
     "data": {
@@ -360,6 +403,26 @@
           }
         ]
       }
-    }
+    },
+    "conditions": [
+      {
+        "validation": {
+          "fail_message": {
+            "type": "error",
+            "focus_parameter_ref": "renamed_fields",
+            "message": {
+              "resource_key": "output_name_not_empty",
+              "default": "The 'Output Name' field cannot be empty"
+            }
+          },
+          "evaluate": {
+            "condition": {
+              "parameter_ref": "renamed_fields",
+              "op": "isNotEmpty"
+            }
+          }
+        }
+      }
+    ]
   }
 }

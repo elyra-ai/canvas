@@ -206,7 +206,10 @@ export default class EditorForm extends React.Component {
 		values[controlId] = controlValue;
 		this.setState({ valuesTable: values },
 			function() {
-				that.getControl(controlId).validateInput();
+				const control = that.getControl(controlId);
+				if (control) {
+					control.validateInput();
+				}
 			});
 	}
 
@@ -821,7 +824,7 @@ export default class EditorForm extends React.Component {
 
 		// visibleDefinition
 		if (this.state.visibleDefinition.length > 0) {
-			logger.info("validate visible definitions");
+			// logger.info("validate visible definitions");
 			controlValues = this.getControlValues();
 
 			// convert the controlValues object structure to what UiConditions take
@@ -850,7 +853,7 @@ export default class EditorForm extends React.Component {
 						this.setState({ controlStates: visTmp });
 					}
 				} catch (error) {
-					logger.info("Error thrown in validation: " + error);
+					logger.warn("Error thrown in validation: " + error);
 				}
 			}
 			// logger.info("visible: " + JSON.stringify(this.state.controlStates));
@@ -858,7 +861,7 @@ export default class EditorForm extends React.Component {
 
 		// enabledDefinitions
 		if (this.state.enabledDefinitions.length > 0) {
-			logger.info("validate enabled definitions");
+			// logger.info("validate enabled definitions");
 			controlValues = this.getControlValues();
 
 			// convert the controlValues object structure to what UiConditions take
@@ -891,7 +894,7 @@ export default class EditorForm extends React.Component {
 						this.setState({ controlStates: tmp });
 					}
 				} catch (error) {
-					logger.info("Error thrown in validation: " + error);
+					logger.warn("Error thrown in validation: " + error);
 				}
 			}
 			// logger.info("enable: " + JSON.stringify(this.state.controlStates));

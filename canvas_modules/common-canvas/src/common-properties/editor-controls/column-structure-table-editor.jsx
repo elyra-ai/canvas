@@ -7,7 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import logger from "../../../utils/logger";
+// import logger from "../../../utils/logger";
 import React from "react";
 import { Tr, Td } from "reactable";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
@@ -17,6 +17,7 @@ import ToggletextControl from "./toggletext-control.jsx";
 import OneofselectControl from "./oneofselect-control.jsx";
 import TextfieldControl from "./textfield-control.jsx";
 import FlexibleTable from "./flexible-table.jsx";
+import SubPanelCell from "../editor-panels/sub-panel-cell.jsx";
 import remove32 from "../../../assets/images/remove_32.svg";
 import remove32hover from "../../../assets/images/remove_32_hover.svg";
 import remove32disabled from "../../../assets/images/remove_32_disabled.svg";
@@ -83,8 +84,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 
 	/* Returns the public representation of the control value. */
 	getControlValue() {
-		logger.info("getControlValue()");
-		logger.info(EditorControl.stringifyStructureStrings(this.state.controlValue));
+		// logger.info(EditorControl.stringifyStructureStrings(this.state.controlValue));
 		return EditorControl.stringifyStructureStrings(this.state.controlValue);
 	}
 
@@ -307,7 +307,8 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		} else {
 			const padding = colIndex === 0 ? "6px 0 10px 15px" : "6px 0 10px 0";
 			columnStyle = { "width": colWidth, "padding": padding };
-			cell = <Td key={colIndex} column={columnDef.name} style={columnStyle}>{controlValue[rowIndex][colIndex]}</Td>;
+			// workaround adding span show column shows up when no data is in cell
+			cell = <Td key={colIndex} column={columnDef.name} style={columnStyle}><span>{controlValue[rowIndex][colIndex]}</span></Td>;
 		}
 		return cell;
 	}
@@ -412,10 +413,17 @@ export default class ColumnStructureTableEditor extends EditorControl {
 				}
 			}
 		}
+		if (this.props.control.childItem) {
+			// default to 6 but this might need to be calculated
+			headers.push({ "key": "edit", "label": "", "width": 6 });
+		}
+		// to adjust column header for scroll bar
+		headers.push({ "key": "scroll", "label": "", "width": 0 });
 		this.filterFields = filterFields;
 
 		const controlValue = this.getCurrentControlValue();
-		const columnWidths = FlexibleTable.calculateColumnWidths(headers);
+		// calculate for all columns except the last which is used for the scroll bar
+		const columnWidths = FlexibleTable.calculateColumnWidths(headers.slice(0, -1), 100);
 		for (var rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
 			const columns = [];
 			if (this.includeInFilter(rowIndex)) {
@@ -424,6 +432,29 @@ export default class ColumnStructureTableEditor extends EditorControl {
 					if (columnDef.visible) {
 						columns.push(this._makeCell(columnDef, controlValue, rowIndex, colIndex, columnWidths[colIndex]));
 					}
+				}
+				if (this.props.control.childItem) {
+					// Assumes the child item is an "ADDITIONAL_LINK" object.
+					// However, we will extract information from the and will create our own Cell-based invoker.
+					const subPanelColIndex = this.props.control.subControls.length;
+					const columnStyle = { "width": columnWidths[subPanelColIndex], "padding": "0 0 0 0" };
+					// const buttonWidth = 6;
+					// const header = <Cell />;
+					const subControlId = this.getSubControlId();
+
+					const subItemButton = this.props.buildUIItem(subControlId, this.props.control.childItem, subControlId, this.getEditingRowValue, this.props.dataModel);
+					// Hack to decompose the button into our own in-table link
+					const subCell = (<SubPanelCell data={controlValue}
+						col={this.props.control.subControls.length}
+						rowIndex={rowIndex}
+						label={subItemButton.props.label}
+						title={subItemButton.props.title}
+						panel={subItemButton.props.panel}
+						notifyStartEditing={this.startEditingRow}
+						notifyFinishedEditing={this.stopEditingRow}
+					/>);
+					const cell = <Td key={subPanelColIndex} column={subControlId} style={columnStyle}>{subCell}</Td>;
+					columns.push(cell);
 				}
 				rows.push(<Tr key={rowIndex} onClick={this.handleRowClick.bind(this, rowIndex)} className={this.getRowClassName(rowIndex)}>{columns}</Tr>);
 			}

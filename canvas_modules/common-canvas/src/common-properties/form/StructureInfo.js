@@ -9,13 +9,15 @@
 
 import { ParameterDef, ParameterMetadata } from "./ParameterInfo";
 import _ from "underscore";
+import { ResourceDef } from "./L10nProvider";
 
-class StructureDef {
-	constructor(cname, keyDefinition, parameterMetadata, moveableRows) {
+export class StructureDef {
+	constructor(cname, keyDefinition, parameterMetadata, moveableRows, label) {
 		this.name = cname;
 		this.keyDefinition = keyDefinition;
 		this.parameterMetadata = parameterMetadata;
 		this.moveableRows = moveableRows;
+		this.label = ResourceDef.make(label);
 	}
 
 	/**
@@ -30,7 +32,16 @@ class StructureDef {
 		}
 		return params;
 	}
-
+	hasSubPanel() {
+		if (this.parameterMetadata) {
+			for (const param of this.parameterMetadata.paramDefs) {
+				if (param.isSubPanelEdit()) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 	keyAttributeIndex() {
 		if (this.keyDefinition) {
 			// Assume the key is always in the first column
@@ -55,9 +66,10 @@ class StructureDef {
 		if (structure) {
 			return new StructureDef(
 				_.propertyOf(structure)("id"),
-				ParameterDef.makeParameterDef(_.propertyOf(structure)("key_definition"), _.propertyOf(uihints)("key_definition")),
+				ParameterDef.makeParameterDef(_.propertyOf(structure)("key_definition"), _.propertyOf(uihints)("key_definition"), true),
 				ParameterMetadata.makeParameterMetadata(_.propertyOf(structure)("parameters"), _.propertyOf(uihints)("parameters")),
-				_.propertyOf(uihints)("moveable_rows")
+				_.propertyOf(uihints)("moveable_rows"),
+				_.propertyOf(uihints)("label")
 			);
 		}
 		return null;

@@ -332,7 +332,7 @@ export default class EditorControl extends React.Component {
 					}
 				}
 			} catch (error) {
-				logger.info("Error thrown in validation: " + error);
+				logger.warn("Error thrown in validation: " + error);
 			}
 		}
 	}

@@ -12,8 +12,9 @@
 
 import { Control, SubControl } from "./ControlInfo";
 import { UIItem } from "./UIItem";
-import { GroupType, PanelType, Type, ControlType, ParamRole, EditStyle } from "./form-constants";
+import { GroupType, PanelType, Type, ControlType, ParamRole } from "./form-constants";
 import logger from "../../../utils/logger";
+import { StructureDef } from "./StructureInfo";
 
 /**
  * The Editor is the primary container for the editing controls. It defines the tabs within the
@@ -72,24 +73,24 @@ class ControlPanel {
 /**
  * Creates tab based on parameter definition
  */
-function makePrimaryTab(propertyDef, group, l10nProvider, conditions) {
+function makePrimaryTab(propertyDef, group, l10nProvider) {
 	const label = l10nProvider.l10nLabel(group, group.name);
-	return new EditorTab(label, group.name, _makeUIItem(propertyDef.parameterMetadata, group, propertyDef.structureMetadata, l10nProvider, conditions));
+	return new EditorTab(label, group.name, _makeUIItem(propertyDef.parameterMetadata, group, propertyDef.structureMetadata, l10nProvider));
 }
 
-function _makeUIItem(parameterMetadata, group, structureMetadata, l10nProvider, conditions) {
+function _makeUIItem(parameterMetadata, group, structureMetadata, l10nProvider) {
 	const groupName = group.name;
 	let groupItem = null;
 	let groupLabel = null;
 	switch (group.groupType()) {
 	case GroupType.CONTROLS:
-		return UIItem.makePanel(new ControlPanel(groupName, PanelType.GENERAL, _makeControls(parameterMetadata, group, structureMetadata, l10nProvider, conditions)));
+		return UIItem.makePanel(new ControlPanel(groupName, PanelType.GENERAL, _makeControls(parameterMetadata, group, structureMetadata, l10nProvider)));
 	case GroupType.COLUMN_ALLOCATION:
-		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_ALLOCATION, _makeControls(parameterMetadata, group, structureMetadata, l10nProvider, conditions)));
+		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_ALLOCATION, _makeControls(parameterMetadata, group, structureMetadata, l10nProvider)));
 	case GroupType.COLUMN_SELECTION:
-		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_SELECTION, _makeControls(parameterMetadata, group, structureMetadata, l10nProvider, conditions)));
+		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_SELECTION, _makeControls(parameterMetadata, group, structureMetadata, l10nProvider)));
 	case GroupType.ADDITIONAL: {
-		const panel = new ControlPanel(groupName, PanelType.GENERAL, _makeControls(parameterMetadata, group, structureMetadata, l10nProvider, conditions));
+		const panel = new ControlPanel(groupName, PanelType.GENERAL, _makeControls(parameterMetadata, group, structureMetadata, l10nProvider));
 		groupLabel = l10nProvider.l10nLabel(group, group.name);
 		return UIItem.makeAdditionalLink(groupLabel, groupLabel, panel);
 	}
@@ -98,7 +99,7 @@ function _makeUIItem(parameterMetadata, group, structureMetadata, l10nProvider, 
 		const subTabItems = [];
 		group.subGroups.forEach(function(subGroup) {
 			const subGroupName = subGroup.name;
-			groupItem = _makeUIItem(parameterMetadata, subGroup, structureMetadata, l10nProvider, conditions);
+			groupItem = _makeUIItem(parameterMetadata, subGroup, structureMetadata, l10nProvider);
 			groupLabel = l10nProvider.l10nLabel(subGroup, subGroup.name);
 			subTabItems.push(new EditorTab(groupLabel, subGroupName, groupItem));
 		});
@@ -109,7 +110,7 @@ function _makeUIItem(parameterMetadata, group, structureMetadata, l10nProvider, 
 		const panSelSubItems = [];
 		group.subGroups.forEach(function(subGroup) {
 			const subGroupName = subGroup.name;
-			groupItem = _makeUIItem(parameterMetadata, subGroup, structureMetadata, l10nProvider, conditions);
+			groupItem = _makeUIItem(parameterMetadata, subGroup, structureMetadata, l10nProvider);
 			groupLabel = l10nProvider.l10nLabel(subGroup, subGroup.name);
 			panSelSubItems.push(new EditorTab(groupLabel, subGroupName, groupItem));
 		});
@@ -118,14 +119,14 @@ function _makeUIItem(parameterMetadata, group, structureMetadata, l10nProvider, 
 	case GroupType.PANELS: {
 		const panSubItems = [];
 		group.subGroups.forEach(function(subGroup) {
-			groupItem = _makeUIItem(parameterMetadata, subGroup, structureMetadata, l10nProvider, conditions);
+			groupItem = _makeUIItem(parameterMetadata, subGroup, structureMetadata, l10nProvider);
 			panSubItems.push(groupItem);
 		});
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.GENERAL, panSubItems));
 	}
 	case GroupType.CHECKBOX_PANEL: {
 		return UIItem.makeCheckboxPanel(new ControlPanel(groupName, PanelType.CHECKBOX_PANEL,
-			_makeControls(parameterMetadata, group, structureMetadata, l10nProvider, conditions), group));
+			_makeControls(parameterMetadata, group, structureMetadata, l10nProvider), group));
 	}
 	default:
 		return UIItem.makeStaticText("(Unknown group type '" + group.groupType() + "')");
@@ -135,7 +136,7 @@ function _makeUIItem(parameterMetadata, group, structureMetadata, l10nProvider, 
 /**
  * Called on a base property group.
  */
-function _makeControls(parameterMetadata, group, structureMetadata, l10nProvider, conditions) {
+function _makeControls(parameterMetadata, group, structureMetadata, l10nProvider) {
 	const uiItems = [];
 	group.parameterNames().forEach(function(paramName) {
 		// Assume property definition exists
@@ -144,22 +145,24 @@ function _makeControls(parameterMetadata, group, structureMetadata, l10nProvider
 		if (prop.propType() === Type.STRUCTURE && structureMetadata) {
 			structureDef = structureMetadata.getStructure(prop.baseType());
 		}
-		const control = UIItem.makeControl(_makeControl(parameterMetadata, paramName, group, structureDef, l10nProvider, conditions));
-		if (prop.separatorBefore() || prop.separatorAfter()) {
-			if (prop.separatorBefore()) {
-				uiItems.push(UIItem.makeHSeparator());
+		if (!(group instanceof StructureDef) || (group instanceof StructureDef && prop.isSubPanelEdit())) {
+			const control = UIItem.makeControl(_makeControl(parameterMetadata, paramName, group, structureDef, l10nProvider));
+			if (prop.separatorBefore() || prop.separatorAfter()) {
+				if (prop.separatorBefore()) {
+					uiItems.push(UIItem.makeHSeparator());
+				}
+				uiItems.push(control);
+				if (prop.separatorAfter()) {
+					uiItems.push(UIItem.makeHSeparator());
+				}
+			} else {
+				uiItems.push(control);
 			}
-			uiItems.push(control);
-			if (prop.separatorAfter()) {
-				uiItems.push(UIItem.makeHSeparator());
-			}
-		} else {
-			uiItems.push(control);
 		}
 	});
 	if (group.subGroups) {
 		group.subGroups.forEach(function(eachGroup) {
-			const subGroup = _makeUIItem(parameterMetadata, eachGroup, structureMetadata, l10nProvider, conditions);
+			const subGroup = _makeUIItem(parameterMetadata, eachGroup, structureMetadata, l10nProvider);
 			uiItems.push(subGroup);
 		});
 	}
@@ -215,7 +218,7 @@ function _makeStringControl(parameter, group) {
 /**
  * Creates a control for the supplied property.
  */
-function _makeControl(parameterMetadata, paramName, group, structureDef, l10nProvider, conditions) {
+function _makeControl(parameterMetadata, paramName, group, structureDef, l10nProvider) {
 	// Assume the property is defined
 	const parameter = parameterMetadata.getParameter(paramName);
 
@@ -290,7 +293,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 			break;
 		case Type.STRUCTURE:
 			if (structureDef) {
-				if (structureDef.editStyle === EditStyle.SUBPANEL) {
+				if (structureDef.hasSubPanel()) {
 					childItem = _makeEditStyleSubPanel(structureDef, l10nProvider);
 				}
 				keyIndex = structureDef.keyAttributeIndex();
@@ -300,12 +303,12 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 				// For inline/row editing, create definitions for all the columns that can be edited
 				subControls = [];
 				structureDef.parameterMetadata.paramDefs.forEach(function(param) {
-					subControls.push(_makeSubControl(param, l10nProvider, false));
+					subControls.push(_makeSubControl(param, l10nProvider));
 				});
 				// If the property is a keyed property or a structure list then the key should not be included in the
 				// structure definition. However it will still need to be included in the table column definitions.
 				if ((parameter.isMapValue() || parameter.isList()) && structureDef.keyDefinition) {
-					subControls.unshift(_makeSubControl(structureDef.keyDefinition, l10nProvider, true));
+					subControls.unshift(_makeSubControl(structureDef.keyDefinition, l10nProvider));
 				}
 				if (parameter.isList() || parameter.isMapValue()) {
 					if (group.groupType() === GroupType.COLUMN_ALLOCATION) {
@@ -400,7 +403,7 @@ function _makeEditStyleSubPanel(structureDef, l10nProvider) {
 /**
  * Creates a column control for the supplied property/attribute.
  */
-function _makeSubControl(parameter, l10nProvider, isKeyField) {
+function _makeSubControl(parameter, l10nProvider) {
 	const additionalText = parameter.getAdditionalText(l10nProvider);
 	const orientation = parameter.orientation;
 	const controlLabel = new Label(l10nProvider.l10nLabel(parameter, parameter.name));
@@ -477,7 +480,7 @@ function _makeSubControl(parameter, l10nProvider, isKeyField) {
 		parameter.filterable,
 		parameter.charLimit,
 		parameter.editStyle,
-		isKeyField
+		parameter.isKey
 	);
 }
 

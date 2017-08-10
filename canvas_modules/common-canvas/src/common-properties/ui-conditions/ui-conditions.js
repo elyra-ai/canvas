@@ -55,7 +55,7 @@ function validateInput(definition, userInput, dataModel, cellCoordinates) {
  * @return {boolean} true if valid, failMessage {Object} if false.
  */
 function validation(validationData, userInput, dataModel, cellCoordinates) {
-	logger.info("Validation check");
+	// logger.info("Validation check");
 	// var data = JSON.parse(validationData);
 	var data = validationData;
 	if (data.fail_message && data.evaluate) {
@@ -96,7 +96,7 @@ function validation(validationData, userInput, dataModel, cellCoordinates) {
  * @return {boolean} true if valid.
  */
 function enabled(enabledData, userInput) {
-	logger.info("Enablement check");
+	// logger.info("Enablement check");
 	// var data = JSON.parse(enabledData);
 	var data = enabledData;
 	if (data.parameter_refs && data.evaluate) {
@@ -137,7 +137,7 @@ function enabled(enabledData, userInput) {
  * @return {boolean} true if valid.
  */
 function visible(visibleData, userInput) {
-	logger.info("Visibility check");
+	// logger.info("Visibility check");
 	// var data = JSON.parse(visibleData);
 	var data = visibleData;
 	if (data.parameter_refs && data.evaluate) {

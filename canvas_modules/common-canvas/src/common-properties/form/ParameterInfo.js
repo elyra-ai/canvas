@@ -8,14 +8,14 @@
  *******************************************************************************/
 
 import { Separator } from "./form-constants";
-import { Type, ParamRole } from "./form-constants";
+import { Type, ParamRole, EditStyle } from "./form-constants";
 import { ResourceDef } from "./L10nProvider";
 import _ from "underscore";
 
 export class ParameterDef {
 	constructor(cname, label, description, type, role, valueRestriction, defaultValue,
 		control, orientation, width, charLimit, placeHolderText, separator,
-		resourceKey, visible, valueIcons, sortable, filterable, editStyle, required, numberGenerator) {
+		resourceKey, visible, valueIcons, sortable, filterable, editStyle, required, numberGenerator, isKey) {
 		this.name = cname;
 		this.label = ResourceDef.make(label);
 		this.description = ResourceDef.make(description);
@@ -39,6 +39,7 @@ export class ParameterDef {
 		if (numberGenerator) {
 			this.numberGenerator = numberGenerator;
 		}
+		this.isKey = isKey;
 	}
 
 	isList() {
@@ -54,7 +55,12 @@ export class ParameterDef {
 		}
 		return false;
 	}
-
+	isSubPanelEdit() {
+		if (this.editStyle === EditStyle.SUBPANEL) {
+			return true;
+		}
+		return false;
+	}
 	propType() {
 		// If we don't recognize the base type as one of the built-in types, assume it's a structure
 		let value;
@@ -153,7 +159,7 @@ export class ParameterDef {
 		return false;
 	}
 
-	static makeParameterDef(param, uihint) {
+	static makeParameterDef(param, uihint, isKey) {
 		if (param) {
 			return new ParameterDef(
 				_.propertyOf(param)("id"),
@@ -176,7 +182,8 @@ export class ParameterDef {
 				_.propertyOf(uihint)("filterable"),
 				_.propertyOf(uihint)("edit_style"),
 				_.propertyOf(param)("required"),
-				_.propertyOf(uihint)("number_generator")
+				_.propertyOf(uihint)("number_generator"),
+				isKey
 			);
 		}
 		return null;

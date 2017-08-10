@@ -265,6 +265,11 @@
           "id": "new_name",
           "type": "string",
           "role": "new_column"
+        },
+        {
+          "id": "new_label",
+          "type": "string",
+          "default": ""
         }
       ]
     },
@@ -578,12 +583,15 @@
       },
       {
         "complex_type_ref": "structuretableRenameFields",
+        "label": {
+          "default": "Rename Subpanel"
+        },
         "key_definition": {
           "parameter_ref": "field",
           "label": {
             "resource_key": "structuretableRenameFields.field.label"
           },
-          "columns": 26
+          "width": 26
         },
         "parameters": [
           {
@@ -591,8 +599,16 @@
             "label": {
               "resource_key": "structuretableRenameFields.new_name.label"
             },
-            "columns": 26,
+            "width": 26,
             "edit_style": "inline"
+          },
+          {
+            "parameter_ref": "new_label",
+            "label": {
+              "default": "Label"
+            },
+            "width": 26,
+            "edit_style": "subpanel"
           }
         ]
       },

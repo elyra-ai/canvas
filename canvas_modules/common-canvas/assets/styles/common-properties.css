@@ -673,6 +673,9 @@ tr.reactable-column-header {
 tbody.reactable-data {
   border-bottom: 1px solid #d8d8d8;
 }
+tbody.reactable-data .editor_control_area {
+  padding-right: 5px;
+}
 
 .number--dark, .number--light {
   padding: .05em 25px .15em 0 !important;
