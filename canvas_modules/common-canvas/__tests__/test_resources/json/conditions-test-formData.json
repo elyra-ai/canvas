@@ -1567,13 +1567,31 @@
           "focus_parameter_ref": "structuretableRenameFields",
           "message": {
             "resource_key": "structuretable_rename_fields_not_empty",
-            "default": "The 'Output Name' field cannot be empty"
+            "default": "The 'Rename Columns' table cannot be empty"
           }
         },
         "evaluate": {
           "condition": {
             "parameter_ref": "structuretableRenameFields",
             "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "structuretableRenameFields",
+          "message": {
+            "resource_key": "output_name_not_empty",
+            "default": "The 'Output Name' field cannot be empty"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "structuretableRenameFields",
+            "op": "cellNotEmpty"
           }
         }
       }

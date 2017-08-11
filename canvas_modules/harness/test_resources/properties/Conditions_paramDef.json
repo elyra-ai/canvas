@@ -1021,20 +1021,10 @@
         "evaluate": {
           "or": [
             {
-              "and": [
-                {
-                  "condition": {
-                    "parameter_ref": "checkboxTypes",
-                    "op": "isNotEmpty"
-                  }
-                },
-                {
-                  "condition": {
-                    "parameter_ref": "checkboxSingle",
-                    "op": "checked"
-                  }
-                }
-              ]
+              "condition": {
+                "parameter_ref": "checkboxSingle",
+                "op": "checked"
+              }
             },
             {
               "and": [

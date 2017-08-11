@@ -17,6 +17,7 @@ import ToggletextControl from "./toggletext-control.jsx";
 import OneofselectControl from "./oneofselect-control.jsx";
 import TextfieldControl from "./textfield-control.jsx";
 import FlexibleTable from "./flexible-table.jsx";
+import PropertyUtils from "../util/property-utils.js";
 import SubPanelCell from "../editor-panels/sub-panel-cell.jsx";
 import remove32 from "../../../assets/images/remove_32.svg";
 import remove32hover from "../../../assets/images/remove_32_hover.svg";
@@ -223,10 +224,9 @@ export default class ColumnStructureTableEditor extends EditorControl {
 				break;
 			}
 		}
-		this.colIndex = col;
-		this.rowIndex = col > -1 ? rowIndex : -1;
-		this.skipVal = col > -1 ? controlValue[rowIndex][0] : null;
 		if (col > -1) {
+			this.rowIndex = rowIndex;
+			this.colIndex = col;
 			controlValue[rowIndex][col] = value;
 			this.props.updateControlValue(this.props.control.name, EditorControl.stringifyStructureStrings(controlValue));
 		}
@@ -292,7 +292,8 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			cell = <Td key={colIndex} column={columnDef.name} style={columnStyle}>this.enumRenderCell(controlValue[rowIndex][colIndex], columnDef)</Td>;
 		} else if (columnDef.controlType === "textfield" && columnDef.editStyle !== "subpanel") {
 			let retrieveFunc;
-			if (rowIndex === this.rowIndex && colIndex === this.colIndex) {
+			const errorState = this.getTableErrorState(rowIndex, colIndex);
+			if (PropertyUtils.toType(errorState) === "object") {
 				retrieveFunc = this.props.retrieveValidationErrorMessage;
 			}
 			cell = (<Td key={colIndex} column={columnDef.name} style={columnStyle}><TextfieldControl

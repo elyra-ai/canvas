@@ -134,8 +134,12 @@ export default class EditorControl extends React.Component {
 		this.notifyValueChanged = this.notifyValueChanged.bind(this);
 		this.validateInput = this.validateInput.bind(this);
 		this.shouldEvaluate = this.shouldEvaluate.bind(this);
-		this.getCurrentTableCoordinates = this.getCurrentTableCoordinates.bind(this);
 		this.getUserInput = this.getUserInput.bind(this);
+		this.clearTableErrorState = this.clearTableErrorState.bind(this);
+		this.getTableErrorState = this.getTableErrorState.bind(this);
+		this.setTableErrorState = this.setTableErrorState.bind(this);
+		this.evaluateInput = this.evaluateInput.bind(this);
+		this.doGroupValidationUpdate = this.doGroupValidationUpdate.bind(this);
 
 		this._valueListener = null;
 	}
@@ -225,13 +229,6 @@ export default class EditorControl extends React.Component {
 		return limit;
 	}
 
-	getCurrentTableCoordinates() {
-		if (typeof this.rowIndex === "number" && typeof this.colIndex === "number") {
-			return { rowIndex: this.rowIndex, colIndex: this.colIndex, skipVal: this.skipVal };
-		}
-		return {};
-	}
-
 	getUserInput() {
 		const userInput = {};
 		const controlValues = this.props.getControlValues();
@@ -241,7 +238,7 @@ export default class EditorControl extends React.Component {
 			} else if (this.isEncodedFieldValue(controlValues[key][0])) {
 				userInput[key] = EditorControl.parseStructureStrings(controlValues[key]);
 			} else {
-				userInput[key] = controlValues[key][0];
+				userInput[key] = controlValues[key].length === 1 ? controlValues[key][0] : controlValues[key];
 			}
 		}
 		return userInput;
@@ -250,6 +247,27 @@ export default class EditorControl extends React.Component {
 	setValueListener(listener) {
 		// Listener is expected to define handleValueChanged(controlName, value);
 		this._valueListener = listener;
+	}
+
+	getTableErrorState(row, column) {
+		if (this.tableErrorState && row < this.tableErrorState.length && column < this.tableErrorState[row].length) {
+			return this.tableErrorState[row][column];
+		}
+		return true;
+	}
+
+	setTableErrorState(row, column, errorMessageObject) {
+		for (let i = this.tableErrorState.length; i <= row; i++) {
+			this.tableErrorState.push([]);
+		}
+		for (let i = this.tableErrorState[row].length; i <= column; i++) {
+			this.tableErrorState[row].push(true);
+		}
+		this.tableErrorState[row][column] = errorMessageObject;
+	}
+
+	clearTableErrorState() {
+		this.tableErrorState = [];
 	}
 
 	clearValueListener() {
@@ -285,6 +303,59 @@ export default class EditorControl extends React.Component {
 		return evaluate;
 	}
 
+	evaluateInput(validation, userInput) {
+		let output;
+		const coordinates = {};
+		if (this.props.control.valueDef.isMap) {
+			// For tables we need to evaluate all non-keyDef cells
+			const cellValues = userInput[this.props.control.name];
+			for (let row = 0; row < cellValues.length; row++) {
+				for (let col = 0; col < cellValues[row].length; col++) {
+					if (col === this.props.control.keyIndex) {
+						// We don't evaluate the key column
+						continue;
+					}
+					coordinates.rowIndex = row;
+					coordinates.colIndex = col;
+					coordinates.skipVal = cellValues[row][this.props.control.keyIndex];
+					const tmp = UiConditions.validateInput(validation.definition, userInput, this.props.dataModel, coordinates);
+					const isError = PropertyUtils.toType(tmp) === "object";
+					if (!output || PropertyUtils.toType(output) === "boolean") {
+						// Set the return value with preference to errors
+						output = tmp;
+					}
+					if (PropertyUtils.toType(this.rowIndex) === "number" && PropertyUtils.toType(this.colIndex) === "number") {
+						// If we have current cell coordinates, they take precedence
+						if (row === this.rowIndex && col === this.colIndex && isError) {
+							output = tmp;
+							output.isActiveCell = true;
+						}
+					}
+					if (isError) {
+						this.setTableErrorState(row, col, tmp);
+					}
+				}
+			}
+		} else {
+			output = UiConditions.validateInput(validation.definition, userInput, this.props.dataModel, coordinates);
+		}
+		return output;
+	}
+
+	doGroupValidationUpdate(validation, errorMessage, output, controlName) {
+		if (typeof validation.params === "object") {
+			for (const control of validation.params) {
+				let groupMessage = errorMessage;
+				if (output === true) {
+					groupMessage = DEFAULT_VALIDATION_MESSAGE;
+				}
+				if (control !== controlName) {
+					this.props.updateValidationErrorMessage(control, groupMessage);
+				}
+			}
+		}
+	}
+
 	validateInput() {
 		var controlName = this.getControlID().split("-")[2];
 		if (!this.props.validationDefinitions) {
@@ -293,42 +364,38 @@ export default class EditorControl extends React.Component {
 		if (this.props.validateConditions) {
 			this.props.validateConditions(); // run visible and enabled condition validations
 		}
-
+		if (this.props.control.valueDef.isMap) {
+			this.clearTableErrorState(); 	// Clear table error state
+		}
 		const validations = this.props.validationDefinitions[controlName];
 		if (this.props.controlStates && typeof this.props.controlStates[controlName] === "undefined" && validations) {
 			try {
 				const userInput = this.getUserInput();
 				let output = false;
 				let errorMessage = DEFAULT_VALIDATION_MESSAGE;
+				let validationSet = false;
+				let errorSet = false;
 
 				for (const validation of validations) {
 					if (this.shouldEvaluate(validation)) {
-						const coordinates = this.getCurrentTableCoordinates();
-						output = UiConditions.validateInput(validation.definition, userInput, this.props.dataModel, coordinates);
+						output = this.evaluateInput(validation, userInput);
+						let isError = false;
 						// logger.info("validated input field " + controlName + " to be " + JSON.stringify(output));
 						if (typeof output === "object") {
+							isError = true;
 							errorMessage = {
 								type: output.type,
 								text: output.text
 							};
 						}
-						if (typeof validation.params === "object") {
-							for (const control of validation.params) {
-								let groupMessage = errorMessage;
-								if (output === true) {
-									groupMessage = DEFAULT_VALIDATION_MESSAGE;
-								}
-								if (control !== controlName) {
-									this.props.updateValidationErrorMessage(control, groupMessage);
-								}
+						if (!validationSet || output.isActiveCell || (isError && !errorSet)) {
+							this.props.updateValidationErrorMessage(controlName, errorMessage);
+							validationSet = true;
+							if (isError) {
+								errorSet = true;
 							}
 						}
-						this.props.updateValidationErrorMessage(controlName, errorMessage);
-
-						if (typeof output === "object" && errorMessage.type === "error") {
-							// Break on the first error
-							break;
-						}
+						this.doGroupValidationUpdate(validation, errorMessage, output, controlName);
 					}
 				}
 			} catch (error) {
