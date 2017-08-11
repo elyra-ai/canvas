@@ -7,6 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 /* eslint complexity: ["error", 13] */
+/* eslint max-len: ["error", 200] */
 
 import React from "react";
 import Isvg from "react-inlinesvg";
@@ -578,21 +579,21 @@ class App extends React.Component {
 								/>
 							</a>
 						</li>
-						<li className="navbar-li nav-divider" data-tip="add node">
+						<li className="navbar-li nav-divider" data-tip="add node" style={{ display: "none" }}>
 							<a onClick={this.addNode.bind(this) }>
 								<Isvg id="action-bar-add"
 									src={ addnew32}
 								/>
 							</a>
 						</li>
-						<li className="navbar-li" data-tip="delete">
+						<li className="navbar-li" data-tip="delete" style={{ display: "none" }}>
 							<a onClick={this.delete.bind(this) }>
 								<Isvg id="action-bar-delete"
 									src={close32}
 								/>
 							</a>
 						</li>
-						<li className="navbar-li" data-tip="run">
+						<li className="navbar-li" data-tip="run" style={{ display: "none" }}>
 							<a onClick={this.run.bind(this) }>
 								<Isvg id="action-bar-run"
 									src={play32}
@@ -620,7 +621,7 @@ class App extends React.Component {
 								/>
 							</a>
 						</li>
-						<li className="navbar-li nav-divider" id={paletteClass} data-tip="palette">
+						<li className="navbar-li nav-divider" id={paletteClass} data-tip="palette" style={{ display: "none" }}>
 							<a onClick={this.openPalette.bind(this) }>
 								<Isvg id="action-bar-palette"
 									src={createNew32}
