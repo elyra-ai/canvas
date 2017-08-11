@@ -3,7 +3,6 @@
   "version": "1.0.53",
   "description": "WDP common-canvas",
   "main": "dist/common-canvas.js",
-  "license": "IPL-1.0",
   "homepage": "https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/wiki",
   "repository": {
     "type": "git",
