@@ -43,6 +43,9 @@ module.exports = function(grunt) {
 				src: [
 					codeCoverageDir
 				]
+			},
+			build: {
+				src: ["dist"]
 			}
 		},
 		webpack: {

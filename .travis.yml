@@ -18,7 +18,7 @@ before_script:
 script:
   - travis_wait ./canvas_modules/common-canvas/build.sh
   - travis_wait ./canvas_modules/harness/build.sh
-  - travis_wait 30 ./canvas_modules/harness/functional_test.sh
+  - travis_wait 40 ./canvas_modules/harness/functional_test.sh
 deploy:
   - provider: script
     skip_cleanup: true
