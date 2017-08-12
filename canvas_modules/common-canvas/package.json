@@ -1,6 +1,6 @@
 {
   "name": "@wdp/common-canvas",
-  "version": "1.0.54",
+  "version": "1.0.55",
   "description": "WDP common-canvas",
   "main": "dist/common-canvas.js",
   "homepage": "https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/wiki",
