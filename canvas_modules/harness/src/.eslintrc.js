@@ -13,6 +13,8 @@ module.exports = {
     	"react/jsx-indent-props": [2, "tab"]
     },
   	"globals": {
-    		"document": true
+    		"document": true,
+				"window": true,
+				"location": true
   	}
 };

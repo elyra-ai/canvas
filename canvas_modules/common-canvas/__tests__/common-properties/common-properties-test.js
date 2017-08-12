@@ -67,6 +67,7 @@ function createCommonProperties(useModalDialog) {
 			showPropertiesDialog={showPropertiesDialog}
 			propertiesInfo={propertiesInfo}
 			useModalDialog={useModalDialog}
+			useOwnContainer={false}
 			applyLabel="Apply"
 			rejectLabel="REJECTED"
 		/>

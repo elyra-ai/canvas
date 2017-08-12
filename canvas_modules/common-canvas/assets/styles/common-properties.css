@@ -482,6 +482,8 @@ input.number,
 .toggletext_icon {
   padding-right: 2px;
   cursor: pointer;
+  width: 12px;
+  height: 12px;
 }
 
 .toggletext_text {

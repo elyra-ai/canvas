@@ -124,40 +124,46 @@ export default class EditorForm extends React.Component {
 		if (!this.sharedCtrlNames) {
 			return data;
 		}
-		const filteredDataset = JSON.parse(JSON.stringify(data)); // deep copy
 
-		let sharedDataModelPanel = false;
-		for (let h = 0; h < this.sharedCtrlNames.length; h++) {
-			if (skipControlName === this.sharedCtrlNames[h].controlName) {
-				sharedDataModelPanel = true;
-				break;
+		let filteredDataset = { fields: [] };
+		try {
+			filteredDataset = JSON.parse(JSON.stringify(data)); // deep copy
+
+			let sharedDataModelPanel = false;
+			for (let h = 0; h < this.sharedCtrlNames.length; h++) {
+				if (skipControlName === this.sharedCtrlNames[h].controlName) {
+					sharedDataModelPanel = true;
+					break;
+				}
 			}
-		}
 
-		if (sharedDataModelPanel) {
-			const temp = [];
-			for (let i = 0; i < this.sharedCtrlNames.length; i++) {
-				const ctrlName = this.sharedCtrlNames[i].controlName;
-				if (ctrlName !== skipControlName) {
-					// only remove from the main list the values that are in other controls
-					const values = this.state.valuesTable[ctrlName];
-					for (let j = 0; j < values.length; j++) {
-						temp.push(data.fields.filter(function(element) {
-							return values[j].split(",")[0].indexOf(element.name) > -1;
-						})[0]);
-						// logger.info("Temp is: " + JSON.stringify(temp));
+			if (sharedDataModelPanel) {
+				const temp = [];
+				for (let i = 0; i < this.sharedCtrlNames.length; i++) {
+					const ctrlName = this.sharedCtrlNames[i].controlName;
+					if (ctrlName !== skipControlName) {
+						// only remove from the main list the values that are in other controls
+						const values = this.state.valuesTable[ctrlName];
+						for (let j = 0; j < values.length; j++) {
+							temp.push(data.fields.filter(function(element) {
+								return values[j].split(",")[0].indexOf(element.name) > -1;
+							})[0]);
+							// logger.info("Temp is: " + JSON.stringify(temp));
+						}
+					}
+				}
+
+				if (temp.length > 0) {
+					for (let k = 0; k < temp.length; k++) {
+						filteredDataset.fields = filteredDataset.fields.filter(function(element) {
+							return element && temp[k] && element.name !== temp[k].name;
+						});
+						// logger.info("filteredData.fields is: " + JSON.stringify(filteredData.fields));
 					}
 				}
 			}
-
-			if (temp.length > 0) {
-				for (let k = 0; k < temp.length; k++) {
-					filteredDataset.fields = filteredDataset.fields.filter(function(element) {
-						return element && temp[k] && element.name !== temp[k].name;
-					});
-					// logger.info("filteredData.fields is: " + JSON.stringify(filteredData.fields));
-				}
-			}
+		} catch (error) {
+			logger.warn("unable to parse json " + error);
 		}
 		return filteredDataset;
 	}
@@ -282,6 +288,7 @@ export default class EditorForm extends React.Component {
 				valueAccessor={controlValueAccessor}
 				updateControlValue={this.updateControlValue}
 				controlStates={this.state.controlStates}
+				controlValue={[]}
 				values={control.values}
 				valueLabels={control.valueLabels}
 				valueIcons={control.valueIcons}

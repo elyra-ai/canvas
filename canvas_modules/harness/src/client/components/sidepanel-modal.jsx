@@ -11,6 +11,7 @@
  /* eslint no-undef: "error" */
 
 import React from "react";
+import { Link } from "react-router-dom";
 import { FormControl } from "react-bootstrap";
 import {
 	Button,
@@ -157,6 +158,9 @@ export default class SidePanelModal extends React.Component {
 		var propertiesInput = (<div className="sidepanel-children" id="sidepanel-input">
 			<div className="formField">
 				<div className="sidepanel-headers">Common Properties</div>
+				<div id="properties-documentation-link">
+					<Link to="/properties" target="_blank">documentation</Link>
+				</div>
 				<Dropdown
 					name="PropertiesDropdown"
 					text="Properties"

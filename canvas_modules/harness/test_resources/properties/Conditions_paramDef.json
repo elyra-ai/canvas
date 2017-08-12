@@ -25,7 +25,7 @@
     "berries": 50,
     "passwordField": "",
     "textfieldName": "",
-    "textareaDescription": "",
+    "textareaDescription": "a / b",
     "expressionBox": "",
     "columnSelectSharedWithInput": [
       "Sex"
@@ -569,7 +569,6 @@
           {
             "parameter_ref": "structuretable_sort_order",
             "width": 16,
-            "resource_key": "structuretableSortOrder.sort_order",
             "label": {
               "resource_key": "structuretableSortOrder.sort_order.label"
             },

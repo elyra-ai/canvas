@@ -1,0 +1,171 @@
+/*******************************************************************************
+ * Licensed Materials - Property of IBM
+ * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ *
+ * Note to U.S. Government Users Restricted Rights:
+ * Use, duplication or disclosure restricted by GSA ADP Schedule
+ * Contract with IBM Corp.
+ *******************************************************************************/
+/* Properties Navbar */
+.properties-navbar-items {
+  position:fixed;
+  width:100%;
+	height: 50px;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #152935;
+  z-index: 3;
+}
+
+#properties-title {
+  background-color: #152935;
+  color: #FFFFFF;
+  padding: 14px;
+  width:auto;
+  text-decoration: none;
+	font-size: 14px;
+	height: 50px;
+}
+
+#properties-menu {
+	width: 200px;
+	position: fixed;
+	right: 0;
+	z-index: 5;
+	margin-top: 5px;
+	margin-right: 10px;
+}
+
+.properties-navbar-li {
+  float: left;
+	height: 50px;
+	background-color: #6EEDD8;
+}
+
+.properties-navbar-li a,
+.properties-navbar-fill a
+{
+  display: block;
+  text-align: center;
+  padding: 14px 12px;
+  color: #FFFFFF;
+  fill:#3FB8AF;
+  box-sizing: content-box;
+	font-size: 16px;
+	background-color: #152935;
+	height: 22px;
+}
+
+.properties-navbar-li a:hover {
+  color: #6EEDD8;
+	height: 18px;
+}
+
+@media (max-width: 779px) {
+	.properties-nav-link {
+		display: none !important;
+	}
+}
+
+/* Header section */
+.properties-section-header {
+	background: #A6266E;
+	padding: 6.5em 4em 2em;
+	position: relative;
+	color: #FFFFFF;
+}
+
+.properties-page-link {
+	text-align: center;
+	display: block;
+	margin: 1.5em 0 0;
+	color: #FFFFFF;
+	font-size: 1em;
+	vertical-align: middle;
+	text-decoration: none;
+}
+
+.properties-page-link:hover {
+	color: #FFFFFF;
+	text-decoration: underline;
+}
+
+.properties-page-intro-link:hover {
+	text-decoration: underline;
+}
+
+/* Properties Content */
+#properties-content {
+	padding: 1em;
+}
+
+.section {
+	margin-top: -3em;
+	padding-top: 4em;
+}
+
+.section-subtitle,
+#--misc-attr,
+#--edit-style {
+	margin-top: -50px;
+	padding-top: 50px;
+}
+
+.properties-section-title {
+	border-bottom: 1px solid;
+	margin-bottom: .5em;
+}
+
+.section-description-link {
+	margin-right: 5px;
+}
+
+.section-description-link:hover {
+	text-decoration: underline;
+}
+
+.section-row {
+	width: 100%;
+	display: inline-flex;
+	flex-wrap: wrap;
+	justify-content: space-around;
+}
+
+.section-row-title{
+	font-size: 1.282rem;
+}
+
+.section-column {
+	width: 50%;
+	flex-grow: 1;
+	flex-shrink: 0;
+	padding-right: 1em;
+}
+
+.section-column-code {
+	padding-right: 0px;
+}
+
+.json-block {
+	font-size: 0.875em;
+	max-height: 565px;
+}
+
+.highlight {
+	background-color: #F5F5F5;
+	font-weight: 400;
+	border-radius: 4px;
+}
+
+/*.properties-control-label {
+	color: #777677;
+}*/
+
+/* min width less than then set width to 100% and flow to next line */
+
+/* Override common-properties */
+#removeFieldTip, #addFieldTip {
+	position: absolute;
+}

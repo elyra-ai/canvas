@@ -31,7 +31,13 @@ function _get(req, res) {
 				res.json({ error: err });
 			}
 			res.status(constants.HTTP_STATUS_OK);
-			res.json(JSON.parse(data));
+			var content = {};
+			try {
+				content = JSON.parse(data);
+			} catch (error) {
+				logger.warn("error parsing json " + filename);
+			}
+			res.json(content);
 		});
 	} else { // retrieve all
 		fs.readdir(dirPath, function(err, files) {

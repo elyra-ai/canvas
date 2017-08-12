@@ -22,6 +22,7 @@
   color: #FFFFFF;
   width:auto;
   text-decoration: none;
+	font-size: 14px;
 }
 
 /*Navbar*/
@@ -153,6 +154,20 @@
 #buttonOneTimeLayoutHorizontal , #buttonOneTimeLayoutVertical{
   width: 100%;
   text-align: center;
+}
+
+#properties-documentation-link {
+	float: right;
+	margin-top: -26px;
+	text-decoration: underline;
+}
+
+#properties-documentation-link a {
+	color: #FFFFFF;
+}
+
+#properties-documentation-link a:hover {
+	color: #41D6C3;;
 }
 
 /*Override ap-components-react styles*/

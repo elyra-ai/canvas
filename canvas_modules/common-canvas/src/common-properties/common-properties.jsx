@@ -38,11 +38,11 @@ export default class CommonProperties extends React.Component {
 			formData = Form.makeForm(this.props.propertiesInfo.parameterDef);
 		}
 		// TODO: Temporary conversion to older property set as arrays of string values
-		if (formData.data && !formData.data.currentProperties && formData.data.currentParameters) {
+		if (formData && formData.data && !formData.data.currentProperties && formData.data.currentParameters) {
 			formData.data.currentProperties = this.parametersToProperties(formData.data.currentParameters);
 		}
-		// TODO: This can be removed once the WML Play service generates dtasetMetadata instead of inputDataModel
-		if (formData.data && formData.data.inputDataModel && !formData.data.datasetMetadata) {
+		// TODO: This can be removed once the WML Play service generates datasetMetadata instead of inputDataModel
+		if (formData && formData.data && formData.data.inputDataModel && !formData.data.datasetMetadata) {
 			formData.data.datasetMetadata = this.convertInputDataModel(formData.data.inputDataModel);
 		}
 		return formData;
@@ -135,7 +135,7 @@ export default class CommonProperties extends React.Component {
 		try {
 			formData = this.getForm();
 		} catch (error) {
-			logger.error("Error generating form: " + error);
+			logger.error("Error generating form in common-properties: " + error);
 			formData = null;
 		}
 		if (formData !== null) {
@@ -166,6 +166,8 @@ export default class CommonProperties extends React.Component {
 					>
 						{editorForm}
 					</PropertiesDialog>);
+				} else if (this.props.useOwnContainer) {
+					propertiesDialog = (<div>{editorForm}</div>);
 				} else {
 					propertiesDialog = (<PropertiesEditing
 						applyLabel={this.props.applyLabel}
@@ -201,5 +203,6 @@ CommonProperties.propTypes = {
 	applyLabel: React.PropTypes.string,
 	rejectLabel: React.PropTypes.string,
 	useModalDialog: React.PropTypes.bool,
+	useOwnContainer: React.PropTypes.bool,
 	propertiesInfo: React.PropTypes.object.isRequired
 };
