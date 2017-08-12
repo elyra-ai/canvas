@@ -1,6 +1,6 @@
 {
   "name": "@wdp/common-canvas",
-  "version": "1.0.53",
+  "version": "1.0.54",
   "description": "WDP common-canvas",
   "main": "dist/common-canvas.js",
   "homepage": "https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/wiki",
@@ -28,7 +28,7 @@
     "babel-preset-stage-1": "6.22.0",
     "chai": "3.5.0",
     "chai-enzyme": "0.6.1",
-    "copy-webpack-plugin" : "4.0.1",
+    "copy-webpack-plugin": "4.0.1",
     "css-loader": "0.23.1",
     "d3": "4.9.1",
     "dagre": "0.7.4",
