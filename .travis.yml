@@ -1,6 +1,14 @@
 ---
 dist: trusty
 sudo: false
+branches:
+ only:
+  - master
+  - release
+  # Build all feature branches
+  - /^ff-/
+  # Build all sandbox branches
+  - /^sb-/
 language: node_js
 node_js: "6.10.2"
 addons:
