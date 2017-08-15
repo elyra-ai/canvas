@@ -40,7 +40,7 @@
     "babel-preset-es2015": "6.22.0",
     "babel-preset-react": "6.23.0",
     "babel-preset-react-hmre": "1.1.1",
-    "chimp": "0.47.2",
+    "chimp": "0.49.1",
     "css-loader": "0.23.1",
     "eslint": "2.3.0",
     "eslint-plugin-react": "4.2.1",

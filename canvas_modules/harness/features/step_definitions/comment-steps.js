@@ -8,7 +8,7 @@
  *******************************************************************************/
 /* eslint no-console: "off" */
 
-import { getEventLogCount, getObjectModelCount, getCommentIndexFromCanvasUsingText } from "./utilities/validateUtil.js";
+import { getCommentIndexFromCanvasUsingText, getEventLogCount, getObjectModelCount } from "./utilities/validateUtil.js";
 import { getHarnessData } from "./utilities/HTTPClient.js";
 import { getRenderingEngine } from "./utilities/test-config.js";
 import { getURL } from "./utilities/test-config.js";
@@ -41,9 +41,7 @@ module.exports = function() {
 			specificComment = browser.$$("textarea")[index];
 		}
 
-		browser.pause(1000);
 		specificComment.doubleClick();
-		browser.pause(1000);
 		if (getRenderingEngine() === "D3") {
 			specificComment.$("textarea").setValue("", comment); // For D3, the text area is created by the double click
 		} else {
@@ -51,7 +49,6 @@ module.exports = function() {
 			specificComment.setValue("", comment);
 		}
 
-		browser.pause(500);
 		browser.leftClick("#common-canvas", 400, 400);
 
 		// Start Validation
@@ -103,7 +100,7 @@ module.exports = function() {
 		browser.$(".context-menu-popover").$$(".react-context-menu-item")[0].$(".react-context-menu-link").click();
 
 		// Start Validation
-		browser.pause(1000);
+		browser.pause(500);
 		// verify comment is not in the canvas DOM
 		var count = 0;
 		var commentElements;

@@ -34,12 +34,10 @@ module.exports = function() {
 
 		if (getRenderingEngine() === "D3") {
 			browser.execute(simulateD3LinkCreation, ".d3-node-halo", orgNodeNumber, ".node-group", destNodeNumber, 1, 1);
-			browser.pause(1500);
 			var links = browser.$$(".d3-selectable-link").length / 2; // Divide by 2 because the line and arrow head use this class
 			expect(links).toEqual(linkCount);
 		} else {
 			browser.execute(simulateDragDrop, ".node-circle", orgNodeNumber, ".node-inner-circle", destNodeNumber, 1, 1);
-			browser.pause(1500);
 			var dataLinks = browser.$$(".canvas-data-link").length / 2;
 			var commentLinks = browser.$$(".canvas-comment-link").length / 2;
 			expect(dataLinks + commentLinks).toEqual(linkCount);
@@ -54,6 +52,7 @@ module.exports = function() {
 		var srcNodeId = browser.execute(getNodeIdFromObjectModel, objectModel.value, orgNodeNumber);
 		var destNodeId = browser.execute(getNodeIdFromObjectModel, objectModel.value, destNodeNumber);
 		var returnVal = browser.execute(containLinkInObjectModel, objectModel.value, srcNodeId.value, destNodeId.value);
+		browser.pause(500);
 		expect(returnVal.value).toBe(1);
 
 		// verify that an event for a new link is in the external object model event log
@@ -82,19 +81,15 @@ module.exports = function() {
 			// text of the comment being deleted.
 			commentIndex = getCommentIndexFromCanvasUsingText(commentText);
 			browser.execute(simulateD3LinkCreation, ".d3-comment-halo", commentIndex, ".node-group", nodeIndex, 1, 1);
-			browser.pause(1500);
 			var links = browser.$$(".d3-selectable-link").length / 2; // Divide by 2 because the line and arrow head use this class
 			expect(links).toEqual(linkCount);
 		} else {
 			browser.execute(simulateDragDrop, ".comment-box", commentIndex, ".node-inner-circle", nodeIndex, 1, 1);
-			browser.pause(1000);
 			// verify link is in the canvas DOM
 			var dataLinks = browser.$$(".canvas-data-link").length / 2;
 			var commentLinks = browser.$$(".canvas-comment-link").length / 2;
 			expect(dataLinks + commentLinks).toEqual(linkCount);
 		}
-
-		browser.pause(2000);
 
 		// verify that the link is in the internal object model
 		const testUrl = getURL();
@@ -128,7 +123,6 @@ module.exports = function() {
 		// verify that the link is Not in the internal object model
 		const testUrl = getURL();
 		const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
-		browser.pause(500);
 		browser.timeoutsAsyncScript(5000);
 		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
 		var srcNodeId = browser.execute(getCommentIdFromObjectModel, objectModel.value, commentIndex);
@@ -151,7 +145,6 @@ module.exports = function() {
 		// verify that the link is Not in the internal object model
 		const testUrl = getURL();
 		const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
-		browser.pause(500);
 		browser.timeoutsAsyncScript(5000);
 		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
 		var srcNodeId = browser.execute(getCommentIdFromObjectModel, objectModel.value, srcNodeIndex);
@@ -163,7 +156,6 @@ module.exports = function() {
 	// Then I validate there are 6 links on the canvas
 	//
 	this.Then(/^I validate there are (\d+) links on the canvas$/, function(canvasLinks) {
-		browser.pause(500);
 		var linkCount = Number(canvasLinks);
 		// verify link is in the canvas DOM
 		var dataLinks = browser.$$(".canvas-data-link").length;

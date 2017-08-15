@@ -481,7 +481,6 @@ module.exports = function() {
 				.click();
 
 			// Start validation
-			browser.pause(1000);
 			var nodeNumber = inNodeIndex - 1;
 
 			// verify node is in the canvas DOM
@@ -546,7 +545,6 @@ module.exports = function() {
 		const testUrl = getURL();
 		const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
 
-		browser.pause(500);
 		browser.timeoutsAsyncScript(5000);
 		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
 		var nodeId = browser.execute(getNodeIdFromObjectModel, objectModel.value, nodeNumber);
@@ -647,6 +645,6 @@ module.exports = function() {
 	// Then I pause for 5 seconds
 	//
 	this.Then(/^I pause for (\d+) seconds$/, function(seconds) {
-		browser.pause(Number(seconds) * 1000);
+		// browser.pause(Number(seconds) * 1000);
 	});
 };

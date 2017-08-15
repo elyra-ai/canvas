@@ -10,10 +10,11 @@ cd $SCRIPT_DIR
 
 # start the test harness
 echo "npm start"
+export NODE_ENV=production
 npm start &
 
 # start running the test Cases
-sleep 2m
+sleep 30
 echo "npm test"
 npm test -- --screenshotsOnError=false
 

@@ -18,9 +18,8 @@ module.exports = function() {
 	const getEventLogUrl = testUrl + "/v1/test-harness/events";
 
 	this.Then(/^I see common properties title "([^"]*)"$/, function(givenTitle) {
-		browser.pause(1500);
+		browser.pause(500);
 		var dialogTitle = browser.getText(".modal-title");
-
 		expect(dialogTitle).toEqual(givenTitle);
 	});
 
@@ -29,7 +28,6 @@ module.exports = function() {
 		textbox.setValue("", textboxValue);
 		var okButton = browser.$(".modal__buttons").$$(".button")[0];
 		okButton.click();
-		browser.pause(1500);
 
 		browser.timeoutsAsyncScript(3000);
 		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
@@ -39,14 +37,13 @@ module.exports = function() {
 	});
 
 	this.Then(/^I select "([^"]*)" dropdown option$/, function(dropdownValue) {
-		browser.pause(1500);
+		browser.pause(500);
 		var dropdown = browser.$(".Dropdown-placeholder");
 		dropdown.click();
 		var dropdownSelect = browser.$(".Dropdown-menu").$$(".Dropdown-option")[1];
 		dropdownSelect.click();
 		var okButton = browser.$(".modal__buttons").$$(".button")[0];
 		okButton.click();
-		browser.pause(1500);
 
 		browser.timeoutsAsyncScript(3000);
 		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
@@ -60,12 +57,11 @@ module.exports = function() {
 		textarea.setValue("", textareaValue);
 		var okButton = browser.$(".modal__buttons").$$(".button")[0];
 		okButton.click();
-		browser.pause(1500);
 
 		browser.timeoutsAsyncScript(3000);
 		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
 		var eventLogJSON = JSON.parse(eventLog.value);
-
+		browser.pause(500);
 		expect(textareaValue).toEqual((eventLogJSON[16].data.form.col).toString());
 	});
 
@@ -113,7 +109,6 @@ module.exports = function() {
 
 		var okButton = browser.$(".modal__buttons").$$(".button")[0];
 		okButton.click();
-		browser.pause(1500);
 
 		browser.timeoutsAsyncScript(3000);
 		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
@@ -136,7 +131,6 @@ module.exports = function() {
 
 		var okButton = browser.$(".modal__buttons").$$(".button")[0];
 		okButton.click();
-		browser.pause(1500);
 
 		browser.timeoutsAsyncScript(3000);
 		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
@@ -164,84 +158,62 @@ module.exports = function() {
 
 		var okButton = browser.$(".modal__buttons").$$(".button")[0];
 		okButton.click();
-		browser.pause(1500);
 
 		browser.timeoutsAsyncScript(3000);
 		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
 		var eventLogJSON = JSON.parse(eventLog.value);
 		var eventLogString = JSON.stringify(eventLog);
 		var checkboxPartitionClicked = eventLogString.includes("samplingSeed");
-
+		browser.pause(500);
 		expect(true).toEqual(checkboxPartitionClicked);
 		expect("-1").not.toEqual((eventLogJSON[25].data.form.samplingSeed).toString());
 	});
 
 	this.Then(/^I change Order for Drug field and reorder$/, function() {
 
-		browser.pause(1500);
+		browser.pause(500);
 		var drugOrder = browser.$$(".toggletext_text")[1];
 		drugOrder.click();
-
-		browser.pause(1500);
 
 		var naRow = browser.$$(".reactable-data")[1].$$("tr")[0];
 		naRow.click();
 
-		browser.pause(1500);
-
 		var moveNaLast = browser.$$(".table-row-move-button")[1];
 		moveNaLast.click();
 
-		browser.pause(1500);
-
 		var testmoveNaLast1 = browser.$(".table").$(".reactable-data");
 		var testmoveNaLast2 = testmoveNaLast1.$(".table-selected-row").$$("td")[0].getText();
-		browser.pause(1500);
 		expect("Na").toEqual(testmoveNaLast2);
 
 		var drugRow = browser.$$(".reactable-data")[1].$$("tr")[0];
 		drugRow.click();
 
-		browser.pause(1500);
-
 		var moveDrugDown = browser.$$(".table-row-move-button")[0];
 		moveDrugDown.click();
 
-		browser.pause(1500);
-
 		var testmoveDrugDown1 = browser.$(".table").$(".reactable-data");
 		var testmoveDrugDown2 = testmoveDrugDown1.$(".table-selected-row").$$("td")[0].getText();
-		browser.pause(1500);
 		expect("Drug").toEqual(testmoveDrugDown2);
 
 		naRow = browser.$$(".reactable-data")[1].$$("tr")[2];
 		naRow.click();
 
-		browser.pause(1500);
-
 		var moveNaFirst = browser.$$(".table-row-move-button")[0];
 		moveNaFirst.click();
 
-		browser.pause(1500);
-
 		var testmoveNaFirst1 = browser.$(".table").$(".reactable-data");
 		var testmoveNaFirst2 = testmoveNaFirst1.$(".table-selected-row").$$("td")[0].getText();
-		browser.pause(1500);
 		expect("Na").toEqual(testmoveNaFirst2);
 
 		drugRow = browser.$$(".reactable-data")[1].$$("tr")[2];
 		drugRow.click();
 
-		browser.pause(1500);
-
 		var moveDrugUp = browser.$$(".table-row-move-button")[1];
 		moveDrugUp.click();
 
-		browser.pause(1500);
-
 		var okButton = browser.$(".modal__buttons").$$(".button")[0];
 		okButton.click();
-		browser.pause(1500);
+		browser.pause(500);
 
 		browser.timeoutsAsyncScript(3000);
 		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
@@ -252,15 +224,10 @@ module.exports = function() {
 		var drugValue = (JSON.stringify(eventLogJSON[28].data.form.keys[1])).includes("Ascending");
 		var cholesterolKey = (JSON.stringify(eventLogJSON[28].data.form.keys[2])).includes("Cholesterol");
 
-		browser.pause(1500);
 		expect(true).toEqual(naKey);
-		browser.pause(1500);
 		expect(true).toEqual(drugKey);
-		browser.pause(1500);
 		expect(true).toEqual(drugValue);
-		browser.pause(1500);
 		expect(true).toEqual(cholesterolKey);
-		browser.pause(1500);
 
 	});
 
@@ -278,12 +245,10 @@ module.exports = function() {
 
 		var okButton = browser.$(".modal__buttons").$$(".button")[0];
 		okButton.click();
-		browser.pause(1500);
 
 	});
 
 	this.Then(/^I have closed the common properties dialog by clicking on close button$/, function() {
-		browser.pause(500);
 		var closeButton = browser.$(".modal__buttons").$(".button--hyperlink");
 		closeButton.click();
 	});

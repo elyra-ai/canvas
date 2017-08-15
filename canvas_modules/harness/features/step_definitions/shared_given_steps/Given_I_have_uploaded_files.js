@@ -12,7 +12,6 @@ module.exports = function() {
 
 	/* global browser */
 	this.Then(/^I have uploaded predefined diagram "([^"]*)"$/, function(diagramFile) {
-		browser.pause(500);
 		// need to click on the canvas drop down
 		browser.$("#sidepanel-canvas-input")
 						.$(".canvasField")
@@ -20,7 +19,6 @@ module.exports = function() {
 						.$("button")
 						.click("svg");
 		// get the list of drop down options.
-		browser.pause(500);
 		var canvasFileOptions = browser
 														.$("#sidepanel-canvas-input")
 														.$(".canvasField")
@@ -35,7 +33,6 @@ module.exports = function() {
 	});
 
 	this.Then(/^I have uploaded diagram "([^"]*)"$/, function(diagramFile) {
-		browser.pause(500);
 		// need to click on the canvas drop down
 		browser.$("#sidepanel-canvas-input")
 						.$(".canvasField")
@@ -43,7 +40,6 @@ module.exports = function() {
 						.$("button")
 						.click("svg");
 		// get the list of drop down options.
-		browser.pause(500);
 		var canvasFileOptions = browser
 														.$("#sidepanel-canvas-input")
 														.$(".canvasField")
@@ -54,10 +50,8 @@ module.exports = function() {
 			if (canvasFileOptions[idx].getText() === "Choose from location...") {
 				canvasFileOptions[idx].click();
 				var canvasInput = browser.$("#canvasFileInput");
-				browser.pause(500);
 				// this will not work with relative paths
 				canvasInput.setValue(getBaseDir() + diagramFile);
-				browser.pause(500);
 				browser.$(".canvasField").click("a");
 			}
 		}
@@ -65,14 +59,12 @@ module.exports = function() {
 
 	this.Then(/^I have uploaded predefined palette "([^"]*)"$/, function(paletteFile) {
 		// need to click on the palette drop down
-		browser.pause(2000);
 		browser.$("#sidepanel-palette-input")
 						.$(".formField")
 						.$(".select")
 						.$("button")
 						.click("svg");
 		// get the list of drop down options.
-		browser.pause(500);
 		var paletteFileOptions = browser.$("#sidepanel-palette-input")
 																		.$(".formField")
 																		.$(".select")
@@ -87,14 +79,12 @@ module.exports = function() {
 
 	this.Then(/^I have uploaded palette "([^"]*)"$/, function(paletteFile) {
 		// need to click on the palette drop down
-		browser.pause(2000);
 		browser.$("#sidepanel-palette-input")
 						.$(".formField")
 						.$(".select")
 						.$("button")
 						.click("svg");
 		// get the list of drop down options.
-		browser.pause(500);
 		var paletteFileOptions = browser.$("#sidepanel-palette-input")
 																		.$(".formField")
 																		.$(".select")
@@ -104,18 +94,15 @@ module.exports = function() {
 			if (paletteFileOptions[idx].getText() === "Choose from location...") {
 				paletteFileOptions[idx].click();
 				var paletteInput = browser.$("#paletteJsonInput");
-				browser.pause(500);
 
 				// this will not work with relative paths
 				paletteInput.setValue(getBaseDir() + paletteFile);
-				browser.pause(500);
 				browser.$("#sidepanel-palette-input").click("a");
 			}
 		}
 	});
 
 	this.Then(/^I have uploaded JSON for common-properties "([^"]*)"$/, function(diagramFile) {
-		browser.pause(500);
 		// need to click on the common-properties drop down
 		browser.$("#sidepanel-input")
 						.$(".formField")
@@ -123,7 +110,6 @@ module.exports = function() {
 						.$("button")
 						.click("svg");
 		// get the list of drop down options.
-		browser.pause(500);
 		var commonPropertiesOptions = browser
 														.$("#sidepanel-input")
 														.$(".formField")
