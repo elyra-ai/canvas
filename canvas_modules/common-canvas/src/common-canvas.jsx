@@ -7,6 +7,8 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
+/* eslint complexity: ["error", 12] */
+
 import React from "react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import ContextMenuWrapper from "./context-menu-wrapper.jsx";
@@ -118,8 +120,11 @@ export default class CommonCanvas extends React.Component {
 				break;
 			}
 			case "editComment": {
-				const command = new EditCommentAction(data);
-				CommandStack.do(command);
+				// only add editComment action, if value of comment has changed
+				if (ObjectModel.getComment(data.nodes[0]).content !== data.label) {
+					const command = new EditCommentAction(data);
+					CommandStack.do(command);
+				}
 				break;
 			}
 			case "linkNodes": {
