@@ -507,6 +507,7 @@ export default class FieldPicker extends EditorControl {
 				columns={headers}
 				data={tableData}
 				onSort={this.onSort}
+				filterKeyword={this.state.filterText}
 			/>
 		);
 

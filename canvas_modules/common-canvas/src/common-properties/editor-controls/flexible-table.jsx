@@ -53,8 +53,7 @@ export default class FlexibleTable extends React.Component {
 			}
 		}
 		this.state = {
-			columnSortDir: sortDirs,
-			filterKeyword: ""
+			columnSortDir: sortDirs
 		};
 
 		this.handleFilterChange = this.handleFilterChange.bind(this);
@@ -79,7 +78,6 @@ export default class FlexibleTable extends React.Component {
 	}
 
 	handleFilterChange(evt) {
-		this.setState({ filterKeyword: evt.target.value });
 		if (this.props.onFilter) {
 			this.props.onFilter(evt.target.value);
 		}
@@ -151,7 +149,7 @@ export default class FlexibleTable extends React.Component {
 						placeholder={placeHolder}
 						disabledPlaceholderAnimation
 						onChange={this.handleFilterChange}
-						value={this.state.filterKeyword}
+						value={this.props.filterKeyword}
 					/>
 				</div>
 				<div id="flexible-table-search-icon"
@@ -172,7 +170,7 @@ export default class FlexibleTable extends React.Component {
 								sortable={this.props.sortable}
 								filterable={this.props.filterable}
 								hideFilterInput
-								filterBy={this.state.filterKeyword}
+								filterBy={this.props.filterKeyword}
 								onSort={this.onSort}
 								onFilter={this.onFilter}
 							>
@@ -242,6 +240,7 @@ FlexibleTable.propTypes = {
 	data: React.PropTypes.array.isRequired,
 	filterable: React.PropTypes.array,
 	filterBy: React.PropTypes.string,
+	filterKeyword: React.PropTypes.string,
 	hideFilterInput: React.PropTypes.func,
 	scrollToRow: React.PropTypes.number,
 	onSort: React.PropTypes.func,
