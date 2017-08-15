@@ -361,7 +361,7 @@ export default class CanvasD3Layout {
 					d3.event.preventDefault();
 					if (d3.event.keyCode === BACKSPACE_KEY ||
 							d3.event.keyCode === DELETE_KEY) {
-						this.editActionHandler({ editType: "deleteSelectedObjects" });
+						this.editActionHandler({ editType: "deleteSelectedObjects", selectedObjectIds: ObjectModel.getSelectedObjectIds() });
 					} else if (this.isCmndCtrlPressed() && !d3.event.shiftKey && d3.event.keyCode === Z_KEY) {
 						this.editActionHandler({ editType: "undo" });
 					} else if (this.isCmndCtrlPressed() && d3.event.shiftKey && d3.event.keyCode === Z_KEY) {

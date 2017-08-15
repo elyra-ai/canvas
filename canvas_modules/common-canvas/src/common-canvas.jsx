@@ -139,9 +139,11 @@ export default class CommonCanvas extends React.Component {
 				CommandStack.do(command);
 				break;
 			}
-			case "deleteSelectedObjects":
-				ObjectModel.deleteSelectedObjects();
+			case "deleteSelectedObjects": {
+				const command = new DeleteObjectsAction(data);
+				CommandStack.do(command);
 				break;
+			}
 			case "undo":
 				CommandStack.undo();
 				break;
