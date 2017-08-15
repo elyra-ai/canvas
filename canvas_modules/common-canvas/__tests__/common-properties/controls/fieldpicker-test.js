@@ -274,6 +274,29 @@ describe("field-picker-control renders correctly", () => {
 		expect(wrapper.find(".field-picker-data-rows")).to.have.length(9);
 	});
 
+	it("should select all in filtered type in `FieldPicker`", () => {
+		const wrapper = mount(
+			<FieldPicker
+				key="field-picker-control"
+				closeFieldPicker={closeFieldPicker}
+				currentControlValues={currentControlValues}
+				dataModel={filteredDataset}
+				updateControlValue={updateControlValue}
+				control={fieldPickerControl}
+				updateSelectedRows={updateSelectedRows}
+			/>
+		);
+		wrapper.find(".filter-list-data-integer-enabled-icon").simulate("click", { type: "integer" });
+		wrapper.find(".filter-list-data-string-enabled-icon").simulate("click", { type: "string" });
+		wrapper.find(".filter-list-data-timestamp-enabled-icon").simulate("click", { type: "timestamp" });
+		wrapper.find(".filter-list-data-time-enabled-icon").simulate("click", { type: "time" });
+		wrapper.find(".filter-list-data-date-enabled-icon").simulate("click", { type: "date" });
+		expect(wrapper.state().filterIcons).to.have.length(5);
+		expect(wrapper.find(".field-picker-data-rows")).to.have.length(2);
+		wrapper.find("input[id='field-picker-checkbox-all']").simulate("change", { target: { checked: "true" } });
+		expect(wrapper.state().newControlValues).to.have.length(4);
+	});
+
 	it("should search correct keyword in `FieldPicker`", () => {
 		const wrapper = mount(
 			<FieldPicker

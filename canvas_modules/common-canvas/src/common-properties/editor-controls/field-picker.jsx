@@ -6,10 +6,10 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-/* eslint complexity: ["error", 14] */
-/* eslint max-depth: ["error", 5] */
+/* eslint complexity: ["error", 18] */
+/* eslint max-depth: ["error", 6] */
 
-import logger from "../../../utils/logger";
+// import logger from "../../../utils/logger";
 import React from "react";
 import EditorControl from "./editor-control.jsx";
 import FlexibleTable from "./flexible-table.jsx";
@@ -51,6 +51,7 @@ export default class FieldPicker extends EditorControl {
 			fields: this.props.dataModel.fields,
 			filterIcons: [],
 			filterList: [],
+			filterText: "",
 			initialControlValues: [],
 			newControlValues: [],
 			hoverResetIcon: false
@@ -71,7 +72,9 @@ export default class FieldPicker extends EditorControl {
 		this.timestampDisabledIcon = timestampDisabledIcon;
 
 		this.filterType = this.filterType.bind(this);
+		this.getDefaultRow = this.getDefaultRow.bind(this);
 		this.getTableData = this.getTableData.bind(this);
+		this.getVisibleData = this.getVisibleData.bind(this);
 		this.handleBack = this.handleBack.bind(this);
 		this.handleCheckAll = this.handleCheckAll.bind(this);
 		this.handleFieldChecked = this.handleFieldChecked.bind(this);
@@ -114,11 +117,13 @@ export default class FieldPicker extends EditorControl {
 		});
 	}
 
-	// reactable
-	getTableData(headers) {
-		const fields = this.state.fields;
+	getTableData() {
+		const fields = this.getVisibleData();
 		const tableData = [];
-		logger.info(JSON.stringify("control vals: " + this.state.newControlValues));
+		let newControlValues = this.state.newControlValues;
+		if (this.props.control.defaultRow) {
+			newControlValues = EditorControl.parseStructureStrings(this.state.newControlValues);
+		}
 		for (let i = 0; i < fields.length; i++) {
 			var field = fields[i];
 			var checked = false;
@@ -126,12 +131,12 @@ export default class FieldPicker extends EditorControl {
 			if (this.state.checkedAll) {
 				checked = true;
 			} else {
-				for (let j = 0; j < this.state.newControlValues.length; j++) {
+				for (let j = 0; j < newControlValues.length; j++) {
 					let key = [];
 					if (this.props.control.defaultRow) {
-						key = this.state.newControlValues[j].split(",")[0];
+						key = newControlValues[j][0];
 					} else {
-						key = this.state.newControlValues[j];
+						key = newControlValues[j];
 					}
 					if (key.indexOf(field.name) >= 0) {
 						checked = true;
@@ -140,34 +145,38 @@ export default class FieldPicker extends EditorControl {
 				}
 			}
 
-			if (this.state.filterIcons.length === 0 || this.state.filterIcons.indexOf(field.type) < 0) {
-				if (!this.state.filterText || field.name.indexOf(this.state.filterText) > -1) {
-					const columns = [
-						<Td key="field-picker-column-checkbox" column="checkbox" style={{ "width": "18%" }}><div className="field-picker-checkbox">
-						<Checkbox id={"field-picker-checkbox-" + i}
-							checked={checked}
-							onChange={this.handleFieldChecked}
-							data-name={field.name}
-						/></div></Td>,
-						<Td key="field-picker-column-fieldname" column="fieldName" style={{ "width": "42%" }}>{field.name}</Td>,
-						<Td key="field-picker-column-datatype" column="dataType" style={{ "width": "40%" }}><div>
-							<div className={"field-picker-data-type-icon field-picker-data-" + field.type + "-type-icon"}>
-								<img src={this[field.type + "EnabledIcon"]} />
-							</div>
-							{field.type}
-						</div></Td>
-					];
-					tableData.push(<Tr key="field-picker-data-rows" className="field-picker-data-rows">{columns}</Tr>);
-				}
-			}
+			const columns = [
+				<Td key="field-picker-column-checkbox" column="checkbox" style={{ "width": "18%" }}><div className="field-picker-checkbox">
+				<Checkbox id={"field-picker-checkbox-" + i}
+					checked={checked}
+					onChange={this.handleFieldChecked}
+					data-name={field.name}
+				/></div></Td>,
+				<Td key="field-picker-column-fieldname" column="fieldName" style={{ "width": "42%" }}>{field.name}</Td>,
+				<Td key="field-picker-column-datatype" column="dataType" style={{ "width": "40%" }}><div>
+					<div className={"field-picker-data-type-icon field-picker-data-" + field.type + "-type-icon"}>
+						<img src={this[field.type + "EnabledIcon"]} />
+					</div>
+					{field.type}
+				</div></Td>
+			];
+			tableData.push(<Tr key="field-picker-data-rows" className="field-picker-data-rows">{columns}</Tr>);
 		}
 		return tableData;
 	}
 
-	handleBack() {
-		this.props.updateControlValue(this.state.controlName, this.state.newControlValues);
-		this.props.updateSelectedRows(this.state.controlName, this.getNewSelections());
-		this.props.closeFieldPicker();
+	getVisibleData() {
+		const that = this;
+		const data = this.state.fields;
+		const	filteredData = data.filter(function(row) {
+			return that.state.filterIcons.indexOf(row.type) < 0;
+		});
+
+		const visibleData = filteredData.filter(function(row) {
+			return row.name.indexOf(that.state.filterText) > -1;
+		});
+
+		return visibleData;
 	}
 
 	/**
@@ -183,36 +192,76 @@ export default class FieldPicker extends EditorControl {
 		return deltas;
 	}
 
+	handleBack() {
+		this.props.updateControlValue(this.state.controlName, this.state.newControlValues);
+		this.props.updateSelectedRows(this.state.controlName, this.getNewSelections());
+		this.props.closeFieldPicker();
+	}
+
 	handleCheckAll(evt) {
 		const selectAll = [];
 		const that = this;
+
+		const data = this.state.fields;
+		let newControlValues = this.state.newControlValues;
+		if (this.props.control.defaultRow) {
+			newControlValues = EditorControl.parseStructureStrings(this.state.newControlValues);
+		}
+
+		const visibleData = this.getVisibleData();
+
 		if (evt.target.checked) {
-			const data = this.state.fields;
-			for (let i = 0; i < data.length; i++) {
-				const selected = this.state.newControlValues.filter(function(element) {
+			for (let i = 0; i < data.length; i++) { // add already selected fields
+				const selected = newControlValues.filter(function(element) {
 					if (that.props.control.defaultRow) {
-						return JSON.parse(element)[0].indexOf(data[i].name) > -1;
+						return element[0] === data[i].name;
 					}
-					return element.indexOf(data[i].name) > -1;
+					return element === data[i].name;
 				});
 				if (selected.length > 0) {
-					// add the already selected fields
-					if (this.props.control.defaultRow) {
-						selectAll.push(JSON.parse(selected));
+					const found = this.getDefaultRow(selected[0]);
+					if (found !== false) {
+						selectAll.push(found);
 					} else {
 						selectAll.push(selected[0]);
 					}
-				} else if (this.props.control.defaultRow) { // add remaining fields
-					const index = this.props.control.valueDef.isMap ? 0 : 1;
-					let defaultValue = this.props.control.defaultRow[index];
-					// Set the default name to the column name for role==="new_column"
-					if ((typeof defaultValue === "undefined" || defaultValue === null) &&
-								this.props.control.subControls[1].role === "new_column") {
-						defaultValue = data[i].name;
+				} else { // if data is in visibleData, add it
+					const duplicate = visibleData.some(function(element) {
+						return element.name === data[i].name;
+					});
+					if (duplicate) {
+						const row = data[i];
+						const found = this.getDefaultRow(data[i].name);
+						if (found !== false) {
+							selectAll.push(found);
+						} else if (this.props.control.defaultRow) { // add remaining fields
+							const index = this.props.control.valueDef.isMap ? 0 : 1;
+							let defaultValue = this.props.control.defaultRow[index];
+							// Set the default name to the column name for role==="new_column"
+							if ((typeof defaultValue === "undefined" || defaultValue === null) &&
+										this.props.control.subControls[1].role === "new_column") {
+								defaultValue = row.name;
+							}
+							selectAll.push([row.name, defaultValue]);
+						} else {
+							selectAll.push(row.name);
+						}
 					}
-					selectAll.push([data[i].name, defaultValue]);
-				} else {
-					selectAll.push(data[i].name);
+				}
+			}
+		} else {
+			for (let l = 0; l < newControlValues.length; l++) {
+				const duplicate = visibleData.some(function(element) {
+					let found = false;
+					if (that.props.control.defaultRow) {
+						found = element.name === newControlValues[l][0];
+					} else {
+						found = element.name === newControlValues[l];
+					}
+					return found;
+				});
+				if (!duplicate) {
+					selectAll.push(newControlValues[l]);
 				}
 			}
 		}
@@ -228,20 +277,41 @@ export default class FieldPicker extends EditorControl {
 				checkedAll: evt.target.checked
 			});
 		}
+
+		if (selectAll.length !== data.length) {
+			this.setState({
+				checkedAll: false
+			});
+		}
+	}
+
+	getDefaultRow(field) {
+		let initialControlValues = this.state.initialControlValues;
+		if (this.props.control.defaultRow) {
+			initialControlValues = EditorControl.parseStructureStrings(this.state.initialControlValues);
+		}
+		for (let i = 0; i < initialControlValues.length; i++) {
+			if ((this.props.control.defaultRow && initialControlValues[i][0] === field) ||
+					(initialControlValues[i] === field)) {
+				return initialControlValues[i];
+			}
+		}
+		return false;
 	}
 
 	handleFieldChecked(evt) {
 		const current = this.state.newControlValues;
-		const initialControlValues = this.state.initialControlValues;
 		const selectedFieldName = evt.currentTarget.getAttribute("data-name");
 		let selectedField = [];
 		// if selectedField is in the original list, grab that row instead of generating new selectedField
-		for (let i = 0; i < initialControlValues.length; i++) {
-			if (initialControlValues[i].split(",")[0].indexOf(selectedFieldName) > -1) {
-				selectedField = initialControlValues[i];
-				break;
+		const found = this.getDefaultRow(selectedFieldName);
+		if (found !== false) {
+			selectedField = found;
+			if (this.props.control.defaultRow) {
+				selectedField = EditorControl.stringifyStructureStrings([found])[0];
 			}
 		}
+
 		if (selectedField.length === 0) {
 			if (this.props.control.defaultRow) {
 				const index = this.props.control.valueDef.isMap ? 0 : 1;
@@ -277,7 +347,9 @@ export default class FieldPicker extends EditorControl {
 			this.setState({ checkedAll: false });
 		}
 		this.setState({
-			newControlValues: this.state.initialControlValues
+			newControlValues: this.state.initialControlValues,
+			filterIcons: [],
+			filterText: ""
 		});
 	}
 
@@ -387,8 +459,29 @@ export default class FieldPicker extends EditorControl {
 		);
 
 		let checkedAll = this.state.checkedAll;
-		// check all box should be checked if all is selected
-		if (this.state.data.fields.length === this.state.newControlValues.length) {
+		// check all box should be checked if all in view is selected
+		const visibleData = this.getVisibleData();
+		let newControlValues = this.state.newControlValues;
+		if (this.props.control.defaultRow) {
+			newControlValues = EditorControl.parseStructureStrings(this.state.newControlValues);
+		}
+		if (visibleData.length > 0 && visibleData.length < this.state.data.fields.length) {
+			// need to compare the contents to make sure the visible ones are selected
+			const sameData = newControlValues.filter(function(row) {
+				let match = false;
+				for (let k = 0; k < visibleData.length; k++) {
+					if (that.props.control.defaultRow && row[0] === visibleData[k].name) {
+						match = true;
+						break;
+					} else if (row === visibleData[k].name) {
+						match = true;
+						break;
+					}
+				}
+				return match;
+			});
+			checkedAll = sameData.length === visibleData.length;
+		} else if (this.state.data.fields.length === this.state.newControlValues.length) {
 			checkedAll = true;
 		} else {
 			checkedAll = false;
@@ -404,7 +497,7 @@ export default class FieldPicker extends EditorControl {
 		headers.push({ "key": "fieldName", "label": "Field name", "width": 40 });
 		headers.push({ "key": "dataType", "label": "Data type", "width": 40 });
 
-		const tableData = this.getTableData(headers);
+		const tableData = this.getTableData();
 
 		const table = (
 			<FlexibleTable className="table" id="table"
