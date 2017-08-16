@@ -71,7 +71,7 @@ export default class EditorForm extends React.Component {
 			activeTabId: ""
 		};
 
-		this.sharedCtrlNames = [];
+		this.sharedCtrlInfo = [];
 
 		this.getControlValue = this.getControlValue.bind(this);
 		this.updateControlValue = this.updateControlValue.bind(this);
@@ -121,26 +121,30 @@ export default class EditorForm extends React.Component {
 	 */
 	getFilteredDataset(skipControlName) {
 		const data = this.state.formData.data.datasetMetadata;
-		if (!this.sharedCtrlNames) {
+		if (!this.sharedCtrlInfo) {
 			return data;
 		}
 
 		let filteredDataset = { fields: [] };
 		try {
-			filteredDataset = JSON.parse(JSON.stringify(data)); // deep copy
 
+			filteredDataset = JSON.parse(JSON.stringify(data)); // deep copy
+			let sharedCtrlNames = [];
 			let sharedDataModelPanel = false;
-			for (let h = 0; h < this.sharedCtrlNames.length; h++) {
-				if (skipControlName === this.sharedCtrlNames[h].controlName) {
-					sharedDataModelPanel = true;
-					break;
+			for (let h = 0; h < this.sharedCtrlInfo.length; h++) {
+				for (let k = 0; k < this.sharedCtrlInfo[h].controlNames.length; k++) {
+					if (skipControlName === this.sharedCtrlInfo[h].controlNames[k].controlName) {
+						sharedDataModelPanel = true;
+						sharedCtrlNames = this.sharedCtrlInfo[h].controlNames;
+						break;
+					}
 				}
 			}
 
 			if (sharedDataModelPanel) {
 				const temp = [];
-				for (let i = 0; i < this.sharedCtrlNames.length; i++) {
-					const ctrlName = this.sharedCtrlNames[i].controlName;
+				for (let i = 0; i < sharedCtrlNames.length; i++) {
+					const ctrlName = sharedCtrlNames[i].controlName;
 					if (ctrlName !== skipControlName) {
 						// only remove from the main list the values that are in other controls
 						const values = this.state.valuesTable[ctrlName];
@@ -151,14 +155,14 @@ export default class EditorForm extends React.Component {
 							// logger.info("Temp is: " + JSON.stringify(temp));
 						}
 					}
-				}
 
-				if (temp.length > 0) {
-					for (let k = 0; k < temp.length; k++) {
-						filteredDataset.fields = filteredDataset.fields.filter(function(element) {
-							return element && temp[k] && element.name !== temp[k].name;
-						});
-						// logger.info("filteredData.fields is: " + JSON.stringify(filteredData.fields));
+					if (temp.length > 0) {
+						for (let k = 0; k < temp.length; k++) {
+							filteredDataset.fields = filteredDataset.fields.filter(function(element) {
+								return element && temp[k] && element.name !== temp[k].name;
+							});
+							// logger.info("filteredData.fields is: " + JSON.stringify(filteredData.fields));
+						}
 					}
 				}
 			}
@@ -422,7 +426,6 @@ export default class EditorForm extends React.Component {
 				valueAccessor={controlValueAccessor}
 				validationDefinitions={this.state.validationDefinitions}
 				updateControlValue={this.updateControlValue}
-				availableFieldsAccessor={this.getFilteredDataset}
 				controlStates={this.state.controlStates}
 				validateConditions={this.validateConditions}
 				getControlValues={this.getControlValues}
@@ -740,15 +743,22 @@ export default class EditorForm extends React.Component {
 	}
 
 	generateSharedControlNames(panel) {
-		if (!this.sharedCtrlNames || this.sharedCtrlNames.length === 0) {
-			this.sharedCtrlNames = [];
-			for (let i = 0; i < panel.uiItems.length; i++) {
-				const controlName = panel.uiItems[i].control.name;
-				this.sharedCtrlNames.push({
-					"controlName": controlName
-				});
+		for (let j = 0; j < this.sharedCtrlInfo.length; j++) {
+			if (typeof this.sharedCtrlInfo[j].id !== "undefined" && this.sharedCtrlInfo[j].id === panel.id) {
+				return;
 			}
 		}
+		const sharedCtrlNames = [];
+		for (let i = 0; i < panel.uiItems.length; i++) {
+			const controlName = panel.uiItems[i].control.name;
+			sharedCtrlNames.push({
+				"controlName": controlName
+			});
+		}
+		this.sharedCtrlInfo.push({
+			"id": panel.id,
+			"controlNames": sharedCtrlNames
+		});
 	}
 
 	genPanel(key, panel, idPrefix, controlValueAccessor, datasetMetadata) {
