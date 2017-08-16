@@ -18,11 +18,13 @@ module.exports = function() {
 
 		try {
 			if (renderingEngine === "D3") {
-				var d3label = browser.$("[for=rendering_radio0]");
+				var d3label = browser.$("#sidepanel-rendering-engine").$$("div")[2].$("label");
+				d3label.moveToObject();
 				d3label.click();
 				setRenderingEngine("D3");
 			} else {
-				var legacylabel = browser.$("[for=rendering_radio1]");
+				var legacylabel = browser.$("#sidepanel-rendering-engine").$$("div")[4].$("label");
+				legacylabel.moveToObject();
 				legacylabel.click();
 				setRenderingEngine("Legacy");
 			}

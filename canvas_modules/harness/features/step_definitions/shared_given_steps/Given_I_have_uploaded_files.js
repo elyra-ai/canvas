@@ -46,6 +46,7 @@ module.exports = function() {
 														.$(".select")
 														.$(".select__options")
 														.$$("button");
+		console.log("TEST");
 		for (var idx = 0; idx < canvasFileOptions.length; idx++) {
 			if (canvasFileOptions[idx].getText() === "Choose from location...") {
 				canvasFileOptions[idx].click();
