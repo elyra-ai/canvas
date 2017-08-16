@@ -98,12 +98,15 @@ export default class FlexibleTable extends React.Component {
 		// go through the header and add the sort direction and convert to use reactable.Th element
 		const headers = [];
 		let searchLabel = "";
-		// calculate for all columns except the last which is used for the scroll bar
-		const columnWidths = FlexibleTable.calculateColumnWidths(this.props.columns.slice(0, -1), 98);
+		// calculate for all columns except the last which is used for the scroll bar.
+		// For now split the different for when the scroll bar is an isn't present
+		const columnWidths = FlexibleTable.calculateColumnWidths(this.props.columns, 99);
+		// to adjust column header for scroll bar
+		this.props.columns.push({ "key": "scroll", "label": "", "width": 0 });
 		for (var j = 0; j < this.props.columns.length; j++) {
 			const columnDef = this.props.columns[j];
 			// Last header column is for scroll bar.  Always set to 2%
-			const columnWidth = j === this.props.columns.length - 1 ? "2%" : columnWidths[j];
+			const columnWidth = j === this.props.columns.length - 1 ? "1%" : columnWidths[j];
 			const columnStyle = { "width": columnWidth };
 			const className = j === 0 ? "left-padding-15" : "";
 			if (typeof this.state.columnSortDir[columnDef.key] !== "undefined") {
@@ -206,7 +209,7 @@ export default class FlexibleTable extends React.Component {
 							onFilter={this.onFilter}
 						>
 							<Thead key="flexible-table-thead">
-								{headers}
+									{headers}
 							</Thead>
 						</Table>
 					</div>
@@ -221,7 +224,6 @@ export default class FlexibleTable extends React.Component {
 					</div>
 				</div>);
 		}
-
 		if (typeof this.props.scrollToRow !== "undefined" && this.props.scrollToRow !== null) {
 			this.scrollToRow(this.props.alignTop);
 		}

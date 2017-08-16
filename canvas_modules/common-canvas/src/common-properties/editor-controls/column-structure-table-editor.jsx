@@ -418,13 +418,11 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			// default to 6 but this might need to be calculated
 			headers.push({ "key": "edit", "label": "", "width": 6 });
 		}
-		// to adjust column header for scroll bar
-		headers.push({ "key": "scroll", "label": "", "width": 0 });
 		this.filterFields = filterFields;
 
 		const controlValue = this.getCurrentControlValue();
 		// calculate for all columns except the last which is used for the scroll bar
-		const columnWidths = FlexibleTable.calculateColumnWidths(headers.slice(0, -1), 100);
+		const columnWidths = FlexibleTable.calculateColumnWidths(headers, 100);
 		for (var rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
 			const columns = [];
 			if (this.includeInFilter(rowIndex)) {

@@ -493,8 +493,8 @@ export default class FieldPicker extends EditorControl {
 					onChange={this.handleCheckAll}
 					checked={checkedAll}
 				/>
-		</div>, "width": 20 });
-		headers.push({ "key": "fieldName", "label": "Field name", "width": 40 });
+		</div>, "width": 18 });
+		headers.push({ "key": "fieldName", "label": "Field name", "width": 42 });
 		headers.push({ "key": "dataType", "label": "Data type", "width": 40 });
 
 		const tableData = this.getTableData();
