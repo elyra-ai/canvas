@@ -14,6 +14,7 @@
 
 const d3 = require("d3");
 import ObjectModel from "./object-model/object-model.js";
+import _ from "underscore";
 
 const BACKSPACE_KEY = 8;
 const DELETE_KEY = 46;
@@ -23,6 +24,8 @@ const Z_KEY = 90;
 // const UP_ARROW_KEY = 38;
 // const RIGHT_ARROW_KEY = 39;
 // const DOWN_ARROW_KEY = 40;
+
+const showTime = false;
 
 export default class CanvasD3Layout {
 
@@ -619,8 +622,7 @@ export default class CanvasD3Layout {
 	}
 
 	dragStart(d) {
-		this.consoleLog("Drag start");
-		this.dragging = true;
+		// this.consoleLog("Drag start");
 		this.dragOffsetX = 0;
 		this.dragOffsetY = 0;
 		// Note: Comment resizing is started by the comment highlight rectangle.
@@ -628,45 +630,44 @@ export default class CanvasD3Layout {
 
 	dragMove() {
 		// this.consoleLog("Drag move");
+		this.dragging = true;
 		if (this.commentSizing) {
 			this.resizeComment();
-		} else if (this.dragging) {
+		} else {
 			this.dragOffsetX += d3.event.dx;
 			this.dragOffsetY += d3.event.dy;
 
-			var objs = [];
-			this.canvasJSON.diagram.nodes.forEach((node) => {
-				if (ObjectModel.getSelectedObjectIds().includes(node.id)) {
-					objs.push(node);
-				}
-			});
-
-			this.canvasJSON.diagram.comments.forEach((comment) => {
-				if (ObjectModel.getSelectedObjectIds().includes(comment.id)) {
-					objs.push(comment);
-				}
-			});
+			var objs = this.getSelectedNodesAndComments();
 
 			objs.forEach(function(d) {
 				d.x_pos += d3.event.dx;
 				d.y_pos += d3.event.dy;
 			});
 
+			var startTime = Date.now();
 			this.displayNodes();
+			var endTimeNodes = Date.now();
 			this.displayComments();
+			var endTimeComments = Date.now();
 			this.drawLines();
+			var endLines = Date.now();
+			if (showTime) {
+				this.consoleLog("dragMove N " + (endTimeNodes - startTime) + " C " +
+				(endTimeComments - endTimeNodes) + " L " + (endLines - endTimeComments));
+			}
 		}
 	}
 
 	dragEnd() {
-		this.consoleLog("Drag end");
+		// this.consoleLog("Drag end");
 		if (this.commentSizing) {
+			this.dragging = false;
 			this.endCommentSizing();
 		} else if (this.dragging) {
 			this.dragging = false;
 			if (this.dragOffsetX !== 0 ||
 					this.dragOffsetY !== 0) {
-				this.consoleLog("editActionHandler - moveObjects");
+				// this.consoleLog("editActionHandler - moveObjects");
 				this.editActionHandler({ editType: "moveObjects", nodes: ObjectModel.getSelectedObjectIds(), offsetX: this.dragOffsetX, offsetY: this.dragOffsetY });
 			}
 		}
@@ -679,54 +680,64 @@ export default class CanvasD3Layout {
 		var nodeGroupSel = this.canvas.selectAll(".node-group")
 			.data(this.canvasJSON.diagram.nodes, function(d) { return d.id; });
 
-		// Apply selection highlighting to the 'update selection' nodes. That is,
-		// all nodes that are the same as during the last call to displayNodes().
-		nodeGroupSel.each(function(d) {
+		if (this.dragging) {
+			// only transform nodes while dragging
+			nodeGroupSel.each(function(d) {
+				d3.select(`#node_grp_${d.id}`)
+					.attr("transform", `translate(${d.x_pos}, ${d.y_pos})`)
+					.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
+			});
+		} else {
 
-			d3.select(`#node_grp_${d.id}`)
-				.attr("transform", `translate(${d.x_pos}, ${d.y_pos})`)
-				.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
+			// Apply selection highlighting to the 'update selection' nodes. That is,
+			// all nodes that are the same as during the last call to displayNodes().
 
-			d3.select(`#node_rect_${d.id}`)
-				.attr("class", ObjectModel.isSelected(d.id) ? "d3-obj-rect d3-obj-rect-selected" : "d3-obj-rect")
-				.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
+			nodeGroupSel.each(function(d) {
 
-			if (that.connectionType === "Ports") {
-				if (d.outputPorts && d.outputPorts.length > 0) {
-					d.outputPorts.forEach((port, i) => {
-						d3.select(`#src_circle_${d.id}_${d.outputPorts[i].name}`)
-							.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
-					});
-				}
+				d3.select(`#node_grp_${d.id}`)
+					.attr("transform", `translate(${d.x_pos}, ${d.y_pos})`)
+					.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
 
-				if (d.inputPorts && d.inputPorts.length > 0) {
-					d.inputPorts.forEach((port, i) => {
-						d3.select(`#trg_circle_${d.id}_${d.inputPorts[i].name}`)
-							.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
-					});
-				}
-			}
+				d3.select(`#node_rect_${d.id}`)
+					.attr("class", ObjectModel.isSelected(d.id) ? "d3-obj-rect d3-obj-rect-selected" : "d3-obj-rect")
+					.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
 
-			d3.select(`#node_image_${d.id}`)
-				.datum((nd) => that.getNode(nd.id)) // Set the __data__ to the updated data
-				.each(function(nd) {
-					if (nd.customAttrs) {
-						var imageObj = d3.select(this);
-						nd.customAttrs.forEach((customAttr) => {
-							imageObj.attr(customAttr, "");
+				if (that.connectionType === "Ports") {
+					if (d.outputPorts && d.outputPorts.length > 0) {
+						d.outputPorts.forEach((port, i) => {
+							d3.select(`#src_circle_${d.id}_${d.outputPorts[i].name}`)
+								.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
 						});
 					}
-				});
 
-			d3.select(`#node_label_${d.id}`)
-				.datum((nd) => that.getNode(nd.id)) // Set the __data__ to the updated data
-				.text(function(nd) {
-					var textObj = d3.select(this);
-					return that.trimLabelToWidth(nd.objectData.label, that.labelWidth, textObj);
-				});
-		});
+					if (d.inputPorts && d.inputPorts.length > 0) {
+						d.inputPorts.forEach((port, i) => {
+							d3.select(`#trg_circle_${d.id}_${d.inputPorts[i].name}`)
+								.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
+						});
+					}
+				}
 
-		var nodeGroups = nodeGroupSel.enter()
+				d3.select(`#node_image_${d.id}`)
+					.datum((nd) => that.getNode(nd.id)) // Set the __data__ to the updated data
+					.each(function(nd) {
+						if (nd.customAttrs) {
+							var imageObj = d3.select(this);
+							nd.customAttrs.forEach((customAttr) => {
+								imageObj.attr(customAttr, "");
+							});
+						}
+					});
+
+				d3.select(`#node_label_${d.id}`)
+					.datum((nd) => that.getNode(nd.id)) // Set the __data__ to the updated data
+					.text(function(nd) {
+						var textObj = d3.select(this);
+						return that.trimLabelToWidth(nd.objectData.label, that.labelWidth, textObj);
+					});
+			});
+
+			var nodeGroups = nodeGroupSel.enter()
 				.append("g")
 					.attr("id", (d) => `node_grp_${d.id}`)
 					.attr("class", "obj-group node-group")
@@ -781,184 +792,190 @@ export default class CanvasD3Layout {
 					})
 					.call(this.drag);   // Must put drag after mousedown listener so mousedown gets called first.
 
-		// Node selection highlighting outline
-		nodeGroups.append("rect")
-			.attr("id", (d) => `node_rect_${d.id}`)
-			.attr("width", this.nodeWidth + (2 * this.highLightGap))
-			.attr("height", this.nodeHeight + (2 * this.highLightGap))
-			.attr("x", -this.highLightGap)
-			.attr("y", -this.highLightGap)
-			.attr("class", function(d) {
-				return ObjectModel.isSelected(d.id) ? "d3-obj-rect d3-obj-rect-selected" : "d3-obj-rect";
-			});
-
-		if (this.connectionType === "Ports") {
-			// Node outline
+			// Node selection highlighting outline
 			nodeGroups.append("rect")
-				.attr("width", this.nodeWidth)
-				.attr("height", this.nodeHeight)
-				.attr("x", 0)
-				.attr("y", 0)
-				.attr("class", "d3-node-rect-outline");
-
-			// Input ports
-			nodeGroups
-				.each((d) => {
-					if (d.inputPorts && d.inputPorts.length > 0) {
-						d.inputPorts.forEach((port, i) => {
-							var cy;
-							if (d.inputPorts.length === 1) {
-								cy = this.portPosY;
-							} else {
-								cy = (this.nodeHeight / (d.inputPorts.length + 1)) * (i + 1);
-							}
-							// Circle for input port
-							var nodeGroup = d3.select(`#node_grp_${d.id}`);
-							nodeGroup.append("circle")
-									.attr("id", `trg_circle_${d.id}_${d.inputPorts[i].name}`)
-									.attr("portId", d.inputPorts[i].name) // This is needed by getNodeInputPortAtMousePos
-									.attr("cx", 0)
-									.attr("cy", cy)
-									.attr("r", this.portRadius)
-									.attr("class", "d3-node-port-input")
-									.attr("connected", "no");
-
-							// Arrow for input port
-							nodeGroup.append("path")
-									.attr("id", `trg_arrow_${d.id}_${d.inputPorts[i].name}`)
-									.attr("d", that.getArrowShapePath(cy))
-									.attr("class", "d3-node-port-input-arrow")
-									.attr("connected", "no");
-						});
-					}
+				.attr("id", (d) => `node_rect_${d.id}`)
+				.attr("width", this.nodeWidth + (2 * this.highLightGap))
+				.attr("height", this.nodeHeight + (2 * this.highLightGap))
+				.attr("x", -this.highLightGap)
+				.attr("y", -this.highLightGap)
+				.attr("class", function(d) {
+					return ObjectModel.isSelected(d.id) ? "d3-obj-rect d3-obj-rect-selected" : "d3-obj-rect";
 				});
 
-			// Output ports
-			nodeGroups
-				.each((d) => {
-					if (d.outputPorts && d.outputPorts.length > 0) {
-						d.outputPorts.forEach((port, i) => {
-							var cy;
-							if (d.outputPorts.length === 1) {
-								cy = this.portPosY;
-							} else {
-								cy = (this.nodeHeight / (d.outputPorts.length + 1)) * (i + 1);
-							}
-							// Circle for input port
-							var nodeGroup = d3.select(`#node_grp_${d.id}`);
 
-							nodeGroup
-								.append("circle")
-									.attr("id", `src_circle_${d.id}_${d.outputPorts[i].name}`)
-									.attr("cx", this.nodeWidth)
-									.attr("cy", cy)
-									.attr("r", this.portRadius)
-									.attr("class", "d3-node-port-output")
-									.on("mousedown", (cd) => {
-										d3.event.stopPropagation(); // Stops the node drag behavior when clicking on the handle/circle
-										d3.event.preventDefault();
-										this.drawingNewLink = true;
-										this.drawingNewLinkSrcId = cd.id;
-										this.drawingNewLinkSrcPortId = port.name;
-										this.drawingNewLinkAction = "node-node";
-										this.drawingNewLinkStartPos = { x: cd.x_pos + this.nodeWidth, y: cd.y_pos + cy };
-										this.drawingNewLinkArray = [];
-										this.drawNewLink();
-									});
-						});
-					}
-				});
-		}
+			if (this.connectionType === "Ports") {
+				// Node outline
+				nodeGroups.append("rect")
+					.attr("width", this.nodeWidth)
+					.attr("height", this.nodeHeight)
+					.attr("x", 0)
+					.attr("y", 0)
+					.attr("class", "d3-node-rect-outline");
 
-		// Image outline
-		// nodeGroup.append("rect")
-		// 	.attr("width", this.imageWidth)
-		// 	.attr("height", this.imageHeight)
-		// 	.attr("x", this.imagePosX)
-		// 	.attr("y", this.imagePosY)
-		// 	.attr("class", "d3-node-rect-outline");
 
-		// Node image
-		nodeGroups.append("image")
-			.attr("id", function(d) { return `node_image_${d.id}`; })
-			.attr("xlink:href", function(d) { return d.image; })
-			.attr("width", this.imageWidth)
-			.attr("height", this.imageHeight)
-			.attr("x", this.imagePosX)
-			.attr("y", this.imagePosY)
-			.attr("class", "node-image")
-			.each(function(d) {
-				if (d.customAttrs) {
-					var imageObj = d3.select(this);
-					d.customAttrs.forEach((customAttr) => {
-						imageObj.attr(customAttr, "");
+				// Input ports
+				nodeGroups
+					.each((d) => {
+						if (d.inputPorts && d.inputPorts.length > 0) {
+							d.inputPorts.forEach((port, i) => {
+								var cy;
+								if (d.inputPorts.length === 1) {
+									cy = this.portPosY;
+								} else {
+									cy = (this.nodeHeight / (d.inputPorts.length + 1)) * (i + 1);
+								}
+								// Circle for input port
+								var nodeGroup = d3.select(`#node_grp_${d.id}`);
+								nodeGroup.append("circle")
+										.attr("id", `trg_circle_${d.id}_${d.inputPorts[i].name}`)
+										.attr("portId", d.inputPorts[i].name) // This is needed by getNodeInputPortAtMousePos
+										.attr("cx", 0)
+										.attr("cy", cy)
+										.attr("r", this.portRadius)
+										.attr("class", "d3-node-port-input")
+										.attr("connected", "no");
+
+								// Arrow for input port
+								nodeGroup.append("path")
+										.attr("id", `trg_arrow_${d.id}_${d.inputPorts[i].name}`)
+										.attr("d", that.getArrowShapePath(cy))
+										.attr("class", "d3-node-port-input-arrow")
+										.attr("connected", "no");
+							});
+						}
 					});
-				}
-			});
 
-		// Label outline
-		// nodeGroup.append("rect")
-		// 	.attr("width", this.labelWidth)
-		// 	.attr("height", this.labelHeight)
-		// 	.attr("x", this.labelOutlineX)
-		// 	.attr("y", this.labelOutlineY)
-		// 	.attr("class", "d3-label-outline");
+				// Output ports
+				nodeGroups
+					.each((d) => {
+						if (d.outputPorts && d.outputPorts.length > 0) {
+							d.outputPorts.forEach((port, i) => {
+								var cy;
+								if (d.outputPorts.length === 1) {
+									cy = this.portPosY;
+								} else {
+									cy = (this.nodeHeight / (d.outputPorts.length + 1)) * (i + 1);
+								}
+								// Circle for input port
+								var nodeGroup = d3.select(`#node_grp_${d.id}`);
 
-		// Label
-		nodeGroups.append("text")
-			.text(function(d) {
-				var textObj = d3.select(this);
-				return that.trimLabelToWidth(d.objectData.label, that.labelWidth, textObj);
-			})
-			.attr("id", function(d) { return `node_label_${d.id}`; })
-			.attr("class", "d3-node-label")
-			.attr("x", this.labelPosX)
-			.attr("y", this.labelPosY)
-			.attr("text-anchor", "middle")
-			.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text object
-				const labelObj = d3.select(this);
-				if (this.textContent.endsWith("...")) {
-					labelObj
-						.attr("abbr-label", this.textContent) // Do this before setting the new label
-						.text(d.objectData.label);
-				}
-			})
-			.on("mouseleave", function(d) { // Use function keyword so 'this' pointer references the DOM text object
-				const labelObj = d3.select(this);
-				const abbrLabel = labelObj.attr("abbr-label");
-				if (abbrLabel && abbrLabel !== "") {
-					labelObj.text(abbrLabel).attr("abbr-label", "");
-				}
-			});
+								nodeGroup
+									.append("circle")
+										.attr("id", `src_circle_${d.id}_${d.outputPorts[i].name}`)
+										.attr("cx", this.nodeWidth)
+										.attr("cy", cy)
+										.attr("r", this.portRadius)
+										.attr("class", "d3-node-port-output")
+										.on("mousedown", (cd) => {
+											d3.event.stopPropagation(); // Stops the node drag behavior when clicking on the handle/circle
+											d3.event.preventDefault();
+											this.drawingNewLink = true;
+											this.drawingNewLinkSrcId = cd.id;
+											this.drawingNewLinkSrcPortId = port.name;
+											this.drawingNewLinkAction = "node-node";
+											this.drawingNewLinkStartPos = { x: cd.x_pos + this.nodeWidth, y: cd.y_pos + cy };
+											this.drawingNewLinkArray = [];
+											this.drawNewLink();
+										});
+							});
+						}
+					});
+			}
 
-		// Halo
-		if (this.connectionType === "Halo") {
-			nodeGroups.append("circle")
-				.attr("id", function(d) { return `node_halo_${d.id}`; })
-				.attr("class", "d3-node-halo")
-				.attr("cx", this.haloCenterX)
-				.attr("cy", this.haloCenterY)
-				.attr("r", this.haloRadius)
-				.on("mousedown", (d) => {
-					this.consoleLog("Halo - mouse down");
-					d3.event.stopPropagation();
-					this.drawingNewLink = true;
-					this.drawingNewLinkSrcId = d.id;
-					this.drawingNewLinkAction = "node-node";
-					this.drawingNewLinkStartPos = this.getTransformedMousePos();
-					this.drawingNewLinkArray = [];
-					this.drawNewLink();
+			// Image outline
+			// nodeGroup.append("rect")
+			// 	.attr("width", this.imageWidth)
+			// 	.attr("height", this.imageHeight)
+			// 	.attr("x", this.imagePosX)
+			// 	.attr("y", this.imagePosY)
+			// 	.attr("class", "d3-node-rect-outline");
+
+			// Node image
+
+			nodeGroups.append("image")
+				.attr("id", function(d) { return `node_image_${d.id}`; })
+				.attr("xlink:href", function(d) { return d.image; })
+				.attr("width", this.imageWidth)
+				.attr("height", this.imageHeight)
+				.attr("x", this.imagePosX)
+				.attr("y", this.imagePosY)
+				.attr("class", "node-image")
+				.each(function(d) {
+					if (d.customAttrs) {
+						var imageObj = d3.select(this);
+						d.customAttrs.forEach((customAttr) => {
+							imageObj.attr(customAttr, "");
+						});
+					}
 				});
+
+
+			// Label outline
+			// nodeGroup.append("rect")
+			// 	.attr("width", this.labelWidth)
+			// 	.attr("height", this.labelHeight)
+			// 	.attr("x", this.labelOutlineX)
+			// 	.attr("y", this.labelOutlineY)
+			// 	.attr("class", "d3-label-outline");
+
+			// Label
+			nodeGroups.append("text")
+				.text(function(d) {
+					var textObj = d3.select(this);
+					return that.trimLabelToWidth(d.objectData.label, that.labelWidth, textObj);
+				})
+				.attr("id", function(d) { return `node_label_${d.id}`; })
+				.attr("class", "d3-node-label")
+				.attr("x", this.labelPosX)
+				.attr("y", this.labelPosY)
+				.attr("text-anchor", "middle")
+				.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text object
+					const labelObj = d3.select(this);
+					if (this.textContent.endsWith("...")) {
+						labelObj
+							.attr("abbr-label", this.textContent) // Do this before setting the new label
+							.text(d.objectData.label);
+					}
+				})
+				.on("mouseleave", function(d) { // Use function keyword so 'this' pointer references the DOM text object
+					const labelObj = d3.select(this);
+					const abbrLabel = labelObj.attr("abbr-label");
+					if (abbrLabel && abbrLabel !== "") {
+						labelObj.text(abbrLabel).attr("abbr-label", "");
+					}
+				});
+
+
+			// Halo
+			if (this.connectionType === "Halo") {
+				nodeGroups.append("circle")
+					.attr("id", function(d) { return `node_halo_${d.id}`; })
+					.attr("class", "d3-node-halo")
+					.attr("cx", this.haloCenterX)
+					.attr("cy", this.haloCenterY)
+					.attr("r", this.haloRadius)
+					.on("mousedown", (d) => {
+						this.consoleLog("Halo - mouse down");
+						d3.event.stopPropagation();
+						this.drawingNewLink = true;
+						this.drawingNewLinkSrcId = d.id;
+						this.drawingNewLinkAction = "node-node";
+						this.drawingNewLinkStartPos = this.getTransformedMousePos();
+						this.drawingNewLinkArray = [];
+						this.drawNewLink();
+					});
+			}
+
+			// Decorators
+			this.addDecorator(nodeGroups, "topLeft", this.leftDecoratorX, this.topDecoratorY);
+			this.addDecorator(nodeGroups, "topRight", this.rightDecoratorX, this.topDecoratorY);
+			this.addDecorator(nodeGroups, "bottomLeft", this.leftDecoratorX, this.bottomDecoratorY);
+			this.addDecorator(nodeGroups, "bottomRight", this.rightDecoratorX, this.bottomDecoratorY);
+
+			// Remove any nodes that are no longer in the diagram.nodes array.
+			nodeGroupSel.exit().remove();
 		}
-
-		// Decorators
-		this.addDecorator(nodeGroups, "topLeft", this.leftDecoratorX, this.topDecoratorY);
-		this.addDecorator(nodeGroups, "topRight", this.rightDecoratorX, this.topDecoratorY);
-		this.addDecorator(nodeGroups, "bottomLeft", this.leftDecoratorX, this.bottomDecoratorY);
-		this.addDecorator(nodeGroups, "bottomRight", this.rightDecoratorX, this.bottomDecoratorY);
-
-		// Remove any nodes that are no longer in the diagram.nodes array.
-		nodeGroupSel.exit().remove();
 	}
 
 	setTrgPortStatus(trgId, trgPortId, newStatus) {
@@ -1387,286 +1404,295 @@ export default class CanvasD3Layout {
 		var commentGroupSel = this.canvas.selectAll(".comment-group")
 			.data(this.canvasJSON.diagram.comments, function(d) { return d.id; });
 
+		if (this.dragging && !this.commentSizing) {
+			commentGroupSel.each(function(d) {
+				// Comment group object
+				d3.select(`#comment_grp_${d.id}`)
+					.attr("transform", `translate(${d.x_pos}, ${d.y_pos})`)
+					.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
+			});
+		} else {
 			// Apply selection highlighting to the 'update selection' comments. That is,
 			// all comments that are the same as during the last call to displayComments().
-		commentGroupSel.each(function(d) {
+			commentGroupSel.each(function(d) {
 
-			// Comment group object
-			d3.select(`#comment_grp_${d.id}`)
-				.attr("transform", `translate(${d.x_pos}, ${d.y_pos})`)
-				.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
+				// Comment group object
+				d3.select(`#comment_grp_${d.id}`)
+					.attr("transform", `translate(${d.x_pos}, ${d.y_pos})`)
+					.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
+
+				// Comment selection highlighting and sizing outline
+				d3.select(`#comment_rect_${d.id}`)
+					.attr("height", d.height + (2 * that.highLightGap))
+					.attr("width", d.width + (2 * that.highLightGap))
+					.attr("class", ObjectModel.isSelected(d.id) ? "d3-obj-rect d3-obj-rect-selected" : "d3-obj-rect")
+					.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
+
+				// Clip path for text
+				d3.select(`#comment_clip__path_${d.id}`)
+					.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
+
+				// Clip rectangle for text
+				d3.select(`#comment_clip_rect_${d.id}`)
+					.attr("height", d.height)
+					.attr("width", d.width - (2 * that.commentWidthPadding))
+					.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
+
+				// Background rectangle for comment
+				d3.select(`#comment_box_${d.id}`)
+					.attr("height", d.height)
+					.attr("width", d.width)
+					.attr("class", d.className || "canvas-comment") // Use common-canvas.css style since that is the default.
+					.datum((cd) => that.getComment(cd.id)) // Set the __data__ to the updated data
+					.each(function(cd) {
+						if (cd.customAttrs) {
+							var imageObj = d3.select(this);
+							cd.customAttrs.forEach((customAttr) => {
+								imageObj.attr(customAttr, "");
+							});
+						}
+					});
+
+				// Comment port circle
+				if (that.connectionType === "Ports") {
+					d3.select(`#comment_circle_${d.id}`)
+						.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
+				}
+
+				// Comment text
+				d3.select(`#comment_text_${d.id}`)
+					.datum((cd) => that.getComment(cd.id)) // Set the __data__ to the updated data
+					.style("stroke", that.editingCommentId === d.id ? "transparent" : null) // Cancel the setting of stroke to null if not editing
+					.style("fill", that.editingCommentId === d.id ? "transparent" : null)   // Cancel the setting of fill to null if not editing
+					.each(function(cd) {
+						var textObj = d3.select(this);
+						textObj.selectAll("tspan").remove();
+						that.displayWordWrappedText(textObj, cd.content, cd.width - (2 * that.commentWidthPadding));
+					});
+
+				// Comment halo
+				d3.select(`#comment_halo_${d.id}`)
+					.attr("width", d.width + (2 * that.haloCommentGap))
+					.attr("height", d.height + (2 * that.haloCommentGap))
+					.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
+
+			});
+
+			var commentGroups = commentGroupSel.enter()
+					.append("g")
+						.attr("id", (d) => `comment_grp_${d.id}`)
+						.attr("class", "obj-group comment-group")
+						.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
+						// Use mouse down instead of click because it gets called before drag start.
+						.on("mousedown", (d) => {
+							this.consoleLog("Comment Group - mouse down");
+							d3.event.stopPropagation(); // Prevent mousedown event going through to canvas
+							if (!ObjectModel.isSelected(d.id)) {
+								if (d3.event.shiftKey) {
+									ObjectModel.selectSubGraph(d.id);
+								} else {
+									ObjectModel.toggleSelection(d.id, this.isCmndCtrlPressed());
+								}
+							} else {
+								if (this.isCmndCtrlPressed()) {
+									ObjectModel.toggleSelection(d.id, this.isCmndCtrlPressed());
+								}
+							}
+							// Even though the single click message below should be emitted
+							// from common canvas, if we uncomment this line it prevents the
+							// double click event going to the comment group object. This seems
+							// to be a timing issue since the same problem is not evident with the
+							// similar code for the Node group object.
+							// this.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "comment", id: d.id, selectedObjectIds: ObjectModel.getSelectedObjectIds() });
+							this.consoleLog("Comment Group - finished mouse down");
+						})
+						.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
+							if (that.connectionType === "Ports") {
+								d3.select(this)
+										.append("circle")
+											.attr("id", "comment_port_circle")
+											.attr("cx", 0 - that.highLightGap)
+											.attr("cy", 0 - that.highLightGap)
+											.attr("r", that.portRadius)
+											.attr("class", "d3-comment-port-circle")
+											.on("mousedown", function(cd) {
+												d3.event.stopPropagation(); // Stops the node drag behavior when clicking on the handle/circle
+												d3.event.preventDefault();
+												that.drawingNewLink = true;
+												that.drawingNewLinkSrcId = d.id;
+												this.drawingNewLinkSrcPortId = null;
+												that.drawingNewLinkAction = "comment-node";
+												that.drawingNewLinkStartPos = { x: d.x_pos - that.highLightGap, y: d.y_pos - that.highLightGap };
+												that.drawingNewLinkArray = [];
+												that.drawNewLink();
+											});
+							}
+						})
+						.on("mouseleave", (d) => {
+							if (that.connectionType === "Ports") {
+								d3.selectAll("#comment_port_circle").remove();
+							}
+						})
+						.on("dblclick", function(d) { // Use function keyword so 'this' pointer references the DOM text object
+							that.consoleLog("Comment Group - double click");
+							d3.event.stopPropagation();
+							d3.event.preventDefault();
+
+							d3.select(`#comment_text_${d.id}`) // Make SVG text invisible when in edit mode.
+								.style("stroke", "transparent")
+								.style("fill", "transparent");
+
+							var datum = d;
+							var id = d.id;
+							var width = d.width - (2 * that.commentWidthPadding);
+							var height = d.height;
+							var xPos = d.x_pos + that.commentWidthPadding;
+							var yPos = d.y_pos;
+							var content = d.content;
+
+							that.textAreaHeight = 0; // Save for comparison during auto-resize
+							that.editingComment = true;
+							that.editingCommentId = id;
+
+							that.zoomTextAreaCenterX = d.x_pos + (d.width / 2);
+							that.zoomTextAreaCenterY = d.y_pos + (d.height / 2);
+
+							d3.select(that.canvasSelector)
+								.append("textarea")
+									.attr("id",	`text_area_${id}`)
+									.attr("data-nodeId", id)
+									.attr("class", "d3-comment-entry")
+									.text(content)
+									.style("width", width + "px")
+									.style("height", height + "px")
+									.style("left", xPos + "px")
+									.style("top", yPos + "px")
+									.style("transform", that.getTextAreaTransform())
+									.on("keyup", function() {
+										that.consoleLog("Text area - Key up");
+										that.editingCommentChangesPending = true;
+										that.autoSizeTextArea(this, datum);
+									})
+									.on("paste", function() {
+										that.consoleLog("Text area - Paste - Scroll Ht = " + this.scrollHeight);
+										that.editingCommentChangesPending = true;
+										// Allow some time for pasted text (from context menu) to be
+										// loaded into the text area. Otherwise the text is not there
+										// and the auto size does not increase the height correctly.
+										setTimeout(that.autoSizeTextArea.bind(that), 500, this, datum);
+									})
+									.on("blur", function() {
+										that.consoleLog("Text area - blur");
+										var commentObj = that.getComment(id);
+										commentObj.content = this.value;
+										that.saveCommentChanges(this);
+										that.closeCommentTextArea();
+										that.displayComments();
+									});
+
+							// Note: Couldn't get focus to work through d3, so used dom instead.
+							document.getElementById(`text_area_${id}`).focus();
+							that.clickActionHandler({ clickType: "DOUBLE_CLICK", objectType: "comment", id: d.id, selectedObjectIds: ObjectModel.getSelectedObjectIds() });
+						})
+						.on("contextmenu", (d) => {
+							this.consoleLog("Comment Group - context menu");
+							d3.event.stopPropagation();
+							d3.event.preventDefault();
+							this.contextMenuHandler({
+								type: "comment",
+								targetObject: d,
+								cmPos: this.getMousePos(),
+								mousePos: this.getTransformedMousePos(),
+								selectedObjectIds: ObjectModel.getSelectedObjectIds(),
+								zoom: this.zoomTransform.k });
+						})
+						.call(this.drag);	 // Must put drag after mousedown listener so mousedown gets called first.
 
 			// Comment selection highlighting and sizing outline
-			d3.select(`#comment_rect_${d.id}`)
-				.attr("height", d.height + (2 * that.highLightGap))
-				.attr("width", d.width + (2 * that.highLightGap))
-				.attr("class", ObjectModel.isSelected(d.id) ? "d3-obj-rect d3-obj-rect-selected" : "d3-obj-rect")
-				.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
-
-			// Clip path for text
-			d3.select(`#comment_clip__path_${d.id}`)
-				.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
-
-			// Clip rectangle for text
-			d3.select(`#comment_clip_rect_${d.id}`)
-				.attr("height", d.height)
-				.attr("width", d.width - (2 * that.commentWidthPadding))
-				.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
+			commentGroups.append("rect")
+				.attr("id", (d) => `comment_rect_${d.id}`)
+				.attr("width", (d) => d.width + (2 * this.highLightGap))
+				.attr("height", (d) => d.height + (2 * this.highLightGap))
+				.attr("x", -this.highLightGap)
+				.attr("y", -this.highLightGap)
+				.attr("class", function(d) {
+					return ObjectModel.isSelected(d.id) ? "d3-obj-rect d3-obj-rect-selected" : "d3-obj-rect";
+				})
+				.on("mousedown", (d) => {
+					this.commentSizing = true;
+					this.commentSizingId = d.id;
+					// Note - comment resizing and finalization of size is handled by drag functions.
+				})
+				.on("mousemove", (d) => {
+					this.commentSizingDirection = this.getCommentSizingDirection(d);
+					this.displaySizingCursor(d.id, this.commentSizingDirection);
+				});
 
 			// Background rectangle for comment
-			d3.select(`#comment_box_${d.id}`)
-				.attr("height", d.height)
-				.attr("width", d.width)
-				.attr("class", d.className || "canvas-comment") // Use common-canvas.css style since that is the default.
-				.datum((cd) => that.getComment(cd.id)) // Set the __data__ to the updated data
-				.each(function(cd) {
-					if (cd.customAttrs) {
+			commentGroups.append("rect")
+				.attr("id", (d) => `comment_box_${d.id}`)
+				.attr("width", (d) => d.width)
+				.attr("height", (d) => d.height)
+				.attr("x", 0)
+				.attr("y", 0)
+				.attr("class", (d) => d.className || "canvas-comment") // Use common-canvas.css style since that is the default.
+				.each(function(d) {
+					if (d.customAttrs) {
 						var imageObj = d3.select(this);
-						cd.customAttrs.forEach((customAttr) => {
+						d.customAttrs.forEach((customAttr) => {
 							imageObj.attr(customAttr, "");
 						});
 					}
 				});
 
-			// Comment port circle
-			if (that.connectionType === "Ports") {
-				d3.select(`#comment_circle_${d.id}`)
-					.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
-			}
+
+			// Clip path to clip the comment text to the comment rectangle
+			commentGroups.append("clipPath")
+				.attr("id", (d) => `comment_clip_path_${d.id}`)
+					.append("rect")
+						.attr("id", (d) => `comment_clip_rect_${d.id}`)
+						.attr("width", (d) => d.width - (2 * that.commentWidthPadding))
+						.attr("height", (d) => d.height)
+						.attr("x", 0 + that.commentWidthPadding)
+						.attr("y", 0);
 
 			// Comment text
-			d3.select(`#comment_text_${d.id}`)
-				.datum((cd) => that.getComment(cd.id)) // Set the __data__ to the updated data
-				.style("stroke", that.editingCommentId === d.id ? "transparent" : null) // Cancel the setting of stroke to null if not editing
-				.style("fill", that.editingCommentId === d.id ? "transparent" : null)   // Cancel the setting of fill to null if not editing
-				.each(function(cd) {
+			commentGroups.append("text")
+				.attr("id", (d) => `comment_text_${d.id}`)
+				.each(function(d) {
 					var textObj = d3.select(this);
-					textObj.selectAll("tspan").remove();
-					that.displayWordWrappedText(textObj, cd.content, cd.width - (2 * that.commentWidthPadding));
-				});
+					that.displayWordWrappedText(textObj, d.content, d.width - (2 * that.commentWidthPadding));
+				})
+				.attr("clip-path", (d) => `url(#comment_clip_path_${d.id})`)
+				.attr("xml:space", "preserve")
+				.attr("x", 0 + that.commentWidthPadding)
+				.attr("y", 0);
 
-			// Comment halo
-			d3.select(`#comment_halo_${d.id}`)
-				.attr("width", d.width + (2 * that.haloCommentGap))
-				.attr("height", d.height + (2 * that.haloCommentGap))
-				.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
-
-		});
-
-		var commentGroups = commentGroupSel.enter()
-				.append("g")
-					.attr("id", (d) => `comment_grp_${d.id}`)
-					.attr("class", "obj-group comment-group")
-					.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
-					// Use mouse down instead of click because it gets called before drag start.
+			// Halo
+			if (this.connectionType === "Halo") {
+				commentGroups.append("rect")
+					.attr("id", (d) => `comment_halo_${d.id}`)
+					.attr("class", "d3-comment-halo")
+					.attr("x", 0 - this.haloCommentGap)
+					.attr("y", 0 - this.haloCommentGap)
+					.attr("width", (d) => d.width + (2 * this.haloCommentGap))
+					.attr("height", (d) => d.height + (2 * this.haloCommentGap))
 					.on("mousedown", (d) => {
-						this.consoleLog("Comment Group - mouse down");
-						d3.event.stopPropagation(); // Prevent mousedown event going through to canvas
-						if (!ObjectModel.isSelected(d.id)) {
-							if (d3.event.shiftKey) {
-								ObjectModel.selectSubGraph(d.id);
-							} else {
-								ObjectModel.toggleSelection(d.id, this.isCmndCtrlPressed());
-							}
-						} else {
-							if (this.isCmndCtrlPressed()) {
-								ObjectModel.toggleSelection(d.id, this.isCmndCtrlPressed());
-							}
-						}
-						// Even though the single click message below should be emitted
-						// from common canvas, if we uncomment this line it prevents the
-						// double click event going to the comment group object. This seems
-						// to be a timing issue since the same problem is not evident with the
-						// similar code for the Node group object.
-						// this.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "comment", id: d.id, selectedObjectIds: ObjectModel.getSelectedObjectIds() });
-						this.consoleLog("Comment Group - finished mouse down");
-					})
-					.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
-						if (that.connectionType === "Ports") {
-							d3.select(this)
-									.append("circle")
-										.attr("id", "comment_port_circle")
-										.attr("cx", 0 - that.highLightGap)
-										.attr("cy", 0 - that.highLightGap)
-										.attr("r", that.portRadius)
-										.attr("class", "d3-comment-port-circle")
-										.on("mousedown", function(cd) {
-											d3.event.stopPropagation(); // Stops the node drag behavior when clicking on the handle/circle
-											d3.event.preventDefault();
-											that.drawingNewLink = true;
-											that.drawingNewLinkSrcId = d.id;
-											this.drawingNewLinkSrcPortId = null;
-											that.drawingNewLinkAction = "comment-node";
-											that.drawingNewLinkStartPos = { x: d.x_pos - that.highLightGap, y: d.y_pos - that.highLightGap };
-											that.drawingNewLinkArray = [];
-											that.drawNewLink();
-										});
-						}
-					})
-					.on("mouseleave", (d) => {
-						if (that.connectionType === "Ports") {
-							d3.selectAll("#comment_port_circle").remove();
-						}
-					})
-					.on("dblclick", function(d) { // Use function keyword so 'this' pointer references the DOM text object
-						that.consoleLog("Comment Group - double click");
+						this.consoleLog("Comment Halo - mouse down");
 						d3.event.stopPropagation();
-						d3.event.preventDefault();
-
-						d3.select(`#comment_text_${d.id}`) // Make SVG text invisible when in edit mode.
-							.style("stroke", "transparent")
-							.style("fill", "transparent");
-
-						var datum = d;
-						var id = d.id;
-						var width = d.width - (2 * that.commentWidthPadding);
-						var height = d.height;
-						var xPos = d.x_pos + that.commentWidthPadding;
-						var yPos = d.y_pos;
-						var content = d.content;
-
-						that.textAreaHeight = 0; // Save for comparison during auto-resize
-						that.editingComment = true;
-						that.editingCommentId = id;
-
-						that.zoomTextAreaCenterX = d.x_pos + (d.width / 2);
-						that.zoomTextAreaCenterY = d.y_pos + (d.height / 2);
-
-						d3.select(that.canvasSelector)
-							.append("textarea")
-								.attr("id",	`text_area_${id}`)
-								.attr("data-nodeId", id)
-								.attr("class", "d3-comment-entry")
-								.text(content)
-								.style("width", width + "px")
-								.style("height", height + "px")
-								.style("left", xPos + "px")
-								.style("top", yPos + "px")
-								.style("transform", that.getTextAreaTransform())
-								.on("keyup", function() {
-									that.consoleLog("Text area - Key up");
-									that.editingCommentChangesPending = true;
-									that.autoSizeTextArea(this, datum);
-								})
-								.on("paste", function() {
-									that.consoleLog("Text area - Paste - Scroll Ht = " + this.scrollHeight);
-									that.editingCommentChangesPending = true;
-									// Allow some time for pasted text (from context menu) to be
-									// loaded into the text area. Otherwise the text is not there
-									// and the auto size does not increase the height correctly.
-									setTimeout(that.autoSizeTextArea.bind(that), 500, this, datum);
-								})
-								.on("blur", function() {
-									that.consoleLog("Text area - blur");
-									var commentObj = that.getComment(id);
-									commentObj.content = this.value;
-									that.saveCommentChanges(this);
-									that.closeCommentTextArea();
-									that.displayComments();
-								});
-
-						// Note: Couldn't get focus to work through d3, so used dom instead.
-						document.getElementById(`text_area_${id}`).focus();
-						that.clickActionHandler({ clickType: "DOUBLE_CLICK", objectType: "comment", id: d.id, selectedObjectIds: ObjectModel.getSelectedObjectIds() });
-					})
-					.on("contextmenu", (d) => {
-						this.consoleLog("Comment Group - context menu");
-						d3.event.stopPropagation();
-						d3.event.preventDefault();
-						this.contextMenuHandler({
-							type: "comment",
-							targetObject: d,
-							cmPos: this.getMousePos(),
-							mousePos: this.getTransformedMousePos(),
-							selectedObjectIds: ObjectModel.getSelectedObjectIds(),
-							zoom: this.zoomTransform.k });
-					})
-					.call(this.drag);	 // Must put drag after mousedown listener so mousedown gets called first.
-
-		// Comment selection highlighting and sizing outline
-		commentGroups.append("rect")
-			.attr("id", (d) => `comment_rect_${d.id}`)
-			.attr("width", (d) => d.width + (2 * this.highLightGap))
-			.attr("height", (d) => d.height + (2 * this.highLightGap))
-			.attr("x", -this.highLightGap)
-			.attr("y", -this.highLightGap)
-			.attr("class", function(d) {
-				return ObjectModel.isSelected(d.id) ? "d3-obj-rect d3-obj-rect-selected" : "d3-obj-rect";
-			})
-			.on("mousedown", (d) => {
-				this.commentSizing = true;
-				this.commentSizingId = d.id;
-				// Note - comment resizing and finalization of size is handled by drag functions.
-			})
-			.on("mousemove", (d) => {
-				this.commentSizingDirection = this.getCommentSizingDirection(d);
-				this.displaySizingCursor(d.id, this.commentSizingDirection);
-			});
-
-		// Background rectangle for comment
-		commentGroups.append("rect")
-			.attr("id", (d) => `comment_box_${d.id}`)
-			.attr("width", (d) => d.width)
-			.attr("height", (d) => d.height)
-			.attr("x", 0)
-			.attr("y", 0)
-			.attr("class", (d) => d.className || "canvas-comment") // Use common-canvas.css style since that is the default.
-			.each(function(d) {
-				if (d.customAttrs) {
-					var imageObj = d3.select(this);
-					d.customAttrs.forEach((customAttr) => {
-						imageObj.attr(customAttr, "");
+						this.drawingNewLink = true;
+						this.drawingNewLinkSrcId = d.id;
+						this.drawingNewLinkSrcPortId = null;
+						this.drawingNewLinkAction = "comment-node";
+						this.drawingNewLinkStartPos = this.getTransformedMousePos();
+						this.drawingNewLinkArray = [];
+						this.drawNewLink();
 					});
-				}
-			});
+			}
 
-
-		// Clip path to clip the comment text to the comment rectangle
-		commentGroups.append("clipPath")
-			.attr("id", (d) => `comment_clip_path_${d.id}`)
-				.append("rect")
-					.attr("id", (d) => `comment_clip_rect_${d.id}`)
-					.attr("width", (d) => d.width - (2 * that.commentWidthPadding))
-					.attr("height", (d) => d.height)
-					.attr("x", 0 + that.commentWidthPadding)
-					.attr("y", 0);
-
-		// Comment text
-		commentGroups.append("text")
-			.attr("id", (d) => `comment_text_${d.id}`)
-			.each(function(d) {
-				var textObj = d3.select(this);
-				that.displayWordWrappedText(textObj, d.content, d.width - (2 * that.commentWidthPadding));
-			})
-			.attr("clip-path", (d) => `url(#comment_clip_path_${d.id})`)
-			.attr("xml:space", "preserve")
-			.attr("x", 0 + that.commentWidthPadding)
-			.attr("y", 0);
-
-		// Halo
-		if (this.connectionType === "Halo") {
-			commentGroups.append("rect")
-				.attr("id", (d) => `comment_halo_${d.id}`)
-				.attr("class", "d3-comment-halo")
-				.attr("x", 0 - this.haloCommentGap)
-				.attr("y", 0 - this.haloCommentGap)
-				.attr("width", (d) => d.width + (2 * this.haloCommentGap))
-				.attr("height", (d) => d.height + (2 * this.haloCommentGap))
-				.on("mousedown", (d) => {
-					this.consoleLog("Comment Halo - mouse down");
-					d3.event.stopPropagation();
-					this.drawingNewLink = true;
-					this.drawingNewLinkSrcId = d.id;
-					this.drawingNewLinkSrcPortId = null;
-					this.drawingNewLinkAction = "comment-node";
-					this.drawingNewLinkStartPos = this.getTransformedMousePos();
-					this.drawingNewLinkArray = [];
-					this.drawNewLink();
-				});
+			// Remove any comments that are no longer in the diagram.nodes array.
+			commentGroupSel.exit().remove();
 		}
-
-		// Remove any comments that are no longer in the diagram.nodes array.
-		commentGroupSel.exit().remove();
 	}
 
 	autoSizeTextArea(textArea, datum) {
@@ -2066,14 +2092,29 @@ export default class CanvasD3Layout {
 
 	drawLines() {
 		// this.consoleLog("Drawing lines");
+		var startTimeDrawingLines = Date.now();
+
+		if (this.dragging) {
+			// while dragging only remove lines that are affected by moving nodes/comments
+			const affectLinks = this.getConnectedLinks(this.getSelectedNodesAndComments());
+			this.canvas.selectAll(".link-group").filter(
+				(linkGroupLink) => typeof affectLinks.find(
+					(link) => link.id === linkGroupLink.id) !== "undefined")
+					.remove();
+		} else {
+			this.canvas.selectAll(".link-group").remove();
+		}
+
+		var timeAfterDelete = Date.now();
+
 		var lineArray = this.buildLineArray();
 		lineArray = this.addConnectionPaths(lineArray);
 
-		this.canvas.selectAll(".link-group").remove();
+		var afterLineArray = Date.now();
 
 		var linkGroup = this.canvas.selectAll(".link-group")
-			.data(lineArray)
-			.enter()
+				.data(lineArray, function(line) { return line.id; })
+				.enter()
 				.append("g")
 					.attr("id", (d) => `link_group_${d.id}`)
 					.attr("class", "link-group")
@@ -2147,6 +2188,13 @@ export default class CanvasD3Layout {
 		}
 
 		this.setDisplayOrder();
+
+		var endTimeDrawingLines = Date.now();
+
+		if (showTime) {
+			this.consoleLog("drawLines R " + (timeAfterDelete - startTimeDrawingLines) +
+			" B " + (afterLineArray - timeAfterDelete) + " D " + (endTimeDrawingLines - afterLineArray));
+		}
 	}
 
 	// Pushes the links to be below nodes and then pushes comments to be below
@@ -2598,6 +2646,33 @@ export default class CanvasD3Layout {
 		path += "L " + data.x2 + " " + data.y2;
 
 		return path;
+	}
+
+	getConnectedLinks(selectedObjects) {
+		var links = [];
+		selectedObjects.forEach((selectedObject) => {
+			const linksContaining = this.canvasJSON.diagram.links.filter(function(link) {
+				return (link.source === selectedObject.id || link.target === selectedObject.id);
+			});
+			links = _.union(links, linksContaining);
+		});
+		return links;
+	}
+
+	getSelectedNodesAndComments() {
+		var objs = [];
+		this.canvasJSON.diagram.nodes.forEach((node) => {
+			if (ObjectModel.getSelectedObjectIds().includes(node.id)) {
+				objs.push(node);
+			}
+		});
+
+		this.canvasJSON.diagram.comments.forEach((comment) => {
+			if (ObjectModel.getSelectedObjectIds().includes(comment.id)) {
+				objs.push(comment);
+			}
+		});
+		return objs;
 	}
 
 	consoleLog(msg) {
