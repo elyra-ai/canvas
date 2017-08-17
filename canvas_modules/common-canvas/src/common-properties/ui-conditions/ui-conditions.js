@@ -417,7 +417,7 @@ function _handleCellNotEmpty(paramInput, cellCoordinates) {
 				cellCoordinates.rowIndex > -1 && cellCoordinates.colIndex > -1 &&
 				paramInput.length > cellCoordinates.rowIndex &&
 				paramInput[cellCoordinates.rowIndex].length > cellCoordinates.colIndex) {
-			value = paramInput[cellCoordinates.rowIndex][cellCoordinates.colIndex];
+			value = (paramInput[cellCoordinates.rowIndex][cellCoordinates.colIndex]).trim();
 		} else {
 			// An empty array means there are no rows to test
 			return true;
