@@ -248,6 +248,17 @@ module.exports = function() {
 
 	});
 
+	this.Then(/^I check for table cell level validation$/, function() {
+		var tableCell1 = browser.$$("#editor-control-renamed_fields")[0];
+		tableCell1.setValue("", " ");
+		var tableCell2 = browser.$(".modal-title");
+		tableCell2.click();
+		var errormsg = browser.$(".form__validation--error").getText();
+		expect("The 'Output Name' field cannot be empty").toEqual(errormsg);
+		var okButton = browser.$(".modal__buttons").$$(".button")[0];
+		okButton.click();
+	});
+
 	this.Then(/^I have closed the common properties dialog by clicking on close button$/, function() {
 		var closeButton = browser.$(".modal__buttons").$(".button--hyperlink");
 		closeButton.click();

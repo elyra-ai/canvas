@@ -59,5 +59,7 @@ Feature: Canvas sanity test
 			# Validation Test Case
 				Given I have uploaded JSON for common-properties "Spark_DecisionTree_paramDef.json"
 				Then I check for validation error on Checkpoint Interval
+				Given I have uploaded JSON for common-properties "Spark_RenameColumns_paramDef.json"
+				Then I check for table cell level validation
 
 		Given I have toggled the app side common-properties panel
