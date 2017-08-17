@@ -360,14 +360,15 @@ export default class CanvasD3Layout {
 				// Only catch key pressses when NOT editing because, while editing,
 				// the test area needs to receive key presses for undo, redo, delete etc.
 				if (!this.editingComment) {
-					d3.event.stopPropagation();  // Some browsers interpret Delete as 'Back to previous page'. So prevent that.
-					d3.event.preventDefault();
 					if (d3.event.keyCode === BACKSPACE_KEY ||
 							d3.event.keyCode === DELETE_KEY) {
+						this.stopPropagationAndPreventDefault();  // Some browsers interpret Delete as 'Back to previous page'. So prevent that.
 						this.editActionHandler({ editType: "deleteSelectedObjects", selectedObjectIds: ObjectModel.getSelectedObjectIds() });
 					} else if (this.isCmndCtrlPressed() && !d3.event.shiftKey && d3.event.keyCode === Z_KEY) {
+						this.stopPropagationAndPreventDefault();
 						this.editActionHandler({ editType: "undo" });
 					} else if (this.isCmndCtrlPressed() && d3.event.shiftKey && d3.event.keyCode === Z_KEY) {
+						this.stopPropagationAndPreventDefault();
 						this.editActionHandler({ editType: "redo" });
 					}
 				}
@@ -780,8 +781,7 @@ export default class CanvasD3Layout {
 					})
 					.on("contextmenu", (d) => {
 						this.consoleLog("Node Group - context menu");
-						d3.event.stopPropagation();
-						d3.event.preventDefault();
+						this.stopPropagationAndPreventDefault();
 						this.contextMenuHandler({
 							type: "node",
 							targetObject: d,
@@ -868,8 +868,7 @@ export default class CanvasD3Layout {
 										.attr("r", this.portRadius)
 										.attr("class", "d3-node-port-output")
 										.on("mousedown", (cd) => {
-											d3.event.stopPropagation(); // Stops the node drag behavior when clicking on the handle/circle
-											d3.event.preventDefault();
+											this.stopPropagationAndPreventDefault(); // Stops the node drag behavior when clicking on the handle/circle
 											this.drawingNewLink = true;
 											this.drawingNewLinkSrcId = cd.id;
 											this.drawingNewLinkSrcPortId = port.name;
@@ -1141,8 +1140,7 @@ export default class CanvasD3Layout {
 					.attr("class", "d3-new-connection-blob")
 					.attr("linkType", linkType)
 					.on("mouseup", () => {
-						d3.event.stopPropagation();
-						d3.event.preventDefault();
+						this.stopPropagationAndPreventDefault();
 						var trgNode = this.getNodeAtMousePos();
 						if (trgNode !== null) {
 							this.completeNewLink(trgNode);
@@ -1202,8 +1200,7 @@ export default class CanvasD3Layout {
 					.attr("class", "d3-new-connection-blob")
 					.attr("linkType", linkType)
 					.on("mouseup", () => {
-						d3.event.stopPropagation();
-						d3.event.preventDefault();
+						this.stopPropagationAndPreventDefault();
 						var trgNode = this.getNodeAtMousePos();
 						if (trgNode !== null) {
 							this.completeNewLink(trgNode);
@@ -1220,8 +1217,7 @@ export default class CanvasD3Layout {
 					.attr("class", "d3-new-connection-arrow")
 					.attr("linkType", linkType)
 					.on("mouseup", () => {
-						d3.event.stopPropagation();
-						d3.event.preventDefault();
+						this.stopPropagationAndPreventDefault();
 						var trgNode = this.getNodeAtMousePos();
 						if (trgNode !== null) {
 							this.completeNewLink(trgNode);
@@ -1516,8 +1512,7 @@ export default class CanvasD3Layout {
 											.attr("r", that.portRadius)
 											.attr("class", "d3-comment-port-circle")
 											.on("mousedown", function(cd) {
-												d3.event.stopPropagation(); // Stops the node drag behavior when clicking on the handle/circle
-												d3.event.preventDefault();
+												that.stopPropagationAndPreventDefault(); // Stops the node drag behavior when clicking on the handle/circle
 												that.drawingNewLink = true;
 												that.drawingNewLinkSrcId = d.id;
 												this.drawingNewLinkSrcPortId = null;
@@ -1535,8 +1530,7 @@ export default class CanvasD3Layout {
 						})
 						.on("dblclick", function(d) { // Use function keyword so 'this' pointer references the DOM text object
 							that.consoleLog("Comment Group - double click");
-							d3.event.stopPropagation();
-							d3.event.preventDefault();
+							that.stopPropagationAndPreventDefault();
 
 							d3.select(`#comment_text_${d.id}`) // Make SVG text invisible when in edit mode.
 								.style("stroke", "transparent")
@@ -1596,8 +1590,7 @@ export default class CanvasD3Layout {
 						})
 						.on("contextmenu", (d) => {
 							this.consoleLog("Comment Group - context menu");
-							d3.event.stopPropagation();
-							d3.event.preventDefault();
+							this.stopPropagationAndPreventDefault();
 							this.contextMenuHandler({
 								type: "comment",
 								targetObject: d,
@@ -2130,8 +2123,7 @@ export default class CanvasD3Layout {
 					})
 					.on("contextmenu", (d) => {
 						// this.consoleLog("Context menu on canvas background.");
-						d3.event.stopPropagation();
-						d3.event.preventDefault();
+						this.stopPropagationAndPreventDefault();
 						this.contextMenuHandler({
 							type: "link",
 							id: d.id,
@@ -2673,6 +2665,11 @@ export default class CanvasD3Layout {
 			}
 		});
 		return objs;
+	}
+
+	stopPropagationAndPreventDefault() {
+		d3.event.stopPropagation();
+		d3.event.preventDefault();
 	}
 
 	consoleLog(msg) {
