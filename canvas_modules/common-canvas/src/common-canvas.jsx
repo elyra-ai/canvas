@@ -7,7 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-/* eslint complexity: ["error", 12] */
+/* eslint complexity: ["error", 14] */
 
 import React from "react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
@@ -120,8 +120,11 @@ export default class CommonCanvas extends React.Component {
 				break;
 			}
 			case "editComment": {
-				// only add editComment action, if value of comment has changed
-				if (ObjectModel.getComment(data.nodes[0]).content !== data.label) {
+				// only add editComment action, if value or size of comment has changed
+				const selectedComment = ObjectModel.getComment(data.nodes[0]);
+				if (selectedComment.content !== data.label ||
+						selectedComment.height !== data.height ||
+						selectedComment.width !== data.height) {
 					const command = new EditCommentAction(data);
 					CommandStack.do(command);
 				}
