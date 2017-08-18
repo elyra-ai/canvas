@@ -62,6 +62,9 @@ export default class CanvasD3Layout {
 		this.dragOffsetX = 0;
 		this.dragOffsetY = 0;
 
+		// when just changing selection, no need to re-render whole canvas
+		this.selecting = false;
+
 		// Placeholder to save transform info as we are zooming
 		this.zoomTransform = d3.zoomIdentity.translate(0, 0).scale(1);
 
@@ -198,6 +201,7 @@ export default class CanvasD3Layout {
 	setCanvas(canvasJSON, config) {
 		this.consoleLog("Set Canvas. Id = " + canvasJSON.id);
 		var startTime = Date.now();
+
 		if (canvasJSON.id !== this.canvasJSON.id ||
 				this.connectionType !== config.enableConnectionType ||
 				this.linkType !== config.enableLinkType) {
@@ -205,9 +209,11 @@ export default class CanvasD3Layout {
 			this.linkType = config.enableLinkType;
 			this.clearCanvas();
 		}
+
 		// Make a copy of canvasJSON because we will need to update it (when moving
 		// nodes and comments and when sizing comments in real time) without updating the
 		// canvasJSON in the ObjectModel until we're done.
+
 		this.canvasJSON = this.cloneCanvasJSON(canvasJSON);
 		// this.zoomTransform = d3.zoomIdentity.translate(0, 0).scale(1); // Reset zoom parameters
 		this.initializeDimensions();
@@ -381,7 +387,7 @@ export default class CanvasD3Layout {
 				.attr("class", "svg-area")
 				.call(this.zoom)
 				// .on("mousedown.zoom", () => {
-				// 	this.consoleLog("Zoom - mousedown");
+				//	this.consoleLog("Zoom - mousedown");
 				// })
 				.on("mousemove.zoom", () => {
 					// this.consoleLog("Zoom - mousemove");
@@ -501,7 +507,6 @@ export default class CanvasD3Layout {
 		}
 
 		if (this.regionSelect === true) {
-			this.regionSelect = false;
 
 			this.removeRegionSelector();
 
@@ -521,11 +526,13 @@ export default class CanvasD3Layout {
 			} else {
 				this.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "canvas", selectedObjectIds: ObjectModel.getSelectedObjectIds() });
 			}
+			this.regionSelect = false;
 		} else {
 			// If mouse hasn't moved very far we make this equivalent to a click
 			// on the canvas.
 			if (Math.abs(d3.event.transform.x - this.zoomStartPoint.x) < 2 &&
 					Math.abs(d3.event.transform.y - this.zoomStartPoint.y) < 2) {
+				this.selecting = true;
 				this.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "canvas", selectedObjectIds: ObjectModel.getSelectedObjectIds() });
 				// TODO - The decision to clear selection (commented out code below) is currently made by common-canvas
 				// This 'to do' is to move that decision from there to here. To do that we need to have a callback function
@@ -533,6 +540,7 @@ export default class CanvasD3Layout {
 				// if (ObjectModel.getSelectedObjectIds().length > 0) {
 				// 	ObjectModel.clearSelection();
 				// }
+				this.selecting = false;
 			} else {
 				// If a text area is open, any pending changes need to be saved before
 				// the zoomCanvas edit action occurs because that will cause a refresh
@@ -665,12 +673,12 @@ export default class CanvasD3Layout {
 			this.dragging = false;
 			this.endCommentSizing();
 		} else if (this.dragging) {
-			this.dragging = false;
 			if (this.dragOffsetX !== 0 ||
 					this.dragOffsetY !== 0) {
 				// this.consoleLog("editActionHandler - moveObjects");
 				this.editActionHandler({ editType: "moveObjects", nodes: ObjectModel.getSelectedObjectIds(), offsetX: this.dragOffsetX, offsetY: this.dragOffsetY });
 			}
+			this.dragging = false;
 		}
 	}
 
@@ -686,6 +694,12 @@ export default class CanvasD3Layout {
 			nodeGroupSel.each(function(d) {
 				d3.select(`#node_grp_${d.id}`)
 					.attr("transform", `translate(${d.x_pos}, ${d.y_pos})`)
+					.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
+			});
+		} else if (this.selecting || this.regionSelect || this.commentSizing) {
+			nodeGroupSel.each(function(d) {
+				d3.select(`#node_rect_${d.id}`)
+					.attr("class", ObjectModel.isSelected(d.id) ? "d3-obj-rect d3-obj-rect-selected" : "d3-obj-rect")
 					.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
 			});
 		} else {
@@ -746,6 +760,7 @@ export default class CanvasD3Layout {
 					// Use mouse down instead of click because it gets called before drag start.
 					.on("mousedown", (d) => {
 						this.consoleLog("Node Group - mouse down");
+						this.selecting = true;
 						d3.event.stopPropagation(); // Prevent mousedown event going through to canvas
 						if (!ObjectModel.isSelected(d.id)) {
 							if (d3.event.shiftKey) {
@@ -759,6 +774,7 @@ export default class CanvasD3Layout {
 							}
 						}
 						this.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "node", id: d.id, selectedObjectIds: ObjectModel.getSelectedObjectIds() });
+						this.selecting = false;
 						this.consoleLog("Node Group - finished mouse down");
 					})
 					.on("mousemove", (d) => {
@@ -1407,6 +1423,15 @@ export default class CanvasD3Layout {
 					.attr("transform", `translate(${d.x_pos}, ${d.y_pos})`)
 					.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
 			});
+		} else if (this.selecting || this.regionSelect) {
+			commentGroupSel.each(function(d) {
+				// Comment selection highlighting and sizing outline
+				d3.select(`#comment_rect_${d.id}`)
+					.attr("height", d.height + (2 * that.highLightGap))
+					.attr("width", d.width + (2 * that.highLightGap))
+					.attr("class", ObjectModel.isSelected(d.id) ? "d3-obj-rect d3-obj-rect-selected" : "d3-obj-rect")
+					.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
+			});
 		} else {
 			// Apply selection highlighting to the 'update selection' comments. That is,
 			// all comments that are the same as during the last call to displayComments().
@@ -1482,6 +1507,7 @@ export default class CanvasD3Layout {
 						// Use mouse down instead of click because it gets called before drag start.
 						.on("mousedown", (d) => {
 							this.consoleLog("Comment Group - mouse down");
+							this.selecting = true;
 							d3.event.stopPropagation(); // Prevent mousedown event going through to canvas
 							if (!ObjectModel.isSelected(d.id)) {
 								if (d3.event.shiftKey) {
@@ -1500,6 +1526,7 @@ export default class CanvasD3Layout {
 							// to be a timing issue since the same problem is not evident with the
 							// similar code for the Node group object.
 							// this.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "comment", id: d.id, selectedObjectIds: ObjectModel.getSelectedObjectIds() });
+							this.selecting = false;
 							this.consoleLog("Comment Group - finished mouse down");
 						})
 						.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
@@ -1853,7 +1880,6 @@ export default class CanvasD3Layout {
 	// Finalises the sizing of a comment by calling editActionHandler
 	// with an editComment action.
 	endCommentSizing() {
-		this.commentSizing = false;
 		var commentObj = this.getComment(this.commentSizingId);
 		const data = {
 			editType: "editComment",
@@ -1866,6 +1892,7 @@ export default class CanvasD3Layout {
 		};
 		this.consoleLog("editActionHandler - editComment");
 		this.editActionHandler(data);
+		this.commentSizing = false;
 	}
 
 	// Formats the text string passed in as a set of lines of text and displays
@@ -2087,7 +2114,9 @@ export default class CanvasD3Layout {
 		// this.consoleLog("Drawing lines");
 		var startTimeDrawingLines = Date.now();
 
-		if (this.dragging) {
+		if (this.selecting || this.regionSelect) {
+			// no lines update needed when selecting objects/region
+		} else if (this.dragging || this.commentSizing) {
 			// while dragging only remove lines that are affected by moving nodes/comments
 			const affectLinks = this.getConnectedLinks(this.getSelectedNodesAndComments());
 			this.canvas.selectAll(".link-group").filter(
