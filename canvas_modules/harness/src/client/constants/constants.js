@@ -45,6 +45,9 @@ _defineConstant("CURVE_LINKS", "Curve");
 _defineConstant("ELBOW_LINKS", "Elbow");
 _defineConstant("STRAIGHT_LINKS", "Straight");
 
+_defineConstant("FLYOUT", "Flyout");
+_defineConstant("MODAL", "Modal");
+
 _defineConstant("CHOOSE_FROM_LOCATION", "Choose from location...");
 
 _defineConstant("BLANK_CANVAS", {

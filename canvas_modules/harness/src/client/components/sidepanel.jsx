@@ -41,6 +41,7 @@ export default class SidePanel extends React.Component {
 				setRenderingEngine={this.props.setRenderingEngine}
 				setConnectionType={this.props.setConnectionType}
 				setLinkType={this.props.setLinkType}
+				setPaletteLayout={this.props.setPaletteLayout}
 				log={this.props.log}
 			/>);
 			break;
@@ -88,5 +89,6 @@ SidePanel.propTypes = {
 	setRenderingEngine: React.PropTypes.func,
 	setConnectionType: React.PropTypes.func,
 	setLinkType: React.PropTypes.func,
+	setPaletteLayout: React.PropTypes.func,
 	log: React.PropTypes.func
 };

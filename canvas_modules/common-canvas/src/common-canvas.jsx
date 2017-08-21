@@ -15,6 +15,7 @@ import ContextMenuWrapper from "./context-menu-wrapper.jsx";
 import DiagramCanvasLegacy from "./diagram-canvas.jsx";
 import DiagramCanvasD3 from "./diagram-canvas-d3.jsx";
 import Palette from "./palette/palette.jsx";
+import PaletteFlyout from "./palette/palette-flyout.jsx";
 import ObjectModel from "./object-model/object-model.js";
 import CommandStack from "./command-stack/command-stack.js";
 import CreateNodeAction from "./command-actions/createNodeAction.js";
@@ -255,7 +256,6 @@ export default class CommonCanvas extends React.Component {
 				canvas = (<DiagramCanvasD3
 					ref="canvas"
 					canvas={canvasJSON}
-					paletteJSON={ObjectModel.getPaletteData()}
 					config={this.props.config}
 					closeContextMenu={this.closeContextMenu}
 					contextMenuHandler={this.contextMenuHandler}
@@ -269,7 +269,6 @@ export default class CommonCanvas extends React.Component {
 				canvas = (<DiagramCanvasLegacy
 					ref="canvas"
 					canvas={canvasJSON}
-					paletteJSON={ObjectModel.getPaletteData()}
 					closeContextMenu={this.closeContextMenu}
 					contextMenuHandler={this.contextMenuHandler}
 					editActionHandler={this.editActionHandler}
@@ -281,21 +280,30 @@ export default class CommonCanvas extends React.Component {
 			}
 
 			if (this.props.config.enablePalette) {
-				popupPalette = (<Palette
-					paletteJSON={ObjectModel.getPaletteData()}
-					showPalette={this.state.isPaletteOpen}
-					closePalette={this.closePalette}
-					createTempNode={this.createTempNode}
-					deleteTempNode={this.deleteTempNode}
-				/>);
+				if (this.props.config.enablePaletteLayout === "Flyout") {
+					popupPalette = (<PaletteFlyout
+						paletteJSON={ObjectModel.getPaletteData()}
+						showPalette={this.props.showPalette}
+						createTempNode={this.createTempNode}
+						deleteTempNode={this.deleteTempNode}
+					/>);
+				} else {
+					popupPalette = (<Palette
+						paletteJSON={ObjectModel.getPaletteData()}
+						showPalette={this.state.isPaletteOpen}
+						closePalette={this.closePalette}
+						createTempNode={this.createTempNode}
+						deleteTempNode={this.deleteTempNode}
+					/>);
 
-				const paletteTooltip = <Tooltip id="paletteTooltip">{this.props.config.paletteTooltip}</Tooltip>;
+					const paletteTooltip = <Tooltip id="paletteTooltip">{this.props.config.paletteTooltip}</Tooltip>;
 
-				addButton = (<OverlayTrigger placement="right" overlay={paletteTooltip}>
-					<div className="palette-show-button">
-						<img src={OpenNodePaletteIcon} onClick={this.openPalette} />
-					</div>
-				</OverlayTrigger>);
+					addButton = (<OverlayTrigger placement="right" overlay={paletteTooltip}>
+						<div className="palette-show-button">
+							<img src={OpenNodePaletteIcon} onClick={this.openPalette} />
+						</div>
+					</OverlayTrigger>);
+				}
 			}
 
 			zoomControls = (<div className="canvas-zoom-controls">
@@ -322,5 +330,6 @@ CommonCanvas.propTypes = {
 	contextMenuActionHandler: React.PropTypes.func,
 	editActionHandler: React.PropTypes.func,
 	clickActionHandler: React.PropTypes.func,
-	decorationActionHandler: React.PropTypes.func
+	decorationActionHandler: React.PropTypes.func,
+	showPalette: React.PropTypes.bool // TODO remove once buttons added for flyout palette
 };

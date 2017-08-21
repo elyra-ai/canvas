@@ -7,8 +7,9 @@ Feature: Canvas sanity test
   So I can build a graph
 
   Scenario: Sanity test empty canvas with the Legacy rendering engine
-    Given I am on the test harness
+		Given I am on the test harness
     Given I have toggled the app side panel
+		Given I have selected the "Modal" palette layout
 		Given I have uploaded predefined palette "modelerPalette.json"
 		Given I have selected the "Legacy" rendering engine
 		Given I have toggled the app side panel

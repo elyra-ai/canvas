@@ -30,7 +30,9 @@ import {
 	PORTS_CONNECTION,
 	CURVE_LINKS,
 	ELBOW_LINKS,
-	STRAIGHT_LINKS
+	STRAIGHT_LINKS,
+	FLYOUT,
+	MODAL
 } from "../constants/constants.js";
 import FormsService from "../services/FormsService";
 
@@ -63,6 +65,7 @@ export default class SidePanelForms extends React.Component {
 		this.renderingEngineOptionChange = this.renderingEngineOptionChange.bind(this);
 		this.connectionTypeOptionChange = this.connectionTypeOptionChange.bind(this);
 		this.linkTypeOptionChange = this.linkTypeOptionChange.bind(this);
+		this.paletteLayoutOptionChange = this.paletteLayoutOptionChange.bind(this);
 	}
 
 	componentWillMount() {
@@ -232,6 +235,9 @@ export default class SidePanelForms extends React.Component {
 
 	linkTypeOptionChange(evt, obj) {
 		this.props.setLinkType(obj.selected);
+	}
+	paletteLayoutOptionChange(evt, obj) {
+		this.props.setPaletteLayout(obj.selected);
 	}
 	renderingEngineOptionChange(evt, obj) {
 		this.props.setRenderingEngine(obj.selected);
@@ -405,6 +411,19 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
+		var paletteLayout = (<div className="sidepanel-children" id="sidepanel-palette-layout">
+			<div className="sidepanel-headers">Palette Layout</div>
+			<RadioGroup name="palette_layout_radio"
+				dark
+				onChange={this.paletteLayoutOptionChange}
+				choices={[
+					FLYOUT,
+					MODAL
+				]}
+				selected={FLYOUT}
+			/>
+		</div>);
+
 		return (
 			<div>
 				{canvasInput}
@@ -422,6 +441,8 @@ export default class SidePanelForms extends React.Component {
 				{connectionType}
 				{divider}
 				{linkType}
+				{divider}
+				{paletteLayout}
 			</div>
 		);
 	}
@@ -438,5 +459,6 @@ SidePanelForms.propTypes = {
 	setRenderingEngine: React.PropTypes.func,
 	setConnectionType: React.PropTypes.func,
 	setLinkType: React.PropTypes.func,
-	log: React.PropTypes.func
+	log: React.PropTypes.func,
+	setPaletteLayout: React.PropTypes.func
 };

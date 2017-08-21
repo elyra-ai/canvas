@@ -51,7 +51,7 @@ class ThreeWayIcon extends React.Component {
 		}
 
 		return (
-			<div draggable= "false" className="three-way-icon-div">
+			<div draggable= "false" className="palette-three-way-icon-div">
 				<img src={icon} draggable="false"
 					onClick={this.iconClicked}
 					onMouseEnter={this.mouseEnter}

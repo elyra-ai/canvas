@@ -78,12 +78,12 @@ class PaletteContent extends React.Component {
 					categorySelectedMethod={this.categorySelected}
 				/>
 				<PaletteContentGrid show={this.props.showGrid}
-					paletteJSON={categoryJSON}
+					categoryJSON={categoryJSON}
 					createTempNode={this.props.createTempNode}
 					deleteTempNode={this.props.deleteTempNode}
 				/>
 				<PaletteContentList show={!this.props.showGrid}
-					paletteJSON={categoryJSON}
+					categoryJSON={categoryJSON}
 					createTempNode={this.props.createTempNode}
 					deleteTempNode={this.props.deleteTempNode}
 				/>

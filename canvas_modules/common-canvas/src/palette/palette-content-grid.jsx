@@ -22,10 +22,10 @@ class PaletteContentGrid extends React.Component {
 	render() {
 		var gridNodes = [];
 
-		for (var idx = 0; idx < this.props.paletteJSON.length; idx++) {
+		for (var idx = 0; idx < this.props.categoryJSON.length; idx++) {
 			gridNodes.push(
 				<PaletteContentGridNode key={"pal_grid_node_" + idx}
-					nodeTemplate={this.props.paletteJSON[idx]}
+					nodeTemplate={this.props.categoryJSON[idx]}
 					createTempNode={this.props.createTempNode}
 					deleteTempNode={this.props.deleteTempNode}
 				/>
@@ -45,7 +45,7 @@ class PaletteContentGrid extends React.Component {
 }
 
 PaletteContentGrid.propTypes = {
-	paletteJSON: React.PropTypes.array.isRequired,
+	categoryJSON: React.PropTypes.array.isRequired,
 	createTempNode: React.PropTypes.func.isRequired,
 	deleteTempNode: React.PropTypes.func.isRequired,
 	show: React.PropTypes.bool.isRequired

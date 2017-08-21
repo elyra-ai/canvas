@@ -28,10 +28,6 @@
     src: url(~ap-components-react/dist/fonts/light/helvetica-neue-light.woff);
 }
 
-@font-face {
-    font-family: IBMHLVRoman;
-    src: url(~ap-components-react/dist/fonts/roman/helvetica-neue-roman.woff);
-}
 
 /* Property editing */
 .properties-editing {

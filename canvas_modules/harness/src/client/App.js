@@ -31,7 +31,8 @@ import {
 	SIDE_PANEL_MODAL,
 	D3_ENGINE,
 	HALO_CONNECTION,
-	CURVE_LINKS
+	CURVE_LINKS,
+	FLYOUT
 } from "./constants/constants.js";
 
 import listview32 from "../graphics/list-view_32.svg";
@@ -66,6 +67,7 @@ class App extends React.Component {
 			selectedRenderingEngine: D3_ENGINE,
 			selectedConnectionType: HALO_CONNECTION,
 			selectedLinkType: CURVE_LINKS,
+			selectedPaletteLayout: FLYOUT,
 			showContextMenu: false,
 			showPropertiesDialog: false
 		};
@@ -81,7 +83,6 @@ class App extends React.Component {
 		this.redo = this.redo.bind(this);
 
 		this.openPalette = this.openPalette.bind(this);
-		this.closePalette = this.closePalette.bind(this);
 		this.enableNavPalette = this.enableNavPalette.bind(this);
 		this.setDiagramJSON = this.setDiagramJSON.bind(this);
 		this.setPaletteJSON = this.setPaletteJSON.bind(this);
@@ -96,6 +97,7 @@ class App extends React.Component {
 		this.setRenderingEngine = this.setRenderingEngine.bind(this);
 		this.setConnectionType = this.setConnectionType.bind(this);
 		this.setLinkType = this.setLinkType.bind(this);
+		this.setPaletteLayout = this.setPaletteLayout.bind(this);
 
 		// common-canvas
 		this.contextMenuHandler = this.contextMenuHandler.bind(this);
@@ -196,6 +198,10 @@ class App extends React.Component {
 		this.setState({ selectedLinkType: selectedLinkType });
 		this.log("Link type selected", selectedLinkType);
 	}
+	setPaletteLayout(selectedPaletteLayout) {
+		this.setState({ selectedPaletteLayout: selectedPaletteLayout });
+		this.log("Palette Layout selected", selectedPaletteLayout);
+	}
 
 	sidePanelCanvas() {
 		this.setState({
@@ -264,14 +270,13 @@ class App extends React.Component {
 	}
 
 	openPalette() {
-		if (this.state.paletteNavEnabled) {
+		if (this.state.paletteOpened) {
+			this.log("closing palette");
+			this.setState({ paletteOpened: false });
+		} else {
 			this.log("opening palette");
 			this.setState({ paletteOpened: true });
 		}
-	}
-
-	closePalette() {
-		this.setState({ paletteOpened: false });
 	}
 
 	enableNavPalette(enabled) {
@@ -560,7 +565,7 @@ class App extends React.Component {
 	}
 
 	render() {
-		var paletteClass = "palette-" + this.state.paletteNavEnabled;
+		const paletteClass = "palette-" + (this.state.paletteNavEnabled && this.state.selectedPaletteLayout === FLYOUT);
 
 		var locale = "en";
 		var messages = i18nData.messages;
@@ -621,7 +626,7 @@ class App extends React.Component {
 								/>
 							</a>
 						</li>
-						<li className="navbar-li nav-divider" id={paletteClass} data-tip="palette" style={{ display: "none" }}>
+						<li className="navbar-li nav-divider" id={paletteClass} data-tip="palette">
 							<a onClick={this.openPalette.bind(this) }>
 								<Isvg id="action-bar-palette"
 									src={createNew32}
@@ -657,6 +662,7 @@ class App extends React.Component {
 			enableConnectionType: this.state.selectedConnectionType,
 			enableLinkType: this.state.selectedLinkType,
 			enableInternalObjectModel: this.state.internalObjectModel,
+			enablePaletteLayout: this.state.selectedPaletteLayout,
 			paletteTooltip: PALETTE_TOOLTIP
 		};
 
@@ -668,6 +674,7 @@ class App extends React.Component {
 				editActionHandler= {this.editActionHandler}
 				clickActionHandler= {this.clickActionHandler}
 				decorationActionHandler= {this.decorationActionHandler}
+				showPalette={this.state.paletteOpened} // TODO remove once buttons added for flyout palette
 			/>
 		</div>);
 
@@ -703,6 +710,7 @@ class App extends React.Component {
 				setRenderingEngine={this.setRenderingEngine}
 				setConnectionType={this.setConnectionType}
 				setLinkType={this.setLinkType}
+				setPaletteLayout={this.setPaletteLayout}
 				log={this.log}
 			/>
 			<IntlProvider key="IntlProvider2" locale={ locale } messages={ messages }>

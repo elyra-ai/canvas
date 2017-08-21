@@ -211,7 +211,6 @@ export default class DiagramCanvas extends React.Component {
 
 DiagramCanvas.propTypes = {
 	canvas: React.PropTypes.object,
-	paletteJSON: React.PropTypes.object.isRequired,
 	closeContextMenu: React.PropTypes.func.isRequired,
 	contextMenuHandler: React.PropTypes.func.isRequired,
 	editActionHandler: React.PropTypes.func.isRequired,

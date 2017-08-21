@@ -42,7 +42,7 @@
   float: left;
 }
 
-.navbar-li a, .palette-true a{
+.navbar-li a, #palette-true a{
   display: block;
   text-align: center;
   padding: 14px;
@@ -51,17 +51,13 @@
   box-sizing: content-box;
 }
 
-.navbar-li a:hover, .palette-true a:hover {
+.navbar-li a:hover, #palette-true a:hover {
   background-color: #111111;
   color: #3FB8AF;
 }
 
-#palette-false a{
-  fill: #797979;
-}
-
-#palette-false a:hover {
-  background-color: #1D3649;
+#palette-false{
+  display: none;
 }
 
 .action-bar-sidepanel {
@@ -117,8 +113,10 @@
 /*SidePanel*/
 #app-sidepanel {
   background-color: #264A60;
-  padding-top: 60px;
-  position:fixed;
+	top: 50px;
+  padding-top: 10px;
+	padding-bottom: 10px;
+  position: absolute;
   right: 0;
   height: 100%;
   -webkit-transition:width 0.5s;

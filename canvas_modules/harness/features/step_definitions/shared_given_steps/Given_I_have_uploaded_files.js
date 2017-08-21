@@ -13,6 +13,7 @@ module.exports = function() {
 	/* global browser */
 	this.Then(/^I have uploaded predefined diagram "([^"]*)"$/, function(diagramFile) {
 		// need to click on the canvas drop down
+		browser.$("#sidepanel-canvas-input").scroll();
 		browser.$("#sidepanel-canvas-input")
 						.$(".canvasField")
 						.$(".select")
@@ -34,6 +35,7 @@ module.exports = function() {
 
 	this.Then(/^I have uploaded diagram "([^"]*)"$/, function(diagramFile) {
 		// need to click on the canvas drop down
+		browser.$("#sidepanel-canvas-input").scroll();
 		browser.$("#sidepanel-canvas-input")
 						.$(".canvasField")
 						.$(".select")
@@ -46,7 +48,6 @@ module.exports = function() {
 														.$(".select")
 														.$(".select__options")
 														.$$("button");
-		console.log("TEST");
 		for (var idx = 0; idx < canvasFileOptions.length; idx++) {
 			if (canvasFileOptions[idx].getText() === "Choose from location...") {
 				canvasFileOptions[idx].click();
@@ -60,6 +61,7 @@ module.exports = function() {
 
 	this.Then(/^I have uploaded predefined palette "([^"]*)"$/, function(paletteFile) {
 		// need to click on the palette drop down
+		browser.$("#sidepanel-palette-input").scroll();
 		browser.$("#sidepanel-palette-input")
 						.$(".formField")
 						.$(".select")
@@ -80,6 +82,7 @@ module.exports = function() {
 
 	this.Then(/^I have uploaded palette "([^"]*)"$/, function(paletteFile) {
 		// need to click on the palette drop down
+		browser.$("#sidepanel-palette-input").scroll();
 		browser.$("#sidepanel-palette-input")
 						.$(".formField")
 						.$(".select")

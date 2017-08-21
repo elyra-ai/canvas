@@ -21,13 +21,13 @@ class PaletteContentList extends React.Component {
 	render() {
 		var contentItems = [];
 
-		for (var idx = 0; idx < this.props.paletteJSON.length; idx++) {
+		for (var idx = 0; idx < this.props.categoryJSON.length; idx++) {
 			var itemKey = "item_" + idx;
 
 			contentItems.push(
 				<div key={itemKey}>
 					<PaletteContentListItem
-						nodeTemplate={this.props.paletteJSON[idx]}
+						nodeTemplate={this.props.categoryJSON[idx]}
 						createTempNode={this.props.createTempNode}
 						deleteTempNode={this.props.deleteTempNode}
 					/>
@@ -48,7 +48,7 @@ class PaletteContentList extends React.Component {
 }
 
 PaletteContentList.propTypes = {
-	paletteJSON: React.PropTypes.array.isRequired,
+	categoryJSON: React.PropTypes.array.isRequired,
 	createTempNode: React.PropTypes.func.isRequired,
 	deleteTempNode: React.PropTypes.func.isRequired,
 	show: React.PropTypes.bool.isRequired

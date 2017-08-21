@@ -8,8 +8,8 @@ Feature: Canvas Sanity test from loaded file
 @watch
   Scenario: Sanity test from loaded file with D3 rendering engine
 		Given I am on the test harness
-
 		Given I have toggled the app side panel
+		Given I have selected the "Modal" palette layout
 		Given I have selected the "D3" rendering engine
 		Given I have toggled the app side panel
 
