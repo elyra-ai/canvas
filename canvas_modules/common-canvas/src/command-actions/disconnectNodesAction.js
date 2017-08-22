@@ -9,7 +9,7 @@
 import Action from "../command-stack/action.js";
 import ObjectModel from "../object-model/object-model.js";
 
-export default class DeleteObjectsAction extends Action {
+export default class DisconnectNodesAction extends Action {
 	constructor(data) {
 		super(data);
 		this.data = data;
