@@ -124,7 +124,7 @@ export default class CommonProperties extends React.Component {
 					additionalComponents={this.props.propertiesInfo.additionalComponents}
 					showPropertiesButtons={this.showPropertiesButtons}
 				/>);
-				const title = <div>{formData.label}</div>;
+				const title = formData.label;
 				const size = formData.editorSize;
 				if (typeof this.props.useModalDialog === "undefined" || this.props.useModalDialog) {
 					propertiesDialog = (<PropertiesDialog

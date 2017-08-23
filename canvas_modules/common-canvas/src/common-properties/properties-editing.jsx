@@ -42,7 +42,7 @@ export default class PropertiesEditing extends Component {
 					style={{ "paddingBottom": "10px" }}
 				>
 					<h2>
-						{this.props.title}
+						<div>{this.props.title}</div>
 					</h2>
 				</div>
 				<div className="properties-body">
