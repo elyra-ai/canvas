@@ -259,6 +259,22 @@ module.exports = function() {
 		okButton.click();
 	});
 
+	this.Then(/^I check for table validation$/, function() {
+		var tableRow1 = browser.$$("#editor-control-renamed_fields")[0];
+		tableRow1.click();
+		browser.$("#remove-fields-button-enabled").click();
+
+		var tableRow2 = browser.$$("#editor-control-renamed_fields")[0];
+		tableRow2.click();
+		browser.$("#remove-fields-button-enabled").click();
+
+		var warningMsg = browser.$(".form__validation--warning").getText();
+		expect("There are no selected columns to rename").toEqual(warningMsg);
+		var okButton = browser.$(".modal__buttons").$$(".button")[0];
+		okButton.click();
+	});
+
+
 	this.Then(/^I have closed the common properties dialog by clicking on close button$/, function() {
 		var closeButton = browser.$(".modal__buttons").$(".button--hyperlink");
 		closeButton.click();

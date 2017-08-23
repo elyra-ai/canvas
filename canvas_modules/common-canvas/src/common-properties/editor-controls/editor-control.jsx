@@ -336,6 +336,10 @@ export default class EditorControl extends React.Component {
 					}
 				}
 			}
+			// validate on table-level if cell validation didn't result in an error already
+			if (!output || PropertyUtils.toType(output) === "boolean") {
+				output = UiConditions.validateInput(validation.definition, userInput, this.props.dataModel, coordinates);
+			}
 		} else {
 			output = UiConditions.validateInput(validation.definition, userInput, this.props.dataModel, coordinates);
 		}
