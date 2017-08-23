@@ -17,7 +17,7 @@ export default class ExpressionControl extends EditorControl {
 	constructor(props) {
 		super(props);
 		this.state = {
-			controlValue: EditorControl.joinNewlines(props.valueAccessor(props.control.name))
+			controlValue: props.valueAccessor(props.control.name)
 		};
 		this.getControlValue = this.getControlValue.bind(this);
 		this.handleChange = this.handleChange.bind(this);
@@ -25,18 +25,11 @@ export default class ExpressionControl extends EditorControl {
 
 	handleChange(evt) {
 		this.setState({ controlValue: evt.target.value });
-		if (this.props.control.valueDef && this.props.control.valueDef.isList) {
-			this.props.updateControlValue(this.props.control.name, EditorControl.splitNewlines(evt.target.value));
-		} else {
-			this.props.updateControlValue(this.props.control.name, evt.target.value);
-		}
+		this.props.updateControlValue(this.props.control.name, evt.target.value);
 	}
 
 	getControlValue() {
-		if (this.props.control.valueDef.isList) {
-			return EditorControl.splitNewlines(this.state.controlValue);
-		}
-		return [this.state.controlValue];
+		return this.state.controlValue;
 	}
 
 	render() {

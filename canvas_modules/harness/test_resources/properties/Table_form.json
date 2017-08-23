@@ -126,19 +126,11 @@
       }
     ],
     "data": {
-      "currentProperties": {
-        "annotation": [
-          ""
-        ],
-        "use_custom_name": [
-          "false"
-        ],
-        "highlight_expr": [
-          ""
-        ],
-        "custom_name": [
-          ""
-        ]
+      "currentParameters": {
+        "annotation": "",
+        "use_custom_name": false,
+        "highlight_expr": "",
+        "custom_name": ""
       },
 			"datasetMetadata": {
         "fields": [

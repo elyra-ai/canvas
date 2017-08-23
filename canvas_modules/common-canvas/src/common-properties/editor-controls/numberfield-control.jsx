@@ -15,7 +15,7 @@ export default class NumberfieldControl extends EditorControl {
 	constructor(props) {
 		super(props);
 		this.state = {
-			controlValue: props.valueAccessor(props.control.name)[0]
+			controlValue: props.valueAccessor(props.control.name)
 		};
 		this.getControlValue = this.getControlValue.bind(this);
 		this.handleChange = this.handleChange.bind(this);
@@ -23,17 +23,24 @@ export default class NumberfieldControl extends EditorControl {
 	}
 
 	handleChange(evt) {
+		const number = parseFloat(evt.target.value);
 		this.setState({ controlValue: evt.target.value });
-		this.props.updateControlValue(this.props.control.name, evt.target.value);
+		if (!isNaN(number)) {
+			this.setState({ controlValue: number });
+			this.props.updateControlValue(this.props.control.name, number);
+		} else if (evt.target.value === "") {
+			this.setState({ controlValue: null });
+			this.props.updateControlValue(this.props.control.name, null);
+		}
 	}
 
 	getControlValue() {
-		return [this.state.controlValue];
+		return this.state.controlValue;
 	}
 
 	clearValue() {
 		const that = this;
-		this.setState({ controlValue: "" },
+		this.setState({ controlValue: null },
 		function() {
 			that.validateInput();
 		});
@@ -58,6 +65,11 @@ export default class NumberfieldControl extends EditorControl {
 			controlIconContainerClass = "control-icon-container-enabled";
 		}
 
+		let numValue = "";
+		if (this.state.controlValue !== null) {
+			numValue = this.state.controlValue;
+		}
+
 		return (
 			<div className="editor_control_area" style={stateStyle}>
 				<div id={controlIconContainerClass}>
@@ -74,8 +86,7 @@ export default class NumberfieldControl extends EditorControl {
 						placeholder={this.props.control.additionalText}
 						disabledPlaceholderAnimation
 						onChange={this.handleChange}
-						value={this.state.controlValue}
-						onChange={(e) => this.setState({ controlValue: e.target.value })}
+						value={numValue}
 						onReset={() => this.clearValue()}
 					/>
 					{icon}

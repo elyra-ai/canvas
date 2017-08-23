@@ -187,29 +187,17 @@
       }
     ],
     "data": {
-      "currentProperties": {
-        "annotation": [
-          ""
-        ],
-        "replace_mode": [
-          "Conditional"
-        ],
-        "replace_with": [
-          "0"
-        ],
-        "condition": [
-          "@BLANK(@FIELD)"
-        ],
+      "currentParameters": {
+        "annotation": "",
+        "replace_mode": "Conditional",
+        "replace_with": 0,
+        "condition": "@BLANK(@FIELD)",
         "fields": [
 					"Sex",
         	"BP"
 				],
-        "use_custom_name": [
-          "false"
-        ],
-        "custom_name": [
-          ""
-        ]
+        "use_custom_name": false,
+        "custom_name": ""
       },
 			"datasetMetadata": {
         "fields": [

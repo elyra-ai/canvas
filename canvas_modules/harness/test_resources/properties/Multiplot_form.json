@@ -325,50 +325,22 @@
       }
     ],
     "data": {
-      "currentProperties": {
-        "if_over_limit": [
-          "PlotBins"
-        ],
-        "subtitle": [
-          ""
-        ],
-        "normalize": [
-          "false"
-        ],
-        "overlay_expression": [
-          ""
-        ],
-        "annotation": [
-          ""
-        ],
-        "records_limit": [
-          "2000"
-        ],
-        "panel_field": [
-          ""
-        ],
-        "x_field": [
-          ""
-        ],
-        "use_grid": [
-          "true"
-        ],
-        "caption": [
-          ""
-        ],
-        "use_custom_name": [
-          "false"
-        ],
-        "title": [
-          ""
-        ],
+      "currentParameters": {
+        "if_over_limit": "PlotBins",
+        "subtitle": "",
+        "normalize": false,
+        "overlay_expression": "",
+        "annotation": "",
+        "records_limit": 2000,
+        "panel_field": "",
+        "x_field": "",
+        "use_grid": true,
+        "caption": "",
+        "use_custom_name": false,
+        "title": "",
         "y_fields": [],
-        "use_overlay_expr": [
-          "false"
-        ],
-        "custom_name": [
-          ""
-        ]
+        "use_overlay_expr": false,
+        "custom_name": ""
       },
       "datasetMetadata": {
         "fields": []

@@ -4,9 +4,9 @@
     "use_custom_name": true,
     "custom_name": "",
     "keys": [
-      "[\"Na\",\"Ascending\"]",
-      "[\"Drug\",\"Descending\"]",
-      "[\"Cholesterol\",\"Ascending\"]"
+      ["Na","Ascending"],
+      ["Drug","Descending"],
+      ["Cholesterol","Ascending"]
     ]
   },
   "complex_types": [

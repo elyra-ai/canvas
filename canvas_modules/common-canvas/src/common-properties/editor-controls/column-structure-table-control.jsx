@@ -9,7 +9,7 @@
 
 /* eslint max-depth: ["error", 5] */
 
-import logger from "../../../utils/logger";
+// import logger from "../../../utils/logger";
 import React from "react";
 import ColumnStructureTableEditor from "./column-structure-table-editor.jsx";
 import TopMoveIconEnable from "../../../assets/images/top_enabled.svg";
@@ -53,7 +53,7 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 	}
 
 	stopEditingRow(rowIndex, applyChanges) {
-		logger.info("stopEditingRow: row=" + rowIndex + ", applyChanges=" + applyChanges);
+		// logger.info("stopEditingRow: row=" + rowIndex + ", applyChanges=" + applyChanges);
 
 		if (applyChanges) {
 			const subControlId = this.getSubControlId();
@@ -67,12 +67,8 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 					// logger.info(control);
 					if (typeof control !== "undefined") {
 						const controlValue = control.getControlValue();
-						logger.info("Control value=" + controlValue);
-						if (columnControl.valueDef.isList === true) {
-							allValues[rowIndex][i] = JSON.stringify(controlValue);
-						} else {
-							allValues[rowIndex][i] = controlValue[0];
-						}
+						// logger.info("Control value=" + controlValue);
+						allValues[rowIndex][i] = controlValue;
 					}
 				}
 			}

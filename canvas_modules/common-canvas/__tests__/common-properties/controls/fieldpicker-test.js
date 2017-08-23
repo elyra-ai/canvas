@@ -18,9 +18,9 @@ chai.use(chaiEnzyme()); // Note the invocation at the end
 
 const currentControlValues = {
 	"keys": [
-		"[\"Na\",\"Ascending\"]",
-		"[\"Drug\",\"Descending\"]",
-		"[\"Cholesterol\",\"Ascending\"]"
+		["Na", "Ascending"],
+		["Drug", "Descending"],
+		["Cholesterol", "Ascending"]
 	],
 	"use_custom_name": [
 		"true"

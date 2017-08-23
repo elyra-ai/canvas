@@ -9,6 +9,9 @@
 
 export default class TextRenderer {
 	render(value) {
+		if (Array.isArray(value)) {
+			return value.join(", ");
+		}
 		return value;
 	}
 }

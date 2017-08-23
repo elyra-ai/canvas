@@ -15,7 +15,7 @@ import { CHARACTER_LIMITS } from "../constants/constants.js";
 export default class TextfieldControl extends EditorControl {
 	constructor(props) {
 		super(props);
-		const value = props.valueAccessor ? props.valueAccessor(props.control.name)[0] : props.value;
+		const value = props.valueAccessor ? props.valueAccessor(props.control.name) : props.value;
 		this.state = {
 			controlValue: value
 		};
@@ -32,7 +32,7 @@ export default class TextfieldControl extends EditorControl {
 	}
 
 	getControlValue() {
-		return [this.state.controlValue];
+		return this.state.controlValue;
 	}
 
 	render() {

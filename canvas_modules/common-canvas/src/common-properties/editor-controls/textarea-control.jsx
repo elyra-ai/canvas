@@ -36,7 +36,7 @@ export default class TextareaControl extends EditorControl {
 		if (this.props.control.valueDef.isList) {
 			return EditorControl.splitNewlines(this.state.controlValue);
 		}
-		return [this.state.controlValue];
+		return this.state.controlValue;
 	}
 
 	render() {

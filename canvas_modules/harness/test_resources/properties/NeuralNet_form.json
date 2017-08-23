@@ -250,17 +250,11 @@
       }
     ],
     "data": {
-      "currentProperties": {
-        "method": [
-          "multilayerPerceptron"
-        ],
-        "custom_fields": [
-          "false"
-        ],
+      "currentParameters": {
+        "method": "multilayerPerceptron",
+        "custom_fields": false,
         "targets": [],
-        "annotation": [
-          ""
-        ],
+        "annotation": "",
         "inputs": [
           "Age",
           "Sex",
@@ -270,15 +264,9 @@
           "K",
           "Drug"
         ],
-        "use_custom_name": [
-          "false"
-        ],
-        "overfit_prevention_pct": [
-          "30.0"
-        ],
-        "custom_name": [
-          ""
-        ]
+        "use_custom_name": false,
+        "overfit_prevention_pct": 30.0,
+        "custom_name": ""
       },
       "inputDataModel": {
         "columns": [

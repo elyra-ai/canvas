@@ -31,9 +31,9 @@ export default class FieldAllocatorControl extends EditorControl {
 
 	handleChange(evt) {
 		if (evt.value !== "...") {
-			this.setState({ selectedValues: evt.value, controlValue: [evt.value] });
+			this.setState({ selectedValues: evt.value, controlValue: evt.value });
 			if (this.props.updateControlValue) {
-				this.props.updateControlValue(this.props.control.name, [evt.value]);
+				this.props.updateControlValue(this.props.control.name, evt.value);
 			}
 		}
 	}
@@ -120,7 +120,7 @@ export default class FieldAllocatorControl extends EditorControl {
 		if (messageType !== "info") {
 			controlIconContainerClass = "control-icon-container-enabled";
 		}
-		const currentSeln = includeEmpty ? "..." : this.state.controlValue[0];
+		const currentSeln = includeEmpty ? "..." : this.state.controlValue;
 		// help={this.props.control.additionalText}
 		return (
 			<div className="editor_control_area" style={stateStyle}>

@@ -1446,7 +1446,7 @@ _defineConstant("STRUCTURETABLE_INLINE_TOGGLE_PROPS_INFO", {
 	"title": "StructureTableToggle Title",
 	"parameterDef": {
 		"current_parameters": {
-			"structureInlineToggleList": ["[\"Cholesterol\",\"Ascending\"]"]
+			"structureInlineToggleList": [["Cholesterol", "Ascending"]]
 		},
 		"parameters": [
 			{
@@ -1534,7 +1534,7 @@ _defineConstant("STRUCTURETABLE_INLINE_TEXTFIELD_PROPS_INFO", {
 	"title": "StructureTableInlineTextfield Title",
 	"parameterDef": {
 		"current_parameters": {
-			"structureInlineTextfieldList": ["[\"BP\", \"BP-1\"]"]
+			"structureInlineTextfieldList": [["BP", "BP-1"]]
 		},
 		"parameters": [
 			{
@@ -1614,7 +1614,7 @@ _defineConstant("STRUCTURETABLE_INLINE_DROPDOWN_PROPS_INFO", {
 	"title": "StructureTableDropdown Title",
 	"parameterDef": {
 		"current_parameters": {
-			"structureInlineDropdownList": ["[\"BP\", \"Integer\"]"]
+			"structureInlineDropdownList": [["BP", "Integer"]]
 		},
 		"parameters": [
 			{
@@ -1702,7 +1702,7 @@ _defineConstant("STRUCTURETABLE_SUBPANEL_TEXTFIELD_PROPS_INFO", {
 	"title": "StructureTableInlineTextfield Title",
 	"parameterDef": {
 		"current_parameters": {
-			"structurelisteditorTableInputList": ["[\"BP\", \"BP-1\"]"]
+			"structurelisteditorTableInputList": [["BP", "BP-1"]]
 		},
 		"parameters": [
 			{
@@ -1846,7 +1846,7 @@ _defineConstant("STRUCTURELISTEDITOR_PROPS_INFO", {
 	"title": "StructureListEditor Title",
 	"parameterDef": {
 		"current_parameters": {
-			"structurelisteditorList": ["[\"Hello\", \"World\"]"]
+			"structurelisteditorList": [["Hello", "World"]]
 		},
 		"parameters": [
 			{
@@ -1926,7 +1926,7 @@ _defineConstant("STRUCTURETABLE_MOVEABLE_PROPS_INFO", {
 	"title": "StructureTableDropdown Title",
 	"parameterDef": {
 		"current_parameters": {
-			"structureInlineDropdownList": ["[\"BP\", \"Integer\"]", "[\"Sex\", \"String\"]", "[\"K\", \"Double\"]"]
+			"structureInlineDropdownList": [["BP", "Integer"], ["Sex", "String"], ["K", "Double"]]
 		},
 		"parameters": [
 			{
@@ -2015,7 +2015,7 @@ _defineConstant("STRUCTURETABLE_SORTABLE_PROPS_INFO", {
 	"title": "StructureTableDropdown Title",
 	"parameterDef": {
 		"current_parameters": {
-			"structureInlineDropdownList": ["[\"BP\", \"Integer\"]", "[\"K\", \"String\"]"]
+			"structureInlineDropdownList": [["BP", "Integer"], ["K", "String"]]
 		},
 		"parameters": [
 			{
@@ -2105,7 +2105,7 @@ _defineConstant("STRUCTURETABLE_FILTERABLE_PROPS_INFO", {
 	"title": "StructureTableDropdown Title",
 	"parameterDef": {
 		"current_parameters": {
-			"structureInlineDropdownList": ["[\"BP\", \"Integer\"]", "[\"Na\", \"Double\"]"]
+			"structureInlineDropdownList": [["BP", "Integer"], ["Na", "Double"]]
 		},
 		"parameters": [
 			{

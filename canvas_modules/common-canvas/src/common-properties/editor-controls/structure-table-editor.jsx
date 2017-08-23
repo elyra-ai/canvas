@@ -35,7 +35,7 @@ export default class StructureTableEditor extends EditorControl {
 	constructor(props) {
 		super(props);
 		this.state = {
-			controlValue: EditorControl.parseStructureStrings(props.valueAccessor(props.control.name)),
+			controlValue: props.valueAccessor(props.control.name),
 			selectedRows: this.props.selectedRows
 		};
 
@@ -66,7 +66,7 @@ export default class StructureTableEditor extends EditorControl {
 		// Added since in subpanel a simple control will try to update the parameter control value incorrectly
 		if (Array.isArray(propVal)) {
 			this.setState({
-				controlValue: EditorControl.parseStructureStrings(propVal),
+				controlValue: propVal,
 				selectedRows: nextProps.selectedRows
 			});
 			this.selectionChanged(nextProps.selectedRows);
@@ -89,8 +89,7 @@ export default class StructureTableEditor extends EditorControl {
 	/* Returns the public representation of the control value. */
 	getControlValue() {
 		// logger.info("getControlValue()");
-		// logger.info(EditorControl.stringifyStructureStrings(this.state.controlValue));
-		return EditorControl.stringifyStructureStrings(this.state.controlValue);
+		return this.state.controlValue;
 	}
 
 	/* Returns the current internal representation of the control value. */
@@ -104,7 +103,7 @@ export default class StructureTableEditor extends EditorControl {
 			controlValue: controlValue,
 			selectedRows: selectedRows
 		}, function() {
-			updateControlValue(targetControl, EditorControl.stringifyStructureStrings(controlValue));
+			updateControlValue(targetControl, controlValue);
 			that.props.updateSelectedRows(that.props.control.name, selectedRows);
 		});
 	}
@@ -115,7 +114,7 @@ export default class StructureTableEditor extends EditorControl {
 			controlValue: controlValue,
 			selectedRows: []
 		}, function() {
-			updateControlValue(targetControl, EditorControl.stringifyStructureStrings(controlValue));
+			updateControlValue(targetControl, controlValue);
 			that.updateSelectedRows(that.props.control.name, []);
 		});
 	}
@@ -140,15 +139,11 @@ export default class StructureTableEditor extends EditorControl {
 		// logger.info("***** getEditingRowValue: controlId=" + controlId);
 
 		const col = this.indexOfColumn(controlId);
-		const columnControl = this.props.control.subControls[col];
 		// List are represented as JSON format strings so need to convert those
 		// to an array of strings
 		const value = this.getCurrentControlValue()[this.getEditingRow()][col];
 		// logger.info("***** value=" + value);
-		if (columnControl.valueDef.isList === true) {
-			return JSON.parse(value);
-		}
-		return [value];
+		return value;
 	}
 
 	indexOfColumn(controlId) {

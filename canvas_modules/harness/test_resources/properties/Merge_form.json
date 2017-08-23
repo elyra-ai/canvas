@@ -322,31 +322,15 @@
       }
     ],
     "data": {
-      "currentProperties": {
-        "method": [
-          "Order"
-        ],
-        "join": [
-          "Inner"
-        ],
-        "annotation": [
-          ""
-        ],
-        "common_keys": [
-          "true"
-        ],
-        "condition": [
-          ""
-        ],
-        "rename_duplicate_fields": [
-          "true"
-        ],
-        "use_custom_name": [
-          "false"
-        ],
-        "custom_name": [
-          ""
-        ],
+      "currentParameters": {
+        "method": "Order",
+        "join": "Inner",
+        "annotation": "",
+        "common_keys": true,
+        "condition": "",
+        "rename_duplicate_fields": true,
+        "use_custom_name": false,
+        "custom_name": "",
         "key_fields": []
       },
       "datasetMetadata": {

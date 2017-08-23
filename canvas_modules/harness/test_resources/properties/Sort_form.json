@@ -204,23 +204,17 @@
       }
     ],
     "data": {
-      "currentProperties": {
-        "annotation": [
-          ""
-        ],
-        "use_custom_name": [
-          "false"
-        ],
-        "custom_name": [
-          ""
-        ],
+      "currentParameters": {
+        "annotation": "",
+        "use_custom_name": false,
+        "custom_name": "",
         "keys": [
-					"[\"Na\",\"Ascending\"]",
-					"[\"Drug\",\"Descending\"]",
-					"[\"Sex\",\"Ascending\"]",
-					"[\"Age\",\"Descending\"]",
-					"[\"BP\",\"Ascending\"]",
-					"[\"Cholesterol\",\"Ascending\"]"
+					["Na","Ascending"],
+					["Drug","Descending"],
+					["Sex","Ascending"],
+					["Age","Descending"],
+					["BP","Ascending"],
+					["Cholesterol","Ascending"]
 				]
       },
 			"datasetMetadata": {

@@ -9,7 +9,7 @@
 
 /* eslint max-depth: ["error", 5] */
 
-import logger from "../../../utils/logger";
+// import logger from "../../../utils/logger";
 import React from "react";
 import StructureTableEditor from "./structure-table-editor.jsx";
 
@@ -32,7 +32,7 @@ export default class ColumnStructureAllocatorControl extends StructureTableEdito
 	}
 
 	stopEditingRow(rowIndex, applyChanges) {
-		logger.info("stopEditingRow: row=" + rowIndex + ", applyChanges=" + applyChanges);
+		// logger.info("stopEditingRow: row=" + rowIndex + ", applyChanges=" + applyChanges);
 
 		if (applyChanges) {
 			const subControlId = this.getSubControlId();
@@ -46,12 +46,8 @@ export default class ColumnStructureAllocatorControl extends StructureTableEdito
 					// logger.info(control);
 					if (typeof control !== "undefined") {
 						const controlValue = control.getControlValue();
-						logger.info("Control value=" + controlValue);
-						if (columnControl.valueDef.isList === true) {
-							allValues[rowIndex][i] = JSON.stringify(controlValue);
-						} else {
-							allValues[rowIndex][i] = controlValue[0];
-						}
+						// logger.info("Control value=" + controlValue);
+						allValues[rowIndex][i] = controlValue;
 					}
 				}
 			}

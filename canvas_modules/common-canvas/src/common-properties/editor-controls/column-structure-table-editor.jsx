@@ -35,7 +35,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		this.state = {
 			enableRemoveIcon: false,
 			hoverRemoveIcon: false,
-			controlValue: EditorControl.parseStructureStrings(props.valueAccessor(props.control.name)),
+			controlValue: props.valueAccessor(props.control.name),
 			selectedRows: this.props.selectedRows
 		};
 
@@ -77,7 +77,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 	componentWillReceiveProps(nextProps) {
 		// logger.info("componentWillReceiveProps");
 		this.setState({
-			controlValue: EditorControl.parseStructureStrings(nextProps.valueAccessor(nextProps.control.name)),
+			controlValue: nextProps.valueAccessor(nextProps.control.name),
 			selectedRows: nextProps.selectedRows
 		});
 		this.selectionChanged(nextProps.selectedRows);
@@ -85,8 +85,8 @@ export default class ColumnStructureTableEditor extends EditorControl {
 
 	/* Returns the public representation of the control value. */
 	getControlValue() {
-		// logger.info(EditorControl.stringifyStructureStrings(this.state.controlValue));
-		return EditorControl.stringifyStructureStrings(this.state.controlValue);
+		// logger.info(this.state.controlValue);
+		return this.state.controlValue;
 	}
 
 	/* Returns the current internal representation of the control value. */
@@ -100,7 +100,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			controlValue: controlValue,
 			selectedRows: selectedRows
 		}, function() {
-			updateControlValue(targetControl, EditorControl.stringifyStructureStrings(controlValue));
+			updateControlValue(targetControl, controlValue);
 			that.updateSelectedRows(that.props.control.name, selectedRows);
 		});
 	}
@@ -111,7 +111,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			controlValue: controlValue,
 			selectedRows: []
 		}, function() {
-			updateControlValue(targetControl, EditorControl.stringifyStructureStrings(controlValue));
+			updateControlValue(targetControl, controlValue);
 			that.updateSelectedRows(that.props.control.name, []);
 		});
 	}
@@ -141,15 +141,11 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		// logger.info("***** getEditingRowValue: controlId=" + controlId);
 
 		const col = this.indexOfColumn(controlId);
-		const columnControl = this.props.control.subControls[col];
 		// List are represented as JSON format strings so need to convert those
 		// to an array of strings
 		const value = this.getCurrentControlValue()[this.getEditingRow()][col];
 		// logger.info("***** value=" + value);
-		if (columnControl.valueDef.isList === true) {
-			return JSON.parse(value);
-		}
-		return [value];
+		return value;
 	}
 
 	indexOfColumn(controlId) {
@@ -228,7 +224,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			this.rowIndex = rowIndex;
 			this.colIndex = col;
 			controlValue[rowIndex][col] = value;
-			this.props.updateControlValue(this.props.control.name, EditorControl.stringifyStructureStrings(controlValue));
+			this.props.updateControlValue(this.props.control.name, controlValue);
 		}
 	}
 

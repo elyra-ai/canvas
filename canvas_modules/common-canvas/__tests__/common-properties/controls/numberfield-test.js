@@ -32,7 +32,7 @@ const validationDefinitions = [];
 const controlStates = {};
 
 function valueAccessor() {
-	return ["3"];
+	return 3;
 }
 
 function updateControlValue(id, controlValue) {
@@ -88,8 +88,24 @@ describe("numberfield-control renders correctly", () => {
 			/>
 		);
 		const input = wrapper.find(".number");
-		input.simulate("change", { target: { value: "44" } });
-		expect(wrapper.state().controlValue).to.equal("44");
+		input.simulate("change", { target: { value: 44 } });
+		expect(wrapper.state().controlValue).to.equal(44);
+	});
+
+	it("should set correct state null in `NumberfieldControl`", () => {
+		const wrapper = mount(
+			<NumberfieldControl control={control}
+				key={controlId}
+				ref={controlId}
+				valueAccessor={valueAccessor}
+				validationDefinitions={validationDefinitions}
+				controlStates={controlStates}
+				updateControlValue={updateControlValue}
+			/>
+		);
+		const input = wrapper.find(".number");
+		input.simulate("change", { target: { value: "" } });
+		expect(wrapper.state().controlValue).to.equal(null);
 	});
 
 	it("should set correct control type in `NumberfieldControl`", () => {

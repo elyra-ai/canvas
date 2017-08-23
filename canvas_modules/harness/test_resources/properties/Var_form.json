@@ -144,22 +144,12 @@
       }
     ],
     "data": {
-      "currentProperties": {
-        "annotation": [
-          ""
-        ],
-        "read_field_names": [
-          "true"
-        ],
-        "use_custom_name": [
-          "false"
-        ],
-        "full_filename": [
-          ""
-        ],
-        "custom_name": [
-          ""
-        ]
+      "currentParameters": {
+        "annotation": "",
+        "read_field_names": true,
+        "use_custom_name": false,
+        "full_filename": "",
+        "custom_name": ""
       },
       "datasetMetadata": {
         "fields": []

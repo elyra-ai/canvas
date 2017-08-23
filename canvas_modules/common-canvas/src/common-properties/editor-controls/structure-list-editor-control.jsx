@@ -7,7 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import logger from "../../../utils/logger";
+// import logger from "../../../utils/logger";
 import React from "react";
 import { Button } from "react-bootstrap";
 import StructureTableEditor from "./structure-table-editor.jsx";
@@ -23,8 +23,6 @@ export default class StructurelisteditorControl extends StructureTableEditor {
 	}
 
 	stopEditingRow(rowIndex, applyChanges) {
-		logger.info("stopEditingRow: row=" + rowIndex + ", applyChanges=" + applyChanges);
-
 		if (applyChanges) {
 			const subControlId = this.getSubControlId();
 			const allValues = this.getCurrentControlValue();
@@ -33,15 +31,10 @@ export default class StructurelisteditorControl extends StructureTableEditor {
 				const lookupKey = subControlId + columnControl.name;
 				// logger.info("Accessing sub-control " + lookupKey);
 				const control = this.refs[lookupKey];
-				// logger.info(control);
 				if (typeof control !== "undefined") {
 					const controlValue = control.getControlValue();
-					logger.info("Control value=" + controlValue);
-					if (columnControl.valueDef.isList === true) {
-						allValues[rowIndex][i] = JSON.stringify(controlValue);
-					} else {
-						allValues[rowIndex][i] = controlValue[0];
-					}
+					// logger.info("Control value=" + controlValue);
+					allValues[rowIndex][i] = controlValue;
 				}
 			}
 			this.setCurrentControlValue(this.props.control.name, allValues, this.props.updateControlValue);
@@ -49,21 +42,15 @@ export default class StructurelisteditorControl extends StructureTableEditor {
 	}
 
 	addRow() {
-		logger.info("addRow");
-
 		const newRow = JSON.parse(JSON.stringify(this.props.control.defaultRow));
-		logger.info(newRow);
-		logger.info(this.getCurrentControlValue());
+		// logger.info(newRow);
 		const rows = this.getCurrentControlValue();
 		rows.push(newRow);
-		logger.info(rows);
 
 		this.setCurrentControlValue(this.props.control.name, rows, this.props.updateControlValue);
 	}
 
 	removeSelectedRows() {
-		logger.info("removeSelectedRows");
-
 		const rows = this.getCurrentControlValue();
 
 		// Sort descending to ensure lower indices don"t get
@@ -71,8 +58,6 @@ export default class StructurelisteditorControl extends StructureTableEditor {
 		const selected = this.getSelectedRows().sort(function(a, b) {
 			return b - a;
 		});
-
-		logger.info(selected);
 
 		for (let i = 0; i < selected.length; i++) {
 			rows.splice(selected[i], 1);
@@ -82,9 +67,6 @@ export default class StructurelisteditorControl extends StructureTableEditor {
 	}
 
 	render() {
-		logger.info("StructurelisteditorControl.render()");
-		logger.info(this.getCurrentControlValue());
-
 		const controlName = this.getControlID().split("-")[2];
 		const conditionProps = {
 			controlName: controlName,

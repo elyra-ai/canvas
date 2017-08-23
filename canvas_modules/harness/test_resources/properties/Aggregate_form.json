@@ -118,7 +118,7 @@
                             ],
                             "keyIndex": 0,
                             "defaultRow": [
-                              "[\"Min\",\"Max\"]"
+                              ["Min","Max"]
                             ],
                             "childItem": {
                               "itemType": "additionalLink",
@@ -300,29 +300,17 @@
       }
     ],
     "data": {
-      "currentProperties": {
-        "inc_record_count": [
-          "true"
-        ],
+      "currentParameters": {
+        "inc_record_count": true,
         "aggregates": [
-          "[\"Cholesterol\",\"[\\\"Min\\\",\\\"Max\\\"]\"]",
-          "[\"K\",\"[\\\"Mean\\\",\\\"Sum\\\",\\\"Min\\\",\\\"Max\\\",\\\"SDev\\\",\\\"Median\\\",\\\"Count\\\",\\\"Variance\\\",\\\"FirstQuartile\\\",\\\"ThirdQuartile\\\"]\"]"
-        ],
-        "annotation": [
-          ""
-        ],
-        "count_field": [
-          "Record_Count"
-        ],
-        "use_custom_name": [
-          "true"
-        ],
-        "custom_name": [
-          ""
-        ],
-        "keys": [
-          "Drug"
-        ]
+          ["Cholesterol",["Min","Max"]],
+          ["K",["Mean","Sum","Min","Max","SDev","Median","Count","Variance","FirstQuartile","ThirdQuartile"]]
+				],
+        "annotation": "",
+        "count_field": "Record_Count",
+        "use_custom_name": true,
+        "custom_name": "",
+        "keys": ["Drug"]
       },
       "inputDataModel": {
         "columns": [

@@ -11,7 +11,6 @@ import React from "react";
 import PropertiesDialog from "./properties-dialog.jsx";
 import PropertiesEditing from "./properties-editing.jsx";
 import EditorForm from "./editor-controls/editor-form.jsx";
-import PropertyUtil from "./util/property-utils.js";
 import Form from "./form/Form";
 import CommandStack from "../command-stack/command-stack.js";
 import CommonPropertiesAction from "../command-actions/commonPropertiesAction.js";
@@ -37,40 +36,11 @@ export default class CommonProperties extends React.Component {
 		} else if (this.props.propertiesInfo.parameterDef) {
 			formData = Form.makeForm(this.props.propertiesInfo.parameterDef);
 		}
-		// TODO: Temporary conversion to older property set as arrays of string values
-		if (formData && formData.data && !formData.data.currentProperties && formData.data.currentParameters) {
-			formData.data.currentProperties = this.parametersToProperties(formData.data.currentParameters);
-		}
 		// TODO: This can be removed once the WML Play service generates datasetMetadata instead of inputDataModel
 		if (formData && formData.data && formData.data.inputDataModel && !formData.data.datasetMetadata) {
 			formData.data.datasetMetadata = this.convertInputDataModel(formData.data.inputDataModel);
 		}
 		return formData;
-	}
-
-	/**
-	 * Converts the newer style parameters definition to
-	 * the older properties definition.
-	 */
-	parametersToProperties(currentParameters) {
-		if (!currentParameters || PropertyUtil.toType(currentParameters) !== "object") {
-			return {};
-		}
-		const retVal = {};
-		for (const propertyName in currentParameters) {
-			if (currentParameters.hasOwnProperty(propertyName)) {
-				const prop = currentParameters[propertyName];
-				const type = PropertyUtil.toType(prop);
-				if (type === "string") {
-					retVal[propertyName] = [prop];
-				} else if (type === "array") {
-					retVal[propertyName] = prop;
-				} else {
-					retVal[propertyName] = [prop.toString()];
-				}
-			}
-		}
-		return retVal;
 	}
 
 	/**
@@ -139,6 +109,7 @@ export default class CommonProperties extends React.Component {
 			formData = null;
 		}
 		if (formData !== null) {
+			// console.log("formData " + JSON.stringify(formData));
 			let propertiesDialog = [];
 			if (this.props.showPropertiesDialog) {
 				if (this.initialCurrentProperties === "empty" &&

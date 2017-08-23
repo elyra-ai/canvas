@@ -239,24 +239,16 @@
       }
     ],
     "data": {
-      "currentProperties": {
-        "annotation": [
-          ""
-        ],
+      "currentParameters": {
+        "annotation": "",
         "new_name": [],
-        "default_include": [
-          "true"
-        ],
+        "default_include": true,
         "selected_fields": [
           "K",
           "Na"
         ],
-        "use_custom_name": [
-          "true"
-        ],
-        "custom_name": [
-          "Discard Fields"
-        ]
+        "use_custom_name": true,
+        "custom_name": "Discard Fields"
       },
       "datasetMetadata": {
         "fields": [

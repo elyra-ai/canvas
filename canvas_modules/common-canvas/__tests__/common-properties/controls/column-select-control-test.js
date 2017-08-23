@@ -152,8 +152,8 @@ const controlStates = {};
 
 function valueAccessor() {
 	return [
-		"[\"Age\"]",
-		"[\"BP\"]"
+		["Age"],
+		["BP"]
 	];
 }
 

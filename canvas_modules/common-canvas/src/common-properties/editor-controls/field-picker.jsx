@@ -120,10 +120,7 @@ export default class FieldPicker extends EditorControl {
 	getTableData() {
 		const fields = this.getVisibleData();
 		const tableData = [];
-		let newControlValues = this.state.newControlValues;
-		if (this.props.control.defaultRow) {
-			newControlValues = EditorControl.parseStructureStrings(this.state.newControlValues);
-		}
+		const newControlValues = this.state.newControlValues;
 		for (let i = 0; i < fields.length; i++) {
 			var field = fields[i];
 			var checked = false;
@@ -203,10 +200,7 @@ export default class FieldPicker extends EditorControl {
 		const that = this;
 
 		const data = this.state.fields;
-		let newControlValues = this.state.newControlValues;
-		if (this.props.control.defaultRow) {
-			newControlValues = EditorControl.parseStructureStrings(this.state.newControlValues);
-		}
+		const newControlValues = this.state.newControlValues;
 
 		const visibleData = this.getVisibleData();
 
@@ -268,7 +262,7 @@ export default class FieldPicker extends EditorControl {
 
 		if (this.props.control.defaultRow) {
 			this.setState({
-				newControlValues: EditorControl.stringifyStructureStrings(selectAll),
+				newControlValues: selectAll,
 				checkedAll: evt.target.checked
 			});
 		} else {
@@ -286,10 +280,7 @@ export default class FieldPicker extends EditorControl {
 	}
 
 	getDefaultRow(field) {
-		let initialControlValues = this.state.initialControlValues;
-		if (this.props.control.defaultRow) {
-			initialControlValues = EditorControl.parseStructureStrings(this.state.initialControlValues);
-		}
+		const initialControlValues = this.state.initialControlValues;
 		for (let i = 0; i < initialControlValues.length; i++) {
 			if ((this.props.control.defaultRow && initialControlValues[i][0] === field) ||
 					(initialControlValues[i] === field)) {
@@ -308,7 +299,7 @@ export default class FieldPicker extends EditorControl {
 		if (found !== false) {
 			selectedField = found;
 			if (this.props.control.defaultRow) {
-				selectedField = EditorControl.stringifyStructureStrings([found])[0];
+				selectedField = found;
 			}
 		}
 
@@ -321,15 +312,14 @@ export default class FieldPicker extends EditorControl {
 							this.props.control.subControls[1].role === "new_column") {
 					defaultValue = selectedFieldName;
 				}
-				selectedField = EditorControl.stringifyStructureStrings(
-					[[selectedFieldName, defaultValue]])[0];
+				selectedField = [selectedFieldName, defaultValue];
 			} else {
 				selectedField = selectedFieldName;
 			}
 		}
 
 		if (evt.target.checked) {
-			this.setState({ newControlValues: current.concat(selectedField) });
+			this.setState({ newControlValues: current.concat([selectedField]) });
 		} else {
 			const modified = current.filter(function(element) {
 				return element !== selectedField;
@@ -461,10 +451,7 @@ export default class FieldPicker extends EditorControl {
 		let checkedAll = this.state.checkedAll;
 		// check all box should be checked if all in view is selected
 		const visibleData = this.getVisibleData();
-		let newControlValues = this.state.newControlValues;
-		if (this.props.control.defaultRow) {
-			newControlValues = EditorControl.parseStructureStrings(this.state.newControlValues);
-		}
+		const newControlValues = this.state.newControlValues;
 		if (visibleData.length > 0 && visibleData.length < this.state.data.fields.length) {
 			// need to compare the contents to make sure the visible ones are selected
 			const sameData = newControlValues.filter(function(row) {

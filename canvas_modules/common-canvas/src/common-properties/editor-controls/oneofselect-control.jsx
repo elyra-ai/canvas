@@ -17,7 +17,7 @@ export default class OneofselectControl extends EditorControl {
 		if (props.tableControl) {
 			this.state = { controlValue: this.props.value };
 		} else {
-			this.state = { controlValue: props.valueAccessor(props.control.name)[0] };
+			this.state = { controlValue: props.valueAccessor(props.control.name) };
 		}
 		if (!this.state.controlValue && typeof props.control.valueDef.defaultValue !== "undefined") {
 			this.state.controlValue = props.control.valueDef.defaultValue;
@@ -43,7 +43,7 @@ export default class OneofselectControl extends EditorControl {
 		}
 	}
 	getControlValue() {
-		return [this.state.controlValue];
+		return this.state.controlValue;
 	}
 
 	genSelectOptions(control, selectedValue) {

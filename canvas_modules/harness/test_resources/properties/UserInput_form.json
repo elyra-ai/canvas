@@ -291,20 +291,12 @@
       }
     ],
     "data": {
-      "currentProperties": {
-        "data_mode": [
-          "Combined"
-        ],
-        "annotation": [
-          ""
-        ],
-        "use_custom_name": [
-          "false"
-        ],
+      "currentParameters": {
+        "data_mode": "Combined",
+        "annotation": "",
+        "use_custom_name": false,
         "definitions": [],
-        "custom_name": [
-          ""
-        ]
+        "custom_name": ""
       },
 			"datasetMetadata": {
         "fields": []

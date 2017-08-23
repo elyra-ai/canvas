@@ -339,47 +339,23 @@
       }
     ],
     "data": {
-      "currentProperties": {
-        "custom_fields": [
-          "false"
-        ],
-        "max_node_number": [
-          "10000"
-        ],
-        "number_of_models": [
-          "100"
-        ],
-        "exclude_single_cat_pct": [
-          "95"
-        ],
-        "max_pct_missing": [
-          "70"
-        ],
-        "max_depth": [
-          "10"
-        ],
-        "annotation": [
-          ""
-        ],
-        "sample_size": [
-          "1.0"
-        ],
-        "max_category_number": [
-          "49"
-        ],
+      "currentParameters": {
+        "custom_fields": false,
+        "max_node_number": 10000,
+        "number_of_models": 100,
+        "exclude_single_cat_pct": 95,
+        "max_pct_missing": 70,
+        "max_depth": 10,
+        "annotation": "",
+        "sample_size": 1.0,
+        "max_category_number": 49,
         "inputs": [],
-        "use_custom_name": [
-          "false"
-        ],
+        "use_custom_name": false,
         "target": [
           ""
         ],
-        "custom_name": [
-          ""
-        ],
-        "min_child_node_size": [
-          "5"
-        ]
+        "custom_name": "",
+        "min_child_node_size": 5
       },
 			"datasetMetadata": {
         "fields": []

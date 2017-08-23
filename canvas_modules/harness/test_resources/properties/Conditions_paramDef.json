@@ -4,60 +4,44 @@
       "Age",
       "BP"
     ],
-    "oneofcolumnsList": [],
-    "someofcolumnsList": [],
     "numberfieldCheckpointInterval": -1,
     "numberfieldImpurity": "entropy",
-    "numberfieldMaxBins": 24,
+    "numberfieldMaxBins": null,
     "numberfieldMaxDepth": 7,
     "numberfieldMinInfoGain": 0,
     "numberfieldMinInstancesPerNode": 2,
     "numberfieldSeed": 12345,
     "checkboxTypes": [],
-    "oneofselectAnimals": [],
+    "oneofselectAnimals": "",
     "oneofselectPets": "turtle",
     "someofselectNumbers": [],
-    "checkboxSingle": "",
-    "checkboxEnable": "",
+    "checkboxSingle": false,
+    "checkboxEnable": false,
     "radiosetColor": "blue",
     "apples": 100,
     "lemons": 100,
     "berries": 50,
     "passwordField": "",
     "textfieldName": "",
-    "textareaDescription": "a / b",
-    "expressionBox": "",
+    "textareaDescription": ["ab", "cd"],
+    "expressionBox": "ab\ncd\nef",
     "columnSelectSharedWithInput": [
       "Sex"
     ],
     "structuretableSortOrder": [
-      "[\"Cholesterol\",\"Ascending\"]"
+      ["Cholesterol","Ascending"]
     ],
     "structuretableRenameFields": [
-      "[\"Age\", \"Age\"]",
-      "[\"BP\", \"BP-1\"]"
+      ["Age", "Age"],
+      ["BP", "BP-1"]
     ],
-    "structurelisteditorTableInput": [
-      "[\"Age\",\"Integer\"]"
-    ]
+    "structurelisteditorTableInput": [["Hello", "World"]]
   },
   "parameters": [
     {
       "id": "columnSelectInputFieldList",
       "type": "array[string]",
       "default": [],
-      "role": "column"
-    },
-    {
-      "id": "oneofcolumnsList",
-      "type": "string",
-      "default": "",
-      "role": "column"
-    },
-    {
-      "id": "someofcolumnsList",
-      "type": "array[string]",
-      "default": "",
       "role": "column"
     },
     {
@@ -117,8 +101,7 @@
         "horse",
         "tiger",
         "monkey"
-      ],
-      "default": "bear"
+      ]
     },
     {
       "id": "oneofselectPets",
@@ -228,10 +211,12 @@
       "role": "column",
       "default": []
     },
-    {
-      "id": "structurelisteditorTableInput",
-      "type": "array[structurelisteditorTableInput]"
-    }
+		{
+			"id": "structurelisteditorTableInput",
+			"type": "array[structurelisteditorTableInput]",
+			"role": "column",
+			"default": []
+		}
   ],
   "complex_types": [
     {
@@ -273,29 +258,21 @@
         }
       ]
     },
-    {
-      "id": "structurelisteditorTableInput",
-      "key_definition": {
-        "id": "field",
-        "type": "string",
-        "role": "textfield",
-        "default": ""
-      },
-      "parameters": [
-        {
-          "id": "Storage",
-          "enum": [
-            "String",
-            "Integer",
-            "Real",
-            "Time",
-            "Date",
-            "Timestamp"
-          ],
-          "default": "String"
-        }
-      ]
-    }
+		{
+			"id": "structurelisteditorTableInput",
+			"parameters": [
+				{
+					"id": "name",
+					"type": "string",
+					"role": "new_column"
+				},
+				{
+					"id": "description",
+					"type": "string",
+					"role": "new_column"
+				}
+			]
+		}
   ],
   "uihints": {
     "id": "Conditions.test",
@@ -315,24 +292,6 @@
         },
         "description": {
           "default": "Select one or more input columns"
-        }
-      },
-      {
-        "parameter_ref": "oneofcolumnsList",
-        "label": {
-          "default": "One of Columns list"
-        },
-        "description": {
-          "default": "One of Columns list"
-        }
-      },
-      {
-        "parameter_ref": "someofcolumnsList",
-        "label": {
-          "default": "Some of Columns list"
-        },
-        "description": {
-          "default": "Some of Columns list"
         }
       },
       {
@@ -612,27 +571,28 @@
           }
         ]
       },
-      {
-        "complex_type_ref": "structurelisteditorTableInput",
-        "key_definition": {
-          "parameter_ref": "field",
-          "width": 10,
-          "label": {
-            "resource_key": "structurelisteditorTableInput.field.label"
-          }
-        },
-        "parameters": [
-          {
-            "parameter_ref": "structurelisteditorTableInput",
-            "width": 30,
-            "resource_key": "structurelisteditorTableInput.sort_order",
-            "label": {
-              "resource_key": "structurelisteditorTableInput.sort_order.label"
-            },
-            "control": "textfield"
-          }
-        ]
-      }
+			{
+				"complex_type_ref": "structurelisteditorTableInput",
+				"parameters": [
+					{
+						"parameter_ref": "name",
+						"label": {
+							"default": "Structure Name",
+							"resource_key": "structurelisteditorTableInput.name.label"
+						},
+						"width": 22,
+						"edit_style": "subpanel"
+					},
+					{
+						"parameter_ref": "description",
+						"label": {
+							"resource_key": "structurelisteditorTableInput.description.label"
+						},
+						"width": 22,
+						"edit_style": "subpanel"
+					}
+				]
+			}
     ],
     "group_info": [
       {
@@ -663,16 +623,6 @@
             "parameter_refs": [
               "columnSelectSharedWithInput",
               "columnSelectInputFieldList"
-            ]
-          },
-          {
-            "id": "List",
-            "label": {
-              "default": "List"
-            },
-            "parameter_refs": [
-              "oneofcolumnsList",
-              "someofcolumnsList"
             ]
           }
         ]
@@ -752,19 +702,15 @@
             },
             "type": "columnSelection",
             "parameter_refs": [
-              "structuretableRenameFields",
-              "structurelisteditorTableInput"
+              "structuretableRenameFields"
             ]
           },
-          {
-            "id": "List",
-            "label": {
-              "default": "List"
-            },
-            "parameter_refs": [
-              "structurelisteditorTableInput"
-            ]
-          }
+					{
+						"id": "Structure Table Inline Control",
+						"parameter_refs": [
+							"structurelisteditorTableInput"
+						]
+					}
         ]
       }
     ]
@@ -846,38 +792,20 @@
         }
       }
     },
-    {
-      "validation": {
-        "fail_message": {
-          "type": "warning",
-          "focus_parameter_ref": "numberfieldMinInstancesPerNode",
-          "message": {
-            "resource_key": "numberfield_min_instances_per_node_not_valid"
-          }
-        },
-        "evaluate": {
-          "condition": {
-            "parameter_ref": "numberfieldMinInstancesPerNode",
-            "op": "greaterThan",
-            "value": 0
-          }
-        }
-      }
-    },
-    {
+		{
       "validation": {
         "fail_message": {
           "type": "error",
           "focus_parameter_ref": "numberfieldMinInfoGain",
           "message": {
-            "resource_key": "numberfield_min_info_gain_not_valid"
+            "resource_key": "numberfield_min_info_gain_not_equals_min_instance"
           }
         },
         "evaluate": {
           "condition": {
             "parameter_ref": "numberfieldMinInfoGain",
-            "op": "greaterThan",
-            "value": 0
+            "op": "notEquals",
+						"parameter_2_ref": "numberfieldMinInstancesPerNode"
           }
         }
       }
@@ -894,8 +822,8 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "numberfieldSeed",
-            "op": "contains",
-            "value": "123"
+            "op": "notEquals",
+            "value": 123
           }
         }
       }
@@ -917,36 +845,18 @@
         }
       }
     },
-    {
-      "validation": {
-        "fail_message": {
-          "type": "error",
-          "focus_parameter_ref": "oneofcolumnsList",
-          "message": {
-            "resource_key": "one_of_columns_list_not_empty"
-          }
-        },
-        "evaluate": {
-          "condition": {
-            "parameter_ref": "oneofcolumnsList",
-            "op": "contains",
-            "value": "Sex"
-          }
-        }
-      }
-    },
-    {
+		{
       "validation": {
         "fail_message": {
           "type": "warning",
-          "focus_parameter_ref": "someofcolumnsList",
+          "focus_parameter_ref": "columnSelectSharedWithInput",
           "message": {
-            "resource_key": "some_of_columns_list_not_empty"
+            "resource_key": "column_select_shared_with_input_not_empty"
           }
         },
         "evaluate": {
           "condition": {
-            "parameter_ref": "someofcolumnsList",
+            "parameter_ref": "columnSelectSharedWithInput",
             "op": "isNotEmpty"
           }
         }
@@ -1102,7 +1012,7 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "passwordField",
-            "op": "contains",
+            "op": "equals",
             "value": "password"
           }
         }
@@ -1221,6 +1131,25 @@
               }
             }
           ]
+        }
+      }
+    },
+		{
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "message": {
+            "default": "Name cannot contain password",
+            "resource_key": "textfield_name_not_contain_password"
+          },
+          "focus_parameter_ref": "passwordField"
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "textfieldName",
+            "op": "notContains",
+            "parameter_2_ref": "passwordField"
+          }
         }
       }
     },
@@ -1349,11 +1278,8 @@
   "resources": {
     "columnSelectInputFieldList.label": "Column Select Input columns",
     "columnSelectInputFieldList.desc": "Select one or more input columns",
-    "oneofcolumnsList.label": "",
-    "oneofcolumnsList.desc": "",
-    "someofcolumnsList.label": "",
-    "someofcolumnsList.desc": "",
     "column_select_input_field_list_not_empty": "Select one or more input fields. This is sample text to show how an error or warning message will display text if provided a long description",
+		"column_select_shared_with_input_not_empty": "Warning: empty tables",
     "one_of_columns_list_not_empty": "Cannot have Sex selected",
     "some_of_columns_list_not_empty": "Field must be selected",
     "numberfieldCheckpointInterval.label": "Checkpoint Interval",
@@ -1375,6 +1301,7 @@
     "numberfield_max_bins_not_valid": "Maximum number of bins must be >= 2 or Maximum depth of the tree > 0",
     "numberfield_min_instances_per_node_not_valid": "The minimum instances per node value must be >= 1",
     "numberfield_min_info_gain_not_valid": "Cannot be less than 0",
+		"numberfield_min_info_gain_not_equals_min_instance" : "info gain should not equal min instance",
     "numberfield_seed_not_valid": "This is an example of a very long error message that someone might enter. The message text will wrap around to the next line as shown here.",
     "checkboxTypes.label": "Data Types",
     "checkboxTypes.desc": "",
@@ -1412,6 +1339,7 @@
     "textarea_description_not_valid": "Description cannot contain /, double or single \"quotes\"",
     "textfield_name_not_valid_one": "Name cannot contain /",
     "textfield_name_not_valid_two": "Name cannot contain double or single \"quotes\"",
+		"textfield_name_not_contain_password": "name cannot contain password",
     "expression_box_not_valid": "Expression cannot contain /, double or single \"quotes\"",
     "columnSelectSharedWithInput.label": "Input List Shared with Below Control",
     "columnSelectSharedWithInput.desc": "Shared input list with sort by",
@@ -1424,10 +1352,7 @@
     "structuretableRenameFields.field.label": "Input name",
     "structuretableRenameFields.new_name.label": "Output name",
     "structuretable_rename_fields_not_empty": "The 'Output Name' field cannot be empty",
-    "structurelisteditorTableInput.label": "Sort",
-    "structurelisteditorTableInput.field.label": "Field",
-    "structurelisteditorTableInput.sort_order.label": "Order",
-    "structurelisteditorTableInput.sort_order.Ascending.label": "Ascending",
-    "structurelisteditorTableInput.sort_order.Descending.label": "Descending"
+    "structurelisteditorTableInput.name.label": "Name",
+    "structurelisteditorTableInput.description.label": "Description"
   }
 }

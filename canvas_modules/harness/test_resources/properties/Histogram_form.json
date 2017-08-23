@@ -235,37 +235,17 @@
       }
     ],
     "data": {
-      "currentProperties": {
-        "color_field": [
-          ""
-        ],
-        "subtitle": [
-          ""
-        ],
-        "field": [
-          ""
-        ],
-        "annotation": [
-          ""
-        ],
-        "panel_field": [
-          ""
-        ],
-        "use_grid": [
-          "true"
-        ],
-        "caption": [
-          ""
-        ],
-        "use_custom_name": [
-          "false"
-        ],
-        "title": [
-          ""
-        ],
-        "custom_name": [
-          ""
-        ]
+      "currentParameters": {
+        "color_field": "",
+        "subtitle": "",
+        "field": "",
+        "annotation": "",
+        "panel_field": "",
+        "use_grid": true,
+        "caption": "",
+        "use_custom_name": false,
+        "title": "",
+        "custom_name": ""
       },
       "datasetMetadata": {
         "fields": []

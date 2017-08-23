@@ -268,22 +268,12 @@
       }
     ],
     "data": {
-      "currentProperties": {
-        "custom_fields": [
-          "false"
-        ],
-        "min_impurity": [
-          "1.0E-4"
-        ],
-        "max_depth": [
-          "5"
-        ],
-        "annotation": [
-          ""
-        ],
-        "impurity_measure": [
-          "Gini"
-        ],
+      "currentParameters": {
+        "custom_fields": false,
+        "min_impurity": "1.0E-4",
+        "max_depth": 5,
+        "annotation": "",
+        "impurity_measure": "Gini",
         "inputs": [
           "Age",
           "Sex",
@@ -293,15 +283,9 @@
           "K",
           "Drug"
         ],
-        "use_custom_name": [
-          "false"
-        ],
-        "target": [
-          ""
-        ],
-        "custom_name": [
-          ""
-        ]
+        "use_custom_name": false,
+        "target": [""],
+        "custom_name": ""
       },
       "inputDataModel": {
         "columns": [

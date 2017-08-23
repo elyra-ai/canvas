@@ -5,9 +5,9 @@
       "use_custom_name": true,
       "custom_name": "",
       "keys": [
-        "[\"Na\",\"Ascending\"]",
-        "[\"Drug\",\"Descending\"]",
-        "[\"Cholesterol\",\"Ascending\"]"
+        ["Na","Ascending"],
+        ["Drug","Descending"],
+        ["Cholesterol","Ascending"]
       ]
     },
     "parameters": [
@@ -287,9 +287,9 @@
         "use_custom_name": true,
         "custom_name": "",
         "keys": [
-          "[\"Na\",\"Ascending\"]",
-          "[\"Drug\",\"Descending\"]",
-          "[\"Cholesterol\",\"Ascending\"]"
+          ["Na","Ascending"],
+          ["Drug","Descending"],
+          ["Cholesterol","Ascending"]
         ]
       },
       "datasetMetadata": {

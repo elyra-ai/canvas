@@ -248,27 +248,15 @@
       }
     ],
     "data": {
-      "currentProperties": {
+      "currentParameters": {
         "end_fields": [],
-        "annotation": [
-          ""
-        ],
-        "sort_by": [
-          "Name"
-        ],
+        "annotation": "",
+        "sort_by": "Name",
         "start_fields": [],
-        "ascending": [
-          "true"
-        ],
-        "use_custom_name": [
-          "false"
-        ],
-        "mode": [
-          "Custom"
-        ],
-        "custom_name": [
-          ""
-        ]
+        "ascending": true,
+        "use_custom_name": false,
+        "mode": "Custom",
+        "custom_name": ""
       },
       "inputDataModel": {
         "columns": [

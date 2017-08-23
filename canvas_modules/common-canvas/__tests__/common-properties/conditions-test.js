@@ -10,7 +10,6 @@
 
 import React from "react";
 import EditorForm from "../../src/common-properties/editor-controls/editor-form.jsx";
-import EditorControl from "../../src/common-properties/editor-controls/editor-control.jsx";
 import { shallow, mount } from "enzyme";
 import { expect } from "chai";
 import sinon from "sinon";
@@ -982,8 +981,13 @@ describe("StructureTableEditor handles cell level conditions", () => {
 		const cell = dataRows.first().find("#editor-control-structuretableRenameFields");
 		cell.simulate("change", { target: { value: "" } });
 		cell.simulate("blur");
-		const rowValues = EditorControl.parseStructureStrings(wrapper.state().valuesTable.structuretableRenameFields);
+		const rowValues = wrapper.state().valuesTable.structuretableRenameFields;
 		expect(rowValues).to.have.length(2);
+		const expected = [
+			["Age", ""],
+			["BP", "BP-1"]
+		];
+		expect(_.isEqual(rowValues, expected)).to.be.true;
 
 	//	const structuretableRenameFieldsErrorMessages = {
 		//	"structuretableRenameFields": {

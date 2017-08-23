@@ -59,7 +59,7 @@ export default class EditorForm extends React.Component {
 		super(props);
 		this.state = {
 			formData: this.props.form,
-			valuesTable: this.props.form.data.currentProperties,
+			valuesTable: this.props.form.data.currentParameters,
 			controlErrorMessages: {},
 			visibleDefinition: [],
 			enabledDefinitions: [],
@@ -150,7 +150,10 @@ export default class EditorForm extends React.Component {
 						const values = this.state.valuesTable[ctrlName];
 						for (let j = 0; j < values.length; j++) {
 							temp.push(data.fields.filter(function(element) {
-								return values[j].split(",")[0].indexOf(element.name) > -1;
+								if (Array.isArray(values)) {
+									return values[j].split(",")[0].indexOf(element.name) > -1;
+								}
+								return values.split(",")[0].indexOf(element.name) > -1;
 							})[0]);
 							// logger.info("Temp is: " + JSON.stringify(temp));
 						}
@@ -848,7 +851,7 @@ export default class EditorForm extends React.Component {
 			userInput = {};
 			for (var visKey in controlValues) {
 				if (visKey) {
-					userInput[visKey] = controlValues[visKey][0];
+					userInput[visKey] = controlValues[visKey];
 				}
 			}
 
@@ -885,7 +888,7 @@ export default class EditorForm extends React.Component {
 			userInput = {};
 			for (var enbKey in controlValues) {
 				if (enbKey) {
-					userInput[enbKey] = controlValues[enbKey][0];
+					userInput[enbKey] = controlValues[enbKey];
 				}
 			}
 

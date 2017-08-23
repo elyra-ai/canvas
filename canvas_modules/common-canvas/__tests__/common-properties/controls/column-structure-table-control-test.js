@@ -152,12 +152,12 @@ const controlStates = {};
 
 function valueAccessor() {
 	return [
-		"[\"Na\",\"Ascending\"]",
-		"[\"Drug\",\"Descending\"]",
-		"[\"Sex\",\"Ascending\"]",
-		"[\"Age\",\"Descending\"]",
-		"[\"BP\",\"Ascending\"]",
-		"[\"Cholesterol\",\"Ascending\"]"
+		["Na", "Ascending"],
+		["Drug", "Descending"],
+		["Sex", "Ascending"],
+		["Age", "Descending"],
+		["BP", "Ascending"],
+		["Cholesterol", "Ascending"]
 	];
 }
 

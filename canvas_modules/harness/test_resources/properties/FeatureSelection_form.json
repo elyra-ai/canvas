@@ -365,56 +365,24 @@
       }
     ],
     "data": {
-      "currentProperties": {
-        "custom_fields": [
-          "false"
-        ],
-        "screen_std_dev": [
-          "true"
-        ],
-        "min_std_dev": [
-          "0.0"
-        ],
-        "screen_missing_values": [
-          "true"
-        ],
-        "max_missing_values": [
-          "70.0"
-        ],
-        "partition": [
-          ""
-        ],
-        "annotation": [
-          ""
-        ],
-        "min_coeff_of_var": [
-          "0.1"
-        ],
-        "screen_coeff_of_var": [
-          "true"
-        ],
-        "max_single_category": [
-          "90.0"
-        ],
+      "currentParameters": {
+        "custom_fields": false,
+        "screen_std_dev": true,
+        "min_std_dev": 0.0,
+        "screen_missing_values": true,
+        "max_missing_values": 70.0,
+        "partition": "",
+        "annotation": "",
+        "min_coeff_of_var": 0.1,
+        "screen_coeff_of_var": true,
+        "max_single_category": 90.0,
         "inputs": [],
-        "screen_num_categories": [
-          "true"
-        ],
-        "use_custom_name": [
-          "false"
-        ],
-        "max_num_categories": [
-          "95.0"
-        ],
-        "target": [
-          ""
-        ],
-        "screen_single_category": [
-          "true"
-        ],
-        "custom_name": [
-          ""
-        ]
+        "screen_num_categories": true,
+        "use_custom_name": false,
+        "max_num_categories": 95.0,
+        "target": [""],
+        "screen_single_category": true,
+        "custom_name": ""
       },
       "datasetMetadata": {
         "fields": []

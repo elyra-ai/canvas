@@ -37,7 +37,7 @@ export default class CheckboxsetControl extends EditorControl {
 
 		if (evt.target.checked && index < 0) {
 			// Add to values
-			values = values.concat(evt.target.id);
+			values = values.concat([evt.target.id]);
 		}
 		if (!(evt.target.checked) && index >= 0) {
 			// Remove from values

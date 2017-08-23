@@ -470,25 +470,13 @@
       }
     ],
     "data": {
-      "currentProperties": {
-        "formula_measure_type": [
-          "Default"
-        ],
-        "annotation": [
-          ""
-        ],
-        "new_name": [
-          "Na_to_K"
-        ],
-        "formula_expr": [
-          "Na/K"
-        ],
-        "use_custom_name": [
-          "false"
-        ],
-        "custom_name": [
-          "Na_to_K"
-        ]
+      "currentParameters": {
+        "formula_measure_type": "Default",
+        "annotation": "",
+        "new_name": "Na_to_K",
+        "formula_expr": "Na/K",
+        "use_custom_name": false,
+        "custom_name": "Na_to_K"
       },
       "datasetMetadata": {
         "fields": [

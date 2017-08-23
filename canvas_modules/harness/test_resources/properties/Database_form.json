@@ -142,20 +142,12 @@
       }
     ],
     "data": {
-      "currentProperties": {
-        "annotation": [
-          ""
-        ],
-        "tablename": [
-          ""
-        ],
-        "use_custom_name": [
-          "false"
-        ],
+      "currentParameters": {
+        "annotation": "",
+        "tablename": "",
+        "use_custom_name": false,
         "driver_connect": [],
-        "custom_name": [
-          ""
-        ]
+        "custom_name": ""
       },
       "datasetMetadata": {
         "fields": []

@@ -591,29 +591,21 @@
       }
     ],
     "data": {
-      "currentProperties": {
-        "annotation": [
-          ""
-        ],
-        "default_value_mode": [
-          "Read"
-        ],
-        "use_custom_name": [
-          "true"
-        ],
+      "currentParameters": {
+        "annotation": "",
+        "default_value_mode": "Read",
+        "use_custom_name": true,
         "metadata": [
-          "[\"Drug\",\"Set\",\"Target\",\"Specify\",\"[\\\"drugA\\\",\\\"drugB\\\",\\\"drugC\\\",\\\"drugX\\\",\\\"drugY\\\"]\",\"[]\",\"5\",\"None\",\"\"]",
-          "[\"Na\",\"Default\",\"Input\",\"Read\",\"[]\",\"[]\",\"\",\"None\",\"\"]",
-          "[\"Sex\",\"Flag\",\"Input\",\"Specify\",\"[\\\"F\\\",\\\"M\\\"]\",\"[]\",\"1\",\"None\",\"\"]",
-          "[\"K\",\"Default\",\"Input\",\"Read\",\"[]\",\"[]\",\"\",\"None\",\"\"]",
-          "[\"Age\",\"Range\",\"Input\",\"Specify\",\"[\\\"15\\\",\\\"74\\\"]\",\"[]\",\"-1\",\"None\",\"\"]",
-          "[\"BP\",\"Set\",\"Input\",\"Specify\",\"[\\\"HIGH\\\",\\\"LOW\\\",\\\"NORMAL\\\"]\",\"[]\",\"6\",\"None\",\"\"]",
-          "[\"Cholesterol\",\"Flag\",\"Input\",\"Specify\",\"[\\\"HIGH\\\",\\\"NORMAL\\\"]\",\"[]\",\"6\",\"None\",\"\"]",
-          "[\"Na_to_K\",\"Range\",\"Input\",\"Specify\",\"[\\\"6.268724\\\",\\\"38.246719\\\"]\",\"[]\",\"-1\",\"None\",\"\"]"
+          ["Drug","Set","Target","Specify",["drugA","drugB","drugC","drugX","drugY"],[],5,"None",""],
+          ["Na","Default","Input","Read",[],[],"","None",""],
+          ["Sex","Flag","Input","Specify",["F","M"],[],1,"None",""],
+          ["K","Default","Input","Read",[],[],"","None",""],
+          ["Age","Range","Input","Specify",[15,74],[],"-1","None",""],
+          ["BP","Set","Input","Specify",["HIGH","LOW","NORMAL"],[],6,"None",""],
+          ["Cholesterol","Flag","Input","Specify",["HIGH","NORMAL"],[],6,"None",""],
+          ["Na_to_K","Range","Input","Specify",[6.268724,38.246719],[],-1,"None",""]
         ],
-        "custom_name": [
-          "Define Types"
-        ]
+        "custom_name": "Define Types"
       },
 			"datasetMetadata": {
         "fields": [

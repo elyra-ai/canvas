@@ -298,37 +298,17 @@
       }
     ],
     "data": {
-      "currentProperties": {
-        "sample_type": [
-          "First"
-        ],
-        "maximum_size": [
-          "10000"
-        ],
-        "annotation": [
-          ""
-        ],
-        "use_max_size": [
-          "false"
-        ],
-        "one_in_n": [
-          "2"
-        ],
-        "first_n": [
-          "10000"
-        ],
-        "use_custom_name": [
-          "false"
-        ],
-        "mode": [
-          "Include"
-        ],
-        "rand_pct": [
-          "50.0"
-        ],
-        "custom_name": [
-          ""
-        ]
+      "currentParameters": {
+        "sample_type": "First",
+        "maximum_size": 10000,
+        "annotation": "",
+        "use_max_size": false,
+        "one_in_n": 2,
+        "first_n": 10000,
+        "use_custom_name": false,
+        "mode": "Include",
+        "rand_pct": 50.0,
+        "custom_name": ""
       },
 			"datasetMetadata": {
         "fields": []

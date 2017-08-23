@@ -15,7 +15,7 @@ export default class PasswordControl extends EditorControl {
 	constructor(props) {
 		super(props);
 		this.state = {
-			controlValue: props.valueAccessor(props.control.name)[0]
+			controlValue: props.valueAccessor(props.control.name)
 		};
 		this.getControlValue = this.getControlValue.bind(this);
 		this.handleChange = this.handleChange.bind(this);
@@ -27,7 +27,7 @@ export default class PasswordControl extends EditorControl {
 	}
 
 	getControlValue() {
-		return [this.state.controlValue];
+		return this.state.controlValue;
 	}
 
 	render() {

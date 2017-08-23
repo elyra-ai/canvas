@@ -79,26 +79,6 @@ export default class EditorControl extends React.Component {
 		return options;
 	}
 
-	// Structures are supplied to the UI as an array of strings where each string represents
-	// an array of values within the structure. This parses those sub-strings into individual arrays.
-	static parseStructureStrings(values) {
-		var structures = [];
-		for (var i = 0; i < values.length; i++) {
-			structures.push(JSON.parse(values[i]));
-		}
-		return structures;
-	}
-
-	// Structures are returned from the UI as an array of strings where each string represents
-	// an array of values within the structure. This converts each array of row values into a JSON string.
-	static stringifyStructureStrings(values) {
-		var structures = [];
-		for (var i = 0; i < values.length; i++) {
-			structures.push(JSON.stringify(values[i]));
-		}
-		return structures;
-	}
-
 	static handleTableRowClick(evt, rowIndex, selection) {
 		// logger.info(selection);
 		var selected = selection;
@@ -233,12 +213,8 @@ export default class EditorControl extends React.Component {
 		const userInput = {};
 		const controlValues = this.props.getControlValues();
 		for (const key in controlValues) {
-			if (typeof controlValues[key][0] === "undefined") {
-				userInput[key] = [];
-			} else if (this.isEncodedFieldValue(controlValues[key][0])) {
-				userInput[key] = EditorControl.parseStructureStrings(controlValues[key]);
-			} else {
-				userInput[key] = controlValues[key].length === 1 ? controlValues[key][0] : controlValues[key];
+			if (key) {
+				userInput[key] = controlValues[key];
 			}
 		}
 		return userInput;
@@ -272,11 +248,6 @@ export default class EditorControl extends React.Component {
 
 	clearValueListener() {
 		this._valueListener = null;
-	}
-
-	isEncodedFieldValue(value) {
-		return PropertyUtils.toType(value) === "string" &&
-						value.startsWith("[\"") && value.endsWith("\"]");
 	}
 
 	notifyValueChanged(controlName, value) {
@@ -368,7 +339,7 @@ export default class EditorControl extends React.Component {
 			this.clearTableErrorState(); 	// Clear table error state
 		}
 		const validations = this.props.validationDefinitions[controlName];
-		if (this.props.controlStates && typeof this.props.controlStates[controlName] === "undefined" && validations) {
+		if (this.props.controlStates && typeof this.props.controlStates[controlName] === "undefined" && Array.isArray(validations)) {
 			try {
 				const userInput = this.getUserInput();
 				let output = false;
