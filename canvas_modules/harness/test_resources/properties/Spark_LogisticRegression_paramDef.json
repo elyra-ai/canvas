@@ -63,6 +63,7 @@
   ],
   "uihints": {
     "id": "org.apache.spark.ml.classification.LogisticRegression",
+    "version": "1.0",
     "icon": "images/modelbuildspark.svg",
     "label": {
       "default": "Logistic Regression"
@@ -379,6 +380,7 @@
     }
   ],
   "dataset_metadata": {
+    "version": "1.0",
     "fields": [
       {
         "name": "Age",

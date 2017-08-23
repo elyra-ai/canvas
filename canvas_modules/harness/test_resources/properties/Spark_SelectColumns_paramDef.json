@@ -22,6 +22,7 @@
   ],
   "uihints": {
     "id": "org.ibm.spark.ibm.transformers.SelectColumns",
+    "version": "1.0",
     "icon": "./select.svg",
     "parameter_info": [
       {
@@ -114,6 +115,7 @@
     }
   ],
   "dataset_metadata": {
+    "version": "1.0",
     "fields": [
       {
         "name": "Age",

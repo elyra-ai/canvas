@@ -299,6 +299,7 @@
   ],
   "uihints": {
     "id": "Conditions.test",
+    "version": "1.0",
     "icon": "images/modelbuildspark.svg",
     "label": {
       "default": "Conditions Test"

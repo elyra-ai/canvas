@@ -38,6 +38,7 @@
   ],
   "uihints": {
     "id": "org.ibm.spark.ibm.transformers.Sort",
+    "version": "1.0",
     "icon": "images/transformationspark.svg",
     "label": {
       "resource_key": "sort.label"
@@ -99,6 +100,7 @@
     ]
   },
   "dataset_metadata": {
+    "version": "1.0",
     "fields": [
       {
         "name": "Age",
