@@ -17,7 +17,7 @@ const constants = require("../lib/constants");
 module.exports.get = _get;
 
 function _get(req, res) {
-	logger.info("Retreiving canvas diagram");
+	logger.info("Retrieving canvas diagram");
 	if (req.session.canvas) {
 		res.status(constants.HTTP_STATUS_OK);
 		res.json(req.session.canvas).end();

@@ -56,7 +56,7 @@ function _create(callback) {
 	};
 	const v1Router = express.Router(routerOptions);
 	app.use(constants.API_PATH_V1, v1Router);
-	v1Router.use(bodyParser.json());
+	v1Router.use(bodyParser.json({ limit: "10mb" }));
 	v1Router.use(constants.APP_PATH, testAPI);
 	v1Router.use(constants.APP_PATH, formsAPI);
 

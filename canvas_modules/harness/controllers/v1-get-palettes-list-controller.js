@@ -21,7 +21,7 @@ const constants = require("../lib/constants");
 module.exports.get = _get;
 
 function _get(req, res) {
-	logger.info("Retreiving list of files");
+	logger.info("Retrieving list of files");
 	var dirPath = path.join(__dirname, constants.TEST_RESOURCES_PALETTES_PATH);
 	if (req.query.file) { // retrieve file contents
 		var filename = req.query.file;

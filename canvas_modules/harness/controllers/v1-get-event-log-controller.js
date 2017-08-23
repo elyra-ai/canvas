@@ -17,7 +17,7 @@ const constants = require("../lib/constants");
 module.exports.get = _get;
 
 function _get(req, res) {
-	logger.info("Retreiving event log");
+	logger.info("Retrieving event log");
 	if (req.session.events) {
 		res.status(constants.HTTP_STATUS_OK);
 		res.json(req.session.events).end();

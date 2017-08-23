@@ -123,7 +123,7 @@ class App extends React.Component {
 		addLocaleData(en);
 		var sessionData = {
 			events: {},
-			canvas: this.getCanvasIfNotTooBig()
+			canvas: ObjectModel.getCanvas()
 		};
 		TestService.postSessionData(sessionData);
 
@@ -136,18 +136,6 @@ class App extends React.Component {
 
 	getLabel(labelId, defaultLabel) {
 		return (<FormattedMessage id={ labelId } defaultMessage={ defaultLabel } />);
-	}
-
-	// Returns the canvas provided it is not bigger than the size limit characters.
-	// If it is, returns empty string.  This is a workaround for the issue
-	// where we start to get errors (Error: request entity too large) in the
-	// test harness when the canvas is too big.
-	getCanvasIfNotTooBig() {
-		var canvas = ObjectModel.getCanvas();
-		if (JSON.stringify(canvas).length > CANVAS_SIZE_LIMIT) {
-			return "";
-		}
-		return canvas;
 	}
 
 	setDiagramJSON(canvasJson) {
@@ -232,7 +220,7 @@ class App extends React.Component {
 		}, function() {
 			var sessionData = {
 				events: that.state.consoleout,
-				canvas: that.getCanvasIfNotTooBig()
+				canvas: ObjectModel.getCanvas()
 			};
 			TestService.postSessionData(sessionData);
 		});
