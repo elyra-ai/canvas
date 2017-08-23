@@ -29,7 +29,7 @@ module.exports = function() {
 		var okButton = browser.$(".modal__buttons").$$(".button")[0];
 		okButton.click();
 
-		browser.timeoutsAsyncScript(3000);
+		browser.timeouts("script", 3000);
 		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
 		var eventLogJSON = JSON.parse(eventLog.value);
 
@@ -45,7 +45,7 @@ module.exports = function() {
 		var okButton = browser.$(".modal__buttons").$$(".button")[0];
 		okButton.click();
 
-		browser.timeoutsAsyncScript(3000);
+		browser.timeouts("script", 3000);
 		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
 		var eventLogJSON = JSON.parse(eventLog.value);
 
@@ -58,7 +58,7 @@ module.exports = function() {
 		var okButton = browser.$(".modal__buttons").$$(".button")[0];
 		okButton.click();
 
-		browser.timeoutsAsyncScript(3000);
+		browser.timeouts("script", 3000);
 		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
 		var eventLogJSON = JSON.parse(eventLog.value);
 		browser.pause(500);
@@ -110,7 +110,7 @@ module.exports = function() {
 		var okButton = browser.$(".modal__buttons").$$(".button")[0];
 		okButton.click();
 
-		browser.timeoutsAsyncScript(3000);
+		browser.timeouts("script", 3000);
 		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
 		var eventLogJSON = JSON.parse(eventLog.value);
 
@@ -132,7 +132,7 @@ module.exports = function() {
 		var okButton = browser.$(".modal__buttons").$$(".button")[0];
 		okButton.click();
 
-		browser.timeoutsAsyncScript(3000);
+		browser.timeouts("script", 3000);
 		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
 		var eventLogJSON = JSON.parse(eventLog.value);
 
@@ -159,7 +159,7 @@ module.exports = function() {
 		var okButton = browser.$(".modal__buttons").$$(".button")[0];
 		okButton.click();
 
-		browser.timeoutsAsyncScript(3000);
+		browser.timeouts("script", 3000);
 		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
 		var eventLogJSON = JSON.parse(eventLog.value);
 		var eventLogString = JSON.stringify(eventLog);
@@ -215,7 +215,7 @@ module.exports = function() {
 		okButton.click();
 		browser.pause(500);
 
-		browser.timeoutsAsyncScript(3000);
+		browser.timeouts("script", 3000);
 		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
 		var eventLogJSON = JSON.parse(eventLog.value);
 

@@ -8,15 +8,17 @@
  *******************************************************************************/
 
 var nconf = require("nconf");
-var renderingEngine = "D3";
 
-// eslint-disable-line global-require
-function getURL() {
+// Should be called first to setup nconf
+function initialize() {
+	nconf.use("memory");
 	nconf.argv();
 	nconf.env("__");
 	var defaultConfigFile = "./config/app.json";
 	nconf.file("default", defaultConfigFile);
+}
 
+function getURL() {
 	var configHost = nconf.get("host");
 	var testHost = (typeof configHost === "undefined") ? "localhost" : configHost;
 
@@ -26,25 +28,12 @@ function getURL() {
 }
 
 function getBaseDir() {
-	nconf.argv();
-	nconf.env("__");
-	var defaultConfigFile = "./config/app.json";
-	nconf.file("default", defaultConfigFile);
 	var configDir = nconf.get("test_base_dir");
 	return (typeof configDir === "undefined") ? process.env.PWD : configDir;
-}
-
-function setRenderingEngine(engine) {
-	renderingEngine = engine;
-}
-
-function getRenderingEngine() {
-	return renderingEngine;
 }
 
 module.exports = {
 	getURL: getURL,
 	getBaseDir: getBaseDir,
-	setRenderingEngine: setRenderingEngine,
-	getRenderingEngine: getRenderingEngine
+	initialize: initialize
 };

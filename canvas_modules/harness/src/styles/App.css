@@ -14,7 +14,7 @@
 #canvas-container {
   height: 100%;
   width: 100%;
-  padding-top: 60px;
+  padding-top: 50px;
 }
 
 #title {
@@ -114,15 +114,13 @@
 #app-sidepanel {
   background-color: #264A60;
 	top: 50px;
-  padding-top: 10px;
-	padding-bottom: 10px;
-  position: absolute;
+  position: fixed;
   right: 0;
-  height: 100%;
+  height: calc(100% - 50px);
   -webkit-transition:width 0.5s;
   transition: width 0.5s;
   color: #F9F9FB;
-  overflow: scroll;
+  overflow: auto;
   z-index: 2;
   box-sizing: border-box;
   font-size: small;

@@ -235,7 +235,7 @@ export default class CommonCanvas extends React.Component {
 
 	render() {
 		let canvas = null;
-		let popupPalette = null;
+		let palette = null;
 		let addButton = null;
 		let zoomControls = null;
 		let contextMenuWrapper = null;
@@ -281,14 +281,14 @@ export default class CommonCanvas extends React.Component {
 
 			if (this.props.config.enablePalette) {
 				if (this.props.config.enablePaletteLayout === "Flyout") {
-					popupPalette = (<PaletteFlyout
+					palette = (<PaletteFlyout
 						paletteJSON={ObjectModel.getPaletteData()}
 						showPalette={this.props.showPalette}
 						createTempNode={this.createTempNode}
 						deleteTempNode={this.deleteTempNode}
 					/>);
 				} else {
-					popupPalette = (<Palette
+					palette = (<Palette
 						paletteJSON={ObjectModel.getPaletteData()}
 						showPalette={this.state.isPaletteOpen}
 						closePalette={this.closePalette}
@@ -315,10 +315,10 @@ export default class CommonCanvas extends React.Component {
 
 		return (
 			<div id="common-canvas">
+				{palette}
 				{canvas}
 				{zoomControls}
 				{addButton}
-				{popupPalette}
 			</div>
 		);
 	}

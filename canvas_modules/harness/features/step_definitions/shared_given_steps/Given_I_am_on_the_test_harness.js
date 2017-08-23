@@ -7,7 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import { getURL } from "../utilities/test-config.js";
+import { getURL, initialize } from "../utilities/test-config.js";
 
 module.exports = function() {
 
@@ -16,6 +16,7 @@ module.exports = function() {
 	/* global browser */
 
 	this.Given("I am on the test harness", function() {
+		initialize();
 		browser.url(getURL());
 	});
 };

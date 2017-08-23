@@ -9,13 +9,13 @@
 /* eslint no-console: "off" */
 
 import { deleteLinkInObjectModel, getEventLogCount, getNodeIdFromObjectModel, getObjectModelCount, isObjectModelEmpty } from "./utilities/validateUtil.js";
-import { getRenderingEngine, getURL } from "./utilities/test-config.js";
 import { getHarnessData } from "./utilities/HTTPClient.js";
+import { getURL } from "./utilities/test-config.js";
 import { simulateDragDrop } from "./utilities/DragAndDrop.js";
 
 /* global browser */
 
-
+var nconf = require("nconf");
 module.exports = function() {
 
 	const categoryPosition = {
@@ -460,32 +460,47 @@ module.exports = function() {
 	//   Test Cases
 	// -------------------------------------
 
+	function findNodeIndex(nodeType) {
+		var listItems = browser.$$(".palette-list-item");
+		for (var idx = 0; idx < listItems.length; idx++) {
+			var nodeText = listItems[idx].$(".palette-list-item-text-div").$(".palette-list-item-text-span")
+			.getText();
+			if (nodeText === nodeType) {
+				return idx;
+			}
+		}
+		return -1;
+	}
 	// Then I add node 1 a "Var. File" node from the "Import" category onto the canvas at 100, 200
 	//
 	this.Then(/^I add node (\d+) a "([^"]*)" node from the "([^"]*)" category onto the canvas at (\d+), (\d+)$/,
 	function(inNodeIndex, nodeType, nodeCategory, canvasX, canvasY) {
+		const D3RenderingEngine = (nconf.get("renderingEngine") === "D3");
 		try {
-			// click on the palette button to open it
-			// browser.click(".palette-show-button");
-			browser.$(".palette-show-button").click();
-			// select import categories
-			const categoryIndex = categoryPosition[nodeCategory];
-			browser.$(".palette-content").$("div")
-			.$$("div")[categoryIndex].click();
-			// drag the var file node to the canvas
-			const nodeIndex = nodePosition[nodeType];
-			browser.execute(simulateDragDrop, ".palette-grid-node-outer", nodeIndex, "#canvas-div", 0, canvasX, canvasY);
-			// close the palette
-			browser.$(".palette-topbar").$(".right-navbar")
-				.$(".secondary-action")
-				.click();
+			if (nconf.get("paletteLayout") === "Modal") {
+				// select import categories
+				const categoryIndex = categoryPosition[nodeCategory];
+				browser.$(".palette-content").$("div")
+				.$$("div")[categoryIndex].click();
+				// drag the var file node to the canvas
+				const nodeIndex = nodePosition[nodeType];
+				browser.execute(simulateDragDrop, ".palette-grid-node-outer", nodeIndex, "#canvas-div", 0, canvasX, canvasY);
+			} else {
+				const categoryElem = browser.$("#palette-flyout-category-" + nodeCategory.replace(/\s/g, "-"));
+				categoryElem.click(); // open category
+				// drag the var file node to the canvas
+				const nodeIndex = findNodeIndex(nodeType);
+				browser.execute(simulateDragDrop, ".palette-list-item", nodeIndex, "#canvas-div", 0, canvasX, canvasY);
+				categoryElem.click(); // close category
+			}
+
 
 			// Start validation
 			var nodeNumber = inNodeIndex - 1;
 
 			// verify node is in the canvas DOM
 			var imageName;
-			if (getRenderingEngine() === "D3") {
+			if (D3RenderingEngine) {
 				imageName = browser.$("#canvas-div").$$(".node-image")[nodeNumber].getAttribute("href");
 			} else {
 				imageName = browser.$("#canvas-div").$$(".node-inner-circle")[nodeNumber].$("img").getAttribute("src");
@@ -498,7 +513,7 @@ module.exports = function() {
 			const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
 			const getEventLogUrl = testUrl + "/v1/test-harness/events";
 
-			browser.timeoutsAsyncScript(5000);
+			browser.timeouts("script", 5000);
 			var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
 			var returnVal = browser.execute(getObjectModelCount, objectModel.value, "nodes", expectedImages[nodeType]);
 			expect(returnVal.value).toBe(1);
@@ -516,11 +531,27 @@ module.exports = function() {
 		}
 	});
 
+	/* Negitive step to validate node doesn't exist in palette*/
+	this.Then(/^I try adding node (\d+) a "([^"]*)" node from the "([^"]*)" category onto the canvas at (\d+), (\d+)$/,
+	function(inNodeIndex, nodeType, nodeCategory, canvasX, canvasY) {
+		const categoryElem = browser.$("#palette-flyout-category-" + nodeCategory.replace(/\s/g, "-"));
+		categoryElem.click(); // open category
+		// drag the var file node to the canvas
+		const nodeIndex = findNodeIndex(nodeType);
+		// expect -1 since node should not be found in palette
+		if (nodeIndex !== -1) {
+			throw new Error("Node should not have been found");
+		}
+		categoryElem.click(); // close category
+
+	});
+
 	// Then I select node 4 the "Type" node
 	//
 	this.Then(/^I select node (\d+) the "([^"]*)" node$/, function(nodeIndex, nodeName) {
+		const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
 		var nodeNumber = nodeIndex - 1;
-		if (getRenderingEngine() === "D3") {
+		if (D3RenderingEngine) {
 			browser.$("#canvas-div").$$(".node-group")[nodeNumber].click();
 		} else {
 			browser.$("#canvas-div").$$(".node-inner-circle")[nodeNumber].click();
@@ -531,8 +562,8 @@ module.exports = function() {
 	//
 	this.Then(/^I disconnect links for node (\d+) a "([^"]*)" on the canvas$/, function(nodeIndex, nodeName) {
 		var nodeNumber = nodeIndex - 1;
-
-		if (getRenderingEngine() === "D3") {
+		const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
+		if (D3RenderingEngine) {
 			browser.$("#canvas-div").$$(".node-group")[nodeNumber].rightClick();
 		} else {
 			browser.$("#canvas-div").$$(".node-inner-circle")[nodeNumber].rightClick();
@@ -545,7 +576,7 @@ module.exports = function() {
 		const testUrl = getURL();
 		const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
 
-		browser.timeoutsAsyncScript(5000);
+		browser.timeouts("script", 5000);
 		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
 		var nodeId = browser.execute(getNodeIdFromObjectModel, objectModel.value, nodeNumber);
 		var returnVal = browser.execute(deleteLinkInObjectModel, objectModel.value, nodeId.value);
@@ -556,9 +587,10 @@ module.exports = function() {
 	// Then I delete node 1 the "Var. File" node
 	//
 	this.Then(/^I delete node (\d+) the "([^"]*)" node$/, function(nodeIndex, nodeType) {
+		const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
 		var nodeNumber = nodeIndex - 1;
 		var nodeSelector;
-		if (getRenderingEngine() === "D3") {
+		if (D3RenderingEngine) {
 			nodeSelector = ".node-group";
 		} else {
 			nodeSelector = ".node-inner-circle";
@@ -571,7 +603,7 @@ module.exports = function() {
 		var nodeList = browser.$("#canvas-div").$$(nodeSelector);
 		for (var idx = 0; idx < nodeList.length; idx++) {
 			var imageName;
-			if (getRenderingEngine() === "D3") {
+			if (D3RenderingEngine) {
 				imageName = browser.$("#canvas-div").$$(nodeSelector)[idx].$("image").getAttribute("href");
 			} else {
 				imageName = browser.$("#canvas-div").$$(nodeSelector)[idx].$("img").getAttribute("src");
@@ -589,7 +621,7 @@ module.exports = function() {
 		const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
 		const getEventLogUrl = testUrl + "/v1/test-harness/events";
 
-		browser.timeoutsAsyncScript(5000);
+		browser.timeouts("script", 5000);
 		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
 		var returnVal = browser.execute(getObjectModelCount, objectModel.value, "nodes", expectedImages[nodeType]);
 		expect(returnVal.value).toBe(0);
@@ -605,8 +637,9 @@ module.exports = function() {
 	//
 	this.Then(/^I move node (\d+) a "([^"]*)" node onto the canvas by \-?(\d+), \-?(\d+)$/,
 		function(nodeIndex, nodeName, canvasX, canvasY) {
+			const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
 			var nodeNumber = nodeIndex - 1;
-			if (getRenderingEngine() === "D3") {
+			if (D3RenderingEngine) {
 				browser.execute(simulateDragDrop, ".node-group", nodeNumber, "#canvas-div", 0, canvasX, canvasY);
 			} else {
 				browser.execute(simulateDragDrop, ".node-inner-circle", nodeNumber, "#canvas-div", 0, canvasX, canvasY);
@@ -620,7 +653,7 @@ module.exports = function() {
 		const testUrl = getURL();
 		const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
 
-		browser.timeoutsAsyncScript(5000);
+		browser.timeouts("script", 5000);
 		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
 		var returnVal = browser.execute(isObjectModelEmpty, objectModel.value);
 		expect(returnVal.value).toBe(0);
@@ -629,7 +662,7 @@ module.exports = function() {
 	// Then I write out the object model
 	//
 	this.Then(/^I write out the object model$/, function() {
-		browser.timeoutsAsyncScript(5000);
+		browser.timeouts("script", 5000);
 		// var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
 		// console.log("warn Object Model: " + objectModel.value);
 	});
@@ -637,7 +670,7 @@ module.exports = function() {
 	// Then I write out the event log
 	//
 	this.Then(/^I write out the event log$/, function() {
-		browser.timeoutsAsyncScript(5000);
+		browser.timeouts("script", 5000);
 		// var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
 		// console.log("warn event Log: " + eventLog.value);
 	});

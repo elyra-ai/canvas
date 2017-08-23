@@ -21,10 +21,15 @@ Feature: Canvas Sanity test from loaded file
 		Given I have toggled the app side panel
 
 		Then I pause for 1 seconds
+
+		Then I open the palette
 		Then I add node 7 a "Field Reorder" node from the "Field Ops" category onto the canvas at 150, 450
+		Then I close the palette
 		Then I select node 7 the "Field Reorder" node
 		Then I add comment 4 at location 150, 500 with the text "Some text comment."
+		Then I open the palette
 		Then I add node 8 a "Sort" node from the "Record Ops" category onto the canvas at 300, 450
+		Then I close the palette
 		Then I link node 7 the "Field Reorder" node to node 8 the "Sort" node for link 10 on the canvas
 		Then I link comment 4 with text "Some text comment." to node 8 the "Sort" node for link 11 on the canvas
 		#Then I delete node link at 380, 240 between node 6 the "Discard Fields" node and node 1 the "Type" node

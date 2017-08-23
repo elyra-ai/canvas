@@ -8,7 +8,7 @@
  *******************************************************************************/
 /* eslint no-console: "off" */
 
-import { setRenderingEngine } from "../utilities/test-config.js";
+var nconf = require("nconf");
 
 module.exports = function() {
 
@@ -22,13 +22,13 @@ module.exports = function() {
 				d3label.scroll();
 				browser.pause(500);
 				d3label.click();
-				setRenderingEngine("D3");
+				nconf.set("renderingEngine", "D3");
 			} else {
 				var legacylabel = browser.$("#sidepanel-rendering-engine").$$("div")[4].$("label");
 				legacylabel.scroll();
 				browser.pause(500);
 				legacylabel.click();
-				setRenderingEngine("Legacy");
+				nconf.set("renderingEngine", "Legacy");
 			}
 		} catch (err) {
 			console.log("Err = " + err);

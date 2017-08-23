@@ -7,37 +7,15 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-@CHARSET "ISO-8859-1";
-
-@font-face {
-    font-family: IBMHLVMedium;
-    src: url(~ap-components-react/dist/fonts/medium/helvetica-neue-medium.woff);
-}
-
-@font-face {
-    font-family: IBMHLVRoman;
-    src: url(~ap-components-react/dist/fonts/roman/helvetica-neue-roman.woff);
-}
-
-@font-face {
-    font-family: IBMHLVBold;
-    src: url(~ap-components-react/dist/fonts/bold/helvetica-neue-bold.woff);
-}
-@font-face {
-    font-family: IBMHLVlight;
-    src: url(~ap-components-react/dist/fonts/light/helvetica-neue-light.woff);
-}
-
 /* Palette styles */
 .palette-flyout-div {
   position: absolute;
   overflow-y: overlay;
   overflow-x: hidden;
   height: 100%;
-  top: 50px;
-  z-index: 1;
-  padding-bottom: 10px;
-  font: 11pt IBMHLVRoman;
+	padding-bottom: 5px;
+  font: 12pt IBMHLVRoman;
+	z-index: 1;
   color: black;
   background-color: #e0e0e0;
 	width: 250px;
@@ -45,8 +23,7 @@
   -webkit-transition: all 0.2s;
   transition: all 0.2s;
   cursor: default; /* This stops Chrome displaying an I-beam cursor when dragging in the canvas. */
-  /* Prevent elements from being selectable */
-  /* This stops it being dragged incorrectly.*/
+	/* This stops it being dragged incorrectly.*/
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
@@ -68,7 +45,7 @@
 .palette-flyout-content .palette-list-item {
   border-width: 0px;
   background-color: #f9f9fb;
-  font-size: 10pt;
+  font-size: 11pt;
 }
 
 .palette-flyout-content .palette-list-item:hover {
@@ -91,6 +68,7 @@
 }
 .palette-flyout-category-arrow {
   float:right;
+  margin-top: 2px;
 }
 
 .palette-flyout-category {
@@ -107,6 +85,10 @@
   padding: 10px;
   padding-right: 18px;
   border-width:0 0 0 2px;
+}
+
+.palette-flyout-category-selected:hover {
+  color: #9D005C;
 }
 
 #palette-flyout-search {

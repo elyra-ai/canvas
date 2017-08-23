@@ -11,9 +11,11 @@
 import { containLinkEvent, containLinkInObjectModel, getCommentIdFromObjectModel,
 					getCommentIdFromObjectModelUsingText, getCommentIndexFromCanvasUsingText,
 					getNodeIdFromObjectModel, getObjectModelCount } from "./utilities/validateUtil.js";
-import { getRenderingEngine, getURL } from "./utilities/test-config.js";
 import { simulateD3LinkCreation, simulateDragDrop } from "./utilities/DragAndDrop.js";
 import { getHarnessData } from "./utilities/HTTPClient.js";
+import { getURL } from "./utilities/test-config.js";
+
+var nconf = require("nconf");
 
 /* global browser */
 
@@ -26,13 +28,14 @@ module.exports = function() {
 	//
 	this.Then(/^I link node (\d+) the "([^"]*)" node to node (\d+) the "([^"]*)" node for link (\d+) on the canvas$/,
   function(srcNodeIndex, srcNodeName, destNodeIndex, destNodeName, canvasLinks) {
+	const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
 	try {
 		var orgNodeNumber = srcNodeIndex - 1;
 		var destNodeNumber = destNodeIndex - 1;
 
 		var linkCount = Number(canvasLinks);
 
-		if (getRenderingEngine() === "D3") {
+		if (D3RenderingEngine) {
 			browser.execute(simulateD3LinkCreation, ".d3-node-halo", orgNodeNumber, ".node-group", destNodeNumber, 1, 1);
 			var links = browser.$$(".d3-selectable-link").length / 2; // Divide by 2 because the line and arrow head use this class
 			expect(links).toEqual(linkCount);
@@ -47,7 +50,7 @@ module.exports = function() {
 		const testUrl = getURL();
 		const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
 		const getEventLogUrl = testUrl + "/v1/test-harness/events";
-		browser.timeoutsAsyncScript(5000);
+		browser.timeouts("script", 5000);
 		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
 		var srcNodeId = browser.execute(getNodeIdFromObjectModel, objectModel.value, orgNodeNumber);
 		var destNodeId = browser.execute(getNodeIdFromObjectModel, objectModel.value, destNodeNumber);
@@ -71,11 +74,12 @@ module.exports = function() {
 	//
 	this.Then(/^I link comment (\d+) with text "([^"]*)" to node (\d+) the "([^"]*)" node for link (\d+) on the canvas$/,
 	function(commentNumber, commentText, nodeNumber, nodeName, canvasLinks) {
+		const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
 		var commentIndex = commentNumber - 1;
 		var nodeIndex = nodeNumber - 1;
 		var linkCount = Number(canvasLinks);
 
-		if (getRenderingEngine() === "D3") {
+		if (D3RenderingEngine) {
 			// For D3, we cannot rely on index position of comments because they get messed up
 			// when pushing comments to be underneath nodes and links. Therefore we look for the
 			// text of the comment being deleted.
@@ -95,7 +99,7 @@ module.exports = function() {
 		const testUrl = getURL();
 		const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
 		const getEventLogUrl = testUrl + "/v1/test-harness/events";
-		browser.timeoutsAsyncScript(5000);
+		browser.timeouts("script", 5000);
 		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
 		var srcNodeId = browser.execute(getCommentIdFromObjectModelUsingText, objectModel.value, commentText);
 		var destNodeId = browser.execute(getNodeIdFromObjectModel, objectModel.value, nodeIndex);
@@ -123,7 +127,7 @@ module.exports = function() {
 		// verify that the link is Not in the internal object model
 		const testUrl = getURL();
 		const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
-		browser.timeoutsAsyncScript(5000);
+		browser.timeouts("script", 5000);
 		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
 		var srcNodeId = browser.execute(getCommentIdFromObjectModel, objectModel.value, commentIndex);
 		var destNodeId = browser.execute(getNodeIdFromObjectModel, objectModel.value, nodeIndex);
@@ -145,7 +149,7 @@ module.exports = function() {
 		// verify that the link is Not in the internal object model
 		const testUrl = getURL();
 		const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
-		browser.timeoutsAsyncScript(5000);
+		browser.timeouts("script", 5000);
 		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
 		var srcNodeId = browser.execute(getCommentIdFromObjectModel, objectModel.value, srcNodeIndex);
 		var destNodeId = browser.execute(getNodeIdFromObjectModel, objectModel.value, destNodeIndex);
@@ -165,7 +169,7 @@ module.exports = function() {
 		// verify that the link is in the internal object model
 		const testUrl = getURL();
 		const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
-		browser.timeoutsAsyncScript(5000);
+		browser.timeouts("script", 5000);
 		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
 		var returnVal = browser.execute(getObjectModelCount, objectModel.value, "links", linkCount);
 		expect(returnVal.value).toBe(linkCount);

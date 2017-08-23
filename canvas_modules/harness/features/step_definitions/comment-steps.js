@@ -10,9 +10,10 @@
 
 import { getCommentIndexFromCanvasUsingText, getEventLogCount, getObjectModelCount } from "./utilities/validateUtil.js";
 import { getHarnessData } from "./utilities/HTTPClient.js";
-import { getRenderingEngine } from "./utilities/test-config.js";
 import { getURL } from "./utilities/test-config.js";
 import { simulateDragDrop } from "./utilities/DragAndDrop.js";
+
+var nconf = require("nconf");
 
 /* global browser */
 
@@ -22,8 +23,9 @@ module.exports = function() {
 	//
 	this.Then(/^I add comment (\d+) at location (\d+), (\d+) with the text "([^"]*)"$/,
 	function(commentIndex, canvasX, canvasY, comment) {
+		const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
 		// create the comment
-		if (getRenderingEngine() === "D3") {
+		if (D3RenderingEngine) {
 			browser.rightClick(".svg-area", Number(canvasX), Number(canvasY));
 		} else {
 			browser.rightClick(".svg-canvas", Number(canvasX), Number(canvasY));
@@ -34,7 +36,7 @@ module.exports = function() {
 		var index = Number(commentIndex) - 1;
 		var specificComment;
 
-		if (getRenderingEngine() === "D3") {
+		if (D3RenderingEngine) {
 			specificComment = browser.$$(".comment-group")[0]; // Comments are inserted at zeroth element.
 			specificComment.click(); // Need to select the comment to allow the double click to work in next step
 		} else {
@@ -42,7 +44,7 @@ module.exports = function() {
 		}
 
 		specificComment.doubleClick();
-		if (getRenderingEngine() === "D3") {
+		if (D3RenderingEngine) {
 			specificComment.$("textarea").setValue("", comment); // For D3, the text area is created by the double click
 		} else {
 			specificComment.click();
@@ -55,7 +57,7 @@ module.exports = function() {
 		browser.pause(500);
 		// verify commentis in the canvas DOM
 		var commentValue;
-		if (getRenderingEngine() === "D3") {
+		if (D3RenderingEngine) {
 			// For D3, we cannot rely on index position of comments because they get messed up
 			// when pushing comments to be underneath nodes and links. Therefore we look for the
 			// text of the comment being deleted.
@@ -71,7 +73,7 @@ module.exports = function() {
 		const testUrl = getURL();
 		const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
 		const getEventLogUrl = testUrl + "/v1/test-harness/events";
-		browser.timeoutsAsyncScript(5000);
+		browser.timeouts("script", 5000);
 		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
 		var returnVal = browser.execute(getObjectModelCount, objectModel.value, "comments", comment);
 		expect(returnVal.value).toBe(1);
@@ -87,8 +89,8 @@ module.exports = function() {
 	this.Then(/^I delete comment (\d+) linked to the "([^"]*)" node with the comment text "([^"]*)"$/,
 	function(commentIndex, nodeName, commentText) {
 		var commentNumber = commentIndex - 1;
-
-		if (getRenderingEngine() === "D3") {
+		const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
+		if (D3RenderingEngine) {
 			// For D3, we cannot rely on index position of comments because they get messed up
 			// when pushing comments to be underneath nodes and links. Therefore we look for the
 			// text of the comment being deleted.
@@ -105,7 +107,7 @@ module.exports = function() {
 		var count = 0;
 		var commentElements;
 
-		if (getRenderingEngine() === "D3") {
+		if (D3RenderingEngine) {
 			commentElements = browser.$("#common-canvas").$$(".comment-group");
 			for (let idx = 0; idx < commentElements.length; idx++) {
 				if (commentElements[idx].getAttribute("textContent") === commentText) {
@@ -127,7 +129,7 @@ module.exports = function() {
 		const testUrl = getURL();
 		const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
 		const getEventLogUrl = testUrl + "/v1/test-harness/events";
-		browser.timeoutsAsyncScript(5000);
+		browser.timeouts("script", 5000);
 		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
 		var returnVal = browser.execute(getObjectModelCount, objectModel.value, "comments", commentText);
 		expect(returnVal.value).toBe(0);
@@ -144,7 +146,8 @@ module.exports = function() {
 	this.Then(/^I move comment (\d+) with text "([^"]*)" onto the canvas by \-?(\d+), \-?(\d+)$/,
 		function(commentIndex, commentText, canvasX, canvasY) {
 			var commentNumber = commentIndex - 1;
-			if (getRenderingEngine() === "D3") {
+			const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
+			if (D3RenderingEngine) {
 				// For D3, we cannot rely on index position of comments because they get messed up
 				// when pushing comments to be underneath nodes and links. Therefore we look for the
 				// text of the comment being deleted.

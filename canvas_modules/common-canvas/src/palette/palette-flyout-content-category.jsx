@@ -36,9 +36,9 @@ class PaletteFlyoutContentCategory extends React.Component {
 			style = "palette-flyout-category-selected";
 			image = <img className="palette-flyout-category-arrow" src={UpIcon} height={ARROW_HEIGHT} width={ARROW_WIDTH} />;
 		}
-
+		const id = "palette-flyout-category-" + this.props.categoryName.replace(/\s/g, "-");
 		var content = (
-			<div className={style} onClick={this.categorySelected} value={this.props.categoryName}>
+			<div className={style} id={id} onClick={this.categorySelected} value={this.props.categoryName}>
 					{this.props.categoryName + " (" + this.props.itemCount + ")"} {image}
 			</div>
 		);
