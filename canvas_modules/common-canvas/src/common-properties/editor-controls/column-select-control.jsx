@@ -16,6 +16,7 @@ import { Button } from "ap-components-react/dist/ap-components-react";
 import remove32 from "../../../assets/images/remove_32.svg";
 import remove32hover from "../../../assets/images/remove_32_hover.svg";
 import remove32disabled from "../../../assets/images/remove_32_disabled.svg";
+import { EDITOR_CONTROL } from "../constants/constants.js";
 
 var _ = require("underscore");
 
@@ -184,7 +185,7 @@ export default class ColumnSelectControl extends EditorControl {
 			this._update_callback = null;
 		}
 
-		const controlName = this.getControlID().split("-")[2];
+		const controlName = this.getControlID().replace(EDITOR_CONTROL, "");
 		const conditionProps = {
 			controlName: controlName,
 			controlType: "selection"

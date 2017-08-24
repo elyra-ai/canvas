@@ -10,6 +10,7 @@
 import React from "react";
 import { FormControl } from "react-bootstrap";
 import EditorControl from "./editor-control.jsx";
+import { EDITOR_CONTROL } from "../constants/constants.js";
 
 export default class OneofcolumnsControl extends EditorControl {
 	constructor(props) {
@@ -32,7 +33,7 @@ export default class OneofcolumnsControl extends EditorControl {
 	}
 
 	render() {
-		const controlName = this.getControlID().split("-")[2];
+		const controlName = this.getControlID().replace(EDITOR_CONTROL, "");
 		const conditionProps = {
 			controlName: controlName,
 			controlType: "selection"

@@ -20,6 +20,7 @@ import TopMoveIconDisable from "../../../assets/images/top_disabled.svg";
 import UpMoveIconDisable from "../../../assets/images/up_disabled.svg";
 import DownMoveIconDisable from "../../../assets/images/down_disabled.svg";
 import BottomMoveIconDisable from "../../../assets/images/bottom_disabled.svg";
+import { EDITOR_CONTROL } from "../constants/constants.js";
 
 var _ = require("underscore");
 
@@ -325,7 +326,7 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 			this._update_callback = null;
 		}
 
-		const controlName = this.getControlID().split("-")[2];
+		const controlName = this.getControlID().replace(EDITOR_CONTROL, "");
 		const conditionProps = {
 			controlName: controlName,
 			controlType: "table"

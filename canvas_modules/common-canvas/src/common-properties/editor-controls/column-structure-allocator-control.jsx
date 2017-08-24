@@ -12,6 +12,7 @@
 // import logger from "../../../utils/logger";
 import React from "react";
 import StructureTableEditor from "./structure-table-editor.jsx";
+import { EDITOR_CONTROL } from "../constants/constants.js";
 
 var _ = require("underscore");
 
@@ -153,7 +154,7 @@ export default class ColumnStructureAllocatorControl extends StructureTableEdito
 			this._update_callback = null;
 		}
 
-		const controlName = this.getControlID().split("-")[2];
+		const controlName = this.getControlID().replace(EDITOR_CONTROL, "");
 		const conditionProps = {
 			controlName: controlName,
 			controlType: "table"

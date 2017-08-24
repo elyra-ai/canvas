@@ -699,6 +699,30 @@ validationDefinitions.structuretableRenameFields = [
 		}
 	}
 ];
+validationDefinitions.subpanelTextfieldName = [
+	{
+		params: "name",
+		definition: {
+			"validation": {
+				"fail_message": {
+					"type": "error",
+					"message": {
+						"default": "name should not contain pw",
+						"resource_key": "invalid_subpanel_name"
+					},
+					"focus_parameter_ref": "name"
+				},
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "name",
+						"op": "notContains",
+						"value": "pw"
+					}
+				}
+			}
+		}
+	}
+];
 
 const defaultControlStates = {
 	"textfieldName": "hidden",
@@ -750,8 +774,8 @@ describe("editor-form renders correctly with validations", () => {
 		expect(wrapper.find("#form-Conditions-test")).to.have.length(1);
 		expect(wrapper.find(".section--light")).to.have.length(1);
 		expect(wrapper.find(".tabs__tabpanel")).to.have.length(5);
-		expect(wrapper.find(".editor_control_area")).to.have.length(18);
-		expect(wrapper.find(".validation-error-message")).to.have.length(24);
+		expect(wrapper.find(".editor_control_area")).to.have.length(17);
+		expect(wrapper.find(".validation-error-message")).to.have.length(22);
 	});
 
 	it("should set correct state values in `EditorForm`", () => {
@@ -800,6 +824,8 @@ describe("editor-form renders correctly with validations", () => {
 			JSON.parse(JSON.stringify(validationDefinitions.expressionBox)))).to.be.true;
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().validationDefinitions.structuretableRenameFields)),
 			JSON.parse(JSON.stringify(validationDefinitions.structuretableRenameFields)))).to.be.true;
+		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().validationDefinitions.name)),
+			JSON.parse(JSON.stringify(validationDefinitions.subpanelTextfieldName)))).to.be.true;
 		expect(_.isEqual(JSON.stringify(wrapper.state().controlErrorMessages), "{}")).to.be.true;
 	});
 });
@@ -1258,7 +1284,6 @@ describe("condition messages renders correctly with textfields control", () => {
 		expect(wrapper.find(".form__validation--warning")).to.have.length(0);
 	});
 });
-
 
 // cannot simulate a mouseDown event
 // describe("condition messages renders correctly with dropDown control", () => {

@@ -47,3 +47,5 @@ _defineConstant("DATA_TYPES", [
 	"time",
 	"timestamp"
 ]);
+
+_defineConstant("EDITOR_CONTROL", "editor-control-");

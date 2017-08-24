@@ -887,79 +887,6 @@
                           ],
                           "required": true
                         }
-                      },
-                      {
-                        "itemType": "control",
-                        "control": {
-                          "name": "structurelisteditorTableInput",
-                          "label": {
-                            "text": "Table Input"
-                          },
-                          "controlType": "structuretable",
-                          "valueDef": {
-                            "propType": "structure",
-                            "isList": true,
-                            "isMap": false
-                          },
-                          "separateLabel": true,
-                          "subControls": [
-                            {
-                              "name": "field",
-                              "label": {
-                                "text": "Field"
-                              },
-                              "controlType": "textfield",
-                              "valueDef": {
-                                "propType": "string",
-                                "isList": false,
-                                "isMap": false,
-                                "defaultValue": ""
-                              },
-                              "role": "textfield",
-                              "visible": true,
-                              "width": 16
-                            },
-                            {
-                              "name": "Storage",
-                              "label": {
-                                "text": "Storage"
-                              },
-                              "controlType": "oneofselect",
-                              "valueDef": {
-                                "propType": "string",
-                                "isList": false,
-                                "isMap": false,
-                                "defaultValue": "String"
-                              },
-                              "role": "enum",
-                              "values": [
-                                "String",
-                                "Integer",
-                                "Real",
-                                "Time",
-                                "Date",
-                                "Timestamp"
-                              ],
-                              "valueLabels": [
-                                "String",
-                                "Integer",
-                                "Real",
-                                "Time",
-                                "Date",
-                                "Timestamp"
-                              ],
-                              "visible": true,
-                              "width": 8,
-                              "editStyle": "inline"
-                            }
-                          ],
-                          "keyIndex": 0,
-                          "defaultRow": [
-                            "",
-                            "String"
-                          ],
-                          "required": false
-                        }
                       }
                     ]
                   }
@@ -967,7 +894,7 @@
                 {
                   "itemType": "panel",
                   "panel": {
-                    "id": "List",
+                    "id": "Structure Table Inline Control",
                     "panelType": "general",
                     "uiItems": [
                       {
@@ -981,66 +908,92 @@
                           "valueDef": {
                             "propType": "structure",
                             "isList": true,
-                            "isMap": false
+                            "isMap": false,
+                            "defaultValue": []
                           },
                           "separateLabel": true,
                           "subControls": [
                             {
-                              "name": "field",
+                              "name": "name",
                               "label": {
-                                "text": "Field"
+                                "text": "Name"
                               },
                               "controlType": "textfield",
                               "valueDef": {
                                 "propType": "string",
                                 "isList": false,
-                                "isMap": false,
-                                "defaultValue": ""
+                                "isMap": false
                               },
-                              "role": "textfield",
+                              "role": "new_column",
                               "visible": true,
-                              "width": 16
+                              "width": 22,
+                              "editStyle": "subpanel"
                             },
                             {
-                              "name": "Storage",
+                              "name": "description",
                               "label": {
-                                "text": "Storage"
+                                "text": "Description"
                               },
-                              "controlType": "oneofselect",
+                              "controlType": "textfield",
                               "valueDef": {
                                 "propType": "string",
                                 "isList": false,
-                                "isMap": false,
-                                "defaultValue": "String"
+                                "isMap": false
                               },
-                              "role": "enum",
-                              "values": [
-                                "String",
-                                "Integer",
-                                "Real",
-                                "Time",
-                                "Date",
-                                "Timestamp"
-                              ],
-                              "valueLabels": [
-                                "String",
-                                "Integer",
-                                "Real",
-                                "Time",
-                                "Date",
-                                "Timestamp"
-                              ],
+                              "role": "new_column",
                               "visible": true,
-                              "width": 8,
-                              "editStyle": "inline"
+                              "width": 22,
+                              "editStyle": "subpanel"
                             }
                           ],
-                          "keyIndex": 0,
+                          "keyIndex": -1,
                           "defaultRow": [
-                            "",
-                            "String"
+                            null,
+                            null
                           ],
-                          "required": false
+                          "childItem": {
+                            "itemType": "additionalLink",
+                            "panel": {
+                              "id": "structurelisteditorTableInput",
+                              "panelType": "general",
+                              "uiItems": [
+                                {
+                                  "itemType": "control",
+                                  "control": {
+                                    "name": "name",
+                                    "label": {
+                                      "text": "Name"
+                                    },
+                                    "controlType": "textfield",
+                                    "valueDef": {
+                                      "propType": "string",
+                                      "isList": false,
+                                      "isMap": false
+                                    },
+                                    "separateLabel": true
+                                  }
+                                },
+                                {
+                                  "itemType": "control",
+                                  "control": {
+                                    "name": "description",
+                                    "label": {
+                                      "text": "Description"
+                                    },
+                                    "controlType": "textfield",
+                                    "valueDef": {
+                                      "propType": "string",
+                                      "isList": false,
+                                      "isMap": false
+                                    },
+                                    "separateLabel": true
+                                  }
+                                }
+                              ]
+                            },
+                            "text": "...",
+                            "secondaryText": "structurelisteditorTableInput"
+                          }
                         }
                       }
                     ]
@@ -1595,6 +1548,44 @@
           }
         }
       }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "name",
+          "message": {
+            "resource_key": "invalid_subpanel_name",
+            "default": "name should not contain pw"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "name",
+            "op": "notContains",
+            "value": "pw"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "description",
+          "message": {
+            "resource_key": "invalid_subpanel_description",
+            "default": "description should not contain pw"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "description",
+            "op": "notContains",
+            "value": "pw"
+          }
+        }
+      }
     }
   ],
   "data": {
@@ -1637,7 +1628,7 @@
         ["BP", "BP-1"]
       ],
       "structurelisteditorTableInput": [
-        ["Age","Integer"]
+        ["Hello","World"]
       ]
     },
     "datasetMetadata": {
@@ -1705,84 +1696,6 @@
             "role": "input"
           }
         }
-      ]
-    },
-    "currentProperties": {
-      "columnSelectInputFieldList": [
-        "Age",
-        "BP"
-      ],
-      "oneofcolumnsList": [],
-      "someofcolumnsList": [],
-      "numberfieldCheckpointInterval": [
-        "-1"
-      ],
-      "numberfieldImpurity": [
-        "entropy"
-      ],
-      "numberfieldMaxBins": [
-        "24"
-      ],
-      "numberfieldMaxDepth": [
-        "7"
-      ],
-      "numberfieldMinInfoGain": [
-        "0"
-      ],
-      "numberfieldMinInstancesPerNode": [
-        "2"
-      ],
-      "numberfieldSeed": [
-        "12345"
-      ],
-      "checkboxTypes": [],
-      "oneofselectAnimals": [],
-      "oneofselectPets": [
-        "turtle"
-      ],
-      "someofselectNumbers": [],
-      "checkboxSingle": [
-        ""
-      ],
-      "checkboxEnable": [
-        ""
-      ],
-      "radiosetColor": [
-        "blue"
-      ],
-      "apples": [
-        "100"
-      ],
-      "lemons": [
-        "100"
-      ],
-      "berries": [
-        "50"
-      ],
-      "passwordField": [
-        ""
-      ],
-      "textfieldName": [
-        ""
-      ],
-      "textareaDescription": [
-        ""
-      ],
-      "expressionBox": [
-        ""
-      ],
-      "columnSelectSharedWithInput": [
-        "Sex"
-      ],
-      "structuretableSortOrder": [
-        ["Cholesterol","Ascending"]
-      ],
-      "structuretableRenameFields": [
-        ["Age", "Age"],
-        ["BP", "BP-1"]
-      ],
-      "structurelisteditorTableInput": [
-        ["Age","Integer"]
       ]
     }
   }

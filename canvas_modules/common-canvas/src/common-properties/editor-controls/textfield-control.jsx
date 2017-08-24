@@ -10,7 +10,7 @@
 import React from "react";
 import { TextField } from "ap-components-react/dist/ap-components-react";
 import EditorControl from "./editor-control.jsx";
-import { CHARACTER_LIMITS } from "../constants/constants.js";
+import { CHARACTER_LIMITS, EDITOR_CONTROL } from "../constants/constants.js";
 
 export default class TextfieldControl extends EditorControl {
 	constructor(props) {
@@ -36,7 +36,7 @@ export default class TextfieldControl extends EditorControl {
 	}
 
 	render() {
-		const controlName = this.getControlID().split("-")[2];
+		const controlName = this.getControlID().replace(EDITOR_CONTROL, "");
 		const conditionProps = {
 			controlName: controlName,
 			controlType: "textfield"

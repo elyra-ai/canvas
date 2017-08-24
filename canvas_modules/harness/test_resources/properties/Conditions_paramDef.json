@@ -1206,7 +1206,45 @@
           }
         }
       }
-    }
+    },
+		{
+			"validation": {
+				"fail_message": {
+					"type": "error",
+					"focus_parameter_ref": "name",
+					"message": {
+						"resource_key": "invalid_subpanel_name",
+						"default": "name should not contain pw"
+					}
+				},
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "name",
+						"op": "notContains",
+						"value": "pw"
+					}
+				}
+			}
+		},
+		{
+			"validation": {
+				"fail_message": {
+					"type": "error",
+					"focus_parameter_ref": "description",
+					"message": {
+						"resource_key": "invalid_subpanel_description",
+						"default": "description should not contain pw"
+					}
+				},
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "description",
+						"op": "notContains",
+						"value": "pw"
+					}
+				}
+			}
+		}
   ],
   "dataset_metadata": {
     "fields": [
@@ -1280,8 +1318,6 @@
     "columnSelectInputFieldList.desc": "Select one or more input columns",
     "column_select_input_field_list_not_empty": "Select one or more input fields. This is sample text to show how an error or warning message will display text if provided a long description",
 		"column_select_shared_with_input_not_empty": "Warning: empty tables",
-    "one_of_columns_list_not_empty": "Cannot have Sex selected",
-    "some_of_columns_list_not_empty": "Field must be selected",
     "numberfieldCheckpointInterval.label": "Checkpoint Interval",
     "numberfieldCheckpointInterval.desc": "Set checkpoint interval (>= 1) or disable checkpoint (-1). Ex) 10 means that the cache will get checkpointed every 10 iterations",
     "numberfieldImpurity.label": "Impurity",
@@ -1353,6 +1389,8 @@
     "structuretableRenameFields.new_name.label": "Output name",
     "structuretable_rename_fields_not_empty": "The 'Output Name' field cannot be empty",
     "structurelisteditorTableInput.name.label": "Name",
-    "structurelisteditorTableInput.description.label": "Description"
+    "structurelisteditorTableInput.description.label": "Description",
+    "invalid_subpanel_name": "name should not contain pw",
+    "invalid_subpanel_description": "description should not contain pw"
   }
 }

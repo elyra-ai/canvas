@@ -10,6 +10,7 @@
 import React from "react";
 import Dropdown from "react-dropdown";
 import EditorControl from "./editor-control.jsx";
+import { EDITOR_CONTROL } from "../constants/constants.js";
 
 export default class FieldAllocatorControl extends EditorControl {
 	constructor(props) {
@@ -103,7 +104,7 @@ export default class FieldAllocatorControl extends EditorControl {
 			this._update_callback = null;
 		}
 
-		var controlName = this.getControlID().split("-")[2];
+		const controlName = this.getControlID().replace(EDITOR_CONTROL, "");
 		const conditionProps = {
 			controlName: controlName,
 			controlType: "selection"

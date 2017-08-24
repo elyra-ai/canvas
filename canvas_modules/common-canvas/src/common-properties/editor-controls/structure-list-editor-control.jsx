@@ -11,6 +11,7 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 import StructureTableEditor from "./structure-table-editor.jsx";
+import { EDITOR_CONTROL } from "../constants/constants.js";
 
 export default class StructurelisteditorControl extends StructureTableEditor {
 	constructor(props) {
@@ -67,7 +68,7 @@ export default class StructurelisteditorControl extends StructureTableEditor {
 	}
 
 	render() {
-		const controlName = this.getControlID().split("-")[2];
+		const controlName = this.getControlID().replace(EDITOR_CONTROL, "");
 		const conditionProps = {
 			controlName: controlName,
 			controlType: "table"

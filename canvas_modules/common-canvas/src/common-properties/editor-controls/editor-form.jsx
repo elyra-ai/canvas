@@ -15,6 +15,7 @@ import React from "react";
 import { ButtonToolbar, Panel } from "react-bootstrap";
 
 import { Tabs } from "ap-components-react/dist/ap-components-react";
+import { EDITOR_CONTROL } from "../constants/constants.js";
 
 import ControlItem from "./control-item.jsx";
 import TextfieldControl from "./textfield-control.jsx";
@@ -83,8 +84,10 @@ export default class EditorForm extends React.Component {
 		this.parseUiConditions = this.parseUiConditions.bind(this);
 		this.updateValidationErrorMessage = this.updateValidationErrorMessage.bind(this);
 		this.retrieveValidationErrorMessage = this.retrieveValidationErrorMessage.bind(this);
+		this.validateChildRefs = this.validateChildRefs.bind(this);
 
 		this.getControlValues = this.getControlValues.bind(this);
+		this.getSubControlValues = this.getSubControlValues.bind(this);
 		this.getControl = this.getControl.bind(this);
 		this.genPanel = this.genPanel.bind(this);
 		this.genUIContent = this.genUIContent.bind(this);
@@ -196,6 +199,25 @@ export default class EditorForm extends React.Component {
 		return values;
 	}
 
+	getSubControlValues() {
+		return this.getSubControlValuesRecursive(this.refs, {});
+	}
+
+	getSubControlValuesRecursive(parentRefs, values) {
+		const that = this;
+		Object.keys(parentRefs).forEach(function(control) {
+			if (typeof parentRefs[control] === "object" &&
+				typeof parentRefs[control].getSubControlId === "function" &&
+				typeof parentRefs[control].refs === "object") {
+				that.getSubControlValuesRecursive(parentRefs[control].refs, values);
+			} else if (typeof parentRefs[control].getControlID === "function") {
+				const subControlId = parentRefs[control].getControlID().replace(EDITOR_CONTROL, "");
+				values[subControlId] = parentRefs[control].getControlValue();
+			}
+		});
+		return values;
+	}
+
 	getSelectedRows(controlName) {
 		if (!this.state.selectedRows[controlName]) {
 			this.state.selectedRows[controlName] = [];
@@ -222,8 +244,27 @@ export default class EditorForm extends React.Component {
 				const control = that.getControl(controlId);
 				if (control) {
 					control.validateInput();
+				} else if (typeof that.refs === "object") { // needed for subpanel validations
+					that.validateChildRefs(that.refs, controlId);
 				}
 			});
+	}
+
+	validateChildRefs(parentRefs, controlId) {
+		const that = this;
+		Object.keys(parentRefs).forEach(function(control) {
+			if (typeof parentRefs[control] === "object" &&
+				typeof parentRefs[control].getSubControlId === "function" &&
+				parentRefs[control].refs) {
+				that.validateChildRefs(parentRefs[control].refs, controlId);
+			} else if (typeof parentRefs[control].getControlID === "function") {
+				const subControlId = parentRefs[control].getControlID().replace(EDITOR_CONTROL, "");
+				if (subControlId === controlId) {
+					parentRefs[control].validateInput();
+					return;
+				}
+			}
+		});
 	}
 
 	updateControlValues() {
@@ -258,6 +299,7 @@ export default class EditorForm extends React.Component {
 				controlStates={this.state.controlStates}
 				validateConditions={this.validateConditions}
 				getControlValues={this.getControlValues}
+				getSubControlValues={this.getSubControlValues}
 				updateValidationErrorMessage={this.updateValidationErrorMessage}
 				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
@@ -272,6 +314,7 @@ export default class EditorForm extends React.Component {
 				controlStates={this.state.controlStates}
 				validateConditions={this.validateConditions}
 				getControlValues={this.getControlValues}
+				getSubControlValues={this.getSubControlValues}
 				updateValidationErrorMessage={this.updateValidationErrorMessage}
 				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
@@ -286,6 +329,7 @@ export default class EditorForm extends React.Component {
 				controlStates={this.state.controlStates}
 				validateConditions={this.validateConditions}
 				getControlValues={this.getControlValues}
+				getSubControlValues={this.getSubControlValues}
 				updateValidationErrorMessage={this.updateValidationErrorMessage}
 				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
@@ -299,6 +343,7 @@ export default class EditorForm extends React.Component {
 				values={control.values}
 				valueLabels={control.valueLabels}
 				valueIcons={control.valueIcons}
+				getSubControlValues={this.getSubControlValues}
 			/>);
 		} else if (control.controlType === "passwordfield") {
 			return (<PasswordControl control={control}
@@ -310,6 +355,7 @@ export default class EditorForm extends React.Component {
 				controlStates={this.state.controlStates}
 				validateConditions={this.validateConditions}
 				getControlValues={this.getControlValues}
+				getSubControlValues={this.getSubControlValues}
 				updateValidationErrorMessage={this.updateValidationErrorMessage}
 				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
@@ -324,6 +370,7 @@ export default class EditorForm extends React.Component {
 				controlStates={this.state.controlStates}
 				validateConditions={this.validateConditions}
 				getControlValues={this.getControlValues}
+				getSubControlValues={this.getSubControlValues}
 				updateValidationErrorMessage={this.updateValidationErrorMessage}
 				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
@@ -337,6 +384,7 @@ export default class EditorForm extends React.Component {
 				controlStates={this.state.controlStates}
 				validateConditions={this.validateConditions}
 				getControlValues={this.getControlValues}
+				getSubControlValues={this.getSubControlValues}
 				updateValidationErrorMessage={this.updateValidationErrorMessage}
 				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
@@ -350,6 +398,7 @@ export default class EditorForm extends React.Component {
 				controlStates={this.state.controlStates}
 				validateConditions={this.validateConditions}
 				getControlValues={this.getControlValues}
+				getSubControlValues={this.getSubControlValues}
 				updateValidationErrorMessage={this.updateValidationErrorMessage}
 				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
@@ -363,6 +412,7 @@ export default class EditorForm extends React.Component {
 				controlStates={this.state.controlStates}
 				validateConditions={this.validateConditions}
 				getControlValues={this.getControlValues}
+				getSubControlValues={this.getSubControlValues}
 				updateValidationErrorMessage={this.updateValidationErrorMessage}
 				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
@@ -377,6 +427,7 @@ export default class EditorForm extends React.Component {
 				controlStates={this.state.controlStates}
 				validateConditions={this.validateConditions}
 				getControlValues={this.getControlValues}
+				getSubControlValues={this.getSubControlValues}
 				updateValidationErrorMessage={this.updateValidationErrorMessage}
 				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
@@ -390,6 +441,7 @@ export default class EditorForm extends React.Component {
 				valueAccessor={controlValueAccessor}
 				validateConditions={this.validateConditions}
 				getControlValues={this.getControlValues}
+				getSubControlValues={this.getSubControlValues}
 				updateValidationErrorMessage={this.updateValidationErrorMessage}
 				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
@@ -403,6 +455,7 @@ export default class EditorForm extends React.Component {
 				valueAccessor={controlValueAccessor}
 				validateConditions={this.validateConditions}
 				getControlValues={this.getControlValues}
+				getSubControlValues={this.getSubControlValues}
 				updateValidationErrorMessage={this.updateValidationErrorMessage}
 				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
@@ -417,6 +470,7 @@ export default class EditorForm extends React.Component {
 				controlStates={this.state.controlStates}
 				validateConditions={this.validateConditions}
 				getControlValues={this.getControlValues}
+				getSubControlValues={this.getSubControlValues}
 				updateValidationErrorMessage={this.updateValidationErrorMessage}
 				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
@@ -432,6 +486,7 @@ export default class EditorForm extends React.Component {
 				controlStates={this.state.controlStates}
 				validateConditions={this.validateConditions}
 				getControlValues={this.getControlValues}
+				getSubControlValues={this.getSubControlValues}
 				updateValidationErrorMessage={this.updateValidationErrorMessage}
 				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
@@ -449,6 +504,7 @@ export default class EditorForm extends React.Component {
 				selectedRows={this.getSelectedRows(control.name)}
 				validateConditions={this.validateConditions}
 				getControlValues={this.getControlValues}
+				getSubControlValues={this.getSubControlValues}
 				updateValidationErrorMessage={this.updateValidationErrorMessage}
 				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
@@ -465,6 +521,7 @@ export default class EditorForm extends React.Component {
 				controlStates={this.state.controlStates}
 				validateConditions={this.validateConditions}
 				getControlValues={this.getControlValues}
+				getSubControlValues={this.getSubControlValues}
 				updateValidationErrorMessage={this.updateValidationErrorMessage}
 				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
@@ -483,6 +540,7 @@ export default class EditorForm extends React.Component {
 				selectedRows={this.getSelectedRows(control.name)}
 				validateConditions={this.validateConditions}
 				getControlValues={this.getControlValues}
+				getSubControlValues={this.getSubControlValues}
 				updateValidationErrorMessage={this.updateValidationErrorMessage}
 				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
@@ -501,6 +559,7 @@ export default class EditorForm extends React.Component {
 				buildUIItem={this.genUIItem}
 				validateConditions={this.validateConditions}
 				getControlValues={this.getControlValues}
+				getSubControlValues={this.getSubControlValues}
 				updateValidationErrorMessage={this.updateValidationErrorMessage}
 				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
@@ -519,6 +578,7 @@ export default class EditorForm extends React.Component {
 				openFieldPicker={this.openFieldPicker}
 				validateConditions={this.validateConditions}
 				getControlValues={this.getControlValues}
+				getSubControlValues={this.getSubControlValues}
 				updateValidationErrorMessage={this.updateValidationErrorMessage}
 				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
@@ -549,6 +609,7 @@ export default class EditorForm extends React.Component {
 				controlStates={this.state.controlStates}
 				validateConditions={this.validateConditions}
 				getControlValues={this.getControlValues}
+				getSubControlValues={this.getSubControlValues}
 				updateValidationErrorMessage={this.updateValidationErrorMessage}
 				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);

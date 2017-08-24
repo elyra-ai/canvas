@@ -12,6 +12,7 @@ import React from "react";
 import { FormControl } from "react-bootstrap";
 import EditorControl from "./editor-control.jsx";
 import ReactDOM from "react-dom";
+import { EDITOR_CONTROL } from "../constants/constants.js";
 
 var _ = require("underscore");
 
@@ -127,7 +128,7 @@ export default class ColumnAllocatorControl extends EditorControl {
 			this._update_callback = null;
 		}
 
-		const controlName = this.getControlID().split("-")[2];
+		const controlName = this.getControlID().replace(EDITOR_CONTROL, "");
 		const conditionProps = {
 			controlName: controlName,
 			controlType: "selection"

@@ -10,6 +10,7 @@
 import React from "react";
 import { TextField } from "ap-components-react/dist/ap-components-react";
 import EditorControl from "./editor-control.jsx";
+import { EDITOR_CONTROL } from "../constants/constants.js";
 
 export default class PasswordControl extends EditorControl {
 	constructor(props) {
@@ -31,7 +32,7 @@ export default class PasswordControl extends EditorControl {
 	}
 
 	render() {
-		const controlName = this.getControlID().split("-")[2];
+		const controlName = this.getControlID().replace(EDITOR_CONTROL, "");
 		const conditionProps = {
 			controlName: controlName,
 			controlType: "textfield"

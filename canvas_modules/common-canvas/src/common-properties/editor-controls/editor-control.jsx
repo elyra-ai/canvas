@@ -15,7 +15,7 @@ import ValidationMessage from "./validation-message.jsx";
 import ValidationIcon from "./validation-icon.jsx";
 import UiConditions from "../ui-conditions/ui-conditions.js";
 import PropertyUtils from "../util/property-utils.js";
-import { DEFAULT_VALIDATION_MESSAGE, VALIDATION_MESSAGE } from "../constants/constants.js";
+import { DEFAULT_VALIDATION_MESSAGE, VALIDATION_MESSAGE, EDITOR_CONTROL } from "../constants/constants.js";
 
 export default class EditorControl extends React.Component {
 
@@ -125,7 +125,7 @@ export default class EditorControl extends React.Component {
 	}
 
 	getControlID() {
-		return "editor-control-" + this.props.control.name;
+		return EDITOR_CONTROL + this.props.control.name;
 	}
 
 	/*
@@ -217,6 +217,14 @@ export default class EditorControl extends React.Component {
 				userInput[key] = controlValues[key];
 			}
 		}
+
+		const subControlValues = this.props.getSubControlValues();
+		for (const key in subControlValues) {
+			if (key) {
+				userInput[key] = subControlValues[key];
+			}
+		}
+
 		return userInput;
 	}
 
@@ -328,7 +336,7 @@ export default class EditorControl extends React.Component {
 	}
 
 	validateInput() {
-		var controlName = this.getControlID().split("-")[2];
+		const controlName = this.getControlID().replace(EDITOR_CONTROL, "");
 		if (!this.props.validationDefinitions) {
 			return;
 		}
@@ -391,5 +399,6 @@ EditorControl.propTypes = {
 	updateValidationErrorMessage: React.PropTypes.func,
 	retrieveValidationErrorMessage: React.PropTypes.func,
 	dataModel: React.PropTypes.object,
-	getControlValues: React.PropTypes.func
+	getControlValues: React.PropTypes.func,
+	getSubControlValues: React.PropTypes.func
 };
