@@ -46,8 +46,6 @@ import undo from "../graphics/undo.svg";
 import redo from "../graphics/redo.svg";
 import template32 from "ibm-design-icons/dist/svg/object-based/template_32.svg";
 
-const CANVAS_SIZE_LIMIT = 100000;
-
 class App extends React.Component {
 	constructor(props) {
 		super(props);
@@ -143,9 +141,7 @@ class App extends React.Component {
 		this.forceUpdate();
 		CommandStack.clearCommandStack();
 		ObjectModel.setCanvas(canvasJson);
-		if (JSON.stringify(canvasJson) <= CANVAS_SIZE_LIMIT) { // Only send the Canvas if it is small enough.
-			TestService.postCanvas(canvasJson);
-		}
+		TestService.postCanvas(canvasJson);
 		this.log("Canvas diagram set");
 	}
 
