@@ -69,7 +69,7 @@ PropertiesDialog.propTypes = {
 	cancelHandler: React.PropTypes.func,
 	okHandler: React.PropTypes.func,
 	bsSize: React.PropTypes.string,
-	title: React.PropTypes.object,
+	title: React.PropTypes.string,
 	children: React.PropTypes.element,
 	showPropertiesButtons: React.PropTypes.bool
 };
