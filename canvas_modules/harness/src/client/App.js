@@ -247,10 +247,20 @@ class App extends React.Component {
 
 	undo() {
 		CommandStack.undo();
+		var sessionData = {
+			events: this.state.consoleout,
+			canvas: ObjectModel.getCanvas()
+		};
+		TestService.postSessionData(sessionData);
 	}
 
 	redo() {
 		CommandStack.redo();
+		var sessionData = {
+			events: this.state.consoleout,
+			canvas: ObjectModel.getCanvas()
+		};
+		TestService.postSessionData(sessionData);
 	}
 
 	openPalette() {
