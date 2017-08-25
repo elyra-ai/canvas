@@ -7,28 +7,6 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-@CHARSET "ISO-8859-1";
-
-@font-face {
-    font-family: IBMHLVMedium;
-    src: url(~ap-components-react/dist/fonts/medium/helvetica-neue-medium.woff);
-}
-
-@font-face {
-    font-family: IBMHLVRoman;
-    src: url(~ap-components-react/dist/fonts/roman/helvetica-neue-roman.woff);
-}
-
-@font-face {
-    font-family: IBMHLVBold;
-    src: url(~ap-components-react/dist/fonts/bold/helvetica-neue-bold.woff);
-}
-@font-face {
-    font-family: IBMHLVlight;
-    src: url(~ap-components-react/dist/fonts/light/helvetica-neue-light.woff);
-}
-
-
 /* Property editing */
 .properties-editing {
     position: absolute;
