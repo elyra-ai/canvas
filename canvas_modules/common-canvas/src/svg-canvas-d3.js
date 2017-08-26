@@ -695,6 +695,22 @@ export default class CanvasD3Layout {
 				d3.select(`#node_grp_${d.id}`)
 					.attr("transform", `translate(${d.x_pos}, ${d.y_pos})`)
 					.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
+
+				if (that.connectionType === "Ports") {
+					if (d.outputPorts && d.outputPorts.length > 0) {
+						d.outputPorts.forEach((port, i) => {
+							d3.select(`#src_circle_${d.id}_${d.outputPorts[i].name}`)
+								.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
+						});
+					}
+
+					if (d.inputPorts && d.inputPorts.length > 0) {
+						d.inputPorts.forEach((port, i) => {
+							d3.select(`#trg_circle_${d.id}_${d.inputPorts[i].name}`)
+								.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
+						});
+					}
+				}
 			});
 		} else if (this.selecting || this.regionSelect || this.commentSizing) {
 			nodeGroupSel.each(function(d) {
@@ -1422,6 +1438,12 @@ export default class CanvasD3Layout {
 				d3.select(`#comment_grp_${d.id}`)
 					.attr("transform", `translate(${d.x_pos}, ${d.y_pos})`)
 					.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
+
+				// Comment port circle
+				if (that.connectionType === "Ports") {
+					d3.select(`#comment_circle_${d.id}`)
+						.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
+				}
 			});
 		} else if (this.selecting || this.regionSelect) {
 			commentGroupSel.each(function(d) {
