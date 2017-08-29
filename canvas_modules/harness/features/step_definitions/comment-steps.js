@@ -8,7 +8,7 @@
  *******************************************************************************/
 /* eslint no-console: "off" */
 
-import { getCommentIndexFromCanvasUsingText, getEventLogCount, getObjectModelCount } from "./utilities/validateUtil.js";
+import { getCommentIdFromObjectModelUsingText, getCommentIndexFromCanvasUsingText, getEventLogCount, getObjectModelCount } from "./utilities/validateUtil.js";
 import { getHarnessData } from "./utilities/HTTPClient.js";
 import { getURL } from "./utilities/test-config.js";
 import { simulateDragDrop } from "./utilities/DragAndDrop.js";
@@ -157,5 +157,102 @@ module.exports = function() {
 				browser.execute(simulateDragDrop, ".comment-inner-box", commentNumber, "#canvas-div", 0, canvasX, canvasY);
 			}
 		});
+
+	// Then I edit comment 1 linked to the "Derive" node with the comment text "This comment box should be linked to the derive node."
+	//
+	this.Then(/^I edit comment (\d+) with the comment text "([^"]*)"$/,
+		function(commentNumber, commentText) {
+			try {
+				var commentIndex = commentNumber - 1;
+				var comment;
+				const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
+				if (D3RenderingEngine) {
+					comment = browser.$$(".comment-group")[0];
+					comment.click();
+					comment.doubleClick();
+					comment.$("textarea").setValue("", commentText);
+				} else {
+					comment = browser.$$("textarea")[commentIndex];
+					comment.doubleClick();
+					comment.setValue("", commentText);
+				}
+
+				browser.pause(1500);
+				browser.leftClick("#common-canvas", 400, 400);
+
+				// verify the comment is in the internal object model
+				const testUrl = getURL();
+				const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
+
+				browser.timeoutsAsyncScript(5000);
+				var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
+				var returnVal = browser.execute(getCommentIdFromObjectModelUsingText, objectModel.value, commentText);
+				expect(returnVal.value).not.toBe(-1);
+
+
+			} catch (err) {
+				console.log("Error = " + err);
+				throw err;
+			}
+
+		});
+
+	this.Then(/^I verify the number of comments are (\d+)$/, function(comments) {
+		try {
+			var commentsLength = browser.$$(".comment-group").length;
+			expect(Number(comments)).toEqual(commentsLength);
+
+			// verify the number of comments is in the internal object model
+			const testUrl = getURL();
+			const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
+
+			browser.timeoutsAsyncScript(5000);
+			var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
+			var returnVal = browser.execute(getObjectModelCount, objectModel.value, "comments", "");
+			expect(returnVal.value).toBe(Number(comments));
+		} catch (err) {
+			console.log("Error = " + err);
+			throw err;
+		}
+	});
+
+	this.Then("I select all the comments in the canvas", function() {
+		var comments = browser.$$(".comment-group");
+		browser.keys("Shift");
+
+		comments.forEach(function(comment) {
+			comment.click();
+		});
+		browser.keys("Shift");
+	});
+
+	this.Then(/^I verify comment (\d+) with the comment text "([^"]*)"$/, function(commentNumber, commentText) {
+		try {
+			var commentContent = browser.$$(".d3-comment-display")[0];
+			expect("This comment box ").toEqual(commentContent.getText());
+
+			// verify the comment is in the internal object model
+			const testUrl = getURL();
+			const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
+
+			browser.timeoutsAsyncScript(5000);
+			var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
+			var returnVal = browser.execute(getCommentIdFromObjectModelUsingText, objectModel.value, commentText);
+			expect(returnVal.value).not.toBe(-1);
+		} catch (err) {
+			console.log("Error = " + err);
+			throw err;
+		}
+
+	});
+
+	this.Then("I verify the comment move was not done", function() {
+		// MOVE OPERATION ISNT WORKING CURRENTLY IN D3
+	});
+
+	this.Then("I verify the comment move was done", function() {
+		// MOVE OPERATION ISNT WORKING CURRENTLY IN D3
+	});
+
 
 };

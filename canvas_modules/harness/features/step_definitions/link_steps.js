@@ -157,6 +157,14 @@ module.exports = function() {
 		expect(returnVal.value).toBe(0);
 	});
 
+	// I delete d3 link at 205, 248
+	//
+	this.Then(/^I delete d3 link at (\d+), (\d+)$/,
+	function(linkX, linkY) {
+		browser.rightClick(".d3-svg-canvas-div", Number(linkX), Number(linkY));
+		browser.$(".context-menu-popover").$$(".react-context-menu-item")[0].$(".react-context-menu-link").click();
+	});
+
 	// Then I validate there are 6 links on the canvas
 	//
 	this.Then(/^I validate there are (\d+) links on the canvas$/, function(canvasLinks) {
@@ -175,4 +183,45 @@ module.exports = function() {
 		expect(returnVal.value).toBe(linkCount);
 
 	});
+
+	this.Then(/^I verify the number of data links are (\d+)$/, function(dataLinks) {
+		try {
+			var dataLinksOnCanvas = browser.$$(".canvas-data-link").length / 2;
+			expect(Number(dataLinks)).toEqual(dataLinksOnCanvas);
+
+			// verify the number of data-links is in the internal object model
+			const testUrl = getURL();
+			const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
+
+			browser.timeoutsAsyncScript(5000);
+			var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
+			var returnVal = browser.execute(getObjectModelCount, objectModel.value, "datalinks", "");
+			expect(returnVal.value).toBe(Number(dataLinks));
+		} catch (err) {
+			console.log("Error = " + err);
+			throw err;
+		}
+
+	});
+
+	this.Then(/^I verify the number of comment links are (\d+)$/, function(commentLinks) {
+		try {
+			var commentLinksOnCanvas = browser.$$(".canvas-comment-link").length / 2;
+			expect(Number(commentLinks)).toEqual(commentLinksOnCanvas);
+
+			// verify the number of data-links is in the internal object model
+			const testUrl = getURL();
+			const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
+
+			browser.timeoutsAsyncScript(5000);
+			var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
+			var returnVal = browser.execute(getObjectModelCount, objectModel.value, "commentLinks", "");
+			expect(returnVal.value).toBe(Number(commentLinks));
+		} catch (err) {
+			console.log("Error = " + err);
+			throw err;
+		}
+
+	});
+
 };

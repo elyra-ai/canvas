@@ -558,7 +558,7 @@ module.exports = function() {
 		}
 	});
 
-  // Then I disconnect links for node 1 a "Var. File" node on the canvas
+  // Then I disconnect links for node 1 a "Var. File" on the canvas
 	//
 	this.Then(/^I disconnect links for node (\d+) a "([^"]*)" on the canvas$/, function(nodeIndex, nodeName) {
 		var nodeNumber = nodeIndex - 1;
@@ -680,4 +680,110 @@ module.exports = function() {
 	this.Then(/^I pause for (\d+) seconds$/, function(seconds) {
 		// browser.pause(Number(seconds) * 1000);
 	});
+
+	// Then I delete node 1 the "Var. File" node by selecting more than 1 node
+	//
+	this.Then(/^I delete node (\d+) the "([^"]*)" node by selecting more than 1 node$/, function(nodeIndex, nodeType) {
+		const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
+		var nodeNumber = nodeIndex - 1;
+		var nodeSelector;
+		if (D3RenderingEngine) {
+			nodeSelector = ".node-group";
+		} else {
+			nodeSelector = ".node-inner-circle";
+		}
+		browser.$("#canvas-div").$$(nodeSelector)[nodeNumber].rightClick();
+		browser.$(".context-menu-popover").$$(".react-context-menu-item")[8].$(".react-context-menu-link").click();
+
+		// verify node is not the canvas DOM
+		var count = 0;
+		var nodeList = browser.$("#canvas-div").$$(nodeSelector);
+		for (var idx = 0; idx < nodeList.length; idx++) {
+			var imageName;
+			if (D3RenderingEngine) {
+				imageName = browser.$("#canvas-div").$$(nodeSelector)[idx].$("image").getAttribute("href");
+			} else {
+				imageName = browser.$("#canvas-div").$$(nodeSelector)[idx].$("img").getAttribute("src");
+			}
+
+			// console.log("Image # = " + idx + " image = " + imageName);
+			if (imageName === expectedImages[nodeType]) {
+				count++;
+			}
+		}
+		expect(count).toBe(0);
+
+		// verify that the  node is in the internal object model
+		const testUrl = getURL();
+		const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
+
+		browser.timeouts("script", 5000);
+		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
+		var returnVal = browser.execute(getObjectModelCount, objectModel.value, "nodes", expectedImages[nodeType]);
+		expect(returnVal.value).toBe(0);
+	});
+
+	// Then I disconnect links for node 1 a "Var. File" on the canvas by selecting more than 1 node
+	//
+	this.Then(/^I disconnect links for node (\d+) a "([^"]*)" on the canvas by selecting more than 1 node$/, function(nodeIndex, nodeName) {
+		var nodeNumber = nodeIndex - 1;
+		const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
+		if (D3RenderingEngine) {
+			browser.$("#canvas-div").$$(".node-group")[nodeNumber].rightClick();
+		} else {
+			browser.$("#canvas-div").$$(".node-inner-circle")[nodeNumber].rightClick();
+		}
+
+		browser.$(".context-menu-popover").$$(".react-context-menu-item")[0].$(".react-context-menu-link").click();
+
+
+		// verify that the link is Not in the internal object model
+		const testUrl = getURL();
+		const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
+
+		browser.timeouts("script", 5000);
+		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
+		var nodeId = browser.execute(getNodeIdFromObjectModel, objectModel.value, nodeNumber);
+		var returnVal = browser.execute(deleteLinkInObjectModel, objectModel.value, nodeId.value);
+		expect(returnVal.value).toBe(0);
+	});
+
+	this.Then(/^I verify the number of nodes are (\d+)$/, function(nodes) {
+		try {
+			var nodesInCanvas = browser.$("#canvas-div").$$(".node-image").length;
+			expect(Number(nodes)).toEqual(nodesInCanvas);
+
+			// verify the number of nodes is in the internal object model
+			const testUrl = getURL();
+			const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
+
+			browser.timeoutsAsyncScript(5000);
+			var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
+			var returnVal = browser.execute(getObjectModelCount, objectModel.value, "nodes", "");
+			expect(returnVal.value).toBe(Number(nodes));
+		} catch (err) {
+			console.log("Error = " + err);
+			throw err;
+		}
+	});
+
+	this.Then("I select all the nodes in the canvas", function() {
+		var nodes = browser.$("#canvas-div").$$(".node-image");
+		browser.keys("Shift");
+
+		nodes.forEach(function(node) {
+			node.click();
+		});
+
+		browser.keys("Shift");
+	});
+
+	this.Then("I verify the node move was not done", function() {
+		// MOVE OPERATION ISNT WORKING CURRENTLY IN D3
+	});
+
+	this.Then("I verify the node move was done", function() {
+		// MOVE OPERATION ISNT WORKING CURRENTLY IN D3
+	});
+
 };

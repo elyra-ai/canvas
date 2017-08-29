@@ -125,26 +125,49 @@ function getNodeIdFromObjectModel(objectModel, nodeIndex) {
 
 // get a count of the number of object types in the object model
 //
+/* eslint complexity: [2, 15] */
 function getObjectModelCount(objectModel, type, compare) {
 	var count = 0;
 	var omJson = JSON.parse(objectModel);
 	if (type === "nodes") {
 		var nodes = omJson.diagram.nodes;
-		for (var idx = 0; idx < nodes.length; idx++) {
-			if (nodes[idx].image === compare) {
-				count++;
+		if (compare !== "") {
+			for (var idx = 0; idx < nodes.length; idx++) {
+				if (nodes[idx].image === compare) {
+					count++;
+				}
 			}
+		} else {
+			count = nodes.length;
 		}
 	} else if (type === "comments") {
 		var comments = omJson.diagram.comments;
-		for (var cidx = 0; cidx < comments.length; cidx++) {
-			if (comments[cidx].content === compare) {
-				count++;
+		if (compare !== "") {
+			for (var cidx = 0; cidx < comments.length; cidx++) {
+				if (comments[cidx].content === compare) {
+					count++;
+				}
 			}
+		} else {
+			count = comments.length;
 		}
 	} else if (type === "links") {
 		var links = omJson.diagram.links;
 		count = links.length;
+	} else if (type === "datalinks") {
+		var datalinks = omJson.diagram.links;
+		datalinks.forEach(function(datalink) {
+			if (datalink.className === "canvas-data-link") {
+				count++;
+			}
+		});
+	} else if (type === "commentLinks") {
+		var commentlinks = omJson.diagram.links;
+		commentlinks.forEach(function(commentlink) {
+			if (commentlink.className === "canvas-comment-link") {
+				count++;
+			}
+		});
 	}
 	return count;
 }

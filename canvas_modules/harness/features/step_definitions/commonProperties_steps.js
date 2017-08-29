@@ -36,6 +36,21 @@ module.exports = function() {
 		expect(textboxValue).toEqual((eventLogJSON[10].data.form.colName).toString());
 	});
 
+	this.Then(/^I enter "([^"]*)" in the textbox Column name$/, function(textboxValue) {
+
+		var textbox = browser.$("#editor-control-colName");
+		textbox.setValue("", textboxValue);
+		var okButton = browser.$(".modal__buttons").$$(".button")[0];
+		okButton.click();
+		browser.pause(500);
+
+		browser.timeoutsAsyncScript(3000);
+		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
+		var eventLogJSON = JSON.parse(eventLog.value);
+
+		expect(textboxValue).toEqual((eventLogJSON[24].data.form.colName).toString());
+	});
+
 	this.Then(/^I select "([^"]*)" dropdown option$/, function(dropdownValue) {
 		browser.pause(500);
 		var dropdown = browser.$(".Dropdown-placeholder");
@@ -278,6 +293,20 @@ module.exports = function() {
 	this.Then(/^I have closed the common properties dialog by clicking on close button$/, function() {
 		var closeButton = browser.$(".modal__buttons").$(".button--hyperlink");
 		closeButton.click();
+	});
+
+	this.Then("I verify testValue is not present", function() {
+		browser.timeoutsAsyncScript(3000);
+		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
+		var eventLogJSON = JSON.parse(eventLog.value);
+		expect("empty").toEqual((eventLogJSON[25].data.form).toString());
+	});
+
+	this.Then("I verify testValue is present", function() {
+		browser.timeoutsAsyncScript(3000);
+		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
+		var eventLogJSON = JSON.parse(eventLog.value);
+		expect("testValue").toEqual((eventLogJSON[26].data.form.colName).toString());
 	});
 
 };
