@@ -47,11 +47,10 @@ export default class SubPanelInvoker extends React.Component {
 
 	render() {
 		var propertiesDialog = [];
-		const title = <div>{this.state.title}</div>;
 		if (this.state.subPanelVisible) {
 			propertiesDialog = (<PropertiesDialog
 				onHide={this.hideSubDialog.bind(this, false)}
-				title={title}
+				title={this.state.title}
 				okHandler={this.hideSubDialog.bind(this, true)}
 				cancelHandler={this.hideSubDialog.bind(this, false)}
 			>
