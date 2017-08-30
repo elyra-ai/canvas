@@ -8,5 +8,6 @@
  *******************************************************************************/
 
 import { CommonCanvas, ObjectModel, CommonProperties, CommandStack } from "@wdp/common-canvas";
+import "@wdp/common-canvas/dist/common-canvas.css";
 
 export { CommonCanvas, ObjectModel, CommonProperties, CommandStack };
