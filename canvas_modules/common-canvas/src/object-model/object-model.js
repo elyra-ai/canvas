@@ -805,6 +805,19 @@ export default class ObjectModel {
 		return store.getState().selections;
 	}
 
+	static getAllObjectIds() {
+		var objIds = [];
+		this.getCanvas().diagram.nodes.forEach((node) => {
+			objIds.push(node.id);
+		});
+
+		this.getCanvas().diagram.comments.forEach((comment) => {
+			objIds.push(comment.id);
+		});
+
+		return objIds;
+	}
+
 	static selectAll() {
 		const selected = [];
 		for (const node of this.getNodes()) {
@@ -922,6 +935,86 @@ export default class ObjectModel {
 	static deleteSelectedObjects() {
 		this.deleteObjects({ "selectedObjectIds": this.getSelectedObjectIds() });
 	}
+
+	// Returns an offset object containing the x and y distances into negative
+	// coordinate space that that the action would encroach. For the
+	// 'moveObjects' action this is the distance the selected objects would encroach
+	// into negative space. For other actions is is simply the offset amounts
+	// passed in, provided either one is negative.
+	static getOffsetIntoNegativeSpace(action, offsetX, offsetY) {
+		var selObjs = this.getSelectedNodesAndComments();
+
+		var offset = { "x": 0, "y": 0 };
+
+		if (action === "moveObjects") {
+			selObjs.forEach((obj) => {
+				offset.x = Math.min(offset.x, obj.x_pos + offsetX - 4); // 4 = highlightGap
+				offset.y = Math.min(offset.y, obj.y_pos + offsetY - 4); // 4 = highlightGap
+			});
+
+			var noneSelObjs = this.getNoneSelectedNodesAndComments();
+			noneSelObjs.forEach((obj) => {
+				offset.x = Math.min(offset.x, obj.x_pos - 4); // 4 = highlightGap
+				offset.y = Math.min(offset.y, obj.y_pos - 4); // 4 = highlightGap
+			});
+		} else {
+			offset = { "x": Math.min(0, offsetX), "y": Math.min(0, offsetY) };
+
+			var objs = this.getNodesAndComments();
+			objs.forEach((obj) => {
+				offset.x = Math.min(offset.x, obj.x_pos - 4); // 4 = highlightGap
+				offset.y = Math.min(offset.y, obj.y_pos - 4); // 4 = highlightGap
+			});
+		}
+
+		return offset;
+	}
+
+	static getSelectedNodesAndComments() {
+		var objs = [];
+		this.getCanvas().diagram.nodes.forEach((node) => {
+			if (this.getSelectedObjectIds().includes(node.id)) {
+				objs.push(node);
+			}
+		});
+
+		this.getCanvas().diagram.comments.forEach((comment) => {
+			if (this.getSelectedObjectIds().includes(comment.id)) {
+				objs.push(comment);
+			}
+		});
+		return objs;
+	}
+
+	static getNoneSelectedNodesAndComments() {
+		var objs = [];
+		this.getCanvas().diagram.nodes.forEach((node) => {
+			if (!this.getSelectedObjectIds().includes(node.id)) {
+				objs.push(node);
+			}
+		});
+
+		this.getCanvas().diagram.comments.forEach((comment) => {
+			if (!this.getSelectedObjectIds().includes(comment.id)) {
+				objs.push(comment);
+			}
+		});
+		return objs;
+	}
+
+	static getNodesAndComments() {
+		var objs = [];
+		this.getCanvas().diagram.nodes.forEach((node) => {
+			objs.push(node);
+		});
+
+		this.getCanvas().diagram.comments.forEach((comment) => {
+			objs.push(comment);
+		});
+		return objs;
+	}
+
+
 }
 
 ObjectModel.fixedLayout = NONE;
