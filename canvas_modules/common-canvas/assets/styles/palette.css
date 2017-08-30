@@ -81,16 +81,6 @@
   color: #9D005C;
 }
 
-.palette-flyout-category-selected {
-  padding: 10px;
-  padding-right: 18px;
-  border-width:0 0 0 2px;
-}
-
-.palette-flyout-category-selected:hover {
-  color: #9D005C;
-}
-
 #palette-flyout-search {
 	height: 37px;
 	padding-right: 18px;

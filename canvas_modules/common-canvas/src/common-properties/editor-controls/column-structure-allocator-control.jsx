@@ -11,6 +11,7 @@
 
 // import logger from "../../../utils/logger";
 import React from "react";
+import PropTypes from "prop-types";
 import StructureTableEditor from "./structure-table-editor.jsx";
 import { EDITOR_CONTROL } from "../constants/constants.js";
 
@@ -185,11 +186,11 @@ export default class ColumnStructureAllocatorControl extends StructureTableEdito
 }
 
 ColumnStructureAllocatorControl.propTypes = {
-	buildUIItem: React.PropTypes.func,
-	dataModel: React.PropTypes.object.isRequired,
-	controlStates: React.PropTypes.object,
-	validationDefinitions: React.PropTypes.array,
-	updateValidationErrorMessage: React.PropTypes.func,
-	retrieveValidationErrorMessage: React.PropTypes.func,
-	updateControlValue: React.PropTypes.func
+	buildUIItem: PropTypes.func,
+	dataModel: PropTypes.object.isRequired,
+	controlStates: PropTypes.object,
+	validationDefinitions: PropTypes.array,
+	updateValidationErrorMessage: PropTypes.func,
+	retrieveValidationErrorMessage: PropTypes.func,
+	updateControlValue: PropTypes.func
 };

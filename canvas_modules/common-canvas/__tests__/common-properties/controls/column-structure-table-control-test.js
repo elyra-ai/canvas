@@ -9,7 +9,7 @@
 
 import React from "react";
 import ColumnStructureTableControl from "../../../src/common-properties/editor-controls/column-structure-table-control.jsx";
-import { shallow, render, mount } from "enzyme";
+import { render, mount } from "enzyme";
 import { expect } from "chai";
 import chai from "chai";
 import chaiEnzyme from "chai-enzyme";
@@ -186,7 +186,7 @@ function updateSelectedRows(row) {
 }
 
 function genUIItem() {
-	return <div ></div>;
+	return <div />;
 }
 
 const openFieldPicker = sinon.spy();
@@ -194,42 +194,37 @@ const openFieldPicker = sinon.spy();
 describe("ColumnStructureTableControl renders correctly", () => {
 
 	it("props should have been defined", () => {
-		const wrapper = shallow(
+		const selectedRows = getSelectedRows(control.name);
+		const wrapper = mount(
 			<ColumnStructureTableControl control={control}
 				dataModel={datasetMetadata}
-				key={controlId}
-				ref={controlId}
 				valueAccessor={valueAccessor}
 				updateControlValue={updateControlValue}
 				updateSelectedRows={updateSelectedRows}
 				validationDefinitions={validationDefinitions}
 				controlStates={controlStates}
-				selectedRows={getSelectedRows(control.name)}
+				selectedRows={selectedRows}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
 			/>
 		);
 
-		expect(wrapper.dataModel).to.be.defined;
-		expect(wrapper.control).to.be.defined;
-		expect(wrapper.key).to.be.defined;
-		expect(wrapper.ref).to.be.defined;
-		expect(wrapper.valueAccessor).to.be.defined;
-		expect(wrapper.updateControlValue).to.be.defined;
-		expect(wrapper.updateSelectedRows).to.be.defined;
-		expect(wrapper.validationDefinitions).to.be.defined;
-		expect(wrapper.selectedRows).to.be.defined;
-		expect(wrapper.controlStates).to.be.defined;
-		expect(wrapper.buildUIItem).to.be.defined;
-		expect(wrapper.openFieldPicker).to.be.defined;
+		expect(wrapper.prop("dataModel")).to.equal(datasetMetadata);
+		expect(wrapper.prop("control")).to.equal(control);
+		expect(wrapper.prop("valueAccessor")).to.equal(valueAccessor);
+		expect(wrapper.prop("updateControlValue")).to.equal(updateControlValue);
+		expect(wrapper.prop("updateSelectedRows")).to.equal(updateSelectedRows);
+		expect(wrapper.prop("validationDefinitions")).to.equal(validationDefinitions);
+		expect(wrapper.prop("selectedRows")).to.equal(selectedRows);
+		expect(wrapper.prop("controlStates")).to.equal(controlStates);
+		expect(wrapper.prop("buildUIItem")).to.equal(genUIItem);
+		expect(wrapper.prop("openFieldPicker")).to.equal(openFieldPicker);
 	});
 
 	it("should render a `ColumnStructureTableControl`", () => {
 		const wrapper = render(
 			<ColumnStructureTableControl control={control}
 				dataModel={datasetMetadata}
-				key={controlId}
-				ref={controlId}
 				valueAccessor={valueAccessor}
 				updateControlValue={updateControlValue}
 				updateSelectedRows={updateSelectedRows}
@@ -256,8 +251,6 @@ describe("ColumnStructureTableControl renders correctly", () => {
 		const wrapper = mount(
 			<ColumnStructureTableControl control={control}
 				dataModel={datasetMetadata}
-				key={controlId}
-				ref={controlId}
 				valueAccessor={valueAccessor}
 				updateControlValue={updateControlValue}
 				updateSelectedRows={updateSelectedRows}
@@ -280,8 +273,6 @@ describe("ColumnStructureTableControl renders correctly", () => {
 		const wrapper = mount(
 			<ColumnStructureTableControl control={control}
 				dataModel={datasetMetadata}
-				key={controlId}
-				ref={controlId}
 				valueAccessor={valueAccessor}
 				updateControlValue={updateControlValue}
 				updateSelectedRows={updateSelectedRows}
@@ -313,19 +304,17 @@ describe("ColumnStructureTableControl renders correctly", () => {
 		tableData = tableBody.find(".reactable-data").children();
 		expect(tableData).to.have.length(6);
 		expect(tableData.at(0).children()
-										.at(0)
-										.text()).to.equal("Drug");
+			.at(0)
+			.text()).to.equal("Drug");
 		expect(tableData.at(1).children()
-										.at(0)
-										.text()).to.equal("Na");
+			.at(0)
+			.text()).to.equal("Na");
 	});
 
 	it("should select top row and move down to bottom row", () => {
 		const wrapper = mount(
 			<ColumnStructureTableControl control={control}
 				dataModel={datasetMetadata}
-				key={controlId}
-				ref={controlId}
 				valueAccessor={valueAccessor}
 				updateControlValue={updateControlValue}
 				updateSelectedRows={updateSelectedRows}
@@ -357,19 +346,17 @@ describe("ColumnStructureTableControl renders correctly", () => {
 		tableData = tableBody.find(".reactable-data").children();
 		expect(tableData).to.have.length(6);
 		expect(tableData.at(0).children()
-										.at(0)
-										.text()).to.equal("Drug");
+			.at(0)
+			.text()).to.equal("Drug");
 		expect(tableData.at(5).children()
-										.at(0)
-										.text()).to.equal("Na");
+			.at(0)
+			.text()).to.equal("Na");
 	});
 
 	it("should select bottom row and move up one row", () => {
 		const wrapper = mount(
 			<ColumnStructureTableControl control={control}
 				dataModel={datasetMetadata}
-				key={controlId}
-				ref={controlId}
 				valueAccessor={valueAccessor}
 				updateControlValue={updateControlValue}
 				updateSelectedRows={updateSelectedRows}
@@ -401,19 +388,17 @@ describe("ColumnStructureTableControl renders correctly", () => {
 		tableData = tableBody.find(".reactable-data").children();
 		expect(tableData).to.have.length(6);
 		expect(tableData.at(4).children()
-										.at(0)
-										.text()).to.equal("Cholesterol");
+			.at(0)
+			.text()).to.equal("Cholesterol");
 		expect(tableData.at(5).children()
-										.at(0)
-										.text()).to.equal("BP");
+			.at(0)
+			.text()).to.equal("BP");
 	});
 
 	it("should select bottom row and move up to top row", () => {
 		const wrapper = mount(
 			<ColumnStructureTableControl control={control}
 				dataModel={datasetMetadata}
-				key={controlId}
-				ref={controlId}
 				valueAccessor={valueAccessor}
 				updateControlValue={updateControlValue}
 				updateSelectedRows={updateSelectedRows}
@@ -445,19 +430,17 @@ describe("ColumnStructureTableControl renders correctly", () => {
 		tableData = tableBody.find(".reactable-data").children();
 		expect(tableData).to.have.length(6);
 		expect(tableData.at(0).children()
-										.at(0)
-										.text()).to.equal("Cholesterol");
+			.at(0)
+			.text()).to.equal("Cholesterol");
 		expect(tableData.at(5).children()
-										.at(0)
-										.text()).to.equal("BP");
+			.at(0)
+			.text()).to.equal("BP");
 	});
 
 	it("should select top row and correct move buttons enabled `ColumnStructureTableControl`", () => {
 		const wrapper = mount(
 			<ColumnStructureTableControl control={control}
 				dataModel={datasetMetadata}
-				key={controlId}
-				ref={controlId}
 				valueAccessor={valueAccessor}
 				updateControlValue={updateControlValue}
 				updateSelectedRows={updateSelectedRows}
@@ -487,8 +470,6 @@ describe("ColumnStructureTableControl renders correctly", () => {
 		const wrapper = mount(
 			<ColumnStructureTableControl control={control}
 				dataModel={datasetMetadata}
-				key={controlId}
-				ref={controlId}
 				valueAccessor={valueAccessor}
 				updateControlValue={updateControlValue}
 				updateSelectedRows={updateSelectedRows}
@@ -518,8 +499,6 @@ describe("ColumnStructureTableControl renders correctly", () => {
 		const wrapper = mount(
 			<ColumnStructureTableControl control={control}
 				dataModel={datasetMetadata}
-				key={controlId}
-				ref={controlId}
 				valueAccessor={valueAccessor}
 				updateControlValue={updateControlValue}
 				updateSelectedRows={updateSelectedRows}
@@ -549,8 +528,6 @@ describe("ColumnStructureTableControl renders correctly", () => {
 		const wrapper = mount(
 			<ColumnStructureTableControl control={control}
 				dataModel={datasetMetadata}
-				key={controlId}
-				ref={controlId}
 				valueAccessor={valueAccessor}
 				updateControlValue={updateControlValue}
 				updateSelectedRows={updateSelectedRows}
@@ -575,8 +552,6 @@ describe("ColumnStructureTableControl renders correctly", () => {
 		const wrapper = mount(
 			<ColumnStructureTableControl control={control}
 				dataModel={datasetMetadata}
-				key={controlId}
-				ref={controlId}
 				valueAccessor={valueAccessor}
 				updateControlValue={updateControlValue}
 				updateSelectedRows={updateSelectedRows}
@@ -611,8 +586,8 @@ describe("ColumnStructureTableControl renders correctly", () => {
 		tableData = tableBody.find(".reactable-data").children();
 		expect(tableData).to.have.length(5);
 		expect(tableData.at(0).children()
-										.at(0)
-										.text()).to.equal("Drug");
+			.at(0)
+			.text()).to.equal("Drug");
 	});
 
 });

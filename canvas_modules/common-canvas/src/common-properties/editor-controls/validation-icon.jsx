@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
+import PropTypes from "prop-types";
 import { Icon } from "ap-components-react/dist/ap-components-react";
 import warnIcon from "../../../assets/images/warn_32.svg";
 
@@ -20,7 +21,7 @@ export default class ValidationIcon extends React.Component {
 	}
 
 	render() {
-		let icon = <div></div>;
+		let icon = <div />;
 		if (this.props.validateErrorMessage && this.props.validateErrorMessage.text !== "") {
 			const errorType = this.props.validateErrorMessage.type;
 
@@ -40,6 +41,6 @@ export default class ValidationIcon extends React.Component {
 }
 
 ValidationIcon.propTypes = {
-	validateErrorMessage: React.PropTypes.object.isRequired,
-	controlType: React.PropTypes.string
+	validateErrorMessage: PropTypes.object.isRequired,
+	controlType: PropTypes.string
 };

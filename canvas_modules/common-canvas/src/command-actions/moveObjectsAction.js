@@ -15,7 +15,7 @@ export default class MoveObjectsAction extends Action {
 		this.data = data;
 	}
 
-// Standard methods
+	// Standard methods
 	do() {
 		ObjectModel.moveObjects(this.data);
 	}

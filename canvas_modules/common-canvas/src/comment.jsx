@@ -12,6 +12,7 @@
 
 import { DND_DATA_TEXT } from "../constants/common-constants.js";
 import React from "react";
+import PropTypes from "prop-types";
 
 class Comment extends React.Component {
 	constructor(props) {
@@ -559,7 +560,7 @@ class Comment extends React.Component {
 		const commentValue = (this.state.editable) ? this.state.value : this.props.comment.content;
 
 		const box = (<div>
-			<div className="padding-box" style={paddingBoxStyle}></div>
+			<div className="padding-box" style={paddingBoxStyle} />
 
 			<div className="comment-box"
 				style={boxStyle}
@@ -571,8 +572,7 @@ class Comment extends React.Component {
 				onDrop={this.linkDrop}
 				onDragOver={this.linkDragOver}
 				onClick={this.props.commentActionHandler.bind(null, "comment")}
-			>
-			</div>
+			/>
 
 			<div className="comment-inner-box"
 				style={innerBoxStyle}
@@ -599,8 +599,7 @@ class Comment extends React.Component {
 						onChange={this.commentChange}
 						onBlur={this.blurFunction}
 						readOnly={readOnly}
-					>
-					</textarea>
+					/>
 				</div>
 			</div>
 		</div>);
@@ -614,13 +613,13 @@ class Comment extends React.Component {
 }
 
 Comment.propTypes = {
-	comment: React.PropTypes.object,
-	commentActionHandler: React.PropTypes.func,
-	onContextMenu: React.PropTypes.func,
-	fontSize: React.PropTypes.number,
-	zoom: React.PropTypes.number,
-	selected: React.PropTypes.bool,
-	cutable: React.PropTypes.bool
+	comment: PropTypes.object,
+	commentActionHandler: PropTypes.func,
+	onContextMenu: PropTypes.func,
+	fontSize: PropTypes.number,
+	zoom: PropTypes.number,
+	selected: PropTypes.bool,
+	cutable: PropTypes.bool
 };
 
 export default Comment;

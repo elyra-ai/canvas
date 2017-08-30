@@ -12,7 +12,7 @@
 /* eslint no-shadow: ["error", { "allow": ["Node", "Comment"] }] */
 
 import React from "react";
-
+import PropTypes from "prop-types";
 import Node from "./node.jsx";
 import Comment from "./comment.jsx";
 import SVGCanvas from "./svg-canvas.jsx";
@@ -316,10 +316,10 @@ export default class DiagramCanvas extends React.Component {
 					const maxY = Math.round(Math.max(dragBounds.startY, dragBounds.endY) / zoom) - (NODE_HEIGHT / 2);
 					this.selectInRegion(minX, minY, maxX, maxY);
 				} else if (jsVal.operation === "link") {
-						// Should already have been handled via a nodeAction() from the Node.drop()
+					// Should already have been handled via a nodeAction() from the Node.drop()
 				} else if (jsVal.operation === "move") {
 					this.moveNode(jsVal.id, Math.round((event.clientX - dragBounds.startX) / zoom),
-					Math.round((event.clientY - dragBounds.startY) / zoom));
+						Math.round((event.clientY - dragBounds.startY) / zoom));
 				}
 			} else if ((jsVal.operation === "createFromTemplate") || jsVal.operation === "createFromObject") {
 				var mousePos2 = this.mouseCoords(event);
@@ -333,7 +333,7 @@ export default class DiagramCanvas extends React.Component {
 				// logger.info(targetPos);
 				// logger.info("addToCanvas :"+JSON.stringify(mousePos));
 				this.createNodeFromDataAt(Math.round((mousePos.x - (NODE_WIDTH / 2)) / zoom),
-				Math.round((mousePos.y - (NODE_HEIGHT / 2)) / zoom), jsVal.data);
+					Math.round((mousePos.y - (NODE_HEIGHT / 2)) / zoom), jsVal.data);
 			}
 		}
 	}
@@ -865,12 +865,12 @@ export default class DiagramCanvas extends React.Component {
 		const connectionLinks = this.makeLinksConnections(positions);
 		viewLinks = (this.makeLinksBackgrounds(positions)).concat(connectionLinks);
 
-		const emptyDraggable = <div ref="emptyDraggable"></div>;
+		const emptyDraggable = <div ref="emptyDraggable" />;
 		let emptyCanvas = null;
 
 		if (this.props.canvas.diagram.nodes.length === 0 && this.props.canvas.diagram.comments.length === 0) {
 			emptyCanvas = (<div id="empty-canvas" onContextMenu={this.canvasContextMenu}>
-				<img src={BlankCanvasImage} className="placeholder-image"></img>
+				<img src={BlankCanvasImage} className="placeholder-image" />
 				<span className="placeholder-text">Your flow is empty!</span>
 				<span className="placeholder-link"
 					onClick={this.handlePlaceholderLinkClick}
@@ -943,11 +943,11 @@ export default class DiagramCanvas extends React.Component {
 }
 
 DiagramCanvas.propTypes = {
-	canvas: React.PropTypes.object,
-	closeContextMenu: React.PropTypes.func.isRequired,
-	contextMenuHandler: React.PropTypes.func.isRequired,
-	editActionHandler: React.PropTypes.func.isRequired,
-	clickActionHandler: React.PropTypes.func.isRequired,
-	decorationActionHandler: React.PropTypes.func.isRequired,
-	children: React.PropTypes.element
+	canvas: PropTypes.object,
+	closeContextMenu: PropTypes.func.isRequired,
+	contextMenuHandler: PropTypes.func.isRequired,
+	editActionHandler: PropTypes.func.isRequired,
+	clickActionHandler: PropTypes.func.isRequired,
+	decorationActionHandler: PropTypes.func.isRequired,
+	children: PropTypes.element
 };

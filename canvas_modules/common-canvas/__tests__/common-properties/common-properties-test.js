@@ -11,22 +11,33 @@ import React from "react";
 import CommonProperties from "../../src/common-properties/common-properties.jsx";
 import PropertiesDialog from "../../src/common-properties/properties-dialog.jsx";
 import PropertiesEditing from "../../src/common-properties/properties-editing.jsx";
-import { shallow } from "enzyme";
+import { mount } from "enzyme";
 import { expect } from "chai";
 import sinon from "sinon";
+import editStyleResource from "../test_resources/json/form-editstyle-test.json";
 
 const applyPropertyChanges = sinon.spy();
 const closePropertiesDialog = sinon.spy();
+
+const propertiesInfo = {};
+
+propertiesInfo.title = <div><h2>"Test Title"</h2></div>;
+propertiesInfo.parameterDef = editStyleResource.paramDef;
+propertiesInfo.appData = {};
+propertiesInfo.additionalComponents = {};
+propertiesInfo.applyPropertyChanges = applyPropertyChanges;
+propertiesInfo.closePropertiesDialog = closePropertiesDialog;
 
 describe("CommonProperties renders correctly", () => {
 
 	it("all required props should have been defined", () => {
 		const wrapper = createCommonProperties(true);
-
-		expect(wrapper.showPropertiesDialog).to.be.defined;
-		expect(wrapper.propertiesInfo).to.be.defined;
-		expect(wrapper.applyPropertyChanges).to.be.defined;
-		expect(wrapper.closePropertiesDialog).to.be.defined;
+		expect(wrapper.prop("showPropertiesDialog")).to.equal(true);
+		expect(wrapper.prop("propertiesInfo")).to.equal(propertiesInfo);
+		expect(wrapper.prop("useModalDialog")).to.equal(true);
+		expect(wrapper.prop("useOwnContainer")).to.equal(false);
+		expect(wrapper.prop("applyLabel")).to.equal("Apply");
+		expect(wrapper.prop("rejectLabel")).to.equal("REJECTED");
 	});
 
 	it("should render one <PropertiesDialog/> component", () => {
@@ -52,19 +63,9 @@ describe("CommonProperties renders correctly", () => {
 });
 
 function createCommonProperties(useModalDialog) {
-	const showPropertiesDialog = true;
-	const propertiesInfo = {};
-
-	propertiesInfo.title = <div><h2>"Test Title"</h2></div>;
-	propertiesInfo.formData = {};
-	propertiesInfo.appData = {};
-	propertiesInfo.additionalComponents = {};
-	propertiesInfo.applyPropertyChanges = applyPropertyChanges;
-	propertiesInfo.closePropertiesDialog = closePropertiesDialog;
-
-	const wrapper = shallow(
+	const wrapper = mount(
 		<CommonProperties
-			showPropertiesDialog={showPropertiesDialog}
+			showPropertiesDialog
 			propertiesInfo={propertiesInfo}
 			useModalDialog={useModalDialog}
 			useOwnContainer={false}
@@ -72,6 +73,5 @@ function createCommonProperties(useModalDialog) {
 			rejectLabel="REJECTED"
 		/>
 	);
-
 	return wrapper;
 }

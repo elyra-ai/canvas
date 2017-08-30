@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
+import PropTypes from "prop-types";
 import { Icon } from "ap-components-react/dist/ap-components-react";
 import warnIcon from "../../../assets/images/warn_32.svg";
 
@@ -22,7 +23,7 @@ export default class ValidationMessage extends React.Component {
 	}
 
 	render() {
-		var errorMessage = <div className="validation-error-message"></div>;
+		var errorMessage = <div className="validation-error-message" />;
 		if (this.props.validateErrorMessage && this.props.validateErrorMessage.text !== "") {
 			const errorType = this.props.validateErrorMessage.type;
 			let controlTypeStyle = "";
@@ -33,9 +34,7 @@ export default class ValidationMessage extends React.Component {
 			errorMessage = (
 				<div className="validation-error-message">
 
-					<p className={"form__validation " +
-						"validation-error-message-color-" + errorType + " " +
-						controlTypeStyle}
+					<p className={"form__validation validation-error-message-color-" + errorType + " " + controlTypeStyle}
 						style={{ "display": "block" }}
 					>
 						<span className={"form__validation--" + errorType}>{this.props.validateErrorMessage.text}</span>
@@ -49,6 +48,6 @@ export default class ValidationMessage extends React.Component {
 }
 
 ValidationMessage.propTypes = {
-	validateErrorMessage: React.PropTypes.object.isRequired,
-	controlType: React.PropTypes.string
+	validateErrorMessage: PropTypes.object.isRequired,
+	controlType: PropTypes.string
 };

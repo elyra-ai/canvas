@@ -9,6 +9,7 @@
 
 import logger from "../../../utils/logger";
 import React from "react";
+import PropTypes from "prop-types";
 import { Button } from "react-bootstrap";
 
 import SubPanelInvoker from "./sub-panel-invoker.jsx";
@@ -55,9 +56,9 @@ export default class SubPanelButton extends React.Component {
 }
 
 SubPanelButton.propTypes = {
-	label: React.PropTypes.string.isRequired,
-	title: React.PropTypes.string.isRequired,
-	panel: React.PropTypes.object.isRequired,
-	notifyStartEditing: React.PropTypes.func,
-	notifyFinishedEditing: React.PropTypes.func
+	label: PropTypes.string.isRequired,
+	title: PropTypes.string.isRequired,
+	panel: PropTypes.object.isRequired,
+	notifyStartEditing: PropTypes.func,
+	notifyFinishedEditing: PropTypes.func
 };

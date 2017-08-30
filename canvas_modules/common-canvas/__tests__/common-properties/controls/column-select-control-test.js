@@ -9,7 +9,7 @@
 
 import React from "react";
 import ColumnSelectControl from "../../../src/common-properties/editor-controls/column-select-control.jsx";
-import { shallow, render, mount } from "enzyme";
+import { render, mount } from "enzyme";
 import { expect } from "chai";
 import chai from "chai";
 import chaiEnzyme from "chai-enzyme";
@@ -178,35 +178,31 @@ const openFieldPicker = sinon.spy();
 describe("ColumnStructureTableControl renders correctly", () => {
 
 	it("props should have been defined", () => {
-		const wrapper = shallow(
+		const selectedRows = getSelectedRows(control.name);
+		const wrapper = mount(
 			<ColumnSelectControl control={control}
 				dataModel={datasetMetadata}
 				multiColumn
-				key={controlId}
-				ref={controlId}
 				valueAccessor={valueAccessor}
 				validationDefinitions={validationDefinitions}
 				controlStates={controlStates}
 				openFieldPicker={openFieldPicker}
 				updateControlValue={updateControlValue}
 				updateSelectedRows={updateSelectedRows}
-				selectedRows={getSelectedRows(control.name)}
+				selectedRows={selectedRows}
 			/>
 		);
 
-		expect(wrapper.dataModel).to.be.defined;
-		expect(wrapper.control).to.be.defined;
-		expect(wrapper.key).to.be.defined;
-		expect(wrapper.ref).to.be.defined;
-		expect(wrapper.valueAccessor).to.be.defined;
-		expect(wrapper.updateControlValue).to.be.defined;
-		expect(wrapper.updateSelectedRows).to.be.defined;
-		expect(wrapper.validationDefinitions).to.be.defined;
-		expect(wrapper.selectedRows).to.be.defined;
-		expect(wrapper.controlStates).to.be.defined;
-		expect(wrapper.buildUIItem).to.be.defined;
-		expect(wrapper.openFieldPicker).to.be.defined;
-		expect(wrapper.multiColumn).to.be.defined;
+		expect(wrapper.prop("dataModel")).to.equal(datasetMetadata);
+		expect(wrapper.prop("control")).to.equal(control);
+		expect(wrapper.prop("valueAccessor")).to.equal(valueAccessor);
+		expect(wrapper.prop("updateControlValue")).to.equal(updateControlValue);
+		expect(wrapper.prop("updateSelectedRows")).to.equal(updateSelectedRows);
+		expect(wrapper.prop("validationDefinitions")).to.equal(validationDefinitions);
+		expect(wrapper.prop("selectedRows")).to.equal(selectedRows);
+		expect(wrapper.prop("controlStates")).to.equal(controlStates);
+		expect(wrapper.prop("openFieldPicker")).to.equal(openFieldPicker);
+		expect(wrapper.prop("multiColumn")).to.equal(true);
 	});
 
 	it("should render a `ColumnSelectControl`", () => {
@@ -214,8 +210,6 @@ describe("ColumnStructureTableControl renders correctly", () => {
 			<ColumnSelectControl control={control}
 				dataModel={datasetMetadata}
 				multiColumn
-				key={controlId}
-				ref={controlId}
 				valueAccessor={valueAccessor}
 				validationDefinitions={validationDefinitions}
 				controlStates={controlStates}
@@ -236,8 +230,6 @@ describe("ColumnStructureTableControl renders correctly", () => {
 			<ColumnSelectControl control={control}
 				dataModel={datasetMetadata}
 				multiColumn
-				key={controlId}
-				ref={controlId}
 				valueAccessor={valueAccessor}
 				validationDefinitions={validationDefinitions}
 				controlStates={controlStates}
@@ -262,8 +254,6 @@ describe("ColumnStructureTableControl renders correctly", () => {
 			<ColumnSelectControl control={control}
 				dataModel={datasetMetadata}
 				multiColumn
-				key={controlId}
-				ref={controlId}
 				valueAccessor={valueAccessor}
 				validationDefinitions={validationDefinitions}
 				controlStates={controlStates}

@@ -10,6 +10,7 @@
 
 // import logger from "../../../utils/logger";
 import React from "react";
+import PropTypes from "prop-types";
 
 export default class SelectorPanel extends React.Component {
 	constructor(props) {
@@ -49,7 +50,7 @@ export default class SelectorPanel extends React.Component {
 		// logger.info("SelectorPanel.render(): currentValue=" + this.state.currentValue);
 		let panel = this.props.panels[this.state.currentValue];
 		if (typeof panel === "undefined") {
-			panel = <div className="control-panel"></div>;
+			panel = <div className="control-panel" />;
 		}
 
 		return (panel);
@@ -57,7 +58,7 @@ export default class SelectorPanel extends React.Component {
 }
 
 SelectorPanel.propTypes = {
-	panels: React.PropTypes.object,
-	dependsOn: React.PropTypes.string,
-	controlAccessor: React.PropTypes.func
+	panels: PropTypes.object,
+	dependsOn: PropTypes.string,
+	controlAccessor: PropTypes.func
 };

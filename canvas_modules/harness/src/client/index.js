@@ -21,13 +21,13 @@ import { IntlProvider } from "react-intl";
 import { HashRouter, Switch, Route } from "react-router-dom";
 
 ReactDOM.render(
-    <IntlProvider locale="en">
-        <HashRouter>
-            <Switch>
-                <Route exact path="/" component={ App } />
-								<Route path="/properties" component={ CommonPropertiesComponents } />
-            </Switch>
-        </HashRouter>
-    </IntlProvider>,
-    document.getElementById("root")
+	<IntlProvider locale="en">
+		<HashRouter>
+			<Switch>
+				<Route exact path="/" component={ App } />
+				<Route path="/properties" component={ CommonPropertiesComponents } />
+			</Switch>
+		</HashRouter>
+	</IntlProvider>,
+	document.getElementById("root")
 );

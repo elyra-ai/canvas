@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
+import PropTypes from "prop-types";
 import enhanceWithClickOutside from "react-click-outside";
 import CommonContextMenu from "./common-context-menu.jsx";
 
@@ -101,11 +102,11 @@ class ContextMenuWrapper extends React.Component {
 }
 
 ContextMenuWrapper.propTypes = {
-	containingDivId: React.PropTypes.string.isRequired,
-	mousePos: React.PropTypes.object.isRequired,
-	contextMenuDef: React.PropTypes.array.isRequired,
-	contextMenuClicked: React.PropTypes.func.isRequired,
-	closeContextMenu: React.PropTypes.func.isRequired
+	containingDivId: PropTypes.string.isRequired,
+	mousePos: PropTypes.object.isRequired,
+	contextMenuDef: PropTypes.array.isRequired,
+	contextMenuClicked: PropTypes.func.isRequired,
+	closeContextMenu: PropTypes.func.isRequired
 };
 
 export default enhanceWithClickOutside(ContextMenuWrapper);

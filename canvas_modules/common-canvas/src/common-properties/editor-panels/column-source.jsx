@@ -9,6 +9,7 @@
 
 import logger from "../../../utils/logger";
 import React from "react";
+import PropTypes from "prop-types";
 import { FormControl } from "react-bootstrap";
 import ReactDOM from "react-dom";
 
@@ -84,7 +85,7 @@ export default class ColumnSource extends React.Component {
 }
 
 ColumnSource.propTypes = {
-	name: React.PropTypes.string,
-	rows: React.PropTypes.number,
-	dataModel: React.PropTypes.object
+	name: PropTypes.string,
+	rows: PropTypes.number,
+	dataModel: PropTypes.object
 };

@@ -12,7 +12,6 @@
 
 var path = require("path");
 var webpack = require("webpack");
-var I18NPlugin = require("@dap/portal-common-i18n").I18nPlugin;
 var babelOptions = require("./scripts/babel/babelOptions").babelClientOptions;
 var constants = require("./lib/constants");
 var HtmlWebpackPlugin = require("html-webpack-plugin");
@@ -43,11 +42,7 @@ var output = {
 
 // Loaders ------------------------------------------------------------>
 
-var loaders = [
-	{
-		test: /\.json$/,
-		loader: "json-loader"
-	},
+var rules = [
 	{
 		test: /\.js(x?)$/,
 		loader: "babel-loader",
@@ -56,22 +51,20 @@ var loaders = [
 	},
 	{
 		test: /\.css$/,
-		loaders: [
-			"style-loader",
-			"css-loader",
-			"postcss-loader"
+		use: [
+			{ loader: "style-loader" },
+			{ loader: "css-loader" },
+			{ loader: "postcss-loader", options: { plugins: [require("autoprefixer")] } }
 		]
 	},
 	{
 		test: /\.(?:png|jpg|svg|woff|ttf|woff2|eot)$/,
-		loaders: [
-			"file-loader?name=graphics/[hash].[ext]"
-		]
+		loader: "file-loader?name=graphics/[hash].[ext]"
 	}
 ];
 
 if (!isDev) {
-	loaders.push({
+	rules.push({
 		test: /common-canvas*\.js$/,
 		loader: "source-map-loader",
 		enforce: "pre"
@@ -84,21 +77,13 @@ if (!isDev) {
 
 var plugins = [
 	new webpack.optimize.OccurrenceOrderPlugin(),
-	new I18NPlugin("en"),
-	new webpack.NoErrorsPlugin(),
+	new webpack.NoEmitOnErrorsPlugin(),
 	// Generates an `index.html` file with the <script> injected.
 	new HtmlWebpackPlugin({
 		inject: true,
 		template: "index.html"
 	}),
 	new webpack.HotModuleReplacementPlugin()
-];
-
-// Postcss ------------------------------------------------------------>
-
-var postcss = [
-//	require("stylelint"),
-	require("autoprefixer")
 ];
 
 // Exports ------------------------------------------------------------>
@@ -110,21 +95,22 @@ if (isDev) {
 module.exports = {
 	entry: entry,
 	resolve: {
-		modulesDirectories: ["web_modules", "node_modules"],
-		root: path.resolve(__dirname),
+		modules: [
+			__dirname,
+			"node_modules",
+			"web_modules"
+		],
 		alias: {
 			"react": "node_modules/react",
 			"react-dom": "node_modules/react-dom",
 			"common-canvas": commonCanvas
 		},
-		extensions: ["", ".js", ".jsx"]
+		extensions: [".js", ".jsx"]
 	},
 	output: output,
 	module: {
-		loaders: loaders
+		rules: rules
 	},
 	plugins: plugins,
-	postcss: postcss,
-	debug: true,
 	devtool: "inline-source-map"
 };

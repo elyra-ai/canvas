@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
+import PropTypes from "prop-types";
 import PaletteContentCategories from "./palette-content-categories.jsx";
 import PaletteContentGrid from "./palette-content-grid.jsx";
 import PaletteContentList from "./palette-content-list.jsx";
@@ -93,10 +94,10 @@ class PaletteContent extends React.Component {
 }
 
 PaletteContent.propTypes = {
-	paletteJSON: React.PropTypes.object.isRequired,
-	showGrid: React.PropTypes.bool.isRequired,
-	createTempNode: React.PropTypes.func.isRequired,
-	deleteTempNode: React.PropTypes.func.isRequired
+	paletteJSON: PropTypes.object.isRequired,
+	showGrid: PropTypes.bool.isRequired,
+	createTempNode: PropTypes.func.isRequired,
+	deleteTempNode: PropTypes.func.isRequired
 };
 
 export default PaletteContent;

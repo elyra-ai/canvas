@@ -24,7 +24,7 @@ function findSlope(sx, sy, ex, ey) {
 	var dx = ex - sx;
 	var theta = Math.atan2(dy, dx); // range (-PI, PI]
 	theta *= 180 / Math.PI; // rads to degs, range (-180, 180]
-    // if (theta < 0) theta = 360 + theta; // range [0, 360)
+	// if (theta < 0) theta = 360 + theta; // range [0, 360)
 	return theta;
 }
 
@@ -40,7 +40,7 @@ function getArrowheadPoints(data, zoom) {
 	const linkLength = Math.sqrt((data.x2 -= data.x1) * data.x2 + (data.y2 -= data.y1) * data.y2);
 	const distanceToArrow = Math.round(linkLength - (CANVAS_UI.HALO_RADIUS * zoom));
 	const p2 = findNewPoint(data.x1, data.y1, slope, distanceToArrow);
-  // TODO futher refine positioning logic
+	// TODO futher refine positioning logic
 	const p1Angle = slope + 160;
 	const p3Angle = slope - 160;
 

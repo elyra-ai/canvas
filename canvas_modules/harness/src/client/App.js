@@ -316,81 +316,81 @@ class App extends React.Component {
 	contextMenuHandler(source) {
 		const EDIT_SUB_MENU = [
 			{ action: "cutSelection", label: this.getLabel("edit-context.cutSelection", "Cut") },
-      { action: "copySelection", label: this.getLabel("edit-context.copySelection", "Copy") }
+			{ action: "copySelection", label: this.getLabel("edit-context.copySelection", "Copy") }
 		];
 
 		const NODE_CONTEXT_MENU = [
-      { action: "editNode", label: this.getLabel("node-context.editNode", "Open") },
-      { action: "disconnectNode", label: this.getLabel("node-context.disconnectNode", "Disconnect") },
-      { action: "previewNode", label: this.getLabel("node-context.previewNode", "Preview") },
+			{ action: "editNode", label: this.getLabel("node-context.editNode", "Open") },
+			{ action: "disconnectNode", label: this.getLabel("node-context.disconnectNode", "Disconnect") },
+			{ action: "previewNode", label: this.getLabel("node-context.previewNode", "Preview") },
 			{ divider: true },
-      { action: "createSuperNode", label: this.getLabel("node-context.createSuperNode", "Create supernode") },
-      { divider: true },
-      { submenu: true, label: this.getLabelString("node-context.editMenu", "Edit"), menu: EDIT_SUB_MENU },
-      { divider: true },
-      { action: "deleteObjects", label: this.getLabel("node-context.deleteNode", "Delete") },
-      { divider: true },
-      { action: "executeNode", label: this.getLabel("node-context.executeNode", "Execute") }
+			{ action: "createSuperNode", label: this.getLabel("node-context.createSuperNode", "Create supernode") },
+			{ divider: true },
+			{ submenu: true, label: this.getLabelString("node-context.editMenu", "Edit"), menu: EDIT_SUB_MENU },
+			{ divider: true },
+			{ action: "deleteObjects", label: this.getLabel("node-context.deleteNode", "Delete") },
+			{ divider: true },
+			{ action: "executeNode", label: this.getLabel("node-context.executeNode", "Execute") }
 		];
 
 		const APPLY_MODEL_NODE_CONTEXT_MENU = [
-      { action: "editNode", label: this.getLabel("node-context.editNode", "Open") },
-      { action: "viewModel", label: this.getLabel("node-context.viewModel", "View Model") },
-      { action: "disconnectNode", label: this.getLabel("node-context.disconnectNode", "Disconnect") },
-      { action: "previewNode", label: this.getLabel("node-context.previewNode", "Preview") },
-      { divider: true },
-      { action: "createSuperNode", label: this.getLabel("node-context.createSuperNode", "Create supernode") },
-      { divider: true },
-      { submenu: true, label: this.getLabel("node-context.editMenu", "Edit"), menu: EDIT_SUB_MENU },
-      { divider: true },
-      { action: "deleteObjects", label: this.getLabel("node-context.deleteNode", "Delete") },
-      { divider: true },
-      { action: "executeNode", label: this.getLabel("node-context.executeNode", "Execute") }
+			{ action: "editNode", label: this.getLabel("node-context.editNode", "Open") },
+			{ action: "viewModel", label: this.getLabel("node-context.viewModel", "View Model") },
+			{ action: "disconnectNode", label: this.getLabel("node-context.disconnectNode", "Disconnect") },
+			{ action: "previewNode", label: this.getLabel("node-context.previewNode", "Preview") },
+			{ divider: true },
+			{ action: "createSuperNode", label: this.getLabel("node-context.createSuperNode", "Create supernode") },
+			{ divider: true },
+			{ submenu: true, label: this.getLabel("node-context.editMenu", "Edit"), menu: EDIT_SUB_MENU },
+			{ divider: true },
+			{ action: "deleteObjects", label: this.getLabel("node-context.deleteNode", "Delete") },
+			{ divider: true },
+			{ action: "executeNode", label: this.getLabel("node-context.executeNode", "Execute") }
 		];
 
 		const SUPER_NODE_CONTEXT_MENU = [
-      { action: "editNode", label: this.getLabel("node-context.editNode", "Open") },
-      { action: "disconnectNode", label: this.getLabel("node-context.disconnectNode", "Disconnect") },
-      { divider: true },
-      { action: "createSuperNode", label: this.getLabel("node-context.createSuperNode", "Create supernode") },
-      { action: "expandSuperNode", label: this.getLabel("node-context.expandSuperNode", "Expand supernode") },
-      { divider: true },
-      { submenu: true, label: this.getLabel("node-context.editMenu", "Edit"), menu: EDIT_SUB_MENU },
-      { divider: true },
-      { action: "deleteObjects", label: this.getLabel("node-context.deleteNode", "Delete") },
-      { divider: true },
-      { action: "executeNode", label: this.getLabel("node-context.executeNode", "Execute") }
+			{ action: "editNode", label: this.getLabel("node-context.editNode", "Open") },
+			{ action: "disconnectNode", label: this.getLabel("node-context.disconnectNode", "Disconnect") },
+			{ divider: true },
+			{ action: "createSuperNode", label: this.getLabel("node-context.createSuperNode", "Create supernode") },
+			{ action: "expandSuperNode", label: this.getLabel("node-context.expandSuperNode", "Expand supernode") },
+			{ divider: true },
+			{ submenu: true, label: this.getLabel("node-context.editMenu", "Edit"), menu: EDIT_SUB_MENU },
+			{ divider: true },
+			{ action: "deleteObjects", label: this.getLabel("node-context.deleteNode", "Delete") },
+			{ divider: true },
+			{ action: "executeNode", label: this.getLabel("node-context.executeNode", "Execute") }
 		];
 
 		const MULTI_SELECT_CONTEXT_MENU = [
-      { action: "disconnectNode", label: this.getLabel("node-context.disconnectNode", "Disconnect") },
-      { divider: true },
-      { action: "createSuperNode", label: this.getLabel("node-context.createSuperNode", "Create supernode") },
-      { divider: true },
-      { submenu: true, label: this.getLabel("node-context.editMenu", "Edit"), menu: EDIT_SUB_MENU },
-      { divider: true },
-      { action: "deleteObjects", label: this.getLabel("node-context.deleteNode", "Delete") }
+			{ action: "disconnectNode", label: this.getLabel("node-context.disconnectNode", "Disconnect") },
+			{ divider: true },
+			{ action: "createSuperNode", label: this.getLabel("node-context.createSuperNode", "Create supernode") },
+			{ divider: true },
+			{ submenu: true, label: this.getLabel("node-context.editMenu", "Edit"), menu: EDIT_SUB_MENU },
+			{ divider: true },
+			{ action: "deleteObjects", label: this.getLabel("node-context.deleteNode", "Delete") }
 		];
 
 		const EMPTY_CLIPBOARD_CANVAS_CONTEXT_MENU = [
-      { action: "addComment", label: this.getLabel("canvas-context.addComment", "New comment") },
-      { action: "selectAll", label: this.getLabel("canvas-context.selectAll", "Select All") },
-      { divider: true },
-      { action: "cutSelection", label: this.getLabel("edit-context.cutSelection", "Cut") },
-      { action: "copySelection", label: this.getLabel("edit-context.copySelection", "Copy") },
+			{ action: "addComment", label: this.getLabel("canvas-context.addComment", "New comment") },
+			{ action: "selectAll", label: this.getLabel("canvas-context.selectAll", "Select All") },
 			{ divider: true },
-      { action: "undo", label: this.getLabel("canvas-context.undo", "Undo") },
-      { action: "redo", label: this.getLabel("canvas-context.redo", "Redo") },
-      { divider: true },
-      { action: "streamProperties", label: this.getLabel("canvas-context.streamProperties", "Options") }
+			{ action: "cutSelection", label: this.getLabel("edit-context.cutSelection", "Cut") },
+			{ action: "copySelection", label: this.getLabel("edit-context.copySelection", "Copy") },
+			{ divider: true },
+			{ action: "undo", label: this.getLabel("canvas-context.undo", "Undo") },
+			{ action: "redo", label: this.getLabel("canvas-context.redo", "Redo") },
+			{ divider: true },
+			{ action: "streamProperties", label: this.getLabel("canvas-context.streamProperties", "Options") }
 		];
 
 		const LINK_CONTEXT_MENU = [
-      { action: "deleteLink", label: this.getLabel("link-context.deleteLink", "Delete") }
+			{ action: "deleteLink", label: this.getLabel("link-context.deleteLink", "Delete") }
 		];
 
 		const COMMENT_CONTEXT_MENU = [
-      { action: "deleteObjects", label: this.getLabel("comment-context.deleteComment", "Delete") }
+			{ action: "deleteObjects", label: this.getLabel("comment-context.deleteComment", "Delete") }
 		];
 
 		const DEPLOY_CONTEXT_MENU = [
@@ -446,17 +446,17 @@ class App extends React.Component {
 			type = data.nodeTypeId;
 		} else if (data.nodes) {
 			if (data.nodes[0].id) {
-				type = data.nodes[0].id;  // Node link
+				type = data.nodes[0].id; // Node link
 			} else {
-				type = data.nodes[0];   // Comment link
+				type = data.nodes[0]; // Comment link
 			}
 		}
 
 		if (data.targetNodes) {
 			if (data.targetNodes[0].id) {
-				type += " to " + data.targetNodes[0].id;  // Node link
+				type += " to " + data.targetNodes[0].id; // Node link
 			} else {
-				type += " to " + data.targetNodes[0];   // Comment link
+				type += " to " + data.targetNodes[0]; // Comment link
 			}
 		}
 

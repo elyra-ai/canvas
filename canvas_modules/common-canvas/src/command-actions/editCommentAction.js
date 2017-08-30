@@ -16,7 +16,7 @@ export default class EditCommentAction extends Action {
 		this.previousComment = "";
 	}
 
-// Standard methods
+	// Standard methods
 	do() {
 		this.previousComment = ObjectModel.getComment(this.data.nodes[0]);
 		ObjectModel.editComment(this.data);

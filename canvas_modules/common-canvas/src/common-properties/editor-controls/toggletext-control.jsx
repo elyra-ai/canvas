@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
+import PropTypes from "prop-types";
 import EditorControl from "./editor-control.jsx";
 
 export default class ToggletextControl extends EditorControl {
@@ -27,7 +28,7 @@ export default class ToggletextControl extends EditorControl {
 	}
 
 	onClick(evt) {
-		evt.stopPropagation();  // prevents row selection change when clicking on toggletext
+		evt.stopPropagation(); // prevents row selection change when clicking on toggletext
 		const renderValue = (this.props.tableControl) ? this.props.value : this.state.controlValue;
 		const newValue = (renderValue === this.props.values[0]) ? this.props.values[1] : this.props.values[0];
 		if (this.props.tableControl) {
@@ -66,17 +67,17 @@ export default class ToggletextControl extends EditorControl {
 }
 
 ToggletextControl.propTypes = {
-	rowIndex: React.PropTypes.number, 										// required when tableControl yes
-	columnIndex: React.PropTypes.number, 									// required when tableControl yes
-	control: React.PropTypes.object.isRequired,
-	controlValue: React.PropTypes.array.isRequired,
-	values: React.PropTypes.array.isRequired,
-	valueLabels: React.PropTypes.array.isRequired,
-	valueIcons: React.PropTypes.array,
-	value: React.PropTypes.string, 												// required when tableControl yes
-	updateControlValue: React.PropTypes.func.isRequired,
-	setCurrentControlValueSelected: React.PropTypes.func,	// required when tableControl yes
-	getSelectedRows: React.PropTypes.func, 								// required when tableControl yes
-	valueAccessor: React.PropTypes.func, 									// required when tableControl no
-	tableControl: React.PropTypes.bool
+	rowIndex: PropTypes.number, 										// required when tableControl yes
+	columnIndex: PropTypes.number, 									// required when tableControl yes
+	control: PropTypes.object.isRequired,
+	controlValue: PropTypes.array.isRequired,
+	values: PropTypes.array.isRequired,
+	valueLabels: PropTypes.array.isRequired,
+	valueIcons: PropTypes.array,
+	value: PropTypes.string, 												// required when tableControl yes
+	updateControlValue: PropTypes.func.isRequired,
+	setCurrentControlValueSelected: PropTypes.func,	// required when tableControl yes
+	getSelectedRows: PropTypes.func, 								// required when tableControl yes
+	valueAccessor: PropTypes.func, 									// required when tableControl no
+	tableControl: PropTypes.bool
 };

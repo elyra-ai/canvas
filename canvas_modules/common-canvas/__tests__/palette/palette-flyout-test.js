@@ -26,8 +26,8 @@ describe("Palette renders correctly", () => {
 	});
 
 	it("should have properties defined", () => {
-		const flyoutPalette = createPalette();
-		expect(flyoutPalette.paletteJSON).to.be.defined;
+		const flyoutPalette = createMountedPalette();
+		expect(flyoutPalette.prop("paletteJSON")).to.equal(paletteSpec);
 	});
 
 	it("should render 1 <PaletteFlyoutContent/> component", () => {
@@ -59,11 +59,11 @@ describe("Palette renders correctly", () => {
 
 	it("should render 1 <PaletteFlyoutContentList/> and 3 <PaletteFlyoutContentListItem/> component", () => {
 		const flyoutPaletteContent = createMountedPalette().find(PaletteFlyoutContent);
-		const importCat = flyoutPaletteContent.find("#palette-flyout-category-Import");
+		const importCat = findCategoryElement(flyoutPaletteContent, "Import");
 		importCat.simulate("click");
 		expect(flyoutPaletteContent.find(PaletteFlyoutContentList)).to.have.length(1);
 		expect(flyoutPaletteContent.find(PaletteFlyoutContentListItem)).to.have.length(3);
-		const outputsCat = flyoutPaletteContent.find("#palette-flyout-category-Outputs");
+		const outputsCat = findCategoryElement(flyoutPaletteContent, "Outputs");
 		outputsCat.simulate("click");
 		expect(flyoutPaletteContent.find(PaletteFlyoutContentList)).to.have.length(1);
 		expect(flyoutPaletteContent.find(PaletteFlyoutContentListItem)).to.have.length(2);
@@ -71,7 +71,7 @@ describe("Palette renders correctly", () => {
 
 	it("should filter nodes based on search text", () => {
 		const flyoutPaletteContent = createMountedPalette().find(PaletteFlyoutContent);
-		const importCat = flyoutPaletteContent.find("#palette-flyout-category-Import");
+		const importCat = findCategoryElement(flyoutPaletteContent, "Import");
 		importCat.simulate("click");
 		const input = flyoutPaletteContent.find("#palette-flyout-search-text");
 		input.simulate("change", { target: { value: "Var" } });
@@ -203,4 +203,15 @@ function createMountedPalette() {
 		/>
 	);
 	return popupPalette;
+}
+
+function findCategoryElement(flyoutPaletteContent, categoryName) {
+	var categories = flyoutPaletteContent.find(".palette-flyout-category");
+	for (var idx = 0; idx < categories.length; idx++) {
+		const category = flyoutPaletteContent.find(".palette-flyout-category").at(idx);
+		if (category.props().value === categoryName) {
+			return category;
+		}
+	}
+	return null;
 }

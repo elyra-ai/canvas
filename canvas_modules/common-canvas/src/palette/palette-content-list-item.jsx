@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
+import PropTypes from "prop-types";
 import { DND_DATA_TEXT } from "../../constants/common-constants.js";
 
 class PaletteContentListItem extends React.Component {
@@ -52,22 +53,22 @@ class PaletteContentListItem extends React.Component {
 				onDragOver={this.onDragOver}
 				className="palette-list-item"
 			>
-			<div className="palette-list-item-icon">
-				<img src={this.props.nodeTemplate.image} alt={this.props.nodeTemplate.label} />
+				<div className="palette-list-item-icon">
+					<img src={this.props.nodeTemplate.image} alt={this.props.nodeTemplate.label} />
+				</div>
+				<div className="palette-list-item-text-div">
+					<span className="palette-list-item-text-span">
+						{this.props.nodeTemplate.label}
+					</span>
+				</div>
 			</div>
-			<div className="palette-list-item-text-div">
-				<span className="palette-list-item-text-span">
-					{this.props.nodeTemplate.label}
-				</span>
-			</div>
-		</div>
-	);
+		);
 	}
 }
 
 PaletteContentListItem.propTypes = {
-	nodeTemplate: React.PropTypes.object.isRequired,
-	deleteTempNode: React.PropTypes.func.isRequired
+	nodeTemplate: PropTypes.object.isRequired,
+	deleteTempNode: PropTypes.func.isRequired
 };
 
 export default PaletteContentListItem;

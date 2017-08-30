@@ -9,7 +9,7 @@
 
 import React from "react";
 import ToggletextControl from "../../../src/common-properties/editor-controls/toggletext-control.jsx";
-import { shallow, mount } from "enzyme";
+import { mount } from "enzyme";
 import { expect } from "chai";
 import chai from "chai";
 import chaiEnzyme from "chai-enzyme";
@@ -135,7 +135,7 @@ function getSelectedRows() {
 describe("ToggletextControl renders correctly in table mode", () => {
 
 	it("props should have been defined", () => {
-		const wrapper = shallow(
+		const wrapper = mount(
 			<ToggletextControl
 				rowIndex={rowIndex}
 				control={control}
@@ -152,16 +152,18 @@ describe("ToggletextControl renders correctly in table mode", () => {
 			/>
 		);
 
-		expect(wrapper.rowIndex).to.be.defined;
-		expect(wrapper.control).to.be.defined;
-		expect(wrapper.columnDef).to.be.defined;
-		expect(wrapper.controlValue).to.be.defined;
-		expect(wrapper.value).to.be.defined;
-		expect(wrapper.updateControlValue).to.be.defined;
-		expect(wrapper.columnIndex).to.be.defined;
-		expect(wrapper.setCurrentControlValueSelected).to.be.defined;
-		expect(wrapper.getSelectedRows).to.be.defined;
-		expect(wrapper.tableControl).to.be.defined;
+		expect(wrapper.prop("rowIndex")).to.equal(rowIndex);
+		expect(wrapper.prop("control")).to.equal(control);
+		expect(wrapper.prop("values")).to.equal(columnDef.values);
+		expect(wrapper.prop("valueLabels")).to.equal(columnDef.valueLabels);
+		expect(wrapper.prop("valueIcons")).to.equal(columnDef.valueIcons);
+		expect(wrapper.prop("controlValue")).to.equal(controlData);
+		expect(wrapper.prop("value")).to.equal(value);
+		expect(wrapper.prop("updateControlValue")).to.equal(updateControlValue);
+		expect(wrapper.prop("columnIndex")).to.equal(colIndex);
+		expect(wrapper.prop("setCurrentControlValueSelected")).to.equal(setCurrentControlValueSelected);
+		expect(wrapper.prop("getSelectedRows")).to.equal(getSelectedRows);
+		expect(wrapper.prop("tableControl")).to.equal(true);
 	});
 
 	it("should render a `ToggletextControl`", () => {
@@ -212,7 +214,7 @@ describe("ToggletextControl renders correctly in table mode", () => {
 describe("ToggletextControl renders correctly not in table", () => {
 
 	it("props should have been defined", () => {
-		const wrapper = shallow(
+		const wrapper = mount(
 			<ToggletextControl
 				control={control}
 				values={columnDef.values}
@@ -225,11 +227,13 @@ describe("ToggletextControl renders correctly not in table", () => {
 		);
 
 
-		expect(wrapper.control).to.be.defined;
-		expect(wrapper.columnDef).to.be.defined;
-		expect(wrapper.controlValue).to.be.defined;
-		expect(wrapper.valueAccessor).to.be.defined;
-		expect(wrapper.updateControlValue).to.be.defined;
+		expect(wrapper.prop("control")).to.equal(control);
+		expect(wrapper.prop("values")).to.equal(columnDef.values);
+		expect(wrapper.prop("valueLabels")).to.equal(columnDef.valueLabels);
+		expect(wrapper.prop("valueIcons")).to.equal(columnDef.valueIcons);
+		expect(wrapper.prop("controlValue")).to.equal(controlData);
+		expect(wrapper.prop("valueAccessor")).to.equal(valueAccessor);
+		expect(wrapper.prop("updateControlValue")).to.equal(updateControlValue);
 	});
 
 	it("should render a `ToggletextControl`", () => {

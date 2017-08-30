@@ -10,6 +10,7 @@
 /* eslint max-depth: ["error", 5] */
 
 import React from "react";
+import PropTypes from "prop-types";
 import { Table, Thead, Th } from "reactable";
 import {
 	TextField
@@ -116,7 +117,7 @@ export default class FlexibleTable extends React.Component {
 						{columnDef.label}
 						<img className="sort_icon-column"src={arrowIcon} height={ARROW_HEIGHT} width={ARROW_WIDTH} />
 					</div>
-					</Th>);
+				</Th>);
 			} else {
 				headers.push(<Th className={className} key={"flexible-table-headers" + j} column={columnDef.key} style={columnStyle}>{columnDef.label}</Th>);
 			}
@@ -166,21 +167,21 @@ export default class FlexibleTable extends React.Component {
 				{this.props.topRightPanel}
 				<div>
 					<div className="flexible-table-header">
-							<Table className="filter-header-border"
-								style={headerStyle}
-								key="flexible-table"
-								id="table-header"
-								sortable={this.props.sortable}
-								filterable={this.props.filterable}
-								hideFilterInput
-								filterBy={this.props.filterKeyword}
-								onSort={this.onSort}
-								onFilter={this.onFilter}
-							>
-								<Thead key="flexible-table-thead">
-									{headers}
-								</Thead>
-							</Table>
+						<Table className="filter-header-border"
+							style={headerStyle}
+							key="flexible-table"
+							id="table-header"
+							sortable={this.props.sortable}
+							filterable={this.props.filterable}
+							hideFilterInput
+							filterBy={this.props.filterKeyword}
+							onSort={this.onSort}
+							onFilter={this.onFilter}
+						>
+							<Thead key="flexible-table-thead">
+								{headers}
+							</Thead>
+						</Table>
 					</div>
 					<div id="flexible-table-container" style={tableStyle}>
 						<Table
@@ -193,7 +194,7 @@ export default class FlexibleTable extends React.Component {
 						</Table>
 					</div>
 				</div>
-				</div>
+			</div>
 			);
 		} else {
 			renderTable = (
@@ -209,7 +210,7 @@ export default class FlexibleTable extends React.Component {
 							onFilter={this.onFilter}
 						>
 							<Thead key="flexible-table-thead">
-									{headers}
+								{headers}
 							</Thead>
 						</Table>
 					</div>
@@ -231,24 +232,24 @@ export default class FlexibleTable extends React.Component {
 		return (
 			<div>
 				{renderTable}
-		</div>
+			</div>
 		);
 	}
 }
 
 FlexibleTable.propTypes = {
-	sortable: React.PropTypes.array,
-	columns: React.PropTypes.array.isRequired,
-	data: React.PropTypes.array.isRequired,
-	filterable: React.PropTypes.array,
-	filterBy: React.PropTypes.string,
-	filterKeyword: React.PropTypes.string,
-	hideFilterInput: React.PropTypes.func,
-	scrollToRow: React.PropTypes.number,
-	onSort: React.PropTypes.func,
-	onFilter: React.PropTypes.func,
-	alignTop: React.PropTypes.bool,
-	label: React.PropTypes.object,
-	topRightPanel: React.PropTypes.object,
-	validationStyle: React.PropTypes.object
+	sortable: PropTypes.array,
+	columns: PropTypes.array.isRequired,
+	data: PropTypes.array.isRequired,
+	filterable: PropTypes.array,
+	filterBy: PropTypes.string,
+	filterKeyword: PropTypes.string,
+	hideFilterInput: PropTypes.func,
+	scrollToRow: PropTypes.number,
+	onSort: PropTypes.func,
+	onFilter: PropTypes.func,
+	alignTop: PropTypes.bool,
+	label: PropTypes.object,
+	topRightPanel: PropTypes.object,
+	validationStyle: PropTypes.object
 };

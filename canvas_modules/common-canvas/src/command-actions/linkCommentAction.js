@@ -15,7 +15,7 @@ export default class LinkCommentAction extends Action {
 		this.data = data;
 	}
 
-// Standard methods
+	// Standard methods
 	do() {
 		ObjectModel.linkComment(this.data);
 	}

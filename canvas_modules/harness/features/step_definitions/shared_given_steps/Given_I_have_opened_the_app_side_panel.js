@@ -17,6 +17,7 @@ module.exports = function() {
 
 	this.Given("I have toggled the app side common-properties panel", function() {
 		browser.$("#action-bar-sidepanel-modal").click("a");
+		browser.pause(500);
 	});
 
 };

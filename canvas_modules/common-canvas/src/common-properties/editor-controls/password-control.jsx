@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
+import PropTypes from "prop-types";
 import { TextField } from "ap-components-react/dist/ap-components-react";
 import EditorControl from "./editor-control.jsx";
 import { EDITOR_CONTROL } from "../constants/constants.js";
@@ -51,29 +52,29 @@ export default class PasswordControl extends EditorControl {
 		}
 
 		return (
-		<div className="editor_control_area" style={stateStyle}>
-			<div id={controlIconContainerClass}>
-				<TextField {...stateDisabled}
-					style={stateStyle}
-					type="password"
-					id={this.getControlID()}
-					placeholder={this.props.control.additionalText}
-					onChange={this.handleChange}
-					onBlur={this.validateInput}
-					value={this.state.controlValue}
-				/>
-				{icon}
-			</div>
-			{errorMessage}
-		</div>);
+			<div className="editor_control_area" style={stateStyle}>
+				<div id={controlIconContainerClass}>
+					<TextField {...stateDisabled}
+						style={stateStyle}
+						type="password"
+						id={this.getControlID()}
+						placeholder={this.props.control.additionalText}
+						onChange={this.handleChange}
+						onBlur={this.validateInput}
+						value={this.state.controlValue}
+					/>
+					{icon}
+				</div>
+				{errorMessage}
+			</div>);
 	}
 }
 
 PasswordControl.propTypes = {
-	control: React.PropTypes.object,
-	controlStates: React.PropTypes.object,
-	validationDefinitions: React.PropTypes.array,
-	updateValidationErrorMessage: React.PropTypes.func,
-	retrieveValidationErrorMessage: React.PropTypes.func,
-	updateControlValue: React.PropTypes.func
+	control: PropTypes.object,
+	controlStates: PropTypes.object,
+	validationDefinitions: PropTypes.array,
+	updateValidationErrorMessage: PropTypes.func,
+	retrieveValidationErrorMessage: PropTypes.func,
+	updateControlValue: PropTypes.func
 };

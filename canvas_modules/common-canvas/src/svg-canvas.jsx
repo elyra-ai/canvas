@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
+import PropTypes from "prop-types";
 import { DRAG_LINK, DRAG_SELECT_REGION } from "../constants/common-constants.js";
 
 export default class SVGCanvas extends React.Component {
@@ -132,5 +133,5 @@ export default class SVGCanvas extends React.Component {
 }
 
 SVGCanvas.propTypes = {
-	children: React.PropTypes.element
+	children: PropTypes.element
 };

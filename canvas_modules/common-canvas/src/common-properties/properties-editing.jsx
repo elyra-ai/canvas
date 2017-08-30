@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { Button } from "ap-components-react/dist/ap-components-react";
 import { OKAY, CANCEL } from "./constants/constants.js";
 
@@ -33,7 +34,7 @@ export default class PropertiesEditing extends Component {
 			</Button>
 		</div>);
 		if (this.props.showPropertiesButtons === false) {
-			buttons = <div></div>;
+			buttons = <div />;
 		}
 
 		return (
@@ -57,12 +58,12 @@ export default class PropertiesEditing extends Component {
 }
 
 PropertiesEditing.propTypes = {
-	cancelHandler: React.PropTypes.func,
-	okHandler: React.PropTypes.func,
-	bsSize: React.PropTypes.string,
-	title: React.PropTypes.string,
-	applyLabel: React.PropTypes.string,
-	rejectLabel: React.PropTypes.string,
-	children: React.PropTypes.element,
-	showPropertiesButtons: React.PropTypes.bool
+	cancelHandler: PropTypes.func,
+	okHandler: PropTypes.func,
+	bsSize: PropTypes.string,
+	title: PropTypes.string,
+	applyLabel: PropTypes.string,
+	rejectLabel: PropTypes.string,
+	children: PropTypes.element,
+	showPropertiesButtons: PropTypes.bool
 };

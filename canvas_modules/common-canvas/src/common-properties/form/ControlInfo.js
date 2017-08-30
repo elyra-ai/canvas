@@ -54,7 +54,7 @@ export class Control extends ControlDef {
 		values, valueLabels, valueIcons, sortable, filterable, charLimit, subControls, keyIndex, defaultRow,
 		childItem, moveableRows, required) {
 		super(cname, label, description, controlType, valueDef, role, additionalText, orientation, values,
-					valueLabels, valueIcons, sortable, filterable, charLimit);
+			valueLabels, valueIcons, sortable, filterable, charLimit);
 		this.separateLabel = separateLabel;
 		if (subControls) {
 			this.subControls = subControls;

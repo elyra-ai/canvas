@@ -9,7 +9,7 @@
 
 import React from "react";
 import Node from "../src/node.jsx";
-import { shallow, mount } from "enzyme";
+import { mount } from "enzyme";
 import { expect } from "chai";
 import sinon from "sinon";
 import chai from "chai";
@@ -51,7 +51,7 @@ const node = {
 describe("Node renders correctly", () => {
 
 	it("props should have been defined", () => {
-		const wrapper = shallow(
+		const wrapper = mount(
 			<Node
 				node={node}
 				label={""}
@@ -59,12 +59,12 @@ describe("Node renders correctly", () => {
 				uiconf={uiconf}
 				selected
 			/>
-    );
-		expect(wrapper.node).to.be.defined;
-		expect(wrapper.label).to.be.defined;
-		expect(wrapper.nodeActionHandler).to.be.defined;
-		expect(wrapper.uiconf).to.be.defined;
-		expect(wrapper.selected).to.be.defined;
+		);
+		expect(wrapper.prop("node")).to.equal(node);
+		expect(wrapper.prop("label")).to.equal("");
+		expect(wrapper.prop("nodeActionHandler")).to.equal(nodeActionHandler);
+		expect(wrapper.prop("uiconf")).to.equal(uiconf);
+		expect(wrapper.prop("selected")).to.equal(true);
 	});
 
 	it("should render a `.node-circle`", () => {
@@ -104,7 +104,7 @@ describe("Node renders correctly", () => {
 				uiconf={uiconf}
 				selected
 			/>
-    );
+		);
 
 		expect(wrapper.find(".node-inner-circle")).to.have.length(1);
 	});
@@ -118,7 +118,7 @@ describe("Node renders correctly", () => {
 				uiconf={uiconf}
 				selected
 			/>
-    );
+		);
 
 		expect(wrapper.find(".padding-circle")).to.have.length(1);
 	});
@@ -133,11 +133,11 @@ describe("Node renders correctly", () => {
 				uiconf={uiconf}
 				selected
 			/>
-    );
+		);
 
-    // wrapper.setState({ showCircle: true });
+		// wrapper.setState({ showCircle: true });
 		wrapper.find(".node-circle").simulate("mouseEnter");
-    // expect(wrapper.state('showCircle')).to.equal(true);
+		// expect(wrapper.state('showCircle')).to.equal(true);
 		expect(wrapper.find(".node-circle")).to.have.style("border");
 
 	});
@@ -151,11 +151,11 @@ describe("Node renders correctly", () => {
 				uiconf={uiconf}
 				selected
 			/>
-    );
+		);
 
-    // wrapper.setState({ showCircle: false });
+		// wrapper.setState({ showCircle: false });
 		wrapper.find(".node-circle").simulate("mouseLeave");
-    // expect(wrapper.state('showCircle')).to.equal(false);
+		// expect(wrapper.state('showCircle')).to.equal(false);
 		expect(wrapper.find(".node-circle")).to.not.have.style("border");
 
 	});

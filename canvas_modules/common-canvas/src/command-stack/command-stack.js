@@ -38,7 +38,7 @@ export default class CommandStack {
 		}
 	}
 
-  // need this for validation on unit tests
+	// need this for validation on unit tests
 	static getStack() {
 		const undoStack = commands.undos;
 		const redoStack = commands.redos;

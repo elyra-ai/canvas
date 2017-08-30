@@ -17,7 +17,7 @@ export default class CommonPropertiesAction extends Action {
 		this.applyPropertyChanges = applyPropertyChanges;
 	}
 
-// Standard methods
+	// Standard methods
 	do() {
 		this.applyPropertyChanges(this.newValues, this.appData);
 	}

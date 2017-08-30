@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
+import PropTypes from "prop-types";
 import Isvg from "react-inlinesvg";
 import ThreeWayIcon from "./three-way-icon.jsx";
 import Close32Icon from "../../assets/images/close_32.svg";
@@ -80,11 +81,11 @@ class PaletteTopbar extends React.Component {
 }
 
 PaletteTopbar.propTypes = {
-	showGridMethod: React.PropTypes.func.isRequired,
-	windowMaximizeMethod: React.PropTypes.func.isRequired,
-	showGrid: React.PropTypes.bool.isRequired,
-	mouseDownMethod: React.PropTypes.func.isRequired,
-	closeMethod: React.PropTypes.func.isRequired
+	showGridMethod: PropTypes.func.isRequired,
+	windowMaximizeMethod: PropTypes.func.isRequired,
+	showGrid: PropTypes.bool.isRequired,
+	mouseDownMethod: PropTypes.func.isRequired,
+	closeMethod: PropTypes.func.isRequired
 };
 
 export default PaletteTopbar;

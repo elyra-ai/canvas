@@ -25,7 +25,7 @@ describe("ObjectModel handle model OK", () => {
 				diagram:
 				{ name: "my diagram",
 					nodes: [{ id: "node1", name: "Node 1" },
-                       { id: "node2", name: "Node 2" }]
+						{ id: "node2", name: "Node 2" }]
 				}
 			};
 
@@ -51,14 +51,14 @@ describe("ObjectModel handle model OK", () => {
 		const startCanvas =
 			{ diagram:
 			{ nodes: [
-               { id: "node1", x_pos: 10, y_pos: 10 },
-               { id: "node2", x_pos: 20, y_pos: 20 },
-               { id: "node3", x_pos: 30, y_pos: 30 }
+				{ id: "node1", x_pos: 10, y_pos: 10 },
+				{ id: "node2", x_pos: 20, y_pos: 20 },
+				{ id: "node3", x_pos: 30, y_pos: 30 }
 			],
-				comments: [
-               { id: "comment1", x_pos: 50, y_pos: 50 },
-               { id: "comment2", x_pos: 60, y_pos: 60 }
-				]
+			comments: [
+				{ id: "comment1", x_pos: 50, y_pos: 50 },
+				{ id: "comment2", x_pos: 60, y_pos: 60 }
+			]
 			}
 			};
 
@@ -86,14 +86,14 @@ describe("ObjectModel handle model OK", () => {
 		const startCanvas =
 			{ diagram:
 			{ nodes: [
-							{ id: "node1", x_pos: 10, y_pos: 10 },
-							{ id: "node2", x_pos: 20, y_pos: 20 },
-							{ id: "node3", x_pos: 30, y_pos: 30 }
+				{ id: "node1", x_pos: 10, y_pos: 10 },
+				{ id: "node2", x_pos: 20, y_pos: 20 },
+				{ id: "node3", x_pos: 30, y_pos: 30 }
 			],
-				comments: [
-							{ id: "comment1", x_pos: 50, y_pos: 50 },
-							{ id: "comment2", x_pos: 60, y_pos: 60 }
-				]
+			comments: [
+				{ id: "comment1", x_pos: 50, y_pos: 50 },
+				{ id: "comment2", x_pos: 60, y_pos: 60 }
+			]
 			}
 			};
 
@@ -104,7 +104,7 @@ describe("ObjectModel handle model OK", () => {
 			data: startCanvas
 		});
 
-			// imageName - Just for Testing
+		// imageName - Just for Testing
 		ObjectModel.dispatch({
 			type: "ADD_NODE",
 			data: { id: "node4",
@@ -127,10 +127,10 @@ describe("ObjectModel handle model OK", () => {
 					inputPorts: [{ name: "inPort", label: "Input Port", cardinality: "1:1" }],
 					x_pos: 40, y_pos: 40, objectData: { description: "", label: "Type" } }
 			],
-				comments: [
-					{ id: "comment1", x_pos: 50, y_pos: 50 },
-					{ id: "comment2", x_pos: 60, y_pos: 60 }
-				]
+			comments: [
+				{ id: "comment1", x_pos: 50, y_pos: 50 },
+				{ id: "comment2", x_pos: 60, y_pos: 60 }
+			]
 			}
 			};
 
@@ -148,14 +148,14 @@ describe("ObjectModel handle model OK", () => {
 		const startCanvas =
 			{ diagram:
 			{ nodes: [
-               { id: "node1", x_pos: 10, y_pos: 10 },
-               { id: "node2", x_pos: 20, y_pos: 20 },
-               { id: "node3", x_pos: 30, y_pos: 30 }
+				{ id: "node1", x_pos: 10, y_pos: 10 },
+				{ id: "node2", x_pos: 20, y_pos: 20 },
+				{ id: "node3", x_pos: 30, y_pos: 30 }
 			],
-				comments: [
-               { id: "comment1", x_pos: 50, y_pos: 50 },
-               { id: "comment2", x_pos: 60, y_pos: 60 }
-				]
+			comments: [
+				{ id: "comment1", x_pos: 50, y_pos: 50 },
+				{ id: "comment2", x_pos: 60, y_pos: 60 }
+			]
 			}
 			};
 
@@ -176,15 +176,15 @@ describe("ObjectModel handle model OK", () => {
 		const expectedCanvas =
 			{ diagram:
 			{ nodes: [
-               { id: "node1", x_pos: 15, y_pos: 17 },
-               { id: "node2", x_pos: 25, y_pos: 27 },
-               { id: "node3", x_pos: 35, y_pos: 37 }
+				{ id: "node1", x_pos: 15, y_pos: 17 },
+				{ id: "node2", x_pos: 25, y_pos: 27 },
+				{ id: "node3", x_pos: 35, y_pos: 37 }
 			],
-				comments: [
-               { id: "comment1", x_pos: 50, y_pos: 50 },
-               { id: "comment2", x_pos: 60, y_pos: 60 }
-				],
-				links: []
+			comments: [
+				{ id: "comment1", x_pos: 50, y_pos: 50 },
+				{ id: "comment2", x_pos: 60, y_pos: 60 }
+			],
+			links: []
 			}
 			};
 
@@ -203,14 +203,14 @@ describe("ObjectModel handle model OK", () => {
 			{ zoom: 100,
 				diagram:
 				{ nodes: [
-              { id: "node1", x_pos: 10, y_pos: 10 },
-              { id: "node2", x_pos: 20, y_pos: 20 },
-              { id: "node3", x_pos: 30, y_pos: 30 }
+					{ id: "node1", x_pos: 10, y_pos: 10 },
+					{ id: "node2", x_pos: 20, y_pos: 20 },
+					{ id: "node3", x_pos: 30, y_pos: 30 }
 				],
-					comments: [
-              { id: "comment1", x_pos: 50, y_pos: 50 },
-              { id: "comment2", x_pos: 60, y_pos: 60 }
-					]
+				comments: [
+					{ id: "comment1", x_pos: 50, y_pos: 50 },
+					{ id: "comment2", x_pos: 60, y_pos: 60 }
+				]
 				} };
 
 		deepFreeze(startCanvas);
@@ -239,13 +239,13 @@ describe("ObjectModel handle model OK", () => {
 			{ zoom: 100,
 				diagram:
 				{ nodes: [
-              { id: "node2", x_pos: 20, y_pos: 20 }
+					{ id: "node2", x_pos: 20, y_pos: 20 }
 				],
-					comments: [
-							{ id: "comment1", x_pos: 50, y_pos: 50 },
-              { id: "comment2", x_pos: 60, y_pos: 60 }
-					],
-					links: []
+				comments: [
+					{ id: "comment1", x_pos: 50, y_pos: 50 },
+					{ id: "comment2", x_pos: 60, y_pos: 60 }
+				],
+				links: []
 				} };
 
 		const actualCanvas = ObjectModel.getCanvas();
@@ -263,17 +263,17 @@ describe("ObjectModel handle model OK", () => {
 			{ zoom: 100,
 				diagram: {
 					nodes: [
-							{ id: "node1", x_pos: 10, y_pos: 10 },
-							{ id: "node2", x_pos: 20, y_pos: 20 },
-							{ id: "node3", x_pos: 30, y_pos: 30 }
+						{ id: "node1", x_pos: 10, y_pos: 10 },
+						{ id: "node2", x_pos: 20, y_pos: 20 },
+						{ id: "node3", x_pos: 30, y_pos: 30 }
 					],
 					comments: [
-							{ id: "comment1", x_pos: 50, y_pos: 50 },
-							{ id: "comment2", x_pos: 60, y_pos: 60 }
+						{ id: "comment1", x_pos: 50, y_pos: 50 },
+						{ id: "comment2", x_pos: 60, y_pos: 60 }
 					],
 					links: [
-							{ id: "link1", source: "node1", target: "node2" },
-							{ id: "link2", source: "comment1", target: "node2" }
+						{ id: "link1", source: "node1", target: "node2" },
+						{ id: "link2", source: "comment1", target: "node2" }
 					]
 				}
 			};
@@ -294,16 +294,16 @@ describe("ObjectModel handle model OK", () => {
 			{ zoom: 100,
 				diagram: {
 					nodes: [
-								{ id: "node1", x_pos: 10, y_pos: 10 },
-								{ id: "node2", x_pos: 20, y_pos: 20 },
-								{ id: "node3", x_pos: 30, y_pos: 30 }
+						{ id: "node1", x_pos: 10, y_pos: 10 },
+						{ id: "node2", x_pos: 20, y_pos: 20 },
+						{ id: "node3", x_pos: 30, y_pos: 30 }
 					],
 					comments: [
-								{ id: "comment1", x_pos: 50, y_pos: 50 },
-								{ id: "comment2", x_pos: 60, y_pos: 60 }
+						{ id: "comment1", x_pos: 50, y_pos: 50 },
+						{ id: "comment2", x_pos: 60, y_pos: 60 }
 					],
 					links: [
-								{ id: "link2", source: "comment1", target: "node2" }
+						{ id: "link2", source: "comment1", target: "node2" }
 					]
 				}
 			};
@@ -323,17 +323,17 @@ describe("ObjectModel handle model OK", () => {
 			{ zoom: 100,
 				diagram: {
 					nodes: [
-							{ id: "node1", x_pos: 10, y_pos: 10 },
-							{ id: "node2", x_pos: 20, y_pos: 20 },
-							{ id: "node3", x_pos: 30, y_pos: 30 }
+						{ id: "node1", x_pos: 10, y_pos: 10 },
+						{ id: "node2", x_pos: 20, y_pos: 20 },
+						{ id: "node3", x_pos: 30, y_pos: 30 }
 					],
 					comments: [
-							{ id: "comment1", x_pos: 50, y_pos: 50 },
-							{ id: "comment2", x_pos: 60, y_pos: 60 }
+						{ id: "comment1", x_pos: 50, y_pos: 50 },
+						{ id: "comment2", x_pos: 60, y_pos: 60 }
 					],
 					links: [
-							{ id: "link1", source: "node1", target: "node2" },
-							{ id: "link2", source: "comment1", target: "node2" }
+						{ id: "link1", source: "node1", target: "node2" },
+						{ id: "link2", source: "comment1", target: "node2" }
 					]
 				}
 			};
@@ -355,17 +355,17 @@ describe("ObjectModel handle model OK", () => {
 			{ zoom: 100,
 				diagram: {
 					nodes: [
-							{ "id": "node1", "x_pos": 10, "y_pos": 10, "customAttrs": ["bgcolor"] },
-							{ id: "node2", x_pos: 20, y_pos: 20 },
-							{ id: "node3", x_pos: 30, y_pos: 30 }
+						{ "id": "node1", "x_pos": 10, "y_pos": 10, "customAttrs": ["bgcolor"] },
+						{ id: "node2", x_pos: 20, y_pos: 20 },
+						{ id: "node3", x_pos: 30, y_pos: 30 }
 					],
 					comments: [
-							{ id: "comment1", x_pos: 50, y_pos: 50 },
-							{ id: "comment2", x_pos: 60, y_pos: 60 }
+						{ id: "comment1", x_pos: 50, y_pos: 50 },
+						{ id: "comment2", x_pos: 60, y_pos: 60 }
 					],
 					links: [
-							{ id: "link1", source: "node1", target: "node2" },
-							{ id: "link2", source: "comment1", target: "node2" }
+						{ id: "link1", source: "node1", target: "node2" },
+						{ id: "link2", source: "comment1", target: "node2" }
 					]
 				}
 			};
@@ -385,17 +385,17 @@ describe("ObjectModel handle model OK", () => {
 			{ zoom: 100,
 				diagram: {
 					nodes: [
-							{ "id": "node1", "x_pos": 10, "y_pos": 10, "customAttrs": ["bgcolor"] },
-							{ id: "node2", x_pos: 20, y_pos: 20 },
-							{ id: "node3", x_pos: 30, y_pos: 30 }
+						{ "id": "node1", "x_pos": 10, "y_pos": 10, "customAttrs": ["bgcolor"] },
+						{ id: "node2", x_pos: 20, y_pos: 20 },
+						{ id: "node3", x_pos: 30, y_pos: 30 }
 					],
 					comments: [
-							{ id: "comment1", x_pos: 50, y_pos: 50 },
-							{ id: "comment2", x_pos: 60, y_pos: 60 }
+						{ id: "comment1", x_pos: 50, y_pos: 50 },
+						{ id: "comment2", x_pos: 60, y_pos: 60 }
 					],
 					links: [
-							{ id: "link1", source: "node1", target: "node2" },
-							{ id: "link2", source: "comment1", target: "node2" }
+						{ id: "link1", source: "node1", target: "node2" },
+						{ id: "link2", source: "comment1", target: "node2" }
 					]
 				}
 			};
@@ -417,17 +417,17 @@ describe("ObjectModel handle model OK", () => {
 			{ zoom: 100,
 				diagram: {
 					nodes: [
-							{ "id": "node1", "x_pos": 10, "y_pos": 10, "customAttrs": [] },
-							{ id: "node2", x_pos: 20, y_pos: 20 },
-							{ id: "node3", x_pos: 30, y_pos: 30 }
+						{ "id": "node1", "x_pos": 10, "y_pos": 10, "customAttrs": [] },
+						{ id: "node2", x_pos: 20, y_pos: 20 },
+						{ id: "node3", x_pos: 30, y_pos: 30 }
 					],
 					comments: [
-							{ id: "comment1", x_pos: 50, y_pos: 50 },
-							{ id: "comment2", x_pos: 60, y_pos: 60 }
+						{ id: "comment1", x_pos: 50, y_pos: 50 },
+						{ id: "comment2", x_pos: 60, y_pos: 60 }
 					],
 					links: [
-							{ id: "link1", source: "node1", target: "node2" },
-							{ id: "link2", source: "comment1", target: "node2" }
+						{ id: "link1", source: "node1", target: "node2" },
+						{ id: "link2", source: "comment1", target: "node2" }
 					]
 				}
 			};
@@ -448,13 +448,13 @@ describe("ObjectModel handle model OK", () => {
 			{ zoom: 100,
 				diagram: {
 					nodes: [
-              { id: "node1", x_pos: 10, y_pos: 10 },
-              { id: "node2", x_pos: 20, y_pos: 20 },
-              { id: "node3", x_pos: 30, y_pos: 30 }
+						{ id: "node1", x_pos: 10, y_pos: 10 },
+						{ id: "node2", x_pos: 20, y_pos: 20 },
+						{ id: "node3", x_pos: 30, y_pos: 30 }
 					],
 					comments: [
-              { id: "comment1", x_pos: 50, y_pos: 50 },
-              { id: "comment2", x_pos: 60, y_pos: 60 }
+						{ id: "comment1", x_pos: 50, y_pos: 50 },
+						{ id: "comment2", x_pos: 60, y_pos: 60 }
 					]
 				}
 			};
@@ -484,14 +484,14 @@ describe("ObjectModel handle model OK", () => {
 			{ zoom: 100,
 				diagram: {
 					nodes: [
-                { id: "node1", x_pos: 10, y_pos: 10 },
-                { id: "node2", x_pos: 20, y_pos: 20 },
-                { id: "node3", x_pos: 30, y_pos: 30 }
+						{ id: "node1", x_pos: 10, y_pos: 10 },
+						{ id: "node2", x_pos: 20, y_pos: 20 },
+						{ id: "node3", x_pos: 30, y_pos: 30 }
 					],
 					comments: [
-                { id: "comment1", x_pos: 50, y_pos: 50 },
-                { id: "comment2", x_pos: 60, y_pos: 60 },
-								{ id: "comment3",	x_pos: 200,	y_pos: 300 }
+						{ id: "comment1", x_pos: 50, y_pos: 50 },
+						{ id: "comment2", x_pos: 60, y_pos: 60 },
+						{ id: "comment3",	x_pos: 200,	y_pos: 300 }
 					],
 					links: []
 				}
@@ -514,13 +514,13 @@ describe("ObjectModel handle model OK", () => {
 			{ zoom: 100,
 				diagram: {
 					nodes: [
-              { id: "node1", x_pos: 10, y_pos: 10 },
-              { id: "node2", x_pos: 20, y_pos: 20 },
-              { id: "node3", x_pos: 30, y_pos: 30 }
+						{ id: "node1", x_pos: 10, y_pos: 10 },
+						{ id: "node2", x_pos: 20, y_pos: 20 },
+						{ id: "node3", x_pos: 30, y_pos: 30 }
 					],
 					comments: [
-              { id: "comment1", x_pos: 50, y_pos: 50 },
-              { id: "comment2", x_pos: 60, y_pos: 60 }
+						{ id: "comment1", x_pos: 50, y_pos: 50 },
+						{ id: "comment2", x_pos: 60, y_pos: 60 }
 					]
 				}
 			};
@@ -541,12 +541,12 @@ describe("ObjectModel handle model OK", () => {
 			{ zoom: 100,
 				diagram: {
 					nodes: [
-                { id: "node1", x_pos: 10, y_pos: 10 },
-                { id: "node2", x_pos: 20, y_pos: 20 },
-                { id: "node3", x_pos: 30, y_pos: 30 }
+						{ id: "node1", x_pos: 10, y_pos: 10 },
+						{ id: "node2", x_pos: 20, y_pos: 20 },
+						{ id: "node3", x_pos: 30, y_pos: 30 }
 					],
 					comments: [
-                { id: "comment1", x_pos: 50, y_pos: 50 },
+						{ id: "comment1", x_pos: 50, y_pos: 50 },
 						{ id: "comment2",
 							x_pos: 425,
 							y_pos: 125,
@@ -572,14 +572,14 @@ describe("ObjectModel handle model OK", () => {
 		const startCanvas =
 			{ diagram:
 			{ nodes: [
-               { id: "node1", x_pos: 10, y_pos: 10 },
-               { id: "node2", x_pos: 20, y_pos: 20 },
-               { id: "node3", x_pos: 30, y_pos: 30 }
+				{ id: "node1", x_pos: 10, y_pos: 10 },
+				{ id: "node2", x_pos: 20, y_pos: 20 },
+				{ id: "node3", x_pos: 30, y_pos: 30 }
 			],
-				comments: [
-               { id: "comment1", x_pos: 50, y_pos: 50 },
-               { id: "comment2", x_pos: 60, y_pos: 60 }
-				]
+			comments: [
+				{ id: "comment1", x_pos: 50, y_pos: 50 },
+				{ id: "comment2", x_pos: 60, y_pos: 60 }
+			]
 			}
 			};
 
@@ -600,15 +600,15 @@ describe("ObjectModel handle model OK", () => {
 		const expectedCanvas =
 			{ diagram:
 			{ nodes: [
-               { id: "node1", x_pos: 10, y_pos: 10 },
-               { id: "node2", x_pos: 20, y_pos: 20 },
-               { id: "node3", x_pos: 30, y_pos: 30 }
+				{ id: "node1", x_pos: 10, y_pos: 10 },
+				{ id: "node2", x_pos: 20, y_pos: 20 },
+				{ id: "node3", x_pos: 30, y_pos: 30 }
 			],
-				comments: [
-               { id: "comment1", x_pos: 55, y_pos: 57 },
-               { id: "comment2", x_pos: 65, y_pos: 67 }
-				],
-				links: []
+			comments: [
+				{ id: "comment1", x_pos: 55, y_pos: 57 },
+				{ id: "comment2", x_pos: 65, y_pos: 67 }
+			],
+			links: []
 			}
 			};
 
@@ -663,12 +663,12 @@ describe("ObjectModel handle model OK", () => {
 			{ zoom: 100,
 				diagram: {
 					"nodes": [
-									{ id: "node1", x_pos: 10, y_pos: 10 },
-									{ id: "node2", x_pos: 20, y_pos: 20 },
-									{ id: "node3", x_pos: 30, y_pos: 30 }
+						{ id: "node1", x_pos: 10, y_pos: 10 },
+						{ id: "node2", x_pos: 20, y_pos: 20 },
+						{ id: "node3", x_pos: 30, y_pos: 30 }
 					],
 					"comments": [
-									{ id: "comment3", x_pos: 70, y_pos: 70 }
+						{ id: "comment3", x_pos: 70, y_pos: 70 }
 					],
 					"links": []
 				}
@@ -688,17 +688,17 @@ describe("ObjectModel handle model OK", () => {
 			{ zoom: 100,
 				diagram: {
 					nodes: [
-								{ id: "node1", x_pos: 10, y_pos: 10 },
-								{ id: "node2", x_pos: 20, y_pos: 20 },
-								{ id: "node3", x_pos: 30, y_pos: 30 }
+						{ id: "node1", x_pos: 10, y_pos: 10 },
+						{ id: "node2", x_pos: 20, y_pos: 20 },
+						{ id: "node3", x_pos: 30, y_pos: 30 }
 					],
 					comments: [
-								{ id: "comment1", x_pos: 50, y_pos: 50 },
-								{ id: "comment2", x_pos: 60, y_pos: 60 }
+						{ id: "comment1", x_pos: 50, y_pos: 50 },
+						{ id: "comment2", x_pos: 60, y_pos: 60 }
 					],
 					links: [
-								{ id: "link1", source: "node1", target: "node2" },
-								{ id: "link2", source: "comment1", target: "node2" }
+						{ id: "link1", source: "node1", target: "node2" },
+						{ id: "link2", source: "comment1", target: "node2" }
 					]
 				}
 			};
@@ -720,17 +720,17 @@ describe("ObjectModel handle model OK", () => {
 			{ zoom: 100,
 				diagram: {
 					nodes: [
-								{ id: "node1", x_pos: 10, y_pos: 10 },
-								{ id: "node2", x_pos: 20, y_pos: 20 },
-								{ id: "node3", x_pos: 30, y_pos: 30 }
+						{ id: "node1", x_pos: 10, y_pos: 10 },
+						{ id: "node2", x_pos: 20, y_pos: 20 },
+						{ id: "node3", x_pos: 30, y_pos: 30 }
 					],
 					comments: [
-								{ "id": "comment1", "x_pos": 50, "y_pos": 50, "customAttrs": ["bgcolor"] },
-								{ id: "comment2", x_pos: 60, y_pos: 60 }
+						{ "id": "comment1", "x_pos": 50, "y_pos": 50, "customAttrs": ["bgcolor"] },
+						{ id: "comment2", x_pos: 60, y_pos: 60 }
 					],
 					links: [
-								{ id: "link1", source: "node1", target: "node2" },
-								{ id: "link2", source: "comment1", target: "node2" }
+						{ id: "link1", source: "node1", target: "node2" },
+						{ id: "link2", source: "comment1", target: "node2" }
 					]
 				}
 			};
@@ -750,17 +750,17 @@ describe("ObjectModel handle model OK", () => {
 			{ zoom: 100,
 				diagram: {
 					nodes: [
-								{ id: "node1", x_pos: 10, y_pos: 10 },
-								{ id: "node2", x_pos: 20, y_pos: 20 },
-								{ id: "node3", x_pos: 30, y_pos: 30 }
+						{ id: "node1", x_pos: 10, y_pos: 10 },
+						{ id: "node2", x_pos: 20, y_pos: 20 },
+						{ id: "node3", x_pos: 30, y_pos: 30 }
 					],
 					comments: [
-								{ "id": "comment1", "x_pos": 50, "y_pos": 50, "customAttrs": ["bgcolor"] },
-								{ id: "comment2", x_pos: 60, y_pos: 60 }
+						{ "id": "comment1", "x_pos": 50, "y_pos": 50, "customAttrs": ["bgcolor"] },
+						{ id: "comment2", x_pos: 60, y_pos: 60 }
 					],
 					links: [
-								{ id: "link1", source: "node1", target: "node2" },
-								{ id: "link2", source: "comment1", target: "node2" }
+						{ id: "link1", source: "node1", target: "node2" },
+						{ id: "link2", source: "comment1", target: "node2" }
 					]
 				}
 			};
@@ -782,17 +782,17 @@ describe("ObjectModel handle model OK", () => {
 			{ zoom: 100,
 				diagram: {
 					nodes: [
-								{ id: "node1", x_pos: 10, y_pos: 10 },
-								{ id: "node2", x_pos: 20, y_pos: 20 },
-								{ id: "node3", x_pos: 30, y_pos: 30 }
+						{ id: "node1", x_pos: 10, y_pos: 10 },
+						{ id: "node2", x_pos: 20, y_pos: 20 },
+						{ id: "node3", x_pos: 30, y_pos: 30 }
 					],
 					comments: [
-								{ "id": "comment1", "x_pos": 50, "y_pos": 50, "customAttrs": [] },
-								{ id: "comment2", x_pos: 60, y_pos: 60 }
+						{ "id": "comment1", "x_pos": 50, "y_pos": 50, "customAttrs": [] },
+						{ id: "comment2", x_pos: 60, y_pos: 60 }
 					],
 					links: [
-								{ id: "link1", source: "node1", target: "node2" },
-								{ id: "link2", source: "comment1", target: "node2" }
+						{ id: "link1", source: "node1", target: "node2" },
+						{ id: "link2", source: "comment1", target: "node2" }
 					]
 				}
 			};
@@ -812,17 +812,17 @@ describe("ObjectModel handle model OK", () => {
 			{ zoom: 100,
 				diagram: {
 					nodes: [
-              { id: "node1", x_pos: 10, y_pos: 10 },
-              { id: "node2", x_pos: 20, y_pos: 20 },
-              { id: "node3", x_pos: 30, y_pos: 30 }
+						{ id: "node1", x_pos: 10, y_pos: 10 },
+						{ id: "node2", x_pos: 20, y_pos: 20 },
+						{ id: "node3", x_pos: 30, y_pos: 30 }
 					],
 					comments: [
-              { id: "comment1", x_pos: 50, y_pos: 50 },
-              { id: "comment2", x_pos: 60, y_pos: 60 }
+						{ id: "comment1", x_pos: 50, y_pos: 50 },
+						{ id: "comment2", x_pos: 60, y_pos: 60 }
 					],
 					links: [
-              { id: "link1", source: "node1", sourcePort: "srcPort1", target: "node2", targetPort: "trgPort2" },
-              { id: "link2", source: "comment1", target: "node2" }
+						{ id: "link1", source: "node1", sourcePort: "srcPort1", target: "node2", targetPort: "trgPort2" },
+						{ id: "link2", source: "comment1", target: "node2" }
 					]
 				}
 			};
@@ -849,19 +849,19 @@ describe("ObjectModel handle model OK", () => {
 			{ zoom: 100,
 				diagram: {
 					nodes: [
-                { id: "node1", x_pos: 10, y_pos: 10 },
-                { id: "node2", x_pos: 20, y_pos: 20 },
-                { id: "node3", x_pos: 30, y_pos: 30 }
+						{ id: "node1", x_pos: 10, y_pos: 10 },
+						{ id: "node2", x_pos: 20, y_pos: 20 },
+						{ id: "node3", x_pos: 30, y_pos: 30 }
 					],
 					comments: [
-                { id: "comment1", x_pos: 50, y_pos: 50 },
-                { id: "comment2", x_pos: 60, y_pos: 60 }
+						{ id: "comment1", x_pos: 50, y_pos: 50 },
+						{ id: "comment2", x_pos: 60, y_pos: 60 }
 					],
 					links: [
-                { id: "link1", source: "node1", sourcePort: "srcPort1", target: "node2", targetPort: "trgPort2" },
-                { id: "link2", source: "comment1", target: "node2" },
-                { id: "link3", className: "canvas-data-link", source: "node2", sourcePort: "srcPort2", target: "node3", targetPort: "trgPort3" },
-                { id: "link4", className: "canvas-comment-link", source: "comment1", target: "node2" }
+						{ id: "link1", source: "node1", sourcePort: "srcPort1", target: "node2", targetPort: "trgPort2" },
+						{ id: "link2", source: "comment1", target: "node2" },
+						{ id: "link3", className: "canvas-data-link", source: "node2", sourcePort: "srcPort2", target: "node3", targetPort: "trgPort3" },
+						{ id: "link4", className: "canvas-comment-link", source: "comment1", target: "node2" }
 					]
 				}
 			};
@@ -881,17 +881,17 @@ describe("ObjectModel handle model OK", () => {
 			{ zoom: 100,
 				diagram: {
 					nodes: [
-              { id: "node1", x_pos: 10, y_pos: 10 },
-              { id: "node2", x_pos: 20, y_pos: 20 },
-              { id: "node3", x_pos: 30, y_pos: 30 }
+						{ id: "node1", x_pos: 10, y_pos: 10 },
+						{ id: "node2", x_pos: 20, y_pos: 20 },
+						{ id: "node3", x_pos: 30, y_pos: 30 }
 					],
 					comments: [
-              { id: "comment1", x_pos: 50, y_pos: 50 },
-              { id: "comment2", x_pos: 60, y_pos: 60 }
+						{ id: "comment1", x_pos: 50, y_pos: 50 },
+						{ id: "comment2", x_pos: 60, y_pos: 60 }
 					],
 					links: [
-              { id: "link1", source: "node1", target: "node2" },
-              { id: "link2", source: "comment1", target: "node2" }
+						{ id: "link1", source: "node1", target: "node2" },
+						{ id: "link2", source: "comment1", target: "node2" }
 					]
 				}
 			};
@@ -912,16 +912,16 @@ describe("ObjectModel handle model OK", () => {
 			{ zoom: 100,
 				diagram: {
 					nodes: [
-                { id: "node1", x_pos: 10, y_pos: 10 },
-                { id: "node2", x_pos: 20, y_pos: 20 },
-                { id: "node3", x_pos: 30, y_pos: 30 }
+						{ id: "node1", x_pos: 10, y_pos: 10 },
+						{ id: "node2", x_pos: 20, y_pos: 20 },
+						{ id: "node3", x_pos: 30, y_pos: 30 }
 					],
 					comments: [
-                { id: "comment1", x_pos: 50, y_pos: 50 },
-                { id: "comment2", x_pos: 60, y_pos: 60 }
+						{ id: "comment1", x_pos: 50, y_pos: 50 },
+						{ id: "comment2", x_pos: 60, y_pos: 60 }
 					],
 					links: [
-                { id: "link2", source: "comment1", target: "node2" }
+						{ id: "link2", source: "comment1", target: "node2" }
 					]
 				}
 			};
@@ -941,17 +941,17 @@ describe("ObjectModel handle model OK", () => {
 			{ zoom: 100,
 				diagram: {
 					nodes: [
-              { id: "node1", x_pos: 10, y_pos: 10 },
-              { id: "node2", x_pos: 20, y_pos: 20 },
-              { id: "node3", x_pos: 30, y_pos: 30 }
+						{ id: "node1", x_pos: 10, y_pos: 10 },
+						{ id: "node2", x_pos: 20, y_pos: 20 },
+						{ id: "node3", x_pos: 30, y_pos: 30 }
 					],
 					comments: [
-              { id: "comment1", x_pos: 50, y_pos: 50 },
-              { id: "comment2", x_pos: 60, y_pos: 60 }
+						{ id: "comment1", x_pos: 50, y_pos: 50 },
+						{ id: "comment2", x_pos: 60, y_pos: 60 }
 					],
 					links: [
-              { id: "link1", source: "node1", target: "node2" },
-              { id: "link2", source: "comment1", target: "node2" }
+						{ id: "link1", source: "node1", target: "node2" },
+						{ id: "link2", source: "comment1", target: "node2" }
 					]
 				}
 			};
@@ -972,15 +972,15 @@ describe("ObjectModel handle model OK", () => {
 			{ zoom: 100,
 				diagram: {
 					nodes: [
-                { id: "node2", x_pos: 20, y_pos: 20 },
-                { id: "node3", x_pos: 30, y_pos: 30 }
+						{ id: "node2", x_pos: 20, y_pos: 20 },
+						{ id: "node3", x_pos: 30, y_pos: 30 }
 					],
 					comments: [
-                { id: "comment1", x_pos: 50, y_pos: 50 },
-                { id: "comment2", x_pos: 60, y_pos: 60 }
+						{ id: "comment1", x_pos: 50, y_pos: 50 },
+						{ id: "comment2", x_pos: 60, y_pos: 60 }
 					],
 					links: [
-                { id: "link2", source: "comment1", target: "node2" }
+						{ id: "link2", source: "comment1", target: "node2" }
 					]
 				}
 			};
@@ -1000,17 +1000,17 @@ describe("ObjectModel handle model OK", () => {
 			{ zoom: 100,
 				diagram: {
 					nodes: [
-							{ id: "node1", x_pos: 10, y_pos: 10 },
-							{ id: "node2", x_pos: 20, y_pos: 20 },
-							{ id: "node3", x_pos: 30, y_pos: 30 }
+						{ id: "node1", x_pos: 10, y_pos: 10 },
+						{ id: "node2", x_pos: 20, y_pos: 20 },
+						{ id: "node3", x_pos: 30, y_pos: 30 }
 					],
 					comments: [
-							{ id: "comment1", x_pos: 50, y_pos: 50 },
-							{ id: "comment2", x_pos: 60, y_pos: 60 }
+						{ id: "comment1", x_pos: 50, y_pos: 50 },
+						{ id: "comment2", x_pos: 60, y_pos: 60 }
 					],
 					links: [
-							{ id: "link1", source: "node1", target: "node2" },
-							{ id: "link2", source: "comment1", target: "node2" }
+						{ id: "link1", source: "node1", target: "node2" },
+						{ id: "link2", source: "comment1", target: "node2" }
 					]
 				}
 			};
@@ -1031,15 +1031,15 @@ describe("ObjectModel handle model OK", () => {
 			{ zoom: 100,
 				diagram: {
 					nodes: [
-								{ id: "node1", x_pos: 10, y_pos: 10 },
-								{ id: "node2", x_pos: 20, y_pos: 20 },
-								{ id: "node3", x_pos: 30, y_pos: 30 }
+						{ id: "node1", x_pos: 10, y_pos: 10 },
+						{ id: "node2", x_pos: 20, y_pos: 20 },
+						{ id: "node3", x_pos: 30, y_pos: 30 }
 					],
 					comments: [
-								{ id: "comment2", x_pos: 60, y_pos: 60 }
+						{ id: "comment2", x_pos: 60, y_pos: 60 }
 					],
 					links: [
-								{ id: "link1", source: "node1", target: "node2" }
+						{ id: "link1", source: "node1", target: "node2" }
 					]
 				}
 			};
@@ -1059,17 +1059,17 @@ describe("ObjectModel handle model OK", () => {
 			{ zoom: 100,
 				diagram: {
 					nodes: [
-              { id: "node1", x_pos: 10, y_pos: 10 },
-              { id: "node2", x_pos: 20, y_pos: 20 },
-              { id: "node3", x_pos: 30, y_pos: 30 }
+						{ id: "node1", x_pos: 10, y_pos: 10 },
+						{ id: "node2", x_pos: 20, y_pos: 20 },
+						{ id: "node3", x_pos: 30, y_pos: 30 }
 					],
 					comments: [
-              { id: "comment1", x_pos: 50, y_pos: 50 },
-              { id: "comment2", x_pos: 60, y_pos: 60 }
+						{ id: "comment1", x_pos: 50, y_pos: 50 },
+						{ id: "comment2", x_pos: 60, y_pos: 60 }
 					],
 					links: [
-              { id: "link1", source: "node1", target: "node2" },
-              { id: "link2", source: "comment1", target: "node2" }
+						{ id: "link1", source: "node1", target: "node2" },
+						{ id: "link2", source: "comment1", target: "node2" }
 					]
 				}
 			};
@@ -1102,17 +1102,17 @@ describe("ObjectModel handle model OK", () => {
 			{ zoom: 100,
 				diagram: {
 					nodes: [
-              { id: "node1", x_pos: 10, y_pos: 10 },
-              { id: "node2", x_pos: 20, y_pos: 20 },
-              { id: "node3", x_pos: 30, y_pos: 30 }
+						{ id: "node1", x_pos: 10, y_pos: 10 },
+						{ id: "node2", x_pos: 20, y_pos: 20 },
+						{ id: "node3", x_pos: 30, y_pos: 30 }
 					],
 					comments: [
-              { id: "comment1", x_pos: 50, y_pos: 50 },
-              { id: "comment2", x_pos: 60, y_pos: 60 }
+						{ id: "comment1", x_pos: 50, y_pos: 50 },
+						{ id: "comment2", x_pos: 60, y_pos: 60 }
 					],
 					links: [
-              { id: "link1", source: "node1", target: "node2" },
-              { id: "link2", source: "comment1", target: "node2" }
+						{ id: "link1", source: "node1", target: "node2" },
+						{ id: "link2", source: "comment1", target: "node2" }
 					]
 				}
 			};
@@ -1150,17 +1150,17 @@ describe("ObjectModel handle model OK", () => {
 			{ zoom: 100,
 				diagram: {
 					nodes: [
-              { id: "node1", x_pos: 10, y_pos: 10 },
-              { id: "node2", x_pos: 20, y_pos: 20 },
-              { id: "node3", x_pos: 30, y_pos: 30 }
+						{ id: "node1", x_pos: 10, y_pos: 10 },
+						{ id: "node2", x_pos: 20, y_pos: 20 },
+						{ id: "node3", x_pos: 30, y_pos: 30 }
 					],
 					comments: [
-              { id: "comment1", x_pos: 50, y_pos: 50 },
-              { id: "comment2", x_pos: 60, y_pos: 60 }
+						{ id: "comment1", x_pos: 50, y_pos: 50 },
+						{ id: "comment2", x_pos: 60, y_pos: 60 }
 					],
 					links: [
-              { id: "link1", source: "node1", target: "node2" },
-              { id: "link2", source: "comment1", target: "node2" }
+						{ id: "link1", source: "node1", target: "node2" },
+						{ id: "link2", source: "comment1", target: "node2" }
 					]
 				}
 			};
@@ -1197,17 +1197,17 @@ describe("ObjectModel handle model OK", () => {
 			{ zoom: 100,
 				diagram: {
 					nodes: [
-              { id: "node1", x_pos: 10, y_pos: 10 },
-              { id: "node2", x_pos: 20, y_pos: 20 },
-              { id: "node3", x_pos: 30, y_pos: 30 }
+						{ id: "node1", x_pos: 10, y_pos: 10 },
+						{ id: "node2", x_pos: 20, y_pos: 20 },
+						{ id: "node3", x_pos: 30, y_pos: 30 }
 					],
 					comments: [
-              { id: "comment1", x_pos: 50, y_pos: 50 },
-              { id: "comment2", x_pos: 60, y_pos: 60 }
+						{ id: "comment1", x_pos: 50, y_pos: 50 },
+						{ id: "comment2", x_pos: 60, y_pos: 60 }
 					],
 					links: [
-              { id: "link1", source: "node1", target: "node2" },
-              { id: "link2", source: "comment1", target: "node2" }
+						{ id: "link1", source: "node1", target: "node2" },
+						{ id: "link2", source: "comment1", target: "node2" }
 					]
 				}
 			};
@@ -1244,17 +1244,17 @@ describe("ObjectModel handle model OK", () => {
 			{ zoom: 100,
 				diagram: {
 					nodes: [
-							{ id: "node1", x_pos: 10, y_pos: 10 },
-							{ id: "node2", x_pos: 20, y_pos: 20 },
-							{ id: "node3", x_pos: 30, y_pos: 30 }
+						{ id: "node1", x_pos: 10, y_pos: 10 },
+						{ id: "node2", x_pos: 20, y_pos: 20 },
+						{ id: "node3", x_pos: 30, y_pos: 30 }
 					],
 					comments: [
-							{ id: "comment1", x_pos: 50, y_pos: 50 },
-							{ id: "comment2", x_pos: 60, y_pos: 60 }
+						{ id: "comment1", x_pos: 50, y_pos: 50 },
+						{ id: "comment2", x_pos: 60, y_pos: 60 }
 					],
 					links: [
-							{ id: "link1", source: "node1", target: "node2" },
-							{ id: "link2", source: "comment1", target: "node2" }
+						{ id: "link1", source: "node1", target: "node2" },
+						{ id: "link2", source: "comment1", target: "node2" }
 					]
 				}
 			};
@@ -1291,17 +1291,17 @@ describe("ObjectModel handle model OK", () => {
 			{ zoom: 100,
 				diagram: {
 					nodes: [
-							{ id: "node1", x_pos: 10, y_pos: 10 },
-							{ id: "node2", x_pos: 20, y_pos: 20 },
-							{ id: "node3", x_pos: 30, y_pos: 30 }
+						{ id: "node1", x_pos: 10, y_pos: 10 },
+						{ id: "node2", x_pos: 20, y_pos: 20 },
+						{ id: "node3", x_pos: 30, y_pos: 30 }
 					],
 					comments: [
-							{ id: "comment1", x_pos: 50, y_pos: 50 },
-							{ id: "comment2", x_pos: 60, y_pos: 60 }
+						{ id: "comment1", x_pos: 50, y_pos: 50 },
+						{ id: "comment2", x_pos: 60, y_pos: 60 }
 					],
 					links: [
-							{ id: "link1", source: "node1", target: "node2" },
-							{ id: "link2", source: "comment1", target: "node2" }
+						{ id: "link1", source: "node1", target: "node2" },
+						{ id: "link2", source: "comment1", target: "node2" }
 					]
 				}
 			};
@@ -1338,20 +1338,20 @@ describe("ObjectModel handle model OK", () => {
 			{ zoom: 100,
 				diagram: {
 					nodes: [
-							{ id: "node1", x_pos: 10, y_pos: 10 },
-							{ id: "node2", x_pos: 20, y_pos: 20 },
-							{ id: "node3", x_pos: 30, y_pos: 30 },
-							{ id: "node4", x_pos: 40, y_pos: 30 }
+						{ id: "node1", x_pos: 10, y_pos: 10 },
+						{ id: "node2", x_pos: 20, y_pos: 20 },
+						{ id: "node3", x_pos: 30, y_pos: 30 },
+						{ id: "node4", x_pos: 40, y_pos: 30 }
 					],
 					comments: [
-							{ id: "comment1", x_pos: 50, y_pos: 50 },
-							{ id: "comment2", x_pos: 60, y_pos: 60 }
+						{ id: "comment1", x_pos: 50, y_pos: 50 },
+						{ id: "comment2", x_pos: 60, y_pos: 60 }
 					],
 					links: [
-							{ id: "link1", source: "node1", target: "node2" },
-							{ id: "link2", source: "node2", target: "node3" },
-							{ id: "link3", source: "node3", target: "node4" },
-							{ id: "link4", source: "comment1", target: "node2" }
+						{ id: "link1", source: "node1", target: "node2" },
+						{ id: "link2", source: "node2", target: "node3" },
+						{ id: "link3", source: "node3", target: "node4" },
+						{ id: "link4", source: "comment1", target: "node2" }
 					]
 				}
 			};

@@ -15,7 +15,7 @@ export default class LinkNodesAction extends Action {
 		this.data = data;
 	}
 
-// Standard methods
+	// Standard methods
 	do() {
 		ObjectModel.addNodeLinks(this.data);
 	}

@@ -185,7 +185,7 @@ const links = (state = [], action) => {
 	switch (action.type) {
 	case "DELETE_OBJECT":
 		return state.filter((link) => {
-			return (link.source !== action.data &&  // If node being deleted is either source or target of link remove this link
+			return (link.source !== action.data && // If node being deleted is either source or target of link remove this link
 				link.target !== action.data);
 		});
 
@@ -259,8 +259,8 @@ const diagram = (state = {}, action) => {
 	case "MOVE_OBJECTS":
 	case "DELETE_OBJECT":
 		return Object.assign({}, state, { nodes: nodes(state.nodes, action),
-                   comments: comments(state.comments, action),
-                   links: links(state.links, action) });
+			comments: comments(state.comments, action),
+			links: links(state.links, action) });
 
 	case "ADD_LINK":
 	case "DELETE_LINK":
@@ -269,7 +269,7 @@ const diagram = (state = {}, action) => {
 
 	case "ADD_COMMENT":
 		return Object.assign({}, state, { comments: comments(state.comments, action) },
-                  { links: links(state.links, action) });
+			{ links: links(state.links, action) });
 
 	case "EDIT_COMMENT":
 	case "ADD_COMMENT_ATTR":
@@ -378,7 +378,7 @@ export default class ObjectModel {
 		store.subscribe(callback);
 	}
 
-// Palette methods
+	// Palette methods
 
 	static clearPaletteData() {
 		store.dispatch({ type: "CLEAR_PALETTE_DATA" });
@@ -404,7 +404,7 @@ export default class ObjectModel {
 		return outNodeType;
 	}
 
-// Canvas methods
+	// Canvas methods
 
 	static clearCanvas() {
 		this.clearSelection();
@@ -483,7 +483,7 @@ export default class ObjectModel {
 		return lookup;
 	}
 
-// Node AND comment methods
+	// Node AND comment methods
 
 	static moveObjects(data) {
 		if (ObjectModel.fixedLayout === NONE) {
@@ -515,7 +515,7 @@ export default class ObjectModel {
 		}
 	}
 
-// Node methods
+	// Node methods
 
 	static createNode(data) {
 		const nodeType = ObjectModel.getPaletteNode(data.nodeTypeId);
@@ -556,7 +556,7 @@ export default class ObjectModel {
 		store.dispatch({ type: "REMOVE_NODE_ATTR", data: { objIds: objIds, attrName: attrName } });
 	}
 
-// Comment methods
+	// Comment methods
 
 	static createComment(source) {
 		const info = {
@@ -601,7 +601,7 @@ export default class ObjectModel {
 		store.dispatch({ type: "EDIT_COMMENT", data: data });
 	}
 
-  // use updateComment when you have the comment structure from the state object.
+	// use updateComment when you have the comment structure from the state object.
 	// this method will format the input to be compatable with editComment interface.
 	static updateComment(data) {
 		data.editType = "editComment";
@@ -620,7 +620,7 @@ export default class ObjectModel {
 		store.dispatch({ type: "REMOVE_COMMENT_ATTR", data: { objIds: objIds, attrName: attrName } });
 	}
 
-// Link methods
+	// Link methods
 
 	static deleteLink(source) {
 		store.dispatch({ type: "DELETE_LINK", data: source });
@@ -707,7 +707,7 @@ export default class ObjectModel {
 		return returnLinks;
 	}
 
-// Utility functions
+	// Utility functions
 
 	static getNode(nodeId) {
 		const diagramNodes = ObjectModel.getCanvas().diagram.nodes;
@@ -795,7 +795,7 @@ export default class ObjectModel {
 		return exists;
 	}
 
-// Methods to handle selections
+	// Methods to handle selections
 
 	static clearSelection() {
 		store.dispatch({ type: "CLEAR_SELECTIONS" });

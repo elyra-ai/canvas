@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
+import PropTypes from "prop-types";
 
 export default class ControlItem extends React.Component {
 	constructor(props) {
@@ -36,6 +37,6 @@ export default class ControlItem extends React.Component {
 }
 
 ControlItem.propTypes = {
-	control: React.PropTypes.object,
-	label: React.PropTypes.object
+	control: PropTypes.object,
+	label: PropTypes.object
 };

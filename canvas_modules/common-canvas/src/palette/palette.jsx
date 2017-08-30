@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
+import PropTypes from "prop-types";
 import PaletteTopbar from "./palette-topbar.jsx";
 import PaletteContent from "./palette-content.jsx";
 
@@ -65,8 +66,8 @@ class Palette extends React.Component {
 		this.totalHoverZoneSize = this.hoverZoneSize * 2;
 
 		// Need to control resizing of palette with snap to grid.
-		this.adjustedWidth = 137;     // default width - (default content node grid width)
-		this.adjustedHeight = 51;     // default heigth - (default content node grid height) + padding to avoid scroll bar
+		this.adjustedWidth = 137; // default width - (default content node grid width)
+		this.adjustedHeight = 51; // default heigth - (default content node grid height) + padding to avoid scroll bar
 		this.adjustedScrollBarWidth = 15;
 
 		// Boolean to remember whether we are maximized or not. This gets set to
@@ -403,7 +404,7 @@ class Palette extends React.Component {
 	// Calculate snap to grid height
 	snapToHeight(newHeight) {
 		const gridHeight = this.state.showGrid ? this.removePx(this.getStyleProperty(".palette-grid-node-outer", "height"))
-																						: this.removePx(this.getStyleProperty(".palette-list-item", "height"));
+			: this.removePx(this.getStyleProperty(".palette-list-item", "height"));
 		const snapHeight = Math.round((newHeight - this.adjustedHeight) / gridHeight) * gridHeight;
 		return (snapHeight + this.adjustedHeight);
 	}
@@ -528,28 +529,28 @@ class Palette extends React.Component {
 				onMouseDown={this.mouseDownOnPalette}
 				style={{ display: displayValue }}
 			>
-			<PaletteTopbar mouseDownMethod={this.mouseDownOnTopBar}
-				closeMethod={this.props.closePalette}
-				showGridMethod={this.showGrid}
-				windowMaximizeMethod={this.windowMaximize}
-				showGrid={this.state.showGrid}
-			/>
-			<PaletteContent paletteJSON={this.props.paletteJSON}
-				showGrid={this.state.showGrid}
-				createTempNode={this.props.createTempNode}
-				deleteTempNode={this.props.deleteTempNode}
-			/>
-		</div>
-	);
+				<PaletteTopbar mouseDownMethod={this.mouseDownOnTopBar}
+					closeMethod={this.props.closePalette}
+					showGridMethod={this.showGrid}
+					windowMaximizeMethod={this.windowMaximize}
+					showGrid={this.state.showGrid}
+				/>
+				<PaletteContent paletteJSON={this.props.paletteJSON}
+					showGrid={this.state.showGrid}
+					createTempNode={this.props.createTempNode}
+					deleteTempNode={this.props.deleteTempNode}
+				/>
+			</div>
+		);
 	}
 }
 
 Palette.propTypes = {
-	paletteJSON: React.PropTypes.object.isRequired,
-	showPalette: React.PropTypes.bool.isRequired,
-	closePalette: React.PropTypes.func.isRequired,
-	createTempNode: React.PropTypes.func.isRequired,
-	deleteTempNode: React.PropTypes.func.isRequired
+	paletteJSON: PropTypes.object.isRequired,
+	showPalette: PropTypes.bool.isRequired,
+	closePalette: PropTypes.func.isRequired,
+	createTempNode: PropTypes.func.isRequired,
+	deleteTempNode: PropTypes.func.isRequired
 };
 
 export default Palette;

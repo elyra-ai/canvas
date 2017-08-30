@@ -11,6 +11,7 @@
 
 // import logger from "../../../utils/logger";
 import React from "react";
+import PropTypes from "prop-types";
 import ColumnStructureTableEditor from "./column-structure-table-editor.jsx";
 import TopMoveIconEnable from "../../../assets/images/top_enabled.svg";
 import UpMoveIconEnable from "../../../assets/images/up_enabled.svg";
@@ -268,7 +269,7 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 		this.setCurrentControlValueSelected(this.props.control.name, controlValue, this.props.updateControlValue, selected);
 	}
 
-  // enabled the move up and down arrows based on which row is selected
+	// enabled the move up and down arrows based on which row is selected
 	getTableRowMoveImages() {
 		const selected = this.getSelectedRows().sort();
 		const controlValue = this.getCurrentControlValue();
@@ -284,12 +285,12 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 				</div>
 			</div>
 		)
-		: (
-			<div key="topImages">
-				<img className="table-row-move-button-disable" height={ARROW_HEIGHT} width={ARROW_WIDTH} src={TopMoveIconDisable} />
-				<img className="table-row-move-button-disable" height={ARROW_HEIGHT} width={ARROW_WIDTH} src={UpMoveIconDisable} />
-			</div>
-		);
+			: (
+				<div key="topImages">
+					<img className="table-row-move-button-disable" height={ARROW_HEIGHT} width={ARROW_WIDTH} src={TopMoveIconDisable} />
+					<img className="table-row-move-button-disable" height={ARROW_HEIGHT} width={ARROW_WIDTH} src={UpMoveIconDisable} />
+				</div>
+			);
 		const bottomImages = bottomEnabled ? (
 			<div key="bottomImages">
 				<div onClick={this.downMoveRow}>
@@ -300,12 +301,12 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 				</div>
 			</div>
 		)
-		: (
-			<div key="bottomImages">
-				<img className="table-row-move-button-disable" height={ARROW_HEIGHT} width={ARROW_WIDTH} src={DownMoveIconDisable} />
-				<img className="table-row-move-button-disable" height={ARROW_HEIGHT} width={ARROW_WIDTH} src={BottomMoveIconDisable} />
-			</div>
-		);
+			: (
+				<div key="bottomImages">
+					<img className="table-row-move-button-disable" height={ARROW_HEIGHT} width={ARROW_WIDTH} src={DownMoveIconDisable} />
+					<img className="table-row-move-button-disable" height={ARROW_HEIGHT} width={ARROW_WIDTH} src={BottomMoveIconDisable} />
+				</div>
+			);
 		return [topImages, bottomImages];
 	}
 
@@ -351,7 +352,7 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 				<div
 					id="table-row-move-button-container"
 				>
-				{moveImages}
+					{moveImages}
 				</div>
 			);
 		}
@@ -401,12 +402,12 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 }
 
 ColumnStructureTableControl.propTypes = {
-	buildUIItem: React.PropTypes.func,
-	dataModel: React.PropTypes.object.isRequired,
-	control: React.PropTypes.object.isRequired,
-	controlStates: React.PropTypes.object,
-	validationDefinitions: React.PropTypes.array,
-	updateValidationErrorMessage: React.PropTypes.func,
-	retrieveValidationErrorMessage: React.PropTypes.func,
-	updateControlValue: React.PropTypes.func
+	buildUIItem: PropTypes.func,
+	dataModel: PropTypes.object.isRequired,
+	control: PropTypes.object.isRequired,
+	controlStates: PropTypes.object,
+	validationDefinitions: PropTypes.array,
+	updateValidationErrorMessage: PropTypes.func,
+	retrieveValidationErrorMessage: PropTypes.func,
+	updateControlValue: PropTypes.func
 };

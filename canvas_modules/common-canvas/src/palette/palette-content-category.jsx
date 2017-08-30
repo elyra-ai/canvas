@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
+import PropTypes from "prop-types";
 
 class PaletteContentCategory extends React.Component {
 	constructor(props) {
@@ -40,9 +41,9 @@ class PaletteContentCategory extends React.Component {
 }
 
 PaletteContentCategory.propTypes = {
-	categoryName: React.PropTypes.string.isRequired,
-	selectedCategory: React.PropTypes.string.isRequired,
-	categorySelectedMethod: React.PropTypes.func.isRequired
+	categoryName: PropTypes.string.isRequired,
+	selectedCategory: PropTypes.string.isRequired,
+	categorySelectedMethod: PropTypes.func.isRequired
 };
 
 export default PaletteContentCategory;

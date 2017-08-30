@@ -7,12 +7,13 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
- /* global FileReader: true */
- /* eslint no-undef: "error" */
+/* global FileReader: true */
+/* eslint no-undef: "error" */
 
 import React from "react";
 import { Link } from "react-router-dom";
 import { FormControl } from "react-bootstrap";
+import PropTypes from "prop-types";
 import {
 	Button,
 	ToggleButton,
@@ -43,11 +44,11 @@ export default class SidePanelModal extends React.Component {
 		var that = this;
 
 		FormsService.getFiles("properties")
-		.then(function(res) {
-			var list = res;
-			list.unshift(CHOOSE_FROM_LOCATION);
-			that.setState({ commonPropertiesFiles: res });
-		});
+			.then(function(res) {
+				var list = res;
+				list.unshift(CHOOSE_FROM_LOCATION);
+				that.setState({ commonPropertiesFiles: res });
+			});
 	}
 
 	onDropdownSelect(evt, obj) {
@@ -87,9 +88,9 @@ export default class SidePanelModal extends React.Component {
 		var that = this;
 		this.props.log("Submit common properties file", this.state.selectedPropertiesDropdownFile);
 		FormsService.getFileContent("properties", this.state.selectedPropertiesDropdownFile)
-		.then(function(res) {
-			that.props.setPropertiesJSON(res);
-		});
+			.then(function(res) {
+				that.props.setPropertiesJSON(res);
+			});
 	}
 
 	submitProperties() {
@@ -140,7 +141,7 @@ export default class SidePanelModal extends React.Component {
 		// />);
 		var space = (<div className="sidepanel-spacer" />);
 
-		var fileChooser = <div></div>;
+		var fileChooser = <div />;
 		if (this.state.fileChooserVisible) {
 			fileChooser = (<div>
 				<FormControl
@@ -202,11 +203,11 @@ export default class SidePanelModal extends React.Component {
 }
 
 SidePanelModal.propTypes = {
-	log: React.PropTypes.func,
-	closePropertiesEditorDialog: React.PropTypes.func,
-	openPropertiesEditorDialog: React.PropTypes.func,
-	setPropertiesJSON: React.PropTypes.func,
-	useModalPropertiesDialog: React.PropTypes.func,
-	modalPropertiesDialog: React.PropTypes.bool,
-	showPropertiesDialog: React.PropTypes.bool
+	log: PropTypes.func,
+	closePropertiesEditorDialog: PropTypes.func,
+	openPropertiesEditorDialog: PropTypes.func,
+	setPropertiesJSON: PropTypes.func,
+	useModalPropertiesDialog: PropTypes.func,
+	modalPropertiesDialog: PropTypes.bool,
+	showPropertiesDialog: PropTypes.bool
 };

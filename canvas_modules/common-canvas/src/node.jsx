@@ -9,6 +9,7 @@
 /* eslint no-shadow: ["error", { "allow": ["Node"] }] */
 
 import React from "react";
+import PropTypes from "prop-types";
 import { DND_DATA_TEXT } from "../constants/common-constants.js";
 import logger from "../utils/logger";
 
@@ -356,7 +357,7 @@ class Node extends React.Component {
 		// logger.info("circleStyle :"+JSON.stringify(circleStyle));
 		const circle = (<div>
 
-			<div className="padding-circle" style={paddingCircleStyle}></div>
+			<div className="padding-circle" style={paddingCircleStyle} />
 			<div className="node-circle"
 				style={circleStyle}
 				onMouseEnter={this.handleMouseEnter}
@@ -369,8 +370,7 @@ class Node extends React.Component {
 				onDrop={this.linkDrop}
 				onDragOver={this.linkDragOver}
 				onClick={this.props.nodeActionHandler.bind(null, "connOut")}
-			>
-			</div>
+			/>
 			<div className="node-inner-circle"
 				style={innerCircleStyle}
 				onMouseEnter={this.handleMouseEnterInnerCircle}
@@ -421,13 +421,13 @@ class Node extends React.Component {
 }
 
 Node.propTypes = {
-	node: React.PropTypes.object,
-	label: React.PropTypes.string,
-	nodeActionHandler: React.PropTypes.func,
-	onContextMenu: React.PropTypes.func,
-	uiconf: React.PropTypes.object,
-	selected: React.PropTypes.bool,
-	decorationActionHandler: React.PropTypes.func
+	node: PropTypes.object,
+	label: PropTypes.string,
+	nodeActionHandler: PropTypes.func,
+	onContextMenu: PropTypes.func,
+	uiconf: PropTypes.object,
+	selected: PropTypes.bool,
+	decorationActionHandler: PropTypes.func
 };
 
 export default Node;

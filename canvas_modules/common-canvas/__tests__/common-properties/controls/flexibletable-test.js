@@ -9,7 +9,7 @@
 
 import React from "react";
 import FlexibleTable from "../../../src/common-properties/editor-controls/flexible-table.jsx";
-import { shallow, mount } from "enzyme";
+import { mount } from "enzyme";
 import { Tr, Td } from "reactable";
 import { expect } from "chai";
 import chai from "chai";
@@ -83,7 +83,7 @@ const scrollToRow = 3;
 describe("FlexibleTable renders correctly", () => {
 
 	it("props should have been defined", () => {
-		const wrapper = shallow(
+		const wrapper = mount(
 			<FlexibleTable
 				sortable={sortFields}
 				filterable={filterFields}
@@ -96,14 +96,14 @@ describe("FlexibleTable renders correctly", () => {
 			/>
 		);
 
-		expect(wrapper.sortable).to.be.defined;
-		expect(wrapper.filterable).to.be.defined;
-		expect(wrapper.columns).to.be.defined;
-		expect(wrapper.data).to.be.defined;
-		expect(wrapper.scrollToRow).to.be.defined;
-		expect(wrapper.alignTop).to.be.defined;
-		expect(wrapper.onFilter).to.be.defined;
-		expect(wrapper.onSort).to.be.defined;
+		expect(wrapper.prop("sortable")).to.equal(sortFields);
+		expect(wrapper.prop("filterable")).to.equal(filterFields);
+		expect(wrapper.prop("columns")).to.equal(headers);
+		expect(wrapper.prop("data")).to.equal(rows);
+		expect(wrapper.prop("scrollToRow")).to.equal(scrollToRow);
+		expect(wrapper.prop("alignTop")).to.equal(alignTop);
+		expect(wrapper.prop("onFilter")).to.equal(onFilter);
+		expect(wrapper.prop("onSort")).to.equal(onSort);
 	});
 
 	it("should render a `FlexibleTable`", () => {

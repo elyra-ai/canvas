@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
+import PropTypes from "prop-types";
 import { TextField } from "ap-components-react/dist/ap-components-react";
 import EditorControl from "./editor-control.jsx";
 import { EDITOR_CONTROL } from "../constants/constants.js";
@@ -42,9 +43,9 @@ export default class NumberfieldControl extends EditorControl {
 	clearValue() {
 		const that = this;
 		this.setState({ controlValue: null },
-		function() {
-			that.validateInput();
-		});
+			function() {
+				that.validateInput();
+			});
 	}
 
 	render() {
@@ -99,11 +100,11 @@ export default class NumberfieldControl extends EditorControl {
 }
 
 NumberfieldControl.propTypes = {
-	control: React.PropTypes.object,
-	controlStates: React.PropTypes.object,
-	validationDefinitions: React.PropTypes.array,
-	validateConditions: React.PropTypes.func,
-	updateValidationErrorMessage: React.PropTypes.func,
-	retrieveValidationErrorMessage: React.PropTypes.func,
-	updateControlValue: React.PropTypes.func
+	control: PropTypes.object,
+	controlStates: PropTypes.object,
+	validationDefinitions: PropTypes.array,
+	validateConditions: PropTypes.func,
+	updateValidationErrorMessage: PropTypes.func,
+	retrieveValidationErrorMessage: PropTypes.func,
+	updateControlValue: PropTypes.func
 };

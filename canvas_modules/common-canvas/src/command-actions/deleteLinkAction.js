@@ -16,7 +16,7 @@ export default class DeleteLinkAction extends Action {
 		this.linkInfo = [];
 	}
 
-// Standard methods
+	// Standard methods
 	do() {
 		this.linkInfo = ObjectModel.getLinksContainingId(this.data.id);
 		ObjectModel.deleteLink(this.data);

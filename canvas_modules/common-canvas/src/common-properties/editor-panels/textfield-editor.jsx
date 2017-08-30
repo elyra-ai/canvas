@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
+import PropTypes from "prop-types";
 import { TextField } from "ap-components-react/dist/ap-components-react";
 
 export default class TextfieldEditor extends React.Component {
@@ -39,5 +40,5 @@ export default class TextfieldEditor extends React.Component {
 }
 
 TextfieldEditor.propTypes = {
-	initialValue: React.PropTypes.string
+	initialValue: PropTypes.string
 };

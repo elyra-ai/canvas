@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
+import PropTypes from "prop-types";
 import Dropdown from "react-dropdown";
 import EditorControl from "./editor-control.jsx";
 import { EDITOR_CONTROL } from "../constants/constants.js";
@@ -124,19 +125,19 @@ export default class OneofselectControl extends EditorControl {
 }
 
 OneofselectControl.propTypes = {
-	control: React.PropTypes.object.isRequired,
-	updateControlValue: React.PropTypes.func,
+	control: PropTypes.object.isRequired,
+	updateControlValue: PropTypes.func,
 	// Optional used when embedded in table
-	tableControl: React.PropTypes.bool,
-	rowIndex: React.PropTypes.number,
-	columnIndex: React.PropTypes.number,
-	controlValue: React.PropTypes.array,
-	columnDef: React.PropTypes.object,
-	value: React.PropTypes.string,
-	setCurrentControlValueSelected: React.PropTypes.func,
-	selectedRows: React.PropTypes.array,
-	controlStates: React.PropTypes.object,
-	validationDefinitions: React.PropTypes.array,
-	updateValidationErrorMessage: React.PropTypes.func,
-	retrieveValidationErrorMessage: React.PropTypes.func
+	tableControl: PropTypes.bool,
+	rowIndex: PropTypes.number,
+	columnIndex: PropTypes.number,
+	controlValue: PropTypes.array,
+	columnDef: PropTypes.object,
+	value: PropTypes.string,
+	setCurrentControlValueSelected: PropTypes.func,
+	selectedRows: PropTypes.array,
+	controlStates: PropTypes.object,
+	validationDefinitions: PropTypes.array,
+	updateValidationErrorMessage: PropTypes.func,
+	retrieveValidationErrorMessage: PropTypes.func
 };

@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
+import PropTypes from "prop-types";
 import EditorControl from "./editor-control.jsx";
 import { EDITOR_CONTROL } from "../constants/constants.js";
 
@@ -72,8 +73,8 @@ export default class RadiosetControl extends EditorControl {
 						onBlur={this.validateInput}
 						checked={checked}
 					/>
-						{this.props.control.valueLabels[i]}
-					<div className={cssIndicator}></div>
+					{this.props.control.valueLabels[i]}
+					<div className={cssIndicator} />
 				</label>
 			);
 		}
@@ -93,10 +94,10 @@ export default class RadiosetControl extends EditorControl {
 }
 
 RadiosetControl.propTypes = {
-	control: React.PropTypes.object,
-	controlStates: React.PropTypes.object,
-	validationDefinitions: React.PropTypes.array,
-	updateValidationErrorMessage: React.PropTypes.func,
-	retrieveValidationErrorMessage: React.PropTypes.func,
-	updateControlValue: React.PropTypes.func
+	control: PropTypes.object,
+	controlStates: PropTypes.object,
+	validationDefinitions: PropTypes.array,
+	updateValidationErrorMessage: PropTypes.func,
+	retrieveValidationErrorMessage: PropTypes.func,
+	updateControlValue: PropTypes.func
 };

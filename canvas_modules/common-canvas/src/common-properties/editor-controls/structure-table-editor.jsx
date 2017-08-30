@@ -9,6 +9,7 @@
 
 // import logger from "../../../utils/logger";
 import React from "react";
+import PropTypes from "prop-types";
 import { Table, Column, Cell } from "fixed-data-table";
 import EditorControl from "./editor-control.jsx";
 
@@ -256,5 +257,5 @@ export default class StructureTableEditor extends EditorControl {
 }
 
 StructureTableEditor.propTypes = {
-	updateControlValue: React.PropTypes.func
+	updateControlValue: PropTypes.func
 };

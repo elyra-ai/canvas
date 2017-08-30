@@ -9,6 +9,7 @@
 /* eslint no-empty-function: ["error", { "allow": ["arrowFunctions"] }] */
 
 import React from "react";
+import PropTypes from "prop-types";
 import { MenuItem, SubMenu } from "react-contextmenu";
 
 class CommonContextMenu extends React.Component {
@@ -30,7 +31,7 @@ class CommonContextMenu extends React.Component {
 
 	buildMenu(menuDefinition) {
 		const customDivider = {
-			className: "customDivider"
+			className: "contextmenu-divider"
 		};
 
 		const menuItems = [];
@@ -42,7 +43,7 @@ class CommonContextMenu extends React.Component {
 			} else if (submenu) {
 				const submenuItems = this.buildMenu(menuDefinition[i].menu);
 				menuItems.push(
-					<SubMenu title={menuDefinition[i].label} key={i + 1}>
+					<SubMenu title={menuDefinition[i].label} key={i + 1} classNames="contextmenu-submenu">
 						{submenuItems}
 					</SubMenu>
 				);
@@ -69,8 +70,8 @@ class CommonContextMenu extends React.Component {
 }
 
 CommonContextMenu.propTypes = {
-	contextHandler: React.PropTypes.func,
-	menuDefinition: React.PropTypes.array
+	contextHandler: PropTypes.func,
+	menuDefinition: PropTypes.array
 };
 
 export default CommonContextMenu;

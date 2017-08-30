@@ -9,7 +9,7 @@
 
 import React from "react";
 import OneofselectControl from "../../../src/common-properties/editor-controls/oneofselect-control.jsx";
-import { shallow, mount } from "enzyme";
+import { mount } from "enzyme";
 import { expect } from "chai";
 import chai from "chai";
 import chaiEnzyme from "chai-enzyme";
@@ -85,15 +85,15 @@ const selectedRows = [];
 describe("DropdownControl renders correctly in not table", () => {
 
 	it("props should have been defined", () => {
-		const wrapper = shallow(
+		const wrapper = mount(
 			<OneofselectControl
 				control={control}
 				valueAccessor = {valueAccessor}
 			/>
 		);
 
-		expect(wrapper.control).to.be.defined;
-		expect(wrapper.valueAccessor).to.be.defined;
+		expect(wrapper.prop("control")).to.equal(control);
+		expect(wrapper.prop("valueAccessor")).to.equal(valueAccessor);
 	});
 
 	it("should render a DropdownControl", () => {
@@ -112,7 +112,7 @@ describe("DropdownControl renders correctly in not table", () => {
 describe("DropdownControl renders correctly in table", () => {
 
 	it("props should have been defined", () => {
-		const wrapper = shallow(
+		const wrapper = mount(
 			<OneofselectControl
 				control={control}
 				valueAccessor = {valueAccessor}
@@ -128,17 +128,17 @@ describe("DropdownControl renders correctly in table", () => {
 			/>
 		);
 
-		expect(wrapper.control).to.be.defined;
-		expect(wrapper.valueAccessor).to.be.defined;
-		expect(wrapper.columnDef).to.be.defined;
-		expect(wrapper.rowIndex).to.be.defined;
-		expect(wrapper.columnIndex).to.be.defined;
-		expect(wrapper.controlValue).to.be.defined;
-		expect(wrapper.value).to.be.defined;
-		expect(wrapper.updateControlValue).to.be.defined;
-		expect(wrapper.setCurrentControlValueSelected).to.be.defined;
-		expect(wrapper.selectedRows).to.be.defined;
-		expect(wrapper.tableControl).to.be.defined;
+		expect(wrapper.prop("control")).to.equal(control);
+		expect(wrapper.prop("valueAccessor")).to.equal(valueAccessor);
+		expect(wrapper.prop("columnDef")).to.equal(columnDef);
+		expect(wrapper.prop("rowIndex")).to.equal(rowIndex);
+		expect(wrapper.prop("colIndex")).to.equal(colIndex);
+		expect(wrapper.prop("controlValue")).to.equal(controlData);
+		expect(wrapper.prop("value")).to.equal(value);
+		expect(wrapper.prop("updateControlValue")).to.equal(updateControlValue);
+		expect(wrapper.prop("setCurrentControlValueSelected")).to.equal(setCurrentControlValueSelected);
+		expect(wrapper.prop("selectedRows")).to.equal(selectedRows);
+		expect(wrapper.prop("tableControl")).to.equal(true);
 	});
 
 	it("should render a DropdownControl", () => {

@@ -53,10 +53,10 @@ class FormsService {
 			}
 			return response.json();
 		})
-		.catch(function(ex) {
-			console.error(ex);
-			return ex;
-		});
+			.catch(function(ex) {
+				console.error(ex);
+				return ex;
+			});
 	}
 }
 

@@ -9,7 +9,7 @@
 
 import React from "react";
 import CommonContextMenu from "../src/common-context-menu.jsx";
-import { shallow } from "enzyme";
+import { shallow, mount } from "enzyme";
 import { expect } from "chai";
 import sinon from "sinon";
 import { MenuItem } from "react-contextmenu";
@@ -19,9 +19,9 @@ describe("CommonContextMenu renders correctly", () => {
 	it("all required props should have been defined", () => {
 		const _contextHandler = sinon.spy();
 		const _menuDefinition = getMenuDefinition();
-		const wrapper = shallow(<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition} />);
-		expect(wrapper.contextHandler).to.be.defined;
-		expect(wrapper.menuDefinition).to.be.defined;
+		const wrapper = mount(<CommonContextMenu contextHandler={_contextHandler} menuDefinition={_menuDefinition} />);
+		expect(wrapper.prop("contextHandler")).to.equal(_contextHandler);
+		expect(wrapper.prop("menuDefinition")).to.equal(_menuDefinition);
 	});
 
 	it("should render three <MenuItem/> components", () => {
@@ -51,8 +51,8 @@ describe("CommonContextMenu renders correctly", () => {
 
 function getMenuDefinition() {
 	return [
-    { action: "dosomething", label: "Do something" },
-    { divider: true },
-    { action: "dosomethingelse", label: "Do something else" }
+		{ action: "dosomething", label: "Do something" },
+		{ divider: true },
+		{ action: "dosomethingelse", label: "Do something else" }
 	];
 }

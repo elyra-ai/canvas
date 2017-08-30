@@ -12,6 +12,7 @@
 /* eslint no-shadow: ["error", { "allow": ["Node", "Comment"] }] */
 
 import React from "react";
+import PropTypes from "prop-types";
 
 import {
 	DND_DATA_TEXT
@@ -45,13 +46,13 @@ export default class DiagramCanvas extends React.Component {
 	componentDidMount() {
 		this.canvasD3Layout =
 			new CanvasD3Layout(this.props.canvas,
-												"#d3-svg-canvas-div",
-												"100%", "100%",
-												this.props.editActionHandler,
-												this.props.contextMenuHandler,
-												this.props.clickActionHandler,
-												this.props.decorationActionHandler,
-												this.props.config);
+				"#d3-svg-canvas-div",
+				"100%", "100%",
+				this.props.editActionHandler,
+				this.props.contextMenuHandler,
+				this.props.clickActionHandler,
+				this.props.decorationActionHandler,
+				this.props.config);
 		document.getElementById("d3-svg-canvas-div").focus(); // Set focus on div so keybord events go there.
 	}
 
@@ -181,7 +182,7 @@ export default class DiagramCanvas extends React.Component {
 		if (this.props.canvas.diagram.nodes.length === 0 &&
 				this.props.canvas.diagram.comments.length === 0) {
 			emptyCanvas = (<div id="empty-canvas" onContextMenu={this.canvasContextMenu}>
-				<img src={BlankCanvasImage} className="placeholder-image"></img>
+				<img src={BlankCanvasImage} className="placeholder-image" />
 				<span className="placeholder-text">Your flow is empty!</span>
 				<span className="placeholder-link"
 					onClick={this.handlePlaceholderLinkClick}
@@ -210,12 +211,12 @@ export default class DiagramCanvas extends React.Component {
 }
 
 DiagramCanvas.propTypes = {
-	canvas: React.PropTypes.object,
-	closeContextMenu: React.PropTypes.func.isRequired,
-	contextMenuHandler: React.PropTypes.func.isRequired,
-	editActionHandler: React.PropTypes.func.isRequired,
-	clickActionHandler: React.PropTypes.func.isRequired,
-	decorationActionHandler: React.PropTypes.func.isRequired,
-	config: React.PropTypes.object.isRequired,
-	children: React.PropTypes.element
+	canvas: PropTypes.object,
+	closeContextMenu: PropTypes.func.isRequired,
+	contextMenuHandler: PropTypes.func.isRequired,
+	editActionHandler: PropTypes.func.isRequired,
+	clickActionHandler: PropTypes.func.isRequired,
+	decorationActionHandler: PropTypes.func.isRequired,
+	config: PropTypes.object.isRequired,
+	children: PropTypes.element
 };

@@ -15,7 +15,7 @@ export default class CreateNodeAction extends Action {
 		this.data = data;
 	}
 
-// Standard methods
+	// Standard methods
 	do() {
 		ObjectModel.addNode(this.data);
 	}

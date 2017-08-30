@@ -6,9 +6,6 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-/* eslint global-require:0 */
-
-var scope = require("./scripts/build/css-scope");
 
 /**
  * This webpack configuration file is used as configuration for the
@@ -21,19 +18,15 @@ module.exports = {
 		libraryTarget: "commonjs2"
 	},
 	module: {
-		loaders: [
+		rules: [
 			{
 				test: /\.s*css$/,
-				loaders: [
+				use: [
 					"style",
-					"css?modules&localIdentName=" + scope.getCssScope(),
-					"sass",
+					"css",
 					"postcss"
 				]
 			}
 		]
 	},
-	postcss: [
-		require("autoprefixer")
-	]
 };

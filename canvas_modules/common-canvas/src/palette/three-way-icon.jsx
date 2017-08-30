@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
+import PropTypes from "prop-types";
 
 class ThreeWayIcon extends React.Component {
 	constructor(props) {
@@ -64,11 +65,11 @@ class ThreeWayIcon extends React.Component {
 }
 
 ThreeWayIcon.propTypes = {
-	iconClickedMethod: React.PropTypes.func.isRequired,
-	isSelected: React.PropTypes.bool.isRequired,
-	selectedIconName: React.PropTypes.string.isRequired,
-	hoverIconName: React.PropTypes.string.isRequired,
-	deselectedIconName: React.PropTypes.string.isRequired
+	iconClickedMethod: PropTypes.func.isRequired,
+	isSelected: PropTypes.bool.isRequired,
+	selectedIconName: PropTypes.string.isRequired,
+	hoverIconName: PropTypes.string.isRequired,
+	deselectedIconName: PropTypes.string.isRequired
 };
 
 export default ThreeWayIcon;

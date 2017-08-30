@@ -10,6 +10,7 @@
 /* eslint complexity: ["error", 14] */
 
 import React from "react";
+import PropTypes from "prop-types";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import ContextMenuWrapper from "./context-menu-wrapper.jsx";
 import DiagramCanvasLegacy from "./diagram-canvas.jsx";
@@ -325,11 +326,11 @@ export default class CommonCanvas extends React.Component {
 }
 
 CommonCanvas.propTypes = {
-	config: React.PropTypes.object,
-	contextMenuHandler: React.PropTypes.func,
-	contextMenuActionHandler: React.PropTypes.func,
-	editActionHandler: React.PropTypes.func,
-	clickActionHandler: React.PropTypes.func,
-	decorationActionHandler: React.PropTypes.func,
-	showPalette: React.PropTypes.bool // TODO remove once buttons added for flyout palette
+	config: PropTypes.object,
+	contextMenuHandler: PropTypes.func,
+	contextMenuActionHandler: PropTypes.func,
+	editActionHandler: PropTypes.func,
+	clickActionHandler: PropTypes.func,
+	decorationActionHandler: PropTypes.func,
+	showPalette: PropTypes.bool // TODO remove once buttons added for flyout palette
 };

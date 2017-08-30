@@ -761,11 +761,11 @@ function createEditorForm(state) {
 describe("editor-form renders correctly with validations", () => {
 
 	it("props should have been defined", () => {
-		const wrapper = createEditorForm("shallow");
+		const wrapper = createEditorForm("mount");
 
-		expect(wrapper.form).to.be.defined;
-		expect(wrapper.additionalComponents).to.be.defined;
-		expect(wrapper.showPropertiesButtons).to.be.defined;
+		expect(wrapper.prop("form")).to.equal(formData);
+		expect(wrapper.prop("additionalComponents")).to.equal(additionalComponents);
+		expect(wrapper.prop("showPropertiesButtons")).to.equal(showPropertiesButtons);
 	});
 
 	it("should render an `EditorForm` with parsed conditions", () => {

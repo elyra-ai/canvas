@@ -15,7 +15,7 @@ function simulateDragDrop(sourceSelector, sourceIndex, destinationSelector, dest
 		DROP: "drop"
 	};
 
-/* global CustomEvent document */
+	/* global CustomEvent document */
 
 	function createCustomEvent(type, clientX, clientY) {
 		var custEvent = new CustomEvent("CustomEvent");
@@ -81,7 +81,7 @@ function simulateD3LinkCreation(sourceSelector, sourceIndex, destinationSelector
 		MOUSE_UP: "mouseup"
 	};
 
-/* global CustomEvent document */
+	/* global CustomEvent document */
 
 	function createCustomEvent(type, clientX, clientY) {
 		var custEvent = new CustomEvent("CustomEvent");

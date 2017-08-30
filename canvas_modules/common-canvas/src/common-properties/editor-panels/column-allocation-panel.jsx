@@ -11,6 +11,7 @@
 
 import logger from "../../../utils/logger";
 import React from "react";
+import PropTypes from "prop-types";
 import {
 	Grid,
 	Row,
@@ -109,8 +110,8 @@ export default class ColumnAllocationPanel extends React.Component {
 							"marginLeft": "40%"
 						}}
 					>
-						<img className="field-allocator-button" src={MoveLeftIcon} onClick={this.deallocate.bind(this, controlName)}></img>
-						<img className="field-allocator-button" src={MoveRightIcon} onClick={this.allocate.bind(this, controlName)}></img>
+						<img className="field-allocator-button" src={MoveLeftIcon} onClick={this.deallocate.bind(this, controlName)} />
+						<img className="field-allocator-button" src={MoveRightIcon} onClick={this.allocate.bind(this, controlName)} />
 					</Col>
 					<Col md={11}>
 						{child}
@@ -143,7 +144,7 @@ export default class ColumnAllocationPanel extends React.Component {
 }
 
 ColumnAllocationPanel.propTypes = {
-	panel: React.PropTypes.object,
-	dataModel: React.PropTypes.object,
-	controlAccessor: React.PropTypes.func
+	panel: PropTypes.object,
+	dataModel: PropTypes.object,
+	controlAccessor: PropTypes.func
 };

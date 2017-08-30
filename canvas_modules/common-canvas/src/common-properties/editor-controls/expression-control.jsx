@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
+import PropTypes from "prop-types";
 import { TextField } from "ap-components-react/dist/ap-components-react";
 
 import EditorControl from "./editor-control.jsx";
@@ -76,10 +77,10 @@ export default class ExpressionControl extends EditorControl {
 }
 
 ExpressionControl.propTypes = {
-	control: React.PropTypes.object,
-	controlStates: React.PropTypes.object,
-	validationDefinitions: React.PropTypes.array,
-	updateValidationErrorMessage: React.PropTypes.func,
-	retrieveValidationErrorMessage: React.PropTypes.func,
-	updateControlValue: React.PropTypes.func
+	control: PropTypes.object,
+	controlStates: PropTypes.object,
+	validationDefinitions: PropTypes.array,
+	updateValidationErrorMessage: PropTypes.func,
+	retrieveValidationErrorMessage: PropTypes.func,
+	updateControlValue: PropTypes.func
 };

@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
+import PropTypes from "prop-types";
 import PaletteFlyoutContentCategory from "./palette-flyout-content-category.jsx";
 import PaletteContentList from "./palette-content-list.jsx";
 import search32 from "../../assets/images/search_32.svg";
@@ -100,7 +101,7 @@ class PaletteFlyoutContent extends React.Component {
 						categorySelectedMethod={this.categorySelected}
 						itemCount={filteredNodeTypes.length}
 					/>
-				{content}
+					{content}
 				</div>
 			);
 		}
@@ -130,10 +131,10 @@ class PaletteFlyoutContent extends React.Component {
 }
 
 PaletteFlyoutContent.propTypes = {
-	paletteJSON: React.PropTypes.object.isRequired,
-	createTempNode: React.PropTypes.func.isRequired,
-	deleteTempNode: React.PropTypes.func.isRequired,
-	filterKeyword: React.PropTypes.string
+	paletteJSON: PropTypes.object.isRequired,
+	createTempNode: PropTypes.func.isRequired,
+	deleteTempNode: PropTypes.func.isRequired,
+	filterKeyword: PropTypes.string
 };
 
 export default PaletteFlyoutContent;

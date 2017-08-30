@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
-
+import PropTypes from "prop-types";
 import {
 	CONSOLE
 } from "../constants/constants.js";
@@ -59,6 +59,6 @@ export default class Console extends React.Component {
 }
 
 Console.propTypes = {
-	consoleOpened: React.PropTypes.bool,
-	logs: React.PropTypes.array
+	consoleOpened: PropTypes.bool,
+	logs: PropTypes.array
 };

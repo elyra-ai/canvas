@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
+import PropTypes from "prop-types";
 import { FormControl } from "react-bootstrap";
 import EditorControl from "./editor-control.jsx";
 import { EDITOR_CONTROL } from "../constants/constants.js";
@@ -81,11 +82,11 @@ export default class SomeofcolumnsControl extends EditorControl {
 }
 
 SomeofcolumnsControl.propTypes = {
-	dataModel: React.PropTypes.object,
-	control: React.PropTypes.object,
-	updateControlValue: React.PropTypes.func,
-	controlStates: React.PropTypes.object,
-	updateValidationErrorMessage: React.PropTypes.func,
-	retrieveValidationErrorMessage: React.PropTypes.func,
-	validationDefinitions: React.PropTypes.array
+	dataModel: PropTypes.object,
+	control: PropTypes.object,
+	updateControlValue: PropTypes.func,
+	controlStates: PropTypes.object,
+	updateValidationErrorMessage: PropTypes.func,
+	retrieveValidationErrorMessage: PropTypes.func,
+	validationDefinitions: PropTypes.array
 };

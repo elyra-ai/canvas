@@ -15,7 +15,7 @@ export default class CreateCommentAction extends Action {
 		this.data = data;
 	}
 
-// Standard methods
+	// Standard methods
 	do() {
 		ObjectModel.addComment(this.data);
 	}

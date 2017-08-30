@@ -15,17 +15,17 @@ module.exports = function() {
 		// need to click on the canvas drop down
 		browser.$("#sidepanel-canvas-input").scroll();
 		browser.$("#sidepanel-canvas-input")
-						.$(".canvasField")
-						.$(".select")
-						.$("button")
-						.click("svg");
+			.$(".canvasField")
+			.$(".select")
+			.$("button")
+			.click("svg");
 		// get the list of drop down options.
 		var canvasFileOptions = browser
-														.$("#sidepanel-canvas-input")
-														.$(".canvasField")
-														.$(".select")
-														.$(".select__options")
-														.$$("button");
+			.$("#sidepanel-canvas-input")
+			.$(".canvasField")
+			.$(".select")
+			.$(".select__options")
+			.$$("button");
 		for (var idx = 0; idx < canvasFileOptions.length; idx++) {
 			if (canvasFileOptions[idx].getText() === diagramFile) {
 				canvasFileOptions[idx].click();
@@ -37,17 +37,17 @@ module.exports = function() {
 		// need to click on the canvas drop down
 		browser.$("#sidepanel-canvas-input").scroll();
 		browser.$("#sidepanel-canvas-input")
-						.$(".canvasField")
-						.$(".select")
-						.$("button")
-						.click("svg");
+			.$(".canvasField")
+			.$(".select")
+			.$("button")
+			.click("svg");
 		// get the list of drop down options.
 		var canvasFileOptions = browser
-														.$("#sidepanel-canvas-input")
-														.$(".canvasField")
-														.$(".select")
-														.$(".select__options")
-														.$$("button");
+			.$("#sidepanel-canvas-input")
+			.$(".canvasField")
+			.$(".select")
+			.$(".select__options")
+			.$$("button");
 		for (var idx = 0; idx < canvasFileOptions.length; idx++) {
 			if (canvasFileOptions[idx].getText() === "Choose from location...") {
 				canvasFileOptions[idx].click();
@@ -62,17 +62,17 @@ module.exports = function() {
 	this.Then(/^I have uploaded JSON for common-properties "([^"]*)"$/, function(diagramFile) {
 		// need to click on the common-properties drop down
 		browser.$("#sidepanel-input")
-						.$(".formField")
-						.$(".select")
-						.$("button")
-						.click("svg");
+			.$(".formField")
+			.$(".select")
+			.$("button")
+			.click("svg");
 		// get the list of drop down options.
 		var commonPropertiesOptions = browser
-														.$("#sidepanel-input")
-														.$(".formField")
-														.$(".select")
-														.$(".select__options")
-														.$$("button");
+			.$("#sidepanel-input")
+			.$(".formField")
+			.$(".select")
+			.$(".select__options")
+			.$$("button");
 
 		for (var idx = 0; idx < commonPropertiesOptions.length; idx++) {
 			if (commonPropertiesOptions[idx].getText() === diagramFile) {

@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
-
+import PropTypes from "prop-types";
 import { DND_DATA_TEXT } from "../../constants/common-constants.js";
 
 class PaletteContentNode extends React.Component {
@@ -31,10 +31,10 @@ class PaletteContentNode extends React.Component {
 				typeId: this.props.nodeTemplate.typeId,
 				label: this.props.nodeTemplate.label
 			}));
-			// Create a temp node and use it to display a drag image.
-			// let tempNode = this.props.createTempNode(ev.target.id);
-			// this.tempNodeCreated = true;
-			// ev.dataTransfer.setDragImage(tempNode.obj, tempNode.xOffset, 0);
+		// Create a temp node and use it to display a drag image.
+		// let tempNode = this.props.createTempNode(ev.target.id);
+		// this.tempNodeCreated = true;
+		// ev.dataTransfer.setDragImage(tempNode.obj, tempNode.xOffset, 0);
 	}
 
 	onDragOver(ev) {
@@ -53,24 +53,24 @@ class PaletteContentNode extends React.Component {
 				onDragOver={this.onDragOver}
 				className="palette-grid-node-outer"
 			>
-			<div className="palette-grid-node-inner">
-				<div className="palette-grid-node-icon">
-					<img className="node-icon" src={this.props.nodeTemplate.image}
-						alt={this.props.nodeTemplate.label}
-					/>
+				<div className="palette-grid-node-inner">
+					<div className="palette-grid-node-icon">
+						<img className="node-icon" src={this.props.nodeTemplate.image}
+							alt={this.props.nodeTemplate.label}
+						/>
+					</div>
+					<div className="palette-grid-node-text">
+						{this.props.nodeTemplate.label}
+					</div>
+				</div>
 			</div>
-			<div className="palette-grid-node-text">
-				{this.props.nodeTemplate.label}
-			</div>
-		</div>
-	</div>
-	);
+		);
 	}
 }
 
 PaletteContentNode.propTypes = {
-	nodeTemplate: React.PropTypes.object,
-	deleteTempNode: React.PropTypes.func.isRequired
+	nodeTemplate: PropTypes.object,
+	deleteTempNode: PropTypes.func.isRequired
 };
 
 export default PaletteContentNode;

@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
+import PropTypes from "prop-types";
 import PropertiesDialog from "./properties-dialog.jsx";
 import PropertiesEditing from "./properties-editing.jsx";
 import EditorForm from "./editor-controls/editor-form.jsx";
@@ -86,7 +87,7 @@ export default class CommonProperties extends React.Component {
 		this.props.propertiesInfo.closePropertiesDialog();
 		// this.props.propertiesInfo.applyPropertyChanges(settings, this.props.propertiesInfo.appData);
 		const command = new CommonPropertiesAction(settings, this.initialCurrentProperties,
-												this.props.propertiesInfo.appData, this.props.propertiesInfo.applyPropertyChanges);
+			this.props.propertiesInfo.appData, this.props.propertiesInfo.applyPropertyChanges);
 		CommandStack.do(command);
 		this.initialCurrentProperties = "empty";
 	}
@@ -170,10 +171,10 @@ CommonProperties.defaultProps = {
 */
 
 CommonProperties.propTypes = {
-	showPropertiesDialog: React.PropTypes.bool.isRequired,
-	applyLabel: React.PropTypes.string,
-	rejectLabel: React.PropTypes.string,
-	useModalDialog: React.PropTypes.bool,
-	useOwnContainer: React.PropTypes.bool,
-	propertiesInfo: React.PropTypes.object.isRequired
+	showPropertiesDialog: PropTypes.bool.isRequired,
+	applyLabel: PropTypes.string,
+	rejectLabel: PropTypes.string,
+	useModalDialog: PropTypes.bool,
+	useOwnContainer: PropTypes.bool,
+	propertiesInfo: PropTypes.object.isRequired
 };

@@ -9,6 +9,7 @@
 
 import logger from "../../../utils/logger";
 import React from "react";
+import PropTypes from "prop-types";
 import { Button } from "react-bootstrap";
 import { Cell } from "fixed-data-table";
 
@@ -61,12 +62,12 @@ export default class SubPanelCell extends React.Component {
 }
 
 SubPanelCell.propTypes = {
-	data: React.PropTypes.array.isRequired,
-	rowIndex: React.PropTypes.number,
-	col: React.PropTypes.number,
-	label: React.PropTypes.string.isRequired,
-	title: React.PropTypes.string.isRequired,
-	panel: React.PropTypes.object.isRequired,
-	notifyStartEditing: React.PropTypes.func.isRequired,
-	notifyFinishedEditing: React.PropTypes.func.isRequired
+	data: PropTypes.array.isRequired,
+	rowIndex: PropTypes.number,
+	col: PropTypes.number,
+	label: PropTypes.string.isRequired,
+	title: PropTypes.string.isRequired,
+	panel: PropTypes.object.isRequired,
+	notifyStartEditing: PropTypes.func.isRequired,
+	notifyFinishedEditing: PropTypes.func.isRequired
 };

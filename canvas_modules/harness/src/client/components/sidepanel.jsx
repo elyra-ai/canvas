@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
-
+import PropTypes from "prop-types";
 import SidePanelCanvas from "./sidepanel-canvas.jsx";
 import SidePanelModal from "./sidepanel-modal.jsx";
 
@@ -70,25 +70,25 @@ export default class SidePanel extends React.Component {
 }
 
 SidePanel.propTypes = {
-	enableNavPalette: React.PropTypes.func,
-	internalObjectModel: React.PropTypes.bool,
-	closePropertiesEditorDialog: React.PropTypes.func,
-	openPropertiesEditorDialog: React.PropTypes.func,
-	openSidepanelCanvas: React.PropTypes.bool,
-	openSidepanelModal: React.PropTypes.bool,
-	setDiagramJSON: React.PropTypes.func,
-	setPaletteJSON: React.PropTypes.func,
-	setPropertiesJSON: React.PropTypes.func,
-	setLayoutDirection: React.PropTypes.func,
-	setOneTimeLayoutDirection: React.PropTypes.func,
-	selectedPanel: React.PropTypes.string,
-	showPropertiesDialog: React.PropTypes.bool,
-	useInternalObjectModel: React.PropTypes.func,
-	modalPropertiesDialog: React.PropTypes.bool,
-	useModalPropertiesDialog: React.PropTypes.func,
-	setRenderingEngine: React.PropTypes.func,
-	setConnectionType: React.PropTypes.func,
-	setLinkType: React.PropTypes.func,
-	setPaletteLayout: React.PropTypes.func,
-	log: React.PropTypes.func
+	enableNavPalette: PropTypes.func,
+	internalObjectModel: PropTypes.bool,
+	closePropertiesEditorDialog: PropTypes.func,
+	openPropertiesEditorDialog: PropTypes.func,
+	openSidepanelCanvas: PropTypes.bool,
+	openSidepanelModal: PropTypes.bool,
+	setDiagramJSON: PropTypes.func,
+	setPaletteJSON: PropTypes.func,
+	setPropertiesJSON: PropTypes.func,
+	setLayoutDirection: PropTypes.func,
+	setOneTimeLayoutDirection: PropTypes.func,
+	selectedPanel: PropTypes.string,
+	showPropertiesDialog: PropTypes.bool,
+	useInternalObjectModel: PropTypes.func,
+	modalPropertiesDialog: PropTypes.bool,
+	useModalPropertiesDialog: PropTypes.func,
+	setRenderingEngine: PropTypes.func,
+	setConnectionType: PropTypes.func,
+	setLinkType: PropTypes.func,
+	setPaletteLayout: PropTypes.func,
+	log: PropTypes.func
 };

@@ -10,7 +10,7 @@
 import React from "react";
 import NumberfieldControl from "../../../src/common-properties/editor-controls/numberfield-control.jsx";
 import ControlItem from "../../../src/common-properties/editor-controls/control-item.jsx";
-import { shallow, mount } from "enzyme";
+import { mount } from "enzyme";
 import { expect } from "chai";
 import chai from "chai";
 import chaiEnzyme from "chai-enzyme";
@@ -42,10 +42,8 @@ function updateControlValue(id, controlValue) {
 describe("numberfield-control renders correctly", () => {
 
 	it("props should have been defined", () => {
-		const wrapper = shallow(
+		const wrapper = mount(
 			<NumberfieldControl control={control}
-				key={controlId}
-				ref={controlId}
 				valueAccessor={valueAccessor}
 				validationDefinitions={validationDefinitions}
 				controlStates={controlStates}
@@ -53,19 +51,15 @@ describe("numberfield-control renders correctly", () => {
 			/>
 		);
 
-		expect(wrapper.control).to.be.defined;
-		expect(wrapper.controlStates).to.be.defined;
-		expect(wrapper.key).to.be.defined;
-		expect(wrapper.ref).to.be.defined;
-		expect(wrapper.valueAccessor).to.be.defined;
-		expect(wrapper.validationDefinitions).to.be.defined;
+		expect(wrapper.prop("control")).to.equal(control);
+		expect(wrapper.prop("controlStates")).to.equal(controlStates);
+		expect(wrapper.prop("valueAccessor")).to.equal(valueAccessor);
+		expect(wrapper.prop("validationDefinitions")).to.equal(validationDefinitions);
 	});
 
 	it("should render a `NumberfieldControl`", () => {
 		const wrapper = mount(
 			<NumberfieldControl control={control}
-				key={controlId}
-				ref={controlId}
 				valueAccessor={valueAccessor}
 				validationDefinitions={validationDefinitions}
 				controlStates={controlStates}
@@ -79,8 +73,6 @@ describe("numberfield-control renders correctly", () => {
 	it("should set correct state value in `NumberfieldControl`", () => {
 		const wrapper = mount(
 			<NumberfieldControl control={control}
-				key={controlId}
-				ref={controlId}
 				valueAccessor={valueAccessor}
 				validationDefinitions={validationDefinitions}
 				controlStates={controlStates}
@@ -95,8 +87,6 @@ describe("numberfield-control renders correctly", () => {
 	it("should set correct state null in `NumberfieldControl`", () => {
 		const wrapper = mount(
 			<NumberfieldControl control={control}
-				key={controlId}
-				ref={controlId}
 				valueAccessor={valueAccessor}
 				validationDefinitions={validationDefinitions}
 				controlStates={controlStates}
@@ -111,8 +101,6 @@ describe("numberfield-control renders correctly", () => {
 	it("should set correct control type in `NumberfieldControl`", () => {
 		const wrapper = mount(
 			<NumberfieldControl control={control}
-				key={controlId}
-				ref={controlId}
 				valueAccessor={valueAccessor}
 				validationDefinitions={validationDefinitions}
 				controlStates={controlStates}
@@ -126,8 +114,6 @@ describe("numberfield-control renders correctly", () => {
 	it("should set placeholder text in `NumberfieldControl`", () => {
 		const wrapper = mount(
 			<NumberfieldControl control={control}
-				key={controlId}
-				ref={controlId}
 				valueAccessor={valueAccessor}
 				validationDefinitions={validationDefinitions}
 				controlStates={controlStates}
@@ -147,15 +133,14 @@ describe("numberfield-control renders correctly", () => {
 			// console.log(newValue);
 		}
 		const controlObj = (<NumberfieldControl control={control2}
-			key={controlId}
 			valueAccessor={valueAccessor}
 			validationDefinitions={validationDefinitions}
 			controlStates={controlStates}
 			updateControlValue={updateControlValue}
 		/>);
-		const numberGenerator = (<label>{'\u00A0\u00A0'}<a className="number-generator" onClick={generateNumber}>
-											{"Generate"}
-											</a></label>);
+		const numberGenerator = (<label>{"\u00A0\u00A0"}<a className="number-generator" onClick={generateNumber}>
+			{"Generate"}
+		</a></label>);
 		const label = (<div>
 			<label className="control-label">{"Test Label"}</label>
 			{numberGenerator}

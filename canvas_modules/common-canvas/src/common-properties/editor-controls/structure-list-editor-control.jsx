@@ -9,6 +9,7 @@
 
 // import logger from "../../../utils/logger";
 import React from "react";
+import PropTypes from "prop-types";
 import { Button } from "react-bootstrap";
 import StructureTableEditor from "./structure-table-editor.jsx";
 import { EDITOR_CONTROL } from "../constants/constants.js";
@@ -106,12 +107,12 @@ export default class StructurelisteditorControl extends StructureTableEditor {
 }
 
 StructurelisteditorControl.propTypes = {
-	buildUIItem: React.PropTypes.func,
-	dataModel: React.PropTypes.object.isRequired,
-	control: React.PropTypes.object.isRequired,
-	controlStates: React.PropTypes.object,
-	validationDefinitions: React.PropTypes.array,
-	updateValidationErrorMessage: React.PropTypes.func,
-	retrieveValidationErrorMessage: React.PropTypes.func,
-	updateControlValue: React.PropTypes.func
+	buildUIItem: PropTypes.func,
+	dataModel: PropTypes.object.isRequired,
+	control: PropTypes.object.isRequired,
+	controlStates: PropTypes.object,
+	validationDefinitions: PropTypes.array,
+	updateValidationErrorMessage: PropTypes.func,
+	retrieveValidationErrorMessage: PropTypes.func,
+	updateControlValue: PropTypes.func
 };

@@ -7,8 +7,8 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
- /* eslint complexity: ["error", 37] */
- /* eslint max-depth: ["error", 5] */
+/* eslint complexity: ["error", 37] */
+/* eslint max-depth: ["error", 5] */
 
 import { Control, SubControl } from "./ControlInfo";
 import { UIItem } from "./UIItem";
@@ -498,6 +498,7 @@ function _parameterValueLabels(parameter, l10nProvider) {
 		});
 		return paramLabels;
 	}
+	return null;
 }
 
 module.exports.makePrimaryTab = makePrimaryTab;

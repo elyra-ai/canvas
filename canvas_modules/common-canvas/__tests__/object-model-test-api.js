@@ -6,7 +6,7 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
- /* eslint no-console: "off" */
+/* eslint no-console: "off" */
 
 import log4js from "log4js";
 import deepFreeze from "deep-freeze";

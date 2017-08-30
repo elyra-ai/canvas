@@ -12,8 +12,8 @@
 
 import logger from "../../../utils/logger";
 import React from "react";
-import { ButtonToolbar, Panel } from "react-bootstrap";
-
+import PropTypes from "prop-types";
+import { ButtonToolbar } from "react-bootstrap";
 import { Tabs } from "ap-components-react/dist/ap-components-react";
 import { EDITOR_CONTROL } from "../constants/constants.js";
 
@@ -635,7 +635,7 @@ export default class EditorForm extends React.Component {
 			that.refs[control.name].setState({ controlValue: newValue });
 		}
 
-		let label = <span></span>;
+		let label = <span />;
 		if (control.label && control.separateLabel) {
 			let description;
 			if (control.description && control.description.placement === "on_panel") {
@@ -647,9 +647,9 @@ export default class EditorForm extends React.Component {
 			}
 			let numberGenerator;
 			if (control.label.numberGenerator) {
-				numberGenerator = (<label>{'\u00A0\u00A0'}<a className="number-generator" onClick={generateNumber} style={stateStyle}>
-													{control.label.numberGenerator.label.default}
-													</a></label>);
+				numberGenerator = (<label>{"\u00A0\u00A0"}<a className="number-generator" onClick={generateNumber} style={stateStyle}>
+					{control.label.numberGenerator.label.default}
+				</a></label>);
 			}
 			let hasFilter = false;
 			if (control.subControls) {
@@ -702,8 +702,8 @@ export default class EditorForm extends React.Component {
 					key={i}
 					title={tab.text}
 				>
-				{panelItems}
-				{additionalComponent}
+					{panelItems}
+					{additionalComponent}
 				</Tabs.Panel>
 			);
 		}
@@ -721,7 +721,7 @@ export default class EditorForm extends React.Component {
 				}}
 				onTabClickHandler={(e, id) => this.setState({ activeTabId: id })}
 			>
-			{tabContent}
+				{tabContent}
 			</Tabs>
 		);
 	}
@@ -1077,8 +1077,8 @@ export default class EditorForm extends React.Component {
 }
 
 EditorForm.propTypes = {
-	form: React.PropTypes.object,
-	additionalComponents: React.PropTypes.object,
-	submitMethod: React.PropTypes.func,
-	showPropertiesButtons: React.PropTypes.func
+	form: PropTypes.object,
+	additionalComponents: PropTypes.object,
+	submitMethod: PropTypes.func,
+	showPropertiesButtons: PropTypes.func
 };

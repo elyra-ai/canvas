@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
+import PropTypes from "prop-types";
 import { TextField } from "ap-components-react/dist/ap-components-react";
 import EditorControl from "./editor-control.jsx";
 import { CHARACTER_LIMITS, EDITOR_CONTROL } from "../constants/constants.js";
@@ -86,16 +87,16 @@ export default class TextfieldControl extends EditorControl {
 }
 
 TextfieldControl.propTypes = {
-	control: React.PropTypes.object.isRequired,
-	controlStates: React.PropTypes.object,
-	validationDefinitions: React.PropTypes.array,
-	validateConditions: React.PropTypes.func,
-	updateValidationErrorMessage: React.PropTypes.func,
-	retrieveValidationErrorMessage: React.PropTypes.func,
-	updateControlValue: React.PropTypes.func,
+	control: PropTypes.object.isRequired,
+	controlStates: PropTypes.object,
+	validationDefinitions: PropTypes.array,
+	validateConditions: PropTypes.func,
+	updateValidationErrorMessage: PropTypes.func,
+	retrieveValidationErrorMessage: PropTypes.func,
+	updateControlValue: PropTypes.func,
 	// Optional used when embedded in table
-	tableControl: React.PropTypes.bool,
-	rowIndex: React.PropTypes.number,
-	columnDef: React.PropTypes.object,
-	value: React.PropTypes.string
+	tableControl: PropTypes.bool,
+	rowIndex: PropTypes.number,
+	columnDef: PropTypes.object,
+	value: PropTypes.string
 };

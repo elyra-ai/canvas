@@ -261,6 +261,7 @@ function condition(data, userInput, dataModel, cellCoordinates) {
 }
 
 function _validateParams(userInput, param, errorType) {
+	var failMessage;
 	if (userInput[param] === null || userInput[param] === "") {
 		const internalError = {
 			focus_parameter_ref: param,
@@ -269,8 +270,9 @@ function _validateParams(userInput, param, errorType) {
 			},
 			type: errorType
 		};
-		return failedMessage(internalError);
+		failMessage = failedMessage(internalError);
 	}
+	return failMessage;
 }
 
 function _handleEmpty(paramInput) {

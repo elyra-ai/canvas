@@ -23,11 +23,6 @@ describe("Palette renders correctly", () => {
 		expect(popupPalette.find(".palette-div")).to.have.length(1);
 	});
 
-	it("props should have been defined", () => {
-		const popupPalette = createPalette();
-		expect(popupPalette.paletteJSON).to.be.defined;
-	});
-
 	it("should render one <PaletteTopbar/> component", () => {
 		const popupPalette = createPalette();
 		expect(popupPalette.find(PaletteTopbar)).to.have.length(1);
@@ -88,6 +83,6 @@ function createPalette() {
 			createTempNode={createTempNodeCallback}
 			deleteTempNode={deleteTempNodeCallback}
 		/>
-  );
+	);
 	return popupPalette;
 }

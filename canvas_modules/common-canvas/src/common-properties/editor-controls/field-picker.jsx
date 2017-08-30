@@ -11,6 +11,7 @@
 
 // import logger from "../../../utils/logger";
 import React from "react";
+import PropTypes from "prop-types";
 import EditorControl from "./editor-control.jsx";
 import FlexibleTable from "./flexible-table.jsx";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
@@ -144,11 +145,11 @@ export default class FieldPicker extends EditorControl {
 
 			const columns = [
 				<Td key="field-picker-column-checkbox" column="checkbox" style={{ "width": "18%" }}><div className="field-picker-checkbox">
-				<Checkbox id={"field-picker-checkbox-" + i}
-					checked={checked}
-					onChange={this.handleFieldChecked}
-					data-name={field.name}
-				/></div></Td>,
+					<Checkbox id={"field-picker-checkbox-" + i}
+						checked={checked}
+						onChange={this.handleFieldChecked}
+						data-name={field.name}
+					/></div></Td>,
 				<Td key="field-picker-column-fieldname" column="fieldName" style={{ "width": "42%" }}>{field.name}</Td>,
 				<Td key="field-picker-column-datatype" column="dataType" style={{ "width": "40%" }}><div>
 					<div className={"field-picker-data-type-icon field-picker-data-" + field.type + "-type-icon"}>
@@ -476,10 +477,10 @@ export default class FieldPicker extends EditorControl {
 
 		const headers = [];
 		headers.push({ "key": "checkbox", "label": <div className="field-picker-checkbox">
-				<Checkbox id={"field-picker-checkbox-all"}
-					onChange={this.handleCheckAll}
-					checked={checkedAll}
-				/>
+			<Checkbox id={"field-picker-checkbox-all"}
+				onChange={this.handleCheckAll}
+				checked={checkedAll}
+			/>
 		</div>, "width": 18 });
 		headers.push({ "key": "fieldName", "label": "Field name", "width": 42 });
 		headers.push({ "key": "dataType", "label": "Data type", "width": 40 });
@@ -509,10 +510,10 @@ export default class FieldPicker extends EditorControl {
 }
 
 FieldPicker.propTypes = {
-	closeFieldPicker: React.PropTypes.func.isRequired,
-	currentControlValues: React.PropTypes.object.isRequired,
-	dataModel: React.PropTypes.object.isRequired,
-	updateControlValue: React.PropTypes.func,
-	control: React.PropTypes.object,
-	title: React.PropTypes.string
+	closeFieldPicker: PropTypes.func.isRequired,
+	currentControlValues: PropTypes.object.isRequired,
+	dataModel: PropTypes.object.isRequired,
+	updateControlValue: PropTypes.func,
+	control: PropTypes.object,
+	title: PropTypes.string
 };

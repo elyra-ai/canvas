@@ -36,10 +36,10 @@ describe("ContextMenuWrapper renders correctly", () => {
 	});
 
 	it("all required props should have been defined", () => {
-		expect(wrapper.containingDivId).to.be.defined;
-		expect(wrapper.mousePos).to.be.defined;
-		expect(wrapper.contextMenuDef).to.be.defined;
-		expect(wrapper.contextMenuClicked).to.be.defined;
-		expect(wrapper.closeContextMenu).to.be.defined;
+		expect(wrapper.prop("containingDivId")).to.equal("common-canvas");
+		expect(wrapper.prop("mousePos")).to.equal(_mousePos);
+		expect(wrapper.prop("contextMenuDef")).to.equal(_menu);
+		expect(wrapper.prop("contextMenuClicked")).to.equal(_contextMenuClicked);
+		expect(wrapper.prop("closeContextMenu")).to.equal(_closeContextMenu);
 	});
 });

@@ -129,45 +129,45 @@ class CommonPropertiesComponents extends React.Component {
 
 	render() {
 		const dropMenu = (<div id="properties-menu" className="header__dropdown">
-		<Dropdown
-			name="Navigation"
-			text="Navigation"
-			options={[
-				"Groups",
-				"--controls",
-				"--panels",
-				"--tabs",
-				"--subtabs",
-				"--panelSelector",
-				"--checkboxPanel",
-				"--columnSelection",
-				"Controls",
-				"--textfield",
-				"--textarea",
-				"--password",
-				"--expression",
-				"--numberfield",
-				"--checkbox",
-				"--checkboxset",
-				"--radioset",
-				"--oneofselect",
-				"--someofselect",
-				"--selectcolumn",
-				"--selectcolumns",
-				"--toggletext",
-				"Complex",
-				"--structuretable",
-				"--structurelisteditor",
-				"--edit-style",
-				"--moveable_rows",
-				"--sortable",
-				"--filterable"
-			]}
-			compact
-			dark
-			inline
-			onSelect={this.onMenuDropdownSelect}
-		/>
+			<Dropdown
+				name="Navigation"
+				text="Navigation"
+				options={[
+					"Groups",
+					"--controls",
+					"--panels",
+					"--tabs",
+					"--subtabs",
+					"--panelSelector",
+					"--checkboxPanel",
+					"--columnSelection",
+					"Controls",
+					"--textfield",
+					"--textarea",
+					"--password",
+					"--expression",
+					"--numberfield",
+					"--checkbox",
+					"--checkboxset",
+					"--radioset",
+					"--oneofselect",
+					"--someofselect",
+					"--selectcolumn",
+					"--selectcolumns",
+					"--toggletext",
+					"Complex",
+					"--structuretable",
+					"--structurelisteditor",
+					"--edit-style",
+					"--moveable_rows",
+					"--sortable",
+					"--filterable"
+				]}
+				compact
+				dark
+				inline
+				onSelect={this.onMenuDropdownSelect}
+			/>
 		</div>);
 
 		const navBar = (<div id="properties-navbar">
@@ -320,79 +320,78 @@ class CommonPropertiesComponents extends React.Component {
 				<div id="panels-controls-component">
 					<h3 id="--panelSelector" className="section-subtitle">panelSelector</h3>
 					<p>To show panels based on the selection in
-						a <a className="properties-page-intro-link" href="#/properties#--radioset">
-							radio set
+						a <a className="properties-page-intro-link" href="#/properties#--radioset">radio set
 						</a>,
 						add a nested <span className="highlight">group_info</span> object of
 						type <span className="highlight">panelSelector</span> and in there, add
 						another <span className="highlight">group_info</span> array with the sub-panels
 						for each possible selection.</p>
+					<div className="section-row">
 						<div className="section-row">
-							<div className="section-row">
-								<div className="section-column">
-									<CommonProperties
-										showPropertiesDialog
-										propertiesInfo={PANEL_SELECTOR_PROPS_INFO}
-										useModalDialog={false}
-										useOwnContainer
-									/>
-								</div>
-								<div className="section-column section-column-code">
-									<pre className="json-block">
-										{this.jsonReplacer(PANEL_SELECTOR_PROPS_INFO.parameterDef, "panel")}
-									</pre>
-								</div>
+							<div className="section-column">
+								<CommonProperties
+									showPropertiesDialog
+									propertiesInfo={PANEL_SELECTOR_PROPS_INFO}
+									useModalDialog={false}
+									useOwnContainer
+								/>
+							</div>
+							<div className="section-column section-column-code">
+								<pre className="json-block">
+									{this.jsonReplacer(PANEL_SELECTOR_PROPS_INFO.parameterDef, "panel")}
+								</pre>
 							</div>
 						</div>
+					</div>
 				</div>
 				<div id="panels-controls-component">
 					<h3 id="--checkboxPanel" className="section-subtitle">checkboxPanel</h3>
 					<p>A panel with a controlling checkbox that enables child controls when selected
 						and disables child controls when deselected.</p>
+					<div className="section-row">
 						<div className="section-row">
-							<div className="section-row">
-								<div className="section-column">
-									<CommonProperties
-										showPropertiesDialog
-										propertiesInfo={CHECKBOX_PANEL_PROPS_INFO}
-										useModalDialog={false}
-										useOwnContainer
-									/>
-								</div>
-								<div className="section-column section-column-code">
-									<pre className="json-block">
-										{this.jsonReplacer(CHECKBOX_PANEL_PROPS_INFO.parameterDef, "panel")}
-									</pre>
-								</div>
+							<div className="section-column">
+								<CommonProperties
+									showPropertiesDialog
+									propertiesInfo={CHECKBOX_PANEL_PROPS_INFO}
+									useModalDialog={false}
+									useOwnContainer
+								/>
+							</div>
+							<div className="section-column section-column-code">
+								<pre className="json-block">
+									{this.jsonReplacer(CHECKBOX_PANEL_PROPS_INFO.parameterDef, "panel")}
+								</pre>
 							</div>
 						</div>
+					</div>
 				</div>
 				<div id="panels-controls-component">
 					<h3 id="--columnSelection" className="section-subtitle">columnSelection</h3>
 					<p>To group multiple <a className="properties-page-intro-link" href="#/properties#--selectcolumns">
 							selectcolumns
-						</a> controls, use type <span className="highlight">columnSelection</span>. Having multiple controls in
+					</a> controls, use type <span className="highlight">columnSelection</span>. Having multiple controls in
 						a <span className="highlight">columnSelection</span> let the controls share a
 						single input list of <span className="highlight">dataset_metadata</span> fields.
 						A field selected in the first <span className="highlight">selectcolumns</span> control
 						cannot be selected in the second control.</p>
+					<div className="section-row">
 						<div className="section-row">
-							<div className="section-row">
-								<div className="section-column">
-									<CommonProperties
-										showPropertiesDialog
-										propertiesInfo={COLUMNSELECTION_PROPS_INFO}
-										useModalDialog={false}
-										useOwnContainer
-									/>
-								</div>
-								<div className="section-column section-column-code">
-									<pre className="json-block">
-										{this.jsonReplacer(COLUMNSELECTION_PROPS_INFO.parameterDef, "panel")}
-									</pre>
-								</div>
+							<div className="section-column">
+								<CommonProperties
+									showPropertiesDialog
+									propertiesInfo={COLUMNSELECTION_PROPS_INFO}
+									useModalDialog={false}
+									useOwnContainer
+								/>
+							</div>
+							<div className="section-column section-column-code">
+								<pre className="json-block">
+									{this.jsonReplacer(COLUMNSELECTION_PROPS_INFO.parameterDef, "panel")}
+								</pre>
 							</div>
 						</div>
+					</div>
 				</div>
 			</div>
 		</section>);
@@ -514,12 +513,12 @@ class CommonPropertiesComponents extends React.Component {
 						<div className="section-column section-column-code">
 							<pre className="json-block">
 								{this.jsonReplacer(NUMBERFIELD_GENERATOR_PROPS_INFO.parameterDef, "custom",
-								["uihints",
-									"id", "type", "parameter_info",
-									"number_generator",
-									"default", "label", "resource_key", "range", "min", "max",
-									"resources", "numberGenerator.label", "numberGenerator.desc"
-								])}
+									["uihints",
+										"id", "type", "parameter_info",
+										"number_generator",
+										"default", "label", "resource_key", "range", "min", "max",
+										"resources", "numberGenerator.label", "numberGenerator.desc"
+									])}
 							</pre>
 						</div>
 					</div>
@@ -637,9 +636,9 @@ class CommonPropertiesComponents extends React.Component {
 					</div>
 					<p>A <a className="properties-page-intro-link" href="#/properties#--oneofselect">
 						oneofselect
-						</a> control can be forced to render as a <a className="properties-page-intro-link" href="#/properties#--radioset">
+					</a> control can be forced to render as a <a className="properties-page-intro-link" href="#/properties#--radioset">
 							radioset
-						</a> by adding a <span className="highlight">control</span> attribute set
+					</a> by adding a <span className="highlight">control</span> attribute set
 						to <span className="highlight">radioset</span>. Similarly, a <span className="highlight">radioset</span> control can
 						be forced to render as a <span className="highlight">oneofselect</span>.</p>
 					<div className="section-row">
@@ -654,7 +653,7 @@ class CommonPropertiesComponents extends React.Component {
 						<div className="section-column section-column-code">
 							<pre className="json-block">
 								{this.jsonReplacer(FORCED_RADIOSET_PROPS_INFO.parameterDef, "custom",
-								["uihints", "parameter_info", "control", "orientation"])}
+									["uihints", "parameter_info", "control", "orientation"])}
 							</pre>
 						</div>
 					</div>
@@ -684,9 +683,9 @@ class CommonPropertiesComponents extends React.Component {
 					</div>
 					<p>A <a className="properties-page-intro-link" href="#/properties#--someofselect">
 						someofselect
-						</a> control can be forced to render as a <a className="properties-page-intro-link" href="#/properties#--checkboxset">
+					</a> control can be forced to render as a <a className="properties-page-intro-link" href="#/properties#--checkboxset">
 							checkboxset
-						</a> by adding a <span className="highlight">control</span> attribute set
+					</a> by adding a <span className="highlight">control</span> attribute set
 						to <span className="highlight">checkboxset</span>. Similarly, a <span className="highlight">checkboxset</span> control
 						can be forced to render as a <span className="highlight">someofselect</span>.</p>
 					<div className="section-row">
@@ -701,7 +700,7 @@ class CommonPropertiesComponents extends React.Component {
 						<div className="section-column section-column-code">
 							<pre className="json-block">
 								{this.jsonReplacer(FORCED_CHECKBOX_SET_PROPS_INFO.parameterDef, "custom",
-								["uihints", "parameter_info", "control"])}
+									["uihints", "parameter_info", "control"])}
 							</pre>
 						</div>
 					</div>
@@ -786,7 +785,7 @@ class CommonPropertiesComponents extends React.Component {
 						<div className="section-column section-column-code">
 							<pre className="json-block">
 								{this.jsonReplacer(TOGGLETEXTICONS_PROPS_INFO.parameterDef, "custom",
-								["uihints", "parameter_info", "value_icons"])}
+									["uihints", "parameter_info", "value_icons"])}
 							</pre>
 						</div>
 					</div>
@@ -936,7 +935,7 @@ class CommonPropertiesComponents extends React.Component {
 						<div className="section-column section-column-code">
 							<pre className="json-block">
 								{this.jsonReplacer(STRUCTURETABLE_MOVEABLE_PROPS_INFO.parameterDef, "custom",
-								["uihints", "complex_type_info", "moveable_rows"])}
+									["uihints", "complex_type_info", "moveable_rows"])}
 							</pre>
 						</div>
 					</div>
@@ -965,7 +964,7 @@ class CommonPropertiesComponents extends React.Component {
 						<div className="section-column section-column-code">
 							<pre className="json-block">
 								{this.jsonReplacer(STRUCTURETABLE_SORTABLE_PROPS_INFO.parameterDef, "custom",
-								["uihints", "complex_type_info", "key_definition", "sortable", "parameters"])}
+									["uihints", "complex_type_info", "key_definition", "sortable", "parameters"])}
 							</pre>
 						</div>
 					</div>
@@ -993,7 +992,7 @@ class CommonPropertiesComponents extends React.Component {
 						<div className="section-column section-column-code">
 							<pre className="json-block">
 								{this.jsonReplacer(STRUCTURETABLE_FILTERABLE_PROPS_INFO.parameterDef, "custom",
-								["uihints", "complex_type_info", "key_definition", "filterable"])}
+									["uihints", "complex_type_info", "key_definition", "filterable"])}
 							</pre>
 						</div>
 					</div>

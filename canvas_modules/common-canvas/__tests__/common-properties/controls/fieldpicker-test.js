@@ -9,7 +9,7 @@
 
 import React from "react";
 import FieldPicker from "../../../src/common-properties/editor-controls/field-picker.jsx";
-import { shallow, mount } from "enzyme";
+import { mount } from "enzyme";
 import { expect } from "chai";
 import chai from "chai";
 import chaiEnzyme from "chai-enzyme";
@@ -201,7 +201,7 @@ function updateSelectedRows(selection) {
 describe("field-picker-control renders correctly", () => {
 
 	it("props should have been defined", () => {
-		const wrapper = shallow(
+		const wrapper = mount(
 			<FieldPicker
 				key="field-picker-control"
 				closeFieldPicker={closeFieldPicker}
@@ -213,12 +213,12 @@ describe("field-picker-control renders correctly", () => {
 			/>
 		);
 
-		expect(wrapper.closeFieldPicker).to.be.defined;
-		expect(wrapper.currentControlValues).to.be.defined;
-		expect(wrapper.filteredDataset).to.be.defined;
-		expect(wrapper.updateControlValue).to.be.defined;
-		expect(wrapper.fieldPickerControl).to.be.defined;
-		expect(wrapper.updateSelectedRows).to.be.defined;
+		expect(wrapper.prop("closeFieldPicker")).to.equal(closeFieldPicker);
+		expect(wrapper.prop("currentControlValues")).to.equal(currentControlValues);
+		expect(wrapper.prop("dataModel")).to.equal(filteredDataset);
+		expect(wrapper.prop("updateControlValue")).to.equal(updateControlValue);
+		expect(wrapper.prop("control")).to.equal(fieldPickerControl);
+		expect(wrapper.prop("updateSelectedRows")).to.equal(updateSelectedRows);
 	});
 
 	it("should render a `FieldPicker`", () => {

@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
+import PropTypes from "prop-types";
 import DownIcon from "../../assets/images/down_enabled.svg";
 import UpIcon from "../../assets/images/up_enabled.svg";
 
@@ -30,16 +31,13 @@ class PaletteFlyoutContentCategory extends React.Component {
 	}
 
 	render() {
-		var style = "palette-flyout-category";
 		var image = <img className="palette-flyout-category-arrow" src={DownIcon} height={ARROW_HEIGHT} width={ARROW_WIDTH} />;
 		if (this.props.selectedCategory === this.props.categoryName) {
-			style = "palette-flyout-category-selected";
 			image = <img className="palette-flyout-category-arrow" src={UpIcon} height={ARROW_HEIGHT} width={ARROW_WIDTH} />;
 		}
-		const id = "palette-flyout-category-" + this.props.categoryName.replace(/\s/g, "-");
 		var content = (
-			<div className={style} id={id} onClick={this.categorySelected} value={this.props.categoryName}>
-					{this.props.categoryName + " (" + this.props.itemCount + ")"} {image}
+			<div className="palette-flyout-category" onClick={this.categorySelected} value={this.props.categoryName}>
+				{this.props.categoryName + " (" + this.props.itemCount + ")"} {image}
 			</div>
 		);
 		return content;
@@ -47,10 +45,10 @@ class PaletteFlyoutContentCategory extends React.Component {
 }
 
 PaletteFlyoutContentCategory.propTypes = {
-	categoryName: React.PropTypes.string.isRequired,
-	selectedCategory: React.PropTypes.string.isRequired,
-	categorySelectedMethod: React.PropTypes.func.isRequired,
-	itemCount: React.PropTypes.number.isRequired
+	categoryName: PropTypes.string.isRequired,
+	selectedCategory: PropTypes.string.isRequired,
+	categorySelectedMethod: PropTypes.func.isRequired,
+	itemCount: PropTypes.number.isRequired
 };
 
 export default PaletteFlyoutContentCategory;

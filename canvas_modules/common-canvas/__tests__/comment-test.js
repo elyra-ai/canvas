@@ -9,7 +9,7 @@
 
 import React from "react";
 import Comment from "../src/comment.jsx";
-import { shallow, mount } from "enzyme";
+import { mount } from "enzyme";
 import { expect } from "chai";
 import sinon from "sinon";
 import chai from "chai";
@@ -36,7 +36,7 @@ const comment = {
 describe("comment renders correctly", () => {
 
 	it("props should have been defined", () => {
-		const wrapper = shallow(
+		const wrapper = mount(
 			<Comment
 				comment={comment}
 				zoom={zoom}
@@ -45,14 +45,14 @@ describe("comment renders correctly", () => {
 				onContextMenu={commentContextHandler}
 				selected={false}
 			/>
-    );
+		);
 
-		expect(wrapper.comment).to.be.defined;
-		expect(wrapper.zoom).to.be.defined;
-		expect(wrapper.commentActionHandler).to.be.defined;
-		expect(wrapper.onContextMenu).to.be.defined;
-		expect(wrapper.fontSize).to.be.defined;
-		expect(wrapper.selected).to.be.defined;
+		expect(wrapper.prop("comment")).to.equal(comment);
+		expect(wrapper.prop("zoom")).to.equal(zoom);
+		expect(wrapper.prop("commentActionHandler")).to.equal(commentActionHandler);
+		expect(wrapper.prop("onContextMenu")).to.equal(commentContextHandler);
+		expect(wrapper.prop("fontSize")).to.equal(fontSize);
+		expect(wrapper.prop("selected")).to.equal(false);
 	});
 
 	it("should render a `.comment-box`", () => {
@@ -80,7 +80,7 @@ describe("comment renders correctly", () => {
 				onContextMenu={commentContextHandler}
 				selected={false}
 			/>
-    );
+		);
 
 		expect(wrapper.find(".comment-inner-box")).to.have.length(1);
 	});
@@ -95,7 +95,7 @@ describe("comment renders correctly", () => {
 				onContextMenu={commentContextHandler}
 				selected={false}
 			/>
-    );
+		);
 
 		expect(wrapper.find(".padding-box")).to.have.length(1);
 	});
@@ -111,11 +111,11 @@ describe("comment renders correctly", () => {
 				onContextMenu={commentContextHandler}
 				selected={false}
 			/>
-    );
+		);
 
-    // wrapper.setState({ showCircle: true });
+		// wrapper.setState({ showCircle: true });
 		wrapper.find(".comment-box").simulate("mouseEnter");
-    // expect(wrapper.state('showCircle')).to.equal(true);
+		// expect(wrapper.state('showCircle')).to.equal(true);
 		expect(wrapper.find(".comment-box")).to.have.style("border");
 
 	});
@@ -130,11 +130,11 @@ describe("comment renders correctly", () => {
 				onContextMenu={commentContextHandler}
 				selected={false}
 			/>
-    );
+		);
 
-    // wrapper.setState({ showCircle: false });
+		// wrapper.setState({ showCircle: false });
 		wrapper.find(".comment-box").simulate("mouseLeave");
-    // expect(wrapper.state('showCircle')).to.equal(false);
+		// expect(wrapper.state('showCircle')).to.equal(false);
 		expect(wrapper.find(".comment-box")).to.not.have.style("border");
 
 	});
@@ -166,7 +166,7 @@ describe("comment renders correctly", () => {
 				onContextMenu={commentContextHandler}
 				selected={false}
 			/>
-	);
+		);
 
 		wrapper.find(".comment-inner-box").simulate("contextMenu");
 

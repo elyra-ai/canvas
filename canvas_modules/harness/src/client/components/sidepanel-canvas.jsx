@@ -11,6 +11,7 @@
 /* eslint no-undef: "error" */
 
 import React from "react";
+import PropTypes from "prop-types";
 import { FormControl } from "react-bootstrap";
 import {
 	Button,
@@ -72,18 +73,18 @@ export default class SidePanelForms extends React.Component {
 		var that = this;
 
 		FormsService.getFiles("diagrams")
-		.then(function(res) {
-			var list = res;
-			list.push(CHOOSE_FROM_LOCATION);
-			that.setState({ canvasFiles: res });
-		});
+			.then(function(res) {
+				var list = res;
+				list.push(CHOOSE_FROM_LOCATION);
+				that.setState({ canvasFiles: res });
+			});
 
 		FormsService.getFiles("palettes")
-		.then(function(res) {
-			var list = res;
-			list.push(CHOOSE_FROM_LOCATION);
-			that.setState({ paletteFiles: res });
-		});
+			.then(function(res) {
+				var list = res;
+				list.push(CHOOSE_FROM_LOCATION);
+				that.setState({ paletteFiles: res });
+			});
 	}
 
 	onCanvasFileSelect(evt) {
@@ -128,9 +129,9 @@ export default class SidePanelForms extends React.Component {
 			}, function() {
 				that.props.log("Submit canvas diagram", that.state.selectedPropertiesDropdownFile);
 				FormsService.getFileContent("diagrams", that.state.selectedCanvasDropdownFile)
-				.then(function(res) {
-					that.props.setDiagramJSON(res);
-				});
+					.then(function(res) {
+						that.props.setDiagramJSON(res);
+					});
 			});
 		}
 	}
@@ -150,13 +151,13 @@ export default class SidePanelForms extends React.Component {
 			}, function() {
 				that.props.log("Submit canvas palette", that.state.selectedPaletteDropdownFile);
 				FormsService.getFileContent("palettes", that.state.selectedPaletteDropdownFile)
-				.then(function(res) {
-					that.props.setPaletteJSON(res);
-					// enable palette
-					if (that.isReadyToSubmitPaletteData()) {
-						that.props.enableNavPalette(true);
-					}
-				});
+					.then(function(res) {
+						that.props.setPaletteJSON(res);
+						// enable palette
+						if (that.isReadyToSubmitPaletteData()) {
+							that.props.enableNavPalette(true);
+						}
+					});
 			});
 		}
 	}
@@ -247,7 +248,7 @@ export default class SidePanelForms extends React.Component {
 		var divider = (<div className="sidepanel-children sidepanel-divider" />);
 		var space = (<div className="sidepanel-spacer" />);
 
-		var canvasFileChooserVisible = <div></div>;
+		var canvasFileChooserVisible = <div />;
 		if (this.state.canvasFileChooserVisible) {
 			canvasFileChooserVisible = (<div>
 				{space}
@@ -269,7 +270,7 @@ export default class SidePanelForms extends React.Component {
 			</div>);
 		}
 
-		var paletteFileChooserVisible = <div></div>;
+		var paletteFileChooserVisible = <div />;
 		if (this.state.paletteFileChooserVisible) {
 			paletteFileChooserVisible = (<div>
 				{space}
@@ -329,6 +330,7 @@ export default class SidePanelForms extends React.Component {
 		var layoutDirection = (<div className="sidepanel-children" id="sidepanel-layout-direction">
 			<div className="sidepanel-headers">Fixed Layout</div>
 			<RadioGroup
+				name="layout_direction_radio"
 				dark
 				onChange={this.layoutDirectionOptionChange}
 				choices={[
@@ -341,7 +343,7 @@ export default class SidePanelForms extends React.Component {
 		</div>);
 
 		var layoutOnDemand = (<div className="sidepanel-children" id="sidepanel-oneTime-layout-direction">
-		<div className="sidepanel-headers">Layout on Demand</div>
+			<div className="sidepanel-headers">Layout on Demand</div>
 			<Button dark
 				id="buttonOneTimeLayoutHorizontal"
 				disabled={this.disableOneTimeLayoutButtons()}
@@ -373,7 +375,8 @@ export default class SidePanelForms extends React.Component {
 
 		var renderingEngine = (<div className="sidepanel-children" id="sidepanel-rendering-engine">
 			<div className="sidepanel-headers">Rendering Engine</div>
-			<RadioGroup name="rendering_radio"
+			<RadioGroup
+				name="rendering_radio"
 				dark
 				onChange={this.renderingEngineOptionChange}
 				choices={[
@@ -386,7 +389,8 @@ export default class SidePanelForms extends React.Component {
 
 		var connectionType = (<div className="sidepanel-children" id="sidepanel-connection-type">
 			<div className="sidepanel-headers">Connection Type (for 'D3')</div>
-			<RadioGroup name="connection_type_radio"
+			<RadioGroup
+				name="connection_type_radio"
 				dark
 				onChange={this.connectionTypeOptionChange}
 				choices={[
@@ -399,7 +403,8 @@ export default class SidePanelForms extends React.Component {
 
 		var linkType = (<div className="sidepanel-children" id="sidepanel-link-type">
 			<div className="sidepanel-headers">Link Type (for 'Ports')</div>
-			<RadioGroup name="link_type_radio"
+			<RadioGroup
+				name="link_type_radio"
 				dark
 				onChange={this.linkTypeOptionChange}
 				choices={[
@@ -413,7 +418,8 @@ export default class SidePanelForms extends React.Component {
 
 		var paletteLayout = (<div className="sidepanel-children" id="sidepanel-palette-layout">
 			<div className="sidepanel-headers">Palette Layout</div>
-			<RadioGroup name="palette_layout_radio"
+			<RadioGroup
+				name="palette_layout_radio"
 				dark
 				onChange={this.paletteLayoutOptionChange}
 				choices={[
@@ -449,16 +455,16 @@ export default class SidePanelForms extends React.Component {
 }
 
 SidePanelForms.propTypes = {
-	enableNavPalette: React.PropTypes.func,
-	internalObjectModel: React.PropTypes.bool,
-	setDiagramJSON: React.PropTypes.func,
-	setPaletteJSON: React.PropTypes.func,
-	setLayoutDirection: React.PropTypes.func,
-	setOneTimeLayoutDirection: React.PropTypes.func,
-	useInternalObjectModel: React.PropTypes.func,
-	setRenderingEngine: React.PropTypes.func,
-	setConnectionType: React.PropTypes.func,
-	setLinkType: React.PropTypes.func,
-	log: React.PropTypes.func,
-	setPaletteLayout: React.PropTypes.func
+	enableNavPalette: PropTypes.func,
+	internalObjectModel: PropTypes.bool,
+	setDiagramJSON: PropTypes.func,
+	setPaletteJSON: PropTypes.func,
+	setLayoutDirection: PropTypes.func,
+	setOneTimeLayoutDirection: PropTypes.func,
+	useInternalObjectModel: PropTypes.func,
+	setRenderingEngine: PropTypes.func,
+	setConnectionType: PropTypes.func,
+	setLinkType: PropTypes.func,
+	log: PropTypes.func,
+	setPaletteLayout: PropTypes.func
 };

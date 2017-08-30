@@ -16,7 +16,7 @@ export default class DeleteObjectsAction extends Action {
 		this.objectsInfo = [];
 	}
 
-// Standard methods
+	// Standard methods
 	do() {
 		this.data.selectedObjectIds.forEach((id) => {
 			const objectInfo = {};

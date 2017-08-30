@@ -254,6 +254,7 @@ polyline.link-arrow-head {
 
 .context-menu-popover {
   min-width: 160px;
+  width: 160px;
   padding: 5px 0;
   margin: 2px 0 0;
   color: #f9f9fb;
@@ -274,19 +275,21 @@ polyline.link-arrow-head {
   padding: 0px !important;
 }
 
-.customDivider {
+.react-contextmenu-item.contextmenu-divider {
   height: 1px;
   display: block;
   margin: 0 2px;
   overflow: hidden;
   background-color: #8c8c8c;
+  padding: 1px;
 }
 
 /* Context Menu styles - used by react-contextmenu module
    Changes may affect diagram-canvas.jsx */
 
-.react-context-menu {
+.react-contextmenu {
   min-width: 160px;
+  width: 160px;
   padding: 5px 0;
   margin: 2px 0 0;
   color: #f9f9fb;
@@ -298,9 +301,14 @@ polyline.link-arrow-head {
   border-radius: .25rem;
   outline: none;
   font-family: IBMHLVlight;
+  display: none;
 }
 
-.react-context-menu-link {
+.react-contextmenu--visible {
+  display: inline-grid;
+}
+
+.react-contextmenu-item {
   display: inline-block;
   width: 100%;
   height: 29px;
@@ -313,8 +321,8 @@ polyline.link-arrow-head {
   border: 0;
 }
 
-.react-context-menu-link.active,
-.react-context-menu-link:hover {
+.react-contextmenu-item.active,
+.react-contextmenu-item:hover {
   /*color: #41d6c3;*/
   color: #262626;
   background-color: #41d6c3;
@@ -323,11 +331,15 @@ polyline.link-arrow-head {
   text-decoration: none;
 }
 
-.react-context-menu-item.submenu > a {
+.react-contextmenu-item.react-contextmenu-submenu {
+  padding: 0px 0px;
+}
+
+.react-contextmenu-item.react-contextmenu-submenu > div {
   padding-right: 27px;
 }
 
-.react-context-menu-item.submenu > a:after {
+.react-contextmenu-item.react-contextmenu-submenu  > div:after {
   content: "▶";
   display: inline-block;
   position: absolute;

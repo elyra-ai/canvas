@@ -9,6 +9,7 @@
 
 // import logger from "../../../utils/logger";
 import React from "react";
+import PropTypes from "prop-types";
 import { FormControl, OverlayTrigger, Tooltip } from "react-bootstrap";
 import EditorControl from "./editor-control.jsx";
 import ReactDOM from "react-dom";
@@ -315,12 +316,12 @@ export default class ColumnSelectControl extends EditorControl {
 }
 
 ColumnSelectControl.propTypes = {
-	multiColumn: React.PropTypes.bool.isRequired,
-	dataModel: React.PropTypes.object.isRequired,
-	control: React.PropTypes.object.isRequired,
-	controlStates: React.PropTypes.object,
-	validationDefinitions: React.PropTypes.array,
-	updateValidationErrorMessage: React.PropTypes.func,
-	retrieveValidationErrorMessage: React.PropTypes.func,
-	updateControlValue: React.PropTypes.func
+	multiColumn: PropTypes.bool.isRequired,
+	dataModel: PropTypes.object.isRequired,
+	control: PropTypes.object.isRequired,
+	controlStates: PropTypes.object,
+	validationDefinitions: PropTypes.array,
+	updateValidationErrorMessage: PropTypes.func,
+	retrieveValidationErrorMessage: PropTypes.func,
+	updateControlValue: PropTypes.func
 };

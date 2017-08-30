@@ -20,7 +20,7 @@ function getHarnessData(url, callback) {
 	};
 	anHttpRequest.open("GET", url, true);
 	anHttpRequest.send(null);
-  }
+}
 
 module.exports = {
 	getHarnessData: getHarnessData

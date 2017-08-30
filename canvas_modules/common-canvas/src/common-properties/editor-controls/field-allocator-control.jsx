@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
+import PropTypes from "prop-types";
 import Dropdown from "react-dropdown";
 import EditorControl from "./editor-control.jsx";
 import { EDITOR_CONTROL } from "../constants/constants.js";
@@ -145,8 +146,8 @@ export default class FieldAllocatorControl extends EditorControl {
 }
 
 FieldAllocatorControl.propTypes = {
-	dataModel: React.PropTypes.object.isRequired,
-	control: React.PropTypes.object.isRequired,
-	controlStates: React.PropTypes.object,
-	updateControlValue: React.PropTypes.func
+	dataModel: PropTypes.object.isRequired,
+	control: PropTypes.object.isRequired,
+	controlStates: PropTypes.object,
+	updateControlValue: PropTypes.func
 };

@@ -10,7 +10,7 @@
 import React from "react";
 import Expression from "../../../src/common-properties/editor-controls/expression-control.jsx";
 import { CHARACTER_LIMITS } from "../../../src/common-properties/constants/constants.js";
-import { shallow, mount } from "enzyme";
+import { mount } from "enzyme";
 import { expect } from "chai";
 import chai from "chai";
 import chaiEnzyme from "chai-enzyme";
@@ -42,10 +42,8 @@ function updateControlValue(id, controlValue) {
 describe("expression-control renders correctly", () => {
 
 	it("props should have been defined", () => {
-		const wrapper = shallow(
+		const wrapper = mount(
 			<Expression control={control}
-				key={controlId}
-				ref={controlId}
 				valueAccessor={valueAccessor}
 				validationDefinitions={validationDefinitions}
 				controlStates={controlStates}
@@ -53,19 +51,15 @@ describe("expression-control renders correctly", () => {
 			/>
 		);
 
-		expect(wrapper.control).to.be.defined;
-		expect(wrapper.controlStates).to.be.defined;
-		expect(wrapper.key).to.be.defined;
-		expect(wrapper.ref).to.be.defined;
-		expect(wrapper.valueAccessor).to.be.defined;
-		expect(wrapper.validationDefinitions).to.be.defined;
+		expect(wrapper.prop("control")).to.equal(control);
+		expect(wrapper.prop("controlStates")).to.equal(controlStates);
+		expect(wrapper.prop("valueAccessor")).to.equal(valueAccessor);
+		expect(wrapper.prop("validationDefinitions")).to.equal(validationDefinitions);
 	});
 
 	it("should render a `Expression`", () => {
 		const wrapper = mount(
 			<Expression control={control}
-				key={controlId}
-				ref={controlId}
 				valueAccessor={valueAccessor}
 				validationDefinitions={validationDefinitions}
 				controlStates={controlStates}
@@ -79,8 +73,6 @@ describe("expression-control renders correctly", () => {
 	it("should set correct state value in `Expression`", () => {
 		const wrapper = mount(
 			<Expression control={control}
-				key={controlId}
-				ref={controlId}
 				valueAccessor={valueAccessor}
 				validationDefinitions={validationDefinitions}
 				controlStates={controlStates}
@@ -95,8 +87,6 @@ describe("expression-control renders correctly", () => {
 	it("should set correct maxLength in `Expression`", () => {
 		const wrapper = mount(
 			<Expression control={control}
-				key={controlId}
-				ref={controlId}
 				valueAccessor={valueAccessor}
 				validationDefinitions={validationDefinitions}
 				controlStates={controlStates}
@@ -110,8 +100,6 @@ describe("expression-control renders correctly", () => {
 	it("should set correct control type in `Expression`", () => {
 		const wrapper = mount(
 			<Expression control={control}
-				key={controlId}
-				ref={controlId}
 				valueAccessor={valueAccessor}
 				validationDefinitions={validationDefinitions}
 				controlStates={controlStates}
@@ -125,8 +113,6 @@ describe("expression-control renders correctly", () => {
 	it("should set placeholder text in `Expression`", () => {
 		const wrapper = mount(
 			<Expression control={control}
-				key={controlId}
-				ref={controlId}
 				valueAccessor={valueAccessor}
 				validationDefinitions={validationDefinitions}
 				controlStates={controlStates}
@@ -140,8 +126,6 @@ describe("expression-control renders correctly", () => {
 	it("should set maxLength correctly without charLimit in `Expression`", () => {
 		const wrapper = mount(
 			<Expression control={control2}
-				key={controlId}
-				ref={controlId}
 				valueAccessor={valueAccessor}
 				validationDefinitions={validationDefinitions}
 				controlStates={controlStates}

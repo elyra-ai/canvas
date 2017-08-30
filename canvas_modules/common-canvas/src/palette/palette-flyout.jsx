@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
+import PropTypes from "prop-types";
 import PaletteFlyoutContent from "./palette-flyout-content.jsx";
 
 // eslint override
@@ -36,15 +37,15 @@ class PaletteFlyout extends React.Component {
 					deleteTempNode={this.props.deleteTempNode}
 				/>
 			</div>
-	);
+		);
 	}
 }
 
 PaletteFlyout.propTypes = {
-	paletteJSON: React.PropTypes.object.isRequired,
-	showPalette: React.PropTypes.bool.isRequired,
-	createTempNode: React.PropTypes.func.isRequired,
-	deleteTempNode: React.PropTypes.func.isRequired
+	paletteJSON: PropTypes.object.isRequired,
+	showPalette: PropTypes.bool.isRequired,
+	createTempNode: PropTypes.func.isRequired,
+	deleteTempNode: PropTypes.func.isRequired
 };
 
 export default PaletteFlyout;

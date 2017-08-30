@@ -38,8 +38,6 @@ const GroupType = {
 	ADDITIONAL: "additional",
 	COLUMN_ALLOCATION: "columnAllocation", // deprecated
 	COLUMN_SELECTION: "columnSelection",
-//	FIELD_ALLOCATION: "fieldAllocation", // should be removed
-//	FIELD_SELECTION: "fieldSelection", // should be removed
 	PANEL_SELECTOR: "panelSelector",
 	CHECKBOX_PANEL: "checkboxPanel"
 };
@@ -69,9 +67,6 @@ const ControlType = {
 	SOMEOFCOLUMNS: "someofcolumns", // deprecated, replaced by SELECTCOLUMNS
 	ALLOCATEDCOLUMN: "allocatedcolumn", // deprecated, replaced by SELECTCOLUMN
 	ALLOCATEDCOLUMNS: "allocatedcolumns", // deprecated, replaced by SELECTCOLUMNS
-//	ALLOCATEDFIELD: "allocatedfield", // for single fields change to selectcolumn
-//	ALLOCATEDFIELDS: "allocatedfields", // remove, replaced by SELECTCOLUMNS
-//	COLUMNSELECT: "columnselect", // for list change to selectcolumns
 	ALLOCATEDSTRUCTURES: "allocatedstructures", // deprecated, replaced by structuretable
 	STRUCTURETABLE: "structuretable",
 	STRUCTUREEDITOR: "structureeditor",

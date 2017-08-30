@@ -10,12 +10,8 @@
 import React from "react";
 import TextfieldControl from "../../../src/common-properties/editor-controls/textfield-control.jsx";
 import { CHARACTER_LIMITS } from "../../../src/common-properties/constants/constants.js";
-import { shallow, mount } from "enzyme";
+import { mount } from "enzyme";
 import { expect } from "chai";
-import chai from "chai";
-import chaiEnzyme from "chai-enzyme";
-chai.use(chaiEnzyme()); // Note the invocation at the end
-
 
 const control = {
 	name: "test-textfield",
@@ -28,6 +24,7 @@ const control = {
 const control2 = {
 };
 const controlId = "test-textfield";
+const value = "value";
 const validationDefinitions = [];
 const controlStates = {};
 
@@ -42,34 +39,32 @@ function updateControlValue(id, controlValue) {
 describe("textfield-control renders correctly", () => {
 
 	it("props should have been defined", () => {
-		const wrapper = shallow(
-			<TextfieldControl control={control}
-				key={controlId}
-				ref={controlId}
+		const wrapper = mount(
+			<TextfieldControl
+				control={control}
 				valueAccessor={valueAccessor}
 				validationDefinitions={validationDefinitions}
 				controlStates={controlStates}
 				updateControlValue={updateControlValue}
+				value={value}
 			/>
 		);
 
-		expect(wrapper.control).to.be.defined;
-		expect(wrapper.controlStates).to.be.defined;
-		expect(wrapper.key).to.be.defined;
-		expect(wrapper.ref).to.be.defined;
-		expect(wrapper.valueAccessor).to.be.defined;
-		expect(wrapper.validationDefinitions).to.be.defined;
+		expect(wrapper.prop("control")).to.equal(control);
+		expect(wrapper.prop("controlStates")).to.equal(controlStates);
+		expect(wrapper.prop("valueAccessor")).to.equal(valueAccessor);
+		expect(wrapper.prop("validationDefinitions")).to.equal(validationDefinitions);
+		expect(wrapper.prop("value")).to.equal(value);
 	});
 
 	it("should render a `TextfieldControl`", () => {
 		const wrapper = mount(
 			<TextfieldControl control={control}
-				key={controlId}
-				ref={controlId}
 				valueAccessor={valueAccessor}
 				validationDefinitions={validationDefinitions}
 				controlStates={controlStates}
 				updateControlValue={updateControlValue}
+				value={value}
 			/>
 		);
 		const input = wrapper.find(".text");
@@ -79,12 +74,11 @@ describe("textfield-control renders correctly", () => {
 	it("should set correct state value in `TextfieldControl`", () => {
 		const wrapper = mount(
 			<TextfieldControl control={control}
-				key={controlId}
-				ref={controlId}
 				valueAccessor={valueAccessor}
 				validationDefinitions={validationDefinitions}
 				controlStates={controlStates}
 				updateControlValue={updateControlValue}
+				value={value}
 			/>
 		);
 		const input = wrapper.find(".text");
@@ -95,12 +89,11 @@ describe("textfield-control renders correctly", () => {
 	it("should set correct maxLength in `TextfieldControl`", () => {
 		const wrapper = mount(
 			<TextfieldControl control={control}
-				key={controlId}
-				ref={controlId}
 				valueAccessor={valueAccessor}
 				validationDefinitions={validationDefinitions}
 				controlStates={controlStates}
 				updateControlValue={updateControlValue}
+				value={value}
 			/>
 		);
 		const input = wrapper.find(".text");
@@ -110,12 +103,11 @@ describe("textfield-control renders correctly", () => {
 	it("should set correct control type in `TextfieldControl`", () => {
 		const wrapper = mount(
 			<TextfieldControl control={control}
-				key={controlId}
-				ref={controlId}
 				valueAccessor={valueAccessor}
 				validationDefinitions={validationDefinitions}
 				controlStates={controlStates}
 				updateControlValue={updateControlValue}
+				value={value}
 			/>
 		);
 		const input = wrapper.find(".text");
@@ -125,12 +117,11 @@ describe("textfield-control renders correctly", () => {
 	it("should set placeholder text in `TextfieldControl`", () => {
 		const wrapper = mount(
 			<TextfieldControl control={control}
-				key={controlId}
-				ref={controlId}
 				valueAccessor={valueAccessor}
 				validationDefinitions={validationDefinitions}
 				controlStates={controlStates}
 				updateControlValue={updateControlValue}
+				value={value}
 			/>
 		);
 		const input = wrapper.find(".text");
@@ -140,12 +131,11 @@ describe("textfield-control renders correctly", () => {
 	it("should set maxLength correctly without charLimit in `TextfieldControl`", () => {
 		const wrapper = mount(
 			<TextfieldControl control={control2}
-				key={controlId}
-				ref={controlId}
 				valueAccessor={valueAccessor}
 				validationDefinitions={validationDefinitions}
 				controlStates={controlStates}
 				updateControlValue={updateControlValue}
+				value={value}
 			/>
 		);
 		const input = wrapper.find(".text");

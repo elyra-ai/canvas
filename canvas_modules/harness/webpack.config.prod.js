@@ -13,7 +13,6 @@
 
 var path = require("path");
 var webpack = require("webpack");
-var I18NPlugin = require("@dap/portal-common-i18n").I18nPlugin;
 var babelOptions = require("./scripts/babel/babelOptions").babelClientOptions;
 var constants = require("./lib/constants");
 var HtmlWebpackPlugin = require("html-webpack-plugin");
@@ -35,30 +34,24 @@ var output = {
 
 // Loaders ------------------------------------------------------------>
 
-var loaders = [
-	{
-		test: /\.json$/,
-		loader: "json-loader"
-	},
+var rules = [
 	{
 		test: /\.js(x?)$/,
-		loader: "babel",
+		loader: "babel-loader",
 		exclude: /node_modules/,
 		query: babelOptions
 	},
 	{
 		test: /\.s*css$/,
-		loaders: [
-			"style-loader",
-			"css-loader",
-			"postcss-loader"
+		use: [
+			{ loader: "style-loader" },
+			{ loader: "css-loader" },
+			{ loader: "postcss-loader", options: { plugins: [require("autoprefixer")] } }
 		]
 	},
 	{
 		test: /\.(?:png|jpg|svg|woff|ttf|woff2|eot)$/,
-		loaders: [
-			"file-loader?name=graphics/[hash].[ext]"
-		]
+		loader: "file-loader?name=graphics/[hash].[ext]"
 	}
 ];
 
@@ -68,8 +61,7 @@ var plugins = [
 	new webpack.DefinePlugin({
 		"process.env.NODE_ENV": "'production'"
 	}),
-	new webpack.optimize.OccurenceOrderPlugin(),
-	new I18NPlugin("en"),
+	new webpack.optimize.OccurrenceOrderPlugin(),
 	new webpack.optimize.UglifyJsPlugin({
 		compress: {
 			warnings: false
@@ -78,7 +70,7 @@ var plugins = [
 	new webpack.optimize.CommonsChunkPlugin({
 		name: "vendor"
 	}),
-	new webpack.NoErrorsPlugin(),
+	new webpack.NoEmitOnErrorsPlugin(),
 	// Generates an `index.html` file with the <script> injected.
 	new HtmlWebpackPlugin({
 		inject: true,
@@ -92,27 +84,21 @@ var plugins = [
 
 module.exports = {
 	entry: entry,
-	// Uncomment this to see details of Webpack build failures
-	// stats: {
-	// 	errorDetails: true
-	// },
-	// Uncomment below to help debug a production build
-	// debug: true,
-	// devtool: "source-map",
-	// devtoolModuleFilenameTemplate: "[resource]",
 	resolve: {
-		modulesDirectories: ["web_modules", "node_modules"],
-		root: path.resolve(__dirname),
+		modules: [
+			__dirname,
+			"web_modules",
+			"node_modules"],
 		alias: {
 			"react": "node_modules/react",
 			"react-dom": "node_modules/react-dom",
 			"common-canvas": "src/common-canvas.js"
 		},
-		extensions: ["", ".js", ".jsx"]
+		extensions: [".js", ".jsx"]
 	},
 	output: output,
 	module: {
-		loaders: loaders
+		rules: rules
 	},
 	plugins: plugins
 };

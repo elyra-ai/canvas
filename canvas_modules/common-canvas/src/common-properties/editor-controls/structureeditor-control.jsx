@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
+import PropTypes from "prop-types";
 import { TextField } from "ap-components-react/dist/ap-components-react";
 import EditorControl from "./editor-control.jsx";
 import SubPanelButton from "../editor-panels/sub-panel-button.jsx";
@@ -108,6 +109,6 @@ export default class StructureeditorControl extends EditorControl {
 }
 
 StructureeditorControl.propTypes = {
-	control: React.PropTypes.object,
-	updateControlValue: React.PropTypes.func
+	control: PropTypes.object,
+	updateControlValue: PropTypes.func
 };

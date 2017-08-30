@@ -11,6 +11,7 @@
 
 import logger from "../../../utils/logger";
 import React from "react";
+import PropTypes from "prop-types";
 import { Checkbox } from "ap-components-react/dist/ap-components-react";
 
 
@@ -65,9 +66,9 @@ export default class CheckboxSelectionPanel extends React.Component {
 		for (var i = 0; i < this.props.children.length; i++) {
 			const child = this.props.children[i];
 			controlItems.push(
-					<div key={ "child" + i }>
-						{child}
-					</div>
+				<div key={ "child" + i }>
+					{child}
+				</div>
 			);
 		}
 
@@ -83,6 +84,6 @@ export default class CheckboxSelectionPanel extends React.Component {
 }
 
 CheckboxSelectionPanel.propTypes = {
-	panel: React.PropTypes.object,
-	controlStateModifier: React.PropTypes.func
+	panel: PropTypes.object,
+	controlStateModifier: PropTypes.func
 };

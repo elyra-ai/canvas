@@ -11,6 +11,7 @@
 
 import logger from "../../../utils/logger";
 import React from "react";
+import PropTypes from "prop-types";
 import ValidationMessage from "./validation-message.jsx";
 import ValidationIcon from "./validation-icon.jsx";
 import UiConditions from "../ui-conditions/ui-conditions.js";
@@ -189,7 +190,7 @@ export default class EditorControl extends React.Component {
 				break;
 			default:
 			}
-			errorMessage = <div></div>;
+			errorMessage = <div />;
 		}
 
 		return {
@@ -389,20 +390,20 @@ export default class EditorControl extends React.Component {
 
 	render() {
 		return (
-			<div key="editor-control"></div>
+			<div key="editor-control" />
 		);
 	}
 }
 
 EditorControl.propTypes = {
-	control: React.PropTypes.object.isRequired,
-	controlStates: React.PropTypes.object,
-	valueAccessor: React.PropTypes.func.isRequired,
-	validationDefinitions: React.PropTypes.array,
-	validateConditions: React.PropTypes.func,
-	updateValidationErrorMessage: React.PropTypes.func,
-	retrieveValidationErrorMessage: React.PropTypes.func,
-	dataModel: React.PropTypes.object,
-	getControlValues: React.PropTypes.func,
-	getSubControlValues: React.PropTypes.func
+	control: PropTypes.object.isRequired,
+	controlStates: PropTypes.object,
+	valueAccessor: PropTypes.func.isRequired,
+	validationDefinitions: PropTypes.array,
+	validateConditions: PropTypes.func,
+	updateValidationErrorMessage: PropTypes.func,
+	retrieveValidationErrorMessage: PropTypes.func,
+	dataModel: PropTypes.object,
+	getControlValues: PropTypes.func,
+	getSubControlValues: PropTypes.func
 };
