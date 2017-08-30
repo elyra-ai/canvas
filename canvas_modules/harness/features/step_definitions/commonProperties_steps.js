@@ -309,4 +309,30 @@ module.exports = function() {
 		expect("testValue").toEqual((eventLogJSON[26].data.form.colName).toString());
 	});
 
+	this.Then(/^I select the Tab (\d+)$/, function(tabNumber) {
+		var tabIndex = tabNumber - 1;
+		var tab = browser.$$(".tabs__tab")[tabIndex];
+		tab.click();
+	});
+
+	this.Then("I open the Table Input Sub Panel", function() {
+		var tableInputbrowsebutton = browser.$$(".btn-xs")[2];
+		tableInputbrowsebutton.click();
+	});
+
+	this.Then(/^I update the value of Name textbox with "([^"]*)"$/, function(nodeName) {
+		var nameTextBox = browser.$("#editor-control-name");
+		nameTextBox.setValue("", nodeName);
+	});
+
+	this.Then(/^I verify that the validation error is "([^"]*)"$/, function(validationError) {
+		var validationDOMError = browser.$(".form__validation--error").getText();
+		expect(validationError).toEqual(validationDOMError);
+	});
+
+	this.Then("I close the subPanel dialog", function() {
+		var closeButton = browser.$$(".modal__buttons")[1].$(".button");
+		closeButton.click();
+	});
+
 };

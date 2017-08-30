@@ -5,6 +5,7 @@ Feature: Canvas sanity test
 	As a human
 	I want to test a common-properties
 	So I can test the various controls in common-properties
+	@watch
 
 	Scenario: Sanity test of common-properties
 		Given I am on the test harness
@@ -63,5 +64,14 @@ Feature: Canvas sanity test
 				Then I check for table cell level validation
 				Given I have uploaded JSON for common-properties "Spark_RenameColumns_paramDef.json"
 				Then I check for table validation
+
+			# Sub Panel Validation
+				Given I have uploaded JSON for common-properties "Conditions_paramDef.json"
+				Then I select the Tab 5
+				Then I open the Table Input Sub Panel
+				Then I update the value of Name textbox with "Hellopwd"
+				Then I verify that the validation error is "name should not contain pw"
+				Then I close the subPanel dialog
+				Then I have closed the common properties dialog by clicking on close button
 
 		Given I have toggled the app side common-properties panel
