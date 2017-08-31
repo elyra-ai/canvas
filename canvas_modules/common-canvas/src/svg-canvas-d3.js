@@ -1266,7 +1266,7 @@ export default class CanvasD3Layout {
 		if (trgNode !== null) {
 			if (this.drawingNewLinkAction === "node-node") {
 				var trgPortId = this.getNodeInputPortAtMousePos();
-				trgPortId = trgPortId || trgNode.inputPorts[0].name;
+				trgPortId = trgPortId || (trgNode.inputPorts ? trgNode.inputPorts[0].name : null);
 				this.consoleLog("editActionHandler - linkNodes");
 				this.editActionHandler({
 					editType: "linkNodes",
