@@ -7,6 +7,4 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import { CommonCanvas, ObjectModel, CommonProperties, CommandStack } from "@wdp/common-canvas";
-
-export { CommonCanvas, ObjectModel, CommonProperties, CommandStack };
+import "@wdp/common-canvas/dist/common-canvas.min.css";

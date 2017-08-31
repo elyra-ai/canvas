@@ -13,6 +13,7 @@ import App from "./App";
 import CommonPropertiesComponents from "./components/common-properties-components.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "ap-components-react/dist/ap-components-react.min.css";
+import "common-canvas-styles";
 import "../styles/properties.css";
 import "../styles/App.css";
 import "../styles/index.css";

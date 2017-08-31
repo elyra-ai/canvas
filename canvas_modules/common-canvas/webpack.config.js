@@ -12,15 +12,16 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
 module.exports = {
-	context: path.join(__dirname, "/src/"),
+	context: __dirname,
 	devtool: "source-map",
 	entry: {
-		lib: "./index.js"
+		"common-canvas": "./src/index.js",
+		"common-canvas.css": "./assets/index.css"
 	},
 	output: {
 		library: "Common-Canvas",
 		libraryTarget: "commonjs2",
-		filename: "common-canvas.js",
+		filename: "[name].js",
 		path: path.join(__dirname, "/dist"),
 		sourceMapFilename: "[file].map"
 	},

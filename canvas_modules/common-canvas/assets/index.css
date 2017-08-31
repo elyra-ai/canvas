@@ -7,6 +7,8 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import { CommonCanvas, ObjectModel, CommonProperties, CommandStack } from "@wdp/common-canvas";
-
-export { CommonCanvas, ObjectModel, CommonProperties, CommandStack };
+@import "./styles/field-allocator.css";
+@import "./styles/common-canvas.css";
+@import "./styles/common-canvas-d3.css";
+@import "./styles/common-properties.css";
+@import "./styles/palette.css";

@@ -88,8 +88,10 @@ var plugins = [
 
 // Exports ------------------------------------------------------------>
 var commonCanvas = "src/common-canvas.js";
+var commonCanvasStyles = "src/common-canvas-styles.js";
 if (isDev) {
 	commonCanvas = "src/common-canvas-dev.js";
+	commonCanvasStyles = "src/common-canvas-styles-dev.js";
 }
 
 module.exports = {
@@ -103,7 +105,8 @@ module.exports = {
 		alias: {
 			"react": "node_modules/react",
 			"react-dom": "node_modules/react-dom",
-			"common-canvas": commonCanvas
+			"common-canvas": commonCanvas,
+			"common-canvas-styles": commonCanvasStyles
 		},
 		extensions: [".js", ".jsx"]
 	},
