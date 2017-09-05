@@ -81,7 +81,7 @@ export default class OneofselectControl extends EditorControl {
 
 		const errorMessage = conditionState.message;
 		const messageType = conditionState.messageType;
-		const icon = conditionState.icon;
+		const icon = this.props.tableControl ? <div /> : conditionState.icon;
 		const stateDisabled = conditionState.disabled;
 		const stateStyle = conditionState.style;
 
