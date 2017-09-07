@@ -11,6 +11,7 @@
 
 // import logger from "../../../utils/logger";
 import React from "react";
+import ReactTooltip from "react-tooltip";
 import PropTypes from "prop-types";
 import ColumnStructureTableEditor from "./column-structure-table-editor.jsx";
 import TopMoveIconEnable from "../../../assets/images/top_enabled.svg";
@@ -365,9 +366,24 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 				if (this.props.control.required) {
 					requiredIndicator = <span className="required-control-indicator">*</span>;
 				}
+				const tooltipId = "tooltip-" + this.props.control.name;
+				let tooltip;
+				if (this.props.control.description) {
+					tooltip = this.props.control.description.text;
+				}
 				label = (<div className={"label-container"}>
-					<label className="control-label">{this.props.control.label.text}</label>
-					{requiredIndicator}
+					<div className="properties-tooltips-container" data-tip={tooltip} data-for={tooltipId}>
+						<label className="control-label">{this.props.control.label.text}</label>
+						{requiredIndicator}
+					</div>
+					<ReactTooltip
+						id={tooltipId}
+						place="right"
+						type="light"
+						effect="solid"
+						border
+						className="properties-tooltips"
+					/>
 				</div>);
 			}
 		}

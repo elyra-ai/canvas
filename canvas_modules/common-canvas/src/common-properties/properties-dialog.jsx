@@ -43,7 +43,6 @@ export default class PropertiesDialog extends Component {
 				onHide={this.props.cancelHandler}
 				bsSize={this.props.bsSize}
 				children={this.props.children}
-				title={this.props.title}
 			>
 				<div className={modalClassName}>
 					<div className="modal-title"
@@ -60,7 +59,6 @@ export default class PropertiesDialog extends Component {
 						{buttons}
 					</div>
 				</div>
-
 			</Modal>
 		);
 	}

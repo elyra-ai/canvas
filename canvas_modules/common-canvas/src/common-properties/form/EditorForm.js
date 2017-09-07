@@ -227,9 +227,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	const required = parameter.required;
 	const controlLabel = new Label(l10nProvider.l10nLabel(parameter, parameter.name), parameter.numberGenerator);
 	let controlDesc;
-	if (parameter.description &&
-		((parameter.description.default && parameter.description.default.length > 0) ||
-		(parameter.description.resource_key))) {
+	if (parameter.description) {
 		controlDesc = new Description(l10nProvider.l10nDesc(parameter, parameter.name),
 			parameter.description ? parameter.description.placement : null);
 	}
@@ -408,9 +406,7 @@ function _makeSubControl(parameter, l10nProvider) {
 	const orientation = parameter.orientation;
 	const controlLabel = new Label(l10nProvider.l10nLabel(parameter, parameter.name));
 	let controlDesc;
-	if (parameter.description &&
-		((parameter.description.default && parameter.description.default.length > 0) ||
-		(parameter.description.resource_key))) {
+	if (parameter.description) {
 		controlDesc = new Description(l10nProvider.l10nDesc(parameter, parameter.name),
 			parameter.description ? parameter.description.placement : null);
 	}

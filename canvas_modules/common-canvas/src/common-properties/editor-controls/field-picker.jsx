@@ -12,14 +12,11 @@
 // import logger from "../../../utils/logger";
 import React from "react";
 import PropTypes from "prop-types";
+import ReactTooltip from "react-tooltip";
 import EditorControl from "./editor-control.jsx";
 import FlexibleTable from "./flexible-table.jsx";
-import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Tr, Td } from "reactable";
-import {
-	Button,
-	Checkbox
-} from "ap-components-react/dist/ap-components-react";
+import { Button, Checkbox } from "ap-components-react/dist/ap-components-react";
 
 import { DATA_TYPES } from "../constants/constants.js";
 
@@ -387,25 +384,38 @@ export default class FieldPicker extends EditorControl {
 
 		const title = this.props.title ? this.props.title : "Node";
 		const label = "Select Fields for " + title;
+		const tooltipId = "tooltip-fp-" + this.props.control.name;
 		const header = (
 			<div className="field-picker-top-row">
-				<Button
-					id="field-picker-back-button"
-					back icon="back"
-					onClick={this.handleBack}
-				/>
+				<div className="properties-tooltips-container" data-tip="Save and return" data-for={tooltipId}>
+					<Button
+						id="field-picker-back-button"
+						back icon="back"
+						onClick={this.handleBack}
+					/>
+				</div>
 				<label className="control-label">{label}</label>
-				<div id="reset-fields-button"
-					className="button"
-					onClick={this.handleReset}
-					onMouseEnter={this.mouseEnterResetButton}
-					onMouseLeave={this.mouseLeaveResetButton}
-				>
-					<div id="reset-fields-button-label">Reset</div>
-					<div id="reset-fields-button-icon">
-						{resetIconImage}
+				<div className="properties-tooltips-fp-reset" data-tip="Reset to previous values" data-for={tooltipId}>
+					<div id="reset-fields-button"
+						className="button"
+						onClick={this.handleReset}
+						onMouseEnter={this.mouseEnterResetButton}
+						onMouseLeave={this.mouseLeaveResetButton}
+					>
+						<div id="reset-fields-button-label">Reset</div>
+						<div id="reset-fields-button-icon">
+							{resetIconImage}
+						</div>
 					</div>
 				</div>
+				<ReactTooltip
+					id={tooltipId}
+					place="top"
+					type="light"
+					effect="solid"
+					border
+					className="properties-tooltips"
+				/>
 			</div>
 		);
 
@@ -418,20 +428,30 @@ export default class FieldPicker extends EditorControl {
 					break;
 				}
 			}
-			const tooltip = <Tooltip className="filter-icons-tooltips" id={"filter-tooltip-" + filter.type}>{filter.type}</Tooltip>;
+			const filterTooltipId = "tooltip-filters-" + ind;
 			const icon = enabled ? filter.icon.enabled : filter.icon.disabled;
 			const className = enabled
 				? "filter-list-li filter-list-li-icon filter-list-data-" + filter.type + "-enabled-icon"
 				: "filter-list-li filter-list-li-icon filter-list-data-" + filter.type + "-disabled-icon";
 			const row = (
-				<OverlayTrigger placement="top" overlay={tooltip} key={"filters" + ind}>
-					<li className={className}
-						data-type={filter.type}
-						onClick={that.filterType.bind(that)}
-					>
-						{icon}
-					</li>
-				</OverlayTrigger>
+				<div key={"filters" + ind}>
+					<div className="properties-tooltips-filter" data-tip={filter.type} data-for={filterTooltipId}>
+						<li className={className}
+							data-type={filter.type}
+							onClick={that.filterType.bind(that)}
+						>
+							{icon}
+						</li>
+					</div>
+					<ReactTooltip
+						id={filterTooltipId}
+						place="top"
+						type="light"
+						effect="solid"
+						border
+						className="properties-tooltips"
+					/>
+				</div>
 			);
 			return (row);
 		});

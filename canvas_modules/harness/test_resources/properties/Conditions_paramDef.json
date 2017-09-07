@@ -17,6 +17,7 @@
     "someofselectNumbers": [],
     "checkboxSingle": false,
     "checkboxEnable": false,
+    "checkboxDisabled": false,
     "radiosetColor": "blue",
     "apples": 100,
     "lemons": 100,
@@ -152,19 +153,15 @@
     },
     {
       "id": "checkboxSingle",
-      "type": "boolean",
-      "enum": [
-        "Single Checkbox"
-      ],
-      "default": ""
+      "type": "boolean"
     },
     {
       "id": "checkboxEnable",
-      "type": "boolean",
-      "enum": [
-        "Enable"
-      ],
-      "default": ""
+      "type": "boolean"
+    },
+    {
+      "id": "checkboxDisabled",
+      "type": "boolean"
     },
     {
       "id": "radiosetColor",
@@ -202,7 +199,7 @@
       "default": "",
       "role": "new_column"
     },
-		{
+    {
       "id": "checkboxEnableDesc",
       "type": "boolean",
       "enum": [
@@ -469,16 +466,25 @@
           "default": "Enable"
         },
         "description": {
-          "default": "Enable check"
+          "default": "Check to enable 'Disabled' and 'Color' controls"
         }
       },
       {
-        "parameter_ref": "checkboxType",
+        "parameter_ref": "checkboxDisabled",
+        "label": {
+          "default": "Disabled"
+        },
+        "description": {
+          "default": "Uncheck 'Enable' to disable"
+        }
+      },
+      {
+        "parameter_ref": "checkboxTypes",
         "label": {
           "default": "Data Types"
         },
         "description": {
-          "default": "Choose your Data Types"
+          "default": "Choose a data type with 'Single Checkbox' unchecked to show error.  Leave all data types unchecked to show warning."
         }
       },
       {
@@ -496,7 +502,7 @@
           "default": "Animals"
         },
         "description": {
-          "default": "Pick an Animal"
+          "default": "Pick 'lion' to hide 'Pets'. Pick 'tiger' to show warning."
         }
       },
       {
@@ -514,7 +520,7 @@
           "default": "Password"
         },
         "description": {
-          "default": "Enter your password"
+          "default": "Enter your password.  Set blank to show error."
         }
       },
       {
@@ -523,10 +529,10 @@
           "default": "Name"
         },
         "description": {
-          "default": "Enter your name"
+          "default": "Enter your name to enable 'Expression'"
         }
       },
-			{
+      {
         "parameter_ref": "checkboxEnableDesc",
         "label": {
           "default": "Add Description"
@@ -560,25 +566,36 @@
           "resource_key": "columnSelectSharedWithInput.label"
         },
         "description": {
-          "default": "Shared input list with below control"
+          "default": "Shared input list with below control",
+          "placement": "on_panel"
         }
       },
       {
         "parameter_ref": "structuretableSortOrder",
         "label": {
           "default": "Sort by"
+        },
+        "description": {
+          "default": "Use arrows to reorder the sorting priority",
+          "placement": "on_panel"
         }
       },
       {
         "parameter_ref": "structuretableRenameFields",
         "label": {
           "default": "Rename Field"
+        },
+        "description": {
+          "default": "Complex table control with inline edit and subpanel edit"
         }
       },
       {
         "parameter_ref": "structurelisteditorTableInput",
         "label": {
           "default": "Table Input"
+        },
+        "description": {
+          "default": "Complex table control list editor table input"
         }
       }
     ],
@@ -599,6 +616,9 @@
             "width": 16,
             "label": {
               "resource_key": "structuretableSortOrder.sort_order.label"
+            },
+            "description": {
+              "resource_key": "structuretableSortOrder.sort_order.desc"
             },
             "control": "toggletext",
             "value_icons": [
@@ -626,6 +646,9 @@
             "label": {
               "resource_key": "structuretableRenameFields.new_name.label"
             },
+            "description": {
+              "resource_key": "structuretableRenameFields.new_name.desc"
+            },
             "width": 26,
             "edit_style": "inline"
           },
@@ -642,6 +665,9 @@
             "label": {
               "default": "Type"
             },
+            "description": {
+              "default": "Select data type"
+            },
             "width": 26,
             "edit_style": "inline"
           }
@@ -656,6 +682,9 @@
               "default": "Structure Name",
               "resource_key": "structurelisteditorTableInput.name.label"
             },
+            "description": {
+              "resource_key": "structurelisteditorTableInput.name.desc"
+            },
             "width": 15,
             "edit_style": "subpanel"
           },
@@ -663,6 +692,9 @@
             "parameter_ref": "description",
             "label": {
               "resource_key": "structurelisteditorTableInput.description.label"
+            },
+            "description": {
+              "resource_key": "structurelisteditorTableInput.description.desc"
             },
             "width": 15,
             "edit_style": "subpanel"
@@ -723,6 +755,7 @@
           "someofselectNumbers",
           "checkboxSingle",
           "checkboxEnable",
+          "checkboxDisabled",
           "radiosetColor"
         ],
         "group_info": [
@@ -761,7 +794,7 @@
         "parameter_refs": [
           "passwordField",
           "textfieldName",
-					"checkboxEnableDesc",
+          "checkboxEnableDesc",
           "textareaDescription",
           "expressionBox"
         ]
@@ -1040,7 +1073,7 @@
         "fail_message": {
           "type": "error",
           "message": {
-            "default": "Checkbox single should be checked if a Data Type is selected",
+            "default": "'Single Checkbox' should be checked if a Data Type is selected",
             "resource_key": "checkbox_single_not_empty"
           },
           "focus_parameter_ref": "checkboxSingle"
@@ -1077,6 +1110,20 @@
       "enabled": {
         "parameter_refs": [
           "radiosetColor"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "checkboxEnable",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "checkboxDisabled"
         ],
         "evaluate": {
           "condition": {
@@ -1199,7 +1246,7 @@
         }
       }
     },
-		{
+    {
       "visible": {
         "parameter_refs": [
           "textareaDescription"
@@ -1507,37 +1554,10 @@
     "numberfield_min_info_gain_not_equals_min_instance": "info gain should not equal min instance",
     "numberfield_seed_not_valid": "Field cannot be null. This is an example of a very long error message that someone might enter. The message text will wrap around to the next line as shown here.",
     "checkboxTypes.label": "Data Types",
-    "checkboxTypes.desc": "",
-    "someofselectNumbers.label": "",
-    "someofselectNumbers.desc": "",
-    "oneofselectAnimals.label": "",
-    "oneofselectAnimals.desc": "",
-    "oneofselectPets.label": "",
-    "oneofselectPets.desc": "",
-    "checkboxSingle.label": "",
-    "checkboxSingle.desc": "",
-    "checkboxEnable.label": "",
-    "checkboxEnable.desc": "",
-    "radiosetColor.label": "",
-    "radiosetColor.desc": "",
-    "apples.label": "",
-    "apples.desc": "",
-    "lemons.label": "",
-    "lemons.desc": "",
-    "berries.label": "",
-    "berries.desc": "",
     "checkbox_types_not_empty": "No data types are selected",
     "checkbox_single_not_empty": "Checkbox single should be checked if data type is selected",
     "one_of_select_animals_not_empty": "Warning: selected tiger",
     "some_of_select_animals_not_three": "Warning: selected three",
-    "passwordField.label": "",
-    "passwordField.desc": "",
-    "textfieldName.label": "",
-    "textfieldName.desc": "",
-    "textareaDescription.label": "",
-    "textareaDescription.desc": "",
-    "expressionBox.label": "",
-    "expressionBox.desc": "",
     "password_not_empty": "Password cannot be empty, enter \"password\"",
     "textarea_description_not_valid": "Description cannot contain /, double or single \"quotes\"",
     "textfield_name_not_valid_one": "Name cannot contain /",
@@ -1549,14 +1569,18 @@
     "structuretableSortOrder.label": "Sort",
     "structuretableSortOrder.field.label": "Field",
     "structuretableSortOrder.sort_order.label": "Order",
+    "structuretableSortOrder.sort_order.desc": "Update sort order",
     "structuretableSortOrder.sort_order.Ascending.label": "Ascending",
     "structuretableSortOrder.sort_order.Descending.label": "Descending",
     "structuretableRenameFields.rename.label": "Rename Columns",
     "structuretableRenameFields.field.label": "Input name",
     "structuretableRenameFields.new_name.label": "Output name",
+    "structuretableRenameFields.new_name.desc": "New field name",
     "structuretable_rename_fields_not_contains_pw": "The 'Output Name' field cannot contain 'pw'",
     "structurelisteditorTableInput.name.label": "Name",
+    "structurelisteditorTableInput.name.desc": "Enter a name",
     "structurelisteditorTableInput.description.label": "Description",
+    "structurelisteditorTableInput.description.desc": "Enter a description",
     "invalid_subpanel_name": "name should not contain pw"
   }
 }

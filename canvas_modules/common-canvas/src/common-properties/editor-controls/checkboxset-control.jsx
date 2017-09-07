@@ -25,18 +25,8 @@ export default class CheckboxsetControl extends EditorControl {
 	}
 
 	handleChange(evt) {
-		// logger.info("CheckboxsetControl.handleChange()");
-		// logger.info(evt.target);
-		// logger.info(evt.target.id);
-		// logger.info(evt.target.checked);
-
 		var values = this.state.controlValue;
 		var index = values.indexOf(evt.target.id);
-
-		// logger.info("Checkboxset: orig values");
-		// logger.info(values);
-		// logger.info(index);
-
 		if (evt.target.checked && index < 0) {
 			// Add to values
 			values = values.concat([evt.target.id]);
@@ -45,9 +35,6 @@ export default class CheckboxsetControl extends EditorControl {
 			// Remove from values
 			values.splice(index, 1);
 		}
-		// logger.info("Checkboxset: new values");
-		// logger.info(values);
-
 		this.setState({ controlValue: values });
 		this.notifyValueChanged(this.props.control.name, values);
 		this.props.updateControlValue(this.props.control.name, values);
@@ -100,10 +87,7 @@ export default class CheckboxsetControl extends EditorControl {
 		return (
 			<div style={stateStyle}>
 				<div id={controlIconContainerClass}>
-					<div id={this.getControlID()}
-						className="checkbox"
-						style={stateStyle}
-					>
+					<div id={this.getControlID()} className="checkbox" style={stateStyle} >
 						{buttons}
 					</div>
 					{icon}

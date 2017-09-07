@@ -154,6 +154,7 @@ export default class EditorControl extends React.Component {
 			controlType={conditionProps.controlType}
 		/>);
 		const stateDisabled = {};
+		let showTooltip = true;
 		let stateStyle = {};
 
 		let messageType = "info";
@@ -184,9 +185,11 @@ export default class EditorControl extends React.Component {
 					color: VALIDATION_MESSAGE.DISABLED,
 					borderColor: VALIDATION_MESSAGE.DISABLED
 				};
+				showTooltip = false;
 				break;
 			case "hidden":
 				stateStyle.visibility = "hidden";
+				showTooltip = false;
 				break;
 			default:
 			}
@@ -198,7 +201,8 @@ export default class EditorControl extends React.Component {
 			messageType: messageType,
 			icon: errorIcon,
 			disabled: stateDisabled,
-			style: stateStyle
+			style: stateStyle,
+			showTooltip: showTooltip
 		};
 	}
 

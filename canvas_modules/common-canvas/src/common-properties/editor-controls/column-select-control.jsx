@@ -10,7 +10,8 @@
 // import logger from "../../../utils/logger";
 import React from "react";
 import PropTypes from "prop-types";
-import { FormControl, OverlayTrigger, Tooltip } from "react-bootstrap";
+import ReactTooltip from "react-tooltip";
+import { FormControl } from "react-bootstrap";
 import EditorControl from "./editor-control.jsx";
 import ReactDOM from "react-dom";
 import { Button } from "ap-components-react/dist/ap-components-react";
@@ -232,12 +233,12 @@ export default class ColumnSelectControl extends EditorControl {
 				{removeIconImage}
 			</div>);
 		}
-		const addTooltip = <Tooltip id="addFieldTip">Select columns to add</Tooltip>;
-		const removeTooltip = <Tooltip id="removeFieldTip">Remove selected columns</Tooltip>;
+
+		const tooltipId = "tooltip-add-remove-columns-" + this.props.control.name;
 		if (this.props.multiColumn) {
 			return (
 				<div>
-					<OverlayTrigger placement="top" overlay={addTooltip}>
+					<div className="properties-tooltips-container add-remove-columns" data-tip="Select columns to add" data-for={tooltipId}>
 						<Button
 							id="add-fields-button"
 							icon="plus"
@@ -246,10 +247,18 @@ export default class ColumnSelectControl extends EditorControl {
 						>
 							Add Columns
 						</Button>
-					</OverlayTrigger>
-					<OverlayTrigger placement="top" overlay={removeTooltip}>
+					</div>
+					<div className="properties-tooltips-container add-remove-columns" data-tip="Remove selected columns" data-for={tooltipId}>
 						{removeIcon}
-					</OverlayTrigger>
+					</div>
+					<ReactTooltip
+						id={tooltipId}
+						place="top"
+						type="light"
+						effect="solid"
+						border
+						className="properties-tooltips"
+					/>
 					<div className="editor_control_area" style={stateStyle}>
 						<div id={controlIconContainerClass}>
 							<FormControl {...stateDisabled}
@@ -277,7 +286,7 @@ export default class ColumnSelectControl extends EditorControl {
 
 		return (
 			<div>
-				<OverlayTrigger placement="top" overlay={addTooltip}>
+				<div className="properties-tooltips-container add-remove-columns" data-tip="Select columns to add" data-for={tooltipId}>
 					<Button
 						id="add-fields-button"
 						secondary icon="plus"
@@ -286,10 +295,18 @@ export default class ColumnSelectControl extends EditorControl {
 					>
 						Add Columns
 					</Button>
-				</OverlayTrigger>
-				<OverlayTrigger placement="top" overlay={removeTooltip}>
+				</div>
+				<div className="properties-tooltips-container add-remove-columns" data-tip="Remove selected columns" data-for={tooltipId}>
 					{removeIcon}
-				</OverlayTrigger>
+				</div>
+				<ReactTooltip
+					id={tooltipId}
+					place="top"
+					type="light"
+					effect="solid"
+					border
+					className="properties-tooltips"
+				/>
 				<div className="editor_control_area" style={stateStyle}>
 					<div id={controlIconContainerClass}>
 						<FormControl {...stateDisabled}

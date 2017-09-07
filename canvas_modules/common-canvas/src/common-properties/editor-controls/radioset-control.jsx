@@ -79,11 +79,8 @@ export default class RadiosetControl extends EditorControl {
 			);
 		}
 		return (
-			<div id={this.getControlID()}
-				className="radio"
-				style={stateStyle}
-			>
-				<div id={controlIconContainerClass}>
+			<div id={this.getControlID()} className="radio" style={stateStyle} >
+				<div id={controlIconContainerClass} >
 					<div id="radioset-control-container">{buttons}</div>
 					{icon}
 				</div>

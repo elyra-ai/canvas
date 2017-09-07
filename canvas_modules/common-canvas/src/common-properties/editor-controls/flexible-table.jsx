@@ -11,6 +11,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import ReactTooltip from "react-tooltip";
 import { Table, Thead, Th } from "reactable";
 import {
 	TextField
@@ -110,16 +111,39 @@ export default class FlexibleTable extends React.Component {
 			const columnWidth = j === this.props.columns.length - 1 ? "1%" : columnWidths[j];
 			const columnStyle = { "width": columnWidth };
 			const className = j === 0 ? "left-padding-15" : "";
+			const tooltipId = "tooltip-column-" + columnDef.key;
+			let tooltip;
+			let description;
+			if (columnDef.editStyle && columnDef.editStyle === "inline" && columnDef.description) {
+				tooltip = (<ReactTooltip
+					id={tooltipId}
+					place="right"
+					type="light"
+					effect="solid"
+					border
+					className="properties-tooltips"
+				/>);
+				description = columnDef.description;
+			}
 			if (typeof this.state.columnSortDir[columnDef.key] !== "undefined") {
 				const arrowIcon = ((this.state.columnSortDir[columnDef.key] === sortDir.ASC) ? SortAscendingIcon : SortDescendingIcon);
-				headers.push(<Th className={className} key={"flexible-table-headers" + j} column={columnDef.key} style={columnStyle}>
-					<div className="flexible-table-column" onClick={this.sortHeaderClick.bind(this, columnDef.key)}>
+				headers.push(<Th className={className} key={"flexible-table-headers" + j} column={columnDef.key} style={columnStyle} >
+					<div
+						className="flexible-table-column properties-tooltips-container"
+						onClick={this.sortHeaderClick.bind(this, columnDef.key)}
+						data-tip={description}
+						data-for={tooltipId}
+					>
 						{columnDef.label}
 						<img className="sort_icon-column"src={arrowIcon} height={ARROW_HEIGHT} width={ARROW_WIDTH} />
 					</div>
+					{tooltip}
 				</Th>);
 			} else {
-				headers.push(<Th className={className} key={"flexible-table-headers" + j} column={columnDef.key} style={columnStyle}>{columnDef.label}</Th>);
+				headers.push(<Th className={className} key={"flexible-table-headers" + j} column={columnDef.key} style={columnStyle}>
+					<div className="properties-tooltips-container" data-tip={description} data-for={tooltipId}>{columnDef.label}</div>
+					{tooltip}
+				</Th>);
 			}
 			if (typeof this.props.filterable !== "undefined" && this.props.filterable[0] === columnDef.key) {
 				searchLabel = columnDef.label;

@@ -9,8 +9,8 @@
 
 // import logger from "../../../utils/logger";
 import React from "react";
+import ReactTooltip from "react-tooltip";
 import { Tr, Td } from "reactable";
-import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Button } from "ap-components-react/dist/ap-components-react";
 import EditorControl from "./editor-control.jsx";
 import ToggletextControl from "./toggletext-control.jsx";
@@ -343,10 +343,26 @@ export default class ColumnStructureTableEditor extends EditorControl {
 				if (this.props.control.required) {
 					requiredIndicator = <span className="required-control-indicator">*</span>;
 				}
+				const tooltipId = "tooltip-" + this.props.control.name;
+				let tooltip;
+				if (this.props.control.description) {
+					tooltip = this.props.control.description.text;
+				}
 				label = (<div className={"label-container"}>
-					<label className="control-label">{this.props.control.label.text}</label>
-					{requiredIndicator}
-				</div>);
+					<div className="properties-tooltips-container" data-tip={tooltip} data-for={tooltipId}>
+						<label className="control-label">{this.props.control.label.text}</label>
+						{requiredIndicator}
+					</div>
+					<ReactTooltip
+						id={tooltipId}
+						place="right"
+						type="light"
+						effect="solid"
+						border
+						className="properties-tooltips"
+					/>
+				</div>
+				);
 			}
 		}
 		return label;
@@ -373,10 +389,9 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			{removeIconImage}
 		</div>);
 
-		const addTooltip = <Tooltip id="addFieldTip">Select columns to add</Tooltip>;
-		const removeTooltip = <Tooltip id="removeFieldTip">Remove selected columns</Tooltip>;
+		const tooltipId = "tooltip-add-remove-columns-" + this.props.control.name;
 		return (<div>
-			<OverlayTrigger placement="top" overlay={addTooltip}>
+			<div className="properties-tooltips-container add-remove-columns" data-tip="Select columns to add" data-for={tooltipId}>
 				<Button
 					id="add-fields-button"
 					icon="plus"
@@ -385,10 +400,18 @@ export default class ColumnStructureTableEditor extends EditorControl {
 				>
 					Add Columns
 				</Button>
-			</OverlayTrigger>
-			<OverlayTrigger placement="top" overlay={removeTooltip}>
+			</div>
+			<div className="properties-tooltips-container add-remove-columns" data-tip="Remove selected columns" data-for={tooltipId}>
 				{removeIcon}
-			</OverlayTrigger>
+			</div>
+			<ReactTooltip
+				id={tooltipId}
+				place="top"
+				type="light"
+				effect="solid"
+				border
+				className="properties-tooltips"
+			/>
 		</div>);
 	}
 
@@ -404,7 +427,8 @@ export default class ColumnStructureTableEditor extends EditorControl {
 				if (columnDef.sortable) {
 					sortFields.push(columnDef.name);
 				}
-				headers.push({ "key": columnDef.name, "label": columnDef.label.text, "width": columnDef.width });
+				headers.push({ "key": columnDef.name, "label": columnDef.label.text, "width": columnDef.width,
+					"editStyle": columnDef.editStyle, "description": (columnDef.description ? columnDef.description.text : null) });
 				if (columnDef.filterable) {
 					filterFields.push(columnDef.name);
 				}

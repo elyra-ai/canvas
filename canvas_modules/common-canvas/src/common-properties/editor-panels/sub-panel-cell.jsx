@@ -11,6 +11,7 @@ import logger from "../../../utils/logger";
 import React from "react";
 import PropTypes from "prop-types";
 import { Button } from "react-bootstrap";
+import ReactTooltip from "react-tooltip";
 import { Cell } from "fixed-data-table";
 
 import SubPanelInvoker from "./sub-panel-invoker.jsx";
@@ -48,13 +49,25 @@ export default class SubPanelCell extends React.Component {
 		return (
 			<SubPanelInvoker ref="invoker">
 				<Cell>
-					<Button
-						style={{ "display": "inline" }}
-						bsSize="xsmall"
-						onClick={this.showSubPanel}
-					>
-						{this.props.label}
-					</Button>
+					<div className="properties-tooltips-container" data-tip="Edit" data-for="tooltip-subpanel-cell">
+						<Button
+							style={{ "display": "inline" }}
+							bsSize="xsmall"
+							onClick={this.showSubPanel}
+						>
+							{this.props.label}
+						</Button>
+					</div>
+					<ReactTooltip
+						id="tooltip-subpanel-cell"
+						place="right"
+						type="light"
+						effect="solid"
+						border
+						className="properties-tooltips"
+						delayShow={500}
+						delayHide={500}
+					/>
 				</Cell>
 			</SubPanelInvoker>
 		);

@@ -9,9 +9,9 @@
 
 /* Property editing */
 .properties-editing {
-    position: absolute;
-    border: thin solid black;
-    overflow: scroll;
+  position: absolute;
+  border: thin solid black;
+  overflow: scroll;
 }
 
 .properties-title {
@@ -24,6 +24,34 @@
 
 .properties-buttons {
 
+}
+
+.properties-tooltips.show {
+  opacity: 1 !important;
+}
+
+.properties-tooltips {
+  border-radius: 0px !important;
+  background-color: #f9f9fb !important;
+  color: #1d3649 !important;
+  font-family: IBMHLVRoman !important;
+  font-weight: 400 !important;
+  z-index: 1100 !important;
+  max-width: 250px;
+  -webkit-transition: opacity 600ms, visibility 600ms !important;
+  transition: opacity 600ms, visibility 600ms !important;
+}
+
+.properties-tooltips-container {
+  display: inline-block;
+}
+
+.properties-tooltips-container.add-remove-columns, .properties-tooltips-fp-reset {
+  float: right;
+}
+
+.properties-tooltips-filter {
+  float: left;
 }
 
 .control-panel {
@@ -45,6 +73,11 @@
   margin-bottom: 15px;
   cursor: pointer;
   padding:20px
+}
+
+.default-label-container .control-label {
+	padding-top: 7px;
+	margin-bottom: 0px;
 }
 
 /* Override for block controls */
@@ -309,14 +342,6 @@ input.number,
 	background-color: transparent;
 }
 
-#removeFieldTip, #addFieldTip {
-  position: fixed;
-}
-
-.filter-icons-tooltips {
-  position: fixed !important;
-}
-
 .field-picker-data-type-icon {
   width: 15px;
   height: 15px;
@@ -559,6 +584,7 @@ th div div label, td div div label {
 
 tr.reactable-column-header {
   height: 30px;
+	cursor: default;
 }
 
 #table-header {

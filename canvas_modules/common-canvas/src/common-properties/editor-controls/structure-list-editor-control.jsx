@@ -9,6 +9,7 @@
 
 // import logger from "../../../utils/logger";
 import React from "react";
+import ReactTooltip from "react-tooltip";
 import PropTypes from "prop-types";
 import { Button } from "react-bootstrap";
 import StructureTableEditor from "./structure-table-editor.jsx";
@@ -88,15 +89,23 @@ export default class StructurelisteditorControl extends StructureTableEditor {
 		}
 
 		const table = this.createTable();
-		const add = <Button bsSize="small" onClick={this.addRow} {...stateDisabled}>+</Button>;
-		const remove = <Button bsSize="small" onClick={this.removeSelectedRows} {...stateDisabled}>-</Button>;
-
+		const tooltipId = "tooltip-list-editor-btn";
+		const add = <Button data-tip="Add new row" data-for={tooltipId} bsSize="small" onClick={this.addRow} {...stateDisabled}>+</Button>;
+		const remove = <Button data-tip="Delete selected rows" data-for={tooltipId} bsSize="small" onClick={this.removeSelectedRows} {...stateDisabled}>-</Button>;
 		return (<div id={this.getControlID()} style={stateStyle}>
 			<div id={controlIconContainerClass}>
 				<div id="structure-list-editor-table-buttons" style={stateStyle}>
 					{table}
 					<div id="structure-list-editor-buttons-container">
-						<span>{add} {remove}</span>
+						<span >{add} {remove}</span>
+						<ReactTooltip
+							id={tooltipId}
+							place="top"
+							type="light"
+							effect="solid"
+							border
+							className="properties-tooltips"
+						/>
 					</div>
 				</div>
 				{icon}

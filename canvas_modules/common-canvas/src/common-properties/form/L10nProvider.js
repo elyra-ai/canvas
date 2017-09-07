@@ -82,9 +82,13 @@ export class ResourceDef {
 	}
 
 	static make(resourceObj) {
-		return new ResourceDef(
-			_.propertyOf(resourceObj)("default"),
-			_.propertyOf(resourceObj)("resource_key"),
-			_.propertyOf(resourceObj)("placement"));
+		let resource;
+		if (resourceObj) {
+			resource = new ResourceDef(
+				_.propertyOf(resourceObj)("default"),
+				_.propertyOf(resourceObj)("resource_key"),
+				_.propertyOf(resourceObj)("placement"));
+		}
+		return resource;
 	}
 }

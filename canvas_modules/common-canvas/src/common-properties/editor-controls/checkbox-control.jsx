@@ -12,6 +12,7 @@ import PropTypes from "prop-types";
 import { Checkbox } from "ap-components-react/dist/ap-components-react";
 import EditorControl from "./editor-control.jsx";
 import { EDITOR_CONTROL } from "../constants/constants.js";
+import ReactTooltip from "react-tooltip";
 
 export default class CheckboxControl extends EditorControl {
 	constructor(props) {
@@ -67,11 +68,27 @@ export default class CheckboxControl extends EditorControl {
 			onBlur={this.validateInput}
 			checked={checked}
 		/>);
-
+		const tooltipId = "tooltip-" + this.props.control.name;
+		let tooltip;
+		if (this.props.control.description && conditionState.showTooltip) {
+			tooltip = this.props.control.description.text;
+		}
 		return (
 			<div className="checkbox editor_control_area" style={stateStyle}>
 				<div id={controlIconContainerClass}>
-					{cb}
+					<div>
+						<div className="properties-tooltips-container" data-tip={tooltip} data-for={tooltipId}>
+							{cb}
+						</div>
+						<ReactTooltip
+							id={tooltipId}
+							place="right"
+							type="light"
+							effect="solid"
+							border
+							className="properties-tooltips"
+						/>
+					</div>
 					{icon}
 				</div>
 				{errorMessage}

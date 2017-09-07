@@ -16,6 +16,7 @@ import PropTypes from "prop-types";
 import { ButtonToolbar } from "react-bootstrap";
 import { Tabs } from "ap-components-react/dist/ap-components-react";
 import { EDITOR_CONTROL } from "../constants/constants.js";
+import ReactTooltip from "react-tooltip";
 
 import ControlItem from "./control-item.jsx";
 import TextfieldControl from "./textfield-control.jsx";
@@ -620,10 +621,13 @@ export default class EditorForm extends React.Component {
 
 	genControlItem(key, control, idPrefix, controlValueAccessor, datasetMetadata) {
 		const stateStyle = {};
+		let tooltipShow = true;
 		if (this.state.controlStates[control.name] === "hidden") {
 			stateStyle.visibility = "hidden";
+			tooltipShow = false;
 		} else if (this.state.controlStates[control.name] === "disabled") {
 			stateStyle.color = "#D8D8D8";
+			tooltipShow = false;
 		}
 
 		const that = this;
@@ -643,8 +647,14 @@ export default class EditorForm extends React.Component {
 		let label = <span />;
 		if (control.label && control.separateLabel) {
 			let description;
-			if (control.description && control.description.placement === "on_panel") {
-				description = <div className="control-description">{control.description.text}</div>;
+			let tooltip;
+			if (control.description) {
+				if (control.description.placement === "on_panel") {
+					description = <div className="control-description">{control.description.text}</div>;
+				// only show tooltip when control enabled and visible
+				} else if (tooltipShow) {
+					tooltip = control.description.text; // default to tooltip
+				}
 			}
 			let requiredIndicator;
 			if (control.required) {
@@ -672,11 +682,22 @@ export default class EditorForm extends React.Component {
 				if (control.controlType === "selectcolumns" || control.controlType === "structuretable") {
 					className = "label-container";
 				}
+				const tooltipId = "tooltip-label-" + control.name;
 				label = (<div className={className}>
-					<label className="control-label" style={stateStyle}>{control.label.text}</label>
-					{requiredIndicator}
-					{numberGenerator}
-					{description}
+					<div className="properties-tooltips-container" data-tip={tooltip} data-for={tooltipId}>
+						<label className="control-label" style={stateStyle} >{control.label.text}</label>
+						{requiredIndicator}
+						{numberGenerator}
+						{description}
+					</div>
+					<ReactTooltip
+						id={tooltipId}
+						place="right"
+						type="light"
+						effect="solid"
+						border
+						className="properties-tooltips"
+					/>
 				</div>);
 			}
 		}
