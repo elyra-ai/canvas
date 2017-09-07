@@ -43,7 +43,9 @@ export default class OneofselectControl extends EditorControl {
 		if (this.props.tableControl) {
 			evt.stopPropagation();
 		}
+		this.validateInput();
 	}
+
 	getControlValue() {
 		return this.state.controlValue;
 	}

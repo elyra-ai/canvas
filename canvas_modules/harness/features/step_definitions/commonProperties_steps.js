@@ -330,6 +330,11 @@ module.exports = function() {
 		expect(validationError).toEqual(validationDOMError);
 	});
 
+	this.Then(/^I verify that the validation warning is "([^"]*)"$/, function(validationWarning) {
+		var validationDOMError = browser.$(".form__validation--warning").getText();
+		expect(validationWarning).toEqual(validationDOMError);
+	});
+
 	this.Then("I close the subPanel dialog", function() {
 		var closeButton = browser.$$(".modal__buttons")[1].$(".button");
 		closeButton.click();

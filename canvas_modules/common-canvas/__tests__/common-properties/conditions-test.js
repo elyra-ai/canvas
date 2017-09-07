@@ -32,6 +32,79 @@ formData.buttons = CONDITIONS_TEST_FORM_DATA.buttons;
 formData.data = CONDITIONS_TEST_FORM_DATA.data;
 formData.conditions = CONDITIONS_TEST_FORM_DATA.conditions;
 
+const enabledDefinitions = [];
+enabledDefinitions.checkboxEnable = [
+	{
+		params: "checkboxEnable",
+		definition: {
+			"enabled": {
+				"parameter_refs": ["radiosetColor"],
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "checkboxEnable",
+						"op": "equals",
+						"value": true
+					}
+				}
+			}
+		}
+	}
+];
+enabledDefinitions.textfieldName = [
+	{
+		params: "textfieldName",
+		definition: {
+			"enabled": {
+				"parameter_refs": [
+					"expressionBox"
+				],
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "textfieldName",
+						"op": "isNotEmpty"
+					}
+				}
+			}
+		}
+	}
+];
+
+const visibleDefinition = [];
+visibleDefinition.oneofselectAnimals = [
+	{
+		"params": "oneofselectAnimals",
+		"definition": {
+			"visible": {
+				"parameter_refs": ["oneofselectPets"],
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "oneofselectAnimals",
+						"op": "notContains",
+						"value": "lion"
+					}
+				}
+			}
+		}
+	}
+];
+visibleDefinition.checkboxEnableDesc = [
+	{
+		params: "checkboxEnableDesc",
+		definition: {
+			"visible": {
+				"parameter_refs": ["textareaDescription"],
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "checkboxEnableDesc",
+						"op": "equals",
+						"value": true
+					}
+				}
+			}
+		}
+	}
+];
+
 const validationDefinitions = [];
 validationDefinitions.numberfieldCheckpointInterval = [
 	{
@@ -68,6 +141,30 @@ validationDefinitions.numberfieldCheckpointInterval = [
 		}
 	}
 ];
+validationDefinitions.numberfieldImpurity = [
+	{
+		params: "numberfieldImpurity",
+		definition: {
+			"validation": {
+				"fail_message": {
+					"type": "error",
+					"focus_parameter_ref": "numberfieldImpurity",
+					"message": {
+						"resource_key": "numberfieldImpurity_invalid",
+						"default": "invalid: gini is selected"
+					}
+				},
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "numberfieldImpurity",
+						"op": "notEquals",
+						"value": "gini"
+					}
+				}
+			}
+		}
+	}
+];
 validationDefinitions.numberfieldMaxBins = [
 	{
 		params: [
@@ -81,7 +178,7 @@ validationDefinitions.numberfieldMaxBins = [
 					"focus_parameter_ref": "numberfieldMaxBins",
 					"message": {
 						"resource_key": "numberfield_max_bins_not_valid",
-						"default": "Maximum number of bins must be >= 2 or Maximum depth of the tree > 0"
+						"default": "Maximum number of bins must be >= 2 or Maximum depth cannot be empty"
 					}
 				},
 				"evaluate": {
@@ -96,8 +193,7 @@ validationDefinitions.numberfieldMaxBins = [
 						{
 							"condition": {
 								"parameter_ref": "numberfieldMaxDepth",
-								"op": "greaterThan",
-								"value": 0
+								"op": "isNotEmpty"
 							}
 						}
 					]
@@ -119,7 +215,7 @@ validationDefinitions.numberfieldMaxDepth = [
 					"focus_parameter_ref": "numberfieldMaxBins",
 					"message": {
 						"resource_key": "numberfield_max_bins_not_valid",
-						"default": "Maximum number of bins must be >= 2 or Maximum depth of the tree > 0"
+						"default": "Maximum number of bins must be >= 2 or Maximum depth cannot be empty"
 					}
 				},
 				"evaluate": {
@@ -134,8 +230,7 @@ validationDefinitions.numberfieldMaxDepth = [
 						{
 							"condition": {
 								"parameter_ref": "numberfieldMaxDepth",
-								"op": "greaterThan",
-								"value": 0
+								"op": "isNotEmpty"
 							}
 						}
 					]
@@ -146,22 +241,25 @@ validationDefinitions.numberfieldMaxDepth = [
 ];
 validationDefinitions.numberfieldMinInstancesPerNode = [
 	{
-		params: "numberfieldMinInstancesPerNode",
+		params: [
+			"numberfieldMinInfoGain",
+			"numberfieldMinInstancesPerNode"
+		],
 		definition: {
 			"validation": {
 				"fail_message": {
-					"type": "warning",
-					"focus_parameter_ref": "numberfieldMinInstancesPerNode",
+					"type": "error",
+					"focus_parameter_ref": "numberfieldMinInfoGain",
 					"message": {
-						"resource_key": "numberfield_min_instances_per_node_not_valid",
-						"default": "The minimum instances per node value must be >= 1"
+						"resource_key": "numberfield_min_info_gain_not_equals_min_instance",
+						"default": "info gain should not equal min instance"
 					}
 				},
 				"evaluate": {
 					"condition": {
-						"parameter_ref": "numberfieldMinInstancesPerNode",
-						"op": "greaterThan",
-						"value": 0
+						"parameter_ref": "numberfieldMinInfoGain",
+						"op": "notEquals",
+						"parameter_2_ref": "numberfieldMinInstancesPerNode"
 					}
 				}
 			}
@@ -170,22 +268,25 @@ validationDefinitions.numberfieldMinInstancesPerNode = [
 ];
 validationDefinitions.numberfieldMinInfoGain = [
 	{
-		params: "numberfieldMinInfoGain",
+		params: [
+			"numberfieldMinInfoGain",
+			"numberfieldMinInstancesPerNode"
+		],
 		definition: {
 			"validation": {
 				"fail_message": {
 					"type": "error",
 					"focus_parameter_ref": "numberfieldMinInfoGain",
 					"message": {
-						"resource_key": "numberfield_min_info_gain_not_valid",
-						"default": "Cannot be less than 0"
+						"resource_key": "numberfield_min_info_gain_not_equals_min_instance",
+						"default": "info gain should not equal min instance"
 					}
 				},
 				"evaluate": {
 					"condition": {
 						"parameter_ref": "numberfieldMinInfoGain",
-						"op": "greaterThan",
-						"value": 0
+						"op": "notEquals",
+						"parameter_2_ref": "numberfieldMinInstancesPerNode"
 					}
 				}
 			}
@@ -202,14 +303,14 @@ validationDefinitions.numberfieldSeed = [
 					"focus_parameter_ref": "numberfieldSeed",
 					"message": {
 						"resource_key": "numberfield_seed_not_valid",
-						"default": "This is an example of a very long error message that someone might enter. The message text will wrap around to the next line as shown here."
+						"default": "Field cannot be null. This is an example of a long error message that might be entered. The message text will wrap around to the next line."
 					}
 				},
 				"evaluate": {
 					"condition": {
 						"parameter_ref": "numberfieldSeed",
-						"op": "contains",
-						"value": "123"
+						"op": "notEquals",
+						"value": null
 					}
 				}
 			}
@@ -286,6 +387,29 @@ validationDefinitions.someofcolumnsList = [
 		}
 	}
 ];
+validationDefinitions.columnSelectSharedWithInput = [
+	{
+		params: "columnSelectSharedWithInput",
+		definition: {
+			"validation": {
+				"fail_message": {
+					"type": "warning",
+					"focus_parameter_ref": "columnSelectSharedWithInput",
+					"message": {
+						"resource_key": "column_select_shared_with_input_not_empty",
+						"default": "Warning: empty tables"
+					}
+				},
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "columnSelectSharedWithInput",
+						"op": "isNotEmpty"
+					}
+				}
+			}
+		}
+	}
+];
 validationDefinitions.checkboxTypes = [
 	{
 		params: "checkboxTypes",
@@ -310,8 +434,8 @@ validationDefinitions.checkboxTypes = [
 	},
 	{
 		params: [
-			"checkboxTypes",
-			"checkboxSingle"
+			"checkboxSingle",
+			"checkboxTypes"
 		],
 		definition: {
 			"validation": {
@@ -326,20 +450,10 @@ validationDefinitions.checkboxTypes = [
 				"evaluate": {
 					"or": [
 						{
-							"and": [
-								{
-									"condition": {
-										"parameter_ref": "checkboxTypes",
-										"op": "isNotEmpty"
-									}
-								},
-								{
-									"condition": {
-										"parameter_ref": "checkboxSingle",
-										"op": "checked"
-									}
-								}
-							]
+							"condition": {
+								"parameter_ref": "checkboxSingle",
+								"op": "isNotEmpty"
+							}
 						},
 						{
 							"and": [
@@ -352,7 +466,7 @@ validationDefinitions.checkboxTypes = [
 								{
 									"condition": {
 										"parameter_ref": "checkboxSingle",
-										"op": "notChecked"
+										"op": "isEmpty"
 									}
 								}
 							]
@@ -371,6 +485,26 @@ validationDefinitions.oneofselectAnimals = [
 				"fail_message": {
 					"type": "warning",
 					"message": {
+						"default": "Warning: one of select cannot be empty"
+					},
+					"focus_parameter_ref": "oneofselectAnimals"
+				},
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "oneofselectAnimals",
+						"op": "isNotEmpty"
+					}
+				}
+			}
+		}
+	},
+	{
+		"params": "oneofselectAnimals",
+		"definition": {
+			"validation": {
+				"fail_message": {
+					"type": "warning",
+					"message": {
 						"default": "Warning: selected tiger",
 						"resource_key": "one_of_select_animals_not_empty"
 					},
@@ -379,7 +513,7 @@ validationDefinitions.oneofselectAnimals = [
 				"evaluate": {
 					"condition": {
 						"parameter_ref": "oneofselectAnimals",
-						"op": "notContains",
+						"op": "notEquals",
 						"value": "tiger"
 					}
 				}
@@ -389,14 +523,32 @@ validationDefinitions.oneofselectAnimals = [
 ];
 validationDefinitions.someofselectNumbers = [
 	{
-		params: "someofselectNumbers",
-		definition: {
+		"params": "someofselectNumbers",
+		"definition": {
+			"validation": {
+				"fail_message": {
+					"type": "error",
+					"message": {
+						"default": "Error: none selected"
+					},
+					"focus_parameter_ref": "someofselectNumbers"
+				},
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "someofselectNumbers",
+						"op": "isNotEmpty"
+					}
+				}
+			}
+		}
+	}, {
+		"params": "someofselectNumbers",
+		"definition": {
 			"validation": {
 				"fail_message": {
 					"type": "warning",
 					"message": {
-						"default": "Warning: selected three",
-						"resource_key": "some_of_select_animals_not_three"
+						"default": "Warning: selected three"
 					},
 					"focus_parameter_ref": "someofselectNumbers"
 				},
@@ -404,7 +556,7 @@ validationDefinitions.someofselectNumbers = [
 					"condition": {
 						"parameter_ref": "someofselectNumbers",
 						"op": "notContains",
-						"value": "three"
+						"value": "Three"
 					}
 				}
 			}
@@ -413,11 +565,10 @@ validationDefinitions.someofselectNumbers = [
 ];
 validationDefinitions.checkboxSingle = [
 	{
-		params: [
-			"checkboxTypes",
-			"checkboxSingle"
+		"params": [
+			"checkboxSingle", "checkboxTypes"
 		],
-		definition: {
+		"definition": {
 			"validation": {
 				"fail_message": {
 					"type": "error",
@@ -430,20 +581,10 @@ validationDefinitions.checkboxSingle = [
 				"evaluate": {
 					"or": [
 						{
-							"and": [
-								{
-									"condition": {
-										"parameter_ref": "checkboxTypes",
-										"op": "isNotEmpty"
-									}
-								},
-								{
-									"condition": {
-										"parameter_ref": "checkboxSingle",
-										"op": "checked"
-									}
-								}
-							]
+							"condition": {
+								"parameter_ref": "checkboxSingle",
+								"op": "isNotEmpty"
+							}
 						},
 						{
 							"and": [
@@ -456,7 +597,7 @@ validationDefinitions.checkboxSingle = [
 								{
 									"condition": {
 										"parameter_ref": "checkboxSingle",
-										"op": "notChecked"
+										"op": "isEmpty"
 									}
 								}
 							]
@@ -508,6 +649,30 @@ validationDefinitions.passwordField = [
 					"condition": {
 						"parameter_ref": "passwordField",
 						"op": "isNotEmpty"
+					}
+				}
+			}
+		}
+	},
+	{
+		"params": [
+			"textfieldName", "passwordField"
+		],
+		"definition": {
+			"validation": {
+				"fail_message": {
+					"type": "warning",
+					"message": {
+						"default": "name cannot contain password",
+						"resource_key": "textfield_name_not_contain_password"
+					},
+					"focus_parameter_ref": "passwordField"
+				},
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "textfieldName",
+						"op": "notContains",
+						"parameter_2_ref": "passwordField"
 					}
 				}
 			}
@@ -566,6 +731,30 @@ validationDefinitions.textfieldName = [
 							}
 						}
 					]
+				}
+			}
+		}
+	},
+	{
+		"params": [
+			"textfieldName", "passwordField"
+		],
+		"definition": {
+			"validation": {
+				"fail_message": {
+					"type": "warning",
+					"message": {
+						"default": "name cannot contain password",
+						"resource_key": "textfield_name_not_contain_password"
+					},
+					"focus_parameter_ref": "passwordField"
+				},
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "textfieldName",
+						"op": "notContains",
+						"parameter_2_ref": "passwordField"
+					}
 				}
 			}
 		}
@@ -655,6 +844,28 @@ validationDefinitions.expressionBox = [
 		}
 	}
 ];
+validationDefinitions.structuretableSortOrder = [
+	{
+		params: "structuretableSortOrder",
+		definition: {
+			"validation": {
+				"fail_message": {
+					"type": "error",
+					"focus_parameter_ref": "structuretableSortOrder",
+					"message": {
+						"default": "table cannot be empty"
+					}
+				},
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "structuretableSortOrder",
+						"op": "isNotEmpty"
+					}
+				}
+			}
+		}
+	}
+];
 validationDefinitions.structuretableRenameFields = [
 	{
 		params: "structuretableRenameFields",
@@ -664,35 +875,38 @@ validationDefinitions.structuretableRenameFields = [
 					"type": "error",
 					"focus_parameter_ref": "structuretableRenameFields",
 					"message": {
-						"resource_key": "structuretable_rename_fields_not_empty",
-						"default": "The 'Rename Columns' table cannot be empty"
+						"resource_key": "structuretable_rename_fields_not_contains_pw",
+						"default": "The 'Output Name' field cannot contain 'pw'"
 					}
 				},
 				"evaluate": {
 					"condition": {
 						"parameter_ref": "structuretableRenameFields",
-						"op": "isNotEmpty"
+						"op": "notContains",
+						"value": "pw"
 					}
 				}
 			}
 		}
-	},
+	}
+];
+validationDefinitions.structurelisteditorTableInput = [
 	{
-		params: "structuretableRenameFields",
+		params: "structurelisteditorTableInput",
 		definition: {
 			"validation": {
 				"fail_message": {
-					"type": "error",
-					"focus_parameter_ref": "structuretableRenameFields",
+					"type": "warning",
+					"focus_parameter_ref": "structurelisteditorTableInput",
 					"message": {
-						"resource_key": "output_name_not_empty",
-						"default": "The 'Output Name' field cannot be empty"
+						"default": "table cannot be empty"
 					}
 				},
 				"evaluate": {
 					"condition": {
-						"parameter_ref": "structuretableRenameFields",
-						"op": "cellNotEmpty"
+						"parameter_ref": "structurelisteditorTableInput",
+						"op": "notEquals",
+						"value": []
 					}
 				}
 			}
@@ -701,16 +915,57 @@ validationDefinitions.structuretableRenameFields = [
 ];
 validationDefinitions.subpanelTextfieldName = [
 	{
-		params: "name",
-		definition: {
+		"params": "name",
+		"definition": {
 			"validation": {
 				"fail_message": {
 					"type": "error",
+					"focus_parameter_ref": "name",
 					"message": {
-						"default": "name should not contain pw",
-						"resource_key": "invalid_subpanel_name"
-					},
-					"focus_parameter_ref": "name"
+						"resource_key": "name should not be empty",
+						"default": "name should not be empty"
+					}
+				},
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "name",
+						"op": "cellNotEmpty"
+					}
+				}
+			}
+		}
+	},
+	{
+		"params": "name",
+		"definition": {
+			"validation": {
+				"fail_message": {
+					"type": "warning",
+					"focus_parameter_ref": "name",
+					"message": {
+						"default": "name cannot be an existing column name"
+					}
+				},
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "name",
+						"op": "colNotExists"
+					}
+				}
+			}
+		}
+	},
+	{
+		"params": "name",
+		"definition": {
+			"validation": {
+				"fail_message": {
+					"type": "error",
+					"focus_parameter_ref": "name",
+					"message": {
+						"resource_key": "invalid_subpanel_name",
+						"default": "name should not contain pw"
+					}
 				},
 				"evaluate": {
 					"condition": {
@@ -725,10 +980,9 @@ validationDefinitions.subpanelTextfieldName = [
 ];
 
 const defaultControlStates = {
-	"textfieldName": "hidden",
+	"radiosetColor": "disabled",
 	"textareaDescription": "hidden",
-	"expressionBox": "hidden",
-	"radiosetColor": "disabled"
+	"expressionBox": "disabled"
 };
 
 function createEditorForm(state) {
@@ -774,8 +1028,8 @@ describe("editor-form renders correctly with validations", () => {
 		expect(wrapper.find("#form-Conditions-test")).to.have.length(1);
 		expect(wrapper.find(".section--light")).to.have.length(1);
 		expect(wrapper.find(".tabs__tabpanel")).to.have.length(5);
-		expect(wrapper.find(".editor_control_area")).to.have.length(17);
-		expect(wrapper.find(".validation-error-message")).to.have.length(22);
+		expect(wrapper.find(".editor_control_area")).to.have.length(18);
+		expect(wrapper.find(".validation-error-message")).to.have.length(26);
 	});
 
 	it("should set correct state values in `EditorForm`", () => {
@@ -783,11 +1037,21 @@ describe("editor-form renders correctly with validations", () => {
 
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().formData)),
 			JSON.parse(JSON.stringify(formData)))).to.be.true;
-		expect(wrapper.state().visibleDefinition).to.have.length(2);
-		expect(wrapper.state().enabledDefinitions).to.have.length(2);
+
+		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().enabledDefinitions.checkboxEnable)),
+			JSON.parse(JSON.stringify(enabledDefinitions.checkboxEnable)))).to.be.true;
+		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().enabledDefinitions.textfieldName)),
+			JSON.parse(JSON.stringify(enabledDefinitions.textfieldName)))).to.be.true;
+
+		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().visibleDefinition.oneofselectAnimals)),
+			JSON.parse(JSON.stringify(visibleDefinition.oneofselectAnimals)))).to.be.true;
+		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().visibleDefinition.checkboxEnableDesc)),
+			JSON.parse(JSON.stringify(visibleDefinition.checkboxEnableDesc)))).to.be.true;
 
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().validationDefinitions.numberfieldCheckpointInterval)),
 			JSON.parse(JSON.stringify(validationDefinitions.numberfieldCheckpointInterval)))).to.be.true;
+		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().validationDefinitions.numberfieldImpurity)),
+			JSON.parse(JSON.stringify(validationDefinitions.numberfieldImpurity)))).to.be.true;
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().validationDefinitions.numberfieldMaxBins)),
 			JSON.parse(JSON.stringify(validationDefinitions.numberfieldMaxBins)))).to.be.true;
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().validationDefinitions.numberfieldMaxDepth)),
@@ -804,6 +1068,8 @@ describe("editor-form renders correctly with validations", () => {
 			JSON.parse(JSON.stringify(validationDefinitions.oneofcolumnsList)))).to.be.true;
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().validationDefinitions.someofcolumnsList)),
 			JSON.parse(JSON.stringify(validationDefinitions.someofcolumnsList)))).to.be.true;
+		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().validationDefinitions.columnSelectSharedWithInput)),
+			JSON.parse(JSON.stringify(validationDefinitions.columnSelectSharedWithInput)))).to.be.true;
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().validationDefinitions.checkboxTypes)),
 			JSON.parse(JSON.stringify(validationDefinitions.checkboxTypes)))).to.be.true;
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().validationDefinitions.oneofselectAnimals)),
@@ -822,8 +1088,12 @@ describe("editor-form renders correctly with validations", () => {
 			JSON.parse(JSON.stringify(validationDefinitions.textareaDescription)))).to.be.true;
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().validationDefinitions.expressionBox)),
 			JSON.parse(JSON.stringify(validationDefinitions.expressionBox)))).to.be.true;
+		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().validationDefinitions.structuretableSortOrder)),
+			JSON.parse(JSON.stringify(validationDefinitions.structuretableSortOrder)))).to.be.true;
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().validationDefinitions.structuretableRenameFields)),
 			JSON.parse(JSON.stringify(validationDefinitions.structuretableRenameFields)))).to.be.true;
+		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().validationDefinitions.structurelisteditorTableInput)),
+			JSON.parse(JSON.stringify(validationDefinitions.structurelisteditorTableInput)))).to.be.true;
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().validationDefinitions.name)),
 			JSON.parse(JSON.stringify(validationDefinitions.subpanelTextfieldName)))).to.be.true;
 		expect(_.isEqual(JSON.stringify(wrapper.state().controlErrorMessages), "{}")).to.be.true;
@@ -850,6 +1120,34 @@ describe("condition messages renders correctly with numberfield control", () => 
 
 		expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
 		expect(wrapper.find(".form__validation--error")).to.have.length(1);
+	});
+
+	it("numberfield control should have error message from null input and generator should trigger validation", () => {
+		const wrapper = createEditorForm("mount");
+
+		const input = wrapper.find("input[id='editor-control-numberfieldSeed']");
+		expect(input).to.have.length(1);
+		input.simulate("change", { target: { value: "" } });
+		input.simulate("blur");
+
+		const numberfieldSeedErrorMessages = {
+			"numberfieldSeed": {
+				"type": "error",
+				"text": "Field cannot be null. This is an example of a long error message that might be entered. The message text will wrap around to the next line."
+			}
+		};
+		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
+			JSON.parse(JSON.stringify(numberfieldSeedErrorMessages)))).to.be.true;
+
+		expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
+		expect(wrapper.find(".form__validation--error")).to.have.length(1);
+
+		const generator = wrapper.find(".number-generator");
+		expect(generator).to.have.length(1);
+		generator.simulate("click");
+
+		expect(wrapper.find(".validation-error-message-icon")).to.have.length(0);
+		expect(wrapper.find(".form__validation--error")).to.have.length(0);
 	});
 });
 
@@ -992,7 +1290,7 @@ describe("condition messages renders correctly with checkbox control", () => {
 	});
 });
 
-describe("StructureTableEditor handles cell level conditions", () => {
+describe("condition messages renders correctly with structure table cells", () => {
 	it("structuretableRenameFields control should have error message with empty renamed field", () => {
 		const wrapper = createEditorForm("mount");
 
@@ -1014,33 +1312,19 @@ describe("StructureTableEditor handles cell level conditions", () => {
 			["BP", "BP-1"]
 		];
 		expect(_.isEqual(rowValues, expected)).to.be.true;
-
-	//	const structuretableRenameFieldsErrorMessages = {
-		//	"structuretableRenameFields": {
-		//		"type": "error",
-		//		"text": "The 'Output Name' field cannot be empty"
-		//	}
-		// };
-
-
-		// This fails for some inexplicable reason - works fine in the UI
-		// expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
-		//	JSON.parse(JSON.stringify(structuretableRenameFieldsErrorMessages)))).to.be.true;
-		// expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
-		// expect(wrapper.find(".form__validation--error")).to.have.length(1);
 	});
 });
 
 describe("condition messages renders correctly with structure table control", () => {
-	it("structuretableRenameFields control should have error message from no selection", () => {
+	it("structuretableSortOrder control should have error message from no selection", () => {
 		const wrapper = createEditorForm("mount");
 
-		const input = wrapper.find("#structure-table").at(1);
+		const input = wrapper.find("#structure-table").at(0);
 		expect(input).to.have.length(1);
-		expect(wrapper.state().valuesTable.structuretableRenameFields).to.have.length(2);
+		expect(wrapper.state().valuesTable.structuretableSortOrder).to.have.length(1);
 
 		let dataRows = input.find(".reactable-data").find("tr");
-		expect(dataRows).to.have.length(2);
+		expect(dataRows).to.have.length(1);
 		dataRows.first().simulate("click");
 
 		const enabledRemoveColumnButton = wrapper.find("#remove-fields-button-enabled");
@@ -1048,28 +1332,78 @@ describe("condition messages renders correctly with structure table control", ()
 
 		enabledRemoveColumnButton.simulate("click");
 		dataRows = input.find(".reactable-data").find("tr");
-		expect(dataRows).to.have.length(1);
-		expect(wrapper.state().valuesTable.structuretableRenameFields).to.have.length(1);
-
-		dataRows.first().simulate("click");
-		enabledRemoveColumnButton.simulate("click");
-		dataRows = input.find(".reactable-data").find("tr");
 		expect(dataRows).to.have.length(0);
-		expect(wrapper.state().valuesTable.structuretableRenameFields).to.have.length(0);
+		expect(wrapper.state().valuesTable.structuretableSortOrder).to.have.length(0);
 
 		enabledRemoveColumnButton.simulate("blur");
+
+		const structuretableSortOrderErrorMessages = {
+			"structuretableSortOrder": {
+				"type": "error",
+				"text": "table cannot be empty"
+			}
+		};
+		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
+			JSON.parse(JSON.stringify(structuretableSortOrderErrorMessages)))).to.be.true;
+
+		expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
+		expect(wrapper.find(".form__validation--error")).to.have.length(1);
+	});
+
+	it("structuretableRenameFields control should have error message from containing 'pw'", () => {
+		const wrapper = createEditorForm("mount");
+
+		const input = wrapper.find("#structure-table").at(1);
+		expect(input).to.have.length(1);
+		expect(wrapper.state().valuesTable.structuretableRenameFields).to.have.length(2);
+
+		const nameInput = input.find("input[id='editor-control-structuretableRenameFields']");
+		expect(nameInput).to.have.length(2);
+		const inputControl = nameInput.at(0);
+		inputControl.simulate("change", { target: { value: "bad pw" } });
+		inputControl.simulate("blur");
 
 		const structuretableRenameFieldsErrorMessages = {
 			"structuretableRenameFields": {
 				"type": "error",
-				"text": "The 'Rename Columns' table cannot be empty"
+				"text": "The 'Output Name' field cannot contain 'pw'"
 			}
 		};
+		// console.log(JSON.stringify(wrapper.state().controlErrorMessages));
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
 			JSON.parse(JSON.stringify(structuretableRenameFieldsErrorMessages)))).to.be.true;
 
 		expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
 		expect(wrapper.find(".form__validation--error")).to.have.length(1);
+	});
+});
+
+describe("condition messages renders correctly with structurelisteditor table", () => {
+	it("structurelisteditor control should have error message when notEquals []", () => {
+		const wrapper = createEditorForm("mount");
+
+		const input = wrapper.find("#editor-control-structurelisteditorTableInput");
+		expect(input).to.have.length(1);
+		expect(wrapper.state().valuesTable.structurelisteditorTableInput).to.have.length(1);
+
+		expect(wrapper.find(".validation-warning-message-icon-table")).to.have.length(0);
+		expect(wrapper.find(".validation-error-message-color-warning")).to.have.length(0);
+
+		const dataRows = input.find(".public_fixedDataTable_bodyRow");
+		expect(dataRows).to.have.length(1);
+		dataRows.first().simulate("click");
+
+		const structureListEditorButtonsContainer = wrapper.find("#structure-list-editor-buttons-container").find("button[type='button']");
+		expect(structureListEditorButtonsContainer).to.have.length(2);
+		const removeRowButton = structureListEditorButtonsContainer.at(1);
+		expect(removeRowButton).to.have.length(1);
+
+		removeRowButton.simulate("click");
+
+		expect(wrapper.state().valuesTable.structurelisteditorTableInput).to.have.length(0);
+
+		expect(wrapper.find(".validation-warning-message-icon-table")).to.have.length(1);
+		expect(wrapper.find(".validation-error-message-color-warning")).to.have.length(1);
 	});
 });
 
@@ -1100,9 +1434,8 @@ describe("condition messages renders correctly with radioSet control", () => {
 		});
 
 		const controlStates = {
-			"textfieldName": "hidden",
 			"textareaDescription": "hidden",
-			"expressionBox": "hidden"
+			"expressionBox": "disabled"
 		};
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlStates)),
 			JSON.parse(JSON.stringify(controlStates)))).to.be.true;
@@ -1137,27 +1470,71 @@ describe("condition messages renders correctly with radioSet control", () => {
 });
 
 describe("condition messages renders correctly with textfields control", () => {
-	it("controls should be hidden", () => {
+	it("test passwordfield isNotEmpty", () => {
 		const wrapper = createEditorForm("mount");
 
+		const passwordInput = wrapper.find("input[id='editor-control-passwordField']");
+		expect(passwordInput).to.have.length(1);
+		passwordInput.simulate("blur");
+
+		let textfieldNameErrorMessages = {
+			"passwordField": {
+				"type": "error",
+				"text": "Password cannot be empty, enter \"password\""
+			},
+			"textfieldName": {
+				"type": "error",
+				"text": "textfieldName is missing an input value for validation."
+			}
+		};
+		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
+			JSON.parse(JSON.stringify(textfieldNameErrorMessages)))).to.be.true;
+
+		passwordInput.simulate("change", { target: { value: "password" } });
+
+		textfieldNameErrorMessages = {
+			"passwordField": {
+				"type": "error",
+				"text": "textfieldName is missing an input value for validation."
+			},
+			"textfieldName": {
+				"type": "error",
+				"text": "textfieldName is missing an input value for validation."
+			}
+		};
+		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
+			JSON.parse(JSON.stringify(textfieldNameErrorMessages)))).to.be.true;
+
 		const textfieldNameInput = wrapper.find("#editor-control-textfieldName");
-		expect(textfieldNameInput).to.have.length(1);
-		expect(textfieldNameInput).to.have.style("visibility", "hidden");
+		textfieldNameInput.simulate("change", { target: { value: "entering a name that contains the password" } });
+		textfieldNameInput.simulate("blur");
+
+		textfieldNameErrorMessages = {
+			"passwordField": {
+				"type": "warning",
+				"text": "name cannot contain password"
+			},
+			"textfieldName": {
+				"type": "warning",
+				"text": "name cannot contain password"
+			}
+		};
+		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
+			JSON.parse(JSON.stringify(textfieldNameErrorMessages)))).to.be.true;
+
+		textfieldNameInput.simulate("change", { target: { value: "" } });
+		textfieldNameInput.simulate("blur");
+	});
+
+	it("control should be hidden", () => {
+		const wrapper = createEditorForm("mount");
 
 		const textareaDescriptionInput = wrapper.find("#editor-control-textareaDescription");
 		expect(textareaDescriptionInput).to.have.length(1);
 		expect(textareaDescriptionInput).to.have.style("visibility", "hidden");
 
-		const expressionBoxInput = wrapper.find("#editor-control-expressionBox");
-		expect(expressionBoxInput).to.have.length(1);
-		expect(expressionBoxInput).to.have.style("visibility", "hidden");
-
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlStates.textfieldName)),
-			JSON.parse(JSON.stringify(defaultControlStates.textfieldName)))).to.be.true;
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlStates.textareaDescription)),
 			JSON.parse(JSON.stringify(defaultControlStates.textareaDescription)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlStates.expressionBox)),
-			JSON.parse(JSON.stringify(defaultControlStates.expressionBox)))).to.be.true;
 	});
 
 	it("textfields control should have error message from invalid input", () => {
@@ -1174,8 +1551,12 @@ describe("condition messages renders correctly with textfields control", () => {
 
 		expect(expressionBoxInput.is("[disabled]")).to.equal(true);
 		const controlStates = {
+			"textareaDescription": "hidden",
 			"expressionBox": "disabled"
 		};
+
+		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlStates.textareaDescription)),
+			JSON.parse(JSON.stringify(controlStates.textareaDescription)))).to.be.true;
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlStates.expressionBox)),
 			JSON.parse(JSON.stringify(controlStates.expressionBox)))).to.be.true;
 
@@ -1217,10 +1598,35 @@ describe("condition messages renders correctly with textfields control", () => {
 		expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
 		expect(wrapper.find(".form__validation--error")).to.have.length(1);
 
-		textareaDescriptionInput.simulate("change", { target: { value: "entering a description with invalid \"quotes'" } });
-		textareaDescriptionInput.simulate("blur");
 		expressionBoxInput.simulate("change", { target: { value: "entering an expression with invalid \"quotes'" } });
 		expressionBoxInput.simulate("blur");
+		textareaDescriptionInput.simulate("change", { target: { value: "Unable to enter text in a hidden control" } });
+		textareaDescriptionInput.simulate("blur");
+
+		textfieldNameErrorMessages = {
+			"passwordField": {
+				"type": "info",
+				"text": ""
+			},
+			"textfieldName": {
+				"type": "error",
+				"text": "Name cannot contain /"
+			},
+			"expressionBox": {
+				"type": "error",
+				"text": "Expression cannot contain /, double or single \"quotes\""
+			}
+		};
+		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
+			JSON.parse(JSON.stringify(textfieldNameErrorMessages)))).to.be.true;
+
+		const checkbox = wrapper.find("#editor-control-checkboxEnableDesc");
+		expect(checkbox).to.have.length(1);
+		checkbox.simulate("change", { target: { checked: true, id: "Enable" } });
+		checkbox.simulate("blur");
+
+		textareaDescriptionInput.simulate("change", { target: { value: "entering a description with invalid \"quotes'" } });
+		textareaDescriptionInput.simulate("blur");
 
 		textfieldNameErrorMessages = {
 			"passwordField": {
@@ -1285,15 +1691,29 @@ describe("condition messages renders correctly with textfields control", () => {
 	});
 });
 
-// cannot simulate a mouseDown event
-// describe("condition messages renders correctly with dropDown control", () => {
-// 	it("oneofselectAnimals control should have warning message from selecting tiger", () => {
-// 		const wrapper = createEditorForm("mount");
-//
-// 		const dropdown = wrapper.find(".Dropdown-control-panel").at(1);
-// 		expect(dropdown).to.have.length(1);
-// 		dropdown.find(".Dropdown-control").simulate("mouseDown");
-// 		expect(dropdown.find(".Dropdown-menu")).to.have.length(1);
-// 		expect(dropdown.find(".Dropdown-option")).to.have.length(5);
-// 	});
-// });
+describe("condition messages renders correctly with dropDown control", () => {
+	it("oneofselectAnimals control should have warning message from empty selection", () => {
+		const wrapper = createEditorForm("mount");
+
+		const dropdownContainer = wrapper.find("#oneofselect-control-container").at(0);
+		const dropdown = dropdownContainer.find(".Dropdown-control-panel");
+		expect(dropdown).to.have.length(1);
+		dropdown.find(".Dropdown-control").simulate("click");
+
+		expect(dropdownContainer.find(".validation-warning-message-icon-dropdown")).to.have.length(1);
+		expect(dropdownContainer.find(".validation-error-message-color-warning")).to.have.length(1);
+	});
+
+	// cannot verify newly inserted dom elements
+	// it("oneofselectAnimals control should have warning message from selecting tiger", () => {
+	// 	const wrapper = createEditorForm("mount");
+	//
+	// const dropdownContainer = wrapper.find("#oneofselect-control-container").at(0);
+	// const dropdown = dropdownContainer.find(".Dropdown-control-panel");
+	// expect(dropdown).to.have.length(1);
+	// dropdown.find(".Dropdown-control").simulate("click");
+	//
+	// 	expect(dropdown.find(".Dropdown-menu")).to.have.length(1);
+	// 	expect(dropdown.find(".Dropdown-option")).to.have.length(6);
+	// });
+});

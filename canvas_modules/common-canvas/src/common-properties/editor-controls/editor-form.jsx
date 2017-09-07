@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 /* eslint complexity: ["error", 28] */
-/* eslint max-depth: ["error", 6] */
+/* eslint max-depth: ["error", 9] */
 
 import logger from "../../../utils/logger";
 import React from "react";
@@ -439,6 +439,7 @@ export default class EditorForm extends React.Component {
 				updateControlValue={this.updateControlValue}
 				controlStates={this.state.controlStates}
 				valueAccessor={controlValueAccessor}
+				validationDefinitions={this.state.validationDefinitions}
 				validateConditions={this.validateConditions}
 				getControlValues={this.getControlValues}
 				getSubControlValues={this.getSubControlValues}
@@ -631,8 +632,12 @@ export default class EditorForm extends React.Component {
 			const min = generator.range && generator.range.min ? generator.range.min : 10000;
 			const max = generator.range && generator.range.max ? generator.range.max : 99999;
 			const newValue = Math.floor(Math.random() * (max - min + 1) + min);
-			that.state.valuesTable[control.name] = [String(newValue)];
-			that.refs[control.name].setState({ controlValue: newValue });
+			that.state.valuesTable[control.name] = newValue;
+			that.refs[control.name].setState({ controlValue: newValue }, function() {
+				if (typeof that.refs[control.name].validateInput === "function") {
+					that.refs[control.name].validateInput();
+				}
+			});
 		}
 
 		let label = <span />;
@@ -904,7 +909,7 @@ export default class EditorForm extends React.Component {
 		var userInput = {};
 
 		// visibleDefinition
-		if (this.state.visibleDefinition.length > 0) {
+		if (Object.keys(this.state.visibleDefinition).length > 0) {
 			// logger.info("validate visible definitions");
 			controlValues = this.getControlValues();
 
@@ -916,32 +921,38 @@ export default class EditorForm extends React.Component {
 				}
 			}
 
-			for (let i = 0; i < this.state.visibleDefinition.length; i++) {
-				var visDefinition = this.state.visibleDefinition[i];
-				try {
-					var visOutput = UiConditions.validateInput(visDefinition, userInput);
+			for (const visibleKey in this.state.visibleDefinition) {
+				if (this.state.visibleDefinition[visibleKey].length > 0) {
+					for (let i = 0; i < this.state.visibleDefinition[visibleKey].length; i++) {
+						const visDefinition = this.state.visibleDefinition[visibleKey][i];
+						if (typeof this.refs[visibleKey] !== "undefined") {
+							const controlType = this.refs[visibleKey].props.control.controlType;
+							try {
+								var visOutput = UiConditions.validateInput(visDefinition.definition, userInput, controlType);
 
-					var visTmp = this.state.controlStates;
-					if (visOutput === true) { // control should be visible
-						for (let j = 0; j < visDefinition.visible.parameter_refs.length; j++) {
-							delete visTmp[visDefinition.visible.parameter_refs[j]];
+								var visTmp = this.state.controlStates;
+								if (visOutput === true) { // control should be visible
+									for (let j = 0; j < visDefinition.definition.visible.parameter_refs.length; j++) {
+										delete visTmp[visDefinition.definition.visible.parameter_refs[j]];
+									}
+									this.setState({ controlStates: visTmp });
+								} else { // control should be hidden
+									for (let j = 0; j < visDefinition.definition.visible.parameter_refs.length; j++) {
+										visTmp[visDefinition.definition.visible.parameter_refs[j]] = "hidden";
+									}
+									this.setState({ controlStates: visTmp });
+								}
+							} catch (error) {
+								logger.warn("Error thrown in validation: " + error);
+							}
 						}
-						this.setState({ controlStates: visTmp });
-					} else { // control should be hidden
-						for (let j = 0; j < visDefinition.visible.parameter_refs.length; j++) {
-							visTmp[visDefinition.visible.parameter_refs[j]] = "hidden";
-						}
-						this.setState({ controlStates: visTmp });
 					}
-				} catch (error) {
-					logger.warn("Error thrown in validation: " + error);
 				}
 			}
-			// logger.info("visible: " + JSON.stringify(this.state.controlStates));
 		}
 
 		// enabledDefinitions
-		if (this.state.enabledDefinitions.length > 0) {
+		if (Object.keys(this.state.enabledDefinitions).length > 0) {
 			// logger.info("validate enabled definitions");
 			controlValues = this.getControlValues();
 
@@ -953,32 +964,38 @@ export default class EditorForm extends React.Component {
 				}
 			}
 
-			for (let i = 0; i < this.state.enabledDefinitions.length; i++) {
-				var definition = this.state.enabledDefinitions[i];
-				try {
-					var enbOutput = UiConditions.validateInput(definition, userInput);
+			for (const enbabledKey in this.state.enabledDefinitions) {
+				if (this.state.enabledDefinitions[enbabledKey].length > 0) {
+					for (let i = 0; i < this.state.enabledDefinitions[enbabledKey].length; i++) {
+						const enbDefinition = this.state.enabledDefinitions[enbabledKey][i];
+						if (typeof this.refs[enbabledKey] !== "undefined") {
+							const controlType = this.refs[enbabledKey].props.control.controlType;
+							try {
+								var enbOutput = UiConditions.validateInput(enbDefinition.definition, userInput, controlType);
 
-					var tmp = this.state.controlStates;
-					if (enbOutput === true) { // control should be enabled
-						for (let j = 0; j < definition.enabled.parameter_refs.length; j++) {
-							if (tmp[definition.enabled.parameter_refs[j]] !== "hidden") {
-								delete tmp[definition.enabled.parameter_refs[j]];
+								var tmp = this.state.controlStates;
+								if (enbOutput === true) { // control should be enabled
+									for (let j = 0; j < enbDefinition.definition.enabled.parameter_refs.length; j++) {
+										if (tmp[enbDefinition.definition.enabled.parameter_refs[j]] !== "hidden") {
+											delete tmp[enbDefinition.definition.enabled.parameter_refs[j]];
+										}
+									}
+									this.setState({ controlStates: tmp });
+								} else { // control should be disabled
+									for (let j = 0; j < enbDefinition.definition.enabled.parameter_refs.length; j++) {
+										if (tmp[enbDefinition.definition.enabled.parameter_refs[j]] !== "hidden") { // if control is hidden, no need to disable it
+											tmp[enbDefinition.definition.enabled.parameter_refs[j]] = "disabled";
+										}
+									}
+									this.setState({ controlStates: tmp });
+								}
+							} catch (error) {
+								logger.warn("Error thrown in validation: " + error);
 							}
 						}
-						this.setState({ controlStates: tmp });
-					} else { // control should be disabled
-						for (let j = 0; j < definition.enabled.parameter_refs.length; j++) {
-							if (tmp[definition.enabled.parameter_refs[j]] !== "hidden") { // if control is hidden, no need to disable it
-								tmp[definition.enabled.parameter_refs[j]] = "disabled";
-							}
-						}
-						this.setState({ controlStates: tmp });
 					}
-				} catch (error) {
-					logger.warn("Error thrown in validation: " + error);
 				}
 			}
-			// logger.info("enable: " + JSON.stringify(this.state.controlStates));
 		}
 	}
 
@@ -1001,32 +1018,11 @@ export default class EditorForm extends React.Component {
 
 		for (let i = 0; i < uiConditions.length; i++) {
 			if (uiConditions[i].visible) {
-				visibleDefinition.push(uiConditions[i]);
+				visibleDefinition = this._parseConditions(visibleDefinition, uiConditions[i], "visible");
 			} else if (uiConditions[i].enabled) {
-				enabledDefinitions.push(uiConditions[i]);
+				enabledDefinitions = this._parseConditions(enabledDefinitions, uiConditions[i], "enabled");
 			} else if (uiConditions[i].validation) {
-				try {
-					var controls = UiConditionsParser.parseInput(uiConditions[i].validation);
-					var groupDef = {
-						"params": controls,
-						"definition": uiConditions[i]
-					};
-					if (Array.isArray(controls) === true) {
-						for (let j = 0; j < controls.length; j++) {
-							if (typeof validationDefinitions[controls[j]] === "undefined") {
-								validationDefinitions[controls[j]] = [];
-							}
-							validationDefinitions[controls[j]].push(groupDef);
-						}
-					} else { // single control
-						if (typeof validationDefinitions[controls] === "undefined") {
-							validationDefinitions[controls] = [];
-						}
-						validationDefinitions[controls].push(groupDef);
-					}
-				} catch (error) { // invalid
-					logger.info("Error parsing ui conditions: " + error);
-				}
+				validationDefinitions = this._parseConditions(validationDefinitions, uiConditions[i], "validation");
 			} else { // invalid
 				logger.info("Invalid definition: " + JSON.stringify(uiConditions[i]));
 			}
@@ -1037,6 +1033,32 @@ export default class EditorForm extends React.Component {
 			enabledDefinitions: enabledDefinitions,
 			validationDefinitions: validationDefinitions
 		});
+	}
+
+	_parseConditions(container, uiCondition, conditionType) {
+		try {
+			var controls = UiConditionsParser.parseInput(uiCondition[conditionType]);
+			var groupDef = {
+				"params": controls,
+				"definition": uiCondition
+			};
+			if (Array.isArray(controls) === true) {
+				for (let j = 0; j < controls.length; j++) {
+					if (typeof container[controls[j]] === "undefined") {
+						container[controls[j]] = [];
+					}
+					container[controls[j]].push(groupDef);
+				}
+			} else { // single control
+				if (typeof container[controls] === "undefined") {
+					container[controls] = [];
+				}
+				container[controls].push(groupDef);
+			}
+		} catch (error) { // invalid
+			logger.info("Error parsing ui conditions: " + error);
+		}
+		return container;
 	}
 
 	render() {

@@ -128,7 +128,7 @@ input[type=radio]{
 
 .form__validation.validation-error-message-type-number,
 .form__validation.validation-error-message-type-table,
-p.form__validation.validation-error-message-color-warning.validation-error-message-type-selection {
+p.form__validation.validation-error-message-type-selection {
 	margin-top: 5px;
 	width: 93%;
 }
@@ -175,7 +175,7 @@ input.number,
 }
 
 .validation-error-message-icon {
-	width: 20px;
+	width: 20px !important;
 	height: 20px;
 	margin-left: 4px;
 }

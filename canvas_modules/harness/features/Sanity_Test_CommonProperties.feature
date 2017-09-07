@@ -71,6 +71,8 @@ Feature: Canvas sanity test
 				Then I open the Table Input Sub Panel
 				Then I update the value of Name textbox with "Hellopwd"
 				Then I verify that the validation error is "name should not contain pw"
+                                Then I update the value of Name textbox with "Age"
+                                Then I verify that the validation warning is "name cannot be an existing column name"
 				Then I close the subPanel dialog
 				Then I have closed the common properties dialog by clicking on close button
 

@@ -31,8 +31,7 @@
                       "isMap": false,
                       "defaultValue": -1
                     },
-                    "separateLabel": true,
-                    "required": true
+                    "separateLabel": true
                   }
                 },
                 {
@@ -61,8 +60,7 @@
                       "gini",
                       "entropy"
                     ],
-                    "separateLabel": true,
-                    "required": false
+                    "separateLabel": true
                   }
                 },
                 {
@@ -82,8 +80,7 @@
                       "isMap": false,
                       "defaultValue": 32
                     },
-                    "separateLabel": true,
-                    "required": true
+                    "separateLabel": true
                   }
                 },
                 {
@@ -103,8 +100,7 @@
                       "isMap": false,
                       "defaultValue": 5
                     },
-                    "separateLabel": true,
-                    "required": false
+                    "separateLabel": true
                   }
                 },
                 {
@@ -124,8 +120,7 @@
                       "isMap": false,
                       "defaultValue": 0
                     },
-                    "separateLabel": true,
-                    "required": true
+                    "separateLabel": true
                   }
                 },
                 {
@@ -145,8 +140,7 @@
                       "isMap": false,
                       "defaultValue": 1
                     },
-                    "separateLabel": true,
-                    "required": true
+                    "separateLabel": true
                   }
                 },
                 {
@@ -154,7 +148,17 @@
                   "control": {
                     "name": "numberfieldSeed",
                     "label": {
-                      "text": "Seed"
+                      "text": "Seed",
+                      "numberGenerator": {
+                        "label": {
+                          "default": "Generate",
+                          "resource_key": "numberGenerator"
+                        },
+                        "range": {
+                          "min": 1000000,
+                          "max": 9999999
+                        }
+                      }
                     },
                     "description": {
                       "text": "Random seed"
@@ -166,8 +170,7 @@
                       "isMap": false,
                       "defaultValue": 12345
                     },
-                    "separateLabel": true,
-                    "required": true
+                    "separateLabel": true
                   }
                 }
               ]
@@ -322,8 +325,7 @@
                       "string",
                       "boolean"
                     ],
-                    "separateLabel": true,
-                    "required": true
+                    "separateLabel": true
                   }
                 },
                 {
@@ -340,8 +342,7 @@
                     "valueDef": {
                       "propType": "string",
                       "isList": false,
-                      "isMap": false,
-                      "defaultValue": "bear"
+                      "isMap": false
                     },
                     "values": [
                       "lion",
@@ -359,8 +360,7 @@
                       "tiger",
                       "monkey"
                     ],
-                    "separateLabel": true,
-                    "required": true
+                    "separateLabel": true
                   }
                 },
                 {
@@ -394,8 +394,7 @@
                       "hamster",
                       "turtle"
                     ],
-                    "separateLabel": true,
-                    "required": false
+                    "separateLabel": true
                   }
                 },
                 {
@@ -439,8 +438,7 @@
                       "Nine",
                       "Ten"
                     ],
-                    "separateLabel": true,
-                    "required": true
+                    "separateLabel": true
                   }
                 },
                 {
@@ -466,8 +464,7 @@
                     "valueLabels": [
                       "Single Checkbox"
                     ],
-                    "separateLabel": false,
-                    "required": true
+                    "separateLabel": false
                   }
                 },
                 {
@@ -493,8 +490,7 @@
                     "valueLabels": [
                       "Enable"
                     ],
-                    "separateLabel": false,
-                    "required": false
+                    "separateLabel": false
                   }
                 },
                 {
@@ -525,8 +521,7 @@
                       "yellow",
                       "blue"
                     ],
-                    "separateLabel": true,
-                    "required": true
+                    "separateLabel": true
                   }
                 },
                 {
@@ -558,8 +553,7 @@
                                   "isMap": false,
                                   "defaultValue": 1000
                                 },
-                                "separateLabel": true,
-                                "required": false
+                                "separateLabel": true
                               }
                             }
                           ]
@@ -592,8 +586,7 @@
                                   "isMap": false,
                                   "defaultValue": 10
                                 },
-                                "separateLabel": true,
-                                "required": false
+                                "separateLabel": true
                               }
                             }
                           ]
@@ -626,8 +619,7 @@
                                   "isMap": false,
                                   "defaultValue": 50
                                 },
-                                "separateLabel": true,
-                                "required": false
+                                "separateLabel": true
                               }
                             }
                           ]
@@ -667,8 +659,7 @@
                       "isMap": false,
                       "defaultValue": ""
                     },
-                    "separateLabel": true,
-                    "required": true
+                    "separateLabel": true
                   }
                 },
                 {
@@ -688,8 +679,33 @@
                       "isMap": false,
                       "defaultValue": ""
                     },
-                    "separateLabel": true,
-                    "required": true
+                    "separateLabel": true
+                  }
+                },
+								{
+                  "itemType": "control",
+                  "control": {
+                    "name": "checkboxEnableDesc",
+                    "label": {
+                      "text": "Add Description"
+                    },
+                    "description": {
+                      "text": "Add Description"
+                    },
+                    "controlType": "checkbox",
+                    "valueDef": {
+                      "propType": "boolean",
+                      "isList": false,
+                      "isMap": false,
+                      "defaultValue": ""
+                    },
+                    "values": [
+                      "Add Description"
+                    ],
+                    "valueLabels": [
+                      "Add Description"
+                    ],
+                    "separateLabel": false
                   }
                 },
                 {
@@ -709,8 +725,7 @@
                       "isMap": false,
                       "defaultValue": ""
                     },
-                    "separateLabel": true,
-                    "required": true
+                    "separateLabel": true
                   }
                 },
                 {
@@ -730,8 +745,7 @@
                       "isMap": false,
                       "defaultValue": ""
                     },
-                    "separateLabel": true,
-                    "required": true
+                    "separateLabel": true
                   }
                 }
               ]
@@ -773,7 +787,7 @@
                               "label": {
                                 "text": "Field"
                               },
-                              "controlType": "oneofcolumns",
+                              "controlType": "selectcolumn",
                               "valueDef": {
                                 "propType": "string",
                                 "isList": false,
@@ -819,8 +833,7 @@
                             "",
                             "Ascending"
                           ],
-                          "moveableRows": true,
-                          "required": false
+                          "moveableRows": true
                         }
                       }
                     ]
@@ -829,7 +842,7 @@
                 {
                   "itemType": "panel",
                   "panel": {
-                    "id": "structuretableSortOrder",
+                    "id": "structuretableRenameFields",
                     "panelType": "columnSelection",
                     "uiItems": [
                       {
@@ -853,7 +866,7 @@
                               "label": {
                                 "text": "Input name"
                               },
-                              "controlType": "oneofcolumns",
+                              "controlType": "selectcolumn",
                               "valueDef": {
                                 "propType": "string",
                                 "isList": false,
@@ -878,14 +891,90 @@
                               "visible": true,
                               "width": 26,
                               "editStyle": "inline"
+                            },
+                            {
+                              "name": "new_label",
+                              "label": {
+                                "text": "Label"
+                              },
+                              "controlType": "textfield",
+                              "valueDef": {
+                                "propType": "string",
+                                "isList": false,
+                                "isMap": false,
+                                "defaultValue": ""
+                              },
+                              "visible": true,
+                              "width": 26,
+                              "editStyle": "subpanel"
+                            },
+                            {
+                              "name": "new_type",
+                              "label": {
+                                "text": "Type"
+                              },
+                              "controlType": "oneofselect",
+                              "valueDef": {
+                                "propType": "string",
+                                "isList": false,
+                                "isMap": false,
+                                "defaultValue": "string"
+                              },
+                              "role": "enum",
+                              "values": [
+                                "string",
+                                "number",
+                                "boolean",
+                                "time",
+                                "date"
+                              ],
+                              "valueLabels": [
+                                "string",
+                                "number",
+                                "boolean",
+                                "time",
+                                "date"
+                              ],
+                              "visible": true,
+                              "width": 26,
+                              "editStyle": "inline"
                             }
                           ],
                           "keyIndex": 0,
                           "defaultRow": [
                             null,
-                            null
+                            null,
+                            "",
+                            "string"
                           ],
-                          "required": true
+                          "childItem": {
+                            "itemType": "additionalLink",
+                            "panel": {
+                              "id": "structuretableRenameFields",
+                              "panelType": "general",
+                              "uiItems": [
+                                {
+                                  "itemType": "control",
+                                  "control": {
+                                    "name": "new_label",
+                                    "label": {
+                                      "text": "Label"
+                                    },
+                                    "controlType": "textfield",
+                                    "valueDef": {
+                                      "propType": "string",
+                                      "isList": false,
+                                      "isMap": false,
+                                      "defaultValue": ""
+                                    },
+                                    "separateLabel": true
+                                  }
+                                }
+                              ]
+                            },
+                            "text": "...",
+                            "secondaryText": "Rename Subpanel"
+                          }
                         }
                       }
                     ]
@@ -926,7 +1015,7 @@
                               },
                               "role": "new_column",
                               "visible": true,
-                              "width": 22,
+                              "width": 15,
                               "editStyle": "subpanel"
                             },
                             {
@@ -942,14 +1031,46 @@
                               },
                               "role": "new_column",
                               "visible": true,
-                              "width": 22,
+                              "width": 15,
+                              "editStyle": "subpanel"
+                            },
+                            {
+                              "name": "data_type",
+                              "label": {
+                                "text": "Type"
+                              },
+                              "controlType": "oneofselect",
+                              "valueDef": {
+                                "propType": "string",
+                                "isList": false,
+                                "isMap": false,
+                                "defaultValue": ""
+                              },
+                              "role": "enum",
+                              "values": [
+                                "string",
+                                "number",
+                                "boolean",
+                                "time",
+                                "date"
+                              ],
+                              "valueLabels": [
+                                "string",
+                                "number",
+                                "boolean",
+                                "time",
+                                "date"
+                              ],
+                              "visible": true,
+                              "width": 15,
                               "editStyle": "subpanel"
                             }
                           ],
                           "keyIndex": -1,
                           "defaultRow": [
                             null,
-                            null
+                            null,
+                            ""
                           ],
                           "childItem": {
                             "itemType": "additionalLink",
@@ -988,6 +1109,37 @@
                                     },
                                     "separateLabel": true
                                   }
+                                },
+                                {
+                                  "itemType": "control",
+                                  "control": {
+                                    "name": "data_type",
+                                    "label": {
+                                      "text": "Type"
+                                    },
+                                    "controlType": "oneofselect",
+                                    "valueDef": {
+                                      "propType": "string",
+                                      "isList": false,
+                                      "isMap": false,
+                                      "defaultValue": ""
+                                    },
+                                    "values": [
+                                      "string",
+                                      "number",
+                                      "boolean",
+                                      "time",
+                                      "date"
+                                    ],
+                                    "valueLabels": [
+                                      "string",
+                                      "number",
+                                      "boolean",
+                                      "time",
+                                      "date"
+                                    ],
+                                    "separateLabel": true
+                                  }
                                 }
                               ]
                             },
@@ -1020,6 +1172,134 @@
       "url": ""
     }
   ],
+  "data": {
+    "currentParameters": {
+      "columnSelectInputFieldList": [
+        "Age",
+        "BP"
+      ],
+      "oneofcolumnsList": "",
+      "someofcolumnsList": [],
+      "numberfieldCheckpointInterval": -1,
+      "numberfieldImpurity": "entropy",
+      "numberfieldMaxBins": null,
+      "numberfieldMaxDepth": 7,
+      "numberfieldMinInfoGain": 0,
+      "numberfieldMinInstancesPerNode": 2,
+      "numberfieldSeed": 12345,
+      "checkboxTypes": [],
+      "oneofselectAnimals": "",
+      "oneofselectPets": "turtle",
+      "someofselectNumbers": [],
+      "checkboxSingle": false,
+      "checkboxEnable": false,
+      "radiosetColor": "blue",
+      "apples": 100,
+      "lemons": 100,
+      "berries": 50,
+      "passwordField": "",
+      "textfieldName": "",
+      "checkboxEnableDesc": false,
+      "textareaDescription": [
+        "ab",
+        "cd"
+      ],
+      "expressionBox": "ab\ncd\nef",
+      "columnSelectSharedWithInput": [
+        "Sex"
+      ],
+      "structuretableSortOrder": [
+        [
+          "Cholesterol",
+          "Ascending"
+        ]
+      ],
+      "structuretableRenameFields": [
+        [
+          "Age",
+          "Age"
+        ],
+        [
+          "BP",
+          "BP-1"
+        ]
+      ],
+      "structurelisteditorTableInput": [
+        [
+          "Hello",
+          "World",
+          "string"
+        ]
+      ]
+    },
+    "datasetMetadata": {
+      "fields": [
+        {
+          "name": "Age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Sex",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Cholesterol",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "K",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    }
+  },
   "conditions": [
     {
       "validation": {
@@ -1055,10 +1335,29 @@
       "validation": {
         "fail_message": {
           "type": "error",
+          "focus_parameter_ref": "numberfieldImpurity",
+          "message": {
+            "resource_key": "numberfieldImpurity_invalid",
+            "default": "invalid: gini is selected"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "numberfieldImpurity",
+            "op": "notEquals",
+            "value": "gini"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
           "focus_parameter_ref": "numberfieldMaxBins",
           "message": {
             "resource_key": "numberfield_max_bins_not_valid",
-            "default": "Maximum number of bins must be >= 2 or Maximum depth of the tree > 0"
+            "default": "Maximum number of bins must be >= 2 or Maximum depth cannot be empty"
           }
         },
         "evaluate": {
@@ -1073,8 +1372,7 @@
             {
               "condition": {
                 "parameter_ref": "numberfieldMaxDepth",
-                "op": "greaterThan",
-                "value": 0
+                "op": "isNotEmpty"
               }
             }
           ]
@@ -1084,37 +1382,18 @@
     {
       "validation": {
         "fail_message": {
-          "type": "warning",
-          "focus_parameter_ref": "numberfieldMinInstancesPerNode",
-          "message": {
-            "resource_key": "numberfield_min_instances_per_node_not_valid",
-            "default": "The minimum instances per node value must be >= 1"
-          }
-        },
-        "evaluate": {
-          "condition": {
-            "parameter_ref": "numberfieldMinInstancesPerNode",
-            "op": "greaterThan",
-            "value": 0
-          }
-        }
-      }
-    },
-    {
-      "validation": {
-        "fail_message": {
           "type": "error",
           "focus_parameter_ref": "numberfieldMinInfoGain",
           "message": {
-            "resource_key": "numberfield_min_info_gain_not_valid",
-            "default": "Cannot be less than 0"
+            "resource_key": "numberfield_min_info_gain_not_equals_min_instance",
+            "default": "info gain should not equal min instance"
           }
         },
         "evaluate": {
           "condition": {
             "parameter_ref": "numberfieldMinInfoGain",
-            "op": "greaterThan",
-            "value": 0
+            "op": "notEquals",
+            "parameter_2_ref": "numberfieldMinInstancesPerNode"
           }
         }
       }
@@ -1126,14 +1405,14 @@
           "focus_parameter_ref": "numberfieldSeed",
           "message": {
             "resource_key": "numberfield_seed_not_valid",
-            "default": "This is an example of a very long error message that someone might enter. The message text will wrap around to the next line as shown here."
+            "default": "Field cannot be null. This is an example of a long error message that might be entered. The message text will wrap around to the next line."
           }
         },
         "evaluate": {
           "condition": {
             "parameter_ref": "numberfieldSeed",
-            "op": "contains",
-            "value": "123"
+            "op": "notEquals",
+            "value": null
           }
         }
       }
@@ -1197,6 +1476,24 @@
       "validation": {
         "fail_message": {
           "type": "warning",
+          "focus_parameter_ref": "columnSelectSharedWithInput",
+          "message": {
+            "resource_key": "column_select_shared_with_input_not_empty",
+            "default": "Warning: empty tables"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "columnSelectSharedWithInput",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
           "message": {
             "default": "No data types are selected",
             "resource_key": "checkbox_types_not_empty"
@@ -1216,16 +1513,14 @@
         "fail_message": {
           "type": "warning",
           "message": {
-            "default": "Warning: selected tiger",
-            "resource_key": "one_of_select_animals_not_empty"
+            "default": "Warning: one of select cannot be empty"
           },
           "focus_parameter_ref": "oneofselectAnimals"
         },
         "evaluate": {
           "condition": {
             "parameter_ref": "oneofselectAnimals",
-            "op": "notContains",
-            "value": "tiger"
+            "op": "isNotEmpty"
           }
         }
       }
@@ -1235,8 +1530,43 @@
         "fail_message": {
           "type": "warning",
           "message": {
-            "default": "Warning: selected three",
-            "resource_key": "some_of_select_animals_not_three"
+            "default": "Warning: selected tiger",
+            "resource_key": "one_of_select_animals_not_empty"
+          },
+          "focus_parameter_ref": "oneofselectAnimals"
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "oneofselectAnimals",
+            "op": "notEquals",
+            "value": "tiger"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "message": {
+            "default": "Error: none selected"
+          },
+          "focus_parameter_ref": "someofselectNumbers"
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "someofselectNumbers",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "message": {
+            "default": "Warning: selected three"
           },
           "focus_parameter_ref": "someofselectNumbers"
         },
@@ -1244,7 +1574,7 @@
           "condition": {
             "parameter_ref": "someofselectNumbers",
             "op": "notContains",
-            "value": "three"
+            "value": "Three"
           }
         }
       }
@@ -1262,20 +1592,10 @@
         "evaluate": {
           "or": [
             {
-              "and": [
-                {
-                  "condition": {
-                    "parameter_ref": "checkboxTypes",
-                    "op": "isNotEmpty"
-                  }
-                },
-                {
-                  "condition": {
-                    "parameter_ref": "checkboxSingle",
-                    "op": "checked"
-                  }
-                }
-              ]
+              "condition": {
+                "parameter_ref": "checkboxSingle",
+                "op": "isNotEmpty"
+              }
             },
             {
               "and": [
@@ -1288,7 +1608,7 @@
                 {
                   "condition": {
                     "parameter_ref": "checkboxSingle",
-                    "op": "notChecked"
+                    "op": "isEmpty"
                   }
                 }
               ]
@@ -1305,7 +1625,8 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "checkboxEnable",
-            "op": "checked"
+            "op": "equals",
+            "value": true
           }
         }
       }
@@ -1339,22 +1660,6 @@
             "parameter_ref": "oneofselectAnimals",
             "op": "notContains",
             "value": "lion"
-          }
-        }
-      }
-    },
-    {
-      "visible": {
-        "parameter_refs": [
-          "textfieldName",
-          "textareaDescription",
-          "expressionBox"
-        ],
-        "evaluate": {
-          "condition": {
-            "parameter_ref": "passwordField",
-            "op": "contains",
-            "value": "password"
           }
         }
       }
@@ -1439,6 +1744,20 @@
         }
       }
     },
+		{
+      "visible": {
+        "parameter_refs": [
+          "textareaDescription"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "checkboxEnableDesc",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
     {
       "validation": {
         "fail_message": {
@@ -1473,6 +1792,25 @@
               }
             }
           ]
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "message": {
+            "default": "name cannot contain password",
+            "resource_key": "textfield_name_not_contain_password"
+          },
+          "focus_parameter_ref": "passwordField"
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "textfieldName",
+            "op": "notContains",
+            "parameter_2_ref": "passwordField"
+          }
         }
       }
     },
@@ -1517,15 +1855,14 @@
       "validation": {
         "fail_message": {
           "type": "error",
-          "focus_parameter_ref": "structuretableRenameFields",
+          "focus_parameter_ref": "structuretableSortOrder",
           "message": {
-            "resource_key": "structuretable_rename_fields_not_empty",
-            "default": "The 'Rename Columns' table cannot be empty"
+            "default": "table cannot be empty"
           }
         },
         "evaluate": {
           "condition": {
-            "parameter_ref": "structuretableRenameFields",
+            "parameter_ref": "structuretableSortOrder",
             "op": "isNotEmpty"
           }
         }
@@ -1537,14 +1874,68 @@
           "type": "error",
           "focus_parameter_ref": "structuretableRenameFields",
           "message": {
-            "resource_key": "output_name_not_empty",
-            "default": "The 'Output Name' field cannot be empty"
+            "resource_key": "structuretable_rename_fields_not_contains_pw",
+            "default": "The 'Output Name' field cannot contain 'pw'"
           }
         },
         "evaluate": {
           "condition": {
             "parameter_ref": "structuretableRenameFields",
+            "op": "notContains",
+            "value": "pw"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "structurelisteditorTableInput",
+          "message": {
+            "default": "table cannot be empty"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "structurelisteditorTableInput",
+            "op": "notEquals",
+            "value": []
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "name",
+          "message": {
+            "resource_key": "name should not be empty",
+            "default": "name should not be empty"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "name",
             "op": "cellNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "name",
+          "message": {
+            "default": "name cannot be an existing column name"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "name",
+            "op": "colNotExists"
           }
         }
       }
@@ -1572,131 +1963,18 @@
       "validation": {
         "fail_message": {
           "type": "error",
-          "focus_parameter_ref": "description",
+          "focus_parameter_ref": "data_type",
           "message": {
-            "resource_key": "invalid_subpanel_description",
-            "default": "description should not contain pw"
+            "default": "type cannot be empty"
           }
         },
         "evaluate": {
           "condition": {
-            "parameter_ref": "description",
-            "op": "notContains",
-            "value": "pw"
+            "parameter_ref": "data_type",
+            "op": "isNotEmpty"
           }
         }
       }
     }
-  ],
-  "data": {
-    "currentParameters": {
-      "columnSelectInputFieldList": [
-        "Age",
-        "BP"
-      ],
-      "oneofcolumnsList": [],
-      "someofcolumnsList": [],
-      "numberfieldCheckpointInterval": -1,
-      "numberfieldImpurity": "entropy",
-      "numberfieldMaxBins": 24,
-      "numberfieldMaxDepth": 7,
-      "numberfieldMinInfoGain": 0,
-      "numberfieldMinInstancesPerNode": 2,
-      "numberfieldSeed": 12345,
-      "checkboxTypes": [],
-      "oneofselectAnimals": [],
-      "oneofselectPets": "turtle",
-      "someofselectNumbers": [],
-      "checkboxSingle": "",
-      "checkboxEnable": "",
-      "radiosetColor": "blue",
-      "apples": 100,
-      "lemons": 100,
-      "berries": 50,
-      "passwordField": "",
-      "textfieldName": "",
-      "textareaDescription": "",
-      "expressionBox": "",
-      "columnSelectSharedWithInput": [
-        "Sex"
-      ],
-      "structuretableSortOrder": [
-        ["Cholesterol","Ascending"]
-      ],
-      "structuretableRenameFields": [
-        ["Age", "Age"],
-        ["BP", "BP-1"]
-      ],
-      "structurelisteditorTableInput": [
-        ["Hello","World"]
-      ]
-    },
-    "datasetMetadata": {
-      "fields": [
-        {
-          "name": "Age",
-          "type": "integer",
-          "metadata": {
-            "description": "",
-            "measure": "range",
-            "role": "input"
-          }
-        },
-        {
-          "name": "Sex",
-          "type": "string",
-          "metadata": {
-            "description": "",
-            "measure": "discrete",
-            "role": "input"
-          }
-        },
-        {
-          "name": "BP",
-          "type": "string",
-          "metadata": {
-            "description": "",
-            "measure": "discrete",
-            "role": "input"
-          }
-        },
-        {
-          "name": "Cholesterol",
-          "type": "string",
-          "metadata": {
-            "description": "",
-            "measure": "discrete",
-            "role": "input"
-          }
-        },
-        {
-          "name": "Na",
-          "type": "double",
-          "metadata": {
-            "description": "",
-            "measure": "range",
-            "role": "input"
-          }
-        },
-        {
-          "name": "K",
-          "type": "double",
-          "metadata": {
-            "description": "",
-            "measure": "range",
-            "role": "input"
-          }
-        },
-        {
-          "name": "Drug",
-          "type": "string",
-          "metadata": {
-            "description": "",
-            "measure": "discrete",
-            "role": "input"
-          }
-        }
-      ]
-    }
-  }
+  ]
 }

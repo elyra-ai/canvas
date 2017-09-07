@@ -21,7 +21,7 @@ function translateMessages(conditions, l10nProvider) {
 function searchMessage(object, l10nProvider) {
 	for (var x in object) {
 		if (object.hasOwnProperty(x)) {
-			if (typeof object[x] === "object") {
+			if (typeof object[x] === "object" && object[x] !== null) {
 				if (object[x].message) {
 					object[x].message.default = l10nProvider.l10nResource(object[x].message);
 				} else {

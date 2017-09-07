@@ -24,7 +24,7 @@ export default class CheckboxControl extends EditorControl {
 	}
 
 	handleChange(evt) {
-		var newValue = evt.target.checked ? newValue = "true" : newValue = "false";
+		var newValue = evt.target.checked;
 		var that = this;
 		this.setState({
 			controlValue: newValue
@@ -36,11 +36,11 @@ export default class CheckboxControl extends EditorControl {
 	}
 
 	getControlValue() {
-		return this.state.controlValue.toString() === "true";
+		return this.state.controlValue;
 	}
 
 	render() {
-		var checked = this.state.controlValue === "true";
+		var checked = this.state.controlValue;
 		const controlName = this.getControlID().replace(EDITOR_CONTROL, "");
 		const conditionProps = {
 			controlName: controlName,

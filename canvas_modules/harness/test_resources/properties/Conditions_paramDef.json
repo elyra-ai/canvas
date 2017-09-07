@@ -23,6 +23,7 @@
     "berries": 50,
     "passwordField": "",
     "textfieldName": "",
+    "checkboxEnableDesc": false,
     "textareaDescription": [
       "ab",
       "cd"
@@ -50,7 +51,8 @@
     "structurelisteditorTableInput": [
       [
         "Hello",
-        "World"
+        "World",
+        "string"
       ]
     ]
   },
@@ -200,6 +202,14 @@
       "default": "",
       "role": "new_column"
     },
+		{
+      "id": "checkboxEnableDesc",
+      "type": "boolean",
+      "enum": [
+        "Add Description"
+      ],
+      "default": ""
+    },
     {
       "id": "textareaDescription",
       "type": "array[string]",
@@ -272,6 +282,17 @@
           "id": "new_label",
           "type": "string",
           "default": ""
+        },
+        {
+          "id": "new_type",
+          "enum": [
+            "string",
+            "number",
+            "boolean",
+            "time",
+            "date"
+          ],
+          "default": "string"
         }
       ]
     },
@@ -287,6 +308,17 @@
           "id": "description",
           "type": "string",
           "role": "new_column"
+        },
+        {
+          "id": "data_type",
+          "enum": [
+            "string",
+            "number",
+            "boolean",
+            "time",
+            "date"
+          ],
+          "default": ""
         }
       ]
     }
@@ -494,6 +526,15 @@
           "default": "Enter your name"
         }
       },
+			{
+        "parameter_ref": "checkboxEnableDesc",
+        "label": {
+          "default": "Add Description"
+        },
+        "description": {
+          "default": "Add Description"
+        }
+      },
       {
         "parameter_ref": "textareaDescription",
         "label": {
@@ -595,6 +636,14 @@
             },
             "width": 26,
             "edit_style": "subpanel"
+          },
+          {
+            "parameter_ref": "new_type",
+            "label": {
+              "default": "Type"
+            },
+            "width": 26,
+            "edit_style": "inline"
           }
         ]
       },
@@ -607,7 +656,7 @@
               "default": "Structure Name",
               "resource_key": "structurelisteditorTableInput.name.label"
             },
-            "width": 22,
+            "width": 15,
             "edit_style": "subpanel"
           },
           {
@@ -615,7 +664,15 @@
             "label": {
               "resource_key": "structurelisteditorTableInput.description.label"
             },
-            "width": 22,
+            "width": 15,
+            "edit_style": "subpanel"
+          },
+          {
+            "parameter_ref": "data_type",
+            "label": {
+              "default": "Type"
+            },
+            "width": 15,
             "edit_style": "subpanel"
           }
         ]
@@ -704,6 +761,7 @@
         "parameter_refs": [
           "passwordField",
           "textfieldName",
+					"checkboxEnableDesc",
           "textareaDescription",
           "expressionBox"
         ]
@@ -811,8 +869,7 @@
             {
               "condition": {
                 "parameter_ref": "numberfieldMaxDepth",
-                "op": "greaterThan",
-                "value": 0
+                "op": "isNotEmpty"
               }
             }
           ]
@@ -850,7 +907,7 @@
           "condition": {
             "parameter_ref": "numberfieldSeed",
             "op": "notEquals",
-            "value": 123
+            "value": null
           }
         }
       }
@@ -912,16 +969,14 @@
         "fail_message": {
           "type": "warning",
           "message": {
-            "default": "Warning: selected tiger",
-            "resource_key": "one_of_select_animals_not_empty"
+            "default": "Warning: one of select cannot be empty"
           },
           "focus_parameter_ref": "oneofselectAnimals"
         },
         "evaluate": {
           "condition": {
             "parameter_ref": "oneofselectAnimals",
-            "op": "notContains",
-            "value": "tiger"
+            "op": "isNotEmpty"
           }
         }
       }
@@ -931,8 +986,43 @@
         "fail_message": {
           "type": "warning",
           "message": {
-            "default": "Warning: selected three",
-            "resource_key": "some_of_select_animals_not_three"
+            "default": "Warning: selected tiger",
+            "resource_key": "one_of_select_animals_not_empty"
+          },
+          "focus_parameter_ref": "oneofselectAnimals"
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "oneofselectAnimals",
+            "op": "notEquals",
+            "value": "tiger"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "message": {
+            "default": "Error: none selected"
+          },
+          "focus_parameter_ref": "someofselectNumbers"
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "someofselectNumbers",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "message": {
+            "default": "Warning: selected three"
           },
           "focus_parameter_ref": "someofselectNumbers"
         },
@@ -940,7 +1030,7 @@
           "condition": {
             "parameter_ref": "someofselectNumbers",
             "op": "notContains",
-            "value": "three"
+            "value": "Three"
           }
         }
       }
@@ -960,7 +1050,7 @@
             {
               "condition": {
                 "parameter_ref": "checkboxSingle",
-                "op": "checked"
+                "op": "isNotEmpty"
               }
             },
             {
@@ -974,7 +1064,7 @@
                 {
                   "condition": {
                     "parameter_ref": "checkboxSingle",
-                    "op": "notChecked"
+                    "op": "isEmpty"
                   }
                 }
               ]
@@ -991,7 +1081,8 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "checkboxEnable",
-            "op": "checked"
+            "op": "equals",
+            "value": true
           }
         }
       }
@@ -1025,22 +1116,6 @@
             "parameter_ref": "oneofselectAnimals",
             "op": "notContains",
             "value": "lion"
-          }
-        }
-      }
-    },
-    {
-      "visible": {
-        "parameter_refs": [
-          "textfieldName",
-          "textareaDescription",
-          "expressionBox"
-        ],
-        "evaluate": {
-          "condition": {
-            "parameter_ref": "passwordField",
-            "op": "equals",
-            "value": "password"
           }
         }
       }
@@ -1121,6 +1196,20 @@
               }
             }
           ]
+        }
+      }
+    },
+		{
+      "visible": {
+        "parameter_refs": [
+          "textareaDescription"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "checkboxEnableDesc",
+            "op": "equals",
+            "value": true
+          }
         }
       }
     },
@@ -1221,15 +1310,68 @@
       "validation": {
         "fail_message": {
           "type": "error",
+          "focus_parameter_ref": "structuretableSortOrder",
+          "message": {
+            "default": "table cannot be empty"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "structuretableSortOrder",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
           "focus_parameter_ref": "structuretableRenameFields",
           "message": {
-            "resource_key": "structuretable_rename_fields_not_empty"
+            "resource_key": "structuretable_rename_fields_not_contains_pw"
           }
         },
         "evaluate": {
           "condition": {
             "parameter_ref": "structuretableRenameFields",
-            "op": "isNotEmpty"
+            "op": "notContains",
+            "value": "pw"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "structurelisteditorTableInput",
+          "message": {
+            "default": "table cannot be empty"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "structurelisteditorTableInput",
+            "op": "notEquals",
+            "value": []
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "name",
+          "message": {
+            "default": "name cannot be an existing column name"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "name",
+            "op": "colNotExists"
           }
         }
       }
@@ -1257,17 +1399,15 @@
       "validation": {
         "fail_message": {
           "type": "error",
-          "focus_parameter_ref": "description",
+          "focus_parameter_ref": "data_type",
           "message": {
-            "resource_key": "invalid_subpanel_description",
-            "default": "description should not contain pw"
+            "default": "type cannot be empty"
           }
         },
         "evaluate": {
           "condition": {
-            "parameter_ref": "description",
-            "op": "notContains",
-            "value": "pw"
+            "parameter_ref": "data_type",
+            "op": "isNotEmpty"
           }
         }
       }
@@ -1361,11 +1501,11 @@
     "numberfieldSeed.desc": "Random seed",
     "numberfield_checkpoint_interval_not_valid": "The checkpoint interval value must either be >= 1 or -1 to disable",
     "numberfieldImpurity_invalid": "invalid: gini is selected",
-    "numberfield_max_bins_not_valid": "Maximum number of bins must be >= 2 or Maximum depth of the tree > 0",
+    "numberfield_max_bins_not_valid": "Maximum number of bins must be >= 2 or Maximum depth cannot be empty",
     "numberfield_min_instances_per_node_not_valid": "The minimum instances per node value must be >= 1",
     "numberfield_min_info_gain_not_valid": "Cannot be less than 0",
     "numberfield_min_info_gain_not_equals_min_instance": "info gain should not equal min instance",
-    "numberfield_seed_not_valid": "This is an example of a very long error message that someone might enter. The message text will wrap around to the next line as shown here.",
+    "numberfield_seed_not_valid": "Field cannot be null. This is an example of a very long error message that someone might enter. The message text will wrap around to the next line as shown here.",
     "checkboxTypes.label": "Data Types",
     "checkboxTypes.desc": "",
     "someofselectNumbers.label": "",
@@ -1414,10 +1554,9 @@
     "structuretableRenameFields.rename.label": "Rename Columns",
     "structuretableRenameFields.field.label": "Input name",
     "structuretableRenameFields.new_name.label": "Output name",
-    "structuretable_rename_fields_not_empty": "The 'Output Name' field cannot be empty",
+    "structuretable_rename_fields_not_contains_pw": "The 'Output Name' field cannot contain 'pw'",
     "structurelisteditorTableInput.name.label": "Name",
     "structurelisteditorTableInput.description.label": "Description",
-    "invalid_subpanel_name": "name should not contain pw",
-    "invalid_subpanel_description": "description should not contain pw"
+    "invalid_subpanel_name": "name should not contain pw"
   }
 }

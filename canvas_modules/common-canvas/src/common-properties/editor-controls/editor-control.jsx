@@ -298,7 +298,7 @@ export default class EditorControl extends React.Component {
 					coordinates.rowIndex = row;
 					coordinates.colIndex = col;
 					coordinates.skipVal = cellValues[row][this.props.control.keyIndex];
-					const tmp = UiConditions.validateInput(validation.definition, userInput, this.props.dataModel, coordinates);
+					const tmp = UiConditions.validateInput(validation.definition, userInput, this.props.control.controlType, this.props.dataModel, coordinates);
 					const isError = PropertyUtils.toType(tmp) === "object";
 					if (!output || PropertyUtils.toType(output) === "boolean") {
 						// Set the return value with preference to errors
@@ -318,10 +318,10 @@ export default class EditorControl extends React.Component {
 			}
 			// validate on table-level if cell validation didn't result in an error already
 			if (!output || PropertyUtils.toType(output) === "boolean") {
-				output = UiConditions.validateInput(validation.definition, userInput, this.props.dataModel, coordinates);
+				output = UiConditions.validateInput(validation.definition, userInput, this.props.control.controlType, this.props.dataModel, coordinates);
 			}
 		} else {
-			output = UiConditions.validateInput(validation.definition, userInput, this.props.dataModel, coordinates);
+			output = UiConditions.validateInput(validation.definition, userInput, this.props.control.controlType, this.props.dataModel, coordinates);
 		}
 		return output;
 	}

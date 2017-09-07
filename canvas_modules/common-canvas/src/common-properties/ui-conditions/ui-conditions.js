@@ -7,6 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 /* eslint complexity: ["error", 34] */
+/* eslint max-depth: ["error", 7] */
 
 import logger from "../../../utils/logger";
 import PropertyUtils from "../util/property-utils.js";
@@ -14,14 +15,25 @@ import PropertyUtils from "../util/property-utils.js";
 const ERROR = "error";
 const WARNING = "warning";
 
-function validateInput(definition, userInput, dataModel, cellCoordinates) {
+/**
+* @param {Object} definition Condition definition
+* @param {Any} userInput Contains the control value entered by the user
+* @param {Object} dataModel Optional data model
+* @param {Object} cellCoordinates Cell coordinates for tables
+*/
+function validateInput(definition, userInput, controlType, dataModel, cellCoordinates) {
 	var data = definition;
+	const info = {
+		controlType: controlType,
+		dataModel: dataModel,
+		cellCoordinates: cellCoordinates
+	};
 	if (data.validation) {
-		return validation(data.validation, userInput, dataModel, cellCoordinates);
+		return validation(data.validation, userInput, info);
 	} else if (data.enabled) {
-		return enabled(data.enabled, userInput);
+		return enabled(data.enabled, userInput, info);
 	} else if (data.visible) {
-		return visible(data.visible, userInput);
+		return visible(data.visible, userInput, info);
 	}
 	throw new Error("Invalid user input validation definition schema");
 }
@@ -52,16 +64,16 @@ function validateInput(definition, userInput, dataModel, cellCoordinates) {
  *		 "required": ["validation"]
  *	 }
  * @param {Any} userInput Contains the control value entered by the user
- * @param {Object} dataModel Optional data model
- * @param {Object} cellCoordinates Cell coordinates for tables
+ * @param {Object} info optional dataset metadata and cell coordinates info
  * @return {boolean} true if valid, failMessage {Object} if false.
  */
-function validation(validationData, userInput, dataModel, cellCoordinates) {
+function validation(validationData, userInput, info) {
 	// logger.info("Validation check");
 	// var data = JSON.parse(validationData);
 	var data = validationData;
+	info.conditionType = "validation";
 	if (data.fail_message && data.evaluate) {
-		return evaluate(data.evaluate, userInput, dataModel, cellCoordinates) || failedMessage(data.fail_message);
+		return evaluate(data.evaluate, userInput, info) || failedMessage(data.fail_message);
 	}
 	throw new Error("Invalid validation schema");
 }
@@ -97,12 +109,13 @@ function validation(validationData, userInput, dataModel, cellCoordinates) {
  *	 }
  * @return {boolean} true if valid.
  */
-function enabled(enabledData, userInput) {
+function enabled(enabledData, userInput, info) {
 	// logger.info("Enablement check");
 	// var data = JSON.parse(enabledData);
 	var data = enabledData;
+	info.conditionType = "enabled";
 	if (data.parameter_refs && data.evaluate) {
-		return evaluate(data.evaluate, userInput);
+		return evaluate(data.evaluate, userInput, info);
 	}
 	throw new Error("Invalid enabled schema");
 }
@@ -138,12 +151,13 @@ function enabled(enabledData, userInput) {
  *	 }
  * @return {boolean} true if valid.
  */
-function visible(visibleData, userInput) {
+function visible(visibleData, userInput, info) {
 	// logger.info("Visibility check");
 	// var data = JSON.parse(visibleData);
 	var data = visibleData;
+	info.conditionType = "visible";
 	if (data.parameter_refs && data.evaluate) {
-		return evaluate(data.evaluate, userInput);
+		return evaluate(data.evaluate, userInput, info);
 	}
 	throw new Error("Invalid visible schema");
 }
@@ -151,13 +165,13 @@ function visible(visibleData, userInput) {
 /**
  * Evaluate Definition
  */
-function evaluate(data, userInput, dataModel, cellCoordinates) {
+function evaluate(data, userInput, info) {
 	if (data.or) {
-		return or(data.or, userInput, dataModel, cellCoordinates);
+		return or(data.or, userInput, info);
 	} else if (data.and) {
-		return and(data.and, userInput, dataModel, cellCoordinates);
+		return and(data.and, userInput, info);
 	} else if (data.condition) { // condition
-		return condition(data.condition, userInput, dataModel, cellCoordinates);
+		return condition(data.condition, userInput, info);
 	}
 	throw new Error("Failed to parse definition");
 }
@@ -167,13 +181,12 @@ function evaluate(data, userInput, dataModel, cellCoordinates) {
  * Can nest any number of additional conditional types.
  * @param {Object} data an array of items
  * @param {string} userInput User-entered value to evaluate
- * @param {Object} dataModel optional dataset metadata
- * @param {Object} cellCoordinates optional cell coordinates for tables
+ * @param {Object} info optional dataset metadata and cell coordinates info
  * @return {boolean}
  */
-function or(data, userInput, dataModel, cellCoordinates) {
+function or(data, userInput, info) {
 	for (let i = 0; i < data.length; i++) {
-		if (evaluate(data[i], userInput, dataModel, cellCoordinates) === true) {
+		if (evaluate(data[i], userInput, info) === true) {
 			// logger.info("Or is true");
 			return true;
 		}
@@ -187,13 +200,12 @@ function or(data, userInput, dataModel, cellCoordinates) {
  * Can nest any number of additional conditional types.
  * @param {Object} data an array of items
  * @param {string} userInput User-entered value to evaluate
- * @param {Object} dataModel optional dataset metadata
- * @param {Object} cellCoordinates optional cell coordinates for tables
+ * @param {Object} info optional dataset metadata and cell coordinates info
  * @return {boolean}
  */
-function and(data, userInput, dataModel, cellCoordinates) {
+function and(data, userInput, info) {
 	for (let i = 0; i < data.length; i++) {
-		if (evaluate(data[i], userInput, dataModel, cellCoordinates) === false) {
+		if (evaluate(data[i], userInput, info) === false) {
 			// logger.info("And is false");
 			return false;
 		}
@@ -208,15 +220,14 @@ function and(data, userInput, dataModel, cellCoordinates) {
  * @param {Object} data.parameter_ref required parameter the condition checks for
  * @param {Object} data.parameter_2_ref optional parameter the condition checks for
  * @param {Object} data.value optional value the condition checks for
- * @param {Object} dataModel optional dataset metadata
- * @param {Object} cellCoordinates optional cell coordinates for tables
+ * @param {Object} info optional dataset metadata and cell coordinates info
  * @return {boolean} true if the parameter(s) satisfy the condition
  */
-function condition(data, userInput, dataModel, cellCoordinates) {
+function condition(data, userInput, info) {
 	var op = data.op;
 	var param = data.parameter_ref;
-	var param2 = data.parameter_2_ref ? data.parameter_2_ref : null;
-	var value = typeof data.value !== "undefined" ? data.value : null;
+	var param2 = data.parameter_2_ref;
+	var value = data.value;
 
 	// validate if userInput has param's input
 	if (typeof userInput[param] === "undefined") {
@@ -224,38 +235,37 @@ function condition(data, userInput, dataModel, cellCoordinates) {
 	}
 
 	var paramInput = userInput[param];
-	const valid = _validateParams(userInput, param, ERROR);
-	if (typeof valid === "object") {
-		return valid;
+	if (typeof param2 !== "undefined" && info.conditionType && info.conditionType === "validation" &&
+		op !== "isEmpty" && op !== "isNotEmpty" && op !== "cellNotEmpty") {
+		const valid = _validateParams(userInput, param, ERROR);
+		if (typeof valid === "object") {
+			return valid;
+		}
 	}
 
 	switch (op) {
 	case "isEmpty":
-		return _handleEmpty(paramInput);
+		return _handleEmpty(param, paramInput);
 	case "isNotEmpty":
-		return _handleNotEmpty(paramInput);
+		return _handleNotEmpty(param, paramInput);
 	case "greaterThan":
-		return _handleGreaterThan(paramInput, userInput, param2, value);
+		return _handleGreaterThan(param, paramInput, userInput, param2, value);
 	case "lessThan":
-		return _handleLessThan(paramInput, userInput, param2, value);
+		return _handleLessThan(param, paramInput, userInput, param2, value);
 	case "equals":
-		return _handleEquals(paramInput, userInput, param2, value);
+		return _handleEquals(param, paramInput, userInput, param2, value, info);
 	case "notEquals":
-		return _handleNotEquals(paramInput, userInput, param2, value);
+		return _handleNotEquals(param, paramInput, userInput, param2, value, info);
 	case "contains":
-		return _handleContains(paramInput, userInput, param2, value);
+		return _handleContains(param, paramInput, userInput, param2, value, info);
 	case "notContains":
-		return _handleNotContains(paramInput, userInput, param2, value);
-	case "checked":
-		return _handleChecked(paramInput, param);
-	case "notChecked":
-		return _handleNotChecked(paramInput, param);
+		return _handleNotContains(param, paramInput, userInput, param2, value, info);
 	case "colNotExists":
-		return _handleColNotExists(paramInput, dataModel, cellCoordinates);
+		return _handleColNotExists(paramInput, info);
 	case "cellNotEmpty":
-		return _handleCellNotEmpty(paramInput, cellCoordinates);
+		return _handleCellNotEmpty(paramInput, info);
 	default:
-		logger.warn("Ignoring unknown condition operation '" + op + "'");
+		logger.warn("Ignoring unknown condition operation '" + op + "' for parameter_ref " + param);
 		return true;
 	}
 }
@@ -275,209 +285,305 @@ function _validateParams(userInput, param, errorType) {
 	return failMessage;
 }
 
-function _handleEmpty(paramInput) {
-	if (typeof paramInput === "object") {
-		if (paramInput.length === 1) {
-			// logger.info("Condition isEmpty: '" + paramInput + "' is " + (paramInput[0].length === 0));
-			return paramInput[0].length === 0;
-		}
-		// logger.info("Condition isEmpty: '" + paramInput + "' is " + (paramInput.length === 0));
-		return paramInput.length === 0;
-	}
-	// string
-	// logger.info("Condition isEmpty: '" + paramInput + "' is " + (paramInput.trim().length === 0));
-	return paramInput === null || paramInput.trim().length === 0;
-}
-
-function _handleNotEmpty(paramInput) {
-	if (typeof paramInput === "object") {
-		if (paramInput.length === 1) {
-			// logger.info("Condition isNotEmpty: '" + paramInput + "' is " + (paramInput[0].length !== 0));
-			return paramInput[0].length !== 0;
-		}
-		// logger.info("Condition isNotEmpty: '" + paramInput + "' is " + (paramInput.length !== 0));
-		return paramInput.length !== 0;
-	}
-	// string
-	// logger.info("Condition isNotEmpty: '" + paramInput + "' is " + (paramInput.trim().length !== 0));
-	return paramInput.toString().trim().length !== 0;
-}
-
-function _handleGreaterThan(paramInput, userInput, param2, value) {
-	if (typeof paramInput === "object") {
+function _handleEmpty(param, paramInput) {
+	const dataType = typeof paramInput;
+	switch (dataType) {
+	case "boolean":
+		return paramInput === false;
+	case "string":
+		return paramInput.trim().length === 0;
+	case "number":
+		return paramInput === null;
+	case "object":
+		return paramInput === null ? true : paramInput.length === 0;
+	default:
+		logger.warn("Ignoring condition operation 'isEmpty' for parameter_ref " + param + " with input data type " + dataType);
 		return true;
 	}
-	if (param2 !== null && typeof userInput[param2] !== "undefined") {
-		const notValid = _validateParams(userInput, param2, WARNING);
-		if (typeof notValid === "object") {
-			return notValid;
-		}
-
-		if (typeof paramInput !== typeof userInput[param2]) {
-			return false;
-		}
-		// logger.info("Condition greaterThan: " + paramInput + " > " + userInput[param2] + " is " + paramInput > userInput[param2]);
-		return paramInput > userInput[param2];
-	} else if (value !== null) {
-		if (typeof paramInput !== typeof value) {
-			return false;
-		}
-		// logger.info("Condition greaterThan: " + paramInput + " > " + value + " is " + paramInput > value);
-		return paramInput > value;
-	}
-	throw new Error("Insufficient parameter for condition op: greaterThan");
 }
 
-function _handleLessThan(paramInput, userInput, param2, value) {
-	if (typeof paramInput === "object") {
+function _handleNotEmpty(param, paramInput) {
+	const dataType = typeof paramInput;
+	switch (dataType) {
+	case "boolean":
+		return paramInput === true;
+	case "string":
+		return paramInput.trim().length !== 0;
+	case "number":
+		return paramInput !== null;
+	case "object":
+		return paramInput === null ? false : paramInput.length !== 0;
+	default:
+		logger.warn("Ignoring condition operation 'isNotEmpty' for parameter_ref " + param + " with input data type " + dataType);
 		return true;
 	}
-	if (param2 !== null && typeof userInput[param2] !== "undefined") {
-		const notValid = _validateParams(userInput, param2, WARNING);
-		if (typeof notValid === "object") {
-			return notValid;
-		}
-
-		if (typeof paramInput !== typeof userInput[param2]) {
-			return false;
-		}
-		// logger.info("Condition lessThan: " + paramInput + " < " + userInput[param2] + " is " + paramInput < userInput[param2]);
-		return paramInput < userInput[param2];
-	} else if (value !== null) {
-		if (typeof paramInput !== typeof value) {
-			return false;
-		}
-		// logger.info("Condition lessThan: " + paramInput + " < " + value + " is " + paramInput < value);
-		return paramInput < value;
-	}
-	throw new Error("Insufficient parameter for condition op: lessThan");
 }
 
-function _handleEquals(paramInput, userInput, param2, value) {
-	if (typeof paramInput === "object") {
-		return true;
-	}
-	if (param2 !== null && typeof userInput[param2] !== "undefined") {
-		const notValid = _validateParams(userInput, param2, WARNING);
-		if (typeof notValid === "object") {
-			return notValid;
-		}
-
-		if (typeof paramInput !== typeof userInput[param2]) {
-			return false;
-		}
-		// logger.info("Condition equals: " + paramInput + " == " + userInput[param2] + " is " + (paramInput === userInput[param2]));
-		return paramInput === userInput[param2];
-	} else if (value !== null) {
-		if (typeof paramInput !== typeof value) {
-			return false;
-		}
-		// logger.info("Condition equals: " + paramInput + " == " + value + " is " + (inputValue === value));
-		return paramInput === value;
-	}
-	throw new Error("Insufficient parameter for condition op: equals");
-}
-
-function _handleNotEquals(paramInput, userInput, param2, value) {
-	if (typeof paramInput === "object") {
-		return true;
-	}
-	if (param2 !== null && typeof userInput[param2] !== "undefined") {
-		const notValid = _validateParams(userInput, param2, WARNING);
-		if (typeof notValid === "object") {
-			return notValid;
-		}
-
-		// logger.info("Condition notEquals: " + paramInput + " != " + userInput[param2] + " is " + (paramInput !== userInput[param2]));
-		return paramInput !== userInput[param2];
-	} else if (value !== null) {
-		// logger.info("Condition notEquals: " + paramInput + " != " + value + " is " + (inputValue !== value));
-		return paramInput !== value;
-	}
-	throw new Error("Insufficient parameter for condition op: notEquals");
-}
-
-function _handleContains(paramInput, userInput, param2, value) {
-	if (param2 !== null && typeof userInput[param2] !== "undefined") {
-		const notValid = _validateParams(userInput, param2, WARNING);
-		if (typeof notValid === "object") {
-			return notValid;
-		}
-
-		// logger.info("Condition contains: " + paramInput + " contains " + userInput[param2] + " is " + (paramInput.indexOf(userInput[param2]) >= 0));
-		return paramInput.toString().indexOf(userInput[param2].toString()) >= 0;
-	} else if (value !== null) {
-		// logger.info("Condition contains: " + paramInput + " contains " + value + " is " + (paramInput.indexOf(value) >= 0));
-		return paramInput.toString().indexOf(value.toString()) >= 0;
-	}
-	throw new Error("Insufficient parameter for condition op: contains");
-}
-
-function _handleNotContains(paramInput, userInput, param2, value) {
-	if (param2 !== null && typeof userInput[param2] !== "undefined") {
-		const notValid = _validateParams(userInput, param2, WARNING);
-		if (typeof notValid === "object") {
-			return notValid;
-		}
-
-		// logger.info("Condition notContains: " + paramInput + " notContains " + userInput[param2] + " is " + (paramInput.indexOf(userInput[param2]) < 0));
-		return paramInput.toString().indexOf(userInput[param2].toString()) < 0;
-	} else if (value !== null) {
-		// logger.info("Condition notContains: " + paramInput + " notContains " + value + " is " + (paramInput.indexOf(value) < 0));
-		return paramInput.toString().indexOf(value.toString()) < 0;
-	}
-	throw new Error("Insufficient parameter for condition op: notContains");
-}
-
-function _handleChecked(paramInput, param) {
-	// logger.info("Condition checked: " + param + " is " + (paramInput !== "" && paramInput === "true") || (paramInput !== "" && paramInput !== "false");
-	return (paramInput !== "" && paramInput === true) || (paramInput !== "" && paramInput !== false);
-}
-
-function _handleNotChecked(paramInput, param) {
-	// logger.info("Condition not checked: " + param + " is " + (paramInput !== "" && paramInput === "false") || paramInput === "";
-	return (paramInput !== "" && paramInput === false) || paramInput === "";
-}
-
-function _handleColNotExists(paramInput, dataModel, cellCoordinates) {
-	// logger.info("Condition col not exists: paramInput === " + paramInput);
-	if (!dataModel) {
-		return true;
-	}
-	let value = paramInput;
-	if (PropertyUtils.toType(paramInput) === "array" && cellCoordinates &&
-			PropertyUtils.toType(cellCoordinates.rowIndex) === "number" &&
-			PropertyUtils.toType(cellCoordinates.colIndex) === "number" &&
-			cellCoordinates.rowIndex > -1 && cellCoordinates.colIndex > -1 &&
-			paramInput.length > cellCoordinates.rowIndex &&
-			paramInput[cellCoordinates.rowIndex].length > cellCoordinates.colIndex) {
-		value = paramInput[cellCoordinates.rowIndex][cellCoordinates.colIndex];
-	}
-	if (!cellCoordinates || cellCoordinates.skipVal !== value) {
-		for (const field of dataModel.fields) {
-			if (field.name === value) {
+function _handleGreaterThan(param, paramInput, userInput, param2, value) {
+	const dataType = typeof paramInput;
+	switch (dataType) {
+	case "number":
+		if (typeof userInput[param2] !== "undefined") {
+			const notValid = _validateParams(userInput, param2, WARNING);
+			if (typeof notValid === "object") {
+				return notValid;
+			}
+			if (typeof userInput[param2] !== "number") {
 				return false;
 			}
+			return paramInput > userInput[param2];
+		} else if (typeof value !== "undefined") {
+			if (value === "null") {
+				return true;
+			}
+			return paramInput > value;
 		}
+		throw new Error("Insufficient parameter for condition operation 'greaterThan'");
+	case "object":
+		if (paramInput === null || userInput[param2] === null || value === null) {
+			return true;
+		}
+		return false;
+	default:
+		logger.warn("Ignoring condition operation 'greaterThan' for parameter_ref " + param + " with input data type " + dataType);
+		return true;
 	}
+}
+
+function _handleLessThan(param, paramInput, userInput, param2, value) {
+	const dataType = typeof paramInput;
+	switch (dataType) {
+	case "number":
+		if (typeof userInput[param2] !== "undefined") {
+			const notValid = _validateParams(userInput, param2, WARNING);
+			if (typeof notValid === "object") {
+				return notValid;
+			}
+			if (typeof userInput[param2] !== "number") {
+				return false;
+			}
+			return paramInput < userInput[param2];
+		} else if (typeof value !== "undefined") {
+			if (value === "null") {
+				return true;
+			}
+			return paramInput < value;
+		}
+		throw new Error("Insufficient parameter for condition operation 'lessThan'");
+	case "object":
+		if (paramInput === null || userInput[param2] === null || value === null) {
+			return true;
+		}
+		return false;
+	default:
+		logger.warn("Ignoring condition operation 'lessThan' for parameter_ref " + param + " with input data type " + dataType);
+		return true;
+	}
+}
+
+function _handleEquals(param, paramInput, userInput, param2, value, info) {
+	if (info.controlType !== "passwordfield") {
+		const dataType = typeof paramInput;
+		if (typeof userInput[param2] !== "undefined") {
+			const notValid = _validateParams(userInput, param2, WARNING);
+			if (typeof notValid === "object") {
+				return notValid;
+			}
+
+			switch (dataType) {
+			case "boolean":
+			case "number":
+				return paramInput === userInput[param2];
+			case "string":
+				return paramInput.trim() === userInput[param2].trim();
+			case "object":
+				return JSON.stringify(paramInput) === JSON.stringify(userInput[param2]);
+			default:
+				logger.warn("Ignoring condition operation 'equals' for parameter_ref " + param + " with input data type " + dataType);
+				return true;
+			}
+		} else if (typeof value !== "undefined") {
+			switch (dataType) {
+			case "boolean":
+			case "number":
+				return paramInput === value;
+			case "string":
+				return paramInput.trim() === value.trim();
+			case "object":
+				return JSON.stringify(paramInput) === JSON.stringify(value);
+			default:
+				logger.warn("Ignoring condition operation 'equals' for parameter_ref " + param + " with input data type " + dataType);
+				return true;
+			}
+		}
+		throw new Error("Insufficient parameter for condition operation equals");
+	}
+	logger.warn("Ignoring unsupported condition operation 'equals' for control type " + info.controlType);
 	return true;
 }
 
-function _handleCellNotEmpty(paramInput, cellCoordinates) {
-	let value = paramInput;
-	if (PropertyUtils.toType(paramInput) === "array" && cellCoordinates) {
-		if (PropertyUtils.toType(cellCoordinates.rowIndex) === "number" &&
-				PropertyUtils.toType(cellCoordinates.colIndex) === "number" &&
-				cellCoordinates.rowIndex > -1 && cellCoordinates.colIndex > -1 &&
-				paramInput.length > cellCoordinates.rowIndex &&
-				paramInput[cellCoordinates.rowIndex].length > cellCoordinates.colIndex) {
-			value = (paramInput[cellCoordinates.rowIndex][cellCoordinates.colIndex]).trim();
-		} else {
-			// An empty array means there are no rows to test
+function _handleNotEquals(param, paramInput, userInput, param2, value, info) {
+	if (info.controlType !== "passwordfield") {
+		const dataType = typeof paramInput;
+		if (typeof userInput[param2] !== "undefined") {
+			const notValid = _validateParams(userInput, param2, WARNING);
+			if (typeof notValid === "object") {
+				return notValid;
+			}
+
+			switch (dataType) {
+			case "boolean":
+			case "number":
+				return paramInput !== userInput[param2];
+			case "string":
+				return paramInput.trim() !== userInput[param2].trim();
+			case "object":
+				return JSON.stringify(paramInput) !== JSON.stringify(userInput[param2]);
+			default:
+				logger.warn("Ignoring condition operation 'notEquals' for parameter_ref " + param + " with input data type " + dataType);
+				return true;
+			}
+		} else if (typeof value !== "undefined") {
+			switch (dataType) {
+			case "boolean":
+			case "number":
+				return paramInput !== value;
+			case "string":
+				return paramInput.trim() !== value.trim();
+			case "object":
+				return JSON.stringify(paramInput) !== JSON.stringify(value);
+			default:
+				logger.warn("Ignoring condition operation 'notEquals' for parameter_ref " + param + " with input data type " + dataType);
+				return true;
+			}
+		}
+		throw new Error("Insufficient parameter for condition operation notEquals");
+	}
+	logger.warn("Ignoring unsupported condition operation 'notEquals' for control type " + info.controlType);
+	return true;
+}
+
+function _handleContains(param, paramInput, userInput, param2, value, info) {
+	const unsupportedControls = ["checkbox", "numberfield", "passwordfield"];
+	if (unsupportedControls.indexOf(info.controlType) < 0) {
+		const dataType = typeof paramInput;
+		if (typeof userInput[param2] !== "undefined") {
+			const notValid = _validateParams(userInput, param2, WARNING);
+			if (typeof notValid === "object") {
+				return notValid;
+			}
+
+			switch (dataType) {
+			case "string":
+				return paramInput.indexOf(userInput[param2]) >= 0;
+			case "object":
+				return _searchInArray(paramInput, userInput[param2], false);
+			default:
+				logger.warn("Ignoring condition operation 'contains' for parameter_ref " + param + " with input data type " + dataType);
+				return true;
+			}
+		} else if (typeof value !== "undefined") {
+			switch (dataType) {
+			case "string":
+				return paramInput.indexOf(value) >= 0;
+			case "object":
+				return _searchInArray(paramInput, value, false);
+			default:
+				logger.warn("Ignoring condition operation 'contains' for parameter_ref " + param + " with input data type " + dataType);
+				return true;
+			}
+		}
+		throw new Error("Insufficient parameter for condition operation contains");
+	}
+	logger.warn("Ignoring unsupported condition operation 'contains' for control type " + info.controlType);
+	return true;
+}
+
+function _handleNotContains(param, paramInput, userInput, param2, value, info) {
+	const unsupportedControls = ["checkbox", "numberfield", "passwordfield"];
+	if (unsupportedControls.indexOf(info.controlType) < 0) {
+		const dataType = typeof paramInput;
+		if (typeof userInput[param2] !== "undefined") {
+			const notValid = _validateParams(userInput, param2, WARNING);
+			if (typeof notValid === "object") {
+				return notValid;
+			}
+
+			switch (dataType) {
+			case "string":
+				return paramInput.indexOf(userInput[param2]) < 0;
+			case "object":
+				return !_searchInArray(paramInput, userInput[param2], false);
+			default:
+				logger.warn("Ignoring condition operation 'notContains' for parameter_ref " + param + " with input data type " + dataType);
+				return true;
+			}
+		} else if (typeof value !== "undefined") {
+			switch (dataType) {
+			case "string":
+				return paramInput.indexOf(value) < 0;
+			case "object":
+				return !_searchInArray(paramInput, value, false);
+			default:
+				logger.warn("Ignoring condition operation 'notContains' for parameter_ref " + param + " with input data type " + dataType);
+				return true;
+			}
+		}
+		throw new Error("Insufficient parameter for condition operation notContains");
+	}
+	logger.warn("Ignoring unsupported condition operation 'notContains' for control type " + info.controlType);
+	return true;
+}
+
+function _handleColNotExists(paramInput, info) {
+	const supportedControls = ["textarea", "textfield", "structuretable", "structureeditor", "structurelisteditor"];
+	if (supportedControls.indexOf(info.controlType) >= 0) {
+		if (!info.dataModel) {
 			return true;
 		}
+		let value = paramInput;
+		if (PropertyUtils.toType(paramInput) === "array" && info.cellCoordinates &&
+				PropertyUtils.toType(info.cellCoordinates.rowIndex) === "number" &&
+				PropertyUtils.toType(info.cellCoordinates.colIndex) === "number" &&
+				info.cellCoordinates.rowIndex > -1 && info.cellCoordinates.colIndex > -1 &&
+				paramInput.length > info.cellCoordinates.rowIndex &&
+				paramInput[info.cellCoordinates.rowIndex].length > info.cellCoordinates.colIndex) {
+			value = paramInput[info.cellCoordinates.rowIndex][info.cellCoordinates.colIndex];
+		}
+		if (!info.cellCoordinates || info.cellCoordinates.skipVal !== value) {
+			for (const field of info.dataModel.fields) {
+				if (field.name === value) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
-	return PropertyUtils.toType(value) !== "undefined" && String(value).length > 0;
+	logger.warn("Ignoring unsupported condition operation 'colNotExists' for control type " + info.controlType);
+	return true;
+}
+
+function _handleCellNotEmpty(paramInput, info) {
+	const supportedControls = ["structuretable", "structureeditor", "structurelisteditor"];
+	if (supportedControls.indexOf(info.controlType) >= 0) {
+		let value = paramInput;
+		if (PropertyUtils.toType(paramInput) === "array" && info.cellCoordinates) {
+			if (PropertyUtils.toType(info.cellCoordinates.rowIndex) === "number" &&
+					PropertyUtils.toType(info.cellCoordinates.colIndex) === "number" &&
+					info.cellCoordinates.rowIndex > -1 && info.cellCoordinates.colIndex > -1 &&
+					paramInput.length > info.cellCoordinates.rowIndex &&
+					paramInput[info.cellCoordinates.rowIndex].length > info.cellCoordinates.colIndex) {
+				value = (paramInput[info.cellCoordinates.rowIndex][info.cellCoordinates.colIndex]).trim();
+			} else {
+				// An empty array means there are no rows to test
+				return true;
+			}
+		}
+		const type = PropertyUtils.toType(value);
+		return type !== "undefined" && type !== "null" && String(value).length > 0;
+	}
+	logger.warn("Ignoring unsupported condition operation 'cellNotEmpty' for control type " + info.controlType);
+	return true;
 }
 
 /**
@@ -493,6 +599,23 @@ function failedMessage(failedErrorMessage) {
 		};
 	}
 	return "Failed to parse failedMessage";
+}
+
+function _searchInArray(array, element, state) {
+	let found = state;
+	for (let i = 0; i < array.length; i++) {
+		if (Array.isArray(array[i])) {
+			found = _searchInArray(array[i], element, found);
+		} else if (typeof array[i] === "string" && array[i].indexOf(element) >= 0) {
+			found = true;
+		} else if (array[i] === element) { // compare whole cell
+			found = true;
+		}
+		if (found) {
+			return true;
+		}
+	}
+	return found;
 }
 
 module.exports = {
