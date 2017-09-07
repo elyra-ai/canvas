@@ -766,7 +766,7 @@ export default class DiagramCanvas extends React.Component {
 
 	handlePlaceholderLinkClick(e) {
 		if (chmln) {
-			chmln.show("58e790d57238810004e28c21");
+			chmln.show("58e7d862db7dc5000436be2d");
 		} else {
 			logger.info("handlePlaceholderLinkClick:no chmln");
 		}
