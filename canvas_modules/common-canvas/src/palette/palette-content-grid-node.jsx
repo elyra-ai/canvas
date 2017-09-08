@@ -18,10 +18,7 @@ class PaletteContentNode extends React.Component {
 		this.state = {
 		};
 
-		this.tempNodeCreated = false;
-
 		this.onDragStart = this.onDragStart.bind(this);
-		this.onDragOver = this.onDragOver.bind(this);
 	}
 
 	onDragStart(ev) {
@@ -31,26 +28,14 @@ class PaletteContentNode extends React.Component {
 				typeId: this.props.nodeTemplate.typeId,
 				label: this.props.nodeTemplate.label
 			}));
-		// Create a temp node and use it to display a drag image.
-		// let tempNode = this.props.createTempNode(ev.target.id);
-		// this.tempNodeCreated = true;
-		// ev.dataTransfer.setDragImage(tempNode.obj, tempNode.xOffset, 0);
 	}
 
-	onDragOver(ev) {
-		// Delete the temp node as soon as we start dragging the temp node's image.
-		if (this.tempNodeCreated === true) {
-			this.props.deleteTempNode();
-			this.tempNodeCreated = false;
-		}
-	}
 
 	render() {
 		return (
 			<div id={this.props.nodeTemplate.id}
 				draggable="true"
 				onDragStart={this.onDragStart}
-				onDragOver={this.onDragOver}
 				className="palette-grid-node-outer"
 			>
 				<div className="palette-grid-node-inner">
@@ -69,8 +54,7 @@ class PaletteContentNode extends React.Component {
 }
 
 PaletteContentNode.propTypes = {
-	nodeTemplate: PropTypes.object,
-	deleteTempNode: PropTypes.func.isRequired
+	nodeTemplate: PropTypes.object
 };
 
 export default PaletteContentNode;

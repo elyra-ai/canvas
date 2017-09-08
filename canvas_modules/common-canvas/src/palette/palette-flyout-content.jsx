@@ -65,7 +65,7 @@ class PaletteFlyoutContent extends React.Component {
 		var filteredNodeTypes = [];
 		if (nodeTypes) {
 			for (const nodeType of nodeTypes) {
-				if (nodeType.label.indexOf(this.state.filterKeyword) > -1) {
+				if (nodeType.label.toLowerCase().indexOf(this.state.filterKeyword.toLowerCase()) > -1) {
 					filteredNodeTypes.push(nodeType);
 				}
 			}
@@ -88,8 +88,7 @@ class PaletteFlyoutContent extends React.Component {
 					<PaletteContentList show
 						key={category + "-nodes"}
 						categoryJSON={filteredNodeTypes}
-						createTempNode={this.props.createTempNode}
-						deleteTempNode={this.props.deleteTempNode}
+						addNodeToCanvas={this.props.addNodeToCanvas}
 					/>);
 			}
 			contentDivs.push(
@@ -132,9 +131,8 @@ class PaletteFlyoutContent extends React.Component {
 
 PaletteFlyoutContent.propTypes = {
 	paletteJSON: PropTypes.object.isRequired,
-	createTempNode: PropTypes.func.isRequired,
-	deleteTempNode: PropTypes.func.isRequired,
-	filterKeyword: PropTypes.string
+	filterKeyword: PropTypes.string,
+	addNodeToCanvas: PropTypes.func
 };
 
 export default PaletteFlyoutContent;

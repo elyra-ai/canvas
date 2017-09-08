@@ -18,10 +18,8 @@ class PaletteContentListItem extends React.Component {
 		this.state = {
 		};
 
-		this.tempNodeCreated = false;
-
 		this.onDragStart = this.onDragStart.bind(this);
-		this.onDragOver = this.onDragOver.bind(this);
+		this.onDoubleClick = this.onDoubleClick.bind(this);
 	}
 
 	onDragStart(ev) {
@@ -31,17 +29,14 @@ class PaletteContentListItem extends React.Component {
 				typeId: this.props.nodeTemplate.typeId,
 				label: this.props.nodeTemplate.label
 			}));
-		// Create a temp node and use it to display a drag image.
-		// let tempNode = this.props.createTempNode(ev.target.id);
-		// this.tempNodeCreated = true;
-		// ev.dataTransfer.setDragImage(tempNode.obj, tempNode.xOffset, 0);
 	}
 
-	onDragOver(ev) {
-		// Delete the temp node as soon as we start dragging the temp node's image.
-		if (this.tempNodeCreated === true) {
-			this.props.deleteTempNode();
-			this.tempNodeCreated = false;
+	onDoubleClick() {
+		if (this.props.addNodeToCanvas) {
+			this.props.addNodeToCanvas({
+				typeId: this.props.nodeTemplate.typeId,
+				label: this.props.nodeTemplate.label
+			});
 		}
 	}
 
@@ -50,7 +45,7 @@ class PaletteContentListItem extends React.Component {
 			<div id={this.props.nodeTemplate.id}
 				draggable="true"
 				onDragStart={this.onDragStart}
-				onDragOver={this.onDragOver}
+				onDoubleClick={this.onDoubleClick}
 				className="palette-list-item"
 			>
 				<div className="palette-list-item-icon">
@@ -68,7 +63,7 @@ class PaletteContentListItem extends React.Component {
 
 PaletteContentListItem.propTypes = {
 	nodeTemplate: PropTypes.object.isRequired,
-	deleteTempNode: PropTypes.func.isRequired
+	addNodeToCanvas: PropTypes.func
 };
 
 export default PaletteContentListItem;

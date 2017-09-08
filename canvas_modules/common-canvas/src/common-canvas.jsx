@@ -53,8 +53,7 @@ export default class CommonCanvas extends React.Component {
 		this.openPalette = this.openPalette.bind(this);
 		this.closePalette = this.closePalette.bind(this);
 
-		this.createTempNode = this.createTempNode.bind(this);
-		this.deleteTempNode = this.deleteTempNode.bind(this);
+		this.addNodeToCanvas = this.addNodeToCanvas.bind(this);
 
 		this.zoomIn = this.zoomIn.bind(this);
 		this.zoomOut = this.zoomOut.bind(this);
@@ -74,14 +73,6 @@ export default class CommonCanvas extends React.Component {
 
 	closePalette() {
 		this.setState({ isPaletteOpen: false });
-	}
-
-	createTempNode(paletteId) {
-		return this.refs.canvas.createTempNode(paletteId);
-	}
-
-	deleteTempNode(paletteId) {
-		return this.refs.canvas.deleteTempNode(paletteId);
 	}
 
 	zoomIn() {
@@ -105,6 +96,10 @@ export default class CommonCanvas extends React.Component {
 		}
 
 		this.closeContextMenu();
+	}
+
+	addNodeToCanvas(typeId, label) {
+		return this.refs.canvas.addNodeToCanvas(typeId, label);
 	}
 
 	editActionHandler(data) {
@@ -285,16 +280,13 @@ export default class CommonCanvas extends React.Component {
 					palette = (<PaletteFlyout
 						paletteJSON={ObjectModel.getPaletteData()}
 						showPalette={this.props.showPalette}
-						createTempNode={this.createTempNode}
-						deleteTempNode={this.deleteTempNode}
+						addNodeToCanvas={this.addNodeToCanvas}
 					/>);
 				} else {
 					palette = (<Palette
 						paletteJSON={ObjectModel.getPaletteData()}
 						showPalette={this.state.isPaletteOpen}
 						closePalette={this.closePalette}
-						createTempNode={this.createTempNode}
-						deleteTempNode={this.deleteTempNode}
 					/>);
 
 					const paletteTooltip = <Tooltip id="paletteTooltip">{this.props.config.paletteTooltip}</Tooltip>;

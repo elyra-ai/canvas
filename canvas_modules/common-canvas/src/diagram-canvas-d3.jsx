@@ -102,6 +102,12 @@ export default class DiagramCanvas extends React.Component {
 		}
 	}
 
+	addNodeToCanvas(node) {
+		if (node) {
+			this.createNodeAt(node.typeId, node.label, node.sourceId, node.sourceObjectTypeId, 260, 10);
+		}
+	}
+
 	dragOver(event) {
 		event.preventDefault();
 	}

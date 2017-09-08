@@ -74,8 +74,6 @@ export default class DiagramCanvas extends React.Component {
 		this.disconnectNodes = this.disconnectNodes.bind(this);
 		this.moveNodes = this.moveNodes.bind(this);
 
-		this.createTempNode = this.createTempNode.bind(this);
-
 		this.zoomIn = this.zoomIn.bind(this);
 		this.zoomOut = this.zoomOut.bind(this);
 
@@ -540,15 +538,6 @@ export default class DiagramCanvas extends React.Component {
 	// ----------------------------------
 
 	// Editing methods
-
-	// Creates a new temporary node that is used by the drag and drop (from
-	// the palette) code to display an image of the dragged node.
-	createTempNode(paletteId) {
-		// var paletteObj = this.getPaletteObject(paletteId);
-		// let tempNode = this.canvasD3.createTempNode(paletteObj);
-		// return tempNode;
-		return null;
-	}
 
 	createNodeAt(nodeTypeId, label, sourceId, sourceObjectTypeId, x, y) {
 		var data = {};

@@ -537,8 +537,6 @@ class Palette extends React.Component {
 				/>
 				<PaletteContent paletteJSON={this.props.paletteJSON}
 					showGrid={this.state.showGrid}
-					createTempNode={this.props.createTempNode}
-					deleteTempNode={this.props.deleteTempNode}
 				/>
 			</div>
 		);
@@ -548,9 +546,7 @@ class Palette extends React.Component {
 Palette.propTypes = {
 	paletteJSON: PropTypes.object.isRequired,
 	showPalette: PropTypes.bool.isRequired,
-	closePalette: PropTypes.func.isRequired,
-	createTempNode: PropTypes.func.isRequired,
-	deleteTempNode: PropTypes.func.isRequired
+	closePalette: PropTypes.func.isRequired
 };
 
 export default Palette;

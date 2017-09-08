@@ -80,13 +80,9 @@ class PaletteContent extends React.Component {
 				/>
 				<PaletteContentGrid show={this.props.showGrid}
 					categoryJSON={categoryJSON}
-					createTempNode={this.props.createTempNode}
-					deleteTempNode={this.props.deleteTempNode}
 				/>
 				<PaletteContentList show={!this.props.showGrid}
 					categoryJSON={categoryJSON}
-					createTempNode={this.props.createTempNode}
-					deleteTempNode={this.props.deleteTempNode}
 				/>
 			</div>
 		);
@@ -95,9 +91,7 @@ class PaletteContent extends React.Component {
 
 PaletteContent.propTypes = {
 	paletteJSON: PropTypes.object.isRequired,
-	showGrid: PropTypes.bool.isRequired,
-	createTempNode: PropTypes.func.isRequired,
-	deleteTempNode: PropTypes.func.isRequired
+	showGrid: PropTypes.bool.isRequired
 };
 
 export default PaletteContent;
