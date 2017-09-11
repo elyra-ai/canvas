@@ -76,6 +76,8 @@ describe("Palette renders correctly", () => {
 		const input = flyoutPaletteContent.find("#palette-flyout-search-text");
 		input.simulate("change", { target: { value: "Var" } });
 		expect(flyoutPaletteContent.find(PaletteFlyoutContentListItem)).to.have.length(1);
+		input.simulate("change", { target: { value: "VAR" } });
+		expect(flyoutPaletteContent.find(PaletteFlyoutContentListItem)).to.have.length(1);
 	});
 });
 

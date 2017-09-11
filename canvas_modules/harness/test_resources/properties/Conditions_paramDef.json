@@ -650,7 +650,8 @@
               "resource_key": "structuretableRenameFields.new_name.desc"
             },
             "width": 26,
-            "edit_style": "inline"
+            "edit_style": "inline",
+            "filterable": true
           },
           {
             "parameter_ref": "new_label",

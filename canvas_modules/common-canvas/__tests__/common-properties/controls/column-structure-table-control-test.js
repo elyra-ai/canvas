@@ -42,7 +42,8 @@ const control = {
 				"propType": "string",
 				"isList": false,
 				"isMap": false
-			}
+			},
+			"filterable": true
 		},
 		{
 			"name": "sort_order",
@@ -588,6 +589,28 @@ describe("ColumnStructureTableControl renders correctly", () => {
 		expect(tableData.at(0).children()
 			.at(0)
 			.text()).to.equal("Drug");
+	});
+
+	it("should search correct keyword in table", () => {
+		const wrapper = mount(
+			<ColumnStructureTableControl control={control}
+				dataModel={datasetMetadata}
+				valueAccessor={valueAccessor}
+				updateControlValue={updateControlValue}
+				updateSelectedRows={updateSelectedRows}
+				validationDefinitions={validationDefinitions}
+				controlStates={controlStates}
+				selectedRows={getSelectedRowsTop(control.name)}
+				buildUIItem={genUIItem}
+				openFieldPicker={openFieldPicker}
+			/>
+		);
+		const input = wrapper.find("#flexible-table-search");
+		input.simulate("change", { target: { value: "Age" } });
+		expect(wrapper.find(".table-row")).to.have.length(1);
+		input.simulate("change", { target: { value: "AGE" } });
+		expect(wrapper.find(".table-row")).to.have.length(1);
+
 	});
 
 });

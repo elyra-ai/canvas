@@ -312,6 +312,9 @@ describe("field-picker-control renders correctly", () => {
 		const input = wrapper.find("#flexible-table-search");
 		input.simulate("change", { target: { value: "Time" } });
 		expect(wrapper.find(".field-picker-data-rows")).to.have.length(2);
+		// test case insensitive
+		input.simulate("change", { target: { value: "TIME" } });
+		expect(wrapper.find(".field-picker-data-rows")).to.have.length(2);
 	});
 
 	it("should set checkedAll to true in `FieldPicker`", () => {

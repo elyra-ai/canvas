@@ -172,8 +172,8 @@ export default class ColumnStructureTableEditor extends EditorControl {
 	getRowClassName(rowIndex) {
 		return this.state.selectedRows.indexOf(rowIndex) >= 0
 			// ? "column-structure-allocator-control-row-selected"
-			? "table-selected-row"
-			: "";
+			? "table-row table-selected-row "
+			: "table-row";
 	}
 
 	enumRenderCell(value, columnDef) {
@@ -325,7 +325,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 				const columnDef = this.props.control.subControls[colIndex];
 				if (columnDef.name === this.filterFields[i]) {
 					const value = controlValue[rowIndex][colIndex];
-					if (value.indexOf(this.state.filterText) > -1) {
+					if (value.toLowerCase().indexOf(this.state.filterText.toLowerCase()) > -1) {
 						return true;
 					}
 					break;

@@ -168,7 +168,7 @@ export default class FieldPicker extends EditorControl {
 		});
 
 		const visibleData = filteredData.filter(function(row) {
-			return row.name.indexOf(that.state.filterText) > -1;
+			return row.name.toLowerCase().indexOf(that.state.filterText.toLowerCase()) > -1;
 		});
 
 		return visibleData;
