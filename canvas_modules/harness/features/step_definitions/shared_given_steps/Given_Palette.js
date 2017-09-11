@@ -65,7 +65,7 @@ module.exports = function() {
 		browser.$("#sidepanel-palette-input")
 			.$(".formField")
 			.$(".select")
-			.$("button")
+			.$(".button")
 			.click("svg");
 		// get the list of drop down options.
 		var paletteFileOptions = browser.$("#sidepanel-palette-input")
@@ -86,7 +86,7 @@ module.exports = function() {
 		browser.$("#sidepanel-palette-input")
 			.$(".formField")
 			.$(".select")
-			.$("button")
+			.$(".button")
 			.click("svg");
 		// get the list of drop down options.
 		var paletteFileOptions = browser.$("#sidepanel-palette-input")
@@ -98,10 +98,9 @@ module.exports = function() {
 			if (paletteFileOptions[idx].getText() === "Choose from location...") {
 				paletteFileOptions[idx].click();
 				var paletteInput = browser.$("#paletteJsonInput");
-
 				// this will not work with relative paths
 				paletteInput.setValue(getBaseDir() + paletteFile);
-				browser.$("#sidepanel-palette-input").click("a");
+				browser.$("#sidepanel-palette-input").click("#paletteFileSubmit");
 			}
 		}
 	});

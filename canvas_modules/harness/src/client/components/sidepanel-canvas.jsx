@@ -262,8 +262,10 @@ export default class SidePanelForms extends React.Component {
 				/>
 				{space}
 				<Button dark
+					id="canvasFileSubmit"
 					disabled={!this.isReadyToSubmitCanvasData()}
 					onClick={this.submitCanvas.bind(this)}
+
 				>
 					Submit
 				</Button>
@@ -284,6 +286,7 @@ export default class SidePanelForms extends React.Component {
 				/>
 				{space}
 				<Button dark
+					id="paletteFileSubmit"
 					disabled={!this.isReadyToSubmitPaletteData()}
 					onClick={this.submitPalette.bind(this)}
 					onChange={(evt) => this.props.enableNavPalette(evt.target.checked)}

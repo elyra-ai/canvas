@@ -17,7 +17,7 @@ module.exports = function() {
 		browser.$("#sidepanel-canvas-input")
 			.$(".canvasField")
 			.$(".select")
-			.$("button")
+			.$(".button")
 			.click("svg");
 		// get the list of drop down options.
 		var canvasFileOptions = browser
@@ -39,7 +39,7 @@ module.exports = function() {
 		browser.$("#sidepanel-canvas-input")
 			.$(".canvasField")
 			.$(".select")
-			.$("button")
+			.$(".button")
 			.click("svg");
 		// get the list of drop down options.
 		var canvasFileOptions = browser
@@ -54,7 +54,7 @@ module.exports = function() {
 				var canvasInput = browser.$("#canvasFileInput");
 				// this will not work with relative paths
 				canvasInput.setValue(getBaseDir() + diagramFile);
-				browser.$(".canvasField").click("a");
+				browser.$(".canvasField").click("#canvasFileSubmit");
 			}
 		}
 	});
@@ -64,7 +64,7 @@ module.exports = function() {
 		browser.$("#sidepanel-input")
 			.$(".formField")
 			.$(".select")
-			.$("button")
+			.$(".button")
 			.click("svg");
 		// get the list of drop down options.
 		var commonPropertiesOptions = browser

@@ -66,7 +66,7 @@ describe("numberfield-control renders correctly", () => {
 				updateControlValue={updateControlValue}
 			/>
 		);
-		const input = wrapper.find(".number");
+		const input = wrapper.find("[type='number']");
 		expect(input).to.have.length(1);
 	});
 
@@ -79,7 +79,7 @@ describe("numberfield-control renders correctly", () => {
 				updateControlValue={updateControlValue}
 			/>
 		);
-		const input = wrapper.find(".number");
+		const input = wrapper.find("[type='number']");
 		input.simulate("change", { target: { value: 44 } });
 		expect(wrapper.state().controlValue).to.equal(44);
 	});
@@ -93,7 +93,7 @@ describe("numberfield-control renders correctly", () => {
 				updateControlValue={updateControlValue}
 			/>
 		);
-		const input = wrapper.find(".number");
+		const input = wrapper.find("[type='number']");
 		input.simulate("change", { target: { value: "" } });
 		expect(wrapper.state().controlValue).to.equal(null);
 	});
@@ -107,7 +107,7 @@ describe("numberfield-control renders correctly", () => {
 				updateControlValue={updateControlValue}
 			/>
 		);
-		const input = wrapper.find(".number");
+		const input = wrapper.find("[type='number']");
 		expect(input.get(0).type).to.equal("number");
 	});
 
@@ -120,7 +120,7 @@ describe("numberfield-control renders correctly", () => {
 				updateControlValue={updateControlValue}
 			/>
 		);
-		const input = wrapper.find(".number");
+		const input = wrapper.find("[type='number']");
 		expect(input.get(0).placeholder).to.equal(control.additionalText);
 	});
 
