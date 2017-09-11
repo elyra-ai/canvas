@@ -716,3 +716,9 @@ tbody.reactable-data .editor_control_area {
 #flexible-table-container>table>tbody>.field-picker-data-rows>td[label=checkbox] {
     padding-left: 15px;
 }
+
+/* Overwrite ap-components style to avoid large margin in bottom.
+   OK to do because we use our own validation component */
+.nolabel {
+  margin-bottom: 0px;
+}
