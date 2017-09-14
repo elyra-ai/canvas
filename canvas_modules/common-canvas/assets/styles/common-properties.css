@@ -161,6 +161,7 @@ input[type=radio]{
 
 .form__validation.validation-error-message-type-number,
 .form__validation.validation-error-message-type-table,
+.form__validation.validation-error-message-type-structure-list-editor,
 p.form__validation.validation-error-message-type-selection {
 	margin-top: 5px;
 	width: 93%;
@@ -217,6 +218,12 @@ input.number,
 .validation-warning-message-icon-table {
 	position: relative;
 	top: 45px;
+}
+
+.validation-error-message-icon-structure-list-editor,
+.validation-warning-message-icon-structure-list-editor {
+	position: relative;
+	top: 0px;
 }
 
 .form__validation.validation-error-message-type-selection {
@@ -721,4 +728,13 @@ tbody.reactable-data .editor_control_area {
    OK to do because we use our own validation component */
 .nolabel {
   margin-bottom: 0px;
+}
+
+.structure-list-editor {
+	border: 1px solid #d8d8d8;
+}
+
+.public_fixedDataTable_header .public_fixedDataTableCell_main {
+	border-top-style: none;
+	border-bottom-style: none;
 }

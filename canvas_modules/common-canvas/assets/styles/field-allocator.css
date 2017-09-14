@@ -124,7 +124,7 @@ select:-internal-list-box option:checked {
 
 #fixed-data-table-container {
   width: 100%;
-  overflow-x: scroll;
+  overflow-x: auto;
 }
 
 #structure-list-editor-table-buttons .public_fixedDataTable_main {

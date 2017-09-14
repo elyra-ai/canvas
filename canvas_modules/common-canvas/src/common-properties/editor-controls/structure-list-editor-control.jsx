@@ -73,7 +73,7 @@ export default class StructurelisteditorControl extends StructureTableEditor {
 		const controlName = this.getControlID().replace(EDITOR_CONTROL, "");
 		const conditionProps = {
 			controlName: controlName,
-			controlType: "table"
+			controlType: "structure-list-editor"
 		};
 		const conditionState = this.getConditionMsgState(conditionProps);
 
@@ -94,7 +94,7 @@ export default class StructurelisteditorControl extends StructureTableEditor {
 		const remove = <Button data-tip="Delete selected rows" data-for={tooltipId} bsSize="small" onClick={this.removeSelectedRows} {...stateDisabled}>-</Button>;
 		return (<div id={this.getControlID()} style={stateStyle}>
 			<div id={controlIconContainerClass}>
-				<div id="structure-list-editor-table-buttons" style={stateStyle}>
+				<div id="structure-list-editor-table-buttons" className="structure-list-editor" style={stateStyle}>
 					{table}
 					<div id="structure-list-editor-buttons-container">
 						<span >{add} {remove}</span>

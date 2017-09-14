@@ -1386,7 +1386,7 @@ describe("condition messages renders correctly with structurelisteditor table", 
 		expect(input).to.have.length(1);
 		expect(wrapper.state().valuesTable.structurelisteditorTableInput).to.have.length(1);
 
-		expect(wrapper.find(".validation-warning-message-icon-table")).to.have.length(0);
+		expect(wrapper.find(".validation-warning-message-icon-structure-list-editor")).to.have.length(0);
 		expect(wrapper.find(".validation-error-message-color-warning")).to.have.length(0);
 
 		const dataRows = input.find(".public_fixedDataTable_bodyRow");
@@ -1402,7 +1402,7 @@ describe("condition messages renders correctly with structurelisteditor table", 
 
 		expect(wrapper.state().valuesTable.structurelisteditorTableInput).to.have.length(0);
 
-		expect(wrapper.find(".validation-warning-message-icon-table")).to.have.length(1);
+		expect(wrapper.find(".validation-warning-message-icon-structure-list-editor")).to.have.length(1);
 		expect(wrapper.find(".validation-error-message-color-warning")).to.have.length(1);
 	});
 });
