@@ -42,11 +42,15 @@
     "structuretableRenameFields": [
       [
         "Age",
-        "Age"
+        "Age",
+        "",
+        "string"
       ],
       [
         "BP",
-        "BP-1"
+        "BP-1",
+        "blood pressure",
+        ""
       ]
     ],
     "structurelisteditorTableInput": [
@@ -231,7 +235,7 @@
     },
     {
       "id": "structuretableRenameFields",
-      "type": "array[structuretableRenameFields]",
+      "type": "map[string,structuretableRenameFields]",
       "role": "column",
       "default": []
     },
@@ -1385,6 +1389,23 @@
             "parameter_ref": "structuretableRenameFields",
             "op": "notContains",
             "value": "pw"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "structuretableRenameFields",
+          "message": {
+            "default": "The given column name is already in use"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "structuretableRenameFields",
+            "op": "colNotExists"
           }
         }
       }

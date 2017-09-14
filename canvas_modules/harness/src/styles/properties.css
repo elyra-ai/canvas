@@ -6,6 +6,11 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
+#conditions-container,
+#conditions-content {
+	width: 100%;
+}
+
 /* Properties Navbar */
 .properties-navbar-items {
   position:fixed;
@@ -19,7 +24,8 @@
   z-index: 3;
 }
 
-#properties-title {
+#properties-title,
+#conditions-title {
   background-color: #152935;
   color: #FFFFFF;
   padding: 14px;
@@ -29,7 +35,8 @@
 	height: 50px;
 }
 
-#properties-menu {
+#properties-menu,
+#conditions-menu {
 	width: 200px;
 	position: fixed;
 	right: 0;
@@ -69,6 +76,12 @@
 	}
 }
 
+@media (max-width: 849px) {
+	.conditions-nav-link {
+		display: none !important;
+	}
+}
+
 /* Header section */
 .properties-section-header {
 	background: #A6266E;
@@ -97,7 +110,8 @@
 }
 
 /* Properties Content */
-#properties-content {
+#properties-content,
+#conditions-content {
 	padding: 1em;
 }
 
@@ -153,11 +167,21 @@
 	max-height: 565px;
 }
 
+#expression-section-column-code > .json-block {
+	max-height: 616px;
+}
+
 .highlight {
 	background-color: #F5F5F5;
 	font-weight: 400;
 	border-radius: 4px;
 }
+
+.conditions-control-table-container {
+	width: 100%;
+	overflow-x: scroll;
+}
+
 
 /*.properties-control-label {
 	color: #777677;
@@ -168,4 +192,8 @@
 /* Override common-properties */
 #removeFieldTip, #addFieldTip {
 	position: absolute;
+}
+
+#conditions-control-table > thead > tr > th:focus {
+	outline: none;
 }

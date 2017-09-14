@@ -40,6 +40,10 @@ export default class FieldAllocatorControl extends EditorControl {
 		}
 	}
 
+	onClick(evt) {
+		this.validateInput();
+	}
+
 	// Selected columns are those that are referenced by values in the control that have
 	// been selected by the user.
 	getSelectedColumns() {
@@ -126,7 +130,7 @@ export default class FieldAllocatorControl extends EditorControl {
 		// help={this.props.control.additionalText}
 		return (
 			<div className="editor_control_area" style={stateStyle}>
-				<div id={controlIconContainerClass}>
+				<div onClick={this.onClick.bind(this)} id={controlIconContainerClass}>
 					<Dropdown {...stateDisabled}
 						id={this.getControlID()}
 						name={this.props.control.name}

@@ -21,14 +21,21 @@ import { DEFAULT_VALIDATION_MESSAGE, VALIDATION_MESSAGE, EDITOR_CONTROL } from "
 export default class EditorControl extends React.Component {
 
 	static splitNewlines(text) {
-		return text.split("\n");
+		if (text.length > 0) {
+			const split = text.split("\n");
+			if (Array.isArray(split)) {
+				return split;
+			}
+			return [split];
+		}
+		return [];
 	}
 
 	static joinNewlines(list) {
 		if (Array.isArray(list)) {
-			return list.join("\n");
+			return list.length === 0 ? [] : list.join("\n");
 		}
-		return "";
+		return list;
 	}
 
 	static genSelectOptions(control, selectedValues) {

@@ -18,25 +18,22 @@ export default class TextareaControl extends EditorControl {
 	constructor(props) {
 		super(props);
 		this.state = {
-			controlValue: EditorControl.joinNewlines(props.valueAccessor(props.control.name))
+			controlValue: props.valueAccessor(props.control.name)
 		};
 		this.getControlValue = this.getControlValue.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 	}
 
 	handleChange(evt) {
-		this.setState({ controlValue: evt.target.value });
-		if (this.props.control.valueDef && this.props.control.valueDef.isList) {
-			this.props.updateControlValue(this.props.control.name, EditorControl.splitNewlines(evt.target.value));
-		} else {
-			this.props.updateControlValue(this.props.control.name, evt.target.value);
+		let input = evt.target.value;
+		if (this.props.control.valueDef && this.props.control.valueDef.isList) { // array
+			input = EditorControl.splitNewlines(evt.target.value);
 		}
+		this.setState({ controlValue: input });
+		this.props.updateControlValue(this.props.control.name, input);
 	}
 
 	getControlValue() {
-		if (this.props.control.valueDef.isList) {
-			return EditorControl.splitNewlines(this.state.controlValue);
-		}
 		return this.state.controlValue;
 	}
 
@@ -59,6 +56,11 @@ export default class TextareaControl extends EditorControl {
 			controlIconContainerClass = "control-icon-container-enabled";
 		}
 
+		let value = EditorControl.joinNewlines(this.state.controlValue);
+		if (value.toString() === "") {
+			value = "";
+		}
+
 		const charLimit = this.getCharLimit(CHARACTER_LIMITS.NODE_PROPERTIES_DIALOG_TEXT_AREA);
 		return (
 			<div className="editor_control_area" style={stateStyle}>
@@ -71,7 +73,7 @@ export default class TextareaControl extends EditorControl {
 						msg={this.state.validateErrorMessage}
 						placeholder={this.props.control.additionalText}
 						onChange={this.handleChange}
-						value={this.state.controlValue}
+						value={value}
 						rows={4}
 						maxCount={charLimit}
 						maxLength={charLimit}

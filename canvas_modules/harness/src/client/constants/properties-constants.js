@@ -89,7 +89,7 @@ _defineConstant("CONTROLS_PROPS_INFO", {
 	"title": "Group Type: controls",
 	"parameterDef": {
 		"current_parameters": {
-			"textfieldControlName": "textareaPlaceholderText",
+			"textfieldControlName": "textfieldPlaceholderText",
 			"numberfieldControlName": -1
 		},
 		"parameters": [
@@ -148,7 +148,7 @@ _defineConstant("TABS_PROPS_INFO", {
 	"title": "Group Type: tabs",
 	"parameterDef": {
 		"current_parameters": {
-			"textfieldControlName": "textareaPlaceholderText",
+			"textfieldControlName": "textfieldPlaceholderText",
 			"numberfieldControlName": -1
 		},
 		"parameters": [
@@ -211,7 +211,7 @@ _defineConstant("SUBTABS_PROPS_INFO", {
 	"title": "Group Type: subTabs",
 	"parameterDef": {
 		"current_parameters": {
-			"textfieldControlName": "textareaPlaceholderText",
+			"textfieldControlName": "textfieldPlaceholderText",
 			"numberfieldControlName": -1
 		},
 		"parameters": [
@@ -280,7 +280,7 @@ _defineConstant("PANELS_PROPS_INFO", {
 	"title": "Group Type: panels",
 	"parameterDef": {
 		"current_parameters": {
-			"textfieldControlName": "textareaPlaceholderText",
+			"textfieldControlName": "textfieldPlaceholderText",
 			"numberfieldControlName": -1
 		},
 		"parameters": [
@@ -501,7 +501,7 @@ _defineConstant("CHECKBOX_PANEL_PROPS_INFO", {
 	"title": "Group Type: controls",
 	"parameterDef": {
 		"current_parameters": {
-			"textfieldControlName": "textareaPlaceholderText",
+			"textfieldControlName": "textfieldPlaceholderText",
 			"numberfieldControlName": -1
 		},
 		"parameters": [
@@ -623,7 +623,7 @@ _defineConstant("TEXTFIELD_PROPS_INFO", {
 	"title": "TextField Title",
 	"parameterDef": {
 		"current_parameters": {
-			"textfieldControlName": "textareaPlaceholderText"
+			"textfieldControlName": "textfieldPlaceholderText"
 		},
 		"parameters": [
 			{
@@ -669,7 +669,7 @@ _defineConstant("TEXTAREA_PROPS_INFO", {
 	"title": "Textarea Title",
 	"parameterDef": {
 		"current_parameters": {
-			"textareaControlName": ""
+			"textareaControlName": []
 		},
 		"parameters": [
 			{
@@ -894,7 +894,7 @@ _defineConstant("CHECKBOX_SINGLE_PROPS_INFO", {
 	"title": "Checkbox Title",
 	"parameterDef": {
 		"current_parameters": {
-			"checkboxSingle": ""
+			"checkboxSingle": false
 		},
 		"parameters": [
 			{
@@ -937,7 +937,7 @@ _defineConstant("CHECKBOX_SET_PROPS_INFO", {
 	"title": "Checkbox Set Title",
 	"parameterDef": {
 		"current_parameters": {
-			"checkboxSet": ""
+			"checkboxSet": []
 		},
 		"parameters": [
 			{
@@ -1172,7 +1172,7 @@ _defineConstant("SOMEOFSELECT_PROPS_INFO", {
 	"title": "Some of Select Title",
 	"parameterDef": {
 		"current_parameters": {
-			"someofselectList": ""
+			"someofselectList": []
 		},
 		"parameters": [
 			{

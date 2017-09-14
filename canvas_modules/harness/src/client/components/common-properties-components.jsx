@@ -10,6 +10,7 @@
 /* eslint max-len: ["error", 150] */
 
 import React from "react";
+import { Link } from "react-router-dom";
 import { Dropdown } from "ap-components-react/dist/ap-components-react";
 import {
 	CONTROLS_PROPS_INFO,
@@ -213,6 +214,9 @@ class CommonPropertiesComponents extends React.Component {
 						href="https://github.ibm.com/NGP-TWC/wdp-pipeline-schemas/blob/master/common-pipeline/operators/uihints-v1-schema.json"
 					>UI Hints schema
 					</a>. In addition, uihints are used to group UI controls.
+				</p>
+				<p>
+					Documentation on how to write conditions for controls can be found <Link to="/conditions" target="_blank">here</Link>.
 				</p>
 			</div>
 		</section>);
@@ -423,7 +427,7 @@ class CommonPropertiesComponents extends React.Component {
 				</div>
 				<div id="panels-controls-component">
 					<h3 id="--textarea" className="section-subtitle">textarea</h3>
-					<p>A multi-line text area is rendered for a parameter of <span className="highlight">type</span> array[string].</p>
+					<p>A multi-line text area is rendered for a parameter of <span className="highlight">type</span> string or array[string].</p>
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
@@ -482,7 +486,7 @@ class CommonPropertiesComponents extends React.Component {
 				</div>
 				<div id="panels-controls-component">
 					<h3 id="--numberfield" className="section-subtitle">numberfield</h3>
-					<p>A numeric text field is rendered for a parameter of <span className="highlight">type</span> integer.</p>
+					<p>A numeric text field is rendered for a parameter of <span className="highlight">type</span> number.</p>
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
@@ -828,12 +832,12 @@ class CommonPropertiesComponents extends React.Component {
 				</div>
 				<div id="panels-controls-component">
 					<h3 id="--structurelisteditor" className="section-subtitle">structurelisteditor</h3>
-					<p>For lists or maps of structures that are not field-oriented properties.
+					<p>For lists of structures that are not field-oriented properties.
 						This complex type control will be rendered if
 						the <span className="highlight">type</span> in <span className="highlight">group_info</span> is
 						not set, which will default to group type <a className="properties-page-intro-link" href="#/properties#--controls">
-							controls
-						</a>.</p>
+						controls</a>.
+					</p>
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties

@@ -11,6 +11,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 import CommonPropertiesComponents from "./components/common-properties-components.jsx";
+import CommonPropertiesConditions from "./components/common-properties-conditions.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "ap-components-react/dist/ap-components-react.min.css";
 import "common-canvas-styles";
@@ -18,15 +19,16 @@ import "../styles/properties.css";
 import "../styles/App.css";
 import "../styles/index.css";
 import { IntlProvider } from "react-intl";
-import { HashRouter, Switch, Route } from "react-router-dom";
+import { HashRouter, Route } from "react-router-dom";
 
 ReactDOM.render(
 	<IntlProvider locale="en">
 		<HashRouter>
-			<Switch>
+			<div>
 				<Route exact path="/" component={ App } />
 				<Route path="/properties" component={ CommonPropertiesComponents } />
-			</Switch>
+				<Route path="/conditions" component={ CommonPropertiesConditions } />
+			</div>
 		</HashRouter>
 	</IntlProvider>,
 	document.getElementById("root")

@@ -28,6 +28,7 @@
     "react-inlinesvg": "0.6.2",
     "react-intl": "2.3.0",
     "react-tooltip": "3.3.0",
+    "reactable": "0.14.1",
     "react-file-download": "0.3.4",
     "react-router-dom": "4.2.0"
   },

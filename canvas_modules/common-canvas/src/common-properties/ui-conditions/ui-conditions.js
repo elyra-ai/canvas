@@ -186,12 +186,11 @@ function evaluate(data, userInput, info) {
  */
 function or(data, userInput, info) {
 	for (let i = 0; i < data.length; i++) {
-		if (evaluate(data[i], userInput, info) === true) {
-			// logger.info("Or is true");
+		const evaluated = evaluate(data[i], userInput, info);
+		if (evaluated === true) {
 			return true;
 		}
 	}
-	// logger.info("Or is false");
 	return false;
 }
 
@@ -205,12 +204,13 @@ function or(data, userInput, info) {
  */
 function and(data, userInput, info) {
 	for (let i = 0; i < data.length; i++) {
-		if (evaluate(data[i], userInput, info) === false) {
-			// logger.info("And is false");
+		const evaluated = evaluate(data[i], userInput, info);
+		if (evaluated === false) {
 			return false;
+		} else if (typeof evaluated === "object") {
+			return evaluated;
 		}
 	}
-	// logger.info("And is true");
 	return true;
 }
 
@@ -397,6 +397,9 @@ function _handleEquals(param, paramInput, userInput, param2, value, info) {
 			case "string":
 				return paramInput.trim() === userInput[param2].trim();
 			case "object":
+				if (paramInput === null) {
+					return paramInput === userInput[param2];
+				}
 				return JSON.stringify(paramInput) === JSON.stringify(userInput[param2]);
 			default:
 				logger.warn("Ignoring condition operation 'equals' for parameter_ref " + param + " with input data type " + dataType);
@@ -410,6 +413,9 @@ function _handleEquals(param, paramInput, userInput, param2, value, info) {
 			case "string":
 				return paramInput.trim() === value.trim();
 			case "object":
+				if (paramInput === null) {
+					return paramInput === value;
+				}
 				return JSON.stringify(paramInput) === JSON.stringify(value);
 			default:
 				logger.warn("Ignoring condition operation 'equals' for parameter_ref " + param + " with input data type " + dataType);
@@ -438,6 +444,9 @@ function _handleNotEquals(param, paramInput, userInput, param2, value, info) {
 			case "string":
 				return paramInput.trim() !== userInput[param2].trim();
 			case "object":
+				if (paramInput === null) {
+					return paramInput !== userInput[param2];
+				}
 				return JSON.stringify(paramInput) !== JSON.stringify(userInput[param2]);
 			default:
 				logger.warn("Ignoring condition operation 'notEquals' for parameter_ref " + param + " with input data type " + dataType);
@@ -451,6 +460,9 @@ function _handleNotEquals(param, paramInput, userInput, param2, value, info) {
 			case "string":
 				return paramInput.trim() !== value.trim();
 			case "object":
+				if (paramInput === null) {
+					return paramInput !== value;
+				}
 				return JSON.stringify(paramInput) !== JSON.stringify(value);
 			default:
 				logger.warn("Ignoring condition operation 'notEquals' for parameter_ref " + param + " with input data type " + dataType);
@@ -536,7 +548,7 @@ function _handleNotContains(param, paramInput, userInput, param2, value, info) {
 }
 
 function _handleColNotExists(paramInput, info) {
-	const supportedControls = ["textarea", "textfield", "structuretable", "structureeditor", "structurelisteditor"];
+	const supportedControls = ["textfield", "structuretable", "structureeditor", "structurelisteditor"];
 	if (supportedControls.indexOf(info.controlType) >= 0) {
 		if (!info.dataModel) {
 			return true;
