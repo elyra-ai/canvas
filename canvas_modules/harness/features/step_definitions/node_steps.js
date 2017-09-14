@@ -796,4 +796,13 @@ module.exports = function() {
 		// MOVE OPERATION ISNT WORKING CURRENTLY IN D3
 	});
 
+	// Then I verify the node 7 position is translate(445, 219)
+	//
+	this.Then(/^I verify the node (\d+) position is "([^"]*)"$/, function(nodeNumber, givenNodePosition) {
+		var nodeIndex = nodeNumber - 1;
+		var node = browser.$$(".node-group")[nodeIndex];
+		var actualNodePosition = node.getAttribute("transform");
+		expect(actualNodePosition).toEqual(givenNodePosition);
+	});
+
 };

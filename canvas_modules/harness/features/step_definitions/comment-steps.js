@@ -254,5 +254,14 @@ module.exports = function() {
 		// MOVE OPERATION ISNT WORKING CURRENTLY IN D3
 	});
 
+	// Then I verify the comment 1 position is translate(445, 219)
+	//
+	this.Then(/^I verify the comment (\d+) position is "([^"]*)"$/, function(commentNumber, givenCommentPosition) {
+		var commentIndex = commentNumber - 1;
+		var comment = browser.$$(".comment-group")[commentIndex];
+		var actualCommentPosition = comment.getAttribute("transform");
+		expect(actualCommentPosition).toEqual(givenCommentPosition);
+	});
+
 
 };
