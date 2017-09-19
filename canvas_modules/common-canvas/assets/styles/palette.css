@@ -13,8 +13,9 @@
   overflow-y: overlay;
   overflow-x: hidden;
   height: 100%;
+	font-family: IBMHLVRoman;
+	font-size: 14px;
 	padding-bottom: 5px;
-  font: 12pt IBMHLVRoman;
 	z-index: 1;
   color: black;
   background-color: #e0e0e0;
@@ -40,12 +41,10 @@
 }
 
 .palette-flyout-content {
-
 }
 .palette-flyout-content .palette-list-item {
   border-width: 0px;
   background-color: #f9f9fb;
-  font-size: 11pt;
 }
 
 .palette-flyout-content .palette-list-item:hover {
@@ -68,7 +67,9 @@
 }
 .palette-flyout-category-arrow {
   float:right;
-  margin-top: 2px;
+  margin-top: 6px;
+	height: 12px;
+	width: 12px;
 }
 
 .palette-flyout-category {
@@ -82,8 +83,10 @@
 }
 
 #palette-flyout-search {
+	font-size: 15px;
 	height: 37px;
 	padding-right: 18px;
+	margin-bottom: 16px;
 }
 
 #palette-flyout-search-bar {
@@ -97,9 +100,9 @@
 }
 
 #palette-flyout-search-icon {
-  width: 20px;
+  width: 16px;
   float: left;
-  margin-top: 4px;
+  margin-top: 5px;
 }
 
 .palette-div {
