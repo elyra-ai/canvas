@@ -1,7 +1,7 @@
 {
     "editType": "createNode",
-    "nodeTypeId": "filler",
-    "label": "Filler",
+    "operator_id_ref": "filter",
+    "label": "Filter",
     "offsetX": 319,
     "offsetY": 152
 }

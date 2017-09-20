@@ -58,8 +58,8 @@ describe("CommonCanvas renders correctly", () => {
 });
 
 function createCommonCanvas(config) {
-	ObjectModel.setCanvas({});
-	ObjectModel.setPaletteData({});
+	ObjectModel.setEmptyPipelineFlow();
+	ObjectModel.setPipelineFlowPalette({});
 	const contextMenuHandler = sinon.spy();
 	const contextMenuActionHandler = sinon.spy();
 	const editDiagramHandler = sinon.spy();

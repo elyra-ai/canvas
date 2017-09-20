@@ -24,7 +24,6 @@ import SidePanel from "./components/sidepanel.jsx";
 import TestService from "./services/TestService";
 
 import {
-	BLANK_CANVAS,
 	NONE,
 	PALETTE_TOOLTIP,
 	SIDE_PANEL_CANVAS,
@@ -113,15 +112,15 @@ class App extends React.Component {
 		// common-properties
 		this.openPropertiesEditorDialog = this.openPropertiesEditorDialog.bind(this);
 		this.closePropertiesEditorDialog = this.closePropertiesEditorDialog.bind(this);
-		ObjectModel.setCanvas(BLANK_CANVAS);
-		ObjectModel.setPaletteData({});
+		ObjectModel.setEmptyPipelineFlow();
+		ObjectModel.setPipelineFlowPalette({});
 	}
 
 	componentDidMount() {
 		addLocaleData(en);
 		var sessionData = {
 			events: {},
-			canvas: ObjectModel.getCanvas()
+			canvas: ObjectModel.getCanvasInfo()
 		};
 		TestService.postSessionData(sessionData);
 
@@ -137,16 +136,20 @@ class App extends React.Component {
 	}
 
 	setDiagramJSON(canvasJson) {
-		ObjectModel.setCanvas(BLANK_CANVAS);
+		ObjectModel.setEmptyPipelineFlow();
 		this.forceUpdate();
 		CommandStack.clearCommandStack();
-		ObjectModel.setCanvas(canvasJson);
-		TestService.postCanvas(canvasJson);
-		this.log("Canvas diagram set");
+		if (canvasJson) {
+			ObjectModel.setPipelineFlow(canvasJson);
+			TestService.postCanvas(canvasJson);
+			this.log("Canvas diagram set");
+		} else {
+			this.log("Canvas diagram cleared");
+		}
 	}
 
 	setPaletteJSON(paletteJson) {
-		ObjectModel.setPaletteData(paletteJson);
+		ObjectModel.setPipelineFlowPalette(paletteJson);
 		this.log("Palette set");
 	}
 
@@ -216,7 +219,7 @@ class App extends React.Component {
 		}, function() {
 			var sessionData = {
 				events: that.state.consoleout,
-				canvas: ObjectModel.getCanvas()
+				canvas: ObjectModel.getCanvasInfo()
 			};
 			TestService.postSessionData(sessionData);
 		});
@@ -241,7 +244,7 @@ class App extends React.Component {
 	}
 
 	download() {
-		var canvas = JSON.stringify(ObjectModel.getCanvas(), null, 2);
+		var canvas = JSON.stringify(ObjectModel.getPipelineFlow(), null, 2);
 		ReactFileDownload(canvas, "canvas.json");
 	}
 
@@ -249,7 +252,7 @@ class App extends React.Component {
 		CommandStack.undo();
 		var sessionData = {
 			events: this.state.consoleout,
-			canvas: ObjectModel.getCanvas()
+			canvas: ObjectModel.getCanvasInfo()
 		};
 		TestService.postSessionData(sessionData);
 	}
@@ -258,7 +261,7 @@ class App extends React.Component {
 		CommandStack.redo();
 		var sessionData = {
 			events: this.state.consoleout,
-			canvas: ObjectModel.getCanvas()
+			canvas: ObjectModel.getCanvasInfo()
 		};
 		TestService.postSessionData(sessionData);
 	}
@@ -442,8 +445,8 @@ class App extends React.Component {
 
 	editActionHandler(data) {
 		var type = "";
-		if (data.nodeTypeId) {
-			type = data.nodeTypeId;
+		if (data.operator_id_ref) {
+			type = data.operator_id_ref;
 		} else if (data.nodes) {
 			if (data.nodes[0].id) {
 				type = data.nodes[0].id; // Node link
@@ -483,9 +486,9 @@ class App extends React.Component {
 		} else if (action === "viewModel") {
 			this.log("action: viewModel", source.targetObject.id);
 		} else if (action === "disconnectNode") {
-			this.log("action: disconnectNode", source.selectedObjectIds, source.targetObject.objectData.label);
+			this.log("action: disconnectNode", source.selectedObjectIds, source.targetObject.label);
 		} else if (action === "createSuperNode") {
-			this.log("action: createSuperNode", source.selectedObjectIds, source.targetObject.objectData.label);
+			this.log("action: createSuperNode", source.selectedObjectIds, source.targetObject.label);
 		} else if (action === "expandSuperNode") {
 			this.log("action: expandSuperNode", source.targetObject.id);
 		} else if (action === "deleteObjects") {
@@ -501,8 +504,8 @@ class App extends React.Component {
 	}
 
 	deleteObjectsActionHandler(source) {
-		if (typeof source.targetObject.objectData !== "undefined") {
-			this.log("action: deleteObjects", source.selectedObjectIds, source.targetObject.objectData.label);
+		if (typeof source.targetObject.label !== "undefined") {
+			this.log("action: deleteObjects", source.selectedObjectIds, source.targetObject.label);
 		} else if (typeof source.targetObject.content !== "undefined") {
 			this.log("action: deleteObjects", source.selectedObjectIds, source.targetObject.content);
 		} else {

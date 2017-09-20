@@ -26,16 +26,14 @@ class PaletteContentListItem extends React.Component {
 		ev.dataTransfer.setData(DND_DATA_TEXT,
 			JSON.stringify({
 				operation: "createFromTemplate",
-				typeId: this.props.nodeTemplate.typeId,
-				label: this.props.nodeTemplate.label
+				operator_id_ref: this.props.nodeTemplate.operator_id_ref
 			}));
 	}
 
 	onDoubleClick() {
 		if (this.props.addNodeToCanvas) {
 			this.props.addNodeToCanvas({
-				typeId: this.props.nodeTemplate.typeId,
-				label: this.props.nodeTemplate.label
+				operator_id_ref: this.props.nodeTemplate.operator_id_ref
 			});
 		}
 	}

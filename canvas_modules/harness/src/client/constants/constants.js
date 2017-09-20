@@ -50,30 +50,4 @@ _defineConstant("MODAL", "Modal");
 
 _defineConstant("CHOOSE_FROM_LOCATION", "Choose from location...");
 
-_defineConstant("BLANK_CANVAS", {
-	"id": "abc651d6-9b88-423c-b01b-861f12d01489",
-	"className": "canvas-image",
-	"style": "",
-	"zoom": 100,
-	"objectData": {
-		"label": "learning",
-		"description": "",
-		"created": 1481766985496,
-		"updated": 1481766986599
-	},
-	"userData": {
-		"typeId": "stream"
-	},
-	"diagram": {
-		"id": "abc651d6-9b88-423c-b01b-861f12d01489",
-		"nodes": [],
-		"comments": [],
-		"links": []
-	},
-	"parents": [{
-		"id": "abc651d6-9b88-423c-b01b-861f12d01489",
-		"label": "druglearn"
-	}]
-});
-
 _defineConstant("PALETTE_TOOLTIP", "Click to show node palette");

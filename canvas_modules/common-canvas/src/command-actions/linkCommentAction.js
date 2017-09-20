@@ -17,7 +17,7 @@ export default class LinkCommentAction extends Action {
 
 	// Standard methods
 	do() {
-		ObjectModel.linkComment(this.data);
+		ObjectModel.addCommentLinks(this.data);
 	}
 
 	undo() {
@@ -27,7 +27,7 @@ export default class LinkCommentAction extends Action {
 	}
 
 	redo() {
-		ObjectModel.linkComment(this.data);
+		ObjectModel.addCommentLinks(this.data);
 	}
 
 }

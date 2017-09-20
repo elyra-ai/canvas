@@ -39,12 +39,11 @@ export default class DeleteObjectsAction extends Action {
 	undo() {
 		this.objectsInfo.forEach((objectInfo) => {
 			if (objectInfo.type === "node") {
-				objectInfo.data.label = objectInfo.data.objectData.label;
 				ObjectModel.addNode(objectInfo.data);
 				ObjectModel.addNodeLinks(objectInfo.links);
 			} else {
 				ObjectModel.addComment(objectInfo.data);
-				ObjectModel.linkComment(objectInfo.links);
+				ObjectModel.addCommentLinks(objectInfo.links);
 			}
 		});
 	}

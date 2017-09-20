@@ -20,7 +20,6 @@ import {
 	ToggleButton
 } from "ap-components-react/dist/ap-components-react";
 import {
-	BLANK_CANVAS,
 	NONE,
 	HORIZONTAL,
 	VERTICAL,
@@ -89,7 +88,7 @@ export default class SidePanelForms extends React.Component {
 
 	onCanvasFileSelect(evt) {
 		this.setState({ canvasDiagram: "" });
-		this.props.setDiagramJSON(BLANK_CANVAS);
+		this.props.setDiagramJSON();
 		if (evt.target.files.length > 0) {
 			var filename = evt.target.files[0].name;
 			var fileExt = filename.substring(filename.lastIndexOf(".") + 1);

@@ -1,4 +1,4 @@
-Feature: Canvas sanity test
+Feature: Sanity_Test_undoRedo
 
 	** Make sure the test harness is running and listening to http://localhost:3001 ***
 
@@ -198,7 +198,7 @@ Feature: Canvas sanity test
 		Then I verify the number of data links are 4
 		Then I click redo
 		Then I verify the number of nodes are 7
-			Then I verify the number of data links are 4
+		Then I verify the number of data links are 4
 
 Scenario: Sanity test for Multiple undo/redo operations with the D3 rendering engine
 		Given I am on the test harness
@@ -233,13 +233,14 @@ Scenario: Sanity test for Multiple undo/redo operations with the D3 rendering en
 		Then I link node 19 the "Filter" node to node 22 the "Neural Net" node for link 21 on the canvas
 		Then I open the palette
 		Then I add node 23 a "Select" node from the "Record Ops" category onto the canvas at 150, 250
+		Then I add node 24 a "Sort" node from the "Record Ops" category onto the canvas at 250, 250
 		Then I close the palette
-		Then I link node 23 the "Field Reorder" node to node 19 the "Filter" node for link 22 on the canvas
+		Then I link node 23 the "Select" node to node 24 the "Sort" node for link 22 on the canvas
 		Then I click undo
 		Then I click redo
 		Then I click undo
 		Then I click undo
-		Then I verify the number of nodes are 22
+		Then I verify the number of nodes are 23
 		Then I verify the number of data links are 21
 
 		Then I pause for 3 seconds

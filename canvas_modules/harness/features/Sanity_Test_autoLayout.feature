@@ -1,4 +1,4 @@
-Feature: Canvas Sanity test from loaded file
+Feature: Sanity_Test_autoLayout
 
   ** Make sure the test harness is running and listening to http://localhost:3001 ***
 
@@ -28,12 +28,14 @@ Scenario: Sanity test for autoLayout operations in Vertical Fixed Layout
 	Then I link node 5 the "Var. File" node to node 2 the "Derive" node for link 6 on the canvas
 	Then I verify the node 1 position is "translate(175, 475)"
 	Then I verify the node 2 position is "translate(175, 175)"
-	Then I verify the node 3 position is "translate(250, 625)"
-	Then I verify the node 4 position is "translate(100, 625)"
+	Then I verify the node 3 position is "translate(100, 625)"
+	Then I verify the node 4 position is "translate(250, 625)"
 	Then I verify the node 5 position is "translate(250, 25)"
 	Then I verify the node 6 position is "translate(175, 325)"
 	Then I verify the comment 1 position is "translate(663, 248)"
 	Then I verify the comment 2 position is "translate(132, 103)"
+
+
 
 Scenario: Sanity test for autoLayout operations in Horizontal Fixed Layout
 	Given I am on the test harness
@@ -62,6 +64,7 @@ Scenario: Sanity test for autoLayout operations in Horizontal Fixed Layout
 	Then I verify the node 6 position is "translate(100, 475)"
 	Then I verify the comment 1 position is "translate(663, 248)"
 	Then I verify the comment 2 position is "translate(132, 103)"
+
 
 Scenario: Sanity test for autoLayout operations in None Fixed Layout
 	Given I am on the test harness

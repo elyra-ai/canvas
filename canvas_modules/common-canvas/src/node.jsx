@@ -92,7 +92,7 @@ class Node extends React.Component {
 		ev.dataTransfer.setData(DND_DATA_TEXT, JSON.stringify({
 			operation: "move",
 			id: this.props.node.id,
-			label: this.props.node.objectData.label }
+			label: this.props.node.label }
 		));
 	}
 
@@ -133,7 +133,7 @@ class Node extends React.Component {
 			JSON.stringify({
 				operation: "link",
 				id: this.props.node.id,
-				label: this.props.node.objectData.label,
+				label: this.props.node.label,
 				connType: connType }
 			));
 	}
@@ -253,22 +253,22 @@ class Node extends React.Component {
 				const key = "decoration_" + i;
 				if (d.hotspot === true) {
 					return (<div
-						className={d.className}
+						className={d.class_name}
 						key={key}
 						style={this.getDecorationStyle(d.position)}
 						onClick={this.decorationClicked.bind(this, d.id)}
 					/>);
 				}
 				return (<div
-					className={d.className}
+					className={d.class_name}
 					key={key}
 					style={this.getDecorationStyle(d.position)}
 				/>);
 			});
 		}
 
-		var className = (typeof (this.props.node.className) !== "undefined" && this.props.node.className)
-			? this.props.node.className
+		var className = (typeof (this.props.node.class_name) !== "undefined" && this.props.node.class_name)
+			? this.props.node.class_name
 			: "canvas-node";
 
 		if (this.props.selected) {
@@ -286,8 +286,8 @@ class Node extends React.Component {
 
 		// TODO anything better to use as an id ?
 		const labelWithTooltipView =
-			(<div style={labelStyle} data-toggle="tooltip" data-placement="left" title={this.props.node.objectData.label}>
-				{this.props.node.objectData.label}
+			(<div style={labelStyle} data-toggle="tooltip" data-placement="left" title={this.props.node.label}>
+				{this.props.node.label}
 			</div>);
 
 
@@ -389,7 +389,7 @@ class Node extends React.Component {
 					onDoubleClick={this.nodeDblClicked}
 					data-toggle="tooltip"
 					data-placement="left"
-					title={this.props.node.objectData.label}
+					title={this.props.node.label}
 				/>
 			</div>
 		</div>);

@@ -198,13 +198,13 @@ export default class CanvasD3Layout {
 		this.minInitialLine = 30;
 	}
 
-	setCanvas(canvasJSON, config) {
+	setCanvasInfo(canvasJSON, config) {
 		this.consoleLog("Set Canvas. Id = " + canvasJSON.id);
 		var startTime = Date.now();
-
 		if (canvasJSON.id !== this.canvasJSON.id ||
 				this.connectionType !== config.enableConnectionType ||
 				this.linkType !== config.enableLinkType) {
+			this.canvasJSON = canvasJSON;
 			this.connectionType = config.enableConnectionType;
 			this.linkType = config.enableLinkType;
 			this.clearCanvas();
@@ -213,7 +213,6 @@ export default class CanvasD3Layout {
 		// Make a copy of canvasJSON because we will need to update it (when moving
 		// nodes and comments and when sizing comments in real time) without updating the
 		// canvasJSON in the ObjectModel until we're done.
-
 		this.canvasJSON = this.cloneCanvasJSON(canvasJSON);
 		// this.zoomTransform = d3.zoomIdentity.translate(0, 0).scale(1); // Reset zoom parameters
 		this.initializeDimensions();
@@ -339,12 +338,12 @@ export default class CanvasD3Layout {
 	}
 
 	getNode(nodeId) {
-		const node = this.canvasJSON.diagram.nodes.find((nd) => nd.id === nodeId);
+		const node = this.canvasJSON.nodes.find((nd) => nd.id === nodeId);
 		return (typeof node === "undefined") ? null : node;
 	}
 
 	getComment(commentId) {
-		const comment = this.canvasJSON.diagram.comments.find((com) => com.id === commentId);
+		const comment = this.canvasJSON.comments.find((com) => com.id === commentId);
 		return (typeof comment === "undefined") ? null : comment;
 	}
 
@@ -687,7 +686,7 @@ export default class CanvasD3Layout {
 		const that = this;
 
 		var nodeGroupSel = this.canvas.selectAll(".node-group")
-			.data(this.canvasJSON.diagram.nodes, function(d) { return d.id; });
+			.data(this.canvasJSON.nodes, function(d) { return d.id; });
 
 		if (this.dragging) {
 			// only transform nodes while dragging
@@ -697,16 +696,16 @@ export default class CanvasD3Layout {
 					.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
 
 				if (that.connectionType === "Ports") {
-					if (d.outputPorts && d.outputPorts.length > 0) {
-						d.outputPorts.forEach((port, i) => {
-							d3.select(`#src_circle_${d.id}_${d.outputPorts[i].name}`)
+					if (d.output_ports && d.output_ports.length > 0) {
+						d.output_ports.forEach((port, i) => {
+							d3.select(`#src_circle_${d.id}_${d.output_ports[i].id}`)
 								.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
 						});
 					}
 
-					if (d.inputPorts && d.inputPorts.length > 0) {
-						d.inputPorts.forEach((port, i) => {
-							d3.select(`#trg_circle_${d.id}_${d.inputPorts[i].name}`)
+					if (d.input_ports && d.input_ports.length > 0) {
+						d.input_ports.forEach((port, i) => {
+							d3.select(`#trg_circle_${d.id}_${d.input_ports[i].id}`)
 								.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
 						});
 					}
@@ -734,16 +733,16 @@ export default class CanvasD3Layout {
 					.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
 
 				if (that.connectionType === "Ports") {
-					if (d.outputPorts && d.outputPorts.length > 0) {
-						d.outputPorts.forEach((port, i) => {
-							d3.select(`#src_circle_${d.id}_${d.outputPorts[i].name}`)
+					if (d.output_ports && d.output_ports.length > 0) {
+						d.output_ports.forEach((port, i) => {
+							d3.select(`#src_circle_${d.id}_${d.output_ports[i].id}`)
 								.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
 						});
 					}
 
-					if (d.inputPorts && d.inputPorts.length > 0) {
-						d.inputPorts.forEach((port, i) => {
-							d3.select(`#trg_circle_${d.id}_${d.inputPorts[i].name}`)
+					if (d.input_ports && d.input_ports.length > 0) {
+						d.input_ports.forEach((port, i) => {
+							d3.select(`#trg_circle_${d.id}_${d.input_ports[i].id}`)
 								.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
 						});
 					}
@@ -764,7 +763,7 @@ export default class CanvasD3Layout {
 					.datum((nd) => that.getNode(nd.id)) // Set the __data__ to the updated data
 					.text(function(nd) {
 						var textObj = d3.select(this);
-						return that.trimLabelToWidth(nd.objectData.label, that.labelWidth, textObj);
+						return that.trimLabelToWidth(nd.label, that.labelWidth, textObj);
 					});
 			});
 
@@ -849,19 +848,19 @@ export default class CanvasD3Layout {
 				// Input ports
 				nodeGroups
 					.each((d) => {
-						if (d.inputPorts && d.inputPorts.length > 0) {
-							d.inputPorts.forEach((port, i) => {
+						if (d.input_ports && d.input_ports.length > 0) {
+							d.input_ports.forEach((port, i) => {
 								var cy;
-								if (d.inputPorts.length === 1) {
+								if (d.input_ports.length === 1) {
 									cy = this.portPosY;
 								} else {
-									cy = (this.nodeHeight / (d.inputPorts.length + 1)) * (i + 1);
+									cy = (this.nodeHeight / (d.input_ports.length + 1)) * (i + 1);
 								}
 								// Circle for input port
 								var nodeGroup = d3.select(`#node_grp_${d.id}`);
 								nodeGroup.append("circle")
-									.attr("id", `trg_circle_${d.id}_${d.inputPorts[i].name}`)
-									.attr("portId", d.inputPorts[i].name) // This is needed by getNodeInputPortAtMousePos
+									.attr("id", `trg_circle_${d.id}_${d.input_ports[i].id}`)
+									.attr("portId", d.input_ports[i].id) // This is needed by getNodeInputPortAtMousePos
 									.attr("cx", 0)
 									.attr("cy", cy)
 									.attr("r", this.portRadius)
@@ -870,7 +869,7 @@ export default class CanvasD3Layout {
 
 								// Arrow for input port
 								nodeGroup.append("path")
-									.attr("id", `trg_arrow_${d.id}_${d.inputPorts[i].name}`)
+									.attr("id", `trg_arrow_${d.id}_${d.input_ports[i].id}`)
 									.attr("d", that.getArrowShapePath(cy))
 									.attr("class", "d3-node-port-input-arrow")
 									.attr("connected", "no");
@@ -881,20 +880,20 @@ export default class CanvasD3Layout {
 				// Output ports
 				nodeGroups
 					.each((d) => {
-						if (d.outputPorts && d.outputPorts.length > 0) {
-							d.outputPorts.forEach((port, i) => {
+						if (d.output_ports && d.output_ports.length > 0) {
+							d.output_ports.forEach((port, i) => {
 								var cy;
-								if (d.outputPorts.length === 1) {
+								if (d.output_ports.length === 1) {
 									cy = this.portPosY;
 								} else {
-									cy = (this.nodeHeight / (d.outputPorts.length + 1)) * (i + 1);
+									cy = (this.nodeHeight / (d.output_ports.length + 1)) * (i + 1);
 								}
 								// Circle for input port
 								var nodeGroup = d3.select(`#node_grp_${d.id}`);
 
 								nodeGroup
 									.append("circle")
-									.attr("id", `src_circle_${d.id}_${d.outputPorts[i].name}`)
+									.attr("id", `src_circle_${d.id}_${d.output_ports[i].id}`)
 									.attr("cx", this.nodeWidth)
 									.attr("cy", cy)
 									.attr("r", this.portRadius)
@@ -903,7 +902,7 @@ export default class CanvasD3Layout {
 										this.stopPropagationAndPreventDefault(); // Stops the node drag behavior when clicking on the handle/circle
 										this.drawingNewLink = true;
 										this.drawingNewLinkSrcId = cd.id;
-										this.drawingNewLinkSrcPortId = port.name;
+										this.drawingNewLinkSrcPortId = port.id;
 										this.drawingNewLinkAction = "node-node";
 										this.drawingNewLinkStartPos = { x: cd.x_pos + this.nodeWidth, y: cd.y_pos + cy };
 										this.drawingNewLinkArray = [];
@@ -954,7 +953,7 @@ export default class CanvasD3Layout {
 			nodeGroups.append("text")
 				.text(function(d) {
 					var textObj = d3.select(this);
-					return that.trimLabelToWidth(d.objectData.label, that.labelWidth, textObj);
+					return that.trimLabelToWidth(d.label, that.labelWidth, textObj);
 				})
 				.attr("id", function(d) { return `node_label_${d.id}`; })
 				.attr("class", "d3-node-label")
@@ -966,7 +965,7 @@ export default class CanvasD3Layout {
 					if (this.textContent.endsWith("...")) {
 						labelObj
 							.attr("abbr-label", this.textContent) // Do this before setting the new label
-							.text(d.objectData.label);
+							.text(d.label);
 					}
 				})
 				.on("mouseleave", function(d) { // Use function keyword so 'this' pointer references the DOM text object
@@ -1010,12 +1009,12 @@ export default class CanvasD3Layout {
 	}
 
 	setTrgPortStatus(trgId, trgPortId, newStatus) {
-		d3.select(`#trg_circle_${trgId}_${trgPortId}`).attr("connected", newStatus); // Use * wildcard to select all ports
-		d3.select(`#trg_arrow_${trgId}_${trgPortId}`).attr("connected", newStatus); // Use * wildcard to select all ports
+		d3.select(`#trg_circle_${trgId}_${trgPortId}`).attr("connected", newStatus);
+		d3.select(`#trg_arrow_${trgId}_${trgPortId}`).attr("connected", newStatus);
 	}
 
 	setSrcPortStatus(srcId, srcPortId, newStatus) {
-		d3.select(`#src_circle_${srcId}_${srcPortId}`).attr("connected", newStatus); // Use * wildcard to select all ports
+		d3.select(`#src_circle_${srcId}_${srcPortId}`).attr("connected", newStatus);
 	}
 
 	// Adds a decorator to the nodeGroup passed in of the type passed in at the
@@ -1056,7 +1055,7 @@ export default class CanvasD3Layout {
 		if (d.decorations) {
 			var dec = d.decorations.find((dc) => dc.position === type);
 			if (dec) {
-				return dec.className;
+				return dec.class_name;
 			}
 		}
 		return "d3-decorator-outline";
@@ -1066,8 +1065,8 @@ export default class CanvasD3Layout {
 		if (d.decorations) {
 			var dec = d.decorations.find((dc) => dc.position === type);
 			if (dec) {
-				if (dec.className === "node-zoom") { // TODO - Remove this if when WML external model supports decorator image field.
-					return "/canvas/images/zoom-in_32.svg";
+				if (dec.class_name === "node-zoom") { // TODO - Remove this if when WML external model supports decorator image field.
+					return "/images/decorators/zoom-in_32.svg";
 				}
 				return dec.image;
 			}
@@ -1266,7 +1265,7 @@ export default class CanvasD3Layout {
 		if (trgNode !== null) {
 			if (this.drawingNewLinkAction === "node-node") {
 				var trgPortId = this.getNodeInputPortAtMousePos();
-				trgPortId = trgPortId || (trgNode.inputPorts ? trgNode.inputPorts[0].name : null);
+				trgPortId = trgPortId || (trgNode.input_ports && trgNode.input_ports.length > 0 ? trgNode.input_ports[0].id : null);
 				this.consoleLog("editActionHandler - linkNodes");
 				this.editActionHandler({
 					editType: "linkNodes",
@@ -1430,7 +1429,7 @@ export default class CanvasD3Layout {
 		const that = this;
 
 		var commentGroupSel = this.canvas.selectAll(".comment-group")
-			.data(this.canvasJSON.diagram.comments, function(d) { return d.id; });
+			.data(this.canvasJSON.comments, function(d) { return d.id; });
 
 		if (this.dragging && !this.commentSizing) {
 			commentGroupSel.each(function(d) {
@@ -1485,7 +1484,7 @@ export default class CanvasD3Layout {
 				d3.select(`#comment_box_${d.id}`)
 					.attr("height", d.height)
 					.attr("width", d.width)
-					.attr("class", d.className || "canvas-comment") // Use common-canvas.css style since that is the default.
+					.attr("class", d.class_name || "canvas-comment") // Use common-canvas.css style since that is the default.
 					.datum((cd) => that.getComment(cd.id)) // Set the __data__ to the updated data
 					.each(function(cd) {
 						if (cd.customAttrs) {
@@ -1677,7 +1676,7 @@ export default class CanvasD3Layout {
 				.attr("height", (d) => d.height)
 				.attr("x", 0)
 				.attr("y", 0)
-				.attr("class", (d) => d.className || "canvas-comment") // Use common-canvas.css style since that is the default.
+				.attr("class", (d) => d.class_name || "canvas-comment") // Use common-canvas.css style since that is the default.
 				.each(function(d) {
 					if (d.customAttrs) {
 						var imageObj = d3.select(this);
@@ -1856,7 +1855,7 @@ export default class CanvasD3Layout {
 		return cursorType;
 	}
 
-	// Sets the size and position of the object in the canvas.diagram.comments
+	// Sets the size and position of the object in the canvas.comments
 	// array based on the position of the pointer during the resize action
 	// then redraws the comment and lines (the line positions may move based
 	// on the comment size change).
@@ -2195,9 +2194,9 @@ export default class CanvasD3Layout {
 			.attr("class", (d) => {
 				var classStr;
 				if (d.type === "commentLink") {
-					classStr = "d3-selectable-link " + (d.className || "d3-comment-link");
+					classStr = "d3-selectable-link " + (d.class_name || "d3-comment-link");
 				} else {
-					classStr = "d3-selectable-link " + (d.className || "d3-data-link");
+					classStr = "d3-selectable-link " + (d.class_name || "d3-data-link");
 				}
 				return classStr;
 			});
@@ -2209,9 +2208,9 @@ export default class CanvasD3Layout {
 			.attr("class", (d) => {
 				var classStr;
 				if (d.type === "commentLink") {
-					classStr = "d3-selectable-link " + (d.className || "d3-comment-link");
+					classStr = "d3-selectable-link " + (d.class_name || "d3-comment-link");
 				} else {
-					classStr = "d3-selectable-link " + (d.className || "d3-data-link");
+					classStr = "d3-selectable-link " + (d.class_name || "d3-data-link");
 				}
 				return classStr;
 			})
@@ -2251,17 +2250,17 @@ export default class CanvasD3Layout {
 	buildLineArray() {
 		var lineArray = [];
 
-		this.canvasJSON.diagram.links.forEach((link) => {
-			var srcNode = this.getNode(link.source);
-			var trgNode = this.getNode(link.target);
-			let type = "nodeLink";
+		this.canvasJSON.links.forEach((link) => {
+			var srcObj;
+			var trgNode = this.getNode(link.trgNodeId);
 
-			if (srcNode === null) {
-				type = "commentLink";
-				srcNode = this.getComment(link.source);
+			if (link.type === "commentLink") {
+				srcObj = this.getComment(link.srcNodeId);
+			} else {
+				srcObj = this.getNode(link.srcNodeId);
 			}
 
-			if (srcNode === null) {
+			if (srcObj === null) {
 				this.consoleLog("Error drawing a link. A link was provided in the Canvas data that does not have a valid source node/comment.");
 			}
 
@@ -2270,29 +2269,29 @@ export default class CanvasD3Layout {
 			}
 
 			// Only proceed if we have a source and a target node/comment.
-			if (srcNode && trgNode) {
-				if (!this.isSourceOverlappingTarget(srcNode, trgNode, type)) {
+			if (srcObj && trgNode) {
+				if (!this.isSourceOverlappingTarget(srcObj, trgNode)) {
 					var coords = {};
 					var srcPortId;
 					var trgPortId;
 
-					if (type === "nodeLink") {
+					if (link.type === "nodeLink") {
 						if (this.connectionType === "Halo") {
-							coords = this.getNodeLinkCoordsForHalo(srcNode, trgNode);
+							coords = this.getNodeLinkCoordsForHalo(srcObj, trgNode);
 						} else {
-							srcPortId = this.getSourcePortId(link, srcNode);
+							srcPortId = this.getSourcePortId(link, srcObj);
 							trgPortId = this.getTargetPortId(link, trgNode);
-							coords = this.getNodeLinkCoordsForPorts(srcNode, srcPortId, trgNode, trgPortId);
+							coords = this.getNodeLinkCoordsForPorts(srcObj, srcPortId, trgNode, trgPortId);
 						}
 					} else {
-						coords = this.getCommentLinkCoords(srcNode, trgNode);
+						coords = this.getCommentLinkCoords(srcObj, trgNode);
 					}
 
 					lineArray.push({ "id": link.id,
 						"x1": coords.x1, "y1": coords.y1, "x2": coords.x2, "y2": coords.y2,
-						"className": link.className,
-						"type": type,
-						"src": srcNode,
+						"class_name": link.class_name,
+						"type": link.type,
+						"src": srcObj,
 						"srcPortId": srcPortId,
 						"trg": trgNode,
 						"trgPortId": trgPortId });
@@ -2307,10 +2306,10 @@ export default class CanvasD3Layout {
 	// to the first available port on the source node.
 	getSourcePortId(link, srcNode) {
 		var srcPortId;
-		if (link.sourcePort) {
-			srcPortId = link.sourcePort;
-		} else if (srcNode.outputPorts && srcNode.outputPorts.length > 0) {
-			srcPortId = srcNode.outputPorts[0].name;
+		if (link.srcNodePortId) {
+			srcPortId = link.srcNodePortId;
+		} else if (srcNode.output_ports && srcNode.output_ports.length > 0) {
+			srcPortId = srcNode.output_ports[0].id;
 		} else {
 			srcPortId = null;
 		}
@@ -2321,10 +2320,10 @@ export default class CanvasD3Layout {
 	// to the first available port on the target node.
 	getTargetPortId(link, trgNode) {
 		var trgPortId;
-		if (link.targetPort) {
-			trgPortId = link.targetPort;
-		} else if (trgNode.inputPorts && trgNode.inputPorts.length > 0) {
-			trgPortId = trgNode.inputPorts[0].name;
+		if (link.trgNodePortId) {
+			trgPortId = link.trgNodePortId;
+		} else if (trgNode.input_ports && trgNode.input_ports.length > 0) {
+			trgPortId = trgNode.input_ports[0].id;
 		} else {
 			trgPortId = null;
 		}
@@ -2362,17 +2361,17 @@ export default class CanvasD3Layout {
 		var srcY = this.portPosY;
 		var trgY = this.portPosY;
 
-		if (srcNode.outputPorts && srcNode.outputPorts.length > 1) {
-			var srcPortPos = srcNode.outputPorts.findIndex((p) => p.name === srcPortId);
+		if (srcNode.output_ports && srcNode.output_ports.length > 1) {
+			var srcPortPos = srcNode.output_ports.findIndex((p) => p.id === srcPortId);
 			if (srcPortPos > -1) {
-				srcY = (this.nodeHeight / (srcNode.outputPorts.length + 1)) * (srcPortPos + 1);
+				srcY = (this.nodeHeight / (srcNode.output_ports.length + 1)) * (srcPortPos + 1);
 			}
 		}
 
-		if (trgNode.inputPorts && trgNode.inputPorts.length > 1) {
-			var trgPortPos = trgNode.inputPorts.findIndex((p) => p.name === trgPortId);
+		if (trgNode.input_ports && trgNode.input_ports.length > 1) {
+			var trgPortPos = trgNode.input_ports.findIndex((p) => p.id === trgPortId);
 			if (trgPortPos > -1) {
-				trgY = (this.nodeHeight / (trgNode.inputPorts.length + 1)) * (trgPortPos + 1);
+				trgY = (this.nodeHeight / (trgNode.input_ports.length + 1)) * (trgPortPos + 1);
 			}
 		}
 
@@ -2694,8 +2693,8 @@ export default class CanvasD3Layout {
 	getConnectedLinks(selectedObjects) {
 		var links = [];
 		selectedObjects.forEach((selectedObject) => {
-			const linksContaining = this.canvasJSON.diagram.links.filter(function(link) {
-				return (link.source === selectedObject.id || link.target === selectedObject.id);
+			const linksContaining = this.canvasJSON.links.filter(function(link) {
+				return (link.srcNodeId === selectedObject.id || link.trgNodeId === selectedObject.id);
 			});
 			links = _.union(links, linksContaining);
 		});
@@ -2704,13 +2703,13 @@ export default class CanvasD3Layout {
 
 	getSelectedNodesAndComments() {
 		var objs = [];
-		this.canvasJSON.diagram.nodes.forEach((node) => {
+		this.canvasJSON.nodes.forEach((node) => {
 			if (ObjectModel.getSelectedObjectIds().includes(node.id)) {
 				objs.push(node);
 			}
 		});
 
-		this.canvasJSON.diagram.comments.forEach((comment) => {
+		this.canvasJSON.comments.forEach((comment) => {
 			if (ObjectModel.getSelectedObjectIds().includes(comment.id)) {
 				objs.push(comment);
 			}

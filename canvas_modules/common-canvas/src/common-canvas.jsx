@@ -235,7 +235,7 @@ export default class CommonCanvas extends React.Component {
 		let addButton = null;
 		let zoomControls = null;
 		let contextMenuWrapper = null;
-		const canvasJSON = ObjectModel.getCanvas();
+		const canvasJSON = ObjectModel.getCanvasInfo();
 
 		if (canvasJSON !== null) {
 			if (this.state.showContextMenu) {

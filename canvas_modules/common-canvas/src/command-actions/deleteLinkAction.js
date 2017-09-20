@@ -18,15 +18,15 @@ export default class DeleteLinkAction extends Action {
 
 	// Standard methods
 	do() {
-		this.linkInfo = ObjectModel.getLinksContainingId(this.data.id);
+		this.linkInfo = ObjectModel.getLink(this.data.id);
 		ObjectModel.deleteLink(this.data);
 	}
 
 	undo() {
-		if (this.linkInfo[0].type === "data") {
-			ObjectModel.addNodeLinks(this.linkInfo);
+		if (this.linkInfo.type === "nodeLink") {
+			ObjectModel.addNodeLinks([this.linkInfo]);
 		} else {
-			ObjectModel.linkComment(this.linkInfo);
+			ObjectModel.addCommentLinks([this.linkInfo]);
 		}
 	}
 

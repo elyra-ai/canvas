@@ -13,7 +13,7 @@ import deepFreeze from "deep-freeze";
 import { expect } from "chai";
 import _ from "underscore";
 import initialCanvas from "./test_resources/json/startCanvas.json";
-import paletteJson from "../../harness/test_resources/palettes/modelerPalette.json";
+import paletteJson from "./test_resources/json/testPalette.json";
 import filterNode from "./test_resources/json/filterNode.json";
 import horizontalLayoutCanvas from "./test_resources/json/horizontalLayoutCanvas.json";
 import verticalLayoutCanvas from "./test_resources/json/verticalLayoutCanvas.json";
@@ -38,20 +38,24 @@ describe("ObjectModel API handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.setCanvas(startCanvas);
+		ObjectModel.setCanvasInfo(startCanvas);
 		ObjectModel.fixedAutoLayout(HORIZONTAL);
-		ObjectModel.setPaletteData(paletteJson);
+		ObjectModel.setPipelineFlowPalette(paletteJson);
 		const node = ObjectModel.createNode(filterNode);
 		ObjectModel.addNode(node);
 
 		const expectedCanvas = addNodeHorizontalLayoutCanvas;
-		const actualCanvas = ObjectModel.getCanvas();
+		const actualCanvas = ObjectModel.getCanvasInfo();
 
 		// Delete ID because IDs are generated at runtime and therefore won't be
 		// the same between expected and actual.
-		delete actualCanvas.diagram.nodes[3].id;
+		delete actualCanvas.nodes[3].id;
+
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
 
 		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+
 
 	});
 
@@ -62,18 +66,21 @@ describe("ObjectModel API handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.setCanvas(startCanvas);
+		ObjectModel.setCanvasInfo(startCanvas);
 		ObjectModel.fixedAutoLayout(VERTICAL);
-		ObjectModel.setPaletteData(paletteJson);
+		ObjectModel.setPipelineFlowPalette(paletteJson);
 		const node = ObjectModel.createNode(filterNode);
 		ObjectModel.addNode(node);
 
 		const expectedCanvas = addNodeVerticalLayoutCanvas;
-		const actualCanvas = ObjectModel.getCanvas();
+		const actualCanvas = ObjectModel.getCanvasInfo();
 
 		// Delete ID because IDs are generated at runtime and therefore won't be
 		// the same between expected and actual.
-		delete actualCanvas.diagram.nodes[3].id;
+		delete actualCanvas.nodes[3].id;
+
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
 
 		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
 	});
@@ -85,12 +92,15 @@ describe("ObjectModel API handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.setCanvas(startCanvas);
+		ObjectModel.setCanvasInfo(startCanvas);
 		ObjectModel.autoLayout(HORIZONTAL);
 
 		const expectedCanvas = horizontalLayoutCanvas;
 
-		const actualCanvas = ObjectModel.getCanvas();
+		const actualCanvas = ObjectModel.getCanvasInfo();
+
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
 
 		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
 
@@ -103,12 +113,15 @@ describe("ObjectModel API handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.setCanvas(startCanvas);
+		ObjectModel.setCanvasInfo(startCanvas);
 		ObjectModel.autoLayout(VERTICAL);
 
 		const expectedCanvas = verticalLayoutCanvas;
 
-		const actualCanvas = ObjectModel.getCanvas();
+		const actualCanvas = ObjectModel.getCanvasInfo();
+
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
 
 		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
 	});
@@ -120,14 +133,17 @@ describe("ObjectModel API handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.setCanvas(startCanvas);
+		ObjectModel.setCanvasInfo(startCanvas);
 		ObjectModel.fixedLayout = NONE;
 		ObjectModel.autoLayout(HORIZONTAL);
 
 		ObjectModel.moveObjects(moveVarNode);
 
 		const expectedCanvas = moveNodeHorizontalLayoutCanvas;
-		const actualCanvas = ObjectModel.getCanvas();
+		const actualCanvas = ObjectModel.getCanvasInfo();
+
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
 
 		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
 	});
@@ -139,14 +155,17 @@ describe("ObjectModel API handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.setCanvas(startCanvas);
+		ObjectModel.setCanvasInfo(startCanvas);
 		ObjectModel.autoLayout(VERTICAL);
 
 		ObjectModel.moveObjects(moveVarNode);
 
 
 		const expectedCanvas = moveNodeVerticalLayoutCanvas;
-		const actualCanvas = ObjectModel.getCanvas();
+		const actualCanvas = ObjectModel.getCanvasInfo();
+
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
 
 		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
 	});

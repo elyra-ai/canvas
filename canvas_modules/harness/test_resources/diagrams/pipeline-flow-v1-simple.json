@@ -1,0 +1,151 @@
+{
+  "doc_type": "pipeline",
+  "version": "1.0",
+  "json_schema": "http://www.ibm.com/ibm/wdp/canvas/v1.0/pipeline-flow-v1-schema.json",
+  "id": "24cc9881-f83a-4d38-b15b-8bf541e12345",
+  "app_data": {
+    "ui_data": {
+      "name": "Pipeline Flow Example",
+      "description": {
+        "default": "An simple example pipeline flow document."
+      },
+      "class_name": "pipeline-flow-overall"
+    },
+    "wml_data": {
+      "typeId": "stream"
+    }
+  },
+  "primary_pipeline": "primary-pipeline",
+  "pipelines": [
+    {
+      "id": "primary-pipeline",
+      "runtime": "scala-spark-2.0.1",
+      "app_data": {
+        "ui_data": {
+          "zoom": 100,
+          "comments": []
+        }
+      },
+      "nodes": [
+        {
+          "id": "entryID1PE",
+          "type": "binding",
+          "output": {
+            "id": "entryPort1PE",
+            "schema_ref": "schema1",
+            "app_data": {
+              "ui_data": {
+                "label": {
+                  "default": "entryPort1PE"
+                }
+              }
+            }
+          },
+          "app_data": {
+            "ui_data": {
+              "label": {
+                "default": "entryID1PE"
+              },
+              "description": {
+                "default": "EntryID1PE"
+              },
+              "image": "/images/nodes/varfile.svg",
+              "x_pos": 100,
+              "y_pos": 170,
+              "class_name": "canvas-node"
+            }
+          }
+        },
+        {
+          "id": "nodeID1PE",
+          "type": "execution_node",
+          "op": "org.apache.spark.ml.ibm.transformers.Join",
+          "inputs": [
+            {
+              "id": "input1NodeID1PE",
+              "links": [
+                {
+                  "node_id_ref": "entryID1PE",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "canvas-data-link"
+                    }
+                  }
+                }
+              ],
+              "schema_ref": "schema1",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 1,
+                    "max": 1
+                  },
+                  "class_name": "foobar",
+                  "label": {
+                    "default": "input1NodeID1PE"
+                  }
+                }
+              }
+            },
+            {
+              "id": "input2NodeID1PE",
+              "links": [],
+              "schema_ref": "schema2",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 1,
+                    "max": 1
+                  },
+                  "class_name": "foobar"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "output1NodeID1PE",
+              "schema_ref": "schema3",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 1,
+                    "max": -1
+                  },
+                  "class_name": "foobar",
+                  "label": {
+                    "default": "output1NodeID1PE"
+                  }
+                }
+              }
+            }
+          ],
+          "parameters": {
+            "join-type": "inner",
+            "key1": "inputDS1.NAME",
+            "key2": "inputDS2.name"
+          },
+          "app_data": {
+            "ui_data": {
+              "label": {
+                "default": "nodeID1PE"
+              },
+              "description": {
+                "default": "nodeID1PE - Join two or more datasets"
+              },
+              "image": "/images/nodes/derive.svg",
+              "x_pos": 250,
+              "y_pos": 170,
+              "class_name": "canvas-node",
+              "attributes": "attr1='value1'; attr2='value2'"
+            },
+            "wml_data": {
+              "typeId": "Join"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "schemas": []
+}

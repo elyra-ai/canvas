@@ -185,7 +185,7 @@ module.exports = function() {
 
 	this.Then(/^I verify the number of data links are (\d+)$/, function(dataLinks) {
 		try {
-			var dataLinksOnCanvas = browser.$$(".canvas-data-link").length / 2;
+			var dataLinksOnCanvas = browser.$$(".canvas-data-link").length / 2; // Divide by 2 because the line and arrow head use this class
 			expect(Number(dataLinks)).toEqual(dataLinksOnCanvas);
 
 			// verify the number of data-links is in the internal object model

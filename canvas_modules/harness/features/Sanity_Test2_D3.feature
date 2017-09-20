@@ -1,4 +1,4 @@
-Feature: Canvas Sanity test from loaded file
+Feature: Sanity_Test2_D3
 
   ** Make sure the test harness is running and listening to http://localhost:3001 ***
 

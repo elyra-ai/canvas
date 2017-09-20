@@ -33,7 +33,7 @@ export default class DisconnectNodesAction extends Action {
 			if (ObjectModel.isDataNode(objectInfo.id)) {
 				ObjectModel.addNodeLinks(objectInfo.links);
 			} else {
-				ObjectModel.linkComment(objectInfo.links);
+				ObjectModel.addCommentLinks(objectInfo.links);
 			}
 		});
 	}

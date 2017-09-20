@@ -466,8 +466,8 @@ class Comment extends React.Component {
 			yPosi = this.state.y_pos;
 		}
 
-		var className = (typeof (this.props.comment.className) !== "undefined" && this.props.comment.className)
-			? this.props.comment.className
+		var className = (typeof (this.props.comment.class_name) !== "undefined" && this.props.comment.class_name)
+			? this.props.comment.class_name
 			: "canvas-comment";
 
 		if (this.props.selected) {

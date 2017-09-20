@@ -323,7 +323,7 @@ export default class DiagramCanvas extends React.Component {
 				var mousePos2 = this.mouseCoords(event);
 				// logger.info(targetPos);
 				// logger.info(mousePos);
-				this.createNodeAt(jsVal.typeId, jsVal.label, jsVal.sourceId, jsVal.sourceObjectTypeId,
+				this.createNodeAt(jsVal.operator_id_ref, jsVal.label, jsVal.sourceId, jsVal.sourceObjectTypeId,
 					Math.round((mousePos2.x - (NODE_WIDTH / 2)) / zoom),
 					Math.round((mousePos2.y - (NODE_HEIGHT / 2)) / zoom));
 			} else if ((jsVal.operation === "addToCanvas") || (jsVal.operation === "addTableFromConnection")) {
@@ -539,7 +539,7 @@ export default class DiagramCanvas extends React.Component {
 
 	// Editing methods
 
-	createNodeAt(nodeTypeId, label, sourceId, sourceObjectTypeId, x, y) {
+	createNodeAt(operatorIdRef, label, sourceId, sourceObjectTypeId, x, y) {
 		var data = {};
 		if (typeof sourceId !== "undefined") {
 			data = {
@@ -553,7 +553,7 @@ export default class DiagramCanvas extends React.Component {
 		} else {
 			data = {
 				editType: "createNode",
-				nodeTypeId: nodeTypeId,
+				operator_id_ref: operatorIdRef,
 				label: label,
 				offsetX: x,
 				offsetY: y
@@ -680,10 +680,10 @@ export default class DiagramCanvas extends React.Component {
 	}
 
 	makeALinkSet(positions, isBackground) {
-		return this.props.canvas.diagram.links.map((link, ind) => {
+		return this.props.canvas.links.map((link, ind) => {
 			// logger.info(link);
-			var posFrom = positions[link.source];
-			var posTo = positions[link.target];
+			var posFrom = positions[link.srcNodeId];
+			var posTo = positions[link.trgNodeId];
 
 			// Older diagrams where the comments don"t have unique IDs may not
 			// have the comment IDs set correctly which in turn means the
@@ -698,8 +698,8 @@ export default class DiagramCanvas extends React.Component {
 				? "canvas-background-link"
 				: "canvas-data-link";
 			if (!isBackground) {
-				if (link.className !== "undefined" && link.className !== null) {
-					className = link.className;
+				if (link.class_name !== "undefined" && link.class_name !== null) {
+					className = link.class_name;
 				}
 			}
 
@@ -795,7 +795,7 @@ export default class DiagramCanvas extends React.Component {
 
 		// TODO - pass a ref to the canvas (or a size config) rather than passing
 		// multiple, individual, identical size params to every node
-		viewNodes = this.props.canvas.diagram.nodes.map((node) => {
+		viewNodes = this.props.canvas.nodes.map((node) => {
 
 			const x = Math.round(node.x_pos * zoom);
 			const y = Math.round(node.y_pos * zoom);
@@ -819,7 +819,7 @@ export default class DiagramCanvas extends React.Component {
 			return (viewNode);
 		});
 
-		viewComments = this.props.canvas.diagram.comments.map((comment) => {
+		viewComments = this.props.canvas.comments.map((comment) => {
 			const x = Math.round(comment.x_pos * zoom);
 			const y = Math.round(comment.y_pos * zoom);
 
@@ -857,7 +857,7 @@ export default class DiagramCanvas extends React.Component {
 		const emptyDraggable = <div ref="emptyDraggable" />;
 		let emptyCanvas = null;
 
-		if (this.props.canvas.diagram.nodes.length === 0 && this.props.canvas.diagram.comments.length === 0) {
+		if (this.props.canvas.nodes.length === 0 && this.props.canvas.comments.length === 0) {
 			emptyCanvas = (<div id="empty-canvas" onContextMenu={this.canvasContextMenu}>
 				<img src={BlankCanvasImage} className="placeholder-image" />
 				<span className="placeholder-text">Your flow is empty!</span>

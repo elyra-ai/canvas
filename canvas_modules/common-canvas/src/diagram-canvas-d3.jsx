@@ -58,7 +58,7 @@ export default class DiagramCanvas extends React.Component {
 
 	componentDidUpdate() {
 		if (this.canvasD3Layout) {
-			this.canvasD3Layout.setCanvas(this.props.canvas, this.props.config);
+			this.canvasD3Layout.setCanvasInfo(this.props.canvas, this.props.config);
 		}
 	}
 
@@ -94,7 +94,7 @@ export default class DiagramCanvas extends React.Component {
 
 		if (jsVal !== null) {
 			if ((jsVal.operation === "createFromTemplate") || jsVal.operation === "createFromObject") {
-				this.createNodeAt(jsVal.typeId, jsVal.label, jsVal.sourceId, jsVal.sourceObjectTypeId, transPos.x, transPos.y);
+				this.createNodeAt(jsVal.operator_id_ref, jsVal.sourceId, jsVal.sourceObjectTypeId, transPos.x, transPos.y);
 
 			} else if ((jsVal.operation === "addToCanvas") || (jsVal.operation === "addTableFromConnection")) {
 				this.createNodeFromDataAt(transPos.x, transPos.y, jsVal.data);
@@ -104,7 +104,7 @@ export default class DiagramCanvas extends React.Component {
 
 	addNodeToCanvas(node) {
 		if (node) {
-			this.createNodeAt(node.typeId, node.label, node.sourceId, node.sourceObjectTypeId, 260, 10);
+			this.createNodeAt(node.operator_id_ref, node.sourceId, node.sourceObjectTypeId, 260, 10);
 		}
 	}
 
@@ -141,13 +141,12 @@ export default class DiagramCanvas extends React.Component {
 		this.props.contextMenuHandler(contextMenuSource);
 	}
 
-	createNodeAt(nodeTypeId, label, sourceId, sourceObjectTypeId, x, y) {
+	createNodeAt(operatorIdRef, sourceId, sourceObjectTypeId, x, y) {
 		var data = {};
 
 		if (typeof sourceId !== "undefined") {
 			data = {
 				editType: "createNode",
-				label: label,
 				offsetX: x,
 				offsetY: y,
 				sourceObjectId: sourceId,
@@ -156,8 +155,7 @@ export default class DiagramCanvas extends React.Component {
 		} else {
 			data = {
 				editType: "createNode",
-				nodeTypeId: nodeTypeId,
-				label: label,
+				operator_id_ref: operatorIdRef,
 				offsetX: x,
 				offsetY: y
 			};
@@ -185,8 +183,8 @@ export default class DiagramCanvas extends React.Component {
 	render() {
 		let emptyCanvas = null;
 
-		if (this.props.canvas.diagram.nodes.length === 0 &&
-				this.props.canvas.diagram.comments.length === 0) {
+		if (this.props.canvas.nodes.length === 0 &&
+				this.props.canvas.comments.length === 0) {
 			emptyCanvas = (<div id="empty-canvas" onContextMenu={this.canvasContextMenu}>
 				<img src={BlankCanvasImage} className="placeholder-image" />
 				<span className="placeholder-text">Your flow is empty!</span>
