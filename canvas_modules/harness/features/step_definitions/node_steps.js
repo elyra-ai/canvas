@@ -642,6 +642,81 @@ module.exports = function() {
 		expect(returnVal.value).toBe(1);
 	});
 
+	// Then I delete node 1 the "Var. File" node
+	//
+	this.Then(/^I delete node (\d+) the "([^"]*)" node by pressing Delete$/, function(nodeIndex, nodeType) {
+		const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
+		var nodeNumber = nodeIndex - 1;
+		var nodeSelector;
+		if (D3RenderingEngine) {
+			nodeSelector = ".node-group";
+		} else {
+			nodeSelector = ".node-inner-circle";
+		}
+		browser.$("#canvas-div").$$(nodeSelector)[nodeNumber].click();
+		browser.keys("Delete");
+
+		// verify node is not the canvas DOM
+		var count = 0;
+		var nodeList = browser.$("#canvas-div").$$(nodeSelector);
+		for (var idx = 0; idx < nodeList.length; idx++) {
+			var imageName;
+			if (D3RenderingEngine) {
+				imageName = browser.$("#canvas-div").$$(nodeSelector)[idx].$("image").getAttribute("href");
+			} else {
+				imageName = browser.$("#canvas-div").$$(nodeSelector)[idx].$("img").getAttribute("src");
+			}
+
+			// console.log("Image # = " + idx + " image = " + imageName);
+			if (imageName === expectedImages[nodeType]) {
+				count++;
+			}
+		}
+		expect(count).toBe(0);
+
+		// verify that the  node is in the internal object model
+		const testUrl = getURL();
+		const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
+		const getEventLogUrl = testUrl + "/v1/test-harness/events";
+
+		browser.timeouts("script", 5000);
+		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
+		var returnVal = browser.execute(getObjectModelCount, objectModel.value, "nodes", expectedImages[nodeType]);
+		expect(returnVal.value).toBe(0);
+
+		// verify that an event for a new  node is in the external object model event log
+		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
+		returnVal = browser.execute(getEventLogCount, eventLog.value, "editActionHandler() deleteSelectedObjects", "");
+		expect(returnVal.value).toBe(1);
+	});
+
+	this.Then("I expect the canvas to be empty", function() {
+		const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
+		var nodeSelector;
+		var commentSelector;
+		var linkSelector;
+
+		if (D3RenderingEngine) {
+			nodeSelector = ".node-group";
+			commentSelector = ".comment-group";
+			linkSelector = ".link-group";
+		} else {
+			nodeSelector = ".node-inner-circle";
+			commentSelector = ".comment-box";
+			linkSelector = ".canvas-background-link";
+		}
+
+		var nodeList = browser.$("#canvas-div").$$(nodeSelector);
+		expect(nodeList.length).toBe(0);
+
+		var commentList = browser.$("#canvas-div").$$(commentSelector);
+		expect(commentList.length).toBe(0);
+
+		var linkList = browser.$("#canvas-div").$$(linkSelector);
+		expect(linkList.length).toBe(0);
+	});
+
+
 	// Then I move node 1 a "Field Reorder" node onto the canvas by 50, 50
 	// this moves the node a delta of x +50px and y +50px
 	//
@@ -786,6 +861,40 @@ module.exports = function() {
 		});
 
 		browser.keys("Shift");
+	});
+
+	this.Then("I select all objects in the canvas via the context menu", function() {
+		const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
+		if (D3RenderingEngine) {
+			browser.rightClick(".svg-area", Number(300), Number(10));
+		} else {
+			browser.rightClick(".svg-canvas", Number(300), Number(10));
+		}
+		browser.$(".context-menu-popover").$$(".react-contextmenu-item")[1].click();
+	});
+
+	this.Then("I select all objects in the canvas via Ctrl+A", function() {
+		const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
+		if (D3RenderingEngine) {
+			browser.click(".svg-area", Number(10), Number(10));
+		} else {
+			browser.click(".svg-canvas", Number(10), Number(10));
+		}
+		browser.keys(["Control", "A", "A", "Control"]);
+	});
+
+	this.Then("I select all objects in the canvas via Cmd+A", function() {
+		const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
+		if (D3RenderingEngine) {
+			browser.click(".svg-area", Number(10), Number(10));
+		} else {
+			browser.click(".svg-canvas", Number(10), Number(10));
+		}
+		browser.keys(["Meta", "A", "A", "Meta"]);
+	});
+
+	this.Then("I delete all selected objects via the Delete key", function() {
+		browser.keys("Delete");
 	});
 
 	this.Then("I verify the node move was not done", function() {

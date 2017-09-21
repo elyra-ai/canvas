@@ -155,6 +155,38 @@ Feature: Sanity_Test_undoRedo
 		Then I verify the number of data links are 20
 		Then I verify the number of comment links are 12
 
+		Then I select all objects in the canvas via the context menu
+		Then I delete node 1 the "Type" node by selecting more than 1 node
+		Then I expect the canvas to be empty
+		Then I expect the object model to be empty
+		Then I click undo
+		Then I verify the number of nodes are 8
+		Then I verify the number of comments are 3
+
+		Then I select all objects in the canvas via Ctrl+A
+		Then I delete all selected objects via the Delete key
+		Then I expect the canvas to be empty
+		Then I expect the object model to be empty
+		Then I click undo
+		Then I verify the number of nodes are 8
+		Then I verify the number of comments are 3
+
+		Then I select all objects in the canvas via Cmd+A
+		Then I delete node 1 the "Type" node by selecting more than 1 node
+		Then I expect the canvas to be empty
+		Then I expect the object model to be empty
+		Then I click undo
+		Then I verify the number of nodes are 8
+		Then I verify the number of comments are 3
+
+		Then I select all objects in the canvas via the context menu
+		Then I delete all selected objects via the Delete key
+		Then I expect the canvas to be empty
+		Then I expect the object model to be empty
+		Then I click undo
+		Then I verify the number of nodes are 8
+		Then I verify the number of comments are 3
+
 		Then I move node 8 a "Sort" node onto the canvas by 50, 50
 		Then I verify the node move was done
 		Then I click undo

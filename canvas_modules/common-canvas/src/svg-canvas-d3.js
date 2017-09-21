@@ -18,6 +18,7 @@ import _ from "underscore";
 
 const BACKSPACE_KEY = 8;
 const DELETE_KEY = 46;
+const A_KEY = 65;
 const Z_KEY = 90;
 // TODO - Implement nudge behavior for moving nodes and comments
 // const LEFT_ARROW_KEY = 37;
@@ -375,6 +376,9 @@ export default class CanvasD3Layout {
 					} else if (this.isCmndCtrlPressed() && d3.event.shiftKey && d3.event.keyCode === Z_KEY) {
 						this.stopPropagationAndPreventDefault();
 						this.editActionHandler({ editType: "redo" });
+					} else if (this.isCmndCtrlPressed() && d3.event.keyCode === A_KEY) {
+						this.stopPropagationAndPreventDefault();
+						ObjectModel.selectAll();
 					}
 				}
 			});

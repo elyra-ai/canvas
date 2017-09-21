@@ -285,6 +285,10 @@ export default class DiagramCanvas extends React.Component {
 		return this.state.zoom / 100;
 	}
 
+	focusOnCanvas() {
+		document.getElementById("canvas-div").focus(); // Set focus on div so keybord events go there.
+	}
+
 	// minInitialLine is the size of the vertical line protruding from the source
 	// or target handles when such a line is required for drawing connectors.
 	minInitialLine() {

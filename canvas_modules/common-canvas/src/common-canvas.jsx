@@ -91,6 +91,8 @@ export default class CommonCanvas extends React.Component {
 	contextMenuClicked(action) {
 		if (action === "selectAll") { // Common Canvas provided default action
 			ObjectModel.selectAll();
+			// Set focus on canvas so keybord events go there.
+			this.refs.canvas.focusOnCanvas();
 		} else {
 			this.contextMenuActionHandler(action);
 		}

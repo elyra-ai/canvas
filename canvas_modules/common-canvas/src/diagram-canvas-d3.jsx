@@ -53,7 +53,7 @@ export default class DiagramCanvas extends React.Component {
 				this.props.clickActionHandler,
 				this.props.decorationActionHandler,
 				this.props.config);
-		document.getElementById("d3-svg-canvas-div").focus(); // Set focus on div so keybord events go there.
+		this.focusOnCanvas();
 	}
 
 	componentDidUpdate() {
@@ -122,6 +122,10 @@ export default class DiagramCanvas extends React.Component {
 		if (this.canvasD3Layout) {
 			this.canvasD3Layout.zoomOut();
 		}
+	}
+
+	focusOnCanvas() {
+		document.getElementById("d3-svg-canvas-div").focus(); // Set focus on div so keybord events go there.
 	}
 
 	canvasContextMenu(event) {

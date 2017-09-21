@@ -42,7 +42,7 @@ Feature: Sanity_Test_D3
 		Then I pause for 3 seconds
 
     Then I delete node 1 the "Var. File" node
-    Then I delete node 1 the "Derive" node
+    Then I delete node 1 the "Derive" node by pressing Delete
     Then I delete comment 1 linked to the "Derive" node with the comment text "This comment box should be linked to the derive node."
     Then I delete node 1 the "Filter" node
     Then I delete comment 1 linked to the "Type" node with the comment text "this comment box should be linked to the type node"
