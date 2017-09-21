@@ -102,7 +102,7 @@ export default class NumberfieldControl extends EditorControl {
 NumberfieldControl.propTypes = {
 	control: PropTypes.object,
 	controlStates: PropTypes.object,
-	validationDefinitions: PropTypes.array,
+	validationDefinitions: PropTypes.object,
 	validateConditions: PropTypes.func,
 	updateValidationErrorMessage: PropTypes.func,
 	retrieveValidationErrorMessage: PropTypes.func,

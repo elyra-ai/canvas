@@ -73,7 +73,7 @@ export default class PasswordControl extends EditorControl {
 PasswordControl.propTypes = {
 	control: PropTypes.object,
 	controlStates: PropTypes.object,
-	validationDefinitions: PropTypes.array,
+	validationDefinitions: PropTypes.object,
 	updateValidationErrorMessage: PropTypes.func,
 	retrieveValidationErrorMessage: PropTypes.func,
 	updateControlValue: PropTypes.func

@@ -330,7 +330,7 @@ describe("field-picker-control renders correctly", () => {
 			/>
 		);
 		wrapper.find("input[id='field-picker-checkbox-all']").simulate("change", { target: { checked: "true" } });
-		expect(wrapper.state().checkedAll).to.equal("true");
+		expect(wrapper.state().checkedAll).to.equal(true);
 		expect(wrapper.state().newControlValues).to.have.length(filteredDataset.fields.length);
 	});
 

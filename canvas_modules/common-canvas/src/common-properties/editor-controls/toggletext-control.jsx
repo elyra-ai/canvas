@@ -10,6 +10,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import EditorControl from "./editor-control.jsx";
+import { EDITOR_CONTROL } from "../constants/constants.js";
 
 export default class ToggletextControl extends EditorControl {
 	constructor(props) {
@@ -43,8 +44,17 @@ export default class ToggletextControl extends EditorControl {
 	}
 
 	render() {
+		const controlName = this.getControlID().replace(EDITOR_CONTROL, "");
+		const conditionProps = {
+			controlName: controlName,
+			controlType: "toggletext"
+		};
+		const conditionState = this.getConditionMsgState(conditionProps);
+		const stateDisabled = conditionState.disabled;
+		const stateStyle = conditionState.style;
+
 		const renderValue = (this.props.tableControl) ? this.props.value : this.state.controlValue;
-		let rendered = (this.props.tableControl) ? this.valuesMap[renderValue] : this.valuesMap[renderValue];
+		let rendered = this.valuesMap[renderValue];
 		if (typeof rendered === "undefined") {
 			rendered = renderValue;
 		}
@@ -54,13 +64,21 @@ export default class ToggletextControl extends EditorControl {
 			icon = <img className="toggletext_icon" src={this.iconsMap[renderValue]} onClick={this.onClick.bind(this)} />;
 
 		}
+		let uValue;
+		if (!this.props.disabled) {
+			uValue = (<u onClick={this.onClick.bind(this)} className="toggletext_text">
+				{rendered}
+			</u>);
+		} else {
+			uValue = (<u {...stateDisabled} style={stateStyle}>
+				{rendered}
+			</u>);
+		}
 
 		return (
 			<div className="toggletext_control">
 				{icon}
-				<u onClick={this.onClick.bind(this)} className="toggletext_text">
-					{rendered}
-				</u>
+				{uValue}
 			</div>
 		);
 	}

@@ -28,7 +28,7 @@ const control = {
 const control2 = {
 };
 const controlId = "test-areafield";
-const validationDefinitions = [];
+const validationDefinitions = {};
 const controlStates = {};
 
 function valueAccessor() {

@@ -115,5 +115,7 @@ module.exports = {
 		rules: rules
 	},
 	plugins: plugins,
-	devtool: "inline-source-map"
+	devtool: "eval-source-map"
 };
+
+// devtool: "inline-source-map"

@@ -128,6 +128,7 @@ export default class EditorControl extends React.Component {
 		this.setTableErrorState = this.setTableErrorState.bind(this);
 		this.evaluateInput = this.evaluateInput.bind(this);
 		this.doGroupValidationUpdate = this.doGroupValidationUpdate.bind(this);
+		this.updateCellConditions = this.updateCellConditions.bind(this);
 
 		this._valueListener = null;
 	}
@@ -203,6 +204,22 @@ export default class EditorControl extends React.Component {
 			errorMessage = <div />;
 		}
 
+		if (this.props.tableControl) {
+			// If this is a control in a table cell, refer to disabled and visible directly
+			if (this.props.disabled) {
+				stateDisabled.disabled = true;
+				stateStyle = {
+					color: VALIDATION_MESSAGE.DISABLED,
+					borderColor: VALIDATION_MESSAGE.DISABLED
+				};
+			} else if (this.props.hidden) {
+				stateStyle.visibility = "hidden";
+			}
+		} else {
+			// Check for cell level operations for tables, which are added to the base control state
+			this.updateCellConditions(conditionProps, stateDisabled, stateStyle);
+		}
+
 		return {
 			message: errorMessage,
 			messageType: messageType,
@@ -268,6 +285,59 @@ export default class EditorControl extends React.Component {
 
 	clearValueListener() {
 		this._valueListener = null;
+	}
+
+	updateCellConditions(conditionProps, stateDisabled, stateStyle) {
+		if (this.props.control.valueDef && this.props.control.valueDef.isMap) {
+			for (var key in this.props.controlStates) {
+				if (this.props.controlStates.hasOwnProperty(key)) {
+					// Separate any complex type sub-control reference
+					let paramName = key;
+					let offset = key.indexOf("[");
+					if (offset > -1) {
+						paramName = key.substring(0, offset);
+						const rowIndex = parseInt(key.substring(offset + 1), 10);
+						offset = key.indexOf("[", offset + 1);
+						const colIndex = offset > -1 ? parseInt(key.substring(offset + 1), 10) : -1;
+						if (conditionProps.controlName === paramName && rowIndex > -1) {
+							this._updateHiddenDisabled(this.props.controlStates[key],
+								rowIndex, colIndex, stateDisabled, stateStyle);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	_updateHiddenDisabled(controlState, rowIndex, colIndex, stateDisabled, stateStyle) {
+		if (controlState === "disabled") {
+			if (!stateDisabled[rowIndex]) {
+				stateDisabled[rowIndex] = {};
+			}
+			if (!stateStyle[rowIndex]) {
+				stateStyle[rowIndex] = {};
+			}
+			if (colIndex > -1) {
+				stateDisabled[rowIndex][colIndex] = { disabled: true };
+				stateStyle[rowIndex][colIndex] = {
+					color: VALIDATION_MESSAGE.DISABLED,
+					borderColor: VALIDATION_MESSAGE.DISABLED
+				};
+			} else {
+				stateDisabled[rowIndex].disabled = true;
+				stateStyle[rowIndex].color = VALIDATION_MESSAGE.DISABLED;
+				stateStyle[rowIndex].borderColor = VALIDATION_MESSAGE.DISABLED;
+			}
+		} else if (controlState === "hidden") {
+			if (!stateStyle[rowIndex]) {
+				stateStyle[rowIndex] = {};
+			}
+			if (colIndex > -1) {
+				stateStyle[rowIndex][colIndex] = { visibility: "hidden" };
+			} else {
+				stateStyle[rowIndex].visibility = "hidden";
+			}
+		}
 	}
 
 	notifyValueChanged(controlName, value) {
@@ -351,13 +421,14 @@ export default class EditorControl extends React.Component {
 		}
 	}
 
-	validateInput() {
+	validateInput(cellCoords) {
 		const controlName = this.getControlID().replace(EDITOR_CONTROL, "");
 		if (!this.props.validationDefinitions) {
 			return;
 		}
 		if (this.props.validateConditions) {
-			this.props.validateConditions(); // run visible and enabled condition validations
+			// run visible and enabled condition validations
+			this.props.validateConditions(this.props.dataModel, cellCoords);
 		}
 		if (this.props.control.valueDef.isMap) {
 			this.clearTableErrorState(); 	// Clear table error state
@@ -410,7 +481,11 @@ EditorControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	controlStates: PropTypes.object,
 	valueAccessor: PropTypes.func.isRequired,
-	validationDefinitions: PropTypes.array,
+	validationDefinitions: PropTypes.object,
+	tableControl: PropTypes.boolean,
+	disabled: PropTypes.boolean,
+	hidden: PropTypes.boolean,
+	columnDef: PropTypes.object,
 	validateConditions: PropTypes.func,
 	updateValidationErrorMessage: PropTypes.func,
 	retrieveValidationErrorMessage: PropTypes.func,

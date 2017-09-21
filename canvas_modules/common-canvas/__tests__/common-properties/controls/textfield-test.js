@@ -25,7 +25,7 @@ const control2 = {
 };
 const controlId = "test-textfield";
 const value = "value";
-const validationDefinitions = [];
+const validationDefinitions = {};
 const controlStates = {};
 
 function valueAccessor() {

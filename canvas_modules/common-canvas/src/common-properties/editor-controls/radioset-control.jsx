@@ -93,7 +93,7 @@ export default class RadiosetControl extends EditorControl {
 RadiosetControl.propTypes = {
 	control: PropTypes.object,
 	controlStates: PropTypes.object,
-	validationDefinitions: PropTypes.array,
+	validationDefinitions: PropTypes.object,
 	updateValidationErrorMessage: PropTypes.func,
 	retrieveValidationErrorMessage: PropTypes.func,
 	updateControlValue: PropTypes.func

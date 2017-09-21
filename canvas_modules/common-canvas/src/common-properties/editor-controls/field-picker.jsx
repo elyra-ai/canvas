@@ -82,6 +82,7 @@ export default class FieldPicker extends EditorControl {
 		this.mouseLeaveResetButton = this.mouseLeaveResetButton.bind(this);
 		this.onSort = this.onSort.bind(this);
 		this.onFilter = this.onFilter.bind(this);
+		this._getRecordForRow = this._getRecordForRow.bind(this);
 	}
 
 	componentWillMount() {
@@ -129,7 +130,7 @@ export default class FieldPicker extends EditorControl {
 				for (let j = 0; j < newControlValues.length; j++) {
 					let key = [];
 					if (this.props.control.defaultRow) {
-						key = newControlValues[j][0];
+						key = newControlValues[j] && typeof newControlValues[j] !== "undefined" ? newControlValues[j][0] : "";
 					} else {
 						key = newControlValues[j];
 					}
@@ -218,25 +219,14 @@ export default class FieldPicker extends EditorControl {
 						selectAll.push(selected[0]);
 					}
 				} else { // if data is in visibleData, add it
-					const duplicate = visibleData.some(function(element) {
+					const visible = visibleData.some(function(element) {
 						return element.name === data[i].name;
 					});
-					if (duplicate) {
-						const row = data[i];
-						const found = this.getDefaultRow(data[i].name);
-						if (found !== false) {
-							selectAll.push(found);
-						} else if (this.props.control.defaultRow) { // add remaining fields
-							const index = this.props.control.valueDef.isMap ? 0 : 1;
-							let defaultValue = this.props.control.defaultRow[index];
-							// Set the default name to the column name for role==="new_column"
-							if ((typeof defaultValue === "undefined" || defaultValue === null) &&
-										this.props.control.subControls[1].role === "new_column") {
-								defaultValue = row.name;
-							}
-							selectAll.push([row.name, defaultValue]);
+					if (visible) {
+						if (this.props.control.defaultRow) {
+							selectAll.push(this._getRecordForRow(data[i].name));
 						} else {
-							selectAll.push(row.name);
+							selectAll.push(data[i].name);
 						}
 					}
 				}
@@ -258,23 +248,10 @@ export default class FieldPicker extends EditorControl {
 			}
 		}
 
-		if (this.props.control.defaultRow) {
-			this.setState({
-				newControlValues: selectAll,
-				checkedAll: evt.target.checked
-			});
-		} else {
-			this.setState({
-				newControlValues: selectAll,
-				checkedAll: evt.target.checked
-			});
-		}
-
-		if (selectAll.length !== data.length) {
-			this.setState({
-				checkedAll: false
-			});
-		}
+		this.setState({
+			newControlValues: selectAll,
+			checkedAll: selectAll.length === data.length
+		});
 	}
 
 	getDefaultRow(field) {
@@ -291,36 +268,18 @@ export default class FieldPicker extends EditorControl {
 	handleFieldChecked(evt) {
 		const current = this.state.newControlValues;
 		const selectedFieldName = evt.currentTarget.getAttribute("data-name");
-		let selectedField = [];
-		// if selectedField is in the original list, grab that row instead of generating new selectedField
-		const found = this.getDefaultRow(selectedFieldName);
-		if (found !== false) {
-			selectedField = found;
-			if (this.props.control.defaultRow) {
-				selectedField = found;
-			}
-		}
+		const selectedField = this._getRecordForRow(selectedFieldName);
 
-		if (selectedField.length === 0) {
-			if (this.props.control.defaultRow) {
-				const index = this.props.control.valueDef.isMap ? 0 : 1;
-				let defaultValue = this.props.control.defaultRow[index];
-				// Set the default name to the column name for role==="new_column"
-				if ((typeof defaultValue === "undefined" || defaultValue === null) &&
-							this.props.control.subControls[1].role === "new_column") {
-					defaultValue = selectedFieldName;
-				}
-				selectedField = [selectedFieldName, defaultValue];
-			} else {
-				selectedField = selectedFieldName;
-			}
-		}
-
+		const that = this;
 		if (evt.target.checked) {
-			this.setState({ newControlValues: current.concat([selectedField]) });
+			const newValue = this.props.control.defaultRow ? [selectedField] : selectedField;
+			this.setState({ newControlValues: current.concat(newValue) });
 		} else {
 			const modified = current.filter(function(element) {
-				return element !== selectedField;
+				if (that.props.control.defaultRow) {
+					return element[0] !== selectedField[0];
+				}
+				return element !== selectedFieldName;
 			});
 
 			this.setState({
@@ -330,14 +289,48 @@ export default class FieldPicker extends EditorControl {
 		}
 	}
 
-	handleReset() {
-		if (this.state.initialControlValues.length !== this.state.data.fields.length) {
-			this.setState({ checkedAll: false });
+	_getRecordForRow(selectedFieldName) {
+		let selectedField = [];
+		// if selectedField is in the original list, grab that row instead of generating new selectedField
+		const found = this.getDefaultRow(selectedFieldName);
+		if (found !== false) {
+			selectedField = found;
+			if (this.props.control.valueDef.isMap) {
+				selectedField[this.props.control.keyIndex] = selectedFieldName;
+			}
 		}
+
+		if (selectedField.length === 0) {
+			if (this.props.control.subControls) {
+				for (let i = 0; i < this.props.control.subControls.length; i++) {
+					const idx = this.props.control.valueDef.isMap ? i - 1 : i;
+					if (i === this.props.control.keyIndex) {
+						selectedField.push(selectedFieldName);
+					} else if (typeof this.props.control.defaultRow !== "undefined" && this.props.control.defaultRow.length > idx) {
+						let defaultValue = this.props.control.defaultRow[idx];
+						if ((typeof defaultValue === "undefined" || defaultValue === null) &&
+									this.props.control.subControls[i].role === "new_column") {
+							// Set the default name to the column name for role==="new_column"
+							defaultValue = selectedFieldName;
+						}
+						selectedField.push(defaultValue);
+					} else {
+						selectedField.push(null);
+					}
+				}
+			} else {
+				selectedField.push(selectedFieldName);
+			}
+		}
+		return selectedField;
+	}
+
+	handleReset() {
 		this.setState({
 			newControlValues: this.state.initialControlValues,
 			filterIcons: [],
-			filterText: ""
+			filterText: "",
+			checkedAll: this.state.initialControlValues.length === this.state.data.fields.length
 		});
 	}
 
@@ -489,7 +482,8 @@ export default class FieldPicker extends EditorControl {
 				return match;
 			});
 			checkedAll = sameData.length === visibleData.length;
-		} else if (this.state.data.fields.length === this.state.newControlValues.length) {
+		} else if (this.state.newControlValues &&
+								this.state.data.fields.length === this.state.newControlValues.length) {
 			checkedAll = true;
 		} else {
 			checkedAll = false;

@@ -1,0 +1,264 @@
+{
+  "current_parameters": {
+    "field_types": [
+      [
+        "Age",
+        true,
+        "integer"
+      ],
+      [
+        "Sex",
+        false,
+        "string"
+      ],
+
+      [
+        "Na",
+        false,
+        "double"
+      ],
+      [
+        "K",
+        false,
+        "double"
+      ],
+      [
+        "Drug",
+        false,
+        "string"
+      ],
+      [
+        "Cp",
+        false,
+        "double"
+      ],
+      [
+        "Returns",
+        false,
+        "integer"
+      ],
+      [
+        "Tag",
+        false,
+        "string"
+      ]
+    ]
+  },
+  "complex_types": [
+    {
+      "id": "FieldStorageEntry",
+      "key_definition": {
+        "id": "field",
+        "type": "string",
+        "role": "column"
+      },
+      "parameters": [
+        {
+          "id": "override",
+          "type": "boolean"
+        },
+        {
+          "id": "storage",
+          "enum": [
+            "string",
+            "integer",
+            "double",
+            "date",
+            "time",
+            "timestamp",
+            "password",
+            "structure"
+          ]
+        }
+      ]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "field_types",
+      "type": "map[string,FieldStorageEntry]",
+      "role": "column",
+      "default": []
+    }
+  ],
+  "uihints": {
+    "id": "storage",
+    "icon": "images/storage.svg",
+    "complex_type_info": [
+      {
+        "complex_type_ref": "FieldStorageEntry",
+        "key_definition": {
+          "parameter_ref": "field",
+          "label": {
+            "default": "",
+            "resource_key": "FieldStorageEntry.field"
+          },
+          "width": 26,
+          "filterable": true
+        },
+        "parameters": [
+          {
+            "parameter_ref": "override",
+            "label": {
+              "default": "",
+              "resource_key": "FieldStorageEntry.override"
+            },
+            "width": 16,
+            "edit_style": "inline"
+          },
+          {
+            "parameter_ref": "storage",
+            "label": {
+              "default": "",
+              "resource_key": "FieldStorageEntry.storage"
+            },
+            "width": 26,
+            "edit_style": "inline",
+            "dm_default": "type"
+          }
+        ]
+      }
+    ],
+    "parameter_info": [
+      {
+        "parameter_ref": "field_types",
+        "label": {
+          "default": ""
+        },
+        "description": {
+          "default": "Change the type of columns in the active dataset"
+        },
+        "control": "structuretable"
+      }
+    ],
+    "group_info": [
+      {
+        "id": "basic-settings",
+        "label": {
+          "default": "Settings"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "field_types"
+        ]
+      }
+    ]
+  },
+  "conditions": [
+    {
+      "enabled": {
+        "parameter_refs": [
+          "field_types[2]"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "field_types[1]",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    }
+  ],
+  "dataset_metadata": {
+    "fields": [
+      {
+        "name": "Age",
+        "type": "integer",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Sex",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "BP",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Cholesterol",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Na",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "K",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Drug",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Cp",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Returns",
+        "type": "integer",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Tag",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      }
+    ]
+  },
+  "resources": {
+    "storage.label": "Storage",
+    "field_types.label": "",
+    "FieldStorageEntry.field": "Field",
+    "FieldStorageEntry.override": "Override",
+    "FieldStorageEntry.storage": "Storage"
+  }
+}

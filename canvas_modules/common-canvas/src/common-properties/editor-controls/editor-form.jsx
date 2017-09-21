@@ -46,6 +46,7 @@ import SubPanelButton from "./../editor-panels/sub-panel-button.jsx";
 import UiConditions from "../ui-conditions/ui-conditions.js";
 import UiConditionsParser from "../ui-conditions/ui-conditions-parser.js";
 import CheckboxSelectionPanel from "../editor-panels/checkbox-selection-panel.jsx";
+import PropertyUtils from "../util/property-utils.js";
 
 
 export default class EditorForm extends React.Component {
@@ -63,9 +64,9 @@ export default class EditorForm extends React.Component {
 			formData: this.props.form,
 			valuesTable: this.props.form.data.currentParameters,
 			controlErrorMessages: {},
-			visibleDefinition: [],
-			enabledDefinitions: [],
-			validationDefinitions: [],
+			visibleDefinition: {},
+			enabledDefinitions: {},
+			validationDefinitions: {},
 			controlStates: {},
 			selectedRows: {},
 			showFieldPicker: false,
@@ -100,6 +101,7 @@ export default class EditorForm extends React.Component {
 		this.generateSharedControlNames = this.generateSharedControlNames.bind(this);
 		this.getSelectedRows = this.getSelectedRows.bind(this);
 		this.setControlState = this.setControlState.bind(this);
+		this.updateTableConditions = this.updateTableConditions.bind(this);
 	}
 
 	componentWillMount() {
@@ -110,6 +112,9 @@ export default class EditorForm extends React.Component {
 
 	componentDidMount() {
 		this.validateConditions();
+
+		// One time table condition updates
+		this.updateTableConditions();
 	}
 
 	getControl(propertyName) {
@@ -236,7 +241,31 @@ export default class EditorForm extends React.Component {
 		this.setState({ controlStates: tempState });
 	}
 
-	updateControlValue(controlId, controlValue) {
+	updateTableConditions() {
+		// First, find the largest table dimensions
+		let maxRow = 0;
+		let maxCol = 0;
+		const controlValues = this.getControlValues();
+		for (const key in controlValues) {
+			if (key) {
+				const value = controlValues[key];
+				if (PropertyUtils.toType(value) === "array" && value.length > 0 &&
+						PropertyUtils.toType(value[0]) === "array") {
+					maxRow = Math.max(maxRow, value.length);
+					maxCol = Math.max(maxCol, value[0].length);
+				}
+			}
+		}
+
+		// Then run a condition updater for each cell address
+		for (let i = 0; i < maxRow; i++) {
+			for (let j = 0; j < maxCol; j++) {
+				this.validateConditions(null, { rowIndex: i, colIndex: j });
+			}
+		}
+	}
+
+	updateControlValue(controlId, controlValue, cellCoords) {
 		const that = this;
 		var values = this.state.valuesTable;
 		values[controlId] = controlValue;
@@ -244,7 +273,7 @@ export default class EditorForm extends React.Component {
 			function() {
 				const control = that.getControl(controlId);
 				if (control) {
-					control.validateInput();
+					control.validateInput(cellCoords);
 				} else if (typeof that.refs === "object") { // needed for subpanel validations
 					that.validateChildRefs(that.refs, controlId);
 				}
@@ -925,17 +954,19 @@ export default class EditorForm extends React.Component {
 		});
 	}
 
-	validateConditions() {
-		var controlValues = {};
-		var userInput = {};
+	validateConditions(dataModel, cellCoords) {
+		this._validateVisible(dataModel, cellCoords);
+		this._validateEnabled(dataModel, cellCoords);
+	}
 
+	_validateVisible(dataModel, cellCoords) {
 		// visibleDefinition
 		if (Object.keys(this.state.visibleDefinition).length > 0) {
 			// logger.info("validate visible definitions");
-			controlValues = this.getControlValues();
+			const controlValues = this.getControlValues();
 
 			// convert the controlValues object structure to what UiConditions take
-			userInput = {};
+			const userInput = {};
 			for (var visKey in controlValues) {
 				if (visKey) {
 					userInput[visKey] = controlValues[visKey];
@@ -946,20 +977,28 @@ export default class EditorForm extends React.Component {
 				if (this.state.visibleDefinition[visibleKey].length > 0) {
 					for (let i = 0; i < this.state.visibleDefinition[visibleKey].length; i++) {
 						const visDefinition = this.state.visibleDefinition[visibleKey][i];
-						if (typeof this.refs[visibleKey] !== "undefined") {
-							const controlType = this.refs[visibleKey].props.control.controlType;
+						const baseKey = this._getBaseParam(visibleKey);
+						if (typeof this.refs[baseKey] !== "undefined") {
+							if (!this._shouldEvaluate(visDefinition.definition.visible, cellCoords)) {
+								continue;
+							}
+							const controlType = this.refs[baseKey].props.control.controlType;
 							try {
-								var visOutput = UiConditions.validateInput(visDefinition.definition, userInput, controlType);
+								var visOutput = UiConditions.validateInput(visDefinition.definition, userInput, controlType, dataModel, cellCoords);
 
 								var visTmp = this.state.controlStates;
 								if (visOutput === true) { // control should be visible
 									for (let j = 0; j < visDefinition.definition.visible.parameter_refs.length; j++) {
-										delete visTmp[visDefinition.definition.visible.parameter_refs[j]];
+										const paramRef = this._getParamReference(visDefinition.definition.visible.parameter_refs[j], cellCoords);
+										if (paramRef && visTmp[paramRef] !== "visible") {
+											delete visTmp[paramRef];
+										}
 									}
 									this.setState({ controlStates: visTmp });
 								} else { // control should be hidden
 									for (let j = 0; j < visDefinition.definition.visible.parameter_refs.length; j++) {
-										visTmp[visDefinition.definition.visible.parameter_refs[j]] = "hidden";
+										const paramRef = this._getParamReference(visDefinition.definition.visible.parameter_refs[j], cellCoords);
+										visTmp[paramRef] = "hidden";
 									}
 									this.setState({ controlStates: visTmp });
 								}
@@ -971,41 +1010,49 @@ export default class EditorForm extends React.Component {
 				}
 			}
 		}
+	}
 
+	_validateEnabled(dataModel, cellCoords) {
 		// enabledDefinitions
 		if (Object.keys(this.state.enabledDefinitions).length > 0) {
 			// logger.info("validate enabled definitions");
-			controlValues = this.getControlValues();
+			const controlValues = this.getControlValues();
 
 			// convert the controlValues object structure to what UiConditions take
-			userInput = {};
+			const userInput = {};
 			for (var enbKey in controlValues) {
 				if (enbKey) {
 					userInput[enbKey] = controlValues[enbKey];
 				}
 			}
 
-			for (const enbabledKey in this.state.enabledDefinitions) {
-				if (this.state.enabledDefinitions[enbabledKey].length > 0) {
-					for (let i = 0; i < this.state.enabledDefinitions[enbabledKey].length; i++) {
-						const enbDefinition = this.state.enabledDefinitions[enbabledKey][i];
-						if (typeof this.refs[enbabledKey] !== "undefined") {
-							const controlType = this.refs[enbabledKey].props.control.controlType;
+			for (const enabledKey in this.state.enabledDefinitions) {
+				if (this.state.enabledDefinitions[enabledKey].length > 0) {
+					for (let i = 0; i < this.state.enabledDefinitions[enabledKey].length; i++) {
+						const enbDefinition = this.state.enabledDefinitions[enabledKey][i];
+						const baseKey = this._getBaseParam(enabledKey);
+						if (typeof this.refs[baseKey] !== "undefined") {
+							if (!this._shouldEvaluate(enbDefinition.definition.enabled, cellCoords)) {
+								continue;
+							}
+							const controlType = this.refs[baseKey].props.control.controlType;
 							try {
-								var enbOutput = UiConditions.validateInput(enbDefinition.definition, userInput, controlType);
+								var enbOutput = UiConditions.validateInput(enbDefinition.definition, userInput, controlType, dataModel, cellCoords);
 
 								var tmp = this.state.controlStates;
 								if (enbOutput === true) { // control should be enabled
 									for (let j = 0; j < enbDefinition.definition.enabled.parameter_refs.length; j++) {
-										if (tmp[enbDefinition.definition.enabled.parameter_refs[j]] !== "hidden") {
-											delete tmp[enbDefinition.definition.enabled.parameter_refs[j]];
+										const paramRef = this._getParamReference(enbDefinition.definition.enabled.parameter_refs[j], cellCoords);
+										if (paramRef && tmp[paramRef] !== "hidden") {
+											delete tmp[paramRef];
 										}
 									}
 									this.setState({ controlStates: tmp });
 								} else { // control should be disabled
 									for (let j = 0; j < enbDefinition.definition.enabled.parameter_refs.length; j++) {
-										if (tmp[enbDefinition.definition.enabled.parameter_refs[j]] !== "hidden") { // if control is hidden, no need to disable it
-											tmp[enbDefinition.definition.enabled.parameter_refs[j]] = "disabled";
+										const paramRef = this._getParamReference(enbDefinition.definition.enabled.parameter_refs[j], cellCoords);
+										if (tmp[paramRef] !== "hidden") { // if control is hidden, no need to disable it
+											tmp[paramRef] = "disabled";
 										}
 									}
 									this.setState({ controlStates: tmp });
@@ -1018,6 +1065,62 @@ export default class EditorForm extends React.Component {
 				}
 			}
 		}
+	}
+
+	_shouldEvaluate(definition, cellCoords) {
+		if (!cellCoords) {
+			return true;
+		}
+		return this._hasColumnEval(definition.evaluate, cellCoords.colIndex);
+	}
+
+	_hasColumnEval(evaluate, column) {
+		const condition = evaluate.condition;
+		if (condition) {
+			const offset = condition.parameter_ref.indexOf("[");
+			if (offset > -1) {
+				return parseInt(condition.parameter_ref.substring(offset + 1), 10) === column;
+			}
+		} else {
+			let andOr = evaluate.and;
+			if (!andOr) {
+				andOr = evaluate.or;
+			}
+			if (andOr) {
+				for (let i = 0; i < andOr.length; i++) {
+					if (this._hasColumnEval(andOr[i], column)) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	_getBaseParam(paramRef) {
+		let baseParam = paramRef;
+		const offset = paramRef.indexOf("[");
+		if (offset > -1) {
+			baseParam = paramRef.substring(0, offset);
+		}
+		return baseParam;
+	}
+
+	_getParamReference(paramRef, cellCoords) {
+		let fullReference = paramRef;
+		let subControlIndex = -1;
+		const offset = paramRef.indexOf("[");
+		if (offset > -1) {
+			const paramName = paramRef.substring(0, offset);
+			if (cellCoords && typeof cellCoords.rowIndex === "number") {
+				subControlIndex = parseInt(paramRef.substring(offset + 1), 10);
+				fullReference = paramName + "[" + cellCoords.rowIndex + "][" + subControlIndex + "]";
+			} else {
+				// If no cell coordinates but this is a cell-based condition then bail out
+				fullReference = null;
+			}
+		}
+		return fullReference;
 	}
 
 	retrieveValidationErrorMessage(controlName) {
@@ -1033,9 +1136,9 @@ export default class EditorForm extends React.Component {
 	}
 
 	parseUiConditions(uiConditions) {
-		var visibleDefinition = [];
-		var enabledDefinitions = [];
-		var validationDefinitions = [];
+		var visibleDefinition = {};
+		var enabledDefinitions = {};
+		var validationDefinitions = {};
 
 		for (let i = 0; i < uiConditions.length; i++) {
 			if (uiConditions[i].visible) {

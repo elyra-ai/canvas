@@ -98,6 +98,10 @@ input[type=radio]{
   padding-bottom: 10px;
 }
 
+.float_right {
+  float: right;
+}
+
 /* Custom control */
 
 .control__indicator{
@@ -206,6 +210,10 @@ input.number,
 
 #control-icon-container-enabled > * {
 	flex-shrink: 0;
+}
+
+.text-align-center {
+  text-align: center;
 }
 
 .validation-error-message-icon {
@@ -361,6 +369,7 @@ input.number,
 
 .Dropdown-root {
   position: relative;
+  margin-right: 5px;
 }
 
 .Dropdown-control {
@@ -406,6 +415,11 @@ input.number,
 .is-open .Dropdown-arrow {
   border-color: transparent transparent #a6266e;
   border-width: 0 5px 5px;
+}
+
+.Dropdown-disabled {
+  color: grey !important;
+  border-color: grey !important;
 }
 
 .Dropdown-menu {

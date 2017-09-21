@@ -17,11 +17,13 @@ import ReactTooltip from "react-tooltip";
 export default class CheckboxControl extends EditorControl {
 	constructor(props) {
 		super(props);
-		this.state = {
-			controlValue: props.valueAccessor(props.control.name)
-		};
+		const value = !props.tableControl
+			? props.valueAccessor(props.control.name)
+			: props.controlValue[props.rowIndex][props.columnIndex];
+		this.state = { controlValue: value };
 		this.getControlValue = this.getControlValue.bind(this);
 		this.handleChange = this.handleChange.bind(this);
+		this.getControlID = this.getControlID.bind(this);
 	}
 
 	handleChange(evt) {
@@ -32,16 +34,32 @@ export default class CheckboxControl extends EditorControl {
 		}, function() {
 			that.validateInput();
 		});
-		this.notifyValueChanged(this.props.control.name, newValue);
-		this.props.updateControlValue(this.props.control.name, newValue);
+		let ctrlValue;
+		if (this.props.tableControl) {
+			ctrlValue = this.props.controlValue;
+			ctrlValue[this.props.rowIndex][this.props.columnIndex] = newValue;
+		} else {
+			ctrlValue = newValue;
+		}
+		this.notifyValueChanged(this.props.control.name, ctrlValue);
+		const coords = { rowIndex: this.props.rowIndex, colIndex: this.props.columnIndex };
+		this.props.updateControlValue(this.props.control.name, ctrlValue, coords);
 	}
 
 	getControlValue() {
 		return this.state.controlValue;
 	}
 
+	getControlID() {
+		let id = EditorControl.prototype.getControlID.call(this);
+		if (this.props.tableControl) {
+			id += this.props.rowIndex + "_" + this.props.columnIndex;
+		}
+		return id;
+	}
+
 	render() {
-		var checked = this.state.controlValue;
+		var checked = this.state.controlValue.toString() === "true";
 		const controlName = this.getControlID().replace(EDITOR_CONTROL, "");
 		const conditionProps = {
 			controlName: controlName,
@@ -55,15 +73,20 @@ export default class CheckboxControl extends EditorControl {
 		const stateDisabled = conditionState.disabled;
 		const stateStyle = conditionState.style;
 
-		let controlIconContainerClass = "control-icon-container";
+		let controlIconContainerId = "control-icon-container";
 		if (messageType !== "info") {
-			controlIconContainerClass = "control-icon-container-enabled";
+			controlIconContainerId = "control-icon-container-enabled";
+		}
+		let containerClass = "";
+		if (this.props.tableControl) {
+			containerClass = "text-align-center";
 		}
 
+		const label = this.props.tableControl ? "" : this.props.control.label.text;
 		var cb = (<Checkbox {...stateDisabled}
 			style={stateStyle}
 			id={this.getControlID()}
-			name={this.props.control.label.text}
+			name={label}
 			onChange={this.handleChange}
 			onBlur={this.validateInput}
 			checked={checked}
@@ -75,7 +98,7 @@ export default class CheckboxControl extends EditorControl {
 		}
 		return (
 			<div className="checkbox editor_control_area" style={stateStyle}>
-				<div id={controlIconContainerClass}>
+				<div id={controlIconContainerId} className={containerClass}>
 					<div>
 						<div className="properties-tooltips-container" data-tip={tooltip} data-for={tooltipId}>
 							{cb}
@@ -100,7 +123,7 @@ export default class CheckboxControl extends EditorControl {
 CheckboxControl.propTypes = {
 	control: PropTypes.object,
 	controlStates: PropTypes.object,
-	validationDefinitions: PropTypes.array,
+	validationDefinitions: PropTypes.object,
 	updateValidationErrorMessage: PropTypes.func,
 	retrieveValidationErrorMessage: PropTypes.func,
 	updateControlValue: PropTypes.func

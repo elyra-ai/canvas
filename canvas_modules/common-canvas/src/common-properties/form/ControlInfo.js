@@ -51,7 +51,7 @@ class ControlDef {
 
 export class Control extends ControlDef {
 	constructor(cname, label, separateLabel, description, controlType, valueDef, role, additionalText, orientation,
-		values, valueLabels, valueIcons, sortable, filterable, charLimit, subControls, keyIndex, defaultRow,
+		values, valueLabels, valueIcons, sortable, filterable, noPickColumns, charLimit, subControls, keyIndex, defaultRow,
 		childItem, moveableRows, required) {
 		super(cname, label, description, controlType, valueDef, role, additionalText, orientation, values,
 			valueLabels, valueIcons, sortable, filterable, charLimit);
@@ -64,6 +64,9 @@ export class Control extends ControlDef {
 		}
 		if (defaultRow) {
 			this.defaultRow = defaultRow;
+		}
+		if (noPickColumns) {
+			this.noPickColumns = noPickColumns;
 		}
 		if (childItem) {
 			this.childItem = childItem;
@@ -79,7 +82,7 @@ export class Control extends ControlDef {
 
 export class SubControl extends ControlDef {
 	constructor(cname, label, description, visible, width, controlType, valueDef, role, additionalText,
-		orientation, values, valueLabels, valueIcons, sortable, filterable, charLimit, editStyle, isKeyField) {
+		orientation, values, valueLabels, valueIcons, sortable, filterable, charLimit, editStyle, isKeyField, dmDefault) {
 		super(cname, label, description, controlType, valueDef, role, additionalText, orientation,
 			values, valueLabels, valueIcons, sortable, filterable, charLimit);
 		if (typeof visible === "boolean") {
@@ -92,6 +95,9 @@ export class SubControl extends ControlDef {
 			this.editStyle = editStyle;
 		} else if (!isKeyField) {
 			this.editStyle = EditStyle.INLINE;
+		}
+		if (dmDefault) {
+			this.dmDefault = dmDefault;
 		}
 	}
 }

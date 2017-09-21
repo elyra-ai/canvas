@@ -26,6 +26,7 @@ export default class OneofselectControl extends EditorControl {
 		}
 		this.getControlValue = this.getControlValue.bind(this);
 		this.handleChange = this.handleChange.bind(this);
+		this.onFocus = this.onFocus.bind(this);
 	}
 
 	handleChange(evt) {
@@ -44,6 +45,36 @@ export default class OneofselectControl extends EditorControl {
 			evt.stopPropagation();
 		}
 		this.validateInput();
+	}
+
+	onFocus(isOpen) {
+		// This method is invoked by the dropdown *only* when the control is clicked
+		const that = this;
+		if (!isOpen && this.props.tableControl) {
+			// Give time for the dropdown to be added to the dom
+			setTimeout(function() {
+				const dropdowns = document.getElementsByClassName("Dropdown-menu");
+				if (dropdowns.length > 0) {
+					var theTop = that.findTopPos(dropdowns[0]);
+					var styles = "position: fixed; width: 200px; top: " + (theTop) + "px;";
+					dropdowns[0].setAttribute("style", styles);
+				}
+			}, 50);
+		}
+	}
+
+	findTopPos(elem) {
+		let curtop = 0;
+		let curtopscroll = 0;
+		let node = elem;
+		const modalClassName = "modal-lg modal-dialog";
+		if (node.offsetParent) {
+			do {
+				curtop += node.offsetTop;
+				curtopscroll += node.className !== modalClassName && node.offsetParent ? node.offsetParent.scrollTop : 0;
+			} while ((node = node.offsetParent) !== null);
+		}
+		return curtop - curtopscroll - window.screenTop + 4;
 	}
 
 	getControlValue() {
@@ -112,6 +143,7 @@ export default class OneofselectControl extends EditorControl {
 								options={dropDown.options}
 								onChange={this.handleChange}
 								onBlur={this.validateInput}
+								onFocus={this.onFocus}
 								value={dropDown.selectedOption}
 								placeholder={this.props.control.additionalText}
 								ref="input"
@@ -139,7 +171,7 @@ OneofselectControl.propTypes = {
 	setCurrentControlValueSelected: PropTypes.func,
 	selectedRows: PropTypes.array,
 	controlStates: PropTypes.object,
-	validationDefinitions: PropTypes.array,
+	validationDefinitions: PropTypes.object,
 	updateValidationErrorMessage: PropTypes.func,
 	retrieveValidationErrorMessage: PropTypes.func
 };

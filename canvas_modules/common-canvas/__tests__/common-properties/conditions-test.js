@@ -32,7 +32,7 @@ formData.buttons = CONDITIONS_TEST_FORM_DATA.buttons;
 formData.data = CONDITIONS_TEST_FORM_DATA.data;
 formData.conditions = CONDITIONS_TEST_FORM_DATA.conditions;
 
-const enabledDefinitions = [];
+const enabledDefinitions = {};
 enabledDefinitions.checkboxEnable = [
 	{
 		params: "checkboxEnable",
@@ -69,7 +69,7 @@ enabledDefinitions.textfieldName = [
 	}
 ];
 
-const visibleDefinition = [];
+const visibleDefinition = {};
 visibleDefinition.oneofselectAnimals = [
 	{
 		"params": "oneofselectAnimals",
@@ -105,7 +105,7 @@ visibleDefinition.checkboxEnableDesc = [
 	}
 ];
 
-const validationDefinitions = [];
+const validationDefinitions = {};
 validationDefinitions.numberfieldCheckpointInterval = [
 	{
 		params: "numberfieldCheckpointInterval",
@@ -980,35 +980,33 @@ validationDefinitions.subpanelTextfieldName = [
 ];
 
 const defaultControlStates = {
-	"radiosetColor": "disabled",
 	"textareaDescription": "hidden",
-	"expressionBox": "disabled"
+	"radiosetColor": "disabled",
+	"expressionBox": "disabled",
+	"field_types[1][3]": "hidden",
+	"field_types[1][2]": "disabled",
+	"field_types[3][3]": "hidden",
+	"field_types[3][2]": "disabled",
+	"field_types[4][3]": "hidden",
+	"field_types[4][2]": "disabled",
+	"field_types[6][3]": "hidden",
+	"field_types[6][2]": "disabled"
 };
 
 function createEditorForm(state) {
 	let wrapper;
+	const editorForm = (<EditorForm
+		ref="editorForm"
+		key="editor-form-key"
+		form={formData}
+		additionalComponents={additionalComponents}
+		showPropertiesButtons={showPropertiesButtons}
+	/>);
 	if (state === "shallow") {
-		wrapper = shallow(
-			<EditorForm
-				ref="editorForm"
-				key="editor-form-key"
-				form={formData}
-				additionalComponents={additionalComponents}
-				showPropertiesButtons={showPropertiesButtons}
-			/>
-		);
+		wrapper = shallow(editorForm);
 	} else {
-		wrapper = mount(
-			<EditorForm
-				ref="editorForm"
-				key="editor-form-key"
-				form={formData}
-				additionalComponents={additionalComponents}
-				showPropertiesButtons={showPropertiesButtons}
-			/>
-		);
+		wrapper = mount(editorForm);
 	}
-
 	return wrapper;
 }
 
@@ -1027,9 +1025,9 @@ describe("editor-form renders correctly with validations", () => {
 
 		expect(wrapper.find("#form-Conditions-test")).to.have.length(1);
 		expect(wrapper.find(".section--light")).to.have.length(1);
-		expect(wrapper.find(".tabs__tabpanel")).to.have.length(5);
-		expect(wrapper.find(".editor_control_area")).to.have.length(18);
-		expect(wrapper.find(".validation-error-message")).to.have.length(26);
+		expect(wrapper.find(".tabs__tabpanel")).to.have.length(6);
+		expect(wrapper.find(".editor_control_area")).to.have.length(25);
+		expect(wrapper.find(".validation-error-message")).to.have.length(48);
 	});
 
 	it("should set correct state values in `EditorForm`", () => {
@@ -1037,7 +1035,8 @@ describe("editor-form renders correctly with validations", () => {
 
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().formData)),
 			JSON.parse(JSON.stringify(formData)))).to.be.true;
-
+		expect(Object.keys(wrapper.state().visibleDefinition)).to.have.length(3);
+		expect(Object.keys(wrapper.state().enabledDefinitions)).to.have.length(3);
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().enabledDefinitions.checkboxEnable)),
 			JSON.parse(JSON.stringify(enabledDefinitions.checkboxEnable)))).to.be.true;
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().enabledDefinitions.textfieldName)),
@@ -1313,6 +1312,25 @@ describe("condition messages renders correctly with structure table cells", () =
 		];
 		expect(_.isEqual(rowValues, expected)).to.be.true;
 	});
+
+
+	it("structuretableRenameFields control should have disabled dropdown control", () => {
+		const wrapper = createEditorForm("mount");
+		const tabs = wrapper.find(".tabs__tabpanel");
+		expect(tabs).to.have.length(6);
+		const tab = tabs.at(5);
+		const dataRows = tab.find(".reactable-data").find("tr");
+		expect(dataRows).to.have.length(7);
+		const uncheckedRow = dataRows.at(1);
+		expect(uncheckedRow.find(".Dropdown-disabled")).to.have.length(1);
+		const cells = uncheckedRow.find("td");
+		expect(cells).to.have.length(4);
+		const cell = cells.at(3);
+		const dropdown = cell.find(".Dropdown-control-table");
+		expect(dropdown).to.have.length(1);
+		expect(dropdown).to.have.style("visibility", "hidden");
+	});
+
 });
 
 describe("condition messages renders correctly with structure table control", () => {
@@ -1378,6 +1396,37 @@ describe("condition messages renders correctly with structure table control", ()
 	});
 });
 
+describe("Cells disable and hide correctly with structure table control", () => {
+	it("structuretable should disable cells", () => {
+		const wrapper = createEditorForm("mount");
+		const table = wrapper.find("#structure-table");
+		let disabledDropdowns = table.find(".Dropdown-disabled");
+		expect(disabledDropdowns).to.have.length(4);
+		const input = wrapper.find("#editor-control-field_types0_1");
+		expect(input).to.have.length(1);
+		input.at(0).simulate("click");
+		disabledDropdowns = wrapper.find(".Dropdown-disabled");
+		expect(disabledDropdowns).to.have.length(4);
+	});
+
+	it("structuretable should hide cells", () => {
+		const wrapper = createEditorForm("mount");
+		const tabs = wrapper.find(".tabs__tabpanel");
+		expect(tabs).to.have.length(6);
+		const tab = tabs.at(5);
+		const table = tab.find("#structure-table");
+		const dataRows = table.find(".reactable-data").find("tr");
+		expect(dataRows).to.have.length(7);
+		const row = dataRows.first();
+		const hiddenDropdowns = row.find(".Dropdown-control-table");
+		expect(hiddenDropdowns).to.have.length(2);
+		expect(hiddenDropdowns.at(1)).not.to.have.style("visibility", "hidden");
+		const input = row.find("#editor-control-field_types0_1");
+		expect(input).to.have.length(1);
+		input.simulate("click");
+	});
+});
+
 describe("condition messages renders correctly with structurelisteditor table", () => {
 	it("structurelisteditor control should have error message when notEquals []", () => {
 		const wrapper = createEditorForm("mount");
@@ -1435,8 +1484,17 @@ describe("condition messages renders correctly with radioSet control", () => {
 
 		const controlStates = {
 			"textareaDescription": "hidden",
-			"expressionBox": "disabled"
+			"expressionBox": "disabled",
+			"field_types[1][3]": "hidden",
+			"field_types[1][2]": "disabled",
+			"field_types[3][3]": "hidden",
+			"field_types[3][2]": "disabled",
+			"field_types[4][3]": "hidden",
+			"field_types[4][2]": "disabled",
+			"field_types[6][3]": "hidden",
+			"field_types[6][2]": "disabled"
 		};
+
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlStates)),
 			JSON.parse(JSON.stringify(controlStates)))).to.be.true;
 

@@ -79,7 +79,7 @@ export default class ExpressionControl extends EditorControl {
 ExpressionControl.propTypes = {
 	control: PropTypes.object,
 	controlStates: PropTypes.object,
-	validationDefinitions: PropTypes.array,
+	validationDefinitions: PropTypes.object,
 	updateValidationErrorMessage: PropTypes.func,
 	retrieveValidationErrorMessage: PropTypes.func,
 	updateControlValue: PropTypes.func

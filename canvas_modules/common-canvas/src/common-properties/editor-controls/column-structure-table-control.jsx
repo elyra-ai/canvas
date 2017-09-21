@@ -338,7 +338,7 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 		const errorMessage = conditionState.message;
 		const messageType = conditionState.messageType;
 		const icon = conditionState.icon;
-		// const stateDisabled = conditionState.disabled;
+		const stateDisabled = conditionState.disabled;
 		const stateStyle = conditionState.style;
 
 		let controlIconContainerClass = "control-icon-container";
@@ -358,7 +358,7 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 			);
 		}
 
-		const table = this.createTable(stateStyle);
+		const table = this.createTable(stateStyle, stateDisabled);
 		let label;
 		if (this.props.control.label && this.props.control.separateLabel) {
 			if (!(this.props.control.description && this.props.control.description.placement === "on_panel")) {
@@ -422,7 +422,7 @@ ColumnStructureTableControl.propTypes = {
 	dataModel: PropTypes.object.isRequired,
 	control: PropTypes.object.isRequired,
 	controlStates: PropTypes.object,
-	validationDefinitions: PropTypes.array,
+	validationDefinitions: PropTypes.object,
 	updateValidationErrorMessage: PropTypes.func,
 	retrieveValidationErrorMessage: PropTypes.func,
 	updateControlValue: PropTypes.func

@@ -64,6 +64,8 @@ Feature: Sanity_Test_CommonProperties
 				Then I check for table cell level validation
 				Given I have uploaded JSON for common-properties "Spark_RenameColumns_paramDef.json"
 				Then I check for table validation
+				Given I have uploaded JSON for common-properties "Spark_SelectStorage_paramDef.json"
+				Then I check table cell enablement
 
 			# Sub Panel Validation
 				Given I have uploaded JSON for common-properties "Conditions_paramDef.json"

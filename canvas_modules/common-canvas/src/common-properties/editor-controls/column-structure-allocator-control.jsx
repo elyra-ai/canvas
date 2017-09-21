@@ -189,7 +189,7 @@ ColumnStructureAllocatorControl.propTypes = {
 	buildUIItem: PropTypes.func,
 	dataModel: PropTypes.object.isRequired,
 	controlStates: PropTypes.object,
-	validationDefinitions: PropTypes.array,
+	validationDefinitions: PropTypes.object,
 	updateValidationErrorMessage: PropTypes.func,
 	retrieveValidationErrorMessage: PropTypes.func,
 	updateControlValue: PropTypes.func

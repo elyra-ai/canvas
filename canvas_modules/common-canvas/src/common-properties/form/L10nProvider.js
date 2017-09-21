@@ -20,7 +20,7 @@ export class L10nProvider {
 	l10n(key, defaultVal) {
 		if (this.resources) {
 			const value = _.propertyOf(this.resources)(key);
-			if (value) {
+			if (value || value === "") {
 				return value;
 			}
 		}

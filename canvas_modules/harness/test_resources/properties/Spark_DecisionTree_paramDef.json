@@ -69,7 +69,6 @@
   ],
   "uihints": {
     "id": "org.apache.spark.ml.classification.DecisionTreeClassifier",
-    "version": "1.0",
     "icon": "images/modelbuildspark.svg",
     "label": {
       "default": "Decision Tree Classifier"
@@ -366,7 +365,6 @@
     }
   ],
   "dataset_metadata": {
-    "version": "1.0",
     "fields": [
       {
         "name": "Age",

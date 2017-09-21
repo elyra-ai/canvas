@@ -89,7 +89,7 @@ export default class TextfieldControl extends EditorControl {
 TextfieldControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	controlStates: PropTypes.object,
-	validationDefinitions: PropTypes.array,
+	validationDefinitions: PropTypes.object,
 	validateConditions: PropTypes.func,
 	updateValidationErrorMessage: PropTypes.func,
 	retrieveValidationErrorMessage: PropTypes.func,

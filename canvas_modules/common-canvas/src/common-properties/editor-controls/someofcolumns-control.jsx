@@ -88,5 +88,5 @@ SomeofcolumnsControl.propTypes = {
 	controlStates: PropTypes.object,
 	updateValidationErrorMessage: PropTypes.func,
 	retrieveValidationErrorMessage: PropTypes.func,
-	validationDefinitions: PropTypes.array
+	validationDefinitions: PropTypes.object
 };

@@ -229,12 +229,23 @@ function condition(data, userInput, info) {
 	var param2 = data.parameter_2_ref;
 	var value = data.value;
 
-	// validate if userInput has param's input
-	if (typeof userInput[param] === "undefined") {
-		throw new Error("param " + param + " not found in userInput");
+	// Separate any complex type sub-control reference
+	let paramName = param;
+	const offset = param.indexOf("[");
+	const row = info.cellCoordinates ? info.cellCoordinates.rowIndex : 0;
+	let column = info.cellCoordinates ? info.cellCoordinates.colIndex : 0;
+	if (offset > -1) {
+		paramName = param.substring(0, offset);
+		column = parseInt(param.substring(offset + 1), 10);
 	}
 
-	var paramInput = userInput[param];
+	// validate if userInput has param's input
+	if (typeof userInput[paramName] === "undefined") {
+		// console.log("userInput: \n" + JSON.stringify(userInput));
+		throw new Error("param " + paramName + " not found in userInput");
+	}
+
+	var paramInput = _getUserInput(userInput, paramName, { rowIndex: row, colIndex: column });
 	if (typeof param2 !== "undefined" && info.conditionType && info.conditionType === "validation" &&
 		op !== "isEmpty" && op !== "isNotEmpty" && op !== "cellNotEmpty") {
 		const valid = _validateParams(userInput, param, ERROR);
@@ -268,6 +279,19 @@ function condition(data, userInput, info) {
 		logger.warn("Ignoring unknown condition operation '" + op + "' for parameter_ref " + param);
 		return true;
 	}
+}
+
+function _getUserInput(userInput, param, cellCoordinates) {
+	const paramInput = userInput[param];
+	if (PropertyUtils.toType(paramInput) === "array" &&
+			PropertyUtils.toType(cellCoordinates) === "object" &&
+			PropertyUtils.toType(cellCoordinates.rowIndex) === "number" &&
+			PropertyUtils.toType(cellCoordinates.colIndex) === "number" &&
+			paramInput.length > cellCoordinates.rowIndex &&
+			paramInput[cellCoordinates.rowIndex].length > cellCoordinates.colIndex) {
+		return paramInput[cellCoordinates.rowIndex][cellCoordinates.colIndex];
+	}
+	return paramInput;
 }
 
 function _validateParams(userInput, param, errorType) {

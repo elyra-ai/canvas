@@ -257,7 +257,6 @@ module.exports = function() {
 		var errormessage2 = errormessage1.getText();
 		expect("The checkpoint interval value must either be >= 1 or -1 to disable").toEqual(errormessage2);
 
-
 		var okButton = browser.$(".modal__buttons").$$(".button")[0];
 		okButton.click();
 
@@ -265,11 +264,30 @@ module.exports = function() {
 
 	this.Then(/^I check for table cell level validation$/, function() {
 		var tableCell1 = browser.$$("#editor-control-renamed_fields")[0];
-		tableCell1.setValue("", " ");
+		tableCell1.setValue("", "Na");
 		var tableCell2 = browser.$(".modal-title");
 		tableCell2.click();
-		var errormsg = browser.$(".form__validation--error").getText();
-		expect("The 'Output Name' field cannot be empty").toEqual(errormsg);
+
+		var errormessage1 = browser.$$(".validation-error-message")[0].$("span");
+		var errormsg = errormessage1.getText();
+		// var errormsg = browser.$(".form__validation--error").getText();
+
+		expect("The given column name is already in use in the current dataset").toEqual(errormsg);
+		var okButton = browser.$(".modal__buttons").$$(".button")[0];
+		okButton.click();
+	});
+
+	this.Then(/^I check table cell enablement$/, function() {
+		var firstCheck = browser.$$(".properties-tooltips-container")[5];
+		var dropdowns = browser.$$(".Dropdown-control ");
+		var disabledDropdowns = browser.$$(".Dropdown-disabled");
+		expect(dropdowns.length).toEqual(10);
+		expect(disabledDropdowns.length).toEqual(9);
+		firstCheck.click();
+
+		// After turning off the checkbox, there should now be one more disabled dropdown
+		disabledDropdowns = browser.$$(".Dropdown-disabled");
+		expect(disabledDropdowns.length).toEqual(10);
 		var okButton = browser.$(".modal__buttons").$$(".button")[0];
 		okButton.click();
 	});

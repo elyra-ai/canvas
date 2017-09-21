@@ -241,6 +241,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	let childItem;
 	let controlType;
 	let moveableRows;
+	let noPickColumns;
 
 	// The control type defines the basic UI element that should be used to edit the property
 	if (parameter.getRole() === ParamRole.CUSTOM) {
@@ -311,7 +312,8 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 				if (parameter.isList() || parameter.isMapValue()) {
 					if (group.groupType() === GroupType.COLUMN_ALLOCATION) {
 						controlType = ControlType.ALLOCATEDSTRUCTURES;
-					} else if (group.groupType() === GroupType.COLUMN_SELECTION) {
+					} else if (group.groupType() === GroupType.COLUMN_SELECTION ||
+							parameter.control === ControlType.STRUCTURETABLE) {
 						controlType = ControlType.STRUCTURETABLE;
 						moveableRows = structureDef.moveableRows; // only support in STRUCTURETABLE
 					} else {
@@ -321,6 +323,10 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 					logger.warn("Complex types should be arrays or maps.  Found: " + parameter.propType());
 					controlType = ControlType.STRUCTUREEDITOR;
 				}
+				if (!(group.groupType() === GroupType.COLUMN_SELECTION ||
+							group.groupType() === GroupType.COLUMN_ALLOCATION)) {
+					noPickColumns = true;
+				}
 			} else {
 				controlType = ControlType.TEXTFIELD;
 			}
@@ -328,6 +334,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 		default:
 			role = "???" + parameter.propType() + "???";
 			controlType = ControlType.TEXTAREA;
+			break;
 		}
 	}
 	let valueLabels;
@@ -347,6 +354,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 		parameter.valueIcons,
 		parameter.sortable,
 		parameter.filterable,
+		noPickColumns,
 		parameter.charLimit,
 		subControls,
 		keyIndex,
@@ -476,7 +484,8 @@ function _makeSubControl(parameter, l10nProvider) {
 		parameter.filterable,
 		parameter.charLimit,
 		parameter.editStyle,
-		parameter.isKey
+		parameter.isKey,
+		parameter.dmDefault
 	);
 }
 

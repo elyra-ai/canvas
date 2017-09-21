@@ -148,7 +148,7 @@ const datasetMetadata = {
 	]
 };
 
-const validationDefinitions = [];
+const validationDefinitions = {};
 const controlStates = {};
 
 function valueAccessor() {

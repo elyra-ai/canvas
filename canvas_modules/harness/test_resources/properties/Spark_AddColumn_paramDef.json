@@ -31,7 +31,6 @@
   ],
   "uihints": {
     "id": "org.apache.spark.ml.ibm.transformers.AddColumn",
-    "version": "1.0",
     "icon": "images/transformationspark.svg",
     "parameter_info": [
       {
@@ -111,7 +110,6 @@
     }
   ],
   "dataset_metadata": {
-    "version": "1.0",
     "fields": [
       {
         "name": "Age",

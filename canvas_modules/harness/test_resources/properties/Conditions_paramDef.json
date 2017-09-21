@@ -59,7 +59,70 @@
         "World",
         "string"
       ]
-    ]
+    ],
+    "field_types": [
+      [
+        "Age",
+        true,
+        "integer",
+        "continuous"
+      ],
+      [
+        "Sex",
+        false,
+        "string",
+        "ordinal"
+      ],
+      [
+        "BP",
+        true,
+        "date",
+        "continuous"
+      ],
+      [
+        "Cholesterol",
+        false,
+        "string",
+        "nominal"
+      ],
+      [
+        "Na",
+        false,
+        "double",
+        "continuous"
+      ],
+      [
+        "K",
+        true,
+        "double",
+        "continuous"
+      ],
+      [
+        "Drug",
+        false,
+        "string",
+        "nominal"
+      ],
+      [
+        "Cp",
+        false,
+        "double",
+        "continuous"
+      ],
+      [
+        "Returns",
+        false,
+        "integer",
+        "ordinal"
+      ],
+      [
+        "Tag",
+        false,
+        "string",
+        "nominal"
+      ]
+    ],
+    "dummy_types": []
   },
   "parameters": [
     {
@@ -244,6 +307,18 @@
       "type": "array[structurelisteditorTableInput]",
       "role": "column",
       "default": []
+    },
+    {
+      "id": "field_types",
+      "type": "map[string,FieldStorageEntry]",
+      "role": "column",
+      "default": []
+    },
+    {
+      "id": "dummy_types",
+      "type": "map[string,DummyEntry]",
+      "role": "column",
+      "default": []
     }
   ],
   "complex_types": [
@@ -322,11 +397,80 @@
           "default": ""
         }
       ]
+    },
+    {
+      "id": "FieldStorageEntry",
+      "key_definition": {
+        "id": "field",
+        "type": "string",
+        "role": "column"
+      },
+      "parameters": [
+        {
+          "id": "override",
+          "type": "boolean"
+        },
+        {
+          "id": "storage",
+          "enum": [
+            "string",
+            "integer",
+            "double",
+            "date",
+            "time",
+            "timestamp",
+            "password",
+            "structure"
+          ]
+        },
+        {
+          "id": "measure",
+          "enum": [
+            "continuous",
+            "nominal",
+            "ordinal",
+            "recordId",
+            "flag"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "DummyEntry",
+      "key_definition": {
+        "id": "field",
+        "type": "string",
+        "role": "column"
+      },
+      "parameters": [
+        {
+          "id": "override",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "id": "dummy_entry_sport_name",
+          "enum": [
+            "Football",
+            "Soccer"
+          ],
+          "default": "Soccer"
+        },
+        {
+          "id": "checkit",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "id": "sometext",
+          "type": "string",
+          "default": "Type something here..."
+        }
+      ]
     }
   ],
   "uihints": {
     "id": "Conditions.test",
-    "version": "1.0",
     "icon": "images/modelbuildspark.svg",
     "label": {
       "default": "Conditions Test"
@@ -601,6 +745,23 @@
         "description": {
           "default": "Complex table control list editor table input"
         }
+      },
+      {
+        "parameter_ref": "field_types",
+        "label": {
+          "default": ""
+        },
+        "description": {
+          "default": "Change the type of columns in the active dataset"
+        },
+        "control": "structuretable"
+      },
+      {
+        "parameter_ref": "dummy_types",
+        "label": {
+          "default": "Some Dummy Types"
+        },
+        "control": "structuretable"
       }
     ],
     "complex_type_info": [
@@ -608,7 +769,7 @@
         "complex_type_ref": "structuretableSortOrder",
         "moveable_rows": true,
         "key_definition": {
-          "parameter_refs": "field",
+          "parameter_ref": "field",
           "width": 28,
           "label": {
             "resource_key": "structuretableSortOrder.field.label"
@@ -711,6 +872,123 @@
             },
             "width": 15,
             "edit_style": "subpanel"
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "FieldStorageEntry",
+        "key_definition": {
+          "parameter_ref": "field",
+          "label": {
+            "default": "",
+            "resource_key": "FieldStorageEntry.field"
+          },
+          "width": 26,
+          "filterable": true
+        },
+        "parameters": [
+          {
+            "parameter_ref": "override",
+            "label": {
+              "default": "",
+              "resource_key": "FieldStorageEntry.override"
+            },
+            "width": 16,
+            "edit_style": "inline"
+          },
+          {
+            "parameter_ref": "storage",
+            "label": {
+              "default": "",
+              "resource_key": "FieldStorageEntry.storage"
+            },
+            "width": 26,
+            "edit_style": "inline",
+            "dm_default": "type"
+          },
+          {
+            "parameter_ref": "measure",
+            "label": {
+              "default": "",
+              "resource_key": "FieldStorageEntry.measure"
+            },
+            "width": 26,
+            "edit_style": "inline",
+            "dm_default": "measure"
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "structuretableSortOrder",
+        "moveable_rows": true,
+        "key_definition": {
+          "parameter_ref": "field",
+          "width": 28,
+          "label": {
+            "resource_key": "structuretableSortOrder.field.label"
+          }
+        },
+        "parameters": [
+          {
+            "parameter_ref": "structuretable_sort_order",
+            "width": 16,
+            "label": {
+              "resource_key": "structuretableSortOrder.sort_order.label"
+            },
+            "control": "toggletext",
+            "value_icons": [
+              "/images/up-triangle.svg",
+              "/images/down-triangle.svg"
+            ]
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "DummyEntry",
+        "key_definition": {
+          "parameter_ref": "field",
+          "width": 10,
+          "label": {
+            "resource_key": "DummyEntry.field.label"
+          }
+        },
+        "parameters": [
+          {
+            "parameter_ref": "override",
+            "label": {
+              "resource_key": "DummyEntry.override.label"
+            },
+            "width": 5,
+            "edit_style": "inline"
+          },
+          {
+            "parameter_ref": "dummy_entry_sport_name",
+            "label": {
+              "resource_key": "DummyEntry.dummy_entry_sport_name.label"
+            },
+            "control": "toggletext",
+            "width": 8,
+            "edit_style": "inline",
+            "value_icons": [
+              "/images/up-triangle.svg",
+              "/images/down-triangle.svg"
+            ]
+          },
+          {
+            "parameter_ref": "checkit",
+            "label": {
+              "resource_key": "DummyEntry.checkit.label"
+            },
+            "width": 5,
+            "edit_style": "inline"
+          },
+          {
+            "parameter_ref": "sometext",
+            "label": {
+              "resource_key": "DummyEntry.sometext.label"
+            },
+            "width": 12,
+            "edit_style": "inline"
           }
         ]
       }
@@ -832,6 +1110,35 @@
             "id": "Structure Table Inline Control",
             "parameter_refs": [
               "structurelisteditorTableInput"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "More_Tables",
+        "type": "panels",
+        "label": {
+          "default": "More Tables"
+        },
+        "group_info": [
+          {
+            "id": "group1",
+            "type": "controls",
+            "label": {
+              "default": "Fields"
+            },
+            "parameter_refs": [
+              "field_types"
+            ]
+          },
+          {
+            "id": "group1",
+            "type": "columnSelection",
+            "label": {
+              "default": "Columns"
+            },
+            "parameter_refs": [
+              "dummy_types"
             ]
           }
         ]
@@ -1429,6 +1736,34 @@
       }
     },
     {
+      "enabled": {
+        "parameter_refs": [
+          "field_types[2]"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "field_types[1]",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "field_types[3]"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "field_types[1]",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
       "validation": {
         "fail_message": {
           "type": "warning",
@@ -1441,6 +1776,20 @@
           "condition": {
             "parameter_ref": "name",
             "op": "colNotExists"
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "dummy_types[2]"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "dummy_types[1]",
+            "op": "equals",
+            "value": true
           }
         }
       }
@@ -1461,6 +1810,45 @@
             "op": "notContains",
             "value": "pw"
           }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "dummy_types[3]"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "dummy_types[1]",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "dummy_types[4]"
+        ],
+        "evaluate": {
+          "and": [
+            {
+              "condition": {
+                "parameter_ref": "dummy_types[1]",
+                "op": "equals",
+                "value": true
+              }
+            },
+            {
+              "condition": {
+                "parameter_ref": "dummy_types[3]",
+                "op": "equals",
+                "value": true
+              }
+            }
+          ]
         }
       }
     },
@@ -1602,7 +1990,20 @@
     "structurelisteditorTableInput.name.label": "Name",
     "structurelisteditorTableInput.name.desc": "Enter a name",
     "structurelisteditorTableInput.description.label": "Description",
-    "structurelisteditorTableInput.description.desc": "Enter a description",
-    "invalid_subpanel_name": "name should not contain pw"
+    "invalid_subpanel_name": "name should not contain pw",
+    "invalid_subpanel_description": "description should not contain pw",
+    "field_types.label": "",
+    "FieldStorageEntry.field": "Field",
+    "FieldStorageEntry.override": "Override",
+    "FieldStorageEntry.storage": "Storage",
+    "FieldStorageEntry.measure": "Measure",
+    "DummyEntry.field.label": "Field",
+    "DummyEntry.override.label": "Override",
+    "DummyEntry.dummy_entry_sport_name.label": "Sport",
+    "DummyEntry.checkit.label": "Check",
+    "DummyEntry.sometext.label": "Text",
+    "DummyEntry.dummy_entry_sport_name.Football.label": "Football",
+    "DummyEntry.dummy_entry_sport_name.Soccer.label": "Soccer",
+    "structurelisteditorTableInput.description.desc": "Enter a description"
   }
 }
