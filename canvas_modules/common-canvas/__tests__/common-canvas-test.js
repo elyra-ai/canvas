@@ -11,6 +11,7 @@ import React from "react";
 import CommonCanvas from "../src/common-canvas.jsx";
 import DiagramCanvas from "../src/diagram-canvas.jsx";
 import Palette from "../src/palette/palette.jsx";
+import Toolbar from "../src/toolbar/toolbar.jsx";
 import { shallow } from "enzyme";
 import { expect } from "chai";
 import sinon from "sinon";
@@ -50,14 +51,22 @@ describe("CommonCanvas renders correctly", () => {
 		expect(wrapper.find(OverlayTrigger)).to.have.length(0);
 	});
 
-	it("should render a `.canvas-zoom-controls`", () => {
+	it("should render one <Toolbar/> component when toolbarConfig is provided", () => {
+		const toolbarMenuActionHandler = sinon.spy();
+		const toolbarConfig = { enablePalette: true, toolbarMenuActionHandler: toolbarMenuActionHandler };
+		const config = { enableAutoLayout: "none" };
+		const wrapper = createCommonCanvas(config, toolbarConfig);
+		expect(wrapper.find(Toolbar)).to.have.length(1);
+	});
+
+	it("should not render one <Toolbar/> component when there is no toolbarConfig", () => {
 		const config = { enableAutoLayout: "none" };
 		const wrapper = createCommonCanvas(config);
-		expect(wrapper.find(".canvas-zoom-controls")).to.have.length(1);
+		expect(wrapper.find(Toolbar)).to.have.length(0);
 	});
 });
 
-function createCommonCanvas(config) {
+function createCommonCanvas(config, toolbarConfig) {
 	ObjectModel.setEmptyPipelineFlow();
 	ObjectModel.setPipelineFlowPalette({});
 	const contextMenuHandler = sinon.spy();
@@ -73,6 +82,7 @@ function createCommonCanvas(config) {
 			editDiagramHandler={editDiagramHandler}
 			clickHandler={clickHandler}
 			decorationActionHandler={decorationActionHandler}
+			toolbarConfig={toolbarConfig}
 		/>
 	);
 	return wrapper;

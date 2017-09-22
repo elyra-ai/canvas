@@ -79,7 +79,7 @@ Scenario: Sanity test for autoLayout operations in None Fixed Layout
 	Then I pause for 1 seconds
 
 	Then I open the palette
-	Then I add node 7 a "Select" node from the "Record Ops" category onto the canvas at 100, 400
+	Then I add node 7 a "Select" node from the "Record Ops" category onto the canvas at 100, 445
 	Then I close the palette
 	Then I delete node 4 the "Neural Net" node
 	Then I delete comment 1 linked to the "C5.0" node with the comment text " comment 3 sample comment text"

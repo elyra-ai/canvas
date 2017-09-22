@@ -48,7 +48,7 @@ module.exports = function() {
 		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
 		var eventLogJSON = JSON.parse(eventLog.value);
 
-		expect(textboxValue).toEqual((eventLogJSON[24].data.form.colName).toString());
+		expect(textboxValue).toEqual((eventLogJSON[eventLogJSON.length - 1].data.form.colName).toString());
 	});
 
 	this.Then(/^I select "([^"]*)" dropdown option$/, function(dropdownValue) {
@@ -317,14 +317,14 @@ module.exports = function() {
 		browser.timeoutsAsyncScript(3000);
 		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
 		var eventLogJSON = JSON.parse(eventLog.value);
-		expect("empty").toEqual((eventLogJSON[25].data.form).toString());
+		expect("empty").toEqual((eventLogJSON[eventLogJSON.length - 2].data.form).toString());
 	});
 
 	this.Then("I verify testValue is present", function() {
 		browser.timeoutsAsyncScript(3000);
 		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
 		var eventLogJSON = JSON.parse(eventLog.value);
-		expect("testValue").toEqual((eventLogJSON[26].data.form.colName).toString());
+		expect("testValue").toEqual((eventLogJSON[eventLogJSON.length - 2].data.form.colName).toString());
 	});
 
 	this.Then(/^I select the Tab (\d+)$/, function(tabNumber) {

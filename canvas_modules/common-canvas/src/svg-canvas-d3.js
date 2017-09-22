@@ -536,7 +536,8 @@ export default class CanvasD3Layout {
 			if (Math.abs(d3.event.transform.x - this.zoomStartPoint.x) < 2 &&
 					Math.abs(d3.event.transform.y - this.zoomStartPoint.y) < 2) {
 				this.selecting = true;
-				this.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "canvas", selectedObjectIds: ObjectModel.getSelectedObjectIds() });
+				const clickedPos = this.getMousePos();
+				this.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "canvas", selectedObjectIds: ObjectModel.getSelectedObjectIds(), clickedPos: clickedPos });
 				// TODO - The decision to clear selection (commented out code below) is currently made by common-canvas
 				// This 'to do' is to move that decision from there to here. To do that we need to have a callback function
 				// to the ask the react code if a context menu is currently on display or not.

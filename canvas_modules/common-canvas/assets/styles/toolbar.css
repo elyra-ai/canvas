@@ -1,0 +1,117 @@
+/*******************************************************************************
+ * Licensed Materials - Property of IBM
+ * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ *
+ * Note to U.S. Government Users Restricted Rights:
+ * Use, duplication or disclosure restricted by GSA ADP Schedule
+ * Contract with IBM Corp.
+ *******************************************************************************/
+
+#canvas-toolbar {
+	height: 45px;
+	width: 100%;
+	min-width: 454px;
+	background-color: #F9F9F9;
+	border-bottom: 2px solid #E0E0E0;
+	box-sizing: content-box;
+	position: absolute;
+	-webkit-transition: all 0.2s;
+	transition: all 0.2s;
+}
+
+.toolbar-palette-opened {
+	left: 250px;
+}
+
+#toolbar-items {
+	height: 45px;
+	list-style-type: none;
+	margin-bottom: 0px;
+	padding: 0px;
+	display: flex;
+}
+
+.toolbar-items-container {
+	display: flex;
+}
+
+#zoom-actions-container {
+	margin-left: auto;
+}
+
+.list-item {
+	height: 45px;
+	width: 64px;
+	display: flex;
+	justify-content: center;
+	box-sizing: content-box;
+	/* Prevent elements from being selectable */
+	/* This stops it being dragged incorrectly.*/
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+}
+
+.list-item:hover {
+	background-color: #EFEFEF;
+}
+
+.list-item-disabled:hover {
+	background-color: #F9F9F9;
+}
+
+.toolbar-divider {
+	border-right: 2px solid #E0E0E0;
+}
+
+.toolbar-item {
+	height: 24px;
+	width: 24px;
+	margin: auto;
+	display: flex;
+	justify-content: center;
+}
+
+.toolbar-icons {
+	height: 16px;
+	width: 16px;
+	margin: auto;
+	/* Prevent elements from being dragged onto canvas */
+	-webkit-user-drag: none;
+	-khtml-user-drag: none;
+	-moz-user-drag: none;
+	-o-user-drag: none;
+	user-drag: none;
+}
+
+.overflow-action-list-item {
+	position: absolute;
+}
+
+.toolbar-popover-list {
+	z-index: 1;
+	top: 45px;
+	display: block;
+	position: absolute;
+	list-style-type: none;
+	padding: 0px;
+}
+
+.toolbar-popover-list-hide {
+	display: none;
+}
+
+.toolbar-popover-list>.list-item {
+	background-color: #eaeaea;
+}
+
+.toolbar-popover-list>.list-item>.list-item:hover {
+	background-color: #d8d8d8;
+	;
+}
+
+.toolbar-popover-list>.list-item>.list-item-disabled:hover {
+	background-color: #eaeaea;
+}

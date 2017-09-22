@@ -13,13 +13,11 @@ module.exports = function() {
 	/* global browser */
 
 	this.Then("I click zoom in", function() {
-		var zoomIn = browser.$(".canvas-zoom-controls").$$("div")[0].$("img");
-		zoomIn.click();
+		browser.$("#zoomIn-action").click();
 	});
 
 	this.Then("I click zoom out", function() {
-		var zoomOut = browser.$(".canvas-zoom-controls").$$("div")[1].$("img");
-		zoomOut.click();
+		browser.$("#zoomOut-action").click();
 	});
 
 

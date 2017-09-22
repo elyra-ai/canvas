@@ -17,6 +17,7 @@ import DiagramCanvasLegacy from "./diagram-canvas.jsx";
 import DiagramCanvasD3 from "./diagram-canvas-d3.jsx";
 import Palette from "./palette/palette.jsx";
 import PaletteFlyout from "./palette/palette-flyout.jsx";
+import Toolbar from "./toolbar/toolbar.jsx";
 import ObjectModel from "./object-model/object-model.js";
 import CommandStack from "./command-stack/command-stack.js";
 import CreateNodeAction from "./command-actions/createNodeAction.js";
@@ -28,8 +29,6 @@ import DeleteLinkAction from "./command-actions/deleteLinkAction.js";
 import DisconnectNodesAction from "./command-actions/disconnectNodesAction.js";
 import MoveObjectsAction from "./command-actions/moveObjectsAction.js";
 import EditCommentAction from "./command-actions/editCommentAction.js";
-import ZoomIn24Icon from "../assets/images/zoom-in_24.svg";
-import ZoomOut24Icon from "../assets/images/zoom-out_24.svg";
 import OpenNodePaletteIcon from "../assets/images/open_node_palette.svg";
 
 export default class CommonCanvas extends React.Component {
@@ -39,7 +38,8 @@ export default class CommonCanvas extends React.Component {
 		this.state = {
 			isPaletteOpen: false,
 			showContextMenu: false,
-			contextMenuDef: {}
+			contextMenuDef: {},
+			posLastClicked: { x: 0, y: 0 }
 		};
 
 		ObjectModel.subscribe(() => {
@@ -63,6 +63,7 @@ export default class CommonCanvas extends React.Component {
 		this.contextMenuHandler = this.contextMenuHandler.bind(this);
 		this.clickActionHandler = this.clickActionHandler.bind(this);
 		this.decorationActionHandler = this.decorationActionHandler.bind(this);
+		this.toolbarMenuActionHandler = this.toolbarMenuActionHandler.bind(this);
 	}
 
 	openPalette() {
@@ -210,6 +211,43 @@ export default class CommonCanvas extends React.Component {
 		}
 	}
 
+	toolbarMenuActionHandler(action) {
+		let source = {};
+		if (this.props.config.enableInternalObjectModel) {
+			switch (action) {
+			case "delete": {
+				source = {
+					selectedObjectIds: ObjectModel.getSelectedObjectIds()
+				};
+				const command = new DeleteObjectsAction(source);
+				CommandStack.do(command);
+				break;
+			}
+			case "addComment": {
+				source = {
+					selectedObjectIds: ObjectModel.getSelectedObjectIds(),
+					mousePos: this.state.posLastClicked
+				};
+				const comment = ObjectModel.createComment(source);
+				const command = new CreateCommentAction(comment);
+				CommandStack.do(command);
+				break;
+			}
+			case "undo":
+				CommandStack.undo();
+				break;
+			case "redo":
+				CommandStack.redo();
+				break;
+			default:
+			}
+		}
+
+		if (this.props.toolbarConfig.toolbarMenuActionHandler) {
+			this.props.toolbarConfig.toolbarMenuActionHandler(action, source);
+		}
+	}
+
 	clickActionHandler(source) {
 		if (source.clickType === "DOUBLE_CLICK" && source.objectType === "canvas") {
 			this.openPalette();
@@ -217,6 +255,11 @@ export default class CommonCanvas extends React.Component {
 			// Don"t clear the selection if the canvas context menu is up
 			if (!this.state.showContextMenu) {
 				ObjectModel.clearSelection();
+			}
+
+			// store last clicked position
+			if (source.clickedPos) {
+				this.setState({ posLastClicked: source.clickedPos });
 			}
 		}
 
@@ -235,8 +278,8 @@ export default class CommonCanvas extends React.Component {
 		let canvas = null;
 		let palette = null;
 		let addButton = null;
-		let zoomControls = null;
 		let contextMenuWrapper = null;
+		let canvasToolbar = null;
 		const canvasJSON = ObjectModel.getCanvasInfo();
 
 		if (canvasJSON !== null) {
@@ -281,7 +324,7 @@ export default class CommonCanvas extends React.Component {
 				if (this.props.config.enablePaletteLayout === "Flyout") {
 					palette = (<PaletteFlyout
 						paletteJSON={ObjectModel.getPaletteData()}
-						showPalette={this.props.showPalette}
+						showPalette={this.state.isPaletteOpen}
 						addNodeToCanvas={this.addNodeToCanvas}
 					/>);
 				} else {
@@ -301,18 +344,26 @@ export default class CommonCanvas extends React.Component {
 				}
 			}
 
-			zoomControls = (<div className="canvas-zoom-controls">
-				<div><img src={ZoomIn24Icon} onClick={this.zoomIn} /></div>
-				<div><img src={ZoomOut24Icon} onClick={this.zoomOut} /></div>
-			</div>);
-
+			if (this.props.toolbarConfig) {
+				canvasToolbar = (<Toolbar
+					config={this.props.toolbarConfig}
+					paletteState={this.state.isPaletteOpen}
+					paletteType={this.props.config.enablePaletteLayout}
+					closePalette={this.closePalette}
+					openPalette={this.openPalette}
+					zoomIn={this.zoomIn}
+					zoomOut={this.zoomOut}
+					zoomToFit={false}
+					toolbarMenuActionHandler={this.toolbarMenuActionHandler}
+				/>);
+			}
 		}
 
 		return (
 			<div id="common-canvas">
+				{canvasToolbar}
 				{palette}
 				{canvas}
-				{zoomControls}
 				{addButton}
 			</div>
 		);
@@ -326,5 +377,5 @@ CommonCanvas.propTypes = {
 	editActionHandler: PropTypes.func,
 	clickActionHandler: PropTypes.func,
 	decorationActionHandler: PropTypes.func,
-	showPalette: PropTypes.bool // TODO remove once buttons added for flyout palette
+	toolbarConfig: PropTypes.object
 };

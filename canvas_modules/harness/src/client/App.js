@@ -35,14 +35,8 @@ import {
 } from "./constants/constants.js";
 
 import listview32 from "../graphics/list-view_32.svg";
-import addnew32 from "../graphics/add-new_32.svg";
-import close32 from "../graphics/close_32.svg";
-import play32 from "../graphics/play_32.svg";
 import download32 from "../graphics/save_32.svg";
-import createNew32 from "../graphics/create-new_32.svg";
 import justify32 from "../graphics/justify_32.svg";
-import undo from "../graphics/undo.svg";
-import redo from "../graphics/redo.svg";
 import template32 from "ibm-design-icons/dist/svg/object-based/template_32.svg";
 
 class App extends React.Component {
@@ -72,14 +66,9 @@ class App extends React.Component {
 		this.openConsole = this.openConsole.bind(this);
 		this.log = this.log.bind(this);
 
-		this.addNode = this.addNode.bind(this);
-		this.delete = this.delete.bind(this);
-		this.run = this.run.bind(this);
 		this.download = this.download.bind(this);
-		this.undo = this.undo.bind(this);
-		this.redo = this.redo.bind(this);
+		this.postUndoRedo = this.postUndoRedo.bind(this);
 
-		this.openPalette = this.openPalette.bind(this);
 		this.enableNavPalette = this.enableNavPalette.bind(this);
 		this.setDiagramJSON = this.setDiagramJSON.bind(this);
 		this.setPaletteJSON = this.setPaletteJSON.bind(this);
@@ -99,6 +88,7 @@ class App extends React.Component {
 		// common-canvas
 		this.contextMenuHandler = this.contextMenuHandler.bind(this);
 		this.contextMenuActionHandler = this.contextMenuActionHandler.bind(this);
+		this.toolbarMenuActionHandler = this.toolbarMenuActionHandler.bind(this);
 		this.editActionHandler = this.editActionHandler.bind(this);
 		this.clickActionHandler = this.clickActionHandler.bind(this);
 		this.decorationActionHandler = this.decorationActionHandler.bind(this);
@@ -214,8 +204,9 @@ class App extends React.Component {
 			"content": content
 		};
 		var that = this;
-		this.setState({
-			consoleout: this.state.consoleout.concat(event)
+		this.setState((state) => {
+			state.consoleout = state.consoleout.concat(event);
+			return state;
 		}, function() {
 			var sessionData = {
 				events: that.state.consoleout,
@@ -231,49 +222,17 @@ class App extends React.Component {
 		this.setState({ consoleOpened: !this.state.consoleOpened });
 	}
 
-	addNode() {
-		this.log("addNode() clicked");
-	}
-
-	delete() {
-		this.log("delete() clicked");
-	}
-
-	run() {
-		this.log("run() clicked");
-	}
-
 	download() {
 		var canvas = JSON.stringify(ObjectModel.getPipelineFlow(), null, 2);
 		ReactFileDownload(canvas, "canvas.json");
 	}
 
-	undo() {
-		CommandStack.undo();
+	postUndoRedo() {
 		var sessionData = {
 			events: this.state.consoleout,
 			canvas: ObjectModel.getCanvasInfo()
 		};
 		TestService.postSessionData(sessionData);
-	}
-
-	redo() {
-		CommandStack.redo();
-		var sessionData = {
-			events: this.state.consoleout,
-			canvas: ObjectModel.getCanvasInfo()
-		};
-		TestService.postSessionData(sessionData);
-	}
-
-	openPalette() {
-		if (this.state.paletteOpened) {
-			this.log("closing palette");
-			this.setState({ paletteOpened: false });
-		} else {
-			this.log("opening palette");
-			this.setState({ paletteOpened: true });
-		}
 	}
 
 	enableNavPalette(enabled) {
@@ -503,6 +462,22 @@ class App extends React.Component {
 		}
 	}
 
+	toolbarMenuActionHandler(action, source) {
+		if (action === "execute") {
+			this.log("toolbar action: executeNode");
+		} else if (action === "undo") {
+			this.postUndoRedo();
+			this.log("toolbar action: undo");
+		} else if (action === "redo") {
+			this.postUndoRedo();
+			this.log("toolbar action: redo");
+		} else if (action === "addComment") {
+			this.log("toolbar action: addComment", source);
+		} else if (action === "delete") {
+			this.log("toolbar action: delete", source);
+		}
+	}
+
 	deleteObjectsActionHandler(source) {
 		if (typeof source.targetObject.label !== "undefined") {
 			this.log("action: deleteObjects", source.selectedObjectIds, source.targetObject.label);
@@ -562,95 +537,47 @@ class App extends React.Component {
 	}
 
 	render() {
-		const paletteClass = "palette-" + (this.state.paletteNavEnabled && this.state.selectedPaletteLayout === FLYOUT);
-
 		var locale = "en";
 		var messages = i18nData.messages;
 
 		var navBar = (<div id="app-navbar">
-			<div className="app-navbar">
-				<nav id="action-bar">
-					<ul className="app-navbar-items">
-						<li className="navbar-li">
-							<a id="title">Canvas Testbed</a>
-						</li>
-						<li className="navbar-li nav-divider" data-tip="console">
-							<a onClick={this.openConsole.bind(this) }>
-								<Isvg id="action-bar-console"
-									src={listview32}
-								/>
-							</a>
-						</li>
-						<li className="navbar-li nav-divider" data-tip="add node" style={{ display: "none" }}>
-							<a onClick={this.addNode.bind(this) }>
-								<Isvg id="action-bar-add"
-									src={ addnew32}
-								/>
-							</a>
-						</li>
-						<li className="navbar-li" data-tip="delete" style={{ display: "none" }}>
-							<a onClick={this.delete.bind(this) }>
-								<Isvg id="action-bar-delete"
-									src={close32}
-								/>
-							</a>
-						</li>
-						<li className="navbar-li" data-tip="run" style={{ display: "none" }}>
-							<a onClick={this.run.bind(this) }>
-								<Isvg id="action-bar-run"
-									src={play32}
-								/>
-							</a>
-						</li>
-						<li className="navbar-li" data-tip="download">
-							<a onClick={this.download.bind(this) }>
-								<Isvg id="action-bar-download"
-									src={download32}
-								/>
-							</a>
-						</li>
-						<li className="navbar-li" data-tip="undo">
-							<a onClick={this.undo.bind(this) }>
-								<Isvg id="action-bar-undo"
-									src={undo}
-								/>
-							</a>
-						</li>
-						<li className="navbar-li" data-tip="redo">
-							<a onClick={this.redo.bind(this) }>
-								<Isvg id="action-bar-redo"
-									src={redo}
-								/>
-							</a>
-						</li>
-						<li className="navbar-li nav-divider" id={paletteClass} data-tip="palette">
-							<a onClick={this.openPalette.bind(this) }>
-								<Isvg id="action-bar-palette"
-									src={createNew32}
-								/>
-							</a>
-						</li>
-						<li className="navbar-li action-bar-sidepanel"
-							id="action-bar-sidepanel-modal" data-tip="Common Properties Modal"
-						>
-							<a onClick={this.sidePanelModal.bind(this) }>
-								<Isvg id="action-bar-panel-modal"
-									src={template32}
-								/>
-							</a>
-						</li>
-						<li className="navbar-li nav-divider action-bar-sidepanel"
-							id="action-bar-sidepanel-canvas"	data-tip="Common Canvas"
-						>
-							<a onClick={this.sidePanelCanvas.bind(this) }>
-								<Isvg id="action-bar-panel"
-									src={justify32}
-								/>
-							</a>
-						</li>
-					</ul>
-				</nav>
-			</div>
+			<ul className="app-navbar-items">
+				<li className="navbar-li">
+					<a id="title">Canvas Testbed</a>
+				</li>
+				<li className="navbar-li nav-divider" data-tip="console">
+					<a onClick={this.openConsole.bind(this) }>
+						<Isvg id="action-bar-console"
+							src={listview32}
+						/>
+					</a>
+				</li>
+				<li className="navbar-li" data-tip="download">
+					<a onClick={this.download.bind(this) }>
+						<Isvg id="action-bar-download"
+							src={download32}
+						/>
+					</a>
+				</li>
+				<li className="navbar-li action-bar-sidepanel"
+					id="action-bar-sidepanel-modal" data-tip="Common Properties Modal"
+				>
+					<a onClick={this.sidePanelModal.bind(this) }>
+						<Isvg id="action-bar-panel-modal"
+							src={template32}
+						/>
+					</a>
+				</li>
+				<li className="navbar-li nav-divider action-bar-sidepanel"
+					id="action-bar-sidepanel-canvas"	data-tip="Common Canvas"
+				>
+					<a onClick={this.sidePanelCanvas.bind(this) }>
+						<Isvg id="action-bar-panel"
+							src={justify32}
+						/>
+					</a>
+				</li>
+			</ul>
 		</div>);
 
 		var commonCanvasConfig = {
@@ -663,6 +590,20 @@ class App extends React.Component {
 			paletteTooltip: PALETTE_TOOLTIP
 		};
 
+		var toolbarConfig = {
+			enablePalette: this.state.paletteNavEnabled,
+			toolbarMenuActionHandler: this.toolbarMenuActionHandler,
+			addComment: true,
+			copy: false,
+			cut: false,
+			delete: true,
+			paste: false,
+			redo: true,
+			run: false,
+			stop: false,
+			undo: true
+		};
+
 		var commonCanvas = (<div id="canvas-container">
 			<CommonCanvas
 				config={commonCanvasConfig}
@@ -671,7 +612,7 @@ class App extends React.Component {
 				editActionHandler= {this.editActionHandler}
 				clickActionHandler= {this.clickActionHandler}
 				decorationActionHandler= {this.decorationActionHandler}
-				showPalette={this.state.paletteOpened} // TODO remove once buttons added for flyout palette
+				toolbarConfig={toolbarConfig}
 			/>
 		</div>);
 

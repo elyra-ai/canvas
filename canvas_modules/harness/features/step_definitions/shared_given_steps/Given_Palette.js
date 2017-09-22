@@ -36,7 +36,7 @@ module.exports = function() {
 			browser.$(".palette-show-button").click();
 		} else {
 			// click on the palette button to open it
-			browser.$("#palette-true").click();
+			browser.$("#palette-open").click();
 			browser.pause(500);
 		}
 	});
@@ -49,7 +49,7 @@ module.exports = function() {
 				.click();
 		} else {
 			// click on the palette button to closed it
-			browser.$("#palette-true").click();
+			browser.$("#palette-close").click();
 		}
 
 	});

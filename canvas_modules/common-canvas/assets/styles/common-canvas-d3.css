@@ -6,7 +6,7 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
- 
+
 @CHARSET "ISO-8859-1";
 
 /* Canvas styles */
@@ -14,6 +14,10 @@
 .d3-svg-canvas-div {
 	cursor: default;
 	height: 100%;
+}
+
+.d3-svg-canvas-div:focus {
+	outline: none;
 }
 
 /* Pull-out region rectangle used for object selection */
