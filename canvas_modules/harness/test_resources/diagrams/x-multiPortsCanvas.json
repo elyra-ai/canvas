@@ -308,9 +308,12 @@
         "id": "5cfe0ccf-2202-483b-a285-8a6b55f3a3c0",
         "className": "canvas-data-link",
         "source": "id5RYSYN9CV1H",
-        "target": "idGWRVT47XDV",
         "sourcePort": "outPort2",
-        "targetPort": "inPort2"
+        "target": "idGWRVT47XDV",
+        "targetPort": "inPort2",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "4d681fef-d046-4ac6-bfce-bfb63d45d0e1",

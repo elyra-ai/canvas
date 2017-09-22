@@ -557,8 +557,9 @@ export default class DiagramCanvas extends React.Component {
 		} else {
 			data = {
 				editType: "createNode",
+				label: label, // label is provided for the external object model
 				operator_id_ref: operatorIdRef,
-				label: label,
+				nodeTypeId: operatorIdRef, // TODO - Remove this when WML Canvas migrates to pipeline flow
 				offsetX: x,
 				offsetY: y
 			};

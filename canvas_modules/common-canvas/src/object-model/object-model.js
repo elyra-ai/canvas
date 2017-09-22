@@ -411,6 +411,8 @@ const store = createStore(combinedReducer);
 store.dispatch({ type: "CLEAR_CANVAS" });
 store.dispatch({ type: "CLEAR_PALETTE_DATA" });
 
+// TODO - Remove this gloabal  variable when WML Canvas supports pipelineFlow
+var oldCanvas = null;
 
 export default class ObjectModel {
 
@@ -464,10 +466,20 @@ export default class ObjectModel {
 	}
 
 	// Deprectaed TODO - Remove this method when WML Canvas supports pipeline Flow
+	// TODO - Remember to also remove declaration of ObjectModel.oldCanvas from above
 	static setCanvas(canvas) {
+		oldCanvas = canvas; // TODO - Remember to remvove the declaration of this global when WML Canvas UI supports pipleine flow.
 		store.dispatch({ type: "SET_PIPELINE_FLOW", data: getInitialPipelineFlow(canvas.id, canvas.diagram.id) });
 		var canvasInfo = SVGCanvasInHandler.convertCanvasToCanvasInfo(canvas);
 		store.dispatch({ type: "SET_CANVAS_INFO", data: canvasInfo });
+	}
+
+	// Deprectaed TODO - Remove this method when WML Canvas supports pipeline Flow
+	static getCanvas() {
+		if (oldCanvas) {
+			return SVGCanvasInHandler.getCanvasBasedOnCanvas(oldCanvas, store.getState().canvasinfo);
+		}
+		return {};
 	}
 
 	static setPipelineFlow(newPipelineFlow) {
@@ -490,7 +502,8 @@ export default class ObjectModel {
 	// as the consuming app makes getPipelineFlow() calls which are difficult to
 	// handle when teting.
 	static getPipelineFlow() {
-		return this.syncPipelineFlow(store.getState().pipelineflow, store.getState().canvasinfo);
+		return this.getCanvas();
+		// return this.syncPipelineFlow(store.getState().pipelineflow, store.getState().canvasinfo);
 	}
 
 	// Returns a pipeline flow based on the initial pipeline flow we were given
@@ -903,6 +916,7 @@ export default class ObjectModel {
 			const srcPort = this.getPort(srcNode.output_ports, srcNodeInfo.portId);
 			if (srcPort &&
 					srcPort.cardinality &&
+					srcPort.cardinality.max !== -1 && // -1 indicates an infinite numder of ports are allowed
 					srcCount >= srcPort.cardinality.max) {
 				return true;
 			}
@@ -912,6 +926,7 @@ export default class ObjectModel {
 			const trgPort = this.getPort(trgNode.input_ports, trgNodeInfo.portId);
 			if (trgPort &&
 					trgPort.cardinality &&
+					trgPort.cardinality.max !== -1 && // -1 indicates an infinite numder of ports are allowed
 					trgCount >= trgPort.cardinality.max) {
 				return true;
 			}

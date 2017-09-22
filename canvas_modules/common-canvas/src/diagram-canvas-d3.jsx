@@ -94,7 +94,7 @@ export default class DiagramCanvas extends React.Component {
 
 		if (jsVal !== null) {
 			if ((jsVal.operation === "createFromTemplate") || jsVal.operation === "createFromObject") {
-				this.createNodeAt(jsVal.operator_id_ref, jsVal.sourceId, jsVal.sourceObjectTypeId, transPos.x, transPos.y);
+				this.createNodeAt(jsVal.operator_id_ref, jsVal.label, jsVal.sourceId, jsVal.sourceObjectTypeId, transPos.x, transPos.y);
 
 			} else if ((jsVal.operation === "addToCanvas") || (jsVal.operation === "addTableFromConnection")) {
 				this.createNodeFromDataAt(transPos.x, transPos.y, jsVal.data);
@@ -104,7 +104,7 @@ export default class DiagramCanvas extends React.Component {
 
 	addNodeToCanvas(node) {
 		if (node) {
-			this.createNodeAt(node.operator_id_ref, node.sourceId, node.sourceObjectTypeId, 260, 10);
+			this.createNodeAt(node.operator_id_ref, node.label, node.sourceId, node.sourceObjectTypeId, 260, 10);
 		}
 	}
 
@@ -145,12 +145,13 @@ export default class DiagramCanvas extends React.Component {
 		this.props.contextMenuHandler(contextMenuSource);
 	}
 
-	createNodeAt(operatorIdRef, sourceId, sourceObjectTypeId, x, y) {
+	createNodeAt(operatorIdRef, label, sourceId, sourceObjectTypeId, x, y) {
 		var data = {};
 
 		if (typeof sourceId !== "undefined") {
 			data = {
 				editType: "createNode",
+				label: label,
 				offsetX: x,
 				offsetY: y,
 				sourceObjectId: sourceId,
@@ -159,7 +160,9 @@ export default class DiagramCanvas extends React.Component {
 		} else {
 			data = {
 				editType: "createNode",
+				label: label, // label is provided for the external object model
 				operator_id_ref: operatorIdRef,
+				nodeTypeId: operatorIdRef, // TODO - Remove this when WML Canvas migrates to pipeline flow
 				offsetX: x,
 				offsetY: y
 			};

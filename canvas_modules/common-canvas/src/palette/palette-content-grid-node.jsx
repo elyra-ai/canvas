@@ -25,7 +25,8 @@ class PaletteContentNode extends React.Component {
 		ev.dataTransfer.setData(DND_DATA_TEXT,
 			JSON.stringify({
 				operation: "createFromTemplate",
-				operator_id_ref: this.props.nodeTemplate.operator_id_ref
+				operator_id_ref: this.props.nodeTemplate.operator_id_ref,
+				label: this.props.nodeTemplate.label
 			}));
 	}
 
