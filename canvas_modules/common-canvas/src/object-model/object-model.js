@@ -502,8 +502,7 @@ export default class ObjectModel {
 	// as the consuming app makes getPipelineFlow() calls which are difficult to
 	// handle when teting.
 	static getPipelineFlow() {
-		return this.getCanvas();
-		// return this.syncPipelineFlow(store.getState().pipelineflow, store.getState().canvasinfo);
+		return this.syncPipelineFlow(store.getState().pipelineflow, store.getState().canvasinfo);
 	}
 
 	// Returns a pipeline flow based on the initial pipeline flow we were given
