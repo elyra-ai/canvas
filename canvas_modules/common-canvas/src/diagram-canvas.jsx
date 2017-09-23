@@ -316,7 +316,7 @@ export default class DiagramCanvas extends React.Component {
 					const minY = Math.round(Math.min(dragBounds.startY, dragBounds.endY) / zoom) - (NODE_HEIGHT / 2);
 					const maxX = Math.round(Math.max(dragBounds.startX, dragBounds.endX) / zoom) - (NODE_WIDTH / 2);
 					const maxY = Math.round(Math.max(dragBounds.startY, dragBounds.endY) / zoom) - (NODE_HEIGHT / 2);
-					this.selectInRegion(minX, minY, maxX, maxY);
+					this.selectInRegion(minX, minY, maxX, maxY, zoom);
 				} else if (jsVal.operation === "link") {
 					// Should already have been handled via a nodeAction() from the Node.drop()
 				} else if (jsVal.operation === "move") {
@@ -665,11 +665,13 @@ export default class DiagramCanvas extends React.Component {
 		});
 	}
 
-	selectInRegion(minX, minY, maxX, maxY) {
+	selectInRegion(minX, minY, maxX, maxY, zoom) {
+		const nodeWidth = Math.round(NODE_WIDTH * zoom);
+		const nodeHeight = Math.round(NODE_HEIGHT * zoom);
 		this.props.clickActionHandler({
 			clickType: "SINGLE_CLICK",
 			objectType: "region",
-			selectedObjectIds: ObjectModel.selectInRegion(minX, minY, maxX, maxY)
+			selectedObjectIds: ObjectModel.selectInRegion(minX, minY, maxX, maxY, nodeWidth, nodeHeight)
 		});
 	}
 

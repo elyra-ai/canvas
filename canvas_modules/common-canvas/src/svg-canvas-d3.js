@@ -524,7 +524,7 @@ export default class CanvasD3Layout {
 			if (Math.abs(this.region.width) > 5 &&
 					Math.abs(this.region.height) > 5) {
 				var { startX, startY, width, height } = this.getRegionDimensions();
-				ObjectModel.selectInRegion(startX, startY, startX + width, startY + height);
+				ObjectModel.selectInRegion(startX, startY, startX + width, startY + height, this.nodeWidth, this.nodeHeight);
 				this.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "region", selectedObjectIds: ObjectModel.getSelectedObjectIds() });
 			} else {
 				this.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "canvas", selectedObjectIds: ObjectModel.getSelectedObjectIds() });

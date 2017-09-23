@@ -995,21 +995,25 @@ export default class ObjectModel {
 		return this.getSelectedObjectIds().indexOf(objectId) >= 0;
 	}
 
-	static selectInRegion(minX, minY, maxX, maxY) {
+	static selectInRegion(minX, minY, maxX, maxY, nodeWidth, nodeHeight) {
 		var regionSelections = [];
 		for (const node of this.getNodes()) {
-			if (node.x_pos > minX && node.x_pos < maxX && node.y_pos > minY && node.y_pos < maxY) {
+			if (minX < node.x_pos + nodeWidth &&
+					maxX > node.x_pos &&
+					minY < node.y_pos + nodeHeight &&
+					maxY > node.y_pos) {
 				regionSelections.push(node.id);
 			}
 		}
 		for (const comment of this.getComments()) {
-			if (comment.x_pos > minX && comment.x_pos < maxX && comment.y_pos > minY && comment.y_pos < maxY) {
+			if (minX < comment.x_pos + comment.width &&
+					maxX > comment.x_pos &&
+					minY < comment.y_pos + comment.height &&
+					maxY > comment.y_pos) {
 				regionSelections.push(comment.id);
 			}
 		}
 		store.dispatch({ type: "SET_SELECTIONS", data: regionSelections });
-
-		return this.getSelectedObjectIds();
 	}
 
 	// Either sets the target object as selected and removes any other
