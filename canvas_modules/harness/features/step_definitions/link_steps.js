@@ -7,10 +7,11 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 /* eslint no-console: "off" */
+/* eslint max-len: "off" */
 
 import { containLinkEvent, containLinkInObjectModel, getCommentIdFromObjectModel,
 	getCommentIdFromObjectModelUsingText, getCommentIndexFromCanvasUsingText,
-	getNodeIdFromObjectModel, getObjectModelCount } from "./utilities/validateUtil.js";
+	getNodeIdFromObjectModel, getObjectModelCount, getPortLinks } from "./utilities/validateUtil.js";
 import { simulateD3LinkCreation, simulateDragDrop } from "./utilities/DragAndDrop.js";
 import { getHarnessData } from "./utilities/HTTPClient.js";
 import { getURL } from "./utilities/test-config.js";
@@ -216,6 +217,51 @@ module.exports = function() {
 			var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
 			var returnVal = browser.execute(getObjectModelCount, objectModel.value, "commentLinks", "");
 			expect(returnVal.value).toBe(Number(commentLinks));
+		} catch (err) {
+			console.log("Error = " + err);
+			throw err;
+		}
+
+	});
+
+	// Then I link node output port 5 to node input port 2
+	//
+	this.Then(/^I link node output port (\d+) to node input port (\d+)$/, function(srcPort, trgPort) {
+		var srcIndex = srcPort - 1;
+		var trgIndex = trgPort - 1;
+
+		browser.execute(simulateD3LinkCreation, ".d3-node-port-output", srcIndex, ".d3-node-port-input", trgIndex, 1, 1);
+
+	});
+
+	this.Then(/^I verify the number of port data links are (\d+)$/, function(portLinks) {
+		try {
+			var portLinksOnCanvas = browser.$$(".canvas-data-link").length;
+			expect(Number(portLinks)).toEqual(portLinksOnCanvas);
+
+			// verify the number of port-links is in the internal object model
+			const testUrl = getURL();
+			const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
+
+			browser.timeoutsAsyncScript(5000);
+			var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
+			var returnVal = browser.execute(getObjectModelCount, objectModel.value, "datalinks", "");
+			expect(returnVal.value).toBe(Number(portLinks));
+		} catch (err) {
+			console.log("Error = " + err);
+			throw err;
+		}
+
+	});
+
+	// Then I verify 1 link between source node "Field Reorder" source port "outPort" to target node "Na_to_K" target port "inPort"
+	this.Then(/^I verify (\d+) link between source node "([^"]*)" source port "([^"]*)" to target node "([^"]*)" target port "([^"]*)"$/, function(linkCount, srcNode, srcPort, trgNode, trgPort) {
+		try {
+			const testUrl = getURL();
+			const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
+			var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
+			var returnVal = getPortLinks(objectModel.value, srcNode, srcPort, trgNode, trgPort);
+			expect(returnVal).toBe(Number(linkCount));
 		} catch (err) {
 			console.log("Error = " + err);
 			throw err;

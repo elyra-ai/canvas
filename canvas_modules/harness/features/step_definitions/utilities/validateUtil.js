@@ -172,6 +172,34 @@ function getObjectModelCount(objectModel, type, compare) {
 	return count;
 }
 
+function getPortLinks(objectModel, srcNode, srcPort, trgNode, trgPort) {
+	var count = 0;
+
+	var omJson = JSON.parse(objectModel);
+	var nodes = omJson.nodes;
+	var links = omJson.links;
+	var srcNodeID;
+	var trgNodeID;
+
+	nodes.forEach(function(node) {
+		if (node.label === srcNode) {
+			srcNodeID = node.id;
+		}
+
+		if (node.label === trgNode) {
+			trgNodeID = node.id;
+		}
+	});
+
+	links.forEach(function(link) {
+		if (link.srcNodeId === srcNodeID && link.trgNodeId === trgNodeID && link.srcNodePortId === srcPort && link.trgNodePortId === trgPort) {
+			count++;
+		}
+	});
+
+	return count;
+}
+
 // determine if all the nodes, comments and links are empty in the object model
 //
 function isObjectModelEmpty(objectModel) {
@@ -194,5 +222,6 @@ module.exports = {
 	getLinkEventCount: getLinkEventCount,
 	getNodeIdFromObjectModel: getNodeIdFromObjectModel,
 	getObjectModelCount: getObjectModelCount,
+	getPortLinks: getPortLinks,
 	isObjectModelEmpty: isObjectModelEmpty
 };
