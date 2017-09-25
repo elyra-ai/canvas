@@ -23,11 +23,7 @@ export default class DeleteLinkAction extends Action {
 	}
 
 	undo() {
-		if (this.linkInfo.type === "nodeLink") {
-			ObjectModel.addNodeLinks([this.linkInfo]);
-		} else {
-			ObjectModel.addCommentLinks([this.linkInfo]);
-		}
+		ObjectModel.addLinks([this.linkInfo]);
 	}
 
 	redo() {

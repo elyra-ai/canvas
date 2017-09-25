@@ -13,29 +13,25 @@ export default class DisconnectNodesAction extends Action {
 	constructor(data) {
 		super(data);
 		this.data = data;
-		this.objectsInfo = [];
+		this.links = [];
 	}
 
 	// Standard methods
 	do() {
 		this.data.selectedObjectIds.forEach((id) => {
-			const objectInfo = {};
-			objectInfo.id = id;
-			// save all the links associated with each id
-			objectInfo.links = ObjectModel.getLinksContainingId(id);
-			this.objectsInfo.push(objectInfo);
+			// save all the links associated with each node, but don't store duplicate links
+			const objectLinks = ObjectModel.getLinksContainingId(id);
+			objectLinks.forEach((objectLink) => {
+				if (this.links.filter((link) => (link.id === objectLink.id)).length === 0) {
+					this.links.push(objectLink);
+				}
+			});
 		});
 		ObjectModel.disconnectNodes(this.data);
 	}
 
 	undo() {
-		this.objectsInfo.forEach((objectInfo) => {
-			if (ObjectModel.isDataNode(objectInfo.id)) {
-				ObjectModel.addNodeLinks(objectInfo.links);
-			} else {
-				ObjectModel.addCommentLinks(objectInfo.links);
-			}
-		});
+		ObjectModel.addLinks(this.links);
 	}
 
 	redo() {

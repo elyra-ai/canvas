@@ -146,14 +146,14 @@ Feature: Sanity_Test_undoRedo
 		Then I select all the comments in the canvas
 		Then I disconnect links for node 1 a "Var. File" on the canvas by selecting more than 1 node
 		Then I click undo
-		Then I verify the number of data links are 20
-		Then I verify the number of comment links are 12
+		Then I verify the number of data links are 5
+		Then I verify the number of comment links are 3
 		Then I click redo
 		Then I verify the number of data links are 0
 		Then I verify the number of comment links are 0
 		Then I click undo
-		Then I verify the number of data links are 20
-		Then I verify the number of comment links are 12
+		Then I verify the number of data links are 5
+		Then I verify the number of comment links are 3
 
 		Then I select all objects in the canvas via the context menu
 		Then I delete node 1 the "Type" node by selecting more than 1 node

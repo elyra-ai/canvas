@@ -758,9 +758,9 @@ export default class ObjectModel {
 		return linkNodeList;
 	}
 
-	static addNodeLinks(linkNodeList) {
-		linkNodeList.forEach((linkNode) => {
-			store.dispatch({ type: "ADD_LINK", data: linkNode });
+	static addLinks(linkList) {
+		linkList.forEach((link) => {
+			store.dispatch({ type: "ADD_LINK", data: link });
 		});
 
 		if (ObjectModel.fixedLayout !== NONE) {
@@ -782,15 +782,6 @@ export default class ObjectModel {
 			});
 		});
 		return linkCommentList;
-	}
-
-	static addCommentLinks(linkCommentList) {
-		linkCommentList.forEach((linkComment) => {
-			store.dispatch({ type: "ADD_LINK", data: linkComment });
-		});
-		if (ObjectModel.fixedLayout !== NONE) {
-			this.autoLayout(ObjectModel.fixedLayout);
-		}
 	}
 
 	static getLinksContainingId(id) {

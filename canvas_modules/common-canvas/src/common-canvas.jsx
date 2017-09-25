@@ -22,8 +22,7 @@ import ObjectModel from "./object-model/object-model.js";
 import CommandStack from "./command-stack/command-stack.js";
 import CreateNodeAction from "./command-actions/createNodeAction.js";
 import CreateCommentAction from "./command-actions/createCommentAction.js";
-import LinkNodesAction from "./command-actions/linkNodesAction.js";
-import LinkCommentAction from "./command-actions/linkCommentAction.js";
+import AddLinksAction from "./command-actions/addLinksAction.js";
 import DeleteObjectsAction from "./command-actions/deleteObjectsAction.js";
 import DeleteLinkAction from "./command-actions/deleteLinkAction.js";
 import DisconnectNodesAction from "./command-actions/disconnectNodesAction.js";
@@ -132,13 +131,13 @@ export default class CommonCanvas extends React.Component {
 			}
 			case "linkNodes": {
 				const linkNodesList = ObjectModel.createNodeLinks(data);
-				const command = new LinkNodesAction(linkNodesList);
+				const command = new AddLinksAction(linkNodesList);
 				CommandStack.do(command);
 				break;
 			}
 			case "linkComment": {
 				const linkCommentList = ObjectModel.createCommentLinks(data);
-				const command = new LinkCommentAction(linkCommentList);
+				const command = new AddLinksAction(linkCommentList);
 				CommandStack.do(command);
 				break;
 			}

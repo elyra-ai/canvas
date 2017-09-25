@@ -40,11 +40,10 @@ export default class DeleteObjectsAction extends Action {
 		this.objectsInfo.forEach((objectInfo) => {
 			if (objectInfo.type === "node") {
 				ObjectModel.addNode(objectInfo.data);
-				ObjectModel.addNodeLinks(objectInfo.links);
 			} else {
 				ObjectModel.addComment(objectInfo.data);
-				ObjectModel.addCommentLinks(objectInfo.links);
 			}
+			ObjectModel.addLinks(objectInfo.links);
 		});
 	}
 

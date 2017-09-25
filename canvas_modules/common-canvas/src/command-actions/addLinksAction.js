@@ -9,7 +9,7 @@
 import Action from "../command-stack/action.js";
 import ObjectModel from "../object-model/object-model.js";
 
-export default class LinkCommentAction extends Action {
+export default class AddLinksAction extends Action {
 	constructor(data) {
 		super(data);
 		this.data = data;
@@ -17,17 +17,17 @@ export default class LinkCommentAction extends Action {
 
 	// Standard methods
 	do() {
-		ObjectModel.addCommentLinks(this.data);
+		ObjectModel.addLinks(this.data);
 	}
 
 	undo() {
-		this.data.forEach((linkComment) => {
-			ObjectModel.deleteLink(linkComment);
+		this.data.forEach((link) => {
+			ObjectModel.deleteLink(link);
 		});
 	}
 
 	redo() {
-		ObjectModel.addCommentLinks(this.data);
+		ObjectModel.addLinks(this.data);
 	}
 
 }
