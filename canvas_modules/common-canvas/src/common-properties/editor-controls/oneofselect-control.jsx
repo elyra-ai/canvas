@@ -68,13 +68,17 @@ export default class OneofselectControl extends EditorControl {
 		let curtopscroll = 0;
 		let node = elem;
 		const modalClassName = "modal-lg modal-dialog";
+		let modalOffset = 0;
+		if (window.matchMedia("(min-width: 768px)").matches) {
+			modalOffset = 20;
+		}
 		if (node.offsetParent) {
 			do {
 				curtop += node.offsetTop;
 				curtopscroll += node.className !== modalClassName && node.offsetParent ? node.offsetParent.scrollTop : 0;
 			} while ((node = node.offsetParent) !== null);
 		}
-		return curtop - curtopscroll - window.screenTop + 4;
+		return curtop - curtopscroll - modalOffset;
 	}
 
 	getControlValue() {

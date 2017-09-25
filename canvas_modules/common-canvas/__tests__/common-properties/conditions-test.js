@@ -1404,9 +1404,11 @@ describe("Cells disable and hide correctly with structure table control", () => 
 		expect(disabledDropdowns).to.have.length(4);
 		const input = wrapper.find("#editor-control-field_types0_1");
 		expect(input).to.have.length(1);
-		input.at(0).simulate("click");
+		wrapper.find("input[id='editor-control-field_types0_1']").simulate("change", { target: { checked: false } });
 		disabledDropdowns = wrapper.find(".Dropdown-disabled");
-		expect(disabledDropdowns).to.have.length(4);
+		expect(disabledDropdowns).to.have.length(5);
+		// Strangely, the line below is necessary to reset state else some tests below fail
+		wrapper.find("input[id='editor-control-field_types0_1']").simulate("change", { target: { checked: true } });
 	});
 
 	it("structuretable should hide cells", () => {
@@ -1417,13 +1419,19 @@ describe("Cells disable and hide correctly with structure table control", () => 
 		const table = tab.find("#structure-table");
 		const dataRows = table.find(".reactable-data").find("tr");
 		expect(dataRows).to.have.length(7);
-		const row = dataRows.first();
-		const hiddenDropdowns = row.find(".Dropdown-control-table");
+		let row = dataRows.first();
+		let hiddenDropdowns = row.find(".Dropdown-control-table");
 		expect(hiddenDropdowns).to.have.length(2);
 		expect(hiddenDropdowns.at(1)).not.to.have.style("visibility", "hidden");
 		const input = row.find("#editor-control-field_types0_1");
 		expect(input).to.have.length(1);
-		input.simulate("click");
+		wrapper.find("input[id='editor-control-field_types0_1']").simulate("change", { target: { checked: false } });
+		row = dataRows.first();
+		hiddenDropdowns = row.find(".Dropdown-control-table");
+		expect(hiddenDropdowns).to.have.length(2);
+		expect(hiddenDropdowns.at(1)).to.have.style("visibility", "hidden");
+		// Strangely, the line below is necessary to reset state else some tests below fail
+		wrapper.find("input[id='editor-control-field_types0_1']").simulate("change", { target: { checked: true } });
 	});
 });
 
@@ -1460,7 +1468,6 @@ describe("condition messages renders correctly with radioSet control", () => {
 	// test radioSet disabled and warning message
 	it("radiosetColor control should have warning message selected yellow", () => {
 		const wrapper = createEditorForm("mount");
-
 		const input = wrapper.find("#editor-control-radiosetColor");
 		expect(input).to.have.length(1);
 		const radios = input.find("input[type='radio']");

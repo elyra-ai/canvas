@@ -93,7 +93,7 @@
             "default": "",
             "resource_key": "FieldStorageEntry.field"
           },
-          "width": 26,
+          "width": 16,
           "filterable": true
         },
         "parameters": [
@@ -103,7 +103,7 @@
               "default": "",
               "resource_key": "FieldStorageEntry.override"
             },
-            "width": 16,
+            "width": 26,
             "edit_style": "inline"
           },
           {

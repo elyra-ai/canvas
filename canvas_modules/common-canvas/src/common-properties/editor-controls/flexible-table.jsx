@@ -110,8 +110,11 @@ export default class FlexibleTable extends React.Component {
 			// Last header column is for scroll bar.  Always set to 2%
 			const columnWidth = j === this.props.columns.length - 1 ? "1%" : columnWidths[j];
 			const columnStyle = { "width": columnWidth };
-			const className = j === 0 ? "left-padding-15" : "";
 			const tooltipId = "tooltip-column-" + columnDef.key;
+			let className = j === 0 ? "left-padding-15" : "";
+			if (columnDef.controlType === "checkbox") {
+				className += " text-align-center";
+			}
 			let tooltip;
 			let description;
 			if (columnDef.editStyle && columnDef.editStyle === "inline" && columnDef.description) {
@@ -141,7 +144,12 @@ export default class FlexibleTable extends React.Component {
 				</Th>);
 			} else {
 				headers.push(<Th className={className} key={"flexible-table-headers" + j} column={columnDef.key} style={columnStyle}>
-					<div className="properties-tooltips-container" data-tip={description} data-for={tooltipId}>{columnDef.label}</div>
+					<div
+						className="properties-tooltips-container"
+						data-tip={description} data-for={tooltipId}
+					>
+						{columnDef.label}
+					</div>
 					{tooltip}
 				</Th>);
 			}

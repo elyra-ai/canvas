@@ -577,8 +577,13 @@ export default class ColumnStructureTableEditor extends EditorControl {
 				if (columnDef.sortable) {
 					sortFields.push(columnDef.name);
 				}
-				headers.push({ "key": columnDef.name, "label": columnDef.label.text, "width": columnDef.width,
-					"editStyle": columnDef.editStyle, "description": (columnDef.description ? columnDef.description.text : null) });
+				headers.push({
+					"key": columnDef.name,
+					"label": columnDef.label.text,
+					"width": columnDef.width,
+					"editStyle": columnDef.editStyle,
+					"controlType": columnDef.controlType,
+					"description": (columnDef.description ? columnDef.description.text : null) });
 				if (columnDef.filterable) {
 					filterFields.push(columnDef.name);
 				}
