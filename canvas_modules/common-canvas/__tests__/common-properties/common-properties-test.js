@@ -20,8 +20,6 @@ const applyPropertyChanges = sinon.spy();
 const closePropertiesDialog = sinon.spy();
 
 const propertiesInfo = {};
-
-propertiesInfo.title = <div><h2>"Test Title"</h2></div>;
 propertiesInfo.parameterDef = editStyleResource.paramDef;
 propertiesInfo.appData = {};
 propertiesInfo.additionalComponents = {};

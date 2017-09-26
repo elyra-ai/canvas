@@ -37,7 +37,6 @@ describe("CommonProperties converts property sets correctly", () => {
 function createCommonProperties2(useModalDialog) {
 	const showPropertiesDialog = true;
 	const propertiesInfo = {};
-	propertiesInfo.title = <div><h2>"Test Title"</h2></div>;
 	propertiesInfo.formData = oldForm.formData;
 	propertiesInfo.appData = {};
 	propertiesInfo.additionalComponents = {};
