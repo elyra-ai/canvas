@@ -66,7 +66,8 @@ export default class CommonCanvas extends React.Component {
 	}
 
 	openPalette() {
-		if (this.props.config.enablePalette) {
+		if (this.props.config.enablePalette &&
+				ObjectModel.getPaletteData()) {
 			this.setState({ isPaletteOpen: true });
 		}
 	}
@@ -319,7 +320,7 @@ export default class CommonCanvas extends React.Component {
 				</DiagramCanvasLegacy>);
 			}
 
-			if (this.props.config.enablePalette) {
+			if (this.props.config.enablePalette && ObjectModel.getPaletteData()) {
 				if (this.props.config.enablePaletteLayout === "Flyout") {
 					palette = (<PaletteFlyout
 						paletteJSON={ObjectModel.getPaletteData()}
