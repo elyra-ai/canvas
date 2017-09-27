@@ -15,7 +15,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { ButtonToolbar } from "react-bootstrap";
 import { Tabs } from "ap-components-react/dist/ap-components-react";
-import { EDITOR_CONTROL } from "../constants/constants.js";
+import { EDITOR_CONTROL, TOOL_TIP_DELAY } from "../constants/constants.js";
 import ReactTooltip from "react-tooltip";
 
 import ControlItem from "./control-item.jsx";
@@ -726,6 +726,7 @@ export default class EditorForm extends React.Component {
 						effect="solid"
 						border
 						className="properties-tooltips"
+						delayShow={TOOL_TIP_DELAY}
 					/>
 				</div>);
 			}

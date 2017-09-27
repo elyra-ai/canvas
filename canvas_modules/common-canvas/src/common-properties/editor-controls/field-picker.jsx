@@ -18,7 +18,7 @@ import FlexibleTable from "./flexible-table.jsx";
 import { Tr, Td } from "reactable";
 import { Button, Checkbox } from "ap-components-react/dist/ap-components-react";
 
-import { DATA_TYPES } from "../constants/constants.js";
+import { DATA_TYPES, TOOL_TIP_DELAY } from "../constants/constants.js";
 
 import resetIcon from "../../../assets/images/reset_32.svg";
 import resetHoverIcon from "../../../assets/images/reset_32_hover.svg";
@@ -408,6 +408,7 @@ export default class FieldPicker extends EditorControl {
 					effect="solid"
 					border
 					className="properties-tooltips"
+					delayShow={TOOL_TIP_DELAY}
 				/>
 			</div>
 		);
@@ -443,6 +444,7 @@ export default class FieldPicker extends EditorControl {
 						effect="solid"
 						border
 						className="properties-tooltips"
+						delayShow={TOOL_TIP_DELAY}
 					/>
 				</div>
 			);

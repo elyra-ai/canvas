@@ -19,6 +19,7 @@ import {
 import search32 from "../../../assets/images/search_32.svg";
 import SortAscendingIcon from "../../../assets/images/sort_ascending.svg";
 import SortDescendingIcon from "../../../assets/images/sort_descending.svg";
+import { TOOL_TIP_DELAY } from "../constants/constants.js";
 
 
 const sortDir = {
@@ -117,7 +118,7 @@ export default class FlexibleTable extends React.Component {
 			}
 			let tooltip;
 			let description;
-			if (columnDef.editStyle && columnDef.editStyle === "inline" && columnDef.description) {
+			if (((columnDef.editStyle && columnDef.editStyle === "inline") || columnDef.controlType === "checkbox") && columnDef.description) {
 				tooltip = (<ReactTooltip
 					id={tooltipId}
 					place="right"
@@ -125,6 +126,7 @@ export default class FlexibleTable extends React.Component {
 					effect="solid"
 					border
 					className="properties-tooltips"
+					delayShow={TOOL_TIP_DELAY}
 				/>);
 				description = columnDef.description;
 			}

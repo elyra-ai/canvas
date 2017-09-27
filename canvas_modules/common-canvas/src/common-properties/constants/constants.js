@@ -49,3 +49,5 @@ _defineConstant("DATA_TYPES", [
 ]);
 
 _defineConstant("EDITOR_CONTROL", "editor-control-");
+
+_defineConstant("TOOL_TIP_DELAY", 1000);

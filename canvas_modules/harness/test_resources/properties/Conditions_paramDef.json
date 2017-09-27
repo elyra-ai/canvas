@@ -748,9 +748,6 @@
       },
       {
         "parameter_ref": "field_types",
-        "label": {
-          "default": ""
-        },
         "description": {
           "default": "Change the type of columns in the active dataset"
         },
@@ -892,6 +889,9 @@
             "label": {
               "default": "",
               "resource_key": "FieldStorageEntry.override"
+            },
+						"description": {
+              "resource_key": "FieldStorageEntry.override.desc"
             },
             "width": 16,
             "edit_style": "inline"
@@ -1995,6 +1995,7 @@
     "field_types.label": "",
     "FieldStorageEntry.field": "Field",
     "FieldStorageEntry.override": "Override",
+		"FieldStorageEntry.override.desc": "Override storage and measurement type for field",
     "FieldStorageEntry.storage": "Storage",
     "FieldStorageEntry.measure": "Measure",
     "DummyEntry.field.label": "Field",

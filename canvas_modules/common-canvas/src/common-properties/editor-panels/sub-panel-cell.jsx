@@ -13,6 +13,7 @@ import PropTypes from "prop-types";
 import { Button } from "react-bootstrap";
 import ReactTooltip from "react-tooltip";
 import { Cell } from "fixed-data-table";
+import { TOOL_TIP_DELAY } from "../constants/constants.js";
 
 import SubPanelInvoker from "./sub-panel-invoker.jsx";
 
@@ -46,6 +47,7 @@ export default class SubPanelCell extends React.Component {
 
 	render() {
 		// logger.info("SubPanelCell.render()");
+		const tooltipId = "tooltip-subpanel-cell";
 		return (
 			<SubPanelInvoker ref="invoker">
 				<Cell>
@@ -59,14 +61,13 @@ export default class SubPanelCell extends React.Component {
 						</Button>
 					</div>
 					<ReactTooltip
-						id="tooltip-subpanel-cell"
+						id={tooltipId}
 						place="right"
 						type="light"
 						effect="solid"
 						border
 						className="properties-tooltips"
-						delayShow={500}
-						delayHide={500}
+						delayShow={TOOL_TIP_DELAY}
 					/>
 				</Cell>
 			</SubPanelInvoker>

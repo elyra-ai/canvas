@@ -13,7 +13,7 @@ import ReactTooltip from "react-tooltip";
 import PropTypes from "prop-types";
 import { Button } from "react-bootstrap";
 import StructureTableEditor from "./structure-table-editor.jsx";
-import { EDITOR_CONTROL } from "../constants/constants.js";
+import { EDITOR_CONTROL, TOOL_TIP_DELAY } from "../constants/constants.js";
 
 export default class StructurelisteditorControl extends StructureTableEditor {
 	constructor(props) {
@@ -105,6 +105,7 @@ export default class StructurelisteditorControl extends StructureTableEditor {
 							effect="solid"
 							border
 							className="properties-tooltips"
+							delayShow={TOOL_TIP_DELAY}
 						/>
 					</div>
 				</div>

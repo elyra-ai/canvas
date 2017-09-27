@@ -11,7 +11,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Checkbox } from "ap-components-react/dist/ap-components-react";
 import EditorControl from "./editor-control.jsx";
-import { EDITOR_CONTROL } from "../constants/constants.js";
+import { EDITOR_CONTROL, TOOL_TIP_DELAY } from "../constants/constants.js";
 import ReactTooltip from "react-tooltip";
 
 export default class CheckboxControl extends EditorControl {
@@ -93,7 +93,7 @@ export default class CheckboxControl extends EditorControl {
 		/>);
 		const tooltipId = "tooltip-" + this.props.control.name;
 		let tooltip;
-		if (this.props.control.description && conditionState.showTooltip) {
+		if (this.props.control.description && conditionState.showTooltip && !this.props.tableControl) {
 			tooltip = this.props.control.description.text;
 		}
 		return (
@@ -110,6 +110,7 @@ export default class CheckboxControl extends EditorControl {
 							effect="solid"
 							border
 							className="properties-tooltips"
+							delayShow={TOOL_TIP_DELAY}
 						/>
 					</div>
 					{icon}

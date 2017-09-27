@@ -22,7 +22,7 @@ import TopMoveIconDisable from "../../../assets/images/top_disabled.svg";
 import UpMoveIconDisable from "../../../assets/images/up_disabled.svg";
 import DownMoveIconDisable from "../../../assets/images/down_disabled.svg";
 import BottomMoveIconDisable from "../../../assets/images/bottom_disabled.svg";
-import { EDITOR_CONTROL } from "../constants/constants.js";
+import { EDITOR_CONTROL, TOOL_TIP_DELAY } from "../constants/constants.js";
 
 var _ = require("underscore");
 
@@ -383,6 +383,7 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 						effect="solid"
 						border
 						className="properties-tooltips"
+						delayShow={TOOL_TIP_DELAY}
 					/>
 				</div>);
 			}

@@ -18,7 +18,7 @@ import { Button } from "ap-components-react/dist/ap-components-react";
 import remove32 from "../../../assets/images/remove_32.svg";
 import remove32hover from "../../../assets/images/remove_32_hover.svg";
 import remove32disabled from "../../../assets/images/remove_32_disabled.svg";
-import { EDITOR_CONTROL } from "../constants/constants.js";
+import { EDITOR_CONTROL, TOOL_TIP_DELAY } from "../constants/constants.js";
 
 var _ = require("underscore");
 
@@ -258,6 +258,7 @@ export default class ColumnSelectControl extends EditorControl {
 						effect="solid"
 						border
 						className="properties-tooltips"
+						delayShow={TOOL_TIP_DELAY}
 					/>
 					<div className="editor_control_area" style={stateStyle}>
 						<div id={controlIconContainerClass}>
@@ -306,6 +307,7 @@ export default class ColumnSelectControl extends EditorControl {
 					effect="solid"
 					border
 					className="properties-tooltips"
+					delayShow={TOOL_TIP_DELAY}
 				/>
 				<div className="editor_control_area" style={stateStyle}>
 					<div id={controlIconContainerClass}>
