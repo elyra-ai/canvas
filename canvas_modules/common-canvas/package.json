@@ -1,6 +1,6 @@
 {
   "name": "@wdp/common-canvas",
-  "version": "2.1.14",
+  "version": "2.1.15",
   "description": "WDP common-canvas",
   "main": "dist/common-canvas.js",
   "homepage": "https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/wiki",
@@ -93,9 +93,9 @@
       "/node_modules/",
       "/.eslintrc.js"
     ],
-		"setupFiles": [
-			"./__mocks__/globalMock.js"
-		],
+    "setupFiles": [
+      "./__mocks__/globalMock.js"
+    ],
     "verbose": true,
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
