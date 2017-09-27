@@ -29,6 +29,14 @@ class PaletteContentListItem extends React.Component {
 				operator_id_ref: this.props.nodeTemplate.operator_id_ref,
 				label: this.props.nodeTemplate.label
 			}));
+		// only display the node image when dragging	
+		const paletteItems = document.getElementsByClassName("palette-list-item-icon");
+		for (var indx = 0; indx < paletteItems.length; indx++) {
+			var item = paletteItems[indx].getElementsByTagName("img")[0];
+			if (item.getAttribute("alt") === this.props.nodeTemplate.label) {
+				ev.dataTransfer.setDragImage(item, 0, 0);
+			}
+		}
 	}
 
 	onDoubleClick() {
