@@ -7,6 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
+import { getAutoCompleteCount, selectAutoComplete, setTextValue } from "./utilities/codemirror_util.js";
 import { getHarnessData } from "./utilities/HTTPClient.js";
 import { getURL } from "./utilities/test-config.js";
 
@@ -33,7 +34,7 @@ module.exports = function() {
 		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
 		var eventLogJSON = JSON.parse(eventLog.value);
 
-		expect(textboxValue).toEqual((eventLogJSON[10].data.form.colName).toString());
+		expect(textboxValue).toEqual((eventLogJSON[eventLogJSON.length - 1].data.form.colName).toString());
 	});
 
 	this.Then(/^I enter "([^"]*)" in the textbox Column name$/, function(textboxValue) {
@@ -64,20 +65,7 @@ module.exports = function() {
 		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
 		var eventLogJSON = JSON.parse(eventLog.value);
 
-		expect(dropdownValue).toEqual((eventLogJSON[13].data.form.measurement).toString());
-	});
-
-	this.Then(/^I enter "([^"]*)" in the Expression textarea$/, function(textareaValue) {
-		var textarea = browser.$("#editor-control-col");
-		textarea.setValue("", textareaValue);
-		var okButton = browser.$(".modal__buttons").$$(".button")[0];
-		okButton.click();
-
-		browser.timeouts("script", 3000);
-		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
-		var eventLogJSON = JSON.parse(eventLog.value);
-		browser.pause(500);
-		expect(textareaValue).toEqual((eventLogJSON[16].data.form.col).toString());
+		expect(dropdownValue).toEqual((eventLogJSON[eventLogJSON.length - 1].data.form.measurement).toString());
 	});
 
 	this.Then(/^I select "([^"]*)" option from Input columns select textbox$/, function(selectTextboxOption) {
@@ -129,7 +117,7 @@ module.exports = function() {
 		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
 		var eventLogJSON = JSON.parse(eventLog.value);
 
-		expect("Drug").toEqual((eventLogJSON[19].data.form.inputFieldList).toString());
+		expect("Drug").toEqual((eventLogJSON[eventLogJSON.length - 1].data.form.inputFieldList).toString());
 
 	});
 
@@ -151,9 +139,78 @@ module.exports = function() {
 		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
 		var eventLogJSON = JSON.parse(eventLog.value);
 
-		expect("1").toEqual((eventLogJSON[22].data.form.checkpointInterval).toString());
-		expect(radioButtonOption).toEqual((eventLogJSON[22].data.form.impurity).toString());
+		expect("1").toEqual((eventLogJSON[eventLogJSON.length - 1].data.form.checkpointInterval).toString());
+		expect(radioButtonOption).toEqual((eventLogJSON[eventLogJSON.length - 1].data.form.impurity).toString());
 
+	});
+
+	this.Then(/^I verify "([^"]*)" is a "([^"]*)" in ExpressionEditor$/, function(word, type) {
+		const CMline = browser.$("#ExpressionEditor").$$(".CodeMirror-line")[0];
+		const searchClass = ".cm-" + type;
+		const testWord = (type === "string") ? "\"" + word + "\"" : word;
+
+		expect(testWord).toEqual(CMline.$$(searchClass)[0].getText());
+
+	});
+
+	this.Then(/^I verify that the placeholder text is "([^"]*)" in ExpressionEditor$/, function(testText) {
+		const CMplaceholder = browser.$("#ExpressionEditor").$(".CodeMirror-placeholder");
+
+		expect(testText).toEqual(CMplaceholder.getText());
+
+	});
+
+	this.Then(/^I enter "([^"]*)" in ExpressionEditor and press autocomplete and verify that (\d+) autocomplete hints are displayed$/, function(enterText, hintCount) {
+
+		const hintNumber = browser.execute(getAutoCompleteCount, enterText);
+		expect(hintNumber.value).toEqual(Number(hintCount));
+
+	});
+
+	this.Then(/^I enter "([^"]*)" in ExpressionEditor and press autocomplete and verify error "([^"]*)" and save$/, function(enterText, errorText) {
+
+		browser.execute(getAutoCompleteCount, enterText);
+		const errLine = browser.$(".expression-validation-message");
+		expect(errorText).toEqual(errLine.$(".form__validation--error").getText());
+
+		var okButton = browser.$(".modal__buttons").$$(".button")[0];
+		okButton.click();
+
+	});
+
+	this.Then(/^I enter "([^"]*)" in ExpressionEditor and press autocomplete and select "([^"]*)" a "([^"]*)"$/, function(enterText, selectText, type) {
+		browser.execute(selectAutoComplete, enterText);
+		const CMline = browser.$("#ExpressionEditor").$$(".CodeMirror-line")[0];
+		const searchClass = ".cm-" + type;
+
+		expect(selectText).toEqual(CMline.$$(searchClass)[0].getText());
+	});
+
+
+	this.Then(/^I enter "([^"]*)" in ExpressionEditor and verify it is a "([^"]*)"$/, function(enterText, type) {
+		const setText = (type === "string") ? "\"" + enterText + "\"" : enterText;
+		browser.execute(setTextValue, setText, false);
+
+		const CMline = browser.$("#ExpressionEditor").$$(".CodeMirror-line")[0];
+		const searchClass = ".cm-" + type;
+		expect(setText).toEqual(CMline.$$(searchClass)[0].getText());
+	});
+
+	this.Then(/^I enter "([^"]*)" in ExpressionEditor and press autocomplete and select "([^"]*)" and verify save$/, function(enterText, selectText) {
+		browser.execute(selectAutoComplete, enterText);
+		const CMline = browser.$("#ExpressionEditor").$$(".CodeMirror-line")[0];
+		const searchClass = ".cm-keyword";
+
+		expect(selectText).toEqual(CMline.$$(searchClass)[0].getText());
+
+		var okButton = browser.$(".modal__buttons").$$(".button")[0];
+		okButton.click();
+
+		browser.timeouts("script", 3000);
+		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
+		var eventLogJSON = JSON.parse(eventLog.value);
+
+		expect(selectText).toEqual((eventLogJSON[eventLogJSON.length - 1].data.form.conditionExpr).toString());
 	});
 
 	this.Then(/^I select Repeatable partition assignment checkbox and click Generate$/, function() {
@@ -181,7 +238,7 @@ module.exports = function() {
 		var checkboxPartitionClicked = eventLogString.includes("samplingSeed");
 		browser.pause(500);
 		expect(true).toEqual(checkboxPartitionClicked);
-		expect("-1").not.toEqual((eventLogJSON[25].data.form.samplingSeed).toString());
+		expect("-1").not.toEqual((eventLogJSON[eventLogJSON.length - 1].data.form.samplingSeed).toString());
 	});
 
 	this.Then(/^I change Order for Drug field and reorder$/, function() {
@@ -234,10 +291,10 @@ module.exports = function() {
 		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
 		var eventLogJSON = JSON.parse(eventLog.value);
 
-		var naKey = (JSON.stringify(eventLogJSON[28].data.form.keys[0])).includes("Na");
-		var drugKey = (JSON.stringify(eventLogJSON[28].data.form.keys[1])).includes("Drug");
-		var drugValue = (JSON.stringify(eventLogJSON[28].data.form.keys[1])).includes("Ascending");
-		var cholesterolKey = (JSON.stringify(eventLogJSON[28].data.form.keys[2])).includes("Cholesterol");
+		var naKey = (JSON.stringify(eventLogJSON[eventLogJSON.length - 1].data.form.keys[0])).includes("Na");
+		var drugKey = (JSON.stringify(eventLogJSON[eventLogJSON.length - 1].data.form.keys[1])).includes("Drug");
+		var drugValue = (JSON.stringify(eventLogJSON[eventLogJSON.length - 1].data.form.keys[1])).includes("Ascending");
+		var cholesterolKey = (JSON.stringify(eventLogJSON[eventLogJSON.length - 1].data.form.keys[2])).includes("Cholesterol");
 
 		expect(true).toEqual(naKey);
 		expect(true).toEqual(drugKey);

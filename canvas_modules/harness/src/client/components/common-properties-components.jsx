@@ -104,6 +104,7 @@ class CommonPropertiesComponents extends React.Component {
 				"parameter_info",
 				"parameter_ref", "control", "label",
 				"description",
+				"language",
 				"orientation"
 			];
 			break;
@@ -111,7 +112,7 @@ class CommonPropertiesComponents extends React.Component {
 			jsonReplacer = [
 				"parameters", "name", "type", "role", "enum", "required", "default",
 				"uihints", "id", "parameter_info",
-				"parameter_ref", "label", "description", "orientation",
+				"parameter_ref", "label", "description", "orientation", "language",
 				"dataset_metadata", "fields", "name", "type", "metadata", "description", "measure", "modeling_role"
 			];
 			break;
@@ -467,7 +468,10 @@ class CommonPropertiesComponents extends React.Component {
 					<h3 id="--expression" className="section-subtitle">expression</h3>
 					<p>An expression editing field is rendered for a parameter of <span className="highlight">type</span> string
 						and <span className="highlight">role</span> expression.
-						Currently the expression field has the same behavior as a textarea.</p>
+						The expression field provides syntax highlighting and text auto completion based on language.
+						Languages supported are <span className="highlight">Spark SQL</span> and
+						<span className="highlight"> Modeler CLEM</span>. Press CTRL-SPACE to see the
+						text auto completion feature.</p>
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties

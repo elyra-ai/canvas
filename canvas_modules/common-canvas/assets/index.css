@@ -12,4 +12,6 @@
 @import "./styles/common-canvas-d3.css";
 @import "./styles/common-properties.css";
 @import "./styles/palette.css";
+@import "~codemirror/lib/codemirror.css";
+@import "~codemirror/addon/hint/show-hint.css";
 @import "./styles/toolbar.css";

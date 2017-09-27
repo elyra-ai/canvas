@@ -76,8 +76,8 @@
 }
 
 .default-label-container .control-label {
-	padding-top: 7px;
-	margin-bottom: 0px;
+  padding-top: 7px;
+  margin-bottom: 0px;
 }
 
 /* Override for block controls */
@@ -160,48 +160,48 @@ input[type=radio]{
 .validation-error-message-color-error,
 .validation-error-message-color-warning,
 .validation-error-message-color-info {
-	font-size: .875rem;
+  font-size: .875rem;
 }
 
 .form__validation.validation-error-message-type-number,
 .form__validation.validation-error-message-type-table,
 .form__validation.validation-error-message-type-structure-list-editor,
 p.form__validation.validation-error-message-type-selection {
-	margin-top: 5px;
-	width: 93%;
+  margin-top: 5px;
+  width: 93%;
 }
 
 .form__validation.validation-error-message-type-textfield,
 .form__validation.validation-error-message-type-textfieldbox {
-	margin-top: -20px;
-	width: 90%;
+  margin-top: -20px;
+  width: 90%;
 }
 
 .form__validation.validation-error-message-type-dropdown {
-	margin-top: 3px;
-	width: 89%;
+  margin-top: 3px;
+  width: 89%;
 }
 
 .form__validation.validation-error-message-type-checkbox {
-	margin-top: 0px;
+  margin-top: 0px;
 }
 
 input.number,
 #column-select-control-icon-container,
 #some-of-column-control-icon-container,
 #radioset-control-container {
-	width: 100%;
+  width: 100%;
 }
 
 #column-select-control-icon-container-enabled,
 #some-of-column-control-icon-container-enabled {
-	display: inline-flex;
-	width: calc(100% + 24px);
+  display: inline-flex;
+  width: calc(100% + 24px);
 }
 
 #control-icon-container-enabled {
-	display: inline-flex;
-	width: 100%;
+  display: inline-flex;
+  width: 100%;
 }
 
 #control-icon-container-enabled > div:first-of-type {
@@ -209,7 +209,7 @@ input.number,
 }
 
 #control-icon-container-enabled > * {
-	flex-shrink: 0;
+  flex-shrink: 0;
 }
 
 .text-align-center {
@@ -217,26 +217,26 @@ input.number,
 }
 
 .validation-error-message-icon {
-	width: 20px !important;
-	height: 20px;
-	margin-left: 4px;
+  width: 20px !important;
+  height: 20px;
+  margin-left: 4px;
 }
 
 .validation-error-message-icon-table,
 .validation-warning-message-icon-table {
-	position: relative;
-	top: 45px;
+  position: relative;
+  top: 45px;
 }
 
 .validation-error-message-icon-structure-list-editor,
 .validation-warning-message-icon-structure-list-editor {
-	position: relative;
-	top: 0px;
+  position: relative;
+  top: 0px;
 }
 
 .form__validation.validation-error-message-type-selection {
-	margin-top: 2px;
-	width: 93%;
+  margin-top: 2px;
+  width: 93%;
 }
 
 .modal__container .modal__buttons {
@@ -245,9 +245,9 @@ input.number,
 
 /* Override bootstrap css */
 .container {
-	width: 100%;
-	height: 100%;
-	padding-top: 0px;
+  width: 100%;
+  height: 100%;
+  padding-top: 0px;
 }
 
 /* Field Picker */
@@ -354,7 +354,7 @@ input.number,
 }
 
 #remove-fields-button-disabled {
-	background-color: transparent;
+  background-color: transparent;
 }
 
 .field-picker-data-type-icon {
@@ -373,12 +373,12 @@ input.number,
 }
 
 .Dropdown-control {
-	color: #a6266e;
-	width: 100%;
-	border-bottom: 2px solid #a6266e;
-	padding: 0 1em 0 0 ;
-	font-weight: 500;
-	position: relative;
+  color: #a6266e;
+  width: 100%;
+  border-bottom: 2px solid #a6266e;
+  padding: 0 1em 0 0 ;
+  font-weight: 500;
+  position: relative;
   overflow: hidden;
   box-sizing: border-box;
   cursor: default;
@@ -387,7 +387,7 @@ input.number,
 }
 
 .Dropdown-control-table {
-	padding-top: 10px;
+  padding-top: 10px;
 }
 
 .Dropdown-control-table .Dropdown-arrow{
@@ -449,7 +449,7 @@ input.number,
   color: #152935;
   cursor: pointer;
   display: block;
-	padding: .7em 1.5625em;
+  padding: .7em 1.5625em;
 }
 
 .Dropdown-option:last-child {
@@ -605,7 +605,7 @@ th div div label, td div div label {
 
 tr.reactable-column-header {
   height: 30px;
-	cursor: default;
+  cursor: default;
 }
 
 #table-header {
@@ -682,11 +682,11 @@ tr.reactable-column-header {
 
 .label-container {
   float: left;
-	clear: both;
+  clear: both;
 }
 
 .default-label-container {
-	clear: both;
+  clear: both;
 }
 
 .control-description {
@@ -745,10 +745,27 @@ tbody.reactable-data .editor_control_area {
 }
 
 .structure-list-editor {
-	border: 1px solid #d8d8d8;
+  border: 1px solid #d8d8d8;
 }
 
 .public_fixedDataTable_header .public_fixedDataTableCell_main {
-	border-top-style: none;
-	border-bottom-style: none;
+  border-top-style: none;
+  border-bottom-style: none;
 }
+
+/* Override so Codemirror autocomplete shows up on top */
+.CodeMirror-hints {
+  z-index: 1110 !important;
+}
+
+.CodeMirror-placeholder {
+  color: lightgray !important;
+}
+
+.cm-s-error.CodeMirror { border: 2px solid #E71D32; }
+
+.cm-s-warning.CodeMirror { border: 2px solid #FDD600; }
+
+.cm-s-disabled.CodeMirror { color: lightgray; }
+
+.expression-validation-message { margin-top: 25px; }

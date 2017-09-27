@@ -756,7 +756,7 @@ _defineConstant("EXPRESSION_PROPS_INFO", {
 	"title": "Expression Title",
 	"parameterDef": {
 		"current_parameters": {
-			"expressionBox": ""
+			"expressionBox": "is_real(salbegin)  and  gender  = \"F\" or BP = 120\n"
 		},
 		"parameters": [
 			{
@@ -771,6 +771,7 @@ _defineConstant("EXPRESSION_PROPS_INFO", {
 			"parameter_info": [
 				{
 					"parameter_ref": "expressionBox",
+					"language": "CLEM",
 					"label": {
 						"default": "Expression Control Name"
 					},

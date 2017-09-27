@@ -9,7 +9,6 @@
 
 import React from "react";
 import Expression from "../../../src/common-properties/editor-controls/expression-control.jsx";
-import { CHARACTER_LIMITS } from "../../../src/common-properties/constants/constants.js";
 import { mount } from "enzyme";
 import { expect } from "chai";
 import chai from "chai";
@@ -23,16 +22,15 @@ const control = {
 	additionalText: "Add expression",
 	valueDef: {
 		isList: false
-	}
-};
-const control2 = {
+	},
+	language: "CLEM"
 };
 const controlId = "test-areafield";
 const validationDefinitions = {};
 const controlStates = {};
 
 function valueAccessor() {
-	return ["Test value"];
+	return "Test value";
 }
 
 function updateControlValue(id, controlValue) {
@@ -66,73 +64,8 @@ describe("expression-control renders correctly", () => {
 				updateControlValue={updateControlValue}
 			/>
 		);
-		const input = wrapper.find(".text");
+		const input = wrapper.find(".ReactCodeMirror");
 		expect(input).to.have.length(1);
 	});
 
-	it("should set correct state value in `Expression`", () => {
-		const wrapper = mount(
-			<Expression control={control}
-				valueAccessor={valueAccessor}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
-				updateControlValue={updateControlValue}
-			/>
-		);
-		const input = wrapper.find(".text");
-		input.simulate("change", { target: { value: "My new value" } });
-		expect(wrapper.state().controlValue).to.equal("My new value");
-	});
-
-	it("should set correct maxLength in `Expression`", () => {
-		const wrapper = mount(
-			<Expression control={control}
-				valueAccessor={valueAccessor}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
-				updateControlValue={updateControlValue}
-			/>
-		);
-		const input = wrapper.find(".text");
-		expect(input.get(0).maxLength).to.equal(control.charLimit);
-	});
-
-	it("should set correct control type in `Expression`", () => {
-		const wrapper = mount(
-			<Expression control={control}
-				valueAccessor={valueAccessor}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
-				updateControlValue={updateControlValue}
-			/>
-		);
-		const input = wrapper.find(".text");
-		expect(input.get(0).type).to.equal("textarea");
-	});
-
-	it("should set placeholder text in `Expression`", () => {
-		const wrapper = mount(
-			<Expression control={control}
-				valueAccessor={valueAccessor}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
-				updateControlValue={updateControlValue}
-			/>
-		);
-		const input = wrapper.find(".text");
-		expect(input.get(0).placeholder).to.equal(control.additionalText);
-	});
-
-	it("should set maxLength correctly without charLimit in `Expression`", () => {
-		const wrapper = mount(
-			<Expression control={control2}
-				valueAccessor={valueAccessor}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
-				updateControlValue={updateControlValue}
-			/>
-		);
-		const input = wrapper.find(".text");
-		expect(input.get(0).maxLength).to.equal(CHARACTER_LIMITS.NODE_PROPERTIES_DIALOG_TEXT_AREA);
-	});
 });

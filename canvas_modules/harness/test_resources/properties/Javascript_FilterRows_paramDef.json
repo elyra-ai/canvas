@@ -1,7 +1,7 @@
 {
   "current_parameters": {
     "mode": "Include",
-    "conditionExpr": "-- SQL Mode ---\n\tselect First_Name, Nickname FROM Friends WHERE Nickname LIKE '%brain%'\n\tINSERT INTO STATION VALUES (13, \"Phoenix\", \"AZ\", 33, 112);\n"
+    "conditionExpr": ""
   },
   "parameters": [
     {
@@ -22,7 +22,6 @@
   ],
   "uihints": {
     "id": "org.apache.spark.ml.ibm.transformers.Filter",
-    "version": "1.0",
     "icon": "images/transformationspark.svg",
     "parameter_info": [
       {
@@ -37,12 +36,15 @@
       },
       {
         "parameter_ref": "conditionExpr",
-        "language": "text/x-hive",
+        "language": "javascript",
         "label": {
-          "default": "Enter a Spark SQL condition expression"
+          "default": "Condition"
         },
         "description": {
           "default": "Enter a boolean expression to use for filtering rows"
+        },
+        "place_holder_text": {
+          "default": "Enter JavaScript text"
         }
       }
     ],
@@ -80,7 +82,6 @@
     }
   ],
   "dataset_metadata": {
-    "version": "1.0",
     "fields": [
       {
         "name": "Age",

@@ -802,48 +802,6 @@ validationDefinitions.textareaDescription = [
 		}
 	}
 ];
-validationDefinitions.expressionBox = [
-	{
-		params: "expressionBox",
-		definition: {
-			"validation": {
-				"fail_message": {
-					"type": "error",
-					"message": {
-						"default": "Expression cannot contain /, double or single \"quotes\"",
-						"resource_key": "expression_box_not_valid"
-					},
-					"focus_parameter_ref": "expressionBox"
-				},
-				"evaluate": {
-					"and": [
-						{
-							"condition": {
-								"parameter_ref": "expressionBox",
-								"op": "notContains",
-								"value": "/"
-							}
-						},
-						{
-							"condition": {
-								"parameter_ref": "expressionBox",
-								"op": "notContains",
-								"value": "\""
-							}
-						},
-						{
-							"condition": {
-								"parameter_ref": "expressionBox",
-								"op": "notContains",
-								"value": "'"
-							}
-						}
-					]
-				}
-			}
-		}
-	}
-];
 validationDefinitions.structuretableSortOrder = [
 	{
 		params: "structuretableSortOrder",
@@ -1085,8 +1043,6 @@ describe("editor-form renders correctly with validations", () => {
 			JSON.parse(JSON.stringify(validationDefinitions.textfieldName)))).to.be.true;
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().validationDefinitions.textareaDescription)),
 			JSON.parse(JSON.stringify(validationDefinitions.textareaDescription)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().validationDefinitions.expressionBox)),
-			JSON.parse(JSON.stringify(validationDefinitions.expressionBox)))).to.be.true;
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().validationDefinitions.structuretableSortOrder)),
 			JSON.parse(JSON.stringify(validationDefinitions.structuretableSortOrder)))).to.be.true;
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().validationDefinitions.structuretableRenameFields)),
@@ -1476,7 +1432,6 @@ describe("condition messages renders correctly with radioSet control", () => {
 			// console.log("radio propsss " + JSON.stringify(radio.props()));
 			expect(radio.is("[disabled]")).to.equal(true);
 		});
-
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlStates)),
 			JSON.parse(JSON.stringify(defaultControlStates)))).to.be.true;
 
@@ -1612,18 +1567,13 @@ describe("condition messages renders correctly with textfields control", () => {
 
 		const textfieldNameInput = wrapper.find("#editor-control-textfieldName");
 		const textareaDescriptionInput = wrapper.find("#editor-control-textareaDescription");
-		const expressionBoxInput = wrapper.find("#editor-control-expressionBox");
 
-		expect(expressionBoxInput.is("[disabled]")).to.equal(true);
 		const controlStates = {
-			"textareaDescription": "hidden",
-			"expressionBox": "disabled"
+			"textareaDescription": "hidden"
 		};
 
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlStates.textareaDescription)),
 			JSON.parse(JSON.stringify(controlStates.textareaDescription)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlStates.expressionBox)),
-			JSON.parse(JSON.stringify(controlStates.expressionBox)))).to.be.true;
 
 		textfieldNameInput.simulate("change", { target: { value: "entering a name with invalid \"quotes'" } });
 		textfieldNameInput.simulate("blur");
@@ -1663,69 +1613,17 @@ describe("condition messages renders correctly with textfields control", () => {
 		expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
 		expect(wrapper.find(".form__validation--error")).to.have.length(1);
 
-		expressionBoxInput.simulate("change", { target: { value: "entering an expression with invalid \"quotes'" } });
-		expressionBoxInput.simulate("blur");
-		textareaDescriptionInput.simulate("change", { target: { value: "Unable to enter text in a hidden control" } });
-		textareaDescriptionInput.simulate("blur");
-
-		textfieldNameErrorMessages = {
-			"passwordField": {
-				"type": "info",
-				"text": ""
-			},
-			"textfieldName": {
-				"type": "error",
-				"text": "Name cannot contain /"
-			},
-			"expressionBox": {
-				"type": "error",
-				"text": "Expression cannot contain /, double or single \"quotes\""
-			}
-		};
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
-			JSON.parse(JSON.stringify(textfieldNameErrorMessages)))).to.be.true;
 
 		const checkbox = wrapper.find("#editor-control-checkboxEnableDesc");
 		expect(checkbox).to.have.length(1);
 		checkbox.simulate("change", { target: { checked: true, id: "Enable" } });
 		checkbox.simulate("blur");
 
-		textareaDescriptionInput.simulate("change", { target: { value: "entering a description with invalid \"quotes'" } });
-		textareaDescriptionInput.simulate("blur");
-
-		textfieldNameErrorMessages = {
-			"passwordField": {
-				"type": "info",
-				"text": ""
-			},
-			"textfieldName": {
-				"type": "error",
-				"text": "Name cannot contain /"
-			},
-			"textareaDescription": {
-				"type": "warning",
-				"text": "Description cannot contain /, double or single \"quotes\""
-			},
-			"expressionBox": {
-				"type": "error",
-				"text": "Expression cannot contain /, double or single \"quotes\""
-			}
-		};
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
-			JSON.parse(JSON.stringify(textfieldNameErrorMessages)))).to.be.true;
-
-		expect(wrapper.find(".validation-error-message-icon-textfield")).to.have.length(1);
-		expect(wrapper.find(".validation-error-message-icon-textfieldbox")).to.have.length(1);
-		expect(wrapper.find(".validation-warning-message-icon-textfieldbox")).to.have.length(1);
-		expect(wrapper.find(".validation-error-message-color-error")).to.have.length(2);
-		expect(wrapper.find(".validation-error-message-color-warning")).to.have.length(1);
 
 		textfieldNameInput.simulate("change", { target: { value: "entering a valid name" } });
 		textfieldNameInput.simulate("blur");
 		textareaDescriptionInput.simulate("change", { target: { value: "entering a valid description" } });
 		textareaDescriptionInput.simulate("blur");
-		expressionBoxInput.simulate("change", { target: { value: "entering a valid expression" } });
-		expressionBoxInput.simulate("blur");
 
 		textfieldNameErrorMessages = {
 			"passwordField": {
@@ -1737,10 +1635,6 @@ describe("condition messages renders correctly with textfields control", () => {
 				"text": ""
 			},
 			"textareaDescription": {
-				"type": "info",
-				"text": ""
-			},
-			"expressionBox": {
 				"type": "info",
 				"text": ""
 			}

@@ -361,7 +361,8 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 		defaultRow,
 		childItem,
 		moveableRows,
-		required
+		required,
+		parameter.language
 	);
 }
 
@@ -485,7 +486,8 @@ function _makeSubControl(parameter, l10nProvider) {
 		parameter.charLimit,
 		parameter.editStyle,
 		parameter.isKey,
-		parameter.dmDefault
+		parameter.dmDefault,
+		parameter.language
 	);
 }
 

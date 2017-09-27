@@ -1,7 +1,7 @@
 {
   "current_parameters": {
     "mode": "Include",
-    "conditionExpr": "-- SQL Mode ---\n\tselect First_Name, Nickname FROM Friends WHERE Nickname LIKE '%brain%'\n\tINSERT INTO STATION VALUES (13, \"Phoenix\", \"AZ\", 33, 112);\n"
+    "conditionExpr": "is_real(salbegin)  and  gender  = \"F\" or BP = 120\n"
   },
   "parameters": [
     {
@@ -22,7 +22,6 @@
   ],
   "uihints": {
     "id": "org.apache.spark.ml.ibm.transformers.Filter",
-    "version": "1.0",
     "icon": "images/transformationspark.svg",
     "parameter_info": [
       {
@@ -37,9 +36,9 @@
       },
       {
         "parameter_ref": "conditionExpr",
-        "language": "text/x-hive",
+        "language": "CLEM",
         "label": {
-          "default": "Enter a Spark SQL condition expression"
+          "default": "Modeler CLEM Condition Expression"
         },
         "description": {
           "default": "Enter a boolean expression to use for filtering rows"
@@ -80,10 +79,9 @@
     }
   ],
   "dataset_metadata": {
-    "version": "1.0",
     "fields": [
       {
-        "name": "Age",
+        "name": "age",
         "type": "integer",
         "metadata": {
           "description": "",
@@ -92,7 +90,7 @@
         }
       },
       {
-        "name": "Sex",
+        "name": "sex",
         "type": "string",
         "metadata": {
           "description": "",
@@ -110,7 +108,7 @@
         }
       },
       {
-        "name": "Cholesterol",
+        "name": "cholesterol",
         "type": "string",
         "metadata": {
           "description": "",
@@ -137,7 +135,7 @@
         }
       },
       {
-        "name": "Drug",
+        "name": "drug",
         "type": "string",
         "metadata": {
           "description": "",

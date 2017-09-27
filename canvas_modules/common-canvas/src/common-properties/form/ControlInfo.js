@@ -11,7 +11,7 @@ import { EditStyle } from "./form-constants";
 
 class ControlDef {
 	constructor(cname, label, description, controlType, valueDef, role, additionalText,
-		orientation, values, valueLabels, valueIcons, sortable, filterable, charLimit) {
+		orientation, values, valueLabels, valueIcons, sortable, filterable, charLimit, language) {
 		this.name = cname;
 		this.label = label;
 		if (description) {
@@ -43,6 +43,9 @@ class ControlDef {
 		if (typeof filterable === "boolean") {
 			this.filterable = filterable;
 		}
+		if (language) {
+			this.language = language;
+		}
 		if (charLimit) {
 			this.charLimit = charLimit;
 		}
@@ -52,9 +55,9 @@ class ControlDef {
 export class Control extends ControlDef {
 	constructor(cname, label, separateLabel, description, controlType, valueDef, role, additionalText, orientation,
 		values, valueLabels, valueIcons, sortable, filterable, noPickColumns, charLimit, subControls, keyIndex, defaultRow,
-		childItem, moveableRows, required) {
+		childItem, moveableRows, required, language) {
 		super(cname, label, description, controlType, valueDef, role, additionalText, orientation, values,
-			valueLabels, valueIcons, sortable, filterable, charLimit);
+			valueLabels, valueIcons, sortable, filterable, charLimit, language);
 		this.separateLabel = separateLabel;
 		if (subControls) {
 			this.subControls = subControls;
@@ -82,9 +85,9 @@ export class Control extends ControlDef {
 
 export class SubControl extends ControlDef {
 	constructor(cname, label, description, visible, width, controlType, valueDef, role, additionalText,
-		orientation, values, valueLabels, valueIcons, sortable, filterable, charLimit, editStyle, isKeyField, dmDefault) {
+		orientation, values, valueLabels, valueIcons, sortable, filterable, charLimit, editStyle, isKeyField, dmDefault, language) {
 		super(cname, label, description, controlType, valueDef, role, additionalText, orientation,
-			values, valueLabels, valueIcons, sortable, filterable, charLimit);
+			values, valueLabels, valueIcons, sortable, filterable, charLimit, language);
 		if (typeof visible === "boolean") {
 			this.visible = visible;
 		}
