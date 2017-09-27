@@ -16,7 +16,7 @@ import SVGPipelineInHandler from "../svg-pipeline-in-handler.js";
 import SVGPipelineOutHandler from "../svg-pipeline-out-handler.js";
 
 /* eslint arrow-body-style: ["error", "always"] */
-/* eslint complexity: ["error", 18] */
+/* eslint complexity: ["error", 19] */
 
 const nodes = (state = [], action) => {
 	switch (action.type) {
@@ -58,6 +58,16 @@ const nodes = (state = [], action) => {
 	case "DELETE_OBJECT":
 		return state.filter((node) => {
 			return node.id !== action.data; // filter will return all objects NOT found
+		});
+
+	case "SET_NODE_PARAMETERS":
+		return state.map((node, index) => {
+			if (action.data.nodeId === node.id) {
+				const newNode = Object.assign({}, node);
+				newNode.parameters = action.data.parameters;
+				return newNode;
+			}
+			return node;
 		});
 
 	case "ADD_NODE_ATTR":
@@ -270,6 +280,7 @@ const canvasinfo = (state = getInitialCanvas(), action) => {
 		return Object.assign({}, action.data);
 
 	case "ADD_NODE":
+	case "SET_NODE_PARAMETERS":
 	case "ADD_NODE_ATTR":
 	case "REMOVE_NODE_ATTR":
 		return Object.assign({}, state, { nodes: nodes(state.nodes, action) });
@@ -655,6 +666,15 @@ export default class ObjectModel {
 
 	static getNodes() {
 		return this.getCanvasInfo().nodes;
+	}
+
+	static getNodeParameters(nodeId) {
+		var node = this.getNode(nodeId);
+		return node.parameters;
+	}
+
+	static setNodeParameters(nodeId, parameters) {
+		store.dispatch({ type: "SET_NODE_PARAMETERS", data: { nodeId: nodeId, parameters: parameters } });
 	}
 
 	static addCustomAttrToNodes(objIds, attrName) {

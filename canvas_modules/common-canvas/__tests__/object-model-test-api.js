@@ -13,6 +13,7 @@ import deepFreeze from "deep-freeze";
 import { expect } from "chai";
 import _ from "underscore";
 import initialCanvas from "./test_resources/json/startCanvas.json";
+import startPipelineFlow from "./test_resources/json/startPipelineFlow.json";
 import paletteJson from "./test_resources/json/testPalette.json";
 import filterNode from "./test_resources/json/filterNode.json";
 import horizontalLayoutCanvas from "./test_resources/json/horizontalLayoutCanvas.json";
@@ -22,6 +23,8 @@ import addNodeVerticalLayoutCanvas from "./test_resources/json/addNodeVerticalLa
 import moveVarNode from "./test_resources/json/moveVarNode.json";
 import moveNodeHorizontalLayoutCanvas from "./test_resources/json/moveNodeHorizontalLayoutCanvas.json";
 import moveNodeVerticalLayoutCanvas from "./test_resources/json/moveNodeVerticalLayoutCanvas.json";
+import nodeParameters from "./test_resources/json/nodeParameters.json";
+import nodeParameterAddedPipelineFlow from "./test_resources/json/nodeParameterAddedPipelineFlow.json";
 
 
 import ObjectModel from "../src/object-model/object-model.js";
@@ -163,6 +166,41 @@ describe("ObjectModel API handle model OK", () => {
 
 		const expectedCanvas = moveNodeVerticalLayoutCanvas;
 		const actualCanvas = ObjectModel.getCanvasInfo();
+
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
+
+		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+	});
+
+	it("should return parameters of a node", () => {
+		logger.info("should return parameters of a node");
+
+		deepFreeze(startPipelineFlow);
+
+		ObjectModel.setPipelineFlow(startPipelineFlow);
+		var actualParameters = ObjectModel.getNodeParameters("idGWRVT47XDV");
+
+		const expectedParameters = nodeParameters;
+
+
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedParameters, null, 4));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualParameters, null, 4));
+
+		expect(_.isEqual(expectedParameters, actualParameters)).to.be.true;
+	});
+
+
+	it("should save parameters of a node", () => {
+		logger.info("should save parameters of a node");
+
+		deepFreeze(startPipelineFlow);
+
+		ObjectModel.setPipelineFlow(startPipelineFlow);
+		ObjectModel.setNodeParameters("id8I6RH2V91XW", { "paramA": "Value for Param A", "paramB": "Value for Param B" });
+
+		const expectedCanvas = nodeParameterAddedPipelineFlow;
+		const actualCanvas = ObjectModel.getPipelineFlow();
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));

@@ -44,7 +44,8 @@ export default class SVGPipelineInHandler {
 				"x_pos": node.app_data.ui_data.x_pos,
 				"y_pos": node.app_data.ui_data.y_pos,
 				"class_name": node.app_data.ui_data.class_name,
-				"decorations": this.convertDecorations(node.app_data.ui_data.decorations)
+				"decorations": this.convertDecorations(node.app_data.ui_data.decorations),
+				"parameters": node.parameters
 			})
 		);
 	}

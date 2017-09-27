@@ -35,6 +35,10 @@ export default class SVGPipelineOutHandler {
 						newNode = Object.assign({}, newNode, {
 							inputs: this.getInputs(pNode.inputs, canvasInfo.links, pNode.id) });
 					}
+					if (canvasInfo.nodes[index].parameters) { // Only non-binding nodes have parameters
+						newNode = Object.assign({}, newNode, {
+							parameters: this.getParameters(canvasInfo.nodes[index].parameters) });
+					}
 				}
 				newNodes.push(newNode);
 			}
@@ -100,6 +104,10 @@ export default class SVGPipelineOutHandler {
 		return inputs.map((input, portIndex) =>
 			Object.assign({}, input, { links: this.getLinks(input.links, canvasLinks, pNodeId, input.id, portIndex) })
 		);
+	}
+
+	static getParameters(parameters) {
+		return Object.assign({}, parameters);
 	}
 
 	// Returns the links that point to the target node info passed in.
@@ -179,6 +187,10 @@ export default class SVGPipelineOutHandler {
 			}
 			if (ciNode.output_ports && ciNode.output_ports.length > 0) {
 				newNode.outputs = this.createOutputs(ciNode);
+			}
+
+			if (ciNode.parameters) {
+				newNode.parameters = ciNode.parameters;
 			}
 
 			var newDecorations = this.createDecorations(ciNode.decorations);
