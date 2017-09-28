@@ -12,7 +12,8 @@
     "url": "https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues"
   },
   "scripts": {
-    "test": "jest"
+    "test" : "jest",
+    "test-coverage": "jest --coverage"
   },
   "dependencies": {},
   "devDependencies": {
