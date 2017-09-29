@@ -31,11 +31,27 @@
 /* SVG Canvas styles */
 
 #common-canvas {
-  overflow: auto;
+  overflow: hidden;
   height: 100%;
   width: 100%;
   cursor: default;
-	position: relative;
+  position: relative;
+}
+
+#common-canvas-items-container {
+  height: 100%;
+  position: relative;
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
+}
+
+.canvas-palette-flyout-div-open {
+  left: 250px;
+  width: calc(100% - 250px);
+}
+
+.canvas-palette-flyout-div-closed {
+  left: 0px;
 }
 
 #canvas-div {
@@ -53,13 +69,13 @@
 
 #empty-canvas {
   position: absolute;
-  left: 0%;
-  top: 0%;
-  padding-left: 32%;
-  padding-top: 10%;
-  float: right;
+  left: 50%;
+  top: 40%;
   cursor: default;
   z-index: -1;
+  transform: translate(-50%, -50%);
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
 }
 
 .placeholder-image {

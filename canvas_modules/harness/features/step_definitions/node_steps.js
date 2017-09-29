@@ -606,7 +606,21 @@ module.exports = function() {
 			nodeSelector = ".node-inner-circle";
 		}
 		browser.$("#canvas-div").$$(nodeSelector)[nodeNumber].rightClick();
-		browser.$(".context-menu-popover").$$(".react-contextmenu-item")[11].click();
+
+		const contextMenu = browser.$(".context-menu-popover").$$(".react-contextmenu-item");
+		// console.log("test " + contextMenu.length);
+		var menuItemDelete;
+		for (var menuIdx = 0; menuIdx < contextMenu.length; menuIdx++) {
+			if (contextMenu[menuIdx].$("span").type !== "NoSuchElement") {
+				var menuLabel = contextMenu[menuIdx].getText("span");
+				if (menuLabel === "Delete") {
+					// console.log("test span content " + contextMenu[menuIdx].getText("span"));
+					menuItemDelete = contextMenu[menuIdx];
+				}
+			}
+		}
+		// console.log("test Menu item delete? " + JSON.stringify(menuItemDelete));
+		menuItemDelete.click();
 
 		// verify node is not the canvas DOM
 		var count = 0;
@@ -763,7 +777,7 @@ module.exports = function() {
 	// Then I pause for 5 seconds
 	//
 	this.Then(/^I pause for (\d+) seconds$/, function(seconds) {
-		// browser.pause(Number(seconds) * 1000);
+		browser.pause(Number(seconds) * 1000);
 	});
 
 	// Then I delete node 1 the "Var. File" node by selecting more than 1 node

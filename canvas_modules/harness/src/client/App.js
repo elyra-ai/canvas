@@ -522,6 +522,7 @@ class App extends React.Component {
 		var properties = this.state.propertiesJson;
 
 		const propsInfo = {
+			title: <FormattedMessage id={ "dialog.nodePropertiesTitle" } />,
 			formData: properties.formData,
 			parameterDef: properties,
 			applyPropertyChanges: this.applyPropertyChanges,
@@ -590,17 +591,21 @@ class App extends React.Component {
 		};
 
 		var toolbarConfig = {
-			enablePalette: this.state.paletteNavEnabled,
+			showPalette: true,
 			toolbarMenuActionHandler: this.toolbarMenuActionHandler,
-			addComment: true,
-			copy: false,
-			cut: false,
-			delete: true,
-			paste: false,
-			redo: true,
-			run: false,
-			stop: false,
-			undo: true
+			toolbarDefinition: [
+				{ action: "stop", label: "Stop Execution", disable: true },
+				{ action: "run", label: "Run Pipeline", disable: true },
+				{ divider: true, overflow: false },
+				{ action: "undo", label: "Undo", disable: false },
+				{ action: "redo", label: "Redo", disable: false },
+				{ action: "cut", label: "Cut", disable: true },
+				{ action: "copy", label: "Copy", disable: true },
+				{ action: "paste", label: "Paste", disable: true },
+				{ action: "addComment", label: "Add Comment", disable: false },
+				{ action: "delete", label: "Delete", disable: false },
+				{ divider: true, overflow: true }
+			]
 		};
 
 		var commonCanvas = (<div id="canvas-container">

@@ -35,18 +35,6 @@ describe("Palette renders correctly", () => {
 		expect(flyoutPalette.find(PaletteFlyoutContent)).to.have.length(1);
 	});
 
-	it("should show <PaletteFlyoutContent/> when showPalette `true`", () => {
-		const flyoutPalette = createPalette();
-		expect(flyoutPalette.find(".palette-flyout-div-open")).to.have.length(1);
-		expect(flyoutPalette.find(".palette-flyout-div-closed")).to.have.length(0);
-	});
-
-	it("should hide <PaletteFlyoutContent/> when showPalette `false`", () => {
-		const flyoutPalette = createPaletteHidden();
-		expect(flyoutPalette.find(".palette-flyout-div-open")).to.have.length(0);
-		expect(flyoutPalette.find(".palette-flyout-div-closed")).to.have.length(1);
-	});
-
 	it("should render 1 <PaletteFlyoutContent/> component", () => {
 		const flyoutPalette = createMountedPalette();
 		expect(flyoutPalette.find(PaletteFlyoutContent)).to.have.length(1);
@@ -174,19 +162,6 @@ function createPalette() {
 		<PaletteFlyout
 			paletteJSON={paletteSpec}
 			showPalette
-			createTempNode={createTempNodeCallback}
-			deleteTempNode={deleteTempNodeCallback}
-		/>
-	);
-	return popupPalette;
-}
-function createPaletteHidden() {
-	const createTempNodeCallback = sinon.spy();
-	const deleteTempNodeCallback = sinon.spy();
-	const popupPalette = shallow(
-		<PaletteFlyout
-			paletteJSON={paletteSpec}
-			showPalette={false}
 			createTempNode={createTempNodeCallback}
 			deleteTempNode={deleteTempNodeCallback}
 		/>

@@ -38,6 +38,7 @@ export default class CommonCanvas extends React.Component {
 			isPaletteOpen: false,
 			showContextMenu: false,
 			contextMenuDef: {},
+			toolbarConfig: this.props.toolbarConfig,
 			posLastClicked: { x: 0, y: 0 }
 		};
 
@@ -56,6 +57,7 @@ export default class CommonCanvas extends React.Component {
 
 		this.zoomIn = this.zoomIn.bind(this);
 		this.zoomOut = this.zoomOut.bind(this);
+		this.zoomToFit = this.zoomToFit.bind(this);
 
 		this.editActionHandler = this.editActionHandler.bind(this);
 		this.contextMenuActionHandler = this.contextMenuActionHandler.bind(this);
@@ -82,6 +84,10 @@ export default class CommonCanvas extends React.Component {
 
 	zoomOut() {
 		this.refs.canvas.zoomOut();
+	}
+
+	zoomToFit() {
+		// TODO
 	}
 
 	closeContextMenu() {
@@ -235,9 +241,11 @@ export default class CommonCanvas extends React.Component {
 			}
 			case "undo":
 				CommandStack.undo();
+				this.canUndoRedo();
 				break;
 			case "redo":
 				CommandStack.redo();
+				this.canUndoRedo();
 				break;
 			default:
 			}
@@ -245,6 +253,28 @@ export default class CommonCanvas extends React.Component {
 
 		if (this.props.toolbarConfig.toolbarMenuActionHandler) {
 			this.props.toolbarConfig.toolbarMenuActionHandler(action, source);
+		}
+	}
+
+	canUndoRedo() {
+		let undoState = true;
+		let redoState = true;
+		if (!CommandStack.canUndo()) {
+			undoState = false;
+		}
+		if (!CommandStack.canRedo()) {
+			redoState = false;
+		}
+
+		if (typeof this.state.toolbarConfig.toolbarDefinition !== "undefined") {
+			for (let i = 0; i < this.state.toolbarConfig.toolbarDefinition.length; i++) {
+				if (this.state.toolbarConfig.toolbarDefinition[i].action === "undo") {
+					this.state.toolbarConfig.toolbarDefinition[i].disable = !undoState;
+				}
+				if (this.state.toolbarConfig.toolbarDefinition[i].action === "redo") {
+					this.state.toolbarConfig.toolbarDefinition[i].disable = !redoState;
+				}
+			}
 		}
 	}
 
@@ -278,6 +308,7 @@ export default class CommonCanvas extends React.Component {
 		let canvas = null;
 		let palette = null;
 		let addButton = null;
+		let paletteClass = "canvas-palette-flyout-div-closed";
 		let contextMenuWrapper = null;
 		let canvasToolbar = null;
 		const canvasJSON = ObjectModel.getCanvasInfo();
@@ -321,19 +352,12 @@ export default class CommonCanvas extends React.Component {
 			}
 
 			if (this.props.config.enablePalette && ObjectModel.getPaletteData()) {
-				if (this.props.config.enablePaletteLayout === "Flyout") {
-					palette = (<PaletteFlyout
-						paletteJSON={ObjectModel.getPaletteData()}
-						showPalette={this.state.isPaletteOpen}
-						addNodeToCanvas={this.addNodeToCanvas}
-					/>);
-				} else {
+				if (this.props.config.enablePaletteLayout === "Modal") {
 					palette = (<Palette
 						paletteJSON={ObjectModel.getPaletteData()}
 						showPalette={this.state.isPaletteOpen}
 						closePalette={this.closePalette}
 					/>);
-
 					const paletteTooltip = <Tooltip id="paletteTooltip">{this.props.config.paletteTooltip}</Tooltip>;
 
 					addButton = (<OverlayTrigger placement="right" overlay={paletteTooltip}>
@@ -341,30 +365,43 @@ export default class CommonCanvas extends React.Component {
 							<img src={OpenNodePaletteIcon} onClick={this.openPalette} />
 						</div>
 					</OverlayTrigger>);
+				} else {
+					if (this.state.isPaletteOpen) {
+						paletteClass = "canvas-palette-flyout-div-open";
+					}
+					palette = (<PaletteFlyout
+						paletteJSON={ObjectModel.getPaletteData()}
+						addNodeToCanvas={this.addNodeToCanvas}
+						showPalette={this.state.isPaletteOpen}
+					/>);
 				}
 			}
 
 			if (this.props.toolbarConfig) {
+				this.state.toolbarConfig.enablePalette = this.props.config.enablePalette;
+				this.canUndoRedo();
 				canvasToolbar = (<Toolbar
-					config={this.props.toolbarConfig}
+					config={this.state.toolbarConfig}
 					paletteState={this.state.isPaletteOpen}
 					paletteType={this.props.config.enablePaletteLayout}
 					closePalette={this.closePalette}
 					openPalette={this.openPalette}
 					zoomIn={this.zoomIn}
 					zoomOut={this.zoomOut}
-					zoomToFit={false}
+					zoomToFit={this.zoomToFit}
 					toolbarMenuActionHandler={this.toolbarMenuActionHandler}
 				/>);
 			}
 		}
 
 		return (
-			<div id="common-canvas">
-				{canvasToolbar}
+			<div id="common-canvas" >
 				{palette}
-				{canvas}
-				{addButton}
+				<div id="common-canvas-items-container" className={paletteClass}>
+					{canvasToolbar}
+					{canvas}
+					{addButton}
+				</div>
 			</div>
 		);
 	}

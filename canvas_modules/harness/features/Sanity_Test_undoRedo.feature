@@ -18,9 +18,10 @@ Feature: Sanity_Test_undoRedo
 		# Base do/undo/redo tests
 
 		Then I open the palette
-		Then I add node 1 a "Var. File" node from the "Import" category onto the canvas at 100, 200
-		Then I add node 2 a "Derive" node from the "Field Ops" category onto the canvas at 200, 200
+		Then I add node 1 a "Var. File" node from the "Import" category onto the canvas at 350, 200
+		Then I add node 2 a "Derive" node from the "Field Ops" category onto the canvas at 450, 200
 		Then I close the palette
+		Then I pause for 1 seconds
 		Then I click undo
 		Then I verify the number of nodes are 1
 		Then I click redo
@@ -34,7 +35,7 @@ Feature: Sanity_Test_undoRedo
 
 		Then I select node 2 the "Derive" node
 
-		Then I add comment 1 at location 100, 250 with the text "This comment box should be linked to the derive node."
+		Then I add comment 1 at location 350, 250 with the text "This comment box should be linked to the derive node."
 		Then I click undo
 		Then I click undo
 		Then I verify the number of comments are 0
@@ -125,8 +126,8 @@ Feature: Sanity_Test_undoRedo
 
 		Then I pause for 3 seconds
 		Then I open the palette
-		Then I add node 7 a "Field Reorder" node from the "Field Ops" category onto the canvas at 150, 450
-		Then I add node 8 a "Sort" node from the "Record Ops" category onto the canvas at 300, 450
+		Then I add node 7 a "Field Reorder" node from the "Field Ops" category onto the canvas at 300, 450
+		Then I add node 8 a "Sort" node from the "Record Ops" category onto the canvas at 500, 450
 		Then I close the palette
 
 		Then I select all the nodes in the canvas
@@ -211,11 +212,12 @@ Feature: Sanity_Test_undoRedo
 
 		Then I pause for 3 seconds
 		Then I open the palette
-		Then I add node 7 a "Field Reorder" node from the "Field Ops" category onto the canvas at 150, 450
+		Then I add node 7 a "Field Reorder" node from the "Field Ops" category onto the canvas at 300, 450
 		Then I add node 8 a "Sort" node from the "Record Ops" category onto the canvas at 300, 450
 		Then I close the palette
-
+		Then I pause for 1 seconds
 		Then I disconnect links for node 4 a "Neural Net" on the canvas
+		Then I pause for 1 seconds
 		Then I delete node 4 the "Neural Net" node
 		Then I verify the number of nodes are 7
 		Then I verify the number of data links are 4
@@ -253,7 +255,7 @@ Scenario: Sanity test for Multiple undo/redo operations with the D3 rendering en
 		Then I verify the number of nodes are 22
 
 		Then I select node 19 the "Filter" node
-		Then I add comment 1 at location 150, 300 with the text "Some text comment."
+		Then I add comment 1 at location 300, 300 with the text "Some text comment."
 		Then I click undo
 		Then I click undo
 		Then I verify the number of comments are 0
@@ -264,7 +266,7 @@ Scenario: Sanity test for Multiple undo/redo operations with the D3 rendering en
 
 		Then I link node 19 the "Filter" node to node 22 the "Neural Net" node for link 21 on the canvas
 		Then I open the palette
-		Then I add node 23 a "Select" node from the "Record Ops" category onto the canvas at 150, 250
+		Then I add node 23 a "Select" node from the "Record Ops" category onto the canvas at 350, 250
 		Then I add node 24 a "Sort" node from the "Record Ops" category onto the canvas at 250, 250
 		Then I close the palette
 		Then I link node 23 the "Select" node to node 24 the "Sort" node for link 22 on the canvas

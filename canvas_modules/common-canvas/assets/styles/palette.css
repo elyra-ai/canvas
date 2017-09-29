@@ -19,8 +19,7 @@
 	z-index: 1;
   color: black;
   background-color: #e0e0e0;
-	width: 250px;
-  min-width: 250px;
+  display: flex;
   -webkit-transition: all 0.2s;
   transition: all 0.2s;
   cursor: default; /* This stops Chrome displaying an I-beam cursor when dragging in the canvas. */
@@ -33,15 +32,13 @@
 }
 
 .palette-flyout-div-open {
-  left: 0px;
+  width: 250px;
 }
 
 .palette-flyout-div-closed {
-	left: -250px;
+  width: 0px;
 }
 
-.palette-flyout-content {
-}
 .palette-flyout-content .palette-list-item {
   border-width: 0px;
   background-color: #f9f9fb;
@@ -87,6 +84,7 @@
 	height: 37px;
 	padding-right: 18px;
 	margin-bottom: 16px;
+	width: 250px;
 }
 
 #palette-flyout-search-bar {

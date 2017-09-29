@@ -46,11 +46,11 @@ export default class CommandStack {
 	}
 
 	static canUndo() {
-		return commands.canUndo();
+		return commands.canUndo;
 	}
 
 	static canRedo() {
-		return commands.canRedo();
+		return commands.canRedo;
 	}
 
 	static clearCommandStack() {

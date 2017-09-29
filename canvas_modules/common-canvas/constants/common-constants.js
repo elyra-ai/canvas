@@ -27,6 +27,11 @@ _defineConstant("CANVAS_UI", {
 	HALO_RADIUS: 45
 });
 
+_defineConstant("TOOLBAR", {
+	ICON_WIDTH: 64,
+	DIVIDER_WIDTH: 2
+});
+
 _defineConstant("NONE", "none");
 _defineConstant("HORIZONTAL", "horizonal");
 _defineConstant("VERTICAL", "vertical");

@@ -80,7 +80,7 @@ Scenario: Sanity test for simple ports operations with the D3 rendering engine
 	Given I have uploaded diagram "/test_resources/diagrams/portsSimple.json"
 
 	Then I open the palette
-	Then I add node 7 a "Field Reorder" node from the "Field Ops" category onto the canvas at 150, 450
+	Then I add node 7 a "Field Reorder" node from the "Field Ops" category onto the canvas at 400, 450
 	Then I close the palette
 
 	Then I verify the number of port data links are 5

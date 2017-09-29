@@ -19,10 +19,6 @@
 	transition: all 0.2s;
 }
 
-.toolbar-palette-opened {
-	left: 250px;
-}
-
 #toolbar-items {
 	height: 45px;
 	list-style-type: none;

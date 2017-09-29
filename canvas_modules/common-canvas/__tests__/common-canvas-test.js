@@ -11,6 +11,7 @@ import React from "react";
 import CommonCanvas from "../src/common-canvas.jsx";
 import DiagramCanvas from "../src/diagram-canvas.jsx";
 import Palette from "../src/palette/palette.jsx";
+import PaletteFlyout from "../src/palette/palette-flyout.jsx";
 import Toolbar from "../src/toolbar/toolbar.jsx";
 import { shallow } from "enzyme";
 import { expect } from "chai";
@@ -28,15 +29,27 @@ describe("CommonCanvas renders correctly", () => {
 	});
 
 	it("should render one <Palette/> component when Palette is enabled", () => {
-		const config = { enablePalette: true, enableAutoLayout: "none" };
+		const config = { enablePalette: true, enablePaletteLayout: "Modal", enableAutoLayout: "none" };
 		const wrapper = createCommonCanvas(config);
 		expect(wrapper.find(Palette)).to.have.length(1);
 	});
 
 	it("should render one <OverlayTrigger/> component when Palette is enabled", () => {
-		const config = { enablePalette: true, enableAutoLayout: "none" };
+		const config = { enablePalette: true, enablePaletteLayout: "Modal", enableAutoLayout: "none" };
 		const wrapper = createCommonCanvas(config);
 		expect(wrapper.find(OverlayTrigger)).to.have.length(1);
+	});
+
+	it("should render one <Palette/> component when Palette is enabled", () => {
+		const config = { enablePalette: true, enableAutoLayout: "none" };
+		const wrapper = createCommonCanvas(config);
+		expect(wrapper.find(PaletteFlyout)).to.have.length(1);
+	});
+
+	it("should render one <OverlayTrigger/> component when Palette is enabled", () => {
+		const config = { enablePalette: true, enablePaletteLayout: "Flyout", enableAutoLayout: "none" };
+		const wrapper = createCommonCanvas(config);
+		expect(wrapper.find(PaletteFlyout)).to.have.length(1);
 	});
 
 	it("should not render any <Palette/> component when Palette is disabled", () => {
