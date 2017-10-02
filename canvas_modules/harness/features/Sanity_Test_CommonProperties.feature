@@ -74,7 +74,17 @@ Feature: Sanity_Test_CommonProperties
 			Then I verify that the validation warning is "name cannot be an existing column name"
 			Then I close the subPanel dialog
 			Then I have closed the common properties dialog by clicking on close button
+
+		# Complex Field Picker
+			Given I have uploaded JSON for common-properties "Conditions_paramDef.json"
+			Then I select the Tab 2
+			Then I add "Drug" to first input control
+			Then I verify "Drug" is not present second input control
+			Then I add "Na" to second input control
+			Then I verify "Na" is not present first input control
+			Then I have closed the common properties dialog by clicking on close button
 			Given I have toggled the app side common-properties panel
+
 @watch
 	Scenario: Test of expression editor control
 		Given I am on the test harness

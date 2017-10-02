@@ -71,7 +71,10 @@ module.exports = function() {
 	this.Then(/^I select "([^"]*)" option from Input columns select textbox$/, function(selectTextboxOption) {
 		var selectTextbox = browser.$("#editor-control-inputFieldList").$$("option")[0];
 		selectTextbox.click();
+
 		browser.$("#remove-fields-button-enabled").click();
+		var inputFieldList = browser.$("#editor-control-inputFieldList").$$("option");
+		expect(1).toEqual(inputFieldList.length);
 
 		browser.$("#add-fields-button").click();
 
@@ -87,12 +90,31 @@ module.exports = function() {
 		optionAge3.click();
 		optionSex3.click();
 
+		browser.$("#field-picker-back-button").click();
+		inputFieldList = browser.$("#editor-control-inputFieldList").$$("option");
+		expect(3).toEqual(inputFieldList.length);
+
+		browser.$("#add-fields-button").click();
+
+		var fieldPickerList = browser.$$(".field-picker-data-rows");
+		expect(7).toEqual(fieldPickerList.length);
+
 		browser.$("#reset-fields-button").click();
+		fieldPickerList = browser.$$(".field-picker-data-rows");
+		expect(7).toEqual(fieldPickerList.length);
+
 		browser.$("#field-picker-filter-list").$$("li")[1].click();
+		fieldPickerList = browser.$$(".field-picker-data-rows");
+		expect(6).toEqual(fieldPickerList.length);
+
 		browser.$("#field-picker-filter-list").$$("li")[2].click();
+		fieldPickerList = browser.$$(".field-picker-data-rows");
+		expect(4).toEqual(fieldPickerList.length);
 
 		var filterField = browser.$("#flexible-table-search");
 		filterField.setValue("", "Drug");
+		fieldPickerList = browser.$$(".field-picker-data-rows");
+		expect(1).toEqual(fieldPickerList.length);
 
 		var optionDrug1 = browser.$("#table").$("tbody");
 		var optionDrug2 = optionDrug1.$("tr").$$("td")[0].$(".field-picker-checkbox");
@@ -101,14 +123,20 @@ module.exports = function() {
 		optionDrug3.click();
 
 		browser.$("#field-picker-back-button").click();
+		inputFieldList = browser.$("#editor-control-inputFieldList").$$("option");
+		expect(4).toEqual(inputFieldList.length);
 
 		var selectDrugOption = browser.$("#editor-control-inputFieldList").$$("option")[1];
 		selectDrugOption.click();
 
 		var selectBPOption = browser.$("#editor-control-inputFieldList").$$("option")[0];
 		selectBPOption.click();
+		inputFieldList = browser.$("#editor-control-inputFieldList").$$("option");
+		expect(4).toEqual(inputFieldList.length);
 
 		browser.$("#remove-fields-button-enabled").click();
+		inputFieldList = browser.$("#editor-control-inputFieldList").$$("option");
+		expect(1).toEqual(inputFieldList.length);
 
 		var okButton = browser.$(".modal__buttons").$$(".button")[0];
 		okButton.click();
@@ -117,8 +145,73 @@ module.exports = function() {
 		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
 		var eventLogJSON = JSON.parse(eventLog.value);
 
-		expect("Drug").toEqual((eventLogJSON[eventLogJSON.length - 1].data.form.inputFieldList).toString());
+		expect("Sex").toEqual((eventLogJSON[eventLogJSON.length - 1].data.form.inputFieldList).toString());
 
+	});
+
+
+	this.Then(/^I add "([^"]*)" to first input control$/, function(firstInput) {
+		browser.$$("#add-fields-button")[0].click();
+
+		var optionDrug1 = browser.$("#table").$("tbody");
+		var optionDrug2 = optionDrug1.$$("tr")[4].$("td").$(".field-picker-checkbox");
+		var optionDrug3 = optionDrug2.$("div").$("label");
+
+		optionDrug3.click();
+
+		browser.$("#field-picker-back-button").click();
+
+		var firstInputFieldList = browser.$("#editor-control-columnSelectSharedWithInput").$$("option");
+		expect(2).toEqual(firstInputFieldList.length);
+
+	});
+
+	this.Then(/^I verify "([^"]*)" is not present second input control$/, function(firstInput) {
+		browser.$$("#add-fields-button")[1].click();
+
+		var checkSecondTablefields = browser.$$(".reactable-data")[1].$$("tr");
+		var fieldFlag = true;
+
+		checkSecondTablefields.forEach(function(checkSecondTablefield) {
+			var fieldName = checkSecondTablefield.$$("td")[1];
+			if (firstInput === fieldName.getText()) {
+				fieldFlag = false;
+			}
+		});
+		expect(fieldFlag).toEqual(true);
+	});
+
+	this.Then(/^I add "([^"]*)" to second input control$/, function(secondInput) {
+
+		var optionNa1 = browser.$("#flexible-table-container").$("table")
+			.$("tbody");
+		var optionNa2 = optionNa1.$$("tr")[3].$("td").$(".field-picker-checkbox");
+		var optionNa3 = optionNa2.$("div").$("label");
+
+		optionNa3.click();
+
+		browser.$("#field-picker-back-button").click();
+
+		var secondInputFieldList = browser.$("#editor-control-columnSelectInputFieldList").$$("option");
+		expect(3).toEqual(secondInputFieldList.length);
+
+	});
+
+	this.Then(/^I verify "([^"]*)" is not present first input control$/, function(secondInput) {
+		browser.$$("#add-fields-button")[0].click();
+
+		var checkFirstTablefields = browser.$$(".reactable-data")[1].$$("tr");
+		var fieldFlag = true;
+
+		checkFirstTablefields.forEach(function(checkFirstTablefield) {
+			var fieldName = checkFirstTablefield.$$("td")[1];
+			if (secondInput === fieldName.getText()) {
+				fieldFlag = false;
+			}
+		});
+		expect(fieldFlag).toEqual(true);
+
+		browser.$("#field-picker-back-button").click();
 	});
 
 	this.Then(/^I select "([^"]*)" radio button for Impurity$/, function(radioButtonOption) {
