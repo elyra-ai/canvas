@@ -61,8 +61,11 @@ export default class ToggletextControl extends EditorControl {
 
 		let icon = "";
 		if (typeof this.iconsMap[renderValue] !== "undefined") {
-			icon = <img className="toggletext_icon" src={this.iconsMap[renderValue]} onClick={this.onClick.bind(this)} />;
-
+			if (!this.props.disabled) {
+				icon = <img className="toggletext_icon" src={this.iconsMap[renderValue]} onClick={this.onClick.bind(this)} />;
+			} else {
+				icon = <img className="toggletext_icon" src={this.iconsMap[renderValue]} />;
+			}
 		}
 		let uValue;
 		if (!this.props.disabled) {
