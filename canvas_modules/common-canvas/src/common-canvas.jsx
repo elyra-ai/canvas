@@ -11,7 +11,6 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import ContextMenuWrapper from "./context-menu-wrapper.jsx";
 import DiagramCanvasLegacy from "./diagram-canvas.jsx";
 import DiagramCanvasD3 from "./diagram-canvas-d3.jsx";
@@ -28,7 +27,6 @@ import DeleteLinkAction from "./command-actions/deleteLinkAction.js";
 import DisconnectNodesAction from "./command-actions/disconnectNodesAction.js";
 import MoveObjectsAction from "./command-actions/moveObjectsAction.js";
 import EditCommentAction from "./command-actions/editCommentAction.js";
-import OpenNodePaletteIcon from "../assets/images/open_node_palette.svg";
 
 export default class CommonCanvas extends React.Component {
 	constructor(props) {
@@ -68,8 +66,7 @@ export default class CommonCanvas extends React.Component {
 	}
 
 	openPalette() {
-		if (this.props.config.enablePalette &&
-				ObjectModel.getPaletteData()) {
+		if (ObjectModel.getPaletteData()) {
 			this.setState({ isPaletteOpen: true });
 		}
 	}
@@ -307,7 +304,6 @@ export default class CommonCanvas extends React.Component {
 	render() {
 		let canvas = null;
 		let palette = null;
-		let addButton = null;
 		let paletteClass = "canvas-palette-flyout-div-closed";
 		let contextMenuWrapper = null;
 		let canvasToolbar = null;
@@ -351,20 +347,13 @@ export default class CommonCanvas extends React.Component {
 				</DiagramCanvasLegacy>);
 			}
 
-			if (this.props.config.enablePalette && ObjectModel.getPaletteData()) {
+			if (ObjectModel.getPaletteData()) {
 				if (this.props.config.enablePaletteLayout === "Modal") {
 					palette = (<Palette
 						paletteJSON={ObjectModel.getPaletteData()}
 						showPalette={this.state.isPaletteOpen}
 						closePalette={this.closePalette}
 					/>);
-					const paletteTooltip = <Tooltip id="paletteTooltip">{this.props.config.paletteTooltip}</Tooltip>;
-
-					addButton = (<OverlayTrigger placement="right" overlay={paletteTooltip}>
-						<div className="palette-show-button">
-							<img src={OpenNodePaletteIcon} onClick={this.openPalette} />
-						</div>
-					</OverlayTrigger>);
 				} else {
 					if (this.state.isPaletteOpen) {
 						paletteClass = "canvas-palette-flyout-div-open";
@@ -378,7 +367,6 @@ export default class CommonCanvas extends React.Component {
 			}
 
 			if (this.props.toolbarConfig) {
-				this.state.toolbarConfig.enablePalette = this.props.config.enablePalette;
 				this.canUndoRedo();
 				canvasToolbar = (<Toolbar
 					config={this.state.toolbarConfig}
@@ -400,7 +388,6 @@ export default class CommonCanvas extends React.Component {
 				<div id="common-canvas-items-container" className={paletteClass}>
 					{canvasToolbar}
 					{canvas}
-					{addButton}
 				</div>
 			</div>
 		);

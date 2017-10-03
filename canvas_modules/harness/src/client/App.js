@@ -581,7 +581,6 @@ class App extends React.Component {
 		</div>);
 
 		var commonCanvasConfig = {
-			enablePalette: this.state.paletteNavEnabled, // true if palette json submitted
 			enableRenderingEngine: this.state.selectedRenderingEngine,
 			enableConnectionType: this.state.selectedConnectionType,
 			enableLinkType: this.state.selectedLinkType,
@@ -591,9 +590,10 @@ class App extends React.Component {
 		};
 
 		var toolbarConfig = {
-			showPalette: true,
 			toolbarMenuActionHandler: this.toolbarMenuActionHandler,
 			toolbarDefinition: [
+				{ action: "palette", label: "Palette", disable: false },
+				{ divider: true, overflow: false },
 				{ action: "stop", label: "Stop Execution", disable: true },
 				{ action: "run", label: "Run Pipeline", disable: true },
 				{ divider: true, overflow: false },

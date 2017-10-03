@@ -31,27 +31,15 @@ module.exports = function() {
 	});
 
 	this.Then(/^I open the palette$/, function() {
-		if (nconf.get("paletteLayout") === "Modal") {
-			// click on the palette button to open it
-			browser.$(".palette-show-button").click();
-		} else {
-			// click on the palette button to open it
-			browser.$("#palette-open").click();
-			browser.pause(500);
-		}
+		// click on the palette button to open it
+		browser.$("#palette-open-action").click();
+		browser.pause(1000);
 	});
 
 	this.Then(/^I close the palette$/, function() {
-		if (nconf.get("paletteLayout") === "Modal") {
-			// close the palette
-			browser.$(".palette-topbar").$(".right-navbar")
-				.$(".secondary-action")
-				.click();
-		} else {
-			// click on the palette button to closed it
-			browser.$("#palette-close").click();
-		}
-
+		// click on the palette button to closed it
+		browser.$("#palette-close-action").click();
+		browser.pause(1000);
 	});
 
 	this.Then(/^I enter "([^"]*)" into the palette search bar$/, function(filterText) {

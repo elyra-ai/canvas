@@ -21,7 +21,6 @@ Feature: Sanity_Test_undoRedo
 		Then I add node 1 a "Var. File" node from the "Import" category onto the canvas at 350, 200
 		Then I add node 2 a "Derive" node from the "Field Ops" category onto the canvas at 450, 200
 		Then I close the palette
-		Then I pause for 1 seconds
 		Then I click undo
 		Then I verify the number of nodes are 1
 		Then I click redo
@@ -124,7 +123,7 @@ Feature: Sanity_Test_undoRedo
 
 		# Complex do/undo/redo tests
 
-		Then I pause for 3 seconds
+		Then I pause for 1 seconds
 		Then I open the palette
 		Then I add node 7 a "Field Reorder" node from the "Field Ops" category onto the canvas at 300, 450
 		Then I add node 8 a "Sort" node from the "Record Ops" category onto the canvas at 500, 450
@@ -210,14 +209,12 @@ Feature: Sanity_Test_undoRedo
 
 		# Complex do/undo/redo tests
 
-		Then I pause for 3 seconds
+		Then I pause for 1 seconds
 		Then I open the palette
 		Then I add node 7 a "Field Reorder" node from the "Field Ops" category onto the canvas at 300, 450
 		Then I add node 8 a "Sort" node from the "Record Ops" category onto the canvas at 300, 450
 		Then I close the palette
-		Then I pause for 1 seconds
 		Then I disconnect links for node 4 a "Neural Net" on the canvas
-		Then I pause for 1 seconds
 		Then I delete node 4 the "Neural Net" node
 		Then I verify the number of nodes are 7
 		Then I verify the number of data links are 4
@@ -246,7 +243,7 @@ Scenario: Sanity test for Multiple undo/redo operations with the D3 rendering en
 		# Multiple commands
 
 		Then I open the palette
-		Then I add node 22 a "Neural Net" node from the "Modeling" category onto the canvas at 150, 150
+		Then I add node 22 a "Neural Net" node from the "Modeling" category onto the canvas at 350, 150
 		Then I close the palette
 		Then I verify the number of nodes are 22
 		Then I click undo
@@ -277,4 +274,4 @@ Scenario: Sanity test for Multiple undo/redo operations with the D3 rendering en
 		Then I verify the number of nodes are 23
 		Then I verify the number of data links are 21
 
-		Then I pause for 3 seconds
+		Then I pause for 1 seconds

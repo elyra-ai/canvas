@@ -38,7 +38,7 @@ Feature: Sanity_Test
     Then I add comment 3 at location 550, 150 with the text "This is the functional test canvas that we build through automated test cases.  This comment is meant to simulate a typical comment for annotating the entire canvas."
 
     # Now delete everything and go back to empty canvas
-		Then I pause for 3 seconds
+		Then I pause for 1 seconds
 
     Then I delete node 1 the "Var. File" node
     #Then I delete comment link at 170, 200 between comment 1 and node 1 the "Derive" node

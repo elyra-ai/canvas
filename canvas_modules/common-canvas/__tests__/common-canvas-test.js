@@ -34,12 +34,6 @@ describe("CommonCanvas renders correctly", () => {
 		expect(wrapper.find(Palette)).to.have.length(1);
 	});
 
-	it("should render one <OverlayTrigger/> component when Palette is enabled", () => {
-		const config = { enablePalette: true, enablePaletteLayout: "Modal", enableAutoLayout: "none" };
-		const wrapper = createCommonCanvas(config);
-		expect(wrapper.find(OverlayTrigger)).to.have.length(1);
-	});
-
 	it("should render one <Palette/> component when Palette is enabled", () => {
 		const config = { enablePalette: true, enableAutoLayout: "none" };
 		const wrapper = createCommonCanvas(config);

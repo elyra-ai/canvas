@@ -17,9 +17,10 @@ describe("Toolbar renders correctly", () => {
 
 	it("should render a Toolbar", () => {
 		const toolbarConfig = {
-			showPalette: true,
 			toolbarMenuActionHandler: sinon.spy(),
 			toolbarDefinition: [
+				{ action: "palette", label: "Palette", disable: false },
+				{ divider: true, overflow: false },
 				{ action: "stop", label: "Stop Execution", disable: true },
 				{ action: "run", label: "Run Pipeline", disable: true },
 				{ divider: true, overflow: false },
@@ -42,9 +43,10 @@ describe("Toolbar renders correctly", () => {
 
 	it("should render a Toolbar", () => {
 		const toolbarConfig = {
-			showPalette: true,
 			toolbarMenuActionHandler: sinon.spy(),
 			toolbarDefinition: [
+				{ action: "palette", label: "Palette", disable: false },
+				{ divider: true, overflow: false },
 				{ action: "stop", label: "Stop Execution", disable: true },
 				{ action: "run", label: "Run Pipeline", disable: true },
 				{ divider: true, overflow: false },
@@ -62,7 +64,7 @@ describe("Toolbar renders correctly", () => {
 		};
 		const canvasToolbar = createToolbar(toolbarConfig);
 		expect(canvasToolbar.find("#canvas-toolbar")).to.have.length(1);
-		expect(canvasToolbar.find(".toolbar-items-container")).to.have.length(5); // include zoom container
+		expect(canvasToolbar.find(".toolbar-items-container")).to.have.length(6); // include zoom container
 		const canvasToolbarItems = canvasToolbar.find("#toolbar-items");
 		expect(canvasToolbarItems.find(".toolbar-icons")).to.have.length(15);
 	});

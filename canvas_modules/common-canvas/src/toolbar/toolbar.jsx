@@ -88,6 +88,7 @@ class Toolbar extends React.Component {
 		this.zoomToFitDisabledIcon = zoomToFitDisabledIcon;
 		this.overflowIcon = overflowIcon;
 
+		this.generatePaletteIcon = this.generatePaletteIcon.bind(this);
 		this.toogleShowExtendedMenu = this.toogleShowExtendedMenu.bind(this);
 		this.updateToolbarWidth = this.updateToolbarWidth.bind(this);
 	}
@@ -206,6 +207,9 @@ class Toolbar extends React.Component {
 			utilityActions = actions.map(function(actionObj, actionObjNum) {
 				const actionId = actionObj.action + "-action";
 				if (actionObj.disable === false) {
+					if (actionObj.action.startsWith("palette")) {
+						return that.generatePaletteIcon(actionObj);
+					}
 					return that.generateEnabledActionIcon(actionObj, actionId, actionsHandler);
 				}
 				// disable
@@ -216,7 +220,11 @@ class Toolbar extends React.Component {
 				const actionObj = actions[i];
 				const actionId = actionObj.action + "-action";
 				if (actionObj.disable === false) {
-					utilityActions[i] = this.generateEnabledActionIcon(actionObj, actionId, actionsHandler);
+					if (actionObj.action.startsWith("palette")) {
+						utilityActions[i] = this.generatePaletteIcon(actionObj);
+					} else {
+						utilityActions[i] = this.generateEnabledActionIcon(actionObj, actionId, actionsHandler);
+					}
 				} else { // disable
 					utilityActions[i] = this.generateDisabledActionIcon(actionObj, actionId);
 				}
@@ -264,6 +272,23 @@ class Toolbar extends React.Component {
 		</li>);
 	}
 
+	generatePaletteIcon(actionObj, paletteState) {
+		actionObj.action = "paletteOpen";
+		if (this.props.openPalette) {
+			actionObj.callback = this.props.openPalette;
+		}
+		let palette = this.generateEnabledActionIcon(actionObj, "palette-open-action", null);
+
+		if (this.props.paletteState) {
+			actionObj.action = "paletteClose";
+			if (this.props.closePalette) {
+				actionObj.callback = this.props.closePalette;
+			}
+			palette = this.generateEnabledActionIcon(actionObj, "palette-close-action", null);
+		}
+		return palette;
+	}
+
 	generatedExtendedMenu(actions, displayItems, actionsHandler, actionsContainerNum) {
 		const subActionsList = actions.slice(displayItems, actions.length);
 		const subActionsListItems = this.generateActionItems(subActionsList, subActionsList.length, actionsHandler, actionsHandler);
@@ -295,25 +320,8 @@ class Toolbar extends React.Component {
 		const canvasWidth = window.innerWidth;
 		let toolbarPaletteWidth = window.innerWidth;
 
-		const openPaletteAction = { action: "paletteOpen", label: "Open Palette", disable: false, callback: this.props.openPalette };
-		let palette = <div />;
-
-		if (this.props.config.showPalette) {
-			palette = this.generateEnabledActionIcon(openPaletteAction, "palette-open", null);
-
-			if (this.props.paletteState) {
-				const closePaletteAction = { action: "paletteClose", label: "Close Palette", disable: false, callback: this.props.closePalette };
-				palette = this.generateEnabledActionIcon(closePaletteAction, "palette-close", null);
-
-				if (this.props.paletteType !== "Modal") {
-					toolbarPaletteWidth = canvasWidth - 250;
-				}
-			}
-
-			if (this.props.config.enablePalette === false) { // disable palette if no json
-				const disablePaletteAction = { action: "palette", label: "Close Palette", disable: false };
-				palette = this.generateDisabledActionIcon(disablePaletteAction, "palette-disabled", null);
-			}
+		if (this.props.paletteState && this.props.paletteType !== "Modal") {
+			toolbarPaletteWidth = canvasWidth - 250;
 		}
 
 		const that = this;
@@ -353,8 +361,6 @@ class Toolbar extends React.Component {
 
 		const canvasToolbar = (<div id="canvas-toolbar" style={{ width: toolbarPaletteWidth + "px" }}>
 			<ul id="toolbar-items">
-				{palette}
-				{divider}
 				{actionContainer}
 				{zoomContainer}
 			</ul>

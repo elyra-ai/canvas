@@ -41,4 +41,4 @@ Feature: Sanity_Test2_D3
 		Then I disconnect links for node 3 a "C5.0" on the canvas
 		Then I move node 4 a "Neural Net" node onto the canvas by 50, 50
 		Then I move comment 3 with text " comment 3 sample comment text" onto the canvas by 100, 100
-		Then I pause for 3 seconds
+		Then I pause for 1 seconds
