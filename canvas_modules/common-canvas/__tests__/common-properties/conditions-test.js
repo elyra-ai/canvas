@@ -1077,6 +1077,27 @@ describe("condition messages renders correctly with numberfield control", () => 
 		expect(wrapper.find(".form__validation--error")).to.have.length(1);
 	});
 
+	it("required numberfield control should have error message from null input", () => {
+		const wrapper = createEditorForm("mount");
+
+		const input = wrapper.find("input[id='editor-control-numberfieldCheckpointInterval']");
+		expect(input).to.have.length(1);
+		input.simulate("change", { target: { value: "" } });
+		input.simulate("blur");
+
+		const numberfieldCheckpointIntervalErrorMessages = {
+			"numberfieldCheckpointInterval": {
+				"type": "error",
+				"text": "Require parameter numberfieldCheckpointInterval has no value"
+			}
+		};
+		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
+			JSON.parse(JSON.stringify(numberfieldCheckpointIntervalErrorMessages)))).to.be.true;
+
+		expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
+		expect(wrapper.find(".form__validation--error")).to.have.length(1);
+	});
+
 	it("numberfield control should have error message from null input and generator should trigger validation", () => {
 		const wrapper = createEditorForm("mount");
 
@@ -1291,6 +1312,8 @@ describe("condition messages renders correctly with structure table cells", () =
 
 describe("condition messages renders correctly with structure table control", () => {
 	it("structuretableSortOrder control should have error message from no selection", () => {
+		// a note about this test.  structuretableSortOrder has the required = true attribute and
+		// a isNotEmpty condition.  THe isNotEmpty condition error message should take precendence.
 		const wrapper = createEditorForm("mount");
 
 		const input = wrapper.find("#structure-table").at(0);
@@ -1343,7 +1366,50 @@ describe("condition messages renders correctly with structure table control", ()
 				"text": "The 'Output Name' field cannot contain 'pw'"
 			}
 		};
-		// console.log(JSON.stringify(wrapper.state().controlErrorMessages));
+
+		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
+			JSON.parse(JSON.stringify(structuretableRenameFieldsErrorMessages)))).to.be.true;
+
+		expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
+		expect(wrapper.find(".form__validation--error")).to.have.length(1);
+	});
+
+	it("required structuretableRenameTable control should have error message from no selection", () => {
+		const wrapper = createEditorForm("mount");
+
+		const input = wrapper.find("#structure-table").at(1);
+		expect(input).to.have.length(1);
+		expect(wrapper.state().valuesTable.structuretableRenameFields).to.have.length(2);
+
+		// remove two data row so that the table is empty
+		let dataRows = input.find(".reactable-data").find("tr");
+		expect(dataRows).to.have.length(2);
+		dataRows.first().simulate("click");
+
+		const enabledRemoveColumnButton = wrapper.find("#remove-fields-button-enabled");
+		expect(enabledRemoveColumnButton).to.have.length(1);
+
+		enabledRemoveColumnButton.simulate("click");
+		dataRows = input.find(".reactable-data").find("tr");
+
+		expect(dataRows).to.have.length(1);
+		expect(wrapper.state().valuesTable.structuretableRenameFields).to.have.length(1);
+
+		dataRows.first().simulate("click");
+		enabledRemoveColumnButton.simulate("click");
+		dataRows = input.find(".reactable-data").find("tr");
+
+		expect(dataRows).to.have.length(0);
+		expect(wrapper.state().valuesTable.structuretableRenameFields).to.have.length(0);
+
+		enabledRemoveColumnButton.simulate("blur");
+
+		const structuretableRenameFieldsErrorMessages = {
+			"structuretableRenameFields": {
+				"type": "error",
+				"text": "Require parameter structuretableRenameFields has no value"
+			}
+		};
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
 			JSON.parse(JSON.stringify(structuretableRenameFieldsErrorMessages)))).to.be.true;
 
@@ -1507,6 +1573,7 @@ describe("condition messages renders correctly with textfields control", () => {
 				"text": "textfieldName is missing an input value for validation."
 			}
 		};
+
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
 			JSON.parse(JSON.stringify(textfieldNameErrorMessages)))).to.be.true;
 
@@ -1646,6 +1713,32 @@ describe("condition messages renders correctly with textfields control", () => {
 		// console.info("testtt  " + JSON.stringify(wrapper.state().controlStates));
 
 		expect(wrapper.find(".form__validation--error")).to.have.length(0);
+		expect(wrapper.find(".form__validation--warning")).to.have.length(0);
+	});
+
+	it("required textfields control should have error message from null input", () => {
+		const wrapper = createEditorForm("mount");
+
+		const textareaDescriptionInput = wrapper.find("#editor-control-textareaDescription");
+
+		const checkbox = wrapper.find("#editor-control-checkboxEnableDesc");
+		expect(checkbox).to.have.length(1);
+		checkbox.simulate("change", { target: { checked: true, id: "Enable" } });
+		checkbox.simulate("blur");
+
+		textareaDescriptionInput.simulate("change", { target: { value: "" } });
+		textareaDescriptionInput.simulate("blur");
+
+		const textfieldNameErrorMessages = {
+			"textareaDescription": {
+				"type": "error",
+				"text": "Require parameter textareaDescription has no value"
+			}
+		};
+		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
+			JSON.parse(JSON.stringify(textfieldNameErrorMessages)))).to.be.true;
+
+		expect(wrapper.find(".form__validation--error")).to.have.length(1);
 		expect(wrapper.find(".form__validation--warning")).to.have.length(0);
 	});
 });

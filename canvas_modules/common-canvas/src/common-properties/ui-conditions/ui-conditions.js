@@ -21,12 +21,13 @@ const WARNING = "warning";
 * @param {Object} dataModel Optional data model
 * @param {Object} cellCoordinates Cell coordinates for tables
 */
-function validateInput(definition, userInput, controlType, dataModel, cellCoordinates) {
+function validateInput(definition, userInput, controlType, dataModel, cellCoordinates, requiredParameters) {
 	var data = definition;
 	const info = {
 		controlType: controlType,
 		dataModel: dataModel,
-		cellCoordinates: cellCoordinates
+		cellCoordinates: cellCoordinates,
+		requiredParameters: requiredParameters
 	};
 	if (data.validation) {
 		return validation(data.validation, userInput, info);
@@ -248,7 +249,7 @@ function condition(data, userInput, info) {
 	var paramInput = _getUserInput(userInput, paramName, { rowIndex: row, colIndex: column });
 	if (typeof param2 !== "undefined" && info.conditionType && info.conditionType === "validation" &&
 		op !== "isEmpty" && op !== "isNotEmpty" && op !== "cellNotEmpty") {
-		const valid = _validateParams(userInput, param, ERROR);
+		const valid = _validateParams(userInput, param, info.requiredParameters, ERROR);
 		if (typeof valid === "object") {
 			return valid;
 		}
@@ -260,9 +261,9 @@ function condition(data, userInput, info) {
 	case "isNotEmpty":
 		return _handleNotEmpty(param, paramInput);
 	case "greaterThan":
-		return _handleGreaterThan(param, paramInput, userInput, param2, value);
+		return _handleGreaterThan(param, paramInput, userInput, param2, value, info);
 	case "lessThan":
-		return _handleLessThan(param, paramInput, userInput, param2, value);
+		return _handleLessThan(param, paramInput, userInput, param2, value, info);
 	case "equals":
 		return _handleEquals(param, paramInput, userInput, param2, value, info);
 	case "notEquals":
@@ -294,9 +295,9 @@ function _getUserInput(userInput, param, cellCoordinates) {
 	return paramInput;
 }
 
-function _validateParams(userInput, param, errorType) {
+function _validateParams(userInput, param, requiredParameters, errorType) {
 	var failMessage;
-	if (userInput[param] === null || userInput[param] === "") {
+	if ((userInput[param] === null || userInput[param] === "") && requiredParameters.indexOf(param) !== -1) {
 		const internalError = {
 			focus_parameter_ref: param,
 			message: {
@@ -343,12 +344,12 @@ function _handleNotEmpty(param, paramInput) {
 	}
 }
 
-function _handleGreaterThan(param, paramInput, userInput, param2, value) {
+function _handleGreaterThan(param, paramInput, userInput, param2, value, info) {
 	const dataType = typeof paramInput;
 	switch (dataType) {
 	case "number":
 		if (typeof userInput[param2] !== "undefined") {
-			const notValid = _validateParams(userInput, param2, WARNING);
+			const notValid = _validateParams(userInput, param2, info.requiredParameters, WARNING);
 			if (typeof notValid === "object") {
 				return notValid;
 			}
@@ -374,12 +375,12 @@ function _handleGreaterThan(param, paramInput, userInput, param2, value) {
 	}
 }
 
-function _handleLessThan(param, paramInput, userInput, param2, value) {
+function _handleLessThan(param, paramInput, userInput, param2, value, info) {
 	const dataType = typeof paramInput;
 	switch (dataType) {
 	case "number":
 		if (typeof userInput[param2] !== "undefined") {
-			const notValid = _validateParams(userInput, param2, WARNING);
+			const notValid = _validateParams(userInput, param2, info.requiredParameters, WARNING);
 			if (typeof notValid === "object") {
 				return notValid;
 			}
@@ -409,7 +410,7 @@ function _handleEquals(param, paramInput, userInput, param2, value, info) {
 	if (info.controlType !== "passwordfield") {
 		const dataType = typeof paramInput;
 		if (typeof userInput[param2] !== "undefined") {
-			const notValid = _validateParams(userInput, param2, WARNING);
+			const notValid = _validateParams(userInput, param2, info.requiredParameters, WARNING);
 			if (typeof notValid === "object") {
 				return notValid;
 			}
@@ -456,7 +457,7 @@ function _handleNotEquals(param, paramInput, userInput, param2, value, info) {
 	if (info.controlType !== "passwordfield") {
 		const dataType = typeof paramInput;
 		if (typeof userInput[param2] !== "undefined") {
-			const notValid = _validateParams(userInput, param2, WARNING);
+			const notValid = _validateParams(userInput, param2, info.requiredParameters, WARNING);
 			if (typeof notValid === "object") {
 				return notValid;
 			}
@@ -504,7 +505,7 @@ function _handleContains(param, paramInput, userInput, param2, value, info) {
 	if (unsupportedControls.indexOf(info.controlType) < 0) {
 		const dataType = typeof paramInput;
 		if (typeof userInput[param2] !== "undefined") {
-			const notValid = _validateParams(userInput, param2, WARNING);
+			const notValid = _validateParams(userInput, param2, info.requiredParameters, WARNING);
 			if (typeof notValid === "object") {
 				return notValid;
 			}
@@ -540,7 +541,7 @@ function _handleNotContains(param, paramInput, userInput, param2, value, info) {
 	if (unsupportedControls.indexOf(info.controlType) < 0) {
 		const dataType = typeof paramInput;
 		if (typeof userInput[param2] !== "undefined") {
-			const notValid = _validateParams(userInput, param2, WARNING);
+			const notValid = _validateParams(userInput, param2, info.requiredParameters, WARNING);
 			if (typeof notValid === "object") {
 				return notValid;
 			}

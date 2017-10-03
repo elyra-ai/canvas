@@ -25,10 +25,7 @@
     "passwordField": "",
     "textfieldName": "",
     "checkboxEnableDesc": false,
-    "textareaDescription": [
-      "ab",
-      "cd"
-    ],
+    "textareaDescription": [],
     "expressionBox": "ab\ncd\nef",
     "columnSelectSharedWithInput": [
       "Sex"
@@ -134,6 +131,7 @@
     {
       "id": "numberfieldCheckpointInterval",
       "type": "integer",
+      "required": true,
       "default": -1
     },
     {
@@ -147,6 +145,7 @@
     {
       "id": "numberfieldMaxBins",
       "type": "integer",
+      "required": true,
       "default": 32
     },
     {
@@ -278,6 +277,7 @@
       "id": "textareaDescription",
       "type": "array[string]",
       "default": "",
+      "required": true,
       "role": "new_column"
     },
     {
@@ -890,7 +890,7 @@
               "default": "",
               "resource_key": "FieldStorageEntry.override"
             },
-						"description": {
+            "description": {
               "resource_key": "FieldStorageEntry.override.desc"
             },
             "width": 16,
@@ -1995,7 +1995,7 @@
     "field_types.label": "",
     "FieldStorageEntry.field": "Field",
     "FieldStorageEntry.override": "Override",
-		"FieldStorageEntry.override.desc": "Override storage and measurement type for field",
+    "FieldStorageEntry.override.desc": "Override storage and measurement type for field",
     "FieldStorageEntry.storage": "Storage",
     "FieldStorageEntry.measure": "Measure",
     "DummyEntry.field.label": "Field",

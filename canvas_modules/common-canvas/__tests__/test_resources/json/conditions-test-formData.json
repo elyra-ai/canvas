@@ -31,6 +31,7 @@
                       "isMap": false,
                       "defaultValue": -1
                     },
+                    "required": true,
                     "separateLabel": true
                   }
                 },
@@ -679,10 +680,11 @@
                       "isMap": false,
                       "defaultValue": ""
                     },
+                    "required": true,
                     "separateLabel": true
                   }
                 },
-								{
+                {
                   "itemType": "control",
                   "control": {
                     "name": "checkboxEnableDesc",
@@ -725,6 +727,7 @@
                       "isMap": false,
                       "defaultValue": ""
                     },
+                    "required": true,
                     "separateLabel": true
                   }
                 },
@@ -780,6 +783,7 @@
                             "isList": true,
                             "isMap": false
                           },
+                          "required": true,
                           "separateLabel": true,
                           "subControls": [
                             {
@@ -859,6 +863,7 @@
                             "isMap": false,
                             "defaultValue": []
                           },
+                          "required": true,
                           "separateLabel": true,
                           "subControls": [
                             {
@@ -1940,7 +1945,7 @@
         }
       }
     },
-		{
+    {
       "visible": {
         "parameter_refs": [
           "textareaDescription"

@@ -176,6 +176,7 @@ OneofselectControl.propTypes = {
 	selectedRows: PropTypes.array,
 	controlStates: PropTypes.object,
 	validationDefinitions: PropTypes.object,
+	requiredParameters: PropTypes.array,
 	updateValidationErrorMessage: PropTypes.func,
 	retrieveValidationErrorMessage: PropTypes.func
 };

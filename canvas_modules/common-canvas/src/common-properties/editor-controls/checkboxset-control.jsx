@@ -102,6 +102,7 @@ CheckboxsetControl.propTypes = {
 	control: PropTypes.object,
 	controlStates: PropTypes.object,
 	validationDefinitions: PropTypes.object,
+	requiredParameters: PropTypes.array,
 	updateValidationErrorMessage: PropTypes.func,
 	retrieveValidationErrorMessage: PropTypes.func,
 	updateControlValue: PropTypes.func

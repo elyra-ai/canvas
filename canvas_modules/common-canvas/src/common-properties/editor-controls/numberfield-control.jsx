@@ -103,6 +103,7 @@ NumberfieldControl.propTypes = {
 	control: PropTypes.object,
 	controlStates: PropTypes.object,
 	validationDefinitions: PropTypes.object,
+	requiredParameters: PropTypes.array,
 	validateConditions: PropTypes.func,
 	updateValidationErrorMessage: PropTypes.func,
 	retrieveValidationErrorMessage: PropTypes.func,

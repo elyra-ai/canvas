@@ -122,6 +122,7 @@ StructurelisteditorControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	controlStates: PropTypes.object,
 	validationDefinitions: PropTypes.object,
+	requiredParameters: PropTypes.array,
 	updateValidationErrorMessage: PropTypes.func,
 	retrieveValidationErrorMessage: PropTypes.func,
 	updateControlValue: PropTypes.func

@@ -205,6 +205,10 @@ export default class ColumnSelectControl extends EditorControl {
 			controlIconContainerClass = "column-select-control-icon-container-enabled";
 		}
 
+		if (messageType === "error" || messageType === "warning") {
+			stateStyle.borderWidth = "2px";
+		}
+
 		let removeFieldsButtonId = "remove-fields-button-enabled";
 		let removeIconImage = (<img src={remove32} />);
 		if (!this.state.enableRemoveIcon) {
@@ -233,7 +237,7 @@ export default class ColumnSelectControl extends EditorControl {
 				{removeIconImage}
 			</div>);
 		}
-
+		// <div className="editor_control_area" style={stateStyle}>
 		const tooltipId = "tooltip-add-remove-columns-" + this.props.control.name;
 		if (this.props.multiColumn) {
 			return (
@@ -260,7 +264,7 @@ export default class ColumnSelectControl extends EditorControl {
 						className="properties-tooltips"
 						delayShow={TOOL_TIP_DELAY}
 					/>
-					<div className="editor_control_area" style={stateStyle}>
+					<div className="editor_control_area">
 						<div id={controlIconContainerClass}>
 							<FormControl {...stateDisabled}
 								id={this.getControlID()}
@@ -309,7 +313,7 @@ export default class ColumnSelectControl extends EditorControl {
 					className="properties-tooltips"
 					delayShow={TOOL_TIP_DELAY}
 				/>
-				<div className="editor_control_area" style={stateStyle}>
+				<div className="editor_control_area">
 					<div id={controlIconContainerClass}>
 						<FormControl {...stateDisabled}
 							id={this.getControlID()}

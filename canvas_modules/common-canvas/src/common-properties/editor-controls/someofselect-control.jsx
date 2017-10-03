@@ -89,5 +89,6 @@ SomeofselectControl.propTypes = {
 	controlStates: PropTypes.object,
 	updateValidationErrorMessage: PropTypes.func,
 	retrieveValidationErrorMessage: PropTypes.func,
-	validationDefinitions: PropTypes.object
+	validationDefinitions: PropTypes.object,
+	requiredParameters: PropTypes.array
 };

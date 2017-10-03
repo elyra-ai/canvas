@@ -379,7 +379,8 @@ export default class EditorControl extends React.Component {
 					coordinates.rowIndex = row;
 					coordinates.colIndex = col;
 					coordinates.skipVal = cellValues[row][this.props.control.keyIndex];
-					const tmp = UiConditions.validateInput(validation.definition, userInput, this.props.control.controlType, this.props.dataModel, coordinates);
+					const tmp = UiConditions.validateInput(validation.definition, userInput, this.props.control.controlType, this.props.dataModel,
+						coordinates, this.props.requiredParameters);
 					const isError = PropertyUtils.toType(tmp) === "object";
 					if (!output || PropertyUtils.toType(output) === "boolean") {
 						// Set the return value with preference to errors
@@ -399,10 +400,12 @@ export default class EditorControl extends React.Component {
 			}
 			// validate on table-level if cell validation didn't result in an error already
 			if (!output || PropertyUtils.toType(output) === "boolean") {
-				output = UiConditions.validateInput(validation.definition, userInput, this.props.control.controlType, this.props.dataModel, coordinates);
+				output = UiConditions.validateInput(validation.definition, userInput, this.props.control.controlType, this.props.dataModel,
+					coordinates, this.props.requiredParameters);
 			}
 		} else {
-			output = UiConditions.validateInput(validation.definition, userInput, this.props.control.controlType, this.props.dataModel, coordinates);
+			output = UiConditions.validateInput(validation.definition, userInput, this.props.control.controlType, this.props.dataModel,
+				coordinates, this.props.requiredParameters);
 		}
 		return output;
 	}
@@ -423,6 +426,7 @@ export default class EditorControl extends React.Component {
 
 	validateInput(cellCoords) {
 		const controlName = this.getControlID().replace(EDITOR_CONTROL, "");
+
 		if (!this.props.validationDefinitions) {
 			return;
 		}
@@ -433,14 +437,14 @@ export default class EditorControl extends React.Component {
 		if (this.props.control.valueDef.isMap) {
 			this.clearTableErrorState(); 	// Clear table error state
 		}
+		let errorSet = false;
+		const userInput = this.getUserInput();
 		const validations = this.props.validationDefinitions[controlName];
 		if (this.props.controlStates && typeof this.props.controlStates[controlName] === "undefined" && Array.isArray(validations)) {
 			try {
-				const userInput = this.getUserInput();
 				let output = false;
 				let errorMessage = DEFAULT_VALIDATION_MESSAGE;
 				let validationSet = false;
-				let errorSet = false;
 
 				for (const validation of validations) {
 					if (this.shouldEvaluate(validation)) {
@@ -468,6 +472,18 @@ export default class EditorControl extends React.Component {
 				logger.warn("Error thrown in validation: " + error);
 			}
 		}
+
+		if (!errorSet && this.props.requiredParameters.indexOf(controlName) !== -1) {
+			const controlValue = userInput[controlName];
+			if (controlValue === null || controlValue === "" ||
+					(Array.isArray(controlValue) && controlValue.length === 0)) {
+				const errorMessage = {
+					type: "error",
+					text: "Require parameter " + controlName + " has no value"
+				};
+				this.props.updateValidationErrorMessage(controlName, errorMessage);
+			}
+		}
 	}
 
 	render() {
@@ -482,6 +498,7 @@ EditorControl.propTypes = {
 	controlStates: PropTypes.object,
 	valueAccessor: PropTypes.func.isRequired,
 	validationDefinitions: PropTypes.object,
+	requiredParameters: PropTypes.array,
 	tableControl: PropTypes.boolean,
 	disabled: PropTypes.boolean,
 	hidden: PropTypes.boolean,
