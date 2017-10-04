@@ -1221,11 +1221,23 @@ export default class EditorForm extends React.Component {
 		}
 	}
 
+	_getTabRequiredParameters(tab, requiredParameters) {
+		if (typeof tab.content.panel !== "undefined") {
+			this._getPanelRequiredParameters(tab.content.panel.uiItems, requiredParameters);
+		} else if (typeof tab.content.tabs !== "undefined") {
+			for (const nestedTab of tab.content.tabs) {
+				this._getTabRequiredParameters(nestedTab, requiredParameters);
+			}
+		}
+	}
+
 	parseRequiredParameters(formData) {
 		var requiredParameters = [];
 		for (const uiItem of formData.uiItems) {
-			for (const tab of uiItem.tabs) {
-				this._getPanelRequiredParameters(tab.content.panel.uiItems, requiredParameters);
+			if (typeof uiItem.tabs !== "undefined") {
+				for (const tab of uiItem.tabs) {
+					this._getTabRequiredParameters(tab, requiredParameters);
+				}
 			}
 		}
 
