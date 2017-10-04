@@ -55,7 +55,12 @@ export default class RadiosetControl extends EditorControl {
 
 		var buttons = [];
 		let cssClasses = "control";
-		let cssIndicator = "control__indicator";
+		let cssIndicator;
+		if (stateDisabled.disabled === true) {
+			cssIndicator = "control__indicator nohover";
+		} else {
+			cssIndicator = "control__indicator";
+		}
 		if (this.props.control.orientation === "vertical") {
 			cssClasses += " control-radio-block";
 			cssIndicator += " control__indicator-block";

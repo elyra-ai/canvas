@@ -123,7 +123,7 @@ input[type=radio]{
 
 /* Hover and focus */
 
-.control__indicator:hover{
+.control__indicator:not(.nohover):hover{
   background:#a6266e;
   box-shadow: 0 0 0 0 rgba(124,199,255,.75),inset 0 0 0 3px #fff;
   /*transform: scale(0);*/
