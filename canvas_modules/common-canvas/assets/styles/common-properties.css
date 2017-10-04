@@ -638,7 +638,7 @@ tr.reactable-column-header {
   padding-right: 3px;
 }
 
-.column-allocator {
+.column-allocator.multi {
   min-height: 100px;
 }
 

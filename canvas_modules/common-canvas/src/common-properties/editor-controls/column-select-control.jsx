@@ -268,7 +268,7 @@ export default class ColumnSelectControl extends EditorControl {
 						<div id={controlIconContainerClass}>
 							<FormControl {...stateDisabled}
 								id={this.getControlID()}
-								className="column-allocator"
+								className="column-allocator multi"
 								componentClass="select"
 								multiple
 								rows={6}
@@ -317,7 +317,7 @@ export default class ColumnSelectControl extends EditorControl {
 					<div id={controlIconContainerClass}>
 						<FormControl {...stateDisabled}
 							id={this.getControlID()}
-							className="column-allocator"
+							className="column-allocator single"
 							componentClass="select"
 							rows={1}
 							name={this.props.control.name}
