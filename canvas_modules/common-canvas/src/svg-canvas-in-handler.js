@@ -22,6 +22,7 @@ export default class SVGCanvasInHandler {
 		return canvasNodes.map((canvasNode) => {
 			var newNode = {
 				id: canvasNode.id,
+				operator_id_ref: canvasNode.userData.typeId,
 				image: canvasNode.image,
 				x_pos: canvasNode.x_pos,
 				y_pos: canvasNode.y_pos,

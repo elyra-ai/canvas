@@ -161,6 +161,7 @@ export default class SVGPipelineOutHandler {
 		var newNode = {
 			id: ciNode.id,
 			type: ciNode.type,
+			op: ciNode.operator_id_ref,
 			app_data: {
 				ui_data: {
 					image: ciNode.image,

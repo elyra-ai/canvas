@@ -37,6 +37,7 @@ export default class SVGPipelineInHandler {
 			({
 				"id": node.id,
 				"type": node.type,
+				"operator_id_ref": node.op,
 				"output_ports": this.convertOutputs(node),
 				"input_ports": this.convertInputs(node),
 				"label": node.app_data.ui_data.label.default, // TODO Add code to check existence of these fields
