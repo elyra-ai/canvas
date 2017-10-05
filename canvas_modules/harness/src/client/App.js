@@ -25,7 +25,6 @@ import TestService from "./services/TestService";
 
 import {
 	NONE,
-	PALETTE_TOOLTIP,
 	SIDE_PANEL_CANVAS,
 	SIDE_PANEL_MODAL,
 	D3_ENGINE,
@@ -585,26 +584,24 @@ class App extends React.Component {
 			enableConnectionType: this.state.selectedConnectionType,
 			enableLinkType: this.state.selectedLinkType,
 			enableInternalObjectModel: this.state.internalObjectModel,
-			enablePaletteLayout: this.state.selectedPaletteLayout,
-			paletteTooltip: PALETTE_TOOLTIP
+			enablePaletteLayout: this.state.selectedPaletteLayout
 		};
 
 		var toolbarConfig = {
 			toolbarMenuActionHandler: this.toolbarMenuActionHandler,
 			toolbarDefinition: [
-				{ action: "palette", label: "Palette", disable: false },
-				{ divider: true, overflow: false },
-				{ action: "stop", label: "Stop Execution", disable: true },
-				{ action: "run", label: "Run Pipeline", disable: true },
-				{ divider: true, overflow: false },
-				{ action: "undo", label: "Undo", disable: false },
-				{ action: "redo", label: "Redo", disable: false },
-				{ action: "cut", label: "Cut", disable: true },
-				{ action: "copy", label: "Copy", disable: true },
-				{ action: "paste", label: "Paste", disable: true },
-				{ action: "addComment", label: "Add Comment", disable: false },
-				{ action: "delete", label: "Delete", disable: false },
-				{ divider: true, overflow: true }
+				{ action: "palette", label: "Palette", enable: true },
+				{ divider: true },
+				{ action: "stop", label: "Stop Execution", enable: false },
+				{ action: "run", label: "Run Pipeline", enable: false },
+				{ divider: true },
+				{ action: "undo", label: "Undo", enable: true },
+				{ action: "redo", label: "Redo", enable: true },
+				{ action: "cut", label: "Cut", enable: false },
+				{ action: "copy", label: "Copy", enable: false },
+				{ action: "paste", label: "Paste", enable: false },
+				{ action: "addComment", label: "Add Comment", enable: true },
+				{ action: "delete", label: "Delete", enable: true }
 			]
 		};
 

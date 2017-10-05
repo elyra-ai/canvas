@@ -10,13 +10,18 @@
 #canvas-toolbar {
 	height: 45px;
 	width: 100%;
-	min-width: 454px;
+	min-width: 258px;
 	background-color: #F9F9F9;
 	border-bottom: 2px solid #E0E0E0;
 	box-sizing: content-box;
 	position: absolute;
 	-webkit-transition: all 0.2s;
 	transition: all 0.2s;
+}
+
+.toolbar-fixed-location {
+	position: fixed !important;
+	z-index: 2;
 }
 
 #toolbar-items {
@@ -60,6 +65,10 @@
 
 .toolbar-divider {
 	border-right: 2px solid #E0E0E0;
+}
+
+.toolbar-divideroverflow {
+	border-bottom: 2px solid #E0E0E0;
 }
 
 .toolbar-item {

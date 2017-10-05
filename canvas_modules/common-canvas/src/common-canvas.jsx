@@ -215,22 +215,18 @@ export default class CommonCanvas extends React.Component {
 	}
 
 	toolbarMenuActionHandler(action) {
-		let source = {};
+		const source = {
+			selectedObjectIds: ObjectModel.getSelectedObjectIds(),
+			mousePos: this.state.posLastClicked
+		};
 		if (this.props.config.enableInternalObjectModel) {
 			switch (action) {
 			case "delete": {
-				source = {
-					selectedObjectIds: ObjectModel.getSelectedObjectIds()
-				};
 				const command = new DeleteObjectsAction(source);
 				CommandStack.do(command);
 				break;
 			}
 			case "addComment": {
-				source = {
-					selectedObjectIds: ObjectModel.getSelectedObjectIds(),
-					mousePos: this.state.posLastClicked
-				};
 				const comment = ObjectModel.createComment(source);
 				const command = new CreateCommentAction(comment);
 				CommandStack.do(command);
@@ -266,10 +262,10 @@ export default class CommonCanvas extends React.Component {
 		if (typeof this.state.toolbarConfig.toolbarDefinition !== "undefined") {
 			for (let i = 0; i < this.state.toolbarConfig.toolbarDefinition.length; i++) {
 				if (this.state.toolbarConfig.toolbarDefinition[i].action === "undo") {
-					this.state.toolbarConfig.toolbarDefinition[i].disable = !undoState;
+					this.state.toolbarConfig.toolbarDefinition[i].enable = undoState;
 				}
 				if (this.state.toolbarConfig.toolbarDefinition[i].action === "redo") {
-					this.state.toolbarConfig.toolbarDefinition[i].disable = !redoState;
+					this.state.toolbarConfig.toolbarDefinition[i].enable = redoState;
 				}
 			}
 		}
@@ -370,6 +366,7 @@ export default class CommonCanvas extends React.Component {
 				this.canUndoRedo();
 				canvasToolbar = (<Toolbar
 					config={this.state.toolbarConfig}
+					renderingEngine={this.props.config.enableRenderingEngine}
 					paletteState={this.state.isPaletteOpen}
 					paletteType={this.props.config.enablePaletteLayout}
 					closePalette={this.closePalette}

@@ -46,16 +46,18 @@ import { TOOLBAR } from "../../constants/common-constants.js";
 
 // eslint override
 /* global window document */
+/* eslint max-depth: ["error", 5] */
 
 class Toolbar extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			toolbarDefinition: [],
-			defaultToolbarWidth: 258, // width of toolbar with default paletter and zoom icons
+			toolbarDefinition: this.props.config.toolbarDefinition,
+			defaultToolbarWidth: 256, // width of toolbar with default zoom icons
 			maxToolbarWidth: 0, // width of toolbar if displaying all icons and dividers
-			showExtendedMenu: []
+			dividerCount: 0,
+			showExtendedMenu: false
 		};
 
 		this.addCommentIcon = addCommentIcon;
@@ -89,7 +91,7 @@ class Toolbar extends React.Component {
 		this.overflowIcon = overflowIcon;
 
 		this.generatePaletteIcon = this.generatePaletteIcon.bind(this);
-		this.toogleShowExtendedMenu = this.toogleShowExtendedMenu.bind(this);
+		this.toggleShowExtendedMenu = this.toggleShowExtendedMenu.bind(this);
 		this.updateToolbarWidth = this.updateToolbarWidth.bind(this);
 	}
 
@@ -97,7 +99,7 @@ class Toolbar extends React.Component {
 		this.updateToolbarWidth();
 		window.addEventListener("resize", this.updateToolbarWidth);
 
-		this.sortActionList(this.props.config.toolbarDefinition);
+		this.calculateMaxToolbarWidth(this.props.config.toolbarDefinition);
 	}
 
 	componentWillUnmount() {
@@ -114,83 +116,41 @@ class Toolbar extends React.Component {
 		return null;
 	}
 
-	/**
-		Create the structure like below:
-		[
-			{
-				definition: [
-					{ action: "stop", label: "Stop Execution", disable: true },
-					{ action: "run", label: "Run Pipeline", disable: true }
-				],
-				divider: true,
-				overflow: false
-			},
-			{
-				definition: [
-					{ action: "undo", label: "Undo", disable: false },
-					{ action: "redo", label: "Redo", disable: false },
-					{ action: "cut", label: "Cut", disable: true },
-					{ action: "copy", label: "Copy", disable: true },
-					{ action: "paste", label: "Paste", disable: true },
-					{ action: "addComment", label: "Add Comment", disable: false },
-					{ action: "delete", label: "Delete", disable: false }
-				],
-				divider: true,
-				overflow: true
-			}
-		]
-	*/
-	sortActionList(list) {
-		const listSections = [];
+	calculateMaxToolbarWidth(list) {
 		let dividerCount = 0;
 		let totalWidthSize = this.state.defaultToolbarWidth;
 		for (let i = 0; i < list.length; i++) {
 			if (list[i].action) {
-				if (typeof listSections[dividerCount] !== "undefined") {
-					const tempArray = listSections[dividerCount].definition;
-					listSections[dividerCount] = { definition: tempArray.concat(list[i]) };
-				} else {
-					listSections[dividerCount] = { definition: [list[i]] };
-				}
 				totalWidthSize += TOOLBAR.ICON_WIDTH;
 			} else if (list[i].divider) {
-				listSections[dividerCount].divider = list[i].divider;
-				listSections[dividerCount].overflow = list[i].overflow;
-				dividerCount++;
 				totalWidthSize += TOOLBAR.DIVIDER_WIDTH;
+				dividerCount++;
 			}
 		}
 
 		this.setState({
-			toolbarDefinition: listSections,
+			dividerCount: dividerCount,
 			maxToolbarWidth: totalWidthSize
 		});
 	}
 
-	calculateDisplayItems(toolbarPaletteWidth, index) {
-		const toolbarDefinitionLength = this.state.toolbarDefinition.length;
-
-		if (this.state.maxToolbarWidth >= toolbarPaletteWidth) { // need to minimize
-			const availableWidth = toolbarPaletteWidth - this.state.defaultToolbarWidth;
-			let otherContainerWidth = 0;
-			for (let i = 0; i < toolbarDefinitionLength; i++) {
-				if (index < i) {
-					otherContainerWidth += TOOLBAR.ICON_WIDTH;
-				} else if (index > i) {
-					otherContainerWidth += this.state.toolbarDefinition[i].definition.length * TOOLBAR.ICON_WIDTH;
-				}
-				otherContainerWidth += this.state.toolbarDefinition[i].divider ? TOOLBAR.DIVIDER_WIDTH : 0;
+	calculateDisplayItems(toolbarWidth) {
+		const numObjects = this.props.config.toolbarDefinition.length;
+		if (this.state.maxToolbarWidth >= toolbarWidth) { // need to minimize
+			let availableWidth = toolbarWidth - this.state.defaultToolbarWidth + TOOLBAR.ICON_WIDTH;
+			if (toolbarWidth - this.state.defaultToolbarWidth <= (3 * TOOLBAR.ICON_WIDTH)) {
+				availableWidth = toolbarWidth - this.state.defaultToolbarWidth;
 			}
 
-			if (availableWidth - otherContainerWidth < TOOLBAR.ICON_WIDTH) {
+			if (availableWidth < TOOLBAR.ICON_WIDTH) {
 				return 0;
 			}
-			const icons = parseInt((availableWidth - otherContainerWidth) / TOOLBAR.ICON_WIDTH, 10);
-			if (icons < this.state.toolbarDefinition[index].definition.length) {
-				return icons - 1;
+			const icons = parseInt((availableWidth - (this.state.dividerCount * TOOLBAR.DIVIDER_WIDTH)) / TOOLBAR.ICON_WIDTH, 10);
+			if (icons < numObjects) {
+				return icons + this.state.dividerCount - 1; // subtract 1 for the overflow icon
 			}
 		}
-		return this.state.toolbarDefinition[index].definition.length;
+		return numObjects;
 	}
 
 	updateToolbarWidth() {
@@ -200,36 +160,43 @@ class Toolbar extends React.Component {
 		});
 	}
 
-	generateActionItems(actions, displayItems, actionsHandler, actionsContainerNum) {
+	generateActionItems(definition, displayItems, actionsHandler, overflow) {
 		const that = this;
 		let utilityActions = [];
-		if (actions.length === displayItems) {
-			utilityActions = actions.map(function(actionObj, actionObjNum) {
-				const actionId = actionObj.action + "-action";
-				if (actionObj.disable === false) {
-					if (actionObj.action.startsWith("palette")) {
-						return that.generatePaletteIcon(actionObj);
+		if (definition.length === displayItems) {
+			utilityActions = definition.map(function(actionObj, actionObjNum) {
+				if (actionObj.action) {
+					const actionId = actionObj.action + "-action";
+					if (actionObj.enable === true) {
+						if (actionObj.action.startsWith("palette")) {
+							return that.generatePaletteIcon(actionObj);
+						}
+						return that.generateEnabledActionIcon(actionObj, actionId, actionsHandler);
 					}
-					return that.generateEnabledActionIcon(actionObj, actionId, actionsHandler);
+					// disable
+					return that.generateDisabledActionIcon(actionObj, actionId);
 				}
-				// disable
-				return that.generateDisabledActionIcon(actionObj, actionId);
+				return (<div key={"toolbar-divider-" + actionObjNum} className={"toolbar-divider" + overflow} />);
 			});
 		} else {
 			for (let i = 0; i < displayItems; i++) {
-				const actionObj = actions[i];
-				const actionId = actionObj.action + "-action";
-				if (actionObj.disable === false) {
-					if (actionObj.action.startsWith("palette")) {
-						utilityActions[i] = this.generatePaletteIcon(actionObj);
-					} else {
-						utilityActions[i] = this.generateEnabledActionIcon(actionObj, actionId, actionsHandler);
+				const actionObj = definition[i];
+				if (actionObj.action) {
+					const actionId = actionObj.action + "-action";
+					if (actionObj.enable === true) {
+						if (actionObj.action.startsWith("palette")) {
+							utilityActions[i] = this.generatePaletteIcon(actionObj);
+						} else {
+							utilityActions[i] = this.generateEnabledActionIcon(actionObj, actionId, actionsHandler);
+						}
+					} else { // disable
+						utilityActions[i] = this.generateDisabledActionIcon(actionObj, actionId);
 					}
-				} else { // disable
-					utilityActions[i] = this.generateDisabledActionIcon(actionObj, actionId);
+				} else {
+					utilityActions[i] = (<div key={"toolbar-divider-" + i} className={"toolbar-divider" + overflow} />);
 				}
 			}
-			utilityActions[displayItems] = this.generatedExtendedMenu(actions, displayItems, actionsHandler, actionsContainerNum);
+			utilityActions[displayItems] = this.generatedExtendedMenu(definition, displayItems, actionsHandler);
 		}
 		return utilityActions;
 	}
@@ -289,13 +256,13 @@ class Toolbar extends React.Component {
 		return palette;
 	}
 
-	generatedExtendedMenu(actions, displayItems, actionsHandler, actionsContainerNum) {
+	generatedExtendedMenu(actions, displayItems, actionsHandler) {
 		const subActionsList = actions.slice(displayItems, actions.length);
-		const subActionsListItems = this.generateActionItems(subActionsList, subActionsList.length, actionsHandler, actionsHandler);
-		const subMenuClassName = this.state.showExtendedMenu[actionsContainerNum] === true ? "" : "toolbar-popover-list-hide";
+		const subActionsListItems = this.generateActionItems(subActionsList, subActionsList.length, actionsHandler, "overflow");
+		const subMenuClassName = this.state.showExtendedMenu === true ? "" : "toolbar-popover-list-hide";
 		return (
-			<li id={"overflow-action" + actionsContainerNum} key={"overflow-action" + actionsContainerNum} className="list-item">
-				<a onClick={() => this.toogleShowExtendedMenu(actionsContainerNum)} className="overflow-action-list-item list-item toolbar-divider">
+			<li id={"overflow-action"} key={"overflow-action"} className="list-item">
+				<a onClick={() => this.toggleShowExtendedMenu()} className="overflow-action-list-item list-item toolbar-divider">
 					<div className="toolbar-item">
 						<img id={"toolbar-icon-overflow"} className="toolbar-icons"
 							src={this.overflowIcon}
@@ -309,57 +276,49 @@ class Toolbar extends React.Component {
 		);
 	}
 
-	toogleShowExtendedMenu(actionsContainerNum) {
-		const extMenuState = this.state.showExtendedMenu;
-		extMenuState[actionsContainerNum] = !extMenuState[actionsContainerNum];
-		this.setState({ showExtendedMenu: extMenuState });
+	toggleShowExtendedMenu() {
+		this.setState({ showExtendedMenu: !this.state.showExtendedMenu });
 	}
 
 	render() {
-		const divider = (<div className="toolbar-divider" />);
 		const canvasWidth = window.innerWidth;
-		let toolbarPaletteWidth = window.innerWidth;
+		let toolbarWidth = window.innerWidth;
 
 		if (this.props.paletteState && this.props.paletteType !== "Modal") {
-			toolbarPaletteWidth = canvasWidth - 250;
+			toolbarWidth = canvasWidth - 250;
 		}
 
 		const that = this;
 		let actionContainer = <div />;
+		const displayItems = this.calculateDisplayItems(toolbarWidth);
 		if (this.state.toolbarDefinition.length > 0) {
-			actionContainer = this.state.toolbarDefinition.map(function(section, sectionNum) {
-				let displayItems = section.definition.length;
-				if (section.overflow === true) {
-					displayItems = that.calculateDisplayItems(toolbarPaletteWidth, sectionNum);
-				}
-				const actions = that.generateActionItems(
-					section.definition,
-					displayItems,
-					that.props.toolbarMenuActionHandler,
-					sectionNum
-				);
-				let displayDivider = <div />;
-				if (section.divider && (sectionNum < that.state.toolbarDefinition.length - 1 || section.overflow === false)) {
-					displayDivider = divider;
-				}
-				return (<div key={"actions-container" + sectionNum} id={"actions-container" + sectionNum} className="toolbar-items-container">
-					{actions}
-					{displayDivider}
-				</div>);
-			});
+			const actions = that.generateActionItems(
+				that.props.config.toolbarDefinition,
+				displayItems,
+				that.props.toolbarMenuActionHandler,
+				""
+			);
+			actionContainer = (<div key={"actions-container"} id={"actions-container"} className="toolbar-items-container">
+				{actions}
+			</div>);
 		}
 
 		const zoomActionItems = [
-			{ action: "zoomIn", label: "Zoom In", disable: false, callback: this.props.zoomIn },
-			{ action: "zoomOut", label: "Zoom Out", disable: false, callback: this.props.zoomOut },
-			{ action: "zoomToFit", label: "Zoom to Fit", disable: true, callback: this.props.zoomToFit }
+			{ action: "zoomIn", label: "Zoom In", enable: true, callback: this.props.zoomIn },
+			{ action: "zoomOut", label: "Zoom Out", enable: true, callback: this.props.zoomOut },
+			{ action: "zoomToFit", label: "Zoom to Fit", enable: false, callback: this.props.zoomToFit }
 		];
-		const zoomContainerItems = this.generateActionItems(zoomActionItems, zoomActionItems.length, null);
+		const zoomContainerItems = this.generateActionItems(zoomActionItems, zoomActionItems.length, null, "");
 		const zoomContainer = (<div id="zoom-actions-container" className="toolbar-items-container">
 			{zoomContainerItems}
 		</div>);
 
-		const canvasToolbar = (<div id="canvas-toolbar" style={{ width: toolbarPaletteWidth + "px" }}>
+		let toolbarClass = "toolbar-fixed-location";
+		if (this.props.renderingEngine === "D3") {
+			toolbarClass = "";
+		}
+
+		const canvasToolbar = (<div id="canvas-toolbar" className={toolbarClass} style={{ width: toolbarWidth + "px" }}>
 			<ul id="toolbar-items">
 				{actionContainer}
 				{zoomContainer}
@@ -372,6 +331,7 @@ class Toolbar extends React.Component {
 
 Toolbar.propTypes = {
 	config: PropTypes.object,
+	renderingEngine: PropTypes.string,
 	paletteState: PropTypes.bool,
 	paletteType: PropTypes.string,
 	closePalette: PropTypes.func,

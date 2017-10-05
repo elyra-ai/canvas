@@ -35,7 +35,7 @@
   padding: 0;
   overflow: hidden;
   background-color: #1D3649;
-  z-index: 3;
+  z-index: 4;
 }
 
 .navbar-li {
@@ -121,7 +121,7 @@
   transition: width 0.5s;
   color: #F9F9FB;
   overflow: auto;
-  z-index: 2;
+  z-index: 3;
   box-sizing: border-box;
   font-size: small;
 }

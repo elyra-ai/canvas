@@ -31,7 +31,6 @@
 /* SVG Canvas styles */
 
 #common-canvas {
-  overflow: hidden;
   height: 100%;
   width: 100%;
   cursor: default;
@@ -57,10 +56,14 @@
 #canvas-div {
   height: calc(100% - 45px);
   width: 100%;
-  min-width: 454px;
+  min-width: 258px;
   position: absolute;
   cursor: default;
   top: 45px;
+}
+
+.canvas-div-d3 {
+	overflow: hidden;
 }
 
 .svg-canvas {

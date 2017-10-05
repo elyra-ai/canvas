@@ -210,6 +210,7 @@ export default class DiagramCanvas extends React.Component {
 		return (
 			<div
 				id="canvas-div"
+				className="canvas-div-d3"
 				onDragOver={this.dragOver}
 				onDrop={this.drop}
 			>

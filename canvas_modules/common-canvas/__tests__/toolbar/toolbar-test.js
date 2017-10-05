@@ -19,25 +19,24 @@ describe("Toolbar renders correctly", () => {
 		const toolbarConfig = {
 			toolbarMenuActionHandler: sinon.spy(),
 			toolbarDefinition: [
-				{ action: "palette", label: "Palette", disable: false },
-				{ divider: true, overflow: false },
-				{ action: "stop", label: "Stop Execution", disable: true },
-				{ action: "run", label: "Run Pipeline", disable: true },
-				{ divider: true, overflow: false },
-				{ action: "undo", label: "Undo", disable: false },
-				{ action: "redo", label: "Redo", disable: false },
-				{ action: "cut", label: "Cut", disable: true },
-				{ action: "copy", label: "Copy", disable: true },
-				{ action: "paste", label: "Paste", disable: true },
-				{ action: "addComment", label: "Add Comment", disable: false },
-				{ action: "delete", label: "Delete", disable: false },
-				{ divider: true, overflow: true }
+				{ action: "palette", label: "Palette", enable: true },
+				{ divider: true },
+				{ action: "stop", label: "Stop Execution", enable: false },
+				{ action: "run", label: "Run Pipeline", enable: false },
+				{ divider: true },
+				{ action: "undo", label: "Undo", enable: true },
+				{ action: "redo", label: "Redo", enable: true },
+				{ action: "cut", label: "Cut", enable: false },
+				{ action: "copy", label: "Copy", enable: false },
+				{ action: "paste", label: "Paste", enable: false },
+				{ action: "addComment", label: "Add Comment", enable: true },
+				{ action: "delete", label: "Delete", enable: true }
 			]
 		};
 		const canvasToolbar = createToolbar(toolbarConfig);
 		expect(canvasToolbar.find("#canvas-toolbar")).to.have.length(1);
-		expect(canvasToolbar.find("#actions-container0")).to.have.length(1);
-		expect(canvasToolbar.find("#actions-container1")).to.have.length(1);
+		expect(canvasToolbar.find("#actions-container")).to.have.length(1);
+		expect(canvasToolbar.find("#zoom-actions-container")).to.have.length(1);
 		expect(canvasToolbar.find(".list-item-disabled")).to.have.length(6); // include zoomToFit
 	});
 
@@ -45,28 +44,30 @@ describe("Toolbar renders correctly", () => {
 		const toolbarConfig = {
 			toolbarMenuActionHandler: sinon.spy(),
 			toolbarDefinition: [
-				{ action: "palette", label: "Palette", disable: false },
-				{ divider: true, overflow: false },
-				{ action: "stop", label: "Stop Execution", disable: true },
-				{ action: "run", label: "Run Pipeline", disable: true },
-				{ divider: true, overflow: false },
-				{ action: "undo", label: "Undo", disable: false },
-				{ action: "redo", label: "Redo", disable: false },
-				{ divider: true, overflow: false },
-				{ action: "cut", label: "Cut", disable: true },
-				{ action: "copy", label: "Copy", disable: true },
-				{ action: "paste", label: "Paste", disable: true },
-				{ divider: true, overflow: true },
-				{ action: "addComment", label: "Add Comment", disable: false },
-				{ action: "delete", label: "Delete", disable: false },
-				{ divider: true, overflow: true }
+				{ action: "palette", label: "Palette", enable: true },
+				{ divider: true },
+				{ action: "stop", label: "Stop Execution", enable: false },
+				{ action: "run", label: "Run Pipeline", enable: false },
+				{ divider: true },
+				{ action: "undo", label: "Undo", enable: true },
+				{ action: "redo", label: "Redo", enable: true },
+				{ divider: true },
+				{ action: "cut", label: "Cut", enable: false },
+				{ action: "copy", label: "Copy", enable: false },
+				{ action: "paste", label: "Paste", enable: false },
+				{ divider: true },
+				{ action: "addComment", label: "Add Comment", enable: true },
+				{ action: "delete", label: "Delete", enable: true }
 			]
 		};
 		const canvasToolbar = createToolbar(toolbarConfig);
 		expect(canvasToolbar.find("#canvas-toolbar")).to.have.length(1);
-		expect(canvasToolbar.find(".toolbar-items-container")).to.have.length(6); // include zoom container
+		expect(canvasToolbar.find(".toolbar-items-container")).to.have.length(2); // include zoom container
 		const canvasToolbarItems = canvasToolbar.find("#toolbar-items");
-		expect(canvasToolbarItems.find(".toolbar-icons")).to.have.length(15);
+		expect(canvasToolbarItems).to.have.length(1);
+		expect(canvasToolbarItems.find(".toolbar-divider")).to.have.length(4);
+		expect(canvasToolbarItems.find("#toolbar-icon-overflow")).to.have.length(1);
+		expect(canvasToolbarItems.find(".toolbar-icons")).to.have.length(14); // include the overflow icon
 	});
 });
 
