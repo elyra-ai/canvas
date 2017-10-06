@@ -40,7 +40,7 @@
 	margin-left: auto;
 }
 
-.list-item {
+.list-item-containers .list-item {
 	height: 45px;
 	width: 64px;
 	display: flex;
@@ -55,6 +55,11 @@
 	user-select: none;
 }
 
+.list-item-containers .list-item.overflow {
+	height: 32px;
+	width: 150px;
+}
+
 .list-item:hover {
 	background-color: #EFEFEF;
 }
@@ -67,7 +72,11 @@
 	border-right: 2px solid #E0E0E0;
 }
 
-.toolbar-divideroverflow {
+#overflow-action {
+	justify-content: flex-start;
+}
+
+.overflow-toolbar-divider {
 	border-bottom: 2px solid #E0E0E0;
 }
 
@@ -77,6 +86,14 @@
 	margin: auto;
 	display: flex;
 	justify-content: center;
+}
+
+.toolbar-item.overflow {
+	height: 32px;
+	width: inherit;
+	margin: 0px;
+	display: flex;
+	justify-content: flex-start;
 }
 
 .toolbar-icons {
@@ -91,8 +108,24 @@
 	user-drag: none;
 }
 
+.toolbar-icons.overflow {
+	margin-left: 8px;
+	margin-right: 8px;
+	float: left;
+}
+
 .overflow-action-list-item {
 	position: absolute;
+}
+
+.overflow-toolbar-icon-label {
+	margin: auto;
+	margin-left: 0px;
+	color: #000000;
+}
+
+.overflow-toolbar-icon-label.disabled {
+	color: #AEAEAE;
 }
 
 .toolbar-popover-list {
@@ -108,15 +141,64 @@
 	display: none;
 }
 
-.toolbar-popover-list>.list-item {
+.toolbar-popover-list>.list-item-containers {
 	background-color: #eaeaea;
 }
 
-.toolbar-popover-list>.list-item>.list-item:hover {
+.toolbar-popover-list>.list-item-containers>.list-item:hover {
 	background-color: #d8d8d8;
 	;
 }
 
-.toolbar-popover-list>.list-item>.list-item-disabled:hover {
+.toolbar-popover-list>.list-item-containers>.list-item-disabled:hover {
 	background-color: #eaeaea;
+}
+
+
+/*tooltips*/
+.canvas-action-bar_tooltip {
+	font-size: .75rem;
+	position: fixed;
+	width: 300px;
+	padding: 5px 10px;
+	background-color: #F9F9FB;
+	color: $color-blue-80;
+	border: 1px solid #AEAEAE;
+	font-weight: 400;
+	line-height: 1.2;
+	text-align: center;
+	z-index: 8000;
+	pointer-events: none;
+	transition: opacity .2s ease-in-out, visibility .2s ease-in-out, transform .2s cubic-bezier(.71, 1.7, .77, 1.24);
+	transform: scaleX(1) translate3d(0, -22px, 0) rotate(0deg);
+}
+
+.canvas-action-bar_tooltip svg {
+	z-index: 8000;
+	transform: scaleX(1) translate3d(0, -8px, 0) rotate(90deg);
+
+	position: absolute;
+	width: 10px;
+	height: 14px;
+	top: -2px;
+}
+
+.canvas-action-bar_tooltip svg polyline{
+	fill: #F9F9FB;
+	stroke-width: 0;
+}
+
+.canvas-action-bar_tooltip svg polygon{
+	fill: #AEAEAE;
+}
+
+.canvas-action-bar_tooltip[aria-hidden="false"] {
+	transform: scaleX(1) translate3d(0, 0, 0) rotate(0deg);
+	visibility: visible;
+	opacity: 100;
+}
+
+.canvas-action-bar_tooltip[aria-hidden="true"] {
+	visibility: hidden;
+	opacity: 0;
 }

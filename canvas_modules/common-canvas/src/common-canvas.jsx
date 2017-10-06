@@ -244,7 +244,7 @@ export default class CommonCanvas extends React.Component {
 			}
 		}
 
-		if (this.props.toolbarConfig.toolbarMenuActionHandler) {
+		if (this.props.toolbarConfig && this.props.toolbarConfig.toolbarMenuActionHandler) {
 			this.props.toolbarConfig.toolbarMenuActionHandler(action, source);
 		}
 	}
