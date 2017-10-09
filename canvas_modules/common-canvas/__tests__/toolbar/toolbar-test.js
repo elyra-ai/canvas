@@ -37,7 +37,7 @@ describe("Toolbar renders correctly", () => {
 		expect(canvasToolbar.find("#canvas-toolbar")).to.have.length(1);
 		expect(canvasToolbar.find("#actions-container")).to.have.length(1);
 		expect(canvasToolbar.find("#zoom-actions-container")).to.have.length(1);
-		expect(canvasToolbar.find(".list-item-disabled")).to.have.length(6); // include zoomToFit
+		expect(canvasToolbar.find(".list-item-disabled")).to.have.length(5);
 	});
 
 	it("should render a Toolbar", () => {

@@ -66,17 +66,8 @@ export default class CanvasD3Layout {
 		// when just changing selection, no need to re-render whole canvas
 		this.selecting = false;
 
-		// Placeholder to save transform info as we are zooming
-		this.zoomTransform = d3.zoomIdentity.translate(0, 0).scale(1);
-
-		// Allows us to record the start point of the current zoom.
-		this.zoomStartPoint = { x: 0, y: 0, k: 0 };
-
-		// Center position of text area used for editing comments. These are used
-		// when zooming a text area.
-		this.zoomTextAreaCenterX = 0;
-		this.zoomTextAreaCenterY = 0;
-
+		// Initialize zoom variables
+		this.initializeZoomVariables();
 
 		// Used to monitor the region selection rectangle.
 		this.regionSelect = false;
@@ -199,6 +190,20 @@ export default class CanvasD3Layout {
 		this.minInitialLine = 30;
 	}
 
+
+	initializeZoomVariables() {
+		// Allows us to record the overal zoom amounts.
+		this.zoomTransform = d3.zoomIdentity.translate(0, 0).scale(1);
+
+		// Allows us to record the start point of the current zoom.
+		this.zoomStartPoint = { x: 0, y: 0, k: 0 };
+
+		// Center position of text area used for editing comments. These are used
+		// when zooming a text area.
+		this.zoomTextAreaCenterX = 0;
+		this.zoomTextAreaCenterY = 0;
+	}
+
 	setCanvasInfo(canvasJSON, config) {
 		this.consoleLog("Set Canvas. Id = " + canvasJSON.id);
 		var startTime = Date.now();
@@ -232,6 +237,7 @@ export default class CanvasD3Layout {
 		this.consoleLog("Clearing Canvas. Id = " + this.canvasJSON.id);
 		ObjectModel.clearSelection();
 		this.canvas.selectAll("g").remove();
+		this.initializeZoomVariables();
 		this.canvasSVG.call(this.zoom.transform, d3.zoomIdentity); // Reset the SVG zoom and scale
 	}
 
@@ -273,35 +279,6 @@ export default class CanvasD3Layout {
 				.style("fill", "none")
 				.style("stroke", "blue")
 				.lower();
-		}
-	}
-
-	zoomIn() {
-		if (this.zoomTransform.k < this.maxScaleExtent) {
-			// const zoomSvgRect = this.canvasSVG.node().getBoundingClientRect();
-			var newScale = Math.min(this.zoomTransform.k + 0.2, this.maxScaleExtent);
-
-			this.zoomTransform = d3.zoomIdentity
-				// .translate(100, 100);
-				.scale(newScale);
-			this.canvas
-			//  .transition()
-			// 	.duration(500)
-				.call(this.zoom.transform, this.zoomTransform);
-		}
-	}
-
-	zoomOut() {
-		if (this.zoomTransform.k > this.minScaleExtent) {
-		// 	const zoomSvgRect = this.canvasSVG.node().getBoundingClientRect();
-			var newScale = Math.max(this.zoomTransform.k - 0.2, this.minScaleExtent);
-			this.zoomTransform = d3.zoomIdentity
-			// 	.translate(100, 100)
-				.scale(newScale);
-			this.canvas
-				// .transition()
-				// .duration(500)
-				.call(this.zoom.transform, this.zoomTransform);
 		}
 	}
 
@@ -441,8 +418,61 @@ export default class CanvasD3Layout {
 			});
 	}
 
+	zoomToFit() {
+		const viewPortDimensions = this.canvasSVG.node().getBoundingClientRect();
+		const canvasDimensions = this.getCanvasDimensionsAdjustedForScale(1, 10);
+
+		if (canvasDimensions) {
+			var xRatio = viewPortDimensions.width / canvasDimensions.width;
+			var yRatio = viewPortDimensions.height / canvasDimensions.height;
+			var newScale = Math.min(xRatio, yRatio, 1); // Don't let the canvas be scaled more than 1 in either direction
+
+			this.zoomToFitForScale(newScale, canvasDimensions, viewPortDimensions);
+		}
+	}
+
+	zoomToFitForScale(newScale, canvasDimensions, viewPortDimensions) {
+		if (canvasDimensions) {
+			var x = (viewPortDimensions.width - (canvasDimensions.width * newScale)) / 2;
+			var y = (viewPortDimensions.height - (canvasDimensions.height * newScale)) / 2;
+
+			x -= newScale * canvasDimensions.left;
+			y -= newScale * canvasDimensions.top;
+
+			this.zoomTransform = d3.zoomIdentity.translate(x, y).scale(newScale);
+
+			this.canvasSVG
+				// .transition()
+				// .duration(500)
+				.call(this.zoom.transform, this.zoomTransform);
+		}
+	}
+
+	zoomIn() {
+		if (this.zoomTransform.k < this.maxScaleExtent) {
+			// const zoomSvgRect = this.canvasSVG.node().getBoundingClientRect();
+			var newScale = Math.min(this.zoomTransform.k * 1.1, this.maxScaleExtent);
+			this.zoomCanvasToViewPortCenter(newScale);
+		}
+	}
+
+	zoomOut() {
+		if (this.zoomTransform.k > this.minScaleExtent) {
+		// 	const zoomSvgRect = this.canvasSVG.node().getBoundingClientRect();
+			var newScale = Math.max(this.zoomTransform.k / 1.1, this.minScaleExtent);
+			this.zoomCanvasToViewPortCenter(newScale);
+		}
+	}
+
+	zoomCanvasToViewPortCenter(newScale) {
+		const viewPortDimensions = this.canvasSVG.node().getBoundingClientRect();
+		const canvasDimensions = this.getCanvasDimensionsAdjustedForScale(1);
+
+		this.zoomToFitForScale(newScale, canvasDimensions, viewPortDimensions);
+	}
+
 	zoomStart() {
-		this.consoleLog("Zoom start - x = " + d3.event.transform.x + " y = " + d3.event.transform.y);
+		this.consoleLog("Zoom start - x = " + d3.event.transform.x + " y = " + d3.event.transform.y + " k = " + d3.event.transform.k);
 
 		if (d3.event.sourceEvent && d3.event.sourceEvent.shiftKey) {
 			this.regionSelect = true;
@@ -461,7 +491,8 @@ export default class CanvasD3Layout {
 	}
 
 	zoomAction() {
-		// this.consoleLog("Zoom action - x = " + d3.event.transform.x + " y = " + d3.event.transform.y);
+		// this.consoleLog("Zoom action - x = " + d3.event.transform.x + " y = " + d3.event.transform.y + " k = " + d3.event.transform.k);
+
 		if (this.regionSelect === true) {
 			const transPos = this.getTransformedMousePos();
 			this.region.width = transPos.x - this.region.startX;
@@ -472,6 +503,7 @@ export default class CanvasD3Layout {
 			var x = d3.event.transform.x;
 			var y = d3.event.transform.y;
 			var k = d3.event.transform.k;
+
 
 			// If we are not zooming we must be dragging so, if the canvas rectangle
 			// (nodes and comments) is smaller than the SVG area then don't let the
@@ -502,7 +534,7 @@ export default class CanvasD3Layout {
 	}
 
 	zoomEnd() {
-		this.consoleLog("Zoom end - x = " + d3.event.transform.x + " y = " + d3.event.transform.y);
+		this.consoleLog("Zoom end - x = " + d3.event.transform.x + " y = " + d3.event.transform.y + " k = " + d3.event.transform.k);
 
 		if (this.drawingNewLink) {
 			this.stopDrawingNewLink();
@@ -510,7 +542,6 @@ export default class CanvasD3Layout {
 		}
 
 		if (this.regionSelect === true) {
-
 			this.removeRegionSelector();
 
 			// Reset the transform x and y to what they were before the region
@@ -557,8 +588,9 @@ export default class CanvasD3Layout {
 	}
 
 	// Returns the dimensions in SVG coordinates of the canvas area. This is
-	// based on the position and width and height of the nodes and comments.
-	getCanvasDimensionsAdjustedForScale(k) {
+	// based on the position and width and height of the nodes and comments. The
+	// dimensions are scaled by k and padded by pad (if provided).
+	getCanvasDimensionsAdjustedForScale(k, pad) {
 		var canvLeft = Infinity;
 		let canvTop = Infinity;
 		var canvRight = -Infinity;
@@ -586,13 +618,15 @@ export default class CanvasD3Layout {
 			return null;
 		}
 
+		var padding = pad || 0;
+
 		return {
-			left: canvLeft * k,
-			top: canvTop * k,
-			right: canvRight * k,
-			bottom: canvBottom * k,
-			width: canvWidth * k,
-			height: canvHeight * k
+			left: (canvLeft * k) - padding,
+			top: (canvTop * k) - padding,
+			right: (canvRight * k) + padding,
+			bottom: (canvBottom * k) + padding,
+			width: (canvWidth * k) + (2 * padding),
+			height: (canvHeight * k) + (2 * padding)
 		};
 	}
 

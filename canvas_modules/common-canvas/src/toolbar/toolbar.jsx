@@ -326,7 +326,7 @@ class Toolbar extends React.Component {
 		const zoomActionItems = [
 			{ action: "zoomIn", label: "Zoom In", enable: true, callback: this.props.zoomIn },
 			{ action: "zoomOut", label: "Zoom Out", enable: true, callback: this.props.zoomOut },
-			{ action: "zoomToFit", label: "Zoom to Fit", enable: false, callback: this.props.zoomToFit }
+			{ action: "zoomToFit", label: "Zoom to Fit", enable: true, callback: this.props.zoomToFit }
 		];
 		const zoomContainerItems = this.generateActionItems(zoomActionItems, zoomActionItems.length, null, "");
 		const zoomContainer = (<div id="zoom-actions-container" className="toolbar-items-container">

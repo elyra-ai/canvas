@@ -124,6 +124,12 @@ export default class DiagramCanvas extends React.Component {
 		}
 	}
 
+	zoomToFit() {
+		if (this.canvasD3Layout) {
+			this.canvasD3Layout.zoomToFit();
+		}
+	}
+
 	focusOnCanvas() {
 		document.getElementById("d3-svg-canvas-div").focus(); // Set focus on div so keybord events go there.
 	}

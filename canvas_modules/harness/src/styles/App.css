@@ -71,7 +71,7 @@
 /*Console*/
 #app-console {
   font-size: small;
-  border-top: 10px solid #1D3649;
+  border-top: 1px solid #1D3649;
   background-color: rgba(243, 243, 243, 0.8);
   position:fixed;
   bottom: 0px;

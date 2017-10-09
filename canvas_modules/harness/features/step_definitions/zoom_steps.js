@@ -23,7 +23,7 @@ module.exports = function() {
 
 	this.Then(/^I verify zoom transform value is "([^"]*)"$/, function(givenZoomTransform) {
 		var actualZoomTransform = browser.$(".svg-area").$$("g")[0].getAttribute("transform");
-		expect(actualZoomTransform).toEqual(givenZoomTransform);
+		expect(String(actualZoomTransform)).toEqual(givenZoomTransform);
 	});
 
 };

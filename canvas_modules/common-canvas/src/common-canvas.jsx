@@ -84,7 +84,7 @@ export default class CommonCanvas extends React.Component {
 	}
 
 	zoomToFit() {
-		// TODO
+		this.refs.canvas.zoomToFit();
 	}
 
 	closeContextMenu() {
