@@ -300,9 +300,14 @@ export default class CanvasD3Layout {
 	// calling d3.event.offsetX and d3.event.offsetX because in Firefox d3.mouse
 	// provides an offset within the SVG area whereas in Firefox the d3.event
 	// offset variables provide an offset from within the object the mouse is over.
+	// Note: added checks for event to prevent error in FF when building in production:
+	// TypeError: Value being assigned to SVGPoint.x is not a finite floating-point value.
 	getMousePos() {
-		const mousePos = d3.mouse(this.canvasSVG.node());
-		return { x: mousePos[0], y: mousePos[1] };
+		if (d3.event instanceof MouseEvent || (d3.event && d3.event.sourceEvent)) {
+			const mousePos = d3.mouse(this.canvasSVG.node());
+			return { x: mousePos[0], y: mousePos[1] };
+		}
+		return { x: 0, y: 0 };
 	}
 
 	// Transforms the mouse x and y passed in by the current zoom transformation
@@ -567,7 +572,7 @@ export default class CanvasD3Layout {
 			if (Math.abs(d3.event.transform.x - this.zoomStartPoint.x) < 2 &&
 					Math.abs(d3.event.transform.y - this.zoomStartPoint.y) < 2) {
 				this.selecting = true;
-				const clickedPos = this.getMousePos();
+				const clickedPos = this.getTransformedMousePos();
 				this.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "canvas", selectedObjectIds: ObjectModel.getSelectedObjectIds(), clickedPos: clickedPos });
 				// TODO - The decision to clear selection (commented out code below) is currently made by common-canvas
 				// This 'to do' is to move that decision from there to here. To do that we need to have a callback function
