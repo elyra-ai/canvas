@@ -543,6 +543,14 @@ export default class ObjectModel {
 		store.dispatch({ type: "SET_CANVAS_INFO", data: canvasInfo });
 	}
 
+	static isCanvasEmpty() {
+		if ((this.getNodes() && this.getNodes().length > 0) ||
+				(this.getComments() && this.getComments().length > 0)) {
+			return false;
+		}
+		return true;
+	}
+
 	static fixedAutoLayout(fixedLayoutDirection) {
 		this.autoLayout(fixedLayoutDirection);
 		ObjectModel.fixedLayout = fixedLayoutDirection;

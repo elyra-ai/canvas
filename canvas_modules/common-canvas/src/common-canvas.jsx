@@ -44,6 +44,8 @@ export default class CommonCanvas extends React.Component {
 			this.forceUpdate();
 		});
 
+		this.paletteClosedByUser = false;
+
 		this.contextMenuSource = null;
 		this.closeContextMenu = this.closeContextMenu.bind(this);
 		this.contextMenuClicked = this.contextMenuClicked.bind(this);
@@ -72,6 +74,7 @@ export default class CommonCanvas extends React.Component {
 	}
 
 	closePalette() {
+		this.paletteClosedByUser = true;
 		this.setState({ isPaletteOpen: false });
 	}
 
@@ -305,6 +308,17 @@ export default class CommonCanvas extends React.Component {
 		let canvasToolbar = null;
 		const canvasJSON = ObjectModel.getCanvasInfo();
 
+		var isPaletteOpen = this.state.isPaletteOpen;
+
+		// Always open the palette when we start up (i.e. before the user
+		// interacts with it) with an emoty canvas and with some palette data.
+		if (!this.state.isPaletteOpen &&
+				!this.paletteClosedByUser &&
+				!ObjectModel.getPaletteData() &&
+				ObjectModel.isCanvasEmpty()) {
+			isPaletteOpen = true;
+		}
+
 		if (canvasJSON !== null) {
 			if (this.state.showContextMenu) {
 				contextMenuWrapper = (<ContextMenuWrapper
@@ -347,17 +361,17 @@ export default class CommonCanvas extends React.Component {
 				if (this.props.config.enablePaletteLayout === "Modal") {
 					palette = (<Palette
 						paletteJSON={ObjectModel.getPaletteData()}
-						showPalette={this.state.isPaletteOpen}
+						showPalette={isPaletteOpen}
 						closePalette={this.closePalette}
 					/>);
 				} else {
-					if (this.state.isPaletteOpen) {
+					if (isPaletteOpen) {
 						paletteClass = "canvas-palette-flyout-div-open";
 					}
 					palette = (<PaletteFlyout
 						paletteJSON={ObjectModel.getPaletteData()}
 						addNodeToCanvas={this.addNodeToCanvas}
-						showPalette={this.state.isPaletteOpen}
+						showPalette={isPaletteOpen}
 					/>);
 				}
 			}
@@ -367,7 +381,7 @@ export default class CommonCanvas extends React.Component {
 				canvasToolbar = (<Toolbar
 					config={this.state.toolbarConfig}
 					renderingEngine={this.props.config.enableRenderingEngine}
-					paletteState={this.state.isPaletteOpen}
+					paletteState={isPaletteOpen}
 					paletteType={this.props.config.enablePaletteLayout}
 					closePalette={this.closePalette}
 					openPalette={this.openPalette}
