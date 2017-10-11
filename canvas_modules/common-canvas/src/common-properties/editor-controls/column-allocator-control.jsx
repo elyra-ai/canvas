@@ -20,8 +20,13 @@ var _ = require("underscore");
 export default class ColumnAllocatorControl extends EditorControl {
 	constructor(props) {
 		super(props);
+		// Convert all values to arrays
+		var controlValue = props.valueAccessor(props.control.name);
+		if (!Array.isArray(controlValue)) {
+			controlValue = [controlValue];
+		}
 		this.state = {
-			controlValue: props.valueAccessor(props.control.name),
+			controlValue: controlValue,
 			selectedValues: []
 		};
 
@@ -63,8 +68,8 @@ export default class ColumnAllocatorControl extends EditorControl {
 
 	// Allocated columns are columns that are referenced by the current control value.
 	getAllocatedColumns() {
-		// logger.info("getAllocatedColumns");
-		return this.getControlValue();
+		// needs to be an array
+		return this.state.controlValue;
 	}
 
 	addColumns(columnNames, callback) {
@@ -172,8 +177,6 @@ export default class ColumnAllocatorControl extends EditorControl {
 				</div>
 			);
 		}
-		const currentSeln = this.state.controlValue[0];
-		// help={this.props.control.additionalText}
 		return (
 			<div className="editor_control_area" style={stateStyle}>
 				<div id={controlIconContainerClass}>
@@ -185,7 +188,7 @@ export default class ColumnAllocatorControl extends EditorControl {
 						name={this.props.control.name}
 						style={stateStyle}
 						onChange={this.handleChange}
-						value={currentSeln}
+						value={this.state.controlValue[0]}
 						ref="input"
 					>
 						{options}
