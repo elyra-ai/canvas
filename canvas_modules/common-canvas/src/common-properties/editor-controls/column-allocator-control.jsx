@@ -115,9 +115,13 @@ export default class ColumnAllocatorControl extends EditorControl {
 	}
 
 	getControlValue() {
-		// logger.info("getControlValue");
-		// logger.info(this.state.controlValue);
-		return this.state.controlValue;
+		if (this.props.multiColumn) {
+			return this.state.controlValue;
+		}
+		if (this.state.controlValue[0]) {
+			return this.state.controlValue[0];
+		}
+		return "";
 	}
 
 	render() {
