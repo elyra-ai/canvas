@@ -247,8 +247,8 @@ export default class CommonCanvas extends React.Component {
 			}
 		}
 
-		if (this.props.toolbarConfig && this.props.toolbarConfig.toolbarMenuActionHandler) {
-			this.props.toolbarConfig.toolbarMenuActionHandler(action, source);
+		if (this.props.toolbarMenuActionHandler) {
+			this.props.toolbarMenuActionHandler(action, source);
 		}
 	}
 
@@ -262,13 +262,13 @@ export default class CommonCanvas extends React.Component {
 			redoState = false;
 		}
 
-		if (typeof this.state.toolbarConfig.toolbarDefinition !== "undefined") {
-			for (let i = 0; i < this.state.toolbarConfig.toolbarDefinition.length; i++) {
-				if (this.state.toolbarConfig.toolbarDefinition[i].action === "undo") {
-					this.state.toolbarConfig.toolbarDefinition[i].enable = undoState;
+		if (typeof this.state.toolbarConfig !== "undefined") {
+			for (let i = 0; i < this.state.toolbarConfig.length; i++) {
+				if (this.state.toolbarConfig[i].action === "undo") {
+					this.state.toolbarConfig[i].enable = undoState;
 				}
-				if (this.state.toolbarConfig.toolbarDefinition[i].action === "redo") {
-					this.state.toolbarConfig.toolbarDefinition[i].enable = redoState;
+				if (this.state.toolbarConfig[i].action === "redo") {
+					this.state.toolbarConfig[i].enable = redoState;
 				}
 			}
 		}
@@ -412,5 +412,6 @@ CommonCanvas.propTypes = {
 	editActionHandler: PropTypes.func,
 	clickActionHandler: PropTypes.func,
 	decorationActionHandler: PropTypes.func,
-	toolbarConfig: PropTypes.object
+	toolbarMenuActionHandler: PropTypes.func,
+	toolbarConfig: PropTypes.array
 };

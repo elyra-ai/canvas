@@ -54,7 +54,7 @@ class Toolbar extends React.Component {
 		super(props);
 
 		this.state = {
-			toolbarDefinition: this.props.config.toolbarDefinition,
+			config: this.props.config,
 			defaultToolbarWidth: 256, // width of toolbar with default zoom icons
 			maxToolbarWidth: 0, // width of toolbar if displaying all icons and dividers
 			dividerCount: 0,
@@ -100,8 +100,8 @@ class Toolbar extends React.Component {
 		this.updateToolbarWidth();
 		window.addEventListener("resize", this.updateToolbarWidth);
 
-		if (this.props.config && this.props.config.toolbarDefinition) {
-			this.calculateMaxToolbarWidth(this.props.config.toolbarDefinition);
+		if (this.props.config) {
+			this.calculateMaxToolbarWidth(this.props.config);
 		}
 	}
 
@@ -138,7 +138,7 @@ class Toolbar extends React.Component {
 	}
 
 	calculateDisplayItems(toolbarWidth) {
-		const numObjects = this.props.config.toolbarDefinition.length;
+		const numObjects = this.props.config.length;
 		if (this.state.maxToolbarWidth >= toolbarWidth) { // need to minimize
 			let availableWidth = toolbarWidth - this.state.defaultToolbarWidth + TOOLBAR.ICON_WIDTH;
 			if (toolbarWidth - this.state.defaultToolbarWidth <= (3 * TOOLBAR.ICON_WIDTH)) {
@@ -310,10 +310,10 @@ class Toolbar extends React.Component {
 
 		const that = this;
 		let actionContainer = <div />;
-		if (this.state.toolbarDefinition && this.state.toolbarDefinition.length > 0) {
+		if (this.state.config && this.state.config.length > 0) {
 			const displayItems = this.calculateDisplayItems(toolbarWidth);
 			const actions = that.generateActionItems(
-				that.props.config.toolbarDefinition,
+				that.props.config,
 				displayItems,
 				that.props.toolbarMenuActionHandler,
 				""
@@ -352,7 +352,7 @@ class Toolbar extends React.Component {
 }
 
 Toolbar.propTypes = {
-	config: PropTypes.object,
+	config: PropTypes.array,
 	renderingEngine: PropTypes.string,
 	paletteState: PropTypes.bool,
 	paletteType: PropTypes.string,

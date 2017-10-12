@@ -16,23 +16,20 @@ import { expect } from "chai";
 describe("Toolbar renders correctly", () => {
 
 	it("should render a Toolbar", () => {
-		const toolbarConfig = {
-			toolbarMenuActionHandler: sinon.spy(),
-			toolbarDefinition: [
-				{ action: "palette", label: "Palette", enable: true },
-				{ divider: true },
-				{ action: "stop", label: "Stop Execution", enable: false },
-				{ action: "run", label: "Run Pipeline", enable: false },
-				{ divider: true },
-				{ action: "undo", label: "Undo", enable: true },
-				{ action: "redo", label: "Redo", enable: true },
-				{ action: "cut", label: "Cut", enable: false },
-				{ action: "copy", label: "Copy", enable: false },
-				{ action: "paste", label: "Paste", enable: false },
-				{ action: "addComment", label: "Add Comment", enable: true },
-				{ action: "delete", label: "Delete", enable: true }
-			]
-		};
+		const toolbarConfig = [
+			{ action: "palette", label: "Palette", enable: true },
+			{ divider: true },
+			{ action: "stop", label: "Stop Execution", enable: false },
+			{ action: "run", label: "Run Pipeline", enable: false },
+			{ divider: true },
+			{ action: "undo", label: "Undo", enable: true },
+			{ action: "redo", label: "Redo", enable: true },
+			{ action: "cut", label: "Cut", enable: false },
+			{ action: "copy", label: "Copy", enable: false },
+			{ action: "paste", label: "Paste", enable: false },
+			{ action: "addComment", label: "Add Comment", enable: true },
+			{ action: "delete", label: "Delete", enable: true }
+		];
 		const canvasToolbar = createToolbar(toolbarConfig);
 		expect(canvasToolbar.find("#canvas-toolbar")).to.have.length(1);
 		expect(canvasToolbar.find("#actions-container")).to.have.length(1);
@@ -41,25 +38,22 @@ describe("Toolbar renders correctly", () => {
 	});
 
 	it("should render a Toolbar", () => {
-		const toolbarConfig = {
-			toolbarMenuActionHandler: sinon.spy(),
-			toolbarDefinition: [
-				{ action: "palette", label: "Palette", enable: true },
-				{ divider: true },
-				{ action: "stop", label: "Stop Execution", enable: false },
-				{ action: "run", label: "Run Pipeline", enable: false },
-				{ divider: true },
-				{ action: "undo", label: "Undo", enable: true },
-				{ action: "redo", label: "Redo", enable: true },
-				{ divider: true },
-				{ action: "cut", label: "Cut", enable: false },
-				{ action: "copy", label: "Copy", enable: false },
-				{ action: "paste", label: "Paste", enable: false },
-				{ divider: true },
-				{ action: "addComment", label: "Add Comment", enable: true },
-				{ action: "delete", label: "Delete", enable: true }
-			]
-		};
+		const toolbarConfig = [
+			{ action: "palette", label: "Palette", enable: true },
+			{ divider: true },
+			{ action: "stop", label: "Stop Execution", enable: false },
+			{ action: "run", label: "Run Pipeline", enable: false },
+			{ divider: true },
+			{ action: "undo", label: "Undo", enable: true },
+			{ action: "redo", label: "Redo", enable: true },
+			{ divider: true },
+			{ action: "cut", label: "Cut", enable: false },
+			{ action: "copy", label: "Copy", enable: false },
+			{ action: "paste", label: "Paste", enable: false },
+			{ divider: true },
+			{ action: "addComment", label: "Add Comment", enable: true },
+			{ action: "delete", label: "Delete", enable: true }
+		];
 		const canvasToolbar = createToolbar(toolbarConfig);
 		expect(canvasToolbar.find("#canvas-toolbar")).to.have.length(1);
 		expect(canvasToolbar.find(".toolbar-items-container")).to.have.length(2); // include zoom container

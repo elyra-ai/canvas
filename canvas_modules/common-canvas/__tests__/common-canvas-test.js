@@ -16,7 +16,6 @@ import Toolbar from "../src/toolbar/toolbar.jsx";
 import { shallow } from "enzyme";
 import { expect } from "chai";
 import sinon from "sinon";
-import { OverlayTrigger } from "react-bootstrap";
 import ObjectModel from "../src/object-model/object-model.js";
 
 
@@ -29,38 +28,31 @@ describe("CommonCanvas renders correctly", () => {
 	});
 
 	it("should render one <Palette/> component when Palette is enabled", () => {
-		const config = { enablePalette: true, enablePaletteLayout: "Modal", enableAutoLayout: "none" };
+		const config = { enablePaletteLayout: "Modal", enableAutoLayout: "none" };
 		const wrapper = createCommonCanvas(config);
 		expect(wrapper.find(Palette)).to.have.length(1);
 	});
 
 	it("should render one <Palette/> component when Palette is enabled", () => {
-		const config = { enablePalette: true, enableAutoLayout: "none" };
+		const config = { enableAutoLayout: "none" };
 		const wrapper = createCommonCanvas(config);
 		expect(wrapper.find(PaletteFlyout)).to.have.length(1);
 	});
 
-	it("should render one <OverlayTrigger/> component when Palette is enabled", () => {
-		const config = { enablePalette: true, enablePaletteLayout: "Flyout", enableAutoLayout: "none" };
+	it("should render one PaletteFlyout component when Palette is enabled", () => {
+		const config = { enablePaletteLayout: "Flyout", enableAutoLayout: "none" };
 		const wrapper = createCommonCanvas(config);
 		expect(wrapper.find(PaletteFlyout)).to.have.length(1);
 	});
 
 	it("should not render any <Palette/> component when Palette is disabled", () => {
-		const config = { enablePalette: false, enableAutoLayout: "none" };
+		const config = { enableAutoLayout: "none" };
 		const wrapper = createCommonCanvas(config);
 		expect(wrapper.find(Palette)).to.have.length(0);
 	});
 
-	it("should not render any <OverlayTrigger/> component when Palette is disabled", () => {
-		const config = { enablePalette: false, enableAutoLayout: "none" };
-		const wrapper = createCommonCanvas(config);
-		expect(wrapper.find(OverlayTrigger)).to.have.length(0);
-	});
-
 	it("should render one <Toolbar/> component when toolbarConfig is provided", () => {
-		const toolbarMenuActionHandler = sinon.spy();
-		const toolbarConfig = { enablePalette: true, toolbarMenuActionHandler: toolbarMenuActionHandler };
+		const toolbarConfig = [];
 		const config = { enableAutoLayout: "none" };
 		const wrapper = createCommonCanvas(config, toolbarConfig);
 		expect(wrapper.find(Toolbar)).to.have.length(1);
@@ -81,6 +73,7 @@ function createCommonCanvas(config, toolbarConfig) {
 	const editDiagramHandler = sinon.spy();
 	const clickHandler = sinon.spy();
 	const decorationActionHandler = sinon.spy();
+	const toolbarMenuActionHandler = sinon.spy();
 	const wrapper = shallow(
 		<CommonCanvas
 			config={config}
@@ -89,6 +82,7 @@ function createCommonCanvas(config, toolbarConfig) {
 			editDiagramHandler={editDiagramHandler}
 			clickHandler={clickHandler}
 			decorationActionHandler={decorationActionHandler}
+			toolbarMenuActionHandler={toolbarMenuActionHandler}
 			toolbarConfig={toolbarConfig}
 		/>
 	);
