@@ -12,6 +12,7 @@ export default class SVGCanvasInHandler {
 	static convertCanvasToCanvasInfo(canvas) {
 		return {
 			id: canvas.id,
+			sub_id: canvas.diagram.id,
 			nodes: this.getNodes(canvas.diagram.nodes),
 			comments: this.getComments(canvas.diagram.comments),
 			links: this.getLinks(canvas.diagram.links, canvas.diagram.comments)
@@ -22,7 +23,6 @@ export default class SVGCanvasInHandler {
 		return canvasNodes.map((canvasNode) => {
 			var newNode = {
 				id: canvasNode.id,
-				operator_id_ref: canvasNode.userData.typeId,
 				image: canvasNode.image,
 				x_pos: canvasNode.x_pos,
 				y_pos: canvasNode.y_pos,
@@ -39,6 +39,12 @@ export default class SVGCanvasInHandler {
 			if (canvasNode.decorations) {
 				newNode.decorations = this.getDecorations(canvasNode.decorations);
 			}
+			if (canvasNode.subDiagramId) {
+				newNode.subflow_ref = { pipeline_id_ref: canvasNode.subDiagramId, url: "app_defined" };
+
+			} else if (canvasNode.userData && canvasNode.userData.typeId) {
+				newNode.operator_id_ref = canvasNode.userData.typeId;
+			}
 
 			return newNode;
 		});
@@ -47,6 +53,9 @@ export default class SVGCanvasInHandler {
 	static getType(canvasNode) {
 		if (canvasNode.inputPorts && canvasNode.inputPorts.length > 0 &&
 				canvasNode.outputPorts && canvasNode.outputPorts.length > 0) {
+			if (canvasNode.subDiagramId) {
+				return "super_node";
+			}
 			return "execution_node";
 		}
 		return "binding";
@@ -207,13 +216,12 @@ export default class SVGCanvasInHandler {
 	// ==========================================================================
 
 	static getCanvasBasedOnCanvas(oldCanvas, canvasinfo) {
-		oldCanvas.diagram = this.getDiagram(oldCanvas, canvasinfo);
-		return oldCanvas;
+		return Object.assign({}, oldCanvas, { diagram: this.getDiagram(oldCanvas, canvasinfo) });
 	}
 
 	static getDiagram(oldCanvas, canvasinfo) {
 		return {
-			id: canvasinfo.id,
+			id: canvasinfo.sub_id,
 			nodes: this.getCanvasNodes(canvasinfo.nodes, oldCanvas),
 			comments: this.getCanvasComments(canvasinfo.comments),
 			links: this.getCanvasLinks(canvasinfo.links)

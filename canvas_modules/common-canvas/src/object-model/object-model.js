@@ -270,6 +270,7 @@ const canvasinfo = (state = getInitialCanvas(), action) => {
 			const mainPipeline = getMainPipeline(action.data);
 			if (mainPipeline) {
 				var canvasInfo = SVGPipelineInHandler.convertPipelineToCanvasInfo(mainPipeline);
+				canvasInfo.id = action.data.id;
 				return canvasInfo;
 			}
 		}
@@ -494,8 +495,8 @@ export default class ObjectModel {
 	}
 
 	static setPipelineFlow(newPipelineFlow) {
-		// TODO - Remove this if clause when remove x-* test files.
-		if (newPipelineFlow.objectData) { // Old cnavas docs will have an 'objectData' field
+		// TODO - Remove this if clause when we remove x-* test files.
+		if (newPipelineFlow.objectData) { // Old canvas docs will have an 'objectData' field
 			this.setCanvas(newPipelineFlow);
 			return;
 		}

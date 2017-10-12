@@ -11,6 +11,7 @@ export default class SVGPipelineOutHandler {
 
 	static modifyPipelineWithCanvasInfo(pipeline, canvasInfo) {
 		return Object.assign({}, pipeline, {
+			id: canvasInfo.sub_id,
 			nodes: this.getNodes(pipeline, canvasInfo),
 			app_data: this.getPipelineAppData(pipeline.app_data, canvasInfo) });
 	}

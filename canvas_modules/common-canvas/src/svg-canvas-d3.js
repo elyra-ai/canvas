@@ -208,6 +208,7 @@ export default class CanvasD3Layout {
 		this.consoleLog("Set Canvas. Id = " + canvasJSON.id);
 		var startTime = Date.now();
 		if (canvasJSON.id !== this.canvasJSON.id ||
+				canvasJSON.sub_id !== this.canvasJSON.sub_id ||
 				this.connectionType !== config.enableConnectionType ||
 				this.linkType !== config.enableLinkType) {
 			this.canvasJSON = canvasJSON;

@@ -23,7 +23,7 @@ export default class SVGPipelineInHandler {
 		const comments = _.has(pipeline, "app_data.ui_data.comments") ? pipeline.app_data.ui_data.comments : [];
 
 		var canvas = {
-			"id": pipeline.id,
+			"sub_id": pipeline.id,
 			"nodes": this.convertNodes(nodes),
 			"comments": this.convertComments(comments),
 			"links": this.convertLinks(nodes, comments),
