@@ -24,7 +24,6 @@ import SidePanel from "./components/sidepanel.jsx";
 import TestService from "./services/TestService";
 
 import {
-	NONE,
 	SIDE_PANEL_CANVAS,
 	SIDE_PANEL_MODAL,
 	D3_ENGINE,
@@ -76,7 +75,6 @@ class App extends React.Component {
 		this.sidePanelCanvas = this.sidePanelCanvas.bind(this);
 		this.sidePanelModal = this.sidePanelModal.bind(this);
 		this.setLayoutDirection = this.setLayoutDirection.bind(this);
-		this.setOneTimeLayoutDirection = this.setOneTimeLayoutDirection.bind(this);
 		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
 		this.useModalPropertiesDialog = this.useModalPropertiesDialog.bind(this);
 		this.setRenderingEngine = this.setRenderingEngine.bind(this);
@@ -151,13 +149,6 @@ class App extends React.Component {
 	setLayoutDirection(selectedLayout) {
 		ObjectModel.fixedAutoLayout(selectedLayout);
 		this.log("Layout selected", selectedLayout);
-	}
-
-	setOneTimeLayoutDirection(selectedOneTimeLayout) {
-		if (ObjectModel.fixedLayout === NONE) {
-			ObjectModel.autoLayout(selectedOneTimeLayout);
-			this.log("One Time Layout selected", selectedOneTimeLayout);
-		}
 	}
 
 	setRenderingEngine(selectedEngine) {
@@ -599,7 +590,9 @@ class App extends React.Component {
 			{ action: "copy", label: "Copy", enable: false },
 			{ action: "paste", label: "Paste", enable: false },
 			{ action: "addComment", label: "Add Comment", enable: true },
-			{ action: "delete", label: "Delete", enable: true }
+			{ action: "delete", label: "Delete", enable: true },
+			{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true },
+			{ action: "arrangeVertically", label: "Arrange Vertically", enable: true }
 		];
 
 		var commonCanvas = (<div id="canvas-container">
@@ -640,7 +633,6 @@ class App extends React.Component {
 				setPaletteJSON={this.setPaletteJSON}
 				setPropertiesJSON={this.setPropertiesJSON}
 				setLayoutDirection={this.setLayoutDirection}
-				setOneTimeLayoutDirection={this.setOneTimeLayoutDirection}
 				showPropertiesDialog={this.state.showPropertiesDialog}
 				useInternalObjectModel={this.useInternalObjectModel}
 				useModalPropertiesDialog={this.useModalPropertiesDialog}

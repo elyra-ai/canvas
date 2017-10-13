@@ -28,7 +28,6 @@ Feature: Sanity_Test_SecondaryToolbar.feature
 	Then I verify the number of comments are 0
 
 
-
 	Scenario: Sanity test for secondary toolbar resize with the D3 rendering engine
 
 	Given I am on the test harness
@@ -48,3 +47,29 @@ Feature: Sanity_Test_SecondaryToolbar.feature
 	Then I verify the number of items in the secondary toolbar are 10
 	Then I resize the window size to 800 width and 600 height
 	Then I verify the number of items in the secondary toolbar are 12
+
+
+	Scenario: Sanity test for secondary toolbar horizontal and vertical layout with the D3 rendering engine
+
+	Given I am on the test harness
+	Given I have toggled the app side panel
+	Given I have selected the "Flyout" palette layout
+	Given I have selected the "D3" rendering engine
+	Given I have uploaded palette "/test_resources/palettes/modelerPalette.json"
+	Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
+	Given I have toggled the app side panel
+	Then I resize the window size to 1330 width and 660 height
+	Then I click on the secondary toolbar horizontal layout button
+	Then I verify the node 1 position is "translate(550, 110)"
+	Then I verify the node 2 position is "translate(250, 100)"
+	Then I verify the node 3 position is "translate(700, 100)"
+	Then I verify the node 4 position is "translate(700, 250)"
+	Then I verify the node 5 position is "translate(100, 25)"
+	Then I verify the node 6 position is "translate(400, 100)"
+	Then I click on the secondary toolbar vertical layout button
+	Then I verify the node 1 position is "translate(185, 475)"
+	Then I verify the node 2 position is "translate(175, 175)"
+	Then I verify the node 3 position is "translate(175, 625)"
+	Then I verify the node 4 position is "translate(325, 625)"
+	Then I verify the node 5 position is "translate(100, 25)"
+	Then I verify the node 6 position is "translate(175, 325)"

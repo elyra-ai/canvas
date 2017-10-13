@@ -36,7 +36,6 @@ export default class SidePanel extends React.Component {
 				setDiagramJSON={this.props.setDiagramJSON}
 				setPaletteJSON={this.props.setPaletteJSON}
 				setLayoutDirection={this.props.setLayoutDirection}
-				setOneTimeLayoutDirection={this.props.setOneTimeLayoutDirection}
 				useInternalObjectModel={this.props.useInternalObjectModel}
 				setRenderingEngine={this.props.setRenderingEngine}
 				setConnectionType={this.props.setConnectionType}
@@ -80,7 +79,6 @@ SidePanel.propTypes = {
 	setPaletteJSON: PropTypes.func,
 	setPropertiesJSON: PropTypes.func,
 	setLayoutDirection: PropTypes.func,
-	setOneTimeLayoutDirection: PropTypes.func,
 	selectedPanel: PropTypes.string,
 	showPropertiesDialog: PropTypes.bool,
 	useInternalObjectModel: PropTypes.func,

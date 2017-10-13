@@ -20,6 +20,14 @@ module.exports = function() {
 		browser.$("#toolbar-icon-delete").click();
 	});
 
+	this.Then("I click on the secondary toolbar horizontal layout button", function() {
+		browser.$("#toolbar-icon-arrangeHorizontally").click();
+	});
+
+	this.Then("I click on the secondary toolbar vertical layout button", function() {
+		browser.$("#toolbar-icon-arrangeVertically").click();
+	});
+
 	this.Then(/^I resize the window size to (\d+) width and (\d+) height$/, function(widthNumber, heightNumber) {
 
 		browser.setViewportSize({

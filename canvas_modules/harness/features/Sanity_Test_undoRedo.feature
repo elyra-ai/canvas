@@ -274,4 +274,56 @@ Scenario: Sanity test for Multiple undo/redo operations with the D3 rendering en
 		Then I verify the number of nodes are 23
 		Then I verify the number of data links are 21
 
+	Scenario: Sanity test for undo/redo of layout actions with the D3 rendering engine
+		Given I am on the test harness
+		Given I have toggled the app side panel
+		Given I have selected the "Flyout" palette layout
+		Given I have uploaded predefined palette "modelerPalette.json"
+		Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
+		Given I have selected the "D3" rendering engine
+		Given I have toggled the app side panel
+		Then I resize the window size to 1330 width and 660 height
+		Then I click on the secondary toolbar horizontal layout button
+		Then I verify the node 1 position is "translate(550, 110)"
+		Then I verify the node 2 position is "translate(250, 100)"
+		Then I verify the node 3 position is "translate(700, 100)"
+		Then I verify the node 4 position is "translate(700, 250)"
+		Then I verify the node 5 position is "translate(100, 25)"
+		Then I verify the node 6 position is "translate(400, 100)"
+		Then I click on the secondary toolbar vertical layout button
+		Then I verify the node 1 position is "translate(185, 475)"
+		Then I verify the node 2 position is "translate(175, 175)"
+		Then I verify the node 3 position is "translate(175, 625)"
+		Then I verify the node 4 position is "translate(325, 625)"
+		Then I verify the node 5 position is "translate(100, 25)"
+		Then I verify the node 6 position is "translate(175, 325)"
+		Then I click undo
+		Then I verify the node 1 position is "translate(550, 110)"
+		Then I verify the node 2 position is "translate(250, 100)"
+		Then I verify the node 3 position is "translate(700, 100)"
+		Then I verify the node 4 position is "translate(700, 250)"
+		Then I verify the node 5 position is "translate(100, 25)"
+		Then I verify the node 6 position is "translate(400, 100)"
+		Then I click undo
+		Then I verify the node 1 position is "translate(445, 219)"
+		Then I verify the node 2 position is "translate(218, 219)"
+		Then I verify the node 3 position is "translate(611, 151)"
+		Then I verify the node 4 position is "translate(606, 310)"
+		Then I verify the node 5 position is "translate(96, 219)"
+		Then I verify the node 6 position is "translate(328, 219)"
+		Then I click redo
+		Then I verify the node 1 position is "translate(550, 110)"
+		Then I verify the node 2 position is "translate(250, 100)"
+		Then I verify the node 3 position is "translate(700, 100)"
+		Then I verify the node 4 position is "translate(700, 250)"
+		Then I verify the node 5 position is "translate(100, 25)"
+		Then I verify the node 6 position is "translate(400, 100)"
+		Then I click redo
+		Then I verify the node 1 position is "translate(185, 475)"
+		Then I verify the node 2 position is "translate(175, 175)"
+		Then I verify the node 3 position is "translate(175, 625)"
+		Then I verify the node 4 position is "translate(325, 625)"
+		Then I verify the node 5 position is "translate(100, 25)"
+		Then I verify the node 6 position is "translate(175, 325)"
+		
 		Then I pause for 1 seconds

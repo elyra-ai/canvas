@@ -34,6 +34,10 @@ import redoIcon from "../../assets/images/canvas_toolbar_icons/redo.svg";
 import redoDisabledIcon from "../../assets/images/canvas_toolbar_icons/redo_disabled.svg";
 import undoIcon from "../../assets/images/canvas_toolbar_icons/undo.svg";
 import undoDisabledIcon from "../../assets/images/canvas_toolbar_icons/undo_disabled.svg";
+import arrangeHorizontallyIcon from "../../assets/images/canvas_toolbar_icons/arrange_horizontally.svg";
+import arrangeHorizontallyDisabledIcon from "../../assets/images/canvas_toolbar_icons/arrange_horizontally_disabled.svg";
+import arrangeVerticallyIcon from "../../assets/images/canvas_toolbar_icons/arrange_vertically.svg";
+import arrangeVerticallyDisabledIcon from "../../assets/images/canvas_toolbar_icons/arrange_vertically_disabled.svg";
 
 import zoomInIcon from "../../assets/images/canvas_toolbar_icons/zoom_in.svg";
 import zoomOutIcon from "../../assets/images/canvas_toolbar_icons/zoom_out.svg";
@@ -81,6 +85,10 @@ class Toolbar extends React.Component {
 		this.stopDisabledIcon = stopDisabledIcon;
 		this.undoIcon = undoIcon;
 		this.undoDisabledIcon = undoDisabledIcon;
+		this.arrangeHorizontallyIcon = arrangeHorizontallyIcon;
+		this.arrangeHorizontallyDisabledIcon = arrangeHorizontallyDisabledIcon;
+		this.arrangeVerticallyIcon = arrangeVerticallyIcon;
+		this.arrangeVerticallyDisabledIcon = arrangeVerticallyDisabledIcon;
 
 		this.paletteDisabledIcon = paletteDisabledIcon;
 		this.paletteCloseIcon = paletteCloseIcon;

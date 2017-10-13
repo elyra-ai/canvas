@@ -58,9 +58,6 @@ export default class SidePanelForms extends React.Component {
 		this.isReadyToSubmitPaletteData = this.isReadyToSubmitPaletteData.bind(this);
 
 		this.layoutDirectionOptionChange = this.layoutDirectionOptionChange.bind(this);
-		this.oneTimeHorizontalLayout = this.oneTimeHorizontalLayout.bind(this);
-		this.oneTimeVerticalLayout = this.oneTimeVerticalLayout.bind(this);
-		this.disableOneTimeLayoutButtons = this.disableOneTimeLayoutButtons.bind(this);
 		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
 		this.renderingEngineOptionChange = this.renderingEngineOptionChange.bind(this);
 		this.connectionTypeOptionChange = this.connectionTypeOptionChange.bind(this);
@@ -159,21 +156,6 @@ export default class SidePanelForms extends React.Component {
 					});
 			});
 		}
-	}
-
-	oneTimeHorizontalLayout() {
-		this.props.setOneTimeLayoutDirection(HORIZONTAL);
-	}
-
-	oneTimeVerticalLayout() {
-		this.props.setOneTimeLayoutDirection(VERTICAL);
-	}
-
-	disableOneTimeLayoutButtons() {
-		if (this.state.oneTimeLayout !== NONE) {
-			return true;
-		}
-		return false;
 	}
 
 	submitCanvas() {
@@ -344,24 +326,6 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
-		var layoutOnDemand = (<div className="sidepanel-children" id="sidepanel-oneTime-layout-direction">
-			<div className="sidepanel-headers">Layout on Demand</div>
-			<Button dark
-				id="buttonOneTimeLayoutHorizontal"
-				disabled={this.disableOneTimeLayoutButtons()}
-				onClick={this.oneTimeHorizontalLayout}
-			>
-				Horizontal
-			</Button>
-			<Button dark
-				id="buttonOneTimeLayoutVertical"
-				disabled={this.disableOneTimeLayoutButtons()}
-				onClick={this.oneTimeVerticalLayout}
-			>
-				Vertical
-			</Button>
-		</div>);
-
 		var enableObjectModel = (<div className="sidepanel-children" id="sidepanel-object-model">
 			<form>
 				<div className="sidepanel-headers">Use Object Model</div>
@@ -440,8 +404,6 @@ export default class SidePanelForms extends React.Component {
 				{divider}
 				{layoutDirection}
 				{divider}
-				{layoutOnDemand}
-				{divider}
 				{enableObjectModel}
 				{divider}
 				{renderingEngine}
@@ -462,7 +424,6 @@ SidePanelForms.propTypes = {
 	setDiagramJSON: PropTypes.func,
 	setPaletteJSON: PropTypes.func,
 	setLayoutDirection: PropTypes.func,
-	setOneTimeLayoutDirection: PropTypes.func,
 	useInternalObjectModel: PropTypes.func,
 	setRenderingEngine: PropTypes.func,
 	setConnectionType: PropTypes.func,

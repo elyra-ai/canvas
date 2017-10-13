@@ -27,6 +27,8 @@ import DeleteLinkAction from "./command-actions/deleteLinkAction.js";
 import DisconnectNodesAction from "./command-actions/disconnectNodesAction.js";
 import MoveObjectsAction from "./command-actions/moveObjectsAction.js";
 import EditCommentAction from "./command-actions/editCommentAction.js";
+import ArrangeLayoutAction from "./command-actions/arrangeLayoutAction.js";
+import constants from "../constants/common-constants.js";
 
 export default class CommonCanvas extends React.Component {
 	constructor(props) {
@@ -232,6 +234,16 @@ export default class CommonCanvas extends React.Component {
 			case "addComment": {
 				const comment = ObjectModel.createComment(source);
 				const command = new CreateCommentAction(comment);
+				CommandStack.do(command);
+				break;
+			}
+			case "arrangeHorizontally": {
+				const command = new ArrangeLayoutAction(constants.HORIZONTAL);
+				CommandStack.do(command);
+				break;
+			}
+			case "arrangeVertically": {
+				const command = new ArrangeLayoutAction(constants.VERTICAL);
 				CommandStack.do(command);
 				break;
 			}
