@@ -7,6 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import { CommonCanvas, ObjectModel, CommonProperties, CommandStack } from "../../common-canvas/src/index";
+import { CommonCanvas, ObjectModel, CommonProperties, CommandStack, FlowValidation }
+	from "../../common-canvas/src/index";
 
-export { CommonCanvas, ObjectModel, CommonProperties, CommandStack };
+export { CommonCanvas, ObjectModel, CommonProperties, CommandStack, FlowValidation };

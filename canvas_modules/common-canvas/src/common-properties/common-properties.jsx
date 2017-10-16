@@ -122,6 +122,7 @@ export default class CommonProperties extends React.Component {
 					ref="editorForm"
 					key="editor-form-key"
 					form={formData}
+					useObjectModelInfo={this.props.propertiesInfo.useObjectModelInfo}
 					additionalComponents={this.props.propertiesInfo.additionalComponents}
 					showPropertiesButtons={this.showPropertiesButtons}
 				/>);

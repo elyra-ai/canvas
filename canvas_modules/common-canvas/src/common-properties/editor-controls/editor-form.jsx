@@ -1166,11 +1166,11 @@ export default class EditorForm extends React.Component {
 
 		for (let i = 0; i < uiConditions.length; i++) {
 			if (uiConditions[i].visible) {
-				visibleDefinition = this._parseConditions(visibleDefinition, uiConditions[i], "visible");
+				visibleDefinition = UiConditionsParser.parseConditions(visibleDefinition, uiConditions[i], "visible");
 			} else if (uiConditions[i].enabled) {
-				enabledDefinitions = this._parseConditions(enabledDefinitions, uiConditions[i], "enabled");
+				enabledDefinitions = UiConditionsParser.parseConditions(enabledDefinitions, uiConditions[i], "enabled");
 			} else if (uiConditions[i].validation) {
-				validationDefinitions = this._parseConditions(validationDefinitions, uiConditions[i], "validation");
+				validationDefinitions = UiConditionsParser.parseConditions(validationDefinitions, uiConditions[i], "validation");
 			} else { // invalid
 				logger.info("Invalid definition: " + JSON.stringify(uiConditions[i]));
 			}
@@ -1183,63 +1183,9 @@ export default class EditorForm extends React.Component {
 		});
 	}
 
-	_parseConditions(container, uiCondition, conditionType) {
-		try {
-			var controls = UiConditionsParser.parseInput(uiCondition[conditionType]);
-			var groupDef = {
-				"params": controls,
-				"definition": uiCondition
-			};
-			if (Array.isArray(controls) === true) {
-				for (let j = 0; j < controls.length; j++) {
-					if (typeof container[controls[j]] === "undefined") {
-						container[controls[j]] = [];
-					}
-					container[controls[j]].push(groupDef);
-				}
-			} else { // single control
-				if (typeof container[controls] === "undefined") {
-					container[controls] = [];
-				}
-				container[controls].push(groupDef);
-			}
-		} catch (error) { // invalid
-			logger.info("Error parsing ui conditions: " + error);
-		}
-		return container;
-	}
-
-	_getPanelRequiredParameters(panelUiItems, requiredParameters) {
-		for (const panelUiItem of panelUiItems) {
-			if (typeof panelUiItem.control !== "undefined") {
-				if (typeof panelUiItem.control.required !== "undefined" && panelUiItem.control.required) {
-					requiredParameters.push(panelUiItem.control.name);
-				}
-			} else if (typeof panelUiItem.panel !== "undefined") {
-				this._getPanelRequiredParameters(panelUiItem.panel.uiItems, requiredParameters);
-			}
-		}
-	}
-
-	_getTabRequiredParameters(tab, requiredParameters) {
-		if (typeof tab.content.panel !== "undefined") {
-			this._getPanelRequiredParameters(tab.content.panel.uiItems, requiredParameters);
-		} else if (typeof tab.content.tabs !== "undefined") {
-			for (const nestedTab of tab.content.tabs) {
-				this._getTabRequiredParameters(nestedTab, requiredParameters);
-			}
-		}
-	}
-
 	parseRequiredParameters(formData) {
 		var requiredParameters = [];
-		for (const uiItem of formData.uiItems) {
-			if (typeof uiItem.tabs !== "undefined") {
-				for (const tab of uiItem.tabs) {
-					this._getTabRequiredParameters(tab, requiredParameters);
-				}
-			}
-		}
+		requiredParameters = UiConditionsParser.parseRequiredParameters(requiredParameters, formData);
 
 		this.setState({ requiredParameters: requiredParameters });
 	}
@@ -1284,6 +1230,7 @@ export default class EditorForm extends React.Component {
 EditorForm.propTypes = {
 	form: PropTypes.object,
 	additionalComponents: PropTypes.object,
+	useObjectModelInfo: PropTypes.object,
 	submitMethod: PropTypes.func,
 	showPropertiesButtons: PropTypes.func
 };

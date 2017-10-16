@@ -15,6 +15,52 @@ import PropertyUtils from "../util/property-utils.js";
 const ERROR = "error";
 const WARNING = "warning";
 
+function evaluateInput(validationDefinition, userInput, control, dataModel, requiredParameters, rowIndex, colIndex, setTableErrorState) {
+	let output;
+	const coordinates = {};
+	if (control.valueDef.isMap) {
+		// For tables we need to evaluate all non-keyDef cells
+		const cellValues = userInput[control.name];
+		for (let row = 0; row < cellValues.length; row++) {
+			for (let col = 0; col < cellValues[row].length; col++) {
+				if (col === control.keyIndex) {
+					// We don't evaluate the key column
+					continue;
+				}
+				coordinates.rowIndex = row;
+				coordinates.colIndex = col;
+				coordinates.skipVal = cellValues[row][control.keyIndex];
+				const tmp = validateInput(validationDefinition, userInput, control.controlType, dataModel,
+					coordinates, requiredParameters);
+				const isError = PropertyUtils.toType(tmp) === "object";
+				if (!output || PropertyUtils.toType(output) === "boolean") {
+					// Set the return value with preference to errors
+					output = tmp;
+				}
+				if (PropertyUtils.toType(rowIndex) === "number" && PropertyUtils.toType(colIndex) === "number") {
+					// If we have current cell coordinates, they take precedence
+					if (row === rowIndex && col === colIndex && isError) {
+						output = tmp;
+						output.isActiveCell = true;
+					}
+				}
+				if (isError) {
+					setTableErrorState(row, col, tmp);
+				}
+			}
+		}
+		// validate on table-level if cell validation didn't result in an error already
+		if (!output || PropertyUtils.toType(output) === "boolean") {
+			output = validateInput(validationDefinition, userInput, control.controlType, dataModel,
+				coordinates, requiredParameters);
+		}
+	} else {
+		output = validateInput(validationDefinition, userInput, control.controlType, dataModel,
+			coordinates, requiredParameters);
+	}
+	return output;
+}
+
 /**
 * @param {Object} definition Condition definition
 * @param {Any} userInput Contains the control value entered by the user
@@ -247,6 +293,7 @@ function condition(data, userInput, info) {
 	}
 
 	var paramInput = _getUserInput(userInput, paramName, { rowIndex: row, colIndex: column });
+
 	if (typeof param2 !== "undefined" && info.conditionType && info.conditionType === "validation" &&
 		op !== "isEmpty" && op !== "isNotEmpty" && op !== "cellNotEmpty") {
 		const valid = _validateParams(userInput, param, info.requiredParameters, ERROR);
@@ -514,7 +561,7 @@ function _handleContains(param, paramInput, userInput, param2, value, info) {
 			case "string":
 				return paramInput.indexOf(userInput[param2]) >= 0;
 			case "object":
-				return _searchInArray(paramInput, userInput[param2], false);
+				return paramInput === null ? false : _searchInArray(paramInput, userInput[param2], false);
 			default:
 				logger.warn("Ignoring condition operation 'contains' for parameter_ref " + param + " with input data type " + dataType);
 				return true;
@@ -524,7 +571,7 @@ function _handleContains(param, paramInput, userInput, param2, value, info) {
 			case "string":
 				return paramInput.indexOf(value) >= 0;
 			case "object":
-				return _searchInArray(paramInput, value, false);
+				return paramInput === null ? false : _searchInArray(paramInput, value, false);
 			default:
 				logger.warn("Ignoring condition operation 'contains' for parameter_ref " + param + " with input data type " + dataType);
 				return true;
@@ -550,7 +597,7 @@ function _handleNotContains(param, paramInput, userInput, param2, value, info) {
 			case "string":
 				return paramInput.indexOf(userInput[param2]) < 0;
 			case "object":
-				return !_searchInArray(paramInput, userInput[param2], false);
+				return paramInput === null ? true : !_searchInArray(paramInput, userInput[param2], false);
 			default:
 				logger.warn("Ignoring condition operation 'notContains' for parameter_ref " + param + " with input data type " + dataType);
 				return true;
@@ -560,7 +607,7 @@ function _handleNotContains(param, paramInput, userInput, param2, value, info) {
 			case "string":
 				return paramInput.indexOf(value) < 0;
 			case "object":
-				return !_searchInArray(paramInput, value, false);
+				return paramInput === null ? true : !_searchInArray(paramInput, value, false);
 			default:
 				logger.warn("Ignoring condition operation 'notContains' for parameter_ref " + param + " with input data type " + dataType);
 				return true;
@@ -656,5 +703,6 @@ function _searchInArray(array, element, state) {
 }
 
 module.exports = {
+	evaluateInput: evaluateInput,
 	validateInput: validateInput
 };

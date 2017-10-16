@@ -15,7 +15,6 @@ import PropTypes from "prop-types";
 import ValidationMessage from "./validation-message.jsx";
 import ValidationIcon from "./validation-icon.jsx";
 import UiConditions from "../ui-conditions/ui-conditions.js";
-import PropertyUtils from "../util/property-utils.js";
 import { DEFAULT_VALIDATION_MESSAGE, VALIDATION_MESSAGE, EDITOR_CONTROL } from "../constants/constants.js";
 
 export default class EditorControl extends React.Component {
@@ -365,49 +364,8 @@ export default class EditorControl extends React.Component {
 	}
 
 	evaluateInput(validation, userInput) {
-		let output;
-		const coordinates = {};
-		if (this.props.control.valueDef.isMap) {
-			// For tables we need to evaluate all non-keyDef cells
-			const cellValues = userInput[this.props.control.name];
-			for (let row = 0; row < cellValues.length; row++) {
-				for (let col = 0; col < cellValues[row].length; col++) {
-					if (col === this.props.control.keyIndex) {
-						// We don't evaluate the key column
-						continue;
-					}
-					coordinates.rowIndex = row;
-					coordinates.colIndex = col;
-					coordinates.skipVal = cellValues[row][this.props.control.keyIndex];
-					const tmp = UiConditions.validateInput(validation.definition, userInput, this.props.control.controlType, this.props.dataModel,
-						coordinates, this.props.requiredParameters);
-					const isError = PropertyUtils.toType(tmp) === "object";
-					if (!output || PropertyUtils.toType(output) === "boolean") {
-						// Set the return value with preference to errors
-						output = tmp;
-					}
-					if (PropertyUtils.toType(this.rowIndex) === "number" && PropertyUtils.toType(this.colIndex) === "number") {
-						// If we have current cell coordinates, they take precedence
-						if (row === this.rowIndex && col === this.colIndex && isError) {
-							output = tmp;
-							output.isActiveCell = true;
-						}
-					}
-					if (isError) {
-						this.setTableErrorState(row, col, tmp);
-					}
-				}
-			}
-			// validate on table-level if cell validation didn't result in an error already
-			if (!output || PropertyUtils.toType(output) === "boolean") {
-				output = UiConditions.validateInput(validation.definition, userInput, this.props.control.controlType, this.props.dataModel,
-					coordinates, this.props.requiredParameters);
-			}
-		} else {
-			output = UiConditions.validateInput(validation.definition, userInput, this.props.control.controlType, this.props.dataModel,
-				coordinates, this.props.requiredParameters);
-		}
-		return output;
+		return UiConditions.evaluateInput(validation.definition, userInput, this.props.control, this.props.dataModel, this.props.requiredParameters,
+			this.rowIndex, this.colIndex, this.setTableErrorState);
 	}
 
 	doGroupValidationUpdate(validation, errorMessage, output, controlName) {

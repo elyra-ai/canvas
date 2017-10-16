@@ -6,7 +6,7 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-/* eslint complexity: ["error", 13] */
+/* eslint complexity: ["error", 14] */
 /* eslint max-len: ["error", 200] */
 
 import React from "react";
@@ -17,11 +17,12 @@ import { IntlProvider, FormattedMessage, addLocaleData, injectIntl, intlShape } 
 import en from "react-intl/locale-data/en";
 var i18nData = require("../intl/en.js");
 
-import { CommonCanvas, ObjectModel, CommonProperties, CommandStack } from "common-canvas";
+import { CommonCanvas, ObjectModel, CommonProperties, CommandStack, FlowValidation } from "common-canvas";
 
 import Console from "./components/console.jsx";
 import SidePanel from "./components/sidepanel.jsx";
 import TestService from "./services/TestService";
+import NodeToForm from "./NodeToForm/node-to-form";
 
 import {
 	SIDE_PANEL_CANVAS,
@@ -92,7 +93,9 @@ class App extends React.Component {
 
 		this.applyDiagramEdit = this.applyDiagramEdit.bind(this);
 		this.applyPropertyChanges = this.applyPropertyChanges.bind(this);
-		this.deleteObjectsActionHandler = this.deleteObjectsActionHandler.bind(this);
+		this.applyPropertyChanges = this.applyPropertyChanges.bind(this);
+		this.validateFlow = this.validateFlow.bind(this);
+		this.getNodeForm = this.getNodeForm.bind(this);
 		this.nodeEditHandler = this.nodeEditHandler.bind(this);
 		this.refreshContent = this.refreshContent.bind(this);
 
@@ -110,7 +113,7 @@ class App extends React.Component {
 			canvas: ObjectModel.getCanvasInfo()
 		};
 		TestService.postSessionData(sessionData);
-
+		NodeToForm.initialize();
 		// this.sidePanelCanvas();
 	}
 
@@ -122,12 +125,19 @@ class App extends React.Component {
 		return (<FormattedMessage id={ labelId } defaultMessage={ defaultLabel } />);
 	}
 
+	getNodeForm(nodeId) {
+		return NodeToForm.getNodeForm(nodeId);
+	}
+
 	setDiagramJSON(canvasJson) {
 		ObjectModel.setEmptyPipelineFlow();
 		this.forceUpdate();
 		CommandStack.clearCommandStack();
+		NodeToForm.clearNodeForms();
 		if (canvasJson) {
 			ObjectModel.setPipelineFlow(canvasJson);
+			NodeToForm.setNodeForms(ObjectModel.getNodes());
+			FlowValidation.validateFlow(this.getNodeForm);
 			TestService.postCanvas(canvasJson);
 			this.log("Canvas diagram set");
 		} else {
@@ -265,6 +275,10 @@ class App extends React.Component {
 		this.log("applyPropertyChanges()", data);
 	}
 
+	validateFlow(source) {
+		FlowValidation.validateFlow(this.getNodeForm);
+	}
+
 	contextMenuHandler(source) {
 		const EDIT_SUB_MENU = [
 			{ action: "cutSelection", label: this.getLabel("edit-context.cutSelection", "Cut") },
@@ -334,6 +348,7 @@ class App extends React.Component {
 			{ action: "undo", label: this.getLabel("canvas-context.undo", "Undo") },
 			{ action: "redo", label: this.getLabel("canvas-context.redo", "Redo") },
 			{ divider: true },
+			{ action: "validateFlow", label: this.getLabel("canvas-context.validateFlow", "Validate Flow") },
 			{ action: "streamProperties", label: this.getLabel("canvas-context.streamProperties", "Options") }
 		];
 
@@ -411,6 +426,9 @@ class App extends React.Component {
 				type += " to " + data.targetNodes[0]; // Comment link
 			}
 		}
+		if (data.editType === "createNode") {
+			NodeToForm.setNodeForm(data.nodeId, type);
+		}
 
 		this.log("editActionHandler() " + data.editType, type, data.label);
 	}
@@ -431,7 +449,7 @@ class App extends React.Component {
 		} else if (action === "deleteLink") {
 			this.log("action: deleteLink", source.id);
 		} else if (action === "editNode") {
-			this.log("action: editNode", source.targetObject.id);
+			this.editNodeHandler(source);
 		} else if (action === "viewModel") {
 			this.log("action: viewModel", source.targetObject.id);
 		} else if (action === "disconnectNode") {
@@ -441,7 +459,6 @@ class App extends React.Component {
 		} else if (action === "expandSuperNode") {
 			this.log("action: expandSuperNode", source.targetObject.id);
 		} else if (action === "deleteObjects") {
-			// weird code to get around eslint complexity error
 			this.deleteObjectsActionHandler(source);
 		} else if (action === "executeNode") {
 			this.log("action: executeNode", source.targetObject.id);
@@ -449,6 +466,8 @@ class App extends React.Component {
 			this.log("action: previewNode", source.targetObject.id);
 		} else if (action === "deploy") {
 			this.log("action: deploy", source.targetObject.id);
+		} else if (action === "validateFlow") {
+			this.validateFlow(source);
 		}
 	}
 
@@ -501,6 +520,27 @@ class App extends React.Component {
 				position: "top-right" });
 		}
 		return decorators;
+	}
+
+	editNodeHandler(source) {
+		this.log("action: editNode", source.targetObject.id);
+		const properties = this.getNodeForm(source.targetObject.id);
+		const config = {
+			"nodeId": source.targetObject.id,
+			"useInternalObjectModel": true,
+		};
+
+		const propsInfo = {
+			title: <FormattedMessage id={ "dialog.nodePropertiesTitle" } />,
+			objectModelInfo: config,
+			formData: properties.data.formData,
+			parameterDef: properties.data,
+			applyPropertyChanges: this.applyPropertyChanges,
+			closePropertiesDialog: this.closePropertiesEditorDialog,
+			additionalComponents: properties.additionalComponents
+		};
+
+		this.setState({ showPropertiesDialog: true, propertiesInfo: propsInfo });
 	}
 
 	refreshContent(streamId, diagramId) {

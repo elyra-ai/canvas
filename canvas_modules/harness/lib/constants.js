@@ -29,6 +29,8 @@ _defineConstant("APP_SESSION_KEY", "keyboard cat");
 _defineConstant("TEST_RESOURCES_DIAGRAMS_PATH", "../test_resources/diagrams/");
 _defineConstant("TEST_RESOURCES_PALETTES_PATH", "../test_resources/palettes/");
 _defineConstant("TEST_RESOURCES_PROPERTIES_PATH", "../test_resources/properties/");
+_defineConstant("TEST_RESOURCES_FORMS_PATH", "../test_resources/forms/");
+_defineConstant("TEST_RESOURCES_PARAMETERDEFS_PATH", "../test_resources/parameterDefs/");
 
 _defineConstant("PROCESS_EXIT_TIMEOUT", 5000); // ms (5 seconds)
 _defineConstant("FAILURE_EXIT_CODE", 1);

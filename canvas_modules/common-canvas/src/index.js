@@ -11,5 +11,7 @@ import CommonCanvas from "./common-canvas.jsx";
 import ObjectModel from "./object-model/object-model";
 import CommonProperties from "./common-properties/common-properties.jsx";
 import CommandStack from "./command-stack/command-stack";
+import FlowValidation from "./flow-validation/validate-flow";
 
-export { CommonCanvas, ObjectModel, CommonProperties, CommandStack };
+
+export { CommonCanvas, ObjectModel, CommonProperties, CommandStack, FlowValidation };

@@ -120,6 +120,8 @@ export default class CommonCanvas extends React.Component {
 				const node = ObjectModel.createNode(data);
 				const command = new CreateNodeAction(node);
 				CommandStack.do(command);
+				// need to pass the nodeid along to any this.props.editActionHandlers
+				data.nodeId = node.id;
 				break;
 			}
 			case "moveObjects": {
