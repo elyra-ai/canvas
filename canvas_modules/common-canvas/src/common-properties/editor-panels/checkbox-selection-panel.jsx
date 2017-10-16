@@ -57,7 +57,7 @@ export default class CheckboxSelectionPanel extends React.Component {
 		const checked = this.state.controlValue;
 		var cb = (<Checkbox
 			id={this.props.panel.id}
-			name={this.props.panel.group.label.default}
+			name={this.props.panel.label.text}
 			onChange={this.handleChange}
 			checked={checked}
 		/>);

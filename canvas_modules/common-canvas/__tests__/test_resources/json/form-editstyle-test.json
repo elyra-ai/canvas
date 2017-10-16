@@ -2,9 +2,16 @@
   "paramDef": {
     "current_parameters": {
       "renamed_fields": [
-        ["Age", "Age"],
-        ["BP", "BP-1"]
-      ]
+        [
+          "Age",
+          "Age"
+        ],
+        [
+          "BP",
+          "BP-1"
+        ]
+      ],
+      "samplingSize": -1
     },
     "complex_types": [
       {
@@ -35,6 +42,12 @@
         "type": "map[string,RenameFieldEntry]",
         "role": "column",
         "default": []
+      },
+      {
+        "id": "samplingSize",
+        "type": "long",
+        "default": -1,
+        "required": true
       }
     ],
     "uihints": {
@@ -79,6 +92,15 @@
           "description": {
             "default": "Rename columns in the active dataset"
           }
+        },
+        {
+          "parameter_ref": "samplingSize",
+          "label": {
+            "default": "Maximum sample size"
+          },
+          "description": {
+            "default": "Maximum number of rows in the sample"
+          }
         }
       ],
       "group_info": [
@@ -87,9 +109,24 @@
           "label": {
             "default": "Settings"
           },
-          "type": "columnSelection",
-          "parameter_refs": [
-            "renamed_fields"
+          "type": "panels",
+          "group_info": [
+            {
+              "type": "columnSelection",
+              "parameter_refs": [
+                "renamed_fields"
+              ]
+            },
+            {
+              "id": "sample-size",
+              "type": "checkboxPanel",
+              "label": {
+                "default": "Use maximum sample size"
+              },
+              "parameter_refs": [
+                "samplingSize"
+              ]
+            }
           ]
         }
       ]
@@ -203,90 +240,48 @@
               "itemType": "panel",
               "panel": {
                 "id": "basic-settings",
-                "panelType": "columnSelection",
+                "panelType": "general",
                 "uiItems": [
                   {
-                    "itemType": "control",
-                    "control": {
-                      "name": "renamed_fields",
-                      "label": {
-                        "text": "Rename columns"
-                      },
-                      "description": {
-                        "text": "Rename columns in the active dataset"
-                      },
-                      "controlType": "structuretable",
-                      "valueDef": {
-                        "propType": "structure",
-                        "isList": false,
-                        "isMap": true,
-                        "defaultValue": []
-                      },
-                      "separateLabel": true,
-                      "subControls": [
+                    "itemType": "panel",
+                    "panel": {
+                      "panelType": "columnSelection",
+                      "uiItems": [
                         {
-                          "name": "field",
-                          "label": {
-                            "text": "Input name"
-                          },
-                          "controlType": "selectcolumn",
-                          "valueDef": {
-                            "propType": "string",
-                            "isList": false,
-                            "isMap": false
-                          },
-                          "role": "column",
-                          "visible": true,
-                          "width": 26
-                        },
-                        {
-                          "name": "new_name",
-                          "label": {
-                            "text": "Output name"
-                          },
-                          "controlType": "textfield",
-                          "valueDef": {
-                            "propType": "string",
-                            "isList": false,
-                            "isMap": false,
-                            "defaultValue": ""
-                          },
-                          "role": "new_column",
-                          "visible": true,
-                          "width": 26,
-                          "editStyle": "subpanel"
-                        },
-                        {
-                          "name": "new_label",
-                          "label": {
-                            "text": "New Label"
-                          },
-                          "controlType": "textfield",
-                          "valueDef": {
-                            "propType": "string",
-                            "isList": false,
-                            "isMap": false,
-                            "defaultValue": ""
-                          },
-                          "visible": true,
-                          "width": 26,
-                          "editStyle": "inline"
-                        }
-                      ],
-                      "keyIndex": 0,
-                      "defaultRow": [
-                        "",
-                        ""
-                      ],
-                      "childItem": {
-                        "itemType": "additionalLink",
-                        "panel": {
-                          "id": "RenameFieldEntry",
-                          "panelType": "general",
-                          "uiItems": [
-                            {
-                              "itemType": "control",
-                              "control": {
+                          "itemType": "control",
+                          "control": {
+                            "name": "renamed_fields",
+                            "label": {
+                              "text": "Rename columns"
+                            },
+                            "description": {
+                              "text": "Rename columns in the active dataset"
+                            },
+                            "controlType": "structuretable",
+                            "valueDef": {
+                              "propType": "structure",
+                              "isList": false,
+                              "isMap": true,
+                              "defaultValue": []
+                            },
+                            "separateLabel": true,
+                            "subControls": [
+                              {
+                                "name": "field",
+                                "label": {
+                                  "text": "Input name"
+                                },
+                                "controlType": "selectcolumn",
+                                "valueDef": {
+                                  "propType": "string",
+                                  "isList": false,
+                                  "isMap": false
+                                },
+                                "role": "column",
+                                "visible": true,
+                                "width": 26
+                              },
+                              {
                                 "name": "new_name",
                                 "label": {
                                   "text": "Output name"
@@ -298,13 +293,96 @@
                                   "isMap": false,
                                   "defaultValue": ""
                                 },
-                                "separateLabel": true
+                                "role": "new_column",
+                                "visible": true,
+                                "width": 26,
+                                "editStyle": "subpanel"
+                              },
+                              {
+                                "name": "new_label",
+                                "label": {
+                                  "text": "New Label"
+                                },
+                                "controlType": "textfield",
+                                "valueDef": {
+                                  "propType": "string",
+                                  "isList": false,
+                                  "isMap": false,
+                                  "defaultValue": ""
+                                },
+                                "visible": true,
+                                "width": 26,
+                                "editStyle": "inline"
                               }
+                            ],
+                            "keyIndex": 0,
+                            "defaultRow": [
+                              "",
+                              ""
+                            ],
+                            "childItem": {
+                              "itemType": "additionalLink",
+                              "panel": {
+                                "id": "RenameFieldEntry",
+                                "panelType": "general",
+                                "uiItems": [
+                                  {
+                                    "itemType": "control",
+                                    "control": {
+                                      "name": "new_name",
+                                      "label": {
+                                        "text": "Output name"
+                                      },
+                                      "controlType": "textfield",
+                                      "valueDef": {
+                                        "propType": "string",
+                                        "isList": false,
+                                        "isMap": false,
+                                        "defaultValue": ""
+                                      },
+                                      "separateLabel": true
+                                    }
+                                  }
+                                ]
+                              },
+                              "text": "...",
+                              "secondaryText": "RenameFieldEntry"
                             }
-                          ]
-                        },
-                        "text": "...",
-                        "secondaryText": "RenameFieldEntry"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "itemType": "checkboxSelector",
+                    "panel": {
+                      "id": "sample-size",
+                      "panelType": "checkboxPanel",
+                      "uiItems": [
+                        {
+                          "itemType": "control",
+                          "control": {
+                            "name": "samplingSize",
+                            "label": {
+                              "text": "Maximum sample size"
+                            },
+                            "description": {
+                              "text": "Maximum number of rows in the sample"
+                            },
+                            "controlType": "numberfield",
+                            "valueDef": {
+                              "propType": "long",
+                              "isList": false,
+                              "isMap": false,
+                              "defaultValue": -1
+                            },
+                            "separateLabel": true,
+                            "required": true
+                          }
+                        }
+                      ],
+                      "label": {
+                        "text": "Use maximum sample size"
                       }
                     }
                   }
@@ -332,9 +410,16 @@
     "data": {
       "currentParameters": {
         "renamed_fields": [
-          ["Age", "Age"],
-          ["BP", "BP-1"]
-        ]
+          [
+            "Age",
+            "Age"
+          ],
+          [
+            "BP",
+            "BP-1"
+          ]
+        ],
+        "samplingSize": -1
       },
       "datasetMetadata": {
         "fields": [

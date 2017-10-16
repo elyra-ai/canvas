@@ -60,12 +60,12 @@ class Description {
 }
 
 class ControlPanel {
-	constructor(id, panelType, controls, group) {
+	constructor(id, panelType, controls, label) {
 		this.id = id;
 		this.panelType = panelType;
 		this.uiItems = controls;
-		if (group) {
-			this.group = group;
+		if (label) {
+			this.label = label;
 		}
 	}
 }
@@ -126,7 +126,7 @@ function _makeUIItem(parameterMetadata, group, structureMetadata, l10nProvider) 
 	}
 	case GroupType.CHECKBOX_PANEL: {
 		return UIItem.makeCheckboxPanel(new ControlPanel(groupName, PanelType.CHECKBOX_PANEL,
-			_makeControls(parameterMetadata, group, structureMetadata, l10nProvider), group));
+			_makeControls(parameterMetadata, group, structureMetadata, l10nProvider), new Label(l10nProvider.l10nLabel(group, group.name))));
 	}
 	default:
 		return UIItem.makeStaticText("(Unknown group type '" + group.groupType() + "')");
