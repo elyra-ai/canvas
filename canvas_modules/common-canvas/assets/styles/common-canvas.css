@@ -300,7 +300,6 @@ polyline.link-arrow-head {
 .react-contextmenu-item.contextmenu-divider {
   height: 1px;
   display: block;
-  margin: 0 2px;
   overflow: hidden;
   background-color: #8c8c8c;
   padding: 1px;
