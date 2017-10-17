@@ -205,6 +205,7 @@ export default class EditorForm extends React.Component {
 				}
 			}
 		}
+		// TODO add in customPanels
 		return values;
 	}
 
@@ -275,7 +276,7 @@ export default class EditorForm extends React.Component {
 		this.setState({ valuesTable: values },
 			function() {
 				const control = that.getControl(controlId);
-				if (control) {
+				if (control && control.validateInput) {
 					control.validateInput(cellCoords);
 				} else if (typeof that.refs === "object") { // needed for subpanel validations
 					that.validateChildRefs(that.refs, controlId);
@@ -879,8 +880,21 @@ export default class EditorForm extends React.Component {
 			return this.genPanelSelector(key, uiItem.tabs, idPrefix, controlValueAccessor, datasetMetadata, uiItem.dependsOn);
 		} else if (uiItem.itemType === "checkboxSelector") {
 			return this.genPanel(key, uiItem.panel, idPrefix, controlValueAccessor, datasetMetadata);
+		} else if (uiItem.itemType === "customPanel") {
+			return this.generateCustomPanel(uiItem.panel, controlValueAccessor, datasetMetadata);
 		}
 		return <div>Unknown: {uiItem.itemType}</div>;
+	}
+
+	generateCustomPanel(panel, controlValueAccessor, datasetMetadata) {
+		if (this.props.customPanels) {
+			for (const custPanel of this.props.customPanels) {
+				if (custPanel.id() === panel.id) {
+					return new custPanel(panel.parameters, controlValueAccessor, this.updateControlValue, datasetMetadata).renderPanel();
+				}
+			}
+		}
+		return <div>Panel Not Found: {panel.id}</div>;
 	}
 
 	generateSharedControlNames(panel) {
@@ -1232,5 +1246,6 @@ EditorForm.propTypes = {
 	additionalComponents: PropTypes.object,
 	useObjectModelInfo: PropTypes.object,
 	submitMethod: PropTypes.func,
-	showPropertiesButtons: PropTypes.func
+	showPropertiesButtons: PropTypes.func,
+	customPanels: PropTypes.array
 };

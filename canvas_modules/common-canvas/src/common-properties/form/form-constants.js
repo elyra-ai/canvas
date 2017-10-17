@@ -16,7 +16,8 @@ const ItemType = {
 	SUB_TABS: "subTabs",
 	PRIMARY_TABS: "primaryTabs",
 	PANEL_SELECTOR: "panelSelector",
-	CHECKBOX_SELECTOR: "checkboxSelector"
+	CHECKBOX_SELECTOR: "checkboxSelector",
+	CUSTOM_PANEL: "customPanel"
 };
 
 const EditStyle = {
@@ -39,14 +40,16 @@ const GroupType = {
 	COLUMN_ALLOCATION: "columnAllocation", // deprecated
 	COLUMN_SELECTION: "columnSelection",
 	PANEL_SELECTOR: "panelSelector",
-	CHECKBOX_PANEL: "checkboxPanel"
+	CHECKBOX_PANEL: "checkboxPanel",
+	CUSTOM_PANEL: "customPanel"
 };
 
 const PanelType = {
 	GENERAL: "general",
 	COLUMN_ALLOCATION: "columnAllocation",
 	COLUMN_SELECTION: "columnSelection",
-	CHECKBOX_PANEL: "checkboxPanel"
+	CHECKBOX_PANEL: "checkboxPanel",
+	CUSTOM: "custom"
 };
 
 const ControlType = {

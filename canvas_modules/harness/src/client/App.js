@@ -22,6 +22,10 @@ import { CommonCanvas, ObjectModel, CommonProperties, CommandStack, FlowValidati
 import Console from "./components/console.jsx";
 import SidePanel from "./components/sidepanel.jsx";
 import TestService from "./services/TestService";
+
+import CustomSliderPanel from "./components/custom-panels/CustomSliderPanel";
+import CustomTogglePanel from "./components/custom-panels/CustomTogglePanel";
+
 import NodeToForm from "./NodeToForm/node-to-form";
 
 import {
@@ -655,6 +659,7 @@ class App extends React.Component {
 				useModalDialog={this.state.modalPropertiesDialog}
 				applyLabel="Apply"
 				rejectLabel="Reject"
+				customPanels={[CustomSliderPanel, CustomTogglePanel]}
 			/>
 		</div>);
 

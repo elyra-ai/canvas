@@ -70,6 +70,14 @@ class ControlPanel {
 	}
 }
 
+class CustomControlPanel {
+	constructor(id, panelType, parameters) {
+		this.id = id;
+		this.panelType = panelType;
+		this.parameters = parameters;
+	}
+}
+
 /**
  * Creates tab based on parameter definition
  */
@@ -127,6 +135,9 @@ function _makeUIItem(parameterMetadata, group, structureMetadata, l10nProvider) 
 	case GroupType.CHECKBOX_PANEL: {
 		return UIItem.makeCheckboxPanel(new ControlPanel(groupName, PanelType.CHECKBOX_PANEL,
 			_makeControls(parameterMetadata, group, structureMetadata, l10nProvider), new Label(l10nProvider.l10nLabel(group, group.name))));
+	}
+	case GroupType.CUSTOM_PANEL: {
+		return UIItem.makeCustomPanel(new CustomControlPanel(groupName, PanelType.PANEL, group.parameterNames()));
 	}
 	default:
 		return UIItem.makeStaticText("(Unknown group type '" + group.groupType() + "')");

@@ -331,3 +331,15 @@
 .properties-small {
 	width: 40%;
 }
+
+.custom-slider .slider .text--slider {
+	padding: .5em 25px .5em 0 !important;
+}
+
+.custom-toggle {
+    display: flex;
+}
+
+.custom-toggle .text {
+    padding-left: 10px;
+}

@@ -86,4 +86,10 @@ export class UIItem {
 			panel: panel
 		});
 	}
+	static makeCustomPanel(panel) {
+		return new UIItem({
+			itemType: ItemType.CUSTOM_PANEL,
+			panel: panel
+		});
+	}
 }

@@ -125,6 +125,7 @@ export default class CommonProperties extends React.Component {
 					useObjectModelInfo={this.props.propertiesInfo.useObjectModelInfo}
 					additionalComponents={this.props.propertiesInfo.additionalComponents}
 					showPropertiesButtons={this.showPropertiesButtons}
+					customPanels={this.props.customPanels}
 				/>);
 				const title = formData.label;
 				const size = formData.editorSize;
@@ -177,5 +178,6 @@ CommonProperties.propTypes = {
 	rejectLabel: PropTypes.string,
 	useModalDialog: PropTypes.bool,
 	useOwnContainer: PropTypes.bool,
-	propertiesInfo: PropTypes.object.isRequired
+	propertiesInfo: PropTypes.object.isRequired,
+	customPanels: PropTypes.array // array of custom panels
 };
