@@ -242,6 +242,9 @@ class Toolbar extends React.Component {
 	generateDisabledActionIcon(actionObj, actionId, overflow) {
 		const overflowClassName = overflow ? "overflow" : "";
 		let icon = this[actionObj.action + "DisabledIcon"];
+		if (actionObj.action.startsWith("palette")) {
+			icon = this.paletteDisabledIcon;
+		}
 		if (actionObj.iconDisabled) {
 			icon = actionObj.iconDisabled;
 		}

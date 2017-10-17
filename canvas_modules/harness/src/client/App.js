@@ -34,7 +34,8 @@ import {
 	D3_ENGINE,
 	HALO_CONNECTION,
 	CURVE_LINKS,
-	FLYOUT
+	FLYOUT,
+	NONE
 } from "./constants/constants.js";
 
 import listview32 from "../graphics/list-view_32.svg";
@@ -60,6 +61,7 @@ class App extends React.Component {
 			selectedPanel: null,
 			selectedRenderingEngine: D3_ENGINE,
 			selectedConnectionType: HALO_CONNECTION,
+			selectedLayout: NONE,
 			selectedLinkType: CURVE_LINKS,
 			selectedPaletteLayout: FLYOUT,
 			showContextMenu: false,
@@ -162,6 +164,7 @@ class App extends React.Component {
 
 	setLayoutDirection(selectedLayout) {
 		ObjectModel.fixedAutoLayout(selectedLayout);
+		this.setState({ selectedLayout: selectedLayout });
 		this.log("Layout selected", selectedLayout);
 	}
 
@@ -622,6 +625,8 @@ class App extends React.Component {
 			enablePaletteLayout: this.state.selectedPaletteLayout
 		};
 
+		var layoutAction = this.state.selectedLayout === NONE;
+
 		var toolbarConfig = [
 			{ action: "palette", label: "Palette", enable: true },
 			{ divider: true },
@@ -635,8 +640,8 @@ class App extends React.Component {
 			{ action: "paste", label: "Paste", enable: false },
 			{ action: "addComment", label: "Add Comment", enable: true },
 			{ action: "delete", label: "Delete", enable: true },
-			{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: true },
-			{ action: "arrangeVertically", label: "Arrange Vertically", enable: true }
+			{ action: "arrangeHorizontally", label: "Arrange Horizontally", enable: layoutAction },
+			{ action: "arrangeVertically", label: "Arrange Vertically", enable: layoutAction }
 		];
 
 		var commonCanvas = (<div id="canvas-container">

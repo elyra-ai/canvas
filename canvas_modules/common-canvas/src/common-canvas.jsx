@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 /* eslint complexity: ["error", 14] */
+/* eslint max-depth: ["error", 6] */
 
 import React from "react";
 import PropTypes from "prop-types";
@@ -67,6 +68,38 @@ export default class CommonCanvas extends React.Component {
 		this.clickActionHandler = this.clickActionHandler.bind(this);
 		this.decorationActionHandler = this.decorationActionHandler.bind(this);
 		this.toolbarMenuActionHandler = this.toolbarMenuActionHandler.bind(this);
+	}
+
+	componentWillReceiveProps(newProps) {
+		if (newProps.toolbarConfig) {
+			const newToolbarConfig = newProps.toolbarConfig;
+			const oldToolbarConfig = this.state.toolbarConfig;
+
+			let identical = true;
+			if (newToolbarConfig.length !== oldToolbarConfig.length) {
+				identical = false;
+			}
+			if (identical) {
+				for (let i = 0; i < newToolbarConfig.length; i++) {
+					for (let j = 0; j < oldToolbarConfig.length; j++) {
+						if (newToolbarConfig[i].action && oldToolbarConfig[j].action &&
+								((newToolbarConfig[i].action.startsWith("palette") &&
+									oldToolbarConfig[j].action.startsWith("palette")) &&
+									newToolbarConfig[i].enable !== oldToolbarConfig[j].enable) ||
+								(newToolbarConfig[i].action === oldToolbarConfig[j].action) &&
+									(newToolbarConfig[i].label !== oldToolbarConfig[j].label ||
+									newToolbarConfig[i].enable !== oldToolbarConfig[j].enable)) {
+							identical = false;
+							break;
+						}
+					}
+				}
+			}
+
+			if (!identical) {
+				this.setState({ toolbarConfig: newProps.toolbarConfig });
+			}
+		}
 	}
 
 	openPalette() {

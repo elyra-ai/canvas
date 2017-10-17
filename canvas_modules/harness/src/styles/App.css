@@ -343,3 +343,7 @@
 .custom-toggle .text {
     padding-left: 10px;
 }
+
+.list-item-containers .list-item.overflow {
+	width: 170px;
+}
