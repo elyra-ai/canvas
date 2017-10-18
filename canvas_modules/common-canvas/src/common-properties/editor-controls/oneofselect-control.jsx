@@ -95,13 +95,14 @@ export default class OneofselectControl extends EditorControl {
 				label: control.valueLabels[j]
 			});
 		}
-		options.forEach((option) => {
-			if (option.value === selectedValue) {
-				selectedOption = option;
-			} else {
-				selectedOption = selectedValue;
+
+		for (var k = 0; k < options.length; k++) {
+			if (options[k].value === selectedValue) {
+				selectedOption = options[k];
+				break;
 			}
-		});
+		}
+
 		return {
 			options: options,
 			selectedOption: selectedOption
@@ -148,7 +149,7 @@ export default class OneofselectControl extends EditorControl {
 								onChange={this.handleChange}
 								onBlur={this.validateInput}
 								onFocus={this.onFocus}
-								value={dropDown.selectedOption}
+								value={dropDown.selectedOption.label}
 								placeholder={this.props.control.additionalText}
 								ref="input"
 							/>
