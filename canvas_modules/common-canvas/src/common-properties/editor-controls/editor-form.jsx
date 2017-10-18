@@ -163,6 +163,9 @@ export default class EditorForm extends React.Component {
 						for (let j = 0; j < values.length; j++) {
 							temp.push(data.fields.filter(function(element) {
 								if (Array.isArray(values)) {
+									if (Array.isArray(values[j])) {
+										return values[j][0].split(",")[0].indexOf(element.name) > -1;
+									}
 									return values[j].split(",")[0].indexOf(element.name) > -1;
 								}
 								return values.split(",")[0].indexOf(element.name) > -1;

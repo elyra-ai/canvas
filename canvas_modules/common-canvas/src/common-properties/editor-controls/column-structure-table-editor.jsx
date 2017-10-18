@@ -337,7 +337,11 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			const padding = colIndex === 0 ? "6px 0 10px 15px" : "6px 0 10px 0";
 			columnStyle = { "width": colWidth, "padding": padding };
 			// workaround adding span show column shows up when no data is in cell
-			cell = <Td key={colIndex} column={columnDef.name} style={columnStyle}><span>{controlValue[rowIndex][colIndex]}</span></Td>;
+			let cellContent = controlValue[rowIndex][colIndex];
+			if (Array.isArray(cellContent)) {
+				cellContent = cellContent.join(", ");
+			}
+			cell = <Td key={colIndex} column={columnDef.name} style={columnStyle}><span>{cellContent}</span></Td>;
 		}
 		return cell;
 	}
