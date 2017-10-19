@@ -56,7 +56,7 @@
                 "ui_data": {
                   "cardinality": {
                     "min": "0",
-                    "max": "1"
+                    "max": "-1"
                   },
                   "label": {
                     "default": "Output Port"
@@ -114,7 +114,7 @@
                 "ui_data": {
                   "cardinality": {
                     "min": "0",
-                    "max": "1"
+                    "max": "-1"
                   },
                   "label": {
                     "default": "Output Port"
@@ -221,7 +221,7 @@
               "ui_data": {
                 "cardinality": {
                   "min": "0",
-                  "max": "1"
+                  "max": "-1"
                 },
                 "label": {
                   "default": "Output Port"
@@ -278,7 +278,7 @@
                 "ui_data": {
                   "cardinality": {
                     "min": "0",
-                    "max": "1"
+                    "max": "-1"
                   },
                   "label": {
                     "default": "Output Port"

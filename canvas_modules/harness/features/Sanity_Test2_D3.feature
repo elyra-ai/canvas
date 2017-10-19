@@ -11,11 +11,7 @@ Feature: Sanity_Test2_D3
 		Given I have toggled the app side panel
 		Given I have selected the "Modal" palette layout
 		Given I have selected the "D3" rendering engine
-		Given I have toggled the app side panel
-
-		Then I pause for 1 seconds
-
-		Given I have toggled the app side panel
+		Given I have selected the "Halo" connection type
 		Given I have uploaded palette "/test_resources/palettes/modelerPalette.json"
 		Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
 		Given I have toggled the app side panel

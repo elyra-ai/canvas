@@ -15,6 +15,7 @@
 const d3 = require("d3");
 import ObjectModel from "./object-model/object-model.js";
 import _ from "underscore";
+import ellipsisIcon from "../assets/images/canvas_node_icons/vertical_ellipsis.svg";
 
 const BACKSPACE_KEY = 8;
 const DELETE_KEY = 46;
@@ -33,10 +34,7 @@ export default class CanvasD3Layout {
 	constructor(canvasJSON, canvasSelector, canvasWidth, canvasHeight,
 		editActionHandler, contextMenuHandler, clickActionHandler,
 		decorationActionHandler, config) {
-		// Make a copy of canvasJSON because we will need to update it (when moving
-		// nodes and comments and when sizing comments in real time) without updating the
-		// canvasJSON in the ObjectModel until we're done.
-		this.canvasJSON = this.cloneCanvasJSON(canvasJSON);
+
 		this.canvasSelector = canvasSelector;
 		this.svg_canvas_width = canvasWidth;
 		this.svg_canvas_height = canvasHeight;
@@ -47,7 +45,14 @@ export default class CanvasD3Layout {
 
 		// Customization options
 		this.connectionType = config.enableConnectionType;
+		this.nodeFormatType = config.enableNodeFormat;
 		this.linkType = config.enableLinkType;
+
+		// Initialize dimension and layout variables
+		this.initializeDimensions();
+
+		// Initialize zoom variables
+		this.initializeZoomVariables();
 
 		// Dimensions for extent of canvas scaling
 		this.minScaleExtent = 0.2;
@@ -63,11 +68,8 @@ export default class CanvasD3Layout {
 		this.dragOffsetX = 0;
 		this.dragOffsetY = 0;
 
-		// when just changing selection, no need to re-render whole canvas
+		// When just changing selection, no need to re-render whole canvas
 		this.selecting = false;
-
-		// Initialize zoom variables
-		this.initializeZoomVariables();
 
 		// Used to monitor the region selection rectangle.
 		this.regionSelect = false;
@@ -107,7 +109,11 @@ export default class CanvasD3Layout {
 				.on("zoom", this.zoomAction.bind(this))
 				.on("end", this.zoomEnd.bind(this));
 
-		this.initializeDimensions();
+		// Make a copy of canvasJSON because we will need to update it (when moving
+		// nodes and comments and when sizing comments in real time) without updating the
+		// canvasJSON in the ObjectModel until we're done.
+		this.canvasJSON = this.cloneCanvasJSON(canvasJSON);
+
 		this.createCanvas();
 		this.displayCanvas();
 	}
@@ -115,66 +121,197 @@ export default class CanvasD3Layout {
 	// Initializes the dimensions for nodes, comments layout etc.
 	initializeDimensions() {
 		// Specify and calculate some sizes of components of a node
-		this.imageWidth = 48;
-		this.imageHeight = 48;
 
 		if (this.connectionType === "Halo") {
-			this.imagePaddingWidth = 6;
-			this.imageUpperPaddingHeight = 0;
-			this.imageLowerPaddingHeight = 2;
-			this.labelPaddingHeight = 4;
-			this.labelHeight = 12;
-			this.labelPaddingWidth = -4;
-			// The gap between a node or comment and its selection highlight rectangle
-			this.highLightGap = 4;
-			// The gap between node or comment and the link line.
-			this.linkGap = 7;
+			this.nodeBodyClass = "d3-node-body-outline";
+			this.selectionHighlightClass = "d3-obj-selection-highlight";
+			this.commentLinkClass = "canvas-comment-link";
+			this.dataLinkClass = "canvas-data-link";
 
-		} else {
-			this.imagePaddingWidth = 10;
-			this.imageUpperPaddingHeight = 5;
-			this.imageLowerPaddingHeight = 2;
-			this.labelPaddingHeight = 8;
+			this.nodeWidth = 60;
+			this.nodeHeight = 66;
+
+			this.imageWidth = 48;
+			this.imageHeight = 48;
+
+			this.imagePosX = 6;
+			this.imagePosY = 0;
+
+			// Sets the justification of label and icon within the node height. This
+			// overrides any labelPosY value provided. Possible value are "center" or
+			// "none". Specify "none" to use the labelPosY value.
+			this.labelAndIconVerticalJustification = "none";
+
+			this.labelClass = "d3-node-label";
+			this.labelHorizontalJustification = "center";
+
+			this.labelWidth = 52;
 			this.labelHeight = 12;
-			this.labelPaddingWidth = 2;
+			this.labelDescent = 3; // The underhang of letters below the baseline for the label font used
+
+			this.labelPosX = 4;
+			this.labelPosY = 53;
+
+			this.decoratorHeight = 12;
+			this.decoratorWidth = 12;
+
+			this.topDecoratorY = 0;
+			this.bottomDecoratorY = 36;
+
+			this.leftDecoratorX = 6;
+			this.rightDecoratorX = 42;
+
 			// The gap between a node or comment and its selection highlight rectangle
 			this.highLightGap = 4;
-			// The gap between node or comment and the link line.
-			this.linkGap = 7;
+
+			// Halo sizes
+			this.haloCommentGap = 11; // Gap between comment rectangle and its halo
+			this.haloNodeGap = 5; // Gap between node image and its halo
+
+			this.haloCenterX = this.imagePosX + (this.imageWidth / 2);
+			this.haloCenterY = this.imagePosY + (this.imageHeight / 2);
+			this.haloRadius = (this.imageWidth / 2) + this.haloNodeGap;
+
+			// Whether to display a link line when linked node/comments overlap
+			this.displayLinkOnOverlap = false;
+
+			// What point to draw the link line towards. Possible values are image_center or node_center.
+			// This is used for comment links going towards nodes.
+			this.drawLinkLineTo = "image_center";
+
+		} else { // Ports connection type
+
+			if (this.nodeFormatType === "Horizontal") {
+				this.nodeBodyClass = "d3-node-body-outline-horizontal";
+				this.selectionHighlightClass = "d3-obj-selection-highlight-horizontal";
+				this.commentLinkClass = "canvas-comment-link";
+				this.dataLinkClass = "canvas-data-link";
+
+				this.nodeWidth = 200;
+				this.nodeHeight = 36;
+
+				this.imageWidth = 24;
+				this.imageHeight = 24;
+
+				this.imagePosX = 6;
+				this.imagePosY = 6;
+
+				// Sets the justification of label and icon within the node height. This
+				// overrides any labelPosY value provided. Possible value are "center" or
+				// "none". Specify "none" to use the labelPosY value.
+				this.labelAndIconVerticalJustification = "center";
+
+				this.labelClass = "d3-node-horizontal-label";
+				this.labelHorizontalJustification = "left";
+
+				this.labelWidth = 125;
+				this.labelHeight = 14;
+				this.labelDescent = 3; // The underhang of letters below the baseline for the label font used
+
+				this.labelPosX = 40;
+				this.labelPosY = 9;
+
+				this.decoratorHeight = 12;
+				this.decoratorWidth = 12;
+
+				this.topDecoratorY = 0;
+				this.bottomDecoratorY = 36;
+
+				this.leftDecoratorX = 6;
+				this.rightDecoratorX = 42;
+
+				this.outerPortRadius = 6; // Need for the bubble part of port
+				this.portRadius = 3;
+
+				// Default position of a single port
+				this.portPosY = 18;
+
+				// Comment port (circle) radius
+				this.commentPortRadius = 5;
+
+				// The gap between a node or comment and its selection highlight outline
+				this.highLightGap = 2;
+
+				// Display of vertical ellipsis to show context menu
+				this.ellipsisWidth = 5;
+				this.ellipsisHeight = 20;
+				this.ellipsisPosX = 185;
+				this.ellipsisPosY = 8;
+
+				// Whether to display a link line when linked node/comments overlap
+				this.displayLinkOnOverlap = true;
+
+				// What point to draw the link line towards. Possible values are image_center or node_center.
+				// This is used for comment links going towards nodes.
+				this.drawLinkLineTo = "node_center";
+
+			} else { // Vertical
+				this.nodeBodyClass = "d3-node-body-outline";
+				this.selectionHighlightClass = "d3-obj-selection-highlight";
+				this.commentLinkClass = "canvas-comment-link";
+				this.dataLinkClass = "canvas-data-link";
+
+				this.nodeWidth = 68;
+				this.nodeHeight = 75;
+
+				this.imageWidth = 48;
+				this.imageHeight = 48;
+
+				this.imagePosX = 10;
+				this.imagePosY = 5;
+
+				// Sets the justification of label and icon within the node height. This
+				// overrides any labelPosY value provided. Possible value are "center" or
+				// "none". Specify "none" to use the labelPosY value.
+				this.labelAndIconVerticalJustification = "none";
+
+				this.labelClass = "d3-node-label";
+				this.labelHorizontalJustification = "center";
+
+				this.labelWidth = 64;
+				this.labelHeight = 12;
+				this.labelDescent = 3; // The underhang of letters below the baseline for the label font used
+
+				this.labelPosX = 2;
+				this.labelPosY = 57;
+
+				this.decoratorHeight = 12;
+				this.decoratorWidth = 12;
+
+				this.topDecoratorY = 5;
+				this.bottomDecoratorY = 41;
+				this.leftDecoratorX = 10;
+				this.rightDecoratorX = 46;
+
+				this.portRadius = 6;
+
+				// Default position of a single port - for vertical node format this
+				// is half way down the image rather than the center of the node.
+				this.portPosY = 29;
+
+				// Comment port (circle) radius
+				this.commentPortRadius = 5;
+
+				// The gap between a node or comment and its selection highlight rectangle
+				this.highLightGap = 4;
+
+				// Whether to display a link line when linked node/comments overlap
+				this.displayLinkOnOverlap = true;
+
+				// What point to draw the link line towards. Possible values are image_center or node_center.
+				// This is used for comment links going towards nodes.
+				this.drawLinkLineTo = "node_center";
+
+				// Display of vertical ellipsis to show context menu
+				this.ellipsisWidth = 5;
+				this.ellipsisHeight = 15;
+				this.ellipsisPosX = 60;
+				this.ellipsisPosY = 5;
+			}
 		}
 
-		this.decoratorHeight = 12;
-		this.decoratorWidth = 12;
-
-		this.portRadius = 6;
-		this.haloCommentGap = 11; // Gap between comment rectangle and its halo
-		this.haloNodeGap = 5; // Gap between node image and its halo
-
-		this.nodeWidth = this.imageWidth + (2 * this.imagePaddingWidth);
-		this.nodeHeight = this.imageUpperPaddingHeight + this.imageHeight + this.imageLowerPaddingHeight + this.labelHeight + this.labelPaddingHeight;
-
-		this.haloCenterX = this.nodeWidth / 2;
-		this.haloCenterY = this.imageUpperPaddingHeight + (this.imageHeight / 2);
-		this.haloRadius = (this.imageWidth / 2) + this.haloNodeGap;
-
-		this.imagePosX = this.imagePaddingWidth;
-		this.imagePosY = this.imageUpperPaddingHeight;
-
-		this.labelWidth = this.nodeWidth - (2 * this.labelPaddingWidth);
-
-		this.labelOutlineX = this.labelPaddingWidth;
-		this.labelOutlineY = this.imageUpperPaddingHeight + this.imageHeight + this.imageLowerPaddingHeight;
-
-		this.labelPosX = this.labelPaddingWidth + (this.labelWidth / 2);
-		this.labelPosY = this.imageUpperPaddingHeight + this.imageHeight + this.imageLowerPaddingHeight + this.labelHeight;
-
-		this.portPosY = this.imageUpperPaddingHeight + (this.imageHeight / 2);
-
-		this.topDecoratorY = this.imageUpperPaddingHeight;
-		this.bottomDecoratorY = this.imageUpperPaddingHeight + this.imageHeight - this.decoratorHeight;
-
-		this.leftDecoratorX = this.imagePaddingWidth;
-		this.rightDecoratorX = this.imagePaddingWidth + this.imageWidth - this.decoratorWidth;
+		// The gap between node or comment and the link line.
+		this.linkGap = 7;
 
 		// When sizing a comment this decides the size of the corner area for
 		// diagonal sizing.
@@ -189,7 +326,6 @@ export default class CanvasD3Layout {
 		this.elbowSize = 10;
 		this.minInitialLine = 30;
 	}
-
 
 	initializeZoomVariables() {
 		// Allows us to record the overal zoom amounts.
@@ -210,19 +346,25 @@ export default class CanvasD3Layout {
 		if (canvasJSON.id !== this.canvasJSON.id ||
 				canvasJSON.sub_id !== this.canvasJSON.sub_id ||
 				this.connectionType !== config.enableConnectionType ||
+				this.nodeFormatType !== config.enableNodeFormatType ||
 				this.linkType !== config.enableLinkType) {
 			this.canvasJSON = canvasJSON;
 			this.connectionType = config.enableConnectionType;
+			this.nodeFormatType = config.enableNodeFormatType;
 			this.linkType = config.enableLinkType;
 			this.clearCanvas();
 		}
+
+		// Initialize dimensions before cloning the canvas since cloning relies on the dimnesion info
+		this.initializeDimensions();
 
 		// Make a copy of canvasJSON because we will need to update it (when moving
 		// nodes and comments and when sizing comments in real time) without updating the
 		// canvasJSON in the ObjectModel until we're done.
 		this.canvasJSON = this.cloneCanvasJSON(canvasJSON);
+
 		// this.zoomTransform = d3.zoomIdentity.translate(0, 0).scale(1); // Reset zoom parameters
-		this.initializeDimensions();
+
 		this.displayCanvas();
 		this.consoleLog("Set Canvas. Elapsed time = " + (Date.now() - startTime));
 	}
@@ -231,7 +373,29 @@ export default class CanvasD3Layout {
 	// real time actions are performed like moving nodes or comments or resizing
 	// comments.
 	cloneCanvasJSON(canvasJSON) {
-		return JSON.parse(JSON.stringify(canvasJSON));
+		var newCanvas = JSON.parse(JSON.stringify(canvasJSON));
+
+		// Add some useful height info to the nodes
+		newCanvas.nodes = newCanvas.nodes.map((node) => {
+			var inputPortsHeight = 0;
+			var outputPortsHeight = 0;
+			var nodeHeight = this.nodeHeight;
+
+			if (this.connectionType === "Ports" &&
+					this.nodeFormatType === "Horizontal") {
+				inputPortsHeight = node.input_ports ? node.input_ports.length * (this.outerPortRadius * 2) : 0;
+				outputPortsHeight = node.output_ports ? node.output_ports.length * (this.outerPortRadius * 2) : 0;
+				nodeHeight = Math.max(inputPortsHeight, outputPortsHeight, this.nodeHeight);
+			}
+
+			node.inputPortsHeight = inputPortsHeight;
+			node.outputPortsHeight = outputPortsHeight;
+			node.height = nodeHeight;
+			node.width = this.nodeWidth;
+			return node;
+		});
+
+		return newCanvas;
 	}
 
 	clearCanvas() {
@@ -246,7 +410,7 @@ export default class CanvasD3Layout {
 		// this.consoleLog("Displaying Canvas. Id = " + this.canvasJSON.id);
 		this.displayComments(); // Show comments first so they appear under nodes, if there is overlap.
 		this.displayNodes();
-		this.drawLines();
+		this.displayLinks();
 		// this.showBoundingRectangles(); // This can be uncommented for debugging to see bondaries.
 	}
 
@@ -396,14 +560,13 @@ export default class CanvasD3Layout {
 			})
 			.on("contextmenu.zoom", (d) => {
 				this.consoleLog("Zoom - context menu");
-				d3.event.preventDefault(); // Stop the browser context menu appearing
-				this.contextMenuHandler({
-					type: "canvas",
-					cmPos: this.getMousePos(),
-					mousePos: this.getTransformedMousePos(),
-					selectedObjectIds: ObjectModel.getSelectedObjectIds(),
-					zoom: this.zoomTransform.k });
+				this.openContextMenu("canvas");
 			});
+
+		// Add defs element to allow a filter
+		// TODO - Figure out how to get drop shadow to display correctly.
+		// var defs = this.canvasSVG.append("defs");
+		// this.createDropShadow(defs);
 
 		this.canvas = this.canvasSVG
 			.append("g")
@@ -422,6 +585,31 @@ export default class CanvasD3Layout {
 			.on("contextmenu", () => {
 				this.consoleLog("Canvas - context menu");
 			});
+	}
+
+	createDropShadow(defs) {
+		var dropShadowFilter = defs.append("filter")
+			.attr("id", "drop-shadow")
+			.attr("x", "0")
+			.attr("y", "0")
+			.attr("width", "200%")
+			.attr("height", "200%");
+
+		dropShadowFilter.append("feOffset")
+			.attr("in", "SourceAlpha")
+			.attr("dx", 5)
+			.attr("dy", 5)
+			.attr("result", "offOut");
+
+		dropShadowFilter.append("feGaussianBlur")
+			.attr("in", "offOut")
+			.attr("stdDeviation", "3")
+			.attr("result", "blurOut");
+
+		dropShadowFilter.append("feBlend")
+			.attr("in", "SourceGraphic")
+			.attr("in2", "blurOut")
+			.attr("mode", "normal");
 	}
 
 	zoomToFit() {
@@ -561,7 +749,7 @@ export default class CanvasD3Layout {
 			if (Math.abs(this.region.width) > 5 &&
 					Math.abs(this.region.height) > 5) {
 				var { startX, startY, width, height } = this.getRegionDimensions();
-				ObjectModel.selectInRegion(startX, startY, startX + width, startY + height, this.nodeWidth, this.nodeHeight);
+				this.selectInRegion(startX, startY, startX + width, startY + height);
 				this.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "region", selectedObjectIds: ObjectModel.getSelectedObjectIds() });
 			} else {
 				this.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "canvas", selectedObjectIds: ObjectModel.getSelectedObjectIds() });
@@ -593,6 +781,27 @@ export default class CanvasD3Layout {
 		}
 	}
 
+	selectInRegion(minX, minY, maxX, maxY) {
+		var regionSelections = [];
+		for (const node of this.canvasJSON.nodes) {
+			if (minX < node.x_pos + node.width &&
+					maxX > node.x_pos &&
+					minY < node.y_pos + node.height &&
+					maxY > node.y_pos) {
+				regionSelections.push(node.id);
+			}
+		}
+		for (const comment of this.canvasJSON.comments) {
+			if (minX < comment.x_pos + comment.width &&
+					maxX > comment.x_pos &&
+					minY < comment.y_pos + comment.height &&
+					maxY > comment.y_pos) {
+				regionSelections.push(comment.id);
+			}
+		}
+		ObjectModel.setSelections(regionSelections);
+	}
+
 	// Returns the dimensions in SVG coordinates of the canvas area. This is
 	// based on the position and width and height of the nodes and comments. The
 	// dimensions are scaled by k and padded by pad (if provided).
@@ -605,8 +814,8 @@ export default class CanvasD3Layout {
 		d3.selectAll(".node-group").each((d) => {
 			canvLeft = Math.min(canvLeft, d.x_pos - this.highLightGap);
 			canvTop = Math.min(canvTop, d.y_pos - this.highLightGap);
-			canvRight = Math.max(canvRight, d.x_pos + this.nodeWidth + this.highLightGap);
-			canvBottom = Math.max(canvBottom, d.y_pos + this.nodeHeight + this.highLightGap);
+			canvRight = Math.max(canvRight, d.x_pos + d.width + this.highLightGap);
+			canvBottom = Math.max(canvBottom, d.y_pos + d.height + this.highLightGap);
 		});
 
 		d3.selectAll(".comment-group").each((d) => {
@@ -702,7 +911,7 @@ export default class CanvasD3Layout {
 			var endTimeNodes = Date.now();
 			this.displayComments();
 			var endTimeComments = Date.now();
-			this.drawLines();
+			this.displayLinks();
 			var endLines = Date.now();
 			if (showTime) {
 				this.consoleLog("dragMove N " + (endTimeNodes - startTime) + " C " +
@@ -759,7 +968,8 @@ export default class CanvasD3Layout {
 		} else if (this.selecting || this.regionSelect || this.commentSizing) {
 			nodeGroupSel.each(function(d) {
 				d3.select(`#node_rect_${d.id}`)
-					.attr("class", ObjectModel.isSelected(d.id) ? "d3-obj-rect d3-obj-rect-selected" : "d3-obj-rect")
+					.attr("selected", ObjectModel.isSelected(d.id) ? "yes" : "no")
+					.attr("class", that.selectionHighlightClass)
 					.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
 			});
 		} else {
@@ -774,7 +984,8 @@ export default class CanvasD3Layout {
 					.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
 
 				d3.select(`#node_rect_${d.id}`)
-					.attr("class", ObjectModel.isSelected(d.id) ? "d3-obj-rect d3-obj-rect-selected" : "d3-obj-rect")
+					.attr("selected", ObjectModel.isSelected(d.id) ? "yes" : "no")
+					.attr("class", that.selectionHighlightClass)
 					.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
 
 				if (that.connectionType === "Ports") {
@@ -808,7 +1019,7 @@ export default class CanvasD3Layout {
 					.datum((nd) => that.getNode(nd.id)) // Set the __data__ to the updated data
 					.text(function(nd) {
 						var textObj = d3.select(this);
-						return that.trimLabelToWidth(nd.label, that.labelWidth, textObj);
+						return that.trimLabelToWidth(nd.label, that.labelWidth, that.labelClass, textObj);
 					});
 			});
 
@@ -817,6 +1028,29 @@ export default class CanvasD3Layout {
 				.attr("id", (d) => `node_grp_${d.id}`)
 				.attr("class", "obj-group node-group")
 				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
+				.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
+					if (that.connectionType === "Ports") {
+						d3.select(`#node_body_${d.id}`).attr("hover", "yes");
+						d3.select(this)
+							.append("image")
+							.attr("id", "node-ellipsis")
+							.attr("xlink:href", ellipsisIcon)
+							.attr("width", that.ellipsisWidth)
+							.attr("height", that.ellipsisHeight)
+							.attr("x", that.ellipsisPosX)
+							.attr("y", that.ellipsisPosY)
+							.on("click", () => {
+								that.stopPropagationAndPreventDefault();
+								that.openContextMenu("node", d);
+							});
+					}
+				})
+				.on("mouseleave", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
+					d3.select(`#node_body_${d.id}`).attr("hover", "no");
+					if (that.connectionType === "Ports") {
+						d3.selectAll("#node-ellipsis").remove();
+					}
+				})
 				// Use mouse down instead of click because it gets called before drag start.
 				.on("mousedown", (d) => {
 					this.consoleLog("Node Group - mouse down");
@@ -858,65 +1092,73 @@ export default class CanvasD3Layout {
 				.on("contextmenu", (d) => {
 					this.consoleLog("Node Group - context menu");
 					this.stopPropagationAndPreventDefault();
-					this.contextMenuHandler({
-						type: "node",
-						targetObject: d,
-						cmPos: this.getMousePos(),
-						mousePos: this.getTransformedMousePos(),
-						selectedObjectIds: ObjectModel.getSelectedObjectIds(),
-						zoom: this.zoomTransform.k });
+					that.openContextMenu("node", d);
 				})
 				.call(this.drag); // Must put drag after mousedown listener so mousedown gets called first.
 
 			// Node selection highlighting outline
-			nodeGroups.append("rect")
-				.attr("id", (d) => `node_rect_${d.id}`)
-				.attr("width", this.nodeWidth + (2 * this.highLightGap))
-				.attr("height", this.nodeHeight + (2 * this.highLightGap))
-				.attr("x", -this.highLightGap)
-				.attr("y", -this.highLightGap)
-				.attr("class", function(d) {
-					return ObjectModel.isSelected(d.id) ? "d3-obj-rect d3-obj-rect-selected" : "d3-obj-rect";
-				});
-
+			if (this.connectionType === "Ports" &&
+					this.nodeFormatType === "Horizontal") {
+				nodeGroups.append("path")
+					.attr("id", (d) => `node_rect_${d.id}`)
+					.attr("d", (d) => this.getNodeShapePath(d))
+					.attr("transform", (d) => this.getNodeHighlightOutlineTranslate(d)) // Scale and move the shape up and to the left to account for the padding
+					.attr("selected", function(d) { return ObjectModel.isSelected(d.id) ? "yes" : "no"; })
+					.attr("class", this.selectionHighlightClass);
+			} else { // Halo or Ports with Vertical format
+				nodeGroups.append("rect")
+					.attr("id", (d) => `node_rect_${d.id}`)
+					.attr("width", (d) => d.width + (2 * this.highLightGap))
+					.attr("height", (d) => d.height + (2 * this.highLightGap))
+					.attr("x", -this.highLightGap)
+					.attr("y", -this.highLightGap)
+					.attr("selected", function(d) { return ObjectModel.isSelected(d.id) ? "yes" : "no"; })
+					.attr("class", this.selectionHighlightClass);
+			}
 
 			if (this.connectionType === "Ports") {
-				// Node outline
-				nodeGroups.append("rect")
-					.attr("width", this.nodeWidth)
-					.attr("height", this.nodeHeight)
-					.attr("x", 0)
-					.attr("y", 0)
-					.attr("class", "d3-node-rect-outline");
-
+				// Node body
+				if (this.nodeFormatType === "Horizontal") {
+					nodeGroups.append("path")
+						.attr("id", (d) => `node_body_${d.id}`)
+						.attr("d", (d) => this.getNodeShapePath(d))
+						.attr("class", this.nodeBodyClass);
+					// .style("filter", "url(#drop-shadow)"); // TODO - Uncomment for drop shadow disply.
+				} else {
+					nodeGroups.append("rect")
+						.attr("id", (d) => `node_body_${d.id}`)
+						.attr("width", (d) => d.width)
+						.attr("height", (d) => d.height)
+						.attr("x", 0)
+						.attr("y", 0)
+						.attr("class", this.nodeBodyClass);
+				}
 
 				// Input ports
 				nodeGroups
 					.each((d) => {
 						if (d.input_ports && d.input_ports.length > 0) {
-							d.input_ports.forEach((port, i) => {
-								var cy;
-								if (d.input_ports.length === 1) {
-									cy = this.portPosY;
-								} else {
-									cy = (this.nodeHeight / (d.input_ports.length + 1)) * (i + 1);
-								}
+							const inputPortPositions = this.getPortPositions(d, "input");
+
+							d.input_ports.forEach((portPos, i) => {
 								// Circle for input port
 								var nodeGroup = d3.select(`#node_grp_${d.id}`);
 								nodeGroup.append("circle")
 									.attr("id", `trg_circle_${d.id}_${d.input_ports[i].id}`)
 									.attr("portId", d.input_ports[i].id) // This is needed by getNodeInputPortAtMousePos
 									.attr("cx", 0)
-									.attr("cy", cy)
+									.attr("cy", inputPortPositions[i])
 									.attr("r", this.portRadius)
 									.attr("class", "d3-node-port-input")
+									.attr("portType", this.nodeFormatType === "Horizontal" ? "bubble" : "circle") // Used by css
 									.attr("connected", "no");
 
 								// Arrow for input port
 								nodeGroup.append("path")
 									.attr("id", `trg_arrow_${d.id}_${d.input_ports[i].id}`)
-									.attr("d", that.getArrowShapePath(cy))
+									.attr("d", that.getArrowShapePath(inputPortPositions[i]))
 									.attr("class", "d3-node-port-input-arrow")
+									.attr("portType", this.nodeFormatType === "Horizontal" ? "bubble" : "circle") // Used by css
 									.attr("connected", "no");
 							});
 						}
@@ -926,30 +1168,27 @@ export default class CanvasD3Layout {
 				nodeGroups
 					.each((d) => {
 						if (d.output_ports && d.output_ports.length > 0) {
+							const outputPortPositions = this.getPortPositions(d, "output");
+
 							d.output_ports.forEach((port, i) => {
-								var cy;
-								if (d.output_ports.length === 1) {
-									cy = this.portPosY;
-								} else {
-									cy = (this.nodeHeight / (d.output_ports.length + 1)) * (i + 1);
-								}
 								// Circle for input port
 								var nodeGroup = d3.select(`#node_grp_${d.id}`);
 
 								nodeGroup
 									.append("circle")
 									.attr("id", `src_circle_${d.id}_${d.output_ports[i].id}`)
-									.attr("cx", this.nodeWidth)
-									.attr("cy", cy)
+									.attr("cx", (cd) => cd.width)
+									.attr("cy", outputPortPositions[i])
 									.attr("r", this.portRadius)
 									.attr("class", "d3-node-port-output")
+									.attr("portType", this.nodeFormatType === "Horizontal" ? "bubble" : "circle") // Used by css
 									.on("mousedown", (cd) => {
 										this.stopPropagationAndPreventDefault(); // Stops the node drag behavior when clicking on the handle/circle
 										this.drawingNewLink = true;
 										this.drawingNewLinkSrcId = cd.id;
 										this.drawingNewLinkSrcPortId = port.id;
 										this.drawingNewLinkAction = "node-node";
-										this.drawingNewLinkStartPos = { x: cd.x_pos + this.nodeWidth, y: cd.y_pos + cy };
+										this.drawingNewLinkStartPos = { x: cd.x_pos + cd.width, y: cd.y_pos + outputPortPositions[i] };
 										this.drawingNewLinkArray = [];
 										this.drawNewLink();
 									});
@@ -958,13 +1197,13 @@ export default class CanvasD3Layout {
 					});
 			}
 
-			// Image outline
-			// nodeGroup.append("rect")
+			// Image outline - this code used for debugging purposes
+			// nodeGroups.append("rect")
 			// 	.attr("width", this.imageWidth)
 			// 	.attr("height", this.imageHeight)
 			// 	.attr("x", this.imagePosX)
 			// 	.attr("y", this.imagePosY)
-			// 	.attr("class", "d3-node-rect-outline");
+			// 	.attr("class", "d3-node-image-outline");
 
 			// Node image
 
@@ -974,7 +1213,7 @@ export default class CanvasD3Layout {
 				.attr("width", this.imageWidth)
 				.attr("height", this.imageHeight)
 				.attr("x", this.imagePosX)
-				.attr("y", this.imagePosY)
+				.attr("y", (d) => this.getImagePosY(d))
 				.attr("class", "node-image")
 				.each(function(d) {
 					if (d.customAttrs) {
@@ -986,25 +1225,25 @@ export default class CanvasD3Layout {
 				});
 
 
-			// Label outline
-			// nodeGroup.append("rect")
+			// Label outline - this code used for debugging purposes
+			// nodeGroups.append("rect")
 			// 	.attr("width", this.labelWidth)
 			// 	.attr("height", this.labelHeight)
-			// 	.attr("x", this.labelOutlineX)
-			// 	.attr("y", this.labelOutlineY)
+			// 	.attr("x", this.labelPosX)
+			// 	.attr("y", (d) => this.getLabelPosY(d))
 			// 	.attr("class", "d3-label-outline");
 
 			// Label
 			nodeGroups.append("text")
 				.text(function(d) {
 					var textObj = d3.select(this);
-					return that.trimLabelToWidth(d.label, that.labelWidth, textObj);
+					return that.trimLabelToWidth(d.label, that.labelWidth, this.labelClass, textObj);
 				})
 				.attr("id", function(d) { return `node_label_${d.id}`; })
-				.attr("class", "d3-node-label")
-				.attr("x", this.labelPosX)
-				.attr("y", this.labelPosY)
-				.attr("text-anchor", "middle")
+				.attr("class", this.labelClass)
+				.attr("x", this.labelHorizontalJustification === "left" ? this.labelPosX : this.labelPosX + (this.labelWidth / 2)) // If not "left" then "center"
+				.attr("y", (d) => this.getLabelPosY(d) + this.labelHeight - this.labelDescent)
+				.attr("text-anchor", this.labelHorizontalJustification === "left" ? "start" : "middle")
 				.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text object
 					const labelObj = d3.select(this);
 					if (this.textContent.endsWith("...")) {
@@ -1051,6 +1290,32 @@ export default class CanvasD3Layout {
 			// Remove any nodes that are no longer in the diagram.nodes array.
 			nodeGroupSel.exit().remove();
 		}
+	}
+
+	getImagePosY(data) {
+		if (this.labelAndIconVerticalJustification === "center") {
+			return (data.height / 2) - (this.imageHeight / 2);
+		}
+		return this.imagePosY;
+	}
+
+	getLabelPosY(data) {
+		if (this.labelAndIconVerticalJustification === "center") {
+			return (data.height / 2) - (this.labelHeight / 2);
+		}
+		return this.labelPosY;
+	}
+
+	openContextMenu(type, d) {
+		this.stopPropagationAndPreventDefault(); // Stop the browser context menu appearing
+		this.contextMenuHandler({
+			type: type,
+			targetObject: type === "canvas" ? null : d,
+			id: type === "canvas" ? null : d.id, // For historical puposes, we pass d.id as well as d as targetObject.
+			cmPos: this.getMousePos(),
+			mousePos: this.getTransformedMousePos(),
+			selectedObjectIds: ObjectModel.getSelectedObjectIds(),
+			zoom: this.zoomTransform.k });
 	}
 
 	setTrgPortStatus(trgId, trgPortId, newStatus) {
@@ -1194,7 +1459,8 @@ export default class CanvasD3Layout {
 			.append("path")
 			.attr("d", (d) => that.getConnectorPath(d))
 			.attr("class", "d3-new-connection-line")
-			.attr("linkType", linkType);
+			.attr("linkType", linkType)
+			.attr("portType", this.nodeFormatType === "Horizontal" ? "bubble" : "circle");
 
 		this.canvas.selectAll(".d3-new-connection-start")
 			.data(this.drawingNewLinkArray)
@@ -1204,7 +1470,8 @@ export default class CanvasD3Layout {
 			.attr("cy", (d) => d.y1)
 			.attr("r", this.portRadius)
 			.attr("class", "d3-new-connection-start")
-			.attr("linkType", linkType);
+			.attr("linkType", linkType)
+			.attr("portType", this.nodeFormatType === "Horizontal" ? "bubble" : "circle");
 
 		this.canvas.selectAll(".d3-new-connection-blob")
 			.data(this.drawingNewLinkArray)
@@ -1215,6 +1482,7 @@ export default class CanvasD3Layout {
 			.attr("r", this.portRadius)
 			.attr("class", "d3-new-connection-blob")
 			.attr("linkType", linkType)
+			.attr("portType", this.nodeFormatType === "Horizontal" ? "bubble" : "circle")
 			.on("mouseup", () => {
 				this.stopPropagationAndPreventDefault();
 				var trgNode = this.getNodeAtMousePos();
@@ -1262,7 +1530,7 @@ export default class CanvasD3Layout {
 		// 		.append("circle")
 		// 			.attr("cx", (d) => d.x1)
 		// 			.attr("cy", (d) => d.y1)
-		// 			.attr("r", this.portRadius)
+		// 			.attr("r", this.commentPortRadius)
 		// 			.attr("class", "d3-new-connection-start")
 		// 			.attr("linkType", linkType);
 
@@ -1272,7 +1540,7 @@ export default class CanvasD3Layout {
 			.append("circle")
 			.attr("cx", (d) => d.x2)
 			.attr("cy", (d) => d.y2)
-			.attr("r", this.portRadius)
+			.attr("r", this.commentPortRadius)
 			.attr("class", "d3-new-connection-blob")
 			.attr("linkType", linkType)
 			.on("mouseup", () => {
@@ -1441,9 +1709,9 @@ export default class CanvasD3Layout {
 		this.canvas.selectAll(".node-group")
 			.each(function(d) {
 				if (pos.x >= d.x_pos - that.portRadius && // Target port sticks out by its radius so need to allow for it.
-						pos.x <= d.x_pos + that.nodeWidth &&
+						pos.x <= d.x_pos + d.width &&
 						pos.y >= d.y_pos &&
-						pos.y <= d.y_pos + that.nodeHeight) {
+						pos.y <= d.y_pos + d.height) {
 					node = d;
 				}
 			});
@@ -1468,6 +1736,112 @@ export default class CanvasD3Layout {
 		return portId;
 	}
 
+	// Returns a path string that will draw the outline shape of the node.
+	getNodeShapePath(data) {
+		let path = "M 0 0 L " + data.width + " 0 "; // Draw line across the top of the node
+
+		if (data.output_ports && data.output_ports.length > 0) {
+			let endPoint = 0;
+
+			// Draw straight segment down to ports (if needed)
+			if (data.outputPortsHeight < data.height) {
+				endPoint = ((data.height - data.outputPortsHeight) / 2);
+				path += " L " + data.width + " " + endPoint;
+			}
+
+			// Draw port arcs
+			data.output_ports.forEach(() => {
+				endPoint += (this.outerPortRadius * 2);
+				path += " A " + this.outerPortRadius + " " + this.outerPortRadius + " 180 0 1 " + data.width + " " + endPoint;
+			});
+
+			// Draw finishing segment to bottom right corner
+			if (data.outputPortsHeight < data.height) {
+				path += " L " + data.width + " " + data.height;
+			}
+
+		// If no output ports just draw a straight line.
+		} else {
+			path += " L " + data.width + " " + data.height;
+		}
+
+		path += " L 0 " + data.height; // Draw line across the bottom of the node
+
+		if (data.input_ports && data.input_ports.length > 0) {
+			let endPoint = data.height;
+
+			if (data.inputPortsHeight < data.height) {
+				endPoint = data.height - ((data.height - data.inputPortsHeight) / 2);
+				path += " L 0 " + endPoint;
+			}
+
+			data.input_ports.forEach(() => {
+				endPoint -= (this.outerPortRadius * 2);
+				path += " A " + this.outerPortRadius + " " + this.outerPortRadius + " 180 0 1 0 " + endPoint;
+			});
+
+			if (data.inputPortsHeight < data.height) {
+				path += " L 0 0"; // Draw finishing segment back to origin
+			}
+		} else {
+			path += " L 0 0"; // If no input ports just draw a straight line.
+		}
+		console.log("Node path = " + path);
+		return path;
+	}
+
+	getNodeHighlightOutlineTranslate(data) {
+		const targetHeight = data.height + (2 * this.highLightGap);
+		const yScale = targetHeight / data.height;
+
+		const targetWidth = data.width + (2 * this.highLightGap);
+		const xScale = targetWidth / data.width;
+
+		return `translate (${-this.highLightGap},${-this.highLightGap}) scale(${xScale}, ${yScale})`;
+	}
+
+	getPortPositions(data, type) {
+		const portPositions = [];
+		var ports;
+		if (type === "input") {
+			ports = data.input_ports;
+		} else {
+			ports = data.output_ports;
+		}
+
+		if (this.nodeFormatType === "Horizontal") {
+			let centerPoint = 0;
+
+			if (type === "input") {
+				if (data.inputPortsHeight < data.height) {
+					centerPoint = ((data.height - data.inputPortsHeight) / 2);
+				}
+			} else {
+				if (data.outputPortsHeight < data.height) {
+					centerPoint = ((data.height - data.outputPortsHeight) / 2);
+				}
+			}
+
+			ports.forEach(() => {
+				centerPoint += this.outerPortRadius;
+				portPositions.push(centerPoint);
+				centerPoint += this.outerPortRadius;
+			});
+
+		} else {
+			ports.forEach((port, i) => {
+				var cy;
+				if (ports.length === 1) {
+					cy = this.portPosY;
+				} else {
+					cy = (data.height / (ports.length + 1)) * (i + 1);
+				}
+				portPositions.push(cy);
+			});
+		}
+
+		return portPositions;
+	}
 
 	displayComments() {
 		// this.consoleLog("Displaying comments");
@@ -1482,12 +1856,6 @@ export default class CanvasD3Layout {
 				d3.select(`#comment_grp_${d.id}`)
 					.attr("transform", `translate(${d.x_pos}, ${d.y_pos})`)
 					.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
-
-				// Comment port circle
-				if (that.connectionType === "Ports") {
-					d3.select(`#comment_circle_${d.id}`)
-						.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
-				}
 			});
 		} else if (this.selecting || this.regionSelect) {
 			commentGroupSel.each(function(d) {
@@ -1495,7 +1863,8 @@ export default class CanvasD3Layout {
 				d3.select(`#comment_rect_${d.id}`)
 					.attr("height", d.height + (2 * that.highLightGap))
 					.attr("width", d.width + (2 * that.highLightGap))
-					.attr("class", ObjectModel.isSelected(d.id) ? "d3-obj-rect d3-obj-rect-selected" : "d3-obj-rect")
+					.attr("selected", ObjectModel.isSelected(d.id) ? "yes" : "no")
+					.attr("class", that.selectionHighlightClass)
 					.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
 			});
 		} else {
@@ -1512,7 +1881,8 @@ export default class CanvasD3Layout {
 				d3.select(`#comment_rect_${d.id}`)
 					.attr("height", d.height + (2 * that.highLightGap))
 					.attr("width", d.width + (2 * that.highLightGap))
-					.attr("class", ObjectModel.isSelected(d.id) ? "d3-obj-rect d3-obj-rect-selected" : "d3-obj-rect")
+					.attr("selected", ObjectModel.isSelected(d.id) ? "yes" : "no")
+					.attr("class", that.selectionHighlightClass)
 					.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
 
 				// Clip path for text
@@ -1540,12 +1910,6 @@ export default class CanvasD3Layout {
 						}
 					});
 
-				// Comment port circle
-				if (that.connectionType === "Ports") {
-					d3.select(`#comment_circle_${d.id}`)
-						.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
-				}
-
 				// Comment text
 				d3.select(`#comment_text_${d.id}`)
 					.datum((cd) => that.getComment(cd.id)) // Set the __data__ to the updated data
@@ -1558,11 +1922,12 @@ export default class CanvasD3Layout {
 					});
 
 				// Comment halo
-				d3.select(`#comment_halo_${d.id}`)
-					.attr("width", d.width + (2 * that.haloCommentGap))
-					.attr("height", d.height + (2 * that.haloCommentGap))
-					.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
-
+				if (that.connectionType === "Halo") {
+					d3.select(`#comment_halo_${d.id}`)
+						.attr("width", d.width + (2 * that.haloCommentGap))
+						.attr("height", d.height + (2 * that.haloCommentGap))
+						.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
+				}
 			});
 
 			var commentGroups = commentGroupSel.enter()
@@ -1602,7 +1967,7 @@ export default class CanvasD3Layout {
 							.attr("id", "comment_port_circle")
 							.attr("cx", 0 - that.highLightGap)
 							.attr("cy", 0 - that.highLightGap)
-							.attr("r", that.portRadius)
+							.attr("r", that.commentPortRadius)
 							.attr("class", "d3-comment-port-circle")
 							.on("mousedown", function(cd) {
 								that.stopPropagationAndPreventDefault(); // Stops the node drag behavior when clicking on the handle/circle
@@ -1683,14 +2048,7 @@ export default class CanvasD3Layout {
 				})
 				.on("contextmenu", (d) => {
 					this.consoleLog("Comment Group - context menu");
-					this.stopPropagationAndPreventDefault();
-					this.contextMenuHandler({
-						type: "comment",
-						targetObject: d,
-						cmPos: this.getMousePos(),
-						mousePos: this.getTransformedMousePos(),
-						selectedObjectIds: ObjectModel.getSelectedObjectIds(),
-						zoom: this.zoomTransform.k });
+					this.openContextMenu("comment", d);
 				})
 				.call(this.drag);	 // Must put drag after mousedown listener so mousedown gets called first.
 
@@ -1701,9 +2059,8 @@ export default class CanvasD3Layout {
 				.attr("height", (d) => d.height + (2 * this.highLightGap))
 				.attr("x", -this.highLightGap)
 				.attr("y", -this.highLightGap)
-				.attr("class", function(d) {
-					return ObjectModel.isSelected(d.id) ? "d3-obj-rect d3-obj-rect-selected" : "d3-obj-rect";
-				})
+				.attr("attr", function(d) { return ObjectModel.isSelected(d.id) ? "yes" : "no"; })
+				.attr("class", this.selectionHighlightClass)
 				.on("mousedown", (d) => {
 					this.commentSizing = true;
 					this.commentSizingId = d.id;
@@ -1792,7 +2149,7 @@ export default class CanvasD3Layout {
 				.style("height", this.textAreaHeight + "px")
 				.style("transform", this.getTextAreaTransform()); // Since the height has changed the translation needs to be reapplied.
 			this.displayComments();
-			this.drawLines();
+			this.displayLinks();
 		}
 	}
 
@@ -1940,7 +2297,7 @@ export default class CanvasD3Layout {
 
 		d3.select(`#comment_grp_${this.commentSizingId}`).remove();
 		this.displayComments();
-		this.drawLines();
+		this.displayLinks();
 	}
 
 	// Finalises the sizing of a comment by calling editActionHandler
@@ -2112,8 +2469,8 @@ export default class CanvasD3Layout {
 
 	// Returns a label to be displayed for a node. The label is trimmed,
 	// if necessary, to fit the label width with a ... suffix added.
-	trimLabelToWidth(text, width, textObj) {
-		var tspan = this.createTspan(text, 1, "d3-node-label", textObj);
+	trimLabelToWidth(text, width, className, textObj) {
+		var tspan = this.createTspan(text, 1, className, textObj);
 		var textLen = tspan.node().getComputedTextLength();
 		let outText = text;
 
@@ -2176,7 +2533,7 @@ export default class CanvasD3Layout {
 		return parseInt(s, 10);
 	}
 
-	drawLines() {
+	displayLinks() {
 		// this.consoleLog("Drawing lines");
 		var startTimeDrawingLines = Date.now();
 
@@ -2217,15 +2574,8 @@ export default class CanvasD3Layout {
 				this.consoleLog("Line - mouse up");
 			})
 			.on("contextmenu", (d) => {
-				// this.consoleLog("Context menu on canvas background.");
-				this.stopPropagationAndPreventDefault();
-				this.contextMenuHandler({
-					type: "link",
-					id: d.id,
-					cmPos: this.getMousePos(),
-					mousePos: this.getTransformedMousePos(),
-					selectedObjectIds: ObjectModel.getSelectedObjectIds(),
-					zoom: this.zoomTransform.k });
+				this.consoleLog("Context menu on canvas background.");
+				this.openContextMenu("link", d);
 			});
 
 		// Link selection area
@@ -2236,12 +2586,13 @@ export default class CanvasD3Layout {
 		// Link line
 		linkGroup.append("path")
 			.attr("d", (d) => d.path)
+			.attr("portType", this.nodeFormatType === "Horizontal" ? "bubble" : "circle") // Used by css
 			.attr("class", (d) => {
 				var classStr;
 				if (d.type === "commentLink") {
-					classStr = "d3-selectable-link " + (d.class_name || "d3-comment-link");
+					classStr = "d3-selectable-link " + (d.class_name || this.commentLinkClass);
 				} else {
-					classStr = "d3-selectable-link " + (d.class_name || "d3-data-link");
+					classStr = "d3-selectable-link " + (d.class_name || this.dataLinkClass);
 				}
 				return classStr;
 			});
@@ -2253,9 +2604,9 @@ export default class CanvasD3Layout {
 			.attr("class", (d) => {
 				var classStr;
 				if (d.type === "commentLink") {
-					classStr = "d3-selectable-link " + (d.class_name || "d3-comment-link");
+					classStr = "d3-selectable-link " + (d.class_name || this.commentLinkClass);
 				} else {
-					classStr = "d3-selectable-link " + (d.class_name || "d3-data-link");
+					classStr = "d3-selectable-link " + (d.class_name || this.dataLinkClass);
 				}
 				return classStr;
 			})
@@ -2279,7 +2630,7 @@ export default class CanvasD3Layout {
 		var endTimeDrawingLines = Date.now();
 
 		if (showTime) {
-			this.consoleLog("drawLines R " + (timeAfterDelete - startTimeDrawingLines) +
+			this.consoleLog("displayLinks R " + (timeAfterDelete - startTimeDrawingLines) +
 			" B " + (afterLineArray - timeAfterDelete) + " D " + (endTimeDrawingLines - afterLineArray));
 		}
 	}
@@ -2384,44 +2735,42 @@ export default class CanvasD3Layout {
 		return lineArray;
 	}
 
-	isSourceOverlappingTarget(srcNode, trgNode, type) {
-		if (type === "nodeLink" &&
-				((srcNode.x_pos + this.nodeWidth + this.linkGap >= trgNode.x_pos - this.linkGap &&
-					trgNode.x_pos + this.nodeWidth + this.linkGap >= srcNode.x_pos - this.linkGap) &&
-					(srcNode.y_pos + this.nodeHeight + this.linkGap >= trgNode.y_pos - this.linkGap &&
-					trgNode.y_pos + this.nodeHeight + this.linkGap >= srcNode.y_pos - this.linkGap))) {
-			return true;
-		} else if (type === "commentLink" &&
-				((srcNode.x_pos + srcNode.width + this.linkGap >= trgNode.x_pos - this.linkGap &&
-					trgNode.x_pos + this.nodeWidth + this.linkGap >= srcNode.x_pos - this.linkGap) &&
-					(srcNode.y_pos + srcNode.height + this.linkGap >= trgNode.y_pos - this.linkGap &&
-					trgNode.y_pos + this.nodeHeight + this.linkGap >= srcNode.y_pos - this.linkGap))) {
-			return true;
+	isSourceOverlappingTarget(srcNode, trgNode) {
+		if (this.displayLinkOnOverlap === false) {
+			if (((srcNode.x_pos + srcNode.width + this.linkGap >= trgNode.x_pos - this.linkGap &&
+						trgNode.x_pos + trgNode.width + this.linkGap >= srcNode.x_pos - this.linkGap) &&
+						(srcNode.y_pos + srcNode.height + this.linkGap >= trgNode.y_pos - this.linkGap &&
+							trgNode.y_pos + trgNode.height + this.linkGap >= srcNode.y_pos - this.linkGap))) {
+				return true;
+			}
 		}
 
 		return false;
 	}
 
 	getNodeLinkCoordsForPorts(srcNode, srcPortId, trgNode, trgPortId) {
+		const outputPortPositions = this.getPortPositions(srcNode, "output");
+		const inputPortPositions = this.getPortPositions(trgNode, "input");
+
 		var srcY = this.portPosY;
 		var trgY = this.portPosY;
 
-		if (srcNode.output_ports && srcNode.output_ports.length > 1) {
+		if (srcNode.output_ports && srcNode.output_ports.length > 0) {
 			var srcPortPos = srcNode.output_ports.findIndex((p) => p.id === srcPortId);
 			if (srcPortPos > -1) {
-				srcY = (this.nodeHeight / (srcNode.output_ports.length + 1)) * (srcPortPos + 1);
+				srcY = outputPortPositions[srcPortPos];
 			}
 		}
 
-		if (trgNode.input_ports && trgNode.input_ports.length > 1) {
+		if (trgNode.input_ports && trgNode.input_ports.length > 0) {
 			var trgPortPos = trgNode.input_ports.findIndex((p) => p.id === trgPortId);
 			if (trgPortPos > -1) {
-				trgY = (this.nodeHeight / (trgNode.input_ports.length + 1)) * (trgPortPos + 1);
+				trgY = inputPortPositions[trgPortPos];
 			}
 		}
 
 		return {
-			x1: srcNode.x_pos + this.nodeWidth,
+			x1: srcNode.x_pos + srcNode.width,
 			y1: srcNode.y_pos + srcY,
 			x2: trgNode.x_pos,
 			y2: trgNode.y_pos + trgY };
@@ -2431,22 +2780,22 @@ export default class CanvasD3Layout {
 		const startPos = this.getOuterCoord(
 			srcNode.x_pos - this.linkGap,
 			srcNode.y_pos - this.linkGap,
-			this.nodeWidth + (this.linkGap * 2),
-			this.nodeHeight + (this.linkGap * 2),
+			srcNode.width + (this.linkGap * 2),
+			srcNode.height + (this.linkGap * 2),
 			this.imagePosX + (this.imageWidth / 2) + this.linkGap,
 			this.imagePosY + (this.imageHeight / 2) + this.linkGap,
-			trgNode.x_pos + (this.nodeWidth / 2),
-			trgNode.y_pos + (this.nodeHeight / 2));
+			trgNode.x_pos + (trgNode.width / 2),
+			trgNode.y_pos + (trgNode.height / 2));
 
 		const endPos = this.getOuterCoord(
 			trgNode.x_pos - this.linkGap,
 			trgNode.y_pos - this.linkGap,
-			this.nodeWidth + (this.linkGap * 2),
-			this.nodeHeight + (this.linkGap * 2),
+			trgNode.width + (this.linkGap * 2),
+			trgNode.height + (this.linkGap * 2),
 			this.imagePosX + (this.imageWidth / 2) + this.linkGap,
 			this.imagePosY + (this.imageHeight / 2) + this.linkGap,
-			srcNode.x_pos + (this.nodeWidth / 2),
-			srcNode.y_pos + (this.nodeHeight / 2));
+			srcNode.x_pos + (srcNode.width / 2),
+			srcNode.y_pos + (srcNode.height / 2));
 
 		return { x1: startPos.x, y1: startPos.y, x2: endPos.x, y2: endPos.y };
 	}
@@ -2459,16 +2808,27 @@ export default class CanvasD3Layout {
 			srcNode.height + (this.linkGap * 2),
 			(srcNode.width / 2) + this.linkGap,
 			(srcNode.height / 2) + this.linkGap,
-			trgNode.x_pos + (this.nodeWidth / 2),
-			trgNode.y_pos + (this.nodeHeight / 2));
+			trgNode.x_pos + (trgNode.width / 2),
+			trgNode.y_pos + (trgNode.height / 2));
+
+		var centerX;
+		var centerY;
+
+		if (this.drawLinkLineTo === "image_center") {
+			centerX = this.imagePosX + (this.imageWidth / 2) + this.linkGap;
+			centerY = this.imagePosY + (this.imageHeight / 2) + this.linkGap;
+		} else {
+			centerX = (trgNode.width / 2) + this.linkGap;
+			centerY = trgNode.height / 2;
+		}
 
 		const endPos = this.getOuterCoord(
 			trgNode.x_pos - this.linkGap,
 			trgNode.y_pos - this.linkGap,
-			this.nodeWidth + (this.linkGap * 2),
-			this.nodeHeight + (this.linkGap * 2),
-			this.imagePosX + (this.imageWidth / 2) + this.linkGap,
-			this.imagePosY + (this.imageHeight / 2) + this.linkGap,
+			trgNode.width + (this.linkGap * 2),
+			trgNode.height + (this.linkGap * 2),
+			centerX,
+			centerY,
 			srcNode.x_pos + (srcNode.width / 2),
 			srcNode.y_pos + (srcNode.height / 2));
 
@@ -2584,7 +2944,7 @@ export default class CanvasD3Layout {
 		const yDiff = data.y2 - data.y1;
 
 		if (xDiff > 20 ||
-				Math.abs(yDiff) < this.nodeHeight) {
+				Math.abs(yDiff) < data.height) {
 			path = "M " + data.x1 + " " + data.y1 + " L " + data.x2 + " " + data.y2;
 
 		} else {

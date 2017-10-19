@@ -50,8 +50,8 @@
                 "default": "EntryID1PE"
               },
               "image": "/images/nodes/varfile.svg",
-              "x_pos": 100,
-              "y_pos": 170,
+              "x_pos": 115,
+              "y_pos": 212,
               "class_name": "canvas-node"
             }
           }
@@ -134,8 +134,8 @@
                 "default": "nodeID1PE - Join two or more datasets"
               },
               "image": "/images/nodes/derive.svg",
-              "x_pos": 250,
-              "y_pos": 170,
+              "x_pos": 476,
+              "y_pos": 183,
               "class_name": "canvas-node",
               "attributes": "attr1='value1'; attr2='value2'"
             },

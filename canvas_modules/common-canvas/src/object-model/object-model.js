@@ -935,8 +935,8 @@ export default class ObjectModel {
 			const srcPort = this.getPort(srcNode.output_ports, srcNodeInfo.portId);
 			if (srcPort &&
 					srcPort.cardinality &&
-					srcPort.cardinality.max !== -1 && // -1 indicates an infinite numder of ports are allowed
-					srcCount >= srcPort.cardinality.max) {
+					Number(srcPort.cardinality.max) !== -1 && // -1 indicates an infinite numder of ports are allowed
+					srcCount >= Number(srcPort.cardinality.max)) {
 				return true;
 			}
 		}
@@ -945,8 +945,8 @@ export default class ObjectModel {
 			const trgPort = this.getPort(trgNode.input_ports, trgNodeInfo.portId);
 			if (trgPort &&
 					trgPort.cardinality &&
-					trgPort.cardinality.max !== -1 && // -1 indicates an infinite numder of ports are allowed
-					trgCount >= trgPort.cardinality.max) {
+					Number(trgPort.cardinality.max) !== -1 && // -1 indicates an infinite numder of ports are allowed
+					trgCount >= Number(trgPort.cardinality.max)) {
 				return true;
 			}
 		}
@@ -986,6 +986,14 @@ export default class ObjectModel {
 		return store.getState().selections;
 	}
 
+	static setSelections(newSelections) {
+		store.dispatch({ type: "SET_SELECTIONS", data: newSelections });
+	}
+
+	static deleteSelectedObjects() {
+		this.deleteObjects({ "selectedObjectIds": this.getSelectedObjectIds() });
+	}
+
 	static getAllObjectIds() {
 		var objIds = [];
 		this.getCanvasInfo().nodes.forEach((node) => {
@@ -1007,32 +1015,11 @@ export default class ObjectModel {
 		for (const comment of this.getComments()) {
 			selected.push(comment.id);
 		}
-		store.dispatch({ type: "SET_SELECTIONS", data: selected });
+		this.setSelections(selected);
 	}
 
 	static isSelected(objectId) {
 		return this.getSelectedObjectIds().indexOf(objectId) >= 0;
-	}
-
-	static selectInRegion(minX, minY, maxX, maxY, nodeWidth, nodeHeight) {
-		var regionSelections = [];
-		for (const node of this.getNodes()) {
-			if (minX < node.x_pos + nodeWidth &&
-					maxX > node.x_pos &&
-					minY < node.y_pos + nodeHeight &&
-					maxY > node.y_pos) {
-				regionSelections.push(node.id);
-			}
-		}
-		for (const comment of this.getComments()) {
-			if (minX < comment.x_pos + comment.width &&
-					maxX > comment.x_pos &&
-					minY < comment.y_pos + comment.height &&
-					maxY > comment.y_pos) {
-				regionSelections.push(comment.id);
-			}
-		}
-		store.dispatch({ type: "SET_SELECTIONS", data: regionSelections });
 	}
 
 	// Either sets the target object as selected and removes any other
@@ -1045,7 +1032,7 @@ export default class ObjectModel {
 		if (alreadySelected.indexOf(objectId) < 0) {
 			alreadySelected = [objectId];
 		}
-		store.dispatch({ type: "SET_SELECTIONS", data: alreadySelected });
+		this.setSelections(alreadySelected);
 
 		return this.getSelectedObjectIds();
 	}
@@ -1063,7 +1050,7 @@ export default class ObjectModel {
 				toggleSelections = this.getSelectedObjectIds().concat(objectId);
 			}
 		}
-		store.dispatch({ type: "SET_SELECTIONS", data: toggleSelections });
+		this.setSelections(toggleSelections);
 
 		return this.getSelectedObjectIds();
 	}
@@ -1094,7 +1081,6 @@ export default class ObjectModel {
 		return retval;
 	}
 
-
 	static selectSubGraph(endNodeId) {
 		var selection = [endNodeId];
 		const currentSelectedObjects = this.getSelectedObjectIds();
@@ -1112,13 +1098,9 @@ export default class ObjectModel {
 			}
 		}
 
-		store.dispatch({ type: "SET_SELECTIONS", data: selectedObjectIds });
+		this.setSelections(selectedObjectIds);
 
 		return this.getSelectedObjectIds();
-	}
-
-	static deleteSelectedObjects() {
-		this.deleteObjects({ "selectedObjectIds": this.getSelectedObjectIds() });
 	}
 
 	// Returns an offset object containing the x and y distances into negative

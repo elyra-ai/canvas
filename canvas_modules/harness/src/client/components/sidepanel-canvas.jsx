@@ -26,6 +26,8 @@ import {
 	CHOOSE_FROM_LOCATION,
 	LEGACY_ENGINE,
 	D3_ENGINE,
+	VERTICAL_FORMAT,
+	HORIZONTAL_FORMAT,
 	HALO_CONNECTION,
 	PORTS_CONNECTION,
 	CURVE_LINKS,
@@ -61,6 +63,7 @@ export default class SidePanelForms extends React.Component {
 		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
 		this.renderingEngineOptionChange = this.renderingEngineOptionChange.bind(this);
 		this.connectionTypeOptionChange = this.connectionTypeOptionChange.bind(this);
+		this.nodeFormatTypeOptionChange = this.nodeFormatTypeOptionChange.bind(this);
 		this.linkTypeOptionChange = this.linkTypeOptionChange.bind(this);
 		this.paletteLayoutOptionChange = this.paletteLayoutOptionChange.bind(this);
 	}
@@ -215,6 +218,10 @@ export default class SidePanelForms extends React.Component {
 		this.props.setConnectionType(obj.selected);
 	}
 
+	nodeFormatTypeOptionChange(evt, obj) {
+		this.props.setNodeFormatType(obj.selected);
+	}
+
 	linkTypeOptionChange(evt, obj) {
 		this.props.setLinkType(obj.selected);
 	}
@@ -360,10 +367,24 @@ export default class SidePanelForms extends React.Component {
 				dark
 				onChange={this.connectionTypeOptionChange}
 				choices={[
-					HALO_CONNECTION,
-					PORTS_CONNECTION
+					PORTS_CONNECTION,
+					HALO_CONNECTION
 				]}
-				selected={HALO_CONNECTION}
+				selected={PORTS_CONNECTION}
+			/>
+		</div>);
+
+		var nodeFormatType = (<div className="sidepanel-children" id="sidepanel-node-format-type">
+			<div className="sidepanel-headers">Node Format Type (for 'Ports')</div>
+			<RadioGroup
+				name="node_format_type_radio"
+				dark
+				onChange={this.nodeFormatTypeOptionChange}
+				choices={[
+					VERTICAL_FORMAT,
+					HORIZONTAL_FORMAT
+				]}
+				selected={VERTICAL_FORMAT}
 			/>
 		</div>);
 
@@ -410,6 +431,8 @@ export default class SidePanelForms extends React.Component {
 				{divider}
 				{connectionType}
 				{divider}
+				{nodeFormatType}
+				{divider}
 				{linkType}
 				{divider}
 				{paletteLayout}
@@ -427,6 +450,7 @@ SidePanelForms.propTypes = {
 	useInternalObjectModel: PropTypes.func,
 	setRenderingEngine: PropTypes.func,
 	setConnectionType: PropTypes.func,
+	setNodeFormatType: PropTypes.func,
 	setLinkType: PropTypes.func,
 	log: PropTypes.func,
 	setPaletteLayout: PropTypes.func

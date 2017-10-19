@@ -89,14 +89,14 @@ export default class SVGCanvasInHandler {
 
 	static getMinCard(card) {
 		if (card) {
-			return card.split(":")[0];
+			return Number(card.split(":")[0]);
 		}
 		return 0;
 	}
 
 	static getMaxCard(card, defaultMaxCard) {
 		if (card) {
-			return card.split(":")[1];
+			return Number(card.split(":")[1]);
 		}
 		return defaultMaxCard;
 	}

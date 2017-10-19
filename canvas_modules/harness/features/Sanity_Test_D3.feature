@@ -13,6 +13,7 @@ Feature: Sanity_Test_D3
 		Given I have selected the "Flyout" palette layout
 		Given I have uploaded predefined palette "modelerPalette.json"
 		Given I have selected the "D3" rendering engine
+		Given I have selected the "Halo" connection type
 		Given I have toggled the app side panel
 
 		Then I open the palette

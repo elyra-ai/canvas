@@ -28,8 +28,8 @@
             "app_data": {
               "ui_data": {
                 "cardinality": {
-                  "min": "0",
-                  "max": "1"
+                  "min": 0,
+                  "max": 1
                 },
                 "label": {
                   "default": "Output Port"
@@ -58,8 +58,8 @@
             "app_data": {
               "ui_data": {
                 "cardinality": {
-                  "min": "0",
-                  "max": "1"
+                  "min": 0,
+                  "max": 1
                 },
                 "label": {
                   "default": "Output Port"
@@ -88,8 +88,8 @@
             "app_data": {
               "ui_data": {
                 "cardinality": {
-                  "min": "0",
-                  "max": "1"
+                  "min": 0,
+                  "max": 1
                 },
                 "label": {
                   "default": "Output Port"
@@ -118,8 +118,8 @@
             "app_data": {
               "ui_data": {
                 "cardinality": {
-                  "min": "0",
-                  "max": "1"
+                  "min": 0,
+                  "max": 1
                 },
                 "label": {
                   "default": "Output Port"

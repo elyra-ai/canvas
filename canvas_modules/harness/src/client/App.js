@@ -32,7 +32,8 @@ import {
 	SIDE_PANEL_CANVAS,
 	SIDE_PANEL_MODAL,
 	D3_ENGINE,
-	HALO_CONNECTION,
+	PORTS_CONNECTION,
+	VERTICAL_FORMAT,
 	CURVE_LINKS,
 	FLYOUT,
 	NONE
@@ -59,9 +60,10 @@ class App extends React.Component {
 			propertiesInfo: {},
 			propertiesJson: null,
 			selectedPanel: null,
-			selectedRenderingEngine: D3_ENGINE,
-			selectedConnectionType: HALO_CONNECTION,
 			selectedLayout: NONE,
+			selectedRenderingEngine: D3_ENGINE,
+			selectedConnectionType: PORTS_CONNECTION,
+			selectedNodeFormat: VERTICAL_FORMAT,
 			selectedLinkType: CURVE_LINKS,
 			selectedPaletteLayout: FLYOUT,
 			showContextMenu: false,
@@ -86,6 +88,7 @@ class App extends React.Component {
 		this.useModalPropertiesDialog = this.useModalPropertiesDialog.bind(this);
 		this.setRenderingEngine = this.setRenderingEngine.bind(this);
 		this.setConnectionType = this.setConnectionType.bind(this);
+		this.setNodeFormatType = this.setNodeFormatType.bind(this);
 		this.setLinkType = this.setLinkType.bind(this);
 		this.setPaletteLayout = this.setPaletteLayout.bind(this);
 
@@ -176,6 +179,11 @@ class App extends React.Component {
 	setConnectionType(selectedConnectionType) {
 		this.setState({ selectedConnectionType: selectedConnectionType });
 		this.log("Connection Type selected", selectedConnectionType);
+	}
+
+	setNodeFormatType(selectedNodeFormat) {
+		this.setState({ selectedNodeFormat: selectedNodeFormat });
+		this.log("Node Format selected", selectedNodeFormat);
 	}
 
 	setLinkType(selectedLinkType) {
@@ -620,6 +628,7 @@ class App extends React.Component {
 		var commonCanvasConfig = {
 			enableRenderingEngine: this.state.selectedRenderingEngine,
 			enableConnectionType: this.state.selectedConnectionType,
+			enableNodeFormatType: this.state.selectedNodeFormat,
 			enableLinkType: this.state.selectedLinkType,
 			enableInternalObjectModel: this.state.internalObjectModel,
 			enablePaletteLayout: this.state.selectedPaletteLayout
@@ -688,6 +697,7 @@ class App extends React.Component {
 				useModalPropertiesDialog={this.useModalPropertiesDialog}
 				setRenderingEngine={this.setRenderingEngine}
 				setConnectionType={this.setConnectionType}
+				setNodeFormatType={this.setNodeFormatType}
 				setLinkType={this.setLinkType}
 				setPaletteLayout={this.setPaletteLayout}
 				log={this.log}

@@ -13,6 +13,7 @@ Feature: Sanity_Test_undoRedo
 		Given I have selected the "Flyout" palette layout
 		Given I have uploaded predefined palette "modelerPalette.json"
 		Given I have selected the "D3" rendering engine
+		Given I have selected the "Halo" connection type
 		Given I have toggled the app side panel
 
 		# Base do/undo/redo tests
@@ -119,6 +120,7 @@ Feature: Sanity_Test_undoRedo
 		Given I have uploaded predefined palette "modelerPalette.json"
 		Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
 		Given I have selected the "D3" rendering engine
+		Given I have selected the "Halo" connection type
 		Given I have toggled the app side panel
 
 		# Complex do/undo/redo tests
@@ -205,6 +207,7 @@ Feature: Sanity_Test_undoRedo
 		Given I have uploaded predefined palette "modelerPalette.json"
 		Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
 		Given I have selected the "D3" rendering engine
+		Given I have selected the "Halo" connection type
 		Given I have toggled the app side panel
 
 		# Complex do/undo/redo tests
@@ -238,6 +241,7 @@ Scenario: Sanity test for Multiple undo/redo operations with the D3 rendering en
 		Given I have uploaded predefined palette "modelerPalette.json"
 		Given I have uploaded diagram "/test_resources/diagrams/radialCanvas.json"
 		Given I have selected the "D3" rendering engine
+		Given I have selected the "Halo" connection type
 		Given I have toggled the app side panel
 
 		# Multiple commands
@@ -281,6 +285,7 @@ Scenario: Sanity test for Multiple undo/redo operations with the D3 rendering en
 		Given I have uploaded predefined palette "modelerPalette.json"
 		Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
 		Given I have selected the "D3" rendering engine
+		Given I have selected the "Halo" connection type
 		Given I have toggled the app side panel
 		Then I resize the window size to 1330 width and 660 height
 		Then I click on the secondary toolbar horizontal layout button
@@ -325,5 +330,5 @@ Scenario: Sanity test for Multiple undo/redo operations with the D3 rendering en
 		Then I verify the node 4 position is "translate(325, 625)"
 		Then I verify the node 5 position is "translate(100, 25)"
 		Then I verify the node 6 position is "translate(175, 325)"
-		
+
 		Then I pause for 1 seconds

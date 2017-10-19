@@ -39,6 +39,7 @@ export default class SidePanel extends React.Component {
 				useInternalObjectModel={this.props.useInternalObjectModel}
 				setRenderingEngine={this.props.setRenderingEngine}
 				setConnectionType={this.props.setConnectionType}
+				setNodeFormatType={this.props.setNodeFormatType}
 				setLinkType={this.props.setLinkType}
 				setPaletteLayout={this.props.setPaletteLayout}
 				log={this.props.log}
@@ -86,6 +87,7 @@ SidePanel.propTypes = {
 	useModalPropertiesDialog: PropTypes.func,
 	setRenderingEngine: PropTypes.func,
 	setConnectionType: PropTypes.func,
+	setNodeFormatType: PropTypes.func,
 	setLinkType: PropTypes.func,
 	setPaletteLayout: PropTypes.func,
 	log: PropTypes.func

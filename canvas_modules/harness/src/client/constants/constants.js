@@ -38,8 +38,11 @@ _defineConstant("VERTICAL", "vertical");
 _defineConstant("LEGACY_ENGINE", "Legacy");
 _defineConstant("D3_ENGINE", "D3");
 
-_defineConstant("HALO_CONNECTION", "Halo");
 _defineConstant("PORTS_CONNECTION", "Ports");
+_defineConstant("HALO_CONNECTION", "Halo");
+
+_defineConstant("VERTICAL_FORMAT", "Vertical");
+_defineConstant("HORIZONTAL_FORMAT", "Horizontal");
 
 _defineConstant("CURVE_LINKS", "Curve");
 _defineConstant("ELBOW_LINKS", "Elbow");

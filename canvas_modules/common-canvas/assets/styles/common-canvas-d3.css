@@ -29,20 +29,48 @@
 
 /* Node styles */
 
-.d3-obj-rect {
+.d3-obj-selection-highlight {
 	stroke-width: 0;
 	fill: transparent;
 }
 
-/* Node selection highlight rectangle */
-.d3-obj-rect-selected {
+.d3-obj-selection-highlight[selected=yes] {
 	stroke: #60C3B9;
 	stroke-dasharray: 5,5;
 	stroke-width: 2;
 	fill: transparent;
 }
 
-.d3-node-rect-outline {
+.d3-obj-selection-highlight-horizontal {
+	stroke-width: 0;
+	fill: transparent;
+}
+
+.d3-obj-selection-highlight-horizontal[selected=yes] {
+	stroke: #047cc0;
+	stroke-width: 2;
+	fill: transparent;
+}
+
+.d3-node-body-outline {
+	stroke: #adc5e4;
+	stroke-width: 2;
+	fill: #e3ebf6;
+}
+
+.d3-node-body-outline-horizontal {
+	stroke: #f3f3f3;
+	stroke-width: 2;
+	fill: #f3f3f3;
+}
+
+.d3-node-body-outline-horizontal[hover=yes] {
+	stroke: #eaeaea;
+	stroke-width: 2;
+	fill: #eaeaea;
+}
+
+.d3-node-image-outline {
 	stroke: #adc5e4;
 	stroke-width: 2;
 	fill: #e3ebf6;
@@ -59,6 +87,19 @@
 	-o-user-select: none;
 	user-select: none;
 }
+
+.d3-node-horizontal-label {
+	font-family: Helvetica;
+	font-size: 14px;
+	/* Prevent elements from being selectable */
+	/* This stops it being dragged incorrectly.*/
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+}
+
 
 .d3-label-outline {
 	fill: #e0e0e0;
@@ -88,72 +129,125 @@
 	stroke-width: 8;
 }
 
-/* Styles for ports */
+/* Styles for Circle ports */
 
-.d3-node-port-output {
+.d3-node-port-output[portType=circle] {
 	stroke: #a2bde0;  /* Blue */
 	fill: #f9f9fb;    /* White */
 	stroke-width: 2;
 }
 
-.d3-node-port-output[connected=yes] {
+.d3-node-port-output[portType=circle][connected=yes] {
 	stroke: #a2bde0;  /* Blue */
 	fill: #e3ebf6;    /* Light blue */
 	stroke-width: 2;
 }
 
-.d3-node-port-output:hover {
+.d3-node-port-output[portType=circle]:hover {
   fill: #4178be;   /* Dark blue */
 }
 
-.d3-node-port-input {
+.d3-node-port-input[portType=circle] {
 	stroke: #a2bde0;  /* Blue */
 	fill: #f9f9fb;    /* White */
 	stroke-width: 2;
 }
 
-.d3-node-port-input[connected=yes] {
+.d3-node-port-input[portType=circle][connected=yes] {
 	stroke: #a2bde0;  /* Blue */
 	fill: #e3ebf6;    /* Light blue */
 	stroke-width: 2;
 }
 
-/* Ports - Target node arrow styles */
-
-.d3-node-port-input-arrow {
+.d3-node-port-input-arrow[portType=circle] {
 	stroke: transparent;
 	fill: transparent;
 }
 
-.d3-node-port-input-arrow[connected=yes] {
+.d3-node-port-input-arrow[portType=circle][connected=yes] {
 	stroke: #4178be; /* Dark blue */
 	fill: transparent;
 }
 
-/* Ports - New connection dynamic line styles. */
+/* Style for Bubble ports */
 
-.d3-new-connection-line[linkType=nodeLink] {
+.d3-node-port-output[portType=bubble] {
+	stroke: black;
+	fill: #f9f9fb;    /* White */
+	stroke-width: 2;
+}
+
+.d3-node-port-output[portType=bubble][connected=yes] {
+	stroke: black;
+	fill: black;
+	stroke-width: 2;
+}
+
+.d3-node-port-output[portType=bubble]:hover {
+  fill: black;
+}
+
+.d3-node-port-input[portType=bubble] {
+	stroke: lightgrey;
+	fill: transparent;
+	stroke-width: 2;
+}
+
+.d3-node-port-input[portType=bubble][connected=yes] {
+	stroke: transparent;
+	fill: transparent;
+	stroke-width: 2;
+}
+
+.d3-node-port-input-arrow[portType=bubble] {
+	stroke: transparent;
+	fill: transparent;
+}
+
+.d3-node-port-input-arrow[portType=bubble][connected=yes] {
+	stroke: black;
+	fill: transparent;
+}
+
+/* Cicle Ports - New connection dynamic line styles. */
+
+.d3-new-connection-line[linkType=nodeLink][portType=circle] {
   stroke: #4178be;   /* Dark blue */
 	stroke-width: 2;
 	stroke-dasharray: 10 10;
 	fill: none;
 }
 
-.d3-new-connection-start[linkType=nodeLink] {
+.d3-new-connection-start[linkType=nodeLink][portType=circle] {
 	stroke: #4178be;   /* Dark blue */
 	fill: #FFFFFF;   /* White */
 }
 
-.d3-new-connection-blob[linkType=nodeLink] {
+.d3-new-connection-blob[linkType=nodeLink][portType=circle] {
 	stroke: #4178be;   /* Dark blue */
 	fill: #4178be;   /* Dark blue */
 }
 
-.d3-comment-port-circle {
-	stroke: #c5ccd6;
+/* Bubble Ports - New connection dynamic line styles. */
+
+.d3-new-connection-line[linkType=nodeLink][portType=bubble] {
+  stroke: black;
 	stroke-width: 2;
-	fill: #c5ccd6;
+	stroke-dasharray: 10 10;
+	fill: none;
 }
+
+.d3-new-connection-start[linkType=nodeLink][portType=bubble] {
+	stroke: black;
+	fill: #FFFFFF;   /* White */
+}
+
+.d3-new-connection-blob[linkType=nodeLink][portType=bubble] {
+	stroke: black;
+	fill: black;
+}
+
+/* Connection styles for comment links */
 
 .d3-new-connection-line[linkType=commentLink] {
 	stroke: gray;
@@ -172,6 +266,13 @@
 	stroke-width: 2;
 	fill: transparent;
 }
+
+.d3-comment-port-circle {
+	stroke: #c5ccd6;
+	stroke-width: 2;
+	fill: #c5ccd6;
+}
+
 
 /* Halo - Temporary connector line pulled out from halo */
 
@@ -230,7 +331,7 @@
 .d3-comment-link {
 	stroke: gray;
 	fill: none;
-	stroke-width:2;
+	stroke-width: 1;
 	stroke-dasharray: 7.3;
 }
 
