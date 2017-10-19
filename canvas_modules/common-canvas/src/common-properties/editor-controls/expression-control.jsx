@@ -32,6 +32,9 @@ export default class ExpressionControl extends EditorControl {
 		this.state = {
 			controlValue: props.valueAccessor(props.control.name)
 		};
+		if (!this.state.controlValue && typeof props.control.valueDef.defaultValue !== "undefined") {
+			this.state.controlValue = props.control.valueDef.defaultValue;
+		}
 
 		this.origHint = "";
 

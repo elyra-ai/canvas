@@ -63,10 +63,12 @@ Feature: Sanity_Test_CommonProperties
 			Then I check for table cell level validation
 			Given I have uploaded JSON for common-properties "Spark_RenameColumns_paramDef.json"
 			Then I check for table validation
+			Given I have uploaded JSON for common-properties "Spark_SelectStorage_paramDef.json"
+			Then I check table cell enablement
 
 		# Sub Panel Validation
 			Given I have uploaded JSON for common-properties "Conditions_paramDef.json"
-			Then I select the Tab 5
+			Then I select the Tab 6
 			Then I open the Table Input Sub Panel
 			Then I update the value of Name textbox with "Hellopwd"
 			Then I verify that the validation error is "name should not contain pw"
@@ -111,67 +113,5 @@ Feature: Sanity_Test_CommonProperties
 		Given I have uploaded JSON for common-properties "Javascript_FilterRows_paramDef.json"
 		Then I verify that the placeholder text is "Enter JavaScript text" in ExpressionEditor
 		Then I enter "" in ExpressionEditor and press autocomplete and verify error "The condition expression cannot be empty" and save
-
-			# Titles Test Case
-				Given I have uploaded JSON for common-properties "Spark_AddColumn_paramDef.json"
-				Then I see common properties title "Add Column"
-				Then I have closed the common properties dialog by clicking on close button
-
-				Given I have uploaded JSON for common-properties "Spark_DecisionTree_paramDef.json"
-				Then I see common properties title "Decision Tree Classifier"
-				Then I have closed the common properties dialog by clicking on close button
-
-				Given I have uploaded JSON for common-properties "Spark_Distinct_paramDef.json"
-				Then I see common properties title "Distinct"
-				Then I have closed the common properties dialog by clicking on close button
-
-				Given I have uploaded JSON for common-properties "Spark_FilterRows_paramDef.json"
-				Then I see common properties title "Filter Rows"
-				Then I have closed the common properties dialog by clicking on close button
-
-			# TextBox Test Case
-				Given I have uploaded JSON for common-properties "Spark_AddColumn_paramDef.json"
-				Then I enter "testValue" in the Column name textbox
-
-			# Dropdown Test Case
-				Given I have uploaded JSON for common-properties "Spark_AddColumn_paramDef.json"
-				Then I select "Continuous" dropdown option
-
-			# Select Textbox, Field Picker Test, Table Checkbox Case
-				Given I have uploaded JSON for common-properties "Spark_DecisionTree_paramDef.json"
-			 	Then I select "Age" option from Input columns select textbox
-
-			# Radio Button, Number Textbox Test Case
-				Given I have uploaded JSON for common-properties "Spark_DecisionTree_paramDef.json"
-				Then I select "gini" radio button for Impurity
-
-			# Checkbox, Generate TextBox Test Case
-			 	Given I have uploaded JSON for common-properties "Spark_Sample_paramDef.json"
-			 	Then I select Repeatable partition assignment checkbox and click Generate
-
-			# ToggleText, Table Reorder Rows
-				Given I have uploaded JSON for common-properties "Spark_Sort_paramDef.json"
-				Then I change Order for Drug field and reorder
-
-			# Validation Test Case
-				Given I have uploaded JSON for common-properties "Spark_DecisionTree_paramDef.json"
-				Then I check for validation error on Checkpoint Interval
-				Given I have uploaded JSON for common-properties "Spark_RenameColumns_paramDef.json"
-				Then I check for table cell level validation
-				Given I have uploaded JSON for common-properties "Spark_RenameColumns_paramDef.json"
-				Then I check for table validation
-				Given I have uploaded JSON for common-properties "Spark_SelectStorage_paramDef.json"
-				Then I check table cell enablement
-
-			# Sub Panel Validation
-				Given I have uploaded JSON for common-properties "Conditions_paramDef.json"
-				Then I select the Tab 5
-				Then I open the Table Input Sub Panel
-				Then I update the value of Name textbox with "Hellopwd"
-				Then I verify that the validation error is "name should not contain pw"
-                                Then I update the value of Name textbox with "Age"
-                                Then I verify that the validation warning is "name cannot be an existing column name"
-				Then I close the subPanel dialog
-				Then I have closed the common properties dialog by clicking on close button
 
 		Given I have toggled the app side common-properties panel

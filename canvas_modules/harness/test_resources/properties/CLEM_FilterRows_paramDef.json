@@ -1,7 +1,6 @@
 {
   "current_parameters": {
-    "mode": "Include",
-    "conditionExpr": "is_real(salbegin)  and  gender  = \"F\" or BP = 120\n"
+    "mode": "Include"
   },
   "parameters": [
     {
@@ -15,7 +14,7 @@
     {
       "id": "conditionExpr",
       "type": "string",
-      "default": "",
+      "default": "is_real(salbegin)  and  gender  = \"F\" or BP = 120\n",
       "role": "expression",
       "required": true
     }

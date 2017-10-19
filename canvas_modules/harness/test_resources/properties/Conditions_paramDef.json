@@ -119,7 +119,8 @@
         "nominal"
       ]
     ],
-    "dummy_types": []
+    "dummy_types": [],
+    "expPlaceHolder": ""
   },
   "parameters": [
     {
@@ -319,6 +320,17 @@
       "type": "map[string,DummyEntry]",
       "role": "column",
       "default": []
+    },
+    {
+      "id": "expPlaceHolder",
+      "type": "string",
+      "role": "expression"
+    },
+    {
+      "id": "expDefault",
+      "type": "string",
+      "default": "SELECT * FROM __THIS__",
+      "role": "expression"
     }
   ],
   "complex_types": [
@@ -759,6 +771,29 @@
           "default": "Some Dummy Types"
         },
         "control": "structuretable"
+      },
+      {
+        "parameter_ref": "expPlaceHolder",
+        "language": "text/x-hive",
+        "label": {
+          "default": "PlaceHolder"
+        },
+        "description": {
+          "default": "Expression box with place holder text"
+        },
+        "place_holder_text": {
+          "default": "SELECT * FROM __THIS__"
+        }
+      },
+      {
+        "parameter_ref": "expDefault",
+        "language": "text/x-hive",
+        "label": {
+          "default": "Default"
+        },
+        "description": {
+          "default": "Expression box with default value"
+        }
       }
     ],
     "complex_type_info": [
@@ -1080,6 +1115,16 @@
           "checkboxEnableDesc",
           "textareaDescription",
           "expressionBox"
+        ]
+      },
+      {
+        "id": "expressions",
+        "label": {
+          "default": "Expressions"
+        },
+        "parameter_refs": [
+          "expPlaceHolder",
+          "expDefault"
         ]
       },
       {
