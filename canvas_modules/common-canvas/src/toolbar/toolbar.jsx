@@ -148,18 +148,29 @@ class Toolbar extends React.Component {
 	calculateDisplayItems(toolbarWidth) {
 		const numObjects = this.props.config.length;
 		if (this.state.maxToolbarWidth >= toolbarWidth) { // need to minimize
+			const definition = this.state.config;
 			let availableWidth = toolbarWidth - this.state.defaultToolbarWidth + TOOLBAR.ICON_WIDTH;
-			if (toolbarWidth - this.state.defaultToolbarWidth <= (3 * TOOLBAR.ICON_WIDTH)) {
-				availableWidth = toolbarWidth - this.state.defaultToolbarWidth;
-			}
 
 			if (availableWidth < TOOLBAR.ICON_WIDTH) {
 				return 0;
 			}
-			const icons = parseInt((availableWidth - (this.state.dividerCount * TOOLBAR.DIVIDER_WIDTH)) / TOOLBAR.ICON_WIDTH, 10);
-			if (icons < numObjects) {
-				return icons + this.state.dividerCount - 1; // subtract 1 for the overflow icon
+
+			let items = 0;
+			for (let i = 0; i < definition.length; i++) {
+				if (definition[i].action) {
+					availableWidth -= TOOLBAR.ICON_WIDTH;
+					items++;
+				} else if (definition[i].divider) {
+					availableWidth -= TOOLBAR.DIVIDER_WIDTH;
+					items++;
+				}
+
+				if (availableWidth < TOOLBAR.ICON_WIDTH) {
+					items--;
+					break;
+				}
 			}
+			return items;
 		}
 		return numObjects;
 	}
@@ -178,7 +189,8 @@ class Toolbar extends React.Component {
 		if (overflow) {
 			dividerClassName = "overflow-toolbar-divider";
 		}
-		if (definition.length === displayItems) {
+		if (definition.length === displayItems ||
+			(definition.length - 1 === displayItems && definition[displayItems].divider)) { // dont show overflow icon if last item is divider
 			utilityActions = definition.map(function(actionObj, actionObjNum) {
 				if (actionObj.action) {
 					const actionId = actionObj.action + "-action";
