@@ -54,7 +54,7 @@ if [[ ${TRAVIS_BRANCH} == ${MASTER} ]]; then
 	echo "Publishing to Artifactory: ${ARTIFACTORY_NPM_REPO}"
 	npm publish --registry ${ARTIFACTORY_NPM_REPO}
 	cd $WORKING_DIR/scripts
-	./update_wml_canvas.sh $BUILDNUM
+#	./update_wml_canvas.sh $BUILDNUM
 elif [[ ${TRAVIS_BRANCH} == ${RELEASE} ]]; then
 	# Update Whitewater npm repository for master builds
 	echo "Publishing to Whitewater NPM"
