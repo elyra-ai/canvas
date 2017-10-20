@@ -2749,13 +2749,11 @@ export default class CanvasD3Layout {
 	}
 
 	getNodeLinkCoordsForPorts(srcNode, srcPortId, trgNode, trgPortId) {
-		const outputPortPositions = this.getPortPositions(srcNode, "output");
-		const inputPortPositions = this.getPortPositions(trgNode, "input");
-
 		var srcY = this.portPosY;
 		var trgY = this.portPosY;
 
 		if (srcNode.output_ports && srcNode.output_ports.length > 0) {
+			const outputPortPositions = this.getPortPositions(srcNode, "output");
 			var srcPortPos = srcNode.output_ports.findIndex((p) => p.id === srcPortId);
 			if (srcPortPos > -1) {
 				srcY = outputPortPositions[srcPortPos];
@@ -2763,6 +2761,7 @@ export default class CanvasD3Layout {
 		}
 
 		if (trgNode.input_ports && trgNode.input_ports.length > 0) {
+			const inputPortPositions = this.getPortPositions(trgNode, "input");
 			var trgPortPos = trgNode.input_ports.findIndex((p) => p.id === trgPortId);
 			if (trgPortPos > -1) {
 				trgY = inputPortPositions[trgPortPos];
