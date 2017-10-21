@@ -331,6 +331,60 @@ const palette = (state = {}, action) => {
 	case "SET_PALETTE_DATA":
 		return Object.assign({}, action.data);
 
+	case "ADD_NODE_TYPE_TO_PALETTE": {
+		return Object.assign({}, state, { categories: categories(state.categories, action) });
+	}
+	default:
+		return state;
+	}
+};
+
+const categories = (state = [], action) => {
+	switch (action.type) {
+
+	case "ADD_NODE_TYPE_TO_PALETTE": {
+		let category = state.find((cat) => {
+			return (cat.category === action.data.category);
+		});
+
+		if (category) {
+			return state.map((cat, index) => {
+				if (action.data.category === cat.category) {
+					return Object.assign({}, cat, { nodetypes: nodetypes(cat.nodetypes, action) });
+				}
+				return cat;
+			});
+		}
+
+		category = {
+			"category": action.data.category,
+			"label": action.data.categoryLabel ? action.data.categoryLabel : action.data.category,
+			"nodetypes": []
+		};
+
+		return [
+			...state,
+			Object.assign({}, category, { nodetypes: nodetypes(category.nodetypes, action) })
+		];
+	}
+	default:
+		return state;
+	}
+};
+
+const nodetypes = (state = [], action) => {
+	switch (action.type) {
+
+	case "ADD_NODE_TYPE_TO_PALETTE":
+		if (action.data.nodeType && action.data.nodeType.label &&
+				action.data.nodeType.operator_id_ref && action.data.nodeType.image) {
+			return [
+				...state,
+				action.data.nodeType
+			];
+		}
+		return state;
+
 	default:
 		return state;
 	}
@@ -456,6 +510,18 @@ export default class ObjectModel {
 
 	static getPaletteData() {
 		return store.getState().palette;
+	}
+
+	static addNodeTypeToPalette(nodeTypeObj, category, categoryLabel) {
+		const nodeTypePaletteData = {
+			"nodeType": nodeTypeObj,
+			"category": category,
+		};
+		if (categoryLabel) {
+			nodeTypePaletteData.categoryLabel = categoryLabel;
+		}
+
+		store.dispatch({ type: "ADD_NODE_TYPE_TO_PALETTE", data: nodeTypePaletteData });
 	}
 
 	static getPaletteNode(nodeOpIdRef) {

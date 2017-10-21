@@ -208,4 +208,73 @@ describe("ObjectModel API handle model OK", () => {
 		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
 	});
 
+	it("should add palette item into existing test category", () => {
+		logger.info("should add palette item into existing test category");
+		ObjectModel.setPipelineFlowPalette(paletteJson);
+		const nodeTypeObj = {
+			"label": "MyNodeType",
+			"description": "My custom node type",
+			"operator_id_ref": "filter",
+			"type": "binding",
+			"image": "/images/filter.svg"
+		};
+
+		const expectedPaletteJSON = JSON.parse(JSON.stringify(paletteJson));
+		expectedPaletteJSON.categories[0].nodetypes.push(nodeTypeObj);
+
+		ObjectModel.addNodeTypeToPalette(nodeTypeObj, "test");
+
+		expect(_.isEqual(expectedPaletteJSON, ObjectModel.getPaletteData())).to.be.true;
+	});
+
+	it("should add palette item into new category without label", () => {
+		logger.info("should add palette item into new category without label");
+
+		const newCategoryName = "newCategory";
+		ObjectModel.setPipelineFlowPalette(paletteJson);
+		const nodeTypeObj = {
+			"label": "MyNodeType",
+			"description": "My custom node type",
+			"operator_id_ref": "filter",
+			"type": "binding",
+			"image": "/images/filter.svg"
+		};
+
+		const expectedPaletteJSON = JSON.parse(JSON.stringify(paletteJson));
+		const newCategory = {};
+		newCategory.category = newCategoryName;
+		newCategory.label = newCategoryName;
+		newCategory.nodetypes = [nodeTypeObj];
+		expectedPaletteJSON.categories.push(newCategory);
+
+		ObjectModel.addNodeTypeToPalette(nodeTypeObj, newCategoryName);
+
+		expect(_.isEqual(expectedPaletteJSON, ObjectModel.getPaletteData())).to.be.true;
+	});
+
+	it("should add palette item into new category with label", () => {
+		logger.info("should add palette item into new category with label");
+		const newCategoryName = "newCategory";
+		const newCategoryLabel = "New Category";
+		ObjectModel.setPipelineFlowPalette(paletteJson);
+		const nodeTypeObj = {
+			"label": "MyNodeType",
+			"description": "My custom node type",
+			"operator_id_ref": "filter",
+			"type": "binding",
+			"image": "/images/filter.svg"
+		};
+
+		const expectedPaletteJSON = JSON.parse(JSON.stringify(paletteJson));
+		const newCategory = {};
+		newCategory.category = newCategoryName;
+		newCategory.label = newCategoryLabel;
+		newCategory.nodetypes = [nodeTypeObj];
+		expectedPaletteJSON.categories.push(newCategory);
+
+		ObjectModel.addNodeTypeToPalette(nodeTypeObj, newCategoryName, newCategoryLabel);
+
+		expect(_.isEqual(expectedPaletteJSON, ObjectModel.getPaletteData())).to.be.true;
+	});
+
 });
