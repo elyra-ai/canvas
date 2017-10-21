@@ -235,7 +235,7 @@
 
 /* Used by D3 renderer */
 .canvas-data-link[portType=bubble] {
-	stroke: #a1cbf2;
+	stroke: #95C4F3;
 	fill: none;
 	stroke-width: 2;
 }

@@ -179,6 +179,11 @@ export default class CanvasD3Layout {
 			// This is used for comment links going towards nodes.
 			this.drawLinkLineTo = "image_center";
 
+			// Error indicator dimensions
+			this.errorCenterX = 54;
+			this.errorCenterY = 0;
+			this.errorRadius = 7;
+
 		} else { // Ports connection type
 
 			if (this.nodeFormatType === "Horizontal") {
@@ -202,6 +207,7 @@ export default class CanvasD3Layout {
 				this.labelAndIconVerticalJustification = "center";
 
 				this.labelClass = "d3-node-horizontal-label";
+				this.labelErrorClass = "d3-node-error-label";
 				this.labelHorizontalJustification = "left";
 
 				this.labelWidth = 125;
@@ -232,18 +238,23 @@ export default class CanvasD3Layout {
 				// The gap between a node or comment and its selection highlight outline
 				this.highLightGap = 2;
 
-				// Display of vertical ellipsis to show context menu
-				this.ellipsisWidth = 5;
-				this.ellipsisHeight = 20;
-				this.ellipsisPosX = 185;
-				this.ellipsisPosY = 8;
-
 				// Whether to display a link line when linked node/comments overlap
 				this.displayLinkOnOverlap = true;
 
 				// What point to draw the link line towards. Possible values are image_center or node_center.
 				// This is used for comment links going towards nodes.
 				this.drawLinkLineTo = "node_center";
+
+				// Display of vertical ellipsis to show context menu
+				this.ellipsisWidth = 5;
+				this.ellipsisHeight = 20;
+				this.ellipsisPosX = 185;
+				this.ellipsisPosY = 8;
+
+				// Error indicator dimensions
+				this.errorCenterX = 30;
+				this.errorCenterY = 10;
+				this.errorRadius = 5;
 
 			} else { // Vertical
 				this.nodeBodyClass = "d3-node-body-outline";
@@ -266,6 +277,7 @@ export default class CanvasD3Layout {
 				this.labelAndIconVerticalJustification = "none";
 
 				this.labelClass = "d3-node-label";
+				this.labelErrorClass = "d3-node-error-label";
 				this.labelHorizontalJustification = "center";
 
 				this.labelWidth = 64;
@@ -306,7 +318,12 @@ export default class CanvasD3Layout {
 				this.ellipsisWidth = 5;
 				this.ellipsisHeight = 15;
 				this.ellipsisPosX = 60;
-				this.ellipsisPosY = 5;
+				this.ellipsisPosY = 7;
+
+				// Error indicator dimensions
+				this.errorCenterX = 68;
+				this.errorCenterY = 0;
+				this.errorRadius = 7;
 			}
 		}
 
@@ -971,6 +988,25 @@ export default class CanvasD3Layout {
 					.attr("selected", ObjectModel.isSelected(d.id) ? "yes" : "no")
 					.attr("class", that.selectionHighlightClass)
 					.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
+
+				// This code will remove custom attributes from a node. This might happen when
+				// the user clicks the canvas background to remove the greyed out appearance of
+				// a node that was 'cut' to the clipboard.
+				// TODO - Remove this code if/when common canvas supports cut (which removes nodes
+				// from the canvas) and when WML Canvas uses that clipboard support in place
+				// of its own.
+				d3.select(`#node_image_${d.id}`)
+					.datum((nd) => that.getNode(nd.id)) // Set the __data__ to the updated data
+					.each(function(nd) {
+						var imageObj = d3.select(this);
+						if (nd.customAttrs && nd.customAttrs.length > 0) {
+							nd.customAttrs.forEach((customAttr) => {
+								imageObj.attr(customAttr, "");
+							});
+						} else {
+							imageObj.attr("data-is-cut", null); // TODO - This should be made generic
+						}
+					});
 			});
 		} else {
 
@@ -1240,7 +1276,7 @@ export default class CanvasD3Layout {
 					return that.trimLabelToWidth(d.label, that.labelWidth, this.labelClass, textObj);
 				})
 				.attr("id", function(d) { return `node_label_${d.id}`; })
-				.attr("class", this.labelClass)
+				.attr("class", function(d) { return that.labelClass + " " + (d.messages && d.messages.length > 0 ? that.labelErrorClass : ""); })
 				.attr("x", this.labelHorizontalJustification === "left" ? this.labelPosX : this.labelPosX + (this.labelWidth / 2)) // If not "left" then "center"
 				.attr("y", (d) => this.getLabelPosY(d) + this.labelHeight - this.labelDescent)
 				.attr("text-anchor", this.labelHorizontalJustification === "left" ? "start" : "middle")
@@ -1281,6 +1317,15 @@ export default class CanvasD3Layout {
 					});
 			}
 
+			// Error indicator
+			nodeGroups.filter((d) => d.messages && d.messages.length > 0)
+				.append("circle")
+				.attr("id", function(d) { return `error_circle_${d.id}`; })
+				.attr("class", "d3-error-circle")
+				.attr("cx", this.errorCenterX)
+				.attr("cy", (d) => this.getErrorPosY(d))
+				.attr("r", this.errorRadius);
+
 			// Decorators
 			this.addDecorator(nodeGroups, "topLeft", this.leftDecoratorX, this.topDecoratorY);
 			this.addDecorator(nodeGroups, "topRight", this.rightDecoratorX, this.topDecoratorY);
@@ -1304,6 +1349,13 @@ export default class CanvasD3Layout {
 			return (data.height / 2) - (this.labelHeight / 2);
 		}
 		return this.labelPosY;
+	}
+
+	getErrorPosY(data) {
+		if (this.labelAndIconVerticalJustification === "center") {
+			return (data.height / 2) - (this.imageHeight / 2);
+		}
+		return this.errorCenterY;
 	}
 
 	openContextMenu(type, d) {
@@ -1866,7 +1918,27 @@ export default class CanvasD3Layout {
 					.attr("selected", ObjectModel.isSelected(d.id) ? "yes" : "no")
 					.attr("class", that.selectionHighlightClass)
 					.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
+
+				// This code will remove custom attributes from a comment. This might happen when
+				// the user clicks the canvas background to remove the greyed out appearance of
+				// a comment that was 'cut' to the clipboard.
+				// TODO - Remove this code if/when common canvas supports cut (which removes comments
+				// from the canvas) and when WML Canvas uses that clipboard support in place
+				// of its own.
+				d3.select(`#comment_box_${d.id}`)
+					.datum((cd) => that.getComment(cd.id)) // Set the __data__ to the updated data
+					.each(function(cd) {
+						var imageObj = d3.select(this);
+						if (cd.customAttrs && cd.customAttrs.length > 0) {
+							cd.customAttrs.forEach((customAttr) => {
+								imageObj.attr(customAttr, "");
+							});
+						} else {
+							imageObj.attr("data-is-cut", null); // TODO - This should be made generic
+						}
+					});
 			});
+
 		} else {
 			// Apply selection highlighting to the 'update selection' comments. That is,
 			// all comments that are the same as during the last call to displayComments().

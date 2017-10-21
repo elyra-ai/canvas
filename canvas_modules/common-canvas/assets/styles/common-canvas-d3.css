@@ -14,6 +14,7 @@
 .d3-svg-canvas-div {
 	cursor: default;
 	height: 100%;
+	background-color: white;
 }
 
 .d3-svg-canvas-div:focus {
@@ -100,6 +101,9 @@
 	user-select: none;
 }
 
+.d3-node-error-label {
+	fill: #E62325; /* Error red */
+}
 
 .d3-label-outline {
 	fill: #e0e0e0;
@@ -127,6 +131,13 @@
 	fill: none;
 	stroke: #4178be;
 	stroke-width: 8;
+}
+
+/* Error indicator */
+.d3-error-circle {
+	stroke: #f3f3f3; /* Node background color */
+	stroke-width: 2;
+	fill: #E62325;   /* Error red */
 }
 
 /* Styles for Circle ports */
