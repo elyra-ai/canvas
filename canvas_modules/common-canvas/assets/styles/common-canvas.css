@@ -75,7 +75,6 @@
   left: 50%;
   top: 40%;
   cursor: default;
-  z-index: -1;
   transform: translate(-50%, -50%);
   -webkit-transition: all 0.2s;
   transition: all 0.2s;
