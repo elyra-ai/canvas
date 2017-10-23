@@ -233,7 +233,7 @@
 }
 
 /* Used by D3 renderer */
-.canvas-data-link[portType=bubble] {
+.canvas-data-link-austin {
 	stroke: #95C4F3;
 	fill: none;
 	stroke-width: 2;

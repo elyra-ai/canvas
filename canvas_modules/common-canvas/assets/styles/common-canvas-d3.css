@@ -42,12 +42,12 @@
 	fill: transparent;
 }
 
-.d3-obj-selection-highlight-horizontal {
+.d3-obj-selection-highlight-austin {
 	stroke-width: 0;
 	fill: transparent;
 }
 
-.d3-obj-selection-highlight-horizontal[selected=yes] {
+.d3-obj-selection-highlight-austin[selected=yes] {
 	stroke: #047cc0;
 	stroke-width: 2;
 	fill: transparent;
@@ -59,13 +59,13 @@
 	fill: #e3ebf6;
 }
 
-.d3-node-body-outline-horizontal {
+.d3-node-body-outline-austin {
 	stroke: #f3f3f3;
 	stroke-width: 2;
 	fill: #f3f3f3;
 }
 
-.d3-node-body-outline-horizontal[hover=yes] {
+.d3-node-body-outline-austin[hover=yes] {
 	stroke: #eaeaea;
 	stroke-width: 2;
 	fill: #eaeaea;
@@ -89,7 +89,7 @@
 	user-select: none;
 }
 
-.d3-node-horizontal-label {
+.d3-node-label-austin {
 	font-family: Helvetica;
 	font-size: 14px;
 	/* Prevent elements from being selectable */
@@ -140,120 +140,120 @@
 	fill: #E62325;   /* Error red */
 }
 
-/* Styles for Circle ports */
+/* Styles for ports */
 
-.d3-node-port-output[portType=circle] {
+.d3-node-port-output {
 	stroke: #a2bde0;  /* Blue */
 	fill: #f9f9fb;    /* White */
 	stroke-width: 2;
 }
 
-.d3-node-port-output[portType=circle][connected=yes] {
+.d3-node-port-output[connected=yes] {
 	stroke: #a2bde0;  /* Blue */
 	fill: #e3ebf6;    /* Light blue */
 	stroke-width: 2;
 }
 
-.d3-node-port-output[portType=circle]:hover {
+.d3-node-port-output:hover {
   fill: #4178be;   /* Dark blue */
 }
 
-.d3-node-port-input[portType=circle] {
+.d3-node-port-input {
 	stroke: #a2bde0;  /* Blue */
 	fill: #f9f9fb;    /* White */
 	stroke-width: 2;
 }
 
-.d3-node-port-input[portType=circle][connected=yes] {
+.d3-node-port-input[connected=yes] {
 	stroke: #a2bde0;  /* Blue */
 	fill: #e3ebf6;    /* Light blue */
 	stroke-width: 2;
 }
 
-.d3-node-port-input-arrow[portType=circle] {
+.d3-node-port-input-arrow {
 	stroke: transparent;
 	fill: transparent;
 }
 
-.d3-node-port-input-arrow[portType=circle][connected=yes] {
+.d3-node-port-input-arrow[connected=yes] {
 	stroke: #4178be; /* Dark blue */
 	fill: transparent;
 }
 
-/* Style for Bubble ports */
+/* Styles for Austin theme */
 
-.d3-node-port-output[portType=bubble] {
+.d3-node-port-output-austin {
 	stroke: black;
 	fill: #f9f9fb;    /* White */
 	stroke-width: 2;
 }
 
-.d3-node-port-output[portType=bubble][connected=yes] {
+.d3-node-port-output-austin[connected=yes] {
 	stroke: black;
 	fill: black;
 	stroke-width: 2;
 }
 
-.d3-node-port-output[portType=bubble]:hover {
+.d3-node-port-output-austin:hover {
   fill: black;
 }
 
-.d3-node-port-input[portType=bubble] {
+.d3-node-port-input-austin {
 	stroke: lightgrey;
 	fill: transparent;
 	stroke-width: 2;
 }
 
-.d3-node-port-input[portType=bubble][connected=yes] {
+.d3-node-port-input-austin[connected=yes] {
 	stroke: transparent;
 	fill: transparent;
 	stroke-width: 2;
 }
 
-.d3-node-port-input-arrow[portType=bubble] {
+.d3-node-port-input-arrow-austin {
 	stroke: transparent;
 	fill: transparent;
 }
 
-.d3-node-port-input-arrow[portType=bubble][connected=yes] {
+.d3-node-port-input-arrow-austin[connected=yes] {
 	stroke: black;
 	fill: transparent;
 }
 
-/* Cicle Ports - New connection dynamic line styles. */
+/* New connection dynamic line styles. */
 
-.d3-new-connection-line[linkType=nodeLink][portType=circle] {
+.d3-new-connection-line[linkType=nodeLink] {
   stroke: #4178be;   /* Dark blue */
 	stroke-width: 2;
 	stroke-dasharray: 10 10;
 	fill: none;
 }
 
-.d3-new-connection-start[linkType=nodeLink][portType=circle] {
+.d3-new-connection-start[linkType=nodeLink] {
 	stroke: #4178be;   /* Dark blue */
 	fill: #FFFFFF;   /* White */
 }
 
-.d3-new-connection-blob[linkType=nodeLink][portType=circle] {
+.d3-new-connection-blob[linkType=nodeLink] {
 	stroke: #4178be;   /* Dark blue */
 	fill: #4178be;   /* Dark blue */
 }
 
-/* Bubble Ports - New connection dynamic line styles. */
+/* New connection dynamic line styles for the Austin theme. */
 
-.d3-new-connection-line[linkType=nodeLink][portType=bubble] {
+.d3-new-connection-line-austin[linkType=nodeLink] {
   stroke: black;
 	stroke-width: 2;
 	stroke-dasharray: 10 10;
 	fill: none;
 }
 
-.d3-new-connection-start[linkType=nodeLink][portType=bubble] {
+.d3-new-connection-start-austin[linkType=nodeLink] {
 	stroke: black;
 	fill: #FFFFFF;   /* White */
 }
 
-.d3-new-connection-blob[linkType=nodeLink][portType=bubble] {
+.d3-new-connection-blob-austin[linkType=nodeLink] {
 	stroke: black;
 	fill: black;
 }

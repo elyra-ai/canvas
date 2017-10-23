@@ -125,8 +125,16 @@ export default class CanvasD3Layout {
 		if (this.connectionType === "Halo") {
 			this.nodeBodyClass = "d3-node-body-outline";
 			this.selectionHighlightClass = "d3-obj-selection-highlight";
-			this.commentLinkClass = "canvas-comment-link";
 			this.dataLinkClass = "canvas-data-link";
+			this.labelClass = "d3-node-label";
+			this.labelErrorClass = "";
+			this.commentLinkClass = "canvas-comment-link";
+			this.nodePortOutputClass = "";
+			this.nodePortInputClass = "";
+			this.nodePortInputArrowClass = "";
+			this.newConnectionLineClass = "";
+			this.newConnectionLineStartClass = "";
+			this.newConnectionLineBlobClass = "";
 
 			this.nodeWidth = 60;
 			this.nodeHeight = 66;
@@ -142,7 +150,7 @@ export default class CanvasD3Layout {
 			// "none". Specify "none" to use the labelPosY value.
 			this.labelAndIconVerticalJustification = "none";
 
-			this.labelClass = "d3-node-label";
+			// Horizontal Justification of the lable based on label position X and Y.
 			this.labelHorizontalJustification = "center";
 
 			this.labelWidth = 52;
@@ -160,6 +168,9 @@ export default class CanvasD3Layout {
 
 			this.leftDecoratorX = 6;
 			this.rightDecoratorX = 42;
+
+			// Draw node as a simple rectangle
+			this.nodeShape = "rectangle";
 
 			// The gap between a node or comment and its selection highlight rectangle
 			this.highLightGap = 4;
@@ -187,10 +198,18 @@ export default class CanvasD3Layout {
 		} else { // Ports connection type
 
 			if (this.nodeFormatType === "Horizontal") {
-				this.nodeBodyClass = "d3-node-body-outline-horizontal";
-				this.selectionHighlightClass = "d3-obj-selection-highlight-horizontal";
+				this.nodeBodyClass = "d3-node-body-outline-austin";
+				this.selectionHighlightClass = "d3-obj-selection-highlight-austin";
+				this.dataLinkClass = "canvas-data-link-austin";
+				this.labelClass = "d3-node-label-austin";
+				this.labelErrorClass = "d3-node-error-label";
 				this.commentLinkClass = "canvas-comment-link";
-				this.dataLinkClass = "canvas-data-link";
+				this.nodePortOutputClass = "d3-node-port-output-austin";
+				this.nodePortInputClass = "d3-node-port-input-austin";
+				this.nodePortInputArrowClass = "d3-node-port-input-arrow-austin";
+				this.newConnectionLineClass = "d3-new-connection-line-austin";
+				this.newConnectionLineStartClass = "d3-new-connection-start-austin";
+				this.newConnectionLineBlobClass = "d3-new-connection-blob-austin";
 
 				this.nodeWidth = 200;
 				this.nodeHeight = 36;
@@ -206,8 +225,7 @@ export default class CanvasD3Layout {
 				// "none". Specify "none" to use the labelPosY value.
 				this.labelAndIconVerticalJustification = "center";
 
-				this.labelClass = "d3-node-horizontal-label";
-				this.labelErrorClass = "d3-node-error-label";
+				// Horizontal Justification of the lable based on label position X and Y.
 				this.labelHorizontalJustification = "left";
 
 				this.labelWidth = 125;
@@ -226,10 +244,19 @@ export default class CanvasD3Layout {
 				this.leftDecoratorX = 6;
 				this.rightDecoratorX = 42;
 
-				this.outerPortRadius = 6; // Need for the bubble part of port
+				// Draw node as a rectangle with bubbles around the ports
+				this.nodeShape = "rectangle-bubbles";
+
+				// Radius of the port circle
 				this.portRadius = 3;
 
-				// Default position of a single port
+				// Radius of an imaginary circle around the port. This controls the
+				// spacing of ports and teh size of bubble when nodeShape is set to
+				// rectangle-bubbles
+				this.outerPortRadius = 6;
+
+				// Default position of a single port - for vertical node format this
+				// is half way down the image rather than the center of the node.
 				this.portPosY = 18;
 
 				// Comment port (circle) radius
@@ -259,8 +286,16 @@ export default class CanvasD3Layout {
 			} else { // Vertical
 				this.nodeBodyClass = "d3-node-body-outline";
 				this.selectionHighlightClass = "d3-obj-selection-highlight";
-				this.commentLinkClass = "canvas-comment-link";
 				this.dataLinkClass = "canvas-data-link";
+				this.labelClass = "d3-node-label";
+				this.labelErrorClass = "d3-node-error-label";
+				this.commentLinkClass = "canvas-comment-link";
+				this.nodePortOutputClass = "d3-node-port-output";
+				this.nodePortInputClass = "d3-node-port-input";
+				this.nodePortInputArrowClass = "d3-node-port-input-arrow";
+				this.newConnectionLineClass = "d3-new-connection-line";
+				this.newConnectionLineStartClass = "d3-new-connection-start";
+				this.newConnectionLineBlobClass = "d3-new-connection-blob";
 
 				this.nodeWidth = 68;
 				this.nodeHeight = 75;
@@ -274,10 +309,9 @@ export default class CanvasD3Layout {
 				// Sets the justification of label and icon within the node height. This
 				// overrides any labelPosY value provided. Possible value are "center" or
 				// "none". Specify "none" to use the labelPosY value.
-				this.labelAndIconVerticalJustification = "none";
+				this.labelAndIconVerticalJustification = "center";
 
-				this.labelClass = "d3-node-label";
-				this.labelErrorClass = "d3-node-error-label";
+				// Horizontal Justification of the lable based on label position X and Y.
 				this.labelHorizontalJustification = "center";
 
 				this.labelWidth = 64;
@@ -295,7 +329,16 @@ export default class CanvasD3Layout {
 				this.leftDecoratorX = 10;
 				this.rightDecoratorX = 46;
 
+				// Draw node as a simple rectangle
+				this.nodeShape = "rectangle";
+
+				// Radius of the port circle
 				this.portRadius = 6;
+
+				// Radius of an imaginary circle around the port. This controls the
+				// spacing of ports and teh size of bubble when nodeShape is set to
+				// rectangle-bubbles
+				this.outerPortRadius = 10; // Defines an imaginary circle around the circle port
 
 				// Default position of a single port - for vertical node format this
 				// is half way down the image rather than the center of the node.
@@ -317,7 +360,7 @@ export default class CanvasD3Layout {
 				// Display of vertical ellipsis to show context menu
 				this.ellipsisWidth = 5;
 				this.ellipsisHeight = 15;
-				this.ellipsisPosX = 60;
+				this.ellipsisPosX = 56;
 				this.ellipsisPosY = 7;
 
 				// Error indicator dimensions
@@ -398,8 +441,7 @@ export default class CanvasD3Layout {
 			var outputPortsHeight = 0;
 			var nodeHeight = this.nodeHeight;
 
-			if (this.connectionType === "Ports" &&
-					this.nodeFormatType === "Horizontal") {
+			if (this.connectionType === "Ports") {
 				inputPortsHeight = node.input_ports ? node.input_ports.length * (this.outerPortRadius * 2) : 0;
 				outputPortsHeight = node.output_ports ? node.output_ports.length * (this.outerPortRadius * 2) : 0;
 				nodeHeight = Math.max(inputPortsHeight, outputPortsHeight, this.nodeHeight);
@@ -984,7 +1026,7 @@ export default class CanvasD3Layout {
 			});
 		} else if (this.selecting || this.regionSelect || this.commentSizing) {
 			nodeGroupSel.each(function(d) {
-				d3.select(`#node_rect_${d.id}`)
+				d3.select(`#node_outline_${d.id}`)
 					.attr("selected", ObjectModel.isSelected(d.id) ? "yes" : "no")
 					.attr("class", that.selectionHighlightClass)
 					.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
@@ -1019,7 +1061,7 @@ export default class CanvasD3Layout {
 					.attr("transform", `translate(${d.x_pos}, ${d.y_pos})`)
 					.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
 
-				d3.select(`#node_rect_${d.id}`)
+				d3.select(`#node_outline_${d.id}`)
 					.attr("selected", ObjectModel.isSelected(d.id) ? "yes" : "no")
 					.attr("class", that.selectionHighlightClass)
 					.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
@@ -1133,17 +1175,16 @@ export default class CanvasD3Layout {
 				.call(this.drag); // Must put drag after mousedown listener so mousedown gets called first.
 
 			// Node selection highlighting outline
-			if (this.connectionType === "Ports" &&
-					this.nodeFormatType === "Horizontal") {
+			if (this.nodeShape === "rectangle-bubbles") {
 				nodeGroups.append("path")
-					.attr("id", (d) => `node_rect_${d.id}`)
+					.attr("id", (d) => `node_outline_${d.id}`)
 					.attr("d", (d) => this.getNodeShapePath(d))
 					.attr("transform", (d) => this.getNodeHighlightOutlineTranslate(d)) // Scale and move the shape up and to the left to account for the padding
 					.attr("selected", function(d) { return ObjectModel.isSelected(d.id) ? "yes" : "no"; })
 					.attr("class", this.selectionHighlightClass);
-			} else { // Halo or Ports with Vertical format
+			} else { // simple rectangle
 				nodeGroups.append("rect")
-					.attr("id", (d) => `node_rect_${d.id}`)
+					.attr("id", (d) => `node_outline_${d.id}`)
 					.attr("width", (d) => d.width + (2 * this.highLightGap))
 					.attr("height", (d) => d.height + (2 * this.highLightGap))
 					.attr("x", -this.highLightGap)
@@ -1154,7 +1195,7 @@ export default class CanvasD3Layout {
 
 			if (this.connectionType === "Ports") {
 				// Node body
-				if (this.nodeFormatType === "Horizontal") {
+				if (this.nodeShape === "rectangle-bubbles") {
 					nodeGroups.append("path")
 						.attr("id", (d) => `node_body_${d.id}`)
 						.attr("d", (d) => this.getNodeShapePath(d))
@@ -1185,16 +1226,14 @@ export default class CanvasD3Layout {
 									.attr("cx", 0)
 									.attr("cy", inputPortPositions[i])
 									.attr("r", this.portRadius)
-									.attr("class", "d3-node-port-input")
-									.attr("portType", this.nodeFormatType === "Horizontal" ? "bubble" : "circle") // Used by css
+									.attr("class", this.nodePortInputClass)
 									.attr("connected", "no");
 
 								// Arrow for input port
 								nodeGroup.append("path")
 									.attr("id", `trg_arrow_${d.id}_${d.input_ports[i].id}`)
 									.attr("d", that.getArrowShapePath(inputPortPositions[i]))
-									.attr("class", "d3-node-port-input-arrow")
-									.attr("portType", this.nodeFormatType === "Horizontal" ? "bubble" : "circle") // Used by css
+									.attr("class", this.nodePortInputArrowClass)
 									.attr("connected", "no");
 							});
 						}
@@ -1216,8 +1255,7 @@ export default class CanvasD3Layout {
 									.attr("cx", (cd) => cd.width)
 									.attr("cy", outputPortPositions[i])
 									.attr("r", this.portRadius)
-									.attr("class", "d3-node-port-output")
-									.attr("portType", this.nodeFormatType === "Horizontal" ? "bubble" : "circle") // Used by css
+									.attr("class", this.nodePortOutputClass)
 									.on("mousedown", (cd) => {
 										this.stopPropagationAndPreventDefault(); // Stops the node drag behavior when clicking on the handle/circle
 										this.drawingNewLink = true;
@@ -1339,21 +1377,40 @@ export default class CanvasD3Layout {
 
 	getImagePosY(data) {
 		if (this.labelAndIconVerticalJustification === "center") {
-			return (data.height / 2) - (this.imageHeight / 2);
+			if (this.nodeFormatType === "Horizontal") {
+				return (data.height / 2) - (this.imageHeight / 2);
+
+			} else if (this.nodeFormatType === "Vertical") {
+				var imageLabelGap = this.labelPosY - (this.imagePosY + this.imageHeight);
+				return (data.height / 2) - ((this.imageHeight + this.labelHeight + imageLabelGap) / 2);
+			}
 		}
 		return this.imagePosY;
 	}
 
 	getLabelPosY(data) {
 		if (this.labelAndIconVerticalJustification === "center") {
-			return (data.height / 2) - (this.labelHeight / 2);
+			if (this.nodeFormatType === "Horizontal") {
+				return (data.height / 2) - (this.labelHeight / 2);
+
+			} else if (this.nodeFormatType === "Vertical") {
+				var imageLabelGap = this.labelPosY - (this.imagePosY + this.imageHeight);
+				return (data.height / 2) + ((this.imageHeight + this.labelHeight + imageLabelGap) / 2) - this.labelHeight;
+			}
 		}
+
 		return this.labelPosY;
 	}
 
 	getErrorPosY(data) {
 		if (this.labelAndIconVerticalJustification === "center") {
-			return (data.height / 2) - (this.imageHeight / 2);
+			if (this.nodeFormatType === "Horizontal") {
+				return (data.height / 2) - (this.imageHeight / 2);
+
+			} else if (this.nodeFormatType === "Vertical") {
+				var imageLabelGap = this.labelPosY - (this.imagePosY + this.imageHeight);
+				return (data.height / 2) - ((this.imageHeight + this.labelHeight + imageLabelGap) / 2);
+			}
 		}
 		return this.errorCenterY;
 	}
@@ -1505,36 +1562,33 @@ export default class CanvasD3Layout {
 			this.drawingNewLinkArray[0].y2 = transPos.y;
 		}
 
-		this.canvas.selectAll(".d3-new-connection-line")
+		this.canvas.selectAll("." + this.newConnectionLineClass)
 			.data(this.drawingNewLinkArray)
 			.enter()
 			.append("path")
 			.attr("d", (d) => that.getConnectorPath(d))
-			.attr("class", "d3-new-connection-line")
-			.attr("linkType", linkType)
-			.attr("portType", this.nodeFormatType === "Horizontal" ? "bubble" : "circle");
+			.attr("class", this.newConnectionLineClass)
+			.attr("linkType", linkType);
 
-		this.canvas.selectAll(".d3-new-connection-start")
+		this.canvas.selectAll("." + this.newConnectionLineStartClass)
 			.data(this.drawingNewLinkArray)
 			.enter()
 			.append("circle")
 			.attr("cx", (d) => d.x1)
 			.attr("cy", (d) => d.y1)
 			.attr("r", this.portRadius)
-			.attr("class", "d3-new-connection-start")
-			.attr("linkType", linkType)
-			.attr("portType", this.nodeFormatType === "Horizontal" ? "bubble" : "circle");
+			.attr("class", this.newConnectionLineStartClass)
+			.attr("linkType", linkType);
 
-		this.canvas.selectAll(".d3-new-connection-blob")
+		this.canvas.selectAll("." + this.newConnectionLineBlobClass)
 			.data(this.drawingNewLinkArray)
 			.enter()
 			.append("circle")
 			.attr("cx", (d) => d.x2)
 			.attr("cy", (d) => d.y2)
 			.attr("r", this.portRadius)
-			.attr("class", "d3-new-connection-blob")
+			.attr("class", this.newConnectionLineBlobClass)
 			.attr("linkType", linkType)
-			.attr("portType", this.nodeFormatType === "Horizontal" ? "bubble" : "circle")
 			.on("mouseup", () => {
 				this.stopPropagationAndPreventDefault();
 				var trgNode = this.getNodeAtMousePos();
@@ -1568,32 +1622,32 @@ export default class CanvasD3Layout {
 			"y2": transPos.y,
 			"type": linkType }];
 
-		this.canvas.selectAll(".d3-new-connection-line")
+		this.canvas.selectAll("." + this.newConnectionLineClass)
 			.data(this.drawingNewLinkArray)
 			.enter()
 			.append("path")
 			.attr("d", (d) => that.getConnectorPath(d))
-			.attr("class", "d3-new-connection-line")
+			.attr("class", this.newConnectionLineClass)
 			.attr("linkType", linkType);
 
-		// this.canvas.selectAll(".d3-new-connection-start")
+		// this.canvas.selectAll("." + this.newConnectionLineStartClass)
 		// 	.data(this.drawingNewLinkArray)
 		// 	.enter()
 		// 		.append("circle")
 		// 			.attr("cx", (d) => d.x1)
 		// 			.attr("cy", (d) => d.y1)
 		// 			.attr("r", this.commentPortRadius)
-		// 			.attr("class", "d3-new-connection-start")
+		// 			.attr("class", this.newConnectionLineStartClass)
 		// 			.attr("linkType", linkType);
 
-		this.canvas.selectAll(".d3-new-connection-blob")
+		this.canvas.selectAll("." + this.newConnectionLineBlobClass)
 			.data(this.drawingNewLinkArray)
 			.enter()
 			.append("circle")
 			.attr("cx", (d) => d.x2)
 			.attr("cy", (d) => d.y2)
 			.attr("r", this.commentPortRadius)
-			.attr("class", "d3-new-connection-blob")
+			.attr("class", this.newConnectionLineBlobClass)
 			.attr("linkType", linkType)
 			.on("mouseup", () => {
 				this.stopPropagationAndPreventDefault();
@@ -1719,21 +1773,21 @@ export default class CanvasD3Layout {
 								"L " + saveX2 + " " + saveY2;
 		}
 
-		d3.selectAll(".d3-new-connection-line")
+		d3.selectAll("." + this.newConnectionLineClass)
 			.transition()
 			.duration(duration)
 			.attr("d", newPath)
 			.on("end", () => {
 				this.canvas.selectAll(".d3-new-connection-arrow").remove();
 
-				d3.selectAll(".d3-new-connection-blob")
+				d3.selectAll("." + this.newConnectionLineBlobClass)
 					.transition()
 					.duration(1000)
 					.ease(d3.easeElastic)
 					.attr("cx", saveX1)
 					.attr("cy", saveY1);
 
-				d3.selectAll(".d3-new-connection-line")
+				d3.selectAll("." + this.newConnectionLineClass)
 					.transition()
 					.duration(1000)
 					.ease(d3.easeElastic)
@@ -1747,9 +1801,9 @@ export default class CanvasD3Layout {
 		if (this.connectionType === "Halo") {
 			this.canvas.selectAll(".d3-node-connector").remove();
 		} else {
-			this.canvas.selectAll(".d3-new-connection-line").remove();
-			this.canvas.selectAll(".d3-new-connection-start").remove();
-			this.canvas.selectAll(".d3-new-connection-blob").remove();
+			this.canvas.selectAll("." + this.newConnectionLineClass).remove();
+			this.canvas.selectAll("." + this.newConnectionLineStartClass).remove();
+			this.canvas.selectAll("." + this.newConnectionLineBlobClass).remove();
 			this.canvas.selectAll(".d3-new-connection-arrow").remove();
 		}
 	}
@@ -1771,10 +1825,14 @@ export default class CanvasD3Layout {
 	}
 
 	getNodeInputPortAtMousePos() {
+		if (this.connectionType === "Halo") {
+			return null;
+		}
+
 		const that = this;
 		var pos = this.getTransformedMousePos();
 		var portId = null;
-		this.canvas.selectAll(".d3-node-port-input")
+		this.canvas.selectAll("." + this.nodePortInputClass)
 			.each(function(d) { // Use function keyword so 'this' pointer references the dom object
 				var cx = d.x_pos + this.cx.baseVal.value;
 				var cy = d.y_pos + this.cy.baseVal.value;
@@ -1797,7 +1855,12 @@ export default class CanvasD3Layout {
 
 			// Draw straight segment down to ports (if needed)
 			if (data.outputPortsHeight < data.height) {
-				endPoint = ((data.height - data.outputPortsHeight) / 2);
+				if (data.output_ports.length === 1 &&
+						data.height < this.nodeHeight) {
+					endPoint = this.portPosY - this.outerPortRadius;
+				} else {
+					endPoint = ((data.height - data.outputPortsHeight) / 2);
+				}
 				path += " L " + data.width + " " + endPoint;
 			}
 
@@ -1823,7 +1886,12 @@ export default class CanvasD3Layout {
 			let endPoint = data.height;
 
 			if (data.inputPortsHeight < data.height) {
-				endPoint = data.height - ((data.height - data.inputPortsHeight) / 2);
+				if (data.input_ports.length === 1 &&
+						data.height < this.nodeHeight) {
+					endPoint = this.portPosY + this.outerPortRadius;
+				} else {
+					endPoint = data.height - ((data.height - data.inputPortsHeight) / 2);
+				}
 				path += " L 0 " + endPoint;
 			}
 
@@ -1861,7 +1929,11 @@ export default class CanvasD3Layout {
 			ports = data.output_ports;
 		}
 
-		if (this.nodeFormatType === "Horizontal") {
+		if (data.height <= this.nodeHeight &&
+				ports.length === 1) {
+			portPositions.push(this.portPosY);
+
+		} else {
 			let centerPoint = 0;
 
 			if (type === "input") {
@@ -1878,17 +1950,6 @@ export default class CanvasD3Layout {
 				centerPoint += this.outerPortRadius;
 				portPositions.push(centerPoint);
 				centerPoint += this.outerPortRadius;
-			});
-
-		} else {
-			ports.forEach((port, i) => {
-				var cy;
-				if (ports.length === 1) {
-					cy = this.portPosY;
-				} else {
-					cy = (data.height / (ports.length + 1)) * (i + 1);
-				}
-				portPositions.push(cy);
 			});
 		}
 
@@ -2658,13 +2719,12 @@ export default class CanvasD3Layout {
 		// Link line
 		linkGroup.append("path")
 			.attr("d", (d) => d.path)
-			.attr("portType", this.nodeFormatType === "Horizontal" ? "bubble" : "circle") // Used by css
 			.attr("class", (d) => {
 				var classStr;
 				if (d.type === "commentLink") {
 					classStr = "d3-selectable-link " + (d.class_name || this.commentLinkClass);
 				} else {
-					classStr = "d3-selectable-link " + (d.class_name || this.dataLinkClass);
+					classStr = "d3-selectable-link " + this.getDataLinkClass(d);
 				}
 				return classStr;
 			});
@@ -2678,7 +2738,7 @@ export default class CanvasD3Layout {
 				if (d.type === "commentLink") {
 					classStr = "d3-selectable-link " + (d.class_name || this.commentLinkClass);
 				} else {
-					classStr = "d3-selectable-link " + (d.class_name || this.dataLinkClass);
+					classStr = "d3-selectable-link " + this.getDataLinkClass(d);
 				}
 				return classStr;
 			})
@@ -2686,9 +2746,9 @@ export default class CanvasD3Layout {
 
 		// Arrow within input port
 		if (this.connectionType === "Ports") {
-			d3.selectAll(".d3-node-port-output").attr("connected", "no");
-			d3.selectAll(".d3-node-port-input").attr("connected", "no");
-			d3.selectAll(".d3-node-port-input-arrow").attr("connected", "no");
+			d3.selectAll("." + this.nodePortOutputClass).attr("connected", "no");
+			d3.selectAll("." + this.nodePortInputClass).attr("connected", "no");
+			d3.selectAll("." + this.nodePortInputArrowClass).attr("connected", "no");
 			lineArray.forEach((line) => {
 				if (line.type === "nodeLink") {
 					this.setTrgPortStatus(line.trg.id, line.trgPortId, "yes");
@@ -2705,6 +2765,18 @@ export default class CanvasD3Layout {
 			this.consoleLog("displayLinks R " + (timeAfterDelete - startTimeDrawingLines) +
 			" B " + (afterLineArray - timeAfterDelete) + " D " + (endTimeDrawingLines - afterLineArray));
 		}
+	}
+
+	getDataLinkClass(d) {
+		// If the data has a classname that isn't the default use it!
+		if (d.class_name &&
+				d.class_name !== "canvas-data-link") {
+			return d.class_name;
+		}
+		// If the class name is not the default, or there is no classname, return
+		// the class name from the preferences. This allows the preferences to
+		// override any default class name passed in.
+		return this.dataLinkClass;
 	}
 
 	// Pushes the links to be below nodes and then pushes comments to be below
