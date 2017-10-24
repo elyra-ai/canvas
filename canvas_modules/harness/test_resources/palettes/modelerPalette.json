@@ -264,16 +264,16 @@
           ],
           "output_ports": [
             {
-              "id": "outPort",
-              "label": "Output Port",
+              "id": "outPort1",
+              "label": "Output Port 1",
               "cardinality": {
                 "min": 0,
                 "max": -1
               }
             },
             {
-              "id": "outPort",
-              "label": "Output Port",
+              "id": "outPort2",
+              "label": "Output Port 2",
               "cardinality": {
                 "min": 0,
                 "max": -1
