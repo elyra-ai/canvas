@@ -15,7 +15,8 @@
 const d3 = require("d3");
 import ObjectModel from "./object-model/object-model.js";
 import _ from "underscore";
-import ellipsisIcon from "../assets/images/canvas_node_icons/vertical_ellipsis.svg";
+import nodeMenuStandardIcon from "../assets/images/canvas_node_icons/node-menu_standard.svg";
+import nodeMenuHoverIcon from "../assets/images/canvas_node_icons/node-menu_hover.svg";
 
 const BACKSPACE_KEY = 8;
 const DELETE_KEY = 46;
@@ -155,7 +156,9 @@ export default class CanvasD3Layout {
 
 			this.labelWidth = 52;
 			this.labelHeight = 12;
-			this.labelDescent = 3; // The underhang of letters below the baseline for the label font used
+
+			// The underhang of letters below the baseline for the label font used
+			this.labelDescent = 3;
 
 			this.labelPosX = 4;
 			this.labelPosY = 53;
@@ -211,14 +214,14 @@ export default class CanvasD3Layout {
 				this.newConnectionLineStartClass = "d3-new-connection-start-austin";
 				this.newConnectionLineBlobClass = "d3-new-connection-blob-austin";
 
-				this.nodeWidth = 200;
-				this.nodeHeight = 36;
+				this.nodeWidth = 160;
+				this.nodeHeight = 40;
 
-				this.imageWidth = 24;
-				this.imageHeight = 24;
+				this.imageWidth = 26;
+				this.imageHeight = 26;
 
-				this.imagePosX = 6;
-				this.imagePosY = 6;
+				this.imagePosX = 7;
+				this.imagePosY = 7;
 
 				// Sets the justification of label and icon within the node height. This
 				// overrides any labelPosY value provided. Possible value are "center" or
@@ -229,35 +232,40 @@ export default class CanvasD3Layout {
 				this.labelHorizontalJustification = "left";
 
 				this.labelWidth = 125;
-				this.labelHeight = 14;
-				this.labelDescent = 3; // The underhang of letters below the baseline for the label font used
+				this.labelHeight = 12;
+
+				// The underhang of letters below the baseline for the label font used
+				this.labelDescent = 3;
 
 				this.labelPosX = 40;
-				this.labelPosY = 9;
+				this.labelPosY = 14;
 
 				this.decoratorHeight = 12;
 				this.decoratorWidth = 12;
 
 				this.topDecoratorY = 0;
-				this.bottomDecoratorY = 36;
+				this.bottomDecoratorY = 28;
 
-				this.leftDecoratorX = 6;
-				this.rightDecoratorX = 42;
+				this.leftDecoratorX = 2;
+				this.rightDecoratorX = 144;
 
-				// Draw node as a rectangle with bubbles around the ports
-				this.nodeShape = "rectangle-bubbles";
+				// Draw node as a rectangle with port arcs around the ports
+				this.nodeShape = "port-arcs";
 
 				// Radius of the port circle
 				this.portRadius = 3;
 
 				// Radius of an imaginary circle around the port. This controls the
-				// spacing of ports and teh size of bubble when nodeShape is set to
-				// rectangle-bubbles
-				this.outerPortRadius = 6;
+				// spacing of ports and the size of port arcs when nodeShape is set to
+				// port-arcs.
+				this.portArcRadius = 6;
+
+				// Spacing between the port arcs around the ports.
+				this.portArcSpacing = 3;
 
 				// Default position of a single port - for vertical node format this
 				// is half way down the image rather than the center of the node.
-				this.portPosY = 18;
+				this.portPosY = 20;
 
 				// Comment port (circle) radius
 				this.commentPortRadius = 5;
@@ -273,10 +281,10 @@ export default class CanvasD3Layout {
 				this.drawLinkLineTo = "node_center";
 
 				// Display of vertical ellipsis to show context menu
-				this.ellipsisWidth = 5;
-				this.ellipsisHeight = 20;
-				this.ellipsisPosX = 185;
-				this.ellipsisPosY = 8;
+				this.ellipsisWidth = 4;
+				this.ellipsisHeight = 16;
+				this.ellipsisPosX = 150;
+				this.ellipsisPosY = 12;
 
 				// Error indicator dimensions
 				this.errorCenterX = 30;
@@ -297,13 +305,13 @@ export default class CanvasD3Layout {
 				this.newConnectionLineStartClass = "d3-new-connection-start";
 				this.newConnectionLineBlobClass = "d3-new-connection-blob";
 
-				this.nodeWidth = 68;
+				this.nodeWidth = 70;
 				this.nodeHeight = 75;
 
 				this.imageWidth = 48;
 				this.imageHeight = 48;
 
-				this.imagePosX = 10;
+				this.imagePosX = 11;
 				this.imagePosY = 5;
 
 				// Sets the justification of label and icon within the node height. This
@@ -316,9 +324,11 @@ export default class CanvasD3Layout {
 
 				this.labelWidth = 64;
 				this.labelHeight = 12;
-				this.labelDescent = 3; // The underhang of letters below the baseline for the label font used
 
-				this.labelPosX = 2;
+				// The underhang of letters below the baseline for the label font used
+				this.labelDescent = 3;
+
+				this.labelPosX = 3;
 				this.labelPosY = 57;
 
 				this.decoratorHeight = 12;
@@ -336,9 +346,12 @@ export default class CanvasD3Layout {
 				this.portRadius = 6;
 
 				// Radius of an imaginary circle around the port. This controls the
-				// spacing of ports and teh size of bubble when nodeShape is set to
-				// rectangle-bubbles
-				this.outerPortRadius = 10; // Defines an imaginary circle around the circle port
+				// spacing of ports and the size of port arcs when nodeShape is set to
+				// port-arcs.
+				this.portArcRadius = 10; // Defines an imaginary circle around the circle port
+
+				// Spacing between the port arcs around the ports.
+				this.portArcSpacing = 0;
 
 				// Default position of a single port - for vertical node format this
 				// is half way down the image rather than the center of the node.
@@ -442,8 +455,8 @@ export default class CanvasD3Layout {
 			var nodeHeight = this.nodeHeight;
 
 			if (this.connectionType === "Ports") {
-				inputPortsHeight = node.input_ports ? node.input_ports.length * (this.outerPortRadius * 2) : 0;
-				outputPortsHeight = node.output_ports ? node.output_ports.length * (this.outerPortRadius * 2) : 0;
+				inputPortsHeight = node.input_ports ? (node.input_ports.length * (this.portArcRadius * 2)) + ((node.input_ports.length - 1) * this.portArcSpacing) : 0;
+				outputPortsHeight = node.output_ports ? (node.output_ports.length * (this.portArcRadius * 2)) + ((node.output_ports.length - 1) * this.portArcSpacing) : 0;
 				nodeHeight = Math.max(inputPortsHeight, outputPortsHeight, this.nodeHeight);
 			}
 
@@ -624,8 +637,8 @@ export default class CanvasD3Layout {
 
 		// Add defs element to allow a filter
 		// TODO - Figure out how to get drop shadow to display correctly.
-		// var defs = this.canvasSVG.append("defs");
-		// this.createDropShadow(defs);
+		var defs = this.canvasSVG.append("defs");
+		this.createDropShadow(defs);
 
 		this.canvas = this.canvasSVG
 			.append("g")
@@ -649,15 +662,15 @@ export default class CanvasD3Layout {
 	createDropShadow(defs) {
 		var dropShadowFilter = defs.append("filter")
 			.attr("id", "drop-shadow")
-			.attr("x", "0")
-			.attr("y", "0")
+			.attr("x", "-20%")
+			.attr("y", "-20%")
 			.attr("width", "200%")
 			.attr("height", "200%");
 
 		dropShadowFilter.append("feOffset")
 			.attr("in", "SourceAlpha")
-			.attr("dx", 5)
-			.attr("dy", 5)
+			.attr("dx", 1)
+			.attr("dy", 1)
 			.attr("result", "offOut");
 
 		dropShadowFilter.append("feGaussianBlur")
@@ -669,6 +682,15 @@ export default class CanvasD3Layout {
 			.attr("in", "SourceGraphic")
 			.attr("in2", "blurOut")
 			.attr("mode", "normal");
+
+		dropShadowFilter.append("feComponentTransfer")
+			.append("feFuncA")
+			.attr("type", "linear")
+			.attr("slope", "0.2");
+
+		var feMerge = dropShadowFilter.append("feMerge");
+		feMerge.append("feMergeNode");
+		feMerge.append("feMergeNode").attr("in", "SourceGraphic");
 	}
 
 	zoomToFit() {
@@ -1112,11 +1134,17 @@ export default class CanvasD3Layout {
 						d3.select(this)
 							.append("image")
 							.attr("id", "node-ellipsis")
-							.attr("xlink:href", ellipsisIcon)
+							.attr("xlink:href", nodeMenuStandardIcon)
 							.attr("width", that.ellipsisWidth)
 							.attr("height", that.ellipsisHeight)
 							.attr("x", that.ellipsisPosX)
-							.attr("y", that.ellipsisPosY)
+							.attr("y", (nd) => that.getEllipsisPosY(nd))
+							.on("mouseenter", () => {
+								d3.select("#node-ellipsis").attr("xlink:href", nodeMenuHoverIcon);
+							})
+							.on("mouseleave", () => {
+								d3.select("#node-ellipsis").attr("xlink:href", nodeMenuStandardIcon);
+							})
 							.on("click", () => {
 								that.stopPropagationAndPreventDefault();
 								that.openContextMenu("node", d);
@@ -1175,7 +1203,7 @@ export default class CanvasD3Layout {
 				.call(this.drag); // Must put drag after mousedown listener so mousedown gets called first.
 
 			// Node selection highlighting outline
-			if (this.nodeShape === "rectangle-bubbles") {
+			if (this.nodeShape === "port-arcs") {
 				nodeGroups.append("path")
 					.attr("id", (d) => `node_outline_${d.id}`)
 					.attr("d", (d) => this.getNodeShapePath(d))
@@ -1195,12 +1223,12 @@ export default class CanvasD3Layout {
 
 			if (this.connectionType === "Ports") {
 				// Node body
-				if (this.nodeShape === "rectangle-bubbles") {
+				if (this.nodeShape === "port-arcs") {
 					nodeGroups.append("path")
 						.attr("id", (d) => `node_body_${d.id}`)
 						.attr("d", (d) => this.getNodeShapePath(d))
-						.attr("class", this.nodeBodyClass);
-					// .style("filter", "url(#drop-shadow)"); // TODO - Uncomment for drop shadow disply.
+						.attr("class", this.nodeBodyClass)
+						.style("filter", "url(#drop-shadow)");
 				} else {
 					nodeGroups.append("rect")
 						.attr("id", (d) => `node_body_${d.id}`)
@@ -1413,6 +1441,18 @@ export default class CanvasD3Layout {
 			}
 		}
 		return this.errorCenterY;
+	}
+
+	getEllipsisPosY(data) {
+		if (this.labelAndIconVerticalJustification === "center") {
+			if (this.nodeFormatType === "Horizontal") {
+				return (data.height / 2) - (this.ellipsisHeight / 2);
+
+			} else if (this.nodeFormatType === "Vertical") {
+				return this.getImagePosY(data) - (this.ellipsisPosY - this.imagePosY);
+			}
+		}
+		return this.ellipsisPosY;
 	}
 
 	openContextMenu(type, d) {
@@ -1856,8 +1896,8 @@ export default class CanvasD3Layout {
 			// Draw straight segment down to ports (if needed)
 			if (data.outputPortsHeight < data.height) {
 				if (data.output_ports.length === 1 &&
-						data.height < this.nodeHeight) {
-					endPoint = this.portPosY - this.outerPortRadius;
+						data.height <= this.nodeHeight) {
+					endPoint = this.portPosY - this.portArcRadius;
 				} else {
 					endPoint = ((data.height - data.outputPortsHeight) / 2);
 				}
@@ -1865,9 +1905,13 @@ export default class CanvasD3Layout {
 			}
 
 			// Draw port arcs
-			data.output_ports.forEach(() => {
-				endPoint += (this.outerPortRadius * 2);
-				path += " A " + this.outerPortRadius + " " + this.outerPortRadius + " 180 0 1 " + data.width + " " + endPoint;
+			data.output_ports.forEach((port, index) => {
+				endPoint += (this.portArcRadius * 2);
+				path += " A " + this.portArcRadius + " " + this.portArcRadius + " 180 0 1 " + data.width + " " + endPoint;
+				if (index < data.output_ports.length - 1) {
+					endPoint += this.portArcSpacing;
+					path += " L " + data.width + " " + endPoint;
+				}
 			});
 
 			// Draw finishing segment to bottom right corner
@@ -1887,17 +1931,21 @@ export default class CanvasD3Layout {
 
 			if (data.inputPortsHeight < data.height) {
 				if (data.input_ports.length === 1 &&
-						data.height < this.nodeHeight) {
-					endPoint = this.portPosY + this.outerPortRadius;
+						data.height <= this.nodeHeight) {
+					endPoint = this.portPosY + this.portArcRadius;
 				} else {
 					endPoint = data.height - ((data.height - data.inputPortsHeight) / 2);
 				}
 				path += " L 0 " + endPoint;
 			}
 
-			data.input_ports.forEach(() => {
-				endPoint -= (this.outerPortRadius * 2);
-				path += " A " + this.outerPortRadius + " " + this.outerPortRadius + " 180 0 1 0 " + endPoint;
+			data.input_ports.forEach((port, index) => {
+				endPoint -= (this.portArcRadius * 2);
+				path += " A " + this.portArcRadius + " " + this.portArcRadius + " 180 0 1 0 " + endPoint;
+				if (index < data.input_ports.length - 1) {
+					endPoint -= this.portArcSpacing;
+					path += " L 0 " + endPoint;
+				}
 			});
 
 			if (data.inputPortsHeight < data.height) {
@@ -1947,9 +1995,9 @@ export default class CanvasD3Layout {
 			}
 
 			ports.forEach(() => {
-				centerPoint += this.outerPortRadius;
+				centerPoint += this.portArcRadius;
 				portPositions.push(centerPoint);
-				centerPoint += this.outerPortRadius;
+				centerPoint += this.portArcRadius + this.portArcSpacing;
 			});
 		}
 
