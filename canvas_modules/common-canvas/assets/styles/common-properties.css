@@ -422,6 +422,10 @@ input.number,
   border-color: grey !important;
 }
 
+.Dropdown-disabled .Dropdown-arrow{
+	border-color: grey transparent transparent;
+}
+
 .Dropdown-menu {
   background-color: #e0e0e0;
   border: 1px solid #ccc;
