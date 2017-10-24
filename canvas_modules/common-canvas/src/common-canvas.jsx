@@ -36,7 +36,7 @@ export default class CommonCanvas extends React.Component {
 		super(props);
 
 		this.state = {
-			isPaletteOpen: false,
+			isPaletteOpen: this.props.config.paletteInitialState || false,
 			showContextMenu: false,
 			contextMenuDef: {},
 			toolbarConfig: this.props.toolbarConfig,
@@ -46,8 +46,6 @@ export default class CommonCanvas extends React.Component {
 		ObjectModel.subscribe(() => {
 			this.forceUpdate();
 		});
-
-		this.paletteClosedByUser = false;
 
 		this.contextMenuSource = null;
 		this.closeContextMenu = this.closeContextMenu.bind(this);
@@ -109,7 +107,6 @@ export default class CommonCanvas extends React.Component {
 	}
 
 	closePalette() {
-		this.paletteClosedByUser = true;
 		this.setState({ isPaletteOpen: false });
 	}
 
@@ -355,17 +352,6 @@ export default class CommonCanvas extends React.Component {
 		let canvasToolbar = null;
 		const canvasJSON = ObjectModel.getCanvasInfo();
 
-		var isPaletteOpen = this.state.isPaletteOpen;
-
-		// Always open the palette when we start up (i.e. before the user
-		// interacts with it) with an emoty canvas and with some palette data.
-		if (!this.state.isPaletteOpen &&
-				!this.paletteClosedByUser &&
-				!ObjectModel.getPaletteData() &&
-				ObjectModel.isCanvasEmpty()) {
-			isPaletteOpen = true;
-		}
-
 		if (canvasJSON !== null) {
 			if (this.state.showContextMenu) {
 				contextMenuWrapper = (<ContextMenuWrapper
@@ -408,17 +394,17 @@ export default class CommonCanvas extends React.Component {
 				if (this.props.config.enablePaletteLayout === "Modal") {
 					palette = (<Palette
 						paletteJSON={ObjectModel.getPaletteData()}
-						showPalette={isPaletteOpen}
+						showPalette={this.state.isPaletteOpen}
 						closePalette={this.closePalette}
 					/>);
 				} else {
-					if (isPaletteOpen) {
+					if (this.state.isPaletteOpen) {
 						paletteClass = "canvas-palette-flyout-div-open";
 					}
 					palette = (<PaletteFlyout
 						paletteJSON={ObjectModel.getPaletteData()}
 						addNodeToCanvas={this.addNodeToCanvas}
-						showPalette={isPaletteOpen}
+						showPalette={this.state.isPaletteOpen}
 					/>);
 				}
 			}
@@ -428,7 +414,7 @@ export default class CommonCanvas extends React.Component {
 				canvasToolbar = (<Toolbar
 					config={this.state.toolbarConfig}
 					renderingEngine={this.props.config.enableRenderingEngine}
-					paletteState={isPaletteOpen}
+					paletteState={this.state.isPaletteOpen}
 					paletteType={this.props.config.enablePaletteLayout}
 					closePalette={this.closePalette}
 					openPalette={this.openPalette}
