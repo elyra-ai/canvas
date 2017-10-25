@@ -562,6 +562,21 @@ export default class CanvasD3Layout {
 		return (typeof node === "undefined") ? null : node;
 	}
 
+	getNodePort(nodeId, portId, type) {
+		const node = this.canvasJSON.nodes.find((nd) => nd.id === nodeId);
+		if (node) {
+			let ports;
+			if (type === "input") {
+				ports = node.input_ports;
+			} else {
+				ports = node.output_ports;
+			}
+			const port = ports.find((p) => p.id === portId);
+			return (typeof port === "undefined") ? null : port;
+		}
+		return null;
+	}
+
 	getComment(commentId) {
 		const comment = this.canvasJSON.comments.find((com) => com.id === commentId);
 		return (typeof comment === "undefined") ? null : comment;
@@ -1029,22 +1044,6 @@ export default class CanvasD3Layout {
 				d3.select(`#node_grp_${d.id}`)
 					.attr("transform", `translate(${d.x_pos}, ${d.y_pos})`)
 					.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
-
-				if (that.connectionType === "Ports") {
-					if (d.output_ports && d.output_ports.length > 0) {
-						d.output_ports.forEach((port, i) => {
-							d3.select(`#src_circle_${d.id}_${d.output_ports[i].id}`)
-								.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
-						});
-					}
-
-					if (d.input_ports && d.input_ports.length > 0) {
-						d.input_ports.forEach((port, i) => {
-							d3.select(`#trg_circle_${d.id}_${d.input_ports[i].id}`)
-								.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
-						});
-					}
-				}
 			});
 		} else if (this.selecting || this.regionSelect || this.commentSizing) {
 			nodeGroupSel.each(function(d) {
@@ -1087,24 +1086,6 @@ export default class CanvasD3Layout {
 					.attr("selected", ObjectModel.isSelected(d.id) ? "yes" : "no")
 					.attr("class", that.selectionHighlightClass)
 					.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
-
-				if (that.connectionType === "Ports") {
-					if (d.output_ports && d.output_ports.length > 0) {
-						d.output_ports.forEach((port, i) => {
-							d3.select(`#src_circle_${d.id}_${d.output_ports[i].id}`)
-								.attr("class", that.nodePortOutputClass + (port.class_name ? " " + port.class_name : ""))
-								.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
-						});
-					}
-
-					if (d.input_ports && d.input_ports.length > 0) {
-						d.input_ports.forEach((port, i) => {
-							d3.select(`#trg_circle_${d.id}_${d.input_ports[i].id}`)
-								.attr("class", that.nodePortInputClass + (port.class_name ? " " + port.class_name : ""))
-								.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
-						});
-					}
-				}
 
 				d3.select(`#node_image_${d.id}`)
 					.datum((nd) => that.getNode(nd.id)) // Set the __data__ to the updated data
@@ -1241,62 +1222,88 @@ export default class CanvasD3Layout {
 						.attr("class", this.nodeBodyClass);
 				}
 
-				// Input ports
-				nodeGroups
+				// ports: create for new and existing nodes
+				var newAndExistingNodes = nodeGroupSel.enter().merge(nodeGroupSel);
+				newAndExistingNodes
 					.each((d) => {
+						// Input ports
 						if (d.input_ports && d.input_ports.length > 0) {
 							const inputPortPositions = this.getPortPositions(d, "input");
 
-							d.input_ports.forEach((port, i) => {
-								// Circle for input port
-								var nodeGroup = d3.select(`#node_grp_${d.id}`);
-								nodeGroup.append("circle")
-									.attr("id", `trg_circle_${d.id}_${d.input_ports[i].id}`)
-									.attr("portId", d.input_ports[i].id) // This is needed by getNodeInputPortAtMousePos
-									.attr("cx", 0)
-									.attr("cy", inputPortPositions[i])
-									.attr("r", this.portRadius)
-									.attr("class", that.nodePortInputClass + (port.class_name ? " " + port.class_name : ""))
-									.attr("connected", "no");
+							var inputPortSelection = d3.select(`#node_grp_${d.id}`).selectAll("." + that.nodePortInputClass)
+								.data(d.input_ports, function(p) { return p.id; });
 
-								// Arrow for input port
-								nodeGroup.append("path")
-									.attr("id", `trg_arrow_${d.id}_${d.input_ports[i].id}`)
-									.attr("d", that.getArrowShapePath(inputPortPositions[i]))
-									.attr("class", this.nodePortInputArrowClass)
-									.attr("connected", "no");
+							// update datum for existing ports, sets the __data__ to the updated data of the port
+							inputPortSelection.each(function(p) {
+								d3.select(`trg_circle_${d.id}_${p.id}`)
+									.attr("class", that.nodePortInputClass + (p.class_name ? " " + p.class_name : ""))
+									.datum((nd) => that.getNodePort(d.id, nd.id, "input"));
 							});
-						}
-					});
 
-				// Output ports
-				nodeGroups
-					.each((d) => {
+							inputPortSelection.enter()
+								.append("circle")
+								.attr("id", (port) => `trg_circle_${d.id}_${port.id}`)
+								.attr("portId", (port) => port.id) // This is needed by getNodeInputPortAtMousePos
+								.attr("cx", 0)
+								.attr("cy", (port) => {
+									var inputPortPos = d.input_ports.findIndex((p) => p.id === port.id);
+									return inputPortPositions[inputPortPos];
+								})
+								.attr("r", this.portRadius)
+								.attr("class", (port) => this.nodePortInputClass + (port.class_name ? " " + port.class_name : ""))
+								.attr("connected", "no");
+
+							inputPortSelection.enter()
+								.append("path")
+								.attr("id", (port) => `trg_arrow_${d.id}_${port.id}`)
+								.attr("d", (port) => {
+									var inputPortPos = d.input_ports.findIndex((p) => p.id === port.id);
+									return that.getArrowShapePath(inputPortPositions[inputPortPos]);
+								})
+								.attr("class", this.nodePortInputArrowClass)
+								.attr("connected", "no");
+
+							inputPortSelection.exit().remove();
+						}
+
+						// Output ports
 						if (d.output_ports && d.output_ports.length > 0) {
 							const outputPortPositions = this.getPortPositions(d, "output");
 
-							d.output_ports.forEach((port, i) => {
-								// Circle for input port
-								var nodeGroup = d3.select(`#node_grp_${d.id}`);
+							var outputPortSelection = d3.select(`#node_grp_${d.id}`).selectAll("." + that.nodePortOutputClass)
+								.data(d.output_ports, function(p) { return p.id; });
 
-								nodeGroup
-									.append("circle")
-									.attr("id", `src_circle_${d.id}_${d.output_ports[i].id}`)
-									.attr("cx", (cd) => cd.width)
-									.attr("cy", outputPortPositions[i])
-									.attr("r", this.portRadius)
-									.attr("class", that.nodePortOutputClass + (port.class_name ? " " + port.class_name : ""))
-									.on("mousedown", (cd) => {
-										this.stopPropagationAndPreventDefault(); // Stops the node drag behavior when clicking on the handle/circle
-										this.drawingNewLink = true;
-										this.drawingNewLinkSrcId = cd.id;
-										this.drawingNewLinkSrcPortId = port.id;
-										this.drawingNewLinkAction = "node-node";
-										this.drawingNewLinkStartPos = { x: cd.x_pos + cd.width, y: cd.y_pos + outputPortPositions[i] };
-										this.drawingNewLinkArray = [];
-										this.drawNewLink();
-									});
+							// update datum for existing ports, sets the __data__ to the updated data of the port
+							outputPortSelection.each(function(p) {
+								d3.select(`src_circle_${d.id}_${p.id}`)
+									.attr("class", that.nodePortInputClass + (p.class_name ? " " + p.class_name : ""))
+									.datum((nd) => that.getNodePort(d.id, nd.id, "output"));
 							});
+
+							outputPortSelection.enter()
+								.append("circle")
+								.attr("id", (port) => `src_circle_${d.id}_${port.id}`)
+								.attr("cx", () => d.width)
+								.attr("cy", (port) => {
+									const outputPortPos = d.output_ports.findIndex((p) => p.id === port.id);
+									return outputPortPositions[outputPortPos];
+								})
+								.attr("r", this.portRadius)
+								.attr("class", (port) => this.nodePortOutputClass + (port.class_name ? " " + port.class_name : ""))
+								.on("mousedown", (port) => {
+									this.stopPropagationAndPreventDefault(); // Stops the node drag behavior when clicking on the handle/circle
+									this.drawingNewLink = true;
+									this.drawingNewLinkSrcId = d.id;
+									this.drawingNewLinkSrcPortId = port.id;
+									this.drawingNewLinkAction = "node-node";
+									const node = this.getNodeAtMousePos();
+									const outputPortPos = d.output_ports.findIndex((p) => p.id === port.id);
+									this.drawingNewLinkStartPos = { x: node.x_pos + d.width, y: node.y_pos + outputPortPositions[outputPortPos] };
+									this.drawingNewLinkArray = [];
+									this.drawNewLink();
+								});
+
+							outputPortSelection.exit().remove();
 						}
 					});
 			}
@@ -1857,7 +1864,7 @@ export default class CanvasD3Layout {
 		this.canvas.selectAll(".node-group")
 			.each(function(d) {
 				if (pos.x >= d.x_pos - that.portRadius && // Target port sticks out by its radius so need to allow for it.
-						pos.x <= d.x_pos + d.width &&
+						pos.x <= d.x_pos + d.width + that.portRadius &&
 						pos.y >= d.y_pos &&
 						pos.y <= d.y_pos + d.height) {
 					node = d;
@@ -1874,17 +1881,20 @@ export default class CanvasD3Layout {
 		const that = this;
 		var pos = this.getTransformedMousePos();
 		var portId = null;
-		this.canvas.selectAll("." + this.nodePortInputClass)
-			.each(function(d) { // Use function keyword so 'this' pointer references the dom object
-				var cx = d.x_pos + this.cx.baseVal.value;
-				var cy = d.y_pos + this.cy.baseVal.value;
-				if (pos.x >= cx - that.portRadius && // Target port sticks out by its radius so need to allow for it.
-						pos.x <= cx + that.portRadius &&
-						pos.y >= cy - that.portRadius &&
-						pos.y <= cy + that.portRadius) {
-					portId = this.getAttribute("portId");
-				}
-			});
+		const node = this.getNodeAtMousePos();
+		if (node) {
+			d3.select(`#node_grp_${node.id}`).selectAll("." + this.nodePortInputClass)
+				.each(function(p) { // Use function keyword so 'this' pointer references the dom object
+					var cx = node.x_pos + this.cx.baseVal.value;
+					var cy = node.y_pos + this.cy.baseVal.value;
+					if (pos.x >= cx - that.portRadius && // Target port sticks out by its radius so need to allow for it.
+							pos.x <= cx + that.portRadius &&
+							pos.y >= cy - that.portRadius &&
+							pos.y <= cy + that.portRadius) {
+						portId = this.getAttribute("portId");
+					}
+				});
+		}
 		return portId;
 	}
 
