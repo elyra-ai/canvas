@@ -154,6 +154,10 @@ export default class CanvasD3Layout {
 			// Horizontal Justification of the lable based on label position X and Y.
 			this.labelHorizontalJustification = "center";
 
+			// Specifies whether a label that has been truncated should be displayed
+			// in full when the pointer is hovered over the truncated label.
+			this.displayFullLabelOnHover = true;
+
 			this.labelWidth = 52;
 			this.labelHeight = 12;
 
@@ -220,7 +224,7 @@ export default class CanvasD3Layout {
 				this.imageWidth = 26;
 				this.imageHeight = 26;
 
-				this.imagePosX = 7;
+				this.imagePosX = 6;
 				this.imagePosY = 7;
 
 				// Sets the justification of label and icon within the node height. This
@@ -231,13 +235,17 @@ export default class CanvasD3Layout {
 				// Horizontal Justification of the lable based on label position X and Y.
 				this.labelHorizontalJustification = "left";
 
-				this.labelWidth = 125;
+				// Specifies whether a label that has been truncated should be displayed
+				// in full when the pointer is hovered over the truncated label.
+				this.displayFullLabelOnHover = false;
+
+				this.labelWidth = 104;
 				this.labelHeight = 12;
 
 				// The underhang of letters below the baseline for the label font used
 				this.labelDescent = 3;
 
-				this.labelPosX = 40;
+				this.labelPosX = 38;
 				this.labelPosY = 14;
 
 				this.decoratorHeight = 12;
@@ -283,7 +291,7 @@ export default class CanvasD3Layout {
 				// Display of vertical ellipsis to show context menu
 				this.ellipsisWidth = 4;
 				this.ellipsisHeight = 16;
-				this.ellipsisPosX = 150;
+				this.ellipsisPosX = 148;
 				this.ellipsisPosY = 12;
 
 				// Error indicator dimensions
@@ -321,6 +329,10 @@ export default class CanvasD3Layout {
 
 				// Horizontal Justification of the lable based on label position X and Y.
 				this.labelHorizontalJustification = "center";
+
+				// Specifies whether a label that has been truncated should be displayed
+				// in full when the pointer is hovered over the truncated label.
+				this.displayFullLabelOnHover = true;
 
 				this.labelWidth = 64;
 				this.labelHeight = 12;
@@ -1357,7 +1369,8 @@ export default class CanvasD3Layout {
 				.attr("text-anchor", this.labelHorizontalJustification === "left" ? "start" : "middle")
 				.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text object
 					const labelObj = d3.select(this);
-					if (this.textContent.endsWith("...")) {
+					if (that.displayFullLabelOnHover &&
+							this.textContent.endsWith("...")) {
 						labelObj
 							.attr("abbr-label", this.textContent) // Do this before setting the new label
 							.text(d.label);
