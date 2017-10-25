@@ -80,7 +80,6 @@
                     "min": 1,
                     "max": 1
                   },
-                  "class_name": "foobar",
                   "label": {
                     "default": "input1NodeID1PE"
                   }
@@ -96,8 +95,7 @@
                   "cardinality": {
                     "min": 1,
                     "max": 1
-                  },
-                  "class_name": "foobar"
+                  }
                 }
               }
             }
@@ -112,7 +110,6 @@
                     "min": 1,
                     "max": -1
                   },
-                  "class_name": "foobar",
                   "label": {
                     "default": "output1NodeID1PE"
                   }

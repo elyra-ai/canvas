@@ -176,7 +176,6 @@
                     "min": 1,
                     "max": 1
                   },
-                  "class_name": "foobar",
                   "label": {
                     "default": "input1NodeID1PE"
                   }
@@ -202,7 +201,6 @@
                     "min": 1,
                     "max": 1
                   },
-                  "class_name": "foobar",
                   "label": {
                     "default": "input2NodeID1PE"
                   }
@@ -220,7 +218,6 @@
                     "min": 1,
                     "max": -1
                   },
-                  "class_name": "foobar",
                   "label": {
                     "default": "output1NodeID1PE"
                   }
@@ -275,7 +272,6 @@
               "schema_ref": "schema3",
               "app_data": {
                 "ui_data": {
-                  "class_name": "port-class",
                   "label": {
                     "default": "input1SuperNodePE"
                   }
@@ -298,7 +294,6 @@
               "schema_ref": "schema2",
               "app_data": {
                 "ui_data": {
-                  "class_name": "port-class",
                   "label": {
                     "default": "input2SuperNodePE"
                   }
@@ -313,7 +308,6 @@
               "subflow_node_ref": "exitID1SE",
               "app_data": {
                 "ui_data": {
-                  "class_name": "port-class",
                   "label": {
                     "default": "output1SuperNodePE"
                   }
@@ -361,7 +355,6 @@
                     "min": 1,
                     "max": 1
                   },
-                  "class_name": "port-class",
                   "label": {
                     "default": "input1NodeID2PE"
                   }
@@ -375,7 +368,6 @@
               "schema_ref": "schema3",
               "app_data": {
                 "ui_data": {
-                  "class_name": "port-class",
                   "label": {
                     "default": "output1NodeID2PE"
                   }
@@ -428,7 +420,6 @@
                     "min": 1,
                     "max": -1
                   },
-                  "class_name": "port-class",
                   "label": {
                     "default": "input1NodeID3PE"
                   }
@@ -442,7 +433,6 @@
               "schema_ref": "schema3",
               "app_data": {
                 "ui_data": {
-                  "class_name": "port-class",
                   "label": {
                     "default": "output1NodeID3PE"
                   }
@@ -586,7 +576,6 @@
               "schema_ref": "schema3",
               "app_data": {
                 "ui_data": {
-                  "class_name": "port-class",
                   "label": {
                     "default": "input1nodeID1SE"
                   }
@@ -600,7 +589,6 @@
               "schema_ref": "schema3",
               "app_data": {
                 "ui_data": {
-                  "class_name": "port-class",
                   "label": {
                     "default": "output1nodeID1SE"
                   }
@@ -653,7 +641,6 @@
                     "min": 1,
                     "max": 1
                   },
-                  "class_name": "foobar",
                   "label": {
                     "default": "input1NodeID2SE"
                   }
@@ -679,7 +666,6 @@
                     "min": 1,
                     "max": 1
                   },
-                  "class_name": "foobar",
                   "label": {
                     "default": "input2NodeID2SE"
                   }
@@ -693,7 +679,6 @@
               "schema_ref": "schema2",
               "app_data": {
                 "ui_data": {
-                  "class_name": "foobar",
                   "label": {
                     "default": "output1NodeID2SE"
                   }

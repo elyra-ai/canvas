@@ -87,6 +87,9 @@ export default class SVGPipelineInHandler {
 				"max": port.app_data.ui_data.cardinality.max
 			};
 		}
+		if (_.has(port, "app_data.ui_data.class_name")) {
+			portObj.class_name = port.app_data.ui_data.class_name;
+		}
 		return portObj;
 	}
 

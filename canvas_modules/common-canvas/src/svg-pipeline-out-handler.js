@@ -270,6 +270,7 @@ export default class SVGPipelineOutHandler {
 				app_data: {
 					ui_data: {
 						cardinality: inPort.cardinality,
+						class_name: inPort.class_name,
 						label: {
 							default: inPort.label
 						}
@@ -308,6 +309,7 @@ export default class SVGPipelineOutHandler {
 				app_data: {
 					ui_data: {
 						cardinality: outPort.cardinality,
+						class_name: outPort.class_name,
 						label: {
 							default: outPort.label
 						}

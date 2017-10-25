@@ -284,6 +284,71 @@
 	stroke: black;
 }
 
+/* These styles are used in the portsColorCanvas.json canvas file. */
+
+.port-output-red {
+	stroke: deeppink;
+	fill: white;
+	stroke-width: 2;
+}
+
+.port-output-red[connected=yes] {
+	stroke: fuchsia;
+	fill: fuchsia;
+	stroke-width: 2;
+}
+
+.port-output-red:hover {
+  fill: red;
+}
+
+.port-output-yellow {
+	stroke: goldenrod;
+	fill: white;
+	stroke-width: 2;
+}
+
+.port-output-yellow[connected=yes] {
+	stroke: gold;
+	fill: gold;
+	stroke-width: 2;
+}
+
+.port-output-yellow:hover {
+  fill: goldenrod;
+}
+
+.port-output-green {
+	stroke: green;
+	fill: white;
+	stroke-width: 2;
+}
+
+.port-output-green[connected=yes] {
+	stroke: teal;
+	fill: teal;
+	stroke-width: 2;
+}
+
+.port-output-green:hover {
+  fill: green;
+}
+
+.port-output-blue {
+	stroke: blue;
+	fill: white;
+	stroke-width: 2;
+}
+
+.port-output-blue[connected=yes] {
+	stroke: blue;
+	fill: blue;
+	stroke-width: 2;
+}
+
+.port-output-blue:hover {
+  fill: slateblue;
+}
 /* This style is used in the customAttrs.json canvas file. */
 
 .node-image[data-attr1] {

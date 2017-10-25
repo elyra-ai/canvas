@@ -1092,6 +1092,7 @@ export default class CanvasD3Layout {
 					if (d.output_ports && d.output_ports.length > 0) {
 						d.output_ports.forEach((port, i) => {
 							d3.select(`#src_circle_${d.id}_${d.output_ports[i].id}`)
+								.attr("class", that.nodePortOutputClass + (port.class_name ? " " + port.class_name : ""))
 								.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
 						});
 					}
@@ -1099,6 +1100,7 @@ export default class CanvasD3Layout {
 					if (d.input_ports && d.input_ports.length > 0) {
 						d.input_ports.forEach((port, i) => {
 							d3.select(`#trg_circle_${d.id}_${d.input_ports[i].id}`)
+								.attr("class", that.nodePortInputClass + (port.class_name ? " " + port.class_name : ""))
 								.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
 						});
 					}
@@ -1245,7 +1247,7 @@ export default class CanvasD3Layout {
 						if (d.input_ports && d.input_ports.length > 0) {
 							const inputPortPositions = this.getPortPositions(d, "input");
 
-							d.input_ports.forEach((portPos, i) => {
+							d.input_ports.forEach((port, i) => {
 								// Circle for input port
 								var nodeGroup = d3.select(`#node_grp_${d.id}`);
 								nodeGroup.append("circle")
@@ -1254,7 +1256,7 @@ export default class CanvasD3Layout {
 									.attr("cx", 0)
 									.attr("cy", inputPortPositions[i])
 									.attr("r", this.portRadius)
-									.attr("class", this.nodePortInputClass)
+									.attr("class", that.nodePortInputClass + (port.class_name ? " " + port.class_name : ""))
 									.attr("connected", "no");
 
 								// Arrow for input port
@@ -1283,7 +1285,7 @@ export default class CanvasD3Layout {
 									.attr("cx", (cd) => cd.width)
 									.attr("cy", outputPortPositions[i])
 									.attr("r", this.portRadius)
-									.attr("class", this.nodePortOutputClass)
+									.attr("class", that.nodePortOutputClass + (port.class_name ? " " + port.class_name : ""))
 									.on("mousedown", (cd) => {
 										this.stopPropagationAndPreventDefault(); // Stops the node drag behavior when clicking on the handle/circle
 										this.drawingNewLink = true;
