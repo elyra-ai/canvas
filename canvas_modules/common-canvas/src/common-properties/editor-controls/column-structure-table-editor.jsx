@@ -82,10 +82,29 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		}
 	}
 
+	componentWillMount() {
+		// augment controlValues with data model fields if appropriate
+		let controlValue = this.getCurrentControlValue();
+		if (this.props.control.noPickColumns) {
+			// When not picking columns, we need always to ensure that the field array is complete and current
+			controlValue = this.populateFieldData(controlValue);
+			this.setState({
+				controlValue: controlValue
+			});
+		}
+	}
+
+
 	componentWillReceiveProps(nextProps) {
 		// logger.info("componentWillReceiveProps");
+		// augment controlValues with data model fields if appropriate
+		let controlValue = nextProps.valueAccessor(nextProps.control.name);
+		if (this.props.control.noPickColumns) {
+			// When not picking columns, we need always to ensure that the field array is complete and current
+			controlValue = this.populateFieldData(controlValue);
+		}
 		this.setState({
-			controlValue: nextProps.valueAccessor(nextProps.control.name),
+			controlValue: controlValue,
 			selectedRows: nextProps.selectedRows
 		});
 		this.selectionChanged(nextProps.selectedRows);
@@ -446,17 +465,9 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			}
 			rowData.push(row);
 		}
-
-		// Run updaters after the cell data has been set
-		const that = this;
-		setTimeout(function() {
-			for (let z = 0; z < updateCells.length; z++) {
-				that.props.validateConditions(dm, { rowIndex: updateCells[z][0], colIndex: updateCells[z][1] });
-			}
-		}, 100);
-
 		return rowData;
 	}
+
 
 	getDefaultSubControlValue(col, fieldName) {
 		let val;
@@ -602,11 +613,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		}
 		this.filterFields = filterFields;
 
-		let controlValue = this.getCurrentControlValue();
-		if (this.props.control.noPickColumns) {
-			// When not picking columns, we need always to ensure that the field array is complete and current
-			controlValue = this.populateFieldData(controlValue);
-		}
+		const controlValue = this.getCurrentControlValue();
 		// calculate for all columns except the last which is used for the scroll bar
 		const columnWidths = FlexibleTable.calculateColumnWidths(headers, 100);
 		this.makeCells(rows, controlValue, columnWidths, stateStyle, stateDisabled);
