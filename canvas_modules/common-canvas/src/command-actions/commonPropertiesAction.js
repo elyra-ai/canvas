@@ -19,15 +19,15 @@ export default class CommonPropertiesAction extends Action {
 
 	// Standard methods
 	do() {
-		this.applyPropertyChanges(this.newValues, this.appData);
+		this.applyPropertyChanges(this.newValues.properties, this.appData, this.newValues.messages);
 	}
 
 	undo() {
-		this.applyPropertyChanges(this.initialValues, this.appData);
+		this.applyPropertyChanges(this.initialValues.properties, this.appData, this.initialValues.messages);
 	}
 
 	redo() {
-		this.applyPropertyChanges(this.newValues, this.appData);
+		this.applyPropertyChanges(this.newValues.properties, this.appData, this.newValues.messages);
 	}
 
 }

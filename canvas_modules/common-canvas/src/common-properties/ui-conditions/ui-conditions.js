@@ -44,7 +44,7 @@ function evaluateInput(validationDefinition, userInput, control, dataModel, requ
 						output.isActiveCell = true;
 					}
 				}
-				if (isError) {
+				if (isError && setTableErrorState !== null) {
 					setTableErrorState(row, col, tmp);
 				}
 			}

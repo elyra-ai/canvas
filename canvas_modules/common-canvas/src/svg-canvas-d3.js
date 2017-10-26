@@ -128,7 +128,8 @@ export default class CanvasD3Layout {
 			this.selectionHighlightClass = "d3-obj-selection-highlight";
 			this.dataLinkClass = "canvas-data-link";
 			this.labelClass = "d3-node-label";
-			this.labelErrorClass = "";
+			this.labelErrorClass = "d3-node-error-label";
+			this.labelWarningClass = "d3-node-warning-label";
 			this.commentLinkClass = "canvas-comment-link";
 			this.nodePortOutputClass = "";
 			this.nodePortInputClass = "";
@@ -210,6 +211,7 @@ export default class CanvasD3Layout {
 				this.dataLinkClass = "canvas-data-link-austin";
 				this.labelClass = "d3-node-label-austin";
 				this.labelErrorClass = "d3-node-error-label";
+				this.labelWarningClass = "d3-node-warning-label";
 				this.commentLinkClass = "canvas-comment-link";
 				this.nodePortOutputClass = "d3-node-port-output-austin";
 				this.nodePortInputClass = "d3-node-port-input-austin";
@@ -305,6 +307,7 @@ export default class CanvasD3Layout {
 				this.dataLinkClass = "canvas-data-link";
 				this.labelClass = "d3-node-label";
 				this.labelErrorClass = "d3-node-error-label";
+				this.labelWarningClass = "d3-node-warning-label";
 				this.commentLinkClass = "canvas-comment-link";
 				this.nodePortOutputClass = "d3-node-port-output";
 				this.nodePortInputClass = "d3-node-port-input";
@@ -720,6 +723,53 @@ export default class CanvasD3Layout {
 		feMerge.append("feMergeNode").attr("in", "SourceGraphic");
 	}
 
+
+	getMessageLevel(messages) {
+		let messageLevel = "";
+		if (messages && messages.length > 0) {
+			for (const message of messages) {
+				if (message.type === "error") {
+					return message.type;
+				} else if (message.type === "warning") {
+					messageLevel = message.type;
+				}
+			}
+		}
+		return messageLevel;
+	}
+
+	getMessageLabelClass(messages) {
+		const messageLevel = this.getMessageLevel(messages);
+		let labelClass = "";
+		switch (messageLevel) {
+		case "error":
+			labelClass = this.labelErrorClass;
+			break;
+		case "warning":
+			labelClass = this.labelWarningClass;
+			break;
+		default:
+			break;
+		}
+		return labelClass;
+	}
+
+	getMessageCircleClass(messages) {
+		const messageLevel = this.getMessageLevel(messages);
+		let labelClass = "d3-error-circle-off";
+		switch (messageLevel) {
+		case "error":
+			labelClass = "d3-error-circle";
+			break;
+		case "warning":
+			labelClass = "d3-warning-circle";
+			break;
+		default:
+			break;
+		}
+		return labelClass;
+	}
+
 	zoomToFit() {
 		const viewPortDimensions = this.canvasSVG.node().getBoundingClientRect();
 		const canvasDimensions = this.getCanvasDimensionsAdjustedForScale(1, 10);
@@ -1115,7 +1165,13 @@ export default class CanvasD3Layout {
 					.text(function(nd) {
 						var textObj = d3.select(this);
 						return that.trimLabelToWidth(nd.label, that.labelWidth, that.labelClass, textObj);
+					})
+					.attr("class", function(nd) { return that.labelClass + " " + that.getMessageLabelClass(nd.messages);
 					});
+
+				d3.select(`#error_circle_${d.id}`)
+					.datum((nd) => that.getNode(nd.id)) // Set the __data__ to the updated data
+					.attr("class", function(nd) { return that.getMessageCircleClass(nd.messages); });
 			});
 
 			var nodeGroups = nodeGroupSel.enter()
@@ -1363,7 +1419,7 @@ export default class CanvasD3Layout {
 					return that.trimLabelToWidth(d.label, that.labelWidth, this.labelClass, textObj);
 				})
 				.attr("id", function(d) { return `node_label_${d.id}`; })
-				.attr("class", function(d) { return that.labelClass + " " + (d.messages && d.messages.length > 0 ? that.labelErrorClass : ""); })
+				.attr("class", function(d) { return that.labelClass + " " + that.getMessageLabelClass(d.messages); })
 				.attr("x", this.labelHorizontalJustification === "left" ? this.labelPosX : this.labelPosX + (this.labelWidth / 2)) // If not "left" then "center"
 				.attr("y", (d) => this.getLabelPosY(d) + this.labelHeight - this.labelDescent)
 				.attr("text-anchor", this.labelHorizontalJustification === "left" ? "start" : "middle")
@@ -1406,10 +1462,9 @@ export default class CanvasD3Layout {
 			}
 
 			// Error indicator
-			nodeGroups.filter((d) => d.messages && d.messages.length > 0)
-				.append("circle")
+			nodeGroups.append("circle")
 				.attr("id", function(d) { return `error_circle_${d.id}`; })
-				.attr("class", "d3-error-circle")
+				.attr("class", function(d) { return that.getMessageCircleClass(d.messages); })
 				.attr("cx", this.errorCenterX)
 				.attr("cy", (d) => this.getErrorPosY(d))
 				.attr("r", this.errorRadius);

@@ -11,9 +11,18 @@
         false,
         "string"
       ],
-
       [
         "Na",
+        false,
+        "double"
+      ],
+      [
+        "BP",
+        false,
+        "double"
+      ],
+      [
+        "Cholesterol",
         false,
         "double"
       ],

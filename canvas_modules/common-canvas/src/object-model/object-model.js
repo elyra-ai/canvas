@@ -16,7 +16,7 @@ import SVGPipelineInHandler from "../svg-pipeline-in-handler.js";
 import SVGPipelineOutHandler from "../svg-pipeline-out-handler.js";
 
 /* eslint arrow-body-style: ["error", "always"] */
-/* eslint complexity: ["error", 19] */
+/* eslint complexity: ["error", 21] */
 
 const nodes = (state = [], action) => {
 	switch (action.type) {
@@ -65,6 +65,37 @@ const nodes = (state = [], action) => {
 			if (action.data.nodeId === node.id) {
 				const newNode = Object.assign({}, node);
 				newNode.parameters = action.data.parameters;
+				return newNode;
+			}
+			return node;
+		});
+
+	case "SET_NODE_MESSAGE":
+		return state.map((node, index) => {
+			if (action.data.nodeId === node.id) {
+				const newNode = Object.assign({}, node);
+				if (newNode.messages) {
+					const controlNameIndex = newNode.messages.findIndex((message) => {
+						return (message.id_ref === action.data.message.id_ref);
+					});
+					if (controlNameIndex > -1) {
+						newNode.messages[controlNameIndex] = action.data.message;
+					} else {
+						newNode.messages.push(action.data.message);
+					}
+				} else {
+					newNode.messages = [action.data.message];
+				}
+				return newNode;
+			}
+			return node;
+		});
+
+	case "SET_NODE_MESSAGES":
+		return state.map((node, index) => {
+			if (action.data.nodeId === node.id) {
+				const newNode = Object.assign({}, node);
+				newNode.messages = action.data.messages;
 				return newNode;
 			}
 			return node;
@@ -282,6 +313,8 @@ const canvasinfo = (state = getInitialCanvas(), action) => {
 
 	case "ADD_NODE":
 	case "SET_NODE_PARAMETERS":
+	case "SET_NODE_MESSAGE":
+	case "SET_NODE_MESSAGES":
 	case "ADD_NODE_ATTR":
 	case "REMOVE_NODE_ATTR":
 		return Object.assign({}, state, { nodes: nodes(state.nodes, action) });
@@ -746,6 +779,31 @@ export default class ObjectModel {
 	static getNodeParameters(nodeId) {
 		var node = this.getNode(nodeId);
 		return node.parameters;
+	}
+
+	static getNodeMessages(nodeId) {
+		var node = this.getNode(nodeId);
+		return node.messages;
+	}
+
+	static getNodeMessage(nodeId, controlName) {
+		var messages = this.getNodeMessages(nodeId);
+		if (messages) {
+			for (const message of messages) {
+				if (message.id_ref === controlName) {
+					return message;
+				}
+			}
+		}
+		return null;
+	}
+
+	static setNodeMessage(nodeId, message) {
+		store.dispatch({ type: "SET_NODE_MESSAGE", data: { nodeId: nodeId, message: message } });
+	}
+
+	static setNodeMessages(nodeId, messages) {
+		store.dispatch({ type: "SET_NODE_MESSAGES", data: { nodeId: nodeId, messages: messages } });
 	}
 
 	static setNodeParameters(nodeId, parameters) {

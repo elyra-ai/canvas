@@ -15,7 +15,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import { ButtonToolbar } from "react-bootstrap";
 import { Tabs } from "ap-components-react/dist/ap-components-react";
-import { EDITOR_CONTROL, TOOL_TIP_DELAY } from "../constants/constants.js";
+import { DEFAULT_VALIDATION_MESSAGE, EDITOR_CONTROL, TOOL_TIP_DELAY } from "../constants/constants.js";
+
 import ReactTooltip from "react-tooltip";
 
 import ControlItem from "./control-item.jsx";
@@ -63,7 +64,7 @@ export default class EditorForm extends React.Component {
 		this.state = {
 			formData: this.props.form,
 			valuesTable: this.props.form.data.currentParameters,
-			controlErrorMessages: {},
+			controlErrorMessages: (this.props.messages) ? this.props.messages : [],
 			visibleDefinition: {},
 			enabledDefinitions: {},
 			validationDefinitions: {},
@@ -210,6 +211,10 @@ export default class EditorForm extends React.Component {
 		}
 		// TODO add in customPanels
 		return values;
+	}
+
+	getControlMessages() {
+		return this.state.controlErrorMessages;
 	}
 
 	getSubControlValues() {
@@ -1165,14 +1170,31 @@ export default class EditorForm extends React.Component {
 	}
 
 	retrieveValidationErrorMessage(controlName) {
-		return this.state.controlErrorMessages[controlName];
+		const messages = this.state.controlErrorMessages;
+		const messageIndex = messages.findIndex((message) => message.id_ref === controlName);
+		return messages[messageIndex];
 	}
 
-	updateValidationErrorMessage(controlName, message) {
-		const tmp = this.state.controlErrorMessages;
-		tmp[controlName] = message;
+	updateValidationErrorMessage(controlName, inMessage) {
+		// add the control name to the message object and then either replace an existing control message or
+		// add a new control message.
+		const message = JSON.parse(JSON.stringify(inMessage));
+		message.id_ref = controlName;
+		const messages = this.state.controlErrorMessages;
+		const messageIndex = messages.findIndex((tmpMessage) => tmpMessage.id_ref === controlName);
+		if (inMessage === DEFAULT_VALIDATION_MESSAGE) {
+			// the default message means no error or warning for the control
+			// need to remove any existing messages or ignore the new message
+			if (messageIndex > -1) {
+				messages.splice(messageIndex, 1);
+			}
+		} else if (messageIndex > -1) {
+			messages[messageIndex] = message;
+		} else {
+			messages.push(message);
+		}
 		this.setState({
-			controlErrorMessages: tmp
+			controlErrorMessages: messages
 		});
 	}
 
@@ -1247,7 +1269,7 @@ export default class EditorForm extends React.Component {
 EditorForm.propTypes = {
 	form: PropTypes.object,
 	additionalComponents: PropTypes.object,
-	useObjectModelInfo: PropTypes.object,
+	messages: PropTypes.array,
 	submitMethod: PropTypes.func,
 	showPropertiesButtons: PropTypes.func,
 	customPanels: PropTypes.array

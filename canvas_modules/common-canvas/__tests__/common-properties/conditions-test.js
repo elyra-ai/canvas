@@ -1051,7 +1051,7 @@ describe("editor-form renders correctly with validations", () => {
 			JSON.parse(JSON.stringify(validationDefinitions.structurelisteditorTableInput)))).to.be.true;
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().validationDefinitions.name)),
 			JSON.parse(JSON.stringify(validationDefinitions.subpanelTextfieldName)))).to.be.true;
-		expect(_.isEqual(JSON.stringify(wrapper.state().controlErrorMessages), "{}")).to.be.true;
+		expect(_.isEqual(JSON.stringify(wrapper.state().controlErrorMessages), "[]")).to.be.true;
 	});
 });
 
@@ -1064,12 +1064,13 @@ describe("condition messages renders correctly with numberfield control", () => 
 		input.simulate("change", { target: { value: "-100" } });
 		input.simulate("blur");
 
-		const numberfieldCheckpointIntervalErrorMessages = {
-			"numberfieldCheckpointInterval": {
+		const numberfieldCheckpointIntervalErrorMessages = [
+			{
 				"type": "error",
-				"text": "The checkpoint interval value must either be >= 1 or -1 to disable"
+				"text": "The checkpoint interval value must either be >= 1 or -1 to disable",
+				"id_ref": "numberfieldCheckpointInterval"
 			}
-		};
+		];
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
 			JSON.parse(JSON.stringify(numberfieldCheckpointIntervalErrorMessages)))).to.be.true;
 
@@ -1085,12 +1086,13 @@ describe("condition messages renders correctly with numberfield control", () => 
 		input.simulate("change", { target: { value: "" } });
 		input.simulate("blur");
 
-		const numberfieldCheckpointIntervalErrorMessages = {
-			"numberfieldCheckpointInterval": {
+		const numberfieldCheckpointIntervalErrorMessages = [
+			{
 				"type": "error",
-				"text": "Require parameter numberfieldCheckpointInterval has no value"
+				"text": "Require parameter numberfieldCheckpointInterval has no value",
+				"id_ref": "numberfieldCheckpointInterval"
 			}
-		};
+		];
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
 			JSON.parse(JSON.stringify(numberfieldCheckpointIntervalErrorMessages)))).to.be.true;
 
@@ -1106,12 +1108,13 @@ describe("condition messages renders correctly with numberfield control", () => 
 		input.simulate("change", { target: { value: "" } });
 		input.simulate("blur");
 
-		const numberfieldSeedErrorMessages = {
-			"numberfieldSeed": {
+		const numberfieldSeedErrorMessages = [
+			{
 				"type": "error",
-				"text": "Field cannot be null. This is an example of a long error message that might be entered. The message text will wrap around to the next line."
+				"text": "Field cannot be null. This is an example of a long error message that might be entered. The message text will wrap around to the next line.",
+				"id_ref": "numberfieldSeed"
 			}
-		};
+		];
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
 			JSON.parse(JSON.stringify(numberfieldSeedErrorMessages)))).to.be.true;
 
@@ -1166,12 +1169,13 @@ describe("condition messages renders correctly with columnselect control", () =>
 		expect(wrapper.state().valuesTable.columnSelectInputFieldList).to.have.length(0);
 		input.simulate("blur");
 
-		const columnSelectInputFieldListErrorMessages = {
-			"columnSelectInputFieldList": {
+		const columnSelectInputFieldListErrorMessages = [
+			{
 				"type": "error",
-				"text": "Select one or more input fields."
+				"text": "Select one or more input fields.",
+				"id_ref": "columnSelectInputFieldList"
 			}
-		};
+		];
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
 			JSON.parse(JSON.stringify(columnSelectInputFieldListErrorMessages)))).to.be.true;
 
@@ -1204,12 +1208,13 @@ describe("condition messages renders correctly with someofcolumns control", () =
 
 		input.simulate("blur");
 
-		const someofcolumnsListWarningMessages = {
-			"someofcolumnsList": {
+		const someofcolumnsListWarningMessages = [
+			{
 				"type": "warning",
-				"text": "Field must be selected"
+				"text": "Field must be selected",
+				"id_ref": "someofcolumnsList"
 			}
-		};
+		];
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
 			JSON.parse(JSON.stringify(someofcolumnsListWarningMessages)))).to.be.true;
 
@@ -1229,16 +1234,18 @@ describe("condition messages renders correctly with checkbox control", () => {
 		checkbox.simulate("change", { target: { checked: true, id: "string" } });
 		checkbox.simulate("blur");
 
-		const checkboxSingleErrorMessages = {
-			"checkboxTypes": {
+		const checkboxSingleErrorMessages = [
+			{
 				"type": "error",
-				"text": "Checkbox single should be checked if data type is selected"
+				"text": "Checkbox single should be checked if data type is selected",
+				"id_ref": "checkboxSingle"
 			},
-			"checkboxSingle": {
+			{
 				"type": "error",
-				"text": "Checkbox single should be checked if data type is selected"
+				"text": "Checkbox single should be checked if data type is selected",
+				"id_ref": "checkboxTypes"
 			}
-		};
+		];
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
 			JSON.parse(JSON.stringify(checkboxSingleErrorMessages)))).to.be.true;
 
@@ -1248,16 +1255,14 @@ describe("condition messages renders correctly with checkbox control", () => {
 		checkbox.simulate("change", { target: { checked: false, id: "string" } });
 		checkbox.simulate("blur");
 
-		const checkboxTypesWarningMessages = {
-			"checkboxTypes": {
+		const checkboxTypesWarningMessages = [
+			{
 				"type": "warning",
-				"text": "No data types are selected"
-			},
-			"checkboxSingle": {
-				"type": "info",
-				"text": ""
+				"text": "No data types are selected",
+				"id_ref": "checkboxTypes"
 			}
-		};
+		];
+
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
 			JSON.parse(JSON.stringify(checkboxTypesWarningMessages)))).to.be.true;
 
@@ -1334,12 +1339,13 @@ describe("condition messages renders correctly with structure table control", ()
 
 		enabledRemoveColumnButton.simulate("blur");
 
-		const structuretableSortOrderErrorMessages = {
-			"structuretableSortOrder": {
+		const structuretableSortOrderErrorMessages = [
+			{
 				"type": "error",
-				"text": "table cannot be empty"
+				"text": "table cannot be empty",
+				"id_ref": "structuretableSortOrder"
 			}
-		};
+		];
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
 			JSON.parse(JSON.stringify(structuretableSortOrderErrorMessages)))).to.be.true;
 
@@ -1360,12 +1366,13 @@ describe("condition messages renders correctly with structure table control", ()
 		inputControl.simulate("change", { target: { value: "bad pw" } });
 		inputControl.simulate("blur");
 
-		const structuretableRenameFieldsErrorMessages = {
-			"structuretableRenameFields": {
+		const structuretableRenameFieldsErrorMessages = [
+			{
 				"type": "error",
-				"text": "The 'Output Name' field cannot contain 'pw'"
+				"text": "The 'Output Name' field cannot contain 'pw'",
+				"id_ref": "structuretableRenameFields"
 			}
-		};
+		];
 
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
 			JSON.parse(JSON.stringify(structuretableRenameFieldsErrorMessages)))).to.be.true;
@@ -1404,12 +1411,13 @@ describe("condition messages renders correctly with structure table control", ()
 
 		enabledRemoveColumnButton.simulate("blur");
 
-		const structuretableRenameFieldsErrorMessages = {
-			"structuretableRenameFields": {
+		const structuretableRenameFieldsErrorMessages = [
+			{
 				"type": "error",
-				"text": "Require parameter structuretableRenameFields has no value"
+				"text": "Require parameter structuretableRenameFields has no value",
+				"id_ref": "structuretableRenameFields"
 			}
-		};
+		];
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
 			JSON.parse(JSON.stringify(structuretableRenameFieldsErrorMessages)))).to.be.true;
 
@@ -1530,12 +1538,13 @@ describe("condition messages renders correctly with radioSet control", () => {
 		radioYellow.simulate("change", { target: { checked: true, value: "yellow" } });
 		radioYellow.simulate("blur");
 
-		const radiosetColorWarningMessages = {
-			"radiosetColor": {
+		const radiosetColorWarningMessages = [
+			{
 				"type": "warning",
-				"text": "Are you sure you want to choose yellow?"
+				"text": "Are you sure you want to choose yellow?",
+				"id_ref": "radiosetColor"
 			}
-		};
+		];
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
 			JSON.parse(JSON.stringify(radiosetColorWarningMessages)))).to.be.true;
 
@@ -1563,32 +1572,36 @@ describe("condition messages renders correctly with textfields control", () => {
 		expect(passwordInput).to.have.length(1);
 		passwordInput.simulate("blur");
 
-		let textfieldNameErrorMessages = {
-			"passwordField": {
+		let textfieldNameErrorMessages = [
+			{
 				"type": "error",
-				"text": "Password cannot be empty, enter \"password\""
+				"text": "Password cannot be empty, enter \"password\"",
+				"id_ref": "passwordField"
 			},
-			"textfieldName": {
+			{
 				"type": "error",
-				"text": "textfieldName is missing an input value for validation."
+				"text": "textfieldName is missing an input value for validation.",
+				"id_ref": "textfieldName"
 			}
-		};
+		];
 
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
 			JSON.parse(JSON.stringify(textfieldNameErrorMessages)))).to.be.true;
 
 		passwordInput.simulate("change", { target: { value: "password" } });
 
-		textfieldNameErrorMessages = {
-			"passwordField": {
+		textfieldNameErrorMessages = [
+			{
 				"type": "error",
-				"text": "textfieldName is missing an input value for validation."
+				"text": "textfieldName is missing an input value for validation.",
+				"id_ref": "textfieldName"
 			},
-			"textfieldName": {
+			{
 				"type": "error",
-				"text": "textfieldName is missing an input value for validation."
+				"text": "textfieldName is missing an input value for validation.",
+				"id_ref": "passwordField"
 			}
-		};
+		];
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
 			JSON.parse(JSON.stringify(textfieldNameErrorMessages)))).to.be.true;
 
@@ -1596,16 +1609,18 @@ describe("condition messages renders correctly with textfields control", () => {
 		textfieldNameInput.simulate("change", { target: { value: "entering a name that contains the password" } });
 		textfieldNameInput.simulate("blur");
 
-		textfieldNameErrorMessages = {
-			"passwordField": {
+		textfieldNameErrorMessages = [
+			{
 				"type": "warning",
-				"text": "name cannot contain password"
+				"text": "name cannot contain password",
+				"id_ref": "passwordField"
 			},
-			"textfieldName": {
+			{
 				"type": "warning",
-				"text": "name cannot contain password"
+				"text": "name cannot contain password",
+				"id_ref": "textfieldName"
 			}
-		};
+		];
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
 			JSON.parse(JSON.stringify(textfieldNameErrorMessages)))).to.be.true;
 
@@ -1645,16 +1660,13 @@ describe("condition messages renders correctly with textfields control", () => {
 		textfieldNameInput.simulate("change", { target: { value: "entering a name with invalid \"quotes'" } });
 		textfieldNameInput.simulate("blur");
 
-		let textfieldNameErrorMessages = {
-			"passwordField": {
-				"type": "info",
-				"text": ""
-			},
-			"textfieldName": {
+		let textfieldNameErrorMessages = [
+			{
 				"type": "error",
-				"text": "Name cannot contain double or single \"quotes\""
+				"text": "Name cannot contain double or single \"quotes\"",
+				"id_ref": "textfieldName"
 			}
-		};
+		];
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
 			JSON.parse(JSON.stringify(textfieldNameErrorMessages)))).to.be.true;
 
@@ -1664,16 +1676,13 @@ describe("condition messages renders correctly with textfields control", () => {
 		textfieldNameInput.simulate("change", { target: { value: "entering a name with invlid / backslash" } });
 		textfieldNameInput.simulate("blur");
 
-		textfieldNameErrorMessages = {
-			"passwordField": {
-				"type": "info",
-				"text": ""
-			},
-			"textfieldName": {
+		textfieldNameErrorMessages = [
+			{
 				"type": "error",
-				"text": "Name cannot contain /"
+				"text": "Name cannot contain /",
+				"id_ref": "textfieldName"
 			}
-		};
+		];
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
 			JSON.parse(JSON.stringify(textfieldNameErrorMessages)))).to.be.true;
 
@@ -1692,20 +1701,7 @@ describe("condition messages renders correctly with textfields control", () => {
 		textareaDescriptionInput.simulate("change", { target: { value: "entering a valid description" } });
 		textareaDescriptionInput.simulate("blur");
 
-		textfieldNameErrorMessages = {
-			"passwordField": {
-				"type": "info",
-				"text": ""
-			},
-			"textfieldName": {
-				"type": "info",
-				"text": ""
-			},
-			"textareaDescription": {
-				"type": "info",
-				"text": ""
-			}
-		};
+		textfieldNameErrorMessages = [];
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
 			JSON.parse(JSON.stringify(textfieldNameErrorMessages)))).to.be.true;
 		// console.info("testtt  " + JSON.stringify(wrapper.state().valuesTable));
@@ -1729,12 +1725,13 @@ describe("condition messages renders correctly with textfields control", () => {
 		textareaDescriptionInput.simulate("change", { target: { value: "" } });
 		textareaDescriptionInput.simulate("blur");
 
-		const textfieldNameErrorMessages = {
-			"textareaDescription": {
+		const textfieldNameErrorMessages = [
+			{
 				"type": "error",
-				"text": "Require parameter textareaDescription has no value"
+				"text": "Require parameter textareaDescription has no value",
+				"id_ref": "textareaDescription"
 			}
-		};
+		];
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
 			JSON.parse(JSON.stringify(textfieldNameErrorMessages)))).to.be.true;
 

@@ -467,7 +467,8 @@ module.exports = function() {
 		browser.timeoutsAsyncScript(3000);
 		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
 		var eventLogJSON = JSON.parse(eventLog.value);
-		expect("empty").toEqual((eventLogJSON[eventLogJSON.length - 2].data.form).toString());
+		expect("").toEqual((eventLogJSON[eventLogJSON.length - 2].data.form.colName).toString());
+
 	});
 
 	this.Then("I verify testValue is present", function() {

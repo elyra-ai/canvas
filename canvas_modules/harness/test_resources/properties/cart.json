@@ -276,13 +276,15 @@
         "impurity_measure": "Gini",
         "inputs": [
           "Age",
+          "Sex",
           "BP",
           "Cholesterol",
           "Na",
-          "K"
+          "K",
+          "Drug"
         ],
         "use_custom_name": false,
-        "target": "Drug",
+        "target": "",
         "custom_name": ""
       },
       "inputDataModel": {

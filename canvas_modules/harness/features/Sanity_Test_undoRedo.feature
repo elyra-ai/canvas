@@ -81,7 +81,7 @@ Feature: Sanity_Test_undoRedo
 
 		Given I have toggled the app side common-properties panel
 
-		Given I have uploaded JSON for common-properties "Spark_AddColumn_paramDef.json"
+		Given I have uploaded JSON for common-properties "org.apache.spark.ml.ibm.transformers.AddColumn.json"
 		Then I enter "testValue" in the textbox Column name
 		Then I click undo
 		Then I verify testValue is not present

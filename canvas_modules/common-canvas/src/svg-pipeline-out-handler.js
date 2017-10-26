@@ -65,9 +65,9 @@ export default class SVGPipelineOutHandler {
 
 	static getNodeUiData(uiData, ciNode) {
 		if (uiData) {
-			return Object.assign({}, uiData, { x_pos: ciNode.x_pos, y_pos: ciNode.y_pos });
+			return Object.assign({}, uiData, { x_pos: ciNode.x_pos, y_pos: ciNode.y_pos, messages: ciNode.messages });
 		}
-		return { x_pos: ciNode.x_pos, y_pos: ciNode.y_pos };
+		return { x_pos: ciNode.x_pos, y_pos: ciNode.y_pos, messages: ciNode.messages };
 	}
 
 	static getInput(input, canvasLinks, pNodeId) {
@@ -169,6 +169,7 @@ export default class SVGPipelineOutHandler {
 					x_pos: ciNode.x_pos,
 					y_pos: ciNode.y_pos,
 					class_name: ciNode.class_name,
+					messages: ciNode.messages,
 					label: {
 						default: ciNode.label
 					}

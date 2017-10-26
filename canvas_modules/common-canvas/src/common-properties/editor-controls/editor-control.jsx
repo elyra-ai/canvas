@@ -148,7 +148,7 @@ export default class EditorControl extends React.Component {
 		let message = DEFAULT_VALIDATION_MESSAGE;
 		if (this.props.retrieveValidationErrorMessage) {
 			message = this.props.retrieveValidationErrorMessage(conditionProps.controlName);
-			if (typeof message === "undefined") {
+			if (typeof message === "undefined" || message === null) {
 				message = DEFAULT_VALIDATION_MESSAGE;
 			}
 		}
@@ -165,7 +165,7 @@ export default class EditorControl extends React.Component {
 		let stateStyle = {};
 
 		let messageType = "info";
-		if (typeof message !== "undefined") {
+		if (typeof message !== "undefined" && message !== null) {
 			messageType = message.type;
 			switch (message.type) {
 			case "warning":

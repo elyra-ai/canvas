@@ -22,11 +22,10 @@ import { CommonCanvas, ObjectModel, CommonProperties, CommandStack, FlowValidati
 import Console from "./components/console.jsx";
 import SidePanel from "./components/sidepanel.jsx";
 import TestService from "./services/TestService";
+import NodeToForm from "./NodeToForm/node-to-form";
 
 import CustomSliderPanel from "./components/custom-panels/CustomSliderPanel";
 import CustomTogglePanel from "./components/custom-panels/CustomTogglePanel";
-
-import NodeToForm from "./NodeToForm/node-to-form";
 
 import {
 	SIDE_PANEL_CANVAS,
@@ -105,7 +104,6 @@ class App extends React.Component {
 		this.applyPropertyChanges = this.applyPropertyChanges.bind(this);
 		this.validateFlow = this.validateFlow.bind(this);
 		this.getNodeForm = this.getNodeForm.bind(this);
-		this.nodeEditHandler = this.nodeEditHandler.bind(this);
 		this.refreshContent = this.refreshContent.bind(this);
 
 		// common-properties
@@ -153,6 +151,7 @@ class App extends React.Component {
 			this.log("Canvas diagram cleared");
 		}
 	}
+
 
 	setPaletteJSON(paletteJson) {
 		ObjectModel.setPipelineFlowPalette(paletteJson);
@@ -269,23 +268,19 @@ class App extends React.Component {
 	clickActionHandler(source) {
 		this.log("clickActionHandler()", source);
 		if (source.clickType === "DOUBLE_CLICK" && source.objectType === "node") {
-			this.nodeEditHandler(source.id);
+			this.editNodeHandler(source.id);
 		}
-	}
-
-	nodeEditHandler(nodeId) {
-		this.log("nodeEditHandler()", nodeId);
-		this.openPropertiesEditorDialog();
 	}
 
 	applyDiagramEdit(data, options) {
 		this.log("applyDiagramEdit()", data.editType);
 	}
 
-	applyPropertyChanges(form, appData) {
+	applyPropertyChanges(form, appData, messages) {
 		var data = {
 			form: form,
-			appData: appData
+			appData: appData,
+			messages: messages
 		};
 		this.log("applyPropertyChanges()", data);
 	}
@@ -464,7 +459,7 @@ class App extends React.Component {
 		} else if (action === "deleteLink") {
 			this.log("action: deleteLink", source.id);
 		} else if (action === "editNode") {
-			this.editNodeHandler(source);
+			this.editNodeHandler(source.targetObject.id);
 		} else if (action === "viewModel") {
 			this.log("action: viewModel", source.targetObject.id);
 		} else if (action === "disconnectNode") {
@@ -537,17 +532,14 @@ class App extends React.Component {
 		return decorators;
 	}
 
-	editNodeHandler(source) {
-		this.log("action: editNode", source.targetObject.id);
-		const properties = this.getNodeForm(source.targetObject.id);
-		const config = {
-			"nodeId": source.targetObject.id,
-			"useInternalObjectModel": true,
-		};
+	editNodeHandler(nodeId) {
+		this.log("action: editNode", nodeId);
+		const properties = this.getNodeForm(nodeId);
+		const messages = ObjectModel.getNodeMessages(nodeId);
 
 		const propsInfo = {
 			title: <FormattedMessage id={ "dialog.nodePropertiesTitle" } />,
-			objectModelInfo: config,
+			messages: messages,
 			formData: properties.data.formData,
 			parameterDef: properties.data,
 			applyPropertyChanges: this.applyPropertyChanges,

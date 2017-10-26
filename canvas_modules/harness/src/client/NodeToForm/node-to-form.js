@@ -19,7 +19,7 @@ function setFileNamesMap(type) {
 		.then(function(res) {
 			for (const fileName of res) {
 				const splitName = fileName.split(".json");
-				nodeFormInfo[splitName[0]] = { "type": type, "name": fileName };
+				nodeFormInfo[splitName[0]] = fileName;
 				loadForm(splitName[0], type, fileName);
 			}
 		});
@@ -33,11 +33,11 @@ function loadForm(id, type, fileName) {
 		});
 }
 
+
 // Export functions
 
 function initialize() {
-	setFileNamesMap("forms");
-	setFileNamesMap("parameterDefs");
+	setFileNamesMap("properties");
 }
 
 function clearNodeForms() {
@@ -45,39 +45,20 @@ function clearNodeForms() {
 }
 
 function getNodeForm(nodeId) {
-	// return a deep copy
 	return JSON.parse(JSON.stringify(nodeToFormMap[nodeId]));
 }
 
 function setNodeForm(nodeId, nodeOp) {
 	if (!nodeToFormMap[nodeId]) {
 		// get the initial form information about this node type
-		let nodeType = nodeOp ? nodeOp : "default";
-		let formInfo = "";
-		if (!nodeFormInfo[nodeType]) {
-			nodeType = "default";
-		}
-		formInfo = nodeFormInfo[nodeType];
-		// if the initial form is in memory
-		if (nodeForms[nodeType]) {
-			// set the mapping of this specific node id to the initial form
-			nodeToFormMap[nodeId] = {
-				type: formInfo.type,
-				data: nodeForms[nodeType]
-			};
-		} else {
-			// load initial form in memory off of disk
-			FormsService.getFileContent(formInfo.type, formInfo.name)
-				.then(function(res) {
-					// set the loaded form
-					nodeForms[nodeType] = res;
-					// set the mapping of this specific node id to the initial form
-					nodeToFormMap[nodeId] = {
-						type: formInfo.type,
-						data: res
-					};
-				});
-		}
+		let nodeType = nodeOp ? nodeOp : "default"; // if op not supplied then get the default
+		nodeType = nodeForms[nodeType] ? nodeType : "default"; // if op form file not found then get default
+		// set the mapping of this specific node id to the initial form
+		const type = (nodeForms[nodeType].formData) ? "form" : "parameterDef";
+		nodeToFormMap[nodeId] = {
+			type: type,
+			data: JSON.parse(JSON.stringify(nodeForms[nodeType]))
+		};
 	}
 }
 

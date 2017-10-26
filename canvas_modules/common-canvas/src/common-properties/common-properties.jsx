@@ -81,11 +81,13 @@ export default class CommonProperties extends React.Component {
 	}
 
 	applyPropertiesEditing() {
-		const settings = this.refs.editorForm.getControlValues(true);
+		const settings = {
+			properties: this.refs.editorForm.getControlValues(true),
+			messages: this.refs.editorForm.getControlMessages()
+		};
 		// May need to close the dialog inside the callback in
 		// case of validation errors
 		this.props.propertiesInfo.closePropertiesDialog();
-		// this.props.propertiesInfo.applyPropertyChanges(settings, this.props.propertiesInfo.appData);
 		const command = new CommonPropertiesAction(settings, this.initialCurrentProperties,
 			this.props.propertiesInfo.appData, this.props.propertiesInfo.applyPropertyChanges);
 		CommandStack.do(command);
@@ -113,16 +115,22 @@ export default class CommonProperties extends React.Component {
 			// console.log("formData " + JSON.stringify(formData));
 			let propertiesDialog = [];
 			if (this.props.showPropertiesDialog) {
-				if (this.initialCurrentProperties === "empty" &&
-						typeof formData.data !== "undefined" &&
-						typeof formData.data.currentProperties !== "undefined") {
-					this.initialCurrentProperties = JSON.parse(JSON.stringify(formData.data.currentProperties));
+				if (this.initialCurrentProperties === "empty") {
+					const setting = {};
+					if (typeof formData.data !== "undefined" &&
+						typeof formData.data.currentParameters !== "undefined") {
+						setting.properties = JSON.parse(JSON.stringify(formData.data.currentParameters));
+					}
+					if (this.props.propertiesInfo.messages) {
+						setting.messages = JSON.parse(JSON.stringify(this.props.propertiesInfo.messages));
+					}
+					this.initialCurrentProperties = setting;
 				}
 				const editorForm = (<EditorForm
 					ref="editorForm"
 					key="editor-form-key"
 					form={formData}
-					useObjectModelInfo={this.props.propertiesInfo.useObjectModelInfo}
+					messages={this.props.propertiesInfo.messages}
 					additionalComponents={this.props.propertiesInfo.additionalComponents}
 					showPropertiesButtons={this.showPropertiesButtons}
 					customPanels={this.props.customPanels}

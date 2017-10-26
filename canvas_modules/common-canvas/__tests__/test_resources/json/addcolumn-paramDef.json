@@ -1,61 +1,57 @@
 {
   "current_parameters": {
-    "mode": "Include",
-    "conditionExpr": "-- SQL Mode ---\n\tselect First_Name, Nickname FROM Friends WHERE Nickname LIKE '%brain%'\n\tINSERT INTO STATION VALUES (13, \"Phoenix\", \"AZ\", 33, 112);\n"
+    "colName": "",
+    "col": "",
+    "measurement": ""
   },
   "parameters": [
     {
-      "id": "mode",
-      "enum": [
-        "Include",
-        "Discard"
-      ],
-      "default": "Include"
+      "id": "colName",
+      "type": "string",
+      "default": "",
+      "role": "new_column",
+      "required": true
     },
     {
-      "id": "conditionExpr",
+      "id": "col",
       "type": "string",
       "default": "",
       "role": "expression",
       "required": true
+    },
+    {
+      "id": "measurement",
+      "enum": [
+        "Default",
+        "Continuous",
+        "Categorical"
+      ],
+      "default": "Default"
     }
   ],
   "uihints": {
-    "id": "org.apache.spark.ml.ibm.transformers.Filter",
-    "version": "1.0",
+    "id": "org.apache.spark.ml.ibm.transformers.AddColumn",
     "icon": "images/transformationspark.svg",
     "parameter_info": [
       {
-        "parameter_ref": "mode",
-        "label": {
-          "default": "Mode"
-        },
-        "description": {
-          "default": "Include or discard rows"
-        },
+        "parameter_ref": "colName",
         "orientation": "horizontal"
       },
       {
-        "parameter_ref": "conditionExpr",
-        "language": "text/x-hive",
-        "label": {
-          "default": "Enter a Spark SQL condition expression"
-        },
-        "description": {
-          "default": "Enter a boolean expression to use for filtering rows"
-        }
+        "parameter_ref": "measurement",
+        "control": "oneofselect"
       }
     ],
     "group_info": [
       {
-        "id": "basic-settings",
+        "id": "settings",
         "label": {
           "default": "Settings"
         },
-        "type": "controls",
         "parameter_refs": [
-          "mode",
-          "conditionExpr"
+          "colName",
+          "col",
+          "measurement"
         ]
       }
     ]
@@ -65,14 +61,48 @@
       "validation": {
         "fail_message": {
           "type": "error",
-          "focus_parameter_ref": "conditionExpr",
+          "focus_parameter_ref": "colName",
           "message": {
-            "resource_key": "condition_expression_not_empty"
+            "resource_key": "colname_not_empty"
           }
         },
         "evaluate": {
           "condition": {
-            "parameter_ref": "conditionExpr",
+            "parameter_ref": "colName",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "colName",
+          "message": {
+            "resource_key": "colname_not_unique"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "colName",
+            "op": "colNotExists"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "col",
+          "message": {
+            "resource_key": "col_not_empty"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "col",
             "op": "isNotEmpty"
           }
         }
@@ -80,7 +110,6 @@
     }
   ],
   "dataset_metadata": {
-    "version": "1.0",
     "fields": [
       {
         "name": "Age",
@@ -148,15 +177,17 @@
     ]
   },
   "resources": {
-    "org.apache.spark.ml.ibm.transformers.Filter.label": "Filter Rows",
-    "org.apache.spark.ml.ibm.transformers.Filter.desc": "Filter rows according to a condition",
-    "mode.label": "Mode",
-    "mode.desc": "Include or discard rows",
-    "mode.Include.label": "Include",
-    "mode.Discard.label": "Discard",
-    "conditionExpr.label": "Condition",
-    "conditionExpr.desc": "The filter condition",
+    "org.apache.spark.ml.ibm.transformers.AddColumn.label": "Add Column",
+    "org.apache.spark.ml.ibm.transformers.AddColumn.desc": "Create a new column with a computed value",
+    "colName.label": "Column name",
+    "colName.desc": "The new column name",
+    "col.label": "Expression",
+    "col.desc": "The computed column value",
+    "measurement.label": "Measurement",
+    "measurement.desc": "Measurement level for the column",
     "settings.label": "Settings",
-    "condition_expression_not_empty": "The condition expression cannot be empty"
+    "colname_not_empty": "The new column name cannot be empty",
+    "col_not_empty": "The computed column value cannot be empty",
+    "colname_not_unique": "The column name already exists in the dataset"
   }
 }

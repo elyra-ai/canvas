@@ -107,6 +107,11 @@
 	fill: #E62325; /* Error red */
 }
 
+.d3-node-warning-label {
+	fill: gold; /* warning yellow (need to verify with design)*/
+}
+
+
 .d3-label-outline {
 	fill: #e0e0e0;
 	stroke: #aeaeae;
@@ -140,6 +145,21 @@
 	stroke: #f3f3f3; /* Node background color */
 	stroke-width: 2;
 	fill: #E62325;   /* Error red */
+}
+
+/* warning indicator */
+.d3-warning-circle {
+	stroke: #f3f3f3; /* Node background color */
+	stroke-width: 2;
+	fill: gold;   /* Error red */
+}
+
+/* Invisible Error indicator */
+.d3-error-circle-off {
+	stroke: #f3f3f3; /* Node background color */
+	stroke-width: 2;
+	fill: #E62325;   /* Error red */
+	display: none;
 }
 
 /* Styles for ports */

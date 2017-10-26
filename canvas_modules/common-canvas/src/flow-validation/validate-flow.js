@@ -11,19 +11,17 @@ import Form from "../common-properties/form/Form";
 import UiConditionsParser from "../common-properties/ui-conditions/ui-conditions-parser";
 import UiConditions from "../common-properties/ui-conditions/ui-conditions";
 import logger from "../../utils/logger";
+import { DEFAULT_VALIDATION_MESSAGE } from "../common-properties/constants/constants.js";
+
 
 /* eslint max-depth: ["error", 7] */
-/* eslint no-unused-vars: "warn" */
 
-var tableErrorState = [];
-
-// export default class FlowValidation {
-
-// class FlowValidation {
 /**
 * @param {Function} callback function to get form | parameter data for a node
+* @param {Function} callback function to store messages data for node.
+
 */
-function validateFlow(getParameterData) {
+function validateFlow(getParameterData, setMessagesCallback) {
 	// get the nodes in the flow
 	const nodes = ObjectModel.getNodes();
 
@@ -34,15 +32,12 @@ function validateFlow(getParameterData) {
 		// console.log("FlowValidation: of Node: " + node.label);
 		if (node.type === "execution_node" || node.type === "binding") {
 			const formData = _getFormData(node.id, getParameterData);
-			const notifications = _validateNode(formData, node.id);
-			// For now display the errors in the console log,
-			// take out when store errors in Object Model
-			if (notifications.length > 0) {
-				console.log("FlowValidation: of Node: " + node.label);
-				for (const controlNote of notifications) {
-					console.log("FlowValidation: Node notification for control name = " + controlNote.name + ": [" + controlNote.type +
-					"] " + controlNote.text);
-				}
+			const messages = _validateNode(formData, node.id);
+			if (messages.length > 0) {
+				ObjectModel.setNodeMessages(node.id, messages);
+			}
+			if (setMessagesCallback) {
+				setMessagesCallback(node.id, messages);
 			}
 		}
 	}
@@ -57,15 +52,19 @@ function _getFormData(nodeId, getParameterData) {
 	var formData = {};
 	var parameterData = getParameterData(nodeId);
 	if (parameterData) {
-		if (parameterData.type === "parameterDefs") {
+		if (parameterData.type === "parameterDef") {
 			formData.form = Form.makeForm(parameterData.data);
 		} else {
 			formData.form = parameterData.data.formData;
 		}
-		formData.validationDefinitions = _getValidationDefinitions(formData.form);
-		if (Object.keys(formData.validationDefinitions).length !== 0) {
-			formData.controls = _getControl(formData.form);
-			formData.requiredParameters = _getRequiredParameters(formData.form, formData.controls);
+		if (formData.form) {
+			formData.validationDefinitions = _getValidationDefinitions(formData.form);
+			if (Object.keys(formData.validationDefinitions).length !== 0) {
+				formData.controls = _getControl(formData.form);
+				formData.requiredParameters = _getRequiredParameters(formData.form, formData.controls);
+			}
+		} else {
+			logger.warn("flow-validation", { message: "No form data for node " + nodeId });
 		}
 	} else {
 		logger.warn("flow-validation", { message: "No parameter def found for node " + nodeId });
@@ -110,55 +109,40 @@ function _getControl(form) {
 	return controls;
 }
 
-function _setTableErrorState(row, column, errorMessageObject) {
-	for (let i = tableErrorState.length; i <= row; i++) {
-		tableErrorState.push([]);
-	}
-	for (let i = tableErrorState[row].length; i <= column; i++) {
-		tableErrorState[row].push(true);
-	}
-	tableErrorState[row][column] = errorMessageObject;
-}
-
 /**
 * Validate the parameters associated with a node
 * @param {Object} form data for a specific node
 */
 function _validateNode(formData, nodeId) {
-	// Validate parameters:
-	//    for each parameter value
-	//    Common_properties.validate parameter value.
-	const errors = [];
+	const messages = [];
 	if (formData.controls) {
 		for (const control of formData.controls) {
 			if (formData.validationDefinitions[control.name]) {
+				let validationSetError = false;
 				for (const validationDefinition of formData.validationDefinitions[control.name]) {
-					if (validationDefinition.definition.validation) {
+					if (!validationSetError && validationDefinition.definition.validation) {
 						// make sure there is an element for the control name in current parameters or the code will fail.
 						if (!formData.form.data.currentParameters[control.name]) {
 							formData.form.data.currentParameters[control.name] = null;
 						}
 						// validate the control's current value.
-						const error = UiConditions.evaluateInput(validationDefinition.definition, formData.form.data.currentParameters,
-							control, formData.form.data.datasetMetadata, formData.requiredParameters, null, null, _setTableErrorState);
-						if (typeof error === "object") {
-							error.name = control.name;
-							// this is where we store the error in the Object Model
-							errors.push(error);
-						}
-
-						// check if control name is a required parameter
-						if (formData.requiredParameters.indexOf(control.name) !== -1) {
+						let error = UiConditions.evaluateInput(validationDefinition.definition, formData.form.data.currentParameters,
+							control, formData.form.data.datasetMetadata, formData.requiredParameters, null, null, null);
+						if (typeof error === "object" && error !== null && error !== DEFAULT_VALIDATION_MESSAGE) {
+							error.id_ref = control.name;
+							messages.push(error);
+							validationSetError = true;
+						} else if (formData.requiredParameters.indexOf(control.name) !== -1) {
 							const controlValue = formData.form.data.currentParameters[control.name];
 							if (!controlValue || controlValue === null || controlValue === "" ||
 							(Array.isArray(controlValue) && controlValue.length === 0)) {
-								const errorMessage = {
-									name: control.name,
+								error = {
+									id_ref: control.name,
 									type: "error",
-									text: "Require parameter " + control.name + " has no value"
+									text: "Required parameter " + control.name + " has no value."
 								};
-								// this is where we store the error in the Object Model
-								errors.push(errorMessage);
+								messages.push(error);
+								validationSetError = true;
 							}
 						}
 					}
@@ -166,7 +150,7 @@ function _validateNode(formData, nodeId) {
 			}
 		}
 	}
-	return errors;
+	return messages;
 }
 
 module.exports = {

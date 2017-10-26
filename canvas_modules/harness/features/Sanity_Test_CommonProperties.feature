@@ -12,56 +12,56 @@ Feature: Sanity_Test_CommonProperties
 		Given I have toggled the app side common-properties panel
 
 		# Titles Test Case
-			Given I have uploaded JSON for common-properties "Spark_AddColumn_paramDef.json"
+			Given I have uploaded JSON for common-properties "org.apache.spark.ml.ibm.transformers.AddColumn.json"
 			Then I see common properties title "Add Column"
 			Then I have closed the common properties dialog by clicking on close button
 
-			Given I have uploaded JSON for common-properties "Spark_DecisionTree_paramDef.json"
+			Given I have uploaded JSON for common-properties "org.apache.spark.ml.classification.DecisionTreeClassifier.json"
 			Then I see common properties title "Decision Tree Classifier"
 			Then I have closed the common properties dialog by clicking on close button
 
-			Given I have uploaded JSON for common-properties "Spark_Distinct_paramDef.json"
+			Given I have uploaded JSON for common-properties "org.apache.spark.ml.ibm.transformers.Distinct.json"
 			Then I see common properties title "Distinct"
 			Then I have closed the common properties dialog by clicking on close button
 
-			Given I have uploaded JSON for common-properties "Spark_FilterRows_paramDef.json"
+			Given I have uploaded JSON for common-properties "org.apache.spark.ml.ibm.transformers.Filter.json"
 			Then I see common properties title "Filter Rows"
 			Then I have closed the common properties dialog by clicking on close button
 
 		# TextBox Test Case
-			Given I have uploaded JSON for common-properties "Spark_AddColumn_paramDef.json"
+			Given I have uploaded JSON for common-properties "org.apache.spark.ml.ibm.transformers.AddColumn.json"
 			Then I enter "testValue" in the Column name textbox
 
 		# Dropdown Test Case
-			Given I have uploaded JSON for common-properties "Spark_AddColumn_paramDef.json"
+			Given I have uploaded JSON for common-properties "org.apache.spark.ml.ibm.transformers.AddColumn.json"
 			Then I select "Continuous" dropdown option
 
 		# TextArea Test Case
-		# Given I have uploaded JSON for common-properties "Spark_AddColumn_paramDef.json"
+		# Given I have uploaded JSON for common-properties "org.apache.spark.ml.ibm.transformers.AddColumn.json"
 		# Then I enter "v1+v2" in the Expression textarea
 
 		# Select Textbox, Field Picker Test, Table Checkbox Case
-			Given I have uploaded JSON for common-properties "Spark_DecisionTree_paramDef.json"
+			Given I have uploaded JSON for common-properties "org.apache.spark.ml.classification.DecisionTreeClassifier.json"
 		 	Then I select "Age" option from Input columns select textbox
 
 		# Radio Button, Number Textbox Test Case
-			Given I have uploaded JSON for common-properties "Spark_DecisionTree_paramDef.json"
+			Given I have uploaded JSON for common-properties "org.apache.spark.ml.classification.DecisionTreeClassifier.json"
 			Then I select "gini" radio button for Impurity
 
 		# Checkbox, Generate TextBox Test Case
-		 	Given I have uploaded JSON for common-properties "Spark_Sample_paramDef.json"
+		 	Given I have uploaded JSON for common-properties "org.apache.spark.ml.ibm.transformers.Sample.json"
 		 	Then I select Repeatable partition assignment checkbox and click Generate
 
 		# ToggleText, Table Reorder Rows
-			Given I have uploaded JSON for common-properties "Spark_Sort_paramDef.json"
+			Given I have uploaded JSON for common-properties "org.apache.spark.ml.ibm.transformers.Sort.json"
 			Then I change Order for Drug field and reorder
 
 		# Validation Test Case
-			Given I have uploaded JSON for common-properties "Spark_DecisionTree_paramDef.json"
+			Given I have uploaded JSON for common-properties "org.apache.spark.ml.classification.DecisionTreeClassifier.json"
 			Then I check for validation error on Checkpoint Interval
-			Given I have uploaded JSON for common-properties "Spark_RenameColumns_paramDef.json"
+			Given I have uploaded JSON for common-properties "org.apache.spark.ml.ibm.transformers.RenameColumn.json"
 			Then I check for table cell level validation
-			Given I have uploaded JSON for common-properties "Spark_RenameColumns_paramDef.json"
+			Given I have uploaded JSON for common-properties "org.apache.spark.ml.ibm.transformers.RenameColumn.json"
 			Then I check for table validation
 			Given I have uploaded JSON for common-properties "Spark_SelectStorage_paramDef.json"
 			Then I check table cell enablement

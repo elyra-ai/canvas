@@ -205,7 +205,107 @@ describe("ObjectModel API handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
 
-		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(_.isEqual(JSON.stringify(expectedCanvas, null, 4), JSON.stringify(actualCanvas, null, 4))).to.be.true;
+	});
+
+	it("should save a messages for a node", () => {
+		logger.info("should save a messages for a node");
+
+		deepFreeze(startPipelineFlow);
+		const expectedMessage = { "id_ref": "controlOne", "type": "warning", "text": "This is a test message" };
+		ObjectModel.setPipelineFlow(startPipelineFlow);
+		ObjectModel.setNodeMessage("id8I6RH2V91XW", expectedMessage);
+
+		const actualMessage = ObjectModel.getNodeMessage("id8I6RH2V91XW", "controlOne");
+
+		expect(_.isEqual(expectedMessage, actualMessage)).to.be.true;
+	});
+
+	it("should save multiple messages for a node", () => {
+		logger.info("should save multiple messages for a node");
+
+		deepFreeze(startPipelineFlow);
+		const message1 = { "id_ref": "controlOne", "type": "warning", "text": "This is a test message" };
+		const message2 = { "id_ref": "controlTwo", "type": "error", "text": "This is an error test message" };
+		const message3 = { "id_ref": "controlThree", "type": "info", "text": "" };
+		const expectedMessages = [
+			message1,
+			message2,
+			message3
+		];
+		ObjectModel.setPipelineFlow(startPipelineFlow);
+		ObjectModel.setNodeMessage("id8I6RH2V91XW", message1);
+		ObjectModel.setNodeMessage("id8I6RH2V91XW", message2);
+		ObjectModel.setNodeMessage("id8I6RH2V91XW", message3);
+
+		const actualMessages = ObjectModel.getNodeMessages("id8I6RH2V91XW");
+
+
+		// logger.info("Expected Messages = " + JSON.stringify(expectedMessages, null, 4));
+		// logger.info("Actual messages   = " + JSON.stringify(actualMessages, null, 4));
+
+
+		expect(_.isEqual(expectedMessages, actualMessages)).to.be.true;
+	});
+
+	it("should save one control messages for a node", () => {
+		logger.info("should save one control messages for a node");
+
+		deepFreeze(startPipelineFlow);
+		const message1 = { "id_ref": "controlOne", "type": "warning", "text": "This is a test message" };
+		const message2 = { "id_ref": "controlOne", "type": "error", "text": "This is an error test message" };
+		const message3 = { "id_ref": "controlThree", "type": "info", "text": "" };
+		const expectedMessages = [
+			message2,
+			message3
+		];
+		ObjectModel.setPipelineFlow(startPipelineFlow);
+		ObjectModel.setNodeMessage("id8I6RH2V91XW", message1);
+		ObjectModel.setNodeMessage("id8I6RH2V91XW", message2);
+		ObjectModel.setNodeMessage("id8I6RH2V91XW", message3);
+
+		const actualMessages = ObjectModel.getNodeMessages("id8I6RH2V91XW");
+
+		// logger.info("Expected Messages = " + JSON.stringify(expectedMessages, null, 4));
+		// logger.info("Actual messages   = " + JSON.stringify(actualMessages, null, 4));
+
+		expect(_.isEqual(expectedMessages, actualMessages)).to.be.true;
+	});
+
+	it("should clear all messages for a node", () => {
+		logger.info("should clear all control messages for a node");
+
+		deepFreeze(startPipelineFlow);
+		const message1 = { "id_ref": "controlOne", "type": "warning", "text": "This is a test message" };
+		const message2 = { "id_ref": "controlTwo", "type": "error", "text": "This is an error test message" };
+		const message3 = { "id_ref": "controlThree", "type": "info", "text": "" };
+		const expectedMessages = [
+			message1,
+			message2,
+			message3
+		];
+		ObjectModel.setPipelineFlow(startPipelineFlow);
+		ObjectModel.setNodeMessage("id8I6RH2V91XW", message1);
+		ObjectModel.setNodeMessage("id8I6RH2V91XW", message2);
+		ObjectModel.setNodeMessage("id8I6RH2V91XW", message3);
+
+		const actualMessages = ObjectModel.getNodeMessages("id8I6RH2V91XW");
+
+		// logger.info("Expected Messages = " + JSON.stringify(expectedMessages, null, 4));
+		// logger.info("Actual messages   = " + JSON.stringify(actualMessages, null, 4));
+
+		expect(_.isEqual(expectedMessages, actualMessages)).to.be.true;
+
+		const expectedClearedMessages = [];
+
+		ObjectModel.setNodeMessages("id8I6RH2V91XW", expectedClearedMessages);
+		const actualClearedMessages = ObjectModel.getNodeMessages("id8I6RH2V91XW");
+
+		// logger.info("Expected Messages = " + JSON.stringify(expectedClearedMessages, null, 4));
+		// logger.info("Actual messages   = " + JSON.stringify(actualClearedMessages, null, 4));
+
+		expect(_.isEqual(expectedClearedMessages, actualClearedMessages)).to.be.true;
+
 	});
 
 	it("should add palette item into existing test category", () => {
