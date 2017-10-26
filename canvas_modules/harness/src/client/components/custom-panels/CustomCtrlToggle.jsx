@@ -24,19 +24,41 @@ export default class CustomCtrlToggle extends React.Component {
 	getControlValue() {
 		return this.state.controlValue;
 	}
+
+	validateInput() {
+		this.props.condition.validateCustomControl(this.props.parameter);
+	}
+
 	handleChange(evt) {
 		this.setState({ controlValue: evt.target.checked });
 		this.props.updateControlValue(this.props.parameter, evt.target.checked);
 	}
 	render() {
+		const message = this.props.condition.retrieveValidationErrorMessage(this.props.parameter);
+		var messageText;
+		if (message && message.text) {
+			messageText = message.text;
+		}
+		const state = this.props.condition.getControlState(this.props.parameter);
+		var visibility;
+		var disabled = false;
+		if (state === "hidden") {
+			visibility = { visibility: "hidden" };
+		} else if (state === "disabled") {
+			disabled = true;
+		}
 		return (
-			<div className="custom-toggle">
-				<ToggleButton
-					id={this.props.parameter}
-					checked={this.state.controlValue}
-					onChange={this.handleChange}
-				/>
-				<div className="text">{"Toggle"}</div>
+			<div>
+				<div className="custom-toggle" style={visibility}>
+					<ToggleButton
+						disabled={disabled}
+						id={this.props.parameter}
+						checked={this.state.controlValue}
+						onChange={this.handleChange}
+					/>
+					<div className="text">Toggle</div>
+				</div>
+				{messageText}
 			</div>
 		);
 	}
@@ -45,5 +67,6 @@ export default class CustomCtrlToggle extends React.Component {
 CustomCtrlToggle.propTypes = {
 	value: PropTypes.bool,
 	parameter: PropTypes.string.isRequired,
-	updateControlValue: PropTypes.func.isRequired
+	updateControlValue: PropTypes.func.isRequired,
+	condition: PropTypes.object
 };

@@ -18,7 +18,7 @@ const WARNING = "warning";
 function evaluateInput(validationDefinition, userInput, control, dataModel, requiredParameters, rowIndex, colIndex, setTableErrorState) {
 	let output;
 	const coordinates = {};
-	if (control.valueDef.isMap) {
+	if (control.valueDef && control.valueDef.isMap) {
 		// For tables we need to evaluate all non-keyDef cells
 		const cellValues = userInput[control.name];
 		for (let row = 0; row < cellValues.length; row++) {

@@ -24,11 +24,25 @@ export default class CustomCtrlSlider extends React.Component {
 	getControlValue() {
 		return this.state.controlValue;
 	}
+
 	handleChange(evt, val) {
+
+		var message;
+		if (parseInt(val, 10) > 60 && parseInt(val, 10) <= 90) {
+			message = { type: "warning", text: "Slider greater then 60" };
+		} else if (parseInt(val, 10) > 90) {
+			message = { type: "error", text: "Slider greater then 90" };
+		}
+		this.props.condition.updateValidationErrorMessage(this.props.parameter, message);
 		this.setState({ controlValue: val });
 		this.props.updateControlValue(this.props.parameter, val);
 	}
 	render() {
+		const message = this.props.condition.retrieveValidationErrorMessage(this.props.parameter);
+		var messageText;
+		if (message && message.text) {
+			messageText = message.type.toUpperCase() + ": " + message.text;
+		}
 		return (
 			<div className="custom-slider">
 				<Slider
@@ -38,6 +52,7 @@ export default class CustomCtrlSlider extends React.Component {
 					upper={100}
 					step={1}
 				/>
+				{messageText}
 			</div>
 		);
 	}
@@ -46,5 +61,6 @@ export default class CustomCtrlSlider extends React.Component {
 CustomCtrlSlider.propTypes = {
 	value: PropTypes.string,
 	parameter: PropTypes.string.isRequired,
-	updateControlValue: PropTypes.func.isRequired
+	updateControlValue: PropTypes.func.isRequired,
+	condition: PropTypes.object
 };

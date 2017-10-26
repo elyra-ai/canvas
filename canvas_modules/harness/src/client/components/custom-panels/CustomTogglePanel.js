@@ -15,11 +15,12 @@ class CustomTogglePanel {
 	static id() {
 		return "custom-toggle-panel";
 	}
-	constructor(parameters, valueAccessor, updateControlValue, datarecordMetadata) {
+	constructor(parameters, valueAccessor, updateControlValue, datarecordMetadata, condition) {
 		this.parameters = parameters;
 		this.valueAccessor = valueAccessor;
 		this.updateControlValue = updateControlValue;
 		this.datarecordMetadata = datarecordMetadata;
+		this.condition = condition;
 	}
 
 	renderPanel() {
@@ -31,6 +32,7 @@ class CustomTogglePanel {
 				parameter={controlId}
 				value={this.valueAccessor(controlId)}
 				updateControlValue={this.updateControlValue}
+				condition={this.condition}
 			/>
 		);
 	}

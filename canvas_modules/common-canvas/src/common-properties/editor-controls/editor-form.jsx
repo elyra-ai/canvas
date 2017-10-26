@@ -62,12 +62,8 @@ export default class EditorForm extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			formData: this.props.form,
 			valuesTable: this.props.form.data.currentParameters,
 			controlErrorMessages: (this.props.messages) ? this.props.messages : [],
-			visibleDefinition: {},
-			enabledDefinitions: {},
-			validationDefinitions: {},
 			requiredParameters: [],
 			controlStates: {},
 			selectedRows: {},
@@ -78,15 +74,19 @@ export default class EditorForm extends React.Component {
 
 		this.sharedCtrlInfo = [];
 
+		this.visibleDefinition = {};
+		this.enabledDefinitions = {};
+		this.validationDefinitions = {};
+
 		this.getControlValue = this.getControlValue.bind(this);
+		this.getControlState = this.getControlState.bind(this);
 		this.updateControlValue = this.updateControlValue.bind(this);
 		this.updateControlValues = this.updateControlValues.bind(this);
 		this.updateSelectedRows = this.updateSelectedRows.bind(this);
 
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.validateConditions = this.validateConditions.bind(this);
-		this.parseUiConditions = this.parseUiConditions.bind(this);
-		this.parseRequiredParameters = this.parseRequiredParameters.bind(this);
+		this.validateCustomControl = this.validateCustomControl.bind(this);
 		this.updateValidationErrorMessage = this.updateValidationErrorMessage.bind(this);
 		this.retrieveValidationErrorMessage = this.retrieveValidationErrorMessage.bind(this);
 		this.validateChildRefs = this.validateChildRefs.bind(this);
@@ -94,6 +94,7 @@ export default class EditorForm extends React.Component {
 		this.getControlValues = this.getControlValues.bind(this);
 		this.getSubControlValues = this.getSubControlValues.bind(this);
 		this.getControl = this.getControl.bind(this);
+
 		this.genPanel = this.genPanel.bind(this);
 		this.genUIContent = this.genUIContent.bind(this);
 		this.genUIItem = this.genUIItem.bind(this);
@@ -104,7 +105,6 @@ export default class EditorForm extends React.Component {
 		this.generateSharedControlNames = this.generateSharedControlNames.bind(this);
 		this.getSelectedRows = this.getSelectedRows.bind(this);
 		this.setControlState = this.setControlState.bind(this);
-		this.updateTableConditions = this.updateTableConditions.bind(this);
 	}
 
 	componentWillMount() {
@@ -125,6 +125,11 @@ export default class EditorForm extends React.Component {
 		return this.refs[propertyName];
 	}
 
+
+	getControlState(controlName) {
+		return this.state.controlStates[controlName];
+	}
+
 	/**
 	 * Retrieves a filtered data model in which all fields that are already
 	 * in use by other controls are already filtered out.
@@ -133,7 +138,7 @@ export default class EditorForm extends React.Component {
 	 * @return Filtered dataset metadata with fields in use removed
 	 */
 	getFilteredDataset(skipControlName) {
-		const data = this.state.formData.data.datasetMetadata;
+		const data = this.props.form.data.datasetMetadata;
 		if (!this.sharedCtrlInfo) {
 			return data;
 		}
@@ -209,7 +214,6 @@ export default class EditorForm extends React.Component {
 				}
 			}
 		}
-		// TODO add in customPanels
 		return values;
 	}
 
@@ -336,7 +340,7 @@ export default class EditorForm extends React.Component {
 				key={controlId}
 				ref={controlId}
 				valueAccessor={controlValueAccessor}
-				validationDefinitions={this.state.validationDefinitions}
+				validationDefinitions={this.validationDefinitions}
 				requiredParameters={this.state.requiredParameters}
 				updateControlValue={this.updateControlValue}
 				controlStates={this.state.controlStates}
@@ -352,7 +356,7 @@ export default class EditorForm extends React.Component {
 				key={controlId}
 				ref={controlId}
 				valueAccessor={controlValueAccessor}
-				validationDefinitions={this.state.validationDefinitions}
+				validationDefinitions={this.validationDefinitions}
 				requiredParameters={this.state.requiredParameters}
 				updateControlValue={this.updateControlValue}
 				controlStates={this.state.controlStates}
@@ -368,7 +372,7 @@ export default class EditorForm extends React.Component {
 				key={controlId}
 				ref={controlId}
 				valueAccessor={controlValueAccessor}
-				validationDefinitions={this.state.validationDefinitions}
+				validationDefinitions={this.validationDefinitions}
 				requiredParameters={this.state.requiredParameters}
 				updateControlValue={this.updateControlValue}
 				controlStates={this.state.controlStates}
@@ -396,7 +400,7 @@ export default class EditorForm extends React.Component {
 				ref={controlId}
 				updateControlValue={this.updateControlValue}
 				valueAccessor={controlValueAccessor}
-				validationDefinitions={this.state.validationDefinitions}
+				validationDefinitions={this.validationDefinitions}
 				requiredParameters={this.state.requiredParameters}
 				controlStates={this.state.controlStates}
 				validateConditions={this.validateConditions}
@@ -412,7 +416,7 @@ export default class EditorForm extends React.Component {
 				ref={controlId}
 				valueAccessor={controlValueAccessor}
 				updateControlValue={this.updateControlValue}
-				validationDefinitions={this.state.validationDefinitions}
+				validationDefinitions={this.validationDefinitions}
 				requiredParameters={this.state.requiredParameters}
 				controlStates={this.state.controlStates}
 				validateConditions={this.validateConditions}
@@ -427,7 +431,7 @@ export default class EditorForm extends React.Component {
 				ref={controlId}
 				updateControlValue={this.updateControlValue}
 				valueAccessor={controlValueAccessor}
-				validationDefinitions={this.state.validationDefinitions}
+				validationDefinitions={this.validationDefinitions}
 				requiredParameters={this.state.requiredParameters}
 				controlStates={this.state.controlStates}
 				validateConditions={this.validateConditions}
@@ -442,7 +446,7 @@ export default class EditorForm extends React.Component {
 				ref={controlId}
 				updateControlValue={this.updateControlValue}
 				valueAccessor={controlValueAccessor}
-				validationDefinitions={this.state.validationDefinitions}
+				validationDefinitions={this.validationDefinitions}
 				requiredParameters={this.state.requiredParameters}
 				controlStates={this.state.controlStates}
 				validateConditions={this.validateConditions}
@@ -457,7 +461,7 @@ export default class EditorForm extends React.Component {
 				ref={controlId}
 				updateControlValue={this.updateControlValue}
 				valueAccessor={controlValueAccessor}
-				validationDefinitions={this.state.validationDefinitions}
+				validationDefinitions={this.validationDefinitions}
 				requiredParameters={this.state.requiredParameters}
 				controlStates={this.state.controlStates}
 				validateConditions={this.validateConditions}
@@ -473,7 +477,7 @@ export default class EditorForm extends React.Component {
 				ref={controlId}
 				updateControlValue={this.updateControlValue}
 				valueAccessor={controlValueAccessor}
-				validationDefinitions={this.state.validationDefinitions}
+				validationDefinitions={this.validationDefinitions}
 				requiredParameters={this.state.requiredParameters}
 				controlStates={this.state.controlStates}
 				validateConditions={this.validateConditions}
@@ -490,7 +494,7 @@ export default class EditorForm extends React.Component {
 				updateControlValue={this.updateControlValue}
 				controlStates={this.state.controlStates}
 				valueAccessor={controlValueAccessor}
-				validationDefinitions={this.state.validationDefinitions}
+				validationDefinitions={this.validationDefinitions}
 				requiredParameters={this.state.requiredParameters}
 				validateConditions={this.validateConditions}
 				getControlValues={this.getControlValues}
@@ -519,7 +523,7 @@ export default class EditorForm extends React.Component {
 				ref={controlId}
 				updateControlValue={this.updateControlValue}
 				valueAccessor={controlValueAccessor}
-				validationDefinitions={this.state.validationDefinitions}
+				validationDefinitions={this.validationDefinitions}
 				requiredParameters={this.state.requiredParameters}
 				controlStates={this.state.controlStates}
 				validateConditions={this.validateConditions}
@@ -535,7 +539,7 @@ export default class EditorForm extends React.Component {
 				key={controlId}
 				ref={controlId}
 				valueAccessor={controlValueAccessor}
-				validationDefinitions={this.state.validationDefinitions}
+				validationDefinitions={this.validationDefinitions}
 				requiredParameters={this.state.requiredParameters}
 				updateControlValue={this.updateControlValue}
 				controlStates={this.state.controlStates}
@@ -553,7 +557,7 @@ export default class EditorForm extends React.Component {
 				key={controlId}
 				ref={controlId}
 				valueAccessor={controlValueAccessor}
-				validationDefinitions={this.state.validationDefinitions}
+				validationDefinitions={this.validationDefinitions}
 				requiredParameters={this.state.requiredParameters}
 				controlStates={this.state.controlStates}
 				updateControlValue={this.updateControlValue}
@@ -571,7 +575,7 @@ export default class EditorForm extends React.Component {
 				key={controlId}
 				ref={controlId}
 				valueAccessor={controlValueAccessor}
-				validationDefinitions={this.state.validationDefinitions}
+				validationDefinitions={this.validationDefinitions}
 				requiredParameters={this.state.requiredParameters}
 				updateControlValue={this.updateControlValue}
 				availableFieldsAccessor={this.getFilteredDataset}
@@ -589,7 +593,7 @@ export default class EditorForm extends React.Component {
 				key={controlId}
 				ref={controlId}
 				valueAccessor={controlValueAccessor}
-				validationDefinitions={this.state.validationDefinitions}
+				validationDefinitions={this.validationDefinitions}
 				requiredParameters={this.state.requiredParameters}
 				controlStates={this.state.controlStates}
 				openFieldPicker={this.openFieldPicker}
@@ -610,7 +614,7 @@ export default class EditorForm extends React.Component {
 				ref={controlId}
 				valueAccessor={controlValueAccessor}
 				updateControlValue={this.updateControlValue}
-				validationDefinitions={this.state.validationDefinitions}
+				validationDefinitions={this.validationDefinitions}
 				requiredParameters={this.state.requiredParameters}
 				controlStates={this.state.controlStates}
 				updateSelectedRows={this.updateSelectedRows}
@@ -630,7 +634,7 @@ export default class EditorForm extends React.Component {
 				valueAccessor={controlValueAccessor}
 				updateControlValue={this.updateControlValue}
 				updateSelectedRows={this.updateSelectedRows}
-				validationDefinitions={this.state.validationDefinitions}
+				validationDefinitions={this.validationDefinitions}
 				requiredParameters={this.state.requiredParameters}
 				controlStates={this.state.controlStates}
 				selectedRows={this.getSelectedRows(control.name)}
@@ -665,7 +669,7 @@ export default class EditorForm extends React.Component {
 				updateSelectedRows={this.updateSelectedRows}
 				selectedRows={this.getSelectedRows(control.name)}
 				buildUIItem={this.genUIItem}
-				validationDefinitions={this.state.validationDefinitions}
+				validationDefinitions={this.validationDefinitions}
 				requiredParameters={this.state.requiredParameters}
 				controlStates={this.state.controlStates}
 				validateConditions={this.validateConditions}
@@ -898,7 +902,14 @@ export default class EditorForm extends React.Component {
 		if (this.props.customPanels) {
 			for (const custPanel of this.props.customPanels) {
 				if (custPanel.id() === panel.id) {
-					return new custPanel(panel.parameters, controlValueAccessor, this.updateControlValue, datasetMetadata).renderPanel();
+					const condition = {
+						validateCustomControl: this.validateCustomControl,
+						updateValidationErrorMessage: this.updateValidationErrorMessage,
+						retrieveValidationErrorMessage: this.retrieveValidationErrorMessage,
+						getControlState: this.getControlState,
+						setControlState: this.setControlState
+					};
+					return new custPanel(panel.parameters, controlValueAccessor, this.updateControlValue, datasetMetadata, condition).renderPanel();
 				}
 			}
 		}
@@ -998,6 +1009,31 @@ export default class EditorForm extends React.Component {
 		});
 	}
 
+	validateCustomControl(controlName, dataModel) {
+		this._validateVisible(dataModel);
+		this._validateEnabled(dataModel);
+		var controlValidation = DEFAULT_VALIDATION_MESSAGE;
+		const control = {
+			name: controlName,
+			controlType: "custom"
+		};
+		if (this.validationDefinitions) {
+			// get validation for this parameter
+			const validations = this.validationDefinitions[controlName];
+			if (validations) {
+				for (const validation of validations) {
+					const result = UiConditions.evaluateInput(validation.definition, this.getControlValues(true), control, dataModel);
+					if (typeof result === "object") {
+						controlValidation = result;
+					}
+				}
+			}
+		}
+		if (controlValidation) {
+			this.updateValidationErrorMessage(controlName, controlValidation);
+		}
+	}
+
 	validateConditions(dataModel, cellCoords) {
 		this._validateVisible(dataModel, cellCoords);
 		this._validateEnabled(dataModel, cellCoords);
@@ -1005,7 +1041,7 @@ export default class EditorForm extends React.Component {
 
 	_validateVisible(dataModel, cellCoords) {
 		// visibleDefinition
-		if (Object.keys(this.state.visibleDefinition).length > 0) {
+		if (Object.keys(this.visibleDefinition).length > 0) {
 			// logger.info("validate visible definitions");
 			const controlValues = this.getControlValues();
 
@@ -1017,16 +1053,22 @@ export default class EditorForm extends React.Component {
 				}
 			}
 
-			for (const visibleKey in this.state.visibleDefinition) {
-				if (this.state.visibleDefinition[visibleKey].length > 0) {
-					for (let i = 0; i < this.state.visibleDefinition[visibleKey].length; i++) {
-						const visDefinition = this.state.visibleDefinition[visibleKey][i];
+			for (const visibleKey in this.visibleDefinition) {
+				if (this.visibleDefinition[visibleKey].length > 0) {
+					for (let i = 0; i < this.visibleDefinition[visibleKey].length; i++) {
+						const visDefinition = this.visibleDefinition[visibleKey][i];
 						const baseKey = this._getBaseParam(visibleKey);
 						if (typeof this.refs[baseKey] !== "undefined") {
 							if (!this._shouldEvaluate(visDefinition.definition.visible, cellCoords)) {
 								continue;
 							}
-							const controlType = this.refs[baseKey].props.control.controlType;
+							var controlType;
+							if (this.refs[baseKey].props.control) {
+								controlType = this.refs[baseKey].props.control.controlType;
+							} else {
+								// assume custom if no control type defined
+								controlType = "custom";
+							}
 							try {
 								var visOutput = UiConditions.validateInput(visDefinition.definition, userInput, controlType, dataModel,
 									cellCoords, this.state.requiredParameters);
@@ -1059,7 +1101,7 @@ export default class EditorForm extends React.Component {
 
 	_validateEnabled(dataModel, cellCoords) {
 		// enabledDefinitions
-		if (Object.keys(this.state.enabledDefinitions).length > 0) {
+		if (Object.keys(this.enabledDefinitions).length > 0) {
 			// logger.info("validate enabled definitions");
 			const controlValues = this.getControlValues();
 
@@ -1071,16 +1113,23 @@ export default class EditorForm extends React.Component {
 				}
 			}
 
-			for (const enabledKey in this.state.enabledDefinitions) {
-				if (this.state.enabledDefinitions[enabledKey].length > 0) {
-					for (let i = 0; i < this.state.enabledDefinitions[enabledKey].length; i++) {
-						const enbDefinition = this.state.enabledDefinitions[enabledKey][i];
+			for (const enabledKey in this.enabledDefinitions) {
+				if (this.enabledDefinitions[enabledKey].length > 0) {
+					for (let i = 0; i < this.enabledDefinitions[enabledKey].length; i++) {
+						const enbDefinition = this.enabledDefinitions[enabledKey][i];
 						const baseKey = this._getBaseParam(enabledKey);
 						if (typeof this.refs[baseKey] !== "undefined") {
 							if (!this._shouldEvaluate(enbDefinition.definition.enabled, cellCoords)) {
 								continue;
 							}
-							const controlType = this.refs[baseKey].props.control.controlType;
+							var controlType;
+							if (this.refs[baseKey].props.control) {
+								controlType = this.refs[baseKey].props.control.controlType;
+							} else {
+								// assume custom if no control type defined
+								controlType = "custom";
+							}
+
 							try {
 								var enbOutput = UiConditions.validateInput(enbDefinition.definition, userInput, controlType, dataModel,
 									cellCoords, this.state.requiredParameters);
@@ -1178,11 +1227,16 @@ export default class EditorForm extends React.Component {
 	updateValidationErrorMessage(controlName, inMessage) {
 		// add the control name to the message object and then either replace an existing control message or
 		// add a new control message.
-		const message = JSON.parse(JSON.stringify(inMessage));
+		// set default if no message provided
+		var newMessage = inMessage;
+		if (!inMessage) {
+			newMessage = DEFAULT_VALIDATION_MESSAGE;
+		}
+		const message = JSON.parse(JSON.stringify(newMessage));
 		message.id_ref = controlName;
 		const messages = this.state.controlErrorMessages;
 		const messageIndex = messages.findIndex((tmpMessage) => tmpMessage.id_ref === controlName);
-		if (inMessage === DEFAULT_VALIDATION_MESSAGE) {
+		if (newMessage === DEFAULT_VALIDATION_MESSAGE) {
 			// the default message means no error or warning for the control
 			// need to remove any existing messages or ignore the new message
 			if (messageIndex > -1) {
@@ -1199,27 +1253,17 @@ export default class EditorForm extends React.Component {
 	}
 
 	parseUiConditions(uiConditions) {
-		var visibleDefinition = {};
-		var enabledDefinitions = {};
-		var validationDefinitions = {};
-
 		for (let i = 0; i < uiConditions.length; i++) {
 			if (uiConditions[i].visible) {
-				visibleDefinition = UiConditionsParser.parseConditions(visibleDefinition, uiConditions[i], "visible");
+				this.visibleDefinition = UiConditionsParser.parseConditions(this.visibleDefinition, uiConditions[i], "visible");
 			} else if (uiConditions[i].enabled) {
-				enabledDefinitions = UiConditionsParser.parseConditions(enabledDefinitions, uiConditions[i], "enabled");
+				this.enabledDefinitions = UiConditionsParser.parseConditions(this.enabledDefinitions, uiConditions[i], "enabled");
 			} else if (uiConditions[i].validation) {
-				validationDefinitions = UiConditionsParser.parseConditions(validationDefinitions, uiConditions[i], "validation");
+				this.validationDefinitions = UiConditionsParser.parseConditions(this.validationDefinitions, uiConditions[i], "validation");
 			} else { // invalid
 				logger.info("Invalid definition: " + JSON.stringify(uiConditions[i]));
 			}
 		}
-
-		this.setState({
-			visibleDefinition: visibleDefinition,
-			enabledDefinitions: enabledDefinitions,
-			validationDefinitions: validationDefinitions
-		});
 	}
 
 	parseRequiredParameters(formData) {
@@ -1230,7 +1274,7 @@ export default class EditorForm extends React.Component {
 	}
 
 	render() {
-		var content = this.genUIContent(this.state.formData.uiItems, "", this.getControlValue, this.state.formData.data.datasetMetadata);
+		var content = this.genUIContent(this.props.form.uiItems, "", this.getControlValue, this.props.form.data.datasetMetadata);
 
 		if (this.state.showFieldPicker) {
 			const currentControlValues = this.getControlValues();

@@ -120,15 +120,10 @@ export default class EditorControl extends React.Component {
 		this.clearValueListener = this.clearValueListener.bind(this);
 		this.notifyValueChanged = this.notifyValueChanged.bind(this);
 		this.validateInput = this.validateInput.bind(this);
-		this.shouldEvaluate = this.shouldEvaluate.bind(this);
 		this.getUserInput = this.getUserInput.bind(this);
 		this.clearTableErrorState = this.clearTableErrorState.bind(this);
 		this.getTableErrorState = this.getTableErrorState.bind(this);
 		this.setTableErrorState = this.setTableErrorState.bind(this);
-		this.evaluateInput = this.evaluateInput.bind(this);
-		this.doGroupValidationUpdate = this.doGroupValidationUpdate.bind(this);
-		this.updateCellConditions = this.updateCellConditions.bind(this);
-
 		this._valueListener = null;
 	}
 
@@ -216,7 +211,7 @@ export default class EditorControl extends React.Component {
 			}
 		} else {
 			// Check for cell level operations for tables, which are added to the base control state
-			this.updateCellConditions(conditionProps, stateDisabled, stateStyle);
+			this._updateCellConditions(conditionProps, stateDisabled, stateStyle);
 		}
 
 		return {
@@ -286,7 +281,7 @@ export default class EditorControl extends React.Component {
 		this._valueListener = null;
 	}
 
-	updateCellConditions(conditionProps, stateDisabled, stateStyle) {
+	_updateCellConditions(conditionProps, stateDisabled, stateStyle) {
 		if (this.props.control.valueDef && this.props.control.valueDef.isMap) {
 			for (var key in this.props.controlStates) {
 				if (this.props.controlStates.hasOwnProperty(key)) {
@@ -350,7 +345,7 @@ export default class EditorControl extends React.Component {
 		}
 	}
 
-	shouldEvaluate(validation) {
+	_shouldEvaluate(validation) {
 		let evaluate = true;
 		if (typeof validation.params === "object") {
 			for (const control of validation.params) {
@@ -363,12 +358,12 @@ export default class EditorControl extends React.Component {
 		return evaluate;
 	}
 
-	evaluateInput(validation, userInput) {
+	_evaluateInput(validation, userInput) {
 		return UiConditions.evaluateInput(validation.definition, userInput, this.props.control, this.props.dataModel, this.props.requiredParameters,
 			this.rowIndex, this.colIndex, this.setTableErrorState);
 	}
 
-	doGroupValidationUpdate(validation, errorMessage, output, controlName) {
+	_doGroupValidationUpdate(validation, errorMessage, output, controlName) {
 		if (typeof validation.params === "object") {
 			for (const control of validation.params) {
 				let groupMessage = errorMessage;
@@ -405,8 +400,8 @@ export default class EditorControl extends React.Component {
 				let validationSet = false;
 
 				for (const validation of validations) {
-					if (this.shouldEvaluate(validation)) {
-						output = this.evaluateInput(validation, userInput);
+					if (this._shouldEvaluate(validation)) {
+						output = this._evaluateInput(validation, userInput);
 						let isError = false;
 						// logger.info("validated input field " + controlName + " to be " + JSON.stringify(output));
 						if (typeof output === "object") {
@@ -423,7 +418,7 @@ export default class EditorControl extends React.Component {
 								errorSet = true;
 							}
 						}
-						this.doGroupValidationUpdate(validation, errorMessage, output, controlName);
+						this._doGroupValidationUpdate(validation, errorMessage, output, controlName);
 					}
 				}
 			} catch (error) {

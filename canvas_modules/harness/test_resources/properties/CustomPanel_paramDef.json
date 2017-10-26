@@ -1,128 +1,76 @@
 {
   "current_parameters": {
-    "keys": [
-      [
-        "Na",
-        "Ascending"
-      ],
-      [
-        "Drug",
-        "Descending"
-      ],
-      [
-        "Cholesterol",
-        "Ascending"
-      ]
-    ],
     "custom-slider": "20.00",
-    "custom-slider2": "10.00",
-    "custom-toggle": true
+    "custom-toggle": true,
+    "custom-toggle2": true,
+    "text-field": "",
+    "selected_fields": []
   },
-  "complex_types": [
-    {
-      "id": "SortEntry",
-      "key_definition": {
-        "id": "field",
-        "type": "string",
-        "role": "column",
-        "default": ""
-      },
-      "parameters": [
-        {
-          "id": "sort_order",
-          "enum": [
-            "Ascending",
-            "Descending"
-          ],
-          "default": "Ascending"
-        }
-      ]
-    }
-  ],
   "parameters": [
     {
-      "id": "keys",
-      "type": "array[SortEntry]"
+      "id": "selected_fields",
+      "type": "array[string]",
+      "role": "column"
     },
     {
       "id": "custom-slider",
       "type": "string"
     },
     {
-      "id": "custom-slider2",
-      "type": "string"
-    },
-    {
       "id": "custom-toggle",
       "type": "boolean"
+    },
+    {
+      "id": "custom-toggle2",
+      "type": "boolean"
+    },
+    {
+      "id": "text-field",
+      "type": "string"
     }
   ],
   "uihints": {
-    "id": "org.ibm.spark.ibm.transformers.Sort",
-    "version": "1.0",
-    "icon": "images/transformationspark.svg",
+    "id": "ibm.Custom",
+    "icon": "images/custom.svg",
     "label": {
-      "resource_key": "sort.label"
+      "default": "Custom Panels"
     },
     "description": {
-      "resource_key": "sort.desc"
+      "default": "Parameter def for custom panels"
     },
     "parameter_info": [
       {
-        "parameter_ref": "keys",
+        "parameter_ref": "text-field",
         "label": {
-          "resource_key": "sort.keys.label"
+          "default": "Enter"
         },
         "description": {
-          "resource_key": "sort.keys.desc",
-          "placement": "on_panel"
+          "default": "Enter 'hide' to hide toggles"
         }
-      }
-    ],
-    "complex_type_info": [
+      },
       {
-        "complex_type_ref": "SortEntry",
-        "moveable_rows": true,
-        "key_definition": {
-          "parameter_ref": "field",
-          "width": 28,
-          "label": {
-            "resource_key": "SortEntry.field.label"
-          }
+        "parameter_ref": "selected_fields",
+        "label": {
+          "default": "Columns"
         },
-        "parameters": [
-          {
-            "parameter_ref": "sort_order",
-            "width": 16,
-            "resource_key": "SortEntry.sort_order",
-            "label": {
-              "resource_key": "SortEntry.sort_order.label"
-            },
-            "control": "toggletext",
-            "value_icons": [
-              "/images/up-triangle.svg",
-              "/images/down-triangle.svg"
-            ]
-          }
-        ]
+        "description": {
+          "default": "Select columns to include or exclude"
+        }
       }
     ],
     "group_info": [
       {
-        "id": "basic-settings",
+        "id": "toggle-panel",
         "label": {
-          "default": "Settings"
+          "default": "Toggle"
         },
         "type": "panels",
         "group_info": [
           {
-            "id": "sort-table",
-            "label": {
-              "default": "Sort"
-            },
-            "type": "columnSelection",
+            "id": "text-field",
+            "type": "controls",
             "parameter_refs": [
-              "keys"
+              "text-field"
             ]
           },
           {
@@ -131,34 +79,107 @@
             "parameter_refs": [
               "custom-toggle"
             ]
+          },
+          {
+            "id": "custom-toggle-panel",
+            "type": "customPanel",
+            "parameter_refs": [
+              "custom-toggle2"
+            ]
           }
         ]
       },
       {
         "id": "slider-panel",
         "label": {
-          "default": "My own slider tab"
+          "default": "Slider"
         },
         "type": "panels",
         "group_info": [
           {
-            "id": "custom-slider-panel",
-            "type": "customPanel",
+            "id": "fields",
+            "type": "columnSelection",
+            "label": {
+              "default": "Columns"
+            },
             "parameter_refs": [
-              "custom-slider"
+              "selected_fields"
             ]
           },
           {
             "id": "custom-slider-panel",
             "type": "customPanel",
             "parameter_refs": [
-              "custom-slider2"
+              "custom-slider"
             ]
           }
         ]
       }
     ]
   },
+  "conditions": [
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "custom-toggle",
+          "message": {
+            "default": "Toggle 1 shouldn't be true"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "custom-toggle",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "custom-toggle2"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "custom-toggle",
+            "op": "notEquals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "custom-toggle"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "custom-toggle2",
+            "op": "notEquals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "custom-toggle",
+          "custom-toggle2"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "text-field",
+            "op": "equals",
+            "value": "hide"
+          }
+        }
+      }
+    }
+  ],
   "dataset_metadata": {
     "version": "1.0",
     "fields": [
@@ -226,16 +247,5 @@
         }
       }
     ]
-  },
-  "resources": {
-    "sort.label": "Sort",
-    "sort.desc": "Sorts the data",
-    "sort.keys.label": "Sort by",
-    "sort.keys.desc": "Use arrows to reorder the sorting priority",
-    "SortEntry.label": "Sort",
-    "SortEntry.field.label": "Field",
-    "SortEntry.sort_order.label": "Order",
-    "SortEntry.sort_order.Ascending.label": "Ascending",
-    "SortEntry.sort_order.Descending.label": "Descending"
   }
 }

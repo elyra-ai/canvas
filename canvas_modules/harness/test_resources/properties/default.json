@@ -114,7 +114,7 @@
             "id": "sample-size",
             "type": "checkboxPanel",
             "label": {
-              "default": "Use maximum sample size"
+              "resource_key": "sample-size.label"
             },
             "parameter_refs": [
               "samplingSize"
@@ -124,7 +124,7 @@
             "id": "sample-seed",
             "type": "checkboxPanel",
             "label": {
-              "default": "Repeatable partition assignment"
+              "resource_key": "sample-seed.label"
             },
             "parameter_refs": [
               "samplingSeed"

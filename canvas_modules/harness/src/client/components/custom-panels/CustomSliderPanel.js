@@ -15,11 +15,12 @@ class CustomSliderPanel {
 	static id() {
 		return "custom-slider-panel";
 	}
-	constructor(parameters, valueAccessor, updateControlValue, datarecordMetadata) {
+	constructor(parameters, valueAccessor, updateControlValue, datarecordMetadata, condition) {
 		this.parameters = parameters;
 		this.valueAccessor = valueAccessor;
 		this.updateControlValue = updateControlValue;
 		this.datarecordMetadata = datarecordMetadata;
+		this.condition = condition;
 	}
 
 	renderPanel() {
@@ -31,6 +32,7 @@ class CustomSliderPanel {
 				parameter={controlId}
 				value={this.valueAccessor(controlId)}
 				updateControlValue={this.updateControlValue}
+				condition={this.condition}
 			/>
 		);
 	}

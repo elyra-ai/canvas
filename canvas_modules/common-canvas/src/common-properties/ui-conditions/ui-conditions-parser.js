@@ -112,6 +112,8 @@ function parseUiItem(controls, uiItem) {
 		}
 		break;
 	}
+	case "customPanel":
+		break; // required parameters are handled by panel
 	default:
 		logger.warn("Unknown UiItem type when parsing ui conditions: " + uiItem.itemType);
 		break;
