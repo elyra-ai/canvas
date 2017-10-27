@@ -210,6 +210,24 @@ function isObjectModelEmpty(objectModel) {
 	return count;
 }
 
+function getNodeIdForLabel(nodeText) {
+	var result = browser.execute(function(labelText) {
+		/* global document */
+		var nodeId = null;
+
+		var domLabels = document.getElementsByClassName("d3-node-label");
+		for (let idx = 0; idx < domLabels.length; idx++) {
+			if (domLabels.item(idx).__data__.label === labelText) {
+				nodeId = domLabels.item(idx).id;
+			}
+		}
+
+		return nodeId;
+	}, nodeText);
+
+	return result.value.substr(11);
+}
+
 
 module.exports = {
 	containLinkEvent: containLinkEvent,
@@ -223,5 +241,6 @@ module.exports = {
 	getNodeIdFromObjectModel: getNodeIdFromObjectModel,
 	getObjectModelCount: getObjectModelCount,
 	getPortLinks: getPortLinks,
-	isObjectModelEmpty: isObjectModelEmpty
+	isObjectModelEmpty: isObjectModelEmpty,
+	getNodeIdForLabel: getNodeIdForLabel
 };

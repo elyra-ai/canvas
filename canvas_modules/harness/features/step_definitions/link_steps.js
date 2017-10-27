@@ -10,7 +10,7 @@
 /* eslint max-len: "off" */
 
 import { containLinkEvent, containLinkInObjectModel, getCommentIdFromObjectModel,
-	getCommentIdFromObjectModelUsingText, getCommentIndexFromCanvasUsingText,
+	getCommentIdFromObjectModelUsingText, getCommentIndexFromCanvasUsingText, getNodeIdForLabel,
 	getNodeIdFromObjectModel, getObjectModelCount, getPortLinks } from "./utilities/validateUtil.js";
 import { simulateD3LinkCreation, simulateDragDrop } from "./utilities/DragAndDrop.js";
 import { getHarnessData } from "./utilities/HTTPClient.js";
@@ -224,15 +224,38 @@ module.exports = function() {
 
 	});
 
-	// Then I link node output port 5 to node input port 2
-	//
-	this.Then(/^I link node output port (\d+) to node input port (\d+)$/, function(srcPort, trgPort) {
-		var srcIndex = srcPort - 1;
-		var trgIndex = trgPort - 1;
 
-		browser.execute(simulateD3LinkCreation, ".d3-node-port-output", srcIndex, ".d3-node-port-input", trgIndex, 1, 1);
+	// Then I link node "Var. File" output port "out3 to node "Select" input port "inport2"
+	//
+	this.Then(/^I link node "([^"]*)" output port "([^"]*)" to node "([^"]*)" input port "([^"]*)"$/, function(srcNodeText, srcPortId, trgNodeText, trgPortId) {
+
+		var srcNodeId = getNodeIdForLabel(srcNodeText);
+		var srcSelector = "#src_circle_" + srcNodeId + "_" + srcPortId;
+
+		var trgNodeId = getNodeIdForLabel(trgNodeText);
+		var trgSelector = "#trg_circle_" + trgNodeId + "_" + trgPortId;
+
+		browser.dragAndDrop(srcSelector, trgSelector);
 
 	});
+
+	// Then I link node "Var. File" output port "out3 to node "Select"
+	// This will simulate a drag from a specific port onto a target node rather
+	// than a specific port. This should be interpreted as a link to the zeroth
+	// port of the target node.
+	//
+	this.Then(/^I link node "([^"]*)" output port "([^"]*)" to node "([^"]*)"$/, function(srcNodeText, srcPortId, trgNodeText) {
+
+		var srcNodeId = getNodeIdForLabel(srcNodeText);
+		var srcSelector = "#src_circle_" + srcNodeId + "_" + srcPortId;
+
+		var trgNodeId = getNodeIdForLabel(trgNodeText);
+		var trgSelector = "#node_grp_" + trgNodeId;
+
+		browser.dragAndDrop(srcSelector, trgSelector);
+
+	});
+
 
 	this.Then(/^I verify the number of port data links are (\d+)$/, function(portLinks) {
 		try {

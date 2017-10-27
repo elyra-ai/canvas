@@ -895,7 +895,7 @@ export default class ObjectModel {
 		const linkNodeList = [];
 		data.nodes.forEach((srcInfo) => {
 			data.targetNodes.forEach((trgInfo) => {
-				if (ObjectModel.connectionIsAllowed(srcInfo, trgInfo)) {
+				if (ObjectModel.isConnectionAllowed(srcInfo, trgInfo)) {
 					const info = {};
 					info.id = getUUID();
 					info.type = "nodeLink";
@@ -994,8 +994,15 @@ export default class ObjectModel {
 		});
 	}
 
-	static connectionIsAllowed(srcNodeInfo, trgNodeInfo) {
-		if (srcNodeInfo.id === trgNodeInfo.id) {
+	static isConnectionAllowed(srcNodeInfo, trgNodeInfo) {
+		const srcNode = this.getNode(srcNodeInfo.id);
+		const trgNode = this.getNode(trgNodeInfo.id);
+
+		if (srcNodeInfo.id === trgNodeInfo.id) { // Cannot connect to ourselves, currently.
+			return false;
+		}
+
+		if (!this.doesNodeHavePorts(trgNode)) {
 			return false;
 		}
 
@@ -1003,11 +1010,15 @@ export default class ObjectModel {
 			return false;
 		}
 
-		if (this.isCardinalityExceeded(srcNodeInfo, trgNodeInfo)) {
+		if (this.isCardinalityExceeded(srcNodeInfo.portId, trgNodeInfo.portId, srcNode, trgNode)) {
 			return false;
 		}
 
 		return true;
+	}
+
+	static doesNodeHavePorts(node) {
+		return node.input_ports && node.input_ports.length > 0;
 	}
 
 	static linkAlreadyExists(srcNodeInfo, trgNodeInfo) {
@@ -1026,29 +1037,24 @@ export default class ObjectModel {
 		return exists;
 	}
 
-	static isCardinalityExceeded(srcNodeInfo, trgNodeInfo) {
+	static isCardinalityExceeded(srcPortId, trgPortId, srcNode, trgNode) {
 		const diagramLinks = ObjectModel.getCanvasInfo().links;
 
 		var srcCount = 0;
 		var trgCount = 0;
 
-		const srcNode = this.getNode(srcNodeInfo.id);
-		const trgNode = this.getNode(trgNodeInfo.id);
-
 		diagramLinks.forEach((link) => {
 			if (link.type === "nodeLink") {
-				if (link.srcNodeId === srcNodeInfo.id &&
-						srcNodeInfo.portId) {
-					if (link.srcNodePortId === srcNodeInfo.portId ||
-							(!link.srcNodePortId && this.isFirstPort(srcNode.output_ports, srcNodeInfo.portId))) {
+				if (link.srcNodeId === srcNode.id && srcPortId) {
+					if (link.srcNodePortId === srcPortId ||
+							(!link.srcNodePortId && this.isFirstPort(srcNode.output_ports, srcPortId))) {
 						srcCount++;
 					}
 				}
 
-				if (link.trgNodeId === trgNodeInfo.id &&
-						trgNodeInfo.portId) {
-					if (link.trgNodePortId === trgNodeInfo.portId ||
-							(!link.trgNodePortId && this.isFirstPort(trgNode.input_ports, trgNodeInfo.portId))) {
+				if (link.trgNodeId === trgNode.id && trgPortId) {
+					if (link.trgNodePortId === trgPortId ||
+							(!link.trgNodePortId && this.isFirstPort(trgNode.input_ports, trgPortId))) {
 						trgCount++;
 					}
 				}
@@ -1056,7 +1062,7 @@ export default class ObjectModel {
 		});
 
 		if (srcCount > 0) {
-			const srcPort = this.getPort(srcNode.output_ports, srcNodeInfo.portId);
+			const srcPort = this.getPort(srcNode.output_ports, srcPortId);
 			if (srcPort &&
 					srcPort.cardinality &&
 					Number(srcPort.cardinality.max) !== -1 && // -1 indicates an infinite numder of ports are allowed
@@ -1066,7 +1072,7 @@ export default class ObjectModel {
 		}
 
 		if (trgCount > 0) {
-			const trgPort = this.getPort(trgNode.input_ports, trgNodeInfo.portId);
+			const trgPort = this.getPort(trgNode.input_ports, trgPortId);
 			if (trgPort &&
 					trgPort.cardinality &&
 					Number(trgPort.cardinality.max) !== -1 && // -1 indicates an infinite numder of ports are allowed
