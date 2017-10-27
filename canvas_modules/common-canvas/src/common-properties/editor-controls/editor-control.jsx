@@ -435,6 +435,8 @@ export default class EditorControl extends React.Component {
 					text: "Require parameter " + controlName + " has no value"
 				};
 				this.props.updateValidationErrorMessage(controlName, errorMessage);
+			} else {
+				this.props.updateValidationErrorMessage(controlName, DEFAULT_VALIDATION_MESSAGE);
 			}
 		}
 	}
