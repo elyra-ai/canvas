@@ -925,13 +925,15 @@ export default class ObjectModel {
 		const linkCommentList = [];
 		data.nodes.forEach((srcNodeId) => {
 			data.targetNodes.forEach((trgNodeId) => {
-				const info = {};
-				info.id = getUUID();
-				info.type = "commentLink";
-				info.class_name = "canvas-comment-link";
-				info.srcNodeId = srcNodeId;
-				info.trgNodeId = trgNodeId;
-				linkCommentList.push(info);
+				if (!ObjectModel.commentLinkAlreadyExists(srcNodeId, trgNodeId)) {
+					const info = {};
+					info.id = getUUID();
+					info.type = "commentLink";
+					info.class_name = "canvas-comment-link";
+					info.srcNodeId = srcNodeId;
+					info.trgNodeId = trgNodeId;
+					linkCommentList.push(info);
+				}
 			});
 		});
 		return linkCommentList;
@@ -1031,6 +1033,20 @@ export default class ObjectModel {
 					(!link.srcNodePortId || link.srcNodePortId === srcNodeInfo.portId) &&
 					link.trgNodeId === trgNodeInfo.id &&
 					(!link.trgNodePortId || link.trgNodePortId === trgNodeInfo.portId)) {
+				exists = true;
+			}
+		});
+		return exists;
+	}
+
+	static commentLinkAlreadyExists(srcNodeId, trgNodeId) {
+		let exists = false;
+
+		const diagramLinks = ObjectModel.getCanvasInfo().links;
+
+		diagramLinks.forEach((link) => {
+			if (link.srcNodeId === srcNodeId &&
+					link.trgNodeId === trgNodeId) {
 				exists = true;
 			}
 		});

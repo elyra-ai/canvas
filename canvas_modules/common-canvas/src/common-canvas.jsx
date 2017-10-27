@@ -7,7 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-/* eslint complexity: ["error", 14] */
+/* eslint complexity: ["error", 16] */
 /* eslint max-depth: ["error", 6] */
 
 import React from "react";
@@ -172,14 +172,18 @@ export default class CommonCanvas extends React.Component {
 			}
 			case "linkNodes": {
 				const linkNodesList = ObjectModel.createNodeLinks(data);
-				const command = new AddLinksAction(linkNodesList);
-				CommandStack.do(command);
+				if (linkNodesList.length > 0) {
+					const command = new AddLinksAction(linkNodesList);
+					CommandStack.do(command);
+				}
 				break;
 			}
 			case "linkComment": {
 				const linkCommentList = ObjectModel.createCommentLinks(data);
-				const command = new AddLinksAction(linkCommentList);
-				CommandStack.do(command);
+				if (linkCommentList.length > 0) {
+					const command = new AddLinksAction(linkCommentList);
+					CommandStack.do(command);
+				}
 				break;
 			}
 			case "deleteSelectedObjects": {

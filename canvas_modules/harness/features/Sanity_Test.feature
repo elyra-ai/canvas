@@ -13,6 +13,9 @@ Feature: Sanity_Test
 		Given I have uploaded predefined palette "modelerPalette.json"
 		Given I have selected the "Legacy" rendering engine
 		Given I have toggled the app side panel
+		Then I pause for 1 seconds
+
+		Then I resize the window size to 1000 width and 800 height
 
 		Then I open the palette
     Then I add node 1 a "Var. File" node from the "Import" category onto the canvas at 200, 400

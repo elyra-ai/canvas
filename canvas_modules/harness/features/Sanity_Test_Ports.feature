@@ -5,9 +5,6 @@ Feature: Canvas sanity test
 	As a human
 	I want to test ports operations
 	So I can build a canvas and perform ports operations
-@watch
-
-
 
 Scenario: Sanity test to check it a port to port link can be made with a new node
 	Given I am on the test harness
@@ -17,6 +14,7 @@ Scenario: Sanity test to check it a port to port link can be made with a new nod
 	Given I have selected the "Ports" connection type
 	Given I have uploaded palette "/test_resources/palettes/modelerPalette.json"
 	Given I have uploaded diagram "/test_resources/diagrams/multiPortsCanvas.json"
+  Given I have toggled the app side panel
 
 	Then I open the palette
 	Then I add node 7 a "Filler" node from the "Field Ops" category onto the canvas at 380, 580
@@ -37,8 +35,6 @@ Scenario: Sanity test to check it a port to port link can be made with a new nod
 	Then I delete node 3 the "C5.0" node
 	Then I verify the number of port data links are 3
 	Then I verify 0 link between source node "Define Types" source port "outPort1" to target node "C5.0" target port "inPort"
-
-
 
 Scenario: Sanity test for multiple ports operations with the D3 rendering engine
 	Given I am on the test harness
@@ -116,9 +112,9 @@ Scenario: Sanity test for multiple ports operations with the D3 rendering engine
 	Then I verify the number of port data links are 16
 	Then I verify 0 link between source node "Select4" source port "outPort" to target node "Merge2" target port "inPort"
 
-
 	# Node "Var. File" is a binding node with no input ports. Therefore, it should not be
 	# possible to make a link to it from another node.
 	# coming from it so this next connection should fail.
 	Then I link node "Merge2" output port "outPort" to node "Var. File"
 	Then I verify the number of port data links are 16
+
