@@ -249,7 +249,7 @@ export default class CommonCanvas extends React.Component {
 		if (this.props.contextMenuHandler) {
 			this.contextMenuSource = source;
 			const menuDef = this.props.contextMenuHandler(source);
-			if (typeof menuDef !== "undefined") {
+			if (menuDef && menuDef.length > 0) {
 				this.setState({ showContextMenu: true, contextMenuDef: menuDef });
 			}
 		}
