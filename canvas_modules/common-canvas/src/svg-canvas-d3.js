@@ -1359,16 +1359,19 @@ export default class CanvasD3Layout {
 								.attr("r", this.portRadius)
 								.attr("class", (port) => this.nodePortOutputClass + (port.class_name ? " " + port.class_name : ""))
 								.on("mousedown", (port) => {
-									this.stopPropagationAndPreventDefault(); // Stops the node drag behavior when clicking on the handle/circle
-									this.drawingNewLink = true;
-									this.drawingNewLinkSrcId = d.id;
-									this.drawingNewLinkSrcPortId = port.id;
-									this.drawingNewLinkAction = "node-node";
-									const node = this.getNodeAtMousePos();
-									const outputPortPos = d.output_ports.findIndex((p) => p.id === port.id);
-									this.drawingNewLinkStartPos = { x: node.x_pos + d.width, y: node.y_pos + outputPortPositions[outputPortPos] };
-									this.drawingNewLinkArray = [];
-									this.drawNewLink();
+									// Make sure this is just a left mouse button click - we don't want context menu click starting a line being drawn
+									if (d3.event.button === 0) {
+										this.stopPropagationAndPreventDefault(); // Stops the node drag behavior when clicking on the handle/circle
+										this.drawingNewLink = true;
+										this.drawingNewLinkSrcId = d.id;
+										this.drawingNewLinkSrcPortId = port.id;
+										this.drawingNewLinkAction = "node-node";
+										const node = this.getNodeAtMousePos();
+										const outputPortPos = d.output_ports.findIndex((p) => p.id === port.id);
+										this.drawingNewLinkStartPos = { x: node.x_pos + d.width, y: node.y_pos + outputPortPositions[outputPortPos] };
+										this.drawingNewLinkArray = [];
+										this.drawNewLink();
+									}
 								});
 
 							outputPortSelection.exit().remove();
