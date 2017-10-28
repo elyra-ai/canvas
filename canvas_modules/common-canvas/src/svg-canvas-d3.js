@@ -392,9 +392,9 @@ export default class CanvasD3Layout {
 				this.ellipsisPosY = 7;
 
 				// Error indicator dimensions
-				this.errorCenterX = 68;
+				this.errorCenterX = 48;
 				this.errorCenterY = 0;
-				this.errorRadius = 7;
+				this.errorRadius = 5;
 			}
 		}
 
@@ -1253,47 +1253,65 @@ export default class CanvasD3Layout {
 				})
 				.call(this.drag); // Must put drag after mousedown listener so mousedown gets called first.
 
-			// Node selection highlighting outline
+			// Node selection highlighting outline for new nodes, flexible properties set in next step
 			if (this.nodeShape === "port-arcs") {
 				nodeGroups.append("path")
-					.attr("id", (d) => `node_outline_${d.id}`)
-					.attr("d", (d) => this.getNodeShapePath(d))
-					.attr("transform", (d) => this.getNodeHighlightOutlineTranslate(d)) // Scale and move the shape up and to the left to account for the padding
-					.attr("selected", function(d) { return ObjectModel.isSelected(d.id) ? "yes" : "no"; })
-					.attr("class", this.selectionHighlightClass);
+					.attr("id", (d) => `node_outline_${d.id}`);
 			} else { // simple rectangle
 				nodeGroups.append("rect")
-					.attr("id", (d) => `node_outline_${d.id}`)
-					.attr("width", (d) => d.width + (2 * this.highLightGap))
-					.attr("height", (d) => d.height + (2 * this.highLightGap))
-					.attr("x", -this.highLightGap)
-					.attr("y", -this.highLightGap)
-					.attr("selected", function(d) { return ObjectModel.isSelected(d.id) ? "yes" : "no"; })
-					.attr("class", this.selectionHighlightClass);
+					.attr("id", (d) => `node_outline_${d.id}`);
 			}
 
 			if (this.connectionType === "Ports") {
-				// Node body
+				// attach node body for new nodes, flexible properties are set in next step
 				if (this.nodeShape === "port-arcs") {
 					nodeGroups.append("path")
 						.attr("id", (d) => `node_body_${d.id}`)
-						.attr("d", (d) => this.getNodeShapePath(d))
-						.attr("class", this.nodeBodyClass)
 						.style("filter", "url(#drop-shadow)");
 				} else {
 					nodeGroups.append("rect")
 						.attr("id", (d) => `node_body_${d.id}`)
-						.attr("width", (d) => d.width)
-						.attr("height", (d) => d.height)
 						.attr("x", 0)
-						.attr("y", 0)
-						.attr("class", this.nodeBodyClass);
+						.attr("y", 0);
 				}
 
 				// ports: create for new and existing nodes
 				var newAndExistingNodes = nodeGroupSel.enter().merge(nodeGroupSel);
 				newAndExistingNodes
 					.each((d) => {
+						// Node selection highlighting: set flexible properties
+						if (this.nodeShape === "port-arcs") {
+							d3.select(`#node_grp_${d.id}`).select(`#node_outline_${d.id}`)
+								.attr("d", (cd) => this.getNodeShapePath(cd))
+								.attr("transform", (cd) => this.getNodeHighlightOutlineTranslate(cd)) // Scale and move the shape up and to the left to account for the padding
+								.attr("selected", function(cd) { return ObjectModel.isSelected(cd.id) ? "yes" : "no"; })
+								.attr("class", this.selectionHighlightClass);
+						} else { // simple rectangle
+							d3.select(`#node_grp_${d.id}`).select(`#node_outline_${d.id}`)
+								.attr("width", (cd) => cd.width + (2 * this.highLightGap))
+								.attr("height",
+									(cd) => cd.height + (2 * this.highLightGap))
+								.attr("x", -this.highLightGap)
+								.attr("y", -this.highLightGap)
+								.attr("selected", function(cd) { return ObjectModel.isSelected(cd.id) ? "yes" : "no"; })
+								.attr("class", this.selectionHighlightClass);
+						}
+
+						// node layout: set flexible properties
+						if (this.connectionType === "Ports") {
+							// Node body updates
+							if (this.nodeShape === "port-arcs") {
+								d3.select(`#node_grp_${d.id}`).select(`#node_body_${d.id}`)
+									.attr("d", (cd) => this.getNodeShapePath(cd))
+									.attr("class", this.nodeBodyClass);
+							} else {
+								d3.select(`#node_grp_${d.id}`).select(`#node_body_${d.id}`)
+									.attr("width", (cd) => cd.width)
+									.attr("height", (cd) => cd.height)
+									.attr("class", this.nodeBodyClass);
+							}
+						}
+
 						// Input ports
 						if (d.input_ports && d.input_ports.length > 0) {
 							const inputPortPositions = this.getPortPositions(d, "input");
@@ -1301,35 +1319,30 @@ export default class CanvasD3Layout {
 							var inputPortSelection = d3.select(`#node_grp_${d.id}`).selectAll("." + that.nodePortInputClass)
 								.data(d.input_ports, function(p) { return p.id; });
 
-							// update datum for existing ports, sets the __data__ to the updated data of the port
-							inputPortSelection.each(function(p) {
-								d3.select(`trg_circle_${d.id}_${p.id}`)
-									.attr("class", that.nodePortInputClass + (p.class_name ? " " + p.class_name : ""))
-									.datum((nd) => that.getNodePort(d.id, nd.id, "input"));
-							});
-
+							// input port circle
 							inputPortSelection.enter()
 								.append("circle")
 								.attr("id", (port) => `trg_circle_${d.id}_${port.id}`)
 								.attr("portId", (port) => port.id) // This is needed by getNodeInputPortAtMousePos
 								.attr("cx", 0)
-								.attr("cy", (port) => {
-									var inputPortPos = d.input_ports.findIndex((p) => p.id === port.id);
-									return inputPortPositions[inputPortPos];
-								})
 								.attr("r", this.portRadius)
-								.attr("class", (port) => this.nodePortInputClass + (port.class_name ? " " + port.class_name : ""))
-								.attr("connected", "no");
+								.attr("connected", "no")
+								.merge(inputPortSelection)	// for new and existing port circles, update cy, datum and class
+								.attr("cy", (port) => inputPortPositions[port.id])
+								.attr("class", (port) =>
+									that.nodePortInputClass + (port.class_name ? " " + port.class_name : ""))
+								.datum((port) => that.getNodePort(d.id, port.id, "input"));
 
+							// input port arrow in circle
 							inputPortSelection.enter()
 								.append("path")
 								.attr("id", (port) => `trg_arrow_${d.id}_${port.id}`)
-								.attr("d", (port) => {
-									var inputPortPos = d.input_ports.findIndex((p) => p.id === port.id);
-									return that.getArrowShapePath(inputPortPositions[inputPortPos]);
-								})
-								.attr("class", this.nodePortInputArrowClass)
+								.attr("class", that.nodePortInputArrowClass)
 								.attr("connected", "no");
+
+							// update arrow in circle for new and existing ports
+							d3.select(`#node_grp_${d.id}`).selectAll("." + that.nodePortInputArrowClass)
+								.attr("d", (port) => this.getArrowShapePath(inputPortPositions[port.id]));
 
 							inputPortSelection.exit().remove();
 						}
@@ -1341,21 +1354,9 @@ export default class CanvasD3Layout {
 							var outputPortSelection = d3.select(`#node_grp_${d.id}`).selectAll("." + that.nodePortOutputClass)
 								.data(d.output_ports, function(p) { return p.id; });
 
-							// update datum for existing ports, sets the __data__ to the updated data of the port
-							outputPortSelection.each(function(p) {
-								d3.select(`src_circle_${d.id}_${p.id}`)
-									.attr("class", that.nodePortInputClass + (p.class_name ? " " + p.class_name : ""))
-									.datum((nd) => that.getNodePort(d.id, nd.id, "output"));
-							});
-
 							outputPortSelection.enter()
 								.append("circle")
 								.attr("id", (port) => `src_circle_${d.id}_${port.id}`)
-								.attr("cx", () => d.width)
-								.attr("cy", (port) => {
-									const outputPortPos = d.output_ports.findIndex((p) => p.id === port.id);
-									return outputPortPositions[outputPortPos];
-								})
 								.attr("r", this.portRadius)
 								.attr("class", (port) => this.nodePortOutputClass + (port.class_name ? " " + port.class_name : ""))
 								.on("mousedown", (port) => {
@@ -1367,12 +1368,16 @@ export default class CanvasD3Layout {
 										this.drawingNewLinkSrcPortId = port.id;
 										this.drawingNewLinkAction = "node-node";
 										const node = this.getNodeAtMousePos();
-										const outputPortPos = d.output_ports.findIndex((p) => p.id === port.id);
-										this.drawingNewLinkStartPos = { x: node.x_pos + d.width, y: node.y_pos + outputPortPositions[outputPortPos] };
+										this.drawingNewLinkStartPos = { x: node.x_pos + d.width, y: node.y_pos + outputPortPositions[port.id] };
 										this.drawingNewLinkArray = [];
 										this.drawNewLink();
 									}
-								});
+								})
+								.merge(outputPortSelection)	// update cx, class and cy for existing output ports
+								.attr("cx", (port) => d.width)
+								.attr("cy", (port) => outputPortPositions[port.id])
+								.attr("class", (port) => this.nodePortOutputClass + (port.class_name ? " " + port.class_name : ""))
+								.datum((port) => this.getNodePort(d.id, port.id, "output"));
 
 							outputPortSelection.exit().remove();
 						}
@@ -1388,15 +1393,16 @@ export default class CanvasD3Layout {
 			// 	.attr("class", "d3-node-image-outline");
 
 			// Node image
-
 			nodeGroups.append("image")
 				.attr("id", function(d) { return `node_image_${d.id}`; })
 				.attr("xlink:href", function(d) { return d.image; })
 				.attr("width", this.imageWidth)
 				.attr("height", this.imageHeight)
 				.attr("x", this.imagePosX)
-				.attr("y", (d) => this.getImagePosY(d))
 				.attr("class", "node-image")
+				.merge(nodeGroupSel)
+				.select("image")
+				.attr("y", (d) => this.getImagePosY(d))
 				.each(function(d) {
 					if (d.customAttrs) {
 						var imageObj = d3.select(this);
@@ -1405,7 +1411,6 @@ export default class CanvasD3Layout {
 						});
 					}
 				});
-
 
 			// Label outline - this code used for debugging purposes
 			// nodeGroups.append("rect")
@@ -1424,7 +1429,6 @@ export default class CanvasD3Layout {
 				.attr("id", function(d) { return `node_label_${d.id}`; })
 				.attr("class", function(d) { return that.labelClass + " " + that.getMessageLabelClass(d.messages); })
 				.attr("x", this.labelHorizontalJustification === "left" ? this.labelPosX : this.labelPosX + (this.labelWidth / 2)) // If not "left" then "center"
-				.attr("y", (d) => this.getLabelPosY(d) + this.labelHeight - this.labelDescent)
 				.attr("text-anchor", this.labelHorizontalJustification === "left" ? "start" : "middle")
 				.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text object
 					const labelObj = d3.select(this);
@@ -1441,8 +1445,13 @@ export default class CanvasD3Layout {
 					if (abbrLabel && abbrLabel !== "") {
 						labelObj.text(abbrLabel).attr("abbr-label", "");
 					}
-				});
-
+				})
+				.merge(nodeGroupSel)
+				.selectAll("text")
+				.filter(function(c) {
+					return this.getAttribute("id").startsWith("node_label_");
+				})
+				.attr("y", (d) => this.getLabelPosY(d) + this.labelHeight - this.labelDescent);
 
 			// Halo
 			if (this.connectionType === "Halo") {
@@ -1469,8 +1478,13 @@ export default class CanvasD3Layout {
 				.attr("id", function(d) { return `error_circle_${d.id}`; })
 				.attr("class", function(d) { return that.getMessageCircleClass(d.messages); })
 				.attr("cx", this.errorCenterX)
-				.attr("cy", (d) => this.getErrorPosY(d))
-				.attr("r", this.errorRadius);
+				.attr("r", this.errorRadius)
+				.merge(nodeGroupSel)
+				.selectAll("circle")
+				.filter(function(c) {
+					return this.getAttribute("id").startsWith("error_circle_");
+				})
+				.attr("cy", (d) => this.getErrorPosY(d));
 
 			// Decorators
 			this.addDecorator(nodeGroups, "topLeft", this.leftDecoratorX, this.topDecoratorY);
@@ -2052,7 +2066,7 @@ export default class CanvasD3Layout {
 	}
 
 	getPortPositions(data, type) {
-		const portPositions = [];
+		const portPositions = {};
 		var ports;
 		if (type === "input") {
 			ports = data.input_ports;
@@ -2062,7 +2076,7 @@ export default class CanvasD3Layout {
 
 		if (data.height <= this.nodeHeight &&
 				ports.length === 1) {
-			portPositions.push(this.portPosY);
+			portPositions[ports[0].id] = this.portPosY;
 
 		} else {
 			let centerPoint = 0;
@@ -2077,9 +2091,9 @@ export default class CanvasD3Layout {
 				}
 			}
 
-			ports.forEach(() => {
+			ports.forEach((p) => {
 				centerPoint += this.portArcRadius;
-				portPositions.push(centerPoint);
+				portPositions[p.id] = centerPoint;
 				centerPoint += this.portArcRadius + this.portArcSpacing;
 			});
 		}
@@ -3029,17 +3043,15 @@ export default class CanvasD3Layout {
 
 		if (srcNode.output_ports && srcNode.output_ports.length > 0) {
 			const outputPortPositions = this.getPortPositions(srcNode, "output");
-			var srcPortPos = srcNode.output_ports.findIndex((p) => p.id === srcPortId);
-			if (srcPortPos > -1) {
-				srcY = outputPortPositions[srcPortPos];
+			if (outputPortPositions[srcPortId]) {
+				srcY = outputPortPositions[srcPortId];
 			}
 		}
 
 		if (trgNode.input_ports && trgNode.input_ports.length > 0) {
 			const inputPortPositions = this.getPortPositions(trgNode, "input");
-			var trgPortPos = trgNode.input_ports.findIndex((p) => p.id === trgPortId);
-			if (trgPortPos > -1) {
-				trgY = inputPortPositions[trgPortPos];
+			if (inputPortPositions[trgPortId]) {
+				trgY = inputPortPositions[trgPortId];
 			}
 		}
 
