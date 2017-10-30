@@ -25,7 +25,8 @@ module.exports = function() {
 		"Graphs": 3,
 		"Modeling": 4,
 		"Outputs": 5,
-		"Export": 6
+		"Export": 6,
+		"Transformations": 0
 	};
 
 	const nodePosition = {
@@ -58,7 +59,8 @@ module.exports = function() {
 		"Table": 0,
 		"Data Audit": 1,
 		"Analysis": 2,
-		"Export Object Store": 0
+		"Export Object Store": 0,
+		"Add Columns": 2
 	};
 
 
@@ -458,7 +460,25 @@ module.exports = function() {
 		"Table": "",
 		"Data Audit": "",
 		"Analysis": "",
-		"Export Object Store": ""
+		"Export Object Store": "",
+		"Add Column": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvci" +
+		"AxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0" +
+		"dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjI2NC44ID" +
+		"E2Mi44IDUyLjIgNTIuMiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAyNjQuOCAxNjIuOCA1Mi4yIDUyLjI7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxzdHlsZSB0eXBl" +
+		"PSJ0ZXh0L2NzcyI+DQoJLnN0MHtmaWxsOiNFQUVBRUE7fQ0KCS5zdDF7ZmlsbDojREZERkRGO30NCgkuc3Qye2ZpbGw6bm9uZTtzdHJva2U6IzFEMzY0OTtzdHJva2Utd2lkdGg6Mj" +
+		"tzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0M3tmaWxsOm5vbmU7c3Ryb2tlOiMxRDM2NDk7c3Ryb2tlLXdpZHRoOjM7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDR7Zmls" +
+		"bDojNUFBQUZBO30NCjwvc3R5bGU+DQo8Zz4NCgkNCgkJPGltYWdlIHN0eWxlPSJvdmVyZmxvdzp2aXNpYmxlO29wYWNpdHk6MC42NjsiIHdpZHRoPSI1NCIgaGVpZ2h0PSI0NyIgeG" +
+		"xpbms6aHJlZj0iQjRCOUREQzI2QUI0MDQ2OS5wbmciICB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIDI2NCAxNjUpIj4NCgk8L2ltYWdlPg0KCTxnPg0KCQk8cG9seWdvbiBjbGFz" +
+		"cz0ic3QwIiBwb2ludHM9IjI3Ny45LDIwNyAyNjYuMiwxODYuNSAyNzcuOSwxNjYgMzAxLjQsMTY2IDMxMy4yLDE4Ni41IDMwMS40LDIwNyAJCSIvPg0KCTwvZz4NCjwvZz4NCjxwb2" +
+		"x5Z29uIGNsYXNzPSJzdDEiIHBvaW50cz0iMjc0LjgsMjAxLjUgMjc3LjksMjA3IDMwMS40LDIwNyAzMTMuMiwxODYuNSAzMDQuNCwxNzEuNCAiLz4NCjxnPg0KCQ0KCQk8aW1hZ2Ug" +
+		"c3R5bGU9Im92ZXJmbG93OnZpc2libGU7b3BhY2l0eTowLjY2OyIgd2lkdGg9IjU3IiBoZWlnaHQ9IjQ5IiB4bGluazpocmVmPSJCNEI5RERDMjZBQjQwNDZCLnBuZyIgIHRyYW5zZm" +
+		"9ybT0ibWF0cml4KDEgMCAwIDEgMjYyIDE2NCkiPg0KCTwvaW1hZ2U+DQoJPGc+DQoJCTxwb2x5Z29uIGNsYXNzPSJzdDIiIHBvaW50cz0iMjc3LjksMjA3IDI2Ni4yLDE4Ni41IDI3" +
+		"Ny45LDE2NiAzMDEuNCwxNjYgMzEzLjIsMTg2LjUgMzAxLjQsMjA3IAkJIi8+DQoJPC9nPg0KPC9nPg0KPGxpbmUgY2xhc3M9InN0MyIgeDE9IjI4OS41IiB5MT0iMTc5IiB4Mj0iMj" +
+		"g5LjUiIHkyPSIxOTciLz4NCjxsaW5lIGNsYXNzPSJzdDMiIHgxPSIyOTcuNSIgeTE9IjE3OSIgeDI9IjI5Ny41IiB5Mj0iMTgyIi8+DQo8bGluZSBjbGFzcz0ic3QzIiB4MT0iMjk3" +
+		"LjUiIHkxPSIxNzUiIHgyPSIyOTcuNSIgeTI9IjE3NyIvPg0KPGxpbmUgY2xhc3M9InN0MyIgeDE9IjI4MS41IiB5MT0iMTc1IiB4Mj0iMjgxLjUiIHkyPSIxNzciLz4NCjxsaW5lIGN" +
+		"sYXNzPSJzdDMiIHgxPSIyODkuNSIgeTE9IjE3NSIgeDI9IjI4OS41IiB5Mj0iMTc3Ii8+DQo8bGluZSBjbGFzcz0ic3QzIiB4MT0iMjk3LjUiIHkxPSIxOTAiIHgyPSIyOTcuNSIgeT" +
+		"I9IjE5NyIvPg0KPGxpbmUgY2xhc3M9InN0MyIgeDE9IjI4MS41IiB5MT0iMTc5IiB4Mj0iMjgxLjUiIHkyPSIxOTciLz4NCjxyZWN0IHg9IjI5NC42IiB5PSIxODUuMyIgY2xhc3M9I" +
+		"nN0NCIgd2lkdGg9IjUuNCIgaGVpZ2h0PSIxLjMiLz4NCjxyZWN0IHg9IjI5Ni43IiB5PSIxODMuMiIgY2xhc3M9InN0NCIgd2lkdGg9IjEuMyIgaGVpZ2h0PSI1LjQiLz4NCjwvc3ZnPg0K"
 	};
 
 	const expectedEventData = {
@@ -491,7 +511,8 @@ module.exports = function() {
 		"Table": "",
 		"Data Audit": "",
 		"Analysis": "",
-		"Export Object Store": ""
+		"Export Object Store": "",
+		"Add Column": "org.apache.spark.ml.ibm.transformers.AddColumn"
 	};
 
 
