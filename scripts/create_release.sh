@@ -30,7 +30,7 @@ GIT_ORG="NGP-TWC"
 GIT_REPO="wdp-abstract-canvas"
 GIT_DIRECTORY="${GIT_REPO}_repo"
 RELEASE="release"
-MASTER="master"
+MASTER_TAG="master-last_success"
 GIT_USER="Y9CTMV866"
 GIT_USER_EMAIL="Y9CTMV866@nomail.relay.ibm.com"
 
@@ -43,12 +43,12 @@ git clone git@github.ibm.com:${GIT_ORG}/${GIT_REPO}.git ${GIT_DIRECTORY}
 
 cd $WORKING_DIR/$GIT_DIRECTORY
 git checkout ${RELEASE}
-if [[ $(git diff --name-status ${MASTER}..${RELEASE}) ]]; then
-	echo "Changes found between ${MASTER} and ${RELEASE}.  Merge branches."
-	git checkout ${MASTER}
+if [[ $(git diff --name-status ${MASTER_TAG}..${RELEASE}) ]]; then
+	echo "Changes found between ${MASTER_TAG} and ${RELEASE}.  Merge branches."
+	git checkout ${MASTER_TAG}
 	git push origin HEAD:${RELEASE} --force
 else
-	echo "No changes found between ${MASTER} and ${RELEASE}"
+	echo "No changes found between ${MASTER_TAG} and ${RELEASE}"
 	exit 0;
 fi
 

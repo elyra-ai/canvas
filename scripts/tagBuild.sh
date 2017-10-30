@@ -12,13 +12,13 @@
 
 set -e
 
-BUILDNUM="$1"
+BRANCH="$1"
+TAG="$2"
 
-TAG_NAME=$TRAVIS_BRANCH-$BUILDNUM
+TAG_NAME=$BRANCH-$TAG
 
 echo "Setting github tag $TAG_NAME"
-git config --global user.email "builds@travis-ci.ibm.com"
-git config --global user.name "Travis CI"
+
 git tag -f $TAG_NAME
 git push origin $TAG_NAME -f
 echo "$TAG_NAME tag set successfully"
