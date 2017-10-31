@@ -122,11 +122,16 @@ function _validateNode(formData, nodeId) {
 				for (const validationDefinition of formData.validationDefinitions[control.name]) {
 					if (!validationSetError && validationDefinition.definition.validation) {
 						// make sure there is an element for the control name in current parameters or the code will fail.
-						if (!formData.form.data.currentParameters[control.name]) {
-							formData.form.data.currentParameters[control.name] = null;
+						var userInput = formData.form.data.currentParameters;
+						if (!userInput[control.name]) {
+							userInput[control.name] = null;
+						}
+						// use default value if there is not input value
+						if (userInput[control.name] === null && typeof control.valueDef.defaultValue !== "undefined") {
+							userInput[control.name] = control.valueDef.defaultValue;
 						}
 						// validate the control's current value.
-						let error = UiConditions.evaluateInput(validationDefinition.definition, formData.form.data.currentParameters,
+						let error = UiConditions.evaluateInput(validationDefinition.definition, userInput,
 							control, formData.form.data.datasetMetadata, formData.requiredParameters, null, null, null);
 						if (typeof error === "object" && error !== null && error !== DEFAULT_VALIDATION_MESSAGE) {
 							error.id_ref = control.name;
