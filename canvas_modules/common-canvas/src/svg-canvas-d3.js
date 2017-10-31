@@ -1174,7 +1174,7 @@ export default class CanvasD3Layout {
 					.attr("class", function(nd) { return that.getMessageCircleClass(nd.messages); });
 			});
 
-			var nodeGroups = nodeGroupSel.enter()
+			var newNodeGroups = nodeGroupSel.enter()
 				.append("g")
 				.attr("id", (d) => `node_grp_${d.id}`)
 				.attr("class", "obj-group node-group")
@@ -1255,21 +1255,21 @@ export default class CanvasD3Layout {
 
 			// Node selection highlighting outline for new nodes, flexible properties set in next step
 			if (this.nodeShape === "port-arcs") {
-				nodeGroups.append("path")
+				newNodeGroups.append("path")
 					.attr("id", (d) => `node_outline_${d.id}`);
 			} else { // simple rectangle
-				nodeGroups.append("rect")
+				newNodeGroups.append("rect")
 					.attr("id", (d) => `node_outline_${d.id}`);
 			}
 
 			if (this.connectionType === "Ports") {
 				// attach node body for new nodes, flexible properties are set in next step
 				if (this.nodeShape === "port-arcs") {
-					nodeGroups.append("path")
+					newNodeGroups.append("path")
 						.attr("id", (d) => `node_body_${d.id}`)
 						.style("filter", "url(#drop-shadow)");
 				} else {
-					nodeGroups.append("rect")
+					newNodeGroups.append("rect")
 						.attr("id", (d) => `node_body_${d.id}`)
 						.attr("x", 0)
 						.attr("y", 0);
@@ -1385,7 +1385,7 @@ export default class CanvasD3Layout {
 			}
 
 			// Image outline - this code used for debugging purposes
-			// nodeGroups.append("rect")
+			// newNodeGroups.append("rect")
 			// 	.attr("width", this.imageWidth)
 			// 	.attr("height", this.imageHeight)
 			// 	.attr("x", this.imagePosX)
@@ -1393,15 +1393,16 @@ export default class CanvasD3Layout {
 			// 	.attr("class", "d3-node-image-outline");
 
 			// Node image
-			nodeGroups.append("image")
+			newNodeGroups.append("image")
 				.attr("id", function(d) { return `node_image_${d.id}`; })
 				.attr("xlink:href", function(d) { return d.image; })
 				.attr("width", this.imageWidth)
 				.attr("height", this.imageHeight)
 				.attr("x", this.imagePosX)
-				.attr("class", "node-image")
-				.merge(nodeGroupSel)
-				.select("image")
+				.attr("class", "node-image");
+
+			// set y and custom attribures for node image in new and existing nodes
+			newNodeGroups.merge(nodeGroupSel).selectAll(".node-image")
 				.attr("y", (d) => this.getImagePosY(d))
 				.each(function(d) {
 					if (d.customAttrs) {
@@ -1413,7 +1414,7 @@ export default class CanvasD3Layout {
 				});
 
 			// Label outline - this code used for debugging purposes
-			// nodeGroups.append("rect")
+			// newNodeGroups.append("rect")
 			// 	.attr("width", this.labelWidth)
 			// 	.attr("height", this.labelHeight)
 			// 	.attr("x", this.labelPosX)
@@ -1421,7 +1422,7 @@ export default class CanvasD3Layout {
 			// 	.attr("class", "d3-label-outline");
 
 			// Label
-			nodeGroups.append("text")
+			newNodeGroups.append("text")
 				.text(function(d) {
 					var textObj = d3.select(this);
 					return that.trimLabelToWidth(d.label, that.labelWidth, this.labelClass, textObj);
@@ -1445,17 +1446,15 @@ export default class CanvasD3Layout {
 					if (abbrLabel && abbrLabel !== "") {
 						labelObj.text(abbrLabel).attr("abbr-label", "");
 					}
-				})
-				.merge(nodeGroupSel)
-				.selectAll("text")
-				.filter(function(c) {
-					return this.getAttribute("id").startsWith("node_label_");
-				})
+				});
+
+			// set y for node label in new and existing nodes
+			newNodeGroups.merge(nodeGroupSel).selectAll("." + that.labelClass)
 				.attr("y", (d) => this.getLabelPosY(d) + this.labelHeight - this.labelDescent);
 
 			// Halo
 			if (this.connectionType === "Halo") {
-				nodeGroups.append("circle")
+				newNodeGroups.append("circle")
 					.attr("id", function(d) { return `node_halo_${d.id}`; })
 					.attr("class", "d3-node-halo")
 					.attr("cx", this.haloCenterX)
@@ -1474,23 +1473,24 @@ export default class CanvasD3Layout {
 			}
 
 			// Error indicator
-			nodeGroups.append("circle")
+			newNodeGroups.append("circle")
 				.attr("id", function(d) { return `error_circle_${d.id}`; })
 				.attr("class", function(d) { return that.getMessageCircleClass(d.messages); })
 				.attr("cx", this.errorCenterX)
-				.attr("r", this.errorRadius)
-				.merge(nodeGroupSel)
-				.selectAll("circle")
+				.attr("r", this.errorRadius);
+
+			// set cy for error circle in new and existing nodes
+			newNodeGroups.merge(nodeGroupSel).selectAll("circle")
 				.filter(function(c) {
 					return this.getAttribute("id").startsWith("error_circle_");
 				})
 				.attr("cy", (d) => this.getErrorPosY(d));
 
 			// Decorators
-			this.addDecorator(nodeGroups, "topLeft", this.leftDecoratorX, this.topDecoratorY);
-			this.addDecorator(nodeGroups, "topRight", this.rightDecoratorX, this.topDecoratorY);
-			this.addDecorator(nodeGroups, "bottomLeft", this.leftDecoratorX, this.bottomDecoratorY);
-			this.addDecorator(nodeGroups, "bottomRight", this.rightDecoratorX, this.bottomDecoratorY);
+			this.addDecorator(newNodeGroups, "topLeft", this.leftDecoratorX, this.topDecoratorY);
+			this.addDecorator(newNodeGroups, "topRight", this.rightDecoratorX, this.topDecoratorY);
+			this.addDecorator(newNodeGroups, "bottomLeft", this.leftDecoratorX, this.bottomDecoratorY);
+			this.addDecorator(newNodeGroups, "bottomRight", this.rightDecoratorX, this.bottomDecoratorY);
 
 			// Remove any nodes that are no longer in the diagram.nodes array.
 			nodeGroupSel.exit().remove();
@@ -2051,7 +2051,7 @@ export default class CanvasD3Layout {
 		} else {
 			path += " L 0 0"; // If no input ports just draw a straight line.
 		}
-		console.log("Node path = " + path);
+		// console.log("Node path = " + path);
 		return path;
 	}
 
@@ -2208,7 +2208,7 @@ export default class CanvasD3Layout {
 				}
 			});
 
-			var commentGroups = commentGroupSel.enter()
+			var newCommentGroups = commentGroupSel.enter()
 				.append("g")
 				.attr("id", (d) => `comment_grp_${d.id}`)
 				.attr("class", "obj-group comment-group")
@@ -2331,7 +2331,7 @@ export default class CanvasD3Layout {
 				.call(this.drag);	 // Must put drag after mousedown listener so mousedown gets called first.
 
 			// Comment selection highlighting and sizing outline
-			commentGroups.append("rect")
+			newCommentGroups.append("rect")
 				.attr("id", (d) => `comment_rect_${d.id}`)
 				.attr("width", (d) => d.width + (2 * this.highLightGap))
 				.attr("height", (d) => d.height + (2 * this.highLightGap))
@@ -2350,7 +2350,7 @@ export default class CanvasD3Layout {
 				});
 
 			// Background rectangle for comment
-			commentGroups.append("rect")
+			newCommentGroups.append("rect")
 				.attr("id", (d) => `comment_box_${d.id}`)
 				.attr("width", (d) => d.width)
 				.attr("height", (d) => d.height)
@@ -2368,7 +2368,7 @@ export default class CanvasD3Layout {
 
 
 			// Clip path to clip the comment text to the comment rectangle
-			commentGroups.append("clipPath")
+			newCommentGroups.append("clipPath")
 				.attr("id", (d) => `comment_clip_path_${d.id}`)
 				.append("rect")
 				.attr("id", (d) => `comment_clip_rect_${d.id}`)
@@ -2378,7 +2378,7 @@ export default class CanvasD3Layout {
 				.attr("y", 0);
 
 			// Comment text
-			commentGroups.append("text")
+			newCommentGroups.append("text")
 				.attr("id", (d) => `comment_text_${d.id}`)
 				.each(function(d) {
 					var textObj = d3.select(this);
@@ -2391,7 +2391,7 @@ export default class CanvasD3Layout {
 
 			// Halo
 			if (this.connectionType === "Halo") {
-				commentGroups.append("rect")
+				newCommentGroups.append("rect")
 					.attr("id", (d) => `comment_halo_${d.id}`)
 					.attr("class", "d3-comment-halo")
 					.attr("x", 0 - this.haloCommentGap)
