@@ -5,7 +5,6 @@ Feature: Sanity_Test_undoRedo
 	As a human
 	I want to test undo/redo operations
 	So I can build a canvas and perform undo/redo operations with various user operations
-@watch
 
 	Scenario: Sanity test for Base undo/redo operations with the D3 rendering engine
 		Given I am on the test harness

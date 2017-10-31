@@ -402,12 +402,29 @@
 	padding: .5em 25px .5em 0 !important;
 }
 
+.custom-slider {
+	display: flex;
+}
+
+.custom-slider .slider {
+	display: block;
+	width: 100%;
+}
+
+.custom-slider .icon {
+	margin-top: 15px;
+}
+
 .custom-toggle {
-    display: flex;
+  display: flex;
 }
 
 .custom-toggle .text {
-    padding-left: 10px;
+  padding-left: 10px;
+}
+
+.custom-toggle .icon {
+  margin-left: auto;
 }
 
 .list-item-containers .list-item.overflow {

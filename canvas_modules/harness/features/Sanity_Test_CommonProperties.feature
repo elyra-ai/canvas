@@ -103,7 +103,6 @@ Feature: Sanity_Test_CommonProperties
 			Then I have closed the common properties dialog by clicking on close button
 			Given I have toggled the app side common-properties panel
 
-@watch
 	Scenario: Test of expression editor control
 		Given I am on the test harness
 		Given I have toggled the app side common-properties panel
@@ -131,3 +130,18 @@ Feature: Sanity_Test_CommonProperties
 		Given I have uploaded JSON for common-properties "Javascript_FilterRows_paramDef.json"
 		Then I verify that the placeholder text is "Enter JavaScript text" in ExpressionEditor
 		Then I enter "" in ExpressionEditor and press autocomplete and verify error "The condition expression cannot be empty" and save
+
+		Given I have toggled the app side common-properties panel
+
+	Scenario: Test of custom panels
+		Given I am on the test harness
+		Given I have toggled the app side common-properties panel
+		Then I have selected the "Modal" properties container type
+		Given I have uploaded JSON for common-properties "CustomPanel_paramDef.json"
+
+		Then I click on toggle 0
+		Then I select the Tab 2
+		Then I click on slider
+		Then I pause for 2 seconds
+		Then I click on modal OK button
+		Then I verify custom panel

@@ -13,6 +13,7 @@ module.exports = function() {
 
 	this.Given("I have toggled the app side panel", function() {
 		browser.$("#action-bar-sidepanel-canvas").click("a");
+		browser.pause(500);
 	});
 
 	this.Given("I have toggled the app side common-properties panel", function() {

@@ -4,7 +4,6 @@ Feature: Sanity_Test_Palette
 
   As a human
   I want to create a canvas to test the flyout palette
-	@watch
 
   Scenario: Sanity test empty canvas with D3 rendering engine
 		Given I am on the test harness

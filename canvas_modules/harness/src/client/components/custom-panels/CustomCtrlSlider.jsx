@@ -9,7 +9,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { Slider } from "ap-components-react/dist/ap-components-react";
+import { Slider, Icon } from "ap-components-react/dist/ap-components-react";
 
 export default class CustomCtrlSlider extends React.Component {
 	constructor(props) {
@@ -26,7 +26,6 @@ export default class CustomCtrlSlider extends React.Component {
 	}
 
 	handleChange(evt, val) {
-
 		var message;
 		if (parseInt(val, 10) > 60 && parseInt(val, 10) <= 90) {
 			message = { type: "warning", text: "Slider greater then 60" };
@@ -40,19 +39,34 @@ export default class CustomCtrlSlider extends React.Component {
 	render() {
 		const message = this.props.condition.retrieveValidationErrorMessage(this.props.parameter);
 		var messageText;
+		var icon;
 		if (message && message.text) {
-			messageText = message.type.toUpperCase() + ": " + message.text;
+			messageText = message.text;
+			if (message.type === "warning") {
+				icon = (<Icon type="warning" />);
+			} else if (message.type === "error") {
+				icon = (<Icon type="error-o" />);
+			}
 		}
 		return (
-			<div className="custom-slider">
-				<Slider
-					onChange={this.handleChange}
-					start={this.state.controlValue}
-					lower={0}
-					upper={100}
-					step={1}
-				/>
-				{messageText}
+			<div>
+				<div className="custom-slider">
+					<div className="slider">
+						<Slider
+							onChange={this.handleChange}
+							start={this.state.controlValue}
+							lower={0}
+							upper={100}
+							step={1}
+						/>
+					</div>
+					<div className="icon">
+						{icon}
+					</div>
+				</div>
+				<div style={{ "margin-top": "-15px" }}>
+					{messageText}
+				</div>
 			</div>
 		);
 	}

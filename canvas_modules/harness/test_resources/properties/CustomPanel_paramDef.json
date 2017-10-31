@@ -1,9 +1,9 @@
 {
   "current_parameters": {
-    "custom-slider": "20.00",
-    "custom-toggle": true,
-    "custom-toggle2": true,
-    "text-field": "",
+    "custom_slider": "20.00",
+    "custom_toggle": true,
+    "custom_toggle2": true,
+    "text_field": "",
     "selected_fields": []
   },
   "parameters": [
@@ -13,19 +13,19 @@
       "role": "column"
     },
     {
-      "id": "custom-slider",
+      "id": "custom_slider",
       "type": "string"
     },
     {
-      "id": "custom-toggle",
+      "id": "custom_toggle",
       "type": "boolean"
     },
     {
-      "id": "custom-toggle2",
+      "id": "custom_toggle2",
       "type": "boolean"
     },
     {
-      "id": "text-field",
+      "id": "text_field",
       "type": "string"
     }
   ],
@@ -40,7 +40,7 @@
     },
     "parameter_info": [
       {
-        "parameter_ref": "text-field",
+        "parameter_ref": "text_field",
         "label": {
           "default": "Enter"
         },
@@ -67,24 +67,24 @@
         "type": "panels",
         "group_info": [
           {
-            "id": "text-field",
+            "id": "text_field",
             "type": "controls",
             "parameter_refs": [
-              "text-field"
+              "text_field"
             ]
           },
           {
             "id": "custom-toggle-panel",
             "type": "customPanel",
             "parameter_refs": [
-              "custom-toggle"
+              "custom_toggle"
             ]
           },
           {
             "id": "custom-toggle-panel",
             "type": "customPanel",
             "parameter_refs": [
-              "custom-toggle2"
+              "custom_toggle2"
             ]
           }
         ]
@@ -110,7 +110,7 @@
             "id": "custom-slider-panel",
             "type": "customPanel",
             "parameter_refs": [
-              "custom-slider"
+              "custom_slider"
             ]
           }
         ]
@@ -122,14 +122,14 @@
       "validation": {
         "fail_message": {
           "type": "error",
-          "focus_parameter_ref": "custom-toggle",
+          "focus_parameter_ref": "custom_toggle",
           "message": {
             "default": "Toggle 1 shouldn't be true"
           }
         },
         "evaluate": {
           "condition": {
-            "parameter_ref": "custom-toggle",
+            "parameter_ref": "custom_toggle",
             "op": "equals",
             "value": true
           }
@@ -139,11 +139,11 @@
     {
       "enabled": {
         "parameter_refs": [
-          "custom-toggle2"
+          "custom_toggle2"
         ],
         "evaluate": {
           "condition": {
-            "parameter_ref": "custom-toggle",
+            "parameter_ref": "custom_toggle",
             "op": "notEquals",
             "value": false
           }
@@ -153,11 +153,11 @@
     {
       "enabled": {
         "parameter_refs": [
-          "custom-toggle"
+          "custom_toggle"
         ],
         "evaluate": {
           "condition": {
-            "parameter_ref": "custom-toggle2",
+            "parameter_ref": "custom_toggle2",
             "op": "notEquals",
             "value": false
           }
@@ -167,13 +167,13 @@
     {
       "visible": {
         "parameter_refs": [
-          "custom-toggle",
-          "custom-toggle2"
+          "custom_toggle",
+          "custom_toggle2"
         ],
         "evaluate": {
           "condition": {
-            "parameter_ref": "text-field",
-            "op": "equals",
+            "parameter_ref": "text_field",
+            "op": "notEquals",
             "value": "hide"
           }
         }

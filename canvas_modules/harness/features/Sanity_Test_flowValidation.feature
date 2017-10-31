@@ -5,7 +5,7 @@ Feature: Sanity_Test2_D3
   As a human
   I want to load a canvas
   So I can verify which nodes have parameter messages
-@watch
+
   Scenario: Sanity test flow validation when open a flow
 		Given I am on the test harness
 		Given I have toggled the app side panel
@@ -19,7 +19,6 @@ Feature: Sanity_Test2_D3
 		Then I verify that there are 1 nodes with a "warning" indicator
 		Then I pause for 1 seconds
 
-@watch
   Scenario: Sanity test flow validation when adding a node
 		Given I am on the test harness
 		Given I have toggled the app side panel

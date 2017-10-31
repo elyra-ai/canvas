@@ -5,7 +5,6 @@ Feature: Sanity_Test_SecondaryToolbar.feature
 	As a human
 	I want to test secondaryToolbar operations
 	So I can build a canvas and perform secondaryToolbar operations
-@watch
 
 	Scenario: Sanity test for secondary toolbar Create and Delete button with the D3 rendering engine
 

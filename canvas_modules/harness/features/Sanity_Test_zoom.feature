@@ -5,7 +5,6 @@ Feature: Sanity_Test_zoom
 	As a human
 	I want to test zoom operations
 	So I can build a canvas and perform zoom operations
-@watch
 
 	Scenario: Sanity test for zoom operations with the D3 rendering engine
 		Given I am on the test harness

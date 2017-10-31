@@ -5,7 +5,6 @@ Feature: Sanity_Test_autoLayout
   As a human
   I want to load a canvas
   So I can test autoLayout operations to the canvas
-@watch
 
 Scenario: Sanity test for autoLayout operations in Vertical Fixed Layout
 	Given I am on the test harness

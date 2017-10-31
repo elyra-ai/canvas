@@ -5,7 +5,7 @@ Feature: Sanity_Test2_D3
   As a human
   I want to load a canvas
   So I can add more flow to the canvas
-@watch
+
   Scenario: Sanity test from loaded file with D3 rendering engine
 		Given I am on the test harness
 		Given I have toggled the app side panel

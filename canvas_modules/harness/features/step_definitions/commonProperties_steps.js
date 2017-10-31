@@ -29,12 +29,8 @@ module.exports = function() {
 		textbox.setValue("", textboxValue);
 		var okButton = getPropertiesApplyButton();
 		okButton.click();
-
-		browser.timeouts("script", 3000);
-		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
-		var eventLogJSON = JSON.parse(eventLog.value);
-
-		expect(textboxValue).toEqual((eventLogJSON[eventLogJSON.length - 1].data.form.colName).toString());
+		var lastEventLog = getLastEventLogData();
+		expect(textboxValue).toEqual((lastEventLog.data.form.colName).toString());
 	});
 
 	this.Then(/^I enter "([^"]*)" in the textbox Column name$/, function(textboxValue) {
@@ -43,13 +39,9 @@ module.exports = function() {
 		textbox.setValue("", textboxValue);
 		var okButton = getPropertiesApplyButton();
 		okButton.click();
-		browser.pause(500);
+		var lastEventLog = getLastEventLogData();
 
-		browser.timeoutsAsyncScript(3000);
-		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
-		var eventLogJSON = JSON.parse(eventLog.value);
-
-		expect(textboxValue).toEqual((eventLogJSON[eventLogJSON.length - 1].data.form.colName).toString());
+		expect(textboxValue).toEqual((lastEventLog.data.form.colName).toString());
 	});
 
 	this.Then(/^I select "([^"]*)" dropdown option$/, function(dropdownValue) {
@@ -61,11 +53,9 @@ module.exports = function() {
 		var okButton = getPropertiesApplyButton();
 		okButton.click();
 
-		browser.timeouts("script", 3000);
-		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
-		var eventLogJSON = JSON.parse(eventLog.value);
+		var lastEventLog = getLastEventLogData();
 
-		expect(dropdownValue).toEqual((eventLogJSON[eventLogJSON.length - 1].data.form.measurement).toString());
+		expect(dropdownValue).toEqual((lastEventLog.data.form.measurement).toString());
 	});
 
 	this.Then(/^I select "([^"]*)" option from Input columns select textbox$/, function(selectTextboxOption) {
@@ -141,11 +131,9 @@ module.exports = function() {
 		var okButton = getPropertiesApplyButton();
 		okButton.click();
 
-		browser.timeouts("script", 3000);
-		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
-		var eventLogJSON = JSON.parse(eventLog.value);
+		var lastEventLog = getLastEventLogData();
 
-		expect("Sex").toEqual((eventLogJSON[eventLogJSON.length - 1].data.form.inputFieldList).toString());
+		expect("Sex").toEqual((lastEventLog.data.form.inputFieldList).toString());
 
 	});
 
@@ -228,12 +216,10 @@ module.exports = function() {
 		var okButton = getPropertiesApplyButton();
 		okButton.click();
 
-		browser.timeouts("script", 3000);
-		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
-		var eventLogJSON = JSON.parse(eventLog.value);
+		var lastEventLog = getLastEventLogData();
 
-		expect("1").toEqual((eventLogJSON[eventLogJSON.length - 1].data.form.checkpointInterval).toString());
-		expect(radioButtonOption).toEqual((eventLogJSON[eventLogJSON.length - 1].data.form.impurity).toString());
+		expect("1").toEqual((lastEventLog.data.form.checkpointInterval).toString());
+		expect(radioButtonOption).toEqual((lastEventLog.data.form.impurity).toString());
 
 	});
 
@@ -299,11 +285,9 @@ module.exports = function() {
 		var okButton = getPropertiesApplyButton();
 		okButton.click();
 
-		browser.timeouts("script", 3000);
-		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
-		var eventLogJSON = JSON.parse(eventLog.value);
+		var lastEventLog = getLastEventLogData();
 
-		expect(selectText).toEqual((eventLogJSON[eventLogJSON.length - 1].data.form.conditionExpr).toString());
+		expect(selectText).toEqual((lastEventLog.data.form.conditionExpr).toString());
 	});
 
 	this.Then(/^I select Repeatable partition assignment checkbox and click Generate$/, function() {
@@ -324,14 +308,10 @@ module.exports = function() {
 		var okButton = getPropertiesApplyButton();
 		okButton.click();
 
-		browser.timeouts("script", 3000);
-		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
-		var eventLogJSON = JSON.parse(eventLog.value);
-		var eventLogString = JSON.stringify(eventLog);
-		var checkboxPartitionClicked = eventLogString.includes("samplingSeed");
-		browser.pause(500);
+		var lastEventLog = getLastEventLogData();
+		var checkboxPartitionClicked = JSON.stringify(lastEventLog).includes("samplingSeed");
 		expect(true).toEqual(checkboxPartitionClicked);
-		expect("-1").not.toEqual((eventLogJSON[eventLogJSON.length - 1].data.form.samplingSeed).toString());
+		expect("-1").not.toEqual((lastEventLog.data.form.samplingSeed).toString());
 	});
 
 	this.Then(/^I change Order for Drug field and reorder$/, function() {
@@ -378,16 +358,11 @@ module.exports = function() {
 
 		var okButton = getPropertiesApplyButton();
 		okButton.click();
-		browser.pause(500);
-
-		browser.timeouts("script", 3000);
-		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
-		var eventLogJSON = JSON.parse(eventLog.value);
-
-		var naKey = (JSON.stringify(eventLogJSON[eventLogJSON.length - 1].data.form.keys[0])).includes("Na");
-		var drugKey = (JSON.stringify(eventLogJSON[eventLogJSON.length - 1].data.form.keys[1])).includes("Drug");
-		var drugValue = (JSON.stringify(eventLogJSON[eventLogJSON.length - 1].data.form.keys[1])).includes("Ascending");
-		var cholesterolKey = (JSON.stringify(eventLogJSON[eventLogJSON.length - 1].data.form.keys[2])).includes("Cholesterol");
+		var lastEventLog = getLastEventLogData();
+		var naKey = (JSON.stringify(lastEventLog.data.form.keys[0])).includes("Na");
+		var drugKey = (JSON.stringify(lastEventLog.data.form.keys[1])).includes("Drug");
+		var drugValue = (JSON.stringify(lastEventLog.data.form.keys[1])).includes("Ascending");
+		var cholesterolKey = (JSON.stringify(lastEventLog.data.form.keys[2])).includes("Cholesterol");
 
 		expect(true).toEqual(naKey);
 		expect(true).toEqual(drugKey);
@@ -464,18 +439,14 @@ module.exports = function() {
 	});
 
 	this.Then("I verify testValue is not present", function() {
-		browser.timeoutsAsyncScript(3000);
-		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
-		var eventLogJSON = JSON.parse(eventLog.value);
-		expect("").toEqual((eventLogJSON[eventLogJSON.length - 2].data.form.colName).toString());
+		var lastEventLog = getLastEventLogData(2);
+		expect("").toEqual((lastEventLog.data.form.colName).toString());
 
 	});
 
 	this.Then("I verify testValue is present", function() {
-		browser.timeoutsAsyncScript(3000);
-		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
-		var eventLogJSON = JSON.parse(eventLog.value);
-		expect("testValue").toEqual((eventLogJSON[eventLogJSON.length - 2].data.form.colName).toString());
+		var lastEventLog = getLastEventLogData(2);
+		expect("testValue").toEqual((lastEventLog.data.form.colName).toString());
 	});
 
 	this.Then(/^I select the Tab (\d+)$/, function(tabNumber) {
@@ -508,6 +479,56 @@ module.exports = function() {
 		var closeButton = getPropertiesCancelButton(true);
 		closeButton.click();
 	});
+
+	this.Then(/^I click on toggle (\d+)$/, function(toggle) {
+		var toggleBtn = browser.$$(".custom-toggle")[toggle].$$("div")[0];
+		toggleBtn.click();
+	});
+
+	this.Then("I click on slider", function() {
+		var sliderInput = browser.$(".text--slider");
+		// needed since screen sizes can be different
+		for (var cntr = 1; cntr < 200; cntr++) {
+			browser.leftClick(".noUi-origin", 15, 2);
+			var value = parseInt(sliderInput.getValue(), 10);
+			if (value >= 65) {
+				return;
+			}
+		}
+	});
+
+	this.Then("I verify custom panel", function() {
+		var lastEventLog = getLastEventLogData();
+		// Don't know the exact number but the slider value should be 65 or more
+		expect(65).toBeLessThanOrEqual(parseInt(lastEventLog.data.form.custom_slider, 10));
+		expect(false).toEqual(lastEventLog.data.form.custom_toggle);
+		// expect 2 error messages from custom panels
+		expect(2).toEqual(lastEventLog.data.messages.length);
+	});
+
+	this.Then("I click on modal OK button", function() {
+		var okButton = getPropertiesApplyButton();
+		okButton.click();
+	});
+
+	function getLastEventLogData(override) {
+		var message = 1;
+		if (override) {
+			message = override;
+		}
+		browser.timeouts("script", 3000);
+		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
+		var eventLogJSON = JSON.parse(eventLog.value);
+		var lastEventLog = eventLogJSON[eventLogJSON.length - message];
+		// try again if data isn't found
+		if (!lastEventLog.data) {
+			browser.pause(500);
+			eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
+			eventLogJSON = JSON.parse(eventLog.value);
+			lastEventLog = eventLogJSON[eventLogJSON.length - message];
+		}
+		return lastEventLog;
+	}
 
 	function getPropertiesApplyButton() {
 		return browser.$("#properties-apply-button");

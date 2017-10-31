@@ -9,7 +9,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { ToggleButton } from "ap-components-react/dist/ap-components-react";
+import { ToggleButton, Icon } from "ap-components-react/dist/ap-components-react";
 
 export default class CustomCtrlToggle extends React.Component {
 	constructor(props) {
@@ -36,8 +36,14 @@ export default class CustomCtrlToggle extends React.Component {
 	render() {
 		const message = this.props.condition.retrieveValidationErrorMessage(this.props.parameter);
 		var messageText;
+		var icon;
 		if (message && message.text) {
 			messageText = message.text;
+			if (message.type === "warning") {
+				icon = (<Icon type="warning" />);
+			} else if (message.type === "error") {
+				icon = (<Icon type="error-o" />);
+			}
 		}
 		const state = this.props.condition.getControlState(this.props.parameter);
 		var visibility;
@@ -48,8 +54,8 @@ export default class CustomCtrlToggle extends React.Component {
 			disabled = true;
 		}
 		return (
-			<div>
-				<div className="custom-toggle" style={visibility}>
+			<div style={visibility}>
+				<div className="custom-toggle" >
 					<ToggleButton
 						disabled={disabled}
 						id={this.props.parameter}
@@ -57,6 +63,9 @@ export default class CustomCtrlToggle extends React.Component {
 						onChange={this.handleChange}
 					/>
 					<div className="text">Toggle</div>
+					<div className="icon">
+						{icon}
+					</div>
 				</div>
 				{messageText}
 			</div>
