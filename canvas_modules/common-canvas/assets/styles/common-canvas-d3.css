@@ -307,6 +307,19 @@
 	fill: #c5ccd6;
 }
 
+/* Connection styles for comment links for the Austin theme. */
+
+.d3-new-connection-line-austin[linkType=commentLink] {
+  stroke: gray;
+	stroke-width: 2;
+	stroke-dasharray: 10 10;
+	fill: none;
+}
+
+.d3-new-connection-blob-austin[linkType=commentLink] {
+	stroke: gray;
+	fill: #FFFFFF;  /* White */
+}
 
 /* Halo - Temporary connector line pulled out from halo */
 

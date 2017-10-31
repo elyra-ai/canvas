@@ -1764,16 +1764,6 @@ export default class CanvasD3Layout {
 			.attr("class", this.newConnectionLineClass)
 			.attr("linkType", linkType);
 
-		// this.canvas.selectAll("." + this.newConnectionLineStartClass)
-		// 	.data(this.drawingNewLinkArray)
-		// 	.enter()
-		// 		.append("circle")
-		// 			.attr("cx", (d) => d.x1)
-		// 			.attr("cy", (d) => d.y1)
-		// 			.attr("r", this.commentPortRadius)
-		// 			.attr("class", this.newConnectionLineStartClass)
-		// 			.attr("linkType", linkType);
-
 		this.canvas.selectAll("." + this.newConnectionLineBlobClass)
 			.data(this.drawingNewLinkArray)
 			.enter()
