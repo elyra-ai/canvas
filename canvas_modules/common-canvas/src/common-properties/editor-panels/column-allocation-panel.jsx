@@ -130,6 +130,7 @@ export default class ColumnAllocationPanel extends React.Component {
 							name={this.props.panel.id}
 							dataModel={this.props.dataModel}
 							rows={this.props.children.length * 5}
+							propertiesClassname={this.props.propertiesClassname}
 						/>
 					</Col>
 					<Col md={9} className="column-allocation-panel-column">
@@ -146,5 +147,6 @@ export default class ColumnAllocationPanel extends React.Component {
 ColumnAllocationPanel.propTypes = {
 	panel: PropTypes.object,
 	dataModel: PropTypes.object,
-	controlAccessor: PropTypes.func
+	controlAccessor: PropTypes.func,
+	propertiesClassname: PropTypes.string
 };

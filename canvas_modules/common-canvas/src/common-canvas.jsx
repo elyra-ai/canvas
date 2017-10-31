@@ -40,6 +40,7 @@ export default class CommonCanvas extends React.Component {
 			showContextMenu: false,
 			contextMenuDef: {},
 			toolbarConfig: this.props.toolbarConfig,
+			rightFlyoutContent: this.props.rightFlyoutContent,
 			posLastClicked: { x: 0, y: 0 }
 		};
 
@@ -97,6 +98,12 @@ export default class CommonCanvas extends React.Component {
 			if (!identical) {
 				this.setState({ toolbarConfig: newProps.toolbarConfig });
 			}
+		}
+
+		if (newProps.rightFlyoutContent !== this.state.rightFlyoutContent) {
+			this.setState({
+				rightFlyoutContent: newProps.rightFlyoutContent
+			});
 		}
 	}
 
@@ -335,6 +342,10 @@ export default class CommonCanvas extends React.Component {
 			if (source.clickedPos) {
 				this.setState({ posLastClicked: source.clickedPos });
 			}
+
+			// if (this.state.rightFlyoutContent && this.props.closeRightFlyout) {
+			// 	this.props.closeRightFlyout(); // Equivalent of canceling
+			// }
 		}
 
 		if (this.props.clickActionHandler) {
@@ -354,6 +365,8 @@ export default class CommonCanvas extends React.Component {
 		let paletteClass = "canvas-palette-flyout-div-closed";
 		let contextMenuWrapper = null;
 		let canvasToolbar = null;
+		let rightFlyout = (<div id="right-flyout-panel" style={{ width: "0px" }} />);
+		const canvasStyle = { minWidth: "258px" };
 		const canvasJSON = ObjectModel.getCanvasInfo();
 
 		if (canvasJSON !== null) {
@@ -404,6 +417,7 @@ export default class CommonCanvas extends React.Component {
 				} else {
 					if (this.state.isPaletteOpen) {
 						paletteClass = "canvas-palette-flyout-div-open";
+						canvasStyle.minWidth = (parseFloat(canvasStyle.minWidth) + 250) + "px";
 					}
 					palette = (<PaletteFlyout
 						paletteJSON={ObjectModel.getPaletteData()}
@@ -426,16 +440,25 @@ export default class CommonCanvas extends React.Component {
 					zoomOut={this.zoomOut}
 					zoomToFit={this.zoomToFit}
 					toolbarMenuActionHandler={this.toolbarMenuActionHandler}
+					rightFlyoutOpen={this.props.showRightFlyout}
 				/>);
 			}
 		}
 
+		if (typeof this.state.rightFlyoutContent !== "undefined" && this.state.rightFlyoutContent !== null && this.props.showRightFlyout) {
+			canvasStyle.minWidth = (parseFloat(canvasStyle.minWidth) + 318) + "px";
+			rightFlyout = (<div id="right-flyout-panel" style={{ width: "318px" }}>
+				{this.state.rightFlyoutContent}
+			</div>);
+		}
+
 		return (
-			<div id="common-canvas" >
+			<div id="common-canvas" style={canvasStyle}>
 				{palette}
 				<div id="common-canvas-items-container" className={paletteClass}>
 					{canvasToolbar}
 					{canvas}
+					{rightFlyout}
 				</div>
 			</div>
 		);
@@ -450,5 +473,8 @@ CommonCanvas.propTypes = {
 	clickActionHandler: PropTypes.func,
 	decorationActionHandler: PropTypes.func,
 	toolbarMenuActionHandler: PropTypes.func,
-	toolbarConfig: PropTypes.array
+	toolbarConfig: PropTypes.array,
+	rightFlyoutContent: PropTypes.object,
+	showRightFlyout: PropTypes.bool,
+	closeRightFlyout: PropTypes.func
 };

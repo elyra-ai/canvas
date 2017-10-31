@@ -330,8 +330,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={TEXTFIELD_ERROR_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 							<p>Below is an example of a textfield control that has a condition
 								of <span className="highlight">type: warning</span> instead of <span className="highlight">error</span>.
@@ -339,8 +338,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={TEXTFIELD_WARNING_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -358,8 +356,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={TEXTFIELD_COLNOTEXISTS_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -381,8 +378,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={TEXTAREA_ERROR_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -400,8 +396,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={TEXTAREA_WARNING_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -423,8 +418,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={PASSWORD_FIELD_ERROR_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -444,8 +438,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={EXPRESSION_ERROR_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 							<p>Below is an example of a expression control that will show a warning if the input
 								field fails the <span className="highlight">isNotEmpty</span> condition.
@@ -453,8 +446,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={EXPRESSION_WARNING_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div id="expression-section-column-code" className="section-column section-column-code">
@@ -474,8 +466,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={NUMBERFIELD_ERROR_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -495,8 +486,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={NUMBERFIELD_GENERATOR_WARNING_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -517,8 +507,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={CHECKBOX_SINGLE_ERROR_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -534,8 +523,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={CHECKBOX_SINGLE_WARNING_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -557,8 +545,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={CHECKBOX_SET_ERROR_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -577,8 +564,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={CHECKBOX_SET_WARNING_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -600,8 +586,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={RADIOSET_HORIZONTAL_ERROR_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -619,8 +604,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={RADIOSET_VERTICAL_WARNING_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -651,8 +635,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={ONEOFSELECT_ERROR_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -667,8 +650,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={ONEOFSELECT_WARNING_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -690,8 +672,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={SOMEOFSELECT_ERROR_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -707,8 +688,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={SOMEOFSELECT_WARNING_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -731,8 +711,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={SELECTCOLUMN_ERROR_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -752,8 +731,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={SELECTCOLUMNS_ERROR_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -782,8 +760,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={STRUCTURETABLE_ERROR_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 							<p>Noticed that in the subpanel, a warning will be shown when a number outside of the range 0 and 130 is entered.
 								A separte condition is defined for the numberfield control. <br />
@@ -804,8 +781,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={STRUCTURETABLE_WARNING_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -822,8 +798,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={STRUCTURETABLE_COLNOTEXISTS_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 							<p>In a map, the <span className="highlight">key</span> field will be compared to the user's input for a <span className="highlight">colNotExists</span>.
 								If the user's input is the same as the <span className="highlight">key</span> field, no error or warning will be shown. If the user's
@@ -851,8 +826,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={STRUCTURELISTEDITOR_ERROR_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -870,8 +844,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={STRUCTURELISTEDITOR_WARNING_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -918,8 +891,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={STRING_GROUP_ERROR_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -934,8 +906,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={STRING_GROUP_WARNING_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -950,8 +921,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={NUMBER_GROUP_ERROR_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -973,8 +943,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={VISIBLE_GROUP_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -1000,8 +969,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={ENABLED_GROUP_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">

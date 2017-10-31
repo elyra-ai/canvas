@@ -50,6 +50,8 @@ _defineConstant("STRAIGHT_LINKS", "Straight");
 
 _defineConstant("FLYOUT", "Flyout");
 _defineConstant("MODAL", "Modal");
+_defineConstant("CUSTOM", "Custom");
+_defineConstant("EDITING", "Editing");
 
 _defineConstant("CHOOSE_FROM_LOCATION", "Choose from location...");
 

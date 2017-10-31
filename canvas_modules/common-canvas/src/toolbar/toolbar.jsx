@@ -331,6 +331,10 @@ class Toolbar extends React.Component {
 			toolbarWidth = canvasWidth - 250;
 		}
 
+		if (this.props.rightFlyoutOpen) {
+			toolbarWidth -= 320;
+		}
+
 		const that = this;
 		let actionContainer = <div />;
 		if (this.state.config && this.state.config.length > 0) {
@@ -384,7 +388,8 @@ Toolbar.propTypes = {
 	zoomIn: PropTypes.func,
 	zoomOut: PropTypes.func,
 	zoomToFit: PropTypes.func,
-	toolbarMenuActionHandler: PropTypes.func
+	toolbarMenuActionHandler: PropTypes.func,
+	rightFlyoutOpen: PropTypes.bool
 };
 
 export default Toolbar;

@@ -95,5 +95,5 @@ Scenario: Sanity test for autoLayout operations in None Fixed Layout
 	Then I verify the node 3 position is "translate(611, 151)"
 	Then I verify the node 4 position is "translate(96, 219)"
 	Then I verify the node 5 position is "translate(328, 219)"
-	Then I verify the node 6 position is "translate(70, 317)"
+	Then I verify the node 6 position is "translate(70, 315)"
 	Then I verify the comment 1 position is "translate(132, 103)"

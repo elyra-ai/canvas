@@ -427,5 +427,6 @@ ColumnStructureTableControl.propTypes = {
 	requiredParameters: PropTypes.array,
 	updateValidationErrorMessage: PropTypes.func,
 	retrieveValidationErrorMessage: PropTypes.func,
-	updateControlValue: PropTypes.func
+	updateControlValue: PropTypes.func,
+	customContainer: PropTypes.bool
 };

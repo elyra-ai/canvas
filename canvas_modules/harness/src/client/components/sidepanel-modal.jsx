@@ -16,11 +16,13 @@ import { FormControl } from "react-bootstrap";
 import PropTypes from "prop-types";
 import {
 	Button,
-	ToggleButton,
+	RadioGroup,
 	Dropdown
 } from "ap-components-react/dist/ap-components-react";
 import {
-	CHOOSE_FROM_LOCATION
+	CHOOSE_FROM_LOCATION,
+	FLYOUT,
+	MODAL
 } from "../constants/constants.js";
 import FormsService from "../services/FormsService";
 
@@ -37,7 +39,7 @@ export default class SidePanelModal extends React.Component {
 		this.onPropertiesSelect = this.onPropertiesSelect.bind(this);
 		this.isReadyToSubmitProperties = this.isReadyToSubmitProperties.bind(this);
 		this.openPropertiesEditorDialog = this.openPropertiesEditorDialog.bind(this);
-		this.useModalPropertiesDialog = this.useModalPropertiesDialog.bind(this);
+		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
 	}
 
 	componentWillMount() {
@@ -65,6 +67,7 @@ export default class SidePanelModal extends React.Component {
 				fileChooserVisible: false
 			}, function() {
 				that.getSelectedFile();
+				that.props.closeSidePanelModal();
 			});
 		}
 	}
@@ -107,6 +110,7 @@ export default class SidePanelModal extends React.Component {
 		} else {
 			this.getSelectedFile();
 		}
+		this.props.closeSidePanelModal();
 	}
 
 	isReadyToSubmitProperties() {
@@ -131,8 +135,8 @@ export default class SidePanelModal extends React.Component {
 		}
 	}
 
-	useModalPropertiesDialog(changeEvent) {
-		this.props.useModalPropertiesDialog(changeEvent.target.checked);
+	usePropertiesContainerType(evt, obj) {
+		this.props.usePropertiesContainerType(obj.selected);
 	}
 
 	render() {
@@ -178,25 +182,29 @@ export default class SidePanelModal extends React.Component {
 					disabled={!this.isReadyToSubmitProperties()}
 					onClick={this.submitProperties.bind(this)}
 				>
-					Open Dialog
+					Show Properties
 				</Button>
-
-				<form>
-					<div className="sidepanel-headers">Modal Dialog</div>
-					<div>
-						<ToggleButton dark
-							id="sidepanel-modal-dialog-toggle"
-							checked={this.props.modalPropertiesDialog}
-							onChange={this.useModalPropertiesDialog}
-						/>
-					</div>
-				</form>
 			</div>
+		</div>);
+
+		var containerType = (<div className="sidepanel-children" id="sidepanel-properties-container-type">
+			<div className="sidepanel-headers">Container Type</div>
+			<RadioGroup
+				name="properties-container_type_radio"
+				dark
+				onChange={this.usePropertiesContainerType}
+				choices={[
+					FLYOUT,
+					MODAL
+				]}
+				selected={this.props.propertiesContainerType}
+			/>
 		</div>);
 
 		return (
 			<div>
 				{propertiesInput}
+				{containerType}
 			</div>
 		);
 	}
@@ -207,7 +215,8 @@ SidePanelModal.propTypes = {
 	closePropertiesEditorDialog: PropTypes.func,
 	openPropertiesEditorDialog: PropTypes.func,
 	setPropertiesJSON: PropTypes.func,
-	useModalPropertiesDialog: PropTypes.func,
-	modalPropertiesDialog: PropTypes.bool,
-	showPropertiesDialog: PropTypes.bool
+	usePropertiesContainerType: PropTypes.func,
+	propertiesContainerType: PropTypes.string,
+	showPropertiesDialog: PropTypes.bool,
+	closeSidePanelModal: PropTypes.func
 };

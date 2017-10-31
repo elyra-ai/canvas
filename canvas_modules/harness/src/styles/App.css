@@ -9,6 +9,7 @@
 
 #app-container {
   height: 100vh;
+  overflow: hidden;
 }
 
 #canvas-container {
@@ -121,7 +122,7 @@
   transition: width 0.5s;
   color: #F9F9FB;
   overflow: auto;
-  z-index: 3;
+  z-index: 100;
   box-sizing: border-box;
   font-size: small;
 }

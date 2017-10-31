@@ -242,8 +242,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={CONTROLS_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -263,8 +262,7 @@ class CommonPropertiesComponents extends React.Component {
 								<CommonProperties
 									showPropertiesDialog
 									propertiesInfo={PANELS_PROPS_INFO}
-									useModalDialog={false}
-									useOwnContainer
+									containerType="Custom"
 								/>
 							</div>
 							<div className="section-column section-column-code">
@@ -287,8 +285,7 @@ class CommonPropertiesComponents extends React.Component {
 								<CommonProperties
 									showPropertiesDialog
 									propertiesInfo={TABS_PROPS_INFO}
-									useModalDialog={false}
-									useOwnContainer
+									containerType="Custom"
 								/>
 							</div>
 							<div className="section-column section-column-code">
@@ -310,8 +307,7 @@ class CommonPropertiesComponents extends React.Component {
 								<CommonProperties
 									showPropertiesDialog
 									propertiesInfo={SUBTABS_PROPS_INFO}
-									useModalDialog={false}
-									useOwnContainer
+									containerType="Custom"
 								/>
 							</div>
 							<div className="section-column section-column-code">
@@ -337,8 +333,7 @@ class CommonPropertiesComponents extends React.Component {
 								<CommonProperties
 									showPropertiesDialog
 									propertiesInfo={PANEL_SELECTOR_PROPS_INFO}
-									useModalDialog={false}
-									useOwnContainer
+									containerType="Custom"
 								/>
 							</div>
 							<div className="section-column section-column-code">
@@ -359,8 +354,7 @@ class CommonPropertiesComponents extends React.Component {
 								<CommonProperties
 									showPropertiesDialog
 									propertiesInfo={CHECKBOX_PANEL_PROPS_INFO}
-									useModalDialog={false}
-									useOwnContainer
+									containerType="Custom"
 								/>
 							</div>
 							<div className="section-column section-column-code">
@@ -386,8 +380,7 @@ class CommonPropertiesComponents extends React.Component {
 								<CommonProperties
 									showPropertiesDialog
 									propertiesInfo={COLUMNSELECTION_PROPS_INFO}
-									useModalDialog={false}
-									useOwnContainer
+									containerType="Custom"
 								/>
 							</div>
 							<div className="section-column section-column-code">
@@ -415,8 +408,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={TEXTFIELD_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -434,8 +426,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={TEXTAREA_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -453,8 +444,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={PASSWORD_FIELD_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -477,8 +467,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={EXPRESSION_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -496,8 +485,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={NUMBERFIELD_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -514,8 +502,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={NUMBERFIELD_GENERATOR_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -541,8 +528,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={CHECKBOX_SINGLE_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -564,8 +550,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={CHECKBOX_SET_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -586,8 +571,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={RADIOSET_HORIZONTAL_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -603,8 +587,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={RADIOSET_VERTICAL_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -632,8 +615,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={ONEOFSELECT_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -654,8 +636,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={FORCED_RADIOSET_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -679,8 +660,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={SOMEOFSELECT_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -701,8 +681,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={FORCED_CHECKBOX_SET_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -723,8 +702,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={SELECTCOLUMN_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -748,8 +726,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={SELECTCOLUMNS_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -768,8 +745,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={TOGGLETEXT_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -786,8 +762,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={TOGGLETEXTICONS_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -823,8 +798,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={STRUCTURETABLE_INLINE_TOGGLE_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -847,8 +821,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={STRUCTURELISTEDITOR_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -877,8 +850,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={STRUCTURETABLE_INLINE_DROPDOWN_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -895,8 +867,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={STRUCTURETABLE_INLINE_TEXTFIELD_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -914,8 +885,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={STRUCTURETABLE_SUBPANEL_TEXTFIELD_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -936,8 +906,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={STRUCTURETABLE_MOVEABLE_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -965,8 +934,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={STRUCTURETABLE_SORTABLE_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -993,8 +961,7 @@ class CommonPropertiesComponents extends React.Component {
 							<CommonProperties
 								showPropertiesDialog
 								propertiesInfo={STRUCTURETABLE_FILTERABLE_PROPS_INFO}
-								useModalDialog={false}
-								useOwnContainer
+								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">

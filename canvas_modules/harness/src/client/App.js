@@ -34,6 +34,7 @@ import {
 	PORTS_CONNECTION,
 	VERTICAL_FORMAT,
 	CURVE_LINKS,
+	CUSTOM,
 	FLYOUT,
 	NONE
 } from "./constants/constants.js";
@@ -51,7 +52,7 @@ class App extends React.Component {
 			consoleOpened: false,
 			contextMenuInfo: {},
 			internalObjectModel: true,
-			modalPropertiesDialog: true,
+			propertiesContainerType: FLYOUT,
 			openSidepanelCanvas: false,
 			openSidepanelModal: false,
 			paletteNavEnabled: false,
@@ -82,9 +83,10 @@ class App extends React.Component {
 
 		this.sidePanelCanvas = this.sidePanelCanvas.bind(this);
 		this.sidePanelModal = this.sidePanelModal.bind(this);
+		this.closeSidePanelModal = this.closeSidePanelModal.bind(this);
 		this.setLayoutDirection = this.setLayoutDirection.bind(this);
 		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
-		this.useModalPropertiesDialog = this.useModalPropertiesDialog.bind(this);
+		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
 		this.setRenderingEngine = this.setRenderingEngine.bind(this);
 		this.setConnectionType = this.setConnectionType.bind(this);
 		this.setNodeFormatType = this.setNodeFormatType.bind(this);
@@ -210,6 +212,14 @@ class App extends React.Component {
 		});
 	}
 
+	closeSidePanelModal() {
+		this.setState({
+			openSidepanelModal: false,
+			openSidepanelCanvas: false,
+			selectedPanel: null
+		});
+	}
+
 	log(evt, data, content) {
 		var event = {
 			"timestamp": new Date().toLocaleString(),
@@ -259,9 +269,9 @@ class App extends React.Component {
 		this.log("use internal object model", enabled);
 	}
 
-	useModalPropertiesDialog(enabled) {
-		this.setState({ modalPropertiesDialog: enabled });
-		this.log("use modal properties dialog", enabled);
+	usePropertiesContainerType(type) {
+		this.setState({ propertiesContainerType: type });
+		this.log("set properties container", type);
 	}
 
 	// common-canvas
@@ -276,11 +286,12 @@ class App extends React.Component {
 		this.log("applyDiagramEdit()", data.editType);
 	}
 
-	applyPropertyChanges(form, appData, messages) {
+	applyPropertyChanges(form, appData, additionalInfo) {
 		var data = {
 			form: form,
 			appData: appData,
-			messages: messages
+			messages: additionalInfo.messages,
+			nodeTitle: additionalInfo.nodeTitle
 		};
 		this.log("applyPropertyChanges()", data);
 	}
@@ -645,6 +656,33 @@ class App extends React.Component {
 			{ action: "arrangeVertically", label: "Arrange Vertically", enable: layoutAction }
 		];
 
+		var commonProperties = (
+			<CommonProperties
+				showPropertiesDialog={this.state.showPropertiesDialog}
+				propertiesInfo={this.state.propertiesInfo}
+				containerType={this.state.propertiesContainerType === FLYOUT ? CUSTOM : this.state.propertiesContainerType}
+				applyLabel="Apply"
+				rejectLabel="Reject"
+				customPanels={[CustomSliderPanel, CustomTogglePanel]}
+				rightFlyout={this.state.propertiesContainerType === FLYOUT}
+			/>);
+
+		let commonPropertiesContainer = null;
+		let rightFlyoutContent = null;
+		let showRightFlyoutProperties = false;
+		if (this.state.propertiesContainerType === FLYOUT) {
+			rightFlyoutContent = (<div id="common-properties" style={{ height: "100%" }}>
+				{commonProperties}
+			</div>);
+			showRightFlyoutProperties = this.state.showPropertiesDialog && this.state.propertiesContainerType === FLYOUT;
+		} else {
+			commonPropertiesContainer = (<IntlProvider key="IntlProvider2" locale={ locale } messages={ messages }>
+				<div id="common-properties">
+					{commonProperties}
+				</div>
+			</IntlProvider>);
+		}
+
 		var commonCanvas = (<div id="canvas-container">
 			<CommonCanvas
 				config={commonCanvasConfig}
@@ -655,17 +693,9 @@ class App extends React.Component {
 				decorationActionHandler= {this.decorationActionHandler}
 				toolbarConfig={toolbarConfig}
 				toolbarMenuActionHandler={this.toolbarMenuActionHandler}
-			/>
-		</div>);
-
-		var commonProperties = (<div id="common-properties">
-			<CommonProperties
-				showPropertiesDialog={this.state.showPropertiesDialog}
-				propertiesInfo={this.state.propertiesInfo}
-				useModalDialog={this.state.modalPropertiesDialog}
-				applyLabel="Apply"
-				rejectLabel="Reject"
-				customPanels={[CustomSliderPanel, CustomTogglePanel]}
+				rightFlyoutContent={rightFlyoutContent}
+				showRightFlyout={showRightFlyoutProperties}
+				closeRightFlyout={this.closePropertiesEditorDialog}
 			/>
 		</div>);
 
@@ -675,9 +705,10 @@ class App extends React.Component {
 				selectedPanel={this.state.selectedPanel}
 				enableNavPalette={this.enableNavPalette}
 				internalObjectModel={this.state.internalObjectModel}
-				modalPropertiesDialog={this.state.modalPropertiesDialog}
+				propertiesContainerType={this.state.propertiesContainerType}
 				openPropertiesEditorDialog={this.openPropertiesEditorDialog}
 				closePropertiesEditorDialog={this.closePropertiesEditorDialog}
+				closeSidePanelModal={this.closeSidePanelModal}
 				openSidepanelCanvas={this.state.openSidepanelCanvas}
 				openSidepanelModal={this.state.openSidepanelModal}
 				setDiagramJSON={this.setDiagramJSON}
@@ -686,7 +717,8 @@ class App extends React.Component {
 				setLayoutDirection={this.setLayoutDirection}
 				showPropertiesDialog={this.state.showPropertiesDialog}
 				useInternalObjectModel={this.useInternalObjectModel}
-				useModalPropertiesDialog={this.useModalPropertiesDialog}
+				usePropertiesContainerType={this.usePropertiesContainerType}
+				propertiesContainerType={this.state.propertiesContainerType}
 				setRenderingEngine={this.setRenderingEngine}
 				setConnectionType={this.setConnectionType}
 				setNodeFormatType={this.setNodeFormatType}
@@ -694,9 +726,10 @@ class App extends React.Component {
 				setPaletteLayout={this.setPaletteLayout}
 				log={this.log}
 			/>
-			<IntlProvider key="IntlProvider2" locale={ locale } messages={ messages }>
+			{/* <IntlProvider key="IntlProvider2" locale={ locale } messages={ messages }>
 				{commonProperties}
-			</IntlProvider>
+			</IntlProvider>*/}
+			{commonPropertiesContainer}
 			<IntlProvider key="IntlProvider" locale={ locale } messages={ messages }>
 				{commonCanvas}
 			</IntlProvider>

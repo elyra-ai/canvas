@@ -80,8 +80,10 @@ Feature: Sanity_Test_undoRedo
 		Then I verify the number of comments are 0
 
 		Given I have toggled the app side common-properties panel
+		Then I have selected the "Modal" properties container type
 
 		Given I have uploaded JSON for common-properties "org.apache.spark.ml.ibm.transformers.AddColumn.json"
+		Then I pause for 1 seconds
 		Then I enter "testValue" in the textbox Column name
 		Then I click undo
 		Then I verify testValue is not present

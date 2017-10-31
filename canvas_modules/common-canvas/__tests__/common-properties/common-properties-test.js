@@ -32,41 +32,39 @@ describe("CommonProperties renders correctly", () => {
 		const wrapper = createCommonProperties(true);
 		expect(wrapper.prop("showPropertiesDialog")).to.equal(true);
 		expect(wrapper.prop("propertiesInfo")).to.equal(propertiesInfo);
-		expect(wrapper.prop("useModalDialog")).to.equal(true);
-		expect(wrapper.prop("useOwnContainer")).to.equal(false);
+		expect(wrapper.prop("containerType")).to.equal(true);
 		expect(wrapper.prop("applyLabel")).to.equal("Apply");
 		expect(wrapper.prop("rejectLabel")).to.equal("REJECTED");
 	});
 
 	it("should render one <PropertiesDialog/> component", () => {
-		const wrapper = createCommonProperties(true);
+		const wrapper = createCommonProperties("Modal");
 		expect(wrapper.find(PropertiesDialog)).to.have.length(1);
 	});
 
 	it("should render one <PropertiesEditing/> component", () => {
-		const wrapper = createCommonProperties(false);
+		const wrapper = createCommonProperties("Editing");
 		expect(wrapper.find(PropertiesEditing)).to.have.length(1);
 	});
 
 	it("should render the applyLabel property", () => {
-		const wrapper = createCommonProperties(false);
+		const wrapper = createCommonProperties("Editing");
 		expect(wrapper.instance().props.applyLabel).to.equal("Apply");
 	});
 
 	it("should render the rejectLabel property", () => {
-		const wrapper = createCommonProperties(false);
+		const wrapper = createCommonProperties("Editing");
 		expect(wrapper.instance().props.rejectLabel).to.equal("REJECTED");
 	});
 
 });
 
-function createCommonProperties(useModalDialog) {
+function createCommonProperties(container) {
 	const wrapper = mount(
 		<CommonProperties
 			showPropertiesDialog
 			propertiesInfo={propertiesInfo}
-			useModalDialog={useModalDialog}
-			useOwnContainer={false}
+			containerType={container}
 			applyLabel="Apply"
 			rejectLabel="REJECTED"
 		/>

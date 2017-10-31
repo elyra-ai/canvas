@@ -52,8 +52,9 @@ export default class SidePanel extends React.Component {
 				openPropertiesEditorDialog={this.props.openPropertiesEditorDialog}
 				setPropertiesJSON={this.props.setPropertiesJSON}
 				showPropertiesDialog={this.props.showPropertiesDialog}
-				modalPropertiesDialog={this.props.modalPropertiesDialog}
-				useModalPropertiesDialog={this.props.useModalPropertiesDialog}
+				usePropertiesContainerType={this.props.usePropertiesContainerType}
+				propertiesContainerType={this.props.propertiesContainerType}
+				closeSidePanelModal={this.props.closeSidePanelModal}
 			/>);
 			break;
 		default:
@@ -73,6 +74,7 @@ SidePanel.propTypes = {
 	enableNavPalette: PropTypes.func,
 	internalObjectModel: PropTypes.bool,
 	closePropertiesEditorDialog: PropTypes.func,
+	closeSidePanelModal: PropTypes.func,
 	openPropertiesEditorDialog: PropTypes.func,
 	openSidepanelCanvas: PropTypes.bool,
 	openSidepanelModal: PropTypes.bool,
@@ -84,7 +86,8 @@ SidePanel.propTypes = {
 	showPropertiesDialog: PropTypes.bool,
 	useInternalObjectModel: PropTypes.func,
 	modalPropertiesDialog: PropTypes.bool,
-	useModalPropertiesDialog: PropTypes.func,
+	usePropertiesContainerType: PropTypes.func,
+	propertiesContainerType: PropTypes.string,
 	setRenderingEngine: PropTypes.func,
 	setConnectionType: PropTypes.func,
 	setNodeFormatType: PropTypes.func,

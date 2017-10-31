@@ -9,33 +9,21 @@
 
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Button } from "ap-components-react/dist/ap-components-react";
-import { OKAY, CANCEL } from "./constants/constants.js";
+import PropertiesButtons from "./properties-buttons.jsx";
 
 export default class PropertiesEditing extends Component {
 
 	render() {
-		const applyButtonLabel = (typeof this.props.applyLabel === "undefined") ? OKAY : this.props.applyLabel;
-		const rejectButtonLabel = (typeof this.props.rejectLabel === "undefined") ? CANCEL : this.props.rejectLabel;
 		const classSize = (typeof this.props.bsSize === "undefined") ? "large" : this.props.bsSize;
 		const propertyEditingClass = "properties-editing properties-" + classSize;
 
-		let buttons = (<div>
-			<Button
-				semantic href=""
-				onClick={this.props.okHandler}
-				style={{ "marginLeft": "10px" }}
-			>
-				{applyButtonLabel}
-			</Button>
-
-			<Button semantic href="" hyperlink onClick={this.props.cancelHandler}>
-				{rejectButtonLabel}
-			</Button>
-		</div>);
-		if (this.props.showPropertiesButtons === false) {
-			buttons = <div />;
-		}
+		const buttons = (<PropertiesButtons
+			okHandler={this.props.okHandler}
+			cancelHandler={this.props.cancelHandler}
+			applyButtonLabel={this.props.applyLabel}
+			rejectButtonLabel={this.props.rejectLabel}
+			showPropertiesButtons={this.props.showPropertiesButtons}
+		/>);
 
 		return (
 			<div className={propertyEditingClass} >
@@ -49,9 +37,7 @@ export default class PropertiesEditing extends Component {
 				<div className="properties-body">
 					{this.props.children}
 				</div>
-				<div className="properties-buttons">
-					{buttons}
-				</div>
+				{buttons}
 			</div>
 		);
 	}

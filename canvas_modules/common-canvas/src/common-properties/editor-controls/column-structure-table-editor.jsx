@@ -618,6 +618,10 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		const columnWidths = FlexibleTable.calculateColumnWidths(headers, 100);
 		this.makeCells(rows, controlValue, columnWidths, stateStyle, stateDisabled);
 
+		if (this.props.customContainer) {
+			this.scrollToRow = null;
+		}
+
 		const table =	(
 			<FlexibleTable
 				sortable={sortFields}

@@ -10,30 +10,18 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Modal } from "react-bootstrap";
-import { Button } from "ap-components-react/dist/ap-components-react";
-import { OKAY, CANCEL } from "./constants/constants.js";
+import PropertiesButtons from "./properties-buttons.jsx";
 
 export default class PropertiesDialog extends Component {
 
 	render() {
 		const modalClassName = "modal__container";
 
-		let buttons = (<div>
-			<Button
-				semantic href=""
-				onClick={this.props.okHandler}
-				style={{ "marginLeft": "10px" }}
-			>
-				{OKAY}
-			</Button>
-
-			<Button semantic href="" hyperlink onClick={this.props.cancelHandler}>
-				{CANCEL}
-			</Button>
-		</div>);
-		if (this.props.showPropertiesButtons === false) {
-			buttons = <div />;
-		}
+		const buttons = (<PropertiesButtons
+			okHandler={this.props.okHandler}
+			cancelHandler={this.props.cancelHandler}
+			showPropertiesButtons={this.props.showPropertiesButtons}
+		/>);
 
 		return (
 			<Modal className="ap-container"
@@ -55,9 +43,7 @@ export default class PropertiesDialog extends Component {
 					<div className="modal-children">
 						{this.props.children}
 					</div>
-					<div className="modal__buttons">
-						{buttons}
-					</div>
+					{buttons}
 				</div>
 			</Modal>
 		);

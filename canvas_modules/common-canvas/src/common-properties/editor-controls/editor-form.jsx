@@ -18,6 +18,7 @@ import { Tabs } from "ap-components-react/dist/ap-components-react";
 import { DEFAULT_VALIDATION_MESSAGE, EDITOR_CONTROL, TOOL_TIP_DELAY } from "../constants/constants.js";
 
 import ReactTooltip from "react-tooltip";
+import _ from "underscore";
 
 import ControlItem from "./control-item.jsx";
 import TextfieldControl from "./textfield-control.jsx";
@@ -49,6 +50,8 @@ import UiConditionsParser from "../ui-conditions/ui-conditions-parser.js";
 import CheckboxSelectionPanel from "../editor-panels/checkbox-selection-panel.jsx";
 import PropertyUtils from "../util/property-utils.js";
 
+import DownIcon from "../../../assets/images/down_enabled.svg";
+import UpIcon from "../../../assets/images/up_enabled.svg";
 
 export default class EditorForm extends React.Component {
 
@@ -62,6 +65,7 @@ export default class EditorForm extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			formData: this.props.form,
 			valuesTable: this.props.form.data.currentParameters,
 			controlErrorMessages: (this.props.messages) ? this.props.messages : [],
 			requiredParameters: [],
@@ -105,6 +109,8 @@ export default class EditorForm extends React.Component {
 		this.generateSharedControlNames = this.generateSharedControlNames.bind(this);
 		this.getSelectedRows = this.getSelectedRows.bind(this);
 		this.setControlState = this.setControlState.bind(this);
+
+		this._showCategoryPanel = this._showCategoryPanel.bind(this);
 	}
 
 	componentWillMount() {
@@ -119,6 +125,31 @@ export default class EditorForm extends React.Component {
 
 		// One time table condition updates
 		this.updateTableConditions();
+	}
+
+	componentWillReceiveProps(newProps) {
+		if (newProps.form) {
+			if (newProps.form && !_.isEqual(newProps.form, this.state.formData)) {
+				const that = this;
+				this.setState({
+					formData: newProps.form,
+					valuesTable: newProps.form.data.currentParameters,
+					controlErrorMessages: (newProps.messages) ? newProps.messages : [],
+					requiredParameters: [],
+					controlStates: {},
+					selectedRows: {},
+					showFieldPicker: false,
+					fieldPickerControl: {},
+					activeTabId: ""
+				}, function() {
+					if (newProps.form.conditions) {
+						that.parseUiConditions(newProps.form.conditions);
+					}
+					that.parseRequiredParameters(newProps.form);
+				});
+
+			}
+		}
 	}
 
 	getControl(propertyName) {
@@ -548,6 +579,7 @@ export default class EditorForm extends React.Component {
 				getSubControlValues={this.getSubControlValues}
 				updateValidationErrorMessage={this.updateValidationErrorMessage}
 				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
+				propertiesClassname={this.props.propertiesClassname}
 			/>);
 		} else if (control.controlType === "allocatedcolumns") {
 			// logger.info("allocatedcolumns");
@@ -567,6 +599,7 @@ export default class EditorForm extends React.Component {
 				getSubControlValues={this.getSubControlValues}
 				updateValidationErrorMessage={this.updateValidationErrorMessage}
 				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
+				propertiesClassname={this.props.propertiesClassname}
 			/>);
 		} else if (control.controlType === "selectcolumn") {
 			// logger.info("selectcolumn");
@@ -605,6 +638,7 @@ export default class EditorForm extends React.Component {
 				getSubControlValues={this.getSubControlValues}
 				updateValidationErrorMessage={this.updateValidationErrorMessage}
 				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
+				propertiesClassname={this.props.propertiesClassname}
 			/>);
 		} else if (control.controlType === "allocatedstructures") {
 			// logger.info("allocatedstructures");
@@ -645,6 +679,7 @@ export default class EditorForm extends React.Component {
 				getSubControlValues={this.getSubControlValues}
 				updateValidationErrorMessage={this.updateValidationErrorMessage}
 				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
+				customContainer={this.props.customContainer}
 			/>);
 		} else if (control.controlType === "structureeditor") {
 			// logger.info("structureeditor");
@@ -770,6 +805,14 @@ export default class EditorForm extends React.Component {
 		return controlItem;
 	}
 
+	_showCategoryPanel(panelid) {
+		let activeTab = panelid;
+		if (this.state.activeTabId === panelid) {
+			activeTab = "";
+		}
+		this.setState({ activeTabId: activeTab });
+	}
+
 	genPrimaryTabs(key, tabs, idPrefix, controlValueAccessor, datasetMetadata) {
 		const tabContent = [];
 		let initialTab = "";
@@ -779,22 +822,58 @@ export default class EditorForm extends React.Component {
 			let additionalComponent = null;
 			if (this.props.additionalComponents) {
 				additionalComponent = this.props.additionalComponents[tab.group];
-				// logger.info("TabGroup=" + tab.group);
-				// logger.info(additionalComponent);
 			}
 			if (i === 0) {
 				initialTab = "primary-tab." + tab.group;
 			}
 
-			tabContent.push(
-				<Tabs.Panel
-					id={"primary-tab." + tab.group}
-					key={i}
-					title={tab.text}
-				>
+			if (this.props.rightFlyout) {
+				let panelArrow = DownIcon;
+				let panelItemsContainerClass = "closed";
+				const styleObj = {};
+				if (this.state.activeTabId === tab.text) {
+					panelArrow = UpIcon;
+					panelItemsContainerClass = "open";
+					if (i === tabs.length - 1) {
+						styleObj.borderBottom = "none";
+					}
+				}
+				const panelItemsContainer = (<div className={"panel-container-" + panelItemsContainerClass + " " + this.props.propertiesClassname} style={styleObj}>
 					{panelItems}
-					{additionalComponent}
-				</Tabs.Panel>
+				</div>);
+
+				tabContent.push(
+					<div key={i + "-" + key} className={"category-title-container-" + this.props.propertiesClassname}>
+						<a onClick={() => this._showCategoryPanel(tab.text)}
+							id={"category-title-" + i + "-" + this.props.propertiesClassname}
+							className={"category-title-" + this.props.propertiesClassname}
+						>
+							{tab.text.toUpperCase()}
+							<img className={"category-icon-" + this.props.propertiesClassname} src={panelArrow}	/>
+						</a>
+						{panelItemsContainer}
+						{additionalComponent}
+					</div>
+				);
+			} else {
+				tabContent.push(
+					<Tabs.Panel
+						id={"primary-tab." + tab.group}
+						key={i}
+						title={tab.text}
+					>
+						{panelItems}
+						{additionalComponent}
+					</Tabs.Panel>
+				);
+			}
+		}
+
+		if (this.props.rightFlyout) {
+			return (
+				<div key={key} id={"category-parent-container-" + this.props.propertiesClassname}>
+					{tabContent}
+				</div>
 			);
 		}
 
@@ -821,15 +900,42 @@ export default class EditorForm extends React.Component {
 		const subTabs = [];
 		for (let i = 0; i < tabs.length; i++) {
 			const tab = tabs[i];
-			subTabs.push(
-				<Tabs.Panel key={i} id={"sub-tab." + tab.group} title={tab.text}>{this.genUIItem(i, tab.content, idPrefix, controlValueAccessor, datasetMetadata)}</Tabs.Panel>
+			const subPanelItems = this.genUIItem(i, tab.content, idPrefix, controlValueAccessor, datasetMetadata);
+			if (this.props.rightFlyout) {
+
+				const panelItemsContainer = (<div key={i + "-" + key} className={"sub-panel-container-" + this.props.propertiesClassname}>
+					{subPanelItems}
+				</div>);
+
+				subTabs.push(
+					<div key={i + "-" + key} className={"sub-category-items-container-" + this.props.propertiesClassname}>
+						<h3 className={"sub-category-title-" + this.props.propertiesClassname}>{tab.text}</h3>
+						{panelItemsContainer}
+					</div>
+				);
+			} else {
+				subTabs.push(
+					<div key={i} id={"sub-tab." + tab.group} className={"sub-tab-parent-items-container-" + this.props.propertiesClassname} title={tab.text}>
+						{subPanelItems}
+					</div>
+				);
+			}
+		}
+
+		if (this.props.rightFlyout) {
+			return (
+				<div key={key} id={"sub-category-parent-container-" + this.props.propertiesClassname}>
+					{subTabs}
+				</div>
 			);
 		}
 
 		return (
-			<Tabs vertical animation={false}>
-				{subTabs}
-			</Tabs>
+			<div id={"sub-tab-container"}>
+				<Tabs vertical animation={false}>
+					{subTabs}
+				</Tabs>
+			</div>
 		);
 	}
 
@@ -839,7 +945,9 @@ export default class EditorForm extends React.Component {
 		for (let i = 0; i < tabs.length; i++) {
 			const tab = tabs[i];
 			// logger.info("Sub-panel: group=" + tab.group + ", title=" + tab.text);
-			subPanels[tab.group] = <div className="control-panel" key={tab.group}>{this.genUIItem(i, tab.content, idPrefix, controlValueAccessor, datasetMetadata)}</div>;
+			subPanels[tab.group] = (<div className="control-panel" key={tab.group}>
+				{this.genUIItem(i, tab.content, idPrefix, controlValueAccessor, datasetMetadata)}
+			</div>);
 		}
 
 		return (
@@ -949,6 +1057,7 @@ export default class EditorForm extends React.Component {
 				panel={panel}
 				dataModel={datasetMetadata}
 				controlAccessor={this.getControl}
+				propertiesClassname={this.props.propertiesClassname}
 			>
 				{content}
 			</ColumnAllocationPanel>);
@@ -1296,7 +1405,7 @@ export default class EditorForm extends React.Component {
 
 		var formButtons = [];
 		return (
-			<div className="well">
+			<div className={"well " + this.props.propertiesClassname}>
 				<form id={"form-" + this.props.form.componentId} className="form-horizontal">
 					<div className="section--light">
 						{content}
@@ -1316,5 +1425,8 @@ EditorForm.propTypes = {
 	messages: PropTypes.array,
 	submitMethod: PropTypes.func,
 	showPropertiesButtons: PropTypes.func,
-	customPanels: PropTypes.array
+	customPanels: PropTypes.array,
+	propertiesClassname: PropTypes.string,
+	customContainer: PropTypes.bool,
+	rightFlyout: PropTypes.bool
 };

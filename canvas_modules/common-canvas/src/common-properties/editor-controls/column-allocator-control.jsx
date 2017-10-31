@@ -161,7 +161,7 @@ export default class ColumnAllocatorControl extends EditorControl {
 				<div className="editor_control_area" style={stateStyle}>
 					<FormControl {...stateDisabled}
 						id={this.getControlID()}
-						className="column-allocator multi"
+						className={"column-allocator multi " + this.props.propertiesClassname}
 						componentClass="select"
 						multiple
 						rows={4}
@@ -182,7 +182,7 @@ export default class ColumnAllocatorControl extends EditorControl {
 				<div id={controlIconContainerClass}>
 					<FormControl {...stateDisabled}
 						id={this.getControlID()}
-						className="column-allocator single"
+						className={"column-allocator single " + this.props.propertiesClassname}
 						componentClass="select"
 						rows={1}
 						name={this.props.control.name}
@@ -209,5 +209,6 @@ ColumnAllocatorControl.propTypes = {
 	requiredParameters: PropTypes.array,
 	updateValidationErrorMessage: PropTypes.func,
 	retrieveValidationErrorMessage: PropTypes.func,
-	updateControlValue: PropTypes.func
+	updateControlValue: PropTypes.func,
+	propertiesClassname: PropTypes.string
 };

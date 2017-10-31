@@ -27,7 +27,7 @@ module.exports = function() {
 	this.Then(/^I enter "([^"]*)" in the Column name textbox$/, function(textboxValue) {
 		var textbox = browser.$("#editor-control-colName");
 		textbox.setValue("", textboxValue);
-		var okButton = browser.$(".modal__buttons").$$(".button")[0];
+		var okButton = getPropertiesApplyButton();
 		okButton.click();
 
 		browser.timeouts("script", 3000);
@@ -41,7 +41,7 @@ module.exports = function() {
 
 		var textbox = browser.$("#editor-control-colName");
 		textbox.setValue("", textboxValue);
-		var okButton = browser.$(".modal__buttons").$$(".button")[0];
+		var okButton = getPropertiesApplyButton();
 		okButton.click();
 		browser.pause(500);
 
@@ -58,7 +58,7 @@ module.exports = function() {
 		dropdown.click();
 		var dropdownSelect = browser.$(".Dropdown-menu").$$(".Dropdown-option")[1];
 		dropdownSelect.click();
-		var okButton = browser.$(".modal__buttons").$$(".button")[0];
+		var okButton = getPropertiesApplyButton();
 		okButton.click();
 
 		browser.timeouts("script", 3000);
@@ -138,7 +138,7 @@ module.exports = function() {
 		inputFieldList = browser.$("#editor-control-inputFieldList").$$("option");
 		expect(1).toEqual(inputFieldList.length);
 
-		var okButton = browser.$(".modal__buttons").$$(".button")[0];
+		var okButton = getPropertiesApplyButton();
 		okButton.click();
 
 		browser.timeouts("script", 3000);
@@ -225,7 +225,7 @@ module.exports = function() {
 		var radiobuttonGini = browser.$("#radioset-control-container").$$("label")[0];
 		radiobuttonGini.click();
 
-		var okButton = browser.$(".modal__buttons").$$(".button")[0];
+		var okButton = getPropertiesApplyButton();
 		okButton.click();
 
 		browser.timeouts("script", 3000);
@@ -266,7 +266,7 @@ module.exports = function() {
 		const errLine = browser.$(".expression-validation-message");
 		expect(errorText).toEqual(errLine.$(".form__validation--error").getText());
 
-		var okButton = browser.$(".modal__buttons").$$(".button")[0];
+		var okButton = getPropertiesApplyButton();
 		okButton.click();
 
 	});
@@ -296,7 +296,7 @@ module.exports = function() {
 
 		expect(selectText).toEqual(CMline.$$(searchClass)[0].getText());
 
-		var okButton = browser.$(".modal__buttons").$$(".button")[0];
+		var okButton = getPropertiesApplyButton();
 		okButton.click();
 
 		browser.timeouts("script", 3000);
@@ -321,7 +321,7 @@ module.exports = function() {
 		var generateButton5 = generateButton4.$(".default-label-container").$$("label")[1];
 		generateButton5.click();
 
-		var okButton = browser.$(".modal__buttons").$$(".button")[0];
+		var okButton = getPropertiesApplyButton();
 		okButton.click();
 
 		browser.timeouts("script", 3000);
@@ -376,7 +376,7 @@ module.exports = function() {
 		var moveDrugUp = browser.$$(".table-row-move-button")[1];
 		moveDrugUp.click();
 
-		var okButton = browser.$(".modal__buttons").$$(".button")[0];
+		var okButton = getPropertiesApplyButton();
 		okButton.click();
 		browser.pause(500);
 
@@ -407,7 +407,7 @@ module.exports = function() {
 		var errormessage2 = errormessage1.getText();
 		expect("The checkpoint interval value must either be >= 1 or -1 to disable").toEqual(errormessage2);
 
-		var okButton = browser.$(".modal__buttons").$$(".button")[0];
+		var okButton = getPropertiesApplyButton();
 		okButton.click();
 
 	});
@@ -423,7 +423,7 @@ module.exports = function() {
 		// var errormsg = browser.$(".form__validation--error").getText();
 
 		expect("The given column name is already in use in the current dataset").toEqual(errormsg);
-		var okButton = browser.$(".modal__buttons").$$(".button")[0];
+		var okButton = getPropertiesApplyButton();
 		okButton.click();
 	});
 
@@ -438,7 +438,7 @@ module.exports = function() {
 		// After turning off the checkbox, there should now be one more disabled dropdown
 		disabledDropdowns = browser.$$(".Dropdown-disabled");
 		expect(disabledDropdowns.length).toEqual(10);
-		var okButton = browser.$(".modal__buttons").$$(".button")[0];
+		var okButton = getPropertiesApplyButton();
 		okButton.click();
 	});
 
@@ -453,13 +453,13 @@ module.exports = function() {
 
 		var warningMsg = browser.$(".form__validation--warning").getText();
 		expect("There are no selected columns to rename").toEqual(warningMsg);
-		var okButton = browser.$(".modal__buttons").$$(".button")[0];
+		var okButton = getPropertiesApplyButton();
 		okButton.click();
 	});
 
 
 	this.Then(/^I have closed the common properties dialog by clicking on close button$/, function() {
-		var closeButton = browser.$(".modal__buttons").$(".button--hyperlink");
+		var closeButton = getPropertiesCancelButton();
 		closeButton.click();
 	});
 
@@ -505,8 +505,18 @@ module.exports = function() {
 	});
 
 	this.Then("I close the subPanel dialog", function() {
-		var closeButton = browser.$$(".modal__buttons")[1].$(".button");
+		var closeButton = getPropertiesCancelButton(true);
 		closeButton.click();
 	});
 
+	function getPropertiesApplyButton() {
+		return browser.$("#properties-apply-button");
+	}
+
+	function getPropertiesCancelButton(subpanel) {
+		if (subpanel) {
+			return browser.$$(".modal__buttons")[1].$("#properties-cancel-button");
+		}
+		return browser.$("#properties-cancel-button");
+	}
 };

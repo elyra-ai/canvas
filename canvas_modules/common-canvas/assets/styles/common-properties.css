@@ -773,3 +773,7 @@ tbody.reactable-data .editor_control_area {
 .cm-s-disabled.CodeMirror { color: lightgray; }
 
 .expression-validation-message { margin-top: 25px; }
+
+#ExpressionEditor {
+	border: 1px solid #777677;
+}

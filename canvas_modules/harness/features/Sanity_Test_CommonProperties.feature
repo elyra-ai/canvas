@@ -10,29 +10,35 @@ Feature: Sanity_Test_CommonProperties
 	Scenario: Sanity test of common-properties
 		Given I am on the test harness
 		Given I have toggled the app side common-properties panel
+		Then I have selected the "Modal" properties container type
 
 		# Titles Test Case
 			Given I have uploaded JSON for common-properties "org.apache.spark.ml.ibm.transformers.AddColumn.json"
 			Then I see common properties title "Add Column"
 			Then I have closed the common properties dialog by clicking on close button
 
+			Given I have toggled the app side common-properties panel
 			Given I have uploaded JSON for common-properties "org.apache.spark.ml.classification.DecisionTreeClassifier.json"
 			Then I see common properties title "Decision Tree Classifier"
 			Then I have closed the common properties dialog by clicking on close button
 
+			Given I have toggled the app side common-properties panel
 			Given I have uploaded JSON for common-properties "org.apache.spark.ml.ibm.transformers.Distinct.json"
 			Then I see common properties title "Distinct"
 			Then I have closed the common properties dialog by clicking on close button
 
+			Given I have toggled the app side common-properties panel
 			Given I have uploaded JSON for common-properties "org.apache.spark.ml.ibm.transformers.Filter.json"
 			Then I see common properties title "Filter Rows"
 			Then I have closed the common properties dialog by clicking on close button
 
 		# TextBox Test Case
+			Given I have toggled the app side common-properties panel
 			Given I have uploaded JSON for common-properties "org.apache.spark.ml.ibm.transformers.AddColumn.json"
 			Then I enter "testValue" in the Column name textbox
 
 		# Dropdown Test Case
+			Given I have toggled the app side common-properties panel
 			Given I have uploaded JSON for common-properties "org.apache.spark.ml.ibm.transformers.AddColumn.json"
 			Then I select "Continuous" dropdown option
 
@@ -41,32 +47,41 @@ Feature: Sanity_Test_CommonProperties
 		# Then I enter "v1+v2" in the Expression textarea
 
 		# Select Textbox, Field Picker Test, Table Checkbox Case
+			Given I have toggled the app side common-properties panel
 			Given I have uploaded JSON for common-properties "org.apache.spark.ml.classification.DecisionTreeClassifier.json"
 		 	Then I select "Age" option from Input columns select textbox
 
 		# Radio Button, Number Textbox Test Case
+			Given I have toggled the app side common-properties panel
 			Given I have uploaded JSON for common-properties "org.apache.spark.ml.classification.DecisionTreeClassifier.json"
 			Then I select "gini" radio button for Impurity
 
 		# Checkbox, Generate TextBox Test Case
+			Given I have toggled the app side common-properties panel
 		 	Given I have uploaded JSON for common-properties "org.apache.spark.ml.ibm.transformers.Sample.json"
 		 	Then I select Repeatable partition assignment checkbox and click Generate
 
 		# ToggleText, Table Reorder Rows
+			Given I have toggled the app side common-properties panel
 			Given I have uploaded JSON for common-properties "org.apache.spark.ml.ibm.transformers.Sort.json"
 			Then I change Order for Drug field and reorder
 
 		# Validation Test Case
+			Given I have toggled the app side common-properties panel
 			Given I have uploaded JSON for common-properties "org.apache.spark.ml.classification.DecisionTreeClassifier.json"
 			Then I check for validation error on Checkpoint Interval
+			Given I have toggled the app side common-properties panel
 			Given I have uploaded JSON for common-properties "org.apache.spark.ml.ibm.transformers.RenameColumn.json"
 			Then I check for table cell level validation
+			Given I have toggled the app side common-properties panel
 			Given I have uploaded JSON for common-properties "org.apache.spark.ml.ibm.transformers.RenameColumn.json"
 			Then I check for table validation
+			Given I have toggled the app side common-properties panel
 			Given I have uploaded JSON for common-properties "Spark_SelectStorage_paramDef.json"
 			Then I check table cell enablement
 
 		# Sub Panel Validation
+			Given I have toggled the app side common-properties panel
 			Given I have uploaded JSON for common-properties "Conditions_paramDef.json"
 			Then I select the Tab 6
 			Then I open the Table Input Sub Panel
@@ -78,6 +93,7 @@ Feature: Sanity_Test_CommonProperties
 			Then I have closed the common properties dialog by clicking on close button
 
 		# Complex Field Picker
+			Given I have toggled the app side common-properties panel
 			Given I have uploaded JSON for common-properties "Conditions_paramDef.json"
 			Then I select the Tab 2
 			Then I add "Drug" to first input control
@@ -91,6 +107,7 @@ Feature: Sanity_Test_CommonProperties
 	Scenario: Test of expression editor control
 		Given I am on the test harness
 		Given I have toggled the app side common-properties panel
+		Then I have selected the "Modal" properties container type
 		Given I have uploaded JSON for common-properties "CLEM_FilterRows_paramDef.json"
 
 		Then I verify "is_real" is a "keyword" in ExpressionEditor
@@ -110,8 +127,7 @@ Feature: Sanity_Test_CommonProperties
 		Then I enter "this is a string" in ExpressionEditor and verify it is a "string"
 		Then I enter "first" in ExpressionEditor and press autocomplete and select "first_index" and verify save
 
+		Given I have toggled the app side common-properties panel
 		Given I have uploaded JSON for common-properties "Javascript_FilterRows_paramDef.json"
 		Then I verify that the placeholder text is "Enter JavaScript text" in ExpressionEditor
 		Then I enter "" in ExpressionEditor and press autocomplete and verify error "The condition expression cannot be empty" and save
-
-		Given I have toggled the app side common-properties panel
