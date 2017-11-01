@@ -30,7 +30,7 @@ export default class PropertiesButtons extends Component {
 				{applyButtonLabel}
 			</Button>
 		</div>);
-		if (this.props.showPropertiesButtons && this.props.showPropertiesButtons === false) {
+		if (this.props.showPropertiesButtons !== "undefined" && this.props.showPropertiesButtons === false) {
 			buttons = <div />;
 		}
 

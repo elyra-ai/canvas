@@ -16,7 +16,6 @@ Feature: Sanity_Test_CommonProperties
 			Given I have uploaded JSON for common-properties "org.apache.spark.ml.ibm.transformers.AddColumn.json"
 			Then I see common properties title "Add Column"
 			Then I have closed the common properties dialog by clicking on close button
-
 			Given I have toggled the app side common-properties panel
 			Given I have uploaded JSON for common-properties "org.apache.spark.ml.classification.DecisionTreeClassifier.json"
 			Then I see common properties title "Decision Tree Classifier"
@@ -142,6 +141,5 @@ Feature: Sanity_Test_CommonProperties
 		Then I click on toggle 0
 		Then I select the Tab 2
 		Then I click on slider
-		Then I pause for 2 seconds
 		Then I click on modal OK button
 		Then I verify custom panel

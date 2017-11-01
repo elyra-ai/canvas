@@ -436,6 +436,7 @@ module.exports = function() {
 	this.Then(/^I have closed the common properties dialog by clicking on close button$/, function() {
 		var closeButton = getPropertiesCancelButton();
 		closeButton.click();
+		browser.pause(500);
 	});
 
 	this.Then("I verify testValue is not present", function() {
