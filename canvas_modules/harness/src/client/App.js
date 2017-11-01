@@ -671,9 +671,7 @@ class App extends React.Component {
 		let rightFlyoutContent = null;
 		let showRightFlyoutProperties = false;
 		if (this.state.propertiesContainerType === FLYOUT) {
-			rightFlyoutContent = (<div id="common-properties" style={{ height: "100%" }}>
-				{commonProperties}
-			</div>);
+			rightFlyoutContent = commonProperties;
 			showRightFlyoutProperties = this.state.showPropertiesDialog && this.state.propertiesContainerType === FLYOUT;
 		} else {
 			commonPropertiesContainer = (<IntlProvider key="IntlProvider2" locale={ locale } messages={ messages }>
