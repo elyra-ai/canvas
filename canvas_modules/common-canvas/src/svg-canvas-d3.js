@@ -46,7 +46,7 @@ export default class CanvasD3Layout {
 
 		// Customization options
 		this.connectionType = config.enableConnectionType;
-		this.nodeFormatType = config.enableNodeFormat;
+		this.nodeFormatType = config.enableNodeFormatType;
 		this.linkType = config.enableLinkType;
 
 		// Initialize dimension and layout variables
