@@ -242,18 +242,20 @@ export default class ColumnSelectControl extends EditorControl {
 		if (this.props.multiColumn) {
 			return (
 				<div>
-					<div className="properties-tooltips-container add-remove-columns" data-tip="Select columns to add" data-for={tooltipId}>
-						<Button
-							id="add-fields-button"
-							icon="plus"
-							onClick={this.props.openFieldPicker}
-							data-control={JSON.stringify(this.props.control)}
-						>
-							Add Columns
-						</Button>
-					</div>
-					<div className="properties-tooltips-container add-remove-columns" data-tip="Remove selected columns" data-for={tooltipId}>
-						{removeIcon}
+					<div id="field-picker-buttons-container">
+						<div className="properties-tooltips-container add-remove-columns" data-tip="Remove selected columns" data-for={tooltipId}>
+							{removeIcon}
+						</div>
+						<div className="properties-tooltips-container add-remove-columns" data-tip="Select columns to add" data-for={tooltipId}>
+							<Button
+								id="add-fields-button"
+								icon="plus"
+								onClick={this.props.openFieldPicker}
+								data-control={JSON.stringify(this.props.control)}
+							>
+								Add Columns
+							</Button>
+						</div>
 					</div>
 					<ReactTooltip
 						id={tooltipId}
@@ -291,18 +293,20 @@ export default class ColumnSelectControl extends EditorControl {
 
 		return (
 			<div>
-				<div className="properties-tooltips-container add-remove-columns" data-tip="Select columns to add" data-for={tooltipId}>
-					<Button
-						id="add-fields-button"
-						secondary icon="plus"
-						onClick={this.props.openFieldPicker}
-						data-control={JSON.stringify(this.props.control)}
-					>
-						Add Columns
-					</Button>
-				</div>
-				<div className="properties-tooltips-container add-remove-columns" data-tip="Remove selected columns" data-for={tooltipId}>
-					{removeIcon}
+				<div id="field-picker-buttons-container">
+					<div className="properties-tooltips-container add-remove-columns" data-tip="Remove selected columns" data-for={tooltipId}>
+						{removeIcon}
+					</div>
+					<div className="properties-tooltips-container add-remove-columns" data-tip="Select columns to add" data-for={tooltipId}>
+						<Button
+							id="add-fields-button"
+							secondary icon="plus"
+							onClick={this.props.openFieldPicker}
+							data-control={JSON.stringify(this.props.control)}
+						>
+							Add Columns
+						</Button>
+					</div>
 				</div>
 				<ReactTooltip
 					id={tooltipId}
