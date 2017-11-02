@@ -40,14 +40,14 @@ export default class SVGPipelineInHandler {
 				"operator_id_ref": node.op,
 				"output_ports": this.convertOutputs(node),
 				"input_ports": this.convertInputs(node),
-				"label": node.app_data.ui_data.label.default, // TODO Add code to check existence of these fields
-				"image": node.app_data.ui_data.image,
-				"x_pos": node.app_data.ui_data.x_pos,
-				"y_pos": node.app_data.ui_data.y_pos,
-				"class_name": node.app_data.ui_data.class_name,
+				"label": _.has(node, "app_data.ui_data.label.default") ? node.app_data.ui_data.label.default : "",
+				"image": _.has(node, "app_data.ui_data.image") ? node.app_data.ui_data.image : "",
+				"x_pos": _.has(node, "app_data.ui_data.x_pos") ? node.app_data.ui_data.x_pos : 10,
+				"y_pos": _.has(node, "app_data.ui_data.y_pos") ? node.app_data.ui_data.y_pos : 10,
+				"class_name": _.has(node, "app_data.ui_data.class_name") ? node.app_data.ui_data.class_name : "",
 				"decorations": this.convertDecorations(node.app_data.ui_data.decorations),
-				"parameters": node.parameters,
-				"messages": node.app_data.ui_data.messages,
+				"parameters": _.has(node, "parameters") ? node.parameters : [],
+				"messages": _.has(node, "app_data.ui_data.messages") ? node.app_data.ui_data.messages : [],
 			})
 		);
 	}

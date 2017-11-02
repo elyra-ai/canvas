@@ -25,6 +25,8 @@ import moveNodeHorizontalLayoutCanvas from "./test_resources/json/moveNodeHorizo
 import moveNodeVerticalLayoutCanvas from "./test_resources/json/moveNodeVerticalLayoutCanvas.json";
 import nodeParameters from "./test_resources/json/nodeParameters.json";
 import nodeParameterAddedPipelineFlow from "./test_resources/json/nodeParameterAddedPipelineFlow.json";
+import pipelineFlowTest1Start from "./test_resources/json/pipelineFlowTest1Start.json";
+import pipelineFlowTest1Expected from "./test_resources/json/pipelineFlowTest1Expected.json";
 
 
 import ObjectModel from "../src/object-model/object-model.js";
@@ -202,8 +204,8 @@ describe("ObjectModel API handle model OK", () => {
 		const expectedCanvas = nodeParameterAddedPipelineFlow;
 		const actualCanvas = ObjectModel.getPipelineFlow();
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
 
 		expect(_.isEqual(JSON.stringify(expectedCanvas, null, 4), JSON.stringify(actualCanvas, null, 4))).to.be.true;
 	});
@@ -375,6 +377,20 @@ describe("ObjectModel API handle model OK", () => {
 		ObjectModel.addNodeTypeToPalette(nodeTypeObj, newCategoryName, newCategoryLabel);
 
 		expect(_.isEqual(expectedPaletteJSON, ObjectModel.getPaletteData())).to.be.true;
+	});
+
+	it("should handle pipeline flow with no app_data in links", () => {
+		logger.info("should handle pipeline flow with no app_data in links");
+
+		ObjectModel.setPipelineFlow(pipelineFlowTest1Start);
+
+		const actualPipelineFlow = ObjectModel.getPipelineFlow();
+		const expectedPipelineFlow = pipelineFlowTest1Expected;
+
+		// logger.info("Expected Messages = " + JSON.stringify(expectedPipelineFlow, null, 2));
+		// logger.info("Actual messages   = " + JSON.stringify(actualPipelineFlow, null, 2));
+
+		expect(_.isEqual(actualPipelineFlow, expectedPipelineFlow)).to.be.true;
 	});
 
 });

@@ -86,19 +86,30 @@ export default class SVGPipelineOutHandler {
 			return nodeLink;
 		}
 
-		return Object.assign({}, nodeLink, {
+		var newNodeLink = Object.assign({}, nodeLink, {
 			node_id_ref: filteredCanvasLinks[0].srcNodeId,
-			port_id_ref: filteredCanvasLinks[0].srcNodePortId,
-			app_data: this.getLinkAppData(nodeLink.app_data, filteredCanvasLinks[0])
+			port_id_ref: filteredCanvasLinks[0].srcNodePortId
 		});
+
+		if (filteredCanvasLinks[0].class_name) {
+			newNodeLink.app_data = this.getLinkAppData(nodeLink.app_data, filteredCanvasLinks[0]);
+		}
+
+		return newNodeLink;
 	}
 
 	static getLinkAppData(appData, link) {
-		return Object.assign({}, appData, { ui_data: this.getLinkUiData(appData.ui_data, link) });
+		if (appData) {
+			return Object.assign({}, appData, { ui_data: this.getLinkUiData(appData.ui_data, link) });
+		}
+		return { ui_data: { class_name: link.class_name } };
 	}
 
 	static getLinkUiData(uiData, link) {
-		return Object.assign({}, uiData, { class_name: link.class_name });
+		if (uiData) {
+			return Object.assign({}, uiData, { class_name: link.class_name });
+		}
+		return { class_name: link.class_name };
 	}
 
 	static getInputs(inputs, canvasLinks, pNodeId) {
@@ -325,13 +336,17 @@ export default class SVGPipelineOutHandler {
 
 	static createNewNodeLink(link) {
 		var newNodeLink = {
-			node_id_ref: link.srcNodeId,
-			app_data: {
+			node_id_ref: link.srcNodeId
+		};
+
+		if (link.class_name) {
+			newNodeLink.app_data = {
 				ui_data: {
 					class_name: link.class_name
 				}
-			}
-		};
+			};
+		}
+
 		if (link.srcNodePortId) {
 			newNodeLink.port_id_ref = link.srcNodePortId;
 		}

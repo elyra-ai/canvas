@@ -19,7 +19,8 @@
               "class_name": "canvas-node",
               "label": {
                 "default": "Define Types"
-              }
+              },
+              "messages": []
             }
           },
           "inputs": [
@@ -80,7 +81,8 @@
               "class_name": "canvas-node",
               "label": {
                 "default": "C5.0"
-              }
+              },
+              "messages": []
             }
           },
           "inputs": [
