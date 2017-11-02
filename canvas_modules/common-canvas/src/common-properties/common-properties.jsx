@@ -42,10 +42,9 @@ export default class CommonProperties extends React.Component {
 
 	componentWillReceiveProps(newProps) {
 		if (newProps.propertiesInfo) {
-			if (newProps.propertiesInfo.formData && !_.isEqual(newProps.propertiesInfo.formData, this.state.propertiesInfo.formData)) {
-				this.setState({ propertiesInfo: newProps.propertiesInfo });
-			}
-			if (newProps.propertiesInfo.parameterDef && !_.isEqual(newProps.propertiesInfo.parameterDef, this.state.propertiesInfo.parameterDef)) {
+			if (!_.isEqual(Object.keys(newProps.propertiesInfo), Object.keys(this.state.propertiesInfo)) ||
+				(newProps.propertiesInfo.formData && !_.isEqual(newProps.propertiesInfo.formData, this.state.propertiesInfo.formData)) ||
+				(newProps.propertiesInfo.parameterDef && !_.isEqual(newProps.propertiesInfo.parameterDef, this.state.propertiesInfo.parameterDef))) {
 				this.setState({ propertiesInfo: newProps.propertiesInfo });
 			}
 		}
