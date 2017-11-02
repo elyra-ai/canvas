@@ -2,7 +2,7 @@
 		"categories": [
 		{
 			"category": "canvas-models",
-			"label": "Models",
+			"label": "MODELS",
 			"nodetypes": [
 				{
 					"label": "C50",
@@ -141,7 +141,7 @@
 		},
 		{
 			"category": "canvas-operations",
-			"label": "Operations",
+			"label": "OPERATIONS",
 			"nodetypes": [
 				{
 					"label": "Aggregate",

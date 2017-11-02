@@ -13,13 +13,9 @@
   overflow-y: overlay;
   overflow-x: hidden;
   height: 100%;
-	font-family: IBMHLVRoman;
-	font-size: 14px;
 	padding-bottom: 5px;
 	z-index: 1;
-  color: black;
-  background-color: #e0e0e0;
-  display: flex;
+  background-color: #EAEAEA;
   -webkit-transition: all 0.2s;
   transition: all 0.2s;
   cursor: default; /* This stops Chrome displaying an I-beam cursor when dragging in the canvas. */
@@ -41,30 +37,29 @@
 
 .palette-flyout-content .palette-list-item {
   border-width: 0px;
-  background-color: #f9f9fb;
 }
 
 .palette-flyout-content .palette-list-item:hover {
-  background-color: #ffffff;
+  background-color: #E2E2E2;
   color: black;
-  font-family: IBMHLVBold;
 }
 
 .palette-flyout-content .palette-scroll {
   overflow-y: hidden; /*prevents multiple scroll bars in flyout*/
 }
 
+.palette-flyout-content .palette-content-list {
+	border-bottom: 2px solid #E0E0E0;
+}
+
 .palette-flyout-content .palette-list-item .palette-list-item-text-div {
+	font-family: IBMHLVRoman;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.palette-flyout-content .palette-list-item .palette-list-item-text-div:hover {
-  /* overflow: visible; */
-}
+
 .palette-flyout-category-arrow {
-  float:right;
-  margin-top: 6px;
 	height: 12px;
 	width: 12px;
 }
@@ -73,34 +68,55 @@
   padding: 10px;
   padding-right: 18px;
   border-width:0 0 0 2px;
+	height: 46px;
+	font-size: 12px;
+	font-family: IBMHLVRoman;
+	align-items: center;
+	justify-content: space-between;
+	display: flex;
+	border-bottom: 2px solid #E0E0E0;
 }
-
+.palette-flyout-text-container {
+	max-width: 205px;
+	display: flex;
+}
+.palette-flyout-category-text {
+	overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.palette-flyout-category-count {
+	padding-left: 5px;
+	font-family: IBMHLVBold;
+}
 .palette-flyout-category:hover {
-  color: #9D005C;
+  font-family: IBMHLVMedium;
 }
 
 #palette-flyout-search {
-	font-size: 15px;
-	height: 37px;
-	padding-right: 18px;
-	margin-bottom: 16px;
-	width: 250px;
+	margin-top: 1px;
+	font-size: 16px;
+	height: 46px;
+	align-items: center;
+	justify-content: space-between;
+	display: flex;
+	padding-right: 16px;
+	border-bottom: 2px solid #E0E0E0;
 }
 
 #palette-flyout-search-bar {
-  width: 202px;
-  float: left;
-  margin: 0 0 0 10px;
-}
-
-#palette-flyout-search-bar:focus {
-  border-bottom: 2px solid #777677;
+  width: 190px;
+  padding-left: 10px;
 }
 
 #palette-flyout-search-icon {
-  width: 16px;
-  float: left;
-  margin-top: 5px;
+  width: 20px;
+}
+
+#palette-flyout-search-text {
+	border-bottom: 0px;
+	padding: 0px;
+	font-weight: normal;
 }
 
 .palette-div {
@@ -292,7 +308,7 @@
 }
 
 .palette-list-item {
-  height: 50px;
+  height: 46px;
   border-width: 1px;
   border-color: lightgrey;
   border-style: solid;
@@ -317,7 +333,7 @@
 }
 
 .palette-list-item-icon {
-  line-height: 54px; /* Must be same as containing div height plus half the icon size */
+  line-height: 46px; /* Must be same as containing div height plus half the icon size */
   height: 32px;
   width: 32px;
 	min-width: 32px;
@@ -329,7 +345,7 @@
 }
 
 .palette-list-item-text-span {
-  line-height: 50px;  /* Must be same as containing div height */
+  line-height: 46px;  /* Must be same as containing div height */
 }
 
 .palette-three-way-icon-div {

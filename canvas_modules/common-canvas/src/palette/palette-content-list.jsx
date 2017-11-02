@@ -35,11 +35,11 @@ class PaletteContentList extends React.Component {
 			);
 		}
 
-		const displayValue = this.props.show ? "block" : "none";
-
+		const style = this.props.style;
+		style.display = this.props.show ? "block" : "none";
 		return (
 			<div width="100%" draggable="false" className="palette-content-list palette-scroll"
-				style={{ display: displayValue }}
+				style={ style }
 			>
 				{contentItems}
 			</div>
@@ -50,7 +50,11 @@ class PaletteContentList extends React.Component {
 PaletteContentList.propTypes = {
 	categoryJSON: PropTypes.array.isRequired,
 	show: PropTypes.bool.isRequired,
-	addNodeToCanvas: PropTypes.func
+	addNodeToCanvas: PropTypes.func,
+	style: PropTypes.object
+};
+PaletteContentList.defaultProps = {
+	style: {}
 };
 
 export default PaletteContentList;

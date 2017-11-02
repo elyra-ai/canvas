@@ -35,9 +35,23 @@ class PaletteFlyoutContentCategory extends React.Component {
 		if (this.props.selectedCategory === this.props.categoryName) {
 			image = <img className="palette-flyout-category-arrow" src={UpIcon} height={ARROW_HEIGHT} width={ARROW_WIDTH} />;
 		}
+		var itemCount = <div />;
+		if (this.props.itemsFiltered && this.props.itemCount > 0) {
+			itemCount = (
+				<span className="palette-flyout-category-count">
+					{"(" + this.props.itemCount + ")"}
+				</span>
+			);
+		}
 		var content = (
 			<div className="palette-flyout-category" onClick={this.categorySelected} value={this.props.categoryName}>
-				{this.props.categoryName + " (" + this.props.itemCount + ")"} {image}
+				<div className="palette-flyout-text-container">
+					<span className="palette-flyout-category-text">
+						{this.props.categoryName}
+					</span>
+					{itemCount}
+				</div>
+				{image}
 			</div>
 		);
 		return content;
@@ -48,7 +62,8 @@ PaletteFlyoutContentCategory.propTypes = {
 	categoryName: PropTypes.string.isRequired,
 	selectedCategory: PropTypes.string.isRequired,
 	categorySelectedMethod: PropTypes.func.isRequired,
-	itemCount: PropTypes.number.isRequired
+	itemCount: PropTypes.number.isRequired,
+	itemsFiltered: PropTypes.bool.isRequired
 };
 
 export default PaletteFlyoutContentCategory;

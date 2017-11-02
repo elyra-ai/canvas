@@ -79,17 +79,28 @@ class PaletteFlyoutContent extends React.Component {
 	render() {
 		var categories = this.getCategories(this.props.paletteJSON.categories);
 		var contentDivs = [];
-		for (const category of categories) {
+		for (var idx = 0; idx < categories.length; idx++) {
+			const category = categories[idx];
+			var style = {};
+			if (idx === categories.length - 1) {
+				style = { "borderBottom": "none" };
+			}
 			var content = null;
 			const nodeTypes = this.getNodeTypesForCategory(this.props.paletteJSON.categories, category);
 			const filteredNodeTypes = this.filterNodeTypes(nodeTypes);
-			if (this.state.selectedCategory === category) {
+			if (this.state.selectedCategory === category && filteredNodeTypes.length > 0) {
 				content = (
-					<PaletteContentList show
+					<PaletteContentList
+						style={style}
+						show
 						key={category + "-nodes"}
 						categoryJSON={filteredNodeTypes}
 						addNodeToCanvas={this.props.addNodeToCanvas}
 					/>);
+			}
+			var itemsFiltered = false;
+			if (this.state.filterKeyword) {
+				itemsFiltered = true;
 			}
 			contentDivs.push(
 				<div key={category + "-container"}>
@@ -99,12 +110,14 @@ class PaletteFlyoutContent extends React.Component {
 						selectedCategory={this.state.selectedCategory}
 						categorySelectedMethod={this.categorySelected}
 						itemCount={filteredNodeTypes.length}
+						itemsFiltered={itemsFiltered}
 					/>
 					{content}
 				</div>
 			);
 		}
 		const placeHolder = "Search Nodes";
+		const value = this.state.filterKeyword;
 		return (
 			<div className="palette-flyout-content">
 				<div id="palette-flyout-search">
@@ -116,7 +129,7 @@ class PaletteFlyoutContent extends React.Component {
 							placeholder={placeHolder}
 							disabledPlaceholderAnimation
 							onChange={this.handleFilterChange}
-							value={this.props.filterKeyword}
+							value={value}
 						/>
 					</div>
 					<div id="palette-flyout-search-icon">
@@ -131,7 +144,6 @@ class PaletteFlyoutContent extends React.Component {
 
 PaletteFlyoutContent.propTypes = {
 	paletteJSON: PropTypes.object.isRequired,
-	filterKeyword: PropTypes.string,
 	addNodeToCanvas: PropTypes.func
 };
 
