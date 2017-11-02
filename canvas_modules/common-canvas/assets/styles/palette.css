@@ -44,6 +44,10 @@
   color: black;
 }
 
+.palette-flyout-content .palette-list-item:active {
+  background-color: #DBDCDD;
+}
+
 .palette-flyout-content .palette-scroll {
   overflow-y: hidden; /*prevents multiple scroll bars in flyout*/
 }
