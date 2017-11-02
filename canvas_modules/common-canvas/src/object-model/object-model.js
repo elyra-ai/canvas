@@ -673,7 +673,11 @@ export default class ObjectModel {
 	}
 
 	static dagreAutolayout(direction, canvasData) {
-		var edges = canvasData.links.map((link) => {
+		var nodeLinks = canvasData.links.filter((link) => {
+			return link.type === "nodeLink";
+		});
+
+		var edges = nodeLinks.map((link) => {
 			return { "v": link.srcNodeId, "w": link.trgNodeId, "value": { "points": [] } };
 		});
 

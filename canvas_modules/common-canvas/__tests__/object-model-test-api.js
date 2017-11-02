@@ -54,8 +54,8 @@ describe("ObjectModel API handle model OK", () => {
 		// the same between expected and actual.
 		delete actualCanvas.nodes[3].id;
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
 
 		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
 
@@ -82,8 +82,8 @@ describe("ObjectModel API handle model OK", () => {
 		// the same between expected and actual.
 		delete actualCanvas.nodes[3].id;
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
 
 		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
 	});
@@ -102,8 +102,8 @@ describe("ObjectModel API handle model OK", () => {
 
 		const actualCanvas = ObjectModel.getCanvasInfo();
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
 
 		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
 
@@ -123,8 +123,8 @@ describe("ObjectModel API handle model OK", () => {
 
 		const actualCanvas = ObjectModel.getCanvasInfo();
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
 
 		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
 	});
@@ -145,8 +145,8 @@ describe("ObjectModel API handle model OK", () => {
 		const expectedCanvas = moveNodeHorizontalLayoutCanvas;
 		const actualCanvas = ObjectModel.getCanvasInfo();
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
 
 		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
 	});
@@ -167,8 +167,8 @@ describe("ObjectModel API handle model OK", () => {
 		const expectedCanvas = moveNodeVerticalLayoutCanvas;
 		const actualCanvas = ObjectModel.getCanvasInfo();
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
 
 		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
 	});

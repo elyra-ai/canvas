@@ -43,8 +43,8 @@
           }
         }
       ],
-      "x_pos": 250,
-      "y_pos": 25,
+      "x_pos": 100,
+      "y_pos": 175,
       "label": "Select"
     },
     {
@@ -71,15 +71,15 @@
           }
         }
       ],
-      "x_pos": 400,
-      "y_pos": 25,
+      "x_pos": 100,
+      "y_pos": 325,
       "label": "Sort"
     },
     {
       "label": "Filter",
       "image": "/images/filter.svg",
-      "operator_id_ref": "filter",
       "type": "execution_node",
+      "operator_id_ref": "filter",
       "class_name": "canvas-node",
       "input_ports": [
         {
@@ -110,7 +110,7 @@
         }
       ],
       "x_pos": 100,
-      "y_pos": 175
+      "y_pos": 475
     }
   ],
   "comments": [],

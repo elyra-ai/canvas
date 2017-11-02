@@ -2802,11 +2802,12 @@ export default class CanvasD3Layout {
 	}
 
 	displayLinks() {
-		// this.consoleLog("Drawing lines");
+		// this.consoleLog("Displaying links");
 		var startTimeDrawingLines = Date.now();
 
 		if (this.selecting || this.regionSelect) {
 			// no lines update needed when selecting objects/region
+			return;
 		} else if (this.dragging || this.commentSizing) {
 			// while dragging only remove lines that are affected by moving nodes/comments
 			const affectLinks = this.getConnectedLinks(this.getSelectedNodesAndComments());

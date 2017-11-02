@@ -9,8 +9,8 @@
             "id": "outPort",
             "label": "Output Port",
             "cardinality": {
-             "min": 0,
-             "max": 1
+              "min": 0,
+              "max": 1
             }
           }
         ],
@@ -43,8 +43,8 @@
             }
           }
         ],
-        "x_pos": 100,
-        "y_pos": 175,
+        "x_pos": 250,
+        "y_pos": 25,
         "label": "Select"
       },
       {
@@ -56,8 +56,8 @@
             "id": "outPort",
             "label": "Output Port",
             "cardinality": {
-             "min": 0,
-             "max": 1
+              "min": 0,
+              "max": 1
             }
           }
         ],
@@ -66,13 +66,13 @@
             "id": "inPort",
             "label": "Input Port",
             "cardinality": {
-             "min": 0,
-             "max": 1
+              "min": 0,
+              "max": 1
             }
           }
         ],
-        "x_pos": 100,
-        "y_pos": 325,
+        "x_pos": 400,
+        "y_pos": 25,
         "label": "Sort"
       }
     ],
@@ -91,4 +91,4 @@
         "trgNodeId": "64505c88-132a-4753-8b39-81adf1e8599d"
       }
     ]
-}
+  }

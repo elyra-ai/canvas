@@ -30,10 +30,10 @@ Scenario: Sanity test for autoLayout operations in Vertical Fixed Layout
 	Then I verify the node 2 position is "translate(175, 175)"
 	Then I verify the node 3 position is "translate(100, 625)"
 	Then I verify the node 4 position is "translate(250, 625)"
-	Then I verify the node 5 position is "translate(250, 25)"
+	Then I verify the node 5 position is "translate(175, 25)"
 	Then I verify the node 6 position is "translate(175, 325)"
-	Then I verify the comment 2 position is "translate(663, 248)"
-	Then I verify the comment 1 position is "translate(132, 103)"
+	Then I verify the comment 2 position is "translate(132, 103)"
+	Then I verify the comment 1 position is "translate(663, 248)"
 
 
 
@@ -58,13 +58,13 @@ Scenario: Sanity test for autoLayout operations in Horizontal Fixed Layout
 	Then I disconnect links for node 5 a "Type" on the canvas
 	Then I link node 6 the "Select" node to node 5 the "Filter" node for link 4 on the canvas
 	Then I verify the node 1 position is "translate(100, 25)"
-	Then I verify the node 2 position is "translate(250, 250)"
+	Then I verify the node 2 position is "translate(250, 175)"
 	Then I verify the node 3 position is "translate(250, 25)"
 	Then I verify the node 4 position is "translate(100, 175)"
-	Then I verify the node 5 position is "translate(250, 475)"
-	Then I verify the node 6 position is "translate(100, 475)"
-	Then I verify the comment 2 position is "translate(663, 248)"
-	Then I verify the comment 1 position is "translate(132, 103)"
+	Then I verify the node 5 position is "translate(250, 325)"
+	Then I verify the node 6 position is "translate(100, 325)"
+	Then I verify the comment 2 position is "translate(132, 103)"
+	Then I verify the comment 1 position is "translate(663, 248)"
 
 
 Scenario: Sanity test for autoLayout operations in None Fixed Layout
