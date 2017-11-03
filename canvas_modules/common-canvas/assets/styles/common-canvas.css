@@ -40,7 +40,8 @@
 	box-shadow: -2px 0px 2px #E0E0E0;
 	overflow-x: scroll;
 	overflow-y: hidden;
-	position: relative;
+	position: absolute;
+	right: 0px;
 }
 
 /* SVG Canvas styles */
@@ -50,11 +51,13 @@
   width: 100%;
   cursor: default;
   position: relative;
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
 }
 
 #common-canvas-items-container {
   height: 100%;
-  position: relative;
+  position: absolute;
   -webkit-transition: all 0.2s;
   transition: all 0.2s;
 }
@@ -66,6 +69,15 @@
 
 .canvas-palette-flyout-div-closed {
   left: 0px;
+  width: 100%;
+}
+
+.canvas-flyout-div-open {
+  width: calc(100% - 320px);
+}
+
+.canvas-palette-flyout-div-open.canvas-flyout-div-open {
+  width: calc(100% - 570px);
 }
 
 #canvas-div {
@@ -75,6 +87,8 @@
   position: absolute;
   cursor: default;
   top: 47px;
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
 }
 
 .canvas-div-d3 {

@@ -446,6 +446,7 @@ export default class CommonCanvas extends React.Component {
 		}
 
 		if (typeof this.state.rightFlyoutContent !== "undefined" && this.state.rightFlyoutContent !== null && this.props.showRightFlyout) {
+			paletteClass += " canvas-flyout-div-open";
 			canvasStyle.minWidth = (parseFloat(canvasStyle.minWidth) + 318) + "px";
 			rightFlyout = (<div id="right-flyout-panel" style={{ width: "318px" }}>
 				{this.state.rightFlyoutContent}
@@ -458,8 +459,8 @@ export default class CommonCanvas extends React.Component {
 				<div id="common-canvas-items-container" className={paletteClass}>
 					{canvasToolbar}
 					{canvas}
-					{rightFlyout}
 				</div>
+				{rightFlyout}
 			</div>
 		);
 	}

@@ -367,7 +367,7 @@ class Toolbar extends React.Component {
 			toolbarClass = "";
 		}
 
-		const canvasToolbar = (<div id="canvas-toolbar" className={toolbarClass} style={{ width: toolbarWidth + "px" }}>
+		const canvasToolbar = (<div id="canvas-toolbar" className={toolbarClass}>
 			<ul id="toolbar-items">
 				{actionContainer}
 				{zoomContainer}

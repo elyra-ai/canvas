@@ -9,12 +9,12 @@
 
 #canvas-toolbar {
 	height: 45px;
-	width: 100%;
 	min-width: 258px;
+	width: 100%;
 	background-color: #F9F9F9;
 	border-bottom: 2px solid #E0E0E0;
 	box-sizing: content-box;
-	position: absolute;
+	position: relative;
 	-webkit-transition: all 0.2s;
 	transition: all 0.2s;
 }
