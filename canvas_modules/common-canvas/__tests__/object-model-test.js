@@ -29,10 +29,19 @@ describe("ObjectModel handle model OK", () => {
 
 		ObjectModel.dispatch({
 			type: "SET_CANVAS_INFO",
-			data: expectedCanvas
+			data: expectedCanvas,
+			layoutinfo: ObjectModel.getLayout()
 		});
 
 		const actualCanvas = ObjectModel.getCanvasInfo();
+
+		// Remove transient data before comparing with expected
+		for (var i = 0; i < actualCanvas.nodes.length; i++) {
+			delete actualCanvas.nodes[i].width;
+			delete actualCanvas.nodes[i].height;
+			delete actualCanvas.nodes[i].outputPortsHeight;
+			delete actualCanvas.nodes[i].inputPortsHeight;
+		}
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas));
@@ -62,7 +71,8 @@ describe("ObjectModel handle model OK", () => {
 
 		ObjectModel.dispatch({
 			type: "SET_CANVAS_INFO",
-			data: startCanvas
+			data: startCanvas,
+			layoutinfo: ObjectModel.getLayout()
 		});
 
 		ObjectModel.dispatch({ type: "CLEAR_PIPELINE_FLOW" });
@@ -95,7 +105,8 @@ describe("ObjectModel handle model OK", () => {
 
 		ObjectModel.dispatch({
 			type: "SET_CANVAS_INFO",
-			data: startCanvas
+			data: startCanvas,
+			layoutinfo: ObjectModel.getLayout()
 		});
 
 		// imageName - Just for Testing
@@ -129,6 +140,14 @@ describe("ObjectModel handle model OK", () => {
 
 		const actualCanvas = ObjectModel.getCanvasInfo();
 
+		// Remove transient data before comparing with expected
+		for (var i = 0; i < actualCanvas.nodes.length; i++) {
+			delete actualCanvas.nodes[i].width;
+			delete actualCanvas.nodes[i].height;
+			delete actualCanvas.nodes[i].outputPortsHeight;
+			delete actualCanvas.nodes[i].inputPortsHeight;
+		}
+
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
 
@@ -155,7 +174,8 @@ describe("ObjectModel handle model OK", () => {
 
 		ObjectModel.dispatch({
 			type: "SET_CANVAS_INFO",
-			data: startCanvas
+			data: startCanvas,
+			layoutinfo: ObjectModel.getLayout()
 		});
 
 		ObjectModel.dispatch({
@@ -179,6 +199,14 @@ describe("ObjectModel handle model OK", () => {
 			};
 
 		const actualCanvas = ObjectModel.getCanvasInfo();
+
+		// Remove transient data before comparing with expected
+		for (var i = 0; i < actualCanvas.nodes.length; i++) {
+			delete actualCanvas.nodes[i].width;
+			delete actualCanvas.nodes[i].height;
+			delete actualCanvas.nodes[i].outputPortsHeight;
+			delete actualCanvas.nodes[i].inputPortsHeight;
+		}
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
@@ -206,7 +234,8 @@ describe("ObjectModel handle model OK", () => {
 
 		ObjectModel.dispatch({
 			type: "SET_CANVAS_INFO",
-			data: startCanvas
+			data: startCanvas,
+			layoutinfo: ObjectModel.getLayout()
 		});
 
 		/* ObjectModel.dispatch({
@@ -238,6 +267,14 @@ describe("ObjectModel handle model OK", () => {
 
 		const actualCanvas = ObjectModel.getCanvasInfo();
 
+		// Remove transient data before comparing with expected
+		for (var i = 0; i < actualCanvas.nodes.length; i++) {
+			delete actualCanvas.nodes[i].width;
+			delete actualCanvas.nodes[i].height;
+			delete actualCanvas.nodes[i].outputPortsHeight;
+			delete actualCanvas.nodes[i].inputPortsHeight;
+		}
+
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas));
 
@@ -268,7 +305,8 @@ describe("ObjectModel handle model OK", () => {
 
 		ObjectModel.dispatch({
 			type: "SET_CANVAS_INFO",
-			data: startCanvas
+			data: startCanvas,
+			layoutinfo: ObjectModel.getLayout()
 		});
 
 		ObjectModel.dispatch({
@@ -293,6 +331,14 @@ describe("ObjectModel handle model OK", () => {
 			};
 
 		const actualCanvas = ObjectModel.getCanvasInfo();
+
+		// Remove transient data before comparing with expected
+		for (var i = 0; i < actualCanvas.nodes.length; i++) {
+			delete actualCanvas.nodes[i].width;
+			delete actualCanvas.nodes[i].height;
+			delete actualCanvas.nodes[i].outputPortsHeight;
+			delete actualCanvas.nodes[i].inputPortsHeight;
+		}
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
@@ -324,7 +370,8 @@ describe("ObjectModel handle model OK", () => {
 
 		ObjectModel.dispatch({
 			type: "SET_CANVAS_INFO",
-			data: startCanvas
+			data: startCanvas,
+			layoutinfo: ObjectModel.getLayout()
 		});
 
 		ObjectModel.dispatch({
@@ -351,6 +398,14 @@ describe("ObjectModel handle model OK", () => {
 			};
 
 		const actualCanvas = ObjectModel.getCanvasInfo();
+
+		// Remove transient data before comparing with expected
+		for (var i = 0; i < actualCanvas.nodes.length; i++) {
+			delete actualCanvas.nodes[i].width;
+			delete actualCanvas.nodes[i].height;
+			delete actualCanvas.nodes[i].outputPortsHeight;
+			delete actualCanvas.nodes[i].inputPortsHeight;
+		}
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
@@ -382,7 +437,8 @@ describe("ObjectModel handle model OK", () => {
 
 		ObjectModel.dispatch({
 			type: "SET_CANVAS_INFO",
-			data: startCanvas
+			data: startCanvas,
+			layoutinfo: ObjectModel.getLayout()
 		});
 
 		ObjectModel.dispatch({
@@ -409,6 +465,14 @@ describe("ObjectModel handle model OK", () => {
 			};
 
 		const actualCanvas = ObjectModel.getCanvasInfo();
+
+		// Remove transient data before comparing with expected
+		for (var i = 0; i < actualCanvas.nodes.length; i++) {
+			delete actualCanvas.nodes[i].width;
+			delete actualCanvas.nodes[i].height;
+			delete actualCanvas.nodes[i].outputPortsHeight;
+			delete actualCanvas.nodes[i].inputPortsHeight;
+		}
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
@@ -437,7 +501,8 @@ describe("ObjectModel handle model OK", () => {
 
 		ObjectModel.dispatch({
 			type: "SET_CANVAS_INFO",
-			data: startCanvas
+			data: startCanvas,
+			layoutinfo: ObjectModel.getLayout()
 		});
 
 		/* ObjectModel.dispatch({
@@ -472,6 +537,14 @@ describe("ObjectModel handle model OK", () => {
 
 		const actualCanvas = ObjectModel.getCanvasInfo();
 
+		// Remove transient data before comparing with expected
+		for (var i = 0; i < actualCanvas.nodes.length; i++) {
+			delete actualCanvas.nodes[i].width;
+			delete actualCanvas.nodes[i].height;
+			delete actualCanvas.nodes[i].outputPortsHeight;
+			delete actualCanvas.nodes[i].inputPortsHeight;
+		}
+
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
 
@@ -499,7 +572,8 @@ describe("ObjectModel handle model OK", () => {
 
 		ObjectModel.dispatch({
 			type: "SET_CANVAS_INFO",
-			data: startCanvas
+			data: startCanvas,
+			layoutinfo: ObjectModel.getLayout()
 		});
 
 		ObjectModel.dispatch({
@@ -526,6 +600,14 @@ describe("ObjectModel handle model OK", () => {
 			};
 
 		const actualCanvas = ObjectModel.getCanvasInfo();
+
+		// Remove transient data before comparing with expected
+		for (var i = 0; i < actualCanvas.nodes.length; i++) {
+			delete actualCanvas.nodes[i].width;
+			delete actualCanvas.nodes[i].height;
+			delete actualCanvas.nodes[i].outputPortsHeight;
+			delete actualCanvas.nodes[i].inputPortsHeight;
+		}
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
@@ -554,7 +636,8 @@ describe("ObjectModel handle model OK", () => {
 
 		ObjectModel.dispatch({
 			type: "SET_CANVAS_INFO",
-			data: startCanvas
+			data: startCanvas,
+			layoutinfo: ObjectModel.getLayout()
 		});
 
 		ObjectModel.dispatch({
@@ -579,6 +662,14 @@ describe("ObjectModel handle model OK", () => {
 			};
 
 		const actualCanvas = ObjectModel.getCanvasInfo();
+
+		// Remove transient data before comparing with expected
+		for (var i = 0; i < actualCanvas.nodes.length; i++) {
+			delete actualCanvas.nodes[i].width;
+			delete actualCanvas.nodes[i].height;
+			delete actualCanvas.nodes[i].outputPortsHeight;
+			delete actualCanvas.nodes[i].inputPortsHeight;
+		}
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas));
@@ -605,7 +696,8 @@ describe("ObjectModel handle model OK", () => {
 		deepFreeze(startCanvas);
 		ObjectModel.dispatch({
 			type: "SET_CANVAS_INFO",
-			data: startCanvas
+			data: startCanvas,
+			layoutinfo: ObjectModel.getLayout()
 		});
 
 		/* ObjectModel.dispatch({
@@ -638,6 +730,14 @@ describe("ObjectModel handle model OK", () => {
 
 		const actualCanvas = ObjectModel.getCanvasInfo();
 
+		// Remove transient data before comparing with expected
+		for (var i = 0; i < actualCanvas.nodes.length; i++) {
+			delete actualCanvas.nodes[i].width;
+			delete actualCanvas.nodes[i].height;
+			delete actualCanvas.nodes[i].outputPortsHeight;
+			delete actualCanvas.nodes[i].inputPortsHeight;
+		}
+
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
 
@@ -669,7 +769,8 @@ describe("ObjectModel handle model OK", () => {
 
 		ObjectModel.dispatch({
 			type: "SET_CANVAS_INFO",
-			data: startCanvas
+			data: startCanvas,
+			layoutinfo: ObjectModel.getLayout()
 		});
 
 		ObjectModel.dispatch({
@@ -696,6 +797,14 @@ describe("ObjectModel handle model OK", () => {
 			};
 
 		const actualCanvas = ObjectModel.getCanvasInfo();
+
+		// Remove transient data before comparing with expected
+		for (var i = 0; i < actualCanvas.nodes.length; i++) {
+			delete actualCanvas.nodes[i].width;
+			delete actualCanvas.nodes[i].height;
+			delete actualCanvas.nodes[i].outputPortsHeight;
+			delete actualCanvas.nodes[i].inputPortsHeight;
+		}
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
@@ -727,7 +836,8 @@ describe("ObjectModel handle model OK", () => {
 
 		ObjectModel.dispatch({
 			type: "SET_CANVAS_INFO",
-			data: startCanvas
+			data: startCanvas,
+			layoutinfo: ObjectModel.getLayout()
 		});
 
 		ObjectModel.dispatch({
@@ -754,6 +864,14 @@ describe("ObjectModel handle model OK", () => {
 			};
 
 		const actualCanvas = ObjectModel.getCanvasInfo();
+
+		// Remove transient data before comparing with expected
+		for (var i = 0; i < actualCanvas.nodes.length; i++) {
+			delete actualCanvas.nodes[i].width;
+			delete actualCanvas.nodes[i].height;
+			delete actualCanvas.nodes[i].outputPortsHeight;
+			delete actualCanvas.nodes[i].inputPortsHeight;
+		}
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
@@ -785,7 +903,8 @@ describe("ObjectModel handle model OK", () => {
 
 		ObjectModel.dispatch({
 			type: "SET_CANVAS_INFO",
-			data: startCanvas
+			data: startCanvas,
+			layoutinfo: ObjectModel.getLayout()
 		});
 
 		ObjectModel.dispatch({
@@ -825,6 +944,14 @@ describe("ObjectModel handle model OK", () => {
 			};
 
 		const actualCanvas = ObjectModel.getCanvasInfo();
+
+		// Remove transient data before comparing with expected
+		for (var i = 0; i < actualCanvas.nodes.length; i++) {
+			delete actualCanvas.nodes[i].width;
+			delete actualCanvas.nodes[i].height;
+			delete actualCanvas.nodes[i].outputPortsHeight;
+			delete actualCanvas.nodes[i].inputPortsHeight;
+		}
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
@@ -868,7 +995,8 @@ describe("ObjectModel handle model OK", () => {
 
 		ObjectModel.dispatch({
 			type: "SET_CANVAS_INFO",
-			data: startCanvas
+			data: startCanvas,
+			layoutinfo: ObjectModel.getLayout()
 		});
 
 		ObjectModel.dispatch({
@@ -893,6 +1021,14 @@ describe("ObjectModel handle model OK", () => {
 			};
 
 		const actualCanvas = ObjectModel.getCanvasInfo();
+
+		// Remove transient data before comparing with expected
+		for (var i = 0; i < actualCanvas.nodes.length; i++) {
+			delete actualCanvas.nodes[i].width;
+			delete actualCanvas.nodes[i].height;
+			delete actualCanvas.nodes[i].outputPortsHeight;
+			delete actualCanvas.nodes[i].inputPortsHeight;
+		}
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
@@ -924,7 +1060,8 @@ describe("ObjectModel handle model OK", () => {
 
 		ObjectModel.dispatch({
 			type: "SET_CANVAS_INFO",
-			data: startCanvas
+			data: startCanvas,
+			layoutinfo: ObjectModel.getLayout()
 		});
 
 		ObjectModel.dispatch({
@@ -948,6 +1085,14 @@ describe("ObjectModel handle model OK", () => {
 			};
 
 		const actualCanvas = ObjectModel.getCanvasInfo();
+
+		// Remove transient data before comparing with expected
+		for (var i = 0; i < actualCanvas.nodes.length; i++) {
+			delete actualCanvas.nodes[i].width;
+			delete actualCanvas.nodes[i].height;
+			delete actualCanvas.nodes[i].outputPortsHeight;
+			delete actualCanvas.nodes[i].inputPortsHeight;
+		}
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
@@ -979,7 +1124,8 @@ describe("ObjectModel handle model OK", () => {
 
 		ObjectModel.dispatch({
 			type: "SET_CANVAS_INFO",
-			data: startCanvas
+			data: startCanvas,
+			layoutinfo: ObjectModel.getLayout()
 		});
 
 		ObjectModel.dispatch({
@@ -1003,6 +1149,14 @@ describe("ObjectModel handle model OK", () => {
 			};
 
 		const actualCanvas = ObjectModel.getCanvasInfo();
+
+		// Remove transient data before comparing with expected
+		for (var i = 0; i < actualCanvas.nodes.length; i++) {
+			delete actualCanvas.nodes[i].width;
+			delete actualCanvas.nodes[i].height;
+			delete actualCanvas.nodes[i].outputPortsHeight;
+			delete actualCanvas.nodes[i].inputPortsHeight;
+		}
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
@@ -1034,7 +1188,8 @@ describe("ObjectModel handle model OK", () => {
 
 		ObjectModel.dispatch({
 			type: "SET_CANVAS_INFO",
-			data: startCanvas
+			data: startCanvas,
+			layoutinfo: ObjectModel.getLayout()
 		});
 
 		ObjectModel.dispatch({
@@ -1075,7 +1230,8 @@ describe("ObjectModel handle model OK", () => {
 
 		ObjectModel.dispatch({
 			type: "SET_CANVAS_INFO",
-			data: startCanvas
+			data: startCanvas,
+			layoutinfo: ObjectModel.getLayout()
 		});
 
 		ObjectModel.dispatch({
@@ -1121,7 +1277,8 @@ describe("ObjectModel handle model OK", () => {
 
 		ObjectModel.dispatch({
 			type: "SET_CANVAS_INFO",
-			data: startCanvas
+			data: startCanvas,
+			layoutinfo: ObjectModel.getLayout()
 		});
 
 		ObjectModel.dispatch({
@@ -1166,7 +1323,8 @@ describe("ObjectModel handle model OK", () => {
 
 		ObjectModel.dispatch({
 			type: "SET_CANVAS_INFO",
-			data: startCanvas
+			data: startCanvas,
+			layoutinfo: ObjectModel.getLayout()
 		});
 
 		ObjectModel.dispatch({
@@ -1211,7 +1369,8 @@ describe("ObjectModel handle model OK", () => {
 
 		ObjectModel.dispatch({
 			type: "SET_CANVAS_INFO",
-			data: startCanvas
+			data: startCanvas,
+			layoutinfo: ObjectModel.getLayout()
 		});
 
 		ObjectModel.dispatch({
@@ -1256,7 +1415,8 @@ describe("ObjectModel handle model OK", () => {
 
 		ObjectModel.dispatch({
 			type: "SET_CANVAS_INFO",
-			data: startCanvas
+			data: startCanvas,
+			layoutinfo: ObjectModel.getLayout()
 		});
 
 		ObjectModel.dispatch({
@@ -1304,7 +1464,8 @@ describe("ObjectModel handle model OK", () => {
 
 		ObjectModel.dispatch({
 			type: "SET_CANVAS_INFO",
-			data: startCanvas
+			data: startCanvas,
+			layoutinfo: ObjectModel.getLayout()
 		});
 
 		ObjectModel.dispatch({
@@ -1352,7 +1513,8 @@ describe("ObjectModel handle model OK", () => {
 
 		ObjectModel.dispatch({
 			type: "SET_CANVAS_INFO",
-			data: startCanvas
+			data: startCanvas,
+			layoutinfo: ObjectModel.getLayout()
 		});
 
 		ObjectModel.dispatch({
@@ -1400,7 +1562,8 @@ describe("ObjectModel handle model OK", () => {
 
 		ObjectModel.dispatch({
 			type: "SET_CANVAS_INFO",
-			data: startCanvas
+			data: startCanvas,
+			layoutinfo: ObjectModel.getLayout()
 		});
 
 		ObjectModel.dispatch({
@@ -1450,7 +1613,8 @@ describe("ObjectModel handle model OK", () => {
 
 		ObjectModel.dispatch({
 			type: "SET_CANVAS_INFO",
-			data: startCanvas
+			data: startCanvas,
+			layoutinfo: ObjectModel.getLayout()
 		});
 
 		ObjectModel.dispatch({
@@ -1520,7 +1684,8 @@ describe("ObjectModel handle model OK", () => {
 
 		ObjectModel.dispatch({
 			type: "SET_CANVAS_INFO",
-			data: startCanvas
+			data: startCanvas,
+			layoutinfo: ObjectModel.getLayout()
 		});
 
 		ObjectModel.dispatch({
@@ -1591,7 +1756,8 @@ describe("ObjectModel handle model OK", () => {
 
 		ObjectModel.dispatch({
 			type: "SET_CANVAS_INFO",
-			data: startCanvas
+			data: startCanvas,
+			layoutinfo: ObjectModel.getLayout()
 		});
 
 		ObjectModel.dispatch({
@@ -1662,7 +1828,8 @@ describe("ObjectModel handle model OK", () => {
 
 		ObjectModel.dispatch({
 			type: "SET_CANVAS_INFO",
-			data: startCanvas
+			data: startCanvas,
+			layoutinfo: ObjectModel.getLayout()
 		});
 
 		ObjectModel.dispatch({
@@ -1732,7 +1899,8 @@ describe("ObjectModel handle model OK", () => {
 
 		ObjectModel.dispatch({
 			type: "SET_CANVAS_INFO",
-			data: startCanvas
+			data: startCanvas,
+			layoutinfo: ObjectModel.getLayout()
 		});
 
 		ObjectModel.dispatch({

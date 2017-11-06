@@ -11,31 +11,20 @@ import { createStore, combineReducers } from "redux";
 import uuid from "node-uuid";
 import { NONE, VERTICAL, DAGRE_HORIZONTAL, DAGRE_VERTICAL } from "../../constants/common-constants.js";
 import dagre from "dagre";
+import LayoutDimensions from "./layout-dimensions.js";
 import SVGCanvasInHandler from "../svg-canvas-in-handler.js"; // TODO - Remove this when WML supports PipelineFlow
 import SVGPipelineInHandler from "../svg-pipeline-in-handler.js";
 import SVGPipelineOutHandler from "../svg-pipeline-out-handler.js";
 
 /* eslint arrow-body-style: ["error", "always"] */
-/* eslint complexity: ["error", 21] */
+/* eslint complexity: ["error", 22] */
 
 const nodes = (state = [], action) => {
 	switch (action.type) {
 	case "ADD_NODE": {
-		const newNode = {
-			id: action.data.id,
-			label: action.data.label,
-			image: action.data.image,
-			type: action.data.type,
-			operator_id_ref: action.data.operator_id_ref,
-			class_name: action.data.class_name,
-			input_ports: action.data.input_ports,
-			output_ports: action.data.output_ports,
-			x_pos: action.data.x_pos,
-			y_pos: action.data.y_pos
-		};
 		return [
 			...state,
-			newNode
+			action.data
 		];
 	}
 
@@ -128,6 +117,15 @@ const nodes = (state = [], action) => {
 				return newNode;
 			}
 			return node;
+		});
+
+	case "SET_PIPELINE_FLOW":
+	case "SET_LAYOUT_INFO":
+	case "SET_CANVAS_INFO":
+		return state.map((node, index) => {
+			let newNode = Object.assign({}, node);
+			newNode = setNodeDimensions(newNode, node, action.layoutinfo);
+			return newNode;
 		});
 
 	default:
@@ -302,14 +300,14 @@ const canvasinfo = (state = getInitialCanvas(), action) => {
 			if (mainPipeline) {
 				var canvasInfo = SVGPipelineInHandler.convertPipelineToCanvasInfo(mainPipeline);
 				canvasInfo.id = action.data.id;
-				return canvasInfo;
+				return Object.assign({}, canvasInfo, { nodes: nodes(canvasInfo.nodes, action) });
 			}
 		}
 		return null;
 	}
 
 	case "SET_CANVAS_INFO":
-		return Object.assign({}, action.data);
+		return Object.assign({}, action.data, { nodes: nodes(action.data.nodes, action) });
 
 	case "ADD_NODE":
 	case "SET_NODE_PARAMETERS":
@@ -317,6 +315,7 @@ const canvasinfo = (state = getInitialCanvas(), action) => {
 	case "SET_NODE_MESSAGES":
 	case "ADD_NODE_ATTR":
 	case "REMOVE_NODE_ATTR":
+	case "SET_LAYOUT_INFO":
 		return Object.assign({}, state, { nodes: nodes(state.nodes, action) });
 
 	case "MOVE_OBJECTS":
@@ -455,6 +454,17 @@ const selections = (state = [], action) => {
 	}
 };
 
+
+const layoutinfo = (state = LayoutDimensions.getLayout(), action) => {
+	switch (action.type) {
+	case "SET_LAYOUT_INFO":
+		return Object.assign({}, action.layoutinfo);
+
+	default:
+		return state;
+	}
+};
+
 const getInitialCanvas = () => {
 	const newPipelineUuid = getUUID();
 
@@ -499,16 +509,39 @@ const getMainPipeline = (pipelineFlow) => {
 	return null;
 };
 
+const setNodeDimensions = (newNode, node, layoutInfo) => {
+	if (layoutInfo.connectionType === "Ports") {
+		newNode.inputPortsHeight = node.input_ports
+			? (node.input_ports.length * (layoutInfo.portArcRadius * 2)) + ((node.input_ports.length - 1) * layoutInfo.portArcSpacing)
+			: 0;
+
+		newNode.outputPortsHeight = node.output_ports
+			? (node.output_ports.length * (layoutInfo.portArcRadius * 2)) + ((node.output_ports.length - 1) * layoutInfo.portArcSpacing)
+			: 0;
+
+		newNode.height = Math.max(newNode.inputPortsHeight, newNode.outputPortsHeight, layoutInfo.defaultNodeHeight);
+	} else { // 'halo' connection type
+		newNode.inputPortsHeight = 0;
+		newNode.outputPortsHeight = 0;
+		newNode.height = layoutInfo.defaultNodeHeight;
+	}
+	newNode.width = layoutInfo.defaultNodeWidth;
+	return newNode;
+};
+
 const getUUID = () => {
 	return uuid.v4();
 };
 
 // Put 'selections' reducer first so slections are handled before canvas and pipeline flow actions
-const combinedReducer = combineReducers({ selections, canvasinfo, pipelineflow, palette });
+// Also put layoutinfo reducer before canvas info becuase node heights and width are calculated
+// based on layoutinfo.
+const combinedReducer = combineReducers({ selections, layoutinfo, canvasinfo, pipelineflow, palette });
 const store = createStore(combinedReducer);
 
 store.dispatch({ type: "CLEAR_CANVAS" });
 store.dispatch({ type: "CLEAR_PALETTE_DATA" });
+store.dispatch({ type: "SET_LAYOUT_INFO", layoutinfo: LayoutDimensions.getLayout() });
 
 // TODO - Remove this gloabal  variable when WML Canvas supports pipelineFlow
 var oldCanvas = null;
@@ -580,9 +613,9 @@ export default class ObjectModel {
 	// TODO - Remember to also remove declaration of ObjectModel.oldCanvas from above
 	static setCanvas(canvas) {
 		oldCanvas = canvas; // TODO - Remember to remvove the declaration of this global when WML Canvas UI supports pipleine flow.
-		store.dispatch({ type: "SET_PIPELINE_FLOW", data: getInitialPipelineFlow(canvas.id, canvas.diagram.id) });
+		store.dispatch({ type: "SET_PIPELINE_FLOW", data: getInitialPipelineFlow(canvas.id, canvas.diagram.id), layoutinfo: store.getState().layoutinfo });
 		var canvasInfo = SVGCanvasInHandler.convertCanvasToCanvasInfo(canvas);
-		store.dispatch({ type: "SET_CANVAS_INFO", data: canvasInfo });
+		this.setCanvasInfo(canvasInfo);
 	}
 
 	// Deprectaed TODO - Remove this method when WML Canvas supports pipeline Flow
@@ -600,11 +633,11 @@ export default class ObjectModel {
 			return;
 		}
 
-		store.dispatch({ type: "SET_PIPELINE_FLOW", data: newPipelineFlow });
+		store.dispatch({ type: "SET_PIPELINE_FLOW", data: newPipelineFlow, layoutinfo: store.getState().layoutinfo });
 	}
 
 	static setEmptyPipelineFlow() {
-		store.dispatch({ type: "SET_PIPELINE_FLOW", data: getInitialPipelineFlow("empty-pipeline-flow", "empty-pipeline") });
+		store.dispatch({ type: "SET_PIPELINE_FLOW", data: getInitialPipelineFlow("empty-pipeline-flow", "empty-pipeline"), layoutinfo: store.getState().layoutinfo });
 	}
 
 	// Returns a pipeline flow based on the initial pipeline flow we were given
@@ -640,7 +673,7 @@ export default class ObjectModel {
 	}
 
 	static setCanvasInfo(canvasInfo) {
-		store.dispatch({ type: "SET_CANVAS_INFO", data: canvasInfo });
+		store.dispatch({ type: "SET_CANVAS_INFO", data: canvasInfo, layoutinfo: this.getLayout() });
 	}
 
 	static isCanvasEmpty() {
@@ -667,9 +700,9 @@ export default class ObjectModel {
 		var newNodes = canvasData.nodes.map((node) => {
 			return Object.assign({}, node, { x_pos: lookup[node.id].value.x, y_pos: lookup[node.id].value.y });
 		});
-		var newCanvasData = Object.assign({}, canvasData, { nodes: newNodes });
 
-		store.dispatch({ type: "SET_CANVAS_INFO", data: newCanvasData });
+		var newCanvasData = Object.assign({}, canvasData, { nodes: newNodes });
+		this.setCanvasInfo(newCanvasData);
 	}
 
 	static dagreAutolayout(direction, canvasData) {
@@ -696,11 +729,18 @@ export default class ObjectModel {
 
 		var inputGraph = { nodes: nodesData, edges: edges, value: value };
 
+		var maxNodeSizes = this.getMaximumNodeSizes();
+
 		var g = dagre.graphlib.json.read(inputGraph);
-		g.graph().marginx = 100;
-		g.graph().marginy = 25;
-		g.graph().nodesep = 150; // distance to separate the nodes horiziontally
-		g.graph().ranksep = 150; // distance between each rank of nodes
+		g.graph().marginx = 50;
+		g.graph().marginy = 50;
+		if (direction === "TB") {
+			g.graph().nodesep = maxNodeSizes.width + 80; // distance to separate the nodes horiziontally
+			g.graph().ranksep = maxNodeSizes.height + 80; // distance between each rank of nodes
+		} else {
+			g.graph().nodesep = maxNodeSizes.height + 80; // distance to separate the nodes horiziontally
+			g.graph().ranksep = maxNodeSizes.width + 80; // distance between each rank of nodes
+		}
 		dagre.layout(g);
 
 		var outputGraph = dagre.graphlib.json.write(g);
@@ -710,6 +750,21 @@ export default class ObjectModel {
 			lookup[outputGraph.nodes[i].v] = outputGraph.nodes[i];
 		}
 		return lookup;
+	}
+
+	static getMaximumNodeSizes() {
+		var maxWidth = store.getState().layoutinfo.defaultNodeWidth;
+		var maxHeight = store.getState().layoutinfo.defaultNodeHeight;
+
+		if (store.getState().canvasinfo &&
+				store.getState().canvasinfo.nodes) {
+			store.getState().canvasinfo.nodes.forEach((node) => {
+				maxWidth = Math.max(maxWidth, node.width);
+				maxHeight = Math.max(maxHeight, node.height);
+			});
+		}
+
+		return { width: maxWidth, height: maxHeight };
 	}
 
 	// Node AND comment methods
@@ -748,24 +803,28 @@ export default class ObjectModel {
 
 	static createNode(data) {
 		const nodeType = ObjectModel.getPaletteNode(data.operator_id_ref);
-		const info = {};
+		let node = {};
 		if (nodeType !== null) {
-			info.id = getUUID();
-			info.label = nodeType.label;
-			info.type = nodeType.type;
-			info.operator_id_ref = nodeType.operator_id_ref;
-			info.image = nodeType.image;
-			info.class_name = "canvas-node";
-			info.input_ports = nodeType.input_ports || [];
-			info.output_ports = nodeType.output_ports || [];
-			info.x_pos = data.offsetX;
-			info.y_pos = data.offsetY;
+			node.id = getUUID();
+			node.label = nodeType.label;
+			node.type = nodeType.type;
+			node.operator_id_ref = nodeType.operator_id_ref;
+			node.image = nodeType.image;
+			node.class_name = "canvas-node";
+			node.input_ports = nodeType.input_ports || [];
+			node.output_ports = nodeType.output_ports || [];
+			node.x_pos = data.offsetX;
+			node.y_pos = data.offsetY;
 		}
-		return info;
+
+		// Add node height and width and, if appropriate, inputPortsHeight
+		// and outputPortsHeight
+		node = setNodeDimensions(node, node, store.getState().layoutinfo);
+		return node;
 	}
 
-	static addNode(info) {
-		store.dispatch({ type: "ADD_NODE", data: info });
+	static addNode(node) {
+		store.dispatch({ type: "ADD_NODE", data: node });
 
 		if (ObjectModel.fixedLayout !== NONE) {
 			this.autoLayout(ObjectModel.fixedLayout);
@@ -1260,27 +1319,28 @@ export default class ObjectModel {
 	// passed in, provided either one is negative.
 	static getOffsetIntoNegativeSpace(action, offsetX, offsetY) {
 		var selObjs = this.getSelectedNodesAndComments();
+		var highlightGap = store.getState().layoutinfo.highlightGap;
 
 		var offset = { "x": 0, "y": 0 };
 
 		if (action === "moveObjects") {
 			selObjs.forEach((obj) => {
-				offset.x = Math.min(offset.x, obj.x_pos + offsetX - 4); // 4 = highlightGap
-				offset.y = Math.min(offset.y, obj.y_pos + offsetY - 4); // 4 = highlightGap
+				offset.x = Math.min(offset.x, obj.x_pos + offsetX - highlightGap);
+				offset.y = Math.min(offset.y, obj.y_pos + offsetY - highlightGap);
 			});
 
 			var noneSelObjs = this.getNoneSelectedNodesAndComments();
 			noneSelObjs.forEach((obj) => {
-				offset.x = Math.min(offset.x, obj.x_pos - 4); // 4 = highlightGap
-				offset.y = Math.min(offset.y, obj.y_pos - 4); // 4 = highlightGap
+				offset.x = Math.min(offset.x, obj.x_pos - highlightGap);
+				offset.y = Math.min(offset.y, obj.y_pos - highlightGap);
 			});
 		} else {
 			offset = { "x": Math.min(0, offsetX), "y": Math.min(0, offsetY) };
 
 			var objs = this.getNodesAndComments();
 			objs.forEach((obj) => {
-				offset.x = Math.min(offset.x, obj.x_pos - 4); // 4 = highlightGap
-				offset.y = Math.min(offset.y, obj.y_pos - 4); // 4 = highlightGap
+				offset.x = Math.min(offset.x, obj.x_pos - highlightGap);
+				offset.y = Math.min(offset.y, obj.y_pos - highlightGap);
 			});
 		}
 
@@ -1331,6 +1391,15 @@ export default class ObjectModel {
 		return objs;
 	}
 
+	// Methods to handle Layout info.
+
+	static setLayoutType(type) {
+		store.dispatch({ type: "SET_LAYOUT_INFO", layoutinfo: LayoutDimensions.getLayout(type) });
+	}
+
+	static getLayout() {
+		return store.getState().layoutinfo;
+	}
 
 }
 

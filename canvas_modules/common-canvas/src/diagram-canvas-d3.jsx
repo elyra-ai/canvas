@@ -87,8 +87,8 @@ export default class DiagramCanvas extends React.Component {
 		const mousePos = this.mouseCoords(event);
 
 		// Offset mousePos so new node appers in center of mouse location.
-		mousePos.x -= (this.canvasD3Layout.nodeWidth / 2) * this.canvasD3Layout.zoomTransform.k;
-		mousePos.y -= (this.canvasD3Layout.nodeHeight / 2) * this.canvasD3Layout.zoomTransform.k;
+		mousePos.x -= (this.canvasD3Layout.defaultNodeWidth / 2) * this.canvasD3Layout.zoomTransform.k;
+		mousePos.y -= (this.canvasD3Layout.defaultNodeHeight / 2) * this.canvasD3Layout.zoomTransform.k;
 
 		const transPos = this.canvasD3Layout.transformMousePos(mousePos);
 

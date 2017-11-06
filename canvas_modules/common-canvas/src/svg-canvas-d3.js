@@ -113,7 +113,7 @@ export default class CanvasD3Layout {
 		// Make a copy of canvasJSON because we will need to update it (when moving
 		// nodes and comments and when sizing comments in real time) without updating the
 		// canvasJSON in the ObjectModel until we're done.
-		this.canvasJSON = this.cloneCanvasJSON(canvasJSON);
+		this.canvasJSON = this.cloneCanvasInfo(canvasJSON);
 
 		this.createCanvas();
 		this.displayCanvas();
@@ -121,8 +121,6 @@ export default class CanvasD3Layout {
 
 	// Initializes the dimensions for nodes, comments layout etc.
 	initializeDimensions() {
-		// Specify and calculate some sizes of components of a node
-
 		if (this.connectionType === "Halo") {
 			this.nodeBodyClass = "d3-node-body-outline";
 			this.selectionHighlightClass = "d3-obj-selection-highlight";
@@ -138,70 +136,7 @@ export default class CanvasD3Layout {
 			this.newConnectionLineStartClass = "";
 			this.newConnectionLineBlobClass = "";
 
-			this.nodeWidth = 60;
-			this.nodeHeight = 66;
-
-			this.imageWidth = 48;
-			this.imageHeight = 48;
-
-			this.imagePosX = 6;
-			this.imagePosY = 0;
-
-			// Sets the justification of label and icon within the node height. This
-			// overrides any labelPosY value provided. Possible value are "center" or
-			// "none". Specify "none" to use the labelPosY value.
-			this.labelAndIconVerticalJustification = "none";
-
-			// Horizontal Justification of the lable based on label position X and Y.
-			this.labelHorizontalJustification = "center";
-
-			// Specifies whether a label that has been truncated should be displayed
-			// in full when the pointer is hovered over the truncated label.
-			this.displayFullLabelOnHover = true;
-
-			this.labelWidth = 52;
-			this.labelHeight = 12;
-
-			// The underhang of letters below the baseline for the label font used
-			this.labelDescent = 3;
-
-			this.labelPosX = 4;
-			this.labelPosY = 53;
-
-			this.decoratorHeight = 12;
-			this.decoratorWidth = 12;
-
-			this.topDecoratorY = 0;
-			this.bottomDecoratorY = 36;
-
-			this.leftDecoratorX = 6;
-			this.rightDecoratorX = 42;
-
-			// Draw node as a simple rectangle
-			this.nodeShape = "rectangle";
-
-			// The gap between a node or comment and its selection highlight rectangle
-			this.highLightGap = 4;
-
-			// Halo sizes
-			this.haloCommentGap = 11; // Gap between comment rectangle and its halo
-			this.haloNodeGap = 5; // Gap between node image and its halo
-
-			this.haloCenterX = this.imagePosX + (this.imageWidth / 2);
-			this.haloCenterY = this.imagePosY + (this.imageHeight / 2);
-			this.haloRadius = (this.imageWidth / 2) + this.haloNodeGap;
-
-			// Whether to display a link line when linked node/comments overlap
-			this.displayLinkOnOverlap = false;
-
-			// What point to draw the link line towards. Possible values are image_center or node_center.
-			// This is used for comment links going towards nodes.
-			this.drawLinkLineTo = "image_center";
-
-			// Error indicator dimensions
-			this.errorCenterX = 54;
-			this.errorCenterY = 0;
-			this.errorRadius = 7;
+			ObjectModel.setLayoutType("halo");
 
 		} else { // Ports connection type
 
@@ -220,86 +155,8 @@ export default class CanvasD3Layout {
 				this.newConnectionLineStartClass = "d3-new-connection-start-austin";
 				this.newConnectionLineBlobClass = "d3-new-connection-blob-austin";
 
-				this.nodeWidth = 160;
-				this.nodeHeight = 40;
 
-				this.imageWidth = 26;
-				this.imageHeight = 26;
-
-				this.imagePosX = 6;
-				this.imagePosY = 7;
-
-				// Sets the justification of label and icon within the node height. This
-				// overrides any labelPosY value provided. Possible value are "center" or
-				// "none". Specify "none" to use the labelPosY value.
-				this.labelAndIconVerticalJustification = "center";
-
-				// Horizontal Justification of the lable based on label position X and Y.
-				this.labelHorizontalJustification = "left";
-
-				// Specifies whether a label that has been truncated should be displayed
-				// in full when the pointer is hovered over the truncated label.
-				this.displayFullLabelOnHover = false;
-
-				this.labelWidth = 104;
-				this.labelHeight = 12;
-
-				// The underhang of letters below the baseline for the label font used
-				this.labelDescent = 3;
-
-				this.labelPosX = 38;
-				this.labelPosY = 14;
-
-				this.decoratorHeight = 12;
-				this.decoratorWidth = 12;
-
-				this.topDecoratorY = 0;
-				this.bottomDecoratorY = 28;
-
-				this.leftDecoratorX = 2;
-				this.rightDecoratorX = 144;
-
-				// Draw node as a rectangle with port arcs around the ports
-				this.nodeShape = "port-arcs";
-
-				// Radius of the port circle
-				this.portRadius = 3;
-
-				// Radius of an imaginary circle around the port. This controls the
-				// spacing of ports and the size of port arcs when nodeShape is set to
-				// port-arcs.
-				this.portArcRadius = 6;
-
-				// Spacing between the port arcs around the ports.
-				this.portArcSpacing = 3;
-
-				// Default position of a single port - for vertical node format this
-				// is half way down the image rather than the center of the node.
-				this.portPosY = 20;
-
-				// Comment port (circle) radius
-				this.commentPortRadius = 5;
-
-				// The gap between a node or comment and its selection highlight outline
-				this.highLightGap = 2;
-
-				// Whether to display a link line when linked node/comments overlap
-				this.displayLinkOnOverlap = true;
-
-				// What point to draw the link line towards. Possible values are image_center or node_center.
-				// This is used for comment links going towards nodes.
-				this.drawLinkLineTo = "node_center";
-
-				// Display of vertical ellipsis to show context menu
-				this.ellipsisWidth = 4;
-				this.ellipsisHeight = 16;
-				this.ellipsisPosX = 148;
-				this.ellipsisPosY = 12;
-
-				// Error indicator dimensions
-				this.errorCenterX = 30;
-				this.errorCenterY = 10;
-				this.errorRadius = 5;
+				ObjectModel.setLayoutType("ports-horizontal");
 
 			} else { // Vertical
 				this.nodeBodyClass = "d3-node-body-outline";
@@ -316,103 +173,12 @@ export default class CanvasD3Layout {
 				this.newConnectionLineStartClass = "d3-new-connection-start";
 				this.newConnectionLineBlobClass = "d3-new-connection-blob";
 
-				this.nodeWidth = 70;
-				this.nodeHeight = 75;
-
-				this.imageWidth = 48;
-				this.imageHeight = 48;
-
-				this.imagePosX = 11;
-				this.imagePosY = 5;
-
-				// Sets the justification of label and icon within the node height. This
-				// overrides any labelPosY value provided. Possible value are "center" or
-				// "none". Specify "none" to use the labelPosY value.
-				this.labelAndIconVerticalJustification = "center";
-
-				// Horizontal Justification of the lable based on label position X and Y.
-				this.labelHorizontalJustification = "center";
-
-				// Specifies whether a label that has been truncated should be displayed
-				// in full when the pointer is hovered over the truncated label.
-				this.displayFullLabelOnHover = true;
-
-				this.labelWidth = 64;
-				this.labelHeight = 12;
-
-				// The underhang of letters below the baseline for the label font used
-				this.labelDescent = 3;
-
-				this.labelPosX = 3;
-				this.labelPosY = 57;
-
-				this.decoratorHeight = 12;
-				this.decoratorWidth = 12;
-
-				this.topDecoratorY = 5;
-				this.bottomDecoratorY = 41;
-				this.leftDecoratorX = 10;
-				this.rightDecoratorX = 46;
-
-				// Draw node as a simple rectangle
-				this.nodeShape = "rectangle";
-
-				// Radius of the port circle
-				this.portRadius = 6;
-
-				// Radius of an imaginary circle around the port. This controls the
-				// spacing of ports and the size of port arcs when nodeShape is set to
-				// port-arcs.
-				this.portArcRadius = 10; // Defines an imaginary circle around the circle port
-
-				// Spacing between the port arcs around the ports.
-				this.portArcSpacing = 0;
-
-				// Default position of a single port - for vertical node format this
-				// is half way down the image rather than the center of the node.
-				this.portPosY = 29;
-
-				// Comment port (circle) radius
-				this.commentPortRadius = 5;
-
-				// The gap between a node or comment and its selection highlight rectangle
-				this.highLightGap = 4;
-
-				// Whether to display a link line when linked node/comments overlap
-				this.displayLinkOnOverlap = true;
-
-				// What point to draw the link line towards. Possible values are image_center or node_center.
-				// This is used for comment links going towards nodes.
-				this.drawLinkLineTo = "node_center";
-
-				// Display of vertical ellipsis to show context menu
-				this.ellipsisWidth = 5;
-				this.ellipsisHeight = 15;
-				this.ellipsisPosX = 56;
-				this.ellipsisPosY = 7;
-
-				// Error indicator dimensions
-				this.errorCenterX = 48;
-				this.errorCenterY = 0;
-				this.errorRadius = 5;
+				ObjectModel.setLayoutType("ports-vertical");
 			}
 		}
+		const layout = ObjectModel.getLayout();
+		Object.assign(this, layout);
 
-		// The gap between node or comment and the link line.
-		this.linkGap = 7;
-
-		// When sizing a comment this decides the size of the corner area for
-		// diagonal sizing.
-		this.cornerResizeArea = 10;
-
-		// The gap between the edge of the comment rectangle and the comment text.
-		this.commentWidthPadding = 3;
-
-		// Initialize values for drawing connectors. minInitialLine is the
-		// size of the vertical line protruding from the source or target handles
-		// when such a line is required for drawing connectors.
-		this.elbowSize = 10;
-		this.minInitialLine = 30;
 	}
 
 	initializeZoomVariables() {
@@ -430,6 +196,7 @@ export default class CanvasD3Layout {
 
 	setCanvasInfo(canvasJSON, config) {
 		this.consoleLog("Set Canvas. Id = " + canvasJSON.id);
+
 		var startTime = Date.now();
 		if (canvasJSON.id !== this.canvasJSON.id ||
 				canvasJSON.sub_id !== this.canvasJSON.sub_id ||
@@ -441,15 +208,15 @@ export default class CanvasD3Layout {
 			this.nodeFormatType = config.enableNodeFormatType;
 			this.linkType = config.enableLinkType;
 			this.clearCanvas();
-		}
 
-		// Initialize dimensions before cloning the canvas since cloning relies on the dimnesion info
-		this.initializeDimensions();
+			// Initialize dimensions before cloning the canvas since cloning relies on the dimnesion info
+			this.initializeDimensions();
+		}
 
 		// Make a copy of canvasJSON because we will need to update it (when moving
 		// nodes and comments and when sizing comments in real time) without updating the
 		// canvasJSON in the ObjectModel until we're done.
-		this.canvasJSON = this.cloneCanvasJSON(canvasJSON);
+		this.canvasJSON = this.cloneCanvasInfo(canvasJSON);
 
 		// this.zoomTransform = d3.zoomIdentity.translate(0, 0).scale(1); // Reset zoom parameters
 
@@ -457,32 +224,11 @@ export default class CanvasD3Layout {
 		this.consoleLog("Set Canvas. Elapsed time = " + (Date.now() - startTime));
 	}
 
-	// Copies the canvas JSON because the canvas info is updated by the d3 code when
+	// Copies the canvas info because the canvas info is updated by the d3 code when
 	// real time actions are performed like moving nodes or comments or resizing
 	// comments.
-	cloneCanvasJSON(canvasJSON) {
-		var newCanvas = JSON.parse(JSON.stringify(canvasJSON));
-
-		// Add some useful height info to the nodes
-		newCanvas.nodes = newCanvas.nodes.map((node) => {
-			var inputPortsHeight = 0;
-			var outputPortsHeight = 0;
-			var nodeHeight = this.nodeHeight;
-
-			if (this.connectionType === "Ports") {
-				inputPortsHeight = node.input_ports ? (node.input_ports.length * (this.portArcRadius * 2)) + ((node.input_ports.length - 1) * this.portArcSpacing) : 0;
-				outputPortsHeight = node.output_ports ? (node.output_ports.length * (this.portArcRadius * 2)) + ((node.output_ports.length - 1) * this.portArcSpacing) : 0;
-				nodeHeight = Math.max(inputPortsHeight, outputPortsHeight, this.nodeHeight);
-			}
-
-			node.inputPortsHeight = inputPortsHeight;
-			node.outputPortsHeight = outputPortsHeight;
-			node.height = nodeHeight;
-			node.width = this.nodeWidth;
-			return node;
-		});
-
-		return newCanvas;
+	cloneCanvasInfo(canvasInfo) {
+		return JSON.parse(JSON.stringify(canvasInfo));
 	}
 
 	clearCanvas() {
@@ -1983,7 +1729,7 @@ export default class CanvasD3Layout {
 			// Draw straight segment down to ports (if needed)
 			if (data.outputPortsHeight < data.height) {
 				if (data.output_ports.length === 1 &&
-						data.height <= this.nodeHeight) {
+						data.height <= this.defaultNodeHeight) {
 					endPoint = this.portPosY - this.portArcRadius;
 				} else {
 					endPoint = ((data.height - data.outputPortsHeight) / 2);
@@ -2018,7 +1764,7 @@ export default class CanvasD3Layout {
 
 			if (data.inputPortsHeight < data.height) {
 				if (data.input_ports.length === 1 &&
-						data.height <= this.nodeHeight) {
+						data.height <= this.defaultNodeHeight) {
 					endPoint = this.portPosY + this.portArcRadius;
 				} else {
 					endPoint = data.height - ((data.height - data.inputPortsHeight) / 2);
@@ -2064,7 +1810,7 @@ export default class CanvasD3Layout {
 			ports = data.output_ports;
 		}
 
-		if (data.height <= this.nodeHeight &&
+		if (data.height <= this.defaultNodeHeight &&
 				ports.length === 1) {
 			portPositions[ports[0].id] = this.portPosY;
 

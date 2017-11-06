@@ -60,8 +60,6 @@ describe("ObjectModel API handle model OK", () => {
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
 
 		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
-
-
 	});
 
 	it("should layout a canvas vertically", () => {
@@ -164,7 +162,6 @@ describe("ObjectModel API handle model OK", () => {
 		ObjectModel.autoLayout(VERTICAL);
 
 		ObjectModel.moveObjects(moveVarNode);
-
 
 		const expectedCanvas = moveNodeVerticalLayoutCanvas;
 		const actualCanvas = ObjectModel.getCanvasInfo();

@@ -26,12 +26,12 @@ Scenario: Sanity test for autoLayout operations in Vertical Fixed Layout
 	Then I delete comment 1 linked to the "C5.0" node with the comment text " comment 2"
 	Then I disconnect links for node 5 a "Type" on the canvas
 	Then I link node 5 the "Var. File" node to node 2 the "Derive" node for link 6 on the canvas
-	Then I verify the node 1 position is "translate(175, 475)"
-	Then I verify the node 2 position is "translate(175, 175)"
-	Then I verify the node 3 position is "translate(100, 625)"
-	Then I verify the node 4 position is "translate(250, 625)"
-	Then I verify the node 5 position is "translate(175, 25)"
-	Then I verify the node 6 position is "translate(175, 325)"
+	Then I verify the node 1 position is "translate(120, 488)"
+	Then I verify the node 2 position is "translate(120, 196)"
+	Then I verify the node 3 position is "translate(50, 634)"
+	Then I verify the node 4 position is "translate(190, 634)"
+	Then I verify the node 5 position is "translate(120, 50)"
+	Then I verify the node 6 position is "translate(120, 342)"
 	Then I verify the comment 2 position is "translate(132, 103)"
 	Then I verify the comment 1 position is "translate(663, 248)"
 
@@ -57,12 +57,12 @@ Scenario: Sanity test for autoLayout operations in Horizontal Fixed Layout
 	Then I delete comment 1 linked to the "C5.0" node with the comment text " comment 2"
 	Then I disconnect links for node 5 a "Type" on the canvas
 	Then I link node 6 the "Select" node to node 5 the "Filter" node for link 4 on the canvas
-	Then I verify the node 1 position is "translate(100, 25)"
-	Then I verify the node 2 position is "translate(250, 175)"
-	Then I verify the node 3 position is "translate(250, 25)"
-	Then I verify the node 4 position is "translate(100, 175)"
-	Then I verify the node 5 position is "translate(250, 325)"
-	Then I verify the node 6 position is "translate(100, 325)"
+	Then I verify the node 1 position is "translate(50, 50)"
+	Then I verify the node 2 position is "translate(190, 196)"
+	Then I verify the node 3 position is "translate(190, 50)"
+	Then I verify the node 4 position is "translate(50, 196)"
+	Then I verify the node 5 position is "translate(190, 342)"
+	Then I verify the node 6 position is "translate(50, 342)"
 	Then I verify the comment 2 position is "translate(132, 103)"
 	Then I verify the comment 1 position is "translate(663, 248)"
 

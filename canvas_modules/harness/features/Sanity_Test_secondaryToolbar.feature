@@ -58,49 +58,49 @@ Feature: Sanity_Test_SecondaryToolbar.feature
 	Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
 	Given I have toggled the app side panel
 	Then I click on the secondary toolbar horizontal layout button
-	Then I verify the node 1 position is "translate(550, 100)"
-	Then I verify the node 2 position is "translate(250, 100)"
-	Then I verify the node 3 position is "translate(700, 25)"
-	Then I verify the node 4 position is "translate(700, 175)"
-	Then I verify the node 5 position is "translate(100, 100)"
-	Then I verify the node 6 position is "translate(400, 100)"
+	Then I verify the node 1 position is "translate(500, 127.5)"
+	Then I verify the node 2 position is "translate(200, 127.5)"
+	Then I verify the node 3 position is "translate(650, 50)"
+	Then I verify the node 4 position is "translate(650, 205)"
+	Then I verify the node 5 position is "translate(50, 127.5)"
+	Then I verify the node 6 position is "translate(350, 127.5)"
 	Then I click on the secondary toolbar vertical layout button
-	Then I verify the node 1 position is "translate(175, 475)"
-	Then I verify the node 2 position is "translate(175, 175)"
-	Then I verify the node 3 position is "translate(100, 625)"
-	Then I verify the node 4 position is "translate(250, 625)"
-	Then I verify the node 5 position is "translate(175, 25)"
-	Then I verify the node 6 position is "translate(175, 325)"
+	Then I verify the node 1 position is "translate(125, 515)"
+	Then I verify the node 2 position is "translate(125, 205)"
+	Then I verify the node 3 position is "translate(50, 670)"
+	Then I verify the node 4 position is "translate(200, 670)"
+	Then I verify the node 5 position is "translate(125, 50)"
+	Then I verify the node 6 position is "translate(125, 360)"
 
 	Given I have toggled the app side panel
 	Given I have selected the "Vertical" fixed Layout
 	Given I have toggled the app side panel
 	Then I click on the secondary toolbar horizontal layout button
-	Then I verify the node 1 position is "translate(175, 475)"
-	Then I verify the node 2 position is "translate(175, 175)"
-	Then I verify the node 3 position is "translate(100, 625)"
-	Then I verify the node 4 position is "translate(250, 625)"
-	Then I verify the node 5 position is "translate(175, 25)"
-	Then I verify the node 6 position is "translate(175, 325)"
+	Then I verify the node 1 position is "translate(125, 515)"
+	Then I verify the node 2 position is "translate(125, 205)"
+	Then I verify the node 3 position is "translate(50, 670)"
+	Then I verify the node 4 position is "translate(200, 670)"
+	Then I verify the node 5 position is "translate(125, 50)"
+	Then I verify the node 6 position is "translate(125, 360)"
 
 	Given I have toggled the app side panel
 	Given I have selected the "None" fixed Layout
 	Given I have toggled the app side panel
 	Then I click on the secondary toolbar horizontal layout button
-	Then I verify the node 1 position is "translate(550, 100)"
-	Then I verify the node 2 position is "translate(250, 100)"
-	Then I verify the node 3 position is "translate(700, 25)"
-	Then I verify the node 4 position is "translate(700, 175)"
-	Then I verify the node 5 position is "translate(100, 100)"
-	Then I verify the node 6 position is "translate(400, 100)"
+	Then I verify the node 1 position is "translate(500, 127.5)"
+	Then I verify the node 2 position is "translate(200, 127.5)"
+	Then I verify the node 3 position is "translate(650, 50)"
+	Then I verify the node 4 position is "translate(650, 205)"
+	Then I verify the node 5 position is "translate(50, 127.5)"
+	Then I verify the node 6 position is "translate(350, 127.5)"
 
 	Given I have toggled the app side panel
 	Given I have selected the "Horizontal" fixed Layout
 	Given I have toggled the app side panel
 	Then I click on the secondary toolbar vertical layout button
-	Then I verify the node 1 position is "translate(550, 100)"
-	Then I verify the node 2 position is "translate(250, 100)"
-	Then I verify the node 3 position is "translate(700, 25)"
-	Then I verify the node 4 position is "translate(700, 175)"
-	Then I verify the node 5 position is "translate(100, 100)"
-	Then I verify the node 6 position is "translate(400, 100)"
+	Then I verify the node 1 position is "translate(500, 127.5)"
+	Then I verify the node 2 position is "translate(200, 127.5)"
+	Then I verify the node 3 position is "translate(650, 50)"
+	Then I verify the node 4 position is "translate(650, 205)"
+	Then I verify the node 5 position is "translate(50, 127.5)"
+	Then I verify the node 6 position is "translate(350, 127.5)"
