@@ -38,14 +38,24 @@ class ContextMenuWrapper extends React.Component {
 		const pos = {};
 		pos.x = mousePos.x;
 		pos.y = mousePos.y;
-
 		var containingDiv = document.getElementById(this.props.containingDivId);
 		var commonCanvasRect = containingDiv.getBoundingClientRect();
 
 		// Reposition contextMenu if it will show off the screen
-		if (Math.round(mousePos.y + menuSize.height) >
-		commonCanvasRect.height - commonCanvasRect.top + containingDiv.scrollTop) {
-			pos.y = mousePos.y - menuSize.height;
+		const screenSize = commonCanvasRect.height - commonCanvasRect.top + containingDiv.scrollTop;
+		if (Math.round(mousePos.y + menuSize.height) > screenSize) {
+			// adjust menu to start at the top of screen
+			if (Math.round(screenSize / 2) < mousePos.y) {
+				pos.y = mousePos.y - menuSize.height;
+				// need to adjust height of context menu so it doesn't go off top of screen
+				if (pos.y < 0) {
+					pos.h = menuSize.height + (mousePos.y - menuSize.height);
+					pos.y = 0;
+				}
+			} else if (Math.round(screenSize / 2) < (mousePos.y + menuSize.height)) {
+				// adjust menu height so it doesn't go off bottom of screen in small windows
+				pos.h = screenSize - mousePos.y;
+			}
 		}
 		if (Math.round(mousePos.x + menuSize.width) >
 		commonCanvasRect.width - commonCanvasRect.left + containingDiv.scrollLeft) {
@@ -87,6 +97,9 @@ class ContextMenuWrapper extends React.Component {
 			left: pos.x - 5 + "px",
 			top: pos.y - 5 + "px"
 		};
+		if (pos.h) {
+			posStyle.height = pos.h + "px";
+		}
 
 		const contextMenu = (<CommonContextMenu
 			menuDefinition={this.props.contextMenuDef}
