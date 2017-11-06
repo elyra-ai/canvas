@@ -14,20 +14,10 @@ import React from "react";
 import ReactTooltip from "react-tooltip";
 import PropTypes from "prop-types";
 import ColumnStructureTableEditor from "./column-structure-table-editor.jsx";
-import TopMoveIconEnable from "../../../assets/images/top_enabled.svg";
-import UpMoveIconEnable from "../../../assets/images/up_enabled.svg";
-import DownMoveIconEnable from "../../../assets/images/down_enabled.svg";
-import BottomMoveIconEnable from "../../../assets/images/bottom_enabled.svg";
-import TopMoveIconDisable from "../../../assets/images/top_disabled.svg";
-import UpMoveIconDisable from "../../../assets/images/up_disabled.svg";
-import DownMoveIconDisable from "../../../assets/images/down_disabled.svg";
-import BottomMoveIconDisable from "../../../assets/images/bottom_disabled.svg";
+import MoveableTableRows from "./moveable-table-rows.jsx";
 import { EDITOR_CONTROL, TOOL_TIP_DELAY } from "../constants/constants.js";
 
 var _ = require("underscore");
-
-const ARROW_HEIGHT = 14;
-const ARROW_WIDTH = 14;
 
 export default class ColumnStructureTableControl extends ColumnStructureTableEditor {
 	constructor(props) {
@@ -47,12 +37,6 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 		this.mouseEnterRemoveButton = this.mouseEnterRemoveButton.bind(this);
 		this.mouseLeaveRemoveButton = this.mouseLeaveRemoveButton.bind(this);
 
-		this.getTableRowMoveImages = this.getTableRowMoveImages.bind(this);
-		this.topMoveRow = this.topMoveRow.bind(this);
-		this.upMoveRow = this.upMoveRow.bind(this);
-		this.downMoveRow = this.downMoveRow.bind(this);
-		this.bottomMoveRow = this.bottomMoveRow.bind(this);
-		this.hasFilter = this.hasFilter.bind(this);
 	}
 
 	stopEditingRow(rowIndex, applyChanges) {
@@ -196,132 +180,6 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 		this.setState({ hoverRemoveIcon: false });
 	}
 
-	topMoveRow(evt) {
-		var selected = this.getSelectedRows().sort();
-		const controlValue = this.getCurrentControlValue();
-		for (var firstRow = selected[0]; firstRow > 0; firstRow--) {
-			for (var i = 0; i <= selected.length - 1; i++) {
-				const selectedRow = selected.shift();
-				const tmpRow = controlValue[selectedRow - 1];
-				controlValue[selectedRow - 1] = controlValue[selectedRow];
-				controlValue[selectedRow] = tmpRow;
-				selected.push(selectedRow - 1);
-			}
-		}
-		if (selected.length > 0) {
-			this.setScrollToRow(selected[0], true);
-		}
-		this.setCurrentControlValueSelected(this.props.control.name, controlValue, this.props.updateControlValue, selected);
-	}
-
-	upMoveRow(evt) {
-		const selected = this.getSelectedRows().sort();
-		// only move up if not already at the top especially for multiple selected
-		if (selected.length !== 0 && selected[0] !== 0) {
-			const controlValue = this.getCurrentControlValue();
-			for (var i = 0; i <= selected.length - 1; i++) {
-				const selectedRow = selected.shift();
-				if (selectedRow !== 0) {
-					const tmpRow = controlValue[selectedRow - 1];
-					controlValue[selectedRow - 1] = controlValue[selectedRow];
-					controlValue[selectedRow] = tmpRow;
-					selected.push(selectedRow - 1);
-				}
-			}
-			this.setScrollToRow(selected[0], true);
-			this.setCurrentControlValueSelected(this.props.control.name, controlValue, this.props.updateControlValue, selected);
-		}
-	}
-
-	downMoveRow(evt) {
-		const selected = this.getSelectedRows().sort();
-		const controlValue = this.getCurrentControlValue();
-		// only move down if not already at the end especially for multiple selected
-		if (selected.length !== 0 && selected[selected.length - 1] !== controlValue.length - 1) {
-			for (var i = selected.length - 1; i >= 0; i--) {
-				const selectedRow = selected.pop();
-				if (selectedRow !== controlValue.length - 1) {
-					const tmpRow = controlValue[selectedRow + 1];
-					controlValue[selectedRow + 1] = controlValue[selectedRow];
-					controlValue[selectedRow] = tmpRow;
-					selected.unshift(selectedRow + 1);
-				}
-			}
-			this.setScrollToRow(selected[selected.length - 1], false);
-			this.setCurrentControlValueSelected(this.props.control.name, controlValue, this.props.updateControlValue, selected);
-		}
-	}
-
-	bottomMoveRow(evt) {
-		var selected = this.getSelectedRows().sort();
-		const controlValue = this.getCurrentControlValue();
-		for (var lastRow = selected[selected.length - 1]; lastRow < controlValue.length - 1; lastRow++) {
-			for (var i = selected.length - 1; i >= 0; i--) {
-				const selectedRow = selected.pop();
-				const tmpRow = controlValue[selectedRow + 1];
-				controlValue[selectedRow + 1] = controlValue[selectedRow];
-				controlValue[selectedRow] = tmpRow;
-				selected.unshift(selectedRow + 1);
-			}
-		}
-		if (selected.length > 0) {
-			this.setScrollToRow(selected[selected.length - 1], false);
-		}
-		this.setCurrentControlValueSelected(this.props.control.name, controlValue, this.props.updateControlValue, selected);
-	}
-
-	// enabled the move up and down arrows based on which row is selected
-	getTableRowMoveImages() {
-		const selected = this.getSelectedRows().sort();
-		const controlValue = this.getCurrentControlValue();
-		const topEnabled = (selected.length !== 0 && selected[0] !== 0);
-		const bottomEnabled = (selected.length !== 0 && selected[selected.length - 1] !== controlValue.length - 1);
-		const topImages = topEnabled ? (
-			<div key="topImages">
-				<div onClick={this.topMoveRow}>
-					<img className="table-row-move-button" src={TopMoveIconEnable} height={ARROW_HEIGHT} width={ARROW_WIDTH} />
-				</div>
-				<div onClick={this.upMoveRow}>
-					<img className="table-row-move-button" src={UpMoveIconEnable} height={ARROW_HEIGHT} width={ARROW_WIDTH} />
-				</div>
-			</div>
-		)
-			: (
-				<div key="topImages">
-					<img className="table-row-move-button-disable" height={ARROW_HEIGHT} width={ARROW_WIDTH} src={TopMoveIconDisable} />
-					<img className="table-row-move-button-disable" height={ARROW_HEIGHT} width={ARROW_WIDTH} src={UpMoveIconDisable} />
-				</div>
-			);
-		const bottomImages = bottomEnabled ? (
-			<div key="bottomImages">
-				<div onClick={this.downMoveRow}>
-					<img className="table-row-move-button" src={DownMoveIconEnable} height={ARROW_HEIGHT} width={ARROW_WIDTH} />
-				</div>
-				<div onClick={this.bottomMoveRow}>
-					<img className="table-row-move-button" src={BottomMoveIconEnable} height={ARROW_HEIGHT} width={ARROW_WIDTH} />
-				</div>
-			</div>
-		)
-			: (
-				<div key="bottomImages">
-					<img className="table-row-move-button-disable" height={ARROW_HEIGHT} width={ARROW_WIDTH} src={DownMoveIconDisable} />
-					<img className="table-row-move-button-disable" height={ARROW_HEIGHT} width={ARROW_WIDTH} src={BottomMoveIconDisable} />
-				</div>
-			);
-		return [topImages, bottomImages];
-	}
-
-	hasFilter() {
-		let hasFilter = false;
-		for (const subControl of this.props.control.subControls) {
-			if (subControl.filterable) {
-				hasFilter = true;
-				break;
-			}
-		}
-		return hasFilter;
-	}
-
 	render() {
 		if (this._update_callback !== null) {
 			this._update_callback();
@@ -346,17 +204,6 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 			controlIconContainerClass = "control-icon-container-enabled";
 		}
 
-		var moveCol = <tc />;
-		if (typeof this.props.control.moveableRows !== "undefined" && this.props.control.moveableRows) {
-			const moveImages = this.getTableRowMoveImages();
-			moveCol = (
-				<div
-					id="table-row-move-button-container"
-				>
-					{moveImages}
-				</div>
-			);
-		}
 
 		const table = this.createTable(stateStyle, stateDisabled);
 		let label;
@@ -388,32 +235,27 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 				</div>);
 			}
 		}
-		var content = (<table id="structure-table">
-			<colgroup>
-				<col className="structure-table-first-column" />
-				<col className="structure-table-second-column" />
-			</colgroup>
-			<tbody>
-				<tr className="structure-table-content-row" style={stateStyle}>
-					<td>
-						<div id={controlIconContainerClass}>
-							{table}
-							{icon}
-						</div>
-						{errorMessage}
-					</td>
-					<td>
-						{moveCol}
-					</td>
-				</tr>
-			</tbody>
-		</table>
+		var content = (
+			<div>
+				<div id={controlIconContainerClass}>
+					{table}
+					{icon}
+				</div>
+				{errorMessage}
+			</div>
 		);
 
 		return (
-			<div>
-				{content}
-			</div>
+			<MoveableTableRows
+				tableContainer={content}
+				control={this.props.control}
+				getSelectedRows={this.getSelectedRows}
+				setScrollToRow={this.setScrollToRow}
+				getCurrentControlValue={this.getCurrentControlValue}
+				updateControlValue={this.props.updateControlValue}
+				setCurrentControlValueSelected={this.setCurrentControlValueSelected}
+				stateStyle={stateStyle}
+			/>
 		);
 	}
 }

@@ -512,6 +512,7 @@ export default class FieldPicker extends EditorControl {
 				data={tableData}
 				onSort={this.onSort}
 				filterKeyword={this.state.filterText}
+				scrollKey={this.props.control.name}
 			/>
 		);
 

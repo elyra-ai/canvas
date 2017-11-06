@@ -87,10 +87,10 @@ export default class FlexibleTable extends React.Component {
 	}
 
 	scrollToRow(alignTop) {
-		var element = document.getElementById("table");
+		var element = document.getElementById("moveablerow-table-" + this.props.scrollKey);
 		if (element && typeof this.props.scrollToRow === "number") {
 			var tableBody = element.getElementsByClassName("reactable-data");
-			var tableRows = tableBody[0].getElementsByTagName("tr");
+			var tableRows = tableBody[1].getElementsByTagName("tr");
 			if (tableRows.length !== 0 && this.props.scrollToRow <= tableRows.length - 1) {
 				tableRows[this.props.scrollToRow].scrollIntoView(alignTop);
 			}
@@ -285,5 +285,6 @@ FlexibleTable.propTypes = {
 	alignTop: PropTypes.bool,
 	label: PropTypes.object,
 	topRightPanel: PropTypes.object,
-	validationStyle: PropTypes.object
+	validationStyle: PropTypes.object,
+	scrollKey: PropTypes.string
 };

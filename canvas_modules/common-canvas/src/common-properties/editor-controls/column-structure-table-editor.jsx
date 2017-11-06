@@ -96,6 +96,8 @@ export default class ColumnStructureTableEditor extends EditorControl {
 
 
 	componentWillReceiveProps(nextProps) {
+
+
 		// logger.info("componentWillReceiveProps");
 		// augment controlValues with data model fields if appropriate
 		let controlValue = nextProps.valueAccessor(nextProps.control.name);
@@ -108,6 +110,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			selectedRows: nextProps.selectedRows
 		});
 		this.selectionChanged(nextProps.selectedRows);
+
 	}
 
 	/* Returns the public representation of the control value. */
@@ -412,6 +415,17 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		return false;
 	}
 
+	hasFilter() {
+		let hasFilter = false;
+		for (const subControl of this.props.control.subControls) {
+			if (subControl.filterable) {
+				hasFilter = true;
+				break;
+			}
+		}
+		return hasFilter;
+	}
+
 	makeLabel() {
 		let label;
 		if (this.props.control.label && this.props.control.separateLabel && !this.hasFilter()) {
@@ -585,7 +599,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		</div>);
 	}
 
-	createTable(stateStyle, stateDisabled) {
+	createTable(stateStyle, stateDisabled, noFieldPicker) {
 		const that = this;
 		const rows = [];
 		const headers = [];
@@ -624,6 +638,8 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			this.scrollToRow = null;
 		}
 
+		const topRightPanel = noFieldPicker ? null : this.makeAddRemoveButtonPanel();
+
 		const table =	(
 			<FlexibleTable
 				sortable={sortFields}
@@ -635,8 +651,9 @@ export default class ColumnStructureTableEditor extends EditorControl {
 				onFilter={this.onFilter}
 				onSort={this.onSort}
 				label={this.makeLabel(stateStyle)}
-				topRightPanel={this.makeAddRemoveButtonPanel()}
+				topRightPanel={topRightPanel}
 				validationStyle={stateStyle}
+				scrollKey={this.props.control.name}
 			/>);
 		setTimeout(function() {
 			that.scrollToRow = null;

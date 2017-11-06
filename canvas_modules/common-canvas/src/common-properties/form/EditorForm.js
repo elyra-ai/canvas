@@ -326,15 +326,19 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 					} else if (group.groupType() === GroupType.COLUMN_SELECTION ||
 							parameter.control === ControlType.STRUCTURETABLE) {
 						controlType = ControlType.STRUCTURETABLE;
-						moveableRows = structureDef.moveableRows; // only support in STRUCTURETABLE
+						moveableRows = structureDef.moveableRows;
 					} else {
 						controlType = ControlType.STRUCTURELISTEDITOR;
+						moveableRows = structureDef.moveableRows;
+
 					}
 				} else {
 					logger.warn("Complex types should be arrays or maps.  Found: " + parameter.propType());
 					controlType = ControlType.STRUCTUREEDITOR;
 				}
-				if (!(group.groupType() === GroupType.COLUMN_SELECTION ||
+				if (controlType === ControlType.STRUCTURELISTEDITOR) {
+					noPickColumns = false;
+				} else if (!(group.groupType() === GroupType.COLUMN_SELECTION ||
 							group.groupType() === GroupType.COLUMN_ALLOCATION)) {
 					noPickColumns = true;
 				}

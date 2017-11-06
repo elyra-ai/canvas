@@ -12,10 +12,14 @@ import React from "react";
 import ReactTooltip from "react-tooltip";
 import PropTypes from "prop-types";
 import { Button } from "react-bootstrap";
-import StructureTableEditor from "./structure-table-editor.jsx";
+import ColumnStructureTableEditor from "./column-structure-table-editor.jsx";
+import MoveableTableRows from "./moveable-table-rows.jsx";
+
 import { EDITOR_CONTROL, TOOL_TIP_DELAY } from "../constants/constants.js";
 
-export default class StructurelisteditorControl extends StructureTableEditor {
+// export default class StructurelisteditorControl extends StructureTableEditor {
+export default class StructurelisteditorControl extends ColumnStructureTableEditor {
+
 	constructor(props) {
 		super(props);
 
@@ -70,6 +74,7 @@ export default class StructurelisteditorControl extends StructureTableEditor {
 	}
 
 	render() {
+
 		const controlName = this.getControlID().replace(EDITOR_CONTROL, "");
 		const conditionProps = {
 			controlName: controlName,
@@ -87,14 +92,15 @@ export default class StructurelisteditorControl extends StructureTableEditor {
 		if (messageType !== "info") {
 			controlIconContainerClass = "control-icon-container-enabled";
 		}
+		const noFieldPicker = true;
 
-		const table = this.createTable();
+		const table = this.createTable(stateStyle, stateDisabled, noFieldPicker);
 		const tooltipId = "tooltip-list-editor-btn";
 		const add = <Button data-tip="Add new row" data-for={tooltipId} bsSize="small" onClick={this.addRow} {...stateDisabled}>+</Button>;
 		const remove = <Button data-tip="Delete selected rows" data-for={tooltipId} bsSize="small" onClick={this.removeSelectedRows} {...stateDisabled}>-</Button>;
-		return (<div id={this.getControlID()} style={stateStyle}>
+		const tableContainer = (<div id={this.getControlID()}>
 			<div id={controlIconContainerClass}>
-				<div id="structure-list-editor-table-buttons" className="structure-list-editor" style={stateStyle}>
+				<div id="structure-list-editor-table-buttons" className="structure-list-editor">
 					{table}
 					<div id="structure-list-editor-buttons-container">
 						<span >{add} {remove}</span>
@@ -113,6 +119,19 @@ export default class StructurelisteditorControl extends StructureTableEditor {
 			</div>
 			{errorMessage}
 		</div>);
+		// stateStyle={stateStyle}
+		return (
+			<MoveableTableRows
+				tableContainer={tableContainer}
+				control={this.props.control}
+				getSelectedRows={this.getSelectedRows}
+				setScrollToRow={this.setScrollToRow}
+				getCurrentControlValue={this.getCurrentControlValue}
+				updateControlValue={this.props.updateControlValue}
+				setCurrentControlValueSelected={this.setCurrentControlValueSelected}
+				stateStyle={stateStyle}
+			/>
+		);
 	}
 }
 
