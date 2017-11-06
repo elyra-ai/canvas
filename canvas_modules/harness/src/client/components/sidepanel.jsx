@@ -11,11 +11,13 @@ import React from "react";
 import PropTypes from "prop-types";
 import SidePanelCanvas from "./sidepanel-canvas.jsx";
 import SidePanelModal from "./sidepanel-modal.jsx";
+import SidePanelAPI from "./sidepanel-api.jsx";
 
 import {
 	SIDE_PANEL,
 	SIDE_PANEL_CANVAS,
-	SIDE_PANEL_MODAL
+	SIDE_PANEL_MODAL,
+	SIDE_PANEL_API
 } from "../constants/constants.js";
 
 export default class SidePanel extends React.Component {
@@ -23,7 +25,8 @@ export default class SidePanel extends React.Component {
 	render() {
 		var panelSize = SIDE_PANEL.MINIMIZED;
 		if (this.props.openSidepanelCanvas ||
-			this.props.openSidepanelModal) {
+			this.props.openSidepanelModal ||
+			this.props.openSidepanelAPI) {
 			panelSize = SIDE_PANEL.MAXIMIXED;
 		}
 
@@ -57,6 +60,14 @@ export default class SidePanel extends React.Component {
 				closeSidePanelModal={this.props.closeSidePanelModal}
 			/>);
 			break;
+		case SIDE_PANEL_API:
+			view = (<SidePanelAPI
+				log={this.props.log}
+				getPipelineFlow={this.props.getPipelineFlow}
+				setPipelineFlow={this.props.setPipelineFlow}
+				addNodeTypeToPalette={this.props.addNodeTypeToPalette}
+			/>);
+			break;
 		default:
 		}
 
@@ -78,6 +89,7 @@ SidePanel.propTypes = {
 	openPropertiesEditorDialog: PropTypes.func,
 	openSidepanelCanvas: PropTypes.bool,
 	openSidepanelModal: PropTypes.bool,
+	openSidepanelAPI: PropTypes.bool,
 	setDiagramJSON: PropTypes.func,
 	setPaletteJSON: PropTypes.func,
 	setPropertiesJSON: PropTypes.func,
@@ -93,5 +105,8 @@ SidePanel.propTypes = {
 	setNodeFormatType: PropTypes.func,
 	setLinkType: PropTypes.func,
 	setPaletteLayout: PropTypes.func,
+	getPipelineFlow: PropTypes.func,
+	setPipelineFlow: PropTypes.func,
+	addNodeTypeToPalette: PropTypes.func,
 	log: PropTypes.func
 };

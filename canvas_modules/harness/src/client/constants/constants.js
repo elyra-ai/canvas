@@ -30,6 +30,7 @@ _defineConstant("SIDE_PANEL", {
 });
 _defineConstant("SIDE_PANEL_CANVAS", "sidepanel-canvas");
 _defineConstant("SIDE_PANEL_MODAL", "sidepanel-modal");
+_defineConstant("SIDE_PANEL_API", "sidepanel-api");
 
 _defineConstant("NONE", "none");
 _defineConstant("HORIZONTAL", "horizontal");
@@ -56,3 +57,6 @@ _defineConstant("EDITING", "Editing");
 _defineConstant("CHOOSE_FROM_LOCATION", "Choose from location...");
 
 _defineConstant("PALETTE_TOOLTIP", "Click to show node palette");
+
+_defineConstant("API_SET_PIPELINEFLOW", "Set PipelineFlow");
+_defineConstant("API_ADD_PALETTE_ITEM", "Add PaletteItem");

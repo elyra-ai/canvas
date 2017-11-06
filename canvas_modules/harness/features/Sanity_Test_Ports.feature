@@ -118,3 +118,24 @@ Scenario: Sanity test for multiple ports operations with the D3 rendering engine
 	Then I link node "Merge2" output port "outPort" to node "Var. File"
 	Then I verify the number of port data links are 16
 
+Scenario: Sanity test for dynamically adding ports by updating pipeline flow through API
+	Given I am on the test harness
+	Given I have toggled the app side panel
+	Given I have selected the "Flyout" palette layout
+	Given I have selected the "D3" rendering engine
+	Given I have selected the "Ports" connection type
+	Given I have uploaded diagram "/test_resources/diagrams/multiPortsCanvas3.json"
+	Given I have toggled the app side api panel
+	Given I have selected the "Set PipelineFlow" API
+
+	When I update the pipelineflow to add input and output ports to node "Select1"
+	And I call the API by clicking on the Submit button
+	Then I link node "Var. File" output port "outPort" to node "Select1" input port "inPort"
+	Then I link node "Select3" output port "outPort1" to node "Select1" input port "inPort2"
+	Then I link node "Select1" output port "outPort" to node "Select3" input port "inPort"
+	Then I link node "Select1" output port "outPort2" to node "Select2" input port "inPort"
+	Then I verify the number of port data links are 4
+	Then I verify 1 link between source node "Var. File" source port "outPort" to target node "Select1" target port "inPort"
+	Then I verify 1 link between source node "Select3" source port "outPort1" to target node "Select1" target port "inPort2"
+	Then I verify 1 link between source node "Select1" source port "outPort" to target node "Select3" target port "inPort"
+	Then I verify 1 link between source node "Select1" source port "outPort2" to target node "Select2" target port "inPort"

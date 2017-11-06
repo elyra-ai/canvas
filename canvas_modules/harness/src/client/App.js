@@ -30,6 +30,7 @@ import CustomTogglePanel from "./components/custom-panels/CustomTogglePanel";
 import {
 	SIDE_PANEL_CANVAS,
 	SIDE_PANEL_MODAL,
+	SIDE_PANEL_API,
 	D3_ENGINE,
 	PORTS_CONNECTION,
 	VERTICAL_FORMAT,
@@ -42,6 +43,7 @@ import {
 import listview32 from "../graphics/list-view_32.svg";
 import download32 from "../graphics/save_32.svg";
 import justify32 from "../graphics/justify_32.svg";
+import api32 from "../graphics/api_32.svg";
 import template32 from "ibm-design-icons/dist/svg/object-based/template_32.svg";
 
 class App extends React.Component {
@@ -55,6 +57,7 @@ class App extends React.Component {
 			propertiesContainerType: FLYOUT,
 			openSidepanelCanvas: false,
 			openSidepanelModal: false,
+			openSidepanelAPI: false,
 			paletteNavEnabled: false,
 			paletteOpened: false,
 			propertiesInfo: {},
@@ -83,6 +86,7 @@ class App extends React.Component {
 
 		this.sidePanelCanvas = this.sidePanelCanvas.bind(this);
 		this.sidePanelModal = this.sidePanelModal.bind(this);
+		this.sidePanelAPI = this.sidePanelAPI.bind(this);
 		this.closeSidePanelModal = this.closeSidePanelModal.bind(this);
 		this.setLayoutDirection = this.setLayoutDirection.bind(this);
 		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
@@ -92,6 +96,9 @@ class App extends React.Component {
 		this.setNodeFormatType = this.setNodeFormatType.bind(this);
 		this.setLinkType = this.setLinkType.bind(this);
 		this.setPaletteLayout = this.setPaletteLayout.bind(this);
+		this.getPipelineFlow = this.getPipelineFlow.bind(this);
+		this.setPipelineFlow = this.setPipelineFlow.bind(this);
+		this.addNodeTypeToPalette = this.addNodeTypeToPalette.bind(this);
 
 		// common-canvas
 		this.contextMenuHandler = this.contextMenuHandler.bind(this);
@@ -157,6 +164,7 @@ class App extends React.Component {
 
 	setPaletteJSON(paletteJson) {
 		ObjectModel.setPipelineFlowPalette(paletteJson);
+		ObjectModel.getPipelineFlow();
 		this.log("Palette set");
 	}
 
@@ -196,10 +204,25 @@ class App extends React.Component {
 		this.log("Palette Layout selected", selectedPaletteLayout);
 	}
 
+	setPipelineFlow(flow) {
+		ObjectModel.setPipelineFlow(flow);
+		this.log("Updated pipeline flow");
+	}
+
+	getPipelineFlow(flow) {
+		return ObjectModel.getPipelineFlow();
+	}
+
+	addNodeTypeToPalette(nodeTypeObj, category, categoryLabel) {
+		ObjectModel.addNodeTypeToPalette(nodeTypeObj, category, categoryLabel);
+		this.log("Added nodeType to palette", { nodeTypeObj: nodeTypeObj, category: category, categoryLabel: categoryLabel });
+	}
+
 	sidePanelCanvas() {
 		this.setState({
 			openSidepanelCanvas: !this.state.openSidepanelCanvas,
 			openSidepanelModal: false,
+			openSidepanelAPI: false,
 			selectedPanel: SIDE_PANEL_CANVAS
 		});
 	}
@@ -208,7 +231,17 @@ class App extends React.Component {
 		this.setState({
 			openSidepanelModal: !this.state.openSidepanelModal,
 			openSidepanelCanvas: false,
+			openSidepanelAPI: false,
 			selectedPanel: SIDE_PANEL_MODAL
+		});
+	}
+
+	sidePanelAPI() {
+		this.setState({
+			openSidepanelAPI: !this.state.openSidepanelAPI,
+			openSidepanelCanvas: false,
+			openSidepanelModal: false,
+			selectedPanel: SIDE_PANEL_API
 		});
 	}
 
@@ -216,6 +249,7 @@ class App extends React.Component {
 		this.setState({
 			openSidepanelModal: false,
 			openSidepanelCanvas: false,
+			openSidepanelAPI: false,
 			selectedPanel: null
 		});
 	}
@@ -607,6 +641,15 @@ class App extends React.Component {
 						/>
 					</a>
 				</li>
+				<li className="navbar-li nav-divider action-bar-sidepanel"
+					id="action-bar-sidepanel-api"	data-tip="API"
+				>
+					<a onClick={this.sidePanelAPI.bind(this) }>
+						<Isvg id="action-bar-panel-api"
+							src={api32}
+						/>
+					</a>
+				</li>
 				<li className="navbar-li action-bar-sidepanel"
 					id="action-bar-sidepanel-modal" data-tip="Common Properties Modal"
 				>
@@ -709,10 +752,13 @@ class App extends React.Component {
 				closeSidePanelModal={this.closeSidePanelModal}
 				openSidepanelCanvas={this.state.openSidepanelCanvas}
 				openSidepanelModal={this.state.openSidepanelModal}
+				openSidepanelAPI={this.state.openSidepanelAPI}
 				setDiagramJSON={this.setDiagramJSON}
 				setPaletteJSON={this.setPaletteJSON}
 				setPropertiesJSON={this.setPropertiesJSON}
 				setLayoutDirection={this.setLayoutDirection}
+				setPipelineFlow={this.setPipelineFlow}
+				addNodeTypeToPalette={this.addNodeTypeToPalette}
 				showPropertiesDialog={this.state.showPropertiesDialog}
 				useInternalObjectModel={this.useInternalObjectModel}
 				usePropertiesContainerType={this.usePropertiesContainerType}
@@ -722,6 +768,9 @@ class App extends React.Component {
 				setNodeFormatType={this.setNodeFormatType}
 				setLinkType={this.setLinkType}
 				setPaletteLayout={this.setPaletteLayout}
+				getPipelineFlow={this.getPipelineFlow}
+				setPipelineFlow={this.setPipelineFlow}
+				addNodeTypeToPalette={this.addNodeTypeToPalette}
 				log={this.log}
 			/>
 			{/* <IntlProvider key="IntlProvider2" locale={ locale } messages={ messages }>

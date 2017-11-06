@@ -21,4 +21,8 @@ module.exports = function() {
 		browser.pause(500);
 	});
 
+	this.Given("I have toggled the app side api panel", function() {
+		browser.$("#action-bar-sidepanel-api").click("a");
+		browser.pause(500);
+	});
 };
