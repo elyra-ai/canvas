@@ -320,6 +320,12 @@ input.number,
   line-height: inherit;
 }
 
+#add-fields-button > span > svg:not(:root) {
+  overflow: visible;
+  margin: 0px;
+  margin-right: 5px;
+}
+
 #reset-fields-button {
   border: none;
   float: right;
@@ -365,6 +371,7 @@ input.number,
 
 #remove-fields-button-disabled {
   background-color: transparent;
+  cursor: default;
 }
 
 .field-picker-data-type-icon {
@@ -428,12 +435,12 @@ input.number,
 }
 
 .Dropdown-disabled {
-  color: grey !important;
-  border-color: grey !important;
+  color: #D8D8D8 !important;
+  border-color: #D8D8D8 !important;
 }
 
 .Dropdown-disabled .Dropdown-arrow{
-	border-color: grey transparent transparent;
+	border-color: #D8D8D8 transparent transparent;
 }
 
 .Dropdown-menu {
@@ -529,9 +536,10 @@ input.number,
 }
 
 /* Flexible Table */
-/*.flexible-table-toolbar{
-  margin-bottom: 5px;
-}*/
+.flexible-table-search-bar.disabled * {
+  color: #D8D8D8;
+  border-bottom-color: #D8D8D8;
+}
 
 #flexible-table-container {
   height: 180px;
@@ -640,12 +648,6 @@ tr.reactable-column-header {
   padding-top: 20px;
 }
 
-#add-fields-button > span > svg:not(:root) {
-  overflow: visible;
-  margin: 0px;
-  margin-right: 5px;
-}
-
 .column-structure-allocator-control-row-selected .public_fixedDataTableCell_main {
   background-color: #e0e0e0 !important;
 }
@@ -656,6 +658,10 @@ tr.reactable-column-header {
 
 .column-allocator.multi {
   min-height: 100px;
+}
+
+.column-allocator.multi.disabled > option {
+  color: #D8D8D8;
 }
 
 .error-border {
@@ -671,8 +677,16 @@ tr.reactable-column-header {
   background-color: #e0e0e0;
 }
 
+.table-cell.disabled {
+  color: #D8D8D8;
+}
+
 .public_fixedDataTable_header .public_fixedDataTableCell_main {
   background-color: #f9f9fb !important;
+}
+
+.fixed-data-table-container.disabled * {
+  color: #D8D8D8;
 }
 
 #structure-table {
@@ -758,6 +772,10 @@ tbody.reactable-data .editor_control_area {
    OK to do because we use our own validation component */
 .nolabel {
   margin-bottom: 0px;
+}
+
+.btn.disabled, .btn[disabled], fieldset[disabled] {
+  color: #D8D8D8;
 }
 
 .structure-list-editor {

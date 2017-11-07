@@ -116,6 +116,16 @@ module.exports = function() {
 		}
 	});
 
+	this.Then(/^I check the checkbox with id "([^"]*)"$/, function(checkboxId) {
+		const labels = browser.$$("label");
+		for (let idx = 0; idx < labels.length; idx++) {
+			if (labels[idx].getAttribute("for") === checkboxId) {
+				labels[idx].click();
+				break;
+			}
+		}
+	});
+
 	function getLastEventLogData(override) {
 		var message = 1;
 		if (override) {

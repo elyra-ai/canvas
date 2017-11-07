@@ -748,7 +748,7 @@ export default class EditorForm extends React.Component {
 			let tooltip;
 			if (control.description) {
 				if (control.description.placement === "on_panel") {
-					description = <div className="control-description">{control.description.text}</div>;
+					description = <div className="control-description" style={stateStyle}>{control.description.text}</div>;
 				// only show tooltip when control enabled and visible
 				} else if (tooltipShow) {
 					tooltip = control.description.text; // default to tooltip

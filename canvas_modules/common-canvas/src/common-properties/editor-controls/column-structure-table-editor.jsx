@@ -356,6 +356,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 				hidden={hidden}
 			/></Td>);
 		} else {
+			const cellDisabledClassName = disabled ? "disabled" : "";
 			const padding = colIndex === 0 ? "6px 0 10px 15px" : "6px 0 10px 0";
 			columnStyle = { "width": colWidth, "padding": padding };
 			// workaround adding span show column shows up when no data is in cell
@@ -363,12 +364,15 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			if (Array.isArray(cellContent)) {
 				cellContent = cellContent.join(", ");
 			}
-			cell = <Td key={colIndex} column={columnDef.name} style={columnStyle}><span>{cellContent}</span></Td>;
+			cell = <Td className={"table-cell " + cellDisabledClassName} key={colIndex} column={columnDef.name} style={columnStyle}><span>{cellContent}</span></Td>;
 		}
 		return cell;
 	}
 
 	_getDisabledStatus(rowIndex, colIndex, stateDisabled) {
+		if (typeof stateDisabled.disabled !== "undefined") {
+			return stateDisabled.disabled;
+		}
 		const row = stateDisabled[rowIndex];
 		if (row) {
 			const column = row[colIndex];
@@ -546,22 +550,25 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		return -1;
 	}
 
-	makeAddRemoveButtonPanel() {
+	makeAddRemoveButtonPanel(stateDisabled) {
 		if (this.props.control.noPickColumns) {
 			return (<div />);
 		}
 		let removeFieldsButtonId = "remove-fields-button-enabled";
 		let removeIconImage = (<img src={remove32} />);
-		if (!this.state.enableRemoveIcon) {
+		let removeOnClick = this.removeSelected;
+
+		if (!this.state.enableRemoveIcon || stateDisabled.disabled) {
 			removeIconImage = (<img src={remove32disabled} />);
 			removeFieldsButtonId = "remove-fields-button-disabled";
+			removeOnClick = null;
 		} else if (this.state.hoverRemoveIcon) {
 			removeIconImage = (<img src={remove32hover} />);
 		}
 
-		const removeIcon = (<div id={removeFieldsButtonId}
+		const removeButton = (<div id={removeFieldsButtonId}
 			className="button"
-			onClick={this.removeSelected}
+			onClick={removeOnClick}
 			onBlur={this.validateInput}
 			onMouseEnter={this.mouseEnterRemoveButton}
 			onMouseLeave={this.mouseLeaveRemoveButton}
@@ -570,21 +577,30 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			{removeIconImage}
 		</div>);
 
+		let addButtonDisabled = false;
+		let addOnClick = this.props.openFieldPicker;
+		if (stateDisabled.disabled) {
+			addButtonDisabled = true;
+			addOnClick = null;
+		}
+		const addButton = (<Button
+			id="add-fields-button"
+			icon="plus"
+			onClick={addOnClick}
+			disabled={addButtonDisabled}
+			data-control={JSON.stringify(this.props.control)}
+		>
+			Add Columns
+		</Button>);
+
 		const tooltipId = "tooltip-add-remove-columns-" + this.props.control.name;
 		return (<div>
 			<div id="field-picker-buttons-container">
 				<div className="properties-tooltips-container add-remove-columns" data-tip="Remove selected columns" data-for={tooltipId}>
-					{removeIcon}
+					{removeButton}
 				</div>
 				<div className="properties-tooltips-container add-remove-columns" data-tip="Select columns to add" data-for={tooltipId}>
-					<Button
-						id="add-fields-button"
-						icon="plus"
-						onClick={this.props.openFieldPicker}
-						data-control={JSON.stringify(this.props.control)}
-					>
-						Add Columns
-					</Button>
+					{addButton}
 				</div>
 			</div>
 			<ReactTooltip
@@ -638,7 +654,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			this.scrollToRow = null;
 		}
 
-		const topRightPanel = noFieldPicker ? null : this.makeAddRemoveButtonPanel();
+		const topRightPanel = noFieldPicker ? null : this.makeAddRemoveButtonPanel(stateDisabled);
 
 		const table =	(
 			<FlexibleTable
@@ -654,6 +670,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 				topRightPanel={topRightPanel}
 				validationStyle={stateStyle}
 				scrollKey={this.props.control.name}
+				stateDisabled={stateDisabled}
 			/>);
 		setTimeout(function() {
 			that.scrollToRow = null;
@@ -677,7 +694,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 					}
 				}
 				if (this.props.control.childItem) {
-					const cell = this.buildChildItem(columnWidths, controlValue, rowIndex);
+					const cell = this.buildChildItem(columnWidths, controlValue, rowIndex, stateDisabled);
 					columns.push(cell);
 				}
 				rows.push(<Tr key={rowIndex} onClick={this.handleRowClick.bind(this, rowIndex)} className={this.getRowClassName(rowIndex)}>{columns}</Tr>);
@@ -685,7 +702,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		}
 	}
 
-	buildChildItem(columnWidths, controlValue, rowIndex) {
+	buildChildItem(columnWidths, controlValue, rowIndex, stateDisabled) {
 		// Assumes the child item is an "ADDITIONAL_LINK" object.
 		// However, we will extract information from the and will create our own Cell-based invoker.
 		const subPanelColIndex = this.props.control.subControls.length;
@@ -696,6 +713,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 
 		const subItemButton = this.props.buildUIItem(subControlId, this.props.control.childItem, subControlId, this.getEditingRowValue, this.props.dataModel);
 		// Hack to decompose the button into our own in-table link
+		const disabled = typeof stateDisabled.disabled !== "undefined" || Object.keys(stateDisabled) > 0;
 		const subCell = (<SubPanelCell data={controlValue}
 			col={this.props.control.subControls.length}
 			rowIndex={rowIndex}
@@ -704,6 +722,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			panel={subItemButton.props.panel}
 			notifyStartEditing={this.startEditingRow}
 			notifyFinishedEditing={this.stopEditingRow}
+			disabled={disabled}
 		/>);
 		return (<Td key={subPanelColIndex} column={subControlId} style={columnStyle}>{subCell}</Td>);
 	}

@@ -6,7 +6,7 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-/* eslint complexity: ["error", 14] */
+/* eslint complexity: ["error", 17] */
 /* eslint max-depth: ["error", 5] */
 
 import React from "react";
@@ -17,6 +17,7 @@ import {
 	TextField
 } from "ap-components-react/dist/ap-components-react";
 import search32 from "../../../assets/images/search_32.svg";
+import search32Disabled from "../../../assets/images/search_32_disabled.svg";
 import SortAscendingIcon from "../../../assets/images/sort_ascending.svg";
 import SortDescendingIcon from "../../../assets/images/sort_descending.svg";
 import { TOOL_TIP_DELAY } from "../constants/constants.js";
@@ -177,8 +178,11 @@ export default class FlexibleTable extends React.Component {
 		let renderTable = "";
 		if (typeof this.props.filterable !== "undefined" && this.props.filterable.length !== 0) {
 			const placeHolder = "Search in column " + searchLabel;
+			const disabled = this.props.stateDisabled && (typeof this.props.stateDisabled.disabled !== "undefined" || Object.keys(this.props.stateDisabled) > 0);
+			const className = disabled ? "disabled" : "";
+			const searchIcon = disabled ? search32Disabled : search32;
 			renderTable = (<div>
-				<div id="flexible-table-search-bar">
+				<div id="flexible-table-search-bar" className={"flexible-table-search-bar " + className}>
 					<TextField
 						key="flexible-table-search-bar"
 						type="search"
@@ -188,13 +192,14 @@ export default class FlexibleTable extends React.Component {
 						disabledPlaceholderAnimation
 						onChange={this.handleFilterChange}
 						value={this.props.filterKeyword}
+						disabled={disabled}
 					/>
 				</div>
 				<div id="flexible-table-search-icon"
 					className="flexible-table-toolbar"
 				>
 					<img id="flexible-table-search-icon"
-						src={search32}
+						src={searchIcon}
 					/>
 				</div>
 				{this.props.label}
@@ -286,5 +291,6 @@ FlexibleTable.propTypes = {
 	label: PropTypes.object,
 	topRightPanel: PropTypes.object,
 	validationStyle: PropTypes.object,
-	scrollKey: PropTypes.string
+	scrollKey: PropTypes.string,
+	stateDisabled: PropTypes.object
 };

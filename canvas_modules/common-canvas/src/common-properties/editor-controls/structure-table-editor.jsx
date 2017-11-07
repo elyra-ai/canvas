@@ -176,8 +176,9 @@ export default class StructureTableEditor extends EditorControl {
 			: "";
 	}
 
-	createTable() {
+	createTable(stateDisabled) {
 		const controlValue = this.getCurrentControlValue();
+		const disabled = this.props.stateDisabled && (typeof this.props.stateDisabled.disabled !== "undefined" || Object.keys(this.props.stateDisabled) > 0);
 		let totalWidth = 0;
 		const columns = [];
 
@@ -218,6 +219,7 @@ export default class StructureTableEditor extends EditorControl {
 				panel={subItemButton.props.panel}
 				notifyStartEditing={this.startEditingRow}
 				notifyFinishedEditing={this.stopEditingRow}
+				disabled={disabled}
 			/>);
 
 			totalWidth += (CHAR_WIDTH * buttonWidth);
@@ -235,9 +237,9 @@ export default class StructureTableEditor extends EditorControl {
 			? selected[0] : undefined;
 
 		/* eslint-enable no-undefined */
-
+		const className = disabled ? "disabled" : "";
 		return (
-			<div id="fixed-data-table-container">
+			<div id="fixed-data-table-container" className={"fixed-data-table-container " + className}>
 				<Table id={this.getControlID()}
 					className="table-editor"
 					headerHeight={HEADER_HEIGHT}
@@ -248,6 +250,7 @@ export default class StructureTableEditor extends EditorControl {
 					rowClassNameGetter={this.getRowClassName}
 					onRowClick={this.handleRowClick} {...this.props}
 					scrollToRow={scrollToRow}
+					disabled
 				>
 					{columns}
 				</Table>

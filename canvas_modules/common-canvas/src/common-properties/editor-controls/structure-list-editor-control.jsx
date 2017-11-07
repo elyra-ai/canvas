@@ -98,6 +98,7 @@ export default class StructurelisteditorControl extends ColumnStructureTableEdit
 		const tooltipId = "tooltip-list-editor-btn";
 		const add = <Button data-tip="Add new row" data-for={tooltipId} bsSize="small" onClick={this.addRow} {...stateDisabled}>+</Button>;
 		const remove = <Button data-tip="Delete selected rows" data-for={tooltipId} bsSize="small" onClick={this.removeSelectedRows} {...stateDisabled}>-</Button>;
+		const disabled = typeof stateDisabled.disabled !== "undefined" || Object.keys(stateDisabled) > 0;
 		const tableContainer = (<div id={this.getControlID()}>
 			<div id={controlIconContainerClass}>
 				<div id="structure-list-editor-table-buttons" className="structure-list-editor">
@@ -130,6 +131,7 @@ export default class StructurelisteditorControl extends ColumnStructureTableEdit
 				updateControlValue={this.props.updateControlValue}
 				setCurrentControlValueSelected={this.setCurrentControlValueSelected}
 				stateStyle={stateStyle}
+				disabled={disabled}
 			/>
 		);
 	}

@@ -48,6 +48,7 @@ export default class SubPanelCell extends React.Component {
 	render() {
 		// logger.info("SubPanelCell.render()");
 		const tooltipId = "tooltip-subpanel-cell";
+		const disabled = typeof this.props.disabled !== "undefined" ? this.props.disabled : false;
 		return (
 			<SubPanelInvoker ref="invoker">
 				<Cell>
@@ -56,6 +57,7 @@ export default class SubPanelCell extends React.Component {
 							style={{ "display": "inline" }}
 							bsSize="xsmall"
 							onClick={this.showSubPanel}
+							disabled={disabled}
 						>
 							{this.props.label}
 						</Button>
@@ -83,5 +85,6 @@ SubPanelCell.propTypes = {
 	title: PropTypes.string.isRequired,
 	panel: PropTypes.object.isRequired,
 	notifyStartEditing: PropTypes.func.isRequired,
-	notifyFinishedEditing: PropTypes.func.isRequired
+	notifyFinishedEditing: PropTypes.func.isRequired,
+	disabled: PropTypes.bool
 };

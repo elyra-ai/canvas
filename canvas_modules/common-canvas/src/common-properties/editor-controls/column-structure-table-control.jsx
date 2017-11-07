@@ -204,7 +204,7 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 			controlIconContainerClass = "control-icon-container-enabled";
 		}
 
-
+		const disabled = typeof stateDisabled.disabled !== "undefined" || Object.keys(stateDisabled) > 0;
 		const table = this.createTable(stateStyle, stateDisabled);
 		let label;
 		if (this.props.control.label && this.props.control.separateLabel) {
@@ -255,6 +255,7 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 				updateControlValue={this.props.updateControlValue}
 				setCurrentControlValueSelected={this.setCurrentControlValueSelected}
 				stateStyle={stateStyle}
+				disabled={disabled}
 			/>
 		);
 	}

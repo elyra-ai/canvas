@@ -83,6 +83,7 @@ Feature: Sanity_Test_CommonProperties
 			Given I have toggled the app side common-properties panel
 			Given I have uploaded JSON for common-properties "Conditions_paramDef.json"
 			Then I select the Tab 6
+			Then I check the checkbox with id "editor-control-enableTableLists"
 			Then I open the Table Input Sub Panel
 			Then I update the value of Name textbox with "Hellopwd"
 			Then I verify that the validation error is "name should not contain pw"

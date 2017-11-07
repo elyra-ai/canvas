@@ -27,15 +27,18 @@
     "checkboxEnableDesc": false,
     "textareaDescription": [],
     "expressionBox": "ab\ncd\nef",
+    "enableColumnSelect": true,
     "columnSelectSharedWithInput": [
       "Sex"
     ],
+    "enableSortByTable": true,
     "structuretableSortOrder": [
       [
         "Cholesterol",
         "Ascending"
       ]
     ],
+    "enableRenameFieldsTable": true,
     "structuretableRenameFields": [
       [
         "Age",
@@ -50,6 +53,7 @@
         ""
       ]
     ],
+    "enableTableLists": false,
     "structurelisteditorListInput": [
       [
         "Hello",
@@ -306,20 +310,40 @@
       "role": "expression"
     },
     {
+      "id": "enableColumnSelect",
+      "type": "boolean",
+      "default": ""
+    },
+    {
       "id": "columnSelectSharedWithInput",
       "type": "array[string]",
       "default": [],
       "role": "column"
     },
     {
+      "id": "enableSortByTable",
+      "type": "boolean",
+      "default": ""
+    },
+    {
       "id": "structuretableSortOrder",
       "type": "array[structuretableSortOrder]"
+    },
+    {
+      "id": "enableRenameFieldsTable",
+      "type": "boolean",
+      "default": ""
     },
     {
       "id": "structuretableRenameFields",
       "type": "map[string,structuretableRenameFields]",
       "role": "column",
       "default": []
+    },
+    {
+      "id": "enableTableLists",
+      "type": "boolean",
+      "default": ""
     },
     {
       "id": "structurelisteditorListInput",
@@ -760,6 +784,15 @@
         }
       },
       {
+        "parameter_ref": "enableColumnSelect",
+        "label": {
+          "default": "enable"
+        },
+        "description": {
+          "default": "Enable table"
+        }
+      },
+      {
         "parameter_ref": "columnSelectSharedWithInput",
         "label": {
           "default": "Column Select Shared with Sort",
@@ -768,6 +801,15 @@
         "description": {
           "default": "Shared input list with below control",
           "placement": "on_panel"
+        }
+      },
+      {
+        "parameter_ref": "enableSortByTable",
+        "label": {
+          "default": "enable"
+        },
+        "description": {
+          "default": "Enable table"
         }
       },
       {
@@ -782,12 +824,30 @@
         }
       },
       {
+        "parameter_ref": "enableRenameFieldsTable",
+        "label": {
+          "default": "enable"
+        },
+        "description": {
+          "default": "Enable table"
+        }
+      },
+      {
         "parameter_ref": "structuretableRenameFields",
         "label": {
           "default": "Rename Field"
         },
         "description": {
           "default": "Complex table control with inline edit and subpanel edit"
+        }
+      },
+      {
+        "parameter_ref": "enableTableLists",
+        "label": {
+          "default": "enable"
+        },
+        "description": {
+          "default": "Enable table"
         }
       },
       {
@@ -1130,6 +1190,7 @@
               "default": "Columns"
             },
             "parameter_refs": [
+              "enableColumnSelect",
               "columnSelectSharedWithInput",
               "columnSelectInputFieldList"
             ]
@@ -1213,6 +1274,7 @@
               "default": "Columns"
             },
             "parameter_refs": [
+              "enableSortByTable",
               "structuretableSortOrder"
             ]
           },
@@ -1223,12 +1285,14 @@
             },
             "type": "columnSelection",
             "parameter_refs": [
+              "enableRenameFieldsTable",
               "structuretableRenameFields"
             ]
           },
           {
             "id": "Structure Table Inline Control",
             "parameter_refs": [
+              "enableTableLists",
               "structurelisteditorTableInput"
             ]
           },
@@ -1272,6 +1336,64 @@
     ]
   },
   "conditions": [
+    {
+      "enabled": {
+        "parameter_refs": [
+          "columnSelectSharedWithInput",
+          "columnSelectInputFieldList"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "enableColumnSelect",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "structuretableSortOrder"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "enableSortByTable",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "structuretableRenameFields"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "enableRenameFieldsTable",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "structurelisteditorTableInput",
+          "structurelisteditorListInput"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "enableTableLists",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
     {
       "validation": {
         "fail_message": {

@@ -39,8 +39,8 @@ export default class MoveableTableRows extends React.Component {
 	getTableRowMoveImages() {
 		const selected = this.props.getSelectedRows().sort();
 		const controlValue = this.props.getCurrentControlValue();
-		const topEnabled = (selected.length !== 0 && selected[0] !== 0);
-		const bottomEnabled = (selected.length !== 0 && selected[selected.length - 1] !== controlValue.length - 1);
+		const topEnabled = (selected.length !== 0 && selected[0] !== 0) && !this.props.disabled;
+		const bottomEnabled = (selected.length !== 0 && selected[selected.length - 1] !== controlValue.length - 1) && !this.props.disabled;
 		const topImages = topEnabled ? (
 			<div key="topImages">
 				<div onClick={this.topMoveRow}>
@@ -199,5 +199,6 @@ MoveableTableRows.propTypes = {
 	setCurrentControlValueSelected: PropTypes.func.isRequired,
 	setScrollToRow: PropTypes.func.isRequired,
 	tableContainer: PropTypes.object.isRequired,
-	stateStyle: PropTypes.object
+	stateStyle: PropTypes.object,
+	disabled: PropTypes.bool
 };

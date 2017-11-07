@@ -211,33 +211,45 @@ export default class ColumnSelectControl extends EditorControl {
 
 		let removeFieldsButtonId = "remove-fields-button-enabled";
 		let removeIconImage = (<img src={remove32} />);
-		if (!this.state.enableRemoveIcon) {
+		let removeOnClick = this.removeSelected;
+		let removeButtonDisabled = false;
+
+		if (!this.state.enableRemoveIcon || stateDisabled.disabled) {
 			removeIconImage = (<img src={remove32disabled} />);
 			removeFieldsButtonId = "remove-fields-button-disabled";
+			removeOnClick = null;
+			removeButtonDisabled = true;
 		} else if (this.state.hoverRemoveIcon) {
 			removeIconImage = (<img src={remove32hover} />);
 		}
-		let removeIcon = (<div id={removeFieldsButtonId}
+		const removeIcon = (<div id={removeFieldsButtonId}
 			className="button"
-			onClick={this.removeSelected}
+			onClick={removeOnClick}
 			onMouseEnter={this.mouseEnterRemoveButton}
 			onMouseLeave={this.mouseLeaveRemoveButton}
-			disabled
+			disabled={removeButtonDisabled}
 		>
 			{removeIconImage}
 		</div>);
-		if (this.state.enableRemoveIcon) {
-			removeIcon = (<div id={removeFieldsButtonId}
-				className="button"
-				onClick={this.removeSelected}
-				onMouseEnter={this.mouseEnterRemoveButton}
-				onMouseLeave={this.mouseLeaveRemoveButton}
-				disabled={false}
-			>
-				{removeIconImage}
-			</div>);
+
+		let disabledClassName = "";
+		let addButtonDisabled = false;
+		let addOnClick = this.props.openFieldPicker;
+		if (stateDisabled.disabled) {
+			disabledClassName = " disabled";
+			addButtonDisabled = true;
+			addOnClick = null;
 		}
-		// <div className="editor_control_area" style={stateStyle}>
+		const addButton = (<Button
+			id="add-fields-button"
+			icon="plus"
+			onClick={addOnClick}
+			disabled={addButtonDisabled}
+			data-control={JSON.stringify(this.props.control)}
+		>
+			Add Columns
+		</Button>);
+
 		const tooltipId = "tooltip-add-remove-columns-" + this.props.control.name;
 		if (this.props.multiColumn) {
 			return (
@@ -247,14 +259,7 @@ export default class ColumnSelectControl extends EditorControl {
 							{removeIcon}
 						</div>
 						<div className="properties-tooltips-container add-remove-columns" data-tip="Select columns to add" data-for={tooltipId}>
-							<Button
-								id="add-fields-button"
-								icon="plus"
-								onClick={this.props.openFieldPicker}
-								data-control={JSON.stringify(this.props.control)}
-							>
-								Add Columns
-							</Button>
+							{addButton}
 						</div>
 					</div>
 					<ReactTooltip
@@ -270,7 +275,7 @@ export default class ColumnSelectControl extends EditorControl {
 						<div id={controlIconContainerClass}>
 							<FormControl {...stateDisabled}
 								id={this.getControlID()}
-								className={"column-allocator multi " + this.props.propertiesClassname}
+								className={"column-allocator multi " + this.props.propertiesClassname + disabledClassName}
 								componentClass="select"
 								multiple
 								rows={6}
@@ -298,14 +303,7 @@ export default class ColumnSelectControl extends EditorControl {
 						{removeIcon}
 					</div>
 					<div className="properties-tooltips-container add-remove-columns" data-tip="Select columns to add" data-for={tooltipId}>
-						<Button
-							id="add-fields-button"
-							secondary icon="plus"
-							onClick={this.props.openFieldPicker}
-							data-control={JSON.stringify(this.props.control)}
-						>
-							Add Columns
-						</Button>
+						{addButton}
 					</div>
 				</div>
 				<ReactTooltip
@@ -321,7 +319,7 @@ export default class ColumnSelectControl extends EditorControl {
 					<div id={controlIconContainerClass}>
 						<FormControl {...stateDisabled}
 							id={this.getControlID()}
-							className={"column-allocator single " + this.props.propertiesClassname}
+							className={"column-allocator single " + this.props.propertiesClassname + disabledClassName}
 							componentClass="select"
 							rows={1}
 							name={this.props.control.name}
