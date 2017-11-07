@@ -182,6 +182,7 @@ export default class CommonCanvas extends React.Component {
 				if (linkNodesList.length > 0) {
 					const command = new AddLinksAction(linkNodesList);
 					CommandStack.do(command);
+					data.linkIds = linkNodesList.map((link) => link.id);
 				}
 				break;
 			}
@@ -190,6 +191,8 @@ export default class CommonCanvas extends React.Component {
 				if (linkCommentList.length > 0) {
 					const command = new AddLinksAction(linkCommentList);
 					CommandStack.do(command);
+					data.linkIds = linkCommentList.map((link) => link.id);
+
 				}
 				break;
 			}
@@ -225,6 +228,7 @@ export default class CommonCanvas extends React.Component {
 				const comment = ObjectModel.createComment(this.contextMenuSource);
 				const command = new CreateCommentAction(comment);
 				CommandStack.do(command);
+				this.contextMenuSource.commentId = comment.id;
 				break;
 			}
 			case "deleteLink": {
@@ -278,6 +282,7 @@ export default class CommonCanvas extends React.Component {
 				const comment = ObjectModel.createComment(source);
 				const command = new CreateCommentAction(comment);
 				CommandStack.do(command);
+				source.commentId = comment.id;
 				break;
 			}
 			case "arrangeHorizontally": {
