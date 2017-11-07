@@ -16,3 +16,4 @@
 @import "~codemirror/lib/codemirror.css";
 @import "~codemirror/addon/hint/show-hint.css";
 @import "./styles/toolbar.css";
+@import "./styles/tooltip.css";
