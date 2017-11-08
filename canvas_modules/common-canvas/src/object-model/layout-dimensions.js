@@ -1,5 +1,29 @@
 
 const haloLayout = {
+
+	// CSS classes
+	cssSelectionHighlight: "d3-obj-selection-highlight",
+	cssNodeBodyOutline: "d3-node-body-outline",
+	cssNodeLabel: "d3-node-label",
+	cssNodePortOutput: "d3-node-port-output",
+	cssNodePortInput: "d3-node-port-input",
+	cssNodePortInputArrow: "d3-node-port-input-arrow",
+	cssNewConnectionLine: "d3-new-connection-line",
+	cssNewConnectionStart: "d3-new-connection-start",
+	cssNewConnectionBlob: "d3-new-connection-blob",
+	cssNewConnectionArrow: "d3-new-connection-arrow",
+	cssDataLink: "canvas-data-link",
+
+	// Connection type decides whether the node to node connections use the
+	// 'halo' connection mechanism and arrows pointing directly from source to
+	// target or the 'ports' connections with connection lines draw from output
+	// ports to input ports.
+	connectionType: "halo",
+
+	// Node format specifies whether the image and label are arranged side by side
+	// (horizontal) or with the image above the label (vertical).
+	nodeFormatType: "vertical",
+
 	// Default node sizes. The height might be overridden for nodes with a more ports
 	// than will fit in the default size.
 	defaultNodeWidth: 60,
@@ -10,12 +34,6 @@ const haloLayout = {
 
 	imagePosX: 6,
 	imagePosY: 0,
-
-	// Connection type decides whether the node to node connections use the
-	// 'halo' connection mechanism and arrows pointing directtly from source to
-	// target or the 'ports' connections with connection lines draw from output
-	// ports to input ports.
-	connectionType: "Halo",
 
 	// Sets the justification of label and icon within the node height. This
 	// overrides any labelPosY value provided. Possible value are "center" or
@@ -41,11 +59,11 @@ const haloLayout = {
 	decoratorHeight: 12,
 	decoratorWidth: 12,
 
-	topDecoratorY: 0,
-	bottomDecoratorY: 36,
+	decoratorTopY: 0,
+	decoratorBottomY: 36,
 
-	leftDecoratorX: 6,
-	rightDecoratorX: 42,
+	decoratorLeftX: 6,
+	decoratorRightX: 42,
 
 	// Draw node as a simple rectangle
 	nodeShape: "rectangle",
@@ -81,16 +99,39 @@ const haloLayout = {
 	elbowSize: 10,
 	minInitialLine: 30,
 
-	// Halo sizes
+	// Comment Halo size
 	haloCommentGap: 11, // Gap between comment rectangle and its halo
-	haloNodeGap: 5, // Gap between node image and its halo
 
+	// Node Halo sizes
 	haloCenterX: 30,
 	haloCenterY: 24,
 	haloRadius: 29
 };
 
 const portsHorizontal = {
+	// CSS classes
+	cssSelectionHighlight: "d3-obj-selection-highlight-austin",
+	cssNodeBodyOutline: "d3-node-body-outline-austin",
+	cssNodeLabel: "d3-node-label-austin",
+	cssNodePortOutput: "d3-node-port-output-austin",
+	cssNodePortInput: "d3-node-port-input-austin",
+	cssNodePortInputArrow: "d3-node-port-input-arrow-austin",
+	cssNewConnectionLine: "d3-new-connection-line-austin",
+	cssNewConnectionStart: "d3-new-connection-start-austin",
+	cssNewConnectionBlob: "d3-new-connection-blob-austin",
+	cssNewConnectionArrow: "d3-new-connection-arrow-austin",
+	cssDataLink: "canvas-data-link-austin",
+
+	// Connection type decides whether the node to node connections use the
+	// 'halo' connection mechanism and arrows pointing directly from source to
+	// target or the 'ports' connections with connection lines draw from output
+	// ports to input ports.
+	connectionType: "ports",
+
+	// Node format specifies whether the image and label are arranged side by side
+	// (horizontal) or with the image above the label (vertical).
+	nodeFormatType: "horizontal",
+
 	// Default node sizes. The height might be overridden for nodes with a more ports
 	// than will fit in the default size.
 	defaultNodeWidth: 160,
@@ -101,12 +142,6 @@ const portsHorizontal = {
 
 	imagePosX: 6,
 	imagePosY: 7,
-
-	// Connection type decides whether the node to node connections use the
-	// 'halo' connection mechanism and arrows pointing directtly from source to
-	// target or the 'ports' connections with connection lines draw from output
-	// ports to input ports.
-	connectionType: "Ports",
 
 	// Sets the justification of label and icon within the node height. This
 	// overrides any labelPosY value provided. Possible value are "center" or
@@ -132,32 +167,14 @@ const portsHorizontal = {
 	decoratorHeight: 12,
 	decoratorWidth: 12,
 
-	topDecoratorY: 0,
-	bottomDecoratorY: 28,
+	decoratorTopY: 0,
+	decoratorBottomY: 28,
 
-	leftDecoratorX: 2,
-	rightDecoratorX: 144,
+	decoratorLeftX: 2,
+	decoratorRightX: 144,
 
 	// Draw node as a rectangle with port arcs around the ports
 	nodeShape: "port-arcs",
-
-	// Radius of the port circle
-	portRadius: 3,
-
-	// Radius of an imaginary circle around the port. This controls the
-	// spacing of ports and the size of port arcs when nodeShape is set to
-	// port-arcs.
-	portArcRadius: 6,
-
-	// Spacing between the port arcs around the ports.
-	portArcSpacing: 3,
-
-	// Default position of a single port - for vertical node format this
-	// is half way down the image rather than the center of the node.
-	portPosY: 20,
-
-	// Comment port (circle) radius
-	commentPortRadius: 5,
 
 	// The gap between a node or comment and its selection highlight outline
 	highLightGap: 2,
@@ -168,12 +185,6 @@ const portsHorizontal = {
 	// What point to draw the link line towards. Possible values are image_center or node_center.
 	// This is used for comment links going towards nodes.
 	drawLinkLineTo: "node_center",
-
-	// Display of vertical ellipsis to show context menu
-	ellipsisWidth: 4,
-	ellipsisHeight: 16,
-	ellipsisPosX: 148,
-	ellipsisPosY: 12,
 
 	// Error indicator dimensions
 	errorCenterX: 30,
@@ -194,10 +205,57 @@ const portsHorizontal = {
 	// size of the vertical line protruding from the source or target handles
 	// when such a line is required for drawing connectors.
 	elbowSize: 10,
-	minInitialLine: 30
+	minInitialLine: 30,
+
+	// Radius of the port circle
+	portRadius: 3,
+
+	// Radius of an imaginary circle around the port. This controls the
+	// spacing of ports and the size of port arcs when nodeShape is set to
+	// port-arcs.
+	portArcRadius: 6,
+
+	// Spacing between the port arcs around the ports.
+	portArcSpacing: 3,
+
+	// Default position of a single port - for vertical node format this
+	// is half way down the image rather than the center of the node.
+	portPosY: 20,
+
+	// Comment port (circle) radius
+	commentPortRadius: 5,
+
+	// Display of vertical ellipsis to show context menu
+	ellipsisWidth: 4,
+	ellipsisHeight: 16,
+	ellipsisPosX: 148,
+	ellipsisPosY: 12
 };
 
 const portsVertical = {
+	// CSS classes
+	cssSelectionHighlight: "d3-obj-selection-highlight",
+	cssNodeBodyOutline: "d3-node-body-outline",
+	cssNodeLabel: "d3-node-label",
+	cssNodePortOutput: "d3-node-port-output",
+	cssNodePortInput: "d3-node-port-input",
+	cssNodePortInputArrow: "d3-node-port-input-arrow",
+	cssNewConnectionLine: "d3-new-connection-line",
+	cssNewConnectionStart: "d3-new-connection-start",
+	cssNewConnectionBlob: "d3-new-connection-blob",
+	cssNewConnectionArrow: "d3-new-connection-arrow",
+	cssDataLink: "canvas-data-link",
+
+	// Connection type decides whether the node to node connections use the
+	// 'halo' connection mechanism and arrows pointing directly from source to
+	// target or the 'ports' connections with connection lines draw from output
+	// ports to input ports.
+	connectionType: "ports",
+
+	// Node format specifies whether the image and label are arranged side by side
+	// (horizontal) or with the image above the label (vertical).
+	nodeFormatType: "vertical",
+
 	// Default node sizes. The height might be overridden for nodes with a more ports
 	// than will fit in the default size.
 	defaultNodeWidth: 70,
@@ -208,12 +266,6 @@ const portsVertical = {
 
 	imagePosX: 11,
 	imagePosY: 5,
-
-	// Connection type decides whether the node to node connections use the
-	// 'halo' connection mechanism and arrows pointing directtly from source to
-	// target or the 'ports' connections with connection lines draw from output
-	// ports to input ports.
-	connectionType: "Ports",
 
 	// Sets the justification of label and icon within the node height. This
 	// overrides any labelPosY value provided. Possible value are "center" or
@@ -239,31 +291,14 @@ const portsVertical = {
 	decoratorHeight: 12,
 	decoratorWidth: 12,
 
-	topDecoratorY: 5,
-	bottomDecoratorY: 41,
-	leftDecoratorX: 10,
-	rightDecoratorX: 46,
+	decoratorTopY: 5,
+	decoratorBottomY: 41,
+
+	decoratorLeftX: 10,
+	decoratorRightX: 46,
 
 	// Draw node as a simple rectangle
 	nodeShape: "rectangle",
-
-	// Radius of the port circle
-	portRadius: 6,
-
-	// Radius of an imaginary circle around the port. This controls the
-	// spacing of ports and the size of port arcs when nodeShape is set to
-	// port-arcs.
-	portArcRadius: 10, // Defines an imaginary circle around the circle port
-
-	// Spacing between the port arcs around the ports.
-	portArcSpacing: 0,
-
-	// Default position of a single port - for vertical node format this
-	// is half way down the image rather than the center of the node.
-	portPosY: 29,
-
-	// Comment port (circle) radius
-	commentPortRadius: 5,
 
 	// The gap between a node or comment and its selection highlight rectangle
 	highLightGap: 4,
@@ -274,12 +309,6 @@ const portsVertical = {
 	// What point to draw the link line towards. Possible values are image_center or node_center.
 	// This is used for comment links going towards nodes.
 	drawLinkLineTo: "node_center",
-
-	// Display of vertical ellipsis to show context menu
-	ellipsisWidth: 5,
-	ellipsisHeight: 15,
-	ellipsisPosX: 56,
-	ellipsisPosY: 7,
 
 	// Error indicator dimensions
 	errorCenterX: 48,
@@ -300,7 +329,31 @@ const portsVertical = {
 	// size of the vertical line protruding from the source or target handles
 	// when such a line is required for drawing connectors.
 	elbowSize: 10,
-	minInitialLine: 30
+	minInitialLine: 30,
+
+	// Radius of the port circle
+	portRadius: 6,
+
+	// Radius of an imaginary circle around the port. This controls the
+	// spacing of ports and the size of port arcs when nodeShape is set to
+	// port-arcs.
+	portArcRadius: 10, // Defines an imaginary circle around the circle port
+
+	// Spacing between the port arcs around the ports.
+	portArcSpacing: 0,
+
+	// Default position of a single port - for vertical node format this
+	// is half way down the image rather than the center of the node.
+	portPosY: 29,
+
+	// Comment port (circle) radius
+	commentPortRadius: 5,
+
+	// Display of vertical ellipsis to show context menu
+	ellipsisWidth: 5,
+	ellipsisHeight: 15,
+	ellipsisPosX: 56,
+	ellipsisPosY: 7
 };
 
 

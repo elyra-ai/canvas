@@ -50,7 +50,7 @@ export default class CanvasD3Layout {
 		this.linkType = config.enableLinkType;
 
 		// Initialize dimension and layout variables
-		this.initializeDimensions();
+		this.initializeLayoutInfo();
 
 		// Initialize zoom variables
 		this.initializeZoomVariables();
@@ -120,65 +120,19 @@ export default class CanvasD3Layout {
 	}
 
 	// Initializes the dimensions for nodes, comments layout etc.
-	initializeDimensions() {
+	initializeLayoutInfo() {
 		if (this.connectionType === "Halo") {
-			this.nodeBodyClass = "d3-node-body-outline";
-			this.selectionHighlightClass = "d3-obj-selection-highlight";
-			this.dataLinkClass = "canvas-data-link";
-			this.labelClass = "d3-node-label";
-			this.labelErrorClass = "d3-node-error-label";
-			this.labelWarningClass = "d3-node-warning-label";
-			this.commentLinkClass = "canvas-comment-link";
-			this.nodePortOutputClass = "";
-			this.nodePortInputClass = "";
-			this.nodePortInputArrowClass = "";
-			this.newConnectionLineClass = "";
-			this.newConnectionLineStartClass = "";
-			this.newConnectionLineBlobClass = "";
-
 			ObjectModel.setLayoutType("halo");
 
 		} else { // Ports connection type
-
 			if (this.nodeFormatType === "Horizontal") {
-				this.nodeBodyClass = "d3-node-body-outline-austin";
-				this.selectionHighlightClass = "d3-obj-selection-highlight-austin";
-				this.dataLinkClass = "canvas-data-link-austin";
-				this.labelClass = "d3-node-label-austin";
-				this.labelErrorClass = "d3-node-error-label";
-				this.labelWarningClass = "d3-node-warning-label";
-				this.commentLinkClass = "canvas-comment-link";
-				this.nodePortOutputClass = "d3-node-port-output-austin";
-				this.nodePortInputClass = "d3-node-port-input-austin";
-				this.nodePortInputArrowClass = "d3-node-port-input-arrow-austin";
-				this.newConnectionLineClass = "d3-new-connection-line-austin";
-				this.newConnectionLineStartClass = "d3-new-connection-start-austin";
-				this.newConnectionLineBlobClass = "d3-new-connection-blob-austin";
-
-
 				ObjectModel.setLayoutType("ports-horizontal");
 
 			} else { // Vertical
-				this.nodeBodyClass = "d3-node-body-outline";
-				this.selectionHighlightClass = "d3-obj-selection-highlight";
-				this.dataLinkClass = "canvas-data-link";
-				this.labelClass = "d3-node-label";
-				this.labelErrorClass = "d3-node-error-label";
-				this.labelWarningClass = "d3-node-warning-label";
-				this.commentLinkClass = "canvas-comment-link";
-				this.nodePortOutputClass = "d3-node-port-output";
-				this.nodePortInputClass = "d3-node-port-input";
-				this.nodePortInputArrowClass = "d3-node-port-input-arrow";
-				this.newConnectionLineClass = "d3-new-connection-line";
-				this.newConnectionLineStartClass = "d3-new-connection-start";
-				this.newConnectionLineBlobClass = "d3-new-connection-blob";
-
 				ObjectModel.setLayoutType("ports-vertical");
 			}
 		}
-		const layout = ObjectModel.getLayout();
-		Object.assign(this, layout);
-
+		this.layout = ObjectModel.getLayout();
 	}
 
 	initializeZoomVariables() {
@@ -207,20 +161,21 @@ export default class CanvasD3Layout {
 			this.connectionType = config.enableConnectionType;
 			this.nodeFormatType = config.enableNodeFormatType;
 			this.linkType = config.enableLinkType;
-			this.clearCanvas();
 
-			// Initialize dimensions before cloning the canvas since cloning relies on the dimnesion info
-			this.initializeDimensions();
+			// Both these methods will result in the canvas being refreshed through
+			// updates to the object model.
+			this.clearCanvas();
+			this.initializeLayoutInfo();
+
+		} else {
+			// Make a copy of canvasJSON because we will need to update it (when moving
+			// nodes and comments and when sizing comments in real time) without updating the
+			// canvasJSON in the ObjectModel until we're done.
+			this.canvasJSON = this.cloneCanvasInfo(canvasJSON);
+
+			this.displayCanvas();
 		}
 
-		// Make a copy of canvasJSON because we will need to update it (when moving
-		// nodes and comments and when sizing comments in real time) without updating the
-		// canvasJSON in the ObjectModel until we're done.
-		this.canvasJSON = this.cloneCanvasInfo(canvasJSON);
-
-		// this.zoomTransform = d3.zoomIdentity.translate(0, 0).scale(1); // Reset zoom parameters
-
-		this.displayCanvas();
 		this.consoleLog("Set Canvas. Elapsed time = " + (Date.now() - startTime));
 	}
 
@@ -489,10 +444,10 @@ export default class CanvasD3Layout {
 		let labelClass = "";
 		switch (messageLevel) {
 		case "error":
-			labelClass = this.labelErrorClass;
+			labelClass = "d3-node-error-label";
 			break;
 		case "warning":
-			labelClass = this.labelWarningClass;
+			labelClass = "d3-node-warning-label";
 			break;
 		default:
 			break;
@@ -716,17 +671,17 @@ export default class CanvasD3Layout {
 		var canvBottom = -Infinity;
 
 		d3.selectAll(".node-group").each((d) => {
-			canvLeft = Math.min(canvLeft, d.x_pos - this.highLightGap);
-			canvTop = Math.min(canvTop, d.y_pos - this.highLightGap);
-			canvRight = Math.max(canvRight, d.x_pos + d.width + this.highLightGap);
-			canvBottom = Math.max(canvBottom, d.y_pos + d.height + this.highLightGap);
+			canvLeft = Math.min(canvLeft, d.x_pos - this.layout.highLightGap);
+			canvTop = Math.min(canvTop, d.y_pos - this.layout.highLightGap);
+			canvRight = Math.max(canvRight, d.x_pos + d.width + this.layout.highLightGap);
+			canvBottom = Math.max(canvBottom, d.y_pos + d.height + this.layout.highLightGap);
 		});
 
 		d3.selectAll(".comment-group").each((d) => {
-			canvLeft = Math.min(canvLeft, d.x_pos - this.highLightGap);
-			canvTop = Math.min(canvTop, d.y_pos - this.highLightGap);
-			canvRight = Math.max(canvRight, d.x_pos + d.width + this.highLightGap);
-			canvBottom = Math.max(canvBottom, d.y_pos + d.height + this.highLightGap);
+			canvLeft = Math.min(canvLeft, d.x_pos - this.layout.highLightGap);
+			canvTop = Math.min(canvTop, d.y_pos - this.layout.highLightGap);
+			canvRight = Math.max(canvRight, d.x_pos + d.width + this.layout.highLightGap);
+			canvBottom = Math.max(canvBottom, d.y_pos + d.height + this.layout.highLightGap);
 		});
 
 		const canvWidth = canvRight - canvLeft;
@@ -857,7 +812,7 @@ export default class CanvasD3Layout {
 			nodeGroupSel.each(function(d) {
 				d3.select(`#node_outline_${d.id}`)
 					.attr("selected", ObjectModel.isSelected(d.id) ? "yes" : "no")
-					.attr("class", that.selectionHighlightClass)
+					.attr("class", that.layout.cssSelectionHighlight)
 					.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
 
 				// This code will remove custom attributes from a node. This might happen when
@@ -892,7 +847,7 @@ export default class CanvasD3Layout {
 
 				d3.select(`#node_outline_${d.id}`)
 					.attr("selected", ObjectModel.isSelected(d.id) ? "yes" : "no")
-					.attr("class", that.selectionHighlightClass)
+					.attr("class", that.layout.cssSelectionHighlight)
 					.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
 
 				d3.select(`#node_image_${d.id}`)
@@ -910,9 +865,9 @@ export default class CanvasD3Layout {
 					.datum((nd) => that.getNode(nd.id)) // Set the __data__ to the updated data
 					.text(function(nd) {
 						var textObj = d3.select(this);
-						return that.trimLabelToWidth(nd.label, that.labelWidth, that.labelClass, textObj);
+						return that.trimLabelToWidth(nd.label, that.layout.labelWidth, that.layout.cssNodeLabel, textObj);
 					})
-					.attr("class", function(nd) { return that.labelClass + " " + that.getMessageLabelClass(nd.messages);
+					.attr("class", function(nd) { return that.layout.cssNodeLabel + " " + that.getMessageLabelClass(nd.messages);
 					});
 
 				d3.select(`#error_circle_${d.id}`)
@@ -926,15 +881,15 @@ export default class CanvasD3Layout {
 				.attr("class", "obj-group node-group")
 				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 				.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
-					if (that.connectionType === "Ports") {
+					if (that.layout.connectionType === "ports") {
 						d3.select(`#node_body_${d.id}`).attr("hover", "yes");
 						d3.select(this)
 							.append("image")
 							.attr("id", "node-ellipsis")
 							.attr("xlink:href", nodeMenuStandardIcon)
-							.attr("width", that.ellipsisWidth)
-							.attr("height", that.ellipsisHeight)
-							.attr("x", that.ellipsisPosX)
+							.attr("width", that.layout.ellipsisWidth)
+							.attr("height", that.layout.ellipsisHeight)
+							.attr("x", that.layout.ellipsisPosX)
 							.attr("y", (nd) => that.getEllipsisPosY(nd))
 							.on("mouseenter", () => {
 								d3.select("#node-ellipsis").attr("xlink:href", nodeMenuHoverIcon);
@@ -950,7 +905,7 @@ export default class CanvasD3Layout {
 				})
 				.on("mouseleave", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
 					d3.select(`#node_body_${d.id}`).attr("hover", "no");
-					if (that.connectionType === "Ports") {
+					if (that.layout.connectionType === "ports") {
 						d3.selectAll("#node-ellipsis").remove();
 					}
 				})
@@ -1000,69 +955,67 @@ export default class CanvasD3Layout {
 				.call(this.drag); // Must put drag after mousedown listener so mousedown gets called first.
 
 			// Node selection highlighting outline for new nodes, flexible properties set in next step
-			if (this.nodeShape === "port-arcs") {
+			if (this.layout.nodeShape === "port-arcs") {
 				newNodeGroups.append("path")
 					.attr("id", (d) => `node_outline_${d.id}`);
+
+				newNodeGroups.append("path")
+					.attr("id", (d) => `node_body_${d.id}`)
+					.style("filter", "url(#drop-shadow)");
+
+
 			} else { // simple rectangle
 				newNodeGroups.append("rect")
 					.attr("id", (d) => `node_outline_${d.id}`);
+
+				newNodeGroups.append("rect")
+					.attr("id", (d) => `node_body_${d.id}`);
+
 			}
 
-			if (this.connectionType === "Ports") {
-				// attach node body for new nodes, flexible properties are set in next step
-				if (this.nodeShape === "port-arcs") {
-					newNodeGroups.append("path")
-						.attr("id", (d) => `node_body_${d.id}`)
-						.style("filter", "url(#drop-shadow)");
-				} else {
-					newNodeGroups.append("rect")
-						.attr("id", (d) => `node_body_${d.id}`)
-						.attr("x", 0)
-						.attr("y", 0);
-				}
+			var newAndExistingNodes = nodeGroupSel.enter().merge(nodeGroupSel);
 
-				// ports: create for new and existing nodes
-				var newAndExistingNodes = nodeGroupSel.enter().merge(nodeGroupSel);
-				newAndExistingNodes
-					.each((d) => {
-						// Node selection highlighting: set flexible properties
-						if (this.nodeShape === "port-arcs") {
-							d3.select(`#node_grp_${d.id}`).select(`#node_outline_${d.id}`)
+			newAndExistingNodes
+				.each((d) => {
+					// Node selection highlighting: set flexible properties
+					if (this.layout.nodeShape === "port-arcs") {
+						d3.select(`#node_grp_${d.id}`).select(`#node_outline_${d.id}`)
+							.attr("d", (cd) => this.getNodeShapePath(cd))
+							.attr("transform", (cd) => this.getNodeHighlightOutlineTranslate(cd)) // Scale and move the shape up and to the left to account for the padding
+							.attr("selected", function(cd) { return ObjectModel.isSelected(cd.id) ? "yes" : "no"; })
+							.attr("class", this.layout.cssSelectionHighlight);
+					} else { // simple rectangle
+						d3.select(`#node_grp_${d.id}`).select(`#node_outline_${d.id}`)
+							.attr("width", (cd) => cd.width + (2 * this.layout.highLightGap))
+							.attr("height",
+								(cd) => cd.height + (2 * this.layout.highLightGap))
+							.attr("x", -this.layout.highLightGap)
+							.attr("y", -this.layout.highLightGap)
+							.attr("selected", function(cd) { return ObjectModel.isSelected(cd.id) ? "yes" : "no"; })
+							.attr("class", this.layout.cssSelectionHighlight);
+					}
+
+					// node layout: set flexible properties
+					if (this.layout.connectionType === "ports") {
+						// Node body updates
+						if (this.layout.nodeShape === "port-arcs") {
+							d3.select(`#node_grp_${d.id}`).select(`#node_body_${d.id}`)
 								.attr("d", (cd) => this.getNodeShapePath(cd))
-								.attr("transform", (cd) => this.getNodeHighlightOutlineTranslate(cd)) // Scale and move the shape up and to the left to account for the padding
-								.attr("selected", function(cd) { return ObjectModel.isSelected(cd.id) ? "yes" : "no"; })
-								.attr("class", this.selectionHighlightClass);
-						} else { // simple rectangle
-							d3.select(`#node_grp_${d.id}`).select(`#node_outline_${d.id}`)
-								.attr("width", (cd) => cd.width + (2 * this.highLightGap))
-								.attr("height",
-									(cd) => cd.height + (2 * this.highLightGap))
-								.attr("x", -this.highLightGap)
-								.attr("y", -this.highLightGap)
-								.attr("selected", function(cd) { return ObjectModel.isSelected(cd.id) ? "yes" : "no"; })
-								.attr("class", this.selectionHighlightClass);
-						}
-
-						// node layout: set flexible properties
-						if (this.connectionType === "Ports") {
-							// Node body updates
-							if (this.nodeShape === "port-arcs") {
-								d3.select(`#node_grp_${d.id}`).select(`#node_body_${d.id}`)
-									.attr("d", (cd) => this.getNodeShapePath(cd))
-									.attr("class", this.nodeBodyClass);
-							} else {
-								d3.select(`#node_grp_${d.id}`).select(`#node_body_${d.id}`)
-									.attr("width", (cd) => cd.width)
-									.attr("height", (cd) => cd.height)
-									.attr("class", this.nodeBodyClass);
-							}
+								.attr("class", this.layout.cssNodeBodyOutline);
+						} else {
+							d3.select(`#node_grp_${d.id}`).select(`#node_body_${d.id}`)
+								.attr("width", (cd) => cd.width)
+								.attr("height", (cd) => cd.height)
+								.attr("x", 0)
+								.attr("y", 0)
+								.attr("class", this.layout.cssNodeBodyOutline);
 						}
 
 						// Input ports
 						if (d.input_ports && d.input_ports.length > 0) {
 							const inputPortPositions = this.getPortPositions(d, "input");
 
-							var inputPortSelection = d3.select(`#node_grp_${d.id}`).selectAll("." + that.nodePortInputClass)
+							var inputPortSelection = d3.select(`#node_grp_${d.id}`).selectAll("." + this.layout.cssNodePortInput)
 								.data(d.input_ports, function(p) { return p.id; });
 
 							// input port circle
@@ -1071,23 +1024,23 @@ export default class CanvasD3Layout {
 								.attr("id", (port) => `trg_circle_${d.id}_${port.id}`)
 								.attr("portId", (port) => port.id) // This is needed by getNodeInputPortAtMousePos
 								.attr("cx", 0)
-								.attr("r", this.portRadius)
+								.attr("r", this.layout.portRadius)
 								.attr("connected", "no")
 								.merge(inputPortSelection)	// for new and existing port circles, update cy, datum and class
 								.attr("cy", (port) => inputPortPositions[port.id])
 								.attr("class", (port) =>
-									that.nodePortInputClass + (port.class_name ? " " + port.class_name : ""))
+									this.layout.cssNodePortInput + (port.class_name ? " " + port.class_name : ""))
 								.datum((port) => that.getNodePort(d.id, port.id, "input"));
 
 							// input port arrow in circle
 							inputPortSelection.enter()
 								.append("path")
 								.attr("id", (port) => `trg_arrow_${d.id}_${port.id}`)
-								.attr("class", that.nodePortInputArrowClass)
+								.attr("class", this.layout.cssNodePortInputArrow)
 								.attr("connected", "no");
 
 							// update arrow in circle for new and existing ports
-							d3.select(`#node_grp_${d.id}`).selectAll("." + that.nodePortInputArrowClass)
+							d3.select(`#node_grp_${d.id}`).selectAll("." + this.layout.cssNodePortInputArrow)
 								.attr("d", (port) => this.getArrowShapePath(inputPortPositions[port.id]));
 
 							inputPortSelection.exit().remove();
@@ -1097,14 +1050,14 @@ export default class CanvasD3Layout {
 						if (d.output_ports && d.output_ports.length > 0) {
 							const outputPortPositions = this.getPortPositions(d, "output");
 
-							var outputPortSelection = d3.select(`#node_grp_${d.id}`).selectAll("." + that.nodePortOutputClass)
+							var outputPortSelection = d3.select(`#node_grp_${d.id}`).selectAll("." + this.layout.cssNodePortOutput)
 								.data(d.output_ports, function(p) { return p.id; });
 
 							outputPortSelection.enter()
 								.append("circle")
 								.attr("id", (port) => `src_circle_${d.id}_${port.id}`)
-								.attr("r", this.portRadius)
-								.attr("class", (port) => this.nodePortOutputClass + (port.class_name ? " " + port.class_name : ""))
+								.attr("r", this.layout.portRadius)
+								.attr("class", (port) => this.layout.cssNodePortOutput + (port.class_name ? " " + port.class_name : ""))
 								.on("mousedown", (port) => {
 									// Make sure this is just a left mouse button click - we don't want context menu click starting a line being drawn
 									if (d3.event.button === 0) {
@@ -1114,7 +1067,7 @@ export default class CanvasD3Layout {
 										this.drawingNewLinkSrcPortId = port.id;
 										this.drawingNewLinkAction = "node-node";
 										const node = this.getNodeAtMousePos();
-										this.drawingNewLinkStartPos = { x: node.x_pos + d.width, y: node.y_pos + outputPortPositions[port.id] };
+										this.drawingNewLinkStartPos = { x: node.x_pos + node.width, y: node.y_pos + outputPortPositions[port.id] };
 										this.drawingNewLinkArray = [];
 										this.drawNewLink();
 									}
@@ -1122,29 +1075,29 @@ export default class CanvasD3Layout {
 								.merge(outputPortSelection)	// update cx, class and cy for existing output ports
 								.attr("cx", (port) => d.width)
 								.attr("cy", (port) => outputPortPositions[port.id])
-								.attr("class", (port) => this.nodePortOutputClass + (port.class_name ? " " + port.class_name : ""))
+								.attr("class", (port) => this.layout.cssNodePortOutput + (port.class_name ? " " + port.class_name : ""))
 								.datum((port) => this.getNodePort(d.id, port.id, "output"));
 
 							outputPortSelection.exit().remove();
 						}
-					});
-			}
+					}
+				});
 
 			// Image outline - this code used for debugging purposes
 			// newNodeGroups.append("rect")
-			// 	.attr("width", this.imageWidth)
-			// 	.attr("height", this.imageHeight)
-			// 	.attr("x", this.imagePosX)
-			// 	.attr("y", this.imagePosY)
+			// 	.attr("width", this.layout.imageWidth)
+			// 	.attr("height", this.layout.imageHeight)
+			// 	.attr("x", this.layout.imagePosX)
+			// 	.attr("y", this.layout.imagePosY)
 			// 	.attr("class", "d3-node-image-outline");
 
 			// Node image
 			newNodeGroups.append("image")
 				.attr("id", function(d) { return `node_image_${d.id}`; })
 				.attr("xlink:href", function(d) { return d.image; })
-				.attr("width", this.imageWidth)
-				.attr("height", this.imageHeight)
-				.attr("x", this.imagePosX)
+				.attr("width", this.layout.imageWidth)
+				.attr("height", this.layout.imageHeight)
+				.attr("x", this.layout.imagePosX)
 				.attr("class", "node-image");
 
 			// set y and custom attribures for node image in new and existing nodes
@@ -1161,9 +1114,9 @@ export default class CanvasD3Layout {
 
 			// Label outline - this code used for debugging purposes
 			// newNodeGroups.append("rect")
-			// 	.attr("width", this.labelWidth)
-			// 	.attr("height", this.labelHeight)
-			// 	.attr("x", this.labelPosX)
+			// 	.attr("width", this.layout.labelWidth)
+			// 	.attr("height", this.layout.labelHeight)
+			// 	.attr("x", this.layout.labelPosX)
 			// 	.attr("y", (d) => this.getLabelPosY(d))
 			// 	.attr("class", "d3-label-outline");
 
@@ -1171,15 +1124,16 @@ export default class CanvasD3Layout {
 			newNodeGroups.append("text")
 				.text(function(d) {
 					var textObj = d3.select(this);
-					return that.trimLabelToWidth(d.label, that.labelWidth, this.labelClass, textObj);
+					return that.trimLabelToWidth(d.label, that.layout.labelWidth, that.layout.cssNodeLabel, textObj);
 				})
 				.attr("id", function(d) { return `node_label_${d.id}`; })
-				.attr("class", function(d) { return that.labelClass + " " + that.getMessageLabelClass(d.messages); })
-				.attr("x", this.labelHorizontalJustification === "left" ? this.labelPosX : this.labelPosX + (this.labelWidth / 2)) // If not "left" then "center"
-				.attr("text-anchor", this.labelHorizontalJustification === "left" ? "start" : "middle")
+				.attr("class", function(d) { return that.layout.cssNodeLabel + " " + that.getMessageLabelClass(d.messages); })
+				.attr("x", this.layout.labelHorizontalJustification === "left" // If not "left" then "center"
+					? this.layout.labelPosX : this.layout.labelPosX + (this.layout.labelWidth / 2))
+				.attr("text-anchor", this.layout.labelHorizontalJustification === "left" ? "start" : "middle")
 				.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text object
 					const labelObj = d3.select(this);
-					if (that.displayFullLabelOnHover &&
+					if (that.layout.displayFullLabelOnHover &&
 							this.textContent.endsWith("...")) {
 						labelObj
 							.attr("abbr-label", this.textContent) // Do this before setting the new label
@@ -1195,17 +1149,17 @@ export default class CanvasD3Layout {
 				});
 
 			// set y for node label in new and existing nodes
-			newNodeGroups.merge(nodeGroupSel).selectAll("." + that.labelClass)
-				.attr("y", (d) => this.getLabelPosY(d) + this.labelHeight - this.labelDescent);
+			newNodeGroups.merge(nodeGroupSel).selectAll("." + this.layout.cssNodeLabel)
+				.attr("y", (d) => this.getLabelPosY(d) + this.layout.labelHeight - this.layout.labelDescent);
 
 			// Halo
-			if (this.connectionType === "Halo") {
+			if (this.layout.connectionType === "halo") {
 				newNodeGroups.append("circle")
 					.attr("id", function(d) { return `node_halo_${d.id}`; })
 					.attr("class", "d3-node-halo")
-					.attr("cx", this.haloCenterX)
-					.attr("cy", this.haloCenterY)
-					.attr("r", this.haloRadius)
+					.attr("cx", this.layout.haloCenterX)
+					.attr("cy", this.layout.haloCenterY)
+					.attr("r", this.layout.haloRadius)
 					.on("mousedown", (d) => {
 						this.consoleLog("Halo - mouse down");
 						d3.event.stopPropagation();
@@ -1222,8 +1176,8 @@ export default class CanvasD3Layout {
 			newNodeGroups.append("circle")
 				.attr("id", function(d) { return `error_circle_${d.id}`; })
 				.attr("class", function(d) { return that.getMessageCircleClass(d.messages); })
-				.attr("cx", this.errorCenterX)
-				.attr("r", this.errorRadius);
+				.attr("cx", this.layout.errorCenterX)
+				.attr("r", this.layout.errorRadius);
 
 			// set cy for error circle in new and existing nodes
 			newNodeGroups.merge(nodeGroupSel).selectAll("circle")
@@ -1233,10 +1187,10 @@ export default class CanvasD3Layout {
 				.attr("cy", (d) => this.getErrorPosY(d));
 
 			// Decorators
-			this.addDecorator(newNodeGroups, "topLeft", this.leftDecoratorX, this.topDecoratorY);
-			this.addDecorator(newNodeGroups, "topRight", this.rightDecoratorX, this.topDecoratorY);
-			this.addDecorator(newNodeGroups, "bottomLeft", this.leftDecoratorX, this.bottomDecoratorY);
-			this.addDecorator(newNodeGroups, "bottomRight", this.rightDecoratorX, this.bottomDecoratorY);
+			this.addDecorator(newNodeGroups, "topLeft", this.layout.decoratorLeftX, this.layout.decoratorTopY);
+			this.addDecorator(newNodeGroups, "topRight", this.layout.decoratorRightX, this.layout.decoratorTopY);
+			this.addDecorator(newNodeGroups, "bottomLeft", this.layout.decoratorLeftX, this.layout.decoratorBottomY);
+			this.addDecorator(newNodeGroups, "bottomRight", this.layout.decoratorRightX, this.layout.decoratorBottomY);
 
 			// Remove any nodes that are no longer in the diagram.nodes array.
 			nodeGroupSel.exit().remove();
@@ -1244,55 +1198,55 @@ export default class CanvasD3Layout {
 	}
 
 	getImagePosY(data) {
-		if (this.labelAndIconVerticalJustification === "center") {
-			if (this.nodeFormatType === "Horizontal") {
-				return (data.height / 2) - (this.imageHeight / 2);
+		if (this.layout.labelAndIconVerticalJustification === "center") {
+			if (this.layout.nodeFormatType === "horizontal") {
+				return (data.height / 2) - (this.layout.imageHeight / 2);
 
-			} else if (this.nodeFormatType === "Vertical") {
-				var imageLabelGap = this.labelPosY - (this.imagePosY + this.imageHeight);
-				return (data.height / 2) - ((this.imageHeight + this.labelHeight + imageLabelGap) / 2);
+			} else if (this.layout.nodeFormatType === "vertical") {
+				var imageLabelGap = this.layout.labelPosY - (this.layout.imagePosY + this.layout.imageHeight);
+				return (data.height / 2) - ((this.layout.imageHeight + this.layout.labelHeight + imageLabelGap) / 2);
 			}
 		}
-		return this.imagePosY;
+		return this.layout.imagePosY;
 	}
 
 	getLabelPosY(data) {
-		if (this.labelAndIconVerticalJustification === "center") {
-			if (this.nodeFormatType === "Horizontal") {
-				return (data.height / 2) - (this.labelHeight / 2);
+		if (this.layout.labelAndIconVerticalJustification === "center") {
+			if (this.layout.nodeFormatType === "horizontal") {
+				return (data.height / 2) - (this.layout.labelHeight / 2);
 
-			} else if (this.nodeFormatType === "Vertical") {
-				var imageLabelGap = this.labelPosY - (this.imagePosY + this.imageHeight);
-				return (data.height / 2) + ((this.imageHeight + this.labelHeight + imageLabelGap) / 2) - this.labelHeight;
+			} else if (this.layout.nodeFormatType === "vertical") {
+				var imageLabelGap = this.layout.labelPosY - (this.layout.imagePosY + this.layout.imageHeight);
+				return (data.height / 2) + ((this.layout.imageHeight + this.layout.labelHeight + imageLabelGap) / 2) - this.layout.labelHeight;
 			}
 		}
 
-		return this.labelPosY;
+		return this.layout.labelPosY;
 	}
 
 	getErrorPosY(data) {
-		if (this.labelAndIconVerticalJustification === "center") {
-			if (this.nodeFormatType === "Horizontal") {
-				return (data.height / 2) - (this.imageHeight / 2);
+		if (this.layout.labelAndIconVerticalJustification === "center") {
+			if (this.layout.nodeFormatType === "horizontal") {
+				return (data.height / 2) - (this.layout.imageHeight / 2);
 
-			} else if (this.nodeFormatType === "Vertical") {
-				var imageLabelGap = this.labelPosY - (this.imagePosY + this.imageHeight);
-				return (data.height / 2) - ((this.imageHeight + this.labelHeight + imageLabelGap) / 2);
+			} else if (this.layout.nodeFormatType === "vertical") {
+				var imageLabelGap = this.layout.labelPosY - (this.layout.imagePosY + this.layout.imageHeight);
+				return (data.height / 2) - ((this.layout.imageHeight + this.layout.labelHeight + imageLabelGap) / 2);
 			}
 		}
-		return this.errorCenterY;
+		return this.layout.errorCenterY;
 	}
 
 	getEllipsisPosY(data) {
-		if (this.labelAndIconVerticalJustification === "center") {
-			if (this.nodeFormatType === "Horizontal") {
-				return (data.height / 2) - (this.ellipsisHeight / 2);
+		if (this.layout.labelAndIconVerticalJustification === "center") {
+			if (this.layout.nodeFormatType === "horizontal") {
+				return (data.height / 2) - (this.layout.ellipsisHeight / 2);
 
-			} else if (this.nodeFormatType === "Vertical") {
-				return this.getImagePosY(data) - (this.ellipsisPosY - this.imagePosY);
+			} else if (this.layout.nodeFormatType === "vertical") {
+				return this.getImagePosY(data) - (this.layout.ellipsisPosY - this.layout.imagePosY);
 			}
 		}
-		return this.ellipsisPosY;
+		return this.layout.ellipsisPosY;
 	}
 
 	openContextMenu(type, d) {
@@ -1322,8 +1276,8 @@ export default class CanvasD3Layout {
 		var decGrp = nodeGroup.filter((d) => this.isDecoration(d, type));
 
 		decGrp.append("rect")
-			.attr("width", this.decoratorWidth + 2)
-			.attr("height", this.decoratorHeight + 2)
+			.attr("width", this.layout.decoratorWidth + 2)
+			.attr("height", this.layout.decoratorHeight + 2)
 			.attr("x", x)
 			.attr("y", y)
 			.attr("class", (d) => this.getDecoratorClass(d, type))
@@ -1331,8 +1285,8 @@ export default class CanvasD3Layout {
 			.on("mousedown", (d) => this.getDecoratorCallback(d, type));
 
 		decGrp.append("image")
-			.attr("width", this.decoratorWidth)
-			.attr("height", this.decoratorHeight)
+			.attr("width", this.layout.decoratorWidth)
+			.attr("height", this.layout.decoratorHeight)
 			.attr("x", x)
 			.attr("y", y)
 			.attr("xlink:href", (d) => this.getDecoratorImage(d, type))
@@ -1406,7 +1360,7 @@ export default class CanvasD3Layout {
 
 		const transPos = this.getTransformedMousePos();
 
-		if (this.connectionType === "Halo") {
+		if (this.layout.connectionType === "halo") {
 			this.drawNewLinkForHalo(transPos);
 		} else {
 			if (this.drawingNewLinkAction === "comment-node") {
@@ -1442,32 +1396,32 @@ export default class CanvasD3Layout {
 			this.drawingNewLinkArray[0].y2 = transPos.y;
 		}
 
-		this.canvas.selectAll("." + this.newConnectionLineClass)
+		this.canvas.selectAll("." + this.layout.cssNewConnectionLine)
 			.data(this.drawingNewLinkArray)
 			.enter()
 			.append("path")
 			.attr("d", (d) => that.getConnectorPath(d))
-			.attr("class", this.newConnectionLineClass)
+			.attr("class", this.layout.cssNewConnectionLine)
 			.attr("linkType", linkType);
 
-		this.canvas.selectAll("." + this.newConnectionLineStartClass)
+		this.canvas.selectAll("." + this.layout.cssNewConnectionStart)
 			.data(this.drawingNewLinkArray)
 			.enter()
 			.append("circle")
 			.attr("cx", (d) => d.x1)
 			.attr("cy", (d) => d.y1)
-			.attr("r", this.portRadius)
-			.attr("class", this.newConnectionLineStartClass)
+			.attr("r", this.layout.portRadius)
+			.attr("class", this.layout.cssNewConnectionStart)
 			.attr("linkType", linkType);
 
-		this.canvas.selectAll("." + this.newConnectionLineBlobClass)
+		this.canvas.selectAll("." + this.layout.cssNewConnectionBlob)
 			.data(this.drawingNewLinkArray)
 			.enter()
 			.append("circle")
 			.attr("cx", (d) => d.x2)
 			.attr("cy", (d) => d.y2)
-			.attr("r", this.portRadius)
-			.attr("class", this.newConnectionLineBlobClass)
+			.attr("r", this.layout.portRadius)
+			.attr("class", this.layout.cssNewConnectionBlob)
 			.attr("linkType", linkType)
 			.on("mouseup", () => {
 				this.stopPropagationAndPreventDefault();
@@ -1485,12 +1439,12 @@ export default class CanvasD3Layout {
 		const srcComment = this.getComment(this.drawingNewLinkSrcId);
 
 		this.drawingNewLinkStartPos = this.getOuterCoord(
-			srcComment.x_pos - this.linkGap,
-			srcComment.y_pos - this.linkGap,
-			srcComment.width + (this.linkGap * 2),
-			srcComment.height + (this.linkGap * 2),
-			srcComment.width / 2 + this.linkGap,
-			srcComment.height / 2 + this.linkGap,
+			srcComment.x_pos - this.layout.linkGap,
+			srcComment.y_pos - this.layout.linkGap,
+			srcComment.width + (this.layout.linkGap * 2),
+			srcComment.height + (this.layout.linkGap * 2),
+			srcComment.width / 2 + this.layout.linkGap,
+			srcComment.height / 2 + this.layout.linkGap,
 			transPos.x,
 			transPos.y);
 
@@ -1502,22 +1456,22 @@ export default class CanvasD3Layout {
 			"y2": transPos.y,
 			"type": linkType }];
 
-		this.canvas.selectAll("." + this.newConnectionLineClass)
+		this.canvas.selectAll("." + this.layout.cssNewConnectionLine)
 			.data(this.drawingNewLinkArray)
 			.enter()
 			.append("path")
 			.attr("d", (d) => that.getConnectorPath(d))
-			.attr("class", this.newConnectionLineClass)
+			.attr("class", this.layout.cssNewConnectionLine)
 			.attr("linkType", linkType);
 
-		this.canvas.selectAll("." + this.newConnectionLineBlobClass)
+		this.canvas.selectAll("." + this.layout.cssNewConnectionBlob)
 			.data(this.drawingNewLinkArray)
 			.enter()
 			.append("circle")
 			.attr("cx", (d) => d.x2)
 			.attr("cy", (d) => d.y2)
-			.attr("r", this.commentPortRadius)
-			.attr("class", this.newConnectionLineBlobClass)
+			.attr("r", this.layout.commentPortRadius)
+			.attr("class", this.layout.cssNewConnectionBlob)
 			.attr("linkType", linkType)
 			.on("mouseup", () => {
 				this.stopPropagationAndPreventDefault();
@@ -1529,12 +1483,12 @@ export default class CanvasD3Layout {
 				}
 			});
 
-		this.canvas.selectAll(".d3-new-connection-arrow")
+		this.canvas.selectAll("." + this.layout.cssNewConnectionArrow)
 			.data(this.drawingNewLinkArray)
 			.enter()
 			.append("path")
 			.attr("d", (d) => this.getArrowHead(d))
-			.attr("class", "d3-new-connection-arrow")
+			.attr("class", this.layout.cssNewConnectionArrow)
 			.attr("linkType", linkType)
 			.on("mouseup", () => {
 				this.stopPropagationAndPreventDefault();
@@ -1580,7 +1534,7 @@ export default class CanvasD3Layout {
 	}
 
 	stopDrawingNewLink() {
-		if (this.connectionType === "Halo") {
+		if (this.layout.connectionType === "halo") {
 			this.stopDrawingNewLinkForHalo();
 		} else {
 			this.stopDrawingNewLinkForPorts();
@@ -1643,21 +1597,21 @@ export default class CanvasD3Layout {
 								"L " + saveX2 + " " + saveY2;
 		}
 
-		d3.selectAll("." + this.newConnectionLineClass)
+		d3.selectAll("." + this.layout.cssNewConnectionLine)
 			.transition()
 			.duration(duration)
 			.attr("d", newPath)
 			.on("end", () => {
-				this.canvas.selectAll(".d3-new-connection-arrow").remove();
+				this.canvas.selectAll("." + this.layout.cssNewConnectionArrow).remove();
 
-				d3.selectAll("." + this.newConnectionLineBlobClass)
+				d3.selectAll("." + this.layout.cssNewConnectionBlob)
 					.transition()
 					.duration(1000)
 					.ease(d3.easeElastic)
 					.attr("cx", saveX1)
 					.attr("cy", saveY1);
 
-				d3.selectAll("." + this.newConnectionLineClass)
+				d3.selectAll("." + this.layout.cssNewConnectionLine)
 					.transition()
 					.duration(1000)
 					.ease(d3.easeElastic)
@@ -1668,13 +1622,13 @@ export default class CanvasD3Layout {
 	}
 
 	removeNewLink() {
-		if (this.connectionType === "Halo") {
+		if (this.layout.connectionType === "halo") {
 			this.canvas.selectAll(".d3-node-connector").remove();
 		} else {
-			this.canvas.selectAll("." + this.newConnectionLineClass).remove();
-			this.canvas.selectAll("." + this.newConnectionLineStartClass).remove();
-			this.canvas.selectAll("." + this.newConnectionLineBlobClass).remove();
-			this.canvas.selectAll(".d3-new-connection-arrow").remove();
+			this.canvas.selectAll("." + this.layout.cssNewConnectionLine).remove();
+			this.canvas.selectAll("." + this.layout.cssNewConnectionStart).remove();
+			this.canvas.selectAll("." + this.layout.cssNewConnectionBlob).remove();
+			this.canvas.selectAll("." + this.layout.cssNewConnectionArrow).remove();
 		}
 	}
 
@@ -1684,8 +1638,8 @@ export default class CanvasD3Layout {
 		var node = null;
 		this.canvas.selectAll(".node-group")
 			.each(function(d) {
-				if (pos.x >= d.x_pos - that.portRadius && // Target port sticks out by its radius so need to allow for it.
-						pos.x <= d.x_pos + d.width + that.portRadius &&
+				if (pos.x >= d.x_pos - that.layout.portRadius && // Target port sticks out by its radius so need to allow for it.
+						pos.x <= d.x_pos + d.width + that.layout.portRadius &&
 						pos.y >= d.y_pos &&
 						pos.y <= d.y_pos + d.height) {
 					node = d;
@@ -1695,7 +1649,7 @@ export default class CanvasD3Layout {
 	}
 
 	getNodeInputPortAtMousePos() {
-		if (this.connectionType === "Halo") {
+		if (this.layout.connectionType === "halo") {
 			return null;
 		}
 
@@ -1704,14 +1658,14 @@ export default class CanvasD3Layout {
 		var portId = null;
 		const node = this.getNodeAtMousePos();
 		if (node) {
-			d3.select(`#node_grp_${node.id}`).selectAll("." + this.nodePortInputClass)
+			d3.select(`#node_grp_${node.id}`).selectAll("." + this.layout.cssNodePortInput)
 				.each(function(p) { // Use function keyword so 'this' pointer references the dom object
 					var cx = node.x_pos + this.cx.baseVal.value;
 					var cy = node.y_pos + this.cy.baseVal.value;
-					if (pos.x >= cx - that.portRadius && // Target port sticks out by its radius so need to allow for it.
-							pos.x <= cx + that.portRadius &&
-							pos.y >= cy - that.portRadius &&
-							pos.y <= cy + that.portRadius) {
+					if (pos.x >= cx - that.layout.portRadius && // Target port sticks out by its radius so need to allow for it.
+							pos.x <= cx + that.layout.portRadius &&
+							pos.y >= cy - that.layout.portRadius &&
+							pos.y <= cy + that.layout.portRadius) {
 						portId = this.getAttribute("portId");
 					}
 				});
@@ -1729,8 +1683,8 @@ export default class CanvasD3Layout {
 			// Draw straight segment down to ports (if needed)
 			if (data.outputPortsHeight < data.height) {
 				if (data.output_ports.length === 1 &&
-						data.height <= this.defaultNodeHeight) {
-					endPoint = this.portPosY - this.portArcRadius;
+						data.height <= this.layout.defaultNodeHeight) {
+					endPoint = this.layout.portPosY - this.layout.portArcRadius;
 				} else {
 					endPoint = ((data.height - data.outputPortsHeight) / 2);
 				}
@@ -1739,10 +1693,10 @@ export default class CanvasD3Layout {
 
 			// Draw port arcs
 			data.output_ports.forEach((port, index) => {
-				endPoint += (this.portArcRadius * 2);
-				path += " A " + this.portArcRadius + " " + this.portArcRadius + " 180 0 1 " + data.width + " " + endPoint;
+				endPoint += (this.layout.portArcRadius * 2);
+				path += " A " + this.layout.portArcRadius + " " + this.layout.portArcRadius + " 180 0 1 " + data.width + " " + endPoint;
 				if (index < data.output_ports.length - 1) {
-					endPoint += this.portArcSpacing;
+					endPoint += this.layout.portArcSpacing;
 					path += " L " + data.width + " " + endPoint;
 				}
 			});
@@ -1764,8 +1718,8 @@ export default class CanvasD3Layout {
 
 			if (data.inputPortsHeight < data.height) {
 				if (data.input_ports.length === 1 &&
-						data.height <= this.defaultNodeHeight) {
-					endPoint = this.portPosY + this.portArcRadius;
+						data.height <= this.layout.defaultNodeHeight) {
+					endPoint = this.layout.portPosY + this.layout.portArcRadius;
 				} else {
 					endPoint = data.height - ((data.height - data.inputPortsHeight) / 2);
 				}
@@ -1773,10 +1727,10 @@ export default class CanvasD3Layout {
 			}
 
 			data.input_ports.forEach((port, index) => {
-				endPoint -= (this.portArcRadius * 2);
-				path += " A " + this.portArcRadius + " " + this.portArcRadius + " 180 0 1 0 " + endPoint;
+				endPoint -= (this.layout.portArcRadius * 2);
+				path += " A " + this.layout.portArcRadius + " " + this.layout.portArcRadius + " 180 0 1 0 " + endPoint;
 				if (index < data.input_ports.length - 1) {
-					endPoint -= this.portArcSpacing;
+					endPoint -= this.layout.portArcSpacing;
 					path += " L 0 " + endPoint;
 				}
 			});
@@ -1792,13 +1746,13 @@ export default class CanvasD3Layout {
 	}
 
 	getNodeHighlightOutlineTranslate(data) {
-		const targetHeight = data.height + (2 * this.highLightGap);
+		const targetHeight = data.height + (2 * this.layout.highLightGap);
 		const yScale = targetHeight / data.height;
 
-		const targetWidth = data.width + (2 * this.highLightGap);
+		const targetWidth = data.width + (2 * this.layout.highLightGap);
 		const xScale = targetWidth / data.width;
 
-		return `translate (${-this.highLightGap},${-this.highLightGap}) scale(${xScale}, ${yScale})`;
+		return `translate (${-this.layout.highLightGap},${-this.layout.highLightGap}) scale(${xScale}, ${yScale})`;
 	}
 
 	getPortPositions(data, type) {
@@ -1810,9 +1764,9 @@ export default class CanvasD3Layout {
 			ports = data.output_ports;
 		}
 
-		if (data.height <= this.defaultNodeHeight &&
+		if (data.height <= this.layout.defaultNodeHeight &&
 				ports.length === 1) {
-			portPositions[ports[0].id] = this.portPosY;
+			portPositions[ports[0].id] = this.layout.portPosY;
 
 		} else {
 			let centerPoint = 0;
@@ -1828,9 +1782,9 @@ export default class CanvasD3Layout {
 			}
 
 			ports.forEach((p) => {
-				centerPoint += this.portArcRadius;
+				centerPoint += this.layout.portArcRadius;
 				portPositions[p.id] = centerPoint;
-				centerPoint += this.portArcRadius + this.portArcSpacing;
+				centerPoint += this.layout.portArcRadius + this.layout.portArcSpacing;
 			});
 		}
 
@@ -1855,10 +1809,10 @@ export default class CanvasD3Layout {
 			commentGroupSel.each(function(d) {
 				// Comment selection highlighting and sizing outline
 				d3.select(`#comment_rect_${d.id}`)
-					.attr("height", d.height + (2 * that.highLightGap))
-					.attr("width", d.width + (2 * that.highLightGap))
+					.attr("height", d.height + (2 * that.layout.highLightGap))
+					.attr("width", d.width + (2 * that.layout.highLightGap))
 					.attr("selected", ObjectModel.isSelected(d.id) ? "yes" : "no")
-					.attr("class", that.selectionHighlightClass)
+					.attr("class", that.layout.cssSelectionHighlight)
 					.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
 
 				// This code will remove custom attributes from a comment. This might happen when
@@ -1893,10 +1847,10 @@ export default class CanvasD3Layout {
 
 				// Comment selection highlighting and sizing outline
 				d3.select(`#comment_rect_${d.id}`)
-					.attr("height", d.height + (2 * that.highLightGap))
-					.attr("width", d.width + (2 * that.highLightGap))
+					.attr("height", d.height + (2 * that.layout.highLightGap))
+					.attr("width", d.width + (2 * that.layout.highLightGap))
 					.attr("selected", ObjectModel.isSelected(d.id) ? "yes" : "no")
-					.attr("class", that.selectionHighlightClass)
+					.attr("class", that.layout.cssSelectionHighlight)
 					.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
 
 				// Clip path for text
@@ -1906,7 +1860,7 @@ export default class CanvasD3Layout {
 				// Clip rectangle for text
 				d3.select(`#comment_clip_rect_${d.id}`)
 					.attr("height", d.height)
-					.attr("width", d.width - (2 * that.commentWidthPadding))
+					.attr("width", d.width - (2 * that.layout.commentWidthPadding))
 					.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
 
 				// Background rectangle for comment
@@ -1932,14 +1886,14 @@ export default class CanvasD3Layout {
 					.each(function(cd) {
 						var textObj = d3.select(this);
 						textObj.selectAll("tspan").remove();
-						that.displayWordWrappedText(textObj, cd.content, cd.width - (2 * that.commentWidthPadding));
+						that.displayWordWrappedText(textObj, cd.content, cd.width - (2 * that.layout.commentWidthPadding));
 					});
 
 				// Comment halo
-				if (that.connectionType === "Halo") {
+				if (that.layout.connectionType === "halo") {
 					d3.select(`#comment_halo_${d.id}`)
-						.attr("width", d.width + (2 * that.haloCommentGap))
-						.attr("height", d.height + (2 * that.haloCommentGap))
+						.attr("width", d.width + (2 * that.layout.haloCommentGap))
+						.attr("height", d.height + (2 * that.layout.haloCommentGap))
 						.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
 				}
 			});
@@ -1975,13 +1929,13 @@ export default class CanvasD3Layout {
 					this.consoleLog("Comment Group - finished mouse down");
 				})
 				.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
-					if (that.connectionType === "Ports") {
+					if (that.layout.connectionType === "ports") {
 						d3.select(this)
 							.append("circle")
 							.attr("id", "comment_port_circle")
-							.attr("cx", 0 - that.highLightGap)
-							.attr("cy", 0 - that.highLightGap)
-							.attr("r", that.commentPortRadius)
+							.attr("cx", 0 - that.layout.highLightGap)
+							.attr("cy", 0 - that.layout.highLightGap)
+							.attr("r", that.layout.commentPortRadius)
 							.attr("class", "d3-comment-port-circle")
 							.on("mousedown", function(cd) {
 								that.stopPropagationAndPreventDefault(); // Stops the node drag behavior when clicking on the handle/circle
@@ -1989,14 +1943,14 @@ export default class CanvasD3Layout {
 								that.drawingNewLinkSrcId = d.id;
 								this.drawingNewLinkSrcPortId = null;
 								that.drawingNewLinkAction = "comment-node";
-								that.drawingNewLinkStartPos = { x: d.x_pos - that.highLightGap, y: d.y_pos - that.highLightGap };
+								that.drawingNewLinkStartPos = { x: d.x_pos - that.layout.highLightGap, y: d.y_pos - that.layout.highLightGap };
 								that.drawingNewLinkArray = [];
 								that.drawNewLink();
 							});
 					}
 				})
 				.on("mouseleave", (d) => {
-					if (that.connectionType === "Ports") {
+					if (that.layout.connectionType === "ports") {
 						d3.selectAll("#comment_port_circle").remove();
 					}
 				})
@@ -2010,9 +1964,9 @@ export default class CanvasD3Layout {
 
 					var datum = d;
 					var id = d.id;
-					var width = d.width - (2 * that.commentWidthPadding);
+					var width = d.width - (2 * that.layout.commentWidthPadding);
 					var height = d.height;
-					var xPos = d.x_pos + that.commentWidthPadding;
+					var xPos = d.x_pos + that.layout.commentWidthPadding;
 					var yPos = d.y_pos;
 					var content = d.content;
 
@@ -2069,12 +2023,12 @@ export default class CanvasD3Layout {
 			// Comment selection highlighting and sizing outline
 			newCommentGroups.append("rect")
 				.attr("id", (d) => `comment_rect_${d.id}`)
-				.attr("width", (d) => d.width + (2 * this.highLightGap))
-				.attr("height", (d) => d.height + (2 * this.highLightGap))
-				.attr("x", -this.highLightGap)
-				.attr("y", -this.highLightGap)
+				.attr("width", (d) => d.width + (2 * this.layout.highLightGap))
+				.attr("height", (d) => d.height + (2 * this.layout.highLightGap))
+				.attr("x", -this.layout.highLightGap)
+				.attr("y", -this.layout.highLightGap)
 				.attr("attr", function(d) { return ObjectModel.isSelected(d.id) ? "yes" : "no"; })
-				.attr("class", this.selectionHighlightClass)
+				.attr("class", this.layout.cssSelectionHighlight)
 				.on("mousedown", (d) => {
 					this.commentSizing = true;
 					this.commentSizingId = d.id;
@@ -2108,9 +2062,9 @@ export default class CanvasD3Layout {
 				.attr("id", (d) => `comment_clip_path_${d.id}`)
 				.append("rect")
 				.attr("id", (d) => `comment_clip_rect_${d.id}`)
-				.attr("width", (d) => d.width - (2 * that.commentWidthPadding))
+				.attr("width", (d) => d.width - (2 * that.layout.commentWidthPadding))
 				.attr("height", (d) => d.height)
-				.attr("x", 0 + that.commentWidthPadding)
+				.attr("x", 0 + that.layout.commentWidthPadding)
 				.attr("y", 0);
 
 			// Comment text
@@ -2118,22 +2072,22 @@ export default class CanvasD3Layout {
 				.attr("id", (d) => `comment_text_${d.id}`)
 				.each(function(d) {
 					var textObj = d3.select(this);
-					that.displayWordWrappedText(textObj, d.content, d.width - (2 * that.commentWidthPadding));
+					that.displayWordWrappedText(textObj, d.content, d.width - (2 * that.layout.commentWidthPadding));
 				})
 				.attr("clip-path", (d) => `url(#comment_clip_path_${d.id})`)
 				.attr("xml:space", "preserve")
-				.attr("x", 0 + that.commentWidthPadding)
+				.attr("x", 0 + that.layout.commentWidthPadding)
 				.attr("y", 0);
 
 			// Halo
-			if (this.connectionType === "Halo") {
+			if (this.layout.connectionType === "halo") {
 				newCommentGroups.append("rect")
 					.attr("id", (d) => `comment_halo_${d.id}`)
 					.attr("class", "d3-comment-halo")
-					.attr("x", 0 - this.haloCommentGap)
-					.attr("y", 0 - this.haloCommentGap)
-					.attr("width", (d) => d.width + (2 * this.haloCommentGap))
-					.attr("height", (d) => d.height + (2 * this.haloCommentGap))
+					.attr("x", 0 - this.layout.haloCommentGap)
+					.attr("y", 0 - this.layout.haloCommentGap)
+					.attr("width", (d) => d.width + (2 * this.layout.haloCommentGap))
+					.attr("height", (d) => d.height + (2 * this.layout.haloCommentGap))
 					.on("mousedown", (d) => {
 						this.consoleLog("Comment Halo - mouse down");
 						d3.event.stopPropagation();
@@ -2185,9 +2139,9 @@ export default class CanvasD3Layout {
 				editType: "editComment",
 				nodes: [textArea.getAttribute("data-nodeId")],
 				label: textArea.value,
-				width: this.removePx(textArea.style.width) + (2 * this.commentWidthPadding),
+				width: this.removePx(textArea.style.width) + (2 * this.layout.commentWidthPadding),
 				height: this.removePx(textArea.style.height),
-				offsetX: this.removePx(textArea.style.left) - this.commentWidthPadding,
+				offsetX: this.removePx(textArea.style.left) - this.layout.commentWidthPadding,
 				offsetY: this.removePx(textArea.style.top)
 			};
 			this.consoleLog("editActionHandler - editComment");
@@ -2229,14 +2183,14 @@ export default class CanvasD3Layout {
 
 		const transPos = this.getTransformedMousePos();
 
-		if (transPos.x < d.x_pos + this.cornerResizeArea) {
+		if (transPos.x < d.x_pos + this.layout.cornerResizeArea) {
 			xPart = "w";
-		} else if (transPos.x > d.x_pos + d.width - this.cornerResizeArea) {
+		} else if (transPos.x > d.x_pos + d.width - this.layout.cornerResizeArea) {
 			xPart = "e";
 		}
-		if (transPos.y < d.y_pos + this.cornerResizeArea) {
+		if (transPos.y < d.y_pos + this.layout.cornerResizeArea) {
 			yPart = "n";
-		} else if (transPos.y > d.y_pos + d.height - this.cornerResizeArea) {
+		} else if (transPos.y > d.y_pos + d.height - this.layout.cornerResizeArea) {
 			yPart = "s";
 		}
 
@@ -2530,7 +2484,7 @@ export default class CanvasD3Layout {
 		return textObj
 			.append("tspan")
 			.attr("class", className)
-			.attr("x", 0 + this.commentWidthPadding)
+			.attr("x", 0 + this.layout.commentWidthPadding)
 			.attr("y", 0)
 			.attr("dy", dy + "em")
 			.attr("xml:space", "preserve") // Preserves the white
@@ -2604,33 +2558,33 @@ export default class CanvasD3Layout {
 			.attr("class", (d) => {
 				var classStr;
 				if (d.type === "commentLink") {
-					classStr = "d3-selectable-link " + (d.class_name || this.commentLinkClass);
+					classStr = "d3-selectable-link " + (d.class_name || "canvas-comment-link");
 				} else {
-					classStr = "d3-selectable-link " + this.getDataLinkClass(d);
+					classStr = "d3-selectable-link " + (d.class_name || this.getDataLinkClass(d));
 				}
 				return classStr;
 			});
 
 		// Arrow head
-		linkGroup.filter((d) => this.connectionType === "Halo" || d.type === "commentLink")
+		linkGroup.filter((d) => this.layout.connectionType === "halo" || d.type === "commentLink")
 			.append("path")
 			.attr("d", (d) => this.getArrowHead(d))
 			.attr("class", (d) => {
 				var classStr;
 				if (d.type === "commentLink") {
-					classStr = "d3-selectable-link " + (d.class_name || this.commentLinkClass);
+					classStr = "d3-selectable-link " + (d.class_name || "canvas-comment-link");
 				} else {
-					classStr = "d3-selectable-link " + this.getDataLinkClass(d);
+					classStr = "d3-selectable-link " + (d.class_name || this.getDataLinkClass(d));
 				}
 				return classStr;
 			})
 			.style("stroke-dasharray", "0"); // Ensure arrow head is always solid line style
 
 		// Arrow within input port
-		if (this.connectionType === "Ports") {
-			d3.selectAll("." + this.nodePortOutputClass).attr("connected", "no");
-			d3.selectAll("." + this.nodePortInputClass).attr("connected", "no");
-			d3.selectAll("." + this.nodePortInputArrowClass).attr("connected", "no");
+		if (this.layout.connectionType === "ports") {
+			d3.selectAll("." + this.layout.cssNodePortOutput).attr("connected", "no");
+			d3.selectAll("." + this.layout.cssNodePortInput).attr("connected", "no");
+			d3.selectAll("." + this.layout.cssNodePortInputArrow).attr("connected", "no");
 			lineArray.forEach((line) => {
 				if (line.type === "nodeLink") {
 					this.setTrgPortStatus(line.trg.id, line.trgPortId, "yes");
@@ -2655,10 +2609,10 @@ export default class CanvasD3Layout {
 				d.class_name !== "canvas-data-link") {
 			return d.class_name;
 		}
-		// If the class name is not the default, or there is no classname, return
-		// the class name from the preferences. This allows the preferences to
-		// override any default class name passed in.
-		return this.dataLinkClass;
+		// If the class name provided IS the default, or there is no classname, return
+		// the class name from the layout preferences. This allows the layout
+		// preferences to override any default class name passed in.
+		return this.layout.cssDataLink;
 	}
 
 	// Pushes the links to be below nodes and then pushes comments to be below
@@ -2698,7 +2652,7 @@ export default class CanvasD3Layout {
 					var trgPortId;
 
 					if (link.type === "nodeLink") {
-						if (this.connectionType === "Halo") {
+						if (this.layout.connectionType === "halo") {
 							coords = this.getNodeLinkCoordsForHalo(srcObj, trgNode);
 						} else {
 							srcPortId = this.getSourcePortId(link, srcObj);
@@ -2762,11 +2716,11 @@ export default class CanvasD3Layout {
 	}
 
 	isSourceOverlappingTarget(srcNode, trgNode) {
-		if (this.displayLinkOnOverlap === false) {
-			if (((srcNode.x_pos + srcNode.width + this.linkGap >= trgNode.x_pos - this.linkGap &&
-						trgNode.x_pos + trgNode.width + this.linkGap >= srcNode.x_pos - this.linkGap) &&
-						(srcNode.y_pos + srcNode.height + this.linkGap >= trgNode.y_pos - this.linkGap &&
-							trgNode.y_pos + trgNode.height + this.linkGap >= srcNode.y_pos - this.linkGap))) {
+		if (this.layout.displayLinkOnOverlap === false) {
+			if (((srcNode.x_pos + srcNode.width + this.layout.linkGap >= trgNode.x_pos - this.layout.linkGap &&
+						trgNode.x_pos + trgNode.width + this.layout.linkGap >= srcNode.x_pos - this.layout.linkGap) &&
+						(srcNode.y_pos + srcNode.height + this.layout.linkGap >= trgNode.y_pos - this.layout.linkGap &&
+							trgNode.y_pos + trgNode.height + this.layout.linkGap >= srcNode.y_pos - this.layout.linkGap))) {
 				return true;
 			}
 		}
@@ -2775,8 +2729,8 @@ export default class CanvasD3Layout {
 	}
 
 	getNodeLinkCoordsForPorts(srcNode, srcPortId, trgNode, trgPortId) {
-		var srcY = this.portPosY;
-		var trgY = this.portPosY;
+		var srcY = this.layout.portPosY;
+		var trgY = this.layout.portPosY;
 
 		if (srcNode.output_ports && srcNode.output_ports.length > 0) {
 			const outputPortPositions = this.getPortPositions(srcNode, "output");
@@ -2801,22 +2755,22 @@ export default class CanvasD3Layout {
 
 	getNodeLinkCoordsForHalo(srcNode, trgNode) {
 		const startPos = this.getOuterCoord(
-			srcNode.x_pos - this.linkGap,
-			srcNode.y_pos - this.linkGap,
-			srcNode.width + (this.linkGap * 2),
-			srcNode.height + (this.linkGap * 2),
-			this.imagePosX + (this.imageWidth / 2) + this.linkGap,
-			this.imagePosY + (this.imageHeight / 2) + this.linkGap,
+			srcNode.x_pos - this.layout.linkGap,
+			srcNode.y_pos - this.layout.linkGap,
+			srcNode.width + (this.layout.linkGap * 2),
+			srcNode.height + (this.layout.linkGap * 2),
+			this.layout.imagePosX + (this.layout.imageWidth / 2) + this.layout.linkGap,
+			this.layout.imagePosY + (this.layout.imageHeight / 2) + this.layout.linkGap,
 			trgNode.x_pos + (trgNode.width / 2),
 			trgNode.y_pos + (trgNode.height / 2));
 
 		const endPos = this.getOuterCoord(
-			trgNode.x_pos - this.linkGap,
-			trgNode.y_pos - this.linkGap,
-			trgNode.width + (this.linkGap * 2),
-			trgNode.height + (this.linkGap * 2),
-			this.imagePosX + (this.imageWidth / 2) + this.linkGap,
-			this.imagePosY + (this.imageHeight / 2) + this.linkGap,
+			trgNode.x_pos - this.layout.linkGap,
+			trgNode.y_pos - this.layout.linkGap,
+			trgNode.width + (this.layout.linkGap * 2),
+			trgNode.height + (this.layout.linkGap * 2),
+			this.layout.imagePosX + (this.layout.imageWidth / 2) + this.layout.linkGap,
+			this.layout.imagePosY + (this.layout.imageHeight / 2) + this.layout.linkGap,
 			srcNode.x_pos + (srcNode.width / 2),
 			srcNode.y_pos + (srcNode.height / 2));
 
@@ -2825,31 +2779,31 @@ export default class CanvasD3Layout {
 
 	getCommentLinkCoords(srcNode, trgNode) {
 		const startPos = this.getOuterCoord(
-			srcNode.x_pos - this.linkGap,
-			srcNode.y_pos - this.linkGap,
-			srcNode.width + (this.linkGap * 2),
-			srcNode.height + (this.linkGap * 2),
-			(srcNode.width / 2) + this.linkGap,
-			(srcNode.height / 2) + this.linkGap,
+			srcNode.x_pos - this.layout.linkGap,
+			srcNode.y_pos - this.layout.linkGap,
+			srcNode.width + (this.layout.linkGap * 2),
+			srcNode.height + (this.layout.linkGap * 2),
+			(srcNode.width / 2) + this.layout.linkGap,
+			(srcNode.height / 2) + this.layout.linkGap,
 			trgNode.x_pos + (trgNode.width / 2),
 			trgNode.y_pos + (trgNode.height / 2));
 
 		var centerX;
 		var centerY;
 
-		if (this.drawLinkLineTo === "image_center") {
-			centerX = this.imagePosX + (this.imageWidth / 2) + this.linkGap;
-			centerY = this.imagePosY + (this.imageHeight / 2) + this.linkGap;
+		if (this.layout.drawLinkLineTo === "image_center") {
+			centerX = this.layout.imagePosX + (this.layout.imageWidth / 2) + this.layout.linkGap;
+			centerY = this.layout.imagePosY + (this.layout.imageHeight / 2) + this.layout.linkGap;
 		} else {
-			centerX = (trgNode.width / 2) + this.linkGap;
+			centerX = (trgNode.width / 2) + this.layout.linkGap;
 			centerY = trgNode.height / 2;
 		}
 
 		const endPos = this.getOuterCoord(
-			trgNode.x_pos - this.linkGap,
-			trgNode.y_pos - this.linkGap,
-			trgNode.width + (this.linkGap * 2),
-			trgNode.height + (this.linkGap * 2),
+			trgNode.x_pos - this.layout.linkGap,
+			trgNode.y_pos - this.layout.linkGap,
+			trgNode.width + (this.layout.linkGap * 2),
+			trgNode.height + (this.layout.linkGap * 2),
 			centerX,
 			centerY,
 			srcNode.x_pos + (srcNode.width / 2),
@@ -2935,7 +2889,7 @@ export default class CanvasD3Layout {
 	}
 
 	getConnectorPath(data) {
-		if (this.connectionType === "Ports" &&
+		if (this.layout.connectionType === "ports" &&
 				data.type === "nodeLink") {
 
 			if (this.linkType === "Curve") {
@@ -2971,9 +2925,9 @@ export default class CanvasD3Layout {
 			path = "M " + data.x1 + " " + data.y1 + " L " + data.x2 + " " + data.y2;
 
 		} else {
-			const corner1X = data.x1 + this.minInitialLine;
+			const corner1X = data.x1 + this.layout.minInitialLine;
 			const corner1Y = data.y1;
-			const corner2X = data.x2 - this.minInitialLine;
+			const corner2X = data.x2 - this.layout.minInitialLine;
 			const corner2Y = data.y2;
 
 			const centerLineY = corner2Y - (corner2Y - corner1Y) / 2;
@@ -3024,7 +2978,7 @@ export default class CanvasD3Layout {
 
 		} else {
 			const yDiff = data.y2 - data.y1;
-			const corner1X = data.x1 + this.minInitialLine;
+			const corner1X = data.x1 + this.layout.minInitialLine;
 			const corner1Y = data.y1;
 
 			const corner2X = corner1X;
@@ -3033,7 +2987,7 @@ export default class CanvasD3Layout {
 			const corner4X = data.x1 + (xDiff / 2);
 			const corner4Y = data.y1 + (yDiff / 2);
 
-			const corner6X = data.x2 - this.minInitialLine;
+			const corner6X = data.x2 - this.layout.minInitialLine;
 			const corner6Y = data.y2 - (yDiff / 4);
 
 			path += " Q " + corner1X + " " + corner1Y + " " +
@@ -3050,20 +3004,20 @@ export default class CanvasD3Layout {
 	// curved connector line using elbows and straight lines.
 	getElbowPath(data) {
 
-		const corner1X = data.x1 + this.minInitialLine;
+		const corner1X = data.x1 + this.layout.minInitialLine;
 		const corner1Y = data.y1;
 		let corner2X = corner1X;
 		const corner2Y = data.y2;
 
 		const xDiff = data.x2 - data.x1;
 		const yDiff = data.y2 - data.y1;
-		let elbowYOffset = this.elbowSize;
+		let elbowYOffset = this.layout.elbowSize;
 
-		if (yDiff > (2 * this.elbowSize)) {
-			elbowYOffset = this.elbowSize;
+		if (yDiff > (2 * this.layout.elbowSize)) {
+			elbowYOffset = this.layout.elbowSize;
 		}
-		else if (yDiff < -(2 * this.elbowSize)) {
-			elbowYOffset = -this.elbowSize;
+		else if (yDiff < -(2 * this.layout.elbowSize)) {
+			elbowYOffset = -this.layout.elbowSize;
 		}
 		else {
 			elbowYOffset = yDiff / 2;
@@ -3071,32 +3025,32 @@ export default class CanvasD3Layout {
 
 		// This is a special case where the source and target handles are very
 		// close together.
-		if (xDiff < (2 * this.minInitialLine) &&
-				(yDiff < (4 * this.elbowSize) &&
-					yDiff > -(4 * this.elbowSize))) {
+		if (xDiff < (2 * this.layout.minInitialLine) &&
+				(yDiff < (4 * this.layout.elbowSize) &&
+					yDiff > -(4 * this.layout.elbowSize))) {
 			elbowYOffset = yDiff / 4;
 		}
 
-		let elbowXOffset = this.elbowSize;
+		let elbowXOffset = this.layout.elbowSize;
 		let extraSegments = false;	// Indicates need for extra elbows and lines
 
-		if (xDiff < (this.minInitialLine + this.elbowSize)) {
+		if (xDiff < (this.layout.minInitialLine + this.layout.elbowSize)) {
 			extraSegments = true;
-			corner2X = data.x2 - this.minInitialLine;
-			elbowXOffset = this.elbowSize;
+			corner2X = data.x2 - this.layout.minInitialLine;
+			elbowXOffset = this.layout.elbowSize;
 		}
-		else if (xDiff < (2 * this.minInitialLine)) {
+		else if (xDiff < (2 * this.layout.minInitialLine)) {
 			extraSegments = true;
-			corner2X = data.x2 - this.minInitialLine;
-			elbowXOffset = -((xDiff - (2 * this.minInitialLine)) / 2);
+			corner2X = data.x2 - this.layout.minInitialLine;
+			elbowXOffset = -((xDiff - (2 * this.layout.minInitialLine)) / 2);
 		}
 		else {
-			elbowXOffset = this.elbowSize;
+			elbowXOffset = this.layout.elbowSize;
 		}
 
 		let path = "M " + data.x1 + " " + data.y1;
 
-		path += "L " + (corner1X - this.elbowSize) + " " + corner1Y;
+		path += "L " + (corner1X - this.layout.elbowSize) + " " + corner1Y;
 		path += "Q " + corner1X + " " + corner1Y + " "	+ corner1X	+ " " + (corner1Y + elbowYOffset);
 
 		if (extraSegments === false) {
@@ -3112,7 +3066,7 @@ export default class CanvasD3Layout {
 			path += "L " + corner2X + " " + (corner2Y - elbowYOffset);
 		}
 
-		path += "Q " + corner2X + " " + corner2Y + " " + (corner2X + this.elbowSize) + " " + corner2Y;
+		path += "Q " + corner2X + " " + corner2Y + " " + (corner2X + this.layout.elbowSize) + " " + corner2Y;
 		path += "L " + data.x2 + " " + data.y2;
 
 		return path;

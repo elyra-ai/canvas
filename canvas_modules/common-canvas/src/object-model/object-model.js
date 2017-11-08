@@ -510,7 +510,7 @@ const getMainPipeline = (pipelineFlow) => {
 };
 
 const setNodeDimensions = (newNode, node, layoutInfo) => {
-	if (layoutInfo.connectionType === "Ports") {
+	if (layoutInfo.connectionType === "ports") {
 		newNode.inputPortsHeight = node.input_ports
 			? (node.input_ports.length * (layoutInfo.portArcRadius * 2)) + ((node.input_ports.length - 1) * layoutInfo.portArcSpacing)
 			: 0;

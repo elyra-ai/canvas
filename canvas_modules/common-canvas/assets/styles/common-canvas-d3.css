@@ -49,6 +49,7 @@
 
 .d3-obj-selection-highlight-austin[selected=yes] {
 	stroke: #047cc0;
+	stroke-dasharray: none; /* Solid line */
 	stroke-width: 3;
 	fill: transparent;
 }
@@ -319,6 +320,12 @@
 .d3-new-connection-blob-austin[linkType=commentLink] {
 	stroke: gray;
 	fill: #FFFFFF;  /* White */
+}
+
+.d3-new-connection-arrow-austin[linkType=commentLink] {
+	stroke: gray;
+	stroke-width: 2;
+	fill: transparent;
 }
 
 /* Halo - Temporary connector line pulled out from halo */

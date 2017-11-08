@@ -32,9 +32,8 @@ Scenario: Sanity test for autoLayout operations in Vertical Fixed Layout
 	Then I verify the node 4 position is "translate(190, 634)"
 	Then I verify the node 5 position is "translate(120, 50)"
 	Then I verify the node 6 position is "translate(120, 342)"
-	Then I verify the comment 2 position is "translate(132, 103)"
-	Then I verify the comment 1 position is "translate(663, 248)"
-
+	Then I verify the comment 1 position is "translate(132, 103)"
+	Then I verify the comment 2 position is "translate(663, 248)"
 
 
 Scenario: Sanity test for autoLayout operations in Horizontal Fixed Layout
@@ -63,8 +62,8 @@ Scenario: Sanity test for autoLayout operations in Horizontal Fixed Layout
 	Then I verify the node 4 position is "translate(50, 196)"
 	Then I verify the node 5 position is "translate(190, 342)"
 	Then I verify the node 6 position is "translate(50, 342)"
-	Then I verify the comment 2 position is "translate(132, 103)"
-	Then I verify the comment 1 position is "translate(663, 248)"
+	Then I verify the comment 1 position is "translate(132, 103)"
+	Then I verify the comment 2 position is "translate(663, 248)"
 
 
 Scenario: Sanity test for autoLayout operations in None Fixed Layout
