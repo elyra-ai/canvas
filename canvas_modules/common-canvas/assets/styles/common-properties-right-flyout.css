@@ -95,6 +95,11 @@
 	border-bottom: 2px solid #E0E0E0;
 }
 
+.category-title-right-flyout-panel:hover {
+	background-color: #D8D8D8;
+	color: #666566;
+}
+
 .category-icon-right-flyout-panel {
 	height: 12px;
 	width: 12px;
