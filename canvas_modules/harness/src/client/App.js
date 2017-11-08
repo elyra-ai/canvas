@@ -325,7 +325,7 @@ class App extends React.Component {
 			form: form,
 			appData: appData,
 			messages: additionalInfo.messages,
-			nodeTitle: additionalInfo.nodeTitle
+			title: additionalInfo.title
 		};
 		this.log("applyPropertyChanges()", data);
 	}

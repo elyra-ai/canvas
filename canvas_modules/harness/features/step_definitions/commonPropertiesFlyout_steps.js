@@ -23,6 +23,23 @@ module.exports = function() {
 		expect(dialogTitle).toEqual(givenTitle);
 	});
 
+	this.Then("I click on title edit icon", function() {
+		var editTitle = browser.$("#title-edit-right-flyout-panel");
+		editTitle.click();
+	});
+
+	this.Then(/^I enter new title "([^"]*)"$/, function(newTitle) {
+		var textbox = browser.$("#node-title-editor-right-flyout-panel");
+		textbox.setValue(newTitle);
+		// browser.keys("Enter");
+		// browser.pause(500);
+	});
+
+	this.Then(/^I verify the new title "([^"]*)"$/, function(newTitle) {
+		var lastEventLog = getLastEventLogData();
+		expect(newTitle).toEqual((lastEventLog.data.title).toString());
+	});
+
 	this.Then(/^I open the "([^"]*)" category from flyout$/, function(categoryName) {
 		const categories = browser.$("#category-parent-container-right-flyout-panel").$$(".category-title-container-right-flyout-panel");
 		for (let idx = 0; idx < categories.length; idx++) {

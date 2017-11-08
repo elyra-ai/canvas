@@ -21,12 +21,10 @@ Feature: Sanity_Test_CommonProperties_Flyout
 			Given I have toggled the app side common-properties panel
 			Given I have uploaded JSON for common-properties "org.apache.spark.ml.classification.DecisionTreeClassifier.json"
 			Then I see common properties flyout title "Decision Tree Classifier"
-			Then I have closed the common properties dialog by clicking on close button
-
-			Given I have toggled the app side common-properties panel
-			Given I have uploaded JSON for common-properties "org.apache.spark.ml.ibm.transformers.Distinct.json"
-			Then I see common properties flyout title "Distinct"
-			Then I have closed the common properties dialog by clicking on close button
+			Then I click on title edit icon
+			Then I enter new title "Decision Tree Classification"
+			Then I click on modal OK button
+			Then I verify the new title "Decision Tree Classification"
 
 		# TextBox Test Case
 			Given I have toggled the app side common-properties panel

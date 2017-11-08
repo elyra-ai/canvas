@@ -30,7 +30,7 @@ export default class CommonProperties extends React.Component {
 			propertiesInfo: this.props.propertiesInfo,
 			showPropertiesDialog: false,
 			showPropertiesButtons: true,
-			nodeTitleReadOnly: true
+			propertiesTitleReadOnly: true
 		};
 		this.settings = { additionalInfo: {} };
 		this.initialCurrentProperties = "empty";
@@ -64,14 +64,14 @@ export default class CommonProperties extends React.Component {
 		return formData;
 	}
 
-	setNodeTitleReadOnlyMode(mode) {
+	setPropertiesTitleReadOnlyMode(mode) {
 		let bottomBorderStyle = "2px solid #777677";
 		if (mode) {
 			bottomBorderStyle = "none";
 		}
 		this.setState({
-			nodeTitleReadOnly: mode,
-			nodeTitleEditStyle: { borderBottom: bottomBorderStyle }
+			propertiesTitleReadOnly: mode,
+			propertiesTitleEditStyle: { borderBottom: bottomBorderStyle }
 		});
 	}
 
@@ -115,8 +115,8 @@ export default class CommonProperties extends React.Component {
 		this.settings.properties = this.refs.editorForm.getControlValues(true);
 		this.settings.additionalInfo.messages = this.refs.editorForm.getControlMessages();
 
-		if (typeof this.state.nodeTitle !== "undefined") {
-			this.settings.additionalInfo.nodeTitle = this.state.nodeTitle;
+		if (typeof this.state.title !== "undefined") {
+			this.settings.additionalInfo.title = this.state.title;
 		}
 		// May need to close the dialog inside the callback in
 		// case of validation errors
@@ -137,12 +137,12 @@ export default class CommonProperties extends React.Component {
 	}
 
 	editTitleClickHandler() {
-		this.setNodeTitleReadOnlyMode(false);
+		this.setPropertiesTitleReadOnlyMode(false);
 	}
 
 	_handleKeyPress(e) {
 		if (e.key === "Enter") {
-			this.setNodeTitleReadOnlyMode(true);
+			this.setPropertiesTitleReadOnlyMode(true);
 		}
 	}
 
@@ -158,29 +158,29 @@ export default class CommonProperties extends React.Component {
 			// console.log("formData " + JSON.stringify(formData));
 			let propertiesDialog = [];
 
-			const title = this.state.nodeTitle || formData.label;
+			const title = this.state.title || formData.label;
 			const size = formData.editorSize;
 
-			let nodeTitle = <div />;
+			let propertiesTitle = <div />;
 			let buttonsContainer = <div />;
 			let propertiesClassname = "";
 			if (this.props.rightFlyout) {
 				propertiesClassname = "right-flyout-panel";
-				nodeTitle = (<div id={"node-title-container-" + propertiesClassname}>
+				propertiesTitle = (<div id={"node-title-container-" + propertiesClassname}>
 					<div id={"node-title-" + propertiesClassname}>
 						<TextField
 							id={"node-title-editor-" + propertiesClassname}
 							value={title}
 							onChange={(e) => this.setState({
-								nodeTitle: e.target.value
+								title: e.target.value
 							})}
-							onBlur={(e) => this.setNodeTitleReadOnlyMode(true)}
+							onBlur={(e) => this.setPropertiesTitleReadOnlyMode(true)}
 							onKeyPress={(e) => this._handleKeyPress(e)}
-							readOnly={this.state.nodeTitleReadOnly}
-							style={this.state.nodeTitleEditStyle}
+							readOnly={this.state.propertiesTitleReadOnly}
+							style={this.state.propertiesTitleEditStyle}
 						/>
 					</div>
-					<a onClick={this.editTitleClickHandler}>
+					<a id={"title-edit-" + propertiesClassname} onClick={this.editTitleClickHandler}>
 						<img id={"title-edit-icon-" + propertiesClassname}
 							src={editIcon}
 						/>
@@ -208,8 +208,8 @@ export default class CommonProperties extends React.Component {
 						this.initialCurrentProperties.additionalInfo.messages = JSON.parse(JSON.stringify(this.props.propertiesInfo.messages));
 					}
 					if (title) {
-						this.settings.additionalInfo.nodeTitle = title;
-						this.initialCurrentProperties.additionalInfo.nodeTitle = title;
+						this.settings.additionalInfo.title = title;
+						this.initialCurrentProperties.additionalInfo.title = title;
 					}
 				}
 				const editorForm = (<EditorForm
@@ -259,7 +259,7 @@ export default class CommonProperties extends React.Component {
 			const propertiesId = this.props.rightFlyout ? "common-properties-" + propertiesClassname : "";
 			return (
 				<div id={propertiesId}>
-					{nodeTitle}
+					{propertiesTitle}
 					{propertiesDialog}
 					{buttonsContainer}
 				</div>
