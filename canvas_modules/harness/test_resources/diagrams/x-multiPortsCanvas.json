@@ -296,13 +296,19 @@
         "id": "f9051baa-1c70-4273-9196-9b3ced951453",
         "className": "canvas-comment-link",
         "source": "a58d8177-3cba-4389-a8a2-56a28227f4da",
-        "target": "id6PXRG57DGIV"
+        "target": "id6PXRG57DGIV",
+        "userData": {
+          "linkType": "comment"
+        }
       },
       {
         "id": "a1e04795-537a-4901-8313-3c157f60f030",
         "className": "canvas-comment-link",
         "source": "a58d8177-3cba-4389-a8a2-56a28227f4da",
-        "target": "id2PZSCTRPRIJ"
+        "target": "id2PZSCTRPRIJ",
+        "userData": {
+          "linkType": "comment"
+        }
       },
       {
         "id": "5cfe0ccf-2202-483b-a285-8a6b55f3a3c0",
@@ -319,13 +325,19 @@
         "id": "4d681fef-d046-4ac6-bfce-bfb63d45d0e1",
         "className": "canvas-comment-link",
         "source": "d5fdc00e-1ad3-475d-8bec-41ad16d3e399",
-        "target": "id5RYSYN9CV1H"
+        "target": "id5RYSYN9CV1H",
+        "userData": {
+          "linkType": "comment"
+        }
       },
       {
         "id": "5d1998e1-1345-494c-80e8-6be92a5ebeb6",
         "className": "canvas-comment-link",
         "source": "d5fdc00e-1ad3-475d-8bec-41ad16d3e399",
-        "target": "idGWRVT47XDV"
+        "target": "idGWRVT47XDV",
+        "userData": {
+          "linkType": "comment"
+        }
       }
     ]
   },

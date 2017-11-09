@@ -7,6 +7,8 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
+import _ from "lodash";
+
 export default class SVGPipelineOutHandler {
 
 	static modifyPipelineWithCanvasInfo(pipeline, canvasInfo) {
@@ -206,11 +208,16 @@ export default class SVGPipelineOutHandler {
 			if (ciNode.parameters) {
 				newNode.parameters = ciNode.parameters;
 			}
+		}
 
-			var newDecorations = this.createDecorations(ciNode.decorations);
-			if (newDecorations.length > 0) {
-				newNode.app_data.ui_data.decorations = newDecorations;
-			}
+		var newDecorations = this.createDecorations(ciNode.decorations);
+		if (newDecorations.length > 0) {
+			newNode.app_data.ui_data.decorations = newDecorations;
+		}
+
+		const assocationLink = this.getAssociationLink(ciNode, canvasLinks);
+		if (!_.isEmpty(assocationLink)) {
+			newNode.app_data.ui_data.associations = assocationLink;
 		}
 
 		return newNode;
@@ -391,5 +398,18 @@ export default class SVGPipelineOutHandler {
 			}
 		});
 		return newLinks;
+	}
+
+	static getAssociationLink(node, canvasLinks) {
+		var newLink = {};
+		canvasLinks.forEach((link) => {
+			if (link.type === "associationLink" &&
+					link.srcNodeId === node.id) {
+				newLink.id = link.id;
+				newLink.node_ref = link.trgNodeId;
+				newLink.class_name = link.class_name;
+			}
+		});
+		return newLink;
 	}
 }

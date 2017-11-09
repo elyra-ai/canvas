@@ -39,3 +39,29 @@ Feature: Sanity_Test2_D3
 		Then I move node 4 a "Neural Net" node onto the canvas by 50, 50
 		Then I move comment 3 with text " comment 3 sample comment text" onto the canvas by 100, 100
 		Then I pause for 1 seconds
+
+	Scenario: Sanity test from loaded file with D3 rendering engine
+		Given I am on the test harness
+		Given I have toggled the app side panel
+		Given I have selected the "D3" rendering engine
+		Given I have selected the "Ports" connection type
+		Given I have uploaded diagram "/test_resources/diagrams/modelerCanvas.json"
+		Given I have toggled the app side panel
+
+		Then I pause for 1 seconds
+		Then I validate there are 9 links on the canvas with port style
+		Then I verify the number of port data links are 7
+		Then I verify the number of comment links are 0
+
+	Scenario: Sanity test from loaded file in legacy format with D3 rendering engine
+		Given I am on the test harness
+		Given I have toggled the app side panel
+		Given I have selected the "D3" rendering engine
+		Given I have selected the "Ports" connection type
+		Given I have uploaded diagram "/test_resources/diagrams/x-modelerCanvas.json"
+		Given I have toggled the app side panel
+
+		Then I pause for 1 seconds
+		Then I validate there are 9 links on the canvas with port style
+		Then I verify the number of port data links are 7
+		Then I verify the number of comment links are 0

@@ -101,14 +101,6 @@
                       "class_name": "canvas-data-link"
                     }
                   }
-                },
-                {
-                  "node_id_ref": "id8I6RH2V91XW",
-                  "app_data": {
-                    "ui_data": {
-                      "class_name": "canvas-object-link"
-                    }
-                  }
                 }
               ]
             }
@@ -223,14 +215,6 @@
                       "class_name": "canvas-data-link"
                     }
                   }
-                },
-                {
-                  "node_id_ref": "id5KIRGGJ3FYT",
-                  "app_data": {
-                    "ui_data": {
-                      "class_name": "canvas-object-link"
-                    }
-                  }
                 }
               ]
             }
@@ -263,6 +247,11 @@
               "class_name": "canvas-node",
               "label": {
                 "default": "Drug"
+              },
+              "associations": {
+                "id": "id5KIRGGJ3FYT.id125TTEEIK7V",
+                "node_ref": "id125TTEEIK7V",
+                "class_name": "canvas-object-link"
               }
             }
           },
@@ -386,6 +375,11 @@
               "class_name": "canvas-node",
               "label": {
                 "default": "Drug"
+              },
+              "associations": {
+                "id": "id8I6RH2V91XW.id1ZZTZ3ZMYWL",
+                "node_ref": "id1ZZTZ3ZMYWL",
+                "class_name": "canvas-object-link"
               }
             }
           },

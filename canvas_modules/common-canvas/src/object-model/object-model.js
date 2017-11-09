@@ -13,6 +13,7 @@ import { NONE, VERTICAL, DAGRE_HORIZONTAL, DAGRE_VERTICAL } from "../../constant
 import dagre from "dagre";
 import LayoutDimensions from "./layout-dimensions.js";
 import SVGCanvasInHandler from "../svg-canvas-in-handler.js"; // TODO - Remove this when WML supports PipelineFlow
+import SVGCanvasOutHandler from "../svg-canvas-out-handler.js"; // TODO - Remove this when WML supports PipelineFlow
 import SVGPipelineInHandler from "../svg-pipeline-in-handler.js";
 import SVGPipelineOutHandler from "../svg-pipeline-out-handler.js";
 
@@ -621,7 +622,7 @@ export default class ObjectModel {
 	// Deprectaed TODO - Remove this method when WML Canvas supports pipeline Flow
 	static getCanvas() {
 		if (oldCanvas) {
-			return SVGCanvasInHandler.getCanvasBasedOnCanvas(oldCanvas, store.getState().canvasinfo);
+			return SVGCanvasOutHandler.getCanvasBasedOnCanvas(oldCanvas, store.getState().canvasinfo);
 		}
 		return {};
 	}
@@ -707,7 +708,7 @@ export default class ObjectModel {
 
 	static dagreAutolayout(direction, canvasData) {
 		var nodeLinks = canvasData.links.filter((link) => {
-			return link.type === "nodeLink";
+			return link.type === "nodeLink" || link.type === "associationLink";
 		});
 
 		var edges = nodeLinks.map((link) => {

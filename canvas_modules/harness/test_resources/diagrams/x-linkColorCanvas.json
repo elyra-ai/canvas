@@ -298,49 +298,73 @@
         "id": "2260b589-ae58-40aa-8fcb-25c748bbb544",
         "className": "canvas-comment-link",
         "source": "a2ff2663-5fb0-4f62-a2d3-1b5902229ef5",
-        "target": "446eee1d-60bc-4f76-a6bd-bc8e38ba7a82"
+        "target": "446eee1d-60bc-4f76-a6bd-bc8e38ba7a82",
+        "userData": {
+          "linkType": "comment"
+        }
       },
       {
         "id": "ffc904a7-1beb-49cd-992c-3a4b39f14a0f",
         "className": "canvas-comment-link",
         "source": "a2ff2663-5fb0-4f62-a2d3-1b5902229ef5",
-        "target": "446eee1d-60bc-4f76-a6bd-125TTEEIK7V"
+        "target": "446eee1d-60bc-4f76-a6bd-125TTEEIK7V",
+        "userData": {
+          "linkType": "comment"
+        }
       },
       {
         "id": "c6cb9c7b-e8c4-47df-b3cc-5ed8e3c4d617",
         "className": "canvas-comment-link",
         "source": "8409e559-de6d-40bb-911a-c2c52c4f4340",
-        "target": "4d7f3bdc-12e1-4dea-8b98-ee70209a8ede"
+        "target": "4d7f3bdc-12e1-4dea-8b98-ee70209a8ede",
+        "userData": {
+          "linkType": "comment"
+        }
       },
       {
         "id": "e1ccc19e-8007-4970-ba78-077b566fd3ee",
         "className": "canvas-comment-link",
         "source": "8409e559-de6d-40bb-911a-c2c52c4f4340",
-        "target": "446eee1d-60bc-4f76-a6bd-bc8e38ba7a82"
+        "target": "446eee1d-60bc-4f76-a6bd-bc8e38ba7a82",
+        "userData": {
+          "linkType": "comment"
+        }
       },
       {
         "id": "aab33e03-e28e-4a5e-8a74-69596f8540ee",
         "className": "canvas-comment-link",
         "source": "9411f736-d31d-4cad-8a21-d3ae32a0728e",
-        "target": "e359d2f2-8d25-4eae-9f3d-18c46fe7cc13"
+        "target": "e359d2f2-8d25-4eae-9f3d-18c46fe7cc13",
+        "userData": {
+          "linkType": "comment"
+        }
       },
       {
         "id": "836ddb89-3cc4-4513-8919-fd67813e55ad",
         "className": "canvas-comment-link",
         "source": "9411f736-d31d-4cad-8a21-d3ae32a0728e",
-        "target": "0a4f1e7b-560c-4efc-ad59-90be91983ff4"
+        "target": "0a4f1e7b-560c-4efc-ad59-90be91983ff4",
+        "userData": {
+          "linkType": "comment"
+        }
       },
       {
         "id": "c401a74a-777f-46c3-b99d-3b7332d7d12d",
         "className": "canvas-comment-link",
         "source": "d513f210-7203-40a6-b4f5-87163e17320b",
-        "target": "0a4f1e7b-560c-4efc-ad59-90be91983ff4"
+        "target": "0a4f1e7b-560c-4efc-ad59-90be91983ff4",
+        "userData": {
+          "linkType": "comment"
+        }
       },
       {
         "id": "e33d1a75-72ee-410e-b04b-6c25da6a7d3a",
         "className": "canvas-comment-link",
         "source": "d513f210-7203-40a6-b4f5-87163e17320b",
-        "target": "ab18d0ed-2d7f-4ccd-96b1-c23903c52c15"
+        "target": "ab18d0ed-2d7f-4ccd-96b1-c23903c52c15",
+        "userData": {
+          "linkType": "comment"
+        }
       }
     ]
   },

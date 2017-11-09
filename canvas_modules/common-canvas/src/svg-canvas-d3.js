@@ -2557,7 +2557,10 @@ export default class CanvasD3Layout {
 			.attr("d", (d) => d.path)
 			.attr("class", (d) => {
 				var classStr;
-				if (d.type === "commentLink") {
+
+				if (d.type === "associationLink") {
+					classStr = "d3-selectable-link " + (d.class_name || "canvas-object-link");
+				} else if (d.type === "commentLink") {
 					classStr = "d3-selectable-link " + (d.class_name || "canvas-comment-link");
 				} else {
 					classStr = "d3-selectable-link " + (d.class_name || this.getDataLinkClass(d));
@@ -2566,7 +2569,8 @@ export default class CanvasD3Layout {
 			});
 
 		// Arrow head
-		linkGroup.filter((d) => this.layout.connectionType === "halo" || d.type === "commentLink")
+		linkGroup.filter((d) => (this.layout.connectionType === "halo" && d.type !== "associationLink") ||
+														d.type === "commentLink")
 			.append("path")
 			.attr("d", (d) => this.getArrowHead(d))
 			.attr("class", (d) => {
@@ -2605,8 +2609,7 @@ export default class CanvasD3Layout {
 
 	getDataLinkClass(d) {
 		// If the data has a classname that isn't the default use it!
-		if (d.class_name &&
-				d.class_name !== "canvas-data-link") {
+		if (d.class_name && d.class_name !== "canvas-data-link") {
 			return d.class_name;
 		}
 		// If the class name provided IS the default, or there is no classname, return
@@ -2660,7 +2663,7 @@ export default class CanvasD3Layout {
 							coords = this.getNodeLinkCoordsForPorts(srcObj, srcPortId, trgNode, trgPortId);
 						}
 					} else {
-						coords = this.getCommentLinkCoords(srcObj, trgNode);
+						coords = this.getNonDataLinkCoords(srcObj, trgNode);
 					}
 
 					lineArray.push({ "id": link.id,
@@ -2777,7 +2780,7 @@ export default class CanvasD3Layout {
 		return { x1: startPos.x, y1: startPos.y, x2: endPos.x, y2: endPos.y };
 	}
 
-	getCommentLinkCoords(srcNode, trgNode) {
+	getNonDataLinkCoords(srcNode, trgNode) {
 		const startPos = this.getOuterCoord(
 			srcNode.x_pos - this.layout.linkGap,
 			srcNode.y_pos - this.layout.linkGap,

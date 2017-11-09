@@ -167,12 +167,13 @@ module.exports = function() {
 
 	// Then I validate there are 6 links on the canvas
 	//
-	this.Then(/^I validate there are (\d+) links on the canvas$/, function(canvasLinks) {
+	this.Then(/^I validate there are (\d+) links on the canvas with port style$/, function(canvasLinks) {
 		var linkCount = Number(canvasLinks);
 		// verify link is in the canvas DOM
 		var dataLinks = browser.$$(".canvas-data-link").length;
 		var commentLinks = browser.$$(".canvas-comment-link").length;
-		expect(dataLinks + commentLinks).toEqual(linkCount);
+		var associationLinks = browser.$$(".canvas-object-link").length;
+		expect(dataLinks + commentLinks + associationLinks).toEqual(linkCount);
 
 		// verify that the link is in the internal object model
 		const testUrl = getURL();

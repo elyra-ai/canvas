@@ -178,6 +178,22 @@ export default class SVGPipelineInHandler {
 					}
 				}
 			}
+			// association links are defined in UI data
+			if (_.has(node, "app_data.ui_data.associations") &&
+					_.has(node, "app_data.ui_data.associations.node_ref") &&
+					this.isNode(nodes, node.app_data.ui_data.associations.node_ref)) {
+				const newLink = {
+					"id": "canvas_link_" + id++,
+					"class_name":
+						_.has(node, "app_data.ui_data.associations.class_name")
+							? node.app_data.ui_data.associations.class_name : "canvas-object-link",
+					"srcNodeId": node.id,
+					"trgNodeId": node.app_data.ui_data.associations.node_ref,
+					"type": "associationLink"
+				};
+
+				links.push(newLink);
+			}
 		});
 
 		comments.forEach((comment) => {

@@ -435,7 +435,9 @@ class App extends React.Component {
 		if (source.type === "canvas") {
 			menuDefinition = EMPTY_CLIPBOARD_CANVAS_CONTEXT_MENU;
 		} else if (source.type === "link") {
-			menuDefinition = LINK_CONTEXT_MENU;
+			if (source.targetObject.type !== "associationLink") {
+				menuDefinition = LINK_CONTEXT_MENU;
+			}
 		} else if (source.type === "node") {
 			if (source.selectedObjectIds) {
 				if (source.selectedObjectIds.length > 1) {
