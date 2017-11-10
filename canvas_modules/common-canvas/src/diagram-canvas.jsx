@@ -8,7 +8,6 @@
  *******************************************************************************/
 
 /* eslint complexity: ["error", 13] */
-/* global chmln */
 /* eslint no-shadow: ["error", { "allow": ["Node", "Comment"] }] */
 
 import React from "react";
@@ -23,7 +22,6 @@ import {
 	DRAG_SELECT_REGION
 } from "../constants/common-constants.js";
 import CanvasUtils from "../utils/canvas-utils.js";
-import BlankCanvasImage from "../assets/images/blank_canvas.png";
 import ObjectModel from "./object-model/object-model.js";
 import logger from "../utils/logger";
 
@@ -80,8 +78,6 @@ export default class DiagramCanvas extends React.Component {
 		this.canvasContextMenu = this.canvasContextMenu.bind(this);
 
 		this.createNodeFromDataAt = this.createNodeFromDataAt.bind(this);
-
-		this.handlePlaceholderLinkClick = this.handlePlaceholderLinkClick.bind(this);
 	}
 
 	// ----------------------------------
@@ -760,14 +756,6 @@ export default class DiagramCanvas extends React.Component {
 		});
 	}
 
-	handlePlaceholderLinkClick(e) {
-		if (chmln) {
-			chmln.show("58e7d862db7dc5000436be2d");
-		} else {
-			logger.info("handlePlaceholderLinkClick:no chmln");
-		}
-	}
-
 	render() {
 		// Hard code for now but should eventually be picked up from the diagram
 		// once we"re using Modeler 18.1.
@@ -862,17 +850,6 @@ export default class DiagramCanvas extends React.Component {
 		viewLinks = (this.makeLinksBackgrounds(positions)).concat(connectionLinks);
 
 		const emptyDraggable = <div ref="emptyDraggable" />;
-		let emptyCanvas = null;
-
-		if (this.props.canvas.nodes.length === 0 && this.props.canvas.comments.length === 0) {
-			emptyCanvas = (<div id="empty-canvas" onContextMenu={this.canvasContextMenu}>
-				<img src={BlankCanvasImage} className="placeholder-image" />
-				<span className="placeholder-text">Your flow is empty!</span>
-				<span className="placeholder-link"
-					onClick={this.handlePlaceholderLinkClick}
-				>Click here to take a tour</span>
-			</div>);
-		}
 
 		// TODO - include link icons
 		return (
@@ -930,7 +907,6 @@ export default class DiagramCanvas extends React.Component {
 					</defs>
 					{viewLinks}
 				</SVGCanvas>
-				{emptyCanvas}
 				{this.props.children}
 				{emptyDraggable}
 			</div>

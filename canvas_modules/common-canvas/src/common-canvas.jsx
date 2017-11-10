@@ -31,6 +31,7 @@ import MoveObjectsAction from "./command-actions/moveObjectsAction.js";
 import EditCommentAction from "./command-actions/editCommentAction.js";
 import ArrangeLayoutAction from "./command-actions/arrangeLayoutAction.js";
 import constants from "../constants/common-constants.js";
+import BlankCanvasImage from "../assets/images/blank_canvas.png";
 
 export default class CommonCanvas extends React.Component {
 	constructor(props) {
@@ -464,12 +465,34 @@ export default class CommonCanvas extends React.Component {
 			</div>);
 		}
 
+		let emptyCanvas = null;
+
+		if (canvasJSON === null ||
+				(canvasJSON.nodes.length === 0 &&
+					canvasJSON.comments.length === 0)) {
+			if (this.props.config.emptyCanvasContent) {
+				emptyCanvas = (
+					<div id="empty-canvas">
+						{this.props.config.emptyCanvasContent}
+					</div>);
+			} else {
+				emptyCanvas = (
+					<div id="empty-canvas">
+						<div>
+							<img src={BlankCanvasImage} className="empty-canvas-image" />
+							<span className="empty-canvas-text">Your flow is empty!</span>
+						</div>
+					</div>);
+			}
+		}
+
 		return (
 			<div id="common-canvas" style={canvasStyle}>
 				{palette}
 				<div id="common-canvas-items-container" className={paletteClass}>
 					{canvasToolbar}
 					{canvas}
+					{emptyCanvas}
 				</div>
 				{rightFlyout}
 			</div>

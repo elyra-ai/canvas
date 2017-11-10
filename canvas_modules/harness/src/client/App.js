@@ -8,6 +8,7 @@
  *******************************************************************************/
 /* eslint complexity: ["error", 14] */
 /* eslint max-len: ["error", 200] */
+/* eslint no-alert: "off" */
 
 import React from "react";
 import Isvg from "react-inlinesvg";
@@ -26,6 +27,8 @@ import NodeToForm from "./NodeToForm/node-to-form";
 
 import CustomSliderPanel from "./components/custom-panels/CustomSliderPanel";
 import CustomTogglePanel from "./components/custom-panels/CustomTogglePanel";
+
+import BlankCanvasImage from "../../assets/images/blank_canvas.png";
 
 import {
 	SIDE_PANEL_CANVAS,
@@ -620,6 +623,12 @@ class App extends React.Component {
 		this.setState({ showPropertiesDialog: false, propertiesInfo: {} });
 	}
 
+	handleEmptyCanvasLinkClick() {
+		window.alert("Sorry the tour is not included with the test harness. :-( But " +
+			"this is a good example of how a host app could add their own link to " +
+			"the empty canvas objects!");
+	}
+
 	render() {
 		var locale = "en";
 		var messages = i18nData.messages;
@@ -673,13 +682,23 @@ class App extends React.Component {
 			</ul>
 		</div>);
 
+		var emptyCanvasDiv = (
+			<div>
+				<img src={BlankCanvasImage} className="empty-harness-image" />
+				<span className="empty-harness-text">Welcome to the Common Canvas Test harness.<br />Your flow is empty!</span>
+				<span className="empty-harness-link"
+					onClick={this.handleEmptyCanvasLinkClick}
+				>Click here to take a tour</span>
+			</div>);
+
 		var commonCanvasConfig = {
 			enableRenderingEngine: this.state.selectedRenderingEngine,
 			enableConnectionType: this.state.selectedConnectionType,
 			enableNodeFormatType: this.state.selectedNodeFormat,
 			enableLinkType: this.state.selectedLinkType,
 			enableInternalObjectModel: this.state.internalObjectModel,
-			enablePaletteLayout: this.state.selectedPaletteLayout
+			enablePaletteLayout: this.state.selectedPaletteLayout,
+			emptyCanvasContent: emptyCanvasDiv
 		};
 
 		var layoutAction = this.state.selectedLayout === NONE;

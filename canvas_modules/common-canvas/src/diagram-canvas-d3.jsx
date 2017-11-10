@@ -8,7 +8,6 @@
  *******************************************************************************/
 
 /* eslint complexity: ["error", 13] */
-/* global chmln */
 /* eslint no-shadow: ["error", { "allow": ["Node", "Comment"] }] */
 
 import React from "react";
@@ -18,8 +17,6 @@ import {
 	DND_DATA_TEXT
 } from "../constants/common-constants.js";
 
-import BlankCanvasImage from "../assets/images/blank_canvas.png";
-import ObjectModel from "./object-model/object-model.js";
 import logger from "../utils/logger";
 import CanvasD3Layout from "./svg-canvas-d3.js";
 
@@ -36,11 +33,7 @@ export default class DiagramCanvas extends React.Component {
 		this.zoomIn = this.zoomIn.bind(this);
 		this.zoomOut = this.zoomOut.bind(this);
 
-		this.canvasContextMenu = this.canvasContextMenu.bind(this);
-
 		this.createNodeFromDataAt = this.createNodeFromDataAt.bind(this);
-
-		this.handlePlaceholderLinkClick = this.handlePlaceholderLinkClick.bind(this);
 	}
 
 	componentDidMount() {
@@ -134,23 +127,6 @@ export default class DiagramCanvas extends React.Component {
 		document.getElementById("d3-svg-canvas-div").focus(); // Set focus on div so keybord events go there.
 	}
 
-	canvasContextMenu(event) {
-		const cmPos = this.mouseCoords(event);
-		const mousePos = cmPos;
-
-		event.preventDefault();
-
-		const contextMenuSource = {
-			type: "canvas",
-			zoom: 1,
-			selectedObjectIds: ObjectModel.getSelectedObjectIds(),
-			cmPos: cmPos,
-			mousePos: mousePos
-		};
-
-		this.props.contextMenuHandler(contextMenuSource);
-	}
-
 	createNodeAt(operatorIdRef, label, sourceId, sourceObjectTypeId, x, y) {
 		var data = {};
 
@@ -196,28 +172,7 @@ export default class DiagramCanvas extends React.Component {
 		this.props.editActionHandler(data);
 	}
 
-	handlePlaceholderLinkClick(e) {
-		if (chmln) {
-			chmln.show("58e7d862db7dc5000436be2d");
-		} else {
-			logger.info("handlePlaceholderLinkClick:no chmln");
-		}
-	}
-
 	render() {
-		let emptyCanvas = null;
-
-		if (this.props.canvas.nodes.length === 0 &&
-				this.props.canvas.comments.length === 0) {
-			emptyCanvas = (<div id="empty-canvas" onContextMenu={this.canvasContextMenu}>
-				<img src={BlankCanvasImage} className="placeholder-image" />
-				<span className="placeholder-text">Your flow is empty!</span>
-				<span className="placeholder-link"
-					onClick={this.handlePlaceholderLinkClick}
-				>Click here to take a tour</span>
-			</div>);
-		}
-
 		// Set tabindex to -1 so the focus (see componentDidMount above) can go to
 		// the div (which allows keyboard events to go there) and using -1 means
 		// the user cannot tab to the div. Keyboard events are handled in svg-canvas-d3.js.
@@ -232,7 +187,6 @@ export default class DiagramCanvas extends React.Component {
 				onDrop={this.drop}
 			>
 				{svgCanvas}
-				{emptyCanvas}
 				{this.props.children}
 			</div>
 		);

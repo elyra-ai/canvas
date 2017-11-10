@@ -99,6 +99,8 @@
   cursor: default;
 }
 
+/* Styles for empty canvas objects */
+
 #empty-canvas {
   position: absolute;
   left: 50%;
@@ -107,26 +109,16 @@
   transform: translate(-50%, -50%);
   -webkit-transition: all 0.2s;
   transition: all 0.2s;
+  pointer-events: none;
 }
 
-.placeholder-image {
+.empty-canvas-image {
   margin-left:auto;
   margin-right:auto;
   display:block;
 }
 
-.placeholder-link{
-  display: block;
-  color: #1d3649;
-  opacity: 0.2;
-  font-size: 20px;
-  font-family: IBMHLVMedium;
-  text-align:center;
-  text-decoration:underline;
-  cursor: pointer;
-}
-
-.placeholder-text {
+.empty-canvas-text {
   display: block;
   color: #1d3649;
   opacity: 0.2;
