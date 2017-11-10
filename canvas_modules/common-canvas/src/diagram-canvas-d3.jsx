@@ -104,7 +104,7 @@ export default class DiagramCanvas extends React.Component {
 
 	addNodeToCanvas(node) {
 		if (node) {
-			this.createNodeAt(node.operator_id_ref, node.label, node.sourceId, node.sourceObjectTypeId, 260, 10);
+			this.createAutoNodeAt(node.operator_id_ref, node.label, node.sourceId, node.sourceObjectTypeId);
 		}
 	}
 
@@ -173,6 +173,17 @@ export default class DiagramCanvas extends React.Component {
 				offsetY: y
 			};
 		}
+
+		this.props.editActionHandler(data);
+	}
+
+	createAutoNodeAt(operatorIdRef, label, sourceId, sourceObjectTypeId) {
+		var data = {
+			editType: "createAutoNode",
+			label: label, // label is provided for the external object model
+			operator_id_ref: operatorIdRef,
+			nodeTypeId: operatorIdRef // TODO - Remove this when WML Canvas migrates to pipeline flow
+		};
 
 		this.props.editActionHandler(data);
 	}

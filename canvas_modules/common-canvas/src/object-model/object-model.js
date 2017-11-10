@@ -18,14 +18,15 @@ import SVGPipelineInHandler from "../svg-pipeline-in-handler.js";
 import SVGPipelineOutHandler from "../svg-pipeline-out-handler.js";
 
 /* eslint arrow-body-style: ["error", "always"] */
-/* eslint complexity: ["error", 22] */
+/* eslint complexity: ["error", 23] */
 
 const nodes = (state = [], action) => {
 	switch (action.type) {
-	case "ADD_NODE": {
+	case "ADD_NODE":
+	case "ADD_AUTO_NODE": {
 		return [
 			...state,
-			action.data
+			action.data.newNode
 		];
 	}
 
@@ -275,6 +276,29 @@ const links = (state = [], action) => {
 		];
 	}
 
+	case "ADD_AUTO_NODE": {
+		var newAutoLink = {
+			id: action.linkId,
+			class_name: "canvas-data-link",
+			srcNodeId: action.data.srcNode.id,
+			trgNodeId: action.data.newNode.id,
+			type: "nodeLink"
+		};
+
+		if (action.data.srcNode.output_ports && action.data.srcNode.output_ports.length > 0) {
+			newAutoLink = Object.assign(newAutoLink, { "srcNodePortId": action.data.srcNode.output_ports[0].id });
+		}
+		if (action.data.newNode.input_ports && action.data.newNode.input_ports.length > 0) {
+			newAutoLink = Object.assign(newAutoLink, { "trgNodePortId": action.data.newNode.input_ports[0].id });
+		}
+
+		return [
+			...state,
+			newAutoLink
+		];
+	}
+
+
 	case "DISCONNECT_NODES":
 		return state.filter((link) => {
 			const index = action.data.selectedNodeIds.findIndex((selId) => {
@@ -318,6 +342,9 @@ const canvasinfo = (state = getInitialCanvas(), action) => {
 	case "REMOVE_NODE_ATTR":
 	case "SET_LAYOUT_INFO":
 		return Object.assign({}, state, { nodes: nodes(state.nodes, action) });
+
+	case "ADD_AUTO_NODE":
+		return Object.assign({}, state, { nodes: nodes(state.nodes, action), links: links(state.links, action) });
 
 	case "MOVE_OBJECTS":
 		return Object.assign({}, state, { nodes: nodes(state.nodes, action), comments: comments(state.comments, action) });
@@ -732,15 +759,20 @@ export default class ObjectModel {
 
 		var maxNodeSizes = this.getMaximumNodeSizes();
 
+		const initialMarginX = store.getState().layoutinfo.autoLayoutInitialMarginX;
+		const initialMarginY = store.getState().layoutinfo.autoLayoutInitialMarginY;
+		const verticalSpacing = store.getState().layoutinfo.autoLayoutVerticalSpacing;
+		const horizontalSpacing = store.getState().layoutinfo.autoLayoutHorizontalSpacing;
+
 		var g = dagre.graphlib.json.read(inputGraph);
-		g.graph().marginx = 50;
-		g.graph().marginy = 50;
+		g.graph().marginx = initialMarginX;
+		g.graph().marginy = initialMarginY;
 		if (direction === "TB") {
-			g.graph().nodesep = maxNodeSizes.width + 80; // distance to separate the nodes horiziontally
-			g.graph().ranksep = maxNodeSizes.height + 80; // distance between each rank of nodes
+			g.graph().nodesep = maxNodeSizes.width + horizontalSpacing; // distance to separate the nodes horiziontally
+			g.graph().ranksep = maxNodeSizes.height + verticalSpacing; // distance between each rank of nodes
 		} else {
-			g.graph().nodesep = maxNodeSizes.height + 80; // distance to separate the nodes horiziontally
-			g.graph().ranksep = maxNodeSizes.width + 80; // distance between each rank of nodes
+			g.graph().nodesep = maxNodeSizes.height + horizontalSpacing; // distance to separate the nodes horiziontally
+			g.graph().ranksep = maxNodeSizes.width + verticalSpacing; // distance between each rank of nodes
 		}
 		dagre.layout(g);
 
@@ -824,8 +856,113 @@ export default class ObjectModel {
 		return node;
 	}
 
-	static addNode(node) {
-		store.dispatch({ type: "ADD_NODE", data: node });
+	static getAutoSourceNode() {
+		var sourceNode = null;
+		var selectedNodes = this.getSelectedNodes();
+
+		if (selectedNodes.length === 1) {
+			sourceNode = selectedNodes[0];
+		} else {
+			var nodesArray = this.getNodes();
+			if (nodesArray.length >= 1) {
+				var lastNodeAdded = nodesArray[nodesArray.length - 1];
+				if ((lastNodeAdded.output_ports).length === 0 && nodesArray[nodesArray.length - 2].output_ports !== 0) {
+					sourceNode = nodesArray[nodesArray.length - 2];
+				} else {
+					sourceNode = lastNodeAdded;
+				}
+
+			}
+		}
+
+		return sourceNode;
+	}
+
+	static getAutoPositionOfTarget(sourceNode) {
+		var x = 0;
+		var y = 0;
+
+		const initialMarginX = store.getState().layoutinfo.autoLayoutInitialMarginX;
+		const initialMarginY = store.getState().layoutinfo.autoLayoutInitialMarginY;
+		const horizontalSpacing = store.getState().layoutinfo.autoLayoutHorizontalSpacing;
+
+		if (sourceNode === null) {
+			x = initialMarginX;
+			y = initialMarginY;
+		} else {
+			x = sourceNode.x_pos + sourceNode.width + horizontalSpacing;
+			y = sourceNode.y_pos;
+		}
+		return { x: x, y: y };
+	}
+
+	static createNodeAtPosition(data, trgPosition) {
+		data.offsetX = trgPosition.x;
+		data.offsetY = trgPosition.y;
+		return this.createNode(data);
+	}
+
+	static addAutoNode(newNode, srcNode) {
+		const initialMarginX = store.getState().layoutinfo.autoLayoutInitialMarginX;
+		const verticalSpacing = store.getState().layoutinfo.autoLayoutVerticalSpacing;
+
+		if ((this.getNodes()).length > 0) {
+			var newSourceNode = this.isIntialBindingNode(newNode);
+			if (newSourceNode) {
+				newNode.x_pos = initialMarginX;
+				newNode.y_pos += newNode.height + verticalSpacing;
+			}
+		}
+
+		var newNodeOverLapping = true;
+
+		while (newNodeOverLapping) {
+			newNodeOverLapping = this.isNodeOverlappingOthers(newNode);
+			if (newNodeOverLapping) {
+				newNode.y_pos += newNode.height + verticalSpacing;
+			}
+		}
+
+		if (srcNode === null) {
+			store.dispatch({ type: "ADD_NODE", data: { newNode: newNode } });
+
+		} else if ((newNode.input_ports).length === 1 && (srcNode.output_ports).length === 1) {
+			var cardinalityExceeded = this.isCardinalityExceeded(srcNode.output_ports[0].id, newNode.input_ports[0].id, srcNode, newNode);
+
+			if (cardinalityExceeded) {
+				store.dispatch({ type: "ADD_NODE", data: { newNode: newNode } });
+			} else {	// Node Link is created in this case only
+				store.dispatch({ type: "ADD_AUTO_NODE", data: { newNode: newNode, srcNode: srcNode, linkId: getUUID() } });
+			}
+
+		} else {
+			store.dispatch({ type: "ADD_NODE", data: { newNode: newNode } });
+		}
+
+	}
+
+	static isIntialBindingNode(node) {
+		if ((node.input_ports).length === 0) {
+			return true;
+		}
+		return false;
+	}
+
+	static isNodeOverlappingOthers(node) {
+
+		var index = this.getNodes().findIndex((arrayNode) => {
+			return this.isSourceOverlappingTarget(arrayNode, node);
+		});
+
+		if (index === -1) {
+			return false;
+		}
+
+		return true;
+	}
+
+	static addNode(newNode) {
+		store.dispatch({ type: "ADD_NODE", data: { newNode: newNode } });
 
 		if (ObjectModel.fixedLayout !== NONE) {
 			this.autoLayout(ObjectModel.fixedLayout);
@@ -1364,6 +1501,17 @@ export default class ObjectModel {
 		return objs;
 	}
 
+	static getSelectedNodes() {
+		var objs = [];
+		this.getCanvasInfo().nodes.forEach((node) => {
+			if (this.getSelectedObjectIds().includes(node.id)) {
+				objs.push(node);
+			}
+		});
+
+		return objs;
+	}
+
 	static getNoneSelectedNodesAndComments() {
 		var objs = [];
 		this.getCanvasInfo().nodes.forEach((node) => {
@@ -1390,6 +1538,18 @@ export default class ObjectModel {
 			objs.push(comment);
 		});
 		return objs;
+	}
+
+	static isSourceOverlappingTarget(srcNode, trgNode) {
+		var highlightGap = store.getState().layoutinfo.highlightGap;
+		if (((srcNode.x_pos + srcNode.width + highlightGap >= trgNode.x_pos - highlightGap &&
+					trgNode.x_pos + trgNode.width + highlightGap >= srcNode.x_pos - highlightGap) &&
+					(srcNode.y_pos + srcNode.height + highlightGap >= trgNode.y_pos - highlightGap &&
+						trgNode.y_pos + trgNode.height + highlightGap >= srcNode.y_pos - highlightGap))) {
+			return true;
+		}
+
+		return false;
 	}
 
 	// Methods to handle Layout info.

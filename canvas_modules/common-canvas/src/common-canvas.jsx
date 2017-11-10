@@ -7,7 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-/* eslint complexity: ["error", 16] */
+/* eslint complexity: ["error", 17] */
 /* eslint max-depth: ["error", 6] */
 
 import React from "react";
@@ -21,6 +21,7 @@ import Toolbar from "./toolbar/toolbar.jsx";
 import ObjectModel from "./object-model/object-model.js";
 import CommandStack from "./command-stack/command-stack.js";
 import CreateNodeAction from "./command-actions/createNodeAction.js";
+import CreateAutoNodeAction from "./command-actions/createAutoNodeAction.js";
 import CreateCommentAction from "./command-actions/createCommentAction.js";
 import AddLinksAction from "./command-actions/addLinksAction.js";
 import DeleteObjectsAction from "./command-actions/deleteObjectsAction.js";
@@ -159,6 +160,11 @@ export default class CommonCanvas extends React.Component {
 				CommandStack.do(command);
 				// need to pass the nodeid along to any this.props.editActionHandlers
 				data.nodeId = node.id;
+				break;
+			}
+			case "createAutoNode": {
+				const command = new CreateAutoNodeAction(data);
+				CommandStack.do(command);
 				break;
 			}
 			case "moveObjects": {

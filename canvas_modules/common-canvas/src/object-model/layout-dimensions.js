@@ -69,7 +69,7 @@ const haloLayout = {
 	nodeShape: "rectangle",
 
 	// The gap between a node or comment and its selection highlight rectangle
-	highLightGap: 4,
+	highlightGap: 4,
 
 	// Whether to display a link line when linked node/comments overlap
 	displayLinkOnOverlap: false,
@@ -98,6 +98,12 @@ const haloLayout = {
 	// when such a line is required for drawing connectors.
 	elbowSize: 10,
 	minInitialLine: 30,
+
+	// Values for AutoLayout and AutoNode function
+	autoLayoutInitialMarginX: 50,
+	autoLayoutInitialMarginY: 50,
+	autoLayoutVerticalSpacing: 80,
+	autoLayoutHorizontalSpacing: 80,
 
 	// Comment Halo size
 	haloCommentGap: 11, // Gap between comment rectangle and its halo
@@ -177,7 +183,7 @@ const portsHorizontal = {
 	nodeShape: "port-arcs",
 
 	// The gap between a node or comment and its selection highlight outline
-	highLightGap: 2,
+	highlightGap: 2,
 
 	// Whether to display a link line when linked node/comments overlap
 	displayLinkOnOverlap: true,
@@ -206,6 +212,12 @@ const portsHorizontal = {
 	// when such a line is required for drawing connectors.
 	elbowSize: 10,
 	minInitialLine: 30,
+
+	// Values for AutoLayout and AutoNode function
+	autoLayoutInitialMarginX: 50,
+	autoLayoutInitialMarginY: 50,
+	autoLayoutVerticalSpacing: 80,
+	autoLayoutHorizontalSpacing: 80,
 
 	// Radius of the port circle
 	portRadius: 3,
@@ -301,7 +313,7 @@ const portsVertical = {
 	nodeShape: "rectangle",
 
 	// The gap between a node or comment and its selection highlight rectangle
-	highLightGap: 4,
+	highlightGap: 4,
 
 	// Whether to display a link line when linked node/comments overlap
 	displayLinkOnOverlap: true,
@@ -330,6 +342,12 @@ const portsVertical = {
 	// when such a line is required for drawing connectors.
 	elbowSize: 10,
 	minInitialLine: 30,
+
+	// Values for AutoLayout and AutoNode function
+	autoLayoutInitialMarginX: 50,
+	autoLayoutInitialMarginY: 50,
+	autoLayoutVerticalSpacing: 80,
+	autoLayoutHorizontalSpacing: 80,
 
 	// Radius of the port circle
 	portRadius: 6,

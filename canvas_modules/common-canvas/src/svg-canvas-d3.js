@@ -671,17 +671,17 @@ export default class CanvasD3Layout {
 		var canvBottom = -Infinity;
 
 		d3.selectAll(".node-group").each((d) => {
-			canvLeft = Math.min(canvLeft, d.x_pos - this.layout.highLightGap);
-			canvTop = Math.min(canvTop, d.y_pos - this.layout.highLightGap);
-			canvRight = Math.max(canvRight, d.x_pos + d.width + this.layout.highLightGap);
-			canvBottom = Math.max(canvBottom, d.y_pos + d.height + this.layout.highLightGap);
+			canvLeft = Math.min(canvLeft, d.x_pos - this.layout.highlightGap);
+			canvTop = Math.min(canvTop, d.y_pos - this.layout.highlightGap);
+			canvRight = Math.max(canvRight, d.x_pos + d.width + this.layout.highlightGap);
+			canvBottom = Math.max(canvBottom, d.y_pos + d.height + this.layout.highlightGap);
 		});
 
 		d3.selectAll(".comment-group").each((d) => {
-			canvLeft = Math.min(canvLeft, d.x_pos - this.layout.highLightGap);
-			canvTop = Math.min(canvTop, d.y_pos - this.layout.highLightGap);
-			canvRight = Math.max(canvRight, d.x_pos + d.width + this.layout.highLightGap);
-			canvBottom = Math.max(canvBottom, d.y_pos + d.height + this.layout.highLightGap);
+			canvLeft = Math.min(canvLeft, d.x_pos - this.layout.highlightGap);
+			canvTop = Math.min(canvTop, d.y_pos - this.layout.highlightGap);
+			canvRight = Math.max(canvRight, d.x_pos + d.width + this.layout.highlightGap);
+			canvBottom = Math.max(canvBottom, d.y_pos + d.height + this.layout.highlightGap);
 		});
 
 		const canvWidth = canvRight - canvLeft;
@@ -986,11 +986,11 @@ export default class CanvasD3Layout {
 							.attr("class", this.layout.cssSelectionHighlight);
 					} else { // simple rectangle
 						d3.select(`#node_grp_${d.id}`).select(`#node_outline_${d.id}`)
-							.attr("width", (cd) => cd.width + (2 * this.layout.highLightGap))
+							.attr("width", (cd) => cd.width + (2 * this.layout.highlightGap))
 							.attr("height",
-								(cd) => cd.height + (2 * this.layout.highLightGap))
-							.attr("x", -this.layout.highLightGap)
-							.attr("y", -this.layout.highLightGap)
+								(cd) => cd.height + (2 * this.layout.highlightGap))
+							.attr("x", -this.layout.highlightGap)
+							.attr("y", -this.layout.highlightGap)
 							.attr("selected", function(cd) { return ObjectModel.isSelected(cd.id) ? "yes" : "no"; })
 							.attr("class", this.layout.cssSelectionHighlight);
 					}
@@ -1746,13 +1746,13 @@ export default class CanvasD3Layout {
 	}
 
 	getNodeHighlightOutlineTranslate(data) {
-		const targetHeight = data.height + (2 * this.layout.highLightGap);
+		const targetHeight = data.height + (2 * this.layout.highlightGap);
 		const yScale = targetHeight / data.height;
 
-		const targetWidth = data.width + (2 * this.layout.highLightGap);
+		const targetWidth = data.width + (2 * this.layout.highlightGap);
 		const xScale = targetWidth / data.width;
 
-		return `translate (${-this.layout.highLightGap},${-this.layout.highLightGap}) scale(${xScale}, ${yScale})`;
+		return `translate (${-this.layout.highlightGap},${-this.layout.highlightGap}) scale(${xScale}, ${yScale})`;
 	}
 
 	getPortPositions(data, type) {
@@ -1809,8 +1809,8 @@ export default class CanvasD3Layout {
 			commentGroupSel.each(function(d) {
 				// Comment selection highlighting and sizing outline
 				d3.select(`#comment_rect_${d.id}`)
-					.attr("height", d.height + (2 * that.layout.highLightGap))
-					.attr("width", d.width + (2 * that.layout.highLightGap))
+					.attr("height", d.height + (2 * that.layout.highlightGap))
+					.attr("width", d.width + (2 * that.layout.highlightGap))
 					.attr("selected", ObjectModel.isSelected(d.id) ? "yes" : "no")
 					.attr("class", that.layout.cssSelectionHighlight)
 					.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
@@ -1847,8 +1847,8 @@ export default class CanvasD3Layout {
 
 				// Comment selection highlighting and sizing outline
 				d3.select(`#comment_rect_${d.id}`)
-					.attr("height", d.height + (2 * that.layout.highLightGap))
-					.attr("width", d.width + (2 * that.layout.highLightGap))
+					.attr("height", d.height + (2 * that.layout.highlightGap))
+					.attr("width", d.width + (2 * that.layout.highlightGap))
 					.attr("selected", ObjectModel.isSelected(d.id) ? "yes" : "no")
 					.attr("class", that.layout.cssSelectionHighlight)
 					.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
@@ -1933,8 +1933,8 @@ export default class CanvasD3Layout {
 						d3.select(this)
 							.append("circle")
 							.attr("id", "comment_port_circle")
-							.attr("cx", 0 - that.layout.highLightGap)
-							.attr("cy", 0 - that.layout.highLightGap)
+							.attr("cx", 0 - that.layout.highlightGap)
+							.attr("cy", 0 - that.layout.highlightGap)
 							.attr("r", that.layout.commentPortRadius)
 							.attr("class", "d3-comment-port-circle")
 							.on("mousedown", function(cd) {
@@ -1943,7 +1943,7 @@ export default class CanvasD3Layout {
 								that.drawingNewLinkSrcId = d.id;
 								this.drawingNewLinkSrcPortId = null;
 								that.drawingNewLinkAction = "comment-node";
-								that.drawingNewLinkStartPos = { x: d.x_pos - that.layout.highLightGap, y: d.y_pos - that.layout.highLightGap };
+								that.drawingNewLinkStartPos = { x: d.x_pos - that.layout.highlightGap, y: d.y_pos - that.layout.highlightGap };
 								that.drawingNewLinkArray = [];
 								that.drawNewLink();
 							});
@@ -2023,10 +2023,10 @@ export default class CanvasD3Layout {
 			// Comment selection highlighting and sizing outline
 			newCommentGroups.append("rect")
 				.attr("id", (d) => `comment_rect_${d.id}`)
-				.attr("width", (d) => d.width + (2 * this.layout.highLightGap))
-				.attr("height", (d) => d.height + (2 * this.layout.highLightGap))
-				.attr("x", -this.layout.highLightGap)
-				.attr("y", -this.layout.highLightGap)
+				.attr("width", (d) => d.width + (2 * this.layout.highlightGap))
+				.attr("height", (d) => d.height + (2 * this.layout.highlightGap))
+				.attr("x", -this.layout.highlightGap)
+				.attr("y", -this.layout.highlightGap)
 				.attr("attr", function(d) { return ObjectModel.isSelected(d.id) ? "yes" : "no"; })
 				.attr("class", this.layout.cssSelectionHighlight)
 				.on("mousedown", (d) => {
@@ -2720,10 +2720,10 @@ export default class CanvasD3Layout {
 
 	isSourceOverlappingTarget(srcNode, trgNode) {
 		if (this.layout.displayLinkOnOverlap === false) {
-			if (((srcNode.x_pos + srcNode.width + this.layout.linkGap >= trgNode.x_pos - this.layout.linkGap &&
-						trgNode.x_pos + trgNode.width + this.layout.linkGap >= srcNode.x_pos - this.layout.linkGap) &&
-						(srcNode.y_pos + srcNode.height + this.layout.linkGap >= trgNode.y_pos - this.layout.linkGap &&
-							trgNode.y_pos + trgNode.height + this.layout.linkGap >= srcNode.y_pos - this.layout.linkGap))) {
+			if (((srcNode.x_pos + srcNode.width + this.layout.highlightGap >= trgNode.x_pos - this.layout.highlightGap &&
+						trgNode.x_pos + trgNode.width + this.layout.highlightGap >= srcNode.x_pos - this.layout.highlightGap) &&
+						(srcNode.y_pos + srcNode.height + this.layout.highlightGap >= trgNode.y_pos - this.layout.highlightGap &&
+							trgNode.y_pos + trgNode.height + this.layout.highlightGap >= srcNode.y_pos - this.layout.highlightGap))) {
 				return true;
 			}
 		}

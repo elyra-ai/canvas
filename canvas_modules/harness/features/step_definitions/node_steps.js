@@ -601,6 +601,25 @@ module.exports = function() {
 			}
 		});
 
+	// Then I double click "Var. File" node from the "Import" category onto the canvas at 100, 200
+	//
+	this.Then(/^I double click "([^"]*)" node from the "([^"]*)" category onto the canvas$/,
+		function(nodeType, nodeCategory) {
+
+			try {
+				var categoryIndex = categoryPosition[nodeCategory];
+				var paletteItem = browser.$$(".palette-flyout-category-arrow")[categoryIndex];
+				paletteItem.click();
+				const nodeIndex = nodePosition[nodeType];
+				var nodeIcon = browser.$$(".palette-list-item-icon")[nodeIndex];
+				nodeIcon.doubleClick();
+				paletteItem.click();
+			} catch (err) {
+				console.log("Error = " + err);
+				throw err;
+			}
+		});
+
 	/* Negitive step to validate node doesn't exist in palette*/
 	this.Then(/^I try adding node (\d+) a "([^"]*)" node from the "([^"]*)" category onto the canvas at (\d+), (\d+)$/,
 		function(inNodeIndex, nodeType, nodeCategory, canvasX, canvasY) {

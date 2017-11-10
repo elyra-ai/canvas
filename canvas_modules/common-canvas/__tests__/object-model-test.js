@@ -109,16 +109,19 @@ describe("ObjectModel handle model OK", () => {
 			layoutinfo: ObjectModel.getLayout()
 		});
 
+		var newNodeData = { id: "node4", label: "Type", image: "imageName", type: "execution_node",
+			operator_id_ref: "type", class_name: "canvas-node",
+			input_ports: [{ name: "inPort", label: "Input Port", cardinality: "1:1" }],
+			output_ports: [{ name: "outPort", label: "Output Port", cardinality: "1:1" }],
+			x_pos: 40, y_pos: 40
+		};
+
 		// imageName - Just for Testing
 		ObjectModel.dispatch({
 			type: "ADD_NODE",
-			data: { id: "node4", label: "Type", image: "imageName", type: "execution_node",
-				operator_id_ref: "type", class_name: "canvas-node",
-				input_ports: [{ name: "inPort", label: "Input Port", cardinality: "1:1" }],
-				output_ports: [{ name: "outPort", label: "Output Port", cardinality: "1:1" }],
-				x_pos: 40, y_pos: 40
-			}
+			data: { newNode: newNodeData }
 		});
+
 
 		const expectedCanvas =
 			{
