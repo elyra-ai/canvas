@@ -215,9 +215,9 @@ export default class SVGPipelineOutHandler {
 			newNode.app_data.ui_data.decorations = newDecorations;
 		}
 
-		const assocationLink = this.getAssociationLink(ciNode, canvasLinks);
-		if (!_.isEmpty(assocationLink)) {
-			newNode.app_data.ui_data.associations = assocationLink;
+		const assocationLinks = this.getAssociationLinks(ciNode, canvasLinks);
+		if (!_.isEmpty(assocationLinks)) {
+			newNode.app_data.ui_data.associations = assocationLinks;
 		}
 
 		return newNode;
@@ -400,16 +400,18 @@ export default class SVGPipelineOutHandler {
 		return newLinks;
 	}
 
-	static getAssociationLink(node, canvasLinks) {
-		var newLink = {};
+	static getAssociationLinks(node, canvasLinks) {
+		const associationsLinks = [];
 		canvasLinks.forEach((link) => {
 			if (link.type === "associationLink" &&
 					link.srcNodeId === node.id) {
-				newLink.id = link.id;
-				newLink.node_ref = link.trgNodeId;
-				newLink.class_name = link.class_name;
+				associationsLinks.push({
+					id: link.id,
+					node_ref: link.trgNodeId,
+					class_name: link.class_name
+				});
 			}
 		});
-		return newLink;
+		return associationsLinks;
 	}
 }

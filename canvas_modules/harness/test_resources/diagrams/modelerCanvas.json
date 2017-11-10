@@ -248,11 +248,11 @@
               "label": {
                 "default": "Drug"
               },
-              "associations": {
+              "associations": [{
                 "id": "id5KIRGGJ3FYT.id125TTEEIK7V",
                 "node_ref": "id125TTEEIK7V",
                 "class_name": "canvas-object-link"
-              }
+              }]
             }
           },
           "input": {
@@ -376,11 +376,11 @@
               "label": {
                 "default": "Drug"
               },
-              "associations": {
+              "associations": [{
                 "id": "id8I6RH2V91XW.id1ZZTZ3ZMYWL",
                 "node_ref": "id1ZZTZ3ZMYWL",
                 "class_name": "canvas-object-link"
-              }
+              }]
             }
           },
           "input": {
