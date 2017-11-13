@@ -51,7 +51,7 @@ class PaletteContentListItem extends React.Component {
 				className="palette-list-item"
 			>
 				<div className="palette-list-item-icon">
-					<img src={this.props.nodeTemplate.image} alt={this.props.nodeTemplate.label} draggable="false" />
+					<img src={this.props.nodeTemplate.image} draggable="false" />
 				</div>
 				<div className="palette-list-item-text-div">
 					<span className="palette-list-item-text-span">
