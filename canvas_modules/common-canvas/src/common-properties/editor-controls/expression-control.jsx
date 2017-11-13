@@ -25,6 +25,12 @@ import "codemirror/mode/sql/sql";
 import "../util/CLEM";
 import "../util/CLEM-hint";
 
+const pxPerChar = 8.5;
+const pxPerLine = 26;
+const defaultCharPerLine = 30;
+const maxLineHeight = 15 * pxPerLine; // 20 lines
+const minLineHeight = 4 * pxPerLine; // 4 lines
+
 
 export default class ExpressionControl extends EditorControl {
 	constructor(props) {
@@ -57,6 +63,14 @@ export default class ExpressionControl extends EditorControl {
 		// This hack allows use to capture the "sql" autocomplete handler and subsitute our custom handler
 		const language = (this.props.control.language === "text/x-hive") ? "sql" : this.props.control.language;
 		cm.registerHelper("hint", language, this.addonHints);
+
+		// set the default height, should be between 4 and 20 lines
+		const editorDiv = document.getElementById("ExpressionEditor");
+		const controlWidth = (editorDiv) ? editorDiv.clientWidth : 0;
+		const charPerLine = (controlWidth > 0) ? controlWidth / pxPerChar : defaultCharPerLine;
+		const height = (this.props.control.charLimit)
+			? Math.min((this.props.control.charLimit / charPerLine) * pxPerLine, maxLineHeight) : minLineHeight;
+		codeMirrorInstance.setSize(null, Math.max(Math.floor(height), minLineHeight));
 	}
 
 	// reset to the original autocomplete handler
@@ -136,6 +150,7 @@ export default class ExpressionControl extends EditorControl {
 			placeholder: this.props.control.additionalText,
 			theme: messageType + " default",
 			readOnly: (stateDisabled.disabled) ? "nocursor" : false,
+			viewportMargin: Infinity,
 			extraKeys: { "Ctrl-Space": "autocomplete" }
 		};
 
