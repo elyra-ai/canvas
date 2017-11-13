@@ -95,7 +95,6 @@ class PaletteFlyoutContent extends React.Component {
 						show
 						key={category + "-nodes"}
 						categoryJSON={filteredNodeTypes}
-						addNodeToCanvas={this.props.addNodeToCanvas}
 					/>);
 			}
 			var itemsFiltered = false;
@@ -143,8 +142,7 @@ class PaletteFlyoutContent extends React.Component {
 }
 
 PaletteFlyoutContent.propTypes = {
-	paletteJSON: PropTypes.object.isRequired,
-	addNodeToCanvas: PropTypes.func
+	paletteJSON: PropTypes.object.isRequired
 };
 
 export default PaletteFlyoutContent;

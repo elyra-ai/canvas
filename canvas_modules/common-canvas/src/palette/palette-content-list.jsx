@@ -29,7 +29,6 @@ class PaletteContentList extends React.Component {
 				<div key={itemKey}>
 					<PaletteContentListItem
 						nodeTemplate={this.props.categoryJSON[idx]}
-						addNodeToCanvas={this.props.addNodeToCanvas}
 					/>
 				</div>
 			);
@@ -50,7 +49,6 @@ class PaletteContentList extends React.Component {
 PaletteContentList.propTypes = {
 	categoryJSON: PropTypes.array.isRequired,
 	show: PropTypes.bool.isRequired,
-	addNodeToCanvas: PropTypes.func,
 	style: PropTypes.object
 };
 PaletteContentList.defaultProps = {

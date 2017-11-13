@@ -7,6 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
+import CanvasController from "../common-canvas-controller.js";
 import React from "react";
 import PropTypes from "prop-types";
 import { DND_DATA_TEXT } from "../../constants/common-constants.js";
@@ -32,16 +33,15 @@ class PaletteContentListItem extends React.Component {
 	}
 
 	onDoubleClick() {
-		if (this.props.addNodeToCanvas) {
-			this.props.addNodeToCanvas({
-				operator_id_ref: this.props.nodeTemplate.operator_id_ref,
-				label: this.props.nodeTemplate.label
-			});
+		if (CanvasController.createAutoNode) {
+			CanvasController.createAutoNode(this.props.nodeTemplate);
 		}
 	}
+
 	imageDrag() {
 		return false;
 	}
+
 	render() {
 		return (
 			<div id={this.props.nodeTemplate.id}
@@ -64,8 +64,7 @@ class PaletteContentListItem extends React.Component {
 }
 
 PaletteContentListItem.propTypes = {
-	nodeTemplate: PropTypes.object.isRequired,
-	addNodeToCanvas: PropTypes.func
+	nodeTemplate: PropTypes.object.isRequired
 };
 
 export default PaletteContentListItem;

@@ -11,6 +11,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import enhanceWithClickOutside from "react-click-outside";
 import CommonContextMenu from "./common-context-menu.jsx";
+import CanvasController from "./common-canvas-controller.js";
 
 // context-menu sizing
 const CONTEXT_MENU_MARGIN = 2; // see common-canvas.css .react-context-menu margin
@@ -26,7 +27,7 @@ class ContextMenuWrapper extends React.Component {
 	}
 
 	handleClickOutside(clickOutsideEvent) {
-		this.props.closeContextMenu();
+		CanvasController.closeContextMenu();
 
 		// This stops the canvasClicked function from being fired which would
 		// clear any current selections. The event here is a real event not a
@@ -83,10 +84,14 @@ class ContextMenuWrapper extends React.Component {
 		return menuSize;
 	}
 
+	contextMenuClicked(action) {
+		CanvasController.contextMenuActionHandler(action);
+	}
+
 	render() {
 		// Reposition contextMenu so that it does not show off the screen
 		var menuSize = this.calculateContextMenuSize(this.props.contextMenuDef);
-		const pos = this.repositionContextMenu(this.props.mousePos, menuSize);
+		const pos = this.repositionContextMenu(CanvasController.getContextMenuPos(), menuSize);
 
 		// Offset the context menu poisiton by 5 pixels. This moves the menu
 		// underneath the pointer. On Firefox this stops the menu from immediately
@@ -103,7 +108,7 @@ class ContextMenuWrapper extends React.Component {
 
 		const contextMenu = (<CommonContextMenu
 			menuDefinition={this.props.contextMenuDef}
-			contextHandler={this.props.contextMenuClicked}
+			contextHandler={this.contextMenuClicked}
 		/>);
 
 		return (
@@ -116,10 +121,7 @@ class ContextMenuWrapper extends React.Component {
 
 ContextMenuWrapper.propTypes = {
 	containingDivId: PropTypes.string.isRequired,
-	mousePos: PropTypes.object.isRequired,
-	contextMenuDef: PropTypes.array.isRequired,
-	contextMenuClicked: PropTypes.func.isRequired,
-	closeContextMenu: PropTypes.func.isRequired
+	contextMenuDef: PropTypes.array.isRequired
 };
 
 export default enhanceWithClickOutside(ContextMenuWrapper);

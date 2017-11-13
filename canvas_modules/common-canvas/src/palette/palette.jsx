@@ -530,7 +530,6 @@ class Palette extends React.Component {
 				style={{ display: displayValue }}
 			>
 				<PaletteTopbar mouseDownMethod={this.mouseDownOnTopBar}
-					closeMethod={this.props.closePalette}
 					showGridMethod={this.showGrid}
 					windowMaximizeMethod={this.windowMaximize}
 					showGrid={this.state.showGrid}
@@ -546,7 +545,6 @@ class Palette extends React.Component {
 Palette.propTypes = {
 	paletteJSON: PropTypes.object.isRequired,
 	showPalette: PropTypes.bool.isRequired,
-	closePalette: PropTypes.func.isRequired
 };
 
 export default Palette;

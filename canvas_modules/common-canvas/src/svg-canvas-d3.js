@@ -13,6 +13,7 @@
 /* eslint no-console: "off" */
 
 const d3 = require("d3");
+import CanvasController from "./common-canvas-controller.js";
 import ObjectModel from "./object-model/object-model.js";
 import _ from "underscore";
 import nodeMenuStandardIcon from "../assets/images/canvas_node_icons/node-menu_standard.svg";
@@ -32,17 +33,11 @@ const showTime = false;
 
 export default class CanvasD3Layout {
 
-	constructor(canvasJSON, canvasSelector, canvasWidth, canvasHeight,
-		editActionHandler, contextMenuHandler, clickActionHandler,
-		decorationActionHandler, config) {
+	constructor(canvasJSON, canvasSelector, canvasWidth, canvasHeight, config) {
 
 		this.canvasSelector = canvasSelector;
 		this.svg_canvas_width = canvasWidth;
 		this.svg_canvas_height = canvasHeight;
-		this.editActionHandler = editActionHandler;
-		this.contextMenuHandler = contextMenuHandler;
-		this.clickActionHandler = clickActionHandler;
-		this.decorationActionHandler = decorationActionHandler;
 
 		// Customization options
 		this.connectionType = config.enableConnectionType;
@@ -319,13 +314,13 @@ export default class CanvasD3Layout {
 					if (d3.event.keyCode === BACKSPACE_KEY ||
 							d3.event.keyCode === DELETE_KEY) {
 						this.stopPropagationAndPreventDefault(); // Some browsers interpret Delete as 'Back to previous page'. So prevent that.
-						this.editActionHandler({ editType: "deleteSelectedObjects", selectedObjectIds: ObjectModel.getSelectedObjectIds() });
+						CanvasController.editActionHandler({ editType: "deleteSelectedObjects", selectedObjectIds: ObjectModel.getSelectedObjectIds() });
 					} else if (this.isCmndCtrlPressed() && !d3.event.shiftKey && d3.event.keyCode === Z_KEY) {
 						this.stopPropagationAndPreventDefault();
-						this.editActionHandler({ editType: "undo" });
+						CanvasController.editActionHandler({ editType: "undo" });
 					} else if (this.isCmndCtrlPressed() && d3.event.shiftKey && d3.event.keyCode === Z_KEY) {
 						this.stopPropagationAndPreventDefault();
-						this.editActionHandler({ editType: "redo" });
+						CanvasController.editActionHandler({ editType: "redo" });
 					} else if (this.isCmndCtrlPressed() && d3.event.keyCode === A_KEY) {
 						this.stopPropagationAndPreventDefault();
 						ObjectModel.selectAll();
@@ -356,7 +351,7 @@ export default class CanvasD3Layout {
 			})
 			.on("dblclick.zoom", () => {
 				this.consoleLog("Zoom - double click");
-				this.clickActionHandler({
+				CanvasController.clickActionHandler({
 					clickType: "DOUBLE_CLICK",
 					objectType: "canvas",
 					selectedObjectIds: ObjectModel.getSelectedObjectIds() });
@@ -609,9 +604,9 @@ export default class CanvasD3Layout {
 					Math.abs(this.region.height) > 5) {
 				var { startX, startY, width, height } = this.getRegionDimensions();
 				this.selectInRegion(startX, startY, startX + width, startY + height);
-				this.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "region", selectedObjectIds: ObjectModel.getSelectedObjectIds() });
+				CanvasController.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "region", selectedObjectIds: ObjectModel.getSelectedObjectIds() });
 			} else {
-				this.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "canvas", selectedObjectIds: ObjectModel.getSelectedObjectIds() });
+				CanvasController.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "canvas", selectedObjectIds: ObjectModel.getSelectedObjectIds() });
 			}
 			this.regionSelect = false;
 		} else {
@@ -620,8 +615,7 @@ export default class CanvasD3Layout {
 			if (Math.abs(d3.event.transform.x - this.zoomStartPoint.x) < 2 &&
 					Math.abs(d3.event.transform.y - this.zoomStartPoint.y) < 2) {
 				this.selecting = true;
-				const clickedPos = this.getTransformedMousePos();
-				this.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "canvas", selectedObjectIds: ObjectModel.getSelectedObjectIds(), clickedPos: clickedPos });
+				CanvasController.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "canvas", selectedObjectIds: ObjectModel.getSelectedObjectIds() });
 				// TODO - The decision to clear selection (commented out code below) is currently made by common-canvas
 				// This 'to do' is to move that decision from there to here. To do that we need to have a callback function
 				// to the ask the react code if a context menu is currently on display or not.
@@ -635,7 +629,7 @@ export default class CanvasD3Layout {
 				// from the objectmodel's canvasJSON which would remove any pending changes.
 				this.savePendingCommentChanges();
 				this.consoleLog("editActionHandler - zoomCanvas");
-				this.editActionHandler({ editType: "zoomCanvas", value: d3.event.transform.k });
+				CanvasController.editActionHandler({ editType: "zoomCanvas", value: d3.event.transform.k });
 			}
 		}
 	}
@@ -788,7 +782,7 @@ export default class CanvasD3Layout {
 			if (this.dragOffsetX !== 0 ||
 					this.dragOffsetY !== 0) {
 				// this.consoleLog("editActionHandler - moveObjects");
-				this.editActionHandler({ editType: "moveObjects", nodes: ObjectModel.getSelectedObjectIds(), offsetX: this.dragOffsetX, offsetY: this.dragOffsetY });
+				CanvasController.editActionHandler({ editType: "moveObjects", nodes: ObjectModel.getSelectedObjectIds(), offsetX: this.dragOffsetX, offsetY: this.dragOffsetY });
 			}
 			this.dragging = false;
 		}
@@ -925,7 +919,7 @@ export default class CanvasD3Layout {
 							ObjectModel.toggleSelection(d.id, this.isCmndCtrlPressed());
 						}
 					}
-					this.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "node", id: d.id, selectedObjectIds: ObjectModel.getSelectedObjectIds() });
+					CanvasController.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "node", id: d.id, selectedObjectIds: ObjectModel.getSelectedObjectIds() });
 					this.selecting = false;
 					this.consoleLog("Node Group - finished mouse down");
 				})
@@ -945,7 +939,7 @@ export default class CanvasD3Layout {
 					this.consoleLog("Node Group - double click");
 					d3.event.stopPropagation();
 					var selObjIds = ObjectModel.getSelectedObjectIds();
-					this.clickActionHandler({ clickType: "DOUBLE_CLICK", objectType: "node", id: d.id, selectedObjectIds: selObjIds });
+					CanvasController.clickActionHandler({ clickType: "DOUBLE_CLICK", objectType: "node", id: d.id, selectedObjectIds: selObjIds });
 				})
 				.on("contextmenu", (d) => {
 					this.consoleLog("Node Group - context menu");
@@ -1251,7 +1245,7 @@ export default class CanvasD3Layout {
 
 	openContextMenu(type, d) {
 		this.stopPropagationAndPreventDefault(); // Stop the browser context menu appearing
-		this.contextMenuHandler({
+		CanvasController.contextMenuHandler({
 			type: type,
 			targetObject: type === "canvas" ? null : d,
 			id: type === "canvas" ? null : d.id, // For historical puposes, we pass d.id as well as d as targetObject.
@@ -1339,9 +1333,9 @@ export default class CanvasD3Layout {
 
 	getDecoratorCallback(d, type) {
 		d3.event.stopPropagation();
-		if (this.decorationActionHandler) {
+		if (CanvasController.decorationActionHandler) {
 			var id = this.getDecoratorId(d, type);
-			this.decorationActionHandler(d, id);
+			CanvasController.decorationActionHandler(d, id);
 		}
 	}
 
@@ -1510,14 +1504,14 @@ export default class CanvasD3Layout {
 				var trgPortId = this.getNodeInputPortAtMousePos();
 				trgPortId = trgPortId || (trgNode.input_ports && trgNode.input_ports.length > 0 ? trgNode.input_ports[0].id : null);
 				this.consoleLog("editActionHandler - linkNodes");
-				this.editActionHandler({
+				CanvasController.editActionHandler({
 					editType: "linkNodes",
 					nodes: [{ "id": this.drawingNewLinkSrcId, "portId": this.drawingNewLinkSrcPortId }],
 					targetNodes: [{ "id": trgNode.id, "portId": trgPortId }],
 					linkType: "data" });
 			} else {
 				this.consoleLog("editActionHandler - linkComment");
-				this.editActionHandler({
+				CanvasController.editActionHandler({
 					editType: "linkComment",
 					nodes: [this.drawingNewLinkSrcId],
 					targetNodes: [trgNode.id],
@@ -1924,7 +1918,7 @@ export default class CanvasD3Layout {
 					// double click event going to the comment group object. This seems
 					// to be a timing issue since the same problem is not evident with the
 					// similar code for the Node group object.
-					// this.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "comment", id: d.id, selectedObjectIds: ObjectModel.getSelectedObjectIds() });
+					// CanvasController.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "comment", id: d.id, selectedObjectIds: ObjectModel.getSelectedObjectIds() });
 					this.selecting = false;
 					this.consoleLog("Comment Group - finished mouse down");
 				})
@@ -2012,7 +2006,7 @@ export default class CanvasD3Layout {
 
 					// Note: Couldn't get focus to work through d3, so used dom instead.
 					document.getElementById(`text_area_${id}`).focus();
-					that.clickActionHandler({ clickType: "DOUBLE_CLICK", objectType: "comment", id: d.id, selectedObjectIds: ObjectModel.getSelectedObjectIds() });
+					CanvasController.clickActionHandler({ clickType: "DOUBLE_CLICK", objectType: "comment", id: d.id, selectedObjectIds: ObjectModel.getSelectedObjectIds() });
 				})
 				.on("contextmenu", (d) => {
 					this.consoleLog("Comment Group - context menu");
@@ -2145,7 +2139,7 @@ export default class CanvasD3Layout {
 				offsetY: this.removePx(textArea.style.top)
 			};
 			this.consoleLog("editActionHandler - editComment");
-			this.editActionHandler(data);
+			CanvasController.editActionHandler(data);
 		}
 	}
 
@@ -2282,7 +2276,7 @@ export default class CanvasD3Layout {
 			offsetY: commentObj.y_pos
 		};
 		this.consoleLog("editActionHandler - editComment");
-		this.editActionHandler(data);
+		CanvasController.editActionHandler(data);
 		this.commentSizing = false;
 	}
 

@@ -10,6 +10,7 @@
 /* eslint complexity: ["error", 13] */
 /* eslint no-shadow: ["error", { "allow": ["Node", "Comment"] }] */
 
+import CanvasController from "./common-canvas-controller.js";
 import React from "react";
 import PropTypes from "prop-types";
 
@@ -29,11 +30,6 @@ export default class DiagramCanvas extends React.Component {
 
 		this.drop = this.drop.bind(this);
 		this.dragOver = this.dragOver.bind(this);
-
-		this.zoomIn = this.zoomIn.bind(this);
-		this.zoomOut = this.zoomOut.bind(this);
-
-		this.createNodeFromDataAt = this.createNodeFromDataAt.bind(this);
 	}
 
 	componentDidMount() {
@@ -41,10 +37,6 @@ export default class DiagramCanvas extends React.Component {
 			new CanvasD3Layout(this.props.canvas,
 				"#d3-svg-canvas-div",
 				"100%", "100%",
-				this.props.editActionHandler,
-				this.props.contextMenuHandler,
-				this.props.clickActionHandler,
-				this.props.decorationActionHandler,
 				this.props.config);
 		this.focusOnCanvas();
 	}
@@ -87,17 +79,11 @@ export default class DiagramCanvas extends React.Component {
 
 		if (jsVal !== null) {
 			if ((jsVal.operation === "createFromTemplate") || jsVal.operation === "createFromObject") {
-				this.createNodeAt(jsVal.operator_id_ref, jsVal.label, jsVal.sourceId, jsVal.sourceObjectTypeId, transPos.x, transPos.y);
+				CanvasController.createNodeAt(jsVal.operator_id_ref, jsVal.label, jsVal.sourceId, jsVal.sourceObjectTypeId, transPos.x, transPos.y);
 
 			} else if ((jsVal.operation === "addToCanvas") || (jsVal.operation === "addTableFromConnection")) {
-				this.createNodeFromDataAt(transPos.x, transPos.y, jsVal.data);
+				CanvasController.createNodeFromDataAt(transPos.x, transPos.y, jsVal.data);
 			}
-		}
-	}
-
-	addNodeToCanvas(node) {
-		if (node) {
-			this.createAutoNodeAt(node.operator_id_ref, node.label, node.sourceId, node.sourceObjectTypeId);
 		}
 	}
 
@@ -105,71 +91,20 @@ export default class DiagramCanvas extends React.Component {
 		event.preventDefault();
 	}
 
-	zoomIn() {
-		if (this.canvasD3Layout) {
-			this.canvasD3Layout.zoomIn();
-		}
-	}
-
-	zoomOut() {
-		if (this.canvasD3Layout) {
-			this.canvasD3Layout.zoomOut();
-		}
-	}
-
-	zoomToFit() {
-		if (this.canvasD3Layout) {
-			this.canvasD3Layout.zoomToFit();
-		}
-	}
-
 	focusOnCanvas() {
 		document.getElementById("d3-svg-canvas-div").focus(); // Set focus on div so keybord events go there.
 	}
 
-	createNodeAt(operatorIdRef, label, sourceId, sourceObjectTypeId, x, y) {
-		var data = {};
-
-		if (typeof sourceId !== "undefined") {
-			data = {
-				editType: "createNode",
-				label: label,
-				offsetX: x,
-				offsetY: y,
-				sourceObjectId: sourceId,
-				sourceObjectTypeId: sourceObjectTypeId
-			};
-		} else {
-			data = {
-				editType: "createNode",
-				label: label, // label is provided for the external object model
-				operator_id_ref: operatorIdRef,
-				nodeTypeId: operatorIdRef, // TODO - Remove this when WML Canvas migrates to pipeline flow
-				offsetX: x,
-				offsetY: y
-			};
-		}
-
-		this.props.editActionHandler(data);
+	zoomIn() {
+		this.canvasD3Layout.zoomIn();
 	}
 
-	createAutoNodeAt(operatorIdRef, label, sourceId, sourceObjectTypeId) {
-		var data = {
-			editType: "createAutoNode",
-			label: label, // label is provided for the external object model
-			operator_id_ref: operatorIdRef,
-			nodeTypeId: operatorIdRef // TODO - Remove this when WML Canvas migrates to pipeline flow
-		};
-
-		this.props.editActionHandler(data);
+	zoomOut() {
+		this.canvasD3Layout.zoomOut();
 	}
 
-	createNodeFromDataAt(x, y, data) {
-		// set coordinates
-		data.offsetX = x;
-		data.offsetY = y;
-
-		this.props.editActionHandler(data);
+	zoomToFit() {
+		this.canvasD3Layout.zoomToFit();
 	}
 
 	render() {
@@ -195,11 +130,6 @@ export default class DiagramCanvas extends React.Component {
 
 DiagramCanvas.propTypes = {
 	canvas: PropTypes.object,
-	closeContextMenu: PropTypes.func.isRequired,
-	contextMenuHandler: PropTypes.func.isRequired,
-	editActionHandler: PropTypes.func.isRequired,
-	clickActionHandler: PropTypes.func.isRequired,
-	decorationActionHandler: PropTypes.func.isRequired,
 	config: PropTypes.object.isRequired,
 	children: PropTypes.element
 };

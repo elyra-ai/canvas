@@ -7,6 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
+import CanvasController from "../common-canvas-controller.js";
 import React from "react";
 import PropTypes from "prop-types";
 import { DND_DATA_TEXT } from "../../constants/common-constants.js";
@@ -19,6 +20,7 @@ class PaletteContentNode extends React.Component {
 		};
 
 		this.onDragStart = this.onDragStart.bind(this);
+		this.onDoubleClick = this.onDoubleClick.bind(this);
 	}
 
 	onDragStart(ev) {
@@ -30,12 +32,18 @@ class PaletteContentNode extends React.Component {
 			}));
 	}
 
+	onDoubleClick() {
+		if (CanvasController.createAutoNode) {
+			CanvasController.createAutoNode(this.props.nodeTemplate);
+		}
+	}
 
 	render() {
 		return (
 			<div id={this.props.nodeTemplate.id}
 				draggable="true"
 				onDragStart={this.onDragStart}
+				onDoubleClick={this.onDoubleClick}
 				className="palette-grid-node-outer"
 			>
 				<div className="palette-grid-node-inner">

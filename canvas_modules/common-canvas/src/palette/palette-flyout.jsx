@@ -33,7 +33,6 @@ class PaletteFlyout extends React.Component {
 			<div className={className}>
 				<PaletteFlyoutContent
 					paletteJSON={this.props.paletteJSON}
-					addNodeToCanvas={this.props.addNodeToCanvas}
 				/>
 			</div>
 		);
@@ -42,8 +41,7 @@ class PaletteFlyout extends React.Component {
 
 PaletteFlyout.propTypes = {
 	paletteJSON: PropTypes.object.isRequired,
-	showPalette: PropTypes.bool.isRequired,
-	addNodeToCanvas: PropTypes.func
+	showPalette: PropTypes.bool.isRequired
 };
 
 export default PaletteFlyout;

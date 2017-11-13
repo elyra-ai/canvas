@@ -48,6 +48,7 @@ import overflowIcon from "../../assets/images/canvas_toolbar_icons/overflow.svg"
 import overflowDisabledIcon from "../../assets/images/canvas_toolbar_icons/overflow_disabled.svg";
 
 import { TOOLBAR } from "../../constants/common-constants.js";
+import CanvasController from "../common-canvas-controller.js";
 
 // eslint override
 /* global window document */
@@ -290,16 +291,12 @@ class Toolbar extends React.Component {
 
 	generatePaletteIcon(actionObj, overflow) {
 		actionObj.action = "paletteOpen";
-		if (this.props.openPalette) {
-			actionObj.callback = this.props.openPalette;
-		}
+		actionObj.callback = CanvasController.openPalette;
 		let palette = this.generateEnabledActionIcon(actionObj, "palette-open-action", null, overflow);
 
 		if (this.props.paletteState) {
 			actionObj.action = "paletteClose";
-			if (this.props.closePalette) {
-				actionObj.callback = this.props.closePalette;
-			}
+			actionObj.callback = CanvasController.closePalette;
 			palette = this.generateEnabledActionIcon(actionObj, "palette-close-action", null, overflow);
 		}
 		return palette;
@@ -356,7 +353,7 @@ class Toolbar extends React.Component {
 			const actions = that.generateActionItems(
 				that.props.config,
 				displayItems,
-				that.props.toolbarMenuActionHandler,
+				CanvasController.toolbarMenuActionHandler,
 				""
 			);
 			actionContainer = (<div key={"actions-container"} id={"actions-container"} className="toolbar-items-container">
@@ -365,9 +362,9 @@ class Toolbar extends React.Component {
 		}
 
 		const zoomActionItems = [
-			{ action: "zoomIn", label: "Zoom In", enable: true, callback: this.props.zoomIn },
-			{ action: "zoomOut", label: "Zoom Out", enable: true, callback: this.props.zoomOut },
-			{ action: "zoomToFit", label: "Zoom to Fit", enable: true, callback: this.props.zoomToFit }
+			{ action: "zoomIn", label: "Zoom In", enable: true, callback: CanvasController.zoomIn },
+			{ action: "zoomOut", label: "Zoom Out", enable: true, callback: CanvasController.zoomOut },
+			{ action: "zoomToFit", label: "Zoom to Fit", enable: true, callback: CanvasController.zoomToFit }
 		];
 		const zoomContainerItems = this.generateActionItems(zoomActionItems, zoomActionItems.length, null, "");
 		const zoomContainer = (<div id="zoom-actions-container" className="toolbar-items-container">
@@ -395,12 +392,12 @@ Toolbar.propTypes = {
 	renderingEngine: PropTypes.string,
 	paletteState: PropTypes.bool,
 	paletteType: PropTypes.string,
-	closePalette: PropTypes.func,
-	openPalette: PropTypes.func,
-	zoomIn: PropTypes.func,
-	zoomOut: PropTypes.func,
-	zoomToFit: PropTypes.func,
-	toolbarMenuActionHandler: PropTypes.func,
+	// closePalette: PropTypes.func,
+	// openPalette: PropTypes.func,
+	// zoomIn: PropTypes.func,
+	// zoomOut: PropTypes.func,
+	// zoomToFit: PropTypes.func,
+	// toolbarMenuActionHandler: PropTypes.func,
 	rightFlyoutOpen: PropTypes.bool
 };
 

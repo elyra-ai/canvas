@@ -8,6 +8,7 @@
  *******************************************************************************/
 /* eslint no-shadow: ["error", { "allow": ["Node"] }] */
 
+import CanvasController from "./common-canvas-controller.js";
 import React from "react";
 import PropTypes from "prop-types";
 import { DND_DATA_TEXT } from "../constants/common-constants.js";
@@ -172,7 +173,7 @@ class Node extends React.Component {
 	}
 
 	decorationClicked(id, ev) {
-		this.props.decorationActionHandler(this.props.node, id);
+		CanvasController.decorationActionHandler(this.props.node, id);
 		ev.stopPropagation();
 	}
 
@@ -426,8 +427,7 @@ Node.propTypes = {
 	nodeActionHandler: PropTypes.func,
 	onContextMenu: PropTypes.func,
 	uiconf: PropTypes.object,
-	selected: PropTypes.bool,
-	decorationActionHandler: PropTypes.func
+	selected: PropTypes.bool
 };
 
 export default Node;

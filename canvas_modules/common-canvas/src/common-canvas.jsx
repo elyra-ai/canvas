@@ -20,18 +20,8 @@ import PaletteFlyout from "./palette/palette-flyout.jsx";
 import Toolbar from "./toolbar/toolbar.jsx";
 import ObjectModel from "./object-model/object-model.js";
 import CommandStack from "./command-stack/command-stack.js";
-import CreateNodeAction from "./command-actions/createNodeAction.js";
-import CreateAutoNodeAction from "./command-actions/createAutoNodeAction.js";
-import CreateCommentAction from "./command-actions/createCommentAction.js";
-import AddLinksAction from "./command-actions/addLinksAction.js";
-import DeleteObjectsAction from "./command-actions/deleteObjectsAction.js";
-import DeleteLinkAction from "./command-actions/deleteLinkAction.js";
-import DisconnectNodesAction from "./command-actions/disconnectNodesAction.js";
-import MoveObjectsAction from "./command-actions/moveObjectsAction.js";
-import EditCommentAction from "./command-actions/editCommentAction.js";
-import ArrangeLayoutAction from "./command-actions/arrangeLayoutAction.js";
-import constants from "../constants/common-constants.js";
 import BlankCanvasImage from "../assets/images/blank_canvas.png";
+import CanvasController from "./common-canvas-controller.js";
 
 export default class CommonCanvas extends React.Component {
 	constructor(props) {
@@ -42,33 +32,23 @@ export default class CommonCanvas extends React.Component {
 			showContextMenu: false,
 			contextMenuDef: {},
 			toolbarConfig: this.props.toolbarConfig,
-			rightFlyoutContent: this.props.rightFlyoutContent,
-			posLastClicked: { x: 0, y: 0 }
+			rightFlyoutContent: this.props.rightFlyoutContent
 		};
 
 		ObjectModel.subscribe(() => {
 			this.forceUpdate();
 		});
 
-		this.contextMenuSource = null;
+		this.openContextMenu = this.openContextMenu.bind(this);
 		this.closeContextMenu = this.closeContextMenu.bind(this);
-		this.contextMenuClicked = this.contextMenuClicked.bind(this);
+		this.isContextMenuDisplayed = this.isContextMenuDisplayed.bind(this);
 
 		this.openPalette = this.openPalette.bind(this);
 		this.closePalette = this.closePalette.bind(this);
 
-		this.addNodeToCanvas = this.addNodeToCanvas.bind(this);
+		this.initializeController = this.initializeController.bind(this);
 
-		this.zoomIn = this.zoomIn.bind(this);
-		this.zoomOut = this.zoomOut.bind(this);
-		this.zoomToFit = this.zoomToFit.bind(this);
-
-		this.editActionHandler = this.editActionHandler.bind(this);
-		this.contextMenuActionHandler = this.contextMenuActionHandler.bind(this);
-		this.contextMenuHandler = this.contextMenuHandler.bind(this);
-		this.clickActionHandler = this.clickActionHandler.bind(this);
-		this.decorationActionHandler = this.decorationActionHandler.bind(this);
-		this.toolbarMenuActionHandler = this.toolbarMenuActionHandler.bind(this);
+		this.initializeController();
 	}
 
 	componentWillReceiveProps(newProps) {
@@ -107,6 +87,36 @@ export default class CommonCanvas extends React.Component {
 				rightFlyoutContent: newProps.rightFlyoutContent
 			});
 		}
+
+		this.initializeController();
+	}
+
+	initializeController() {
+		CanvasController.setCanvasConfig({
+			enableRenderingEngine: this.props.config.enableRenderingEngine,
+			enableConnectionType: this.props.config.enableConnectionType,
+			enableNodeFormatType: this.props.config.enableNodeFormatType,
+			enableLinkType: this.props.config.enableLinkType,
+			enableInternalObjectModel: this.props.config.enableInternalObjectModel,
+			enablePaletteLayout: this.props.config.enablePaletteLayout,
+			emptyCanvasContent: this.props.config.emptyCanvasContent,
+			toolbarConfig: this.props.toolbarConfig,
+			rightFlyoutContent: this.props.rightFlyoutContent,
+			showRightFlyout: this.props.showRightFlyout,
+			closeRightFlyout: this.props.closeRightFlyout
+		});
+
+
+		CanvasController.setHandlers({
+			contextMenuHandler: this.props.contextMenuHandler,
+			contextMenuActionHandler: this.props.contextMenuActionHandler,
+			editActionHandler: this.props.editActionHandler,
+			clickActionHandler: this.props.clickActionHandler,
+			decorationActionHandler: this.props.decorationActionHandler,
+			toolbarMenuActionHandler: this.props.toolbarMenuActionHandler,
+		});
+
+		CanvasController.setCommonCanvas(this);
 	}
 
 	openPalette() {
@@ -117,6 +127,18 @@ export default class CommonCanvas extends React.Component {
 
 	closePalette() {
 		this.setState({ isPaletteOpen: false });
+	}
+
+	openContextMenu(menuDef) {
+		this.setState({ showContextMenu: true, contextMenuDef: menuDef });
+	}
+
+	closeContextMenu() {
+		this.setState({ showContextMenu: false, contextMenuDef: {} });
+	}
+
+	isContextMenuDisplayed() {
+		return this.state.showContextMenu;
 	}
 
 	zoomIn() {
@@ -131,192 +153,8 @@ export default class CommonCanvas extends React.Component {
 		this.refs.canvas.zoomToFit();
 	}
 
-	closeContextMenu() {
-		this.contextMenuSource = null;
-		this.setState({ showContextMenu: false, contextMenuDef: {} });
-	}
-
-	contextMenuClicked(action) {
-		if (action === "selectAll") { // Common Canvas provided default action
-			ObjectModel.selectAll();
-			// Set focus on canvas so keybord events go there.
-			this.refs.canvas.focusOnCanvas();
-		} else {
-			this.contextMenuActionHandler(action);
-		}
-
-		this.closeContextMenu();
-	}
-
-	addNodeToCanvas(typeId, label) {
-		return this.refs.canvas.addNodeToCanvas(typeId, label);
-	}
-
-	editActionHandler(data) {
-		if (this.props.config.enableInternalObjectModel) {
-			switch (data.editType) {
-			case "createNode": {
-				const node = ObjectModel.createNode(data);
-				const command = new CreateNodeAction(node);
-				CommandStack.do(command);
-				// need to pass the nodeid along to any this.props.editActionHandlers
-				data.nodeId = node.id;
-				break;
-			}
-			case "createAutoNode": {
-				const command = new CreateAutoNodeAction(data);
-				CommandStack.do(command);
-				break;
-			}
-			case "moveObjects": {
-				const command = new MoveObjectsAction(data);
-				CommandStack.do(command);
-				break;
-			}
-			case "editComment": {
-				// only add editComment action, if value or size of comment has changed
-				const selectedComment = ObjectModel.getComment(data.nodes[0]);
-				if (selectedComment.content !== data.label ||
-						selectedComment.height !== data.height ||
-						selectedComment.width !== data.height) {
-					const command = new EditCommentAction(data);
-					CommandStack.do(command);
-				}
-				break;
-			}
-			case "linkNodes": {
-				const linkNodesList = ObjectModel.createNodeLinks(data);
-				if (linkNodesList.length > 0) {
-					const command = new AddLinksAction(linkNodesList);
-					CommandStack.do(command);
-					data.linkIds = linkNodesList.map((link) => link.id);
-				}
-				break;
-			}
-			case "linkComment": {
-				const linkCommentList = ObjectModel.createCommentLinks(data);
-				if (linkCommentList.length > 0) {
-					const command = new AddLinksAction(linkCommentList);
-					CommandStack.do(command);
-					data.linkIds = linkCommentList.map((link) => link.id);
-
-				}
-				break;
-			}
-			case "deleteSelectedObjects": {
-				const command = new DeleteObjectsAction(data);
-				CommandStack.do(command);
-				break;
-			}
-			case "undo":
-				CommandStack.undo();
-				break;
-			case "redo":
-				CommandStack.redo();
-				break;
-			default:
-			}
-		}
-
-		if (this.props.editActionHandler) {
-			this.props.editActionHandler(data);
-		}
-	}
-
-	contextMenuActionHandler(action) {
-		if (this.props.config.enableInternalObjectModel) {
-			switch (action) {
-			case "deleteObjects": {
-				const command = new DeleteObjectsAction(this.contextMenuSource);
-				CommandStack.do(command);
-				break;
-			}
-			case "addComment": {
-				const comment = ObjectModel.createComment(this.contextMenuSource);
-				const command = new CreateCommentAction(comment);
-				CommandStack.do(command);
-				this.contextMenuSource.commentId = comment.id;
-				break;
-			}
-			case "deleteLink": {
-				const command = new DeleteLinkAction(this.contextMenuSource);
-				CommandStack.do(command);
-				break;
-			}
-			case "disconnectNode": {
-				const command = new DisconnectNodesAction(this.contextMenuSource);
-				CommandStack.do(command);
-				break;
-			}
-			case "undo":
-				CommandStack.undo();
-				break;
-			case "redo":
-				CommandStack.redo();
-				break;
-			default:
-			}
-		}
-
-		if (this.props.contextMenuActionHandler) {
-			this.props.contextMenuActionHandler(action, this.contextMenuSource);
-		}
-	}
-
-	contextMenuHandler(source) {
-		if (this.props.contextMenuHandler) {
-			this.contextMenuSource = source;
-			const menuDef = this.props.contextMenuHandler(source);
-			if (menuDef && menuDef.length > 0) {
-				this.setState({ showContextMenu: true, contextMenuDef: menuDef });
-			}
-		}
-	}
-
-	toolbarMenuActionHandler(action) {
-		const source = {
-			selectedObjectIds: ObjectModel.getSelectedObjectIds(),
-			mousePos: this.state.posLastClicked
-		};
-		if (this.props.config.enableInternalObjectModel) {
-			switch (action) {
-			case "delete": {
-				const command = new DeleteObjectsAction(source);
-				CommandStack.do(command);
-				break;
-			}
-			case "addComment": {
-				const comment = ObjectModel.createComment(source);
-				const command = new CreateCommentAction(comment);
-				CommandStack.do(command);
-				source.commentId = comment.id;
-				break;
-			}
-			case "arrangeHorizontally": {
-				const command = new ArrangeLayoutAction(constants.HORIZONTAL);
-				CommandStack.do(command);
-				break;
-			}
-			case "arrangeVertically": {
-				const command = new ArrangeLayoutAction(constants.VERTICAL);
-				CommandStack.do(command);
-				break;
-			}
-			case "undo":
-				CommandStack.undo();
-				this.canUndoRedo();
-				break;
-			case "redo":
-				CommandStack.redo();
-				this.canUndoRedo();
-				break;
-			default:
-			}
-		}
-
-		if (this.props.toolbarMenuActionHandler) {
-			this.props.toolbarMenuActionHandler(action, source);
-		}
+	focusOnCanvas() {
+		this.refs.canvas.focusOnCanvas(); // Set focus on div so keybord events go there.
 	}
 
 	canUndoRedo() {
@@ -341,36 +179,6 @@ export default class CommonCanvas extends React.Component {
 		}
 	}
 
-	clickActionHandler(source) {
-		if (source.clickType === "DOUBLE_CLICK" && source.objectType === "canvas") {
-			this.openPalette();
-		} else if (source.clickType === "SINGLE_CLICK" && source.objectType === "canvas") {
-			// Don"t clear the selection if the canvas context menu is up
-			if (!this.state.showContextMenu) {
-				ObjectModel.clearSelection();
-			}
-
-			// store last clicked position
-			if (source.clickedPos) {
-				this.setState({ posLastClicked: source.clickedPos });
-			}
-
-			// if (this.state.rightFlyoutContent && this.props.closeRightFlyout) {
-			// 	this.props.closeRightFlyout(); // Equivalent of canceling
-			// }
-		}
-
-		if (this.props.clickActionHandler) {
-			this.props.clickActionHandler(source);
-		}
-	}
-
-	decorationActionHandler(node, id) {
-		if (this.props.decorationActionHandler) {
-			this.props.decorationActionHandler(node, id);
-		}
-	}
-
 	render() {
 		let canvas = null;
 		let palette = null;
@@ -385,10 +193,7 @@ export default class CommonCanvas extends React.Component {
 			if (this.state.showContextMenu) {
 				contextMenuWrapper = (<ContextMenuWrapper
 					containingDivId={"common-canvas"}
-					mousePos={this.contextMenuSource.cmPos}
 					contextMenuDef={this.state.contextMenuDef}
-					contextMenuClicked={this.contextMenuClicked}
-					closeContextMenu={this.closeContextMenu}
 				/>);
 			}
 
@@ -397,11 +202,6 @@ export default class CommonCanvas extends React.Component {
 					ref="canvas"
 					canvas={canvasJSON}
 					config={this.props.config}
-					closeContextMenu={this.closeContextMenu}
-					contextMenuHandler={this.contextMenuHandler}
-					editActionHandler={this.editActionHandler}
-					clickActionHandler={this.clickActionHandler}
-					decorationActionHandler={this.decorationActionHandler}
 				>
 					{contextMenuWrapper}
 				</DiagramCanvasD3>);
@@ -409,11 +209,6 @@ export default class CommonCanvas extends React.Component {
 				canvas = (<DiagramCanvasLegacy
 					ref="canvas"
 					canvas={canvasJSON}
-					closeContextMenu={this.closeContextMenu}
-					contextMenuHandler={this.contextMenuHandler}
-					editActionHandler={this.editActionHandler}
-					clickActionHandler={this.clickActionHandler}
-					decorationActionHandler={this.decorationActionHandler}
 				>
 					{contextMenuWrapper}
 				</DiagramCanvasLegacy>);
@@ -424,7 +219,6 @@ export default class CommonCanvas extends React.Component {
 					palette = (<Palette
 						paletteJSON={ObjectModel.getPaletteData()}
 						showPalette={this.state.isPaletteOpen}
-						closePalette={this.closePalette}
 					/>);
 				} else {
 					if (this.state.isPaletteOpen) {
@@ -433,7 +227,6 @@ export default class CommonCanvas extends React.Component {
 					}
 					palette = (<PaletteFlyout
 						paletteJSON={ObjectModel.getPaletteData()}
-						addNodeToCanvas={this.addNodeToCanvas}
 						showPalette={this.state.isPaletteOpen}
 					/>);
 				}
@@ -446,12 +239,6 @@ export default class CommonCanvas extends React.Component {
 					renderingEngine={this.props.config.enableRenderingEngine}
 					paletteState={this.state.isPaletteOpen}
 					paletteType={this.props.config.enablePaletteLayout}
-					closePalette={this.closePalette}
-					openPalette={this.openPalette}
-					zoomIn={this.zoomIn}
-					zoomOut={this.zoomOut}
-					zoomToFit={this.zoomToFit}
-					toolbarMenuActionHandler={this.toolbarMenuActionHandler}
 					rightFlyoutOpen={this.props.showRightFlyout}
 				/>);
 			}

@@ -24,6 +24,7 @@ import {
 import CanvasUtils from "../utils/canvas-utils.js";
 import ObjectModel from "./object-model/object-model.js";
 import logger from "../utils/logger";
+import CanvasController from "./common-canvas-controller.js";
 
 const NODE_BORDER_SIZE = 2; // see common-canvas.css, .canvas-node
 // const CELL_SIZE = 48;
@@ -76,8 +77,6 @@ export default class DiagramCanvas extends React.Component {
 		this.zoomOut = this.zoomOut.bind(this);
 
 		this.canvasContextMenu = this.canvasContextMenu.bind(this);
-
-		this.createNodeFromDataAt = this.createNodeFromDataAt.bind(this);
 	}
 
 	// ----------------------------------
@@ -261,7 +260,7 @@ export default class DiagramCanvas extends React.Component {
 			zoom = ZOOM_MAX_VALUE;
 		}
 
-		this.props.editActionHandler({ editType: "zoomCanvas", value: zoom });
+		CanvasController.editActionHandler({ editType: "zoomCanvas", value: zoom });
 		this.setState({ zoom: zoom });
 	}
 
@@ -273,7 +272,7 @@ export default class DiagramCanvas extends React.Component {
 			zoom = ZOOM_MIN_VALUE;
 		}
 
-		this.props.editActionHandler({ editType: "zoomCanvas", value: zoom });
+		CanvasController.editActionHandler({ editType: "zoomCanvas", value: zoom });
 		this.setState({ zoom: zoom });
 	}
 
@@ -323,14 +322,14 @@ export default class DiagramCanvas extends React.Component {
 				var mousePos2 = this.mouseCoords(event);
 				// logger.info(targetPos);
 				// logger.info(mousePos);
-				this.createNodeAt(jsVal.operator_id_ref, jsVal.label, jsVal.sourceId, jsVal.sourceObjectTypeId,
+				CanvasController.createNodeAt(jsVal.operator_id_ref, jsVal.label, jsVal.sourceId, jsVal.sourceObjectTypeId,
 					Math.round((mousePos2.x - (NODE_WIDTH / 2)) / zoom),
 					Math.round((mousePos2.y - (NODE_HEIGHT / 2)) / zoom));
 			} else if ((jsVal.operation === "addToCanvas") || (jsVal.operation === "addTableFromConnection")) {
 				var mousePos = this.mouseCoords(event);
 				// logger.info(targetPos);
 				// logger.info("addToCanvas :"+JSON.stringify(mousePos));
-				this.createNodeFromDataAt(Math.round((mousePos.x - (NODE_WIDTH / 2)) / zoom),
+				CanvasController.createNodeFromDataAt(Math.round((mousePos.x - (NODE_WIDTH / 2)) / zoom),
 					Math.round((mousePos.y - (NODE_HEIGHT / 2)) / zoom), jsVal.data);
 			}
 		}
@@ -348,7 +347,7 @@ export default class DiagramCanvas extends React.Component {
 	}
 
 	dragStart(event) {
-		this.props.closeContextMenu();
+		CanvasController.closeContextMenu();
 
 		const selectRegion = (event.dataTransfer.getData(DND_DATA_TEXT) === "");
 
@@ -392,7 +391,7 @@ export default class DiagramCanvas extends React.Component {
 	}
 
 	canvasClicked(event) {
-		this.props.clickActionHandler({
+		CanvasController.clickActionHandler({
 			clickType: "SINGLE_CLICK",
 			objectType: "canvas",
 			selectedObjectIds: ObjectModel.getSelectedObjectIds()
@@ -400,7 +399,7 @@ export default class DiagramCanvas extends React.Component {
 	}
 
 	canvasDblClick(event) {
-		this.props.clickActionHandler({
+		CanvasController.clickActionHandler({
 			clickType: "DOUBLE_CLICK",
 			objectType: "canvas",
 			selectedObjectIds: ObjectModel.getSelectedObjectIds()
@@ -428,7 +427,7 @@ export default class DiagramCanvas extends React.Component {
 			mousePos: mousePos
 		};
 
-		this.props.contextMenuHandler(contextMenuSource);
+		CanvasController.contextMenuHandler(contextMenuSource);
 	}
 
 	canvasContextMenu(event) {
@@ -457,7 +456,7 @@ export default class DiagramCanvas extends React.Component {
 			};
 		}
 
-		this.props.contextMenuHandler(contextMenuSource);
+		CanvasController.contextMenuHandler(contextMenuSource);
 	}
 
 	// ----------------------------------
@@ -469,7 +468,7 @@ export default class DiagramCanvas extends React.Component {
 		} else if (action === "removeNode") {
 			this.removeNode(node.id);
 		} else if (action === "nodeDblClicked") {
-			this.props.clickActionHandler({
+			CanvasController.clickActionHandler({
 				clickType: "DOUBLE_CLICK",
 				objectType: "node",
 				id: node.id,
@@ -481,7 +480,7 @@ export default class DiagramCanvas extends React.Component {
 			} else {
 				ObjectModel.toggleSelection(node.id, optionalArgs.metaKey);
 			}
-			this.props.clickActionHandler({
+			CanvasController.clickActionHandler({
 				clickType: "SINGLE_CLICK",
 				objectType: "node",
 				id: node.id,
@@ -515,7 +514,7 @@ export default class DiagramCanvas extends React.Component {
 		if (action === "selected") {
 			// The event is passed as the third arg
 			ObjectModel.toggleSelection(comment.id, optionalArgs.metaKey);
-			this.props.clickActionHandler({
+			CanvasController.clickActionHandler({
 				clickType: "SINGLE_CLICK",
 				objectType: "comment",
 				id: comment.id,
@@ -523,7 +522,7 @@ export default class DiagramCanvas extends React.Component {
 			});
 		} else if (action === "editComment") {
 			// save the changed comment
-			this.props.editActionHandler({
+			CanvasController.editActionHandler({
 				editType: "editComment",
 				nodes: optionalArgs.nodes,
 				label: optionalArgs.target.value,
@@ -533,43 +532,6 @@ export default class DiagramCanvas extends React.Component {
 				offsetY: optionalArgs.y_pos
 			});
 		}
-	}
-
-	// ----------------------------------
-
-	// Editing methods
-
-	createNodeAt(operatorIdRef, label, sourceId, sourceObjectTypeId, x, y) {
-		var data = {};
-		if (typeof sourceId !== "undefined") {
-			data = {
-				editType: "createNode",
-				label: label,
-				offsetX: x,
-				offsetY: y,
-				sourceObjectId: sourceId,
-				sourceObjectTypeId: sourceObjectTypeId
-			};
-		} else {
-			data = {
-				editType: "createNode",
-				label: label, // label is provided for the external object model
-				operator_id_ref: operatorIdRef,
-				nodeTypeId: operatorIdRef, // TODO - Remove this when WML Canvas migrates to pipeline flow
-				offsetX: x,
-				offsetY: y
-			};
-		}
-
-		this.props.editActionHandler(data);
-	}
-
-	createNodeFromDataAt(x, y, data) {
-		// set coordinates
-		data.offsetX = x;
-		data.offsetY = y;
-
-		this.props.editActionHandler(data);
 	}
 
 	removeNode(nodeId) {
@@ -588,7 +550,7 @@ export default class DiagramCanvas extends React.Component {
 		this.setState({
 			sourceNodes: [],
 			targetNodes: [] });
-		this.props.editActionHandler({
+		CanvasController.editActionHandler({
 			editType: "linkNodes",
 			nodes: sources,
 			targetNodes: targets,
@@ -597,7 +559,7 @@ export default class DiagramCanvas extends React.Component {
 	}
 
 	linkCommentSelected(sources, targets) {
-		this.props.editActionHandler({
+		CanvasController.editActionHandler({
 			editType: "linkComment",
 			nodes: sources,
 			targetNodes: targets,
@@ -641,19 +603,19 @@ export default class DiagramCanvas extends React.Component {
 
 	deleteObjects(nodeIds) {
 		// logger.info("deleteObjects(): " + nodeIds);
-		this.props.editActionHandler({
+		CanvasController.editActionHandler({
 			editType: "deleteObjects", nodes: nodeIds
 		});
 	}
 
 	disconnectNodes(nodeIds) {
-		this.props.editActionHandler({
+		CanvasController.editActionHandler({
 			editType: "disconnectNodes", nodes: nodeIds
 		});
 	}
 
 	moveNodes(nodeIds, offsetX, offsetY) {
-		this.props.editActionHandler({
+		CanvasController.editActionHandler({
 			editType: "moveObjects",
 			nodes: nodeIds,
 			offsetX: offsetX,
@@ -664,7 +626,7 @@ export default class DiagramCanvas extends React.Component {
 	selectInRegion(minX, minY, maxX, maxY, zoom) {
 		const nodeWidth = Math.round(NODE_WIDTH * zoom);
 		const nodeHeight = Math.round(NODE_HEIGHT * zoom);
-		this.props.clickActionHandler({
+		CanvasController.clickActionHandler({
 			clickType: "SINGLE_CLICK",
 			objectType: "region",
 			selectedObjectIds: ObjectModel.selectInRegion(minX, minY, maxX, maxY, nodeWidth, nodeHeight)
@@ -802,7 +764,6 @@ export default class DiagramCanvas extends React.Component {
 				nodeActionHandler={this.nodeAction.bind(this, node)}
 				onContextMenu={this.objectContextMenu.bind(this, "node", node)}
 				selected={ObjectModel.isSelected(node.id)}
-				decorationActionHandler={this.props.decorationActionHandler}
 			/>);
 
 			positions[node.id] = this.getConnPoints(halfNodeWidth, halfIcon, connSize, zoom, node);
@@ -916,10 +877,5 @@ export default class DiagramCanvas extends React.Component {
 
 DiagramCanvas.propTypes = {
 	canvas: PropTypes.object,
-	closeContextMenu: PropTypes.func.isRequired,
-	contextMenuHandler: PropTypes.func.isRequired,
-	editActionHandler: PropTypes.func.isRequired,
-	clickActionHandler: PropTypes.func.isRequired,
-	decorationActionHandler: PropTypes.func.isRequired,
 	children: PropTypes.element
 };

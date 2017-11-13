@@ -1022,6 +1022,10 @@ export default class ObjectModel {
 	// Comment methods
 
 	static createComment(source) {
+		if (!source || !source.mousePos) {
+			source.mousePos = { x: 50, y: 50 }; // Comments created from toolbar
+		}
+
 		const info = {
 			id: getUUID(),
 			class_name: "canvas-comment",

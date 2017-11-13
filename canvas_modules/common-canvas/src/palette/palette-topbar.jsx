@@ -7,6 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
+import CanvasController from "../common-canvas-controller.js";
 import React from "react";
 import PropTypes from "prop-types";
 import Isvg from "react-inlinesvg";
@@ -42,7 +43,7 @@ class PaletteTopbar extends React.Component {
 	}
 
 	close(closeEvent) {
-		this.props.closeMethod(closeEvent);
+		CanvasController.closePalette(closeEvent);
 	}
 
 	gridViewSelected() {
@@ -84,8 +85,7 @@ PaletteTopbar.propTypes = {
 	showGridMethod: PropTypes.func.isRequired,
 	windowMaximizeMethod: PropTypes.func.isRequired,
 	showGrid: PropTypes.bool.isRequired,
-	mouseDownMethod: PropTypes.func.isRequired,
-	closeMethod: PropTypes.func.isRequired
+	mouseDownMethod: PropTypes.func.isRequired
 };
 
 export default PaletteTopbar;
