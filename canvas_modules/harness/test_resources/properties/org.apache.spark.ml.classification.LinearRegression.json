@@ -70,7 +70,6 @@
   ],
   "uihints": {
     "id": "org.apache.spark.ml.regression.LinearRegression",
-    "version": "1.0",
     "icon": "images/modelbuildspark.svg",
     "label": {
       "default": "Linear Regression"
@@ -363,7 +362,6 @@
     }
   ],
   "dataset_metadata": {
-    "version": "1.0",
     "fields": [
       {
         "name": "Age",

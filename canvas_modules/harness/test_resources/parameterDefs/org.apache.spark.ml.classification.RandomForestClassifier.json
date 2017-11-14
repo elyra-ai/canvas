@@ -89,7 +89,6 @@
   ],
   "uihints": {
     "id": "org.apache.spark.ml.classification.RandomForestClassifier",
-    "version": "1.0",
     "icon": "images/modelbuildspark.svg",
     "label": {
       "default": "Random Forest Classifier"
@@ -434,7 +433,6 @@
     }
   ],
   "dataset_metadata": {
-    "version": "1.0",
     "fields": [
       {
         "name": "Age",

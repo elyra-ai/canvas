@@ -181,7 +181,6 @@
     }
   ],
   "dataset_metadata": {
-    "version": "1.0",
     "fields": [
       {
         "name": "Age",

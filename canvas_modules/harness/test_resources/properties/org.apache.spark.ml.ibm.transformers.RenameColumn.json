@@ -32,7 +32,6 @@
   ],
   "uihints": {
     "id": "org.ibm.spark.ibm.transformers.RenameColumns",
-    "version": "1.0",
     "icon": "./rename.svg",
     "complex_type_info": [
       {
@@ -132,7 +131,6 @@
     }
   ],
   "dataset_metadata": {
-    "version": "1.0",
     "fields": [
       {
         "name": "Age",
