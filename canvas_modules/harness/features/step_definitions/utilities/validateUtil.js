@@ -10,6 +10,8 @@
 
 /* global browser */
 
+var nconf = require("nconf");
+
 // find the number of link events in event log
 //
 function containLinkEvent(eventLog, srcNodeId, destNodeId, eventType) {
@@ -228,6 +230,15 @@ function getNodeIdForLabel(nodeText) {
 	return result.value.substr(11);
 }
 
+function clickSVGAreaAt(xCoord, yCoord) {
+	const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
+	if (D3RenderingEngine) {
+		browser.click(".svg-area", Number(xCoord), Number(yCoord));
+	} else {
+		browser.click(".svg-canvas", Number(xCoord), Number(yCoord));
+	}
+}
+
 
 module.exports = {
 	containLinkEvent: containLinkEvent,
@@ -242,5 +253,6 @@ module.exports = {
 	getObjectModelCount: getObjectModelCount,
 	getPortLinks: getPortLinks,
 	isObjectModelEmpty: isObjectModelEmpty,
-	getNodeIdForLabel: getNodeIdForLabel
+	getNodeIdForLabel: getNodeIdForLabel,
+	clickSVGAreaAt: clickSVGAreaAt
 };

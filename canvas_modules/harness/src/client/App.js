@@ -685,7 +685,7 @@ class App extends React.Component {
 		var emptyCanvasDiv = (
 			<div>
 				<img src={BlankCanvasImage} className="empty-harness-image" />
-				<span className="empty-harness-text">Welcome to the Common Canvas Test harness.<br />Your flow is empty!</span>
+				<span className="empty-harness-text">Welcome to the Common Canvas test harness.<br />Your flow is empty!</span>
 				<span className="empty-harness-link"
 					onClick={this.handleEmptyCanvasLinkClick}
 				>Click here to take a tour</span>

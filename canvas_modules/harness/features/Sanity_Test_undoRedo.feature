@@ -27,7 +27,7 @@ Feature: Sanity_Test_undoRedo
 		Then I verify the number of nodes are 2
 
 		Then I link node 1 the "Var. File" node to node 2 the "Derive" node for link 1 on the canvas
-		Then I click undo
+		Then I press Ctrl/Cmnd+Z to Undo
 		Then I verify the number of data links are 0
 		Then I click redo
 		Then I verify the number of data links are 1
@@ -38,14 +38,14 @@ Feature: Sanity_Test_undoRedo
 		Then I click undo
 		Then I click undo
 		Then I verify the number of comments are 0
-		Then I click redo
+		Then I press Ctrl/Cmnd+Shift+Z to Redo
 		Then I click redo
 		Then I verify the number of comments are 1
 
 		Then I disconnect links for node 1 a "Var. File" on the canvas
 		Then I click undo
 		Then I verify the number of data links are 1
-		Then I click redo
+		Then I press Ctrl/Cmnd+Y to Redo
 		Then I verify the number of data links are 0
 
 		Then I move node 1 a "Var. File" node onto the canvas by 50, 50
