@@ -317,7 +317,6 @@ polyline.link-arrow-head {
   font-family: IBMHLVlight;
   position: absolute;
   z-index: 2;
-	overflow-y: auto;
 }
 
 .context-menu-popover.popover>.arrow{
