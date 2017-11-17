@@ -333,11 +333,16 @@ function _getUserInput(userInput, param, cellCoordinates) {
 	const paramInput = userInput[param];
 	if (PropertyUtils.toType(paramInput) === "array" &&
 			PropertyUtils.toType(cellCoordinates) === "object" &&
-			PropertyUtils.toType(cellCoordinates.rowIndex) === "number" &&
-			PropertyUtils.toType(cellCoordinates.colIndex) === "number" &&
-			paramInput.length > cellCoordinates.rowIndex &&
-			paramInput[cellCoordinates.rowIndex].length > cellCoordinates.colIndex) {
-		return paramInput[cellCoordinates.rowIndex][cellCoordinates.colIndex];
+			PropertyUtils.toType(cellCoordinates.colIndex) === "number") {
+		if (PropertyUtils.toType(cellCoordinates.rowIndex) === "number" &&
+				paramInput.length > cellCoordinates.rowIndex &&
+				paramInput[cellCoordinates.rowIndex].length > cellCoordinates.colIndex) {
+			// Tables have rows and columns
+			return paramInput[cellCoordinates.rowIndex][cellCoordinates.colIndex];
+		} else if (paramInput.length > cellCoordinates.colIndex) {
+			// Plain structures have only columns
+			return paramInput[cellCoordinates.colIndex];
+		}
 	}
 	return paramInput;
 }

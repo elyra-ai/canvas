@@ -9,9 +9,9 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { ToggleButton, Icon } from "ap-components-react/dist/ap-components-react";
+import { Slider, Icon } from "ap-components-react/dist/ap-components-react";
 
-export default class CustomCtrlToggle extends React.Component {
+export default class CustomSliderCtrl extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -25,13 +25,16 @@ export default class CustomCtrlToggle extends React.Component {
 		return this.state.controlValue;
 	}
 
-	validateInput() {
-		this.props.condition.validateCustomControl(this.props.parameter);
-	}
-
-	handleChange(evt) {
-		this.setState({ controlValue: evt.target.checked });
-		this.props.updateControlValue(this.props.parameter, evt.target.checked);
+	handleChange(evt, val) {
+		var message;
+		if (parseInt(val, 10) > 60 && parseInt(val, 10) <= 90) {
+			message = { type: "warning", text: "Slider greater than 60" };
+		} else if (parseInt(val, 10) > 90) {
+			message = { type: "error", text: "Slider greater than 90" };
+		}
+		this.props.condition.updateValidationErrorMessage(this.props.parameter, message);
+		this.setState({ controlValue: val });
+		this.props.updateControlValue(this.props.parameter, val);
 	}
 	render() {
 		const message = this.props.condition.retrieveValidationErrorMessage(this.props.parameter);
@@ -45,36 +48,32 @@ export default class CustomCtrlToggle extends React.Component {
 				icon = (<Icon type="error-o" />);
 			}
 		}
-		const state = this.props.condition.getControlState(this.props.parameter);
-		var visibility;
-		var disabled = false;
-		if (state === "hidden") {
-			visibility = { visibility: "hidden" };
-		} else if (state === "disabled") {
-			disabled = true;
-		}
 		return (
-			<div style={visibility}>
-				<div className="custom-toggle" >
-					<ToggleButton
-						disabled={disabled}
-						id={this.props.parameter}
-						checked={this.state.controlValue}
-						onChange={this.handleChange}
-					/>
-					<div className="text">Toggle</div>
+			<div>
+				<div className="custom-slider">
+					<div className="slider">
+						<Slider
+							onChange={this.handleChange}
+							start={this.state.controlValue}
+							lower={0}
+							upper={100}
+							step={1}
+						/>
+					</div>
 					<div className="icon">
 						{icon}
 					</div>
 				</div>
-				{messageText}
+				<div style={{ "marginTop": "-15px" }}>
+					{messageText}
+				</div>
 			</div>
 		);
 	}
 }
 
-CustomCtrlToggle.propTypes = {
-	value: PropTypes.bool,
+CustomSliderCtrl.propTypes = {
+	value: PropTypes.string,
 	parameter: PropTypes.string.isRequired,
 	updateControlValue: PropTypes.func.isRequired,
 	condition: PropTypes.object

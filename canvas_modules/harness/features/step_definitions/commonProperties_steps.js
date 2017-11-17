@@ -481,32 +481,6 @@ module.exports = function() {
 		closeButton.click();
 	});
 
-	this.Then(/^I click on toggle (\d+)$/, function(toggle) {
-		var toggleBtn = browser.$$(".custom-toggle")[toggle].$$("div")[0];
-		toggleBtn.click();
-	});
-
-	this.Then("I click on slider", function() {
-		var sliderInput = browser.$(".text--slider");
-		// needed since screen sizes can be different
-		for (var cntr = 1; cntr < 200; cntr++) {
-			browser.leftClick(".noUi-origin", 15, 2);
-			var value = parseInt(sliderInput.getValue(), 10);
-			if (value >= 65) {
-				return;
-			}
-		}
-	});
-
-	this.Then("I verify custom panel", function() {
-		var lastEventLog = getLastEventLogData();
-		// Don't know the exact number but the slider value should be 65 or more
-		expect(65).toBeLessThanOrEqual(parseInt(lastEventLog.data.form.custom_slider, 10));
-		expect(false).toEqual(lastEventLog.data.form.custom_toggle);
-		// expect 2 error messages from custom panels
-		expect(2).toEqual(lastEventLog.data.messages.length);
-	});
-
 	this.Then("I click on modal OK button", function() {
 		var okButton = getPropertiesApplyButton();
 		okButton.click();
@@ -519,6 +493,7 @@ module.exports = function() {
 		}
 		browser.timeouts("script", 3000);
 		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
+		// console.log(eventLog.value);
 		var eventLogJSON = JSON.parse(eventLog.value);
 		var lastEventLog = eventLogJSON[eventLogJSON.length - message];
 		// try again if data isn't found

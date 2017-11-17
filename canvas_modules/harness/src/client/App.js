@@ -27,6 +27,7 @@ import NodeToForm from "./NodeToForm/node-to-form";
 
 import CustomSliderPanel from "./components/custom-panels/CustomSliderPanel";
 import CustomTogglePanel from "./components/custom-panels/CustomTogglePanel";
+import CustomMapPanel from "./components/custom-panels/CustomMapPanel";
 
 import BlankCanvasImage from "../../assets/images/blank_canvas.png";
 
@@ -727,7 +728,7 @@ class App extends React.Component {
 				containerType={this.state.propertiesContainerType === FLYOUT ? CUSTOM : this.state.propertiesContainerType}
 				applyLabel="Apply"
 				rejectLabel="Reject"
-				customPanels={[CustomSliderPanel, CustomTogglePanel]}
+				customPanels={[CustomSliderPanel, CustomTogglePanel, CustomMapPanel]}
 				rightFlyout={this.state.propertiesContainerType === FLYOUT}
 			/>);
 

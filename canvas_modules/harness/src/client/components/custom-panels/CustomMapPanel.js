@@ -9,12 +9,13 @@
 
 /* eslint-disable no-empty-function */
 import React from "react";
-import CustomSliderCtrl from "./CustomSliderCtrl";
+import CustomMapCtrl from "./CustomMapCtrl";
 
-class CustomSliderPanel {
+class CustomMapPanel {
 	static id() {
-		return "custom-slider-panel";
+		return "custom-map-panel";
 	}
+
 	constructor(parameters, valueAccessor, updateControlValue, datarecordMetadata, condition) {
 		this.parameters = parameters;
 		this.valueAccessor = valueAccessor;
@@ -26,7 +27,7 @@ class CustomSliderPanel {
 	renderPanel() {
 		const controlId = this.parameters[0];
 		return (
-			<CustomSliderCtrl
+			<CustomMapCtrl
 				key={controlId}
 				ref={controlId}
 				parameter={controlId}
@@ -38,4 +39,4 @@ class CustomSliderPanel {
 	}
 }
 
-export default CustomSliderPanel;
+export default CustomMapPanel;

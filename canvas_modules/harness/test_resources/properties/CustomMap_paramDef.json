@@ -1,0 +1,186 @@
+{
+  "current_parameters": {
+    "text_field": "",
+    "map_checkbox": false,
+    "custom_map_info": [37.5, 238, 9]
+  },
+  "complex_types": [
+    {
+      "id": "map_info",
+      "parameters": [
+        {
+          "id": "lat",
+          "type": "double"
+        },
+        {
+          "id": "lng",
+          "type": "double"
+        },
+        {
+          "id": "zoom",
+          "type": "integer"
+        }
+      ]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "text_field",
+      "type": "string"
+    },
+    {
+      "id": "map_checkbox",
+      "type": "boolean"
+    },
+    {
+      "id": "custom_map_info",
+      "type": "map_info",
+      "default": [37.5, 238, 9]
+    }
+  ],
+  "uihints": {
+    "id": "ibm.Custom",
+    "icon": "images/custom.svg",
+    "label": {
+      "default": "Custom Map Panel"
+    },
+    "description": {
+      "default": "Parameter def for a custom map panel"
+    },
+    "complex_type_info": [
+      {
+        "complex_type_ref": "map_info",
+        "parameters": [
+          {
+            "parameter_ref": "lat",
+            "label": {
+              "default": "Latitude"
+            }
+          },
+          {
+            "parameter_ref": "lng",
+            "label": {
+              "default": "Longitude"
+            }
+          },
+          {
+            "parameter_ref": "zoom",
+            "label": {
+              "default": "Zoom"
+            }
+          }
+        ]
+      }
+    ],
+    "parameter_info": [
+      {
+        "parameter_ref": "text_field",
+        "label": {
+          "default": "Enter a view name"
+        },
+        "description": {
+          "default": "Enter a name for the map view"
+        }
+      },
+      {
+        "parameter_ref": "map_checkbox",
+        "label": {
+          "default": "Show map"
+        },
+        "description": {
+          "default": "Select to show a map control"
+        }
+      },
+      {
+        "parameter_ref": "custom_map_info",
+        "label": {
+          "default": "Map parameters"
+        },
+        "description": {
+          "default": "Latitude, longitude, and zoom setting"
+        }
+      }
+    ],
+    "group_info": [
+      {
+        "id": "map-panel",
+        "label": {
+          "default": "Map Panel"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "text_field",
+            "type": "controls",
+            "parameter_refs": [
+              "text_field",
+              "map_checkbox"
+            ]
+          },
+          {
+            "id": "custom-map-panel",
+            "type": "customPanel",
+            "parameter_refs": [
+              "custom_map_info"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "conditions": [
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "custom_map_info[2]",
+          "message": {
+            "default": "Map zoom too wide, please decrease"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "custom_map_info[2]",
+            "op": "greaterThan",
+            "value": 8
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "text_field",
+          "message": {
+            "default": "A view name is required"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "text_field",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "custom_map_info"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "map_checkbox",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    }
+  ],
+  "dataset_metadata": {
+    "fields": [
+    ]
+  }
+}

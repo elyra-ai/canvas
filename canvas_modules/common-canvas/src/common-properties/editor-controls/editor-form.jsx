@@ -94,6 +94,7 @@ export default class EditorForm extends React.Component {
 		this.updateValidationErrorMessage = this.updateValidationErrorMessage.bind(this);
 		this.retrieveValidationErrorMessage = this.retrieveValidationErrorMessage.bind(this);
 		this.validateChildRefs = this.validateChildRefs.bind(this);
+		this.extractValidationDefinitions = this.extractValidationDefinitions.bind(this);
 
 		this.getControlValues = this.getControlValues.bind(this);
 		this.getSubControlValues = this.getSubControlValues.bind(this);
@@ -1118,20 +1119,26 @@ export default class EditorForm extends React.Component {
 		});
 	}
 
-	validateCustomControl(controlName, dataModel) {
-		this._validateVisible(dataModel);
-		this._validateEnabled(dataModel);
+	validateCustomControl(controlName, dataModel, cellCoords) {
+		this.validateConditions(dataModel, cellCoords);
 		var controlValidation = DEFAULT_VALIDATION_MESSAGE;
 		const control = {
 			name: controlName,
 			controlType: "custom"
 		};
 		if (this.validationDefinitions) {
-			// get validation for this parameter
-			const validations = this.validationDefinitions[controlName];
+			// Retrieve validations for this parameter
+			const validations = this.extractValidationDefinitions(controlName);
 			if (validations) {
+				let colIndex;
+				let rowIndex;
+				if (cellCoords) {
+					rowIndex = cellCoords.rowIndex;
+					colIndex = cellCoords.colIndex;
+				}
 				for (const validation of validations) {
-					const result = UiConditions.evaluateInput(validation.definition, this.getControlValues(true), control, dataModel);
+					const result = UiConditions.evaluateInput(validation.definition, this.getControlValues(true),
+						control, dataModel, this.state.requiredParameters, rowIndex, colIndex);
 					if (typeof result === "object") {
 						controlValidation = result;
 					}
@@ -1141,6 +1148,19 @@ export default class EditorForm extends React.Component {
 		if (controlValidation) {
 			this.updateValidationErrorMessage(controlName, controlValidation);
 		}
+	}
+
+	extractValidationDefinitions(controlName) {
+		let retVal = [];
+		for (const validationKey in this.validationDefinitions) {
+			if (this.validationDefinitions[validationKey].length > 0) {
+				const baseName = this._getBaseParam(validationKey);
+				if (baseName === controlName) {
+					retVal = retVal.concat(this.validationDefinitions[validationKey]);
+				}
+			}
+		}
+		return retVal;
 	}
 
 	validateConditions(dataModel, cellCoords) {

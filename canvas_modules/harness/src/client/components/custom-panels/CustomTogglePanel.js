@@ -9,7 +9,7 @@
 
 /* eslint-disable no-empty-function */
 import React from "react";
-import CustomCtrlToggle from "./CustomCtrlToggle";
+import CustomToggleCtrl from "./CustomToggleCtrl";
 
 class CustomTogglePanel {
 	static id() {
@@ -26,7 +26,7 @@ class CustomTogglePanel {
 	renderPanel() {
 		const controlId = this.parameters[0];
 		return (
-			<CustomCtrlToggle
+			<CustomToggleCtrl
 				key={controlId}
 				ref={controlId}
 				parameter={controlId}
