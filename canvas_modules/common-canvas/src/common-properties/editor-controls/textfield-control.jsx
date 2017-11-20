@@ -22,6 +22,7 @@ export default class TextfieldControl extends EditorControl {
 		};
 		this.getControlValue = this.getControlValue.bind(this);
 		this.handleChange = this.handleChange.bind(this);
+		this.keyPress = this.keyPress.bind(this);
 	}
 
 	handleChange(evt) {
@@ -34,6 +35,13 @@ export default class TextfieldControl extends EditorControl {
 
 	getControlValue() {
 		return this.state.controlValue;
+	}
+
+	keyPress(e) {
+		if (e.keyCode === 13) {
+			// See: https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/819
+			e.preventDefault();
+		}
 	}
 
 	render() {
@@ -74,6 +82,7 @@ export default class TextfieldControl extends EditorControl {
 						disabledPlaceholderAnimation
 						placeholder={this.props.control.additionalText}
 						onChange={this.handleChange}
+						onKeyDown={this.keyPress}
 						value={cellvalue}
 						maxCount={displayedCharLimit}
 						maxLength={charLimit}
