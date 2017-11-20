@@ -9,7 +9,6 @@
 
 .common-canvas_tooltip {
 	font-size: .75rem;
-	width: 300px;
 	position: fixed;
 	padding: 5px 10px;
 	background-color: #F9F9FB;
@@ -20,19 +19,44 @@
 	text-align: center;
 	z-index: 8000;
 	pointer-events: none;
-	transition: opacity .2s ease-in-out, visibility .2s ease-in-out, transform .2s cubic-bezier(.71, 1.7, .77, 1.24);
-	transform: scaleX(1) translate3d(0, -22px, 0) rotate(0deg);
+	transition: opacity .1s ease-in-out, visibility .1s ease-in-out, transform .1s cubic-bezier(.71, 1.7, .77, 1.24);
+}
+
+.common-canvas_tooltip[direction=right] {
+	transform: translate3d(-22px, 0, 0);
+}
+
+.common-canvas_tooltip[direction=top] {
+	transform: translate3d(0, 22px, 0);
+}
+
+.common-canvas_tooltip[direction=left] {
+	transform: translate3d(22px, 0, 0);
+}
+
+.common-canvas_tooltip[direction=bottom] {
+	transform: translate3d(0, -22px, 0);
 }
 
 .common-canvas_tooltip svg {
 	z-index: 8000;
-	transform: scaleX(1) translate3d(0, -8px, 0) rotate(90deg);
-
 	position: absolute;
 	width: 10px;
 	height: 14px;
-	top: -2px;
 }
+
+.common-canvas_tooltip[direction=top] svg {
+	transform: rotate(-90deg);
+}
+
+.common-canvas_tooltip[direction=left] svg {
+	transform: rotate(180deg);
+}
+
+.common-canvas_tooltip[direction=bottom] svg {
+	transform: rotate(90deg);
+}
+
 
 .common-canvas_tooltip svg polyline{
 	fill: #F9F9FB;
