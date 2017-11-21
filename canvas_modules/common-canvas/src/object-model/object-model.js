@@ -264,7 +264,7 @@ const links = (state = [], action) => {
 		action.data.selectedObjectIds.forEach((objId, i) => {
 			createdLinks.push({
 				id: action.data.linkIds[i],
-				class_name: "canvas-comment-link",
+				class_name: "d3-comment-link",
 				srcNodeId: action.data.id,
 				trgNodeId: action.data.selectedObjectIds[i],
 				type: "commentLink"
@@ -279,7 +279,7 @@ const links = (state = [], action) => {
 	case "ADD_AUTO_NODE": {
 		var newAutoLink = {
 			id: action.linkId,
-			class_name: "canvas-data-link",
+			class_name: "d3-data-link",
 			srcNodeId: action.data.srcNode.id,
 			trgNodeId: action.data.newNode.id,
 			type: "nodeLink"
@@ -843,7 +843,7 @@ export default class ObjectModel {
 			node.type = nodeType.type;
 			node.operator_id_ref = nodeType.operator_id_ref;
 			node.image = nodeType.image;
-			node.class_name = "canvas-node";
+			node.class_name = "d3-node-body";
 			node.input_ports = nodeType.input_ports || [];
 			node.output_ports = nodeType.output_ports || [];
 			node.x_pos = data.offsetX;
@@ -1028,10 +1028,10 @@ export default class ObjectModel {
 
 		const info = {
 			id: getUUID(),
-			class_name: "canvas-comment",
-			content: " ",
-			height: 32,
-			width: 128,
+			class_name: "d3-comment-rect",
+			content: "",
+			height: 42,
+			width: 175,
 			x_pos: source.mousePos.x,
 			y_pos: source.mousePos.y,
 			linkIds: [],
@@ -1104,7 +1104,7 @@ export default class ObjectModel {
 					const info = {};
 					info.id = getUUID();
 					info.type = "nodeLink";
-					info.class_name = "canvas-data-link";
+					info.class_name = "d3-data-link";
 					info.srcNodeId = srcInfo.id;
 					info.srcNodePortId = srcInfo.portId;
 					info.trgNodeId = trgInfo.id;
@@ -1134,7 +1134,7 @@ export default class ObjectModel {
 					const info = {};
 					info.id = getUUID();
 					info.type = "commentLink";
-					info.class_name = "canvas-comment-link";
+					info.class_name = "d3-comment-link";
 					info.srcNodeId = srcNodeId;
 					info.trgNodeId = trgNodeId;
 					linkCommentList.push(info);
@@ -1404,6 +1404,27 @@ export default class ObjectModel {
 		this.setSelections(toggleSelections);
 
 		return this.getSelectedObjectIds();
+	}
+
+	static selectInRegion(minX, minY, maxX, maxY) {
+		var regionSelections = [];
+		for (const node of this.getNodes()) {
+			if (minX < node.x_pos + node.width &&
+					maxX > node.x_pos &&
+					minY < node.y_pos + node.height &&
+					maxY > node.y_pos) {
+				regionSelections.push(node.id);
+			}
+		}
+		for (const comment of this.getComments()) {
+			if (minX < comment.x_pos + comment.width &&
+					maxX > comment.x_pos &&
+					minY < comment.y_pos + comment.height &&
+					maxY > comment.y_pos) {
+				regionSelections.push(comment.id);
+			}
+		}
+		this.setSelections(regionSelections);
 	}
 
 	static findNodesInSubGraph(startNodeId, endNodeId, selection) {

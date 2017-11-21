@@ -1,0 +1,147 @@
+/*******************************************************************************
+ * Licensed Materials - Property of IBM
+ * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ *
+ * Note to U.S. Government Users Restricted Rights:
+ * Use, duplication or disclosure restricted by GSA ADP Schedule
+ * Contract with IBM Corp.
+ *******************************************************************************/
+
+/* Node styles */
+
+.canvas-node {
+  cursor: 'move';
+  border: 2px solid transparent;
+  /* Prevent elements from being selectable */
+  /* This stops it being dragged incorrectly.*/
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+.canvas-node:focus {
+  outline: 1px dotted #9D005C;
+}
+
+.canvas-node.selected {
+  border: 2px dashed #60C3B9;
+}
+
+.canvas-node .node-icon {
+  display: block;
+  margin: auto;
+}
+
+.canvas-node .connector {
+}
+
+.canvas-node p {
+  font-family: IBMHLVRoman;
+  font-size: 10pt;
+  white-space: nowrap;
+  color: rgb(0,0,0);
+  text-align: center;
+}
+
+.node-circle{
+
+}
+.node-inner-circle{
+
+}
+
+/* Comment styles */
+
+.canvas-comment {
+  background-color: #ffff99;
+  color: #000000;
+  cursor: 'move';
+  border: 2px solid transparent;
+  /* Prevent elements from being selectable */
+  /* This stops it being dragged incorrectly. */
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+
+	/* For saved canvas documents when using the canvas-comment class name */
+	fill: #FFFFFF;
+	stroke: #C0BFC0;
+	stroke-width: 1;
+}
+
+.canvas-comment:focus {
+  outline: 1px dotted #9D005C;
+}
+
+.canvas-comment.selected {
+  border: 2px dashed #60C3B9;
+}
+
+.comment-box{
+
+}
+.comment-inner-box{
+
+}
+
+.canvas-link {
+  border: 0;
+  margin: 0;
+  /* Prevent elements from being selectable */
+  /* This stops it being dragged incorrectly.*/
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+.canvas-data-link {
+  stroke: black;
+  fill: none;
+  stroke-width: 2;
+}
+
+.canvas-comment-link {
+  stroke: gray;
+  fill: none;
+  stroke-dasharray: 7.3;
+}
+
+.canvas-object-link {
+	stroke: black;
+	fill: none;
+	stroke-dasharray: 5.5;
+}
+
+.canvas-link {
+  border: 0;
+   margin: 0;
+  /* Prevent elements from being selectable */
+  /* This stops it being dragged incorrectly.*/
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+.canvas-background-link {
+	stroke: white;
+	fill: none;
+	stroke-width: 10
+}
+
+.selectLineStyle {
+	stroke: gray;
+	fill: none;
+	stroke-dasharray: 2.2;
+}
+
+polyline.link-arrow-head {
+	stroke-dasharray: 0;
+}

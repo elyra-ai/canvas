@@ -470,6 +470,10 @@ class Comment extends React.Component {
 			? this.props.comment.class_name
 			: "canvas-comment";
 
+		if (className === "d3-canvas-comment") {
+			className = "canvas-comment";
+		}
+
 		if (this.props.selected) {
 			className += " selected";
 		}

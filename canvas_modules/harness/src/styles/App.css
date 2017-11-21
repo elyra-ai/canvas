@@ -387,19 +387,19 @@
 }
 
 /* Override common-canvas styles with custom colors for customColorCanvas.json */
-.canvas-data-link.error {
+.d3-data-link.error {
   stroke: #FF4500;
 }
 
-.canvas-data-link.warning {
+.d3-data-link.warning {
   stroke: #FFFF00;
 }
 
-.canvas-data-link.okay {
+.d3-data-link.okay {
   stroke: #008000;
 }
 
-.canvas-object-link.blue {
+.d3-object-link.blue {
   stroke: #0000FF;
 }
 

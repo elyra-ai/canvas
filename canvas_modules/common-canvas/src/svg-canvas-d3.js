@@ -605,7 +605,7 @@ export default class CanvasD3Layout {
 			if (Math.abs(this.region.width) > 5 &&
 					Math.abs(this.region.height) > 5) {
 				var { startX, startY, width, height } = this.getRegionDimensions();
-				this.selectInRegion(startX, startY, startX + width, startY + height);
+				ObjectModel.selectInRegion(startX, startY, startX + width, startY + height);
 				CanvasController.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "region", selectedObjectIds: ObjectModel.getSelectedObjectIds() });
 			} else {
 				CanvasController.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "canvas", selectedObjectIds: ObjectModel.getSelectedObjectIds() });
@@ -634,27 +634,6 @@ export default class CanvasD3Layout {
 				CanvasController.editActionHandler({ editType: "zoomCanvas", value: d3.event.transform.k });
 			}
 		}
-	}
-
-	selectInRegion(minX, minY, maxX, maxY) {
-		var regionSelections = [];
-		for (const node of this.canvasJSON.nodes) {
-			if (minX < node.x_pos + node.width &&
-					maxX > node.x_pos &&
-					minY < node.y_pos + node.height &&
-					maxY > node.y_pos) {
-				regionSelections.push(node.id);
-			}
-		}
-		for (const comment of this.canvasJSON.comments) {
-			if (minX < comment.x_pos + comment.width &&
-					maxX > comment.x_pos &&
-					minY < comment.y_pos + comment.height &&
-					maxY > comment.y_pos) {
-				regionSelections.push(comment.id);
-			}
-		}
-		ObjectModel.setSelections(regionSelections);
 	}
 
 	// Returns the dimensions in SVG coordinates of the canvas area. This is
@@ -997,14 +976,14 @@ export default class CanvasD3Layout {
 						if (this.layout.nodeShape === "port-arcs") {
 							d3.select(`#node_grp_${d.id}`).select(`#node_body_${d.id}`)
 								.attr("d", (cd) => this.getNodeShapePath(cd))
-								.attr("class", this.layout.cssNodeBodyOutline);
+								.attr("class", (cd) => this.getNodeBodyClass(cd));
 						} else {
 							d3.select(`#node_grp_${d.id}`).select(`#node_body_${d.id}`)
 								.attr("width", (cd) => cd.width)
 								.attr("height", (cd) => cd.height)
 								.attr("x", 0)
 								.attr("y", 0)
-								.attr("class", this.layout.cssNodeBodyOutline);
+								.attr("class", (cd) => this.getNodeBodyClass(cd));
 						}
 
 						// Input ports
@@ -1479,22 +1458,24 @@ export default class CanvasD3Layout {
 				}
 			});
 
-		this.canvas.selectAll("." + this.layout.cssNewConnectionArrow)
-			.data(this.drawingNewLinkArray)
-			.enter()
-			.append("path")
-			.attr("d", (d) => this.getArrowHead(d))
-			.attr("class", this.layout.cssNewConnectionArrow)
-			.attr("linkType", linkType)
-			.on("mouseup", () => {
-				this.stopPropagationAndPreventDefault();
-				var trgNode = this.getNodeAtMousePos();
-				if (trgNode !== null) {
-					this.completeNewLink(trgNode);
-				} else {
-					this.stopDrawingNewLink();
-				}
-			});
+		if (this.layout.commentLinkArrowHead) {
+			this.canvas.selectAll("." + this.layout.cssNewConnectionArrow)
+				.data(this.drawingNewLinkArray)
+				.enter()
+				.append("path")
+				.attr("d", (d) => this.getArrowHead(d))
+				.attr("class", this.layout.cssNewConnectionArrow)
+				.attr("linkType", linkType)
+				.on("mouseup", () => {
+					this.stopPropagationAndPreventDefault();
+					var trgNode = this.getNodeAtMousePos();
+					if (trgNode !== null) {
+						this.completeNewLink(trgNode);
+					} else {
+						this.stopDrawingNewLink();
+					}
+				});
+		}
 	}
 
 	completeNewLink(trgNode) {
@@ -1855,7 +1836,7 @@ export default class CanvasD3Layout {
 
 				// Clip rectangle for text
 				d3.select(`#comment_clip_rect_${d.id}`)
-					.attr("height", d.height)
+					.attr("height", d.height - (2 * that.layout.commentHeightPadding))
 					.attr("width", d.width - (2 * that.layout.commentWidthPadding))
 					.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
 
@@ -1863,7 +1844,7 @@ export default class CanvasD3Layout {
 				d3.select(`#comment_box_${d.id}`)
 					.attr("height", d.height)
 					.attr("width", d.width)
-					.attr("class", d.class_name || "canvas-comment") // Use common-canvas.css style since that is the default.
+					.attr("class", (cd) => that.getCommentRectClass(cd))
 					.datum((cd) => that.getComment(cd.id)) // Set the __data__ to the updated data
 					.each(function(cd) {
 						if (cd.customAttrs) {
@@ -1877,8 +1858,7 @@ export default class CanvasD3Layout {
 				// Comment text
 				d3.select(`#comment_text_${d.id}`)
 					.datum((cd) => that.getComment(cd.id)) // Set the __data__ to the updated data
-					.style("stroke", that.editingCommentId === d.id ? "transparent" : null) // Cancel the setting of stroke to null if not editing
-					.style("fill", that.editingCommentId === d.id ? "transparent" : null) // Cancel the setting of fill to null if not editing
+					.attr("beingedited", that.editingCommentId === d.id ? "yes" : "no") // Use the beingedited css style to make text transparent
 					.each(function(cd) {
 						var textObj = d3.select(this);
 						textObj.selectAll("tspan").remove();
@@ -1955,14 +1935,13 @@ export default class CanvasD3Layout {
 					that.stopPropagationAndPreventDefault();
 
 					d3.select(`#comment_text_${d.id}`) // Make SVG text invisible when in edit mode.
-						.style("stroke", "transparent")
-						.style("fill", "transparent");
+						.attr("beingedited", "yes");
 
 					var datum = d;
 					var id = d.id;
-					var width = d.width - (2 * that.layout.commentWidthPadding);
+					var width = d.width;
 					var height = d.height;
-					var xPos = d.x_pos + that.layout.commentWidthPadding;
+					var xPos = d.x_pos;
 					var yPos = d.y_pos;
 					var content = d.content;
 
@@ -2042,7 +2021,7 @@ export default class CanvasD3Layout {
 				.attr("height", (d) => d.height)
 				.attr("x", 0)
 				.attr("y", 0)
-				.attr("class", (d) => d.class_name || "canvas-comment") // Use common-canvas.css style since that is the default.
+				.attr("class", (d) => this.getCommentRectClass(d))
 				.each(function(d) {
 					if (d.customAttrs) {
 						var imageObj = d3.select(this);
@@ -2059,13 +2038,15 @@ export default class CanvasD3Layout {
 				.append("rect")
 				.attr("id", (d) => `comment_clip_rect_${d.id}`)
 				.attr("width", (d) => d.width - (2 * that.layout.commentWidthPadding))
-				.attr("height", (d) => d.height)
+				.attr("height", (d) => d.height - (2 * that.layout.commentHeightPadding))
 				.attr("x", 0 + that.layout.commentWidthPadding)
-				.attr("y", 0);
+				.attr("y", 0 + that.layout.commentHeightPadding);
 
 			// Comment text
 			newCommentGroups.append("text")
 				.attr("id", (d) => `comment_text_${d.id}`)
+				.attr("class", "d3-comment-text")
+				.attr("beingedited", "no")
 				.each(function(d) {
 					var textObj = d3.select(this);
 					that.displayWordWrappedText(textObj, d.content, d.width - (2 * that.layout.commentWidthPadding));
@@ -2073,7 +2054,7 @@ export default class CanvasD3Layout {
 				.attr("clip-path", (d) => `url(#comment_clip_path_${d.id})`)
 				.attr("xml:space", "preserve")
 				.attr("x", 0 + that.layout.commentWidthPadding)
-				.attr("y", 0);
+				.attr("y", 0 + that.layout.commentHeightPadding);
 
 			// Halo
 			if (this.layout.connectionType === "halo") {
@@ -2135,9 +2116,9 @@ export default class CanvasD3Layout {
 				editType: "editComment",
 				nodes: [textArea.getAttribute("data-nodeId")],
 				label: textArea.value,
-				width: this.removePx(textArea.style.width) + (2 * this.layout.commentWidthPadding),
+				width: this.removePx(textArea.style.width),
 				height: this.removePx(textArea.style.height),
-				offsetX: this.removePx(textArea.style.left) - this.layout.commentWidthPadding,
+				offsetX: this.removePx(textArea.style.left),
 				offsetY: this.removePx(textArea.style.top)
 			};
 			this.consoleLog("editActionHandler - editComment");
@@ -2287,11 +2268,11 @@ export default class CanvasD3Layout {
 	displayWordWrappedText(textObj, text, width) {
 		// Create a dummy tspan for use in calculating display lengths for text.
 		// This will also be used by displayLinesAsTspan() to display the first line of text.
-		var tspan = this.createTspan(" ", 1, "d3-comment-display", textObj);
+		var tspan = this.createTspan(" ", 1, "d3-comment-text-tspan", textObj);
 		var lines = this.splitOnLineBreak(text);
 		lines = this.splitLinesOnWords(lines, width, tspan);
 
-		this.displayLinesAsTspan(lines, textObj, tspan);
+		this.displayLinesAsTspan(lines, "d3-comment-text-tspan", textObj, tspan);
 	}
 
 	// Returns an array of lines which is the text passed in broken up by
@@ -2464,12 +2445,12 @@ export default class CanvasD3Layout {
 	// Displays the array of lines of text passed in as tspans within the
 	// text object passed in. Uses the tspan passed in for the first line since
 	// that has already been created.
-	displayLinesAsTspan(lines, textObj, tspan) {
+	displayLinesAsTspan(lines, className, textObj, tspan) {
 		lines.forEach((line, i) => {
 			if (i === 0) {
 				tspan.text(line); // Use the existing tspan for the first line of text.
 			} else {
-				this.createTspan(line, i + 1, "d3-comment-display", textObj);
+				this.createTspan(line, i + 1, className, textObj);
 			}
 		});
 	}
@@ -2481,7 +2462,7 @@ export default class CanvasD3Layout {
 			.append("tspan")
 			.attr("class", className)
 			.attr("x", 0 + this.layout.commentWidthPadding)
-			.attr("y", 0)
+			.attr("y", 0 + this.layout.commentHeightPadding - 2) // Move text up a bit to match position in textarea
 			.attr("dy", dy + "em")
 			.attr("xml:space", "preserve") // Preserves the white
 			.text(text);
@@ -2555,26 +2536,26 @@ export default class CanvasD3Layout {
 				var classStr;
 
 				if (d.type === "associationLink") {
-					classStr = "d3-selectable-link " + (d.class_name || "canvas-object-link");
+					classStr = "d3-selectable-link " + this.getAssociationLinkClass(d);
 				} else if (d.type === "commentLink") {
-					classStr = "d3-selectable-link " + (d.class_name || "canvas-comment-link");
+					classStr = "d3-selectable-link " + this.getCommentLinkClass(d);
 				} else {
-					classStr = "d3-selectable-link " + (d.class_name || this.getDataLinkClass(d));
+					classStr = "d3-selectable-link " + this.getDataLinkClass(d);
 				}
 				return classStr;
 			});
 
 		// Arrow head
-		linkGroup.filter((d) => (this.layout.connectionType === "halo" && d.type !== "associationLink") ||
-														d.type === "commentLink")
+		linkGroup.filter((d) => (this.layout.connectionType === "halo" && d.type === "nodeLink") ||
+														(d.type === "commentLink" && this.layout.commentLinkArrowHead))
 			.append("path")
 			.attr("d", (d) => this.getArrowHead(d))
 			.attr("class", (d) => {
 				var classStr;
 				if (d.type === "commentLink") {
-					classStr = "d3-selectable-link " + (d.class_name || "canvas-comment-link");
+					classStr = "d3-selectable-link " + this.getCommentLinkClass(d);
 				} else {
-					classStr = "d3-selectable-link " + (d.class_name || this.getDataLinkClass(d));
+					classStr = "d3-selectable-link " + this.getDataLinkClass(d);
 				}
 				return classStr;
 			})
@@ -2604,14 +2585,58 @@ export default class CanvasD3Layout {
 	}
 
 	getDataLinkClass(d) {
+		// If the data has a classname that isn't the historical default use it!
+		if (d.class_name && d.class_name !== "canvas-data-link" && d.class_name !== "d3-data-link") {
+			return d.class_name;
+		}
+		// If the class name provided IS the historical default, or there is no classname, return
+		// the class name from the layout preferences. This allows the layout
+		// preferences to override any default class name passed in.
+		return this.layout.cssDataLink;
+	}
+
+	getAssociationLinkClass(d) {
 		// If the data has a classname that isn't the default use it!
-		if (d.class_name && d.class_name !== "canvas-data-link") {
+		if (d.class_name && d.class_name !== "canvas-object-link") {
 			return d.class_name;
 		}
 		// If the class name provided IS the default, or there is no classname, return
 		// the class name from the layout preferences. This allows the layout
 		// preferences to override any default class name passed in.
-		return this.layout.cssDataLink;
+		return "d3-object-link";
+	}
+
+	getCommentLinkClass(d) {
+		// If the data has a classname that isn't the default use it!
+		if (d.class_name && d.class_name !== "canvas-comment-link") {
+			return d.class_name;
+		}
+		// If the class name provided IS the default, or there is no classname, return
+		// the class name from the layout preferences. This allows the layout
+		// preferences to override any default class name passed in.
+		return "d3-comment-link";
+	}
+
+	getCommentRectClass(d) {
+		// If the comment has a classname that isn't the default use it!
+		if (d.class_name && d.class_name !== "canvas-comment") {
+			return d.class_name;
+		}
+		// If the class name provided IS the default, or there is no classname, return
+		// the class name from the layout preferences. This allows the layout
+		// preferences to override any default class name passed in.
+		return "d3-comment-rect";
+	}
+
+	getNodeBodyClass(d) {
+		// If the comment has a classname that isn't the default use it!
+		if (d.class_name && d.class_name !== "canvas-node" && d.class_name !== "d3-node-body") {
+			return d.class_name;
+		}
+		// If the class name provided IS the default, or there is no classname, return
+		// the class name from the layout preferences. This allows the layout
+		// preferences to override any default class name passed in.
+		return this.layout.cssNodeBody;
 	}
 
 	// Pushes the links to be below nodes and then pushes comments to be below

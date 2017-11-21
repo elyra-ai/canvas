@@ -156,7 +156,10 @@ export default class CommonCanvasController {
 	}
 
 	static getContextMenuPos() {
-		return contextMenuSource.cmPos;
+		if (contextMenuSource) {
+			return contextMenuSource.cmPos;
+		}
+		return { x: 0, y: 0 };
 	}
 
 	static contextMenuActionHandler(action) {

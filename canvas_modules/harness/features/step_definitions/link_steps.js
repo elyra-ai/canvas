@@ -170,9 +170,9 @@ module.exports = function() {
 	this.Then(/^I validate there are (\d+) links on the canvas with port style$/, function(canvasLinks) {
 		var linkCount = Number(canvasLinks);
 		// verify link is in the canvas DOM
-		var dataLinks = browser.$$(".canvas-data-link").length;
-		var commentLinks = browser.$$(".canvas-comment-link").length;
-		var associationLinks = browser.$$(".canvas-object-link").length;
+		var dataLinks = browser.$$(".d3-data-link").length;
+		var commentLinks = browser.$$(".d3-comment-link").length;
+		var associationLinks = browser.$$(".d3-object-link").length;
 		expect(dataLinks + commentLinks + associationLinks).toEqual(linkCount);
 
 		// verify that the link is in the internal object model
@@ -187,7 +187,7 @@ module.exports = function() {
 
 	this.Then(/^I verify the number of data links are (\d+)$/, function(dataLinks) {
 		try {
-			var dataLinksOnCanvas = browser.$$(".canvas-data-link").length / 2; // Divide by 2 because the line and arrow head use this class
+			var dataLinksOnCanvas = browser.$$(".d3-data-link").length / 2; // Divide by 2 because the line and arrow head use this class
 			expect(Number(dataLinks)).toEqual(dataLinksOnCanvas);
 
 			// verify the number of data-links is in the internal object model
@@ -207,7 +207,7 @@ module.exports = function() {
 
 	this.Then(/^I verify the number of comment links are (\d+)$/, function(commentLinks) {
 		try {
-			var commentLinksOnCanvas = browser.$$(".canvas-comment-link").length / 2;
+			var commentLinksOnCanvas = browser.$$(".d3-comment-link").length / 2;
 			expect(Number(commentLinks)).toEqual(commentLinksOnCanvas);
 
 			// verify the number of data-links is in the internal object model
@@ -260,7 +260,7 @@ module.exports = function() {
 
 	this.Then(/^I verify the number of port data links are (\d+)$/, function(portLinks) {
 		try {
-			var portLinksOnCanvas = browser.$$(".canvas-data-link").length;
+			var portLinksOnCanvas = browser.$$(".d3-data-link").length;
 			expect(Number(portLinks)).toEqual(portLinksOnCanvas);
 
 			// verify the number of port-links is in the internal object model

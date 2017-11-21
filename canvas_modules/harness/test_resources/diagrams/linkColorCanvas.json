@@ -99,7 +99,7 @@
                   "node_id_ref": "4d7f3bdc-12e1-4dea-8b98-ee70209a8ede",
                   "app_data": {
                     "ui_data": {
-                      "class_name": "canvas-data-link okay"
+                      "class_name": "d3-data-link okay"
                     }
                   }
                 }
@@ -156,7 +156,7 @@
                   "node_id_ref": "446eee1d-60bc-4f76-a6bd-bc8e38ba7a82",
                   "app_data": {
                     "ui_data": {
-                      "class_name": "canvas-object-link blue"
+                      "class_name": "d3-object-link blue"
                     }
                   }
                 },
@@ -164,7 +164,7 @@
                   "node_id_ref": "1c278dfe-a598-430b-b4d9-869f5f7a7da2",
                   "app_data": {
                     "ui_data": {
-                      "class_name": "canvas-object-link"
+                      "class_name": "d3-object-link blue"
                     }
                   }
                 }
@@ -221,7 +221,7 @@
                   "node_id_ref": "139588b8-04ec-45dc-aa7f-793083f6220c",
                   "app_data": {
                     "ui_data": {
-                      "class_name": "canvas-data-link"
+                      "class_name": "d3-data-link"
                     }
                   }
                 }
@@ -292,7 +292,7 @@
                   "node_id_ref": "e359d2f2-8d25-4eae-9f3d-18c46fe7cc13",
                   "app_data": {
                     "ui_data": {
-                      "class_name": "canvas-data-link warning"
+                      "class_name": "d3-data-link warning"
                     }
                   }
                 }
@@ -378,7 +378,7 @@
                   "node_id_ref": "0a4f1e7b-560c-4efc-ad59-90be91983ff4",
                   "app_data": {
                     "ui_data": {
-                      "class_name": "canvas-data-link error"
+                      "class_name": "d3-data-link error"
                     }
                   }
                 }
@@ -411,17 +411,17 @@
               "x_pos": 467,
               "y_pos": 109,
               "width": 128,
-              "height": 49,
+              "height": 57,
               "class_name": "custom-canvas-comment",
               "content": "The link between these nodes should be blue",
               "associated_id_refs": [
                 {
                   "node_ref": "446eee1d-60bc-4f76-a6bd-bc8e38ba7a82",
-                  "class_name": "canvas-comment-link"
+                  "class_name": "d3-comment-link"
                 },
                 {
                   "node_ref": "446eee1d-60bc-4f76-a6bd-125TTEEIK7V",
-                  "class_name": "canvas-comment-link"
+                  "class_name": "d3-comment-link"
                 }
               ]
             },
@@ -430,17 +430,17 @@
               "x_pos": 214,
               "y_pos": 61,
               "width": 128,
-              "height": 49,
+              "height": 59,
               "class_name": "custom-canvas-comment",
               "content": "The link between these nodes should be green",
               "associated_id_refs": [
                 {
                   "node_ref": "4d7f3bdc-12e1-4dea-8b98-ee70209a8ede",
-                  "class_name": "canvas-comment-link"
+                  "class_name": "d3-comment-link"
                 },
                 {
                   "node_ref": "446eee1d-60bc-4f76-a6bd-bc8e38ba7a82",
-                  "class_name": "canvas-comment-link"
+                  "class_name": "d3-comment-link"
                 }
               ]
             },
@@ -448,18 +448,18 @@
               "id": "9411f736-d31d-4cad-8a21-d3ae32a0728e",
               "x_pos": 192,
               "y_pos": 515,
-              "width": 128,
-              "height": 49,
+              "width": 129,
+              "height": 57,
               "class_name": "custom-canvas-comment",
               "content": "The link between these nodes should be yellow",
               "associated_id_refs": [
                 {
                   "node_ref": "e359d2f2-8d25-4eae-9f3d-18c46fe7cc13",
-                  "class_name": "canvas-comment-link"
+                  "class_name": "d3-comment-link"
                 },
                 {
                   "node_ref": "0a4f1e7b-560c-4efc-ad59-90be91983ff4",
-                  "class_name": "canvas-comment-link"
+                  "class_name": "d3-comment-link"
                 }
               ]
             },
@@ -468,17 +468,17 @@
               "x_pos": 359,
               "y_pos": 514,
               "width": 128,
-              "height": 49,
+              "height": 59,
               "class_name": "custom-canvas-comment",
               "content": "The link between these nodes should be red",
               "associated_id_refs": [
                 {
                   "node_ref": "0a4f1e7b-560c-4efc-ad59-90be91983ff4",
-                  "class_name": "canvas-comment-link"
+                  "class_name": "d3-comment-link"
                 },
                 {
                   "node_ref": "ab18d0ed-2d7f-4ccd-96b1-c23903c52c15",
-                  "class_name": "canvas-comment-link"
+                  "class_name": "d3-comment-link"
                 }
               ]
             },

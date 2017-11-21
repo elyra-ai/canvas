@@ -234,8 +234,8 @@
         "id": "id1VTTH5YNUB",
         "x_pos": 663,
         "y_pos": 248,
-        "width": 128,
-        "height": 34,
+        "width": 131,
+        "height": 45,
         "className": "canvas-comment-3",
         "content": " comment 3 sample comment text",
         "userData": {

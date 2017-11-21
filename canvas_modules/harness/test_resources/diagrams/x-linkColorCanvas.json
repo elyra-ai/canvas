@@ -215,7 +215,7 @@
         "id": "a2ff2663-5fb0-4f62-a2d3-1b5902229ef5",
         "className": "custom-canvas-comment",
         "content": "The link between these nodes should be blue",
-        "height": 49,
+        "height": 57,
         "width": 128,
         "x_pos": 467,
         "y_pos": 109
@@ -224,7 +224,7 @@
         "id": "8409e559-de6d-40bb-911a-c2c52c4f4340",
         "className": "custom-canvas-comment",
         "content": "The link between these nodes should be green",
-        "height": 49,
+        "height": 59,
         "width": 128,
         "x_pos": 214,
         "y_pos": 61
@@ -233,8 +233,8 @@
         "id": "9411f736-d31d-4cad-8a21-d3ae32a0728e",
         "className": "custom-canvas-comment",
         "content": "The link between these nodes should be yellow",
-        "height": 49,
-        "width": 128,
+        "height": 57,
+        "width": 129,
         "x_pos": 192,
         "y_pos": 515
       },
@@ -242,7 +242,7 @@
         "id": "d513f210-7203-40a6-b4f5-87163e17320b",
         "className": "custom-canvas-comment",
         "content": "The link between these nodes should be red",
-        "height": 49,
+        "height": 59,
         "width": 128,
         "x_pos": 359,
         "y_pos": 514
@@ -260,43 +260,43 @@
     "links": [
       {
         "id": "ee3dad83-d7a9-4019-b202-9137e7a25806",
-        "className": "canvas-data-link okay",
+        "className": "d3-data-link okay",
         "source": "4d7f3bdc-12e1-4dea-8b98-ee70209a8ede",
         "target": "446eee1d-60bc-4f76-a6bd-bc8e38ba7a82"
       },
       {
         "id": "575b0cb8-426e-4845-9083-5a1d143d4aa5",
-        "className": "canvas-data-link",
+        "className": "d3-data-link",
         "source": "139588b8-04ec-45dc-aa7f-793083f6220c",
         "target": "1c278dfe-a598-430b-b4d9-869f5f7a7da2"
       },
       {
         "id": "575b0cb8-426e-4845-9083-5a1d143d4aa5",
-        "className": "canvas-object-link blue",
+        "className": "d3-object-link blue",
         "source": "446eee1d-60bc-4f76-a6bd-bc8e38ba7a82",
         "target": "446eee1d-60bc-4f76-a6bd-125TTEEIK7V"
       },
       {
         "id": "892b0cb3-4e26-4548-0893-5a1d143d4aa5",
-        "className": "canvas-object-link",
+        "className": "d3-object-link blue",
         "source": "1c278dfe-a598-430b-b4d9-869f5f7a7da2",
         "target": "446eee1d-60bc-4f76-a6bd-125TTEEIK7V"
       },
       {
         "id": "24cbb9f6-1b89-4aa3-89fe-33a639d22ede",
-        "className": "canvas-data-link warning",
+        "className": "d3-data-link warning",
         "source": "e359d2f2-8d25-4eae-9f3d-18c46fe7cc13",
         "target": "0a4f1e7b-560c-4efc-ad59-90be91983ff4"
       },
       {
         "id": "c9831fe3-c4ba-4c0c-a16a-ee2acc0248aa",
-        "className": "canvas-data-link error",
+        "className": "d3-data-link error",
         "source": "0a4f1e7b-560c-4efc-ad59-90be91983ff4",
         "target": "ab18d0ed-2d7f-4ccd-96b1-c23903c52c15"
       },
       {
         "id": "2260b589-ae58-40aa-8fcb-25c748bbb544",
-        "className": "canvas-comment-link",
+        "className": "d3-comment-link",
         "source": "a2ff2663-5fb0-4f62-a2d3-1b5902229ef5",
         "target": "446eee1d-60bc-4f76-a6bd-bc8e38ba7a82",
         "userData": {
@@ -305,7 +305,7 @@
       },
       {
         "id": "ffc904a7-1beb-49cd-992c-3a4b39f14a0f",
-        "className": "canvas-comment-link",
+        "className": "d3-comment-link",
         "source": "a2ff2663-5fb0-4f62-a2d3-1b5902229ef5",
         "target": "446eee1d-60bc-4f76-a6bd-125TTEEIK7V",
         "userData": {
@@ -314,7 +314,7 @@
       },
       {
         "id": "c6cb9c7b-e8c4-47df-b3cc-5ed8e3c4d617",
-        "className": "canvas-comment-link",
+        "className": "d3-comment-link",
         "source": "8409e559-de6d-40bb-911a-c2c52c4f4340",
         "target": "4d7f3bdc-12e1-4dea-8b98-ee70209a8ede",
         "userData": {
@@ -323,7 +323,7 @@
       },
       {
         "id": "e1ccc19e-8007-4970-ba78-077b566fd3ee",
-        "className": "canvas-comment-link",
+        "className": "d3-comment-link",
         "source": "8409e559-de6d-40bb-911a-c2c52c4f4340",
         "target": "446eee1d-60bc-4f76-a6bd-bc8e38ba7a82",
         "userData": {
@@ -332,7 +332,7 @@
       },
       {
         "id": "aab33e03-e28e-4a5e-8a74-69596f8540ee",
-        "className": "canvas-comment-link",
+        "className": "d3-comment-link",
         "source": "9411f736-d31d-4cad-8a21-d3ae32a0728e",
         "target": "e359d2f2-8d25-4eae-9f3d-18c46fe7cc13",
         "userData": {
@@ -341,7 +341,7 @@
       },
       {
         "id": "836ddb89-3cc4-4513-8919-fd67813e55ad",
-        "className": "canvas-comment-link",
+        "className": "d3-comment-link",
         "source": "9411f736-d31d-4cad-8a21-d3ae32a0728e",
         "target": "0a4f1e7b-560c-4efc-ad59-90be91983ff4",
         "userData": {
@@ -350,7 +350,7 @@
       },
       {
         "id": "c401a74a-777f-46c3-b99d-3b7332d7d12d",
-        "className": "canvas-comment-link",
+        "className": "d3-comment-link",
         "source": "d513f210-7203-40a6-b4f5-87163e17320b",
         "target": "0a4f1e7b-560c-4efc-ad59-90be91983ff4",
         "userData": {
@@ -359,7 +359,7 @@
       },
       {
         "id": "e33d1a75-72ee-410e-b04b-6c25da6a7d3a",
-        "className": "canvas-comment-link",
+        "className": "d3-comment-link",
         "source": "d513f210-7203-40a6-b4f5-87163e17320b",
         "target": "ab18d0ed-2d7f-4ccd-96b1-c23903c52c15",
         "userData": {

@@ -363,8 +363,8 @@
               "id": "3eb280c9-c109-48a3-8cc4-3efec1427f68",
               "x_pos": 142,
               "y_pos": 36,
-              "width": 270,
-              "height": 57,
+              "width": 272,
+              "height": 72,
               "class_name": "canvas-comment",
               "content": " This canvas shows examples of nodes with different numbers of input and output ports. It should be view using the 'Ports' option in the test harness.",
               "associated_id_refs": []
@@ -374,7 +374,7 @@
               "x_pos": 147,
               "y_pos": 383,
               "width": 128,
-              "height": 31,
+              "height": 48,
               "class_name": "canvas-comment",
               "content": " This should link to port 2 on Na_to_K",
               "associated_id_refs": [
@@ -393,7 +393,7 @@
               "x_pos": 391,
               "y_pos": 382,
               "width": 128,
-              "height": 56,
+              "height": 69,
               "class_name": "canvas-comment",
               "content": " This should link port 2 on Discard Fields to port 2 on Define Types",
               "associated_id_refs": [

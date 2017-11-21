@@ -3,7 +3,7 @@ const haloLayout = {
 
 	// CSS classes
 	cssSelectionHighlight: "d3-obj-selection-highlight",
-	cssNodeBodyOutline: "d3-node-body-outline",
+	cssNodeBody: "d3-node-body-outline",
 	cssNodeLabel: "d3-node-label",
 	cssNodePortOutput: "d3-node-port-output",
 	cssNodePortInput: "d3-node-port-input",
@@ -12,7 +12,7 @@ const haloLayout = {
 	cssNewConnectionStart: "d3-new-connection-start",
 	cssNewConnectionBlob: "d3-new-connection-blob",
 	cssNewConnectionArrow: "d3-new-connection-arrow",
-	cssDataLink: "canvas-data-link",
+	cssDataLink: "d3-data-link",
 
 	// Connection type decides whether the node to node connections use the
 	// 'halo' connection mechanism and arrows pointing directly from source to
@@ -91,7 +91,11 @@ const haloLayout = {
 	cornerResizeArea: 10,
 
 	// The gap between the edge of the comment rectangle and the comment text.
-	commentWidthPadding: 3,
+	commentWidthPadding: 10,
+	commentHeightPadding: 8,
+
+	// Display an arrow head on the comment-to-node links
+	commentLinkArrowHead: true,
 
 	// Initialize values for drawing connectors. minInitialLine is the
 	// size of the vertical line protruding from the source or target handles
@@ -117,7 +121,7 @@ const haloLayout = {
 const portsHorizontal = {
 	// CSS classes
 	cssSelectionHighlight: "d3-obj-selection-highlight-austin",
-	cssNodeBodyOutline: "d3-node-body-outline-austin",
+	cssNodeBody: "d3-node-body-outline-austin",
 	cssNodeLabel: "d3-node-label-austin",
 	cssNodePortOutput: "d3-node-port-output-austin",
 	cssNodePortInput: "d3-node-port-input-austin",
@@ -126,7 +130,7 @@ const portsHorizontal = {
 	cssNewConnectionStart: "d3-new-connection-start-austin",
 	cssNewConnectionBlob: "d3-new-connection-blob-austin",
 	cssNewConnectionArrow: "d3-new-connection-arrow-austin",
-	cssDataLink: "canvas-data-link-austin",
+	cssDataLink: "d3-data-link-austin",
 
 	// Connection type decides whether the node to node connections use the
 	// 'halo' connection mechanism and arrows pointing directly from source to
@@ -205,7 +209,11 @@ const portsHorizontal = {
 	cornerResizeArea: 10,
 
 	// The gap between the edge of the comment rectangle and the comment text.
-	commentWidthPadding: 3,
+	commentWidthPadding: 10,
+	commentHeightPadding: 8,
+
+	// Display an arrow head on the comment-to-node links
+	commentLinkArrowHead: false,
 
 	// Initialize values for drawing connectors. minInitialLine is the
 	// size of the vertical line protruding from the source or target handles
@@ -247,7 +255,7 @@ const portsHorizontal = {
 const portsVertical = {
 	// CSS classes
 	cssSelectionHighlight: "d3-obj-selection-highlight",
-	cssNodeBodyOutline: "d3-node-body-outline",
+	cssNodeBody: "d3-node-body-outline",
 	cssNodeLabel: "d3-node-label",
 	cssNodePortOutput: "d3-node-port-output",
 	cssNodePortInput: "d3-node-port-input",
@@ -256,7 +264,7 @@ const portsVertical = {
 	cssNewConnectionStart: "d3-new-connection-start",
 	cssNewConnectionBlob: "d3-new-connection-blob",
 	cssNewConnectionArrow: "d3-new-connection-arrow",
-	cssDataLink: "canvas-data-link",
+	cssDataLink: "d3-data-link",
 
 	// Connection type decides whether the node to node connections use the
 	// 'halo' connection mechanism and arrows pointing directly from source to
@@ -335,7 +343,11 @@ const portsVertical = {
 	cornerResizeArea: 10,
 
 	// The gap between the edge of the comment rectangle and the comment text.
-	commentWidthPadding: 3,
+	commentWidthPadding: 10,
+	commentHeightPadding: 8,
+
+	// Display an arrow head on the comment-to-node links
+	commentLinkArrowHead: false,
 
 	// Initialize values for drawing connectors. minInitialLine is the
 	// size of the vertical line protruding from the source or target handles
@@ -370,7 +382,7 @@ const portsVertical = {
 	// Display of vertical ellipsis to show context menu
 	ellipsisWidth: 5,
 	ellipsisHeight: 15,
-	ellipsisPosX: 56,
+	ellipsisPosX: 60,
 	ellipsisPosY: 7
 };
 

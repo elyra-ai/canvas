@@ -330,8 +330,8 @@
               "id": "id1VTTH5YNUB",
               "x_pos": 663,
               "y_pos": 248,
-              "width": 128,
-              "height": 34,
+              "width": 131,
+              "height": 45,
               "class_name": "canvas-comment-3",
               "content": " comment 3 sample comment text",
               "associated_id_refs": []

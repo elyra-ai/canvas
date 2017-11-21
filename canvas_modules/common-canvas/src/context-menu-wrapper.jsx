@@ -103,7 +103,7 @@ class ContextMenuWrapper extends React.Component {
 			top: pos.y - 5 + "px"
 		};
 		if (pos.h) {
-			// posStyle.height = pos.h + "px";
+			posStyle.height = pos.h + "px";
 		}
 
 		const contextMenu = (<CommonContextMenu

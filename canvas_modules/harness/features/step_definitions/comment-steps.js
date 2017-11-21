@@ -200,6 +200,7 @@ module.exports = function() {
 	this.Then(/^I verify the number of comments are (\d+)$/, function(comments) {
 		try {
 			var commentsLength = browser.$$(".comment-group").length;
+			console.log("commentsLength" + commentsLength);
 			expect(Number(comments)).toEqual(commentsLength);
 
 			// verify the number of comments is in the internal object model
@@ -228,8 +229,11 @@ module.exports = function() {
 
 	this.Then(/^I verify comment (\d+) with the comment text "([^"]*)"$/, function(commentNumber, commentText) {
 		try {
-			var commentContent = browser.$$(".d3-comment-display")[0];
-			expect("This comment box ").toEqual(commentContent.getText());
+			var commentContent = browser.$$(".d3-comment-text")[0];
+			var commentContentTxt = commentContent.getText();
+			commentContentTxt = commentContentTxt.replace("\n", "");
+			commentContentTxt = commentContentTxt.replace("\r", "");
+			expect(commentText).toEqual(commentContentTxt);
 
 			// verify the comment is in the internal object model
 			const testUrl = getURL();

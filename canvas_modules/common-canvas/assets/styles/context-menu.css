@@ -1,0 +1,100 @@
+/*******************************************************************************
+ * Licensed Materials - Property of IBM
+ * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ *
+ * Note to U.S. Government Users Restricted Rights:
+ * Use, duplication or disclosure restricted by GSA ADP Schedule
+ * Contract with IBM Corp.
+ *******************************************************************************/
+
+ /* Context Menu styles - used by react-contextmenu module */
+
+.context-menu-popover {
+	min-width: 160px;
+	width: 160px;
+	color: #f9f9fb;
+	text-align: left;
+	background-color: #EAEAEA;
+	background-clip: padding-box;
+	border: none;
+	outline: none;
+	font-family: IBMHLVlight;
+	position: absolute;
+	z-index: 2;
+	-moz-box-shadow:2px 2px 2px rgba(0,0,0,0.2);
+	-webkit-box-shadow:2px 2px 2px rgba(0,0,0,0.2);
+	box-shadow:2px 2px 2px rgba(0,0,0,0.2);
+}
+
+.context-menu-popover.popover>.arrow{
+	display: none;
+}
+.context-menu-popover.popover>.popover-content{
+	padding: 0px;
+}
+
+.react-contextmenu {
+	min-width: 160px;
+	width: 160px;
+	text-align: left;
+	background-color: #EAEAEA;
+	-webkit-background-clip: padding-box;
+	background-clip: padding-box;
+	border-radius: .25rem;
+	outline: none;
+	font-family: IBMHLVlight;
+	display: none;
+	-moz-box-shadow:2px 2px 2px rgba(0,0,0,0.2);
+	-webkit-box-shadow:2px 2px 2px rgba(0,0,0,0.2);
+	box-shadow:2px 2px 2px rgba(0,0,0,0.2);
+}
+
+.react-contextmenu--visible {
+	display: inline-grid;
+}
+
+.react-contextmenu-item {
+	display: inline-block;
+	width: 100%;
+	height: 26px;
+	padding: 2px 10px 1px 10px;
+	clear: both;
+	color: #1d3649;
+	text-align: inherit;
+	white-space: nowrap;
+	background: 0 0;
+	border: 0;
+}
+
+.react-contextmenu-item:active,
+.react-contextmenu-item:focus,
+.react-contextmenu-item:hover {
+	color: #262626;
+	background: #d8d8d8;
+	text-decoration: none;
+	border: none;
+	outline: none; /* Suppress Chrome's blue active border */
+}
+
+.react-contextmenu-item.react-contextmenu-submenu {
+	padding: 0px 0px;
+}
+
+.react-contextmenu-item.react-contextmenu-submenu > div {
+	padding-right: 27px;
+}
+
+.react-contextmenu-item.react-contextmenu-submenu > div:after {
+	content: "▶";
+	display: inline-block;
+	position: absolute;
+	right: 7px;
+}
+
+.react-contextmenu-item.contextmenu-divider {
+	height: 1px;
+	display: block;
+	overflow: hidden;
+	background-color: #D8D8D8;
+	padding: 0;
+}

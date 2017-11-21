@@ -122,7 +122,7 @@ export default class SVGPipelineInHandler {
 				"y_pos": comment.y_pos,
 				"class_name":
 					_.has(comment, "class_name")
-						? comment.class_name : "canvas-comment",
+						? comment.class_name : "d3-comment-rect",
 			})
 		);
 	}
@@ -142,7 +142,7 @@ export default class SVGPipelineInHandler {
 									"id": "canvas_link_" + id++,
 									"class_name":
 										_.has(link, "app_data.ui_data.class_name")
-											? link.app_data.ui_data.class_name : "canvas-data-link",
+											? link.app_data.ui_data.class_name : "d3-data-link",
 									"srcNodeId": link.node_id_ref,
 									"trgNodeId": node.id,
 									"trgNodePortId": input.id,
@@ -165,7 +165,7 @@ export default class SVGPipelineInHandler {
 							"id": "canvas_link_" + id++,
 							"class_name":
 								_.has(node, "input.link.app_data.ui_data.class_name")
-									? node.input.link.app_data.ui_data.class_name : "canvas-data-link",
+									? node.input.link.app_data.ui_data.class_name : "d3-data-link",
 							"srcNodeId": node.input.link.node_id_ref,
 							"trgNodeId": node.id,
 							"trgNodePortId": node.input.id,
@@ -185,7 +185,7 @@ export default class SVGPipelineInHandler {
 					if (this.isNode(nodes, association.node_ref)) {
 						const newLink = {
 							"id": "canvas_link_" + id++,
-							"class_name": association.class_name ? association.class_name : "canvas-object-link",
+							"class_name": association.class_name ? association.class_name : "d3-object-link",
 							"srcNodeId": node.id,
 							"trgNodeId": association.node_ref,
 							"type": "associationLink"
@@ -205,7 +205,7 @@ export default class SVGPipelineInHandler {
 							"id": "canvas_link_" + id++,
 							"class_name":
 								_.has(assocRef, "class_name")
-									? assocRef.class_name : "canvas-comment-link",
+									? assocRef.class_name : "d3-comment-link",
 							"srcNodeId": comment.id,
 							"trgNodeId": assocRef.node_ref,
 							"type": "commentLink"

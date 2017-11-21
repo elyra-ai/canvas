@@ -2552,8 +2552,8 @@
         "id": "id42ESQA3VPXB",
         "x_pos": 132,
         "y_pos": 103,
-        "width": 128,
-        "height": 34,
+        "width": 130,
+        "height": 44,
         "className": "canvas-comment-1",
         "content": " comment 1",
         "userData": {
@@ -2565,9 +2565,9 @@
       },
       {
         "id": "id2MHTH4XNJ32",
-        "x_pos": 564.5680847167969,
-        "y_pos": 133.59063720703125,
-        "width": 128,
+        "x_pos": 500,
+        "y_pos": 84,
+        "width": 131,
         "height": 34,
         "className": "canvas-comment-2",
         "content": " comment 2",
@@ -2581,10 +2581,10 @@
       },
       {
         "id": "id1VTTH5YNUB",
-        "x_pos": 824.6760864257812,
-        "y_pos": 89.69217681884766,
+        "x_pos": 825,
+        "y_pos": 90,
         "width": 128,
-        "height": 34,
+        "height": 41,
         "className": "canvas-comment-3",
         "content": " comment 3 sample comment text",
         "userData": {

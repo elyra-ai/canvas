@@ -47,48 +47,48 @@
 /* SVG Canvas styles */
 
 #common-canvas {
-  height: 100%;
-  width: 100%;
-  cursor: default;
-  position: relative;
-  -webkit-transition: all 0.2s;
-  transition: all 0.2s;
+	height: 100%;
+	width: 100%;
+	cursor: default;
+	position: relative;
+	-webkit-transition: all 0.2s;
+	transition: all 0.2s;
 }
 
 #common-canvas-items-container {
-  height: 100%;
-  position: absolute;
-  -webkit-transition: all 0.2s;
-  transition: all 0.2s;
+	height: 100%;
+	position: absolute;
+	-webkit-transition: all 0.2s;
+	transition: all 0.2s;
 }
 
 .canvas-palette-flyout-div-open {
-  left: 250px;
-  width: calc(100% - 250px);
+	left: 250px;
+	width: calc(100% - 250px);
 }
 
 .canvas-palette-flyout-div-closed {
-  left: 0px;
-  width: 100%;
+	left: 0px;
+	width: 100%;
 }
 
 .canvas-flyout-div-open {
-  width: calc(100% - 320px);
+	width: calc(100% - 320px);
 }
 
 .canvas-palette-flyout-div-open.canvas-flyout-div-open {
-  width: calc(100% - 570px);
+	width: calc(100% - 570px);
 }
 
 #canvas-div {
-  height: calc(100% - 45px);
-  width: 100%;
-  min-width: 258px;
-  position: absolute;
-  cursor: default;
-  top: 47px;
-  -webkit-transition: all 0.2s;
-  transition: all 0.2s;
+	height: calc(100% - 45px);
+	width: 100%;
+	min-width: 258px;
+	position: absolute;
+	cursor: default;
+	top: 47px;
+	-webkit-transition: all 0.2s;
+	transition: all 0.2s;
 }
 
 .canvas-div-d3 {
@@ -96,302 +96,33 @@
 }
 
 .svg-canvas {
-  cursor: default;
+	cursor: default;
 }
 
 /* Styles for empty canvas objects */
 
 #empty-canvas {
-  position: absolute;
-  left: 50%;
-  top: 40%;
-  cursor: default;
-  transform: translate(-50%, -50%);
-  -webkit-transition: all 0.2s;
-  transition: all 0.2s;
-  pointer-events: none;
+	position: absolute;
+	left: 50%;
+	top: 40%;
+	cursor: default;
+	transform: translate(-50%, -50%);
+	-webkit-transition: all 0.2s;
+	transition: all 0.2s;
+	pointer-events: none;
 }
 
 .empty-canvas-image {
-  margin-left:auto;
-  margin-right:auto;
-  display:block;
+	margin-left:auto;
+	margin-right:auto;
+	display:block;
 }
 
 .empty-canvas-text {
-  display: block;
-  color: #1d3649;
-  opacity: 0.2;
-  font-size: 20px;
-  font-family: IBMHLVMedium;
-  text-align:center;
-}
-
-/* Canvas Styles */
-
-.canvas-zoom-controls {
-  position: fixed;
-  bottom: 96px;
-  left: 35px;
-  width: 48px;
-  height: 64px;
-	/* Prevent elements from being selectable */
-  /* This stops it being dragged incorrectly.*/
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -o-user-select: none;
-  user-select: none;
-}
-
-.canvas-zoom-controls img {
-  width: 24px;
-  height: 24px;
-}
-
-.canvas-autolayout-controls {
-  display: none;
-  position: fixed;
-  bottom: 35px;
-  left: 35px;
-  width: 48px;
-  height: 64px;
-}
-
-.canvas-autolayout-controls img {
-  width: 24px;
-  height: 24px;
-}
-
-/* Node styles */
-
-.canvas-node {
-  cursor: 'move';
-  border: 2px solid transparent;
-  /* Prevent elements from being selectable */
-  /* This stops it being dragged incorrectly.*/
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -o-user-select: none;
-  user-select: none;
-}
-
-.canvas-node:focus {
-  outline: 1px dotted #9D005C;
-}
-
-.canvas-node.selected {
-  border: 2px dashed #60C3B9;
-}
-
-.canvas-node .node-icon {
-  display: block;
-  margin: auto;
-}
-
-.canvas-node .connector {
-}
-
-.canvas-node p {
-  font-family: IBMHLVRoman;
-  font-size: 10pt;
-  white-space: nowrap;
-  color: rgb(0,0,0);
-  text-align: center;
-}
-
-.node-circle{
-
-}
-.node-inner-circle{
-
-}
-
-/* Comment styles */
-
-.canvas-comment {
-  background-color: #ffff99;
-  color: #000000;
-  cursor: 'move';
-  border: 2px solid transparent;
-  /* Prevent elements from being selectable */
-  /* This stops it being dragged incorrectly. */
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -o-user-select: none;
-  user-select: none;
-
-	/* For D3 Rendering engine */
-	fill: #ffff99;
-	stroke: transparent;
-	stroke-width: 2;
-}
-
-.canvas-comment:focus {
-  outline: 1px dotted #9D005C;
-}
-
-.canvas-comment.selected {
-  border: 2px dashed #60C3B9;
-}
-
-.comment-box{
-
-}
-.comment-inner-box{
-
-}
-
-/* Link styles */
-
-/* Used by D3 renderer */
-.canvas-data-link {
-	stroke: black;
-	fill: none;
-	stroke-width: 2;
-}
-
-/* Used by D3 renderer */
-.canvas-data-link-austin {
-	stroke: #95C4F3;
-	fill: none;
-	stroke-width: 2;
-}
-
-/* Used by D3 renderer */
-.canvas-comment-link {
-	stroke: gray;
-	fill: none;
-	stroke-dasharray: 7.3;
-}
-
-.canvas-link {
-  border: 0;
-  margin: 0;
-  /* Prevent elements from being selectable */
-  /* This stops it being dragged incorrectly.*/
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -o-user-select: none;
-  user-select: none;
-}
-
-.canvas-object-link {
-	stroke: black;
-	fill: none;
-	stroke-dasharray: 5.5;
-}
-
-.canvas-background-link {
-	stroke: white;
-	fill: none;
-	stroke-width: 10
-}
-
-.selectLineStyle {
-	stroke: gray;
-	fill: none;
-	stroke-dasharray: 2.2;
-}
-
-polyline.link-arrow-head {
-	stroke-dasharray: 0;
-}
-
-/* Context Menu styles */
-
-.context-menu-popover {
-  min-width: 160px;
-  width: 160px;
-  padding: 5px 0;
-  margin: 2px 0 0;
-  color: #f9f9fb;
-  text-align: left;
-  background-color: #1d3649;
-  background-clip: padding-box;
-  border: 1px solid rgba(0, 0, 0, .15);
-  outline: none;
-  font-family: IBMHLVlight;
-  position: absolute;
-  z-index: 2;
-}
-
-.context-menu-popover.popover>.arrow{
-  display: none !important;
-}
-.context-menu-popover.popover>.popover-content{
-  padding: 0px !important;
-}
-
-.react-contextmenu-item.contextmenu-divider {
-  height: 1px;
-  display: block;
-  overflow: hidden;
-  background-color: #8c8c8c;
-  padding: 1px;
-}
-
-/* Context Menu styles - used by react-contextmenu module
-   Changes may affect diagram-canvas.jsx */
-
-.react-contextmenu {
-  min-width: 160px;
-  width: 160px;
-  padding: 5px 0;
-  margin: 2px 0 0;
-  color: #f9f9fb;
-  text-align: left;
-  background-color: #1d3649;
-  -webkit-background-clip: padding-box;
-  background-clip: padding-box;
-  border: 1px solid rgba(0,0,0,.15);
-  border-radius: .25rem;
-  outline: none;
-  font-family: IBMHLVlight;
-  display: none;
-}
-
-.react-contextmenu--visible {
-  display: inline-grid;
-}
-
-.react-contextmenu-item {
-  display: inline-block;
-  width: 100%;
-  height: 29px;
-  padding: 3px 10px;
-  clear: both;
-  color: #f9f9fb;
-  text-align: inherit;
-  white-space: nowrap;
-  background: 0 0;
-  border: 0;
-}
-
-.react-contextmenu-item.active,
-.react-contextmenu-item:hover {
-  /*color: #41d6c3;*/
-  color: #262626;
-  background-color: #41d6c3;
-  /*background-color: #152935;*/
-  /*border-color: #0275d8;*/
-  text-decoration: none;
-}
-
-.react-contextmenu-item.react-contextmenu-submenu {
-  padding: 0px 0px;
-}
-
-.react-contextmenu-item.react-contextmenu-submenu > div {
-  padding-right: 27px;
-}
-
-.react-contextmenu-item.react-contextmenu-submenu  > div:after {
-  content: "▶";
-  display: inline-block;
-  position: absolute;
-  right: 7px;
+	display: block;
+	color: #1d3649;
+	opacity: 0.2;
+	font-size: 20px;
+	font-family: IBMHLVMedium;
+	text-align:center;
 }

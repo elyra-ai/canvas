@@ -439,7 +439,7 @@ class App extends React.Component {
 		if (source.type === "canvas") {
 			menuDefinition = EMPTY_CLIPBOARD_CANVAS_CONTEXT_MENU;
 		} else if (source.type === "link") {
-			if (source.targetObject.type !== "associationLink") {
+			if (!source.targetObject || source.targetObject.type !== "associationLink") { // targetObject is not provided in the legacy rendering engine
 				menuDefinition = LINK_CONTEXT_MENU;
 			}
 		} else if (source.type === "node") {

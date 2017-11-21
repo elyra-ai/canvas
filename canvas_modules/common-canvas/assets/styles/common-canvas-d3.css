@@ -48,7 +48,7 @@
 }
 
 .d3-obj-selection-highlight-austin[selected=yes] {
-	stroke: #047cc0;
+	stroke: #047CC0;
 	stroke-dasharray: none; /* Solid line */
 	stroke-width: 3;
 	fill: transparent;
@@ -178,7 +178,7 @@
 }
 
 .d3-node-port-output:hover {
-  fill: #4178be;   /* Dark blue */
+	fill: #4178be;   /* Dark blue */
 }
 
 .d3-node-port-input {
@@ -218,7 +218,7 @@
 }
 
 .d3-node-port-output-austin:hover {
-  fill: #1b496d;
+	fill: #1b496d;
 }
 
 .d3-node-port-input-austin {
@@ -247,7 +247,7 @@
 /* New connection dynamic line styles. */
 
 .d3-new-connection-line[linkType=nodeLink] {
-  stroke: #4178be;   /* Dark blue */
+	stroke: #4178be;   /* Dark blue */
 	stroke-width: 2;
 	stroke-dasharray: 10 10;
 	fill: none;
@@ -266,23 +266,23 @@
 /* New connection dynamic line styles for the Austin theme. */
 
 .d3-new-connection-line-austin[linkType=nodeLink] {
-  stroke: black;
+	stroke: #95C4F3; /* Cerulean 20 */
 	stroke-width: 2;
 	stroke-dasharray: 10 10;
 	fill: none;
 }
 
 .d3-new-connection-start-austin[linkType=nodeLink] {
-	stroke: black;
+	stroke: #95C4F3; /* Cerulean 20 */
 	fill: #FFFFFF;   /* White */
 }
 
 .d3-new-connection-blob-austin[linkType=nodeLink] {
-	stroke: black;
-	fill: black;
+	stroke: #95C4F3; /* Cerulean 20 */
+	fill: #95C4F3;   /* Cerulean 20 */
 }
 
-/* Connection styles for comment links */
+/* New connection dynamic line styles for comment links */
 
 .d3-new-connection-line[linkType=commentLink] {
 	stroke: gray;
@@ -308,10 +308,10 @@
 	fill: #c5ccd6;
 }
 
-/* Connection styles for comment links for the Austin theme. */
+/* New connection dynamic line styles for comment links for the Austin theme. */
 
 .d3-new-connection-line-austin[linkType=commentLink] {
-  stroke: gray;
+	stroke: gray;
 	stroke-width: 2;
 	stroke-dasharray: 10 10;
 	fill: none;
@@ -337,11 +337,35 @@
 
 /* Comment styles */
 
-.d3-comment-display {
-	font-family: sans-serif;
-	font-size: 13px;  /* Must be the same as font size in .comment-entry */
+/* Style for comment background rectangle */
+.d3-comment-rect {
+	fill: #FFFFFF;
+	stroke: #C0BFC0;
+	stroke-width: 1;
+
+	/* Prevent elements from being selectable */
+	/* This stops it being dragged incorrectly. */
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+}
+
+.d3-comment-text {
+	fill: #777677;  /* Must be the same as color in .d3-comment-display */
+}
+
+.d3-comment-text[beingedited=yes] {
+	fill: transparent;
+}
+
+/* Style for comment text when displayed as SVG text */
+.d3-comment-text-tspan {
+	font-family: Helvetica Neue; /* Must be the same as font in .comment-entry */
+	font-size: 12px;  /* Must be the same as font size in .comment-entry */
+	font-weight: 400;  /* Must be the same as font weight in .comment-entry */
 	position: absolute;
-	padding: 2;
 	pointer-events: none;   /* This prevents strange problems with div focus that occur when the text is clicked. */
 	/* Prevent elements from being selectable */
 	/* This stops it being dragged incorrectly.*/
@@ -352,14 +376,18 @@
 	user-select: none;
 }
 
+/* Style for comment text entry when shown in an HTML textarea control. */
 .d3-comment-entry {
-	font-family: sans-serif;
-	font-size: 13px;  /* Must be the same as font size in .comment-display */
+	color: #777677;  /* Must be the same as fill in .d3-comment-text */
+	font-family: Helvetica Neue; /* Must be the same as font in .d3-comment-text-tspan */
+	font-size: 12px;  /* Must be the same as font size in .d3-comment-text-tspan */
+	font-weight: 400;  /* Must be the same as font weight in .d3-comment-text-tspan */
 	position: absolute;
 	border: none;
-	padding-top: 2px;
-	padding-left: 0px;
-	padding-right: 0px;
+	padding-left: 10px;  /* This needs to be the same as the commentWidthPadding in layout-dimensions.js */
+	padding-right: 10px; /* This needs to be the same as the commentWidthPadding  in layout-dimensions.js */
+	padding-top: 8px;    /* This needs to be the same as the commentHeightPadding in layout-dimensions.js */
+	padding-bottom: 8px; /* This needs to be the same as the commentHeightPadding  in layout-dimensions.js */
 	overflow: hidden;
 	line-height: 105%;  /* Set so that entry text is displayed the same as display text */
 	white-space: pre-line;
@@ -383,7 +411,7 @@
 /* Link styles */
 
 .d3-comment-link {
-	stroke: gray;
+	stroke: #C0BFC0;
 	fill: none;
 	stroke-width: 1;
 	stroke-dasharray: 7.3;
@@ -396,8 +424,20 @@
 	stroke-dasharray: 0;
 }
 
-.d3-data-link {
+.d3-object-link {
 	stroke: black;
+	fill: none;
+	stroke-dasharray: 5.5;
+}
+
+.d3-data-link {
+	stroke: #95C4F3; /* Cerulean 20 */
+	fill: none;
+	stroke-width: 2;
+}
+
+.d3-data-link-austin {
+	stroke: #95C4F3; /* Cerulean 20 */
 	fill: none;
 	stroke-width: 2;
 }
@@ -424,5 +464,5 @@ g .d3-data-link:hover,
 g .d3-selectable-link:hover,
 g .d3-selectable-link:hover ~ .d3-selectable-link,      /* Colors arrow head when hovering over line. */
 g .d3-link-selection-area:hover ~ .d3-selectable-link { /* Colors arrow head when hovering over line selection area. */
-	stroke: #60C3B9;
+	stroke: #56ACF2;
 }

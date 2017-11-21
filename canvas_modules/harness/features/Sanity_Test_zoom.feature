@@ -22,30 +22,30 @@ Feature: Sanity_Test_zoom
 		Then I verify zoom transform value is "translate(0,0) scale(1)"
 
 		Then I click zoom in
-		Then I verify zoom transform value is "translate(177.14999999999998,5.849999999999994) scale(1.1)"
+		Then I verify zoom transform value is "translate(175.5,5.849999999999994) scale(1.1)"
 
 		Then I click zoom out
-		Then I verify zoom transform value is "translate(221.5,31) scale(1)"
-
-		Then I click zoom in
-		Then I click zoom in
-		Then I click zoom out
-		Then I verify zoom transform value is "translate(177.14999999999998,5.849999999999994) scale(1.1)"
-
-		Then I click zoom out
-		Then I click zoom out
-		Then I click zoom in
-		Then I click zoom out
-		Then I verify zoom transform value is "translate(261.8181818181818,53.863636363636374) scale(0.9090909090909091)"
+		Then I verify zoom transform value is "translate(220,31) scale(1)"
 
 		Then I click zoom in
 		Then I click zoom in
+		Then I click zoom out
+		Then I verify zoom transform value is "translate(175.5,5.849999999999994) scale(1.1)"
+
+		Then I click zoom out
+		Then I click zoom out
+		Then I click zoom in
+		Then I click zoom out
+		Then I verify zoom transform value is "translate(260.4545454545455,53.863636363636374) scale(0.9090909090909091)"
+
 		Then I click zoom in
 		Then I click zoom in
 		Then I click zoom in
 		Then I click zoom in
 		Then I click zoom in
-		Then I verify zoom transform value is "translate(-120.68730350000044,-163.04759150000027) scale(1.771561000000001)"
+		Then I click zoom in
+		Then I click zoom in
+		Then I verify zoom transform value is "translate(-123.34464500000047,-163.04759150000027) scale(1.771561000000001)"
 
 		Then I click zoom out
 		Then I click zoom out
@@ -57,4 +57,4 @@ Feature: Sanity_Test_zoom
 		Then I click zoom out
 		Then I click zoom out
 		Then I click zoom out
-		Then I verify zoom transform value is "translate(362.0835325455912,110.72211597568476) scale(0.6830134553650705)"
+		Then I verify zoom transform value is "translate(361.0590123625436,110.72211597568476) scale(0.6830134553650705)"

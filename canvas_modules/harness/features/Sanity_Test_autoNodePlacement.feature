@@ -6,8 +6,6 @@ Feature: Sanity_Test_autoNodePlacement
   I want to create a canvas
   So I can build a graph
 
-@watch
-
   Scenario: Sanity test empty canvas with D3 rendering engine
 		Given I am on the test harness
     Given I have toggled the app side panel

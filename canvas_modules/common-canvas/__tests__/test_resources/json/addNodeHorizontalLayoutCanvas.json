@@ -92,7 +92,7 @@
           "type": "execution_node",
           "operator_id_ref": "filter",
           "image": "/images/filter.svg",
-          "class_name": "canvas-node",
+          "class_name": "d3-node-body",
           "input_ports": [
             {
               "id": "inPort",

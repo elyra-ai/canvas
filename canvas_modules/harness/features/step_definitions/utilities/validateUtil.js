@@ -159,14 +159,16 @@ function getObjectModelCount(objectModel, type, compare) {
 	} else if (type === "datalinks") {
 		var datalinks = omJson.links;
 		datalinks.forEach(function(datalink) {
-			if (datalink.class_name === "canvas-data-link") {
+			if (datalink.class_name === "d3-data-link" ||
+					datalink.class_name === "canvas-data-link") { // For legacy rendering engine
 				count++;
 			}
 		});
 	} else if (type === "commentLinks") {
 		var commentlinks = omJson.links;
 		commentlinks.forEach(function(commentlink) {
-			if (commentlink.class_name === "canvas-comment-link") {
+			if (commentlink.class_name === "d3-comment-link" ||
+					commentlink.class_name === "canvas-comment-link") { // For legacy rendering engine
 				count++;
 			}
 		});

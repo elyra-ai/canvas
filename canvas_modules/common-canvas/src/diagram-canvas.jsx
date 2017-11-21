@@ -659,13 +659,21 @@ export default class DiagramCanvas extends React.Component {
 				return null;
 			}
 
-			var className = isBackground
-				? "canvas-background-link"
-				: "canvas-data-link";
-			if (!isBackground) {
-				if (link.class_name !== "undefined" && link.class_name !== null) {
+			var className;
+			if (isBackground) {
+				className = "canvas-background-link";
+			} else if (link.class_name !== "undefined" && link.class_name !== null) {
+				if (link.class_name === "d3-comment-link") {
+					className = "canvas-comment-link";
+				} else if (link.class_name === "d3-data-link") {
+					className = "canvas-data-link";
+				} else if (link.class_name === "d3-object-link") {
+					className = "canvas-object-link";
+				} else {
 					className = link.class_name;
 				}
+			} else {
+				className = "canvas-data-link";
 			}
 
 			const data = {

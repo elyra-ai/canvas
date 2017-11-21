@@ -257,7 +257,7 @@ Scenario: Sanity test for Multiple undo/redo operations with the D3 rendering en
 		Then I verify the number of nodes are 22
 
 		Then I select node 19 the "Filter" node
-		Then I add comment 1 at location 300, 300 with the text "Some text comment."
+		Then I add comment 1 at location 30, 300 with the text "Some text comment."
 		Then I click undo
 		Then I click undo
 		Then I verify the number of comments are 0

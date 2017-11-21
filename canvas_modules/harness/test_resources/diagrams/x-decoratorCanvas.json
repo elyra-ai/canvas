@@ -215,7 +215,7 @@
         "x_pos": 40,
         "y_pos": 16.999998092651367,
         "width": 196,
-        "height": 45,
+        "height": 61,
         "className": "",
         "content": " This canvas tests the layout of decorators. They show the four possible decorator positions.",
         "userData": {
@@ -229,7 +229,7 @@
         "id": "ea4fb177-5e35-4eb1-89ef-d3f3a597c13b",
         "className": "canvas-comment",
         "content": " This node does not have any decorators.",
-        "height": 44,
+        "height": 55,
         "width": 128,
         "x_pos": 80,
         "y_pos": 367
@@ -247,7 +247,7 @@
         "id": "1ba0db53-864f-46a7-a077-fb1d34b00805",
         "className": "canvas-comment",
         "content": " These two nodes have view only decorators",
-        "height": 43,
+        "height": 59,
         "width": 128,
         "x_pos": 86,
         "y_pos": 170
