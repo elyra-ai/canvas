@@ -35,7 +35,7 @@
 	fill: transparent;
 }
 
-.d3-obj-selection-highlight[selected=yes] {
+.d3-obj-selection-highlight[data-selected=yes] {
 	stroke: #60C3B9;
 	stroke-dasharray: 5,5;
 	stroke-width: 2;
@@ -47,7 +47,7 @@
 	fill: transparent;
 }
 
-.d3-obj-selection-highlight-austin[selected=yes] {
+.d3-obj-selection-highlight-austin[data-selected=yes] {
 	stroke: #047CC0;
 	stroke-dasharray: none; /* Solid line */
 	stroke-width: 3;

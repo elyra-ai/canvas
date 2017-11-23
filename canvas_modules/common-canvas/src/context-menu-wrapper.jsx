@@ -9,32 +9,52 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import enhanceWithClickOutside from "react-click-outside";
 import CommonContextMenu from "./common-context-menu.jsx";
 import CanvasController from "./common-canvas-controller.js";
 
 // context-menu sizing
-const CONTEXT_MENU_MARGIN = 2; // see common-canvas.css .react-context-menu margin
-const CONTEXT_MENU_BORDER = 1; // see common-canvas.css .react-context-menu border
-const CONTEXT_MENU_PADDING = 5; // see common-canvas.css .react-context-menu padding
-const CONTEXT_MENU_LINK_HEIGHT = 29; // see common-canvas.css .react-context-menu-link height
-const CONTEXT_MENU_MIN_WIDTH = 160; // see common-canvas.css .react-context-menu min-width
+const CONTEXT_MENU_WIDTH = 160; // see context-menu.css .react-context-menu margin
+const CONTEXT_MENU_LINK_HEIGHT = 26; // see context-menu.css .react-context-menu-item height
+const CONTEXT_MENU_DIVIDER_HEIGHT = 1; // see context-menu.css .react-context-menu-item height
+const CONTEXT_MENU_TOOLBAR_HEIGHT = 45; // Height of tooolbar
+const CONTEXT_MENU_BUTTON = 2;
 
-class ContextMenuWrapper extends React.Component {
+export default class ContextMenuWrapper extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {};
 	}
 
-	handleClickOutside(clickOutsideEvent) {
-		CanvasController.closeContextMenu();
-
-		// This stops the canvasClicked function from being fired which would
-		// clear any current selections. The event here is a real event not a
-		// synthetic react mouse event.
-		clickOutsideEvent.stopPropagation();
+	componentDidMount() {
+		// On Firefox, the context menu gesture emits a 'click' event which causes the
+		// context menu to disappear imediately after it is displayed if clicks are
+		// captured, so we look for 'mousedown' events instead.
+		document.addEventListener("mousedown", this.handleClickOutside, true);
 	}
 
+	componentWillUnmount() {
+		document.removeEventListener("mousedown", this.handleClickOutside, true);
+	}
+
+	handleClickOutside(e) {
+		const domNode = document.getElementById("context-menu-popover");
+		if (domNode && !domNode.contains(e.target)) {
+			CanvasController.closeContextMenu();
+
+			// This stops the canvasClicked function from being fired which would
+			// clear any current selections. The event here is a real event not a
+			// synthetic react mouse event so we need to use the 'stopPropagation' method.
+			// We only stop propogation if it is NOT a context menu gesture because
+			// when a context menu is requested we need to let the gesture go through
+			// to the canvas objects.
+			if (e.button !== CONTEXT_MENU_BUTTON) {
+				e.stopPropagation();
+			}
+		}
+	}
+
+	// Returns a new position for the context menu based on the current mouse position
+	// and whether the menu would appear outside the edges of the page.
 	repositionContextMenu(mousePos, menuSize) {
 		const pos = {};
 		pos.x = mousePos.x;
@@ -42,24 +62,25 @@ class ContextMenuWrapper extends React.Component {
 		var containingDiv = document.getElementById(this.props.containingDivId);
 		var commonCanvasRect = containingDiv.getBoundingClientRect();
 
-		// Reposition contextMenu if it will show off the screen
-		const screenSize = commonCanvasRect.height - commonCanvasRect.top + containingDiv.scrollTop;
-		if (Math.round(mousePos.y + menuSize.height) > screenSize) {
-			// adjust menu to start at the top of screen
-			if (Math.round(screenSize / 2) < mousePos.y) {
-				pos.y = mousePos.y - menuSize.height;
-				// need to adjust height of context menu so it doesn't go off top of screen
-				if (pos.y < 0) {
-					pos.h = menuSize.height + (mousePos.y - menuSize.height);
-					pos.y = 0;
-				}
-			} else if (Math.round(screenSize / 2) < (mousePos.y + menuSize.height)) {
-				// adjust menu height so it doesn't go off bottom of screen in small windows
-				pos.h = screenSize - mousePos.y;
+		// The commonCanvasRect height is relative to the bottom of the page banner
+		// while the context menu mouse position is relative to the SVG area which
+		// starts at the bottom of the toolbar. So we need to adjust the
+		// commonCanvasRect to be relative to the bottom of the toolbar.
+		var bottom = commonCanvasRect.height - CONTEXT_MENU_TOOLBAR_HEIGHT;
+
+		// Reposition contextMenu if it will show off the bottom of the page
+		if (mousePos.y + menuSize.height > bottom) {
+			pos.y = bottom - menuSize.height - 5; // Move up by five pixels so it looks nice
+
+			// If repositioning the menu would push it off the top of the page
+			// (in very short browser windows) position it at the top.
+			if (pos.y < 0) {
+				pos.y = 0;
 			}
 		}
-		if (Math.round(mousePos.x + menuSize.width) >
-		commonCanvasRect.width - commonCanvasRect.left + containingDiv.scrollLeft) {
+
+		// Reposition contextMenu if it will show off the right of the page
+		if (mousePos.x + menuSize.width > commonCanvasRect.width) {
 			pos.x = mousePos.x - menuSize.width;
 		}
 
@@ -76,9 +97,8 @@ class ContextMenuWrapper extends React.Component {
 		}
 
 		var menuSize = {
-			height: ((menu.length - numDividers) * CONTEXT_MENU_LINK_HEIGHT) +
-			(CONTEXT_MENU_MARGIN + CONTEXT_MENU_BORDER + CONTEXT_MENU_PADDING),
-			width: CONTEXT_MENU_MIN_WIDTH - (CONTEXT_MENU_MARGIN + CONTEXT_MENU_BORDER + CONTEXT_MENU_PADDING)
+			height: ((menu.length - numDividers) * CONTEXT_MENU_LINK_HEIGHT) + (numDividers * CONTEXT_MENU_DIVIDER_HEIGHT),
+			width: CONTEXT_MENU_WIDTH
 		};
 
 		return menuSize;
@@ -93,18 +113,10 @@ class ContextMenuWrapper extends React.Component {
 		var menuSize = this.calculateContextMenuSize(this.props.contextMenuDef);
 		const pos = this.repositionContextMenu(CanvasController.getContextMenuPos(), menuSize);
 
-		// Offset the context menu poisiton by 5 pixels. This moves the menu
-		// underneath the pointer. On Firefox this stops the menu from immediately
-		// disappearing becasue on FF the handleClickOutside is fired because the
-		// mouse pointer is outside of the conetxt menu. On Chrome and Safari
-		// (on the Mac) the system does not think the pointer is outside the menu.
 		const posStyle = {
-			left: pos.x - 5 + "px",
-			top: pos.y - 5 + "px"
+			left: pos.x + "px",
+			top: pos.y + "px"
 		};
-		if (pos.h) {
-			posStyle.height = pos.h + "px";
-		}
 
 		const contextMenu = (<CommonContextMenu
 			menuDefinition={this.props.contextMenuDef}
@@ -112,7 +124,7 @@ class ContextMenuWrapper extends React.Component {
 		/>);
 
 		return (
-			<div className="context-menu-popover" style={posStyle}>
+			<div id="context-menu-popover" className="context-menu-popover" style={posStyle}>
 				{contextMenu}
 			</div>
 		);
@@ -123,5 +135,3 @@ ContextMenuWrapper.propTypes = {
 	containingDivId: PropTypes.string.isRequired,
 	contextMenuDef: PropTypes.array.isRequired
 };
-
-export default enhanceWithClickOutside(ContextMenuWrapper);

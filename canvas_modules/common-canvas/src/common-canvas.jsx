@@ -192,7 +192,7 @@ export default class CommonCanvas extends React.Component {
 		if (canvasJSON !== null) {
 			if (this.state.showContextMenu) {
 				contextMenuWrapper = (<ContextMenuWrapper
-					containingDivId={"common-canvas"}
+					containingDivId={"common-canvas-items-container"}
 					contextMenuDef={this.state.contextMenuDef}
 				/>);
 			}

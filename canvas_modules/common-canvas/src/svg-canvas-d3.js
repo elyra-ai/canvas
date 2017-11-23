@@ -786,7 +786,7 @@ export default class CanvasD3Layout {
 		} else if (this.selecting || this.regionSelect || this.commentSizing) {
 			nodeGroupSel.each(function(d) {
 				d3.select(`#node_outline_${d.id}`)
-					.attr("selected", ObjectModel.isSelected(d.id) ? "yes" : "no")
+					.attr("data-selected", ObjectModel.isSelected(d.id) ? "yes" : "no")
 					.attr("class", that.layout.cssSelectionHighlight)
 					.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
 
@@ -821,7 +821,7 @@ export default class CanvasD3Layout {
 					.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
 
 				d3.select(`#node_outline_${d.id}`)
-					.attr("selected", ObjectModel.isSelected(d.id) ? "yes" : "no")
+					.attr("data-selected", ObjectModel.isSelected(d.id) ? "yes" : "no")
 					.attr("class", that.layout.cssSelectionHighlight)
 					.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
 
@@ -957,7 +957,7 @@ export default class CanvasD3Layout {
 						d3.select(`#node_grp_${d.id}`).select(`#node_outline_${d.id}`)
 							.attr("d", (cd) => this.getNodeShapePath(cd))
 							.attr("transform", (cd) => this.getNodeHighlightOutlineTranslate(cd)) // Scale and move the shape up and to the left to account for the padding
-							.attr("selected", function(cd) { return ObjectModel.isSelected(cd.id) ? "yes" : "no"; })
+							.attr("data-selected", function(cd) { return ObjectModel.isSelected(cd.id) ? "yes" : "no"; })
 							.attr("class", this.layout.cssSelectionHighlight);
 					} else { // simple rectangle
 						d3.select(`#node_grp_${d.id}`).select(`#node_outline_${d.id}`)
@@ -966,7 +966,7 @@ export default class CanvasD3Layout {
 								(cd) => cd.height + (2 * this.layout.highlightGap))
 							.attr("x", -this.layout.highlightGap)
 							.attr("y", -this.layout.highlightGap)
-							.attr("selected", function(cd) { return ObjectModel.isSelected(cd.id) ? "yes" : "no"; })
+							.attr("data-selected", function(cd) { return ObjectModel.isSelected(cd.id) ? "yes" : "no"; })
 							.attr("class", this.layout.cssSelectionHighlight);
 					}
 
@@ -1788,7 +1788,7 @@ export default class CanvasD3Layout {
 				d3.select(`#comment_rect_${d.id}`)
 					.attr("height", d.height + (2 * that.layout.highlightGap))
 					.attr("width", d.width + (2 * that.layout.highlightGap))
-					.attr("selected", ObjectModel.isSelected(d.id) ? "yes" : "no")
+					.attr("data-selected", ObjectModel.isSelected(d.id) ? "yes" : "no")
 					.attr("class", that.layout.cssSelectionHighlight)
 					.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
 
@@ -1826,7 +1826,7 @@ export default class CanvasD3Layout {
 				d3.select(`#comment_rect_${d.id}`)
 					.attr("height", d.height + (2 * that.layout.highlightGap))
 					.attr("width", d.width + (2 * that.layout.highlightGap))
-					.attr("selected", ObjectModel.isSelected(d.id) ? "yes" : "no")
+					.attr("data-selected", ObjectModel.isSelected(d.id) ? "yes" : "no")
 					.attr("class", that.layout.cssSelectionHighlight)
 					.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
 

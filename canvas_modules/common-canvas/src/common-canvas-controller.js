@@ -163,12 +163,13 @@ export default class CommonCanvasController {
 	}
 
 	static contextMenuActionHandler(action) {
+		// selectAll is supported for the external AND internal object models.
+		if (action === "selectAll") {
+			ObjectModel.selectAll();
+		}
+
 		if (canvasConfig.enableInternalObjectModel) {
 			switch (action) {
-			case "selectAll": {
-				ObjectModel.selectAll();
-				break;
-			}
 			case "deleteObjects": {
 				const command = new DeleteObjectsAction(contextMenuSource);
 				CommandStack.do(command);

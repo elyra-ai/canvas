@@ -8,7 +8,7 @@
  *******************************************************************************/
 /* eslint no-console: "off" */
 
-import { deleteLinkInObjectModel, getEventLogCount, getNodeIdFromObjectModel, getObjectModelCount, isObjectModelEmpty } from "./utilities/validateUtil.js";
+import { deleteLinkInObjectModel, getEventLogCount, getNodeIdForLabel, getNodeIdFromObjectModel, getObjectModelCount, isObjectModelEmpty } from "./utilities/validateUtil.js";
 import { getHarnessData } from "./utilities/HTTPClient.js";
 import { getURL } from "./utilities/test-config.js";
 import { simulateDragDrop } from "./utilities/DragAndDrop.js";
@@ -647,6 +647,30 @@ module.exports = function() {
 		}
 	});
 
+	// Then I double click the "Type" node to open its properties
+	//
+	this.Then(/^I double click the "([^"]*)" node to open its properties$/, function(nodeName) {
+		var nodeId = getNodeIdForLabel(nodeName);
+		var nodeSelector = "#node_grp_" + nodeId;
+		browser.$(nodeSelector).doubleClick();
+		browser.pause(1000); // Wait for properties to be displayed
+	});
+
+	this.Then(/^I click the "([^"]*)" node to select it$/, function(nodeName) {
+		var nodeId = getNodeIdForLabel(nodeName);
+		var nodeSelector = "#node_grp_" + nodeId;
+		browser.$(nodeSelector).click();
+	});
+
+	this.Then(/^I Cmd\+click the "([^"]*)" node to add it to the selections$/, function(nodeName) {
+		browser.keys(["Meta"]);
+		var nodeId = getNodeIdForLabel(nodeName);
+		var nodeSelector = "#node_grp_" + nodeId;
+		browser.$(nodeSelector).click();
+		browser.keys(["Meta"]);
+	});
+
+
 	// Then I disconnect links for node 1 a "Var. File" node on the canvas
 	//
 	this.Then(/^I disconnect links for node (\d+) a "([^"]*)" on the canvas$/, function(nodeIndex, nodeName) {
@@ -956,39 +980,6 @@ module.exports = function() {
 		browser.keys("Shift");
 	});
 
-	this.Then("I select all objects in the canvas via the context menu", function() {
-		const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
-		if (D3RenderingEngine) {
-			browser.rightClick(".svg-area", Number(300), Number(10));
-		} else {
-			browser.rightClick(".svg-canvas", Number(300), Number(10));
-		}
-		browser.$(".context-menu-popover").$$(".react-contextmenu-item")[1].click();
-	});
-
-	this.Then("I select all objects in the canvas via Ctrl+A", function() {
-		const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
-		if (D3RenderingEngine) {
-			browser.click(".svg-area", Number(10), Number(10));
-		} else {
-			browser.click(".svg-canvas", Number(10), Number(10));
-		}
-		browser.keys(["Control", "A", "A", "Control"]);
-	});
-
-	this.Then("I select all objects in the canvas via Cmd+A", function() {
-		const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
-		if (D3RenderingEngine) {
-			browser.click(".svg-area", Number(10), Number(10));
-		} else {
-			browser.click(".svg-canvas", Number(10), Number(10));
-		}
-		browser.keys(["Meta", "A", "A", "Meta"]);
-	});
-
-	this.Then("I delete all selected objects via the Delete key", function() {
-		browser.keys("Delete");
-	});
 
 	this.Then("I verify the node move was not done", function() {
 		// MOVE OPERATION ISNT WORKING CURRENTLY IN D3
