@@ -1307,7 +1307,7 @@ describe("condition messages renders correctly with structure table cells", () =
 		const cell = cells.at(3);
 		const dropdown = cell.find(".Dropdown-control-table");
 		expect(dropdown).to.have.length(1);
-		expect(dropdown).to.have.style("visibility", "hidden");
+		expect(dropdown).to.have.style("display", "none");
 	});
 
 });
@@ -1449,14 +1449,14 @@ describe("Cells disable and hide correctly with structure table control", () => 
 		let row = dataRows.first();
 		let hiddenDropdowns = row.find(".Dropdown-control-table");
 		expect(hiddenDropdowns).to.have.length(2);
-		expect(hiddenDropdowns.at(1)).not.to.have.style("visibility", "hidden");
+		expect(hiddenDropdowns.at(1)).not.to.have.style("display", "none");
 		const input = row.find("#editor-control-field_types0_1");
 		expect(input).to.have.length(1);
 		wrapper.find("input[id='editor-control-field_types0_1']").simulate("change", { target: { checked: false } });
 		row = dataRows.first();
 		hiddenDropdowns = row.find(".Dropdown-control-table");
 		expect(hiddenDropdowns).to.have.length(2);
-		expect(hiddenDropdowns.at(1)).to.have.style("visibility", "hidden");
+		expect(hiddenDropdowns.at(1)).to.have.style("display", "none");
 		// Strangely, the line below is necessary to reset state else some tests below fail
 		wrapper.find("input[id='editor-control-field_types0_1']").simulate("change", { target: { checked: true } });
 	});
@@ -1630,7 +1630,7 @@ describe("condition messages renders correctly with textfields control", () => {
 
 		const textareaDescriptionInput = wrapper.find("#editor-control-textareaDescription");
 		expect(textareaDescriptionInput).to.have.length(1);
-		expect(textareaDescriptionInput).to.have.style("visibility", "hidden");
+		expect(textareaDescriptionInput).to.have.style("display", "none");
 
 		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlStates.textareaDescription)),
 			JSON.parse(JSON.stringify(defaultControlStates.textareaDescription)))).to.be.true;
