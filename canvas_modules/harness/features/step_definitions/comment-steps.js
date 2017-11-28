@@ -45,7 +45,7 @@ module.exports = function() {
 
 			specificComment.doubleClick();
 			if (D3RenderingEngine) {
-				specificComment.$("textarea").setValue("", comment); // For D3, the text area is created by the double click
+				specificComment.$("textarea").keys(comment); // For D3, the text area is created by the double click
 			} else {
 				specificComment.click();
 				specificComment.setValue("", comment);
@@ -170,7 +170,12 @@ module.exports = function() {
 					comment = browser.$$(".comment-group")[0];
 					comment.click();
 					comment.doubleClick();
-					comment.$("textarea").setValue("", commentText);
+					// workaround since setValue isn't working with comments.
+					// keys is deprecated and might not work in latest version of firefox
+					for (let indx = 0; indx < 60; ++indx) {
+						comment.$("textarea").keys("Backspace");
+					}
+					comment.$("textarea").keys(commentText);
 				} else {
 					comment = browser.$$("textarea")[commentIndex];
 					comment.doubleClick();

@@ -722,7 +722,7 @@ export default class EditorForm extends React.Component {
 		const stateStyle = {};
 		let tooltipShow = true;
 		if (this.state.controlStates[control.name] === "hidden") {
-			stateStyle.display = "none";
+			stateStyle.visibility = "hidden";
 			tooltipShow = false;
 		} else if (this.state.controlStates[control.name] === "disabled") {
 			stateStyle.color = "#D8D8D8";

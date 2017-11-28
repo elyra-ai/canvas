@@ -190,7 +190,7 @@ export default class EditorControl extends React.Component {
 				showTooltip = false;
 				break;
 			case "hidden":
-				stateStyle.display = "none";
+				stateStyle.visibility = "hidden";
 				showTooltip = false;
 				break;
 			default:
@@ -207,7 +207,7 @@ export default class EditorControl extends React.Component {
 					borderColor: VALIDATION_MESSAGE.DISABLED
 				};
 			} else if (this.props.hidden) {
-				stateStyle.display = "none";
+				stateStyle.visibility = "hidden";
 			}
 		} else {
 			// Check for cell level operations for tables, which are added to the base control state
@@ -327,9 +327,9 @@ export default class EditorControl extends React.Component {
 				stateStyle[rowIndex] = {};
 			}
 			if (colIndex > -1) {
-				stateStyle[rowIndex][colIndex] = { display: "none" };
+				stateStyle[rowIndex][colIndex] = { visibility: "hidden" };
 			} else {
-				stateStyle[rowIndex].display = "none";
+				stateStyle[rowIndex].visibility = "hidden";
 			}
 		}
 	}

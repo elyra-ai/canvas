@@ -714,7 +714,7 @@ module.exports = function() {
 		// console.log("test " + contextMenu.length);
 		var menuItemDelete;
 		for (var menuIdx = 0; menuIdx < contextMenu.length; menuIdx++) {
-			if (contextMenu[menuIdx].$("span").type !== "NoSuchElement") {
+			if (contextMenu[menuIdx].isExisting("span")) {
 				var menuLabel = contextMenu[menuIdx].getText("span");
 				if (menuLabel === "Delete") {
 					// console.log("test span content " + contextMenu[menuIdx].getText("span"));
