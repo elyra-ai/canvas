@@ -388,7 +388,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		if (row) {
 			const column = row[colIndex];
 			if (column) {
-				return column.visibility === "hidden";
+				return column.display === "none";
 			}
 		}
 		return false;
