@@ -2002,7 +2002,7 @@ export default class CanvasD3Layout {
 				.attr("height", (d) => d.height + (2 * this.layout.highlightGap))
 				.attr("x", -this.layout.highlightGap)
 				.attr("y", -this.layout.highlightGap)
-				.attr("attr", function(d) { return ObjectModel.isSelected(d.id) ? "yes" : "no"; })
+				.attr("data-selected", function(d) { return ObjectModel.isSelected(d.id) ? "yes" : "no"; })
 				.attr("class", this.layout.cssSelectionHighlight)
 				.on("mousedown", (d) => {
 					this.commentSizing = true;
@@ -2644,7 +2644,16 @@ export default class CanvasD3Layout {
 	// of nodes and links for annotation purposes.
 	setDisplayOrder() {
 		this.canvas.selectAll(".link-group").lower(); // Moves link lines below other SVG elements
-		this.canvas.selectAll(".comment-group").lower(); // Moves comments below other SVG elements
+
+		// We push comments to the back in the reverse order they were added to the
+		// comments array. This is to ensure that pasted comments get displayed on
+		// top of previously existing comments.
+		const comments = ObjectModel.getComments();
+
+		for (var idx = comments.length - 1; idx > -1; idx--) {
+			d3.select(`#comment_grp_${comments[idx].id}`).lower();
+		}
+
 	}
 
 	buildLineArray() {

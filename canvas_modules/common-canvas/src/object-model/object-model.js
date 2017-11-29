@@ -126,7 +126,7 @@ const nodes = (state = [], action) => {
 	case "SET_CANVAS_INFO":
 		return state.map((node, index) => {
 			let newNode = Object.assign({}, node);
-			newNode = setNodeDimensions(newNode, node, action.layoutinfo);
+			newNode = setNodeDimensions(newNode, action.layoutinfo);
 			return newNode;
 		});
 
@@ -537,7 +537,11 @@ const getMainPipeline = (pipelineFlow) => {
 	return null;
 };
 
-const setNodeDimensions = (newNode, node, layoutInfo) => {
+// Returns a copy of the node passed in with additional fields which contains
+//  the height occupied by the input ports and output ports, based on the
+// layout info passed in, as well as the node width.
+const setNodeDimensions = (node, layoutInfo) => {
+	const newNode = Object.assign({}, node);
 	if (layoutInfo.connectionType === "ports") {
 		newNode.inputPortsHeight = node.input_ports
 			? (node.input_ports.length * (layoutInfo.portArcRadius * 2)) + ((node.input_ports.length - 1) * layoutInfo.portArcSpacing)
@@ -852,7 +856,16 @@ export default class ObjectModel {
 
 		// Add node height and width and, if appropriate, inputPortsHeight
 		// and outputPortsHeight
-		node = setNodeDimensions(node, node, store.getState().layoutinfo);
+		node = setNodeDimensions(node, store.getState().layoutinfo);
+		return node;
+	}
+
+	static cloneNode(inNode) {
+		let node = Object.assign({}, inNode, { id: getUUID() });
+
+		// Add node height and width and, if appropriate, inputPortsHeight
+		// and outputPortsHeight
+		node = setNodeDimensions(node, store.getState().layoutinfo);
 		return node;
 	}
 
@@ -961,6 +974,84 @@ export default class ObjectModel {
 		return true;
 	}
 
+	// Returns a position for a new comment added by clicking the 'add comment'
+	// button on the toolbar. It searches for a position that is not already
+	// occupied by an existing comment.
+	static getNewCommentPosition() {
+		var pos = { x_pos: 50, y_pos: 50 };
+
+		while (this.exactlyOverlaps(null, [pos])) {
+			pos.x_pos += 10;
+			pos.y_pos += 10;
+		}
+
+		return pos;
+	}
+
+	// Returns true if any of the node or comment definitions passed in exactly
+	// overlap any of the existing nodes and comments. This is used by the
+	// paste-from-clipboard code to detect if nodes and comments being pasted
+	// overlap existing nodes and comments.
+	static exactlyOverlaps(nodeDefs, commentDefs) {
+		var overlaps = false;
+
+		if (nodeDefs && nodeDefs.length > 0) {
+			const index = nodeDefs.findIndex((nodeDef) => {
+				return this.exactlyOverlapsNodes(nodeDef);
+			});
+			if (index > -1) {
+				overlaps = true;
+			}
+		}
+		if (overlaps === false && commentDefs && commentDefs.length > 0) {
+			const index = commentDefs.findIndex((commentDef) => {
+				return this.exactlyOverlapsComments(commentDef);
+			});
+			if (index > -1) {
+				overlaps = true;
+			}
+		}
+
+		return overlaps;
+	}
+
+	// Return true if the new node definition passed in exactly overlaps any
+	// of the existing nodes.
+	static exactlyOverlapsNodes(nodeDef) {
+		var overlap = false;
+		this.getNodes().forEach((canvasNode) => {
+			if (canvasNode.x_pos === nodeDef.x_pos &&
+					canvasNode.y_pos === nodeDef.y_pos) {
+				overlap = true;
+			}
+		});
+		return overlap;
+	}
+
+	// Return true if the new comment definition passed in exactly overlaps any
+	// of the existing comments.
+	static exactlyOverlapsComments(comment) {
+		var overlap = false;
+		this.getComments().forEach((canvasComment) => {
+			if (canvasComment.x_pos === comment.x_pos &&
+					canvasComment.y_pos === comment.y_pos) {
+				overlap = true;
+			}
+		});
+		return overlap;
+	}
+
+	// Returns true if the node ID passed in exists in the array of nodes
+	// passed in.
+	static isNodeIdInNodes(nodeId, inNodes) {
+		if (inNodes) {
+			return inNodes.findIndex((node) => {
+				return node.id === nodeId;
+			}) > -1;
+		}
+		return false;
+	}
+
 	static addNode(newNode) {
 		store.dispatch({ type: "ADD_NODE", data: { newNode: newNode } });
 
@@ -1022,10 +1113,6 @@ export default class ObjectModel {
 	// Comment methods
 
 	static createComment(source) {
-		if (!source || !source.mousePos) {
-			source.mousePos = { x: 50, y: 50 }; // Comments created from toolbar
-		}
-
 		const info = {
 			id: getUUID(),
 			class_name: "d3-comment-rect",
@@ -1044,6 +1131,10 @@ export default class ObjectModel {
 			}
 		});
 		return info;
+	}
+
+	static cloneComment(inComment) {
+		return Object.assign({}, inComment, { id: getUUID() });
 	}
 
 	static addComment(info) {
@@ -1116,6 +1207,18 @@ export default class ObjectModel {
 		return linkNodeList;
 	}
 
+	static cloneNodeLink(link, srcNodeId, trgNodeId) {
+		return {
+			id: getUUID(),
+			type: link.type,
+			class_name: link.class_name,
+			srcNodeId: srcNodeId,
+			srcNodePortId: link.srcNodePortId,
+			trgNodeId: trgNodeId,
+			trgNodePortId: link.trgNodePortId
+		};
+	}
+
 	static addLinks(linkList) {
 		linkList.forEach((link) => {
 			store.dispatch({ type: "ADD_LINK", data: link });
@@ -1144,6 +1247,34 @@ export default class ObjectModel {
 		return linkCommentList;
 	}
 
+	static cloneCommentLink(link, srcNodeId, trgNodeId) {
+		return {
+			id: getUUID(),
+			type: link.type,
+			class_name: link.class_name,
+			srcNodeId: srcNodeId,
+			trgNodeId: trgNodeId
+		};
+	}
+
+	// Returns an array of links from canvas info links which link
+	// any of the nodes or comments passed in.
+	static getLinksBetween(inNodes, inComments) {
+		const linksList = this.getCanvasInfo().links;
+		const filteredLinks = linksList.filter((link) => {
+			// All links must point to a node so look for target node first
+			if (this.isNodeIdInNodes(link.trgNodeId, inNodes)) {
+				// Next look for any node or comment as the source object.
+				if (this.isNodeIdInNodes(link.srcNodeId, inNodes) ||
+						this.isCommentIdInComments(link.srcNodeId, inComments)) {
+					return true;
+				}
+			}
+			return false;
+		});
+		return filteredLinks;
+	}
+
 	static getLinksContainingId(id) {
 		const linksList = this.getCanvasInfo().links;
 		const linksContaining = linksList.filter((link) => {
@@ -1163,6 +1294,17 @@ export default class ObjectModel {
 			return newLink;
 		});
 		return returnLinks;
+	}
+
+	// Returns true if the comment ID passed in exists in the array of comments
+	// passed in.
+	static isCommentIdInComments(commentId, inComments) {
+		if (inComments) {
+			return inComments.findIndex((comment) => {
+				return comment.id === commentId;
+			}) > -1;
+		}
+		return false;
 	}
 
 	// Utility functions
@@ -1204,6 +1346,11 @@ export default class ObjectModel {
 	static isConnectionAllowed(srcNodeInfo, trgNodeInfo) {
 		const srcNode = this.getNode(srcNodeInfo.id);
 		const trgNode = this.getNode(trgNodeInfo.id);
+
+
+		if (!srcNode || !trgNode) { // Source ot target are not valid.
+			return false;
+		}
 
 		if (srcNodeInfo.id === trgNodeInfo.id) { // Cannot connect to ourselves, currently.
 			return false;
@@ -1511,19 +1658,8 @@ export default class ObjectModel {
 	}
 
 	static getSelectedNodesAndComments() {
-		var objs = [];
-		this.getCanvasInfo().nodes.forEach((node) => {
-			if (this.getSelectedObjectIds().includes(node.id)) {
-				objs.push(node);
-			}
-		});
-
-		this.getCanvasInfo().comments.forEach((comment) => {
-			if (this.getSelectedObjectIds().includes(comment.id)) {
-				objs.push(comment);
-			}
-		});
-		return objs;
+		var objs = this.getSelectedNodes();
+		return objs.concat(this.getSelectedComments());
 	}
 
 	static getSelectedNodes() {
@@ -1531,6 +1667,17 @@ export default class ObjectModel {
 		this.getCanvasInfo().nodes.forEach((node) => {
 			if (this.getSelectedObjectIds().includes(node.id)) {
 				objs.push(node);
+			}
+		});
+
+		return objs;
+	}
+
+	static getSelectedComments() {
+		var objs = [];
+		this.getCanvasInfo().comments.forEach((comment) => {
+			if (this.getSelectedObjectIds().includes(comment.id)) {
+				objs.push(comment);
 			}
 		});
 

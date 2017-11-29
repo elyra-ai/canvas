@@ -102,6 +102,7 @@ class Toolbar extends React.Component {
 		this.generatePaletteIcon = this.generatePaletteIcon.bind(this);
 		this.toggleShowExtendedMenu = this.toggleShowExtendedMenu.bind(this);
 		this.updateToolbarWidth = this.updateToolbarWidth.bind(this);
+		this.toolbarMenuActionHandler = this.toolbarMenuActionHandler.bind(this);
 	}
 
 	componentDidMount() {
@@ -334,6 +335,10 @@ class Toolbar extends React.Component {
 		this.setState({ showExtendedMenu: !this.state.showExtendedMenu });
 	}
 
+	toolbarMenuActionHandler(action) {
+		CanvasController.toolbarMenuActionHandler(action);
+	}
+
 	render() {
 		const canvasWidth = window.innerWidth;
 		let toolbarWidth = window.innerWidth;
@@ -353,7 +358,7 @@ class Toolbar extends React.Component {
 			const actions = that.generateActionItems(
 				that.props.config,
 				displayItems,
-				CanvasController.toolbarMenuActionHandler,
+				this.toolbarMenuActionHandler,
 				""
 			);
 			actionContainer = (<div key={"actions-container"} id={"actions-container"} className="toolbar-items-container">
@@ -392,12 +397,6 @@ Toolbar.propTypes = {
 	renderingEngine: PropTypes.string,
 	paletteState: PropTypes.bool,
 	paletteType: PropTypes.string,
-	// closePalette: PropTypes.func,
-	// openPalette: PropTypes.func,
-	// zoomIn: PropTypes.func,
-	// zoomOut: PropTypes.func,
-	// zoomToFit: PropTypes.func,
-	// toolbarMenuActionHandler: PropTypes.func,
 	rightFlyoutOpen: PropTypes.bool
 };
 

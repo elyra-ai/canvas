@@ -51,6 +51,7 @@
     "grunt-yamllint": "0.3.0",
     "immutable-undo": "1.1.1",
     "jest": "20.0.4",
+    "jest-localstorage-mock": "2.1.0",
     "log4js": "0.6.38",
     "node-uuid": "1.4.8",
     "optimize-css-assets-webpack-plugin": "3.1.1",
@@ -94,7 +95,8 @@
       "/.eslintrc.js"
     ],
     "setupFiles": [
-      "./__mocks__/globalMock.js"
+      "./__mocks__/globalMock.js",
+      "jest-localstorage-mock"
     ],
     "verbose": true,
     "moduleNameMapper": {

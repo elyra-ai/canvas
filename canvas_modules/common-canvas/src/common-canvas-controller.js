@@ -9,6 +9,7 @@
 
 import AddLinksAction from "./command-actions/addLinksAction.js";
 import ArrangeLayoutAction from "./command-actions/arrangeLayoutAction.js";
+import CloneMultipleObjectsAction from "./command-actions/cloneMultipleObjectsAction.js";
 import CommandStack from "./command-stack/command-stack.js";
 import constants from "../constants/common-constants.js";
 import CreateAutoNodeAction from "./command-actions/createAutoNodeAction.js";
@@ -42,7 +43,6 @@ var handlers = {
 
 var commonCanvas = null;
 var contextMenuSource = null;
-
 
 export default class CommonCanvasController {
 
@@ -101,6 +101,84 @@ export default class CommonCanvasController {
 		}
 	}
 
+	static cutToClipboard() {
+		if (this.copyToClipboard()) {
+			this.editActionHandler({
+				editType: "deleteSelectedObjects",
+				selectedObjectIds: ObjectModel.getSelectedObjectIds()
+			});
+		}
+	}
+
+	// Copies the currently selected objects to the internal clipboard and
+	// returns true if successful. Returns false if there is nothing to copy to
+	// the clipboard.
+	static copyToClipboard() {
+		var copyData = {};
+		var nodes = ObjectModel.getSelectedNodes();
+		var comments = ObjectModel.getSelectedComments();
+		var links = ObjectModel.getLinksBetween(nodes, comments);
+
+		if (nodes.length === 0 && comments.length === 0) {
+			return false;
+		}
+
+		if (nodes && nodes.length > 0) {
+			copyData.nodes = nodes;
+		}
+		if (comments && comments.length > 0) {
+			copyData.comments = comments;
+		}
+		if (links && links.length > 0) {
+			copyData.links = links;
+		}
+
+		var clipboardData = JSON.stringify(copyData);
+		localStorage.canvasClipboard = clipboardData;
+
+		return true;
+	}
+
+	static isClipboardEmpty() {
+		return !localStorage.canvasClipboard || localStorage.canvasClipboard === "";
+	}
+
+	static pasteFromClipboard() {
+		var pastedText = localStorage.canvasClipboard;
+
+		var objects = JSON.parse(pastedText);
+
+		// If there are no nodes and no comments there's nothing to paste so just
+		// return.
+		if (!objects.nodes && !objects.comments) {
+			return;
+		}
+
+		// Offset position of pasted nodes and comments if they exactly overlap
+		// existing nodes and comments - this can happen when pasting over the top
+		// of the canvas from which the nodes and comments were copied.
+		while (ObjectModel.exactlyOverlaps(objects.nodes, objects.comments)) {
+			if (objects.nodes) {
+				objects.nodes.forEach((node) => {
+					node.x_pos += 10;
+					node.y_pos += 10;
+				});
+			}
+			if (objects.comments) {
+				objects.comments.forEach((comment) => {
+					comment.x_pos += 10;
+					comment.y_pos += 10;
+					comment.selectedObjectIds = [];
+				});
+			}
+		}
+
+		this.editActionHandler({
+			editType: "cloneMultipleObjects",
+			objects: objects
+		});
+	}
+
 	static createAutoNode(nodeTemplate) {
 		var data = {
 			editType: "createAutoNode",
@@ -112,6 +190,7 @@ export default class CommonCanvasController {
 		this.editActionHandler(data);
 	}
 
+	// Called when a node is dragged from the palette onto the canvas
 	static createNodeAt(operatorIdRef, label, sourceId, sourceObjectTypeId, x, y) {
 		var data = {};
 
@@ -138,6 +217,10 @@ export default class CommonCanvasController {
 		this.editActionHandler(data);
 	}
 
+	// Called when a data object is dragged from outside common canvas.
+	// The data object must contain the 'action' field that is passed to
+	// the host app from editActionHandler. The editActionHandler method
+	// does not intercept this action.
 	static createNodeFromDataAt(x, y, data) {
 		data.offsetX = x;
 		data.offsetY = y;
@@ -219,9 +302,27 @@ export default class CommonCanvasController {
 			case "delete": {
 				const command = new DeleteObjectsAction(source);
 				CommandStack.do(command);
+				commonCanvas.configureToolbarButtonsState();
 				break;
 			}
+			case "cut":
+				this.cutToClipboard();
+				commonCanvas.configureToolbarButtonsState();
+				break;
+			case "copy":
+				this.copyToClipboard();
+				commonCanvas.configureToolbarButtonsState();
+				break;
+			case "paste":
+				this.pasteFromClipboard();
+				commonCanvas.configureToolbarButtonsState();
+				break;
 			case "addComment": {
+				const comPos = ObjectModel.getNewCommentPosition();
+				source.mousePos = {
+					x: comPos.x_pos,
+					y: comPos.y_pos
+				};
 				const comment = ObjectModel.createComment(source);
 				const command = new CreateCommentAction(comment);
 				CommandStack.do(command);
@@ -240,11 +341,11 @@ export default class CommonCanvasController {
 			}
 			case "undo":
 				CommandStack.undo();
-				commonCanvas.canUndoRedo();
+				commonCanvas.configureToolbarButtonsState();
 				break;
 			case "redo":
 				CommandStack.redo();
-				commonCanvas.canUndoRedo();
+				commonCanvas.configureToolbarButtonsState();
 				break;
 			default:
 			}
@@ -291,6 +392,11 @@ export default class CommonCanvasController {
 			}
 			case "createAutoNode": {
 				const command = new CreateAutoNodeAction(data);
+				CommandStack.do(command);
+				break;
+			}
+			case "cloneMultipleObjects": {
+				const command = new CloneMultipleObjectsAction(data);
 				CommandStack.do(command);
 				break;
 			}

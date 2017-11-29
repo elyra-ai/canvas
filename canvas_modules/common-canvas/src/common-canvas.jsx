@@ -157,14 +157,27 @@ export default class CommonCanvas extends React.Component {
 		this.refs.canvas.focusOnCanvas(); // Set focus on div so keybord events go there.
 	}
 
-	canUndoRedo() {
+	configureToolbarButtonsState() {
 		let undoState = true;
 		let redoState = true;
+		let cutState = true;
+		let copyState = true;
+		let pasteState = true;
+		let deleteState = true;
+
 		if (!CommandStack.canUndo()) {
 			undoState = false;
 		}
 		if (!CommandStack.canRedo()) {
 			redoState = false;
+		}
+		if (ObjectModel.getSelectedObjectIds().length === 0) {
+			cutState = false;
+			copyState = false;
+			deleteState = false;
+		}
+		if (CanvasController.isClipboardEmpty()) {
+			pasteState = false;
 		}
 
 		if (typeof this.state.toolbarConfig !== "undefined") {
@@ -174,6 +187,18 @@ export default class CommonCanvas extends React.Component {
 				}
 				if (this.state.toolbarConfig[i].action === "redo") {
 					this.state.toolbarConfig[i].enable = redoState;
+				}
+				if (this.state.toolbarConfig[i].action === "cut") {
+					this.state.toolbarConfig[i].enable = cutState;
+				}
+				if (this.state.toolbarConfig[i].action === "copy") {
+					this.state.toolbarConfig[i].enable = copyState;
+				}
+				if (this.state.toolbarConfig[i].action === "paste") {
+					this.state.toolbarConfig[i].enable = pasteState;
+				}
+				if (this.state.toolbarConfig[i].action === "delete") {
+					this.state.toolbarConfig[i].enable = deleteState;
 				}
 			}
 		}
@@ -233,7 +258,7 @@ export default class CommonCanvas extends React.Component {
 			}
 
 			if (this.props.toolbarConfig) {
-				this.canUndoRedo();
+				this.configureToolbarButtonsState();
 				canvasToolbar = (<Toolbar
 					config={this.state.toolbarConfig}
 					renderingEngine={this.props.config.enableRenderingEngine}

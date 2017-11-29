@@ -12,7 +12,7 @@ module.exports = function() {
 
 	/* global browser */
 
-	this.Then("I click on the secondary toolbar create comment", function() {
+	this.Then("I click on the secondary toolbar create comment button", function() {
 		browser.$("#toolbar-icon-addComment").click();
 	});
 
@@ -26,6 +26,18 @@ module.exports = function() {
 
 	this.Then("I click on the secondary toolbar vertical layout button", function() {
 		browser.$("#toolbar-icon-arrangeVertically").click();
+	});
+
+	this.Then("I click on the secondary toolbar cut button", function() {
+		browser.$("#toolbar-icon-cut").click();
+	});
+
+	this.Then("I click on the secondary toolbar copy button", function() {
+		browser.$("#toolbar-icon-copy").click();
+	});
+
+	this.Then("I click on the secondary toolbar paste button", function() {
+		browser.$("#toolbar-icon-paste").click();
 	});
 
 	this.Then(/^I resize the window size to (\d+) width and (\d+) height$/, function(widthNumber, heightNumber) {
