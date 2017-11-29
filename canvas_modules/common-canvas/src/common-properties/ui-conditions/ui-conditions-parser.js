@@ -93,7 +93,8 @@ function parseUiItem(controls, uiItem) {
 	}
 	case "additionalLink":
 	case "checkboxSelector":
-	case "panel": {
+	case "panel":
+	case "summaryPanel": {
 		if (uiItem.panel && uiItem.panel.uiItems) {
 			for (const panelUiItem of uiItem.panel.uiItems) {
 				parseUiItem(controls, panelUiItem);

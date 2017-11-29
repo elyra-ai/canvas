@@ -97,20 +97,29 @@
         "type": "panels",
         "group_info": [
           {
-            "id": "fields",
-            "type": "columnSelection",
+            "id": "summary-panel",
             "label": {
-              "default": "Columns"
+              "default": "Configure Slider"
             },
-            "parameter_refs": [
-              "selected_fields"
-            ]
-          },
-          {
-            "id": "custom-slider-panel",
-            "type": "customPanel",
-            "parameter_refs": [
-              "custom_slider"
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "fields",
+                "type": "columnSelection",
+                "label": {
+                  "default": "Columns"
+                },
+                "parameter_refs": [
+                  "selected_fields"
+                ]
+              },
+              {
+                "id": "custom-slider-panel",
+                "type": "customPanel",
+                "parameter_refs": [
+                  "custom_slider"
+                ]
+              }
             ]
           }
         ]

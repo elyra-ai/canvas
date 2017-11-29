@@ -59,6 +59,7 @@ module.exports = function() {
 	});
 
 	this.Then(/^I select "([^"]*)" option from Input columns select textbox$/, function(selectTextboxOption) {
+		// remove the first row in the table, left with one row in the table
 		var selectTextbox = browser.$("#editor-control-inputFieldList").$$("option")[0];
 		selectTextbox.click();
 
@@ -66,6 +67,7 @@ module.exports = function() {
 		var inputFieldList = browser.$("#editor-control-inputFieldList").$$("option");
 		expect(1).toEqual(inputFieldList.length);
 
+		// add two more rows to the table, for a total of 3 rows in the table
 		browser.$("#add-fields-button").click();
 
 		// Splitting into different options due to ESLint errors
@@ -84,23 +86,29 @@ module.exports = function() {
 		inputFieldList = browser.$("#editor-control-inputFieldList").$$("option");
 		expect(3).toEqual(inputFieldList.length);
 
+		// check the length of the field picker list after clicking buttons
+		// click the add columns button
 		browser.$("#add-fields-button").click();
 
 		var fieldPickerList = browser.$$(".field-picker-data-rows");
 		expect(7).toEqual(fieldPickerList.length);
 
+		// click the reset button
 		browser.$("#reset-fields-button").click();
 		fieldPickerList = browser.$$(".field-picker-data-rows");
 		expect(7).toEqual(fieldPickerList.length);
 
+		// Filter out type integer
 		browser.$("#field-picker-filter-list").$$("li")[1].click();
 		fieldPickerList = browser.$$(".field-picker-data-rows");
 		expect(6).toEqual(fieldPickerList.length);
 
+		// add a filter out of type doubles
 		browser.$("#field-picker-filter-list").$$("li")[2].click();
 		fieldPickerList = browser.$$(".field-picker-data-rows");
 		expect(4).toEqual(fieldPickerList.length);
 
+		// search for the drug row
 		var filterField = browser.$("#flexible-table-search");
 		filterField.setValue("", "Drug");
 		fieldPickerList = browser.$$(".field-picker-data-rows");
@@ -116,14 +124,19 @@ module.exports = function() {
 		inputFieldList = browser.$("#editor-control-inputFieldList").$$("option");
 		expect(4).toEqual(inputFieldList.length);
 
+		// at this point there are 4 row in the input field list
+
+		// selecte second row
 		var selectDrugOption = browser.$("#editor-control-inputFieldList").$$("option")[1];
 		selectDrugOption.click();
-
+		// select first row
 		var selectBPOption = browser.$("#editor-control-inputFieldList").$$("option")[0];
 		selectBPOption.click();
+		// still have 4 rowa
 		inputFieldList = browser.$("#editor-control-inputFieldList").$$("option");
 		expect(4).toEqual(inputFieldList.length);
 
+		// click on the remove button remove 2 rows selected above and have 2 remaining rows.
 		browser.$("#remove-fields-button-enabled").click();
 		inputFieldList = browser.$("#editor-control-inputFieldList").$$("option");
 		expect(1).toEqual(inputFieldList.length);
@@ -435,7 +448,7 @@ module.exports = function() {
 
 	this.Then(/^I have closed the common properties dialog by clicking on close button$/, function() {
 		var closeButton = getPropertiesCancelButton();
-		closeButton.click();
+		closeButton[closeButton.length - 1].click();
 		browser.pause(500);
 	});
 
@@ -477,8 +490,8 @@ module.exports = function() {
 	});
 
 	this.Then("I close the subPanel dialog", function() {
-		var closeButton = getPropertiesCancelButton(true);
-		closeButton.click();
+		var closeButton = getPropertiesCancelButton();
+		closeButton[closeButton.length - 1].click();
 	});
 
 	this.Then("I click on modal OK button", function() {
@@ -511,9 +524,6 @@ module.exports = function() {
 	}
 
 	function getPropertiesCancelButton(subpanel) {
-		if (subpanel) {
-			return browser.$$(".modal__buttons")[1].$("#properties-cancel-button");
-		}
-		return browser.$("#properties-cancel-button");
+		return browser.$$("#properties-cancel-button");
 	}
 };

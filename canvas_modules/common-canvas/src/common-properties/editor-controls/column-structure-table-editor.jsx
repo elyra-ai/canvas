@@ -17,6 +17,7 @@ import ToggletextControl from "./toggletext-control.jsx";
 import OneofselectControl from "./oneofselect-control.jsx";
 import TextfieldControl from "./textfield-control.jsx";
 import CheckboxControl from "./checkbox-control.jsx";
+import ExpressionControl from "./expression-control.jsx";
 import FlexibleTable from "./flexible-table.jsx";
 import PropertyUtils from "../util/property-utils.js";
 import SubPanelCell from "../editor-panels/sub-panel-cell.jsx";
@@ -29,7 +30,7 @@ var _ = require("underscore");
 
 /* eslint-disable react/prop-types */
 /* eslint-enable react/prop-types */
-/* eslint complexity: ["error", 12] */
+/* eslint complexity: ["error", 13] */
 
 export default class ColumnStructureTableEditor extends EditorControl {
 	constructor(props) {
@@ -40,6 +41,8 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			controlValue: props.valueAccessor(props.control.name),
 			selectedRows: this.props.selectedRows
 		};
+
+		this.onPanelContainer = [];
 
 		this._editing_row = 0;
 		this._subControlId = "___" + props.control.name + "_";
@@ -67,12 +70,11 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		this.onSort = this.onSort.bind(this);
 		this.setScrollToRow = this.setScrollToRow.bind(this);
 		this.includeInFilter = this.includeInFilter.bind(this);
+		this.mouseEnterRemoveButton = this.mouseEnterRemoveButton.bind(this);
+		this.mouseLeaveRemoveButton = this.mouseLeaveRemoveButton.bind(this);
+
 		this.makeAddRemoveButtonPanel = this.makeAddRemoveButtonPanel.bind(this);
 		this.makeLabel = this.makeLabel.bind(this);
-		this.populateFieldData = this.populateFieldData.bind(this);
-		this.getDefaultSubControlValue = this.getDefaultSubControlValue.bind(this);
-		this.indexOfField = this.indexOfField.bind(this);
-		this.getDMDefault = this.getDMDefault.bind(this);
 		this.buildChildItem = this.buildChildItem.bind(this);
 		this.makeCells = this.makeCells.bind(this);
 
@@ -82,35 +84,13 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		}
 	}
 
-	componentWillMount() {
-		// augment controlValues with data model fields if appropriate
-		let controlValue = this.getCurrentControlValue();
-		if (this.props.control.noPickColumns) {
-			// When not picking columns, we need always to ensure that the field array is complete and current
-			controlValue = this.populateFieldData(controlValue);
-			this.setState({
-				controlValue: controlValue
-			});
-		}
-	}
-
-
 	componentWillReceiveProps(nextProps) {
-
-
-		// logger.info("componentWillReceiveProps");
-		// augment controlValues with data model fields if appropriate
-		let controlValue = nextProps.valueAccessor(nextProps.control.name);
-		if (this.props.control.noPickColumns) {
-			// When not picking columns, we need always to ensure that the field array is complete and current
-			controlValue = this.populateFieldData(controlValue);
-		}
+		const controlValue = nextProps.valueAccessor(nextProps.control.name);
 		this.setState({
 			controlValue: controlValue,
 			selectedRows: nextProps.selectedRows
 		});
 		this.selectionChanged(nextProps.selectedRows);
-
 	}
 
 	/* Returns the public representation of the control value. */
@@ -122,6 +102,14 @@ export default class ColumnStructureTableEditor extends EditorControl {
 	/* Returns the current internal representation of the control value. */
 	getCurrentControlValue() {
 		return this.state.controlValue;
+	}
+
+	getOnPanelContainer(selectedRows) {
+		if (this.onPanelContainer.length === 0 || selectedRows.length === 0) {
+			return (<div />);
+		}
+
+		return (<div>{this.onPanelContainer[selectedRows[0]]}</div>);
 	}
 
 	setCurrentControlValueSelected(targetControl, controlValue, updateControlValue, selectedRows) {
@@ -185,7 +173,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 	}
 
 	handleRowClick(rowIndex, evt) {
-		const selection = EditorControl.handleTableRowClick(evt, rowIndex, this.state.selectedRows);
+		const selection = EditorControl.handleTableRowClick(evt, rowIndex, this.state.selectedRows, this.props.control.rowSelection);
 		// logger.info(selection);
 		this.updateSelectedRows(this.props.control.name, selection);
 	}
@@ -193,6 +181,8 @@ export default class ColumnStructureTableEditor extends EditorControl {
 	updateSelectedRows(ctrlName, selection) {
 		this.props.updateSelectedRows(ctrlName, selection);
 		this.selectionChanged(selection);
+		this.setState({ enableRemoveIcon: (selection.length !== 0) });
+
 	}
 
 	selectionChanged(selection) {
@@ -284,12 +274,13 @@ export default class ColumnStructureTableEditor extends EditorControl {
 
 	_makeCell(columnDef, controlValue, rowIndex, colIndex, colWidth, stateStyle, stateDisabled) {
 		let cell;
+		let cellContent;
 		let columnStyle = { "width": colWidth, "padding": "0 0 0 0" };
 		const disabled = this._getDisabledStatus(rowIndex, colIndex, stateDisabled);
 		const hidden = this._getHiddenStatus(rowIndex, colIndex, stateStyle);
 		if (columnDef.controlType === "toggletext" && columnDef.editStyle !== "subpanel") {
 			columnStyle = { "width": colWidth, "padding": "8px 0 0px 0" };
-			cell = (<Td key={colIndex} column={columnDef.name} style={columnStyle}><ToggletextControl
+			cellContent = (<ToggletextControl
 				rowIndex={rowIndex}
 				control={this.props.control}
 				columnDef={columnDef}
@@ -305,9 +296,9 @@ export default class ColumnStructureTableEditor extends EditorControl {
 				tableControl
 				disabled={disabled}
 				hidden={hidden}
-			/></Td>);
+			/>);
 		} else if (columnDef.controlType === "oneofselect" && columnDef.editStyle !== "subpanel") {
-			cell = (<Td key={colIndex} column={columnDef.name} style={columnStyle}><OneofselectControl
+			cellContent = (<OneofselectControl
 				rowIndex={rowIndex}
 				control={this.props.control}
 				columnDef={columnDef}
@@ -320,16 +311,38 @@ export default class ColumnStructureTableEditor extends EditorControl {
 				tableControl
 				disabled={disabled}
 				hidden={hidden}
-			/></Td>);
+			/>);
 		} else if (columnDef.valueDef.propType === "enum" && columnDef.editStyle !== "subpanel") {
-			cell = <Td key={colIndex} column={columnDef.name} style={columnStyle}>this.enumRenderCell(controlValue[rowIndex][colIndex], columnDef)</Td>;
+			cellContent = this.enumRenderCell(controlValue[rowIndex][colIndex], columnDef);
+		} else if (columnDef.controlType === "expression" && columnDef.editStyle === "on_panel") {
+			const controlId = "tableexpression" + this.props.control.name;
+			cellContent = (<div>
+				<br />
+				<label className="control-label">Expression</label>
+				<div>
+					<ExpressionControl
+						key={controlId}
+						rowIndex={rowIndex}
+						columnIndex={colIndex}
+						control={columnDef}
+						dataModel={this.props.dataModel}
+						controlValue={controlValue}
+						value={controlValue[rowIndex][colIndex]}
+						updateControlValue={this.props.updateControlValue}
+						validateConditions={this.validateConditions}
+						setCurrentControlValueSelected={this.setCurrentControlValueSelected}
+						getSelectedRows={this.getSelectedRows}
+						tableControl
+					/>
+				</div>
+			</div>);
 		} else if (columnDef.controlType === "textfield" && columnDef.editStyle !== "subpanel") {
 			let retrieveFunc;
 			const errorState = this.getTableErrorState(rowIndex, colIndex);
 			if (PropertyUtils.toType(errorState) === "object") {
 				retrieveFunc = this.props.retrieveValidationErrorMessage;
 			}
-			cell = (<Td key={colIndex} column={columnDef.name} style={columnStyle}><TextfieldControl
+			cellContent = (<TextfieldControl
 				rowIndex={rowIndex}
 				control={this.props.control}
 				columnDef={columnDef}
@@ -339,9 +352,9 @@ export default class ColumnStructureTableEditor extends EditorControl {
 				tableControl
 				disabled={disabled}
 				hidden={hidden}
-			/></Td>);
+			/>);
 		} else if (columnDef.valueDef.propType === "boolean" && columnDef.editStyle !== "subpanel") {
-			cell = (<Td key={colIndex} column={columnDef.name} style={columnStyle}><CheckboxControl
+			cellContent = (<CheckboxControl
 				rowIndex={rowIndex}
 				columnIndex={colIndex}
 				control={this.props.control}
@@ -354,18 +367,29 @@ export default class ColumnStructureTableEditor extends EditorControl {
 				tableControl
 				disabled={disabled}
 				hidden={hidden}
-			/></Td>);
+			/>);
+
 		} else {
-			const cellDisabledClassName = disabled ? "disabled" : "";
 			const padding = colIndex === 0 ? "6px 0 10px 15px" : "6px 0 10px 0";
 			columnStyle = { "width": colWidth, "padding": padding };
 			// workaround adding span show column shows up when no data is in cell
-			let cellContent = controlValue[rowIndex][colIndex];
+			cellContent = controlValue[rowIndex][colIndex];
 			if (Array.isArray(cellContent)) {
 				cellContent = cellContent.join(", ");
 			}
-			cell = <Td className={"table-cell " + cellDisabledClassName} key={colIndex} column={columnDef.name} style={columnStyle}><span>{cellContent}</span></Td>;
 		}
+		const cellDisabledClassName = disabled ? "disabled" : "";
+		if (columnDef.editStyle === "subpanel") {
+			cell = <Td className={"table-cell " + cellDisabledClassName} key={colIndex} column={columnDef.name} style={columnStyle}><span>{cellContent}</span></Td>;
+		} else if (columnDef.editStyle === "on_panel") {
+			cell = (<Td className={"table-cell " + cellDisabledClassName} key={colIndex} column={columnDef.name} style={columnStyle}>
+				<span>{controlValue[rowIndex][colIndex]}</span></Td>);
+			// save the cell conent in an object
+			this.onPanelContainer[rowIndex] = cellContent;
+		} else {
+			cell = (<Td key={colIndex} column={columnDef.name} style={columnStyle}>{cellContent}</Td>);
+		}
+
 		return cell;
 	}
 
@@ -463,101 +487,21 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		}
 		return label;
 	}
-
-	populateFieldData(controlValue) {
-		const rowData = [];
-		const dm = this.props.dataModel;
-		const updateCells = [];
-		for (var i = 0; i < dm.fields.length; i++) {
-			const row = [];
-			const fieldIndex = this.indexOfField(dm.fields[i].name, controlValue);
-			for (var k = 0; k < this.props.control.subControls.length; k++) {
-				if (k === this.props.control.keyIndex) {
-					row.push(dm.fields[i].name);
-				} else if (fieldIndex > -1 && controlValue.length > i && controlValue[i].length > k) {
-					row.push(controlValue[i][k]);
-				} else {
-					row.push(this.getDefaultSubControlValue(k, dm.fields[i].name));
-					updateCells.push([i, k]);
-				}
-			}
-			rowData.push(row);
-		}
-		return rowData;
+	mouseEnterRemoveButton() {
+		this.setState({ hoverRemoveIcon: true });
 	}
 
-
-	getDefaultSubControlValue(col, fieldName) {
-		let val;
-		const subControl = this.props.control.subControls[col];
-		if (PropertyUtils.toType(subControl.valueDef.defaultValue) !== "undefined") {
-			val = subControl.valueDef.defaultValue;
-		} else if (PropertyUtils.toType(subControl.dmDefault) !== "undefined") {
-			val = this.getDMDefault(subControl, fieldName);
-		} else if (subControl.values) {
-			val = subControl.values[0];
-		} else if (subControl.valueDef.propType === "string") {
-			val = "";
-		} else if (subControl.valueDef.propType === "boolean") {
-			val = false;
-		} else if (subControl.valueDef.propType === "enum") {
-			val = subControl.values[0];
-		} else if (subControl.valueDef.propType === "integer" ||
-								subControl.valueDef.propType === "long" ||
-								subControl.valueDef.propType === "double") {
-			val = 0;
-		} else {
-			val = null;
-		}
-		return val;
+	mouseLeaveRemoveButton() {
+		this.setState({ hoverRemoveIcon: false });
 	}
 
-	getDMDefault(subControlDef, fieldName) {
-		let defaultValue;
-		const dmField = subControlDef.dmDefault;
-		if (fieldName) {
-			for (let i = 0; i < this.props.dataModel.fields.length; i++) {
-				if (this.props.dataModel.fields[i].name === fieldName) {
-					switch (dmField) {
-					case "type":
-						defaultValue = this.props.dataModel.fields[i].type;
-						break;
-					case "description":
-						defaultValue = this.props.dataModel.fields[i].description;
-						break;
-					case "measure":
-						defaultValue = this.props.dataModel.fields[i].measure;
-						break;
-					case "modeling_role":
-						defaultValue = this.props.dataModel.fields[i].modeling_role;
-						break;
-					default:
-						break;
-					}
-					break;
-				}
-			}
-		}
-		return defaultValue;
-	}
-
-	indexOfField(fieldName, controlValue) {
-		for (var i = 0; i < controlValue.length; i++) {
-			if (controlValue[i][0] === fieldName) {
-				return i;
-			}
-		}
-		return -1;
-	}
-
-	makeAddRemoveButtonPanel(stateDisabled) {
+	makeAddRemoveButtonPanel(stateDisabled, tableButtonConfig) {
 		if (this.props.control.noPickColumns) {
 			return (<div />);
 		}
 		let removeFieldsButtonId = "remove-fields-button-enabled";
 		let removeIconImage = (<img src={remove32} />);
-		let removeOnClick = this.removeSelected;
-
+		let removeOnClick = (tableButtonConfig) ? tableButtonConfig.removeButtonFunction : this.removeSelected;
 		if (!this.state.enableRemoveIcon || stateDisabled.disabled) {
 			removeIconImage = (<img src={remove32disabled} />);
 			removeFieldsButtonId = "remove-fields-button-disabled";
@@ -578,7 +522,8 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		</div>);
 
 		let addButtonDisabled = false;
-		let addOnClick = this.props.openFieldPicker;
+		let addOnClick = (tableButtonConfig) ? tableButtonConfig.addButtonFunction : this.props.openFieldPicker;
+		const addButtonLabel = (tableButtonConfig) ? tableButtonConfig.addButtonLabel : "Add Columns";
 		if (stateDisabled.disabled) {
 			addButtonDisabled = true;
 			addOnClick = null;
@@ -590,16 +535,19 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			disabled={addButtonDisabled}
 			data-control={JSON.stringify(this.props.control)}
 		>
-			Add Columns
+			{addButtonLabel}
 		</Button>);
 
 		const tooltipId = "tooltip-add-remove-columns-" + this.props.control.name;
+		const addToolTip = (tableButtonConfig) ? tableButtonConfig.addTooltip : "Select columns to add";
+		const removeToolTip = (tableButtonConfig) ? tableButtonConfig.removeTooltip : "Remove selected columns";
+
 		return (<div>
 			<div id="field-picker-buttons-container">
-				<div className="properties-tooltips-container add-remove-columns" data-tip="Remove selected columns" data-for={tooltipId}>
+				<div className="properties-tooltips-container add-remove-columns" data-tip={removeToolTip} data-for={tooltipId}>
 					{removeButton}
 				</div>
-				<div className="properties-tooltips-container add-remove-columns" data-tip="Select columns to add" data-for={tooltipId}>
+				<div className="properties-tooltips-container add-remove-columns" data-tip={addToolTip} data-for={tooltipId}>
 					{addButton}
 				</div>
 			</div>
@@ -615,7 +563,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		</div>);
 	}
 
-	createTable(stateStyle, stateDisabled, noFieldPicker) {
+	createTable(stateStyle, stateDisabled, tableButtonConfig) {
 		const that = this;
 		const rows = [];
 		const headers = [];
@@ -640,21 +588,23 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			}
 		}
 		if (this.props.control.childItem) {
-			// default to 6 but this might need to be calculated
-			headers.push({ "key": "edit", "label": "", "width": 6 });
+			// set to specific size
+			headers.push({ "key": "edit", "label": "", "width": "46px" });
 		}
+		// add extra column for overlay scrollbar
+		headers.push({ "key": "edit", "label": "", "width": "7px" });
 		this.filterFields = filterFields;
 
 		const controlValue = this.getCurrentControlValue();
 		// calculate for all columns except the last which is used for the scroll bar
-		const columnWidths = FlexibleTable.calculateColumnWidths(headers, 100);
+		const columnWidths = FlexibleTable.calculateColumnWidths(headers, "flexible-table-" + this.props.control.name);
 		this.makeCells(rows, controlValue, columnWidths, stateStyle, stateDisabled);
 
 		if (this.props.customContainer) {
 			this.scrollToRow = null;
 		}
 
-		const topRightPanel = noFieldPicker ? null : this.makeAddRemoveButtonPanel(stateDisabled);
+		const topRightPanel = this.makeAddRemoveButtonPanel(stateDisabled, tableButtonConfig);
 
 		const table =	(
 			<FlexibleTable
@@ -697,6 +647,8 @@ export default class ColumnStructureTableEditor extends EditorControl {
 					const cell = this.buildChildItem(columnWidths, controlValue, rowIndex, stateDisabled);
 					columns.push(cell);
 				}
+				// add extra 7px cell for overlay scrollbar
+				columns.push(<Td key={columns.length} column={"scrollbar"} style={{ "width": "7px", "padding": "0 0 0 0" }}><div /></Td>);
 				rows.push(<Tr key={rowIndex} onClick={this.handleRowClick.bind(this, rowIndex)} className={this.getRowClassName(rowIndex)}>{columns}</Tr>);
 			}
 		}

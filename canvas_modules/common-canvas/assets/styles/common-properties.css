@@ -250,6 +250,61 @@ input.number,
   padding-top: 0px;
 }
 
+/* Modal for wider controls in right side flyout */
+.rightside-modal-container {
+	width: 675px;
+	left: unset;
+	top: unset;
+}
+
+.rightside-modal-container #flexible-table-container {
+	height: 100%
+}
+
+.rightside-modal-container .modal-dialog {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+.rightside-modal-container .modal-content {
+  min-height: 100%;
+  border-radius: 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.rightside-modal-container.modal.fade:not(.in) .modal-dialog {
+	-webkit-transform: translate3d(25%, 0, 0);
+	transform: translate3d(25%, 0, 0);
+}
+
+.rightside-modal-container .control-contents {
+	flex-grow: 1;
+	padding: 10px 10px 5px 10px;
+}
+
+.rightside-modal-container .control-title {
+	font-family: IBMHLVMedium;
+	padding: 10px 10px 5px 10px;
+	font-size: 20px;
+	border-bottom: 2px solid #E0E0E0;
+	margin-bottom: 10px;
+}
+
+.rightside-modal-container .modal__buttons {
+	height: 60px;
+  width: 100%;
+  margin: 0px;
+	padding: 0px;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	background-color: unset;
+	border-top: 2px solid #E0E0E0;
+}
+
 /* Field Picker */
 
 #field-picker-back-button {
@@ -258,6 +313,7 @@ input.number,
   border: none;
   padding: 0;
   padding-top: 2px;
+	padding-left: 10px;
 }
 
 #field-picker-filter-list{
@@ -308,7 +364,6 @@ input.number,
   display: flex;
   float: right;
   justify-content: space-between;
-  width: 145px;
 }
 
 #add-fields-button {
@@ -544,12 +599,16 @@ input.number,
 #flexible-table-container {
   height: 180px;
   width: 100%;
-  overflow: scroll;
+  overflow: overlay;
   position: relative;
   border: 1px solid #d8d8d8;
   background-color: #FFFFFF;
   padding: 0;
   color: #000000;
+}
+
+.filter-header-border {
+	background-color: #f9f9fb;
 }
 
 th div div label, td div div label {
@@ -611,13 +670,11 @@ th div div label, td div div label {
 
 .flexible-table-header {
   width: 100%;
-  background-color: #f9f9fb;
   padding: 0 0px 0 0px;
 }
 
 .flexible-table-header-container {
   width: 100%;
-  background-color: #f9f9fb;
   padding: 0;
 }
 
@@ -776,10 +833,6 @@ tbody.reactable-data .editor_control_area {
 
 .btn.disabled, .btn[disabled], fieldset[disabled] {
   color: #D8D8D8;
-}
-
-.structure-list-editor {
-  border: 1px solid #d8d8d8;
 }
 
 .public_fixedDataTable_header .public_fixedDataTableCell_main {

@@ -86,12 +86,14 @@ export default class EditorControl extends React.Component {
 		return options;
 	}
 
-	static handleTableRowClick(evt, rowIndex, selection) {
+	static handleTableRowClick(evt, rowIndex, selection, allowedSelection) {
 		// logger.info(selection);
 		var selected = selection;
 		const index = selected.indexOf(rowIndex);
 
-		if (evt.metaKey === true || evt.ctrlKey === true) {
+		if (allowedSelection === "single") {
+			selected = [rowIndex];
+		} else if (evt.metaKey === true || evt.ctrlKey === true) {
 			// If already selected then remove otherwise add
 			if (index >= 0) {
 				selected.splice(index, 1);
@@ -183,10 +185,8 @@ export default class EditorControl extends React.Component {
 			switch (this.props.controlStates[conditionProps.controlName]) {
 			case "disabled":
 				stateDisabled.disabled = true;
-				stateStyle = {
-					color: VALIDATION_MESSAGE.DISABLED,
-					borderColor: VALIDATION_MESSAGE.DISABLED
-				};
+				stateStyle.color = VALIDATION_MESSAGE.DISABLED;
+				stateStyle.borderColor = VALIDATION_MESSAGE.DISABLED;
 				showTooltip = false;
 				break;
 			case "hidden":
@@ -432,7 +432,7 @@ export default class EditorControl extends React.Component {
 					(Array.isArray(controlValue) && controlValue.length === 0)) {
 				const errorMessage = {
 					type: "error",
-					text: "Require parameter " + controlName + " has no value"
+					text: "Required parameter " + controlName + " has no value"
 				};
 				this.props.updateValidationErrorMessage(controlName, errorMessage);
 			} else {

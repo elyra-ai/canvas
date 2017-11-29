@@ -585,10 +585,10 @@ describe("StructureListEditorControl renders correctly", () => {
 			/>
 		);
 
-		// validate the add/remove buttons are present and click add buttone
-		const buttonContainer = wrapper.find("#structure-list-editor-buttons-container").find("button");
-		expect(buttonContainer).to.have.length(2);
-		buttonContainer.at(0).simulate("click");
+		// select the add column button
+		const addColumnButton = wrapper.find("#add-fields-button");
+		expect(addColumnButton).to.have.length(1);
+		addColumnButton.simulate("click");
 
 		// The table content should increase by 1
 		const tableBody = wrapper.find("#flexible-table-container");
@@ -612,6 +612,9 @@ describe("StructureListEditorControl renders correctly", () => {
 			/>
 		);
 
+		// ensure the remove column button is disabled
+		const removeColumnButton = wrapper.find("#remove-fields-button-disabled");
+		expect(removeColumnButton).to.have.length(1);
 
 		// select the first row in the table
 		var tableBody = wrapper.find("#flexible-table-container");
@@ -620,10 +623,11 @@ describe("StructureListEditorControl renders correctly", () => {
 		expect(tableData).to.have.length(6);
 		tableData.at(2).simulate("click");
 
-		// validate the add/remove buttons are present and click remove buttone
-		const buttonContainer = wrapper.find("#structure-list-editor-buttons-container").find("button");
-		expect(buttonContainer).to.have.length(2);
-		buttonContainer.at(1).simulate("click");
+		// ensure removed button is enabled and select it
+		const enabledRemoveColumnButton = wrapper.find("#remove-fields-button-enabled");
+		expect(enabledRemoveColumnButton).to.have.length(1);
+		expect(enabledRemoveColumnButton.prop("id")).to.equal("remove-fields-button-enabled");
+		enabledRemoveColumnButton.simulate("click");
 
 		// validate the first row is deleted
 		tableBody = wrapper.find("#flexible-table-container");

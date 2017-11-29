@@ -92,4 +92,10 @@ export class UIItem {
 			panel: panel
 		});
 	}
+	static makeSummaryPanel(panel) {
+		return new UIItem({
+			itemType: ItemType.SUMMARY_PANEL,
+			panel: panel
+		});
+	}
 }

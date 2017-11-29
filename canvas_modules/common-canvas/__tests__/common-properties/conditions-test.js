@@ -1086,7 +1086,7 @@ describe("condition messages renders correctly with numberfield control", () => 
 		const numberfieldCheckpointIntervalErrorMessages = [
 			{
 				"type": "error",
-				"text": "Require parameter numberfieldCheckpointInterval has no value",
+				"text": "Required parameter numberfieldCheckpointInterval has no value",
 				"id_ref": "numberfieldCheckpointInterval"
 			}
 		];
@@ -1303,7 +1303,7 @@ describe("condition messages renders correctly with structure table cells", () =
 		const uncheckedRow = dataRows.at(1);
 		expect(uncheckedRow.find(".Dropdown-disabled")).to.have.length(1);
 		const cells = uncheckedRow.find("td");
-		expect(cells).to.have.length(4);
+		expect(cells).to.have.length(5);
 		const cell = cells.at(3);
 		const dropdown = cell.find(".Dropdown-control-table");
 		expect(dropdown).to.have.length(1);
@@ -1411,7 +1411,7 @@ describe("condition messages renders correctly with structure table control", ()
 		const structuretableRenameFieldsErrorMessages = [
 			{
 				"type": "error",
-				"text": "Require parameter structuretableRenameFields has no value",
+				"text": "Required parameter structuretableRenameFields has no value",
 				"id_ref": "structuretableRenameFields"
 			}
 		];
@@ -1427,12 +1427,14 @@ describe("Cells disable and hide correctly with structure table control", () => 
 	it("structuretable should disable cells", () => {
 		const wrapper = createEditorForm("mount");
 		const table = wrapper.find("#structure-table");
-		let disabledDropdowns = table.find(".Dropdown-disabled");
+		expect(table).to.have.length(4);
+		const storageTable = table.at(3);
+		let disabledDropdowns = storageTable.find(".Dropdown-disabled");
 		expect(disabledDropdowns).to.have.length(4);
-		const input = wrapper.find("#editor-control-field_types0_1");
+		const input = storageTable.find("#editor-control-field_types0_1");
 		expect(input).to.have.length(1);
-		wrapper.find("input[id='editor-control-field_types0_1']").simulate("change", { target: { checked: false } });
-		disabledDropdowns = wrapper.find(".Dropdown-disabled");
+		storageTable.find("input[id='editor-control-field_types0_1']").simulate("change", { target: { checked: false } });
+		disabledDropdowns = storageTable.find(".Dropdown-disabled");
 		expect(disabledDropdowns).to.have.length(5);
 		// Strangely, the line below is necessary to reset state else some tests below fail
 		wrapper.find("input[id='editor-control-field_types0_1']").simulate("change", { target: { checked: true } });
@@ -1477,9 +1479,7 @@ describe("condition messages renders correctly with structurelisteditor table", 
 		expect(dataRows).to.have.length(1);
 		dataRows.first().simulate("click");
 
-		const structureListEditorButtonsContainer = wrapper.find("#structure-list-editor-buttons-container").find("button[type='button']");
-		expect(structureListEditorButtonsContainer).to.have.length(2);
-		const removeRowButton = structureListEditorButtonsContainer.at(1);
+		const removeRowButton = wrapper.find("#remove-fields-button-enabled");
 		expect(removeRowButton).to.have.length(1);
 
 		removeRowButton.simulate("click");
@@ -1725,7 +1725,7 @@ describe("condition messages renders correctly with textfields control", () => {
 		const textfieldNameErrorMessages = [
 			{
 				"type": "error",
-				"text": "Require parameter textareaDescription has no value",
+				"text": "Required parameter textareaDescription has no value",
 				"id_ref": "textareaDescription"
 			}
 		];

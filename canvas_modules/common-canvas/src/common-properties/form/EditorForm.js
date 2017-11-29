@@ -139,6 +139,15 @@ function _makeUIItem(parameterMetadata, group, structureMetadata, l10nProvider) 
 	case GroupType.CUSTOM_PANEL: {
 		return UIItem.makeCustomPanel(new CustomControlPanel(groupName, PanelType.PANEL, group.parameterNames()));
 	}
+	case GroupType.SUMMARY_PANEL: {
+		groupLabel = l10nProvider.l10nLabel(group, group.name);
+		const panSubItems = [];
+		group.subGroups.forEach(function(subGroup) {
+			groupItem = _makeUIItem(parameterMetadata, subGroup, structureMetadata, l10nProvider);
+			panSubItems.push(groupItem);
+		});
+		return UIItem.makeSummaryPanel(new ControlPanel(groupName, PanelType.SUMMARY, panSubItems, groupLabel));
+	}
 	default:
 		return UIItem.makeStaticText("(Unknown group type '" + group.groupType() + "')");
 	}
@@ -253,6 +262,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	let controlType;
 	let moveableRows;
 	let noPickColumns;
+	let rowSelection;
 
 	// The control type defines the basic UI element that should be used to edit the property
 	if (parameter.getRole() === ParamRole.CUSTOM) {
@@ -327,10 +337,11 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 							parameter.control === ControlType.STRUCTURETABLE) {
 						controlType = ControlType.STRUCTURETABLE;
 						moveableRows = structureDef.moveableRows;
+						rowSelection = structureDef.rowSelection;
 					} else {
 						controlType = ControlType.STRUCTURELISTEDITOR;
 						moveableRows = structureDef.moveableRows;
-
+						rowSelection = structureDef.rowSelection;
 					}
 				} else {
 					logger.warn("Complex types should be arrays or maps.  Found: " + parameter.propType());
@@ -377,7 +388,9 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 		childItem,
 		moveableRows,
 		required,
-		parameter.language
+		parameter.language,
+		parameter.summary,
+		rowSelection
 	);
 }
 
@@ -450,6 +463,10 @@ function _makeSubControl(parameter, l10nProvider) {
 		case ParamRole.NEW_COLUMN:
 			controlType = ControlType.TEXTFIELD;
 			break;
+		case ParamRole.EXPRESSION:
+			controlType = ControlType.EXPRESSION;
+			break;
+
 		default:
 			controlType = ControlType.TEXTFIELD;
 		}
@@ -502,7 +519,8 @@ function _makeSubControl(parameter, l10nProvider) {
 		parameter.editStyle,
 		parameter.isKey,
 		parameter.dmDefault,
-		parameter.language
+		parameter.language,
+		parameter.summary
 	);
 }
 

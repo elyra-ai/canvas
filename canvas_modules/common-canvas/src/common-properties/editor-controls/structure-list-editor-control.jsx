@@ -9,15 +9,12 @@
 
 // import logger from "../../../utils/logger";
 import React from "react";
-import ReactTooltip from "react-tooltip";
 import PropTypes from "prop-types";
-import { Button } from "react-bootstrap";
 import ColumnStructureTableEditor from "./column-structure-table-editor.jsx";
 import MoveableTableRows from "./moveable-table-rows.jsx";
 
-import { EDITOR_CONTROL, TOOL_TIP_DELAY } from "../constants/constants.js";
+import { EDITOR_CONTROL } from "../constants/constants.js";
 
-// export default class StructurelisteditorControl extends StructureTableEditor {
 export default class StructurelisteditorControl extends ColumnStructureTableEditor {
 
 	constructor(props) {
@@ -92,47 +89,49 @@ export default class StructurelisteditorControl extends ColumnStructureTableEdit
 		if (messageType !== "info") {
 			controlIconContainerClass = "control-icon-container-enabled";
 		}
-		const noFieldPicker = true;
 
-		const table = this.createTable(stateStyle, stateDisabled, noFieldPicker);
-		const tooltipId = "tooltip-list-editor-btn";
-		const add = <Button data-tip="Add new row" data-for={tooltipId} bsSize="small" onClick={this.addRow} {...stateDisabled}>+</Button>;
-		const remove = <Button data-tip="Delete selected rows" data-for={tooltipId} bsSize="small" onClick={this.removeSelectedRows} {...stateDisabled}>-</Button>;
+		const tableButtonConfig = {
+			addButtonLabel: "Add Value",
+			removeButtonTooltip: "Delete selected rows",
+			addButtonTooltip: "Add new row",
+			removeButtonFunction: this.removeSelectedRows,
+			addButtonFunction: this.addRow
+		};
+
+		const table = this.createTable(stateStyle, stateDisabled, tableButtonConfig);
+
 		const disabled = typeof stateDisabled.disabled !== "undefined" || Object.keys(stateDisabled) > 0;
 		const tableContainer = (<div id={this.getControlID()}>
 			<div id={controlIconContainerClass}>
 				<div id="structure-list-editor-table-buttons" className="structure-list-editor">
 					{table}
-					<div id="structure-list-editor-buttons-container">
-						<span >{add} {remove}</span>
-						<ReactTooltip
-							id={tooltipId}
-							place="top"
-							type="light"
-							effect="solid"
-							border
-							className="properties-tooltips"
-							delayShow={TOOL_TIP_DELAY}
-						/>
-					</div>
 				</div>
 				{icon}
 			</div>
 			{errorMessage}
 		</div>);
 		// stateStyle={stateStyle}
+
+		const onPanelContainer = this.getOnPanelContainer(this.getSelectedRows());
 		return (
-			<MoveableTableRows
-				tableContainer={tableContainer}
-				control={this.props.control}
-				getSelectedRows={this.getSelectedRows}
-				setScrollToRow={this.setScrollToRow}
-				getCurrentControlValue={this.getCurrentControlValue}
-				updateControlValue={this.props.updateControlValue}
-				setCurrentControlValueSelected={this.setCurrentControlValueSelected}
-				stateStyle={stateStyle}
-				disabled={disabled}
-			/>
+			<div>
+				<div>
+					<MoveableTableRows
+						tableContainer={tableContainer}
+						control={this.props.control}
+						getSelectedRows={this.getSelectedRows}
+						setScrollToRow={this.setScrollToRow}
+						getCurrentControlValue={this.getCurrentControlValue}
+						updateControlValue={this.props.updateControlValue}
+						setCurrentControlValueSelected={this.setCurrentControlValueSelected}
+						stateStyle={stateStyle}
+						disabled={disabled}
+					/>
+				</div>
+				<div>
+					{onPanelContainer}
+				</div>
+			</div>
 		);
 	}
 }

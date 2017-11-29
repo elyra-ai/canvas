@@ -186,6 +186,10 @@ function updateSelectedRows(row) {
 	return [];
 }
 
+function validateConditions() {
+	return [];
+}
+
 function genUIItem() {
 	return <div />;
 }
@@ -207,6 +211,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				selectedRows={selectedRows}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
+				validateConditions={validateConditions}
 			/>
 		);
 
@@ -234,6 +239,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				selectedRows={getSelectedRows(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
+				validateConditions={validateConditions}
 			/>
 		);
 
@@ -260,6 +266,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				selectedRows={getSelectedRows(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
+				validateConditions={validateConditions}
 			/>
 		);
 
@@ -282,6 +289,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				selectedRows={getSelectedRowsTop(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
+				validateConditions={validateConditions}
 			/>
 		);
 
@@ -324,6 +332,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				selectedRows={getSelectedRowsTop(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
+				validateConditions={validateConditions}
 			/>
 		);
 
@@ -366,6 +375,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				selectedRows={getSelectedRowsBottom(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
+				validateConditions={validateConditions}
 			/>
 		);
 
@@ -408,6 +418,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				selectedRows={getSelectedRowsBottom(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
+				validateConditions={validateConditions}
 			/>
 		);
 
@@ -450,6 +461,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				selectedRows={getSelectedRowsTop(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
+				validateConditions={validateConditions}
 			/>
 		);
 
@@ -479,6 +491,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				selectedRows={getSelectedRowsBottom(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
+				validateConditions={validateConditions}
 			/>
 		);
 
@@ -508,6 +521,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				selectedRows={getSelectedRowsMiddle(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
+				validateConditions={validateConditions}
 			/>
 		);
 
@@ -537,6 +551,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				selectedRows={getSelectedRowsTop(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
+				validateConditions={validateConditions}
 			/>
 		);
 
@@ -561,6 +576,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				selectedRows={getSelectedRowsTop(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
+				validateConditions={validateConditions}
 			/>
 		);
 
@@ -603,6 +619,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				selectedRows={getSelectedRowsTop(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
+				validateConditions={validateConditions}
 			/>
 		);
 		const input = wrapper.find("#flexible-table-search");

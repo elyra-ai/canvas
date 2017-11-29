@@ -16,7 +16,7 @@ export class ParameterDef {
 	constructor(cname, label, description, type, role, valueRestriction, defaultValue,
 		control, orientation, width, charLimit, placeHolderText, separator,
 		resourceKey, visible, valueIcons, sortable, filterable, editStyle, required,
-		numberGenerator, isKey, dmDefault, language) {
+		numberGenerator, isKey, dmDefault, language, summary) {
 		this.name = cname;
 		this.label = ResourceDef.make(label);
 		this.description = ResourceDef.make(description);
@@ -45,6 +45,7 @@ export class ParameterDef {
 		if (dmDefault) {
 			this.dmDefault = dmDefault;
 		}
+		this.summary = summary;
 	}
 
 	isList() {
@@ -190,7 +191,8 @@ export class ParameterDef {
 				_.propertyOf(uihint)("number_generator"),
 				isKey,
 				_.propertyOf(uihint)("dm_default"),
-				_.propertyOf(uihint)("language")
+				_.propertyOf(uihint)("language"),
+				_.propertyOf(uihint)("summary")
 			);
 		}
 		return null;

@@ -32,16 +32,38 @@ const ARROW_WIDTH = 10;
 
 export default class FlexibleTable extends React.Component {
 
-	static calculateColumnWidths(columns, availWidth) {
-
-		const widths = [];
-		let totalWidth = 0;
-		for (const columnDef of columns) {
-			totalWidth += columnDef.width ? columnDef.width : 100;
+	static calculateColumnWidths(columns, elementId) {
+		// get the parent table width
+		const table = document.getElementById(elementId);
+		var tableWidth = 0;
+		if (table) {
+			tableWidth = parseInt(window.getComputedStyle(table, null).getPropertyValue("width"), 10);
 		}
 		for (const columnDef of columns) {
-			const size = columnDef.width ? columnDef.width : 100;
-			widths.push(Math.floor(size / totalWidth * availWidth) + "%");
+			// if columns have specific width subtract from total width
+			if (columnDef.width && typeof columnDef.width === "string" && columnDef.width.includes("px")) {
+				tableWidth -= parseInt(10, columnDef.width);
+			}
+		}
+		const widths = [];
+		let totalWidth = 0;
+		// only calculate column widths that don't have "px"
+		for (const columnDef of columns) {
+			if (!columnDef.width) {
+				totalWidth += 30; // set default width of 30 if nothing provided
+			} else if (typeof columnDef.width !== "string") {
+				totalWidth += columnDef.width;
+			}
+		}
+		const pxMultiplier = Math.floor(tableWidth / totalWidth);
+		for (const columnDef of columns) {
+			// push actual size with "px" already set
+			if (columnDef.width && typeof columnDef.width === "string" && columnDef.width.includes("px")) {
+				widths.push(columnDef.width);
+			} else {
+				const size = columnDef.width ? columnDef.width : 30;
+				widths.push(size * pxMultiplier + "px");
+			}
 		}
 		return widths;
 	}
@@ -102,16 +124,10 @@ export default class FlexibleTable extends React.Component {
 		// go through the header and add the sort direction and convert to use reactable.Th element
 		const headers = [];
 		let searchLabel = "";
-		// calculate for all columns except the last which is used for the scroll bar.
-		// For now split the different for when the scroll bar is an isn't present
-		const columnWidths = FlexibleTable.calculateColumnWidths(this.props.columns, 99);
-		// to adjust column header for scroll bar
-		this.props.columns.push({ "key": "scroll", "label": "", "width": 0 });
+		const columnWidths = FlexibleTable.calculateColumnWidths(this.props.columns, "flexible-table-" + this.props.scrollKey);
 		for (var j = 0; j < this.props.columns.length; j++) {
 			const columnDef = this.props.columns[j];
-			// Last header column is for scroll bar.  Always set to 2%
-			const columnWidth = j === this.props.columns.length - 1 ? "1%" : columnWidths[j];
-			const columnStyle = { "width": columnWidth };
+			const columnStyle = { "width": columnWidths[j] };
 			const tooltipId = "tooltip-column-" + columnDef.key;
 			let className = j === 0 ? "left-padding-15" : "";
 			if (columnDef.controlType === "checkbox") {
@@ -269,7 +285,7 @@ export default class FlexibleTable extends React.Component {
 		}
 
 		return (
-			<div>
+			<div id={"flexible-table-" + this.props.scrollKey}>
 				{renderTable}
 			</div>
 		);

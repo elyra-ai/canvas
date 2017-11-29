@@ -79,12 +79,13 @@ Feature: Sanity_Test_CommonProperties_Flyout
 			Given I have toggled the app side common-properties panel
 			Given I have uploaded JSON for common-properties "Spark_SelectStorage_paramDef.json"
 			Then I open the "Settings" category from flyout
-			Then I check table cell enablement
+			Then I check table cell enablement in flyout
 
 		# Sub Panel Validation
 			Given I have toggled the app side common-properties panel
 			Given I have uploaded JSON for common-properties "Conditions_paramDef.json"
 			Then I open the "Tables" category from flyout
+			Then I open the "Configure Table Input" summary panel
 			Then I check the checkbox with id "editor-control-enableTableLists"
 			Then I open the Table Input Sub Panel from flyout
 			Then I update the value of Name textbox with "Hellopwd"

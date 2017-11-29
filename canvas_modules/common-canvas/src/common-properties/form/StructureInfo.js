@@ -12,12 +12,13 @@ import _ from "underscore";
 import { ResourceDef } from "./L10nProvider";
 
 export class StructureDef {
-	constructor(cname, keyDefinition, parameterMetadata, moveableRows, label) {
+	constructor(cname, keyDefinition, parameterMetadata, moveableRows, label, rowSelection) {
 		this.name = cname;
 		this.keyDefinition = keyDefinition;
 		this.parameterMetadata = parameterMetadata;
 		this.moveableRows = moveableRows;
 		this.label = ResourceDef.make(label);
+		this.rowSelection = rowSelection;
 	}
 
 	/**
@@ -69,7 +70,8 @@ export class StructureDef {
 				ParameterDef.makeParameterDef(_.propertyOf(structure)("key_definition"), _.propertyOf(uihints)("key_definition"), true),
 				ParameterMetadata.makeParameterMetadata(_.propertyOf(structure)("parameters"), _.propertyOf(uihints)("parameters")),
 				_.propertyOf(uihints)("moveable_rows"),
-				_.propertyOf(uihints)("label")
+				_.propertyOf(uihints)("label"),
+				_.propertyOf(uihints)("row_selection")
 			);
 		}
 		return null;

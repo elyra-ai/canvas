@@ -93,7 +93,8 @@
             "resource_key": "FieldStorageEntry.field"
           },
           "width": 16,
-          "filterable": true
+          "filterable": true,
+          "summary": true
         },
         "parameters": [
           {
@@ -113,7 +114,8 @@
             },
             "width": 26,
             "edit_style": "inline",
-            "dm_default": "type"
+            "dm_default": "type",
+            "summary": true
           }
         ]
       }
@@ -136,9 +138,24 @@
         "label": {
           "default": "Settings"
         },
-        "type": "controls",
-        "parameter_refs": [
-          "field_types"
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "summary-panel",
+            "label": {
+              "default": "Configure field types"
+            },
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "controls-panel",
+                "type": "controls",
+                "parameter_refs": [
+                  "field_types"
+                ]
+              }
+            ]
+          }
         ]
       }
     ]

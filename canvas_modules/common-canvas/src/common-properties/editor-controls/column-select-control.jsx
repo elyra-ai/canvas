@@ -20,19 +20,15 @@ import remove32hover from "../../../assets/images/remove_32_hover.svg";
 import remove32disabled from "../../../assets/images/remove_32_disabled.svg";
 import { EDITOR_CONTROL, TOOL_TIP_DELAY } from "../constants/constants.js";
 
-var _ = require("underscore");
-
 export default class ColumnSelectControl extends EditorControl {
 	constructor(props) {
 		super(props);
-		const ctrlValue = props.valueAccessor(props.control.name);
 		const selections = [];
 		for (let i = 0; i < this.props.selectedRows.length; i++) {
-			selections.push(ctrlValue[this.props.selectedRows[i]]);
+			selections.push(props.valueAccessor(props.control.name)[this.props.selectedRows[i]]);
 		}
 		this.state = {
 			hoverRemoveIcon: false,
-			controlValue: ctrlValue,
 			selectedValues: selections
 		};
 
@@ -42,8 +38,6 @@ export default class ColumnSelectControl extends EditorControl {
 		this.handleChange = this.handleChange.bind(this);
 		this.getSelectedColumns = this.getSelectedColumns.bind(this);
 		this.getAllocatedColumns = this.getAllocatedColumns.bind(this);
-		this.addColumns = this.addColumns.bind(this);
-		this.removeColumns = this.removeColumns.bind(this);
 		this.handleChangeMultiColumn = this.handleChangeMultiColumn.bind(this);
 		this.removeSelected = this.removeSelected.bind(this);
 		this.selectionChanged = this.selectionChanged.bind(this);
@@ -55,6 +49,20 @@ export default class ColumnSelectControl extends EditorControl {
 		this.selectionChanged(this.state.selectedValues);
 		ReactDOM.findDOMNode(this.refs.input).focus();
 	}
+
+
+	componentWillReceiveProps(nextProps) {
+		const selections = [];
+		for (let i = 0; i < nextProps.selectedRows.length; i++) {
+			selections.push(nextProps.valueAccessor(nextProps.control.name)[nextProps.selectedRows[i]]);
+		}
+
+		this.setState({
+			enableRemoveIcon: (selections.length !== 0),
+			selectedValues: selections
+		});
+	}
+
 
 	handleChangeMultiColumn(evt) {
 		let values = [];
@@ -89,55 +97,10 @@ export default class ColumnSelectControl extends EditorControl {
 		return this.getControlValue();
 	}
 
-	addColumns(columnNames, callback) {
-		// logger.info("addColumns");
-		var currentColumns = this.state.controlValue;
-		// logger.info(currentColumns);
-		if (this.props.multiColumn) {
-			currentColumns = _.union(currentColumns, columnNames);
-		} else if (columnNames.length === 1) {
-			currentColumns = columnNames;
-		}
-		// logger.info(currentColumns);
-
-		this._update_callback = callback;
-
-		var that = this;
-		this.setState({
-			controlValue: currentColumns,
-			selectedValues: []
-		}, function() {
-			that.validateInput();
-		});
-	}
-
-	removeColumns(columnNames, callback) {
-		// logger.info("removeColumns");
-		var currentColumns = this.state.controlValue;
-		// logger.info(currentColumns);
-		if (this.props.multiColumn) {
-			currentColumns = _.difference(currentColumns, columnNames);
-		} else {
-			// Always remove the current value
-			currentColumns = [""];
-		}
-		// logger.info(currentColumns);
-
-		this._update_callback = callback;
-
-		var that = this;
-		this.setState({
-			controlValue: currentColumns,
-			selectedValues: []
-		}, function() {
-			that.validateInput();
-		});
-	}
-
 	getControlValue() {
 		// logger.info("getControlValue");
 		// logger.info(this.state.controlValue);
-		return this.state.controlValue;
+		return this.props.valueAccessor(this.props.control.name);
 	}
 
 	removeSelected() {
@@ -150,7 +113,6 @@ export default class ColumnSelectControl extends EditorControl {
 			}
 		}
 		const newState = {};
-		newState.controlValue = newRows;
 		newState.selectedValues = [];
 		this.setState(newState);
 		this.props.updateControlValue(this.props.control.name, newRows);
@@ -160,7 +122,7 @@ export default class ColumnSelectControl extends EditorControl {
 	selectionChanged(selection) {
 		const indices = [];
 		for (const seln of selection) {
-			indices.push(this.state.controlValue.indexOf(seln));
+			indices.push(this.getControlValue().indexOf(seln));
 		}
 		this.props.updateSelectedRows(this.props.control.name, indices);
 		this.setState({ enableRemoveIcon: (selection.length !== 0) });
@@ -179,9 +141,8 @@ export default class ColumnSelectControl extends EditorControl {
 	render() {
 		// logger.info("AllocationControl.render");
 		// logger.info(this.state);
-		var options = EditorControl.genStringSelectOptions(this.state.controlValue, this.state.selectedValues);
+		var options = EditorControl.genStringSelectOptions(this.getControlValue(), this.state.selectedValues);
 		// logger.info(options);
-
 		if (this._update_callback !== null) {
 			this._update_callback();
 			this._update_callback = null;
@@ -213,7 +174,6 @@ export default class ColumnSelectControl extends EditorControl {
 		let removeIconImage = (<img src={remove32} />);
 		let removeOnClick = this.removeSelected;
 		let removeButtonDisabled = false;
-
 		if (!this.state.enableRemoveIcon || stateDisabled.disabled) {
 			removeIconImage = (<img src={remove32disabled} />);
 			removeFieldsButtonId = "remove-fields-button-disabled";

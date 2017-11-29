@@ -38,7 +38,7 @@
         "Ascending"
       ]
     ],
-    "enableRenameFieldsTable": true,
+    "showRenameFieldsTable": true,
     "structuretableRenameFields": [
       [
         "Age",
@@ -142,6 +142,12 @@
       ]
     ],
     "dummy_types": [],
+    "expressionCellTable": [
+      [
+        "BabyBoomer",
+        "Age >= 55"
+      ]
+    ],
     "expPlaceHolder": ""
   },
   "parameters": [
@@ -330,7 +336,7 @@
       "type": "array[structuretableSortOrder]"
     },
     {
-      "id": "enableRenameFieldsTable",
+      "id": "showRenameFieldsTable",
       "type": "boolean",
       "default": ""
     },
@@ -367,6 +373,12 @@
     {
       "id": "dummy_types",
       "type": "map[string,DummyEntry]",
+      "role": "column",
+      "default": []
+    },
+    {
+      "id": "expressionCellTable",
+      "type": "array[expressionCellTable]",
       "role": "column",
       "default": []
     },
@@ -512,6 +524,23 @@
       ]
     },
     {
+      "id": "expressionCellTable",
+      "parameters": [
+        {
+          "id": "valueName",
+          "type": "string",
+          "default": "Value",
+          "role": "new_column"
+        },
+        {
+          "id": "condition",
+          "type": "string",
+          "default": "",
+          "role": "expression"
+        }
+      ]
+    },
+    {
       "id": "DummyEntry",
       "key_definition": {
         "id": "field",
@@ -590,7 +619,8 @@
         },
         "description": {
           "default": "Maximum number of bins used for discretizing continuous features and for choosing how to split on features at each node. More bins give higher granularity. Must be >= 2 and >= number of categories in any categorical feature"
-        }
+        },
+        "summary": true
       },
       {
         "parameter_ref": "numberfieldMaxDepth",
@@ -599,7 +629,8 @@
         },
         "description": {
           "default": "Maximum depth of the tree (>= 0). Ex) depth 0 means 1 leaf node; depth 1 means 1 internal node + 2 leaf nodes"
-        }
+        },
+        "summary": true
       },
       {
         "parameter_ref": "numberfieldMinInfoGain",
@@ -824,12 +855,12 @@
         }
       },
       {
-        "parameter_ref": "enableRenameFieldsTable",
+        "parameter_ref": "showRenameFieldsTable",
         "label": {
-          "default": "enable"
+          "default": "Show Rename Fields Table"
         },
         "description": {
-          "default": "Enable table"
+          "default": "Show Rename Fields Table"
         }
       },
       {
@@ -870,10 +901,22 @@
       },
       {
         "parameter_ref": "field_types",
+        "label": {
+          "default": "Field Types"
+        },
         "description": {
           "default": "Change the type of columns in the active dataset"
         },
         "control": "structuretable"
+      },
+      {
+        "parameter_ref": "expressionCellTable",
+        "label": {
+          "default": "Values"
+        },
+        "description": {
+          "default": "Complex table control list editor table input"
+        }
       },
       {
         "parameter_ref": "dummy_types",
@@ -915,7 +958,8 @@
           "width": 28,
           "label": {
             "resource_key": "structuretableSortOrder.field.label"
-          }
+          },
+          "summary": true
         },
         "parameters": [
           {
@@ -945,7 +989,8 @@
           "label": {
             "resource_key": "structuretableRenameFields.field.label"
           },
-          "width": 26
+          "width": 26,
+          "summary": true
         },
         "parameters": [
           {
@@ -958,7 +1003,8 @@
             },
             "width": 26,
             "edit_style": "inline",
-            "filterable": true
+            "filterable": true,
+            "summary": true
           },
           {
             "parameter_ref": "new_label",
@@ -993,7 +1039,8 @@
               "resource_key": "structurelisteditorListInput.name.label"
             },
             "width": 20,
-            "edit_style": "subpanel"
+            "edit_style": "subpanel",
+            "summary": true
           },
           {
             "parameter_ref": "description",
@@ -1019,7 +1066,8 @@
               "resource_key": "structurelisteditorTableInput.name.desc"
             },
             "width": 15,
-            "edit_style": "subpanel"
+            "edit_style": "subpanel",
+            "summary": true
           },
           {
             "parameter_ref": "description",
@@ -1114,13 +1162,48 @@
         ]
       },
       {
+        "complex_type_ref": "expressionCellTable",
+        "row_selection": "single",
+        "parameters": [
+          {
+            "parameter_ref": "valueName",
+            "label": {
+              "default": "Structure Name",
+              "resource_key": "expressionCellTable.name.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.name.desc"
+            },
+            "width": 15,
+            "edit_style": "inline",
+            "summary": true
+          },
+          {
+            "parameter_ref": "condition",
+            "language": "CLEM",
+            "label": {
+              "resource_key": "expressionCellTable.description.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.description.desc"
+            },
+            "width": 15,
+            "edit_style": "on_panel",
+            "place_holder_text": {
+              "default": "Enter condition expression"
+            }
+          }
+        ]
+      },
+      {
         "complex_type_ref": "DummyEntry",
         "key_definition": {
           "parameter_ref": "field",
           "width": 10,
           "label": {
             "resource_key": "DummyEntry.field.label"
-          }
+          },
+          "summary": true
         },
         "parameters": [
           {
@@ -1142,7 +1225,8 @@
             "value_icons": [
               "/images/up-triangle.svg",
               "/images/down-triangle.svg"
-            ]
+            ],
+            "summary": true
           },
           {
             "parameter_ref": "checkit",
@@ -1158,7 +1242,8 @@
               "resource_key": "DummyEntry.sometext.label"
             },
             "width": 12,
-            "edit_style": "inline"
+            "edit_style": "inline",
+            "summary": true
           }
         ]
       }
@@ -1169,14 +1254,40 @@
         "label": {
           "default": "Numbers"
         },
-        "parameter_refs": [
-          "numberfieldCheckpointInterval",
-          "numberfieldImpurity",
-          "numberfieldMaxBins",
-          "numberfieldMaxDepth",
-          "numberfieldMinInfoGain",
-          "numberfieldMinInstancesPerNode",
-          "numberfieldSeed"
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "summary-panel",
+            "label": {
+              "default": "Configure Number Fields"
+            },
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "Numberfield",
+                "label": {
+                  "default": "Numbers"
+                },
+                "parameter_refs": [
+                  "numberfieldMaxBins",
+                  "numberfieldMaxDepth",
+                  "numberfieldMinInfoGain",
+                  "numberfieldMinInstancesPerNode"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "Numberfield",
+            "label": {
+              "default": "Numbers"
+            },
+            "parameter_refs": [
+              "numberfieldCheckpointInterval",
+              "numberfieldImpurity",
+              "numberfieldSeed"
+            ]
+          }
         ]
       },
       {
@@ -1268,38 +1379,60 @@
         "type": "panels",
         "group_info": [
           {
-            "id": "structuretableSortOrder",
-            "type": "columnSelection",
+            "id": "structuretableSortOrder-summary-panel",
             "label": {
-              "default": "Columns"
+              "default": "Configure Sort Order"
             },
-            "parameter_refs": [
-              "enableSortByTable",
-              "structuretableSortOrder"
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "structuretableSortOrder",
+                "type": "columnSelection",
+                "label": {
+                  "default": "Columns"
+                },
+                "parameter_refs": [
+                  "enableSortByTable",
+                  "structuretableSortOrder"
+                ]
+              }
             ]
           },
           {
-            "id": "structuretableRenameFields",
+            "id": "structuretableRenameFields-summary-panel",
             "label": {
-              "default": "Tables"
+              "default": "Configure Rename fields"
             },
-            "type": "columnSelection",
-            "parameter_refs": [
-              "enableRenameFieldsTable",
-              "structuretableRenameFields"
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "structuretableRenameFields",
+                "label": {
+                  "default": "Tables"
+                },
+                "type": "columnSelection",
+                "parameter_refs": [
+                  "showRenameFieldsTable",
+                  "structuretableRenameFields"
+                ]
+              }
             ]
           },
           {
-            "id": "Structure Table Inline Control",
-            "parameter_refs": [
-              "enableTableLists",
-              "structurelisteditorTableInput"
-            ]
-          },
-          {
-            "id": "Complex Structure Table Inline Control",
-            "parameter_refs": [
-              "structurelisteditorListInput"
+            "id": "structurelisteditorTableInput-summary-panel",
+            "label": {
+              "default": "Configure Table Input"
+            },
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "Structure Table Inline Control",
+                "parameter_refs": [
+                  "enableTableLists",
+                  "structurelisteditorTableInput",
+                  "structurelisteditorListInput"
+                ]
+              }
             ]
           }
         ]
@@ -1312,23 +1445,65 @@
         },
         "group_info": [
           {
-            "id": "group1",
-            "type": "controls",
+            "id": "field_types-summary-panel",
             "label": {
-              "default": "Fields"
+              "default": "Configure Field Types"
             },
-            "parameter_refs": [
-              "field_types"
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "group1",
+                "type": "controls",
+                "label": {
+                  "default": "Fields"
+                },
+                "parameter_refs": [
+                  "field_types"
+                ]
+              }
             ]
           },
           {
-            "id": "group1",
-            "type": "columnSelection",
+            "id": "dummy_types-summary-panel",
             "label": {
-              "default": "Columns"
+              "default": "Configure Dummy Types"
             },
-            "parameter_refs": [
-              "dummy_types"
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "group1",
+                "type": "columnSelection",
+                "label": {
+                  "default": "Columns"
+                },
+                "parameter_refs": [
+                  "dummy_types"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "expressionCellTable-summary-panel",
+        "label": {
+          "default": "Configure Derive Node"
+        },
+        "type": "summaryPanel",
+        "group_info": [
+          {
+            "id": "Derive-Node",
+            "type": "panels",
+            "label": {
+              "default": "Derive Node"
+            },
+            "group_info": [
+              {
+                "id": "Expression Control Cell",
+                "parameter_refs": [
+                  "expressionCellTable"
+                ]
+              }
             ]
           }
         ]
@@ -1366,13 +1541,13 @@
       }
     },
     {
-      "enabled": {
+      "visible": {
         "parameter_refs": [
           "structuretableRenameFields"
         ],
         "evaluate": {
           "condition": {
-            "parameter_ref": "enableRenameFieldsTable",
+            "parameter_ref": "showRenameFieldsTable",
             "op": "equals",
             "value": true
           }
@@ -1984,6 +2159,24 @@
       }
     },
     {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "expressionCellTable",
+          "message": {
+            "default": "table cannot be empty"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "expressionCellTable",
+            "op": "notEquals",
+            "value": []
+          }
+        }
+      }
+    },
+    {
       "enabled": {
         "parameter_refs": [
           "field_types[2]"
@@ -2248,6 +2441,9 @@
     "FieldStorageEntry.override.desc": "Override storage and measurement type for field",
     "FieldStorageEntry.storage": "Storage",
     "FieldStorageEntry.measure": "Measure",
+    "expressionCellTable.name.label": "Set Field To",
+    "expressionCellTable.name.desc": "Enter a name",
+    "expressionCellTable.description.label": "If This Condition Is True",
     "DummyEntry.field.label": "Field",
     "DummyEntry.override.label": "Override",
     "DummyEntry.dummy_entry_sport_name.label": "Sport",

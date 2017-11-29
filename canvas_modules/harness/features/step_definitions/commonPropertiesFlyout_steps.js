@@ -133,11 +133,39 @@ module.exports = function() {
 		}
 	});
 
+	this.Then(/^I check table cell enablement in flyout$/, function() {
+		const summaryLinkButton = browser.$(".control-summary-link-buttons").$("a");
+		summaryLinkButton.click();
+		var firstCheck = browser.$$(".properties-tooltips-container")[5];
+		var dropdowns = browser.$$(".Dropdown-control ");
+		var disabledDropdowns = browser.$$(".Dropdown-disabled");
+		expect(dropdowns.length).toEqual(10);
+		expect(disabledDropdowns.length).toEqual(9);
+		firstCheck.click();
+
+		// After turning off the checkbox, there should now be one more disabled dropdown
+		disabledDropdowns = browser.$$(".Dropdown-disabled");
+		expect(disabledDropdowns.length).toEqual(10);
+		const okButton = browser.$(".modal-dialog").$("#properties-apply-button");
+		okButton.click();
+	});
+
 	this.Then(/^I check the checkbox with id "([^"]*)"$/, function(checkboxId) {
 		const labels = browser.$$("label");
 		for (let idx = 0; idx < labels.length; idx++) {
 			if (labels[idx].getAttribute("for") === checkboxId) {
 				labels[idx].click();
+				break;
+			}
+		}
+	});
+
+	this.Then(/^I open the "([^"]*)" summary panel$/, function(summaryLinkName) {
+		const summaryLinks = browser.$$(".control-summary-link-buttons");
+		for (let idx = 0; idx < summaryLinks.length; idx++) {
+			const buttonText = summaryLinks[idx].getText(".button__text");
+			if (buttonText === summaryLinkName) {
+				summaryLinks[idx].$("a").click();
 				break;
 			}
 		}

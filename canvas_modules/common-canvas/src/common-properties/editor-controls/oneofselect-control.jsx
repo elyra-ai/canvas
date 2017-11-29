@@ -76,7 +76,11 @@ export default class OneofselectControl extends EditorControl {
 			do {
 				curtop += node.offsetTop;
 				curtopscroll += node.className !== modalClassName && node.offsetParent ? node.offsetParent.scrollTop : 0;
-			} while ((node = node.offsetParent) !== null);
+				node = node.offsetParent;
+			} while (node.offsetParent !== null);
+		}
+		if (node.className.indexOf("rightside-modal-container") >= 0) {
+			modalOffset -= 24; // adjust matchMedia offset and 4px for borders from .modal-content and #flexible-table-container
 		}
 		return curtop - curtopscroll - modalOffset;
 	}

@@ -36,7 +36,7 @@ export default class ExpressionControl extends EditorControl {
 	constructor(props) {
 		super(props);
 		this.state = {
-			controlValue: props.valueAccessor(props.control.name)
+			controlValue: (props.tableControl) ? props.controlValue[props.rowIndex][props.columnIndex] : props.valueAccessor(props.control.name)
 		};
 		if (!this.state.controlValue && typeof props.control.valueDef.defaultValue !== "undefined") {
 			this.state.controlValue = props.control.valueDef.defaultValue;
@@ -46,6 +46,8 @@ export default class ExpressionControl extends EditorControl {
 
 		this.getControlValue = this.getControlValue.bind(this);
 		this.handleChange = this.handleChange.bind(this);
+		this.onFocusChange = this.onFocusChange.bind(this);
+
 
 		this.addonHints = this.addonHints.bind(this);
 		this.getDatasetFields = this.getDatasetFields.bind(this);
@@ -77,6 +79,14 @@ export default class ExpressionControl extends EditorControl {
 	componentWillUnmount() {
 		if (this.origHint) {
 			cm.registerHelper("hint", this.props.control.language, this.origHint);
+		}
+	}
+
+	componentWillReceiveProps(nextProps) {
+		const nextControlValue = (nextProps.tableControl) ? nextProps.controlValue[nextProps.rowIndex][nextProps.columnIndex]
+			: nextProps.valueAccessor(nextProps.control.name);
+		if (this.state.controlValue !== nextControlValue) {
+			this.setState({ controlValue: nextControlValue });
 		}
 	}
 
@@ -117,7 +127,20 @@ export default class ExpressionControl extends EditorControl {
 
 	handleChange(value) {
 		this.setState({ controlValue: value });
-		this.props.updateControlValue(this.props.control.name, value);
+	}
+
+	onFocusChange() {
+		if (this.props.tableControl) {
+			var newControlValue = this.props.controlValue;
+			newControlValue[this.props.rowIndex][this.props.columnIndex] = this.state.controlValue;
+			this.props.setCurrentControlValueSelected(this.props.control.name, newControlValue, this.props.updateControlValue, this.props.getSelectedRows());
+		} else {
+			this.props.updateControlValue(this.props.control.name, this.state.controlValue);
+		}
+		// this.validateInput({ rowIndex: this.props.rowIndex, colIndex: this.props.columnIndex });
+		this.validateInput();
+
+
 	}
 
 	getControlValue() {
@@ -150,7 +173,6 @@ export default class ExpressionControl extends EditorControl {
 			placeholder: this.props.control.additionalText,
 			theme: messageType + " default",
 			readOnly: (stateDisabled.disabled) ? "nocursor" : false,
-			viewportMargin: Infinity,
 			extraKeys: { "Ctrl-Space": "autocomplete" }
 		};
 
@@ -162,7 +184,7 @@ export default class ExpressionControl extends EditorControl {
 							<CodeMirror
 								ref= { (ref) => (this.codeMirror = ref)}
 								options={mirrorOptions}
-								onFocusChange={this.validateInput}
+								onFocusChange={this.onFocusChange}
 								onChange={this.handleChange}
 								value={this.state.controlValue}
 							/>
@@ -179,11 +201,17 @@ export default class ExpressionControl extends EditorControl {
 }
 
 ExpressionControl.propTypes = {
-	control: PropTypes.object,
+	control: PropTypes.object.isRequired,
 	controlStates: PropTypes.object,
 	validationDefinitions: PropTypes.object,
 	requiredParameters: PropTypes.array,
 	updateValidationErrorMessage: PropTypes.func,
 	retrieveValidationErrorMessage: PropTypes.func,
-	updateControlValue: PropTypes.func
+	updateControlValue: PropTypes.func,
+	controlValue: PropTypes.array,
+	setCurrentControlValueSelected: PropTypes.func,
+	getSelectedRows: PropTypes.func,
+	rowIndex: PropTypes.number,
+	columnIndex: PropTypes.number,
+	tableControl: PropTypes.bool
 };

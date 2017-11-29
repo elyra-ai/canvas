@@ -34,9 +34,6 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 
 		this.indexOfRow = this.indexOfRow.bind(this);
 
-		this.mouseEnterRemoveButton = this.mouseEnterRemoveButton.bind(this);
-		this.mouseLeaveRemoveButton = this.mouseLeaveRemoveButton.bind(this);
-
 	}
 
 	stopEditingRow(rowIndex, applyChanges) {
@@ -169,15 +166,7 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 
 	selectionChanged(selection) {
 		ColumnStructureTableEditor.prototype.selectionChanged.call(this, selection);
-		this.setState({ enableRemoveIcon: (selection.length !== 0) });
-	}
-
-	mouseEnterRemoveButton() {
-		this.setState({ hoverRemoveIcon: true });
-	}
-
-	mouseLeaveRemoveButton() {
-		this.setState({ hoverRemoveIcon: false });
+		// this.setState({ enableRemoveIcon: (selection.length !== 0) });
 	}
 
 	render() {
@@ -205,6 +194,7 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 		}
 
 		const disabled = typeof stateDisabled.disabled !== "undefined" || Object.keys(stateDisabled) > 0;
+
 		const table = this.createTable(stateStyle, stateDisabled);
 		let label;
 		if (this.props.control.label && this.props.control.separateLabel) {
