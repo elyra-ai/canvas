@@ -42,6 +42,8 @@ import {
 	STRUCTURETABLE_INLINE_TEXTFIELD_PROPS_INFO,
 	STRUCTURETABLE_INLINE_DROPDOWN_PROPS_INFO,
 	STRUCTURETABLE_SUBPANEL_TEXTFIELD_PROPS_INFO,
+	STRUCTURETABLE_ONPANEL_EXPRESSION_PROPS_INFO,
+	STRUCTURETABLE_ROW_SELECTION_PROPS_INFO,
 	STRUCTURELISTEDITOR_PROPS_INFO,
 	STRUCTURETABLE_MOVEABLE_PROPS_INFO,
 	STRUCTURETABLE_SORTABLE_PROPS_INFO,
@@ -835,11 +837,13 @@ class CommonPropertiesComponents extends React.Component {
 					<h3 id="--attributes">Attributes</h3>
 					<p>The following attributes can be applied to complex_types controls.</p>
 					<h4 id="--edit-style" className="section-row-title section-subtitle">edit_style</h4>
-					<p>When editing complex type values in tables, one can either edit cell values inline or in a sub panel.
+					<p>When editing complex type values in tables, one can edit cell values inline, in a sub panel or in an area below the table.
 						The <span className="highlight">edit_style</span> attribute is set in
 						the <span className="highlight">parameters</span> object
-						within <span className="highlight">complex_type_info</span>. The available options
-						are <span className="highlight">inline</span> and <span className="highlight">subpanel</span>.
+						within <span className="highlight">complex_type_info</span>.
+						The available options
+						are <span className="highlight">inline</span> , <span className="highlight">subpanel</span> or <span className="highlight">
+						on_panel</span>
 					</p>
 					<p><span className="highlight">inline</span> will render controls inline within the table cells for editing values.
 						The following example shows a <a className="properties-page-intro-link" href="#/properties#--oneofselect">
@@ -893,6 +897,35 @@ class CommonPropertiesComponents extends React.Component {
 								{this.jsonReplacer(STRUCTURETABLE_SUBPANEL_TEXTFIELD_PROPS_INFO.parameterDef, "all")}
 							</pre>
 						</div>
+						<p>
+							<span className="highlight">on_panel</span> will allow editing of the cell value in a control below the table.
+							The control will be created when the row is selected.
+							The atribute <span className="highlight">row_selection</span> must be
+							set to <span className="highlight">single</span> when using the value <span className="highlight">on_panel</span>.
+							<br /><br />
+							In the table below the <span className="highlight">Condition</span> column
+							has <span className="highlight">edit_style</span> attribute
+							of <span className="highlight">on_panel</span> and is
+							a <span className="highlight">role</span> of <span className="highlight">expression</span>.
+							If you select a row the <span className="highlight">expression</span> control will display
+							below the table with the current value of the <span className="highlight">Condition</span> cell for the selected row.
+							<br />Modify the value in the <span className="highlight">expression</span> control and it will change the
+							value in the cell when focus is off the <span className="highlight">expression</span> control.
+						</p>
+						<div className="section-row">
+							<div className="section-column">
+								<CommonProperties
+									showPropertiesDialog
+									propertiesInfo={STRUCTURETABLE_ONPANEL_EXPRESSION_PROPS_INFO}
+									containerType="Custom"
+								/>
+							</div>
+							<div className="section-column section-column-code">
+								<pre className="json-block">
+									{this.jsonReplacer(STRUCTURETABLE_ONPANEL_EXPRESSION_PROPS_INFO.parameterDef, "all")}
+								</pre>
+							</div>
+						</div>
 					</div>
 					<h4 id="--moveable_rows" className="section-row-title section-subtitle">moveable_rows</h4>
 					<p><span className="highlight">moveable_rows</span> is a boolean attribute that can be set
@@ -913,6 +946,29 @@ class CommonPropertiesComponents extends React.Component {
 							<pre className="json-block">
 								{this.jsonReplacer(STRUCTURETABLE_MOVEABLE_PROPS_INFO.parameterDef, "custom",
 									["uihints", "complex_type_info", "moveable_rows"])}
+							</pre>
+						</div>
+					</div>
+					<h4 id="--row_selection" className="section-row-title section-subtitle">row_selection</h4>
+					<p><span className="highlight">row_selection</span> is a string attribute that can be set
+						in <span className="highlight">complex_type_definition</span> sections. Valid values
+						for <span className="highlight">row_selection</span> are <span className="highlight">single</span>
+						or <span className="highlight">multiple</span>.  If set to <span className="highlight">single</span> then
+						one and only one row may be selected at one time.</p>
+					<p>In this example, the <span className="highlight">row_selection</span> attribute
+						is set <span className="highlight">single</span>. Such that only one row will be selected at a time.</p>
+					<div className="section-row">
+						<div className="section-column">
+							<CommonProperties
+								showPropertiesDialog
+								propertiesInfo={STRUCTURETABLE_ROW_SELECTION_PROPS_INFO}
+								containerType="Custom"
+							/>
+						</div>
+						<div className="section-column section-column-code">
+							<pre className="json-block">
+								{this.jsonReplacer(STRUCTURETABLE_ROW_SELECTION_PROPS_INFO.parameterDef, "custom",
+									["uihints", "complex_type_info", "row_selection"])}
 							</pre>
 						</div>
 					</div>

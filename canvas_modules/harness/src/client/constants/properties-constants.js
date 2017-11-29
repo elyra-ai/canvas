@@ -1843,6 +1843,289 @@ _defineConstant("STRUCTURETABLE_SUBPANEL_TEXTFIELD_PROPS_INFO", {
 		}
 	}
 });
+_defineConstant("STRUCTURETABLE_ONPANEL_EXPRESSION_PROPS_INFO", {
+	"title": "StructureListEditor Title",
+	"parameterDef": {
+		"current_parameters": {
+			"expressionCellTable": [
+				[
+					"BabyBoomer",
+					"Age >= 55"
+				]
+			]
+		},
+		"parameters": [
+			{
+				"id": "expressionCellTable",
+				"type": "array[expressionCellTable]",
+				"role": "column",
+				"default": []
+			}
+		],
+		"complex_types": [
+			{
+				"id": "expressionCellTable",
+				"parameters": [
+					{
+						"id": "valueName",
+						"type": "string",
+						"default": "Value",
+						"role": "new_column"
+					},
+					{
+						"id": "condition",
+						"type": "string",
+						"default": "",
+						"role": "expression"
+					}
+				]
+			}
+		],
+		"uihints": {
+			"id": "Conditions.test",
+			"icon": "images/modelbuildspark.svg",
+			"label": {
+				"default": "Conditions Test"
+			},
+			"description": {
+				"default": "Test condition handling in controls"
+			},
+			"parameter_info": [
+				{
+					"parameter_ref": "expressionCellTable",
+					"label": {
+						"default": "Values"
+					},
+					"description": {
+						"default": "Complex table control list editor table input"
+					}
+				}
+			],
+			"complex_type_info": [
+				{
+					"complex_type_ref": "expressionCellTable",
+					"row_selection": "single",
+					"parameters": [
+						{
+							"parameter_ref": "valueName",
+							"label": {
+								"default": "Structure Name",
+								"resource_key": "expressionCellTable.name.label"
+							},
+							"description": {
+								"resource_key": "expressionCellTable.name.desc"
+							},
+							"width": 15,
+							"edit_style": "inline"
+						},
+						{
+							"parameter_ref": "condition",
+							"language": "CLEM",
+							"label": {
+								"resource_key": "expressionCellTable.description.label"
+							},
+							"description": {
+								"resource_key": "expressionCellTable.description.desc"
+							},
+							"width": 15,
+							"edit_style": "on_panel",
+							"place_holder_text": {
+								"default": "Enter condition expression"
+							}
+						}
+					]
+				}
+			],
+			"group_info": [
+				{
+					"id": "Derive Node",
+					"type": "panels",
+					"label": {
+						"default": "Derive Node"
+					},
+					"group_info": [
+						{
+							"id": "Expression Control Cell",
+							"parameter_refs": [
+								"expressionCellTable"
+							]
+						}
+					]
+				}
+			]
+		},
+		"conditions": [
+			{
+				"validation": {
+					"fail_message": {
+						"type": "warning",
+						"focus_parameter_ref": "expressionCellTable",
+						"message": {
+							"default": "table cannot be empty"
+						}
+					},
+					"evaluate": {
+						"condition": {
+							"parameter_ref": "expressionCellTable",
+							"op": "notEquals",
+							"value": []
+						}
+					}
+				}
+			}
+		],
+		"dataset_metadata": {
+			"fields": []
+		},
+		"resources": {
+			"expressionCellTable.name.label": "Set Field To",
+			"expressionCellTable.name.desc": "value of field",
+			"expressionCellTable.description.label": "Condition",
+			"expressionCellTable.description.desc": "if condition true set field"
+		}
+	}
+});
+_defineConstant("STRUCTURETABLE_ROW_SELECTION_PROPS_INFO", {
+	"title": "StructureListEditor Title",
+	"parameterDef": {
+		"current_parameters": {
+			"expressionCellTable": [
+				["BabyBoomer", "Age >= 55"],
+				["GenX", "Age < 55 && Age >= 35"],
+				["Millenial", "Age < 35"]
+			]
+		},
+		"parameters": [
+			{
+				"id": "expressionCellTable",
+				"type": "array[expressionCellTable]",
+				"role": "column",
+				"default": []
+			}
+		],
+		"complex_types": [
+			{
+				"id": "expressionCellTable",
+				"parameters": [
+					{
+						"id": "valueName",
+						"type": "string",
+						"default": "Value",
+						"role": "new_column"
+					},
+					{
+						"id": "condition",
+						"type": "string",
+						"default": "",
+						"role": "expression"
+					}
+				]
+			}
+		],
+		"uihints": {
+			"id": "Conditions.test",
+			"icon": "images/modelbuildspark.svg",
+			"label": {
+				"default": "Conditions Test"
+			},
+			"description": {
+				"default": "Test condition handling in controls"
+			},
+			"parameter_info": [
+				{
+					"parameter_ref": "expressionCellTable",
+					"label": {
+						"default": "Values"
+					},
+					"description": {
+						"default": "Complex table control list editor table input"
+					}
+				}
+			],
+			"complex_type_info": [
+				{
+					"complex_type_ref": "expressionCellTable",
+					"row_selection": "single",
+					"parameters": [
+						{
+							"parameter_ref": "valueName",
+							"label": {
+								"default": "Structure Name",
+								"resource_key": "expressionCellTable.name.label"
+							},
+							"description": {
+								"resource_key": "expressionCellTable.name.desc"
+							},
+							"width": 15,
+							"edit_style": "inline"
+						},
+						{
+							"parameter_ref": "condition",
+							"language": "CLEM",
+							"label": {
+								"resource_key": "expressionCellTable.description.label"
+							},
+							"description": {
+								"resource_key": "expressionCellTable.description.desc"
+							},
+							"width": 15,
+							"edit_style": "on_panel",
+							"place_holder_text": {
+								"default": "Enter condition expression"
+							}
+						}
+					]
+				}
+			],
+			"group_info": [
+				{
+					"id": "Derive Node",
+					"type": "panels",
+					"label": {
+						"default": "Derive Node"
+					},
+					"group_info": [
+						{
+							"id": "Expression Control Cell",
+							"parameter_refs": [
+								"expressionCellTable"
+							]
+						}
+					]
+				}
+			]
+		},
+		"conditions": [
+			{
+				"validation": {
+					"fail_message": {
+						"type": "warning",
+						"focus_parameter_ref": "expressionCellTable",
+						"message": {
+							"default": "table cannot be empty"
+						}
+					},
+					"evaluate": {
+						"condition": {
+							"parameter_ref": "expressionCellTable",
+							"op": "notEquals",
+							"value": []
+						}
+					}
+				}
+			}
+		],
+		"dataset_metadata": {
+			"fields": []
+		},
+		"resources": {
+			"expressionCellTable.name.label": "Set Field To",
+			"expressionCellTable.name.desc": "value of field",
+			"expressionCellTable.description.label": "Condition",
+			"expressionCellTable.description.desc": "if condition true set field"
+		}
+	}
+});
 _defineConstant("STRUCTURELISTEDITOR_PROPS_INFO", {
 	"title": "StructureListEditor Title",
 	"parameterDef": {
