@@ -562,6 +562,11 @@
           "default": "Soccer"
         },
         {
+          "id": "dummy_entry_invisble",
+          "type": "string",
+          "default": "Don't show"
+        },
+        {
           "id": "checkit",
           "type": "boolean",
           "default": false
@@ -1227,6 +1232,14 @@
               "/images/down-triangle.svg"
             ],
             "summary": true
+          },
+          {
+            "parameter_ref": "dummy_entry_invisble",
+            "label": {
+              "default": "Invisible Field"
+            },
+            "edit_style": "inline",
+            "visible": false
           },
           {
             "parameter_ref": "checkit",
@@ -2257,7 +2270,7 @@
     {
       "visible": {
         "parameter_refs": [
-          "dummy_types[3]"
+          "dummy_types[4]"
         ],
         "evaluate": {
           "condition": {
@@ -2271,7 +2284,7 @@
     {
       "enabled": {
         "parameter_refs": [
-          "dummy_types[4]"
+          "dummy_types[5]"
         ],
         "evaluate": {
           "and": [
@@ -2284,7 +2297,7 @@
             },
             {
               "condition": {
-                "parameter_ref": "dummy_types[3]",
+                "parameter_ref": "dummy_types[4]",
                 "op": "equals",
                 "value": true
               }

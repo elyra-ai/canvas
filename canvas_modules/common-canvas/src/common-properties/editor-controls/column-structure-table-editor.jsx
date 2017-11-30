@@ -636,11 +636,13 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		for (var rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
 			const columns = [];
 			if (this.includeInFilter(rowIndex)) {
+				let visibleIndx = 0;
 				for (var colIndex = 0; colIndex < this.props.control.subControls.length; colIndex++) {
 					const columnDef = this.props.control.subControls[colIndex];
 					if (columnDef.visible) {
 						columns.push(this._makeCell(columnDef, controlValue, rowIndex,
-							colIndex, columnWidths[colIndex], stateStyle, stateDisabled));
+							colIndex, columnWidths[visibleIndx], stateStyle, stateDisabled));
+						visibleIndx += 1;
 					}
 				}
 				if (this.props.control.childItem) {
