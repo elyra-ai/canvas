@@ -611,7 +611,6 @@ export default class EditorForm extends React.Component {
 				getSubControlValues={this.getSubControlValues}
 				updateValidationErrorMessage={this.updateValidationErrorMessage}
 				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
-				propertiesClassname={this.props.propertiesClassname}
 			/>);
 		} else if (control.controlType === "allocatedcolumns") {
 			// logger.info("allocatedcolumns");
@@ -631,7 +630,6 @@ export default class EditorForm extends React.Component {
 				getSubControlValues={this.getSubControlValues}
 				updateValidationErrorMessage={this.updateValidationErrorMessage}
 				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
-				propertiesClassname={this.props.propertiesClassname}
 			/>);
 		} else if (control.controlType === "selectcolumn") {
 			// logger.info("selectcolumn");
@@ -670,7 +668,6 @@ export default class EditorForm extends React.Component {
 				getSubControlValues={this.getSubControlValues}
 				updateValidationErrorMessage={this.updateValidationErrorMessage}
 				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
-				propertiesClassname={this.props.propertiesClassname}
 			/>);
 		} else if (control.controlType === "allocatedstructures") {
 			// logger.info("allocatedstructures");
@@ -870,18 +867,18 @@ export default class EditorForm extends React.Component {
 						styleObj.borderBottom = "none";
 					}
 				}
-				const panelItemsContainer = (<div className={"panel-container-" + panelItemsContainerClass + " " + this.props.propertiesClassname} style={styleObj}>
+				const panelItemsContainer = (<div className={"panel-container-" + panelItemsContainerClass + " right-flyout-panel"} style={styleObj}>
 					{panelItems}
 				</div>);
 
 				tabContent.push(
-					<div key={i + "-" + key} className={"category-title-container-" + this.props.propertiesClassname}>
+					<div key={i + "-" + key} className="category-title-container-right-flyout-panel">
 						<a onClick={() => this._showCategoryPanel(tab.text)}
-							id={"category-title-" + i + "-" + this.props.propertiesClassname}
-							className={"category-title-" + this.props.propertiesClassname}
+							id={"category-title-" + i + "-right-flyout-panel"}
+							className="category-title-right-flyout-panel"
 						>
 							{tab.text.toUpperCase()}
-							<img className={"category-icon-" + this.props.propertiesClassname} src={panelArrow}	/>
+							<img className="category-icon-right-flyout-panel" src={panelArrow}	/>
 						</a>
 						{panelItemsContainer}
 						{additionalComponent}
@@ -903,7 +900,7 @@ export default class EditorForm extends React.Component {
 
 		if (this.props.rightFlyout) {
 			return (
-				<div key={key} id={"category-parent-container-" + this.props.propertiesClassname}>
+				<div key={key} id="category-parent-container-right-flyout-panel">
 					{tabContent}
 				</div>
 			);
@@ -935,19 +932,19 @@ export default class EditorForm extends React.Component {
 			const subPanelItems = this.genUIItem(i, tab.content, idPrefix, controlValueAccessor, datasetMetadata);
 			if (this.props.rightFlyout) {
 
-				const panelItemsContainer = (<div key={i + "-" + key} className={"sub-panel-container-" + this.props.propertiesClassname}>
+				const panelItemsContainer = (<div key={i + "-" + key} className="sub-panel-container-right-flyout-panel">
 					{subPanelItems}
 				</div>);
 
 				subTabs.push(
-					<div key={i + "-" + key} className={"sub-category-items-container-" + this.props.propertiesClassname}>
-						<h3 className={"sub-category-title-" + this.props.propertiesClassname}>{tab.text}</h3>
+					<div key={i + "-" + key} className="sub-category-items-container-right-flyout-panel">
+						<h3 className="sub-category-title-right-flyout-panel">{tab.text}</h3>
 						{panelItemsContainer}
 					</div>
 				);
 			} else {
 				subTabs.push(
-					<div key={i} id={"sub-tab." + tab.group} className={"sub-tab-parent-items-container-" + this.props.propertiesClassname} title={tab.text}>
+					<div key={i} id={"sub-tab." + tab.group} className="sub-tab-parent-items-container" title={tab.text}>
 						{subPanelItems}
 					</div>
 				);
@@ -956,7 +953,7 @@ export default class EditorForm extends React.Component {
 
 		if (this.props.rightFlyout) {
 			return (
-				<div key={key} id={"sub-category-parent-container-" + this.props.propertiesClassname}>
+				<div key={key} id="sub-category-parent-container-right-flyout-panel">
 					{subTabs}
 				</div>
 			);
@@ -1092,7 +1089,6 @@ export default class EditorForm extends React.Component {
 				panel={panel}
 				dataModel={datasetMetadata}
 				controlAccessor={this.getControl}
-				propertiesClassname={this.props.propertiesClassname}
 			>
 				{content}
 			</ColumnAllocationPanel>);
@@ -1126,7 +1122,6 @@ export default class EditorForm extends React.Component {
 						label={panel.label}
 						valueAccessor={controlValueAccessor}
 						controlStates={this.state.controlStates}
-						propertiesClassname={this.props.propertiesClassname}
 						getControlValuesTable={this.getControlValuesTable}
 						updateControlValues={this.updateControlValues}
 						clearSelectedRows={this.clearSelectedRows}
@@ -1606,7 +1601,7 @@ export default class EditorForm extends React.Component {
 		var formButtons = [];
 		return (
 			<div>
-				<div className={"well " + this.props.propertiesClassname}>
+				<div className="well">
 					<form id={"form-" + this.props.form.componentId} className="form-horizontal">
 						<div className="section--light">
 							{content}
@@ -1629,7 +1624,6 @@ EditorForm.propTypes = {
 	submitMethod: PropTypes.func,
 	showPropertiesButtons: PropTypes.func,
 	customPanels: PropTypes.array,
-	propertiesClassname: PropTypes.string,
 	customContainer: PropTypes.bool,
 	rightFlyout: PropTypes.bool
 };
