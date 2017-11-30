@@ -231,10 +231,10 @@ module.exports = function() {
 	this.Then(/^I link node "([^"]*)" output port "([^"]*)" to node "([^"]*)" input port "([^"]*)"$/, function(srcNodeText, srcPortId, trgNodeText, trgPortId) {
 
 		var srcNodeId = getNodeIdForLabel(srcNodeText);
-		var srcSelector = "#src_circle_" + srcNodeId + "_" + srcPortId;
+		var srcSelector = "#node_src_port_" + srcNodeId + "_" + srcPortId;
 
 		var trgNodeId = getNodeIdForLabel(trgNodeText);
-		var trgSelector = "#trg_circle_" + trgNodeId + "_" + trgPortId;
+		var trgSelector = "#node_trg_port_" + trgNodeId + "_" + trgPortId;
 
 		browser.dragAndDrop(srcSelector, trgSelector);
 
@@ -248,7 +248,7 @@ module.exports = function() {
 	this.Then(/^I link node "([^"]*)" output port "([^"]*)" to node "([^"]*)"$/, function(srcNodeText, srcPortId, trgNodeText) {
 
 		var srcNodeId = getNodeIdForLabel(srcNodeText);
-		var srcSelector = "#src_circle_" + srcNodeId + "_" + srcPortId;
+		var srcSelector = "#node_src_port_" + srcNodeId + "_" + srcPortId;
 
 		var trgNodeId = getNodeIdForLabel(trgNodeText);
 		var trgSelector = "#node_grp_" + trgNodeId;

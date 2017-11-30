@@ -1,12 +1,12 @@
 Feature: Sanity_Test2_flowValidation
 
-  ** Make sure the test harness is running and listening to http://localhost:3001 ***
+	** Make sure the test harness is running and listening to http://localhost:3001 ***
 
-  As a human
-  I want to load a canvas
-  So I can verify which nodes have parameter messages
+	As a human
+	I want to load a canvas
+	So I can verify which nodes have parameter messages
 
-  Scenario: Sanity test flow validation when open a flow
+	Scenario: Sanity test flow validation when open a flow
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "D3" rendering engine
@@ -19,7 +19,7 @@ Feature: Sanity_Test2_flowValidation
 		Then I verify that there are 1 nodes with a "warning" indicator
 		Then I pause for 1 seconds
 
-  Scenario: Sanity test flow validation when adding a node
+	Scenario: Sanity test flow validation when adding a node
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "Flyout" palette layout

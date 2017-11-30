@@ -58,6 +58,11 @@ export default class CommonCanvasController {
 		commonCanvas = comcan;
 	}
 
+	// Return a unique identifier for this instance of common canvas.
+	static getInstanceId() {
+		return 1;
+	}
+
 	static openPalette() {
 		if (commonCanvas) {
 			commonCanvas.openPalette();

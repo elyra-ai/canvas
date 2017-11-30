@@ -45,6 +45,9 @@ export default class CanvasD3Layout {
 		this.nodeFormatType = config.enableNodeFormatType;
 		this.linkType = config.enableLinkType;
 
+		// Our instance ID for adding to DOM element IDs
+		this.instanceId = CanvasController.getInstanceId();
+
 		// Initialize dimension and layout variables
 		this.initializeLayoutInfo();
 
@@ -204,12 +207,12 @@ export default class CanvasD3Layout {
 		const svgRect = this.canvasSVG.node().getBoundingClientRect();
 		const canv = this.getCanvasDimensionsAdjustedForScale(1);
 
-		this.canvas.selectAll("#svgRect").remove();
-		this.canvas.selectAll("#canvasRect").remove();
+		this.canvas.selectAll(this.getId("#br_svg_rect")).remove();
+		this.canvas.selectAll(this.getId("#br_canvas_rect")).remove();
 
 		this.canvas
 			.append("rect")
-			.attr("id", "svgRect")
+			.attr("id", this.getId("br_svg_rect"))
 			.attr("height", svgRect.height)
 			.attr("width", svgRect.width)
 			.attr("x", 0)
@@ -220,7 +223,7 @@ export default class CanvasD3Layout {
 		if (canv) {
 			this.canvas
 				.append("rect")
-				.attr("id", "canvasRect")
+				.attr("id", this.getId("br_canvas_rect"))
 				.attr("height", canv.height)
 				.attr("width", canv.width)
 				.attr("x", canv.left)
@@ -229,6 +232,22 @@ export default class CanvasD3Layout {
 				.style("stroke", "blue")
 				.lower();
 		}
+	}
+
+	// Returns an id string like one of the following:
+	// * 'prefix_instanceID'
+	// * 'prefix_instanceID_suffix'
+	// * 'prefix_instanceID_suffix_suffix2'
+	// depending on what parameters are provided.
+	getId(prefix, suffix, suffix2) {
+		let id = `${prefix}_${this.instanceId}`;
+		if (suffix) {
+			id += `_${suffix}`;
+		}
+		if (suffix2) {
+			id += `_${suffix2}`;
+		}
+		return id;
 	}
 
 	// Returns true if either the Command Key (Mac) or Control key (Windows)
@@ -389,7 +408,7 @@ export default class CanvasD3Layout {
 
 	createDropShadow(defs) {
 		var dropShadowFilter = defs.append("filter")
-			.attr("id", "drop-shadow")
+			.attr("id", this.getId("node_drop_shadow"))
 			.attr("x", "-20%")
 			.attr("y", "-20%")
 			.attr("width", "200%")
@@ -779,13 +798,13 @@ export default class CanvasD3Layout {
 		if (this.dragging) {
 			// only transform nodes while dragging
 			nodeGroupSel.each(function(d) {
-				that.canvas.select(`#node_grp_${d.id}`)
+				that.canvas.select(that.getId("#node_grp", d.id))
 					.attr("transform", `translate(${d.x_pos}, ${d.y_pos})`)
 					.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
 			});
 		} else if (this.selecting || this.regionSelect || this.commentSizing) {
 			nodeGroupSel.each(function(d) {
-				that.canvas.select(`#node_outline_${d.id}`)
+				that.canvas.select(that.getId("#node_outline", d.id))
 					.attr("data-selected", ObjectModel.isSelected(d.id) ? "yes" : "no")
 					.attr("class", that.layout.cssSelectionHighlight)
 					.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
@@ -796,7 +815,7 @@ export default class CanvasD3Layout {
 				// TODO - Remove this code if/when common canvas supports cut (which removes nodes
 				// from the canvas) and when WML Canvas uses that clipboard support in place
 				// of its own.
-				that.canvas.select(`#node_image_${d.id}`)
+				that.canvas.select(that.getId("#node_image", d.id))
 					.datum((nd) => that.getNode(nd.id)) // Set the __data__ to the updated data
 					.each(function(nd) {
 						var imageObj = d3.select(this);
@@ -816,16 +835,16 @@ export default class CanvasD3Layout {
 
 			nodeGroupSel.each(function(d) {
 
-				that.canvas.select(`#node_grp_${d.id}`)
+				that.canvas.select(that.getId("#node_grp", d.id))
 					.attr("transform", `translate(${d.x_pos}, ${d.y_pos})`)
 					.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
 
-				that.canvas.select(`#node_outline_${d.id}`)
+				that.canvas.select(that.getId("#node_outline", d.id))
 					.attr("data-selected", ObjectModel.isSelected(d.id) ? "yes" : "no")
 					.attr("class", that.layout.cssSelectionHighlight)
 					.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
 
-				that.canvas.select(`#node_image_${d.id}`)
+				that.canvas.select(that.getId("#node_image", d.id))
 					.datum((nd) => that.getNode(nd.id)) // Set the __data__ to the updated data
 					.each(function(nd) {
 						if (nd.customAttrs) {
@@ -836,7 +855,7 @@ export default class CanvasD3Layout {
 						}
 					});
 
-				that.canvas.select(`#node_label_${d.id}`)
+				that.canvas.select(that.getId("#node_label", d.id))
 					.datum((nd) => that.getNode(nd.id)) // Set the __data__ to the updated data
 					.text(function(nd) {
 						var textObj = d3.select(this);
@@ -845,32 +864,32 @@ export default class CanvasD3Layout {
 					.attr("class", function(nd) { return that.layout.cssNodeLabel + " " + that.getMessageLabelClass(nd.messages);
 					});
 
-				that.canvas.select(`#error_circle_${d.id}`)
+				that.canvas.select(that.getId("#node_error_marker", d.id))
 					.datum((nd) => that.getNode(nd.id)) // Set the __data__ to the updated data
-					.attr("class", function(nd) { return that.getMessageCircleClass(nd.messages); });
+					.attr("class", function(nd) { return "node-error-marker " + that.getMessageCircleClass(nd.messages); });
 			});
 
 			var newNodeGroups = nodeGroupSel.enter()
 				.append("g")
-				.attr("id", (d) => `node_grp_${d.id}`)
+				.attr("id", (d) => that.getId("node_grp", d.id))
 				.attr("class", "obj-group node-group")
 				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 				.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
 					if (that.layout.connectionType === "ports") {
-						that.canvas.select(`#node_body_${d.id}`).attr("hover", "yes");
+						that.canvas.select(that.getId("#node_body", d.id)).attr("hover", "yes");
 						d3.select(this)
 							.append("image")
-							.attr("id", "node-ellipsis")
+							.attr("id", that.getId("node_ellipsis"))
 							.attr("xlink:href", nodeMenuStandardIcon)
 							.attr("width", that.layout.ellipsisWidth)
 							.attr("height", that.layout.ellipsisHeight)
 							.attr("x", that.layout.ellipsisPosX)
 							.attr("y", (nd) => that.getEllipsisPosY(nd))
 							.on("mouseenter", () => {
-								that.canvas.select("#node-ellipsis").attr("xlink:href", nodeMenuHoverIcon);
+								that.canvas.select(that.getId("#node_ellipsis")).attr("xlink:href", nodeMenuHoverIcon);
 							})
 							.on("mouseleave", () => {
-								that.canvas.select("#node-ellipsis").attr("xlink:href", nodeMenuStandardIcon);
+								that.canvas.select(that.getId("#node_ellipsis")).attr("xlink:href", nodeMenuStandardIcon);
 							})
 							.on("click", () => {
 								that.stopPropagationAndPreventDefault();
@@ -879,9 +898,9 @@ export default class CanvasD3Layout {
 					}
 				})
 				.on("mouseleave", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
-					that.canvas.select(`#node_body_${d.id}`).attr("hover", "no");
+					that.canvas.select(that.getId("#node_body", d.id)).attr("hover", "no");
 					if (that.layout.connectionType === "ports") {
-						that.canvas.selectAll("#node-ellipsis").remove();
+						that.canvas.selectAll(that.getId("#node_ellipsis")).remove();
 					}
 				})
 				// Use mouse down instead of click because it gets called before drag start.
@@ -932,19 +951,19 @@ export default class CanvasD3Layout {
 			// Node selection highlighting outline for new nodes, flexible properties set in next step
 			if (this.layout.nodeShape === "port-arcs") {
 				newNodeGroups.append("path")
-					.attr("id", (d) => `node_outline_${d.id}`);
+					.attr("id", (d) => this.getId("node_outline", d.id));
 
 				newNodeGroups.append("path")
-					.attr("id", (d) => `node_body_${d.id}`)
-					.style("filter", "url(#drop-shadow)");
+					.attr("id", (d) => this.getId("node_body", d.id))
+					.style("filter", `url(${this.getId("#node_drop_shadow")})`);
 
 
 			} else { // simple rectangle
 				newNodeGroups.append("rect")
-					.attr("id", (d) => `node_outline_${d.id}`);
+					.attr("id", (d) => this.getId("node_outline", d.id));
 
 				newNodeGroups.append("rect")
-					.attr("id", (d) => `node_body_${d.id}`);
+					.attr("id", (d) => this.getId("node_body", d.id));
 
 			}
 
@@ -954,13 +973,13 @@ export default class CanvasD3Layout {
 				.each((d) => {
 					// Node selection highlighting: set flexible properties
 					if (this.layout.nodeShape === "port-arcs") {
-						that.canvas.select(`#node_grp_${d.id}`).select(`#node_outline_${d.id}`)
+						that.canvas.select(that.getId("#node_grp", d.id)).select(that.getId("#node_outline", d.id))
 							.attr("d", (cd) => this.getNodeShapePath(cd))
 							.attr("transform", (cd) => this.getNodeHighlightOutlineTranslate(cd)) // Scale and move the shape up and to the left to account for the padding
 							.attr("data-selected", function(cd) { return ObjectModel.isSelected(cd.id) ? "yes" : "no"; })
 							.attr("class", this.layout.cssSelectionHighlight);
 					} else { // simple rectangle
-						that.canvas.select(`#node_grp_${d.id}`).select(`#node_outline_${d.id}`)
+						that.canvas.select(that.getId("#node_grp", d.id)).select(that.getId("#node_outline", d.id))
 							.attr("width", (cd) => cd.width + (2 * this.layout.highlightGap))
 							.attr("height",
 								(cd) => cd.height + (2 * this.layout.highlightGap))
@@ -974,11 +993,11 @@ export default class CanvasD3Layout {
 					if (this.layout.connectionType === "ports") {
 						// Node body updates
 						if (this.layout.nodeShape === "port-arcs") {
-							that.canvas.select(`#node_grp_${d.id}`).select(`#node_body_${d.id}`)
+							that.canvas.select(that.getId("#node_grp", d.id)).select(that.getId("#node_body", d.id))
 								.attr("d", (cd) => this.getNodeShapePath(cd))
 								.attr("class", (cd) => this.getNodeBodyClass(cd));
 						} else {
-							that.canvas.select(`#node_grp_${d.id}`).select(`#node_body_${d.id}`)
+							that.canvas.select(that.getId("#node_grp", d.id)).select(that.getId("#node_body", d.id))
 								.attr("width", (cd) => cd.width)
 								.attr("height", (cd) => cd.height)
 								.attr("x", 0)
@@ -990,13 +1009,13 @@ export default class CanvasD3Layout {
 						if (d.input_ports && d.input_ports.length > 0) {
 							const inputPortPositions = this.getPortPositions(d, "input");
 
-							var inputPortSelection = that.canvas.select(`#node_grp_${d.id}`).selectAll("." + this.layout.cssNodePortInput)
+							var inputPortSelection = that.canvas.select(that.getId("#node_grp", d.id)).selectAll("." + this.layout.cssNodePortInput)
 								.data(d.input_ports, function(p) { return p.id; });
 
 							// input port circle
 							inputPortSelection.enter()
 								.append("circle")
-								.attr("id", (port) => `trg_circle_${d.id}_${port.id}`)
+								.attr("id", (port) => this.getId("node_trg_port", d.id, port.id))
 								.attr("portId", (port) => port.id) // This is needed by getNodeInputPortAtMousePos
 								.attr("cx", 0)
 								.attr("r", this.layout.portRadius)
@@ -1010,12 +1029,12 @@ export default class CanvasD3Layout {
 							// input port arrow in circle
 							inputPortSelection.enter()
 								.append("path")
-								.attr("id", (port) => `trg_arrow_${d.id}_${port.id}`)
+								.attr("id", (port) => this.getId("node_trg_port_arrow", d.id, port.id))
 								.attr("class", this.layout.cssNodePortInputArrow)
 								.attr("connected", "no");
 
 							// update arrow in circle for new and existing ports
-							that.canvas.select(`#node_grp_${d.id}`).selectAll("." + this.layout.cssNodePortInputArrow)
+							that.canvas.select(that.getId("#node_grp", d.id)).selectAll("." + this.layout.cssNodePortInputArrow)
 								.attr("d", (port) => this.getArrowShapePath(inputPortPositions[port.id]));
 
 							inputPortSelection.exit().remove();
@@ -1025,13 +1044,13 @@ export default class CanvasD3Layout {
 						if (d.output_ports && d.output_ports.length > 0) {
 							const outputPortPositions = this.getPortPositions(d, "output");
 
-							var outputPortSelection = this.canvas.select(`#node_grp_${d.id}`)
+							var outputPortSelection = this.canvas.select(this.getId("#node_grp", d.id))
 								.selectAll("." + this.layout.cssNodePortOutput)
 								.data(d.output_ports, function(p) { return p.id; });
 
 							outputPortSelection.enter()
 								.append("circle")
-								.attr("id", (port) => `src_circle_${d.id}_${port.id}`)
+								.attr("id", (port) => this.getId("node_src_port", d.id, port.id))
 								.attr("r", this.layout.portRadius)
 								.attr("class", (port) => this.layout.cssNodePortOutput + (port.class_name ? " " + port.class_name : ""))
 								.on("mousedown", (port) => {
@@ -1069,8 +1088,8 @@ export default class CanvasD3Layout {
 
 			// Node image
 			newNodeGroups.append("image")
-				.attr("id", function(d) { return `node_image_${d.id}`; })
-				.attr("xlink:href", function(d) { return d.image; })
+				.attr("id", (d) => this.getId("node_image", d.id))
+				.attr("xlink:href", (d) => d.image)
 				.attr("width", this.layout.imageWidth)
 				.attr("height", this.layout.imageHeight)
 				.attr("x", this.layout.imagePosX)
@@ -1102,8 +1121,8 @@ export default class CanvasD3Layout {
 					var textObj = d3.select(this);
 					return that.trimLabelToWidth(d.label, that.layout.labelWidth, that.layout.cssNodeLabel, textObj);
 				})
-				.attr("id", function(d) { return `node_label_${d.id}`; })
-				.attr("class", function(d) { return that.layout.cssNodeLabel + " " + that.getMessageLabelClass(d.messages); })
+				.attr("id", (d) => that.getId("node_label", d.id))
+				.attr("class", (d) => that.layout.cssNodeLabel + " " + that.getMessageLabelClass(d.messages))
 				.attr("x", this.layout.labelHorizontalJustification === "left" // If not "left" then "center"
 					? this.layout.labelPosX : this.layout.labelPosX + (this.layout.labelWidth / 2))
 				.attr("text-anchor", this.layout.labelHorizontalJustification === "left" ? "start" : "middle")
@@ -1131,7 +1150,7 @@ export default class CanvasD3Layout {
 			// Halo
 			if (this.layout.connectionType === "halo") {
 				newNodeGroups.append("circle")
-					.attr("id", function(d) { return `node_halo_${d.id}`; })
+					.attr("id", (d) => this.getId("node_halo", d.id))
 					.attr("class", "d3-node-halo")
 					.attr("cx", this.layout.haloCenterX)
 					.attr("cy", this.layout.haloCenterY)
@@ -1150,16 +1169,13 @@ export default class CanvasD3Layout {
 
 			// Error indicator
 			newNodeGroups.append("circle")
-				.attr("id", function(d) { return `error_circle_${d.id}`; })
-				.attr("class", function(d) { return that.getMessageCircleClass(d.messages); })
+				.attr("id", (d) => that.getId("node_error_marker", d.id))
+				.attr("class", (d) => "node-error-marker " + that.getMessageCircleClass(d.messages))
 				.attr("cx", this.layout.errorCenterX)
 				.attr("r", this.layout.errorRadius);
 
 			// set cy for error circle in new and existing nodes
-			newNodeGroups.merge(nodeGroupSel).selectAll("circle")
-				.filter(function(c) {
-					return this.getAttribute("id").startsWith("error_circle_");
-				})
+			newNodeGroups.merge(nodeGroupSel).selectAll(".node-error-marker")
 				.attr("cy", (d) => this.getErrorPosY(d));
 
 			// Decorators
@@ -1238,12 +1254,12 @@ export default class CanvasD3Layout {
 	}
 
 	setTrgPortStatus(trgId, trgPortId, newStatus) {
-		this.canvas.select(`#trg_circle_${trgId}_${trgPortId}`).attr("connected", newStatus);
-		this.canvas.select(`#trg_arrow_${trgId}_${trgPortId}`).attr("connected", newStatus);
+		this.canvas.select(this.getId("#node_trg_port", trgId, trgPortId)).attr("connected", newStatus);
+		this.canvas.select(this.getId("#node_trg_port_arrow", trgId, trgPortId)).attr("connected", newStatus);
 	}
 
 	setSrcPortStatus(srcId, srcPortId, newStatus) {
-		this.canvas.select(`#src_circle_${srcId}_${srcPortId}`).attr("connected", newStatus);
+		this.canvas.select(this.getId("#node_src_port", srcId, srcPortId)).attr("connected", newStatus);
 	}
 
 	// Adds a decorator to the nodeGroup passed in of the type passed in at the
@@ -1636,7 +1652,7 @@ export default class CanvasD3Layout {
 		var portId = null;
 		const node = this.getNodeAtMousePos();
 		if (node) {
-			this.canvas.select(`#node_grp_${node.id}`).selectAll("." + this.layout.cssNodePortInput)
+			this.canvas.select(this.getId("#node_grp", node.id)).selectAll("." + this.layout.cssNodePortInput)
 				.each(function(p) { // Use function keyword so 'this' pointer references the dom object
 					var cx = node.x_pos + this.cx.baseVal.value;
 					var cy = node.y_pos + this.cy.baseVal.value;
@@ -1779,14 +1795,14 @@ export default class CanvasD3Layout {
 		if (this.dragging && !this.commentSizing) {
 			commentGroupSel.each(function(d) {
 				// Comment group object
-				that.canvas.select(`#comment_grp_${d.id}`)
+				that.canvas.select(that.getId("#comment_grp", d.id))
 					.attr("transform", `translate(${d.x_pos}, ${d.y_pos})`)
 					.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
 			});
 		} else if (this.selecting || this.regionSelect) {
 			commentGroupSel.each(function(d) {
 				// Comment selection highlighting and sizing outline
-				that.canvas.select(`#comment_rect_${d.id}`)
+				that.canvas.select(that.getId("#comment_outline", d.id))
 					.attr("height", d.height + (2 * that.layout.highlightGap))
 					.attr("width", d.width + (2 * that.layout.highlightGap))
 					.attr("data-selected", ObjectModel.isSelected(d.id) ? "yes" : "no")
@@ -1799,7 +1815,7 @@ export default class CanvasD3Layout {
 				// TODO - Remove this code if/when common canvas supports cut (which removes comments
 				// from the canvas) and when WML Canvas uses that clipboard support in place
 				// of its own.
-				that.canvas.select(`#comment_box_${d.id}`)
+				that.canvas.select(that.getId("#comment_body", d.id))
 					.datum((cd) => that.getComment(cd.id)) // Set the __data__ to the updated data
 					.each(function(cd) {
 						var imageObj = d3.select(this);
@@ -1819,12 +1835,12 @@ export default class CanvasD3Layout {
 			commentGroupSel.each(function(d) {
 
 				// Comment group object
-				that.canvas.select(`#comment_grp_${d.id}`)
+				that.canvas.select(that.getId("#comment_grp", d.id))
 					.attr("transform", `translate(${d.x_pos}, ${d.y_pos})`)
 					.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
 
 				// Comment selection highlighting and sizing outline
-				that.canvas.select(`#comment_rect_${d.id}`)
+				that.canvas.select(that.getId("#comment_outline", d.id))
 					.attr("height", d.height + (2 * that.layout.highlightGap))
 					.attr("width", d.width + (2 * that.layout.highlightGap))
 					.attr("data-selected", ObjectModel.isSelected(d.id) ? "yes" : "no")
@@ -1836,13 +1852,13 @@ export default class CanvasD3Layout {
 					.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
 
 				// Clip rectangle for text
-				that.canvas.select(`#comment_clip_rect_${d.id}`)
+				that.canvas.select(that.getId("#comment_clip_rect", d.id))
 					.attr("height", d.height - (2 * that.layout.commentHeightPadding))
 					.attr("width", d.width - (2 * that.layout.commentWidthPadding))
 					.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
 
 				// Background rectangle for comment
-				that.canvas.select(`#comment_box_${d.id}`)
+				that.canvas.select(that.getId("#comment_body", d.id))
 					.attr("height", d.height)
 					.attr("width", d.width)
 					.attr("class", (cd) => that.getCommentRectClass(cd))
@@ -1857,7 +1873,7 @@ export default class CanvasD3Layout {
 					});
 
 				// Comment text
-				that.canvas.select(`#comment_text_${d.id}`)
+				that.canvas.select(that.getId("#comment_text", d.id))
 					.datum((cd) => that.getComment(cd.id)) // Set the __data__ to the updated data
 					.attr("beingedited", that.editingCommentId === d.id ? "yes" : "no") // Use the beingedited css style to make text transparent
 					.each(function(cd) {
@@ -1868,7 +1884,7 @@ export default class CanvasD3Layout {
 
 				// Comment halo
 				if (that.layout.connectionType === "halo") {
-					that.canvas.select(`#comment_halo_${d.id}`)
+					that.canvas.select(that.getId("#comment_halo", d.id))
 						.attr("width", d.width + (2 * that.layout.haloCommentGap))
 						.attr("height", d.height + (2 * that.layout.haloCommentGap))
 						.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
@@ -1877,7 +1893,7 @@ export default class CanvasD3Layout {
 
 			var newCommentGroups = commentGroupSel.enter()
 				.append("g")
-				.attr("id", (d) => `comment_grp_${d.id}`)
+				.attr("id", (d) => this.getId("comment_grp", d.id))
 				.attr("class", "obj-group comment-group")
 				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
 				// Use mouse down instead of click because it gets called before drag start.
@@ -1909,7 +1925,7 @@ export default class CanvasD3Layout {
 					if (that.layout.connectionType === "ports") {
 						d3.select(this)
 							.append("circle")
-							.attr("id", "comment_port_circle")
+							.attr("id", that.getId("comment_port"))
 							.attr("cx", 0 - that.layout.highlightGap)
 							.attr("cy", 0 - that.layout.highlightGap)
 							.attr("r", that.layout.commentPortRadius)
@@ -1928,14 +1944,14 @@ export default class CanvasD3Layout {
 				})
 				.on("mouseleave", (d) => {
 					if (that.layout.connectionType === "ports") {
-						that.canvas.selectAll("#comment_port_circle").remove();
+						that.canvas.selectAll(that.getId("#comment_port")).remove();
 					}
 				})
 				.on("dblclick", function(d) { // Use function keyword so 'this' pointer references the DOM text object
 					that.consoleLog("Comment Group - double click");
 					that.stopPropagationAndPreventDefault();
 
-					that.canvas.select(`#comment_text_${d.id}`) // Make SVG text invisible when in edit mode.
+					that.canvas.select(that.getId("#comment_text", d.id)) // Make SVG text invisible when in edit mode.
 						.attr("beingedited", "yes");
 
 					var datum = d;
@@ -1955,7 +1971,7 @@ export default class CanvasD3Layout {
 
 					d3.select(that.canvasSelector)
 						.append("textarea")
-						.attr("id",	`text_area_${id}`)
+						.attr("id",	that.getId("comment_text_area", id))
 						.attr("data-nodeId", id)
 						.attr("class", "d3-comment-entry")
 						.text(content)
@@ -1987,7 +2003,7 @@ export default class CanvasD3Layout {
 						});
 
 					// Note: Couldn't get focus to work through d3, so used dom instead.
-					document.getElementById(`text_area_${id}`).focus();
+					document.getElementById(that.getId("comment_text_area", id)).focus();
 					CanvasController.clickActionHandler({ clickType: "DOUBLE_CLICK", objectType: "comment", id: d.id, selectedObjectIds: ObjectModel.getSelectedObjectIds() });
 				})
 				.on("contextmenu", (d) => {
@@ -1998,7 +2014,7 @@ export default class CanvasD3Layout {
 
 			// Comment selection highlighting and sizing outline
 			newCommentGroups.append("rect")
-				.attr("id", (d) => `comment_rect_${d.id}`)
+				.attr("id", (d) => this.getId("comment_outline", d.id))
 				.attr("width", (d) => d.width + (2 * this.layout.highlightGap))
 				.attr("height", (d) => d.height + (2 * this.layout.highlightGap))
 				.attr("x", -this.layout.highlightGap)
@@ -2017,7 +2033,7 @@ export default class CanvasD3Layout {
 
 			// Background rectangle for comment
 			newCommentGroups.append("rect")
-				.attr("id", (d) => `comment_box_${d.id}`)
+				.attr("id", (d) => this.getId("comment_body", d.id))
 				.attr("width", (d) => d.width)
 				.attr("height", (d) => d.height)
 				.attr("x", 0)
@@ -2035,9 +2051,9 @@ export default class CanvasD3Layout {
 
 			// Clip path to clip the comment text to the comment rectangle
 			newCommentGroups.append("clipPath")
-				.attr("id", (d) => `comment_clip_path_${d.id}`)
+				.attr("id", (d) => that.getId("comment_clip_path", d.id))
 				.append("rect")
-				.attr("id", (d) => `comment_clip_rect_${d.id}`)
+				.attr("id", (d) => that.getId("comment_clip_rect", d.id))
 				.attr("width", (d) => d.width - (2 * that.layout.commentWidthPadding))
 				.attr("height", (d) => d.height - (2 * that.layout.commentHeightPadding))
 				.attr("x", 0 + that.layout.commentWidthPadding)
@@ -2045,14 +2061,14 @@ export default class CanvasD3Layout {
 
 			// Comment text
 			newCommentGroups.append("text")
-				.attr("id", (d) => `comment_text_${d.id}`)
+				.attr("id", (d) => that.getId("comment_text", d.id))
 				.attr("class", "d3-comment-text")
 				.attr("beingedited", "no")
 				.each(function(d) {
 					var textObj = d3.select(this);
 					that.displayWordWrappedText(textObj, d.content, d.width - (2 * that.layout.commentWidthPadding));
 				})
-				.attr("clip-path", (d) => `url(#comment_clip_path_${d.id})`)
+				.attr("clip-path", (d) => "url(" + that.getId("#comment_clip_path", d.id) + ")")
 				.attr("xml:space", "preserve")
 				.attr("x", 0 + that.layout.commentWidthPadding)
 				.attr("y", 0 + that.layout.commentHeightPadding);
@@ -2060,7 +2076,7 @@ export default class CanvasD3Layout {
 			// Halo
 			if (this.layout.connectionType === "halo") {
 				newCommentGroups.append("rect")
-					.attr("id", (d) => `comment_halo_${d.id}`)
+					.attr("id", (d) => that.getId("comment_halo", d.id))
 					.attr("class", "d3-comment-halo")
 					.attr("x", 0 - this.layout.haloCommentGap)
 					.attr("y", 0 - this.layout.haloCommentGap)
@@ -2091,7 +2107,7 @@ export default class CanvasD3Layout {
 			this.zoomTextAreaCenterY = datum.y_pos + (this.textAreaHeight / 2);
 			var comment = this.getComment(datum.id);
 			comment.height = this.textAreaHeight;
-			d3.select(this.canvasSelector).select(`#text_area_${datum.id}`)
+			d3.select(this.canvasSelector).select(this.getId("#comment_text_area", datum.id))
 				.style("height", this.textAreaHeight + "px")
 				.style("transform", this.getTextAreaTransform()); // Since the height has changed the translation needs to be reapplied.
 			this.displayComments();
@@ -2149,7 +2165,7 @@ export default class CanvasD3Layout {
 	// direction passed in.
 	displaySizingCursor(id, direction) {
 		var cursor = this.getCursorBasedOnDirection(direction);
-		this.canvas.select(`#comment_rect_${id}`).style("cursor", cursor);
+		this.canvas.select(this.getId("#comment_outline", id)).style("cursor", cursor);
 	}
 
 	// Returns the comment sizing direction (i.e. one of n, s, e, w, nw, ne,
@@ -2241,7 +2257,7 @@ export default class CanvasD3Layout {
 		commentObj.width = width;
 		commentObj.height = height;
 
-		this.canvas.select(`#comment_grp_${this.commentSizingId}`).remove();
+		this.canvas.select(this.getId("#comment_grp", this.commentSizingId)).remove();
 		this.displayComments();
 		this.displayLinks();
 	}
@@ -2508,7 +2524,7 @@ export default class CanvasD3Layout {
 			.data(lineArray, function(line) { return line.id; })
 			.enter()
 			.append("g")
-			.attr("id", (d) => `link_group_${d.id}`)
+			.attr("id", (d) => this.getId("link_grp", d.id))
 			.attr("class", "link-group")
 			.attr("src", (d) => d.src)
 			.attr("trg", (d) => d.trg)
@@ -2652,9 +2668,8 @@ export default class CanvasD3Layout {
 		const comments = ObjectModel.getComments();
 
 		for (var idx = comments.length - 1; idx > -1; idx--) {
-			d3.select(`#comment_grp_${comments[idx].id}`).lower();
+			this.canvas.select(this.getId("#comment_grp", comments[idx].id)).lower();
 		}
-
 	}
 
 	buildLineArray() {
