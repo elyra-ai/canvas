@@ -34,9 +34,8 @@ export default class PropertiesButtons extends Component {
 			buttons = <div />;
 		}
 
-		const className = typeof this.props.propertiesClassname !== "undefined" ? this.props.propertiesClassname : "";
 		return (
-			<div className={"modal__buttons " + className}>
+			<div className="modal__buttons">
 				{buttons}
 			</div>
 		);
@@ -48,6 +47,5 @@ PropertiesButtons.propTypes = {
 	okHandler: PropTypes.func,
 	applyLabel: PropTypes.string,
 	rejectLabel: PropTypes.string,
-	showPropertiesButtons: PropTypes.bool,
-	propertiesClassname: PropTypes.string
+	showPropertiesButtons: PropTypes.bool
 };

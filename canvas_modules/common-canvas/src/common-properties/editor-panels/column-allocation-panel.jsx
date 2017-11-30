@@ -99,24 +99,21 @@ export default class ColumnAllocationPanel extends React.Component {
 
 			// Child should be a ControlItem so access the control ref
 			const controlName = child.props.control.ref;
-			const fieldAllocatorButtonsId = this.props.propertiesClassname.length > 0
-				? "field-allocator-button-container-" + this.props.propertiesClassname
-				: "field-allocator-button-container";
 
 			controlItems.push(
-				<Row key={i} className={this.props.propertiesClassname}>
+				<Row key={i}>
 					<Col md={1}
-						id={fieldAllocatorButtonsId}
+						id="field-allocator-button-container"
 						style={{
 							"marginTop": "18px",
 							"top": "50%",
 							"marginLeft": "40%"
 						}}
 					>
-						<img className={"field-allocator-button " + this.props.propertiesClassname} src={MoveLeftIcon} onClick={this.deallocate.bind(this, controlName)} />
-						<img className={"field-allocator-button " + this.props.propertiesClassname} src={MoveRightIcon} onClick={this.allocate.bind(this, controlName)} />
+						<img className="field-allocator-button" src={MoveLeftIcon} onClick={this.deallocate.bind(this, controlName)} />
+						<img className="field-allocator-button" src={MoveRightIcon} onClick={this.allocate.bind(this, controlName)} />
 					</Col>
-					<Col md={11} className={"column-allocation-panel-column " + this.props.propertiesClassname}>
+					<Col md={11} className="column-allocation-panel-column">
 						{child}
 					</Col>
 				</Row>
@@ -125,18 +122,17 @@ export default class ColumnAllocationPanel extends React.Component {
 
 		return (
 			<Grid>
-				<Row className={"column-allocation-panel-row " + this.props.propertiesClassname}>
-					<Col md={3} className={"column-allocation-panel-column " + this.props.propertiesClassname}>
+				<Row className="column-allocation-panel-row">
+					<Col md={3} className="column-allocation-panel-column">
 						<ColumnSource
 							id={"column-source." + this.props.panel.id}
 							ref="columnSource"
 							name={this.props.panel.id}
 							dataModel={this.props.dataModel}
 							rows={this.props.children.length * 5}
-							propertiesClassname={this.props.propertiesClassname}
 						/>
 					</Col>
-					<Col md={9} className={"column-allocation-panel-column " + this.props.propertiesClassname}>
+					<Col md={9} className="column-allocation-panel-column">
 						<Grid>
 							{controlItems}
 						</Grid>
@@ -150,6 +146,5 @@ export default class ColumnAllocationPanel extends React.Component {
 ColumnAllocationPanel.propTypes = {
 	panel: PropTypes.object,
 	dataModel: PropTypes.object,
-	controlAccessor: PropTypes.func,
-	propertiesClassname: PropTypes.string
+	controlAccessor: PropTypes.func
 };

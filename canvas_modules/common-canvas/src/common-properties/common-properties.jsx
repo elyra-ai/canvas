@@ -163,13 +163,11 @@ export default class CommonProperties extends React.Component {
 
 			let propertiesTitle = <div />;
 			let buttonsContainer = <div />;
-			let propertiesClassname = "";
 			if (this.props.rightFlyout) {
-				propertiesClassname = "right-flyout-panel";
-				propertiesTitle = (<div id={"node-title-container-" + propertiesClassname}>
-					<div id={"node-title-" + propertiesClassname}>
+				propertiesTitle = (<div id="node-title-container-right-flyout-panel">
+					<div id="node-title-right-flyout-panel">
 						<TextField
-							id={"node-title-editor-" + propertiesClassname}
+							id="node-title-editor-right-flyout-panel"
 							value={title}
 							onChange={(e) => this.setState({
 								title: e.target.value
@@ -180,8 +178,8 @@ export default class CommonProperties extends React.Component {
 							style={this.state.propertiesTitleEditStyle}
 						/>
 					</div>
-					<a id={"title-edit-" + propertiesClassname} onClick={this.editTitleClickHandler}>
-						<img id={"title-edit-icon-" + propertiesClassname}
+					<a id="title-edit-right-flyout-panel" onClick={this.editTitleClickHandler}>
+						<img id="title-edit-icon-right-flyout-panel"
 							src={editIcon}
 						/>
 					</a>
@@ -191,7 +189,6 @@ export default class CommonProperties extends React.Component {
 					cancelHandler={this.cancelHandler}
 					applyLabel="Save"
 					showPropertiesButtons={this.state.showPropertiesButtons}
-					propertiesClassname={propertiesClassname}
 				/>);
 			}
 
@@ -220,7 +217,6 @@ export default class CommonProperties extends React.Component {
 					additionalComponents={this.props.propertiesInfo.additionalComponents}
 					showPropertiesButtons={this.showPropertiesButtons}
 					customPanels={this.props.customPanels}
-					propertiesClassname={propertiesClassname}
 					customContainer={this.props.containerType === "Custom"}
 					rightFlyout={this.props.rightFlyout}
 				/>);
@@ -238,8 +234,7 @@ export default class CommonProperties extends React.Component {
 						{editorForm}
 					</PropertiesEditing>);
 				} else if (this.props.containerType === "Custom") {
-					const customContainerId = this.props.rightFlyout ? "custom-container-" + propertiesClassname : "custom-container";
-					propertiesDialog = (<div id={customContainerId}>
+					propertiesDialog = (<div id="custom-container">
 						{editorForm}
 					</div>);
 				} else { // Modal
@@ -256,7 +251,7 @@ export default class CommonProperties extends React.Component {
 				}
 			}
 
-			const propertiesId = this.props.rightFlyout ? "common-properties-" + propertiesClassname : "";
+			const propertiesId = this.props.rightFlyout ? "common-properties-right-flyout-panel" : "";
 			return (
 				<div id={propertiesId}>
 					{propertiesTitle}

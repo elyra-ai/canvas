@@ -11,15 +11,15 @@
 	height: 100%;
 }
 
-#custom-container-right-flyout-panel {
+#common-properties-right-flyout-panel > #custom-container {
 	height: calc(100% - 90px);
 	overflow-y: auto;
 }
 
-.modal__buttons.right-flyout-panel {
+#common-properties-right-flyout-panel .modal__buttons {
 	height: 45px;
-  width: 100%;
-  margin: 0px;
+	width: 100%;
+	margin: 0px;
 	padding: 0px;
 	display: flex;
 	align-items: center;
@@ -61,7 +61,7 @@
 	background-color: #EFEFEF;
 }
 
-.well.right-flyout-panel {
+#common-properties-right-flyout-panel .well {
 	height: 100%;
 	background-color:#FFFFFF;
 	border: none;
@@ -73,9 +73,6 @@
 	border-top: 2px solid #E0E0E0;
 	position: relative;
 	overflow-y: auto;
-}
-
-#category-parent-container-right-flyout-panel {
 }
 
 .category-title-container-right-flyout-panel {
@@ -121,10 +118,10 @@
 	border-bottom: 2px solid #E0E0E0;
 }
 
-.column-source.form-control.right-flyout-panel,
-.column-allocator.single.right-flyout-panel.form-control,
-.column-allocator.multi.right-flyout-panel.form-control {
-	background-color: #f9f9fb;
+#common-properties-right-flyout-panel .column-source.form-control,
+#common-properties-right-flyout-panel .column-allocator.single.form-control,
+#common-properties-right-flyout-panel .column-allocator.multi.form-control {
+	border: 2px solid #E0E0E0;
 }
 
 #sub-category-parent-container-right-flyout-panel {
@@ -194,34 +191,29 @@
 }
 
 /* Override css for wider content */
-#field-allocator-button-container-right-flyout-panel {
+#common-properties-right-flyout-panel #field-allocator-button-container {
 	margin-left: 40%;
 	width: inherit;
 	top: 0px !important;
-	/*height: 20px;*/
 }
 
-.field-allocator-button.right-flyout-panel {
+#common-properties-right-flyout-panel .field-allocator-button {
 	width: 12px !important;
 	border-right: 2px solid #f9f9fb;
 	transform: rotate(90deg);
 }
 
-.field-allocator-button.right-flyout-panel:hover{
+#common-properties-right-flyout-panel .field-allocator-button:hover{
 	border-bottom: none !important;
 	border-right: 2px solid #a6266e;
 }
 
-.column-allocation-panel-row.right-flyout-panel {
+#common-properties-right-flyout-panel .column-allocation-panel-row {
 	display: grid;
 }
 
-.row.right-flyout-panel {
-
-}
-
-.column-allocation-panel-column.right-flyout-panel.col-md-3,
-.column-allocation-panel-column.right-flyout-panel.col-md-9,
-.column-allocation-panel-column.right-flyout-panel.col-md-11 {
+#common-properties-right-flyout-panel .column-allocation-panel-column.col-md-3,
+#common-properties-right-flyout-panel .column-allocation-panel-column.col-md-9,
+#common-properties-right-flyout-panel .column-allocation-panel-column.col-md-11 {
 	width: 100%;
 }

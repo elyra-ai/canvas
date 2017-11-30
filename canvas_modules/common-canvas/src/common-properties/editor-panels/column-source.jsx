@@ -70,7 +70,7 @@ export default class ColumnSource extends React.Component {
 
 		return (
 			<FormControl
-				className={"column-source " + this.props.propertiesClassname}
+				className="column-source"
 				componentClass="select"
 				multiple name={this.props.name}
 				rows={this.props.rows}
@@ -87,6 +87,5 @@ export default class ColumnSource extends React.Component {
 ColumnSource.propTypes = {
 	name: PropTypes.string,
 	rows: PropTypes.number,
-	dataModel: PropTypes.object,
-	propertiesClassname: PropTypes.string
+	dataModel: PropTypes.object
 };
