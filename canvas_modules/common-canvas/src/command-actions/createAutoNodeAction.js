@@ -24,6 +24,7 @@ export default class CreateAutoNodeAction extends Action {
 	// Standard methods
 	do() {
 		ObjectModel.addAutoNode(this.newNode, this.sourceNode);
+		ObjectModel.setSelections([this.newNode.id]);
 	}
 
 	undo() {
@@ -32,5 +33,6 @@ export default class CreateAutoNodeAction extends Action {
 
 	redo() {
 		ObjectModel.addAutoNode(this.newNode, this.sourceNode);
+		ObjectModel.setSelections([this.newNode.id]);
 	}
 }

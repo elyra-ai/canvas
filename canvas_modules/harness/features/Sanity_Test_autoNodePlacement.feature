@@ -65,40 +65,40 @@ Feature: Sanity_Test_autoNodePlacement
 		Then I verify the number of port data links are 4
 
 		Then I double click "Sample" node from the "Record Ops" category onto the canvas
-		Then I verify the node 6 position is "translate(200, 360)"
+		Then I verify the node 6 position is "translate(350, 205)"
 		Then I verify the number of nodes are 6
 		Then I verify the number of port data links are 5
 
 		Then I select node 6 the "Sample" node
 
 		Then I double click "Select" node from the "Record Ops" category onto the canvas
-		Then I verify the node 7 position is "translate(350, 360)"
+		Then I verify the node 7 position is "translate(500, 205)"
 		Then I verify the number of nodes are 7
 		Then I verify the number of port data links are 6
 
 		Then I double click "Var. File" node from the "Import" category onto the canvas
-		Then I verify the node 8 position is "translate(50, 515)"
+		Then I verify the node 8 position is "translate(50, 360)"
 		Then I verify the number of nodes are 8
 		Then I verify the number of port data links are 6
 
 		Then I select node 8 the "Var. File" node
 
 		Then I double click "Select" node from the "Record Ops" category onto the canvas
-		Then I verify the node 9 position is "translate(200, 515)"
+		Then I verify the node 9 position is "translate(200, 360)"
 		Then I verify the number of nodes are 9
 		Then I verify the number of port data links are 7
 
 		Then I select node 9 the "Select" node
 
 		Then I double click "C5.0" node from the "Modeling" category onto the canvas
-		Then I verify the node 10 position is "translate(350, 515)"
+		Then I verify the node 10 position is "translate(350, 360)"
 		Then I verify the number of nodes are 10
 		Then I verify the number of port data links are 8
 
 		Then I select node 10 the "C5.0" node
 
 		Then I double click "C5.0" node from the "Modeling" category onto the canvas
-		Then I verify the node 11 position is "translate(500, 515)"
+		Then I verify the node 11 position is "translate(500, 360)"
 		Then I verify the number of nodes are 11
 		Then I verify the number of port data links are 8
 
