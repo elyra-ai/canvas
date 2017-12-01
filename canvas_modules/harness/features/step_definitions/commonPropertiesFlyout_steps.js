@@ -40,7 +40,7 @@ module.exports = function() {
 		expect(newTitle).toEqual((lastEventLog.data.title).toString());
 	});
 
-	this.Then(/^I open the "([^"]*)" category from flyout$/, function(categoryName) {
+	this.Then(/^I click the "([^"]*)" category from flyout$/, function(categoryName) {
 		const categories = browser.$("#category-parent-container-right-flyout-panel").$$(".category-title-container-right-flyout-panel");
 		for (let idx = 0; idx < categories.length; idx++) {
 			const category = categories[idx].$(".category-title-right-flyout-panel");
@@ -160,7 +160,7 @@ module.exports = function() {
 		}
 	});
 
-	this.Then(/^I open the "([^"]*)" summary panel$/, function(summaryLinkName) {
+	this.Then(/^I open the "([^"]*)" wide flyout panel$/, function(summaryLinkName) {
 		const summaryLinks = browser.$$(".control-summary-link-buttons");
 		for (let idx = 0; idx < summaryLinks.length; idx++) {
 			const buttonText = summaryLinks[idx].getText(".button__text");

@@ -75,7 +75,7 @@ export default class EditorForm extends React.Component {
 			selectedRows: {},
 			showFieldPicker: false,
 			fieldPickerControl: {},
-			activeTabId: ""
+			activeTabId: null
 		};
 
 		this.sharedCtrlInfo = [];
@@ -151,7 +151,7 @@ export default class EditorForm extends React.Component {
 					selectedRows: {},
 					showFieldPicker: false,
 					fieldPickerControl: {},
-					activeTabId: ""
+					activeTabId: null
 				}, function() {
 					if (newProps.form.conditions) {
 						that.parseUiConditions(newProps.form.conditions);
@@ -834,9 +834,9 @@ export default class EditorForm extends React.Component {
 		return controlItem;
 	}
 
-	_showCategoryPanel(panelid) {
+	_showCategoryPanel(panelid, categories) {
 		let activeTab = panelid;
-		if (this.state.activeTabId === panelid) {
+		if ((this.state.activeTabId === null && categories === 1) || this.state.activeTabId === panelid) {
 			activeTab = "";
 		}
 		this.setState({ activeTabId: activeTab });
@@ -860,7 +860,7 @@ export default class EditorForm extends React.Component {
 				let panelArrow = DownIcon;
 				let panelItemsContainerClass = "closed";
 				const styleObj = {};
-				if (this.state.activeTabId === tab.text) {
+				if ((tabs.length === 1 && this.state.activeTabId === null) || this.state.activeTabId === tab.text) {
 					panelArrow = UpIcon;
 					panelItemsContainerClass = "open";
 					if (i === tabs.length - 1) {
@@ -873,7 +873,7 @@ export default class EditorForm extends React.Component {
 
 				tabContent.push(
 					<div key={i + "-" + key} className="category-title-container-right-flyout-panel">
-						<a onClick={() => this._showCategoryPanel(tab.text)}
+						<a onClick={() => this._showCategoryPanel(tab.text, tabs.length)}
 							id={"category-title-" + i + "-right-flyout-panel"}
 							className="category-title-right-flyout-panel"
 						>
@@ -912,7 +912,7 @@ export default class EditorForm extends React.Component {
 				defaultActiveKey={0}
 				animation={false}
 				isTabActive={function active(id) {
-					if (that.state.activeTabId === "") {
+					if (that.state.activeTabId === "" || that.state.activeTabId === null) {
 						return id === initialTab;
 					}
 					return id === that.state.activeTabId;

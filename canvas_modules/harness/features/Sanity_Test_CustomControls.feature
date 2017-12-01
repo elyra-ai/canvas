@@ -23,6 +23,5 @@ Feature: Sanity_Test_CustomControls
 		Given I have toggled the app side common-properties panel
 		Given I have uploaded JSON for common-properties "CustomMap_paramDef.json"
 
-		Then I select the Map Panel
 		Then I show the map and go to SVL
 		Then I verify custom control with structure property
