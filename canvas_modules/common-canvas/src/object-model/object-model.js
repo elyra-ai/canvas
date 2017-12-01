@@ -869,6 +869,11 @@ export default class ObjectModel {
 		return node;
 	}
 
+	// Returns a source node for auto completion or null if no source node can be
+	// detected. The source node is either:
+	// 1. The selected node, if only *one* node is currently selected or
+	// 2. The most recently added node, provided it has one or more output ports or
+	// 3. The most-recent-but-one added node, provided it has one or more output ports
 	static getAutoSourceNode() {
 		var sourceNode = null;
 		var selectedNodes = this.getSelectedNodes();
@@ -877,17 +882,18 @@ export default class ObjectModel {
 			sourceNode = selectedNodes[0];
 		} else {
 			var nodesArray = this.getNodes();
-			if (nodesArray.length >= 1) {
+			if (nodesArray.length > 0) {
 				var lastNodeAdded = nodesArray[nodesArray.length - 1];
-				if ((lastNodeAdded.output_ports).length === 0 && nodesArray[nodesArray.length - 2].output_ports !== 0) {
-					sourceNode = nodesArray[nodesArray.length - 2];
-				} else {
+				if (lastNodeAdded.output_ports && lastNodeAdded.output_ports.length >= 0) {
 					sourceNode = lastNodeAdded;
+				} else if (nodesArray.length > 1) {
+					var lastButOneNodeAdded = nodesArray[nodesArray.length - 2];
+					if (lastButOneNodeAdded.output_ports && lastButOneNodeAdded.output_ports.length >= 0) {
+						sourceNode = lastButOneNodeAdded;
+					}
 				}
-
 			}
 		}
-
 		return sourceNode;
 	}
 

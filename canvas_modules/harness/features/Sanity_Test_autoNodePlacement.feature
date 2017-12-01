@@ -19,6 +19,24 @@ Feature: Sanity_Test_autoNodePlacement
 
 		Then I resize the window size to 1330 width and 660 height
 
+		Then I double click "C5.0" node from the "Modeling" category onto the canvas
+		Then I verify the node 1 position is "translate(50, 50)"
+		Then I verify the number of nodes are 1
+		Then I verify the number of port data links are 0
+
+		Then I double click "C5.0" node from the "Modeling" category onto the canvas
+		Then I verify the node 2 position is "translate(200, 50)"
+		Then I verify the number of nodes are 2
+		Then I verify the number of port data links are 0
+
+		Then I click undo
+		Then I verify the number of nodes are 1
+		Then I verify the number of port data links are 0
+
+		Then I click undo
+		Then I verify the number of nodes are 0
+		Then I verify the number of port data links are 0
+
 		Then I double click "Var. File" node from the "Import" category onto the canvas
 		Then I verify the node 1 position is "translate(50, 50)"
 		Then I verify the number of nodes are 1
