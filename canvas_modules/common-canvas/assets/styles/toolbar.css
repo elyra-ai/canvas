@@ -61,7 +61,11 @@
 }
 
 .list-item:hover {
-	background-color: #EFEFEF;
+	background-color: #EAEAEA;
+}
+
+.list-item:active {
+	background-color: #D8D8D8;
 }
 
 .list-item-disabled:hover {
@@ -147,7 +151,6 @@
 
 .toolbar-popover-list>.list-item-containers>.list-item:hover {
 	background-color: #d8d8d8;
-	;
 }
 
 .toolbar-popover-list>.list-item-containers>.list-item-disabled:hover {
