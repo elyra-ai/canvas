@@ -208,7 +208,7 @@
   margin-top: 5px;
 }
 
-.radio--dark + label {
+.radio--dark + label, .checkbox--dark + label {
   font-weight: 100;
 }
 

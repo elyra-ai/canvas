@@ -74,7 +74,13 @@ class App extends React.Component {
 			selectedLinkType: CURVE_LINKS,
 			selectedPaletteLayout: FLYOUT,
 			showContextMenu: false,
-			showPropertiesDialog: false
+			showPropertiesDialog: false,
+			tipConfig: {
+				"palette": true,
+				"nodes": true,
+				"ports": true,
+				"links": true
+			}
 		};
 
 		this.openConsole = this.openConsole.bind(this);
@@ -102,6 +108,7 @@ class App extends React.Component {
 		this.setPaletteLayout = this.setPaletteLayout.bind(this);
 		this.getPipelineFlow = this.getPipelineFlow.bind(this);
 		this.setPipelineFlow = this.setPipelineFlow.bind(this);
+		this.setTipConfig = this.setTipConfig.bind(this);
 		this.addNodeTypeToPalette = this.addNodeTypeToPalette.bind(this);
 
 		// common-canvas
@@ -111,6 +118,7 @@ class App extends React.Component {
 		this.editActionHandler = this.editActionHandler.bind(this);
 		this.clickActionHandler = this.clickActionHandler.bind(this);
 		this.decorationActionHandler = this.decorationActionHandler.bind(this);
+		this.tipHandler = this.tipHandler.bind(this);
 
 		this.applyDiagramEdit = this.applyDiagramEdit.bind(this);
 		this.applyPropertyChanges = this.applyPropertyChanges.bind(this);
@@ -203,6 +211,7 @@ class App extends React.Component {
 		this.setState({ selectedLinkType: selectedLinkType });
 		this.log("Link type selected", selectedLinkType);
 	}
+
 	setPaletteLayout(selectedPaletteLayout) {
 		this.setState({ selectedPaletteLayout: selectedPaletteLayout });
 		this.log("Palette Layout selected", selectedPaletteLayout);
@@ -215,6 +224,11 @@ class App extends React.Component {
 
 	getPipelineFlow(flow) {
 		return ObjectModel.getPipelineFlow();
+	}
+
+	setTipConfig(newTipConfig) {
+		this.setState({ tipConfig: newTipConfig });
+		this.log("Set tip config", newTipConfig);
 	}
 
 	addNodeTypeToPalette(nodeTypeObj, category, categoryLabel) {
@@ -601,6 +615,26 @@ class App extends React.Component {
 		this.setState({ showPropertiesDialog: true, propertiesInfo: propsInfo });
 	}
 
+	tipHandler(tipType, data) {
+		if (tipType === "tipTypeLink") {
+			let sourceString = "comment";
+			if (data.link.src.output_ports) {
+				const srcPort = !data.link.src.output_ports ? null : data.link.src.output_ports.find(function(port) {
+					return port.id === data.link.srcPortId;
+				});
+				sourceString = `'${data.link.src.label}'` + (srcPort ? `, port '${srcPort.label}'` : "");
+			}
+
+			const trgPort = data.link.trg.input_ports.find(function(port) {
+				return port.id === data.link.trgPortId;
+			});
+			const targetString = `'${data.link.trg.label}'` + (trgPort ? `, port '${trgPort.label}'` : "");
+
+			return `Link from ${sourceString} to ${targetString}`;
+		}
+		return null;
+	}
+
 	refreshContent(streamId, diagramId) {
 		this.log("refreshContent()");
 	}
@@ -699,7 +733,8 @@ class App extends React.Component {
 			enableLinkType: this.state.selectedLinkType,
 			enableInternalObjectModel: this.state.internalObjectModel,
 			enablePaletteLayout: this.state.selectedPaletteLayout,
-			emptyCanvasContent: emptyCanvasDiv
+			emptyCanvasContent: emptyCanvasDiv,
+			tipConfig: this.state.tipConfig
 		};
 
 		var layoutAction = this.state.selectedLayout === NONE;
@@ -754,6 +789,7 @@ class App extends React.Component {
 				editActionHandler= {this.editActionHandler}
 				clickActionHandler= {this.clickActionHandler}
 				decorationActionHandler= {this.decorationActionHandler}
+				tipHandler={this.tipHandler}
 				toolbarConfig={toolbarConfig}
 				toolbarMenuActionHandler={this.toolbarMenuActionHandler}
 				rightFlyoutContent={rightFlyoutContent}
@@ -765,6 +801,7 @@ class App extends React.Component {
 		var mainView = (<div id="app-container">
 			{navBar}
 			<SidePanel
+				canvasConfig={commonCanvasConfig}
 				selectedPanel={this.state.selectedPanel}
 				enableNavPalette={this.enableNavPalette}
 				internalObjectModel={this.state.internalObjectModel}
@@ -792,6 +829,7 @@ class App extends React.Component {
 				setPaletteLayout={this.setPaletteLayout}
 				getPipelineFlow={this.getPipelineFlow}
 				setPipelineFlow={this.setPipelineFlow}
+				setTipConfig={this.setTipConfig}
 				addNodeTypeToPalette={this.addNodeTypeToPalette}
 				log={this.log}
 			/>

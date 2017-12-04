@@ -41,6 +41,7 @@ export default class SVGPipelineInHandler {
 				"output_ports": this.convertOutputs(node),
 				"input_ports": this.convertInputs(node),
 				"label": _.has(node, "app_data.ui_data.label.default") ? node.app_data.ui_data.label.default : "",
+				"description": _.has(node, "app_data.ui_data.description") ? node.app_data.ui_data.description : "",
 				"image": _.has(node, "app_data.ui_data.image") ? node.app_data.ui_data.image : "",
 				"x_pos": _.has(node, "app_data.ui_data.x_pos") ? node.app_data.ui_data.x_pos : 10,
 				"y_pos": _.has(node, "app_data.ui_data.y_pos") ? node.app_data.ui_data.y_pos : 10,
@@ -148,7 +149,7 @@ export default class SVGPipelineInHandler {
 									"trgNodePortId": input.id,
 									"type": "nodeLink"
 								};
-								if (link.port_id_ref) {
+								if (link.port_id_ref) { // according to the spec, port_id_ref is optional for links
 									newLink.srcNodePortId = link.port_id_ref;
 								}
 								links.push(newLink);

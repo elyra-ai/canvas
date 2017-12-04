@@ -34,6 +34,7 @@ export default class SidePanel extends React.Component {
 		switch (this.props.selectedPanel) {
 		case SIDE_PANEL_CANVAS:
 			view = (<SidePanelCanvas
+				canvasConfig={this.props.canvasConfig}
 				enableNavPalette={this.props.enableNavPalette}
 				internalObjectModel={this.props.internalObjectModel}
 				setDiagramJSON={this.props.setDiagramJSON}
@@ -45,6 +46,7 @@ export default class SidePanel extends React.Component {
 				setNodeFormatType={this.props.setNodeFormatType}
 				setLinkType={this.props.setLinkType}
 				setPaletteLayout={this.props.setPaletteLayout}
+				setTipConfig={this.props.setTipConfig}
 				log={this.props.log}
 			/>);
 			break;
@@ -82,6 +84,7 @@ export default class SidePanel extends React.Component {
 }
 
 SidePanel.propTypes = {
+	canvasConfig: PropTypes.object,
 	enableNavPalette: PropTypes.func,
 	internalObjectModel: PropTypes.bool,
 	closePropertiesEditorDialog: PropTypes.func,
@@ -107,6 +110,7 @@ SidePanel.propTypes = {
 	setPaletteLayout: PropTypes.func,
 	getPipelineFlow: PropTypes.func,
 	setPipelineFlow: PropTypes.func,
+	setTipConfig: PropTypes.func,
 	addNodeTypeToPalette: PropTypes.func,
 	log: PropTypes.func
 };

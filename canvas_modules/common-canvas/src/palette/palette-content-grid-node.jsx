@@ -10,7 +10,7 @@
 import CanvasController from "../common-canvas-controller.js";
 import React from "react";
 import PropTypes from "prop-types";
-import { DND_DATA_TEXT } from "../../constants/common-constants.js";
+import { DND_DATA_TEXT, TIP_TYPE_PALETTE_ITEM } from "../../constants/common-constants.js";
 
 class PaletteContentNode extends React.Component {
 	constructor(props) {
@@ -21,6 +21,8 @@ class PaletteContentNode extends React.Component {
 
 		this.onDragStart = this.onDragStart.bind(this);
 		this.onDoubleClick = this.onDoubleClick.bind(this);
+		this.onMouseOver = this.onMouseOver.bind(this);
+		this.onMouseOut = this.onMouseOut.bind(this);
 	}
 
 	onDragStart(ev) {
@@ -38,12 +40,27 @@ class PaletteContentNode extends React.Component {
 		}
 	}
 
+	onMouseOver(ev) {
+		CanvasController.showTip({
+			id: "paletteTip_" + this.props.nodeTemplate.operator_id_ref,
+			type: TIP_TYPE_PALETTE_ITEM,
+			targetObj: ev.currentTarget,
+			paletteItem: this.props.nodeTemplate
+		});
+	}
+
+	onMouseOut() {
+		CanvasController.hideTip();
+	}
+
 	render() {
 		return (
 			<div id={this.props.nodeTemplate.id}
 				draggable="true"
 				onDragStart={this.onDragStart}
 				onDoubleClick={this.onDoubleClick}
+				onMouseOver={this.onMouseOver}
+				onMouseOut={this.onMouseOut}
 				className="palette-grid-node-outer"
 			>
 				<div className="palette-grid-node-inner">

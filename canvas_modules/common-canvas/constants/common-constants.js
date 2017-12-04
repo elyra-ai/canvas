@@ -37,3 +37,9 @@ _defineConstant("HORIZONTAL", "horizonal");
 _defineConstant("VERTICAL", "vertical");
 _defineConstant("DAGRE_HORIZONTAL", "LR");
 _defineConstant("DAGRE_VERTICAL", "TB");
+
+_defineConstant("TIP_TYPE_NODE", "tipTypeNode");
+_defineConstant("TIP_TYPE_PORT", "tipTypePort");
+_defineConstant("TIP_TYPE_LINK", "tipTypeLink");
+_defineConstant("TIP_TYPE_PALETTE_ITEM", "tipTypePaletteItem");
+_defineConstant("TIP_TYPE_TOOLBAR_ITEM", "tipTypeToolbarItem");

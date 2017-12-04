@@ -16,6 +16,7 @@ import SVGCanvasInHandler from "../svg-canvas-in-handler.js"; // TODO - Remove t
 import SVGCanvasOutHandler from "../svg-canvas-out-handler.js"; // TODO - Remove this when WML supports PipelineFlow
 import SVGPipelineInHandler from "../svg-pipeline-in-handler.js";
 import SVGPipelineOutHandler from "../svg-pipeline-out-handler.js";
+import _ from "underscore";
 
 /* eslint arrow-body-style: ["error", "always"] */
 /* eslint complexity: ["error", 23] */
@@ -624,14 +625,28 @@ export default class ObjectModel {
 
 	static getPaletteNode(nodeOpIdRef) {
 		let outNodeType = null;
+		if (!_.isEmpty(ObjectModel.getPaletteData())) {
+			ObjectModel.getPaletteData().categories.forEach((category) => {
+				category.nodetypes.forEach((nodeType) => {
+					if (nodeType.operator_id_ref === nodeOpIdRef) {
+						outNodeType = nodeType;
+					}
+				});
+			});
+		}
+		return outNodeType;
+	}
+
+	static getCategoryForNode(nodeOpIdRef) {
+		let result = null;
 		ObjectModel.getPaletteData().categories.forEach((category) => {
 			category.nodetypes.forEach((nodeType) => {
 				if (nodeType.operator_id_ref === nodeOpIdRef) {
-					outNodeType = nodeType;
+					result = category;
 				}
 			});
 		});
-		return outNodeType;
+		return result;
 	}
 
 	// Canvas methods
@@ -1094,6 +1109,26 @@ export default class ObjectModel {
 			}
 		}
 		return null;
+	}
+
+	static hasErrorMessage(nodeId) {
+		const messages = this.getNodeMessages(nodeId);
+		if (messages) {
+			return (typeof messages.find((msg) => {
+				return msg.type === "error";
+			}) !== "undefined");
+		}
+		return false;
+	}
+
+	static hasWarningMessage(nodeId) {
+		const messages = this.getNodeMessages(nodeId);
+		if (messages) {
+			return (typeof messages.find((msg) => {
+				return msg.type === "warning";
+			}) !== "undefined");
+		}
+		return false;
 	}
 
 	static setNodeMessage(nodeId, message) {

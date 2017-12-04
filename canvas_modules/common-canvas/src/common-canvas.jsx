@@ -22,6 +22,8 @@ import ObjectModel from "./object-model/object-model.js";
 import CommandStack from "./command-stack/command-stack.js";
 import BlankCanvasImage from "../assets/images/blank_canvas.png";
 import CanvasController from "./common-canvas-controller.js";
+import TooltipWrapper from "./tooltip-wrapper.jsx";
+import _ from "underscore";
 
 export default class CommonCanvas extends React.Component {
 	constructor(props) {
@@ -32,7 +34,8 @@ export default class CommonCanvas extends React.Component {
 			showContextMenu: false,
 			contextMenuDef: {},
 			toolbarConfig: this.props.toolbarConfig,
-			rightFlyoutContent: this.props.rightFlyoutContent
+			rightFlyoutContent: this.props.rightFlyoutContent,
+			tipDef: {}
 		};
 
 		ObjectModel.subscribe(() => {
@@ -43,12 +46,16 @@ export default class CommonCanvas extends React.Component {
 		this.closeContextMenu = this.closeContextMenu.bind(this);
 		this.isContextMenuDisplayed = this.isContextMenuDisplayed.bind(this);
 
+		this.showTip = this.showTip.bind(this);
+		this.hideTip = this.hideTip.bind(this);
+		this.isTipShowing = this.isTipShowing.bind(this);
+
 		this.openPalette = this.openPalette.bind(this);
 		this.closePalette = this.closePalette.bind(this);
 
 		this.initializeController = this.initializeController.bind(this);
 
-		this.initializeController();
+		this.initializeController(props);
 	}
 
 	componentWillReceiveProps(newProps) {
@@ -88,22 +95,23 @@ export default class CommonCanvas extends React.Component {
 			});
 		}
 
-		this.initializeController();
+		this.initializeController(newProps);
 	}
 
-	initializeController() {
+	initializeController(props) {
 		CanvasController.setCanvasConfig({
-			enableRenderingEngine: this.props.config.enableRenderingEngine,
-			enableConnectionType: this.props.config.enableConnectionType,
-			enableNodeFormatType: this.props.config.enableNodeFormatType,
-			enableLinkType: this.props.config.enableLinkType,
-			enableInternalObjectModel: this.props.config.enableInternalObjectModel,
-			enablePaletteLayout: this.props.config.enablePaletteLayout,
-			emptyCanvasContent: this.props.config.emptyCanvasContent,
-			toolbarConfig: this.props.toolbarConfig,
-			rightFlyoutContent: this.props.rightFlyoutContent,
-			showRightFlyout: this.props.showRightFlyout,
-			closeRightFlyout: this.props.closeRightFlyout
+			enableRenderingEngine: props.config.enableRenderingEngine,
+			enableConnectionType: props.config.enableConnectionType,
+			enableNodeFormatType: props.config.enableNodeFormatType,
+			enableLinkType: props.config.enableLinkType,
+			enableInternalObjectModel: props.config.enableInternalObjectModel,
+			enablePaletteLayout: props.config.enablePaletteLayout,
+			emptyCanvasContent: props.config.emptyCanvasContent,
+			toolbarConfig: props.toolbarConfig,
+			tipConfig: props.config.tipConfig,
+			rightFlyoutContent: props.rightFlyoutContent,
+			showRightFlyout: props.showRightFlyout,
+			closeRightFlyout: props.closeRightFlyout
 		});
 
 
@@ -114,6 +122,7 @@ export default class CommonCanvas extends React.Component {
 			clickActionHandler: this.props.clickActionHandler,
 			decorationActionHandler: this.props.decorationActionHandler,
 			toolbarMenuActionHandler: this.props.toolbarMenuActionHandler,
+			tipHandler: this.props.tipHandler
 		});
 
 		CanvasController.setCommonCanvas(this);
@@ -139,6 +148,18 @@ export default class CommonCanvas extends React.Component {
 
 	isContextMenuDisplayed() {
 		return this.state.showContextMenu;
+	}
+
+	showTip(tipDef) {
+		this.setState({ tipDef: tipDef });
+	}
+
+	hideTip() {
+		this.setState({ tipDef: {} });
+	}
+
+	isTipShowing() {
+		return !_.isEmpty(this.state.tipDef);
 	}
 
 	zoomIn() {
@@ -211,6 +232,7 @@ export default class CommonCanvas extends React.Component {
 		let contextMenuWrapper = null;
 		let canvasToolbar = null;
 		let rightFlyout = (<div id="right-flyout-panel" style={{ width: "0px" }} />);
+		let tip = null;
 		const canvasStyle = { minWidth: "258px" };
 		const canvasJSON = ObjectModel.getCanvasInfo();
 
@@ -298,6 +320,20 @@ export default class CommonCanvas extends React.Component {
 			}
 		}
 
+		if (!_.isEmpty(this.state.tipDef)) {
+
+			tip = (<TooltipWrapper
+				id={this.state.tipDef.id}
+				type={this.state.tipDef.type}
+				customContent={this.state.tipDef.customContent}
+				targetObj={this.state.tipDef.targetObj}
+				mousePos={this.state.tipDef.mousePos}
+				node={this.state.tipDef.node}
+				port={this.state.tipDef.port}
+				paletteItem={this.state.tipDef.paletteItem}
+			/>);
+		}
+
 		return (
 			<div id="common-canvas" style={canvasStyle}>
 				{palette}
@@ -307,6 +343,7 @@ export default class CommonCanvas extends React.Component {
 					{emptyCanvas}
 				</div>
 				{rightFlyout}
+				{tip}
 			</div>
 		);
 	}
@@ -323,5 +360,6 @@ CommonCanvas.propTypes = {
 	toolbarConfig: PropTypes.array,
 	rightFlyoutContent: PropTypes.object,
 	showRightFlyout: PropTypes.bool,
-	closeRightFlyout: PropTypes.func
+	closeRightFlyout: PropTypes.func,
+	tipHandler: PropTypes.func
 };

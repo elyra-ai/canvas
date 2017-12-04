@@ -28,7 +28,13 @@ var canvasConfig = {
 	enableNodeFormatType: "Horizontal",
 	enableLinkType: "Curve",
 	enableInternalObjectModel: true,
-	enablePaletteLayout: "Flyout"
+	enablePaletteLayout: "Flyout",
+	tipConfig: {
+		"palette": true,
+		"nodes": true,
+		"ports": true,
+		"links": true
+	}
 };
 
 
@@ -38,7 +44,8 @@ var handlers = {
 	editActionHandler: null,
 	clickActionHandler: null,
 	decorationActionHandler: null,
-	toolbarMenuActionHandler: null
+	toolbarMenuActionHandler: null,
+	tipHandler: null
 };
 
 var commonCanvas = null;
@@ -182,6 +189,58 @@ export default class CommonCanvasController {
 			editType: "cloneMultipleObjects",
 			objects: objects
 		});
+	}
+
+	static showTip(tipConfig) {
+		if (commonCanvas && this.isTipEnabled(tipConfig.type)) {
+			if (handlers.tipHandler) {
+				const data = {};
+				switch (tipConfig.type) {
+				case constants.TIP_TYPE_PALETTE_ITEM:
+					data.nodeTemplate = tipConfig.nodeTemplate;
+					break;
+				case constants.TIP_TYPE_NODE:
+					data.pipelineId = tipConfig.pipelineId;
+					data.node = tipConfig.node;
+					break;
+				case constants.TIP_TYPE_PORT:
+					data.pipelineId = tipConfig.pipelineId;
+					data.node = tipConfig.node;
+					data.port = tipConfig.port;
+					break;
+				case constants.TIP_TYPE_LINK:
+					data.pipelineId = tipConfig.pipelineId;
+					data.link = tipConfig.link;
+					break;
+				default:
+				}
+
+				tipConfig.customContent = handlers.tipHandler(tipConfig.type, data);
+			}
+
+			commonCanvas.showTip(tipConfig);
+		}
+	}
+
+	static hideTip() {
+		if (commonCanvas && commonCanvas.isTipShowing()) {
+			commonCanvas.hideTip();
+		}
+	}
+
+	static isTipEnabled(tipType) {
+		switch (tipType) {
+		case constants.TIP_TYPE_PALETTE_ITEM:
+			return canvasConfig.tipConfig.palette;
+		case constants.TIP_TYPE_NODE:
+			return canvasConfig.tipConfig.nodes;
+		case constants.TIP_TYPE_PORT:
+			return canvasConfig.tipConfig.ports;
+		case constants.TIP_TYPE_LINK:
+			return canvasConfig.tipConfig.links;
+		default:
+			return false;
+		}
 	}
 
 	static createAutoNode(nodeTemplate) {

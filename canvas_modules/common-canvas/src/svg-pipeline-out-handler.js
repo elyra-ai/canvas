@@ -185,7 +185,8 @@ export default class SVGPipelineOutHandler {
 					messages: ciNode.messages,
 					label: {
 						default: ciNode.label
-					}
+					},
+					description: ciNode.description
 				}
 			}
 		};

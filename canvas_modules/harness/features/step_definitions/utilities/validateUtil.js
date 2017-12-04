@@ -241,6 +241,26 @@ function clickSVGAreaAt(xCoord, yCoord) {
 	}
 }
 
+function findNodeIndexInPalette(nodeType) {
+	var listItems = browser.$$(".palette-list-item");
+	for (var idx = 0; idx < listItems.length; idx++) {
+		var nodeText = listItems[idx].$(".palette-list-item-text-div").$(".palette-list-item-text-span")
+			.getText();
+		if (nodeText === nodeType) {
+			return idx;
+		}
+	}
+	return -1;
+}
+
+function findCategoryElement(nodeCategory) {
+	for (var cat of browser.$$(".palette-flyout-category")) {
+		if (cat.getValue() === nodeCategory) {
+			return cat;
+		}
+	}
+	return null;
+}
 
 module.exports = {
 	containLinkEvent: containLinkEvent,
@@ -256,5 +276,7 @@ module.exports = {
 	getPortLinks: getPortLinks,
 	isObjectModelEmpty: isObjectModelEmpty,
 	getNodeIdForLabel: getNodeIdForLabel,
-	clickSVGAreaAt: clickSVGAreaAt
+	clickSVGAreaAt: clickSVGAreaAt,
+	findNodeIndexInPalette: findNodeIndexInPalette,
+	findCategoryElement: findCategoryElement
 };

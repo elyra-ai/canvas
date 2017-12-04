@@ -15,6 +15,7 @@ import PropTypes from "prop-types";
 import { FormControl } from "react-bootstrap";
 import {
 	Button,
+	Checkbox,
 	Dropdown,
 	RadioGroup,
 	ToggleButton
@@ -34,7 +35,11 @@ import {
 	ELBOW_LINKS,
 	STRAIGHT_LINKS,
 	FLYOUT,
-	MODAL
+	MODAL,
+	TIP_PALETTE,
+	TIP_NODES,
+	TIP_PORTS,
+	TIP_LINKS
 } from "../constants/constants.js";
 import FormsService from "../services/FormsService";
 
@@ -66,6 +71,7 @@ export default class SidePanelForms extends React.Component {
 		this.nodeFormatTypeOptionChange = this.nodeFormatTypeOptionChange.bind(this);
 		this.linkTypeOptionChange = this.linkTypeOptionChange.bind(this);
 		this.paletteLayoutOptionChange = this.paletteLayoutOptionChange.bind(this);
+		this.tipConfigChange = this.tipConfigChange.bind(this);
 	}
 
 	componentWillMount() {
@@ -225,9 +231,32 @@ export default class SidePanelForms extends React.Component {
 	linkTypeOptionChange(evt, obj) {
 		this.props.setLinkType(obj.selected);
 	}
+
 	paletteLayoutOptionChange(evt, obj) {
 		this.props.setPaletteLayout(obj.selected);
 	}
+
+	tipConfigChange(evt) {
+		const tipConf = Object.assign({}, this.props.canvasConfig.tipConfig);
+		switch (evt.currentTarget.id) {
+		case "tip_palette":
+			tipConf.palette = evt.currentTarget.checked;
+			break;
+		case "tip_nodes":
+			tipConf.nodes = evt.currentTarget.checked;
+			break;
+		case "tip_ports":
+			tipConf.ports = evt.currentTarget.checked;
+			break;
+		case "tip_links":
+			tipConf.links = evt.currentTarget.checked;
+			break;
+		default:
+			return;
+		}
+		this.props.setTipConfig(tipConf);
+	}
+
 	renderingEngineOptionChange(evt, obj) {
 		this.props.setRenderingEngine(obj.selected);
 	}
@@ -417,6 +446,38 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
+		var tipConfig = (<div className="sidepanel-children" id="sidepanel-tip-config">
+			<div className="sidepanel-headers">Tips</div>
+			<Checkbox
+				id="tip_palette"
+				name={TIP_PALETTE}
+				dark
+				onChange={this.tipConfigChange}
+				checked={this.props.canvasConfig.tipConfig.palette}
+			/>
+			<Checkbox
+				id="tip_nodes"
+				name={TIP_NODES}
+				dark
+				onChange={this.tipConfigChange}
+				checked={this.props.canvasConfig.tipConfig.nodes}
+			/>
+			<Checkbox
+				id="tip_ports"
+				name={TIP_PORTS}
+				dark
+				onChange={this.tipConfigChange}
+				checked={this.props.canvasConfig.tipConfig.ports}
+			/>
+			<Checkbox
+				id="tip_links"
+				name={TIP_LINKS}
+				dark
+				onChange={this.tipConfigChange}
+				checked={this.props.canvasConfig.tipConfig.links}
+			/>
+		</div>);
+
 		return (
 			<div>
 				{canvasInput}
@@ -436,12 +497,15 @@ export default class SidePanelForms extends React.Component {
 				{linkType}
 				{divider}
 				{paletteLayout}
+				{divider}
+				{tipConfig}
 			</div>
 		);
 	}
 }
 
 SidePanelForms.propTypes = {
+	canvasConfig: PropTypes.object,
 	enableNavPalette: PropTypes.func,
 	internalObjectModel: PropTypes.bool,
 	setDiagramJSON: PropTypes.func,
@@ -453,5 +517,6 @@ SidePanelForms.propTypes = {
 	setNodeFormatType: PropTypes.func,
 	setLinkType: PropTypes.func,
 	log: PropTypes.func,
-	setPaletteLayout: PropTypes.func
+	setPaletteLayout: PropTypes.func,
+	setTipConfig: PropTypes.func
 };

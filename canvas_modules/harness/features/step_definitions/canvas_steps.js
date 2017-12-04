@@ -7,6 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
+import { findCategoryElement, findNodeIndexInPalette, getNodeIdForLabel } from "./utilities/validateUtil.js";
 import { clickSVGAreaAt } from "./utilities/validateUtil.js";
 
 /* global browser */
@@ -108,5 +109,118 @@ module.exports = function() {
 		browser.keys("Delete");
 	});
 
+	this.Then(/^I hover over node type "([^"]*)" in category "([^"]*)"$/, function(nodeType, category) {
+		const categoryElem = findCategoryElement(category);
+		categoryElem.click();
+		const nodeIndex = findNodeIndexInPalette(nodeType);
 
+		browser.$$(".palette-list-item")[nodeIndex].moveToObject();
+		browser.pause(1000); // Wait for the tooltip to be displayed
+	});
+
+	this.Then(/^I verify the tip shows next to the node type "([^"]*)" in category "([^"]*)"$/, function(nodeType, category) {
+		const tip = browser.$(".tip-palette-item");
+		expect(tip.value).not.toEqual(null);
+
+		const nodeIndex = findNodeIndexInPalette(nodeType);
+		const paletteItem = browser.$$(".palette-list-item")[nodeIndex];
+
+		const nodeRight = paletteItem.getLocation().x + paletteItem.getElementSize().width;
+		const tipLeft = tip.getLocation().x;
+		expect(tipLeft).toBeGreaterThan(nodeRight);
+
+		const tipCategoryLabel = tip.$(".tip-palette-category").getText();
+		expect(tipCategoryLabel).toEqual(category);
+
+		const tipLabel = tip.$(".tip-palette-label").getText();
+		expect(tipLabel).toEqual(nodeType);
+	});
+
+	this.Then(/^I hover over the node "([^"]*)"$/, function(nodeName) {
+		const nodeId = getNodeIdForLabel(nodeName);
+		const nodeSelector = "#node_grp_" + nodeId;
+		browser.$(nodeSelector).moveToObject();
+		browser.pause(1000); // Wait for the tooltip to be displayed
+	});
+
+	this.Then(/^I verify the tip shows below the node "([^"]*)"$/, function(nodeName) {
+		const nodeId = getNodeIdForLabel(nodeName);
+		const tip = browser.$("#nodeTip_" + nodeId);
+		expect(tip.value).not.toEqual(null);
+
+		const node = browser.$("#node_grp_" + nodeId);
+		const nodeBottom = node.getLocation().y + node.getElementSize().height;
+		const tipTop = tip.getLocation().y;
+		expect(tipTop).toBeGreaterThan(nodeBottom);
+
+		const tipLabel = tip.$(".tip-node-label").getText();
+		expect(tipLabel).toEqual(nodeName);
+	});
+
+	this.Then(/^I hover over the input port "([^"]*)" of node "([^"]*)"$/, function(portId, nodeName) {
+		const nodeId = getNodeIdForLabel(nodeName);
+		const portSelector = "#node_trg_port_" + nodeId + "_" + portId;
+		browser.$(portSelector).moveToObject();
+		browser.pause(1000); // Wait for the tooltip to be displayed
+	});
+
+	this.Then(/^I verify the port name "([^"]*)" shows below the input port id "([^"]*)" of node "([^"]*)"$/, function(portName, portId, nodeName) {
+		const nodeId = getNodeIdForLabel(nodeName);
+		const portSelector = "#node_trg_port_" + nodeId + "_" + portId;
+		const tip = browser.$("#portTip_1_" + portId);
+		expect(tip.value).not.toEqual(null);
+
+		const port = browser.$(portSelector);
+		const portBottom = port.getLocation().y + port.getElementSize().height;
+		const tipTop = tip.getLocation().y;
+		expect(tipTop).toBeGreaterThan(portBottom);
+
+		const tipLabel = tip.$(".tip-port").getText();
+		expect(tipLabel).toEqual(portName);
+	});
+
+	this.Then(/^I hover over the link at (\d+), (\d+)$/, function(mouseX, mouseY) {
+		browser.moveToObject(".d3-svg-canvas-div", Number(mouseX), Number(mouseY));
+		browser.pause(1000); // Wait for the tooltip to be displayed
+	});
+
+	this.Then(/^I verify the tip shows below (\d+) for link id "([^"]*)" between node "([^"]*)", port "([^"]*)" and node "([^"]*)", port "([^"]*)"$/,
+		function(mouseY, linkId, sourceNode, sourcePort, targetNode, targetPort) {
+			const tip = browser.$("#linkTip_1_" + linkId);
+			expect(tip.value).not.toEqual(null);
+
+			const tipTop = tip.getLocation().y;
+			expect(tipTop).toBeGreaterThan(mouseY);
+
+			const tipLabel = tip.$("#tooltipContainer").getText();
+			const sourceString = `'${sourceNode}', port '${sourcePort}'`;
+			const targetString = `'${targetNode}', port '${targetPort}'`;
+			const linkLabel = `Link from ${sourceString} to ${targetString}`;
+			expect(tipLabel).toEqual(linkLabel);
+		});
+
+	this.Then(/^I verify the tip doesn't show for node type "([^"]*)"$/, function(nodeType) {
+		const tip = browser.$(".tip-palette-item");
+		expect(tip.value).toEqual(null);
+	});
+
+	this.Then(/^I verify the tip doesn't show for node "([^"]*)"$/, function(nodeName) {
+		const nodeId = getNodeIdForLabel(nodeName);
+		const tip = browser.$("#nodeTip_" + nodeId);
+		expect(tip.value).toEqual(null);
+	});
+
+	this.Then(/^I verify the tip doesn't show for input port id "([^"]*)"$/, function(portId) {
+		const tip = browser.$("#portTip_1_" + portId);
+		expect(tip.value).toEqual(null);
+	});
+
+	this.Then(/^I verify the tip shows doesn't show for link id "([^"]*)"$/, function(linkId) {
+		const tip = browser.$("#linkTip_1_" + linkId);
+		expect(tip.value).toEqual(null);
+	});
+
+	this.Then(/^I move the mouse to coordinates (\d+), (\d+)$/, function(mouseX, mouseY) {
+		browser.moveToObject(".d3-svg-canvas-div", Number(mouseX), Number(mouseY));
+	});
 };

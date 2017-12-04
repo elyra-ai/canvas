@@ -8,7 +8,8 @@
  *******************************************************************************/
 /* eslint no-console: "off" */
 
-import { deleteLinkInObjectModel, getEventLogCount, getNodeIdForLabel, getNodeIdFromObjectModel, getObjectModelCount, isObjectModelEmpty } from "./utilities/validateUtil.js";
+import { deleteLinkInObjectModel, findCategoryElement, findNodeIndexInPalette, getEventLogCount,
+	getNodeIdForLabel, getNodeIdFromObjectModel, getObjectModelCount, isObjectModelEmpty } from "./utilities/validateUtil.js";
 import { getHarnessData } from "./utilities/HTTPClient.js";
 import { getURL } from "./utilities/test-config.js";
 import { simulateDragDrop } from "./utilities/DragAndDrop.js";
@@ -520,27 +521,6 @@ module.exports = function() {
 	//   Test Cases
 	// -------------------------------------
 
-	function findNodeIndex(nodeType) {
-		var listItems = browser.$$(".palette-list-item");
-		for (var idx = 0; idx < listItems.length; idx++) {
-			var nodeText = listItems[idx].$(".palette-list-item-text-div").$(".palette-list-item-text-span")
-				.getText();
-			if (nodeText === nodeType) {
-				return idx;
-			}
-		}
-		return -1;
-	}
-
-	function findCategoryElement(nodeCategory) {
-		for (var cat of browser.$$(".palette-flyout-category")) {
-			if (cat.getValue() === nodeCategory) {
-				return cat;
-			}
-		}
-		return null;
-	}
-
 	// Then I add node 1 a "Var. File" node from the "Import" category onto the canvas at 100, 200
 	//
 	this.Then(/^I add node (\d+) a "([^"]*)" node from the "([^"]*)" category onto the canvas at (\d+), (\d+)$/,
@@ -559,7 +539,7 @@ module.exports = function() {
 					var categoryElem = findCategoryElement(nodeCategory);
 					categoryElem.click();
 					// drag the var file node to the canvas
-					const nodeIndex = findNodeIndex(nodeType);
+					const nodeIndex = findNodeIndexInPalette(nodeType);
 					browser.execute(simulateDragDrop, ".palette-list-item", nodeIndex, "#canvas-div", 0, canvasX, canvasY);
 					categoryElem.click(); // close category
 				}
@@ -626,7 +606,7 @@ module.exports = function() {
 			const categoryElem = findCategoryElement(nodeCategory);
 			categoryElem.click(); // open category
 			// drag the var file node to the canvas
-			const nodeIndex = findNodeIndex(nodeType);
+			const nodeIndex = findNodeIndexInPalette(nodeType);
 			// expect -1 since node should not be found in palette
 			if (nodeIndex !== -1) {
 				throw new Error("Node should not have been found");

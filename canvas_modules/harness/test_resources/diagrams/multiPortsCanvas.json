@@ -19,7 +19,8 @@
               "class_name": "canvas-node",
               "label": {
                 "default": "Define Types"
-              }
+              },
+              "description": "Define Types node description"
             }
           },
           "inputs": [
@@ -119,7 +120,8 @@
               "class_name": "canvas-node",
               "label": {
                 "default": "Na_to_K"
-              }
+              },
+              "description": "Na_to_K node description"
             }
           },
           "inputs": [
@@ -190,7 +192,8 @@
               "class_name": "canvas-node",
               "label": {
                 "default": "C5.0"
-              }
+              },
+              "description": "This is a very long node description which explains what the node does."
             }
           },
           "input": {

@@ -8,13 +8,16 @@
  *******************************************************************************/
 
 .common-canvas_tooltip {
-	font-size: .75rem;
+	font-family: Helvetica Neue;
+	font-size: 12px;
 	position: fixed;
 	padding: 5px 10px;
-	background-color: #F9F9FB;
-	border: 1px solid #AEAEAE;
+	max-width: 180px;
+	background-color: #F9F9F9;
+	border: 1px solid #CCCCCC;
 	font-weight: 400;
-	color: black;
+	opacity: 90%;
+	color: #777677;
 	line-height: 1.2;
 	text-align: center;
 	z-index: 8000;
@@ -38,32 +41,31 @@
 	transform: translate3d(0, -22px, 0);
 }
 
-.common-canvas_tooltip svg {
-	z-index: 8000;
+.common-canvas_tooltip #tipArrow {
 	position: absolute;
 	width: 10px;
 	height: 14px;
 }
 
-.common-canvas_tooltip[direction=top] svg {
+.common-canvas_tooltip[direction=top] #tipArrow {
 	transform: rotate(-90deg);
 }
 
-.common-canvas_tooltip[direction=left] svg {
+.common-canvas_tooltip[direction=left] #tipArrow {
 	transform: rotate(180deg);
 }
 
-.common-canvas_tooltip[direction=bottom] svg {
+.common-canvas_tooltip[direction=bottom] #tipArrow {
 	transform: rotate(90deg);
 }
 
 
-.common-canvas_tooltip svg polyline{
+.common-canvas_tooltip #tipArrow polyline{
 	fill: #F9F9FB;
 	stroke-width: 0;
 }
 
-.common-canvas_tooltip svg polygon{
+.common-canvas_tooltip #tipArrow polygon{
 	fill: #AEAEAE;
 }
 
@@ -76,4 +78,45 @@
 .common-canvas_tooltip[aria-hidden="true"] {
 	visibility: hidden;
 	opacity: 0;
+}
+
+.tip-palette-item, .tip-node {
+	min-width: 80px;
+	padding: 10px 5px;
+	text-align: left;
+}
+
+.tip-palette-category {
+	font-size: 10px;
+	padding-bottom: 4px;
+	color: #9B9B9B;
+}
+
+.tip-palette-label, .tip-node-label {
+	font-weight: bold;
+	color: #1B496D;
+}
+
+.tip-palette-desc, .tip-node-desc {
+	padding-top: 4px;
+}
+
+.tip-palette-line, .tip-node-line {
+	background-color: #EAEAEA;
+	border: 0;
+	height: 2px;
+	width: 24px;
+	margin: 0 0 4px 0;
+}
+
+.tip-node-status {
+	position: absolute;
+	width: 12px;
+	height: 12px;
+	right: 10px;
+	top: 10px;
+}
+
+.tip-port {
+	min-width: 90px;
 }
