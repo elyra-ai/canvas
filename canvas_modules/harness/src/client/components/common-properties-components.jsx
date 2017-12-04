@@ -785,7 +785,8 @@ class CommonPropertiesComponents extends React.Component {
 					via complex type controls. Controls can appear as rows in tables or standing on
 					their own in panels. The following controls are supported for complex types:&nbsp;
 					<span className="highlight">toggletext</span>, <span className="highlight">oneofselect</span>,&nbsp;
-					<span className="highlight">enum</span>, and <span className="highlight">textfield</span></p>
+					<span className="highlight">enum</span>, <span className="highlight">textfield</span>,&nbsp;
+						and <span className="highlight">expression</span></p>
 			</div>
 			<div className="properties-section-content">
 				<div id="panels-controls-component">
@@ -902,15 +903,17 @@ class CommonPropertiesComponents extends React.Component {
 							The control will be created when the row is selected.
 							The atribute <span className="highlight">row_selection</span> must be
 							set to <span className="highlight">single</span> when using the value <span className="highlight">on_panel</span>.
-							<br /><br />
-							In the table below the <span className="highlight">Condition</span> column
-							has <span className="highlight">edit_style</span> attribute
-							of <span className="highlight">on_panel</span> and is
-							a <span className="highlight">role</span> of <span className="highlight">expression</span>.
-							If you select a row the <span className="highlight">expression</span> control will display
+							There can only be one column in the table with the value of <span className="highlight">on_panel</span>
+						</p><p>The following example shows
+							a <a className="properties-page-intro-link" href="#/properties#--expression">expression</a>&nbsp;
+							control with <span className="highlight">on_panel</span> in the structuretable rows.
+							If you select a row
+							the <a className="properties-page-intro-link" href="#/properties#--expression">expression</a> control will display
 							below the table with the current value of the <span className="highlight">Condition</span> cell for the selected row.
-							<br />Modify the value in the <span className="highlight">expression</span> control and it will change the
-							value in the cell when focus is off the <span className="highlight">expression</span> control.
+							Modify the value in
+							the <a className="properties-page-intro-link" href="#/properties#--expression">expression</a> control
+							and it will change the value in the cell when focus is off
+							the <a className="properties-page-intro-link" href="#/properties#--expression">expression</a> control.
 						</p>
 						<div className="section-row">
 							<div className="section-column">

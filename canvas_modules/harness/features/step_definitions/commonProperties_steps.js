@@ -7,7 +7,6 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import { getAutoCompleteCount, selectAutoComplete, setTextValue } from "./utilities/codemirror_util.js";
 import { getHarnessData } from "./utilities/HTTPClient.js";
 import { getURL } from "./utilities/test-config.js";
 
@@ -236,73 +235,6 @@ module.exports = function() {
 
 	});
 
-	this.Then(/^I verify "([^"]*)" is a "([^"]*)" in ExpressionEditor$/, function(word, type) {
-		const CMline = browser.$("#ExpressionEditor").$$(".CodeMirror-line")[0];
-		const searchClass = ".cm-" + type;
-		const testWord = (type === "string") ? "\"" + word + "\"" : word;
-
-		expect(testWord).toEqual(CMline.$$(searchClass)[0].getText());
-
-	});
-
-	this.Then(/^I verify that the placeholder text is "([^"]*)" in ExpressionEditor$/, function(testText) {
-		const CMplaceholder = browser.$("#ExpressionEditor").$(".CodeMirror-placeholder");
-
-		expect(testText).toEqual(CMplaceholder.getText());
-
-	});
-
-	this.Then(/^I enter "([^"]*)" in ExpressionEditor and press autocomplete and verify that (\d+) autocomplete hints are displayed$/, function(enterText, hintCount) {
-
-		const hintNumber = browser.execute(getAutoCompleteCount, enterText);
-		expect(hintNumber.value).toEqual(Number(hintCount));
-
-	});
-
-	this.Then(/^I enter "([^"]*)" in ExpressionEditor and press autocomplete and verify error "([^"]*)" and save$/, function(enterText, errorText) {
-
-		browser.execute(getAutoCompleteCount, enterText);
-		const errLine = browser.$(".expression-validation-message");
-		expect(errorText).toEqual(errLine.$(".form__validation--error").getText());
-
-		var okButton = getPropertiesApplyButton();
-		okButton.click();
-
-	});
-
-	this.Then(/^I enter "([^"]*)" in ExpressionEditor and press autocomplete and select "([^"]*)" a "([^"]*)"$/, function(enterText, selectText, type) {
-		browser.execute(selectAutoComplete, enterText);
-		const CMline = browser.$("#ExpressionEditor").$$(".CodeMirror-line")[0];
-		const searchClass = ".cm-" + type;
-
-		expect(selectText).toEqual(CMline.$$(searchClass)[0].getText());
-	});
-
-
-	this.Then(/^I enter "([^"]*)" in ExpressionEditor and verify it is a "([^"]*)"$/, function(enterText, type) {
-		const setText = (type === "string") ? "\"" + enterText + "\"" : enterText;
-		browser.execute(setTextValue, setText, false);
-
-		const CMline = browser.$("#ExpressionEditor").$$(".CodeMirror-line")[0];
-		const searchClass = ".cm-" + type;
-		expect(setText).toEqual(CMline.$$(searchClass)[0].getText());
-	});
-
-	this.Then(/^I enter "([^"]*)" in ExpressionEditor and press autocomplete and select "([^"]*)" and verify save$/, function(enterText, selectText) {
-		browser.execute(selectAutoComplete, enterText);
-		const CMline = browser.$("#ExpressionEditor").$$(".CodeMirror-line")[0];
-		const searchClass = ".cm-keyword";
-
-		expect(selectText).toEqual(CMline.$$(searchClass)[0].getText());
-
-		var okButton = getPropertiesApplyButton();
-		okButton.click();
-
-		var lastEventLog = getLastEventLogData();
-
-		expect(selectText).toEqual((lastEventLog.data.form.conditionExpr).toString());
-	});
-
 	this.Then(/^I select Repeatable partition assignment checkbox and click Generate$/, function() {
 
 		// Splitting into different options due to ESLint errors
@@ -448,8 +380,8 @@ module.exports = function() {
 
 	this.Then(/^I have closed the common properties dialog by clicking on close button$/, function() {
 		var closeButton = getPropertiesCancelButton();
-		closeButton[closeButton.length - 1].click();
-		browser.pause(500);
+		closeButton.click();
+
 	});
 
 	this.Then("I verify testValue is not present", function() {
@@ -490,13 +422,23 @@ module.exports = function() {
 	});
 
 	this.Then("I close the subPanel dialog", function() {
-		var closeButton = getPropertiesCancelButton();
-		closeButton[closeButton.length - 1].click();
+		const closeButton = getPropertiesCancelButton();
+		closeButton.click();
 	});
 
 	this.Then("I click on modal OK button", function() {
 		var okButton = getPropertiesApplyButton();
 		okButton.click();
+	});
+
+	this.Then(/^I click on the "([^"]*)" button$/, function(buttonName) {
+		if (buttonName === "OK") {
+			var okButton = getPropertiesApplyButton();
+			okButton.click();
+		} else {
+			var cancelButton = getPropertiesCancelButton();
+			cancelButton.click();
+		}
 	});
 
 	function getLastEventLogData(override) {
@@ -520,10 +462,12 @@ module.exports = function() {
 	}
 
 	function getPropertiesApplyButton() {
-		return browser.$("#properties-apply-button");
+		const applyButtons = browser.$$("#properties-apply-button");
+		return applyButtons[applyButtons.length - 1];
 	}
 
-	function getPropertiesCancelButton(subpanel) {
-		return browser.$$("#properties-cancel-button");
+	function getPropertiesCancelButton() {
+		const cancelButtons = browser.$$("#properties-cancel-button");
+		return cancelButtons[cancelButtons.length - 1];
 	}
 };

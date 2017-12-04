@@ -691,6 +691,10 @@ tr.reactable-column-header {
   width: 100%;
 }
 
+.table {
+	margin-bottom: 0px;
+}
+
 /* end Flexible table */
 
 .tabs--vertical .tabs__list--vertical {

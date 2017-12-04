@@ -102,33 +102,3 @@ Feature: Sanity_Test_CommonProperties
 			Then I verify "Na" is not present first input control
 			Then I have closed the common properties dialog by clicking on close button
 			Given I have toggled the app side common-properties panel
-
-	Scenario: Test of expression editor control
-		Given I am on the test harness
-		Given I have toggled the app side common-properties panel
-		Then I have selected the "Modal" properties container type
-		Given I have uploaded JSON for common-properties "CLEM_FilterRows_paramDef.json"
-
-		Then I verify "is_real" is a "keyword" in ExpressionEditor
-		Then I verify "salbegin" is a "variable" in ExpressionEditor
-		Then I verify "=" is a "operator" in ExpressionEditor
-		Then I verify "120" is a "number" in ExpressionEditor
-		Then I verify "F" is a "string" in ExpressionEditor
-		Then I enter "is" in ExpressionEditor and press autocomplete and verify that 18 autocomplete hints are displayed
-		Then I enter "is_d" in ExpressionEditor and press autocomplete and verify that 2 autocomplete hints are displayed
-		Then I enter "is_" in ExpressionEditor and press autocomplete and select "is_date" a "keyword"
-		Then I enter "is_t" in ExpressionEditor and press autocomplete and select "is_time" a "keyword"
-		Then I enter "a" in ExpressionEditor and press autocomplete and select "age" a "variable"
-		Then I enter "and" in ExpressionEditor and verify it is a "keyword"
-		Then I enter "age" in ExpressionEditor and verify it is a "variable"
-		Then I enter "=" in ExpressionEditor and verify it is a "operator"
-		Then I enter "120" in ExpressionEditor and verify it is a "number"
-		Then I enter "this is a string" in ExpressionEditor and verify it is a "string"
-		Then I enter "first" in ExpressionEditor and press autocomplete and select "first_index" and verify save
-
-		Given I have toggled the app side common-properties panel
-		Given I have uploaded JSON for common-properties "Javascript_FilterRows_paramDef.json"
-		Then I verify that the placeholder text is "Enter JavaScript text" in ExpressionEditor
-		Then I enter "" in ExpressionEditor and press autocomplete and verify error "The condition expression cannot be empty" and save
-
-		Given I have toggled the app side common-properties panel

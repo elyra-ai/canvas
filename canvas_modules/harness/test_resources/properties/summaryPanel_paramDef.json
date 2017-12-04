@@ -1,0 +1,378 @@
+{
+	"current_parameters": {
+		"expressionCellTable": [
+			[
+				"BabyBoomer",
+				"Age >= 55"
+			]
+		],
+		"enableSortByTable": true,
+    "structuretableSortOrder": [
+      [
+        "Cholesterol",
+        "Ascending"
+      ]
+    ]
+	},
+	"parameters": [
+		{
+			"id": "expressionCellTable",
+			"type": "array[expressionCellTable]",
+			"role": "column",
+			"default": []
+		},
+    {
+      "id": "enableSortByTable",
+      "type": "boolean",
+      "default": ""
+    },
+    {
+      "id": "structuretableSortOrder",
+      "type": "array[structuretableSortOrder]"
+    }
+	],
+	"complex_types": [
+		{
+      "id": "structuretableSortOrder",
+      "key_definition": {
+        "id": "field",
+        "type": "string",
+        "role": "column",
+        "default": ""
+      },
+      "parameters": [
+        {
+          "id": "structuretable_sort_order",
+          "enum": [
+            "Ascending",
+            "Descending"
+          ],
+          "default": "Ascending"
+        }
+      ]
+    },
+		{
+			"id": "expressionCellTable",
+			"parameters": [
+				{
+					"id": "valueName",
+					"type": "string",
+					"default": "Value",
+					"role": "new_column"
+				},
+				{
+					"id": "condition",
+					"type": "string",
+					"default": "",
+					"role": "expression"
+				}
+			]
+		}
+	],
+	"uihints": {
+		"id": "Conditions.test",
+		"icon": "images/modelbuildspark.svg",
+		"label": {
+			"default": "Summary Test"
+		},
+		"description": {
+			"default": "Test condition handling in controls"
+		},
+		"parameter_info": [
+			{
+				"parameter_ref": "expressionCellTable",
+				"label": {
+					"default": "Values"
+				},
+				"description": {
+					"default": "Complex table control list editor table input"
+				}
+			},
+      {
+        "parameter_ref": "enableSortByTable",
+        "label": {
+          "default": "enable"
+        },
+        "description": {
+          "default": "Enable table"
+        }
+      },
+      {
+        "parameter_ref": "structuretableSortOrder",
+        "required": true,
+        "label": {
+          "default": "Sort by"
+        },
+        "description": {
+          "default": "Use arrows to reorder the sorting priority",
+          "placement": "on_panel"
+        }
+      }
+		],
+		"complex_type_info": [
+			{
+				"complex_type_ref": "structuretableSortOrder",
+				"moveable_rows": true,
+				"key_definition": {
+					"parameter_ref": "field",
+					"width": 28,
+					"label": {
+						"resource_key": "structuretableSortOrder.field.label"
+					},
+					"summary": true
+				},
+				"parameters": [
+					{
+						"parameter_ref": "structuretable_sort_order",
+						"width": 16,
+						"label": {
+							"resource_key": "structuretableSortOrder.sort_order.label"
+						},
+						"description": {
+							"resource_key": "structuretableSortOrder.sort_order.desc"
+						},
+						"control": "toggletext",
+						"value_icons": [
+							"/images/up-triangle.svg",
+							"/images/down-triangle.svg"
+						]
+					}
+				]
+			},
+			{
+				"complex_type_ref": "expressionCellTable",
+				"row_selection": "single",
+				"parameters": [
+					{
+						"parameter_ref": "valueName",
+						"label": {
+							"default": "Structure Name",
+							"resource_key": "expressionCellTable.name.label"
+						},
+						"description": {
+							"resource_key": "expressionCellTable.name.desc"
+						},
+						"width": 15,
+						"edit_style": "inline",
+						"summary": true
+					},
+					{
+						"parameter_ref": "condition",
+						"language": "CLEM",
+						"label": {
+							"resource_key": "expressionCellTable.description.label"
+						},
+						"description": {
+							"resource_key": "expressionCellTable.description.desc"
+						},
+						"width": 15,
+						"edit_style": "on_panel",
+						"place_holder_text": {
+							"default": "Enter condition expression"
+						},
+						"summary": true
+					}
+				]
+			}
+		],
+		"group_info": [
+			{
+				"id": "expressionCellTable-summary-panel",
+				"label": {
+					"default": "Structure List Table"
+				},
+				"type": "panels",
+				"group_info": [
+					{
+						"id": "Derive-Node",
+						"type": "summaryPanel",
+						"label": {
+							"default": "Configure Derive Node"
+						},
+						"group_info": [
+							{
+								"id": "Expression Control Cell",
+								"parameter_refs": [
+									"expressionCellTable"
+								]
+							}
+						]
+					}
+				]
+			},
+			{
+				"id": "Tables",
+				"label": {
+					"default": "Column Structure Table"
+				},
+				"type": "panels",
+				"group_info": [
+					{
+						"id": "structuretableSortOrder-summary-panel",
+						"label": {
+							"default": "Configure Sort Order"
+						},
+						"type": "summaryPanel",
+						"group_info": [
+							{
+								"id": "structuretableSortOrder",
+								"type": "columnSelection",
+								"label": {
+									"default": "Columns"
+								},
+								"parameter_refs": [
+									"enableSortByTable",
+									"structuretableSortOrder"
+								]
+							}
+						]
+					}
+				]
+			}
+		]
+	},
+	"conditions": [
+		{
+			"validation": {
+				"fail_message": {
+					"type": "warning",
+					"focus_parameter_ref": "expressionCellTable",
+					"message": {
+						"default": "table cannot be empty"
+					}
+				},
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "expressionCellTable",
+						"op": "notEquals",
+						"value": []
+					}
+				}
+			}
+		},
+		{
+			"enabled": {
+				"parameter_refs": [
+					"structuretableSortOrder"
+				],
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "enableSortByTable",
+						"op": "equals",
+						"value": true
+					}
+				}
+			}
+		},
+    {
+      "enabled": {
+        "parameter_refs": [
+          "structuretableSortOrder"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "enableSortByTable",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "structuretableSortOrder",
+          "message": {
+            "default": "table cannot be empty"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "structuretableSortOrder",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    }
+	],
+	"dataset_metadata": {
+		"fields": [
+      {
+        "name": "Age",
+        "type": "integer",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Sex",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "BP",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Cholesterol",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Na",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "K",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Drug",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      }
+    ]
+	},
+	"resources": {
+		"structuretableSortOrder.label": "Sort",
+		"structuretableSortOrder.field.label": "Field",
+		"structuretableSortOrder.sort_order.label": "Order",
+		"structuretableSortOrder.sort_order.desc": "Update sort order",
+		"structuretableSortOrder.sort_order.Ascending.label": "Ascending",
+		"structuretableSortOrder.sort_order.Descending.label": "Descending",
+		"expressionCellTable.name.label": "Set Field To",
+		"expressionCellTable.name.desc": "value of field",
+		"expressionCellTable.description.label": "If This Condition Is True",
+		"expressionCellTable.description.desc": "if condition true set field"
+	}
+}
