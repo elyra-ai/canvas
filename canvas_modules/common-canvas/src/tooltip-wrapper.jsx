@@ -53,14 +53,14 @@ export default class TooltipWrapper extends React.Component {
 			switch (this.props.type) {
 			case TIP_TYPE_PALETTE_ITEM:
 				{
-					const category = ObjectModel.getCategoryForNode(this.props.paletteItem.operator_id_ref);
+					const category = ObjectModel.getCategoryForNode(this.props.nodeTemplate.operator_id_ref);
 					content = (
 						<div className="tip-palette-item">
 							<hr className="tip-palette-line" />
 							<div className="tip-palette-category">{category.label}</div>
-							<div className="tip-palette-label">{this.props.paletteItem.label}</div>
-							{this.props.paletteItem.description
-								? (<div className="tip-palette-desc">{this.props.paletteItem.description}</div>)
+							<div className="tip-palette-label">{this.props.nodeTemplate.label}</div>
+							{this.props.nodeTemplate.description
+								? (<div className="tip-palette-desc">{this.props.nodeTemplate.description}</div>)
 								: ("")
 							}
 						</div>
@@ -124,6 +124,6 @@ TooltipWrapper.propTypes = {
 	customContent: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
 	node: PropTypes.object,
 	port: PropTypes.object,
-	paletteItem: PropTypes.object,
+	nodeTemplate: PropTypes.object,
 	category: PropTypes.string
 };

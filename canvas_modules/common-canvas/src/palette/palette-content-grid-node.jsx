@@ -22,7 +22,7 @@ class PaletteContentNode extends React.Component {
 		this.onDragStart = this.onDragStart.bind(this);
 		this.onDoubleClick = this.onDoubleClick.bind(this);
 		this.onMouseOver = this.onMouseOver.bind(this);
-		this.onMouseOut = this.onMouseOut.bind(this);
+		this.onMouseLeave = this.onMouseLeave.bind(this);
 	}
 
 	onDragStart(ev) {
@@ -45,11 +45,11 @@ class PaletteContentNode extends React.Component {
 			id: "paletteTip_" + this.props.nodeTemplate.operator_id_ref,
 			type: TIP_TYPE_PALETTE_ITEM,
 			targetObj: ev.currentTarget,
-			paletteItem: this.props.nodeTemplate
+			nodeTemplate: this.props.nodeTemplate
 		});
 	}
 
-	onMouseOut() {
+	onMouseLeave() {
 		CanvasController.hideTip();
 	}
 
@@ -60,7 +60,7 @@ class PaletteContentNode extends React.Component {
 				onDragStart={this.onDragStart}
 				onDoubleClick={this.onDoubleClick}
 				onMouseOver={this.onMouseOver}
-				onMouseOut={this.onMouseOut}
+				onMouseLeave={this.onMouseLeave}
 				className="palette-grid-node-outer"
 			>
 				<div className="palette-grid-node-inner">

@@ -910,6 +910,9 @@ export default class CanvasD3Layout {
 					if (that.layout.connectionType === "ports") {
 						that.canvas.selectAll(that.getId("#node_ellipsis")).remove();
 					}
+
+					CanvasController.hideTip();
+					that.showTip = false;
 				})
 				// Use mouse down instead of click because it gets called before drag start.
 				.on("mousedown", (d) => {
@@ -954,10 +957,6 @@ export default class CanvasD3Layout {
 							node: d
 						});
 					}
-				})
-				.on("mouseout", (d) => {
-					CanvasController.hideTip();
-					this.showTip = false;
 				})
 				.on("dblclick", (d) => {
 					this.consoleLog("Node Group - double click");
@@ -1047,6 +1046,7 @@ export default class CanvasD3Layout {
 								.on("mouseover", function(port) {
 									that.stopPropagationAndPreventDefault(); // stop event propagation, otherwise node tip is shown
 									if (that.canShowTip(TIP_TYPE_PORT)) {
+										CanvasController.hideTip();
 										that.showTip = true;
 										CanvasController.showTip({
 											id: that.getId("portTip", port.id),
@@ -1059,7 +1059,6 @@ export default class CanvasD3Layout {
 									}
 								})
 								.on("mouseout", (port) => {
-									that.stopPropagationAndPreventDefault();
 									CanvasController.hideTip();
 									this.showTip = false;
 								})
@@ -1090,7 +1089,6 @@ export default class CanvasD3Layout {
 									}
 								})
 								.on("mouseout", (port) => {
-									that.stopPropagationAndPreventDefault();
 									CanvasController.hideTip();
 									this.showTip = false;
 								});
@@ -1132,6 +1130,7 @@ export default class CanvasD3Layout {
 								.on("mouseover", function(port) {
 									that.stopPropagationAndPreventDefault(); // stop event propagation, otherwise node tip is shown
 									if (that.canShowTip(TIP_TYPE_PORT)) {
+										CanvasController.hideTip();
 										that.showTip = true;
 										CanvasController.showTip({
 											id: that.getId("portTip", port.id),
@@ -1144,7 +1143,6 @@ export default class CanvasD3Layout {
 									}
 								})
 								.on("mouseout", (port) => {
-									that.stopPropagationAndPreventDefault();
 									CanvasController.hideTip();
 									this.showTip = false;
 								})

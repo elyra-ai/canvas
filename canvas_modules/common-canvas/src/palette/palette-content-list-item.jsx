@@ -22,7 +22,7 @@ class PaletteContentListItem extends React.Component {
 		this.onDragStart = this.onDragStart.bind(this);
 		this.onDoubleClick = this.onDoubleClick.bind(this);
 		this.onMouseOver = this.onMouseOver.bind(this);
-		this.onMouseOut = this.onMouseOut.bind(this);
+		this.onMouseLeave = this.onMouseLeave.bind(this);
 	}
 
 	onDragStart(ev) {
@@ -45,11 +45,11 @@ class PaletteContentListItem extends React.Component {
 			id: "paletteTip_" + this.props.nodeTemplate.operator_id_ref,
 			type: TIP_TYPE_PALETTE_ITEM,
 			targetObj: ev.currentTarget,
-			paletteItem: this.props.nodeTemplate
+			nodeTemplate: this.props.nodeTemplate
 		});
 	}
 
-	onMouseOut() {
+	onMouseLeave() {
 		CanvasController.hideTip();
 	}
 
@@ -65,7 +65,7 @@ class PaletteContentListItem extends React.Component {
 				onDoubleClick={this.onDoubleClick}
 				className="palette-list-item"
 				onMouseOver={this.onMouseOver}
-				onMouseOut={this.onMouseOut}
+				onMouseLeave={this.onMouseLeave}
 			>
 				<div className="palette-list-item-icon">
 					<img src={this.props.nodeTemplate.image} draggable="false" />

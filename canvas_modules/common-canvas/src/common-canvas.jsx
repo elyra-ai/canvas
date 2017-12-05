@@ -330,7 +330,7 @@ export default class CommonCanvas extends React.Component {
 				mousePos={this.state.tipDef.mousePos}
 				node={this.state.tipDef.node}
 				port={this.state.tipDef.port}
-				paletteItem={this.state.tipDef.paletteItem}
+				nodeTemplate={this.state.tipDef.nodeTemplate}
 			/>);
 		}
 
