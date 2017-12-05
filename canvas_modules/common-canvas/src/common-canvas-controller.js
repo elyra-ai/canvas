@@ -70,6 +70,10 @@ export default class CommonCanvasController {
 		return 1;
 	}
 
+	static isInternalObjectModelEnabled() {
+		return canvasConfig.enableInternalObjectModel;
+	}
+
 	static openPalette() {
 		if (commonCanvas) {
 			commonCanvas.openPalette();

@@ -179,6 +179,13 @@ export default class CommonCanvas extends React.Component {
 	}
 
 	configureToolbarButtonsState() {
+		// We only set toolbar state with the internal object model. With the
+		// external object model the host app must set toolbar state through the
+		// toolbar config params.
+		if (!CanvasController.isInternalObjectModelEnabled()) {
+			return;
+		}
+
 		let undoState = true;
 		let redoState = true;
 		let cutState = true;
