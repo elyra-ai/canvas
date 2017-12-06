@@ -3252,7 +3252,8 @@ export default class CanvasD3Layout {
 
 	canShowTip(tipType) {
 		return CanvasController.isTipEnabled(tipType) &&
-			!this.selecting && !this.regionSelect && !this.dragging && !this.commentSizing;
+			!this.selecting && !this.regionSelect && !this.dragging &&
+			!this.commentSizing && !this.drawingNewLink;
 	}
 
 	consoleLog(msg) {
