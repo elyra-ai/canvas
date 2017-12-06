@@ -29,8 +29,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port 1"
@@ -43,8 +43,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port 2"
@@ -68,8 +68,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port 3"
@@ -84,8 +84,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Output Port 1"
@@ -98,8 +98,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Output Port 2"
@@ -130,8 +130,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port 1"
@@ -144,8 +144,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port2"
@@ -170,8 +170,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Output Port"
@@ -201,8 +201,8 @@
             "app_data": {
               "ui_data": {
                 "cardinality": {
-                  "min": "0",
-                  "max": "1"
+                  "min": 0,
+                  "max": 1
                 },
                 "label": {
                   "default": "Input Port"
@@ -239,8 +239,8 @@
             "app_data": {
               "ui_data": {
                 "cardinality": {
-                  "min": "0",
-                  "max": "1"
+                  "min": 0,
+                  "max": 1
                 },
                 "label": {
                   "default": "Input Port"
@@ -277,8 +277,8 @@
             "app_data": {
               "ui_data": {
                 "cardinality": {
-                  "min": "0",
-                  "max": "1"
+                  "min": 0,
+                  "max": 1
                 },
                 "label": {
                   "default": "Output Port"
@@ -307,8 +307,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -333,8 +333,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Output Port One"
@@ -347,8 +347,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Output Port Two"

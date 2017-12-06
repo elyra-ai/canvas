@@ -48,7 +48,7 @@
                     "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port One"
                   },
                   "class_name": "port-output-red"
                 }
@@ -63,7 +63,7 @@
                     "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port Two"
                   },
                   "class_name": "port-output-yellow"
                 }
@@ -78,7 +78,7 @@
                     "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port Three"
                   },
                   "class_name": "port-output-green"
                 }
@@ -93,7 +93,7 @@
                     "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port Four"
                   },
                   "class_name": "port-output-blue"
                 }
@@ -108,7 +108,7 @@
                     "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port Five"
                   },
                   "class_name": "port-output-red"
                 }
@@ -123,7 +123,7 @@
                     "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port Six"
                   },
                   "class_name": "port-output-yellow"
                 }
@@ -138,7 +138,7 @@
                     "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port Seven"
                   },
                   "class_name": "port-output-green"
                 }
@@ -153,7 +153,7 @@
                     "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port Eight"
                   },
                   "class_name": "port-output-blue"
                 }

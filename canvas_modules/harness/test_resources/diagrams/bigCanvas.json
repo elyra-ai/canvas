@@ -28,8 +28,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -54,8 +54,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -85,8 +85,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -111,8 +111,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -141,8 +141,8 @@
             "app_data": {
               "ui_data": {
                 "cardinality": {
-                  "min": "0",
-                  "max": "1"
+                  "min": 0,
+                  "max": 1
                 },
                 "label": {
                   "default": "Input Port"
@@ -178,8 +178,8 @@
             "app_data": {
               "ui_data": {
                 "cardinality": {
-                  "min": "0",
-                  "max": "1"
+                  "min": 0,
+                  "max": -1
                 },
                 "label": {
                   "default": "Output Port"
@@ -208,8 +208,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -234,8 +234,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -265,8 +265,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -291,8 +291,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -322,8 +322,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -348,8 +348,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -379,8 +379,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -413,8 +413,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -444,8 +444,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -470,8 +470,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -501,8 +501,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -527,8 +527,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -558,8 +558,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -584,8 +584,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -615,8 +615,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -641,8 +641,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -672,8 +672,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -706,8 +706,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -737,8 +737,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -763,8 +763,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -794,8 +794,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -820,8 +820,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -850,8 +850,8 @@
             "app_data": {
               "ui_data": {
                 "cardinality": {
-                  "min": "0",
-                  "max": "1"
+                  "min": 0,
+                  "max": 1
                 },
                 "label": {
                   "default": "Input Port"
@@ -888,8 +888,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -910,29 +910,29 @@
           ],
           "outputs": [
             {
-              "id": "outPort",
+              "id": "outPort1",
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port One"
                   }
                 }
               }
             },
             {
-              "id": "outPort",
+              "id": "outPort2",
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port Two"
                   }
                 }
               }
@@ -959,8 +959,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -985,8 +985,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -1016,8 +1016,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -1042,8 +1042,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -1073,8 +1073,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -1099,8 +1099,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -1130,8 +1130,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -1156,8 +1156,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -1187,8 +1187,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -1213,8 +1213,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -1244,8 +1244,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -1270,8 +1270,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -1301,8 +1301,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -1335,8 +1335,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -1365,8 +1365,8 @@
             "app_data": {
               "ui_data": {
                 "cardinality": {
-                  "min": "0",
-                  "max": "1"
+                  "min": 0,
+                  "max": -1
                 },
                 "label": {
                   "default": "Output Port"
@@ -1394,8 +1394,8 @@
             "app_data": {
               "ui_data": {
                 "cardinality": {
-                  "min": "0",
-                  "max": "1"
+                  "min": 0,
+                  "max": -1
                 },
                 "label": {
                   "default": "Output Port"
@@ -1424,8 +1424,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -1450,8 +1450,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -1481,8 +1481,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -1507,8 +1507,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -1538,8 +1538,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -1564,8 +1564,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -1595,8 +1595,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -1621,8 +1621,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -1652,8 +1652,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -1678,8 +1678,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -1709,8 +1709,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -1731,29 +1731,29 @@
           ],
           "outputs": [
             {
-              "id": "outPort",
+              "id": "outPort1",
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port One"
                   }
                 }
               }
             },
             {
-              "id": "outPort",
+              "id": "outPort2",
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port Two"
                   }
                 }
               }
@@ -1780,8 +1780,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -1806,8 +1806,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -1837,8 +1837,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -1863,8 +1863,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -1893,8 +1893,8 @@
             "app_data": {
               "ui_data": {
                 "cardinality": {
-                  "min": "0",
-                  "max": "1"
+                  "min": 0,
+                  "max": -1
                 },
                 "label": {
                   "default": "Output Port"
@@ -1922,8 +1922,8 @@
             "app_data": {
               "ui_data": {
                 "cardinality": {
-                  "min": "0",
-                  "max": "1"
+                  "min": 0,
+                  "max": -1
                 },
                 "label": {
                   "default": "Output Port"
@@ -1952,8 +1952,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -1974,29 +1974,29 @@
           ],
           "outputs": [
             {
-              "id": "outPort",
+              "id": "outPort1",
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port One"
                   }
                 }
               }
             },
             {
-              "id": "outPort",
+              "id": "outPort2",
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port Two"
                   }
                 }
               }
@@ -2023,8 +2023,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -2049,8 +2049,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -2080,8 +2080,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -2106,8 +2106,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -2137,8 +2137,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -2163,8 +2163,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -2194,8 +2194,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -2220,8 +2220,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -2251,8 +2251,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -2277,8 +2277,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -2308,8 +2308,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -2330,29 +2330,29 @@
           ],
           "outputs": [
             {
-              "id": "outPort",
+              "id": "outPort1",
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port One"
                   }
                 }
               }
             },
             {
-              "id": "outPort",
+              "id": "outPort2",
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port Two"
                   }
                 }
               }
@@ -2379,8 +2379,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -2401,29 +2401,29 @@
           ],
           "outputs": [
             {
-              "id": "outPort",
+              "id": "outPort1",
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port One"
                   }
                 }
               }
             },
             {
-              "id": "outPort",
+              "id": "outPort2",
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port Two"
                   }
                 }
               }
@@ -2449,8 +2449,8 @@
             "app_data": {
               "ui_data": {
                 "cardinality": {
-                  "min": "0",
-                  "max": "1"
+                  "min": 0,
+                  "max": -1
                 },
                 "label": {
                   "default": "Output Port"
@@ -2478,8 +2478,8 @@
             "app_data": {
               "ui_data": {
                 "cardinality": {
-                  "min": "0",
-                  "max": "1"
+                  "min": 0,
+                  "max": -1
                 },
                 "label": {
                   "default": "Output Port"
@@ -2508,8 +2508,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -2534,8 +2534,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -2565,8 +2565,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -2599,8 +2599,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -2630,8 +2630,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -2656,8 +2656,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -2687,8 +2687,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -2713,8 +2713,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -2744,8 +2744,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -2770,8 +2770,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -2801,8 +2801,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -2827,8 +2827,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -2858,8 +2858,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -2884,8 +2884,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -2914,8 +2914,8 @@
             "app_data": {
               "ui_data": {
                 "cardinality": {
-                  "min": "0",
-                  "max": "1"
+                  "min": 0,
+                  "max": -1
                 },
                 "label": {
                   "default": "Output Port"
@@ -2944,8 +2944,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -2970,8 +2970,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -3001,8 +3001,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -3023,29 +3023,29 @@
           ],
           "outputs": [
             {
-              "id": "outPort",
+              "id": "outPort1",
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port One"
                   }
                 }
               }
             },
             {
-              "id": "outPort",
+              "id": "outPort2",
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port Two"
                   }
                 }
               }
@@ -3072,8 +3072,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -3098,8 +3098,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -3129,8 +3129,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -3155,8 +3155,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -3186,8 +3186,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -3212,8 +3212,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -3243,8 +3243,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -3269,8 +3269,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -3300,8 +3300,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -3334,8 +3334,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -3365,8 +3365,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -3391,8 +3391,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -3422,8 +3422,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -3444,29 +3444,29 @@
           ],
           "outputs": [
             {
-              "id": "outPort",
+              "id": "outPort1",
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port One"
                   }
                 }
               }
             },
             {
-              "id": "outPort",
+              "id": "outPort2",
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port Two"
                   }
                 }
               }
@@ -3493,8 +3493,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -3515,29 +3515,29 @@
           ],
           "outputs": [
             {
-              "id": "outPort",
+              "id": "outPort1",
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port One"
                   }
                 }
               }
             },
             {
-              "id": "outPort",
+              "id": "outPort2",
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port Two"
                   }
                 }
               }
@@ -3564,8 +3564,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -3590,8 +3590,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -3621,8 +3621,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -3647,8 +3647,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -3678,8 +3678,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -3704,8 +3704,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -3735,8 +3735,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -3761,8 +3761,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -3792,8 +3792,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -3826,8 +3826,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -3857,8 +3857,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -3883,8 +3883,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -3914,8 +3914,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -3940,8 +3940,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -3971,8 +3971,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -3997,8 +3997,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -4028,8 +4028,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -4054,8 +4054,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -4085,8 +4085,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -4107,29 +4107,29 @@
           ],
           "outputs": [
             {
-              "id": "outPort",
+              "id": "outPort1",
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port One"
                   }
                 }
               }
             },
             {
-              "id": "outPort",
+              "id": "outPort2",
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port Two"
                   }
                 }
               }
@@ -4156,8 +4156,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -4182,8 +4182,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -4213,8 +4213,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -4247,8 +4247,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -4278,8 +4278,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -4304,8 +4304,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -4335,8 +4335,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -4369,8 +4369,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -4400,8 +4400,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -4426,8 +4426,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -4457,8 +4457,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -4483,8 +4483,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -4514,8 +4514,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -4540,8 +4540,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -4571,8 +4571,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -4597,8 +4597,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -4628,8 +4628,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -4654,8 +4654,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -4685,8 +4685,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -4719,8 +4719,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -4750,8 +4750,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -4772,29 +4772,29 @@
           ],
           "outputs": [
             {
-              "id": "outPort",
+              "id": "outPort1",
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port One"
                   }
                 }
               }
             },
             {
-              "id": "outPort",
+              "id": "outPort2",
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port Two"
                   }
                 }
               }
@@ -4821,8 +4821,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -4847,8 +4847,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -4878,8 +4878,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -4900,29 +4900,29 @@
           ],
           "outputs": [
             {
-              "id": "outPort",
+              "id": "outPort1",
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port One"
                   }
                 }
               }
             },
             {
-              "id": "outPort",
+              "id": "outPort2",
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port Two"
                   }
                 }
               }
@@ -4949,8 +4949,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -4975,8 +4975,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -5006,8 +5006,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -5032,8 +5032,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -5063,8 +5063,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -5089,8 +5089,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -5120,8 +5120,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -5146,8 +5146,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -5177,8 +5177,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -5203,8 +5203,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -5234,8 +5234,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -5260,8 +5260,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -5291,8 +5291,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -5317,8 +5317,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -5348,8 +5348,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -5382,8 +5382,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -5413,8 +5413,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -5439,8 +5439,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -5470,8 +5470,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -5496,8 +5496,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -5527,8 +5527,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -5553,8 +5553,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -5584,8 +5584,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": 1
                   },
                   "label": {
                     "default": "Input Port"
@@ -5618,8 +5618,8 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": "0",
-                    "max": "1"
+                    "min": 0,
+                    "max": -1
                   },
                   "label": {
                     "default": "Output Port"
@@ -5648,8 +5648,8 @@
             "app_data": {
               "ui_data": {
                 "cardinality": {
-                  "min": "0",
-                  "max": "1"
+                  "min": 0,
+                  "max": 1
                 },
                 "label": {
                   "default": "Input Port"

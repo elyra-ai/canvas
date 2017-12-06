@@ -76,7 +76,7 @@
                     "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port One"
                   }
                 }
               }
@@ -90,7 +90,7 @@
                     "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port Two"
                   }
                 }
               }
@@ -104,7 +104,7 @@
                     "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port Three"
                   }
                 }
               }
@@ -118,7 +118,7 @@
                     "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port Four"
                   }
                 }
               }
@@ -164,7 +164,7 @@
                     "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port One"
                   }
                 }
               }
@@ -178,7 +178,7 @@
                     "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port Two"
                   }
                 }
               }
@@ -192,7 +192,7 @@
                     "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port Three"
                   }
                 }
               }
@@ -206,7 +206,7 @@
                     "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port Four"
                   }
                 }
               }
@@ -220,7 +220,7 @@
                     "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port Five"
                   }
                 }
               }
@@ -234,7 +234,7 @@
                     "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port Six"
                   }
                 }
               }
@@ -248,7 +248,7 @@
                     "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port Seven"
                   }
                 }
               }
@@ -262,7 +262,7 @@
                     "max": -1
                   },
                   "label": {
-                    "default": "Output Port"
+                    "default": "Output Port Eight"
                   }
                 }
               }
