@@ -411,6 +411,16 @@ module.exports = function() {
 		nameTextBox.setValue("", nodeName);
 	});
 
+	this.Then(/^I update the value of Seed textbox with "([^"]*)"$/, function(seedValue) {
+		var seedTextBox = browser.$("#editor-control-numberfieldSeed");
+		seedTextBox.setValue("", seedValue);
+	});
+
+	this.Then(/^I verify the value of Seed textbox with "([^"]*)"$/, function(seedValue) {
+		var seedTextBox = browser.$("#editor-control-numberfieldSeed").getAttribute("value");
+		expect(seedTextBox).toEqual(seedValue);
+	});
+
 	this.Then(/^I verify that the validation error is "([^"]*)"$/, function(validationError) {
 		var validationDOMError = browser.$(".form__validation--error").getText();
 		expect(validationError).toEqual(validationDOMError);

@@ -17,7 +17,9 @@ export default class NumberfieldControl extends EditorControl {
 	constructor(props) {
 		super(props);
 		this.state = {
-			controlValue: props.valueAccessor(props.control.name)
+			controlValue: props.valueAccessor(props.control.name),
+			userInputValue: props.valueAccessor(props.control.name)
+
 		};
 		this.getControlValue = this.getControlValue.bind(this);
 		this.handleChange = this.handleChange.bind(this);
@@ -26,7 +28,8 @@ export default class NumberfieldControl extends EditorControl {
 
 	handleChange(evt) {
 		const number = parseFloat(evt.target.value);
-		this.setState({ controlValue: evt.target.value });
+		this.setState({ controlValue: evt.target.value,
+			userInputValue: evt.target.value });
 		if (!isNaN(number)) {
 			this.setState({ controlValue: number });
 			this.props.updateControlValue(this.props.control.name, number);
@@ -68,8 +71,8 @@ export default class NumberfieldControl extends EditorControl {
 		}
 
 		let numValue = "";
-		if (this.state.controlValue !== null) {
-			numValue = this.state.controlValue;
+		if (this.state.userInputValue !== null) {
+			numValue = this.state.userInputValue;
 		}
 
 		return (

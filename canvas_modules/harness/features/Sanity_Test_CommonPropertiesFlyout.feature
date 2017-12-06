@@ -99,4 +99,11 @@ Feature: Sanity_Test_CommonProperties_Flyout
 			Then I add "Na" to second input control
 			Then I verify "Na" is not present first input control
 			Then I have closed the common properties dialog by clicking on close button
+
+		# Number Textbox Box with Decimal Number Test
 			Given I have toggled the app side common-properties panel
+			Given I have uploaded JSON for common-properties "Conditions_paramDef.json"
+			Then I click the "Numbers" category from flyout
+			Then I update the value of Seed textbox with "10.0213"
+			Then I verify the value of Seed textbox with "10.0213"
+			Then I have closed the common properties dialog by clicking on close button
