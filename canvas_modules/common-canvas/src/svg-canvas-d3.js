@@ -72,9 +72,6 @@ export default class CanvasD3Layout {
 		// When just changing selection, no need to re-render whole canvas
 		this.selecting = false;
 
-		// When showing tip, no need to re-render whole canvas
-		this.showtip = false;
-
 		// Used to monitor the region selection rectangle.
 		this.regionSelect = false;
 		this.region = { startX: 0, startY: 0, width: 0, height: 0 };
@@ -560,7 +557,6 @@ export default class CanvasD3Layout {
 			};
 		} else {
 			CanvasController.hideTip();
-			this.showTip = false;
 
 			this.zoomStartPoint = { x: d3.event.transform.x, y: d3.event.transform.y, k: d3.event.transform.k };
 		}
@@ -753,7 +749,6 @@ export default class CanvasD3Layout {
 	dragMove() {
 		// this.consoleLog("Drag move");
 		this.dragging = true;
-		this.showTip = false;
 		if (this.commentSizing) {
 			this.resizeComment();
 		} else {
@@ -912,7 +907,6 @@ export default class CanvasD3Layout {
 					}
 
 					CanvasController.hideTip();
-					that.showTip = false;
 				})
 				// Use mouse down instead of click because it gets called before drag start.
 				.on("mousedown", (d) => {
@@ -948,7 +942,6 @@ export default class CanvasD3Layout {
 				})
 				.on("mouseover", function(d) {
 					if (that.canShowTip(TIP_TYPE_NODE)) {
-						that.showTip = true;
 						CanvasController.showTip({
 							id: that.getId("nodeTip", d.id),
 							type: TIP_TYPE_NODE,
@@ -1047,7 +1040,6 @@ export default class CanvasD3Layout {
 									that.stopPropagationAndPreventDefault(); // stop event propagation, otherwise node tip is shown
 									if (that.canShowTip(TIP_TYPE_PORT)) {
 										CanvasController.hideTip();
-										that.showTip = true;
 										CanvasController.showTip({
 											id: that.getId("portTip", port.id),
 											type: TIP_TYPE_PORT,
@@ -1060,7 +1052,6 @@ export default class CanvasD3Layout {
 								})
 								.on("mouseout", (port) => {
 									CanvasController.hideTip();
-									this.showTip = false;
 								})
 								.merge(inputPortSelection)	// for new and existing port circles, update cy, datum and class
 								.attr("cy", (port) => inputPortPositions[port.id])
@@ -1077,7 +1068,6 @@ export default class CanvasD3Layout {
 								.on("mouseover", function(port) {
 									that.stopPropagationAndPreventDefault(); // stop event propagation, otherwise node tip is shown
 									if (that.canShowTip(TIP_TYPE_PORT)) {
-										that.showTip = true;
 										CanvasController.showTip({
 											id: that.getId("portTip", port.id),
 											type: TIP_TYPE_PORT,
@@ -1090,7 +1080,6 @@ export default class CanvasD3Layout {
 								})
 								.on("mouseout", (port) => {
 									CanvasController.hideTip();
-									this.showTip = false;
 								});
 
 							// update arrow in circle for new and existing ports
@@ -1131,7 +1120,6 @@ export default class CanvasD3Layout {
 									that.stopPropagationAndPreventDefault(); // stop event propagation, otherwise node tip is shown
 									if (that.canShowTip(TIP_TYPE_PORT)) {
 										CanvasController.hideTip();
-										that.showTip = true;
 										CanvasController.showTip({
 											id: that.getId("portTip", port.id),
 											type: TIP_TYPE_PORT,
@@ -1144,7 +1132,6 @@ export default class CanvasD3Layout {
 								})
 								.on("mouseout", (port) => {
 									CanvasController.hideTip();
-									this.showTip = false;
 								})
 								.merge(outputPortSelection)	// update cx, class and cy for existing output ports
 								.attr("cx", (port) => d.width)
@@ -2579,7 +2566,7 @@ export default class CanvasD3Layout {
 		var startTimeDrawingLines = Date.now();
 		const that = this;
 
-		if (this.selecting || this.regionSelect || this.showTip) {
+		if (this.selecting || this.regionSelect) {
 			// no lines update needed when selecting objects/region
 			return;
 		} else if (this.dragging || this.commentSizing) {
@@ -2622,7 +2609,6 @@ export default class CanvasD3Layout {
 			})
 			.on("mouseover", function(link) {
 				if (that.canShowTip(TIP_TYPE_LINK)) {
-					that.showTip = true;
 					CanvasController.showTip({
 						id: that.getId("linkTip", link.id),
 						type: TIP_TYPE_LINK,
@@ -2635,7 +2621,6 @@ export default class CanvasD3Layout {
 			})
 			.on("mouseout", (d) => {
 				CanvasController.hideTip();
-				this.showTip = false;
 			});
 
 		// Link selection area

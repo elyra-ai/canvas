@@ -1091,12 +1091,12 @@ export default class ObjectModel {
 
 	static getNodeParameters(nodeId) {
 		var node = this.getNode(nodeId);
-		return node.parameters;
+		return (node ? node.parameters : null);
 	}
 
 	static getNodeMessages(nodeId) {
 		var node = this.getNode(nodeId);
-		return node.messages;
+		return (node ? node.messages : null);
 	}
 
 	static getNodeMessage(nodeId, controlName) {

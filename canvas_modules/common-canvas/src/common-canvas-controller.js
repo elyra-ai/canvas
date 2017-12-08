@@ -21,6 +21,14 @@ import DisconnectNodesAction from "./command-actions/disconnectNodesAction.js";
 import EditCommentAction from "./command-actions/editCommentAction.js";
 import MoveObjectsAction from "./command-actions/moveObjectsAction.js";
 import ObjectModel from "./object-model/object-model.js";
+import lodash from "lodash";
+
+const defaultTipConfig = {
+	"palette": true,
+	"nodes": true,
+	"ports": true,
+	"links": true
+};
 
 var canvasConfig = {
 	enableRenderingEngine: "D3",
@@ -29,14 +37,8 @@ var canvasConfig = {
 	enableLinkType: "Curve",
 	enableInternalObjectModel: true,
 	enablePaletteLayout: "Flyout",
-	tipConfig: {
-		"palette": true,
-		"nodes": true,
-		"ports": true,
-		"links": true
-	}
+	tipConfig: defaultTipConfig
 };
-
 
 var handlers = {
 	contextMenuHandler: null,
@@ -196,7 +198,7 @@ export default class CommonCanvasController {
 	}
 
 	static showTip(tipConfig) {
-		if (commonCanvas && this.isTipEnabled(tipConfig.type)) {
+		if (commonCanvas && !this.isTipShowing() && this.isTipEnabled(tipConfig.type)) {
 			if (handlers.tipHandler) {
 				const data = {};
 				switch (tipConfig.type) {
@@ -226,6 +228,10 @@ export default class CommonCanvasController {
 		}
 	}
 
+	static isTipShowing() {
+		return commonCanvas && commonCanvas.isTipShowing();
+	}
+
 	static hideTip() {
 		if (commonCanvas && commonCanvas.isTipShowing()) {
 			commonCanvas.hideTip();
@@ -235,13 +241,13 @@ export default class CommonCanvasController {
 	static isTipEnabled(tipType) {
 		switch (tipType) {
 		case constants.TIP_TYPE_PALETTE_ITEM:
-			return canvasConfig.tipConfig.palette;
+			return (lodash.has(canvasConfig, "tipConfig.palette") ? canvasConfig.tipConfig.palette : defaultTipConfig.palette);
 		case constants.TIP_TYPE_NODE:
-			return canvasConfig.tipConfig.nodes;
+			return (lodash.has(canvasConfig, "tipConfig.nodes") ? canvasConfig.tipConfig.nodes : defaultTipConfig.nodes);
 		case constants.TIP_TYPE_PORT:
-			return canvasConfig.tipConfig.ports;
+			return (lodash.has(canvasConfig, "tipConfig.ports") ? canvasConfig.tipConfig.ports : defaultTipConfig.ports);
 		case constants.TIP_TYPE_LINK:
-			return canvasConfig.tipConfig.links;
+			return (lodash.has(canvasConfig, "tipConfig.links") ? canvasConfig.tipConfig.links : defaultTipConfig.links);
 		default:
 			return false;
 		}
