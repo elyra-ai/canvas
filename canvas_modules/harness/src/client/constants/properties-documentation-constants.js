@@ -85,6 +85,26 @@ const fields = [
 ];
 
 // Public Methods ------------------------------------------------------------->
+_defineConstant("CONTAINERS_RIGHT_FLYOUT_PROPERTIES", "const rightFlyoutContent =(<CommonProperties \n" +
+"    showPropertiesDialog={this.showPropertiesDialog} \n" +
+"    propertiesInfo={this.propertiesInfo} \n" +
+"    containerType=\"Custom\" \n" +
+"    rightFlyout \n" +
+"/>);");
+
+_defineConstant("CONTAINERS_RIGHT_FLYOUT_CANVAS", "<CommonCanvas \n" +
+"    config={commonCanvasConfig} \n" +
+"    contextMenuHandler={this.contextMenuHandler} \n" +
+"    contextMenuActionHandler= {this.contextMenuActionHandler} \n" +
+"    editActionHandler= {this.editActionHandler} \n" +
+"    clickActionHandler= {this.clickActionHandler} \n" +
+"    decorationActionHandler= {this.decorationActionHandler} \n" +
+"    toolbarConfig={toolbarConfig} \n" +
+"    toolbarMenuActionHandler={this.toolbarMenuActionHandler} \n" +
+"    rightFlyoutContent={rightFlyoutContent} \n" +
+"    showRightFlyout={showRightFlyoutProperties} \n" +
+"/>");
+
 _defineConstant("CONTROLS_PROPS_INFO", {
 	"title": "Group Type: controls",
 	"parameterDef": {
@@ -556,6 +576,193 @@ _defineConstant("CHECKBOX_PANEL_PROPS_INFO", {
 		},
 		"dataset_metadata": {
 			"fields": []
+		}
+	}
+});
+_defineConstant("SUMMARY_PANEL_PROPS_INFO", {
+	"title": "Group Type: controls",
+	"parameterDef": {
+		"current_parameters": {
+			"structuretableRenameFields": [
+				[
+					"Age",
+					"Age",
+					"",
+					"string"
+				],
+				[
+					"BP",
+					"BP-1",
+					"blood pressure",
+					""
+				]
+			]
+		},
+		"parameters": [
+			{
+				"id": "structuretableRenameFields",
+				"type": "map[string,structuretableRenameFields]",
+				"role": "column",
+				"default": []
+			}
+		],
+		"complex_types": [
+			{
+				"id": "structuretableRenameFields",
+				"key_definition": {
+					"id": "field",
+					"type": "string",
+					"role": "column"
+				},
+				"parameters": [
+					{
+						"id": "new_name",
+						"type": "string",
+						"role": "new_column"
+					},
+					{
+						"id": "new_label",
+						"type": "string",
+						"default": ""
+					},
+					{
+						"id": "new_type",
+						"enum": [
+							"string",
+							"number",
+							"boolean",
+							"time",
+							"date"
+						],
+						"default": "string"
+					}
+				]
+			}
+		],
+		"uihints": {
+			"id": "PanelsPanel",
+			"parameter_info": [
+				{
+					"parameter_ref": "textfieldControlName",
+					"label": {
+						"default": "Textfield Control Name"
+					},
+					"description": {
+						"default": "Textfield test"
+					}
+				},
+				{
+					"parameter_ref": "numberfieldControlName",
+					"label": {
+						"default": "Numberfield Control Name"
+					},
+					"description": {
+						"default": "Numberfield test"
+					}
+				},
+				{
+					"parameter_ref": "structuretableSortOrder",
+					"required": true,
+					"label": {
+						"default": "Sort by"
+					},
+					"description": {
+						"default": "Use arrows to reorder the sorting priority",
+						"placement": "on_panel"
+					}
+				},
+				{
+					"parameter_ref": "structuretableRenameFields",
+					"label": {
+						"default": "Rename Field"
+					},
+					"description": {
+						"default": "Complex table control with inline edit and subpanel edit"
+					}
+				}
+			],
+			"complex_type_info": [
+				{
+					"complex_type_ref": "structuretableRenameFields",
+					"label": {
+						"default": "Rename Subpanel"
+					},
+					"key_definition": {
+						"parameter_ref": "field",
+						"label": {
+							"resource_key": "structuretableRenameFields.field.label"
+						},
+						"width": 26,
+						"summary": true
+					},
+					"parameters": [
+						{
+							"parameter_ref": "new_name",
+							"label": {
+								"resource_key": "structuretableRenameFields.new_name.label"
+							},
+							"description": {
+								"resource_key": "structuretableRenameFields.new_name.desc"
+							},
+							"width": 26,
+							"edit_style": "inline",
+							"filterable": true,
+							"summary": true
+						},
+						{
+							"parameter_ref": "new_label",
+							"label": {
+								"default": "Label"
+							},
+							"width": 26,
+							"edit_style": "subpanel"
+						},
+						{
+							"parameter_ref": "new_type",
+							"label": {
+								"default": "Type"
+							},
+							"description": {
+								"default": "Select data type"
+							},
+							"width": 26,
+							"edit_style": "inline"
+						}
+					]
+				}
+			],
+			"group_info": [{
+				"id": "Tables",
+				"type": "panels",
+				"group_info": [
+					{
+						"id": "structuretableRenameFields-summary-panel",
+						"label": {
+							"default": "Configure Tables"
+						},
+						"type": "summaryPanel",
+						"group_info": [{
+							"id": "structuretableRenameFields",
+							"label": {
+								"default": "Tables"
+							},
+							"type": "columnSelection",
+							"parameter_refs": [
+								"structuretableRenameFields"
+							]
+						}]
+					}
+				]
+			}]
+		},
+		"dataset_metadata": {
+			"fields": fields
+		},
+		"resources": {
+			"structuretableRenameFields.rename.label": "Rename Columns",
+			"structuretableRenameFields.field.label": "Input name",
+			"structuretableRenameFields.new_name.label": "Output name",
+			"structuretableRenameFields.new_name.desc": "New field name"
 		}
 	}
 });
@@ -2471,6 +2678,285 @@ _defineConstant("STRUCTURETABLE_FILTERABLE_PROPS_INFO", {
 		"resources": {
 			"structureInlineDropdown.field.label": "Field",
 			"structureInlineDropdown.inline_dropdown.label": "Type"
+		}
+	}
+});
+_defineConstant("SUMMARY_PROPS_INFO", {
+	"title": "Group Type: controls",
+	"parameterDef": {
+		"current_parameters": {
+			"textfieldControlName": "textfieldPlaceholderText",
+			"numberfieldControlName": -1,
+			"structuretableSortOrder": [
+				[
+					"Cholesterol",
+					"Ascending"
+				]
+			],
+			"structuretableRenameFields": [
+				[
+					"Age",
+					"Age",
+					"",
+					"string"
+				],
+				[
+					"BP",
+					"BP-1",
+					"blood pressure",
+					""
+				]
+			]
+		},
+		"parameters": [
+			{
+				"id": "textfieldControlName",
+				"type": "string",
+				"default": "textfieldControlNamePlaceholderText",
+				"role": "new_column",
+				"required": true
+			},
+			{
+				"id": "numberfieldControlName",
+				"type": "integer",
+				"default": 0
+			},
+			{
+				"id": "structuretableSortOrder",
+				"type": "array[structuretableSortOrder]"
+			},
+			{
+				"id": "structuretableRenameFields",
+				"type": "map[string,structuretableRenameFields]",
+				"role": "column",
+				"default": []
+			}
+		],
+		"complex_types": [
+			{
+				"id": "structuretableSortOrder",
+				"key_definition": {
+					"id": "field",
+					"type": "string",
+					"role": "column",
+					"default": ""
+				},
+				"parameters": [{
+					"id": "structuretable_sort_order",
+					"enum": [
+						"Ascending",
+						"Descending"
+					],
+					"default": "Ascending"
+				}]
+			},
+			{
+				"id": "structuretableRenameFields",
+				"key_definition": {
+					"id": "field",
+					"type": "string",
+					"role": "column"
+				},
+				"parameters": [
+					{
+						"id": "new_name",
+						"type": "string",
+						"role": "new_column"
+					},
+					{
+						"id": "new_label",
+						"type": "string",
+						"default": ""
+					},
+					{
+						"id": "new_type",
+						"enum": [
+							"string",
+							"number",
+							"boolean",
+							"time",
+							"date"
+						],
+						"default": "string"
+					}
+				]
+			}
+		],
+		"uihints": {
+			"id": "PanelsPanel",
+			"parameter_info": [
+				{
+					"parameter_ref": "textfieldControlName",
+					"label": {
+						"default": "Textfield Control Name"
+					},
+					"description": {
+						"default": "Textfield test"
+					}
+				},
+				{
+					"parameter_ref": "numberfieldControlName",
+					"label": {
+						"default": "Numberfield Control Name"
+					},
+					"description": {
+						"default": "Numberfield test"
+					}
+				},
+				{
+					"parameter_ref": "structuretableSortOrder",
+					"required": true,
+					"label": {
+						"default": "Sort by"
+					},
+					"description": {
+						"default": "Use arrows to reorder the sorting priority",
+						"placement": "on_panel"
+					}
+				},
+				{
+					"parameter_ref": "structuretableRenameFields",
+					"label": {
+						"default": "Rename Field"
+					},
+					"description": {
+						"default": "Complex table control with inline edit and subpanel edit"
+					}
+				}
+			],
+			"complex_type_info": [
+				{
+					"complex_type_ref": "structuretableSortOrder",
+					"moveable_rows": true,
+					"key_definition": {
+						"parameter_ref": "field",
+						"width": 28,
+						"label": {
+							"resource_key": "structuretableSortOrder.field.label"
+						},
+						"summary": true
+					},
+					"parameters": [{
+						"parameter_ref": "structuretable_sort_order",
+						"width": 16,
+						"label": {
+							"resource_key": "structuretableSortOrder.sort_order.label"
+						},
+						"description": {
+							"resource_key": "structuretableSortOrder.sort_order.desc"
+						},
+						"control": "toggletext",
+						"value_icons": [
+							"/images/up-triangle.svg",
+							"/images/down-triangle.svg"
+						]
+					}]
+				},
+				{
+					"complex_type_ref": "structuretableRenameFields",
+					"label": {
+						"default": "Rename Subpanel"
+					},
+					"key_definition": {
+						"parameter_ref": "field",
+						"label": {
+							"resource_key": "structuretableRenameFields.field.label"
+						},
+						"width": 26,
+						"summary": true
+					},
+					"parameters": [
+						{
+							"parameter_ref": "new_name",
+							"label": {
+								"resource_key": "structuretableRenameFields.new_name.label"
+							},
+							"description": {
+								"resource_key": "structuretableRenameFields.new_name.desc"
+							},
+							"width": 26,
+							"edit_style": "inline",
+							"filterable": true,
+							"summary": true
+						},
+						{
+							"parameter_ref": "new_label",
+							"label": {
+								"default": "Label"
+							},
+							"width": 26,
+							"edit_style": "subpanel"
+						},
+						{
+							"parameter_ref": "new_type",
+							"label": {
+								"default": "Type"
+							},
+							"description": {
+								"default": "Select data type"
+							},
+							"width": 26,
+							"edit_style": "inline"
+						}
+					]
+				}
+			],
+			"group_info": [{
+				"id": "Tables",
+				"type": "panels",
+				"group_info": [
+					{
+						"id": "textnumberfields-summary-panel",
+						"label": {
+							"default": "Configure Fields"
+						},
+						"type": "summaryPanel",
+						"group_info": [{
+							"id": "Text Number Field",
+							"label": {
+								"default": "TextNumber"
+							},
+							"parameter_refs": [
+								"textfieldControlName",
+								"numberfieldControlName"
+							]
+						}]
+					},
+					{
+						"id": "structuretableRenameFields-summary-panel",
+						"label": {
+							"default": "Configure Tables"
+						},
+						"type": "summaryPanel",
+						"group_info": [{
+							"id": "structuretableRenameFields",
+							"label": {
+								"default": "Tables"
+							},
+							"type": "columnSelection",
+							"parameter_refs": [
+								"structuretableSortOrder",
+								"structuretableRenameFields"
+							]
+						}]
+					}
+				]
+			}]
+		},
+		"dataset_metadata": {
+			"fields": fields
+		},
+		"resources": {
+			"structuretableSortOrder.label": "Sort",
+			"structuretableSortOrder.field.label": "Field",
+			"structuretableSortOrder.sort_order.label": "Order",
+			"structuretableSortOrder.sort_order.desc": "Update sort order",
+			"structuretableSortOrder.sort_order.Ascending.label": "Ascending",
+			"structuretableSortOrder.sort_order.Descending.label": "Descending",
+			"structuretableRenameFields.rename.label": "Rename Columns",
+			"structuretableRenameFields.field.label": "Input name",
+			"structuretableRenameFields.new_name.label": "Output name",
+			"structuretableRenameFields.new_name.desc": "New field name"
 		}
 	}
 });

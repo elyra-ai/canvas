@@ -45,7 +45,7 @@ import {
 	NUMBER_GROUP_ERROR_PROPS_INFO,
 	VISIBLE_GROUP_PROPS_INFO,
 	ENABLED_GROUP_PROPS_INFO
-} from "../constants/conditions-constants.js";
+} from "../constants/conditions-documentation-constants.js";
 import { CommonProperties } from "common-canvas";
 import { Table } from "reactable";
 
@@ -138,7 +138,7 @@ class CommonPropertiesComponents extends React.Component {
 	}
 
 	render() {
-		const dropMenu = (<div id="conditions-menu" className="header__dropdown">
+		const dropMenu = (<div id="conditions-documentation-menu" className="header__dropdown">
 			<Dropdown
 				name="Navigation"
 				text="Navigation"
@@ -170,29 +170,29 @@ class CommonPropertiesComponents extends React.Component {
 			/>
 		</div>);
 
-		const navBar = (<div id="conditions-navbar">
-			<nav id="conditions-action-bar">
-				<ul className="properties-navbar-items">
-					<li className="properties-navbar-li">
-						<a id="conditions-title">WDP Common Properties Conditions</a>
+		const navBar = (<div id="conditions-documentation-navbar">
+			<nav id="conditions-documentation-action-bar">
+				<ul className="properties-documentation-navbar-items">
+					<li className="properties-documentation-navbar-li">
+						<a id="conditions-documentation-title">WDP Common Properties Conditions</a>
 					</li>
-					<li className="properties-navbar-li nav-divider">
-						<a className="conditions-nav-link" href="#/conditions#Conditions">Conditions</a>
+					<li className="properties-documentation-navbar-li nav-divider">
+						<a className="conditions-documentation-nav-link" href="#/conditions#Conditions">Conditions</a>
 					</li>
-					<li className="properties-navbar-li">
-						<a className="conditions-nav-link" href="#/conditions#SingleConditions">Single Conditions</a>
+					<li className="properties-documentation-navbar-li">
+						<a className="conditions-documentation-nav-link" href="#/conditions#SingleConditions">Single Conditions</a>
 					</li>
-					<li className="properties-navbar-li">
-						<a className="conditions-nav-link" href="#/conditions#GroupConditions">Group Conditions</a>
+					<li className="properties-documentation-navbar-li">
+						<a className="conditions-documentation-nav-link" href="#/conditions#GroupConditions">Group Conditions</a>
 					</li>
 				</ul>
 				{dropMenu}
 			</nav>
 		</div>);
 
-		const header = (<div id="main" className="properties-section-header">
-			<h1 className="properties-page-title">WDP Common Properties Conditions</h1>
-			<a className="properties-page-link"
+		const header = (<div id="main" className="properties-documentation-section-header">
+			<h1 className="properties-documentation-page-title">WDP Common Properties Conditions</h1>
+			<a className="properties-documentation-page-link"
 				href="https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/tree/master/canvas_modules/common-canvas"
 				target="_blank"
 			>
@@ -200,16 +200,16 @@ class CommonPropertiesComponents extends React.Component {
 			</a>
 		</div>);
 
-		const contentIntro = (<section id="Intro" className="section properties-content-intro-section">
-			<h2 className="properties-section-title">Introduction</h2>
+		const contentIntro = (<section id="Intro" className="section properties-documentation-content-intro-section">
+			<h2 className="properties-documentation-section-title">Introduction</h2>
 			<div className="section-description">
 				<p>Conditions define a set of specifications for evaluating parameter values.
 					The specifications support complex interdependency checking such as relationships
 					between multiple parameters (i.e. valid values for parameter 1 depend upon the value of parameter 2).
-					To create a condition for a control, create a JSON that adheres to the <a className="properties-page-intro-link"
-						href="https://github.ibm.com/NGP-TWC/wdp-pipeline-schemas/blob/master/common-pipeline/operators/conditions-v1-schema.json"
+					To create a condition for a control, create a JSON that adheres to the <a className="properties-documentation-page-intro-link"
+						href="https://github.ibm.com/NGP-TWC/wdp-pipeline-schemas/blob/master/common-pipeline/operators/conditions-documentation-v1-schema.json"
 					>Conditions schema</a>, and add it to the conditions array in the parameter definition&nbsp;
-					<a className="properties-page-intro-link" href="https://github.ibm.com/NGP-TWC/wdp-pipeline-schemas/blob/master/common-canvas/parameter-defs/parameter-defs-v1-schema.json">
+					<a className="properties-documentation-page-intro-link" href="https://github.ibm.com/NGP-TWC/wdp-pipeline-schemas/blob/master/common-canvas/parameter-defs/parameter-defs-v1-schema.json">
 					parameter definition</a> JSON.
 				</p>
 				<p>
@@ -263,8 +263,8 @@ class CommonPropertiesComponents extends React.Component {
 			{ Conditions: "cellNotEmpty", boolean: "no", string: "no", number: "no", stringArray: "no", doubleArray: <div> map: yes <br />array: no</div> }
 		];
 
-		const contentConditions = (<section id="Conditions" className="section conditions-content-overview-section">
-			<h2 className="properties-section-title">Conditions</h2>
+		const contentConditions = (<section id="Conditions" className="section conditions-documentation-content-overview-section">
+			<h2 className="properties-documentation-section-title">Conditions</h2>
 			<div className="section-description">
 				<p>There are three kinds of conditions:</p>
 				<ul>
@@ -287,8 +287,8 @@ class CommonPropertiesComponents extends React.Component {
 					A condition fails if it evaluates to false and an error or warning will be shown to indicate that the
 					user input did not pass the test. <br /> Below is a table that describes what control supports what conditions.
 				</p>
-				<div className="conditions-control-table-container">
-					<Table className="table conditions-control-table" id="conditions-control-table"
+				<div className="conditions-documentation-control-table-container">
+					<Table className="table conditions-documentation-control-table" id="conditions-documentation-control-table"
 						sortable={["Control"]}
 						columns={tableConditionsHeader}
 						data={tableConditionsData}
@@ -297,8 +297,8 @@ class CommonPropertiesComponents extends React.Component {
 				<p>Another way of understanding the above table is by looking at the data type that a
 					control handles and map it to the supported conditions.
 				</p>
-				<div className="conditions-control-table-container">
-					<Table className="table conditions-control-table" id="conditions-control-table"
+				<div className="conditions-documentation-control-table-container">
+					<Table className="table conditions-documentation-control-table" id="conditions-documentation-control-table"
 						sortable={["Conditions"]}
 						columns={tableConditionsDataTypeHeader}
 						data={tableConditionsDataTypeData}
@@ -310,15 +310,15 @@ class CommonPropertiesComponents extends React.Component {
 			</div>
 		</section>);
 
-		const contentSingleConditions = (<section id="SingleConditions" className="section conditions-content-single-section">
-			<h2 className="properties-section-title">Single Conditions</h2>
+		const contentSingleConditions = (<section id="SingleConditions" className="section conditions-documentation-content-single-section">
+			<h2 className="properties-documentation-section-title">Single Conditions</h2>
 			<div className="section-description">
 				<p>Single conditions validate the user's input from one control.
 					Only the <span className="highlight">validation</span> condition type is supported in single conditions.
 				</p>
 			</div>
-			<div className="properties-section-content">
-				<div id="panels-controls-component">
+			<div className="properties-documentation-section-content">
+				<div className="conditions-documentation-panels-controls-component">
 					<h3 id="--textfield" className="section-subtitle">textfield</h3>
 					<p>A text field control is of type <span className="highlight">string</span>, which supports all the
 						conditions except for <span className="highlight">greaterThan</span> and <span className="highlight">lessThan</span>.
@@ -366,7 +366,7 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div id="panels-controls-component">
+				<div className="conditions-documentation-panels-controls-component">
 					<h3 id="--textarea" className="section-subtitle">textarea</h3>
 					<p>Since the textarea control is of type <span className="highlight">[string]</span>,
 						the <span className="highlight">equals</span> and <span className="highlight">notEquals</span> conditions
@@ -406,7 +406,7 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div id="panels-controls-component">
+				<div className="conditions-documentation-panels-controls-component">
 					<h3 id="--password" className="section-subtitle">password</h3>
 					<p>Although a passwordfield control is of type <span className="highlight">string</span>, it only supports
 						the conditions <span className="highlight">isEmpty</span> and <span className="highlight">isNotEmpty</span>.
@@ -428,7 +428,7 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div id="panels-controls-component">
+				<div className="conditions-documentation-panels-controls-component">
 					<h3 id="--expression" className="section-subtitle">expression</h3>
 					<p>An expression control is of type <span className="highlight">string</span> that can span
 						multiple lines, represented by a newline character (\n) in the string returned.
@@ -456,7 +456,7 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div id="panels-controls-component">
+				<div className="conditions-documentation-panels-controls-component">
 					<h3 id="--numberfield" className="section-subtitle">numberfield</h3>
 					<p>A numberfield control is of type <span className="highlight">number</span>. The following example
 						shows a nested condition.
@@ -496,7 +496,7 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div id="panels-controls-component">
+				<div className="conditions-documentation-panels-controls-component">
 					<h3 id="--checkbox" className="section-subtitle">checkbox</h3>
 					<p>A checkbox control is of type <span className="highlight">boolean</span>.
 						To check whether it’s checked, <span className="highlight">empty/isNotEmpty</span>&nbsp;
@@ -533,7 +533,7 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div id="panels-controls-component">
+				<div className="conditions-documentation-panels-controls-component">
 					<h3 id="--checkboxset" className="section-subtitle">checkboxset</h3>
 					<p>The checkboxset control is of type <span className="highlight">[string]</span>.
 						The below example will show an error if both integer and string are selected. This can be
@@ -574,7 +574,7 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div id="panels-controls-component">
+				<div className="conditions-documentation-panels-controls-component">
 					<h3 id="--radioset" className="section-subtitle">radioset</h3>
 					<p> A radio set is of type <span className="highlight">string</span>.
 						The <span className="highlight">equals</span> and <span className="highlight">notEquals</span> conditions
@@ -620,10 +620,10 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div id="panels-controls-component">
+				<div className="conditions-documentation-panels-controls-component">
 					<h3 id="--oneofselect" className="section-subtitle">oneofselect</h3>
 					<p>The oneofselect control is of type <span className="highlight">string</span>.
-						Conditions for oneofselect are very similar to a <a className="properties-page-intro-link" href="#/conditions#--radioset">
+						Conditions for oneofselect are very similar to a <a className="properties-documentation-page-intro-link" href="#/conditions#--radioset">
 						radioset</a> control. When the radioset control does not have a default value, the control
 						will show a <span className="highlight">Select...</span> option. With no default value,
 						a <span className="highlight">isNotEmpty</span> condition can be used to verify an option is selected.
@@ -661,7 +661,7 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div id="panels-controls-component">
+				<div className="conditions-documentation-panels-controls-component">
 					<h3 id="--someofselect" className="section-subtitle">someofselect</h3>
 					<p>A someofselect control is of type <span className="highlight">[string]</span>.
 						The below example will show an error if no values are selected.
@@ -699,10 +699,10 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div id="panels-controls-component">
+				<div className="conditions-documentation-panels-controls-component">
 					<h3 id="--selectcolumn" className="section-subtitle">selectcolumn</h3>
 					<p>A selectcolumn control is of type <span className="highlight">string</span>. The conditions supported
-						for this control are the same as <a className="properties-page-intro-link" href="#/conditions#--oneofselect">
+						for this control are the same as <a className="properties-documentation-page-intro-link" href="#/conditions#--oneofselect">
 						oneofselect</a>. The difference is that the <span className="highlight">value</span> the conditions compared to
 						must be defined in the <span className="highlight">dataset_metadata</span>.
 					</p>
@@ -721,9 +721,9 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div id="panels-controls-component">
+				<div className="conditions-documentation-panels-controls-component">
 					<h3 id="--selectcolumns" className="section-subtitle">selectcolumns</h3>
-					<p>Similar to the <a className="properties-page-intro-link" href="#/conditions#--someofselect">
+					<p>Similar to the <a className="properties-documentation-page-intro-link" href="#/conditions#--someofselect">
 						someofselect</a> control, the selectcolumns control is also of type <span className="highlight">[string]</span>.
 					</p>
 					<div className="section-row">
@@ -741,7 +741,7 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div id="panels-controls-component">
+				<div className="conditions-documentation-panels-controls-component">
 					<h3 id="--structuretable" className="section-subtitle">structuretable</h3>
 					<p>A structuretable is a complex type control of type <span className="highlight">[[primitive]]</span>.
 						The double array data type will behave the same as single arrays for the following conditions: <span className="highlight">isEmpty</span>,&nbsp;
@@ -813,13 +813,13 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div id="panels-controls-component">
+				<div className="conditions-documentation-panels-controls-component">
 					<h3 id="--structurelisteditor" className="section-subtitle">structurelisteditor</h3>
 					<p>The structurelisteditor control is of type <span className="highlight">[[string]]</span>.
 						Although this is a complex type control, the <span className="highlight">colNotExists</span> and&nbsp;
 						<span className="highlight">cellNotEmpty</span> conditions are not supported for this control because
 						structurelisteditor does not support map structures. Other supported conditions for this control behave
-						the same as a <a className="properties-page-intro-link" href="#/conditions#--structuretable">structuretable</a> control.
+						the same as a <a className="properties-documentation-page-intro-link" href="#/conditions#--structuretable">structuretable</a> control.
 					</p>
 					<div className="section-row">
 						<div className="section-column">
@@ -857,8 +857,8 @@ class CommonPropertiesComponents extends React.Component {
 			</div>
 		</section>);
 
-		const contentGroupConditions = (<section id="GroupConditions" className="section conditions-content-group-section">
-			<h2 className="properties-section-title">Group Conditions</h2>
+		const contentGroupConditions = (<section id="GroupConditions" className="section conditions-documentation-content-group-section">
+			<h2 className="properties-documentation-section-title">Group Conditions</h2>
 			<div className="section-description">
 				<p>Group conditions validate the user's input from two controls. The following conditions are supported in group validations:
 					<li>greaterThan/lessThan</li>
@@ -879,8 +879,8 @@ class CommonPropertiesComponents extends React.Component {
 					If a control has both single and group conditions, group conditions should be placed before single conditions in the array.
 				</p>
 			</div>
-			<div className="properties-section-content">
-				<div id="panels-controls-component">
+			<div className="properties-documentation-section-content">
+				<div className="conditions-documentation-panels-controls-component">
 					<h3 id="--group_validation_conditions" className="section-subtitle">Validation Conditions</h3>
 					<p>The following example shows a group condition for two textfield controls. If the value from both controls
 						are equal, an error will be shown. Notice the different error and warning
@@ -931,7 +931,7 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div id="panels-controls-component">
+				<div className="conditions-documentation-panels-controls-component">
 					<h3 id="--visible" className="section-subtitle">Visible Conditions</h3>
 					<p>Up until now, all the examples shown are using <span className="highlight">validation</span> condition type.
 						With <span className="highlight">visible</span> conditions, the value of a control can be used to
@@ -958,9 +958,9 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div id="panels-controls-component">
+				<div className="conditions-documentation-panels-controls-component">
 					<h3 id="--enabled" className="section-subtitle">Enabled Conditions</h3>
-					<p>Similar to <a className="properties-page-intro-link" href="#/conditions#--visible">
+					<p>Similar to <a className="properties-documentation-page-intro-link" href="#/conditions#--visible">
 						visible</a> conditions, the <span className="highlight">enabled</span> condition will disable and enable
 						controls.
 					</p>
@@ -987,7 +987,7 @@ class CommonPropertiesComponents extends React.Component {
 			</div>
 		</section>);
 
-		const content = (<div id="conditions-content">
+		const content = (<div id="conditions-documentation-content">
 			{contentIntro}
 			{contentConditions}
 			{contentSingleConditions}
@@ -995,7 +995,7 @@ class CommonPropertiesComponents extends React.Component {
 		</div>);
 
 		return (
-			<div id="conditions-container">
+			<div id="conditions-documentation-container">
 				{navBar}
 				{header}
 				{content}

@@ -1142,31 +1142,6 @@
         ]
       },
       {
-        "complex_type_ref": "structuretableSortOrder",
-        "moveable_rows": true,
-        "key_definition": {
-          "parameter_ref": "field",
-          "width": 28,
-          "label": {
-            "resource_key": "structuretableSortOrder.field.label"
-          }
-        },
-        "parameters": [
-          {
-            "parameter_ref": "structuretable_sort_order",
-            "width": 16,
-            "label": {
-              "resource_key": "structuretableSortOrder.sort_order.label"
-            },
-            "control": "toggletext",
-            "value_icons": [
-              "/images/up-triangle.svg",
-              "/images/down-triangle.svg"
-            ]
-          }
-        ]
-      },
-      {
         "complex_type_ref": "expressionCellTable",
         "row_selection": "single",
         "parameters": [

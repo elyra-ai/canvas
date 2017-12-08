@@ -13,12 +13,15 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Dropdown } from "ap-components-react/dist/ap-components-react";
 import {
+	CONTAINERS_RIGHT_FLYOUT_PROPERTIES,
+	CONTAINERS_RIGHT_FLYOUT_CANVAS,
 	CONTROLS_PROPS_INFO,
 	TABS_PROPS_INFO,
 	SUBTABS_PROPS_INFO,
 	PANELS_PROPS_INFO,
 	PANEL_SELECTOR_PROPS_INFO,
 	CHECKBOX_PANEL_PROPS_INFO,
+	SUMMARY_PANEL_PROPS_INFO,
 	COLUMNSELECTION_PROPS_INFO,
 	TEXTFIELD_PROPS_INFO,
 	TEXTAREA_PROPS_INFO,
@@ -47,18 +50,22 @@ import {
 	STRUCTURELISTEDITOR_PROPS_INFO,
 	STRUCTURETABLE_MOVEABLE_PROPS_INFO,
 	STRUCTURETABLE_SORTABLE_PROPS_INFO,
-	STRUCTURETABLE_FILTERABLE_PROPS_INFO
-} from "../constants/properties-constants.js";
+	STRUCTURETABLE_FILTERABLE_PROPS_INFO,
+	SUMMARY_PROPS_INFO
+} from "../constants/properties-documentation-constants.js";
 import { CommonProperties } from "common-canvas";
 
 class CommonPropertiesComponents extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			showRightFlyout: false,
+			rightFlyoutContent: null
 		};
 
 		this.jsonReplacer = this.jsonReplacer.bind(this);
 		this.onMenuDropdownSelect = this.onMenuDropdownSelect.bind(this);
+		this.setRightFlyoutState = this.setRightFlyoutState.bind(this);
 	}
 
 	componentDidMount() {
@@ -82,6 +89,14 @@ class CommonPropertiesComponents extends React.Component {
 	onMenuDropdownSelect(evt, obj) {
 		location.href = `${"#/properties#" + obj.selected}`;
 		document.querySelector(`#${obj.selected}`).scrollIntoView();
+	}
+
+	setRightFlyoutState(content) {
+		this.setState({
+			showRightFlyout: content !== this.state.rightFlyoutContent ||
+				(content === this.state.rightFlyoutContent && !this.state.showRightFlyout),
+			rightFlyoutContent: content
+		});
 	}
 
 	jsonReplacer(json, type, custom) {
@@ -131,8 +146,24 @@ class CommonPropertiesComponents extends React.Component {
 		return JSON.stringify(json, jsonReplacer, 2);
 	}
 
+	renderRightFlyoutButton(content) {
+		let buttonText = "View in Flyout";
+		if (this.state.showRightFlyout && content === this.state.rightFlyoutContent) {
+			buttonText = "Close Flyout";
+		}
+		const openFlyoutButton = (<button
+			className="properties-documentation-show-flyout-button button"
+			type="button"
+			onClick={() => this.setRightFlyoutState(content)}
+		>
+			{buttonText}
+		</button>);
+
+		return openFlyoutButton;
+	}
+
 	render() {
-		const dropMenu = (<div id="properties-menu" className="header__dropdown">
+		const dropMenu = (<div id="properties-documentation-menu" className="header__dropdown">
 			<Dropdown
 				name="Navigation"
 				text="Navigation"
@@ -144,6 +175,7 @@ class CommonPropertiesComponents extends React.Component {
 					"--subtabs",
 					"--panelSelector",
 					"--checkboxPanel",
+					"--summaryPanel",
 					"--columnSelection",
 					"Controls",
 					"--textfield",
@@ -164,8 +196,10 @@ class CommonPropertiesComponents extends React.Component {
 					"--structurelisteditor",
 					"--edit-style",
 					"--moveable_rows",
+					"--row_selection",
 					"--sortable",
-					"--filterable"
+					"--filterable",
+					"--summary"
 				]}
 				compact
 				dark
@@ -174,29 +208,29 @@ class CommonPropertiesComponents extends React.Component {
 			/>
 		</div>);
 
-		const navBar = (<div id="properties-navbar">
-			<nav id="properties-action-bar">
-				<ul className="properties-navbar-items">
-					<li className="properties-navbar-li">
-						<a id="properties-title">WDP Common Properties Components</a>
+		const navBar = (<div className="properties-documentation-navbar-items">
+			<nav id="properties-documentation-action-bar">
+				<ul className="properties-documentation-navbar-items">
+					<li className="properties-documentation-navbar-li">
+						<a id="properties-documentation-title">WDP Common Properties Components</a>
 					</li>
-					<li className="properties-navbar-li nav-divider">
-						<a className="properties-nav-link" href="#/properties#Groups">Groups</a>
+					<li className="properties-documentation-navbar-li nav-divider">
+						<a className="properties-documentation-nav-link" href="#/properties#Groups">Groups</a>
 					</li>
-					<li className="properties-navbar-li">
-						<a className="properties-nav-link" href="#/properties#Controls">Controls</a>
+					<li className="properties-documentation-navbar-li">
+						<a className="properties-documentation-nav-link" href="#/properties#Controls">Controls</a>
 					</li>
-					<li className="properties-navbar-li">
-						<a className="properties-nav-link" href="#/properties#Complex">Complex Types</a>
+					<li className="properties-documentation-navbar-li">
+						<a className="properties-documentation-nav-link" href="#/properties#Complex">Complex Types</a>
 					</li>
 				</ul>
 				{dropMenu}
 			</nav>
 		</div>);
 
-		const header = (<div id="main" className="properties-section-header">
-			<h1 className="properties-page-title">WDP Common Properties Components</h1>
-			<a className="properties-page-link"
+		const header = (<div id="main" className="properties-documentation-section-header">
+			<h1 className="properties-documentation-page-title">WDP Common Properties Components</h1>
+			<a className="properties-documentation-page-link"
 				href="https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/tree/master/canvas_modules/common-canvas"
 				target="_blank"
 			>
@@ -204,16 +238,16 @@ class CommonPropertiesComponents extends React.Component {
 			</a>
 		</div>);
 
-		const contentIntro = (<section id="Intro" className="section properties-content-intro-section">
-			<h2 className="properties-section-title">Introduction</h2>
+		const contentIntro = (<section id="Intro" className="section properties-documentation-content-intro-section">
+			<h2 className="properties-documentation-section-title">Introduction</h2>
 			<div className="section-description">
 				<p>To create UIs based on the WDP Common Properties Components, a JSON adhering to
-					the <a className="properties-page-intro-link"
+					the <a className="properties-documentation-page-intro-link"
 						href="https://github.ibm.com/NGP-TWC/wdp-pipeline-schemas/tree/master/common-canvas/parameter-defs"
 					>Parameter Definition Schema</a> has to be provided. The JSON contains parameter definitions, uihints,
 					dataset_metadata, etc. The data in these sections is used to generate the UI. Certain parameter types
 					translate into specific controls. The control type can be overriden in the uihints section, which follows
-					the <a className="properties-page-intro-link"
+					the <a className="properties-documentation-page-intro-link"
 						href="https://github.ibm.com/NGP-TWC/wdp-pipeline-schemas/blob/master/common-pipeline/operators/uihints-v1-schema.json"
 					>UI Hints schema
 					</a>. In addition, uihints are used to group UI controls.
@@ -224,8 +258,39 @@ class CommonPropertiesComponents extends React.Component {
 			</div>
 		</section>);
 
-		const contentPanels = (<section id="Groups" className="section properties-content-panels-section">
-			<h2 className="properties-section-title">Groups</h2>
+		const contentContainer = (<section id="Container" className="section properties-documentation-content-container-section">
+			<h2 className="properties-documentation-section-title">ContainerType</h2>
+			<div className="section-description">
+				<p>The <span className="highlight">containerType</span> property in CommonProperties allows you to specify which
+					container the properties editor will rendered in. By default, a <span className="highlight">Modal</span> dialog will be rendered.
+					By specifying a <span className="highlight">Custom</span> containerType, the properties editor will be rendered in
+					a container that it will be enclosed in.
+				</p>
+				<p>For example, CommonCanvas provides an optional right-flyout div that may be used to display the properties editor.
+					To use this, create a CommonProperties object with <span className="highlight">containerType</span> set
+					to <span className="highlight">Custom</span> and <span className="highlight">rightFlyout</span> set to true.
+				</p>
+				<pre className="json-block">
+					{CONTAINERS_RIGHT_FLYOUT_PROPERTIES}
+				</pre>
+				<p>In the CommonCanvas object, pass the CommonProperties object into the <span className="highlight">rightFlyoutContent</span>
+					&nbsp;property.</p>
+				<pre className="json-block">
+					{CONTAINERS_RIGHT_FLYOUT_CANVAS}
+				</pre>
+				<p>For more information with using CommonCanvas right-flyout for the properties editor, refer to the documentation in the&nbsp;
+					<a className="properties-documentation-page-intro-link"
+						href={"https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/wiki/3.0-Common-properties-documentation-documentation" +
+						"#using-commonproperties-documentation-in-commoncanvas-right-flyout-panel"}
+					>
+						Common Properties wiki
+					</a>.
+				</p>
+			</div>
+		</section>);
+
+		const contentPanels = (<section id="Groups" className="section properties-documentation-content-panels-section">
+			<h2 className="properties-documentation-section-title">Groups</h2>
 			<div className="section-description">
 				<p>Every parameter definition needs to have a <span className="highlight">group_info</span> section
 					to define how the UI elements are grouped. The <span className="highlight">type</span> attribute
@@ -233,8 +298,8 @@ class CommonPropertiesComponents extends React.Component {
 					type of the UI container.
 				</p>
 			</div>
-			<div className="properties-section-content">
-				<div id="panels-controls-component">
+			<div className="properties-documentation-section-content">
+				<div className="properties-documentation-panels-controls-component">
 					<h3 id="--controls" className="section-subtitle">controls</h3>
 					<p>With the default type <span className="highlight">controls</span>,
 						the children elements will be displayed in a vertical layout.
@@ -246,6 +311,7 @@ class CommonPropertiesComponents extends React.Component {
 								propertiesInfo={CONTROLS_PROPS_INFO}
 								containerType="Custom"
 							/>
+							{this.renderRightFlyoutButton(CONTROLS_PROPS_INFO)}
 						</div>
 						<div className="section-column section-column-code">
 							<pre className="json-block">
@@ -254,7 +320,7 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div id="panels-controls-component">
+				<div className="properties-documentation-panels-controls-component">
 					<h3 id="--panels" className="section-subtitle">panels</h3>
 					<p>To create a padded grouping of controls, use type <span className="highlight">panels</span>.
 						The default padding is set to 8px.</p>
@@ -266,6 +332,7 @@ class CommonPropertiesComponents extends React.Component {
 									propertiesInfo={PANELS_PROPS_INFO}
 									containerType="Custom"
 								/>
+								{this.renderRightFlyoutButton(PANELS_PROPS_INFO)}
 							</div>
 							<div className="section-column section-column-code">
 								<pre className="json-block">
@@ -275,12 +342,12 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div id="panels-controls-component">
+				<div className="properties-documentation-panels-controls-component">
 					<h3 id="--tabs" className="section-subtitle">tabs</h3>
 					<p>Multiple objects in the <span className="highlight">group_info</span> array will be rendered in separate tabs.
 						Each object in the <span className="highlight">group_info</span> array must have a
 						unique <span className="highlight">id</span>. To create sub tabs for nested group_info objects, see
-						type <a className="properties-page-intro-link" href="#/properties#--subtabs">subTabs</a>.</p>
+						type <a className="properties-documentation-page-intro-link" href="#/properties#--subtabs">subTabs</a>.</p>
 					<div className="section-row">
 						<div className="section-row">
 							<div className="section-column">
@@ -289,6 +356,7 @@ class CommonPropertiesComponents extends React.Component {
 									propertiesInfo={TABS_PROPS_INFO}
 									containerType="Custom"
 								/>
+								{this.renderRightFlyoutButton(TABS_PROPS_INFO)}
 							</div>
 							<div className="section-column section-column-code">
 								<pre className="json-block">
@@ -298,7 +366,7 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div id="panels-controls-component">
+				<div className="properties-documentation-panels-controls-component">
 					<h3 id="--subtabs" className="section-subtitle">subTabs</h3>
 					<p>To create vertical sub-tabs, set the <span className="highlight">type</span> to <span className="highlight">subTabs</span> and
 						add a nested <span className="highlight">group_info</span> array with the objects
@@ -311,6 +379,7 @@ class CommonPropertiesComponents extends React.Component {
 									propertiesInfo={SUBTABS_PROPS_INFO}
 									containerType="Custom"
 								/>
+								{this.renderRightFlyoutButton(SUBTABS_PROPS_INFO)}
 							</div>
 							<div className="section-column section-column-code">
 								<pre className="json-block">
@@ -320,10 +389,10 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div id="panels-controls-component">
+				<div className="properties-documentation-panels-controls-component">
 					<h3 id="--panelSelector" className="section-subtitle">panelSelector</h3>
 					<p>To show panels based on the selection in
-						a <a className="properties-page-intro-link" href="#/properties#--radioset">radio set
+						a <a className="properties-documentation-page-intro-link" href="#/properties#--radioset">radio set
 						</a>,
 						add a nested <span className="highlight">group_info</span> object of
 						type <span className="highlight">panelSelector</span> and in there, add
@@ -337,6 +406,7 @@ class CommonPropertiesComponents extends React.Component {
 									propertiesInfo={PANEL_SELECTOR_PROPS_INFO}
 									containerType="Custom"
 								/>
+								{this.renderRightFlyoutButton(PANEL_SELECTOR_PROPS_INFO)}
 							</div>
 							<div className="section-column section-column-code">
 								<pre className="json-block">
@@ -346,7 +416,7 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div id="panels-controls-component">
+				<div className="properties-documentation-panels-controls-component">
 					<h3 id="--checkboxPanel" className="section-subtitle">checkboxPanel</h3>
 					<p>A panel with a controlling checkbox that enables child controls when selected
 						and disables child controls when deselected.</p>
@@ -358,6 +428,7 @@ class CommonPropertiesComponents extends React.Component {
 									propertiesInfo={CHECKBOX_PANEL_PROPS_INFO}
 									containerType="Custom"
 								/>
+								{this.renderRightFlyoutButton(CHECKBOX_PANEL_PROPS_INFO)}
 							</div>
 							<div className="section-column section-column-code">
 								<pre className="json-block">
@@ -367,9 +438,37 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div id="panels-controls-component">
+				<div className="properties-documentation-panels-controls-component">
+					<h3 id="--summaryPanel" className="section-subtitle">summaryPanel</h3>
+					<p>A panel that displays a link that opens a wide flyout with the specified controls and
+						optionally a summary of column(s) from the control(s). The summary of columns to display is configured by setting
+						the <a className="properties-documentation-page-intro-link" href="#/properties#--summary">summary</a> attribute
+						in the parameters of complex types control.
+					</p>
+					<p>The summaryPanel is only available in a right flyout container. As shown below, the control will
+						display as is in a Modal container.
+					</p>
+					<div className="section-row">
+						<div className="section-row">
+							<div className="section-column">
+								<CommonProperties
+									showPropertiesDialog
+									propertiesInfo={SUMMARY_PANEL_PROPS_INFO}
+									containerType="Custom"
+								/>
+								{this.renderRightFlyoutButton(SUMMARY_PANEL_PROPS_INFO)}
+							</div>
+							<div className="section-column section-column-code">
+								<pre className="json-block">
+									{this.jsonReplacer(SUMMARY_PANEL_PROPS_INFO.parameterDef, "panel")}
+								</pre>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div className="properties-documentation-panels-controls-component">
 					<h3 id="--columnSelection" className="section-subtitle">columnSelection</h3>
-					<p>To group multiple <a className="properties-page-intro-link" href="#/properties#--selectcolumns">
+					<p>To group multiple <a className="properties-documentation-page-intro-link" href="#/properties#--selectcolumns">
 							selectcolumns
 					</a> controls, use type <span className="highlight">columnSelection</span>. Having multiple controls in
 						a <span className="highlight">columnSelection</span> let the controls share a
@@ -384,6 +483,7 @@ class CommonPropertiesComponents extends React.Component {
 									propertiesInfo={COLUMNSELECTION_PROPS_INFO}
 									containerType="Custom"
 								/>
+								{this.renderRightFlyoutButton(COLUMNSELECTION_PROPS_INFO)}
 							</div>
 							<div className="section-column section-column-code">
 								<pre className="json-block">
@@ -396,12 +496,12 @@ class CommonPropertiesComponents extends React.Component {
 			</div>
 		</section>);
 
-		const contentControls = (<section id="Controls" className="section properties-content-controls-section">
-			<h2 className="properties-section-title">Controls</h2>
+		const contentControls = (<section id="Controls" className="section properties-documentation-content-controls-section">
+			<h2 className="properties-documentation-section-title">Controls</h2>
 			<p className="section-description">The following controls are supported in the Common Properties editor.
 				The type of a control is determined by the <span className="highlight">type</span> of a parameter.</p>
-			<div className="properties-section-content">
-				<div id="panels-controls-component">
+			<div className="properties-documentation-section-content">
+				<div className="properties-documentation-panels-controls-component">
 					<h3 id="--textfield" className="section-subtitle">textfield</h3>
 					<p>A single line editable text field is rendered for a parameter of <span className="highlight">type</span> string.
 						This is the default.</p>
@@ -412,6 +512,7 @@ class CommonPropertiesComponents extends React.Component {
 								propertiesInfo={TEXTFIELD_PROPS_INFO}
 								containerType="Custom"
 							/>
+							{this.renderRightFlyoutButton(TEXTFIELD_PROPS_INFO)}
 						</div>
 						<div className="section-column section-column-code">
 							<pre className="json-block">
@@ -420,7 +521,7 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div id="panels-controls-component">
+				<div className="properties-documentation-panels-controls-component">
 					<h3 id="--textarea" className="section-subtitle">textarea</h3>
 					<p>A multi-line text area is rendered for a parameter of <span className="highlight">type</span> string or array[string].</p>
 					<div className="section-row">
@@ -430,6 +531,7 @@ class CommonPropertiesComponents extends React.Component {
 								propertiesInfo={TEXTAREA_PROPS_INFO}
 								containerType="Custom"
 							/>
+							{this.renderRightFlyoutButton(TEXTAREA_PROPS_INFO)}
 						</div>
 						<div className="section-column section-column-code">
 							<pre className="json-block">
@@ -438,7 +540,7 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div id="panels-controls-component">
+				<div className="properties-documentation-panels-controls-component">
 					<h3 id="--password" className="section-subtitle">password</h3>
 					<p>A masked single line text field is rendered for a parameter of <span className="highlight">type</span> password.</p>
 					<div className="section-row">
@@ -448,6 +550,7 @@ class CommonPropertiesComponents extends React.Component {
 								propertiesInfo={PASSWORD_FIELD_PROPS_INFO}
 								containerType="Custom"
 							/>
+							{this.renderRightFlyoutButton(PASSWORD_FIELD_PROPS_INFO)}
 						</div>
 						<div className="section-column section-column-code">
 							<pre className="json-block">
@@ -456,7 +559,7 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div id="panels-controls-component">
+				<div className="properties-documentation-panels-controls-component">
 					<h3 id="--expression" className="section-subtitle">expression</h3>
 					<p>An expression editing field is rendered for a parameter of <span className="highlight">type</span> string
 						and <span className="highlight">role</span> expression.
@@ -471,6 +574,7 @@ class CommonPropertiesComponents extends React.Component {
 								propertiesInfo={EXPRESSION_PROPS_INFO}
 								containerType="Custom"
 							/>
+							{this.renderRightFlyoutButton(EXPRESSION_PROPS_INFO)}
 						</div>
 						<div className="section-column section-column-code">
 							<pre className="json-block">
@@ -479,7 +583,7 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div id="panels-controls-component">
+				<div className="properties-documentation-panels-controls-component">
 					<h3 id="--numberfield" className="section-subtitle">numberfield</h3>
 					<p>A numeric text field is rendered for a parameter of <span className="highlight">type</span> number.</p>
 					<div className="section-row">
@@ -489,6 +593,7 @@ class CommonPropertiesComponents extends React.Component {
 								propertiesInfo={NUMBERFIELD_PROPS_INFO}
 								containerType="Custom"
 							/>
+							{this.renderRightFlyoutButton(NUMBERFIELD_PROPS_INFO)}
 						</div>
 						<div className="section-column section-column-code">
 							<pre className="json-block">
@@ -506,6 +611,7 @@ class CommonPropertiesComponents extends React.Component {
 								propertiesInfo={NUMBERFIELD_GENERATOR_PROPS_INFO}
 								containerType="Custom"
 							/>
+							{this.renderRightFlyoutButton(NUMBERFIELD_GENERATOR_PROPS_INFO)}
 						</div>
 						<div className="section-column section-column-code">
 							<pre className="json-block">
@@ -520,7 +626,7 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div id="panels-controls-component">
+				<div className="properties-documentation-panels-controls-component">
 					<h3 id="--checkbox" className="section-subtitle">checkbox</h3>
 					<p>A checkbox control is rendered for a parameter of <span className="highlight">type</span> boolean.
 						The value in the <span className="highlight">enum</span> array
@@ -532,6 +638,7 @@ class CommonPropertiesComponents extends React.Component {
 								propertiesInfo={CHECKBOX_SINGLE_PROPS_INFO}
 								containerType="Custom"
 							/>
+							{this.renderRightFlyoutButton(CHECKBOX_SINGLE_PROPS_INFO)}
 						</div>
 						<div className="section-column section-column-code">
 							<pre className="json-block">
@@ -540,11 +647,11 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div id="panels-controls-component">
+				<div className="properties-documentation-panels-controls-component">
 					<h3 id="--checkboxset" className="section-subtitle">checkboxset</h3>
 					<p>For parameters of <span className="highlight">type</span> array[string] with fewer than five elements,
 						a checkboxset is rendered. For five or more elements,
-						a <a className="properties-page-intro-link" href="#/properties#--someofselect">
+						a <a className="properties-documentation-page-intro-link" href="#/properties#--someofselect">
 								someofselect
 						</a> control is rendered.</p>
 					<div className="section-row">
@@ -554,6 +661,7 @@ class CommonPropertiesComponents extends React.Component {
 								propertiesInfo={CHECKBOX_SET_PROPS_INFO}
 								containerType="Custom"
 							/>
+							{this.renderRightFlyoutButton(CHECKBOX_SET_PROPS_INFO)}
 						</div>
 						<div className="section-column section-column-code">
 							<pre className="json-block">
@@ -562,10 +670,10 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div id="panels-controls-component">
+				<div className="properties-documentation-panels-controls-component">
 					<h3 id="--radioset" className="section-subtitle">radioset</h3>
 					<p> A radio set where a parameter value is selected from up to four options.
-						For five or more options, a <a className="properties-page-intro-link" href="#/properties#--oneofselect">
+						For five or more options, a <a className="properties-documentation-page-intro-link" href="#/properties#--oneofselect">
 						oneofselect
 						</a> control is rendered.</p>
 					<div className="section-row">
@@ -575,6 +683,7 @@ class CommonPropertiesComponents extends React.Component {
 								propertiesInfo={RADIOSET_HORIZONTAL_PROPS_INFO}
 								containerType="Custom"
 							/>
+							{this.renderRightFlyoutButton(RADIOSET_HORIZONTAL_PROPS_INFO)}
 						</div>
 						<div className="section-column section-column-code">
 							<pre className="json-block">
@@ -591,6 +700,7 @@ class CommonPropertiesComponents extends React.Component {
 								propertiesInfo={RADIOSET_VERTICAL_PROPS_INFO}
 								containerType="Custom"
 							/>
+							{this.renderRightFlyoutButton(RADIOSET_VERTICAL_PROPS_INFO)}
 						</div>
 						<div className="section-column section-column-code">
 							<pre className="json-block">
@@ -605,11 +715,11 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div id="panels-controls-component">
+				<div className="properties-documentation-panels-controls-component">
 					<h3 id="--oneofselect" className="section-subtitle">oneofselect</h3>
 					<p>A dropdown list control is rendered for a parameter with an <span className="highlight">enum</span> list
 						with five or more elements. For fewer than five elements,
-						a <a className="properties-page-intro-link" href="#/properties#--radioset">
+						a <a className="properties-documentation-page-intro-link" href="#/properties#--radioset">
 						radioset
 						</a> control is rendered.</p>
 					<div className="section-row">
@@ -619,6 +729,7 @@ class CommonPropertiesComponents extends React.Component {
 								propertiesInfo={ONEOFSELECT_PROPS_INFO}
 								containerType="Custom"
 							/>
+							{this.renderRightFlyoutButton(ONEOFSELECT_PROPS_INFO)}
 						</div>
 						<div className="section-column section-column-code">
 							<pre className="json-block">
@@ -626,9 +737,9 @@ class CommonPropertiesComponents extends React.Component {
 							</pre>
 						</div>
 					</div>
-					<p>A <a className="properties-page-intro-link" href="#/properties#--oneofselect">
+					<p>A <a className="properties-documentation-page-intro-link" href="#/properties#--oneofselect">
 						oneofselect
-					</a> control can be forced to render as a <a className="properties-page-intro-link" href="#/properties#--radioset">
+					</a> control can be forced to render as a <a className="properties-documentation-page-intro-link" href="#/properties#--radioset">
 							radioset
 					</a> by adding a <span className="highlight">control</span> attribute set
 						to <span className="highlight">radioset</span>. Similarly, a <span className="highlight">radioset</span> control can
@@ -640,6 +751,7 @@ class CommonPropertiesComponents extends React.Component {
 								propertiesInfo={FORCED_RADIOSET_PROPS_INFO}
 								containerType="Custom"
 							/>
+							{this.renderRightFlyoutButton(FORCED_RADIOSET_PROPS_INFO)}
 						</div>
 						<div className="section-column section-column-code">
 							<pre className="json-block">
@@ -649,12 +761,12 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div id="panels-controls-component">
+				<div className="properties-documentation-panels-controls-component">
 					<h3 id="--someofselect" className="section-subtitle">someofselect</h3>
 					<p>A multi-selection control is rendered for a parameter with an <span className="highlight">enum</span> list
 						with five or more elements of <span className="highlight">type</span> array[string].
 						For fewer than five elements,
-						a <a className="properties-page-intro-link" href="#/properties#--checkboxset">
+						a <a className="properties-documentation-page-intro-link" href="#/properties#--checkboxset">
 						checkboxset
 						</a> control is rendered.</p>
 					<div className="section-row">
@@ -664,6 +776,7 @@ class CommonPropertiesComponents extends React.Component {
 								propertiesInfo={SOMEOFSELECT_PROPS_INFO}
 								containerType="Custom"
 							/>
+							{this.renderRightFlyoutButton(SOMEOFSELECT_PROPS_INFO)}
 						</div>
 						<div className="section-column section-column-code">
 							<pre className="json-block">
@@ -671,11 +784,11 @@ class CommonPropertiesComponents extends React.Component {
 							</pre>
 						</div>
 					</div>
-					<p>A <a className="properties-page-intro-link" href="#/properties#--someofselect">
+					<p>A <a className="properties-documentation-page-intro-link" href="#/properties#--someofselect">
 						someofselect
-					</a> control can be forced to render as a <a className="properties-page-intro-link" href="#/properties#--checkboxset">
-							checkboxset
-					</a> by adding a <span className="highlight">control</span> attribute set
+					</a> control can be forced to render as a <a className="properties-documentation-page-intro-link"
+						href="#/properties#--checkboxset"
+					>checkboxset</a> by adding a <span className="highlight">control</span> attribute set
 						to <span className="highlight">checkboxset</span>. Similarly, a <span className="highlight">checkboxset</span> control
 						can be forced to render as a <span className="highlight">someofselect</span>.</p>
 					<div className="section-row">
@@ -685,6 +798,7 @@ class CommonPropertiesComponents extends React.Component {
 								propertiesInfo={FORCED_CHECKBOX_SET_PROPS_INFO}
 								containerType="Custom"
 							/>
+							{this.renderRightFlyoutButton(FORCED_CHECKBOX_SET_PROPS_INFO)}
 						</div>
 						<div className="section-column section-column-code">
 							<pre className="json-block">
@@ -694,7 +808,7 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div id="panels-controls-component">
+				<div className="properties-documentation-panels-controls-component">
 					<h3 id="--selectcolumn" className="section-subtitle">selectcolumn</h3>
 					<p>A dropdown control that contains the available fields provided in <span className="highlight">dataset_metadata</span>.
 						The type of the parameter associated with the dropdown list must be of <span className="highlight">type</span> string
@@ -706,6 +820,7 @@ class CommonPropertiesComponents extends React.Component {
 								propertiesInfo={SELECTCOLUMN_PROPS_INFO}
 								containerType="Custom"
 							/>
+							{this.renderRightFlyoutButton(SELECTCOLUMN_PROPS_INFO)}
 						</div>
 						<div className="section-column section-column-code">
 							<pre className="json-block">
@@ -714,13 +829,13 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div id="panels-controls-component">
+				<div className="properties-documentation-panels-controls-component">
 					<h3 id="--selectcolumns" className="section-subtitle">selectcolumns</h3>
 					<p>A multi-select control for column selections. The type of the parameter associated with this control
 						must be of <span className="highlight">type</span> array[string] and
 						the <span className="highlight">role</span> must be set to <span className="highlight">column</span>.
 						The <span className="highlight">type</span> in <span className="highlight">group_info</span> needs
-						to be set to <a className="properties-page-intro-link" href="#/properties#--columnSelection">
+						to be set to <a className="properties-documentation-page-intro-link" href="#/properties#--columnSelection">
 							columnSelection
 						</a>.</p>
 					<div className="section-row">
@@ -730,6 +845,7 @@ class CommonPropertiesComponents extends React.Component {
 								propertiesInfo={SELECTCOLUMNS_PROPS_INFO}
 								containerType="Custom"
 							/>
+							{this.renderRightFlyoutButton(SELECTCOLUMNS_PROPS_INFO)}
 						</div>
 						<div className="section-column section-column-code">
 							<pre className="json-block">
@@ -738,7 +854,7 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div id="panels-controls-component">
+				<div className="properties-documentation-panels-controls-component">
 					<h3 id="--toggletext" className="section-subtitle">toggletext</h3>
 					<p>A two-state control with optional icons that can exist on its own or within table cells.
 						The <span className="highlight">control</span> must be set to <span className="highlight">toggletext</span>.</p>
@@ -749,6 +865,7 @@ class CommonPropertiesComponents extends React.Component {
 								propertiesInfo={TOGGLETEXT_PROPS_INFO}
 								containerType="Custom"
 							/>
+							{this.renderRightFlyoutButton(TOGGLETEXT_PROPS_INFO)}
 						</div>
 						<div className="section-column section-column-code">
 							<pre className="json-block">
@@ -766,6 +883,7 @@ class CommonPropertiesComponents extends React.Component {
 								propertiesInfo={TOGGLETEXTICONS_PROPS_INFO}
 								containerType="Custom"
 							/>
+							{this.renderRightFlyoutButton(TOGGLETEXTICONS_PROPS_INFO)}
 						</div>
 						<div className="section-column section-column-code">
 							<pre className="json-block">
@@ -778,8 +896,8 @@ class CommonPropertiesComponents extends React.Component {
 			</div>
 		</section>);
 
-		const contentComplex = (<section id="Complex" className="section properties-content-complex-section">
-			<h2 className="properties-section-title">Complex Types</h2>
+		const contentComplex = (<section id="Complex" className="section properties-documentation-content-complex-section">
+			<h2 className="properties-documentation-section-title">Complex Types</h2>
 			<div className="section-description">
 				<p>Complex types representing lists or maps of basic parameter types are supported
 					via complex type controls. Controls can appear as rows in tables or standing on
@@ -788,12 +906,12 @@ class CommonPropertiesComponents extends React.Component {
 					<span className="highlight">enum</span>, <span className="highlight">textfield</span>,&nbsp;
 						and <span className="highlight">expression</span></p>
 			</div>
-			<div className="properties-section-content">
-				<div id="panels-controls-component">
+			<div className="properties-documentation-section-content">
+				<div className="properties-documentation-panels-controls-component">
 					<h3 id="--structuretable" className="section-subtitle">structuretable</h3>
 					<p>A complex type table control for editing lists or maps of structures that with field names
 						in the first column. The <span className="highlight">type</span> in <span className="highlight">group_info</span> needs
-						to be set to <a className="properties-page-intro-link" href="#/properties#--columnSelection">
+						to be set to <a className="properties-documentation-page-intro-link" href="#/properties#--columnSelection">
 							columnSelection
 						</a>.</p>
 					<div className="section-row">
@@ -803,6 +921,7 @@ class CommonPropertiesComponents extends React.Component {
 								propertiesInfo={STRUCTURETABLE_INLINE_TOGGLE_PROPS_INFO}
 								containerType="Custom"
 							/>
+							{this.renderRightFlyoutButton(STRUCTURETABLE_INLINE_TOGGLE_PROPS_INFO)}
 						</div>
 						<div className="section-column section-column-code">
 							<pre className="json-block">
@@ -811,12 +930,13 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div id="panels-controls-component">
+				<div className="properties-documentation-panels-controls-component">
 					<h3 id="--structurelisteditor" className="section-subtitle">structurelisteditor</h3>
 					<p>For lists of structures that are not field-oriented properties.
 						This complex type control will be rendered if
 						the <span className="highlight">type</span> in <span className="highlight">group_info</span> is
-						not set, which will default to group type <a className="properties-page-intro-link" href="#/properties#--controls">
+						not set, which will default to group
+						type <a className="properties-documentation-page-intro-link" href="#/properties#--controls">
 						controls</a>.
 					</p>
 					<div className="section-row">
@@ -826,6 +946,7 @@ class CommonPropertiesComponents extends React.Component {
 								propertiesInfo={STRUCTURELISTEDITOR_PROPS_INFO}
 								containerType="Custom"
 							/>
+							{this.renderRightFlyoutButton(STRUCTURELISTEDITOR_PROPS_INFO)}
 						</div>
 						<div className="section-column section-column-code">
 							<pre className="json-block">
@@ -834,7 +955,7 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div id="panels-controls-component">
+				<div className="properties-documentation-panels-controls-component">
 					<h3 id="--attributes">Attributes</h3>
 					<p>The following attributes can be applied to complex_types controls.</p>
 					<h4 id="--edit-style" className="section-row-title section-subtitle">edit_style</h4>
@@ -847,7 +968,7 @@ class CommonPropertiesComponents extends React.Component {
 						on_panel</span>
 					</p>
 					<p><span className="highlight">inline</span> will render controls inline within the table cells for editing values.
-						The following example shows a <a className="properties-page-intro-link" href="#/properties#--oneofselect">
+						The following example shows a <a className="properties-documentation-page-intro-link" href="#/properties#--oneofselect">
 							oneofselect
 						</a> control <span className="highlight">inline</span> with the structuretable rows.</p>
 					<div className="section-row">
@@ -857,6 +978,7 @@ class CommonPropertiesComponents extends React.Component {
 								propertiesInfo={STRUCTURETABLE_INLINE_DROPDOWN_PROPS_INFO}
 								containerType="Custom"
 							/>
+							{this.renderRightFlyoutButton(STRUCTURETABLE_INLINE_DROPDOWN_PROPS_INFO)}
 						</div>
 						<div className="section-column section-column-code">
 							<pre className="json-block">
@@ -864,7 +986,7 @@ class CommonPropertiesComponents extends React.Component {
 							</pre>
 						</div>
 					</div>
-					<p>The following example shows a <a className="properties-page-intro-link" href="#/properties#--textfield">
+					<p>The following example shows a <a className="properties-documentation-page-intro-link" href="#/properties#--textfield">
 						textfield
 					</a> control <span className="highlight">inline</span> with the structuretable rows.</p>
 					<div className="section-row">
@@ -874,6 +996,7 @@ class CommonPropertiesComponents extends React.Component {
 								propertiesInfo={STRUCTURETABLE_INLINE_TEXTFIELD_PROPS_INFO}
 								containerType="Custom"
 							/>
+							{this.renderRightFlyoutButton(STRUCTURETABLE_INLINE_TEXTFIELD_PROPS_INFO)}
 						</div>
 						<div className="section-column section-column-code">
 							<pre className="json-block">
@@ -892,6 +1015,7 @@ class CommonPropertiesComponents extends React.Component {
 								propertiesInfo={STRUCTURETABLE_SUBPANEL_TEXTFIELD_PROPS_INFO}
 								containerType="Custom"
 							/>
+							{this.renderRightFlyoutButton(STRUCTURETABLE_SUBPANEL_TEXTFIELD_PROPS_INFO)}
 						</div>
 						<div className="section-column section-column-code">
 							<pre className="json-block">
@@ -905,15 +1029,15 @@ class CommonPropertiesComponents extends React.Component {
 							set to <span className="highlight">single</span> when using the value <span className="highlight">on_panel</span>.
 							There can only be one column in the table with the value of <span className="highlight">on_panel</span>
 						</p><p>The following example shows
-							a <a className="properties-page-intro-link" href="#/properties#--expression">expression</a>&nbsp;
+							a <a className="properties-documentation-page-intro-link" href="#/properties#--expression">expression</a>&nbsp;
 							control with <span className="highlight">on_panel</span> in the structuretable rows.
 							If you select a row
-							the <a className="properties-page-intro-link" href="#/properties#--expression">expression</a> control will display
-							below the table with the current value of the <span className="highlight">Condition</span> cell for the selected row.
-							Modify the value in
-							the <a className="properties-page-intro-link" href="#/properties#--expression">expression</a> control
+							the <a className="properties-documentation-page-intro-link" href="#/properties#--expression">
+							expression</a> control will display below the table with the current value of
+							the <span className="highlight">Condition</span> cell for the selected row. Modify the value in
+							the <a className="properties-documentation-page-intro-link" href="#/properties#--expression">expression</a> control
 							and it will change the value in the cell when focus is off
-							the <a className="properties-page-intro-link" href="#/properties#--expression">expression</a> control.
+							the <a className="properties-documentation-page-intro-link" href="#/properties#--expression">expression</a> control.
 						</p>
 						<div className="section-row">
 							<div className="section-column">
@@ -922,6 +1046,7 @@ class CommonPropertiesComponents extends React.Component {
 									propertiesInfo={STRUCTURETABLE_ONPANEL_EXPRESSION_PROPS_INFO}
 									containerType="Custom"
 								/>
+								{this.renderRightFlyoutButton(STRUCTURETABLE_ONPANEL_EXPRESSION_PROPS_INFO)}
 							</div>
 							<div className="section-column section-column-code">
 								<pre className="json-block">
@@ -944,6 +1069,7 @@ class CommonPropertiesComponents extends React.Component {
 								propertiesInfo={STRUCTURETABLE_MOVEABLE_PROPS_INFO}
 								containerType="Custom"
 							/>
+							{this.renderRightFlyoutButton(STRUCTURETABLE_MOVEABLE_PROPS_INFO)}
 						</div>
 						<div className="section-column section-column-code">
 							<pre className="json-block">
@@ -967,6 +1093,7 @@ class CommonPropertiesComponents extends React.Component {
 								propertiesInfo={STRUCTURETABLE_ROW_SELECTION_PROPS_INFO}
 								containerType="Custom"
 							/>
+							{this.renderRightFlyoutButton(STRUCTURETABLE_ROW_SELECTION_PROPS_INFO)}
 						</div>
 						<div className="section-column section-column-code">
 							<pre className="json-block">
@@ -995,6 +1122,7 @@ class CommonPropertiesComponents extends React.Component {
 								propertiesInfo={STRUCTURETABLE_SORTABLE_PROPS_INFO}
 								containerType="Custom"
 							/>
+							{this.renderRightFlyoutButton(STRUCTURETABLE_SORTABLE_PROPS_INFO)}
 						</div>
 						<div className="section-column section-column-code">
 							<pre className="json-block">
@@ -1022,6 +1150,7 @@ class CommonPropertiesComponents extends React.Component {
 								propertiesInfo={STRUCTURETABLE_FILTERABLE_PROPS_INFO}
 								containerType="Custom"
 							/>
+							{this.renderRightFlyoutButton(STRUCTURETABLE_FILTERABLE_PROPS_INFO)}
 						</div>
 						<div className="section-column section-column-code">
 							<pre className="json-block">
@@ -1030,22 +1159,76 @@ class CommonPropertiesComponents extends React.Component {
 							</pre>
 						</div>
 					</div>
+					<h4 id="--summary" className="section-row-title section-subtitle">summary</h4>
+					<p><span className="highlight">summary</span> is a boolean attribute that can be
+						applied to table columns. This can be set within the <span className="highlight">key_definition</span> or
+						the <span className="highlight">parameters</span> sections of a structure definition.
+						The <span className="highlight">summary</span> attribute is only available in a right flyout container.
+						As shown below, controls will display as is in a modal container.
+					</p>
+					<p>When <span className="highlight">summary</span> set to true for a column and the control is within a&nbsp;
+						<a className="properties-documentation-page-intro-link" href="#/properties#--summaryPanel">summaryPanel</a>,
+						the column will be shown in the summary table in the right flyout. There will also be a link above the summary
+						that will open the controls in another wide flyout container for users to configure. The label for the link can be
+						configured in the <span className="highlight">group_info</span> section for
+						the <span className="highlight">summaryPanel</span>.
+					</p>
+					<p>Although non-complex type controls may be placed and configured in a&nbsp;
+						<a className="properties-documentation-page-intro-link" href="#/properties#--summaryPanel">summaryPanel</a>,
+						the <span className="highlight">summary</span> attribute does not apply to non-complex type controls.
+						No summary will be shown for those controls.
+					</p>
+					<div className="section-row">
+						<div className="section-column">
+							<CommonProperties
+								showPropertiesDialog
+								propertiesInfo={SUMMARY_PROPS_INFO}
+								containerType="Custom"
+							/>
+							{this.renderRightFlyoutButton(SUMMARY_PROPS_INFO)}
+						</div>
+						<div id="summary-section-column-code" className="section-column section-column-code">
+							<pre className="json-block">
+								{this.jsonReplacer(SUMMARY_PROPS_INFO.parameterDef, "all")}
+							</pre>
+						</div>
+					</div>
 				</div>
 			</div>
 		</section>);
 
-		const content = (<div id="properties-content">
+		const content = (<div id="properties-documentation-content">
 			{contentIntro}
+			{contentContainer}
 			{contentPanels}
 			{contentControls}
 			{contentComplex}
 		</div>);
 
+		let rightFlyoutWidth = "0px";
+		let rightFlyout = (<div id="right-flyout-panel" style={{ width: rightFlyoutWidth }} />);
+		if (this.state.showRightFlyout) {
+			rightFlyoutWidth = "318px";
+			rightFlyout = (<div id="right-flyout-panel" style={{ width: rightFlyoutWidth }}>
+				<CommonProperties
+					showPropertiesDialog
+					propertiesInfo={this.state.rightFlyoutContent}
+					containerType="Custom"
+					applyLabel="Apply"
+					rejectLabel="Reject"
+					rightFlyout
+				/>);
+			</div>);
+		}
+
 		return (
-			<div id="properties-container">
+			<div id="properties-documentation-container">
 				{navBar}
-				{header}
-				{content}
+				<div id="properties-documentation-container-main-content" style={{ width: "calc(100% - " + rightFlyoutWidth + " )" }}>
+					{header}
+					{content}
+				</div>
+				{rightFlyout}
 			</div>
 		);
 	}

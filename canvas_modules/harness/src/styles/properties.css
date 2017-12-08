@@ -6,13 +6,45 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-#conditions-container,
-#conditions-content {
+#properties-documentation-container {
+	position: relative;
+}
+
+#properties-documentation-main-content {
+	position: relative;
+}
+
+#properties-documentation-container > #right-flyout-panel {
+	top: 0px;
+	padding-top: 50px;
+	box-shadow: none;
+	border-left: 1px solid #cccccc;
+	position: fixed;
+}
+
+#properties-documentation-container >
+#right-flyout-panel >
+#common-properties-right-flyout-panel >
+.modal__buttons {
+	display: none;
+}
+
+#properties-documentation-container-main-content {
+	-webkit-transition: all 0.2s ease-out;
+	transition: all 0.2s ease-out;
+	position: fixed;
+	top: 50px;
+	height: calc(100% - 50px);
+	overflow-x: scroll;
+}
+
+#conditions-documentation-container,
+#conditions-documentation-content {
 	width: 100%;
 }
 
 /* Properties Navbar */
-.properties-navbar-items {
+.properties-documentation-navbar-items {
   position:fixed;
   width:100%;
 	height: 50px;
@@ -21,11 +53,11 @@
   padding: 0;
   overflow: hidden;
   background-color: #152935;
-  z-index: 3;
+  z-index: 4;
 }
 
-#properties-title,
-#conditions-title {
+#properties-documentation-title,
+#conditions-documentation-title {
   background-color: #152935;
   color: #FFFFFF;
   padding: 14px;
@@ -35,8 +67,8 @@
 	height: 50px;
 }
 
-#properties-menu,
-#conditions-menu {
+#properties-documentation-menu,
+#conditions-documentation-menu {
 	width: 200px;
 	position: fixed;
 	right: 0;
@@ -45,14 +77,18 @@
 	margin-right: 10px;
 }
 
-.properties-navbar-li {
+.properties-documentation-navbar-li {
   float: left;
 	height: 50px;
 	background-color: #6EEDD8;
 }
 
-.properties-navbar-li a,
-.properties-navbar-fill a
+.properties-documentation-navbar-li::after {
+	clear: both;
+}
+
+.properties-documentation-navbar-li a,
+.properties-documentation-navbar-fill a
 {
   display: block;
   text-align: center;
@@ -65,32 +101,32 @@
 	height: 22px;
 }
 
-.properties-navbar-li a:hover {
+.properties-documentation-navbar-li a:hover {
   color: #6EEDD8;
 	height: 18px;
 }
 
 @media (max-width: 779px) {
-	.properties-nav-link {
+	.properties-documentation-nav-link {
 		display: none !important;
 	}
 }
 
 @media (max-width: 849px) {
-	.conditions-nav-link {
+	.conditions-documentation-nav-link {
 		display: none !important;
 	}
 }
 
 /* Header section */
-.properties-section-header {
+.properties-documentation-section-header {
 	background: #A6266E;
 	padding: 6.5em 4em 2em;
 	position: relative;
 	color: #FFFFFF;
 }
 
-.properties-page-link {
+.properties-documentation-page-link {
 	text-align: center;
 	display: block;
 	margin: 1.5em 0 0;
@@ -100,19 +136,33 @@
 	text-decoration: none;
 }
 
-.properties-page-link:hover {
+.properties-documentation-page-link:hover {
 	color: #FFFFFF;
 	text-decoration: underline;
 }
 
-.properties-page-intro-link:hover {
+.properties-documentation-page-intro-link:hover {
 	text-decoration: underline;
 }
 
 /* Properties Content */
-#properties-content,
-#conditions-content {
+#properties-documentation-content,
+#conditions-documentation-content {
 	padding: 1em;
+}
+
+.conditions-documentation-panels-controls-component,
+.properties-documentation-panels-controls-component {
+	position: relative;
+	padding-bottom: 5px;
+}
+
+.properties-documentation-panels-controls-component .well {
+	margin-bottom: 5px;
+}
+
+.properties-documentation-show-flyout-button {
+
 }
 
 .section {
@@ -120,14 +170,11 @@
 	padding-top: 4em;
 }
 
-.section-subtitle,
-#--misc-attr,
-#--edit-style {
-	margin-top: -50px;
-	padding-top: 50px;
+.section-row ~ .section-row-title.section-subtitle {
+	margin-top: 20px;
 }
 
-.properties-section-title {
+.properties-documentation-section-title {
 	border-bottom: 1px solid;
 	margin-bottom: .5em;
 }
@@ -171,19 +218,23 @@
 	max-height: 616px;
 }
 
+#summary-section-column-code > .json-block {
+	max-height: 849px;
+}
+
 .highlight {
 	background-color: #F5F5F5;
 	font-weight: 400;
 	border-radius: 4px;
 }
 
-.conditions-control-table-container {
+.conditions-documentation-control-table-container {
 	width: 100%;
 	overflow-x: scroll;
 }
 
 
-/*.properties-control-label {
+/*.properties-documentation-control-label {
 	color: #777677;
 }*/
 
@@ -194,6 +245,6 @@
 	position: absolute;
 }
 
-#conditions-control-table > thead > tr > th:focus {
+#conditions-documentation-control-table > thead > tr > th:focus {
 	outline: none;
 }

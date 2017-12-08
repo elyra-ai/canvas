@@ -944,9 +944,14 @@ export default class EditorForm extends React.Component {
 				);
 			} else {
 				subTabs.push(
-					<div key={i} id={"sub-tab." + tab.group} className="sub-tab-parent-items-container" title={tab.text}>
+					<Tabs.Panel
+						id={"sub-tab." + tab.group}
+						key={i}
+						title={tab.text}
+						className="sub-tab-parent-items-container"
+					>
 						{subPanelItems}
-					</div>
+					</Tabs.Panel>
 				);
 			}
 		}

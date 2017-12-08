@@ -31,7 +31,7 @@ export default class WideFlyout extends Component {
 	}
 
 	updateDimensions() {
-		const commonCanvas = document.getElementById("common-canvas");
+		const commonCanvas = document.getElementById("common-properties-right-flyout-panel");
 		const canvasHeight = window.getComputedStyle(commonCanvas, null).getPropertyValue("height");
 		this.setState({
 			canvasHeight: canvasHeight
