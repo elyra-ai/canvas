@@ -7,19 +7,17 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
+// DEPRECATED control oneofcolumns
 import React from "react";
 import PropTypes from "prop-types";
 import { FormControl } from "react-bootstrap";
 import EditorControl from "./editor-control.jsx";
-import { EDITOR_CONTROL } from "../constants/constants.js";
 
 export default class SomeofcolumnsControl extends EditorControl {
 	constructor(props) {
 		super(props);
 		this.state = {
-			controlValue: props.valueAccessor(props.control.name)
 		};
-		this.getControlValue = this.getControlValue.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 	}
 
@@ -29,19 +27,13 @@ export default class SomeofcolumnsControl extends EditorControl {
 		}).map(function(o) {
 			return o.value;
 		});
-		this.setState({ controlValue: values });
-		this.notifyValueChanged(this.props.control.name, values);
-		this.props.updateControlValue(this.props.control.name, values);
-	}
-
-	getControlValue() {
-		return this.state.controlValue;
+		this.props.controller.updatePropertyValue(this.props.propertyId, values);
 	}
 
 	render() {
-		const controlName = this.getControlID().replace(EDITOR_CONTROL, "");
+		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		const conditionProps = {
-			controlName: controlName,
+			propertyId: this.props.propertyId,
 			controlType: "selection"
 		};
 		const conditionState = this.getConditionMsgState(conditionProps);
@@ -57,7 +49,7 @@ export default class SomeofcolumnsControl extends EditorControl {
 			controlIconContainerClass = "some-of-column-control-icon-container-enabled";
 		}
 
-		var options = EditorControl.genColumnSelectOptions(this.props.dataModel.fields, this.state.controlValue, false);
+		var options = EditorControl.genColumnSelectOptions(this.props.dataModel.fields, controlValue, false);
 		return (
 			<div style={stateStyle}>
 				<div id={controlIconContainerClass}>
@@ -67,8 +59,7 @@ export default class SomeofcolumnsControl extends EditorControl {
 						componentClass="select"
 						multiple name={this.props.control.name}
 						onChange={this.handleChange}
-						onBlur={this.validateInput}
-						value={this.state.controlValue}
+						value={controlValue}
 						ref="input"
 					>
 						{options}
@@ -82,12 +73,8 @@ export default class SomeofcolumnsControl extends EditorControl {
 }
 
 SomeofcolumnsControl.propTypes = {
-	dataModel: PropTypes.object,
-	control: PropTypes.object,
-	updateControlValue: PropTypes.func,
-	controlStates: PropTypes.object,
-	updateValidationErrorMessage: PropTypes.func,
-	retrieveValidationErrorMessage: PropTypes.func,
-	validationDefinitions: PropTypes.object,
-	requiredParameters: PropTypes.array
+	dataModel: PropTypes.object.isRequired,
+	control: PropTypes.object.isRequired,
+	propertyId: PropTypes.object.isRequired,
+	controller: PropTypes.object.isRequired
 };

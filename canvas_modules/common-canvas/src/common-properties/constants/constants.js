@@ -48,6 +48,27 @@ _defineConstant("DATA_TYPES", [
 	"timestamp"
 ]);
 
+_defineConstant("CONTROL", "control");
+_defineConstant("ADDITIONALLINK", "additionalLink");
+_defineConstant("CHECKBOXSELECTOR", "checkboxSelector");
+_defineConstant("PANEL", "panel");
+_defineConstant("SUMMARYPANEL", "summaryPanel");
+_defineConstant("PRIMARYTABS", "primaryTabs");
+_defineConstant("PANELSELECTOR", "panelSelector");
+_defineConstant("SUBTABS", "subTabs");
+_defineConstant("CUSTOMPANEL", "customPanel");
+
 _defineConstant("EDITOR_CONTROL", "editor-control-");
 
 _defineConstant("TOOL_TIP_DELAY", 1000);
+
+_defineConstant("STATES", {
+	VISIBLE: "visible",
+	HIDDEN: "hidden",
+	ENABLED: "enabled",
+	DISABLED: "disabled"
+});
+_defineConstant("ACTIONS", {
+	SET_PROPERTIES: "SET_PROPERTIES",
+	UPDATE_PROPERTY: "UPDATE_PROPERTY"
+});

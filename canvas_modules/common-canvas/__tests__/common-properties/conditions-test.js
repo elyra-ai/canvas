@@ -13,10 +13,12 @@ import EditorForm from "../../src/common-properties/editor-controls/editor-form.
 import { shallow, mount } from "enzyme";
 import { expect } from "chai";
 import sinon from "sinon";
-import _ from "underscore";
 import chai from "chai";
 import chaiEnzyme from "chai-enzyme";
-chai.use(chaiEnzyme()); // Note the invocation at the end
+chai.use(chaiEnzyme()); // Need for style checking
+import _ from "underscore";
+
+import Controller from "../../src/common-properties/properties-controller";
 
 const CONDITIONS_TEST_FORM_DATA = require("../test_resources/json/conditions-test-formData.json");
 
@@ -950,13 +952,15 @@ const defaultControlStates = {
 	"field_types[6][3]": "hidden",
 	"field_types[6][2]": "disabled"
 };
-
+var controller;
 function createEditorForm(state) {
+	controller = new Controller();
+	controller.setForm(formData);
 	let wrapper;
 	const editorForm = (<EditorForm
 		ref="editorForm"
 		key="editor-form-key"
-		form={formData}
+		controller={controller}
 		additionalComponents={additionalComponents}
 		showPropertiesButtons={showPropertiesButtons}
 	/>);
@@ -967,799 +971,683 @@ function createEditorForm(state) {
 	}
 	return wrapper;
 }
+function compareObjects(expected, actual) {
+	expect(_.isEqual(JSON.parse(JSON.stringify(expected)),
+		JSON.parse(JSON.stringify(actual)))).to.be.true;
+}
 
 describe("editor-form renders correctly with validations", () => {
 
 	it("props should have been defined", () => {
 		const wrapper = createEditorForm("mount");
 
-		expect(wrapper.prop("form")).to.equal(formData);
+		expect(wrapper.prop("controller")).to.equal(controller);
 		expect(wrapper.prop("additionalComponents")).to.equal(additionalComponents);
 		expect(wrapper.prop("showPropertiesButtons")).to.equal(showPropertiesButtons);
 	});
-
 	it("should render an `EditorForm` with parsed conditions", () => {
 		const wrapper = createEditorForm("mount");
 
-		expect(wrapper.find("#form-Conditions-test")).to.have.length(1);
+		expect(wrapper.find(".form-horizontal")).to.have.length(1);
 		expect(wrapper.find(".section--light")).to.have.length(1);
 		expect(wrapper.find(".tabs__tabpanel")).to.have.length(6);
 		expect(wrapper.find(".editor_control_area")).to.have.length(25);
-		expect(wrapper.find(".validation-error-message")).to.have.length(48);
+		expect(wrapper.find(".validation-error-message")).to.have.length(40);
 	});
+	it("should initialize correct values in `Properties-Controller`", () => {
+		expect(Object.keys(controller.visibleDefinition)).to.have.length(3);
+		expect(Object.keys(controller.enabledDefinitions)).to.have.length(3);
+		compareObjects(enabledDefinitions.checkboxEnable, controller.enabledDefinitions.checkboxEnable);
+		compareObjects(enabledDefinitions.textfieldName, controller.enabledDefinitions.textfieldName);
 
-	it("should initialize correct values in `EditorForm`", () => {
-		const wrapper = createEditorForm("shallow");
-		expect(Object.keys(wrapper.instance().visibleDefinition)).to.have.length(3);
-		expect(Object.keys(wrapper.instance().enabledDefinitions)).to.have.length(3);
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.instance().enabledDefinitions.checkboxEnable)),
-			JSON.parse(JSON.stringify(enabledDefinitions.checkboxEnable)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.instance().enabledDefinitions.textfieldName)),
-			JSON.parse(JSON.stringify(enabledDefinitions.textfieldName)))).to.be.true;
+		compareObjects(visibleDefinition.oneofselectAnimals, controller.visibleDefinition.oneofselectAnimals);
+		compareObjects(visibleDefinition.checkboxEnableDesc, controller.visibleDefinition.checkboxEnableDesc);
 
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.instance().visibleDefinition.oneofselectAnimals)),
-			JSON.parse(JSON.stringify(visibleDefinition.oneofselectAnimals)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.instance().visibleDefinition.checkboxEnableDesc)),
-			JSON.parse(JSON.stringify(visibleDefinition.checkboxEnableDesc)))).to.be.true;
-
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.instance().validationDefinitions.numberfieldCheckpointInterval)),
+		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.numberfieldCheckpointInterval)),
 			JSON.parse(JSON.stringify(validationDefinitions.numberfieldCheckpointInterval)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.instance().validationDefinitions.numberfieldImpurity)),
+		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.numberfieldImpurity)),
 			JSON.parse(JSON.stringify(validationDefinitions.numberfieldImpurity)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.instance().validationDefinitions.numberfieldMaxBins)),
+		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.numberfieldMaxBins)),
 			JSON.parse(JSON.stringify(validationDefinitions.numberfieldMaxBins)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.instance().validationDefinitions.numberfieldMaxDepth)),
+		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.numberfieldMaxDepth)),
 			JSON.parse(JSON.stringify(validationDefinitions.numberfieldMaxDepth)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.instance().validationDefinitions.numberfieldMinInstancesPerNode)),
+		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.numberfieldMinInstancesPerNode)),
 			JSON.parse(JSON.stringify(validationDefinitions.numberfieldMinInstancesPerNode)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.instance().validationDefinitions.numberfieldMinInfoGain)),
+		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.numberfieldMinInfoGain)),
 			JSON.parse(JSON.stringify(validationDefinitions.numberfieldMinInfoGain)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.instance().validationDefinitions.numberfieldSeed)),
+		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.numberfieldSeed)),
 			JSON.parse(JSON.stringify(validationDefinitions.numberfieldSeed)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.instance().validationDefinitions.columnSelectInputFieldList)),
+		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.columnSelectInputFieldList)),
 			JSON.parse(JSON.stringify(validationDefinitions.columnSelectInputFieldList)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.instance().validationDefinitions.oneofcolumnsList)),
+		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.oneofcolumnsList)),
 			JSON.parse(JSON.stringify(validationDefinitions.oneofcolumnsList)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.instance().validationDefinitions.someofcolumnsList)),
+		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.someofcolumnsList)),
 			JSON.parse(JSON.stringify(validationDefinitions.someofcolumnsList)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.instance().validationDefinitions.columnSelectSharedWithInput)),
+		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.columnSelectSharedWithInput)),
 			JSON.parse(JSON.stringify(validationDefinitions.columnSelectSharedWithInput)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.instance().validationDefinitions.checkboxTypes)),
+		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.checkboxTypes)),
 			JSON.parse(JSON.stringify(validationDefinitions.checkboxTypes)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.instance().validationDefinitions.oneofselectAnimals)),
+		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.oneofselectAnimals)),
 			JSON.parse(JSON.stringify(validationDefinitions.oneofselectAnimals)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.instance().validationDefinitions.someofselectNumbers)),
+		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.someofselectNumbers)),
 			JSON.parse(JSON.stringify(validationDefinitions.someofselectNumbers)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.instance().validationDefinitions.checkboxSingle)),
+		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.checkboxSingle)),
 			JSON.parse(JSON.stringify(validationDefinitions.checkboxSingle)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.instance().validationDefinitions.radiosetColor)),
+		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.radiosetColor)),
 			JSON.parse(JSON.stringify(validationDefinitions.radiosetColor)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.instance().validationDefinitions.passwordField)),
+		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.passwordField)),
 			JSON.parse(JSON.stringify(validationDefinitions.passwordField)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.instance().validationDefinitions.textfieldName)),
+		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.textfieldName)),
 			JSON.parse(JSON.stringify(validationDefinitions.textfieldName)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.instance().validationDefinitions.textareaDescription)),
+		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.textareaDescription)),
 			JSON.parse(JSON.stringify(validationDefinitions.textareaDescription)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.instance().validationDefinitions.structuretableSortOrder)),
+		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.structuretableSortOrder)),
 			JSON.parse(JSON.stringify(validationDefinitions.structuretableSortOrder)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.instance().validationDefinitions.structuretableRenameFields)),
+		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.structuretableRenameFields)),
 			JSON.parse(JSON.stringify(validationDefinitions.structuretableRenameFields)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.instance().validationDefinitions.structurelisteditorTableInput)),
+		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.structurelisteditorTableInput)),
 			JSON.parse(JSON.stringify(validationDefinitions.structurelisteditorTableInput)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.instance().validationDefinitions.name)),
+		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.name)),
 			JSON.parse(JSON.stringify(validationDefinitions.subpanelTextfieldName)))).to.be.true;
-		expect(_.isEqual(JSON.stringify(wrapper.state().controlErrorMessages), "[]")).to.be.true;
+
+		compareObjects({}, controller.getErrorMessages());
 	});
-});
+	describe("condition messages renders correctly with numberfield control", () => {
+		it("numberfield control should have error message from invalid input", () => {
+			const wrapper = createEditorForm("mount");
 
-describe("condition messages renders correctly with numberfield control", () => {
-	it("numberfield control should have error message from invalid input", () => {
-		const wrapper = createEditorForm("mount");
+			const input = wrapper.find("input[id='editor-control-numberfieldCheckpointInterval']");
+			expect(input).to.have.length(1);
+			input.simulate("change", { target: { value: -100 } });
+			wrapper.update();
 
-		const input = wrapper.find("input[id='editor-control-numberfieldCheckpointInterval']");
-		expect(input).to.have.length(1);
-		input.simulate("change", { target: { value: "-100" } });
-		input.simulate("blur");
-
-		const numberfieldCheckpointIntervalErrorMessages = [
-			{
+			const numberfieldCheckpointIntervalErrorMessages = {
 				"type": "error",
-				"text": "The checkpoint interval value must either be >= 1 or -1 to disable",
-				"id_ref": "numberfieldCheckpointInterval"
-			}
-		];
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
-			JSON.parse(JSON.stringify(numberfieldCheckpointIntervalErrorMessages)))).to.be.true;
+				"text": "The checkpoint interval value must either be >= 1 or -1 to disable"
+			};
+			compareObjects(numberfieldCheckpointIntervalErrorMessages, controller.getErrorMessage({ name: "numberfieldCheckpointInterval" }));
+			expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
+			expect(wrapper.find(".form__validation--error")).to.have.length(1);
+		});
+		it("required numberfield control should have error message from null input", () => {
+			const wrapper = createEditorForm("mount");
 
-		expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
-		expect(wrapper.find(".form__validation--error")).to.have.length(1);
-	});
+			const input = wrapper.find("input[id='editor-control-numberfieldCheckpointInterval']");
+			expect(input).to.have.length(1);
+			input.simulate("change", { target: { value: "" } });
+			wrapper.update();
 
-	it("required numberfield control should have error message from null input", () => {
-		const wrapper = createEditorForm("mount");
-
-		const input = wrapper.find("input[id='editor-control-numberfieldCheckpointInterval']");
-		expect(input).to.have.length(1);
-		input.simulate("change", { target: { value: "" } });
-		input.simulate("blur");
-
-		const numberfieldCheckpointIntervalErrorMessages = [
-			{
+			const numberfieldCheckpointIntervalErrorMessages = {
 				"type": "error",
 				"text": "Required parameter numberfieldCheckpointInterval has no value",
-				"id_ref": "numberfieldCheckpointInterval"
-			}
-		];
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
-			JSON.parse(JSON.stringify(numberfieldCheckpointIntervalErrorMessages)))).to.be.true;
+			};
+			compareObjects(numberfieldCheckpointIntervalErrorMessages, controller.getErrorMessage({ name: "numberfieldCheckpointInterval" }));
+			expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
+			expect(wrapper.find(".form__validation--error")).to.have.length(1);
+		});
+		it("numberfield control should have error message from null input and generator should trigger validation", () => {
+			const wrapper = createEditorForm("mount");
 
-		expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
-		expect(wrapper.find(".form__validation--error")).to.have.length(1);
-	});
+			const input = wrapper.find("input[id='editor-control-numberfieldSeed']");
+			expect(input).to.have.length(1);
+			input.simulate("change", { target: { value: "" } });
+			wrapper.update();
 
-	it("numberfield control should have error message from null input and generator should trigger validation", () => {
-		const wrapper = createEditorForm("mount");
-
-		const input = wrapper.find("input[id='editor-control-numberfieldSeed']");
-		expect(input).to.have.length(1);
-		input.simulate("change", { target: { value: "" } });
-		input.simulate("blur");
-
-		const numberfieldSeedErrorMessages = [
-			{
+			const numberfieldSeedErrorMessages = {
 				"type": "error",
 				"text": "Field cannot be null. This is an example of a long error message that might be entered. The message text will wrap around to the next line.",
-				"id_ref": "numberfieldSeed"
-			}
-		];
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
-			JSON.parse(JSON.stringify(numberfieldSeedErrorMessages)))).to.be.true;
+			};
+			compareObjects(numberfieldSeedErrorMessages, controller.getErrorMessage({ name: "numberfieldSeed" }));
+			expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
+			expect(wrapper.find(".form__validation--error")).to.have.length(1);
 
-		expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
-		expect(wrapper.find(".form__validation--error")).to.have.length(1);
+			const generator = wrapper.find(".number-generator");
+			expect(generator).to.have.length(1);
+			generator.simulate("click");
+			wrapper.update();
 
-		const generator = wrapper.find(".number-generator");
-		expect(generator).to.have.length(1);
-		generator.simulate("click");
-
-		expect(wrapper.find(".validation-error-message-icon")).to.have.length(0);
-		expect(wrapper.find(".form__validation--error")).to.have.length(0);
+			expect(wrapper.find(".validation-error-message-icon")).to.have.length(0);
+			expect(wrapper.find(".form__validation--error")).to.have.length(0);
+		});
 	});
-});
+	describe("condition messages renders correctly with columnselect control", () => {
+		it("columnselect control should have error message from empty input", () => {
+			const wrapper = createEditorForm("mount");
+			const propertyId = { name: "columnSelectInputFieldList" };
+			const input = wrapper.find("#editor-control-columnSelectInputFieldList");
+			expect(input).to.have.length(1);
 
-describe("condition messages renders correctly with columnselect control", () => {
-	it("columnselect control should have error message from empty input", () => {
-		const wrapper = createEditorForm("mount");
+			const optAge = document.createElement("OPTION");
+			optAge.selected = true;
+			optAge.value = "Age";
+			const optBp = document.createElement("OPTION");
+			optBp.selected = false;
+			optBp.value = "BP";
+			const options1 = [
+				optAge,
+				optBp
+			];
 
-		const input = wrapper.find("#editor-control-columnSelectInputFieldList");
-		expect(input).to.have.length(1);
+			expect(input.find("option")).to.have.length(2);
+			input.simulate("change", { target: { options: options1 } });
+			wrapper.update();
 
-		const optAge = document.createElement("OPTION");
-		optAge.selected = true;
-		optAge.value = "Age";
-		const optBp = document.createElement("OPTION");
-		optBp.selected = false;
-		optBp.value = "BP";
-		const options1 = [
-			optAge,
-			optBp
-		];
+			const enabledRemoveColumnButton = wrapper.find("#remove-fields-button-enabled");
+			expect(enabledRemoveColumnButton).to.have.length(1);
 
-		expect(input.find("option")).to.have.length(2);
-		input.simulate("change", { target: { options: options1 } });
+			enabledRemoveColumnButton.simulate("click");
+			expect(input.find("option")).to.have.length(1);
+			expect(controller.getPropertyValue(propertyId)).to.have.length(1);
 
-		const enabledRemoveColumnButton = wrapper.find("#remove-fields-button-enabled");
-		expect(enabledRemoveColumnButton).to.have.length(1);
+			optBp.selected = true;
+			const options2 = [
+				optBp
+			];
+			input.simulate("change", { target: { options: options2 } });
+			wrapper.update();
 
-		enabledRemoveColumnButton.simulate("click");
-		expect(input.find("option")).to.have.length(1);
-		expect(wrapper.state().valuesTable.columnSelectInputFieldList).to.have.length(1);
+			enabledRemoveColumnButton.simulate("click");
+			expect(input.find("option")).to.have.length(0);
+			expect(controller.getPropertyValue(propertyId)).to.have.length(0);
+			input.simulate("blur");
+			wrapper.update();
 
-		optBp.selected = true;
-		const options2 = [
-			optBp
-		];
-		input.simulate("change", { target: { options: options2 } });
-
-		enabledRemoveColumnButton.simulate("click");
-		expect(input.find("option")).to.have.length(0);
-		expect(wrapper.state().valuesTable.columnSelectInputFieldList).to.have.length(0);
-		input.simulate("blur");
-
-		const columnSelectInputFieldListErrorMessages = [
-			{
+			const columnSelectInputFieldListErrorMessages = {
 				"type": "error",
-				"text": "Select one or more input fields.",
-				"id_ref": "columnSelectInputFieldList"
-			}
-		];
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
-			JSON.parse(JSON.stringify(columnSelectInputFieldListErrorMessages)))).to.be.true;
-
-		expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
-		expect(wrapper.find(".form__validation--error")).to.have.length(1);
+				"text": "Select one or more input fields."
+			};
+			compareObjects(columnSelectInputFieldListErrorMessages, controller.getErrorMessage(propertyId));
+			expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
+			expect(wrapper.find(".form__validation--error")).to.have.length(1);
+		});
 	});
-});
+	describe("condition messages renders correctly with someofcolumns control", () => {
+		it("someofcolumnsList control should have warning message from no selection", () => {
+			const wrapper = createEditorForm("mount");
+			const propertyId = { name: "someofcolumnsList" };
+			const input = wrapper.find("select[id='editor-control-someofcolumnsList']");
+			expect(input).to.have.length(1);
 
-describe("condition messages renders correctly with someofcolumns control", () => {
-	it("someofcolumnsList control should have warning message from no selection", () => {
-		const wrapper = createEditorForm("mount");
+			const optAge = document.createElement("OPTION");
+			optAge.selected = true;
+			optAge.value = "Age";
+			const options1 = [
+				optAge
+			];
 
-		const input = wrapper.find("select[id='editor-control-someofcolumnsList']");
-		expect(input).to.have.length(1);
+			expect(input.find("option")).to.have.length(7);
+			input.simulate("change", { target: { options: options1 } });
+			expect(controller.getPropertyValue(propertyId)).to.have.length(1);
 
-		const optAge = document.createElement("OPTION");
-		optAge.selected = true;
-		optAge.value = "Age";
-		const options1 = [
-			optAge
-		];
+			optAge.selected = false;
+			input.simulate("change", { target: { options: options1 } });
+			wrapper.update();
+			expect(controller.getPropertyValue(propertyId)).to.have.length(0);
 
-		expect(input.find("option")).to.have.length(7);
-		input.simulate("change", { target: { options: options1 } });
-		expect(wrapper.state().valuesTable.someofcolumnsList).to.have.length(1);
-
-		optAge.selected = false;
-		input.simulate("change", { target: { options: options1 } });
-		expect(wrapper.state().valuesTable.someofcolumnsList).to.have.length(0);
-
-		input.simulate("blur");
-
-		const someofcolumnsListWarningMessages = [
-			{
+			const someofcolumnsListWarningMessages = {
 				"type": "warning",
 				"text": "Field must be selected",
-				"id_ref": "someofcolumnsList"
-			}
-		];
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
-			JSON.parse(JSON.stringify(someofcolumnsListWarningMessages)))).to.be.true;
+			};
+			compareObjects(someofcolumnsListWarningMessages, controller.getErrorMessage(propertyId));
 
-		expect(wrapper.find(".validation-warning-message-icon-selection")).to.have.length(1);
-		expect(wrapper.find(".validation-error-message-color-warning")).to.have.length(1);
+			expect(wrapper.find(".validation-warning-message-icon-selection")).to.have.length(1);
+			expect(wrapper.find(".validation-error-message-color-warning")).to.have.length(1);
+		});
 	});
-});
 
-describe("condition messages renders correctly with checkbox control", () => {
-	it("checkboxTypes control should have warning message if none are checked", () => {
-		const wrapper = createEditorForm("mount");
+	describe("condition messages renders correctly with checkbox control", () => {
+		it("checkboxTypes control should have warning message if none are checked", () => {
+			const wrapper = createEditorForm("mount");
 
-		const input = wrapper.find("#editor-control-checkboxTypes");
-		expect(input).to.have.length(1);
-		expect(input.find("input[type='checkbox']")).to.have.length(3);
-		const checkbox = wrapper.find("input[type='checkbox']").at(1);
-		checkbox.simulate("change", { target: { checked: true, id: "string" } });
-		checkbox.simulate("blur");
+			const input = wrapper.find("#editor-control-checkboxTypes");
+			expect(input).to.have.length(1);
+			expect(input.find("input[type='checkbox']")).to.have.length(3);
+			const checkbox = wrapper.find("input[type='checkbox']").at(1);
+			checkbox.simulate("change", { target: { checked: true, id: "string" } });
+			wrapper.update();
 
-		const checkboxSingleErrorMessages = [
-			{
+			const checkboxSingleMessages = {
 				"type": "error",
-				"text": "Checkbox single should be checked if data type is selected",
-				"id_ref": "checkboxSingle"
-			},
-			{
+				"text": "Checkbox single should be checked if data type is selected"
+			};
+			var checkboxTypesMessages = {
 				"type": "error",
-				"text": "Checkbox single should be checked if data type is selected",
-				"id_ref": "checkboxTypes"
-			}
-		];
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
-			JSON.parse(JSON.stringify(checkboxSingleErrorMessages)))).to.be.true;
+				"text": "Checkbox single should be checked if data type is selected"
+			};
+			compareObjects(checkboxSingleMessages, controller.getErrorMessage({ name: "checkboxSingle" }));
+			compareObjects(checkboxTypesMessages, controller.getErrorMessage({ name: "checkboxTypes" }));
 
-		expect(wrapper.find(".validation-error-message-icon-checkbox")).to.have.length(2);
-		expect(wrapper.find(".validation-error-message-color-error")).to.have.length(2);
+			expect(wrapper.find(".validation-error-message-icon-checkbox")).to.have.length(2);
+			expect(wrapper.find(".validation-error-message-color-error")).to.have.length(2);
 
-		checkbox.simulate("change", { target: { checked: false, id: "string" } });
-		checkbox.simulate("blur");
+			checkbox.simulate("change", { target: { checked: false, id: "string" } });
+			wrapper.update();
 
-		const checkboxTypesWarningMessages = [
-			{
+			checkboxTypesMessages = {
 				"type": "warning",
-				"text": "No data types are selected",
-				"id_ref": "checkboxTypes"
-			}
-		];
+				"text": "No data types are selected"
+			};
+			compareObjects(checkboxTypesMessages, controller.getErrorMessage({ name: "checkboxTypes" }));
 
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
-			JSON.parse(JSON.stringify(checkboxTypesWarningMessages)))).to.be.true;
-
-		expect(wrapper.find(".validation-warning-message-icon-checkbox")).to.have.length(1);
-		expect(wrapper.find(".validation-error-message-color-warning")).to.have.length(1);
+			expect(wrapper.find(".validation-warning-message-icon-checkbox")).to.have.length(1);
+			expect(wrapper.find(".validation-error-message-color-warning")).to.have.length(1);
+		});
 	});
-});
+	describe("condition messages renders correctly with structure table cells", () => {
+		it("structuretableRenameFields control should have error message with empty renamed field", () => {
+			const wrapper = createEditorForm("mount");
+			const propertyId = { name: "structuretableRenameFields" };
+			const input = wrapper.find("#structure-table").at(1);
+			expect(input).to.have.length(1);
+			expect(controller.getPropertyValue(propertyId)).to.have.length(2);
 
-describe("condition messages renders correctly with structure table cells", () => {
-	it("structuretableRenameFields control should have error message with empty renamed field", () => {
-		const wrapper = createEditorForm("mount");
+			const dataRows = input.find(".reactable-data").find("tr");
+			expect(dataRows).to.have.length(2);
+			dataRows.first().simulate("click");
+			const cell = dataRows.first().find("#editor-control-new_name");
+			cell.simulate("change", { target: { value: "" } });
+			const rowValues = controller.getPropertyValue(propertyId);
+			const expected = [
+				["Age", ""],
+				["BP", "BP-1"]
+			];
+			expect(_.isEqual(rowValues, expected)).to.be.true;
 
-		const input = wrapper.find("#structure-table").at(1);
-		expect(input).to.have.length(1);
-		expect(wrapper.state().valuesTable.structuretableRenameFields).to.have.length(2);
+			// TODO nothing being checked here for validations
+		});
 
-		const dataRows = input.find(".reactable-data").find("tr");
-		expect(dataRows).to.have.length(2);
-		dataRows.first().simulate("click");
-
-		const cell = dataRows.first().find("#editor-control-structuretableRenameFields");
-		cell.simulate("change", { target: { value: "" } });
-		cell.simulate("blur");
-		const rowValues = wrapper.state().valuesTable.structuretableRenameFields;
-		expect(rowValues).to.have.length(2);
-		const expected = [
-			["Age", ""],
-			["BP", "BP-1"]
-		];
-		expect(_.isEqual(rowValues, expected)).to.be.true;
+		it("structuretableRenameFields control should have disabled dropdown control", () => {
+			const wrapper = createEditorForm("mount");
+			const tabs = wrapper.find(".tabs__tabpanel");
+			expect(tabs).to.have.length(6);
+			const tab = tabs.at(5);
+			const dataRows = tab.find(".reactable-data").find("tr");
+			expect(dataRows).to.have.length(7);
+			const uncheckedRow = dataRows.at(1);
+			expect(uncheckedRow.find(".Dropdown-disabled")).to.have.length(1);
+			const cells = uncheckedRow.find("td");
+			expect(cells).to.have.length(5);
+			const cell = cells.at(3);
+			const dropdown = cell.find(".Dropdown-control-table");
+			expect(dropdown).to.have.length(1);
+			expect(dropdown).to.have.style("display", "none");
+		});
 	});
+	describe("condition messages renders correctly with structure table control", () => {
+		it("structuretableSortOrder control should have error message from no selection", () => {
+			// a note about this test.  structuretableSortOrder has the required = true attribute and
+			// a isNotEmpty condition.  THe isNotEmpty condition error message should take precendence.
+			const wrapper = createEditorForm("mount");
+			const propertyId = { name: "structuretableSortOrder" };
+			const input = wrapper.find("#structure-table").at(0);
+			expect(input).to.have.length(1);
+			expect(controller.getPropertyValue(propertyId)).to.have.length(1);
 
+			let dataRows = input.find(".reactable-data").find("tr");
+			expect(dataRows).to.have.length(1);
+			dataRows.first().simulate("click");
+			wrapper.update();
 
-	it("structuretableRenameFields control should have disabled dropdown control", () => {
-		const wrapper = createEditorForm("mount");
-		const tabs = wrapper.find(".tabs__tabpanel");
-		expect(tabs).to.have.length(6);
-		const tab = tabs.at(5);
-		const dataRows = tab.find(".reactable-data").find("tr");
-		expect(dataRows).to.have.length(7);
-		const uncheckedRow = dataRows.at(1);
-		expect(uncheckedRow.find(".Dropdown-disabled")).to.have.length(1);
-		const cells = uncheckedRow.find("td");
-		expect(cells).to.have.length(5);
-		const cell = cells.at(3);
-		const dropdown = cell.find(".Dropdown-control-table");
-		expect(dropdown).to.have.length(1);
-		expect(dropdown).to.have.style("display", "none");
-	});
+			const enabledRemoveColumnButton = wrapper.find("#remove-fields-button-enabled");
+			expect(enabledRemoveColumnButton).to.have.length(1);
 
-});
+			enabledRemoveColumnButton.simulate("click");
+			wrapper.update();
+			dataRows = input.find(".reactable-data").find("tr");
+			expect(dataRows).to.have.length(0);
+			expect(controller.getPropertyValue(propertyId)).to.have.length(0);
 
-describe("condition messages renders correctly with structure table control", () => {
-	it("structuretableSortOrder control should have error message from no selection", () => {
-		// a note about this test.  structuretableSortOrder has the required = true attribute and
-		// a isNotEmpty condition.  THe isNotEmpty condition error message should take precendence.
-		const wrapper = createEditorForm("mount");
+			enabledRemoveColumnButton.simulate("blur");
+			wrapper.update();
 
-		const input = wrapper.find("#structure-table").at(0);
-		expect(input).to.have.length(1);
-		expect(wrapper.state().valuesTable.structuretableSortOrder).to.have.length(1);
-
-		let dataRows = input.find(".reactable-data").find("tr");
-		expect(dataRows).to.have.length(1);
-		dataRows.first().simulate("click");
-
-		const enabledRemoveColumnButton = wrapper.find("#remove-fields-button-enabled");
-		expect(enabledRemoveColumnButton).to.have.length(1);
-
-		enabledRemoveColumnButton.simulate("click");
-		dataRows = input.find(".reactable-data").find("tr");
-		expect(dataRows).to.have.length(0);
-		expect(wrapper.state().valuesTable.structuretableSortOrder).to.have.length(0);
-
-		enabledRemoveColumnButton.simulate("blur");
-
-		const structuretableSortOrderErrorMessages = [
-			{
+			const structuretableSortOrderErrorMessages = {
 				"type": "error",
-				"text": "table cannot be empty",
-				"id_ref": "structuretableSortOrder"
-			}
-		];
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
-			JSON.parse(JSON.stringify(structuretableSortOrderErrorMessages)))).to.be.true;
+				"text": "table cannot be empty"
+			};
 
-		expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
-		expect(wrapper.find(".form__validation--error")).to.have.length(1);
-	});
+			compareObjects(structuretableSortOrderErrorMessages, controller.getErrorMessage({ name: "structuretableSortOrder" }));
+			expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
+			expect(wrapper.find(".form__validation--error")).to.have.length(1);
+		});
 
-	it("structuretableRenameFields control should have error message from containing 'pw'", () => {
-		const wrapper = createEditorForm("mount");
+		it("structuretableRenameFields control should have error message from containing 'pw'", () => {
+			const wrapper = createEditorForm("mount");
+			const propertyId = { name: "structuretableRenameFields" };
+			const input = wrapper.find("#structure-table").at(1);
+			expect(input).to.have.length(1);
+			expect(controller.getPropertyValue(propertyId)).to.have.length(2);
 
-		const input = wrapper.find("#structure-table").at(1);
-		expect(input).to.have.length(1);
-		expect(wrapper.state().valuesTable.structuretableRenameFields).to.have.length(2);
+			const nameInput = input.find("input[id='editor-control-new_name']");
+			expect(nameInput).to.have.length(2);
+			const inputControl = nameInput.at(0);
+			inputControl.simulate("change", { target: { value: "bad pw" } });
+			wrapper.update();
+			inputControl.simulate("blur");
+			wrapper.update();
 
-		const nameInput = input.find("input[id='editor-control-structuretableRenameFields']");
-		expect(nameInput).to.have.length(2);
-		const inputControl = nameInput.at(0);
-		inputControl.simulate("change", { target: { value: "bad pw" } });
-		inputControl.simulate("blur");
-
-		const structuretableRenameFieldsErrorMessages = [
-			{
+			const structuretableRenameFieldsErrorMessages = {
 				"type": "error",
-				"text": "The 'Output Name' field cannot contain 'pw'",
-				"id_ref": "structuretableRenameFields"
-			}
-		];
+				"text": "The 'Output Name' field cannot contain 'pw'"
+			};
 
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
-			JSON.parse(JSON.stringify(structuretableRenameFieldsErrorMessages)))).to.be.true;
+			compareObjects(structuretableRenameFieldsErrorMessages, controller.getErrorMessage({ name: "structuretableRenameFields" }));
+			expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
+			expect(wrapper.find(".form__validation--error")).to.have.length(1);
 
-		expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
-		expect(wrapper.find(".form__validation--error")).to.have.length(1);
-	});
+		});
 
-	it("required structuretableRenameTable control should have error message from no selection", () => {
-		const wrapper = createEditorForm("mount");
+		it("required structuretableRenameTable control should have error message from no selection", () => {
+			const wrapper = createEditorForm("mount");
+			const propertyId = { name: "structuretableRenameFields" };
 
-		const input = wrapper.find("#structure-table").at(1);
-		expect(input).to.have.length(1);
-		expect(wrapper.state().valuesTable.structuretableRenameFields).to.have.length(2);
+			const input = wrapper.find("#structure-table").at(1);
+			expect(input).to.have.length(1);
+			expect(controller.getPropertyValue(propertyId)).to.have.length(2);
 
-		// remove two data row so that the table is empty
-		let dataRows = input.find(".reactable-data").find("tr");
-		expect(dataRows).to.have.length(2);
-		dataRows.first().simulate("click");
+			// remove two data row so that the table is empty
+			let dataRows = input.find(".reactable-data").find("tr");
+			expect(dataRows).to.have.length(2);
+			dataRows.first().simulate("click");
+			wrapper.update();
 
-		const enabledRemoveColumnButton = wrapper.find("#remove-fields-button-enabled");
-		expect(enabledRemoveColumnButton).to.have.length(1);
+			const enabledRemoveColumnButton = wrapper.find("#remove-fields-button-enabled");
+			expect(enabledRemoveColumnButton).to.have.length(1);
 
-		enabledRemoveColumnButton.simulate("click");
-		dataRows = input.find(".reactable-data").find("tr");
+			enabledRemoveColumnButton.simulate("click");
+			wrapper.update();
+			dataRows = input.find(".reactable-data").find("tr");
 
-		expect(dataRows).to.have.length(1);
-		expect(wrapper.state().valuesTable.structuretableRenameFields).to.have.length(1);
+			expect(dataRows).to.have.length(1);
+			expect(controller.getPropertyValue(propertyId)).to.have.length(1);
 
-		dataRows.first().simulate("click");
-		enabledRemoveColumnButton.simulate("click");
-		dataRows = input.find(".reactable-data").find("tr");
+			dataRows.first().simulate("click");
+			wrapper.update();
+			enabledRemoveColumnButton.simulate("click");
+			wrapper.update();
+			dataRows = input.find(".reactable-data").find("tr");
 
-		expect(dataRows).to.have.length(0);
-		expect(wrapper.state().valuesTable.structuretableRenameFields).to.have.length(0);
+			expect(dataRows).to.have.length(0);
+			expect(controller.getPropertyValue(propertyId)).to.have.length(0);
 
-		enabledRemoveColumnButton.simulate("blur");
+			enabledRemoveColumnButton.simulate("blur");
 
-		const structuretableRenameFieldsErrorMessages = [
-			{
+			const structuretableRenameFieldsErrorMessages = {
 				"type": "error",
-				"text": "Required parameter structuretableRenameFields has no value",
-				"id_ref": "structuretableRenameFields"
-			}
-		];
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
-			JSON.parse(JSON.stringify(structuretableRenameFieldsErrorMessages)))).to.be.true;
+				"text": "Required parameter structuretableRenameFields has no value"
+			};
+			compareObjects(structuretableRenameFieldsErrorMessages, controller.getErrorMessage({ name: "structuretableRenameFields" }));
 
-		expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
-		expect(wrapper.find(".form__validation--error")).to.have.length(1);
+			expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
+			expect(wrapper.find(".form__validation--error")).to.have.length(1);
+		});
 	});
-});
+	describe("Cells disable and hide correctly with structure table control", () => {
+		it("structuretable should disable cells", () => {
+			const wrapper = createEditorForm("mount");
+			const table = wrapper.find("#structure-table");
+			expect(table).to.have.length(4);
+			const storageTable = table.at(3);
+			let disabledDropdowns = storageTable.find(".Dropdown-disabled");
+			expect(disabledDropdowns).to.have.length(4);
+			const input = storageTable.find("#editor-control-override_field_types_0_1");
+			expect(input).to.have.length(1);
+			storageTable.find("input[id='editor-control-override_field_types_0_1']").simulate("change", { target: { checked: false } });
+			wrapper.update();
+			disabledDropdowns = storageTable.find(".Dropdown-disabled");
+			expect(disabledDropdowns).to.have.length(5);
+		});
 
-describe("Cells disable and hide correctly with structure table control", () => {
-	it("structuretable should disable cells", () => {
-		const wrapper = createEditorForm("mount");
-		const table = wrapper.find("#structure-table");
-		expect(table).to.have.length(4);
-		const storageTable = table.at(3);
-		let disabledDropdowns = storageTable.find(".Dropdown-disabled");
-		expect(disabledDropdowns).to.have.length(4);
-		const input = storageTable.find("#editor-control-field_types0_1");
-		expect(input).to.have.length(1);
-		storageTable.find("input[id='editor-control-field_types0_1']").simulate("change", { target: { checked: false } });
-		disabledDropdowns = storageTable.find(".Dropdown-disabled");
-		expect(disabledDropdowns).to.have.length(5);
-		// Strangely, the line below is necessary to reset state else some tests below fail
-		wrapper.find("input[id='editor-control-field_types0_1']").simulate("change", { target: { checked: true } });
+		it("structuretable should hide cells", () => {
+			const wrapper = createEditorForm("mount");
+			const tabs = wrapper.find(".tabs__tabpanel");
+			expect(tabs).to.have.length(6);
+			const tab = tabs.at(5);
+			const table = tab.find("#structure-table");
+			const dataRows = table.find(".reactable-data").find("tr");
+			expect(dataRows).to.have.length(7);
+			let row = dataRows.first();
+			let hiddenDropdowns = row.find(".Dropdown-control-table");
+			expect(hiddenDropdowns).to.have.length(2);
+			expect(hiddenDropdowns.at(1)).not.to.have.style("display", "none");
+			const input = row.find("#editor-control-override_field_types_0_1");
+			expect(input).to.have.length(1);
+			wrapper.find("input[id='editor-control-override_field_types_0_1']").simulate("change", { target: { checked: false } });
+			wrapper.update();
+			row = dataRows.first();
+			hiddenDropdowns = row.find(".Dropdown-control-table");
+			expect(hiddenDropdowns).to.have.length(2);
+			expect(hiddenDropdowns.at(1)).to.have.style("display", "none");
+		});
 	});
 
-	it("structuretable should hide cells", () => {
-		const wrapper = createEditorForm("mount");
-		const tabs = wrapper.find(".tabs__tabpanel");
-		expect(tabs).to.have.length(6);
-		const tab = tabs.at(5);
-		const table = tab.find("#structure-table");
-		const dataRows = table.find(".reactable-data").find("tr");
-		expect(dataRows).to.have.length(7);
-		let row = dataRows.first();
-		let hiddenDropdowns = row.find(".Dropdown-control-table");
-		expect(hiddenDropdowns).to.have.length(2);
-		expect(hiddenDropdowns.at(1)).not.to.have.style("display", "none");
-		const input = row.find("#editor-control-field_types0_1");
-		expect(input).to.have.length(1);
-		wrapper.find("input[id='editor-control-field_types0_1']").simulate("change", { target: { checked: false } });
-		row = dataRows.first();
-		hiddenDropdowns = row.find(".Dropdown-control-table");
-		expect(hiddenDropdowns).to.have.length(2);
-		expect(hiddenDropdowns.at(1)).to.have.style("display", "none");
-		// Strangely, the line below is necessary to reset state else some tests below fail
-		wrapper.find("input[id='editor-control-field_types0_1']").simulate("change", { target: { checked: true } });
+	describe("condition messages renders correctly with structurelisteditor table", () => {
+		it("structurelisteditor control should have error message when notEquals []", () => {
+			const wrapper = createEditorForm("mount");
+			const propertyId = { name: "structurelisteditorTableInput" };
+			const input = wrapper.find("#editor-control-structurelisteditorTableInput");
+			expect(input).to.have.length(1);
+			expect(controller.getPropertyValue(propertyId)).to.have.length(1);
+
+			expect(wrapper.find(".validation-warning-message-icon-structure-list-editor")).to.have.length(0);
+			expect(wrapper.find(".validation-error-message-color-warning")).to.have.length(0);
+			// const dataRows = input.find(".public_fixedDataTable_bodyRow");
+			const dataRows = input.find(".table-row");
+			expect(dataRows).to.have.length(1);
+			dataRows.first().simulate("click");
+			wrapper.update();
+			const removeRowButton = wrapper.find("#remove-fields-button-enabled");
+			expect(removeRowButton).to.have.length(1);
+
+			removeRowButton.simulate("click");
+			wrapper.update();
+			expect(controller.getPropertyValue(propertyId)).to.have.length(0);
+
+			expect(wrapper.find(".validation-warning-message-icon-structure-list-editor")).to.have.length(1);
+			expect(wrapper.find(".validation-error-message-color-warning")).to.have.length(1);
+		});
 	});
-});
 
-describe("condition messages renders correctly with structurelisteditor table", () => {
-	it("structurelisteditor control should have error message when notEquals []", () => {
-		const wrapper = createEditorForm("mount");
+	describe("condition messages renders correctly with radioSet control", () => {
+		// test radioSet disabled and warning message
+		it("radiosetColor control should have warning message selected yellow", () => {
+			const wrapper = createEditorForm("mount");
+			const propertyId = { name: "radiosetColor" };
+			const input = wrapper.find("#editor-control-radiosetColor");
+			expect(input).to.have.length(1);
+			const radios = input.find("input[type='radio']");
+			expect(radios).to.have.length(3);
+			radios.forEach((radio) => {
+				// console.log("radio propsss " + JSON.stringify(radio.props()));
+				expect(radio.is("[disabled]")).to.equal(true);
+			});
+			expect(controller.getControlState(propertyId)).to.equal(defaultControlStates.radiosetColor);
 
-		const input = wrapper.find("#editor-control-structurelisteditorTableInput");
-		expect(input).to.have.length(1);
-		expect(wrapper.state().valuesTable.structurelisteditorTableInput).to.have.length(1);
-
-		expect(wrapper.find(".validation-warning-message-icon-structure-list-editor")).to.have.length(0);
-		expect(wrapper.find(".validation-error-message-color-warning")).to.have.length(0);
-		// const dataRows = input.find(".public_fixedDataTable_bodyRow");
-		const dataRows = input.find(".table-row");
-		expect(dataRows).to.have.length(1);
-		dataRows.first().simulate("click");
-
-		const removeRowButton = wrapper.find("#remove-fields-button-enabled");
-		expect(removeRowButton).to.have.length(1);
-
-		removeRowButton.simulate("click");
-
-		expect(wrapper.state().valuesTable.structurelisteditorTableInput).to.have.length(0);
-
-		expect(wrapper.find(".validation-warning-message-icon-structure-list-editor")).to.have.length(1);
-		expect(wrapper.find(".validation-error-message-color-warning")).to.have.length(1);
-	});
-});
-
-describe("condition messages renders correctly with radioSet control", () => {
-	// test radioSet disabled and warning message
-	it("radiosetColor control should have warning message selected yellow", () => {
-		const wrapper = createEditorForm("mount");
-		const input = wrapper.find("#editor-control-radiosetColor");
-		expect(input).to.have.length(1);
-		const radios = input.find("input[type='radio']");
-		expect(radios).to.have.length(3);
-		radios.forEach((radio) => {
+			const checkbox = wrapper.find("#editor-control-checkboxEnable");
+			expect(checkbox).to.have.length(1);
+			checkbox.simulate("change", { target: { checked: true, id: "Enable" } });
+			wrapper.update();
+			radios.forEach((radio) => {
 			// console.log("radio propsss " + JSON.stringify(radio.props()));
-			expect(radio.is("[disabled]")).to.equal(true);
-		});
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlStates)),
-			JSON.parse(JSON.stringify(defaultControlStates)))).to.be.true;
+				expect(radio.is("[disabled]")).to.equal(false);
+			});
 
-		const checkbox = wrapper.find("#editor-control-checkboxEnable");
-		expect(checkbox).to.have.length(1);
-		checkbox.simulate("change", { target: { checked: true, id: "Enable" } });
-		checkbox.simulate("blur");
+			expect(controller.getControlState(propertyId)).to.equal("enabled");
 
-		radios.forEach((radio) => {
-			expect(radio.is("[disabled]")).to.equal(false);
-		});
+			const radioYellow = radios.find("input[value='yellow']");
+			radioYellow.simulate("change", { target: { checked: true, value: "yellow" } });
+			wrapper.update();
+			const radiosetColorWarningMessages = {
+				radiosetColor:
+							{ type: "warning",
+								text: "Are you sure you want to choose yellow?"
+							}
+			};
+			compareObjects(radiosetColorWarningMessages, controller.getErrorMessages());
 
-		const controlStates = {
-			"textareaDescription": "hidden",
-			"expressionBox": "disabled",
-			"field_types[1][3]": "hidden",
-			"field_types[1][2]": "disabled",
-			"field_types[3][3]": "hidden",
-			"field_types[3][2]": "disabled",
-			"field_types[4][3]": "hidden",
-			"field_types[4][2]": "disabled",
-			"field_types[6][3]": "hidden",
-			"field_types[6][2]": "disabled"
-		};
+			expect(wrapper.find(".validation-warning-message-icon-checkbox")).to.have.length(1);
+			expect(wrapper.find(".validation-error-message-color-warning")).to.have.length(1);
 
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlStates)),
-			JSON.parse(JSON.stringify(controlStates)))).to.be.true;
+			expect(checkbox).to.have.length(1);
+			checkbox.simulate("change", { target: { checked: false, id: "Enable" } });
+			wrapper.update();
+			expect(controller.getControlState(propertyId)).to.equal(defaultControlStates.radiosetColor);
 
-		const radioYellow = radios.find("input[value='yellow']");
-		radioYellow.simulate("change", { target: { checked: true, value: "yellow" } });
-		radioYellow.simulate("blur");
-
-		const radiosetColorWarningMessages = [
-			{
-				"type": "warning",
-				"text": "Are you sure you want to choose yellow?",
-				"id_ref": "radiosetColor"
-			}
-		];
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
-			JSON.parse(JSON.stringify(radiosetColorWarningMessages)))).to.be.true;
-
-		expect(wrapper.find(".validation-warning-message-icon-checkbox")).to.have.length(1);
-		expect(wrapper.find(".validation-error-message-color-warning")).to.have.length(1);
-
-		expect(checkbox).to.have.length(1);
-		checkbox.simulate("change", { target: { checked: false, id: "Enable" } });
-		checkbox.simulate("blur");
-
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlStates)),
-			JSON.parse(JSON.stringify(defaultControlStates)))).to.be.true;
-
-		radios.forEach((radio) => {
-			expect(radio.is("[disabled]")).to.equal(true);
+			radios.forEach((radio) => {
+				expect(radio.is("[disabled]")).to.equal(true);
+			});
 		});
 	});
-});
 
-describe("condition messages renders correctly with textfields control", () => {
-	it("test passwordfield isNotEmpty", () => {
-		const wrapper = createEditorForm("mount");
+	describe("condition messages renders correctly with textfields control", () => {
+		it("test passwordfield isNotEmpty", () => {
+			const wrapper = createEditorForm("mount");
 
-		const passwordInput = wrapper.find("input[id='editor-control-passwordField']");
-		expect(passwordInput).to.have.length(1);
-		passwordInput.simulate("blur");
+			const passwordInput = wrapper.find("input[id='editor-control-passwordField']");
+			expect(passwordInput).to.have.length(1);
+			passwordInput.simulate("change", { target: { value: "" } });
+			wrapper.update();
+			let textfieldNameErrorMessages = {
+				passwordField:
+							{ type: "error",
+								text: "Password cannot be empty, enter \"password\"" },
+				textfieldName:
+							{ type: "error",
+								text: "textfieldName is missing an input value for validation."
+							}
+			};
 
-		let textfieldNameErrorMessages = [
-			{
-				"type": "error",
-				"text": "Password cannot be empty, enter \"password\"",
-				"id_ref": "passwordField"
-			},
-			{
-				"type": "error",
-				"text": "textfieldName is missing an input value for validation.",
-				"id_ref": "textfieldName"
-			}
-		];
+			compareObjects(textfieldNameErrorMessages, controller.getErrorMessages());
+			passwordInput.simulate("change", { target: { value: "password" } });
+			wrapper.update();
+			textfieldNameErrorMessages = {
+				textfieldName:
+							{ type: "error",
+								text: "textfieldName is missing an input value for validation."
+							},
+				passwordField:
+							{ type: "error",
+								text: "textfieldName is missing an input value for validation."
+							}
+			};
 
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
-			JSON.parse(JSON.stringify(textfieldNameErrorMessages)))).to.be.true;
+			compareObjects(textfieldNameErrorMessages, controller.getErrorMessages());
 
-		passwordInput.simulate("change", { target: { value: "password" } });
+			const textfieldNameInput = wrapper.find("#editor-control-textfieldName");
+			textfieldNameInput.simulate("change", { target: { value: "entering a name that contains the password" } });
+			wrapper.update();
+			textfieldNameErrorMessages = {
+				passwordField:
+							{ type: "warning",
+								text: "name cannot contain password"
+							},
+				textfieldName:
+							{ type: "warning",
+								text: "name cannot contain password"
+							}
+			};
 
-		textfieldNameErrorMessages = [
-			{
-				"type": "error",
-				"text": "textfieldName is missing an input value for validation.",
-				"id_ref": "textfieldName"
-			},
-			{
-				"type": "error",
-				"text": "textfieldName is missing an input value for validation.",
-				"id_ref": "passwordField"
-			}
-		];
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
-			JSON.parse(JSON.stringify(textfieldNameErrorMessages)))).to.be.true;
+			compareObjects(textfieldNameErrorMessages, controller.getErrorMessages());
+		});
 
-		const textfieldNameInput = wrapper.find("#editor-control-textfieldName");
-		textfieldNameInput.simulate("change", { target: { value: "entering a name that contains the password" } });
-		textfieldNameInput.simulate("blur");
+		it("control should be hidden", () => {
+			const wrapper = createEditorForm("mount");
+			const textareaDescriptionInput = wrapper.find("#editor-control-textareaDescription");
+			expect(textareaDescriptionInput).to.have.length(1);
+			expect(textareaDescriptionInput).to.have.style("display", "none");
+			expect(controller.getControlState({ name: "textareaDescription" })).to.equal(defaultControlStates.textareaDescription);
+		});
 
-		textfieldNameErrorMessages = [
-			{
-				"type": "warning",
-				"text": "name cannot contain password",
-				"id_ref": "passwordField"
-			},
-			{
-				"type": "warning",
-				"text": "name cannot contain password",
-				"id_ref": "textfieldName"
-			}
-		];
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
-			JSON.parse(JSON.stringify(textfieldNameErrorMessages)))).to.be.true;
+		it("textfields control should have error message from invalid input", () => {
+			const wrapper = createEditorForm("mount");
 
-		textfieldNameInput.simulate("change", { target: { value: "" } });
-		textfieldNameInput.simulate("blur");
+			const passwordInput = wrapper.find("input[id='editor-control-passwordField']");
+			expect(passwordInput).to.have.length(1);
+			passwordInput.simulate("change", { target: { value: "password" } });
+			wrapper.update();
+			const textfieldNameInput = wrapper.find("#editor-control-textfieldName");
+			const textareaDescriptionInput = wrapper.find("#editor-control-textareaDescription");
+
+			expect(controller.getControlState({ name: "textareaDescription" })).to.equal("hidden");
+
+			textfieldNameInput.simulate("change", { target: { value: "entering a name with invalid \"quotes'" } });
+			wrapper.update();
+			let textfieldNameErrorMessages = {
+				textfieldName:
+							{
+								type: "error",
+								text: "Name cannot contain double or single \"quotes\""
+							}
+			};
+
+			compareObjects(textfieldNameErrorMessages, controller.getErrorMessages());
+
+			expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
+			expect(wrapper.find(".form__validation--error")).to.have.length(1);
+
+			textfieldNameInput.simulate("change", { target: { value: "entering a name with invlid / backslash" } });
+			wrapper.update();
+			textfieldNameErrorMessages = {
+				textfieldName:
+				{
+					type: "error",
+					text: "Name cannot contain /"
+				}
+			};
+
+			compareObjects(textfieldNameErrorMessages, controller.getErrorMessages());
+
+			expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
+			expect(wrapper.find(".form__validation--error")).to.have.length(1);
+
+			const checkbox = wrapper.find("#editor-control-checkboxEnableDesc");
+			expect(checkbox).to.have.length(1);
+			checkbox.simulate("change", { target: { checked: true, id: "Enable" } });
+			textfieldNameInput.simulate("change", { target: { value: "entering a valid name" } });
+			textareaDescriptionInput.simulate("change", { target: { value: "entering a valid description" } });
+			wrapper.update();
+			textfieldNameErrorMessages = {};
+			compareObjects(textfieldNameErrorMessages, controller.getErrorMessages());
+
+			expect(wrapper.find(".form__validation--error")).to.have.length(0);
+			expect(wrapper.find(".form__validation--warning")).to.have.length(0);
+		});
+
+		it("required textfields control should have error message from null input", () => {
+			const wrapper = createEditorForm("mount");
+
+			const textareaDescriptionInput = wrapper.find("#editor-control-textareaDescription");
+
+			const checkbox = wrapper.find("#editor-control-checkboxEnableDesc");
+			expect(checkbox).to.have.length(1);
+			checkbox.simulate("change", { target: { checked: true, id: "Enable" } });
+			textareaDescriptionInput.simulate("change", { target: { value: "" } });
+
+			const textfieldNameErrorMessages = {
+				textareaDescription:
+							{
+								type: "error",
+								text: "Required parameter textareaDescription has no value"
+							}
+			};
+
+			compareObjects(textfieldNameErrorMessages, controller.getErrorMessages());
+			wrapper.update();
+			expect(wrapper.find(".form__validation--error")).to.have.length(1);
+			expect(wrapper.find(".form__validation--warning")).to.have.length(0);
+		});
 	});
 
-	it("control should be hidden", () => {
-		const wrapper = createEditorForm("mount");
+	describe("condition messages renders correctly with dropDown control", () => {
+		it("oneofselectAnimals control should have warning message from empty selection", () => {
+			const wrapper = createEditorForm("mount");
 
-		const textareaDescriptionInput = wrapper.find("#editor-control-textareaDescription");
-		expect(textareaDescriptionInput).to.have.length(1);
-		expect(textareaDescriptionInput).to.have.style("display", "none");
-
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlStates.textareaDescription)),
-			JSON.parse(JSON.stringify(defaultControlStates.textareaDescription)))).to.be.true;
+			const dropdownContainer = wrapper.find("#oneofselect-control-container").at(0);
+			const dropdown = dropdownContainer.find(".Dropdown-control-panel");
+			expect(dropdown).to.have.length(1);
+			dropdown.find(".Dropdown-control").simulate("click");
+			wrapper.update();
+			expect(dropdownContainer.find(".validation-warning-message-icon-dropdown")).to.have.length(1);
+			expect(dropdownContainer.find(".validation-error-message-color-warning")).to.have.length(1);
+		});
 	});
-
-	it("textfields control should have error message from invalid input", () => {
-		const wrapper = createEditorForm("mount");
-
-		const passwordInput = wrapper.find("input[id='editor-control-passwordField']");
-		expect(passwordInput).to.have.length(1);
-		passwordInput.simulate("change", { target: { value: "password" } });
-		passwordInput.simulate("blur");
-
-		const textfieldNameInput = wrapper.find("#editor-control-textfieldName");
-		const textareaDescriptionInput = wrapper.find("#editor-control-textareaDescription");
-
-		const controlStates = {
-			"textareaDescription": "hidden"
-		};
-
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlStates.textareaDescription)),
-			JSON.parse(JSON.stringify(controlStates.textareaDescription)))).to.be.true;
-
-		textfieldNameInput.simulate("change", { target: { value: "entering a name with invalid \"quotes'" } });
-		textfieldNameInput.simulate("blur");
-
-		let textfieldNameErrorMessages = [
-			{
-				"type": "error",
-				"text": "Name cannot contain double or single \"quotes\"",
-				"id_ref": "textfieldName"
-			}
-		];
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
-			JSON.parse(JSON.stringify(textfieldNameErrorMessages)))).to.be.true;
-
-		expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
-		expect(wrapper.find(".form__validation--error")).to.have.length(1);
-
-		textfieldNameInput.simulate("change", { target: { value: "entering a name with invlid / backslash" } });
-		textfieldNameInput.simulate("blur");
-
-		textfieldNameErrorMessages = [
-			{
-				"type": "error",
-				"text": "Name cannot contain /",
-				"id_ref": "textfieldName"
-			}
-		];
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
-			JSON.parse(JSON.stringify(textfieldNameErrorMessages)))).to.be.true;
-
-		expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
-		expect(wrapper.find(".form__validation--error")).to.have.length(1);
-
-
-		const checkbox = wrapper.find("#editor-control-checkboxEnableDesc");
-		expect(checkbox).to.have.length(1);
-		checkbox.simulate("change", { target: { checked: true, id: "Enable" } });
-		checkbox.simulate("blur");
-
-
-		textfieldNameInput.simulate("change", { target: { value: "entering a valid name" } });
-		textfieldNameInput.simulate("blur");
-		textareaDescriptionInput.simulate("change", { target: { value: "entering a valid description" } });
-		textareaDescriptionInput.simulate("blur");
-
-		textfieldNameErrorMessages = [];
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
-			JSON.parse(JSON.stringify(textfieldNameErrorMessages)))).to.be.true;
-		// console.info("testtt  " + JSON.stringify(wrapper.state().valuesTable));
-		// console.info("testtt  " + JSON.stringify(wrapper.state().controlErrorMessages));
-		// console.info("testtt  " + JSON.stringify(wrapper.state().controlStates));
-
-		expect(wrapper.find(".form__validation--error")).to.have.length(0);
-		expect(wrapper.find(".form__validation--warning")).to.have.length(0);
-	});
-
-	it("required textfields control should have error message from null input", () => {
-		const wrapper = createEditorForm("mount");
-
-		const textareaDescriptionInput = wrapper.find("#editor-control-textareaDescription");
-
-		const checkbox = wrapper.find("#editor-control-checkboxEnableDesc");
-		expect(checkbox).to.have.length(1);
-		checkbox.simulate("change", { target: { checked: true, id: "Enable" } });
-		checkbox.simulate("blur");
-
-		textareaDescriptionInput.simulate("change", { target: { value: "" } });
-		textareaDescriptionInput.simulate("blur");
-
-		const textfieldNameErrorMessages = [
-			{
-				"type": "error",
-				"text": "Required parameter textareaDescription has no value",
-				"id_ref": "textareaDescription"
-			}
-		];
-		expect(_.isEqual(JSON.parse(JSON.stringify(wrapper.state().controlErrorMessages)),
-			JSON.parse(JSON.stringify(textfieldNameErrorMessages)))).to.be.true;
-
-		expect(wrapper.find(".form__validation--error")).to.have.length(1);
-		expect(wrapper.find(".form__validation--warning")).to.have.length(0);
-	});
-});
-
-describe("condition messages renders correctly with dropDown control", () => {
-	it("oneofselectAnimals control should have warning message from empty selection", () => {
-		const wrapper = createEditorForm("mount");
-
-		const dropdownContainer = wrapper.find("#oneofselect-control-container").at(0);
-		const dropdown = dropdownContainer.find(".Dropdown-control-panel");
-		expect(dropdown).to.have.length(1);
-		dropdown.find(".Dropdown-control").simulate("click");
-
-		expect(dropdownContainer.find(".validation-warning-message-icon-dropdown")).to.have.length(1);
-		expect(dropdownContainer.find(".validation-error-message-color-warning")).to.have.length(1);
-	});
-
-	// cannot verify newly inserted dom elements
-	// it("oneofselectAnimals control should have warning message from selecting tiger", () => {
-	// 	const wrapper = createEditorForm("mount");
-	//
-	// const dropdownContainer = wrapper.find("#oneofselect-control-container").at(0);
-	// const dropdown = dropdownContainer.find(".Dropdown-control-panel");
-	// expect(dropdown).to.have.length(1);
-	// dropdown.find(".Dropdown-control").simulate("click");
-	//
-	// 	expect(dropdown.find(".Dropdown-menu")).to.have.length(1);
-	// 	expect(dropdown.find(".Dropdown-option")).to.have.length(6);
-	// });
 });

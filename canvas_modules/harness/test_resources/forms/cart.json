@@ -55,7 +55,7 @@
                     "itemType": "panel",
                     "panel": {
                       "id": "field-allocation",
-                      "panelType": "columnAllocation",
+                      "panelType": "columnSelection",
                       "uiItems": [
                         {
                           "itemType": "control",
@@ -65,7 +65,7 @@
                               "text": "Target"
                             },
                             "separateLabel": true,
-                            "controlType": "allocatedcolumn",
+                            "controlType": "selectcolumn",
                             "valueDef": {
                               "propType": "string",
                               "isList": false,
@@ -81,7 +81,7 @@
                               "text": "Inputs"
                             },
                             "separateLabel": true,
-                            "controlType": "allocatedcolumns",
+                            "controlType": "selectcolumns",
                             "valueDef": {
                               "propType": "string",
                               "isList": true,

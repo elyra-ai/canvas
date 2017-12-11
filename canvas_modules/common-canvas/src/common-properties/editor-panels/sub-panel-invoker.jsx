@@ -7,11 +7,11 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-/* eslint "react/prop-types": [2, { ignore: ["children"] }] */
-
 import React from "react";
+import PropTypes from "prop-types";
 
 import PropertiesDialog from "../properties-dialog.jsx";
+import WideFlyout from "../components/wide-flyout.jsx";
 
 export default class SubPanelInvoker extends React.Component {
 	constructor(props) {
@@ -47,15 +47,25 @@ export default class SubPanelInvoker extends React.Component {
 
 	render() {
 		var propertiesDialog = [];
-		if (this.state.subPanelVisible) {
+		if (this.state.subPanelVisible && !this.props.customContainer) {
 			propertiesDialog = (<PropertiesDialog
-				onHide={this.hideSubDialog.bind(this, false)}
 				title={this.state.title}
 				okHandler={this.hideSubDialog.bind(this, true)}
 				cancelHandler={this.hideSubDialog.bind(this, false)}
 			>
 				{this.state.panel}
 			</PropertiesDialog>);
+		} else if (this.props.customContainer) {
+			propertiesDialog = (<WideFlyout
+				cancelHandler={this.hideSubDialog.bind(this, false)}
+				okHandler={this.hideSubDialog.bind(this, true)}
+				show={this.state.subPanelVisible}
+				title={this.state.title}
+			>
+				<div>
+					{this.state.panel}
+				</div>
+			</WideFlyout>);
 		}
 
 		return (
@@ -68,4 +78,11 @@ export default class SubPanelInvoker extends React.Component {
 }
 
 SubPanelInvoker.propTypes = {
+	children: PropTypes.element,
+	customContainer: PropTypes.bool
+};
+
+
+SubPanelInvoker.defaultProps = {
+	customContainer: false
 };

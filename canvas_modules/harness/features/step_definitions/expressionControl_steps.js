@@ -86,12 +86,23 @@ module.exports = function() {
 		expect(selectText).toEqual((lastEventLog.data.form.conditionExpr).toString());
 	});
 
-	this.Then(/^I enter "([^"]*)" in ExpressionEditor and press autocomplete and select "([^"]*)"$/, function(enterText, selectText) {
+	this.Then(/^I enter "([^"]*)" in ExpressionEditor and press autocomplete and select "([^"]*)" $/, function(enterText, selectText) {
 		browser.execute(selectAutoComplete, enterText);
 		const CMline = browser.$("#ExpressionEditor").$$(".CodeMirror-line")[0];
 		const searchClass = ".cm-keyword";
 
 		expect(selectText).toEqual(CMline.$$(searchClass)[0].getText());
+	});
+
+	this.Then(/^I enter "([^"]*)" in ExpressionEditor and press autocomplete and select "([^"]*)"$/, function(enterText, selectText) {
+		browser.execute(selectAutoComplete, enterText);
+	});
+
+	this.Then(/^I verify error "([^"]*)"$/, function(errorMsg) {
+		const expMsg = browser.$(".expression-validation-message")
+			.$(".form__validation--error")
+			.getText();
+		expect(errorMsg).toEqual(expMsg);
 	});
 
 	this.Then(/^I verify that the event log has a value of "([^"]*)" for the "([^"]*)" parameter$/, function(testValue, parameterName) {

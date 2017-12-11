@@ -137,7 +137,7 @@ function _makeUIItem(parameterMetadata, group, structureMetadata, l10nProvider) 
 			_makeControls(parameterMetadata, group, structureMetadata, l10nProvider), new Label(l10nProvider.l10nLabel(group, group.name))));
 	}
 	case GroupType.CUSTOM_PANEL: {
-		return UIItem.makeCustomPanel(new CustomControlPanel(groupName, PanelType.PANEL, group.parameterNames()));
+		return UIItem.makeCustomPanel(new CustomControlPanel(groupName, PanelType.CUSTOM, group.parameterNames()));
 	}
 	case GroupType.SUMMARY_PANEL: {
 		groupLabel = l10nProvider.l10nLabel(group, group.name);

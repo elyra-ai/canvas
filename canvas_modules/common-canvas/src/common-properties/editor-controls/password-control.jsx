@@ -11,31 +11,21 @@ import React from "react";
 import PropTypes from "prop-types";
 import { TextField } from "ap-components-react/dist/ap-components-react";
 import EditorControl from "./editor-control.jsx";
-import { EDITOR_CONTROL } from "../constants/constants.js";
 
 export default class PasswordControl extends EditorControl {
 	constructor(props) {
 		super(props);
-		this.state = {
-			controlValue: props.valueAccessor(props.control.name)
-		};
-		this.getControlValue = this.getControlValue.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 	}
 
 	handleChange(evt) {
-		this.setState({ controlValue: evt.target.value });
-		this.props.updateControlValue(this.props.control.name, evt.target.value);
-	}
-
-	getControlValue() {
-		return this.state.controlValue;
+		this.props.controller.updatePropertyValue(this.props.propertyId, evt.target.value);
 	}
 
 	render() {
-		const controlName = this.getControlID().replace(EDITOR_CONTROL, "");
+		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		const conditionProps = {
-			controlName: controlName,
+			propertyId: this.props.propertyId,
 			controlType: "textfield"
 		};
 		const conditionState = this.getConditionMsgState(conditionProps);
@@ -60,8 +50,7 @@ export default class PasswordControl extends EditorControl {
 						id={this.getControlID()}
 						placeholder={this.props.control.additionalText}
 						onChange={this.handleChange}
-						onBlur={this.validateInput}
-						value={this.state.controlValue}
+						value={controlValue}
 					/>
 					{icon}
 				</div>
@@ -71,11 +60,7 @@ export default class PasswordControl extends EditorControl {
 }
 
 PasswordControl.propTypes = {
-	control: PropTypes.object,
-	controlStates: PropTypes.object,
-	validationDefinitions: PropTypes.object,
-	requiredParameters: PropTypes.array,
-	updateValidationErrorMessage: PropTypes.func,
-	retrieveValidationErrorMessage: PropTypes.func,
-	updateControlValue: PropTypes.func
+	control: PropTypes.object.isRequired,
+	propertyId: PropTypes.object.isRequired,
+	controller: PropTypes.object.isRequired
 };

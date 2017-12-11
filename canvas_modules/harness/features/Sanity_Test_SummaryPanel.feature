@@ -5,8 +5,6 @@ Feature: Sanity_Test_SummaryPanel
 	As a human
 	I want to test a common-properties summary panel
 	So I can test the summary panel controls in common-properties
-
-	@watch
 		Scenario: Test of summary panel and wideflyout
 			Given I am on the test harness
 			Given I have toggled the app side common-properties panel

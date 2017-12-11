@@ -14,47 +14,60 @@ import PropertyUtils from "../util/property-utils.js";
 
 const ERROR = "error";
 const WARNING = "warning";
+function evaluateInput(validationDefinition, userInput, control, dataModel, requiredParameters, propertyId, controller) {
+	let output;
+	try {
+		if ((control.valueDef && control.valueDef.isMap) || (typeof propertyId.col !== "undefined")) {
+			output = _validateTable(validationDefinition, userInput, control, dataModel, requiredParameters, propertyId, controller);
+		} else {
+			output = validateInput(validationDefinition, userInput, control.controlType, dataModel,
+				{}, requiredParameters);
+		}
+	} catch (error) {
+		logger.warn("Error thrown in validation: " + error);
+	}
+	return output;
+}
 
-function evaluateInput(validationDefinition, userInput, control, dataModel, requiredParameters, rowIndex, colIndex, setTableErrorState) {
+function _validateTable(validationDefinition, userInput, control, dataModel, requiredParameters, propertyId, controller) {
 	let output;
 	const coordinates = {};
-	if (control.valueDef && control.valueDef.isMap) {
-		// For tables we need to evaluate all non-keyDef cells
-		const cellValues = userInput[control.name];
-		for (let row = 0; row < cellValues.length; row++) {
-			for (let col = 0; col < cellValues[row].length; col++) {
-				if (col === control.keyIndex) {
-					// We don't evaluate the key column
-					continue;
-				}
-				coordinates.rowIndex = row;
-				coordinates.colIndex = col;
-				coordinates.skipVal = cellValues[row][control.keyIndex];
-				const tmp = validateInput(validationDefinition, userInput, control.controlType, dataModel,
-					coordinates, requiredParameters);
-				const isError = PropertyUtils.toType(tmp) === "object";
-				if (!output || PropertyUtils.toType(output) === "boolean") {
-					// Set the return value with preference to errors
+	// get the control for the table,
+	// need to use controller.getControl({ name: propertyId.name })so it does not return the control for the cell.
+	const tableControl = (propertyId.col) ? controller.getControl({ name: propertyId.name }) : null;
+	var tableControlName = propertyId.name;
+	var rowIndex = propertyId.row;
+	var colIndex = propertyId.col;
+	var keyIndex = (propertyId.col) ? tableControl.keyIndex : control.keyIndex;
+	var tableControlType = (propertyId.col) ? tableControl.controlType : control.controlType;
+
+	// For tables we need to evaluate all non-keyDef cells
+	const cellValues = userInput[tableControlName];
+	for (let row = 0; row < cellValues.length; row++) {
+		for (let col = 0; col < cellValues[row].length; col++) {
+			if (col === keyIndex) {
+				// We don't evaluate the key column
+				continue;
+			}
+			coordinates.rowIndex = row;
+			coordinates.colIndex = col;
+			coordinates.skipVal = cellValues[row][keyIndex];
+
+			const tmp = validateInput(validationDefinition, userInput, tableControlType, dataModel,
+				coordinates, requiredParameters, controller);
+
+			// oinly set the error for the current cell
+			const isError = PropertyUtils.toType(tmp) === "object";
+			if (PropertyUtils.toType(rowIndex) === "number" && PropertyUtils.toType(colIndex) === "number") {
+				if (row === rowIndex && col === colIndex && isError) {
 					output = tmp;
-				}
-				if (PropertyUtils.toType(rowIndex) === "number" && PropertyUtils.toType(colIndex) === "number") {
-					// If we have current cell coordinates, they take precedence
-					if (row === rowIndex && col === colIndex && isError) {
-						output = tmp;
-						output.isActiveCell = true;
-					}
-				}
-				if (isError && setTableErrorState !== null) {
-					setTableErrorState(row, col, tmp);
+					output.isActiveCell = true;
 				}
 			}
 		}
-		// validate on table-level if cell validation didn't result in an error already
-		if (!output || PropertyUtils.toType(output) === "boolean") {
-			output = validateInput(validationDefinition, userInput, control.controlType, dataModel,
-				coordinates, requiredParameters);
-		}
-	} else {
+	}
+	// validate on table-level if cell validation didn't result in an error already
+	if (!output || PropertyUtils.toType(output) === "boolean") {
 		output = validateInput(validationDefinition, userInput, control.controlType, dataModel,
 			coordinates, requiredParameters);
 	}

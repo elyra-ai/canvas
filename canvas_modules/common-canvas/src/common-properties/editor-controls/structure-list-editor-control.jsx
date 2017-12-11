@@ -7,13 +7,10 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-// import logger from "../../../utils/logger";
 import React from "react";
 import PropTypes from "prop-types";
 import ColumnStructureTableEditor from "./column-structure-table-editor.jsx";
 import MoveableTableRows from "./moveable-table-rows.jsx";
-
-import { EDITOR_CONTROL } from "../constants/constants.js";
 
 export default class StructurelisteditorControl extends ColumnStructureTableEditor {
 
@@ -41,7 +38,7 @@ export default class StructurelisteditorControl extends ColumnStructureTableEdit
 					allValues[rowIndex][i] = controlValue;
 				}
 			}
-			this.setCurrentControlValue(this.props.control.name, allValues, this.props.updateControlValue);
+			this.setCurrentControlValue(allValues);
 		}
 	}
 
@@ -51,7 +48,7 @@ export default class StructurelisteditorControl extends ColumnStructureTableEdit
 		const rows = this.getCurrentControlValue();
 		rows.push(newRow);
 
-		this.setCurrentControlValue(this.props.control.name, rows, this.props.updateControlValue);
+		this.setCurrentControlValue(rows);
 	}
 
 	removeSelectedRows() {
@@ -67,14 +64,12 @@ export default class StructurelisteditorControl extends ColumnStructureTableEdit
 			rows.splice(selected[i], 1);
 		}
 
-		this.setCurrentControlValue(this.props.control.name, rows, this.props.updateControlValue);
+		this.setCurrentControlValue(rows);
 	}
 
 	render() {
-
-		const controlName = this.getControlID().replace(EDITOR_CONTROL, "");
 		const conditionProps = {
-			controlName: controlName,
+			propertyId: this.props.propertyId,
 			controlType: "structure-list-editor"
 		};
 		const conditionState = this.getConditionMsgState(conditionProps);
@@ -119,10 +114,10 @@ export default class StructurelisteditorControl extends ColumnStructureTableEdit
 					<MoveableTableRows
 						tableContainer={tableContainer}
 						control={this.props.control}
+						controller={this.props.controller}
 						getSelectedRows={this.getSelectedRows}
 						setScrollToRow={this.setScrollToRow}
 						getCurrentControlValue={this.getCurrentControlValue}
-						updateControlValue={this.props.updateControlValue}
 						setCurrentControlValueSelected={this.setCurrentControlValueSelected}
 						stateStyle={stateStyle}
 						disabled={disabled}
@@ -138,12 +133,7 @@ export default class StructurelisteditorControl extends ColumnStructureTableEdit
 
 StructurelisteditorControl.propTypes = {
 	buildUIItem: PropTypes.func,
-	dataModel: PropTypes.object.isRequired,
 	control: PropTypes.object.isRequired,
-	controlStates: PropTypes.object,
-	validationDefinitions: PropTypes.object,
-	requiredParameters: PropTypes.array,
-	updateValidationErrorMessage: PropTypes.func,
-	retrieveValidationErrorMessage: PropTypes.func,
-	updateControlValue: PropTypes.func
+	propertyId: PropTypes.object.isRequired,
+	controller: PropTypes.object.isRequired
 };

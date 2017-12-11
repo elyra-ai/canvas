@@ -6,8 +6,8 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
+// Base class for table controls
 
-// import logger from "../../../utils/logger";
 import React from "react";
 import ReactTooltip from "react-tooltip";
 import { Tr, Td } from "reactable";
@@ -19,7 +19,6 @@ import TextfieldControl from "./textfield-control.jsx";
 import CheckboxControl from "./checkbox-control.jsx";
 import ExpressionControl from "./expression-control.jsx";
 import FlexibleTable from "./flexible-table.jsx";
-import PropertyUtils from "../util/property-utils.js";
 import SubPanelCell from "../editor-panels/sub-panel-cell.jsx";
 import remove32 from "../../../assets/images/remove_32.svg";
 import remove32hover from "../../../assets/images/remove_32_hover.svg";
@@ -38,34 +37,25 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		this.state = {
 			enableRemoveIcon: false,
 			hoverRemoveIcon: false,
-			controlValue: props.valueAccessor(props.control.name),
 			selectedRows: this.props.selectedRows
 		};
 
 		this.onPanelContainer = [];
 
 		this._editing_row = 0;
-		this._subControlId = "___" + props.control.name + "_";
 
-		this.getEditingRow = this.getEditingRow.bind(this);
-		this.startEditingRow = this.startEditingRow.bind(this);
-		this.getEditingRowValue = this.getEditingRowValue.bind(this);
 		this.indexOfColumn = this.indexOfColumn.bind(this);
 
-		this.getControlValue = this.getControlValue.bind(this);
 		this.getCurrentControlValue = this.getCurrentControlValue.bind(this);
 		this.setCurrentControlValue = this.setCurrentControlValue.bind(this);
 		this.setCurrentControlValueSelected = this.setCurrentControlValueSelected.bind(this);
 		this.getSelectedRows = this.getSelectedRows.bind(this);
-		this.getSubControlId = this.getSubControlId.bind(this);
 
 		this.handleRowClick = this.handleRowClick.bind(this);
 		this.getRowClassName = this.getRowClassName.bind(this);
 		this.enumRenderCell = this.enumRenderCell.bind(this);
 
 		this.createTable = this.createTable.bind(this);
-		this.getCellValue = this.getCellValue.bind(this);
-		this.updateControlValue = this.updateControlValue.bind(this);
 		this.onFilter = this.onFilter.bind(this);
 		this.onSort = this.onSort.bind(this);
 		this.setScrollToRow = this.setScrollToRow.bind(this);
@@ -85,23 +75,10 @@ export default class ColumnStructureTableEditor extends EditorControl {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		const controlValue = nextProps.valueAccessor(nextProps.control.name);
 		this.setState({
-			controlValue: controlValue,
 			selectedRows: nextProps.selectedRows
 		});
 		this.selectionChanged(nextProps.selectedRows);
-	}
-
-	/* Returns the public representation of the control value. */
-	getControlValue() {
-		// logger.info(this.state.controlValue);
-		return this.state.controlValue;
-	}
-
-	/* Returns the current internal representation of the control value. */
-	getCurrentControlValue() {
-		return this.state.controlValue;
 	}
 
 	getOnPanelContainer(selectedRows) {
@@ -112,26 +89,28 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		return (<div>{this.onPanelContainer[selectedRows[0]]}</div>);
 	}
 
-	setCurrentControlValueSelected(targetControl, controlValue, updateControlValue, selectedRows) {
-		var that = this;
-		this.setState({
-			controlValue: controlValue,
-			selectedRows: selectedRows
-		}, function() {
-			updateControlValue(targetControl, controlValue);
-			that.updateSelectedRows(that.props.control.name, selectedRows);
-		});
+	getCurrentControlValue() {
+		return this.props.controller.getPropertyValue(this.props.propertyId);
 	}
 
-	setCurrentControlValue(targetControl, controlValue, updateControlValue) {
+	setCurrentControlValueSelected(controlValue, selectedRows) {
 		var that = this;
 		this.setState({
-			controlValue: controlValue,
+			selectedRows: selectedRows
+		}, function() {
+			that.updateSelectedRows(that.props.control.name, selectedRows);
+		});
+		this.props.controller.updatePropertyValue(this.props.propertyId, controlValue);
+	}
+
+	setCurrentControlValue(controlValue) {
+		var that = this;
+		this.setState({
 			selectedRows: []
 		}, function() {
-			updateControlValue(targetControl, controlValue);
 			that.updateSelectedRows(that.props.control.name, []);
 		});
+		this.props.controller.updatePropertyValue(this.props.propertyId, controlValue);
 	}
 
 	setScrollToRow(row, alignTop) {
@@ -141,29 +120,6 @@ export default class ColumnStructureTableEditor extends EditorControl {
 
 	getSelectedRows() {
 		return this.state.selectedRows;
-	}
-
-	getSubControlId() {
-		return this._subControlId;
-	}
-
-	getEditingRow() {
-		return this._editing_row;
-	}
-
-	startEditingRow(rowIndex) {
-		this._editing_row = rowIndex;
-	}
-
-	getEditingRowValue(controlId) {
-		// logger.info("***** getEditingRowValue: controlId=" + controlId);
-
-		const col = this.indexOfColumn(controlId);
-		// List are represented as JSON format strings so need to convert those
-		// to an array of strings
-		const value = this.getCurrentControlValue()[this.getEditingRow()][col];
-		// logger.info("***** value=" + value);
-		return value;
 	}
 
 	indexOfColumn(controlId) {
@@ -226,28 +182,6 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		return rendered;
 	}
 
-	getCellValue(rowIndex, colIndex) {
-		const controlValue = this.getCurrentControlValue();
-		return controlValue[rowIndex][colIndex];
-	}
-
-	updateControlValue(ctrlName, value, rowIndex) {
-		const controlValue = this.getCurrentControlValue();
-		let col = -1;
-		for (var colIndex = 0; colIndex < this.props.control.subControls.length; colIndex++) {
-			if (this.props.control.subControls[colIndex].name === ctrlName) {
-				col = colIndex;
-				break;
-			}
-		}
-		if (col > -1) {
-			this.rowIndex = rowIndex;
-			this.colIndex = col;
-			controlValue[rowIndex][col] = value;
-			this.props.updateControlValue(this.props.control.name, controlValue);
-		}
-	}
-
 	onFilter(filterString) {
 		this.setState({ filterText: filterString });
 	}
@@ -268,7 +202,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			if (spec.direction > 0) {
 				controlValue = controlValue.reverse();
 			}
-			this.setCurrentControlValueSelected(this.props.control.name, controlValue, this.props.updateControlValue, []);
+			this.setCurrentControlValueSelected(controlValue, []);
 		}
 	}
 
@@ -277,96 +211,58 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		let cellContent;
 		let columnStyle = { "width": colWidth, "padding": "0 0 0 0" };
 		const disabled = this._getDisabledStatus(rowIndex, colIndex, stateDisabled);
-		const hidden = this._getHiddenStatus(rowIndex, colIndex, stateStyle);
+		const propertyId = {
+			name: this.props.control.name,
+			row: rowIndex,
+			col: colIndex
+		};
 		if (columnDef.controlType === "toggletext" && columnDef.editStyle !== "subpanel") {
 			columnStyle = { "width": colWidth, "padding": "8px 0 0px 0" };
 			cellContent = (<ToggletextControl
-				rowIndex={rowIndex}
-				control={this.props.control}
-				columnDef={columnDef}
+				controller={this.props.controller}
+				propertyId={propertyId}
+				control={columnDef}
 				values={columnDef.values}
 				valueLabels={columnDef.valueLabels}
 				valueIcons={columnDef.valueIcons}
-				controlValue={controlValue}
-				value={controlValue[rowIndex][colIndex]}
-				updateControlValue={this.props.updateControlValue}
-				columnIndex={colIndex}
-				setCurrentControlValueSelected={this.setCurrentControlValueSelected}
-				getSelectedRows={this.getSelectedRows}
 				tableControl
-				disabled={disabled}
-				hidden={hidden}
 			/>);
 		} else if (columnDef.controlType === "oneofselect" && columnDef.editStyle !== "subpanel") {
 			cellContent = (<OneofselectControl
-				rowIndex={rowIndex}
-				control={this.props.control}
-				columnDef={columnDef}
-				controlValue={controlValue}
-				value={controlValue[rowIndex][colIndex]}
-				updateControlValue={this.props.updateControlValue}
-				columnIndex={colIndex}
-				setCurrentControlValueSelected={this.setCurrentControlValueSelected}
-				selectedRows={this.getSelectedRows()}
+				controller={this.props.controller}
+				propertyId={propertyId}
+				control={columnDef}
 				tableControl
-				disabled={disabled}
-				hidden={hidden}
 			/>);
 		} else if (columnDef.valueDef.propType === "enum" && columnDef.editStyle !== "subpanel") {
 			cellContent = this.enumRenderCell(controlValue[rowIndex][colIndex], columnDef);
 		} else if (columnDef.controlType === "expression" && columnDef.editStyle === "on_panel") {
-			const controlId = "tableexpression" + this.props.control.name;
 			cellContent = (<div>
 				<br />
 				<label className="control-label">Expression</label>
 				<div>
 					<ExpressionControl
-						key={controlId}
-						rowIndex={rowIndex}
-						columnIndex={colIndex}
+						controller={this.props.controller}
+						propertyId={propertyId}
 						control={columnDef}
 						dataModel={this.props.dataModel}
-						controlValue={controlValue}
-						value={controlValue[rowIndex][colIndex]}
-						updateControlValue={this.props.updateControlValue}
-						validateConditions={this.validateConditions}
-						setCurrentControlValueSelected={this.setCurrentControlValueSelected}
-						getSelectedRows={this.getSelectedRows}
 						tableControl
 					/>
 				</div>
 			</div>);
 		} else if (columnDef.controlType === "textfield" && columnDef.editStyle !== "subpanel") {
-			let retrieveFunc;
-			const errorState = this.getTableErrorState(rowIndex, colIndex);
-			if (PropertyUtils.toType(errorState) === "object") {
-				retrieveFunc = this.props.retrieveValidationErrorMessage;
-			}
 			cellContent = (<TextfieldControl
-				rowIndex={rowIndex}
-				control={this.props.control}
-				columnDef={columnDef}
-				value={controlValue[rowIndex][colIndex]}
-				updateControlValue={this.updateControlValue}
-				retrieveValidationErrorMessage={retrieveFunc}
+				controller={this.props.controller}
+				propertyId={propertyId}
+				control={columnDef}
 				tableControl
-				disabled={disabled}
-				hidden={hidden}
 			/>);
 		} else if (columnDef.valueDef.propType === "boolean" && columnDef.editStyle !== "subpanel") {
 			cellContent = (<CheckboxControl
-				rowIndex={rowIndex}
-				columnIndex={colIndex}
-				control={this.props.control}
-				columnDef={columnDef}
-				controlValue={controlValue}
-				value={controlValue[rowIndex][colIndex]}
-				updateControlValue={this.props.updateControlValue}
-				setCurrentControlValueSelected={this.setCurrentControlValueSelected}
-				selectedRows={this.getSelectedRows()}
+				controller={this.props.controller}
+				propertyId={propertyId}
+				control={columnDef}
 				tableControl
-				disabled={disabled}
-				hidden={hidden}
 			/>);
 
 		} else {
@@ -389,7 +285,6 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		} else {
 			cell = (<Td key={colIndex} column={columnDef.name} style={columnStyle}>{cellContent}</Td>);
 		}
-
 		return cell;
 	}
 
@@ -402,17 +297,6 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			const column = row[colIndex];
 			if (column) {
 				return column.disabled;
-			}
-		}
-		return false;
-	}
-
-	_getHiddenStatus(rowIndex, colIndex, stateStyle) {
-		const row = stateStyle[rowIndex];
-		if (row) {
-			const column = row[colIndex];
-			if (column) {
-				return column.display === "none";
 			}
 		}
 		return false;
@@ -513,7 +397,6 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		const removeButton = (<div id={removeFieldsButtonId}
 			className="button"
 			onClick={removeOnClick}
-			onBlur={this.validateInput}
 			onMouseEnter={this.mouseEnterRemoveButton}
 			onMouseLeave={this.mouseLeaveRemoveButton}
 			disabled
@@ -646,7 +529,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 					}
 				}
 				if (this.props.control.childItem) {
-					const cell = this.buildChildItem(columnWidths, controlValue, rowIndex, stateDisabled);
+					const cell = this.buildChildItem(columnWidths, rowIndex, stateDisabled);
 					columns.push(cell);
 				}
 				// add extra 7px cell for overlay scrollbar
@@ -656,29 +539,25 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		}
 	}
 
-	buildChildItem(columnWidths, controlValue, rowIndex, stateDisabled) {
+	buildChildItem(columnWidths, rowIndex, stateDisabled) {
 		// Assumes the child item is an "ADDITIONAL_LINK" object.
 		// However, we will extract information from the and will create our own Cell-based invoker.
+		const propertyId = { name: this.props.propertyId.name, row: rowIndex };
 		const subPanelColIndex = this.props.control.subControls.length;
 		const columnStyle = { "width": columnWidths[subPanelColIndex], "padding": "0 0 0 0" };
-		// const buttonWidth = 6;
-		// const header = <Cell />;
-		const subControlId = this.getSubControlId();
-
-		const subItemButton = this.props.buildUIItem(subControlId, this.props.control.childItem, subControlId, this.getEditingRowValue, this.props.dataModel);
+		const subItemButton = this.props.buildUIItem(rowIndex, this.props.control.childItem, propertyId, this.indexOfColumn);
 		// Hack to decompose the button into our own in-table link
 		const disabled = typeof stateDisabled.disabled !== "undefined" || Object.keys(stateDisabled) > 0;
-		const subCell = (<SubPanelCell data={controlValue}
-			col={this.props.control.subControls.length}
-			rowIndex={rowIndex}
+		const subCell = (<SubPanelCell
 			label={subItemButton.props.label}
 			title={subItemButton.props.title}
 			panel={subItemButton.props.panel}
-			notifyStartEditing={this.startEditingRow}
-			notifyFinishedEditing={this.stopEditingRow}
 			disabled={disabled}
+			controller={this.props.controller}
+			propertyId={this.props.propertyId}
+			customContainer={this.props.customContainer}
 		/>);
-		return (<Td key={subPanelColIndex} column={subControlId} style={columnStyle}>{subCell}</Td>);
+		return (<Td key={subPanelColIndex} column={"subPanel"} style={columnStyle}>{subCell}</Td>);
 	}
 }
 

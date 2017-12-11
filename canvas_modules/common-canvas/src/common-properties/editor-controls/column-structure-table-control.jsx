@@ -7,15 +7,14 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
+// CONTROL structuretable
 /* eslint max-depth: ["error", 5] */
-
-// import logger from "../../../utils/logger";
 import React from "react";
 import ReactTooltip from "react-tooltip";
 import PropTypes from "prop-types";
 import ColumnStructureTableEditor from "./column-structure-table-editor.jsx";
 import MoveableTableRows from "./moveable-table-rows.jsx";
-import { EDITOR_CONTROL, TOOL_TIP_DELAY } from "../constants/constants.js";
+import { TOOL_TIP_DELAY } from "../constants/constants.js";
 
 var _ = require("underscore");
 
@@ -23,7 +22,7 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 	constructor(props) {
 		super(props);
 
-		this._update_callback = null;
+		this._update_callback = null; // TODO is this needed anymore?
 
 		this.getSelectedColumns = this.getSelectedColumns.bind(this);
 		this.getAllocatedColumns = this.getAllocatedColumns.bind(this);
@@ -56,7 +55,7 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 					}
 				}
 			}
-			this.setCurrentControlValue(this.props.control.name, allValues, this.props.updateControlValue);
+			this.setCurrentControlValue(allValues);
 		}
 	}
 
@@ -97,10 +96,6 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 	}
 
 	addColumns(columnNames, callback) {
-		// logger.info("addColumns");
-		// logger.info(columnNames);
-		// logger.info(this.props.control.defaultRow);
-
 		const newRows = [];
 		const isMap = this.props.control.valueDef.isMap;
 		for (var i = 0; i < columnNames.length; i++) {
@@ -128,7 +123,7 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 
 		this._update_callback = callback;
 
-		this.setCurrentControlValue(this.props.control.name, rows, this.props.updateControlValue);
+		this.setCurrentControlValue(rows);
 	}
 
 	removeColumns(columnNames, callback) {
@@ -149,7 +144,7 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 
 		this._update_callback = callback;
 
-		this.setCurrentControlValue(this.props.control.name, newRows, this.props.updateControlValue);
+		this.setCurrentControlValue(newRows);
 	}
 
 	removeSelected() {
@@ -161,7 +156,7 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 				newRows.push(rows[i]);
 			}
 		}
-		this.setCurrentControlValue(this.props.control.name, newRows, this.props.updateControlValue);
+		this.setCurrentControlValue(newRows);
 	}
 
 	selectionChanged(selection) {
@@ -175,9 +170,8 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 			this._update_callback = null;
 		}
 
-		const controlName = this.getControlID().replace(EDITOR_CONTROL, "");
 		const conditionProps = {
-			controlName: controlName,
+			propertyId: this.props.propertyId,
 			controlType: "table"
 		};
 		const conditionState = this.getConditionMsgState(conditionProps);
@@ -239,10 +233,10 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 			<MoveableTableRows
 				tableContainer={content}
 				control={this.props.control}
+				controller={this.props.controller}
 				getSelectedRows={this.getSelectedRows}
 				setScrollToRow={this.setScrollToRow}
 				getCurrentControlValue={this.getCurrentControlValue}
-				updateControlValue={this.props.updateControlValue}
 				setCurrentControlValueSelected={this.setCurrentControlValueSelected}
 				stateStyle={stateStyle}
 				disabled={disabled}
@@ -253,13 +247,8 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 
 ColumnStructureTableControl.propTypes = {
 	buildUIItem: PropTypes.func,
-	dataModel: PropTypes.object.isRequired,
 	control: PropTypes.object.isRequired,
-	controlStates: PropTypes.object,
-	validationDefinitions: PropTypes.object,
-	requiredParameters: PropTypes.array,
-	updateValidationErrorMessage: PropTypes.func,
-	retrieveValidationErrorMessage: PropTypes.func,
-	updateControlValue: PropTypes.func,
+	propertyId: PropTypes.object.isRequired,
+	controller: PropTypes.object.isRequired,
 	customContainer: PropTypes.bool
 };

@@ -7,7 +7,6 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-// import logger from "../../../utils/logger";
 import React from "react";
 import PropTypes from "prop-types";
 import ReactTooltip from "react-tooltip";
@@ -18,27 +17,24 @@ import { Button } from "ap-components-react/dist/ap-components-react";
 import remove32 from "../../../assets/images/remove_32.svg";
 import remove32hover from "../../../assets/images/remove_32_hover.svg";
 import remove32disabled from "../../../assets/images/remove_32_disabled.svg";
-import { EDITOR_CONTROL, TOOL_TIP_DELAY } from "../constants/constants.js";
+import { TOOL_TIP_DELAY } from "../constants/constants.js";
 
 export default class ColumnSelectControl extends EditorControl {
 	constructor(props) {
 		super(props);
 		const selections = [];
-		for (let i = 0; i < this.props.selectedRows.length; i++) {
-			selections.push(props.valueAccessor(props.control.name)[this.props.selectedRows[i]]);
+		const controlValue = props.controller.getPropertyValue(props.propertyId);
+		for (let i = 0; i < props.selectedRows.length; i++) {
+			selections.push(controlValue[props.selectedRows[i]]);
 		}
 		this.state = {
 			hoverRemoveIcon: false,
 			selectedValues: selections
 		};
 
-		this._update_callback = null;
-
-		this.getControlValue = this.getControlValue.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 		this.getSelectedColumns = this.getSelectedColumns.bind(this);
 		this.getAllocatedColumns = this.getAllocatedColumns.bind(this);
-		this.handleChangeMultiColumn = this.handleChangeMultiColumn.bind(this);
 		this.removeSelected = this.removeSelected.bind(this);
 		this.selectionChanged = this.selectionChanged.bind(this);
 		this.mouseEnterRemoveButton = this.mouseEnterRemoveButton.bind(this);
@@ -53,10 +49,10 @@ export default class ColumnSelectControl extends EditorControl {
 
 	componentWillReceiveProps(nextProps) {
 		const selections = [];
+		const controlValue = nextProps.controller.getPropertyValue(nextProps.propertyId);
 		for (let i = 0; i < nextProps.selectedRows.length; i++) {
-			selections.push(nextProps.valueAccessor(nextProps.control.name)[nextProps.selectedRows[i]]);
+			selections.push(controlValue[nextProps.selectedRows[i]]);
 		}
-
 		this.setState({
 			enableRemoveIcon: (selections.length !== 0),
 			selectedValues: selections
@@ -64,7 +60,7 @@ export default class ColumnSelectControl extends EditorControl {
 	}
 
 
-	handleChangeMultiColumn(evt) {
+	handleChange(evt) {
 		let values = [];
 		if (typeof evt.target.options !== "undefined") {
 			values = [].filter.call(evt.target.options, function(o) {
@@ -73,38 +69,24 @@ export default class ColumnSelectControl extends EditorControl {
 				return o.value;
 			});
 		}
-
 		this.setState({ selectedValues: values });
 		this.selectionChanged(values);
 	}
 
-	handleChange(evt) {
-		this.setState({ selectedValues: evt.target.value });
-		this.selectionChanged(evt.target.value);
-	}
-
 	// Selected columns are those that are referenced by values in the control that have
 	// been selected by the user.
+	// TODO not sure if this is needed
 	getSelectedColumns() {
-		// logger.info("getSelectedColumns");
-		// logger.info(this.state.selectedValues);
 		return this.state.selectedValues;
 	}
 
 	// Allocated columns are columns that are referenced by the current control value.
 	getAllocatedColumns() {
-		// logger.info("getAllocatedColumns");
-		return this.getControlValue();
-	}
-
-	getControlValue() {
-		// logger.info("getControlValue");
-		// logger.info(this.state.controlValue);
-		return this.props.valueAccessor(this.props.control.name);
+		return this.props.controller.getPropertyValue(this.props.propertyId);
 	}
 
 	removeSelected() {
-		const rows = this.getControlValue();
+		const rows = this.props.controller.getPropertyValue(this.props.propertyId);
 		const newRows = [];
 		const selected = this.state.selectedValues;
 		for (var i = 0; i < rows.length; i++) {
@@ -112,17 +94,21 @@ export default class ColumnSelectControl extends EditorControl {
 				newRows.push(rows[i]);
 			}
 		}
-		const newState = {};
-		newState.selectedValues = [];
-		this.setState(newState);
-		this.props.updateControlValue(this.props.control.name, newRows);
+		this.setState({
+			selectedValues: []
+		});
+		this.props.controller.updatePropertyValue(this.props.propertyId, newRows);
 		this.selectionChanged([]);
 	}
 
 	selectionChanged(selection) {
 		const indices = [];
 		for (const seln of selection) {
-			indices.push(this.getControlValue().indexOf(seln));
+			const valIdx = this.props.controller.getPropertyValue(this.props.propertyId).indexOf(seln);
+			if (valIdx > -1) {
+				indices.push(valIdx);
+			}
+
 		}
 		this.props.updateSelectedRows(this.props.control.name, indices);
 		this.setState({ enableRemoveIcon: (selection.length !== 0) });
@@ -139,18 +125,11 @@ export default class ColumnSelectControl extends EditorControl {
 	}
 
 	render() {
-		// logger.info("AllocationControl.render");
-		// logger.info(this.state);
-		var options = EditorControl.genStringSelectOptions(this.getControlValue(), this.state.selectedValues);
-		// logger.info(options);
-		if (this._update_callback !== null) {
-			this._update_callback();
-			this._update_callback = null;
-		}
+		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
+		var options = EditorControl.genStringSelectOptions(controlValue, this.state.selectedValues);
 
-		const controlName = this.getControlID().replace(EDITOR_CONTROL, "");
 		const conditionProps = {
-			controlName: controlName,
+			propertyId: this.props.propertyId,
 			controlType: "selection"
 		};
 		const conditionState = this.getConditionMsgState(conditionProps);
@@ -211,51 +190,6 @@ export default class ColumnSelectControl extends EditorControl {
 		</Button>);
 
 		const tooltipId = "tooltip-add-remove-columns-" + this.props.control.name;
-		if (this.props.multiColumn) {
-			return (
-				<div>
-					<div id="field-picker-buttons-container">
-						<div className="properties-tooltips-container add-remove-columns" data-tip="Remove selected columns" data-for={tooltipId}>
-							{removeIcon}
-						</div>
-						<div className="properties-tooltips-container add-remove-columns" data-tip="Select columns to add" data-for={tooltipId}>
-							{addButton}
-						</div>
-					</div>
-					<ReactTooltip
-						id={tooltipId}
-						place="top"
-						type="light"
-						effect="solid"
-						border
-						className="properties-tooltips"
-						delayShow={TOOL_TIP_DELAY}
-					/>
-					<div className="editor_control_area">
-						<div id={controlIconContainerClass}>
-							<FormControl {...stateDisabled}
-								id={this.getControlID()}
-								className={"column-allocator multi " + disabledClassName}
-								componentClass="select"
-								multiple
-								rows={6}
-								name={this.props.control.name}
-								style={stateStyle}
-								onChange={this.handleChangeMultiColumn}
-								onBlur={this.validateInput}
-								value={this.state.selectedValues}
-								ref="input"
-							>
-								{options}
-							</FormControl>
-							{icon}
-						</div>
-						{errorMessage}
-					</div>
-				</div>
-			);
-		}
-
 		return (
 			<div>
 				<div id="field-picker-buttons-container">
@@ -279,13 +213,13 @@ export default class ColumnSelectControl extends EditorControl {
 					<div id={controlIconContainerClass}>
 						<FormControl {...stateDisabled}
 							id={this.getControlID()}
-							className={"column-allocator single " + disabledClassName}
+							className={"column-allocator multi " + disabledClassName}
 							componentClass="select"
-							rows={1}
+							multiple
+							rows={6}
 							name={this.props.control.name}
 							style={stateStyle}
 							onChange={this.handleChange}
-							onBlur={this.validateInput}
 							value={this.state.selectedValues}
 							ref="input"
 						>
@@ -301,12 +235,8 @@ export default class ColumnSelectControl extends EditorControl {
 }
 
 ColumnSelectControl.propTypes = {
-	multiColumn: PropTypes.bool.isRequired,
-	dataModel: PropTypes.object.isRequired,
 	control: PropTypes.object.isRequired,
-	controlStates: PropTypes.object,
-	validationDefinitions: PropTypes.object,
-	updateValidationErrorMessage: PropTypes.func,
-	retrieveValidationErrorMessage: PropTypes.func,
-	updateControlValue: PropTypes.func
+	propertyId: PropTypes.object.isRequired,
+	controller: PropTypes.object.isRequired,
+	selectedRows: PropTypes.array.isRequired
 };

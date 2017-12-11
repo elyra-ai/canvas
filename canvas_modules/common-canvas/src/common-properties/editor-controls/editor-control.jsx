@@ -7,14 +7,11 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 /* eslint max-depth: ["error", 7] */
-/* eslint complexity: ["error", 17] */
 
-import logger from "../../../utils/logger";
 import React from "react";
 import PropTypes from "prop-types";
 import ValidationMessage from "./validation-message.jsx";
 import ValidationIcon from "./validation-icon.jsx";
-import UiConditions from "../ui-conditions/ui-conditions.js";
 import { DEFAULT_VALIDATION_MESSAGE, VALIDATION_MESSAGE, EDITOR_CONTROL } from "../constants/constants.js";
 
 export default class EditorControl extends React.Component {
@@ -65,14 +62,14 @@ export default class EditorControl extends React.Component {
 
 	static genColumnSelectDropdownOptions(fields, selectedValues) {
 		var options = [];
-
-		for (var j = 0; j < fields.length; j++) {
-			options.push({
-				value: fields[j].name,
-				label: fields[j].name
-			});
+		if (fields) {
+			for (var j = 0; j < fields.length; j++) {
+				options.push({
+					value: fields[j].name,
+					label: fields[j].name
+				});
+			}
 		}
-
 		return options;
 	}
 
@@ -118,42 +115,24 @@ export default class EditorControl extends React.Component {
 	constructor(props) {
 		super(props);
 		this.getControlID = this.getControlID.bind(this);
-		this.setValueListener = this.setValueListener.bind(this);
-		this.clearValueListener = this.clearValueListener.bind(this);
-		this.notifyValueChanged = this.notifyValueChanged.bind(this);
-		this.validateInput = this.validateInput.bind(this);
-		this.getUserInput = this.getUserInput.bind(this);
-		this.clearTableErrorState = this.clearTableErrorState.bind(this);
-		this.getTableErrorState = this.getTableErrorState.bind(this);
-		this.setTableErrorState = this.setTableErrorState.bind(this);
-		this._valueListener = null;
+		this.getConditionMsgState = this.getConditionMsgState.bind(this);
 	}
 
 	getControlID() {
 		return EDITOR_CONTROL + this.props.control.name;
 	}
 
-	/*
-	 * Sub-classes must override this function to return the value of the control as an array of strings.
-	 */
-	getControlValue() {
-		return [];
-	}
-
-
 	getConditionMsgState(conditionProps) {
 		let message = DEFAULT_VALIDATION_MESSAGE;
-		if (this.props.retrieveValidationErrorMessage) {
-			message = this.props.retrieveValidationErrorMessage(conditionProps.controlName);
-			if (typeof message === "undefined" || message === null) {
-				message = DEFAULT_VALIDATION_MESSAGE;
-			}
+		message = this.props.controller.getErrorMessage(conditionProps.propertyId);
+		if (typeof message === "undefined" || message === null) {
+			message = DEFAULT_VALIDATION_MESSAGE;
 		}
 		let errorMessage = (<ValidationMessage
 			validateErrorMessage={message}
 			controlType={conditionProps.controlType}
 		/>);
-		const errorIcon = (<ValidationIcon
+		let errorIcon = (<ValidationIcon
 			validateErrorMessage={message}
 			controlType={conditionProps.controlType}
 		/>);
@@ -167,53 +146,37 @@ export default class EditorControl extends React.Component {
 			switch (message.type) {
 			case "warning":
 				stateStyle = {
-					// color: VALIDATION_MESSAGE.WARNING,
 					borderColor: VALIDATION_MESSAGE.WARNING
 				};
 				break;
 			case "error":
 				stateStyle = {
-					// color: VALIDATION_MESSAGE.ERROR,
 					borderColor: VALIDATION_MESSAGE.ERROR
 				};
 				break;
 			default:
 			}
 		}
-
-		if (this.props.controlStates && typeof this.props.controlStates[conditionProps.controlName] !== "undefined") {
-			switch (this.props.controlStates[conditionProps.controlName]) {
+		const controlState = this.props.controller.getControlState(conditionProps.propertyId);
+		if (controlState) {
+			switch (controlState) {
 			case "disabled":
 				stateDisabled.disabled = true;
 				stateStyle.color = VALIDATION_MESSAGE.DISABLED;
 				stateStyle.borderColor = VALIDATION_MESSAGE.DISABLED;
 				showTooltip = false;
+				errorMessage = <div />;
+				errorIcon = <div />;
 				break;
 			case "hidden":
 				stateStyle.display = "none";
 				showTooltip = false;
+				errorMessage = <div />;
+				errorIcon = <div />;
 				break;
 			default:
 			}
-			errorMessage = <div />;
 		}
-
-		if (this.props.tableControl) {
-			// If this is a control in a table cell, refer to disabled and visible directly
-			if (this.props.disabled) {
-				stateDisabled.disabled = true;
-				stateStyle = {
-					color: VALIDATION_MESSAGE.DISABLED,
-					borderColor: VALIDATION_MESSAGE.DISABLED
-				};
-			} else if (this.props.hidden) {
-				stateStyle.display = "none";
-			}
-		} else {
-			// Check for cell level operations for tables, which are added to the base control state
-			this._updateCellConditions(conditionProps, stateDisabled, stateStyle);
-		}
-
 		return {
 			message: errorMessage,
 			messageType: messageType,
@@ -232,59 +195,13 @@ export default class EditorControl extends React.Component {
 		return limit;
 	}
 
-	getUserInput() {
-		const userInput = {};
-		const controlValues = this.props.getControlValues();
-		for (const key in controlValues) {
-			if (key) {
-				userInput[key] = controlValues[key];
-			}
-		}
 
-		const subControlValues = this.props.getSubControlValues();
-		for (const key in subControlValues) {
-			if (key) {
-				userInput[key] = subControlValues[key];
-			}
-		}
-
-		return userInput;
-	}
-
-	setValueListener(listener) {
-		// Listener is expected to define handleValueChanged(controlName, value);
-		this._valueListener = listener;
-	}
-
-	getTableErrorState(row, column) {
-		if (this.tableErrorState && row < this.tableErrorState.length && column < this.tableErrorState[row].length) {
-			return this.tableErrorState[row][column];
-		}
-		return true;
-	}
-
-	setTableErrorState(row, column, errorMessageObject) {
-		for (let i = this.tableErrorState.length; i <= row; i++) {
-			this.tableErrorState.push([]);
-		}
-		for (let i = this.tableErrorState[row].length; i <= column; i++) {
-			this.tableErrorState[row].push(true);
-		}
-		this.tableErrorState[row][column] = errorMessageObject;
-	}
-
-	clearTableErrorState() {
-		this.tableErrorState = [];
-	}
-
-	clearValueListener() {
-		this._valueListener = null;
-	}
-
+	// TODO Remove?
 	_updateCellConditions(conditionProps, stateDisabled, stateStyle) {
 		if (this.props.control.valueDef && this.props.control.valueDef.isMap) {
-			for (var key in this.props.controlStates) {
-				if (this.props.controlStates.hasOwnProperty(key)) {
+			const controlStates = this.props.controller.getControlStates();
+			for (var key in controlStates) {
+				if (controlStates.hasOwnProperty(key)) {
 					// Separate any complex type sub-control reference
 					let paramName = key;
 					let offset = key.indexOf("[");
@@ -294,7 +211,7 @@ export default class EditorControl extends React.Component {
 						offset = key.indexOf("[", offset + 1);
 						const colIndex = offset > -1 ? parseInt(key.substring(offset + 1), 10) : -1;
 						if (conditionProps.controlName === paramName && rowIndex > -1) {
-							this._updateHiddenDisabled(this.props.controlStates[key],
+							this._updateHiddenDisabled(controlStates[key],
 								rowIndex, colIndex, stateDisabled, stateStyle);
 						}
 					}
@@ -302,7 +219,7 @@ export default class EditorControl extends React.Component {
 			}
 		}
 	}
-
+	// TODO Remove?
 	_updateHiddenDisabled(controlState, rowIndex, colIndex, stateDisabled, stateStyle) {
 		if (controlState === "disabled") {
 			if (!stateDisabled[rowIndex]) {
@@ -334,113 +251,6 @@ export default class EditorControl extends React.Component {
 		}
 	}
 
-	notifyValueChanged(controlName, value) {
-		// logger.info("notifyValueChanged(): control=" + controlName);
-		// logger.info(value);
-		if (this._valueListener !== null) {
-			// logger.info("notifyValueChanged(): notifying value listener");
-			this._valueListener.handleValueChanged(controlName, value);
-		} else {
-			// logger.info("notifyValueChanged(): no listener");
-		}
-	}
-
-	_shouldEvaluate(validation) {
-		let evaluate = true;
-		if (typeof validation.params === "object") {
-			for (const control of validation.params) {
-				if (typeof this.props.controlStates[control] !== "undefined") {
-					evaluate = false;
-					break;
-				}
-			}
-		}
-		return evaluate;
-	}
-
-	_evaluateInput(validation, userInput) {
-		return UiConditions.evaluateInput(validation.definition, userInput, this.props.control, this.props.dataModel, this.props.requiredParameters,
-			this.rowIndex, this.colIndex, this.setTableErrorState);
-	}
-
-	_doGroupValidationUpdate(validation, errorMessage, output, controlName) {
-		if (typeof validation.params === "object") {
-			for (const control of validation.params) {
-				let groupMessage = errorMessage;
-				if (output === true) {
-					groupMessage = DEFAULT_VALIDATION_MESSAGE;
-				}
-				if (control !== controlName) {
-					this.props.updateValidationErrorMessage(control, groupMessage);
-				}
-			}
-		}
-	}
-
-	validateInput(cellCoords) {
-		const controlName = this.getControlID().replace(EDITOR_CONTROL, "");
-
-		if (!this.props.validationDefinitions) {
-			return;
-		}
-		if (this.props.validateConditions) {
-			// run visible and enabled condition validations
-			this.props.validateConditions(this.props.dataModel, cellCoords);
-		}
-		if (this.props.control.valueDef.isMap) {
-			this.clearTableErrorState(); 	// Clear table error state
-		}
-		let errorSet = false;
-		const userInput = this.getUserInput();
-		const validations = this.props.validationDefinitions[controlName];
-		if (this.props.controlStates && typeof this.props.controlStates[controlName] === "undefined" && Array.isArray(validations)) {
-			try {
-				let output = false;
-				let errorMessage = DEFAULT_VALIDATION_MESSAGE;
-				let validationSet = false;
-
-				for (const validation of validations) {
-					if (this._shouldEvaluate(validation)) {
-						output = this._evaluateInput(validation, userInput);
-						let isError = false;
-						// logger.info("validated input field " + controlName + " to be " + JSON.stringify(output));
-						if (typeof output === "object") {
-							isError = true;
-							errorMessage = {
-								type: output.type,
-								text: output.text
-							};
-						}
-						if (!validationSet || output.isActiveCell || (isError && !errorSet)) {
-							this.props.updateValidationErrorMessage(controlName, errorMessage);
-							validationSet = true;
-							if (isError) {
-								errorSet = true;
-							}
-						}
-						this._doGroupValidationUpdate(validation, errorMessage, output, controlName);
-					}
-				}
-			} catch (error) {
-				logger.warn("Error thrown in validation: " + error);
-			}
-		}
-
-		if (!errorSet && this.props.requiredParameters.indexOf(controlName) !== -1) {
-			const controlValue = userInput[controlName];
-			if (controlValue === null || controlValue === "" ||
-					(Array.isArray(controlValue) && controlValue.length === 0)) {
-				const errorMessage = {
-					type: "error",
-					text: "Required parameter " + controlName + " has no value"
-				};
-				this.props.updateValidationErrorMessage(controlName, errorMessage);
-			} else {
-				this.props.updateValidationErrorMessage(controlName, DEFAULT_VALIDATION_MESSAGE);
-			}
-		}
-	}
-
 	render() {
 		return (
 			<div key="editor-control" />
@@ -450,18 +260,6 @@ export default class EditorControl extends React.Component {
 
 EditorControl.propTypes = {
 	control: PropTypes.object.isRequired,
-	controlStates: PropTypes.object,
-	valueAccessor: PropTypes.func.isRequired,
-	validationDefinitions: PropTypes.object,
-	requiredParameters: PropTypes.array,
-	tableControl: PropTypes.boolean,
-	disabled: PropTypes.boolean,
-	hidden: PropTypes.boolean,
-	columnDef: PropTypes.object,
-	validateConditions: PropTypes.func,
-	updateValidationErrorMessage: PropTypes.func,
-	retrieveValidationErrorMessage: PropTypes.func,
-	dataModel: PropTypes.object,
-	getControlValues: PropTypes.func,
-	getSubControlValues: PropTypes.func
+	tableControl: PropTypes.bool,
+	controller: PropTypes.object.isRequired
 };

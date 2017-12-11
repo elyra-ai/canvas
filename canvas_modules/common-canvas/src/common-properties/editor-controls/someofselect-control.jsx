@@ -12,15 +12,10 @@ import PropTypes from "prop-types";
 import { FormControl } from "react-bootstrap";
 import EditorControl from "./editor-control.jsx";
 import ReactDOM from "react-dom";
-import { EDITOR_CONTROL } from "../constants/constants.js";
 
 export default class SomeofselectControl extends EditorControl {
 	constructor(props) {
 		super(props);
-		this.state = {
-			controlValue: props.valueAccessor(props.control.name)
-		};
-		this.getControlValue = this.getControlValue.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 	}
 
@@ -31,19 +26,13 @@ export default class SomeofselectControl extends EditorControl {
 		}).map(function(o) {
 			return o.value;
 		});
-		this.setState({ controlValue: values });
-		this.notifyValueChanged(this.props.control.name, values);
-		this.props.updateControlValue(this.props.control.name, values);
-	}
-
-	getControlValue() {
-		return this.state.controlValue;
+		this.props.controller.updatePropertyValue(this.props.propertyId, values);
 	}
 
 	render() {
-		const controlName = this.getControlID().replace(EDITOR_CONTROL, "");
+		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		const conditionProps = {
-			controlName: controlName,
+			propertyId: this.props.propertyId,
 			controlType: "selection"
 		};
 		const conditionState = this.getConditionMsgState(conditionProps);
@@ -59,7 +48,7 @@ export default class SomeofselectControl extends EditorControl {
 			controlIconContainerClass = "control-icon-container-enabled";
 		}
 
-		var options = EditorControl.genSelectOptions(this.props.control, this.state.controlValue);
+		var options = EditorControl.genSelectOptions(this.props.control, controlValue);
 
 		return (
 			<div style={stateStyle}>
@@ -68,9 +57,10 @@ export default class SomeofselectControl extends EditorControl {
 						{...stateDisabled}
 						style={stateStyle}
 						componentClass="select"
-						multiple name={this.props.control.name}
+						multiple
+						name={this.props.control.name}
 						onChange={this.handleChange}
-						value={this.state.controlValue}
+						value={controlValue}
 						ref="input"
 					>
 						{options}
@@ -85,8 +75,8 @@ export default class SomeofselectControl extends EditorControl {
 
 SomeofselectControl.propTypes = {
 	control: PropTypes.object,
-	updateControlValue: PropTypes.func,
-	controlStates: PropTypes.object,
+	propertyId: PropTypes.object.isRequired,
+	controller: PropTypes.object.isRequired,
 	updateValidationErrorMessage: PropTypes.func,
 	retrieveValidationErrorMessage: PropTypes.func,
 	validationDefinitions: PropTypes.object,

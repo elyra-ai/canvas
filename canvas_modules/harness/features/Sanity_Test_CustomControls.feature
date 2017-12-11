@@ -9,19 +9,17 @@ Feature: Sanity_Test_CustomControls
 	Scenario: Test of custom panels
 		Given I am on the test harness
 		Given I have toggled the app side common-properties panel
-		Then I have selected the "Modal" properties container type
+		Then I have selected the "Flyout" properties container type
 		Given I have uploaded JSON for common-properties "CustomPanel_paramDef.json"
 
+		Then I click the "TOGGLE" category from flyout
 		Then I click on toggle 0
-		Then I select the Tab 2
+		Then I click the "MAP AND SLIDER" category from flyout
+		Then I open the "Configure Map and Slider" summary link in the "MAP AND SLIDER" category
+		Then I verify that a wideflyout dialog has opened
 		Then I click on slider
+		Then I show the map and go to Armonk
+		Then I click on modal OK button
+		Then I pause for 1 seconds
 		Then I click on modal OK button
 		Then I verify custom panel
-
-	Scenario: Test of custom control with structure property
-		Given I am on the test harness
-		Given I have toggled the app side common-properties panel
-		Given I have uploaded JSON for common-properties "CustomMap_paramDef.json"
-
-		Then I show the map and go to SVL
-		Then I verify custom control with structure property

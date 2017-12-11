@@ -48,7 +48,7 @@ const GroupType = {
 
 const PanelType = {
 	GENERAL: "general",
-	COLUMN_ALLOCATION: "columnAllocation",
+	COLUMN_ALLOCATION: "columnAllocation", // deprecated
 	COLUMN_SELECTION: "columnSelection",
 	CHECKBOX_PANEL: "checkboxPanel",
 	CUSTOM: "custom",

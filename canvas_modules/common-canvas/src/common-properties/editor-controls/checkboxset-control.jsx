@@ -7,25 +7,20 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-// import logger from "../../../utils/logger";
 import React from "react";
 import PropTypes from "prop-types";
 import { Checkbox } from "ap-components-react/dist/ap-components-react";
 import EditorControl from "./editor-control.jsx";
-import { EDITOR_CONTROL } from "../constants/constants.js";
 
 export default class CheckboxsetControl extends EditorControl {
 	constructor(props) {
 		super(props);
-		this.state = {
-			controlValue: props.valueAccessor(props.control.name)
-		};
-		this.getControlValue = this.getControlValue.bind(this);
+		this.state = {};
 		this.handleChange = this.handleChange.bind(this);
 	}
 
 	handleChange(evt) {
-		var values = this.state.controlValue;
+		var values = this.props.controller.getPropertyValue(this.props.propertyId);
 		var index = values.indexOf(evt.target.id);
 		if (evt.target.checked && index < 0) {
 			// Add to values
@@ -35,19 +30,13 @@ export default class CheckboxsetControl extends EditorControl {
 			// Remove from values
 			values.splice(index, 1);
 		}
-		this.setState({ controlValue: values });
-		this.notifyValueChanged(this.props.control.name, values);
-		this.props.updateControlValue(this.props.control.name, values);
-	}
-
-	getControlValue() {
-		return this.state.controlValue;
+		this.props.controller.updatePropertyValue(this.props.propertyId, values);
 	}
 
 	render() {
-		const controlName = this.getControlID().replace(EDITOR_CONTROL, "");
+		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		const conditionProps = {
-			controlName: controlName,
+			propertyId: this.props.propertyId,
 			controlType: "checkbox"
 		};
 		const conditionState = this.getConditionMsgState(conditionProps);
@@ -66,7 +55,7 @@ export default class CheckboxsetControl extends EditorControl {
 
 		for (var i = 0; i < this.props.control.values.length; i++) {
 			var val = this.props.control.values[i];
-			var checked = (this.state.controlValue.indexOf(val) >= 0);
+			var checked = (controlValue.indexOf(val) >= 0);
 			var classType = "";
 			if (this.state.validateErrorMessage && this.state.validateErrorMessage.type) {
 				classType = this.state.validateErrorMessage.type;
@@ -79,7 +68,6 @@ export default class CheckboxsetControl extends EditorControl {
 				key={val + i}
 				name={this.props.control.valueLabels[i]}
 				onChange={this.handleChange}
-				onBlur={this.validateInput}
 				checked={checked}
 			/>);
 		}
@@ -99,11 +87,7 @@ export default class CheckboxsetControl extends EditorControl {
 }
 
 CheckboxsetControl.propTypes = {
-	control: PropTypes.object,
-	controlStates: PropTypes.object,
-	validationDefinitions: PropTypes.object,
-	requiredParameters: PropTypes.array,
-	updateValidationErrorMessage: PropTypes.func,
-	retrieveValidationErrorMessage: PropTypes.func,
-	updateControlValue: PropTypes.func
+	control: PropTypes.object.isRequired,
+	propertyId: PropTypes.object.isRequired,
+	controller: PropTypes.object.isRequired
 };

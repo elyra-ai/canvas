@@ -110,7 +110,7 @@ module.exports = function() {
 	});
 
 	this.Then(/^I check for table cell level validation from flyout$/, function() {
-		var tableCell1 = browser.$$("#editor-control-renamed_fields")[0];
+		var tableCell1 = browser.$$("#editor-control-new_name")[0];
 		tableCell1.setValue("", "Na");
 		var tableCell2 = browser.$("#custom-container");
 		tableCell2.click();

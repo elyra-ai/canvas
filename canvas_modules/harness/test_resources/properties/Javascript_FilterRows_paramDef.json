@@ -79,6 +79,24 @@
           }
         }
       }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "conditionExpr",
+          "message": {
+            "default": "Cannot have value innerWidth"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "conditionExpr",
+            "op": "notEquals",
+            "value": "innerWidth"
+          }
+        }
+      }
     }
   ],
   "dataset_metadata": {

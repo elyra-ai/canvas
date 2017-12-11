@@ -7,9 +7,6 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-/* eslint max-depth: ["error", 5] */
-
-// import logger from "../../../utils/logger";
 import React from "react";
 import PropTypes from "prop-types";
 import TopMoveIconEnable from "../../../assets/images/top_enabled.svg";
@@ -91,7 +88,7 @@ export default class MoveableTableRows extends React.Component {
 		if (selected.length > 0) {
 			this.props.setScrollToRow(selected[0], true);
 		}
-		this.props.setCurrentControlValueSelected(this.props.control.name, controlValue, this.props.updateControlValue, selected);
+		this.props.setCurrentControlValueSelected(controlValue, selected);
 	}
 
 	upMoveRow(evt) {
@@ -109,7 +106,7 @@ export default class MoveableTableRows extends React.Component {
 				}
 			}
 			this.props.setScrollToRow(selected[0], true);
-			this.props.setCurrentControlValueSelected(this.props.control.name, controlValue, this.props.updateControlValue, selected);
+			this.props.setCurrentControlValueSelected(controlValue, selected);
 		}
 	}
 
@@ -128,7 +125,7 @@ export default class MoveableTableRows extends React.Component {
 				}
 			}
 			this.props.setScrollToRow(selected[selected.length - 1], false);
-			this.props.setCurrentControlValueSelected(this.props.control.name, controlValue, this.props.updateControlValue, selected);
+			this.props.setCurrentControlValueSelected(controlValue, selected);
 		}
 	}
 
@@ -147,7 +144,7 @@ export default class MoveableTableRows extends React.Component {
 		if (selected.length > 0) {
 			this.props.setScrollToRow(selected[selected.length - 1], false);
 		}
-		this.props.setCurrentControlValueSelected(this.props.control.name, controlValue, this.props.updateControlValue, selected);
+		this.props.setCurrentControlValueSelected(controlValue, selected);
 	}
 
 	render() {
@@ -193,7 +190,7 @@ export default class MoveableTableRows extends React.Component {
 
 MoveableTableRows.propTypes = {
 	control: PropTypes.object.isRequired,
-	updateControlValue: PropTypes.func.isRequired,
+	controller: PropTypes.object.isRequired,
 	getSelectedRows: PropTypes.func.isRequired,
 	getCurrentControlValue: PropTypes.func.isRequired,
 	setCurrentControlValueSelected: PropTypes.func.isRequired,

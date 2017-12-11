@@ -25,7 +25,7 @@
               "itemType": "panel",
               "panel": {
                 "id": "basic-settings",
-                "panelType": "columnAllocation",
+                "panelType": "columnSelection",
                 "uiItems": [
                   {
                     "itemType": "control",
@@ -35,7 +35,7 @@
                         "text": "Sort by"
                       },
                       "separateLabel": true,
-                      "controlType": "allocatedstructures",
+                      "controlType": "structuretable",
                       "valueDef": {
                         "propType": "structure",
                         "isList": true,

@@ -11,10 +11,9 @@ import React from "react";
 import FieldAllocatorControl from "../../../src/common-properties/editor-controls/field-allocator-control.jsx";
 import { mount } from "enzyme";
 import { expect } from "chai";
-import chai from "chai";
-import chaiEnzyme from "chai-enzyme";
-chai.use(chaiEnzyme()); // Note the invocation at the end
+import Controller from "../../../src/common-properties/properties-controller";
 
+const controller = new Controller();
 
 const control = {
 	"name": "targetField",
@@ -38,7 +37,7 @@ const control = {
 const dataModel = {
 	"fields": [
 		{
-			"name": "Age",
+			"name": "age",
 			"type": "integer",
 			"metadata": {
 				"description": "",
@@ -47,25 +46,7 @@ const dataModel = {
 			}
 		},
 		{
-			"name": "Sex",
-			"type": "string",
-			"metadata": {
-				"description": "",
-				"measure": "discrete",
-				"modeling_role": "input"
-			}
-		},
-		{
 			"name": "BP",
-			"type": "string",
-			"metadata": {
-				"description": "",
-				"measure": "discrete",
-				"modeling_role": "input"
-			}
-		},
-		{
-			"name": "Cholesterol",
 			"type": "string",
 			"metadata": {
 				"description": "",
@@ -81,34 +62,19 @@ const dataModel = {
 				"measure": "range",
 				"modeling_role": "input"
 			}
-		},
-		{
-			"name": "K",
-			"type": "double",
-			"metadata": {
-				"description": "",
-				"measure": "range",
-				"modeling_role": "input"
-			}
-		},
-		{
-			"name": "Drug",
-			"type": "string",
-			"metadata": {
-				"description": "",
-				"measure": "discrete",
-				"modeling_role": "input"
-			}
 		}
 	]
 };
 
+const propertyId = { name: "targetField" };
+
 const emptyDataModel = {
 	"fields": []
 };
-
-function valueAccessor() {
-	return [];
+function setPropertyValue() {
+	controller.setPropertyValues(
+		{ "targetField": "age" }
+	);
 }
 
 describe("field-allocator-control renders correctly", () => {
@@ -118,53 +84,49 @@ describe("field-allocator-control renders correctly", () => {
 			<FieldAllocatorControl
 				control={control}
 				dataModel={dataModel}
-				valueAccessor = {valueAccessor}
+				propertyId={propertyId}
+				controller = {controller}
 			/>
 		);
 
 		expect(wrapper.prop("control")).to.equal(control);
 		expect(wrapper.prop("dataModel")).to.equal(dataModel);
-		expect(wrapper.prop("valueAccessor")).to.equal(valueAccessor);
+		expect(wrapper.prop("propertyId")).to.equal(propertyId);
+		expect(wrapper.prop("controller")).to.equal(controller);
 	});
 
-	it("should render a not empty FieldAllocatorControl", () => {
-		const wrapper = mount(
-			<FieldAllocatorControl
-				control={control}
-				dataModel={dataModel}
-				valueAccessor = {valueAccessor}
-			/>
+	it("should render correctly with emptyDataModel and null value FieldAllocatorControl", () => {
+		controller.setPropertyValues(
+			{ "targetField": null }
 		);
-		const input = wrapper.find(".Dropdown-control");
-		expect(input).to.have.length(1);
-	});
-
-	it("should render a empty FieldAllocatorControl", () => {
 		const wrapper = mount(
 			<FieldAllocatorControl
 				control={control}
 				dataModel={emptyDataModel}
-				valueAccessor = {valueAccessor}
+				propertyId={propertyId}
+				controller = {controller}
 			/>
 		);
 		const input = wrapper.find(".Dropdown-control");
-		expect(input).to.have.length(1);
+		expect(input).to.have.length(1); // TODO not sure what this is validating
 	});
 
 	it("should render a empty FieldAllocatorControl and update the dropdown value", () => {
+		setPropertyValue();
 		const wrapper = mount(
 			<FieldAllocatorControl
 				control={control}
 				dataModel={emptyDataModel}
-				valueAccessor = {valueAccessor}
+				propertyId={propertyId}
+				controller = {controller}
 			/>
 		);
 
 		const input = wrapper.find(".Dropdown-control");
 		expect(input).to.have.length(1);
 		const evt = { value: "Na", label: "Na" };
-		input.root.node.handleChange(evt);
-		expect(input.root.node.getControlValue()).to.equal("Na");
+		input.root.node.handleChange(evt); // TODO should use click events if possible
+		expect(controller.getPropertyValue(propertyId)).to.equal("Na");
 	});
 
 });

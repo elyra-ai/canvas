@@ -64,7 +64,7 @@
                     "itemType": "panel",
                     "panel": {
                       "id": "type-settings",
-                      "panelType": "columnAllocation",
+                      "panelType": "columnSelection",
                       "uiItems": [
                         {
                           "itemType": "control",
@@ -74,7 +74,7 @@
                               "text": "Types"
                             },
                             "separateLabel": true,
-                            "controlType": "allocatedstructures",
+                            "controlType": "structuretable",
                             "valueDef": {
                               "propType": "structure",
                               "isList": true,

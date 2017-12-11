@@ -7,9 +7,6 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-/* eslint "react/prop-types": [2, { ignore: ["children"] }] */
-
-import logger from "../../../utils/logger";
 import React from "react";
 import PropTypes from "prop-types";
 import { Checkbox } from "ap-components-react/dist/ap-components-react";
@@ -18,11 +15,8 @@ import { Checkbox } from "ap-components-react/dist/ap-components-react";
 export default class CheckboxSelectionPanel extends React.Component {
 	constructor(props) {
 		super(props);
-		logger.info("CheckboxSelectionPanel: constructor()");
-		logger.info(props);
 		this.state = {
-			controlValue: false,
-			allocatedColumns: []
+			controlValue: false
 		};
 		this.handleChange = this.handleChange.bind(this);
 	}
@@ -31,20 +25,20 @@ export default class CheckboxSelectionPanel extends React.Component {
 		if (!this.state.controlValue) {
 			for (var i = 0; i < this.props.panel.uiItems.length; i++) {
 				const child = this.props.panel.uiItems[i];
-				this.props.controlStateModifier(child.control.name, "disabled");
+				this.props.controller.updateControlState({ name: child.control.name }, "disabled");
 			}
 		}
 	}
 
 	handleChange(evt) {
-		let value;
+		let value = "enabled";
 		const checked = evt.target.checked;
 		if (!checked) {
 			value = "disabled";
 		}
 		for (var i = 0; i < this.props.panel.uiItems.length; i++) {
 			const child = this.props.panel.uiItems[i];
-			this.props.controlStateModifier(child.control.name, value);
+			this.props.controller.updateControlState({ name: child.control.name }, value);
 		}
 		this.setState({
 			controlValue: checked
@@ -84,6 +78,7 @@ export default class CheckboxSelectionPanel extends React.Component {
 }
 
 CheckboxSelectionPanel.propTypes = {
-	panel: PropTypes.object,
-	controlStateModifier: PropTypes.func
+	panel: PropTypes.object.isRequired,
+	controller: PropTypes.object.isRequired,
+	children: PropTypes.array.isRequired
 };

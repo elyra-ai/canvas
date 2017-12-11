@@ -69,7 +69,7 @@
                           "itemType": "panel",
                           "panel": {
                             "id": "Custom",
-                            "panelType": "columnAllocation",
+                            "panelType": "columnSelection",
                             "uiItems": [
                               {
                                 "itemType": "control",
@@ -79,7 +79,7 @@
                                     "text": "Fields appearing at the start"
                                   },
                                   "separateLabel": true,
-                                  "controlType": "allocatedcolumns",
+                                  "controlType": "selectcolumns",
                                   "valueDef": {
                                     "propType": "string",
                                     "isList": true,
@@ -95,7 +95,7 @@
                                     "text": "Fields appearing at the end"
                                   },
                                   "separateLabel": true,
-                                  "controlType": "allocatedcolumns",
+                                  "controlType": "selectcolumns",
                                   "valueDef": {
                                     "propType": "string",
                                     "isList": true,

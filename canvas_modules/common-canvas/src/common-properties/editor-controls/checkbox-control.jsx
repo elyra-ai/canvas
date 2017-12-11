@@ -11,58 +11,37 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Checkbox } from "ap-components-react/dist/ap-components-react";
 import EditorControl from "./editor-control.jsx";
-import { EDITOR_CONTROL, TOOL_TIP_DELAY } from "../constants/constants.js";
+import { TOOL_TIP_DELAY } from "../constants/constants.js";
 import ReactTooltip from "react-tooltip";
 
 export default class CheckboxControl extends EditorControl {
 	constructor(props) {
 		super(props);
-		const value = !props.tableControl
-			? props.valueAccessor(props.control.name)
-			: props.controlValue[props.rowIndex][props.columnIndex];
-		this.state = { controlValue: value };
-		this.getControlValue = this.getControlValue.bind(this);
+		this.state = {};
 		this.handleChange = this.handleChange.bind(this);
 		this.getControlID = this.getControlID.bind(this);
 	}
 
 	handleChange(evt) {
-		var newValue = evt.target.checked;
-		var that = this;
-		this.setState({
-			controlValue: newValue
-		}, function() {
-			that.validateInput();
-		});
-		let ctrlValue;
-		if (this.props.tableControl) {
-			ctrlValue = this.props.controlValue;
-			ctrlValue[this.props.rowIndex][this.props.columnIndex] = newValue;
-		} else {
-			ctrlValue = newValue;
-		}
-		this.notifyValueChanged(this.props.control.name, ctrlValue);
-		const coords = { rowIndex: this.props.rowIndex, colIndex: this.props.columnIndex };
-		this.props.updateControlValue(this.props.control.name, ctrlValue, coords);
+		this.props.controller.updatePropertyValue(this.props.propertyId, evt.target.checked);
 	}
-
-	getControlValue() {
-		return this.state.controlValue;
-	}
-
+	// id needs to be unique inside of a panel.
 	getControlID() {
 		let id = EditorControl.prototype.getControlID.call(this);
 		if (this.props.tableControl) {
-			id += this.props.rowIndex + "_" + this.props.columnIndex;
+			id += "_" + this.props.propertyId.name + "_" + this.props.propertyId.row + "_" + this.props.propertyId.col;
 		}
 		return id;
 	}
 
 	render() {
-		var checked = this.state.controlValue.toString() === "true";
-		const controlName = this.getControlID().replace(EDITOR_CONTROL, "");
+		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
+		var checked = false;
+		if (typeof controlValue !== "undefined" || controlValue !== null) {
+			checked = controlValue.toString() === "true";
+		}
 		const conditionProps = {
-			controlName: controlName,
+			propertyId: this.props.propertyId,
 			controlType: "checkbox"
 		};
 		const conditionState = this.getConditionMsgState(conditionProps);
@@ -88,7 +67,6 @@ export default class CheckboxControl extends EditorControl {
 			id={this.getControlID()}
 			name={label}
 			onChange={this.handleChange}
-			onBlur={this.validateInput}
 			checked={checked}
 		/>);
 		const tooltipId = "tooltip-" + this.props.control.name;
@@ -122,11 +100,7 @@ export default class CheckboxControl extends EditorControl {
 }
 
 CheckboxControl.propTypes = {
-	control: PropTypes.object,
-	controlStates: PropTypes.object,
-	validationDefinitions: PropTypes.object,
-	requiredParameters: PropTypes.array,
-	updateValidationErrorMessage: PropTypes.func,
-	retrieveValidationErrorMessage: PropTypes.func,
-	updateControlValue: PropTypes.func
+	control: PropTypes.object.isRequired,
+	propertyId: PropTypes.object.isRequired,
+	controller: PropTypes.object.isRequired
 };

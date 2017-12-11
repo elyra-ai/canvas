@@ -10,13 +10,12 @@
 import React from "react";
 import StructureListEditorControl from "../../../src/common-properties/editor-controls/structure-list-editor-control.jsx";
 import SubPanelButton from "../../../src/common-properties/editor-panels/sub-panel-button.jsx";
-
-
 import { render, mount } from "enzyme";
 import { expect } from "chai";
-import chai from "chai";
-import chaiEnzyme from "chai-enzyme";
-chai.use(chaiEnzyme()); // Note the invocation at the end
+
+import Controller from "../../../src/common-properties/properties-controller";
+
+const controller = new Controller();
 
 const control = {
 	"name": "structurelisteditorList",
@@ -121,92 +120,19 @@ const control = {
 	"required": true
 };
 
-const controlId = "structurelisteditorList";
+const propertyId = { name: "keys" };
 
-const datasetMetadata = {
-	"fields": [
-		{
-			"name": "Age",
-			"type": "integer",
-			"metadata": {
-				"description": "",
-				"measure": "range",
-				"modeling_role": "input"
-			}
-		},
-		{
-			"name": "Sex",
-			"type": "string",
-			"metadata": {
-				"description": "",
-				"measure": "discrete",
-				"modeling_role": "input"
-			}
-		},
-		{
-			"name": "BP",
-			"type": "string",
-			"metadata": {
-				"description": "",
-				"measure": "discrete",
-				"modeling_role": "input"
-			}
-		},
-		{
-			"name": "Cholesterol",
-			"type": "string",
-			"metadata": {
-				"description": "",
-				"measure": "discrete",
-				"modeling_role": "input"
-			}
-		},
-		{
-			"name": "Na",
-			"type": "double",
-			"metadata": {
-				"description": "",
-				"measure": "range",
-				"modeling_role": "input"
-			}
-		},
-		{
-			"name": "K",
-			"type": "double",
-			"metadata": {
-				"description": "",
-				"measure": "range",
-				"modeling_role": "input"
-			}
-		},
-		{
-			"name": "Drug",
-			"type": "string",
-			"metadata": {
-				"description": "",
-				"measure": "discrete",
-				"modeling_role": "input"
-			}
-		}
-	]
-};
-
-const validationDefinitions = {};
-const controlStates = {};
-
-function valueAccessor() {
-	return [
-		["Hello", "World"],
-		["one", "two"],
-		["apple", "orange"],
-		["ford", "honda"],
-		["BP", "Ascending"],
-		["Cholesterol", "Ascending"]
-	];
-}
-
-function updateControlValue(id, controlValue) {
-	expect(id).to.equal(controlId);
+function setPropertyValue() {
+	controller.setPropertyValues(
+		{ "keys": [
+			["Hello", "World"],
+			["one", "two"],
+			["apple", "orange"],
+			["ford", "honda"],
+			["BP", "Ascending"],
+			["Cholesterol", "Ascending"]
+		] }
+	);
 }
 
 function getSelectedRows(controlName) {
@@ -254,41 +180,35 @@ function genUIItem() {
 describe("StructureListEditorControl renders correctly", () => {
 
 	it("props should have been defined", () => {
-		const selectedRows = getSelectedRows(control.name);
+		setPropertyValue();
+		const selectedRows = getSelectedRows();
 		const wrapper = mount(
-			<StructureListEditorControl control={control}
-				dataModel={datasetMetadata}
-				valueAccessor={valueAccessor}
-				updateControlValue={updateControlValue}
+			<StructureListEditorControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
 				updateSelectedRows={updateSelectedRows}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
 				selectedRows={selectedRows}
 				buildUIItem={genUIItem}
 			/>
 		);
 
-		expect(wrapper.prop("dataModel")).to.equal(datasetMetadata);
 		expect(wrapper.prop("control")).to.equal(control);
-		expect(wrapper.prop("valueAccessor")).to.equal(valueAccessor);
-		expect(wrapper.prop("updateControlValue")).to.equal(updateControlValue);
-		expect(wrapper.prop("updateSelectedRows")).to.equal(updateSelectedRows);
-		expect(wrapper.prop("validationDefinitions")).to.equal(validationDefinitions);
+		expect(wrapper.prop("controller")).to.equal(controller);
+		expect(wrapper.prop("propertyId")).to.equal(propertyId);
 		expect(wrapper.prop("selectedRows")).to.equal(selectedRows);
-		expect(wrapper.prop("controlStates")).to.equal(controlStates);
 		expect(wrapper.prop("buildUIItem")).to.equal(genUIItem);
 	});
 
 	it("should render a `StructureListEditorControl`", () => {
+		setPropertyValue();
 		const wrapper = render(
-			<StructureListEditorControl control={control}
-				dataModel={datasetMetadata}
-				valueAccessor={valueAccessor}
-				updateControlValue={updateControlValue}
+			<StructureListEditorControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
 				updateSelectedRows={updateSelectedRows}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
-				selectedRows={getSelectedRows(control.name)}
+				selectedRows={getSelectedRows()}
 				buildUIItem={genUIItem}
 			/>
 		);
@@ -303,15 +223,14 @@ describe("StructureListEditorControl renders correctly", () => {
 	});
 
 	it("should select no rows and all move buttons disabled `StructureListEditorControl`", () => {
+		setPropertyValue();
 		const wrapper = mount(
-			<StructureListEditorControl control={control}
-				dataModel={datasetMetadata}
-				valueAccessor={valueAccessor}
-				updateControlValue={updateControlValue}
+			<StructureListEditorControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
 				updateSelectedRows={updateSelectedRows}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
-				selectedRows={getSelectedRows(control.name)}
+				selectedRows={getSelectedRows()}
 				buildUIItem={genUIItem}
 			/>
 		);
@@ -324,15 +243,14 @@ describe("StructureListEditorControl renders correctly", () => {
 	});
 
 	it("should select top row and move down one row", () => {
+		setPropertyValue();
 		const wrapper = mount(
-			<StructureListEditorControl control={control}
-				dataModel={datasetMetadata}
-				valueAccessor={valueAccessor}
-				updateControlValue={updateControlValue}
+			<StructureListEditorControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
 				updateSelectedRows={updateSelectedRows}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
-				selectedRows={getSelectedRowsTop(control.name)}
+				selectedRows={getSelectedRowsTop()}
 				buildUIItem={genUIItem}
 			/>
 		);
@@ -365,15 +283,14 @@ describe("StructureListEditorControl renders correctly", () => {
 	});
 
 	it("should select top row and move down to bottom row", () => {
+		setPropertyValue();
 		const wrapper = mount(
-			<StructureListEditorControl control={control}
-				dataModel={datasetMetadata}
-				valueAccessor={valueAccessor}
-				updateControlValue={updateControlValue}
+			<StructureListEditorControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
 				updateSelectedRows={updateSelectedRows}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
-				selectedRows={getSelectedRowsTop(control.name)}
+				selectedRows={getSelectedRowsTop()}
 				buildUIItem={genUIItem}
 			/>
 		);
@@ -406,15 +323,14 @@ describe("StructureListEditorControl renders correctly", () => {
 	});
 
 	it("should select bottom row and move up one row", () => {
+		setPropertyValue();
 		const wrapper = mount(
-			<StructureListEditorControl control={control}
-				dataModel={datasetMetadata}
-				valueAccessor={valueAccessor}
-				updateControlValue={updateControlValue}
+			<StructureListEditorControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
 				updateSelectedRows={updateSelectedRows}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
-				selectedRows={getSelectedRowsBottom(control.name)}
+				selectedRows={getSelectedRowsBottom()}
 				buildUIItem={genUIItem}
 			/>
 		);
@@ -447,15 +363,14 @@ describe("StructureListEditorControl renders correctly", () => {
 	});
 
 	it("should select bottom row and move up to top row", () => {
+		setPropertyValue();
 		const wrapper = mount(
-			<StructureListEditorControl control={control}
-				dataModel={datasetMetadata}
-				valueAccessor={valueAccessor}
-				updateControlValue={updateControlValue}
+			<StructureListEditorControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
 				updateSelectedRows={updateSelectedRows}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
-				selectedRows={getSelectedRowsBottom(control.name)}
+				selectedRows={getSelectedRowsBottom()}
 				buildUIItem={genUIItem}
 			/>
 		);
@@ -488,15 +403,14 @@ describe("StructureListEditorControl renders correctly", () => {
 	});
 
 	it("should select top row and correct move buttons enabled `StructureListEditorControl`", () => {
+		setPropertyValue();
 		const wrapper = mount(
-			<StructureListEditorControl control={control}
-				dataModel={datasetMetadata}
-				valueAccessor={valueAccessor}
-				updateControlValue={updateControlValue}
+			<StructureListEditorControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
 				updateSelectedRows={updateSelectedRows}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
-				selectedRows={getSelectedRowsTop(control.name)}
+				selectedRows={getSelectedRowsTop()}
 				buildUIItem={genUIItem}
 			/>
 		);
@@ -516,15 +430,14 @@ describe("StructureListEditorControl renders correctly", () => {
 	});
 
 	it("should select bottom row and correct move buttons enabled `StructureListEditorControl`", () => {
+		setPropertyValue();
 		const wrapper = mount(
-			<StructureListEditorControl control={control}
-				dataModel={datasetMetadata}
-				valueAccessor={valueAccessor}
-				updateControlValue={updateControlValue}
+			<StructureListEditorControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
 				updateSelectedRows={updateSelectedRows}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
-				selectedRows={getSelectedRowsBottom(control.name)}
+				selectedRows={getSelectedRowsBottom()}
 				buildUIItem={genUIItem}
 			/>
 		);
@@ -544,15 +457,14 @@ describe("StructureListEditorControl renders correctly", () => {
 	});
 
 	it("should select middle row and all move buttons enabled `StructureListEditorControl`", () => {
+		setPropertyValue();
 		const wrapper = mount(
-			<StructureListEditorControl control={control}
-				dataModel={datasetMetadata}
-				valueAccessor={valueAccessor}
-				updateControlValue={updateControlValue}
+			<StructureListEditorControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
 				updateSelectedRows={updateSelectedRows}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
-				selectedRows={getSelectedRowsMiddle(control.name)}
+				selectedRows={getSelectedRowsMiddle()}
 				buildUIItem={genUIItem}
 			/>
 		);
@@ -572,15 +484,14 @@ describe("StructureListEditorControl renders correctly", () => {
 	});
 
 	it("should select add row button and new row should display", () => {
+		setPropertyValue();
 		const wrapper = mount(
-			<StructureListEditorControl control={control}
-				dataModel={datasetMetadata}
-				valueAccessor={valueAccessor}
-				updateControlValue={updateControlValue}
+			<StructureListEditorControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
 				updateSelectedRows={updateSelectedRows}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
-				selectedRows={getSelectedRowsTop(control.name)}
+				selectedRows={getSelectedRowsTop()}
 				buildUIItem={genUIItem}
 			/>
 		);
@@ -599,15 +510,14 @@ describe("StructureListEditorControl renders correctly", () => {
 	});
 
 	it("should select row and remove button row should be removed", () => {
+		setPropertyValue();
 		const wrapper = mount(
-			<StructureListEditorControl control={control}
-				dataModel={datasetMetadata}
-				valueAccessor={valueAccessor}
-				updateControlValue={updateControlValue}
+			<StructureListEditorControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
 				updateSelectedRows={updateSelectedRows}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
-				selectedRows={getSelectedRowsTop(control.name)}
+				selectedRows={getSelectedRowsTop()}
 				buildUIItem={genUIItem}
 			/>
 		);
@@ -640,15 +550,14 @@ describe("StructureListEditorControl renders correctly", () => {
 	});
 
 	it("should search correct keyword in table", () => {
+		setPropertyValue();
 		const wrapper = mount(
-			<StructureListEditorControl control={control}
-				dataModel={datasetMetadata}
-				valueAccessor={valueAccessor}
-				updateControlValue={updateControlValue}
+			<StructureListEditorControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
 				updateSelectedRows={updateSelectedRows}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
-				selectedRows={getSelectedRowsTop(control.name)}
+				selectedRows={getSelectedRowsTop()}
 				buildUIItem={genUIItem}
 			/>
 		);

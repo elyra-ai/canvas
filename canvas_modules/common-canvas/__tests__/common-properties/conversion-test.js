@@ -19,12 +19,16 @@ import deriveDatasetMetadata from "../test_resources/json/deriveDatasetMetadata.
 
 const applyPropertyChanges = sinon.spy();
 const closePropertiesDialog = sinon.spy();
+var controller = null;
+function controllerHandler(inController) {
+	controller = inController;
+}
 
 describe("CommonProperties converts property sets correctly", () => {
 
 	it("should convert inputDataModel into datasetMetadata", () => {
-		const wrapper = createCommonProperties2(true);
-		const form = wrapper.instance().getForm();
+		createCommonProperties2(true);
+		const form = controller.getForm();
 		const newDatasetMetadata = form.data.datasetMetadata;
 		const expectedDatasetMetadata = deriveDatasetMetadata;
 		// console.log("Expected1: " + JSON.stringify(expectedDatasetMetadata));
@@ -50,6 +54,7 @@ function createCommonProperties2(useModalDialog) {
 			useModalDialog={useModalDialog}
 			applyLabel="Apply"
 			rejectLabel="REJECTED"
+			controllerHandler={controllerHandler}
 		/>
 	);
 	return wrapper;

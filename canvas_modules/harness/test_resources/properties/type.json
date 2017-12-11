@@ -64,7 +64,7 @@
                   {
                     "itemType": "summaryPanel",
                     "panel": {
-                      "id": "summpary-panel",
+                      "id": "summary-panel",
                       "panelType": "summary",
                       "label": "Configure Table",
                       "uiItems": [

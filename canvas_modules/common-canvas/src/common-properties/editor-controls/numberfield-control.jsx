@@ -11,50 +11,50 @@ import React from "react";
 import PropTypes from "prop-types";
 import { TextField } from "ap-components-react/dist/ap-components-react";
 import EditorControl from "./editor-control.jsx";
-import { EDITOR_CONTROL } from "../constants/constants.js";
 
 export default class NumberfieldControl extends EditorControl {
 	constructor(props) {
 		super(props);
-		this.state = {
-			controlValue: props.valueAccessor(props.control.name),
-			userInputValue: props.valueAccessor(props.control.name)
-
-		};
-		this.getControlValue = this.getControlValue.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 		this.clearValue = this.clearValue.bind(this);
 	}
-
-	handleChange(evt) {
-		const number = parseFloat(evt.target.value);
-		this.setState({ controlValue: evt.target.value,
-			userInputValue: evt.target.value });
-		if (!isNaN(number)) {
-			this.setState({ controlValue: number });
-			this.props.updateControlValue(this.props.control.name, number);
-		} else if (evt.target.value === "") {
-			this.setState({ controlValue: null });
-			this.props.updateControlValue(this.props.control.name, null);
+	componentWillMount() {
+		// needed since in a number like 10.0 the .0 is stripped off so users couldn't enter 10.02
+		this.stringValue = "";
+		const numValue = this.props.controller.getPropertyValue(this.props.propertyId);
+		if (typeof numValue !== "undefined" && numValue !== null) {
+			this.stringValue = numValue.toString();
 		}
 	}
 
-	getControlValue() {
-		return this.state.controlValue;
+	handleChange(evt) {
+		// needed since in a number like 10.0 the .0 is stripped off so users couldn't enter 10.02
+		this.stringValue = evt.target.value;
+		var numValue = parseFloat(this.stringValue);
+		if (isNaN(numValue) || (evt.target.value === "")) {
+			numValue = null;
+		}
+		this.props.controller.updatePropertyValue(this.props.propertyId, numValue);
+
 	}
 
 	clearValue() {
-		const that = this;
-		this.setState({ controlValue: null },
-			function() {
-				that.validateInput();
-			});
+		// number values should be null of not set
+		this.props.controller.updatePropertyValue(this.props.propertyId, null);
 	}
 
 	render() {
-		const controlName = this.getControlID().replace(EDITOR_CONTROL, "");
+		// needed since in a number like 10.0 the .0 is stripped off so users couldn't enter 10.02
+		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
+		// we should reset the string value in case the values was updated outside of the control
+		if (parseFloat(controlValue) !== parseFloat(this.stringValue)) {
+			this.stringValue = controlValue;
+		}
+		if (typeof this.stringValue === "undefined" || this.stringValue === null) {
+			this.stringValue = "";
+		}
 		const conditionProps = {
-			controlName: controlName,
+			propertyId: this.props.propertyId,
 			controlType: "number"
 		};
 		const conditionState = this.getConditionMsgState(conditionProps);
@@ -70,11 +70,6 @@ export default class NumberfieldControl extends EditorControl {
 			controlIconContainerClass = "control-icon-container-enabled";
 		}
 
-		let numValue = "";
-		if (this.state.userInputValue !== null) {
-			numValue = this.state.userInputValue;
-		}
-
 		return (
 			<div className="editor_control_area" style={stateStyle}>
 				<div id={controlIconContainerClass}>
@@ -82,16 +77,10 @@ export default class NumberfieldControl extends EditorControl {
 						style={stateStyle}
 						type="number"
 						id={this.getControlID()}
-						onBlur={this.validateInput}
-						onKeyUp={
-							(evt) => {
-								this.validateInput();
-							}
-						}
 						placeholder={this.props.control.additionalText}
 						disabledPlaceholderAnimation
 						onChange={this.handleChange}
-						value={numValue}
+						value={this.stringValue}
 						onReset={() => this.clearValue()}
 					/>
 					{icon}
@@ -103,12 +92,7 @@ export default class NumberfieldControl extends EditorControl {
 }
 
 NumberfieldControl.propTypes = {
-	control: PropTypes.object,
-	controlStates: PropTypes.object,
-	validationDefinitions: PropTypes.object,
-	requiredParameters: PropTypes.array,
-	validateConditions: PropTypes.func,
-	updateValidationErrorMessage: PropTypes.func,
-	retrieveValidationErrorMessage: PropTypes.func,
-	updateControlValue: PropTypes.func
+	control: PropTypes.object.isRequired,
+	propertyId: PropTypes.object.isRequired,
+	controller: PropTypes.object.isRequired
 };

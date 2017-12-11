@@ -12,9 +12,6 @@ import PropTypes from "prop-types";
 import CodeMirror from "react-codemirror";
 import cm from "codemirror";
 import EditorControl from "./editor-control.jsx";
-
-import { EDITOR_CONTROL } from "../constants/constants.js";
-
 import "codemirror/addon/hint/show-hint";
 import "codemirror/addon/display/placeholder";
 
@@ -35,23 +32,13 @@ const minLineHeight = 4 * pxPerLine; // 4 lines
 export default class ExpressionControl extends EditorControl {
 	constructor(props) {
 		super(props);
-		this.state = {
-			controlValue: (props.tableControl) ? props.controlValue[props.rowIndex][props.columnIndex] : props.valueAccessor(props.control.name)
-		};
-		if (!this.state.controlValue && typeof props.control.valueDef.defaultValue !== "undefined") {
-			this.state.controlValue = props.control.valueDef.defaultValue;
-		}
 
 		this.origHint = "";
 
-		this.getControlValue = this.getControlValue.bind(this);
 		this.handleChange = this.handleChange.bind(this);
-		this.onFocusChange = this.onFocusChange.bind(this);
-
 
 		this.addonHints = this.addonHints.bind(this);
 		this.getDatasetFields = this.getDatasetFields.bind(this);
-
 	}
 
 	// Save original autocomplete handler and then register our custom handler
@@ -82,14 +69,6 @@ export default class ExpressionControl extends EditorControl {
 		}
 	}
 
-	componentWillReceiveProps(nextProps) {
-		const nextControlValue = (nextProps.tableControl) ? nextProps.controlValue[nextProps.rowIndex][nextProps.columnIndex]
-			: nextProps.valueAccessor(nextProps.control.name);
-		if (this.state.controlValue !== nextControlValue) {
-			this.setState({ controlValue: nextControlValue });
-		}
-	}
-
 	// Add the dataset field names to the autocomplete list
 	addonHints(editor, options) {
 		var results = {};
@@ -117,40 +96,23 @@ export default class ExpressionControl extends EditorControl {
 	// get the set of dataset field names
 	getDatasetFields() {
 		var results = [];
-		if (this.props.dataModel) {
-			for (var i = 0; i < this.props.dataModel.fields.length; ++i) {
-				results.push(this.props.dataModel.fields[i].name);
+		const dataModel = this.props.controller.getDatasetMetadata();
+		if (dataModel) {
+			for (var i = 0; i < dataModel.fields.length; ++i) {
+				results.push(dataModel.fields[i].name);
 			}
 		}
 		return results;
 	}
 
 	handleChange(value) {
-		this.setState({ controlValue: value });
-	}
-
-	onFocusChange() {
-		if (this.props.tableControl) {
-			var newControlValue = this.props.controlValue;
-			newControlValue[this.props.rowIndex][this.props.columnIndex] = this.state.controlValue;
-			this.props.setCurrentControlValueSelected(this.props.control.name, newControlValue, this.props.updateControlValue, this.props.getSelectedRows());
-		} else {
-			this.props.updateControlValue(this.props.control.name, this.state.controlValue);
-		}
-		// this.validateInput({ rowIndex: this.props.rowIndex, colIndex: this.props.columnIndex });
-		this.validateInput();
-
-
-	}
-
-	getControlValue() {
-		return this.state.controlValue;
+		this.props.controller.updatePropertyValue(this.props.propertyId, value);
 	}
 
 	render() {
-		const controlName = this.getControlID().replace(EDITOR_CONTROL, "");
+		var controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		const conditionProps = {
-			controlName: controlName,
+			propertyId: this.props.propertyId,
 			controlType: "textfieldbox"
 		};
 		const conditionState = this.getConditionMsgState(conditionProps);
@@ -184,9 +146,8 @@ export default class ExpressionControl extends EditorControl {
 							<CodeMirror
 								ref= { (ref) => (this.codeMirror = ref)}
 								options={mirrorOptions}
-								onFocusChange={this.onFocusChange}
 								onChange={this.handleChange}
-								value={this.state.controlValue}
+								value={controlValue}
 							/>
 						</div>
 						{icon}
@@ -202,16 +163,6 @@ export default class ExpressionControl extends EditorControl {
 
 ExpressionControl.propTypes = {
 	control: PropTypes.object.isRequired,
-	controlStates: PropTypes.object,
-	validationDefinitions: PropTypes.object,
-	requiredParameters: PropTypes.array,
-	updateValidationErrorMessage: PropTypes.func,
-	retrieveValidationErrorMessage: PropTypes.func,
-	updateControlValue: PropTypes.func,
-	controlValue: PropTypes.array,
-	setCurrentControlValueSelected: PropTypes.func,
-	getSelectedRows: PropTypes.func,
-	rowIndex: PropTypes.number,
-	columnIndex: PropTypes.number,
-	tableControl: PropTypes.bool
+	propertyId: PropTypes.object.isRequired,
+	controller: PropTypes.object.isRequired
 };

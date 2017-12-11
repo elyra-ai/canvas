@@ -11,10 +11,9 @@ import React from "react";
 import Expression from "../../../src/common-properties/editor-controls/expression-control.jsx";
 import { mount } from "enzyme";
 import { expect } from "chai";
-import chai from "chai";
-import chaiEnzyme from "chai-enzyme";
-chai.use(chaiEnzyme()); // Note the invocation at the end
+import Controller from "../../../src/common-properties/properties-controller";
 
+const controller = new Controller();
 
 const control = {
 	name: "test-areafield",
@@ -25,43 +24,30 @@ const control = {
 	},
 	language: "CLEM"
 };
-const controlId = "test-areafield";
-const validationDefinitions = {};
-const controlStates = {};
 
-function valueAccessor() {
-	return "Test value";
-}
-
-function updateControlValue(id, controlValue) {
-	expect(id).to.equal(controlId);
-}
+const propertyId = { name: "test-expression" };
 
 describe("expression-control renders correctly", () => {
 
 	it("props should have been defined", () => {
 		const wrapper = mount(
-			<Expression control={control}
-				valueAccessor={valueAccessor}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
-				updateControlValue={updateControlValue}
+			<Expression
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
 			/>
 		);
-
 		expect(wrapper.prop("control")).to.equal(control);
-		expect(wrapper.prop("controlStates")).to.equal(controlStates);
-		expect(wrapper.prop("valueAccessor")).to.equal(valueAccessor);
-		expect(wrapper.prop("validationDefinitions")).to.equal(validationDefinitions);
+		expect(wrapper.prop("controller")).to.equal(controller);
+		expect(wrapper.prop("propertyId")).to.equal(propertyId);
 	});
 
 	it("should render a `Expression`", () => {
 		const wrapper = mount(
-			<Expression control={control}
-				valueAccessor={valueAccessor}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
-				updateControlValue={updateControlValue}
+			<Expression
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
 			/>
 		);
 		const input = wrapper.find(".ReactCodeMirror");

@@ -15,12 +15,9 @@ class CustomSliderPanel {
 	static id() {
 		return "custom-slider-panel";
 	}
-	constructor(parameters, valueAccessor, updateControlValue, datarecordMetadata, condition) {
+	constructor(parameters, controller) {
 		this.parameters = parameters;
-		this.valueAccessor = valueAccessor;
-		this.updateControlValue = updateControlValue;
-		this.datarecordMetadata = datarecordMetadata;
-		this.condition = condition;
+		this.controller = controller;
 	}
 
 	renderPanel() {
@@ -29,10 +26,8 @@ class CustomSliderPanel {
 			<CustomSliderCtrl
 				key={controlId}
 				ref={controlId}
-				parameter={controlId}
-				value={this.valueAccessor(controlId)}
-				updateControlValue={this.updateControlValue}
-				condition={this.condition}
+				propertyId={{ name: controlId }}
+				controller={this.controller}
 			/>
 		);
 	}

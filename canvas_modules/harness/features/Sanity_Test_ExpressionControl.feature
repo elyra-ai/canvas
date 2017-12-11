@@ -35,9 +35,9 @@ Feature: Sanity_Test_ExpressionControl
 		Given I have toggled the app side common-properties panel
 		Given I have uploaded JSON for common-properties "Javascript_FilterRows_paramDef.json"
 		Then I verify that the placeholder text is "Enter JavaScript text" in ExpressionEditor
-		Then I enter "" in ExpressionEditor and press autocomplete and verify error "The condition expression cannot be empty" and save
-
-
+		Then I enter "i" in ExpressionEditor and press autocomplete and select "innerWidth"
+		Then I verify error "Cannot have value innerWidth"
+		Then I click on the "OK" button
 
 		Given I have toggled the app side common-properties panel
 

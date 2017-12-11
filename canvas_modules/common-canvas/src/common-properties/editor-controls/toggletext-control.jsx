@@ -10,14 +10,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import EditorControl from "./editor-control.jsx";
-import { EDITOR_CONTROL } from "../constants/constants.js";
 
 export default class ToggletextControl extends EditorControl {
 	constructor(props) {
 		super(props);
-		if (!props.tableControl) {
-			this.state = { controlValue: props.valueAccessor(props.control.name)[0] };
-		}
 		this.valuesMap = {};
 		this.iconsMap = {};
 		for (let i = 0; i < this.props.values.length; ++i) {
@@ -30,45 +26,40 @@ export default class ToggletextControl extends EditorControl {
 
 	onClick(evt) {
 		evt.stopPropagation(); // prevents row selection change when clicking on toggletext
-		const renderValue = (this.props.tableControl) ? this.props.value : this.state.controlValue;
+		var renderValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		const newValue = (renderValue === this.props.values[0]) ? this.props.values[1] : this.props.values[0];
-		if (this.props.tableControl) {
-			var newControlValue = this.props.controlValue;
-			newControlValue[this.props.rowIndex][this.props.columnIndex] = newValue;
-			this.props.setCurrentControlValueSelected(this.props.control.name, newControlValue, this.props.updateControlValue, this.props.getSelectedRows());
-		} else {
-			this.notifyValueChanged(this.props.control.name, newValue);
-			this.setState({ controlValue: newValue });
-			this.props.updateControlValue(this.props.control.name, newValue);
-		}
+		this.props.controller.updatePropertyValue(this.props.propertyId, newValue);
+
 	}
 
 	render() {
-		const controlName = this.getControlID().replace(EDITOR_CONTROL, "");
+		const renderValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		const conditionProps = {
-			controlName: controlName,
+			propertyId: this.props.propertyId,
 			controlType: "toggletext"
 		};
 		const conditionState = this.getConditionMsgState(conditionProps);
 		const stateDisabled = conditionState.disabled;
 		const stateStyle = conditionState.style;
 
-		const renderValue = (this.props.tableControl) ? this.props.value : this.state.controlValue;
 		let rendered = this.valuesMap[renderValue];
 		if (typeof rendered === "undefined") {
 			rendered = renderValue;
 		}
-
+		let disabled = false;
+		if (typeof stateDisabled !== "undefined" && stateDisabled.disabled) {
+			disabled = true;
+		}
 		let icon = "";
 		if (typeof this.iconsMap[renderValue] !== "undefined") {
-			if (!this.props.disabled) {
+			if (!disabled) {
 				icon = <img className="toggletext_icon" src={this.iconsMap[renderValue]} onClick={this.onClick.bind(this)} />;
 			} else {
 				icon = <img className="toggletext_icon" src={this.iconsMap[renderValue]} />;
 			}
 		}
 		let uValue;
-		if (!this.props.disabled) {
+		if (!disabled) {
 			uValue = (<u onClick={this.onClick.bind(this)} className="toggletext_text">
 				{rendered}
 			</u>);
@@ -88,17 +79,10 @@ export default class ToggletextControl extends EditorControl {
 }
 
 ToggletextControl.propTypes = {
-	rowIndex: PropTypes.number, 										// required when tableControl yes
-	columnIndex: PropTypes.number, 									// required when tableControl yes
+	propertyId: PropTypes.object.isRequired,
+	controller: PropTypes.object.isRequired,
 	control: PropTypes.object.isRequired,
-	controlValue: PropTypes.array.isRequired,
 	values: PropTypes.array.isRequired,
 	valueLabels: PropTypes.array.isRequired,
 	valueIcons: PropTypes.array,
-	value: PropTypes.string, 												// required when tableControl yes
-	updateControlValue: PropTypes.func.isRequired,
-	setCurrentControlValueSelected: PropTypes.func,	// required when tableControl yes
-	getSelectedRows: PropTypes.func, 								// required when tableControl yes
-	valueAccessor: PropTypes.func, 									// required when tableControl no
-	tableControl: PropTypes.bool
 };

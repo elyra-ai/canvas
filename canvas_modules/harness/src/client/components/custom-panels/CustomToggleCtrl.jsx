@@ -15,26 +15,16 @@ export default class CustomToggleCtrl extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			controlValue: props.value
 		};
-		this.getControlValue = this.getControlValue.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 	}
 
-	getControlValue() {
-		return this.state.controlValue;
-	}
-
-	validateInput() {
-		this.props.condition.validateCustomControl(this.props.parameter);
-	}
-
 	handleChange(evt) {
-		this.setState({ controlValue: evt.target.checked });
-		this.props.updateControlValue(this.props.parameter, evt.target.checked);
+		this.props.controller.updatePropertyValue(this.props.propertyId, evt.target.checked);
 	}
 	render() {
-		const message = this.props.condition.retrieveValidationErrorMessage(this.props.parameter);
+		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
+		const message = this.props.controller.getErrorMessage(this.props.propertyId);
 		var messageText;
 		var icon;
 		if (message && message.text) {
@@ -45,7 +35,7 @@ export default class CustomToggleCtrl extends React.Component {
 				icon = (<Icon type="error-o" />);
 			}
 		}
-		const state = this.props.condition.getControlState(this.props.parameter);
+		const state = this.props.controller.getControlState(this.props.propertyId);
 		var visibility;
 		var disabled = false;
 		if (state === "hidden") {
@@ -58,8 +48,8 @@ export default class CustomToggleCtrl extends React.Component {
 				<div className="custom-toggle" >
 					<ToggleButton
 						disabled={disabled}
-						id={this.props.parameter}
-						checked={this.state.controlValue}
+						id={this.props.propertyId.name}
+						checked={controlValue}
 						onChange={this.handleChange}
 					/>
 					<div className="text">Toggle</div>
@@ -74,8 +64,6 @@ export default class CustomToggleCtrl extends React.Component {
 }
 
 CustomToggleCtrl.propTypes = {
-	value: PropTypes.bool,
-	parameter: PropTypes.string.isRequired,
-	updateControlValue: PropTypes.func.isRequired,
-	condition: PropTypes.object
+	controller: PropTypes.object.isRequired,
+	propertyId: PropTypes.object.isRequired
 };

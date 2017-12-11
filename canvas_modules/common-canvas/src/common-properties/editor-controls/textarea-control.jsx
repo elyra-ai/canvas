@@ -10,17 +10,14 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { TextField } from "ap-components-react/dist/ap-components-react";
-import { CHARACTER_LIMITS, EDITOR_CONTROL } from "../constants/constants.js";
+import { CHARACTER_LIMITS } from "../constants/constants.js";
 
 import EditorControl from "./editor-control.jsx";
 
 export default class TextareaControl extends EditorControl {
 	constructor(props) {
 		super(props);
-		this.state = {
-			controlValue: props.valueAccessor(props.control.name)
-		};
-		this.getControlValue = this.getControlValue.bind(this);
+		this.state = {};
 		this.handleChange = this.handleChange.bind(this);
 	}
 
@@ -29,18 +26,13 @@ export default class TextareaControl extends EditorControl {
 		if (this.props.control.valueDef && this.props.control.valueDef.isList) { // array
 			input = EditorControl.splitNewlines(evt.target.value);
 		}
-		this.setState({ controlValue: input });
-		this.props.updateControlValue(this.props.control.name, input);
-	}
-
-	getControlValue() {
-		return this.state.controlValue;
+		this.props.controller.updatePropertyValue(this.props.propertyId, input);
 	}
 
 	render() {
-		const controlName = this.getControlID().replace(EDITOR_CONTROL, "");
+		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		const conditionProps = {
-			controlName: controlName,
+			propertyId: this.props.propertyId,
 			controlType: "textfieldbox"
 		};
 		const conditionState = this.getConditionMsgState(conditionProps);
@@ -56,8 +48,8 @@ export default class TextareaControl extends EditorControl {
 			controlIconContainerClass = "control-icon-container-enabled";
 		}
 
-		let value = EditorControl.joinNewlines(this.state.controlValue);
-		if (value.toString() === "") {
+		let value = EditorControl.joinNewlines(controlValue);
+		if (value && value.toString() === "") {
 			value = "";
 		}
 
@@ -69,8 +61,6 @@ export default class TextareaControl extends EditorControl {
 						style={stateStyle}
 						type="textarea"
 						id={this.getControlID()}
-						onBlur={this.validateInput}
-						msg={this.state.validateErrorMessage}
 						placeholder={this.props.control.additionalText}
 						onChange={this.handleChange}
 						value={value}
@@ -87,11 +77,7 @@ export default class TextareaControl extends EditorControl {
 }
 
 TextareaControl.propTypes = {
-	control: PropTypes.object,
-	controlStates: PropTypes.object,
-	validationDefinitions: PropTypes.object,
-	requiredParameters: PropTypes.array,
-	updateValidationErrorMessage: PropTypes.func,
-	retrieveValidationErrorMessage: PropTypes.func,
-	updateControlValue: PropTypes.func
+	control: PropTypes.object.isRequired,
+	propertyId: PropTypes.object.isRequired,
+	controller: PropTypes.object.isRequired
 };

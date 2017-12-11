@@ -15,12 +15,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import { ButtonToolbar } from "react-bootstrap";
 import { Tabs } from "ap-components-react/dist/ap-components-react";
-import { DEFAULT_VALIDATION_MESSAGE, EDITOR_CONTROL, TOOL_TIP_DELAY } from "../constants/constants.js";
+import { TOOL_TIP_DELAY } from "../constants/constants.js";
 
 import ReactTooltip from "react-tooltip";
-import _ from "underscore";
 
-import ControlItem from "./control-item.jsx";
 import TextfieldControl from "./textfield-control.jsx";
 import ToggletextControl from "./toggletext-control.jsx";
 import TextareaControl from "./textarea-control.jsx";
@@ -34,23 +32,21 @@ import OneofselectControl from "./oneofselect-control.jsx";
 import SomeofselectControl from "./someofselect-control.jsx";
 import OneofcolumnsControl from "./oneofcolumns-control.jsx";
 import SomeofcolumnsControl from "./someofcolumns-control.jsx";
-import ColumnAllocatorControl from "./column-allocator-control.jsx";
 import FieldAllocatorControl from "./field-allocator-control.jsx";
 import ColumnSelectControl from "./column-select-control.jsx";
-import ColumnStructureAllocatorControl from "./column-structure-allocator-control.jsx";
 import ColumnStructureTableControl from "./column-structure-table-control.jsx";
 import StructureeditorControl from "./structureeditor-control.jsx";
 import StructurelisteditorControl from "./structure-list-editor-control.jsx";
-import FieldPicker from "./field-picker.jsx";
-import ColumnAllocationPanel from "./../editor-panels/column-allocation-panel.jsx";
+
 import SelectorPanel from "./../editor-panels/selector-panel.jsx";
-import SubPanelButton from "./../editor-panels/sub-panel-button.jsx";
 import SummaryPanel from "./../editor-panels/summary-panel.jsx";
-import UiConditions from "../ui-conditions/ui-conditions.js";
-import UiConditionsParser from "../ui-conditions/ui-conditions-parser.js";
 import CheckboxSelectionPanel from "../editor-panels/checkbox-selection-panel.jsx";
-import PropertyUtils from "../util/property-utils.js";
 import WideFlyout from "../components/wide-flyout.jsx";
+
+import SubPanelButton from "./../editor-panels/sub-panel-button.jsx";
+import FieldPicker from "./field-picker.jsx";
+import ControlItem from "./control-item.jsx";
+
 
 import DownIcon from "../../../assets/images/down_enabled.svg";
 import UpIcon from "../../../assets/images/up_enabled.svg";
@@ -67,11 +63,6 @@ export default class EditorForm extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			formData: this.props.form,
-			valuesTable: this.props.form.data.currentParameters,
-			controlErrorMessages: (this.props.messages) ? this.props.messages : [],
-			requiredParameters: [],
-			controlStates: {},
 			selectedRows: {},
 			showFieldPicker: false,
 			fieldPickerControl: {},
@@ -80,27 +71,10 @@ export default class EditorForm extends React.Component {
 
 		this.sharedCtrlInfo = [];
 
-		this.visibleDefinition = {};
-		this.enabledDefinitions = {};
-		this.validationDefinitions = {};
-
-		this.getControlValue = this.getControlValue.bind(this);
-		this.getControlValuesTable = this.getControlValuesTable.bind(this);
-		this.getControlState = this.getControlState.bind(this);
-		this.updateControlValue = this.updateControlValue.bind(this);
-		this.updateControlValues = this.updateControlValues.bind(this);
 		this.updateSelectedRows = this.updateSelectedRows.bind(this);
 
 		this.handleSubmit = this.handleSubmit.bind(this);
-		this.validateConditions = this.validateConditions.bind(this);
-		this.validateCustomControl = this.validateCustomControl.bind(this);
-		this.updateValidationErrorMessage = this.updateValidationErrorMessage.bind(this);
-		this.retrieveValidationErrorMessage = this.retrieveValidationErrorMessage.bind(this);
-		this.validateChildRefs = this.validateChildRefs.bind(this);
-		this.extractValidationDefinitions = this.extractValidationDefinitions.bind(this);
 
-		this.getControlValues = this.getControlValues.bind(this);
-		this.getSubControlValues = this.getSubControlValues.bind(this);
 		this.getControl = this.getControl.bind(this);
 
 		this.genPanel = this.genPanel.bind(this);
@@ -113,69 +87,13 @@ export default class EditorForm extends React.Component {
 		this.generateSharedControlNames = this.generateSharedControlNames.bind(this);
 		this.getSelectedRows = this.getSelectedRows.bind(this);
 		this.clearSelectedRows = this.clearSelectedRows.bind(this);
-		this.setControlState = this.setControlState.bind(this);
 
 		this._showCategoryPanel = this._showCategoryPanel.bind(this);
 		this._inSummaryControls = this._inSummaryControls.bind(this);
 	}
 
-	componentWillMount() {
-		if (this.props.form.conditions) {
-			this.parseUiConditions(this.props.form.conditions);
-		}
-		const localControls = UiConditionsParser.parseControls([], this.props.form);
-		// for control.type of structuretable that do not use FieldPicker, we need to add to
-		// the controlValue any missing data model fields.  We need to do it here so that
-		// validate enabled/visible can run against the added fields and that we can set state
-		// values safely
-		this._addDataModelFieldsToValues(localControls);
-		this._parseRequiredParameters(localControls);
-	}
-
-	componentDidMount() {
-		this.validateConditions();
-		// One time table condition updates
-		this.updateTableConditions();
-	}
-
-	componentWillReceiveProps(newProps) {
-		if (newProps.form) {
-			if (newProps.form && !_.isEqual(newProps.form, this.state.formData)) {
-				const that = this;
-				this.setState({
-					formData: newProps.form,
-					valuesTable: newProps.form.data.currentParameters,
-					controlErrorMessages: (newProps.messages) ? newProps.messages : [],
-					requiredParameters: [],
-					controlStates: {},
-					selectedRows: {},
-					showFieldPicker: false,
-					fieldPickerControl: {},
-					activeTabId: null
-				}, function() {
-					if (newProps.form.conditions) {
-						that.parseUiConditions(newProps.form.conditions);
-					}
-					const localControls = UiConditionsParser.parseControls([], that.props.form);
-					// for control.type of structuretable that do not use FieldPicker, we need to add to
-					// the controlValue any missing data model fields.  We need to do it here so that
-					// validate enabled/visible can run against the added fields and that we can set state
-					// values safely
-					that._addDataModelFieldsToValues(localControls);
-					that._parseRequiredParameters(localControls);
-				});
-
-			}
-		}
-	}
-
 	getControl(propertyName) {
 		return this.refs[propertyName];
-	}
-
-
-	getControlState(controlName) {
-		return this.state.controlStates[controlName];
 	}
 
 	/**
@@ -186,8 +104,8 @@ export default class EditorForm extends React.Component {
 	 * @return Filtered dataset metadata with fields in use removed
 	 */
 	getFilteredDataset(skipControlName) {
-		const data = this.props.form.data.datasetMetadata;
-		if (!this.sharedCtrlInfo) {
+		const data = this.props.controller.getDatasetMetadata();
+		if (!this.sharedCtrlInfo || !skipControlName) {
 			return data;
 		}
 
@@ -213,7 +131,7 @@ export default class EditorForm extends React.Component {
 					const ctrlName = sharedCtrlNames[i].controlName;
 					if (ctrlName !== skipControlName) {
 						// only remove from the main list the values that are in other controls
-						const values = this.state.valuesTable[ctrlName];
+						const values = this.props.controller.getPropertyValue({ name: ctrlName });
 						for (let j = 0; j < values.length; j++) {
 							temp.push(data.fields.filter(function(element) {
 								if (Array.isArray(values)) {
@@ -244,144 +162,11 @@ export default class EditorForm extends React.Component {
 		return filteredDataset;
 	}
 
-	getControlValue(controlId) {
-		return this.state.valuesTable[controlId];
-	}
-	getControlValuesTable() {
-		return this.state.valuesTable;
-	}
-
-	getControlValues(removeDisabled) {
-		var values = {};
-		for (var ref in this.refs) {
-			// Slightly hacky way of identifying non-control references with 3 underscores...
-			if (!(ref.startsWith("___"))) {
-				const stateValue = this.state.controlStates[ref];
-				const skip = removeDisabled && stateValue === "disabled";
-				if (!skip) {
-					if (this.refs[ref] && typeof this.refs[ref].getControlValue === "function") {
-						values[ref] = this.refs[ref].getControlValue();
-					} else if (typeof this.refs[ref].getControls === "function") {
-						// in a summary panel.  Can only get values from control array
-						for (const controlId of this.refs[ref].getControls().controlIds) {
-							values[controlId] = this.getControlValue(controlId);
-						}
-					}
-				}
-			}
-		}
-		return values;
-	}
-
-	getControlMessages() {
-		return this.state.controlErrorMessages;
-	}
-
-	getSubControlValues() {
-		return this.getSubControlValuesRecursive(this.refs, {});
-	}
-
-	getSubControlValuesRecursive(parentRefs, values) {
-		const that = this;
-		Object.keys(parentRefs).forEach(function(control) {
-			if (typeof parentRefs[control] === "object" &&
-				typeof parentRefs[control].getSubControlId === "function" &&
-				typeof parentRefs[control].refs === "object") {
-				that.getSubControlValuesRecursive(parentRefs[control].refs, values);
-			} else if (typeof parentRefs[control].getControlID === "function" &&
-								typeof parentRefs[control].getControlValue === "function") {
-				const subControlId = parentRefs[control].getControlID().replace(EDITOR_CONTROL, "");
-				values[subControlId] = parentRefs[control].getControlValue();
-			}
-		});
-		return values;
-	}
-
 	getSelectedRows(controlName) {
 		if (!this.state.selectedRows[controlName]) {
 			this.state.selectedRows[controlName] = [];
 		}
 		return this.state.selectedRows[controlName];
-	}
-
-	/**
-	 * Sets the control state. Supported states are:
-	 * "disabled", "hidden", and undefined.
-	 */
-	setControlState(controlName, state) {
-		const tempState = this.state.controlStates;
-		tempState[controlName] = state;
-		this.setState({ controlStates: tempState });
-	}
-
-	updateTableConditions() {
-		// First, find the largest table dimensions
-		let maxRow = 0;
-		let maxCol = 0;
-		const controlValues = this.getControlValues();
-		for (const key in controlValues) {
-			if (key) {
-				const value = controlValues[key];
-				if (PropertyUtils.toType(value) === "array" && value.length > 0 &&
-						PropertyUtils.toType(value[0]) === "array") {
-					maxRow = Math.max(maxRow, value.length);
-					maxCol = Math.max(maxCol, value[0].length);
-				}
-			}
-		}
-
-		// Then run a condition updater for each cell address
-		for (let i = 0; i < maxRow; i++) {
-			for (let j = 0; j < maxCol; j++) {
-				this.validateConditions(null, { rowIndex: i, colIndex: j });
-			}
-		}
-	}
-
-	updateControlValue(controlId, controlValue, cellCoords) {
-		const that = this;
-		var values = this.state.valuesTable;
-		values[controlId] = controlValue;
-		this.setState({ valuesTable: values },
-			function() {
-				const control = that.getControl(controlId);
-				if (control && control.validateInput) {
-					control.validateInput(cellCoords);
-				} else if (typeof that.refs === "object") { // needed for subpanel validations
-					that.validateChildRefs(that.refs, controlId);
-				}
-			});
-	}
-
-	validateChildRefs(parentRefs, controlId) {
-		const that = this;
-		Object.keys(parentRefs).forEach(function(control) {
-			if (typeof parentRefs[control] === "object" &&
-				typeof parentRefs[control].getSubControlId === "function" &&
-				parentRefs[control].refs) {
-				that.validateChildRefs(parentRefs[control].refs, controlId);
-			} else if (typeof parentRefs[control].getControlID === "function") {
-				const subControlId = parentRefs[control].getControlID().replace(EDITOR_CONTROL, "");
-				if (subControlId === controlId) {
-					parentRefs[control].validateInput();
-					return;
-				}
-			}
-		});
-	}
-	updateControlValues(newValues) {
-		var values = newValues;
-		if (!newValues) {
-			values = this.state.valuesTable;
-			for (var ref in this.refs) {
-				// Slightly hacky way of identifying non-control references with
-				// 3 underscores...
-				if (!(ref.startsWith("___"))) {
-					values[ref] = this.refs[ref].getControlValue();
-				}
-			}
-		}
-		this.setState({ valuesTable: values });
 	}
 
 	updateSelectedRows(controlName, selection) {
@@ -394,365 +179,186 @@ export default class EditorForm extends React.Component {
 		this.setState({ selectedRows: {} });
 	}
 
-	genControl(control, idPrefix, controlValueAccessor, datasetMetadata) {
-		const controlId = idPrefix + control.name;
+	genControl(control, propertyId) {
 		// List of available controls is defined in models/editor/Control.scala
+		let controlRef = propertyId.name;
+		if (propertyId.row) {
+			controlRef += "_" + propertyId.row;
+			if (propertyId.col) {
+				controlRef += "_" + propertyId.col;
+			}
+		}
 		if (control.controlType === "textfield") {
-			return (<TextfieldControl control={control}
-				dataModel={datasetMetadata}
-				key={controlId}
-				ref={controlId}
-				valueAccessor={controlValueAccessor}
-				validationDefinitions={this.validationDefinitions}
-				requiredParameters={this.state.requiredParameters}
-				updateControlValue={this.updateControlValue}
-				controlStates={this.state.controlStates}
-				validateConditions={this.validateConditions}
-				getControlValues={this.getControlValues}
-				getSubControlValues={this.getSubControlValues}
-				updateValidationErrorMessage={this.updateValidationErrorMessage}
-				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
+			return (<TextfieldControl
+				ref={controlRef}
+				control={control}
+				controller={this.props.controller}
+				propertyId={propertyId}
 			/>);
 		} else if (control.controlType === "textarea") {
-			return (<TextareaControl control={control}
-				dataModel={datasetMetadata}
-				key={controlId}
-				ref={controlId}
-				valueAccessor={controlValueAccessor}
-				validationDefinitions={this.validationDefinitions}
-				requiredParameters={this.state.requiredParameters}
-				updateControlValue={this.updateControlValue}
-				controlStates={this.state.controlStates}
-				validateConditions={this.validateConditions}
-				getControlValues={this.getControlValues}
-				getSubControlValues={this.getSubControlValues}
-				updateValidationErrorMessage={this.updateValidationErrorMessage}
-				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
+			return (<TextareaControl
+				ref={controlRef}
+				control={control}
+				controller={this.props.controller}
+				propertyId={propertyId}
 			/>);
 		} else if (control.controlType === "expression") {
-			return (<ExpressionControl control={control}
-				dataModel={datasetMetadata}
-				key={controlId}
-				ref={controlId}
-				valueAccessor={controlValueAccessor}
-				validationDefinitions={this.validationDefinitions}
-				requiredParameters={this.state.requiredParameters}
-				updateControlValue={this.updateControlValue}
-				controlStates={this.state.controlStates}
-				validateConditions={this.validateConditions}
-				getControlValues={this.getControlValues}
-				getSubControlValues={this.getSubControlValues}
-				updateValidationErrorMessage={this.updateValidationErrorMessage}
-				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
+			return (<ExpressionControl
+				ref={controlRef}
+				control={control}
+				controller={this.props.controller}
+				propertyId={propertyId}
 			/>);
 		} else if (control.controlType === "toggletext") {
-			return (<ToggletextControl control={control}
-				updateControlValue={this.updateControlValue}
-				valueAccessor={controlValueAccessor}
-				updateControlValue={this.updateControlValue}
-				controlStates={this.state.controlStates}
-				controlValue={[]}
+			return (<ToggletextControl
+				ref={controlRef}
+				control={control}
+				controller={this.props.controller}
+				propertyId={propertyId}
 				values={control.values}
 				valueLabels={control.valueLabels}
 				valueIcons={control.valueIcons}
-				getSubControlValues={this.getSubControlValues}
 			/>);
 		} else if (control.controlType === "passwordfield") {
-			return (<PasswordControl control={control}
-				key={controlId}
-				ref={controlId}
-				updateControlValue={this.updateControlValue}
-				valueAccessor={controlValueAccessor}
-				validationDefinitions={this.validationDefinitions}
-				requiredParameters={this.state.requiredParameters}
-				controlStates={this.state.controlStates}
-				validateConditions={this.validateConditions}
-				getControlValues={this.getControlValues}
-				getSubControlValues={this.getSubControlValues}
-				updateValidationErrorMessage={this.updateValidationErrorMessage}
-				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
+			return (<PasswordControl
+				ref={controlRef}
+				control={control}
+				controller={this.props.controller}
+				propertyId={propertyId}
 			/>);
 		} else if (control.controlType === "numberfield") {
-			return (<NumberfieldControl control={control}
-				dataModel={datasetMetadata}
-				key={controlId}
-				ref={controlId}
-				valueAccessor={controlValueAccessor}
-				updateControlValue={this.updateControlValue}
-				validationDefinitions={this.validationDefinitions}
-				requiredParameters={this.state.requiredParameters}
-				controlStates={this.state.controlStates}
-				validateConditions={this.validateConditions}
-				getControlValues={this.getControlValues}
-				getSubControlValues={this.getSubControlValues}
-				updateValidationErrorMessage={this.updateValidationErrorMessage}
-				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
+			return (<NumberfieldControl
+				ref={controlRef}
+				control={control}
+				controller={this.props.controller}
+				propertyId={propertyId}
 			/>);
 		} else if (control.controlType === "checkbox") {
-			return (<CheckboxControl control={control}
-				key={controlId}
-				ref={controlId}
-				updateControlValue={this.updateControlValue}
-				valueAccessor={controlValueAccessor}
-				validationDefinitions={this.validationDefinitions}
-				requiredParameters={this.state.requiredParameters}
-				controlStates={this.state.controlStates}
-				validateConditions={this.validateConditions}
-				getControlValues={this.getControlValues}
-				getSubControlValues={this.getSubControlValues}
-				updateValidationErrorMessage={this.updateValidationErrorMessage}
-				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
+			return (<CheckboxControl
+				ref={controlRef}
+				control={control}
+				propertyId={propertyId}
+				controller={this.props.controller}
 			/>);
 		} else if (control.controlType === "checkboxset") {
-			return (<CheckboxsetControl control={control}
-				key={controlId}
-				ref={controlId}
-				updateControlValue={this.updateControlValue}
-				valueAccessor={controlValueAccessor}
-				validationDefinitions={this.validationDefinitions}
-				requiredParameters={this.state.requiredParameters}
-				controlStates={this.state.controlStates}
-				validateConditions={this.validateConditions}
-				getControlValues={this.getControlValues}
-				getSubControlValues={this.getSubControlValues}
-				updateValidationErrorMessage={this.updateValidationErrorMessage}
-				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
+			return (<CheckboxsetControl
+				ref={controlRef}
+				control={control}
+				controller={this.props.controller}
+				propertyId={propertyId}
 			/>);
 		} else if (control.controlType === "radioset") {
-			return (<RadiosetControl control={control}
-				key={controlId}
-				ref={controlId}
-				updateControlValue={this.updateControlValue}
-				valueAccessor={controlValueAccessor}
-				validationDefinitions={this.validationDefinitions}
-				requiredParameters={this.state.requiredParameters}
-				controlStates={this.state.controlStates}
-				validateConditions={this.validateConditions}
-				getControlValues={this.getControlValues}
-				getSubControlValues={this.getSubControlValues}
-				updateValidationErrorMessage={this.updateValidationErrorMessage}
-				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
+			return (<RadiosetControl
+				ref={controlRef}
+				control={control}
+				controller={this.props.controller}
+				propertyId={propertyId}
 			/>);
 		} else if (control.controlType === "oneofselect") {
-			return (<OneofselectControl control={control}
-				dataModel={datasetMetadata}
-				key={controlId}
-				ref={controlId}
-				updateControlValue={this.updateControlValue}
-				valueAccessor={controlValueAccessor}
-				validationDefinitions={this.validationDefinitions}
-				requiredParameters={this.state.requiredParameters}
-				controlStates={this.state.controlStates}
-				validateConditions={this.validateConditions}
-				getControlValues={this.getControlValues}
-				getSubControlValues={this.getSubControlValues}
-				updateValidationErrorMessage={this.updateValidationErrorMessage}
-				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
+			return (<OneofselectControl
+				ref={controlRef}
+				control={control}
+				controller={this.props.controller}
+				propertyId={propertyId}
 			/>);
 		} else if (control.controlType === "someofselect") {
-			return (<SomeofselectControl control={control}
-				dataModel={datasetMetadata}
-				key={controlId}
-				ref={controlId}
-				updateControlValue={this.updateControlValue}
-				controlStates={this.state.controlStates}
-				valueAccessor={controlValueAccessor}
-				validationDefinitions={this.validationDefinitions}
-				requiredParameters={this.state.requiredParameters}
-				validateConditions={this.validateConditions}
-				getControlValues={this.getControlValues}
-				getSubControlValues={this.getSubControlValues}
-				updateValidationErrorMessage={this.updateValidationErrorMessage}
-				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
+			return (<SomeofselectControl
+				ref={controlRef}
+				control={control}
+				controller={this.props.controller}
+				propertyId={propertyId}
 			/>);
 		} else if (control.controlType === "oneofcolumns") {
-			return (<OneofcolumnsControl control={control}
-				dataModel={datasetMetadata}
-				key={controlId}
-				ref={controlId}
-				updateControlValue={this.updateControlValue}
-				controlStates={this.state.controlStates}
-				valueAccessor={controlValueAccessor}
-				validateConditions={this.validateConditions}
-				getControlValues={this.getControlValues}
-				getSubControlValues={this.getSubControlValues}
-				updateValidationErrorMessage={this.updateValidationErrorMessage}
-				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
+			return (<OneofcolumnsControl
+				ref={controlRef}
+				control={control}
+				controller={this.props.controller}
+				propertyId={propertyId}
+				dataModel={this.getFilteredDataset(propertyId.name)}
 			/>);
 		} else if (control.controlType === "someofcolumns") {
-			return (<SomeofcolumnsControl control={control}
-				dataModel={datasetMetadata}
-				key={controlId}
-				ref={controlId}
-				updateControlValue={this.updateControlValue}
-				valueAccessor={controlValueAccessor}
-				validationDefinitions={this.validationDefinitions}
-				requiredParameters={this.state.requiredParameters}
-				controlStates={this.state.controlStates}
-				validateConditions={this.validateConditions}
-				getControlValues={this.getControlValues}
-				getSubControlValues={this.getSubControlValues}
-				updateValidationErrorMessage={this.updateValidationErrorMessage}
-				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
-			/>);
-		} else if (control.controlType === "allocatedcolumn") {
-			// logger.info("allocatedcolumn");
-			return (<ColumnAllocatorControl control={control}
-				dataModel={datasetMetadata}
-				key={controlId}
-				ref={controlId}
-				valueAccessor={controlValueAccessor}
-				validationDefinitions={this.validationDefinitions}
-				requiredParameters={this.state.requiredParameters}
-				updateControlValue={this.updateControlValue}
-				controlStates={this.state.controlStates}
-				validateConditions={this.validateConditions}
-				getControlValues={this.getControlValues}
-				getSubControlValues={this.getSubControlValues}
-				updateValidationErrorMessage={this.updateValidationErrorMessage}
-				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
-			/>);
-		} else if (control.controlType === "allocatedcolumns") {
-			// logger.info("allocatedcolumns");
-			return (<ColumnAllocatorControl control={control}
-				dataModel={datasetMetadata}
-				multiColumn
-				key={controlId}
-				ref={controlId}
-				valueAccessor={controlValueAccessor}
-				validationDefinitions={this.validationDefinitions}
-				requiredParameters={this.state.requiredParameters}
-				controlStates={this.state.controlStates}
-				updateControlValue={this.updateControlValue}
-				selectedRows={this.getSelectedRows(control.name)}
-				validateConditions={this.validateConditions}
-				getControlValues={this.getControlValues}
-				getSubControlValues={this.getSubControlValues}
-				updateValidationErrorMessage={this.updateValidationErrorMessage}
-				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
+			return (<SomeofcolumnsControl
+				ref={controlRef}
+				control={control}
+				controller={this.props.controller}
+				propertyId={propertyId}
+				dataModel={this.props.controller.getDatasetMetadata()}
 			/>);
 		} else if (control.controlType === "selectcolumn") {
-			// logger.info("selectcolumn");
-			return (<FieldAllocatorControl control={control}
-				dataModel={datasetMetadata}
-				key={controlId}
-				ref={controlId}
-				valueAccessor={controlValueAccessor}
-				validationDefinitions={this.validationDefinitions}
-				requiredParameters={this.state.requiredParameters}
-				updateControlValue={this.updateControlValue}
-				availableFieldsAccessor={this.getFilteredDataset}
-				controlStates={this.state.controlStates}
-				validateConditions={this.validateConditions}
-				getControlValues={this.getControlValues}
-				getSubControlValues={this.getSubControlValues}
-				updateValidationErrorMessage={this.updateValidationErrorMessage}
-				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
+			// TODO should use propertyID for filteredDataset
+			return (<FieldAllocatorControl
+				ref={controlRef}
+				control={control}
+				controller={this.props.controller}
+				propertyId={propertyId}
+				dataModel={this.getFilteredDataset(propertyId.name)}
 			/>);
 		} else if (control.controlType === "selectcolumns") {
-			return (<ColumnSelectControl control={control}
-				dataModel={datasetMetadata}
-				multiColumn
-				key={controlId}
-				ref={controlId}
-				valueAccessor={controlValueAccessor}
-				validationDefinitions={this.validationDefinitions}
-				requiredParameters={this.state.requiredParameters}
-				controlStates={this.state.controlStates}
+			return (<ColumnSelectControl
+				ref={controlRef}
+				control={control}
+				controller={this.props.controller}
+				propertyId={propertyId}
+				dataModel={this.props.controller.getDatasetMetadata()}
 				openFieldPicker={this.openFieldPicker}
-				updateControlValue={this.updateControlValue}
 				updateSelectedRows={this.updateSelectedRows}
 				selectedRows={this.getSelectedRows(control.name)}
-				validateConditions={this.validateConditions}
-				getControlValues={this.getControlValues}
-				getSubControlValues={this.getSubControlValues}
-				updateValidationErrorMessage={this.updateValidationErrorMessage}
-				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
-			/>);
-		} else if (control.controlType === "allocatedstructures") {
-			// logger.info("allocatedstructures");
-			return (<ColumnStructureAllocatorControl control={control}
-				dataModel={datasetMetadata}
-				key={controlId}
-				ref={controlId}
-				valueAccessor={controlValueAccessor}
-				updateControlValue={this.updateControlValue}
-				validationDefinitions={this.validationDefinitions}
-				requiredParameters={this.state.requiredParameters}
-				controlStates={this.state.controlStates}
-				updateSelectedRows={this.updateSelectedRows}
-				selectedRows={this.getSelectedRows(control.name)}
-				buildUIItem={this.genUIItem}
-				validateConditions={this.validateConditions}
-				getControlValues={this.getControlValues}
-				getSubControlValues={this.getSubControlValues}
-				updateValidationErrorMessage={this.updateValidationErrorMessage}
-				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 			/>);
 		} else if (control.controlType === "structuretable") {
-			return (<ColumnStructureTableControl control={control}
-				dataModel={datasetMetadata}
-				key={controlId}
-				ref={controlId}
-				valueAccessor={controlValueAccessor}
-				updateControlValue={this.updateControlValue}
+			return (<ColumnStructureTableControl
+				ref={controlRef}
+				control={control}
+				controller={this.props.controller}
+				propertyId={propertyId}
+				dataModel={this.props.controller.getDatasetMetadata()}
 				updateSelectedRows={this.updateSelectedRows}
-				validationDefinitions={this.validationDefinitions}
-				requiredParameters={this.state.requiredParameters}
-				controlStates={this.state.controlStates}
 				selectedRows={this.getSelectedRows(control.name)}
 				buildUIItem={this.genUIItem}
 				openFieldPicker={this.openFieldPicker}
-				validateConditions={this.validateConditions}
-				getControlValues={this.getControlValues}
-				getSubControlValues={this.getSubControlValues}
-				updateValidationErrorMessage={this.updateValidationErrorMessage}
-				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
 				customContainer={this.props.customContainer}
 			/>);
 		} else if (control.controlType === "structureeditor") {
 			// logger.info("structureeditor");
-			return (<StructureeditorControl control={control}
-				dataModel={datasetMetadata}
-				key={controlId}
-				ref={controlId}
-				valueAccessor={controlValueAccessor}
-				updateControlValue={this.updateControlValue}
-				controlStates={this.state.controlStates}
+			return (<StructureeditorControl
+				ref={controlRef}
+				control={control}
+				controller={this.props.controller}
+				propertyId={propertyId}
 				updateSelectedRows={this.updateSelectedRows}
 				selectedRows={this.getSelectedRows(control.name)}
 				buildUIItem={this.genUIItem}
 			/>);
 		} else if (control.controlType === "structurelisteditor") {
 			// logger.info("structurelisteditor");
-			return (<StructurelisteditorControl control={control}
-				dataModel={datasetMetadata}
-				key={controlId} ref={controlId}
-				valueAccessor={controlValueAccessor}
-				updateControlValue={this.updateControlValue}
+			return (<StructurelisteditorControl
+				ref={controlRef}
+				control={control}
+				controller={this.props.controller}
+				propertyId={propertyId}
 				updateSelectedRows={this.updateSelectedRows}
 				selectedRows={this.getSelectedRows(control.name)}
 				buildUIItem={this.genUIItem}
-				validationDefinitions={this.validationDefinitions}
-				requiredParameters={this.state.requiredParameters}
-				controlStates={this.state.controlStates}
-				validateConditions={this.validateConditions}
-				getControlValues={this.getControlValues}
-				getSubControlValues={this.getSubControlValues}
-				updateValidationErrorMessage={this.updateValidationErrorMessage}
-				retrieveValidationErrorMessage={this.retrieveValidationErrorMessage}
+				customContainer={this.props.customContainer}
 			/>);
 		}
-		return <h6 key={controlId}>{controlId}</h6>;
+		return <h6 key={control.name}>{control.name}</h6>;
 	}
 
-	genControlItem(key, control, idPrefix, controlValueAccessor, datasetMetadata) {
+	genControlItem(key, control, inPropertyId, indexof) {
+		const propertyId = { name: control.name };
+		// Used for subpanels in tables
+		if (inPropertyId) {
+			propertyId.name = inPropertyId.name;
+			propertyId.row = inPropertyId.row;
+			propertyId.col = indexof(control.name);
+		}
 		const stateStyle = {};
 		let tooltipShow = true;
-		if (this.state.controlStates[control.name] === "hidden") {
+		const controlState = this.props.controller.getControlState(propertyId);
+		if (controlState === "hidden") {
 			stateStyle.display = "none";
 			tooltipShow = false;
-		} else if (this.state.controlStates[control.name] === "disabled") {
+		} else if (controlState === "disabled") {
 			stateStyle.color = "#D8D8D8";
 			tooltipShow = false;
 		}
@@ -763,12 +369,7 @@ export default class EditorForm extends React.Component {
 			const min = generator.range && generator.range.min ? generator.range.min : 10000;
 			const max = generator.range && generator.range.max ? generator.range.max : 99999;
 			const newValue = Math.floor(Math.random() * (max - min + 1) + min);
-			that.state.valuesTable[control.name] = newValue;
-			that.refs[control.name].setState({ controlValue: newValue }, function() {
-				if (typeof that.refs[control.name].validateInput === "function") {
-					that.refs[control.name].validateInput();
-				}
-			});
+			that.props.controller.updatePropertyValue(propertyId, newValue); // TODO might need to use propertyId and indexof
 		}
 
 		let label = <span />;
@@ -829,7 +430,7 @@ export default class EditorForm extends React.Component {
 				</div>);
 			}
 		}
-		var controlObj = this.genControl(control, idPrefix, controlValueAccessor, datasetMetadata);
+		var controlObj = this.genControl(control, propertyId);
 		var controlItem = <ControlItem key={key} label={label} control={controlObj} />;
 		return controlItem;
 	}
@@ -842,12 +443,12 @@ export default class EditorForm extends React.Component {
 		this.setState({ activeTabId: activeTab });
 	}
 
-	genPrimaryTabs(key, tabs, idPrefix, controlValueAccessor, datasetMetadata) {
+	genPrimaryTabs(key, tabs, propertyId, indexof) {
 		const tabContent = [];
 		let initialTab = "";
 		for (var i = 0; i < tabs.length; i++) {
 			const tab = tabs[i];
-			const panelItems = this.genUIItem(i, tab.content, idPrefix, controlValueAccessor, datasetMetadata);
+			const panelItems = this.genUIItem(i, tab.content, propertyId, indexof);
 			let additionalComponent = null;
 			if (this.props.additionalComponents) {
 				additionalComponent = this.props.additionalComponents[tab.group];
@@ -924,12 +525,12 @@ export default class EditorForm extends React.Component {
 		);
 	}
 
-	genSubTabs(key, tabs, idPrefix, controlValueAccessor, datasetMetadata) {
+	genSubTabs(key, tabs, propertyId, indexof) {
 		// logger.info("genSubTabs");
 		const subTabs = [];
 		for (let i = 0; i < tabs.length; i++) {
 			const tab = tabs[i];
-			const subPanelItems = this.genUIItem(i, tab.content, idPrefix, controlValueAccessor, datasetMetadata);
+			const subPanelItems = this.genUIItem(i, tab.content, propertyId, indexof);
 			if (this.props.rightFlyout) {
 
 				const panelItemsContainer = (<div key={i + "-" + key} className="sub-panel-container-right-flyout-panel">
@@ -973,48 +574,40 @@ export default class EditorForm extends React.Component {
 		);
 	}
 
-	genPanelSelector(key, tabs, idPrefix, controlValueAccessor, datasetMetadata, dependsOn) {
-		// logger.info("genPanelSelector: dependsOn=" + dependsOn);
+	genPanelSelector(key, tabs, dependsOn, propertyId, indexof) {
 		const subPanels = {};
 		for (let i = 0; i < tabs.length; i++) {
 			const tab = tabs[i];
-			// logger.info("Sub-panel: group=" + tab.group + ", title=" + tab.text);
 			subPanels[tab.group] = (<div className="control-panel" key={tab.group}>
-				{this.genUIItem(i, tab.content, idPrefix, controlValueAccessor, datasetMetadata)}
+				{this.genUIItem(i, tab.content, propertyId, indexof)}
 			</div>);
 		}
-
 		return (
 			<SelectorPanel id={"selector-panel." + dependsOn}
 				key={key}
-				controlAccessor={this.getControl}
 				panels={subPanels}
 				dependsOn={dependsOn}
+				controller={this.props.controller}
 			/>
 		);
 	}
 
-	genUIContent(uiItems, idPrefix, controlValueAccessor, datasetMetadata) {
-		// logger.info("genUIContent");
+	genUIContent(uiItems, propertyId, indexof) {
 		var uiContent = [];
 		for (var i = 0; i < uiItems.length; i++) {
-			var uiItem = uiItems[i];
-			// logger.info(uiItem);
-			uiContent.push(this.genUIItem(i, uiItem, idPrefix, controlValueAccessor, datasetMetadata));
+			uiContent.push(this.genUIItem(i, uiItems[i], propertyId, indexof));
 		}
 		return uiContent;
 	}
 
-	genUIItem(key, uiItem, idPrefix, controlValueAccessor, datasetMetadata) {
-		// logger.info("genUIItem");
-		// logger.info(uiItem);
-
+	/*
+	*  propertyId and indexOf only used for subpanel in tables
+	*/
+	genUIItem(key, uiItem, propertyId, indexof) {
 		if (uiItem.itemType === "control") {
-			return this.genControlItem(key, uiItem.control, idPrefix, controlValueAccessor, datasetMetadata);
+			return this.genControlItem(key, uiItem.control, propertyId, indexof);
 		} else if (uiItem.itemType === "additionalLink") {
-			// logger.info ("Additional link");
-			// logger.info(uiItem);
-			var subPanel = this.genPanel(key, uiItem.panel, idPrefix, controlValueAccessor, datasetMetadata);
+			var subPanel = this.genPanel(key, uiItem.panel, propertyId, indexof);
 			return (<SubPanelButton id={"sub-panel-button." + key}
 				label={uiItem.text}
 				title={uiItem.secondaryText}
@@ -1025,36 +618,29 @@ export default class EditorForm extends React.Component {
 		} else if (uiItem.itemType === "hSeparator") {
 			return <hr id={"h-separator." + key} />;
 		} else if (uiItem.itemType === "panel") {
-			return this.genPanel(key, uiItem.panel, idPrefix, controlValueAccessor, datasetMetadata);
+			return this.genPanel(key, uiItem.panel, propertyId, indexof);
 		} else if (uiItem.itemType === "subTabs") {
-			return this.genSubTabs(key, uiItem.tabs, idPrefix, controlValueAccessor, datasetMetadata);
+			return this.genSubTabs(key, uiItem.tabs, propertyId, indexof);
 		} else if (uiItem.itemType === "primaryTabs") {
-			return this.genPrimaryTabs(key, uiItem.tabs, idPrefix, controlValueAccessor, datasetMetadata);
+			return this.genPrimaryTabs(key, uiItem.tabs, propertyId, indexof);
 		} else if (uiItem.itemType === "panelSelector") {
-			return this.genPanelSelector(key, uiItem.tabs, idPrefix, controlValueAccessor, datasetMetadata, uiItem.dependsOn);
+			return this.genPanelSelector(key, uiItem.tabs, uiItem.dependsOn, propertyId, indexof);
 		} else if (uiItem.itemType === "checkboxSelector") {
-			return this.genPanel(key, uiItem.panel, idPrefix, controlValueAccessor, datasetMetadata);
+			return this.genPanel(key, uiItem.panel, propertyId, indexof);
 		} else if (uiItem.itemType === "customPanel") {
-			return this.generateCustomPanel(uiItem.panel, controlValueAccessor, datasetMetadata);
+			return this.generateCustomPanel(uiItem.panel);
 			// only generate summary panel for right side flyout
 		} else if (uiItem.itemType === "summaryPanel") {
-			return this.genPanel(key, uiItem.panel, idPrefix, controlValueAccessor, datasetMetadata);
+			return this.genPanel(key, uiItem.panel, propertyId, indexof);
 		}
 		return <div>Unknown: {uiItem.itemType}</div>;
 	}
 
-	generateCustomPanel(panel, controlValueAccessor, datasetMetadata) {
+	generateCustomPanel(panel) {
 		if (this.props.customPanels) {
 			for (const custPanel of this.props.customPanels) {
 				if (custPanel.id() === panel.id) {
-					const condition = {
-						validateCustomControl: this.validateCustomControl,
-						updateValidationErrorMessage: this.updateValidationErrorMessage,
-						retrieveValidationErrorMessage: this.retrieveValidationErrorMessage,
-						getControlState: this.getControlState,
-						setControlState: this.setControlState
-					};
-					return new custPanel(panel.parameters, controlValueAccessor, this.updateControlValue, datasetMetadata, condition).renderPanel();
+					return new custPanel(panel.parameters, this.props.controller).renderPanel();
 				}
 			}
 		}
@@ -1080,24 +666,13 @@ export default class EditorForm extends React.Component {
 		});
 	}
 
-	genPanel(key, panel, idPrefix, controlValueAccessor, datasetMetadata) {
+	genPanel(key, panel, propertyId, indexof) {
 		// logger.info("genPanel");
 		// logger.info(panel);
-		const content = this.genUIContent(panel.uiItems, idPrefix, controlValueAccessor, datasetMetadata);
+		const content = this.genUIContent(panel.uiItems, propertyId, indexof);
 		const id = "panel." + key;
 		var uiObject;
-		if (panel.panelType === "columnAllocation") {
-			this.generateSharedControlNames(panel);
-			uiObject = (<ColumnAllocationPanel
-				id={id}
-				key={key}
-				panel={panel}
-				dataModel={datasetMetadata}
-				controlAccessor={this.getControl}
-			>
-				{content}
-			</ColumnAllocationPanel>);
-		} else if (panel.panelType === "columnSelection") {
+		if (panel.panelType === "columnSelection") {
 			this.generateSharedControlNames(panel);
 			uiObject = (<div id={id}
 				className="control-panel"
@@ -1110,9 +685,8 @@ export default class EditorForm extends React.Component {
 				id={id}
 				key={key}
 				panel={panel}
-				dataModel={datasetMetadata}
+				controller={this.props.controller}
 				controlAccessor={this.getControl}
-				controlStateModifier={this.setControlState}
 			>
 				{content}
 			</CheckboxSelectionPanel>);
@@ -1124,12 +698,10 @@ export default class EditorForm extends React.Component {
 					<SummaryPanel
 						key={id}
 						ref={panel.id}
+						controller={this.props.controller}
 						label={panel.label}
-						valueAccessor={controlValueAccessor}
-						controlStates={this.state.controlStates}
-						getControlValuesTable={this.getControlValuesTable}
-						updateControlValues={this.updateControlValues}
 						clearSelectedRows={this.clearSelectedRows}
+						panelId={panel.id}
 					>
 						{content}
 					</SummaryPanel>);
@@ -1172,180 +744,6 @@ export default class EditorForm extends React.Component {
 		});
 	}
 
-	validateCustomControl(controlName, dataModel, cellCoords) {
-		this.validateConditions(dataModel, cellCoords);
-		var controlValidation = DEFAULT_VALIDATION_MESSAGE;
-		const control = {
-			name: controlName,
-			controlType: "custom"
-		};
-		if (this.validationDefinitions) {
-			// Retrieve validations for this parameter
-			const validations = this.extractValidationDefinitions(controlName);
-			if (validations) {
-				let colIndex;
-				let rowIndex;
-				if (cellCoords) {
-					rowIndex = cellCoords.rowIndex;
-					colIndex = cellCoords.colIndex;
-				}
-				for (const validation of validations) {
-					const result = UiConditions.evaluateInput(validation.definition, this.getControlValues(true),
-						control, dataModel, this.state.requiredParameters, rowIndex, colIndex);
-					if (typeof result === "object") {
-						controlValidation = result;
-					}
-				}
-			}
-		}
-		if (controlValidation) {
-			this.updateValidationErrorMessage(controlName, controlValidation);
-		}
-	}
-
-	extractValidationDefinitions(controlName) {
-		let retVal = [];
-		for (const validationKey in this.validationDefinitions) {
-			if (this.validationDefinitions[validationKey].length > 0) {
-				const baseName = this._getBaseParam(validationKey);
-				if (baseName === controlName) {
-					retVal = retVal.concat(this.validationDefinitions[validationKey]);
-				}
-			}
-		}
-		return retVal;
-	}
-
-	validateConditions(dataModel, cellCoords) {
-		this._validateVisible(dataModel, cellCoords);
-		this._validateEnabled(dataModel, cellCoords);
-	}
-
-	_validateVisible(dataModel, cellCoords) {
-		// visibleDefinition
-		if (Object.keys(this.visibleDefinition).length > 0) {
-			// logger.info("validate visible definitions");
-			const controlValues = this.getControlValues();
-
-			// convert the controlValues object structure to what UiConditions take
-			const userInput = {};
-			for (var visKey in controlValues) {
-				if (visKey) {
-					userInput[visKey] = controlValues[visKey];
-				}
-			}
-
-			for (const visibleKey in this.visibleDefinition) {
-				if (this.visibleDefinition[visibleKey].length > 0) {
-					for (let i = 0; i < this.visibleDefinition[visibleKey].length; i++) {
-						const visDefinition = this.visibleDefinition[visibleKey][i];
-						const baseKey = this._getBaseParam(visibleKey);
-						const summaryPanelControl = this._inSummaryControls(baseKey);
-
-						let controlType = "custom";
-
-						if (typeof this.refs[baseKey] !== "undefined" && this.refs[baseKey].props.control) {
-							controlType = this.refs[baseKey].props.control.controlType;
-						} else if (summaryPanelControl !== false) {
-							controlType = summaryPanelControl.controlType;
-						}
-
-						try {
-							if (visDefinition.definition && !this._shouldEvaluate(visDefinition.definition.visible, cellCoords)) {
-								continue;
-							}
-
-							var visOutput = UiConditions.validateInput(visDefinition.definition, userInput, controlType, dataModel,
-								cellCoords, this.state.requiredParameters);
-
-							var visTmp = this.state.controlStates;
-							if (visOutput === true) { // control should be visible
-								for (let j = 0; j < visDefinition.definition.visible.parameter_refs.length; j++) {
-									const paramRef = this._getParamReference(visDefinition.definition.visible.parameter_refs[j], cellCoords);
-									if (paramRef && visTmp[paramRef] !== "visible") {
-										delete visTmp[paramRef];
-									}
-								}
-								this.setState({ controlStates: visTmp });
-							} else { // control should be hidden
-								for (let j = 0; j < visDefinition.definition.visible.parameter_refs.length; j++) {
-									const paramRef = this._getParamReference(visDefinition.definition.visible.parameter_refs[j], cellCoords);
-									visTmp[paramRef] = "hidden";
-								}
-								this.setState({ controlStates: visTmp });
-							}
-						} catch (error) {
-							logger.warn("Error thrown in validation: " + error);
-						}
-					}
-				}
-			}
-		}
-	}
-
-	_validateEnabled(dataModel, cellCoords) {
-		// enabledDefinitions
-		if (Object.keys(this.enabledDefinitions).length > 0) {
-			// logger.info("validate enabled definitions");
-			const controlValues = this.getControlValues();
-
-			// convert the controlValues object structure to what UiConditions take
-			const userInput = {};
-			for (var enbKey in controlValues) {
-				if (enbKey) {
-					userInput[enbKey] = controlValues[enbKey];
-				}
-			}
-
-			for (const enabledKey in this.enabledDefinitions) {
-				if (this.enabledDefinitions[enabledKey].length > 0) {
-					for (let i = 0; i < this.enabledDefinitions[enabledKey].length; i++) {
-						const enbDefinition = this.enabledDefinitions[enabledKey][i];
-						const baseKey = this._getBaseParam(enabledKey);
-						const summaryPanelControl = this._inSummaryControls(baseKey);
-						let controlType = "custom";
-
-						if (typeof this.refs[baseKey] !== "undefined" && this.refs[baseKey].props.control) {
-							controlType = this.refs[baseKey].props.control.controlType;
-						} else if (summaryPanelControl !== false) {
-							controlType = summaryPanelControl.controlType;
-						}
-
-						try {
-							if (enbDefinition.definition && !this._shouldEvaluate(enbDefinition.definition.enabled, cellCoords)) {
-								continue;
-							}
-
-							var enbOutput = UiConditions.validateInput(enbDefinition.definition, userInput, controlType, dataModel,
-								cellCoords, this.state.requiredParameters);
-
-							var tmp = this.state.controlStates;
-							if (enbOutput === true) { // control should be enabled
-								for (let j = 0; j < enbDefinition.definition.enabled.parameter_refs.length; j++) {
-									const paramRef = this._getParamReference(enbDefinition.definition.enabled.parameter_refs[j], cellCoords);
-									if (paramRef && tmp[paramRef] !== "hidden") {
-										delete tmp[paramRef];
-									}
-								}
-								this.setState({ controlStates: tmp });
-							} else { // control should be disabled
-								for (let j = 0; j < enbDefinition.definition.enabled.parameter_refs.length; j++) {
-									const paramRef = this._getParamReference(enbDefinition.definition.enabled.parameter_refs[j], cellCoords);
-									if (tmp[paramRef] !== "hidden") { // if control is hidden, no need to disable it
-										tmp[paramRef] = "disabled";
-									}
-								}
-								this.setState({ controlStates: tmp });
-							}
-						} catch (error) {
-							logger.warn("Error thrown in validation: " + error);
-						}
-					}
-				}
-			}
-		}
-	}
-
 	_inSummaryControls(controlId) {
 		for (var ref in this.refs) {
 			if (typeof ref.getControls === "function") {
@@ -1361,207 +759,6 @@ export default class EditorForm extends React.Component {
 		return false;
 	}
 
-	_shouldEvaluate(definition, cellCoords) {
-		if (!cellCoords) {
-			return true;
-		}
-		return this._hasColumnEval(definition.evaluate, cellCoords.colIndex);
-	}
-
-	_hasColumnEval(evaluate, column) {
-		const condition = evaluate.condition;
-		if (condition) {
-			const offset = condition.parameter_ref.indexOf("[");
-			if (offset > -1) {
-				return parseInt(condition.parameter_ref.substring(offset + 1), 10) === column;
-			}
-		} else {
-			let andOr = evaluate.and;
-			if (!andOr) {
-				andOr = evaluate.or;
-			}
-			if (andOr) {
-				for (let i = 0; i < andOr.length; i++) {
-					if (this._hasColumnEval(andOr[i], column)) {
-						return true;
-					}
-				}
-			}
-		}
-		return false;
-	}
-
-	_getBaseParam(paramRef) {
-		let baseParam = paramRef;
-		const offset = paramRef.indexOf("[");
-		if (offset > -1) {
-			baseParam = paramRef.substring(0, offset);
-		}
-		return baseParam;
-	}
-
-	_getParamReference(paramRef, cellCoords) {
-		let fullReference = paramRef;
-		let subControlIndex = -1;
-		const offset = paramRef.indexOf("[");
-		if (offset > -1) {
-			const paramName = paramRef.substring(0, offset);
-			if (cellCoords && typeof cellCoords.rowIndex === "number") {
-				subControlIndex = parseInt(paramRef.substring(offset + 1), 10);
-				fullReference = paramName + "[" + cellCoords.rowIndex + "][" + subControlIndex + "]";
-			} else {
-				// If no cell coordinates but this is a cell-based condition then bail out
-				fullReference = null;
-			}
-		}
-		return fullReference;
-	}
-
-	retrieveValidationErrorMessage(controlName) {
-		const messages = this.state.controlErrorMessages;
-		const messageIndex = messages.findIndex((message) => message.id_ref === controlName);
-		return messages[messageIndex];
-	}
-
-	updateValidationErrorMessage(controlName, inMessage) {
-		// add the control name to the message object and then either replace an existing control message or
-		// add a new control message.
-		// set default if no message provided
-		var newMessage = inMessage;
-		if (!inMessage) {
-			newMessage = DEFAULT_VALIDATION_MESSAGE;
-		}
-		const message = JSON.parse(JSON.stringify(newMessage));
-		message.id_ref = controlName;
-		const messages = this.state.controlErrorMessages;
-		const messageIndex = messages.findIndex((tmpMessage) => tmpMessage.id_ref === controlName);
-		if (newMessage === DEFAULT_VALIDATION_MESSAGE) {
-			// the default message means no error or warning for the control
-			// need to remove any existing messages or ignore the new message
-			if (messageIndex > -1) {
-				messages.splice(messageIndex, 1);
-			}
-		} else if (messageIndex > -1) {
-			messages[messageIndex] = message;
-		} else {
-			messages.push(message);
-		}
-		this.setState({
-			controlErrorMessages: messages
-		});
-	}
-
-	parseUiConditions(uiConditions) {
-		for (let i = 0; i < uiConditions.length; i++) {
-			if (uiConditions[i].visible) {
-				this.visibleDefinition = UiConditionsParser.parseConditions(this.visibleDefinition, uiConditions[i], "visible");
-			} else if (uiConditions[i].enabled) {
-				this.enabledDefinitions = UiConditionsParser.parseConditions(this.enabledDefinitions, uiConditions[i], "enabled");
-			} else if (uiConditions[i].validation) {
-				this.validationDefinitions = UiConditionsParser.parseConditions(this.validationDefinitions, uiConditions[i], "validation");
-			} else { // invalid
-				logger.info("Invalid definition: " + JSON.stringify(uiConditions[i]));
-			}
-		}
-	}
-
-	_addDataModelFieldsToValues(controls) {
-		controls.forEach((control) => {
-			if (control.controlType === "structuretable" && control.noPickColumns) {
-				var controlValue = this.getControlValue(control.name);
-				controlValue = this._populateFieldData(controlValue, this.props.form.data.datasetMetadata, control);
-				var values = this.state.valuesTable;
-				values[control.name] = controlValue;
-				this.setState({ valuesTable: values });
-			}
-		});
-	}
-
-	_populateFieldData(controlValue, dataModel, control) {
-		const rowData = [];
-		const dm = dataModel;
-		const updateCells = [];
-		for (var i = 0; i < dm.fields.length; i++) {
-			const row = [];
-			const fieldIndex = this._indexOfField(dm.fields[i].name, controlValue);
-			for (var k = 0; k < control.subControls.length; k++) {
-				if (k === control.keyIndex) {
-					row.push(dm.fields[i].name);
-				} else if (fieldIndex > -1 && controlValue.length > i && controlValue[i].length > k) {
-					row.push(controlValue[i][k]);
-				} else {
-					row.push(this._getDefaultSubControlValue(k, dm.fields[i].name, dataModel, control));
-					updateCells.push([i, k]);
-				}
-			}
-			rowData.push(row);
-		}
-		return rowData;
-	}
-
-
-	_getDefaultSubControlValue(col, fieldName, dataModel, control) {
-		let val;
-		const subControl = control.subControls[col];
-		if (PropertyUtils.toType(subControl.valueDef.defaultValue) !== "undefined") {
-			val = subControl.valueDef.defaultValue;
-		} else if (PropertyUtils.toType(subControl.dmDefault) !== "undefined") {
-			val = this._getDMDefault(subControl, fieldName, dataModel);
-		} else if (subControl.values) {
-			val = subControl.values[0];
-		} else if (subControl.valueDef.propType === "string") {
-			val = "";
-		} else if (subControl.valueDef.propType === "boolean") {
-			val = false;
-		} else if (subControl.valueDef.propType === "enum") {
-			val = subControl.values[0];
-		} else if (subControl.valueDef.propType === "integer" ||
-								subControl.valueDef.propType === "long" ||
-								subControl.valueDef.propType === "double") {
-			val = 0;
-		} else {
-			val = null;
-		}
-		return val;
-	}
-
-	_getDMDefault(subControlDef, fieldName, dataModel) {
-		let defaultValue;
-		const dmField = subControlDef.dmDefault;
-		if (fieldName) {
-			for (let i = 0; i < dataModel.fields.length; i++) {
-				if (dataModel.fields[i].name === fieldName) {
-					switch (dmField) {
-					case "type":
-						defaultValue = dataModel.fields[i].type;
-						break;
-					case "description":
-						defaultValue = dataModel.fields[i].description;
-						break;
-					case "measure":
-						defaultValue = dataModel.fields[i].measure;
-						break;
-					case "modeling_role":
-						defaultValue = dataModel.fields[i].modeling_role;
-						break;
-					default:
-						break;
-					}
-					break;
-				}
-			}
-		}
-		return defaultValue;
-	}
-
-	_indexOfField(fieldName, controlValue) {
-		for (var i = 0; i < controlValue.length; i++) {
-			if (controlValue[i][0] === fieldName) {
-				return i;
-			}
-		}
-		return -1;
-	}
 
 	_parseRequiredParameters(controls) {
 		var requiredParameters = controls.filter(function(control) {
@@ -1576,26 +773,26 @@ export default class EditorForm extends React.Component {
 	}
 
 	fieldPicker() {
-		const currentControlValues = this.getControlValues();
+		const currentControlValues = this.props.controller.getPropertyValues();
 		const filteredDataset = this.getFilteredDataset(this.state.fieldPickerControl.name);
+		const form = this.props.controller.getForm();
 		return (<div id="field-picker-table">
 			<FieldPicker
 				key="field-picker-control"
+				controller={this.props.controller}
 				closeFieldPicker={this.closeFieldPicker}
-				getControlValue={this.getControlValue}
 				currentControlValues={currentControlValues}
 				dataModel={filteredDataset}
-				updateControlValue={this.updateControlValue}
 				control={this.state.fieldPickerControl}
 				updateSelectedRows={this.updateSelectedRows}
-				title={this.props.form.label}
+				title={form.label}
 				rightFlyout={this.props.rightFlyout}
 			/>
 		</div>);
 	}
 
 	render() {
-		var content = this.genUIContent(this.props.form.uiItems, "", this.getControlValue, this.props.form.data.datasetMetadata);
+		var content = this.genUIContent(this.props.controller.getUiItems());
 		var wideFly = <div />;
 		if (this.props.rightFlyout) {
 			wideFly = (<WideFlyout showPropertiesButtons={false} show={this.state.showFieldPicker && this.props.rightFlyout}>
@@ -1608,7 +805,7 @@ export default class EditorForm extends React.Component {
 		return (
 			<div>
 				<div className="well">
-					<form id={"form-" + this.props.form.componentId} className="form-horizontal">
+					<form className="form-horizontal">
 						<div className="section--light">
 							{content}
 						</div>
@@ -1624,9 +821,8 @@ export default class EditorForm extends React.Component {
 }
 
 EditorForm.propTypes = {
-	form: PropTypes.object,
+	controller: PropTypes.object.isRequired,
 	additionalComponents: PropTypes.object,
-	messages: PropTypes.array,
 	submitMethod: PropTypes.func,
 	showPropertiesButtons: PropTypes.func,
 	customPanels: PropTypes.array,

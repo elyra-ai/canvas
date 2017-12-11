@@ -56,7 +56,7 @@
                     "itemType": "panel",
                     "panel": {
                       "id": "field-allocation",
-                      "panelType": "columnAllocation",
+                      "panelType": "columnSelection",
                       "uiItems": [
                         {
                           "itemType": "control",
@@ -66,7 +66,7 @@
                               "text": "Target"
                             },
                             "separateLabel": true,
-                            "controlType": "allocatedcolumn",
+                            "controlType": "selectcolumn",
                             "valueDef": {
                               "propType": "string",
                               "isList": false,
@@ -82,7 +82,7 @@
                               "text": "Inputs"
                             },
                             "separateLabel": true,
-                            "controlType": "allocatedcolumns",
+                            "controlType": "selectcolumns",
                             "valueDef": {
                               "propType": "string",
                               "isList": true,
@@ -98,7 +98,7 @@
                               "text": "Partition"
                             },
                             "separateLabel": true,
-                            "controlType": "allocatedcolumn",
+                            "controlType": "selectcolumn",
                             "valueDef": {
                               "propType": "string",
                               "isList": false,
@@ -380,12 +380,62 @@
         "screen_num_categories": true,
         "use_custom_name": false,
         "max_num_categories": 95.0,
-        "target": [""],
+        "target": "",
         "screen_single_category": true,
         "custom_name": ""
       },
       "datasetMetadata": {
-        "fields": []
+        "fields": [
+          {
+            "name": "Age",
+            "label": "",
+            "storage": "Integer",
+            "measure": "Range",
+            "modelingRole": "Input"
+          },
+          {
+            "name": "Sex",
+            "label": "",
+            "storage": "String",
+            "measure": "Discrete",
+            "modelingRole": "Input"
+          },
+          {
+            "name": "BP",
+            "label": "",
+            "storage": "String",
+            "measure": "Discrete",
+            "modelingRole": "Input"
+          },
+          {
+            "name": "Cholesterol",
+            "label": "",
+            "storage": "String",
+            "measure": "Discrete",
+            "modelingRole": "Input"
+          },
+          {
+            "name": "Na",
+            "label": "",
+            "storage": "Real",
+            "measure": "Range",
+            "modelingRole": "Input"
+          },
+          {
+            "name": "K",
+            "label": "",
+            "storage": "Real",
+            "measure": "Range",
+            "modelingRole": "Input"
+          },
+          {
+            "name": "Drug",
+            "label": "",
+            "storage": "String",
+            "measure": "Discrete",
+            "modelingRole": "Input"
+          }
+        ]
       }
     }
   },

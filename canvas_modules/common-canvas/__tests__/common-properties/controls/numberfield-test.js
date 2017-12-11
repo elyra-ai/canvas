@@ -12,10 +12,9 @@ import NumberfieldControl from "../../../src/common-properties/editor-controls/n
 import ControlItem from "../../../src/common-properties/editor-controls/control-item.jsx";
 import { mount } from "enzyme";
 import { expect } from "chai";
-import chai from "chai";
-import chaiEnzyme from "chai-enzyme";
-chai.use(chaiEnzyme()); // Note the invocation at the end
+import Controller from "../../../src/common-properties/properties-controller";
 
+const controller = new Controller();
 
 const control = {
 	name: "test-numberfield",
@@ -27,43 +26,36 @@ const control = {
 };
 const control2 = {
 };
-const controlId = "test-numberfield";
-const validationDefinitions = {};
-const controlStates = {};
 
-function valueAccessor() {
-	return 3;
-}
+const propertyId = { name: "test-numberfield" };
 
-function updateControlValue(id, controlValue) {
-	expect(id).to.equal(controlId);
+function setPropertyValue() {
+	controller.setPropertyValues(
+		{ "test-numberfield": 1 }
+	);
 }
 
 describe("numberfield-control renders correctly", () => {
 
 	it("props should have been defined", () => {
 		const wrapper = mount(
-			<NumberfieldControl control={control}
-				valueAccessor={valueAccessor}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
-				updateControlValue={updateControlValue}
+			<NumberfieldControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
 			/>
 		);
-
 		expect(wrapper.prop("control")).to.equal(control);
-		expect(wrapper.prop("controlStates")).to.equal(controlStates);
-		expect(wrapper.prop("valueAccessor")).to.equal(valueAccessor);
-		expect(wrapper.prop("validationDefinitions")).to.equal(validationDefinitions);
+		expect(wrapper.prop("controller")).to.equal(controller);
+		expect(wrapper.prop("propertyId")).to.equal(propertyId);
 	});
 
 	it("should render a `NumberfieldControl`", () => {
 		const wrapper = mount(
-			<NumberfieldControl control={control}
-				valueAccessor={valueAccessor}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
-				updateControlValue={updateControlValue}
+			<NumberfieldControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
 			/>
 		);
 		const input = wrapper.find("[type='number']");
@@ -71,40 +63,39 @@ describe("numberfield-control renders correctly", () => {
 	});
 
 	it("should set correct state value in `NumberfieldControl`", () => {
+		setPropertyValue();
 		const wrapper = mount(
-			<NumberfieldControl control={control}
-				valueAccessor={valueAccessor}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
-				updateControlValue={updateControlValue}
+			<NumberfieldControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
 			/>
 		);
 		const input = wrapper.find("[type='number']");
 		input.simulate("change", { target: { value: 44 } });
-		expect(wrapper.state().controlValue).to.equal(44);
+		expect(controller.getPropertyValue(propertyId)).to.equal(44);
 	});
 
 	it("should set correct state null in `NumberfieldControl`", () => {
+		setPropertyValue();
 		const wrapper = mount(
-			<NumberfieldControl control={control}
-				valueAccessor={valueAccessor}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
-				updateControlValue={updateControlValue}
+			<NumberfieldControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
 			/>
 		);
 		const input = wrapper.find("[type='number']");
 		input.simulate("change", { target: { value: "" } });
-		expect(wrapper.state().controlValue).to.equal(null);
+		expect(controller.getPropertyValue(propertyId)).to.equal(null);
 	});
 
 	it("should set correct control type in `NumberfieldControl`", () => {
 		const wrapper = mount(
-			<NumberfieldControl control={control}
-				valueAccessor={valueAccessor}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
-				updateControlValue={updateControlValue}
+			<NumberfieldControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
 			/>
 		);
 		const input = wrapper.find("[type='number']");
@@ -113,11 +104,10 @@ describe("numberfield-control renders correctly", () => {
 
 	it("should set placeholder text in `NumberfieldControl`", () => {
 		const wrapper = mount(
-			<NumberfieldControl control={control}
-				valueAccessor={valueAccessor}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
-				updateControlValue={updateControlValue}
+			<NumberfieldControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
 			/>
 		);
 		const input = wrapper.find("[type='number']");
@@ -132,11 +122,10 @@ describe("numberfield-control renders correctly", () => {
 			// const newValue = Math.floor(Math.random() * (max - min + 1) + min);
 			// console.log(newValue);
 		}
-		const controlObj = (<NumberfieldControl control={control2}
-			valueAccessor={valueAccessor}
-			validationDefinitions={validationDefinitions}
-			controlStates={controlStates}
-			updateControlValue={updateControlValue}
+		const controlObj = (<NumberfieldControl
+			control={control2}
+			controller={controller}
+			propertyId={propertyId}
 		/>);
 		const numberGenerator = (<label>{"\u00A0\u00A0"}<a className="number-generator" onClick={generateNumber}>
 			{"Generate"}

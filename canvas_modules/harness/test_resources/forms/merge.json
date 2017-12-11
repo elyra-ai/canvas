@@ -92,7 +92,7 @@
                                 "itemType": "panel",
                                 "panel": {
                                   "id": "key-allocation-settings",
-                                  "panelType": "columnAllocation",
+                                  "panelType": "columnSelection",
                                   "uiItems": [
                                     {
                                       "itemType": "control",
@@ -102,7 +102,7 @@
                                           "text": "Keys"
                                         },
                                         "separateLabel": true,
-                                        "controlType": "allocatedcolumns",
+                                        "controlType": "selectcolumns",
                                         "valueDef": {
                                           "propType": "string",
                                           "isList": true,

@@ -7,6 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
+// TODO need to figure out how this control is used
 import React from "react";
 import PropTypes from "prop-types";
 import { TextField } from "ap-components-react/dist/ap-components-react";
@@ -83,7 +84,7 @@ export default class StructureeditorControl extends EditorControl {
 	}
 
 	render() {
-		const subItemButton = this.props.buildUIItem(this.state.subControlId, this.props.control.childItem, this.state.subControlId, this.getEditingValue, this.props.dataModel);
+		const subItemButton = this.props.buildUIItem(this.state.subControlId, this.props.control.childItem, this.state.subControlId, this.getEditingValue);
 
 		// Hack to attach our own editing notifiers which involves decomposing
 		// the original button into our own button.
@@ -110,5 +111,7 @@ export default class StructureeditorControl extends EditorControl {
 
 StructureeditorControl.propTypes = {
 	control: PropTypes.object,
-	updateControlValue: PropTypes.func
+	propertyId: PropTypes.object.isRequired,
+	controller: PropTypes.object.isRequired,
+	buildUIItem: PropTypes.func.isRequired
 };

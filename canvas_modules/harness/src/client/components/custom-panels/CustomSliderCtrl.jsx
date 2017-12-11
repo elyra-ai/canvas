@@ -15,29 +15,24 @@ export default class CustomSliderCtrl extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			controlValue: props.value
 		};
-		this.getControlValue = this.getControlValue.bind(this);
 		this.handleChange = this.handleChange.bind(this);
-	}
-
-	getControlValue() {
-		return this.state.controlValue;
 	}
 
 	handleChange(evt, val) {
 		var message;
 		if (parseInt(val, 10) > 60 && parseInt(val, 10) <= 90) {
 			message = { type: "warning", text: "Slider greater than 60" };
+			this.props.controller.updateErrorMessage(this.props.propertyId, message);
 		} else if (parseInt(val, 10) > 90) {
 			message = { type: "error", text: "Slider greater than 90" };
+			this.props.controller.updateErrorMessage(this.props.propertyId, message);
 		}
-		this.props.condition.updateValidationErrorMessage(this.props.parameter, message);
-		this.setState({ controlValue: val });
-		this.props.updateControlValue(this.props.parameter, val);
+		this.props.controller.updatePropertyValue(this.props.propertyId, val);
 	}
 	render() {
-		const message = this.props.condition.retrieveValidationErrorMessage(this.props.parameter);
+		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
+		const message = this.props.controller.getErrorMessage(this.props.propertyId);
 		var messageText;
 		var icon;
 		if (message && message.text) {
@@ -54,7 +49,7 @@ export default class CustomSliderCtrl extends React.Component {
 					<div className="slider">
 						<Slider
 							onChange={this.handleChange}
-							start={this.state.controlValue}
+							start={controlValue}
 							lower={0}
 							upper={100}
 							step={1}
@@ -73,8 +68,6 @@ export default class CustomSliderCtrl extends React.Component {
 }
 
 CustomSliderCtrl.propTypes = {
-	value: PropTypes.string,
-	parameter: PropTypes.string.isRequired,
-	updateControlValue: PropTypes.func.isRequired,
-	condition: PropTypes.object
+	controller: PropTypes.object.isRequired,
+	propertyId: PropTypes.object.isRequired
 };

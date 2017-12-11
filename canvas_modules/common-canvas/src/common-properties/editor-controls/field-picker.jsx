@@ -44,7 +44,6 @@ export default class FieldPicker extends EditorControl {
 		super(props);
 		this.state = {
 			checkedAll: false,
-			controlName: "",
 			data: this.props.dataModel,
 			fields: this.props.dataModel.fields,
 			filterIcons: [],
@@ -109,7 +108,6 @@ export default class FieldPicker extends EditorControl {
 
 		const controlName = this.props.control.name;
 		this.setState({
-			controlName: controlName,
 			initialControlValues: this.props.currentControlValues[controlName],
 			newControlValues: this.props.currentControlValues[controlName],
 			filterList: filters
@@ -189,8 +187,8 @@ export default class FieldPicker extends EditorControl {
 	}
 
 	handleBack() {
-		this.props.updateControlValue(this.state.controlName, this.state.newControlValues);
-		this.props.updateSelectedRows(this.state.controlName, this.getNewSelections());
+		this.props.controller.updatePropertyValue({ name: this.props.control.name }, this.state.newControlValues);
+		this.props.updateSelectedRows(this.props.control.name, this.getNewSelections());
 		this.props.closeFieldPicker();
 	}
 
@@ -539,8 +537,7 @@ export default class FieldPicker extends EditorControl {
 FieldPicker.propTypes = {
 	closeFieldPicker: PropTypes.func.isRequired,
 	currentControlValues: PropTypes.object.isRequired,
-	dataModel: PropTypes.object.isRequired,
-	updateControlValue: PropTypes.func,
+	dataModel: PropTypes.object,
 	control: PropTypes.object,
 	title: PropTypes.string,
 	rightFlyout: PropTypes.bool

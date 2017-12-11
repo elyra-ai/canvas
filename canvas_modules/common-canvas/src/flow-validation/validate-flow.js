@@ -132,7 +132,7 @@ function _validateNode(formData, nodeId) {
 						}
 						// validate the control's current value.
 						let error = UiConditions.evaluateInput(validationDefinition.definition, userInput,
-							control, formData.form.data.datasetMetadata, formData.requiredParameters, null, null, null);
+							control, formData.form.data.datasetMetadata, formData.requiredParameters, { name: control.name }, null);
 						if (typeof error === "object" && error !== null && error !== DEFAULT_VALIDATION_MESSAGE) {
 							error.id_ref = control.name;
 							messages.push(error);

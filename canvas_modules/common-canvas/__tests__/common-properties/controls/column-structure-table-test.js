@@ -11,10 +11,11 @@ import React from "react";
 import ColumnStructureTableControl from "../../../src/common-properties/editor-controls/column-structure-table-control.jsx";
 import { render, mount } from "enzyme";
 import { expect } from "chai";
-import chai from "chai";
-import chaiEnzyme from "chai-enzyme";
 import sinon from "sinon";
-chai.use(chaiEnzyme()); // Note the invocation at the end
+
+import Controller from "../../../src/common-properties/properties-controller";
+
+const controller = new Controller();
 
 const control = {
 	"name": "keys",
@@ -77,8 +78,6 @@ const control = {
 		"Ascending"
 	]
 };
-
-const controlId = "keys";
 
 const datasetMetadata = {
 	"fields": [
@@ -148,45 +147,38 @@ const datasetMetadata = {
 	]
 };
 
-const validationDefinitions = {};
-const controlStates = {};
+const propertyId = { name: "keys" };
 
-function valueAccessor() {
-	return [
-		["Na", "Ascending"],
-		["Drug", "Descending"],
-		["Sex", "Ascending"],
-		["Age", "Descending"],
-		["BP", "Ascending"],
-		["Cholesterol", "Ascending"]
-	];
+function setPropertyValue() {
+	controller.setPropertyValues(
+		{ "keys": [
+			["Na", "Ascending"],
+			["Drug", "Descending"],
+			["Sex", "Ascending"],
+			["Age", "Descending"],
+			["BP", "Ascending"],
+			["Cholesterol", "Ascending"]
+		] }
+	);
 }
 
-function updateControlValue(id, controlValue) {
-	expect(id).to.equal(controlId);
-}
-
-function getSelectedRows(controlName) {
+function getSelectedRows() {
 	return [];
 }
 
-function getSelectedRowsTop(controlName) {
+function getSelectedRowsTop() {
 	return [0];
 }
 
-function getSelectedRowsBottom(controlName) {
+function getSelectedRowsBottom() {
 	return [5];
 }
 
-function getSelectedRowsMiddle(controlName) {
+function getSelectedRowsMiddle() {
 	return [2];
 }
 
 function updateSelectedRows(row) {
-	return [];
-}
-
-function validateConditions() {
 	return [];
 }
 
@@ -195,51 +187,45 @@ function genUIItem() {
 }
 
 const openFieldPicker = sinon.spy();
-
+setPropertyValue();
 describe("ColumnStructureTableControl renders correctly", () => {
 
 	it("props should have been defined", () => {
-		const selectedRows = getSelectedRows(control.name);
+		const selectedRows = getSelectedRows();
 		const wrapper = mount(
-			<ColumnStructureTableControl control={control}
+			<ColumnStructureTableControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
 				dataModel={datasetMetadata}
-				valueAccessor={valueAccessor}
-				updateControlValue={updateControlValue}
 				updateSelectedRows={updateSelectedRows}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
 				selectedRows={selectedRows}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
-				validateConditions={validateConditions}
 			/>
 		);
 
 		expect(wrapper.prop("dataModel")).to.equal(datasetMetadata);
 		expect(wrapper.prop("control")).to.equal(control);
-		expect(wrapper.prop("valueAccessor")).to.equal(valueAccessor);
-		expect(wrapper.prop("updateControlValue")).to.equal(updateControlValue);
+		expect(wrapper.prop("controller")).to.equal(controller);
+		expect(wrapper.prop("propertyId")).to.equal(propertyId);
 		expect(wrapper.prop("updateSelectedRows")).to.equal(updateSelectedRows);
-		expect(wrapper.prop("validationDefinitions")).to.equal(validationDefinitions);
 		expect(wrapper.prop("selectedRows")).to.equal(selectedRows);
-		expect(wrapper.prop("controlStates")).to.equal(controlStates);
 		expect(wrapper.prop("buildUIItem")).to.equal(genUIItem);
 		expect(wrapper.prop("openFieldPicker")).to.equal(openFieldPicker);
 	});
 
 	it("should render a `ColumnStructureTableControl`", () => {
 		const wrapper = render(
-			<ColumnStructureTableControl control={control}
+			<ColumnStructureTableControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
 				dataModel={datasetMetadata}
-				valueAccessor={valueAccessor}
-				updateControlValue={updateControlValue}
 				updateSelectedRows={updateSelectedRows}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
 				selectedRows={getSelectedRows(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
-				validateConditions={validateConditions}
 			/>
 		);
 
@@ -256,17 +242,15 @@ describe("ColumnStructureTableControl renders correctly", () => {
 
 	it("should select no rows and all move buttons disabled `ColumnStructureTableControl`", () => {
 		const wrapper = mount(
-			<ColumnStructureTableControl control={control}
+			<ColumnStructureTableControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
 				dataModel={datasetMetadata}
-				valueAccessor={valueAccessor}
-				updateControlValue={updateControlValue}
 				updateSelectedRows={updateSelectedRows}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
 				selectedRows={getSelectedRows(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
-				validateConditions={validateConditions}
 			/>
 		);
 
@@ -278,18 +262,17 @@ describe("ColumnStructureTableControl renders correctly", () => {
 	});
 
 	it("should select top row and move down one row", () => {
+		setPropertyValue();
 		const wrapper = mount(
-			<ColumnStructureTableControl control={control}
+			<ColumnStructureTableControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
 				dataModel={datasetMetadata}
-				valueAccessor={valueAccessor}
-				updateControlValue={updateControlValue}
 				updateSelectedRows={updateSelectedRows}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
 				selectedRows={getSelectedRowsTop(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
-				validateConditions={validateConditions}
 			/>
 		);
 
@@ -321,18 +304,17 @@ describe("ColumnStructureTableControl renders correctly", () => {
 	});
 
 	it("should select top row and move down to bottom row", () => {
+		setPropertyValue();
 		const wrapper = mount(
-			<ColumnStructureTableControl control={control}
+			<ColumnStructureTableControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
 				dataModel={datasetMetadata}
-				valueAccessor={valueAccessor}
-				updateControlValue={updateControlValue}
 				updateSelectedRows={updateSelectedRows}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
 				selectedRows={getSelectedRowsTop(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
-				validateConditions={validateConditions}
 			/>
 		);
 
@@ -364,18 +346,17 @@ describe("ColumnStructureTableControl renders correctly", () => {
 	});
 
 	it("should select bottom row and move up one row", () => {
+		setPropertyValue();
 		const wrapper = mount(
-			<ColumnStructureTableControl control={control}
+			<ColumnStructureTableControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
 				dataModel={datasetMetadata}
-				valueAccessor={valueAccessor}
-				updateControlValue={updateControlValue}
 				updateSelectedRows={updateSelectedRows}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
 				selectedRows={getSelectedRowsBottom(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
-				validateConditions={validateConditions}
 			/>
 		);
 
@@ -407,18 +388,17 @@ describe("ColumnStructureTableControl renders correctly", () => {
 	});
 
 	it("should select bottom row and move up to top row", () => {
+		setPropertyValue();
 		const wrapper = mount(
-			<ColumnStructureTableControl control={control}
+			<ColumnStructureTableControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
 				dataModel={datasetMetadata}
-				valueAccessor={valueAccessor}
-				updateControlValue={updateControlValue}
 				updateSelectedRows={updateSelectedRows}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
 				selectedRows={getSelectedRowsBottom(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
-				validateConditions={validateConditions}
 			/>
 		);
 
@@ -450,18 +430,17 @@ describe("ColumnStructureTableControl renders correctly", () => {
 	});
 
 	it("should select top row and correct move buttons enabled `ColumnStructureTableControl`", () => {
+		setPropertyValue();
 		const wrapper = mount(
-			<ColumnStructureTableControl control={control}
+			<ColumnStructureTableControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
 				dataModel={datasetMetadata}
-				valueAccessor={valueAccessor}
-				updateControlValue={updateControlValue}
 				updateSelectedRows={updateSelectedRows}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
 				selectedRows={getSelectedRowsTop(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
-				validateConditions={validateConditions}
 			/>
 		);
 
@@ -480,18 +459,17 @@ describe("ColumnStructureTableControl renders correctly", () => {
 	});
 
 	it("should select bottom row and correct move buttons enabled `ColumnStructureTableControl`", () => {
+		setPropertyValue();
 		const wrapper = mount(
-			<ColumnStructureTableControl control={control}
+			<ColumnStructureTableControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
 				dataModel={datasetMetadata}
-				valueAccessor={valueAccessor}
-				updateControlValue={updateControlValue}
 				updateSelectedRows={updateSelectedRows}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
 				selectedRows={getSelectedRowsBottom(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
-				validateConditions={validateConditions}
 			/>
 		);
 
@@ -510,18 +488,17 @@ describe("ColumnStructureTableControl renders correctly", () => {
 	});
 
 	it("should select middle row and all move buttons enabled `ColumnStructureTableControl`", () => {
+		setPropertyValue();
 		const wrapper = mount(
-			<ColumnStructureTableControl control={control}
+			<ColumnStructureTableControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
 				dataModel={datasetMetadata}
-				valueAccessor={valueAccessor}
-				updateControlValue={updateControlValue}
 				updateSelectedRows={updateSelectedRows}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
 				selectedRows={getSelectedRowsMiddle(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
-				validateConditions={validateConditions}
 			/>
 		);
 
@@ -540,18 +517,17 @@ describe("ColumnStructureTableControl renders correctly", () => {
 	});
 
 	it("should select add columns button and field picker should display", () => {
+		setPropertyValue();
 		const wrapper = mount(
-			<ColumnStructureTableControl control={control}
+			<ColumnStructureTableControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
 				dataModel={datasetMetadata}
-				valueAccessor={valueAccessor}
-				updateControlValue={updateControlValue}
 				updateSelectedRows={updateSelectedRows}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
 				selectedRows={getSelectedRowsTop(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
-				validateConditions={validateConditions}
 			/>
 		);
 
@@ -565,18 +541,17 @@ describe("ColumnStructureTableControl renders correctly", () => {
 	});
 
 	it("should select row and remove button row should be removed", () => {
+		setPropertyValue();
 		const wrapper = mount(
-			<ColumnStructureTableControl control={control}
+			<ColumnStructureTableControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
 				dataModel={datasetMetadata}
-				valueAccessor={valueAccessor}
-				updateControlValue={updateControlValue}
 				updateSelectedRows={updateSelectedRows}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
 				selectedRows={getSelectedRowsTop(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
-				validateConditions={validateConditions}
 			/>
 		);
 
@@ -608,18 +583,17 @@ describe("ColumnStructureTableControl renders correctly", () => {
 	});
 
 	it("should search correct keyword in table", () => {
+		setPropertyValue();
 		const wrapper = mount(
-			<ColumnStructureTableControl control={control}
+			<ColumnStructureTableControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
 				dataModel={datasetMetadata}
-				valueAccessor={valueAccessor}
-				updateControlValue={updateControlValue}
 				updateSelectedRows={updateSelectedRows}
-				validationDefinitions={validationDefinitions}
-				controlStates={controlStates}
 				selectedRows={getSelectedRowsTop(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
-				validateConditions={validateConditions}
 			/>
 		);
 		const input = wrapper.find("#flexible-table-search");
@@ -629,5 +603,4 @@ describe("ColumnStructureTableControl renders correctly", () => {
 		expect(wrapper.find(".table-row")).to.have.length(1);
 
 	});
-
 });

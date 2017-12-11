@@ -39,34 +39,20 @@ module.exports = function() {
 		// Don't know the exact number but the slider value should be 65 or more
 		expect(65).toBeLessThanOrEqual(parseInt(lastEventLog.data.form.custom_slider, 10));
 		expect(false).toEqual(lastEventLog.data.form.custom_toggle);
+		expect(41.113575).toEqual(lastEventLog.data.form.custom_map_info[0]);
+		expect(-73.716052).toEqual(lastEventLog.data.form.custom_map_info[1]);
+		expect(18).toEqual(lastEventLog.data.form.custom_map_info[2]);
+
 		// expect 2 error messages from custom panels
 		expect(2).toEqual(lastEventLog.data.messages.length);
 	});
 
-	this.Then("I select the Map Panel", function() {
-		var category = browser.$("#category-title-0-right-flyout-panel");
-		category.click();
-	});
 
-	this.Then("I show the map and go to SVL", function() {
+	this.Then("I show the map and go to Armonk", function() {
 		var showMapCheckbox = browser.$("#editor-control-map_checkbox");
-		var applyButton = browser.$("#properties-apply-button");
-		// var goToSVLButton = browser.$("#go_to_svl");
-
 		showMapCheckbox.click();
-		// This causes all element ids to be lost
-		// goToSVLButton.click();
-		applyButton.click();
-	});
-
-	this.Then("I verify custom control with structure property", function() {
-		var lastEventLog = getLastEventLogData();
-		// expect(37.1957).toEqual(lastEventLog.data.form.custom_map_info[0]);
-		// expect(238.2518).toEqual(lastEventLog.data.form.custom_map_info[1]);
-		// expect(18).toEqual(lastEventLog.data.form.custom_map_info[2]);
-		expect(37.5).toEqual(lastEventLog.data.form.custom_map_info[0]);
-		expect(238).toEqual(lastEventLog.data.form.custom_map_info[1]);
-		expect(9).toEqual(lastEventLog.data.form.custom_map_info[2]);
+		var goToArmonkButton = browser.$("#go_to_armonk");
+		goToArmonkButton.click();
 	});
 
 	function getLastEventLogData(override) {

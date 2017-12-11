@@ -11,30 +11,17 @@ import React from "react";
 import PropTypes from "prop-types";
 import { TextField } from "ap-components-react/dist/ap-components-react";
 import EditorControl from "./editor-control.jsx";
-import { CHARACTER_LIMITS, EDITOR_CONTROL } from "../constants/constants.js";
+import { CHARACTER_LIMITS } from "../constants/constants.js";
 
 export default class TextfieldControl extends EditorControl {
 	constructor(props) {
 		super(props);
-		const value = props.valueAccessor ? props.valueAccessor(props.control.name) : props.value;
-		this.state = {
-			controlValue: value
-		};
-		this.getControlValue = this.getControlValue.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 		this.keyPress = this.keyPress.bind(this);
 	}
 
 	handleChange(evt) {
-		this.setState({ controlValue: evt.target.value });
-		if (this.props.updateControlValue) {
-			const ctrlName = this.props.columnDef ? this.props.columnDef.name : this.props.control.name;
-			this.props.updateControlValue(ctrlName, evt.target.value, this.props.rowIndex);
-		}
-	}
-
-	getControlValue() {
-		return this.state.controlValue;
+		this.props.controller.updatePropertyValue(this.props.propertyId, evt.target.value);
 	}
 
 	keyPress(e) {
@@ -45,14 +32,16 @@ export default class TextfieldControl extends EditorControl {
 	}
 
 	render() {
-		const controlName = this.getControlID().replace(EDITOR_CONTROL, "");
+		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
+		const value = controlValue ? controlValue : "";
+
 		const conditionProps = {
-			controlName: controlName,
+			propertyId: this.props.propertyId,
 			controlType: "textfield"
 		};
 		const conditionState = this.getConditionMsgState(conditionProps);
 
-		const errorMessage = !this.props.columnDef ? conditionState.message : null;
+		const errorMessage = this.props.tableControl ? null : conditionState.message;
 		const messageType = conditionState.messageType;
 		const icon = this.props.tableControl ? <div /> : conditionState.icon;
 		const stateDisabled = conditionState.disabled;
@@ -65,25 +54,20 @@ export default class TextfieldControl extends EditorControl {
 
 		const charLimit = this.getCharLimit(CHARACTER_LIMITS.NODE_PROPERTIES_DIALOG_TEXT_FIELD);
 		let displayedCharLimit;
-		let cellvalue = this.state.controlValue;
 		if (!this.props.tableControl) {
 			displayedCharLimit = charLimit;
-		} else {
-			cellvalue = this.props.value;
 		}
-		cellvalue = cellvalue ? cellvalue : "";
 		return (
 			<div className="editor_control_area" style={stateStyle}>
 				<div id={controlIconContainerClass}>
 					<TextField {...stateDisabled}
 						style={stateStyle}
 						id={this.getControlID()}
-						onBlur={this.validateInput}
 						disabledPlaceholderAnimation
 						placeholder={this.props.control.additionalText}
 						onChange={this.handleChange}
 						onKeyDown={this.keyPress}
-						value={cellvalue}
+						value={value}
 						maxCount={displayedCharLimit}
 						maxLength={charLimit}
 					/>
@@ -97,16 +81,7 @@ export default class TextfieldControl extends EditorControl {
 
 TextfieldControl.propTypes = {
 	control: PropTypes.object.isRequired,
-	controlStates: PropTypes.object,
-	validationDefinitions: PropTypes.object,
-	requiredParameters: PropTypes.array,
-	validateConditions: PropTypes.func,
-	updateValidationErrorMessage: PropTypes.func,
-	retrieveValidationErrorMessage: PropTypes.func,
-	updateControlValue: PropTypes.func,
-	// Optional used when embedded in table
-	tableControl: PropTypes.bool,
-	rowIndex: PropTypes.number,
-	columnDef: PropTypes.object,
-	value: PropTypes.string
+	propertyId: PropTypes.object.isRequired,
+	controller: PropTypes.object.isRequired,
+	tableControl: PropTypes.bool
 };

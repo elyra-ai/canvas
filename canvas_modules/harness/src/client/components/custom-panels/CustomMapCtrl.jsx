@@ -18,12 +18,13 @@ export default class CustomMapCtrl extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			controlValue: props.value
 		};
-		if (this.state.controlValue && this.state.controlValue.length >= 3) {
-			this.lat = this.state.controlValue[0];
-			this.lng = this.state.controlValue[1];
-			this.zoom = this.state.controlValue[2];
+		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
+
+		if (controlValue && controlValue.length >= 3) {
+			this.lat = controlValue[0];
+			this.lng = controlValue[1];
+			this.zoom = controlValue[2];
 		} else {
 			this.lat = 37.5;
 			this.lng = 238;
@@ -34,7 +35,6 @@ export default class CustomMapCtrl extends React.Component {
 		this.resized = false;
 		this.initMap = this.initMap.bind(this);
 		this.goSomewhere = this.goSomewhere.bind(this);
-		this.getControlValue = this.getControlValue.bind(this);
 		this.setInternalState = this.setInternalState.bind(this);
 	}
 
@@ -65,12 +65,8 @@ export default class CustomMapCtrl extends React.Component {
 		this.zoom = zoom;
 		const value = [lat, lng, zoom];
 		this.coords = this.formatCoords(lat, lng);
-		this.setState({ "controlValue": value });
-		this.props.updateControlValue(this.props.parameter, value);
-	}
-
-	getControlValue() {
-		return this.state.controlValue;
+		this.props.controller.updatePropertyValue(this.props.propertyId, value);
+		this.props.controller.updatePropertyValue({ name: "map_zoom" }, zoom); // update value in another control
 	}
 
 	goSomewhere(where, zoom) {
@@ -131,16 +127,12 @@ export default class CustomMapCtrl extends React.Component {
 		});
 	}
 
-	validateInput() {
-		this.props.condition.validateCustomControl(this.props.parameter);
-	}
-
 	render() {
 		if (this.initialized && !this.resized) {
 			google.maps.event.trigger(this.map, "resize"); // eslint-disable-line no-undef
 			this.resized = true;
 		}
-		const message = this.props.condition.retrieveValidationErrorMessage(this.props.parameter);
+		const message = this.props.controller.getErrorMessage(this.props.propertyId);
 		var messageText;
 		var icon;
 		if (message && message.text) {
@@ -151,7 +143,7 @@ export default class CustomMapCtrl extends React.Component {
 				icon = (<Icon type="error-o" />);
 			}
 		}
-		const state = this.props.condition.getControlState(this.props.parameter);
+		const state = this.props.controller.getControlState(this.props.propertyId);
 		var visibility;
 		if (state === "hidden") {
 			visibility = { visibility: "hidden" };
@@ -186,8 +178,6 @@ function loadJS(src) {
 }
 
 CustomMapCtrl.propTypes = {
-	value: PropTypes.array,
-	parameter: PropTypes.string.isRequired,
-	updateControlValue: PropTypes.func.isRequired,
-	condition: PropTypes.object
+	controller: PropTypes.object.isRequired,
+	propertyId: PropTypes.object.isRequired
 };

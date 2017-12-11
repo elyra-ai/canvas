@@ -7,7 +7,6 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import logger from "../../../utils/logger";
 import React from "react";
 import PropTypes from "prop-types";
 import { Button } from "react-bootstrap";
@@ -22,35 +21,27 @@ export default class SubPanelCell extends React.Component {
 		super(props);
 		this.showSubPanel = this.showSubPanel.bind(this);
 		this.onSubPanelHidden = this.onSubPanelHidden.bind(this);
-		this.getRowIndex = this.getRowIndex.bind(this);
 	}
 
 	onSubPanelHidden(applyChanges) {
-		logger.info("Cell.onSubPanelHidden(): applyChanges=" + applyChanges);
-		this.props.notifyFinishedEditing(this.props.rowIndex, applyChanges);
+		// on cancel reset back to original value
+		if (!applyChanges) {
+			this.props.controller.updatePropertyValue(this.props.propertyId, this.initialControlValue);
+		}
 	}
 
-	getRowIndex() {
-		return this.props.rowIndex;
-	}
 
 	showSubPanel() {
-		logger.info("Cell.showSubPanel(): row=" + this.props.rowIndex + ", col=" + this.props.col);
-		// this.props.data[this.props.rowIndex][this.props.col]
-
-		// Have to tell the owner table which row is about to be edited so it
-		// can return the correct values when the controls request their values.
-		this.props.notifyStartEditing(this.props.rowIndex);
-
+		// sets the current value for parameter.  Used on cancel
+		this.initialControlValue = JSON.parse(JSON.stringify(this.props.controller.getPropertyValue(this.props.propertyId)));
 		this.refs.invoker.showSubDialog(this.props.title, this.props.panel, this.onSubPanelHidden);
 	}
 
 	render() {
-		// logger.info("SubPanelCell.render()");
 		const tooltipId = "tooltip-subpanel-cell";
 		const disabled = typeof this.props.disabled !== "undefined" ? this.props.disabled : false;
 		return (
-			<SubPanelInvoker ref="invoker">
+			<SubPanelInvoker ref="invoker" customContainer={this.props.customContainer}>
 				<Cell>
 					<div className="properties-tooltips-container" data-tip="Edit" data-for="tooltip-subpanel-cell">
 						<Button
@@ -78,13 +69,11 @@ export default class SubPanelCell extends React.Component {
 }
 
 SubPanelCell.propTypes = {
-	data: PropTypes.array.isRequired,
-	rowIndex: PropTypes.number,
-	col: PropTypes.number,
 	label: PropTypes.string.isRequired,
 	title: PropTypes.string.isRequired,
 	panel: PropTypes.object.isRequired,
-	notifyStartEditing: PropTypes.func.isRequired,
-	notifyFinishedEditing: PropTypes.func.isRequired,
-	disabled: PropTypes.bool
+	disabled: PropTypes.bool,
+	controller: PropTypes.object,
+	propertyId: PropTypes.object,
+	customContainer: PropTypes.bool
 };

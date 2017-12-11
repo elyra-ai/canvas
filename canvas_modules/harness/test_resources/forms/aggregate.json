@@ -30,7 +30,7 @@
                     "itemType": "panel",
                     "panel": {
                       "id": "aggregation-settings",
-                      "panelType": "columnAllocation",
+                      "panelType": "columnSelection",
                       "uiItems": [
                         {
                           "itemType": "control",
@@ -40,7 +40,7 @@
                               "text": "Group by"
                             },
                             "separateLabel": true,
-                            "controlType": "allocatedcolumns",
+                            "controlType": "selectcolumns",
                             "valueDef": {
                               "propType": "string",
                               "isList": true,
@@ -56,7 +56,7 @@
                               "text": "Aggregates"
                             },
                             "separateLabel": true,
-                            "controlType": "allocatedstructures",
+                            "controlType": "structuretable",
                             "valueDef": {
                               "propType": "structure",
                               "isList": false,

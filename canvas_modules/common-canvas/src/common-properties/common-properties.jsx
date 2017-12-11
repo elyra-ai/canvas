@@ -16,6 +16,7 @@ import EditorForm from "./editor-controls/editor-form.jsx";
 import Form from "./form/Form";
 import CommandStack from "../command-stack/command-stack.js";
 import CommonPropertiesAction from "../command-actions/commonPropertiesAction.js";
+import PropertiesController from "./properties-controller";
 import logger from "../../utils/logger";
 import _ from "underscore";
 
@@ -27,41 +28,77 @@ export default class CommonProperties extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			propertiesInfo: this.props.propertiesInfo,
 			showPropertiesDialog: false,
 			showPropertiesButtons: true,
 			propertiesTitleReadOnly: true
 		};
-		this.settings = { additionalInfo: {} };
+		this.propertiesInfo = this.props.propertiesInfo;
+		this.propertiesController = new PropertiesController();
+
+		this.propertiesController.subscribe(() => {
+			this.forceUpdate();
+		});
+		// TODO should be able to reset based on form data
 		this.initialCurrentProperties = "empty";
+		// TODO should be able to reset based on form data
+		this.settings = { additionalInfo: {} };
+
 		this.applyPropertiesEditing = this.applyPropertiesEditing.bind(this);
 		this.showPropertiesButtons = this.showPropertiesButtons.bind(this);
 		this.cancelHandler = this.cancelHandler.bind(this);
 		this.editTitleClickHandler = this.editTitleClickHandler.bind(this);
 	}
+	componentWillMount() {
+		this.setForm();
+		this.propertiesController.setHandlers({
+			controllerHandler: this.props.controllerHandler,
+			propertyUpdateListener: this.props.propertyUpdateListener
+		});
+		if (this.propertiesInfo.messages) {
+			this.setErrorMessages(this.propertiesInfo.messages);
+		} else {
+			this.propertiesController.setErrorMessages([]);
+		}
+	}
 
 	componentWillReceiveProps(newProps) {
 		if (newProps.propertiesInfo) {
-			if (!_.isEqual(Object.keys(newProps.propertiesInfo), Object.keys(this.state.propertiesInfo)) ||
-				(newProps.propertiesInfo.formData && !_.isEqual(newProps.propertiesInfo.formData, this.state.propertiesInfo.formData)) ||
-				(newProps.propertiesInfo.parameterDef && !_.isEqual(newProps.propertiesInfo.parameterDef, this.state.propertiesInfo.parameterDef))) {
-				this.setState({ propertiesInfo: newProps.propertiesInfo });
+			if (newProps.propertiesInfo.messages && !_.isEqual(newProps.propertiesInfo.messages, this.propertiesInfo.messages)) {
+				this.propertiesInfo.messages = newProps.propertiesInfo.messages;
+				this.setErrorMessages(newProps.propertiesInfo.messages);
+			}
+			if (!_.isEqual(Object.keys(newProps.propertiesInfo), Object.keys(this.propertiesInfo)) ||
+				(newProps.propertiesInfo.formData && !_.isEqual(newProps.propertiesInfo.formData, this.propertiesInfo.formData)) ||
+				(newProps.propertiesInfo.parameterDef && !_.isEqual(newProps.propertiesInfo.parameterDef, this.propertiesInfo.parameterDef))) {
+				this.propertiesInfo = newProps.propertiesInfo;
+				this.setForm();
 			}
 		}
 	}
 
-	getForm() {
-		let formData = {};
-		if (this.state.propertiesInfo.formData && Object.keys(this.props.propertiesInfo.formData).length !== 0) {
-			formData = this.state.propertiesInfo.formData;
-		} else if (this.state.propertiesInfo.parameterDef) {
-			formData = Form.makeForm(this.state.propertiesInfo.parameterDef);
+	setForm() {
+		let formData = null;
+		try {
+			if (this.propertiesInfo.formData && Object.keys(this.propertiesInfo.formData).length !== 0) {
+				formData = this.propertiesInfo.formData;
+			} else if (this.propertiesInfo.parameterDef) {
+				formData = Form.makeForm(this.propertiesInfo.parameterDef);
+			}
+			// TODO: This can be removed once the WML Play service generates datasetMetadata instead of inputDataModel
+			if (formData && formData.data && formData.data.inputDataModel && !formData.data.datasetMetadata) {
+				formData.data.datasetMetadata = this.convertInputDataModel(formData.data.inputDataModel);
+			}
+		} catch (error) {
+			logger.error("Error generating form in common-properties: " + error);
 		}
-		// TODO: This can be removed once the WML Play service generates datasetMetadata instead of inputDataModel
-		if (formData && formData.data && formData.data.inputDataModel && !formData.data.datasetMetadata) {
-			formData.data.datasetMetadata = this.convertInputDataModel(formData.data.inputDataModel);
-		}
-		return formData;
+		this.propertiesController.setForm(formData);
+	}
+
+	setErrorMessages(messages) {
+		messages.forEach((message) => {
+			this.propertiesController.updateErrorMessage({ name: message.id_ref },
+				{ type: message.type, text: message.text });
+		});
 	}
 
 	setPropertiesTitleReadOnlyMode(mode) {
@@ -112,8 +149,11 @@ export default class CommonProperties extends React.Component {
 	}
 
 	applyPropertiesEditing() {
-		this.settings.properties = this.refs.editorForm.getControlValues(true);
-		this.settings.additionalInfo.messages = this.refs.editorForm.getControlMessages();
+		this.settings.properties = this.propertiesController.getPropertyValues(true);
+		const errorMessages = this.propertiesController.getErrorMessages(true);
+		if (typeof errorMessages !== "undefined" && errorMessages !== null) {
+			this.settings.additionalInfo.messages = errorMessages;
+		}
 
 		if (typeof this.state.title !== "undefined") {
 			this.settings.additionalInfo.title = this.state.title;
@@ -129,7 +169,7 @@ export default class CommonProperties extends React.Component {
 
 	cancelHandler() {
 		this.initialCurrentProperties = "empty";
-		this.state.propertiesInfo.closePropertiesDialog();
+		this.propertiesInfo.closePropertiesDialog();
 	}
 
 	showPropertiesButtons(state) {
@@ -147,13 +187,7 @@ export default class CommonProperties extends React.Component {
 	}
 
 	render() {
-		let formData;
-		try {
-			formData = this.getForm();
-		} catch (error) {
-			logger.error("Error generating form in common-properties: " + error);
-			formData = null;
-		}
+		const formData = this.propertiesController.getForm();
 		if (formData !== null) {
 			// console.log("formData " + JSON.stringify(formData));
 			let propertiesDialog = [];
@@ -193,6 +227,7 @@ export default class CommonProperties extends React.Component {
 			}
 
 			if (this.props.showPropertiesDialog) {
+				// TODO remove this block of code
 				if (this.initialCurrentProperties === "empty") {
 					this.initialCurrentProperties = { additionalInfo: { messages: [] } };
 					if (typeof formData.data !== "undefined" &&
@@ -212,8 +247,7 @@ export default class CommonProperties extends React.Component {
 				const editorForm = (<EditorForm
 					ref="editorForm"
 					key="editor-form-key"
-					form={formData}
-					messages={this.props.propertiesInfo.messages}
+					controller={this.propertiesController}
 					additionalComponents={this.props.propertiesInfo.additionalComponents}
 					showPropertiesButtons={this.showPropertiesButtons}
 					customPanels={this.props.customPanels}
@@ -239,7 +273,7 @@ export default class CommonProperties extends React.Component {
 					</div>);
 				} else { // Modal
 					propertiesDialog = (<PropertiesDialog
-						onHide={this.state.propertiesInfo.closePropertiesDialog}
+						onHide={this.propertiesInfo.closePropertiesDialog}
 						title={title}
 						bsSize={size}
 						okHandler={this.applyPropertiesEditing}
@@ -277,5 +311,7 @@ CommonProperties.propTypes = {
 	containerType: PropTypes.string,
 	propertiesInfo: PropTypes.object.isRequired,
 	customPanels: PropTypes.array, // array of custom panels
-	rightFlyout: PropTypes.bool
+	rightFlyout: PropTypes.bool,
+	controllerHandler: PropTypes.func,
+	propertyUpdateListener: PropTypes.func
 };

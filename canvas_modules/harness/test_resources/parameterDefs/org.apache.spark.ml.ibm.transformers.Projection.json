@@ -21,7 +21,7 @@
     }
   ],
   "uihints": {
-    "id": "org.ibm.spark.ibm.transformers.SelectColumns",
+    "id": "org.ibm.spark.ibm.transformers.selectcolumns",
     "icon": "./select.svg",
     "parameter_info": [
       {
@@ -181,7 +181,7 @@
     ]
   },
   "resources": {
-    "org.ibm.spark.ibm.transformers.SelectColumns.label": "Select Columns",
+    "org.ibm.spark.ibm.transformers.selectcolumns.label": "Select Columns",
     "mode.label": "Mode",
     "mode.desc": "Include or discard columns",
     "mode.Include.label": "Include selected columns",

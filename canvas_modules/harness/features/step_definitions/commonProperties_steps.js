@@ -333,7 +333,7 @@ module.exports = function() {
 	});
 
 	this.Then(/^I check for table cell level validation$/, function() {
-		var tableCell1 = browser.$$("#editor-control-renamed_fields")[0];
+		var tableCell1 = browser.$$("#editor-control-new_name")[0];
 		tableCell1.setValue("", "Na");
 		var tableCell2 = browser.$(".modal-title");
 		tableCell2.click();
@@ -363,11 +363,11 @@ module.exports = function() {
 	});
 
 	this.Then(/^I check for table validation$/, function() {
-		var tableRow1 = browser.$$("#editor-control-renamed_fields")[0];
+		var tableRow1 = browser.$$("#editor-control-new_name")[0];
 		tableRow1.click();
 		browser.$("#remove-fields-button-enabled").click();
 
-		var tableRow2 = browser.$$("#editor-control-renamed_fields")[0];
+		var tableRow2 = browser.$$("#editor-control-new_name")[0];
 		tableRow2.click();
 		browser.$("#remove-fields-button-enabled").click();
 
@@ -420,7 +420,6 @@ module.exports = function() {
 		var seedTextBox = browser.$("#editor-control-numberfieldSeed").getAttribute("value");
 		expect(seedTextBox).toEqual(seedValue);
 	});
-
 	this.Then(/^I verify that the validation error is "([^"]*)"$/, function(validationError) {
 		var validationDOMError = browser.$(".form__validation--error").getText();
 		expect(validationError).toEqual(validationDOMError);

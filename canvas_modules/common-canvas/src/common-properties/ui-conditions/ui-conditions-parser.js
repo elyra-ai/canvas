@@ -6,7 +6,13 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
+
+/* eslint complexity: ["error", 25]*/
+
 import logger from "../../../utils/logger";
+import { CONTROL, ADDITIONALLINK, CHECKBOXSELECTOR, PANEL, SUMMARYPANEL, PRIMARYTABS } from "../constants/constants.js";
+import { PANELSELECTOR, SUBTABS, CUSTOMPANEL } from "../constants/constants.js";
+
 
 function parseInput(definition) {
 	var data = definition;
@@ -82,38 +88,70 @@ function parseControls(controls, formData) {
 	return controls;
 }
 
-function parseUiItem(controls, uiItem) {
+function parseUiItem(controls, uiItem, panelId) {
 	switch (uiItem.itemType) {
-	case "control": {
-		controls.push(uiItem.control);
-		if (uiItem.control.childItem) {
-			parseUiItem(controls, uiItem.control.childItem);
+	case CONTROL: {
+		const control = uiItem.control;
+		if (panelId) {
+			control.summaryPanelId = panelId;
+			control.summaryLabel = uiItem.control.label.text;
+		}
+		controls.push(control);
+		if (uiItem.control.subControls) {
+			for (var idx = 0; idx < uiItem.control.subControls.length; idx++) {
+				const subControl = uiItem.control.subControls[idx];
+				subControl.parameterName = uiItem.control.name;
+				subControl.columnIndex = idx;
+				if (panelId) {
+					subControl.summaryPanelId = panelId;
+					subControl.summaryLabel = uiItem.control.label.text;
+				}
+				controls.push(subControl);
+			}
 		}
 		break;
 	}
-	case "additionalLink":
-	case "checkboxSelector":
-	case "panel":
-	case "summaryPanel": {
+	case ADDITIONALLINK:
+	case CHECKBOXSELECTOR:
+	case PANEL: {
 		if (uiItem.panel && uiItem.panel.uiItems) {
 			for (const panelUiItem of uiItem.panel.uiItems) {
-				parseUiItem(controls, panelUiItem);
+				parseUiItem(controls, panelUiItem, panelId);
 			}
 		}
 		break;
 	}
-
-	case "primaryTabs":
-	case "panelSelector":
-	case "subTabs": {
+	case SUMMARYPANEL: {
+		if (uiItem.panel && uiItem.panel.uiItems) {
+			for (const panelUiItem of uiItem.panel.uiItems) {
+				parseUiItem(controls, panelUiItem, uiItem.panel.id);
+			}
+		}
+		break;
+	}
+	case PRIMARYTABS:
+	case PANELSELECTOR:
+	case SUBTABS: {
 		if (uiItem.tabs) {
 			for (const tab of uiItem.tabs) {
-				parseUiItem(controls, tab.content);
+				parseUiItem(controls, tab.content, panelId);
 			}
 		}
 		break;
 	}
-	case "customPanel":
+	case CUSTOMPANEL:
+		if (uiItem.panel && uiItem.panel.parameters) {
+			for (const param of uiItem.panel.parameters) {
+				const control = {
+					name: param,
+					controlType: "custom"
+				};
+				if (panelId) {
+					control.summaryPanelId = panelId;
+				}
+				controls.push(control);
+			}
+		}
 		break; // required parameters are handled by panel
 	default:
 		logger.warn("Unknown UiItem type when parsing ui conditions: " + uiItem.itemType);

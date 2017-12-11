@@ -1,16 +1,53 @@
 {
   "current_parameters": {
-    "custom_slider": "20.00",
+    "custom_slider": "9.00",
+    "map_zoom": 9,
+    "map_checkbox": false,
+    "custom_map_info": [
+      37.5,
+      238,
+      9
+    ],
     "custom_toggle": true,
     "custom_toggle2": true,
-    "text_field": "",
-    "selected_fields": []
+    "text_field": ""
   },
+  "complex_types": [
+    {
+      "id": "map_info",
+      "parameters": [
+        {
+          "id": "lat",
+          "type": "double"
+        },
+        {
+          "id": "lng",
+          "type": "double"
+        },
+        {
+          "id": "zoom",
+          "type": "integer"
+        }
+      ]
+    }
+  ],
   "parameters": [
     {
-      "id": "selected_fields",
-      "type": "array[string]",
-      "role": "column"
+      "id": "map_zoom",
+      "type": "integer"
+    },
+    {
+      "id": "map_checkbox",
+      "type": "boolean"
+    },
+    {
+      "id": "custom_map_info",
+      "type": "map_info",
+      "default": [
+        37.5,
+        238,
+        9
+      ]
     },
     {
       "id": "custom_slider",
@@ -42,20 +79,63 @@
       {
         "parameter_ref": "text_field",
         "label": {
-          "default": "Enter"
+          "default": "Enter a value"
         },
         "description": {
+          "default": "Enter 'hide' to hide toggles"
+        },
+        "place_holder_text": {
           "default": "Enter 'hide' to hide toggles"
         }
       },
       {
-        "parameter_ref": "selected_fields",
+        "parameter_ref": "map_zoom",
         "label": {
-          "default": "Columns"
+          "default": "Zoom Value from map"
+        }
+      },
+      {
+        "parameter_ref": "map_checkbox",
+        "label": {
+          "default": "Show map"
         },
         "description": {
-          "default": "Select columns to include or exclude"
+          "default": "Select to show a map control"
         }
+      },
+      {
+        "parameter_ref": "custom_map_info",
+        "label": {
+          "default": "Map parameters"
+        },
+        "description": {
+          "default": "Latitude, longitude, and zoom setting"
+        }
+      }
+    ],
+    "complex_type_info": [
+      {
+        "complex_type_ref": "map_info",
+        "parameters": [
+          {
+            "parameter_ref": "lat",
+            "label": {
+              "default": "Latitude"
+            }
+          },
+          {
+            "parameter_ref": "lng",
+            "label": {
+              "default": "Longitude"
+            }
+          },
+          {
+            "parameter_ref": "zoom",
+            "label": {
+              "default": "Zoom"
+            }
+          }
+        ]
       }
     ],
     "group_info": [
@@ -90,34 +170,39 @@
         ]
       },
       {
-        "id": "slider-panel",
+        "id": "map-panel",
         "label": {
-          "default": "Slider"
+          "default": "Map and Slider"
         },
         "type": "panels",
         "group_info": [
           {
             "id": "summary-panel",
             "label": {
-              "default": "Configure Slider"
+              "default": "Configure Map and Slider"
             },
             "type": "summaryPanel",
             "group_info": [
-              {
-                "id": "fields",
-                "type": "columnSelection",
-                "label": {
-                  "default": "Columns"
-                },
-                "parameter_refs": [
-                  "selected_fields"
-                ]
-              },
               {
                 "id": "custom-slider-panel",
                 "type": "customPanel",
                 "parameter_refs": [
                   "custom_slider"
+                ]
+              },
+              {
+                "id": "checkbox-panel",
+                "type": "controls",
+                "parameter_refs": [
+                  "map_checkbox",
+                  "map_zoom"
+                ]
+              },
+              {
+                "id": "custom-map-panel",
+                "type": "customPanel",
+                "parameter_refs": [
+                  "custom_map_info"
                 ]
               }
             ]
@@ -141,6 +226,24 @@
             "parameter_ref": "custom_toggle",
             "op": "equals",
             "value": true
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "custom_map_info[2]",
+          "message": {
+            "default": "Map zoom too wide, please decrease"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "custom_map_info[2]",
+            "op": "greaterThan",
+            "value": 8
           }
         }
       }
@@ -187,73 +290,21 @@
           }
         }
       }
-    }
-  ],
-  "dataset_metadata": {
-    "fields": [
-      {
-        "name": "Age",
-        "type": "integer",
-        "metadata": {
-          "description": "",
-          "measure": "range",
-          "modeling_role": "input"
-        }
-      },
-      {
-        "name": "Sex",
-        "type": "string",
-        "metadata": {
-          "description": "",
-          "measure": "discrete",
-          "modeling_role": "input"
-        }
-      },
-      {
-        "name": "BP",
-        "type": "string",
-        "metadata": {
-          "description": "",
-          "measure": "discrete",
-          "modeling_role": "input"
-        }
-      },
-      {
-        "name": "Cholesterol",
-        "type": "string",
-        "metadata": {
-          "description": "",
-          "measure": "discrete",
-          "modeling_role": "input"
-        }
-      },
-      {
-        "name": "Na",
-        "type": "double",
-        "metadata": {
-          "description": "",
-          "measure": "range",
-          "modeling_role": "input"
-        }
-      },
-      {
-        "name": "K",
-        "type": "double",
-        "metadata": {
-          "description": "",
-          "measure": "range",
-          "modeling_role": "input"
-        }
-      },
-      {
-        "name": "Drug",
-        "type": "string",
-        "metadata": {
-          "description": "",
-          "measure": "discrete",
-          "modeling_role": "input"
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "custom_map_info",
+          "map_zoom"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "map_checkbox",
+            "op": "equals",
+            "value": true
+          }
         }
       }
-    ]
-  }
+    }
+  ]
 }

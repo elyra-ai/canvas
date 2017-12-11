@@ -2140,8 +2140,7 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "structurelisteditorTableInput",
-            "op": "notEquals",
-            "value": []
+            "op": "isNotEmpty"
           }
         }
       }
@@ -2196,14 +2195,14 @@
       "validation": {
         "fail_message": {
           "type": "warning",
-          "focus_parameter_ref": "name",
+          "focus_parameter_ref": "structurelisteditorTableInput[0]",
           "message": {
             "default": "name cannot be an existing column name"
           }
         },
         "evaluate": {
           "condition": {
-            "parameter_ref": "name",
+            "parameter_ref": "structurelisteditorTableInput[0]",
             "op": "colNotExists"
           }
         }
@@ -2227,7 +2226,7 @@
       "validation": {
         "fail_message": {
           "type": "error",
-          "focus_parameter_ref": "name",
+          "focus_parameter_ref": "structurelisteditorTableInput[0]",
           "message": {
             "resource_key": "invalid_subpanel_name",
             "default": "name should not contain pw"
@@ -2235,7 +2234,7 @@
         },
         "evaluate": {
           "condition": {
-            "parameter_ref": "name",
+            "parameter_ref": "structurelisteditorTableInput[0]",
             "op": "notContains",
             "value": "pw"
           }

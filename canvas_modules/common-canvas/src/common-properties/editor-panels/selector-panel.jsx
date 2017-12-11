@@ -15,40 +15,12 @@ import PropTypes from "prop-types";
 export default class SelectorPanel extends React.Component {
 	constructor(props) {
 		super(props);
-		// logger.info("SelectorPanel: constructor()");
-		// logger.info(props);
 		this.state = {
-			currentValue: ""
 		};
 	}
 
-	componentDidMount() {
-		// logger.info("SelectorPanel.componentDidMount()");
-		const control = this.props.controlAccessor(this.props.dependsOn);
-		// logger.info("Control=" + control);
-		if (control) {
-			control.setValueListener(this);
-			this.setState({ currentValue: control.getControlValue() });
-		}
-	}
-
-	componentWillUnmount() {
-		// logger.info("SelectorPanel.componentWillUnmount()");
-		const control = this.props.controlAccessor(this.props.dependsOn);
-		// logger.info("Control=" + control);
-		if (control) {
-			control.clearValueListener();
-		}
-	}
-
-	handleValueChanged(controlName, value) {
-		// logger.info("SelectorPanel.handleValueChanged(): value=" + value);
-		this.setState({ currentValue: value });
-	}
-
 	render() {
-		// logger.info("SelectorPanel.render(): currentValue=" + this.state.currentValue);
-		let panel = this.props.panels[this.state.currentValue];
+		let panel = this.props.panels[this.props.controller.getPropertyValue({ name: this.props.dependsOn })];
 		if (typeof panel === "undefined") {
 			panel = <div className="control-panel" />;
 		}
@@ -60,5 +32,5 @@ export default class SelectorPanel extends React.Component {
 SelectorPanel.propTypes = {
 	panels: PropTypes.object,
 	dependsOn: PropTypes.string,
-	controlAccessor: PropTypes.func
+	controller: PropTypes.object.isRequired,
 };

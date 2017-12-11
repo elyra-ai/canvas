@@ -45,7 +45,7 @@
                     "itemType": "panel",
                     "panel": {
                       "id": "data-settings",
-                      "panelType": "columnAllocation",
+                      "panelType": "columnSelection",
                       "uiItems": [
                         {
                           "itemType": "control",
@@ -55,7 +55,7 @@
                               "text": "Select Fields"
                             },
                             "separateLabel": true,
-                            "controlType": "allocatedcolumns",
+                            "controlType": "selectcolumns",
                             "valueDef": {
                               "propType": "string",
                               "isList": true,
@@ -77,7 +77,7 @@
               "itemType": "panel",
               "panel": {
                 "id": "rename-settings",
-                "panelType": "columnAllocation",
+                "panelType": "columnSelection",
                 "uiItems": [
                   {
                     "itemType": "control",
@@ -87,7 +87,7 @@
                         "text": "Rename Fields"
                       },
                       "separateLabel": true,
-                      "controlType": "allocatedstructures",
+                      "controlType": "structuretable",
                       "valueDef": {
                         "propType": "structure",
                         "isList": false,

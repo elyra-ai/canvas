@@ -11,40 +11,27 @@ import React from "react";
 import PropTypes from "prop-types";
 import Dropdown from "react-dropdown";
 import EditorControl from "./editor-control.jsx";
-import { EDITOR_CONTROL } from "../constants/constants.js";
 
 export default class OneofselectControl extends EditorControl {
 	constructor(props) {
 		super(props);
-		if (props.tableControl) {
-			this.state = { controlValue: this.props.value };
-		} else {
-			this.state = { controlValue: props.valueAccessor(props.control.name) };
-		}
-		if (!this.state.controlValue && typeof props.control.valueDef.defaultValue !== "undefined") {
-			this.state.controlValue = props.control.valueDef.defaultValue;
-		}
-		this.getControlValue = this.getControlValue.bind(this);
 		this.handleChange = this.handleChange.bind(this);
+		this.onBlur = this.onBlur.bind(this);
 		this.onFocus = this.onFocus.bind(this);
 	}
 
 	handleChange(evt) {
-		if (this.props.tableControl) {
-			this.props.controlValue[this.props.rowIndex][this.props.columnIndex] = evt.value;
-			this.props.setCurrentControlValueSelected(this.props.control.name, this.props.controlValue, this.props.updateControlValue, this.props.selectedRows);
-		} else {
-			this.notifyValueChanged(this.props.control.name, evt.value);
-			this.setState({ controlValue: evt.value });
-			this.props.updateControlValue(this.props.control.name, evt.value);
-		}
+		this.props.controller.updatePropertyValue(this.props.propertyId, evt.value);
+	}
+	onBlur() {
+		this.props.controller.validateInput(this.props.propertyId);
 	}
 	// Added to prevent entire row being selected in table
 	onClick(evt) {
 		if (this.props.tableControl) {
 			evt.stopPropagation();
 		}
-		this.validateInput();
+		this.props.controller.validateInput(this.props.propertyId);
 	}
 
 	onFocus(isOpen) {
@@ -53,6 +40,7 @@ export default class OneofselectControl extends EditorControl {
 		if (!isOpen && this.props.tableControl) {
 			// Give time for the dropdown to be added to the dom
 			setTimeout(function() {
+				// TODO can we use react-dom methods instead?
 				const dropdowns = document.getElementsByClassName("Dropdown-menu");
 				if (dropdowns.length > 0) {
 					var theTop = that.findTopPos(dropdowns[0]);
@@ -85,10 +73,6 @@ export default class OneofselectControl extends EditorControl {
 		return curtop - curtopscroll - modalOffset;
 	}
 
-	getControlValue() {
-		return this.state.controlValue;
-	}
-
 	genSelectOptions(control, selectedValue) {
 		var options = [];
 		var selectedOption = [];
@@ -114,9 +98,9 @@ export default class OneofselectControl extends EditorControl {
 	}
 
 	render() {
-		const controlName = this.getControlID().replace(EDITOR_CONTROL, "");
+		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		const conditionProps = {
-			controlName: controlName,
+			propertyId: this.props.propertyId,
 			controlType: "dropdown"
 		};
 		const conditionState = this.getConditionMsgState(conditionProps);
@@ -132,15 +116,9 @@ export default class OneofselectControl extends EditorControl {
 			controlIconContainerClass = "control-icon-container-enabled";
 		}
 
-		var dropDown = {};
-		var className = "Dropdown-control-panel";
-		if (this.props.tableControl) {
-			dropDown = this.genSelectOptions(this.props.columnDef, this.props.value);
-			className = "Dropdown-control-table";
-		} else {
-			dropDown = this.genSelectOptions(this.props.control, this.state.controlValue);
-		}
-
+		var dropDown = this.genSelectOptions(this.props.control, controlValue);
+		// TODO can this be done with a selector in the parent?
+		var className = this.props.tableControl ? "Dropdown-control-table" : "Dropdown-control-panel";
 		return (
 			<div id="oneofselect-control-container">
 				<div id={controlIconContainerClass}>
@@ -151,8 +129,8 @@ export default class OneofselectControl extends EditorControl {
 								name={this.props.control.name}
 								options={dropDown.options}
 								onChange={this.handleChange}
-								onBlur={this.validateInput}
 								onFocus={this.onFocus}
+								onBlur={this.onBlur}
 								value={dropDown.selectedOption.label}
 								placeholder={this.props.control.additionalText}
 								ref="input"
@@ -169,19 +147,7 @@ export default class OneofselectControl extends EditorControl {
 
 OneofselectControl.propTypes = {
 	control: PropTypes.object.isRequired,
-	updateControlValue: PropTypes.func,
-	// Optional used when embedded in table
-	tableControl: PropTypes.bool,
-	rowIndex: PropTypes.number,
-	columnIndex: PropTypes.number,
-	controlValue: PropTypes.array,
-	columnDef: PropTypes.object,
-	value: PropTypes.string,
-	setCurrentControlValueSelected: PropTypes.func,
-	selectedRows: PropTypes.array,
-	controlStates: PropTypes.object,
-	validationDefinitions: PropTypes.object,
-	requiredParameters: PropTypes.array,
-	updateValidationErrorMessage: PropTypes.func,
-	retrieveValidationErrorMessage: PropTypes.func
+	propertyId: PropTypes.object.isRequired,
+	controller: PropTypes.object.isRequired,
+	tableControl: PropTypes.bool
 };

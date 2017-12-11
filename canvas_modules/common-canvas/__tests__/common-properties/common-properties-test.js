@@ -29,10 +29,10 @@ propertiesInfo.closePropertiesDialog = closePropertiesDialog;
 describe("CommonProperties renders correctly", () => {
 
 	it("all required props should have been defined", () => {
-		const wrapper = createCommonProperties(true);
+		const wrapper = createCommonProperties("Modal");
 		expect(wrapper.prop("showPropertiesDialog")).to.equal(true);
 		expect(wrapper.prop("propertiesInfo")).to.equal(propertiesInfo);
-		expect(wrapper.prop("containerType")).to.equal(true);
+		expect(wrapper.prop("containerType")).to.equal("Modal");
 		expect(wrapper.prop("applyLabel")).to.equal("Apply");
 		expect(wrapper.prop("rejectLabel")).to.equal("REJECTED");
 	});
