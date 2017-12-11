@@ -597,7 +597,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 
 		const controlValue = this.getCurrentControlValue();
 		// calculate for all columns except the last which is used for the scroll bar
-		const columnWidths = FlexibleTable.calculateColumnWidths(headers, "flexible-table-" + this.props.control.name);
+		const columnWidths = FlexibleTable.calculateColumnWidths(headers, "flexible-table-" + this.props.control.name, 0);
 		this.makeCells(rows, controlValue, columnWidths, stateStyle, stateDisabled);
 
 		if (this.props.customContainer) {

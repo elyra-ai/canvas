@@ -172,7 +172,7 @@ export default class MoveableTableRows extends React.Component {
 			</colgroup>
 			<tbody>
 				<tr className="structure-table-content-row" style={this.props.stateStyle}>
-					<td>
+					<td className="structure-table-content-row-first-column">
 						{this.props.tableContainer}
 					</td>
 					<td>

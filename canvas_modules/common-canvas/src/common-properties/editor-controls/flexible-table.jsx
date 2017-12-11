@@ -32,12 +32,14 @@ const ARROW_WIDTH = 10;
 
 export default class FlexibleTable extends React.Component {
 
-	static calculateColumnWidths(columns, elementId) {
+	static calculateColumnWidths(columns, elementId, parentTableWidth) {
 		// get the parent table width
-		const table = document.getElementById(elementId);
-		var tableWidth = 0;
-		if (table) {
-			tableWidth = parseInt(window.getComputedStyle(table, null).getPropertyValue("width"), 10);
+		let tableWidth = parentTableWidth;
+		if (elementId !== null) {
+			const table = document.getElementById(elementId);
+			if (table) {
+				tableWidth = parseInt(window.getComputedStyle(table, null).getPropertyValue("width"), 10);
+			}
 		}
 		for (const columnDef of columns) {
 			// if columns have specific width subtract from total width
@@ -79,17 +81,40 @@ export default class FlexibleTable extends React.Component {
 			}
 		}
 		this.state = {
-			columnSortDir: sortDirs
+			columnSortDir: sortDirs,
+			tableWidth: 0
 		};
 
 		this.handleFilterChange = this.handleFilterChange.bind(this);
 		this.scrollToRow = this.scrollToRow.bind(this);
 		this.onSort = this.onSort.bind(this);
+		this._updateTableWidth = this._updateTableWidth.bind(this);
+	}
+
+	componentDidMount() {
+		this._updateTableWidth();
+		window.addEventListener("resize", this._updateTableWidth);
+	}
+
+	componentWillReceiveProps() {
+		this._updateTableWidth();
+	}
+
+	componentWillUnmount() {
+		window.removeEventListener("resize", this._updateTableWidth);
 	}
 
 	onSort(spec) {
 		if (this.props.onSort) {
 			this.props.onSort(spec);
+		}
+	}
+
+	_updateTableWidth() {
+		if (this.state.tableWidth !== this.flexTableWrapper.clientWidth) {
+			this.setState({
+				tableWidth: this.flexTableWrapper.clientWidth
+			});
 		}
 	}
 
@@ -124,7 +149,9 @@ export default class FlexibleTable extends React.Component {
 		// go through the header and add the sort direction and convert to use reactable.Th element
 		const headers = [];
 		let searchLabel = "";
-		const columnWidths = FlexibleTable.calculateColumnWidths(this.props.columns, "flexible-table-" + this.props.scrollKey);
+		const tableWidth = this.state.tableWidth;
+		const columnWidths = FlexibleTable.calculateColumnWidths(this.props.columns, null, tableWidth);
+
 		for (var j = 0; j < this.props.columns.length; j++) {
 			const columnDef = this.props.columns[j];
 			const columnStyle = { "width": columnWidths[j] };
@@ -191,13 +218,16 @@ export default class FlexibleTable extends React.Component {
 				borderRightColor: this.props.validationStyle.borderColor
 			};
 		}
+
 		let renderTable = "";
+		let renderTableHeaderContents = "";
+		let searchBar = null;
 		if (typeof this.props.filterable !== "undefined" && this.props.filterable.length !== 0) {
 			const placeHolder = "Search in column " + searchLabel;
 			const disabled = this.props.stateDisabled && (typeof this.props.stateDisabled.disabled !== "undefined" || Object.keys(this.props.stateDisabled) > 0);
 			const className = disabled ? "disabled" : "";
 			const searchIcon = disabled ? search32Disabled : search32;
-			renderTable = (<div>
+			searchBar = (<div>
 				<div id="flexible-table-search-bar" className={"flexible-table-search-bar " + className}>
 					<TextField
 						key="flexible-table-search-bar"
@@ -218,71 +248,75 @@ export default class FlexibleTable extends React.Component {
 						src={searchIcon}
 					/>
 				</div>
-				{this.props.label}
-				{this.props.topRightPanel}
-				<div>
-					<div className="flexible-table-header">
-						<Table className="filter-header-border"
-							style={headerStyle}
-							key="flexible-table"
-							id="table-header"
-							sortable={this.props.sortable}
-							filterable={this.props.filterable}
-							hideFilterInput
-							filterBy={this.props.filterKeyword}
-							onSort={this.onSort}
-							onFilter={this.onFilter}
-						>
-							<Thead key="flexible-table-thead">
-								{headers}
-							</Thead>
-						</Table>
-					</div>
-					<div id="flexible-table-container" style={tableStyle}>
-						<Table
-							key="flexible-table"
-							className="table"
-							id="table"
-							hideTableHeader
-						>
-							{this.props.data}
-						</Table>
-					</div>
-				</div>
 			</div>
 			);
-		} else {
-			renderTable = (
-				<div>
-					{this.props.label}
-					{this.props.topRightPanel}
-					<div className="flexible-table-header-container">
-						<Table className="filter-header-border"
-							style={headerStyle}
-							id="table-header"
-							sortable={this.props.sortable}
-							onSort={this.onSort}
-							onFilter={this.onFilter}
-						>
-							<Thead key="flexible-table-thead">
-								{headers}
-							</Thead>
-						</Table>
-					</div>
-					<div id="flexible-table-container" style={tableStyle}>
-						<Table
-							className="table"
-							id="table"
-							hideTableHeader
-						>
-							{this.props.data}
-						</Table>
-					</div>
+
+			renderTableHeaderContents = (
+				<div className="flexible-table-header" style={{ width: tableWidth }}>
+					<Table className="filter-header-border"
+						style={headerStyle}
+						key="flexible-table"
+						id="table-header"
+						sortable={this.props.sortable}
+						filterable={this.props.filterable}
+						hideFilterInput
+						filterBy={this.props.filterKeyword}
+						onSort={this.onSort}
+						onFilter={this.onFilter}
+					>
+						<Thead key="flexible-table-thead">
+							{headers}
+						</Thead>
+					</Table>
 				</div>);
+		} else {
+			renderTableHeaderContents = (
+				<div className="flexible-table-header-container" style={{ width: tableWidth }}>
+					<Table className="filter-header-border"
+						style={headerStyle}
+						id="table-header"
+						sortable={this.props.sortable}
+						onSort={this.onSort}
+						onFilter={this.onFilter}
+					>
+						<Thead key="flexible-table-thead">
+							{headers}
+						</Thead>
+					</Table>
+				</div>
+			);
 		}
 		if (typeof this.props.scrollToRow !== "undefined" && this.props.scrollToRow !== null) {
 			this.scrollToRow(this.props.alignTop);
 		}
+
+		renderTable = (
+			<div>
+				{searchBar}
+				{this.props.label}
+				{this.props.topRightPanel}
+				<div id="flexible-table-container-wrapper"
+					ref={(div) => {
+						this.flexTableWrapper = div;
+					}}
+				>
+					<div className="flexible-table-container-header-wrapper">
+						{renderTableHeaderContents}
+					</div>
+					<div className="flexible-table-container-absolute" style={tableStyle}>
+						<div id="flexible-table-container" style={{ width: tableWidth }}>
+							<Table
+								className="table"
+								id="table"
+								hideTableHeader
+							>
+								{this.props.data}
+							</Table>
+						</div>
+					</div>
+				</div>
+			</div>
+		);
 
 		return (
 			<div id={"flexible-table-" + this.props.scrollKey}>

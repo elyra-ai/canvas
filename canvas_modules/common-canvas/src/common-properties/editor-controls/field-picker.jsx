@@ -491,15 +491,25 @@ export default class FieldPicker extends EditorControl {
 			checkedAll = false;
 		}
 
+		let checkboxWidth = 19;
+		let fieldWidth = 46;
+		let dataWidth = 43;
+
+		if (this.props.rightFlyout) {
+			checkboxWidth = 16.5;
+			fieldWidth = 39;
+			dataWidth = 37;
+		}
+
 		const headers = [];
 		headers.push({ "key": "checkbox", "label": <div className="field-picker-checkbox">
 			<Checkbox id={"field-picker-checkbox-all"}
 				onChange={this.handleCheckAll}
 				checked={checkedAll}
 			/>
-		</div>, "width": 18 });
-		headers.push({ "key": "fieldName", "label": "Field name", "width": 42 });
-		headers.push({ "key": "dataType", "label": "Data type", "width": 40 });
+		</div>, "width": checkboxWidth });
+		headers.push({ "key": "fieldName", "label": "Field name", "width": fieldWidth });
+		headers.push({ "key": "dataType", "label": "Data type", "width": dataWidth });
 
 		const tableData = this.getTableData();
 
@@ -532,5 +542,6 @@ FieldPicker.propTypes = {
 	dataModel: PropTypes.object.isRequired,
 	updateControlValue: PropTypes.func,
 	control: PropTypes.object,
-	title: PropTypes.string
+	title: PropTypes.string,
+	rightFlyout: PropTypes.bool
 };

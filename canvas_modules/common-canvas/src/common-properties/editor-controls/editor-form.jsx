@@ -1589,6 +1589,7 @@ export default class EditorForm extends React.Component {
 				control={this.state.fieldPickerControl}
 				updateSelectedRows={this.updateSelectedRows}
 				title={this.props.form.label}
+				rightFlyout={this.props.rightFlyout}
 			/>
 		</div>);
 	}
