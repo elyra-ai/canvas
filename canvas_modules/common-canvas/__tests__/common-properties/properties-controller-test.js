@@ -12,8 +12,8 @@ import sinon from "sinon";
 import _ from "underscore";
 import deepFreeze from "deep-freeze";
 import Controller from "../../src/common-properties/properties-controller";
+import conditionForm from "../test_resources/json/conditions-summary-form.json";
 
-const controller = new Controller();
 const propValues = {
 	param_int: 5,
 	param_str: "Testing a string parameter",
@@ -120,9 +120,11 @@ deepFreeze(errorMessages);
 function getCopy(value) {
 	return JSON.parse(JSON.stringify(value));
 }
+var controller;
 function reset() {
 	// setting of states needs to be done after property values.
 	// conditions are ran on each set and update of property values
+	controller = new Controller();
 	controller.setPropertyValues(getCopy(propValues));
 	controller.setDatasetMetadata(getCopy(dataModel));
 	controller.setErrorMessages(getCopy(errorMessages));
@@ -139,26 +141,26 @@ describe("Properties Controller property values", () => {
 		reset();
 		controller.updatePropertyValue({ name: "param_int" }, 10);
 		const actualValues = controller.getPropertyValues();
-		const expectValues = getCopy(propValues);
-		expectValues.param_int = 10;
-		expect(_.isEqual(expectValues, actualValues)).to.be.true;
+		const expectedValues = getCopy(propValues);
+		expectedValues.param_int = 10;
+		expect(_.isEqual(expectedValues, actualValues)).to.be.true;
 	});
 	it("should update a row property value correctly", () => {
 		reset();
 		controller.updatePropertyValue({ name: "param_mix_table", row: 5 }, [null, null, null, null, null]);
 		const actualValues = controller.getPropertyValues();
-		const expectValues = getCopy(propValues);
-		expectValues.param_mix_table[5] = [null, null, null, null, null];
-		expect(_.isEqual(expectValues, actualValues)).to.be.true;
+		const expectedValues = getCopy(propValues);
+		expectedValues.param_mix_table[5] = [null, null, null, null, null];
+		expect(_.isEqual(expectedValues, actualValues)).to.be.true;
 
 	});
 	it("should update a cell property value correctly", () => {
 		reset();
 		controller.updatePropertyValue({ name: "param_mix_table", row: 2, col: 3 }, 10);
 		const actualValues = controller.getPropertyValues();
-		const expectValues = getCopy(propValues);
-		expectValues.param_mix_table[2][3] = 10;
-		expect(_.isEqual(expectValues, actualValues)).to.be.true;
+		const expectedValues = getCopy(propValues);
+		expectedValues.param_mix_table[2][3] = 10;
+		expect(_.isEqual(expectedValues, actualValues)).to.be.true;
 	});
 	it("should get a simple property value correctly", () => {
 		reset();
@@ -215,32 +217,32 @@ describe("Properties Controller states", () => {
 		reset();
 		controller.updateControlState({ name: "param_int" }, "hidden");
 		const actualValues = controller.getControlStates();
-		const expectValues = getCopy(propStates);
-		expectValues.param_int = {
+		const expectedValues = getCopy(propStates);
+		expectedValues.param_int = {
 			value: "hidden"
 		};
-		expect(_.isEqual(expectValues, actualValues)).to.be.true;
+		expect(_.isEqual(expectedValues, actualValues)).to.be.true;
 	});
 	it("should update a row property state correctly", () => {
 		reset();
 		controller.updateControlState({ name: "param_str_array", row: 2 }, "disabled");
 		const actualValues = controller.getControlStates();
-		const expectValues = getCopy(propStates);
-		expectValues.param_str_array[2] = {
+		const expectedValues = getCopy(propStates);
+		expectedValues.param_str_array[2] = {
 			value: "disabled"
 		};
-		expect(_.isEqual(expectValues, actualValues)).to.be.true;
+		expect(_.isEqual(expectedValues, actualValues)).to.be.true;
 	});
 	it("should update a cell property state correctly", () => {
 		reset();
 		controller.updateControlState({ name: "param_mix_table", row: 2, col: 3 }, "hidden");
 		const actualValues = controller.getControlStates();
-		const expectValues = getCopy(propStates);
-		expectValues.param_mix_table[2] = {};
-		expectValues.param_mix_table[2][3] = {
+		const expectedValues = getCopy(propStates);
+		expectedValues.param_mix_table[2] = {};
+		expectedValues.param_mix_table[2][3] = {
 			value: "hidden"
 		};
-		expect(_.isEqual(expectValues, actualValues)).to.be.true;
+		expect(_.isEqual(expectedValues, actualValues)).to.be.true;
 	});
 	it("should get a simple property state correctly", () => {
 		reset();
@@ -252,7 +254,7 @@ describe("Properties Controller states", () => {
 		const actualValue = controller.getControlState({ name: "param_str_array", row: 3 });
 		expect(actualValue).to.equal("hidden");
 	});
-	it("should get a row property state correctly", () => {
+	it("should get a cell property state correctly", () => {
 		reset();
 		const actualValue = controller.getControlState({ name: "param_mix_table", row: 3, col: 3 });
 		expect(actualValue).to.equal("visible");
@@ -284,12 +286,12 @@ describe("Properties Controller property messages", () => {
 			text: "Testing error messages"
 		});
 		const actualValues = controller.getErrorMessages();
-		const expectValues = getCopy(errorMessages);
-		expectValues.param_int = {
+		const expectedValues = getCopy(errorMessages);
+		expectedValues.param_int = {
 			type: "error",
 			text: "Testing error messages"
 		};
-		expect(_.isEqual(expectValues, actualValues)).to.be.true;
+		expect(_.isEqual(expectedValues, actualValues)).to.be.true;
 	});
 	it("should update a row property message correctly", () => {
 		reset();
@@ -298,13 +300,13 @@ describe("Properties Controller property messages", () => {
 			text: "warning in array"
 		});
 		const actualValues = controller.getErrorMessages();
-		const expectValues = getCopy(errorMessages);
-		expectValues.param_str_array = {};
-		expectValues.param_str_array[2] = {
+		const expectedValues = getCopy(errorMessages);
+		expectedValues.param_str_array = {};
+		expectedValues.param_str_array[2] = {
 			type: "warning",
 			text: "warning in array"
 		};
-		expect(_.isEqual(expectValues, actualValues)).to.be.true;
+		expect(_.isEqual(expectedValues, actualValues)).to.be.true;
 	});
 	it("should update a cell property message correctly", () => {
 		reset();
@@ -313,45 +315,45 @@ describe("Properties Controller property messages", () => {
 			text: "Bad cell value"
 		});
 		const actualValues = controller.getErrorMessages();
-		const expectValues = getCopy(errorMessages);
-		expectValues.param_mix_table[2] = {};
-		expectValues.param_mix_table[2][3] = {
+		const expectedValues = getCopy(errorMessages);
+		expectedValues.param_mix_table[2] = {};
+		expectedValues.param_mix_table[2][3] = {
 			type: "error",
 			text: "Bad cell value"
 		};
-		expect(_.isEqual(expectValues, actualValues)).to.be.true;
+		expect(_.isEqual(expectedValues, actualValues)).to.be.true;
 	});
 	it("should get a table property message correctly", () => {
 		reset();
 		const actualValue = controller.getErrorMessage({ name: "param_mix_table" });
-		const expectValue = {
+		const expectedValue = {
 			type: "warning",
 			text: "Bad table value"
 		};
-		expect(_.isEqual(expectValue, actualValue)).to.be.true;
+		expect(_.isEqual(expectedValue, actualValue)).to.be.true;
 	});
 	it("should get a row property message correctly", () => {
 		reset();
 		const actualValue = controller.getErrorMessage({ name: "param_str_array", row: 2 });
-		const expectValue = {
+		const expectedValue = {
 			type: "error",
 			text: "Bad array value"
 		};
-		expect(_.isEqual(expectValue, actualValue)).to.be.true;
+		expect(_.isEqual(expectedValue, actualValue)).to.be.true;
 	});
 	it("should get a cell property message correctly", () => {
 		reset();
 		const actualValue = controller.getErrorMessage({ name: "param_mix_table", row: 0, col: 2 });
-		const expectValue = {
+		const expectedValue = {
 			type: "warning",
 			text: "Bad table value"
 		};
-		expect(_.isEqual(expectValue, actualValue)).to.be.true;
+		expect(_.isEqual(expectedValue, actualValue)).to.be.true;
 	});
 	it("should get pipeline property messages correctly", () => {
 		reset();
 		const actualValues = controller.getErrorMessages(true);
-		const expectValues = [
+		const expectedValues = [
 			{
 				id_ref: "param_int",
 				type: "warning",
@@ -368,7 +370,7 @@ describe("Properties Controller property messages", () => {
 				"text": "Bad table value"
 			}
 		];
-		expect(_.isEqual(expectValues, actualValues)).to.be.true;
+		expect(_.isEqual(expectedValues, actualValues)).to.be.true;
 	});
 });
 describe("Properties Controller handlers", () => {
@@ -388,5 +390,130 @@ describe("Properties Controller handlers", () => {
 	it("should fire event on updatePropertyValue", () => {
 		controller2.updatePropertyValue({ name: "param_int" }, 10);
 		expect(propertyListener).to.have.property("callCount", 2);
+	});
+});
+describe("Properties Controller controls", () => {
+	it("should get simple control", () => {
+		reset();
+		controller.setForm(conditionForm);
+		const actualValue = controller.getControl({ name: "numberfieldMaxBins" });
+
+		const expectedValue = {
+			"name": "numberfieldMaxBins",
+			"label": {
+				"text": "Maximum number of bins"
+			},
+			"description": {
+				"text": "Maximum number of bins"
+			},
+			"controlType": "numberfield",
+			"valueDef": {
+				"propType": "integer",
+				"isList": false,
+				"isMap": false,
+				"defaultValue": 32
+			},
+			"summary": true,
+			"separateLabel": true,
+			"required": true,
+			"summaryPanelId": "summary-panel",
+			"summaryLabel": "Maximum number of bins"
+		};
+		expect(_.isEqual(expectedValue, actualValue)).to.be.true;
+	});
+	it("should get table control", () => {
+		reset();
+		controller.setForm(conditionForm);
+		const actualValue = controller.getControl({ name: "structuretableSortOrder", col: 0 });
+		const expectedValue = {
+			"name": "field",
+			"label": {
+				"text": "Field"
+			},
+			"controlType": "selectcolumn",
+			"valueDef": {
+				"propType": "string",
+				"isList": false,
+				"isMap": false,
+				"defaultValue": ""
+			},
+			"role": "column",
+			"summary": true,
+			"visible": true,
+			"width": 28,
+			"parameterName": "structuretableSortOrder",
+			"columnIndex": 0,
+			"summaryPanelId": "structuretableSortOrder-summary-panel",
+			"summaryLabel": "Sort by"
+		};
+		expect(_.isEqual(expectedValue, actualValue)).to.be.true;
+	});
+	it("should return if control is required", () => {
+		reset();
+		controller.setForm(conditionForm);
+		const actualValue = controller.isRequired({ name: "numberfieldMaxBins" });
+		expect(actualValue).to.equal(true);
+	});
+	it("should return if control is not required", () => {
+		reset();
+		controller.setForm(conditionForm);
+		const actualValue = controller.isRequired({ name: "numberfieldMaxDepth" });
+		expect(actualValue).to.equal(false);
+	});
+	it("should return if control is in summary", () => {
+		reset();
+		controller.setForm(conditionForm);
+		const actualValue = controller.isSummary({ name: "numberfieldMaxBins" });
+		expect(actualValue).to.equal(true);
+	});
+	it("should return if table control is in summary", () => {
+		reset();
+		controller.setForm(conditionForm);
+		const actualValue = controller.isSummary({ name: "structuretableSortOrder", col: 0 });
+		expect(actualValue).to.equal(true);
+	});
+	it("should return if control is not in summary", () => {
+		reset();
+		controller.setForm(conditionForm);
+		const actualValue = controller.isSummary({ name: "numberfieldMinInfoGain" });
+		expect(actualValue).to.equal(false);
+	});
+	it("should return control type", () => {
+		reset();
+		controller.setForm(conditionForm);
+		const actualValue = controller.getControlType({ name: "numberfieldMaxBins" });
+		expect(actualValue).to.equal("numberfield");
+	});
+	it("should return table control type", () => {
+		reset();
+		controller.setForm(conditionForm);
+		const actualValue = controller.getControlType({ name: "structuretableSortOrder", col: 0 });
+		expect(actualValue).to.equal("selectcolumn");
+	});
+});
+describe("Properties Controller summary panel", () => {
+	it("should get summary panel controls", () => {
+		reset();
+		controller.setForm(conditionForm);
+		const actualValues = controller.getSummaryPanelControls("summary-panel");
+		const expectedValues = {
+			"numberfieldMaxBins": {
+				"controlType": "numberfield",
+				"label": "Maximum number of bins"
+			},
+			"numberfieldMaxDepth": {
+				"controlType": "numberfield",
+				"label": "Maximum depth of the tree"
+			},
+			"numberfieldMinInfoGain": {
+				"controlType": "numberfield",
+				"label": "Minimum information gain"
+			},
+			"numberfieldMinInstancesPerNode": {
+				"controlType": "numberfield",
+				"label": "Minimum instances per node"
+			}
+		};
+		expect(_.isEqual(expectedValues, actualValues)).to.be.true;
 	});
 });

@@ -452,7 +452,4 @@ export default class PropertiesController {
 	getSummaryPanelControls(panelId) {
 		return this.summaryPanelControls[panelId];
 	}
-	updateSummaryPanelControl(panelId, summaryPanelControl) {
-		this.summaryPanelControls[panelId] = summaryPanelControl;
-	}
 }
