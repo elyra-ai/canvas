@@ -8,18 +8,21 @@
  *******************************************************************************/
 
 import { createStore, combineReducers } from "redux";
-import { setPropertyValues, updatePropertyValue, setControlStates, updateControlState } from "./actions";
+import { setPropertyValues, updatePropertyValue } from "./actions";
+import { setControlStates, updateControlState } from "./actions";
 import { setErrorMessages, updateErrorMessage, clearErrorMessage } from "./actions";
+import { setDatasetMetadata } from "./actions";
 import propertiesReducer from "./reducers/properties";
 import controlStatesReducer from "./reducers/control-states";
 import errorMessagesReducer from "./reducers/error-messages";
+import datasetMetadataReducer from "./reducers/dataset-metadata";
 import _ from "underscore";
 
 /* eslint max-depth: ["error", 6] */
 
 export default class PropertiesStore {
 	constructor() {
-		this.combinedReducer = combineReducers({ propertiesReducer, controlStatesReducer, errorMessagesReducer });
+		this.combinedReducer = combineReducers({ propertiesReducer, controlStatesReducer, errorMessagesReducer, datasetMetadataReducer });
 		this.store = createStore(this.combinedReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 	}
 
@@ -132,7 +135,6 @@ export default class PropertiesStore {
 		}
 		return null;
 	}
-
 	getErrorMessages() {
 		const state = this.store.getState();
 		return JSON.parse(JSON.stringify(state.errorMessagesReducer));
@@ -148,10 +150,20 @@ export default class PropertiesStore {
 			this.store.dispatch(updateErrorMessage({ propertyId: propertyId, value: value }));
 		}
 	}
-
 	clearErrorMessage(propertyId) {
 		if (this.getErrorMessage(propertyId) !== null) {
 			this.store.dispatch(clearErrorMessage({ propertyId: propertyId }));
 		}
+	}
+
+	/*
+	* DataModel methods
+	*/
+	setDatasetMetadata(datasetMetadata) {
+		this.store.dispatch(setDatasetMetadata(datasetMetadata));
+	}
+	getDatasetMetadata() {
+		const state = this.store.getState();
+		return state.datasetMetadataReducer;
 	}
 }

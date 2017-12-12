@@ -52,7 +52,7 @@ export default class CommonProperties extends React.Component {
 		this.setForm();
 		this.propertiesController.setHandlers({
 			controllerHandler: this.props.controllerHandler,
-			propertyUpdateListener: this.props.propertyUpdateListener
+			propertyListener: this.props.propertyListener
 		});
 		if (this.propertiesInfo.messages) {
 			this.setErrorMessages(this.propertiesInfo.messages);
@@ -313,5 +313,5 @@ CommonProperties.propTypes = {
 	customPanels: PropTypes.array, // array of custom panels
 	rightFlyout: PropTypes.bool,
 	controllerHandler: PropTypes.func,
-	propertyUpdateListener: PropTypes.func
+	propertyListener: PropTypes.func
 };

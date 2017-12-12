@@ -130,7 +130,7 @@ class App extends React.Component {
 		// common-properties
 		this.openPropertiesEditorDialog = this.openPropertiesEditorDialog.bind(this);
 		this.closePropertiesEditorDialog = this.closePropertiesEditorDialog.bind(this);
-		this.propertyUpdateListener = this.propertyUpdateListener.bind(this);
+		this.propertyListener = this.propertyListener.bind(this);
 		this.controllerHandler = this.controllerHandler.bind(this);
 		ObjectModel.setEmptyPipelineFlow();
 		ObjectModel.setPipelineFlowPalette({});
@@ -670,8 +670,8 @@ class App extends React.Component {
 		this.log("controllerHandler()");
 		this.controller = controller;
 	}
-	propertyUpdateListener(data) {
-		this.log("propertyUpdateListener() " + data.action);
+	propertyListener(data) {
+		this.log("propertyListener() " + data.action);
 	}
 
 	render() {
@@ -776,7 +776,7 @@ class App extends React.Component {
 				customPanels={[CustomSliderPanel, CustomTogglePanel, CustomMapPanel]}
 				rightFlyout={this.state.propertiesContainerType === FLYOUT}
 				controllerHandler={this.controllerHandler}
-				propertyUpdateListener={this.propertyUpdateListener}
+				propertyListener={this.propertyListener}
 			/>);
 
 		let commonPropertiesContainer = null;

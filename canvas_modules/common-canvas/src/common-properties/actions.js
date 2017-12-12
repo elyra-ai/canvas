@@ -9,6 +9,7 @@ export const UPDATE_CONTROL_STATE = "UPDATE_CONTROL_STATE";
 export const SET_ERROR_MESSAGES = "SET_ERROR_MESSAGES";
 export const UPDATE_ERROR_MESSAGE = "UPDATE_ERROR_MESSAGE";
 export const CLEAR_ERROR_MESSAGE = "CLEAR_ERROR_MESSAGE";
+export const SET_DATASET_METADATA = "SET_DATASET_METADATA";
 
 
 /*
@@ -40,4 +41,8 @@ export function updateErrorMessage(message) {
 }
 export function clearErrorMessage(message) {
 	return { type: CLEAR_ERROR_MESSAGE, message };
+}
+
+export function setDatasetMetadata(datasetMetadata) {
+	return { type: SET_DATASET_METADATA, datasetMetadata };
 }

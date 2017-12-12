@@ -20,7 +20,7 @@ export default class PropertiesController {
 	constructor() {
 		this.propertiesStore = new PropertiesStore();
 		this.handlers = {
-			propertyUpdateListener: null,
+			propertyListener: null,
 			controllerHandler: null
 		};
 		this.visibleDefinition = {};
@@ -56,7 +56,7 @@ export default class PropertiesController {
 			this._saveControls(controls); // saves controls without the subcontrols
 			this._parseSummaryControls(controls);
 			if (this.form.data) {
-				this.datasetMetadata = this.form.data.datasetMetadata;
+				this.setDatasetMetadata(this.form.data.datasetMetadata);
 				this.setPropertyValues(this.form.data.currentParameters);
 			}
 			this.requiredParameters = this._parseRequiredParameters(this.form, controls); // TODO remove this when we switch to using this.controls in validateInput
@@ -240,12 +240,19 @@ export default class PropertiesController {
 	getUiItems() {
 		return this.uiItems;
 	}
+
+	/*
+	* DatasetMetadata methods
+	*/
 	getDatasetMetadata() {
-		return this.datasetMetadata;
+		return this.propertiesStore.getDatasetMetadata();
+	}
+	setDatasetMetadata(datasetMetadata) {
+		return this.propertiesStore.setDatasetMetadata(datasetMetadata);
 	}
 
 	validateInput(propertyId) {
-		conditionsUtil.validateInput(propertyId, this, this.validationDefinitions, this.datasetMetadata);
+		conditionsUtil.validateInput(propertyId, this, this.validationDefinitions, this.getDatasetMetadata());
 	}
 
 	/*
@@ -253,10 +260,10 @@ export default class PropertiesController {
 	*/
 	updatePropertyValue(id, value) {
 		this.propertiesStore.updatePropertyValue(id, value);
-		conditionsUtil.validateConditions(this, this.visibleDefinition, this.enabledDefinitions, this.datasetMetadata);
-		conditionsUtil.validateInput(id, this, this.validationDefinitions, this.datasetMetadata);
-		if (this.handlers.propertyUpdateListener) {
-			this.handlers.propertyUpdateListener(
+		conditionsUtil.validateConditions(this, this.visibleDefinition, this.enabledDefinitions, this.getDatasetMetadata());
+		conditionsUtil.validateInput(id, this, this.validationDefinitions, this.getDatasetMetadata());
+		if (this.handlers.propertyListener) {
+			this.handlers.propertyListener(
 				{
 					action: ACTIONS.UPDATE_PROPERTY,
 					property: id,
@@ -318,9 +325,9 @@ export default class PropertiesController {
 	}
 	setPropertyValues(values) {
 		this.propertiesStore.setPropertyValues(values);
-		conditionsUtil.validateConditions(this, this.visibleDefinition, this.enabledDefinitions, this.datasetMetadata);
-		if (this.handlers.propertyUpdateListener) {
-			this.handlers.propertyUpdateListener(
+		conditionsUtil.validateConditions(this, this.visibleDefinition, this.enabledDefinitions, this.getDatasetMetadata());
+		if (this.handlers.propertyListener) {
+			this.handlers.propertyListener(
 				{
 					action: ACTIONS.SET_PROPERTIES
 				}
@@ -448,5 +455,4 @@ export default class PropertiesController {
 	updateSummaryPanelControl(panelId, summaryPanelControl) {
 		this.summaryPanelControls[panelId] = summaryPanelControl;
 	}
-
 }
