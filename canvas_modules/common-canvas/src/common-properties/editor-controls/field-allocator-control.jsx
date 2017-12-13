@@ -17,36 +17,28 @@ export default class FieldAllocatorControl extends EditorControl {
 	constructor(props) {
 		super(props);
 		this.state = {
-			selectedValues: []
 		};
-
+		this.emptyLabel = "...";
+		if (props.control.additionalText) {
+			this.emptyLabel = this.props.control.additionalText;
+		}
 		this.handleChange = this.handleChange.bind(this);
-		this.onBlur = this.onBlur.bind(this);
-
-		this.getSelectedColumns = this.getSelectedColumns.bind(this);
 		this.getAllocatedColumns = this.getAllocatedColumns.bind(this);
 		this.addColumns = this.addColumns.bind(this);
 		this.removeColumns = this.removeColumns.bind(this);
 	}
 
 	handleChange(evt) {
-		if (evt.value !== "...") {
-			this.setState({ selectedValues: evt.value });
-			this.props.controller.updatePropertyValue(this.props.propertyId, evt.value);
+		let value = evt.value;
+		// shouldn't have to do this but when "" the label is returned instead of label
+		if (value === this.emptyLabel) {
+			value = "";
 		}
-	}
-	onBlur() {
-		this.props.controller.validateInput(this.props.propertyId);
+		this.props.controller.updatePropertyValue(this.props.propertyId, value);
 	}
 
 	onClick(evt) {
 		this.props.controller.validateInput(this.props.propertyId);
-	}
-
-	// Selected columns are those that are referenced by values in the control that have
-	// been selected by the user.
-	getSelectedColumns() {
-		return this.state.selectedValues;
 	}
 
 	// Allocated columns are columns that are referenced by the current control value.
@@ -59,23 +51,39 @@ export default class FieldAllocatorControl extends EditorControl {
 		if (columnNames.length === 1) {
 			currentColumns = columnNames;
 		}
-		this._update_callback = callback;
-		this.setState({ selectedValues: [] });
 		this.props.controller.updatePropertyValue(this.props.propertyId, currentColumns);
 	}
 
 	removeColumns(columnNames, callback) {
-		this._update_callback = callback;
-		this.setState({ selectedValues: [] });
 		this.props.controller.updatePropertyValue(this.props.propertyId, []);
 	}
 
+	genDropdownOptions(fields) {
+		const options = [];
+		// allow for user to not select a field
+		options.push({
+			value: "",
+			label: this.emptyLabel
+		});
+		if (fields) {
+			for (let j = 0; j < fields.length; j++) {
+				options.push({
+					value: fields[j].name,
+					label: fields[j].name
+				});
+			}
+		}
+		return options;
+	}
+
 	render() {
-		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
-		let includeEmpty = false;
-		includeEmpty = !controlValue || controlValue.length === 0;
-		const options = EditorControl.genColumnSelectDropdownOptions(this.props.dataModel.fields,
-			this.state.selectedValues);
+		let controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
+		let controlLabel = controlValue;
+		if (typeof controlValue === "undefined" || controlValue === null || controlValue === "") {
+			controlValue = "";
+			controlLabel = this.emptyLabel;
+		}
+		const options = this.genDropdownOptions(this.props.dataModel.fields);
 		const conditionProps = {
 			propertyId: this.props.propertyId,
 			controlType: "selection"
@@ -92,7 +100,6 @@ export default class FieldAllocatorControl extends EditorControl {
 		if (messageType !== "info") {
 			controlIconContainerClass = "control-icon-container-enabled";
 		}
-		const currentSeln = includeEmpty ? "..." : controlValue;
 		return (
 			<div onClick={this.onClick.bind(this)} className="editor_control_area" style={stateStyle}>
 				<div id={controlIconContainerClass}>
@@ -101,9 +108,10 @@ export default class FieldAllocatorControl extends EditorControl {
 						name={this.props.control.name}
 						options={options}
 						onChange={this.handleChange}
-						onBlur={this.onBlur}
-						value={currentSeln}
-						placeholder={this.props.control.additionalText}
+						value={{
+							value: controlValue,
+							label: controlLabel
+						}}
 						ref="input"
 					/>
 					{icon}

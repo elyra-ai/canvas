@@ -60,19 +60,6 @@ export default class EditorControl extends React.Component {
 		return options;
 	}
 
-	static genColumnSelectDropdownOptions(fields, selectedValues) {
-		var options = [];
-		if (fields) {
-			for (var j = 0; j < fields.length; j++) {
-				options.push({
-					value: fields[j].name,
-					label: fields[j].name
-				});
-			}
-		}
-		return options;
-	}
-
 	static genStringSelectOptions(values, selectedValues) {
 		var options = [];
 		for (var i = 0; i < values.length; i++) {

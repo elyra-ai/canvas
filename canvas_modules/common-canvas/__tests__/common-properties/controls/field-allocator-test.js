@@ -128,5 +128,22 @@ describe("field-allocator-control renders correctly", () => {
 		input.root.node.handleChange(evt); // TODO should use click events if possible
 		expect(controller.getPropertyValue(propertyId)).to.equal("Na");
 	});
+	it("should allow empty string to be set as valid field in control", () => {
+		setPropertyValue();
+		const wrapper = mount(
+			<FieldAllocatorControl
+				control={control}
+				dataModel={emptyDataModel}
+				propertyId={propertyId}
+				controller = {controller}
+			/>
+		);
+
+		const input = wrapper.find(".Dropdown-control");
+		expect(input).to.have.length(1);
+		const evt = { value: "...", label: "..." }; // defect with Dropdown npm module.  Value is set to label when ""
+		input.root.node.handleChange(evt); // TODO should use click events if possible
+		expect(controller.getPropertyValue(propertyId)).to.equal("");
+	});
 
 });

@@ -3,6 +3,7 @@
     "field": "age",
     "field_null": null,
     "field_empty_string": "",
+    "field_placeholder": "",
     "field1_panel": "age",
     "field2_panel": "BP",
     "field_error": "BP",
@@ -43,6 +44,11 @@
       "type": "string",
       "role": "column",
       "required": true
+    },
+    {
+      "id": "field_placeholder",
+      "type": "string",
+      "role": "column"
     },
     {
       "id": "field1_panel",
@@ -130,6 +136,18 @@
         },
         "description": {
           "default": "selectcolumn with parameter value set to '\"\"'"
+        }
+      },
+      {
+        "parameter_ref": "field_placeholder",
+        "label": {
+          "default": "Field with Placeholder text"
+        },
+        "description": {
+          "default": "selectcolumn with placeholder text 'None...'"
+        },
+        "place_holder_text": {
+          "default": "None..."
         }
       },
       {
@@ -232,7 +250,8 @@
               "field_null",
               "field_empty_string",
               "field_undefined",
-              "field_default"
+              "field_default",
+              "field_placeholder"
             ]
           }
         ]
