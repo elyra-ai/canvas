@@ -534,13 +534,13 @@ module.exports = function() {
 						.$$("div")[categoryIndex].click();
 					// drag the var file node to the canvas
 					const nodeIndex = nodePosition[nodeType];
-					browser.execute(simulateDragDrop, ".palette-grid-node-outer", nodeIndex, "#canvas-div", 0, canvasX, canvasY);
+					browser.execute(simulateDragDrop, ".palette-grid-node-outer", nodeIndex, "#canvas-div-0", 0, canvasX, canvasY);
 				} else {
 					var categoryElem = findCategoryElement(nodeCategory);
 					categoryElem.click();
 					// drag the var file node to the canvas
 					const nodeIndex = findNodeIndexInPalette(nodeType);
-					browser.execute(simulateDragDrop, ".palette-list-item", nodeIndex, "#canvas-div", 0, canvasX, canvasY);
+					browser.execute(simulateDragDrop, ".palette-list-item", nodeIndex, "#canvas-div-0", 0, canvasX, canvasY);
 					categoryElem.click(); // close category
 				}
 
@@ -551,9 +551,9 @@ module.exports = function() {
 				// verify node is in the canvas DOM
 				var imageName;
 				if (D3RenderingEngine) {
-					imageName = browser.$("#canvas-div").$$(".node-image")[nodeNumber].getAttribute("href");
+					imageName = browser.$("#canvas-div-0").$$(".node-image")[nodeNumber].getAttribute("href");
 				} else {
-					imageName = browser.$("#canvas-div").$$(".node-inner-circle")[nodeNumber].$("img").getAttribute("src");
+					imageName = browser.$("#canvas-div-0").$$(".node-inner-circle")[nodeNumber].$("img").getAttribute("src");
 				}
 
 				expect(imageName).toEqual(expectedImages[nodeType]);
@@ -621,9 +621,9 @@ module.exports = function() {
 		const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
 		var nodeNumber = nodeIndex - 1;
 		if (D3RenderingEngine) {
-			browser.$("#canvas-div").$$(".node-group")[nodeNumber].click();
+			browser.$("#canvas-div-0").$$(".node-group")[nodeNumber].click();
 		} else {
-			browser.$("#canvas-div").$$(".node-inner-circle")[nodeNumber].click();
+			browser.$("#canvas-div-0").$$(".node-inner-circle")[nodeNumber].click();
 		}
 	});
 
@@ -657,9 +657,9 @@ module.exports = function() {
 		var nodeNumber = nodeIndex - 1;
 		const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
 		if (D3RenderingEngine) {
-			browser.$("#canvas-div").$$(".node-group")[nodeNumber].rightClick();
+			browser.$("#canvas-div-0").$$(".node-group")[nodeNumber].rightClick();
 		} else {
-			browser.$("#canvas-div").$$(".node-inner-circle")[nodeNumber].rightClick();
+			browser.$("#canvas-div-0").$$(".node-inner-circle")[nodeNumber].rightClick();
 		}
 
 		browser.$(".context-menu-popover").$$(".react-contextmenu-item")[1].click();
@@ -688,7 +688,7 @@ module.exports = function() {
 		} else {
 			nodeSelector = ".node-inner-circle";
 		}
-		browser.$("#canvas-div").$$(nodeSelector)[nodeNumber].rightClick();
+		browser.$("#canvas-div-0").$$(nodeSelector)[nodeNumber].rightClick();
 
 		const contextMenu = browser.$(".context-menu-popover").$$(".react-contextmenu-item");
 		// console.log("test " + contextMenu.length);
@@ -707,13 +707,13 @@ module.exports = function() {
 
 		// verify node is not the canvas DOM
 		var count = 0;
-		var nodeList = browser.$("#canvas-div").$$(nodeSelector);
+		var nodeList = browser.$("#canvas-div-0").$$(nodeSelector);
 		for (var idx = 0; idx < nodeList.length; idx++) {
 			var imageName;
 			if (D3RenderingEngine) {
-				imageName = browser.$("#canvas-div").$$(nodeSelector)[idx].$("image").getAttribute("href");
+				imageName = browser.$("#canvas-div-0").$$(nodeSelector)[idx].$("image").getAttribute("href");
 			} else {
-				imageName = browser.$("#canvas-div").$$(nodeSelector)[idx].$("img").getAttribute("src");
+				imageName = browser.$("#canvas-div-0").$$(nodeSelector)[idx].$("img").getAttribute("src");
 			}
 
 			// console.log("Image # = " + idx + " image = " + imageName);
@@ -750,18 +750,18 @@ module.exports = function() {
 		} else {
 			nodeSelector = ".node-inner-circle";
 		}
-		browser.$("#canvas-div").$$(nodeSelector)[nodeNumber].click();
+		browser.$("#canvas-div-0").$$(nodeSelector)[nodeNumber].click();
 		browser.keys("Delete");
 
 		// verify node is not the canvas DOM
 		var count = 0;
-		var nodeList = browser.$("#canvas-div").$$(nodeSelector);
+		var nodeList = browser.$("#canvas-div-0").$$(nodeSelector);
 		for (var idx = 0; idx < nodeList.length; idx++) {
 			var imageName;
 			if (D3RenderingEngine) {
-				imageName = browser.$("#canvas-div").$$(nodeSelector)[idx].$("image").getAttribute("href");
+				imageName = browser.$("#canvas-div-0").$$(nodeSelector)[idx].$("image").getAttribute("href");
 			} else {
-				imageName = browser.$("#canvas-div").$$(nodeSelector)[idx].$("img").getAttribute("src");
+				imageName = browser.$("#canvas-div-0").$$(nodeSelector)[idx].$("img").getAttribute("src");
 			}
 
 			// console.log("Image # = " + idx + " image = " + imageName);
@@ -803,13 +803,13 @@ module.exports = function() {
 			linkSelector = ".canvas-background-link";
 		}
 
-		var nodeList = browser.$("#canvas-div").$$(nodeSelector);
+		var nodeList = browser.$("#canvas-div-0").$$(nodeSelector);
 		expect(nodeList.length).toBe(0);
 
-		var commentList = browser.$("#canvas-div").$$(commentSelector);
+		var commentList = browser.$("#canvas-div-0").$$(commentSelector);
 		expect(commentList.length).toBe(0);
 
-		var linkList = browser.$("#canvas-div").$$(linkSelector);
+		var linkList = browser.$("#canvas-div-0").$$(linkSelector);
 		expect(linkList.length).toBe(0);
 	});
 
@@ -822,9 +822,9 @@ module.exports = function() {
 			const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
 			var nodeNumber = nodeIndex - 1;
 			if (D3RenderingEngine) {
-				browser.execute(simulateDragDrop, ".node-group", nodeNumber, "#canvas-div", 0, canvasX, canvasY);
+				browser.execute(simulateDragDrop, ".node-group", nodeNumber, "#canvas-div-0", 0, canvasX, canvasY);
 			} else {
-				browser.execute(simulateDragDrop, ".node-inner-circle", nodeNumber, "#canvas-div", 0, canvasX, canvasY);
+				browser.execute(simulateDragDrop, ".node-inner-circle", nodeNumber, "#canvas-div-0", 0, canvasX, canvasY);
 			}
 		});
 
@@ -874,18 +874,18 @@ module.exports = function() {
 		} else {
 			nodeSelector = ".node-inner-circle";
 		}
-		browser.$("#canvas-div").$$(nodeSelector)[nodeNumber].rightClick();
+		browser.$("#canvas-div-0").$$(nodeSelector)[nodeNumber].rightClick();
 		browser.$(".context-menu-popover").$$(".react-contextmenu-item")[9].click();
 
 		// verify node is not the canvas DOM
 		var count = 0;
-		var nodeList = browser.$("#canvas-div").$$(nodeSelector);
+		var nodeList = browser.$("#canvas-div-0").$$(nodeSelector);
 		for (var idx = 0; idx < nodeList.length; idx++) {
 			var imageName;
 			if (D3RenderingEngine) {
-				imageName = browser.$("#canvas-div").$$(nodeSelector)[idx].$("image").getAttribute("href");
+				imageName = browser.$("#canvas-div-0").$$(nodeSelector)[idx].$("image").getAttribute("href");
 			} else {
-				imageName = browser.$("#canvas-div").$$(nodeSelector)[idx].$("img").getAttribute("src");
+				imageName = browser.$("#canvas-div-0").$$(nodeSelector)[idx].$("img").getAttribute("src");
 			}
 
 			// console.log("Image # = " + idx + " image = " + imageName);
@@ -911,9 +911,9 @@ module.exports = function() {
 		var nodeNumber = nodeIndex - 1;
 		const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
 		if (D3RenderingEngine) {
-			browser.$("#canvas-div").$$(".node-group")[nodeNumber].rightClick();
+			browser.$("#canvas-div-0").$$(".node-group")[nodeNumber].rightClick();
 		} else {
-			browser.$("#canvas-div").$$(".node-inner-circle")[nodeNumber].rightClick();
+			browser.$("#canvas-div-0").$$(".node-inner-circle")[nodeNumber].rightClick();
 		}
 
 		browser.$(".context-menu-popover").$$(".react-contextmenu-item")[0].click();
@@ -932,7 +932,7 @@ module.exports = function() {
 
 	this.Then(/^I verify the number of nodes are (\d+)$/, function(nodes) {
 		try {
-			var nodesInCanvas = browser.$("#canvas-div").$$(".node-image").length;
+			var nodesInCanvas = browser.$("#canvas-div-0").$$(".node-image").length;
 			expect(Number(nodes)).toEqual(nodesInCanvas);
 
 			// verify the number of nodes is in the internal object model
@@ -950,7 +950,7 @@ module.exports = function() {
 	});
 
 	this.Then("I select all the nodes in the canvas", function() {
-		var nodes = browser.$("#canvas-div").$$(".node-image");
+		var nodes = browser.$("#canvas-div-0").$$(".node-image");
 		browser.keys("Shift");
 
 		nodes.forEach(function(node) {

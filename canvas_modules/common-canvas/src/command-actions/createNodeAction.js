@@ -7,25 +7,25 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 import Action from "../command-stack/action.js";
-import ObjectModel from "../object-model/object-model.js";
 
 export default class CreateNodeAction extends Action {
-	constructor(data) {
+	constructor(data, objectModel) {
 		super(data);
 		this.data = data;
+		this.objectModel = objectModel;
 	}
 
 	// Standard methods
 	do() {
-		ObjectModel.addNode(this.data);
+		this.objectModel.addNode(this.data);
 	}
 
 	undo() {
-		ObjectModel.deleteNode(this.data.id);
+		this.objectModel.deleteNode(this.data.id);
 	}
 
 	redo() {
-		ObjectModel.addNode(this.data);
+		this.objectModel.addNode(this.data);
 	}
 
 }

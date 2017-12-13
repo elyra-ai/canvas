@@ -18,10 +18,7 @@ import DiagramCanvasD3 from "./diagram-canvas-d3.jsx";
 import Palette from "./palette/palette.jsx";
 import PaletteFlyout from "./palette/palette-flyout.jsx";
 import Toolbar from "./toolbar/toolbar.jsx";
-import ObjectModel from "./object-model/object-model.js";
-import CommandStack from "./command-stack/command-stack.js";
 import BlankCanvasImage from "../assets/images/blank_canvas.png";
-import CanvasController from "./common-canvas-controller.js";
 import TooltipWrapper from "./tooltip-wrapper.jsx";
 import _ from "underscore";
 
@@ -38,10 +35,6 @@ export default class CommonCanvas extends React.Component {
 			tipDef: {}
 		};
 
-		ObjectModel.subscribe(() => {
-			this.forceUpdate();
-		});
-
 		this.openContextMenu = this.openContextMenu.bind(this);
 		this.closeContextMenu = this.closeContextMenu.bind(this);
 		this.isContextMenuDisplayed = this.isContextMenuDisplayed.bind(this);
@@ -52,10 +45,20 @@ export default class CommonCanvas extends React.Component {
 
 		this.openPalette = this.openPalette.bind(this);
 		this.closePalette = this.closePalette.bind(this);
-
 		this.initializeController = this.initializeController.bind(this);
 
+		this.canvasController = this.props.canvasController;
 		this.initializeController(props);
+
+		this.canvasController.setCommonCanvas(this);
+
+		this.itemsContainerDivId = "common-canvas-items-container-" + this.canvasController.getInstanceId();
+
+		this.objectModel = this.canvasController.getObjectModel();
+
+		this.unsubscribe = this.objectModel.subscribe(() => {
+			this.forceUpdate();
+		});
 	}
 
 	componentWillReceiveProps(newProps) {
@@ -98,8 +101,12 @@ export default class CommonCanvas extends React.Component {
 		this.initializeController(newProps);
 	}
 
+	componentWillUnmount() {
+		this.unsubscribe();
+	}
+
 	initializeController(props) {
-		CanvasController.setCanvasConfig({
+		this.canvasController.setCanvasConfig({
 			enableRenderingEngine: props.config.enableRenderingEngine,
 			enableConnectionType: props.config.enableConnectionType,
 			enableNodeFormatType: props.config.enableNodeFormatType,
@@ -114,22 +121,19 @@ export default class CommonCanvas extends React.Component {
 			closeRightFlyout: props.closeRightFlyout
 		});
 
-
-		CanvasController.setHandlers({
-			contextMenuHandler: this.props.contextMenuHandler,
-			contextMenuActionHandler: this.props.contextMenuActionHandler,
-			editActionHandler: this.props.editActionHandler,
-			clickActionHandler: this.props.clickActionHandler,
-			decorationActionHandler: this.props.decorationActionHandler,
-			toolbarMenuActionHandler: this.props.toolbarMenuActionHandler,
-			tipHandler: this.props.tipHandler
+		this.canvasController.setHandlers({
+			contextMenuHandler: props.contextMenuHandler,
+			contextMenuActionHandler: props.contextMenuActionHandler,
+			editActionHandler: props.editActionHandler,
+			clickActionHandler: props.clickActionHandler,
+			decorationActionHandler: props.decorationActionHandler,
+			toolbarMenuActionHandler: props.toolbarMenuActionHandler,
+			tipHandler: props.tipHandler
 		});
-
-		CanvasController.setCommonCanvas(this);
 	}
 
 	openPalette() {
-		if (ObjectModel.getPaletteData()) {
+		if (this.objectModel.getPaletteData()) {
 			this.setState({ isPaletteOpen: true });
 		}
 	}
@@ -182,7 +186,7 @@ export default class CommonCanvas extends React.Component {
 		// We only set toolbar state with the internal object model. With the
 		// external object model the host app must set toolbar state through the
 		// toolbar config params.
-		if (!CanvasController.isInternalObjectModelEnabled()) {
+		if (!this.canvasController.isInternalObjectModelEnabled()) {
 			return;
 		}
 
@@ -193,18 +197,18 @@ export default class CommonCanvas extends React.Component {
 		let pasteState = true;
 		let deleteState = true;
 
-		if (!CommandStack.canUndo()) {
+		if (!this.canvasController.getCommandStack().canUndo()) {
 			undoState = false;
 		}
-		if (!CommandStack.canRedo()) {
+		if (!this.canvasController.getCommandStack().canRedo()) {
 			redoState = false;
 		}
-		if (ObjectModel.getSelectedObjectIds().length === 0) {
+		if (this.objectModel.getSelectedObjectIds().length === 0) {
 			cutState = false;
 			copyState = false;
 			deleteState = false;
 		}
-		if (CanvasController.isClipboardEmpty()) {
+		if (this.canvasController.isClipboardEmpty()) {
 			pasteState = false;
 		}
 
@@ -238,16 +242,17 @@ export default class CommonCanvas extends React.Component {
 		let paletteClass = "canvas-palette-flyout-div-closed";
 		let contextMenuWrapper = null;
 		let canvasToolbar = null;
-		let rightFlyout = (<div id="right-flyout-panel" style={{ width: "0px" }} />);
+		let rightFlyout = (<div className="right-flyout-panel" style={{ width: "0px" }} />);
 		let tip = null;
 		const canvasStyle = { minWidth: "258px" };
-		const canvasJSON = ObjectModel.getCanvasInfo();
+		const canvasJSON = this.objectModel.getCanvasInfo();
 
 		if (canvasJSON !== null) {
 			if (this.state.showContextMenu) {
 				contextMenuWrapper = (<ContextMenuWrapper
-					containingDivId={"common-canvas-items-container"}
+					containingDivId={this.itemsContainerDivId}
 					contextMenuDef={this.state.contextMenuDef}
+					canvasController={this.canvasController}
 				/>);
 			}
 
@@ -256,23 +261,30 @@ export default class CommonCanvas extends React.Component {
 					ref="canvas"
 					canvas={canvasJSON}
 					config={this.props.config}
+					canvasController={this.canvasController}
 				>
-					{contextMenuWrapper}
+					<div>
+						{contextMenuWrapper}
+					</div>
 				</DiagramCanvasD3>);
 			} else {
 				canvas = (<DiagramCanvasLegacy
 					ref="canvas"
 					canvas={canvasJSON}
+					parentDivId={this.itemsContainerDivId}
+					canvasController={this.canvasController}
 				>
 					{contextMenuWrapper}
 				</DiagramCanvasLegacy>);
 			}
 
-			if (ObjectModel.getPaletteData()) {
+			if (this.objectModel.getPaletteData()) {
 				if (this.props.config.enablePaletteLayout === "Modal") {
 					palette = (<Palette
-						paletteJSON={ObjectModel.getPaletteData()}
+						paletteJSON={this.objectModel.getPaletteData()}
 						showPalette={this.state.isPaletteOpen}
+						parentDivId={this.itemsContainerDivId}
+						canvasController={this.canvasController}
 					/>);
 				} else {
 					if (this.state.isPaletteOpen) {
@@ -280,8 +292,9 @@ export default class CommonCanvas extends React.Component {
 						canvasStyle.minWidth = (parseFloat(canvasStyle.minWidth) + 250) + "px";
 					}
 					palette = (<PaletteFlyout
-						paletteJSON={ObjectModel.getPaletteData()}
+						paletteJSON={this.objectModel.getPaletteData()}
 						showPalette={this.state.isPaletteOpen}
+						canvasController={this.canvasController}
 					/>);
 				}
 			}
@@ -294,14 +307,17 @@ export default class CommonCanvas extends React.Component {
 					paletteState={this.state.isPaletteOpen}
 					paletteType={this.props.config.enablePaletteLayout}
 					rightFlyoutOpen={this.props.showRightFlyout}
+					canvasController={this.canvasController}
 				/>);
 			}
 		}
 
-		if (typeof this.state.rightFlyoutContent !== "undefined" && this.state.rightFlyoutContent !== null && this.props.showRightFlyout) {
+		if (typeof this.state.rightFlyoutContent !== "undefined" &&
+				this.state.rightFlyoutContent !== null &&
+				this.props.showRightFlyout) {
 			paletteClass += " canvas-flyout-div-open";
 			canvasStyle.minWidth = (parseFloat(canvasStyle.minWidth) + 318) + "px";
-			rightFlyout = (<div id="right-flyout-panel" style={{ width: "318px" }}>
+			rightFlyout = (<div className="right-flyout-panel" style={{ width: "318px" }}>
 				{this.state.rightFlyoutContent}
 			</div>);
 		}
@@ -313,12 +329,12 @@ export default class CommonCanvas extends React.Component {
 					canvasJSON.comments.length === 0)) {
 			if (this.props.config.emptyCanvasContent) {
 				emptyCanvas = (
-					<div id="empty-canvas">
+					<div className="empty-canvas">
 						{this.props.config.emptyCanvasContent}
 					</div>);
 			} else {
 				emptyCanvas = (
-					<div id="empty-canvas">
+					<div className="empty-canvas">
 						<div>
 							<img src={BlankCanvasImage} className="empty-canvas-image" />
 							<span className="empty-canvas-text">Your flow is empty!</span>
@@ -338,16 +354,17 @@ export default class CommonCanvas extends React.Component {
 				node={this.state.tipDef.node}
 				port={this.state.tipDef.port}
 				nodeTemplate={this.state.tipDef.nodeTemplate}
+				canvasController={this.canvasController}
 			/>);
 		}
 
 		return (
-			<div id="common-canvas" style={canvasStyle}>
+			<div className="common-canvas" style={canvasStyle}>
 				{palette}
-				<div id="common-canvas-items-container" className={paletteClass}>
-					{canvasToolbar}
+				<div id={this.itemsContainerDivId} className={"common-canvas-items-container " + paletteClass}>
 					{canvas}
 					{emptyCanvas}
+					{canvasToolbar}
 				</div>
 				{rightFlyout}
 				{tip}
@@ -368,5 +385,6 @@ CommonCanvas.propTypes = {
 	rightFlyoutContent: PropTypes.object,
 	showRightFlyout: PropTypes.bool,
 	closeRightFlyout: PropTypes.func,
-	tipHandler: PropTypes.func
+	tipHandler: PropTypes.func,
+	canvasController: PropTypes.object.isRequired
 };

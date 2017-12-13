@@ -10,8 +10,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Tooltip from "./tooltip.jsx";
-import CanvasController from "./common-canvas-controller.js";
-import ObjectModel from "./object-model/object-model.js";
 import { Icon } from "ap-components-react/dist/ap-components-react";
 import { TIP_TYPE_PALETTE_ITEM, TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK } from "../constants/common-constants.js";
 
@@ -19,6 +17,8 @@ export default class TooltipWrapper extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {};
+
+		this.handleClick = this.handleClick.bind(this);
 	}
 
 	componentDidMount() {
@@ -30,7 +30,7 @@ export default class TooltipWrapper extends React.Component {
 	}
 
 	handleClick(e) {
-		CanvasController.hideTip();
+		this.props.canvasController.hideTip();
 	}
 
 	render() {
@@ -53,7 +53,7 @@ export default class TooltipWrapper extends React.Component {
 			switch (this.props.type) {
 			case TIP_TYPE_PALETTE_ITEM:
 				{
-					const category = ObjectModel.getCategoryForNode(this.props.nodeTemplate.operator_id_ref);
+					const category = this.props.canvasController.getObjectModel().getCategoryForNode(this.props.nodeTemplate.operator_id_ref);
 					content = (
 						<div className="tip-palette-item">
 							<hr className="tip-palette-line" />
@@ -70,12 +70,12 @@ export default class TooltipWrapper extends React.Component {
 			case TIP_TYPE_NODE:
 				{
 					let icon = null;
-					if (ObjectModel.hasErrorMessage(this.props.node.id)) {
+					if (this.props.canvasController.getObjectModel().hasErrorMessage(this.props.node.id)) {
 						icon = <Icon className="tip-node-status" type="error" />;
-					} else if (ObjectModel.hasWarningMessage(this.props.node.id)) {
+					} else if (this.props.canvasController.getObjectModel().hasWarningMessage(this.props.node.id)) {
 						icon = <Icon className="tip-node-status" type="warning" />;
 					}
-					const nodeType = ObjectModel.getPaletteNode(this.props.node.operator_id_ref);
+					const nodeType = this.props.canvasController.getObjectModel().getPaletteNode(this.props.node.operator_id_ref);
 					let nodeLabel = this.props.node.label;
 					if (nodeType && nodeLabel !== nodeType.label) {
 						nodeLabel += ` (${nodeType.label})`;
@@ -125,5 +125,6 @@ TooltipWrapper.propTypes = {
 	node: PropTypes.object,
 	port: PropTypes.object,
 	nodeTemplate: PropTypes.object,
-	category: PropTypes.string
+	category: PropTypes.string,
+	canvasController: PropTypes.object.isRequired
 };

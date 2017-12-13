@@ -72,6 +72,8 @@ export default class SidePanelForms extends React.Component {
 		this.linkTypeOptionChange = this.linkTypeOptionChange.bind(this);
 		this.paletteLayoutOptionChange = this.paletteLayoutOptionChange.bind(this);
 		this.tipConfigChange = this.tipConfigChange.bind(this);
+		this.extraCanvasChange = this.extraCanvasChange.bind(this);
+
 	}
 
 	componentWillMount() {
@@ -255,6 +257,10 @@ export default class SidePanelForms extends React.Component {
 			return;
 		}
 		this.props.setTipConfig(tipConf);
+	}
+
+	extraCanvasChange(changeEvent) {
+		this.props.showExtraCanvas(changeEvent.target.checked);
 	}
 
 	renderingEngineOptionChange(evt, obj) {
@@ -478,6 +484,19 @@ export default class SidePanelForms extends React.Component {
 			/>
 		</div>);
 
+		var extraCanvas = (<div className="sidepanel-children" id="sidepanel-extra-canvas">
+			<form>
+				<div className="sidepanel-headers">Extra canvas</div>
+				<div>
+					<ToggleButton dark
+						id="sidepanel-object-extra-canvas"
+						checked={this.props.extraCanvasDisplayed}
+						onChange={this.extraCanvasChange}
+					/>
+				</div>
+			</form>
+		</div>);
+
 		return (
 			<div>
 				{canvasInput}
@@ -499,6 +518,8 @@ export default class SidePanelForms extends React.Component {
 				{paletteLayout}
 				{divider}
 				{tipConfig}
+				{divider}
+				{extraCanvas}
 			</div>
 		);
 	}
@@ -516,6 +537,8 @@ SidePanelForms.propTypes = {
 	setConnectionType: PropTypes.func,
 	setNodeFormatType: PropTypes.func,
 	setLinkType: PropTypes.func,
+	extraCanvasDisplayed: PropTypes.bool,
+	showExtraCanvas: PropTypes.func,
 	log: PropTypes.func,
 	setPaletteLayout: PropTypes.func,
 	setTipConfig: PropTypes.func

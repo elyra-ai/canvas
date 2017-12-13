@@ -80,9 +80,11 @@ class PaletteContent extends React.Component {
 				/>
 				<PaletteContentGrid show={this.props.showGrid}
 					categoryJSON={categoryJSON}
+					canvasController={this.props.canvasController}
 				/>
 				<PaletteContentList show={!this.props.showGrid}
 					categoryJSON={categoryJSON}
+					canvasController={this.props.canvasController}
 				/>
 			</div>
 		);
@@ -91,7 +93,8 @@ class PaletteContent extends React.Component {
 
 PaletteContent.propTypes = {
 	paletteJSON: PropTypes.object.isRequired,
-	showGrid: PropTypes.bool.isRequired
+	showGrid: PropTypes.bool.isRequired,
+	canvasController: PropTypes.object.isRequired
 };
 
 export default PaletteContent;

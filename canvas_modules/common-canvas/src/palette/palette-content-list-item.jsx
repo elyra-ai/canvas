@@ -7,7 +7,6 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import CanvasController from "../common-canvas-controller.js";
 import React from "react";
 import PropTypes from "prop-types";
 import { DND_DATA_TEXT, TIP_TYPE_PALETTE_ITEM } from "../../constants/common-constants.js";
@@ -35,13 +34,13 @@ class PaletteContentListItem extends React.Component {
 	}
 
 	onDoubleClick() {
-		if (CanvasController.createAutoNode) {
-			CanvasController.createAutoNode(this.props.nodeTemplate);
+		if (this.props.canvasController.createAutoNode) {
+			this.props.canvasController.createAutoNode(this.props.nodeTemplate);
 		}
 	}
 
 	onMouseOver(ev) {
-		CanvasController.showTip({
+		this.props.canvasController.showTip({
 			id: "paletteTip_" + this.props.nodeTemplate.operator_id_ref,
 			type: TIP_TYPE_PALETTE_ITEM,
 			targetObj: ev.currentTarget,
@@ -50,7 +49,7 @@ class PaletteContentListItem extends React.Component {
 	}
 
 	onMouseLeave() {
-		CanvasController.hideTip();
+		this.props.canvasController.hideTip();
 	}
 
 	imageDrag() {
@@ -81,7 +80,8 @@ class PaletteContentListItem extends React.Component {
 }
 
 PaletteContentListItem.propTypes = {
-	nodeTemplate: PropTypes.object.isRequired
+	nodeTemplate: PropTypes.object.isRequired,
+	canvasController: PropTypes.object.isRequired
 };
 
 export default PaletteContentListItem;

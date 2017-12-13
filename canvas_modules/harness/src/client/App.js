@@ -18,7 +18,7 @@ import { IntlProvider, FormattedMessage, addLocaleData, injectIntl, intlShape } 
 import en from "react-intl/locale-data/en";
 var i18nData = require("../intl/en.js");
 
-import { CommonCanvas, ObjectModel, CommonProperties, CommandStack, FlowValidation } from "common-canvas";
+import { CommonCanvas, CanvasController, CommonProperties, FlowValidation } from "common-canvas";
 
 import Console from "./components/console.jsx";
 import SidePanel from "./components/sidepanel.jsx";
@@ -80,7 +80,8 @@ class App extends React.Component {
 				"nodes": true,
 				"ports": true,
 				"links": true
-			}
+			},
+			extraCanvasDisplayed: false
 		};
 
 		this.openConsole = this.openConsole.bind(this);
@@ -109,6 +110,7 @@ class App extends React.Component {
 		this.getPipelineFlow = this.getPipelineFlow.bind(this);
 		this.setPipelineFlow = this.setPipelineFlow.bind(this);
 		this.setTipConfig = this.setTipConfig.bind(this);
+		this.showExtraCanvas = this.showExtraCanvas.bind(this);
 		this.addNodeTypeToPalette = this.addNodeTypeToPalette.bind(this);
 
 		// common-canvas
@@ -131,16 +133,22 @@ class App extends React.Component {
 		this.openPropertiesEditorDialog = this.openPropertiesEditorDialog.bind(this);
 		this.closePropertiesEditorDialog = this.closePropertiesEditorDialog.bind(this);
 		this.propertyListener = this.propertyListener.bind(this);
-		this.controllerHandler = this.controllerHandler.bind(this);
-		ObjectModel.setEmptyPipelineFlow();
-		ObjectModel.setPipelineFlowPalette({});
+		this.propertiesControllerHandler = this.propertiesControllerHandler.bind(this);
+
+		this.canvasController = new CanvasController();
+		this.canvasController.setEmptyPipelineFlow();
+		this.canvasController.setPipelineFlowPalette({});
+
+		this.canvasController2 = new CanvasController();
+		this.canvasController2.setEmptyPipelineFlow();
+		this.canvasController2.setPipelineFlowPalette({});
 	}
 
 	componentDidMount() {
 		addLocaleData(en);
 		var sessionData = {
 			events: {},
-			canvas: ObjectModel.getCanvasInfo()
+			canvas: this.canvasController.getCanvasInfo()
 		};
 		TestService.postSessionData(sessionData);
 		NodeToForm.initialize();
@@ -160,14 +168,14 @@ class App extends React.Component {
 	}
 
 	setDiagramJSON(canvasJson) {
-		ObjectModel.setEmptyPipelineFlow();
+		this.canvasController.setEmptyPipelineFlow();
 		this.forceUpdate();
-		CommandStack.clearCommandStack();
+		this.canvasController.getCommandStack().clearCommandStack();
 		NodeToForm.clearNodeForms();
 		if (canvasJson) {
-			ObjectModel.setPipelineFlow(canvasJson);
-			NodeToForm.setNodeForms(ObjectModel.getNodes());
-			FlowValidation.validateFlow(this.getNodeForm);
+			this.canvasController.setPipelineFlow(canvasJson);
+			NodeToForm.setNodeForms(this.canvasController.getNodes());
+			FlowValidation.validateFlow(this.canvasController, this.getNodeForm);
 			TestService.postCanvas(canvasJson);
 			this.log("Canvas diagram set");
 		} else {
@@ -177,8 +185,8 @@ class App extends React.Component {
 
 
 	setPaletteJSON(paletteJson) {
-		ObjectModel.setPipelineFlowPalette(paletteJson);
-		ObjectModel.getPipelineFlow();
+		this.canvasController.setPipelineFlowPalette(paletteJson);
+		this.canvasController.getPipelineFlow();
 		this.log("Palette set");
 	}
 
@@ -189,7 +197,7 @@ class App extends React.Component {
 	}
 
 	setLayoutDirection(selectedLayout) {
-		ObjectModel.fixedAutoLayout(selectedLayout);
+		this.canvasController.fixedAutoLayout(selectedLayout);
 		this.setState({ selectedLayout: selectedLayout });
 		this.log("Layout selected", selectedLayout);
 	}
@@ -220,12 +228,12 @@ class App extends React.Component {
 	}
 
 	setPipelineFlow(flow) {
-		ObjectModel.setPipelineFlow(flow);
+		this.canvasController.setPipelineFlow(flow);
 		this.log("Updated pipeline flow");
 	}
 
 	getPipelineFlow(flow) {
-		return ObjectModel.getPipelineFlow();
+		return this.canvasController.getPipelineFlow();
 	}
 
 	setTipConfig(newTipConfig) {
@@ -234,7 +242,7 @@ class App extends React.Component {
 	}
 
 	addNodeTypeToPalette(nodeTypeObj, category, categoryLabel) {
-		ObjectModel.addNodeTypeToPalette(nodeTypeObj, category, categoryLabel);
+		this.canvasController.addNodeTypeToPalette(nodeTypeObj, category, categoryLabel);
 		this.log("Added nodeType to palette", { nodeTypeObj: nodeTypeObj, category: category, categoryLabel: categoryLabel });
 	}
 
@@ -288,7 +296,7 @@ class App extends React.Component {
 		}, function() {
 			var sessionData = {
 				events: that.state.consoleout,
-				canvas: ObjectModel.getCanvasInfo()
+				canvas: that.canvasController.getCanvasInfo()
 			};
 			TestService.postSessionData(sessionData);
 		});
@@ -301,14 +309,14 @@ class App extends React.Component {
 	}
 
 	download() {
-		var canvas = JSON.stringify(ObjectModel.getPipelineFlow(), null, 2);
+		var canvas = JSON.stringify(this.canvasController.getPipelineFlow(), null, 2);
 		ReactFileDownload(canvas, "canvas.json");
 	}
 
 	postUndoRedo() {
 		var sessionData = {
 			events: this.state.consoleout,
-			canvas: ObjectModel.getCanvasInfo()
+			canvas: this.canvasController.getCanvasInfo()
 		};
 		TestService.postSessionData(sessionData);
 	}
@@ -321,6 +329,11 @@ class App extends React.Component {
 	useInternalObjectModel(enabled) {
 		this.setState({ internalObjectModel: enabled });
 		this.log("use internal object model", enabled);
+	}
+
+	showExtraCanvas(enabled) {
+		this.setState({ extraCanvasDisplayed: enabled });
+		this.log("show extra canvas", enabled);
 	}
 
 	usePropertiesContainerType(type) {
@@ -351,7 +364,7 @@ class App extends React.Component {
 	}
 
 	validateFlow(source) {
-		FlowValidation.validateFlow(this.getNodeForm);
+		FlowValidation.validateFlow(this.canvasController, this.getNodeForm);
 	}
 
 	contextMenuHandler(source) {
@@ -602,7 +615,7 @@ class App extends React.Component {
 	editNodeHandler(nodeId) {
 		this.log("action: editNode", nodeId);
 		const properties = this.getNodeForm(nodeId);
-		const messages = ObjectModel.getNodeMessages(nodeId);
+		const messages = this.canvasController.getNodeMessages(nodeId);
 
 		const propsInfo = {
 			title: <FormattedMessage id={ "dialog.nodePropertiesTitle" } />,
@@ -666,10 +679,12 @@ class App extends React.Component {
 			"the empty canvas objects!");
 	}
 
-	controllerHandler(controller) {
-		this.log("controllerHandler()");
-		this.controller = controller;
+	propertiesControllerHandler(propertiesController) {
+		this.log("propertiesControllerHandler()");
+		this.propertiesController = propertiesController;
+		this.propertiesController.setCommandStack(this.canvasController.getCommandStack());
 	}
+
 	propertyListener(data) {
 		this.log("propertyListener() " + data.action);
 	}
@@ -678,7 +693,7 @@ class App extends React.Component {
 		var locale = "en";
 		var messages = i18nData.messages;
 
-		var navBar = (<div id="app-navbar">
+		var navBar = (<div className="app-navbar">
 			<ul className="app-navbar-items">
 				<li className="navbar-li">
 					<a id="title">Canvas Testbed</a>
@@ -747,6 +762,17 @@ class App extends React.Component {
 			tipConfig: this.state.tipConfig
 		};
 
+		var commonCanvasConfig2 = {
+			enableRenderingEngine: this.state.selectedRenderingEngine,
+			enableConnectionType: this.state.selectedConnectionType,
+			enableNodeFormatType: this.state.selectedNodeFormat,
+			enableLinkType: this.state.selectedLinkType,
+			enableInternalObjectModel: this.state.internalObjectModel,
+			enablePaletteLayout: this.state.selectedPaletteLayout,
+			emptyCanvasContent: emptyCanvasDiv,
+			tipConfig: this.state.tipConfig
+		};
+
 		var layoutAction = this.state.selectedLayout === NONE;
 
 		var toolbarConfig = [
@@ -775,7 +801,7 @@ class App extends React.Component {
 				rejectLabel="Reject"
 				customPanels={[CustomSliderPanel, CustomTogglePanel, CustomMapPanel]}
 				rightFlyout={this.state.propertiesContainerType === FLYOUT}
-				controllerHandler={this.controllerHandler}
+				controllerHandler={this.propertiesControllerHandler}
 				propertyListener={this.propertyListener}
 			/>);
 
@@ -793,7 +819,7 @@ class App extends React.Component {
 			</IntlProvider>);
 		}
 
-		var commonCanvas = (<div id="canvas-container">
+		var firstCanvas = (
 			<CommonCanvas
 				config={commonCanvasConfig}
 				contextMenuHandler={this.contextMenuHandler}
@@ -807,8 +833,31 @@ class App extends React.Component {
 				rightFlyoutContent={rightFlyoutContent}
 				showRightFlyout={showRightFlyoutProperties}
 				closeRightFlyout={this.closePropertiesEditorDialog}
-			/>
-		</div>);
+				canvasController={this.canvasController}
+			/>);
+
+		var commonCanvas;
+		if (this.state.extraCanvasDisplayed === true) {
+			commonCanvas = (
+				<div className="canvas-container-double">
+					<div className="canvas-single">
+						{firstCanvas}
+					</div>
+					<div className="canvas-single">
+						<CommonCanvas
+							config={commonCanvasConfig2}
+							contextMenuHandler={this.contextMenuHandler}
+							toolbarConfig={toolbarConfig}
+							canvasController={this.canvasController2}
+						/>
+					</div>
+				</div>);
+		} else {
+			commonCanvas = (
+				<div className="canvas-container">
+					{firstCanvas}
+				</div>);
+		}
 
 		var mainView = (<div id="app-container">
 			{navBar}
@@ -842,6 +891,8 @@ class App extends React.Component {
 				getPipelineFlow={this.getPipelineFlow}
 				setPipelineFlow={this.setPipelineFlow}
 				setTipConfig={this.setTipConfig}
+				showExtraCanvas={this.showExtraCanvas}
+				extraCanvasDisplayed={this.state.extraCanvasDisplayed}
 				addNodeTypeToPalette={this.addNodeTypeToPalette}
 				log={this.log}
 			/>

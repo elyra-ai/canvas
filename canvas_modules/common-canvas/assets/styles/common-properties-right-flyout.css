@@ -103,15 +103,15 @@
 	width: 12px;
 }
 
-.panel-container-closed.right-flyout-panel {
+.panel-container-closed-right-flyout-panel {
 	height: 0px;
 }
 
-.panel-container-closed.right-flyout-panel > * {
+.panel-container-closed-right-flyout-panel > * {
 	display: none;
 }
 
-.panel-container-open.right-flyout-panel {
+.panel-container-open-right-flyout-panel {
 	height: 100%;
 	padding-left: 20px;
 	padding-right: 20px;

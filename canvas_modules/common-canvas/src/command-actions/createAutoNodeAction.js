@@ -7,32 +7,31 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 import Action from "../command-stack/action.js";
-import ObjectModel from "../object-model/object-model.js";
-// import _ from "underscore";
 
 export default class CreateAutoNodeAction extends Action {
-	constructor(data) {
+	constructor(data, objectModel) {
 		super(data);
 		this.data = data;
+		this.objectModel = objectModel;
 
-		this.sourceNode = ObjectModel.getAutoSourceNode();
-		this.trgPosition = ObjectModel.getAutoPositionOfTarget(this.sourceNode);
-		this.newNode = ObjectModel.createNodeAtPosition(data, this.trgPosition);
+		this.sourceNode = this.objectModel.getAutoSourceNode();
+		this.trgPosition = this.objectModel.getAutoPositionOfTarget(this.sourceNode);
+		this.newNode = this.objectModel.createNodeAtPosition(data, this.trgPosition);
 
 	}
 
 	// Standard methods
 	do() {
-		ObjectModel.addAutoNode(this.newNode, this.sourceNode);
-		ObjectModel.setSelections([this.newNode.id]);
+		this.objectModel.addAutoNode(this.newNode, this.sourceNode);
+		this.objectModel.setSelections([this.newNode.id]);
 	}
 
 	undo() {
-		ObjectModel.deleteNode(this.newNode.id);
+		this.objectModel.deleteNode(this.newNode.id);
 	}
 
 	redo() {
-		ObjectModel.addAutoNode(this.newNode, this.sourceNode);
-		ObjectModel.setSelections([this.newNode.id]);
+		this.objectModel.addAutoNode(this.newNode, this.sourceNode);
+		this.objectModel.setSelections([this.newNode.id]);
 	}
 }

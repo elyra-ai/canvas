@@ -7,32 +7,32 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 import Action from "../command-stack/action.js";
-import ObjectModel from "../object-model/object-model.js";
 
 export default class ArrangeLayoutAction extends Action {
-	constructor(layoutDirection) {
+	constructor(layoutDirection, objectModel) {
 		super(layoutDirection);
 		this.layoutDirection = layoutDirection;
+		this.objectModel = objectModel;
 		this.existingNodesData = {};
 	}
 
 	// Standard methods
 	do() {
-		var currentNodes = ObjectModel.getNodes().map(function(node) {
+		var currentNodes = this.objectModel.getNodes().map(function(node) {
 			return Object.assign({}, node);
 		});
 		this.existingNodesData = currentNodes;
-		ObjectModel.autoLayout(this.layoutDirection);
+		this.objectModel.autoLayout(this.layoutDirection);
 	}
 
 	undo() {
-		const currentCanvasData = ObjectModel.getCanvasInfo();
+		const currentCanvasData = this.objectModel.getCanvasInfo();
 		const newCanvasData = Object.assign({}, currentCanvasData, { nodes: this.existingNodesData });
-		ObjectModel.setCanvasInfo(newCanvasData);
+		this.objectModel.setCanvasInfo(newCanvasData);
 	}
 
 	redo() {
-		ObjectModel.autoLayout(this.layoutDirection);
+		this.objectModel.autoLayout(this.layoutDirection);
 	}
 
 }

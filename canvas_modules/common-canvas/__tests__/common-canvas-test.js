@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
+import CanvasController from "../src/canvas-controller";
 import CommonCanvas from "../src/common-canvas.jsx";
 import DiagramCanvas from "../src/diagram-canvas.jsx";
 import Palette from "../src/palette/palette.jsx";
@@ -16,58 +17,59 @@ import Toolbar from "../src/toolbar/toolbar.jsx";
 import { shallow } from "enzyme";
 import { expect } from "chai";
 import sinon from "sinon";
-import ObjectModel from "../src/object-model/object-model.js";
+
+const canvasController = new CanvasController();
 
 
 describe("CommonCanvas renders correctly", () => {
 
-	it("should render one <DialogEditor/> component", () => {
-		const config = { enableAutoLayout: "none" };
+	it("should render one <DialogCanvas/> component", () => {
+		const config = { enableAutoLayout: "none", canvasController: canvasController };
 		const wrapper = createCommonCanvas(config);
 		expect(wrapper.find(DiagramCanvas)).to.have.length(1);
 	});
 
 	it("should render one <Palette/> component when Palette is enabled", () => {
-		const config = { enablePaletteLayout: "Modal", enableAutoLayout: "none" };
+		const config = { enablePaletteLayout: "Modal", enableAutoLayout: "none", canvasController: canvasController };
 		const wrapper = createCommonCanvas(config);
 		expect(wrapper.find(Palette)).to.have.length(1);
 	});
 
-	it("should render one <Palette/> component when Palette is enabled", () => {
-		const config = { enableAutoLayout: "none" };
+	it("should render one <PaletteFlyout/> component when Palette layout is not provided", () => {
+		const config = { enableAutoLayout: "none", canvasController: canvasController };
 		const wrapper = createCommonCanvas(config);
 		expect(wrapper.find(PaletteFlyout)).to.have.length(1);
 	});
 
-	it("should render one PaletteFlyout component when Palette is enabled", () => {
-		const config = { enablePaletteLayout: "Flyout", enableAutoLayout: "none" };
+	it("should render one <PaletteFlyout/> component when Palette layout is enabled", () => {
+		const config = { enablePaletteLayout: "Flyout", enableAutoLayout: "none", canvasController: canvasController };
 		const wrapper = createCommonCanvas(config);
 		expect(wrapper.find(PaletteFlyout)).to.have.length(1);
 	});
 
-	it("should not render any <Palette/> component when Palette is disabled", () => {
-		const config = { enableAutoLayout: "none" };
+	it("should not render any <Palette/> component when Palette layout is not provided", () => {
+		const config = { enableAutoLayout: "none", canvasController: canvasController };
 		const wrapper = createCommonCanvas(config);
 		expect(wrapper.find(Palette)).to.have.length(0);
 	});
 
 	it("should render one <Toolbar/> component when toolbarConfig is provided", () => {
 		const toolbarConfig = [];
-		const config = { enableAutoLayout: "none" };
+		const config = { enableAutoLayout: "none", canvasController: canvasController };
 		const wrapper = createCommonCanvas(config, toolbarConfig);
 		expect(wrapper.find(Toolbar)).to.have.length(1);
 	});
 
 	it("should not render one <Toolbar/> component when there is no toolbarConfig", () => {
-		const config = { enableAutoLayout: "none" };
+		const config = { enableAutoLayout: "none", canvasController: canvasController };
 		const wrapper = createCommonCanvas(config);
 		expect(wrapper.find(Toolbar)).to.have.length(0);
 	});
 });
 
 function createCommonCanvas(config, toolbarConfig) {
-	ObjectModel.setEmptyPipelineFlow();
-	ObjectModel.setPipelineFlowPalette({});
+	canvasController.getObjectModel().setEmptyPipelineFlow();
+	canvasController.getObjectModel().setPipelineFlowPalette({});
 	const contextMenuHandler = sinon.spy();
 	const contextMenuActionHandler = sinon.spy();
 	const editDiagramHandler = sinon.spy();
@@ -84,6 +86,7 @@ function createCommonCanvas(config, toolbarConfig) {
 			decorationActionHandler={decorationActionHandler}
 			toolbarMenuActionHandler={toolbarMenuActionHandler}
 			toolbarConfig={toolbarConfig}
+			canvasController={canvasController}
 		/>
 	);
 	return wrapper;

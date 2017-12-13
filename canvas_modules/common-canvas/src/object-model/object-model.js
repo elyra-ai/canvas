@@ -460,8 +460,8 @@ const selections = (state = [], action) => {
 		// In some instances, with an external object model, the same canvas may
 		// be set multiple times. Consequently, we only clear the selections if
 		// we're given a completely new canvas.
-		if (action.data && store.getState().pipelineflow &&
-				action.data.id !== store.getState().pipelineflow.id) {
+		if (action.data && action.currentPipelineFlow &&
+				action.data.id !== action.currentPipelineFlow.id) {
 			return [];
 		}
 		return state;
@@ -566,52 +566,58 @@ const getUUID = () => {
 	return uuid.v4();
 };
 
-// Put 'selections' reducer first so slections are handled before canvas and pipeline flow actions
-// Also put layoutinfo reducer before canvas info becuase node heights and width are calculated
-// based on layoutinfo.
-const combinedReducer = combineReducers({ selections, layoutinfo, canvasinfo, pipelineflow, palette });
-const store = createStore(combinedReducer);
-
-store.dispatch({ type: "CLEAR_CANVAS" });
-store.dispatch({ type: "CLEAR_PALETTE_DATA" });
-store.dispatch({ type: "SET_LAYOUT_INFO", layoutinfo: LayoutDimensions.getLayout() });
-
-// TODO - Remove this gloabal  variable when WML Canvas supports pipelineFlow
-var oldCanvas = null;
 
 export default class ObjectModel {
 
-// Standard methods
+	constructor() {
+		// Put 'selections' reducer first so slections are handled before canvas and pipeline flow actions
+		// Also put layoutinfo reducer before canvas info becuase node heights and width are calculated
+		// based on layoutinfo.
+		var combinedReducer = combineReducers({ selections, layoutinfo, canvasinfo, pipelineflow, palette });
+		this.store = createStore(combinedReducer);
 
-	static dispatch(action) {
-		store.dispatch(action);
+		this.store.dispatch({ type: "CLEAR_CANVAS" });
+		this.store.dispatch({ type: "CLEAR_PALETTE_DATA" });
+		this.store.dispatch({ type: "SET_LAYOUT_INFO", layoutinfo: LayoutDimensions.getLayout() });
+
+		// Default value for fixed layout behavior
+		this.fixedLayout = NONE;
+
+		// TODO - Remove this gloabal  variable when WML Canvas supports pipelineFlow
+		this.oldCanvas = null;
 	}
 
-	static subscribe(callback) {
-		store.subscribe(callback);
+	// Standard methods
+
+	dispatch(action) {
+		this.store.dispatch(action);
+	}
+
+	subscribe(callback) {
+		return this.store.subscribe(callback);
 	}
 
 	// Palette methods
 
-	static clearPaletteData() {
-		store.dispatch({ type: "CLEAR_PALETTE_DATA" });
+	clearPaletteData() {
+		this.store.dispatch({ type: "CLEAR_PALETTE_DATA" });
 	}
 
 	// Deprecated  TODO - Remvove this method when WML Canvas migrates to setPipelineFlowPalette() method
-	static setPaletteData(paletteData) {
+	setPaletteData(paletteData) {
 		var newPalData = SVGCanvasInHandler.convertPaletteToPipelineFlowPalette(paletteData);
-		store.dispatch({ type: "SET_PALETTE_DATA", data: newPalData });
+		this.store.dispatch({ type: "SET_PALETTE_DATA", data: newPalData });
 	}
 
-	static setPipelineFlowPalette(paletteData) {
-		store.dispatch({ type: "SET_PALETTE_DATA", data: paletteData });
+	setPipelineFlowPalette(paletteData) {
+		this.store.dispatch({ type: "SET_PALETTE_DATA", data: paletteData });
 	}
 
-	static getPaletteData() {
-		return store.getState().palette;
+	getPaletteData() {
+		return this.store.getState().palette;
 	}
 
-	static addNodeTypeToPalette(nodeTypeObj, category, categoryLabel) {
+	addNodeTypeToPalette(nodeTypeObj, category, categoryLabel) {
 		const nodeTypePaletteData = {
 			"nodeType": nodeTypeObj,
 			"category": category,
@@ -620,13 +626,13 @@ export default class ObjectModel {
 			nodeTypePaletteData.categoryLabel = categoryLabel;
 		}
 
-		store.dispatch({ type: "ADD_NODE_TYPE_TO_PALETTE", data: nodeTypePaletteData });
+		this.store.dispatch({ type: "ADD_NODE_TYPE_TO_PALETTE", data: nodeTypePaletteData });
 	}
 
-	static getPaletteNode(nodeOpIdRef) {
+	getPaletteNode(nodeOpIdRef) {
 		let outNodeType = null;
-		if (!_.isEmpty(ObjectModel.getPaletteData())) {
-			ObjectModel.getPaletteData().categories.forEach((category) => {
+		if (!_.isEmpty(this.getPaletteData())) {
+			this.getPaletteData().categories.forEach((category) => {
 				category.nodetypes.forEach((nodeType) => {
 					if (nodeType.operator_id_ref === nodeOpIdRef) {
 						outNodeType = nodeType;
@@ -637,9 +643,9 @@ export default class ObjectModel {
 		return outNodeType;
 	}
 
-	static getCategoryForNode(nodeOpIdRef) {
+	getCategoryForNode(nodeOpIdRef) {
 		let result = null;
-		ObjectModel.getPaletteData().categories.forEach((category) => {
+		this.getPaletteData().categories.forEach((category) => {
 			category.nodetypes.forEach((nodeType) => {
 				if (nodeType.operator_id_ref === nodeOpIdRef) {
 					result = category;
@@ -651,40 +657,52 @@ export default class ObjectModel {
 
 	// Canvas methods
 
-	static clearPipelineFlow() {
+	clearPipelineFlow() {
 		this.clearSelection();
-		store.dispatch({ type: "CLEAR_PIPELINE_FLOW" });
+		this.store.dispatch({ type: "CLEAR_PIPELINE_FLOW" });
 	}
 
 	// Deprectaed TODO - Remove this method when WML Canvas supports pipeline Flow
 	// TODO - Remember to also remove declaration of ObjectModel.oldCanvas from above
-	static setCanvas(canvas) {
-		oldCanvas = canvas; // TODO - Remember to remvove the declaration of this global when WML Canvas UI supports pipleine flow.
-		store.dispatch({ type: "SET_PIPELINE_FLOW", data: getInitialPipelineFlow(canvas.id, canvas.diagram.id), layoutinfo: store.getState().layoutinfo });
+	setCanvas(canvas) {
+		this.oldCanvas = canvas; // TODO - Remember to remvove the declaration of this global when WML Canvas UI supports pipleine flow.
+		this.store.dispatch({
+			type: "SET_PIPELINE_FLOW",
+			data: getInitialPipelineFlow(canvas.id, canvas.diagram.id),
+			layoutinfo: this.store.getState().layoutinfo,
+			currentPipelineFlow: this.store.getState().pipelineflow });
 		var canvasInfo = SVGCanvasInHandler.convertCanvasToCanvasInfo(canvas);
 		this.setCanvasInfo(canvasInfo);
 	}
 
 	// Deprectaed TODO - Remove this method when WML Canvas supports pipeline Flow
-	static getCanvas() {
-		if (oldCanvas) {
-			return SVGCanvasOutHandler.getCanvasBasedOnCanvas(oldCanvas, store.getState().canvasinfo);
+	getCanvas() {
+		if (this.oldCanvas) {
+			return SVGCanvasOutHandler.getCanvasBasedOnCanvas(this.oldCanvas, this.store.getState().canvasinfo);
 		}
 		return {};
 	}
 
-	static setPipelineFlow(newPipelineFlow) {
+	setPipelineFlow(newPipelineFlow) {
 		// TODO - Remove this if clause when we remove x-* test files.
 		if (newPipelineFlow.objectData) { // Old canvas docs will have an 'objectData' field
 			this.setCanvas(newPipelineFlow);
 			return;
 		}
 
-		store.dispatch({ type: "SET_PIPELINE_FLOW", data: newPipelineFlow, layoutinfo: store.getState().layoutinfo });
+		this.store.dispatch({
+			type: "SET_PIPELINE_FLOW",
+			data: newPipelineFlow,
+			layoutinfo: this.store.getState().layoutinfo,
+			currentPipelineFlow: this.store.getState().pipelineflow });
 	}
 
-	static setEmptyPipelineFlow() {
-		store.dispatch({ type: "SET_PIPELINE_FLOW", data: getInitialPipelineFlow("empty-pipeline-flow", "empty-pipeline"), layoutinfo: store.getState().layoutinfo });
+	setEmptyPipelineFlow() {
+		this.store.dispatch({
+			type: "SET_PIPELINE_FLOW",
+			data: getInitialPipelineFlow("empty-pipeline-flow", "empty-pipeline"),
+			layoutinfo: this.store.getState().layoutinfo,
+			currentPipelineFlow: this.store.getState().pipelineflow });
 	}
 
 	// Returns a pipeline flow based on the initial pipeline flow we were given
@@ -692,13 +710,13 @@ export default class ObjectModel {
 	// redux code because that would result is continuous update of the pipelineflow
 	// as the consuming app makes getPipelineFlow() calls which are difficult to
 	// handle when teting.
-	static getPipelineFlow() {
-		return this.syncPipelineFlow(store.getState().pipelineflow, store.getState().canvasinfo);
+	getPipelineFlow() {
+		return this.syncPipelineFlow(this.store.getState().pipelineflow, this.store.getState().canvasinfo);
 	}
 
 	// Returns a pipeline flow based on the initial pipeline flow we were given
 	// with the changes to canvasinfo made by the user.
-	static syncPipelineFlow(pipelineFlow, canvasInfo) {
+	syncPipelineFlow(pipelineFlow, canvasInfo) {
 		var pipeline = getMainPipeline(pipelineFlow);
 		var newPipeline = SVGPipelineOutHandler.modifyPipelineWithCanvasInfo(pipeline, canvasInfo);
 
@@ -715,15 +733,15 @@ export default class ObjectModel {
 		return null;
 	}
 
-	static getCanvasInfo() {
-		return store.getState().canvasinfo;
+	getCanvasInfo() {
+		return this.store.getState().canvasinfo;
 	}
 
-	static setCanvasInfo(canvasInfo) {
-		store.dispatch({ type: "SET_CANVAS_INFO", data: canvasInfo, layoutinfo: this.getLayout() });
+	setCanvasInfo(canvasInfo) {
+		this.store.dispatch({ type: "SET_CANVAS_INFO", data: canvasInfo, layoutinfo: this.getLayout() });
 	}
 
-	static isCanvasEmpty() {
+	isCanvasEmpty() {
 		if ((this.getNodes() && this.getNodes().length > 0) ||
 				(this.getComments() && this.getComments().length > 0)) {
 			return false;
@@ -731,12 +749,12 @@ export default class ObjectModel {
 		return true;
 	}
 
-	static fixedAutoLayout(fixedLayoutDirection) {
+	fixedAutoLayout(fixedLayoutDirection) {
 		this.autoLayout(fixedLayoutDirection);
-		ObjectModel.fixedLayout = fixedLayoutDirection;
+		this.fixedLayout = fixedLayoutDirection;
 	}
 
-	static autoLayout(layoutDirection) {
+	autoLayout(layoutDirection) {
 		var canvasData = this.getCanvasInfo();
 		var lookup = {};
 		if (layoutDirection === VERTICAL) {
@@ -752,7 +770,7 @@ export default class ObjectModel {
 		this.setCanvasInfo(newCanvasData);
 	}
 
-	static dagreAutolayout(direction, canvasData) {
+	dagreAutolayout(direction, canvasData) {
 		var nodeLinks = canvasData.links.filter((link) => {
 			return link.type === "nodeLink" || link.type === "associationLink";
 		});
@@ -778,10 +796,10 @@ export default class ObjectModel {
 
 		var maxNodeSizes = this.getMaximumNodeSizes();
 
-		const initialMarginX = store.getState().layoutinfo.autoLayoutInitialMarginX;
-		const initialMarginY = store.getState().layoutinfo.autoLayoutInitialMarginY;
-		const verticalSpacing = store.getState().layoutinfo.autoLayoutVerticalSpacing;
-		const horizontalSpacing = store.getState().layoutinfo.autoLayoutHorizontalSpacing;
+		const initialMarginX = this.store.getState().layoutinfo.autoLayoutInitialMarginX;
+		const initialMarginY = this.store.getState().layoutinfo.autoLayoutInitialMarginY;
+		const verticalSpacing = this.store.getState().layoutinfo.autoLayoutVerticalSpacing;
+		const horizontalSpacing = this.store.getState().layoutinfo.autoLayoutHorizontalSpacing;
 
 		var g = dagre.graphlib.json.read(inputGraph);
 		g.graph().marginx = initialMarginX;
@@ -804,13 +822,13 @@ export default class ObjectModel {
 		return lookup;
 	}
 
-	static getMaximumNodeSizes() {
-		var maxWidth = store.getState().layoutinfo.defaultNodeWidth;
-		var maxHeight = store.getState().layoutinfo.defaultNodeHeight;
+	getMaximumNodeSizes() {
+		var maxWidth = this.store.getState().layoutinfo.defaultNodeWidth;
+		var maxHeight = this.store.getState().layoutinfo.defaultNodeHeight;
 
-		if (store.getState().canvasinfo &&
-				store.getState().canvasinfo.nodes) {
-			store.getState().canvasinfo.nodes.forEach((node) => {
+		if (this.store.getState().canvasinfo &&
+				this.store.getState().canvasinfo.nodes) {
+			this.store.getState().canvasinfo.nodes.forEach((node) => {
 				maxWidth = Math.max(maxWidth, node.width);
 				maxHeight = Math.max(maxHeight, node.height);
 			});
@@ -821,40 +839,40 @@ export default class ObjectModel {
 
 	// Node AND comment methods
 
-	static moveObjects(data) {
-		if (ObjectModel.fixedLayout === NONE) {
-			store.dispatch({ type: "MOVE_OBJECTS", data: data });
+	moveObjects(data) {
+		if (this.fixedLayout === NONE) {
+			this.store.dispatch({ type: "MOVE_OBJECTS", data: data });
 		}
 	}
 
-	static deleteObjects(source) {
+	deleteObjects(source) {
 		source.selectedObjectIds.forEach((selId) => {
 			this.deleteObject(selId);
 		});
 	}
 
-	static deleteObject(id) {
-		store.dispatch({ type: "DELETE_OBJECT", data: id });
-		if (ObjectModel.fixedLayout !== NONE) {
-			this.autoLayout(ObjectModel.fixedLayout);
+	deleteObject(id) {
+		this.store.dispatch({ type: "DELETE_OBJECT", data: id });
+		if (this.fixedLayout !== NONE) {
+			this.autoLayout(this.fixedLayout);
 		}
 	}
 
-	static disconnectNodes(source) {
+	disconnectNodes(source) {
 		// We only disconnect links to data nodes (not links to comments).
 		const selectedNodeIds = this.filterDataNodes(source.selectedObjectIds);
 
 		const newSource = Object.assign({}, source, { selectedNodeIds: selectedNodeIds });
-		store.dispatch({ type: "DISCONNECT_NODES", data: newSource });
-		if (ObjectModel.fixedLayout !== NONE) {
-			this.autoLayout(ObjectModel.fixedLayout);
+		this.store.dispatch({ type: "DISCONNECT_NODES", data: newSource });
+		if (this.fixedLayout !== NONE) {
+			this.autoLayout(this.fixedLayout);
 		}
 	}
 
 	// Node methods
 
-	static createNode(data) {
-		const nodeType = ObjectModel.getPaletteNode(data.operator_id_ref);
+	createNode(data) {
+		const nodeType = this.getPaletteNode(data.operator_id_ref);
 		let node = {};
 		if (nodeType !== null) {
 			node.id = getUUID();
@@ -867,20 +885,21 @@ export default class ObjectModel {
 			node.output_ports = nodeType.output_ports || [];
 			node.x_pos = data.offsetX;
 			node.y_pos = data.offsetY;
+
+			// Add node height and width and, if appropriate, inputPortsHeight
+			// and outputPortsHeight
+			node = setNodeDimensions(node, this.store.getState().layoutinfo);
 		}
 
-		// Add node height and width and, if appropriate, inputPortsHeight
-		// and outputPortsHeight
-		node = setNodeDimensions(node, store.getState().layoutinfo);
 		return node;
 	}
 
-	static cloneNode(inNode) {
+	cloneNode(inNode) {
 		let node = Object.assign({}, inNode, { id: getUUID() });
 
 		// Add node height and width and, if appropriate, inputPortsHeight
 		// and outputPortsHeight
-		node = setNodeDimensions(node, store.getState().layoutinfo);
+		node = setNodeDimensions(node, this.store.getState().layoutinfo);
 		return node;
 	}
 
@@ -889,7 +908,7 @@ export default class ObjectModel {
 	// 1. The selected node, if only *one* node is currently selected or
 	// 2. The most recently added node, provided it has one or more output ports or
 	// 3. The most-recent-but-one added node, provided it has one or more output ports
-	static getAutoSourceNode() {
+	getAutoSourceNode() {
 		var sourceNode = null;
 		var selectedNodes = this.getSelectedNodes();
 
@@ -912,13 +931,13 @@ export default class ObjectModel {
 		return sourceNode;
 	}
 
-	static getAutoPositionOfTarget(sourceNode) {
+	getAutoPositionOfTarget(sourceNode) {
 		var x = 0;
 		var y = 0;
 
-		const initialMarginX = store.getState().layoutinfo.autoLayoutInitialMarginX;
-		const initialMarginY = store.getState().layoutinfo.autoLayoutInitialMarginY;
-		const horizontalSpacing = store.getState().layoutinfo.autoLayoutHorizontalSpacing;
+		const initialMarginX = this.store.getState().layoutinfo.autoLayoutInitialMarginX;
+		const initialMarginY = this.store.getState().layoutinfo.autoLayoutInitialMarginY;
+		const horizontalSpacing = this.store.getState().layoutinfo.autoLayoutHorizontalSpacing;
 
 		if (sourceNode === null) {
 			x = initialMarginX;
@@ -930,15 +949,15 @@ export default class ObjectModel {
 		return { x: x, y: y };
 	}
 
-	static createNodeAtPosition(data, trgPosition) {
+	createNodeAtPosition(data, trgPosition) {
 		data.offsetX = trgPosition.x;
 		data.offsetY = trgPosition.y;
 		return this.createNode(data);
 	}
 
-	static addAutoNode(newNode, srcNode) {
-		const initialMarginX = store.getState().layoutinfo.autoLayoutInitialMarginX;
-		const verticalSpacing = store.getState().layoutinfo.autoLayoutVerticalSpacing;
+	addAutoNode(newNode, srcNode) {
+		const initialMarginX = this.store.getState().layoutinfo.autoLayoutInitialMarginX;
+		const verticalSpacing = this.store.getState().layoutinfo.autoLayoutVerticalSpacing;
 
 		if ((this.getNodes()).length > 0) {
 			var newSourceNode = this.isIntialBindingNode(newNode);
@@ -958,31 +977,30 @@ export default class ObjectModel {
 		}
 
 		if (srcNode === null) {
-			store.dispatch({ type: "ADD_NODE", data: { newNode: newNode } });
+			this.addNode(newNode);
 
 		} else if ((newNode.input_ports).length === 1 && (srcNode.output_ports).length === 1) {
 			var cardinalityExceeded = this.isCardinalityExceeded(srcNode.output_ports[0].id, newNode.input_ports[0].id, srcNode, newNode);
 
 			if (cardinalityExceeded) {
-				store.dispatch({ type: "ADD_NODE", data: { newNode: newNode } });
+				this.addNode(newNode);
 			} else {	// Node Link is created in this case only
-				store.dispatch({ type: "ADD_AUTO_NODE", data: { newNode: newNode, srcNode: srcNode, linkId: getUUID() } });
+				this.addAutoNodeSrcNodeAndLink(newNode, srcNode);
 			}
 
 		} else {
-			store.dispatch({ type: "ADD_NODE", data: { newNode: newNode } });
+			this.addNode(newNode);
 		}
-
 	}
 
-	static isIntialBindingNode(node) {
+	isIntialBindingNode(node) {
 		if ((node.input_ports).length === 0) {
 			return true;
 		}
 		return false;
 	}
 
-	static isNodeOverlappingOthers(node) {
+	isNodeOverlappingOthers(node) {
 
 		var index = this.getNodes().findIndex((arrayNode) => {
 			return this.isSourceOverlappingTarget(arrayNode, node);
@@ -998,7 +1016,7 @@ export default class ObjectModel {
 	// Returns a position for a new comment added by clicking the 'add comment'
 	// button on the toolbar. It searches for a position that is not already
 	// occupied by an existing comment.
-	static getNewCommentPosition() {
+	getNewCommentPosition() {
 		var pos = { x_pos: 50, y_pos: 50 };
 
 		while (this.exactlyOverlaps(null, [pos])) {
@@ -1013,7 +1031,7 @@ export default class ObjectModel {
 	// overlap any of the existing nodes and comments. This is used by the
 	// paste-from-clipboard code to detect if nodes and comments being pasted
 	// overlap existing nodes and comments.
-	static exactlyOverlaps(nodeDefs, commentDefs) {
+	exactlyOverlaps(nodeDefs, commentDefs) {
 		var overlaps = false;
 
 		if (nodeDefs && nodeDefs.length > 0) {
@@ -1038,7 +1056,7 @@ export default class ObjectModel {
 
 	// Return true if the new node definition passed in exactly overlaps any
 	// of the existing nodes.
-	static exactlyOverlapsNodes(nodeDef) {
+	exactlyOverlapsNodes(nodeDef) {
 		var overlap = false;
 		this.getNodes().forEach((canvasNode) => {
 			if (canvasNode.x_pos === nodeDef.x_pos &&
@@ -1051,7 +1069,7 @@ export default class ObjectModel {
 
 	// Return true if the new comment definition passed in exactly overlaps any
 	// of the existing comments.
-	static exactlyOverlapsComments(comment) {
+	exactlyOverlapsComments(comment) {
 		var overlap = false;
 		this.getComments().forEach((canvasComment) => {
 			if (canvasComment.x_pos === comment.x_pos &&
@@ -1064,7 +1082,7 @@ export default class ObjectModel {
 
 	// Returns true if the node ID passed in exists in the array of nodes
 	// passed in.
-	static isNodeIdInNodes(nodeId, inNodes) {
+	isNodeIdInNodes(nodeId, inNodes) {
 		if (inNodes) {
 			return inNodes.findIndex((node) => {
 				return node.id === nodeId;
@@ -1073,33 +1091,37 @@ export default class ObjectModel {
 		return false;
 	}
 
-	static addNode(newNode) {
-		store.dispatch({ type: "ADD_NODE", data: { newNode: newNode } });
+	addNode(newNode) {
+		this.store.dispatch({ type: "ADD_NODE", data: { newNode: newNode } });
 
-		if (ObjectModel.fixedLayout !== NONE) {
-			this.autoLayout(ObjectModel.fixedLayout);
+		if (this.fixedLayout !== NONE) {
+			this.autoLayout(this.fixedLayout);
 		}
 	}
 
-	static deleteNode(id) {
+	addAutoNodeSrcNodeAndLink(node, srcNode) {
+		this.store.dispatch({ type: "ADD_AUTO_NODE", data: { newNode: node, srcNode: srcNode, linkId: getUUID() } });
+	}
+
+	deleteNode(id) {
 		this.deleteObject(id);
 	}
 
-	static getNodes() {
+	getNodes() {
 		return this.getCanvasInfo().nodes;
 	}
 
-	static getNodeParameters(nodeId) {
+	getNodeParameters(nodeId) {
 		var node = this.getNode(nodeId);
 		return (node ? node.parameters : null);
 	}
 
-	static getNodeMessages(nodeId) {
+	getNodeMessages(nodeId) {
 		var node = this.getNode(nodeId);
 		return (node ? node.messages : null);
 	}
 
-	static getNodeMessage(nodeId, controlName) {
+	getNodeMessage(nodeId, controlName) {
 		var messages = this.getNodeMessages(nodeId);
 		if (messages) {
 			for (const message of messages) {
@@ -1111,7 +1133,7 @@ export default class ObjectModel {
 		return null;
 	}
 
-	static hasErrorMessage(nodeId) {
+	hasErrorMessage(nodeId) {
 		const messages = this.getNodeMessages(nodeId);
 		if (messages) {
 			return (typeof messages.find((msg) => {
@@ -1121,7 +1143,7 @@ export default class ObjectModel {
 		return false;
 	}
 
-	static hasWarningMessage(nodeId) {
+	hasWarningMessage(nodeId) {
 		const messages = this.getNodeMessages(nodeId);
 		if (messages) {
 			return (typeof messages.find((msg) => {
@@ -1131,29 +1153,29 @@ export default class ObjectModel {
 		return false;
 	}
 
-	static setNodeMessage(nodeId, message) {
-		store.dispatch({ type: "SET_NODE_MESSAGE", data: { nodeId: nodeId, message: message } });
+	setNodeMessage(nodeId, message) {
+		this.store.dispatch({ type: "SET_NODE_MESSAGE", data: { nodeId: nodeId, message: message } });
 	}
 
-	static setNodeMessages(nodeId, messages) {
-		store.dispatch({ type: "SET_NODE_MESSAGES", data: { nodeId: nodeId, messages: messages } });
+	setNodeMessages(nodeId, messages) {
+		this.store.dispatch({ type: "SET_NODE_MESSAGES", data: { nodeId: nodeId, messages: messages } });
 	}
 
-	static setNodeParameters(nodeId, parameters) {
-		store.dispatch({ type: "SET_NODE_PARAMETERS", data: { nodeId: nodeId, parameters: parameters } });
+	setNodeParameters(nodeId, parameters) {
+		this.store.dispatch({ type: "SET_NODE_PARAMETERS", data: { nodeId: nodeId, parameters: parameters } });
 	}
 
-	static addCustomAttrToNodes(objIds, attrName) {
-		store.dispatch({ type: "ADD_NODE_ATTR", data: { objIds: objIds, attrName: attrName } });
+	addCustomAttrToNodes(objIds, attrName, attrValue) {
+		this.store.dispatch({ type: "ADD_NODE_ATTR", data: { objIds: objIds, attrName: attrName, attrValue: attrValue } });
 	}
 
-	static removeCustomAttrFromNodes(objIds, attrName) {
-		store.dispatch({ type: "REMOVE_NODE_ATTR", data: { objIds: objIds, attrName: attrName } });
+	removeCustomAttrFromNodes(objIds, attrName, attrValue) {
+		this.store.dispatch({ type: "REMOVE_NODE_ATTR", data: { objIds: objIds, attrName: attrName } });
 	}
 
 	// Comment methods
 
-	static createComment(source) {
+	createComment(source) {
 		const info = {
 			id: getUUID(),
 			class_name: "d3-comment-rect",
@@ -1174,65 +1196,65 @@ export default class ObjectModel {
 		return info;
 	}
 
-	static cloneComment(inComment) {
+	cloneComment(inComment) {
 		return Object.assign({}, inComment, { id: getUUID() });
 	}
 
-	static addComment(info) {
+	addComment(info) {
 		if (typeof info.selectedObjectIds === "undefined") {
 			info.selectedObjectIds = [];
 		}
-		store.dispatch({ type: "ADD_COMMENT", data: info });
-		if (ObjectModel.fixedLayout !== NONE) {
-			this.autoLayout(ObjectModel.fixedLayout);
+		this.store.dispatch({ type: "ADD_COMMENT", data: info });
+		if (this.fixedLayout !== NONE) {
+			this.autoLayout(this.fixedLayout);
 		}
 	}
 
-	static deleteComment(id) {
+	deleteComment(id) {
 		this.deleteObject(id);
 	}
 
-	static getComments() {
+	getComments() {
 		return this.getCanvasInfo().comments;
 	}
 
-	static editComment(data) {
-		store.dispatch({ type: "EDIT_COMMENT", data: data });
+	editComment(data) {
+		this.store.dispatch({ type: "EDIT_COMMENT", data: data });
 	}
 
 	// use updateComment when you have the comment structure from the state object.
 	// this method will format the input to be compatable with editComment interface.
-	static updateComment(data) {
+	updateComment(data) {
 		data.editType = "editComment";
 		data.nodes = [data.id];
 		data.offsetX = data.x_pos;
 		data.offsetY = data.y_pos;
 		data.label = data.content;
-		store.dispatch({ type: "EDIT_COMMENT", data: data });
+		this.store.dispatch({ type: "EDIT_COMMENT", data: data });
 	}
 
-	static addCustomAttrToComments(objIds, attrName) {
-		store.dispatch({ type: "ADD_COMMENT_ATTR", data: { objIds: objIds, attrName: attrName } });
+	addCustomAttrToComments(objIds, attrName, attrValue) {
+		this.store.dispatch({ type: "ADD_COMMENT_ATTR", data: { objIds: objIds, attrName: attrName, attrValue: attrValue } });
 	}
 
-	static removeCustomAttrFromComments(objIds, attrName) {
-		store.dispatch({ type: "REMOVE_COMMENT_ATTR", data: { objIds: objIds, attrName: attrName } });
+	removeCustomAttrFromComments(objIds, attrName) {
+		this.store.dispatch({ type: "REMOVE_COMMENT_ATTR", data: { objIds: objIds, attrName: attrName } });
 	}
 
 	// Link methods
 
-	static deleteLink(source) {
-		store.dispatch({ type: "DELETE_LINK", data: source });
-		if (ObjectModel.fixedLayout !== NONE) {
-			this.autoLayout(ObjectModel.fixedLayout);
+	deleteLink(source) {
+		this.store.dispatch({ type: "DELETE_LINK", data: source });
+		if (this.fixedLayout !== NONE) {
+			this.autoLayout(this.fixedLayout);
 		}
 	}
 
-	static createNodeLinks(data) {
+	createNodeLinks(data) {
 		const linkNodeList = [];
 		data.nodes.forEach((srcInfo) => {
 			data.targetNodes.forEach((trgInfo) => {
-				if (ObjectModel.isConnectionAllowed(srcInfo, trgInfo)) {
+				if (this.isConnectionAllowed(srcInfo, trgInfo)) {
 					const info = {};
 					info.id = getUUID();
 					info.type = "nodeLink";
@@ -1248,7 +1270,7 @@ export default class ObjectModel {
 		return linkNodeList;
 	}
 
-	static cloneNodeLink(link, srcNodeId, trgNodeId) {
+	cloneNodeLink(link, srcNodeId, trgNodeId) {
 		return {
 			id: getUUID(),
 			type: link.type,
@@ -1260,21 +1282,21 @@ export default class ObjectModel {
 		};
 	}
 
-	static addLinks(linkList) {
+	addLinks(linkList) {
 		linkList.forEach((link) => {
-			store.dispatch({ type: "ADD_LINK", data: link });
+			this.store.dispatch({ type: "ADD_LINK", data: link });
 		});
 
-		if (ObjectModel.fixedLayout !== NONE) {
-			this.autoLayout(ObjectModel.fixedLayout);
+		if (this.fixedLayout !== NONE) {
+			this.autoLayout(this.fixedLayout);
 		}
 	}
 
-	static createCommentLinks(data) {
+	createCommentLinks(data) {
 		const linkCommentList = [];
 		data.nodes.forEach((srcNodeId) => {
 			data.targetNodes.forEach((trgNodeId) => {
-				if (!ObjectModel.commentLinkAlreadyExists(srcNodeId, trgNodeId)) {
+				if (!this.commentLinkAlreadyExists(srcNodeId, trgNodeId)) {
 					const info = {};
 					info.id = getUUID();
 					info.type = "commentLink";
@@ -1288,7 +1310,7 @@ export default class ObjectModel {
 		return linkCommentList;
 	}
 
-	static cloneCommentLink(link, srcNodeId, trgNodeId) {
+	cloneCommentLink(link, srcNodeId, trgNodeId) {
 		return {
 			id: getUUID(),
 			type: link.type,
@@ -1300,7 +1322,7 @@ export default class ObjectModel {
 
 	// Returns an array of links from canvas info links which link
 	// any of the nodes or comments passed in.
-	static getLinksBetween(inNodes, inComments) {
+	getLinksBetween(inNodes, inComments) {
 		const linksList = this.getCanvasInfo().links;
 		const filteredLinks = linksList.filter((link) => {
 			// All links must point to a node so look for target node first
@@ -1316,7 +1338,7 @@ export default class ObjectModel {
 		return filteredLinks;
 	}
 
-	static getLinksContainingId(id) {
+	getLinksContainingId(id) {
 		const linksList = this.getCanvasInfo().links;
 		const linksContaining = linksList.filter((link) => {
 			return (link.srcNodeId === id || link.trgNodeId === id);
@@ -1339,7 +1361,7 @@ export default class ObjectModel {
 
 	// Returns true if the comment ID passed in exists in the array of comments
 	// passed in.
-	static isCommentIdInComments(commentId, inComments) {
+	isCommentIdInComments(commentId, inComments) {
 		if (inComments) {
 			return inComments.findIndex((comment) => {
 				return comment.id === commentId;
@@ -1350,41 +1372,41 @@ export default class ObjectModel {
 
 	// Utility functions
 
-	static getNode(nodeId) {
-		const diagramNodes = ObjectModel.getCanvasInfo().nodes;
+	getNode(nodeId) {
+		const diagramNodes = this.getCanvasInfo().nodes;
 		return diagramNodes.find((node) => {
 			return (node.id === nodeId);
 		});
 	}
 
-	static getComment(commentId) {
-		const diagramComments = ObjectModel.getCanvasInfo().comments;
+	getComment(commentId) {
+		const diagramComments = this.getCanvasInfo().comments;
 		return diagramComments.find((comment) => {
 			return (comment.id === commentId);
 		});
 	}
 
-	static getLink(linkId) {
+	getLink(linkId) {
 		const diagramLinks = this.getCanvasInfo().links;
 		return diagramLinks.find((link) => {
 			return (link.id === linkId);
 		});
 	}
 
-	static isDataNode(objId) {
-		const node = ObjectModel.getNode(objId);
+	isDataNode(objId) {
+		const node = this.getNode(objId);
 		return (typeof node !== "undefined"); // node will be undefined if objId references a comment
 	}
 
 	// Filters data node IDs from the list of IDs passed in and returns them
 	// in a new array. That is, the result array doesn't contain any comment IDs.
-	static filterDataNodes(objectIds) {
+	filterDataNodes(objectIds) {
 		return objectIds.filter((objId) => {
 			return this.isDataNode(objId);
 		});
 	}
 
-	static isConnectionAllowed(srcNodeInfo, trgNodeInfo) {
+	isConnectionAllowed(srcNodeInfo, trgNodeInfo) {
 		const srcNode = this.getNode(srcNodeInfo.id);
 		const trgNode = this.getNode(trgNodeInfo.id);
 
@@ -1412,14 +1434,14 @@ export default class ObjectModel {
 		return true;
 	}
 
-	static doesNodeHavePorts(node) {
+	doesNodeHavePorts(node) {
 		return node.input_ports && node.input_ports.length > 0;
 	}
 
-	static linkAlreadyExists(srcNodeInfo, trgNodeInfo) {
+	linkAlreadyExists(srcNodeInfo, trgNodeInfo) {
 		let exists = false;
 
-		const diagramLinks = ObjectModel.getCanvasInfo().links;
+		const diagramLinks = this.getCanvasInfo().links;
 
 		diagramLinks.forEach((link) => {
 			if (link.srcNodeId === srcNodeInfo.id &&
@@ -1432,10 +1454,10 @@ export default class ObjectModel {
 		return exists;
 	}
 
-	static commentLinkAlreadyExists(srcNodeId, trgNodeId) {
+	commentLinkAlreadyExists(srcNodeId, trgNodeId) {
 		let exists = false;
 
-		const diagramLinks = ObjectModel.getCanvasInfo().links;
+		const diagramLinks = this.getCanvasInfo().links;
 
 		diagramLinks.forEach((link) => {
 			if (link.srcNodeId === srcNodeId &&
@@ -1446,8 +1468,8 @@ export default class ObjectModel {
 		return exists;
 	}
 
-	static isCardinalityExceeded(srcPortId, trgPortId, srcNode, trgNode) {
-		const diagramLinks = ObjectModel.getCanvasInfo().links;
+	isCardinalityExceeded(srcPortId, trgPortId, srcNode, trgNode) {
+		const diagramLinks = this.getCanvasInfo().links;
 
 		var srcCount = 0;
 		var trgCount = 0;
@@ -1493,7 +1515,7 @@ export default class ObjectModel {
 		return false;
 	}
 
-	static isFirstPort(ports, portId) {
+	isFirstPort(ports, portId) {
 		const index = ports.findIndex((port) => {
 			return port.id === portId;
 		});
@@ -1504,7 +1526,7 @@ export default class ObjectModel {
 		return false;
 	}
 
-	static getPort(ports, portId) {
+	getPort(ports, portId) {
 		const index = ports.findIndex((port) => {
 			return port.id === portId;
 		});
@@ -1517,23 +1539,23 @@ export default class ObjectModel {
 
 	// Methods to handle selections
 
-	static clearSelection() {
-		store.dispatch({ type: "CLEAR_SELECTIONS" });
+	clearSelection() {
+		this.store.dispatch({ type: "CLEAR_SELECTIONS" });
 	}
 
-	static getSelectedObjectIds() {
-		return store.getState().selections;
+	getSelectedObjectIds() {
+		return this.store.getState().selections;
 	}
 
-	static setSelections(newSelections) {
-		store.dispatch({ type: "SET_SELECTIONS", data: newSelections });
+	setSelections(newSelections) {
+		this.store.dispatch({ type: "SET_SELECTIONS", data: newSelections });
 	}
 
-	static deleteSelectedObjects() {
+	deleteSelectedObjects() {
 		this.deleteObjects({ "selectedObjectIds": this.getSelectedObjectIds() });
 	}
 
-	static getAllObjectIds() {
+	getAllObjectIds() {
 		var objIds = [];
 		this.getCanvasInfo().nodes.forEach((node) => {
 			objIds.push(node.id);
@@ -1546,7 +1568,7 @@ export default class ObjectModel {
 		return objIds;
 	}
 
-	static selectAll() {
+	selectAll() {
 		const selected = [];
 		for (const node of this.getNodes()) {
 			selected.push(node.id);
@@ -1557,13 +1579,13 @@ export default class ObjectModel {
 		this.setSelections(selected);
 	}
 
-	static isSelected(objectId) {
+	isSelected(objectId) {
 		return this.getSelectedObjectIds().indexOf(objectId) >= 0;
 	}
 
 	// Either sets the target object as selected and removes any other
 	// selections or leaves as selected if this object is already selected.
-	static ensureSelected(objectId) {
+	ensureSelected(objectId) {
 		let alreadySelected = this.getSelectedObjectIds();
 
 		// If the operation is about to be done to a non-selected object,
@@ -1576,7 +1598,7 @@ export default class ObjectModel {
 		return this.getSelectedObjectIds();
 	}
 
-	static toggleSelection(objectId, toggleSelection) {
+	toggleSelection(objectId, toggleSelection) {
 		let toggleSelections = [objectId];
 
 		if (toggleSelection) {
@@ -1594,7 +1616,7 @@ export default class ObjectModel {
 		return this.getSelectedObjectIds();
 	}
 
-	static selectInRegion(minX, minY, maxX, maxY) {
+	selectInRegion(minX, minY, maxX, maxY) {
 		var regionSelections = [];
 		for (const node of this.getNodes()) {
 			if (minX < node.x_pos + node.width &&
@@ -1615,14 +1637,14 @@ export default class ObjectModel {
 		this.setSelections(regionSelections);
 	}
 
-	static findNodesInSubGraph(startNodeId, endNodeId, selection) {
+	findNodesInSubGraph(startNodeId, endNodeId, selection) {
 		let retval = false;
 
 		selection.push(startNodeId);
 		if (startNodeId === endNodeId) {
 			retval = true;
 		} else {
-			const diagramLinks = ObjectModel.getCanvasInfo().links;
+			const diagramLinks = this.getCanvasInfo().links;
 			for (const link of diagramLinks) {
 				if (link.srcNodeId === startNodeId) {
 					const newRetval = this.findNodesInSubGraph(link.trgNodeId, endNodeId, selection);
@@ -1641,7 +1663,7 @@ export default class ObjectModel {
 		return retval;
 	}
 
-	static selectSubGraph(endNodeId) {
+	selectSubGraph(endNodeId) {
 		var selection = [endNodeId];
 		const currentSelectedObjects = this.getSelectedObjectIds();
 
@@ -1668,9 +1690,9 @@ export default class ObjectModel {
 	// 'moveObjects' action this is the distance the selected objects would encroach
 	// into negative space. For other actions is is simply the offset amounts
 	// passed in, provided either one is negative.
-	static getOffsetIntoNegativeSpace(action, offsetX, offsetY) {
+	getOffsetIntoNegativeSpace(action, offsetX, offsetY) {
 		var selObjs = this.getSelectedNodesAndComments();
-		var highlightGap = store.getState().layoutinfo.highlightGap;
+		var highlightGap = this.store.getState().layoutinfo.highlightGap;
 
 		var offset = { "x": 0, "y": 0 };
 
@@ -1698,12 +1720,12 @@ export default class ObjectModel {
 		return offset;
 	}
 
-	static getSelectedNodesAndComments() {
+	getSelectedNodesAndComments() {
 		var objs = this.getSelectedNodes();
 		return objs.concat(this.getSelectedComments());
 	}
 
-	static getSelectedNodes() {
+	getSelectedNodes() {
 		var objs = [];
 		this.getCanvasInfo().nodes.forEach((node) => {
 			if (this.getSelectedObjectIds().includes(node.id)) {
@@ -1714,7 +1736,7 @@ export default class ObjectModel {
 		return objs;
 	}
 
-	static getSelectedComments() {
+	getSelectedComments() {
 		var objs = [];
 		this.getCanvasInfo().comments.forEach((comment) => {
 			if (this.getSelectedObjectIds().includes(comment.id)) {
@@ -1725,7 +1747,7 @@ export default class ObjectModel {
 		return objs;
 	}
 
-	static getNoneSelectedNodesAndComments() {
+	getNoneSelectedNodesAndComments() {
 		var objs = [];
 		this.getCanvasInfo().nodes.forEach((node) => {
 			if (!this.getSelectedObjectIds().includes(node.id)) {
@@ -1741,7 +1763,7 @@ export default class ObjectModel {
 		return objs;
 	}
 
-	static getNodesAndComments() {
+	getNodesAndComments() {
 		var objs = [];
 		this.getCanvasInfo().nodes.forEach((node) => {
 			objs.push(node);
@@ -1753,8 +1775,8 @@ export default class ObjectModel {
 		return objs;
 	}
 
-	static isSourceOverlappingTarget(srcNode, trgNode) {
-		var highlightGap = store.getState().layoutinfo.highlightGap;
+	isSourceOverlappingTarget(srcNode, trgNode) {
+		var highlightGap = this.store.getState().layoutinfo.highlightGap;
 		if (((srcNode.x_pos + srcNode.width + highlightGap >= trgNode.x_pos - highlightGap &&
 					trgNode.x_pos + trgNode.width + highlightGap >= srcNode.x_pos - highlightGap) &&
 					(srcNode.y_pos + srcNode.height + highlightGap >= trgNode.y_pos - highlightGap &&
@@ -1767,14 +1789,12 @@ export default class ObjectModel {
 
 	// Methods to handle Layout info.
 
-	static setLayoutType(type) {
-		store.dispatch({ type: "SET_LAYOUT_INFO", layoutinfo: LayoutDimensions.getLayout(type) });
+	setLayoutType(type) {
+		this.store.dispatch({ type: "SET_LAYOUT_INFO", layoutinfo: LayoutDimensions.getLayout(type) });
 	}
 
-	static getLayout() {
-		return store.getState().layoutinfo;
+	getLayout() {
+		return this.store.getState().layoutinfo;
 	}
 
 }
-
-ObjectModel.fixedLayout = NONE;

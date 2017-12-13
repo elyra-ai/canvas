@@ -61,7 +61,7 @@ module.exports = function() {
 				specificComment.setValue("", comment);
 			}
 
-			browser.leftClick("#common-canvas", 400, 400);
+			browser.leftClick("#common-canvas-items-container-0", 400, 400);
 
 			// Start Validation
 			browser.pause(500);
@@ -72,10 +72,10 @@ module.exports = function() {
 				// when pushing comments to be underneath nodes and links. Therefore we look for the
 				// text of the comment being deleted.
 				var comIndex = getCommentIndexFromCanvasUsingText(comment);
-				commentValue = browser.$("#common-canvas").$$(".comment-group")[comIndex].getAttribute("textContent");
+				commentValue = browser.$("#common-canvas-items-container-0").$$(".comment-group")[comIndex].getAttribute("textContent");
 			} else {
 				const index = Number(commentIndex) - 1;
-				commentValue = browser.$("#common-canvas").$$("textarea")[index].getValue();
+				commentValue = browser.$("#common-canvas-items-container-0").$$("textarea")[index].getValue();
 			}
 			console.log("Commentvalue " + commentValue);
 			expect(commentValue).toEqual(comment);
@@ -106,9 +106,9 @@ module.exports = function() {
 				// when pushing comments to be underneath nodes and links. Therefore we look for the
 				// text of the comment being deleted.
 				var index = getCommentIndexFromCanvasUsingText(commentText);
-				browser.$("#common-canvas").$$(".comment-group")[index].rightClick();
+				browser.$("#common-canvas-items-container-0").$$(".comment-group")[index].rightClick();
 			} else {
-				browser.$("#common-canvas").$$(".comment-inner-box")[commentNumber].rightClick();
+				browser.$("#common-canvas-items-container-0").$$(".comment-inner-box")[commentNumber].rightClick();
 			}
 			browser.$(".context-menu-popover").$$(".react-contextmenu-item")[0].click();
 
@@ -119,14 +119,14 @@ module.exports = function() {
 			var commentElements;
 
 			if (D3RenderingEngine) {
-				commentElements = browser.$("#common-canvas").$$(".comment-group");
+				commentElements = browser.$("#common-canvas-items-container-0").$$(".comment-group");
 				for (let idx = 0; idx < commentElements.length; idx++) {
 					if (commentElements[idx].getAttribute("textContent") === commentText) {
 						count++;
 					}
 				}
 			} else {
-				commentElements = browser.$("#common-canvas").$$("textarea");
+				commentElements = browser.$("#common-canvas-items-container-0").$$("textarea");
 				for (let idx = 0; idx < commentElements.length; idx++) {
 					if (commentElements[idx] === commentText) {
 						count++;
@@ -163,9 +163,9 @@ module.exports = function() {
 				// when pushing comments to be underneath nodes and links. Therefore we look for the
 				// text of the comment being deleted.
 				var index = getCommentIndexFromCanvasUsingText(commentText);
-				browser.execute(simulateDragDrop, ".comment-group", index, "#canvas-div", 0, canvasX, canvasY);
+				browser.execute(simulateDragDrop, ".comment-group", index, "#canvas-div-0", 0, canvasX, canvasY);
 			} else {
-				browser.execute(simulateDragDrop, ".comment-inner-box", commentNumber, "#canvas-div", 0, canvasX, canvasY);
+				browser.execute(simulateDragDrop, ".comment-inner-box", commentNumber, "#canvas-div-0", 0, canvasX, canvasY);
 			}
 		});
 
@@ -194,7 +194,7 @@ module.exports = function() {
 				}
 
 				browser.pause(1500);
-				browser.leftClick("#common-canvas", 400, 400);
+				browser.leftClick("#common-canvas-items-container-0", 400, 400);
 
 				// verify the comment is in the internal object model
 				const testUrl = getURL();
@@ -245,7 +245,7 @@ module.exports = function() {
 
 	this.Then(/^I click the comment with text "([^"]*)" to select it$/, function(commentText) {
 		const comIndex = getCommentIndexFromCanvasUsingText(commentText);
-		const commentId = browser.$("#common-canvas").$$(".comment-group")[comIndex].getAttribute("id");
+		const commentId = browser.$("#common-canvas-items-container-0").$$(".comment-group")[comIndex].getAttribute("id");
 		var cmntSelector = "#" + commentId;
 		browser.$(cmntSelector).click();
 	});

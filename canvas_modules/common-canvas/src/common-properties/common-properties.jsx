@@ -14,7 +14,6 @@ import PropertiesEditing from "./properties-editing.jsx";
 import PropertiesButtons from "./properties-buttons.jsx";
 import EditorForm from "./editor-controls/editor-form.jsx";
 import Form from "./form/Form";
-import CommandStack from "../command-stack/command-stack.js";
 import CommonPropertiesAction from "../command-actions/commonPropertiesAction.js";
 import PropertiesController from "./properties-controller";
 import logger from "../../utils/logger";
@@ -163,7 +162,7 @@ export default class CommonProperties extends React.Component {
 		this.props.propertiesInfo.closePropertiesDialog();
 		const command = new CommonPropertiesAction(this.settings, this.initialCurrentProperties,
 			this.props.propertiesInfo.appData, this.props.propertiesInfo.applyPropertyChanges);
-		CommandStack.do(command);
+		this.propertiesController.getCommandStack().do(command);
 		this.initialCurrentProperties = "empty";
 	}
 

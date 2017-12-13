@@ -10,7 +10,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import CommonContextMenu from "./common-context-menu.jsx";
-import CanvasController from "./common-canvas-controller.js";
 
 // context-menu sizing
 const CONTEXT_MENU_WIDTH = 160; // see context-menu.css .react-context-menu margin
@@ -23,6 +22,9 @@ export default class ContextMenuWrapper extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {};
+
+		this.contextMenuClicked = this.contextMenuClicked.bind(this);
+		this.handleClickOutside = this.handleClickOutside.bind(this);
 	}
 
 	componentDidMount() {
@@ -39,7 +41,7 @@ export default class ContextMenuWrapper extends React.Component {
 	handleClickOutside(e) {
 		const domNode = document.getElementById("context-menu-popover");
 		if (domNode && !domNode.contains(e.target)) {
-			CanvasController.closeContextMenu();
+			this.props.canvasController.closeContextMenu();
 
 			// This stops the canvasClicked function from being fired which would
 			// clear any current selections. The event here is a real event not a
@@ -105,13 +107,13 @@ export default class ContextMenuWrapper extends React.Component {
 	}
 
 	contextMenuClicked(action) {
-		CanvasController.contextMenuActionHandler(action);
+		this.props.canvasController.contextMenuActionHandler(action);
 	}
 
 	render() {
 		// Reposition contextMenu so that it does not show off the screen
 		var menuSize = this.calculateContextMenuSize(this.props.contextMenuDef);
-		const pos = this.repositionContextMenu(CanvasController.getContextMenuPos(), menuSize);
+		const pos = this.repositionContextMenu(this.props.canvasController.getContextMenuPos(), menuSize);
 
 		const posStyle = {
 			left: pos.x + "px",
@@ -133,5 +135,6 @@ export default class ContextMenuWrapper extends React.Component {
 
 ContextMenuWrapper.propTypes = {
 	containingDivId: PropTypes.string.isRequired,
-	contextMenuDef: PropTypes.array.isRequired
+	contextMenuDef: PropTypes.array.isRequired,
+	canvasController: PropTypes.object.isRequired
 };

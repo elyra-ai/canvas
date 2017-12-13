@@ -33,6 +33,7 @@ import ObjectModel from "../src/object-model/object-model.js";
 import { NONE, VERTICAL, HORIZONTAL } from "../constants/common-constants.js";
 
 const logger = log4js.getLogger("object-model-test");
+const objectModel = new ObjectModel();
 
 describe("ObjectModel API handle model OK", () => {
 
@@ -43,14 +44,14 @@ describe("ObjectModel API handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.setCanvasInfo(startCanvas);
-		ObjectModel.fixedAutoLayout(HORIZONTAL);
-		ObjectModel.setPipelineFlowPalette(paletteJson);
-		const node = ObjectModel.createNode(filterNode);
-		ObjectModel.addNode(node);
+		objectModel.setCanvasInfo(startCanvas);
+		objectModel.fixedAutoLayout(HORIZONTAL);
+		objectModel.setPipelineFlowPalette(paletteJson);
+		const node = objectModel.createNode(filterNode);
+		objectModel.addNode(node);
 
 		const expectedCanvas = addNodeHorizontalLayoutCanvas;
-		const actualCanvas = ObjectModel.getCanvasInfo();
+		const actualCanvas = objectModel.getCanvasInfo();
 
 		// Delete ID because IDs are generated at runtime and therefore won't be
 		// the same between expected and actual.
@@ -69,14 +70,14 @@ describe("ObjectModel API handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.setCanvasInfo(startCanvas);
-		ObjectModel.fixedAutoLayout(VERTICAL);
-		ObjectModel.setPipelineFlowPalette(paletteJson);
-		const node = ObjectModel.createNode(filterNode);
-		ObjectModel.addNode(node);
+		objectModel.setCanvasInfo(startCanvas);
+		objectModel.fixedAutoLayout(VERTICAL);
+		objectModel.setPipelineFlowPalette(paletteJson);
+		const node = objectModel.createNode(filterNode);
+		objectModel.addNode(node);
 
 		const expectedCanvas = addNodeVerticalLayoutCanvas;
-		const actualCanvas = ObjectModel.getCanvasInfo();
+		const actualCanvas = objectModel.getCanvasInfo();
 
 		// Delete ID because IDs are generated at runtime and therefore won't be
 		// the same between expected and actual.
@@ -95,12 +96,12 @@ describe("ObjectModel API handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.setCanvasInfo(startCanvas);
-		ObjectModel.autoLayout(HORIZONTAL);
+		objectModel.setCanvasInfo(startCanvas);
+		objectModel.autoLayout(HORIZONTAL);
 
 		const expectedCanvas = horizontalLayoutCanvas;
 
-		const actualCanvas = ObjectModel.getCanvasInfo();
+		const actualCanvas = objectModel.getCanvasInfo();
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
@@ -116,12 +117,12 @@ describe("ObjectModel API handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.setCanvasInfo(startCanvas);
-		ObjectModel.autoLayout(VERTICAL);
+		objectModel.setCanvasInfo(startCanvas);
+		objectModel.autoLayout(VERTICAL);
 
 		const expectedCanvas = verticalLayoutCanvas;
 
-		const actualCanvas = ObjectModel.getCanvasInfo();
+		const actualCanvas = objectModel.getCanvasInfo();
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
@@ -136,14 +137,14 @@ describe("ObjectModel API handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.setCanvasInfo(startCanvas);
-		ObjectModel.fixedLayout = NONE;
-		ObjectModel.autoLayout(HORIZONTAL);
+		objectModel.setCanvasInfo(startCanvas);
+		objectModel.fixedLayout = NONE;
+		objectModel.autoLayout(HORIZONTAL);
 
-		ObjectModel.moveObjects(moveVarNode);
+		objectModel.moveObjects(moveVarNode);
 
 		const expectedCanvas = moveNodeHorizontalLayoutCanvas;
-		const actualCanvas = ObjectModel.getCanvasInfo();
+		const actualCanvas = objectModel.getCanvasInfo();
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
@@ -158,13 +159,13 @@ describe("ObjectModel API handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.setCanvasInfo(startCanvas);
-		ObjectModel.autoLayout(VERTICAL);
+		objectModel.setCanvasInfo(startCanvas);
+		objectModel.autoLayout(VERTICAL);
 
-		ObjectModel.moveObjects(moveVarNode);
+		objectModel.moveObjects(moveVarNode);
 
 		const expectedCanvas = moveNodeVerticalLayoutCanvas;
-		const actualCanvas = ObjectModel.getCanvasInfo();
+		const actualCanvas = objectModel.getCanvasInfo();
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
@@ -177,8 +178,8 @@ describe("ObjectModel API handle model OK", () => {
 
 		deepFreeze(startPipelineFlow);
 
-		ObjectModel.setPipelineFlow(startPipelineFlow);
-		var actualParameters = ObjectModel.getNodeParameters("idGWRVT47XDV");
+		objectModel.setPipelineFlow(startPipelineFlow);
+		var actualParameters = objectModel.getNodeParameters("idGWRVT47XDV");
 
 		const expectedParameters = nodeParameters;
 
@@ -195,11 +196,11 @@ describe("ObjectModel API handle model OK", () => {
 
 		deepFreeze(startPipelineFlow);
 
-		ObjectModel.setPipelineFlow(startPipelineFlow);
-		ObjectModel.setNodeParameters("id8I6RH2V91XW", { "paramA": "Value for Param A", "paramB": "Value for Param B" });
+		objectModel.setPipelineFlow(startPipelineFlow);
+		objectModel.setNodeParameters("id8I6RH2V91XW", { "paramA": "Value for Param A", "paramB": "Value for Param B" });
 
 		const expectedCanvas = nodeParameterAddedPipelineFlow;
-		const actualCanvas = ObjectModel.getPipelineFlow();
+		const actualCanvas = objectModel.getPipelineFlow();
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
@@ -212,10 +213,10 @@ describe("ObjectModel API handle model OK", () => {
 
 		deepFreeze(startPipelineFlow);
 		const expectedMessage = { "id_ref": "controlOne", "type": "warning", "text": "This is a test message" };
-		ObjectModel.setPipelineFlow(startPipelineFlow);
-		ObjectModel.setNodeMessage("id8I6RH2V91XW", expectedMessage);
+		objectModel.setPipelineFlow(startPipelineFlow);
+		objectModel.setNodeMessage("id8I6RH2V91XW", expectedMessage);
 
-		const actualMessage = ObjectModel.getNodeMessage("id8I6RH2V91XW", "controlOne");
+		const actualMessage = objectModel.getNodeMessage("id8I6RH2V91XW", "controlOne");
 
 		expect(_.isEqual(expectedMessage, actualMessage)).to.be.true;
 	});
@@ -232,12 +233,12 @@ describe("ObjectModel API handle model OK", () => {
 			message2,
 			message3
 		];
-		ObjectModel.setPipelineFlow(startPipelineFlow);
-		ObjectModel.setNodeMessage("id8I6RH2V91XW", message1);
-		ObjectModel.setNodeMessage("id8I6RH2V91XW", message2);
-		ObjectModel.setNodeMessage("id8I6RH2V91XW", message3);
+		objectModel.setPipelineFlow(startPipelineFlow);
+		objectModel.setNodeMessage("id8I6RH2V91XW", message1);
+		objectModel.setNodeMessage("id8I6RH2V91XW", message2);
+		objectModel.setNodeMessage("id8I6RH2V91XW", message3);
 
-		const actualMessages = ObjectModel.getNodeMessages("id8I6RH2V91XW");
+		const actualMessages = objectModel.getNodeMessages("id8I6RH2V91XW");
 
 
 		// logger.info("Expected Messages = " + JSON.stringify(expectedMessages, null, 4));
@@ -258,12 +259,12 @@ describe("ObjectModel API handle model OK", () => {
 			message2,
 			message3
 		];
-		ObjectModel.setPipelineFlow(startPipelineFlow);
-		ObjectModel.setNodeMessage("id8I6RH2V91XW", message1);
-		ObjectModel.setNodeMessage("id8I6RH2V91XW", message2);
-		ObjectModel.setNodeMessage("id8I6RH2V91XW", message3);
+		objectModel.setPipelineFlow(startPipelineFlow);
+		objectModel.setNodeMessage("id8I6RH2V91XW", message1);
+		objectModel.setNodeMessage("id8I6RH2V91XW", message2);
+		objectModel.setNodeMessage("id8I6RH2V91XW", message3);
 
-		const actualMessages = ObjectModel.getNodeMessages("id8I6RH2V91XW");
+		const actualMessages = objectModel.getNodeMessages("id8I6RH2V91XW");
 
 		// logger.info("Expected Messages = " + JSON.stringify(expectedMessages, null, 4));
 		// logger.info("Actual messages   = " + JSON.stringify(actualMessages, null, 4));
@@ -283,12 +284,12 @@ describe("ObjectModel API handle model OK", () => {
 			message2,
 			message3
 		];
-		ObjectModel.setPipelineFlow(startPipelineFlow);
-		ObjectModel.setNodeMessage("id8I6RH2V91XW", message1);
-		ObjectModel.setNodeMessage("id8I6RH2V91XW", message2);
-		ObjectModel.setNodeMessage("id8I6RH2V91XW", message3);
+		objectModel.setPipelineFlow(startPipelineFlow);
+		objectModel.setNodeMessage("id8I6RH2V91XW", message1);
+		objectModel.setNodeMessage("id8I6RH2V91XW", message2);
+		objectModel.setNodeMessage("id8I6RH2V91XW", message3);
 
-		const actualMessages = ObjectModel.getNodeMessages("id8I6RH2V91XW");
+		const actualMessages = objectModel.getNodeMessages("id8I6RH2V91XW");
 
 		// logger.info("Expected Messages = " + JSON.stringify(expectedMessages, null, 4));
 		// logger.info("Actual messages   = " + JSON.stringify(actualMessages, null, 4));
@@ -297,8 +298,8 @@ describe("ObjectModel API handle model OK", () => {
 
 		const expectedClearedMessages = [];
 
-		ObjectModel.setNodeMessages("id8I6RH2V91XW", expectedClearedMessages);
-		const actualClearedMessages = ObjectModel.getNodeMessages("id8I6RH2V91XW");
+		objectModel.setNodeMessages("id8I6RH2V91XW", expectedClearedMessages);
+		const actualClearedMessages = objectModel.getNodeMessages("id8I6RH2V91XW");
 
 		// logger.info("Expected Messages = " + JSON.stringify(expectedClearedMessages, null, 4));
 		// logger.info("Actual messages   = " + JSON.stringify(actualClearedMessages, null, 4));
@@ -309,7 +310,7 @@ describe("ObjectModel API handle model OK", () => {
 
 	it("should add palette item into existing test category", () => {
 		logger.info("should add palette item into existing test category");
-		ObjectModel.setPipelineFlowPalette(paletteJson);
+		objectModel.setPipelineFlowPalette(paletteJson);
 		const nodeTypeObj = {
 			"label": "MyNodeType",
 			"description": "My custom node type",
@@ -321,16 +322,16 @@ describe("ObjectModel API handle model OK", () => {
 		const expectedPaletteJSON = JSON.parse(JSON.stringify(paletteJson));
 		expectedPaletteJSON.categories[0].nodetypes.push(nodeTypeObj);
 
-		ObjectModel.addNodeTypeToPalette(nodeTypeObj, "test");
+		objectModel.addNodeTypeToPalette(nodeTypeObj, "test");
 
-		expect(_.isEqual(expectedPaletteJSON, ObjectModel.getPaletteData())).to.be.true;
+		expect(_.isEqual(expectedPaletteJSON, objectModel.getPaletteData())).to.be.true;
 	});
 
 	it("should add palette item into new category without label", () => {
 		logger.info("should add palette item into new category without label");
 
 		const newCategoryName = "newCategory";
-		ObjectModel.setPipelineFlowPalette(paletteJson);
+		objectModel.setPipelineFlowPalette(paletteJson);
 		const nodeTypeObj = {
 			"label": "MyNodeType",
 			"description": "My custom node type",
@@ -346,16 +347,16 @@ describe("ObjectModel API handle model OK", () => {
 		newCategory.nodetypes = [nodeTypeObj];
 		expectedPaletteJSON.categories.push(newCategory);
 
-		ObjectModel.addNodeTypeToPalette(nodeTypeObj, newCategoryName);
+		objectModel.addNodeTypeToPalette(nodeTypeObj, newCategoryName);
 
-		expect(_.isEqual(expectedPaletteJSON, ObjectModel.getPaletteData())).to.be.true;
+		expect(_.isEqual(expectedPaletteJSON, objectModel.getPaletteData())).to.be.true;
 	});
 
 	it("should add palette item into new category with label", () => {
 		logger.info("should add palette item into new category with label");
 		const newCategoryName = "newCategory";
 		const newCategoryLabel = "New Category";
-		ObjectModel.setPipelineFlowPalette(paletteJson);
+		objectModel.setPipelineFlowPalette(paletteJson);
 		const nodeTypeObj = {
 			"label": "MyNodeType",
 			"description": "My custom node type",
@@ -371,17 +372,17 @@ describe("ObjectModel API handle model OK", () => {
 		newCategory.nodetypes = [nodeTypeObj];
 		expectedPaletteJSON.categories.push(newCategory);
 
-		ObjectModel.addNodeTypeToPalette(nodeTypeObj, newCategoryName, newCategoryLabel);
+		objectModel.addNodeTypeToPalette(nodeTypeObj, newCategoryName, newCategoryLabel);
 
-		expect(_.isEqual(expectedPaletteJSON, ObjectModel.getPaletteData())).to.be.true;
+		expect(_.isEqual(expectedPaletteJSON, objectModel.getPaletteData())).to.be.true;
 	});
 
 	it("should handle pipeline flow with no app_data in links", () => {
 		logger.info("should handle pipeline flow with no app_data in links");
 
-		ObjectModel.setPipelineFlow(pipelineFlowTest1Start);
+		objectModel.setPipelineFlow(pipelineFlowTest1Start);
 
-		const actualPipelineFlow = ObjectModel.getPipelineFlow();
+		const actualPipelineFlow = objectModel.getPipelineFlow();
 		const expectedPipelineFlow = pipelineFlowTest1Expected;
 
 		// logger.info("Expected Messages = " + JSON.stringify(expectedPipelineFlow, null, 2));

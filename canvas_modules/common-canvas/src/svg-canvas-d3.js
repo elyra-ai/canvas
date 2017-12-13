@@ -13,8 +13,6 @@
 /* eslint no-console: "off" */
 
 const d3 = require("d3");
-import CanvasController from "./common-canvas-controller.js";
-import ObjectModel from "./object-model/object-model.js";
 import _ from "underscore";
 import nodeMenuStandardIcon from "../assets/images/canvas_node_icons/node-menu_standard.svg";
 import nodeMenuHoverIcon from "../assets/images/canvas_node_icons/node-menu_hover.svg";
@@ -35,11 +33,13 @@ const showTime = false;
 
 export default class CanvasD3Layout {
 
-	constructor(canvasJSON, canvasSelector, canvasWidth, canvasHeight, config) {
+	constructor(canvasJSON, canvasSelector, canvasWidth, canvasHeight, config, canvasController) {
 
 		this.canvasSelector = canvasSelector;
 		this.svg_canvas_width = canvasWidth;
 		this.svg_canvas_height = canvasHeight;
+		this.canvasController = canvasController;
+		this.objectModel = this.canvasController.getObjectModel();
 
 		// Customization options
 		this.connectionType = config.enableConnectionType;
@@ -47,7 +47,7 @@ export default class CanvasD3Layout {
 		this.linkType = config.enableLinkType;
 
 		// Our instance ID for adding to DOM element IDs
-		this.instanceId = CanvasController.getInstanceId();
+		this.instanceId = this.canvasController.getInstanceId();
 
 		// Initialize dimension and layout variables
 		this.initializeLayoutInfo();
@@ -122,17 +122,17 @@ export default class CanvasD3Layout {
 	// Initializes the dimensions for nodes, comments layout etc.
 	initializeLayoutInfo() {
 		if (this.connectionType === "Halo") {
-			ObjectModel.setLayoutType("halo");
+			this.objectModel.setLayoutType("halo");
 
 		} else { // Ports connection type
 			if (this.nodeFormatType === "Horizontal") {
-				ObjectModel.setLayoutType("ports-horizontal");
+				this.objectModel.setLayoutType("ports-horizontal");
 
 			} else { // Vertical
-				ObjectModel.setLayoutType("ports-vertical");
+				this.objectModel.setLayoutType("ports-vertical");
 			}
 		}
-		this.layout = ObjectModel.getLayout();
+		this.layout = this.objectModel.getLayout();
 	}
 
 	initializeZoomVariables() {
@@ -149,7 +149,7 @@ export default class CanvasD3Layout {
 	}
 
 	setCanvasInfo(canvasJSON, config) {
-		this.consoleLog("Set Canvas. Id = " + canvasJSON.id);
+		this.consoleLog("Set Canvas. Inst = " + this.instanceId + " Id = " + canvasJSON.id);
 
 		var startTime = Date.now();
 		if (canvasJSON.id !== this.canvasJSON.id ||
@@ -176,7 +176,7 @@ export default class CanvasD3Layout {
 			this.displayCanvas();
 		}
 
-		this.consoleLog("Set Canvas. Elapsed time = " + (Date.now() - startTime));
+		this.consoleLog("Set Canvas. Inst = " + this.instanceId + " Elapsed time = " + (Date.now() - startTime));
 	}
 
 	// Copies the canvas info because the canvas info is updated by the d3 code when
@@ -187,15 +187,15 @@ export default class CanvasD3Layout {
 	}
 
 	clearCanvas() {
-		this.consoleLog("Clearing Canvas. Id = " + this.canvasJSON.id);
-		ObjectModel.clearSelection();
+		this.consoleLog("Clearing Canvas. Inst = " + this.instanceId + "  Id = " + this.canvasJSON.id);
+		this.objectModel.clearSelection();
 		this.canvas.selectAll("g").remove();
 		this.initializeZoomVariables();
 		this.canvasSVG.call(this.zoom.transform, d3.zoomIdentity); // Reset the SVG zoom and scale
 	}
 
 	displayCanvas() {
-		// this.consoleLog("Displaying Canvas. Id = " + this.canvasJSON.id);
+		// this.consoleLog("Displaying Canvas. Inst = " + this.instanceId + "  Id = " + this.canvasJSON.id);
 		this.displayComments(); // Show comments first so they appear under nodes, if there is overlap.
 		this.displayNodes();
 		this.displayLinks();
@@ -323,7 +323,7 @@ export default class CanvasD3Layout {
 	}
 
 	createCanvas() {
-		// this.consoleLog("Create Canvas");
+		// this.consoleLog("Create Canvas. Inst = " + this.instanceId);
 
 		// Add a listener to canvas div to catch delete key presses. The containing
 		// canvas div must have tabindex set and the focus set on the div.
@@ -335,17 +335,17 @@ export default class CanvasD3Layout {
 					if (d3.event.keyCode === BACKSPACE_KEY ||
 							d3.event.keyCode === DELETE_KEY) {
 						this.stopPropagationAndPreventDefault(); // Some browsers interpret Delete as 'Back to previous page'. So prevent that.
-						CanvasController.editActionHandler({ editType: "deleteSelectedObjects", selectedObjectIds: ObjectModel.getSelectedObjectIds() });
+						this.canvasController.editActionHandler({ editType: "deleteSelectedObjects", selectedObjectIds: this.objectModel.getSelectedObjectIds() });
 					} else if (this.isCmndCtrlPressed() && !d3.event.shiftKey && d3.event.keyCode === Z_KEY) {
 						this.stopPropagationAndPreventDefault();
-						CanvasController.editActionHandler({ editType: "undo" });
+						this.canvasController.editActionHandler({ editType: "undo" });
 					} else if (this.isCmndCtrlPressed() &&
 							((d3.event.shiftKey && d3.event.keyCode === Z_KEY) || d3.event.keyCode === Y_KEY)) {
 						this.stopPropagationAndPreventDefault();
-						CanvasController.editActionHandler({ editType: "redo" });
+						this.canvasController.editActionHandler({ editType: "redo" });
 					} else if (this.isCmndCtrlPressed() && d3.event.keyCode === A_KEY) {
 						this.stopPropagationAndPreventDefault();
-						ObjectModel.selectAll();
+						this.objectModel.selectAll();
 					}
 				}
 			});
@@ -373,10 +373,10 @@ export default class CanvasD3Layout {
 			})
 			.on("dblclick.zoom", () => {
 				this.consoleLog("Zoom - double click");
-				CanvasController.clickActionHandler({
+				this.canvasController.clickActionHandler({
 					clickType: "DOUBLE_CLICK",
 					objectType: "canvas",
-					selectedObjectIds: ObjectModel.getSelectedObjectIds() });
+					selectedObjectIds: this.objectModel.getSelectedObjectIds() });
 			})
 			.on("contextmenu.zoom", (d) => {
 				this.consoleLog("Zoom - context menu");
@@ -556,8 +556,7 @@ export default class CanvasD3Layout {
 				height: 0
 			};
 		} else {
-			CanvasController.hideTip();
-
+			this.canvasController.hideTip();
 			this.zoomStartPoint = { x: d3.event.transform.x, y: d3.event.transform.y, k: d3.event.transform.k };
 		}
 	}
@@ -621,16 +620,16 @@ export default class CanvasD3Layout {
 			d3.event.transform.x = this.regionStartTransformX;
 			d3.event.transform.y = this.regionStartTransformY;
 
-			ObjectModel.clearSelection();
+			this.objectModel.clearSelection();
 
 			// Only select objects if region selector area dimensions are > 5.
 			if (Math.abs(this.region.width) > 5 &&
 					Math.abs(this.region.height) > 5) {
 				var { startX, startY, width, height } = this.getRegionDimensions();
-				ObjectModel.selectInRegion(startX, startY, startX + width, startY + height);
-				CanvasController.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "region", selectedObjectIds: ObjectModel.getSelectedObjectIds() });
+				this.objectModel.selectInRegion(startX, startY, startX + width, startY + height);
+				this.canvasController.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "region", selectedObjectIds: this.objectModel.getSelectedObjectIds() });
 			} else {
-				CanvasController.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "canvas", selectedObjectIds: ObjectModel.getSelectedObjectIds() });
+				this.canvasController.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "canvas", selectedObjectIds: this.objectModel.getSelectedObjectIds() });
 			}
 			this.regionSelect = false;
 		} else {
@@ -639,12 +638,12 @@ export default class CanvasD3Layout {
 			if (Math.abs(d3.event.transform.x - this.zoomStartPoint.x) < 2 &&
 					Math.abs(d3.event.transform.y - this.zoomStartPoint.y) < 2) {
 				this.selecting = true;
-				CanvasController.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "canvas", selectedObjectIds: ObjectModel.getSelectedObjectIds() });
+				this.canvasController.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "canvas", selectedObjectIds: this.objectModel.getSelectedObjectIds() });
 				// TODO - The decision to clear selection (commented out code below) is currently made by common-canvas
 				// This 'to do' is to move that decision from there to here. To do that we need to have a callback function
 				// to the ask the react code if a context menu is currently on display or not.
-				// if (ObjectModel.getSelectedObjectIds().length > 0) {
-				// 	ObjectModel.clearSelection();
+				// if (this.objectModel.getSelectedObjectIds().length > 0) {
+				// 	this.objectModel.clearSelection();
 				// }
 				this.selecting = false;
 			} else {
@@ -653,7 +652,7 @@ export default class CanvasD3Layout {
 				// from the objectmodel's canvasJSON which would remove any pending changes.
 				this.savePendingCommentChanges();
 				this.consoleLog("editActionHandler - zoomCanvas");
-				CanvasController.editActionHandler({ editType: "zoomCanvas", value: d3.event.transform.k });
+				this.canvasController.editActionHandler({ editType: "zoomCanvas", value: d3.event.transform.k });
 			}
 		}
 	}
@@ -785,7 +784,11 @@ export default class CanvasD3Layout {
 			if (this.dragOffsetX !== 0 ||
 					this.dragOffsetY !== 0) {
 				// this.consoleLog("editActionHandler - moveObjects");
-				CanvasController.editActionHandler({ editType: "moveObjects", nodes: ObjectModel.getSelectedObjectIds(), offsetX: this.dragOffsetX, offsetY: this.dragOffsetY });
+				this.canvasController.editActionHandler({
+					editType: "moveObjects",
+					nodes: this.objectModel.getSelectedObjectIds(),
+					offsetX: this.dragOffsetX,
+					offsetY: this.dragOffsetY });
 			}
 			this.dragging = false;
 		}
@@ -808,7 +811,7 @@ export default class CanvasD3Layout {
 		} else if (this.selecting || this.regionSelect || this.commentSizing) {
 			nodeGroupSel.each(function(d) {
 				that.canvas.select(that.getId("#node_outline", d.id))
-					.attr("data-selected", ObjectModel.isSelected(d.id) ? "yes" : "no")
+					.attr("data-selected", that.objectModel.isSelected(d.id) ? "yes" : "no")
 					.attr("class", that.layout.cssSelectionHighlight)
 					.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
 
@@ -843,7 +846,7 @@ export default class CanvasD3Layout {
 					.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
 
 				that.canvas.select(that.getId("#node_outline", d.id))
-					.attr("data-selected", ObjectModel.isSelected(d.id) ? "yes" : "no")
+					.attr("data-selected", that.objectModel.isSelected(d.id) ? "yes" : "no")
 					.attr("class", that.layout.cssSelectionHighlight)
 					.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
 
@@ -906,25 +909,29 @@ export default class CanvasD3Layout {
 						that.canvas.selectAll(that.getId("#node_ellipsis")).remove();
 					}
 
-					CanvasController.hideTip();
+					that.canvasController.hideTip();
 				})
 				// Use mouse down instead of click because it gets called before drag start.
 				.on("mousedown", (d) => {
 					this.consoleLog("Node Group - mouse down");
 					this.selecting = true;
 					d3.event.stopPropagation(); // Prevent mousedown event going through to canvas
-					if (!ObjectModel.isSelected(d.id)) {
+					if (!this.objectModel.isSelected(d.id)) {
 						if (d3.event.shiftKey) {
-							ObjectModel.selectSubGraph(d.id);
+							this.objectModel.selectSubGraph(d.id);
 						} else {
-							ObjectModel.toggleSelection(d.id, this.isCmndCtrlPressed());
+							this.objectModel.toggleSelection(d.id, this.isCmndCtrlPressed());
 						}
 					} else {
-						if (that.isCmndCtrlPressed()) {
-							ObjectModel.toggleSelection(d.id, this.isCmndCtrlPressed());
+						if (this.isCmndCtrlPressed()) {
+							this.objectModel.toggleSelection(d.id, this.isCmndCtrlPressed());
 						}
 					}
-					CanvasController.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "node", id: d.id, selectedObjectIds: ObjectModel.getSelectedObjectIds() });
+					this.canvasController.clickActionHandler({
+						clickType: "SINGLE_CLICK",
+						objectType: "node",
+						id: d.id,
+						selectedObjectIds: this.objectModel.getSelectedObjectIds() });
 					this.selecting = false;
 					this.consoleLog("Node Group - finished mouse down");
 				})
@@ -942,8 +949,8 @@ export default class CanvasD3Layout {
 				})
 				.on("mouseover", function(d) {
 					if (that.canShowTip(TIP_TYPE_NODE)) {
-						CanvasController.showTip({
-							id: that.getId("nodeTip", d.id),
+						that.canvasController.showTip({
+							id: that.getId("node_tip", d.id),
 							type: TIP_TYPE_NODE,
 							targetObj: this,
 							pipelineId: that.canvasJSON.sub_id,
@@ -954,8 +961,8 @@ export default class CanvasD3Layout {
 				.on("dblclick", (d) => {
 					this.consoleLog("Node Group - double click");
 					d3.event.stopPropagation();
-					var selObjIds = ObjectModel.getSelectedObjectIds();
-					CanvasController.clickActionHandler({ clickType: "DOUBLE_CLICK", objectType: "node", id: d.id, selectedObjectIds: selObjIds });
+					var selObjIds = this.objectModel.getSelectedObjectIds();
+					this.canvasController.clickActionHandler({ clickType: "DOUBLE_CLICK", objectType: "node", id: d.id, selectedObjectIds: selObjIds });
 				})
 				.on("contextmenu", (d) => {
 					this.consoleLog("Node Group - context menu");
@@ -992,7 +999,7 @@ export default class CanvasD3Layout {
 						that.canvas.select(that.getId("#node_grp", d.id)).select(that.getId("#node_outline", d.id))
 							.attr("d", (cd) => this.getNodeShapePath(cd))
 							.attr("transform", (cd) => this.getNodeHighlightOutlineTranslate(cd)) // Scale and move the shape up and to the left to account for the padding
-							.attr("data-selected", function(cd) { return ObjectModel.isSelected(cd.id) ? "yes" : "no"; })
+							.attr("data-selected", function(cd) { return that.objectModel.isSelected(cd.id) ? "yes" : "no"; })
 							.attr("class", this.layout.cssSelectionHighlight);
 					} else { // simple rectangle
 						that.canvas.select(that.getId("#node_grp", d.id)).select(that.getId("#node_outline", d.id))
@@ -1001,7 +1008,7 @@ export default class CanvasD3Layout {
 								(cd) => cd.height + (2 * this.layout.highlightGap))
 							.attr("x", -this.layout.highlightGap)
 							.attr("y", -this.layout.highlightGap)
-							.attr("data-selected", function(cd) { return ObjectModel.isSelected(cd.id) ? "yes" : "no"; })
+							.attr("data-selected", function(cd) { return that.objectModel.isSelected(cd.id) ? "yes" : "no"; })
 							.attr("class", this.layout.cssSelectionHighlight);
 					}
 
@@ -1039,9 +1046,9 @@ export default class CanvasD3Layout {
 								.on("mouseover", function(port) {
 									that.stopPropagationAndPreventDefault(); // stop event propagation, otherwise node tip is shown
 									if (that.canShowTip(TIP_TYPE_PORT)) {
-										CanvasController.hideTip();
-										CanvasController.showTip({
-											id: that.getId("portTip", port.id),
+										that.canvasController.hideTip();
+										that.canvasController.showTip({
+											id: that.getId("node_port_tip", port.id),
 											type: TIP_TYPE_PORT,
 											targetObj: this,
 											pipelineId: that.canvasJSON.sub_id,
@@ -1051,7 +1058,7 @@ export default class CanvasD3Layout {
 									}
 								})
 								.on("mouseout", (port) => {
-									CanvasController.hideTip();
+									this.canvasController.hideTip();
 								})
 								.merge(inputPortSelection)	// for new and existing port circles, update cy, datum and class
 								.attr("cy", (port) => inputPortPositions[port.id])
@@ -1068,8 +1075,8 @@ export default class CanvasD3Layout {
 								.on("mouseover", function(port) {
 									that.stopPropagationAndPreventDefault(); // stop event propagation, otherwise node tip is shown
 									if (that.canShowTip(TIP_TYPE_PORT)) {
-										CanvasController.showTip({
-											id: that.getId("portTip", port.id),
+										that.canvasController.showTip({
+											id: that.getId("node_port_tip", port.id),
 											type: TIP_TYPE_PORT,
 											targetObj: this,
 											pipelineId: that.canvasJSON.sub_id,
@@ -1079,7 +1086,7 @@ export default class CanvasD3Layout {
 									}
 								})
 								.on("mouseout", (port) => {
-									CanvasController.hideTip();
+									this.canvasController.hideTip();
 								});
 
 							// update arrow in circle for new and existing ports
@@ -1119,9 +1126,9 @@ export default class CanvasD3Layout {
 								.on("mouseover", function(port) {
 									that.stopPropagationAndPreventDefault(); // stop event propagation, otherwise node tip is shown
 									if (that.canShowTip(TIP_TYPE_PORT)) {
-										CanvasController.hideTip();
-										CanvasController.showTip({
-											id: that.getId("portTip", port.id),
+										that.canvasController.hideTip();
+										that.canvasController.showTip({
+											id: that.getId("node_port_tip", port.id),
 											type: TIP_TYPE_PORT,
 											targetObj: this,
 											pipelineId: that.canvasJSON.sub_id,
@@ -1131,7 +1138,7 @@ export default class CanvasD3Layout {
 									}
 								})
 								.on("mouseout", (port) => {
-									CanvasController.hideTip();
+									this.canvasController.hideTip();
 								})
 								.merge(outputPortSelection)	// update cx, class and cy for existing output ports
 								.attr("cx", (port) => d.width)
@@ -1309,13 +1316,13 @@ export default class CanvasD3Layout {
 
 	openContextMenu(type, d) {
 		this.stopPropagationAndPreventDefault(); // Stop the browser context menu appearing
-		CanvasController.contextMenuHandler({
+		this.canvasController.contextMenuHandler({
 			type: type,
 			targetObject: type === "canvas" ? null : d,
 			id: type === "canvas" ? null : d.id, // For historical puposes, we pass d.id as well as d as targetObject.
 			cmPos: this.getMousePos(),
 			mousePos: this.getTransformedMousePos(),
-			selectedObjectIds: ObjectModel.getSelectedObjectIds(),
+			selectedObjectIds: this.objectModel.getSelectedObjectIds(),
 			zoom: this.zoomTransform.k });
 	}
 
@@ -1397,9 +1404,9 @@ export default class CanvasD3Layout {
 
 	getDecoratorCallback(d, type) {
 		d3.event.stopPropagation();
-		if (CanvasController.decorationActionHandler) {
+		if (this.canvasController.decorationActionHandler) {
 			var id = this.getDecoratorId(d, type);
-			CanvasController.decorationActionHandler(d, id);
+			this.canvasController.decorationActionHandler(d, id);
 		}
 	}
 
@@ -1570,14 +1577,14 @@ export default class CanvasD3Layout {
 				var trgPortId = this.getNodeInputPortAtMousePos();
 				trgPortId = trgPortId || (trgNode.input_ports && trgNode.input_ports.length > 0 ? trgNode.input_ports[0].id : null);
 				this.consoleLog("editActionHandler - linkNodes");
-				CanvasController.editActionHandler({
+				this.canvasController.editActionHandler({
 					editType: "linkNodes",
 					nodes: [{ "id": this.drawingNewLinkSrcId, "portId": this.drawingNewLinkSrcPortId }],
 					targetNodes: [{ "id": trgNode.id, "portId": trgPortId }],
 					linkType: "data" });
 			} else {
 				this.consoleLog("editActionHandler - linkComment");
-				CanvasController.editActionHandler({
+				this.canvasController.editActionHandler({
 					editType: "linkComment",
 					nodes: [this.drawingNewLinkSrcId],
 					targetNodes: [trgNode.id],
@@ -1871,7 +1878,7 @@ export default class CanvasD3Layout {
 				that.canvas.select(that.getId("#comment_outline", d.id))
 					.attr("height", d.height + (2 * that.layout.highlightGap))
 					.attr("width", d.width + (2 * that.layout.highlightGap))
-					.attr("data-selected", ObjectModel.isSelected(d.id) ? "yes" : "no")
+					.attr("data-selected", that.objectModel.isSelected(d.id) ? "yes" : "no")
 					.attr("class", that.layout.cssSelectionHighlight)
 					.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
 
@@ -1909,7 +1916,7 @@ export default class CanvasD3Layout {
 				that.canvas.select(that.getId("#comment_outline", d.id))
 					.attr("height", d.height + (2 * that.layout.highlightGap))
 					.attr("width", d.width + (2 * that.layout.highlightGap))
-					.attr("data-selected", ObjectModel.isSelected(d.id) ? "yes" : "no")
+					.attr("data-selected", that.objectModel.isSelected(d.id) ? "yes" : "no")
 					.attr("class", that.layout.cssSelectionHighlight)
 					.datum((cd) => that.getComment(cd.id)); // Set the __data__ to the updated data
 
@@ -1967,15 +1974,15 @@ export default class CanvasD3Layout {
 					this.consoleLog("Comment Group - mouse down");
 					this.selecting = true;
 					d3.event.stopPropagation(); // Prevent mousedown event going through to canvas
-					if (!ObjectModel.isSelected(d.id)) {
+					if (!this.objectModel.isSelected(d.id)) {
 						if (d3.event.shiftKey) {
-							ObjectModel.selectSubGraph(d.id);
+							this.objectModel.selectSubGraph(d.id);
 						} else {
-							ObjectModel.toggleSelection(d.id, this.isCmndCtrlPressed());
+							this.objectModel.toggleSelection(d.id, this.isCmndCtrlPressed());
 						}
 					} else {
 						if (this.isCmndCtrlPressed()) {
-							ObjectModel.toggleSelection(d.id, this.isCmndCtrlPressed());
+							this.objectModel.toggleSelection(d.id, this.isCmndCtrlPressed());
 						}
 					}
 					// Even though the single click message below should be emitted
@@ -1983,7 +1990,11 @@ export default class CanvasD3Layout {
 					// double click event going to the comment group object. This seems
 					// to be a timing issue since the same problem is not evident with the
 					// similar code for the Node group object.
-					// CanvasController.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "comment", id: d.id, selectedObjectIds: ObjectModel.getSelectedObjectIds() });
+					// this.canvasController.clickActionHandler({
+					//		clickType: "SINGLE_CLICK",
+					//		objectType: "comment",
+					//		id: d.id,
+					//		selectedObjectIds: this.objectModel.getSelectedObjectIds() });
 					this.selecting = false;
 					this.consoleLog("Comment Group - finished mouse down");
 				})
@@ -2070,7 +2081,12 @@ export default class CanvasD3Layout {
 
 					// Note: Couldn't get focus to work through d3, so used dom instead.
 					document.getElementById(that.getId("comment_text_area", id)).focus();
-					CanvasController.clickActionHandler({ clickType: "DOUBLE_CLICK", objectType: "comment", id: d.id, selectedObjectIds: ObjectModel.getSelectedObjectIds() });
+
+					that.canvasController.clickActionHandler({
+						clickType: "DOUBLE_CLICK",
+						objectType: "comment",
+						id: d.id,
+						selectedObjectIds: that.objectModel.getSelectedObjectIds() });
 				})
 				.on("contextmenu", (d) => {
 					this.consoleLog("Comment Group - context menu");
@@ -2085,7 +2101,7 @@ export default class CanvasD3Layout {
 				.attr("height", (d) => d.height + (2 * this.layout.highlightGap))
 				.attr("x", -this.layout.highlightGap)
 				.attr("y", -this.layout.highlightGap)
-				.attr("data-selected", function(d) { return ObjectModel.isSelected(d.id) ? "yes" : "no"; })
+				.attr("data-selected", function(d) { return that.objectModel.isSelected(d.id) ? "yes" : "no"; })
 				.attr("class", this.layout.cssSelectionHighlight)
 				.on("mousedown", (d) => {
 					this.commentSizing = true;
@@ -2205,7 +2221,7 @@ export default class CanvasD3Layout {
 				offsetY: this.removePx(textArea.style.top)
 			};
 			this.consoleLog("editActionHandler - editComment");
-			CanvasController.editActionHandler(data);
+			this.canvasController.editActionHandler(data);
 		}
 	}
 
@@ -2342,7 +2358,7 @@ export default class CanvasD3Layout {
 			offsetY: commentObj.y_pos
 		};
 		this.consoleLog("editActionHandler - editComment");
-		CanvasController.editActionHandler(data);
+		this.canvasController.editActionHandler(data);
 		this.commentSizing = false;
 	}
 
@@ -2609,8 +2625,8 @@ export default class CanvasD3Layout {
 			})
 			.on("mouseover", function(link) {
 				if (that.canShowTip(TIP_TYPE_LINK)) {
-					CanvasController.showTip({
-						id: that.getId("linkTip", link.id),
+					that.canvasController.showTip({
+						id: that.getId("link_tip", link.id),
 						type: TIP_TYPE_LINK,
 						targetObj: this,
 						mousePos: { x: d3.event.x, y: d3.event.y },
@@ -2620,7 +2636,7 @@ export default class CanvasD3Layout {
 				}
 			})
 			.on("mouseout", (d) => {
-				CanvasController.hideTip();
+				this.canvasController.hideTip();
 			});
 
 		// Link selection area
@@ -2747,7 +2763,7 @@ export default class CanvasD3Layout {
 		// We push comments to the back in the reverse order they were added to the
 		// comments array. This is to ensure that pasted comments get displayed on
 		// top of previously existing comments.
-		const comments = ObjectModel.getComments();
+		const comments = this.objectModel.getComments();
 
 		for (var idx = comments.length - 1; idx > -1; idx--) {
 			this.canvas.select(this.getId("#comment_grp", comments[idx].id)).lower();
@@ -3217,13 +3233,13 @@ export default class CanvasD3Layout {
 	getSelectedNodesAndComments() {
 		var objs = [];
 		this.canvasJSON.nodes.forEach((node) => {
-			if (ObjectModel.getSelectedObjectIds().includes(node.id)) {
+			if (this.objectModel.getSelectedObjectIds().includes(node.id)) {
 				objs.push(node);
 			}
 		});
 
 		this.canvasJSON.comments.forEach((comment) => {
-			if (ObjectModel.getSelectedObjectIds().includes(comment.id)) {
+			if (this.objectModel.getSelectedObjectIds().includes(comment.id)) {
 				objs.push(comment);
 			}
 		});
@@ -3236,7 +3252,7 @@ export default class CanvasD3Layout {
 	}
 
 	canShowTip(tipType) {
-		return CanvasController.isTipEnabled(tipType) &&
+		return this.canvasController.isTipEnabled(tipType) &&
 			!this.selecting && !this.regionSelect && !this.dragging &&
 			!this.commentSizing && !this.drawingNewLink;
 	}

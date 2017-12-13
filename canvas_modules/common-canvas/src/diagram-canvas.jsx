@@ -22,9 +22,7 @@ import {
 	DRAG_SELECT_REGION
 } from "../constants/common-constants.js";
 import CanvasUtils from "../utils/canvas-utils.js";
-import ObjectModel from "./object-model/object-model.js";
 import logger from "../utils/logger";
-import CanvasController from "./common-canvas-controller.js";
 
 const NODE_BORDER_SIZE = 2; // see common-canvas.css, .canvas-node
 // const CELL_SIZE = 48;
@@ -77,6 +75,8 @@ export default class DiagramCanvas extends React.Component {
 		this.zoomOut = this.zoomOut.bind(this);
 
 		this.canvasContextMenu = this.canvasContextMenu.bind(this);
+
+		this.canvasDivId = "canvas-div-" + this.props.canvasController.getInstanceId();
 	}
 
 	// ----------------------------------
@@ -260,7 +260,7 @@ export default class DiagramCanvas extends React.Component {
 			zoom = ZOOM_MAX_VALUE;
 		}
 
-		CanvasController.editActionHandler({ editType: "zoomCanvas", value: zoom });
+		this.props.canvasController.editActionHandler({ editType: "zoomCanvas", value: zoom });
 		this.setState({ zoom: zoom });
 	}
 
@@ -272,7 +272,7 @@ export default class DiagramCanvas extends React.Component {
 			zoom = ZOOM_MIN_VALUE;
 		}
 
-		CanvasController.editActionHandler({ editType: "zoomCanvas", value: zoom });
+		this.props.canvasController.editActionHandler({ editType: "zoomCanvas", value: zoom });
 		this.setState({ zoom: zoom });
 	}
 
@@ -281,7 +281,7 @@ export default class DiagramCanvas extends React.Component {
 	}
 
 	focusOnCanvas() {
-		document.getElementById("canvas-div").focus(); // Set focus on div so keybord events go there.
+		document.getElementById(this.canvasDivId).focus(); // Set focus on div so keybord events go there.
 	}
 
 	// minInitialLine is the size of the vertical line protruding from the source
@@ -322,14 +322,14 @@ export default class DiagramCanvas extends React.Component {
 				var mousePos2 = this.mouseCoords(event);
 				// logger.info(targetPos);
 				// logger.info(mousePos);
-				CanvasController.createNodeAt(jsVal.operator_id_ref, jsVal.label, jsVal.sourceId, jsVal.sourceObjectTypeId,
+				this.props.canvasController.createNodeAt(jsVal.operator_id_ref, jsVal.label, jsVal.sourceId, jsVal.sourceObjectTypeId,
 					Math.round((mousePos2.x - (NODE_WIDTH / 2)) / zoom),
 					Math.round((mousePos2.y - (NODE_HEIGHT / 2)) / zoom));
 			} else if ((jsVal.operation === "addToCanvas") || (jsVal.operation === "addTableFromConnection")) {
 				var mousePos = this.mouseCoords(event);
 				// logger.info(targetPos);
 				// logger.info("addToCanvas :"+JSON.stringify(mousePos));
-				CanvasController.createNodeFromDataAt(Math.round((mousePos.x - (NODE_WIDTH / 2)) / zoom),
+				this.props.canvasController.createNodeFromDataAt(Math.round((mousePos.x - (NODE_WIDTH / 2)) / zoom),
 					Math.round((mousePos.y - (NODE_HEIGHT / 2)) / zoom), jsVal.data);
 			}
 		}
@@ -347,7 +347,7 @@ export default class DiagramCanvas extends React.Component {
 	}
 
 	dragStart(event) {
-		CanvasController.closeContextMenu();
+		this.props.canvasController.closeContextMenu();
 
 		const selectRegion = (event.dataTransfer.getData(DND_DATA_TEXT) === "");
 
@@ -391,23 +391,23 @@ export default class DiagramCanvas extends React.Component {
 	}
 
 	canvasClicked(event) {
-		CanvasController.clickActionHandler({
+		this.props.canvasController.clickActionHandler({
 			clickType: "SINGLE_CLICK",
 			objectType: "canvas",
-			selectedObjectIds: ObjectModel.getSelectedObjectIds()
+			selectedObjectIds: this.props.canvasController.getObjectModel().getSelectedObjectIds()
 		});
 	}
 
 	canvasDblClick(event) {
-		CanvasController.clickActionHandler({
+		this.props.canvasController.clickActionHandler({
 			clickType: "DOUBLE_CLICK",
 			objectType: "canvas",
-			selectedObjectIds: ObjectModel.getSelectedObjectIds()
+			selectedObjectIds: this.props.canvasController.getObjectModel().getSelectedObjectIds()
 		});
 	}
 
 	objectContextMenu(objectType, object, event) {
-		const canvasDiv = document.getElementById("canvas-div");
+		const canvasDiv = document.getElementById(this.canvasDivId);
 		const rect = canvasDiv.getBoundingClientRect();
 
 		const cmPos = {
@@ -422,12 +422,12 @@ export default class DiagramCanvas extends React.Component {
 		const contextMenuSource = {
 			type: objectType,
 			targetObject: object,
-			selectedObjectIds: ObjectModel.ensureSelected(object.id),
+			selectedObjectIds: this.props.canvasController.getObjectModel().ensureSelected(object.id),
 			cmPos: cmPos,
 			mousePos: mousePos
 		};
 
-		CanvasController.contextMenuHandler(contextMenuSource);
+		this.props.canvasController.contextMenuHandler(contextMenuSource);
 	}
 
 	canvasContextMenu(event) {
@@ -442,7 +442,7 @@ export default class DiagramCanvas extends React.Component {
 			contextMenuSource = {
 				type: "canvas",
 				zoom: this.zoom(),
-				selectedObjectIds: ObjectModel.getSelectedObjectIds(),
+				selectedObjectIds: this.props.canvasController.getObjectModel().getSelectedObjectIds(),
 				cmPos: cmPos,
 				mousePos: mousePos
 			};
@@ -456,7 +456,7 @@ export default class DiagramCanvas extends React.Component {
 			};
 		}
 
-		CanvasController.contextMenuHandler(contextMenuSource);
+		this.props.canvasController.contextMenuHandler(contextMenuSource);
 	}
 
 	// ----------------------------------
@@ -468,23 +468,23 @@ export default class DiagramCanvas extends React.Component {
 		} else if (action === "removeNode") {
 			this.removeNode(node.id);
 		} else if (action === "nodeDblClicked") {
-			CanvasController.clickActionHandler({
+			this.props.canvasController.clickActionHandler({
 				clickType: "DOUBLE_CLICK",
 				objectType: "node",
 				id: node.id,
-				selectedObjectIds: ObjectModel.getSelectedObjectIds()
+				selectedObjectIds: this.props.canvasController.getObjectModel().getSelectedObjectIds()
 			});
 		} else if (action === "selected") {
 			if (optionalArgs.shiftKey) {
-				ObjectModel.selectSubGraph(node.id);
+				this.props.canvasController.getObjectModel().selectSubGraph(node.id);
 			} else {
-				ObjectModel.toggleSelection(node.id, optionalArgs.metaKey);
+				this.props.canvasController.getObjectModel().toggleSelection(node.id, optionalArgs.metaKey);
 			}
-			CanvasController.clickActionHandler({
+			this.props.canvasController.clickActionHandler({
 				clickType: "SINGLE_CLICK",
 				objectType: "node",
 				id: node.id,
-				selectedObjectIds: ObjectModel.getSelectedObjectIds()
+				selectedObjectIds: this.props.canvasController.getObjectModel().getSelectedObjectIds()
 			});
 		} else if (action === "dropOnNode" && this.isDragging()) {
 			// The event is passed as the third arg
@@ -513,16 +513,16 @@ export default class DiagramCanvas extends React.Component {
 	commentAction(comment, action, optionalArgs = []) {
 		if (action === "selected") {
 			// The event is passed as the third arg
-			ObjectModel.toggleSelection(comment.id, optionalArgs.metaKey);
-			CanvasController.clickActionHandler({
+			this.props.canvasController.getObjectModel().toggleSelection(comment.id, optionalArgs.metaKey);
+			this.props.canvasController.clickActionHandler({
 				clickType: "SINGLE_CLICK",
 				objectType: "comment",
 				id: comment.id,
-				selectedObjectIds: ObjectModel.getSelectedObjectIds()
+				selectedObjectIds: this.props.canvasController.getObjectModel().getSelectedObjectIds()
 			});
 		} else if (action === "editComment") {
 			// save the changed comment
-			CanvasController.editActionHandler({
+			this.props.canvasController.editActionHandler({
 				editType: "editComment",
 				nodes: optionalArgs.nodes,
 				label: optionalArgs.target.value,
@@ -535,22 +535,22 @@ export default class DiagramCanvas extends React.Component {
 	}
 
 	removeNode(nodeId) {
-		this.deleteObjects(ObjectModel.ensureSelected(nodeId));
+		this.deleteObjects(this.props.canvasController.getObjectModel().ensureSelected(nodeId));
 	}
 
 	disconnectNode(nodeId) {
-		this.disconnectNodes(ObjectModel.ensureSelected(nodeId));
+		this.disconnectNodes(this.props.canvasController.getObjectModel().ensureSelected(nodeId));
 	}
 
 	moveNode(nodeId, offsetX, offsetY) {
-		this.moveNodes(ObjectModel.ensureSelected(nodeId), offsetX, offsetY);
+		this.moveNodes(this.props.canvasController.getObjectModel().ensureSelected(nodeId), offsetX, offsetY);
 	}
 
 	linkSelected(sources, targets) {
 		this.setState({
 			sourceNodes: [],
 			targetNodes: [] });
-		CanvasController.editActionHandler({
+		this.props.canvasController.editActionHandler({
 			editType: "linkNodes",
 			nodes: sources,
 			targetNodes: targets,
@@ -559,7 +559,7 @@ export default class DiagramCanvas extends React.Component {
 	}
 
 	linkCommentSelected(sources, targets) {
-		CanvasController.editActionHandler({
+		this.props.canvasController.editActionHandler({
 			editType: "linkComment",
 			nodes: sources,
 			targetNodes: targets,
@@ -603,19 +603,19 @@ export default class DiagramCanvas extends React.Component {
 
 	deleteObjects(nodeIds) {
 		// logger.info("deleteObjects(): " + nodeIds);
-		CanvasController.editActionHandler({
+		this.props.canvasController.editActionHandler({
 			editType: "deleteObjects", nodes: nodeIds
 		});
 	}
 
 	disconnectNodes(nodeIds) {
-		CanvasController.editActionHandler({
+		this.props.canvasController.editActionHandler({
 			editType: "disconnectNodes", nodes: nodeIds
 		});
 	}
 
 	moveNodes(nodeIds, offsetX, offsetY) {
-		CanvasController.editActionHandler({
+		this.props.canvasController.editActionHandler({
 			editType: "moveObjects",
 			nodes: nodeIds,
 			offsetX: offsetX,
@@ -626,10 +626,10 @@ export default class DiagramCanvas extends React.Component {
 	selectInRegion(minX, minY, maxX, maxY, zoom) {
 		const nodeWidth = Math.round(NODE_WIDTH * zoom);
 		const nodeHeight = Math.round(NODE_HEIGHT * zoom);
-		CanvasController.clickActionHandler({
+		this.props.canvasController.clickActionHandler({
 			clickType: "SINGLE_CLICK",
 			objectType: "region",
-			selectedObjectIds: ObjectModel.selectInRegion(minX, minY, maxX, maxY, nodeWidth, nodeHeight)
+			selectedObjectIds: this.props.canvasController.getObjectModel().selectInRegion(minX, minY, maxX, maxY, nodeWidth, nodeHeight)
 		});
 	}
 
@@ -771,7 +771,8 @@ export default class DiagramCanvas extends React.Component {
 				uiconf={uiconf}
 				nodeActionHandler={this.nodeAction.bind(this, node)}
 				onContextMenu={this.objectContextMenu.bind(this, "node", node)}
-				selected={ObjectModel.isSelected(node.id)}
+				selected={this.props.canvasController.getObjectModel().isSelected(node.id)}
+				canvasController={this.props.canvasController}
 			/>);
 
 			positions[node.id] = this.getConnPoints(halfNodeWidth, halfIcon, connSize, zoom, node);
@@ -794,7 +795,8 @@ export default class DiagramCanvas extends React.Component {
 				fontSize={fontSize}
 				commentActionHandler={this.commentAction.bind(this, comment)}
 				onContextMenu={this.objectContextMenu.bind(this, "comment", comment)}
-				selected={ObjectModel.isSelected(comment.id)}
+				selected={this.props.canvasController.getObjectModel().isSelected(comment.id)}
+				parentDivId={this.props.parentDivId}
 			/>);
 
 			positions[comment.id] = this.getConnPoints(
@@ -823,8 +825,8 @@ export default class DiagramCanvas extends React.Component {
 		// TODO - include link icons
 		return (
 			<div
-				id="canvas-div"
-				style={parentStyle}
+				id={this.canvasDivId}
+				className={"common-canvas-drop-div"}
 				draggable="true"
 				onDragOver={this.dragOver}
 				onDrop={this.drop}
@@ -834,56 +836,60 @@ export default class DiagramCanvas extends React.Component {
 				onClick={this.canvasClicked}
 				onDoubleClick={this.canvasDblClick}
 			>
-				{viewComments}
-				{viewNodes}
+				<div style={parentStyle}>
+					{viewComments}
+					{viewNodes}
 
-				<SVGCanvas
-					ref="svg_canvas"
-					x="0"
-					y="0"
-					width="100%"
-					height="100%"
-					onContextMenu={this.canvasContextMenu}
-				>
-					<defs>
-						<marker
-							id="markerCircle"
-							markerWidth={42}
-							markerHeight={42}
-							refX={10}
-							refY={10}
-							markerUnits="strokeWidth"
-						>
-							<circle cx={0} cy={0} r={20} fill="#f00" />
-						</marker>
-						<marker id="markerArrow" markerWidth={13} markerHeight={13} refX={2} refY={6} orient="auto">
-							<path d="M2,2 L2,11 L10,6 L2,2" fill="#f00" />
-						</marker>
+					<SVGCanvas
+						ref="svg_canvas"
+						x="0"
+						y="0"
+						width="100%"
+						height="100%"
+						onContextMenu={this.canvasContextMenu}
+					>
+						<defs>
+							<marker
+								id="markerCircle"
+								markerWidth={42}
+								markerHeight={42}
+								refX={10}
+								refY={10}
+								markerUnits="strokeWidth"
+							>
+								<circle cx={0} cy={0} r={20} fill="#f00" />
+							</marker>
+							<marker id="markerArrow" markerWidth={13} markerHeight={13} refX={2} refY={6} orient="auto">
+								<path d="M2,2 L2,11 L10,6 L2,2" fill="#f00" />
+							</marker>
 
-						<marker
-							id="Triangle"
-							ref="Triangle"
-							viewBox="0 0 20 20"
-							refX="9"
-							refY="5"
-							markerWidth="10"
-							markerHeight="10"
-							orient="auto"
-							markerUnits="strokeWidth"
-						>
-							<path d="M 0 0 L 10 5 L 0 10 z" />
-						</marker>
-					</defs>
-					{viewLinks}
-				</SVGCanvas>
-				{this.props.children}
-				{emptyDraggable}
+							<marker
+								id="Triangle"
+								ref="Triangle"
+								viewBox="0 0 20 20"
+								refX="9"
+								refY="5"
+								markerWidth="10"
+								markerHeight="10"
+								orient="auto"
+								markerUnits="strokeWidth"
+							>
+								<path d="M 0 0 L 10 5 L 0 10 z" />
+							</marker>
+						</defs>
+						{viewLinks}
+					</SVGCanvas>
+					{this.props.children}
+					{emptyDraggable}
+				</div>
 			</div>
 		);
 	}
 }
 
 DiagramCanvas.propTypes = {
-	canvas: PropTypes.object,
-	children: PropTypes.element
+	canvas: PropTypes.object.isRequired,
+	children: PropTypes.element,
+	parentDivId: PropTypes.string.isRequired,
+	canvasController: PropTypes.object.isRequired
 };

@@ -12,10 +12,18 @@
   overflow: hidden;
 }
 
-#canvas-container {
-  height: 100%;
+.canvas-container {
+  height: calc(100vh - 50px);
   width: 100%;
-  padding-top: 50px;
+}
+
+.canvas-container-double {
+  height: calc(100vh - 50px);
+  width: 100%;
+}
+
+.canvas-single {
+  height: 50%;
 }
 
 #title {
@@ -57,6 +65,10 @@
 
 
 /*Navbar*/
+.app-navbar {
+  height: 50px;
+}
+
 .app-navbar-items {
   position:fixed;
   width:100%;

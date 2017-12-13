@@ -19,6 +19,7 @@ import FlowValidation from "../src/flow-validation/validate-flow.js";
 
 
 const logger = log4js.getLogger("flow-validation-test");
+const objectModel = new ObjectModel();
 
 const CONDITIONS_TEST_FORM_DATA = require("./test_resources/json/addcolumn-paramDef.json");
 const parameterDef = {};
@@ -73,12 +74,12 @@ describe("Flow validation API handle flows OK", () => {
 		logger.info("should save a messages for a node");
 
 		deepFreeze(startPipelineFlow);
-		ObjectModel.setPipelineFlow(startPipelineFlow);
-		FlowValidation.validateFlow(getFormData, setNodeMessages);
+		objectModel.setPipelineFlow(startPipelineFlow);
+		FlowValidation.validateFlow(objectModel, getFormData, setNodeMessages);
 
 
-		const actualNode1Messages = ObjectModel.getNodeMessages("idGWRVT47XDV");
-		const actualNode2Messages = ObjectModel.getNodeMessages("id8I6RH2V91XW");
+		const actualNode1Messages = objectModel.getNodeMessages("idGWRVT47XDV");
+		const actualNode2Messages = objectModel.getNodeMessages("id8I6RH2V91XW");
 
 		// logger.info("expected Node1Messages  = " + JSON.stringify(expectedNode1Messages, null, 4));
 		// logger.info("actual Node1Messages  = " + JSON.stringify(actualNode1Messages, null, 4));

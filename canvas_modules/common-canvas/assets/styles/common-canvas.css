@@ -30,7 +30,7 @@
 
 /* right flyout panel */
 
-#right-flyout-panel {
+.right-flyout-panel {
 	width: 0px;
 	height: 100%;
 	float: right;
@@ -46,7 +46,7 @@
 
 /* SVG Canvas styles */
 
-#common-canvas {
+.common-canvas {
 	height: 100%;
 	width: 100%;
 	cursor: default;
@@ -55,11 +55,23 @@
 	transition: all 0.2s;
 }
 
-#common-canvas-items-container {
+.common-canvas-items-container {
 	height: 100%;
 	position: absolute;
 	-webkit-transition: all 0.2s;
 	transition: all 0.2s;
+}
+
+.common-canvas-drop-div {
+	height: calc(100% - 45px);
+	width: 100%;
+	min-width: 258px;
+	position: absolute;
+	cursor: default;
+	top: 47px;
+	-webkit-transition: all 0.2s;
+	transition: all 0.2s;
+	overflow: hidden;
 }
 
 .canvas-palette-flyout-div-open {
@@ -80,31 +92,12 @@
 	width: calc(100% - 570px);
 }
 
-#canvas-div {
-	height: calc(100% - 45px);
-	width: 100%;
-	min-width: 258px;
-	position: absolute;
-	cursor: default;
-	top: 47px;
-	-webkit-transition: all 0.2s;
-	transition: all 0.2s;
-}
-
-.canvas-div-d3 {
-	overflow: hidden;
-}
-
-.svg-canvas {
-	cursor: default;
-}
-
 /* Styles for empty canvas objects */
 
-#empty-canvas {
+.empty-canvas {
 	position: absolute;
 	left: 50%;
-	top: 40%;
+	top: 48%;
 	cursor: default;
 	transform: translate(-50%, -50%);
 	-webkit-transition: all 0.2s;

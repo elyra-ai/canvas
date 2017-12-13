@@ -7,27 +7,27 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 import Action from "../command-stack/action.js";
-import ObjectModel from "../object-model/object-model.js";
 
 export default class DeleteLinkAction extends Action {
-	constructor(data) {
+	constructor(data, objectModel) {
 		super(data);
 		this.data = data;
 		this.linkInfo = [];
+		this.objectModel = objectModel;
 	}
 
 	// Standard methods
 	do() {
-		this.linkInfo = ObjectModel.getLink(this.data.id);
-		ObjectModel.deleteLink(this.data);
+		this.linkInfo = this.objectModel.getLink(this.data.id);
+		this.objectModel.deleteLink(this.data);
 	}
 
 	undo() {
-		ObjectModel.addLinks([this.linkInfo]);
+		this.objectModel.addLinks([this.linkInfo]);
 	}
 
 	redo() {
-		ObjectModel.deleteLink(this.data);
+		this.objectModel.deleteLink(this.data);
 	}
 
 }

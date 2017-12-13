@@ -7,29 +7,29 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 import Action from "../command-stack/action.js";
-import ObjectModel from "../object-model/object-model.js";
 
 export default class MoveObjectsAction extends Action {
-	constructor(data) {
+	constructor(data, objectModel) {
 		super(data);
 		this.data = data;
+		this.objectModel = objectModel;
 	}
 
 	// Standard methods
 	do() {
-		ObjectModel.moveObjects(this.data);
+		this.objectModel.moveObjects(this.data);
 	}
 
 	undo() {
 		this.data.offsetX = -(this.data.offsetX);
 		this.data.offsetY = -(this.data.offsetY);
-		ObjectModel.moveObjects(this.data);
+		this.objectModel.moveObjects(this.data);
 	}
 
 	redo() {
 		this.data.offsetX = -(this.data.offsetX);
 		this.data.offsetY = -(this.data.offsetY);
-		ObjectModel.moveObjects(this.data);
+		this.objectModel.moveObjects(this.data);
 	}
 
 }

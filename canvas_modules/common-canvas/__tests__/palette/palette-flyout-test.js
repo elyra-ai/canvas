@@ -16,6 +16,9 @@ import PaletteFlyoutContentList from "../../src/palette/palette-content-list.jsx
 import PaletteFlyoutContentListItem from "../../src/palette/palette-content-list-item.jsx";
 import sinon from "sinon";
 import { expect } from "chai";
+import CanvasController from "../../src/canvas-controller";
+
+const canvasController = new CanvasController();
 
 
 describe("Palette renders correctly", () => {
@@ -164,6 +167,7 @@ function createPalette() {
 			showPalette
 			createTempNode={createTempNodeCallback}
 			deleteTempNode={deleteTempNodeCallback}
+			canvasController={canvasController}
 		/>
 	);
 	return popupPalette;
@@ -177,6 +181,7 @@ function createMountedPalette() {
 			showPalette
 			createTempNode={createTempNodeCallback}
 			deleteTempNode={deleteTempNodeCallback}
+			canvasController={canvasController}
 		/>
 	);
 	return popupPalette;

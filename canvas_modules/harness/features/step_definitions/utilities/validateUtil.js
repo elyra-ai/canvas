@@ -80,7 +80,7 @@ function getCommentIdFromObjectModelUsingText(objectModel, commentText) {
 // when pushing comments to be underneath nodes and links. Therefore we look for the
 // text of the comment being deleted.
 function getCommentIndexFromCanvasUsingText(commentText) {
-	var commentElements = browser.$("#common-canvas").$$(".comment-group");
+	var commentElements = browser.$("#common-canvas-items-container-0").$$(".comment-group");
 	var comIndex = 0;
 	for (let idx = 0; idx < commentElements.length; idx++) {
 		if (commentElements[idx].getAttribute("textContent") === commentText) {

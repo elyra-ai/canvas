@@ -7,6 +7,11 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
+
+ .svg-canvas {
+ 	cursor: default;
+ }
+
 /* Node styles */
 
 .canvas-node {

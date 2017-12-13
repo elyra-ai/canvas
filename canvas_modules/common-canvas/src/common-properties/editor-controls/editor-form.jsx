@@ -468,7 +468,7 @@ export default class EditorForm extends React.Component {
 						styleObj.borderBottom = "none";
 					}
 				}
-				const panelItemsContainer = (<div className={"panel-container-" + panelItemsContainerClass + " right-flyout-panel"} style={styleObj}>
+				const panelItemsContainer = (<div className={"panel-container-" + panelItemsContainerClass + "-right-flyout-panel"} style={styleObj}>
 					{panelItems}
 				</div>);
 

@@ -7,12 +7,12 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 import Action from "../command-stack/action.js";
-import ObjectModel from "../object-model/object-model.js";
 
 export default class DisconnectNodesAction extends Action {
-	constructor(data) {
+	constructor(data, objectModel) {
 		super(data);
 		this.data = data;
+		this.objectModel = objectModel;
 		this.links = [];
 	}
 
@@ -20,22 +20,22 @@ export default class DisconnectNodesAction extends Action {
 	do() {
 		this.data.selectedObjectIds.forEach((id) => {
 			// save all the links associated with each node, but don't store duplicate links
-			const objectLinks = ObjectModel.getLinksContainingId(id);
+			const objectLinks = this.objectModel.getLinksContainingId(id);
 			objectLinks.forEach((objectLink) => {
 				if (this.links.filter((link) => (link.id === objectLink.id)).length === 0) {
 					this.links.push(objectLink);
 				}
 			});
 		});
-		ObjectModel.disconnectNodes(this.data);
+		this.objectModel.disconnectNodes(this.data);
 	}
 
 	undo() {
-		ObjectModel.addLinks(this.links);
+		this.objectModel.addLinks(this.links);
 	}
 
 	redo() {
-		ObjectModel.disconnectNodes(this.data);
+		this.objectModel.disconnectNodes(this.data);
 	}
 
 }

@@ -10,51 +10,52 @@ import History from "immutable-undo";
 
 /* eslint no-shadow: ["error", { "allow": ["History"] }] */
 
-var commands = History.create({
-	maxUndos: 100
-});
-
 export default class CommandStack {
 
-// Standard methods
-	static do(action) {
-		commands = commands.push(action);
+	constructor() {
+		this.commands = History.create({
+			maxUndos: 100
+		});
+	}
+
+	do(action) {
+		this.commands = this.commands.push(action);
 		action.do();
 	}
 
-	static undo() {
-		if (commands.canUndo) {
-			const action = commands.previous;
-			commands = commands.undo(action);
+	undo() {
+		if (this.commands.canUndo) {
+			const action = this.commands.previous;
+			this.commands = this.commands.undo(action);
 			action.undo();
 		}
 	}
 
-	static redo() {
-		if (commands.canRedo) {
-			const action = commands.next;
-			commands = commands.redo(action);
+	redo() {
+		if (this.commands.canRedo) {
+			const action = this.commands.next;
+			this.commands = this.commands.redo(action);
 			action.redo();
 		}
 	}
 
 	// need this for validation on unit tests
-	static getStack() {
-		const undoStack = commands.undos;
-		const redoStack = commands.redos;
+	getStack() {
+		const undoStack = this.commands.undos;
+		const redoStack = this.commands.redos;
 		return { "undos": undoStack, "redos": redoStack };
 	}
 
-	static canUndo() {
-		return commands.canUndo;
+	canUndo() {
+		return this.commands.canUndo;
 	}
 
-	static canRedo() {
-		return commands.canRedo;
+	canRedo() {
+		return this.commands.canRedo;
 	}
 
-	static clearCommandStack() {
-		commands = History.create({
+	clearCommandStack() {
+		this.commands = History.create({
 			maxUndos: 100
 		});
 	}

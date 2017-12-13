@@ -27,6 +27,7 @@ class PaletteContentGrid extends React.Component {
 			gridNodes.push(
 				<PaletteContentGridNode key={"pal_grid_node_" + idx}
 					nodeTemplate={this.props.categoryJSON[idx]}
+					canvasController={this.props.canvasController}
 				/>
 			);
 		}
@@ -45,7 +46,8 @@ class PaletteContentGrid extends React.Component {
 
 PaletteContentGrid.propTypes = {
 	categoryJSON: PropTypes.array.isRequired,
-	show: PropTypes.bool.isRequired
+	show: PropTypes.bool.isRequired,
+	canvasController: PropTypes.object.isRequired
 };
 
 export default PaletteContentGrid;

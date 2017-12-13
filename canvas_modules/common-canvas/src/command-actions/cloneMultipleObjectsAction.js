@@ -7,25 +7,25 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 import Action from "../command-stack/action.js";
-import ObjectModel from "../object-model/object-model.js";
 
 export default class CloneMultipleObjectsAction extends Action {
-	constructor(data) {
+	constructor(data, objectModel) {
 		super(data);
 		this.data = data;
+		this.objectModel = objectModel;
 		this.clonedNodesInfo = [];
 		this.clonedCommentsInfo = [];
 		this.links = [];
 
 		if (data.objects.nodes) {
 			data.objects.nodes.forEach((node) => {
-				this.clonedNodesInfo.push({ originalId: node.id, node: ObjectModel.cloneNode(node) });
+				this.clonedNodesInfo.push({ originalId: node.id, node: this.objectModel.cloneNode(node) });
 			});
 		}
 
 		if (data.objects.comments) {
 			data.objects.comments.forEach((comment) => {
-				this.clonedCommentsInfo.push({ originalId: comment.id, comment: ObjectModel.cloneComment(comment) });
+				this.clonedCommentsInfo.push({ originalId: comment.id, comment: this.objectModel.cloneComment(comment) });
 			});
 		}
 
@@ -35,14 +35,14 @@ export default class CloneMultipleObjectsAction extends Action {
 					const srcClonedNode = this.findClonedNode(link.srcNodeId);
 					const trgClonedNode = this.findClonedNode(link.trgNodeId);
 					if (srcClonedNode && trgClonedNode) {
-						const newLink = ObjectModel.cloneNodeLink(link, srcClonedNode.id, trgClonedNode.id);
+						const newLink = this.objectModel.cloneNodeLink(link, srcClonedNode.id, trgClonedNode.id);
 						this.links.push(newLink);
 					}
 				} else {
 					const srcClonedComment = this.findClonedComment(link.srcNodeId);
 					const trgClonedNode = this.findClonedNode(link.trgNodeId);
 					if (srcClonedComment && trgClonedNode) {
-						const newLink = ObjectModel.cloneCommentLink(link, srcClonedComment.id, trgClonedNode.id);
+						const newLink = this.objectModel.cloneCommentLink(link, srcClonedComment.id, trgClonedNode.id);
 						this.links.push(newLink);
 					}
 				}
@@ -54,27 +54,27 @@ export default class CloneMultipleObjectsAction extends Action {
 	do() {
 		const addedObjectIds = [];
 		this.clonedNodesInfo.forEach((clonedNodeInfo) => {
-			ObjectModel.addNode(clonedNodeInfo.node);
+			this.objectModel.addNode(clonedNodeInfo.node);
 			addedObjectIds.push(clonedNodeInfo.node.id);
 		});
 		this.clonedCommentsInfo.forEach((clonedCommentInfo) => {
-			ObjectModel.addComment(clonedCommentInfo.comment);
+			this.objectModel.addComment(clonedCommentInfo.comment);
 			addedObjectIds.push(clonedCommentInfo.comment.id);
 		});
 
-		ObjectModel.addLinks(this.links);
-		ObjectModel.setSelections(addedObjectIds);
+		this.objectModel.addLinks(this.links);
+		this.objectModel.setSelections(addedObjectIds);
 	}
 
 	undo() {
 		this.clonedNodesInfo.forEach((clonedNodeInfo) => {
-			ObjectModel.deleteNode(clonedNodeInfo.node.id);
+			this.objectModel.deleteNode(clonedNodeInfo.node.id);
 		});
 		this.clonedCommentsInfo.forEach((clonedCommentInfo) => {
-			ObjectModel.deleteComment(clonedCommentInfo.comment.id);
+			this.objectModel.deleteComment(clonedCommentInfo.comment.id);
 		});
 		this.links.forEach((link) => {
-			ObjectModel.deleteLink(link.id);
+			this.objectModel.deleteLink(link.id);
 		});
 	}
 

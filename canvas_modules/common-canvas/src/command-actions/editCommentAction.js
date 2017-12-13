@@ -7,27 +7,27 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 import Action from "../command-stack/action.js";
-import ObjectModel from "../object-model/object-model.js";
 
 export default class EditCommentAction extends Action {
-	constructor(data) {
+	constructor(data, objectModel) {
 		super(data);
 		this.data = data;
+		this.objectModel = objectModel;
 		this.previousComment = "";
 	}
 
 	// Standard methods
 	do() {
-		this.previousComment = ObjectModel.getComment(this.data.nodes[0]);
-		ObjectModel.editComment(this.data);
+		this.previousComment = this.objectModel.getComment(this.data.nodes[0]);
+		this.objectModel.editComment(this.data);
 	}
 
 	undo() {
-		ObjectModel.updateComment(this.previousComment);
+		this.objectModel.updateComment(this.previousComment);
 	}
 
 	redo() {
-		ObjectModel.editComment(this.data);
+		this.objectModel.editComment(this.data);
 	}
 
 }

@@ -171,7 +171,7 @@ class Comment extends React.Component {
 		// console.log("setCursorStyle");
 
 		// adjust the event X,Y for sliding focus on multiple focus size canvas
-		const canvasDiv = document.getElementById("canvas-div");
+		const canvasDiv = document.getElementById(this.props.parentDivId);
 		const rect = canvasDiv.getBoundingClientRect();
 
 		const clientX = event.clientX - Math.round(rect.left);
@@ -236,7 +236,7 @@ class Comment extends React.Component {
 		// done mouse down when in sizing hover zone) and take appropriate
 		// sizing action.
 		if (this.resizingComment) {
-			const canvasDiv = document.getElementById("canvas-div");
+			const canvasDiv = document.getElementById(this.props.parentDivId);
 
 			const dimensions = this.getNewSize(this.verticalSizingAction,
 				this.horizontalSizingAction,
@@ -623,7 +623,8 @@ Comment.propTypes = {
 	fontSize: PropTypes.number,
 	zoom: PropTypes.number,
 	selected: PropTypes.bool,
-	cutable: PropTypes.bool
+	cutable: PropTypes.bool,
+	parentDivId: PropTypes.string
 };
 
 export default Comment;

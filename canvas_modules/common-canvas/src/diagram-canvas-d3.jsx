@@ -10,7 +10,6 @@
 /* eslint complexity: ["error", 13] */
 /* eslint no-shadow: ["error", { "allow": ["Node", "Comment"] }] */
 
-import CanvasController from "./common-canvas-controller.js";
 import React from "react";
 import PropTypes from "prop-types";
 
@@ -28,12 +27,14 @@ export default class DiagramCanvas extends React.Component {
 		this.state = {
 		};
 
-		this.svgCanvasDivId = "d3-svg-canvas-div-" + CanvasController.getInstanceId();
+		this.svgCanvasDivId = "d3-svg-canvas-div-" + this.props.canvasController.getInstanceId();
 		this.svgCanvasDivSelector = "#" + this.svgCanvasDivId;
 
 		this.drop = this.drop.bind(this);
 		this.dragOver = this.dragOver.bind(this);
 		this.focusOnCanvas = this.focusOnCanvas.bind(this);
+
+		this.canvasDivId = "canvas-div-" + this.props.canvasController.getInstanceId();
 	}
 
 	componentDidMount() {
@@ -41,7 +42,8 @@ export default class DiagramCanvas extends React.Component {
 			new CanvasD3Layout(this.props.canvas,
 				this.svgCanvasDivSelector,
 				"100%", "100%",
-				this.props.config);
+				this.props.config,
+				this.props.canvasController);
 		this.focusOnCanvas();
 	}
 
@@ -83,10 +85,10 @@ export default class DiagramCanvas extends React.Component {
 
 		if (jsVal !== null) {
 			if ((jsVal.operation === "createFromTemplate") || jsVal.operation === "createFromObject") {
-				CanvasController.createNodeAt(jsVal.operator_id_ref, jsVal.label, jsVal.sourceId, jsVal.sourceObjectTypeId, transPos.x, transPos.y);
+				this.props.canvasController.createNodeAt(jsVal.operator_id_ref, jsVal.label, jsVal.sourceId, jsVal.sourceObjectTypeId, transPos.x, transPos.y);
 
 			} else if ((jsVal.operation === "addToCanvas") || (jsVal.operation === "addTableFromConnection")) {
-				CanvasController.createNodeFromDataAt(transPos.x, transPos.y, jsVal.data);
+				this.props.canvasController.createNodeFromDataAt(transPos.x, transPos.y, jsVal.data);
 			}
 		}
 	}
@@ -120,8 +122,8 @@ export default class DiagramCanvas extends React.Component {
 
 		return (
 			<div
-				id="canvas-div"
-				className="canvas-div-d3"
+				id={this.canvasDivId}
+				className="common-canvas-drop-div"
 				onDragOver={this.dragOver}
 				onDrop={this.drop}
 			>
@@ -135,5 +137,6 @@ export default class DiagramCanvas extends React.Component {
 DiagramCanvas.propTypes = {
 	canvas: PropTypes.object,
 	config: PropTypes.object.isRequired,
-	children: PropTypes.element
+	children: PropTypes.element,
+	canvasController: PropTypes.object.isRequired
 };

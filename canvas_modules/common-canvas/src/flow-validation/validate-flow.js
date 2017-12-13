@@ -6,7 +6,6 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-import ObjectModel from "../object-model/object-model";
 import Form from "../common-properties/form/Form";
 import UiConditionsParser from "../common-properties/ui-conditions/ui-conditions-parser";
 import UiConditions from "../common-properties/ui-conditions/ui-conditions";
@@ -21,9 +20,9 @@ import { DEFAULT_VALIDATION_MESSAGE } from "../common-properties/constants/const
 * @param {Function} callback function to store messages data for node.
 
 */
-function validateFlow(getParameterData, setMessagesCallback) {
+function validateFlow(canvasController, getParameterData, setMessagesCallback) {
 	// get the nodes in the flow
-	const nodes = ObjectModel.getNodes();
+	const nodes = canvasController.getNodes();
 
 	// traverse the flow
 	// this will just visit all the nodes and not traverse it via DAG
@@ -34,7 +33,7 @@ function validateFlow(getParameterData, setMessagesCallback) {
 			const formData = _getFormData(node.id, getParameterData);
 			const messages = _validateNode(formData, node.id);
 			if (messages.length > 0) {
-				ObjectModel.setNodeMessages(node.id, messages);
+				canvasController.setNodeMessages(node.id, messages);
 			}
 			if (setMessagesCallback) {
 				setMessagesCallback(node.id, messages);

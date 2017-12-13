@@ -54,87 +54,88 @@ describe("command stack handle commmands OK", () => {
 
 	it("should do(a1), undo(), redo() onto a command stack", () => {
 
-		CommandStack.do(action1);
-		CommandStack.undo();
-		CommandStack.redo();
+		var commandStack = new CommandStack();
+		commandStack.do(action1);
+		commandStack.undo();
+		commandStack.redo();
 
 		// validation of state of stack
-		const undoStack = CommandStack.getStack().undos.toArray();
-		const redoStack = CommandStack.getStack().redos.toArray();
+		const undoStack = commandStack.getStack().undos.toArray();
+		const redoStack = commandStack.getStack().redos.toArray();
 		expect(undoStack).to.have.length(1);
 		expect(undoStack[0].value.getData()).to.equal("a1");
 		expect(redoStack).to.have.length(0);
 
 		// clear the stack
-		CommandStack.undo();
+		commandStack.undo();
 	});
 
 	it("should do(a1),undo(), do(a2) onto a command stack", () => {
-
-		CommandStack.do(action1);
-		CommandStack.undo();
-		CommandStack.do(action2);
+		var commandStack = new CommandStack();
+		commandStack.do(action1);
+		commandStack.undo();
+		commandStack.do(action2);
 
 		// validation of state of stack
-		const undoStack = CommandStack.getStack().undos.toArray();
-		const redoStack = CommandStack.getStack().redos.toArray();
+		const undoStack = commandStack.getStack().undos.toArray();
+		const redoStack = commandStack.getStack().redos.toArray();
 		expect(undoStack).to.have.length(1);
 		expect(undoStack[0].value.getData()).to.equal("a2");
 		expect(redoStack).to.have.length(0);
 
 		// clear the stack
-		CommandStack.undo();
-		CommandStack.undo();
+		commandStack.undo();
+		commandStack.undo();
 	});
 
 	it("should do(a1), do(a2), undo() onto a command stack", () => {
-
-		CommandStack.do(action1);
-		CommandStack.do(action2);
-		CommandStack.undo();
+		var commandStack = new CommandStack();
+		commandStack.do(action1);
+		commandStack.do(action2);
+		commandStack.undo();
 
 		// validation of state of stack
-		const undoStack = CommandStack.getStack().undos.toArray();
-		const redoStack = CommandStack.getStack().redos.toArray();
+		const undoStack = commandStack.getStack().undos.toArray();
+		const redoStack = commandStack.getStack().redos.toArray();
 		expect(undoStack).to.have.length(1);
 		expect(undoStack[0].value.getData()).to.equal("a1");
 		expect(redoStack).to.have.length(1);
 		expect(redoStack[0].value.getData()).to.equal("a2");
 
 		// clear the stack
-		CommandStack.undo();
+		commandStack.undo();
 	});
 
 	it("should do(a1), do(a2), undo(), redo() onto a command stack", () => {
-
-		CommandStack.do(action1);
-		CommandStack.do(action2);
-		CommandStack.undo();
-		CommandStack.redo();
+		var commandStack = new CommandStack();
+		commandStack.do(action1);
+		commandStack.do(action2);
+		commandStack.undo();
+		commandStack.redo();
 
 		// validation of state of stack
-		const undoStack = CommandStack.getStack().undos.toArray();
-		const redoStack = CommandStack.getStack().redos.toArray();
+		const undoStack = commandStack.getStack().undos.toArray();
+		const redoStack = commandStack.getStack().redos.toArray();
 		expect(undoStack).to.have.length(2);
 		expect(undoStack[0].value.getData()).to.equal("a1");
 		expect(undoStack[1].value.getData()).to.equal("a2");
 		expect(redoStack).to.have.length(0);
 
 		// clear the stack
-		CommandStack.undo();
-		CommandStack.undo();
+		commandStack.undo();
+		commandStack.undo();
 	});
 
 	it("should do(a1), do(a2), undo(), undo() onto a command stack", () => {
-
-		CommandStack.do(action1);
-		CommandStack.do(action2);
-		CommandStack.undo();
-		CommandStack.undo();
+		var commandStack = new CommandStack();
+		commandStack.do(action1);
+		commandStack.do(action2);
+		commandStack.undo();
+		commandStack.undo();
 
 		// validation of state of stack
-		const undoStack = CommandStack.getStack().undos.toArray();
-		const redoStack = CommandStack.getStack().redos.toArray();
+		const undoStack = commandStack.getStack().undos.toArray();
+		const redoStack = commandStack.getStack().redos.toArray();
 		expect(undoStack).to.have.length(0);
 		expect(redoStack).to.have.length(2);
 		expect(redoStack[0].value.getData()).to.equal("a1");
@@ -142,57 +143,57 @@ describe("command stack handle commmands OK", () => {
 	});
 
 	it("should do(a1), do(a2), undo(), undo(), redo() onto a command stack", () => {
-
-		CommandStack.do(action1);
-		CommandStack.do(action2);
-		CommandStack.undo();
-		CommandStack.undo();
-		CommandStack.redo();
+		var commandStack = new CommandStack();
+		commandStack.do(action1);
+		commandStack.do(action2);
+		commandStack.undo();
+		commandStack.undo();
+		commandStack.redo();
 
 		// validation of state of stack
-		const undoStack = CommandStack.getStack().undos.toArray();
-		const redoStack = CommandStack.getStack().redos.toArray();
+		const undoStack = commandStack.getStack().undos.toArray();
+		const redoStack = commandStack.getStack().redos.toArray();
 		expect(undoStack).to.have.length(1);
 		expect(undoStack[0].value.getData()).to.equal("a1");
 		expect(redoStack).to.have.length(1);
 		expect(redoStack[0].value.getData()).to.equal("a2");
 
 		// clear the stack
-		CommandStack.undo();
+		commandStack.undo();
 	});
 
 	it("should do(a1), do(a2), undo(), undo(), do(a3) onto a command stack", () => {
-
-		CommandStack.do(action1);
-		CommandStack.do(action2);
-		CommandStack.undo();
-		CommandStack.undo();
-		CommandStack.do(action3);
+		var commandStack = new CommandStack();
+		commandStack.do(action1);
+		commandStack.do(action2);
+		commandStack.undo();
+		commandStack.undo();
+		commandStack.do(action3);
 
 		// validation of state of stack
-		const undoStack = CommandStack.getStack().undos.toArray();
-		const redoStack = CommandStack.getStack().redos.toArray();
+		const undoStack = commandStack.getStack().undos.toArray();
+		const redoStack = commandStack.getStack().redos.toArray();
 		expect(undoStack).to.have.length(1);
 		expect(undoStack[0].value.getData()).to.equal("a3");
 		expect(redoStack).to.have.length(0);
 
 		// clear the stack
-		CommandStack.undo();
+		commandStack.undo();
 	});
 
 	it("should do(a1), do(a2), do(a3), undo(), redo(), undo(), undo() onto a command stack", () => {
-
-		CommandStack.do(action1);
-		CommandStack.do(action2);
-		CommandStack.do(action3);
-		CommandStack.undo();
-		CommandStack.redo();
-		CommandStack.undo();
-		CommandStack.undo();
+		var commandStack = new CommandStack();
+		commandStack.do(action1);
+		commandStack.do(action2);
+		commandStack.do(action3);
+		commandStack.undo();
+		commandStack.redo();
+		commandStack.undo();
+		commandStack.undo();
 
 		// validation of state of stack
-		const undoStack = CommandStack.getStack().undos.toArray();
-		const redoStack = CommandStack.getStack().redos.toArray();
+		const undoStack = commandStack.getStack().undos.toArray();
+		const redoStack = commandStack.getStack().redos.toArray();
 		expect(undoStack).to.have.length(1);
 		expect(undoStack[0].value.getData()).to.equal("a1");
 		expect(redoStack).to.have.length(2);

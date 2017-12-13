@@ -6,6 +6,7 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
+/* eslint no-console: "off" */
 
 import { findCategoryElement, findNodeIndexInPalette, getNodeIdForLabel } from "./utilities/validateUtil.js";
 import { clickSVGAreaAt } from "./utilities/validateUtil.js";
@@ -145,7 +146,7 @@ module.exports = function() {
 
 	this.Then(/^I verify the tip shows below the node "([^"]*)"$/, function(nodeName) {
 		const nodeId = getNodeIdForLabel(nodeName);
-		const tip = browser.$("#nodeTip_" + nodeId);
+		const tip = browser.$("#node_tip_" + nodeId);
 		expect(tip.value).not.toEqual(null);
 
 		const node = browser.$("#node_grp_" + nodeId);
@@ -167,7 +168,8 @@ module.exports = function() {
 	this.Then(/^I verify the port name "([^"]*)" shows below the input port id "([^"]*)" of node "([^"]*)"$/, function(portName, portId, nodeName) {
 		const nodeId = getNodeIdForLabel(nodeName);
 		const portSelector = "#node_trg_port_" + nodeId + "_" + portId;
-		const tip = browser.$("#portTip_1_" + portId);
+		console.log("portId " + portId);
+		const tip = browser.$("#node_port_tip_0_" + portId);
 		expect(tip.value).not.toEqual(null);
 
 		const port = browser.$(portSelector);
@@ -186,7 +188,7 @@ module.exports = function() {
 
 	this.Then(/^I verify the tip shows below (\d+) for link id "([^"]*)" between node "([^"]*)", port "([^"]*)" and node "([^"]*)", port "([^"]*)"$/,
 		function(mouseY, linkId, sourceNode, sourcePort, targetNode, targetPort) {
-			const tip = browser.$("#linkTip_1_" + linkId);
+			const tip = browser.$("#link_tip_0_" + linkId);
 			expect(tip.value).not.toEqual(null);
 
 			const tipTop = tip.getLocation().y;
@@ -206,17 +208,17 @@ module.exports = function() {
 
 	this.Then(/^I verify the tip doesn't show for node "([^"]*)"$/, function(nodeName) {
 		const nodeId = getNodeIdForLabel(nodeName);
-		const tip = browser.$("#nodeTip_" + nodeId);
+		const tip = browser.$("#node_tip_" + nodeId);
 		expect(tip.value).toEqual(null);
 	});
 
 	this.Then(/^I verify the tip doesn't show for input port id "([^"]*)"$/, function(portId) {
-		const tip = browser.$("#portTip_1_" + portId);
+		const tip = browser.$("#node_port_tip_0_" + portId);
 		expect(tip.value).toEqual(null);
 	});
 
 	this.Then(/^I verify the tip shows doesn't show for link id "([^"]*)"$/, function(linkId) {
-		const tip = browser.$("#linkTip_1_" + linkId);
+		const tip = browser.$("#link_tip_0_" + linkId);
 		expect(tip.value).toEqual(null);
 	});
 

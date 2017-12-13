@@ -7,6 +7,6 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import { CommonCanvas, ObjectModel, CommonProperties, CommandStack, FlowValidation } from "@wdp/common-canvas";
+import { CommonCanvas, CanvasController, CommonProperties, CommandStack, FlowValidation } from "@wdp/common-canvas";
 
-export { CommonCanvas, ObjectModel, CommonProperties, CommandStack, FlowValidation };
+export { CommonCanvas, CanvasController, CommonProperties, CommandStack, FlowValidation };

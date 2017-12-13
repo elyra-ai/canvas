@@ -305,7 +305,7 @@ class Palette extends React.Component {
 
 	movePalette(ev) {
 		const paletteDiv = this.getPaletteDiv();
-		const canvasDiv = document.getElementById("canvas-div");
+		const canvasDiv = document.getElementById(this.props.parentDivId);
 
 		let newLeft = ev.clientX - this.dragOffsetX;
 		let newTop = ev.clientY - this.dragOffsetY;
@@ -333,7 +333,7 @@ class Palette extends React.Component {
 
 	resizePalette(ev) {
 		const paletteDiv = this.getPaletteDiv();
-		const canvasDiv = document.getElementById("canvas-div");
+		const canvasDiv = document.getElementById(this.props.parentDivId);
 
 		// When manually resizing, set isMaximized to false in case the user
 		// is resizing a maximized window.
@@ -414,7 +414,7 @@ class Palette extends React.Component {
 	// into the canvas.
 	windowResize() {
 		const paletteDiv = this.getPaletteDiv();
-		const canvasDiv = document.getElementById("canvas-div");
+		const canvasDiv = document.getElementById(this.props.parentDivId);
 
 		if (canvasDiv) {
 			if (this.isMaximized) {
@@ -471,7 +471,7 @@ class Palette extends React.Component {
 	// Called when the user double clicks the title bar.
 	windowMaximize() {
 		const paletteDiv = this.getPaletteDiv();
-		const canvasDiv = document.getElementById("canvas-div");
+		const canvasDiv = document.getElementById(this.props.parentDivId);
 
 		if (canvasDiv) {
 			if (this.isMaximized) {
@@ -533,9 +533,11 @@ class Palette extends React.Component {
 					showGridMethod={this.showGrid}
 					windowMaximizeMethod={this.windowMaximize}
 					showGrid={this.state.showGrid}
+					canvasController={this.props.canvasController}
 				/>
 				<PaletteContent paletteJSON={this.props.paletteJSON}
 					showGrid={this.state.showGrid}
+					canvasController={this.props.canvasController}
 				/>
 			</div>
 		);
@@ -545,6 +547,8 @@ class Palette extends React.Component {
 Palette.propTypes = {
 	paletteJSON: PropTypes.object.isRequired,
 	showPalette: PropTypes.bool.isRequired,
+	parentDivId: PropTypes.string.isRequired,
+	canvasController: PropTypes.object.isRequired
 };
 
 export default Palette;

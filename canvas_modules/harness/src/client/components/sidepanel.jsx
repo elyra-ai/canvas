@@ -47,6 +47,8 @@ export default class SidePanel extends React.Component {
 				setLinkType={this.props.setLinkType}
 				setPaletteLayout={this.props.setPaletteLayout}
 				setTipConfig={this.props.setTipConfig}
+				extraCanvasDisplayed={this.props.extraCanvasDisplayed}
+				showExtraCanvas={this.props.showExtraCanvas}
 				log={this.props.log}
 			/>);
 			break;
@@ -111,6 +113,8 @@ SidePanel.propTypes = {
 	getPipelineFlow: PropTypes.func,
 	setPipelineFlow: PropTypes.func,
 	setTipConfig: PropTypes.func,
+	extraCanvasDisplayed: PropTypes.bool,
+	showExtraCanvas: PropTypes.func,
 	addNodeTypeToPalette: PropTypes.func,
 	log: PropTypes.func
 };

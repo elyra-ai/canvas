@@ -14,6 +14,7 @@ import UiConditionsParser from "./ui-conditions/ui-conditions-parser.js";
 import conditionsUtil from "./util/conditions-utils";
 import PropertyUtils from "./util/property-utils.js";
 import { STATES, ACTIONS } from "./constants/constants.js";
+import CommandStack from "../command-stack/command-stack.js";
 
 export default class PropertiesController {
 
@@ -30,6 +31,7 @@ export default class PropertiesController {
 		this.summaryPanelControls = {};
 		this.controllerHandlerCalled = false;
 		this.requiredParameters = []; // TODO this is needed for validateInput, will change to use this.controls later
+		this.commandStack = new CommandStack();
 
 	}
 	subscribe(callback) {
@@ -43,6 +45,15 @@ export default class PropertiesController {
 			this.controllerHandlerCalled = true;
 		}
 	}
+
+	setCommandStack(commandStack) {
+		this.commandStack = commandStack;
+	}
+
+	getCommandStack() {
+		return this.commandStack;
+	}
+
 	//
 	// Form and parsing Methods
 	//

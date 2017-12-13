@@ -9,9 +9,11 @@
 
 import React from "react";
 import { mount } from "enzyme";
-import Toolbar from "../../src/toolbar/toolbar.jsx";
-import sinon from "sinon";
 import { expect } from "chai";
+import CanvasController from "../../src/canvas-controller";
+import Toolbar from "../../src/toolbar/toolbar.jsx";
+
+const canvasController = new CanvasController();
 
 describe("Toolbar renders correctly", () => {
 
@@ -66,23 +68,12 @@ describe("Toolbar renders correctly", () => {
 });
 
 function createToolbar(config) {
-	const closePalette = sinon.spy();
-	const openPalette = sinon.spy();
-	const zoomIn = sinon.spy();
-	const zoomOut = sinon.spy();
-	const zoomToFit = sinon.spy();
-	const toolbarMenuActionHandler = sinon.spy();
 	const canvasToolbar = mount(
 		<Toolbar
 			config={config}
 			paletteState
 			paletteType="Flyout"
-			closePalette={closePalette}
-			openPalette={openPalette}
-			zoomIn={zoomIn}
-			zoomOut={zoomOut}
-			zoomToFit={zoomToFit}
-			toolbarMenuActionHandler={toolbarMenuActionHandler}
+			canvasController={canvasController}
 		/>
 	);
 	return canvasToolbar;

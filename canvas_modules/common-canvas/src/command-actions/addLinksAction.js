@@ -7,27 +7,27 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 import Action from "../command-stack/action.js";
-import ObjectModel from "../object-model/object-model.js";
 
 export default class AddLinksAction extends Action {
-	constructor(data) {
+	constructor(data, objectModel) {
 		super(data);
 		this.data = data;
+		this.objectModel = objectModel;
 	}
 
 	// Standard methods
 	do() {
-		ObjectModel.addLinks(this.data);
+		this.objectModel.addLinks(this.data);
 	}
 
 	undo() {
 		this.data.forEach((link) => {
-			ObjectModel.deleteLink(link);
+			this.objectModel.deleteLink(link);
 		});
 	}
 
 	redo() {
-		ObjectModel.addLinks(this.data);
+		this.objectModel.addLinks(this.data);
 	}
 
 }

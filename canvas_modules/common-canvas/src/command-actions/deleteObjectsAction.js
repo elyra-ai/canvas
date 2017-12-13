@@ -7,12 +7,12 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 import Action from "../command-stack/action.js";
-import ObjectModel from "../object-model/object-model.js";
 
 export default class DeleteObjectsAction extends Action {
-	constructor(data) {
+	constructor(data, objectModel) {
 		super(data);
 		this.data = data;
+		this.objectModel = objectModel;
 		this.objectsInfo = [];
 	}
 
@@ -23,32 +23,32 @@ export default class DeleteObjectsAction extends Action {
 			objectInfo.id = id;
 
 			// save all the links and node data associated with each id
-			objectInfo.links = ObjectModel.getLinksContainingId(id);
-			if (ObjectModel.isDataNode(id)) {
+			objectInfo.links = this.objectModel.getLinksContainingId(id);
+			if (this.objectModel.isDataNode(id)) {
 				objectInfo.type = "node";
-				objectInfo.data = ObjectModel.getNode(id);
+				objectInfo.data = this.objectModel.getNode(id);
 			} else {
 				objectInfo.type = "comment";
-				objectInfo.data = ObjectModel.getComment(id);
+				objectInfo.data = this.objectModel.getComment(id);
 			}
 			this.objectsInfo.push(objectInfo);
 		});
-		ObjectModel.deleteObjects(this.data);
+		this.objectModel.deleteObjects(this.data);
 	}
 
 	undo() {
 		this.objectsInfo.forEach((objectInfo) => {
 			if (objectInfo.type === "node") {
-				ObjectModel.addNode(objectInfo.data);
+				this.objectModel.addNode(objectInfo.data);
 			} else {
-				ObjectModel.addComment(objectInfo.data);
+				this.objectModel.addComment(objectInfo.data);
 			}
-			ObjectModel.addLinks(objectInfo.links);
+			this.objectModel.addLinks(objectInfo.links);
 		});
 	}
 
 	redo() {
-		ObjectModel.deleteObjects(this.data);
+		this.objectModel.deleteObjects(this.data);
 	}
 
 }

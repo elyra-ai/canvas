@@ -14,6 +14,7 @@ import ObjectModel from "../src/object-model/object-model.js";
 import log4js from "log4js";
 
 const logger = log4js.getLogger("object-model-test");
+const objectModel = new ObjectModel();
 
 describe("ObjectModel handle model OK", () => {
 
@@ -27,13 +28,13 @@ describe("ObjectModel handle model OK", () => {
 
 		deepFreeze(expectedCanvas);
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
 			data: expectedCanvas,
-			layoutinfo: ObjectModel.getLayout()
+			layoutinfo: objectModel.getLayout()
 		});
 
-		const actualCanvas = ObjectModel.getCanvasInfo();
+		const actualCanvas = objectModel.getCanvasInfo();
 
 		// Remove transient data before comparing with expected
 		for (var i = 0; i < actualCanvas.nodes.length; i++) {
@@ -69,16 +70,16 @@ describe("ObjectModel handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
 			data: startCanvas,
-			layoutinfo: ObjectModel.getLayout()
+			layoutinfo: objectModel.getLayout()
 		});
 
-		ObjectModel.dispatch({ type: "CLEAR_PIPELINE_FLOW" });
+		objectModel.dispatch({ type: "CLEAR_PIPELINE_FLOW" });
 
 		const expectedCanvas = null;
-		const actualCanvas = ObjectModel.getCanvasInfo();
+		const actualCanvas = objectModel.getCanvasInfo();
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
@@ -103,10 +104,10 @@ describe("ObjectModel handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
 			data: startCanvas,
-			layoutinfo: ObjectModel.getLayout()
+			layoutinfo: objectModel.getLayout()
 		});
 
 		var newNodeData = { id: "node4", label: "Type", image: "imageName", type: "execution_node",
@@ -117,7 +118,7 @@ describe("ObjectModel handle model OK", () => {
 		};
 
 		// imageName - Just for Testing
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "ADD_NODE",
 			data: { newNode: newNodeData }
 		});
@@ -141,7 +142,7 @@ describe("ObjectModel handle model OK", () => {
 				]
 			};
 
-		const actualCanvas = ObjectModel.getCanvasInfo();
+		const actualCanvas = objectModel.getCanvasInfo();
 
 		// Remove transient data before comparing with expected
 		for (var i = 0; i < actualCanvas.nodes.length; i++) {
@@ -175,13 +176,13 @@ describe("ObjectModel handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
 			data: startCanvas,
-			layoutinfo: ObjectModel.getLayout()
+			layoutinfo: objectModel.getLayout()
 		});
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "MOVE_OBJECTS",
 			data: { nodes: ["node1", "node2", "node3"],
 				offsetX: 5,
@@ -201,7 +202,7 @@ describe("ObjectModel handle model OK", () => {
 			links: []
 			};
 
-		const actualCanvas = ObjectModel.getCanvasInfo();
+		const actualCanvas = objectModel.getCanvasInfo();
 
 		// Remove transient data before comparing with expected
 		for (var i = 0; i < actualCanvas.nodes.length; i++) {
@@ -235,23 +236,23 @@ describe("ObjectModel handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
 			data: startCanvas,
-			layoutinfo: ObjectModel.getLayout()
+			layoutinfo: objectModel.getLayout()
 		});
 
-		/* ObjectModel.dispatch({
+		/* objectModel.dispatch({
 			type: "DELETE_OBJECTS",
 			data: { selectedObjectIds: ["node1", "node3"] }
 		}); */
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "DELETE_OBJECT",
 			data: "node1"
 		});
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "DELETE_OBJECT",
 			data: "node3"
 		});
@@ -268,7 +269,7 @@ describe("ObjectModel handle model OK", () => {
 				links: []
 			};
 
-		const actualCanvas = ObjectModel.getCanvasInfo();
+		const actualCanvas = objectModel.getCanvasInfo();
 
 		// Remove transient data before comparing with expected
 		for (var i = 0; i < actualCanvas.nodes.length; i++) {
@@ -306,13 +307,13 @@ describe("ObjectModel handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
 			data: startCanvas,
-			layoutinfo: ObjectModel.getLayout()
+			layoutinfo: objectModel.getLayout()
 		});
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "DISCONNECT_NODES",
 			data: { selectedNodeIds: ["node1"] }
 		});
@@ -333,7 +334,7 @@ describe("ObjectModel handle model OK", () => {
 				]
 			};
 
-		const actualCanvas = ObjectModel.getCanvasInfo();
+		const actualCanvas = objectModel.getCanvasInfo();
 
 		// Remove transient data before comparing with expected
 		for (var i = 0; i < actualCanvas.nodes.length; i++) {
@@ -371,13 +372,13 @@ describe("ObjectModel handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
 			data: startCanvas,
-			layoutinfo: ObjectModel.getLayout()
+			layoutinfo: objectModel.getLayout()
 		});
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "ADD_NODE_ATTR",
 			data: { objIds: ["node1"],
 				attrName: "bgcolor" }
@@ -400,7 +401,7 @@ describe("ObjectModel handle model OK", () => {
 				]
 			};
 
-		const actualCanvas = ObjectModel.getCanvasInfo();
+		const actualCanvas = objectModel.getCanvasInfo();
 
 		// Remove transient data before comparing with expected
 		for (var i = 0; i < actualCanvas.nodes.length; i++) {
@@ -438,13 +439,13 @@ describe("ObjectModel handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
 			data: startCanvas,
-			layoutinfo: ObjectModel.getLayout()
+			layoutinfo: objectModel.getLayout()
 		});
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "REMOVE_NODE_ATTR",
 			data: { objIds: ["node1"],
 				attrName: "bgcolor" }
@@ -467,7 +468,7 @@ describe("ObjectModel handle model OK", () => {
 				]
 			};
 
-		const actualCanvas = ObjectModel.getCanvasInfo();
+		const actualCanvas = objectModel.getCanvasInfo();
 
 		// Remove transient data before comparing with expected
 		for (var i = 0; i < actualCanvas.nodes.length; i++) {
@@ -502,13 +503,13 @@ describe("ObjectModel handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
 			data: startCanvas,
-			layoutinfo: ObjectModel.getLayout()
+			layoutinfo: objectModel.getLayout()
 		});
 
-		/* ObjectModel.dispatch({
+		/* objectModel.dispatch({
 			type: "ADD_COMMENT",
 			data: { id: "comment3", mousePos: { x: 200, y: 300 }, selectedObjectIds: [] }
 			class_name: "canvas-comment",
@@ -517,7 +518,7 @@ describe("ObjectModel handle model OK", () => {
 			width: 128,
 		});*/
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "ADD_COMMENT",
 			data: { id: "comment3",	x_pos: 200,	y_pos: 300,	selectedObjectIds: []	}
 		});
@@ -538,7 +539,7 @@ describe("ObjectModel handle model OK", () => {
 			};
 
 
-		const actualCanvas = ObjectModel.getCanvasInfo();
+		const actualCanvas = objectModel.getCanvasInfo();
 
 		// Remove transient data before comparing with expected
 		for (var i = 0; i < actualCanvas.nodes.length; i++) {
@@ -573,13 +574,13 @@ describe("ObjectModel handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
 			data: startCanvas,
-			layoutinfo: ObjectModel.getLayout()
+			layoutinfo: objectModel.getLayout()
 		});
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "EDIT_COMMENT",
 			data: { nodes: ["comment2"], offsetX: 425, offsetY: 125, height: 45, width: 250, label: "this is a new comment string" }
 		});
@@ -602,7 +603,7 @@ describe("ObjectModel handle model OK", () => {
 				]
 			};
 
-		const actualCanvas = ObjectModel.getCanvasInfo();
+		const actualCanvas = objectModel.getCanvasInfo();
 
 		// Remove transient data before comparing with expected
 		for (var i = 0; i < actualCanvas.nodes.length; i++) {
@@ -637,13 +638,13 @@ describe("ObjectModel handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
 			data: startCanvas,
-			layoutinfo: ObjectModel.getLayout()
+			layoutinfo: objectModel.getLayout()
 		});
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "MOVE_OBJECTS",
 			data: { nodes: ["comment1", "comment2"],
 				offsetX: 5,
@@ -664,7 +665,7 @@ describe("ObjectModel handle model OK", () => {
 				links: []
 			};
 
-		const actualCanvas = ObjectModel.getCanvasInfo();
+		const actualCanvas = objectModel.getCanvasInfo();
 
 		// Remove transient data before comparing with expected
 		for (var i = 0; i < actualCanvas.nodes.length; i++) {
@@ -697,23 +698,23 @@ describe("ObjectModel handle model OK", () => {
 				"links": []
 			};
 		deepFreeze(startCanvas);
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
 			data: startCanvas,
-			layoutinfo: ObjectModel.getLayout()
+			layoutinfo: objectModel.getLayout()
 		});
 
-		/* ObjectModel.dispatch({
+		/* objectModel.dispatch({
 			type: "DELETE_OBJECTS",
 			data: { selectedObjectIds: ["comment1", "comment2"] }
 		});*/
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "DELETE_OBJECT",
 			data: "comment1"
 		});
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "DELETE_OBJECT",
 			data: "comment2"
 		});
@@ -731,7 +732,7 @@ describe("ObjectModel handle model OK", () => {
 				"links": []
 			};
 
-		const actualCanvas = ObjectModel.getCanvasInfo();
+		const actualCanvas = objectModel.getCanvasInfo();
 
 		// Remove transient data before comparing with expected
 		for (var i = 0; i < actualCanvas.nodes.length; i++) {
@@ -770,13 +771,13 @@ describe("ObjectModel handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
 			data: startCanvas,
-			layoutinfo: ObjectModel.getLayout()
+			layoutinfo: objectModel.getLayout()
 		});
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "ADD_COMMENT_ATTR",
 			data: { objIds: ["comment1"],
 				attrName: "bgcolor" }
@@ -799,7 +800,7 @@ describe("ObjectModel handle model OK", () => {
 				]
 			};
 
-		const actualCanvas = ObjectModel.getCanvasInfo();
+		const actualCanvas = objectModel.getCanvasInfo();
 
 		// Remove transient data before comparing with expected
 		for (var i = 0; i < actualCanvas.nodes.length; i++) {
@@ -837,13 +838,13 @@ describe("ObjectModel handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
 			data: startCanvas,
-			layoutinfo: ObjectModel.getLayout()
+			layoutinfo: objectModel.getLayout()
 		});
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "REMOVE_COMMENT_ATTR",
 			data: { objIds: ["comment1"],
 				attrName: "bgcolor" }
@@ -866,7 +867,7 @@ describe("ObjectModel handle model OK", () => {
 				]
 			};
 
-		const actualCanvas = ObjectModel.getCanvasInfo();
+		const actualCanvas = objectModel.getCanvasInfo();
 
 		// Remove transient data before comparing with expected
 		for (var i = 0; i < actualCanvas.nodes.length; i++) {
@@ -904,20 +905,20 @@ describe("ObjectModel handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
 			data: startCanvas,
-			layoutinfo: ObjectModel.getLayout()
+			layoutinfo: objectModel.getLayout()
 		});
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "ADD_LINK",
 			data: { id: "link3", class_name: "canvas-node-link",
 				type: "nodeLink", srcNodeId: "node2", trgNodeId: "node3",
 				srcNodePortId: "sourceport1", trgNodePortId: "targetport1" }
 		});
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "ADD_LINK",
 			data: { id: "link4", class_name: "canvas-comment-link",
 				type: "commentLink", srcNodeId: "comment1", trgNodeId: "node2" }
@@ -946,7 +947,7 @@ describe("ObjectModel handle model OK", () => {
 				]
 			};
 
-		const actualCanvas = ObjectModel.getCanvasInfo();
+		const actualCanvas = objectModel.getCanvasInfo();
 
 		// Remove transient data before comparing with expected
 		for (var i = 0; i < actualCanvas.nodes.length; i++) {
@@ -996,13 +997,13 @@ describe("ObjectModel handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
 			data: startCanvas,
-			layoutinfo: ObjectModel.getLayout()
+			layoutinfo: objectModel.getLayout()
 		});
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "DELETE_LINK",
 			data: { id: "link1" }
 		});
@@ -1023,7 +1024,7 @@ describe("ObjectModel handle model OK", () => {
 				]
 			};
 
-		const actualCanvas = ObjectModel.getCanvasInfo();
+		const actualCanvas = objectModel.getCanvasInfo();
 
 		// Remove transient data before comparing with expected
 		for (var i = 0; i < actualCanvas.nodes.length; i++) {
@@ -1061,13 +1062,13 @@ describe("ObjectModel handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
 			data: startCanvas,
-			layoutinfo: ObjectModel.getLayout()
+			layoutinfo: objectModel.getLayout()
 		});
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "DELETE_OBJECT",
 			data: "node1"
 		});
@@ -1087,7 +1088,7 @@ describe("ObjectModel handle model OK", () => {
 				]
 			};
 
-		const actualCanvas = ObjectModel.getCanvasInfo();
+		const actualCanvas = objectModel.getCanvasInfo();
 
 		// Remove transient data before comparing with expected
 		for (var i = 0; i < actualCanvas.nodes.length; i++) {
@@ -1125,13 +1126,13 @@ describe("ObjectModel handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
 			data: startCanvas,
-			layoutinfo: ObjectModel.getLayout()
+			layoutinfo: objectModel.getLayout()
 		});
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "DELETE_OBJECT",
 			data: "comment1"
 		});
@@ -1151,7 +1152,7 @@ describe("ObjectModel handle model OK", () => {
 				]
 			};
 
-		const actualCanvas = ObjectModel.getCanvasInfo();
+		const actualCanvas = objectModel.getCanvasInfo();
 
 		// Remove transient data before comparing with expected
 		for (var i = 0; i < actualCanvas.nodes.length; i++) {
@@ -1189,19 +1190,19 @@ describe("ObjectModel handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
 			data: startCanvas,
-			layoutinfo: ObjectModel.getLayout()
+			layoutinfo: objectModel.getLayout()
 		});
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_SELECTIONS",
 			data: ["comment1", "node3"]
 		});
 
 		const expectedSelections = ["comment1", "node3"];
-		const actualSelections = ObjectModel.getSelectedObjectIds();
+		const actualSelections = objectModel.getSelectedObjectIds();
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
@@ -1231,24 +1232,24 @@ describe("ObjectModel handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
 			data: startCanvas,
-			layoutinfo: ObjectModel.getLayout()
+			layoutinfo: objectModel.getLayout()
 		});
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_SELECTIONS",
 			data: ["comment1", "node3"]
 		});
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "CLEAR_SELECTIONS"
 		});
 
 
 		const expectedSelections = [];
-		const actualSelections = ObjectModel.getSelectedObjectIds();
+		const actualSelections = objectModel.getSelectedObjectIds();
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
@@ -1278,23 +1279,23 @@ describe("ObjectModel handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
 			data: startCanvas,
-			layoutinfo: ObjectModel.getLayout()
+			layoutinfo: objectModel.getLayout()
 		});
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_SELECTIONS",
 			data: ["comment1", "node3"]
 		});
 
 
-		ObjectModel.toggleSelection("comment1", true);
+		objectModel.toggleSelection("comment1", true);
 
 
 		const expectedSelections = ["node3"];
-		const actualSelections = ObjectModel.getSelectedObjectIds();
+		const actualSelections = objectModel.getSelectedObjectIds();
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
@@ -1324,23 +1325,23 @@ describe("ObjectModel handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
 			data: startCanvas,
-			layoutinfo: ObjectModel.getLayout()
+			layoutinfo: objectModel.getLayout()
 		});
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_SELECTIONS",
 			data: ["node3"]
 		});
 
 
-		ObjectModel.toggleSelection("comment1", true);
+		objectModel.toggleSelection("comment1", true);
 
 
 		const expectedSelections = ["node3", "comment1"];
-		const actualSelections = ObjectModel.getSelectedObjectIds();
+		const actualSelections = objectModel.getSelectedObjectIds();
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
@@ -1370,23 +1371,23 @@ describe("ObjectModel handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
 			data: startCanvas,
-			layoutinfo: ObjectModel.getLayout()
+			layoutinfo: objectModel.getLayout()
 		});
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_SELECTIONS",
 			data: ["comment1", "node3"]
 		});
 
 
-		ObjectModel.toggleSelection("node3", true);
+		objectModel.toggleSelection("node3", true);
 
 
 		const expectedSelections = ["comment1"];
-		const actualSelections = ObjectModel.getSelectedObjectIds();
+		const actualSelections = objectModel.getSelectedObjectIds();
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
@@ -1416,23 +1417,23 @@ describe("ObjectModel handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
 			data: startCanvas,
-			layoutinfo: ObjectModel.getLayout()
+			layoutinfo: objectModel.getLayout()
 		});
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_SELECTIONS",
 			data: ["comment1"]
 		});
 
 
-		ObjectModel.toggleSelection("node3", true);
+		objectModel.toggleSelection("node3", true);
 
 
 		const expectedSelections = ["comment1", "node3"];
-		const actualSelections = ObjectModel.getSelectedObjectIds();
+		const actualSelections = objectModel.getSelectedObjectIds();
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
@@ -1465,23 +1466,23 @@ describe("ObjectModel handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
 			data: startCanvas,
-			layoutinfo: ObjectModel.getLayout()
+			layoutinfo: objectModel.getLayout()
 		});
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_SELECTIONS",
 			data: ["node2"]
 		});
 
 
-		ObjectModel.selectSubGraph("node4");
+		objectModel.selectSubGraph("node4");
 
 
 		const expectedSelections = ["node2", "node4", "node3"];
-		const actualSelections = ObjectModel.getSelectedObjectIds();
+		const actualSelections = objectModel.getSelectedObjectIds();
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
@@ -1514,23 +1515,23 @@ describe("ObjectModel handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
 			data: startCanvas,
-			layoutinfo: ObjectModel.getLayout()
+			layoutinfo: objectModel.getLayout()
 		});
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_SELECTIONS",
 			data: ["node1"]
 		});
 
 
-		ObjectModel.selectSubGraph("node4");
+		objectModel.selectSubGraph("node4");
 
 
 		const expectedSelections = ["node1", "node4", "node2"];
-		const actualSelections = ObjectModel.getSelectedObjectIds();
+		const actualSelections = objectModel.getSelectedObjectIds();
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
@@ -1563,23 +1564,23 @@ describe("ObjectModel handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
 			data: startCanvas,
-			layoutinfo: ObjectModel.getLayout()
+			layoutinfo: objectModel.getLayout()
 		});
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_SELECTIONS",
 			data: ["node1"]
 		});
 
 
-		ObjectModel.selectSubGraph("node4");
+		objectModel.selectSubGraph("node4");
 
 
 		const expectedSelections = ["node1", "node4", "node3"];
-		const actualSelections = ObjectModel.getSelectedObjectIds();
+		const actualSelections = objectModel.getSelectedObjectIds();
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
@@ -1614,23 +1615,23 @@ describe("ObjectModel handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
 			data: startCanvas,
-			layoutinfo: ObjectModel.getLayout()
+			layoutinfo: objectModel.getLayout()
 		});
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_SELECTIONS",
 			data: ["node2"]
 		});
 
 
-		ObjectModel.selectSubGraph("node4");
+		objectModel.selectSubGraph("node4");
 
 
 		const expectedSelections = ["node2", "node4", "node3"];
-		const actualSelections = ObjectModel.getSelectedObjectIds();
+		const actualSelections = objectModel.getSelectedObjectIds();
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
@@ -1685,24 +1686,24 @@ describe("ObjectModel handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
 			data: startCanvas,
-			layoutinfo: ObjectModel.getLayout()
+			layoutinfo: objectModel.getLayout()
 		});
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_SELECTIONS",
 			data: ["node1"]
 		});
 
 
-		ObjectModel.selectSubGraph("node13");
+		objectModel.selectSubGraph("node13");
 
 
 		const expectedSelections = ["node1", "node13", "node2", "node3", "node4", "node11", "node12",
 			"node5", "node6", "node7"];
-		const actualSelections = ObjectModel.getSelectedObjectIds();
+		const actualSelections = objectModel.getSelectedObjectIds();
 
 		// logger.info("Expected Selections = " + JSON.stringify(expectedSelections));
 		// logger.info("Actual Selections   = " + JSON.stringify(actualSelections));
@@ -1757,24 +1758,24 @@ describe("ObjectModel handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
 			data: startCanvas,
-			layoutinfo: ObjectModel.getLayout()
+			layoutinfo: objectModel.getLayout()
 		});
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_SELECTIONS",
 			data: ["node1"]
 		});
 
 
-		ObjectModel.selectSubGraph("node12");
+		objectModel.selectSubGraph("node12");
 
 
 		const expectedSelections = ["node1", "node12", "node2", "node3", "node4",
 			"node5", "node6", "node7"];
-		const actualSelections = ObjectModel.getSelectedObjectIds();
+		const actualSelections = objectModel.getSelectedObjectIds();
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
@@ -1829,23 +1830,23 @@ describe("ObjectModel handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
 			data: startCanvas,
-			layoutinfo: ObjectModel.getLayout()
+			layoutinfo: objectModel.getLayout()
 		});
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_SELECTIONS",
 			data: ["node8"]
 		});
 
 
-		ObjectModel.selectSubGraph("node11");
+		objectModel.selectSubGraph("node11");
 
 
 		const expectedSelections = ["node8", "node11", "node4", "node12"];
-		const actualSelections = ObjectModel.getSelectedObjectIds();
+		const actualSelections = objectModel.getSelectedObjectIds();
 
 		// logger.info("Expected Selections = " + JSON.stringify(expectedSelections));
 		// logger.info("Actual Selections   = " + JSON.stringify(actualSelections));
@@ -1900,21 +1901,21 @@ describe("ObjectModel handle model OK", () => {
 
 		deepFreeze(startCanvas);
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
 			data: startCanvas,
-			layoutinfo: ObjectModel.getLayout()
+			layoutinfo: objectModel.getLayout()
 		});
 
-		ObjectModel.dispatch({
+		objectModel.dispatch({
 			type: "SET_SELECTIONS",
 			data: ["comment1"]
 		});
 
-		ObjectModel.selectSubGraph("node13");
+		objectModel.selectSubGraph("node13");
 
 		const expectedSelections = ["comment1", "node13", "node7", "node4", "node11", "node12"];
-		const actualSelections = ObjectModel.getSelectedObjectIds();
+		const actualSelections = objectModel.getSelectedObjectIds();
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
