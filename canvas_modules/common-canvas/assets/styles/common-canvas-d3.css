@@ -61,14 +61,14 @@
 }
 
 .d3-node-body-outline-austin {
-	stroke: #efefef;
-	stroke-width: 2;
+	stroke: #D8D8D8;
+	stroke-width: 1;
 	fill: #efefef;
 }
 
 .d3-node-body-outline-austin[hover=yes] {
-	stroke: #eaeaea;
-	stroke-width: 2;
+	stroke: #D8D8D8;
+	stroke-width: 1;
 	fill: #eaeaea;
 }
 
