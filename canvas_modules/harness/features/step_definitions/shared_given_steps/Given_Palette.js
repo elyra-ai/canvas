@@ -64,6 +64,7 @@ module.exports = function() {
 		for (var idx = 0; idx < paletteFileOptions.length; idx++) {
 			if (paletteFileOptions[idx].getText() === paletteFile) {
 				paletteFileOptions[idx].click();
+				break;
 			}
 		}
 	});
@@ -89,6 +90,7 @@ module.exports = function() {
 				// this will not work with relative paths
 				paletteInput.setValue(getBaseDir() + paletteFile);
 				browser.$("#sidepanel-palette-input").click("#paletteFileSubmit");
+				break;
 			}
 		}
 	});

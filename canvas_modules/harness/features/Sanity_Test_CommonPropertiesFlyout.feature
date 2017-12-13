@@ -73,7 +73,7 @@ Feature: Sanity_Test_CommonProperties_Flyout
 			Then I click the "Settings" category from flyout
 			Then I click the "Settings" category from flyout
 			Then I open the "Configure field types" wide flyout panel
-			Then I close the subPanel dialog
+			Then I close the wideFlyout dialog
 			Then I have closed the common properties dialog by clicking on close button
 
 		# Sub Panel Validation
@@ -88,6 +88,7 @@ Feature: Sanity_Test_CommonProperties_Flyout
 			Then I update the value of Name textbox with "Age"
 			Then I verify that the validation warning is "name cannot be an existing column name"
 			Then I close the subPanel dialog
+			Then I close the wideFlyout dialog
 			Then I have closed the common properties dialog by clicking on close button
 
 		# Complex Field Picker

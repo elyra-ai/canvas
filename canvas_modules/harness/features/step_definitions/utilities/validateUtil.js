@@ -85,6 +85,7 @@ function getCommentIndexFromCanvasUsingText(commentText) {
 	for (let idx = 0; idx < commentElements.length; idx++) {
 		if (commentElements[idx].getAttribute("textContent") === commentText) {
 			comIndex = idx;
+			break;
 		}
 	}
 	return comIndex;
@@ -223,6 +224,7 @@ function getNodeIdForLabel(nodeText) {
 		for (let idx = 0; idx < domLabels.length; idx++) {
 			if (domLabels.item(idx).__data__.label === labelText) {
 				nodeId = domLabels.item(idx).id;
+				break;
 			}
 		}
 

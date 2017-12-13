@@ -27,6 +27,7 @@ module.exports = function() {
 		const linkButton = findSummaryLinkButton(category, linkName);
 		expect(linkButton).not.toBe(null);
 		linkButton.click();
+		browser.pause(250);
 	});
 
 	this.Then(/^I verify that the "([^"]*)" control is displayed$/, function(controlId) {

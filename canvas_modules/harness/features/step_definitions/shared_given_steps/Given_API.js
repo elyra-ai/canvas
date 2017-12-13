@@ -26,6 +26,7 @@ module.exports = function() {
 		for (var idx = 0; idx < apiList.length; idx++) {
 			if (apiList[idx].getText() === api) {
 				apiList[idx].click();
+				break;
 			}
 		}
 	});

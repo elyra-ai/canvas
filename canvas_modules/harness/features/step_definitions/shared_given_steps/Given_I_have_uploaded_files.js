@@ -29,6 +29,7 @@ module.exports = function() {
 		for (var idx = 0; idx < canvasFileOptions.length; idx++) {
 			if (canvasFileOptions[idx].getText() === diagramFile) {
 				canvasFileOptions[idx].click();
+				break;
 			}
 		}
 	});
@@ -55,6 +56,7 @@ module.exports = function() {
 				// this will not work with relative paths
 				canvasInput.setValue(getBaseDir() + diagramFile);
 				browser.$(".canvasField").click("#canvasFileSubmit");
+				break;
 			}
 		}
 	});
@@ -77,8 +79,11 @@ module.exports = function() {
 		for (var idx = 0; idx < commonPropertiesOptions.length; idx++) {
 			if (commonPropertiesOptions[idx].getText() === diagramFile) {
 				commonPropertiesOptions[idx].click();
+				break;
 			}
 		}
+
+		browser.pause(550);
 	});
 
 };

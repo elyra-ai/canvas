@@ -136,7 +136,8 @@ module.exports = function() {
 	this.Then(/^I check table cell enablement in flyout$/, function() {
 		const summaryLinkButton = browser.$(".control-summary-link-buttons").$("a");
 		summaryLinkButton.click();
-		var firstCheck = browser.$$(".properties-tooltips-container")[5];
+		browser.pause(250);
+		var firstCheck = browser.$$(".properties-tooltips-container")[5].$("label");
 		var dropdowns = browser.$$(".Dropdown-control ");
 		var disabledDropdowns = browser.$$(".Dropdown-disabled");
 		expect(dropdowns.length).toEqual(10);

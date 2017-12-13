@@ -59,6 +59,7 @@ module.exports = function() {
 		for (var idx = 0; idx < items.length; idx++) {
 			if (items[idx].getText() === itemText) {
 				found = true;
+				break;
 			}
 		}
 		expect(found).toEqual(true);

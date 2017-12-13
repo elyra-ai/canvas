@@ -160,6 +160,7 @@ module.exports = function() {
 		optionDrug3.click();
 
 		browser.$("#field-picker-back-button").click();
+		browser.pause(500);
 
 		var firstInputFieldList = browser.$("#editor-control-columnSelectSharedWithInput").$$("option");
 		expect(2).toEqual(firstInputFieldList.length);
@@ -191,6 +192,7 @@ module.exports = function() {
 		optionNa3.click();
 
 		browser.$("#field-picker-back-button").click();
+		browser.pause(500);
 
 		var secondInputFieldList = browser.$("#editor-control-columnSelectInputFieldList").$$("option");
 		expect(3).toEqual(secondInputFieldList.length);
@@ -379,9 +381,7 @@ module.exports = function() {
 
 
 	this.Then(/^I have closed the common properties dialog by clicking on close button$/, function() {
-		var closeButton = getPropertiesCancelButton();
-		closeButton.click();
-
+		clickCancelButton();
 	});
 
 	this.Then("I verify testValue is not present", function() {
@@ -431,8 +431,11 @@ module.exports = function() {
 	});
 
 	this.Then("I close the subPanel dialog", function() {
-		const closeButton = getPropertiesCancelButton();
-		closeButton.click();
+		clickCancelButton();
+	});
+
+	this.Then("I close the wideFlyout dialog", function() {
+		clickCancelButton();
 	});
 
 	this.Then("I click on modal OK button", function() {
@@ -445,8 +448,7 @@ module.exports = function() {
 			var okButton = getPropertiesApplyButton();
 			okButton.click();
 		} else {
-			var cancelButton = getPropertiesCancelButton();
-			cancelButton.click();
+			clickCancelButton();
 		}
 	});
 
@@ -475,8 +477,11 @@ module.exports = function() {
 		return applyButtons[applyButtons.length - 1];
 	}
 
-	function getPropertiesCancelButton() {
+	function clickCancelButton() {
+		browser.pause(500);
 		const cancelButtons = browser.$$("#properties-cancel-button");
-		return cancelButtons[cancelButtons.length - 1];
+		const button = cancelButtons[cancelButtons.length - 1];
+		button.click();
+		browser.pause(500);
 	}
 };

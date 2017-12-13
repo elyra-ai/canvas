@@ -116,10 +116,12 @@ module.exports = function() {
 					for (var indx = 0; indx < parameter.length; indx++) {
 						if (parameter[indx] === testValue) {
 							found = true;
+							break;
 						}
 					}
 				} else if (parameterValues === testValue) {
 					found = true;
+					break;
 				}
 			}
 		} else if (parameterValues === testValue) {
