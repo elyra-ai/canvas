@@ -10,9 +10,7 @@
 /* eslint complexity: ["error", 25]*/
 
 import logger from "../../../utils/logger";
-import { CONTROL, ADDITIONALLINK, CHECKBOXSELECTOR, PANEL, SUMMARYPANEL, PRIMARYTABS } from "../constants/constants.js";
-import { PANELSELECTOR, SUBTABS, CUSTOMPANEL } from "../constants/constants.js";
-
+import { ItemType } from "../form/form-constants";
 
 function parseInput(definition) {
 	var data = definition;
@@ -90,7 +88,7 @@ function parseControls(controls, formData) {
 
 function parseUiItem(controls, uiItem, panelId) {
 	switch (uiItem.itemType) {
-	case CONTROL: {
+	case ItemType.CONTROL: {
 		const control = uiItem.control;
 		if (panelId) {
 			control.summaryPanelId = panelId;
@@ -111,9 +109,9 @@ function parseUiItem(controls, uiItem, panelId) {
 		}
 		break;
 	}
-	case ADDITIONALLINK:
-	case CHECKBOXSELECTOR:
-	case PANEL: {
+	case ItemType.ADDITIONAL_LINK:
+	case ItemType.CHECKBOX_SELECTOR:
+	case ItemType.PANEL: {
 		if (uiItem.panel && uiItem.panel.uiItems) {
 			for (const panelUiItem of uiItem.panel.uiItems) {
 				parseUiItem(controls, panelUiItem, panelId);
@@ -121,7 +119,7 @@ function parseUiItem(controls, uiItem, panelId) {
 		}
 		break;
 	}
-	case SUMMARYPANEL: {
+	case ItemType.SUMMARY_PANEL: {
 		if (uiItem.panel && uiItem.panel.uiItems) {
 			for (const panelUiItem of uiItem.panel.uiItems) {
 				parseUiItem(controls, panelUiItem, uiItem.panel.id);
@@ -129,9 +127,9 @@ function parseUiItem(controls, uiItem, panelId) {
 		}
 		break;
 	}
-	case PRIMARYTABS:
-	case PANELSELECTOR:
-	case SUBTABS: {
+	case ItemType.PRIMARY_TABS:
+	case ItemType.PANEL_SELECTOR:
+	case ItemType.SUB_TABS: {
 		if (uiItem.tabs) {
 			for (const tab of uiItem.tabs) {
 				parseUiItem(controls, tab.content, panelId);
@@ -139,7 +137,7 @@ function parseUiItem(controls, uiItem, panelId) {
 		}
 		break;
 	}
-	case CUSTOMPANEL:
+	case ItemType.CUSTOM_PANEL:
 		if (uiItem.panel && uiItem.panel.parameters) {
 			for (const param of uiItem.panel.parameters) {
 				const control = {
@@ -153,6 +151,10 @@ function parseUiItem(controls, uiItem, panelId) {
 			}
 		}
 		break; // required parameters are handled by panel
+	case ItemType.STATIC_TEXT:
+	case ItemType.HORIZONTAL_SEPARATOR: {
+		break;
+	}
 	default:
 		logger.warn("Unknown UiItem type when parsing ui conditions: " + uiItem.itemType);
 		break;

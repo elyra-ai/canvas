@@ -16,7 +16,7 @@ export class ParameterDef {
 	constructor(cname, label, description, type, role, valueRestriction, defaultValue,
 		control, orientation, width, charLimit, placeHolderText, separator,
 		resourceKey, visible, valueIcons, sortable, filterable, editStyle, required,
-		numberGenerator, isKey, dmDefault, language, summary) {
+		numberGenerator, isKey, dmDefault, language, summary, textAfter) {
 		this.name = cname;
 		this.label = ResourceDef.make(label);
 		this.description = ResourceDef.make(description);
@@ -46,6 +46,7 @@ export class ParameterDef {
 			this.dmDefault = dmDefault;
 		}
 		this.summary = summary;
+		this.textAfter = textAfter;
 	}
 
 	isList() {
@@ -128,6 +129,10 @@ export class ParameterDef {
 		return l10nProvider.l10nResource(this.placeHolderText);
 	}
 
+	getTextAfter(l10nProvider) {
+		return l10nProvider.l10nResource(this.textAfter);
+	}
+
 	/**
 	 * Returns the "control" attribute which can be used to define which control should be used
 	 * for editing a property. The control should be valid for the associated property.
@@ -192,7 +197,8 @@ export class ParameterDef {
 				isKey,
 				_.propertyOf(uihint)("dm_default"),
 				_.propertyOf(uihint)("language"),
-				_.propertyOf(uihint)("summary")
+				_.propertyOf(uihint)("summary"),
+				_.propertyOf(uihint)("text_after")
 			);
 		}
 		return null;

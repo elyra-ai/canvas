@@ -1,0 +1,84 @@
+{
+  "current_parameters": {},
+  "parameters": [
+    {
+      "id": "radioset",
+      "enum": [
+        "Include",
+        "Discard"
+      ],
+      "default": "Include"
+    },
+    {
+      "id": "textfield",
+      "type": "string",
+      "default": ""
+    },
+    {
+      "id": "numberfield",
+      "type": "integer"
+    }
+  ],
+  "uihints": {
+    "id": "uiItems",
+    "icon": "images/items.svg",
+    "label": {
+      "default": "UIItem Test"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "radioset",
+        "label": {
+          "default": "Mode"
+        },
+        "description": {
+          "default": "Include or discard rows"
+        },
+        "orientation": "horizontal",
+        "text_after": {
+          "default": "Hint: should have a separator after"
+        },
+        "separator": "after"
+      },
+      {
+        "parameter_ref": "textfield",
+        "label": {
+          "default": "Simple text"
+        },
+        "description": {
+          "default": "Testing of uiItems"
+        },
+        "text_after": {
+          "resource_key": "textfield.text_after"
+        }
+      },
+      {
+        "parameter_ref": "numberfield",
+        "label": {
+          "default": "Number"
+        },
+        "description": {
+          "default": "Testing of uiItems"
+        },
+        "separator": "before"
+      }
+    ],
+    "group_info": [
+      {
+        "id": "basic-settings",
+        "label": {
+          "default": "Settings"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "radioset",
+          "textfield",
+          "numberfield"
+        ]
+      }
+    ]
+  },
+  "resources": {
+    "textfield.text_after": "Hint: should have a separator after"
+  }
+}

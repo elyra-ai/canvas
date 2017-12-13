@@ -167,16 +167,15 @@ function _makeControls(parameterMetadata, group, structureMetadata, l10nProvider
 		}
 		if (!(group instanceof StructureDef) || (group instanceof StructureDef && prop.isSubPanelEdit())) {
 			const control = UIItem.makeControl(_makeControl(parameterMetadata, paramName, group, structureDef, l10nProvider));
-			if (prop.separatorBefore() || prop.separatorAfter()) {
-				if (prop.separatorBefore()) {
-					uiItems.push(UIItem.makeHSeparator());
-				}
-				uiItems.push(control);
-				if (prop.separatorAfter()) {
-					uiItems.push(UIItem.makeHSeparator());
-				}
-			} else {
-				uiItems.push(control);
+			if (prop.separatorBefore()) {
+				uiItems.push(UIItem.makeHSeparator());
+			}
+			uiItems.push(control);
+			if (prop.textAfter) {
+				uiItems.push(UIItem.makeStaticText(prop.getTextAfter(l10nProvider)));
+			}
+			if (prop.separatorAfter()) {
+				uiItems.push(UIItem.makeHSeparator());
 			}
 		}
 	});

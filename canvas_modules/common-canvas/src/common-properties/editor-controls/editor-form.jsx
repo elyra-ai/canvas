@@ -614,9 +614,9 @@ export default class EditorForm extends React.Component {
 				panel={subPanel}
 			/>);
 		} else if (uiItem.itemType === "staticText") {
-			return <div id={"static-text." + key}>{uiItem.text}</div>;
+			return <div key={"static-text." + key} className="static-text">{uiItem.text}</div>;
 		} else if (uiItem.itemType === "hSeparator") {
-			return <hr id={"h-separator." + key} />;
+			return <hr key={"h-separator." + key} className="h-separator" />;
 		} else if (uiItem.itemType === "panel") {
 			return this.genPanel(key, uiItem.panel, propertyId, indexof);
 		} else if (uiItem.itemType === "subTabs") {

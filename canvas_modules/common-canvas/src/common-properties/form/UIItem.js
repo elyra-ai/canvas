@@ -73,10 +73,10 @@ export class UIItem {
 		});
 	}
 
-	static makeStaticText(label) {
+	static makeStaticText(text) {
 		return new UIItem({
 			itemType: ItemType.STATIC_TEXT,
-			label: label
+			text: text
 		});
 	}
 
