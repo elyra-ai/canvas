@@ -267,7 +267,7 @@ export default class CommonProperties extends React.Component {
 						{editorForm}
 					</PropertiesEditing>);
 				} else if (this.props.containerType === "Custom") {
-					propertiesDialog = (<div id="custom-container">
+					propertiesDialog = (<div className="custom-container">
 						{editorForm}
 					</div>);
 				} else { // Modal

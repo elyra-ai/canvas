@@ -316,6 +316,7 @@ export default class EditorForm extends React.Component {
 				buildUIItem={this.genUIItem}
 				openFieldPicker={this.openFieldPicker}
 				customContainer={this.props.customContainer}
+				rightFlyout={this.props.rightFlyout}
 			/>);
 		} else if (control.controlType === "structureeditor") {
 			// logger.info("structureeditor");
@@ -327,6 +328,7 @@ export default class EditorForm extends React.Component {
 				updateSelectedRows={this.updateSelectedRows}
 				selectedRows={this.getSelectedRows(control.name)}
 				buildUIItem={this.genUIItem}
+				rightFlyout={this.props.rightFlyout}
 			/>);
 		} else if (control.controlType === "structurelisteditor") {
 			// logger.info("structurelisteditor");
@@ -339,6 +341,7 @@ export default class EditorForm extends React.Component {
 				selectedRows={this.getSelectedRows(control.name)}
 				buildUIItem={this.genUIItem}
 				customContainer={this.props.customContainer}
+				rightFlyout={this.props.rightFlyout}
 			/>);
 		}
 		return <h6 key={control.name}>{control.name}</h6>;
@@ -612,6 +615,7 @@ export default class EditorForm extends React.Component {
 				label={uiItem.text}
 				title={uiItem.secondaryText}
 				panel={subPanel}
+				rightFlyout={this.props.rightFlyout}
 			/>);
 		} else if (uiItem.itemType === "staticText") {
 			return <div key={"static-text." + key} className="static-text">{uiItem.text}</div>;

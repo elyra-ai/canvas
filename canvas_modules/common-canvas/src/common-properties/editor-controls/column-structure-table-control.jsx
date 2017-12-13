@@ -172,7 +172,7 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 
 		const conditionProps = {
 			propertyId: this.props.propertyId,
-			controlType: "table"
+			controlType: "structure-table"
 		};
 		const conditionState = this.getConditionMsgState(conditionProps);
 
@@ -250,5 +250,6 @@ ColumnStructureTableControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
-	customContainer: PropTypes.bool
+	customContainer: PropTypes.bool,
+	rightFlyout: PropTypes.bool
 };

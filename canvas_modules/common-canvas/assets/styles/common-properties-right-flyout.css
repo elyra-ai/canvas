@@ -12,7 +12,7 @@
 	background-color: #FFFFFF;
 }
 
-#common-properties-right-flyout-panel > #custom-container {
+#common-properties-right-flyout-panel > .custom-container {
 	height: calc(100% - 90px);
 	overflow-y: auto;
 }

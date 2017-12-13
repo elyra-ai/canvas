@@ -21,7 +21,7 @@ import search32Disabled from "../../../assets/images/search_32_disabled.svg";
 import SortAscendingIcon from "../../../assets/images/sort_ascending.svg";
 import SortDescendingIcon from "../../../assets/images/sort_descending.svg";
 import { TOOL_TIP_DELAY } from "../constants/constants.js";
-
+import ObserveSize from "react-observe-size";
 
 const sortDir = {
 	ASC: "ASC",
@@ -91,29 +91,16 @@ export default class FlexibleTable extends React.Component {
 		this._updateTableWidth = this._updateTableWidth.bind(this);
 	}
 
-	componentDidMount() {
-		this._updateTableWidth();
-		window.addEventListener("resize", this._updateTableWidth);
-	}
-
-	componentWillReceiveProps() {
-		this._updateTableWidth();
-	}
-
-	componentWillUnmount() {
-		window.removeEventListener("resize", this._updateTableWidth);
-	}
-
 	onSort(spec) {
 		if (this.props.onSort) {
 			this.props.onSort(spec);
 		}
 	}
 
-	_updateTableWidth() {
-		if (this.state.tableWidth !== this.flexTableWrapper.clientWidth) {
+	_updateTableWidth(width) {
+		if (this.state.tableWidth !== width) {
 			this.setState({
-				tableWidth: this.flexTableWrapper.clientWidth
+				tableWidth: width
 			});
 		}
 	}
@@ -227,7 +214,7 @@ export default class FlexibleTable extends React.Component {
 			const disabled = this.props.stateDisabled && (typeof this.props.stateDisabled.disabled !== "undefined" || Object.keys(this.props.stateDisabled) > 0);
 			const className = disabled ? "disabled" : "";
 			const searchIcon = disabled ? search32Disabled : search32;
-			searchBar = (<div>
+			searchBar = (<div className="flexible-table-search-container">
 				<div id="flexible-table-search-bar" className={"flexible-table-search-bar " + className}>
 					<TextField
 						key="flexible-table-search-bar"
@@ -295,26 +282,24 @@ export default class FlexibleTable extends React.Component {
 				{searchBar}
 				{this.props.label}
 				{this.props.topRightPanel}
-				<div id="flexible-table-container-wrapper"
-					ref={(div) => {
-						this.flexTableWrapper = div;
-					}}
-				>
-					<div className="flexible-table-container-header-wrapper">
-						{renderTableHeaderContents}
-					</div>
-					<div className="flexible-table-container-absolute" style={tableStyle}>
-						<div id="flexible-table-container" style={{ width: tableWidth }}>
-							<Table
-								className="table"
-								id="table"
-								hideTableHeader
-							>
-								{this.props.data}
-							</Table>
+				<ObserveSize observerFn={(element) => this._updateTableWidth(element.width)}>
+					<div id="flexible-table-container-wrapper">
+						<div className="flexible-table-container-header-wrapper">
+							{renderTableHeaderContents}
+						</div>
+						<div className="flexible-table-container-absolute" style={tableStyle}>
+							<div id="flexible-table-container" style={{ width: tableWidth }}>
+								<Table
+									className="table"
+									id="table"
+									hideTableHeader
+								>
+									{this.props.data}
+								</Table>
+							</div>
 						</div>
 					</div>
-				</div>
+				</ObserveSize>
 			</div>
 		);
 

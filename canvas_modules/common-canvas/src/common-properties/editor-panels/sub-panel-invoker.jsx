@@ -47,7 +47,7 @@ export default class SubPanelInvoker extends React.Component {
 
 	render() {
 		var propertiesDialog = [];
-		if (this.state.subPanelVisible && !this.props.customContainer) {
+		if (this.state.subPanelVisible && !this.props.rightFlyout) {
 			propertiesDialog = (<PropertiesDialog
 				title={this.state.title}
 				okHandler={this.hideSubDialog.bind(this, true)}
@@ -55,7 +55,7 @@ export default class SubPanelInvoker extends React.Component {
 			>
 				{this.state.panel}
 			</PropertiesDialog>);
-		} else if (this.props.customContainer) {
+		} else if (this.props.rightFlyout) {
 			propertiesDialog = (<WideFlyout
 				cancelHandler={this.hideSubDialog.bind(this, false)}
 				okHandler={this.hideSubDialog.bind(this, true)}
@@ -79,10 +79,10 @@ export default class SubPanelInvoker extends React.Component {
 
 SubPanelInvoker.propTypes = {
 	children: PropTypes.element,
-	customContainer: PropTypes.bool
+	rightFlyout: PropTypes.bool
 };
 
 
 SubPanelInvoker.defaultProps = {
-	customContainer: false
+	rightFlyout: false
 };

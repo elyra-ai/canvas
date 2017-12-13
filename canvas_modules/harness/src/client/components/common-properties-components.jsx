@@ -215,13 +215,19 @@ class CommonPropertiesComponents extends React.Component {
 						<a id="properties-documentation-title">WDP Common Properties Components</a>
 					</li>
 					<li className="properties-documentation-navbar-li nav-divider">
-						<a className="properties-documentation-nav-link" href="#/properties#Groups">Groups</a>
+						<a className="properties-documentation-nav-link"
+							onClick={() => this.onMenuDropdownSelect(null, { selected: "Groups" })}
+						>Groups</a>
 					</li>
 					<li className="properties-documentation-navbar-li">
-						<a className="properties-documentation-nav-link" href="#/properties#Controls">Controls</a>
+						<a className="properties-documentation-nav-link"
+							onClick={() => this.onMenuDropdownSelect(null, { selected: "Controls" })}
+						>Controls</a>
 					</li>
 					<li className="properties-documentation-navbar-li">
-						<a className="properties-documentation-nav-link" href="#/properties#Complex">Complex Types</a>
+						<a className="properties-documentation-nav-link"
+							onClick={() => this.onMenuDropdownSelect(null, { selected: "Complex" })}
+						>Complex Types</a>
 					</li>
 				</ul>
 				{dropMenu}

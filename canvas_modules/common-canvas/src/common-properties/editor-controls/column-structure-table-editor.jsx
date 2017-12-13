@@ -555,7 +555,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			disabled={disabled}
 			controller={this.props.controller}
 			propertyId={this.props.propertyId}
-			customContainer={this.props.customContainer}
+			rightFlyout={this.props.rightFlyout}
 		/>);
 		return (<Td key={subPanelColIndex} column={"subPanel"} style={columnStyle}>{subCell}</Td>);
 	}

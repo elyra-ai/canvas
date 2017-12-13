@@ -31,11 +31,13 @@ export default class WideFlyout extends Component {
 	}
 
 	updateDimensions() {
-		const commonCanvas = document.getElementById("common-properties-right-flyout-panel");
-		const canvasHeight = window.getComputedStyle(commonCanvas, null).getPropertyValue("height");
-		this.setState({
-			canvasHeight: canvasHeight
-		});
+		const propertiesContainer = document.getElementById("common-properties-right-flyout-panel");
+		if (propertiesContainer !== null) {
+			const canvasHeight = window.getComputedStyle(propertiesContainer, null).getPropertyValue("height");
+			this.setState({
+				canvasHeight: canvasHeight
+			});
+		}
 	}
 
 	render() {
@@ -54,7 +56,9 @@ export default class WideFlyout extends Component {
 			backdrop="static"
 		>
 			{title}
-			<div className="control-contents">{this.props.children}</div>
+			<div className="rightside-modal-control-contents-container">
+				<div className="control-contents">{this.props.children}</div>
+			</div>
 			{buttons}
 		</Modal>);
 	}

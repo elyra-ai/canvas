@@ -164,7 +164,7 @@ input[type=radio]{
 }
 
 .form__validation.validation-error-message-type-number,
-.form__validation.validation-error-message-type-table,
+.form__validation.validation-error-message-type-structure-table,
 .form__validation.validation-error-message-type-structure-list-editor,
 p.form__validation.validation-error-message-type-selection {
   margin-top: 5px;
@@ -222,10 +222,10 @@ input.number,
   margin-left: 4px;
 }
 
-.validation-error-message-icon-table,
-.validation-warning-message-icon-table {
+.validation-error-message-icon-structure-table,
+.validation-warning-message-icon-structure-table {
   position: relative;
-  top: 45px;
+  top: 35px;
 }
 
 .validation-error-message-icon-structure-list-editor,
@@ -265,10 +265,16 @@ input.number,
   width: 100%;
   height: 100%;
   margin: 0;
+  overflow-y: hidden;
+}
+
+.rightside-modal-control-contents-container {
+	height: calc(100% - 60px);
+	overflow-x: auto;
 }
 
 .rightside-modal-container .modal-content {
-  min-height: 100%;
+  height: 100%;
   border-radius: 0;
 	display: flex;
 	flex-direction: column;
@@ -290,7 +296,7 @@ input.number,
 	padding: 10px 10px 5px 10px;
 	font-size: 20px;
 	border-bottom: 2px solid #E0E0E0;
-	margin-bottom: 10px;
+	margin-bottom: 5px;
 }
 
 .rightside-modal-container .modal__buttons {
@@ -303,6 +309,10 @@ input.number,
 	justify-content: flex-end;
 	background-color: unset;
 	border-top: 2px solid #E0E0E0;
+}
+
+.rightside-modal-container .editor_control_area {
+	width: calc(100% - 15px);
 }
 
 .rightside-modal-container #field-picker-table #flexible-table-container-wrapper {
@@ -604,11 +614,6 @@ input.number,
 }
 
 /* Flexible Table */
-.flexible-table-search-bar.disabled * {
-  color: #D8D8D8;
-  border-bottom-color: #D8D8D8;
-}
-
 #flexible-table-container-wrapper {
 	height: 230px;
 	width: 100%;
@@ -619,13 +624,13 @@ input.number,
 .flexible-table-header,
 .flexible-table-header-container {
 	padding: 0;
-	position: fixed;
+	position: absolute;
 	height: 32px;
 	z-index: 100;
 }
 
 .flexible-table-container-header-wrapper {
-	position: fixed;
+	position: absolute;
 	height: 32px;
 	overflow: hidden;
 	width: 100%;
@@ -692,9 +697,23 @@ th div div label, td div div label {
   margin-bottom: 6px;
 }
 
+.flexible-table-search-container {
+	width: 50%;
+	height: 30px;
+	float: left;
+	top: -5px;
+	position: relative;
+	display: flex;
+}
+
+.flexible-table-search-bar.disabled * {
+  color: #D8D8D8;
+  border-bottom-color: #D8D8D8;
+}
+
 #flexible-table-search-bar {
   height: 32px;
-  width: 45%;
+  width: 90%;
   float: left;
   margin: 5px 0 2px 5px;
 }
@@ -704,6 +723,7 @@ th div div label, td div div label {
   float: left;
   padding-bottom: 2px;
   border-bottom-width: 1px;
+  text-overflow: ellipsis;
 }
 
 #flexible-table-search-icon {

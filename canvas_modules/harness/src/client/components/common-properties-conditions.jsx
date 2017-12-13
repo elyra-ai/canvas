@@ -177,13 +177,19 @@ class CommonPropertiesComponents extends React.Component {
 						<a id="conditions-documentation-title">WDP Common Properties Conditions</a>
 					</li>
 					<li className="properties-documentation-navbar-li nav-divider">
-						<a className="conditions-documentation-nav-link" href="#/conditions#Conditions">Conditions</a>
+						<a className="conditions-documentation-nav-link"
+							onClick={() => this.onMenuDropdownSelect(null, { selected: "Conditions" })}
+						>Conditions</a>
 					</li>
 					<li className="properties-documentation-navbar-li">
-						<a className="conditions-documentation-nav-link" href="#/conditions#SingleConditions">Single Conditions</a>
+						<a className="conditions-documentation-nav-link"
+							onClick={() => this.onMenuDropdownSelect(null, { selected: "SingleConditions" })}
+						>Single Conditions</a>
 					</li>
 					<li className="properties-documentation-navbar-li">
-						<a className="conditions-documentation-nav-link" href="#/conditions#GroupConditions">Group Conditions</a>
+						<a className="conditions-documentation-nav-link"
+							onClick={() => this.onMenuDropdownSelect(null, { selected: "GroupConditions" })}
+						>Group Conditions</a>
 					</li>
 				</ul>
 				{dropMenu}
@@ -997,8 +1003,10 @@ class CommonPropertiesComponents extends React.Component {
 		return (
 			<div id="conditions-documentation-container">
 				{navBar}
-				{header}
-				{content}
+				<div id="conditions-documentation-container-main-content">
+					{header}
+					{content}
+				</div>
 			</div>
 		);
 	}

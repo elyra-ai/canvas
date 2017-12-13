@@ -48,7 +48,7 @@ export default class SubPanelButton extends React.Component {
 			{this.props.label}
 		</Button>);
 		return (
-			<SubPanelInvoker ref="invoker">
+			<SubPanelInvoker ref="invoker" rightFlyout={this.props.rightFlyout}>
 				{button}
 			</SubPanelInvoker>
 		);
@@ -60,5 +60,6 @@ SubPanelButton.propTypes = {
 	title: PropTypes.string.isRequired,
 	panel: PropTypes.object.isRequired,
 	notifyStartEditing: PropTypes.func,
-	notifyFinishedEditing: PropTypes.func
+	notifyFinishedEditing: PropTypes.func,
+	rightFlyout: PropTypes.bool
 };

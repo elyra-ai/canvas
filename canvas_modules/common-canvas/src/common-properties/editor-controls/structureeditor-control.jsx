@@ -92,6 +92,7 @@ export default class StructureeditorControl extends EditorControl {
 			title={subItemButton.props.title}
 			panel={subItemButton.props.panel}
 			notifyFinishedEditing={this.stopEditing}
+			rightFlyout={this.props.rightFlyout}
 		/>);
 
 		return (
@@ -113,5 +114,6 @@ StructureeditorControl.propTypes = {
 	control: PropTypes.object,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
-	buildUIItem: PropTypes.func.isRequired
+	buildUIItem: PropTypes.func.isRequired,
+	rightFlyout: PropTypes.bool
 };

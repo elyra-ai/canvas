@@ -135,5 +135,6 @@ StructurelisteditorControl.propTypes = {
 	buildUIItem: PropTypes.func,
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
-	controller: PropTypes.object.isRequired
+	controller: PropTypes.object.isRequired,
+	rightFlyout: PropTypes.bool
 };

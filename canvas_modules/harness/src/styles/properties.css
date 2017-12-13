@@ -29,7 +29,8 @@
 	display: none;
 }
 
-#properties-documentation-container-main-content {
+#properties-documentation-container-main-content,
+#conditions-documentation-container-main-content {
 	-webkit-transition: all 0.2s ease-out;
 	transition: all 0.2s ease-out;
 	position: fixed;
@@ -121,7 +122,7 @@
 /* Header section */
 .properties-documentation-section-header {
 	background: #A6266E;
-	padding: 6.5em 4em 2em;
+	padding: 4.5em 4em 2em;
 	position: relative;
 	color: #FFFFFF;
 }
@@ -163,11 +164,6 @@
 
 .properties-documentation-show-flyout-button {
 
-}
-
-.section {
-	margin-top: -3em;
-	padding-top: 4em;
 }
 
 .section-row ~ .section-row-title.section-subtitle {

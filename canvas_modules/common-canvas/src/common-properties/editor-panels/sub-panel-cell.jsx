@@ -41,7 +41,7 @@ export default class SubPanelCell extends React.Component {
 		const tooltipId = "tooltip-subpanel-cell";
 		const disabled = typeof this.props.disabled !== "undefined" ? this.props.disabled : false;
 		return (
-			<SubPanelInvoker ref="invoker" customContainer={this.props.customContainer}>
+			<SubPanelInvoker ref="invoker" rightFlyout={this.props.rightFlyout}>
 				<Cell>
 					<div className="properties-tooltips-container" data-tip="Edit" data-for="tooltip-subpanel-cell">
 						<Button
@@ -75,5 +75,5 @@ SubPanelCell.propTypes = {
 	disabled: PropTypes.bool,
 	controller: PropTypes.object,
 	propertyId: PropTypes.object,
-	customContainer: PropTypes.bool
+	rightFlyout: PropTypes.bool
 };
