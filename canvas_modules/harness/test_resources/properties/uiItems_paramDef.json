@@ -38,6 +38,9 @@
         "text_after": {
           "default": "Hint: should have a separator after"
         },
+        "text_before": {
+          "default": "Some helpful text before the control"
+        },
         "separator": "after"
       },
       {

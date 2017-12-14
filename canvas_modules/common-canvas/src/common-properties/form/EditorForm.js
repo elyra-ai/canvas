@@ -170,6 +170,9 @@ function _makeControls(parameterMetadata, group, structureMetadata, l10nProvider
 			if (prop.separatorBefore()) {
 				uiItems.push(UIItem.makeHSeparator());
 			}
+			if (prop.textBefore) {
+				uiItems.push(UIItem.makeStaticText(prop.getTextBefore(l10nProvider)));
+			}
 			uiItems.push(control);
 			if (prop.textAfter) {
 				uiItems.push(UIItem.makeStaticText(prop.getTextAfter(l10nProvider)));

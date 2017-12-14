@@ -16,7 +16,7 @@ export class ParameterDef {
 	constructor(cname, label, description, type, role, valueRestriction, defaultValue,
 		control, orientation, width, charLimit, placeHolderText, separator,
 		resourceKey, visible, valueIcons, sortable, filterable, editStyle, required,
-		numberGenerator, isKey, dmDefault, language, summary, textAfter) {
+		numberGenerator, isKey, dmDefault, language, summary, textAfter, textBefore) {
 		this.name = cname;
 		this.label = ResourceDef.make(label);
 		this.description = ResourceDef.make(description);
@@ -47,6 +47,7 @@ export class ParameterDef {
 		}
 		this.summary = summary;
 		this.textAfter = textAfter;
+		this.textBefore = textBefore;
 	}
 
 	isList() {
@@ -132,6 +133,9 @@ export class ParameterDef {
 	getTextAfter(l10nProvider) {
 		return l10nProvider.l10nResource(this.textAfter);
 	}
+	getTextBefore(l10nProvider) {
+		return l10nProvider.l10nResource(this.textBefore);
+	}
 
 	/**
 	 * Returns the "control" attribute which can be used to define which control should be used
@@ -198,7 +202,8 @@ export class ParameterDef {
 				_.propertyOf(uihint)("dm_default"),
 				_.propertyOf(uihint)("language"),
 				_.propertyOf(uihint)("summary"),
-				_.propertyOf(uihint)("text_after")
+				_.propertyOf(uihint)("text_after"),
+				_.propertyOf(uihint)("text_before")
 			);
 		}
 		return null;
