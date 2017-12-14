@@ -9,9 +9,11 @@
 
 import React from "react";
 import NumberfieldControl from "../../../src/common-properties/editor-controls/numberfield-control.jsx";
+import EditorForm from "../../../src/common-properties/editor-controls/editor-form.jsx";
 import ControlItem from "../../../src/common-properties/editor-controls/control-item.jsx";
 import { mount } from "enzyme";
 import { expect } from "chai";
+import sinon from "sinon";
 import Controller from "../../../src/common-properties/properties-controller";
 
 const controller = new Controller();
@@ -26,6 +28,92 @@ const control = {
 };
 const control2 = {
 };
+const form = {
+	"componentId": "numberfield",
+	"label": "Number Fields",
+	"editorSize": "large",
+	"uiItems": [
+		{
+			"itemType": "primaryTabs",
+			"tabs": [
+				{
+					"text": "Values",
+					"group": "numberfield-values",
+					"content": {
+						"itemType": "panel",
+						"panel": {
+							"id": "numberfield-values",
+							"panelType": "general",
+							"uiItems": [
+								{
+									"itemType": "control",
+									"control": {
+										"name": "test-numberfield",
+										"label": {
+											"text": "Random",
+											"numberGenerator": {
+												"label": {
+													"default": "Random"
+												},
+												"range": {
+													"min": 1000000,
+													"max": 9999999
+												}
+											}
+										},
+										"description": {
+											"text": "numberfield with parameter with random number generator"
+										},
+										"controlType": "numberfield",
+										"valueDef": {
+											"propType": "integer",
+											"isList": false,
+											"isMap": false
+										},
+										"separateLabel": true,
+										"required": true
+									}
+								}
+							]
+						}
+					}
+				}
+			]
+		}
+	],
+	"buttons": [
+		{
+			"id": "ok",
+			"text": "OK",
+			"isPrimary": true,
+			"url": ""
+		},
+		{
+			"id": "cancel",
+			"text": "Cancel",
+			"isPrimary": false,
+			"url": ""
+		}
+	],
+	"data": {
+		"currentParameters": {
+			"number_random": 12345
+		}
+	},
+	"conditions": []
+};
+
+const showPropertiesButtons = sinon.spy();
+function createEditorForm(inController) {
+	inController.setForm(form);
+	const editorForm = (<EditorForm
+		ref="editorForm"
+		key="editor-form-key"
+		controller={inController}
+		showPropertiesButtons={showPropertiesButtons}
+	/>);
+	return mount(editorForm);
+}
 
 const propertyId = { name: "test-numberfield" };
 
@@ -138,5 +226,22 @@ describe("numberfield-control renders correctly", () => {
 			<ControlItem key={"key1"} label={label} control={controlObj} />
 		);
 		expect(wrapper.find(".number-generator")).to.have.length(1);
+	});
+});
+
+describe("editor-form renders with random number generator", () => {
+	const editorController = new Controller();
+	const wrapper = createEditorForm(editorController);
+	it("should have displayed random generator link", () => {
+		const generator = wrapper.find(".number-generator");
+		expect(generator).to.have.length(1);
+	});
+	it("should click on generator to create a new number", () => {
+		const generator = wrapper.find(".number-generator");
+		const oldValue = editorController.getPropertyValue(propertyId);
+		generator.simulate("click");
+		wrapper.update();
+		const newValue = editorController.getPropertyValue(propertyId);
+		expect(oldValue).not.equal(newValue);
 	});
 });

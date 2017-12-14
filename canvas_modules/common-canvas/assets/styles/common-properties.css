@@ -909,6 +909,7 @@ tbody.reactable-data .editor_control_area {
 .number-generator {
   color: #aeaeae;
   text-decoration: underline;
+	cursor: pointer;
 }
 
 .left-padding-15 {

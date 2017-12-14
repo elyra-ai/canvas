@@ -1,0 +1,351 @@
+{
+  "current_parameters": {
+    "number_int": 10,
+    "number_dbl": 11.012,
+    "number_null": null,
+    "number_placeholder": null,
+    "number_random": 12345,
+    "number_error": -1,
+    "number_warning": 0.1,
+    "hide": true,
+    "number_hidden": 10,
+    "number_random_hidden": 12345,
+    "disable": true,
+    "number_disabled": 10,
+    "number_random_disabled": 10
+  },
+  "parameters": [
+    {
+      "id": "number_int",
+      "type": "integer",
+      "required": true
+    },
+    {
+      "id": "number_dbl",
+      "type": "double",
+      "required": true
+    },
+    {
+      "id": "number_default",
+      "type": "integer",
+      "default": 3,
+      "required": true
+    },
+    {
+      "id": "number_undefined",
+      "type": "double",
+      "required": true
+    },
+    {
+      "id": "number_null",
+      "type": "integer",
+      "required": true
+    },
+    {
+      "id": "number_placeholder",
+      "type": "double"
+    },
+    {
+      "id": "number_random",
+      "type": "integer",
+      "required": true
+    },
+    {
+      "id": "number_error",
+      "type": "integer",
+      "required": true
+    },
+    {
+      "id": "number_warning",
+      "type": "double",
+      "required": true
+    },
+    {
+      "id": "hide",
+      "type": "boolean"
+    },
+    {
+      "id": "number_hidden",
+      "type": "integer",
+      "required": true
+    },
+    {
+      "id": "number_random_hidden",
+      "type": "integer",
+      "required": true
+    },
+    {
+      "id": "disable",
+      "type": "boolean"
+    },
+    {
+      "id": "number_disabled",
+      "type": "double",
+      "required": true
+    },
+    {
+      "id": "number_random_disabled",
+      "type": "integer",
+      "required": true
+    }
+  ],
+  "uihints": {
+    "id": "numberfield",
+    "icon": "images/default.svg",
+    "label": {
+      "default": "Number Fields"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "number_int",
+        "label": {
+          "default": "Integer"
+        },
+        "description": {
+          "default": "numberfield with parameter value set to '10'"
+        }
+      },
+      {
+        "parameter_ref": "number_dbl",
+        "label": {
+          "default": "Double"
+        },
+        "description": {
+          "default": "numberfield with parameter value set to '11.012'"
+        }
+      },
+      {
+        "parameter_ref": "number_default",
+        "label": {
+          "default": "Default"
+        },
+        "description": {
+          "default": "numberfield with parameter value set to '3' by default"
+        }
+      },
+      {
+        "parameter_ref": "number_null",
+        "label": {
+          "default": "Null"
+        },
+        "description": {
+          "default": "numberfield with parameter value set to 'null'"
+        }
+      },
+      {
+        "parameter_ref": "number_undefined",
+        "label": {
+          "default": "Undefined"
+        },
+        "description": {
+          "default": "numberfield with parameter value set to 'undefined'"
+        }
+      },
+      {
+        "parameter_ref": "number_placeholder",
+        "label": {
+          "default": "Placeholder text"
+        },
+        "description": {
+          "default": "numberfield with placeholder text 'Enter a number'"
+        },
+        "place_holder_text": {
+          "default": "Enter a number"
+        }
+      },
+      {
+        "parameter_ref": "number_random",
+        "label": {
+          "default": "Random"
+        },
+        "description": {
+          "default": "numberfield with parameter with random number generator"
+        },
+        "number_generator": {
+          "label": {
+            "default": "Random"
+          },
+          "range": {
+            "min": 1000000,
+            "max": 9999999
+          }
+        }
+      },
+      {
+        "parameter_ref": "number_error",
+        "label": {
+          "default": "Error"
+        },
+        "description": {
+          "default": "numberfield with error when set to '-1'"
+        }
+      },
+      {
+        "parameter_ref": "number_warning",
+        "label": {
+          "default": "Warning"
+        },
+        "description": {
+          "default": "numberfield with warning when set to '0.1'"
+        }
+      },
+      {
+        "parameter_ref": "hide",
+        "label": {
+          "default": "Hide 'Number Hidden'"
+        }
+      },
+      {
+        "parameter_ref": "number_hidden",
+        "label": {
+          "default": "Number Hidden"
+        }
+      },
+      {
+        "parameter_ref": "number_random_hidden",
+        "label": {
+          "default": "Random Hidden"
+        },
+        "number_generator": {
+          "label": {
+            "default": "Generate"
+          },
+          "range": {
+            "min": 1,
+            "max": 9
+          }
+        }
+      },
+      {
+        "parameter_ref": "disable",
+        "label": {
+          "default": "Disable 'Number Disabled'"
+        }
+      },
+      {
+        "parameter_ref": "number_disabled",
+        "label": {
+          "default": "Number Disabled"
+        }
+      },
+      {
+        "parameter_ref": "number_random_disabled",
+        "label": {
+          "default": "Random Disabled"
+        },
+        "number_generator": {
+          "label": {
+            "default": "Generate"
+          },
+          "range": {
+            "min": 1000,
+            "max": 9999
+          }
+        }
+      }
+    ],
+    "group_info": [
+      {
+        "id": "numberfield-values",
+        "label": {
+          "default": "Values"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "number_int",
+          "number_dbl",
+          "number_default",
+          "number_undefined",
+          "number_null",
+          "number_placeholder",
+          "number_random"
+        ]
+      },
+      {
+        "id": "numberfield-conditions",
+        "label": {
+          "default": "Conditions"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "number_error",
+          "number_warning",
+          "hide",
+          "number_hidden",
+          "number_random_hidden",
+          "disable",
+          "number_disabled",
+          "number_random_disabled"
+        ]
+      }
+    ]
+  },
+  "conditions": [
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "number_error",
+          "message": {
+            "default": "Needs to be greaterThan 0"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "number_error",
+            "op": "greaterThan",
+            "value": 0
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "number_warning",
+          "message": {
+            "default": "Needs to be greaterThan 1"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "number_warning",
+            "op": "greaterThan",
+            "value": 1
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "number_hidden",
+          "number_random_hidden"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hide",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "number_disabled",
+          "number_random_disabled"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disable",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    }
+  ]
+}

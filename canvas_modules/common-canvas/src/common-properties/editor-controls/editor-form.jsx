@@ -363,6 +363,7 @@ export default class EditorForm extends React.Component {
 			tooltipShow = false;
 		} else if (controlState === "disabled") {
 			stateStyle.color = "#D8D8D8";
+			stateStyle.pointerEvents = "none";
 			tooltipShow = false;
 		}
 
@@ -372,7 +373,7 @@ export default class EditorForm extends React.Component {
 			const min = generator.range && generator.range.min ? generator.range.min : 10000;
 			const max = generator.range && generator.range.max ? generator.range.max : 99999;
 			const newValue = Math.floor(Math.random() * (max - min + 1) + min);
-			that.props.controller.updatePropertyValue(propertyId, newValue); // TODO might need to use propertyId and indexof
+			that.props.controller.updatePropertyValue(propertyId, newValue);
 		}
 
 		let label = <span />;
