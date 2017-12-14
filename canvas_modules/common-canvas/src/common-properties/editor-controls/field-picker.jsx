@@ -132,7 +132,7 @@ export default class FieldPicker extends EditorControl {
 					} else {
 						key = newControlValues[j];
 					}
-					if (key.indexOf(field.name) >= 0) {
+					if (key === field.name) {
 						checked = true;
 						break;
 					}

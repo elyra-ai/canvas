@@ -2362,6 +2362,15 @@
           "measure": "discrete",
           "modeling_role": "input"
         }
+      },
+			{
+        "name": "Ag",
+        "type": "integer",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
       }
     ]
   },

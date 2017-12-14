@@ -96,9 +96,12 @@ Feature: Sanity_Test_CommonProperties
 			Given I have toggled the app side common-properties panel
 			Given I have uploaded JSON for common-properties "Conditions_paramDef.json"
 			Then I select the Tab 2
+			Then I click on Add Columns button to open field picker at index "0"
 			Then I add "Drug" to first input control
+			Then I click on Add Columns button to open field picker at index "1"
 			Then I verify "Drug" is not present second input control
 			Then I add "Na" to second input control
+			Then I click on Add Columns button to open field picker at index "0"
 			Then I verify "Na" is not present first input control
 			Then I have closed the common properties dialog by clicking on close button
 			Given I have toggled the app side common-properties panel
