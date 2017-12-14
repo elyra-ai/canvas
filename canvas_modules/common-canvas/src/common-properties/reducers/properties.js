@@ -24,7 +24,7 @@ function properties(state = {}, action) {
 		}
 		return Object.assign({}, state, newState);
 	case SET_PROPERTY_VALUES:
-		return Object.assign({}, state, action.properties);
+		return Object.assign({}, action.properties);
 	default:
 		return state;
 	}

@@ -35,6 +35,8 @@ export default class SummaryPanel extends EditorControl {
 	cancelWideFlyout() {
 		// on cancel reset back to original value
 		this.props.controller.setPropertyValues(this.initialControlValues);
+		this.props.controller.setErrorMessages(this.initialMessages);
+		this.props.controller.setControlStates(this.initialStates);
 		this.hideWideFlyout();
 	}
 
@@ -44,6 +46,8 @@ export default class SummaryPanel extends EditorControl {
 		}
 		// sets the current value for parameter.  Used on cancel
 		this.initialControlValues = JSON.parse(JSON.stringify(this.props.controller.getPropertyValues()));
+		this.initialMessages = this.props.controller.getErrorMessages();
+		this.initialStates = this.props.controller.getControlStates();
 	}
 
 	/*

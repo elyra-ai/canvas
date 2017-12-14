@@ -27,6 +27,8 @@ export default class SubPanelCell extends React.Component {
 		// on cancel reset back to original value
 		if (!applyChanges) {
 			this.props.controller.updatePropertyValue(this.props.propertyId, this.initialControlValue);
+			this.props.controller.setErrorMessages(this.initialMessages);
+			this.props.controller.setControlStates(this.initialStates);
 		}
 	}
 
@@ -34,6 +36,8 @@ export default class SubPanelCell extends React.Component {
 	showSubPanel() {
 		// sets the current value for parameter.  Used on cancel
 		this.initialControlValue = JSON.parse(JSON.stringify(this.props.controller.getPropertyValue(this.props.propertyId)));
+		this.initialMessages = this.props.controller.getErrorMessages();
+		this.initialStates = this.props.controller.getControlStates();
 		this.refs.invoker.showSubDialog(this.props.title, this.props.panel, this.onSubPanelHidden);
 	}
 

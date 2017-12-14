@@ -12,7 +12,7 @@ import { SET_DATASET_METADATA } from "../actions";
 function datasetMetadata(state = {}, action) {
 	switch (action.type) {
 	case SET_DATASET_METADATA:
-		return Object.assign({}, state, action.datasetMetadata);
+		return Object.assign({}, action.datasetMetadata);
 	default:
 		return state;
 	}

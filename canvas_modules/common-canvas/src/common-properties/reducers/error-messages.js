@@ -55,7 +55,7 @@ function messages(state = {}, action) {
 		return Object.assign({}, state, newState);
 	}
 	case SET_ERROR_MESSAGES: {
-		return Object.assign({}, state, action.messages);
+		return Object.assign({}, action.messages);
 	}
 	default: {
 		return state;

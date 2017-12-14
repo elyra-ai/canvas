@@ -47,7 +47,7 @@ function states(state = {}, action) {
 		return Object.assign({}, state, newState);
 	}
 	case SET_CONTROL_STATES: {
-		return Object.assign({}, state, action.states);
+		return Object.assign({}, action.states);
 	}
 	default: {
 		return state;
