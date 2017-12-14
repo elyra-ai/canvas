@@ -33,8 +33,6 @@ module.exports = function() {
 			}
 
 			if (label) {
-				label.scroll();
-				browser.pause(500);
 				label.click();
 			}
 		} catch (err) {

@@ -167,6 +167,7 @@
   z-index: 100;
   box-sizing: border-box;
   font-size: small;
+  overflow-x: hidden;
 }
 
 .sidepanel-headers {

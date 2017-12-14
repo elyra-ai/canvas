@@ -169,7 +169,6 @@ module.exports = function() {
 	this.Then(/^I verify the port name "([^"]*)" shows below the input port id "([^"]*)" of node "([^"]*)"$/, function(portName, portId, nodeName) {
 		const nodeId = getNodeIdForLabel(nodeName);
 		const portSelector = "#node_trg_port_" + nodeId + "_" + portId;
-		console.log("portId " + portId);
 		const tip = browser.$("#node_port_tip_0_" + portId);
 		expect(tip.value).not.toEqual(null);
 
