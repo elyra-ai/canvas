@@ -238,7 +238,7 @@ class Toolbar extends React.Component {
 		if (actionObj.iconEnabled) {
 			icon = actionObj.iconEnabled;
 		}
-		const tooltipId = actionId + "-tooltip";
+		const tooltipId = actionId + "-" + this.props.canvasController.getInstanceId() + "-tooltip";
 		let disableTooltip = false;
 		if (overflow) {
 			disableTooltip = true;
@@ -268,7 +268,7 @@ class Toolbar extends React.Component {
 		if (actionObj.iconDisabled) {
 			icon = actionObj.iconDisabled;
 		}
-		const tooltipId = actionId + "-tooltip";
+		const tooltipId = actionId + "-" + this.props.canvasController.getInstanceId() + "-tooltip";
 		let disableTooltip = false;
 		if (overflow) {
 			disableTooltip = true;
