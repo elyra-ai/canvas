@@ -1268,7 +1268,7 @@ describe("editor-form renders correctly with validations", () => {
 			const cells = uncheckedRow.find("td");
 			expect(cells).to.have.length(5);
 			const cell = cells.at(3);
-			const dropdown = cell.find(".Dropdown-control-table");
+			const dropdown = cell.find(".Dropdown-control-panel");
 			expect(dropdown).to.have.length(1);
 			expect(dropdown).to.have.style("display", "none");
 		});
@@ -1406,7 +1406,7 @@ describe("editor-form renders correctly with validations", () => {
 			const dataRows = table.find(".reactable-data").find("tr");
 			expect(dataRows).to.have.length(7);
 			let row = dataRows.first();
-			let hiddenDropdowns = row.find(".Dropdown-control-table");
+			let hiddenDropdowns = row.find(".Dropdown-control-panel");
 			expect(hiddenDropdowns).to.have.length(2);
 			expect(hiddenDropdowns.at(1)).not.to.have.style("display", "none");
 			const input = row.find("#editor-control-override_field_types_0_1");
@@ -1414,7 +1414,7 @@ describe("editor-form renders correctly with validations", () => {
 			wrapper.find("input[id='editor-control-override_field_types_0_1']").simulate("change", { target: { checked: false } });
 			wrapper.update();
 			row = dataRows.first();
-			hiddenDropdowns = row.find(".Dropdown-control-table");
+			hiddenDropdowns = row.find(".Dropdown-control-panel");
 			expect(hiddenDropdowns).to.have.length(2);
 			expect(hiddenDropdowns.at(1)).to.have.style("display", "none");
 		});

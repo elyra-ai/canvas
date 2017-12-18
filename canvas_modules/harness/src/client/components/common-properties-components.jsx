@@ -27,6 +27,7 @@ import {
 	TEXTAREA_PROPS_INFO,
 	PASSWORD_FIELD_PROPS_INFO,
 	EXPRESSION_PROPS_INFO,
+	READONLY_PROPS_INFO,
 	NUMBERFIELD_PROPS_INFO,
 	NUMBERFIELD_GENERATOR_PROPS_INFO,
 	CHECKBOX_SINGLE_PROPS_INFO,
@@ -182,6 +183,7 @@ class CommonPropertiesComponents extends React.Component {
 					"--textarea",
 					"--password",
 					"--expression",
+					"--readonly",
 					"--numberfield",
 					"--checkbox",
 					"--checkboxset",
@@ -585,6 +587,26 @@ class CommonPropertiesComponents extends React.Component {
 						<div className="section-column section-column-code">
 							<pre className="json-block">
 								{this.jsonReplacer(EXPRESSION_PROPS_INFO.parameterDef, "control")}
+							</pre>
+						</div>
+					</div>
+				</div>
+				<div className="properties-documentation-panels-controls-component">
+					<h3 id="--readonly" className="section-subtitle">readonly</h3>
+					<p>A readonly field is rendered for a parameter of attribute <span className="highlight">control </span>
+					and value <span className="highlight">readonly</span></p>
+					<div className="section-row">
+						<div className="section-column">
+							<CommonProperties
+								showPropertiesDialog
+								propertiesInfo={READONLY_PROPS_INFO}
+								containerType="Custom"
+							/>
+							{this.renderRightFlyoutButton(READONLY_PROPS_INFO)}
+						</div>
+						<div className="section-column section-column-code">
+							<pre className="json-block">
+								{this.jsonReplacer(READONLY_PROPS_INFO.parameterDef, "control")}
 							</pre>
 						</div>
 					</div>

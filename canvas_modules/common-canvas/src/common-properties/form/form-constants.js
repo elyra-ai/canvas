@@ -77,7 +77,8 @@ const ControlType = {
 	STRUCTURETABLE: "structuretable",
 	STRUCTUREEDITOR: "structureeditor",
 	STRUCTURELISTEDITOR: "structurelisteditor",
-	TOGGLETEXT: "toggletext"
+	TOGGLETEXT: "toggletext",
+	READONLY: "readonly"
 };
 
 const ParamRole = {

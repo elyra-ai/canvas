@@ -64,6 +64,21 @@ const control = {
 			"visible": true,
 			"width": 20,
 			"editStyle": "subpanel"
+		},
+		{
+			"name": "readonly",
+			"label": {
+				"text": "ReadOnly"
+			},
+			"controlType": "readonly",
+			"valueDef": {
+				"propType": "string",
+				"isList": false,
+				"isMap": false
+			},
+			"visible": true,
+			"width": 20,
+			"editStyle": "inline"
 		}
 	],
 	"keyIndex": -1,
@@ -125,12 +140,12 @@ const propertyId = { name: "keys" };
 function setPropertyValue() {
 	controller.setPropertyValues(
 		{ "keys": [
-			["Hello", "World"],
-			["one", "two"],
-			["apple", "orange"],
-			["ford", "honda"],
-			["BP", "Ascending"],
-			["Cholesterol", "Ascending"]
+			["Hello", "World", "Hello World"],
+			["one", "two", "one or two"],
+			["apple", "orange", "apple or orange"],
+			["ford", "honda", "for or honda"],
+			["BP", "Ascending", "BP ascending"],
+			["Cholesterol", "Ascending", "Cholesterol Ascending"]
 		] }
 	);
 }
@@ -220,6 +235,8 @@ describe("StructureListEditorControl renders correctly", () => {
 		expect(tableContent).to.have.length(1);
 		expect(tableContent.find("#table-row-move-button-container")).to.have.length(1);
 		expect(tableContent.find(".table-row-move-button-disable")).to.have.length(4);
+		// checks to see of readonly controls are rendered
+		expect(tableContent.find(".editor_control_readonly")).to.have.length(6);
 	});
 
 	it("should select no rows and all move buttons disabled `StructureListEditorControl`", () => {

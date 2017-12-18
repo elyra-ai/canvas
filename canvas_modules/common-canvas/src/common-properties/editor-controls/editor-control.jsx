@@ -183,62 +183,6 @@ export default class EditorControl extends React.Component {
 		return limit;
 	}
 
-
-	// TODO Remove?
-	_updateCellConditions(conditionProps, stateDisabled, stateStyle) {
-		if (this.props.control.valueDef && this.props.control.valueDef.isMap) {
-			const controlStates = this.props.controller.getControlStates();
-			for (var key in controlStates) {
-				if (controlStates.hasOwnProperty(key)) {
-					// Separate any complex type sub-control reference
-					let paramName = key;
-					let offset = key.indexOf("[");
-					if (offset > -1) {
-						paramName = key.substring(0, offset);
-						const rowIndex = parseInt(key.substring(offset + 1), 10);
-						offset = key.indexOf("[", offset + 1);
-						const colIndex = offset > -1 ? parseInt(key.substring(offset + 1), 10) : -1;
-						if (conditionProps.controlName === paramName && rowIndex > -1) {
-							this._updateHiddenDisabled(controlStates[key],
-								rowIndex, colIndex, stateDisabled, stateStyle);
-						}
-					}
-				}
-			}
-		}
-	}
-	// TODO Remove?
-	_updateHiddenDisabled(controlState, rowIndex, colIndex, stateDisabled, stateStyle) {
-		if (controlState === "disabled") {
-			if (!stateDisabled[rowIndex]) {
-				stateDisabled[rowIndex] = {};
-			}
-			if (!stateStyle[rowIndex]) {
-				stateStyle[rowIndex] = {};
-			}
-			if (colIndex > -1) {
-				stateDisabled[rowIndex][colIndex] = { disabled: true };
-				stateStyle[rowIndex][colIndex] = {
-					color: VALIDATION_MESSAGE.DISABLED,
-					borderColor: VALIDATION_MESSAGE.DISABLED
-				};
-			} else {
-				stateDisabled[rowIndex].disabled = true;
-				stateStyle[rowIndex].color = VALIDATION_MESSAGE.DISABLED;
-				stateStyle[rowIndex].borderColor = VALIDATION_MESSAGE.DISABLED;
-			}
-		} else if (controlState === "hidden") {
-			if (!stateStyle[rowIndex]) {
-				stateStyle[rowIndex] = {};
-			}
-			if (colIndex > -1) {
-				stateStyle[rowIndex][colIndex] = { display: "none" };
-			} else {
-				stateStyle[rowIndex].display = "none";
-			}
-		}
-	}
-
 	render() {
 		return (
 			<div key="editor-control" />

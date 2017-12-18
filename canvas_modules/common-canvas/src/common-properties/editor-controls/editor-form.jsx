@@ -20,6 +20,7 @@ import { TOOL_TIP_DELAY } from "../constants/constants.js";
 import ReactTooltip from "react-tooltip";
 
 import TextfieldControl from "./textfield-control.jsx";
+import ReadonlyControl from "./readonly-control.jsx";
 import ToggletextControl from "./toggletext-control.jsx";
 import TextareaControl from "./textarea-control.jsx";
 import ExpressionControl from "./expression-control.jsx";
@@ -89,7 +90,6 @@ export default class EditorForm extends React.Component {
 		this.clearSelectedRows = this.clearSelectedRows.bind(this);
 
 		this._showCategoryPanel = this._showCategoryPanel.bind(this);
-		this._inSummaryControls = this._inSummaryControls.bind(this);
 	}
 
 	getControl(propertyName) {
@@ -190,6 +190,13 @@ export default class EditorForm extends React.Component {
 		}
 		if (control.controlType === "textfield") {
 			return (<TextfieldControl
+				ref={controlRef}
+				control={control}
+				controller={this.props.controller}
+				propertyId={propertyId}
+			/>);
+		} else if (control.controlType === "readonly") {
+			return (<ReadonlyControl
 				ref={controlRef}
 				control={control}
 				controller={this.props.controller}
@@ -747,34 +754,6 @@ export default class EditorForm extends React.Component {
 			showFieldPicker: true,
 			postPickCallback: postPickerCallback
 		});
-	}
-
-	_inSummaryControls(controlId) {
-		for (var ref in this.refs) {
-			if (typeof ref.getControls === "function") {
-				const summaryControls = ref.getControls();
-				const controlIds = summaryControls.controlIds;
-				for (let idx = 0; idx < controlIds.length; idx++) {
-					if (controlIds[idx] === controlId) {
-						return summaryControls.controls[idx];
-					}
-				}
-			}
-		}
-		return false;
-	}
-
-
-	_parseRequiredParameters(controls) {
-		var requiredParameters = controls.filter(function(control) {
-			return (control.required);
-		});
-
-		requiredParameters = requiredParameters.map(function(required) {
-			return (required.name);
-		});
-
-		this.setState({ requiredParameters: requiredParameters });
 	}
 
 	fieldPicker() {

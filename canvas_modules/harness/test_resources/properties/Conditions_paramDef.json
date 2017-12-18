@@ -76,7 +76,8 @@
       [
         "Hello",
         "World",
-        "string"
+        "string",
+        "Readonly phrase"
       ]
     ],
     "field_types": [
@@ -483,6 +484,10 @@
             "date"
           ],
           "default": ""
+        },
+        {
+          "id": "readonly",
+          "type": "string"
         }
       ]
     },
@@ -1092,6 +1097,14 @@
             },
             "width": 15,
             "edit_style": "subpanel"
+          },
+          {
+            "parameter_ref": "readonly",
+            "label": {
+              "default": "ReadOnly"
+            },
+            "control": "readonly",
+            "width": 20
           }
         ]
       },
@@ -2363,7 +2376,7 @@
           "modeling_role": "input"
         }
       },
-			{
+      {
         "name": "Ag",
         "type": "integer",
         "metadata": {

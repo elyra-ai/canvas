@@ -14,6 +14,7 @@ import { Tr, Td } from "reactable";
 import { Button } from "ap-components-react/dist/ap-components-react";
 import EditorControl from "./editor-control.jsx";
 import ToggletextControl from "./toggletext-control.jsx";
+import ReadonlyControl from "./readonly-control.jsx";
 import OneofselectControl from "./oneofselect-control.jsx";
 import TextfieldControl from "./textfield-control.jsx";
 import CheckboxControl from "./checkbox-control.jsx";
@@ -209,7 +210,8 @@ export default class ColumnStructureTableEditor extends EditorControl {
 	_makeCell(columnDef, controlValue, rowIndex, colIndex, colWidth, stateStyle, stateDisabled) {
 		let cell;
 		let cellContent;
-		let columnStyle = { "width": colWidth, "padding": "0 0 0 0" };
+		const columnStyle = { "width": colWidth };
+		columnStyle.paddingLeft = colIndex === 0 ? "15px" : "0";
 		const disabled = this._getDisabledStatus(rowIndex, colIndex, stateDisabled);
 		const propertyId = {
 			name: this.props.control.name,
@@ -217,7 +219,6 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			col: colIndex
 		};
 		if (columnDef.controlType === "toggletext" && columnDef.editStyle !== "subpanel") {
-			columnStyle = { "width": colWidth, "padding": "8px 0 0px 0" };
 			cellContent = (<ToggletextControl
 				controller={this.props.controller}
 				propertyId={propertyId}
@@ -251,13 +252,23 @@ export default class ColumnStructureTableEditor extends EditorControl {
 				</div>
 			</div>);
 		} else if (columnDef.controlType === "textfield" && columnDef.editStyle !== "subpanel") {
+			columnStyle.paddingTop = 0;
+			columnStyle.paddingBottom = 0;
 			cellContent = (<TextfieldControl
 				controller={this.props.controller}
 				propertyId={propertyId}
 				control={columnDef}
 				tableControl
 			/>);
+		} else if (columnDef.controlType === "readonly" && columnDef.editStyle !== "subpanel") {
+			cellContent = (<ReadonlyControl
+				control={columnDef}
+				controller={this.props.controller}
+				propertyId={propertyId}
+			/>);
 		} else if (columnDef.valueDef.propType === "boolean" && columnDef.editStyle !== "subpanel") {
+			columnStyle.paddingTop = 0;
+			columnStyle.paddingBottom = 0;
 			cellContent = (<CheckboxControl
 				controller={this.props.controller}
 				propertyId={propertyId}
@@ -266,9 +277,6 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			/>);
 
 		} else {
-			const padding = colIndex === 0 ? "6px 0 10px 15px" : "6px 0 10px 0";
-			columnStyle = { "width": colWidth, "padding": padding };
-			// workaround adding span show column shows up when no data is in cell
 			cellContent = controlValue[rowIndex][colIndex];
 			if (Array.isArray(cellContent)) {
 				cellContent = cellContent.join(", ");

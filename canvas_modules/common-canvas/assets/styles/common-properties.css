@@ -487,11 +487,7 @@ input.number,
   transition: all 200ms ease;
 }
 
-.Dropdown-control-table {
-  padding-top: 10px;
-}
-
-.Dropdown-control-table .Dropdown-arrow{
+.table-row .Dropdown-arrow{
   top: 10px;
 }
 
@@ -765,6 +761,8 @@ tr.reactable-column-header {
 
 tr.reactable-column-header > th {
 	overflow: hidden;
+	display: flex;
+	align-items: center;
 }
 
 .flexible-table-column.properties-tooltips-container {
@@ -925,6 +923,9 @@ tbody.reactable-data .editor_control_area {
 
 #flexible-table-container>table>tbody>.field-picker-data-rows>td[label=checkbox] {
     padding-left: 15px;
+}
+.table-row .checkbox {
+	margin-top: 5px;
 }
 
 /* Overwrite ap-components style to avoid large margin in bottom.

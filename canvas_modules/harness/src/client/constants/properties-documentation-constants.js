@@ -1002,6 +1002,47 @@ _defineConstant("EXPRESSION_PROPS_INFO", {
 		}
 	}
 });
+_defineConstant("READONLY_PROPS_INFO", {
+	"title": "Readonly Title",
+	"parameterDef": {
+		"current_parameters": {
+			"readonly_param": "The more I study, the more insatiable do I feel my genius for it to be. 'Ada Lovelace'"
+		},
+		"parameters": [
+			{
+				"id": "readonly_param",
+				"type": "string"
+			}
+		],
+		"uihints": {
+			"id": "readonly_param-control",
+			"parameter_info": [
+				{
+					"parameter_ref": "readonly_param",
+					"label": {
+						"default": "Readonly Field"
+					},
+					"description": {
+						"default": "Readonly field that can't be edited"
+					},
+					"control": "readonly"
+				}
+			],
+			"group_info": [
+				{
+					"id": "readonly-group",
+					"label": {
+						"default": "Readonly Tab"
+					},
+					"type": "controls",
+					"parameter_refs": [
+						"readonly_param"
+					]
+				}
+			]
+		}
+	}
+});
 _defineConstant("NUMBERFIELD_PROPS_INFO", {
 	"title": "NumberField Title",
 	"parameterDef": {

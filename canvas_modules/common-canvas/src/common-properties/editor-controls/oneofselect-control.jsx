@@ -117,13 +117,11 @@ export default class OneofselectControl extends EditorControl {
 		}
 
 		var dropDown = this.genSelectOptions(this.props.control, controlValue);
-		// TODO can this be done with a selector in the parent?
-		var className = this.props.tableControl ? "Dropdown-control-table" : "Dropdown-control-panel";
 		return (
 			<div id="oneofselect-control-container">
 				<div id={controlIconContainerClass}>
 					<div>
-						<div onClick={this.onClick.bind(this)} className={className} style={stateStyle}>
+						<div onClick={this.onClick.bind(this)} className="Dropdown-control-panel" style={stateStyle}>
 							<Dropdown {...stateDisabled}
 								id={this.getControlID()}
 								name={this.props.control.name}

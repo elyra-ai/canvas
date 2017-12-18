@@ -249,7 +249,7 @@
       }
     },
     {
-      "enabled": {
+      "visible": {
         "parameter_refs": [
           "field_hidden"
         ],
@@ -263,7 +263,7 @@
       }
     },
     {
-      "visible": {
+      "enabled": {
         "parameter_refs": [
           "field_disabled"
         ],

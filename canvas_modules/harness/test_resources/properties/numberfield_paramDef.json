@@ -318,7 +318,7 @@
       }
     },
     {
-      "enabled": {
+      "visible": {
         "parameter_refs": [
           "number_hidden",
           "number_random_hidden"
@@ -333,7 +333,7 @@
       }
     },
     {
-      "visible": {
+      "enabled": {
         "parameter_refs": [
           "number_disabled",
           "number_random_disabled"
