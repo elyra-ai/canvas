@@ -46,33 +46,16 @@ export default class ToggletextControl extends EditorControl {
 		if (typeof rendered === "undefined") {
 			rendered = renderValue;
 		}
-		let disabled = false;
-		if (typeof stateDisabled !== "undefined" && stateDisabled.disabled) {
-			disabled = true;
-		}
 		let icon = "";
 		if (typeof this.iconsMap[renderValue] !== "undefined") {
-			if (!disabled) {
-				icon = <img className="toggletext_icon" src={this.iconsMap[renderValue]} onClick={this.onClick.bind(this)} />;
-			} else {
-				icon = <img className="toggletext_icon" src={this.iconsMap[renderValue]} />;
-			}
+			icon = <img className="toggletext_icon" src={this.iconsMap[renderValue]} onClick={this.onClick.bind(this)} {...stateDisabled} style={stateStyle} />;
 		}
-		let uValue;
-		if (!disabled) {
-			uValue = (<u onClick={this.onClick.bind(this)} className="toggletext_text">
-				{rendered}
-			</u>);
-		} else {
-			uValue = (<u {...stateDisabled} style={stateStyle}>
-				{rendered}
-			</u>);
-		}
-
 		return (
 			<div className="toggletext_control">
 				{icon}
-				{uValue}
+				<u onClick={this.onClick.bind(this)} className="toggletext_text" {...stateDisabled} style={stateStyle}>
+					{rendered}
+				</u>
 			</div>
 		);
 	}

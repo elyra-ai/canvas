@@ -151,6 +151,7 @@ export default class EditorControl extends React.Component {
 				stateDisabled.disabled = true;
 				stateStyle.color = VALIDATION_MESSAGE.DISABLED;
 				stateStyle.borderColor = VALIDATION_MESSAGE.DISABLED;
+				stateStyle.pointerEvents = "none";
 				showTooltip = false;
 				errorMessage = <div />;
 				errorIcon = <div />;

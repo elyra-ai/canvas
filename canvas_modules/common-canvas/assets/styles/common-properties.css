@@ -114,7 +114,7 @@ input[type=radio]{
   /*background: grey !important;*/
   border-radius: 50% !important;
   transition: all .2s ease-in-out !important;
-  border: 1px solid #1d3649 !important;
+  border: 1px solid #1d3649;
 }
 /* Override for block controls */
 .control__indicator-block{
@@ -129,15 +129,22 @@ input[type=radio]{
   /*transform: scale(0);*/
 }
 
-.control input:checked ~ .control__indicator{
-  background:#a6266e !important;
-  height:17px !important;
-  width: 17px !important;
-  border: none !important;
+/* Control disabled */
+.control input:checked ~ .control__indicator.nohover {
+	background: #aeaeae !important;
+	border: none !important;
 }
 
-.control__indicator:disabled{
-  border: 1px solid #aeaeae;
+.control input:checked ~ .control__indicator{
+  background:#a6266e;
+  height:17px !important;
+  width: 17px !important;
+  border: none;
+}
+
+/* Control disabled */
+.control__indicator.nohover{
+  border: 1px solid #aeaeae !important;
 }
 
 .well{
