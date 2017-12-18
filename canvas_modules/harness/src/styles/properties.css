@@ -14,7 +14,7 @@
 	position: relative;
 }
 
-#properties-documentation-container > #right-flyout-panel {
+#properties-documentation-container > .right-flyout-panel {
 	top: 0px;
 	padding-top: 50px;
 	box-shadow: none;

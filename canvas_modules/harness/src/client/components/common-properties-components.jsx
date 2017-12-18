@@ -1234,10 +1234,10 @@ class CommonPropertiesComponents extends React.Component {
 		</div>);
 
 		let rightFlyoutWidth = "0px";
-		let rightFlyout = (<div id="right-flyout-panel" style={{ width: rightFlyoutWidth }} />);
+		let rightFlyout = (<div className="right-flyout-panel" style={{ width: rightFlyoutWidth }} />);
 		if (this.state.showRightFlyout) {
 			rightFlyoutWidth = "318px";
-			rightFlyout = (<div id="right-flyout-panel" style={{ width: rightFlyoutWidth }}>
+			rightFlyout = (<div className="right-flyout-panel" style={{ width: rightFlyoutWidth }}>
 				<CommonProperties
 					showPropertiesDialog
 					propertiesInfo={this.state.rightFlyoutContent}
