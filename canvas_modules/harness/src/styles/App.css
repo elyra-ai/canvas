@@ -469,6 +469,14 @@
 .custom-toggle .icon {
   margin-left: auto;
 }
+.custom-map-summary span {
+	display: block;
+
+}
+.custom-map-summary text {
+	color: mediumblue;
+	font-weight: bold;
+}
 
 .list-item-containers .list-item.overflow {
 	width: 170px;

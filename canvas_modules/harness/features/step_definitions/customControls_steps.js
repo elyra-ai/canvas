@@ -33,6 +33,14 @@ module.exports = function() {
 			}
 		}
 	});
+	this.Then("I verify custom summary panel", function() {
+		// check to see if there are 2 rows of data in the summary panel
+		const dataRows = browser.$$(".control-summary-table-row-multi-data");
+		expect(dataRows.length).toEqual(2);
+		// check the custom react object is render correctly 
+		const customMap = browser.$(".custom-map-summary").$$(".span-text");
+		expect(customMap.length).toEqual(3);
+	});
 
 	this.Then("I verify custom panel", function() {
 		var lastEventLog = getLastEventLogData();

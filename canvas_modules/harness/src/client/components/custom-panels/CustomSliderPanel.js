@@ -18,15 +18,14 @@ class CustomSliderPanel {
 	constructor(parameters, controller) {
 		this.parameters = parameters;
 		this.controller = controller;
+		this.propertyId = { name: parameters[0] };
+		this.controller.setControlInSummary(this.propertyId, "Slider", true);
 	}
-
 	renderPanel() {
-		const controlId = this.parameters[0];
 		return (
 			<CustomSliderCtrl
-				key={controlId}
-				ref={controlId}
-				propertyId={{ name: controlId }}
+				key={this.propertyId.name}
+				propertyId={this.propertyId}
 				controller={this.controller}
 			/>
 		);

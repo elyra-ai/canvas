@@ -6,7 +6,7 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-/* eslint complexity: ["error", 18] */
+/* eslint complexity: ["error", 30] */
 /* eslint max-depth: ["error", 6] */
 
 import React from "react";
@@ -72,7 +72,15 @@ export default class SummaryPanel extends EditorControl {
 			const propertyId = { name: summaryControlKey };
 			const summaryControl = summaryControls[summaryControlKey];
 			// get filtered controlValue (filters out hidden and disabled values)
-			const controlValue = this.props.controller.getPropertyValue(propertyId, true);
+			let controlValue = this.props.controller.getPropertyValue(propertyId, true);
+			// let custom control set their own value to be displayed
+			const customValue = this.props.controller.getCustPropSumPanelValue(propertyId);
+			let showCustom = false;
+			if (typeof customValue !== "undefined" && customValue !== null) {
+				controlValue = customValue.value;
+				summaryControl.summaryLabel = customValue.label;
+				showCustom = true;
+			}
 			const summaryValues = [];
 			if (Array.isArray(controlValue)) {
 				for (let rowIdx = 0; rowIdx < controlValue.length; rowIdx++) {
@@ -85,14 +93,14 @@ export default class SummaryPanel extends EditorControl {
 								name: propertyId.name,
 								col: colIdx
 							};
-							if (this.props.controller.isSummary(colPropertyId)) {
+							if (this.props.controller.isSummary(colPropertyId) || showCustom) {
 								rowData.push(
 									<td key={"control-summary-table-row-multi-data-" + colIdx} className={"control-summary-table-row-multi-data"}>
 										{rowValue[colIdx]}
 									</td>);
 							}
 						}
-					} else if (this.props.controller.isSummary(propertyId)) { // only push row data if control is in summary
+					} else if (this.props.controller.isSummary(propertyId) || showCustom) { // only push row data if control is in summary
 						rowData.push(
 							<td key={"control-summary-table-row-multi-data-" + rowIdx} className={"control-summary-table-row-multi-data"}>
 								{rowValue}
@@ -107,7 +115,8 @@ export default class SummaryPanel extends EditorControl {
 				}
 			} else if (controlValue) {
 				// assume simple parameter
-				if (this.props.controller.isSummary(propertyId)) {
+				// if (typeof controlValue === "string" || typeof controlValue === "boolean" || typeof controlValue === "number") {
+				if (this.props.controller.isSummary(propertyId) || showCustom) {
 					summaryValues.push(
 						<tr key={"control-summary-table-rows-" + summaryControlKey} className={"control-summary-list-rows"}>
 							<td key={"control-summary-table-row-multi-data-" + summaryControlKey} className={"control-summary-table-row-multi-data"}>
@@ -116,13 +125,16 @@ export default class SummaryPanel extends EditorControl {
 						</tr>
 					);
 				}
+				// } else if (showCustom) {
+				//	summaryValues.push(controlValue); // allows for custom objects to be displayed in summaryPanel
+				// }
 			}
 			if (summaryValues.length > 0) {
 				summaryTables.push(
 					<div key={"summary-container-" + summaryControlKey} className={"control-summary-configured-values"}>
-						<span key={"summary-text-" + summaryControlKey} className={"summary-label"}>{summaryControl.label}</span>
+						<span key={"summary-text-" + summaryControlKey} className={"summary-label"}>{summaryControl.summaryLabel}</span>
 						<table key={"summary-table-" + summaryControlKey} className={"control-summary-table " + disableText}>
-							<tbody>
+							<tbody key={"summary-body-" + summaryControlKey}>
 								{summaryValues}
 							</tbody>
 						</table>

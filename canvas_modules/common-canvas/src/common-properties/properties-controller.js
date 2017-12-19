@@ -32,6 +32,7 @@ export default class PropertiesController {
 		this.controllerHandlerCalled = false;
 		this.requiredParameters = []; // TODO this is needed for validateInput, will change to use this.controls later
 		this.commandStack = new CommandStack();
+		this.custPropSumPanelValues = {};
 
 	}
 	subscribe(callback) {
@@ -225,15 +226,9 @@ export default class PropertiesController {
 					summaryControls[control.summaryPanelId] = {};
 				}
 				if (typeof control.columnIndex === "undefined") {
-					summaryControls[control.summaryPanelId][control.name] = {
-						controlType: control.controlType,
-						label: control.summaryLabel
-					};
+					summaryControls[control.summaryPanelId][control.name] = control;
 				} else {
-					summaryControls[control.summaryPanelId][control.parameterName] = {
-						controlType: control.controlType,
-						label: control.summaryLabel
-					};
+					summaryControls[control.summaryPanelId][control.parameterName] = control;
 				}
 			}
 		});
@@ -269,26 +264,26 @@ export default class PropertiesController {
 	/*
 	* Property Values Methods
 	*/
-	updatePropertyValue(id, value) {
-		this.propertiesStore.updatePropertyValue(id, value);
+	updatePropertyValue(propertyId, value) {
+		this.propertiesStore.updatePropertyValue(propertyId, value);
 		conditionsUtil.validateConditions(this, this.visibleDefinition, this.enabledDefinitions, this.getDatasetMetadata());
-		conditionsUtil.validateInput(id, this, this.validationDefinitions, this.getDatasetMetadata());
+		conditionsUtil.validateInput(propertyId, this, this.validationDefinitions, this.getDatasetMetadata());
 		if (this.handlers.propertyListener) {
 			this.handlers.propertyListener(
 				{
 					action: ACTIONS.UPDATE_PROPERTY,
-					property: id,
+					property: propertyId,
 					value: value
 				}
 			);
 		}
 	}
-	getPropertyValue(id, filterHiddenDisabled) {
-		const propertyValue = this.propertiesStore.getPropertyValue(id);
+	getPropertyValue(propertyId, filterHiddenDisabled) {
+		const propertyValue = this.propertiesStore.getPropertyValue(propertyId);
 		// don't return hidden/disabled values
 		if (filterHiddenDisabled && propertyValue) {
 			// top level value
-			const controlState = this.getControlState(id);
+			const controlState = this.getControlState(propertyId);
 			if (controlState === STATES.DISABLED || controlState === STATES.HIDDEN) {
 				return null;
 			}
@@ -300,7 +295,7 @@ export default class PropertiesController {
 					if (Array.isArray(rowValue)) {
 						for (let colIdx = 0; colIdx < rowValue.length; colIdx++) {
 							const colPropertyId = {
-								name: id.name,
+								name: propertyId.name,
 								row: rowIdx,
 								col: colIdx
 							};
@@ -395,7 +390,7 @@ export default class PropertiesController {
 		return messages;
 	}
 	updateErrorMessage(propertyId, message) {
-		if (message.type !== "info") {
+		if (message && message.type !== "info") {
 			this.propertiesStore.updateErrorMessage(propertyId, message);
 		} else {
 			this.propertiesStore.clearErrorMessage(propertyId);
@@ -422,34 +417,27 @@ export default class PropertiesController {
 	}
 
 	isRequired(propertyId) {
-		if (typeof this.controls[propertyId.name] !== "undefined") {
-			var required = this.controls[propertyId.name].required;
-			if (typeof propertyId.col !== "undefined") {
-				required = this.controls[propertyId.name][propertyId.col].required;
-			}
+		const control = this.getControl(propertyId);
+		if (control) {
+			const required = control.required;
 			return (required) ? required : false;
 		}
 		return false;
 	}
 
 	isSummary(propertyId) {
-		if (typeof this.controls[propertyId.name] !== "undefined") {
-			var summary = this.controls[propertyId.name].summary;
-			if (typeof propertyId.col !== "undefined") {
-				summary = this.controls[propertyId.name][propertyId.col].summary;
-			}
+		const control = this.getControl(propertyId);
+		if (control) {
+			const summary = control.summary;
 			return (summary) ? summary : false;
 		}
 		return false;
 	}
 
 	getControlType(propertyId) {
-		if (typeof this.controls[propertyId.name] !== "undefined") {
-			var controlType = this.controls[propertyId.name].controlType;
-			if (typeof propertyId.col !== "undefined") {
-				controlType = this.controls[propertyId.name][propertyId.col].controlType;
-			}
-			return controlType;
+		const control = this.getControl(propertyId);
+		if (control) {
+			return control.controlType;
 		}
 		return null;
 	}
@@ -462,5 +450,27 @@ export default class PropertiesController {
 	}
 	getSummaryPanelControls(panelId) {
 		return this.summaryPanelControls[panelId];
+	}
+	// Sets the value to be displayed in the summaryPanel for a customPanel property
+	updateCustPropSumPanelValue(propertyId, content) {
+		if (typeof propertyId.name !== "undefined") {
+			this.custPropSumPanelValues[propertyId.name] = content;
+		}
+	}
+	getCustPropSumPanelValue(propertyId) {
+		// don't display hidden or disabled parameters
+		const controlState = this.getControlState(propertyId);
+		if (controlState === STATES.DISABLED || controlState === STATES.HIDDEN) {
+			return null;
+		}
+		return this.custPropSumPanelValues[propertyId.name];
+	}
+	// Only used in custom panel to allow for custom property summary values to be displayed
+	setControlInSummary(propertyId, label, inSummary) {
+		const control = this.getControl(propertyId);
+		if (control) {
+			control.summary = true;
+			control.summaryLabel = label;
+		}
 	}
 }

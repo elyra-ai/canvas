@@ -10,6 +10,7 @@
 /* eslint-disable no-empty-function */
 import React from "react";
 import CustomMapCtrl from "./CustomMapCtrl";
+import CustomMapSummary from "./CustomMapSummary";
 
 class CustomMapPanel {
 	static id() {
@@ -23,11 +24,16 @@ class CustomMapPanel {
 
 	renderPanel() {
 		const controlId = this.parameters[0];
+		const propertyId = { name: controlId };
+		const currentValue = this.controller.getPropertyValue(propertyId);
+		const mapSummary = (<CustomMapSummary lng={currentValue[1]} lat={currentValue[0]} zoom={currentValue[2]} />);
+		this.controller.updateCustPropSumPanelValue(propertyId,
+			{ value: mapSummary, label: "Map" });
 		return (
 			<CustomMapCtrl
 				key={controlId}
 				ref={controlId}
-				propertyId={{ name: controlId }}
+				propertyId={propertyId}
 				controller={this.controller}
 			/>
 		);

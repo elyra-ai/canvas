@@ -10,6 +10,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Icon } from "ap-components-react/dist/ap-components-react";
+import CustomMapSummary from "./CustomMapSummary";
 
 //* eslint no-unused-expressions: ["error", { "allow": ["CustomMapCtrl"] }] */
 
@@ -19,7 +20,7 @@ export default class CustomMapCtrl extends React.Component {
 		super(props);
 		this.state = {
 		};
-		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
+		const controlValue = props.controller.getPropertyValue(this.props.propertyId);
 
 		if (controlValue && controlValue.length >= 3) {
 			this.lat = controlValue[0];
@@ -36,6 +37,9 @@ export default class CustomMapCtrl extends React.Component {
 		this.initMap = this.initMap.bind(this);
 		this.goSomewhere = this.goSomewhere.bind(this);
 		this.setInternalState = this.setInternalState.bind(this);
+		const mapSummary = (<CustomMapSummary lng={this.lng} lat={this.lat} zoom={this.zoom} />);
+		props.controller.updateCustPropSumPanelValue(props.propertyId,
+			{ value: mapSummary, label: "Map" });
 	}
 
 	componentDidMount() {
@@ -67,6 +71,9 @@ export default class CustomMapCtrl extends React.Component {
 		this.coords = this.formatCoords(lat, lng);
 		this.props.controller.updatePropertyValue(this.props.propertyId, value);
 		this.props.controller.updatePropertyValue({ name: "map_zoom" }, zoom); // update value in another control
+		const mapSummary = (<CustomMapSummary lng={this.lng} lat={this.lat} zoom={this.zoom} />);
+		this.props.controller.updateCustPropSumPanelValue(this.props.propertyId,
+			{ value: mapSummary, label: "Map" });
 	}
 
 	goSomewhere(where, zoom) {

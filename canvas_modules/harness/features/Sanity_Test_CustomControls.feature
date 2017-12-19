@@ -21,5 +21,6 @@ Feature: Sanity_Test_CustomControls
 		Then I show the map and go to Armonk
 		Then I click on modal OK button
 		Then I pause for 1 seconds
+		Then I verify custom summary panel
 		Then I click on modal OK button
 		Then I verify custom panel
