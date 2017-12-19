@@ -229,10 +229,13 @@
 	overflow-x: scroll;
 }
 
+.conditions-documentation-control-table tr.reactable-column-header {
+	display: table-row;
+}
 
-/*.properties-documentation-control-label {
-	color: #777677;
-}*/
+.conditions-documentation-control-table tr.reactable-column-header > th {
+	display: table-cell;
+}
 
 /* min width less than then set width to 100% and flow to next line */
 
