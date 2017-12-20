@@ -18,7 +18,8 @@ const ItemType = {
 	PANEL_SELECTOR: "panelSelector",
 	CHECKBOX_SELECTOR: "checkboxSelector",
 	CUSTOM_PANEL: "customPanel",
-	SUMMARY_PANEL: "summaryPanel"
+	SUMMARY_PANEL: "summaryPanel",
+	ACTION: "action"
 };
 
 const EditStyle = {
@@ -43,7 +44,8 @@ const GroupType = {
 	PANEL_SELECTOR: "panelSelector",
 	CHECKBOX_PANEL: "checkboxPanel",
 	CUSTOM_PANEL: "customPanel",
-	SUMMARY_PANEL: "summaryPanel"
+	SUMMARY_PANEL: "summaryPanel",
+	ACTION_PANEL: "actionPanel"
 };
 
 const PanelType = {
@@ -52,7 +54,8 @@ const PanelType = {
 	COLUMN_SELECTION: "columnSelection",
 	CHECKBOX_PANEL: "checkboxPanel",
 	CUSTOM: "custom",
-	SUMMARY: "summary"
+	SUMMARY: "summary",
+	ACTION_PANEL: "actionPanel"
 };
 
 const ControlType = {

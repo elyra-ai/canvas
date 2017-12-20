@@ -22,7 +22,8 @@ export default class PropertiesController {
 		this.propertiesStore = new PropertiesStore();
 		this.handlers = {
 			propertyListener: null,
-			controllerHandler: null
+			controllerHandler: null,
+			actionHandler: null
 		};
 		this.visibleDefinition = {};
 		this.enabledDefinitions = {};
@@ -78,6 +79,16 @@ export default class PropertiesController {
 			this._addToControlValues();
 			this.uiItems = this.form.uiItems; // set last so properties dialog doesn't render too early
 		}
+	}
+	getForm() {
+		return this.form;
+	}
+
+	setAppData(appData) {
+		this.appData = appData;
+	}
+	getAppData() {
+		return this.appData;
 	}
 
 	_parseUiConditions() {
@@ -240,9 +251,7 @@ export default class PropertiesController {
 		requiredParameters = UiConditionsParser.parseRequiredParameters(requiredParameters, form, controls);
 		return requiredParameters;
 	}
-	getForm() {
-		return this.form;
-	}
+
 	getUiItems() {
 		return this.uiItems;
 	}

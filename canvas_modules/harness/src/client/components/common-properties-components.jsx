@@ -52,7 +52,8 @@ import {
 	STRUCTURETABLE_MOVEABLE_PROPS_INFO,
 	STRUCTURETABLE_SORTABLE_PROPS_INFO,
 	STRUCTURETABLE_FILTERABLE_PROPS_INFO,
-	SUMMARY_PROPS_INFO
+	SUMMARY_PROPS_INFO,
+	ACTION_PROPS_INFO
 } from "../constants/properties-documentation-constants.js";
 import { CommonProperties } from "common-canvas";
 
@@ -67,6 +68,8 @@ class CommonPropertiesComponents extends React.Component {
 		this.jsonReplacer = this.jsonReplacer.bind(this);
 		this.onMenuDropdownSelect = this.onMenuDropdownSelect.bind(this);
 		this.setRightFlyoutState = this.setRightFlyoutState.bind(this);
+		this.actionHandler = this.actionHandler.bind(this);
+		this.controllerHandler = this.controllerHandler.bind(this);
 	}
 
 	componentDidMount() {
@@ -98,6 +101,22 @@ class CommonPropertiesComponents extends React.Component {
 				(content === this.state.rightFlyoutContent && !this.state.showRightFlyout),
 			rightFlyoutContent: content
 		});
+	}
+	controllerHandler(propertiesController) {
+		this.propertiesController = propertiesController;
+	}
+
+	actionHandler(actionId, appData, data) {
+		if (actionId === "increment") {
+			const propertyId = { name: data.parameter_ref };
+			let value = this.propertiesController.getPropertyValue(propertyId);
+			this.propertiesController.updatePropertyValue(propertyId, value += 1);
+		}
+		if (actionId === "decrement") {
+			const propertyId = { name: data.parameter_ref };
+			let value = this.propertiesController.getPropertyValue(propertyId);
+			this.propertiesController.updatePropertyValue(propertyId, value -= 1);
+		}
 	}
 
 	jsonReplacer(json, type, custom) {
@@ -201,7 +220,9 @@ class CommonPropertiesComponents extends React.Component {
 					"--row_selection",
 					"--sortable",
 					"--filterable",
-					"--summary"
+					"--summary",
+					"Actions",
+					"--button"
 				]}
 				compact
 				dark
@@ -230,6 +251,11 @@ class CommonPropertiesComponents extends React.Component {
 						<a className="properties-documentation-nav-link"
 							onClick={() => this.onMenuDropdownSelect(null, { selected: "Complex" })}
 						>Complex Types</a>
+					</li>
+					<li className="properties-documentation-navbar-li">
+						<a className="properties-documentation-nav-link"
+							onClick={() => this.onMenuDropdownSelect(null, { selected: "Actions" })}
+						>Action Controls</a>
 					</li>
 				</ul>
 				{dropMenu}
@@ -1224,6 +1250,35 @@ class CommonPropertiesComponents extends React.Component {
 				</div>
 			</div>
 		</section>);
+		const contentActions = (<section id="Actions" className="section properties-documentation-content-controls-section">
+			<h2 className="properties-documentation-section-title">Actions</h2>
+			<p className="section-description">Actions are used to callback to the consuming application to allow the
+				application to perform a task. All actions call <span className="highlight">actionHandler</span> and pass
+				<span className="highlight"> actionId, appData, and data</span> back to the application.
+					The following actions are supported in the Common Properties editor.</p>
+			<div className="properties-documentation-section-content">
+				<div className="properties-documentation-panels-controls-component">
+					<h3 id="--button" className="section-subtitle">button</h3>
+					<div className="section-row">
+						<div className="section-column">
+							<CommonProperties
+								showPropertiesDialog
+								propertiesInfo={ACTION_PROPS_INFO}
+								containerType="Custom"
+								actionHandler={this.actionHandler}
+								controllerHandler={this.controllerHandler}
+							/>
+							{this.renderRightFlyoutButton(ACTION_PROPS_INFO)}
+						</div>
+						<div className="section-column section-column-code">
+							<pre className="json-block">
+								{this.jsonReplacer(ACTION_PROPS_INFO.parameterDef, "all")}
+							</pre>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>);
 
 		const content = (<div id="properties-documentation-content">
 			{contentIntro}
@@ -1231,6 +1286,7 @@ class CommonPropertiesComponents extends React.Component {
 			{contentPanels}
 			{contentControls}
 			{contentComplex}
+			{contentActions}
 		</div>);
 
 		let rightFlyoutWidth = "0px";

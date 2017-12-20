@@ -164,6 +164,6 @@ export default class PropertiesStore {
 	}
 	getDatasetMetadata() {
 		const state = this.store.getState();
-		return state.datasetMetadataReducer;
+		return JSON.parse(JSON.stringify(state.datasetMetadataReducer));
 	}
 }

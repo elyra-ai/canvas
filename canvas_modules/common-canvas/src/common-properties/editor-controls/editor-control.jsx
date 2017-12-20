@@ -60,16 +60,6 @@ export default class EditorControl extends React.Component {
 		return options;
 	}
 
-	static genStringSelectOptions(values, selectedValues) {
-		var options = [];
-		for (var i = 0; i < values.length; i++) {
-			options.push(
-				<option key={i} value={values[i]}>{values[i]}</option>
-			);
-		}
-		return options;
-	}
-
 	static handleTableRowClick(evt, rowIndex, selection, allowedSelection) {
 		// logger.info(selection);
 		var selected = selection;

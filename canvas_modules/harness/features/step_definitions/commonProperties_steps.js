@@ -467,6 +467,23 @@ module.exports = function() {
 		}
 	});
 
+	/*
+	* Action steps
+ 	*/
+	this.Then(/^I click the "([^"]*)" action$/, function(actionName) {
+		const buttons = browser.$$(".properties-action-button .button");
+		for (const button of buttons) {
+			if (button.$("span").getText() === actionName) {
+				button.click();
+				break;
+			}
+		}
+	});
+	this.Then(/^I verify that readonly value is "([^"]*)"$/, function(value) {
+		const text = browser.$$(".editor_control_readonly text")[0];
+		expect(value).toEqual(text.getText());
+	});
+
 	function getLastEventLogData(override) {
 		var message = 1;
 		if (override) {

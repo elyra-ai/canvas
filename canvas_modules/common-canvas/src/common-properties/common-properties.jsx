@@ -51,12 +51,13 @@ export default class CommonProperties extends React.Component {
 		this.setForm();
 		this.propertiesController.setHandlers({
 			controllerHandler: this.props.controllerHandler,
-			propertyListener: this.props.propertyListener
+			propertyListener: this.props.propertyListener,
+			actionHandler: this.props.actionHandler
 		});
 		if (this.propertiesInfo.messages) {
 			this.setErrorMessages(this.propertiesInfo.messages);
 		} else {
-			this.propertiesController.setErrorMessages([]);
+			this.propertiesController.setErrorMessages({});
 		}
 	}
 
@@ -91,6 +92,7 @@ export default class CommonProperties extends React.Component {
 			logger.error("Error generating form in common-properties: " + error);
 		}
 		this.propertiesController.setForm(formData);
+		this.propertiesController.setAppData(this.props.propertiesInfo.appData);
 	}
 
 	setErrorMessages(messages) {
@@ -252,6 +254,7 @@ export default class CommonProperties extends React.Component {
 					customPanels={this.props.customPanels}
 					customContainer={this.props.containerType === "Custom"}
 					rightFlyout={this.props.rightFlyout}
+					actionHandler={this.props.actionHandler}
 				/>);
 
 				if (this.props.containerType === "Editing") {
@@ -312,5 +315,6 @@ CommonProperties.propTypes = {
 	customPanels: PropTypes.array, // array of custom panels
 	rightFlyout: PropTypes.bool,
 	controllerHandler: PropTypes.func,
-	propertyListener: PropTypes.func
+	propertyListener: PropTypes.func,
+	actionHandler: PropTypes.func
 };

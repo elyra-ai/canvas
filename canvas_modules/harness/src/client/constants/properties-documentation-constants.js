@@ -3001,3 +3001,85 @@ _defineConstant("SUMMARY_PROPS_INFO", {
 		}
 	}
 });
+
+_defineConstant("ACTION_PROPS_INFO", {
+	"title": "Actions",
+	"parameterDef": {
+		"current_parameters": {
+			"number": 0
+		},
+		"parameters": [
+			{
+				"id": "number",
+				"type": "integer"
+			}
+		],
+		"uihints": {
+			"id": "actions",
+			"icon": "images/actions.svg",
+			"label": {
+				"default": "Action Test"
+			},
+			"parameter_info": [
+				{
+					"parameter_ref": "number",
+					"label": {
+						"default": "Integer"
+					},
+					"description": {
+						"default": "Try pressing Increment or Descrement buttons"
+					},
+					"control": "readonly"
+				}
+			],
+			"action_info": [
+				{
+					"id": "increment",
+					"label": {
+						"default": "Increment"
+					},
+					"control": "button",
+					"data": {
+						"parameter_ref": "number"
+					}
+				},
+				{
+					"id": "decrement",
+					"label": {
+						"default": "Decrement"
+					},
+					"control": "button",
+					"data": {
+						"parameter_ref": "number"
+					}
+				}
+			],
+			"group_info": [
+				{
+					"id": "action-tests",
+					"label": {
+						"default": "Actions"
+					},
+					"type": "panels",
+					"group_info": [
+						{
+							"id": "increment-action-panel",
+							"type": "actionPanel",
+							"action_refs": [
+								"increment",
+								"decrement"
+							]
+						},
+						{
+							"id": "number-control",
+							"type": "controls",
+							"parameter_refs": [
+								"number"
+							]
+						}
+					]
+				}
+			]
+		}
+	}
+});

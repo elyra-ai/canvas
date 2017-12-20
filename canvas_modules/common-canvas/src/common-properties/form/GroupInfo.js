@@ -12,9 +12,10 @@ import { ResourceDef } from "./L10nProvider";
 import _ from "underscore";
 
 class Group {
-	constructor(cname, parameters, type, label, dependsOn, subGroups) {
+	constructor(cname, parameters, actions, type, label, dependsOn, subGroups) {
 		this.name = cname;
 		this.parameters = parameters;
+		this.actions = actions;
 		this.type = type;
 		this.label = ResourceDef.make(label);
 		this.dependsOn = dependsOn;
@@ -23,6 +24,10 @@ class Group {
 
 	parameterNames() {
 		return this.parameters;
+	}
+
+	actionIds() {
+		return this.actions;
 	}
 
 	groupType() {
@@ -44,6 +49,7 @@ class Group {
 			return new Group(
 				_.propertyOf(uiGroup)("id"),
 				_.propertyOf(uiGroup)("parameter_refs"),
+				_.propertyOf(uiGroup)("action_refs"),
 				_.propertyOf(uiGroup)("type"),
 				_.propertyOf(uiGroup)("label"),
 				_.propertyOf(uiGroup)("depends_on_ref"),

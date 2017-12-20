@@ -1,76 +1,86 @@
 {
   "current_parameters": {
-    "field": "age",
-    "field_null": null,
-    "field_empty_string": "",
-    "field_placeholder": "",
-    "field1_panel": "age",
-    "field2_panel": "BP",
-    "field_error": "BP",
-    "field_warning": "NA",
+    "fields": [
+      "age"
+    ],
+    "fields_null": null,
+    "fields_empty": [],
+    "fields1_panel": [
+      "age"
+    ],
+    "fields2_panel": [
+      "BP"
+    ],
+    "fields_error": [
+      "BP"
+    ],
+    "fields_warning": [
+      "Na"
+    ],
     "hide": true,
-    "field_hidden": "drug",
+    "fields_hidden": [
+      "drug"
+    ],
     "disable": true,
-    "field_disabled": "age"
+    "fields_disabled": [
+      "age"
+    ]
   },
   "parameters": [
     {
-      "id": "field",
-      "type": "string",
+      "id": "fields",
+      "type": "array[string]",
       "role": "column",
       "required": true
     },
     {
-      "id": "field_default",
-      "type": "string",
-      "default": "BP",
+      "id": "fields_default",
+      "type": "array[string]",
+      "default": [
+        "BP"
+      ],
       "role": "column",
       "required": true
     },
     {
-      "id": "field_undefined",
-      "type": "string",
+      "id": "fields_undefined",
+      "type": "array[string]",
       "role": "column",
       "required": true
     },
     {
-      "id": "field_null",
-      "type": "string",
+      "id": "fields_null",
+      "type": "array[string]",
       "role": "column",
       "required": true
     },
     {
-      "id": "field_empty_string",
-      "type": "string",
+      "id": "fields_empty",
+      "type": "array[string]",
       "role": "column",
       "required": true
     },
     {
-      "id": "field_placeholder",
-      "type": "string",
-      "role": "column"
-    },
-    {
-      "id": "field1_panel",
-      "type": "string",
+      "id": "fields1_panel",
+      "type": "array[string]",
       "role": "column",
       "required": true
     },
     {
-      "id": "field2_panel",
-      "type": "string",
+      "id": "fields2_panel",
+      "type": "array[string]",
       "role": "column",
       "required": true
     },
     {
-      "id": "field_error",
-      "type": "string",
+      "id": "fields_error",
+      "type": "array[string]",
       "role": "column",
       "required": true
     },
     {
-      "id": "field_warning",
-      "type": "string",
+      "id": "fields_warning",
+      "type": "array[string]",
       "role": "column",
       "required": true
     },
@@ -79,8 +89,8 @@
       "type": "boolean"
     },
     {
-      "id": "field_hidden",
-      "type": "string",
+      "id": "fields_hidden",
+      "type": "array[string]",
       "role": "column",
       "required": true
     },
@@ -89,110 +99,98 @@
       "type": "boolean"
     },
     {
-      "id": "field_disabled",
-      "type": "string",
+      "id": "fields_disabled",
+      "type": "array[string]",
       "role": "column",
       "required": true
     }
   ],
   "uihints": {
-    "id": "selectcolumn",
+    "id": "selectcolumns",
     "icon": "images/default.svg",
     "label": {
-      "default": "Select Column"
+      "default": "Select Columns"
     },
     "parameter_info": [
       {
-        "parameter_ref": "field",
+        "parameter_ref": "fields",
         "label": {
-          "default": "Field"
+          "default": "Fields"
         },
         "description": {
-          "default": "selectcolumn with parameter value set to 'age'"
+          "default": "selectcolumns with parameter value set to 'age'"
         }
       },
       {
-        "parameter_ref": "field_null",
+        "parameter_ref": "fields_null",
         "label": {
-          "default": "Field null"
+          "default": "Fields null"
         },
         "description": {
-          "default": "selectcolumn with parameter value set to 'null'"
+          "default": "selectcolumns with parameter value set to 'null'"
         }
       },
       {
-        "parameter_ref": "field_undefined",
+        "parameter_ref": "fields_undefined",
         "label": {
-          "default": "Field undefined"
+          "default": "Fields undefined"
         },
         "description": {
-          "default": "selectcolumn with parameter value set to 'undefined'"
+          "default": "selectcolumns with parameter value set to 'undefined'"
         }
       },
       {
-        "parameter_ref": "field_empty_string",
+        "parameter_ref": "fields_empty",
         "label": {
-          "default": "Field Empty String"
+          "default": "Fields Empty"
         },
         "description": {
-          "default": "selectcolumn with parameter value set to '\"\"'"
+          "default": "selectcolumns with parameter value set to '[]'"
         }
       },
       {
-        "parameter_ref": "field_placeholder",
+        "parameter_ref": "fields_default",
         "label": {
-          "default": "Field with Placeholder text"
+          "default": "Fields Default Value"
         },
         "description": {
-          "default": "selectcolumn with placeholder text 'None...'"
-        },
-        "place_holder_text": {
-          "default": "None..."
+          "default": "selectcolumns with parameter value set to '[BP]'"
         }
       },
       {
-        "parameter_ref": "field_default",
+        "parameter_ref": "fields1_panel",
         "label": {
-          "default": "Field Default Value"
+          "default": "Fields1 Panel"
         },
         "description": {
-          "default": "selectcolumn with parameter value set to 'BP'"
+          "default": "selectcolumns with parameter shared with Field2 Panel"
         }
       },
       {
-        "parameter_ref": "field1_panel",
+        "parameter_ref": "fields2_panel",
         "label": {
-          "default": "Field1 Panel"
+          "default": "Fields2 Panel"
         },
         "description": {
-          "default": "selectcolumn with parameter shared with Field2 Panel"
+          "default": "selectcolumns with parameter shared with Field1 Panel"
         }
       },
       {
-        "parameter_ref": "field2_panel",
-        "label": {
-          "default": "Field2 Panel"
-        },
-        "description": {
-          "default": "selectcolumn with parameter shared with Field1 Panel"
-        }
-      },
-      {
-        "parameter_ref": "field_error",
+        "parameter_ref": "fields_error",
         "label": {
           "default": "Field Error"
         },
         "description": {
-          "default": "selectcolumn with error when set to 'age'"
+          "default": "selectcolumns with error when set to 'age'"
         }
       },
       {
-        "parameter_ref": "field_warning",
+        "parameter_ref": "fields_warning",
         "label": {
           "default": "Field Warning"
         },
         "description": {
-          "default": "selectcolumn with warning when set to 'age'"
+          "default": "selectcolumns with warning when set to 'age'"
         }
       },
       {
@@ -202,7 +200,7 @@
         }
       },
       {
-        "parameter_ref": "field_hidden",
+        "parameter_ref": "fields_hidden",
         "label": {
           "default": "Field Hidden"
         }
@@ -214,7 +212,7 @@
         }
       },
       {
-        "parameter_ref": "field_disabled",
+        "parameter_ref": "fields_disabled",
         "label": {
           "default": "Field Disabled"
         }
@@ -222,53 +220,52 @@
     ],
     "group_info": [
       {
-        "id": "selectcolumn-values",
+        "id": "selectcolumns-values",
         "label": {
           "default": "Values"
         },
         "type": "panels",
         "group_info": [
           {
-            "id": "selectcolumn-values",
+            "id": "selectcolumns-values",
             "label": {
               "default": "Values"
             },
             "type": "columnSelection",
             "parameter_refs": [
-              "field1_panel",
-              "field2_panel"
+              "fields1_panel",
+              "fields2_panel"
             ]
           },
           {
-            "id": "selectcolumn-values",
+            "id": "selectcolumns-values",
             "label": {
               "default": "Values"
             },
             "type": "controls",
             "parameter_refs": [
-              "field",
-              "field_null",
-              "field_empty_string",
-              "field_undefined",
-              "field_default",
-              "field_placeholder"
+              "fields",
+              "fields_null",
+              "fields_empty",
+              "fields_undefined",
+              "fields_default"
             ]
           }
         ]
       },
       {
-        "id": "selectcolumn-conditions",
+        "id": "selectcolumns-conditions",
         "label": {
           "default": "Conditions"
         },
         "type": "controls",
         "parameter_refs": [
-          "field_error",
-          "field_warning",
+          "fields_error",
+          "fields_warning",
           "hide",
-          "field_hidden",
+          "fields_hidden",
           "disable",
-          "field_disabled"
+          "fields_disabled"
         ]
       }
     ]
@@ -278,14 +275,14 @@
       "validation": {
         "fail_message": {
           "type": "error",
-          "focus_parameter_ref": "field_error",
+          "focus_parameter_ref": "fields_error",
           "message": {
             "default": "Don't select 'age'"
           }
         },
         "evaluate": {
           "condition": {
-            "parameter_ref": "field_error",
+            "parameter_ref": "fields_error[0]",
             "op": "notEquals",
             "value": "age"
           }
@@ -296,14 +293,14 @@
       "validation": {
         "fail_message": {
           "type": "warning",
-          "focus_parameter_ref": "field_warning",
+          "focus_parameter_ref": "fields_warning",
           "message": {
             "default": "Shouldn't select 'age'"
           }
         },
         "evaluate": {
           "condition": {
-            "parameter_ref": "field_warning",
+            "parameter_ref": "fields_warning[0]",
             "op": "notEquals",
             "value": "age"
           }
@@ -313,7 +310,7 @@
     {
       "visible": {
         "parameter_refs": [
-          "field_hidden"
+          "fields_hidden"
         ],
         "evaluate": {
           "condition": {
@@ -327,7 +324,7 @@
     {
       "enabled": {
         "parameter_refs": [
-          "field_disabled"
+          "fields_disabled"
         ],
         "evaluate": {
           "condition": {

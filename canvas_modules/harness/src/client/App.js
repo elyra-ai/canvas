@@ -123,8 +123,6 @@ class App extends React.Component {
 		this.tipHandler = this.tipHandler.bind(this);
 
 		this.applyDiagramEdit = this.applyDiagramEdit.bind(this);
-		this.applyPropertyChanges = this.applyPropertyChanges.bind(this);
-		this.applyPropertyChanges = this.applyPropertyChanges.bind(this);
 		this.validateFlow = this.validateFlow.bind(this);
 		this.getNodeForm = this.getNodeForm.bind(this);
 		this.refreshContent = this.refreshContent.bind(this);
@@ -132,7 +130,10 @@ class App extends React.Component {
 		// common-properties
 		this.openPropertiesEditorDialog = this.openPropertiesEditorDialog.bind(this);
 		this.closePropertiesEditorDialog = this.closePropertiesEditorDialog.bind(this);
+		// properties callbacks
+		this.applyPropertyChanges = this.applyPropertyChanges.bind(this);
 		this.propertyListener = this.propertyListener.bind(this);
+		this.propertyActionHandler = this.propertyActionHandler.bind(this);
 		this.propertiesControllerHandler = this.propertiesControllerHandler.bind(this);
 
 		this.canvasController = new CanvasController();
@@ -688,6 +689,34 @@ class App extends React.Component {
 	propertyListener(data) {
 		this.log("propertyListener() " + data.action);
 	}
+	propertyActionHandler(actionId, appData, data) {
+		if (actionId === "increment") {
+			const propertyId = { name: data.parameter_ref };
+			let value = this.propertiesController.getPropertyValue(propertyId);
+			this.propertiesController.updatePropertyValue(propertyId, value += 1);
+		}
+		if (actionId === "decrement") {
+			const propertyId = { name: data.parameter_ref };
+			let value = this.propertiesController.getPropertyValue(propertyId);
+			this.propertiesController.updatePropertyValue(propertyId, value -= 1);
+		}
+		if (actionId === "dm-update") {
+			const dm = this.propertiesController.getDatasetMetadata();
+			const newFieldName = "Added Field " + (dm.fields.length);
+			const newField = {
+				"name": newFieldName,
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "discrete",
+					"modeling_role": "target"
+				}
+			};
+			dm.fields.push(newField);
+			this.propertiesController.setDatasetMetadata(dm);
+		}
+		this.log("propertyActionHandler() " + actionId);
+	}
 
 	render() {
 		var locale = "en";
@@ -803,6 +832,7 @@ class App extends React.Component {
 				rightFlyout={this.state.propertiesContainerType === FLYOUT}
 				controllerHandler={this.propertiesControllerHandler}
 				propertyListener={this.propertyListener}
+				actionHandler={this.propertyActionHandler}
 			/>);
 
 		let commonPropertiesContainer = null;

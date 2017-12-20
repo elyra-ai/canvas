@@ -7,7 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-/* eslint complexity: ["error", 25]*/
+/* eslint complexity: ["error", 30]*/
 
 import logger from "../../../utils/logger";
 import { ItemType } from "../form/form-constants";
@@ -151,6 +151,7 @@ function parseUiItem(controls, uiItem, panelId) {
 			}
 		}
 		break; // required parameters are handled by panel
+	case ItemType.ACTION:
 	case ItemType.STATIC_TEXT:
 	case ItemType.HORIZONTAL_SEPARATOR: {
 		break;

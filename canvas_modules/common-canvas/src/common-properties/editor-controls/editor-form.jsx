@@ -44,6 +44,8 @@ import SummaryPanel from "./../editor-panels/summary-panel.jsx";
 import CheckboxSelectionPanel from "../editor-panels/checkbox-selection-panel.jsx";
 import WideFlyout from "../components/wide-flyout.jsx";
 
+import ButtonAction from "../actions/button-action.jsx";
+
 import SubPanelButton from "./../editor-panels/sub-panel-button.jsx";
 import FieldPicker from "./field-picker.jsx";
 import ControlItem from "./control-item.jsx";
@@ -644,8 +646,27 @@ export default class EditorForm extends React.Component {
 			// only generate summary panel for right side flyout
 		} else if (uiItem.itemType === "summaryPanel") {
 			return this.genPanel(key, uiItem.panel, propertyId, indexof);
+		} else if (uiItem.itemType === "action") {
+			return this.generateAction(key, uiItem.action);
 		}
 		return <div>Unknown: {uiItem.itemType}</div>;
+	}
+
+	generateAction(key, action) {
+		if (action) {
+			if (action.actionType === "button") {
+				return (
+					<ButtonAction
+						key={"action." + key}
+						action={action}
+						controller={this.props.controller}
+						actionHandler={this.props.actionHandler}
+					/>
+				);
+			}
+		}
+		return null;
+
 	}
 
 	generateCustomPanel(panel) {
@@ -718,6 +739,11 @@ export default class EditorForm extends React.Component {
 						{content}
 					</SummaryPanel>);
 			}
+		} else if (panel.panelType === "actionPanel") {
+			uiObject = (
+				<div className="action-panel" key={key} >
+					{content}
+				</div>);
 		} else {
 			uiObject = (<div id={id}
 				className="control-panel"
@@ -811,5 +837,6 @@ EditorForm.propTypes = {
 	showPropertiesButtons: PropTypes.func,
 	customPanels: PropTypes.array,
 	customContainer: PropTypes.bool,
-	rightFlyout: PropTypes.bool
+	rightFlyout: PropTypes.bool,
+	actionHandler: PropTypes.func
 };

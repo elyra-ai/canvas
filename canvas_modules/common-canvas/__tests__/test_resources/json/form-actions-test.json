@@ -1,0 +1,445 @@
+{
+  "paramDef": {
+    "current_parameters": {
+      "number": 10,
+      "fields": [
+        "age"
+      ]
+    },
+    "parameters": [
+      {
+        "id": "number",
+        "type": "integer"
+      },
+      {
+        "id": "fields",
+        "type": "array[string]",
+        "role": "column",
+        "required": true
+      }
+    ],
+    "uihints": {
+      "id": "actions",
+      "icon": "images/actions.svg",
+      "label": {
+        "default": "Action Test"
+      },
+      "parameter_info": [
+        {
+          "parameter_ref": "number",
+          "label": {
+            "default": "Integer"
+          },
+          "description": {
+            "default": "Try pressing Increment or Descrement buttons"
+          },
+          "control": "readonly"
+        },
+        {
+          "parameter_ref": "fields",
+          "label": {
+            "default": "Fields"
+          },
+          "description": {
+            "default": "Press 'Update Datamodel' to add a new field"
+          },
+          "summary": true
+        }
+      ],
+      "action_info": [
+        {
+          "id": "increment",
+          "label": {
+            "resource_key": "increment"
+          },
+          "control": "button",
+          "data": {
+            "parameter_ref": "number"
+          }
+        },
+        {
+          "id": "decrement",
+          "label": {
+            "resource_key": "decrement"
+          },
+          "control": "button",
+          "data": {
+            "parameter_ref": "number"
+          }
+        },
+        {
+          "id": "dm-update",
+          "label": {
+            "resource_key": "dm-update"
+          },
+          "control": "button",
+          "data": {}
+        }
+      ],
+      "group_info": [
+        {
+          "id": "action-tests",
+          "label": {
+            "default": "Actions"
+          },
+          "type": "panels",
+          "group_info": [
+            {
+              "id": "increment-action-panel",
+              "type": "actionPanel",
+              "action_refs": [
+                "increment",
+                "decrement"
+              ]
+            },
+            {
+              "id": "number-control",
+              "type": "controls",
+              "parameter_refs": [
+                "number"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "summary-panel",
+          "label": {
+            "default": "Summary Panel Actions"
+          },
+          "type": "summaryPanel",
+          "group_info": [
+            {
+              "id": "dm-action-panel",
+              "type": "actionPanel",
+              "action_refs": [
+                "dm-update"
+              ]
+            },
+            {
+              "id": "summary-controls",
+              "type": "controls",
+              "parameter_refs": [
+                "fields"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "conditions": [],
+    "dataset_metadata": {
+      "fields": [
+        {
+          "name": "Age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Sex",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Cholesterol",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "K",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    },
+    "resources": {
+      "increment": "Increment",
+      "decrement": "Decrement",
+      "dm-update": "Update Datamodel"
+    }
+  },
+  "expectedResult": {
+    "componentId": "actions",
+    "label": "Action Test",
+    "editorSize": "large",
+    "uiItems": [
+      {
+        "itemType": "primaryTabs",
+        "tabs": [
+          {
+            "text": "Actions",
+            "group": "action-tests",
+            "content": {
+              "itemType": "panel",
+              "panel": {
+                "id": "action-tests",
+                "panelType": "general",
+                "uiItems": [
+                  {
+                    "itemType": "panel",
+                    "panel": {
+                      "id": "increment-action-panel",
+                      "panelType": "actionPanel",
+                      "uiItems": [
+                        {
+                          "itemType": "action",
+                          "action": {
+                            "name": "increment",
+                            "label": {
+                              "text": "Increment"
+                            },
+                            "actionType": "button",
+                            "data": {
+                              "parameter_ref": "number"
+                            }
+                          }
+                        },
+                        {
+                          "itemType": "action",
+                          "action": {
+                            "name": "decrement",
+                            "label": {
+                              "text": "Decrement"
+                            },
+                            "actionType": "button",
+                            "data": {
+                              "parameter_ref": "number"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "itemType": "panel",
+                    "panel": {
+                      "id": "number-control",
+                      "panelType": "general",
+                      "uiItems": [
+                        {
+                          "itemType": "control",
+                          "control": {
+                            "name": "number",
+                            "label": {
+                              "text": "Integer"
+                            },
+                            "description": {
+                              "text": "Try pressing Increment or Descrement buttons"
+                            },
+                            "controlType": "readonly",
+                            "valueDef": {
+                              "propType": "integer",
+                              "isList": false,
+                              "isMap": false
+                            },
+                            "separateLabel": true
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "text": "Summary Panel Actions",
+            "group": "summary-panel",
+            "content": {
+              "itemType": "summaryPanel",
+              "panel": {
+                "id": "summary-panel",
+                "panelType": "summary",
+                "uiItems": [
+                  {
+                    "itemType": "panel",
+                    "panel": {
+                      "id": "dm-action-panel",
+                      "panelType": "actionPanel",
+                      "uiItems": [
+                        {
+                          "itemType": "action",
+                          "action": {
+                            "name": "dm-update",
+                            "label": {
+                              "text": "Update Datamodel"
+                            },
+                            "actionType": "button",
+                            "data": {}
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "itemType": "panel",
+                    "panel": {
+                      "id": "summary-controls",
+                      "panelType": "general",
+                      "uiItems": [
+                        {
+                          "itemType": "control",
+                          "control": {
+                            "name": "fields",
+                            "label": {
+                              "text": "Fields"
+                            },
+                            "description": {
+                              "text": "Press 'Update Datamodel' to add a new field"
+                            },
+                            "controlType": "selectcolumns",
+                            "valueDef": {
+                              "propType": "string",
+                              "isList": true,
+                              "isMap": false
+                            },
+                            "summary": true,
+                            "separateLabel": true,
+                            "required": true
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "label": "Summary Panel Actions"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "buttons": [
+      {
+        "id": "ok",
+        "text": "OK",
+        "isPrimary": true,
+        "url": ""
+      },
+      {
+        "id": "cancel",
+        "text": "Cancel",
+        "isPrimary": false,
+        "url": ""
+      }
+    ],
+    "data": {
+      "currentParameters": {
+        "number": 10,
+        "fields": [
+          "age"
+        ]
+      },
+      "datasetMetadata": {
+        "fields": [
+          {
+            "name": "Age",
+            "type": "integer",
+            "metadata": {
+              "description": "",
+              "measure": "range",
+              "modeling_role": "input"
+            }
+          },
+          {
+            "name": "Sex",
+            "type": "string",
+            "metadata": {
+              "description": "",
+              "measure": "discrete",
+              "modeling_role": "input"
+            }
+          },
+          {
+            "name": "BP",
+            "type": "string",
+            "metadata": {
+              "description": "",
+              "measure": "discrete",
+              "modeling_role": "input"
+            }
+          },
+          {
+            "name": "Cholesterol",
+            "type": "string",
+            "metadata": {
+              "description": "",
+              "measure": "discrete",
+              "modeling_role": "input"
+            }
+          },
+          {
+            "name": "Na",
+            "type": "double",
+            "metadata": {
+              "description": "",
+              "measure": "range",
+              "modeling_role": "input"
+            }
+          },
+          {
+            "name": "K",
+            "type": "double",
+            "metadata": {
+              "description": "",
+              "measure": "range",
+              "modeling_role": "input"
+            }
+          },
+          {
+            "name": "Drug",
+            "type": "string",
+            "metadata": {
+              "description": "",
+              "measure": "discrete",
+              "modeling_role": "input"
+            }
+          }
+        ]
+      }
+    },
+    "conditions": []
+  }
+}

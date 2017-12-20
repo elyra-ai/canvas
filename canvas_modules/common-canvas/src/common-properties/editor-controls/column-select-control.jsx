@@ -124,9 +124,21 @@ export default class ColumnSelectControl extends EditorControl {
 		this.setState({ hoverRemoveIcon: false });
 	}
 
+	genSelectOptions(values) {
+		var options = [];
+		if (values && Array.isArray(values)) {
+			for (var i = 0; i < values.length; i++) {
+				options.push(
+					<option key={i} value={values[i]}>{values[i]}</option>
+				);
+			}
+		}
+		return options;
+	}
+
 	render() {
 		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
-		var options = EditorControl.genStringSelectOptions(controlValue, this.state.selectedValues);
+		var options = this.genSelectOptions(controlValue);
 
 		const conditionProps = {
 			propertyId: this.props.propertyId,

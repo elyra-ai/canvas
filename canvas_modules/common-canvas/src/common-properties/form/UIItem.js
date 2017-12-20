@@ -19,6 +19,7 @@ export class UIItem {
 		this.text = _.propertyOf(elements)("text"); // when ADDITIONAL_LINK (link label), STATIC_TEXT or HORIZONTAL_SEPARATOR
 		this.secondaryText = _.propertyOf(elements)("secondaryText"); // when ADDITIONAL_LINK (subpanel label)
 		this.dependsOn = _.propertyOf(elements)("dependsOn"); // when PANEL_SELECTOR (control to obtain value from)
+		this.action = _.propertyOf(elements)("action"); // when ACTION
 	}
 
 	static makePrimaryTabs(tabs) {
@@ -63,6 +64,13 @@ export class UIItem {
 		return new UIItem({
 			itemType: ItemType.CONTROL,
 			control: control
+		});
+	}
+
+	static makeAction(action) {
+		return new UIItem({
+			itemType: ItemType.ACTION,
+			action: action
 		});
 	}
 

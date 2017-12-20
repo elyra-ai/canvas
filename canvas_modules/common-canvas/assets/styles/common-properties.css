@@ -963,3 +963,42 @@ tbody.reactable-data .editor_control_area {
 #ExpressionEditor {
 	border: 1px solid #777677;
 }
+
+/*
+* Override for current version of ap-components
+* Fixed in new versions
+*/
+.properties-action-button .button:focus {
+  background-color: transparent;
+  color: #a6266e;
+  cursor: pointer;
+  text-decoration: none;
+	outline: none;
+}
+
+.properties-action-button .button:focus .icon{
+  fill: none;
+}
+
+.properties-action-button .button:active {
+  background-color: #a6266e;
+	border-color: #a6266e;
+  color: #f9f9fb;
+  cursor: pointer;
+  text-decoration: none;
+	outline: none;
+}
+
+.properties-action-button .button:active .icon{
+  fill: #fff;
+}
+/**************************/
+
+.properties-action-button {
+	padding: 1px 2px 1px 2px;
+}
+
+.action-panel {
+	display: flex;
+	flex-wrap: wrap;
+}

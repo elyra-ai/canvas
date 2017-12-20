@@ -14,8 +14,10 @@ import EditorControl from "./editor-control.jsx";
 export default class ReadonlyControl extends EditorControl {
 
 	render() {
-		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
-		const value = controlValue ? controlValue : "";
+		let controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
+		if (typeof controlValue === "undefined" || controlValue === null) {
+			controlValue = "";
+		}
 
 		const conditionProps = {
 			propertyId: this.props.propertyId,
@@ -39,7 +41,7 @@ export default class ReadonlyControl extends EditorControl {
 			<div className="editor_control_readonly" style={stateStyle}>
 				<div id={controlIconContainerClass}>
 					<text {...stateDisabled} id={this.getControlID()}>
-						{value}
+						{controlValue}
 					</text>
 					{icon}
 				</div>

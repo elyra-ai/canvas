@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import { GroupMetadata } from "./GroupInfo";
+import { ActionMetadata } from "./ActionInfo";
 import { ParameterMetadata } from "./ParameterInfo";
 import { StructureMetadata } from "./StructureInfo";
 import { Size } from "./form-constants";
@@ -15,7 +16,7 @@ import { ResourceDef } from "./L10nProvider";
 import _ from "underscore";
 
 export class PropertyDef {
-	constructor(cname, icon, editorSize, label, description, structureMetadata, parameterMetadata, groupMetadata) {
+	constructor(cname, icon, editorSize, label, description, structureMetadata, parameterMetadata, groupMetadata, actionMetadata) {
 		this.name = cname;
 		this.icon = icon;
 		this.editorSize = editorSize;
@@ -24,6 +25,7 @@ export class PropertyDef {
 		this.structureMetadata = structureMetadata;
 		this.parameterMetadata = parameterMetadata;
 		this.groupMetadata = groupMetadata;
+		this.actionMetadata = actionMetadata;
 	}
 
 	/**
@@ -43,6 +45,7 @@ export class PropertyDef {
 			// structures aren't in current spec
 			const structureMetadata = StructureMetadata.makeStructureMetadata(structures, _.propertyOf(uihints)("complex_type_info"));
 			const parameterMetadata = ParameterMetadata.makeParameterMetadata(parameters, _.propertyOf(uihints)("parameter_info"));
+			const actionMetadata = ActionMetadata.makeActionMetadata(_.propertyOf(uihints)("action_info"));
 			const groupMetadata = GroupMetadata.makeGroupMetadata(_.propertyOf(uihints)("group_info"));
 			return new PropertyDef(
 				_.propertyOf(uihints)("id"),
@@ -52,7 +55,8 @@ export class PropertyDef {
 				_.propertyOf(uihints)("description"),
 				structureMetadata,
 				parameterMetadata,
-				groupMetadata
+				groupMetadata,
+				actionMetadata
 			);
 		}
 		return null;

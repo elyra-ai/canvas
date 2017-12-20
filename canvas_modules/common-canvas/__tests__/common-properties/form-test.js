@@ -16,6 +16,7 @@ import formStructuredTable2 from "../test_resources/json/form-structure2-test.js
 import conditionResource from "../test_resources/json/form-test-condition.json";
 import editStyleResource from "../test_resources/json/form-editstyle-test.json";
 import placementResource from "../test_resources/json/form-placement-test.json";
+import actionResource from "../test_resources/json/form-actions-test.json";
 
 
 const buttons = [{ id: "ok", text: "OK", isPrimary: true, url: "" }, { id: "cancel", text: "Cancel", isPrimary: false, url: "" }];
@@ -140,6 +141,14 @@ describe("Correct form should be created", () => {
 		// console.info("Actual  : " + JSON.stringify(generatedForm) + "\n\n");
 		// console.info("\n\n");
 		expect(_.isEqual(JSON.parse(JSON.stringify(placementResource.expectedResult)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
+	});
+
+	it("should create a form with actions and summaryPanel", () => {
+		const generatedForm = Form.makeForm(actionResource.paramDef);
+		// console.info("Expected: " + JSON.stringify(placementResource.expectedResult));
+		// console.info("Actual  : " + JSON.stringify(generatedForm) + "\n\n");
+		// console.info("\n\n");
+		expect(_.isEqual(JSON.parse(JSON.stringify(actionResource.expectedResult)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
 	});
 
 });
