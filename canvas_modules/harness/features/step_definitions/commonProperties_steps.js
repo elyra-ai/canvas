@@ -17,6 +17,19 @@ module.exports = function() {
 	const testUrl = getURL();
 	const getEventLogUrl = testUrl + "/v1/test-harness/events";
 
+	this.Then(/^I select the "([^"]*)" tab in "([^"]*)"$/, function(tabName, mode) {
+		const labelName = (mode === "flyout") ? tabName.toUpperCase() : tabName;
+		const tabList = (mode === "flyout") ? browser.$$(".category-title-container-right-flyout-panel") : browser.$(".tabs__list").$$("li");
+		expect(tabList.length).toEqual(2);
+		for (var idx = 0; idx < tabList.length; idx++) {
+			const tabLabel = (mode === "flyout") ? tabList[idx].$("a") : tabList[idx];
+			if (tabLabel.getText() === labelName) {
+				tabLabel.click();
+				break;
+			}
+		}
+	});
+
 	this.Then(/^I see common properties title "([^"]*)"$/, function(givenTitle) {
 		browser.pause(500);
 		var dialogTitle = browser.getText(".modal-title");
@@ -57,99 +70,6 @@ module.exports = function() {
 		expect(dropdownValue).toEqual((lastEventLog.data.form.measurement).toString());
 	});
 
-	this.Then(/^I select "([^"]*)" option from Input columns select textbox$/, function(selectTextboxOption) {
-		// remove the first row in the table, left with one row in the table
-		var selectTextbox = browser.$("#editor-control-inputFieldList").$$("option")[0];
-		selectTextbox.click();
-
-		browser.$("#remove-fields-button-enabled").click();
-		var inputFieldList = browser.$("#editor-control-inputFieldList").$$("option");
-		expect(1).toEqual(inputFieldList.length);
-
-		// add two more rows to the table, for a total of 3 rows in the table
-		browser.$("#add-fields-button").click();
-
-		// Splitting into different options due to ESLint errors
-		var optionAge1 = browser.$("#table").$("tbody");
-		var optionAge2 = optionAge1.$$("tr")[0].$$("td")[0].$(".field-picker-checkbox");
-		var optionAge3 = optionAge2.$("div").$("label");
-
-		var optionSex1 = browser.$("#table").$("tbody");
-		var optionSex2 = optionSex1.$$("tr")[1].$$("td")[0].$(".field-picker-checkbox");
-		var optionSex3 = optionSex2.$("div").$("label");
-
-		optionAge3.click();
-		optionSex3.click();
-
-		clickFieldPickerBackButton();
-
-		inputFieldList = browser.$("#editor-control-inputFieldList").$$("option");
-		expect(3).toEqual(inputFieldList.length);
-
-		// check the length of the field picker list after clicking buttons
-		// click the add columns button
-		browser.$("#add-fields-button").click();
-
-		var fieldPickerList = browser.$$(".field-picker-data-rows");
-		expect(7).toEqual(fieldPickerList.length);
-
-		// click the reset button
-		browser.$("#reset-fields-button").click();
-		fieldPickerList = browser.$$(".field-picker-data-rows");
-		expect(7).toEqual(fieldPickerList.length);
-
-		// Filter out type integer
-		browser.$("#field-picker-filter-list").$$("li")[1].click();
-		fieldPickerList = browser.$$(".field-picker-data-rows");
-		expect(6).toEqual(fieldPickerList.length);
-
-		// add a filter out of type doubles
-		browser.$("#field-picker-filter-list").$$("li")[2].click();
-		fieldPickerList = browser.$$(".field-picker-data-rows");
-		expect(4).toEqual(fieldPickerList.length);
-
-		// search for the drug row
-		var filterField = browser.$("#flexible-table-search");
-		filterField.setValue("", "Drug");
-		fieldPickerList = browser.$$(".field-picker-data-rows");
-		expect(1).toEqual(fieldPickerList.length);
-
-		var optionDrug1 = browser.$("#table").$("tbody");
-		var optionDrug2 = optionDrug1.$("tr").$$("td")[0].$(".field-picker-checkbox");
-		var optionDrug3 = optionDrug2.$("div").$("label");
-
-		optionDrug3.click();
-
-		clickFieldPickerBackButton();
-
-		inputFieldList = browser.$("#editor-control-inputFieldList").$$("option");
-		expect(4).toEqual(inputFieldList.length);
-
-		// at this point there are 4 row in the input field list
-
-		// selecte second row
-		var selectDrugOption = browser.$("#editor-control-inputFieldList").$$("option")[1];
-		selectDrugOption.click();
-		// select first row
-		var selectBPOption = browser.$("#editor-control-inputFieldList").$$("option")[0];
-		selectBPOption.click();
-		// still have 4 rowa
-		inputFieldList = browser.$("#editor-control-inputFieldList").$$("option");
-		expect(4).toEqual(inputFieldList.length);
-
-		// click on the remove button remove 2 rows selected above and have 2 remaining rows.
-		browser.$("#remove-fields-button-enabled").click();
-		inputFieldList = browser.$("#editor-control-inputFieldList").$$("option");
-		expect(1).toEqual(inputFieldList.length);
-
-		var okButton = getPropertiesApplyButton();
-		okButton.click();
-
-		var lastEventLog = getLastEventLogData();
-
-		expect("Sex").toEqual((lastEventLog.data.form.inputFieldList).toString());
-
-	});
 
 	this.Then(/^I click on Add Columns button to open field picker at index "([^"]*)"$/, function(index) {
 		browser.$$("#add-fields-button")[index].click();
@@ -157,15 +77,18 @@ module.exports = function() {
 	});
 
 	this.Then(/^I add "([^"]*)" to first input control$/, function(firstInput) {
-		var optionDrug1 = browser.$("#table").$("tbody");
+
+		/* var optionDrug1 = browser.$("#table").$("tbody");
 		var optionDrug2 = optionDrug1.$$("tr")[4].$("td").$(".field-picker-checkbox");
 		var optionDrug3 = optionDrug2.$("div").$("label");
+		*/
+		const optionDrug = browser.$("#field-picker-table").$$(".field-picker-checkbox")[5].$("label");
 
-		optionDrug3.click();
+		optionDrug.click();
 
 		clickFieldPickerBackButton();
 
-		var firstInputFieldList = browser.$("#editor-control-columnSelectSharedWithInput").$$("option");
+		var firstInputFieldList = browser.$("#flexible-table-columnSelectSharedWithInput").$$(".column-select-table-row");
 		expect(2).toEqual(firstInputFieldList.length);
 
 	});
@@ -194,7 +117,7 @@ module.exports = function() {
 
 		clickFieldPickerBackButton();
 
-		var secondInputFieldList = browser.$("#editor-control-columnSelectInputFieldList").$$("option");
+		var secondInputFieldList = browser.$("#flexible-table-columnSelectInputFieldList").$$(".column-select-table-row");
 		expect(3).toEqual(secondInputFieldList.length);
 
 	});
@@ -334,15 +257,16 @@ module.exports = function() {
 	});
 
 	this.Then(/^I check for validation error on Checkpoint Interval$/, function() {
-		var tab = browser.$$(".tabs__tab")[1];
+		const tab = browser.$$(".tabs__tab")[1];
 		tab.click();
 
-		var checkpointIntervalTextBoxTest = browser.$("#editor-control-checkpointInterval");
+		const checkpointIntervalTextBoxTest = browser.$("#editor-control-checkpointInterval");
 		checkpointIntervalTextBoxTest.setValue("", 0);
-
-		var errormessage1 = browser.$$(".editor_control_area")[2].$$("div")[3].$("p").$("span");
-		var errormessage2 = errormessage1.getText();
-		expect("The checkpoint interval value must either be >= 1 or -1 to disable").toEqual(errormessage2);
+		var errormessage1 = browser.$$(".editor_control_area")[1]
+			.$(".validation-error-message")
+			.$("span")
+			.getText();
+		expect("The checkpoint interval value must either be >= 1 or -1 to disable").toEqual(errormessage1);
 
 		var okButton = getPropertiesApplyButton();
 		okButton.click();
@@ -458,6 +382,13 @@ module.exports = function() {
 		okButton.click();
 	});
 
+
+	this.Then(/^I select the "([^"]*)" enable button$/, function(buttonName) {
+		browser.$("#editor-control-" + buttonName)
+			.click();
+	});
+
+
 	this.Then(/^I click on the "([^"]*)" button$/, function(buttonName) {
 		if (buttonName === "OK") {
 			var okButton = getPropertiesApplyButton();
@@ -465,6 +396,17 @@ module.exports = function() {
 		} else {
 			clickCancelButton();
 		}
+	});
+
+	this.Then(/^I select the "([^"]*)" button in "([^"]*)"$/, function(buttonName, mode) {
+		var button;
+		if (buttonName === "apply") {
+			button = (mode === "flyout") ? browser.$("#properties-apply-button") : browser.$("#properties-apply-button");
+		} else {
+			button = (mode === "flyout") ? browser.$("#properties-cancel-button") : browser.$("#properties-cancel-button");
+		}
+		button.click();
+
 	});
 
 	/*
@@ -482,6 +424,28 @@ module.exports = function() {
 	this.Then(/^I verify that readonly value is "([^"]*)"$/, function(value) {
 		const text = browser.$$(".editor_control_readonly text")[0];
 		expect(value).toEqual(text.getText());
+	});
+
+	this.Then(/^I verify the event log for the "([^"]*)" parameter contains "([^"]*)"$/, function(parameterName, values) {
+		const lastEventLog = getLastEventLogData();
+		// console.log(lastEventLog.data.form[parameterName]);
+		expect(values).toEqual((lastEventLog.data.form[parameterName]).toString());
+	});
+
+	this.Then(/^I verify the event log has the "([^"]*)" message for the "([^"]*)" parameter of "([^"]*)"$/, function(msgType, parameterName, msg) {
+		const lastEventLog = getLastEventLogData();
+		// console.log(lastEventLog.data.messages);
+		expect(lastEventLog.data.messages.length).not.toEqual(0);
+		var found = false;
+		for (var idx = 0; idx < lastEventLog.data.messages.length; idx++) {
+			if (lastEventLog.data.messages[idx].text === msg &&
+					lastEventLog.data.messages[idx].type === msgType &&
+					lastEventLog.data.messages[idx].id_ref === parameterName) {
+				found = true;
+				break;
+			}
+		}
+		expect(found).toEqual(true);
 	});
 
 	function getLastEventLogData(override) {

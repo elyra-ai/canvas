@@ -35,6 +35,26 @@ const control = {
 	"separateLabel": true
 };
 
+const moveableRowControl = {
+	"name": "test-columnSelect",
+	"label": {
+		"text": "Input List Shared with Below Control"
+	},
+	"description": {
+		"text": "Shared input list with below control",
+		"placement": "on_panel"
+	},
+	"controlType": "selectcolumns",
+	"valueDef": {
+		"propType": "string",
+		"isList": true,
+		"isMap": false,
+		"defaultValue": []
+	},
+	"separateLabel": true,
+	"moveableRows": true
+};
+
 const propertyId = { name: "test-columnSelect" };
 
 function setPropertyValue() {
@@ -91,10 +111,9 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				selectedRows={getSelectedRows()}
 			/>
 		);
-
 		expect(wrapper.find("#add-fields-button")).to.have.length(1);
 		expect(wrapper.find("#remove-fields-button-disabled")).to.have.length(1);
-		expect(wrapper.find(".editor_control_area")).to.have.length(1);
+		expect(wrapper.find(".column-select-table-row")).to.have.length(3);
 	});
 
 	it("should select add columns button and openFieldPicker should be invoked", () => {
@@ -131,9 +150,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 			/>
 		);
 		// select the first row in the table
-		const tableBody = wrapper.find(".editor_control_area");
-		expect(tableBody).to.have.length(1);
-		const tableData = tableBody.find("option");
+		const tableData = wrapper.find(".column-select-table-row");
 		expect(tableData).to.have.length(3);
 		tableData.at(0).simulate("click"); // TODO Doesn't actually do anything
 		// ensure removed button is enabled and select it
@@ -143,6 +160,22 @@ describe("ColumnStructureTableControl renders correctly", () => {
 		enabledRemoveColumnButton.simulate("click");
 		// validate the first row is deleted
 		expect(controller.getPropertyValue(propertyId)).to.have.same.members(["BP", "K"]);
+	});
+
+	it("should ensure moveableRows are rendered", () => {
+		const wrapper = mount(
+			<ColumnSelectControl
+				control={moveableRowControl}
+				controller={controller}
+				propertyId={propertyId}
+				openFieldPicker={openFieldPicker}
+				updateSelectedRows={updateSelectedRows}
+				selectedRows={getSelectedRows()}
+			/>
+		);
+		// see if moveable rows container and buttons rendered and are disabled
+		expect(wrapper.find("#table-row-move-button-container")).to.have.length(1);
+		expect(wrapper.find(".table-row-move-button-disable")).to.have.length(4);
 	});
 
 });

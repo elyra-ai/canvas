@@ -30,12 +30,6 @@ Feature: Sanity_Test_CommonProperties_Flyout
 			Given I have uploaded JSON for common-properties "org.apache.spark.ml.ibm.transformers.AddColumn.json"
 			Then I select "Continuous" dropdown option
 
-		# Select Textbox, Field Picker Test, Table Checkbox Case
-			Given I have toggled the app side common-properties panel
-			Given I have uploaded JSON for common-properties "org.apache.spark.ml.classification.DecisionTreeClassifier.json"
-			Then I click the "Fields" category from flyout
-			Then I select "Age" option from Input columns select textbox
-
 		# Radio Button, Number Textbox Test Case
 			Given I have toggled the app side common-properties panel
 			Given I have uploaded JSON for common-properties "org.apache.spark.ml.classification.DecisionTreeClassifier.json"

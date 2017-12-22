@@ -40,7 +40,6 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			hoverRemoveIcon: false,
 			selectedRows: this.props.selectedRows
 		};
-
 		this.onPanelContainer = [];
 
 		this._editing_row = 0;
@@ -51,6 +50,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		this.setCurrentControlValue = this.setCurrentControlValue.bind(this);
 		this.setCurrentControlValueSelected = this.setCurrentControlValueSelected.bind(this);
 		this.getSelectedRows = this.getSelectedRows.bind(this);
+		this.removeSelected = this.removeSelected.bind(this);
 
 		this.handleRowClick = this.handleRowClick.bind(this);
 		this.getRowClassName = this.getRowClassName.bind(this);
@@ -80,6 +80,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			selectedRows: nextProps.selectedRows
 		});
 		this.selectionChanged(nextProps.selectedRows);
+		this.setState({ enableRemoveIcon: (nextProps.selectedRows.length !== 0) });
 	}
 
 	getOnPanelContainer(selectedRows) {
@@ -140,6 +141,18 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		this.selectionChanged(selection);
 		this.setState({ enableRemoveIcon: (selection.length !== 0) });
 
+	}
+
+	removeSelected() {
+		const rows = this.getCurrentControlValue();
+		const newRows = [];
+		const selected = this.getSelectedRows();
+		for (var i = 0; i < rows.length; i++) {
+			if (selected.indexOf(i) < 0) {
+				newRows.push(rows[i]);
+			}
+		}
+		this.setCurrentControlValue(newRows);
 	}
 
 	selectionChanged(selection) {
@@ -337,22 +350,24 @@ export default class ColumnStructureTableEditor extends EditorControl {
 
 	hasFilter() {
 		let hasFilter = false;
-		for (const subControl of this.props.control.subControls) {
-			if (subControl.filterable) {
-				hasFilter = true;
-				break;
+		if (this.props.control.subControls) {
+			for (const subControl of this.props.control.subControls) {
+				if (subControl.filterable) {
+					hasFilter = true;
+					break;
+				}
 			}
 		}
 		return hasFilter;
 	}
 
-	makeLabel() {
+	makeLabel(stateStyle) {
 		let label;
 		if (this.props.control.label && this.props.control.separateLabel && !this.hasFilter()) {
 			if (!(this.props.control.description && this.props.control.description.placement === "on_panel")) {
 				let requiredIndicator;
 				if (this.props.control.required) {
-					requiredIndicator = <span className="required-control-indicator">*</span>;
+					requiredIndicator = <span className="required-control-indicator" style={stateStyle}>*</span>;
 				}
 				const tooltipId = "tooltip-" + this.props.control.name;
 				let tooltip;

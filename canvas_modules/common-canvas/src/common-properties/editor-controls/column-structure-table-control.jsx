@@ -28,7 +28,6 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 		this.getAllocatedColumns = this.getAllocatedColumns.bind(this);
 		this.addColumns = this.addColumns.bind(this);
 		this.removeColumns = this.removeColumns.bind(this);
-		this.removeSelected = this.removeSelected.bind(this);
 		this.stopEditingRow = this.stopEditingRow.bind(this);
 
 		this.indexOfRow = this.indexOfRow.bind(this);
@@ -147,17 +146,6 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 		this.setCurrentControlValue(newRows);
 	}
 
-	removeSelected() {
-		const rows = this.getCurrentControlValue();
-		const newRows = [];
-		const selected = this.getSelectedRows();
-		for (var i = 0; i < rows.length; i++) {
-			if (selected.indexOf(i) < 0) {
-				newRows.push(rows[i]);
-			}
-		}
-		this.setCurrentControlValue(newRows);
-	}
 
 	selectionChanged(selection) {
 		ColumnStructureTableEditor.prototype.selectionChanged.call(this, selection);

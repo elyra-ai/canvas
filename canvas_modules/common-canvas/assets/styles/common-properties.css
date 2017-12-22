@@ -575,6 +575,22 @@ input.number,
   background-color: #e0e0e0 !important;
 }
 
+.column-select-table-cell{
+	border-style: none !important;
+}
+
+.column-select-table-row{
+	font-weight: 500;
+	border-style: none !important;
+	color: #a6266e;
+}
+.column-select-table-selected-row{
+	font-weight: 500;
+	border-style: none !important;
+	color: #a6266e;
+  background-color: #e0e0e0 !important;
+}
+
 #table-row-move-button-container {
   width: 16px !important;
   margin-left: 7px;
@@ -584,7 +600,15 @@ input.number,
   justify-content: center;
 }
 
-.table-row-move-button .table-row-move-button-disable{
+.table-row-move-button {
+  width: 10px !important;
+  border-bottom: 2px solid #f9f9fb;
+  border-right: none;
+  transform: rotate(0deg);
+	cursor: pointer;
+}
+
+.table-row-move-button-disable{
   width: 10px !important;
   border-bottom: 2px solid #f9f9fb;
   border-right: none;
@@ -653,6 +677,22 @@ input.number,
 	background-color: #FFFFFF;
 }
 
+.flexible-table-container-absolute-noheader {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	overflow-y: auto;
+	overflow-x: hidden;
+	border-right: 1px solid #d8d8d8;
+	border-left: 1px solid #d8d8d8;
+	border-bottom: 1px solid #d8d8d8;
+	border-top: 1px solid #d8d8d8;
+	background-color: #FFFFFF;
+}
+.flexible-table-control-container {
+	width: 100%;
+}
+
 #flexible-table-container {
   height: 180px;
   width: 726px;
@@ -661,6 +701,14 @@ input.number,
   padding: 0;
   color: #000000;
   padding-top: 30px;
+}
+
+#flexible-table-container-noheader {
+  width: 726px;
+  position: relative;
+  background-color: #FFFFFF;
+  padding: 0;
+  color: #000000;
 }
 
 .filter-header-border {
@@ -694,6 +742,10 @@ th div div label, td div div label {
   -moz-hyphens: auto;
   -webkit-hyphens: auto;
   hyphens: auto;
+}
+
+.properties-column-select #flexible-table-container-wrapper {
+    height: 150px;
 }
 
 .field-picker-top-row {
@@ -884,7 +936,10 @@ tr.reactable-column-header > th {
   font-size: 12px;
 }
 
-tbody.reactable-data {
+tr.table-row {
+  border-bottom: 1px solid #d8d8d8;
+}
+tr.field-picker-data-rows {
   border-bottom: 1px solid #d8d8d8;
 }
 tbody.reactable-data .editor_control_area {

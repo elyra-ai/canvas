@@ -15,7 +15,7 @@ module.exports = function() {
 	this.Then(/^I have selected the "([^"]*)" properties container type$/, function(containerType) {
 
 		try {
-			if (containerType === "Custom") {
+			if (containerType === "Custom" || containerType === "Flyout") {
 				var customContainer = browser.$("#sidepanel-properties-container-type").$$("div")[2].$("label");
 				customContainer.scroll();
 				browser.pause(500);

@@ -119,7 +119,9 @@
         },
         "description": {
           "default": "selectcolumns with parameter value set to 'age'"
-        }
+        },
+        "moveable_rows": true,
+        "summary": true
       },
       {
         "parameter_ref": "fields_null",
@@ -203,7 +205,8 @@
         "parameter_ref": "fields_hidden",
         "label": {
           "default": "Field Hidden"
-        }
+        },
+        "moveable_rows": true
       },
       {
         "parameter_ref": "disable",
@@ -215,7 +218,8 @@
         "parameter_ref": "fields_disabled",
         "label": {
           "default": "Field Disabled"
-        }
+        },
+        "moveable_rows": true
       }
     ],
     "group_info": [
@@ -240,11 +244,29 @@
           {
             "id": "selectcolumns-values",
             "label": {
+              "default": "configure fields"
+            },
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "fields",
+                "type": "controls",
+                "label": {
+                  "default": "Fields"
+                },
+                "parameter_refs": [
+                  "fields"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "selectcolumns-values",
+            "label": {
               "default": "Values"
             },
             "type": "controls",
             "parameter_refs": [
-              "fields",
               "fields_null",
               "fields_empty",
               "fields_undefined",
@@ -367,6 +389,114 @@
       },
       {
         "name": "drug",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "age2",
+        "type": "integer",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "BP2",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Na2",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "drug2",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "age3",
+        "type": "integer",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "BP3",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Na3",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "drug3",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "age4",
+        "type": "integer",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "BP4",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Na4",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "drug4",
         "type": "string",
         "metadata": {
           "description": "",

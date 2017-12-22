@@ -275,7 +275,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	let defaultRow;
 	let childItem;
 	let controlType;
-	let moveableRows;
+	let moveableRows = parameter.moveableRows;
 	let noPickColumns;
 	let rowSelection;
 

@@ -417,12 +417,10 @@ export default class EditorForm extends React.Component {
 				}
 			}
 			// structuretable labels w/o descriptions and filtering are created elsewhere
-			const isStructureTable = control.controlType === "structuretable" || control.controlType === "structurelisteditor";
+			const isStructureTable = control.controlType === "structuretable" || control.controlType === "structurelisteditor" ||
+				control.controlType === "selectcolumns";
 			if (!isStructureTable || description || hasFilter) {
-				let className = "default-label-container";
-				if (control.controlType === "selectcolumns" || control.controlType === "structuretable") {
-					className = "label-container";
-				}
+				const className = "default-label-container";
 				const tooltipId = "tooltip-label-" + control.name;
 				label = (<div className={className}>
 					<div className="properties-tooltips-container" data-tip={tooltip} data-for={tooltipId}>

@@ -124,7 +124,7 @@ export default class FieldPicker extends EditorControl {
 
 			if (this.state.checkedAll) {
 				checked = true;
-			} else {
+			} else if (newControlValues) {
 				for (let j = 0; j < newControlValues.length; j++) {
 					let key = [];
 					if (this.props.control.defaultRow) {
@@ -178,9 +178,12 @@ export default class FieldPicker extends EditorControl {
 	 */
 	getNewSelections() {
 		const deltas = [];
-		for (let i = 0; i < this.state.newControlValues.length; i++) {
-			if (this.state.initialControlValues.indexOf(this.state.newControlValues[i]) < 0) {
-				deltas.push(i);
+		const initialValues = this.state.initialControlValues;
+		if (this.state.newControlValues) {
+			for (let i = 0; i < this.state.newControlValues.length; i++) {
+				if (typeof initialValues === "undefined" || initialValues === null || initialValues.indexOf(this.state.newControlValues[i]) < 0) {
+					deltas.push(i);
+				}
 			}
 		}
 		return deltas;
@@ -203,7 +206,7 @@ export default class FieldPicker extends EditorControl {
 
 		if (evt.target.checked) {
 			for (let i = 0; i < data.length; i++) { // add already selected fields
-				const selected = newControlValues.filter(function(element) {
+				const selected = (!newControlValues) ? [] : newControlValues.filter(function(element) {
 					if (that.props.control.defaultRow) {
 						return element[0] === data[i].name;
 					}
@@ -229,7 +232,7 @@ export default class FieldPicker extends EditorControl {
 					}
 				}
 			}
-		} else {
+		} else if (newControlValues) {
 			for (let l = 0; l < newControlValues.length; l++) {
 				const duplicate = visibleData.some(function(element) {
 					let found = false;
@@ -272,7 +275,7 @@ export default class FieldPicker extends EditorControl {
 		if (evt.target.checked) {
 			const newValue = this.props.control.defaultRow ? [selectedField] : selectedField;
 			this.setState({ newControlValues: current.concat(newValue) });
-		} else {
+		} else if (current) {
 			const modified = current.filter(function(element) {
 				if (that.props.control.defaultRow) {
 					return element[0] !== selectedField[0];

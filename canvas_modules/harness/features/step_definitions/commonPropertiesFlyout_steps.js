@@ -100,9 +100,11 @@ module.exports = function() {
 		var checkpointIntervalTextBoxTest = browser.$("#editor-control-checkpointInterval");
 		checkpointIntervalTextBoxTest.setValue("", 0);
 
-		var errormessage1 = browser.$$(".editor_control_area")[2].$$("div")[3].$("p").$("span");
-		var errormessage2 = errormessage1.getText();
-		expect("The checkpoint interval value must either be >= 1 or -1 to disable").toEqual(errormessage2);
+		var errormessage1 = browser.$$(".editor_control_area")[1]
+			.$(".validation-error-message")
+			.$("span")
+			.getText();
+		expect("The checkpoint interval value must either be >= 1 or -1 to disable").toEqual(errormessage1);
 
 		var okButton = getPropertiesApplyButton();
 		okButton.click();

@@ -991,7 +991,7 @@ describe("editor-form renders correctly with validations", () => {
 		expect(wrapper.find(".form-horizontal")).to.have.length(1);
 		expect(wrapper.find(".section--light")).to.have.length(1);
 		expect(wrapper.find(".tabs__tabpanel")).to.have.length(6);
-		expect(wrapper.find(".editor_control_area")).to.have.length(25);
+		expect(wrapper.find(".editor_control_area")).to.have.length(23);
 		expect(wrapper.find(".validation-error-message")).to.have.length(40);
 	});
 	it("should initialize correct values in `Properties-Controller`", () => {
@@ -1114,41 +1114,32 @@ describe("editor-form renders correctly with validations", () => {
 		it("columnselect control should have error message from empty input", () => {
 			const wrapper = createEditorForm("mount");
 			const propertyId = { name: "columnSelectInputFieldList" };
-			const input = wrapper.find("#editor-control-columnSelectInputFieldList");
+			const input = wrapper.find("#flexible-table-columnSelectInputFieldList");
 			expect(input).to.have.length(1);
 
-			const optAge = document.createElement("OPTION");
-			optAge.selected = true;
-			optAge.value = "Age";
-			const optBp = document.createElement("OPTION");
-			optBp.selected = false;
-			optBp.value = "BP";
-			const options1 = [
-				optAge,
-				optBp
-			];
-
-			expect(input.find("option")).to.have.length(2);
-			input.simulate("change", { target: { options: options1 } });
-			wrapper.update();
-
-			const enabledRemoveColumnButton = wrapper.find("#remove-fields-button-enabled");
+			// select the first row in the table
+			var tableData = input.find(".column-select-table-row");
+			expect(tableData).to.have.length(2);
+			tableData.at(0).simulate("click"); // TODO Doesn't actually do anything
+			// ensure removed button is enabled and select it
+			var enabledRemoveColumnButton = input.find("#remove-fields-button-enabled");
 			expect(enabledRemoveColumnButton).to.have.length(1);
-
+			expect(enabledRemoveColumnButton.prop("id")).to.equal("remove-fields-button-enabled");
 			enabledRemoveColumnButton.simulate("click");
-			expect(input.find("option")).to.have.length(1);
-			expect(controller.getPropertyValue(propertyId)).to.have.length(1);
+			// validate the first row is deleted
+			expect(controller.getPropertyValue(propertyId)).to.have.same.members(["BP"]);
 
-			optBp.selected = true;
-			const options2 = [
-				optBp
-			];
-			input.simulate("change", { target: { options: options2 } });
-			wrapper.update();
-
+			tableData = input.find(".column-select-table-row");
+			expect(tableData).to.have.length(1);
+			tableData.at(0).simulate("click"); // TODO Doesn't actually do anything
+			// ensure removed button is enabled and select it
+			enabledRemoveColumnButton = input.find("#remove-fields-button-enabled");
+			expect(enabledRemoveColumnButton).to.have.length(1);
+			expect(enabledRemoveColumnButton.prop("id")).to.equal("remove-fields-button-enabled");
 			enabledRemoveColumnButton.simulate("click");
-			expect(input.find("option")).to.have.length(0);
+			// validate the first row is deleted
 			expect(controller.getPropertyValue(propertyId)).to.have.length(0);
+
 			input.simulate("blur");
 			wrapper.update();
 
@@ -1237,7 +1228,7 @@ describe("editor-form renders correctly with validations", () => {
 		it("structuretableRenameFields control should have error message with empty renamed field", () => {
 			const wrapper = createEditorForm("mount");
 			const propertyId = { name: "structuretableRenameFields" };
-			const input = wrapper.find("#structure-table").at(1);
+			const input = wrapper.find("#flexible-table-structuretableRenameFields");
 			expect(input).to.have.length(1);
 			expect(controller.getPropertyValue(propertyId)).to.have.length(2);
 
@@ -1279,7 +1270,7 @@ describe("editor-form renders correctly with validations", () => {
 			// a isNotEmpty condition.  THe isNotEmpty condition error message should take precendence.
 			const wrapper = createEditorForm("mount");
 			const propertyId = { name: "structuretableSortOrder" };
-			const input = wrapper.find("#structure-table").at(0);
+			const input = wrapper.find("#flexible-table-structuretableSortOrder").at(0);
 			expect(input).to.have.length(1);
 			expect(controller.getPropertyValue(propertyId)).to.have.length(1);
 
@@ -1313,7 +1304,7 @@ describe("editor-form renders correctly with validations", () => {
 		it("structuretableRenameFields control should have error message from containing 'pw'", () => {
 			const wrapper = createEditorForm("mount");
 			const propertyId = { name: "structuretableRenameFields" };
-			const input = wrapper.find("#structure-table").at(1);
+			const input = wrapper.find("#flexible-table-structuretableRenameFields");
 			expect(input).to.have.length(1);
 			expect(controller.getPropertyValue(propertyId)).to.have.length(2);
 
@@ -1340,7 +1331,7 @@ describe("editor-form renders correctly with validations", () => {
 			const wrapper = createEditorForm("mount");
 			const propertyId = { name: "structuretableRenameFields" };
 
-			const input = wrapper.find("#structure-table").at(1);
+			const input = wrapper.find("#flexible-table-structuretableRenameFields");
 			expect(input).to.have.length(1);
 			expect(controller.getPropertyValue(propertyId)).to.have.length(2);
 
@@ -1384,9 +1375,7 @@ describe("editor-form renders correctly with validations", () => {
 	describe("Cells disable and hide correctly with structure table control", () => {
 		it("structuretable should disable cells", () => {
 			const wrapper = createEditorForm("mount");
-			const table = wrapper.find("#structure-table");
-			expect(table).to.have.length(4);
-			const storageTable = table.at(3);
+			const storageTable = wrapper.find("#flexible-table-field_types");
 			let disabledDropdowns = storageTable.find(".Dropdown-disabled");
 			expect(disabledDropdowns).to.have.length(4);
 			const input = storageTable.find("#editor-control-override_field_types_0_1");

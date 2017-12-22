@@ -6,7 +6,7 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-/* eslint complexity: ["error", 17] */
+/* eslint complexity: ["error", 20] */
 /* eslint max-depth: ["error", 5] */
 
 import React from "react";
@@ -125,7 +125,7 @@ export default class FlexibleTable extends React.Component {
 		var element = document.getElementById("moveablerow-table-" + this.props.scrollKey);
 		if (element && typeof this.props.scrollToRow === "number") {
 			var tableBody = element.getElementsByClassName("reactable-data");
-			var tableRows = tableBody[1].getElementsByTagName("tr");
+			var tableRows = tableBody[tableBody.length - 1].getElementsByTagName("tr");
 			if (tableRows.length !== 0 && this.props.scrollToRow <= tableRows.length - 1) {
 				tableRows[this.props.scrollToRow].scrollIntoView(alignTop);
 			}
@@ -135,8 +135,11 @@ export default class FlexibleTable extends React.Component {
 	render() {
 		// go through the header and add the sort direction and convert to use reactable.Th element
 		const headers = [];
+		// some controls do not want a header
+		const renderHeader = this.props.columns.length > 0;
 		let searchLabel = "";
 		const tableWidth = this.state.tableWidth;
+
 		const columnWidths = FlexibleTable.calculateColumnWidths(this.props.columns, null, tableWidth);
 
 		for (var j = 0; j < this.props.columns.length; j++) {
@@ -204,6 +207,9 @@ export default class FlexibleTable extends React.Component {
 				borderLeftColor: this.props.validationStyle.borderColor,
 				borderRightColor: this.props.validationStyle.borderColor
 			};
+			if (!renderHeader) {
+				tableStyle.borderTopColor = this.props.validationStyle.borderColor;
+			}
 		}
 
 		let renderTable = "";
@@ -238,38 +244,45 @@ export default class FlexibleTable extends React.Component {
 			</div>
 			);
 
+			if (renderHeader) {
+				renderTableHeaderContents = (
+					<div className="flexible-table-container-header-wrapper">
+						<div className="flexible-table-header" style={{ width: tableWidth }}>
+							<Table className="filter-header-border"
+								style={headerStyle}
+								key="flexible-table"
+								id="table-header"
+								sortable={this.props.sortable}
+								filterable={this.props.filterable}
+								hideFilterInput
+								filterBy={this.props.filterKeyword}
+								onSort={this.onSort}
+								onFilter={this.onFilter}
+							>
+								<Thead key="flexible-table-thead">
+									{headers}
+								</Thead>
+							</Table>
+						</div>);
+					</div>);
+			}
+
+		} else if (renderHeader) {
 			renderTableHeaderContents = (
-				<div className="flexible-table-header" style={{ width: tableWidth }}>
-					<Table className="filter-header-border"
-						style={headerStyle}
-						key="flexible-table"
-						id="table-header"
-						sortable={this.props.sortable}
-						filterable={this.props.filterable}
-						hideFilterInput
-						filterBy={this.props.filterKeyword}
-						onSort={this.onSort}
-						onFilter={this.onFilter}
-					>
-						<Thead key="flexible-table-thead">
-							{headers}
-						</Thead>
-					</Table>
-				</div>);
-		} else {
-			renderTableHeaderContents = (
-				<div className="flexible-table-header-container" style={{ width: tableWidth }}>
-					<Table className="filter-header-border"
-						style={headerStyle}
-						id="table-header"
-						sortable={this.props.sortable}
-						onSort={this.onSort}
-						onFilter={this.onFilter}
-					>
-						<Thead key="flexible-table-thead">
-							{headers}
-						</Thead>
-					</Table>
+				<div className="flexible-table-container-header-wrapper">
+					<div className="flexible-table-header-container" style={{ width: tableWidth }}>
+						<Table className="filter-header-border"
+							style={headerStyle}
+							id="table-header"
+							sortable={this.props.sortable}
+							onSort={this.onSort}
+							onFilter={this.onFilter}
+						>
+							<Thead key="flexible-table-thead">
+								{headers}
+							</Thead>
+						</Table>
+					</div>
 				</div>
 			);
 		}
@@ -277,6 +290,8 @@ export default class FlexibleTable extends React.Component {
 			this.scrollToRow(this.props.alignTop);
 		}
 
+		const containerId = (renderHeader) ? "flexible-table-container" : "flexible-table-container-noheader";
+		const containerClass = (renderHeader) ? "flexible-table-container-absolute" : "flexible-table-container-absolute-noheader";
 		renderTable = (
 			<div>
 				{searchBar}
@@ -284,11 +299,9 @@ export default class FlexibleTable extends React.Component {
 				{this.props.topRightPanel}
 				<ObserveSize observerFn={(element) => this._updateTableWidth(element.width)}>
 					<div id="flexible-table-container-wrapper">
-						<div className="flexible-table-container-header-wrapper">
-							{renderTableHeaderContents}
-						</div>
-						<div className="flexible-table-container-absolute" style={tableStyle}>
-							<div id="flexible-table-container" style={{ width: tableWidth }}>
+						{renderTableHeaderContents}
+						<div className={containerClass} style={tableStyle}>
+							<div id={containerId} style={{ width: tableWidth }}>
 								<Table
 									className="table"
 									id="table"
@@ -304,7 +317,7 @@ export default class FlexibleTable extends React.Component {
 		);
 
 		return (
-			<div id={"flexible-table-" + this.props.scrollKey}>
+			<div id={"flexible-table-" + this.props.scrollKey} className="flexible-table-control-container">
 				{renderTable}
 			</div>
 		);
