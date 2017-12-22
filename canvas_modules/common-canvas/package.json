@@ -13,7 +13,8 @@
   },
   "scripts": {
     "test": "jest",
-    "test-coverage": "jest --coverage"
+    "test-coverage": "jest --coverage",
+    "bundle-report": "webpack-bundle-analyzer --host 127.0.0.1 --port 8888 dist/stats.json"
   },
   "dependencies": {},
   "devDependencies": {
@@ -75,7 +76,8 @@
     "stylelint": "8.0.0",
     "underscore": "1.8.3",
     "url-loader": "0.5.9",
-    "webpack": "3.4.1"
+    "webpack": "3.4.1",
+    "webpack-bundle-analyzer": "2.9.1"
   },
   "peerDependencies": {
     "react": ">=15.x < 16",

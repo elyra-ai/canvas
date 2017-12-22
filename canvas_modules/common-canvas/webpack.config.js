@@ -8,8 +8,11 @@
  *******************************************************************************/
 
 var path = require("path");
+var webpack = require("webpack");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+var BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+
 
 module.exports = {
 	context: __dirname,
@@ -59,12 +62,19 @@ module.exports = {
 		]
 	},
 	plugins: [
+		new webpack.DefinePlugin({
+			"process.env.NODE_ENV": "'production'"
+		}),
+		new webpack.optimize.UglifyJsPlugin(), // minify everything
+		new webpack.optimize.AggressiveMergingPlugin(), // Merge chunk
 		new ExtractTextPlugin("common-canvas.css"),
 		new ExtractTextPlugin("common-canvas.min.css"),
 		new OptimizeCssAssetsPlugin({
 			assetNameRegExp: /\.min.css$/g,
 			cssProcessorOptions: { discardComments: { removeAll: true } }
-		})
+		}),
+		new BundleAnalyzerPlugin(
+			{ generateStatsFile: true, openAnalyzer: false })
 	],
 	resolve: {
 		extensions: [".js", ".jsx"]

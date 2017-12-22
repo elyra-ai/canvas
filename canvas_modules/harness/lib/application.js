@@ -33,6 +33,13 @@ function _create(callback) {
 	}
 
 	var app = express();
+	if (isProduction) {
+		app.get("*.js", function(req, res, next) {
+			req.url += ".gz";
+			res.set("Content-Encoding", "gzip");
+			next();
+		});
+	}
 	// See: http://expressjs.com/en/guide/behind-proxies.html
 	app.set("trust proxy", 1);
 

@@ -16,6 +16,7 @@ var webpack = require("webpack");
 var babelOptions = require("./scripts/babel/babelOptions").babelClientOptions;
 var constants = require("./lib/constants");
 var HtmlWebpackPlugin = require("html-webpack-plugin");
+var CompressionPlugin = require("compression-webpack-plugin");
 
 // Entry & Output files ------------------------------------------------------------>
 
@@ -62,11 +63,8 @@ var plugins = [
 		"process.env.NODE_ENV": "'production'"
 	}),
 	new webpack.optimize.OccurrenceOrderPlugin(),
-	new webpack.optimize.UglifyJsPlugin({
-		compress: {
-			warnings: false
-		}
-	}),
+	new webpack.optimize.UglifyJsPlugin(), // minify everything
+	new webpack.optimize.AggressiveMergingPlugin(), // Merge chunk
 	new webpack.optimize.CommonsChunkPlugin({
 		name: "vendor"
 	}),
@@ -75,6 +73,13 @@ var plugins = [
 	new HtmlWebpackPlugin({
 		inject: true,
 		template: "index.html"
+	}),
+	new CompressionPlugin({
+		asset: "[path].gz[query]",
+		algorithm: "gzip",
+		test: /\.js$|\.css$|\.html$/,
+		threshold: 10240,
+		minRatio: 0.8
 	})
 ];
 
