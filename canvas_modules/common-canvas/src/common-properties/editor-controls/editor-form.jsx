@@ -13,8 +13,8 @@
 import logger from "../../../utils/logger";
 import React from "react";
 import PropTypes from "prop-types";
-import { ButtonToolbar } from "react-bootstrap";
-import { Tabs } from "ap-components-react/dist/ap-components-react";
+import ButtonToolbar from "react-bootstrap/lib/ButtonToolbar";
+import Tabs from "ap-components-react/dist/components/Tabs";
 import { TOOL_TIP_DELAY } from "../constants/constants.js";
 
 import ReactTooltip from "react-tooltip";

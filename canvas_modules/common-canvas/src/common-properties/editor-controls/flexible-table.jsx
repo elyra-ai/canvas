@@ -13,9 +13,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import ReactTooltip from "react-tooltip";
 import { Table, Thead, Th } from "reactable";
-import {
-	TextField
-} from "ap-components-react/dist/ap-components-react";
+import TextField from "ap-components-react/dist/components/TextField";
 import search32 from "../../../assets/images/search_32.svg";
 import search32Disabled from "../../../assets/images/search_32_disabled.svg";
 import SortAscendingIcon from "../../../assets/images/sort_ascending.svg";

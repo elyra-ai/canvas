@@ -16,7 +16,8 @@ import ReactTooltip from "react-tooltip";
 import EditorControl from "./editor-control.jsx";
 import FlexibleTable from "./flexible-table.jsx";
 import { Tr, Td } from "reactable";
-import { Button, Checkbox } from "ap-components-react/dist/ap-components-react";
+import Button from "ap-components-react/dist/components/Button";
+import Checkbox from "ap-components-react/dist/components/Checkbox";
 
 import { DATA_TYPES, TOOL_TIP_DELAY } from "../constants/constants.js";
 

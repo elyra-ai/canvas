@@ -11,7 +11,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { Button } from "ap-components-react/dist/ap-components-react";
+import Button from "ap-components-react/dist/components/Button";
 import WideFlyout from "../components/wide-flyout.jsx";
 import EditorControl from "../editor-controls/editor-control.jsx";
 

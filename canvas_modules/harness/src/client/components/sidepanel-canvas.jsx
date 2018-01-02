@@ -12,14 +12,14 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { FormControl } from "react-bootstrap";
-import {
-	Button,
-	Checkbox,
-	Dropdown,
-	RadioGroup,
-	ToggleButton
-} from "ap-components-react/dist/ap-components-react";
+import FormControl from "react-bootstrap/lib/FormControl";
+import Button from "ap-components-react/dist/components/Button";
+import Dropdown from "ap-components-react/dist/components/Dropdown";
+import Checkbox from "ap-components-react/dist/components/Checkbox";
+import RadioGroup from "ap-components-react/dist/components/RadioGroup";
+import ToggleButton from "ap-components-react/dist/components/ToggleButton";
+
+
 import {
 	NONE,
 	HORIZONTAL,

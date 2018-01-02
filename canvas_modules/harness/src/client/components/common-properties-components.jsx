@@ -11,7 +11,7 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { Dropdown } from "ap-components-react/dist/ap-components-react";
+import Dropdown from "ap-components-react/dist/components/Dropdown";
 import {
 	CONTAINERS_RIGHT_FLYOUT_PROPERTIES,
 	CONTAINERS_RIGHT_FLYOUT_CANVAS,

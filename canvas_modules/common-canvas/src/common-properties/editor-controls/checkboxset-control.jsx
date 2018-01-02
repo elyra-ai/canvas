@@ -9,7 +9,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { Checkbox } from "ap-components-react/dist/ap-components-react";
+import Checkbox from "ap-components-react/dist/components/Checkbox";
 import EditorControl from "./editor-control.jsx";
 
 export default class CheckboxsetControl extends EditorControl {

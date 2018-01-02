@@ -9,7 +9,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { Button } from "ap-components-react/dist/ap-components-react";
+import Button from "ap-components-react/dist/components/Button";
 
 export default class ButtonAction extends React.Component {
 	constructor(props) {

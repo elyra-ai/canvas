@@ -77,7 +77,8 @@ module.exports = {
 			{ generateStatsFile: true, openAnalyzer: false })
 	],
 	resolve: {
-		extensions: [".js", ".jsx"]
+		modules: ["node_modules"],
+		extensions: [".js", ".jsx", ".json"]
 	},
 	externals: {
 		"react": "react",

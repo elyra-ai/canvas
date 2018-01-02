@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node index.js",
-    "test": "chimp"
+    "test": "chimp",
+    "bundle-report": "webpack-bundle-analyzer --host 127.0.0.1 --port 8888 .build/stats.json"
   },
   "engines": {
     "node": "6.11.1",
@@ -70,6 +71,7 @@
     "stylelint": "8.0.0",
     "text-table": "0.2.0",
     "webpack": "3.4.1",
+    "webpack-bundle-analyzer": "2.9.1",
     "webpack-dev-middleware": "1.12.0",
     "webpack-dev-server": "2.6.1",
     "webpack-hot-middleware": "2.18.2"

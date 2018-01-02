@@ -9,7 +9,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { TextField } from "ap-components-react/dist/ap-components-react";
+import TextField from "ap-components-react/dist/components/TextField";
 import { CHARACTER_LIMITS } from "../constants/constants.js";
 
 import EditorControl from "./editor-control.jsx";

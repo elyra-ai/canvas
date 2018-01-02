@@ -108,7 +108,7 @@ module.exports = {
 			"common-canvas": commonCanvas,
 			"common-canvas-styles": commonCanvasStyles
 		},
-		extensions: [".js", ".jsx"]
+		extensions: [".js", ".jsx", ".json"]
 	},
 	output: output,
 	module: {

@@ -9,7 +9,7 @@
 
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Button } from "ap-components-react/dist/ap-components-react";
+import Button from "ap-components-react/dist/components/Button";
 import { OKAY, CANCEL } from "./constants/constants.js";
 
 export default class PropertiesButtons extends Component {

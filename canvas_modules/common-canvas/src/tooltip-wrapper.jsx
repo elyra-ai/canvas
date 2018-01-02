@@ -10,7 +10,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Tooltip from "./tooltip.jsx";
-import { Icon } from "ap-components-react/dist/ap-components-react";
+import Icon from "ap-components-react/dist/components/Icon";
 import { TIP_TYPE_PALETTE_ITEM, TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK } from "../constants/common-constants.js";
 
 export default class TooltipWrapper extends React.Component {

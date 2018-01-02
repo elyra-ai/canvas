@@ -9,7 +9,8 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { ToggleButton, Icon } from "ap-components-react/dist/ap-components-react";
+import Icon from "ap-components-react/dist/components/Icon";
+import ToggleButton from "ap-components-react/dist/components/ToggleButton";
 
 export default class CustomToggleCtrl extends React.Component {
 	constructor(props) {

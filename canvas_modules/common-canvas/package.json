@@ -42,7 +42,6 @@
     "extract-text-webpack-plugin": "3.0.0",
     "fetch-mock": "5.12.2",
     "file-loader": "0.11.2",
-    "fixed-data-table": "0.6.3",
     "grunt": "1.0.1",
     "grunt-contrib-clean": "1.1.0",
     "grunt-env": "0.4.4",
@@ -50,6 +49,7 @@
     "grunt-jsonlint": "1.1.0",
     "grunt-webpack": "3.0.2",
     "grunt-yamllint": "0.3.0",
+    "ibm-design-colors": "1.6.0",
     "immutable-undo": "1.1.1",
     "jest": "20.0.4",
     "jest-localstorage-mock": "2.0.1",
@@ -89,7 +89,8 @@
   "jest": {
     "moduleFileExtensions": [
       "js",
-      "jsx"
+      "jsx",
+      "json"
     ],
     "modulePathIgnorePatterns": [
       "/lib/",

@@ -12,7 +12,7 @@ import PropTypes from "prop-types";
 import PaletteFlyoutContentCategory from "./palette-flyout-content-category.jsx";
 import PaletteContentList from "./palette-content-list.jsx";
 import search32 from "../../assets/images/search_32.svg";
-import { TextField } from "ap-components-react/dist/ap-components-react";
+import TextField from "ap-components-react/dist/components/TextField";
 
 class PaletteFlyoutContent extends React.Component {
 	constructor(props) {

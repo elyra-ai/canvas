@@ -19,7 +19,7 @@ import PropertiesController from "./properties-controller";
 import logger from "../../utils/logger";
 import _ from "underscore";
 
-import { TextField } from "ap-components-react/dist/ap-components-react";
+import TextField from "ap-components-react/dist/components/TextField";
 
 import editIcon from "../../assets/images/edit.svg";
 

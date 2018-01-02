@@ -9,7 +9,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { Icon } from "ap-components-react/dist/ap-components-react";
+import Icon from "ap-components-react/dist/components/Icon";
 import CustomMapSummary from "./CustomMapSummary";
 
 //* eslint no-unused-expressions: ["error", { "allow": ["CustomMapCtrl"] }] */

@@ -10,7 +10,7 @@
 import logger from "../../../utils/logger";
 import React from "react";
 import PropTypes from "prop-types";
-import { Button } from "react-bootstrap";
+import Button from "react-bootstrap/lib/Button";
 
 import SubPanelInvoker from "./sub-panel-invoker.jsx";
 

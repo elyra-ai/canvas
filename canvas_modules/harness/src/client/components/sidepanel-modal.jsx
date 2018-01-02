@@ -12,13 +12,12 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { FormControl } from "react-bootstrap";
+import FormControl from "react-bootstrap/lib/FormControl";
 import PropTypes from "prop-types";
-import {
-	Button,
-	RadioGroup,
-	Dropdown
-} from "ap-components-react/dist/ap-components-react";
+import Button from "ap-components-react/dist/components/Button";
+import Dropdown from "ap-components-react/dist/components/Dropdown";
+import RadioGroup from "ap-components-react/dist/components/RadioGroup";
+
 import {
 	CHOOSE_FROM_LOCATION,
 	FLYOUT,

@@ -10,7 +10,7 @@
 // TODO need to figure out how this control is used
 import React from "react";
 import PropTypes from "prop-types";
-import { TextField } from "ap-components-react/dist/ap-components-react";
+import TextField from "ap-components-react/dist/components/TextField";
 import EditorControl from "./editor-control.jsx";
 import SubPanelButton from "../editor-panels/sub-panel-button.jsx";
 

@@ -9,9 +9,8 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { Button } from "react-bootstrap";
+import Button from "react-bootstrap/lib/Button";
 import ReactTooltip from "react-tooltip";
-import { Cell } from "fixed-data-table";
 import { TOOL_TIP_DELAY } from "../constants/constants.js";
 
 import SubPanelInvoker from "./sub-panel-invoker.jsx";
@@ -46,27 +45,25 @@ export default class SubPanelCell extends React.Component {
 		const disabled = typeof this.props.disabled !== "undefined" ? this.props.disabled : false;
 		return (
 			<SubPanelInvoker ref="invoker" rightFlyout={this.props.rightFlyout}>
-				<Cell>
-					<div className="properties-tooltips-container" data-tip="Edit" data-for="tooltip-subpanel-cell">
-						<Button
-							style={{ "display": "inline" }}
-							bsSize="xsmall"
-							onClick={this.showSubPanel}
-							disabled={disabled}
-						>
-							{this.props.label}
-						</Button>
-					</div>
-					<ReactTooltip
-						id={tooltipId}
-						place="right"
-						type="light"
-						effect="solid"
-						border
-						className="properties-tooltips"
-						delayShow={TOOL_TIP_DELAY}
-					/>
-				</Cell>
+				<div className="properties-tooltips-container" data-tip="Edit" data-for="tooltip-subpanel-cell">
+					<Button
+						style={{ "display": "inline" }}
+						bsSize="xsmall"
+						onClick={this.showSubPanel}
+						disabled={disabled}
+					>
+						{this.props.label}
+					</Button>
+				</div>
+				<ReactTooltip
+					id={tooltipId}
+					place="right"
+					type="light"
+					effect="solid"
+					border
+					className="properties-tooltips"
+					delayShow={TOOL_TIP_DELAY}
+				/>
 			</SubPanelInvoker>
 		);
 	}

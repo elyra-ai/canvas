@@ -9,7 +9,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { Checkbox } from "ap-components-react/dist/ap-components-react";
+import Checkbox from "ap-components-react/dist/components/Checkbox";
 
 
 export default class CheckboxSelectionPanel extends React.Component {

@@ -17,6 +17,7 @@ var babelOptions = require("./scripts/babel/babelOptions").babelClientOptions;
 var constants = require("./lib/constants");
 var HtmlWebpackPlugin = require("html-webpack-plugin");
 var CompressionPlugin = require("compression-webpack-plugin");
+var BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
 // Entry & Output files ------------------------------------------------------------>
 
@@ -80,7 +81,9 @@ var plugins = [
 		test: /\.js$|\.css$|\.html$/,
 		threshold: 10240,
 		minRatio: 0.8
-	})
+	}),
+	new BundleAnalyzerPlugin(
+		{ generateStatsFile: true, openAnalyzer: false })
 ];
 
 
@@ -100,7 +103,7 @@ module.exports = {
 			"common-canvas": "src/common-canvas.js",
 			"common-canvas-styles": "src/common-canvas-styles.js"
 		},
-		extensions: [".js", ".jsx"]
+		extensions: [".js", ".jsx", ".json"]
 	},
 	output: output,
 	module: {

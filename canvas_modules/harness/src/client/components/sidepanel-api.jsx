@@ -11,11 +11,9 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import {
-	Button,
-	Dropdown,
-	TextField
-} from "ap-components-react/dist/ap-components-react";
+import Button from "ap-components-react/dist/components/Button";
+import Dropdown from "ap-components-react/dist/components/Dropdown";
+import TextField from "ap-components-react/dist/components/TextField";
 import {
 	API_SET_PIPELINEFLOW,
 	API_ADD_PALETTE_ITEM

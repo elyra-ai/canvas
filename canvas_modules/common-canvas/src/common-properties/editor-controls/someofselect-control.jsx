@@ -9,7 +9,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { FormControl } from "react-bootstrap";
+import FormControl from "react-bootstrap/lib/FormControl";
 import EditorControl from "./editor-control.jsx";
 import ReactDOM from "react-dom";
 

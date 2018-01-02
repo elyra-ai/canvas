@@ -9,7 +9,8 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { Slider, Icon } from "ap-components-react/dist/ap-components-react";
+import Slider from "ap-components-react/dist/components/Slider";
+import Icon from "ap-components-react/dist/components/Icon";
 
 export default class CustomSliderCtrl extends React.Component {
 	constructor(props) {

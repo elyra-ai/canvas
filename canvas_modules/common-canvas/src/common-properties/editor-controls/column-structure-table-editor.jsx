@@ -11,7 +11,7 @@
 import React from "react";
 import ReactTooltip from "react-tooltip";
 import { Tr, Td } from "reactable";
-import { Button } from "ap-components-react/dist/ap-components-react";
+import Button from "ap-components-react/dist/components/Button";
 import EditorControl from "./editor-control.jsx";
 import ToggletextControl from "./toggletext-control.jsx";
 import ReadonlyControl from "./readonly-control.jsx";
@@ -567,7 +567,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		// However, we will extract information from the and will create our own Cell-based invoker.
 		const propertyId = { name: this.props.propertyId.name, row: rowIndex };
 		const subPanelColIndex = this.props.control.subControls.length;
-		const columnStyle = { "width": columnWidths[subPanelColIndex], "padding": "0 0 0 0" };
+		const columnStyle = { "width": columnWidths[subPanelColIndex] };
 		const subItemButton = this.props.buildUIItem(rowIndex, this.props.control.childItem, propertyId, this.indexOfColumn);
 		// Hack to decompose the button into our own in-table link
 		const disabled = typeof stateDisabled.disabled !== "undefined" || Object.keys(stateDisabled) > 0;
