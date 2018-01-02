@@ -30,6 +30,12 @@ Delete @wdp from node_modules
 npm install
 ```
 
+### Webpack Bundle Analyzer
+Used to break down the size of each component used in common-canvas
+
+1. Build common-canvas `grunt`
+2. `npm run bundle-report`
+
 ### Updating "release" branch (Weekly Jenkins Job: [link](https://analytics-canvas-jenkins.swg-devops.com/view/canvas_utils/job/Abstract-Canvas_Promote-Release))
 
 ### Committing breaking changes
