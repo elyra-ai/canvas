@@ -45,6 +45,10 @@ npm test -- --browser=firefox
 ### Webpack Bundle Analyzer
 Used to break down the size of each component used by the test harness
 
-1. `export NODE_ENV=production` 
-2. Build common-canvas `grunt`
-3. `npm run bundle-report`
+```sh
+export NODE_ENV=production
+# Build the test harness
+grunt
+# Start the analyzer tool
+npm run bundle-report
+```
