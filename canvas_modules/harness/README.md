@@ -1,6 +1,6 @@
-## harness
+## Test Harness
 
-## Environment setup
+### Environment setup
 
 Build common-canvas project
 ```sh
@@ -28,7 +28,7 @@ export NODE_ENV=development
 # changes to common-canvas or harness will automatically be picked up by webpack
 ```
 
-## UI test
+### UI test
 
 Ensure that the test harness is running.  The default location is http://localhost:3001.  
 ```sh
@@ -41,3 +41,10 @@ The Firefox version that will be used is located in the default folder.  On Mac 
 cd <base dir>/canvas_modules/harness
 npm test -- --browser=firefox
 ```
+
+### Webpack Bundle Analyzer
+Used to break down the size of each component used by the test harness
+
+1. `export NODE_ENV=production` 
+2. Build common-canvas `grunt`
+3. `npm run bundle-report`
