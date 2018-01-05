@@ -960,6 +960,10 @@ module.exports = function() {
 		browser.keys("Shift");
 	});
 
+	this.Then(/^I drag the Select Node from side panel to common canvas at (\d+), (\d+)$/, function(xPos, yPos) {
+		browser.execute(simulateDragDrop, "#sidePanelNodeDraggable", 0, "#canvas-div-0", 0, xPos, yPos);
+	});
+
 
 	this.Then("I verify the node move was not done", function() {
 		// MOVE OPERATION ISNT WORKING CURRENTLY IN D3

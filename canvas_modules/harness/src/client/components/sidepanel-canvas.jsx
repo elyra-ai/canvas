@@ -73,6 +73,7 @@ export default class SidePanelForms extends React.Component {
 		this.paletteLayoutOptionChange = this.paletteLayoutOptionChange.bind(this);
 		this.tipConfigChange = this.tipConfigChange.bind(this);
 		this.extraCanvasChange = this.extraCanvasChange.bind(this);
+		this.onDragStart = this.onDragStart.bind(this);
 
 	}
 
@@ -167,6 +168,19 @@ export default class SidePanelForms extends React.Component {
 					});
 			});
 		}
+	}
+
+	onDragStart(ev) {
+		ev.dataTransfer.setData("text",
+			JSON.stringify({
+				operation: "addToCanvas",
+				editType: "createNode",
+				label: "Derive",
+				operator_id_ref: "derive",
+				nodeTypeId: "derive",
+				offsetX: 100,
+				offsetY: 100
+			}));
 	}
 
 	submitCanvas() {
@@ -497,6 +511,22 @@ export default class SidePanelForms extends React.Component {
 			</form>
 		</div>);
 
+		var nodeDraggable = (<div className="sidepanel-children" id="sidepanel-nodeDraggable">
+			<form>
+				<div className="sidepanel-headers">Draggable Node (Requires modelerPalette.json to be set.)</div>
+				<div id="sidePanelNodeDraggable" draggable="true"
+					onDragStart={this.onDragStart} onDragOver={this.onDragOver}
+				>
+					<div className="sidepanel-list-item-icon">
+						<img draggable="false" src="/images/nodes/derive.svg" />
+					</div>
+					<div>
+						<span className="sidepanel-list-item-text">Derive</span>
+					</div>
+				</div>
+			</form>
+		</div>);
+
 		return (
 			<div>
 				{canvasInput}
@@ -520,6 +550,8 @@ export default class SidePanelForms extends React.Component {
 				{tipConfig}
 				{divider}
 				{extraCanvas}
+				{divider}
+				{nodeDraggable}
 			</div>
 		);
 	}

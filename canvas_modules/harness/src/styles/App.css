@@ -191,6 +191,18 @@
   padding: 6px 0 0 0;
 }
 
+.sidepanel-list-item-icon {
+  height: 40px;
+  width: 40px;
+  min-width: 32px;
+  float: left;
+}
+
+.sidepanel-list-item-text {
+  line-height: 30px;
+  margin-left: 15px;
+}
+
 #buttonOneTimeLayoutHorizontal , #buttonOneTimeLayoutVertical{
   width: 100%;
   text-align: center;

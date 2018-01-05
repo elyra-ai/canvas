@@ -88,7 +88,7 @@ export default class DiagramCanvas extends React.Component {
 				this.props.canvasController.createNodeAt(jsVal.operator_id_ref, jsVal.label, jsVal.sourceId, jsVal.sourceObjectTypeId, transPos.x, transPos.y);
 
 			} else if ((jsVal.operation === "addToCanvas") || (jsVal.operation === "addTableFromConnection")) {
-				this.props.canvasController.createNodeFromDataAt(transPos.x, transPos.y, jsVal.data);
+				this.props.canvasController.createNodeFromDataAt(transPos.x, transPos.y, jsVal);
 			}
 		}
 	}
