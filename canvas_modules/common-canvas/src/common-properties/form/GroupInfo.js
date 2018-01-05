@@ -12,7 +12,7 @@ import { ResourceDef } from "./L10nProvider";
 import _ from "underscore";
 
 class Group {
-	constructor(cname, parameters, actions, type, label, dependsOn, subGroups) {
+	constructor(cname, parameters, actions, type, label, dependsOn, subGroups, description) {
 		this.name = cname;
 		this.parameters = parameters;
 		this.actions = actions;
@@ -20,6 +20,7 @@ class Group {
 		this.label = ResourceDef.make(label);
 		this.dependsOn = dependsOn;
 		this.subGroups = subGroups;
+		this.description = ResourceDef.make(description);
 	}
 
 	parameterNames() {
@@ -53,7 +54,8 @@ class Group {
 				_.propertyOf(uiGroup)("type"),
 				_.propertyOf(uiGroup)("label"),
 				_.propertyOf(uiGroup)("depends_on_ref"),
-				subGroups);
+				subGroups,
+				_.propertyOf(uiGroup)("description"));
 		}
 		return null;
 	}

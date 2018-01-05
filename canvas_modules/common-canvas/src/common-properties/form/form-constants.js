@@ -19,7 +19,8 @@ const ItemType = {
 	CHECKBOX_SELECTOR: "checkboxSelector",
 	CUSTOM_PANEL: "customPanel",
 	SUMMARY_PANEL: "summaryPanel",
-	ACTION: "action"
+	ACTION: "action",
+	TEXT_PANEL: "textPanel"
 };
 
 const EditStyle = {
@@ -45,7 +46,8 @@ const GroupType = {
 	CHECKBOX_PANEL: "checkboxPanel",
 	CUSTOM_PANEL: "customPanel",
 	SUMMARY_PANEL: "summaryPanel",
-	ACTION_PANEL: "actionPanel"
+	ACTION_PANEL: "actionPanel",
+	TEXT_PANEL: "textPanel"
 };
 
 const PanelType = {

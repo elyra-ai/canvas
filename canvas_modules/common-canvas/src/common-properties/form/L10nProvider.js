@@ -73,21 +73,18 @@ export class L10nProvider {
 }
 
 export class ResourceDef {
-	constructor(defaultText, resourceKey, placement) {
-		this.default = defaultText;
-		this.resource_key = resourceKey;
-		if (placement) {
-			this.placement = placement;
-		}
-	}
-
 	static make(resourceObj) {
 		let resource;
 		if (resourceObj) {
-			resource = new ResourceDef(
-				_.propertyOf(resourceObj)("default"),
-				_.propertyOf(resourceObj)("resource_key"),
-				_.propertyOf(resourceObj)("placement"));
+			resource = new ResourceDef();
+			resource.default = resourceObj.default;
+			resource.resource_key = resourceObj.resource_key;
+			if (resourceObj.placement) {
+				resource.placement = resourceObj.placement;
+			}
+			if (resourceObj.type) {
+				resource.type = resourceObj.type;
+			}
 		}
 		return resource;
 	}

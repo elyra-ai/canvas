@@ -28,6 +28,11 @@
     src: url(./../../node_modules/ap-components-react/dist/fonts/light/helvetica-neue-light.woff) format('woff');
 }
 
+@font-face {
+    font-family: IBMHLVLightItalic;
+    src: url(./../../node_modules/ap-components-react/dist/fonts/light-italic/helvetica-neue-light-italic.woff) format('woff');
+}
+
 /* right flyout panel */
 
 .right-flyout-panel {

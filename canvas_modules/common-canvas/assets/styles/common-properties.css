@@ -1057,3 +1057,40 @@ tbody.reactable-data .editor_control_area {
 	display: flex;
 	flex-wrap: wrap;
 }
+
+.properties-text-panel {
+	cursor: text;
+	font-size: 14px;
+	color: #1d3649;
+}
+.panel-label {
+	padding-top: 7px;
+	font-family: IBMHLVBold;
+}
+.panel-description {
+	font-family: IBMHLVRoman;
+}
+.static-text-icon-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.static-text-icon {
+	width: 17px;
+	height: 17px;
+	margin-right: 10px;
+}
+.static-text-container {
+	display: flex;
+}
+.static-text {
+	cursor: text;
+	font-family: IBMHLVRoman;
+	font-size: 14px;
+	color: #1d3649;
+}
+
+.static-text.info {
+	font-family: IBMHLVLightItalic;
+	color: #777677;
+}

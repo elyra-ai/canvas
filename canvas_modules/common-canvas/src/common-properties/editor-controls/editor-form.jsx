@@ -53,6 +53,7 @@ import ControlItem from "./control-item.jsx";
 
 import DownIcon from "../../../assets/images/down_enabled.svg";
 import UpIcon from "../../../assets/images/up_enabled.svg";
+import InfoIcon from "../../../assets/images/info.svg";
 
 export default class EditorForm extends React.Component {
 
@@ -589,13 +590,19 @@ export default class EditorForm extends React.Component {
 		const subPanels = {};
 		for (let i = 0; i < tabs.length; i++) {
 			const tab = tabs[i];
-			subPanels[tab.group] = (<div className="control-panel" key={tab.group}>
-				{this.genUIItem(i, tab.content, propertyId, indexof)}
-			</div>);
+			let className = "control-panel";
+			if (tab.content && tab.content.itemType === "textPanel") {
+				className = "text-panel";
+			}
+			subPanels[tab.group] = (
+				<div className={className} key={tab.group + key}>
+					{this.genUIItem(i, tab.content, propertyId, indexof)}
+				</div>
+			);
 		}
 		return (
 			<SelectorPanel id={"selector-panel." + dependsOn}
-				key={key}
+				key={"selectorPanel" + key}
 				panels={subPanels}
 				dependsOn={dependsOn}
 				controller={this.props.controller}
@@ -626,7 +633,14 @@ export default class EditorForm extends React.Component {
 				rightFlyout={this.props.rightFlyout}
 			/>);
 		} else if (uiItem.itemType === "staticText") {
-			return <div key={"static-text." + key} className="static-text">{uiItem.text}</div>;
+			let textClass = "static-text";
+			let icon = <div />;
+			if (uiItem.textType === "info") {
+				icon = <div className="static-text-icon-container"><img className="static-text-icon" src={InfoIcon} /></div>;
+				textClass = "static-text info";
+			}
+			const text = <div className={textClass}>{uiItem.text}</div>;
+			return <div key={"static-text." + key} className="static-text-container">{icon}{text}</div>;
 		} else if (uiItem.itemType === "hSeparator") {
 			return <hr key={"h-separator." + key} className="h-separator" />;
 		} else if (uiItem.itemType === "panel") {
@@ -646,6 +660,14 @@ export default class EditorForm extends React.Component {
 			return this.genPanel(key, uiItem.panel, propertyId, indexof);
 		} else if (uiItem.itemType === "action") {
 			return this.generateAction(key, uiItem.action);
+		} else if (uiItem.itemType === "textPanel" && uiItem.panel) {
+			const label = uiItem.panel.label ? (<div className="panel-label">{uiItem.panel.label.text}</div>) : (<div />);
+			const description = uiItem.panel.description ? (<div className="panel-description">{uiItem.panel.description.text}</div>) : (<div />);
+			return (
+				<div className="properties-text-panel" key={"text-panel-" + key}>
+					{label}
+					{description}
+				</div>);
 		}
 		return <div>Unknown: {uiItem.itemType}</div>;
 	}

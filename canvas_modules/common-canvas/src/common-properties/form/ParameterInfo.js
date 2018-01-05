@@ -46,8 +46,8 @@ export class ParameterDef {
 			this.dmDefault = dmDefault;
 		}
 		this.summary = summary;
-		this.textAfter = textAfter;
-		this.textBefore = textBefore;
+		this.textAfter = ResourceDef.make(textAfter);
+		this.textBefore = ResourceDef.make(textBefore);
 		this.moveableRows = moveableRows;
 	}
 
@@ -134,8 +134,14 @@ export class ParameterDef {
 	getTextAfter(l10nProvider) {
 		return l10nProvider.l10nResource(this.textAfter);
 	}
+	getTextAfterType() {
+		return this.textAfter ? this.textAfter.type : null;
+	}
 	getTextBefore(l10nProvider) {
 		return l10nProvider.l10nResource(this.textBefore);
+	}
+	getTextBeforeType() {
+		return this.textBefore ? this.textBefore.type : null;
 	}
 
 	/**

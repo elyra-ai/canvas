@@ -14,7 +14,8 @@
   "scripts": {
     "test": "jest",
     "test-coverage": "jest --coverage",
-    "bundle-report": "webpack-bundle-analyzer --host 127.0.0.1 --port 8888 dist/stats.json"
+    "bundle-report": "webpack-bundle-analyzer --host 127.0.0.1 --port 8888 dist/stats.json",
+		"debug": "node --inspect-brk node_modules/.bin/jest --runInBand"
   },
   "dependencies": {},
   "devDependencies": {
@@ -98,6 +99,7 @@
       "/node_modules/",
       "/.eslintrc.js"
     ],
+    "testPathIgnorePatterns":["_utils_"],
     "setupFiles": [
       "./__mocks__/globalMock.js",
       "jest-localstorage-mock"

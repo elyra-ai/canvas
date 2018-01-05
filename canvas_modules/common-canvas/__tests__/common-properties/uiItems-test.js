@@ -7,158 +7,25 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import React from "react";
-import EditorForm from "../../src/common-properties/editor-controls/editor-form.jsx";
-import { mount } from "enzyme";
 import { expect } from "chai";
-import sinon from "sinon";
-
-import Controller from "../../src/common-properties/properties-controller";
-
-
-const formData = {
-	"componentId": "uiItems",
-	"label": "UIItem Test",
-	"editorSize": "large",
-	"uiItems": [
-		{
-			"itemType": "primaryTabs",
-			"tabs": [
-				{
-					"text": "Settings",
-					"group": "basic-settings",
-					"content": {
-						"itemType": "panel",
-						"panel": {
-							"id": "basic-settings",
-							"panelType": "general",
-							"uiItems": [
-								{
-									"itemType": "control",
-									"control": {
-										"name": "radioset",
-										"label": {
-											"text": "Mode"
-										},
-										"description": {
-											"text": "Include or discard rows"
-										},
-										"controlType": "radioset",
-										"valueDef": {
-											"propType": "string",
-											"isList": false,
-											"isMap": false,
-											"defaultValue": "Include"
-										},
-										"orientation": "horizontal",
-										"values": [
-											"Include",
-											"Discard"
-										],
-										"valueLabels": [
-											"Include",
-											"Discard"
-										],
-										"separateLabel": true
-									}
-								},
-								{
-									"itemType": "staticText",
-									"text": "Hint: should have a separator after"
-								},
-								{
-									"itemType": "hSeparator"
-								},
-								{
-									"itemType": "control",
-									"control": {
-										"name": "textfield",
-										"label": {
-											"text": "Simple text"
-										},
-										"description": {
-											"text": "Testing of uiItems"
-										},
-										"controlType": "textfield",
-										"valueDef": {
-											"propType": "string",
-											"isList": false,
-											"isMap": false,
-											"defaultValue": ""
-										},
-										"separateLabel": true
-									}
-								},
-								{
-									"itemType": "staticText",
-									"text": "Hint: should have a separator after"
-								},
-								{
-									"itemType": "hSeparator"
-								},
-								{
-									"itemType": "control",
-									"control": {
-										"name": "numberfield",
-										"label": {
-											"text": "Number"
-										},
-										"description": {
-											"text": "Testing of uiItems"
-										},
-										"controlType": "numberfield",
-										"valueDef": {
-											"propType": "integer",
-											"isList": false,
-											"isMap": false
-										},
-										"separateLabel": true
-									}
-								}
-							]
-						}
-					}
-				}
-			]
-		}
-	],
-	"buttons": [
-		{
-			"id": "ok",
-			"text": "OK",
-			"isPrimary": true,
-			"url": ""
-		},
-		{
-			"id": "cancel",
-			"text": "Cancel",
-			"isPrimary": false,
-			"url": ""
-		}
-	],
-	"data": {
-		"currentParameters": {}
-	}
-};
-const showPropertiesButtons = sinon.spy();
-var controller;
-function createEditorForm() {
-	controller = new Controller();
-	controller.setForm(formData);
-	const editorForm = (<EditorForm
-		ref="editorForm"
-		key="editor-form-key"
-		controller={controller}
-		showPropertiesButtons={showPropertiesButtons}
-	/>);
-	return mount(editorForm);
-}
+import propertyUtils from "../_utils_/property-utils";
+import uiItemParamDef from "../test_resources/paramDefs/uiItems_paramDef.json";
 
 describe("editor-form renders correctly with correct uiItems", () => {
-	const wrapper = createEditorForm();
+	const wrapper = propertyUtils.flyoutEditorForm(uiItemParamDef);
 	it("should have displayed correct number of staticText elements", () => {
 		const staticText = wrapper.find(".static-text");
-		expect(staticText).to.have.length(2);
+		expect(staticText).to.have.length(3);
+		const staticTextIcons = wrapper.find(".static-text-icon");
+		expect(staticTextIcons).to.have.length(1);
+		const staticTextWithIcon = wrapper.find(".static-text.info");
+		expect(staticTextWithIcon).to.have.length(1);
+	});
+	it("should have displayed correct text in staticText elements", () => {
+		const staticText = wrapper.find(".static-text");
+		expect(staticText.at(0).text()).to.equal("Some helpful text before the control");
+		const staticTextWithIcon = wrapper.find(".static-text.info");
+		expect(staticTextWithIcon.at(0).text()).to.equal("Hint: should have a separator after and icon");
 	});
 	it("should have displayed correct number of separator elements", () => {
 		const separators = wrapper.find(".h-separator");

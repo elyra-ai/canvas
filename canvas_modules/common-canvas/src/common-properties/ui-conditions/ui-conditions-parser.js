@@ -153,6 +153,7 @@ function parseUiItem(controls, uiItem, panelId) {
 		break; // required parameters are handled by panel
 	case ItemType.ACTION:
 	case ItemType.STATIC_TEXT:
+	case ItemType.TEXT_PANEL:
 	case ItemType.HORIZONTAL_SEPARATOR: {
 		break;
 	}

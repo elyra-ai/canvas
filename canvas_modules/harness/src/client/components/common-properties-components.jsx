@@ -23,6 +23,7 @@ import {
 	CHECKBOX_PANEL_PROPS_INFO,
 	SUMMARY_PANEL_PROPS_INFO,
 	COLUMNSELECTION_PROPS_INFO,
+	TEXT_PANEL_PROPS_INFO,
 	TEXTFIELD_PROPS_INFO,
 	TEXTAREA_PROPS_INFO,
 	PASSWORD_FIELD_PROPS_INFO,
@@ -197,6 +198,7 @@ class CommonPropertiesComponents extends React.Component {
 					"--checkboxPanel",
 					"--summaryPanel",
 					"--columnSelection",
+					"--textPanel",
 					"Controls",
 					"--textfield",
 					"--textarea",
@@ -522,6 +524,28 @@ class CommonPropertiesComponents extends React.Component {
 							<div className="section-column section-column-code">
 								<pre className="json-block">
 									{this.jsonReplacer(COLUMNSELECTION_PROPS_INFO.parameterDef, "panel")}
+								</pre>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div className="properties-documentation-panels-controls-component">
+					<h3 id="--textPanel" className="section-subtitle">textPanel</h3>
+					<p>Displays text not related to a parameter.  Can be used with a <span className="highlight">panelSelector</span> to
+						display different text values based on a control value.</p>
+					<div className="section-row">
+						<div className="section-row">
+							<div className="section-column">
+								<CommonProperties
+									showPropertiesDialog
+									propertiesInfo={TEXT_PANEL_PROPS_INFO}
+									containerType="Custom"
+								/>
+								{this.renderRightFlyoutButton(TEXT_PANEL_PROPS_INFO)}
+							</div>
+							<div className="section-column section-column-code">
+								<pre className="json-block">
+									{this.jsonReplacer(TEXT_PANEL_PROPS_INFO.parameterDef, "all")}
 								</pre>
 							</div>
 						</div>

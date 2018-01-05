@@ -826,6 +826,31 @@ _defineConstant("COLUMNSELECTION_PROPS_INFO", {
 	}
 });
 
+_defineConstant("TEXT_PANEL_PROPS_INFO", {
+	"title": "Group Types: Text Panel",
+	"parameterDef": {
+		"parameters": [
+		],
+		"uihints": {
+			"id": "TextPanelId",
+			"parameter_info": [
+			],
+			"group_info": [
+				{
+					"id": "orange",
+					"type": "textPanel",
+					"label": {
+						"default": "Oranges"
+					},
+					"description": {
+						"default": "An orange tree can grow to reach 30 feet and live for over a hundred years."
+					}
+				}
+			]
+		}
+	}
+});
+
 _defineConstant("TEXTFIELD_PROPS_INFO", {
 	"title": "TextField Title",
 	"parameterDef": {

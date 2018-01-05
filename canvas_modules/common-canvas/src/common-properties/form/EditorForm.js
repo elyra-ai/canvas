@@ -160,6 +160,11 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 	case GroupType.ACTION_PANEL: {
 		return UIItem.makePanel(new ActionPanel(groupName, PanelType.ACTION_PANEL, _makeActions(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider)));
 	}
+	case GroupType.TEXT_PANEL: {
+		groupLabel = l10nProvider.l10nResource(group.label);
+		const groupDesc = l10nProvider.l10nDesc(group, group.name);
+		return UIItem.makeTextPanel(new Label(groupLabel), new Description(groupDesc));
+	}
 	default:
 		return UIItem.makeStaticText("(Unknown group type '" + group.groupType() + "')");
 	}
@@ -183,11 +188,11 @@ function _makeControls(parameterMetadata, actionMetadata, group, structureMetada
 				uiItems.push(UIItem.makeHSeparator());
 			}
 			if (prop.textBefore) {
-				uiItems.push(UIItem.makeStaticText(prop.getTextBefore(l10nProvider)));
+				uiItems.push(UIItem.makeStaticText(prop.getTextBefore(l10nProvider), prop.getTextBeforeType()));
 			}
 			uiItems.push(control);
 			if (prop.textAfter) {
-				uiItems.push(UIItem.makeStaticText(prop.getTextAfter(l10nProvider)));
+				uiItems.push(UIItem.makeStaticText(prop.getTextAfter(l10nProvider), prop.getTextAfterType()));
 			}
 			if (prop.separatorAfter()) {
 				uiItems.push(UIItem.makeHSeparator());

@@ -16,7 +16,8 @@ export class UIItem {
 		this.tabs = _.propertyOf(elements)("tabs"); // when PRIMARY_TABS, SUB_TABS or PANEL_SELECTOR
 		this.panel = _.propertyOf(elements)("panel"); // when PANEL or ADDITIONAL_LINK
 		this.control = _.propertyOf(elements)("control"); // when CONTROL
-		this.text = _.propertyOf(elements)("text"); // when ADDITIONAL_LINK (link label), STATIC_TEXT or HORIZONTAL_SEPARATOR
+		this.text = _.propertyOf(elements)("text"); // when ADDITIONAL_LINK (link label) or STATIC_TEXT
+		this.textType = _.propertyOf(elements)("textType"); // when STATIC_TEXT
 		this.secondaryText = _.propertyOf(elements)("secondaryText"); // when ADDITIONAL_LINK (subpanel label)
 		this.dependsOn = _.propertyOf(elements)("dependsOn"); // when PANEL_SELECTOR (control to obtain value from)
 		this.action = _.propertyOf(elements)("action"); // when ACTION
@@ -74,17 +75,27 @@ export class UIItem {
 		});
 	}
 
-	static makeHSeparator(label) {
+	static makeHSeparator() {
 		return new UIItem({
-			itemType: ItemType.HORIZONTAL_SEPARATOR,
-			label: label
+			itemType: ItemType.HORIZONTAL_SEPARATOR
 		});
 	}
 
-	static makeStaticText(text) {
+	static makeStaticText(text, textType) {
 		return new UIItem({
 			itemType: ItemType.STATIC_TEXT,
-			text: text
+			text: text,
+			textType: textType
+		});
+	}
+
+	static makeTextPanel(label, description) {
+		return new UIItem({
+			itemType: ItemType.TEXT_PANEL,
+			panel: {
+				label: label,
+				description: description
+			}
 		});
 	}
 
