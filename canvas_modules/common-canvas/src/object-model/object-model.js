@@ -19,7 +19,7 @@ import SVGPipelineOutHandler from "../svg-pipeline-out-handler.js";
 import _ from "underscore";
 
 /* eslint arrow-body-style: ["error", "always"] */
-/* eslint complexity: ["error", 23] */
+/* eslint complexity: ["error", 26] */
 
 const nodes = (state = [], action) => {
 	switch (action.type) {
@@ -122,6 +122,32 @@ const nodes = (state = [], action) => {
 			return node;
 		});
 
+	case "SET_NODE_LABEL":
+		return state.map((node, index) => {
+			if (action.data.nodeId === node.id) {
+				const newNode = Object.assign({}, node);
+				newNode.label = action.data.label;
+				return newNode;
+			}
+			return node;
+		});
+
+	case "SET_INPUT_PORT_LABEL":
+		return state.map((node, index) => {
+			if (action.data.nodeId === node.id) {
+				return Object.assign({}, node, { input_ports: ports(node.input_ports, action) });
+			}
+			return node;
+		});
+
+	case "SET_OUTPUT_PORT_LABEL":
+		return state.map((node, index) => {
+			if (action.data.nodeId === node.id) {
+				return Object.assign({}, node, { output_ports: ports(node.output_ports, action) });
+			}
+			return node;
+		});
+
 	case "SET_PIPELINE_FLOW":
 	case "SET_LAYOUT_INFO":
 	case "SET_CANVAS_INFO":
@@ -136,6 +162,22 @@ const nodes = (state = [], action) => {
 	}
 };
 
+const ports = (state = [], action) => {
+	switch (action.type) {
+	case "SET_INPUT_PORT_LABEL":
+	case "SET_OUTPUT_PORT_LABEL":
+		return state.map((port, index) => {
+			if (action.data.portId === port.id) {
+				const newPort = Object.assign({}, port);
+				newPort.label = action.data.label;
+				return newPort;
+			}
+			return port;
+		});
+	default:
+		return state;
+	}
+};
 
 const comments = (state = [], action) => {
 	switch (action.type) {
@@ -342,6 +384,9 @@ const canvasinfo = (state = getInitialCanvas(), action) => {
 	case "ADD_NODE_ATTR":
 	case "REMOVE_NODE_ATTR":
 	case "SET_LAYOUT_INFO":
+	case "SET_NODE_LABEL":
+	case "SET_INPUT_PORT_LABEL":
+	case "SET_OUTPUT_PORT_LABEL":
 		return Object.assign({}, state, { nodes: nodes(state.nodes, action) });
 
 	case "ADD_AUTO_NODE":
@@ -615,6 +660,18 @@ export default class ObjectModel {
 
 	getPaletteData() {
 		return this.store.getState().palette;
+	}
+
+	setNodeLabel(nodeId, newLabel) {
+		this.store.dispatch({ type: "SET_NODE_LABEL", data: { nodeId: nodeId, label: newLabel } });
+	}
+
+	setInputPortLabel(nodeId, portId, newLabel) {
+		this.store.dispatch({ type: "SET_INPUT_PORT_LABEL", data: { nodeId: nodeId, portId: portId, label: newLabel } });
+	}
+
+	setOutputPortLabel(nodeId, portId, newLabel) {
+		this.store.dispatch({ type: "SET_OUTPUT_PORT_LABEL", data: { nodeId: nodeId, portId: portId, label: newLabel } });
 	}
 
 	addNodeTypeToPalette(nodeTypeObj, category, categoryLabel) {
@@ -1515,8 +1572,8 @@ export default class ObjectModel {
 		return false;
 	}
 
-	isFirstPort(ports, portId) {
-		const index = ports.findIndex((port) => {
+	isFirstPort(portArray, portId) {
+		const index = portArray.findIndex((port) => {
 			return port.id === portId;
 		});
 
@@ -1526,13 +1583,13 @@ export default class ObjectModel {
 		return false;
 	}
 
-	getPort(ports, portId) {
-		const index = ports.findIndex((port) => {
+	getPort(portArray, portId) {
+		const index = portArray.findIndex((port) => {
 			return port.id === portId;
 		});
 
 		if (index > -1) {
-			return ports[index];
+			return portArray[index];
 		}
 		return null;
 	}

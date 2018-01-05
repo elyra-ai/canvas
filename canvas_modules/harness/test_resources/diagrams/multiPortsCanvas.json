@@ -17,9 +17,7 @@
               "x_pos": 445,
               "y_pos": 219,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Define Types"
-              },
+              "label": "Define Types",
               "description": "Define Types node description"
             }
           },
@@ -32,9 +30,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port 1"
-                  }
+                  "label": "Input Port 1"
                 }
               }
             },
@@ -46,9 +42,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port 2"
-                  }
+                  "label": "Input Port 2"
                 }
               },
               "links": [
@@ -71,9 +65,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port 3"
-                  }
+                  "label": "Input Port 3"
                 }
               }
             }
@@ -87,9 +79,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Output Port 1"
-                  }
+                  "label": "Output Port 1"
                 }
               }
             },
@@ -101,9 +91,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Output Port 2"
-                  }
+                  "label": "Output Port 2"
                 }
               }
             }
@@ -118,9 +106,7 @@
               "x_pos": 218,
               "y_pos": 219,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Na_to_K"
-              },
+              "label": "Na_to_K",
               "description": "Na_to_K node description"
             }
           },
@@ -133,9 +119,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port 1"
-                  }
+                  "label": "Input Port 1"
                 }
               }
             },
@@ -147,9 +131,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port2"
-                  }
+                  "label": "Input Port2"
                 }
               },
               "links": [
@@ -173,9 +155,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -190,9 +170,7 @@
               "x_pos": 611,
               "y_pos": 151,
               "class_name": "canvas-node",
-              "label": {
-                "default": "C5.0"
-              },
+              "label": "C5.0",
               "description": "This is a very long node description which explains what the node does."
             }
           },
@@ -204,9 +182,7 @@
                   "min": 0,
                   "max": 1
                 },
-                "label": {
-                  "default": "Input Port"
-                }
+                "label": "Input Port"
               }
             },
             "link": {
@@ -229,9 +205,7 @@
               "x_pos": 606,
               "y_pos": 310,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Neural Net"
-              }
+              "label": "Neural Net"
             }
           },
           "input": {
@@ -242,9 +216,7 @@
                   "min": 0,
                   "max": 1
                 },
-                "label": {
-                  "default": "Input Port"
-                }
+                "label": "Input Port"
               }
             },
             "link": {
@@ -267,9 +239,7 @@
               "x_pos": 96,
               "y_pos": 219,
               "class_name": "canvas-node",
-              "label": {
-                "default": "DRUG1n"
-              }
+              "label": "DRUG1n"
             }
           },
           "output": {
@@ -280,9 +250,7 @@
                   "min": 0,
                   "max": 1
                 },
-                "label": {
-                  "default": "Output Port"
-                }
+                "label": "Output Port"
               }
             }
           }
@@ -296,9 +264,7 @@
               "x_pos": 328,
               "y_pos": 219,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Discard Fields"
-              }
+              "label": "Discard Fields"
             }
           },
           "inputs": [
@@ -310,9 +276,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -336,9 +300,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Output Port One"
-                  }
+                  "label": "Output Port One"
                 }
               }
             },
@@ -350,9 +312,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Output Port Two"
-                  }
+                  "label": "Output Port Two"
                 }
               }
             }

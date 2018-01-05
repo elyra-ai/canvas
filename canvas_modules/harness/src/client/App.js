@@ -41,7 +41,9 @@ import {
 	CURVE_LINKS,
 	CUSTOM,
 	FLYOUT,
-	NONE
+	NONE,
+	INPUT_PORT,
+	OUTPUT_PORT
 } from "./constants/constants.js";
 
 import listview32 from "../graphics/list-view_32.svg";
@@ -112,6 +114,9 @@ class App extends React.Component {
 		this.setTipConfig = this.setTipConfig.bind(this);
 		this.showExtraCanvas = this.showExtraCanvas.bind(this);
 		this.addNodeTypeToPalette = this.addNodeTypeToPalette.bind(this);
+		this.getCanvasInfo = this.getCanvasInfo.bind(this);
+		this.setNodeLabel = this.setNodeLabel.bind(this);
+		this.setPortLabel = this.setPortLabel.bind(this);
 
 		// common-canvas
 		this.contextMenuHandler = this.contextMenuHandler.bind(this);
@@ -233,13 +238,31 @@ class App extends React.Component {
 		this.log("Updated pipeline flow");
 	}
 
-	getPipelineFlow(flow) {
+	getPipelineFlow() {
 		return this.canvasController.getPipelineFlow();
+	}
+
+	getCanvasInfo() {
+		return this.canvasController.getCanvasInfo();
 	}
 
 	setTipConfig(newTipConfig) {
 		this.setState({ tipConfig: newTipConfig });
 		this.log("Set tip config", newTipConfig);
+	}
+
+	setNodeLabel(nodeId, newLabel) {
+		this.canvasController.setNodeLabel(nodeId, newLabel);
+		this.log("Set new node label", { nodeId: nodeId, nodeLabel: newLabel });
+	}
+
+	setPortLabel(nodeId, portId, newLabel, portType) {
+		if (portType === INPUT_PORT) {
+			this.canvasController.setInputPortLabel(nodeId, portId, newLabel);
+		} else if (portType === OUTPUT_PORT) {
+			this.canvasController.setOutputPortLabel(nodeId, portId, newLabel);
+		}
+		this.log("Set new port label", { nodeId: nodeId, portLabel: newLabel, portType: portType });
 	}
 
 	addNodeTypeToPalette(nodeTypeObj, category, categoryLabel) {
@@ -909,6 +932,8 @@ class App extends React.Component {
 				setLayoutDirection={this.setLayoutDirection}
 				setPipelineFlow={this.setPipelineFlow}
 				addNodeTypeToPalette={this.addNodeTypeToPalette}
+				setNodeLabel={this.setNodeLabel}
+				setPortLabel={this.setPortLabel}
 				showPropertiesDialog={this.state.showPropertiesDialog}
 				useInternalObjectModel={this.useInternalObjectModel}
 				usePropertiesContainerType={this.usePropertiesContainerType}
@@ -920,10 +945,10 @@ class App extends React.Component {
 				setPaletteLayout={this.setPaletteLayout}
 				getPipelineFlow={this.getPipelineFlow}
 				setPipelineFlow={this.setPipelineFlow}
+				getCanvasInfo={this.getCanvasInfo}
 				setTipConfig={this.setTipConfig}
 				showExtraCanvas={this.showExtraCanvas}
 				extraCanvasDisplayed={this.state.extraCanvasDisplayed}
-				addNodeTypeToPalette={this.addNodeTypeToPalette}
 				log={this.log}
 			/>
 			{/* <IntlProvider key="IntlProvider2" locale={ locale } messages={ messages }>

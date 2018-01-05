@@ -40,7 +40,7 @@ export default class SVGPipelineInHandler {
 				"operator_id_ref": node.op,
 				"output_ports": this.convertOutputs(node),
 				"input_ports": this.convertInputs(node),
-				"label": _.has(node, "app_data.ui_data.label.default") ? node.app_data.ui_data.label.default : "",
+				"label": this.getLabel(node),
 				"description": _.has(node, "app_data.ui_data.description") ? node.app_data.ui_data.description : "",
 				"image": _.has(node, "app_data.ui_data.image") ? node.app_data.ui_data.image : "",
 				"x_pos": _.has(node, "app_data.ui_data.x_pos") ? node.app_data.ui_data.x_pos : 10,
@@ -51,6 +51,15 @@ export default class SVGPipelineInHandler {
 				"messages": _.has(node, "app_data.ui_data.messages") ? node.app_data.ui_data.messages : [],
 			})
 		);
+	}
+
+	static getLabel(obj) {
+		// node label in pipeline-flow-ui schema is not a resource_def anymore, but just a string
+		const label = _.has(obj, "app_data.ui_data.label") ? obj.app_data.ui_data.label : "";
+		if (_.isObject(label) && label.default) {
+			return label.default;
+		}
+		return label;
 	}
 
 	static convertOutputs(node) {
@@ -80,8 +89,7 @@ export default class SVGPipelineInHandler {
 	static getPortObject(port) {
 		const portObj = {
 			"id": port.id,
-			"label": _.has(port, "app_data.ui_data.label.default")
-				? port.app_data.ui_data.label.default : ""
+			"label": this.getLabel(port)
 		};
 		if (_.has(port, "app_data.ui_data.cardinality")) {
 			portObj.cardinality = {

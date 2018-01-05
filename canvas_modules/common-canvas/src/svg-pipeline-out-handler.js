@@ -21,7 +21,7 @@ export default class SVGPipelineOutHandler {
 	static getNodes(pipeline, canvasInfo) {
 		var newNodes = [];
 		pipeline.nodes.forEach((pNode) => {
-			var index = canvasInfo.nodes.findIndex((ciNode) => ciNode.id === pNode.id);
+			const index = canvasInfo.nodes.findIndex((ciNode) => ciNode.id === pNode.id);
 			if (index > -1) {
 				var newNode;
 				if (pNode.type === "binding") {
@@ -29,14 +29,22 @@ export default class SVGPipelineOutHandler {
 						app_data: this.getNodeAppData(pNode.app_data, canvasInfo.nodes[index]) });
 					if (pNode.input) {
 						newNode = Object.assign({}, newNode, {
-							input: this.getInput(pNode.input, canvasInfo.links, pNode.id) });
+							input: this.getInput(canvasInfo.nodes[index].input_ports[0], pNode.input, canvasInfo.links, pNode.id) });
+					}
+					if (pNode.output) {
+						newNode = Object.assign({}, newNode, {
+							output: this.getOutput(canvasInfo.nodes[index].output_ports[0], pNode.output) });
 					}
 				} else {
 					newNode = Object.assign({}, pNode, {
 						app_data: this.getNodeAppData(pNode.app_data, canvasInfo.nodes[index]) });
 					if (pNode.inputs) {
 						newNode = Object.assign({}, newNode, {
-							inputs: this.getInputs(pNode.inputs, canvasInfo.links, pNode.id) });
+							inputs: this.getInputs(canvasInfo.nodes[index].input_ports, pNode.inputs, canvasInfo.links, pNode.id) });
+					}
+					if (pNode.outputs) {
+						newNode = Object.assign({}, newNode, {
+							outputs: this.getOutputs(canvasInfo.nodes[index].output_ports, pNode.outputs) });
 					}
 					if (canvasInfo.nodes[index].parameters) { // Only non-binding nodes have parameters
 						newNode = Object.assign({}, newNode, {
@@ -67,13 +75,31 @@ export default class SVGPipelineOutHandler {
 
 	static getNodeUiData(uiData, ciNode) {
 		if (uiData) {
-			return Object.assign({}, uiData, { x_pos: ciNode.x_pos, y_pos: ciNode.y_pos, messages: ciNode.messages });
+			return Object.assign({}, uiData, { label: ciNode.label, x_pos: ciNode.x_pos, y_pos: ciNode.y_pos, messages: ciNode.messages });
 		}
-		return { x_pos: ciNode.x_pos, y_pos: ciNode.y_pos, messages: ciNode.messages };
+		return { label: ciNode.label, x_pos: ciNode.x_pos, y_pos: ciNode.y_pos, messages: ciNode.messages };
 	}
 
-	static getInput(input, canvasLinks, pNodeId) {
-		return Object.assign({}, input, { link: this.getLink(input.link, canvasLinks, pNodeId, input.id) });
+	static getInput(ciPort, input, canvasLinks, pNodeId) {
+		return Object.assign({}, input, { link: this.getLink(input.link, canvasLinks, pNodeId, input.id), app_data: this.getPortAppData(input.app_data, ciPort) });
+	}
+
+	static getOutput(ciPort, output) {
+		return Object.assign({}, output, { app_data: this.getPortAppData(output.app_data, ciPort) });
+	}
+
+	static getPortAppData(appData, ciPort) {
+		if (appData) {
+			return Object.assign({}, appData, { ui_data: this.getPortUiData(appData.ui_data, ciPort) });
+		}
+		return null;
+	}
+
+	static getPortUiData(uiData, ciPort) {
+		if (uiData) {
+			return Object.assign({}, uiData, { label: ciPort.label });
+		}
+		return { label: ciPort.label };
 	}
 
 	static getLink(nodeLink, canvasLinks, pNodeId, pPortId) {
@@ -114,10 +140,21 @@ export default class SVGPipelineOutHandler {
 		return { class_name: link.class_name };
 	}
 
-	static getInputs(inputs, canvasLinks, pNodeId) {
-		return inputs.map((input, portIndex) =>
-			Object.assign({}, input, { links: this.getLinks(input.links, canvasLinks, pNodeId, input.id, portIndex) })
-		);
+	static getInputs(ciInputs, inputs, canvasLinks, pNodeId) {
+		return inputs.map((input, portIndex) => {
+			const index = ciInputs.findIndex((ciInput) => ciInput.id === input.id);
+			return Object.assign({}, input, {
+				app_data: this.getPortAppData(input.app_data, ciInputs[index]),
+				links: this.getLinks(input.links, canvasLinks, pNodeId, input.id, portIndex)
+			});
+		});
+	}
+
+	static getOutputs(ciOutputs, outputs) {
+		return outputs.map((output, portIndex) => {
+			const index = ciOutputs.findIndex((ciOutput) => ciOutput.id === output.id);
+			return Object.assign({}, output, { app_data: this.getPortAppData(output.app_data, ciOutputs[index]) });
+		});
 	}
 
 	static getParameters(parameters) {
@@ -183,9 +220,7 @@ export default class SVGPipelineOutHandler {
 					y_pos: ciNode.y_pos,
 					class_name: ciNode.class_name,
 					messages: ciNode.messages,
-					label: {
-						default: ciNode.label
-					},
+					label: ciNode.label,
 					description: ciNode.description
 				}
 			}
@@ -249,9 +284,7 @@ export default class SVGPipelineOutHandler {
 			newInput.app_data = {
 				ui_data: {
 					cardinality: ciNode.input_ports[0].cardinality, // There should be only one input_port for a binding ndoe
-					label: {
-						default: ciNode.input_ports[0].label
-					}
+					label: ciNode.input_ports[0].label
 				}
 			};
 		}
@@ -273,9 +306,7 @@ export default class SVGPipelineOutHandler {
 			newOutput.app_data = {
 				ui_data: {
 					cardinality: ciNode.output_ports[0].cardinality, // There should be only one input_port for a binding ndoe
-					label: {
-						default: ciNode.output_ports[0].label
-					}
+					label: ciNode.output_ports[0].label
 				}
 			};
 		}
@@ -291,9 +322,7 @@ export default class SVGPipelineOutHandler {
 					ui_data: {
 						cardinality: inPort.cardinality,
 						class_name: inPort.class_name,
-						label: {
-							default: inPort.label
-						}
+						label: inPort.label
 					}
 				}
 			};
@@ -330,9 +359,7 @@ export default class SVGPipelineOutHandler {
 					ui_data: {
 						cardinality: outPort.cardinality,
 						class_name: outPort.class_name,
-						label: {
-							default: outPort.label
-						}
+						label: outPort.label
 					}
 				}
 			};

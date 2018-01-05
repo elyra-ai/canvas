@@ -22,9 +22,54 @@ module.exports = function() {
 		textbox.setValue("", textboxValue);
 	});
 
+	this.When(/^I enter "([^"]*)" into the new label field$/, function(textboxValue) {
+		var textbox = browser.$("#newLabel");
+		textbox.setValue("", textboxValue);
+	});
+
 	this.When("I call the API by clicking on the Submit button", function() {
 		var submitButton = getAPISubmitButton();
 		submitButton.click();
+	});
+
+	this.Then(/^I select node "([^"]*)" in the node drop-down list$/, function(nodeName) {
+		// get the list of drop down options.
+		browser.$("#sidepanel-api-nodePortLabel").scroll();
+		browser.$("#sidepanel-api-nodePortLabel")
+			.$$(".select")[0]
+			.$(".button")
+			.click("svg");
+		// get the list of drop down options.
+		var nodeList = browser.$("#sidepanel-api-nodePortLabel")
+			.$$(".select")[0]
+			.$(".select__options")
+			.$$("button");
+		for (var idx = 0; idx < nodeList.length; idx++) {
+			if (nodeList[idx].getText() === nodeName) {
+				nodeList[idx].click();
+				break;
+			}
+		}
+	});
+
+	this.Then(/^I select port "([^"]*)" in the port drop-down list$/, function(portName) {
+		// get the list of drop down options.
+		browser.$("#sidepanel-api-nodePortLabel").scroll();
+		browser.$("#sidepanel-api-nodePortLabel")
+			.$$(".select")[1]
+			.$(".button")
+			.click("svg");
+		// get the list of drop down options.
+		var portList = browser.$("#sidepanel-api-nodePortLabel")
+			.$$(".select")[1]
+			.$(".select__options")
+			.$$("button");
+		for (var idx = 0; idx < portList.length; idx++) {
+			if (portList[idx].getText() === portName) {
+				portList[idx].click();
+				break;
+			}
+		}
 	});
 
 	this.Then(/^I verify that "([^"]*)" was added in palette category "([^"]*)"$/, function(nodeTypeName, categoryName) {
@@ -51,7 +96,7 @@ module.exports = function() {
 		const textField = browser.$("#pipelineFlow");
 		const pipelineFlow = JSON.parse(textField.getText());
 		const nodeList = pipelineFlow.pipelines[0].nodes;
-		const node = nodeList.find((nd) => nd.app_data.ui_data.label.default === nodeName);
+		const node = nodeList.find((nd) => nd.app_data.ui_data.label === nodeName);
 		const newInputPort = {
 			"id": "inPort2",
 			"app_data": {
@@ -60,9 +105,7 @@ module.exports = function() {
 						"min": 0,
 						"max": 1
 					},
-					"label": {
-						"default": "Input Port2"
-					}
+					"label": "Input Port2"
 				}
 			},
 			"links": []
@@ -76,9 +119,7 @@ module.exports = function() {
 						"min": 0,
 						"max": -1
 					},
-					"label": {
-						"default": "Output Port2"
-					}
+					"label": "Output Port2"
 				}
 			}
 		};

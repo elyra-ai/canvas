@@ -17,9 +17,7 @@
               "x_pos": 445,
               "y_pos": 219,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Define Types"
-              },
+              "label": "Define Types",
               "messages": []
             }
           },
@@ -32,9 +30,7 @@
                     "min": "0",
                     "max": "1"
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -58,9 +54,7 @@
                     "min": "0",
                     "max": "1"
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -79,9 +73,7 @@
               "x_pos": 611,
               "y_pos": 151,
               "class_name": "canvas-node",
-              "label": {
-                "default": "C5.0"
-              },
+              "label": "C5.0",
               "messages": []
             }
           },
@@ -94,9 +86,7 @@
                     "min": "0",
                     "max": "1"
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": []

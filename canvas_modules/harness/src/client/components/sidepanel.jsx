@@ -67,9 +67,12 @@ export default class SidePanel extends React.Component {
 		case SIDE_PANEL_API:
 			view = (<SidePanelAPI
 				log={this.props.log}
+				getCanvasInfo={this.props.getCanvasInfo}
 				getPipelineFlow={this.props.getPipelineFlow}
 				setPipelineFlow={this.props.setPipelineFlow}
 				addNodeTypeToPalette={this.props.addNodeTypeToPalette}
+				setNodeLabel={this.props.setNodeLabel}
+				setPortLabel={this.props.setPortLabel}
 			/>);
 			break;
 		default:
@@ -112,9 +115,12 @@ SidePanel.propTypes = {
 	setPaletteLayout: PropTypes.func,
 	getPipelineFlow: PropTypes.func,
 	setPipelineFlow: PropTypes.func,
+	getCanvasInfo: PropTypes.func,
 	setTipConfig: PropTypes.func,
 	extraCanvasDisplayed: PropTypes.bool,
 	showExtraCanvas: PropTypes.func,
 	addNodeTypeToPalette: PropTypes.func,
+	setNodeLabel: PropTypes.func,
+	setPortLabel: PropTypes.func,
 	log: PropTypes.func
 };

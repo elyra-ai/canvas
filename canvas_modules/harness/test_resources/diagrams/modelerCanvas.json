@@ -17,9 +17,7 @@
               "x_pos": 482,
               "y_pos": 132.99999237060547,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Define Types"
-              }
+              "label": "Define Types"
             }
           },
           "inputs": [
@@ -31,9 +29,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -57,9 +53,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -74,9 +68,7 @@
               "x_pos": 753,
               "y_pos": 82.99999618530273,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Drug"
-              }
+              "label": "Drug"
             }
           },
           "inputs": [
@@ -88,9 +80,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -114,9 +104,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -131,9 +119,7 @@
               "x_pos": 227,
               "y_pos": 128.99999237060547,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Na_to_K"
-              }
+              "label": "Na_to_K"
             }
           },
           "inputs": [
@@ -145,9 +131,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -171,9 +155,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -188,9 +170,7 @@
               "x_pos": 760,
               "y_pos": 230.99999237060547,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Drug"
-              }
+              "label": "Drug"
             }
           },
           "inputs": [
@@ -202,9 +182,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -228,9 +206,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -245,9 +221,7 @@
               "x_pos": 623,
               "y_pos": 304.99999237060547,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Drug"
-              },
+              "label": "Drug",
               "associations": [{
                 "id": "id5KIRGGJ3FYT.id125TTEEIK7V",
                 "node_ref": "id125TTEEIK7V",
@@ -263,9 +237,7 @@
                   "min": 0,
                   "max": 1
                 },
-                "label": {
-                  "default": "Input Port"
-                }
+                "label": "Input Port"
               }
             },
             "link": {
@@ -287,9 +259,7 @@
               "x_pos": 101,
               "y_pos": 127.99999237060547,
               "class_name": "canvas-node",
-              "label": {
-                "default": "DRUG1n"
-              }
+              "label": "DRUG1n"
             }
           },
           "output": {
@@ -300,9 +270,7 @@
                   "min": 0,
                   "max": -1
                 },
-                "label": {
-                  "default": "Output Port"
-                }
+                "label": "Output Port"
               }
             }
           }
@@ -316,9 +284,7 @@
               "x_pos": 363,
               "y_pos": 131.99998474121094,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Discard Fields"
-              }
+              "label": "Discard Fields"
             }
           },
           "inputs": [
@@ -330,9 +296,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -356,9 +320,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -373,9 +335,7 @@
               "x_pos": 607,
               "y_pos": 22.999996185302734,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Drug"
-              },
+              "label": "Drug",
               "associations": [{
                 "id": "id8I6RH2V91XW.id1ZZTZ3ZMYWL",
                 "node_ref": "id1ZZTZ3ZMYWL",
@@ -391,9 +351,7 @@
                   "min": 0,
                   "max": 1
                 },
-                "label": {
-                  "default": "Input Port"
-                }
+                "label": "Input Port"
               }
             },
             "link": {

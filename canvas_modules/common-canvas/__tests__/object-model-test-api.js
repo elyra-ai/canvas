@@ -391,4 +391,39 @@ describe("ObjectModel API handle model OK", () => {
 		expect(_.isEqual(actualPipelineFlow, expectedPipelineFlow)).to.be.true;
 	});
 
+	it("should update label for a node", () => {
+		logger.info("should update label for a node");
+
+		deepFreeze(startPipelineFlow);
+		const newLabel = "newNodeLabel";
+		objectModel.setPipelineFlow(startPipelineFlow);
+		objectModel.setNodeLabel("id8I6RH2V91XW", newLabel);
+
+		expect(_.isEqual(newLabel, objectModel.getNode("id8I6RH2V91XW").label)).to.be.true;
+	});
+
+	it("should update input port label for a node", () => {
+		logger.info("should update input port label for a node");
+
+		deepFreeze(startPipelineFlow);
+		const newLabel = "newPortLabel";
+		objectModel.setPipelineFlow(startPipelineFlow);
+		objectModel.setInputPortLabel("id8I6RH2V91XW", "inPort", newLabel);
+		const node = objectModel.getNode("id8I6RH2V91XW");
+
+		expect(_.isEqual(newLabel, objectModel.getPort(node.input_ports, "inPort").label)).to.be.true;
+	});
+
+	it("should update output port label for a node", () => {
+		logger.info("should update output port label for a node");
+
+		deepFreeze(startPipelineFlow);
+		const newLabel = "newPortLabel";
+		objectModel.setPipelineFlow(startPipelineFlow);
+		objectModel.setOutputPortLabel("idGWRVT47XDV", "outPort", newLabel);
+		const node = objectModel.getNode("idGWRVT47XDV");
+
+		expect(_.isEqual(newLabel, objectModel.getPort(node.output_ports, "outPort").label)).to.be.true;
+	});
+
 });

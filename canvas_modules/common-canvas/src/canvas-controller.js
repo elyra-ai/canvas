@@ -107,6 +107,18 @@ export default class CanvasController {
 		this.objectModel.setNodeMessages(nodeId, messages);
 	}
 
+	setNodeLabel(nodeId, newLabel) {
+		this.objectModel.setNodeLabel(nodeId, newLabel);
+	}
+
+	setInputPortLabel(nodeId, portId, newLabel) {
+		this.objectModel.setInputPortLabel(nodeId, portId, newLabel);
+	}
+
+	setOutputPortLabel(nodeId, portId, newLabel) {
+		this.objectModel.setOutputPortLabel(nodeId, portId, newLabel);
+	}
+
 	addNode(node) {
 		this.objectModel.addNode(node);
 	}

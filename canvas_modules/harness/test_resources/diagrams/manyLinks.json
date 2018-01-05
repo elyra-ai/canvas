@@ -17,9 +17,7 @@
               "x_pos": 1069.1607666015625,
               "y_pos": 876.2312965393066,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Na_to_K"
-              }
+              "label": "Na_to_K"
             }
           },
           "inputs": [
@@ -31,9 +29,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -57,9 +53,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -74,9 +68,7 @@
               "x_pos": 39.91758728027344,
               "y_pos": 105.74665069580078,
               "class_name": "canvas-node",
-              "label": {
-                "default": "DRUG1n"
-              }
+              "label": "DRUG1n"
             }
           },
           "output": {
@@ -87,9 +79,7 @@
                   "min": 0,
                   "max": -1
                 },
-                "label": {
-                  "default": "Output Port"
-                }
+                "label": "Output Port"
               }
             }
           }
@@ -103,9 +93,7 @@
               "x_pos": 1374.2510681152344,
               "y_pos": 651.9853324890137,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Filler"
-              }
+              "label": "Filler"
             }
           },
           "inputs": [
@@ -117,9 +105,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -143,9 +129,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port One"
-                  }
+                  "label": "Output Port One"
                 }
               }
             },
@@ -157,9 +141,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port Two"
-                  }
+                  "label": "Output Port Two"
                 }
               }
             }
@@ -174,9 +156,7 @@
               "x_pos": 1031.91748046875,
               "y_pos": 787.7913932800293,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Type"
-              }
+              "label": "Type"
             }
           },
           "inputs": [
@@ -188,9 +168,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -214,9 +192,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -231,9 +207,7 @@
               "x_pos": 740.5344543457031,
               "y_pos": 920.7393913269043,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Partition"
-              }
+              "label": "Partition"
             }
           },
           "inputs": [
@@ -245,9 +219,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -271,9 +243,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -288,9 +258,7 @@
               "x_pos": 865.5369262695312,
               "y_pos": 928.3005180358887,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Field Reorder"
-              }
+              "label": "Field Reorder"
             }
           },
           "inputs": [
@@ -302,9 +270,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -328,9 +294,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -345,9 +309,7 @@
               "x_pos": 787.5156860351562,
               "y_pos": 957.187572479248,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Field Reorder"
-              }
+              "label": "Field Reorder"
             }
           },
           "inputs": [
@@ -359,9 +321,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -385,9 +345,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -402,9 +360,7 @@
               "x_pos": 1241.1129760742188,
               "y_pos": 772.2033805847168,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Field Reorder"
-              }
+              "label": "Field Reorder"
             }
           },
           "inputs": [
@@ -416,9 +372,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -442,9 +396,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -459,9 +411,7 @@
               "x_pos": 851.0154113769531,
               "y_pos": 865.1118278503418,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Filter"
-              }
+              "label": "Filter"
             }
           },
           "inputs": [
@@ -473,9 +423,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -499,9 +447,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -516,9 +462,7 @@
               "x_pos": 669.568359375,
               "y_pos": 942.6840629577637,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Derive"
-              }
+              "label": "Derive"
             }
           },
           "inputs": [
@@ -530,9 +474,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -556,9 +498,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -573,9 +513,7 @@
               "x_pos": 1141.3504028320312,
               "y_pos": 737.9816093444824,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Filter"
-              }
+              "label": "Filter"
             }
           },
           "inputs": [
@@ -587,9 +525,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -613,9 +549,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -630,9 +564,7 @@
               "x_pos": 1494.5968193002473,
               "y_pos": 612.1247376380686,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Filler"
-              }
+              "label": "Filler"
             }
           },
           "inputs": [
@@ -644,9 +576,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -670,9 +600,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port One"
-                  }
+                  "label": "Output Port One"
                 }
               }
             },
@@ -684,9 +612,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port Two"
-                  }
+                  "label": "Output Port Two"
                 }
               }
             }
@@ -701,9 +627,7 @@
               "x_pos": 1396.9504203625102,
               "y_pos": 815.4256179138888,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Partition"
-              }
+              "label": "Partition"
             }
           },
           "inputs": [
@@ -715,9 +639,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -741,9 +663,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -758,9 +678,7 @@
               "x_pos": 784.7027105982636,
               "y_pos": 885.5324800649764,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Partition"
-              }
+              "label": "Partition"
             }
           },
           "inputs": [
@@ -772,9 +690,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -798,9 +714,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -815,9 +729,7 @@
               "x_pos": 926.7037594354385,
               "y_pos": 848.634346363217,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Partition"
-              }
+              "label": "Partition"
             }
           },
           "inputs": [
@@ -829,9 +741,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -855,9 +765,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -872,9 +780,7 @@
               "x_pos": 1457.2122105352464,
               "y_pos": 750.352177237264,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Filler"
-              }
+              "label": "Filler"
             }
           },
           "inputs": [
@@ -886,9 +792,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -912,9 +816,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port One"
-                  }
+                  "label": "Output Port One"
                 }
               }
             },
@@ -926,9 +828,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port Two"
-                  }
+                  "label": "Output Port Two"
                 }
               }
             }
@@ -943,9 +843,7 @@
               "x_pos": 1383.80731557948,
               "y_pos": 595.8559589997216,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Type"
-              }
+              "label": "Type"
             }
           },
           "inputs": [
@@ -957,9 +855,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -983,9 +879,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -1000,9 +894,7 @@
               "x_pos": 1077.656168869085,
               "y_pos": 754.0973022755547,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Filter"
-              }
+              "label": "Filter"
             }
           },
           "inputs": [
@@ -1014,9 +906,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -1040,9 +930,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -1057,9 +945,7 @@
               "x_pos": 1211.9424173835882,
               "y_pos": 860.7612619035958,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Filter"
-              }
+              "label": "Filter"
             }
           },
           "inputs": [
@@ -1071,9 +957,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -1097,9 +981,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -1114,9 +996,7 @@
               "x_pos": 616.2684422605671,
               "y_pos": 871.5746717812904,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Filter"
-              }
+              "label": "Filter"
             }
           },
           "inputs": [
@@ -1128,9 +1008,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -1154,9 +1032,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -1171,9 +1047,7 @@
               "x_pos": 688.7556985498968,
               "y_pos": 879.2153118071683,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Filter"
-              }
+              "label": "Filter"
             }
           },
           "inputs": [
@@ -1185,9 +1059,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -1211,9 +1083,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -1228,9 +1098,7 @@
               "x_pos": 1187.290771484375,
               "y_pos": 165.59925460815424,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Filler"
-              }
+              "label": "Filler"
             }
           },
           "inputs": [
@@ -1242,9 +1110,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -1268,9 +1134,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port One"
-                  }
+                  "label": "Output Port One"
                 }
               }
             },
@@ -1282,9 +1146,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port Two"
-                  }
+                  "label": "Output Port Two"
                 }
               }
             }
@@ -1299,9 +1161,7 @@
               "x_pos": 1286.2260131835938,
               "y_pos": 119.41296005249012,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Type"
-              }
+              "label": "Type"
             }
           },
           "inputs": [
@@ -1313,9 +1173,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -1339,9 +1197,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -1356,9 +1212,7 @@
               "x_pos": 1308.2750244140625,
               "y_pos": 718.4274101257323,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Partition"
-              }
+              "label": "Partition"
             }
           },
           "inputs": [
@@ -1370,9 +1224,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -1396,9 +1248,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -1413,9 +1263,7 @@
               "x_pos": 1320.3238525390625,
               "y_pos": 855.8288078308105,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Field Reorder"
-              }
+              "label": "Field Reorder"
             }
           },
           "inputs": [
@@ -1427,9 +1275,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -1453,9 +1299,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -1470,9 +1314,7 @@
               "x_pos": 1093.257080078125,
               "y_pos": 965.7391777038574,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Derive"
-              }
+              "label": "Derive"
             }
           },
           "inputs": [
@@ -1484,9 +1326,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -1510,9 +1350,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -1527,9 +1365,7 @@
               "x_pos": 1391.1082763671875,
               "y_pos": 365.50371932983387,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Field Reorder"
-              }
+              "label": "Field Reorder"
             }
           },
           "inputs": [
@@ -1541,9 +1377,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -1567,9 +1401,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -1584,9 +1416,7 @@
               "x_pos": 1376.0169677734375,
               "y_pos": 563.3915672302245,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Derive"
-              }
+              "label": "Derive"
             }
           },
           "inputs": [
@@ -1598,9 +1428,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -1624,9 +1452,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -1641,9 +1467,7 @@
               "x_pos": 1545.7136840820312,
               "y_pos": 432.9524755477904,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Partition"
-              }
+              "label": "Partition"
             }
           },
           "inputs": [
@@ -1655,9 +1479,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -1681,9 +1503,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -1698,9 +1518,7 @@
               "x_pos": 1318.4542236328125,
               "y_pos": 530.5122573375701,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Filter"
-              }
+              "label": "Filter"
             }
           },
           "inputs": [
@@ -1712,9 +1530,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -1738,9 +1554,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -1755,9 +1569,7 @@
               "x_pos": 1252.3085327148438,
               "y_pos": 214.2037620544433,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Type"
-              }
+              "label": "Type"
             }
           },
           "inputs": [
@@ -1769,9 +1581,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -1795,9 +1605,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -1812,9 +1620,7 @@
               "x_pos": 1480.2421264648438,
               "y_pos": 395.89199447631836,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Filler"
-              }
+              "label": "Filler"
             }
           },
           "inputs": [
@@ -1826,9 +1632,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -1852,9 +1656,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port One"
-                  }
+                  "label": "Output Port One"
                 }
               }
             },
@@ -1866,9 +1668,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port Two"
-                  }
+                  "label": "Output Port Two"
                 }
               }
             }
@@ -1883,9 +1683,7 @@
               "x_pos": 1384.04541015625,
               "y_pos": 174.44626998901367,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Type"
-              }
+              "label": "Type"
             }
           },
           "inputs": [
@@ -1897,9 +1695,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -1923,9 +1719,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -1940,9 +1734,7 @@
               "x_pos": 1309.5435180664062,
               "y_pos": 275.60224533081055,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Type"
-              }
+              "label": "Type"
             }
           },
           "inputs": [
@@ -1954,9 +1746,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -1980,9 +1770,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -1997,9 +1785,7 @@
               "x_pos": 1421.3336181640625,
               "y_pos": 687.1370811462401,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Filler"
-              }
+              "label": "Filler"
             }
           },
           "inputs": [
@@ -2011,9 +1797,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -2037,9 +1821,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port One"
-                  }
+                  "label": "Output Port One"
                 }
               }
             },
@@ -2051,9 +1833,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port Two"
-                  }
+                  "label": "Output Port Two"
                 }
               }
             }
@@ -2068,9 +1848,7 @@
               "x_pos": 1470.252197265625,
               "y_pos": 652.8419151306151,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Partition"
-              }
+              "label": "Partition"
             }
           },
           "inputs": [
@@ -2082,9 +1860,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -2108,9 +1884,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -2125,9 +1899,7 @@
               "x_pos": 1223.394287109375,
               "y_pos": 723.3556938171386,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Field Reorder"
-              }
+              "label": "Field Reorder"
             }
           },
           "inputs": [
@@ -2139,9 +1911,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -2165,9 +1935,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -2182,9 +1950,7 @@
               "x_pos": 615.9896850585938,
               "y_pos": 968.6238517761228,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Derive"
-              }
+              "label": "Derive"
             }
           },
           "inputs": [
@@ -2196,9 +1962,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -2222,9 +1986,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -2239,9 +2001,7 @@
               "x_pos": 1197.9583740234375,
               "y_pos": 923.7439994812012,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Filter"
-              }
+              "label": "Filter"
             }
           },
           "inputs": [
@@ -2253,9 +2013,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -2279,9 +2037,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -2296,9 +2052,7 @@
               "x_pos": 1345.8695958960689,
               "y_pos": 331.1075292728717,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Filler"
-              }
+              "label": "Filler"
             }
           },
           "inputs": [
@@ -2310,9 +2064,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -2336,9 +2088,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port One"
-                  }
+                  "label": "Output Port One"
                 }
               }
             },
@@ -2350,9 +2100,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port Two"
-                  }
+                  "label": "Output Port Two"
                 }
               }
             }
@@ -2367,9 +2115,7 @@
               "x_pos": 1397.9902808444376,
               "y_pos": 504.14822165509884,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Partition"
-              }
+              "label": "Partition"
             }
           },
           "inputs": [
@@ -2381,9 +2127,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -2407,9 +2151,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -2424,9 +2166,7 @@
               "x_pos": 1556.4371151525565,
               "y_pos": 301.91994423073163,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Partition"
-              }
+              "label": "Partition"
             }
           },
           "inputs": [
@@ -2438,9 +2178,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -2464,9 +2202,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -2481,9 +2217,7 @@
               "x_pos": 1529.3343586680521,
               "y_pos": 745.9882221851578,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Field Reorder"
-              }
+              "label": "Field Reorder"
             }
           },
           "inputs": [
@@ -2495,9 +2229,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -2521,9 +2253,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -2538,9 +2268,7 @@
               "x_pos": 1493.892203447861,
               "y_pos": 493.724081161879,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Derive"
-              }
+              "label": "Derive"
             }
           },
           "inputs": [
@@ -2552,9 +2280,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -2578,9 +2304,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -2595,9 +2319,7 @@
               "x_pos": 1531.4191211716707,
               "y_pos": 550.014433125057,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Partition"
-              }
+              "label": "Partition"
             }
           },
           "inputs": [
@@ -2609,9 +2331,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -2635,9 +2355,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -2652,9 +2370,7 @@
               "x_pos": 1485.5528916571247,
               "y_pos": 228.95096253615554,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Type"
-              }
+              "label": "Type"
             }
           },
           "inputs": [
@@ -2666,9 +2382,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -2692,9 +2406,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -2709,9 +2421,7 @@
               "x_pos": 1458.4502554793694,
               "y_pos": 452.02752797427513,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Partition"
-              }
+              "label": "Partition"
             }
           },
           "inputs": [
@@ -2723,9 +2433,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -2749,9 +2457,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -2766,9 +2472,7 @@
               "x_pos": 1145.7261205556047,
               "y_pos": 114.28548320637304,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Partition"
-              }
+              "label": "Partition"
             }
           },
           "inputs": [
@@ -2780,9 +2484,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -2806,9 +2508,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -2823,9 +2523,7 @@
               "x_pos": 1343.7848153457362,
               "y_pos": 752.2427071818217,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Field Reorder"
-              }
+              "label": "Field Reorder"
             }
           },
           "inputs": [
@@ -2837,9 +2535,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -2863,9 +2559,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -2880,9 +2574,7 @@
               "x_pos": 1118.6232904258327,
               "y_pos": 20.46822029620887,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Type"
-              }
+              "label": "Type"
             }
           },
           "inputs": [
@@ -2894,9 +2586,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -2920,9 +2610,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -2937,9 +2625,7 @@
               "x_pos": 1272.90053353345,
               "y_pos": 55.91028965876956,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Type"
-              }
+              "label": "Type"
             }
           },
           "inputs": [
@@ -2951,9 +2637,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -2977,9 +2661,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -2994,9 +2676,7 @@
               "x_pos": 1946.1884808886598,
               "y_pos": 142.36739678884862,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Filler"
-              }
+              "label": "Filler"
             }
           },
           "inputs": [
@@ -3008,9 +2688,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -3034,9 +2712,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port One"
-                  }
+                  "label": "Output Port One"
                 }
               }
             },
@@ -3048,9 +2724,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port Two"
-                  }
+                  "label": "Output Port Two"
                 }
               }
             }
@@ -3065,9 +2739,7 @@
               "x_pos": 2036.949443172145,
               "y_pos": 355.08840214076747,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Type"
-              }
+              "label": "Type"
             }
           },
           "inputs": [
@@ -3079,9 +2751,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -3105,9 +2775,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -3122,9 +2790,7 @@
               "x_pos": 1997.2415221731203,
               "y_pos": 641.5526893480181,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Type"
-              }
+              "label": "Type"
             }
           },
           "inputs": [
@@ -3136,9 +2802,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -3162,9 +2826,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -3179,9 +2841,7 @@
               "x_pos": 1940.515920745942,
               "y_pos": 525.2652064223025,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Partition"
-              }
+              "label": "Partition"
             }
           },
           "inputs": [
@@ -3193,9 +2853,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -3219,9 +2877,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -3236,9 +2892,7 @@
               "x_pos": 1801.5381972493547,
               "y_pos": 797.5480932727586,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Partition"
-              }
+              "label": "Partition"
             }
           },
           "inputs": [
@@ -3250,9 +2904,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -3276,9 +2928,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -3293,9 +2943,7 @@
               "x_pos": 1818.5558776775083,
               "y_pos": 627.3712889912235,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Partition"
-              }
+              "label": "Partition"
             }
           },
           "inputs": [
@@ -3307,9 +2955,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -3333,9 +2979,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -3350,9 +2994,7 @@
               "x_pos": 1818.5558776775083,
               "y_pos": 457.1944847096885,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Type"
-              }
+              "label": "Type"
             }
           },
           "inputs": [
@@ -3364,9 +3006,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -3390,9 +3030,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -3407,9 +3045,7 @@
               "x_pos": 1957.533601174095,
               "y_pos": 874.1276551994492,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Type"
-              }
+              "label": "Type"
             }
           },
           "inputs": [
@@ -3421,9 +3057,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -3447,9 +3081,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -3464,9 +3096,7 @@
               "x_pos": 1795.8656371066372,
               "y_pos": 945.0346569834223,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Type"
-              }
+              "label": "Type"
             }
           },
           "inputs": [
@@ -3478,9 +3108,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -3504,9 +3132,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -3521,9 +3147,7 @@
               "x_pos": 1645.5427933246144,
               "y_pos": 865.6188149853726,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Type"
-              }
+              "label": "Type"
             }
           },
           "inputs": [
@@ -3535,9 +3159,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -3561,9 +3183,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -3578,9 +3198,7 @@
               "x_pos": 1724.9586353226641,
               "y_pos": 1004.5965384819594,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Partition"
-              }
+              "label": "Partition"
             }
           },
           "inputs": [
@@ -3592,9 +3210,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -3618,9 +3234,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -3635,9 +3249,7 @@
               "x_pos": 1628.525112896461,
               "y_pos": 723.8048114174267,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Type"
-              }
+              "label": "Type"
             }
           },
           "inputs": [
@@ -3649,9 +3261,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -3675,9 +3285,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -3692,9 +3300,7 @@
               "x_pos": 1858.263798676533,
               "y_pos": 287.0176804281534,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Type"
-              }
+              "label": "Type"
             }
           },
           "inputs": [
@@ -3706,9 +3312,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -3732,9 +3336,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -3749,9 +3351,7 @@
               "x_pos": 1767.5028363930478,
               "y_pos": 1146.4105420499054,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Type"
-              }
+              "label": "Type"
             }
           },
           "inputs": [
@@ -3763,9 +3363,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -3789,9 +3387,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -3806,9 +3402,7 @@
               "x_pos": 1503.7287897566684,
               "y_pos": 953.5434971974989,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Derive"
-              }
+              "label": "Derive"
             }
           },
           "inputs": [
@@ -3820,9 +3414,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -3846,9 +3438,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -3863,9 +3453,7 @@
               "x_pos": 1483.874829257156,
               "y_pos": 1118.0477413363162,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Derive"
-              }
+              "label": "Derive"
             }
           },
           "inputs": [
@@ -3877,9 +3465,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -3903,9 +3489,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -3920,9 +3504,7 @@
               "x_pos": 1373.2599064741582,
               "y_pos": 1098.1937808368039,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Derive"
-              }
+              "label": "Derive"
             }
           },
           "inputs": [
@@ -3934,9 +3516,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -3960,9 +3540,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -3977,9 +3555,7 @@
               "x_pos": 1293.8440644761085,
               "y_pos": 1174.7733427634946,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Derive"
-              }
+              "label": "Derive"
             }
           },
           "inputs": [
@@ -3991,9 +3567,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -4017,9 +3591,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -4034,9 +3606,7 @@
               "x_pos": 1427.1492278299777,
               "y_pos": 1217.3175438338783,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Derive"
-              }
+              "label": "Derive"
             }
           },
           "inputs": [
@@ -4048,9 +3618,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -4074,9 +3642,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -4091,9 +3657,7 @@
               "x_pos": 1183.229141693111,
               "y_pos": 1240.0077844047496,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Derive"
-              }
+              "label": "Derive"
             }
           },
           "inputs": [
@@ -4105,9 +3669,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -4131,9 +3693,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -4148,9 +3708,7 @@
               "x_pos": 1086.7956192669076,
               "y_pos": 1322.2599064741582,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Derive"
-              }
+              "label": "Derive"
             }
           },
           "inputs": [
@@ -4162,9 +3720,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -4188,9 +3744,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -4205,9 +3759,7 @@
               "x_pos": 930.8002153421671,
               "y_pos": 1271.2068651896977,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Derive"
-              }
+              "label": "Derive"
             }
           },
           "inputs": [
@@ -4219,9 +3771,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -4245,9 +3795,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -4262,9 +3810,7 @@
               "x_pos": 840.0392530586819,
               "y_pos": 1407.3483086149258,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Derive"
-              }
+              "label": "Derive"
             }
           },
           "inputs": [
@@ -4276,9 +3822,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -4302,9 +3846,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -4319,9 +3861,7 @@
               "x_pos": 1038.578858053806,
               "y_pos": 1194.627303263007,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Derive"
-              }
+              "label": "Derive"
             }
           },
           "inputs": [
@@ -4333,9 +3873,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -4359,9 +3897,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -4376,9 +3912,7 @@
               "x_pos": 803.1676121310159,
               "y_pos": 1308.0785061173638,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Derive"
-              }
+              "label": "Derive"
             }
           },
           "inputs": [
@@ -4390,9 +3924,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -4416,9 +3948,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -4433,9 +3963,7 @@
               "x_pos": 675.5350089198646,
               "y_pos": 1435.711109328515,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Derive"
-              }
+              "label": "Derive"
             }
           },
           "inputs": [
@@ -4447,9 +3975,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               }
             }
@@ -4463,9 +3989,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -4480,9 +4004,7 @@
               "x_pos": 979.0169765552687,
               "y_pos": 1413.0208687576437,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Derive"
-              }
+              "label": "Derive"
             }
           },
           "inputs": [
@@ -4494,9 +4016,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -4520,9 +4040,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -4537,9 +4055,7 @@
               "x_pos": 1319.3705851183388,
               "y_pos": 1305.2422260460048,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Derive"
-              }
+              "label": "Derive"
             }
           },
           "inputs": [
@@ -4551,9 +4067,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -4577,9 +4091,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -4594,9 +4106,7 @@
               "x_pos": 1177.556581550393,
               "y_pos": 1044.3044594809844,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Derive"
-              }
+              "label": "Derive"
             }
           },
           "inputs": [
@@ -4608,9 +4118,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -4634,9 +4142,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -4651,9 +4157,7 @@
               "x_pos": 1512.2376299707453,
               "y_pos": 1257.0254648329033,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Derive"
-              }
+              "label": "Derive"
             }
           },
           "inputs": [
@@ -4665,9 +4169,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -4691,9 +4193,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -4708,9 +4208,7 @@
               "x_pos": 1543.4367107556934,
               "y_pos": 1044.3044594809844,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Derive"
-              }
+              "label": "Derive"
             }
           },
           "inputs": [
@@ -4722,9 +4220,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -4748,9 +4244,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -4765,9 +4259,7 @@
               "x_pos": 1577.4720716120003,
               "y_pos": 979.0700178397292,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Derive"
-              }
+              "label": "Derive"
             }
           },
           "inputs": [
@@ -4779,9 +4271,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -4805,9 +4295,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -4822,9 +4310,7 @@
               "x_pos": 1903.6442798182757,
               "y_pos": 953.5434971974989,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Filter"
-              }
+              "label": "Filter"
             }
           },
           "inputs": [
@@ -4836,9 +4322,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -4862,9 +4346,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -4879,9 +4361,7 @@
               "x_pos": 1988.7326819590435,
               "y_pos": 752.1676121310159,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Filter"
-              }
+              "label": "Filter"
             }
           },
           "inputs": [
@@ -4893,9 +4373,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -4919,9 +4397,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -4936,9 +4412,7 @@
               "x_pos": 2011.4229225299146,
               "y_pos": 511.08380606550793,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Filter"
-              }
+              "label": "Filter"
             }
           },
           "inputs": [
@@ -4950,9 +4424,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -4976,9 +4448,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -4993,9 +4463,7 @@
               "x_pos": 2099.3476047420413,
               "y_pos": 153.71251707428428,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Filter"
-              }
+              "label": "Filter"
             }
           },
           "inputs": [
@@ -5007,9 +4475,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -5033,9 +4499,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -5050,9 +4514,7 @@
               "x_pos": 2173.090886597373,
               "y_pos": 51.60643450536327,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Filler"
-              }
+              "label": "Filler"
             }
           },
           "inputs": [
@@ -5064,9 +4526,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -5090,9 +4550,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port One"
-                  }
+                  "label": "Output Port One"
                 }
               }
             },
@@ -5104,9 +4562,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port Two"
-                  }
+                  "label": "Output Port Two"
                 }
               }
             }
@@ -5121,9 +4577,7 @@
               "x_pos": 1983.0601218163256,
               "y_pos": 443.0130843528939,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Filler"
-              }
+              "label": "Filler"
             }
           },
           "inputs": [
@@ -5135,9 +4589,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -5161,9 +4613,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port One"
-                  }
+                  "label": "Output Port One"
                 }
               }
             },
@@ -5175,9 +4625,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port Two"
-                  }
+                  "label": "Output Port Two"
                 }
               }
             }
@@ -5192,9 +4640,7 @@
               "x_pos": 2028.4406029580682,
               "y_pos": 919.5081363411921,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Filler"
-              }
+              "label": "Filler"
             }
           },
           "inputs": [
@@ -5206,9 +4652,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -5232,9 +4676,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port One"
-                  }
+                  "label": "Output Port One"
                 }
               }
             },
@@ -5246,9 +4688,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port Two"
-                  }
+                  "label": "Output Port Two"
                 }
               }
             }
@@ -5263,9 +4703,7 @@
               "x_pos": 1841.2461182483798,
               "y_pos": 1066.9947000518557,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Filler"
-              }
+              "label": "Filler"
             }
           },
           "inputs": [
@@ -5277,9 +4715,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -5303,9 +4739,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port One"
-                  }
+                  "label": "Output Port One"
                 }
               }
             },
@@ -5317,9 +4751,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port Two"
-                  }
+                  "label": "Output Port Two"
                 }
               }
             }
@@ -5334,9 +4766,7 @@
               "x_pos": 1682.4144342522802,
               "y_pos": 1171.9370626921357,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Filler"
-              }
+              "label": "Filler"
             }
           },
           "inputs": [
@@ -5348,9 +4778,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -5374,9 +4802,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port One"
-                  }
+                  "label": "Output Port One"
                 }
               }
             },
@@ -5388,9 +4814,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port Two"
-                  }
+                  "label": "Output Port Two"
                 }
               }
             }
@@ -5405,9 +4829,7 @@
               "x_pos": 1801.554787194596,
               "y_pos": 1110.8469790789914,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Filler"
-              }
+              "label": "Filler"
             }
           },
           "inputs": [
@@ -5419,9 +4841,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -5445,9 +4865,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port One"
-                  }
+                  "label": "Output Port One"
                 }
               }
             },
@@ -5459,9 +4877,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port Two"
-                  }
+                  "label": "Output Port Two"
                 }
               }
             }
@@ -5476,9 +4892,7 @@
               "x_pos": 1645.5427933246144,
               "y_pos": 1217.3175438338783,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Filler"
-              }
+              "label": "Filler"
             }
           },
           "inputs": [
@@ -5490,9 +4904,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -5516,9 +4928,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port One"
-                  }
+                  "label": "Output Port One"
                 }
               }
             },
@@ -5530,9 +4940,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port Two"
-                  }
+                  "label": "Output Port Two"
                 }
               }
             }
@@ -5547,9 +4955,7 @@
               "x_pos": 1585.9808722917592,
               "y_pos": 1118.0478006377932,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Filler"
-              }
+              "label": "Filler"
             }
           },
           "inputs": [
@@ -5561,9 +4967,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -5587,9 +4991,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port One"
-                  }
+                  "label": "Output Port One"
                 }
               }
             },
@@ -5601,9 +5003,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port Two"
-                  }
+                  "label": "Output Port Two"
                 }
               }
             }
@@ -5618,9 +5018,7 @@
               "x_pos": 1412.9678274731832,
               "y_pos": 1350.6227071877474,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Filler"
-              }
+              "label": "Filler"
             }
           },
           "inputs": [
@@ -5632,9 +5030,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -5658,9 +5054,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port One"
-                  }
+                  "label": "Output Port One"
                 }
               }
             },
@@ -5672,9 +5066,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port Two"
-                  }
+                  "label": "Output Port Two"
                 }
               }
             }
@@ -5689,9 +5081,7 @@
               "x_pos": 1205.9193822639822,
               "y_pos": 1350.6227071877474,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Filler"
-              }
+              "label": "Filler"
             }
           },
           "inputs": [
@@ -5703,9 +5093,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -5729,9 +5117,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port One"
-                  }
+                  "label": "Output Port One"
                 }
               }
             },
@@ -5743,9 +5129,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port Two"
-                  }
+                  "label": "Output Port Two"
                 }
               }
             }
@@ -5760,9 +5144,7 @@
               "x_pos": 1117.9947000518557,
               "y_pos": 1441.383669471233,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Filler"
-              }
+              "label": "Filler"
             }
           },
           "inputs": [
@@ -5774,9 +5156,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -5800,9 +5180,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port One"
-                  }
+                  "label": "Output Port One"
                 }
               }
             },
@@ -5814,9 +5192,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port Two"
-                  }
+                  "label": "Output Port Two"
                 }
               }
             }
@@ -5831,9 +5207,7 @@
               "x_pos": 922.2913751280905,
               "y_pos": 1455.5650698280274,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Filler"
-              }
+              "label": "Filler"
             }
           },
           "inputs": [
@@ -5845,9 +5219,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -5871,9 +5243,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port One"
-                  }
+                  "label": "Output Port One"
                 }
               }
             },
@@ -5885,9 +5255,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port Two"
-                  }
+                  "label": "Output Port Two"
                 }
               }
             }
@@ -5902,9 +5270,7 @@
               "x_pos": 1251.2998634057249,
               "y_pos": 1398.839468400849,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Filler"
-              }
+              "label": "Filler"
             }
           },
           "inputs": [
@@ -5916,9 +5282,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -5942,9 +5306,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port One"
-                  }
+                  "label": "Output Port One"
                 }
               }
             },
@@ -5956,9 +5318,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port Two"
-                  }
+                  "label": "Output Port Two"
                 }
               }
             }
@@ -5973,9 +5333,7 @@
               "x_pos": 1880.9540392474046,
               "y_pos": 695.4420107038376,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Filler"
-              }
+              "label": "Filler"
             }
           },
           "inputs": [
@@ -5987,9 +5345,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -6013,9 +5369,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port One"
-                  }
+                  "label": "Output Port One"
                 }
               }
             },
@@ -6027,9 +5381,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port Two"
-                  }
+                  "label": "Output Port Two"
                 }
               }
             }

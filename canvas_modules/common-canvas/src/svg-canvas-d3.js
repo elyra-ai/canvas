@@ -1091,7 +1091,8 @@ export default class CanvasD3Layout {
 
 							// update arrow in circle for new and existing ports
 							that.canvas.select(that.getId("#node_grp", d.id)).selectAll("." + this.layout.cssNodePortInputArrow)
-								.attr("d", (port) => this.getArrowShapePath(inputPortPositions[port.id]));
+								.attr("d", (port) => this.getArrowShapePath(inputPortPositions[port.id]))
+								.datum((port) => this.getNodePort(d.id, port.id, "input"));
 
 							inputPortSelection.exit().remove();
 						}

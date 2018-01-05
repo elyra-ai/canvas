@@ -65,17 +65,13 @@
             "schema_ref": "schema1",
             "app_data": {
               "ui_data": {
-                "label": {
-                  "default": "entryID1PE"
-                }
+                "label": "entryID1PE"
               }
             }
           },
           "app_data": {
             "ui_data": {
-              "label": {
-                "default": "entryID1PE"
-              },
+              "label": "entryID1PE",
               "description": {
                 "default": "EntryID1PE"
               },
@@ -94,17 +90,13 @@
             "schema_ref": "schema2",
             "app_data": {
               "ui_data": {
-                "label": {
-                  "default": "entryPort2PE"
-                }
+                "label": "entryPort2PE"
               }
             }
           },
           "app_data": {
             "ui_data": {
-              "label": {
-                "default": "entryID2PE"
-              },
+              "label": "entryID2PE",
               "description": {
                 "default": "entryID2PE"
               },
@@ -123,9 +115,7 @@
             "schema_ref": "schema2",
             "app_data": {
               "ui_data": {
-                "label": {
-                  "default": "entryPort3PE"
-                }
+                "label": "entryPort3PE"
               }
             }
           },
@@ -139,9 +129,7 @@
           },
           "app_data": {
             "ui_data": {
-              "label": {
-                "default": "entryID3PE"
-              },
+              "label": "entryID3PE",
               "description": {
                 "default": "entryID3PE"
               },
@@ -176,9 +164,7 @@
                     "min": 1,
                     "max": 1
                   },
-                  "label": {
-                    "default": "input1NodeID1PE"
-                  }
+                  "label": "input1NodeID1PE"
                 }
               }
             },
@@ -201,9 +187,7 @@
                     "min": 1,
                     "max": 1
                   },
-                  "label": {
-                    "default": "input2NodeID1PE"
-                  }
+                  "label": "input2NodeID1PE"
                 }
               }
             }
@@ -218,9 +202,7 @@
                     "min": 1,
                     "max": -1
                   },
-                  "label": {
-                    "default": "output1NodeID1PE"
-                  }
+                  "label": "output1NodeID1PE"
                 }
               }
             }
@@ -232,9 +214,7 @@
           },
           "app_data": {
             "ui_data": {
-              "label": {
-                "default": "nodeID1PE"
-              },
+              "label": "nodeID1PE",
               "description": {
                 "default": "nodeID1PE - Join two or more datasets"
               },
@@ -272,9 +252,7 @@
               "schema_ref": "schema3",
               "app_data": {
                 "ui_data": {
-                  "label": {
-                    "default": "input1SuperNodePE"
-                  }
+                  "label": "input1SuperNodePE"
                 }
               }
             },
@@ -294,9 +272,7 @@
               "schema_ref": "schema2",
               "app_data": {
                 "ui_data": {
-                  "label": {
-                    "default": "input2SuperNodePE"
-                  }
+                  "label": "input2SuperNodePE"
                 }
               }
             }
@@ -308,18 +284,14 @@
               "subflow_node_ref": "exitID1SE",
               "app_data": {
                 "ui_data": {
-                  "label": {
-                    "default": "output1SuperNodePE"
-                  }
+                  "label": "output1SuperNodePE"
                 }
               }
             }
           ],
           "app_data": {
             "ui_data": {
-              "label": {
-                "default": "nodeIDSuperNodePE"
-              },
+              "label": "nodeIDSuperNodePE",
               "description": {
                 "default": "nodeIDSuperNodePE"
               },
@@ -355,9 +327,7 @@
                     "min": 1,
                     "max": 1
                   },
-                  "label": {
-                    "default": "input1NodeID2PE"
-                  }
+                  "label": "input1NodeID2PE"
                 }
               }
             }
@@ -368,9 +338,7 @@
               "schema_ref": "schema3",
               "app_data": {
                 "ui_data": {
-                  "label": {
-                    "default": "output1NodeID2PE"
-                  }
+                  "label": "output1NodeID2PE"
                 }
               }
             }
@@ -380,9 +348,7 @@
           },
           "app_data": {
             "ui_data": {
-              "label": {
-                "default": "nodeID2PE"
-              },
+              "label": "nodeID2PE",
               "description": {
                 "default": "nodeID2PE - Filter record data"
               },
@@ -420,9 +386,7 @@
                     "min": 1,
                     "max": -1
                   },
-                  "label": {
-                    "default": "input1NodeID3PE"
-                  }
+                  "label": "input1NodeID3PE"
                 }
               }
             }
@@ -433,9 +397,7 @@
               "schema_ref": "schema3",
               "app_data": {
                 "ui_data": {
-                  "label": {
-                    "default": "output1NodeID3PE"
-                  }
+                  "label": "output1NodeID3PE"
                 }
               }
             }
@@ -445,9 +407,7 @@
           },
           "app_data": {
             "ui_data": {
-              "label": {
-                "default": "nodeID3PE"
-              },
+              "label": "nodeID3PE",
               "description": {
                 "default": "nodeID3PE - Filter record data"
               },
@@ -478,9 +438,7 @@
           },
           "app_data": {
             "ui_data": {
-              "label": {
-                "default": "exitID1PE"
-              },
+              "label": "exitID1PE",
               "description": {
                 "default": "exitID1PE"
               },
@@ -507,17 +465,13 @@
             },
             "app_data": {
               "ui_data": {
-                "label": {
-                  "default": "exitPort2PE"
-                }
+                "label": "exitPort2PE"
               }
             }
           },
           "app_data": {
             "ui_data": {
-              "label": {
-                "default": "exitID2PE"
-              },
+              "label": "exitID2PE",
               "description": {
                 "default": "exitID2PE"
               },
@@ -576,9 +530,7 @@
               "schema_ref": "schema3",
               "app_data": {
                 "ui_data": {
-                  "label": {
-                    "default": "input1nodeID1SE"
-                  }
+                  "label": "input1nodeID1SE"
                 }
               }
             }
@@ -589,9 +541,7 @@
               "schema_ref": "schema3",
               "app_data": {
                 "ui_data": {
-                  "label": {
-                    "default": "output1nodeID1SE"
-                  }
+                  "label": "output1nodeID1SE"
                 }
               }
             }
@@ -601,9 +551,7 @@
           },
           "app_data": {
             "ui_data": {
-              "label": {
-                "default": "Filter"
-              },
+              "label": "Filter",
               "description": {
                 "default": "Filter record data"
               },
@@ -641,9 +589,7 @@
                     "min": 1,
                     "max": 1
                   },
-                  "label": {
-                    "default": "input1NodeID2SE"
-                  }
+                  "label": "input1NodeID2SE"
                 }
               }
             },
@@ -666,9 +612,7 @@
                     "min": 1,
                     "max": 1
                   },
-                  "label": {
-                    "default": "input2NodeID2SE"
-                  }
+                  "label": "input2NodeID2SE"
                 }
               }
             }
@@ -679,9 +623,7 @@
               "schema_ref": "schema2",
               "app_data": {
                 "ui_data": {
-                  "label": {
-                    "default": "output1NodeID2SE"
-                  }
+                  "label": "output1NodeID2SE"
                 }
               }
             }
@@ -693,9 +635,7 @@
           },
           "app_data": {
             "ui_data": {
-              "label": {
-                "default": "nodeID2SE"
-              },
+              "label": "nodeID2SE",
               "description": {
                 "default": "nodeID2SE Join two or more datasets"
               },
@@ -726,17 +666,13 @@
             },
             "app_data": {
               "ui_data": {
-                "label": {
-                  "default": "exitPort1SE"
-                }
+                "label": "exitPort1SE"
               }
             }
           },
           "app_data": {
             "ui_data": {
-              "label": {
-                "default": "exitID1SE"
-              },
+              "label": "exitID1SE",
               "description": {
                 "default": "exitID1SE"
               },

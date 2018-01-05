@@ -17,9 +17,7 @@
               "x_pos": 300,
               "y_pos": 25,
               "class_name": "canvas-node",
-              "label": {
-                "default": "No Custom Attrs"
-              }
+              "label": "No Custom Attrs"
             }
           },
           "inputs": [
@@ -31,9 +29,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               }
             }
@@ -47,9 +43,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -64,9 +58,7 @@
               "x_pos": 600,
               "y_pos": 25,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Custom Attrs"
-              }
+              "label": "Custom Attrs"
             }
           },
           "inputs": [
@@ -78,9 +70,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               }
             }
@@ -94,9 +84,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }

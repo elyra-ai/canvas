@@ -18,9 +18,7 @@
               "x_pos": 31,
               "y_pos": 97.5,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Var. File"
-              },
+              "label": "Var. File",
               "messages": []
             }
           },
@@ -32,9 +30,7 @@
                   "min": 0,
                   "max": -1
                 },
-                "label": {
-                  "default": "Output Port"
-                }
+                "label": "Output Port"
               }
             }
           }
@@ -48,9 +44,7 @@
               "x_pos": 168,
               "y_pos": 98.5,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Select"
-              },
+              "label": "Select",
               "messages": []
             }
           },
@@ -63,9 +57,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": [
@@ -90,9 +82,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -109,9 +99,7 @@
               "x_pos": 320,
               "y_pos": 99.5,
               "class_name": "canvas-node",
-              "label": {
-                "default": "Object Store"
-              },
+              "label": "Object Store",
               "messages": []
             }
           },
@@ -123,9 +111,7 @@
                   "min": 0,
                   "max": 1
                 },
-                "label": {
-                  "default": "Input Port"
-                }
+                "label": "Input Port"
               }
             },
             "link": {

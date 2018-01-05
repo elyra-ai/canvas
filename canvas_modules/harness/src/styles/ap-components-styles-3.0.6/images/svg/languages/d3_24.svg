@@ -1,0 +1,6 @@
+<svg width="24" height="24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" aria-labelledby="title">
+		<title>D3 Chart</title>
+		<path d="M18.7,16c1.4-1.6,2.3-3.7,2.3-6c0-5-4-9-9-9s-9,4-9,9c0,5,4,9,9,9v4l6.3-6.6c0.1-0.1,0.1-0.1,0.2-0.2L18.7,16L18.7,16z
+		 M4,10c0-4.4,3.6-8,8-8s8,3.6,8,8s-3.6,8-8,8S4,14.4,4,10z M10,8h1v4h-1V8z M8,12h2v1H7V7h3v1H8V12z M16,10v1h-1v-1H16z M15,9v1h-1
+		V9H15z M13,12h3v1h-3V12z M13,12h-1v-1h1V12z M15,8h-3V7h5v1h-1v1h-1V8z M16,11h1v1h-1V11z"></path>
+</svg>

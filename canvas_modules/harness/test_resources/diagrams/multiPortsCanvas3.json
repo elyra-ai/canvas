@@ -17,9 +17,7 @@
               "image": "/images/common_node_icons/sources/source_var_import.svg",
 							"x_pos": 32,
               "y_pos": 62.5,
-              "label": {
-                "default": "Var. File"
-              }
+              "label": "Var. File"
             }
           },
           "output": {
@@ -30,9 +28,7 @@
                   "min": 0,
                   "max": 1
                 },
-                "label": {
-                  "default": "Output Port"
-                }
+                "label": "Output Port"
               }
             }
           }
@@ -44,9 +40,7 @@
               "image": "/images/common_node_icons/operations/operation_select.svg",
 							"x_pos": 575,
               "y_pos": 70.5,
-              "label": {
-                "default": "Select2"
-              }
+              "label": "Select2"
             }
           },
           "inputs": [
@@ -58,9 +52,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": []
@@ -75,9 +67,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -90,9 +80,7 @@
               "image": "/images/common_node_icons/operations/operation_select.svg",
 							"x_pos": 38,
               "y_pos": 333.5,
-              "label": {
-                "default": "Select3"
-              }
+              "label": "Select3"
             }
           },
           "inputs": [
@@ -104,9 +92,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": []
@@ -121,9 +107,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port One"
-                  }
+                  "label": "Output Port One"
                 }
               }
             },
@@ -135,9 +119,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port Two"
-                  }
+                  "label": "Output Port Two"
                 }
               }
             }
@@ -150,9 +132,7 @@
               "image": "/images/common_node_icons/operations/operation_select.svg",
 							"x_pos": 298,
               "y_pos": 63.5,
-              "label": {
-                "default": "Select1"
-              }
+              "label": "Select1"
             }
           },
           "inputs": [
@@ -164,9 +144,7 @@
                     "min": 0,
                     "max": 1
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": []
@@ -181,9 +159,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }
@@ -197,9 +173,7 @@
               "image": "/images/common_node_icons/output/output_table.svg",
 							"x_pos": 837,
               "y_pos": 69.5,
-              "label": {
-                "default": "Table"
-              }
+              "label": "Table"
             }
           },
           "inputs": [
@@ -211,9 +185,7 @@
                     "min": 0,
                     "max": 4
                   },
-                  "label": {
-                    "default": "Input Port"
-                  }
+                  "label": "Input Port"
                 }
               },
               "links": []
@@ -228,9 +200,7 @@
                     "min": 0,
                     "max": -1
                   },
-                  "label": {
-                    "default": "Output Port"
-                  }
+                  "label": "Output Port"
                 }
               }
             }

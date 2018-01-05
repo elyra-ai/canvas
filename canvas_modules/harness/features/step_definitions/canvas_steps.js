@@ -166,9 +166,31 @@ module.exports = function() {
 		browser.pause(1000); // Wait for the tooltip to be displayed
 	});
 
+	this.Then(/^I hover over the output port "([^"]*)" of node "([^"]*)"$/, function(portId, nodeName) {
+		const nodeId = getNodeIdForLabel(nodeName);
+		const portSelector = "#node_src_port_" + nodeId + "_" + portId;
+		browser.$(portSelector).moveToObject();
+		browser.pause(1000); // Wait for the tooltip to be displayed
+	});
+
 	this.Then(/^I verify the port name "([^"]*)" shows below the input port id "([^"]*)" of node "([^"]*)"$/, function(portName, portId, nodeName) {
 		const nodeId = getNodeIdForLabel(nodeName);
 		const portSelector = "#node_trg_port_" + nodeId + "_" + portId;
+		const tip = browser.$("#node_port_tip_0_" + portId);
+		expect(tip.value).not.toEqual(null);
+
+		const port = browser.$(portSelector);
+		const portBottom = port.getLocation().y + port.getElementSize().height;
+		const tipTop = tip.getLocation().y;
+		expect(tipTop).toBeGreaterThan(portBottom);
+
+		const tipLabel = tip.$(".tip-port").getText();
+		expect(tipLabel).toEqual(portName);
+	});
+
+	this.Then(/^I verify the port name "([^"]*)" shows below the output port id "([^"]*)" of node "([^"]*)"$/, function(portName, portId, nodeName) {
+		const nodeId = getNodeIdForLabel(nodeName);
+		const portSelector = "#node_src_port_" + nodeId + "_" + portId;
 		const tip = browser.$("#node_port_tip_0_" + portId);
 		expect(tip.value).not.toEqual(null);
 

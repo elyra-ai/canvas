@@ -60,6 +60,11 @@ _defineConstant("PALETTE_TOOLTIP", "Click to show node palette");
 
 _defineConstant("API_SET_PIPELINEFLOW", "Set PipelineFlow");
 _defineConstant("API_ADD_PALETTE_ITEM", "Add PaletteItem");
+_defineConstant("API_SET_NODE_LABEL", "Set Node Label");
+_defineConstant("API_SET_INPUT_PORT_LABEL", "Set Input Port Label");
+_defineConstant("API_SET_OUTPUT_PORT_LABEL", "Set Output Port Label");
+_defineConstant("INPUT_PORT", "inputPort");
+_defineConstant("OUTPUT_PORT", "outputPort");
 
 _defineConstant("TIP_PALETTE", "Palette");
 _defineConstant("TIP_NODES", "Nodes");
