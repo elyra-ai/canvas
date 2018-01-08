@@ -11,9 +11,8 @@
 import { getCommentIdFromObjectModelUsingText, getCommentIndexFromCanvasUsingText, getEventLogCount, getObjectModelCount } from "./utilities/validateUtil.js";
 import { getHarnessData } from "./utilities/HTTPClient.js";
 import { getURL } from "./utilities/test-config.js";
+import isEqual from "lodash/isEqual";
 import { simulateDragDrop } from "./utilities/DragAndDrop.js";
-import underscore from "underscore";
-
 
 var nconf = require("nconf");
 
@@ -38,7 +37,7 @@ module.exports = function() {
 
 				// Find the new comment that was added by comparing new comment list with old (previous)
 				for (let idx = 0; idx < newComments.length; idx++) {
-					const index = previousComments.findIndex((prevCom) => underscore.isEqual(prevCom, newComments[idx]));
+					const index = previousComments.findIndex((prevCom) => isEqual(prevCom, newComments[idx]));
 					if (index === -1) {
 						specificComment = newComments[idx];
 					}

@@ -20,7 +20,7 @@ import PaletteFlyout from "./palette/palette-flyout.jsx";
 import Toolbar from "./toolbar/toolbar.jsx";
 import BlankCanvasImage from "../assets/images/blank_canvas.png";
 import TooltipWrapper from "./tooltip-wrapper.jsx";
-import _ from "underscore";
+import isEmpty from "lodash/isEmpty";
 
 export default class CommonCanvas extends React.Component {
 	constructor(props) {
@@ -163,7 +163,7 @@ export default class CommonCanvas extends React.Component {
 	}
 
 	isTipShowing() {
-		return !_.isEmpty(this.state.tipDef);
+		return !isEmpty(this.state.tipDef);
 	}
 
 	zoomIn() {
@@ -343,7 +343,7 @@ export default class CommonCanvas extends React.Component {
 			}
 		}
 
-		if (!_.isEmpty(this.state.tipDef)) {
+		if (!isEmpty(this.state.tipDef)) {
 
 			tip = (<TooltipWrapper
 				id={this.state.tipDef.id}

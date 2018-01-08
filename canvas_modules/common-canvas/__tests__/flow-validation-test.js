@@ -11,7 +11,7 @@
 import log4js from "log4js";
 import deepFreeze from "deep-freeze";
 import { expect } from "chai";
-import _ from "underscore";
+import isEqual from "lodash/isEqual";
 import startPipelineFlow from "./test_resources/json/startPipelineFlow.json";
 
 import ObjectModel from "../src/object-model/object-model.js";
@@ -60,11 +60,11 @@ function setNodeMessages(nodeId, messages) {
 	if (nodeId === "idGWRVT47XDV") {
 		// logger.info("expected Node1Messages  = " + JSON.stringify(expectedNode1Messages, null, 4));
 		// logger.info("actual Node1Messages  = " + JSON.stringify(actualNode1Messages, null, 4));
-		expect(_.isEqual(expectedNode1Messages, messages)).to.be.true;
+		expect(isEqual(expectedNode1Messages, messages)).to.be.true;
 	} else {
 		// logger.info("expected Node2Messages  = " + JSON.stringify(expectedNode2Messages, null, 4));
 		// logger.info("actual Node2Messages  = " + JSON.stringify(actualNode2Messages, null, 4));
-		expect(_.isEqual(expectedNode2Messages, messages)).to.be.true;
+		expect(isEqual(expectedNode2Messages, messages)).to.be.true;
 	}
 }
 
@@ -86,8 +86,8 @@ describe("Flow validation API handle flows OK", () => {
 		// logger.info("expected Node2Messages  = " + JSON.stringify(expectedNode2Messages, null, 4));
 		// logger.info("actual Node2Messages  = " + JSON.stringify(actualNode2Messages, null, 4));
 
-		expect(_.isEqual(expectedNode1Messages, actualNode1Messages)).to.be.true;
-		expect(_.isEqual(expectedNode2Messages, actualNode2Messages)).to.be.true;
+		expect(isEqual(expectedNode1Messages, actualNode1Messages)).to.be.true;
+		expect(isEqual(expectedNode2Messages, actualNode2Messages)).to.be.true;
 
 	});
 

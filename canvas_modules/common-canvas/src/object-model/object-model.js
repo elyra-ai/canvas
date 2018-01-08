@@ -16,7 +16,7 @@ import SVGCanvasInHandler from "../svg-canvas-in-handler.js"; // TODO - Remove t
 import SVGCanvasOutHandler from "../svg-canvas-out-handler.js"; // TODO - Remove this when WML supports PipelineFlow
 import SVGPipelineInHandler from "../svg-pipeline-in-handler.js";
 import SVGPipelineOutHandler from "../svg-pipeline-out-handler.js";
-import _ from "underscore";
+import isEmpty from "lodash/isEmpty";
 
 /* eslint arrow-body-style: ["error", "always"] */
 /* eslint complexity: ["error", 26] */
@@ -688,7 +688,7 @@ export default class ObjectModel {
 
 	getPaletteNode(nodeOpIdRef) {
 		let outNodeType = null;
-		if (!_.isEmpty(this.getPaletteData())) {
+		if (!isEmpty(this.getPaletteData())) {
 			this.getPaletteData().categories.forEach((category) => {
 				category.nodetypes.forEach((nodeType) => {
 					if (nodeType.operator_id_ref === nodeOpIdRef) {

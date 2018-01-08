@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 import { expect } from "chai";
-import _ from "underscore";
+import isEqual from "lodash/isEqual";
 import deepFreeze from "deep-freeze";
 import ObjectModel from "../src/object-model/object-model.js";
 import log4js from "log4js";
@@ -47,7 +47,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas));
 
-		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
 	});
 
 
@@ -84,7 +84,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
 
-		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
 	});
 
 	it("should add a node", () => {
@@ -155,7 +155,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
 
-		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
 	});
 
 	it("should move a node", () => {
@@ -215,7 +215,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
 
-		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
 	});
 
 	it("should delete a node", () => {
@@ -282,7 +282,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas));
 
-		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
 	});
 
 	it("should disconnect a node", () => {
@@ -347,7 +347,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
 
-		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
 	});
 
 	it("should add node attr", () => {
@@ -414,7 +414,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
 
-		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
 	});
 
 	it("should remove node attr", () => {
@@ -481,7 +481,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
 
-		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
 	});
 
 	it("should add a comment", () => {
@@ -552,7 +552,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
 
-		expect(_.isEqual(JSON.stringify(expectedCanvas), JSON.stringify(actualCanvas))).to.be.true;
+		expect(isEqual(JSON.stringify(expectedCanvas), JSON.stringify(actualCanvas))).to.be.true;
 	});
 
 	it("should edit a comment", () => {
@@ -616,7 +616,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
 
-		expect(_.isEqual(JSON.stringify(expectedCanvas), JSON.stringify(actualCanvas))).to.be.true;
+		expect(isEqual(JSON.stringify(expectedCanvas), JSON.stringify(actualCanvas))).to.be.true;
 	});
 
 	it("should move a comment", () => {
@@ -678,7 +678,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas));
 
-		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
 	});
 
 	it("should delete a comment", () => {
@@ -745,7 +745,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
 
-		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
 
 	});
 
@@ -813,7 +813,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
 
-		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
 	});
 
 	it("should remove comment attr", () => {
@@ -880,7 +880,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
 
-		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
 	});
 
 	it("should add a link", () => {
@@ -972,7 +972,7 @@ describe("ObjectModel handle model OK", () => {
 		// }
 
 
-		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
 	});
 
 	it("should delete a link", () => {
@@ -1037,7 +1037,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
 
-		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
 	});
 
 	it("should delete a link when a node is deleted", () => {
@@ -1101,7 +1101,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
 
-		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
 	});
 
 	it("should delete a link when a comment is deleted", () => {
@@ -1165,7 +1165,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
 
-		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
 	});
 
 	it("should select an object", () => {
@@ -1207,7 +1207,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
 
-		expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
+		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
 	});
 
 	it("should clear current selections", () => {
@@ -1254,7 +1254,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
 
-		expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
+		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
 	});
 
 	it("should select toggle off comment", () => {
@@ -1300,7 +1300,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
 
-		expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
+		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
 	});
 
 	it("should select toggle on comment", () => {
@@ -1346,7 +1346,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
 
-		expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
+		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
 	});
 
 	it("should select toggle off node", () => {
@@ -1392,7 +1392,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
 
-		expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
+		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
 	});
 
 	it("should select toggle on node", () => {
@@ -1438,7 +1438,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
 
-		expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
+		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
 	});
 
 	it("should select nodes in a simple subgraph", () => {
@@ -1487,7 +1487,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
 
-		expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
+		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
 	});
 
 	it("should select nodes in a fork subgraph", () => {
@@ -1536,7 +1536,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
 
-		expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
+		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
 	});
 
 	it("should select nodes in a merge subgraph", () => {
@@ -1585,7 +1585,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
 
-		expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
+		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
 	});
 
 	it("should select nodes in a simple partial subgraph", () => {
@@ -1636,7 +1636,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
 
-		expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
+		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
 	});
 
 	it("should select nodes in a complex subgraph", () => {
@@ -1708,7 +1708,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Selections = " + JSON.stringify(expectedSelections));
 		// logger.info("Actual Selections   = " + JSON.stringify(actualSelections));
 
-		expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
+		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
 	});
 
 	it("should select nodes in a complex patial subgraph", () => {
@@ -1780,7 +1780,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
 
-		expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
+		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
 	});
 
 	it("should select nodes in a complex single input subgraph", () => {
@@ -1851,7 +1851,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Selections = " + JSON.stringify(expectedSelections));
 		// logger.info("Actual Selections   = " + JSON.stringify(actualSelections));
 
-		expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
+		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
 	});
 
 	it("should select nodes in a complex subgraph starting with comment", () => {
@@ -1920,7 +1920,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
 
-		expect(_.isEqual(expectedSelections, actualSelections)).to.be.true;
+		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
 	});
 
 });

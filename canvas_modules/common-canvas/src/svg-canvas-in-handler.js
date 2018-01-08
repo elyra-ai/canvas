@@ -7,7 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import _ from "lodash";
+import has from "lodash/has";
 
 export default class SVGCanvasInHandler {
 
@@ -147,7 +147,7 @@ export default class SVGCanvasInHandler {
 	}
 
 	static getLinkType(canvasLink) {
-		if (_.has(canvasLink, "userData.linkType")) {
+		if (has(canvasLink, "userData.linkType")) {
 			switch (canvasLink.userData.linkType) {
 			case "comment":
 				return "commentLink";

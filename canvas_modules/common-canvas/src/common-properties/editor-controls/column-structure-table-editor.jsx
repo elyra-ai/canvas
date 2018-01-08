@@ -25,8 +25,8 @@ import remove32 from "../../../assets/images/remove_32.svg";
 import remove32hover from "../../../assets/images/remove_32_hover.svg";
 import remove32disabled from "../../../assets/images/remove_32_disabled.svg";
 import { TOOL_TIP_DELAY } from "../constants/constants.js";
-
-var _ = require("underscore");
+import findIndex from "lodash/findIndex";
+import sortBy from "lodash/sortBy";
 
 /* eslint-disable react/prop-types */
 /* eslint-enable react/prop-types */
@@ -125,7 +125,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 	}
 
 	indexOfColumn(controlId) {
-		return _.findIndex(this.props.control.subControls, function(columnControl) {
+		return findIndex(this.props.control.subControls, function(columnControl) {
 			return columnControl.name === controlId;
 		});
 	}
@@ -210,7 +210,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			}
 		}
 		if (col > -1) {
-			controlValue = _.sortBy(controlValue, function(row) {
+			controlValue = sortBy(controlValue, function(row) {
 				return row[col];
 			});
 			if (spec.direction > 0) {

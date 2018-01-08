@@ -11,7 +11,7 @@
 import log4js from "log4js";
 import deepFreeze from "deep-freeze";
 import { expect } from "chai";
-import _ from "underscore";
+import isEqual from "lodash/isEqual";
 import initialCanvas from "./test_resources/json/startCanvas.json";
 import startPipelineFlow from "./test_resources/json/startPipelineFlow.json";
 import paletteJson from "./test_resources/json/testPalette.json";
@@ -60,7 +60,7 @@ describe("ObjectModel API handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
 
-		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
 	});
 
 	it("should layout a canvas vertically", () => {
@@ -86,7 +86,7 @@ describe("ObjectModel API handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
 
-		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
 	});
 
 	it("should oneTimeLayout a canvas horiziontally", () => {
@@ -106,7 +106,7 @@ describe("ObjectModel API handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
 
-		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
 
 	});
 
@@ -127,7 +127,7 @@ describe("ObjectModel API handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
 
-		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
 	});
 
 	it("should move a node after oneTimeLayout horiziontally", () => {
@@ -149,7 +149,7 @@ describe("ObjectModel API handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
 
-		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
 	});
 
 	it("should move a node after oneTimeLayout vertically", () => {
@@ -170,7 +170,7 @@ describe("ObjectModel API handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
 
-		expect(_.isEqual(expectedCanvas, actualCanvas)).to.be.true;
+		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
 	});
 
 	it("should return parameters of a node", () => {
@@ -187,7 +187,7 @@ describe("ObjectModel API handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedParameters, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualParameters, null, 4));
 
-		expect(_.isEqual(expectedParameters, actualParameters)).to.be.true;
+		expect(isEqual(expectedParameters, actualParameters)).to.be.true;
 	});
 
 
@@ -205,7 +205,7 @@ describe("ObjectModel API handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
 
-		expect(_.isEqual(JSON.stringify(expectedCanvas, null, 4), JSON.stringify(actualCanvas, null, 4))).to.be.true;
+		expect(isEqual(JSON.stringify(expectedCanvas, null, 4), JSON.stringify(actualCanvas, null, 4))).to.be.true;
 	});
 
 	it("should save a messages for a node", () => {
@@ -218,7 +218,7 @@ describe("ObjectModel API handle model OK", () => {
 
 		const actualMessage = objectModel.getNodeMessage("id8I6RH2V91XW", "controlOne");
 
-		expect(_.isEqual(expectedMessage, actualMessage)).to.be.true;
+		expect(isEqual(expectedMessage, actualMessage)).to.be.true;
 	});
 
 	it("should save multiple messages for a node", () => {
@@ -245,7 +245,7 @@ describe("ObjectModel API handle model OK", () => {
 		// logger.info("Actual messages   = " + JSON.stringify(actualMessages, null, 4));
 
 
-		expect(_.isEqual(expectedMessages, actualMessages)).to.be.true;
+		expect(isEqual(expectedMessages, actualMessages)).to.be.true;
 	});
 
 	it("should save one control messages for a node", () => {
@@ -269,7 +269,7 @@ describe("ObjectModel API handle model OK", () => {
 		// logger.info("Expected Messages = " + JSON.stringify(expectedMessages, null, 4));
 		// logger.info("Actual messages   = " + JSON.stringify(actualMessages, null, 4));
 
-		expect(_.isEqual(expectedMessages, actualMessages)).to.be.true;
+		expect(isEqual(expectedMessages, actualMessages)).to.be.true;
 	});
 
 	it("should clear all messages for a node", () => {
@@ -294,7 +294,7 @@ describe("ObjectModel API handle model OK", () => {
 		// logger.info("Expected Messages = " + JSON.stringify(expectedMessages, null, 4));
 		// logger.info("Actual messages   = " + JSON.stringify(actualMessages, null, 4));
 
-		expect(_.isEqual(expectedMessages, actualMessages)).to.be.true;
+		expect(isEqual(expectedMessages, actualMessages)).to.be.true;
 
 		const expectedClearedMessages = [];
 
@@ -304,7 +304,7 @@ describe("ObjectModel API handle model OK", () => {
 		// logger.info("Expected Messages = " + JSON.stringify(expectedClearedMessages, null, 4));
 		// logger.info("Actual messages   = " + JSON.stringify(actualClearedMessages, null, 4));
 
-		expect(_.isEqual(expectedClearedMessages, actualClearedMessages)).to.be.true;
+		expect(isEqual(expectedClearedMessages, actualClearedMessages)).to.be.true;
 
 	});
 
@@ -324,7 +324,7 @@ describe("ObjectModel API handle model OK", () => {
 
 		objectModel.addNodeTypeToPalette(nodeTypeObj, "test");
 
-		expect(_.isEqual(expectedPaletteJSON, objectModel.getPaletteData())).to.be.true;
+		expect(isEqual(expectedPaletteJSON, objectModel.getPaletteData())).to.be.true;
 	});
 
 	it("should add palette item into new category without label", () => {
@@ -349,7 +349,7 @@ describe("ObjectModel API handle model OK", () => {
 
 		objectModel.addNodeTypeToPalette(nodeTypeObj, newCategoryName);
 
-		expect(_.isEqual(expectedPaletteJSON, objectModel.getPaletteData())).to.be.true;
+		expect(isEqual(expectedPaletteJSON, objectModel.getPaletteData())).to.be.true;
 	});
 
 	it("should add palette item into new category with label", () => {
@@ -374,7 +374,7 @@ describe("ObjectModel API handle model OK", () => {
 
 		objectModel.addNodeTypeToPalette(nodeTypeObj, newCategoryName, newCategoryLabel);
 
-		expect(_.isEqual(expectedPaletteJSON, objectModel.getPaletteData())).to.be.true;
+		expect(isEqual(expectedPaletteJSON, objectModel.getPaletteData())).to.be.true;
 	});
 
 	it("should handle pipeline flow with no app_data in links", () => {
@@ -388,7 +388,7 @@ describe("ObjectModel API handle model OK", () => {
 		// logger.info("Expected Messages = " + JSON.stringify(expectedPipelineFlow, null, 2));
 		// logger.info("Actual messages   = " + JSON.stringify(actualPipelineFlow, null, 2));
 
-		expect(_.isEqual(actualPipelineFlow, expectedPipelineFlow)).to.be.true;
+		expect(isEqual(actualPipelineFlow, expectedPipelineFlow)).to.be.true;
 	});
 
 	it("should update label for a node", () => {
@@ -399,7 +399,7 @@ describe("ObjectModel API handle model OK", () => {
 		objectModel.setPipelineFlow(startPipelineFlow);
 		objectModel.setNodeLabel("id8I6RH2V91XW", newLabel);
 
-		expect(_.isEqual(newLabel, objectModel.getNode("id8I6RH2V91XW").label)).to.be.true;
+		expect(isEqual(newLabel, objectModel.getNode("id8I6RH2V91XW").label)).to.be.true;
 	});
 
 	it("should update input port label for a node", () => {
@@ -411,7 +411,7 @@ describe("ObjectModel API handle model OK", () => {
 		objectModel.setInputPortLabel("id8I6RH2V91XW", "inPort", newLabel);
 		const node = objectModel.getNode("id8I6RH2V91XW");
 
-		expect(_.isEqual(newLabel, objectModel.getPort(node.input_ports, "inPort").label)).to.be.true;
+		expect(isEqual(newLabel, objectModel.getPort(node.input_ports, "inPort").label)).to.be.true;
 	});
 
 	it("should update output port label for a node", () => {
@@ -423,7 +423,7 @@ describe("ObjectModel API handle model OK", () => {
 		objectModel.setOutputPortLabel("idGWRVT47XDV", "outPort", newLabel);
 		const node = objectModel.getNode("idGWRVT47XDV");
 
-		expect(_.isEqual(newLabel, objectModel.getPort(node.output_ports, "outPort").label)).to.be.true;
+		expect(isEqual(newLabel, objectModel.getPort(node.output_ports, "outPort").label)).to.be.true;
 	});
 
 });

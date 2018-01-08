@@ -38,7 +38,7 @@ import stringDisabledIcon from "../../../assets/images/string-disabled-icon.svg"
 import timeDisabledIcon from "../../../assets/images/time-disabled-icon.svg";
 import timestampDisabledIcon from "../../../assets/images/timestamp-disabled-icon.svg";
 
-var _ = require("underscore");
+import sortBy from "lodash/sortBy";
 
 export default class FieldPicker extends EditorControl {
 	constructor(props) {
@@ -362,7 +362,7 @@ export default class FieldPicker extends EditorControl {
 
 	onSort(spec) {
 		let controlValue = this.state.fields;
-		controlValue = _.sortBy(controlValue, function(field) {
+		controlValue = sortBy(controlValue, function(field) {
 			return spec.column === "fieldName" ? field.name : field.type;
 		});
 		if (spec.direction > 0) {

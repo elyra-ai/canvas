@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 import { expect } from "chai";
-import _ from "underscore";
+import isEqual from "lodash/isEqual";
 import Form from "../../src/common-properties/form/Form";
 import formResource from "../test_resources/json/form-test.json";
 import formStructuredTable from "../test_resources/json/form-structure-test.json";
@@ -29,7 +29,7 @@ describe("Correct form should be created", () => {
 		// console.info("\n\n");
 
 		// Work around since comparing the objects directly doesn't wor// k.
-		expect(_.isEqual(JSON.parse(JSON.stringify(formResource.expectedResult)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
+		expect(isEqual(JSON.parse(JSON.stringify(formResource.expectedResult)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
 	});
 
 	it("should create a form with minimum paramSpec options", () => {
@@ -100,7 +100,7 @@ describe("Correct form should be created", () => {
 		// console.info("Expected: " + JSON.stringify(expectedForm));
 		// console.info("Actual  : " + JSON.stringify(generatedForm) + "\n\n");
 		// console.info("\n\n");
-		expect(_.isEqual(JSON.parse(JSON.stringify(expectedForm)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
+		expect(isEqual(JSON.parse(JSON.stringify(expectedForm)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
 	});
 
 	it("should create a form with a structure", () => {
@@ -108,7 +108,7 @@ describe("Correct form should be created", () => {
 		// console.info("Expected: " + JSON.stringify(formStructuredTable.expectedResult));
 		// console.info("Actual  : " + JSON.stringify(generatedForm) + "\n\n");
 		// console.info("\n\n");
-		expect(_.isEqual(JSON.parse(JSON.stringify(formStructuredTable.expectedResult)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
+		expect(isEqual(JSON.parse(JSON.stringify(formStructuredTable.expectedResult)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
 	});
 
 	it("should create a form with a structure with moveable_rows and value_icons", () => {
@@ -116,7 +116,7 @@ describe("Correct form should be created", () => {
 		// console.info("Expected: " + JSON.stringify(formStructuredTable2.expectedResult));
 		// console.info("Actual  : " + JSON.stringify(generatedForm));
 		// console.info("\n\n");
-		expect(_.isEqual(JSON.parse(JSON.stringify(formStructuredTable2.expectedResult)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
+		expect(isEqual(JSON.parse(JSON.stringify(formStructuredTable2.expectedResult)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
 	});
 
 	it("should create a form with translated condition message", () => {
@@ -124,7 +124,7 @@ describe("Correct form should be created", () => {
 		// console.info("Expected: " + JSON.stringify(conditionResource.expectedResult));
 		// console.info("Actual  : " + JSON.stringify(generatedForm) + "\n\n");
 		// console.info("\n\n");
-		expect(_.isEqual(JSON.parse(JSON.stringify(conditionResource.expectedResult)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
+		expect(isEqual(JSON.parse(JSON.stringify(conditionResource.expectedResult)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
 	});
 
 	it("should create a form with editStyle set to subpanel and checkbox panel", () => {
@@ -132,7 +132,7 @@ describe("Correct form should be created", () => {
 		// console.info("Expected: " + JSON.stringify(editStyleResource.expectedResult));
 		// console.info("Actual  : " + JSON.stringify(generatedForm) + "\n\n");
 		// console.info("\n\n");
-		expect(_.isEqual(JSON.parse(JSON.stringify(editStyleResource.expectedResult)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
+		expect(isEqual(JSON.parse(JSON.stringify(editStyleResource.expectedResult)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
 	});
 
 	it("should create a form with description placement set to on_panel", () => {
@@ -140,7 +140,7 @@ describe("Correct form should be created", () => {
 		// console.info("Expected: " + JSON.stringify(placementResource.expectedResult));
 		// console.info("Actual  : " + JSON.stringify(generatedForm) + "\n\n");
 		// console.info("\n\n");
-		expect(_.isEqual(JSON.parse(JSON.stringify(placementResource.expectedResult)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
+		expect(isEqual(JSON.parse(JSON.stringify(placementResource.expectedResult)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
 	});
 
 	it("should create a form with actions and summaryPanel", () => {
@@ -148,7 +148,7 @@ describe("Correct form should be created", () => {
 		// console.info("Expected: " + JSON.stringify(placementResource.expectedResult));
 		// console.info("Actual  : " + JSON.stringify(generatedForm) + "\n\n");
 		// console.info("\n\n");
-		expect(_.isEqual(JSON.parse(JSON.stringify(actionResource.expectedResult)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
+		expect(isEqual(JSON.parse(JSON.stringify(actionResource.expectedResult)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
 	});
 
 });

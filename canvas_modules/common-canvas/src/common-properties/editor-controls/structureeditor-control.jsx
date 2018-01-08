@@ -14,7 +14,7 @@ import TextField from "ap-components-react/dist/components/TextField";
 import EditorControl from "./editor-control.jsx";
 import SubPanelButton from "../editor-panels/sub-panel-button.jsx";
 
-var _ = require("underscore");
+import findIndex from "lodash/findIndex";
 
 export default class StructureeditorControl extends EditorControl {
 	constructor(props) {
@@ -41,7 +41,7 @@ export default class StructureeditorControl extends EditorControl {
 	}
 
 	indexOfColumn(controlId) {
-		return _.findIndex(this.props.control.subControls, function(columnControl) {
+		return findIndex(this.props.control.subControls, function(columnControl) {
 			return columnControl.name === controlId;
 		});
 	}

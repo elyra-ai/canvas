@@ -13,7 +13,7 @@ import { ParameterMetadata } from "./ParameterInfo";
 import { StructureMetadata } from "./StructureInfo";
 import { Size } from "./form-constants";
 import { ResourceDef } from "./L10nProvider";
-import _ from "underscore";
+import propertyOf from "lodash/propertyOf";
 
 export class PropertyDef {
 	constructor(cname, icon, editorSize, label, description, structureMetadata, parameterMetadata, groupMetadata, actionMetadata) {
@@ -43,16 +43,16 @@ export class PropertyDef {
 	static makePropertyDef(parameters, structures, uihints) {
 		if (parameters) {
 			// structures aren't in current spec
-			const structureMetadata = StructureMetadata.makeStructureMetadata(structures, _.propertyOf(uihints)("complex_type_info"));
-			const parameterMetadata = ParameterMetadata.makeParameterMetadata(parameters, _.propertyOf(uihints)("parameter_info"));
-			const actionMetadata = ActionMetadata.makeActionMetadata(_.propertyOf(uihints)("action_info"));
-			const groupMetadata = GroupMetadata.makeGroupMetadata(_.propertyOf(uihints)("group_info"));
+			const structureMetadata = StructureMetadata.makeStructureMetadata(structures, propertyOf(uihints)("complex_type_info"));
+			const parameterMetadata = ParameterMetadata.makeParameterMetadata(parameters, propertyOf(uihints)("parameter_info"));
+			const actionMetadata = ActionMetadata.makeActionMetadata(propertyOf(uihints)("action_info"));
+			const groupMetadata = GroupMetadata.makeGroupMetadata(propertyOf(uihints)("group_info"));
 			return new PropertyDef(
-				_.propertyOf(uihints)("id"),
-				_.propertyOf(uihints)("icon"),
-				_.propertyOf(uihints)("editor_size"),
-				_.propertyOf(uihints)("label"),
-				_.propertyOf(uihints)("description"),
+				propertyOf(uihints)("id"),
+				propertyOf(uihints)("icon"),
+				propertyOf(uihints)("editor_size"),
+				propertyOf(uihints)("label"),
+				propertyOf(uihints)("description"),
 				structureMetadata,
 				parameterMetadata,
 				groupMetadata,

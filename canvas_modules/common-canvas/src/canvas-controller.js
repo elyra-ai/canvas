@@ -21,7 +21,7 @@ import DisconnectNodesAction from "./command-actions/disconnectNodesAction.js";
 import EditCommentAction from "./command-actions/editCommentAction.js";
 import MoveObjectsAction from "./command-actions/moveObjectsAction.js";
 import ObjectModel from "./object-model/object-model.js";
-import lodash from "lodash";
+import has from "lodash/has";
 
 // Global instance ID counter
 var commonCanvasControllerInstanceId = 0;
@@ -390,13 +390,13 @@ export default class CanvasController {
 	isTipEnabled(tipType) {
 		switch (tipType) {
 		case constants.TIP_TYPE_PALETTE_ITEM:
-			return (lodash.has(this.canvasConfig, "tipConfig.palette") ? this.canvasConfig.tipConfig.palette : this.defaultTipConfig.palette);
+			return (has(this.canvasConfig, "tipConfig.palette") ? this.canvasConfig.tipConfig.palette : this.defaultTipConfig.palette);
 		case constants.TIP_TYPE_NODE:
-			return (lodash.has(this.canvasConfig, "tipConfig.nodes") ? this.canvasConfig.tipConfig.nodes : this.defaultTipConfig.nodes);
+			return (has(this.canvasConfig, "tipConfig.nodes") ? this.canvasConfig.tipConfig.nodes : this.defaultTipConfig.nodes);
 		case constants.TIP_TYPE_PORT:
-			return (lodash.has(this.canvasConfig, "tipConfig.ports") ? this.canvasConfig.tipConfig.ports : this.defaultTipConfig.ports);
+			return (has(this.canvasConfig, "tipConfig.ports") ? this.canvasConfig.tipConfig.ports : this.defaultTipConfig.ports);
 		case constants.TIP_TYPE_LINK:
-			return (lodash.has(this.canvasConfig, "tipConfig.links") ? this.canvasConfig.tipConfig.links : this.defaultTipConfig.links);
+			return (has(this.canvasConfig, "tipConfig.links") ? this.canvasConfig.tipConfig.links : this.defaultTipConfig.links);
 		default:
 			return false;
 		}

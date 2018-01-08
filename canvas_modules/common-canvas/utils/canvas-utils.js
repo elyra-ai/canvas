@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 import { CANVAS_UI } from "../constants/common-constants.js";
-import _ from "underscore";
+import clone from "lodash/clone";
 
 // http://stackoverflow.com/questions/17456783/javascript-figure-out-point-y-by-angle-and-distance
 function findNewPoint(x, y, angle, distance) {
@@ -64,7 +64,7 @@ function getArrowheadPoints(data, zoom) {
  */
 function getLinePointOnHalo(data, zoom) {
 	const slope = findSlope(data.x1, data.y1, data.x2, data.y2);
-	const d = _.clone(data);
+	const d = clone(data);
 	const linkLength = Math.sqrt((d.x2 -= d.x1) * d.x2 + (d.y2 -= d.y1) * d.y2);
 	const distanceToHalo = Math.round(linkLength - (CANVAS_UI.HALO_RADIUS * zoom));
 	const posHalo = findNewPoint(data.x1, data.y1, slope, distanceToHalo);

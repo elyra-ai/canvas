@@ -11,7 +11,9 @@
 /* eslint brace-style: "off" */
 /* eslint no-lonely-if: "off" */
 
-import _ from "lodash";
+import has from "lodash/has";
+import isEmpty from "lodash/isEmpty";
+import isObject from "lodash/isObject";
 
 export default class SVGPipelineInHandler {
 
@@ -19,8 +21,8 @@ export default class SVGPipelineInHandler {
 	// that info from the pipeline provided. 'Canvas info' consists of three
 	// arrays: nodes, comments and links.
 	static convertPipelineToCanvasInfo(pipeline) {
-		const nodes = _.has(pipeline, "nodes") ? pipeline.nodes : [];
-		const comments = _.has(pipeline, "app_data.ui_data.comments") ? pipeline.app_data.ui_data.comments : [];
+		const nodes = has(pipeline, "nodes") ? pipeline.nodes : [];
+		const comments = has(pipeline, "app_data.ui_data.comments") ? pipeline.app_data.ui_data.comments : [];
 
 		var canvas = {
 			"sub_id": pipeline.id,
@@ -41,22 +43,22 @@ export default class SVGPipelineInHandler {
 				"output_ports": this.convertOutputs(node),
 				"input_ports": this.convertInputs(node),
 				"label": this.getLabel(node),
-				"description": _.has(node, "app_data.ui_data.description") ? node.app_data.ui_data.description : "",
-				"image": _.has(node, "app_data.ui_data.image") ? node.app_data.ui_data.image : "",
-				"x_pos": _.has(node, "app_data.ui_data.x_pos") ? node.app_data.ui_data.x_pos : 10,
-				"y_pos": _.has(node, "app_data.ui_data.y_pos") ? node.app_data.ui_data.y_pos : 10,
-				"class_name": _.has(node, "app_data.ui_data.class_name") ? node.app_data.ui_data.class_name : "",
+				"description": has(node, "app_data.ui_data.description") ? node.app_data.ui_data.description : "",
+				"image": has(node, "app_data.ui_data.image") ? node.app_data.ui_data.image : "",
+				"x_pos": has(node, "app_data.ui_data.x_pos") ? node.app_data.ui_data.x_pos : 10,
+				"y_pos": has(node, "app_data.ui_data.y_pos") ? node.app_data.ui_data.y_pos : 10,
+				"class_name": has(node, "app_data.ui_data.class_name") ? node.app_data.ui_data.class_name : "",
 				"decorations": this.convertDecorations(node.app_data.ui_data.decorations),
-				"parameters": _.has(node, "parameters") ? node.parameters : [],
-				"messages": _.has(node, "app_data.ui_data.messages") ? node.app_data.ui_data.messages : [],
+				"parameters": has(node, "parameters") ? node.parameters : [],
+				"messages": has(node, "app_data.ui_data.messages") ? node.app_data.ui_data.messages : [],
 			})
 		);
 	}
 
 	static getLabel(obj) {
 		// node label in pipeline-flow-ui schema is not a resource_def anymore, but just a string
-		const label = _.has(obj, "app_data.ui_data.label") ? obj.app_data.ui_data.label : "";
-		if (_.isObject(label) && label.default) {
+		const label = has(obj, "app_data.ui_data.label") ? obj.app_data.ui_data.label : "";
+		if (isObject(label) && label.default) {
 			return label.default;
 		}
 		return label;
@@ -91,13 +93,13 @@ export default class SVGPipelineInHandler {
 			"id": port.id,
 			"label": this.getLabel(port)
 		};
-		if (_.has(port, "app_data.ui_data.cardinality")) {
+		if (has(port, "app_data.ui_data.cardinality")) {
 			portObj.cardinality = {
 				"min": port.app_data.ui_data.cardinality.min,
 				"max": port.app_data.ui_data.cardinality.max
 			};
 		}
-		if (_.has(port, "app_data.ui_data.class_name")) {
+		if (has(port, "app_data.ui_data.class_name")) {
 			portObj.class_name = port.app_data.ui_data.class_name;
 		}
 		return portObj;
@@ -130,7 +132,7 @@ export default class SVGPipelineInHandler {
 				"x_pos": comment.x_pos,
 				"y_pos": comment.y_pos,
 				"class_name":
-					_.has(comment, "class_name")
+					has(comment, "class_name")
 						? comment.class_name : "d3-comment-rect",
 			})
 		);
@@ -150,7 +152,7 @@ export default class SVGPipelineInHandler {
 								const newLink = {
 									"id": "canvas_link_" + id++,
 									"class_name":
-										_.has(link, "app_data.ui_data.class_name")
+										has(link, "app_data.ui_data.class_name")
 											? link.app_data.ui_data.class_name : "d3-data-link",
 									"srcNodeId": link.node_id_ref,
 									"trgNodeId": node.id,
@@ -173,7 +175,7 @@ export default class SVGPipelineInHandler {
 						const newLink = {
 							"id": "canvas_link_" + id++,
 							"class_name":
-								_.has(node, "input.link.app_data.ui_data.class_name")
+								has(node, "input.link.app_data.ui_data.class_name")
 									? node.input.link.app_data.ui_data.class_name : "d3-data-link",
 							"srcNodeId": node.input.link.node_id_ref,
 							"trgNodeId": node.id,
@@ -189,7 +191,7 @@ export default class SVGPipelineInHandler {
 			}
 
 			// association links are defined in UI data
-			if (_.has(node, "app_data.ui_data.associations") && !_.isEmpty(node.app_data.ui_data.associations)) {
+			if (has(node, "app_data.ui_data.associations") && !isEmpty(node.app_data.ui_data.associations)) {
 				node.app_data.ui_data.associations.forEach((association) => {
 					if (this.isNode(nodes, association.node_ref)) {
 						const newLink = {
@@ -213,7 +215,7 @@ export default class SVGPipelineInHandler {
 						const newLink = {
 							"id": "canvas_link_" + id++,
 							"class_name":
-								_.has(assocRef, "class_name")
+								has(assocRef, "class_name")
 									? assocRef.class_name : "d3-comment-link",
 							"srcNodeId": comment.id,
 							"trgNodeId": assocRef.node_ref,

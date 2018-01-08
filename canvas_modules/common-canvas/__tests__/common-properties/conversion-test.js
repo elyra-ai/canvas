@@ -12,7 +12,7 @@ import CommonProperties from "../../src/common-properties/common-properties.jsx"
 import { shallow } from "enzyme";
 import { expect } from "chai";
 import sinon from "sinon";
-import _ from "underscore";
+import isEqual from "lodash/isEqual";
 import oldForm from "../test_resources/json/oldDeriveForm.json";
 import deriveDatasetMetadata from "../test_resources/json/deriveDatasetMetadata.json";
 
@@ -33,7 +33,7 @@ describe("CommonProperties converts property sets correctly", () => {
 		const expectedDatasetMetadata = deriveDatasetMetadata;
 		// console.log("Expected1: " + JSON.stringify(expectedDatasetMetadata));
 		// console.log("Actual1  : " + JSON.stringify(newDatasetMetadata));
-		expect(_.isEqual(JSON.parse(JSON.stringify(expectedDatasetMetadata)),
+		expect(isEqual(JSON.parse(JSON.stringify(expectedDatasetMetadata)),
 			JSON.parse(JSON.stringify(newDatasetMetadata)))).to.be.true;
 	});
 });

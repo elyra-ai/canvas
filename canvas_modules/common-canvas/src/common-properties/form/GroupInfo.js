@@ -9,7 +9,8 @@
 
 import { GroupType } from "./form-constants";
 import { ResourceDef } from "./L10nProvider";
-import _ from "underscore";
+import propertyOf from "lodash/propertyOf";
+import has from "lodash/has";
 
 class Group {
 	constructor(cname, parameters, actions, type, label, dependsOn, subGroups, description) {
@@ -38,7 +39,7 @@ class Group {
 	static makeGroup(uiGroup) {
 		if (uiGroup) {
 			let subGroups;
-			if (_.has(uiGroup, "group_info")) {
+			if (has(uiGroup, "group_info")) {
 				subGroups = [];
 				for (const group of uiGroup.group_info) {
 					const newGroup = Group.makeGroup(group);
@@ -48,14 +49,14 @@ class Group {
 				}
 			}
 			return new Group(
-				_.propertyOf(uiGroup)("id"),
-				_.propertyOf(uiGroup)("parameter_refs"),
-				_.propertyOf(uiGroup)("action_refs"),
-				_.propertyOf(uiGroup)("type"),
-				_.propertyOf(uiGroup)("label"),
-				_.propertyOf(uiGroup)("depends_on_ref"),
+				propertyOf(uiGroup)("id"),
+				propertyOf(uiGroup)("parameter_refs"),
+				propertyOf(uiGroup)("action_refs"),
+				propertyOf(uiGroup)("type"),
+				propertyOf(uiGroup)("label"),
+				propertyOf(uiGroup)("depends_on_ref"),
 				subGroups,
-				_.propertyOf(uiGroup)("description"));
+				propertyOf(uiGroup)("description"));
 		}
 		return null;
 	}

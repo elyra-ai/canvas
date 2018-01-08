@@ -8,19 +8,19 @@
  *******************************************************************************/
 
 import { ItemType } from "./form-constants";
-import _ from "underscore";
+import propertyOf from "lodash/propertyOf";
 
 export class UIItem {
 	constructor(elements) {
-		this.itemType = _.propertyOf(elements)("itemType");
-		this.tabs = _.propertyOf(elements)("tabs"); // when PRIMARY_TABS, SUB_TABS or PANEL_SELECTOR
-		this.panel = _.propertyOf(elements)("panel"); // when PANEL or ADDITIONAL_LINK
-		this.control = _.propertyOf(elements)("control"); // when CONTROL
-		this.text = _.propertyOf(elements)("text"); // when ADDITIONAL_LINK (link label) or STATIC_TEXT
-		this.textType = _.propertyOf(elements)("textType"); // when STATIC_TEXT
-		this.secondaryText = _.propertyOf(elements)("secondaryText"); // when ADDITIONAL_LINK (subpanel label)
-		this.dependsOn = _.propertyOf(elements)("dependsOn"); // when PANEL_SELECTOR (control to obtain value from)
-		this.action = _.propertyOf(elements)("action"); // when ACTION
+		this.itemType = propertyOf(elements)("itemType");
+		this.tabs = propertyOf(elements)("tabs"); // when PRIMARY_TABS, SUB_TABS or PANEL_SELECTOR
+		this.panel = propertyOf(elements)("panel"); // when PANEL or ADDITIONAL_LINK
+		this.control = propertyOf(elements)("control"); // when CONTROL
+		this.text = propertyOf(elements)("text"); // when ADDITIONAL_LINK (link label) or STATIC_TEXT
+		this.textType = propertyOf(elements)("textType"); // when STATIC_TEXT
+		this.secondaryText = propertyOf(elements)("secondaryText"); // when ADDITIONAL_LINK (subpanel label)
+		this.dependsOn = propertyOf(elements)("dependsOn"); // when PANEL_SELECTOR (control to obtain value from)
+		this.action = propertyOf(elements)("action"); // when ACTION
 	}
 
 	static makePrimaryTabs(tabs) {
