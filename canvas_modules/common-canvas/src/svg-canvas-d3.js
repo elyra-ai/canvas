@@ -13,7 +13,7 @@
 /* eslint no-console: "off" */
 
 const d3 = require("d3");
-import _ from "underscore";
+import union from "lodash/union";
 import nodeMenuStandardIcon from "../assets/images/canvas_node_icons/node-menu_standard.svg";
 import nodeMenuHoverIcon from "../assets/images/canvas_node_icons/node-menu_hover.svg";
 import { TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK } from "../constants/common-constants.js";
@@ -3226,7 +3226,7 @@ export default class CanvasD3Layout {
 			const linksContaining = this.canvasJSON.links.filter(function(link) {
 				return (link.srcNodeId === selectedObject.id || link.trgNodeId === selectedObject.id);
 			});
-			links = _.union(links, linksContaining);
+			links = union(links, linksContaining);
 		});
 		return links;
 	}

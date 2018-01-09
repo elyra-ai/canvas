@@ -7,7 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import _ from "lodash";
+import isEmpty from "lodash/isEmpty";
 
 export default class SVGPipelineOutHandler {
 
@@ -252,7 +252,7 @@ export default class SVGPipelineOutHandler {
 		}
 
 		const assocationLinks = this.getAssociationLinks(ciNode, canvasLinks);
-		if (!_.isEmpty(assocationLinks)) {
+		if (!isEmpty(assocationLinks)) {
 			newNode.app_data.ui_data.associations = assocationLinks;
 		}
 

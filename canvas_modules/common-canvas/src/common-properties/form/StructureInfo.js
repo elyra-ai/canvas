@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 import { ParameterDef, ParameterMetadata } from "./ParameterInfo";
-import _ from "underscore";
+import propertyOf from "lodash/propertyOf";
 import { ResourceDef } from "./L10nProvider";
 
 export class StructureDef {
@@ -66,12 +66,12 @@ export class StructureDef {
 	static makeStructure(structure, uihints) {
 		if (structure) {
 			return new StructureDef(
-				_.propertyOf(structure)("id"),
-				ParameterDef.makeParameterDef(_.propertyOf(structure)("key_definition"), _.propertyOf(uihints)("key_definition"), true),
-				ParameterMetadata.makeParameterMetadata(_.propertyOf(structure)("parameters"), _.propertyOf(uihints)("parameters")),
-				_.propertyOf(uihints)("moveable_rows"),
-				_.propertyOf(uihints)("label"),
-				_.propertyOf(uihints)("row_selection")
+				propertyOf(structure)("id"),
+				ParameterDef.makeParameterDef(propertyOf(structure)("key_definition"), propertyOf(uihints)("key_definition"), true),
+				ParameterMetadata.makeParameterMetadata(propertyOf(structure)("parameters"), propertyOf(uihints)("parameters")),
+				propertyOf(uihints)("moveable_rows"),
+				propertyOf(uihints)("label"),
+				propertyOf(uihints)("row_selection")
 			);
 		}
 		return null;

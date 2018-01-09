@@ -16,7 +16,7 @@ import sinon from "sinon";
 import chai from "chai";
 import chaiEnzyme from "chai-enzyme";
 chai.use(chaiEnzyme()); // Need for style checking
-import _ from "underscore";
+import isEqual from "lodash/isEqual";
 
 import Controller from "../../src/common-properties/properties-controller";
 
@@ -972,7 +972,7 @@ function createEditorForm(state) {
 	return wrapper;
 }
 function compareObjects(expected, actual) {
-	expect(_.isEqual(JSON.parse(JSON.stringify(expected)),
+	expect(isEqual(JSON.parse(JSON.stringify(expected)),
 		JSON.parse(JSON.stringify(actual)))).to.be.true;
 }
 
@@ -1003,51 +1003,51 @@ describe("editor-form renders correctly with validations", () => {
 		compareObjects(visibleDefinition.oneofselectAnimals, controller.visibleDefinition.oneofselectAnimals);
 		compareObjects(visibleDefinition.checkboxEnableDesc, controller.visibleDefinition.checkboxEnableDesc);
 
-		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.numberfieldCheckpointInterval)),
+		expect(isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.numberfieldCheckpointInterval)),
 			JSON.parse(JSON.stringify(validationDefinitions.numberfieldCheckpointInterval)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.numberfieldImpurity)),
+		expect(isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.numberfieldImpurity)),
 			JSON.parse(JSON.stringify(validationDefinitions.numberfieldImpurity)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.numberfieldMaxBins)),
+		expect(isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.numberfieldMaxBins)),
 			JSON.parse(JSON.stringify(validationDefinitions.numberfieldMaxBins)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.numberfieldMaxDepth)),
+		expect(isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.numberfieldMaxDepth)),
 			JSON.parse(JSON.stringify(validationDefinitions.numberfieldMaxDepth)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.numberfieldMinInstancesPerNode)),
+		expect(isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.numberfieldMinInstancesPerNode)),
 			JSON.parse(JSON.stringify(validationDefinitions.numberfieldMinInstancesPerNode)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.numberfieldMinInfoGain)),
+		expect(isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.numberfieldMinInfoGain)),
 			JSON.parse(JSON.stringify(validationDefinitions.numberfieldMinInfoGain)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.numberfieldSeed)),
+		expect(isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.numberfieldSeed)),
 			JSON.parse(JSON.stringify(validationDefinitions.numberfieldSeed)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.columnSelectInputFieldList)),
+		expect(isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.columnSelectInputFieldList)),
 			JSON.parse(JSON.stringify(validationDefinitions.columnSelectInputFieldList)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.oneofcolumnsList)),
+		expect(isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.oneofcolumnsList)),
 			JSON.parse(JSON.stringify(validationDefinitions.oneofcolumnsList)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.someofcolumnsList)),
+		expect(isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.someofcolumnsList)),
 			JSON.parse(JSON.stringify(validationDefinitions.someofcolumnsList)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.columnSelectSharedWithInput)),
+		expect(isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.columnSelectSharedWithInput)),
 			JSON.parse(JSON.stringify(validationDefinitions.columnSelectSharedWithInput)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.checkboxTypes)),
+		expect(isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.checkboxTypes)),
 			JSON.parse(JSON.stringify(validationDefinitions.checkboxTypes)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.oneofselectAnimals)),
+		expect(isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.oneofselectAnimals)),
 			JSON.parse(JSON.stringify(validationDefinitions.oneofselectAnimals)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.someofselectNumbers)),
+		expect(isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.someofselectNumbers)),
 			JSON.parse(JSON.stringify(validationDefinitions.someofselectNumbers)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.checkboxSingle)),
+		expect(isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.checkboxSingle)),
 			JSON.parse(JSON.stringify(validationDefinitions.checkboxSingle)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.radiosetColor)),
+		expect(isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.radiosetColor)),
 			JSON.parse(JSON.stringify(validationDefinitions.radiosetColor)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.passwordField)),
+		expect(isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.passwordField)),
 			JSON.parse(JSON.stringify(validationDefinitions.passwordField)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.textfieldName)),
+		expect(isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.textfieldName)),
 			JSON.parse(JSON.stringify(validationDefinitions.textfieldName)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.textareaDescription)),
+		expect(isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.textareaDescription)),
 			JSON.parse(JSON.stringify(validationDefinitions.textareaDescription)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.structuretableSortOrder)),
+		expect(isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.structuretableSortOrder)),
 			JSON.parse(JSON.stringify(validationDefinitions.structuretableSortOrder)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.structuretableRenameFields)),
+		expect(isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.structuretableRenameFields)),
 			JSON.parse(JSON.stringify(validationDefinitions.structuretableRenameFields)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.structurelisteditorTableInput)),
+		expect(isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.structurelisteditorTableInput)),
 			JSON.parse(JSON.stringify(validationDefinitions.structurelisteditorTableInput)))).to.be.true;
-		expect(_.isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.name)),
+		expect(isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.name)),
 			JSON.parse(JSON.stringify(validationDefinitions.subpanelTextfieldName)))).to.be.true;
 
 		compareObjects({}, controller.getErrorMessages());
@@ -1242,7 +1242,7 @@ describe("editor-form renders correctly with validations", () => {
 				["Age", ""],
 				["BP", "BP-1"]
 			];
-			expect(_.isEqual(rowValues, expected)).to.be.true;
+			expect(isEqual(rowValues, expected)).to.be.true;
 
 			// TODO nothing being checked here for validations
 		});

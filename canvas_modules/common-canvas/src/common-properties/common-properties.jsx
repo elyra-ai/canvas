@@ -17,7 +17,7 @@ import Form from "./form/Form";
 import CommonPropertiesAction from "../command-actions/commonPropertiesAction.js";
 import PropertiesController from "./properties-controller";
 import logger from "../../utils/logger";
-import _ from "underscore";
+import isEqual from "lodash/isEqual";
 
 import TextField from "ap-components-react/dist/components/TextField";
 
@@ -63,13 +63,13 @@ export default class CommonProperties extends React.Component {
 
 	componentWillReceiveProps(newProps) {
 		if (newProps.propertiesInfo) {
-			if (newProps.propertiesInfo.messages && !_.isEqual(newProps.propertiesInfo.messages, this.propertiesInfo.messages)) {
+			if (newProps.propertiesInfo.messages && !isEqual(newProps.propertiesInfo.messages, this.propertiesInfo.messages)) {
 				this.propertiesInfo.messages = newProps.propertiesInfo.messages;
 				this.setErrorMessages(newProps.propertiesInfo.messages);
 			}
-			if (!_.isEqual(Object.keys(newProps.propertiesInfo), Object.keys(this.propertiesInfo)) ||
-				(newProps.propertiesInfo.formData && !_.isEqual(newProps.propertiesInfo.formData, this.propertiesInfo.formData)) ||
-				(newProps.propertiesInfo.parameterDef && !_.isEqual(newProps.propertiesInfo.parameterDef, this.propertiesInfo.parameterDef))) {
+			if (!isEqual(Object.keys(newProps.propertiesInfo), Object.keys(this.propertiesInfo)) ||
+				(newProps.propertiesInfo.formData && !isEqual(newProps.propertiesInfo.formData, this.propertiesInfo.formData)) ||
+				(newProps.propertiesInfo.parameterDef && !isEqual(newProps.propertiesInfo.parameterDef, this.propertiesInfo.parameterDef))) {
 				this.propertiesInfo = newProps.propertiesInfo;
 				this.setForm();
 			}

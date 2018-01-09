@@ -15,8 +15,8 @@ import PropTypes from "prop-types";
 import ColumnStructureTableEditor from "./column-structure-table-editor.jsx";
 import MoveableTableRows from "./moveable-table-rows.jsx";
 import { TOOL_TIP_DELAY } from "../constants/constants.js";
-
-var _ = require("underscore");
+import findIndex from "lodash/findIndex";
+import reject from "lodash/reject";
 
 export default class ColumnStructureTableControl extends ColumnStructureTableEditor {
 	constructor(props) {
@@ -60,7 +60,7 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 
 	indexOfRow(columnName) {
 		const keyIndex = this.props.control.keyIndex;
-		return _.findIndex(this.getCurrentControlValue(), function(row) {
+		return findIndex(this.getCurrentControlValue(), function(row) {
 			return row[keyIndex] === columnName;
 		});
 	}
@@ -132,7 +132,7 @@ export default class ColumnStructureTableControl extends ColumnStructureTableEdi
 		const rows = this.getCurrentControlValue();
 		const keyIndex = this.props.control.keyIndex;
 
-		const newRows = _.reject(rows, function(val) {
+		const newRows = reject(rows, function(val) {
 			// logger.info("_reject: " + val[keyIndex]);
 			// logger.info("_reject: " + (columnNames.indexOf(val[keyIndex]) >= 0));
 			return columnNames.indexOf(val[keyIndex]) >= 0;

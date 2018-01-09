@@ -16,7 +16,7 @@ import propertiesReducer from "./reducers/properties";
 import controlStatesReducer from "./reducers/control-states";
 import errorMessagesReducer from "./reducers/error-messages";
 import datasetMetadataReducer from "./reducers/dataset-metadata";
-import _ from "underscore";
+import isEqual from "lodash/isEqual";
 
 /* eslint max-depth: ["error", 6] */
 
@@ -82,7 +82,7 @@ export default class PropertiesStore {
 	}
 	setControlStates(values) {
 		// check to see if values are equal before firing event
-		if (!_.isEqual(this.getControlStates(), values)) {
+		if (!isEqual(this.getControlStates(), values)) {
 			this.store.dispatch(setControlStates(values));
 		}
 	}
@@ -141,12 +141,12 @@ export default class PropertiesStore {
 	}
 	setErrorMessages(values) {
 		// check to see if values are equal before firing event
-		if (!_.isEqual(this.getErrorMessages(), values)) {
+		if (!isEqual(this.getErrorMessages(), values)) {
 			this.store.dispatch(setErrorMessages(values));
 		}
 	}
 	updateErrorMessage(propertyId, value) {
-		if (!_.isEqual(this.getErrorMessage(propertyId), value)) {
+		if (!isEqual(this.getErrorMessage(propertyId), value)) {
 			this.store.dispatch(updateErrorMessage({ propertyId: propertyId, value: value }));
 		}
 	}

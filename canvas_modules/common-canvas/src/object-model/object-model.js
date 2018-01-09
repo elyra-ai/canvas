@@ -10,13 +10,13 @@
 import { createStore, combineReducers } from "redux";
 import uuid from "node-uuid";
 import { NONE, VERTICAL, DAGRE_HORIZONTAL, DAGRE_VERTICAL } from "../../constants/common-constants.js";
-import dagre from "dagre";
+import dagre from "dagre/dist/dagre.min.js";
 import LayoutDimensions from "./layout-dimensions.js";
 import SVGCanvasInHandler from "../svg-canvas-in-handler.js"; // TODO - Remove this when WML supports PipelineFlow
 import SVGCanvasOutHandler from "../svg-canvas-out-handler.js"; // TODO - Remove this when WML supports PipelineFlow
 import SVGPipelineInHandler from "../svg-pipeline-in-handler.js";
 import SVGPipelineOutHandler from "../svg-pipeline-out-handler.js";
-import _ from "underscore";
+import isEmpty from "lodash/isEmpty";
 
 /* eslint arrow-body-style: ["error", "always"] */
 /* eslint complexity: ["error", 26] */
@@ -688,7 +688,7 @@ export default class ObjectModel {
 
 	getPaletteNode(nodeOpIdRef) {
 		let outNodeType = null;
-		if (!_.isEmpty(this.getPaletteData())) {
+		if (!isEmpty(this.getPaletteData())) {
 			this.getPaletteData().categories.forEach((category) => {
 				category.nodetypes.forEach((nodeType) => {
 					if (nodeType.operator_id_ref === nodeOpIdRef) {

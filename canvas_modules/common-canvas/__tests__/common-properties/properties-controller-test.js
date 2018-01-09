@@ -9,7 +9,7 @@
 
 import { expect } from "chai";
 import sinon from "sinon";
-import _ from "underscore";
+import isEqual from "lodash/isEqual";
 import deepFreeze from "deep-freeze";
 import Controller from "../../src/common-properties/properties-controller";
 import conditionForm from "../test_resources/json/conditions-summary-form.json";
@@ -135,7 +135,7 @@ describe("Properties Controller property values", () => {
 	it("should set property values correctly", () => {
 		reset();
 		const actualValues = controller.getPropertyValues();
-		expect(_.isEqual(getCopy(propValues), actualValues)).to.be.true;
+		expect(isEqual(getCopy(propValues), actualValues)).to.be.true;
 	});
 	it("should update a simple property value correctly", () => {
 		reset();
@@ -143,7 +143,7 @@ describe("Properties Controller property values", () => {
 		const actualValues = controller.getPropertyValues();
 		const expectedValues = getCopy(propValues);
 		expectedValues.param_int = 10;
-		expect(_.isEqual(expectedValues, actualValues)).to.be.true;
+		expect(isEqual(expectedValues, actualValues)).to.be.true;
 	});
 	it("should update a row property value correctly", () => {
 		reset();
@@ -151,7 +151,7 @@ describe("Properties Controller property values", () => {
 		const actualValues = controller.getPropertyValues();
 		const expectedValues = getCopy(propValues);
 		expectedValues.param_mix_table[5] = [null, null, null, null, null];
-		expect(_.isEqual(expectedValues, actualValues)).to.be.true;
+		expect(isEqual(expectedValues, actualValues)).to.be.true;
 
 	});
 	it("should update a cell property value correctly", () => {
@@ -160,7 +160,7 @@ describe("Properties Controller property values", () => {
 		const actualValues = controller.getPropertyValues();
 		const expectedValues = getCopy(propValues);
 		expectedValues.param_mix_table[2][3] = 10;
-		expect(_.isEqual(expectedValues, actualValues)).to.be.true;
+		expect(isEqual(expectedValues, actualValues)).to.be.true;
 	});
 	it("should get a simple property value correctly", () => {
 		reset();
@@ -186,7 +186,7 @@ describe("Properties Controller property values", () => {
 			["field3", false, null, 0.674, "WML"],
 			["field4", null, 10, null, ""],
 			[null, false, 10, null, null]];
-		expect(_.isEqual(expectedValue, actualValue)).to.be.true;
+		expect(isEqual(expectedValue, actualValue)).to.be.true;
 	});
 	it("should get filtered property values correctly", () => {
 		reset();
@@ -203,7 +203,7 @@ describe("Properties Controller property values", () => {
 			param_message1: [],
 			param_message2: []
 		};
-		expect(_.isEqual(expectedValue, actualValue)).to.be.true;
+		expect(isEqual(expectedValue, actualValue)).to.be.true;
 	});
 });
 
@@ -211,7 +211,7 @@ describe("Properties Controller states", () => {
 	it("should set property states correctly", () => {
 		reset();
 		const actualValues = controller.getControlStates();
-		expect(_.isEqual(getCopy(propStates), actualValues)).to.be.true;
+		expect(isEqual(getCopy(propStates), actualValues)).to.be.true;
 	});
 	it("should update a simple property state correctly", () => {
 		reset();
@@ -221,7 +221,7 @@ describe("Properties Controller states", () => {
 		expectedValues.param_int = {
 			value: "hidden"
 		};
-		expect(_.isEqual(expectedValues, actualValues)).to.be.true;
+		expect(isEqual(expectedValues, actualValues)).to.be.true;
 	});
 	it("should update a row property state correctly", () => {
 		reset();
@@ -231,7 +231,7 @@ describe("Properties Controller states", () => {
 		expectedValues.param_str_array[2] = {
 			value: "disabled"
 		};
-		expect(_.isEqual(expectedValues, actualValues)).to.be.true;
+		expect(isEqual(expectedValues, actualValues)).to.be.true;
 	});
 	it("should update a cell property state correctly", () => {
 		reset();
@@ -242,7 +242,7 @@ describe("Properties Controller states", () => {
 		expectedValues.param_mix_table[2][3] = {
 			value: "hidden"
 		};
-		expect(_.isEqual(expectedValues, actualValues)).to.be.true;
+		expect(isEqual(expectedValues, actualValues)).to.be.true;
 	});
 	it("should get a simple property state correctly", () => {
 		reset();
@@ -262,7 +262,7 @@ describe("Properties Controller states", () => {
 	it("should get property states correctly", () => {
 		reset();
 		const actualValues = controller.getControlStates();
-		expect(_.isEqual(propStates, actualValues)).to.be.true;
+		expect(isEqual(propStates, actualValues)).to.be.true;
 	});
 });
 
@@ -270,14 +270,14 @@ describe("Properties Controller datasetMetadata", () => {
 	it("should set datasetMetadata correctly", () => {
 		reset();
 		const actualValue = controller.getDatasetMetadata();
-		expect(_.isEqual(dataModel, actualValue)).to.be.true;
+		expect(isEqual(dataModel, actualValue)).to.be.true;
 	});
 });
 describe("Properties Controller property messages", () => {
 	it("should set property messages correctly", () => {
 		reset();
 		const actualValues = controller.getErrorMessages();
-		expect(_.isEqual(getCopy(errorMessages), actualValues)).to.be.true;
+		expect(isEqual(getCopy(errorMessages), actualValues)).to.be.true;
 	});
 	it("should update a simple property message correctly", () => {
 		reset();
@@ -291,7 +291,7 @@ describe("Properties Controller property messages", () => {
 			type: "error",
 			text: "Testing error messages"
 		};
-		expect(_.isEqual(expectedValues, actualValues)).to.be.true;
+		expect(isEqual(expectedValues, actualValues)).to.be.true;
 	});
 	it("should update a row property message correctly", () => {
 		reset();
@@ -306,7 +306,7 @@ describe("Properties Controller property messages", () => {
 			type: "warning",
 			text: "warning in array"
 		};
-		expect(_.isEqual(expectedValues, actualValues)).to.be.true;
+		expect(isEqual(expectedValues, actualValues)).to.be.true;
 	});
 	it("should update a cell property message correctly", () => {
 		reset();
@@ -321,7 +321,7 @@ describe("Properties Controller property messages", () => {
 			type: "error",
 			text: "Bad cell value"
 		};
-		expect(_.isEqual(expectedValues, actualValues)).to.be.true;
+		expect(isEqual(expectedValues, actualValues)).to.be.true;
 	});
 	it("should get a table property message correctly", () => {
 		reset();
@@ -330,7 +330,7 @@ describe("Properties Controller property messages", () => {
 			type: "warning",
 			text: "Bad table value"
 		};
-		expect(_.isEqual(expectedValue, actualValue)).to.be.true;
+		expect(isEqual(expectedValue, actualValue)).to.be.true;
 	});
 	it("should get a row property message correctly", () => {
 		reset();
@@ -339,7 +339,7 @@ describe("Properties Controller property messages", () => {
 			type: "error",
 			text: "Bad array value"
 		};
-		expect(_.isEqual(expectedValue, actualValue)).to.be.true;
+		expect(isEqual(expectedValue, actualValue)).to.be.true;
 	});
 	it("should get a cell property message correctly", () => {
 		reset();
@@ -348,7 +348,7 @@ describe("Properties Controller property messages", () => {
 			type: "warning",
 			text: "Bad table value"
 		};
-		expect(_.isEqual(expectedValue, actualValue)).to.be.true;
+		expect(isEqual(expectedValue, actualValue)).to.be.true;
 	});
 	it("should get pipeline property messages correctly", () => {
 		reset();
@@ -370,7 +370,7 @@ describe("Properties Controller property messages", () => {
 				"text": "Bad table value"
 			}
 		];
-		expect(_.isEqual(expectedValues, actualValues)).to.be.true;
+		expect(isEqual(expectedValues, actualValues)).to.be.true;
 	});
 });
 describe("Properties Controller handlers", () => {
@@ -419,7 +419,7 @@ describe("Properties Controller controls", () => {
 			"summaryPanelId": "summary-panel",
 			"summaryLabel": "Maximum number of bins"
 		};
-		expect(_.isEqual(expectedValue, actualValue)).to.be.true;
+		expect(isEqual(expectedValue, actualValue)).to.be.true;
 	});
 	it("should get table control", () => {
 		reset();
@@ -446,7 +446,7 @@ describe("Properties Controller controls", () => {
 			"summaryPanelId": "structuretableSortOrder-summary-panel",
 			"summaryLabel": "Sort by"
 		};
-		expect(_.isEqual(expectedValue, actualValue)).to.be.true;
+		expect(isEqual(expectedValue, actualValue)).to.be.true;
 	});
 	it("should return if control is required", () => {
 		reset();

@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 import { PropertyDef } from "./PropertyDef";
-import _ from "underscore";
+import propertyOf from "lodash/propertyOf";
 import { makePrimaryTab } from "./EditorForm";
 import { UIItem } from "./UIItem";
 import { L10nProvider } from "./L10nProvider";
@@ -29,11 +29,11 @@ export default class Form {
 	* Returns a new Form
 	*/
 	static makeForm(paramDef) {
-		const propDef = PropertyDef.makePropertyDef(_.propertyOf(paramDef)("parameters"), _.propertyOf(paramDef)("complex_types"),
-			_.propertyOf(paramDef)("uihints"));
-		const conditions = _.propertyOf(paramDef)("conditions");
+		const propDef = PropertyDef.makePropertyDef(propertyOf(paramDef)("parameters"), propertyOf(paramDef)("complex_types"),
+			propertyOf(paramDef)("uihints"));
+		const conditions = propertyOf(paramDef)("conditions");
 		if (propDef) {
-			const l10nProvider = new L10nProvider(_.propertyOf(paramDef)("resources"));
+			const l10nProvider = new L10nProvider(propertyOf(paramDef)("resources"));
 			const tabs = [];
 			if (propDef.groupMetadata && propDef.groupMetadata.groups) {
 				for (const group of propDef.groupMetadata.groups) {
@@ -42,8 +42,8 @@ export default class Form {
 			}
 
 			const data = {
-				currentParameters: _.propertyOf(paramDef)("current_parameters"),
-				datasetMetadata: _.propertyOf(paramDef)("dataset_metadata")
+				currentParameters: propertyOf(paramDef)("current_parameters"),
+				datasetMetadata: propertyOf(paramDef)("dataset_metadata")
 			};
 			return new Form(propDef.name,
 				l10nProvider.l10nLabel(propDef, propDef.name),

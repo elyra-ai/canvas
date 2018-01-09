@@ -10,7 +10,7 @@
 import { Separator } from "./form-constants";
 import { Type, ParamRole, EditStyle } from "./form-constants";
 import { ResourceDef } from "./L10nProvider";
-import _ from "underscore";
+import propertyOf from "lodash/propertyOf";
 
 export class ParameterDef {
 	constructor(cname, label, description, type, role, valueRestriction, defaultValue,
@@ -184,34 +184,34 @@ export class ParameterDef {
 	static makeParameterDef(param, uihint, isKey) {
 		if (param) {
 			return new ParameterDef(
-				_.propertyOf(param)("id"),
-				_.propertyOf(uihint)("label"),
-				_.propertyOf(uihint)("description"),
-				_.propertyOf(param)("type"),
-				_.propertyOf(param)("role"),
-				_.propertyOf(param)("enum"),
-				_.propertyOf(param)("default"),
-				_.propertyOf(uihint)("control"),
-				_.propertyOf(uihint)("orientation"),
-				_.propertyOf(uihint)("width"),
-				_.propertyOf(uihint)("char_limit"),
-				_.propertyOf(uihint)("place_holder_text"),
-				_.propertyOf(uihint)("separator"),
-				_.propertyOf(uihint)("resource_key"),
-				_.propertyOf(uihint)("visible"),
-				_.propertyOf(uihint)("value_icons"),
-				_.propertyOf(uihint)("sortable"),
-				_.propertyOf(uihint)("filterable"),
-				_.propertyOf(uihint)("edit_style"),
-				_.propertyOf(param)("required"),
-				_.propertyOf(uihint)("number_generator"),
+				propertyOf(param)("id"),
+				propertyOf(uihint)("label"),
+				propertyOf(uihint)("description"),
+				propertyOf(param)("type"),
+				propertyOf(param)("role"),
+				propertyOf(param)("enum"),
+				propertyOf(param)("default"),
+				propertyOf(uihint)("control"),
+				propertyOf(uihint)("orientation"),
+				propertyOf(uihint)("width"),
+				propertyOf(uihint)("char_limit"),
+				propertyOf(uihint)("place_holder_text"),
+				propertyOf(uihint)("separator"),
+				propertyOf(uihint)("resource_key"),
+				propertyOf(uihint)("visible"),
+				propertyOf(uihint)("value_icons"),
+				propertyOf(uihint)("sortable"),
+				propertyOf(uihint)("filterable"),
+				propertyOf(uihint)("edit_style"),
+				propertyOf(param)("required"),
+				propertyOf(uihint)("number_generator"),
 				isKey,
-				_.propertyOf(uihint)("dm_default"),
-				_.propertyOf(uihint)("language"),
-				_.propertyOf(uihint)("summary"),
-				_.propertyOf(uihint)("text_after"),
-				_.propertyOf(uihint)("text_before"),
-				_.propertyOf(uihint)("moveable_rows")
+				propertyOf(uihint)("dm_default"),
+				propertyOf(uihint)("language"),
+				propertyOf(uihint)("summary"),
+				propertyOf(uihint)("text_after"),
+				propertyOf(uihint)("text_before"),
+				propertyOf(uihint)("moveable_rows")
 			);
 		}
 		return null;
