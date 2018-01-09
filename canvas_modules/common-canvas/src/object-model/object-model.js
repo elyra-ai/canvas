@@ -10,7 +10,7 @@
 import { createStore, combineReducers } from "redux";
 import uuid from "node-uuid";
 import { NONE, VERTICAL, DAGRE_HORIZONTAL, DAGRE_VERTICAL } from "../../constants/common-constants.js";
-import dagre from "dagre";
+import dagre from "dagre/dist/dagre.min.js";
 import LayoutDimensions from "./layout-dimensions.js";
 import SVGCanvasInHandler from "../svg-canvas-in-handler.js"; // TODO - Remove this when WML supports PipelineFlow
 import SVGCanvasOutHandler from "../svg-canvas-out-handler.js"; // TODO - Remove this when WML supports PipelineFlow
