@@ -7,6 +7,8 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
+import logger from "../../../utils/logger";
+
 /**
  * A better type identifier than a simple 'typeOf' call:
  *
@@ -26,6 +28,75 @@ function toType(obj) {
 	return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
 }
 
+/*
+* Parses text to see if there is any text replace elements ${}
+*/
+function evaluateText(text, controller) {
+	try {
+		if (!text) {
+			return text;
+		}
+		const startIdx = text.indexOf("${");
+		if (startIdx < 0) {
+			return text;
+		}
+		const endIdx = text.substr(startIdx + 2).indexOf("}");
+		if (endIdx < 0) {
+			return text;
+		}
+		const expression = text.substr(startIdx + 2, endIdx);
+		const newText = text.replace("${" + expression + "}", _evaluateExpression(expression, controller));
+		return evaluateText(newText, controller); // test to see if there are more expressions
+	} catch (e) {
+		logger.warn("Invalid expression.  Make sure replacement expression in text is a valid expression.");
+		return text;
+	}
+}
+
+function _evaluateExpression(expression, controller) {
+	const paramStartIdx = expression.indexOf("(");
+	const funcName = expression.substr(0, paramStartIdx);
+	const parameters = expression.slice(paramStartIdx + 1, -1).split(",");
+	if (parameters.length === 0) {
+		return "";
+	}
+	let value;
+	let paramValue;
+	switch (funcName) {
+	case "percent":
+		paramValue = _getExpParameterValue(parameters[0], controller);
+		// 0, undefined, null, or not a number return 0
+		if (!paramValue || isNaN(paramValue)) {
+			return 0;
+		}
+		value = 100.0 / paramValue;
+		if (parameters.length > 1) {
+			value = value.toFixed(parseInt(parameters[1], 10));
+		}
+		return value;
+	case "sum":
+		value = 0;
+		for (const param of parameters) {
+			paramValue = _getExpParameterValue(param, controller);
+			if (!isNaN(paramValue)) {
+				value += paramValue;
+			}
+		}
+		return value;
+	default:
+		break;
+	}
+	return "";
+}
+function _getExpParameterValue(expParam, controller) {
+	// assume property if parameter is a string
+	if (isNaN(expParam)) {
+		return controller.getPropertyValue({ name: expParam.trim() });
+	}
+	return parseFloat(expParam);
+}
+
 module.exports = {
-	toType: toType
+	toType: toType,
+	evaluateText: evaluateText
 };

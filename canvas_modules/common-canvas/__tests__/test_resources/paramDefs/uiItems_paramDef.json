@@ -64,7 +64,10 @@
         "description": {
           "default": "Testing of uiItems"
         },
-        "separator": "before"
+        "separator": "before",
+        "text_after": {
+          "default": "Sum: ${sum(numberfield, 2, numberfield)} with (numberfield, 2, numberfield). Percent: ${percent(numberfield,2)}"
+        }
       }
     ],
     "group_info": [

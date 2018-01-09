@@ -15,17 +15,24 @@ describe("textPanel render correctly", () => {
 	const wrapper = propertyUtils.flyoutEditorForm(panelParamDef);
 	it("should have displayed correct number of textPanel elements", () => {
 		const staticText = wrapper.find(".properties-text-panel");
-		expect(staticText).to.have.length(2);
+		expect(staticText).to.have.length(4);
 		const labels = wrapper.find(".panel-label");
-		expect(labels).to.have.length(2);
+		expect(labels).to.have.length(4);
 		const descriptions = wrapper.find(".panel-description");
-		expect(descriptions).to.have.length(2);
+		expect(descriptions).to.have.length(4);
 	});
 	it("should have displayed correct text in textPanel elements", () => {
 		const labels = wrapper.find(".panel-label");
 		expect(labels.at(0).text()).to.equal("Oranges");
-		const descriptions = wrapper.find(".panel-description");
+		let descriptions = wrapper.find(".panel-description");
 		expect(descriptions.at(0).text()).to.equal("An orange tree can grow to reach 30 feet and live for over a hundred years.");
-		expect(descriptions.at(1).text()).to.equal("Apples ripen six to 10 times faster at room temperature than if they are refrigerated.");
+		expect(descriptions.at(1).text()).to.equal("Percent: 9.090909 with 6 decimals. Percent: 9.09 with 2 decimals");
+		expect(descriptions.at(2).text()).to.equal("Sum: 22 with (number, number). Sum: 24 with (number, 2, number)");
+		expect(descriptions.at(3).text()).to.equal("Apples ripen six to 10 times faster at room temperature than if they are refrigerated.");
+		const input = wrapper.find("[type='number']");
+		input.simulate("change", { target: { value: 0.52 } });
+		descriptions = wrapper.find(".panel-description");
+		expect(descriptions.at(1).text()).to.equal("Percent: 192.307692 with 6 decimals. Percent: 192.31 with 2 decimals");
+		expect(descriptions.at(2).text()).to.equal("Sum: 1.04 with (number, number). Sum: 3.04 with (number, 2, number)");
 	});
 });

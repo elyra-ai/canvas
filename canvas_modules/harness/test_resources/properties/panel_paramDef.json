@@ -37,7 +37,10 @@
       {
         "parameter_ref": "number",
         "label": {
-          "default": "Number"
+          "default": "number"
+        },
+        "description": {
+          "default": "A control between a panelSelector control.  Also used to display dynamic text in panel text."
         }
       }
     ],
@@ -72,6 +75,26 @@
           "number"
         ],
         "group_info": [
+          {
+            "id": "dynamicTextPercent",
+            "type": "textPanel",
+            "label": {
+              "default": "Dynamic Percent"
+            },
+            "description": {
+              "default": "Percent: ${percent(number, 6)} with 6 decimals. Percent: ${percent(number,2)} with 2 decimals"
+            }
+          },
+          {
+            "id": "dynamicTextSum",
+            "type": "textPanel",
+            "label": {
+              "default": "Dynamic Sum"
+            },
+            "description": {
+              "default": "Sum: ${sum(number, number)} with (number, number). Sum: ${sum(number, 2, number)} with (number, 2, number)"
+            }
+          },
           {
             "id": "panel-selector-fields",
             "label": {

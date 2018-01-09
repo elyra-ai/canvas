@@ -16,6 +16,7 @@ import PropTypes from "prop-types";
 import ButtonToolbar from "react-bootstrap/lib/ButtonToolbar";
 import Tabs from "ap-components-react/dist/components/Tabs";
 import { TOOL_TIP_DELAY } from "../constants/constants.js";
+import PropertyUtil from "../util/property-utils.js";
 
 import ReactTooltip from "react-tooltip";
 
@@ -56,13 +57,6 @@ import UpIcon from "../../../assets/images/up_enabled.svg";
 import InfoIcon from "../../../assets/images/info.svg";
 
 export default class EditorForm extends React.Component {
-
-	static tabId(component, id, hash) {
-		if (hash) {
-			return "#tab-" + component + "-" + id;
-		}
-		return "tab-" + component + "-" + id;
-	}
 
 	constructor(props) {
 		super(props);
@@ -639,7 +633,7 @@ export default class EditorForm extends React.Component {
 				icon = <div className="static-text-icon-container"><img className="static-text-icon" src={InfoIcon} /></div>;
 				textClass = "static-text info";
 			}
-			const text = <div className={textClass}>{uiItem.text}</div>;
+			const text = <div className={textClass}>{PropertyUtil.evaluateText(uiItem.text, this.props.controller)}</div>;
 			return <div key={"static-text." + key} className="static-text-container">{icon}{text}</div>;
 		} else if (uiItem.itemType === "hSeparator") {
 			return <hr key={"h-separator." + key} className="h-separator" />;
@@ -662,7 +656,9 @@ export default class EditorForm extends React.Component {
 			return this.generateAction(key, uiItem.action);
 		} else if (uiItem.itemType === "textPanel" && uiItem.panel) {
 			const label = uiItem.panel.label ? (<div className="panel-label">{uiItem.panel.label.text}</div>) : (<div />);
-			const description = uiItem.panel.description ? (<div className="panel-description">{uiItem.panel.description.text}</div>) : (<div />);
+			const description = uiItem.panel.description
+				? (<div className="panel-description">{PropertyUtil.evaluateText(uiItem.panel.description.text, this.props.controller)}</div>)
+				: (<div />);
 			return (
 				<div className="properties-text-panel" key={"text-panel-" + key}>
 					{label}
