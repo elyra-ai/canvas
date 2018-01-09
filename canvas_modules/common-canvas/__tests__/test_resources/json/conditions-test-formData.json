@@ -81,6 +81,7 @@
                       "isMap": false,
                       "defaultValue": 32
                     },
+                    "required" : true,
                     "separateLabel": true
                   }
                 },

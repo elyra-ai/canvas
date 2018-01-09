@@ -1639,4 +1639,60 @@ describe("editor-form renders correctly with validations", () => {
 			expect(dropdownContainer.find(".validation-error-message-color-warning")).to.have.length(1);
 		});
 	});
+
+	describe("condition messages renders correctly with multi-control conditions", () => {
+		it("Control should genereate error message on both controls ", () => {
+			const wrapper = createEditorForm("mount");
+			// set max number of bins to 1
+			var input = wrapper.find("input[id='editor-control-numberfieldMaxBins']");
+			expect(input).to.have.length(1);
+			input.simulate("change", { target: { value: "1" } });
+			wrapper.update();
+
+			// set max depth to null, this should not clear out the max bins error
+			input = wrapper.find("input[id='editor-control-numberfieldMaxDepth']");
+			expect(input).to.have.length(1);
+			input.simulate("change", { target: { value: "" } });
+			wrapper.update();
+
+			const multiControlErrorMessages = {
+				"type": "error",
+				"text": "Maximum number of bins must be >= 2 or Maximum depth cannot be empty",
+			};
+			// required parameter error should still exist
+			compareObjects(multiControlErrorMessages, controller.getErrorMessage({ name: "numberfieldMaxBins" }));
+			compareObjects(multiControlErrorMessages, controller.getErrorMessage({ name: "numberfieldMaxDepth" }));
+
+			expect(wrapper.find(".validation-error-message-icon")).to.have.length(2);
+			expect(wrapper.find(".form__validation--error")).to.have.length(2);
+		});
+		it("control should have required error message from null input in multi-control condition", () => {
+			const wrapper = createEditorForm("mount");
+			// set max number of bins to empty
+			var input = wrapper.find("input[id='editor-control-numberfieldMaxBins']");
+			expect(input).to.have.length(1);
+			input.simulate("change", { target: { value: "" } });
+			wrapper.update();
+
+			// should create this error
+			const numberfieldMaxBinsErrorMessages = {
+				"type": "error",
+				"text": "Required parameter numberfieldMaxBins has no value",
+			};
+			compareObjects(numberfieldMaxBinsErrorMessages, controller.getErrorMessage({ name: "numberfieldMaxBins" }));
+			expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
+			expect(wrapper.find(".form__validation--error")).to.have.length(1);
+
+			// set max depth to null, this should not clear out the max bins error
+			input = wrapper.find("input[id='editor-control-numberfieldMaxDepth']");
+			expect(input).to.have.length(1);
+			input.simulate("change", { target: { value: "" } });
+			wrapper.update();
+
+			// required parameter error should still exist
+			compareObjects(numberfieldMaxBinsErrorMessages, controller.getErrorMessage({ name: "numberfieldMaxBins" }));
+			expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
+			expect(wrapper.find(".form__validation--error")).to.have.length(1);
+		});
+	});
 });

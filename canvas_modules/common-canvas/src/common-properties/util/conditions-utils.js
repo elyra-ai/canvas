@@ -238,17 +238,7 @@ function validateInput(propertyId, controller, validationDefinitions, datasetMet
 	}
 
 	if (!errorSet && controller.isRequired(propertyId)) {
-		const controlValue = controller.getPropertyValue(propertyId);
-		if (controlValue === null || controlValue === "" ||
-				(Array.isArray(controlValue) && controlValue.length === 0)) {
-			const errorMessage = {
-				type: "error",
-				text: "Required parameter " + propertyId.name + " has no value"
-			};
-			controller.updateErrorMessage(propertyId, errorMessage);
-		} else {
-			controller.updateErrorMessage(propertyId, DEFAULT_VALIDATION_MESSAGE);
-		}
+		_requiredValidation(propertyId, controller);
 	}
 }
 
@@ -260,9 +250,28 @@ function _doGroupValidationUpdate(validation, errorMessage, output, propertyId, 
 				groupMessage = DEFAULT_VALIDATION_MESSAGE;
 			}
 			if (control !== propertyId.name) {
-				controller.updateErrorMessage({ name: control }, groupMessage);
+				const controlPropertyId = { name: control };
+				controller.updateErrorMessage(controlPropertyId, groupMessage);
+				// Special case: do not remove required property error message for secondary controls if group validation does not fail
+				if (controller.isRequired(controlPropertyId) && groupMessage === DEFAULT_VALIDATION_MESSAGE) {
+					_requiredValidation(controlPropertyId, controller);
+				}
 			}
 		}
+	}
+}
+
+function _requiredValidation(propertyId, controller) {
+	const controlValue = controller.getPropertyValue(propertyId);
+	if (controlValue === null || controlValue === "" ||
+			(Array.isArray(controlValue) && controlValue.length === 0)) {
+		const errorMessage = {
+			type: "error",
+			text: "Required parameter " + propertyId.name + " has no value"
+		};
+		controller.updateErrorMessage(propertyId, errorMessage);
+	} else {
+		controller.updateErrorMessage(propertyId, DEFAULT_VALIDATION_MESSAGE);
 	}
 }
 
