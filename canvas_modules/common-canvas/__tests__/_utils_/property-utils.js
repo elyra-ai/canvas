@@ -9,7 +9,8 @@
 
 import React from "react";
 import CommonProperties from "../../src/common-properties/common-properties.jsx";
-import { mount } from "enzyme";
+import EditorForm from "../../src/common-properties/editor-controls/editor-form.jsx";
+import { mount, shallow } from "enzyme";
 import sinon from "sinon";
 
 function flyoutEditorForm(paramDef) {
@@ -33,6 +34,29 @@ function flyoutEditorForm(paramDef) {
 	return editorForm;
 }
 
+function createEditorForm(state, formData, controller) {
+	const additionalComponents = null;
+	const showPropertiesButtons = sinon.spy();
+
+	controller.setForm(formData);
+
+	let wrapper;
+	const editorForm = (<EditorForm
+		ref="editorForm"
+		key="editor-form-key"
+		controller={controller}
+		additionalComponents={additionalComponents}
+		showPropertiesButtons={showPropertiesButtons}
+	/>);
+	if (state === "shallow") {
+		wrapper = shallow(editorForm);
+	} else {
+		wrapper = mount(editorForm);
+	}
+	return wrapper;
+}
+
 module.exports = {
-	flyoutEditorForm: flyoutEditorForm
+	flyoutEditorForm: flyoutEditorForm,
+	createEditorForm: createEditorForm
 };

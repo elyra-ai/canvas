@@ -178,6 +178,7 @@
                         "isMap": false,
                         "defaultValue": []
                       },
+                      "role": "column",
                       "separateLabel": true,
                       "required": true
                     }

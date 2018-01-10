@@ -125,16 +125,6 @@ module.exports = function() {
 		okButton.click();
 	});
 
-	this.Then("I open the Table Input Sub Panel from flyout", function() {
-		const buttons = browser.$("#structure-list-editor-table-buttons").$$("button");
-		for (let idx = 0; idx < buttons.length; idx++) {
-			if (buttons[idx].getText() === "...") {
-				buttons[idx].click();
-				break;
-			}
-		}
-	});
-
 	this.Then(/^I check table cell enablement in flyout$/, function() {
 		const summaryLinkButton = browser.$(".control-summary-link-buttons").$("a");
 		summaryLinkButton.click();

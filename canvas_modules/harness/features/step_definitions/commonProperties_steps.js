@@ -36,13 +36,9 @@ module.exports = function() {
 		expect(dialogTitle).toEqual(givenTitle);
 	});
 
-	this.Then(/^I enter "([^"]*)" in the Column name textbox$/, function(textboxValue) {
-		var textbox = browser.$("#editor-control-colName");
-		textbox.setValue("", textboxValue);
-		var okButton = getPropertiesApplyButton();
-		okButton.click();
-		var lastEventLog = getLastEventLogData();
-		expect(textboxValue).toEqual((lastEventLog.data.form.colName).toString());
+	this.Then(/^I enter text "([^"]*)" in the "([^"]*)" textbox control$/, function(textValue, controlId) {
+		var textbox = browser.$("#" + controlId);
+		textbox.setValue("", textValue);
 	});
 
 	this.Then(/^I enter "([^"]*)" in the textbox Column name$/, function(textboxValue) {
@@ -72,6 +68,11 @@ module.exports = function() {
 
 
 	this.Then(/^I click on Add Columns button to open field picker at index "([^"]*)"$/, function(index) {
+		browser.$$("#add-fields-button")[index].click();
+		browser.pause(500);
+	});
+
+	this.Then(/^I click on Add Value button at index "([^"]*)"$/, function(index) {
 		browser.$$("#add-fields-button")[index].click();
 		browser.pause(500);
 	});
@@ -340,16 +341,6 @@ module.exports = function() {
 		tab.click();
 	});
 
-	this.Then("I open the Table Input Sub Panel", function() {
-		var tableInputbrowsebutton = browser.$$(".btn-xs")[2];
-		tableInputbrowsebutton.click();
-	});
-
-	this.Then(/^I update the value of Name textbox with "([^"]*)"$/, function(nodeName) {
-		var nameTextBox = browser.$("#editor-control-name");
-		nameTextBox.setValue("", nodeName);
-	});
-
 	this.Then(/^I update the value of Seed textbox with "([^"]*)"$/, function(seedValue) {
 		var seedTextBox = browser.$("#editor-control-numberfieldSeed");
 		seedTextBox.setValue("", seedValue);
@@ -382,12 +373,10 @@ module.exports = function() {
 		okButton.click();
 	});
 
-
 	this.Then(/^I select the "([^"]*)" enable button$/, function(buttonName) {
 		browser.$("#editor-control-" + buttonName)
 			.click();
 	});
-
 
 	this.Then(/^I click on the "([^"]*)" button$/, function(buttonName) {
 		if (buttonName === "OK") {

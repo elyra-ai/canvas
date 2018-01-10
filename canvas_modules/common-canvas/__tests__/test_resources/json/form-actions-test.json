@@ -335,6 +335,7 @@
                               "isList": true,
                               "isMap": false
                             },
+                            "role": "column",
                             "summary": true,
                             "separateLabel": true,
                             "required": true

@@ -54,6 +54,8 @@ import {
 	STRUCTURETABLE_SORTABLE_PROPS_INFO,
 	STRUCTURETABLE_FILTERABLE_PROPS_INFO,
 	SUMMARY_PROPS_INFO,
+	STRUCTURETABLE_GENERATED_VALUES_PROPS_INFO,
+	STRUCTURETABLE_GENERATED_VALUES_DEFAULT_PROPS_INFO,
 	ACTION_PROPS_INFO
 } from "../constants/properties-documentation-constants.js";
 import { CommonProperties } from "common-canvas";
@@ -1270,10 +1272,54 @@ class CommonPropertiesComponents extends React.Component {
 								{this.jsonReplacer(SUMMARY_PROPS_INFO.parameterDef, "all")}
 							</pre>
 						</div>
+					</div><h4 id="--generatedValues" className="section-row-title section-subtitle">generatedValues</h4>
+					<p>Generates values for a column in
+						a <a className="properties-documentation-page-intro-link" href="#/properties#--readonly">readonly</a> parameter.
+						Currently only the <span className="highlight">index</span> operation is supported, which will auto-increment the integer
+						column value starting at 1.
+					</p>
+					<div className="section-row">
+						<div className="section-column">
+							<CommonProperties
+								showPropertiesDialog
+								propertiesInfo={STRUCTURETABLE_GENERATED_VALUES_PROPS_INFO}
+								containerType="Custom"
+							/>
+							{this.renderRightFlyoutButton(STRUCTURETABLE_GENERATED_VALUES_PROPS_INFO)}
+						</div>
+						<div id="generated-values-section-column-code" className="section-column section-column-code">
+							<pre className="json-block">
+								{this.jsonReplacer(STRUCTURETABLE_GENERATED_VALUES_PROPS_INFO.parameterDef, "all")}
+							</pre>
+						</div>
+					</div>
+					<p>Optionally, a <span className="highlight">start_value</span> can be set to specify what value to increment
+						from when the <span className="highlight">operation</span> is <span className="highlight">index</span>.
+						If the <span className="highlight">start_value</span> is not set, it will default to 1.
+					</p>
+					<div className="section-row">
+						<div className="section-column">
+							<CommonProperties
+								showPropertiesDialog
+								propertiesInfo={STRUCTURETABLE_GENERATED_VALUES_DEFAULT_PROPS_INFO}
+								containerType="Custom"
+							/>
+							{this.renderRightFlyoutButton(STRUCTURETABLE_GENERATED_VALUES_DEFAULT_PROPS_INFO)}
+						</div>
+						<div id="generated-values-section-column-code" className="section-column section-column-code">
+							<pre className="json-block">
+								{this.jsonReplacer(STRUCTURETABLE_GENERATED_VALUES_DEFAULT_PROPS_INFO.parameterDef, "custom",
+									["uihints",
+										"id", "type", "complex_type_info", "key_definition",
+										"generated_values", "operation", "start_value", "control"
+									])}
+							</pre>
+						</div>
 					</div>
 				</div>
 			</div>
 		</section>);
+
 		const contentActions = (<section id="Actions" className="section properties-documentation-content-controls-section">
 			<h2 className="properties-documentation-section-title">Actions</h2>
 			<p className="section-description">Actions are used to callback to the consuming application to allow the

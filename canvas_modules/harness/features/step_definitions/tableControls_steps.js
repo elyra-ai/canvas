@@ -68,8 +68,62 @@ module.exports = function() {
 		expect(clicked).toBe(true);
 	});
 
+	this.Then(/^I click the subpanel edit button on row "([^"]*)" from the "([^"]*)" table$/, function(rowNumber, tableControlId) {
+		const tableRows = browser.$("#" + tableControlId).$$(".table-row");
+		const subPanelButton = tableRows[Number(rowNumber) - 1].$("button");
+		if (subPanelButton.getText() === "...") {
+			subPanelButton.click();
+		}
+	});
+
 	this.Then(/^I click on the "([^"]*)" button to save the new columns$/, function(arg1) {
 		browser.$("#field-picker-back-button").click();
 	});
 
+	// moveableRows
+	this.Then(/^I verify that moveable row button "([^"]*)" is "([^"]*)"$/, function(direction, enabled) {
+		const moveButtons = browser.$("#table-row-move-button-container").$$("img");
+		expect(moveButtons.length).toEqual(4);
+
+		if (direction === "top") {
+			if (enabled === "enabled") {
+				expect(moveButtons[0].getAttribute("class")).toEqual("table-row-move-button");
+			} else {
+				expect(moveButtons[0].getAttribute("class")).toEqual("table-row-move-button-disable");
+			}
+		} else if (direction === "up") {
+			if (enabled === "enabled") {
+				expect(moveButtons[1].getAttribute("class")).toEqual("table-row-move-button");
+			} else {
+				expect(moveButtons[1].getAttribute("class")).toEqual("table-row-move-button-disable");
+			}
+		} else if (direction === "down") {
+			if (enabled === "enabled") {
+				expect(moveButtons[2].getAttribute("class")).toEqual("table-row-move-button");
+			} else {
+				expect(moveButtons[2].getAttribute("class")).toEqual("table-row-move-button-disable");
+			}
+		} else if (direction === "bottom") {
+			if (enabled === "enabled") {
+				expect(moveButtons[3].getAttribute("class")).toEqual("table-row-move-button");
+			} else {
+				expect(moveButtons[3].getAttribute("class")).toEqual("table-row-move-button-disable");
+			}
+		}
+	});
+
+	this.Then(/^I click on the moveable row button "([^"]*)" to move the row$/, function(direction) {
+		const moveButtons = browser.$("#table-row-move-button-container").$$("img");
+		expect(moveButtons.length).toEqual(4);
+
+		if (direction === "top") {
+			moveButtons[0].click();
+		} else if (direction === "up") {
+			moveButtons[1].click();
+		} else if (direction === "down") {
+			moveButtons[2].click();
+		} else if (direction === "bottom") {
+			moveButtons[3].click();
+		}
+	});
 };

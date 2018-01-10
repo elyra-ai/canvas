@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
+import propertyUtils from "../../_utils_/property-utils";
 import NumberfieldControl from "../../../src/common-properties/editor-controls/numberfield-control.jsx";
 import EditorForm from "../../../src/common-properties/editor-controls/editor-form.jsx";
 import ControlItem from "../../../src/common-properties/editor-controls/control-item.jsx";
@@ -15,6 +16,9 @@ import { mount } from "enzyme";
 import { expect } from "chai";
 import sinon from "sinon";
 import Controller from "../../../src/common-properties/properties-controller";
+import isEqual from "lodash/isEqual";
+
+const CONDITIONS_TEST_FORM_DATA = require("../../test_resources/json/conditions-test-formData.json");
 
 const controller = new Controller();
 
@@ -243,5 +247,70 @@ describe("editor-form renders with random number generator", () => {
 		wrapper.update();
 		const newValue = editorController.getPropertyValue(propertyId);
 		expect(oldValue).not.equal(newValue);
+	});
+});
+
+describe("condition messages renders correctly with numberfield control", () => {
+	it("numberfield control should have error message from null input and generator should trigger validation", () => {
+		const wrapper = propertyUtils.createEditorForm("mount", CONDITIONS_TEST_FORM_DATA, controller);
+
+		const input = wrapper.find("input[id='editor-control-numberfieldSeed']");
+		expect(input).to.have.length(1);
+		input.simulate("change", { target: { value: "" } });
+		wrapper.update();
+
+		const numberfieldSeedErrorMessages = {
+			"type": "error",
+			"text": "Field cannot be null. This is an example of a long error message that might be entered. The message text will wrap around to the next line.",
+		};
+		const actual = controller.getErrorMessage({ name: "numberfieldSeed" });
+		expect(isEqual(JSON.parse(JSON.stringify(numberfieldSeedErrorMessages)),
+			JSON.parse(JSON.stringify(actual)))).to.be.true;
+		expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
+		expect(wrapper.find(".form__validation--error")).to.have.length(1);
+
+		const generator = wrapper.find(".number-generator");
+		expect(generator).to.have.length(1);
+		generator.simulate("click");
+		wrapper.update();
+
+		expect(wrapper.find(".validation-error-message-icon")).to.have.length(0);
+		expect(wrapper.find(".form__validation--error")).to.have.length(0);
+	});
+	it("numberfield control should have error message from invalid input", () => {
+		const wrapper = propertyUtils.createEditorForm("mount", CONDITIONS_TEST_FORM_DATA, controller);
+
+		const input = wrapper.find("input[id='editor-control-numberfieldCheckpointInterval']");
+		expect(input).to.have.length(1);
+		input.simulate("change", { target: { value: -100 } });
+		wrapper.update();
+
+		const numberfieldCheckpointIntervalErrorMessages = {
+			"type": "error",
+			"text": "The checkpoint interval value must either be >= 1 or -1 to disable"
+		};
+		const actual = controller.getErrorMessage({ name: "numberfieldCheckpointInterval" });
+		expect(isEqual(JSON.parse(JSON.stringify(numberfieldCheckpointIntervalErrorMessages)),
+			JSON.parse(JSON.stringify(actual)))).to.be.true;
+		expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
+		expect(wrapper.find(".form__validation--error")).to.have.length(1);
+	});
+	it("required numberfield control should have error message from null input", () => {
+		const wrapper = propertyUtils.createEditorForm("mount", CONDITIONS_TEST_FORM_DATA, controller);
+
+		const input = wrapper.find("input[id='editor-control-numberfieldCheckpointInterval']");
+		expect(input).to.have.length(1);
+		input.simulate("change", { target: { value: "" } });
+		wrapper.update();
+
+		const numberfieldCheckpointIntervalErrorMessages = {
+			"type": "error",
+			"text": "Required parameter numberfieldCheckpointInterval has no value",
+		};
+		const actual = controller.getErrorMessage({ name: "numberfieldCheckpointInterval" });
+		expect(isEqual(JSON.parse(JSON.stringify(numberfieldCheckpointIntervalErrorMessages)),
+			JSON.parse(JSON.stringify(actual)))).to.be.true;
+		expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
+		expect(wrapper.find(".form__validation--error")).to.have.length(1);
 	});
 });

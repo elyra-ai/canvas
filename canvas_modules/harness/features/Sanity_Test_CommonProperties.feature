@@ -16,10 +16,6 @@ Feature: Sanity_Test_CommonProperties
 			Given I have uploaded JSON for common-properties "org.apache.spark.ml.ibm.transformers.AddColumn.json"
 			Then I see common properties title "Add Column"
 			Then I have closed the common properties dialog by clicking on close button
-			Given I have toggled the app side common-properties panel
-			Given I have uploaded JSON for common-properties "org.apache.spark.ml.classification.DecisionTreeClassifier.json"
-			Then I see common properties title "Decision Tree Classifier"
-			Then I have closed the common properties dialog by clicking on close button
 
 			Given I have toggled the app side common-properties panel
 			Given I have uploaded JSON for common-properties "org.apache.spark.ml.ibm.transformers.Distinct.json"
@@ -34,7 +30,9 @@ Feature: Sanity_Test_CommonProperties
 		# TextBox Test Case
 			Given I have toggled the app side common-properties panel
 			Given I have uploaded JSON for common-properties "org.apache.spark.ml.ibm.transformers.AddColumn.json"
-			Then I enter "testValue" in the Column name textbox
+			Then I enter text "testValue" in the "editor-control-colName" textbox control
+			Then I click on the "OK" button
+			Then I verify the event log for the "colName" parameter contains "testValue"
 
 		# Dropdown Test Case
 			Given I have toggled the app side common-properties panel
@@ -75,10 +73,10 @@ Feature: Sanity_Test_CommonProperties
 			Given I have uploaded JSON for common-properties "Conditions_paramDef.json"
 			Then I select the Tab 6
 			Then I check the checkbox with id "editor-control-enableTableLists"
-			Then I open the Table Input Sub Panel
-			Then I update the value of Name textbox with "Hellopwd"
+			Then I click the subpanel edit button on row "1" from the "flexible-table-structurelisteditorTableInput" table
+			Then I enter text "Hellopwd" in the "editor-control-name" textbox control
 			Then I verify that the validation error is "name should not contain pw"
-			Then I update the value of Name textbox with "Age"
+			Then I enter text "Age" in the "editor-control-name" textbox control
 			Then I verify that the validation warning is "name cannot be an existing column name"
 			Then I close the subPanel dialog
 			Then I have closed the common properties dialog by clicking on close button

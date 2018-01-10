@@ -213,7 +213,11 @@ function _makeStringControl(parameter, group) {
 	let controlType;
 	let role;
 	if (parameter.isList()) {
-		controlType = _processListParameter(parameter, group);
+		const controlObj = _processListParameter(parameter, group);
+		controlType = controlObj.controlType;
+		if (controlObj.role) {
+			role = controlObj.role;
+		}
 	} else {
 		switch (parameter.getRole()) {
 		case ParamRole.TEXT:
@@ -339,7 +343,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 				keyIndex = structureDef.keyAttributeIndex();
 				// The defaultRow allows the UI to create a new row with sensible settings
 				// when needed
-				defaultRow = structureDef.defaultStructure(parameter.isList());
+				defaultRow = structureDef.defaultStructure();
 				// For inline/row editing, create definitions for all the columns that can be edited
 				subControls = [];
 				structureDef.parameterMetadata.paramDefs.forEach(function(param) {
@@ -410,34 +414,36 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 		required,
 		parameter.language,
 		parameter.summary,
-		rowSelection
+		rowSelection,
+		parameter.generatedValues
 	);
 }
 
 function _processListParameter(parameter, group) {
-	let controlType;
+	const controlObj = {};
 	switch (parameter.getRole()) {
 	case ParamRole.TEXT:
-		controlType = ControlType.TEXTAREA;
+		controlObj.controlType = ControlType.TEXTAREA;
 		break;
 	case ParamRole.ENUM:
 		if (parameter.getValidValueCount() < 5) {
-			controlType = ControlType.CHECKBOXSET;
+			controlObj.controlType = ControlType.CHECKBOXSET;
 		} else {
-			controlType = ControlType.SOMEOFSELECT;
+			controlObj.controlType = ControlType.SOMEOFSELECT;
 		}
 		break;
 	case ParamRole.COLUMN:
 		if (group.groupType() === GroupType.COLUMN_ALLOCATION) {
-			controlType = ControlType.ALLOCATEDCOLUMNS;
+			controlObj.controlType = ControlType.ALLOCATEDCOLUMNS;
 		} else {
-			controlType = ControlType.SELECTCOLUMNS;
+			controlObj.role = ParamRole.COLUMN;
+			controlObj.controlType = ControlType.SELECTCOLUMNS;
 		}
 		break;
 	default:
-		controlType = ControlType.TEXTAREA;
+		controlObj.controlType = ControlType.TEXTAREA;
 	}
-	return controlType;
+	return controlObj;
 }
 
 function _makeEditStyleSubPanel(structureDef, l10nProvider) {
@@ -479,6 +485,7 @@ function _makeSubControl(parameter, l10nProvider) {
 			controlType = ControlType.ONEOFSELECT;
 			break;
 		case ParamRole.COLUMN:
+			role = ParamRole.COLUMN;
 			controlType = ControlType.SELECTCOLUMN;
 			break;
 		case ParamRole.NEW_COLUMN:
@@ -541,7 +548,8 @@ function _makeSubControl(parameter, l10nProvider) {
 		parameter.isKey,
 		parameter.dmDefault,
 		parameter.language,
-		parameter.summary
+		parameter.summary,
+		parameter.generatedValues
 	);
 }
 

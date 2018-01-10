@@ -20,6 +20,7 @@ import Button from "ap-components-react/dist/components/Button";
 import Checkbox from "ap-components-react/dist/components/Checkbox";
 
 import { DATA_TYPES, TOOL_TIP_DELAY } from "../constants/constants.js";
+import { ParamRole } from "../form/form-constants";
 
 import resetIcon from "../../../assets/images/reset_32.svg";
 import resetHoverIcon from "../../../assets/images/reset_32_hover.svg";
@@ -78,14 +79,18 @@ export default class FieldPicker extends EditorControl {
 		this.handleFieldChecked = this.handleFieldChecked.bind(this);
 		this.handleReset = this.handleReset.bind(this);
 		this.getNewSelections = this.getNewSelections.bind(this);
+		this.setReadOnlyColumnValue = this.setReadOnlyColumnValue.bind(this);
 		this.mouseEnterResetButton = this.mouseEnterResetButton.bind(this);
 		this.mouseLeaveResetButton = this.mouseLeaveResetButton.bind(this);
 		this.onSort = this.onSort.bind(this);
 		this.onFilter = this.onFilter.bind(this);
 		this._getRecordForRow = this._getRecordForRow.bind(this);
+		this._getRoleColumnIndex = this._getRoleColumnIndex.bind(this);
 	}
 
 	componentWillMount() {
+		this.dataColumnIndex = this.props.control.subControls ? this._getRoleColumnIndex() : 0;
+
 		const fields = this.state.data.fields;
 		const filterList = DATA_TYPES;
 		const filters = [];
@@ -129,7 +134,7 @@ export default class FieldPicker extends EditorControl {
 				for (let j = 0; j < newControlValues.length; j++) {
 					let key = [];
 					if (this.props.control.defaultRow) {
-						key = newControlValues[j] && typeof newControlValues[j] !== "undefined" ? newControlValues[j][0] : "";
+						key = newControlValues[j] && typeof newControlValues[j] !== "undefined" ? newControlValues[j][this.dataColumnIndex] : "";
 					} else {
 						key = newControlValues[j];
 					}
@@ -190,7 +195,28 @@ export default class FieldPicker extends EditorControl {
 		return deltas;
 	}
 
+	setReadOnlyColumnValue() {
+		const controlValues = this.state.newControlValues;
+		let updatePropertyValues = false;
+		for (var rowIndex = 0; rowIndex < controlValues.length; rowIndex++) {
+			for (var colIndex = 0; colIndex < this.props.control.subControls.length; colIndex++) {
+				const columnDef = this.props.control.subControls[colIndex];
+				if (columnDef.controlType === "readonly" && columnDef.generatedValues && columnDef.generatedValues.operation === "index") {
+					updatePropertyValues = true;
+					const index = typeof columnDef.generatedValues.startValue !== "undefined" ? columnDef.generatedValues.startValue + rowIndex : rowIndex + 1;
+					controlValues[rowIndex][colIndex] = index;
+				}
+			}
+		}
+		if (updatePropertyValues) {
+			this.setState({ newControlValues: controlValues });
+		}
+	}
+
 	handleBack() {
+		if (this.props.control.subControls) {
+			this.setReadOnlyColumnValue();
+		}
 		this.props.controller.updatePropertyValue({ name: this.props.control.name }, this.state.newControlValues);
 		this.props.updateSelectedRows(this.props.control.name, this.getNewSelections());
 		this.props.closeFieldPicker();
@@ -209,7 +235,7 @@ export default class FieldPicker extends EditorControl {
 			for (let i = 0; i < data.length; i++) { // add already selected fields
 				const selected = (!newControlValues) ? [] : newControlValues.filter(function(element) {
 					if (that.props.control.defaultRow) {
-						return element[0] === data[i].name;
+						return element[that.dataColumnIndex] === data[i].name;
 					}
 					return element === data[i].name;
 				});
@@ -238,7 +264,7 @@ export default class FieldPicker extends EditorControl {
 				const duplicate = visibleData.some(function(element) {
 					let found = false;
 					if (that.props.control.defaultRow) {
-						found = element.name === newControlValues[l][0];
+						found = element.name === newControlValues[l][that.dataColumnIndex];
 					} else {
 						found = element.name === newControlValues[l];
 					}
@@ -259,7 +285,7 @@ export default class FieldPicker extends EditorControl {
 	getDefaultRow(field) {
 		const initialControlValues = this.state.initialControlValues;
 		for (let i = 0; i < initialControlValues.length; i++) {
-			if ((this.props.control.defaultRow && initialControlValues[i][0] === field) ||
+			if ((this.props.control.defaultRow && initialControlValues[i][this.dataColumnIndex] === field) ||
 					(initialControlValues[i] === field)) {
 				return initialControlValues[i];
 			}
@@ -279,7 +305,7 @@ export default class FieldPicker extends EditorControl {
 		} else if (current) {
 			const modified = current.filter(function(element) {
 				if (that.props.control.defaultRow) {
-					return element[0] !== selectedField[0];
+					return element[that.dataColumnIndex] !== selectedField[that.dataColumnIndex];
 				}
 				return element !== selectedFieldName;
 			});
@@ -298,21 +324,20 @@ export default class FieldPicker extends EditorControl {
 		if (found !== false) {
 			selectedField = found;
 			if (this.props.control.valueDef.isMap) {
-				selectedField[this.props.control.keyIndex] = selectedFieldName;
+				selectedField[this.dataColumnIndex] = selectedFieldName;
 			}
 		}
 
 		if (selectedField.length === 0) {
 			if (this.props.control.subControls) {
 				for (let i = 0; i < this.props.control.subControls.length; i++) {
-					const idx = this.props.control.valueDef.isMap ? i - 1 : i;
-					if (i === this.props.control.keyIndex) {
+					if (i === this.dataColumnIndex) { // role===ParamRole.COLUMN
 						selectedField.push(selectedFieldName);
-					} else if (typeof this.props.control.defaultRow !== "undefined" && this.props.control.defaultRow.length > idx) {
-						let defaultValue = this.props.control.defaultRow[idx];
+					} else if (typeof this.props.control.defaultRow !== "undefined" && this.props.control.defaultRow.length > i) {
+						let defaultValue = this.props.control.defaultRow[i];
 						if ((typeof defaultValue === "undefined" || defaultValue === null) &&
-									this.props.control.subControls[i].role === "new_column") {
-							// Set the default name to the column name for role==="new_column"
+									this.props.control.subControls[i].role === ParamRole.NEW_COLUMN) {
+							// Set the default name to the column name for role===ParamRole.NEW_COLUMN
 							defaultValue = selectedFieldName;
 						}
 						selectedField.push(defaultValue);
@@ -325,6 +350,15 @@ export default class FieldPicker extends EditorControl {
 			}
 		}
 		return selectedField;
+	}
+
+	_getRoleColumnIndex() {
+		for (let i = 0; i < this.props.control.subControls.length; i++) {
+			if (this.props.control.subControls[i].role === ParamRole.COLUMN) {
+				return i;
+			}
+		}
+		throw new Error("Role 'column' is not found in structure.");
 	}
 
 	handleReset() {
@@ -475,7 +509,7 @@ export default class FieldPicker extends EditorControl {
 			const sameData = newControlValues.filter(function(row) {
 				let match = false;
 				for (let k = 0; k < visibleData.length; k++) {
-					if (that.props.control.defaultRow && row[0] === visibleData[k].name) {
+					if (that.props.control.defaultRow && row[that.dataColumnIndex] === visibleData[k].name) {
 						match = true;
 						break;
 					} else if (row === visibleData[k].name) {

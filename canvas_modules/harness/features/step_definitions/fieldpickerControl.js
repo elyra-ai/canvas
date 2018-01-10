@@ -14,18 +14,13 @@ module.exports = function() {
 		if (fieldName !== "all") {
 			const fieldList = browser.$("#field-picker-table").$$(".field-picker-data-rows");
 			expect(fieldList.length).not.toEqual(0);
-			var clicked = false;
 			for (var idx = 0; idx < fieldList.length; idx++) {
 				const fieldCells = fieldList[idx].$$("td");
 				expect(fieldCells.length).toEqual(3);
-				for (var inx = 0; inx < fieldCells.length; inx++) {
-					if (fieldCells[inx].getText() === fieldName) {
-						clicked = true;
-						fieldList[idx].$("label").click();
-						break;
-					}
-				}
-				if (clicked) {
+
+				const rowCheckbox = fieldList[idx].$(".field-picker-checkbox");
+				if (rowCheckbox.$("input").getAttribute("data-name") === fieldName) {
+					rowCheckbox.$("label").click();
 					break;
 				}
 			}

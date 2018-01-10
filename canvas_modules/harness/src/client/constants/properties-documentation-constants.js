@@ -3026,6 +3026,217 @@ _defineConstant("SUMMARY_PROPS_INFO", {
 		}
 	}
 });
+_defineConstant("STRUCTURETABLE_GENERATED_VALUES_PROPS_INFO", {
+	"title": "StructureTableDropdown Title",
+	"parameterDef": {
+		"current_parameters": {
+			"structureInlineDropdownList": [[1, "BP", "Integer"], [2, "Sex", "String"], [3, "K", "Double"]]
+		},
+		"parameters": [
+			{
+				"id": "structureInlineDropdownList",
+				"type": "array[structureInlineDropdown]",
+				"role": "column",
+				"default": []
+			}
+		],
+		"complex_types": [
+			{
+				"id": "structureInlineDropdown",
+				"key_definition": {
+					"id": "index",
+					"type": "integer"
+				},
+				"parameters": [
+					{
+						"id": "field",
+						"type": "string",
+						"role": "column"
+					},
+					{
+						"id": "inline_dropdown",
+						"type": "string",
+						"enum": [
+							"String",
+							"Integer",
+							"Real",
+							"Time",
+							"Date",
+							"Timestamp"
+						],
+						"default": "String"
+					}
+				]
+			}
+		],
+		"uihints": {
+			"id": "structureInlineTextfieldList",
+			"parameter_info": [
+				{
+					"parameter_ref": "structureInlineDropdownList"
+				}
+			],
+			"complex_type_info": [
+				{
+					"complex_type_ref": "structureInlineDropdown",
+					"moveable_rows": true,
+					"key_definition": {
+						"parameter_ref": "index",
+						"width": 15,
+						"label": {
+							"default": "Index",
+							"resource_key": "structureInlineDropdown.index.label"
+						},
+						"generated_values": {
+							"operation": "index"
+						},
+						"control": "readonly"
+					},
+					"parameters": [
+						{
+							"parameter_ref": "field",
+							"width": 20,
+							"label": {
+								"default": "StructureDropdown Name",
+								"resource_key": "structureInlineDropdown.field.label"
+							}
+						},
+						{
+							"parameter_ref": "inline_dropdown",
+							"label": {
+								"resource_key": "structureInlineDropdown.inline_dropdown.label"
+							},
+							"width": 30,
+							"edit_style": "inline"
+						}
+					]
+				}
+			],
+			"group_info": [
+				{
+					"id": "Structure Table Dropdown Control",
+					"type": "columnSelection",
+					"parameter_refs": [
+						"structureInlineDropdownList"
+					]
+				}
+			]
+		},
+		"dataset_metadata": {
+			"fields": fields
+		},
+		"resources": {
+			"structureInlineDropdown.field.label": "Field",
+			"structureInlineDropdown.inline_dropdown.label": "Type"
+		}
+	}
+});
+_defineConstant("STRUCTURETABLE_GENERATED_VALUES_DEFAULT_PROPS_INFO", {
+	"title": "StructureTableDropdown Title",
+	"parameterDef": {
+		"current_parameters": {
+			"structureInlineDropdownList": [[1, "BP", "Integer"], [2, "Sex", "String"], [3, "K", "Double"]]
+		},
+		"parameters": [
+			{
+				"id": "structureInlineDropdownList",
+				"type": "array[structureInlineDropdown]",
+				"role": "column",
+				"default": []
+			}
+		],
+		"complex_types": [
+			{
+				"id": "structureInlineDropdown",
+				"key_definition": {
+					"id": "index",
+					"type": "integer"
+				},
+				"parameters": [
+					{
+						"id": "field",
+						"type": "string",
+						"role": "column"
+					},
+					{
+						"id": "inline_dropdown",
+						"type": "string",
+						"enum": [
+							"String",
+							"Integer",
+							"Real",
+							"Time",
+							"Date",
+							"Timestamp"
+						],
+						"default": "String"
+					}
+				]
+			}
+		],
+		"uihints": {
+			"id": "structureInlineTextfieldList",
+			"parameter_info": [
+				{
+					"parameter_ref": "structureInlineDropdownList"
+				}
+			],
+			"complex_type_info": [
+				{
+					"complex_type_ref": "structureInlineDropdown",
+					"moveable_rows": true,
+					"key_definition": {
+						"parameter_ref": "index",
+						"width": 15,
+						"label": {
+							"default": "Index",
+							"resource_key": "structureInlineDropdown.index.label"
+						},
+						"generated_values": {
+							"operation": "index",
+							"start_value": 10
+						},
+						"control": "readonly"
+					},
+					"parameters": [
+						{
+							"parameter_ref": "field",
+							"width": 20,
+							"label": {
+								"default": "StructureDropdown Name",
+								"resource_key": "structureInlineDropdown.field.label"
+							}
+						},
+						{
+							"parameter_ref": "inline_dropdown",
+							"label": {
+								"resource_key": "structureInlineDropdown.inline_dropdown.label"
+							},
+							"width": 30,
+							"edit_style": "inline"
+						}
+					]
+				}
+			],
+			"group_info": [
+				{
+					"id": "Structure Table Dropdown Control",
+					"type": "columnSelection",
+					"parameter_refs": [
+						"structureInlineDropdownList"
+					]
+				}
+			]
+		},
+		"dataset_metadata": {
+			"fields": fields
+		},
+		"resources": {
+			"structureInlineDropdown.field.label": "Field",
+			"structureInlineDropdown.inline_dropdown.label": "Type"
+		}
+	}
+});
 
 _defineConstant("ACTION_PROPS_INFO", {
 	"title": "Actions",

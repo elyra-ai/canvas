@@ -11,7 +11,8 @@ import { EditStyle } from "./form-constants";
 
 class ControlDef {
 	constructor(cname, label, description, controlType, valueDef, role, additionalText,
-		orientation, values, valueLabels, valueIcons, sortable, filterable, charLimit, language, summary) {
+		orientation, values, valueLabels, valueIcons, sortable, filterable, charLimit, language,
+		summary, generatedValues) {
 		this.name = cname;
 		this.label = label;
 		if (description) {
@@ -52,15 +53,24 @@ class ControlDef {
 		if (summary) {
 			this.summary = summary;
 		}
+		if (generatedValues) {
+			this.generatedValues = {};
+			if (generatedValues.operation) {
+				this.generatedValues.operation = generatedValues.operation;
+			}
+			if (generatedValues.start_value) {
+				this.generatedValues.startValue = generatedValues.start_value;
+			}
+		}
 	}
 }
 
 export class Control extends ControlDef {
 	constructor(cname, label, separateLabel, description, controlType, valueDef, role, additionalText, orientation,
 		values, valueLabels, valueIcons, sortable, filterable, noPickColumns, charLimit, subControls, keyIndex, defaultRow,
-		childItem, moveableRows, required, language, summary, rowSelection) {
+		childItem, moveableRows, required, language, summary, rowSelection, generatedValues) {
 		super(cname, label, description, controlType, valueDef, role, additionalText, orientation, values,
-			valueLabels, valueIcons, sortable, filterable, charLimit, language, summary);
+			valueLabels, valueIcons, sortable, filterable, charLimit, language, summary, generatedValues);
 		this.separateLabel = separateLabel;
 		if (subControls) {
 			this.subControls = subControls;
@@ -92,9 +102,9 @@ export class Control extends ControlDef {
 export class SubControl extends ControlDef {
 	constructor(cname, label, description, visible, width, controlType, valueDef, role, additionalText,
 		orientation, values, valueLabels, valueIcons, sortable, filterable, charLimit, editStyle, isKeyField,
-		dmDefault, language, summary) {
+		dmDefault, language, summary, generatedValues) {
 		super(cname, label, description, controlType, valueDef, role, additionalText, orientation,
-			values, valueLabels, valueIcons, sortable, filterable, charLimit, language, summary);
+			values, valueLabels, valueIcons, sortable, filterable, charLimit, language, summary, generatedValues);
 		if (typeof visible === "boolean") {
 			this.visible = visible;
 		}

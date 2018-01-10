@@ -30,7 +30,7 @@ import sortBy from "lodash/sortBy";
 
 /* eslint-disable react/prop-types */
 /* eslint-enable react/prop-types */
-/* eslint complexity: ["error", 13] */
+/* eslint complexity: ["error", 15] */
 
 export default class ColumnStructureTableEditor extends EditorControl {
 	constructor(props) {
@@ -49,6 +49,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		this.getCurrentControlValue = this.getCurrentControlValue.bind(this);
 		this.setCurrentControlValue = this.setCurrentControlValue.bind(this);
 		this.setCurrentControlValueSelected = this.setCurrentControlValueSelected.bind(this);
+		this.setReadOnlyColumnValue = this.setReadOnlyColumnValue.bind(this);
 		this.getSelectedRows = this.getSelectedRows.bind(this);
 		this.removeSelected = this.removeSelected.bind(this);
 
@@ -75,6 +76,13 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		}
 	}
 
+	componentDidMount() {
+		if (this.props.control.subControls) {
+			const updatedControlValues = this.setReadOnlyColumnValue(this.getCurrentControlValue());
+			this.props.controller.updatePropertyValue(this.props.propertyId, updatedControlValues);
+		}
+	}
+
 	componentWillReceiveProps(nextProps) {
 		this.setState({
 			selectedRows: nextProps.selectedRows
@@ -96,23 +104,46 @@ export default class ColumnStructureTableEditor extends EditorControl {
 	}
 
 	setCurrentControlValueSelected(controlValue, selectedRows) {
+		let updatedControlValues = controlValue;
 		var that = this;
 		this.setState({
 			selectedRows: selectedRows
 		}, function() {
 			that.updateSelectedRows(that.props.control.name, selectedRows);
 		});
-		this.props.controller.updatePropertyValue(this.props.propertyId, controlValue);
+
+		if (this.props.control.subControls) {
+			updatedControlValues = this.setReadOnlyColumnValue(controlValue);
+		}
+		this.props.controller.updatePropertyValue(this.props.propertyId, updatedControlValues);
 	}
 
 	setCurrentControlValue(controlValue) {
+		let updatedControlValues = controlValue;
 		var that = this;
 		this.setState({
 			selectedRows: []
 		}, function() {
 			that.updateSelectedRows(that.props.control.name, []);
 		});
-		this.props.controller.updatePropertyValue(this.props.propertyId, controlValue);
+		if (this.props.control.subControls) {
+			updatedControlValues = this.setReadOnlyColumnValue(controlValue);
+		}
+		this.props.controller.updatePropertyValue(this.props.propertyId, updatedControlValues);
+	}
+
+	setReadOnlyColumnValue(controlValue) {
+		const controlValues = controlValue ? controlValue : this.getCurrentControlValue();
+		for (var rowIndex = 0; rowIndex < controlValues.length; rowIndex++) {
+			for (var colIndex = 0; colIndex < this.props.control.subControls.length; colIndex++) {
+				const columnDef = this.props.control.subControls[colIndex];
+				if (columnDef.controlType === "readonly" && columnDef.generatedValues && columnDef.generatedValues.operation === "index") {
+					const index = typeof columnDef.generatedValues.startValue !== "undefined" ? columnDef.generatedValues.startValue + rowIndex : rowIndex + 1;
+					controlValues[rowIndex][colIndex] = index;
+				}
+			}
+		}
+		return controlValues;
 	}
 
 	setScrollToRow(row, alignTop) {

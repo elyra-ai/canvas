@@ -1,0 +1,243 @@
+{
+  "current_parameters": {
+    "structurelisteditorTableInput": [
+      [
+        1,
+        "Hello",
+        "World",
+        "string",
+        "Readonly phrase"
+      ]
+    ]
+  },
+  "parameters": [
+    {
+      "id": "structurelisteditorTableInput",
+      "type": "array[structurelisteditorTableInput]",
+      "role": "column",
+      "default": []
+    }
+  ],
+  "complex_types": [
+    {
+      "id": "structurelisteditorTableInput",
+      "parameters": [
+        {
+          "id": "readonly_numbered_column_index",
+          "type": "integer"
+        },
+        {
+          "id": "name",
+          "type": "string",
+          "role": "new_column"
+        },
+        {
+          "id": "description",
+          "type": "string",
+          "role": "new_column"
+        },
+        {
+          "id": "data_type",
+          "enum": [
+            "string",
+            "number",
+            "boolean",
+            "time",
+            "date"
+          ],
+          "default": ""
+        },
+        {
+          "id": "readonly",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "uihints": {
+    "id": "StructureListEditor.test",
+    "icon": "images/modelbuildspark.svg",
+    "label": {
+      "default": "StructureListEditor Test"
+    },
+    "description": {
+      "default": "Test readonly numbered column in a structure list editor control"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "structurelisteditorTableInput",
+        "label": {
+          "default": "Table Input"
+        },
+        "description": {
+          "default": "The index column will be auto-populated with an integer value for each row starting at 1. Subsequent rows will be incremented by 1."
+        }
+      }
+    ],
+    "complex_type_info": [
+      {
+        "complex_type_ref": "structurelisteditorTableInput",
+        "parameters": [
+					{
+	          "parameter_ref": "readonly_numbered_column_index",
+	          "label": {
+	            "resource_key": "structurelisteditorTableInput.readonly_numbered_column_index.label"
+	          },
+	          "width": 15,
+	          "generated_values": {
+	            "operation": "index"
+	          },
+	          "control": "readonly",
+            "summary": true
+	        },
+          {
+            "parameter_ref": "name",
+            "label": {
+              "default": "Structure Name",
+              "resource_key": "structurelisteditorTableInput.name.label"
+            },
+            "description": {
+              "resource_key": "structurelisteditorTableInput.name.desc"
+            },
+            "width": 15,
+            "edit_style": "subpanel",
+            "summary": true
+          },
+          {
+            "parameter_ref": "description",
+            "label": {
+              "resource_key": "structurelisteditorTableInput.description.label"
+            },
+            "description": {
+              "resource_key": "structurelisteditorTableInput.description.desc"
+            },
+            "width": 15,
+            "edit_style": "subpanel"
+          },
+          {
+            "parameter_ref": "data_type",
+            "label": {
+              "default": "Type"
+            },
+            "width": 15,
+            "edit_style": "subpanel"
+          },
+          {
+            "parameter_ref": "readonly",
+            "label": {
+              "default": "ReadOnly"
+            },
+            "control": "readonly",
+            "width": 20
+          }
+        ]
+      }
+    ],
+    "group_info": [
+      {
+        "id": "Tables",
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "structurelisteditorTableInput-summary-panel",
+            "label": {
+              "default": "Configure Table Input"
+            },
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "Structure Table Inline Control",
+                "parameter_refs": [
+                  "structurelisteditorTableInput"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "dataset_metadata": {
+    "fields": [
+      {
+        "name": "Age",
+        "type": "integer",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Sex",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "BP",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Cholesterol",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Na",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "K",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Drug",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Ag",
+        "type": "integer",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      }
+    ]
+  },
+  "resources": {
+    "structurelisteditorTableInput.name.label": "Name",
+    "structurelisteditorTableInput.name.desc": "Enter a name",
+    "structurelisteditorTableInput.description.label": "Description",
+    "structurelisteditorTableInput.readonly_numbered_column_index.label": "Index",
+    "structurelisteditorTableInput.description.desc": "Enter a description"
+  }
+}

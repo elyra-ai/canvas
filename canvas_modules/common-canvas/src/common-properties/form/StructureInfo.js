@@ -51,12 +51,12 @@ export class StructureDef {
 		return -1;
 	}
 
-	defaultStructure(addKeyDefinition) {
+	defaultStructure() {
 		const defaults = [];
 		this.parameterMetadata.paramDefs.forEach(function(param) {
 			defaults.push(param.defaultValue);
 		});
-		if (addKeyDefinition && this.keyDefinition) {
+		if (this.keyDefinition) {
 			// Assume the key is always in the first column
 			defaults.unshift(this.keyDefinition.defaultValue);
 		}

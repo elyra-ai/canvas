@@ -148,6 +148,7 @@ const fieldPickerControl = {
 			"visible": true,
 			"width": 28,
 			"controlType": "oneofcolumns",
+			"role": "column",
 			"valueDef": {
 				"propType": "string",
 				"isList": false,
@@ -162,6 +163,7 @@ const fieldPickerControl = {
 			"visible": true,
 			"width": 16,
 			"controlType": "toggletext",
+			"role": "enum",
 			"valueDef": {
 				"propType": "string",
 				"isList": false,
@@ -190,14 +192,6 @@ function closeFieldPicker() {
 	return ["Test value"];
 }
 
-function updateControlValue() {
-	return ["Test value"];
-}
-
-function updateSelectedRows(selection) {
-	return selection;
-}
-
 describe("field-picker-control renders correctly", () => {
 
 	it("props should have been defined", () => {
@@ -207,18 +201,14 @@ describe("field-picker-control renders correctly", () => {
 				closeFieldPicker={closeFieldPicker}
 				currentControlValues={currentControlValues}
 				dataModel={filteredDataset}
-				updateControlValue={updateControlValue}
 				control={fieldPickerControl}
-				updateSelectedRows={updateSelectedRows}
 			/>
 		);
 
 		expect(wrapper.prop("closeFieldPicker")).to.equal(closeFieldPicker);
 		expect(wrapper.prop("currentControlValues")).to.equal(currentControlValues);
 		expect(wrapper.prop("dataModel")).to.equal(filteredDataset);
-		expect(wrapper.prop("updateControlValue")).to.equal(updateControlValue);
 		expect(wrapper.prop("control")).to.equal(fieldPickerControl);
-		expect(wrapper.prop("updateSelectedRows")).to.equal(updateSelectedRows);
 	});
 
 	it("should render a `FieldPicker`", () => {
@@ -228,9 +218,7 @@ describe("field-picker-control renders correctly", () => {
 				closeFieldPicker={closeFieldPicker}
 				currentControlValues={currentControlValues}
 				dataModel={filteredDataset}
-				updateControlValue={updateControlValue}
 				control={fieldPickerControl}
-				updateSelectedRows={updateSelectedRows}
 			/>
 		);
 		wrapper.update();
@@ -247,9 +235,7 @@ describe("field-picker-control renders correctly", () => {
 				closeFieldPicker={closeFieldPicker}
 				currentControlValues={currentControlValues}
 				dataModel={filteredDataset}
-				updateControlValue={updateControlValue}
 				control={fieldPickerControl}
-				updateSelectedRows={updateSelectedRows}
 			/>
 		);
 		expect(wrapper.state().data.fields).to.have.length(filteredDataset.fields.length);
@@ -264,9 +250,7 @@ describe("field-picker-control renders correctly", () => {
 				closeFieldPicker={closeFieldPicker}
 				currentControlValues={currentControlValues}
 				dataModel={filteredDataset}
-				updateControlValue={updateControlValue}
 				control={fieldPickerControl}
-				updateSelectedRows={updateSelectedRows}
 			/>
 		);
 		wrapper.find(".filter-list-data-integer-enabled-icon").simulate("click", { type: "integer" });
@@ -281,9 +265,7 @@ describe("field-picker-control renders correctly", () => {
 				closeFieldPicker={closeFieldPicker}
 				currentControlValues={currentControlValues}
 				dataModel={filteredDataset}
-				updateControlValue={updateControlValue}
 				control={fieldPickerControl}
-				updateSelectedRows={updateSelectedRows}
 			/>
 		);
 		wrapper.find(".filter-list-data-integer-enabled-icon").simulate("click", { type: "integer" });
@@ -304,9 +286,7 @@ describe("field-picker-control renders correctly", () => {
 				closeFieldPicker={closeFieldPicker}
 				currentControlValues={currentControlValues}
 				dataModel={filteredDataset}
-				updateControlValue={updateControlValue}
 				control={fieldPickerControl}
-				updateSelectedRows={updateSelectedRows}
 			/>
 		);
 		const input = wrapper.find("#flexible-table-search");
@@ -324,9 +304,7 @@ describe("field-picker-control renders correctly", () => {
 				closeFieldPicker={closeFieldPicker}
 				currentControlValues={currentControlValues}
 				dataModel={filteredDataset}
-				updateControlValue={updateControlValue}
 				control={fieldPickerControl}
-				updateSelectedRows={updateSelectedRows}
 			/>
 		);
 		wrapper.find("input[id='field-picker-checkbox-all']").simulate("change", { target: { checked: "true" } });
@@ -341,9 +319,7 @@ describe("field-picker-control renders correctly", () => {
 				closeFieldPicker={closeFieldPicker}
 				currentControlValues={currentControlValues}
 				dataModel={filteredDataset}
-				updateControlValue={updateControlValue}
 				control={fieldPickerControl}
-				updateSelectedRows={updateSelectedRows}
 			/>
 		);
 		wrapper.find("input[id='field-picker-checkbox-0']").simulate("change", { target: { checked: "true", name: "Age" } });
@@ -358,9 +334,7 @@ describe("field-picker-control renders correctly", () => {
 				closeFieldPicker={closeFieldPicker}
 				currentControlValues={currentControlValues}
 				dataModel={filteredDataset}
-				updateControlValue={updateControlValue}
 				control={fieldPickerControl}
-				updateSelectedRows={updateSelectedRows}
 			/>
 		);
 		wrapper.find("input[id='field-picker-checkbox-1']").simulate("change", { target: { checked: "true", name: "Sex" } });

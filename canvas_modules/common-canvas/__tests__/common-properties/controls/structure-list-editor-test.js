@@ -12,8 +12,10 @@ import StructureListEditorControl from "../../../src/common-properties/editor-co
 import SubPanelButton from "../../../src/common-properties/editor-panels/sub-panel-button.jsx";
 import { render, mount } from "enzyme";
 import { expect } from "chai";
-
 import Controller from "../../../src/common-properties/properties-controller";
+import propertyUtils from "../../_utils_/property-utils";
+
+const CONDITIONS_TEST_FORM_DATA = require("../../test_resources/json/conditions-test-formData.json");
 
 const controller = new Controller();
 
@@ -584,5 +586,32 @@ describe("StructureListEditorControl renders correctly", () => {
 		input.simulate("change", { target: { value: "ONE" } });
 		expect(wrapper.find(".table-row")).to.have.length(1);
 
+	});
+});
+
+describe("condition messages renders correctly with structurelisteditor table", () => {
+	it("structurelisteditor control should have error message when notEquals []", () => {
+		const wrapper = propertyUtils.createEditorForm("mount", CONDITIONS_TEST_FORM_DATA, controller);
+		const conditionsPropertyId = { name: "structurelisteditorTableInput" };
+		const input = wrapper.find("#editor-control-structurelisteditorTableInput");
+		expect(input).to.have.length(1);
+		expect(controller.getPropertyValue(conditionsPropertyId)).to.have.length(1);
+
+		expect(wrapper.find(".validation-warning-message-icon-structure-list-editor")).to.have.length(0);
+		expect(wrapper.find(".validation-error-message-color-warning")).to.have.length(0);
+		// const dataRows = input.find(".public_fixedDataTable_bodyRow");
+		const dataRows = input.find(".table-row");
+		expect(dataRows).to.have.length(1);
+		dataRows.first().simulate("click");
+		wrapper.update();
+		const removeRowButton = wrapper.find("#remove-fields-button-enabled");
+		expect(removeRowButton).to.have.length(1);
+
+		removeRowButton.simulate("click");
+		wrapper.update();
+		expect(controller.getPropertyValue(conditionsPropertyId)).to.have.length(0);
+
+		expect(wrapper.find(".validation-warning-message-icon-structure-list-editor")).to.have.length(1);
+		expect(wrapper.find(".validation-error-message-color-warning")).to.have.length(1);
 	});
 });

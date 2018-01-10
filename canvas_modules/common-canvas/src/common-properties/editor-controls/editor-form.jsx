@@ -779,22 +779,17 @@ export default class EditorForm extends React.Component {
 
 	closeFieldPicker() {
 		this.props.showPropertiesButtons(true);
-		if (this.state.postPickCallback) {
-			this.state.postPickCallback();
-		}
 		this.setState({
 			fieldPickerControl: {},
-			showFieldPicker: false,
-			postPickCallback: null
+			showFieldPicker: false
 		});
 	}
 
-	openFieldPicker(evt, postPickerCallback) {
+	openFieldPicker(evt) {
 		this.props.showPropertiesButtons(false);
 		this.setState({
 			fieldPickerControl: JSON.parse(evt.currentTarget.dataset.control),
-			showFieldPicker: true,
-			postPickCallback: postPickerCallback
+			showFieldPicker: true
 		});
 	}
 

@@ -8,31 +8,15 @@
  *******************************************************************************/
 /* global document */
 
-import React from "react";
-import EditorForm from "../../src/common-properties/editor-controls/editor-form.jsx";
-import { shallow, mount } from "enzyme";
+import propertyUtils from "../_utils_/property-utils";
 import { expect } from "chai";
-import sinon from "sinon";
-import chai from "chai";
-import chaiEnzyme from "chai-enzyme";
-chai.use(chaiEnzyme()); // Need for style checking
 import isEqual from "lodash/isEqual";
 
 import Controller from "../../src/common-properties/properties-controller";
 
 const CONDITIONS_TEST_FORM_DATA = require("../test_resources/json/conditions-test-formData.json");
 
-const showPropertiesButtons = sinon.spy();
-
 const additionalComponents = null;
-const formData = {};
-formData.componentId = CONDITIONS_TEST_FORM_DATA.componentId;
-formData.label = CONDITIONS_TEST_FORM_DATA.label;
-formData.editorSize = CONDITIONS_TEST_FORM_DATA.editorSize;
-formData.uiItems = CONDITIONS_TEST_FORM_DATA.uiItems;
-formData.buttons = CONDITIONS_TEST_FORM_DATA.buttons;
-formData.data = CONDITIONS_TEST_FORM_DATA.data;
-formData.conditions = CONDITIONS_TEST_FORM_DATA.conditions;
 
 const enabledDefinitions = {};
 enabledDefinitions.checkboxEnable = [
@@ -939,38 +923,8 @@ validationDefinitions.subpanelTextfieldName = [
 	}
 ];
 
-const defaultControlStates = {
-	"textareaDescription": "hidden",
-	"radiosetColor": "disabled",
-	"expressionBox": "disabled",
-	"field_types[1][3]": "hidden",
-	"field_types[1][2]": "disabled",
-	"field_types[3][3]": "hidden",
-	"field_types[3][2]": "disabled",
-	"field_types[4][3]": "hidden",
-	"field_types[4][2]": "disabled",
-	"field_types[6][3]": "hidden",
-	"field_types[6][2]": "disabled"
-};
-var controller;
-function createEditorForm(state) {
-	controller = new Controller();
-	controller.setForm(formData);
-	let wrapper;
-	const editorForm = (<EditorForm
-		ref="editorForm"
-		key="editor-form-key"
-		controller={controller}
-		additionalComponents={additionalComponents}
-		showPropertiesButtons={showPropertiesButtons}
-	/>);
-	if (state === "shallow") {
-		wrapper = shallow(editorForm);
-	} else {
-		wrapper = mount(editorForm);
-	}
-	return wrapper;
-}
+const controller = new Controller();
+
 function compareObjects(expected, actual) {
 	expect(isEqual(JSON.parse(JSON.stringify(expected)),
 		JSON.parse(JSON.stringify(actual)))).to.be.true;
@@ -979,14 +933,15 @@ function compareObjects(expected, actual) {
 describe("editor-form renders correctly with validations", () => {
 
 	it("props should have been defined", () => {
-		const wrapper = createEditorForm("mount");
+		const wrapper = propertyUtils.createEditorForm("mount", CONDITIONS_TEST_FORM_DATA, controller);
 
 		expect(wrapper.prop("controller")).to.equal(controller);
 		expect(wrapper.prop("additionalComponents")).to.equal(additionalComponents);
-		expect(wrapper.prop("showPropertiesButtons")).to.equal(showPropertiesButtons);
+		expect(wrapper.prop("showPropertiesButtons")).to.exist;
 	});
+
 	it("should render an `EditorForm` with parsed conditions", () => {
-		const wrapper = createEditorForm("mount");
+		const wrapper = propertyUtils.createEditorForm("mount", CONDITIONS_TEST_FORM_DATA, controller);
 
 		expect(wrapper.find(".form-horizontal")).to.have.length(1);
 		expect(wrapper.find(".section--light")).to.have.length(1);
@@ -994,6 +949,7 @@ describe("editor-form renders correctly with validations", () => {
 		expect(wrapper.find(".editor_control_area")).to.have.length(23);
 		expect(wrapper.find(".validation-error-message")).to.have.length(40);
 	});
+
 	it("should initialize correct values in `Properties-Controller`", () => {
 		expect(Object.keys(controller.visibleDefinition)).to.have.length(3);
 		expect(Object.keys(controller.enabledDefinitions)).to.have.length(3);
@@ -1052,647 +1008,39 @@ describe("editor-form renders correctly with validations", () => {
 
 		compareObjects({}, controller.getErrorMessages());
 	});
-	describe("condition messages renders correctly with numberfield control", () => {
-		it("numberfield control should have error message from invalid input", () => {
-			const wrapper = createEditorForm("mount");
-
-			const input = wrapper.find("input[id='editor-control-numberfieldCheckpointInterval']");
-			expect(input).to.have.length(1);
-			input.simulate("change", { target: { value: -100 } });
-			wrapper.update();
-
-			const numberfieldCheckpointIntervalErrorMessages = {
-				"type": "error",
-				"text": "The checkpoint interval value must either be >= 1 or -1 to disable"
-			};
-			compareObjects(numberfieldCheckpointIntervalErrorMessages, controller.getErrorMessage({ name: "numberfieldCheckpointInterval" }));
-			expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
-			expect(wrapper.find(".form__validation--error")).to.have.length(1);
-		});
-		it("required numberfield control should have error message from null input", () => {
-			const wrapper = createEditorForm("mount");
-
-			const input = wrapper.find("input[id='editor-control-numberfieldCheckpointInterval']");
-			expect(input).to.have.length(1);
-			input.simulate("change", { target: { value: "" } });
-			wrapper.update();
-
-			const numberfieldCheckpointIntervalErrorMessages = {
-				"type": "error",
-				"text": "Required parameter numberfieldCheckpointInterval has no value",
-			};
-			compareObjects(numberfieldCheckpointIntervalErrorMessages, controller.getErrorMessage({ name: "numberfieldCheckpointInterval" }));
-			expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
-			expect(wrapper.find(".form__validation--error")).to.have.length(1);
-		});
-		it("numberfield control should have error message from null input and generator should trigger validation", () => {
-			const wrapper = createEditorForm("mount");
-
-			const input = wrapper.find("input[id='editor-control-numberfieldSeed']");
-			expect(input).to.have.length(1);
-			input.simulate("change", { target: { value: "" } });
-			wrapper.update();
-
-			const numberfieldSeedErrorMessages = {
-				"type": "error",
-				"text": "Field cannot be null. This is an example of a long error message that might be entered. The message text will wrap around to the next line.",
-			};
-			compareObjects(numberfieldSeedErrorMessages, controller.getErrorMessage({ name: "numberfieldSeed" }));
-			expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
-			expect(wrapper.find(".form__validation--error")).to.have.length(1);
-
-			const generator = wrapper.find(".number-generator");
-			expect(generator).to.have.length(1);
-			generator.simulate("click");
-			wrapper.update();
-
-			expect(wrapper.find(".validation-error-message-icon")).to.have.length(0);
-			expect(wrapper.find(".form__validation--error")).to.have.length(0);
-		});
-	});
-	describe("condition messages renders correctly with columnselect control", () => {
-		it("columnselect control should have error message from empty input", () => {
-			const wrapper = createEditorForm("mount");
-			const propertyId = { name: "columnSelectInputFieldList" };
-			const input = wrapper.find("#flexible-table-columnSelectInputFieldList");
-			expect(input).to.have.length(1);
-
-			// select the first row in the table
-			var tableData = input.find(".column-select-table-row");
-			expect(tableData).to.have.length(2);
-			tableData.at(0).simulate("click"); // TODO Doesn't actually do anything
-			// ensure removed button is enabled and select it
-			var enabledRemoveColumnButton = input.find("#remove-fields-button-enabled");
-			expect(enabledRemoveColumnButton).to.have.length(1);
-			expect(enabledRemoveColumnButton.prop("id")).to.equal("remove-fields-button-enabled");
-			enabledRemoveColumnButton.simulate("click");
-			// validate the first row is deleted
-			expect(controller.getPropertyValue(propertyId)).to.have.same.members(["BP"]);
-
-			tableData = input.find(".column-select-table-row");
-			expect(tableData).to.have.length(1);
-			tableData.at(0).simulate("click"); // TODO Doesn't actually do anything
-			// ensure removed button is enabled and select it
-			enabledRemoveColumnButton = input.find("#remove-fields-button-enabled");
-			expect(enabledRemoveColumnButton).to.have.length(1);
-			expect(enabledRemoveColumnButton.prop("id")).to.equal("remove-fields-button-enabled");
-			enabledRemoveColumnButton.simulate("click");
-			// validate the first row is deleted
-			expect(controller.getPropertyValue(propertyId)).to.have.length(0);
-
-			input.simulate("blur");
-			wrapper.update();
-
-			const columnSelectInputFieldListErrorMessages = {
-				"type": "error",
-				"text": "Select one or more input fields."
-			};
-			compareObjects(columnSelectInputFieldListErrorMessages, controller.getErrorMessage(propertyId));
-			expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
-			expect(wrapper.find(".form__validation--error")).to.have.length(1);
-		});
-	});
-	describe("condition messages renders correctly with someofcolumns control", () => {
-		it("someofcolumnsList control should have warning message from no selection", () => {
-			const wrapper = createEditorForm("mount");
-			const propertyId = { name: "someofcolumnsList" };
-			const input = wrapper.find("select[id='editor-control-someofcolumnsList']");
-			expect(input).to.have.length(1);
-
-			const optAge = document.createElement("OPTION");
-			optAge.selected = true;
-			optAge.value = "Age";
-			const options1 = [
-				optAge
-			];
-
-			expect(input.find("option")).to.have.length(7);
-			input.simulate("change", { target: { options: options1 } });
-			expect(controller.getPropertyValue(propertyId)).to.have.length(1);
-
-			optAge.selected = false;
-			input.simulate("change", { target: { options: options1 } });
-			wrapper.update();
-			expect(controller.getPropertyValue(propertyId)).to.have.length(0);
-
-			const someofcolumnsListWarningMessages = {
-				"type": "warning",
-				"text": "Field must be selected",
-			};
-			compareObjects(someofcolumnsListWarningMessages, controller.getErrorMessage(propertyId));
-
-			expect(wrapper.find(".validation-warning-message-icon-selection")).to.have.length(1);
-			expect(wrapper.find(".validation-error-message-color-warning")).to.have.length(1);
-		});
-	});
-
-	describe("condition messages renders correctly with checkbox control", () => {
-		it("checkboxTypes control should have warning message if none are checked", () => {
-			const wrapper = createEditorForm("mount");
-
-			const input = wrapper.find("#editor-control-checkboxTypes");
-			expect(input).to.have.length(1);
-			expect(input.find("input[type='checkbox']")).to.have.length(3);
-			const checkbox = wrapper.find("input[type='checkbox']").at(1);
-			checkbox.simulate("change", { target: { checked: true, id: "string" } });
-			wrapper.update();
-
-			const checkboxSingleMessages = {
-				"type": "error",
-				"text": "Checkbox single should be checked if data type is selected"
-			};
-			var checkboxTypesMessages = {
-				"type": "error",
-				"text": "Checkbox single should be checked if data type is selected"
-			};
-			compareObjects(checkboxSingleMessages, controller.getErrorMessage({ name: "checkboxSingle" }));
-			compareObjects(checkboxTypesMessages, controller.getErrorMessage({ name: "checkboxTypes" }));
-
-			expect(wrapper.find(".validation-error-message-icon-checkbox")).to.have.length(2);
-			expect(wrapper.find(".validation-error-message-color-error")).to.have.length(2);
-
-			checkbox.simulate("change", { target: { checked: false, id: "string" } });
-			wrapper.update();
-
-			checkboxTypesMessages = {
-				"type": "warning",
-				"text": "No data types are selected"
-			};
-			compareObjects(checkboxTypesMessages, controller.getErrorMessage({ name: "checkboxTypes" }));
-
-			expect(wrapper.find(".validation-warning-message-icon-checkbox")).to.have.length(1);
-			expect(wrapper.find(".validation-error-message-color-warning")).to.have.length(1);
-		});
-	});
-	describe("condition messages renders correctly with structure table cells", () => {
-		it("structuretableRenameFields control should have error message with empty renamed field", () => {
-			const wrapper = createEditorForm("mount");
-			const propertyId = { name: "structuretableRenameFields" };
-			const input = wrapper.find("#flexible-table-structuretableRenameFields");
-			expect(input).to.have.length(1);
-			expect(controller.getPropertyValue(propertyId)).to.have.length(2);
-
-			const dataRows = input.find(".reactable-data").find("tr");
-			expect(dataRows).to.have.length(2);
-			dataRows.first().simulate("click");
-			const cell = dataRows.first().find("#editor-control-new_name");
-			cell.simulate("change", { target: { value: "" } });
-			const rowValues = controller.getPropertyValue(propertyId);
-			const expected = [
-				["Age", ""],
-				["BP", "BP-1"]
-			];
-			expect(isEqual(rowValues, expected)).to.be.true;
-
-			// TODO nothing being checked here for validations
-		});
-
-		it("structuretableRenameFields control should have disabled dropdown control", () => {
-			const wrapper = createEditorForm("mount");
-			const tabs = wrapper.find(".tabs__tabpanel");
-			expect(tabs).to.have.length(6);
-			const tab = tabs.at(5);
-			const dataRows = tab.find(".reactable-data").find("tr");
-			expect(dataRows).to.have.length(7);
-			const uncheckedRow = dataRows.at(1);
-			expect(uncheckedRow.find(".Dropdown-disabled")).to.have.length(1);
-			const cells = uncheckedRow.find("td");
-			expect(cells).to.have.length(5);
-			const cell = cells.at(3);
-			const dropdown = cell.find(".Dropdown-control-panel");
-			expect(dropdown).to.have.length(1);
-			expect(dropdown).to.have.style("display", "none");
-		});
-	});
-	describe("condition messages renders correctly with structure table control", () => {
-		it("structuretableSortOrder control should have error message from no selection", () => {
-			// a note about this test.  structuretableSortOrder has the required = true attribute and
-			// a isNotEmpty condition.  THe isNotEmpty condition error message should take precendence.
-			const wrapper = createEditorForm("mount");
-			const propertyId = { name: "structuretableSortOrder" };
-			const input = wrapper.find("#flexible-table-structuretableSortOrder").at(0);
-			expect(input).to.have.length(1);
-			expect(controller.getPropertyValue(propertyId)).to.have.length(1);
-
-			let dataRows = input.find(".reactable-data").find("tr");
-			expect(dataRows).to.have.length(1);
-			dataRows.first().simulate("click");
-			wrapper.update();
-
-			const enabledRemoveColumnButton = wrapper.find("#remove-fields-button-enabled");
-			expect(enabledRemoveColumnButton).to.have.length(1);
-
-			enabledRemoveColumnButton.simulate("click");
-			wrapper.update();
-			dataRows = input.find(".reactable-data").find("tr");
-			expect(dataRows).to.have.length(0);
-			expect(controller.getPropertyValue(propertyId)).to.have.length(0);
-
-			enabledRemoveColumnButton.simulate("blur");
-			wrapper.update();
-
-			const structuretableSortOrderErrorMessages = {
-				"type": "error",
-				"text": "table cannot be empty"
-			};
-
-			compareObjects(structuretableSortOrderErrorMessages, controller.getErrorMessage({ name: "structuretableSortOrder" }));
-			expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
-			expect(wrapper.find(".form__validation--error")).to.have.length(1);
-		});
-
-		it("structuretableRenameFields control should have error message from containing 'pw'", () => {
-			const wrapper = createEditorForm("mount");
-			const propertyId = { name: "structuretableRenameFields" };
-			const input = wrapper.find("#flexible-table-structuretableRenameFields");
-			expect(input).to.have.length(1);
-			expect(controller.getPropertyValue(propertyId)).to.have.length(2);
-
-			const nameInput = input.find("input[id='editor-control-new_name']");
-			expect(nameInput).to.have.length(2);
-			const inputControl = nameInput.at(0);
-			inputControl.simulate("change", { target: { value: "bad pw" } });
-			wrapper.update();
-			inputControl.simulate("blur");
-			wrapper.update();
-
-			const structuretableRenameFieldsErrorMessages = {
-				"type": "error",
-				"text": "The 'Output Name' field cannot contain 'pw'"
-			};
-
-			compareObjects(structuretableRenameFieldsErrorMessages, controller.getErrorMessage({ name: "structuretableRenameFields" }));
-			expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
-			expect(wrapper.find(".form__validation--error")).to.have.length(1);
-
-		});
-
-		it("required structuretableRenameTable control should have error message from no selection", () => {
-			const wrapper = createEditorForm("mount");
-			const propertyId = { name: "structuretableRenameFields" };
-
-			const input = wrapper.find("#flexible-table-structuretableRenameFields");
-			expect(input).to.have.length(1);
-			expect(controller.getPropertyValue(propertyId)).to.have.length(2);
-
-			// remove two data row so that the table is empty
-			let dataRows = input.find(".reactable-data").find("tr");
-			expect(dataRows).to.have.length(2);
-			dataRows.first().simulate("click");
-			wrapper.update();
-
-			const enabledRemoveColumnButton = wrapper.find("#remove-fields-button-enabled");
-			expect(enabledRemoveColumnButton).to.have.length(1);
-
-			enabledRemoveColumnButton.simulate("click");
-			wrapper.update();
-			dataRows = input.find(".reactable-data").find("tr");
-
-			expect(dataRows).to.have.length(1);
-			expect(controller.getPropertyValue(propertyId)).to.have.length(1);
-
-			dataRows.first().simulate("click");
-			wrapper.update();
-			enabledRemoveColumnButton.simulate("click");
-			wrapper.update();
-			dataRows = input.find(".reactable-data").find("tr");
-
-			expect(dataRows).to.have.length(0);
-			expect(controller.getPropertyValue(propertyId)).to.have.length(0);
-
-			enabledRemoveColumnButton.simulate("blur");
-
-			const structuretableRenameFieldsErrorMessages = {
-				"type": "error",
-				"text": "Required parameter structuretableRenameFields has no value"
-			};
-			compareObjects(structuretableRenameFieldsErrorMessages, controller.getErrorMessage({ name: "structuretableRenameFields" }));
-
-			expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
-			expect(wrapper.find(".form__validation--error")).to.have.length(1);
-		});
-	});
-	describe("Cells disable and hide correctly with structure table control", () => {
-		it("structuretable should disable cells", () => {
-			const wrapper = createEditorForm("mount");
-			const storageTable = wrapper.find("#flexible-table-field_types");
-			let disabledDropdowns = storageTable.find(".Dropdown-disabled");
-			expect(disabledDropdowns).to.have.length(4);
-			const input = storageTable.find("#editor-control-override_field_types_0_1");
-			expect(input).to.have.length(1);
-			storageTable.find("input[id='editor-control-override_field_types_0_1']").simulate("change", { target: { checked: false } });
-			wrapper.update();
-			disabledDropdowns = storageTable.find(".Dropdown-disabled");
-			expect(disabledDropdowns).to.have.length(5);
-		});
-
-		it("structuretable should hide cells", () => {
-			const wrapper = createEditorForm("mount");
-			const tabs = wrapper.find(".tabs__tabpanel");
-			expect(tabs).to.have.length(6);
-			const tab = tabs.at(5);
-			const table = tab.find("#structure-table");
-			const dataRows = table.find(".reactable-data").find("tr");
-			expect(dataRows).to.have.length(7);
-			let row = dataRows.first();
-			let hiddenDropdowns = row.find(".Dropdown-control-panel");
-			expect(hiddenDropdowns).to.have.length(2);
-			expect(hiddenDropdowns.at(1)).not.to.have.style("display", "none");
-			const input = row.find("#editor-control-override_field_types_0_1");
-			expect(input).to.have.length(1);
-			wrapper.find("input[id='editor-control-override_field_types_0_1']").simulate("change", { target: { checked: false } });
-			wrapper.update();
-			row = dataRows.first();
-			hiddenDropdowns = row.find(".Dropdown-control-panel");
-			expect(hiddenDropdowns).to.have.length(2);
-			expect(hiddenDropdowns.at(1)).to.have.style("display", "none");
-		});
-	});
-
-	describe("condition messages renders correctly with structurelisteditor table", () => {
-		it("structurelisteditor control should have error message when notEquals []", () => {
-			const wrapper = createEditorForm("mount");
-			const propertyId = { name: "structurelisteditorTableInput" };
-			const input = wrapper.find("#editor-control-structurelisteditorTableInput");
-			expect(input).to.have.length(1);
-			expect(controller.getPropertyValue(propertyId)).to.have.length(1);
-
-			expect(wrapper.find(".validation-warning-message-icon-structure-list-editor")).to.have.length(0);
-			expect(wrapper.find(".validation-error-message-color-warning")).to.have.length(0);
-			// const dataRows = input.find(".public_fixedDataTable_bodyRow");
-			const dataRows = input.find(".table-row");
-			expect(dataRows).to.have.length(1);
-			dataRows.first().simulate("click");
-			wrapper.update();
-			const removeRowButton = wrapper.find("#remove-fields-button-enabled");
-			expect(removeRowButton).to.have.length(1);
-
-			removeRowButton.simulate("click");
-			wrapper.update();
-			expect(controller.getPropertyValue(propertyId)).to.have.length(0);
-
-			expect(wrapper.find(".validation-warning-message-icon-structure-list-editor")).to.have.length(1);
-			expect(wrapper.find(".validation-error-message-color-warning")).to.have.length(1);
-		});
-	});
-
-	describe("condition messages renders correctly with radioSet control", () => {
-		// test radioSet disabled and warning message
-		it("radiosetColor control should have warning message selected yellow", () => {
-			const wrapper = createEditorForm("mount");
-			const propertyId = { name: "radiosetColor" };
-			const input = wrapper.find("#editor-control-radiosetColor");
-			expect(input).to.have.length(1);
-			const radios = input.find("input[type='radio']");
-			expect(radios).to.have.length(3);
-			radios.forEach((radio) => {
-				// console.log("radio propsss " + JSON.stringify(radio.props()));
-				expect(radio.is("[disabled]")).to.equal(true);
-			});
-			expect(controller.getControlState(propertyId)).to.equal(defaultControlStates.radiosetColor);
-
-			const checkbox = wrapper.find("#editor-control-checkboxEnable");
-			expect(checkbox).to.have.length(1);
-			checkbox.simulate("change", { target: { checked: true, id: "Enable" } });
-			wrapper.update();
-			radios.forEach((radio) => {
-			// console.log("radio propsss " + JSON.stringify(radio.props()));
-				expect(radio.is("[disabled]")).to.equal(false);
-			});
-
-			expect(controller.getControlState(propertyId)).to.equal("enabled");
-
-			const radioYellow = radios.find("input[value='yellow']");
-			radioYellow.simulate("change", { target: { checked: true, value: "yellow" } });
-			wrapper.update();
-			const radiosetColorWarningMessages = {
-				radiosetColor:
-							{ type: "warning",
-								text: "Are you sure you want to choose yellow?"
-							}
-			};
-			compareObjects(radiosetColorWarningMessages, controller.getErrorMessages());
-
-			expect(wrapper.find(".validation-warning-message-icon-checkbox")).to.have.length(1);
-			expect(wrapper.find(".validation-error-message-color-warning")).to.have.length(1);
-
-			expect(checkbox).to.have.length(1);
-			checkbox.simulate("change", { target: { checked: false, id: "Enable" } });
-			wrapper.update();
-			expect(controller.getControlState(propertyId)).to.equal(defaultControlStates.radiosetColor);
-
-			radios.forEach((radio) => {
-				expect(radio.is("[disabled]")).to.equal(true);
-			});
-		});
-	});
-
-	describe("condition messages renders correctly with textfields control", () => {
-		it("test passwordfield isNotEmpty", () => {
-			const wrapper = createEditorForm("mount");
-
-			const passwordInput = wrapper.find("input[id='editor-control-passwordField']");
-			expect(passwordInput).to.have.length(1);
-			passwordInput.simulate("change", { target: { value: "" } });
-			wrapper.update();
-			let textfieldNameErrorMessages = {
-				passwordField:
-							{ type: "error",
-								text: "Password cannot be empty, enter \"password\"" },
-				textfieldName:
-							{ type: "error",
-								text: "textfieldName is missing an input value for validation."
-							}
-			};
-
-			compareObjects(textfieldNameErrorMessages, controller.getErrorMessages());
-			passwordInput.simulate("change", { target: { value: "password" } });
-			wrapper.update();
-			textfieldNameErrorMessages = {
-				textfieldName:
-							{ type: "error",
-								text: "textfieldName is missing an input value for validation."
-							},
-				passwordField:
-							{ type: "error",
-								text: "textfieldName is missing an input value for validation."
-							}
-			};
-
-			compareObjects(textfieldNameErrorMessages, controller.getErrorMessages());
-
-			const textfieldNameInput = wrapper.find("#editor-control-textfieldName");
-			textfieldNameInput.simulate("change", { target: { value: "entering a name that contains the password" } });
-			wrapper.update();
-			textfieldNameErrorMessages = {
-				passwordField:
-							{ type: "warning",
-								text: "name cannot contain password"
-							},
-				textfieldName:
-							{ type: "warning",
-								text: "name cannot contain password"
-							}
-			};
-
-			compareObjects(textfieldNameErrorMessages, controller.getErrorMessages());
-		});
-
-		it("control should be hidden", () => {
-			const wrapper = createEditorForm("mount");
-			const textareaDescriptionInput = wrapper.find("#editor-control-textareaDescription");
-			expect(textareaDescriptionInput).to.have.length(1);
-			expect(textareaDescriptionInput).to.have.style("display", "none");
-			expect(controller.getControlState({ name: "textareaDescription" })).to.equal(defaultControlStates.textareaDescription);
-		});
-
-		it("textfields control should have error message from invalid input", () => {
-			const wrapper = createEditorForm("mount");
-
-			const passwordInput = wrapper.find("input[id='editor-control-passwordField']");
-			expect(passwordInput).to.have.length(1);
-			passwordInput.simulate("change", { target: { value: "password" } });
-			wrapper.update();
-			const textfieldNameInput = wrapper.find("#editor-control-textfieldName");
-			const textareaDescriptionInput = wrapper.find("#editor-control-textareaDescription");
-
-			expect(controller.getControlState({ name: "textareaDescription" })).to.equal("hidden");
-
-			textfieldNameInput.simulate("change", { target: { value: "entering a name with invalid \"quotes'" } });
-			wrapper.update();
-			let textfieldNameErrorMessages = {
-				textfieldName:
-							{
-								type: "error",
-								text: "Name cannot contain double or single \"quotes\""
-							}
-			};
-
-			compareObjects(textfieldNameErrorMessages, controller.getErrorMessages());
-
-			expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
-			expect(wrapper.find(".form__validation--error")).to.have.length(1);
-
-			textfieldNameInput.simulate("change", { target: { value: "entering a name with invlid / backslash" } });
-			wrapper.update();
-			textfieldNameErrorMessages = {
-				textfieldName:
-				{
-					type: "error",
-					text: "Name cannot contain /"
-				}
-			};
-
-			compareObjects(textfieldNameErrorMessages, controller.getErrorMessages());
-
-			expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
-			expect(wrapper.find(".form__validation--error")).to.have.length(1);
-
-			const checkbox = wrapper.find("#editor-control-checkboxEnableDesc");
-			expect(checkbox).to.have.length(1);
-			checkbox.simulate("change", { target: { checked: true, id: "Enable" } });
-			textfieldNameInput.simulate("change", { target: { value: "entering a valid name" } });
-			textareaDescriptionInput.simulate("change", { target: { value: "entering a valid description" } });
-			wrapper.update();
-			textfieldNameErrorMessages = {};
-			compareObjects(textfieldNameErrorMessages, controller.getErrorMessages());
-
-			expect(wrapper.find(".form__validation--error")).to.have.length(0);
-			expect(wrapper.find(".form__validation--warning")).to.have.length(0);
-		});
-
-		it("required textfields control should have error message from null input", () => {
-			const wrapper = createEditorForm("mount");
-
-			const textareaDescriptionInput = wrapper.find("#editor-control-textareaDescription");
-
-			const checkbox = wrapper.find("#editor-control-checkboxEnableDesc");
-			expect(checkbox).to.have.length(1);
-			checkbox.simulate("change", { target: { checked: true, id: "Enable" } });
-			textareaDescriptionInput.simulate("change", { target: { value: "" } });
-
-			const textfieldNameErrorMessages = {
-				textareaDescription:
-							{
-								type: "error",
-								text: "Required parameter textareaDescription has no value"
-							}
-			};
-
-			compareObjects(textfieldNameErrorMessages, controller.getErrorMessages());
-			wrapper.update();
-			expect(wrapper.find(".form__validation--error")).to.have.length(1);
-			expect(wrapper.find(".form__validation--warning")).to.have.length(0);
-		});
-	});
-
-	describe("condition messages renders correctly with dropDown control", () => {
-		it("oneofselectAnimals control should have warning message from empty selection", () => {
-			const wrapper = createEditorForm("mount");
-
-			const dropdownContainer = wrapper.find("#oneofselect-control-container").at(0);
-			const dropdown = dropdownContainer.find(".Dropdown-control-panel");
-			expect(dropdown).to.have.length(1);
-			dropdown.find(".Dropdown-control").simulate("click");
-			wrapper.update();
-			expect(dropdownContainer.find(".validation-warning-message-icon-dropdown")).to.have.length(1);
-			expect(dropdownContainer.find(".validation-error-message-color-warning")).to.have.length(1);
-		});
-	});
-
-	describe("condition messages renders correctly with multi-control conditions", () => {
-		it("Control should genereate error message on both controls ", () => {
-			const wrapper = createEditorForm("mount");
-			// set max number of bins to 1
-			var input = wrapper.find("input[id='editor-control-numberfieldMaxBins']");
-			expect(input).to.have.length(1);
-			input.simulate("change", { target: { value: "1" } });
-			wrapper.update();
-
-			// set max depth to null, this should not clear out the max bins error
-			input = wrapper.find("input[id='editor-control-numberfieldMaxDepth']");
-			expect(input).to.have.length(1);
-			input.simulate("change", { target: { value: "" } });
-			wrapper.update();
-
-			const multiControlErrorMessages = {
-				"type": "error",
-				"text": "Maximum number of bins must be >= 2 or Maximum depth cannot be empty",
-			};
-			// required parameter error should still exist
-			compareObjects(multiControlErrorMessages, controller.getErrorMessage({ name: "numberfieldMaxBins" }));
-			compareObjects(multiControlErrorMessages, controller.getErrorMessage({ name: "numberfieldMaxDepth" }));
-
-			expect(wrapper.find(".validation-error-message-icon")).to.have.length(2);
-			expect(wrapper.find(".form__validation--error")).to.have.length(2);
-		});
-		it("control should have required error message from null input in multi-control condition", () => {
-			const wrapper = createEditorForm("mount");
-			// set max number of bins to empty
-			var input = wrapper.find("input[id='editor-control-numberfieldMaxBins']");
-			expect(input).to.have.length(1);
-			input.simulate("change", { target: { value: "" } });
-			wrapper.update();
-
-			// should create this error
-			const numberfieldMaxBinsErrorMessages = {
-				"type": "error",
-				"text": "Required parameter numberfieldMaxBins has no value",
-			};
-			compareObjects(numberfieldMaxBinsErrorMessages, controller.getErrorMessage({ name: "numberfieldMaxBins" }));
-			expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
-			expect(wrapper.find(".form__validation--error")).to.have.length(1);
-
-			// set max depth to null, this should not clear out the max bins error
-			input = wrapper.find("input[id='editor-control-numberfieldMaxDepth']");
-			expect(input).to.have.length(1);
-			input.simulate("change", { target: { value: "" } });
-			wrapper.update();
-
-			// required parameter error should still exist
-			compareObjects(numberfieldMaxBinsErrorMessages, controller.getErrorMessage({ name: "numberfieldMaxBins" }));
-			expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
-			expect(wrapper.find(".form__validation--error")).to.have.length(1);
-		});
+});
+
+// DEPRECATED control: someofcolumns
+describe("condition messages renders correctly with someofcolumns control", () => {
+	it("someofcolumnsList control should have warning message from no selection", () => {
+		const wrapper = propertyUtils.createEditorForm("mount", CONDITIONS_TEST_FORM_DATA, controller);
+		const propertyId = { name: "someofcolumnsList" };
+		const input = wrapper.find("select[id='editor-control-someofcolumnsList']");
+		expect(input).to.have.length(1);
+
+		const optAge = document.createElement("OPTION");
+		optAge.selected = true;
+		optAge.value = "Age";
+		const options1 = [
+			optAge
+		];
+
+		expect(input.find("option")).to.have.length(7);
+		input.simulate("change", { target: { options: options1 } });
+		expect(controller.getPropertyValue(propertyId)).to.have.length(1);
+
+		optAge.selected = false;
+		input.simulate("change", { target: { options: options1 } });
+		wrapper.update();
+		expect(controller.getPropertyValue(propertyId)).to.have.length(0);
+
+		const someofcolumnsListWarningMessages = {
+			"type": "warning",
+			"text": "Field must be selected",
+		};
+		compareObjects(someofcolumnsListWarningMessages, controller.getErrorMessage(propertyId));
+
+		expect(wrapper.find(".validation-warning-message-icon-selection")).to.have.length(1);
+		expect(wrapper.find(".validation-error-message-color-warning")).to.have.length(1);
 	});
 });

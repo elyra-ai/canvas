@@ -12,7 +12,11 @@ import ColumnSelectControl from "../../../src/common-properties/editor-controls/
 import { render, mount } from "enzyme";
 import { expect } from "chai";
 import sinon from "sinon";
+import propertyUtils from "../../_utils_/property-utils";
 import Controller from "../../../src/common-properties/properties-controller";
+import isEqual from "lodash/isEqual";
+
+const CONDITIONS_TEST_FORM_DATA = require("../../test_resources/json/conditions-test-formData.json");
 
 const controller = new Controller();
 
@@ -26,6 +30,7 @@ const control = {
 		"placement": "on_panel"
 	},
 	"controlType": "selectcolumns",
+	"role": "column",
 	"valueDef": {
 		"propType": "string",
 		"isList": true,
@@ -178,4 +183,50 @@ describe("ColumnStructureTableControl renders correctly", () => {
 		expect(wrapper.find(".table-row-move-button-disable")).to.have.length(4);
 	});
 
+});
+
+describe("condition messages renders correctly with columnselect control", () => {
+	it("columnselect control should have error message from empty input", () => {
+		const wrapper = propertyUtils.createEditorForm("mount", CONDITIONS_TEST_FORM_DATA, controller);
+		const conditionsPropertyId = { name: "columnSelectInputFieldList" };
+		const input = wrapper.find("#flexible-table-columnSelectInputFieldList");
+		expect(input).to.have.length(1);
+
+		// select the first row in the table
+		var tableData = input.find(".column-select-table-row");
+		expect(tableData).to.have.length(2);
+		tableData.at(0).simulate("click"); // TODO Doesn't actually do anything
+		// ensure removed button is enabled and select it
+		var enabledRemoveColumnButton = input.find("#remove-fields-button-enabled");
+		expect(enabledRemoveColumnButton).to.have.length(1);
+		expect(enabledRemoveColumnButton.prop("id")).to.equal("remove-fields-button-enabled");
+		enabledRemoveColumnButton.simulate("click");
+		// validate the first row is deleted
+		expect(controller.getPropertyValue(conditionsPropertyId)).to.have.same.members(["BP"]);
+
+		tableData = input.find(".column-select-table-row");
+		expect(tableData).to.have.length(1);
+		tableData.at(0).simulate("click"); // TODO Doesn't actually do anything
+		// ensure removed button is enabled and select it
+		enabledRemoveColumnButton = input.find("#remove-fields-button-enabled");
+		expect(enabledRemoveColumnButton).to.have.length(1);
+		expect(enabledRemoveColumnButton.prop("id")).to.equal("remove-fields-button-enabled");
+		enabledRemoveColumnButton.simulate("click");
+		// validate the first row is deleted
+		expect(controller.getPropertyValue(conditionsPropertyId)).to.have.length(0);
+
+		input.simulate("blur");
+		wrapper.update();
+
+		const columnSelectInputFieldListErrorMessages = {
+			"type": "error",
+			"text": "Select one or more input fields."
+		};
+		const actual = controller.getErrorMessage(conditionsPropertyId);
+		expect(isEqual(JSON.parse(JSON.stringify(columnSelectInputFieldListErrorMessages)),
+			JSON.parse(JSON.stringify(actual)))).to.be.true;
+
+		expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
+		expect(wrapper.find(".form__validation--error")).to.have.length(1);
+	});
 });
