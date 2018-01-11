@@ -596,7 +596,7 @@ FieldPicker.propTypes = {
 	dataModel: PropTypes.object,
 	control: PropTypes.object,
 	title: PropTypes.string,
-	updateSelectedRows: PropTypes.object.isRequired,
+	updateSelectedRows: PropTypes.func.isRequired,
 	controller: PropTypes.object.isRequired,
 	rightFlyout: PropTypes.bool,
 	intl: intlShape
