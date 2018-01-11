@@ -7,7 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import { GroupType } from "./form-constants";
+import { GroupType } from "../constants/form-constants";
 import { ResourceDef } from "./L10nProvider";
 import propertyOf from "lodash/propertyOf";
 import has from "lodash/has";

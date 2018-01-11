@@ -11,8 +11,12 @@ import React from "react";
 import PropTypes from "prop-types";
 import ColumnStructureTableEditor from "./column-structure-table-editor.jsx";
 import MoveableTableRows from "./moveable-table-rows.jsx";
+import PropertyUtils from "../util/property-utils";
+import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "../constants/constants";
+import { injectIntl, intlShape } from "react-intl";
 
-export default class StructurelisteditorControl extends ColumnStructureTableEditor {
+
+class StructurelisteditorControl extends ColumnStructureTableEditor {
 
 	constructor(props) {
 		super(props);
@@ -86,9 +90,12 @@ export default class StructurelisteditorControl extends ColumnStructureTableEdit
 		}
 
 		const tableButtonConfig = {
-			addButtonLabel: "Add Value",
-			removeButtonTooltip: "Delete selected rows",
-			addButtonTooltip: "Add new row",
+			addButtonLabel: PropertyUtils.formatMessage(this.props.intl,
+				MESSAGE_KEYS.STRUCTURELISTEDITOR_ADDBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.STRUCTURELISTEDITOR_ADDBUTTON_LABEL),
+			removeButtonTooltip: PropertyUtils.formatMessage(this.props.intl,
+				MESSAGE_KEYS.STRUCTURELISTEDITOR_REMOVEBUTTON_TOOLTIP, MESSAGE_KEYS_DEFAULTS.STRUCTURELISTEDITOR_REMOVEBUTTON_TOOLTIP),
+			addButtonTooltip: PropertyUtils.formatMessage(this.props.intl,
+				MESSAGE_KEYS.STRUCTURELISTEDITOR_ADDBUTTON_TOOLTIP, MESSAGE_KEYS_DEFAULTS.STRUCTURELISTEDITOR_ADDBUTTON_TOOLTIP),
 			removeButtonFunction: this.removeSelectedRows,
 			addButtonFunction: this.addRow
 		};
@@ -136,5 +143,8 @@ StructurelisteditorControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
+	intl: intlShape,
 	rightFlyout: PropTypes.bool
 };
+
+export default injectIntl(StructurelisteditorControl);

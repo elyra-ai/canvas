@@ -9,7 +9,8 @@
 
 import React from "react";
 import FlexibleTable from "../../../src/common-properties/editor-controls/flexible-table.jsx";
-import { mount } from "enzyme";
+// import { mount } from "enzyme";
+import { mountWithIntl } from "enzyme-react-intl";
 import { Tr, Td } from "reactable";
 import { expect } from "chai";
 import chai from "chai";
@@ -83,7 +84,7 @@ const scrollToRow = 3;
 describe("FlexibleTable renders correctly", () => {
 
 	it("props should have been defined", () => {
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<FlexibleTable
 				sortable={sortFields}
 				filterable={filterFields}
@@ -107,7 +108,7 @@ describe("FlexibleTable renders correctly", () => {
 	});
 
 	it("should render a `FlexibleTable`", () => {
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<FlexibleTable
 				sortable={sortFields}
 				filterable={filterFields}
@@ -131,7 +132,7 @@ describe("FlexibleTable renders correctly", () => {
 	});
 
 	it("should return filter text in `FlexibleTable`", () => {
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<FlexibleTable
 				sortable={sortFields}
 				filterable={filterFields}
@@ -151,7 +152,7 @@ describe("FlexibleTable renders correctly", () => {
 	});
 
 	it("should return sort text in `FlexibleTable`", () => {
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<FlexibleTable
 				sortable={sortFields}
 				filterable={filterFields}
@@ -171,7 +172,7 @@ describe("FlexibleTable renders correctly", () => {
 	});
 
 	it("should handle row click in `FlexibleTable`", () => {
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<FlexibleTable
 				sortable={sortFields}
 				filterable={filterFields}

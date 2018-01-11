@@ -52,6 +52,8 @@ export default class SubPanelInvoker extends React.Component {
 				title={this.state.title}
 				okHandler={this.hideSubDialog.bind(this, true)}
 				cancelHandler={this.hideSubDialog.bind(this, false)}
+				applyLabel={this.props.applyLabel}
+				rejectLabel={this.props.rejectLabel}
 			>
 				{this.state.panel}
 			</PropertiesDialog>);
@@ -60,6 +62,8 @@ export default class SubPanelInvoker extends React.Component {
 				cancelHandler={this.hideSubDialog.bind(this, false)}
 				okHandler={this.hideSubDialog.bind(this, true)}
 				show={this.state.subPanelVisible}
+				applyLabel={this.props.applyLabel}
+				rejectLabel={this.props.rejectLabel}
 				title={this.state.title}
 			>
 				<div>
@@ -79,6 +83,8 @@ export default class SubPanelInvoker extends React.Component {
 
 SubPanelInvoker.propTypes = {
 	children: PropTypes.element,
+	applyLabel: PropTypes.string,
+	rejectLabel: PropTypes.string,
 	rightFlyout: PropTypes.bool
 };
 

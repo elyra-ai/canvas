@@ -34,5 +34,24 @@ export const messages = {
 	"canvas-context.undo": "Undo",
 	"canvas-context.redo": "Redo",
 
-	"dialog.nodePropertiesTitle": "Node Properties"
+	"dialog.nodePropertiesTitle": "Node Properties",
+
+	"subPanel.button.tooltip": "Edit",
+	"structureListEditor.addButton.label": "Add Value",
+	"structureListEditor.removeButton.tooltip": "Delete selected rows",
+	"structureListEditor.addButton.tooltip": "Add new row",
+	"expressionCell.controlLabel": "Expression",
+	"structureTable.addButton.label": "Add Columns",
+	"structureTable.addButton.tooltip": "Select columns to add",
+	"structureTable.removeButton.tooltip": "Remove selected columns",
+	"fieldPicker.saveButton.label": "Select Fields for",
+	"fieldPicker.saveButton.tooltip": "Save and return",
+	"fieldPicker.resetButton.label": "Reset ",
+	"fieldPicker.resetButton.tooltip": "Reset to previous values",
+	"fieldPicker.filter.label": "Filter:",
+	"fieldPicker.fieldColumn.label": "Field name",
+	"fieldPicker.dataTypeColumn.label": "Data type",
+	"flyout.applyButton.label": "OK",
+	"flyout.rejectButton.label": "Cancel",
+	"table.search.placeholder": "Search in column"
 };

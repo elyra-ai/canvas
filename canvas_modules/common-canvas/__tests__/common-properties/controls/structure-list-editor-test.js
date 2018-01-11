@@ -10,7 +10,9 @@
 import React from "react";
 import StructureListEditorControl from "../../../src/common-properties/editor-controls/structure-list-editor-control.jsx";
 import SubPanelButton from "../../../src/common-properties/editor-panels/sub-panel-button.jsx";
-import { render, mount } from "enzyme";
+import { mountWithIntl } from "enzyme-react-intl";
+
+
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtils from "../../_utils_/property-utils";
@@ -185,11 +187,13 @@ function genUIItem() {
 		label={label}
 		title={title}
 		panel={subPanel}
+		controller={controller}
 	/>);
 	return (<SubPanelButton id={"sub-panel-button.___structurelisteditorList_"}
 		label={label}
 		title={title}
 		panel={panel}
+		controller={controller}
 	/>);
 }
 
@@ -199,7 +203,7 @@ describe("StructureListEditorControl renders correctly", () => {
 	it("props should have been defined", () => {
 		setPropertyValue();
 		const selectedRows = getSelectedRows();
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<StructureListEditorControl
 				control={control}
 				controller={controller}
@@ -219,7 +223,7 @@ describe("StructureListEditorControl renders correctly", () => {
 
 	it("should render a `StructureListEditorControl`", () => {
 		setPropertyValue();
-		const wrapper = render(
+		const wrapper = mountWithIntl(
 			<StructureListEditorControl
 				control={control}
 				controller={controller}
@@ -243,7 +247,7 @@ describe("StructureListEditorControl renders correctly", () => {
 
 	it("should select no rows and all move buttons disabled `StructureListEditorControl`", () => {
 		setPropertyValue();
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<StructureListEditorControl
 				control={control}
 				controller={controller}
@@ -263,7 +267,7 @@ describe("StructureListEditorControl renders correctly", () => {
 
 	it("should select top row and move down one row", () => {
 		setPropertyValue();
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<StructureListEditorControl
 				control={control}
 				controller={controller}
@@ -303,7 +307,7 @@ describe("StructureListEditorControl renders correctly", () => {
 
 	it("should select top row and move down to bottom row", () => {
 		setPropertyValue();
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<StructureListEditorControl
 				control={control}
 				controller={controller}
@@ -343,7 +347,7 @@ describe("StructureListEditorControl renders correctly", () => {
 
 	it("should select bottom row and move up one row", () => {
 		setPropertyValue();
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<StructureListEditorControl
 				control={control}
 				controller={controller}
@@ -383,7 +387,7 @@ describe("StructureListEditorControl renders correctly", () => {
 
 	it("should select bottom row and move up to top row", () => {
 		setPropertyValue();
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<StructureListEditorControl
 				control={control}
 				controller={controller}
@@ -423,7 +427,7 @@ describe("StructureListEditorControl renders correctly", () => {
 
 	it("should select top row and correct move buttons enabled `StructureListEditorControl`", () => {
 		setPropertyValue();
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<StructureListEditorControl
 				control={control}
 				controller={controller}
@@ -450,7 +454,7 @@ describe("StructureListEditorControl renders correctly", () => {
 
 	it("should select bottom row and correct move buttons enabled `StructureListEditorControl`", () => {
 		setPropertyValue();
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<StructureListEditorControl
 				control={control}
 				controller={controller}
@@ -477,7 +481,7 @@ describe("StructureListEditorControl renders correctly", () => {
 
 	it("should select middle row and all move buttons enabled `StructureListEditorControl`", () => {
 		setPropertyValue();
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<StructureListEditorControl
 				control={control}
 				controller={controller}
@@ -504,7 +508,7 @@ describe("StructureListEditorControl renders correctly", () => {
 
 	it("should select add row button and new row should display", () => {
 		setPropertyValue();
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<StructureListEditorControl
 				control={control}
 				controller={controller}
@@ -530,7 +534,7 @@ describe("StructureListEditorControl renders correctly", () => {
 
 	it("should select row and remove button row should be removed", () => {
 		setPropertyValue();
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<StructureListEditorControl
 				control={control}
 				controller={controller}
@@ -570,7 +574,7 @@ describe("StructureListEditorControl renders correctly", () => {
 
 	it("should search correct keyword in table", () => {
 		setPropertyValue();
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<StructureListEditorControl
 				control={control}
 				controller={controller}

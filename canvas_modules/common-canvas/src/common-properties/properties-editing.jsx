@@ -16,12 +16,11 @@ export default class PropertiesEditing extends Component {
 	render() {
 		const classSize = (typeof this.props.bsSize === "undefined") ? "large" : this.props.bsSize;
 		const propertyEditingClass = "properties-editing properties-" + classSize;
-
 		const buttons = (<PropertiesButtons
 			okHandler={this.props.okHandler}
 			cancelHandler={this.props.cancelHandler}
-			applyButtonLabel={this.props.applyLabel}
-			rejectButtonLabel={this.props.rejectLabel}
+			applyLabel={this.props.applyLabel}
+			rejectLabel={this.props.rejectLabel}
 			showPropertiesButtons={this.props.showPropertiesButtons}
 		/>);
 

@@ -10,13 +10,16 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Button from "ap-components-react/dist/components/Button";
-import { OKAY, CANCEL } from "./constants/constants.js";
+
+import { MESSAGE_KEYS_DEFAULTS } from "./constants/constants";
+
 
 export default class PropertiesButtons extends Component {
 
 	render() {
-		const applyButtonLabel = (typeof this.props.applyLabel === "undefined") ? OKAY : this.props.applyLabel;
-		const rejectButtonLabel = (typeof this.props.rejectLabel === "undefined") ? CANCEL : this.props.rejectLabel;
+		const applyButtonLabel = (typeof this.props.applyLabel === "undefined") ? MESSAGE_KEYS_DEFAULTS.APPLYBUTTON_LABEL : this.props.applyLabel;
+		const rejectButtonLabel = (typeof this.props.rejectLabel === "undefined") ? MESSAGE_KEYS_DEFAULTS.REJECTBUTTON_LABEL : this.props.rejectLabel;
+
 		let buttons = (<div>
 			<Button id="properties-cancel-button" semantic href="" hyperlink onClick={this.props.cancelHandler}>
 				{rejectButtonLabel}

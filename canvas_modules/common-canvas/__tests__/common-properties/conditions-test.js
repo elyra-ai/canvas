@@ -9,6 +9,7 @@
 /* global document */
 
 import propertyUtils from "../_utils_/property-utils";
+
 import { expect } from "chai";
 import isEqual from "lodash/isEqual";
 

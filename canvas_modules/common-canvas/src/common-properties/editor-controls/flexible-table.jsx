@@ -12,13 +12,17 @@
 import React from "react";
 import PropTypes from "prop-types";
 import ReactTooltip from "react-tooltip";
+import { injectIntl, intlShape } from "react-intl";
 import { Table, Thead, Th } from "reactable";
 import TextField from "ap-components-react/dist/components/TextField";
 import search32 from "../../../assets/images/search_32.svg";
 import search32Disabled from "../../../assets/images/search_32_disabled.svg";
 import SortAscendingIcon from "../../../assets/images/sort_ascending.svg";
 import SortDescendingIcon from "../../../assets/images/sort_descending.svg";
-import { TOOL_TIP_DELAY } from "../constants/constants.js";
+import PropertyUtils from "../util/property-utils";
+
+import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "../constants/constants";
+import { TOOL_TIP_DELAY } from "../constants/constants";
 import ObserveSize from "react-observe-size";
 
 const sortDir = {
@@ -28,7 +32,7 @@ const sortDir = {
 const ARROW_HEIGHT = 10;
 const ARROW_WIDTH = 10;
 
-export default class FlexibleTable extends React.Component {
+class FlexibleTable extends React.Component {
 
 	static calculateColumnWidths(columns, elementId, parentTableWidth) {
 		// get the parent table width
@@ -214,7 +218,8 @@ export default class FlexibleTable extends React.Component {
 		let renderTableHeaderContents = "";
 		let searchBar = null;
 		if (typeof this.props.filterable !== "undefined" && this.props.filterable.length !== 0) {
-			const placeHolder = "Search in column " + searchLabel;
+			const placeHolder = PropertyUtils.formatMessage(this.props.intl,
+				MESSAGE_KEYS.TABLE_SEARCH_PLACEHOLDER, MESSAGE_KEYS_DEFAULTS.TABLE_SEARCH_PLACEHOLDER) + " " + searchLabel;
 			const disabled = this.props.stateDisabled && (typeof this.props.stateDisabled.disabled !== "undefined" || Object.keys(this.props.stateDisabled) > 0);
 			const className = disabled ? "disabled" : "";
 			const searchIcon = disabled ? search32Disabled : search32;
@@ -338,5 +343,8 @@ FlexibleTable.propTypes = {
 	topRightPanel: PropTypes.object,
 	validationStyle: PropTypes.object,
 	scrollKey: PropTypes.string,
-	stateDisabled: PropTypes.object
+	stateDisabled: PropTypes.object,
+	intl: intlShape
 };
+
+export default injectIntl(FlexibleTable);

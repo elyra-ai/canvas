@@ -9,12 +9,14 @@
 
 import React from "react";
 import FieldPicker from "../../../src/common-properties/editor-controls/field-picker.jsx";
-import { mount } from "enzyme";
+import Controller from "../../../src/common-properties/properties-controller";
+import { mountWithIntl } from "enzyme-react-intl";
 import { expect } from "chai";
 import chai from "chai";
 import chaiEnzyme from "chai-enzyme";
 chai.use(chaiEnzyme()); // Note the invocation at the end
 
+const controller = new Controller();
 
 const currentControlValues = {
 	"keys": [
@@ -192,16 +194,22 @@ function closeFieldPicker() {
 	return ["Test value"];
 }
 
+function updateSelectedRows(selection) {
+	return selection;
+}
+
 describe("field-picker-control renders correctly", () => {
 
 	it("props should have been defined", () => {
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<FieldPicker
 				key="field-picker-control"
 				closeFieldPicker={closeFieldPicker}
 				currentControlValues={currentControlValues}
 				dataModel={filteredDataset}
 				control={fieldPickerControl}
+				updateSelectedRows={updateSelectedRows}
+				controller={controller}
 			/>
 		);
 
@@ -212,13 +220,15 @@ describe("field-picker-control renders correctly", () => {
 	});
 
 	it("should render a `FieldPicker`", () => {
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<FieldPicker
 				key="field-picker-control"
 				closeFieldPicker={closeFieldPicker}
 				currentControlValues={currentControlValues}
 				dataModel={filteredDataset}
 				control={fieldPickerControl}
+				updateSelectedRows={updateSelectedRows}
+				controller={controller}
 			/>
 		);
 		wrapper.update();
@@ -229,64 +239,100 @@ describe("field-picker-control renders correctly", () => {
 	});
 
 	it("should set correct state values in `FieldPicker`", () => {
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<FieldPicker
 				key="field-picker-control"
 				closeFieldPicker={closeFieldPicker}
 				currentControlValues={currentControlValues}
 				dataModel={filteredDataset}
 				control={fieldPickerControl}
+				updateSelectedRows={updateSelectedRows}
+				controller={controller}
 			/>
 		);
-		expect(wrapper.state().data.fields).to.have.length(filteredDataset.fields.length);
-		expect(wrapper.state().filterList).to.have.length(6);
-		expect(wrapper.state().initialControlValues).to.have.length(currentControlValues.keys.length);
+		// with intl support wrapper.state() does not work.
+		// looking for equivalent confirmation in the DOM
+		expect(wrapper.find("#flexible-table-container").find(".field-picker-data-rows")).to.have.length(filteredDataset.fields.length);
+		expect(wrapper.find(".properties-tooltips-filter")).to.have.length(6); // list of filters
+		const checkBoxs = wrapper.find("Checkbox").filterWhere((checkBox) => checkBox.prop("checked") === true);
+		expect(checkBoxs).to.have.length(currentControlValues.keys.length); // controlValues rendered correctly
 	});
 
 	it("should set correct filtered type in `FieldPicker`", () => {
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<FieldPicker
 				key="field-picker-control"
 				closeFieldPicker={closeFieldPicker}
 				currentControlValues={currentControlValues}
 				dataModel={filteredDataset}
 				control={fieldPickerControl}
+				updateSelectedRows={updateSelectedRows}
+				controller={controller}
 			/>
 		);
 		wrapper.find(".filter-list-data-integer-enabled-icon").simulate("click", { type: "integer" });
-		expect(wrapper.state().filterIcons).to.have.length(1);
+		wrapper.update();
+		expect(wrapper.find(".filter-list-data-integer-disabled-icon")).to.have.length(1);
 		expect(wrapper.find(".field-picker-data-rows")).to.have.length(9);
 	});
 
 	it("should select all in filtered type in `FieldPicker`", () => {
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<FieldPicker
 				key="field-picker-control"
 				closeFieldPicker={closeFieldPicker}
 				currentControlValues={currentControlValues}
 				dataModel={filteredDataset}
 				control={fieldPickerControl}
+				updateSelectedRows={updateSelectedRows}
+				controller={controller}
 			/>
 		);
+
+		// with intl support wrapper.state() does not work.
+		// looking for equivalent confirmation in the DOM
+
+		// disable a set of icons
 		wrapper.find(".filter-list-data-integer-enabled-icon").simulate("click", { type: "integer" });
 		wrapper.find(".filter-list-data-string-enabled-icon").simulate("click", { type: "string" });
 		wrapper.find(".filter-list-data-timestamp-enabled-icon").simulate("click", { type: "timestamp" });
 		wrapper.find(".filter-list-data-time-enabled-icon").simulate("click", { type: "time" });
 		wrapper.find(".filter-list-data-date-enabled-icon").simulate("click", { type: "date" });
-		expect(wrapper.state().filterIcons).to.have.length(5);
+		wrapper.update();
+		expect(wrapper.find(".filter-list-data-integer-disabled-icon")).to.have.length(1);
+		expect(wrapper.find(".filter-list-data-string-disabled-icon")).to.have.length(1);
+		expect(wrapper.find(".filter-list-data-timestamp-disabled-icon")).to.have.length(1);
+		expect(wrapper.find(".filter-list-data-time-disabled-icon")).to.have.length(1);
+		expect(wrapper.find(".filter-list-data-date-disabled-icon")).to.have.length(1);
+
+		// select the remaining rows
 		expect(wrapper.find(".field-picker-data-rows")).to.have.length(2);
 		wrapper.find("input[id='field-picker-checkbox-all']").simulate("change", { target: { checked: "true" } });
-		expect(wrapper.state().newControlValues).to.have.length(4);
+		wrapper.update();
+
+		//  enable the icons so that we can get a valid count of all selected rows.
+		wrapper.find(".filter-list-data-integer-disabled-icon").simulate("click", { type: "integer" });
+		wrapper.find(".filter-list-data-string-disabled-icon").simulate("click", { type: "string" });
+		wrapper.find(".filter-list-data-timestamp-disabled-icon").simulate("click", { type: "timestamp" });
+		wrapper.find(".filter-list-data-time-disabled-icon").simulate("click", { type: "time" });
+		wrapper.find(".filter-list-data-date-disabled-icon").simulate("click", { type: "date" });
+		wrapper.update();
+
+		// validate the number of rows selected
+		const checkBoxs = wrapper.find("Checkbox").filterWhere((checkBox) => checkBox.prop("checked") === true && checkBox.prop("data-name"));
+		expect(checkBoxs).to.have.length(4);
 	});
 
 	it("should search correct keyword in `FieldPicker`", () => {
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<FieldPicker
 				key="field-picker-control"
 				closeFieldPicker={closeFieldPicker}
 				currentControlValues={currentControlValues}
 				dataModel={filteredDataset}
 				control={fieldPickerControl}
+				updateSelectedRows={updateSelectedRows}
+				controller={controller}
 			/>
 		);
 		const input = wrapper.find("#flexible-table-search");
@@ -298,49 +344,67 @@ describe("field-picker-control renders correctly", () => {
 	});
 
 	it("should set checkedAll to true in `FieldPicker`", () => {
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<FieldPicker
 				key="field-picker-control"
 				closeFieldPicker={closeFieldPicker}
 				currentControlValues={currentControlValues}
 				dataModel={filteredDataset}
 				control={fieldPickerControl}
+				updateSelectedRows={updateSelectedRows}
+				controller={controller}
 			/>
 		);
 		wrapper.find("input[id='field-picker-checkbox-all']").simulate("change", { target: { checked: "true" } });
-		expect(wrapper.state().checkedAll).to.equal(true);
-		expect(wrapper.state().newControlValues).to.have.length(filteredDataset.fields.length);
+		wrapper.update();
+
+		// with intl support wrapper.state() does not work.
+		// looking for equivalent confirmation in the DOM
+
+		const checkBoxs = wrapper.find("Checkbox").filterWhere((checkBox) => checkBox.prop("checked") === true && checkBox.prop("data-name"));
+		expect(checkBoxs).to.have.length(filteredDataset.fields.length);
 	});
 
 	it("should add additional field to newControlValues in `FieldPicker`", () => {
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<FieldPicker
 				key="field-picker-control"
 				closeFieldPicker={closeFieldPicker}
 				currentControlValues={currentControlValues}
 				dataModel={filteredDataset}
 				control={fieldPickerControl}
+				updateSelectedRows={updateSelectedRows}
+				controller={controller}
 			/>
 		);
 		wrapper.find("input[id='field-picker-checkbox-0']").simulate("change", { target: { checked: "true", name: "Age" } });
-		expect(wrapper.state().checkedAll).to.equal(false);
-		expect(wrapper.state().newControlValues).to.have.length(4);
+		// with intl support wrapper.state() does not work.
+		// looking for equivalent confirmation in the DOM
+		const checkBoxs = wrapper.find("Checkbox").filterWhere((checkBox) => checkBox.prop("checked") === true && checkBox.prop("data-name"));
+		expect(checkBoxs).to.have.length(4);
 	});
 
 	it("should reset to initial values in `FieldPicker`", () => {
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<FieldPicker
 				key="field-picker-control"
 				closeFieldPicker={closeFieldPicker}
 				currentControlValues={currentControlValues}
 				dataModel={filteredDataset}
 				control={fieldPickerControl}
+				updateSelectedRows={updateSelectedRows}
+				controller={controller}
 			/>
 		);
 		wrapper.find("input[id='field-picker-checkbox-1']").simulate("change", { target: { checked: "true", name: "Sex" } });
-		expect(wrapper.state().checkedAll).to.equal(false);
-		expect(wrapper.state().newControlValues).to.have.length(4);
+		wrapper.update();
+		// with intl support wrapper.state() does not work.
+		// looking for equivalent confirmation in the DOM
+		const checkBoxs = wrapper.find("Checkbox").filterWhere((checkBox) => checkBox.prop("checked") === true && checkBox.prop("data-name"));
+		expect(checkBoxs).to.have.length(4);
 		wrapper.find("#reset-fields-button").simulate("click");
-		expect(wrapper.state().newControlValues).to.have.length(3);
+		wrapper.update();
+		const resetBoxs = wrapper.find("Checkbox").filterWhere((checkBox) => checkBox.prop("checked") === true && checkBox.prop("data-name"));
+		expect(resetBoxs).to.have.length(3);
 	});
 });

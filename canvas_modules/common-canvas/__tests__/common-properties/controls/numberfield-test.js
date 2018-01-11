@@ -13,6 +13,7 @@ import NumberfieldControl from "../../../src/common-properties/editor-controls/n
 import EditorForm from "../../../src/common-properties/editor-controls/editor-form.jsx";
 import ControlItem from "../../../src/common-properties/editor-controls/control-item.jsx";
 import { mount } from "enzyme";
+import { mountWithIntl } from "enzyme-react-intl";
 import { expect } from "chai";
 import sinon from "sinon";
 import Controller from "../../../src/common-properties/properties-controller";
@@ -116,7 +117,7 @@ function createEditorForm(inController) {
 		controller={inController}
 		showPropertiesButtons={showPropertiesButtons}
 	/>);
-	return mount(editorForm);
+	return mountWithIntl(editorForm);
 }
 
 const propertyId = { name: "test-numberfield" };

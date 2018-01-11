@@ -14,11 +14,12 @@ import ReactTooltip from "react-tooltip";
 import PropTypes from "prop-types";
 import ColumnStructureTableEditor from "./column-structure-table-editor.jsx";
 import MoveableTableRows from "./moveable-table-rows.jsx";
-import { TOOL_TIP_DELAY } from "../constants/constants.js";
+import { TOOL_TIP_DELAY } from "../constants/constants";
+import { injectIntl, intlShape } from "react-intl";
 import findIndex from "lodash/findIndex";
 import reject from "lodash/reject";
 
-export default class ColumnStructureTableControl extends ColumnStructureTableEditor {
+class ColumnStructureTableControl extends ColumnStructureTableEditor {
 	constructor(props) {
 		super(props);
 
@@ -239,5 +240,8 @@ ColumnStructureTableControl.propTypes = {
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
 	customContainer: PropTypes.bool,
+	intl: intlShape,
 	rightFlyout: PropTypes.bool
 };
+
+export default injectIntl(ColumnStructureTableControl);

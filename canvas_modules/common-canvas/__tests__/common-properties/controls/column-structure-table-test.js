@@ -9,7 +9,8 @@
 
 import React from "react";
 import ColumnStructureTableControl from "../../../src/common-properties/editor-controls/column-structure-table-control.jsx";
-import { render, mount } from "enzyme";
+import { mountWithIntl } from "enzyme-react-intl";
+
 import { expect } from "chai";
 import sinon from "sinon";
 import propertyUtils from "../../_utils_/property-utils";
@@ -598,7 +599,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 
 	it("props should have been defined", () => {
 		const selectedRows = getSelectedRows();
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<ColumnStructureTableControl
 				control={control}
 				controller={controller}
@@ -622,7 +623,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 	});
 
 	it("should render a `ColumnStructureTableControl`", () => {
-		const wrapper = render(
+		const wrapper = mountWithIntl(
 			<ColumnStructureTableControl
 				control={control}
 				controller={controller}
@@ -647,7 +648,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 	});
 
 	it("should select no rows and all move buttons disabled `ColumnStructureTableControl`", () => {
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<ColumnStructureTableControl
 				control={control}
 				controller={controller}
@@ -669,7 +670,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 
 	it("should select top row and move down one row", () => {
 		setPropertyValue();
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<ColumnStructureTableControl
 				control={control}
 				controller={controller}
@@ -711,7 +712,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 
 	it("should select top row and move down to bottom row", () => {
 		setPropertyValue();
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<ColumnStructureTableControl
 				control={control}
 				controller={controller}
@@ -753,7 +754,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 
 	it("should select bottom row and move up one row", () => {
 		setPropertyValue();
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<ColumnStructureTableControl
 				control={control}
 				controller={controller}
@@ -795,7 +796,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 
 	it("should select bottom row and move up to top row", () => {
 		setPropertyValue();
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<ColumnStructureTableControl
 				control={control}
 				controller={controller}
@@ -837,7 +838,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 
 	it("should select top row and correct move buttons enabled `ColumnStructureTableControl`", () => {
 		setPropertyValue();
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<ColumnStructureTableControl
 				control={control}
 				controller={controller}
@@ -866,7 +867,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 
 	it("should select bottom row and correct move buttons enabled `ColumnStructureTableControl`", () => {
 		setPropertyValue();
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<ColumnStructureTableControl
 				control={control}
 				controller={controller}
@@ -895,7 +896,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 
 	it("should select middle row and all move buttons enabled `ColumnStructureTableControl`", () => {
 		setPropertyValue();
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<ColumnStructureTableControl
 				control={control}
 				controller={controller}
@@ -924,7 +925,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 
 	it("should select add columns button and field picker should display", () => {
 		setPropertyValue();
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<ColumnStructureTableControl
 				control={control}
 				controller={controller}
@@ -948,7 +949,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 
 	it("should select row and remove button row should be removed", () => {
 		setPropertyValue();
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<ColumnStructureTableControl
 				control={control}
 				controller={controller}
@@ -990,7 +991,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 
 	it("should search correct keyword in table", () => {
 		setPropertyValue();
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<ColumnStructureTableControl
 				control={control}
 				controller={controller}
@@ -1207,7 +1208,7 @@ describe("Cells disable and hide correctly with structure table control", () => 
 describe("ColumnStructureTableControl with readonly numbered column renders correctly", () => {
 	it("should have displayed the correct generatedValues with default index values", () => {
 		setPropertyValue("readonlyControlDefault");
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<ColumnStructureTableControl
 				control={readonlyControlDefault}
 				controller={controller}
@@ -1230,7 +1231,7 @@ describe("ColumnStructureTableControl with readonly numbered column renders corr
 
 	it("should have displayed the correct generatedValues with startValue", () => {
 		setPropertyValue("readonlyControlStartValue");
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<ColumnStructureTableControl
 				control={readonlyControlStartValue}
 				controller={controller}

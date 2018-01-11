@@ -363,7 +363,7 @@ input.number,
 }
 
 #filter-list-title {
-  width: 40px;
+  width: fit-content;
   height: 32px;
 }
 

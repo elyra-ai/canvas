@@ -9,7 +9,7 @@
 
 import React from "react";
 import ColumnSelectControl from "../../../src/common-properties/editor-controls/column-select-control.jsx";
-import { render, mount } from "enzyme";
+import { mountWithIntl } from "enzyme-react-intl";
 import { expect } from "chai";
 import sinon from "sinon";
 import propertyUtils from "../../_utils_/property-utils";
@@ -86,7 +86,7 @@ setPropertyValue();
 describe("ColumnStructureTableControl renders correctly", () => {
 
 	it("props should have been defined", () => {
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<ColumnSelectControl
 				control={control}
 				controller={controller}
@@ -106,7 +106,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 	});
 
 	it("should render a `ColumnSelectControl`", () => {
-		const wrapper = render(
+		const wrapper = mountWithIntl(
 			<ColumnSelectControl
 				control={control}
 				controller={controller}
@@ -122,7 +122,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 	});
 
 	it("should select add columns button and openFieldPicker should be invoked", () => {
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<ColumnSelectControl
 				control={control}
 				controller={controller}
@@ -144,7 +144,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 
 	it("should select row and remove button row should be removed", () => {
 		setPropertyValue();
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<ColumnSelectControl
 				control={control}
 				controller={controller}
@@ -168,7 +168,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 	});
 
 	it("should ensure moveableRows are rendered", () => {
-		const wrapper = mount(
+		const wrapper = mountWithIntl(
 			<ColumnSelectControl
 				control={moveableRowControl}
 				controller={controller}

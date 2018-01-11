@@ -849,8 +849,6 @@ class App extends React.Component {
 				showPropertiesDialog={this.state.showPropertiesDialog}
 				propertiesInfo={this.state.propertiesInfo}
 				containerType={this.state.propertiesContainerType === FLYOUT ? CUSTOM : this.state.propertiesContainerType}
-				applyLabel="Apply"
-				rejectLabel="Reject"
 				customPanels={[CustomSliderPanel, CustomTogglePanel, CustomMapPanel]}
 				rightFlyout={this.state.propertiesContainerType === FLYOUT}
 				controllerHandler={this.propertiesControllerHandler}
@@ -958,6 +956,7 @@ class App extends React.Component {
 			<IntlProvider key="IntlProvider" locale={ locale } messages={ messages }>
 				{commonCanvas}
 			</IntlProvider>
+
 
 			<Console
 				consoleOpened={this.state.consoleOpened}

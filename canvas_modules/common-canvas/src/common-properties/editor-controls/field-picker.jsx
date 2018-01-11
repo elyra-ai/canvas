@@ -15,12 +15,16 @@ import PropTypes from "prop-types";
 import ReactTooltip from "react-tooltip";
 import EditorControl from "./editor-control.jsx";
 import FlexibleTable from "./flexible-table.jsx";
+import PropertyUtils from "../util/property-utils";
+
 import { Tr, Td } from "reactable";
 import Button from "ap-components-react/dist/components/Button";
 import Checkbox from "ap-components-react/dist/components/Checkbox";
+import { injectIntl, intlShape } from "react-intl";
 
+import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "../constants/constants";
 import { DATA_TYPES, TOOL_TIP_DELAY } from "../constants/constants.js";
-import { ParamRole } from "../form/form-constants";
+import { ParamRole } from "../constants/form-constants";
 
 import resetIcon from "../../../assets/images/reset_32.svg";
 import resetHoverIcon from "../../../assets/images/reset_32_hover.svg";
@@ -41,7 +45,7 @@ import timestampDisabledIcon from "../../../assets/images/timestamp-disabled-ico
 
 import sortBy from "lodash/sortBy";
 
-export default class FieldPicker extends EditorControl {
+class FieldPicker extends EditorControl {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -412,26 +416,33 @@ export default class FieldPicker extends EditorControl {
 		}
 
 		const title = this.props.title ? this.props.title : "Node";
-		const label = "Select Fields for " + title;
+		const saveLabel = PropertyUtils.formatMessage(this.props.intl,
+			MESSAGE_KEYS.FIELDPICKER_SAVEBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_SAVEBUTTON_LABEL) + " " + title;
+		const saveTooltip = PropertyUtils.formatMessage(this.props.intl,
+			MESSAGE_KEYS.FIELDPICKER_SAVEBUTTON_TOOLTIP, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_SAVEBUTTON_TOOLTIP);
+		const resetLabel = PropertyUtils.formatMessage(this.props.intl,
+			MESSAGE_KEYS.FIELDPICKER_RESETBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_RESETBUTTON_LABEL);
+		const resetTooltip = PropertyUtils.formatMessage(this.props.intl,
+			MESSAGE_KEYS.FIELDPICKER_RESETBUTTON_TOOLTIP, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_RESETBUTTON_TOOLTIP);
 		const tooltipId = "tooltip-fp-" + this.props.control.name;
 		const header = (
 			<div className="field-picker-top-row">
-				<div className="properties-tooltips-container" data-tip="Save and return" data-for={tooltipId}>
+				<div className="properties-tooltips-container" data-tip={saveTooltip} data-for={tooltipId}>
 					<Button
 						id="field-picker-back-button"
 						back icon="back"
 						onClick={this.handleBack}
 					/>
 				</div>
-				<label className="control-label">{label}</label>
-				<div className="properties-tooltips-fp-reset" data-tip="Reset to previous values" data-for={tooltipId}>
+				<label className="control-label">{saveLabel}</label>
+				<div className="properties-tooltips-fp-reset" data-tip={resetTooltip} data-for={tooltipId}>
 					<div id="reset-fields-button"
 						className="button"
 						onClick={this.handleReset}
 						onMouseEnter={this.mouseEnterResetButton}
 						onMouseLeave={this.mouseLeaveResetButton}
 					>
-						<div id="reset-fields-button-label">Reset</div>
+						<div id="reset-fields-button-label">{resetLabel}</div>
 						<div id="reset-fields-button-icon">
 							{resetIconImage}
 						</div>
@@ -487,12 +498,14 @@ export default class FieldPicker extends EditorControl {
 			return (row);
 		});
 
+		const filterLabel = PropertyUtils.formatMessage(this.props.intl,
+			MESSAGE_KEYS.FIELDPICKER_FILTER_LABEL, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_FILTER_LABEL);
 		const search = (
 			<div>
 				<div >
 					<ul id="field-picker-filter-list">
 						<li id="filter-list-title" className="filter-list-li">
-							Filter:
+							{filterLabel}
 						</li>
 						{filters}
 					</ul>
@@ -537,6 +550,11 @@ export default class FieldPicker extends EditorControl {
 			dataWidth = 37;
 		}
 
+		const fieldColumnLabel = PropertyUtils.formatMessage(this.props.intl,
+			MESSAGE_KEYS.FIELDPICKER_FIELDCOLUMN_LABEL, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_FIELDCOLUMN_LABEL);
+		const dataTypeColumnLabel = PropertyUtils.formatMessage(this.props.intl,
+			MESSAGE_KEYS.FIELDPICKER_DATATYPECOLUMN_LABEL, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_DATATYPECOLUMN_LABEL);
+
 		const headers = [];
 		headers.push({ "key": "checkbox", "label": <div className="field-picker-checkbox">
 			<Checkbox id={"field-picker-checkbox-all"}
@@ -544,8 +562,8 @@ export default class FieldPicker extends EditorControl {
 				checked={checkedAll}
 			/>
 		</div>, "width": checkboxWidth });
-		headers.push({ "key": "fieldName", "label": "Field name", "width": fieldWidth });
-		headers.push({ "key": "dataType", "label": "Data type", "width": dataWidth });
+		headers.push({ "key": "fieldName", "label": fieldColumnLabel, "width": fieldWidth });
+		headers.push({ "key": "dataType", "label": dataTypeColumnLabel, "width": dataWidth });
 
 		const tableData = this.getTableData();
 
@@ -578,5 +596,10 @@ FieldPicker.propTypes = {
 	dataModel: PropTypes.object,
 	control: PropTypes.object,
 	title: PropTypes.string,
-	rightFlyout: PropTypes.bool
+	updateSelectedRows: PropTypes.object.isRequired,
+	controller: PropTypes.object.isRequired,
+	rightFlyout: PropTypes.bool,
+	intl: intlShape
 };
+
+export default injectIntl(FieldPicker);

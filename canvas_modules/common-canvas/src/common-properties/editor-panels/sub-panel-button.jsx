@@ -10,11 +10,16 @@
 import logger from "../../../utils/logger";
 import React from "react";
 import PropTypes from "prop-types";
-import Button from "react-bootstrap/lib/Button";
+import { Button } from "react-bootstrap/lib/Button";
+import PropertyUtils from "../util/property-utils";
+import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "../constants/constants";
+
+import { injectIntl, intlShape } from "react-intl";
+
 
 import SubPanelInvoker from "./sub-panel-invoker.jsx";
 
-export default class SubPanelButton extends React.Component {
+class SubPanelButton extends React.Component {
 	constructor(props) {
 		super(props);
 		this.showSubPanel = this.showSubPanel.bind(this);
@@ -40,6 +45,9 @@ export default class SubPanelButton extends React.Component {
 	}
 
 	render() {
+		const applyLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.APPLYBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.APPLYBUTTON_LABEL);
+		const rejectLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.REJECTBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.REJECTBUTTON_LABEL);
+
 		const button = (<Button
 			style={{ "display": "inline" }}
 			bsSize="xsmall"
@@ -48,7 +56,11 @@ export default class SubPanelButton extends React.Component {
 			{this.props.label}
 		</Button>);
 		return (
-			<SubPanelInvoker ref="invoker" rightFlyout={this.props.rightFlyout}>
+			<SubPanelInvoker ref="invoker"
+				rightFlyout={this.props.rightFlyout}
+				applyLabel={applyLabel}
+				rejectLabel={rejectLabel}
+			>
 				{button}
 			</SubPanelInvoker>
 		);
@@ -59,7 +71,11 @@ SubPanelButton.propTypes = {
 	label: PropTypes.string.isRequired,
 	title: PropTypes.string.isRequired,
 	panel: PropTypes.object.isRequired,
+	controller: PropTypes.object.isRequired,
 	notifyStartEditing: PropTypes.func,
 	notifyFinishedEditing: PropTypes.func,
-	rightFlyout: PropTypes.bool
+	rightFlyout: PropTypes.bool,
+	intl: intlShape
 };
+
+export default injectIntl(SubPanelButton);

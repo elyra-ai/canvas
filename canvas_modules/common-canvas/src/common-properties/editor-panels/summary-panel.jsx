@@ -14,8 +14,12 @@ import PropTypes from "prop-types";
 import Button from "ap-components-react/dist/components/Button";
 import WideFlyout from "../components/wide-flyout.jsx";
 import EditorControl from "../editor-controls/editor-control.jsx";
+import { injectIntl, intlShape } from "react-intl";
+import PropertyUtils from "../util/property-utils";
+import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "../constants/constants";
 
-export default class SummaryPanel extends EditorControl {
+
+class SummaryPanel extends EditorControl {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -169,10 +173,14 @@ export default class SummaryPanel extends EditorControl {
 			{icon}
 		</div>);
 
+		const applyLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.APPLYBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.APPLYBUTTON_LABEL);
+		const rejectLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.REJECTBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.REJECTBUTTON_LABEL);
 		const flyout = (<WideFlyout
 			cancelHandler={this.cancelWideFlyout}
 			okHandler={this.hideWideFlyout}
 			show={this.state.showWideFlyout}
+			applyLabel={applyLabel}
+			rejectLabel={rejectLabel}
 			title={this.props.label}
 		>
 			<div>
@@ -196,5 +204,8 @@ SummaryPanel.propTypes = {
 	controller: PropTypes.object.isRequired,
 	children: PropTypes.array,
 	clearSelectedRows: PropTypes.func.isRequired,
-	panelId: PropTypes.string.isRequired
+	panelId: PropTypes.string.isRequired,
+	intl: intlShape
 };
+
+export default injectIntl(SummaryPanel);

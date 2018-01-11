@@ -37,7 +37,7 @@ export default class CheckboxControl extends EditorControl {
 	render() {
 		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		var checked = false;
-		if (typeof controlValue !== "undefined" || controlValue !== null) {
+		if (controlValue) {
 			checked = controlValue.toString() === "true";
 		}
 		const conditionProps = {

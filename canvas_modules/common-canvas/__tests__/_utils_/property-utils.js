@@ -10,7 +10,9 @@
 import React from "react";
 import CommonProperties from "../../src/common-properties/common-properties.jsx";
 import EditorForm from "../../src/common-properties/editor-controls/editor-form.jsx";
-import { mount, shallow } from "enzyme";
+import { mountWithIntl, shallowWithIntl } from "enzyme-react-intl";
+
+
 import sinon from "sinon";
 
 function flyoutEditorForm(paramDef) {
@@ -22,16 +24,16 @@ function flyoutEditorForm(paramDef) {
 		applyPropertyChanges: applyPropertyChanges,
 		closePropertiesDialog: closePropertiesDialog
 	};
-	const wrapper = mount(
+	const wrapper = mountWithIntl(
 		<CommonProperties
 			showPropertiesDialog
 			propertiesInfo={propertiesInfo}
-			containerType="custom"
+			containerType="Custom"
 			rightFlyout
 		/>
 	);
-	const editorForm = wrapper.ref("editorForm");
-	return editorForm;
+
+	return wrapper;
 }
 
 function createEditorForm(state, formData, controller) {
@@ -49,9 +51,9 @@ function createEditorForm(state, formData, controller) {
 		showPropertiesButtons={showPropertiesButtons}
 	/>);
 	if (state === "shallow") {
-		wrapper = shallow(editorForm);
+		wrapper = shallowWithIntl(editorForm);
 	} else {
-		wrapper = mount(editorForm);
+		wrapper = mountWithIntl(editorForm);
 	}
 	return wrapper;
 }

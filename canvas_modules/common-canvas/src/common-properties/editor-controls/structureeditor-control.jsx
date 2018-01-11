@@ -92,6 +92,7 @@ export default class StructureeditorControl extends EditorControl {
 			title={subItemButton.props.title}
 			panel={subItemButton.props.panel}
 			notifyFinishedEditing={this.stopEditing}
+			controller={this.props.controller}
 			rightFlyout={this.props.rightFlyout}
 		/>);
 

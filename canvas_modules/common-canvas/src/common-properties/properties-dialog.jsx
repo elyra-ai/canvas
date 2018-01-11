@@ -21,6 +21,8 @@ export default class PropertiesDialog extends Component {
 			okHandler={this.props.okHandler}
 			cancelHandler={this.props.cancelHandler}
 			showPropertiesButtons={this.props.showPropertiesButtons}
+			applyLabel={this.props.applyLabel}
+			rejectLabel={this.props.rejectLabel}
 		/>);
 
 		return (
@@ -56,5 +58,7 @@ PropertiesDialog.propTypes = {
 	bsSize: PropTypes.string,
 	title: PropTypes.string,
 	children: PropTypes.element,
-	showPropertiesButtons: PropTypes.bool
+	showPropertiesButtons: PropTypes.bool,
+	applyLabel: PropTypes.string,
+	rejectLabel: PropTypes.string,
 };

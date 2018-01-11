@@ -13,8 +13,9 @@ import { Tr, Td } from "reactable";
 import FlexibleTable from "./flexible-table.jsx";
 import MoveableTableRows from "./moveable-table-rows.jsx";
 import ColumnStructureTableEditor from "./column-structure-table-editor.jsx";
+import { injectIntl, intlShape } from "react-intl";
 
-export default class ColumnSelectControl extends ColumnStructureTableEditor {
+class ColumnSelectControl extends ColumnStructureTableEditor {
 
 	getRowClassName(rowIndex) {
 		const selectedRows = this.getSelectedRows();
@@ -121,5 +122,8 @@ export default class ColumnSelectControl extends ColumnStructureTableEditor {
 ColumnSelectControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
-	controller: PropTypes.object.isRequired
+	controller: PropTypes.object.isRequired,
+	intl: intlShape
 };
+
+export default injectIntl(ColumnSelectControl);

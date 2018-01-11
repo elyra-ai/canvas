@@ -28,6 +28,16 @@ function toType(obj) {
 	return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
 }
 
+function formatMessage(intl, key, defaultMessage) {
+	let formattedMessage;
+	if (typeof intl !== "undefined" || intl !== null) {
+		formattedMessage = intl.formatMessage({ id: key, defaultMessage: defaultMessage });
+	} else {
+		formattedMessage = defaultMessage;
+	}
+	return formattedMessage;
+}
+
 /*
 * Parses text to see if there is any text replace elements ${}
 */
@@ -88,6 +98,7 @@ function _evaluateExpression(expression, controller) {
 	}
 	return "";
 }
+
 function _getExpParameterValue(expParam, controller) {
 	// assume property if parameter is a string
 	if (isNaN(expParam)) {
@@ -98,5 +109,6 @@ function _getExpParameterValue(expParam, controller) {
 
 module.exports = {
 	toType: toType,
+	formatMessage: formatMessage,
 	evaluateText: evaluateText
 };

@@ -51,12 +51,14 @@ import SubPanelButton from "./../editor-panels/sub-panel-button.jsx";
 import FieldPicker from "./field-picker.jsx";
 import ControlItem from "./control-item.jsx";
 
+import { injectIntl, intlShape } from "react-intl";
+
 
 import DownIcon from "../../../assets/images/down_enabled.svg";
 import UpIcon from "../../../assets/images/up_enabled.svg";
 import InfoIcon from "../../../assets/images/info.svg";
 
-export default class EditorForm extends React.Component {
+class EditorForm extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -327,11 +329,11 @@ export default class EditorForm extends React.Component {
 			return (<StructureeditorControl
 				ref={controlRef}
 				control={control}
-				controller={this.props.controller}
 				propertyId={propertyId}
 				updateSelectedRows={this.updateSelectedRows}
 				selectedRows={this.getSelectedRows(control.name)}
 				buildUIItem={this.genUIItem}
+				controller={this.props.controller}
 				rightFlyout={this.props.rightFlyout}
 			/>);
 		} else if (control.controlType === "structurelisteditor") {
@@ -624,6 +626,7 @@ export default class EditorForm extends React.Component {
 				label={uiItem.text}
 				title={uiItem.secondaryText}
 				panel={subPanel}
+				controller={this.props.controller}
 				rightFlyout={this.props.rightFlyout}
 			/>);
 		} else if (uiItem.itemType === "staticText") {
@@ -849,5 +852,8 @@ EditorForm.propTypes = {
 	customPanels: PropTypes.array,
 	customContainer: PropTypes.bool,
 	rightFlyout: PropTypes.bool,
+	intl: intlShape,
 	actionHandler: PropTypes.func
 };
+
+export default injectIntl(EditorForm);

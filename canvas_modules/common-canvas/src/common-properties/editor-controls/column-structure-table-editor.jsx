@@ -24,6 +24,9 @@ import SubPanelCell from "../editor-panels/sub-panel-cell.jsx";
 import remove32 from "../../../assets/images/remove_32.svg";
 import remove32hover from "../../../assets/images/remove_32_hover.svg";
 import remove32disabled from "../../../assets/images/remove_32_disabled.svg";
+import PropertyUtils from "../util/property-utils";
+
+import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "../constants/constants";
 import { TOOL_TIP_DELAY } from "../constants/constants.js";
 import findIndex from "lodash/findIndex";
 import sortBy from "lodash/sortBy";
@@ -282,9 +285,11 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		} else if (columnDef.valueDef.propType === "enum" && columnDef.editStyle !== "subpanel") {
 			cellContent = this.enumRenderCell(controlValue[rowIndex][colIndex], columnDef);
 		} else if (columnDef.controlType === "expression" && columnDef.editStyle === "on_panel") {
+			const expressionCellControlLabel = PropertyUtils.formatMessage(this.props.intl,
+				MESSAGE_KEYS.EXPRESSIONCELL_CONTROLLABEL, MESSAGE_KEYS_DEFAULTS.EXPRESSIONCELL_CONTROLLABEL);
 			cellContent = (<div>
 				<br />
-				<label className="control-label">Expression</label>
+				<label className="control-label">{expressionCellControlLabel}</label>
 				<div>
 					<ExpressionControl
 						controller={this.props.controller}
@@ -460,7 +465,9 @@ export default class ColumnStructureTableEditor extends EditorControl {
 
 		let addButtonDisabled = false;
 		let addOnClick = (tableButtonConfig) ? tableButtonConfig.addButtonFunction : this.props.openFieldPicker;
-		const addButtonLabel = (tableButtonConfig) ? tableButtonConfig.addButtonLabel : "Add Columns";
+		const addButtonLabel = (tableButtonConfig) ? tableButtonConfig.addButtonLabel
+			: PropertyUtils.formatMessage(this.props.intl,
+				MESSAGE_KEYS.STRUCTURETABLE_ADDBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.STRUCTURETABLE_ADDBUTTON_LABEL);
 		if (stateDisabled.disabled) {
 			addButtonDisabled = true;
 			addOnClick = null;
@@ -476,8 +483,12 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		</Button>);
 
 		const tooltipId = "tooltip-add-remove-columns-" + this.props.control.name;
-		const addToolTip = (tableButtonConfig) ? tableButtonConfig.addTooltip : "Select columns to add";
-		const removeToolTip = (tableButtonConfig) ? tableButtonConfig.removeTooltip : "Remove selected columns";
+		const addToolTip = (tableButtonConfig) ? tableButtonConfig.addButtonTooltip
+			: PropertyUtils.formatMessage(this.props.intl,
+				MESSAGE_KEYS.STRUCTURETABLE_ADDBUTTON_TOOLTIP, MESSAGE_KEYS_DEFAULTS.STRUCTURETABLE_ADDBUTTON_TOOLTIP);
+		const removeToolTip = (tableButtonConfig) ? tableButtonConfig.removeButtonTooltip
+			: PropertyUtils.formatMessage(this.props.intl,
+				MESSAGE_KEYS.STRUCTURETABLE_REMOVEBUTTON_TOOLTIP, MESSAGE_KEYS_DEFAULTS.STRUCTURETABLE_REMOVEBUTTON_TOOLTIP);
 
 		return (<div>
 			<div id="field-picker-buttons-container">
@@ -534,7 +545,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 
 		const controlValue = this.getCurrentControlValue();
 		// calculate for all columns except the last which is used for the scroll bar
-		const columnWidths = FlexibleTable.calculateColumnWidths(headers, "flexible-table-" + this.props.control.name, 0);
+		const columnWidths = FlexibleTable.WrappedComponent.calculateColumnWidths(headers, "flexible-table-" + this.props.control.name, 0);
 		this.makeCells(rows, controlValue, columnWidths, stateStyle, stateDisabled);
 
 		if (this.props.customContainer) {

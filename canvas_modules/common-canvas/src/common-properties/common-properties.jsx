@@ -14,16 +14,20 @@ import PropertiesEditing from "./properties-editing.jsx";
 import PropertiesButtons from "./properties-buttons.jsx";
 import EditorForm from "./editor-controls/editor-form.jsx";
 import Form from "./form/Form";
-import CommonPropertiesAction from "../command-actions/commonPropertiesAction.js";
+import CommonPropertiesAction from "../command-actions/commonPropertiesAction";
 import PropertiesController from "./properties-controller";
 import logger from "../../utils/logger";
+import PropertyUtils from "./util/property-utils";
+import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./constants/constants";
 import isEqual from "lodash/isEqual";
+import { injectIntl, intlShape } from "react-intl";
+
 
 import TextField from "ap-components-react/dist/components/TextField";
 
 import editIcon from "../../assets/images/edit.svg";
 
-export default class CommonProperties extends React.Component {
+class CommonProperties extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -188,6 +192,9 @@ export default class CommonProperties extends React.Component {
 	}
 
 	render() {
+		const applyLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_APPLYBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.PROPERTIESEDIT_APPLYBUTTON_LABEL);
+		const rejectLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_REJECTBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.PROPERTIESEDIT_REJECTBUTTON_LABEL);
+
 		const formData = this.propertiesController.getForm();
 		if (formData !== null) {
 			// console.log("formData " + JSON.stringify(formData));
@@ -222,7 +229,8 @@ export default class CommonProperties extends React.Component {
 				buttonsContainer = (<PropertiesButtons
 					okHandler={this.applyPropertiesEditing}
 					cancelHandler={this.cancelHandler}
-					applyLabel="Save"
+					applyLabel={applyLabel}
+					rejectLabel={rejectLabel}
 					showPropertiesButtons={this.state.showPropertiesButtons}
 				/>);
 			}
@@ -259,8 +267,8 @@ export default class CommonProperties extends React.Component {
 
 				if (this.props.containerType === "Editing") {
 					propertiesDialog = (<PropertiesEditing
-						applyLabel={this.props.applyLabel}
-						rejectLabel={this.props.rejectLabel}
+						applyLabel={applyLabel}
+						rejectLabel={rejectLabel}
 						bsSize={size}
 						title={title}
 						okHandler={this.applyPropertiesEditing}
@@ -281,6 +289,8 @@ export default class CommonProperties extends React.Component {
 						okHandler={this.applyPropertiesEditing}
 						cancelHandler={this.cancelHandler}
 						showPropertiesButtons={this.state.showPropertiesButtons}
+						applyLabel={applyLabel}
+						rejectLabel={rejectLabel}
 					>
 						{editorForm}
 					</PropertiesDialog>);
@@ -308,13 +318,14 @@ CommonProperties.defaultProps = {
 
 CommonProperties.propTypes = {
 	showPropertiesDialog: PropTypes.bool.isRequired,
-	applyLabel: PropTypes.string,
-	rejectLabel: PropTypes.string,
 	containerType: PropTypes.string,
 	propertiesInfo: PropTypes.object.isRequired,
 	customPanels: PropTypes.array, // array of custom panels
 	rightFlyout: PropTypes.bool,
 	controllerHandler: PropTypes.func,
+	intl: intlShape,
 	propertyListener: PropTypes.func,
 	actionHandler: PropTypes.func
 };
+
+export default injectIntl(CommonProperties);

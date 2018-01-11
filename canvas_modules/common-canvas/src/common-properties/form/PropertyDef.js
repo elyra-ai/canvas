@@ -11,7 +11,7 @@ import { GroupMetadata } from "./GroupInfo";
 import { ActionMetadata } from "./ActionInfo";
 import { ParameterMetadata } from "./ParameterInfo";
 import { StructureMetadata } from "./StructureInfo";
-import { Size } from "./form-constants";
+import { Size } from "../constants/form-constants";
 import { ResourceDef } from "./L10nProvider";
 import propertyOf from "lodash/propertyOf";
 

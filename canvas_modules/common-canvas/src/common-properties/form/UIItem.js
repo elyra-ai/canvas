@@ -7,7 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import { ItemType } from "./form-constants";
+import { ItemType } from "../constants/form-constants";
 import propertyOf from "lodash/propertyOf";
 
 export class UIItem {

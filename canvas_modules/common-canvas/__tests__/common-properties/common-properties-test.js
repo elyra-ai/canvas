@@ -15,9 +15,18 @@ import { mount } from "enzyme";
 import { expect } from "chai";
 import sinon from "sinon";
 import editStyleResource from "../test_resources/json/form-editstyle-test.json";
+import { IntlProvider } from "react-intl";
+
 
 const applyPropertyChanges = sinon.spy();
 const closePropertiesDialog = sinon.spy();
+
+const locale = "en";
+const localMessages = {
+	"structureTable.addButton.label": "Add Some Stuff",
+	"propertiesEdit.applyButton.label": "CONFIRM",
+	"propertiesEdit.rejectButton.label": "NOT"
+};
 
 const propertiesInfo = {};
 propertiesInfo.parameterDef = editStyleResource.paramDef;
@@ -33,8 +42,6 @@ describe("CommonProperties renders correctly", () => {
 		expect(wrapper.prop("showPropertiesDialog")).to.equal(true);
 		expect(wrapper.prop("propertiesInfo")).to.equal(propertiesInfo);
 		expect(wrapper.prop("containerType")).to.equal("Modal");
-		expect(wrapper.prop("applyLabel")).to.equal("Apply");
-		expect(wrapper.prop("rejectLabel")).to.equal("REJECTED");
 	});
 
 	it("should render one <PropertiesDialog/> component", () => {
@@ -47,27 +54,37 @@ describe("CommonProperties renders correctly", () => {
 		expect(wrapper.find(PropertiesEditing)).to.have.length(1);
 	});
 
-	it("should render the applyLabel property", () => {
-		const wrapper = createCommonProperties("Editing");
-		expect(wrapper.instance().props.applyLabel).to.equal("Apply");
+	it("should override a reject label", () => {
+		const wrapper = createCommonProperties("Editing", localMessages);
+		const buttonLabels = wrapper.find("PropertiesButtons").find("span");
+		expect(buttonLabels.at(0).text()).to.equal("NOT");
 	});
 
-	it("should render the rejectLabel property", () => {
-		const wrapper = createCommonProperties("Editing");
-		expect(wrapper.instance().props.rejectLabel).to.equal("REJECTED");
+	it("should override a apply label", () => {
+		const wrapper = createCommonProperties("Editing", localMessages);
+		const buttonLabels = wrapper.find("PropertiesButtons").find("span");
+		expect(buttonLabels.at(1).text()).to.equal("CONFIRM");
+	});
+
+	it("should override a structure table add button label", () => {
+		const wrapper = createCommonProperties("Editing", localMessages);
+		const tableButton = wrapper.find("#field-picker-buttons-container").find(".button__text");
+		expect(tableButton.text()).to.equal("Add Some Stuff");
 	});
 
 });
 
-function createCommonProperties(container) {
-	const wrapper = mount(
-		<CommonProperties
-			showPropertiesDialog
-			propertiesInfo={propertiesInfo}
-			containerType={container}
-			applyLabel="Apply"
-			rejectLabel="REJECTED"
-		/>
+function createCommonProperties(container, messages) {
+	const	wrapper = mount(
+		<IntlProvider key="IntlProvider2" locale={ locale } messages={messages}>
+			<CommonProperties
+				showPropertiesDialog
+				propertiesInfo={propertiesInfo}
+				containerType={container}
+			/>
+		</IntlProvider>
 	);
-	return wrapper;
+
+
+	return wrapper.find("CommonProperties");
 }

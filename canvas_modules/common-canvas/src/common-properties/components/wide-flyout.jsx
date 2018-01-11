@@ -45,10 +45,13 @@ export default class WideFlyout extends Component {
 		if (this.props.title) {
 			title = (<div className="control-title">{this.props.title}</div>);
 		}
+
 		const buttons = (<PropertiesButtons
 			okHandler={this.props.okHandler}
 			cancelHandler={this.props.cancelHandler}
 			showPropertiesButtons={this.props.showPropertiesButtons}
+			applyLabel={this.props.applyLabel}
+			rejectLabel={this.props.rejectLabel}
 		/>);
 		return (<Modal className="rightside-modal-container" style={{ "height": this.state.canvasHeight }}
 			show={this.props.show}
@@ -70,6 +73,8 @@ WideFlyout.propTypes = {
 	okHandler: PropTypes.func,
 	show: PropTypes.bool,
 	showPropertiesButtons: PropTypes.bool,
+	applyLabel: PropTypes.string,
+	rejectLabel: PropTypes.string,
 	title: PropTypes.string
 };
 

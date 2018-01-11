@@ -10,7 +10,8 @@
 /* eslint complexity: ["error", 30]*/
 
 import logger from "../../../utils/logger";
-import { ItemType } from "../form/form-constants";
+import { ItemType } from "../constants/form-constants";
+
 
 function parseInput(definition) {
 	var data = definition;

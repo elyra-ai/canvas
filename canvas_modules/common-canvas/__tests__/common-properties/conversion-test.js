@@ -9,7 +9,10 @@
 
 import React from "react";
 import CommonProperties from "../../src/common-properties/common-properties.jsx";
-import { shallow } from "enzyme";
+import { mount } from "enzyme";
+import { IntlProvider } from "react-intl";
+
+
 import { expect } from "chai";
 import sinon from "sinon";
 import isEqual from "lodash/isEqual";
@@ -27,7 +30,7 @@ function controllerHandler(inController) {
 describe("CommonProperties converts property sets correctly", () => {
 
 	it("should convert inputDataModel into datasetMetadata", () => {
-		createCommonProperties2(true);
+		createCommonProperties2("Modal");
 		const form = controller.getForm();
 		const newDatasetMetadata = form.data.datasetMetadata;
 		const expectedDatasetMetadata = deriveDatasetMetadata;
@@ -38,7 +41,7 @@ describe("CommonProperties converts property sets correctly", () => {
 	});
 });
 
-function createCommonProperties2(useModalDialog) {
+function createCommonProperties2(container) {
 	const showPropertiesDialog = true;
 	const propertiesInfo = {};
 	propertiesInfo.formData = oldForm.formData;
@@ -47,15 +50,16 @@ function createCommonProperties2(useModalDialog) {
 	propertiesInfo.applyPropertyChanges = applyPropertyChanges;
 	propertiesInfo.closePropertiesDialog = closePropertiesDialog;
 
-	const wrapper = shallow(
-		<CommonProperties
-			showPropertiesDialog={showPropertiesDialog}
-			propertiesInfo={propertiesInfo}
-			useModalDialog={useModalDialog}
-			applyLabel="Apply"
-			rejectLabel="REJECTED"
-			controllerHandler={controllerHandler}
-		/>
+	const locale = "en";
+	const wrapper = mount(
+		<IntlProvider key="IntlProvider2" locale={ locale } >
+			<CommonProperties
+				showPropertiesDialog={showPropertiesDialog}
+				propertiesInfo={propertiesInfo}
+				containerType={container}
+				controllerHandler={controllerHandler}
+			/>
+		</IntlProvider>
 	);
 	return wrapper;
 }

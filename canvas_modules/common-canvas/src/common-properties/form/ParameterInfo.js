@@ -7,8 +7,8 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import { Separator } from "./form-constants";
-import { Type, ParamRole, EditStyle } from "./form-constants";
+import { Separator } from "../constants/form-constants";
+import { Type, ParamRole, EditStyle } from "../constants/form-constants";
 import { ResourceDef } from "./L10nProvider";
 import propertyOf from "lodash/propertyOf";
 

@@ -7,7 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import { EditStyle } from "./form-constants";
+import { EditStyle } from "../constants/form-constants";
 
 class ControlDef {
 	constructor(cname, label, description, controlType, valueDef, role, additionalText,
