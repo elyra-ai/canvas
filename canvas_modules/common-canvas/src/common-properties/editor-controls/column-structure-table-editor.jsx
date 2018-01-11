@@ -12,6 +12,7 @@ import React from "react";
 import ReactTooltip from "react-tooltip";
 import { Tr, Td } from "reactable";
 import Button from "ap-components-react/dist/components/Button";
+import Checkbox from "ap-components-react/dist/components/Checkbox";
 import EditorControl from "./editor-control.jsx";
 import ToggletextControl from "./toggletext-control.jsx";
 import ReadonlyControl from "./readonly-control.jsx";
@@ -43,6 +44,8 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			hoverRemoveIcon: false,
 			selectedRows: this.props.selectedRows
 		};
+
+		this.checkedAll = {};
 		this.onPanelContainer = [];
 
 		this._editing_row = 0;
@@ -72,6 +75,8 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		this.makeLabel = this.makeLabel.bind(this);
 		this.buildChildItem = this.buildChildItem.bind(this);
 		this.makeCells = this.makeCells.bind(this);
+
+		this.checkedAllValue = this.checkedAllValue.bind(this);
 
 		if (this.props.selectedRows && this.props.selectedRows.length > 0) {
 			this.scrollToRow = this.props.selectedRows[this.props.selectedRows.length - 1];
@@ -315,16 +320,19 @@ export default class ColumnStructureTableEditor extends EditorControl {
 				controller={this.props.controller}
 				propertyId={propertyId}
 			/>);
-		} else if (columnDef.valueDef.propType === "boolean" && columnDef.editStyle !== "subpanel") {
+		} else if (columnDef.controlType === "checkbox" && columnDef.editStyle !== "subpanel") {
 			columnStyle.paddingTop = 0;
 			columnStyle.paddingBottom = 0;
-			cellContent = (<CheckboxControl
-				controller={this.props.controller}
-				propertyId={propertyId}
-				control={columnDef}
-				tableControl
-			/>);
-
+			cellContent = (
+				<CheckboxControl
+					controller={this.props.controller}
+					propertyId={propertyId}
+					control={columnDef}
+					tableControl
+				/>);
+			if (this.checkedAll[colIndex] && controlValue[rowIndex][colIndex] === false) {
+				this.checkedAll[colIndex] = false;
+			}
 		} else {
 			cellContent = controlValue[rowIndex][colIndex];
 			if (Array.isArray(cellContent)) {
@@ -511,6 +519,19 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		</div>);
 	}
 
+	checkedAllValue(colIndex, evt) {
+		const flexibleTableCheckedAll = evt.target.checked;
+		for (let i = 0; i < this.getCurrentControlValue().length; i++) {
+			const propertyId = {
+				name: this.props.control.name,
+				row: i,
+				col: colIndex
+			};
+			this.props.controller.updatePropertyValue(propertyId, flexibleTableCheckedAll);
+		}
+		this.checkedAll[colIndex] = flexibleTableCheckedAll;
+	}
+
 	createTable(stateStyle, stateDisabled, tableButtonConfig) {
 		const that = this;
 		const rows = [];
@@ -519,13 +540,25 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		const filterFields = [];
 		for (var j = 0; j < this.props.control.subControls.length; j++) {
 			const columnDef = this.props.control.subControls[j];
+			const checkboxName = this.props.control.name + j;
+			const columnLabel = (columnDef.controlType === "checkbox")
+				? (<div className="checkbox-container">
+					<div className="checkbox">
+						<Checkbox
+							id={checkboxName}
+							checked={Boolean(this.checkedAll[j])}
+							onChange={this.checkedAllValue.bind(this, j)}
+						/>
+					</div>
+					<div className="checkbox-label"> {columnDef.label.text} </div>
+				</div>) : columnDef.label.text;
 			if (columnDef.visible) {
 				if (columnDef.sortable) {
 					sortFields.push(columnDef.name);
 				}
 				headers.push({
 					"key": columnDef.name,
-					"label": columnDef.label.text,
+					"label": columnLabel,
 					"width": columnDef.width,
 					"editStyle": columnDef.editStyle,
 					"controlType": columnDef.controlType,

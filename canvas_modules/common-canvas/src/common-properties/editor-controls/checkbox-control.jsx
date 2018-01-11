@@ -56,10 +56,6 @@ export default class CheckboxControl extends EditorControl {
 		if (messageType !== "info") {
 			controlIconContainerId = "control-icon-container-enabled";
 		}
-		let containerClass = "";
-		if (this.props.tableControl) {
-			containerClass = "text-align-center";
-		}
 
 		const label = this.props.tableControl ? "" : this.props.control.label.text;
 		var cb = (<Checkbox {...stateDisabled}
@@ -76,7 +72,7 @@ export default class CheckboxControl extends EditorControl {
 		}
 		return (
 			<div className="checkbox editor_control_area" style={stateStyle}>
-				<div id={controlIconContainerId} className={containerClass}>
+				<div id={controlIconContainerId}>
 					<div>
 						<div className="properties-tooltips-container" data-tip={tooltip} data-for={tooltipId}>
 							{cb}

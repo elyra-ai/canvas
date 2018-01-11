@@ -63,6 +63,7 @@ export default class PropertiesController {
 		this.form = form;
 		// set initial property values
 		if (this.form) {
+			this.setControlStates({}); // clear state
 			this._parseUiConditions();
 			// should be done before running any validations
 			const controls = UiConditionsParser.parseControls([], this.form);

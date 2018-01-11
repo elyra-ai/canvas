@@ -974,7 +974,7 @@ tbody.reactable-data .editor_control_area {
 #flexible-table-container>table>tbody>.field-picker-data-rows>td[label=checkbox] {
     padding-left: 15px;
 }
-.table-row .checkbox {
+.rightside-modal-control-contents-container .table-row .checkbox {
 	margin-top: 5px;
 }
 
@@ -1012,6 +1012,14 @@ tbody.reactable-data .editor_control_area {
 
 #ExpressionEditor {
 	border: 1px solid #777677;
+}
+
+.reactable-column-header .checkbox-container {
+	display: flex;;
+	align-items: center
+}
+.reactable-column-header .checkbox-label {
+  margin-left: -9px;
 }
 
 /*

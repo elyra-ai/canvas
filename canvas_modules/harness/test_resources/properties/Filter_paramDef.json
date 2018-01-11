@@ -1,0 +1,324 @@
+{
+  "current_parameters": {
+    "field_types": [
+      [
+        "Field 1",
+        "Field 1",
+        false
+      ],
+      [
+        "Field 2",
+        "Field 2",
+        true
+      ],
+      [
+        "Field 3",
+        "Field 3",
+        false
+      ],
+      [
+        "Field 4",
+        "Field 4",
+        false
+      ],
+      [
+        "Field 5",
+        "Field 5",
+        false
+      ],
+      [
+        "Field 6",
+        "Field 6",
+        false
+      ],
+      [
+        "Field 7",
+        "Field 7",
+        false
+      ],
+      [
+        "Field 8",
+        "Field 8",
+        false
+      ],
+      [
+        "Field 9",
+        "Field 9",
+        false
+      ],
+      [
+        "Field 10",
+        "Field 10",
+        false
+      ]
+    ],
+    "custom_name": "",
+    "custom_name_checkbox": false,
+    "annotation": []
+  },
+  "complex_types": [
+    {
+      "id": "fieldFilterEntry",
+      "key_definition": {
+        "id": "input",
+        "type": "string",
+        "role": "column"
+      },
+      "parameters": [
+        {
+          "id": "output",
+          "type": "string",
+          "role": "new_column"
+        },
+        {
+          "id": "exclude",
+          "type": "boolean"
+        }
+      ]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "field_types",
+      "type": "map[string,fieldFilterEntry]",
+      "role": "column",
+      "default": []
+    },
+    {
+      "id": "custom_name",
+      "type": "string",
+      "role": "new_column",
+      "default": ""
+    },
+    {
+      "id": "custom_name_checkbox",
+      "type": "boolean",
+      "enum": [
+        "Add Description"
+      ],
+      "default": ""
+    },
+    {
+      "id": "annotation",
+      "type": "array[string]",
+      "default": "",
+      "role": "new_column"
+    }
+  ],
+  "uihints": {
+    "id": "filter",
+    "icon": "images/filter.svg",
+    "complex_type_info": [
+      {
+        "complex_type_ref": "fieldFilterEntry",
+        "key_definition": {
+          "parameter_ref": "input",
+          "label": {
+            "default": "",
+            "resource_key": "fieldFilterEntry.input"
+          },
+          "width": 16,
+          "filterable": true
+        },
+        "parameters": [
+          {
+            "parameter_ref": "output",
+            "label": {
+              "default": "",
+              "resource_key": "fieldFilterEntry.output"
+            },
+            "width": 26,
+            "edit_style": "inline"
+          },
+          {
+            "parameter_ref": "exclude",
+            "label": {
+              "default": "",
+              "resource_key": "fieldFilterEntry.exclude"
+            },            
+            "width": 16
+          }
+        ]
+      }
+    ],
+    "parameter_info": [
+      {
+        "parameter_ref": "field_types",
+        "label": {
+          "default": ""
+        },
+        "description": {
+          "default": "Filter columns"
+        },
+        "control": "structuretable"
+      },
+      {
+        "parameter_ref": "custom_name",
+        "label": {
+          "default": " "
+        },
+        "description": {
+          "default": ""
+        }
+      },
+      {
+        "parameter_ref": "custom_name_checkbox",
+        "label": {
+          "default": "Custom name"
+        },
+        "description": {
+          "default": "Check this box in order to use a custom name for the node."
+        }
+      },
+      {
+        "parameter_ref": "annotation",
+        "label": {
+          "default": "Annotation"
+        },
+        "description": {
+          "default": "Annotation"
+        }
+      }
+    ],
+    "group_info": [
+      {
+        "id": "basic-settings",
+        "label": {
+          "default": "Settings"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "field_types"
+        ]
+      },
+      {
+        "id": "annotations",
+        "label": {
+          "default": "Annotations"
+        },
+        "parameter_refs": [
+          "custom_name_checkbox",
+          "custom_name",
+          "annotation"
+        ]
+      }
+    ]
+  },
+  "conditions": [
+    {
+      "enabled": {
+        "parameter_refs": [
+          "field_types[1]"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "field_types[2]",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    }
+  ],
+  "dataset_metadata": {
+    "fields": [
+      {
+        "name": "Field 1",
+        "type": "integer",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Field 2",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Field 3",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Field 4",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Field 5",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Field 6",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Field 7",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Field 8",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Field 9",
+        "type": "integer",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Field 10",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      }
+    ]
+  },
+  "resources": {
+    "filter.label": "Filter",
+    "field_types.label": "",
+    "fieldFilterEntry.input": "Input name",
+    "fieldFilterEntry.output": "Output name",
+    "fieldFilterEntry.exclude": "Exclude"
+  }
+}
