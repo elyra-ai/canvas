@@ -8,7 +8,6 @@
  *******************************************************************************/
 
 import { createStore, combineReducers } from "redux";
-import uuid from "node-uuid";
 import { NONE, VERTICAL, DAGRE_HORIZONTAL, DAGRE_VERTICAL } from "../../constants/common-constants.js";
 import dagre from "dagre/dist/dagre.min.js";
 import LayoutDimensions from "./layout-dimensions.js";
@@ -17,6 +16,7 @@ import SVGCanvasOutHandler from "../svg-canvas-out-handler.js"; // TODO - Remove
 import SVGPipelineInHandler from "../svg-pipeline-in-handler.js";
 import SVGPipelineOutHandler from "../svg-pipeline-out-handler.js";
 import isEmpty from "lodash/isEmpty";
+import uuid4 from "uuid/v4";
 
 /* eslint arrow-body-style: ["error", "always"] */
 /* eslint complexity: ["error", 26] */
@@ -608,7 +608,7 @@ const setNodeDimensions = (node, layoutInfo) => {
 };
 
 const getUUID = () => {
-	return uuid.v4();
+	return uuid4();
 };
 
 
