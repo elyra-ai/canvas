@@ -384,11 +384,6 @@ input.number,
   width: 100%;
 }
 
-#field-picker-table #table-header {
-  border: 1px solid #d8d8d8;
-  border-bottom: none;
-}
-
 #field-picker-buttons-container {
   display: flex;
   float: right;
@@ -700,7 +695,7 @@ input.number,
   background-color: #FFFFFF;
   padding: 0;
   color: #000000;
-  padding-top: 30px;
+  padding-top: 31px;
 }
 
 #flexible-table-container-noheader {
