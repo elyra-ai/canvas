@@ -21,6 +21,9 @@ function _post(req, res, next) {
 	if (req.body) {
 		req.session.events = req.body.events;
 		req.session.canvas = req.body.canvas;
+		if (req.body.canvas2) {
+			req.session.canvas2 = req.body.canvas2;
+		}
 		res.status(constants.HTTP_STATUS_OK);
 		res.json(req.body).end();
 	} else {

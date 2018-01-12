@@ -11,7 +11,14 @@ import fetch from "isomorphic-fetch";
 
 class TestService {
 	postCanvas(canvas) {
-		var url = "/v1/test-harness/canvas";
+		return this.canvas("/v1/test-harness/canvas", canvas);
+	}
+
+	postCanvas2(canvas) {
+		return this.canvas("/v1/test-harness/canvas2", canvas);
+	}
+
+	canvas(url, canvas) {
 		var that = this;
 		var headers = {
 			"Accept": "application/json",

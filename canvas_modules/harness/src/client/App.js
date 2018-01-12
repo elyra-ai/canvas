@@ -95,6 +95,8 @@ class App extends React.Component {
 		this.enableNavPalette = this.enableNavPalette.bind(this);
 		this.setDiagramJSON = this.setDiagramJSON.bind(this);
 		this.setPaletteJSON = this.setPaletteJSON.bind(this);
+		this.setDiagramJSON2 = this.setDiagramJSON2.bind(this);
+		this.setPaletteJSON2 = this.setPaletteJSON2.bind(this);
 		this.setPropertiesJSON = this.setPropertiesJSON.bind(this);
 
 		this.sidePanelCanvas = this.sidePanelCanvas.bind(this);
@@ -123,6 +125,7 @@ class App extends React.Component {
 		this.contextMenuActionHandler = this.contextMenuActionHandler.bind(this);
 		this.toolbarMenuActionHandler = this.toolbarMenuActionHandler.bind(this);
 		this.editActionHandler = this.editActionHandler.bind(this);
+		this.extraCanvasActionHandler = this.extraCanvasActionHandler.bind(this);
 		this.clickActionHandler = this.clickActionHandler.bind(this);
 		this.decorationActionHandler = this.decorationActionHandler.bind(this);
 		this.tipHandler = this.tipHandler.bind(this);
@@ -156,6 +159,9 @@ class App extends React.Component {
 			events: {},
 			canvas: this.canvasController.getCanvasInfo()
 		};
+		if (this.state.extraCanvasDisplayed) {
+			sessionData.canvas2 = this.canvasController2.getCanvasInfo();
+		}
 		TestService.postSessionData(sessionData);
 		NodeToForm.initialize();
 		// this.sidePanelCanvas();
@@ -189,11 +195,33 @@ class App extends React.Component {
 		}
 	}
 
+	setDiagramJSON2(canvasJson) {
+		this.canvasController2.setEmptyPipelineFlow();
+		this.forceUpdate();
+		this.canvasController2.getCommandStack().clearCommandStack();
+		NodeToForm.clearNodeForms();
+		if (canvasJson) {
+			this.canvasController2.setPipelineFlow(canvasJson);
+			NodeToForm.setNodeForms(this.canvasController2.getNodes());
+			FlowValidation.validateFlow(this.canvasController2, this.getNodeForm);
+			TestService.postCanvas2(canvasJson);
+			this.log("Canvas diagram set 2");
+		} else {
+			this.log("Canvas diagram cleared 2");
+		}
+	}
+
 
 	setPaletteJSON(paletteJson) {
 		this.canvasController.setPipelineFlowPalette(paletteJson);
 		this.canvasController.getPipelineFlow();
 		this.log("Palette set");
+	}
+
+	setPaletteJSON2(paletteJson) {
+		this.canvasController2.setPipelineFlowPalette(paletteJson);
+		this.canvasController2.getPipelineFlow();
+		this.log("Palette set 2");
 	}
 
 	setPropertiesJSON(propertiesJson) {
@@ -204,6 +232,7 @@ class App extends React.Component {
 
 	setLayoutDirection(selectedLayout) {
 		this.canvasController.fixedAutoLayout(selectedLayout);
+		this.canvasController2.fixedAutoLayout(selectedLayout);
 		this.setState({ selectedLayout: selectedLayout });
 		this.log("Layout selected", selectedLayout);
 	}
@@ -322,6 +351,9 @@ class App extends React.Component {
 				events: that.state.consoleout,
 				canvas: that.canvasController.getCanvasInfo()
 			};
+			if (that.state.extraCanvasDisplayed) {
+				sessionData.canvas2 = that.canvasController2.getCanvasInfo();
+			}
 			TestService.postSessionData(sessionData);
 		});
 		var objDiv = document.getElementById("app-console");
@@ -342,6 +374,9 @@ class App extends React.Component {
 			events: this.state.consoleout,
 			canvas: this.canvasController.getCanvasInfo()
 		};
+		if (this.state.extraCanvasDisplayed) {
+			sessionData.canvas2 = this.canvasController2.getCanvasInfo();
+		}
 		TestService.postSessionData(sessionData);
 	}
 
@@ -545,6 +580,13 @@ class App extends React.Component {
 		}
 
 		this.log("editActionHandler() " + data.editType, type, data.label);
+	}
+
+	extraCanvasActionHandler(data) {
+		var sessionData = {
+			canvas2: this.canvasController2.getCanvasInfo()
+		};
+		TestService.postSessionData(sessionData);
 	}
 
 	contextMenuActionHandler(action, source) {
@@ -898,6 +940,9 @@ class App extends React.Component {
 						<CommonCanvas
 							config={commonCanvasConfig2}
 							contextMenuHandler={this.contextMenuHandler}
+							contextMenuActionHandler= {this.extraCanvasActionHandler}
+							editActionHandler= {this.extraCanvasActionHandler}
+							clickActionHandler= {this.extraCanvasActionHandler}
 							toolbarConfig={toolbarConfig}
 							canvasController={this.canvasController2}
 						/>
@@ -926,6 +971,8 @@ class App extends React.Component {
 				openSidepanelAPI={this.state.openSidepanelAPI}
 				setDiagramJSON={this.setDiagramJSON}
 				setPaletteJSON={this.setPaletteJSON}
+				setDiagramJSON2={this.setDiagramJSON2}
+				setPaletteJSON2={this.setPaletteJSON2}
 				setPropertiesJSON={this.setPropertiesJSON}
 				setLayoutDirection={this.setLayoutDirection}
 				setPipelineFlow={this.setPipelineFlow}

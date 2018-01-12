@@ -42,6 +42,12 @@ module.exports = function() {
 		browser.pause(1000);
 	});
 
+	this.Then(/^I open the extra canvas palette$/, function() {
+		// click on the palette button to open it
+		browser.$$("#palette-open-action")[1].click();
+		browser.pause(1000);
+	});
+
 	this.Then(/^I enter "([^"]*)" into the palette search bar$/, function(filterText) {
 		browser.$("#palette-flyout-search-bar").click();
 		browser.$("#palette-flyout-search-text").setValue("", filterText);
@@ -90,6 +96,32 @@ module.exports = function() {
 				// this will not work with relative paths
 				paletteInput.setValue(getBaseDir() + paletteFile);
 				browser.$("#sidepanel-palette-input").click("#paletteFileSubmit");
+				break;
+			}
+		}
+	});
+
+	this.Then(/^I have uploaded palette for extra canvas "([^"]*)"$/, function(paletteFile) {
+		// need to click on the extra palette drop down
+		browser.$("#sidepanel-palette-input2").scroll();
+		browser.$("#sidepanel-palette-input2")
+			.$(".formField")
+			.$(".select")
+			.$(".button")
+			.click("svg");
+		// get the list of drop down options.
+		var paletteFileOptions = browser.$("#sidepanel-palette-input2")
+			.$(".formField")
+			.$(".select")
+			.$(".select__options")
+			.$$("button");
+		for (var idx = 0; idx < paletteFileOptions.length; idx++) {
+			if (paletteFileOptions[idx].getText() === "Choose from location...") {
+				paletteFileOptions[idx].click();
+				var paletteInput = browser.$("#paletteJsonInput2");
+				// this will not work with relative paths
+				paletteInput.setValue(getBaseDir() + paletteFile);
+				browser.$("#sidepanel-palette-input2").click("#paletteFileSubmit");
 				break;
 			}
 		}

@@ -48,21 +48,32 @@ export default class SidePanelForms extends React.Component {
 		super(props);
 		this.state = {
 			canvasDiagram: "",
+			canvasDiagram2: "",
 			canvasPalette: "",
+			canvasPalette2: "",
 			canvasFileChooserVisible: false,
 			paletteFileChooserVisible: false,
+			canvasFileChooserVisible2: false,
+			paletteFileChooserVisible2: false,
 			canvasFiles: [],
 			paletteFiles: [],
 			selectedCanvasDropdownFile: "",
 			selectedPaletteDropdownFile: "",
+			selectedCanvasDropdownFile2: "",
+			selectedPaletteDropdownFile2: "",
+			extraCanvasOptions: false,
 			oneTimeLayout: NONE
 		};
 
 		this.onCanvasFileSelect = this.onCanvasFileSelect.bind(this);
+		this.onCanvasFileSelect2 = this.onCanvasFileSelect2.bind(this);
 		this.isReadyToSubmitCanvasData = this.isReadyToSubmitCanvasData.bind(this);
+		this.isReadyToSubmitCanvasData2 = this.isReadyToSubmitCanvasData2.bind(this);
 
 		this.onCanvasPaletteSelect = this.onCanvasPaletteSelect.bind(this);
+		this.onCanvasPaletteSelect2 = this.onCanvasPaletteSelect2.bind(this);
 		this.isReadyToSubmitPaletteData = this.isReadyToSubmitPaletteData.bind(this);
+		this.isReadyToSubmitPaletteData2 = this.isReadyToSubmitPaletteData2.bind(this);
 
 		this.layoutDirectionOptionChange = this.layoutDirectionOptionChange.bind(this);
 		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
@@ -108,6 +119,19 @@ export default class SidePanelForms extends React.Component {
 		}
 	}
 
+	onCanvasFileSelect2(evt) {
+		this.setState({ canvasDiagram2: "" });
+		this.props.setDiagramJSON2();
+		if (evt.target.files.length > 0) {
+			var filename = evt.target.files[0].name;
+			var fileExt = filename.substring(filename.lastIndexOf(".") + 1);
+			if (fileExt === "json") {
+				this.setState({ canvasDiagram2: evt.target.files[0] });
+				this.props.log("Canvas diagram JSON file selected", filename);
+			}
+		}
+	}
+
 	onCanvasPaletteSelect(evt) {
 		this.setState({ canvasPalette: "" });
 		this.props.setPaletteJSON({});
@@ -122,6 +146,21 @@ export default class SidePanelForms extends React.Component {
 		}
 	}
 
+	onCanvasPaletteSelect2(evt) {
+		this.setState({ canvasPalette2: "" });
+		this.props.setPaletteJSON2({});
+		this.props.enableNavPalette(false);
+		if (evt.target.files.length > 0) {
+			var filename = evt.target.files[0].name;
+			var fileExt = filename.substring(filename.lastIndexOf(".") + 1);
+			if (fileExt === "json") {
+				this.setState({ canvasPalette2: evt.target.files[0] });
+				this.props.log("Canvas palette JSON file selected", filename);
+			}
+		}
+	}
+
+
 	onCanvasDropdownSelect(evt, obj) {
 		if (obj.selected === CHOOSE_FROM_LOCATION) {
 			this.setState({
@@ -135,10 +174,32 @@ export default class SidePanelForms extends React.Component {
 				canvasDiagram: "",
 				canvasFileChooserVisible: false
 			}, function() {
-				that.props.log("Submit canvas diagram", that.state.selectedPropertiesDropdownFile);
+				that.props.log("Submit canvas diagram", that.state.selectedCanvasDropdownFile);
 				FormsService.getFileContent("diagrams", that.state.selectedCanvasDropdownFile)
 					.then(function(res) {
 						that.props.setDiagramJSON(res);
+					});
+			});
+		}
+	}
+
+	onCanvasDropdownSelect2(evt, obj) {
+		if (obj.selected === CHOOSE_FROM_LOCATION) {
+			this.setState({
+				canvasFileChooserVisible2: true,
+				selectedCanvasDropdownFile2: ""
+			});
+		} else {
+			var that = this;
+			this.setState({
+				selectedCanvasDropdownFile2: obj.selected,
+				canvasDiagram2: "",
+				canvasFileChooserVisible2: false
+			}, function() {
+				that.props.log("Submit canvas diagram", that.state.selectedCanvasDropdownFile2);
+				FormsService.getFileContent("diagrams", that.state.selectedCanvasDropdownFile2)
+					.then(function(res) {
+						that.props.setDiagramJSON2(res);
 					});
 			});
 		}
@@ -163,6 +224,32 @@ export default class SidePanelForms extends React.Component {
 						that.props.setPaletteJSON(res);
 						// enable palette
 						if (that.isReadyToSubmitPaletteData()) {
+							that.props.enableNavPalette(true);
+						}
+					});
+			});
+		}
+	}
+
+	onPaletteDropdownSelect2(evt, obj) {
+		if (obj.selected === CHOOSE_FROM_LOCATION) {
+			this.setState({
+				paletteFileChooserVisible2: true,
+				selectedPaletteDropdownFile2: ""
+			});
+		} else {
+			var that = this;
+			this.setState({
+				selectedPaletteDropdownFile2: obj.selected,
+				canvasPalette2: "",
+				paletteFileChooserVisible2: false
+			}, function() {
+				that.props.log("Submit canvas palette", that.state.selectedPaletteDropdownFile2);
+				FormsService.getFileContent("palettes", that.state.selectedPaletteDropdownFile2)
+					.then(function(res) {
+						that.props.setPaletteJSON2(res);
+						// enable palette
+						if (that.isReadyToSubmitPaletteData2()) {
 							that.props.enableNavPalette(true);
 						}
 					});
@@ -195,8 +282,27 @@ export default class SidePanelForms extends React.Component {
 		}
 	}
 
+	submitCanvas2() {
+		if (this.state.canvasDiagram2 !== "") {
+			var fileReader = new FileReader();
+			fileReader.onload = function(evt) {
+				var fileContent = fileReader.result;
+				var content = JSON.parse(fileContent);
+				this.props.setDiagramJSON2(content);
+			}.bind(this);
+			fileReader.readAsText(this.state.canvasDiagram2);
+		}
+	}
+
 	isReadyToSubmitCanvasData() {
 		if (this.state.canvasDiagram !== "" || this.state.selectedCanvasDropdownFile !== "") {
+			return true;
+		}
+		return false;
+	}
+
+	isReadyToSubmitCanvasData2() {
+		if (this.state.canvasDiagram2 !== "" || this.state.selectedCanvasDropdownFile2 !== "") {
 			return true;
 		}
 		return false;
@@ -218,8 +324,31 @@ export default class SidePanelForms extends React.Component {
 		}
 	}
 
+	submitPalette2() {
+		if (this.state.canvasPalette2 !== "") {
+			var fileReader = new FileReader();
+			fileReader.onload = function(evt) {
+				var fileContent = fileReader.result;
+				var content = JSON.parse(fileContent);
+				this.props.setPaletteJSON2(content);
+			}.bind(this);
+			fileReader.readAsText(this.state.canvasPalette2);
+		}
+		// enable palette
+		if (this.isReadyToSubmitPaletteData2()) {
+			this.props.enableNavPalette(true);
+		}
+	}
+
 	isReadyToSubmitPaletteData() {
 		if (this.state.canvasPalette !== "" || this.state.selectedPaletteDropdownFile !== "") {
+			return true;
+		}
+		return false;
+	}
+
+	isReadyToSubmitPaletteData2() {
+		if (this.state.canvasPalette2 !== "" || this.state.selectedPaletteDropdownFile2 !== "") {
 			return true;
 		}
 		return false;
@@ -275,6 +404,7 @@ export default class SidePanelForms extends React.Component {
 
 	extraCanvasChange(changeEvent) {
 		this.props.showExtraCanvas(changeEvent.target.checked);
+		this.setState({ extraCanvasOptions: changeEvent.target.checked });
 	}
 
 	renderingEngineOptionChange(evt, obj) {
@@ -364,6 +494,90 @@ export default class SidePanelForms extends React.Component {
 					value={this.state.selectedPaletteDropdownFile}
 				/>
 				{paletteFileChooserVisible}
+			</div>
+		</div>);
+
+		var canvasFileChooserVisible2 = <div />;
+		if (this.state.canvasFileChooserVisible2) {
+			canvasFileChooserVisible2 = (<div>
+				{space}
+				<FormControl
+					required="required"
+					id="canvasFileInput2"
+					type="file"
+					accept=".json"
+					ref="canvasDiagram2"
+					onChange={this.onCanvasFileSelect2}
+				/>
+				{space}
+				<Button dark
+					id="canvasFileSubmit2"
+					disabled={!this.isReadyToSubmitCanvasData2()}
+					onClick={this.submitCanvas2.bind(this)}
+
+				>
+					Submit
+				</Button>
+			</div>);
+		}
+
+		var paletteFileChooserVisible2 = <div />;
+		if (this.state.paletteFileChooserVisible2) {
+			paletteFileChooserVisible2 = (<div>
+				{space}
+				<FormControl
+					required="required"
+					id="paletteJsonInput2"
+					type="file"
+					accept=".json"
+					ref="canvasPalette2"
+					onChange={this.onCanvasPaletteSelect2}
+				/>
+				{space}
+				<Button dark
+					id="paletteFileSubmit"
+					disabled={!this.isReadyToSubmitPaletteData2()}
+					onClick={this.submitPalette2.bind(this)}
+					onChange={(evt) => this.props.enableNavPalette(evt.target.checked)}
+				>
+					Submit
+				</Button>
+			</div>);
+		}
+
+		var canvasInput2 = (<div className="sidepanel-children" id="sidepanel-canvas-input2">
+			<div className="canvasField">
+				<div className="sidepanel-headers">Canvas Diagram</div>
+				<Dropdown
+					disabled={!this.state.extraCanvasOptions}
+					name="CanvasDropdown"
+					text="Canvas"
+					id="sidepanel-canvas-dropdown2"
+					maxVisibleItems={10}
+					dark
+					options={this.state.canvasFiles}
+					onSelect={this.onCanvasDropdownSelect2.bind(this)}
+					value={this.state.selectedCanvasDropdownFile2}
+				/>
+				{canvasFileChooserVisible2}
+			</div>
+		</div>);
+
+		var paletteInput2 = (<div className="sidepanel-children" id="sidepanel-palette-input2">
+			<div className="formField">
+				<div className="sidepanel-headers">Canvas Palette</div>
+				<Dropdown
+					disabled={!this.state.extraCanvasOptions}
+					name="PaletteDropdown"
+					text="Palette"
+					id="sidepanel-palette-dropdown2"
+					maxVisibleItems={10}
+					dark
+					options={this.state.paletteFiles}
+					onSelect={this.onPaletteDropdownSelect2.bind(this)}
+					value={this.state.selectedPaletteDropdownFile2}
+				/>
+				{paletteFileChooserVisible2}
 			</div>
 		</div>);
 
@@ -549,9 +763,11 @@ export default class SidePanelForms extends React.Component {
 				{divider}
 				{tipConfig}
 				{divider}
-				{extraCanvas}
-				{divider}
 				{nodeDraggable}
+				{divider}
+				{extraCanvas}
+				{canvasInput2}
+				{paletteInput2}
 			</div>
 		);
 	}
@@ -563,6 +779,8 @@ SidePanelForms.propTypes = {
 	internalObjectModel: PropTypes.bool,
 	setDiagramJSON: PropTypes.func,
 	setPaletteJSON: PropTypes.func,
+	setDiagramJSON2: PropTypes.func,
+	setPaletteJSON2: PropTypes.func,
 	setLayoutDirection: PropTypes.func,
 	useInternalObjectModel: PropTypes.func,
 	setRenderingEngine: PropTypes.func,

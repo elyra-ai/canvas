@@ -960,8 +960,12 @@ module.exports = function() {
 		browser.keys("Shift");
 	});
 
-	this.Then(/^I drag the Select Node from side panel to common canvas at (\d+), (\d+)$/, function(xPos, yPos) {
+	this.Then(/^I drag the Derive Node from side panel to common canvas at (\d+), (\d+)$/, function(xPos, yPos) {
 		browser.execute(simulateDragDrop, "#sidePanelNodeDraggable", 0, "#canvas-div-0", 0, xPos, yPos);
+	});
+
+	this.Then(/^I drag the Derive Node from side panel to extra canvas at (\d+), (\d+)$/, function(xPos, yPos) {
+		browser.execute(simulateDragDrop, "#sidePanelNodeDraggable", 0, "#canvas-div-1", 0, xPos, yPos);
 	});
 
 
@@ -980,6 +984,61 @@ module.exports = function() {
 		var node = browser.$$(".node-group")[nodeIndex];
 		var actualNodePosition = node.getAttribute("transform");
 		expect(actualNodePosition).toEqual(givenNodePosition);
+	});
+
+	this.Then(/^I verify the number of nodes in extra canvas are (\d+)$/, function(nodes) {
+		try {
+			var nodesInCanvas = browser.$("#canvas-div-1").$$(".node-image").length;
+			expect(Number(nodes)).toEqual(nodesInCanvas);
+
+			// verify the number of nodes is in the internal object model
+			const testUrl = getURL();
+			const getCanvasUrl = testUrl + "/v1/test-harness/canvas2";
+
+			browser.timeoutsAsyncScript(5000);
+			var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
+			var returnVal = browser.execute(getObjectModelCount, objectModel.value, "nodes", "");
+			expect(returnVal.value).toBe(Number(nodes));
+		} catch (err) {
+			console.log("Error = " + err);
+			throw err;
+		}
+	});
+
+	this.Then(/^I add node (\d+) a "([^"]*)" node from the "([^"]*)" category onto the extra canvas at (\d+), (\d+)$/,
+		function(inNodeIndex, nodeType, nodeCategory, canvasX, canvasY) {
+			try {
+				var categoryElem = findCategoryElement(nodeCategory);
+				categoryElem.click();
+				// drag the var file node to the canvas
+				const nodeIndex = findNodeIndexInPalette(nodeType);
+				browser.execute(simulateDragDrop, ".palette-list-item", nodeIndex, "#canvas-div-1", 0, canvasX, canvasY);
+				categoryElem.click(); // close category
+			} catch (err) {
+				console.log("Error = " + err);
+				throw err;
+			}
+		});
+
+	// Then I delete node 1 the "Var. File" node from extra canvas
+	//
+	this.Then(/^I delete node (\d+) the "([^"]*)" node from extra canvas$/, function(nodeIndex, nodeType) {
+		var nodeNumber = nodeIndex - 1;
+		var nodeSelector = ".node-group";
+		browser.$("#canvas-div-1").$$(nodeSelector)[nodeNumber].rightClick();
+
+		const contextMenu = browser.$(".context-menu-popover").$$(".react-contextmenu-item");
+		var menuItemDelete;
+		for (var menuIdx = 0; menuIdx < contextMenu.length; menuIdx++) {
+			if (contextMenu[menuIdx].isExisting("span")) {
+				var menuLabel = contextMenu[menuIdx].getText("span");
+				if (menuLabel === "Delete") {
+					menuItemDelete = contextMenu[menuIdx];
+				}
+			}
+		}
+		menuItemDelete.click();
+
 	});
 
 };

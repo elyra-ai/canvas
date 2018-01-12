@@ -25,4 +25,10 @@ module.exports = function() {
 		browser.$("#action-bar-sidepanel-api").click("a");
 		browser.pause(550);
 	});
+
+	this.Then("I click on extra canvas toggle", function() {
+		browser.$("#sidepanel-extra-canvas").$$("div")[1].$("div").$("label")
+			.click();
+	});
+
 };

@@ -30,6 +30,8 @@ module.exports = router;
 
 router.get("/canvas", getCanvasDiagramController.get);
 router.post("/canvas", postCanvasDiagramController.post);
+router.get("/canvas2", getCanvasDiagramController.get2);
+router.post("/canvas2", postCanvasDiagramController.post2);
 router.get("/events", getEventLogController.get);
 router.post("/events", postEventLogController.post);
 router.post("/data", postSessionDataController.post);

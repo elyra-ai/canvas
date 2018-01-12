@@ -15,14 +15,23 @@ const constants = require("../lib/constants");
 // Public Methods ------------------------------------------------------------->
 
 module.exports.get = _get;
+module.exports.get2 = _get2;
 
 function _get(req, res) {
+	getCanvas(req, res, "canvas");
+}
+
+function _get2(req, res) {
+	getCanvas(req, res, "canvas2");
+}
+
+function getCanvas(req, res, canvasRef) {
 	logger.info("Retrieving canvas diagram");
-	if (req.session.canvas) {
+	if (req.session[canvasRef]) {
 		res.status(constants.HTTP_STATUS_OK);
-		res.json(req.session.canvas).end();
+		res.json(req.session[canvasRef]).end();
 	} else {
 		res.status(constants.HTTP_STATUS_NOT_FOUND);
-		res.json({ error: "Unable to find canvas" }).end();
+		res.json({ error: "Unable to find " + canvasRef }).end();
 	}
 }

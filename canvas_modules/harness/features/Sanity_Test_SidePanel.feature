@@ -14,7 +14,7 @@ Scenario: Sanity test to test drag and drop of external object to canvas
 	Given I have selected the "Ports" connection type
 	Given I have uploaded palette "/test_resources/palettes/modelerPalette.json"
 
-	Then I drag the Select Node from side panel to common canvas at 300, 300
+	Then I drag the Derive Node from side panel to common canvas at 300, 300
 	Then I verify the number of nodes are 1
 	Then I click undo
 	Then I verify the number of nodes are 0

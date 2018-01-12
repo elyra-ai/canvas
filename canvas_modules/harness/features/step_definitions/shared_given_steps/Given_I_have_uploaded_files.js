@@ -61,6 +61,33 @@ module.exports = function() {
 		}
 	});
 
+	this.Then(/^I have uploaded diagram for extra canvas "([^"]*)"$/, function(diagramFile) {
+		// need to click on the canvas drop down
+		browser.$("#sidepanel-canvas-input2").scroll();
+		browser.$("#sidepanel-canvas-input2")
+			.$(".canvasField")
+			.$(".select")
+			.$(".button")
+			.click("svg");
+		// get the list of drop down options.
+		var canvasFileOptions = browser
+			.$("#sidepanel-canvas-input2")
+			.$(".canvasField")
+			.$(".select")
+			.$(".select__options")
+			.$$("button");
+		for (var idx = 0; idx < canvasFileOptions.length; idx++) {
+			if (canvasFileOptions[idx].getText() === "Choose from location...") {
+				canvasFileOptions[idx].click();
+				var canvasInput = browser.$("#canvasFileInput2");
+				// this will not work with relative paths
+				canvasInput.setValue(getBaseDir() + diagramFile);
+				browser.$$(".canvasField")[1].click("#canvasFileSubmit2");
+				break;
+			}
+		}
+	});
+
 	this.Then(/^I have uploaded JSON for common-properties "([^"]*)"$/, function(diagramFile) {
 		// need to click on the common-properties drop down
 		browser.$("#sidepanel-input")

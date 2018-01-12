@@ -15,15 +15,24 @@ const constants = require("../lib/constants");
 // Public Methods ------------------------------------------------------------->
 
 module.exports.post = _post;
+module.exports.post2 = _post2;
 
 function _post(req, res, next) {
+	postCanvas(req, res, next, "canvas");
+}
+
+function _post2(req, res, next) {
+	postCanvas(req, res, next, "canvas2");
+}
+
+function postCanvas(req, res, next, canvasRef) {
 	logger.info("Posting canvas diagram");
 	if (req.body) {
-		req.session.canvas = req.body;
+		req.session[canvasRef] = req.body;
 		res.status(constants.HTTP_STATUS_OK);
 		res.json(req.body).end();
 	} else {
 		res.status(constants.HTTP_STATUS_NOT_FOUND);
-		res.json({ error: "Unable to post canvas" }).end();
+		res.json({ error: "Unable to post " + canvasRef }).end();
 	}
 }
