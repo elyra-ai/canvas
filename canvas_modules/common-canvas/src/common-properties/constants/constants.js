@@ -35,7 +35,8 @@ _defineConstant("MESSAGE_KEYS_DEFAULTS", {
 	REJECTBUTTON_LABEL: "Cancel",
 	PROPERTIESEDIT_APPLYBUTTON_LABEL: "Save",
 	PROPERTIESEDIT_REJECTBUTTON_LABEL: "Cancel",
-	TABLE_SEARCH_PLACEHOLDER: "Search in column"
+	TABLE_SEARCH_PLACEHOLDER: "Search in column",
+	LONG_TABLE_SUMMARY_PLACEHOLDER: "More than ten fields..."
 });
 
 _defineConstant("MESSAGE_KEYS", {
@@ -58,7 +59,8 @@ _defineConstant("MESSAGE_KEYS", {
 	REJECTBUTTON_LABEL: "flyout.rejectButton.label",
 	PROPERTIESEDIT_APPLYBUTTON_LABEL: "propertiesEdit.applyButton.label",
 	PROPERTIESEDIT_REJECTBUTTON_LABEL: "propertiesEdit.rejectButton.label",
-	TABLE_SEARCH_PLACEHOLDER: "table.search.placeholder"
+	TABLE_SEARCH_PLACEHOLDER: "table.search.placeholder",
+	LONG_TABLE_SUMMARY_PLACEHOLDER: "summary.longTable.placeholder"
 });
 
 _defineConstant("CHARACTER_LIMITS", {

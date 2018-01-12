@@ -52,3 +52,31 @@ Feature: Sanity_Test_SummaryPanel
 			Then I click on the "Select Fields" button to save the new columns
 			Then I click on the "Cancel" button
 			Then I verify that the summary list does not contains the value of "BP" for the "Configure Sort Order" summary link in the "Column Structure Table" category
+
+		Scenario: Test long table summaries
+			Given I am on the test harness
+			Given I have toggled the app side common-properties panel
+			Then I have selected the "flyout" properties container type
+			Given I have uploaded JSON for common-properties "summaryPanel_paramDef.json"
+
+			# generatedValues in key_definition with default of 1
+			Then I open the "Structure List Table" category
+			Then I verify that the summary list contains the value of "BabyBoomer" for the "Configure Derive Node" summary link in the "Structure List Table" category
+			Then I open the "Configure Derive Node" wide flyout panel
+			Then I click on Add Value button at index "0"
+			Then I click on Add Value button at index "0"
+			Then I click on Add Value button at index "0"
+			Then I click on Add Value button at index "0"
+			Then I click on Add Value button at index "0"
+			Then I click on Add Value button at index "0"
+			Then I click on Add Value button at index "0"
+			Then I click on Add Value button at index "0"
+			Then I click on Add Value button at index "0"
+			# close wide flyout
+			Then I click on the "OK" button
+			Then I verify that the summary list contains the value of "BabyBoomer Age >= 55\nValue\nValue\nValue\nValue\nValue\nValue\nValue\nValue\nValue" for the "Configure Derive Node" summary link in the "Structure List Table" category
+			Then I open the "Configure Derive Node" wide flyout panel
+			Then I click on Add Value button at index "0"
+			# close wide flyout
+			Then I click on the "OK" button
+			Then I verify the "Configure Derive Node" summary in the "Structure List Table" category contains more than ten rows

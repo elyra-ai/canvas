@@ -1,0 +1,122 @@
+{
+  "current_parameters": {
+    "structurelisteditorTableInput": [
+      [ 1, "Hello" ],
+			[ 2, "Hello" ],
+			[ 3, "Hello" ],
+			[ 4, "Hello" ],
+			[ 5, "Hello" ],
+			[ 6, "Hello" ],
+			[ 7, "Hello" ],
+			[ 8, "Hello" ],
+			[ 9, "Hello" ],
+			[ 10, "Hello" ],
+			[ 11, "Hello" ]
+    ]
+  },
+  "parameters": [
+    {
+      "id": "structurelisteditorTableInput",
+      "type": "array[structurelisteditorTableInput]",
+      "role": "column",
+      "default": []
+    }
+  ],
+  "complex_types": [
+    {
+      "id": "structurelisteditorTableInput",
+      "parameters": [
+        {
+          "id": "index",
+          "type": "integer"
+        },
+        {
+          "id": "name",
+          "type": "string",
+          "role": "new_column"
+        }
+      ]
+    }
+  ],
+  "uihints": {
+    "id": "StructureListEditor.test",
+    "icon": "images/modelbuildspark.svg",
+    "label": {
+      "default": "StructureListEditor in Summary Test"
+    },
+    "description": {
+      "default": "Test summary panel display correctly with long table with more than ten rows"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "structurelisteditorTableInput",
+        "label": {
+          "default": "Table Input"
+        },
+        "description": {
+          "default": "Summay panel should display placeholder: More than ten fields..."
+        }
+      }
+    ],
+    "complex_type_info": [
+      {
+        "complex_type_ref": "structurelisteditorTableInput",
+        "parameters": [
+					{
+	          "parameter_ref": "index",
+	          "label": {
+	            "resource_key": "structurelisteditorTableInput.index.label"
+	          },
+	          "width": 15,
+	          "generated_values": {
+	            "operation": "index"
+	          },
+	          "control": "readonly",
+            "summary": true
+	        },
+          {
+            "parameter_ref": "name",
+            "label": {
+              "default": "Structure Name",
+              "resource_key": "structurelisteditorTableInput.name.label"
+            },
+            "description": {
+              "resource_key": "structurelisteditorTableInput.name.desc"
+            },
+            "width": 15,
+            "edit_style": "subpanel",
+            "summary": true
+          }
+        ]
+      }
+    ],
+    "group_info": [
+      {
+        "id": "Tables",
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "structurelisteditorTableInput-summary-panel",
+            "label": {
+              "default": "Configure Table Input"
+            },
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "Structure Table Inline Control",
+                "parameter_refs": [
+                  "structurelisteditorTableInput"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "resources": {
+    "structurelisteditorTableInput.name.label": "Name",
+    "structurelisteditorTableInput.name.desc": "Enter a name",
+    "structurelisteditorTableInput.index.label": "Index"
+  }
+}

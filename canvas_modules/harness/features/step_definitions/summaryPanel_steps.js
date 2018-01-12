@@ -65,6 +65,18 @@ module.exports = function() {
 			}
 		});
 
+	this.Then(/^I verify the "([^"]*)" summary in the "([^"]*)" category contains more than ten rows$/,
+		function(linkName, categoryName) {
+			const category = findCategory(categoryName);
+			expect(category).not.toBe(null);
+
+			const summaryContainer = findSummaryContainer(category, linkName);
+			expect(summaryContainer).not.toBe(null);
+			const summaryTablePlaceholder = summaryContainer.$(".control-summary-table").getText();
+
+			expect(summaryTablePlaceholder).toBe("More than ten fields...");
+		});
+
 	this.Then(/^I verify that a wideflyout dialog has opened$/, function() {
 		const wideFlyOutClassElement = browser.$(".rightside-modal-container");
 		expect(wideFlyOutClassElement.value).not.toBe(null);

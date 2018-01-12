@@ -53,5 +53,6 @@ export const messages = {
 	"fieldPicker.dataTypeColumn.label": "Data type",
 	"flyout.applyButton.label": "OK",
 	"flyout.rejectButton.label": "Cancel",
-	"table.search.placeholder": "Search in column"
+	"table.search.placeholder": "Search in column",
+	"summary.longTable.placeholder": "More than ten fields..."
 };

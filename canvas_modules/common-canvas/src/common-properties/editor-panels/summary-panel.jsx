@@ -134,14 +134,21 @@ class SummaryPanel extends EditorControl {
 				// }
 			}
 			if (summaryValues.length > 0) {
+				let summaryBody = (<table key={"summary-table-" + summaryControlKey} className={"control-summary-table " + disableText}>
+					<tbody key={"summary-body-" + summaryControlKey}>
+						{summaryValues}
+					</tbody>
+				</table>);
+				if (summaryValues.length > 10) {
+					const largeTableLabel = PropertyUtils.formatMessage(this.props.intl,
+						MESSAGE_KEYS.LONG_TABLE_SUMMARY_PLACEHOLDER,
+						MESSAGE_KEYS_DEFAULTS.LONG_TABLE_SUMMARY_PLACEHOLDER);
+					summaryBody = (<div className={"control-summary-table " + disableText}>{largeTableLabel}</div>);
+				}
 				summaryTables.push(
 					<div key={"summary-container-" + summaryControlKey} className={"control-summary-configured-values"}>
 						<span key={"summary-text-" + summaryControlKey} className={"summary-label"}>{summaryControl.summaryLabel}</span>
-						<table key={"summary-table-" + summaryControlKey} className={"control-summary-table " + disableText}>
-							<tbody key={"summary-body-" + summaryControlKey}>
-								{summaryValues}
-							</tbody>
-						</table>
+						{summaryBody}
 					</div>
 				);
 			}

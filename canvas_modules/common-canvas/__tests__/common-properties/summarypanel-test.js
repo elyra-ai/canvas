@@ -9,6 +9,7 @@
 
 import propertyUtils from "../_utils_/property-utils";
 import structuretableParamDef from "../test_resources/paramDefs/structuretable_paramDef.json";
+import summarypanelParamDef from "../test_resources/paramDefs/summarypanel_paramDef.json";
 import { expect } from "chai";
 
 describe("structuretable summary renders correctly", () => {
@@ -37,5 +38,20 @@ describe("structuretable summary renders correctly", () => {
 			.text()).to.equal("Drug");
 		expect(sortRow3.find(".control-summary-table-row-multi-data").at(1)
 			.text()).to.equal("111");
+	});
+});
+
+describe("summary panel renders correctly with long table of more than ten rows", () => {
+	const wrapper = propertyUtils.flyoutEditorForm(summarypanelParamDef);
+
+	it("should have displayed placeholder in summary panel", () => {
+		const summaries = wrapper.find(".control-summary-configured-values");
+		expect(summaries).to.have.length(1);
+		const summaryRows = summaries.find(".control-summary-list-rows");
+		expect(summaryRows).to.have.length(0);
+
+		const summaryPlaceholder = summaries.find(".control-summary-table");
+		expect(summaryPlaceholder).to.have.length(1);
+		expect(summaryPlaceholder.text()).to.equal("More than ten fields...");
 	});
 });
