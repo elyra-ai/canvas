@@ -199,7 +199,7 @@ module.exports = function() {
 				const testUrl = getURL();
 				const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
 
-				browser.timeoutsAsyncScript(5000);
+				browser.timeouts("script", 5000);
 				var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
 				var returnVal = browser.execute(getCommentIdFromObjectModelUsingText, objectModel.value, commentText);
 				expect(returnVal.value).not.toBe(-1);
@@ -222,7 +222,7 @@ module.exports = function() {
 			const testUrl = getURL();
 			const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
 
-			browser.timeoutsAsyncScript(5000);
+			browser.timeouts("script", 5000);
 			var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
 			var returnVal = browser.execute(getObjectModelCount, objectModel.value, "comments", "");
 			expect(returnVal.value).toBe(Number(comments));
@@ -262,7 +262,7 @@ module.exports = function() {
 			const testUrl = getURL();
 			const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
 
-			browser.timeoutsAsyncScript(5000);
+			browser.timeouts("script", 5000);
 			var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
 			var returnVal = browser.execute(getCommentIdFromObjectModelUsingText, objectModel.value, commentText);
 			expect(returnVal.value).not.toBe(-1);

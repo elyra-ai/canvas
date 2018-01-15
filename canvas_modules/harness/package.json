@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node index.js",
-    "test": "chimp",
+    "test": "chimp config/chimp.js",
     "bundle-report": "webpack-bundle-analyzer --host 127.0.0.1 --port 8888 .build/stats.json"
   },
   "engines": {
