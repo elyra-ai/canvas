@@ -7,7 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 /* eslint complexity: ["error", 13] */
-/* eslint max-len: ["error", 150] */
+/* eslint max-len: ["error", 200] */
 
 import React from "react";
 import { Link } from "react-router-dom";
@@ -225,6 +225,7 @@ class CommonPropertiesComponents extends React.Component {
 					"--sortable",
 					"--filterable",
 					"--summary",
+					"--generatedValues",
 					"Actions",
 					"--button"
 				]}
@@ -1257,6 +1258,12 @@ class CommonPropertiesComponents extends React.Component {
 						<a className="properties-documentation-page-intro-link" href="#/properties#--summaryPanel">summaryPanel</a>,
 						the <span className="highlight">summary</span> attribute does not apply to non-complex type controls.
 						No summary will be shown for those controls.
+					</p>
+					<p>For summary tables with more than ten rows, a placeholder text will be shown instead. The text defaults
+						to <span className="highlight">More than ten fields...</span> This placeholder text can be configured through
+						&nbsp;<a className="properties-documentation-page-intro-link"
+							href="https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/wiki/3.0-Common-Properties-documentation#internationalization-and-override-of-labels-in-commonproperties"
+						>custom labels</a>.
 					</p>
 					<div className="section-row">
 						<div className="section-column">

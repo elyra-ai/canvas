@@ -81,6 +81,51 @@ const fields = [
 			"measure": "discrete",
 			"modeling_role": "input"
 		}
+	},
+	{
+		"name": "Height",
+		"type": "double",
+		"metadata": {
+			"description": "",
+			"measure": "range",
+			"modeling_role": "input"
+		}
+	},
+	{
+		"name": "Weight",
+		"type": "double",
+		"metadata": {
+			"description": "",
+			"measure": "range",
+			"modeling_role": "input"
+		}
+	},
+	{
+		"name": "BMI",
+		"type": "double",
+		"metadata": {
+			"description": "",
+			"measure": "range",
+			"modeling_role": "input"
+		}
+	},
+	{
+		"name": "Name",
+		"type": "string",
+		"metadata": {
+			"description": "",
+			"measure": "range",
+			"modeling_role": "input"
+		}
+	},
+	{
+		"name": "DOB",
+		"type": "date",
+		"metadata": {
+			"description": "",
+			"measure": "range",
+			"modeling_role": "input"
+		}
 	}
 ];
 
