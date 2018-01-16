@@ -1,4 +1,7 @@
 {
+  "titleDefinition": {
+    "title": "Filter"
+  },
   "current_parameters": {
     "field_types": [
       [
@@ -135,7 +138,7 @@
             "label": {
               "default": "",
               "resource_key": "fieldFilterEntry.exclude"
-            },            
+            },
             "width": 16
           }
         ]

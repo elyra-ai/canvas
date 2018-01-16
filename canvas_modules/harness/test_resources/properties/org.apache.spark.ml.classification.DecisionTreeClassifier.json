@@ -1,4 +1,7 @@
 {
+  "titleDefinition": {
+    "title": "Decision Tree Classifier"
+  },
   "current_parameters": {
     "targetField": [],
     "inputFieldList": [

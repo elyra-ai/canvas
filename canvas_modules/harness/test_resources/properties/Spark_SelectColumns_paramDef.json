@@ -1,4 +1,7 @@
 {
+  "titleDefinition": {
+    "title": "Select Columns"
+  },
   "current_parameters": {
     "mode": "Include",
     "selected_fields": []

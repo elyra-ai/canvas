@@ -1,4 +1,7 @@
 {
+  "titleDefinition": {
+    "title": "Linear Regression"
+  },
   "current_parameters": {
     "targetField": [],
     "inputFieldList": [],

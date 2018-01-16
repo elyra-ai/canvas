@@ -1,5 +1,8 @@
 {
   "paramDef": {
+    "titleDefinition": {
+      "title": "Form condition test"
+    },
     "parameters": [
       {
         "id": "int_param",
@@ -72,7 +75,8 @@
   },
   "expectedResult": {
     "componentId": "cond_test",
-    "label": "cond_test",
+    "label": "Form condition test",
+    "labelEditable": true,
     "editorSize": "large",
     "uiItems": [
       {

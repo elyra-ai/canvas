@@ -15,9 +15,10 @@ import { L10nProvider } from "./L10nProvider";
 import Conditions from "./Conditions";
 
 export default class Form {
-	constructor(componentId, label, editorSize, uiItems, buttons, data, conditions) {
+	constructor(componentId, label, labelEditable, editorSize, uiItems, buttons, data, conditions) {
 		this.componentId = componentId;
 		this.label = label;
+		this.labelEditable = labelEditable;
 		this.editorSize = editorSize;
 		this.uiItems = uiItems;
 		this.buttons = buttons;
@@ -29,7 +30,7 @@ export default class Form {
 	* Returns a new Form
 	*/
 	static makeForm(paramDef) {
-		const propDef = PropertyDef.makePropertyDef(propertyOf(paramDef)("parameters"), propertyOf(paramDef)("complex_types"),
+		const propDef = PropertyDef.makePropertyDef(propertyOf(paramDef)("titleDefinition"), propertyOf(paramDef)("parameters"), propertyOf(paramDef)("complex_types"),
 			propertyOf(paramDef)("uihints"));
 		const conditions = propertyOf(paramDef)("conditions");
 		if (propDef) {
@@ -46,7 +47,8 @@ export default class Form {
 				datasetMetadata: propertyOf(paramDef)("dataset_metadata")
 			};
 			return new Form(propDef.name,
-				l10nProvider.l10nLabel(propDef, propDef.name),
+				propDef.label,
+				propDef.labelEditable,
 				propDef.editorSizeHint(),
 				[UIItem.makePrimaryTabs(tabs)],
 				_defaultButtons(),

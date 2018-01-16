@@ -1,4 +1,7 @@
 {
+  "titleDefinition": {
+    "title": "Sample Rows"
+  },
   "current_parameters": {
     "withReplacement": false,
     "samplingRatio": 1,

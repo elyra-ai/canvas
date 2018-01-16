@@ -19,6 +19,12 @@ Feature: Sanity_Test_CommonProperties_Flyout
 			Then I click on modal OK button
 			Then I verify the new title "Decision Tree Classification"
 
+		# Readonly Title Test Case
+			Given I have toggled the app side common-properties panel
+			Given I have uploaded JSON for common-properties "readonly_paramDef.json"
+			Then I see common properties flyout title "Readonly Fields"
+			Then I verify there is no title edit icon
+
 		# TextBox Test Case
 			Given I have toggled the app side common-properties panel
 			Given I have uploaded JSON for common-properties "org.apache.spark.ml.ibm.transformers.AddColumn.json"

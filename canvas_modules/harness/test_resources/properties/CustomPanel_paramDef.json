@@ -1,4 +1,7 @@
 {
+  "titleDefinition": {
+    "title": "Custom Panels"
+  },
   "current_parameters": {
     "custom_slider": "9.00",
     "map_zoom": 9,

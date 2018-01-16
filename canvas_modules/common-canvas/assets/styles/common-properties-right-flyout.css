@@ -60,6 +60,7 @@
 
 #title-edit-icon-right-flyout-panel:hover {
 	background-color: #EFEFEF;
+	cursor: pointer;
 }
 
 #common-properties-right-flyout-panel .well {

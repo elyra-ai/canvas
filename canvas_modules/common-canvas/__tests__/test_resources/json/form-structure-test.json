@@ -1,5 +1,8 @@
 {
   "paramDef": {
+    "titleDefinition": {
+      "title": "Form structure test"
+    },
     "current_parameters": {
       "renamed_fields": [
         ["Age", "Age"],
@@ -172,7 +175,8 @@
   },
   "expectedResult": {
     "componentId": "rename",
-    "label": "Rename Columns",
+    "label": "Form structure test",
+    "labelEditable": true,
     "editorSize": "large",
     "uiItems": [
       {

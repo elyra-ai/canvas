@@ -1,4 +1,7 @@
 {
+  "titleDefinition": {
+    "title": "Filter Rows"
+  },
   "current_parameters": {
     "mode": "Include"
   },

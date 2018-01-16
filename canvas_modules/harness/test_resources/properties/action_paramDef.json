@@ -1,4 +1,7 @@
 {
+  "titleDefinition": {
+    "title": "Action Test"
+  },
   "current_parameters": {
     "number": 0,
     "fields": [

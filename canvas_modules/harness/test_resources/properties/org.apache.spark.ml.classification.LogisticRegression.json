@@ -1,4 +1,7 @@
 {
+  "titleDefinition": {
+    "title": "Logistic Regression"
+  },
   "current_parameters": {
     "targetField": [],
     "inputFieldList": [],

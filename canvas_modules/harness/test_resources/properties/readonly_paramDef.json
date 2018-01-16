@@ -1,4 +1,8 @@
 {
+  "titleDefinition": {
+    "title": "Readonly Fields",
+    "editable": false
+  },
   "current_parameters": {
     "readonly_num": 10,
     "readonly_text": "The more I study, the more insatiable do I feel my genius for it to be. 'Ada Lovelace'",

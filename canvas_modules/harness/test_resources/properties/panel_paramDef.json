@@ -1,4 +1,7 @@
 {
+  "titleDefinition": {
+    "title": "Panels"
+  },
   "current_parameters": {
     "fruit-color": "red",
     "number": 11

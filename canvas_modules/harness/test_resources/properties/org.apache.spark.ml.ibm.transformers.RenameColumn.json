@@ -1,4 +1,7 @@
 {
+  "titleDefinition": {
+    "title": "Rename Columns"
+  },
   "current_parameters": {
     "renamed_fields": [
       ["Age", "Age"],

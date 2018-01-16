@@ -1,4 +1,7 @@
 {
+  "titleDefinition": {
+    "title": "Sort"
+  },
   "current_parameters": {
     "annotation": "",
     "use_custom_name": true,

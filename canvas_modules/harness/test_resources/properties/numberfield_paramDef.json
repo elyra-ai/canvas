@@ -1,4 +1,7 @@
 {
+  "titleDefinition": {
+    "title": "Number Fields"
+  },
   "current_parameters": {
     "number_int": 10,
     "number_dbl": 11.012,

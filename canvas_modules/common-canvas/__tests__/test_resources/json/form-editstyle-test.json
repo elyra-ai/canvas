@@ -1,5 +1,8 @@
 {
   "paramDef": {
+    "titleDefinition": {
+      "title": "Form editstyle test"
+    },
     "current_parameters": {
       "renamed_fields": [
         [
@@ -227,7 +230,8 @@
   },
   "expectedResult": {
     "componentId": "rename",
-    "label": "Rename Columns",
+    "label": "Form editstyle test",
+    "labelEditable": true,
     "editorSize": "large",
     "uiItems": [
       {

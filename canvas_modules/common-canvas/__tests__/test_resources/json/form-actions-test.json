@@ -1,5 +1,8 @@
 {
   "paramDef": {
+    "titleDefinition": {
+      "title": "Form actions test"
+    },
     "current_parameters": {
       "number": 10,
       "fields": [
@@ -202,7 +205,8 @@
   },
   "expectedResult": {
     "componentId": "actions",
-    "label": "Action Test",
+    "label": "Form actions test",
+    "labelEditable": true,
     "editorSize": "large",
     "uiItems": [
       {

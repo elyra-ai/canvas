@@ -1,4 +1,7 @@
 {
+  "titleDefinition": {
+    "title": "Gradient Boosted Tree Classifier"
+  },
   "current_parameters": {
     "targetField": [],
     "inputFieldList": [

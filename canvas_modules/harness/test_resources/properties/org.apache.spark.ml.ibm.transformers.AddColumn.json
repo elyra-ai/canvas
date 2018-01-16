@@ -1,4 +1,7 @@
 {
+  "titleDefinition": {
+    "title": "Add Column"
+  },
   "current_parameters": {
     "colName": "",
     "col": "",

@@ -205,6 +205,13 @@ class CommonProperties extends React.Component {
 
 			let propertiesTitle = <div />;
 			let buttonsContainer = <div />;
+			const propertiesTitleEdit = formData.labelEditable === false ? <div />
+				: (<a id="title-edit-right-flyout-panel" onClick={this.editTitleClickHandler}>
+					<img id="title-edit-icon-right-flyout-panel"
+						src={editIcon}
+					/>
+				</a>);
+
 			if (this.props.rightFlyout) {
 				propertiesTitle = (<div id="node-title-container-right-flyout-panel">
 					<div id="node-title-right-flyout-panel">
@@ -220,11 +227,7 @@ class CommonProperties extends React.Component {
 							style={this.state.propertiesTitleEditStyle}
 						/>
 					</div>
-					<a id="title-edit-right-flyout-panel" onClick={this.editTitleClickHandler}>
-						<img id="title-edit-icon-right-flyout-panel"
-							src={editIcon}
-						/>
-					</a>
+					{propertiesTitleEdit}
 				</div>);
 				buttonsContainer = (<PropertiesButtons
 					okHandler={this.applyPropertiesEditing}

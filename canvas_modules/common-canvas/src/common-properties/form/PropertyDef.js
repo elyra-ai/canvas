@@ -16,11 +16,12 @@ import { ResourceDef } from "./L10nProvider";
 import propertyOf from "lodash/propertyOf";
 
 export class PropertyDef {
-	constructor(cname, icon, editorSize, label, description, structureMetadata, parameterMetadata, groupMetadata, actionMetadata) {
+	constructor(cname, icon, editorSize, label, labelEditable, description, structureMetadata, parameterMetadata, groupMetadata, actionMetadata) {
 		this.name = cname;
 		this.icon = icon;
 		this.editorSize = editorSize;
-		this.label = ResourceDef.make(label);
+		this.label = label;
+		this.labelEditable = labelEditable;
 		this.description = ResourceDef.make(description);
 		this.structureMetadata = structureMetadata;
 		this.parameterMetadata = parameterMetadata;
@@ -40,18 +41,23 @@ export class PropertyDef {
 	}
 
 
-	static makePropertyDef(parameters, structures, uihints) {
+	static makePropertyDef(titleDefinition, parameters, structures, uihints) {
 		if (parameters) {
 			// structures aren't in current spec
 			const structureMetadata = StructureMetadata.makeStructureMetadata(structures, propertyOf(uihints)("complex_type_info"));
 			const parameterMetadata = ParameterMetadata.makeParameterMetadata(parameters, propertyOf(uihints)("parameter_info"));
 			const actionMetadata = ActionMetadata.makeActionMetadata(propertyOf(uihints)("action_info"));
 			const groupMetadata = GroupMetadata.makeGroupMetadata(propertyOf(uihints)("group_info"));
+
+			const label = titleDefinition && titleDefinition.title ? titleDefinition.title : "";
+			const labelEditable = titleDefinition && typeof titleDefinition.editable !== "undefined" ? titleDefinition.editable : true;
+
 			return new PropertyDef(
 				propertyOf(uihints)("id"),
 				propertyOf(uihints)("icon"),
 				propertyOf(uihints)("editor_size"),
-				propertyOf(uihints)("label"),
+				label,
+				labelEditable,
 				propertyOf(uihints)("description"),
 				structureMetadata,
 				parameterMetadata,

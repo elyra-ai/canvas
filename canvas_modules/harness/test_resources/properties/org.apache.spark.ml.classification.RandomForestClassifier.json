@@ -1,4 +1,7 @@
 {
+  "titleDefinition": {
+    "title": "Random Forest Classifier"
+  },
   "current_parameters": {
     "targetField": [],
     "inputFieldList": [

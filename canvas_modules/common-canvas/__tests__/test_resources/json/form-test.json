@@ -1,5 +1,8 @@
 {
   "paramDef": {
+    "titleDefinition": {
+      "title": "TestOp label: resource"
+    },
     "parameters": [
       {
         "id": "target",
@@ -163,6 +166,7 @@
   "expectedResult": {
    "componentId":"TestOp",
    "label":"TestOp label: resource",
+   "labelEditable": true,
    "editorSize":"large",
    "uiItems":[
       {

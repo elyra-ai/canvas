@@ -1,5 +1,8 @@
 {
   "paramDef": {
+    "titleDefinition": {
+      "title": "Form placement test"
+    },
     "current_parameters": {
       "cols": []
     },
@@ -145,7 +148,8 @@
   },
   "expectedResult": {
     "componentId": "org.apache.spark.ml.ibm.transformers.Distinct",
-    "label": "Distinct",
+    "label": "Form placement test",
+    "labelEditable": true,
     "editorSize": "large",
     "uiItems": [
       {

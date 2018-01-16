@@ -25,7 +25,13 @@ module.exports = function() {
 
 	this.Then("I click on title edit icon", function() {
 		var editTitle = browser.$("#title-edit-right-flyout-panel");
+		expect(editTitle).not.toBe(null);
 		editTitle.click();
+	});
+
+	this.Then("I verify there is no title edit icon", function() {
+		var editTitle = browser.$$("#title-edit-right-flyout-panel");
+		expect(editTitle.length).toEqual(0);
 	});
 
 	this.Then(/^I enter new title "([^"]*)"$/, function(newTitle) {
