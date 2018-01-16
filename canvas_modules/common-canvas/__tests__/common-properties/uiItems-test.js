@@ -28,7 +28,7 @@ describe("editor-form renders correctly with correct uiItems", () => {
 		expect(staticTextWithIcon.at(0).text()).to.equal("Hint: should have a separator after and icon");
 		expect(staticText.at(3).text()).to.equal("Sum: 2 with (numberfield, 2, numberfield). Percent: 0");
 		const input = wrapper.find("[type='number']");
-		input.simulate("change", { target: { value: 44 } });
+		input.simulate("change", { target: { value: "44" } });
 		staticText = wrapper.find(".static-text");
 		expect(staticText.at(3).text()).to.equal("Sum: 90 with (numberfield, 2, numberfield). Percent: 2.27");
 	});

@@ -11,12 +11,25 @@
         "string",
         "Readonly phrase"
       ]
+    ],
+    "inlineEditingTable": [
+      [
+        "1",
+        "1.234",
+        "Age >= 55"
+      ]
     ]
   },
   "parameters": [
     {
       "id": "structurelisteditorTableInput",
       "type": "array[structurelisteditorTableInput]",
+      "role": "column",
+      "default": []
+    },
+    {
+      "id": "inlineEditingTable",
+      "type": "array[inlineEditingTable]",
       "role": "column",
       "default": []
     }
@@ -55,6 +68,29 @@
           "type": "string"
         }
       ]
+    },
+    {
+      "id": "inlineEditingTable",
+      "parameters": [
+        {
+          "id": "valueName",
+          "type": "integer",
+          "default": "1",
+          "role": "new_column"
+        },
+        {
+          "id": "doubleName",
+          "type": "double",
+          "default": "1.2",
+          "role": "new_column"
+        },
+        {
+          "id": "condition",
+          "type": "string",
+          "default": "",
+          "role": "expression"
+        }
+      ]
     }
   ],
   "uihints": {
@@ -75,24 +111,33 @@
         "description": {
           "default": "The index column will be auto-populated with an integer value for each row starting at 1. Subsequent rows will be incremented by 1."
         }
+      },
+      {
+        "parameter_ref": "inlineEditingTable",
+        "label": {
+          "default": "Values"
+        },
+        "description": {
+          "default": "Complex table control list editor table input"
+        }
       }
     ],
     "complex_type_info": [
       {
         "complex_type_ref": "structurelisteditorTableInput",
         "parameters": [
-					{
-	          "parameter_ref": "readonly_numbered_column_index",
-	          "label": {
-	            "resource_key": "structurelisteditorTableInput.readonly_numbered_column_index.label"
-	          },
-	          "width": 15,
-	          "generated_values": {
-	            "operation": "index"
-	          },
-	          "control": "readonly",
+          {
+            "parameter_ref": "readonly_numbered_column_index",
+            "label": {
+              "resource_key": "structurelisteditorTableInput.readonly_numbered_column_index.label"
+            },
+            "width": 15,
+            "generated_values": {
+              "operation": "index"
+            },
+            "control": "readonly",
             "summary": true
-	        },
+          },
           {
             "parameter_ref": "name",
             "label": {
@@ -134,6 +179,53 @@
             "width": 20
           }
         ]
+      },
+      {
+        "complex_type_ref": "inlineEditingTable",
+        "row_selection": "single",
+        "parameters": [
+          {
+            "parameter_ref": "valueName",
+            "label": {
+              "default": "Integer Field",
+              "resource_key": "expressionCellTable.name.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.name.desc"
+            },
+            "width": 10,
+            "edit_style": "inline",
+            "summary": true
+          },
+          {
+            "parameter_ref": "doubleName",
+            "label": {
+              "default": "Double Field",
+              "resource_key": "expressionCellTable.doubleName.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.doubleName.desc"
+            },
+            "width": 10,
+            "edit_style": "inline",
+            "summary": true
+          },
+          {
+            "parameter_ref": "condition",
+            "language": "CLEM",
+            "label": {
+              "resource_key": "expressionCellTable.description.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.description.desc"
+            },
+            "width": 15,
+            "edit_style": "on_panel",
+            "place_holder_text": {
+              "default": "Enter condition expression"
+            }
+          }
+        ]
       }
     ],
     "group_info": [
@@ -152,6 +244,21 @@
                 "id": "Structure Table Inline Control",
                 "parameter_refs": [
                   "structurelisteditorTableInput"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "Values",
+            "type": "summaryPanel",
+            "label": {
+              "default": "Configure Inline Editing Table"
+            },
+            "group_info": [
+              {
+                "id": "Inline editing",
+                "parameter_refs": [
+                  "inlineEditingTable"
                 ]
               }
             ]
@@ -241,6 +348,11 @@
     "structurelisteditorTableInput.name.desc": "Enter a name",
     "structurelisteditorTableInput.description.label": "Description",
     "structurelisteditorTableInput.readonly_numbered_column_index.label": "Index",
-    "structurelisteditorTableInput.description.desc": "Enter a description"
+    "structurelisteditorTableInput.description.desc": "Enter a description",
+    "expressionCellTable.name.label": "integer Field",
+    "expressionCellTable.name.desc": "Enter an integer",
+    "expressionCellTable.description.label": "If This Condition Is True",
+    "expressionCellTable.doubleName.label": "double Field",
+    "expressionCellTable.doubleName.desc": "Enter a double"
   }
 }

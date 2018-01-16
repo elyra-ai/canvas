@@ -36,6 +36,9 @@ export const messages = {
 
 	"dialog.nodePropertiesTitle": "Node Properties",
 
+	/* ------------------------------ */
+	/* labels and deafault values     */
+	/* ------------------------------ */
 	"subPanel.button.tooltip": "Edit",
 	"structureListEditor.addButton.label": "Add Value",
 	"structureListEditor.removeButton.tooltip": "Delete selected rows",
@@ -53,6 +56,8 @@ export const messages = {
 	"fieldPicker.dataTypeColumn.label": "Data type",
 	"flyout.applyButton.label": "OK",
 	"flyout.rejectButton.label": "Cancel",
+	"propertiesEdit.applyButton.label": "Save",
+	"propertiesEdit.rejectButton.label": "Cancel",
 	"table.search.placeholder": "Search in column",
 	"summary.longTable.placeholder": "More than ten fields..."
 };

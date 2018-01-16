@@ -76,7 +76,6 @@ module.exports = function() {
 				const index = Number(commentIndex) - 1;
 				commentValue = browser.$("#common-canvas-items-container-0").$$("textarea")[index].getValue();
 			}
-			console.log("Commentvalue " + commentValue);
 			expect(commentValue).toEqual(comment);
 
 			// verify that the comment is in the internal object model
@@ -215,7 +214,6 @@ module.exports = function() {
 	this.Then(/^I verify the number of comments are (\d+)$/, function(comments) {
 		try {
 			var commentsLength = browser.$$(".comment-group").length;
-			console.log("commentsLength" + commentsLength);
 			expect(Number(comments)).toEqual(commentsLength);
 
 			// verify the number of comments is in the internal object model

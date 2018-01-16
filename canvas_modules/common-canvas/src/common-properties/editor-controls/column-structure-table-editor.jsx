@@ -18,6 +18,7 @@ import ToggletextControl from "./toggletext-control.jsx";
 import ReadonlyControl from "./readonly-control.jsx";
 import OneofselectControl from "./oneofselect-control.jsx";
 import TextfieldControl from "./textfield-control.jsx";
+import NumberfieldControl from "./numberfield-control.jsx";
 import CheckboxControl from "./checkbox-control.jsx";
 import ExpressionControl from "./expression-control.jsx";
 import FlexibleTable from "./flexible-table.jsx";
@@ -318,6 +319,12 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			/>);
 		} else if (columnDef.controlType === "readonly" && columnDef.editStyle !== "subpanel") {
 			cellContent = (<ReadonlyControl
+				control={columnDef}
+				controller={this.props.controller}
+				propertyId={propertyId}
+			/>);
+		} else if (columnDef.controlType === "numberfield" && columnDef.editStyle !== "subpanel") {
+			cellContent = (<NumberfieldControl
 				control={columnDef}
 				controller={this.props.controller}
 				propertyId={propertyId}

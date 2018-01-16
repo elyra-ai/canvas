@@ -985,7 +985,7 @@ class CommonPropertiesComponents extends React.Component {
 					their own in panels. The following controls are supported for complex types:&nbsp;
 					<span className="highlight">toggletext</span>, <span className="highlight">oneofselect</span>,&nbsp;
 					<span className="highlight">enum</span>, <span className="highlight">textfield</span>,&nbsp;
-						and <span className="highlight">expression</span></p>
+					<span className="highlight">numberField</span> and <span className="highlight">expression</span></p>
 			</div>
 			<div className="properties-documentation-section-content">
 				<div className="properties-documentation-panels-controls-component">

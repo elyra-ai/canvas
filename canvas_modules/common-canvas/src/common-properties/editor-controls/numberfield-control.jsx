@@ -28,11 +28,46 @@ export default class NumberfieldControl extends EditorControl {
 	}
 
 	handleChange(evt) {
-		// needed since in a number like 10.0 the .0 is stripped off so users couldn't enter 10.02
-		this.stringValue = evt.target.value;
-		var numValue = parseFloat(this.stringValue);
-		if (isNaN(numValue) || (evt.target.value === "")) {
-			numValue = null;
+		var originalValue = JSON.parse(JSON.stringify(this.stringValue));
+		var numValue = null;
+		// if integer only allow signed numbers.
+		if (this.props.control.valueDef && this.props.control.valueDef.propType === "integer") {
+			const signedDigits = /^[-+]?[0-9]+$/;
+			if (typeof evt.target.value === "undefined" || evt.target.value === null ||
+			evt.target.value === "") {
+				this.stringValue = "";
+			} else if (evt.target.value.match(signedDigits)) {
+				// does not contain invalid integers characters
+				this.stringValue = evt.target.value;
+			} else {
+				// if a non digit was entered do not accept the input (stays at the original value)
+				this.stringValue = originalValue;
+			}
+			if (this.stringValue !== "") {
+				numValue = parseInt(this.stringValue, 10);
+			}
+		// it is a double
+		} else if (evt.target.value === "" && this.stringValue.length !== 1) {
+			// this case a NaN enter and not delete of last characters
+			// set to original value
+			this.stringValue = originalValue;
+			numValue = this.props.controller.getPropertyValue(this.props.propertyId);
+		} else {
+			this.stringValue = evt.target.value;
+			if (this.stringValue !== "") {
+				numValue = parseFloat(this.stringValue);
+			}
+		}
+		// if an invalid character entered then do not change any values
+		if (this.stringValue !== "" && isNaN(numValue)) {
+			this.stringValue = originalValue;
+			numValue = this.props.controller.getPropertyValue(this.props.propertyId);
+		}
+
+		// Need to do this so that the cursor doesn't go to the start of the input area when deleting characters
+		if (originalValue.indexOf(".") > -1 && this.stringValue.indexOf(".") === -1) {
+			evt.target.value = "";
+			evt.target.value = this.stringValue;
 		}
 		this.props.controller.updatePropertyValue(this.props.propertyId, numValue);
 

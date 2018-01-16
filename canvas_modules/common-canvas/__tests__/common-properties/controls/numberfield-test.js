@@ -28,7 +28,17 @@ const control = {
 	charLimit: 15,
 	additionalText: "Enter number",
 	valueDef: {
-		isList: false
+		isList: false,
+		propType: "integer"
+	}
+};
+const controlDouble = {
+	name: "test-numberfield",
+	charLimit: 15,
+	additionalText: "Enter number",
+	valueDef: {
+		isList: false,
+		propType: "double"
 	}
 };
 const control2 = {
@@ -165,8 +175,37 @@ describe("numberfield-control renders correctly", () => {
 			/>
 		);
 		const input = wrapper.find("[type='number']");
-		input.simulate("change", { target: { value: 44 } });
+		input.simulate("change", { target: { value: "44" } });
 		expect(controller.getPropertyValue(propertyId)).to.equal(44);
+	});
+
+	it("should not allow a double value in an integer type `NumberfieldControl`", () => {
+		setPropertyValue();
+		const wrapper = mount(
+			<NumberfieldControl
+				control={control}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const input = wrapper.find("[type='number']");
+		input.simulate("change", { target: { value: "44.23" } });
+		// do not accept "44.23" so it is still the original value from setPropertyValue (1)
+		expect(controller.getPropertyValue(propertyId)).to.equal(1);
+	});
+
+	it("should allow a double value in a double type `NumberfieldControl`", () => {
+		setPropertyValue();
+		const wrapper = mount(
+			<NumberfieldControl
+				control={controlDouble}
+				controller={controller}
+				propertyId={propertyId}
+			/>
+		);
+		const input = wrapper.find("[type='number']");
+		input.simulate("change", { target: { value: "44.23" } });
+		expect(controller.getPropertyValue(propertyId)).to.equal(44.23);
 	});
 
 	it("should set correct state null in `NumberfieldControl`", () => {
@@ -283,7 +322,7 @@ describe("condition messages renders correctly with numberfield control", () => 
 
 		const input = wrapper.find("input[id='editor-control-numberfieldCheckpointInterval']");
 		expect(input).to.have.length(1);
-		input.simulate("change", { target: { value: -100 } });
+		input.simulate("change", { target: { value: "-100" } });
 		wrapper.update();
 
 		const numberfieldCheckpointIntervalErrorMessages = {

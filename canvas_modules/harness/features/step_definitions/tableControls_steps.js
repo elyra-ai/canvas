@@ -22,20 +22,27 @@ module.exports = function() {
 
 	this.Then(/^I verify that "([^"]*)" is a value in the "([^"]*)" cell of row (\d+) in the table "([^"]*)"$/,
 		function(cellValue, cellLabel, rowNumber, tableControlId) {
-			const table = browser.$("#" + tableControlId);
-			const selectRow = table.$("#flexible-table-container")
-				.$(".reactable-data")
-				.$$("tr");
-			const cells = selectRow[Number(rowNumber) - 1].$$("td");
-			var cell = null;
-			for (var idx = 0; idx < cells.length; idx++) {
-				if (cells[idx].getAttribute("label") === cellLabel) {
-					cell = cells[idx];
-					break;
-				}
-			}
+			const cell = getCell(cellLabel, rowNumber, tableControlId);
 			expect(cell).not.toBe(null);
 			expect(cell.getText()).toBe(cellValue);
+		});
+
+	this.Then(/^I verify that the inline "([^"]*)" field has "([^"]*)" as a value in the "([^"]*)" cell of row (\d+) in the table "([^"]*)"$/,
+		function(inlineType, cellValue, cellLabel, rowNumber, tableControlId) {
+			const cell = getCell(cellLabel, rowNumber, tableControlId);
+			expect(cell).not.toBe(null);
+			if (inlineType === "number") {
+				expect(cell.getAttribute("input", "value")).toBe(cellValue);
+			}
+		});
+
+	this.Then(/^I enter the value "([^"]*)" in the inline "([^"]*)" field for the "([^"]*)" cell of row (\d+) in the table "([^"]*)"$/,
+		function(cellValue, inlineType, cellLabel, rowNumber, tableControlId) {
+			const cell = getCell(cellLabel, rowNumber, tableControlId);
+			expect(cell).not.toBe(null);
+			if (inlineType === "number") {
+				cell.setValue("#editor-control-" + cellLabel, cellValue);
+			}
 		});
 
 	this.Then(/^I click the "([^"]*)" button on the "([^"]*)" table$/, function(buttonName, tableName) {
@@ -126,4 +133,20 @@ module.exports = function() {
 			moveButtons[3].click();
 		}
 	});
+
+	function getCell(cellLabel, rowNumber, tableControlId) {
+		const table = browser.$("#" + tableControlId);
+		const selectRow = table.$("#flexible-table-container")
+			.$(".reactable-data")
+			.$$("tr");
+		const cells = selectRow[Number(rowNumber) - 1].$$("td");
+		var cell = null;
+		for (var idx = 0; idx < cells.length; idx++) {
+			if (cells[idx].getAttribute("label") === cellLabel) {
+				cell = cells[idx];
+				break;
+			}
+		}
+		return cell;
+	}
 };
