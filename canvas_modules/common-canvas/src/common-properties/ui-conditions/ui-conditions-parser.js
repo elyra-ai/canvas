@@ -17,7 +17,7 @@ function parseInput(definition) {
 	var data = definition;
 	if (data.evaluate) {
 		var paramsList = [];
-		evaluate(data.evaluate, paramsList);
+		evaluate(data.evaluate, paramsList, data.parameter_ref);
 		// remove duplicates in paramsList array
 		var uniqueList = Array.from(new Set(paramsList));
 		if (uniqueList.length > 1) {
@@ -34,13 +34,13 @@ function parseInput(definition) {
 /**
  * Evaluate Definition
  */
-function evaluate(data, paramsList) {
+function evaluate(data, paramsList, defaultParameter) {
 	if (data.or) {
-		or(data.or, paramsList);
+		or(data.or, paramsList, defaultParameter);
 	} else if (data.and) {
-		and(data.and, paramsList);
+		and(data.and, paramsList, defaultParameter);
 	} else if (data.condition) { // condition
-		condition(data.condition, paramsList);
+		condition(data.condition, paramsList, defaultParameter);
 	} else {
 		throw new Error("Failed to parse definition");
 	}
@@ -49,9 +49,9 @@ function evaluate(data, paramsList) {
 /**
  * The 'or' condition.
  */
-function or(data, paramsList) {
+function or(data, paramsList, defaultParameter) {
 	for (let i = 0; i < data.length; i++) {
-		evaluate(data[i], paramsList);
+		evaluate(data[i], paramsList, defaultParameter);
 	}
 }
 
@@ -61,19 +61,24 @@ function or(data, paramsList) {
  * @param {Object} data an array of items
  * @return {boolean}
  */
-function and(data, paramsList) {
+function and(data, paramsList, defaultParameter) {
 	for (let i = 0; i < data.length; i++) {
-		evaluate(data[i], paramsList);
+		evaluate(data[i], paramsList, defaultParameter);
 	}
 }
 
 /**
  * A parameter condition.
  */
-function condition(data, paramsList) {
-	paramsList.push(data.parameter_ref);
-	if (data.parameter_2_ref) {
-		paramsList.push(data.parameter_2_ref);
+function condition(data, paramsList, defaultParameter) {
+	if (data.parameter_ref) {
+		paramsList.push(data.parameter_ref);
+		if (data.parameter_2_ref) {
+			paramsList.push(data.parameter_2_ref);
+		}
+	} else {
+		// needed for filtering of dm fields
+		paramsList.push(defaultParameter);
 	}
 }
 

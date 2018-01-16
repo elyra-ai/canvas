@@ -46,9 +46,8 @@ class StructurelisteditorControl extends ColumnStructureTableEditor {
 		}
 	}
 
-	addRow() {
-		const newRow = JSON.parse(JSON.stringify(this.props.control.defaultRow));
-		// logger.info(newRow);
+	addRow(control) {
+		const newRow = JSON.parse(JSON.stringify(control.defaultRow));
 		const rows = this.getCurrentControlValue();
 		rows.push(newRow);
 

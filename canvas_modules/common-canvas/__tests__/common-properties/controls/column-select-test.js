@@ -10,11 +10,15 @@
 import React from "react";
 import ColumnSelectControl from "../../../src/common-properties/editor-controls/column-select-control.jsx";
 import { mountWithIntl } from "enzyme-react-intl";
+import { ReactWrapper } from "enzyme";
 import { expect } from "chai";
 import sinon from "sinon";
 import propertyUtils from "../../_utils_/property-utils";
 import Controller from "../../../src/common-properties/properties-controller";
 import isEqual from "lodash/isEqual";
+
+import selectcolumnsParamDef from "../../test_resources/paramDefs/selectcolumns_paramDef.json";
+
 
 const CONDITIONS_TEST_FORM_DATA = require("../../test_resources/json/conditions-test-formData.json");
 
@@ -228,5 +232,35 @@ describe("condition messages renders correctly with columnselect control", () =>
 
 		expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
 		expect(wrapper.find(".form__validation--error")).to.have.length(1);
+	});
+});
+
+describe("selectcolumns control filters values correctly", () => {
+	const wrapper = propertyUtils.flyoutEditorForm(selectcolumnsParamDef);
+	it("should filter values from selectcolumn control", () => {
+		const filterCategory = wrapper.find(".category-title-container-right-flyout-panel").at(2); // get the filter category
+		const addFieldsButtons = filterCategory.find("Button"); // field picker buttons
+		addFieldsButtons.at(0).simulate("click"); // open filter picker for `Filter by Type` control
+		const fphtml = document.getElementById("field-picker-table"); // needed since modal dialogs are outside `wrapper`
+		const fieldpicker = new ReactWrapper(fphtml, true);
+		const rows = fieldpicker.find(".field-picker-data-rows");
+		// check the 4 rows of data to make sure age* is returned
+		expect(rows).to.have.length(4);
+		let age = rows.at(0).find("td")
+			.at(1)
+			.text();
+		expect(age).to.equal("age");
+		age = rows.at(1).find("td")
+			.at(1)
+			.text();
+		expect(age).to.equal("age2");
+		age = rows.at(2).find("td")
+			.at(1)
+			.text();
+		expect(age).to.equal("age3");
+		age = rows.at(3).find("td")
+			.at(1)
+			.text();
+		expect(age).to.equal("age4");
 	});
 });

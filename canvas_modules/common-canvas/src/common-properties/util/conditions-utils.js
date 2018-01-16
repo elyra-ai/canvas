@@ -13,7 +13,6 @@ import logger from "../../../utils/logger";
 import UiConditions from "../ui-conditions/ui-conditions.js";
 import { DEFAULT_VALIDATION_MESSAGE, STATES } from "../constants/constants.js";
 
-
 function validateConditions(controller, visibleDefinition, enabledDefinitions, dataModel) {
 	_validateVisible(controller, visibleDefinition, dataModel);
 	_validateEnabled(controller, enabledDefinitions, dataModel);
@@ -31,7 +30,7 @@ function _validateVisible(controller, visibleDefinition, dataModel) {
 			for (const visDefinition of visibleDefinition[visibleKey]) {
 				const baseId = _getPropertyId(visibleKey);
 				const controlType = controller.getControlType(baseId);
-				var cellCoords = null;
+				let cellCoords = null;
 				try {
 					// table value.  Might need to also support not table arrays
 					if (baseId.col) {
@@ -55,7 +54,7 @@ function _validateVisible(controller, visibleDefinition, dataModel) {
 	}
 }
 function _setValidateVisible(definition, propertyValues, controlType, dataModel, cellCoords, newStates) {
-	var visOutput = UiConditions.validateInput(definition, propertyValues, controlType, dataModel,
+	const visOutput = UiConditions.validateInput(definition, propertyValues, controlType, dataModel,
 		cellCoords);
 	if (visOutput === true) { // control should be visible
 		for (const paramRef of definition.visible.parameter_refs) {
@@ -88,7 +87,7 @@ function _validateEnabled(controller, enabledDefinitions, dataModel) {
 			for (const enbDefinition of enabledDefinitions[enabledKey]) {
 				const baseId = _getPropertyId(enabledKey);
 				const controlType = controller.getControlType(baseId);
-				var cellCoords = null;
+				let cellCoords = null;
 				try {
 					// table value.  Might need to also support not table arrays
 					if (baseId.col) {
@@ -112,7 +111,7 @@ function _validateEnabled(controller, enabledDefinitions, dataModel) {
 }
 
 function _setValidateEnabled(definition, propertyValues, controlType, dataModel, cellCoords, newStates) {
-	var enbOutput = UiConditions.validateInput(definition, propertyValues, controlType, dataModel,
+	const enbOutput = UiConditions.validateInput(definition, propertyValues, controlType, dataModel,
 		cellCoords);
 	if (enbOutput === true) { // control should be enabled
 		for (const paramRef of definition.enabled.parameter_refs) {
@@ -195,7 +194,7 @@ function validateInput(propertyId, controller, validationDefinitions, datasetMet
 	if (!validationDefinitions) {
 		return;
 	}
-	var control = controller.getControl(propertyId);
+	const control = controller.getControl(propertyId);
 	if (!control) {
 		logger.warn("Control not found for " + propertyId.name);
 		return;
@@ -295,5 +294,21 @@ function _extractValidationDefinitions(propertyId, validationDefinitions) {
 	return retVal;
 }
 
+/*
+* Filters the datamodel fields for a parameter.
+*/
+function filterConditions(propertyId, filterDefinitions, controller, datasetMetadata) {
+	// filters only have 1 definition
+	if (filterDefinitions[propertyId.name] && filterDefinitions[propertyId.name][0]) {
+		try {
+			return UiConditions.filter(filterDefinitions[propertyId.name][0].definition, controller, datasetMetadata);
+		} catch (error) {
+			logger.warn("Error thrown in filter: " + error);
+		}
+	}
+	return datasetMetadata;
+}
+
 module.exports.validateConditions = validateConditions;
 module.exports.validateInput = validateInput;
+module.exports.filterConditions = filterConditions;

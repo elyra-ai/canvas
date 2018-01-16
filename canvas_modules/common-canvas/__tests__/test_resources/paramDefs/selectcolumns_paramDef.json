@@ -1,7 +1,4 @@
 {
-  "titleDefinition": {
-    "title": "Select Columns"
-  },
   "current_parameters": {
     "fields": [
       "age"

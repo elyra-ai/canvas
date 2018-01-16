@@ -11,6 +11,10 @@
 
 import logger from "../../../utils/logger";
 import PropertyUtils from "../util/property-utils.js";
+import cloneDeep from "lodash/cloneDeep";
+import intersectionWith from "lodash/intersectionWith";
+import unionWith from "lodash/unionWith";
+import isEqual from "lodash/isEqual";
 
 const ERROR = "error";
 const WARNING = "warning";
@@ -35,11 +39,11 @@ function _validateTable(validationDefinition, userInput, control, dataModel, req
 	// get the control for the table,
 	// need to use controller.getControl({ name: propertyId.name })so it does not return the control for the cell.
 	const tableControl = (propertyId.col) ? controller.getControl({ name: propertyId.name }) : null;
-	var tableControlName = propertyId.name;
-	var rowIndex = propertyId.row;
-	var colIndex = propertyId.col;
-	var keyIndex = (propertyId.col) ? tableControl.keyIndex : control.keyIndex;
-	var tableControlType = (propertyId.col) ? tableControl.controlType : control.controlType;
+	const tableControlName = propertyId.name;
+	const rowIndex = propertyId.row;
+	const colIndex = propertyId.col;
+	const keyIndex = (propertyId.col) ? tableControl.keyIndex : control.keyIndex;
+	const tableControlType = (propertyId.col) ? tableControl.controlType : control.controlType;
 
 	// For tables we need to evaluate all non-keyDef cells
 	const cellValues = userInput[tableControlName];
@@ -81,7 +85,7 @@ function _validateTable(validationDefinition, userInput, control, dataModel, req
 * @param {Object} cellCoordinates Cell coordinates for tables
 */
 function validateInput(definition, userInput, controlType, dataModel, cellCoordinates, requiredParameters) {
-	var data = definition;
+	const data = definition;
 	const info = {
 		controlType: controlType,
 		dataModel: dataModel,
@@ -128,9 +132,7 @@ function validateInput(definition, userInput, controlType, dataModel, cellCoordi
  * @return {boolean} true if valid, failMessage {Object} if false.
  */
 function validation(validationData, userInput, info) {
-	// logger.info("Validation check");
-	// var data = JSON.parse(validationData);
-	var data = validationData;
+	const data = validationData;
 	info.conditionType = "validation";
 	if (data.fail_message && data.evaluate) {
 		return evaluate(data.evaluate, userInput, info) || failedMessage(data.fail_message);
@@ -170,9 +172,7 @@ function validation(validationData, userInput, info) {
  * @return {boolean} true if valid.
  */
 function enabled(enabledData, userInput, info) {
-	// logger.info("Enablement check");
-	// var data = JSON.parse(enabledData);
-	var data = enabledData;
+	const data = enabledData;
 	info.conditionType = "enabled";
 	if (data.parameter_refs && data.evaluate) {
 		return evaluate(data.evaluate, userInput, info);
@@ -212,14 +212,19 @@ function enabled(enabledData, userInput, info) {
  * @return {boolean} true if valid.
  */
 function visible(visibleData, userInput, info) {
-	// logger.info("Visibility check");
-	// var data = JSON.parse(visibleData);
-	var data = visibleData;
+	const data = visibleData;
 	info.conditionType = "visible";
 	if (data.parameter_refs && data.evaluate) {
 		return evaluate(data.evaluate, userInput, info);
 	}
 	throw new Error("Invalid visible schema");
+}
+
+function filter(filterDef, controller, datasetMetadata) {
+	if (filterDef && filterDef.filter && filterDef.filter.evaluate) {
+		return evaluateFilter(filterDef.filter.evaluate, controller, datasetMetadata);
+	}
+	return datasetMetadata;
 }
 
 /**
@@ -234,6 +239,20 @@ function evaluate(data, userInput, info) {
 		return condition(data.condition, userInput, info);
 	}
 	throw new Error("Failed to parse definition");
+}
+
+/**
+ * Evaluate Definition.
+ */
+function evaluateFilter(conditionItem, controller, datasetMetadata) {
+	if (conditionItem.or) {
+		return orFilter(conditionItem.or, controller, datasetMetadata);
+	} else if (conditionItem.and) {
+		return andFilter(conditionItem.and, controller, datasetMetadata);
+	} else if (conditionItem.condition) { // condition
+		return conditionFilter(conditionItem.condition, controller, datasetMetadata);
+	}
+	throw new Error("Failed to parse filter definition");
 }
 
 /**
@@ -252,6 +271,16 @@ function or(data, userInput, info) {
 		}
 	}
 	return false;
+}
+
+function orFilter(conditionItems, controller, datasetMetadata) {
+	const filteredData = cloneDeep(datasetMetadata);
+	filteredData.fields = [];
+	for (const item of conditionItems) {
+		const newData = evaluateFilter(item, controller, datasetMetadata);
+		filteredData.fields = unionWith(filteredData.fields, newData.fields, isEqual);
+	}
+	return filteredData;
 }
 
 /**
@@ -274,6 +303,15 @@ function and(data, userInput, info) {
 	return true;
 }
 
+function andFilter(conditionItems, controller, datasetMetadata) {
+	const filteredData = cloneDeep(datasetMetadata);
+	for (const item of conditionItems) {
+		const newData = evaluateFilter(item, controller, datasetMetadata);
+		filteredData.fields = intersectionWith(filteredData.fields, newData.fields, isEqual);
+	}
+	return filteredData;
+}
+
 /**
  * A parameter condition. Evaluates to true or false.
  * @param {Object} data.op A single operator for the properties of the condition.
@@ -284,10 +322,10 @@ function and(data, userInput, info) {
  * @return {boolean} true if the parameter(s) satisfy the condition
  */
 function condition(data, userInput, info) {
-	var op = data.op;
-	var param = data.parameter_ref;
-	var param2 = data.parameter_2_ref;
-	var value = data.value;
+	const op = data.op;
+	const param = data.parameter_ref;
+	const param2 = data.parameter_2_ref;
+	const value = data.value;
 
 	// Separate any complex type sub-control reference
 	let paramName = param;
@@ -305,7 +343,7 @@ function condition(data, userInput, info) {
 		throw new Error("param " + paramName + " not found in userInput");
 	}
 
-	var paramInput = _getUserInput(userInput, paramName, { rowIndex: row, colIndex: column });
+	const paramInput = _getUserInput(userInput, paramName, { rowIndex: row, colIndex: column });
 
 	if (typeof param2 !== "undefined" && info.conditionType && info.conditionType === "validation" &&
 		op !== "isEmpty" && op !== "isNotEmpty" && op !== "cellNotEmpty") {
@@ -342,6 +380,50 @@ function condition(data, userInput, info) {
 	}
 }
 
+/**
+ * A parameter condition. Evaluates to true or false.
+ * @param {Object} data.op A single operator for the properties of the condition.
+ * @param {Object} data.value optional value the condition checks for
+ * @param {Object} info optional dataset metadata and cell coordinates info
+ */
+function conditionFilter(conditionItem, controller, datasetMetadata) {
+	const op = conditionItem.op;
+	const value = conditionItem.value;
+	switch (op) {
+	case "dmMeasurement":
+		return _handleDmMeasurement(datasetMetadata, value);
+	case "dmType":
+		return _handleDmType(datasetMetadata, value);
+	default:
+		logger.warn("Ignoring unknown condition operation '" + op + "'");
+		return datasetMetadata;
+	}
+}
+
+function _handleDmMeasurement(datasetMetadata, measurementValue) {
+	const filterDM = cloneDeep(datasetMetadata);
+	const filteredFields = filterDM.fields.filter(function(field) {
+		if (field.metadata.measure === measurementValue) {
+			return true;
+		}
+		return false;
+	});
+	filterDM.fields = filteredFields;
+	return filterDM;
+}
+
+function _handleDmType(datasetMetadata, typeValue) {
+	const filterDM = cloneDeep(datasetMetadata);
+	const filteredFields = filterDM.fields.filter(function(field) {
+		if (field.type === typeValue) {
+			return true;
+		}
+		return false;
+	});
+	filterDM.fields = filteredFields;
+	return filterDM;
+}
+
 function _getUserInput(userInput, param, cellCoordinates) {
 	const paramInput = userInput[param];
 	if (PropertyUtils.toType(paramInput) === "array" &&
@@ -361,7 +443,7 @@ function _getUserInput(userInput, param, cellCoordinates) {
 }
 
 function _validateParams(userInput, param, requiredParameters, errorType) {
-	var failMessage;
+	let failMessage;
 	if ((userInput[param] === null || userInput[param] === "") && requiredParameters.indexOf(param) !== -1) {
 		const internalError = {
 			focus_parameter_ref: param,
@@ -722,5 +804,6 @@ function _searchInArray(array, element, state) {
 
 module.exports = {
 	evaluateInput: evaluateInput,
-	validateInput: validateInput
+	validateInput: validateInput,
+	filter: filter
 };

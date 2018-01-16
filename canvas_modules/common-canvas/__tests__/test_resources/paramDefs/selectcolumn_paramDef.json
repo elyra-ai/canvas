@@ -1,93 +1,80 @@
 {
-  "titleDefinition": {
-    "title": "Select Columns"
-  },
   "current_parameters": {
-    "fields": [
-      "age"
-    ],
-    "fields_null": null,
-    "fields_empty": [],
-    "fields1_panel": [
-      "age"
-    ],
-    "fields2_panel": [
-      "BP"
-    ],
-    "fields_error": [
-      "BP"
-    ],
-    "fields_warning": [
-      "Na"
-    ],
+    "field": "age",
+    "field_null": null,
+    "field_empty_string": "",
+    "field_placeholder": "",
+    "field1_panel": "age",
+    "field2_panel": "BP",
+    "field_error": "BP",
+    "field_warning": "NA",
     "hide": true,
-    "fields_hidden": [
-      "drug"
-    ],
+    "field_hidden": "drug",
     "disable": true,
-    "fields_disabled": [
-      "age"
-    ],
-    "fields_filter_measurement": [],
-    "fields_filter_type": [],
-    "fields_filter_and": [],
-    "fields_filter_or": []
+    "field_disabled": "age",
+    "field_filter_measurement": "",
+    "field_filter_type": "",
+    "field_filter_and": "",
+    "field_filter_or": ""
   },
   "parameters": [
     {
-      "id": "fields",
-      "type": "array[string]",
+      "id": "field",
+      "type": "string",
       "role": "column",
       "required": true
     },
     {
-      "id": "fields_default",
-      "type": "array[string]",
-      "default": [
-        "BP"
-      ],
+      "id": "field_default",
+      "type": "string",
+      "default": "BP",
       "role": "column",
       "required": true
     },
     {
-      "id": "fields_undefined",
-      "type": "array[string]",
+      "id": "field_undefined",
+      "type": "string",
       "role": "column",
       "required": true
     },
     {
-      "id": "fields_null",
-      "type": "array[string]",
+      "id": "field_null",
+      "type": "string",
       "role": "column",
       "required": true
     },
     {
-      "id": "fields_empty",
-      "type": "array[string]",
+      "id": "field_empty_string",
+      "type": "string",
       "role": "column",
       "required": true
     },
     {
-      "id": "fields1_panel",
-      "type": "array[string]",
+      "id": "field_placeholder",
+      "type": "string",
+      "role": "column"
+    },
+    {
+      "id": "field1_panel",
+      "type": "string",
       "role": "column",
       "required": true
     },
     {
-      "id": "fields2_panel",
-      "type": "array[string]",
+      "id": "field2_panel",
+      "type": "string",
       "role": "column",
       "required": true
     },
     {
-      "id": "fields_error",
-      "type": "array[string]",
+      "id": "field_error",
+      "type": "string",
       "role": "column",
       "required": true
     },
     {
-      "id": "fields_warning",
-      "type": "array[string]",
+      "id": "field_warning",
+      "type": "string",
       "role": "column",
       "required": true
     },
@@ -96,8 +83,8 @@
       "type": "boolean"
     },
     {
-      "id": "fields_hidden",
-      "type": "array[string]",
+      "id": "field_hidden",
+      "type": "string",
       "role": "column",
       "required": true
     },
@@ -106,120 +93,130 @@
       "type": "boolean"
     },
     {
-      "id": "fields_disabled",
-      "type": "array[string]",
+      "id": "field_disabled",
+      "type": "string",
       "role": "column",
       "required": true
     },
     {
-      "id": "fields_filter_measurement",
-      "type": "array[string]",
+      "id": "field_filter_measurement",
+      "type": "string",
       "role": "column"
     },
     {
-      "id": "fields_filter_type",
-      "type": "array[string]",
+      "id": "field_filter_type",
+      "type": "string",
       "role": "column"
     },
     {
-      "id": "fields_filter_and",
-      "type": "array[string]",
+      "id": "field_filter_and",
+      "type": "string",
       "role": "column"
     },
     {
-      "id": "fields_filter_or",
-      "type": "array[string]",
+      "id": "field_filter_or",
+      "type": "string",
       "role": "column"
     }
   ],
   "uihints": {
-    "id": "selectcolumns",
+    "id": "selectcolumn",
     "icon": "images/default.svg",
     "label": {
-      "default": "Select Columns"
+      "default": "Select Column"
     },
     "parameter_info": [
       {
-        "parameter_ref": "fields",
+        "parameter_ref": "field",
         "label": {
-          "default": "Fields"
+          "default": "Field"
         },
         "description": {
-          "default": "selectcolumns with parameter value set to 'age'"
-        },
-        "moveable_rows": true,
-        "summary": true
-      },
-      {
-        "parameter_ref": "fields_null",
-        "label": {
-          "default": "Fields null"
-        },
-        "description": {
-          "default": "selectcolumns with parameter value set to 'null'"
+          "default": "selectcolumn with parameter value set to 'age'"
         }
       },
       {
-        "parameter_ref": "fields_undefined",
+        "parameter_ref": "field_null",
         "label": {
-          "default": "Fields undefined"
+          "default": "Field null"
         },
         "description": {
-          "default": "selectcolumns with parameter value set to 'undefined'"
+          "default": "selectcolumn with parameter value set to 'null'"
         }
       },
       {
-        "parameter_ref": "fields_empty",
+        "parameter_ref": "field_undefined",
         "label": {
-          "default": "Fields Empty"
+          "default": "Field undefined"
         },
         "description": {
-          "default": "selectcolumns with parameter value set to '[]'"
+          "default": "selectcolumn with parameter value set to 'undefined'"
         }
       },
       {
-        "parameter_ref": "fields_default",
+        "parameter_ref": "field_empty_string",
         "label": {
-          "default": "Fields Default Value"
+          "default": "Field Empty String"
         },
         "description": {
-          "default": "selectcolumns with parameter value set to '[BP]'"
+          "default": "selectcolumn with parameter value set to '\"\"'"
         }
       },
       {
-        "parameter_ref": "fields1_panel",
+        "parameter_ref": "field_placeholder",
         "label": {
-          "default": "Fields1 Panel"
+          "default": "Field with Placeholder text"
         },
         "description": {
-          "default": "selectcolumns with parameter shared with Field2 Panel"
+          "default": "selectcolumn with placeholder text 'None...'"
+        },
+        "place_holder_text": {
+          "default": "None..."
         }
       },
       {
-        "parameter_ref": "fields2_panel",
+        "parameter_ref": "field_default",
         "label": {
-          "default": "Fields2 Panel"
+          "default": "Field Default Value"
         },
         "description": {
-          "default": "selectcolumns with parameter shared with Field1 Panel"
+          "default": "selectcolumn with parameter value set to 'BP'"
         }
       },
       {
-        "parameter_ref": "fields_error",
+        "parameter_ref": "field1_panel",
+        "label": {
+          "default": "Field1 Panel"
+        },
+        "description": {
+          "default": "selectcolumn with parameter shared with Field2 Panel"
+        }
+      },
+      {
+        "parameter_ref": "field2_panel",
+        "label": {
+          "default": "Field2 Panel"
+        },
+        "description": {
+          "default": "selectcolumn with parameter shared with Field1 Panel"
+        }
+      },
+      {
+        "parameter_ref": "field_error",
         "label": {
           "default": "Field Error"
         },
         "description": {
-          "default": "selectcolumns with error when set to 'age'"
+          "default": "selectcolumn with error when set to 'age'"
         }
       },
       {
-        "parameter_ref": "fields_warning",
+        "parameter_ref": "field_warning",
         "label": {
           "default": "Field Warning"
         },
         "description": {
-          "default": "selectcolumns with warning when set to 'age'"
+          "default": "selectcolumn with warning when set to 'age'"
         }
       },
       {
@@ -229,11 +226,10 @@
         }
       },
       {
-        "parameter_ref": "fields_hidden",
+        "parameter_ref": "field_hidden",
         "label": {
           "default": "Field Hidden"
-        },
-        "moveable_rows": true
+        }
       },
       {
         "parameter_ref": "disable",
@@ -242,14 +238,13 @@
         }
       },
       {
-        "parameter_ref": "fields_disabled",
+        "parameter_ref": "field_disabled",
         "label": {
           "default": "Field Disabled"
-        },
-        "moveable_rows": true
+        }
       },
       {
-        "parameter_ref": "fields_filter_measurement",
+        "parameter_ref": "field_filter_measurement",
         "label": {
           "default": "Filter by Measurement"
         },
@@ -258,7 +253,7 @@
         }
       },
       {
-        "parameter_ref": "fields_filter_type",
+        "parameter_ref": "field_filter_type",
         "label": {
           "default": "Filter by Type"
         },
@@ -267,7 +262,7 @@
         }
       },
       {
-        "parameter_ref": "fields_filter_and",
+        "parameter_ref": "field_filter_and",
         "label": {
           "default": "Filter by Type and Measurement"
         },
@@ -276,7 +271,7 @@
         }
       },
       {
-        "parameter_ref": "fields_filter_or",
+        "parameter_ref": "field_filter_or",
         "label": {
           "default": "Filter by Type or Measurement"
         },
@@ -287,83 +282,66 @@
     ],
     "group_info": [
       {
-        "id": "selectcolumns-values",
+        "id": "selectcolumn-values",
         "label": {
           "default": "Values"
         },
         "type": "panels",
         "group_info": [
           {
-            "id": "selectcolumns-values",
+            "id": "selectcolumn-values",
             "label": {
               "default": "Values"
             },
             "type": "columnSelection",
             "parameter_refs": [
-              "fields1_panel",
-              "fields2_panel"
+              "field1_panel",
+              "field2_panel"
             ]
           },
           {
-            "id": "selectcolumns-values",
-            "label": {
-              "default": "configure fields"
-            },
-            "type": "summaryPanel",
-            "group_info": [
-              {
-                "id": "fields",
-                "type": "controls",
-                "label": {
-                  "default": "Fields"
-                },
-                "parameter_refs": [
-                  "fields"
-                ]
-              }
-            ]
-          },
-          {
-            "id": "selectcolumns-values",
+            "id": "selectcolumn-values",
             "label": {
               "default": "Values"
             },
             "type": "controls",
             "parameter_refs": [
-              "fields_null",
-              "fields_empty",
-              "fields_undefined",
-              "fields_default"
+              "field",
+              "field_null",
+              "field_empty_string",
+              "field_undefined",
+              "field_default",
+              "field_placeholder"
             ]
           }
         ]
       },
       {
-        "id": "selectcolumns-conditions",
+        "id": "selectcolumn-conditions",
         "label": {
           "default": "Conditions"
         },
         "type": "controls",
         "parameter_refs": [
-          "fields_error",
-          "fields_warning",
+          "field_error",
+          "field_warning",
           "hide",
-          "fields_hidden",
+          "field_hidden",
           "disable",
-          "fields_disabled"
+          "field_disabled"
         ]
       },
       {
-        "id": "selectcolumns-filter",
+        "id": "selectcolumn-filter",
         "label": {
           "default": "Filter"
         },
         "type": "controls",
         "parameter_refs": [
-          "fields_filter_type",
-          "fields_filter_measurement",
-          "fields_filter_and",
-          "fields_filter_or"
+          "field_filter_type",
+          "field_filter_measurement",
+          "field_filter_and",
+          "field_filter_or"
         ]
       }
     ]
@@ -373,14 +351,14 @@
       "validation": {
         "fail_message": {
           "type": "error",
-          "focus_parameter_ref": "fields_error",
+          "focus_parameter_ref": "field_error",
           "message": {
             "default": "Don't select 'age'"
           }
         },
         "evaluate": {
           "condition": {
-            "parameter_ref": "fields_error[0]",
+            "parameter_ref": "field_error",
             "op": "notEquals",
             "value": "age"
           }
@@ -391,14 +369,14 @@
       "validation": {
         "fail_message": {
           "type": "warning",
-          "focus_parameter_ref": "fields_warning",
+          "focus_parameter_ref": "field_warning",
           "message": {
             "default": "Shouldn't select 'age'"
           }
         },
         "evaluate": {
           "condition": {
-            "parameter_ref": "fields_warning[0]",
+            "parameter_ref": "field_warning",
             "op": "notEquals",
             "value": "age"
           }
@@ -408,7 +386,7 @@
     {
       "visible": {
         "parameter_refs": [
-          "fields_hidden"
+          "field_hidden"
         ],
         "evaluate": {
           "condition": {
@@ -422,7 +400,7 @@
     {
       "enabled": {
         "parameter_refs": [
-          "fields_disabled"
+          "field_disabled"
         ],
         "evaluate": {
           "condition": {
@@ -435,7 +413,7 @@
     },
     {
       "filter": {
-        "parameter_ref": "fields_filter_type",
+        "parameter_ref": "field_filter_type",
         "evaluate": {
           "condition": {
             "op": "dmType",
@@ -446,7 +424,7 @@
     },
     {
       "filter": {
-        "parameter_ref": "fields_filter_measurement",
+        "parameter_ref": "field_filter_measurement",
         "evaluate": {
           "condition": {
             "op": "dmMeasurement",
@@ -457,7 +435,7 @@
     },
     {
       "filter": {
-        "parameter_ref": "fields_filter_and",
+        "parameter_ref": "field_filter_and",
         "evaluate": {
           "and": [
             {
@@ -478,7 +456,7 @@
     },
     {
       "filter": {
-        "parameter_ref": "fields_filter_or",
+        "parameter_ref": "field_filter_or",
         "evaluate": {
           "or": [
             {

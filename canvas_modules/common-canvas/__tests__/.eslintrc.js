@@ -3,7 +3,7 @@ module.exports = {
 		"@dap/eslint-config-portal-common/react"
 	].map(require.resolve),
 	env: {
-
+		"browser": true,
 	},
 	rules: {
 		// Disable strict warning on ES6 Components

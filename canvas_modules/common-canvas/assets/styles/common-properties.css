@@ -471,13 +471,14 @@ input.number,
 .Dropdown-control {
   color: #a6266e;
   width: 100%;
+	height: 25px;
   border-bottom: 2px solid #a6266e;
   padding: 0 1em 0 0 ;
   font-weight: 500;
   position: relative;
   overflow: hidden;
   box-sizing: border-box;
-  cursor: default;
+  cursor: pointer;
   outline: none;
   transition: all 200ms ease;
 }

@@ -28,6 +28,7 @@ export default class PropertiesController {
 		this.visibleDefinition = {};
 		this.enabledDefinitions = {};
 		this.validationDefinitions = {};
+		this.filterDefinitions = {};
 		this.controls = {};
 		this.summaryPanelControls = {};
 		this.controllerHandlerCalled = false;
@@ -96,6 +97,7 @@ export default class PropertiesController {
 		this.visibleDefinition = {};
 		this.enabledDefinitions = {};
 		this.validationDefinitions = {};
+		this.filterDefinitions = {};
 		if (this.form.conditions) {
 			for (const condition of this.form.conditions) {
 				if (condition.visible) {
@@ -104,6 +106,8 @@ export default class PropertiesController {
 					UiConditionsParser.parseConditions(this.enabledDefinitions, condition, "enabled");
 				} else if (condition.validation) {
 					UiConditionsParser.parseConditions(this.validationDefinitions, condition, "validation");
+				} else if (condition.filter) {
+					UiConditionsParser.parseConditions(this.filterDefinitions, condition, "filter");
 				} else { // invalid
 					logger.info("Invalid definition: " + JSON.stringify(condition));
 				}
@@ -263,6 +267,68 @@ export default class PropertiesController {
 	getDatasetMetadata() {
 		return this.propertiesStore.getDatasetMetadata();
 	}
+	getFilteredDatasetMetadata(propertyId, sharedCtrlInfo) {
+		let datasetMetadata = this.getDatasetMetadata();
+		this._filterSharedDataset(propertyId, sharedCtrlInfo, datasetMetadata);
+		datasetMetadata = conditionsUtil.filterConditions(propertyId, this.filterDefinitions, this, datasetMetadata);
+		return datasetMetadata;
+	}
+
+	/**
+	 * Retrieves a filtered data model in which all fields that are already
+	 * in use by other controls are already filtered out.
+	 *
+	 * @param propertyId Name of control to skip when checking field controls
+	 * @return Filtered dataset metadata with fields in use removed
+	 */
+	_filterSharedDataset(propertyId, sharedCtrlInfo, datasetMetadata) {
+		if (!sharedCtrlInfo || !propertyId) {
+			return;
+		}
+		const skipControlName = propertyId.name;
+		try {
+			// gets all the controls that are shared with this property
+			let sharedCtrlNames = [];
+			for (const sharedCtrlList of sharedCtrlInfo) {
+				for (const sharedCtrl of sharedCtrlList.controlNames) {
+					if (skipControlName === sharedCtrl.controlName) {
+						sharedCtrlNames = sharedCtrlList.controlNames;
+						break;
+					}
+				}
+			}
+			// get all the fields that are used by other controls
+			const usedFields = [];
+			for (const sharedCtr of sharedCtrlNames) {
+				const ctrlName = sharedCtr.controlName;
+				if (ctrlName !== skipControlName) {
+					// only remove from the main list the values that are in other controls
+					const propValue = this.getPropertyValue({ name: ctrlName });
+					if (Array.isArray(propValue)) {
+						for (const arrayValue of propValue) {
+							if (Array.isArray(arrayValue)) {
+								// tables assuming fields are in the 1st column
+								usedFields.push(arrayValue[0]); // TODO not always in 1st index
+							} else { // one dimensional arrays
+								usedFields.push(arrayValue);
+							}
+						}
+					} else { // simple property values
+						usedFields.push(propValue);
+					}
+				}
+			}
+			const usedFieldsList = Array.from(new Set(usedFields)); // make all values unique
+			for (const usedField of usedFieldsList) {
+				datasetMetadata.fields = datasetMetadata.fields.filter(function(element) {
+					return element && usedField && element.name !== usedField;
+				});
+			}
+		} catch (error) {
+			logger.warn("Error filtering shared controls " + error);
+		}
+	}
+
 	setDatasetMetadata(datasetMetadata) {
 		return this.propertiesStore.setDatasetMetadata(datasetMetadata);
 	}

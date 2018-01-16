@@ -78,6 +78,8 @@ export default class ColumnStructureTableEditor extends EditorControl {
 
 		this.checkedAllValue = this.checkedAllValue.bind(this);
 
+		this.addOnClick = this.addOnClick.bind(this);
+
 		if (this.props.selectedRows && this.props.selectedRows.length > 0) {
 			this.scrollToRow = this.props.selectedRows[this.props.selectedRows.length - 1];
 			this.alignTop = true;
@@ -446,6 +448,12 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		this.setState({ hoverRemoveIcon: false });
 	}
 
+	addOnClick(control) {
+		if (this.addOnClickCallback) {
+			this.addOnClickCallback(control);
+		}
+	}
+
 	makeAddRemoveButtonPanel(stateDisabled, tableButtonConfig) {
 		if (this.props.control.noPickColumns) {
 			return (<div />);
@@ -472,20 +480,19 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		</div>);
 
 		let addButtonDisabled = false;
-		let addOnClick = (tableButtonConfig) ? tableButtonConfig.addButtonFunction : this.props.openFieldPicker;
+		this.addOnClickCallback = (tableButtonConfig) ? tableButtonConfig.addButtonFunction : this.props.openFieldPicker;
 		const addButtonLabel = (tableButtonConfig) ? tableButtonConfig.addButtonLabel
 			: PropertyUtils.formatMessage(this.props.intl,
 				MESSAGE_KEYS.STRUCTURETABLE_ADDBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.STRUCTURETABLE_ADDBUTTON_LABEL);
 		if (stateDisabled.disabled) {
 			addButtonDisabled = true;
-			addOnClick = null;
+			this.addOnClickCallback = null;
 		}
 		const addButton = (<Button
 			id="add-fields-button"
 			icon="plus"
-			onClick={addOnClick}
+			onClick={this.addOnClick.bind(this, this.props.control)}
 			disabled={addButtonDisabled}
-			data-control={JSON.stringify(this.props.control)}
 		>
 			{addButtonLabel}
 		</Button>);

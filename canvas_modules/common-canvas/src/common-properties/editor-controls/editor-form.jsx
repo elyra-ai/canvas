@@ -10,7 +10,6 @@
 /* eslint complexity: ["error", 28] */
 /* eslint max-depth: ["error", 9] */
 
-import logger from "../../../utils/logger";
 import React from "react";
 import PropTypes from "prop-types";
 import ButtonToolbar from "react-bootstrap/lib/ButtonToolbar";
@@ -83,7 +82,6 @@ class EditorForm extends React.Component {
 
 		this.closeFieldPicker = this.closeFieldPicker.bind(this);
 		this.openFieldPicker = this.openFieldPicker.bind(this);
-		this.getFilteredDataset = this.getFilteredDataset.bind(this);
 		this.generateSharedControlNames = this.generateSharedControlNames.bind(this);
 		this.getSelectedRows = this.getSelectedRows.bind(this);
 		this.clearSelectedRows = this.clearSelectedRows.bind(this);
@@ -93,72 +91,6 @@ class EditorForm extends React.Component {
 
 	getControl(propertyName) {
 		return this.refs[propertyName];
-	}
-
-	/**
-	 * Retrieves a filtered data model in which all fields that are already
-	 * in use by other controls are already filtered out.
-	 *
-	 * @param skipControlName Name of control to skip when checking field controls
-	 * @return Filtered dataset metadata with fields in use removed
-	 */
-	getFilteredDataset(skipControlName) {
-		const data = this.props.controller.getDatasetMetadata();
-		if (!this.sharedCtrlInfo || !skipControlName) {
-			return data;
-		}
-
-		let filteredDataset = { fields: [] };
-		try {
-
-			filteredDataset = JSON.parse(JSON.stringify(data)); // deep copy
-			let sharedCtrlNames = [];
-			let sharedDataModelPanel = false;
-			for (let h = 0; h < this.sharedCtrlInfo.length; h++) {
-				for (let k = 0; k < this.sharedCtrlInfo[h].controlNames.length; k++) {
-					if (skipControlName === this.sharedCtrlInfo[h].controlNames[k].controlName) {
-						sharedDataModelPanel = true;
-						sharedCtrlNames = this.sharedCtrlInfo[h].controlNames;
-						break;
-					}
-				}
-			}
-
-			if (sharedDataModelPanel) {
-				const temp = [];
-				for (let i = 0; i < sharedCtrlNames.length; i++) {
-					const ctrlName = sharedCtrlNames[i].controlName;
-					if (ctrlName !== skipControlName) {
-						// only remove from the main list the values that are in other controls
-						const values = this.props.controller.getPropertyValue({ name: ctrlName });
-						for (let j = 0; j < values.length; j++) {
-							temp.push(data.fields.filter(function(element) {
-								if (Array.isArray(values)) {
-									if (Array.isArray(values[j])) {
-										return values[j][0].split(",")[0].indexOf(element.name) > -1;
-									}
-									return values[j].split(",")[0].indexOf(element.name) > -1;
-								}
-								return values.split(",")[0].indexOf(element.name) > -1;
-							})[0]);
-							// logger.info("Temp is: " + JSON.stringify(temp));
-						}
-					}
-
-					if (temp.length > 0) {
-						for (let k = 0; k < temp.length; k++) {
-							filteredDataset.fields = filteredDataset.fields.filter(function(element) {
-								return element && temp[k] && element.name !== temp[k].name;
-							});
-							// logger.info("filteredData.fields is: " + JSON.stringify(filteredData.fields));
-						}
-					}
-				}
-			}
-		} catch (error) {
-			logger.warn("unable to parse json " + error);
-		}
-		return filteredDataset;
 	}
 
 	getSelectedRows(controlName) {
@@ -280,7 +212,7 @@ class EditorForm extends React.Component {
 				control={control}
 				controller={this.props.controller}
 				propertyId={propertyId}
-				dataModel={this.getFilteredDataset(propertyId.name)}
+				dataModel={this.props.controller.getFilteredDatasetMetadata(propertyId, this.sharedCtrlInfo)}
 			/>);
 		} else if (control.controlType === "someofcolumns") {
 			return (<SomeofcolumnsControl
@@ -288,7 +220,7 @@ class EditorForm extends React.Component {
 				control={control}
 				controller={this.props.controller}
 				propertyId={propertyId}
-				dataModel={this.props.controller.getDatasetMetadata()}
+				dataModel={this.props.controller.getFilteredDatasetMetadata(propertyId, this.sharedCtrlInfo)}
 			/>);
 		} else if (control.controlType === "selectcolumn") {
 			// TODO should use propertyID for filteredDataset
@@ -297,7 +229,7 @@ class EditorForm extends React.Component {
 				control={control}
 				controller={this.props.controller}
 				propertyId={propertyId}
-				dataModel={this.getFilteredDataset(propertyId.name)}
+				dataModel={this.props.controller.getFilteredDatasetMetadata(propertyId, this.sharedCtrlInfo)}
 			/>);
 		} else if (control.controlType === "selectcolumns") {
 			return (<ColumnSelectControl
@@ -305,7 +237,7 @@ class EditorForm extends React.Component {
 				control={control}
 				controller={this.props.controller}
 				propertyId={propertyId}
-				dataModel={this.props.controller.getDatasetMetadata()}
+				dataModel={this.props.controller.getFilteredDatasetMetadata(propertyId, this.sharedCtrlInfo)}
 				openFieldPicker={this.openFieldPicker}
 				updateSelectedRows={this.updateSelectedRows}
 				selectedRows={this.getSelectedRows(control.name)}
@@ -316,7 +248,7 @@ class EditorForm extends React.Component {
 				control={control}
 				controller={this.props.controller}
 				propertyId={propertyId}
-				dataModel={this.props.controller.getDatasetMetadata()}
+				dataModel={this.props.controller.getFilteredDatasetMetadata(propertyId, this.sharedCtrlInfo)}
 				updateSelectedRows={this.updateSelectedRows}
 				selectedRows={this.getSelectedRows(control.name)}
 				buildUIItem={this.genUIItem}
@@ -788,17 +720,18 @@ class EditorForm extends React.Component {
 		});
 	}
 
-	openFieldPicker(evt) {
+	openFieldPicker(control) {
 		this.props.showPropertiesButtons(false);
 		this.setState({
-			fieldPickerControl: JSON.parse(evt.currentTarget.dataset.control),
+			fieldPickerControl: control,
 			showFieldPicker: true
 		});
 	}
 
 	fieldPicker() {
 		const currentControlValues = this.props.controller.getPropertyValues();
-		const filteredDataset = this.getFilteredDataset(this.state.fieldPickerControl.name);
+		const propertyId = { name: this.state.fieldPickerControl.name };
+		const filteredDataset = this.props.controller.getFilteredDatasetMetadata(propertyId, this.sharedCtrlInfo);
 		const form = this.props.controller.getForm();
 		return (<div id="field-picker-table">
 			<FieldPicker

@@ -13,6 +13,9 @@ import { mount } from "enzyme";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
 
+import propertyUtils from "../../_utils_/property-utils";
+import selectcolumnParamDef from "../../test_resources/paramDefs/selectcolumn_paramDef.json";
+
 const controller = new Controller();
 
 const control = {
@@ -77,7 +80,7 @@ function setPropertyValue() {
 	);
 }
 
-describe("field-allocator-control renders correctly", () => {
+describe("selectcolumn control renders correctly", () => {
 
 	it("props should have been defined", () => {
 		const wrapper = mount(
@@ -95,7 +98,7 @@ describe("field-allocator-control renders correctly", () => {
 		expect(wrapper.prop("controller")).to.equal(controller);
 	});
 
-	it("should render correctly with emptyDataModel and null value FieldAllocatorControl", () => {
+	it("should render correctly with emptyDataModel and null value selectcolumn", () => {
 		controller.setPropertyValues(
 			{ "targetField": null }
 		);
@@ -111,7 +114,7 @@ describe("field-allocator-control renders correctly", () => {
 		expect(input).to.have.length(1); // TODO not sure what this is validating
 	});
 
-	it("should render a empty FieldAllocatorControl and update the dropdown value", () => {
+	it("should render a empty selectcolumn and update the dropdown value", () => {
 		setPropertyValue();
 		const wrapper = mount(
 			<FieldAllocatorControl
@@ -145,5 +148,52 @@ describe("field-allocator-control renders correctly", () => {
 		input.root.node.handleChange(evt); // TODO should use click events if possible
 		expect(controller.getPropertyValue(propertyId)).to.equal("");
 	});
+});
 
+describe("selectcolumn control filters values correctly", () => {
+	const wrapper = propertyUtils.flyoutEditorForm(selectcolumnParamDef);
+	it("should filter values from selectcolumn control", () => {
+		const filterCategory = wrapper.find(".category-title-container-right-flyout-panel").at(2); // get the filter category
+		const dropDowns = filterCategory.find("Dropdown");
+		let options = dropDowns.at(0).prop("options"); // by Type
+		let expectedOptions = [
+			{ label: "...", value: "" },
+			{ label: "age", value: "age" },
+			{ label: "age2", value: "age2" },
+			{ label: "age3", value: "age3" },
+			{ label: "age4", value: "age4" }
+		];
+		expect(options).to.eql(expectedOptions);
+		options = dropDowns.at(1).prop("options"); // by Measurement
+		expectedOptions = [
+			{ label: "...", value: "" },
+			{ label: "BP", value: "BP" },
+			{ label: "BP2", value: "BP2" },
+			{ label: "BP3", value: "BP3" },
+			{ label: "BP4", value: "BP4" }
+		];
+		expect(options).to.eql(expectedOptions);
+		options = dropDowns.at(2).prop("options"); // by Type and Measurement
+		expectedOptions = [
+			{ label: "...", value: "" },
+			{ label: "drug", value: "drug" },
+			{ label: "drug2", value: "drug2" },
+			{ label: "drug3", value: "drug3" },
+			{ label: "drug4", value: "drug4" }
+		];
+		expect(options).to.eql(expectedOptions);
+		options = dropDowns.at(3).prop("options"); // by Type or Measurement
+		expectedOptions = [
+			{ label: "...", value: "" },
+			{ label: "drug", value: "drug" },
+			{ label: "drug2", value: "drug2" },
+			{ label: "drug3", value: "drug3" },
+			{ label: "drug4", value: "drug4" },
+			{ label: "age", value: "age" },
+			{ label: "age2", value: "age2" },
+			{ label: "age3", value: "age3" },
+			{ label: "age4", value: "age4" }
+		];
+		expect(options).to.eql(expectedOptions);
+	});
 });
