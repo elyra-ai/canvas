@@ -91,6 +91,10 @@ export default class CanvasController {
 		this.objectModel.setEmptyPipelineFlow();
 	}
 
+	clearPipelineFlow() {
+		this.objectModel.clearPipelineFlow();
+	}
+
 	setCanvas(canvas) {
 		this.objectModel.setCanvas(canvas); // TODO - Remove this method when WML Canvas moves to pipeline flow
 	}
@@ -99,12 +103,20 @@ export default class CanvasController {
 		this.objectModel.setPaletteData(paletteData); // TODO - Remove this method when WML Canvas moves to pipeline flow
 	}
 
+	clearPaletteData() {
+		this.objectModel.clearPaletteData();
+	}
+
 	setNodeParameters(nodeId, parameters) {
 		this.objectModel.setNodeParameters(nodeId, parameters);
 	}
 
 	setNodeMessages(nodeId, messages) {
 		this.objectModel.setNodeMessages(nodeId, messages);
+	}
+
+	setNodeMessage(nodeId, message) {
+		this.objectModel.setNodeMessage(nodeId, message);
 	}
 
 	setNodeLabel(nodeId, newLabel) {
@@ -117,6 +129,22 @@ export default class CanvasController {
 
 	setOutputPortLabel(nodeId, portId, newLabel) {
 		this.objectModel.setOutputPortLabel(nodeId, portId, newLabel);
+	}
+
+	moveObjects(data) {
+		this.objectModel.moveObjects(data);
+	}
+
+	deleteObjects(source) {
+		this.objectModel.deleteObjects(source);
+	}
+
+	deleteObject(id) {
+		this.objectModel.deleteObject(id);
+	}
+
+	disconnectNodes(source) {
+		this.objectModel.disconnectNodes(source);
 	}
 
 	addNode(node) {
@@ -140,7 +168,11 @@ export default class CanvasController {
 	}
 
 	createNodeLinks(data) {
-		this.objectModel.linkNodes(data);
+		this.objectModel.createNodeLinks(data);
+	}
+
+	createCommentLinks(data) {
+		this.objectModel.createCommentLinks(data);
 	}
 
 	addNodeTypeToPalette(nodeTypeObj, category, categoryLabel) {
@@ -151,20 +183,44 @@ export default class CanvasController {
 		this.objectModel.addCustomAttrToNodes(objIds, attrName);
 	}
 
-	addCustomAttrToComments(objIds, attrName) {
-		this.objectModel.addCustomAttrToComments(objIds, attrName);
-	}
-
 	removeCustomAttrFromNodes(objIds, attrName) {
-		this.objectModel.addCustomAttrToNodes(objIds, attrName);
-	}
-
-	removeCustomAttrFromComments(objIds, attrName) {
-		this.objectModel.addCustomAttrToComments(objIds, attrName);
+		this.objectModel.removeCustomAttrToNodes(objIds, attrName);
 	}
 
 	fixedAutoLayout(selectedLayout) {
 		this.objectModel.fixedAutoLayout(selectedLayout);
+	}
+
+	autoLayout(layoutDirection) {
+		this.objectModel.autoLayout(layoutDirection);
+	}
+
+	createComment(source) {
+		this.objectModel.createComment(source);
+	}
+
+	addComment(info) {
+		this.objectModel.addComment(info);
+	}
+
+	editComment(data) {
+		this.objectModel.editComment(data);
+	}
+
+	deleteComment(id) {
+		this.objectModel.deleteComment(id);
+	}
+
+	getComments() {
+		return this.objectModel.getComments();
+	}
+
+	addCustomAttrToComments(objIds, attrName) {
+		this.objectModel.addCustomAttrToComments(objIds, attrName);
+	}
+
+	removeCustomAttrFromComments(objIds, attrName) {
+		this.objectModel.removeCustomAttrToComments(objIds, attrName);
 	}
 
 	// Return a unique identifier for this instance of common canvas.
@@ -202,6 +258,10 @@ export default class CanvasController {
 
 	getNodeMessages(nodeId) {
 		return this.objectModel.getNodeMessages(nodeId);
+	}
+
+	getNodeMessage(nodeId, controlName) {
+		return this.objectModel.getNodeMessage(nodeId, controlName);
 	}
 
 	getAllObjectIds() {
