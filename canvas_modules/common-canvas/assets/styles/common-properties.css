@@ -330,6 +330,7 @@ input.number,
 .rightside-modal-container #field-picker-table #flexible-table-container-wrapper {
 	height: 100%;
 	max-height: 500px;
+	min-height: 32px;
 	overflow-y: auto;
 }
 
