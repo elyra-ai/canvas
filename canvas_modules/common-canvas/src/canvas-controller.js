@@ -474,28 +474,29 @@ export default class CanvasController {
 	}
 
 	// Called when a node is dragged from the palette onto the canvas
-	createNodeAt(operatorIdRef, label, sourceId, sourceObjectTypeId, x, y) {
-		var data = {};
+	createNodeFromTemplateAt(operatorIdRef, label, x, y) {
+		var data = {
+			editType: "createNode",
+			label: label, // label will be passed through to the external object model
+			operator_id_ref: operatorIdRef,
+			nodeTypeId: operatorIdRef, // TODO - Remove this when WML Canvas migrates to pipeline flow
+			offsetX: x,
+			offsetY: y
+		};
 
-		if (typeof sourceId !== "undefined") {
-			data = {
-				editType: "createNode",
-				label: label,
-				offsetX: x,
-				offsetY: y,
-				sourceObjectId: sourceId,
-				sourceObjectTypeId: sourceObjectTypeId
-			};
-		} else {
-			data = {
-				editType: "createNode",
-				label: label, // label is provided for the external object model
-				operator_id_ref: operatorIdRef,
-				nodeTypeId: operatorIdRef, // TODO - Remove this when WML Canvas migrates to pipeline flow
-				offsetX: x,
-				offsetY: y
-			};
-		}
+		this.editActionHandler(data);
+	}
+
+	// Called when a node is dragged from the 'output' window (in WML) onto the canvas
+	createNodeFromObjectAt(sourceId, sourceObjectTypeId, label, x, y) {
+		var data = {
+			editType: "createNode",
+			label: label, // label will be passed through to the external object model
+			offsetX: x,
+			offsetY: y,
+			sourceObjectId: sourceId,
+			sourceObjectTypeId: sourceObjectTypeId
+		};
 
 		this.editActionHandler(data);
 	}

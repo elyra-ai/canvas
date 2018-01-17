@@ -318,13 +318,21 @@ export default class DiagramCanvas extends React.Component {
 					this.moveNode(jsVal.id, Math.round((event.clientX - dragBounds.startX) / zoom),
 						Math.round((event.clientY - dragBounds.startY) / zoom));
 				}
-			} else if ((jsVal.operation === "createFromTemplate") || jsVal.operation === "createFromObject") {
-				var mousePos2 = this.mouseCoords(event);
+			} else if (jsVal.operation === "createFromTemplate") {
+				const mousePos2 = this.mouseCoords(event);
 				// logger.info(targetPos);
-				// logger.info(mousePos);
-				this.props.canvasController.createNodeAt(jsVal.operator_id_ref, jsVal.label, jsVal.sourceId, jsVal.sourceObjectTypeId,
+				// logger.info(mousePos2);
+				this.props.canvasController.createNodeFromTemplateAt(jsVal.operator_id_ref, jsVal.label,
 					Math.round((mousePos2.x - (NODE_WIDTH / 2)) / zoom),
 					Math.round((mousePos2.y - (NODE_HEIGHT / 2)) / zoom));
+			} else if (jsVal.operation === "createFromObject") {
+				const mousePos3 = this.mouseCoords(event);
+				// logger.info(targetPos);
+				// logger.info(mousePos3);
+				this.props.canvasController.createNodeFromObjectAt(jsVal.sourceId, jsVal.sourceObjectTypeId, jsVal.label,
+					Math.round((mousePos3.x - (NODE_WIDTH / 2)) / zoom),
+					Math.round((mousePos3.y - (NODE_HEIGHT / 2)) / zoom));
+
 			} else if ((jsVal.operation === "addToCanvas") || (jsVal.operation === "addTableFromConnection")) {
 				var mousePos = this.mouseCoords(event);
 				// logger.info(targetPos);
