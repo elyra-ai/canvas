@@ -318,6 +318,11 @@ input.number,
 	border-top: 2px solid #E0E0E0;
 }
 
+.rightside-modal-container .modal__buttons > div > .button,
+.right-flyout-panel .modal__buttons > div > .button {
+  line-height: 1;
+}
+
 .rightside-modal-container .editor_control_area {
 	width: calc(100% - 15px);
 }
@@ -411,6 +416,7 @@ input.number,
   height: 32px;
   width: 90px;
   padding-right: 0px;
+  line-height: 0.5
 }
 
 #reset-fields-button-label {

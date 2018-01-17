@@ -164,6 +164,10 @@
 	border-bottom: 1px solid #D8D8D8;
 }
 
+.control-summary-link-buttons .button {
+  line-height: 0.5;
+}
+
 .control-summary-configured-values {
 	border-top: 1px solid #E0E0E0;
 	margin-top: 5px;
