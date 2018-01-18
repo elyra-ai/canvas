@@ -102,15 +102,15 @@
       "validation": {
         "fail_message": {
           "type": "error",
-          "focus_parameter_ref": "renamed_fields",
+          "focus_parameter_ref": "renamed_fields[1]",
           "message": {
             "resource_key": "output_name_not_empty"
           }
         },
         "evaluate": {
           "condition": {
-            "parameter_ref": "renamed_fields",
-            "op": "cellNotEmpty"
+            "parameter_ref": "renamed_fields[1]",
+            "op": "isNotEmpty"
           }
         }
       }
@@ -119,14 +119,14 @@
       "validation": {
         "fail_message": {
           "type": "error",
-          "focus_parameter_ref": "renamed_fields",
+          "focus_parameter_ref": "renamed_fields[1]",
           "message": {
             "resource_key": "column_name_already_exists"
           }
         },
         "evaluate": {
           "condition": {
-            "parameter_ref": "renamed_fields",
+            "parameter_ref": "renamed_fields[1]",
             "op": "colNotExists"
           }
         }

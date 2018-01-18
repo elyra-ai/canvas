@@ -2131,14 +2131,14 @@
       "validation": {
         "fail_message": {
           "type": "error",
-          "focus_parameter_ref": "structuretableRenameFields",
+          "focus_parameter_ref": "structuretableRenameFields[1]",
           "message": {
             "default": "The given column name is already in use"
           }
         },
         "evaluate": {
           "condition": {
-            "parameter_ref": "structuretableRenameFields",
+            "parameter_ref": "structuretableRenameFields[1]",
             "op": "colNotExists"
           }
         }

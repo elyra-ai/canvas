@@ -222,7 +222,7 @@ function validateInput(propertyId, controller, validationDefinitions, datasetMet
 						text: output.text
 					};
 				}
-				if (!validationSet || output.isActiveCell || (isError && !errorSet)) {
+				if (!validationSet || (typeof output === "object" && output.isActiveCell) || (isError && !errorSet)) {
 					controller.updateErrorMessage(propertyId, errorMessage);
 					validationSet = true;
 					if (isError) {

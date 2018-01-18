@@ -14,6 +14,7 @@ import PropertyUtils from "../util/property-utils.js";
 import cloneDeep from "lodash/cloneDeep";
 import intersectionWith from "lodash/intersectionWith";
 import unionWith from "lodash/unionWith";
+import union from "lodash/union";
 import isEqual from "lodash/isEqual";
 
 const ERROR = "error";
@@ -45,37 +46,73 @@ function _validateTable(validationDefinition, userInput, control, dataModel, req
 	const keyIndex = (propertyId.col) ? tableControl.keyIndex : control.keyIndex;
 	const tableControlType = (propertyId.col) ? tableControl.controlType : control.controlType;
 
-	// For tables we need to evaluate all non-keyDef cells
-	const cellValues = userInput[tableControlName];
-	for (let row = 0; row < cellValues.length; row++) {
-		for (let col = 0; col < cellValues[row].length; col++) {
-			if (col === keyIndex) {
-				// We don't evaluate the key column
-				continue;
-			}
-			coordinates.rowIndex = row;
-			coordinates.colIndex = col;
-			coordinates.skipVal = cellValues[row][keyIndex];
+	// only evaluate table cells if the validation definition has  condition for a cell
+	const columnNumbers = getColumnsFromValidation(validationDefinition);
+	if (columnNumbers.length > 0) {
+		// For tables we need to evaluate all non-keyDef cells
+		const cellValues = userInput[tableControlName];
+		for (let row = 0; row < cellValues.length; row++) {
+			for (let col = 0; col < cellValues[row].length; col++) {
+				if (col === keyIndex) {
+					// We don't evaluate the key column
+					continue;
+				}
+				coordinates.rowIndex = row;
+				coordinates.colIndex = col;
+				coordinates.skipVal = cellValues[row][keyIndex];
 
-			const tmp = validateInput(validationDefinition, userInput, tableControlType, dataModel,
-				coordinates, requiredParameters, controller);
+				// only run validation on columns defined in validation
+				var tmp = null;
+				if (columnNumbers.indexOf(col) > -1) {
+					tmp = validateInput(validationDefinition, userInput, tableControlType, dataModel,
+						coordinates, requiredParameters, controller);
+				}
 
-			// oinly set the error for the current cell
-			const isError = PropertyUtils.toType(tmp) === "object";
-			if (PropertyUtils.toType(rowIndex) === "number" && PropertyUtils.toType(colIndex) === "number") {
-				if (row === rowIndex && col === colIndex && isError) {
-					output = tmp;
-					output.isActiveCell = true;
+				// only set the error for the current cell
+				const isError = PropertyUtils.toType(tmp) === "object";
+				if (PropertyUtils.toType(rowIndex) === "number" && PropertyUtils.toType(colIndex) === "number") {
+					if (row === rowIndex && col === colIndex && isError) {
+						output = tmp;
+						output.isActiveCell = true;
+					}
 				}
 			}
 		}
-	}
-	// validate on table-level if cell validation didn't result in an error already
-	if (!output || PropertyUtils.toType(output) === "boolean") {
+	} else {
+		// no table cells in defintion then evaluate the table
 		output = validateInput(validationDefinition, userInput, control.controlType, dataModel,
 			coordinates, requiredParameters);
 	}
 	return output;
+}
+
+function getColumnsFromValidation(validationDefinition) {
+	let columnNumbers = [];
+	if (validationDefinition.validation && validationDefinition.validation.evaluate) {
+		const evaluateDef = validationDefinition.validation.evaluate;
+		if (evaluateDef.condition) {
+			columnNumbers = union(columnNumbers, getColumnsFromCondition(columnNumbers, evaluateDef.condition));
+		} else if (evaluateDef.and) {
+			for (const andCondition of evaluateDef.and) {
+				columnNumbers = union(columnNumbers, getColumnsFromCondition(columnNumbers, andCondition.condition));
+			}
+		} else if (evaluateDef.or) {
+			for (const orCondition of evaluateDef.or) {
+				columnNumbers = union(columnNumbers, getColumnsFromCondition(columnNumbers, orCondition.condition));
+			}
+		}
+	}
+	return columnNumbers;
+}
+
+function getColumnsFromCondition(columnNumbers, cellCondition) {
+	if (cellCondition.parameter_ref && cellCondition.parameter_ref.indexOf("[") > -1) {
+		columnNumbers.push(_getColumnNumber(cellCondition.parameter_ref));
+	}
+	if (cellCondition.parameter_2_ref && cellCondition.parameter_2_ref.indexOf("[") > -1) {
+		columnNumbers.push(_getColumnNumber(cellCondition.parameter_2_ref));
+	}
+	return columnNumbers;
 }
 
 /**
@@ -334,7 +371,7 @@ function condition(data, userInput, info) {
 	let column = info.cellCoordinates ? info.cellCoordinates.colIndex : 0;
 	if (offset > -1) {
 		paramName = param.substring(0, offset);
-		column = parseInt(param.substring(offset + 1), 10);
+		column = _getColumnNumber(param);
 	}
 
 	// validate if userInput has param's input
@@ -800,6 +837,19 @@ function _searchInArray(array, element, state) {
 		}
 	}
 	return found;
+}
+
+// returns -1 if no column specified in parameter
+function _getColumnNumber(param) {
+	const startCol = param.indexOf("[");
+	if (startCol > -1) {
+		const endCol = param.indexOf("]");
+		if (endCol > -1) {
+			return parseInt(param.substring(startCol + 1, endCol), 10);
+		}
+		return -1;
+	}
+	return -1;
 }
 
 module.exports = {

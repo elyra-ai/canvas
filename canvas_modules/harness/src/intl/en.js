@@ -37,7 +37,7 @@ export const messages = {
 	"dialog.nodePropertiesTitle": "Node Properties",
 
 	/* ------------------------------ */
-	/* labels and deafault values     */
+	/* labels and default values     */
 	/* ------------------------------ */
 	"subPanel.button.tooltip": "Edit",
 	"structureListEditor.addButton.label": "Add Value",

@@ -14,8 +14,29 @@
     ],
     "inlineEditingTable": [
       [
-        "1",
-        "1.234",
+        1,
+        1.234,
+        "Age >= 55"
+      ]
+    ],
+    "inlineEditingTableWarning": [
+      [
+        1,
+        1.234,
+        "Age >= 55"
+      ]
+    ],
+    "inlineEditingTableError": [
+      [
+        1,
+        1.234,
+        "Age >= 55"
+      ]
+    ],
+    "inlineEditingTableError2": [
+      [
+        1,
+        1.234,
         "Age >= 55"
       ]
     ]
@@ -30,6 +51,24 @@
     {
       "id": "inlineEditingTable",
       "type": "array[inlineEditingTable]",
+      "role": "column",
+      "default": []
+    },
+    {
+      "id": "inlineEditingTableWarning",
+      "type": "array[inlineEditingTableWarning]",
+      "role": "column",
+      "default": []
+    },
+    {
+      "id": "inlineEditingTableError",
+      "type": "array[inlineEditingTableError]",
+      "role": "column",
+      "default": []
+    },
+    {
+      "id": "inlineEditingTableError2",
+      "type": "array[inlineEditingTableError2]",
       "role": "column",
       "default": []
     }
@@ -71,6 +110,75 @@
     },
     {
       "id": "inlineEditingTable",
+      "parameters": [
+        {
+          "id": "valueName",
+          "type": "integer",
+          "default": 1,
+          "role": "new_column"
+        },
+        {
+          "id": "doubleName",
+          "type": "double",
+          "default": 1.2,
+          "role": "new_column"
+        },
+        {
+          "id": "condition",
+          "type": "string",
+          "default": "",
+          "role": "expression"
+        }
+      ]
+    },
+    {
+      "id": "inlineEditingTableWarning",
+      "parameters": [
+        {
+          "id": "valueName",
+          "type": "integer",
+          "default": 1,
+          "role": "new_column"
+        },
+        {
+          "id": "doubleName",
+          "type": "double",
+          "default": 1.2,
+          "role": "new_column"
+        },
+        {
+          "id": "condition",
+          "type": "string",
+          "default": "",
+          "role": "expression"
+        }
+      ]
+    },
+    {
+      "id": "inlineEditingTableError",
+      "parameters": [
+        {
+          "id": "valueName",
+          "type": "integer",
+          "default": 2,
+          "role": "new_column"
+        },
+        {
+          "id": "doubleName",
+          "type": "double",
+          "default": 1.2,
+          "role": "new_column"
+        },
+        {
+          "id": "condition",
+          "type": "string",
+          "default": "",
+          "role": "expression"
+        }
+      ]
+    },
+    {
+      "id": "inlineEditingTableError2",
       "parameters": [
         {
           "id": "valueName",
@@ -119,6 +227,42 @@
         },
         "description": {
           "default": "Complex table control list editor table input"
+        }
+      },
+      {
+        "parameter_ref": "inlineEditingTableWarning",
+        "label": {
+          "default": "Values"
+        },
+        "description": {
+          "default": "Complex table control list editor table input"
+        },
+        "text_before": {
+          "default": "To generated a warning set integer Field cell value to 3"
+        }
+      },
+      {
+        "parameter_ref": "inlineEditingTableError",
+        "label": {
+          "default": "Values"
+        },
+        "description": {
+          "default": "Complex table control list editor table input"
+        },
+        "text_before": {
+          "default": "To generated a error set both the integer Field cell value to 2 AND the double Field cell value to 2.3"
+        }
+      },
+      {
+        "parameter_ref": "inlineEditingTableError2",
+        "label": {
+          "default": "Values"
+        },
+        "description": {
+          "default": "Complex table control list editor table input"
+        },
+        "text_before": {
+          "default": "To generated a error set integer Field cell value to 2 OR the double Field cell value to 2.3"
         }
       }
     ],
@@ -226,6 +370,147 @@
             }
           }
         ]
+      },
+      {
+        "complex_type_ref": "inlineEditingTableWarning",
+        "row_selection": "single",
+        "parameters": [
+          {
+            "parameter_ref": "valueName",
+            "label": {
+              "default": "Integer Field",
+              "resource_key": "expressionCellTable.name.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.name.desc"
+            },
+            "width": 10,
+            "edit_style": "inline",
+            "summary": true
+          },
+          {
+            "parameter_ref": "doubleName",
+            "label": {
+              "default": "Double Field",
+              "resource_key": "expressionCellTable.doubleName.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.doubleName.desc"
+            },
+            "width": 10,
+            "edit_style": "inline",
+            "summary": true
+          },
+          {
+            "parameter_ref": "condition",
+            "language": "CLEM",
+            "label": {
+              "resource_key": "expressionCellTable.description.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.description.desc"
+            },
+            "width": 15,
+            "edit_style": "on_panel",
+            "place_holder_text": {
+              "default": "Enter condition expression"
+            }
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "inlineEditingTableError",
+        "row_selection": "single",
+        "parameters": [
+          {
+            "parameter_ref": "valueName",
+            "label": {
+              "default": "Integer Field",
+              "resource_key": "expressionCellTable.name.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.name.desc"
+            },
+            "width": 10,
+            "edit_style": "inline",
+            "summary": true
+          },
+          {
+            "parameter_ref": "doubleName",
+            "label": {
+              "default": "Double Field",
+              "resource_key": "expressionCellTable.doubleName.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.doubleName.desc"
+            },
+            "width": 10,
+            "edit_style": "inline",
+            "summary": true
+          },
+          {
+            "parameter_ref": "condition",
+            "language": "CLEM",
+            "label": {
+              "resource_key": "expressionCellTable.description.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.description.desc"
+            },
+            "width": 15,
+            "edit_style": "on_panel",
+            "place_holder_text": {
+              "default": "Enter condition expression"
+            }
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "inlineEditingTableError2",
+        "row_selection": "single",
+        "parameters": [
+          {
+            "parameter_ref": "valueName",
+            "label": {
+              "default": "Integer Field",
+              "resource_key": "expressionCellTable.name.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.name.desc"
+            },
+            "width": 10,
+            "edit_style": "inline",
+            "summary": true
+          },
+          {
+            "parameter_ref": "doubleName",
+            "label": {
+              "default": "Double Field",
+              "resource_key": "expressionCellTable.doubleName.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.doubleName.desc"
+            },
+            "width": 10,
+            "edit_style": "inline",
+            "summary": true
+          },
+          {
+            "parameter_ref": "condition",
+            "language": "CLEM",
+            "label": {
+              "resource_key": "expressionCellTable.description.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.description.desc"
+            },
+            "width": 15,
+            "edit_style": "on_panel",
+            "place_holder_text": {
+              "default": "Enter condition expression"
+            }
+          }
+        ]
       }
     ],
     "group_info": [
@@ -264,9 +549,175 @@
             ]
           }
         ]
+      },
+      {
+        "id": "Conditions",
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "inlineEditingTableWarning-summary-panel",
+            "type": "summaryPanel",
+            "label": {
+              "default": "Configure Warning Inline Editing Table"
+            },
+            "group_info": [
+              {
+                "id": "Inline editing",
+                "parameter_refs": [
+                  "inlineEditingTableWarning"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "inlineEditingTableError-summary-panel",
+            "type": "summaryPanel",
+            "label": {
+              "default": "Configure AND Error Inline Editing Table"
+            },
+            "group_info": [
+              {
+                "id": "Inline editing",
+                "parameter_refs": [
+                  "inlineEditingTableError"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "inlineEditingTableError2-summary-panel",
+            "type": "summaryPanel",
+            "label": {
+              "default": "Configure OR Error Inline Editing Table"
+            },
+            "group_info": [
+              {
+                "id": "Inline editing",
+                "parameter_refs": [
+                  "inlineEditingTableError2"
+                ]
+              }
+            ]
+          }
+        ]
       }
     ]
   },
+  "conditions": [
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "structurelisteditorTableInput",
+          "message": {
+            "default": "table cannot be empty"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "structurelisteditorTableInput",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+		{
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "inlineEditingTableWarning",
+          "message": {
+            "default": "table cannot be empty"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "inlineEditingTableWarning",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "inlineEditingTableWarning[0]",
+          "message": {
+            "resource_key": "invalid_subpanel_name",
+            "default": "field1 should not equal 3"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "inlineEditingTableWarning[0]",
+            "op": "notEquals",
+            "value": 3
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "inlineEditingTableError[0]",
+          "message": {
+            "resource_key": "invalid_subpanel_name",
+            "default": "fields are 2 and 2.3"
+          }
+        },
+        "evaluate": {
+          "or": [
+            {
+              "condition": {
+                "parameter_ref": "inlineEditingTableError[0]",
+                "op": "notEquals",
+                "value": 2
+              }
+            },
+            {
+              "condition": {
+                "parameter_ref": "inlineEditingTableError[1]",
+                "op": "notEquals",
+                "value": 2.3
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "inlineEditingTableError2[0]",
+          "message": {
+            "resource_key": "invalid_subpanel_name",
+            "default": "fields are 2 or 2.3"
+          }
+        },
+        "evaluate": {
+          "and": [
+            {
+              "condition": {
+                "parameter_ref": "inlineEditingTableError2[0]",
+                "op": "notEquals",
+                "value": 2
+              }
+            },
+            {
+              "condition": {
+                "parameter_ref": "inlineEditingTableError2[1]",
+                "op": "notEquals",
+                "value": 2.3
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "dataset_metadata": {
     "fields": [
       {
