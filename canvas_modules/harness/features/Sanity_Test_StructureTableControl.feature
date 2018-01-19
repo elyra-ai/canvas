@@ -18,7 +18,7 @@ Feature: Sanity_Test_StructureTableControl
 		Then I select the "Na" checkbox
 		Then I select the "K" checkbox
 		Then I select the "Drug" checkbox
-		Then I select the field picker "back" button to save my changes
+		Then I click on the "OK" button
 		Then I verify that "Age" is a value in the "field" cell of row 1 in the table "flexible-table-structuretableReadonlyColumnDefaultIndex"
 		Then I verify that "1" is a value in the "structuretableRenameFields_readonly_int" cell of row 1 in the table "flexible-table-structuretableReadonlyColumnDefaultIndex"
 		Then I verify that "BP" is a value in the "field" cell of row 2 in the table "flexible-table-structuretableReadonlyColumnDefaultIndex"
@@ -56,7 +56,7 @@ Feature: Sanity_Test_StructureTableControl
 		Then I click on Add Columns button to open field picker at index "0"
 		Then I select the "Age" checkbox
 		Then I select the "Drug" checkbox
-		Then I select the field picker "back" button to save my changes
+		Then I click on the "OK" button
 		Then I verify that "Cholesterol" is a value in the "field" cell of row 1 in the table "flexible-table-structuretableReadonlyColumnStartValue"
 		Then I verify that "5" is a value in the "structuretable_sort_order_readonly_int" cell of row 1 in the table "flexible-table-structuretableReadonlyColumnStartValue"
 		Then I verify that "Age" is a value in the "field" cell of row 2 in the table "flexible-table-structuretableReadonlyColumnStartValue"
@@ -71,7 +71,7 @@ Feature: Sanity_Test_StructureTableControl
 		Then I verify that "6" is a value in the "structuretable_sort_order_readonly_int" cell of row 2 in the table "flexible-table-structuretableReadonlyColumnStartValue"
 		Then I click on Add Columns button to open field picker at index "0"
 		Then I select the "Cholesterol" checkbox
-		Then I select the field picker "back" button to save my changes
+		Then I click on the "OK" button
 		Then I verify that "Cholesterol" is a value in the "field" cell of row 3 in the table "flexible-table-structuretableReadonlyColumnStartValue"
 		Then I verify that "7" is a value in the "structuretable_sort_order_readonly_int" cell of row 3 in the table "flexible-table-structuretableReadonlyColumnStartValue"
 		# close wide flyout
@@ -92,7 +92,7 @@ Feature: Sanity_Test_StructureTableControl
 		Then I select the "Age" checkbox
 		Then I select the "Drug" checkbox
 		Then I select the "Sex" checkbox
-		Then I select the field picker "back" button to save my changes
+		Then I click on the "OK" button
 		Then I verify that "Cholesterol" is a value in the "field" cell of row 1 in the table "flexible-table-structuretableReadonlyColumnStartValue"
 		Then I verify that "5" is a value in the "structuretable_sort_order_readonly_int" cell of row 1 in the table "flexible-table-structuretableReadonlyColumnStartValue"
 		Then I verify that "Age" is a value in the "field" cell of row 2 in the table "flexible-table-structuretableReadonlyColumnStartValue"

@@ -340,6 +340,13 @@ input.number,
 	border-bottom: none;
 }
 
+.rightside-modal-container #field-picker-table .modal__buttons {
+  position: absolute;
+  border-top: unset;
+  padding-top: 7px;
+  z-index: 1;
+}
+
 /* Field Picker */
 
 #field-picker-back-button {
@@ -354,7 +361,7 @@ input.number,
 #field-picker-filter-list{
   list-style-type: none;
   float: right;
-  margin-top: 10px;
+  margin-top: 6px;
   margin-bottom: 0px;
   width:40%;
   height: 22px;
@@ -369,7 +376,7 @@ input.number,
 }
 
 #filter-list-title {
-  width: fit-content;
+  width: auto;
   height: 32px;
 }
 
@@ -753,6 +760,13 @@ th div div label, td div div label {
 
 .field-picker-top-row {
   margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.rightside-modal-container .field-picker-top-row {
+  width: 50%;
+  float: right;
 }
 
 .flexible-table-search-container {

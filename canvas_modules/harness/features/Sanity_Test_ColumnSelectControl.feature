@@ -42,7 +42,7 @@ Feature: Sanity_Test_ColumnSelectControl
 		Then I select the "Values" tab in "flyout"
 		Then I select the "add-fields-button" button on the "fields1_panel" parameter
 		Then I select the "Na" checkbox
-		Then I select the field picker "back" button to save my changes
+		Then I click on the "OK" button
 		Then I verify that the "fields1_panel" parameter contains the "Na" value
 		Then I verify that the "fields1_panel" parameter has 2 values
 		Then I select the "apply" button in "flyout"
@@ -55,7 +55,7 @@ Feature: Sanity_Test_ColumnSelectControl
 		Then I select the "Values" tab in "flyout"
 		Then I select the "add-fields-button" button on the "fields2_panel" parameter
 		Then I select the "all" checkbox
-		Then I select the field picker "back" button to save my changes
+		Then I click on the "OK" button
 		Then I verify that the "fields2_panel" parameter has 15 values
 		Then I select the "apply" button in "flyout"
 		Given I have toggled the app side common-properties panel
@@ -131,7 +131,7 @@ Feature: Sanity_Test_ColumnSelectControl
 		Then I select the "remove-fields-button-enabled" button on the "fields_warning" parameter
 		Then I select the "add-fields-button" button on the "fields_warning" parameter
 		Then I select the "age" checkbox
-		Then I select the field picker "back" button to save my changes
+		Then I click on the "OK" button
 		Then I validate the "warning" message for the "fields_warning" parameter of "Shouldn't select 'age'"
 		Then I select the "apply" button in "flyout"
 		Then I verify the event log has the "warning" message for the "fields_warning" parameter of "Shouldn't select 'age'"

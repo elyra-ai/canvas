@@ -16,6 +16,7 @@ import ButtonToolbar from "react-bootstrap/lib/ButtonToolbar";
 import Tabs from "ap-components-react/dist/components/Tabs";
 import { TOOL_TIP_DELAY } from "../constants/constants.js";
 import PropertyUtil from "../util/property-utils.js";
+import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "../constants/constants";
 
 import ReactTooltip from "react-tooltip";
 
@@ -728,11 +729,11 @@ class EditorForm extends React.Component {
 		});
 	}
 
-	fieldPicker() {
+	fieldPicker(title) {
 		const currentControlValues = this.props.controller.getPropertyValues();
 		const propertyId = { name: this.state.fieldPickerControl.name };
 		const filteredDataset = this.props.controller.getFilteredDatasetMetadata(propertyId, this.sharedCtrlInfo);
-		const form = this.props.controller.getForm();
+
 		return (<div id="field-picker-table">
 			<FieldPicker
 				key="field-picker-control"
@@ -742,7 +743,7 @@ class EditorForm extends React.Component {
 				dataModel={filteredDataset}
 				control={this.state.fieldPickerControl}
 				updateSelectedRows={this.updateSelectedRows}
-				title={form.label}
+				title={title}
 				rightFlyout={this.props.rightFlyout}
 			/>
 		</div>);
@@ -751,12 +752,21 @@ class EditorForm extends React.Component {
 	render() {
 		var content = this.genUIContent(this.props.controller.getUiItems());
 		var wideFly = <div />;
+
+		const form = this.props.controller.getForm();
+		const title = PropertyUtil.formatMessage(this.props.intl,
+			MESSAGE_KEYS.FIELDPICKER_SAVEBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_SAVEBUTTON_LABEL) + " " + form.label;
+
 		if (this.props.rightFlyout) {
-			wideFly = (<WideFlyout showPropertiesButtons={false} show={this.state.showFieldPicker && this.props.rightFlyout}>
-				{this.fieldPicker()}
+			wideFly = (<WideFlyout
+				showPropertiesButtons={false}
+				show={this.state.showFieldPicker && this.props.rightFlyout}
+				title={title}
+			>
+				{this.fieldPicker(title)}
 			</WideFlyout>);
 		} else if (this.state.showFieldPicker) {
-			content = this.fieldPicker();
+			content = this.fieldPicker(title);
 		}
 		var formButtons = [];
 		return (

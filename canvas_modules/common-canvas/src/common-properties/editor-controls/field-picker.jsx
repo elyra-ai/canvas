@@ -15,6 +15,7 @@ import PropTypes from "prop-types";
 import ReactTooltip from "react-tooltip";
 import EditorControl from "./editor-control.jsx";
 import FlexibleTable from "./flexible-table.jsx";
+import PropertiesButtons from "../properties-buttons.jsx";
 import PropertyUtils from "../util/property-utils";
 
 import { Tr, Td } from "reactable";
@@ -78,7 +79,8 @@ class FieldPicker extends EditorControl {
 		this.getDefaultRow = this.getDefaultRow.bind(this);
 		this.getTableData = this.getTableData.bind(this);
 		this.getVisibleData = this.getVisibleData.bind(this);
-		this.handleBack = this.handleBack.bind(this);
+		this.handleSave = this.handleSave.bind(this);
+		this.handleCancel = this.handleCancel.bind(this);
 		this.handleCheckAll = this.handleCheckAll.bind(this);
 		this.handleFieldChecked = this.handleFieldChecked.bind(this);
 		this.handleReset = this.handleReset.bind(this);
@@ -217,12 +219,17 @@ class FieldPicker extends EditorControl {
 		}
 	}
 
-	handleBack() {
+	handleSave() {
 		if (this.props.control.subControls) {
 			this.setReadOnlyColumnValue();
 		}
 		this.props.controller.updatePropertyValue({ name: this.props.control.name }, this.state.newControlValues);
 		this.props.updateSelectedRows(this.props.control.name, this.getNewSelections());
+		this.props.closeFieldPicker();
+	}
+
+	handleCancel() {
+		this.handleReset();
 		this.props.closeFieldPicker();
 	}
 
@@ -409,45 +416,33 @@ class FieldPicker extends EditorControl {
 		this.setState({ fields: controlValue });
 	}
 
-	render() {
-		let resetIconImage = (<img src={resetIcon} />);
-		if (this.state.hoverResetIcon) {
-			resetIconImage = (<img src={resetHoverIcon} />);
+	_genBackButton() {
+		if (this.props.rightFlyout) {
+			const applyLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.APPLYBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.APPLYBUTTON_LABEL);
+			const rejectLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.REJECTBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.REJECTBUTTON_LABEL);
+
+			return (<PropertiesButtons
+				okHandler={this.handleSave}
+				cancelHandler={this.handleCancel}
+				showPropertiesButtons={this.props.showPropertiesButtons}
+				applyLabel={applyLabel}
+				rejectLabel={rejectLabel}
+			/>);
 		}
 
-		const title = this.props.title ? this.props.title : "Node";
-		const saveLabel = PropertyUtils.formatMessage(this.props.intl,
-			MESSAGE_KEYS.FIELDPICKER_SAVEBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_SAVEBUTTON_LABEL) + " " + title;
 		const saveTooltip = PropertyUtils.formatMessage(this.props.intl,
 			MESSAGE_KEYS.FIELDPICKER_SAVEBUTTON_TOOLTIP, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_SAVEBUTTON_TOOLTIP);
-		const resetLabel = PropertyUtils.formatMessage(this.props.intl,
-			MESSAGE_KEYS.FIELDPICKER_RESETBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_RESETBUTTON_LABEL);
-		const resetTooltip = PropertyUtils.formatMessage(this.props.intl,
-			MESSAGE_KEYS.FIELDPICKER_RESETBUTTON_TOOLTIP, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_RESETBUTTON_TOOLTIP);
 		const tooltipId = "tooltip-fp-" + this.props.control.name;
-		const header = (
-			<div className="field-picker-top-row">
+		return (
+			<div>
 				<div className="properties-tooltips-container" data-tip={saveTooltip} data-for={tooltipId}>
 					<Button
 						id="field-picker-back-button"
 						back icon="back"
-						onClick={this.handleBack}
+						onClick={this.handleSave}
 					/>
 				</div>
-				<label className="control-label">{saveLabel}</label>
-				<div className="properties-tooltips-fp-reset" data-tip={resetTooltip} data-for={tooltipId}>
-					<div id="reset-fields-button"
-						className="button"
-						onClick={this.handleReset}
-						onMouseEnter={this.mouseEnterResetButton}
-						onMouseLeave={this.mouseLeaveResetButton}
-					>
-						<div id="reset-fields-button-label">{resetLabel}</div>
-						<div id="reset-fields-button-icon">
-							{resetIconImage}
-						</div>
-					</div>
-				</div>
+				<label className="control-label">{this.props.title}</label>
 				<ReactTooltip
 					id={tooltipId}
 					place="top"
@@ -459,7 +454,47 @@ class FieldPicker extends EditorControl {
 				/>
 			</div>
 		);
+	}
 
+	_genResetButton() {
+		let resetIconImage = (<img src={resetIcon} />);
+		if (this.state.hoverResetIcon) {
+			resetIconImage = (<img src={resetHoverIcon} />);
+		}
+
+		const resetLabel = PropertyUtils.formatMessage(this.props.intl,
+			MESSAGE_KEYS.FIELDPICKER_RESETBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_RESETBUTTON_LABEL);
+		const resetTooltip = PropertyUtils.formatMessage(this.props.intl,
+			MESSAGE_KEYS.FIELDPICKER_RESETBUTTON_TOOLTIP, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_RESETBUTTON_TOOLTIP);
+		const tooltipId = "tooltip-fp-" + this.props.control.name;
+
+		return (<div>
+			<div className="properties-tooltips-fp-reset" data-tip={resetTooltip} data-for={tooltipId}>
+				<div id="reset-fields-button"
+					className="button"
+					onClick={this.handleReset}
+					onMouseEnter={this.mouseEnterResetButton}
+					onMouseLeave={this.mouseLeaveResetButton}
+				>
+					<div id="reset-fields-button-label">{resetLabel}</div>
+					<div id="reset-fields-button-icon">
+						{resetIconImage}
+					</div>
+				</div>
+			</div>
+			<ReactTooltip
+				id={tooltipId}
+				place="top"
+				type="light"
+				effect="solid"
+				border
+				className="properties-tooltips"
+				delayShow={TOOL_TIP_DELAY}
+			/>
+		</div>);
+	}
+
+	_genFilterTypes() {
 		const that = this;
 		const filters = this.state.filterList.map(function(filter, ind) {
 			let enabled = true;
@@ -500,19 +535,18 @@ class FieldPicker extends EditorControl {
 
 		const filterLabel = PropertyUtils.formatMessage(this.props.intl,
 			MESSAGE_KEYS.FIELDPICKER_FILTER_LABEL, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_FILTER_LABEL);
-		const search = (
-			<div>
-				<div >
-					<ul id="field-picker-filter-list">
-						<li id="filter-list-title" className="filter-list-li">
-							{filterLabel}
-						</li>
-						{filters}
-					</ul>
-				</div>
-			</div>
+		return (
+			<ul id="field-picker-filter-list">
+				<li id="filter-list-title" className="filter-list-li">
+					{filterLabel}
+				</li>
+				{filters}
+			</ul>
 		);
+	}
 
+	_genTable() {
+		const that = this;
 		let checkedAll = this.state.checkedAll;
 		// check all box should be checked if all in view is selected
 		const visibleData = this.getVisibleData();
@@ -567,7 +601,7 @@ class FieldPicker extends EditorControl {
 
 		const tableData = this.getTableData();
 
-		const table = (
+		return (
 			<FlexibleTable className="table" id="table"
 				sortable={["fieldName", "dataType"]}
 				filterable={["fieldName"]}
@@ -579,14 +613,33 @@ class FieldPicker extends EditorControl {
 				scrollKey={this.props.control.name}
 			/>
 		);
+	}
 
-		return (
-			<div>
-				{header}
-				{search}
+	render() {
+		const backButton = this._genBackButton();
+		const resetButton = this._genResetButton();
+		const filterTypes = this._genFilterTypes();
+		const table = this._genTable();
+
+		if (this.props.rightFlyout) {
+			return (<div>
+				<div className="field-picker-top-row">
+					{filterTypes}
+					{resetButton}
+				</div>
 				{table}
+				{backButton}
+			</div>);
+		}
+
+		return (<div>
+			<div className="field-picker-top-row">
+				{backButton}
+				{resetButton}
 			</div>
-		);
+			{filterTypes}
+			{table}
+		</div>);
 	}
 }
 

@@ -5,6 +5,7 @@ Feature: Sanity_Test_SummaryPanel
 	As a human
 	I want to test a common-properties summary panel
 	So I can test the summary panel controls in common-properties
+@watch
 		Scenario: Test of summary panel and wideflyout
 			Given I am on the test harness
 			Given I have toggled the app side common-properties panel
@@ -34,9 +35,9 @@ Feature: Sanity_Test_SummaryPanel
 			Then I open the "Configure Sort Order" summary link in the "Column Structure Table" category
 			Then I click the "Add" button on the "structuretableSortOrder" table
 			Then I select the "BP" field from the "Field Picker" table
-			Then I click on the "Select Fields" button to save the new columns
 			Then I click on the "OK" button
 			Then I verify that the summary list contains the value of "BP" for the "Configure Sort Order" summary link in the "Column Structure Table" category
+			Then I click on the "OK" button
 
 			# remove a row in the subcontrol and the summary list should Not contain the removed value.
 			Then I open the "Configure Sort Order" summary link in the "Column Structure Table" category
@@ -49,7 +50,6 @@ Feature: Sanity_Test_SummaryPanel
 			Then I open the "Configure Sort Order" summary link in the "Column Structure Table" category
 			Then I click the "Add" button on the "structuretableSortOrder" table
 			Then I select the "BP" field from the "Field Picker" table
-			Then I click on the "Select Fields" button to save the new columns
 			Then I click on the "Cancel" button
 			Then I verify that the summary list does not contains the value of "BP" for the "Configure Sort Order" summary link in the "Column Structure Table" category
 

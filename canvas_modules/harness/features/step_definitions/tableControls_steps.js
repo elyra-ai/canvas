@@ -83,6 +83,11 @@ module.exports = function() {
 		}
 	});
 
+	this.Then(/^I verify the "([^"]*)" table has (\d+) rows$/, function(table, rows) {
+		const tableRows = browser.$("#" + table).$$(".table-row");
+		expect(tableRows.length).toEqual(Number(rows));
+	});
+
 	this.Then(/^I click on the "([^"]*)" button to save the new columns$/, function(arg1) {
 		browser.$("#field-picker-back-button").click();
 	});

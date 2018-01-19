@@ -98,16 +98,25 @@ Feature: Sanity_Test_CommonProperties_Flyout
 			Given I have uploaded JSON for common-properties "Conditions_paramDef.json"
 			Then I click the "Columns" category from flyout
 			Then I click on Add Columns button to open field picker at index "0"
-			Then I add "Drug" to first input control
+			Then I select the "Drug" checkbox
+			Then I click on the "OK" button
+			Then I verify that the "columnSelectSharedWithInput" parameter has 2 values
 			Then I click on Add Columns button to open field picker at index "1"
 			Then I verify "Drug" is not present second input control
-			Then I add "Na" to second input control
+			Then I select the "Na" checkbox
+			Then I click on the "OK" button
+			Then I verify that the "columnSelectInputFieldList" parameter has 3 values
 			Then I click on Add Columns button to open field picker at index "0"
 			Then I verify "Na" is not present first input control
+			Then I click on the "OK" button
 			Then I click the "Tables" category from flyout
 			Then I open the "Configure Sort Order" wide flyout panel
 			Then I click on Add Columns button to open field picker at index "2"
-			Then I add "Age" from the field picker to the sort table control
+			Then I select the "Age" checkbox
+			Then I click on the "OK" button
+			Then I verify the "flexible-table-structuretableSortOrder" table has 2 rows
+			Then I verify that "Cholesterol" is a value in the "field" cell of row 1 in the table "flexible-table-structuretableSortOrder"
+			Then I verify that "Age" is a value in the "field" cell of row 2 in the table "flexible-table-structuretableSortOrder"
 			Then I have closed the common properties dialog by clicking on close button
 
 		# Number Textbox Box with Decimal Number Test
