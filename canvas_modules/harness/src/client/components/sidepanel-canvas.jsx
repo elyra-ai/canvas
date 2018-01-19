@@ -261,12 +261,14 @@ export default class SidePanelForms extends React.Component {
 		ev.dataTransfer.setData("text",
 			JSON.stringify({
 				operation: "addToCanvas",
-				editType: "createNode",
 				label: "Derive",
-				operator_id_ref: "derive",
-				nodeTypeId: "derive",
 				offsetX: 100,
-				offsetY: 100
+				offsetY: 100,
+				data: {
+					editType: "createNode",
+					operator_id_ref: "derive",
+					nodeTypeId: "derive"
+				}
 			}));
 	}
 
