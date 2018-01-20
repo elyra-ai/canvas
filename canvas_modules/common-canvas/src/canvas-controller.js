@@ -15,6 +15,7 @@ import constants from "../constants/common-constants.js";
 import CreateAutoNodeAction from "./command-actions/createAutoNodeAction.js";
 import CreateCommentAction from "./command-actions/createCommentAction.js";
 import CreateNodeAction from "./command-actions/createNodeAction.js";
+import CreateNodeOnLinkAction from "./command-actions/createNodeOnLinkAction.js";
 import DeleteLinkAction from "./command-actions/deleteLinkAction.js";
 import DeleteObjectsAction from "./command-actions/deleteObjectsAction.js";
 import DisconnectNodesAction from "./command-actions/disconnectNodesAction.js";
@@ -176,6 +177,10 @@ export default class CanvasController {
 		this.objectModel.createCommentLinks(data);
 	}
 
+	getLink(linkId) {
+		return this.objectModel.getLink(linkId);
+	}
+
 	addNodeTypeToPalette(nodeTypeObj, category, categoryLabel) {
 		this.objectModel.addNodeTypeToPalette(nodeTypeObj, category, categoryLabel);
 	}
@@ -273,6 +278,10 @@ export default class CanvasController {
 		return this.objectModel.getOffsetIntoNegativeSpace(editType, offsetX, offsetY);
 	}
 
+	canNodeBeDroppedOnLink(operatorIdRef) {
+		return this.objectModel.canNodeBeDroppedOnLink(operatorIdRef);
+	}
+
 	getObjectModel() {
 		return this.objectModel;
 	}
@@ -280,7 +289,6 @@ export default class CanvasController {
 	getCommandStack() {
 		return this.commandStack;
 	}
-
 
 	isInternalObjectModelEnabled() {
 		return this.canvasConfig.enableInternalObjectModel;
@@ -488,6 +496,22 @@ export default class CanvasController {
 		this.editActionHandler(data);
 	}
 
+	// Called when a node is dragged from the palette onto the canvas and dropped
+	// onto an existing link between two data nodes.
+	createNodeFromTemplateOnLinkAt(operatorIdRef, link, label, x, y) {
+		var data = {
+			editType: "createNodeOnLink",
+			label: label, // label will be passed through to the external object model
+			operator_id_ref: operatorIdRef,
+			nodeTypeId: operatorIdRef, // TODO - Remove this when WML Canvas migrates to pipeline flow
+			offsetX: x,
+			offsetY: y,
+			link: link
+		};
+
+		this.editActionHandler(data);
+	}
+
 	// Called when a node is dragged from the 'output' window (in WML) onto the canvas
 	createNodeFromObjectAt(sourceId, sourceObjectTypeId, label, x, y) {
 		var data = {
@@ -673,6 +697,11 @@ export default class CanvasController {
 				this.commandStack.do(command);
 				// need to pass the nodeid along to any this.props.editActionHandlers
 				data.nodeId = node.id;
+				break;
+			}
+			case "createNodeOnLink": {
+				const command = new CreateNodeOnLinkAction(data, this.objectModel);
+				this.commandStack.do(command);
 				break;
 			}
 			case "createAutoNode": {

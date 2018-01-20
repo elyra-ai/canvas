@@ -323,7 +323,7 @@ const links = (state = [], action) => {
 
 	case "ADD_AUTO_NODE": {
 		var newAutoLink = {
-			id: action.linkId,
+			id: action.data.linkId,
 			class_name: "d3-data-link",
 			srcNodeId: action.data.srcNode.id,
 			trgNodeId: action.data.newNode.id,
@@ -1241,6 +1241,15 @@ export default class ObjectModel {
 		this.store.dispatch({ type: "REMOVE_NODE_ATTR", data: { objIds: objIds, attrName: attrName } });
 	}
 
+	canNodeBeDroppedOnLink(operatorIdRef) {
+		const nodeType = this.getPaletteNode(operatorIdRef);
+		if (nodeType.input_ports && nodeType.input_ports.length > 0 &&
+				nodeType.output_ports && nodeType.output_ports.length > 0) {
+			return true;
+		}
+		return false;
+	}
+
 	// Comment methods
 
 	createComment(source) {
@@ -1322,20 +1331,28 @@ export default class ObjectModel {
 		const linkNodeList = [];
 		data.nodes.forEach((srcInfo) => {
 			data.targetNodes.forEach((trgInfo) => {
-				if (this.isConnectionAllowed(srcInfo, trgInfo)) {
-					const info = {};
-					info.id = this.getUniqueId(CREATE_NODE_LINK, { "sourceNode": this.getNode(srcInfo.id), "targetNode": this.getNode(trgInfo.id) });
-					info.type = "nodeLink";
-					info.class_name = "d3-data-link";
-					info.srcNodeId = srcInfo.id;
-					info.srcNodePortId = srcInfo.portId;
-					info.trgNodeId = trgInfo.id;
-					info.trgNodePortId = trgInfo.portId;
-					linkNodeList.push(info);
+				const link = this.createNodeLink(srcInfo, trgInfo);
+				if (link) {
+					linkNodeList.push(link);
 				}
 			});
 		});
 		return linkNodeList;
+	}
+
+	createNodeLink(srcInfo, trgInfo) {
+		if (this.isConnectionAllowed(srcInfo, trgInfo)) {
+			const link = {};
+			link.id = this.getUniqueId(CREATE_NODE_LINK, { "sourceNode": this.getNode(srcInfo.id), "targetNode": this.getNode(trgInfo.id) });
+			link.type = "nodeLink";
+			link.class_name = "d3-data-link";
+			link.srcNodeId = srcInfo.id;
+			link.srcNodePortId = srcInfo.portId;
+			link.trgNodeId = trgInfo.id;
+			link.trgNodePortId = trgInfo.portId;
+			return link;
+		}
+		return null;
 	}
 
 	cloneNodeLink(link, srcNodeId, trgNodeId) {

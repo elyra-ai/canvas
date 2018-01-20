@@ -62,6 +62,15 @@ export default class DiagramCanvas extends React.Component {
 		}
 	}
 
+	getNodeLinkAtMousePos(event) {
+		const element = document.elementFromPoint(event.clientX, event.clientY);
+
+		if (element && element.nodeName === "path") {
+			return this.canvasD3Layout.getNodeLinkForElement(element);
+		}
+		return null;
+	}
+
 	mouseCoords(event) {
 		const rect = event.currentTarget.getBoundingClientRect();
 
@@ -82,10 +91,17 @@ export default class DiagramCanvas extends React.Component {
 		mousePos.y -= (this.canvasD3Layout.layout.defaultNodeHeight / 2) * this.canvasD3Layout.zoomTransform.k;
 
 		const transPos = this.canvasD3Layout.transformMousePos(mousePos);
+		const link = this.getNodeLinkAtMousePos(event);
 
 		if (jsVal !== null) {
 			if (jsVal.operation === "createFromTemplate") {
-				this.props.canvasController.createNodeFromTemplateAt(jsVal.operator_id_ref, jsVal.label, transPos.x, transPos.y);
+				if (link &&
+						this.props.canvasController.canNodeBeDroppedOnLink(jsVal.operator_id_ref) &&
+						this.props.canvasController.isInternalObjectModelEnabled()) {
+					this.props.canvasController.createNodeFromTemplateOnLinkAt(jsVal.operator_id_ref, link, jsVal.label, transPos.x, transPos.y);
+				} else {
+					this.props.canvasController.createNodeFromTemplateAt(jsVal.operator_id_ref, jsVal.label, transPos.x, transPos.y);
+				}
 
 			} else if (jsVal.operation === "createFromObject") {
 				this.props.canvasController.createNodeFromObjectAt(jsVal.sourceId, jsVal.sourceObjectTypeId, jsVal.label, transPos.x, transPos.y);

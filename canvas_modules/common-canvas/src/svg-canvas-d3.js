@@ -289,6 +289,20 @@ export default class CanvasD3Layout {
 		};
 	}
 
+	// Returns the node link object from the canvasInfo corresponding to the
+	// element passed in which should be a 'path' DOM object. Returns null if
+	// the link cannot be found.
+	getNodeLinkForElement(element) {
+		const datum = d3.select(element).datum();
+		if (datum) {
+			var foundLink = this.canvasController.getLink(datum.id);
+			if (foundLink && foundLink.type === "nodeLink") {
+				return foundLink;
+			}
+		}
+		return null;
+	}
+
 	getNode(nodeId) {
 		const node = this.canvasJSON.nodes.find((nd) => nd.id === nodeId);
 		return (typeof node === "undefined") ? null : node;
