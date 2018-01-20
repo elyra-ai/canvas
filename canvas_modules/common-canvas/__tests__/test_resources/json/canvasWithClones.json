@@ -1,0 +1,194 @@
+{
+  "nodes": [
+    {
+      "id": "2e6ecd75-8b2c-4c49-991c-80fa98fe08eb",
+      "class_name": "canvas-node",
+      "image": "/images/filter.svg",
+      "output_ports": [
+        {
+          "id": "outPort",
+          "label": "Output Port",
+          "cardinality": {
+            "min": 0,
+            "max": 1
+          }
+        }
+      ],
+      "input_ports": [],
+      "x_pos": 50,
+      "y_pos": 50,
+      "label": "Var. File",
+      "inputPortsHeight": -3,
+      "outputPortsHeight": 12,
+      "height": 40,
+      "width": 160
+    },
+    {
+      "id": "b4f90b52-d198-42f0-85cc-31af3914dd4f",
+      "class_name": "canvas-node",
+      "image": "/images/filter.svg",
+      "output_ports": [
+        {
+          "id": "outPort",
+          "label": "Output Port",
+          "cardinality": {
+            "min": 0,
+            "max": 1
+          }
+        }
+      ],
+      "input_ports": [
+        {
+          "id": "inPort",
+          "label": "Input Port",
+          "cardinality": {
+            "min": 0,
+            "max": 1
+          }
+        }
+      ],
+      "x_pos": 290,
+      "y_pos": 50,
+      "label": "Select",
+      "inputPortsHeight": 12,
+      "outputPortsHeight": 12,
+      "height": 40,
+      "width": 160
+    },
+    {
+      "id": "64505c88-132a-4753-8b39-81adf1e8599d",
+      "class_name": "canvas-node",
+      "image": "/images/filter.svg",
+      "output_ports": [
+        {
+          "id": "outPort",
+          "label": "Output Port",
+          "cardinality": {
+            "min": 0,
+            "max": 1
+          }
+        }
+      ],
+      "input_ports": [
+        {
+          "id": "inPort",
+          "label": "Input Port",
+          "cardinality": {
+            "min": 0,
+            "max": 1
+          }
+        }
+      ],
+      "x_pos": 530,
+      "y_pos": 50,
+      "label": "Sort",
+      "inputPortsHeight": 12,
+      "outputPortsHeight": 12,
+      "height": 40,
+      "width": 160
+    },
+    {
+      "id": "myUniqueClonedNodeId_2e6ecd75-8b2c-4c49-991c-80fa98fe08eb",
+      "class_name": "canvas-node",
+      "image": "/images/filter.svg",
+      "output_ports": [
+        {
+          "id": "outPort",
+          "label": "Output Port",
+          "cardinality": {
+            "min": 0,
+            "max": 1
+          }
+        }
+      ],
+      "input_ports": [],
+      "x_pos": 770,
+      "y_pos": 50,
+      "label": "Var. File",
+      "inputPortsHeight": -3,
+      "outputPortsHeight": 12,
+      "height": 40,
+      "width": 160
+    },
+    {
+      "id": "myUniqueClonedNodeId_b4f90b52-d198-42f0-85cc-31af3914dd4f",
+      "class_name": "canvas-node",
+      "image": "/images/filter.svg",
+      "output_ports": [
+        {
+          "id": "outPort",
+          "label": "Output Port",
+          "cardinality": {
+            "min": 0,
+            "max": 1
+          }
+        }
+      ],
+      "input_ports": [
+        {
+          "id": "inPort",
+          "label": "Input Port",
+          "cardinality": {
+            "min": 0,
+            "max": 1
+          }
+        }
+      ],
+      "x_pos": 1010,
+      "y_pos": 50,
+      "label": "Select",
+      "inputPortsHeight": 12,
+      "outputPortsHeight": 12,
+      "height": 40,
+      "width": 160
+    }
+  ],
+  "comments": [
+    {
+      "id": "myUniqueCommentId",
+      "class_name": "d3-comment-rect",
+      "content": "",
+      "height": 42,
+      "width": 175,
+      "x_pos": 100,
+      "y_pos": 100
+    },
+    {
+      "id": "myUniqueClonedCommentId_myUniqueCommentId",
+      "class_name": "d3-comment-rect",
+      "content": "",
+      "height": 42,
+      "width": 175,
+      "x_pos": 100,
+      "y_pos": 100
+    }
+  ],
+  "links": [
+    {
+      "id": "7ec57e11-fe0b-4bc8-a3b8-b72920bf1a55",
+      "class_name": "canvas-data-link",
+      "srcNodeId": "2e6ecd75-8b2c-4c49-991c-80fa98fe08eb",
+      "trgNodeId": "b4f90b52-d198-42f0-85cc-31af3914dd4f"
+    },
+    {
+      "id": "acd2988b-2f6f-482b-a110-e393d3fe42b6",
+      "class_name": "canvas-data-link",
+      "srcNodeId": "b4f90b52-d198-42f0-85cc-31af3914dd4f",
+      "trgNodeId": "64505c88-132a-4753-8b39-81adf1e8599d"
+    },
+    {
+      "id": "myUniqueCommentLinkId",
+      "class_name": "d3-comment-link",
+      "srcNodeId": "myUniqueCommentId",
+      "trgNodeId": "2e6ecd75-8b2c-4c49-991c-80fa98fe08eb",
+      "type": "commentLink"
+    },
+    {
+      "id": "myUniqueClonedCommentLinkId_myUniqueCommentLinkId_myUniqueClonedCommentId_myUniqueCommentId_myUniqueClonedNodeId_2e6ecd75-8b2c-4c49-991c-80fa98fe08eb",
+      "class_name": "d3-comment-link",
+      "srcNodeId": "myUniqueClonedCommentId_myUniqueCommentId",
+      "trgNodeId": "myUniqueClonedNodeId_2e6ecd75-8b2c-4c49-991c-80fa98fe08eb",
+      "type": "commentLink"
+    }
+  ]
+}

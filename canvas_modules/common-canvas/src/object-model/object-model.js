@@ -8,7 +8,9 @@
  *******************************************************************************/
 
 import { createStore, combineReducers } from "redux";
-import { NONE, VERTICAL, DAGRE_HORIZONTAL, DAGRE_VERTICAL } from "../../constants/common-constants.js";
+import { NONE, VERTICAL, DAGRE_HORIZONTAL, DAGRE_VERTICAL,
+	CREATE_NODE, CLONE_NODE, CREATE_COMMENT, CLONE_COMMENT, CREATE_NODE_LINK,
+	CLONE_NODE_LINK, CREATE_COMMENT_LINK, CLONE_COMMENT_LINK } from "../../constants/common-constants.js";
 import dagre from "dagre/dist/dagre.min.js";
 import LayoutDimensions from "./layout-dimensions.js";
 import SVGCanvasInHandler from "../svg-canvas-in-handler.js"; // TODO - Remove this when WML supports PipelineFlow
@@ -630,6 +632,9 @@ export default class ObjectModel {
 
 		// TODO - Remove this gloabal  variable when WML Canvas supports pipelineFlow
 		this.oldCanvas = null;
+
+		// optional handler to generate the id of object model objects
+		this.idGeneratorHandler = null;
 	}
 
 	// Standard methods
@@ -672,6 +677,10 @@ export default class ObjectModel {
 
 	setOutputPortLabel(nodeId, portId, newLabel) {
 		this.store.dispatch({ type: "SET_OUTPUT_PORT_LABEL", data: { nodeId: nodeId, portId: portId, label: newLabel } });
+	}
+
+	setIdGeneratorHandler(idGeneratorHandler) {
+		this.idGeneratorHandler = idGeneratorHandler;
 	}
 
 	addNodeTypeToPalette(nodeTypeObj, category, categoryLabel) {
@@ -932,7 +941,7 @@ export default class ObjectModel {
 		const nodeType = this.getPaletteNode(data.operator_id_ref);
 		let node = {};
 		if (nodeType !== null) {
-			node.id = getUUID();
+			node.id = this.getUniqueId(CREATE_NODE, { "nodeType": nodeType });
 			node.label = nodeType.label;
 			node.type = nodeType.type;
 			node.operator_id_ref = nodeType.operator_id_ref;
@@ -952,7 +961,7 @@ export default class ObjectModel {
 	}
 
 	cloneNode(inNode) {
-		let node = Object.assign({}, inNode, { id: getUUID() });
+		let node = Object.assign({}, inNode, { id: this.getUniqueId(CLONE_NODE, { "node": inNode }) });
 
 		// Add node height and width and, if appropriate, inputPortsHeight
 		// and outputPortsHeight
@@ -1157,7 +1166,9 @@ export default class ObjectModel {
 	}
 
 	addAutoNodeSrcNodeAndLink(node, srcNode) {
-		this.store.dispatch({ type: "ADD_AUTO_NODE", data: { newNode: node, srcNode: srcNode, linkId: getUUID() } });
+		this.store.dispatch({ type: "ADD_AUTO_NODE", data: {
+			newNode: node, srcNode: srcNode,
+			linkId: this.getUniqueId(CREATE_NODE_LINK, { "sourceNode": srcNode, "targetNode": node }) } });
 	}
 
 	deleteNode(id) {
@@ -1234,7 +1245,7 @@ export default class ObjectModel {
 
 	createComment(source) {
 		const info = {
-			id: getUUID(),
+			id: this.getUniqueId(CREATE_COMMENT),
 			class_name: "d3-comment-rect",
 			content: "",
 			height: 42,
@@ -1247,14 +1258,14 @@ export default class ObjectModel {
 		source.selectedObjectIds.forEach((objId) => {
 			if (this.isDataNode(objId)) { // Only add links to data nodes, not comments
 				info.selectedObjectIds.push(objId);
-				info.linkIds.push(getUUID());
+				info.linkIds.push(this.getUniqueId(CREATE_COMMENT_LINK, { "comment": info, "targetNode": this.getNode(objId) }));
 			}
 		});
 		return info;
 	}
 
 	cloneComment(inComment) {
-		return Object.assign({}, inComment, { id: getUUID() });
+		return Object.assign({}, inComment, { id: this.getUniqueId(CLONE_COMMENT, { "comment": inComment }) });
 	}
 
 	addComment(info) {
@@ -1313,7 +1324,7 @@ export default class ObjectModel {
 			data.targetNodes.forEach((trgInfo) => {
 				if (this.isConnectionAllowed(srcInfo, trgInfo)) {
 					const info = {};
-					info.id = getUUID();
+					info.id = this.getUniqueId(CREATE_NODE_LINK, { "sourceNode": this.getNode(srcInfo.id), "targetNode": this.getNode(trgInfo.id) });
 					info.type = "nodeLink";
 					info.class_name = "d3-data-link";
 					info.srcNodeId = srcInfo.id;
@@ -1329,7 +1340,7 @@ export default class ObjectModel {
 
 	cloneNodeLink(link, srcNodeId, trgNodeId) {
 		return {
-			id: getUUID(),
+			id: this.getUniqueId(CLONE_NODE_LINK, { "link": link, "sourceNodeId": srcNodeId, "targetNodeId": trgNodeId }),
 			type: link.type,
 			class_name: link.class_name,
 			srcNodeId: srcNodeId,
@@ -1355,7 +1366,7 @@ export default class ObjectModel {
 			data.targetNodes.forEach((trgNodeId) => {
 				if (!this.commentLinkAlreadyExists(srcNodeId, trgNodeId)) {
 					const info = {};
-					info.id = getUUID();
+					info.id = this.getUniqueId(CREATE_COMMENT_LINK, { "comment": this.getComment(srcNodeId), "targetNode": this.getNode(trgNodeId) });
 					info.type = "commentLink";
 					info.class_name = "d3-comment-link";
 					info.srcNodeId = srcNodeId;
@@ -1369,7 +1380,7 @@ export default class ObjectModel {
 
 	cloneCommentLink(link, srcNodeId, trgNodeId) {
 		return {
-			id: getUUID(),
+			id: this.getUniqueId(CLONE_COMMENT_LINK, { "link": link, "commentId": srcNodeId, "targetNodeId": trgNodeId }),
 			type: link.type,
 			class_name: link.class_name,
 			srcNodeId: srcNodeId,
@@ -1852,6 +1863,15 @@ export default class ObjectModel {
 
 	getLayout() {
 		return this.store.getState().layoutinfo;
+	}
+
+	getUniqueId(action, data) {
+		let uniqueId;
+		if (this.idGeneratorHandler) {
+			uniqueId = this.idGeneratorHandler(action, data);
+		}
+		// generate v4 uuid if no custom id was generated
+		return uniqueId ? uniqueId : getUUID();
 	}
 
 }

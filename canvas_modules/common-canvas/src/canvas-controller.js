@@ -73,6 +73,7 @@ export default class CanvasController {
 
 	setHandlers(inHandlers) {
 		this.handlers = Object.assign(this.handlers, inHandlers);
+		this.objectModel.setIdGeneratorHandler(inHandlers.idGeneratorHandler);
 	}
 
 	setCommonCanvas(comcan) {

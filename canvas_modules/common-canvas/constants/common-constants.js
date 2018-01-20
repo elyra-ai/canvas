@@ -43,3 +43,12 @@ _defineConstant("TIP_TYPE_PORT", "tipTypePort");
 _defineConstant("TIP_TYPE_LINK", "tipTypeLink");
 _defineConstant("TIP_TYPE_PALETTE_ITEM", "tipTypePaletteItem");
 _defineConstant("TIP_TYPE_TOOLBAR_ITEM", "tipTypeToolbarItem");
+
+_defineConstant("CREATE_NODE", "create_node");
+_defineConstant("CLONE_NODE", "clone_node");
+_defineConstant("CREATE_COMMENT", "create_comment");
+_defineConstant("CLONE_COMMENT", "clone_comment");
+_defineConstant("CREATE_NODE_LINK", "create_node_link");
+_defineConstant("CLONE_NODE_LINK", "clone_node_link");
+_defineConstant("CREATE_COMMENT_LINK", "create_comment_link");
+_defineConstant("CLONE_COMMENT_LINK", "clone_comment_link");

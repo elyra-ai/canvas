@@ -13,6 +13,7 @@ import deepFreeze from "deep-freeze";
 import { expect } from "chai";
 import isEqual from "lodash/isEqual";
 import initialCanvas from "./test_resources/json/startCanvas.json";
+import clonedCanvas from "./test_resources/json/canvasWithClones.json";
 import startPipelineFlow from "./test_resources/json/startPipelineFlow.json";
 import paletteJson from "./test_resources/json/testPalette.json";
 import filterNode from "./test_resources/json/filterNode.json";
@@ -30,7 +31,9 @@ import pipelineFlowTest1Expected from "./test_resources/json/pipelineFlowTest1Ex
 
 
 import ObjectModel from "../src/object-model/object-model.js";
-import { NONE, VERTICAL, HORIZONTAL } from "../constants/common-constants.js";
+import { NONE, VERTICAL, HORIZONTAL, CREATE_NODE, CLONE_NODE, CREATE_COMMENT, CLONE_COMMENT, CREATE_NODE_LINK,
+	CLONE_NODE_LINK, CREATE_COMMENT_LINK, CLONE_COMMENT_LINK } from "../constants/common-constants.js";
+import CloneMultipleObjectsAction from "../src/command-actions/cloneMultipleObjectsAction.js";
 
 const logger = log4js.getLogger("object-model-test");
 const objectModel = new ObjectModel();
@@ -426,4 +429,209 @@ describe("ObjectModel API handle model OK", () => {
 		expect(isEqual(newLabel, objectModel.getPort(node.output_ports, "outPort").label)).to.be.true;
 	});
 
+	it("should create node with fixed node id", () => {
+		logger.info("should create node with fixed node id");
+		const uniqueNodeId = "myUniqueNodeId";
+
+		const startCanvas = initialCanvas;
+
+		deepFreeze(startCanvas);
+
+		objectModel.setIdGeneratorHandler((action, data) => {
+			if (action === CREATE_NODE) {
+				return uniqueNodeId;
+			}
+			return null;
+		});
+		objectModel.setCanvasInfo(startCanvas);
+		objectModel.fixedAutoLayout(VERTICAL);
+		objectModel.setPipelineFlowPalette(paletteJson);
+		const node = objectModel.createNode(filterNode);
+		objectModel.addNode(node);
+
+		const expectedCanvas = addNodeVerticalLayoutCanvas;
+		expectedCanvas.nodes[3].id = uniqueNodeId;
+		const actualCanvas = objectModel.getCanvasInfo();
+
+		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
+	});
+
+	it("should create node with non-null node id", () => {
+		logger.info("should create node with non-null node id");
+		const startCanvas = initialCanvas;
+
+		deepFreeze(startCanvas);
+
+		objectModel.setIdGeneratorHandler(() => null);
+		objectModel.setEmptyPipelineFlow();
+		objectModel.setPipelineFlowPalette(paletteJson);
+		const node = objectModel.createNode(filterNode);
+		objectModel.addNode(node);
+
+		expect(objectModel.getCanvasInfo().nodes[0].id).not.to.be.null;
+	});
+
+	it("should create node links with fixed id", () => {
+		logger.info("should create node links with fixed id");
+		const uniqueNodeId = "myUniqueNodeId";
+		const uniqueNodeLink = "myUniqueLinkId";
+
+		const startCanvas = initialCanvas;
+
+		deepFreeze(startCanvas);
+
+		objectModel.setIdGeneratorHandler((action, data) => {
+			if (action === CREATE_NODE) {
+				return uniqueNodeId + "_" + data.nodeType.label;
+			}
+			if (action === CREATE_NODE_LINK) {
+				return uniqueNodeLink + "_" + data.sourceNode.id + "_" + data.targetNode.id;
+			}
+			return null;
+		});
+		objectModel.setCanvasInfo(startCanvas);
+		objectModel.setPipelineFlowPalette(paletteJson);
+
+		const node = objectModel.createNode(filterNode);
+		objectModel.addNode(node);
+
+		const sourceNodeId = uniqueNodeId + "_" + filterNode.label;
+		const linkData = {
+			"editType": "linkNodes",
+			"nodes": [{ "id": sourceNodeId }],
+			"targetNodes": [{ "id": "b4f90b52-d198-42f0-85cc-31af3914dd4f" }],
+			"linkType": "data"
+		};
+
+		const nodeLinks = objectModel.createNodeLinks(linkData);
+		objectModel.addLinks(nodeLinks);
+
+		const expectedLinkId = uniqueNodeLink + "_" + sourceNodeId + "_b4f90b52-d198-42f0-85cc-31af3914dd4f";
+		const expectedNodeLink = {
+			"id": expectedLinkId,
+			"class_name": "d3-data-link",
+			"srcNodeId": sourceNodeId,
+			"trgNodeId": "b4f90b52-d198-42f0-85cc-31af3914dd4f",
+			"type": "nodeLink"
+		};
+
+		expect(isEqual(JSON.stringify(expectedNodeLink), JSON.stringify(objectModel.getLink(expectedLinkId)))).to.be.true;
+	});
+
+	it("should create comment with fixed comment id", () => {
+		logger.info("should create comment with fixed comment id");
+		const uniqueCommentId = "myUniqueCommentId";
+		const uniqueCommentLinkId = "myUniqueCommentLinkId";
+
+		const startCanvas = initialCanvas;
+
+		deepFreeze(startCanvas);
+		objectModel.setCanvasInfo(startCanvas);
+
+		objectModel.setIdGeneratorHandler((action, data) => {
+			if (action === CREATE_COMMENT) {
+				return uniqueCommentId;
+			} else if (action === CREATE_COMMENT_LINK) {
+				return uniqueCommentLinkId + "_" + data.comment.id + "_" + data.targetNode.id;
+			}
+			return null;
+		});
+
+		const commentData = {
+			"mousePos": {
+				"x": 100,
+				"y": 100
+			},
+			"selectedObjectIds": ["2e6ecd75-8b2c-4c49-991c-80fa98fe08eb"]
+		};
+
+		const comment = objectModel.createComment(commentData);
+		objectModel.addComment(comment);
+
+		const expectedComment = {
+			"id": uniqueCommentId,
+			"class_name": "d3-comment-rect",
+			"content": "",
+			"height": 42,
+			"width": 175,
+			"x_pos": 100,
+			"y_pos": 100
+		};
+
+		const expectedCommentLinkId = uniqueCommentLinkId + "_" + uniqueCommentId + "_2e6ecd75-8b2c-4c49-991c-80fa98fe08eb";
+		const expectedCommentLink = {
+			"id": expectedCommentLinkId,
+			"class_name": "d3-comment-link",
+			"srcNodeId": uniqueCommentId,
+			"trgNodeId": "2e6ecd75-8b2c-4c49-991c-80fa98fe08eb",
+			"type": "commentLink"
+		};
+
+		expect(isEqual(expectedComment, objectModel.getComments()[0])).to.be.true;
+		expect(isEqual(JSON.stringify(expectedCommentLink), JSON.stringify(objectModel.getLink(expectedCommentLinkId)))).to.be.true;
+	});
+
+	it("should clone a node, comment, node_link and comment_link with fixed ids", () => {
+		logger.info("should clone a node, comment, node_link and comment_link with fixed ids");
+		const uniqueCommentId = "myUniqueCommentId";
+		const uniqueCommentLinkId = "myUniqueCommentLinkId";
+		const uniqueClonedNodeId = "myUniqueClonedNodeId";
+		const uniqueClonedNodeLinkId = "myUniqueClonedNodeLinkId";
+		const uniqueClonedCommentId = "myUniqueClonedCommentId";
+		const uniqueClonedCommentLinkId = "myUniqueClonedCommentLinkId";
+
+		const startCanvas = initialCanvas;
+
+		deepFreeze(startCanvas);
+		objectModel.setCanvasInfo(startCanvas);
+
+		objectModel.setIdGeneratorHandler((action, data) => {
+			if (action === CREATE_COMMENT) {
+				return uniqueCommentId;
+			}
+			if (action === CREATE_COMMENT_LINK) {
+				return uniqueCommentLinkId;
+			}
+			if (action === CLONE_NODE) {
+				return uniqueClonedNodeId + "_" + data.node.id;
+			}
+			if (action === CLONE_NODE_LINK) {
+				return uniqueClonedNodeLinkId + "_" + data.link.id + "_" + data.sourceNodeId + "_" + data.targetNodeId;
+			}
+			if (action === CLONE_COMMENT) {
+				return uniqueClonedCommentId + "_" + data.comment.id;
+			}
+			if (action === CLONE_COMMENT_LINK) {
+				return uniqueClonedCommentLinkId + "_" + data.link.id + "_" + data.commentId + "_" + data.targetNodeId;
+			}
+			return null;
+		});
+
+		// add a comment
+		const commentData = {
+			"mousePos": {
+				"x": 100,
+				"y": 100
+			},
+			"selectedObjectIds": ["2e6ecd75-8b2c-4c49-991c-80fa98fe08eb"]
+		};
+
+		const comment = objectModel.createComment(commentData);
+		objectModel.addComment(comment);
+
+		const cloneData = { "objects": {} };
+		cloneData.objects.nodes = [
+			objectModel.getNode("2e6ecd75-8b2c-4c49-991c-80fa98fe08eb"),
+			objectModel.getNode("b4f90b52-d198-42f0-85cc-31af3914dd4f")];
+		cloneData.objects.comments = [
+			objectModel.getComment(uniqueCommentId)];
+		cloneData.objects.links = [
+			objectModel.getLink("7ec57e11-fe0b-4bc8-a3b8-b72920bf1a55"),
+			objectModel.getLink(uniqueCommentLinkId)];
+
+		const cloneAction = new CloneMultipleObjectsAction(cloneData, objectModel);
+		cloneAction.do();
+
+		expect(isEqual(objectModel.getCanvasInfo(), clonedCanvas)).to.be.true;
+	});
 });
