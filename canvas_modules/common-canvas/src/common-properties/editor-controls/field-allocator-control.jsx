@@ -9,6 +9,7 @@
 
 // selectcolumn control
 import React from "react";
+import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import Dropdown from "react-dropdown";
 import EditorControl from "./editor-control.jsx";
@@ -17,6 +18,7 @@ export default class FieldAllocatorControl extends EditorControl {
 	constructor(props) {
 		super(props);
 		this.state = {
+			clippedClassName: ""
 		};
 		this.emptyLabel = "...";
 		if (props.control.additionalText) {
@@ -38,6 +40,16 @@ export default class FieldAllocatorControl extends EditorControl {
 	}
 
 	onClick(evt) {
+		const me = ReactDOM.findDOMNode(this.refs.input);
+		const myRect = me.getBoundingClientRect();
+		const parentRect = me.getRootNode().getElementsByClassName("panel-container-open-right-flyout-panel")[0].getBoundingClientRect();
+
+		let clippedClassName = "";
+		// 200 is the height of .Dropdown-menu in common-properties.css
+		if (Math.abs((parentRect.top + parentRect.height) - (myRect.top + myRect.height)) < 200) {
+			clippedClassName = "Dropdown-menu-clipped";
+		}
+		this.setState({ clippedClassName: clippedClassName });
 		this.props.controller.validateInput(this.props.propertyId);
 	}
 
@@ -101,7 +113,7 @@ export default class FieldAllocatorControl extends EditorControl {
 			controlIconContainerClass = "control-icon-container-enabled";
 		}
 		return (
-			<div onClick={this.onClick.bind(this)} className="editor_control_area" style={stateStyle}>
+			<div onClick={this.onClick.bind(this)} className={"editor_control_area " + this.state.clippedClassName} style={stateStyle}>
 				<div id={controlIconContainerClass}>
 					<Dropdown {...stateDisabled}
 						id={this.getControlID()}

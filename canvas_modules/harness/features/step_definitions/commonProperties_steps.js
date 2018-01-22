@@ -345,6 +345,11 @@ module.exports = function() {
 
 	});
 
+	this.Then(/^I click the dropdown menu in the "([^"]*)" container$/, function(container) {
+		const dropdown = browser.$("#" + container).$(".Dropdown-placeholder");
+		dropdown.click();
+	});
+
 	/*
 	* Action steps
  	*/

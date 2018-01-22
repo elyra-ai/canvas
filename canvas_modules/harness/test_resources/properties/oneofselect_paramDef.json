@@ -1,0 +1,78 @@
+{
+  "titleDefinition": {
+    "title": "One of Select"
+  },
+  "current_parameters": {
+    "oneofselectList_not_empty": ""
+  },
+  "parameters": [
+    {
+      "id": "oneofselectList_not_empty",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ]
+    }
+  ],
+  "uihints": {
+    "id": "selectcolumn",
+    "icon": "images/default.svg",
+    "label": {
+      "default": "Select Columns"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "oneofselectList_not_empty",
+        "label": {
+          "default": "One of Select Control Name"
+        },
+        "description": {
+          "default": "oneofselect test"
+        }
+      }
+    ],
+    "group_info": [
+      {
+        "id": "selectcolumn-values",
+        "label": {
+          "default": "Conditions"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "selectcolumn-values",
+            "label": {
+              "default": "Values"
+            },
+            "parameter_refs": [
+              "oneofselectList_not_empty"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "conditions": [
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "oneofselectList_not_empty",
+          "message": {
+            "default": "Warning: this cannot be empty"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "oneofselectList_not_empty",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    }
+  ]
+}

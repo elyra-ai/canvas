@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
+import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import Dropdown from "react-dropdown";
 import EditorControl from "./editor-control.jsx";
@@ -15,6 +16,10 @@ import EditorControl from "./editor-control.jsx";
 export default class OneofselectControl extends EditorControl {
 	constructor(props) {
 		super(props);
+
+		this.state = {
+			clippedClassName: ""
+		};
 		this.handleChange = this.handleChange.bind(this);
 		this.onBlur = this.onBlur.bind(this);
 		this.onFocus = this.onFocus.bind(this);
@@ -28,6 +33,17 @@ export default class OneofselectControl extends EditorControl {
 	}
 	// Added to prevent entire row being selected in table
 	onClick(evt) {
+		const me = ReactDOM.findDOMNode(this.refs.input);
+		const myRect = me.getBoundingClientRect();
+		const parentRect = me.getRootNode().getElementsByClassName("panel-container-open-right-flyout-panel")[0].getBoundingClientRect();
+
+		let clippedClassName = "";
+		// 200 is the height of .Dropdown-menu in common-properties.css
+		if (Math.abs((parentRect.top + parentRect.height) - (myRect.top + myRect.height)) < 200) {
+			clippedClassName = "Dropdown-menu-clipped";
+		}
+		this.setState({ clippedClassName: clippedClassName });
+
 		if (this.props.tableControl) {
 			evt.stopPropagation();
 		}
@@ -40,8 +56,7 @@ export default class OneofselectControl extends EditorControl {
 		if (!isOpen && this.props.tableControl) {
 			// Give time for the dropdown to be added to the dom
 			setTimeout(function() {
-				// TODO can we use react-dom methods instead?
-				const dropdowns = document.getElementsByClassName("Dropdown-menu");
+				const dropdowns = ReactDOM.findDOMNode(that).getElementsByClassName("Dropdown-menu");
 				if (dropdowns.length > 0) {
 					var theTop = that.findTopPos(dropdowns[0]);
 					var styles = "position: fixed; width: 200px; top: " + (theTop) + "px;";
@@ -121,7 +136,7 @@ export default class OneofselectControl extends EditorControl {
 			<div id="oneofselect-control-container">
 				<div id={controlIconContainerClass}>
 					<div>
-						<div onClick={this.onClick.bind(this)} className="Dropdown-control-panel" style={stateStyle}>
+						<div onClick={this.onClick.bind(this)} className={"Dropdown-control-panel " + this.state.clippedClassName} style={stateStyle}>
 							<Dropdown {...stateDisabled}
 								id={this.getControlID()}
 								name={this.props.control.name}
