@@ -199,6 +199,7 @@ class EditorForm extends React.Component {
 				control={control}
 				controller={this.props.controller}
 				propertyId={propertyId}
+				rightFlyout={this.props.rightFlyout}
 			/>);
 		} else if (control.controlType === "someofselect") {
 			return (<SomeofselectControl

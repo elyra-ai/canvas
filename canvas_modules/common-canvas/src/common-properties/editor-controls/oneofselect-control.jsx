@@ -6,6 +6,7 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
+/* eslint max-depth: ["error", 5] */
 
 import React from "react";
 import ReactDOM from "react-dom";
@@ -22,7 +23,6 @@ export default class OneofselectControl extends EditorControl {
 		};
 		this.handleChange = this.handleChange.bind(this);
 		this.onBlur = this.onBlur.bind(this);
-		this.onFocus = this.onFocus.bind(this);
 	}
 
 	handleChange(evt) {
@@ -35,14 +35,26 @@ export default class OneofselectControl extends EditorControl {
 	onClick(evt) {
 		const me = ReactDOM.findDOMNode(this.refs.input);
 		const myRect = me.getBoundingClientRect();
-		const parentRect = me.getRootNode().getElementsByClassName("panel-container-open-right-flyout-panel")[0].getBoundingClientRect();
 
-		let clippedClassName = "";
-		// 200 is the height of .Dropdown-menu in common-properties.css
-		if (Math.abs((parentRect.top + parentRect.height) - (myRect.top + myRect.height)) < 200) {
-			clippedClassName = "Dropdown-menu-clipped";
+		// Required to prevent the dropdown menu from being clipped within table
+		const dropdowns = me.getElementsByClassName("Dropdown-menu");
+		if (dropdowns.length > 0) {
+			const dropdownRect = me.getElementsByClassName("Dropdown-control")[0].getBoundingClientRect();
+			const topPos = this._findTopPos(me, dropdownRect);
+			if (topPos !== null) {
+				const styles = "position: fixed; min-width: 200px; max-width: " + dropdownRect.width + "px; top: " + topPos + "px;";
+				dropdowns[0].setAttribute("style", styles);
+			} else {
+				const parentRect = document.querySelector(".panel-container-open-right-flyout-panel").getBoundingClientRect();
+
+				let clippedClassName = "";
+				// 200 is the height of .Dropdown-menu in common-properties.css
+				if (Math.abs((parentRect.top + parentRect.height) - (myRect.top + myRect.height)) < 200) {
+					clippedClassName = "Dropdown-menu-clipped";
+				}
+				this.setState({ clippedClassName: clippedClassName });
+			}
 		}
-		this.setState({ clippedClassName: clippedClassName });
 
 		if (this.props.tableControl) {
 			evt.stopPropagation();
@@ -50,42 +62,43 @@ export default class OneofselectControl extends EditorControl {
 		this.props.controller.validateInput(this.props.propertyId);
 	}
 
-	onFocus(isOpen) {
-		// This method is invoked by the dropdown *only* when the control is clicked
-		const that = this;
-		if (!isOpen && this.props.tableControl) {
-			// Give time for the dropdown to be added to the dom
-			setTimeout(function() {
-				const dropdowns = ReactDOM.findDOMNode(that).getElementsByClassName("Dropdown-menu");
-				if (dropdowns.length > 0) {
-					var theTop = that.findTopPos(dropdowns[0]);
-					var styles = "position: fixed; width: 200px; top: " + (theTop) + "px;";
-					dropdowns[0].setAttribute("style", styles);
-				}
-			}, 50);
-		}
-	}
+	_findTopPos(me, dropdownRect) {
+		let topPos = "";
+		if (this.props.rightFlyout) {
+			// dropdown control is in wide-flyout
+			topPos = dropdownRect.y - dropdownRect.height;
 
-	findTopPos(elem) {
-		let curtop = 0;
-		let curtopscroll = 0;
-		let node = elem;
-		const modalClassName = "modal-lg modal-dialog";
-		let modalOffset = 0;
-		if (window.matchMedia("(min-width: 768px)").matches) {
-			modalOffset = 20;
+			// dropdown control is in flyout, not within the wide-flyout
+			if (document.querySelector(".rightside-modal-container") === null) {
+				let tableParent = false;
+				let elem = me.parentElement;
+				while (!tableParent) {
+					if (elem.parentElement.id && elem.parentElement.id === "flexible-table-container") {
+						// dropdown control is in flyout as a standalone control, outside a table
+						topPos += 50;
+						tableParent = true;
+					}
+					elem = elem.parentElement;
+					if (elem.parentElement === null) {
+						break;
+					}
+				}
+
+				// dropdown control is not in table
+				if (!tableParent) {
+					topPos = null;
+				}
+			}
+		} else { // dropdown control is in modal dialog
+			const modal = document.querySelector(".modal-content");
+			topPos = dropdownRect.bottom;
+
+			if (modal !== null) {
+				const modalRect = modal.getBoundingClientRect();
+				topPos -= modalRect.top;
+			}
 		}
-		if (node.offsetParent) {
-			do {
-				curtop += node.offsetTop;
-				curtopscroll += node.className !== modalClassName && node.offsetParent ? node.offsetParent.scrollTop : 0;
-				node = node.offsetParent;
-			} while (node.offsetParent !== null);
-		}
-		if (node.className.indexOf("rightside-modal-container") >= 0) {
-			modalOffset -= 24; // adjust matchMedia offset and 4px for borders from .modal-content and #flexible-table-container
-		}
-		return curtop - curtopscroll - modalOffset;
+		return topPos;
 	}
 
 	genSelectOptions(control, selectedValue) {
@@ -142,7 +155,6 @@ export default class OneofselectControl extends EditorControl {
 								name={this.props.control.name}
 								options={dropDown.options}
 								onChange={this.handleChange}
-								onFocus={this.onFocus}
 								onBlur={this.onBlur}
 								value={dropDown.selectedOption.label}
 								placeholder={this.props.control.additionalText}
@@ -162,5 +174,6 @@ OneofselectControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
-	tableControl: PropTypes.bool
+	tableControl: PropTypes.bool,
+	rightFlyout: PropTypes.bool
 };

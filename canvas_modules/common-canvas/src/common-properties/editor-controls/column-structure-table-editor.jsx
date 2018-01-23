@@ -289,6 +289,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 				propertyId={propertyId}
 				control={columnDef}
 				tableControl
+				rightFlyout={this.props.rightFlyout}
 			/>);
 		} else if (columnDef.valueDef.propType === "enum" && columnDef.editStyle !== "subpanel") {
 			cellContent = this.enumRenderCell(controlValue[rowIndex][colIndex], columnDef);
