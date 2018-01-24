@@ -451,7 +451,7 @@ export default class CanvasController {
 	}
 
 	hideTip() {
-		if (this.commonCanvas && this.commonCanvas.isTipShowing()) {
+		if (this.commonCanvas) {
 			this.commonCanvas.hideTip();
 		}
 	}

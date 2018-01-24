@@ -25,7 +25,11 @@ class ToolTip extends React.Component {
 
 	componentDidMount() {
 		if (this.props.targetObj) {
-			this.showTooltipWithDelay();
+			if (this.props.delay === 0) {
+				this.setTooltipVisible(true);
+			} else {
+				this.showTooltipWithDelay();
+			}
 		}
 	}
 

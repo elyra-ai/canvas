@@ -59,6 +59,8 @@ export default class CommonCanvas extends React.Component {
 		this.unsubscribe = this.objectModel.subscribe(() => {
 			this.forceUpdate();
 		});
+
+		this.pendingTooltip = null;
 	}
 
 	componentWillReceiveProps(newProps) {
@@ -103,6 +105,9 @@ export default class CommonCanvas extends React.Component {
 
 	componentWillUnmount() {
 		this.unsubscribe();
+		if (this.pendingTooltip) {
+			clearTimeout(this.pendingTooltip);
+		}
 	}
 
 	initializeController(props) {
@@ -156,11 +161,23 @@ export default class CommonCanvas extends React.Component {
 	}
 
 	showTip(tipDef) {
-		this.setState({ tipDef: tipDef });
+		const that = this;
+		if (this.pendingTooltip) {
+			clearTimeout(this.pendingTooltip);
+		}
+
+		this.pendingTooltip = setTimeout(function() {
+			that.setState({ tipDef: tipDef });
+		}, tipDef.delay ? tipDef.delay : 750);
 	}
 
 	hideTip() {
-		this.setState({ tipDef: {} });
+		if (this.pendingTooltip) {
+			clearTimeout(this.pendingTooltip);
+		}
+		if (this.isTipShowing()) {
+			this.setState({ tipDef: {} });
+		}
 	}
 
 	isTipShowing() {

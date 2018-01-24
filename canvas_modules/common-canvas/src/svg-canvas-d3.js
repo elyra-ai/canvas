@@ -2644,7 +2644,7 @@ export default class CanvasD3Layout {
 						id: that.getId("link_tip", link.id),
 						type: TIP_TYPE_LINK,
 						targetObj: this,
-						mousePos: { x: d3.event.x, y: d3.event.y },
+						mousePos: { x: d3.event.clientX, y: d3.event.clientY },
 						pipelineId: that.canvasJSON.sub_id,
 						link: link
 					});

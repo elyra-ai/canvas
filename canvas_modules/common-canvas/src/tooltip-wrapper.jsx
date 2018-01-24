@@ -111,7 +111,7 @@ export default class TooltipWrapper extends React.Component {
 			id={this.props.id}
 			targetObj={this.props.targetObj}
 			mousePos={this.props.mousePos}
-			delay={750}
+			delay={0}
 		/>) : null;
 	}
 }
