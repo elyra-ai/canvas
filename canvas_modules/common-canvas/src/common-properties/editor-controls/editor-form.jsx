@@ -641,10 +641,13 @@ class EditorForm extends React.Component {
 		}
 		const sharedCtrlNames = [];
 		for (let i = 0; i < panel.uiItems.length; i++) {
-			const controlName = panel.uiItems[i].control.name;
-			sharedCtrlNames.push({
-				"controlName": controlName
-			});
+			// only push uiItems with controls.  Some uiItems are for display only and shouldn't be added.
+			if (panel.uiItems[i].control && panel.uiItems[i].control.name) {
+				const controlName = panel.uiItems[i].control.name;
+				sharedCtrlNames.push({
+					"controlName": controlName
+				});
+			}
 		}
 		this.sharedCtrlInfo.push({
 			"id": panel.id,

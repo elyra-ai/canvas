@@ -193,6 +193,10 @@
         },
         "description": {
           "default": "selectcolumns with parameter shared with Field2 Panel"
+        },
+        "text_after": {
+          "default": "Values shared with 'Fields2 Panel'.  Issue 1054",
+          "type": "info"
         }
       },
       {
