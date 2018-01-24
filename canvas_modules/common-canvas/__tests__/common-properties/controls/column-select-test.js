@@ -10,7 +10,6 @@
 import React from "react";
 import ColumnSelectControl from "../../../src/common-properties/editor-controls/column-select-control.jsx";
 import { mountWithIntl } from "enzyme-react-intl";
-import { ReactWrapper } from "enzyme";
 import { expect } from "chai";
 import sinon from "sinon";
 import propertyUtils from "../../_utils_/property-utils";
@@ -241,26 +240,6 @@ describe("selectcolumns control filters values correctly", () => {
 		const filterCategory = wrapper.find(".category-title-container-right-flyout-panel").at(2); // get the filter category
 		const addFieldsButtons = filterCategory.find("Button"); // field picker buttons
 		addFieldsButtons.at(0).simulate("click"); // open filter picker for `Filter by Type` control
-		const fphtml = document.getElementById("field-picker-table"); // needed since modal dialogs are outside `wrapper`
-		const fieldpicker = new ReactWrapper(fphtml, true);
-		const rows = fieldpicker.find(".field-picker-data-rows");
-		// check the 4 rows of data to make sure age* is returned
-		expect(rows).to.have.length(4);
-		let age = rows.at(0).find("td")
-			.at(1)
-			.text();
-		expect(age).to.equal("age");
-		age = rows.at(1).find("td")
-			.at(1)
-			.text();
-		expect(age).to.equal("age2");
-		age = rows.at(2).find("td")
-			.at(1)
-			.text();
-		expect(age).to.equal("age3");
-		age = rows.at(3).find("td")
-			.at(1)
-			.text();
-		expect(age).to.equal("age4");
+		propertyUtils.fieldPicker(["age"], ["age", "age2", "age3", "age4"]);
 	});
 });

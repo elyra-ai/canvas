@@ -10,12 +10,15 @@
 import React from "react";
 import ColumnStructureTableControl from "../../../src/common-properties/editor-controls/column-structure-table-control.jsx";
 import { mountWithIntl } from "enzyme-react-intl";
+import { ReactWrapper } from "enzyme";
 
 import { expect } from "chai";
 import sinon from "sinon";
 import propertyUtils from "../../_utils_/property-utils";
 import Controller from "../../../src/common-properties/properties-controller";
 import isEqual from "lodash/isEqual";
+
+import structuretableParamDef from "../../test_resources/paramDefs/structuretable_paramDef.json";
 
 import chai from "chai";
 import chaiEnzyme from "chai-enzyme";
@@ -1250,5 +1253,20 @@ describe("ColumnStructureTableControl with readonly numbered column renders corr
 		const expectedData = "[[3,\"Cholesterol\",\"Ascending\"],[4,\"Age\",\"Descending\"],[5,\"Drug\",\"Ascending\"]]";
 		const controllerData = controller.getPropertyValue(propertyIdReadonlyControlStartValue);
 		expect(JSON.stringify(controllerData)).to.equal(expectedData);
+	});
+});
+
+describe("ColumnStructureTableControl with filtering works correctly", () => {
+	const wrapper = propertyUtils.flyoutEditorForm(structuretableParamDef);
+	it("should only show string fields in field picker", () => {
+		const filterCategory = wrapper.find(".category-title-container-right-flyout-panel").at(1); // FILTER category
+		filterCategory.find(".button").simulate("click");
+		const wfhtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
+		const wideflyoutWrapper = new ReactWrapper(wfhtml, true);
+		const addFieldsButtons = wideflyoutWrapper.find("Button"); // field picker buttons
+		addFieldsButtons.at(0).simulate("click"); // open filter picker
+		propertyUtils.fieldPicker(["Drug"], ["Sex", "BP", "Cholesterol", "Drug"]);
+		wideflyoutWrapper.find("#properties-apply-button").simulate("click");
+		expect(filterCategory.find(".control-summary-list-rows")).to.have.length(1);
 	});
 });

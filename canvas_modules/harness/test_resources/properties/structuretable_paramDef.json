@@ -37,6 +37,12 @@
       "type": "map[string,structuretableReadonlyColumnDefaultIndex]",
       "role": "column",
       "default": []
+    },
+    {
+      "id": "structuretable_filter",
+      "type": "map[string,structuretable_filter]",
+      "role": "column",
+      "default": []
     }
   ],
   "complex_types": [
@@ -98,6 +104,20 @@
           "default": "string"
         }
       ]
+    },
+    {
+      "id": "structuretable_filter",
+      "key_definition": {
+        "id": "readonly",
+        "type": "integer"
+      },
+      "parameters": [
+        {
+          "id": "field",
+          "type": "string",
+          "role": "column"
+        }
+      ]
     }
   ],
   "uihints": {
@@ -128,6 +148,15 @@
         },
         "description": {
           "default": "The level column will be auto-populated with an integer value for each row starting at 1. Subsequent rows will be incremented by 1."
+        }
+      },
+      {
+        "parameter_ref": "structuretable_filter",
+        "label": {
+          "default": "Filter Field"
+        },
+        "description": {
+          "default": "Filters fields that aren't of type 'string'"
         }
       }
     ],
@@ -234,6 +263,34 @@
             "edit_style": "inline"
           }
         ]
+      },
+      {
+        "complex_type_ref": "structuretable_filter",
+        "label": {
+          "default": "Filter Fields"
+        },
+        "key_definition": {
+          "parameter_ref": "readonly",
+          "label": {
+            "default": "Index"
+          },
+          "width": 15,
+          "generated_values": {
+            "operation": "index"
+          },
+          "control": "readonly",
+          "summary": true
+        },
+        "parameters": [
+          {
+            "parameter_ref": "field",
+            "label": {
+              "default": "Field"
+            },
+            "width": 26,
+            "summary": true
+          }
+        ]
       }
     ],
     "group_info": [
@@ -280,9 +337,47 @@
             ]
           }
         ]
+      },
+      {
+        "id": "filter",
+        "type": "panels",
+        "label": {
+          "default": "Filter"
+        },
+        "group_info": [
+          {
+            "id": "structuretable_filter-summary-panel",
+            "label": {
+              "default": "Configure Filter Fields"
+            },
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "structuretable_filter_panel",
+                "type": "columnSelection",
+                "parameter_refs": [
+                  "structuretable_filter"
+                ]
+              }
+            ]
+          }
+        ]
       }
     ]
   },
+  "conditions": [
+    {
+      "filter": {
+        "parameter_ref": "structuretable_filter",
+        "evaluate": {
+          "condition": {
+            "op": "dmType",
+            "value": "string"
+          }
+        }
+      }
+    }
+  ],
   "dataset_metadata": {
     "fields": [
       {

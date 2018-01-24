@@ -43,24 +43,21 @@ function _validateTable(validationDefinition, userInput, control, dataModel, req
 	const tableControlName = propertyId.name;
 	const rowIndex = propertyId.row;
 	const colIndex = propertyId.col;
-	const keyIndex = (propertyId.col) ? tableControl.keyIndex : control.keyIndex;
 	const tableControlType = (propertyId.col) ? tableControl.controlType : control.controlType;
+	const fieldIndex = PropertyUtils.getTableFieldIndex(tableControl ? tableControl : control);
 
 	// only evaluate table cells if the validation definition has  condition for a cell
 	const columnNumbers = getColumnsFromValidation(validationDefinition);
 	if (columnNumbers.length > 0) {
-		// For tables we need to evaluate all non-keyDef cells
+		// For tables we need to evaluate all cells
 		const cellValues = userInput[tableControlName];
 		for (let row = 0; row < cellValues.length; row++) {
 			for (let col = 0; col < cellValues[row].length; col++) {
-				if (col === keyIndex) {
-					// We don't evaluate the key column
-					continue;
-				}
 				coordinates.rowIndex = row;
 				coordinates.colIndex = col;
-				coordinates.skipVal = cellValues[row][keyIndex];
-
+				if (fieldIndex >= 0) {
+					coordinates.skipVal = cellValues[row][fieldIndex];
+				}
 				// only run validation on columns defined in validation
 				var tmp = null;
 				if (columnNumbers.indexOf(col) > -1) {

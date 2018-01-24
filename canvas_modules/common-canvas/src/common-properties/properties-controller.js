@@ -6,7 +6,7 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-/* eslint max-depth: ["error", 6]*/
+/* eslint max-depth: ["error", 7]*/
 
 import PropertiesStore from "./properties-store.js";
 import logger from "../../utils/logger";
@@ -307,8 +307,10 @@ export default class PropertiesController {
 					if (Array.isArray(propValue)) {
 						for (const arrayValue of propValue) {
 							if (Array.isArray(arrayValue)) {
-								// tables assuming fields are in the 1st column
-								usedFields.push(arrayValue[0]); // TODO not always in 1st index
+								const fieldIdx = PropertyUtils.getTableFieldIndex(sharedCtr);
+								if (fieldIdx >= 0 && fieldIdx < arrayValue.length) {
+									usedFields.push(arrayValue[fieldIdx]);
+								}
 							} else { // one dimensional arrays
 								usedFields.push(arrayValue);
 							}
@@ -321,7 +323,7 @@ export default class PropertiesController {
 			const usedFieldsList = Array.from(new Set(usedFields)); // make all values unique
 			for (const usedField of usedFieldsList) {
 				datasetMetadata.fields = datasetMetadata.fields.filter(function(element) {
-					return element && usedField && element.name !== usedField;
+					return element && element.name !== usedField;
 				});
 			}
 		} catch (error) {

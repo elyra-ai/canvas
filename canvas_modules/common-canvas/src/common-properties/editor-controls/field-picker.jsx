@@ -91,11 +91,13 @@ class FieldPicker extends EditorControl {
 		this.onSort = this.onSort.bind(this);
 		this.onFilter = this.onFilter.bind(this);
 		this._getRecordForRow = this._getRecordForRow.bind(this);
-		this._getRoleColumnIndex = this._getRoleColumnIndex.bind(this);
 	}
 
 	componentWillMount() {
-		this.dataColumnIndex = this.props.control.subControls ? this._getRoleColumnIndex() : 0;
+		this.dataColumnIndex = PropertyUtils.getTableFieldIndex(this.props.control);
+		if (this.dataColumnIndex === -1) {
+			this.dataColumnIndex = 0; // default to 0
+		}
 
 		const fields = this.state.data.fields;
 		const filterList = DATA_TYPES;
@@ -119,9 +121,13 @@ class FieldPicker extends EditorControl {
 		}
 
 		const controlName = this.props.control.name;
+		let controlValues = [];
+		if (this.props.currentControlValues[controlName]) {
+			controlValues = this.props.currentControlValues[controlName];
+		}
 		this.setState({
 			initialControlValues: this.props.currentControlValues[controlName],
-			newControlValues: this.props.currentControlValues[controlName],
+			newControlValues: controlValues,
 			filterList: filters
 		});
 	}
@@ -295,6 +301,9 @@ class FieldPicker extends EditorControl {
 
 	getDefaultRow(field) {
 		const initialControlValues = this.state.initialControlValues;
+		if (!initialControlValues) {
+			return false;
+		}
 		for (let i = 0; i < initialControlValues.length; i++) {
 			if ((this.props.control.defaultRow && initialControlValues[i][this.dataColumnIndex] === field) ||
 					(initialControlValues[i] === field)) {
@@ -363,21 +372,16 @@ class FieldPicker extends EditorControl {
 		return selectedField;
 	}
 
-	_getRoleColumnIndex() {
-		for (let i = 0; i < this.props.control.subControls.length; i++) {
-			if (this.props.control.subControls[i].role === ParamRole.COLUMN) {
-				return i;
-			}
-		}
-		throw new Error("Role 'column' is not found in structure.");
-	}
-
 	handleReset() {
+		let checkedAll = false;
+		if (this.state.initialControlValues && (this.state.initialControlValues === this.state.data.fields.length)) {
+			checkedAll = true;
+		}
 		this.setState({
 			newControlValues: this.state.initialControlValues,
 			filterIcons: [],
 			filterText: "",
-			checkedAll: this.state.initialControlValues.length === this.state.data.fields.length
+			checkedAll: checkedAll
 		});
 	}
 

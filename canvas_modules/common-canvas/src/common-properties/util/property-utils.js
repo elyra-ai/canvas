@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import logger from "../../../utils/logger";
+import { ParamRole } from "../constants/form-constants";
 
 /**
  * A better type identifier than a simple 'typeOf' call:
@@ -107,8 +108,25 @@ function _getExpParameterValue(expParam, controller) {
 	return parseFloat(expParam);
 }
 
+function getTableFieldIndex(control) {
+	if (control) {
+		// table
+		if (control.subControls) {
+			for (let i = 0; i < control.subControls.length; i++) {
+				if (control.subControls[i].role === ParamRole.COLUMN) {
+					return i;
+				}
+			}
+		} else if (control.role === ParamRole.COLUMN) { // array
+			return 0;
+		}
+	}
+	return -1;
+}
+
 module.exports = {
 	toType: toType,
 	formatMessage: formatMessage,
-	evaluateText: evaluateText
+	evaluateText: evaluateText,
+	getTableFieldIndex: getTableFieldIndex
 };

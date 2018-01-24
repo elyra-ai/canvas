@@ -1,4 +1,7 @@
 {
+  "titleDefinition": {
+    "title": "Panels"
+  },
   "current_parameters": {
     "fruit-color": "red",
     "number": 11
@@ -15,6 +18,18 @@
     {
       "id": "number",
       "type": "double",
+      "required": true
+    },
+    {
+      "id": "selectcolumn",
+      "type": "string",
+      "role": "column",
+      "required": true
+    },
+    {
+      "id": "selectcolumns",
+      "type": "array[string]",
+      "role": "column",
       "required": true
     }
   ],
@@ -41,6 +56,24 @@
         },
         "description": {
           "default": "A control between a panelSelector control.  Also used to display dynamic text in panel text."
+        }
+      },
+      {
+        "parameter_ref": "selectcolumn",
+        "label": {
+          "default": "Select Field"
+        },
+        "description": {
+          "default": "selectcolumn control where values are shared with selectcolumns 'Select Fields'"
+        }
+      },
+      {
+        "parameter_ref": "selectcolumns",
+        "label": {
+          "default": "Select Fields"
+        },
+        "description": {
+          "default": "selectcolumns control where values are shared with selectcolumns 'Select Field'"
         }
       }
     ],
@@ -133,6 +166,57 @@
             ]
           }
         ]
+      },
+      {
+        "id": "column-selection",
+        "label": {
+          "default": "Column Selection"
+        },
+        "type": "columnSelection",
+        "parameter_refs": [
+          "selectcolumn",
+          "selectcolumns"
+        ]
+      }
+    ]
+  },
+  "dataset_metadata": {
+    "fields": [
+      {
+        "name": "age",
+        "type": "integer",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "BP",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Na",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "drug",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "set",
+          "modeling_role": "input"
+        }
       }
     ]
   }
