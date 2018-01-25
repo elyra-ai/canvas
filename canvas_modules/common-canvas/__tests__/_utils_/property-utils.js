@@ -23,6 +23,10 @@ function controllerHandler(propertyController) {
 function flyoutEditorForm(paramDef) {
 	const applyPropertyChanges = sinon.spy();
 	const closePropertiesDialog = sinon.spy();
+	const callbacks = {
+		applyPropertyChanges: applyPropertyChanges,
+		closePropertiesDialog: closePropertiesDialog
+	};
 
 	const propertiesInfo = {
 		parameterDef: paramDef,
@@ -39,7 +43,7 @@ function flyoutEditorForm(paramDef) {
 		/>
 	);
 
-	return { wrapper: wrapper, controller: renderedController };
+	return { wrapper: wrapper, controller: renderedController, callbacks: callbacks };
 }
 
 function createEditorForm(state, formData, controller) {

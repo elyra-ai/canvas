@@ -59,7 +59,7 @@ export default class SidePanelModal extends React.Component {
 				selectedPropertiesDropdownFile: ""
 			});
 		} else {
-			var that = this;
+			const that = this;
 			this.setState({
 				selectedPropertiesDropdownFile: obj.selected,
 				commonProperties: "",
@@ -74,8 +74,8 @@ export default class SidePanelModal extends React.Component {
 	onPropertiesSelect(evt) {
 		this.setState({ commonProperties: "" });
 		if (evt.target.files.length > 0) {
-			var filename = evt.target.files[0].name;
-			var fileExt = filename.substring(filename.lastIndexOf(".") + 1);
+			const filename = evt.target.files[0].name;
+			const fileExt = filename.substring(filename.lastIndexOf(".") + 1);
 			if (fileExt === "json") {
 				this.setState({
 					commonProperties: evt.target.files[0],
@@ -87,7 +87,7 @@ export default class SidePanelModal extends React.Component {
 	}
 
 	getSelectedFile() {
-		var that = this;
+		const that = this;
 		this.props.log("Submit common properties file", this.state.selectedPropertiesDropdownFile);
 		FormsService.getFileContent("properties", this.state.selectedPropertiesDropdownFile)
 			.then(function(res) {
@@ -99,7 +99,7 @@ export default class SidePanelModal extends React.Component {
 		if (this.state.commonProperties.name) {
 			this.props.log("Submit common properties file", this.state.commonProperties.name);
 			// read file
-			var fileReader = new FileReader();
+			const fileReader = new FileReader();
 			fileReader.onload = function(evt) {
 				var fileContent = fileReader.result;
 				var content = JSON.parse(fileContent);
@@ -142,9 +142,9 @@ export default class SidePanelModal extends React.Component {
 		// var divider = (<div
 		// 	className="sidepanel-children sidepanel-divider"
 		// />);
-		var space = (<div className="sidepanel-spacer" />);
+		const space = (<div className="sidepanel-spacer" />);
 
-		var fileChooser = <div />;
+		let fileChooser = <div />;
 		if (this.state.fileChooserVisible) {
 			fileChooser = (<div>
 				<FormControl
@@ -159,7 +159,7 @@ export default class SidePanelModal extends React.Component {
 			</div>);
 		}
 
-		var propertiesInput = (<div className="sidepanel-children" id="sidepanel-input">
+		const propertiesInput = (<div className="sidepanel-children" id="sidepanel-input">
 			<div className="formField">
 				<div className="sidepanel-headers">Common Properties</div>
 				<div id="properties-documentation-link">
@@ -186,7 +186,7 @@ export default class SidePanelModal extends React.Component {
 			</div>
 		</div>);
 
-		var containerType = (<div className="sidepanel-children" id="sidepanel-properties-container-type">
+		const containerType = (<div className="sidepanel-children" id="sidepanel-properties-container-type">
 			<div className="sidepanel-headers">Container Type</div>
 			<RadioGroup
 				name="properties-container_type_radio"
@@ -199,11 +199,23 @@ export default class SidePanelModal extends React.Component {
 				selected={this.props.propertiesContainerType}
 			/>
 		</div>);
-
+		const apply = (<div className="sidepanel-children">
+			<div className="sidepanel-headers">Apply Property Settings</div>
+			<Button data-compact dark
+				disabled={!this.props.showPropertiesDialog}
+				onClick={this.props.forceApplyProperties}
+			>
+				Apply Properties
+			</Button>
+		</div>);
+		const divider = (<div className="sidepanel-children sidepanel-divider" />);
 		return (
 			<div>
 				{propertiesInput}
+				{divider}
 				{containerType}
+				{divider}
+				{apply}
 			</div>
 		);
 	}
@@ -217,5 +229,6 @@ SidePanelModal.propTypes = {
 	usePropertiesContainerType: PropTypes.func,
 	propertiesContainerType: PropTypes.string,
 	showPropertiesDialog: PropTypes.bool,
-	closeSidePanelModal: PropTypes.func
+	closeSidePanelModal: PropTypes.func,
+	forceApplyProperties: PropTypes.func
 };

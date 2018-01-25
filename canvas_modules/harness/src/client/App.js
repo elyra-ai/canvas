@@ -56,6 +56,7 @@ class App extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			forceApplyProperties: false,
 			consoleout: [],
 			consoleOpened: false,
 			contextMenuInfo: {},
@@ -143,6 +144,7 @@ class App extends React.Component {
 		this.propertyListener = this.propertyListener.bind(this);
 		this.propertyActionHandler = this.propertyActionHandler.bind(this);
 		this.propertiesControllerHandler = this.propertiesControllerHandler.bind(this);
+		this.forceApplyProperties = this.forceApplyProperties.bind(this);
 
 		this.canvasController = new CanvasController();
 		this.canvasController.setEmptyPipelineFlow();
@@ -413,13 +415,14 @@ class App extends React.Component {
 	}
 
 	applyPropertyChanges(form, appData, additionalInfo) {
-		var data = {
+		const data = {
 			form: form,
 			appData: appData,
 			messages: additionalInfo.messages,
 			title: additionalInfo.title
 		};
 		this.log("applyPropertyChanges()", data);
+		this.setState({ forceApplyProperties: false });
 	}
 
 	validateFlow(source) {
@@ -739,6 +742,10 @@ class App extends React.Component {
 		this.setState({ showPropertiesDialog: false, propertiesInfo: {} });
 	}
 
+	forceApplyProperties() {
+		this.setState({ forceApplyProperties: true });
+	}
+
 	handleEmptyCanvasLinkClick() {
 		window.alert("Sorry the tour is not included with the test harness. :-( But " +
 			"this is a good example of how a host app could add their own link to " +
@@ -889,6 +896,7 @@ class App extends React.Component {
 		var commonProperties = (
 			<CommonProperties
 				showPropertiesDialog={this.state.showPropertiesDialog}
+				forceApplyProperties={this.state.forceApplyProperties}
 				propertiesInfo={this.state.propertiesInfo}
 				containerType={this.state.propertiesContainerType === FLYOUT ? CUSTOM : this.state.propertiesContainerType}
 				customPanels={[CustomSliderPanel, CustomTogglePanel, CustomMapPanel]}
@@ -968,6 +976,7 @@ class App extends React.Component {
 				closeSidePanelModal={this.closeSidePanelModal}
 				openSidepanelCanvas={this.state.openSidepanelCanvas}
 				openSidepanelModal={this.state.openSidepanelModal}
+				forceApplyProperties={this.forceApplyProperties}
 				openSidepanelAPI={this.state.openSidepanelAPI}
 				setDiagramJSON={this.setDiagramJSON}
 				setPaletteJSON={this.setPaletteJSON}

@@ -11,6 +11,7 @@ import React from "react";
 import CommonProperties from "../../src/common-properties/common-properties.jsx";
 import PropertiesDialog from "../../src/common-properties/properties-dialog.jsx";
 import PropertiesEditing from "../../src/common-properties/properties-editing.jsx";
+import propertyUtils from "../_utils_/property-utils";
 import { mount } from "enzyme";
 import { expect } from "chai";
 import sinon from "sinon";
@@ -73,6 +74,27 @@ describe("CommonProperties renders correctly", () => {
 	});
 
 });
+describe("CommonProperties works correctly in flyout", () => {
+	let renderedObject;
+	beforeEach(() => {
+		renderedObject = propertyUtils.flyoutEditorForm(propertiesInfo.parameterDef);
+	});
+
+	afterEach(() => {
+		renderedObject.wrapper.unmount();
+	});
+	it("When forceApplyProperties set applyPropertyChanges should be called", () => {
+		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
+		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
+		renderedObject.wrapper.setProps({ forceApplyProperties: true });
+		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 1);
+		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
+		renderedObject.wrapper.setProps({ forceApplyProperties: false });
+		renderedObject.wrapper.setProps({ forceApplyProperties: true });
+		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 2);
+		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
+	});
+});
 
 function createCommonProperties(container, messages) {
 	const	wrapper = mount(
@@ -81,10 +103,9 @@ function createCommonProperties(container, messages) {
 				showPropertiesDialog
 				propertiesInfo={propertiesInfo}
 				containerType={container}
+				forceApplyProperties={false}
 			/>
 		</IntlProvider>
 	);
-
-
 	return wrapper.find("CommonProperties");
 }

@@ -41,10 +41,6 @@ class CommonProperties extends React.Component {
 		this.propertiesController.subscribe(() => {
 			this.forceUpdate();
 		});
-		// TODO should be able to reset based on form data
-		this.initialCurrentProperties = "empty";
-		// TODO should be able to reset based on form data
-		this.settings = { additionalInfo: {} };
 
 		this.applyPropertiesEditing = this.applyPropertiesEditing.bind(this);
 		this.showPropertiesButtons = this.showPropertiesButtons.bind(this);
@@ -78,6 +74,9 @@ class CommonProperties extends React.Component {
 				this.setForm();
 			}
 		}
+		if (newProps.forceApplyProperties) {
+			this.applyPropertiesEditing(false);
+		}
 	}
 
 	setForm() {
@@ -97,6 +96,11 @@ class CommonProperties extends React.Component {
 		}
 		this.propertiesController.setForm(formData);
 		this.propertiesController.setAppData(this.props.propertiesInfo.appData);
+		if (formData) {
+			this.setState({
+				title: formData.label
+			});
+		}
 	}
 
 	setErrorMessages(messages) {
@@ -153,27 +157,40 @@ class CommonProperties extends React.Component {
 		return retVal;
 	}
 
-	applyPropertiesEditing() {
-		this.settings.properties = this.propertiesController.getPropertyValues(true);
+	applyPropertiesEditing(closeProperties) {
+		const settings = { additionalInfo: {} };
+		settings.properties = this.propertiesController.getPropertyValues(true);
 		const errorMessages = this.propertiesController.getErrorMessages(true);
-		if (typeof errorMessages !== "undefined" && errorMessages !== null) {
-			this.settings.additionalInfo.messages = errorMessages;
+		if (errorMessages) {
+			settings.additionalInfo.messages = errorMessages;
 		}
-
-		if (typeof this.state.title !== "undefined") {
-			this.settings.additionalInfo.title = this.state.title;
+		if (this.state.title) {
+			settings.additionalInfo.title = this.state.title;
 		}
-		// May need to close the dialog inside the callback in
-		// case of validation errors
-		this.props.propertiesInfo.closePropertiesDialog();
-		const command = new CommonPropertiesAction(this.settings, this.initialCurrentProperties,
+		// set initial values for undo
+		const formData = this.propertiesController.getForm();
+		const initialCurrentProperties = { additionalInfo: { messages: [] } };
+		if (formData && formData.data && formData.data.currentParameters) {
+			initialCurrentProperties.properties = JSON.parse(JSON.stringify(formData.data.currentParameters));
+		}
+		if (this.props.propertiesInfo.messages) {
+			initialCurrentProperties.additionalInfo.messages = JSON.parse(JSON.stringify(this.props.propertiesInfo.messages));
+		}
+		if (formData && formData.label) {
+			initialCurrentProperties.additionalInfo.title = formData.label;
+		}
+		// don't closed if forceApplyProperties is set by user
+		if (closeProperties) {
+			// May need to close the dialog inside the callback in
+			// case of validation errors.
+			this.props.propertiesInfo.closePropertiesDialog();
+		}
+		const command = new CommonPropertiesAction(settings, initialCurrentProperties,
 			this.props.propertiesInfo.appData, this.props.propertiesInfo.applyPropertyChanges);
 		this.propertiesController.getCommandStack().do(command);
-		this.initialCurrentProperties = "empty";
 	}
 
 	cancelHandler() {
-		this.initialCurrentProperties = "empty";
 		this.propertiesInfo.closePropertiesDialog();
 	}
 
@@ -200,7 +217,6 @@ class CommonProperties extends React.Component {
 			// console.log("formData " + JSON.stringify(formData));
 			let propertiesDialog = [];
 
-			const title = this.state.title || formData.label;
 			const size = formData.editorSize;
 
 			let propertiesTitle = <div />;
@@ -217,7 +233,7 @@ class CommonProperties extends React.Component {
 					<div id="node-title-right-flyout-panel">
 						<TextField
 							id="node-title-editor-right-flyout-panel"
-							value={title}
+							value={this.state.title}
 							onChange={(e) => this.setState({
 								title: e.target.value
 							})}
@@ -230,7 +246,7 @@ class CommonProperties extends React.Component {
 					{propertiesTitleEdit}
 				</div>);
 				buttonsContainer = (<PropertiesButtons
-					okHandler={this.applyPropertiesEditing}
+					okHandler={this.applyPropertiesEditing.bind(this, true)}
 					cancelHandler={this.cancelHandler}
 					applyLabel={applyLabel}
 					rejectLabel={rejectLabel}
@@ -239,23 +255,6 @@ class CommonProperties extends React.Component {
 			}
 
 			if (this.props.showPropertiesDialog) {
-				// TODO remove this block of code
-				if (this.initialCurrentProperties === "empty") {
-					this.initialCurrentProperties = { additionalInfo: { messages: [] } };
-					if (typeof formData.data !== "undefined" &&
-						typeof formData.data.currentParameters !== "undefined") {
-						this.initialCurrentProperties.properties = JSON.parse(JSON.stringify(formData.data.currentParameters));
-					}
-
-					if (this.props.propertiesInfo.messages) {
-						this.settings.additionalInfo.messages = JSON.parse(JSON.stringify(this.props.propertiesInfo.messages));
-						this.initialCurrentProperties.additionalInfo.messages = JSON.parse(JSON.stringify(this.props.propertiesInfo.messages));
-					}
-					if (title) {
-						this.settings.additionalInfo.title = title;
-						this.initialCurrentProperties.additionalInfo.title = title;
-					}
-				}
 				const editorForm = (<EditorForm
 					ref="editorForm"
 					key="editor-form-key"
@@ -273,8 +272,8 @@ class CommonProperties extends React.Component {
 						applyLabel={applyLabel}
 						rejectLabel={rejectLabel}
 						bsSize={size}
-						title={title}
-						okHandler={this.applyPropertiesEditing}
+						title={this.state.title}
+						okHandler={this.applyPropertiesEditing.bind(this, true)}
 						cancelHandler={this.cancelHandler}
 						showPropertiesButtons={this.state.showPropertiesButtons}
 					>
@@ -287,9 +286,9 @@ class CommonProperties extends React.Component {
 				} else { // Modal
 					propertiesDialog = (<PropertiesDialog
 						onHide={this.propertiesInfo.closePropertiesDialog}
-						title={title}
+						title={this.state.title}
 						bsSize={size}
-						okHandler={this.applyPropertiesEditing}
+						okHandler={this.applyPropertiesEditing.bind(this, true)}
 						cancelHandler={this.cancelHandler}
 						showPropertiesButtons={this.state.showPropertiesButtons}
 						applyLabel={applyLabel}
@@ -321,6 +320,7 @@ CommonProperties.defaultProps = {
 
 CommonProperties.propTypes = {
 	showPropertiesDialog: PropTypes.bool.isRequired,
+	forceApplyProperties: PropTypes.bool, // used to force call to applyPropertyChanges
 	containerType: PropTypes.string,
 	propertiesInfo: PropTypes.object.isRequired,
 	customPanels: PropTypes.array, // array of custom panels
