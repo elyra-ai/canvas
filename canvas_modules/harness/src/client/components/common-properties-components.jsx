@@ -50,6 +50,7 @@ import {
 	STRUCTURETABLE_ONPANEL_EXPRESSION_PROPS_INFO,
 	STRUCTURETABLE_ROW_SELECTION_PROPS_INFO,
 	STRUCTURELISTEDITOR_PROPS_INFO,
+	STRUCTURELISTEDITOR_ADDREMOVEROWS_PROPS_INFO,
 	STRUCTURETABLE_MOVEABLE_PROPS_INFO,
 	STRUCTURETABLE_SORTABLE_PROPS_INFO,
 	STRUCTURETABLE_FILTERABLE_PROPS_INFO,
@@ -222,6 +223,7 @@ class CommonPropertiesComponents extends React.Component {
 					"--edit-style",
 					"--moveable_rows",
 					"--row_selection",
+					"--add_remove_rows",
 					"--sortable",
 					"--filterable",
 					"--summary",
@@ -1180,6 +1182,30 @@ class CommonPropertiesComponents extends React.Component {
 							<pre className="json-block">
 								{this.jsonReplacer(STRUCTURETABLE_ROW_SELECTION_PROPS_INFO.parameterDef, "custom",
 									["uihints", "complex_type_info", "row_selection"])}
+							</pre>
+						</div>
+					</div>
+					<h4 id="--add_remove_rows" className="section-row-title section-subtitle">add_remove_rows</h4>
+					<p><span className="highlight">add_remove_rowsn</span> is a boolean attribute that can be set
+						in <span className="highlight">complex_type_definition</span> sections.
+						If set to true, it allows rows to be added and removed from a table through a pair of buttons
+						on the top right of the table.  If set to false the buttons are not displayed and there is no way
+					to add or remove rows from the table.</p>
+					<p>In this example, the <span className="highlight">add_remove_rows</span> attribute
+						is set <span className="highlight">false</span>.</p>
+					<div className="section-row">
+						<div className="section-column">
+							<CommonProperties
+								showPropertiesDialog
+								propertiesInfo={STRUCTURELISTEDITOR_ADDREMOVEROWS_PROPS_INFO}
+								containerType="Custom"
+							/>
+							{this.renderRightFlyoutButton(STRUCTURELISTEDITOR_ADDREMOVEROWS_PROPS_INFO)}
+						</div>
+						<div className="section-column section-column-code">
+							<pre className="json-block">
+								{this.jsonReplacer(STRUCTURELISTEDITOR_ADDREMOVEROWS_PROPS_INFO.parameterDef, "custom",
+									["uihints", "complex_type_info", "add_remove_rows"])}
 							</pre>
 						</div>
 					</div>

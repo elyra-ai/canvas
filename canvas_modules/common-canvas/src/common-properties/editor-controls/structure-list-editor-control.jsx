@@ -116,7 +116,7 @@ class StructurelisteditorControl extends ColumnStructureTableEditor {
 		const onPanelContainer = this.getOnPanelContainer(this.getSelectedRows());
 		return (
 			<div>
-				<div>
+				<div className="properties-structure-list-editor">
 					<MoveableTableRows
 						tableContainer={tableContainer}
 						control={this.props.control}

@@ -36,6 +36,7 @@ const control = {
 	"separateLabel": true,
 	"controlType": "structuretable",
 	"moveableRows": true,
+	"addRemoveRows": true,
 	"valueDef": {
 		"propType": "structure",
 		"isList": true,
@@ -1018,7 +1019,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 describe("condition messages renders correctly with structure table control", () => {
 	it("structuretableSortOrder control should have error message from no selection", () => {
 		// a note about this test.  structuretableSortOrder has the required = true attribute and
-		// a isNotEmpty condition.  THe isNotEmpty condition error message should take precendence.
+		// a isNotEmpty condition.  The isNotEmpty condition error message should take precendence.
 		const wrapper = propertyUtils.createEditorForm("mount", CONDITIONS_TEST_FORM_DATA, controller);
 		const conditionsPropertyId = { name: "structuretableSortOrder" };
 		const input = wrapper.find("#flexible-table-structuretableSortOrder").at(0);
@@ -1196,6 +1197,7 @@ describe("Cells disable and hide correctly with structure table control", () => 
 		let row = dataRows.first();
 		let hiddenDropdowns = row.find(".Dropdown-control-panel");
 		expect(hiddenDropdowns).to.have.length(2);
+
 		expect(hiddenDropdowns.at(1)).not.to.have.style("display", "none");
 		const input = row.find("#editor-control-override_field_types_0_1");
 		expect(input).to.have.length(1);
@@ -1257,7 +1259,27 @@ describe("ColumnStructureTableControl with readonly numbered column renders corr
 });
 
 describe("ColumnStructureTableControl with filtering works correctly", () => {
-	const wrapper = propertyUtils.flyoutEditorForm(structuretableParamDef);
+	var wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("should not have add remove buttons for the table", () => {
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(2); // Summary link Configure No Buttons Table
+		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
+		const tableHtml = document.getElementById("flexible-table-structuretableNoButtons"); // needed since modal dialogs are outside `wrapper`
+		const noButtonTable = new ReactWrapper(tableHtml, true);
+		// no add/remove buttons should be rendered
+		expect(noButtonTable.find("#field-picker-buttons-container")).to.have.length(0);
+
+		// TODO when issue #1105 is implement then a check should be added that the table contains 2 rows.
+	});
+
 	it("should only show string fields in field picker", () => {
 		const filterCategory = wrapper.find(".category-title-container-right-flyout-panel").at(1); // FILTER category
 		filterCategory.find(".button").simulate("click");

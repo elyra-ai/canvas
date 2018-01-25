@@ -2524,6 +2524,102 @@ _defineConstant("STRUCTURELISTEDITOR_PROPS_INFO", {
 		}
 	}
 });
+_defineConstant("STRUCTURELISTEDITOR_ADDREMOVEROWS_PROPS_INFO", {
+	"title": "StructureListEditor Title",
+	"parameterDef": {
+		"current_parameters": {
+			"structurelisteditorList": [["Difference", 1, 0.023]]
+		},
+		"parameters": [
+			{
+				"id": "structurelisteditorList",
+				"type": "array[structurelisteditorTableInput]",
+				"role": "column",
+				"default": []
+			}
+		],
+		"complex_types": [
+			{
+				"id": "structurelisteditorTableInput",
+				"parameters": [
+					{
+						"id": "Property",
+						"type": "string",
+						"role": "new_column"
+					},
+					{
+						"id": "nonseasonal",
+						"type": "integer",
+						"default": 0,
+						"role": "new_column"
+					},
+					{
+						"id": "seasonal",
+						"type": "double",
+						"default": 1.0,
+						"role": "new_column"
+					}
+				]
+			}
+		],
+		"uihints": {
+			"id": "structurelisteditorList",
+			"parameter_info": [
+				{
+					"parameter_ref": "structurelisteditorList"
+				}
+			],
+			"complex_type_info": [
+				{
+					"complex_type_ref": "structurelisteditorTableInput",
+					"add_remove_rows": false,
+					"parameters": [
+						{
+							"parameter_ref": "name",
+							"label": {
+								"default": "Structure Name",
+								"resource_key": "structurelisteditorTableInput.name.label"
+							},
+							"width": 10
+						},
+						{
+							"parameter_ref": "nonseasonal",
+							"label": {
+								"resource_key": "structurelisteditorTableInput.nonseasonal.label"
+							},
+							"width": 10,
+							"edit_style": "inline"
+						},
+						{
+							"parameter_ref": "seasonal",
+							"label": {
+								"resource_key": "structurelisteditorTableInput.seasonal.label"
+							},
+							"width": 10,
+							"edit_style": "inline"
+						}
+					]
+				}
+			],
+			"group_info": [
+				{
+					"id": "Structure Table Subpanel Control",
+					"parameter_refs": [
+						"structurelisteditorList"
+					]
+				}
+			]
+		},
+		"dataset_metadata": {
+			"fields": []
+		},
+		"resources": {
+			"structurelisteditorTableInput.name.label": "Name",
+			"structurelisteditorTableInput.nonseasonal.label": "NonSeasonal",
+			"structurelisteditorTableInput.seasonal.label": "NonSeasonal"
+		}
+	}
+});
 _defineConstant("STRUCTURETABLE_MOVEABLE_PROPS_INFO", {
 	"title": "StructureTableDropdown Title",
 	"parameterDef": {

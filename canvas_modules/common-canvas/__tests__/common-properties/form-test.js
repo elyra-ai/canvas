@@ -28,7 +28,7 @@ describe("Correct form should be created", () => {
 		// console.info("Actual  : " + JSON.stringify(generatedForm));
 		// console.info("\n\n");
 
-		// Work around since comparing the objects directly doesn't wor// k.
+		// Work around since comparing the objects directly doesn't work.
 		expect(isEqual(JSON.parse(JSON.stringify(formResource.expectedResult)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;
 	});
 

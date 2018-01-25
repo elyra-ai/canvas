@@ -122,7 +122,7 @@ export default class PropertiesController {
 			const control = this.controls[keyName];
 			const propertyId = { name: control.name };
 			var controlValue = this.getPropertyValue(propertyId);
-			if (control.controlType === "structuretable" && control.noPickColumns) {
+			if (control.controlType === "structuretable" && control.addRemoveRows === false) {
 				controlValue = this._populateFieldData(controlValue, this.getDatasetMetadata(), control);
 				this.updatePropertyValue(propertyId, controlValue);
 			} else if (control.valueDef && control.valueDef.defaultValue &&

@@ -25,24 +25,40 @@
         "blood pressure",
         ""
       ]
+    ],
+    "structuretableNoButtons": [
+      [
+        "Fred",
+        "Ascending"
+      ],
+      [
+        "Kathy",
+        "Descending"
+      ]
     ]
   },
   "parameters": [
     {
       "id": "structuretableReadonlyColumnStartValue",
-      "type": "array[structuretableReadonlyColumnStartValue]"
+      "type": "array[structuretableReadonlyColumnStartValue]",
+      "required": true
     },
     {
       "id": "structuretableReadonlyColumnDefaultIndex",
       "type": "map[string,structuretableReadonlyColumnDefaultIndex]",
       "role": "column",
-      "default": []
+      "default": [],
+      "required": true
     },
     {
       "id": "structuretable_filter",
       "type": "map[string,structuretable_filter]",
       "role": "column",
       "default": []
+    },
+    {
+      "id": "structuretableNoButtons",
+      "type": "array[structuretableNoButtons]"
     }
   ],
   "complex_types": [
@@ -118,6 +134,25 @@
           "role": "column"
         }
       ]
+    },
+    {
+      "id": "structuretableNoButtons",
+      "key_definition": {
+        "id": "field",
+        "type": "string",
+        "role": "column",
+        "default": ""
+      },
+      "parameters": [
+        {
+          "id": "BP_trend",
+          "enum": [
+            "Ascending",
+            "Descending"
+          ],
+          "default": "Ascending"
+        }
+      ]
     }
   ],
   "uihints": {
@@ -157,6 +192,15 @@
         },
         "description": {
           "default": "Filters fields that aren't of type 'string'"
+        }
+      },
+      {
+        "parameter_ref": "structuretableNoButtons",
+        "label": {
+          "default": "No Buttons"
+        },
+        "description": {
+          "default": "Structure Table with no add-remove buttons"
         }
       }
     ],
@@ -291,6 +335,35 @@
             "summary": true
           }
         ]
+      },
+      {
+        "complex_type_ref": "structuretableNoButtons",
+        "add_remove_rows": false,
+        "key_definition": {
+          "parameter_ref": "field",
+          "width": 28,
+          "label": {
+            "resource_key": "structuretableNoButtons.field.label"
+          },
+          "summary": true
+        },
+        "parameters": [
+          {
+            "parameter_ref": "BP_trend",
+            "width": 16,
+            "label": {
+              "resource_key": "structuretableNoButtons.BP_trend.label"
+            },
+            "description": {
+              "resource_key": "structuretableNoButtons.BP_trend.desc"
+            },
+            "control": "toggletext",
+            "value_icons": [
+              "/images/up-triangle.svg",
+              "/images/down-triangle.svg"
+            ]
+          }
+        ]
       }
     ],
     "group_info": [
@@ -332,6 +405,25 @@
                 "type": "columnSelection",
                 "parameter_refs": [
                   "structuretableReadonlyColumnDefaultIndex"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "structuretableNoButtons-summary-panel",
+            "label": {
+              "default": "Configure No Buttons Table"
+            },
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "structuretableNoButtons_panel",
+                "type": "columnSelection",
+                "label": {
+                  "default": "Columns"
+                },
+                "parameter_refs": [
+                  "structuretableNoButtons"
                 ]
               }
             ]
@@ -467,6 +559,9 @@
     "structuretableReadonlyColumnDefaultIndex.field.label": "Input name",
     "structuretableReadonlyColumnDefaultIndex.new_name.label": "Output name",
     "structuretableReadonlyColumnDefaultIndex.new_name.desc": "New field name",
-    "structuretableReadonlyColumnDefaultIndex.structuretableRenameFields_readonly_int.label": "Level"
+    "structuretableReadonlyColumnDefaultIndex.structuretableRenameFields_readonly_int.label": "Level",
+    "structuretableNoButtons.field.label": "Patient",
+    "structuretableNoButtons.BP_trend.label": "BP Trend",
+    "structuretableNoButtons.BP_trend.desc": "Patient BP historical trend"
   }
 }

@@ -238,7 +238,7 @@ input.number,
 .validation-error-message-icon-structure-list-editor,
 .validation-warning-message-icon-structure-list-editor {
   position: relative;
-  top: 0px;
+  top: 40px;
 }
 
 .form__validation.validation-error-message-type-selection {

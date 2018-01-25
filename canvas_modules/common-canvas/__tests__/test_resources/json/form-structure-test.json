@@ -5,8 +5,14 @@
     },
     "current_parameters": {
       "renamed_fields": [
-        ["Age", "Age"],
-        ["BP", "BP-1"]
+        [
+          "Age",
+          "Age"
+        ],
+        [
+          "BP",
+          "BP-1"
+        ]
       ]
     },
     "complex_types": [
@@ -247,7 +253,8 @@
                       "defaultRow": [
                         null,
                         ""
-                      ]
+                      ],
+                      "addRemoveRows": true
                     }
                   }
                 ]
@@ -294,8 +301,14 @@
     "data": {
       "currentParameters": {
         "renamed_fields": [
-          ["Age", "Age"],
-          ["BP", "BP-1"]
+          [
+            "Age",
+            "Age"
+          ],
+          [
+            "BP",
+            "BP-1"
+          ]
         ]
       },
       "datasetMetadata": {

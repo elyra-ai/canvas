@@ -81,7 +81,7 @@
                       "isMap": false,
                       "defaultValue": 32
                     },
-                    "required" : true,
+                    "required": true,
                     "separateLabel": true
                   }
                 },
@@ -786,6 +786,7 @@
                           },
                           "required": true,
                           "separateLabel": true,
+                          "addRemoveRows": true,
                           "subControls": [
                             {
                               "name": "field",
@@ -866,6 +867,7 @@
                           },
                           "required": true,
                           "separateLabel": true,
+                          "addRemoveRows": true,
                           "subControls": [
                             {
                               "name": "field",
@@ -1007,6 +1009,7 @@
                             "defaultValue": []
                           },
                           "separateLabel": true,
+                          "addRemoveRows": true,
                           "subControls": [
                             {
                               "name": "name",
@@ -1162,156 +1165,155 @@
           }
         },
         {
-           "text":"More Tables",
-           "group":"More_Tables",
-           "content":{
-              "itemType":"panel",
-              "panel":{
-                 "id":"More_Tables",
-                 "panelType":"general",
-                 "uiItems":[
-                    {
-                       "itemType":"panel",
-                       "panel":{
-                          "id":"group1",
-                          "panelType":"general",
-                          "uiItems":[
-                             {
-                                "itemType":"control",
-                                "control":{
-                                   "name":"field_types",
-                                   "label":{
-                                      "text":""
-                                   },
-                                   "description":{
-                                      "text":"Change the type of columns in the active dataset"
-                                   },
-                                   "controlType":"structuretable",
-                                   "valueDef":{
-                                      "propType":"structure",
-                                      "isList":false,
-                                      "isMap":true,
-                                      "defaultValue":[
-
-                                      ]
-                                   },
-                                   "separateLabel":true,
-                                   "subControls":[
-                                      {
-                                         "name":"field",
-                                         "label":{
-                                            "text":"Field"
-                                         },
-                                         "controlType":"selectcolumn",
-                                         "valueDef":{
-                                            "propType":"string",
-                                            "isList":false,
-                                            "isMap":false
-                                         },
-                                         "role":"column",
-                                         "filterable":true,
-                                         "visible":true,
-                                         "width":26
-                                      },
-                                      {
-                                         "name":"override",
-                                         "label":{
-                                            "text":"Override"
-                                         },
-                                         "controlType":"checkbox",
-                                         "valueDef":{
-                                            "propType":"boolean",
-                                            "isList":false,
-                                            "isMap":false
-                                         },
-                                         "visible":true,
-                                         "width":16,
-                                         "editStyle":"inline"
-                                      },
-                                      {
-                                         "name":"storage",
-                                         "label":{
-                                            "text":"Storage"
-                                         },
-                                         "controlType":"oneofselect",
-                                         "valueDef":{
-                                            "propType":"string",
-                                            "isList":false,
-                                            "isMap":false
-                                         },
-                                         "role":"enum",
-                                         "values":[
-                                            "string",
-                                            "integer",
-                                            "double",
-                                            "date",
-                                            "time",
-                                            "timestamp",
-                                            "password",
-                                            "structure"
-                                         ],
-                                         "valueLabels":[
-                                            "string",
-                                            "integer",
-                                            "double",
-                                            "date",
-                                            "time",
-                                            "timestamp",
-                                            "password",
-                                            "structure"
-                                         ],
-                                         "visible":true,
-                                         "width":26,
-                                         "editStyle":"inline",
-                                         "dmDefault":"type"
-                                      },
-                                      {
-                                         "name":"measure",
-                                         "label":{
-                                            "text":"Measure"
-                                         },
-                                         "controlType":"oneofselect",
-                                         "valueDef":{
-                                            "propType":"string",
-                                            "isList":false,
-                                            "isMap":false
-                                         },
-                                         "role":"enum",
-                                         "values":[
-                                            "continuous",
-                                            "nominal",
-                                            "ordinal",
-                                            "recordId",
-                                            "flag"
-                                         ],
-                                         "valueLabels":[
-                                            "continuous",
-                                            "nominal",
-                                            "ordinal",
-                                            "recordId",
-                                            "flag"
-                                         ],
-                                         "visible":true,
-                                         "width":26,
-                                         "editStyle":"inline",
-                                         "dmDefault":"measure"
-                                      }
-                                   ],
-                                   "keyIndex":0,
-                                   "defaultRow":[
-                                      null,
-                                      null,
-                                      null
-                                   ],
-                                   "noPickColumns":true
-                                }
-                             }
-                          ]
-                       }
-                    }
-                 ]
-              }
-           }
+          "text": "More Tables",
+          "group": "More_Tables",
+          "content": {
+            "itemType": "panel",
+            "panel": {
+              "id": "More_Tables",
+              "panelType": "general",
+              "uiItems": [
+                {
+                  "itemType": "panel",
+                  "panel": {
+                    "id": "group1",
+                    "panelType": "general",
+                    "uiItems": [
+                      {
+                        "itemType": "control",
+                        "control": {
+                          "name": "field_types",
+                          "label": {
+                            "text": ""
+                          },
+                          "description": {
+                            "text": "Change the type of columns in the active dataset"
+                          },
+                          "controlType": "structuretable",
+                          "addRemoveRows": false,
+                          "valueDef": {
+                            "propType": "structure",
+                            "isList": false,
+                            "isMap": true,
+                            "defaultValue": []
+                          },
+                          "separateLabel": true,
+                          "subControls": [
+                            {
+                              "name": "field",
+                              "label": {
+                                "text": "Field"
+                              },
+                              "controlType": "selectcolumn",
+                              "valueDef": {
+                                "propType": "string",
+                                "isList": false,
+                                "isMap": false
+                              },
+                              "role": "column",
+                              "filterable": true,
+                              "visible": true,
+                              "width": 26
+                            },
+                            {
+                              "name": "override",
+                              "label": {
+                                "text": "Override"
+                              },
+                              "controlType": "checkbox",
+                              "valueDef": {
+                                "propType": "boolean",
+                                "isList": false,
+                                "isMap": false
+                              },
+                              "visible": true,
+                              "width": 16,
+                              "editStyle": "inline"
+                            },
+                            {
+                              "name": "storage",
+                              "label": {
+                                "text": "Storage"
+                              },
+                              "controlType": "oneofselect",
+                              "valueDef": {
+                                "propType": "string",
+                                "isList": false,
+                                "isMap": false
+                              },
+                              "role": "enum",
+                              "values": [
+                                "string",
+                                "integer",
+                                "double",
+                                "date",
+                                "time",
+                                "timestamp",
+                                "password",
+                                "structure"
+                              ],
+                              "valueLabels": [
+                                "string",
+                                "integer",
+                                "double",
+                                "date",
+                                "time",
+                                "timestamp",
+                                "password",
+                                "structure"
+                              ],
+                              "visible": true,
+                              "width": 26,
+                              "editStyle": "inline",
+                              "dmDefault": "type"
+                            },
+                            {
+                              "name": "measure",
+                              "label": {
+                                "text": "Measure"
+                              },
+                              "controlType": "oneofselect",
+                              "valueDef": {
+                                "propType": "string",
+                                "isList": false,
+                                "isMap": false
+                              },
+                              "role": "enum",
+                              "values": [
+                                "continuous",
+                                "nominal",
+                                "ordinal",
+                                "recordId",
+                                "flag"
+                              ],
+                              "valueLabels": [
+                                "continuous",
+                                "nominal",
+                                "ordinal",
+                                "recordId",
+                                "flag"
+                              ],
+                              "visible": true,
+                              "width": 26,
+                              "editStyle": "inline",
+                              "dmDefault": "measure"
+                            }
+                          ],
+                          "keyIndex": 0,
+                          "defaultRow": [
+                            null,
+                            null,
+                            null
+                          ],
+                          "noPickColumns": true
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
         }
       ]
     }
@@ -1389,49 +1391,49 @@
           "string"
         ]
       ],
-      "field_types":[
-         [
-            "Age",
-            true,
-            "integer",
-            "continuous"
-         ],
-         [
-            "Sex",
-            false,
-            "string",
-            "ordinal"
-         ],
-         [
-            "BP",
-            true,
-            "date",
-            "continuous"
-         ],
-         [
-            "Cholesterol",
-            false,
-            "string",
-            "nominal"
-         ],
-         [
-            "Na",
-            false,
-            "double",
-            "continuous"
-         ],
-         [
-            "K",
-            true,
-            "double",
-            "continuous"
-         ],
-         [
-            "Drug",
-            false,
-            "string",
-            "nominal"
-         ]
+      "field_types": [
+        [
+          "Age",
+          true,
+          "integer",
+          "continuous"
+        ],
+        [
+          "Sex",
+          false,
+          "string",
+          "ordinal"
+        ],
+        [
+          "BP",
+          true,
+          "date",
+          "continuous"
+        ],
+        [
+          "Cholesterol",
+          false,
+          "string",
+          "nominal"
+        ],
+        [
+          "Na",
+          false,
+          "double",
+          "continuous"
+        ],
+        [
+          "K",
+          true,
+          "double",
+          "continuous"
+        ],
+        [
+          "Drug",
+          false,
+          "string",
+          "nominal"
+        ]
       ]
     },
     "datasetMetadata": {
@@ -2179,32 +2181,32 @@
       }
     },
     {
-       "enabled":{
-          "parameter_refs":[
-             "field_types[2]"
-          ],
-          "evaluate":{
-             "condition":{
-                "parameter_ref":"field_types[1]",
-                "op":"equals",
-                "value":true
-             }
+      "enabled": {
+        "parameter_refs": [
+          "field_types[2]"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "field_types[1]",
+            "op": "equals",
+            "value": true
           }
-       }
+        }
+      }
     },
     {
-       "visible":{
-          "parameter_refs":[
-             "field_types[3]"
-          ],
-          "evaluate":{
-             "condition":{
-                "parameter_ref":"field_types[1]",
-                "op":"equals",
-                "value":true
-             }
+      "visible": {
+        "parameter_refs": [
+          "field_types[3]"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "field_types[1]",
+            "op": "equals",
+            "value": true
           }
-       }
+        }
+      }
     }
   ]
 }

@@ -12,7 +12,8 @@ import summarypanelParamDef from "../test_resources/paramDefs/summarypanel_param
 import { expect } from "chai";
 
 describe("summary renders correctly", () => {
-	const wrapper = propertyUtils.flyoutEditorForm(summarypanelParamDef);
+	const renderedObject = propertyUtils.flyoutEditorForm(summarypanelParamDef);
+	const wrapper = renderedObject.wrapper;
 
 	it("should have displayed the initial values in the summary", () => {
 		const summaries = wrapper.find(".control-summary-configured-values");
@@ -27,7 +28,8 @@ describe("summary renders correctly", () => {
 });
 
 describe("summary panel renders correctly with long table of more than ten rows", () => {
-	const wrapper = propertyUtils.flyoutEditorForm(summarypanelParamDef);
+	const renderedObject = propertyUtils.flyoutEditorForm(summarypanelParamDef);
+	const wrapper = renderedObject.wrapper;
 
 	it("should have displayed placeholder in summary panel", () => {
 		const summaries = wrapper.find(".control-summary-configured-values");

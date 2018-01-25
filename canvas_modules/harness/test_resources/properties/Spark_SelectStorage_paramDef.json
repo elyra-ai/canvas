@@ -89,6 +89,7 @@
     "complex_type_info": [
       {
         "complex_type_ref": "FieldStorageEntry",
+        "add_remove_rows": false,
         "key_definition": {
           "parameter_ref": "field",
           "label": {

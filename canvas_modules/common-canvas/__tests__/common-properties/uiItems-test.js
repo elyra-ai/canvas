@@ -12,7 +12,8 @@ import propertyUtils from "../_utils_/property-utils";
 import uiItemParamDef from "../test_resources/paramDefs/uiItems_paramDef.json";
 
 describe("editor-form renders correctly with correct uiItems", () => {
-	const wrapper = propertyUtils.flyoutEditorForm(uiItemParamDef);
+	const renderedObject = propertyUtils.flyoutEditorForm(uiItemParamDef);
+	const wrapper = renderedObject.wrapper;
 	it("should have displayed correct number of staticText elements", () => {
 		const staticText = wrapper.find(".static-text");
 		expect(staticText).to.have.length(4);

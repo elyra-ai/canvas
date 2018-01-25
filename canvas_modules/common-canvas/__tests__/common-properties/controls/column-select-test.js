@@ -235,7 +235,9 @@ describe("condition messages renders correctly with columnselect control", () =>
 });
 
 describe("selectcolumns control filters values correctly", () => {
-	const wrapper = propertyUtils.flyoutEditorForm(selectcolumnsParamDef);
+	const renderedObject = propertyUtils.flyoutEditorForm(selectcolumnsParamDef);
+	const wrapper = renderedObject.wrapper;
+
 	it("should filter values from selectcolumn control", () => {
 		const filterCategory = wrapper.find(".category-title-container-right-flyout-panel").at(2); // get the filter category
 		const addFieldsButtons = filterCategory.find("Button"); // field picker buttons

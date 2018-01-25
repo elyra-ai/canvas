@@ -11,11 +11,13 @@ import React from "react";
 import StructureListEditorControl from "../../../src/common-properties/editor-controls/structure-list-editor-control.jsx";
 import SubPanelButton from "../../../src/common-properties/editor-panels/sub-panel-button.jsx";
 import { mountWithIntl } from "enzyme-react-intl";
-
-
+import { ReactWrapper } from "enzyme";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtils from "../../_utils_/property-utils";
+import isEqual from "lodash/isEqual";
+
+import structureListEditorParamDef from "../../test_resources/paramDefs/structurelisteditor_paramDef.json";
 
 const CONDITIONS_TEST_FORM_DATA = require("../../test_resources/json/conditions-test-formData.json");
 
@@ -34,6 +36,7 @@ const control = {
 		"defaultValue": []
 	},
 	"separateLabel": true,
+	"addRemoveRows": true,
 	"subControls": [
 		{
 			"name": "name",
@@ -617,5 +620,138 @@ describe("condition messages renders correctly with structurelisteditor table", 
 
 		expect(wrapper.find(".validation-warning-message-icon-structure-list-editor")).to.have.length(1);
 		expect(wrapper.find(".validation-error-message-color-warning")).to.have.length(1);
+	});
+});
+
+describe("should render with CommonProperties element", () => {
+	var wrapper;
+	var renderedController;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(structureListEditorParamDef);
+		wrapper = renderedObject.wrapper;
+		renderedController = renderedObject.controller;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+	it("table does not render with add-remove buttons", () => {
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(2); // Summary link Configure Inline Editing Table
+		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
+		const tableHtml = document.getElementById("flexible-table-inlineEditingTableNoButtons"); // needed since modal dialogs are outside `wrapper`
+		const noButtonTable = new ReactWrapper(tableHtml, true);
+		const addButtons = noButtonTable.find("#field-picker-buttons-container");
+		expect(addButtons).to.have.length(0);
+	});
+
+	it("only allow integer values in integer numberfield cell", () => {
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(1); // Summary link Configure No Add Buttons Inline Editing Table
+		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
+		const tableHtml = document.getElementById("flexible-table-inlineEditingTable"); // needed since modal dialogs are outside `wrapper`
+		const inlineEditTable = new ReactWrapper(tableHtml, true);
+		const integerCell = inlineEditTable.find("#editor-control-valueName");
+		expect(integerCell).to.have.length(1);
+		expect(integerCell.prop("value")).to.equal("1");
+		// enter a valid integer
+		integerCell.simulate("change", { target: { value: "2" } });
+		expect(integerCell.prop("value")).to.equal("2");
+
+		// enter an invalid integer
+		integerCell.simulate("change", { target: { value: "2.3" } });
+		expect(integerCell.prop("value")).to.equal("2");
+	});
+
+	it("only allow double values in double numberfield cell", () => {
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(1); // Summary link Configure No Add Buttons Inline Editing Table
+		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
+		const tableHtml = document.getElementById("flexible-table-inlineEditingTable"); // needed since modal dialogs are outside `wrapper`
+		const inlineEditTable = new ReactWrapper(tableHtml, true);
+		const doubleCell = inlineEditTable.find("#editor-control-doubleName");
+		expect(doubleCell).to.have.length(1);
+		expect(doubleCell.prop("value")).to.equal("1.234");
+
+		// enter a valid double integer
+		doubleCell.simulate("change", { target: { value: "2.3" } });
+		expect(doubleCell.prop("value")).to.equal("2.3");
+	});
+
+	it("warning message generated when editing numberfield cell", () => {
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(3); // Summary link Configure Warning Inline Editing Table
+		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
+		const tableHtml = document.getElementById("flexible-table-inlineEditingTableWarning"); // needed since modal dialogs are outside `wrapper`
+		const inlineEditTable = new ReactWrapper(tableHtml, true);
+		const integerCell = inlineEditTable.find("#editor-control-valueName");
+		expect(integerCell).to.have.length(1);
+		expect(integerCell.prop("value")).to.equal("1");
+		// enter a valid integer
+		integerCell.simulate("change", { target: { value: "3" } });
+		expect(integerCell.prop("value")).to.equal("3");
+		wrapper.update();
+
+		const numberfieldSeedErrorMessages = {
+			"type": "warning",
+			"text": "field1 should not equal 3",
+		};
+		const actual = renderedController.getErrorMessage({ name: "inlineEditingTableWarning" });
+		expect(isEqual(JSON.parse(JSON.stringify(numberfieldSeedErrorMessages)),
+			JSON.parse(JSON.stringify(actual)))).to.be.true;
+		expect(inlineEditTable.find(".validation-error-message-icon")).to.have.length(1);
+		expect(inlineEditTable.find(".form__validation--warning")).to.have.length(1);
+	});
+
+	it("error message generated on OR condition when editing numberfield cell", () => {
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(5); // Summary link Configure OR Error Inline Editing Table
+		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
+		const tableHtml = document.getElementById("flexible-table-inlineEditingTableError2"); // needed since modal dialogs are outside `wrapper`
+		const inlineEditTable = new ReactWrapper(tableHtml, true);
+		const doubleCell = inlineEditTable.find("#editor-control-doubleName");
+		expect(doubleCell).to.have.length(1);
+		expect(doubleCell.prop("value")).to.equal("1.234");
+
+		// enter a valid double integer
+		doubleCell.simulate("change", { target: { value: "2.3" } });
+		expect(doubleCell.prop("value")).to.equal("2.3");
+		wrapper.update();
+
+		const numberfieldSeedErrorMessages = {
+			"type": "error",
+			"text": "fields are 2 or 2.3",
+		};
+		const actual = renderedController.getErrorMessage({ name: "inlineEditingTableError2" });
+		expect(isEqual(JSON.parse(JSON.stringify(numberfieldSeedErrorMessages)),
+			JSON.parse(JSON.stringify(actual)))).to.be.true;
+		expect(inlineEditTable.find(".validation-error-message-icon")).to.have.length(1);
+		expect(inlineEditTable.find(".form__validation--error")).to.have.length(1);
+	});
+
+	it("error message generated on AND condition when editing numberfield cell", () => {
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(4); // Summary link Configure OR Error Inline Editing Table
+		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
+		const tableHtml = document.getElementById("flexible-table-inlineEditingTableError"); // needed since modal dialogs are outside `wrapper`
+		const inlineEditTable = new ReactWrapper(tableHtml, true);
+		const doubleCell = inlineEditTable.find("#editor-control-doubleName");
+		expect(doubleCell).to.have.length(1);
+		expect(doubleCell.prop("value")).to.equal("1.234");
+		const integerCell = inlineEditTable.find("#editor-control-valueName");
+		expect(integerCell).to.have.length(1);
+		expect(integerCell.prop("value")).to.equal("1");
+		// enter a valid integer
+		integerCell.simulate("change", { target: { value: "2" } });
+		expect(integerCell.prop("value")).to.equal("2");
+
+		// enter a valid double integer
+		doubleCell.simulate("change", { target: { value: "2.3" } });
+		expect(doubleCell.prop("value")).to.equal("2.3");
+		wrapper.update();
+
+		const numberfieldSeedErrorMessages = {
+			"type": "error",
+			"text": "fields are 2 and 2.3",
+		};
+		const actual = renderedController.getErrorMessage({ name: "inlineEditingTableError" });
+		expect(isEqual(JSON.parse(JSON.stringify(numberfieldSeedErrorMessages)),
+			JSON.parse(JSON.stringify(actual)))).to.be.true;
+		expect(inlineEditTable.find(".validation-error-message-icon")).to.have.length(1);
+		expect(inlineEditTable.find(".form__validation--error")).to.have.length(1);
 	});
 });

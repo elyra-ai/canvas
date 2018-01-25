@@ -285,8 +285,8 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	let childItem;
 	let controlType;
 	let moveableRows = parameter.moveableRows;
-	let noPickColumns;
 	let rowSelection;
+	let addRemoveRows;
 
 	// The control type defines the basic UI element that should be used to edit the property
 	if (parameter.getRole() === ParamRole.CUSTOM) {
@@ -362,20 +362,16 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 						controlType = ControlType.STRUCTURETABLE;
 						moveableRows = structureDef.moveableRows;
 						rowSelection = structureDef.rowSelection;
+						addRemoveRows = structureDef.addRemoveRows;
 					} else {
 						controlType = ControlType.STRUCTURELISTEDITOR;
 						moveableRows = structureDef.moveableRows;
 						rowSelection = structureDef.rowSelection;
+						addRemoveRows = structureDef.addRemoveRows;
 					}
 				} else {
 					logger.warn("Complex types should be arrays or maps.  Found: " + parameter.propType());
 					controlType = ControlType.STRUCTUREEDITOR;
-				}
-				if (controlType === ControlType.STRUCTURELISTEDITOR) {
-					noPickColumns = false;
-				} else if (!(group.groupType() === GroupType.COLUMN_SELECTION ||
-							group.groupType() === GroupType.COLUMN_ALLOCATION)) {
-					noPickColumns = true;
 				}
 			} else {
 				controlType = ControlType.TEXTFIELD;
@@ -404,7 +400,6 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 		parameter.valueIcons,
 		parameter.sortable,
 		parameter.filterable,
-		noPickColumns,
 		parameter.charLimit,
 		subControls,
 		keyIndex,
@@ -415,7 +410,8 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 		parameter.language,
 		parameter.summary,
 		rowSelection,
-		parameter.generatedValues
+		parameter.generatedValues,
+		addRemoveRows
 	);
 }
 

@@ -151,7 +151,9 @@ describe("selectcolumn control renders correctly", () => {
 });
 
 describe("selectcolumn control filters values correctly", () => {
-	const wrapper = propertyUtils.flyoutEditorForm(selectcolumnParamDef);
+	const renderedObject = propertyUtils.flyoutEditorForm(selectcolumnParamDef);
+	const wrapper = renderedObject.wrapper;
+
 	it("should filter values from selectcolumn control", () => {
 		const filterCategory = wrapper.find(".category-title-container-right-flyout-panel").at(2); // get the filter category
 		const dropDowns = filterCategory.find("Dropdown");

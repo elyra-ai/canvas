@@ -15,6 +15,10 @@ import { ReactWrapper } from "enzyme";
 import { expect } from "chai";
 
 import sinon from "sinon";
+var renderedController;
+function controllerHandler(propertyController) {
+	renderedController = propertyController;
+}
 
 function flyoutEditorForm(paramDef) {
 	const applyPropertyChanges = sinon.spy();
@@ -30,11 +34,12 @@ function flyoutEditorForm(paramDef) {
 			showPropertiesDialog
 			propertiesInfo={propertiesInfo}
 			containerType="Custom"
+			controllerHandler={controllerHandler}
 			rightFlyout
 		/>
 	);
 
-	return wrapper;
+	return { wrapper: wrapper, controller: renderedController };
 }
 
 function createEditorForm(state, formData, controller) {

@@ -12,7 +12,9 @@ import propertyUtils from "../_utils_/property-utils";
 import panelParamDef from "../test_resources/paramDefs/panel_paramDef.json";
 
 describe("textPanel render correctly", () => {
-	const wrapper = propertyUtils.flyoutEditorForm(panelParamDef);
+	const renderedObject = propertyUtils.flyoutEditorForm(panelParamDef);
+	const wrapper = renderedObject.wrapper;
+
 	it("should have displayed correct number of textPanel elements", () => {
 		const staticText = wrapper.find(".properties-text-panel");
 		expect(staticText).to.have.length(4);
@@ -37,7 +39,8 @@ describe("textPanel render correctly", () => {
 	});
 });
 describe("columnSelection panel works correctly", () => {
-	const wrapper = propertyUtils.flyoutEditorForm(panelParamDef);
+	const renderedObject = propertyUtils.flyoutEditorForm(panelParamDef);
+	const wrapper = renderedObject.wrapper;
 	it("Select 'age' from 'Select Field' control", () => {
 		const columnSelectionCategory = wrapper.find(".category-title-container-right-flyout-panel").at(2); // COLUMN SELECTION category
 		const expectedOptions = [

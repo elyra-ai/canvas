@@ -463,9 +463,6 @@ export default class ColumnStructureTableEditor extends EditorControl {
 	}
 
 	makeAddRemoveButtonPanel(stateDisabled, tableButtonConfig) {
-		if (this.props.control.noPickColumns) {
-			return (<div />);
-		}
 		let removeFieldsButtonId = "remove-fields-button-enabled";
 		let removeIconImage = (<img src={remove32} />);
 		let removeOnClick = (tableButtonConfig) ? tableButtonConfig.removeButtonFunction : this.removeSelected;
@@ -600,7 +597,9 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			this.scrollToRow = null;
 		}
 
-		const topRightPanel = this.makeAddRemoveButtonPanel(stateDisabled, tableButtonConfig);
+		const topRightPanel = (this.props.control.addRemoveRows)
+			? this.makeAddRemoveButtonPanel(stateDisabled, tableButtonConfig)
+			: <div />;
 
 		const table =	(
 			<FlexibleTable

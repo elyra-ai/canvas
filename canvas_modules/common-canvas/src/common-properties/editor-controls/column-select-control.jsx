@@ -50,7 +50,7 @@ class ColumnSelectControl extends ColumnStructureTableEditor {
 
 		const conditionProps = {
 			propertyId: this.props.propertyId,
-			controlType: "structure-table"
+			controlType: "structure-list-editor"
 		};
 		const conditionState = this.getConditionMsgState(conditionProps);
 

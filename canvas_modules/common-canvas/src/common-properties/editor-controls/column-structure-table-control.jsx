@@ -219,17 +219,19 @@ class ColumnStructureTableControl extends ColumnStructureTableEditor {
 		);
 
 		return (
-			<MoveableTableRows
-				tableContainer={content}
-				control={this.props.control}
-				controller={this.props.controller}
-				getSelectedRows={this.getSelectedRows}
-				setScrollToRow={this.setScrollToRow}
-				getCurrentControlValue={this.getCurrentControlValue}
-				setCurrentControlValueSelected={this.setCurrentControlValueSelected}
-				stateStyle={stateStyle}
-				disabled={disabled}
-			/>
+			<div className="properties-column-structure">
+				<MoveableTableRows
+					tableContainer={content}
+					control={this.props.control}
+					controller={this.props.controller}
+					getSelectedRows={this.getSelectedRows}
+					setScrollToRow={this.setScrollToRow}
+					getCurrentControlValue={this.getCurrentControlValue}
+					setCurrentControlValueSelected={this.setCurrentControlValueSelected}
+					stateStyle={stateStyle}
+					disabled={disabled}
+				/>
+			</div>
 		);
 	}
 }
