@@ -66,10 +66,10 @@ export default class OneofselectControl extends EditorControl {
 		let topPos = "";
 		if (this.props.rightFlyout) {
 			// dropdown control is in wide-flyout
-			topPos = dropdownRect.y - dropdownRect.height;
-
-			// dropdown control is in flyout, not within the wide-flyout
-			if (document.querySelector(".rightside-modal-container") === null) {
+			if (document.querySelector(".rightside-modal-container") !== null) {
+				const modalRect = document.querySelector(".rightside-modal-container").getBoundingClientRect();
+				topPos = dropdownRect.bottom - modalRect.top;
+			} else { // dropdown control is in flyout, not within the wide-flyout
 				let tableParent = false;
 				let elem = me.parentElement;
 				while (!tableParent) {

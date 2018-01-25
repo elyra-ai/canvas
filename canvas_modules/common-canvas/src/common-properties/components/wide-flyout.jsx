@@ -16,7 +16,7 @@ export default class WideFlyout extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			canvasHeight: 0
+			flyoutStyle: {}
 		};
 		this.updateDimensions = this.updateDimensions.bind(this);
 	}
@@ -33,9 +33,12 @@ export default class WideFlyout extends Component {
 	updateDimensions() {
 		const propertiesContainer = document.getElementById("common-properties-right-flyout-panel");
 		if (propertiesContainer !== null) {
-			const canvasHeight = window.getComputedStyle(propertiesContainer, null).getPropertyValue("height");
+			const canvasRect = propertiesContainer.getBoundingClientRect();
 			this.setState({
-				canvasHeight: canvasHeight
+				flyoutStyle: {
+					height: (canvasRect.height + "px"),
+					top: (canvasRect.top + "px")
+				}
 			});
 		}
 	}
@@ -53,7 +56,7 @@ export default class WideFlyout extends Component {
 			applyLabel={this.props.applyLabel}
 			rejectLabel={this.props.rejectLabel}
 		/>);
-		return (<Modal className="rightside-modal-container" style={{ "height": this.state.canvasHeight }}
+		return (<Modal className="rightside-modal-container" style={this.state.flyoutStyle}
 			show={this.props.show}
 			keyboard
 			backdrop="static"

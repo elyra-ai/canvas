@@ -286,6 +286,7 @@ input.number,
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
+	border: none;
 }
 
 .rightside-modal-container.modal.fade:not(.in) .modal-dialog {

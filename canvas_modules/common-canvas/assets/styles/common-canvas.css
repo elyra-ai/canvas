@@ -43,8 +43,7 @@
 	transition: all 0.2s;
 	z-index: 3;
 	box-shadow: -2px 0px 2px #E0E0E0;
-	overflow-x: scroll;
-	overflow-y: hidden;
+	overflow: hidden;
 	position: absolute;
 	right: 0px;
 }

@@ -13,7 +13,7 @@
 }
 
 .canvas-container {
-  height: calc(100vh - 50px);
+  height: calc(100% - 52px);
   width: 100%;
 }
 
