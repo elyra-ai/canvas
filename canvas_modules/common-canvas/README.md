@@ -1,6 +1,6 @@
 ## @wdp/common-canvas
 
-The `Common Canvas` exists for use in building canvas-like applications. The canvas is driven by an application-agnostic [_Diagram JSON_](https://github.ibm.com/NGP-TWC/wdp-pipeline-schemas/tree/master/common-canvas/diagram), and fires UI events to the consuming application for document management.
+The `Common Canvas` exists for use in building canvas-like applications. The canvas is driven by an application-agnostic [_PipelineFlow JSON_](https://github.ibm.com/NGP-TWC/wdp-pipeline-schemas/tree/master/common-pipeline/pipeline-flow), and fires UI events to the consuming application for document management.
 
 ### Documentation
 
