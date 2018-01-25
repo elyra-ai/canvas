@@ -8,16 +8,13 @@
  *******************************************************************************/
 
 import { getAutoCompleteCount, selectAutoComplete, setTextValue } from "./utilities/codemirror_util.js";
-import { getHarnessData } from "./utilities/HTTPClient.js";
-import { getURL } from "./utilities/test-config.js";
+import testUtils from "./utilities/test-utils.js";
+
 
 /* global browser */
 /* eslint max-depth: ["error", 6] */
 
 module.exports = function() {
-
-	const testUrl = getURL();
-	const getEventLogUrl = testUrl + "/v1/test-harness/events";
 
 	this.Then(/^I verify "([^"]*)" is a "([^"]*)" in ExpressionEditor$/, function(word, type) {
 		const CMline = browser.$("#ExpressionEditor").$$(".CodeMirror-line")[0];
@@ -81,7 +78,7 @@ module.exports = function() {
 		var okButton = getPropertiesApplyButton();
 		okButton.click();
 
-		var lastEventLog = getLastEventLogData();
+		var lastEventLog = testUtils.getLastEventLogData();
 
 		expect(selectText).toEqual((lastEventLog.data.form.conditionExpr).toString());
 	});
@@ -106,7 +103,7 @@ module.exports = function() {
 	});
 
 	this.Then(/^I verify that the event log has a value of "([^"]*)" for the "([^"]*)" parameter$/, function(testValue, parameterName) {
-		var lastEventLog = getLastEventLogData();
+		var lastEventLog = testUtils.getLastEventLogData();
 		var found = false;
 		const parameterValues = lastEventLog.data.form[parameterName];
 		if (Array.isArray(parameterValues)) {
@@ -129,27 +126,6 @@ module.exports = function() {
 		}
 		expect(found).toBe(true);
 	});
-
-
-	function getLastEventLogData(override) {
-		var message = 1;
-		if (override) {
-			message = override;
-		}
-		browser.timeouts("script", 3000);
-		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
-		// console.log(eventLog.value);
-		var eventLogJSON = JSON.parse(eventLog.value);
-		var lastEventLog = eventLogJSON[eventLogJSON.length - message];
-		// try again if data isn't found
-		if (!lastEventLog.data) {
-			browser.pause(500);
-			eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
-			eventLogJSON = JSON.parse(eventLog.value);
-			lastEventLog = eventLogJSON[eventLogJSON.length - message];
-		}
-		return lastEventLog;
-	}
 
 	function getPropertiesApplyButton() {
 		const applyButtons = browser.$$("#properties-apply-button");

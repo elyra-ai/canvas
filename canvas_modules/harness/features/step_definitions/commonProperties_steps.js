@@ -7,15 +7,11 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import { getHarnessData } from "./utilities/HTTPClient.js";
-import { getURL } from "./utilities/test-config.js";
+import testUtils from "./utilities/test-utils.js";
 
 /* global browser */
 
 module.exports = function() {
-
-	const testUrl = getURL();
-	const getEventLogUrl = testUrl + "/v1/test-harness/events";
 
 	this.Then(/^I select the "([^"]*)" tab in "([^"]*)"$/, function(tabName, mode) {
 		const labelName = (mode === "flyout") ? tabName.toUpperCase() : tabName;
@@ -46,7 +42,7 @@ module.exports = function() {
 		textbox.setValue("", textboxValue);
 		var okButton = getPropertiesApplyButton();
 		okButton.click();
-		var lastEventLog = getLastEventLogData();
+		var lastEventLog = testUtils.getLastEventLogData();
 
 		expect(textboxValue).toEqual((lastEventLog.data.form.colName).toString());
 	});
@@ -60,7 +56,7 @@ module.exports = function() {
 		var okButton = getPropertiesApplyButton();
 		okButton.click();
 
-		var lastEventLog = getLastEventLogData();
+		var lastEventLog = testUtils.getLastEventLogData();
 
 		expect(dropdownValue).toEqual((lastEventLog.data.form.measurement).toString());
 	});
@@ -116,7 +112,7 @@ module.exports = function() {
 		var okButton = getPropertiesApplyButton();
 		okButton.click();
 
-		var lastEventLog = getLastEventLogData();
+		var lastEventLog = testUtils.getLastEventLogData();
 
 		expect("1").toEqual((lastEventLog.data.form.checkpointInterval).toString());
 		expect(radioButtonOption).toEqual((lastEventLog.data.form.impurity).toString());
@@ -141,7 +137,7 @@ module.exports = function() {
 		var okButton = getPropertiesApplyButton();
 		okButton.click();
 
-		var lastEventLog = getLastEventLogData();
+		var lastEventLog = testUtils.getLastEventLogData();
 		var checkboxPartitionClicked = JSON.stringify(lastEventLog).includes("samplingSeed");
 		expect(true).toEqual(checkboxPartitionClicked);
 		expect("-1").not.toEqual((lastEventLog.data.form.samplingSeed).toString());
@@ -191,7 +187,7 @@ module.exports = function() {
 
 		var okButton = getPropertiesApplyButton();
 		okButton.click();
-		var lastEventLog = getLastEventLogData();
+		var lastEventLog = testUtils.getLastEventLogData();
 		var naKey = (JSON.stringify(lastEventLog.data.form.keys[0])).includes("Na");
 		var drugKey = (JSON.stringify(lastEventLog.data.form.keys[1])).includes("Drug");
 		var drugValue = (JSON.stringify(lastEventLog.data.form.keys[1])).includes("Ascending");
@@ -272,13 +268,13 @@ module.exports = function() {
 	});
 
 	this.Then("I verify testValue is not present", function() {
-		var lastEventLog = getLastEventLogData(2);
+		var lastEventLog = testUtils.getLastEventLogData(2);
 		expect("").toEqual((lastEventLog.data.form.colName).toString());
 
 	});
 
 	this.Then("I verify testValue is present", function() {
-		var lastEventLog = getLastEventLogData(2);
+		var lastEventLog = testUtils.getLastEventLogData(2);
 		expect("testValue").toEqual((lastEventLog.data.form.colName).toString());
 	});
 
@@ -368,13 +364,13 @@ module.exports = function() {
 	});
 
 	this.Then(/^I verify the event log for the "([^"]*)" parameter contains "([^"]*)"$/, function(parameterName, values) {
-		const lastEventLog = getLastEventLogData();
+		const lastEventLog = testUtils.getLastEventLogData();
 		// console.log(lastEventLog.data.form[parameterName]);
 		expect(values).toEqual((lastEventLog.data.form[parameterName]).toString());
 	});
 
 	this.Then(/^I verify the event log has the "([^"]*)" message for the "([^"]*)" parameter of "([^"]*)"$/, function(msgType, parameterName, msg) {
-		const lastEventLog = getLastEventLogData();
+		const lastEventLog = testUtils.getLastEventLogData();
 		// console.log(lastEventLog.data.messages);
 		expect(lastEventLog.data.messages.length).not.toEqual(0);
 		var found = false;
@@ -388,26 +384,6 @@ module.exports = function() {
 		}
 		expect(found).toEqual(true);
 	});
-
-	function getLastEventLogData(override) {
-		var message = 1;
-		if (override) {
-			message = override;
-		}
-		browser.timeouts("script", 3000);
-		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
-		// console.log(eventLog.value);
-		var eventLogJSON = JSON.parse(eventLog.value);
-		var lastEventLog = eventLogJSON[eventLogJSON.length - message];
-		// try again if data isn't found
-		if (!lastEventLog.data) {
-			browser.pause(500);
-			eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
-			eventLogJSON = JSON.parse(eventLog.value);
-			lastEventLog = eventLogJSON[eventLogJSON.length - message];
-		}
-		return lastEventLog;
-	}
 
 	function getPropertiesApplyButton() {
 		const applyButtons = browser.$$("#properties-apply-button");

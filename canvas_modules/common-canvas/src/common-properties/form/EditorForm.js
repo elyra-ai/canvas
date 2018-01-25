@@ -80,10 +80,11 @@ class ActionPanel {
 }
 
 class CustomControlPanel {
-	constructor(id, panelType, parameters) {
+	constructor(id, panelType, parameters, data) {
 		this.id = id;
 		this.panelType = panelType;
 		this.parameters = parameters;
+		this.data = data;
 	}
 }
 
@@ -146,7 +147,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider), new Label(l10nProvider.l10nLabel(group, group.name))));
 	}
 	case GroupType.CUSTOM_PANEL: {
-		return UIItem.makeCustomPanel(new CustomControlPanel(groupName, PanelType.CUSTOM, group.parameterNames()));
+		return UIItem.makeCustomPanel(new CustomControlPanel(groupName, PanelType.CUSTOM, group.parameterNames(), group.data));
 	}
 	case GroupType.SUMMARY_PANEL: {
 		groupLabel = l10nProvider.l10nLabel(group, group.name);

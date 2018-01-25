@@ -626,7 +626,7 @@ class EditorForm extends React.Component {
 		if (this.props.customPanels) {
 			for (const custPanel of this.props.customPanels) {
 				if (custPanel.id() === panel.id) {
-					return new custPanel(panel.parameters, this.props.controller).renderPanel();
+					return new custPanel(panel.parameters, this.props.controller, panel.data).renderPanel();
 				}
 			}
 		}

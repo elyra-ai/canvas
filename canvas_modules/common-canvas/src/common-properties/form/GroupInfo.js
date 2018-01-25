@@ -13,7 +13,7 @@ import propertyOf from "lodash/propertyOf";
 import has from "lodash/has";
 
 class Group {
-	constructor(cname, parameters, actions, type, label, dependsOn, subGroups, description) {
+	constructor(cname, parameters, actions, type, label, dependsOn, subGroups, description, data) {
 		this.name = cname;
 		this.parameters = parameters;
 		this.actions = actions;
@@ -22,6 +22,7 @@ class Group {
 		this.dependsOn = dependsOn;
 		this.subGroups = subGroups;
 		this.description = ResourceDef.make(description);
+		this.data = data;
 	}
 
 	parameterNames() {
@@ -56,7 +57,8 @@ class Group {
 				propertyOf(uiGroup)("label"),
 				propertyOf(uiGroup)("depends_on_ref"),
 				subGroups,
-				propertyOf(uiGroup)("description"));
+				propertyOf(uiGroup)("description"),
+				propertyOf(uiGroup)("data"));
 		}
 		return null;
 	}

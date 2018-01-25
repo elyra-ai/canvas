@@ -7,15 +7,11 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import { getHarnessData } from "./utilities/HTTPClient.js";
-import { getURL } from "./utilities/test-config.js";
+import testUtils from "./utilities/test-utils.js";
 
 /* global browser */
 
 module.exports = function() {
-
-	const testUrl = getURL();
-	const getEventLogUrl = testUrl + "/v1/test-harness/events";
 
 	this.Then(/^I see common properties flyout title "([^"]*)"$/, function(givenTitle) {
 		browser.pause(500);
@@ -42,7 +38,7 @@ module.exports = function() {
 	});
 
 	this.Then(/^I verify the new title "([^"]*)"$/, function(newTitle) {
-		var lastEventLog = getLastEventLogData();
+		var lastEventLog = testUtils.getLastEventLogData();
 		expect(newTitle).toEqual((lastEventLog.data.title).toString());
 	});
 
@@ -73,7 +69,7 @@ module.exports = function() {
 		var okButton = getPropertiesApplyButton();
 		okButton.click();
 
-		var lastEventLog = getLastEventLogData();
+		var lastEventLog = testUtils.getLastEventLogData();
 
 		expect("1").toEqual((lastEventLog.data.form.checkpointInterval).toString());
 		expect(radioButtonOption).toEqual((lastEventLog.data.form.impurity).toString());
@@ -96,7 +92,7 @@ module.exports = function() {
 		var okButton = getPropertiesApplyButton();
 		okButton.click();
 
-		var lastEventLog = getLastEventLogData();
+		var lastEventLog = testUtils.getLastEventLogData();
 		var checkboxPartitionClicked = JSON.stringify(lastEventLog).includes("samplingSeed");
 		expect(true).toEqual(checkboxPartitionClicked);
 		expect("-1").not.toEqual((lastEventLog.data.form.samplingSeed).toString());
@@ -169,25 +165,6 @@ module.exports = function() {
 			}
 		}
 	});
-
-	function getLastEventLogData(override) {
-		var message = 1;
-		if (override) {
-			message = override;
-		}
-		browser.timeouts("script", 3000);
-		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
-		var eventLogJSON = JSON.parse(eventLog.value);
-		var lastEventLog = eventLogJSON[eventLogJSON.length - message];
-		// try again if data isn't found
-		if (!lastEventLog.data) {
-			browser.pause(500);
-			eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
-			eventLogJSON = JSON.parse(eventLog.value);
-			lastEventLog = eventLogJSON[eventLogJSON.length - message];
-		}
-		return lastEventLog;
-	}
 
 	function getPropertiesApplyButton() {
 		return browser.$("#properties-apply-button");

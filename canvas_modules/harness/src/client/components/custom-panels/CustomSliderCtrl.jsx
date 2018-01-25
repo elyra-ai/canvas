@@ -22,10 +22,10 @@ export default class CustomSliderCtrl extends React.Component {
 
 	handleChange(evt, val) {
 		var message;
-		if (parseInt(val, 10) > 60 && parseInt(val, 10) <= 90) {
+		if (val > 60 && val <= 90) {
 			message = { type: "warning", text: "Slider greater than 60" };
 			this.props.controller.updateErrorMessage(this.props.propertyId, message);
-		} else if (parseInt(val, 10) > 90) {
+		} else if (val > 90) {
 			message = { type: "error", text: "Slider greater than 90" };
 			this.props.controller.updateErrorMessage(this.props.propertyId, message);
 		} else {

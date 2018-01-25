@@ -17,9 +17,10 @@ class CustomMapPanel {
 		return "custom-map-panel";
 	}
 
-	constructor(parameters, controller) {
+	constructor(parameters, controller, data) {
 		this.parameters = parameters;
 		this.controller = controller;
+		this.data = data;
 	}
 
 	renderPanel() {
@@ -35,6 +36,7 @@ class CustomMapPanel {
 				ref={controlId}
 				propertyId={propertyId}
 				controller={this.controller}
+				data={this.data}
 			/>
 		);
 	}

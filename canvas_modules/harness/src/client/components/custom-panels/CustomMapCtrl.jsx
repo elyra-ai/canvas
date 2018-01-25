@@ -70,7 +70,8 @@ export default class CustomMapCtrl extends React.Component {
 		const value = [lat, lng, zoom];
 		this.coords = this.formatCoords(lat, lng);
 		this.props.controller.updatePropertyValue(this.props.propertyId, value);
-		this.props.controller.updatePropertyValue({ name: "map_zoom" }, zoom); // update value in another control
+		this.props.controller.updatePropertyValue(
+			{ name: this.props.data.parameter_ref }, zoom); // update value in another control
 		const mapSummary = (<CustomMapSummary lng={this.lng} lat={this.lat} zoom={this.zoom} />);
 		this.props.controller.updateCustPropSumPanelValue(this.props.propertyId,
 			{ value: mapSummary, label: "Map" });
@@ -186,5 +187,6 @@ function loadJS(src) {
 
 CustomMapCtrl.propTypes = {
 	controller: PropTypes.object.isRequired,
-	propertyId: PropTypes.object.isRequired
+	propertyId: PropTypes.object.isRequired,
+	data: PropTypes.object.isRequired
 };

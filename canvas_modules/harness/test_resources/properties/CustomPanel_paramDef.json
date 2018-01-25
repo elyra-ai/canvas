@@ -3,7 +3,7 @@
     "title": "Custom Panels"
   },
   "current_parameters": {
-    "custom_slider": "9.00",
+    "custom_slider": 9,
     "map_zoom": 9,
     "map_checkbox": false,
     "custom_map_info": [
@@ -54,7 +54,7 @@
     },
     {
       "id": "custom_slider",
-      "type": "string"
+      "type": "integer"
     },
     {
       "id": "custom_toggle",
@@ -206,7 +206,10 @@
                 "type": "customPanel",
                 "parameter_refs": [
                   "custom_map_info"
-                ]
+                ],
+                "data": {
+                  "parameter_ref": "map_zoom"
+                }
               }
             ]
           }
