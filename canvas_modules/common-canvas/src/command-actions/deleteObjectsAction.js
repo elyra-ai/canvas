@@ -14,37 +14,35 @@ export default class DeleteObjectsAction extends Action {
 		this.data = data;
 		this.objectModel = objectModel;
 		this.objectsInfo = [];
+		this.nodes = this.objectModel.getSelectedNodes();
+		this.comments = this.objectModel.getSelectedComments();
+		this.links = [];
+		this.data.selectedObjectIds.forEach((id) => {
+			const objectLinks = this.objectModel.getLinksContainingId(id);
+			// ensure each link is only stored once
+			objectLinks.forEach((objectLink) => {
+				if (!this.links.find((link) => (link.id === objectLink.id))) {
+					this.links.push(objectLink);
+				}
+			});
+		});
 	}
 
 	// Standard methods
 	do() {
-		this.data.selectedObjectIds.forEach((id) => {
-			const objectInfo = {};
-			objectInfo.id = id;
-
-			// save all the links and node data associated with each id
-			objectInfo.links = this.objectModel.getLinksContainingId(id);
-			if (this.objectModel.isDataNode(id)) {
-				objectInfo.type = "node";
-				objectInfo.data = this.objectModel.getNode(id);
-			} else {
-				objectInfo.type = "comment";
-				objectInfo.data = this.objectModel.getComment(id);
-			}
-			this.objectsInfo.push(objectInfo);
-		});
 		this.objectModel.deleteObjects(this.data);
 	}
 
 	undo() {
-		this.objectsInfo.forEach((objectInfo) => {
-			if (objectInfo.type === "node") {
-				this.objectModel.addNode(objectInfo.data);
-			} else {
-				this.objectModel.addComment(objectInfo.data);
-			}
-			this.objectModel.addLinks(objectInfo.links);
+		this.nodes.forEach((node) => {
+			this.objectModel.addNode(node);
 		});
+
+		this.comments.forEach((comment) => {
+			this.objectModel.addComment(comment);
+		});
+
+		this.objectModel.addLinks(this.links);
 	}
 
 	redo() {

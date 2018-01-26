@@ -138,12 +138,18 @@ Feature: Sanity_Test_undoRedo
 		Then I click undo
 		Then I verify the number of nodes are 8
 		Then I verify the number of comments are 3
+		Then I verify the number of data links are 5
+		Then I verify the number of comment links are 3
 		Then I click redo
 		Then I verify the number of nodes are 0
 		Then I verify the number of comments are 0
+		Then I verify the number of data links are 0
+		Then I verify the number of comment links are 0
 		Then I click undo
 		Then I verify the number of nodes are 8
 		Then I verify the number of comments are 3
+		Then I verify the number of data links are 5
+		Then I verify the number of comment links are 3
 
 		Then I select all the nodes in the canvas
 		Then I select all the comments in the canvas
