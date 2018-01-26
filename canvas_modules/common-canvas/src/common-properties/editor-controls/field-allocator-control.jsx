@@ -32,7 +32,7 @@ export default class FieldAllocatorControl extends EditorControl {
 
 	handleChange(evt) {
 		let value = evt.value;
-		// shouldn't have to do this but when "" the label is returned instead of label
+		// shouldn't have to do this but when "" the label is returned instead of value
 		if (value === this.emptyLabel) {
 			value = "";
 		}
@@ -59,7 +59,7 @@ export default class FieldAllocatorControl extends EditorControl {
 	}
 
 	addColumns(columnNames, callback) {
-		var currentColumns = this.props.controller.getPropertyValue(this.props.propertyId);
+		let currentColumns = this.props.controller.getPropertyValue(this.props.propertyId);
 		if (columnNames.length === 1) {
 			currentColumns = columnNames;
 		}

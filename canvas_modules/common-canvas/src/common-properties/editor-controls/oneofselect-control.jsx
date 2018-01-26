@@ -17,16 +17,24 @@ import EditorControl from "./editor-control.jsx";
 export default class OneofselectControl extends EditorControl {
 	constructor(props) {
 		super(props);
-
 		this.state = {
 			clippedClassName: ""
 		};
+		this.emptyLabel = "...";
+		if (props.control.additionalText) {
+			this.emptyLabel = this.props.control.additionalText;
+		}
 		this.handleChange = this.handleChange.bind(this);
 		this.onBlur = this.onBlur.bind(this);
 	}
 
 	handleChange(evt) {
-		this.props.controller.updatePropertyValue(this.props.propertyId, evt.value);
+		let value = evt.value;
+		// shouldn't have to do this but when "" the label is returned instead of value
+		if (value === this.emptyLabel) {
+			value = "";
+		}
+		this.props.controller.updatePropertyValue(this.props.propertyId, value);
 	}
 	onBlur() {
 		this.props.controller.validateInput(this.props.propertyId);
@@ -101,24 +109,30 @@ export default class OneofselectControl extends EditorControl {
 		return topPos;
 	}
 
-	genSelectOptions(control, selectedValue) {
-		var options = [];
-		var selectedOption = [];
-		const optionsLength = control.values.length;
-		for (var j = 0; j < optionsLength; j++) {
+	genSelectOptions(control, inSelectedValue) {
+		let selectedValue = inSelectedValue;
+		if (typeof selectedValue === "undefined" || selectedValue === null) {
+			selectedValue = "";
+		}
+		const options = [];
+		// allow for user to not select a field
+		options.push({
+			value: "",
+			label: this.emptyLabel
+		});
+		for (var j = 0; j < control.values.length; j++) {
 			options.push({
 				value: control.values[j],
 				label: control.valueLabels[j]
 			});
 		}
-
-		for (var k = 0; k < options.length; k++) {
-			if (options[k].value === selectedValue) {
-				selectedOption = options[k];
+		let selectedOption = [];
+		for (const option of options) {
+			if (option.value === selectedValue) {
+				selectedOption = option;
 				break;
 			}
 		}
-
 		return {
 			options: options,
 			selectedOption: selectedOption
@@ -144,7 +158,7 @@ export default class OneofselectControl extends EditorControl {
 			controlIconContainerClass = "control-icon-container-enabled";
 		}
 
-		var dropDown = this.genSelectOptions(this.props.control, controlValue);
+		const dropDown = this.genSelectOptions(this.props.control, controlValue);
 		return (
 			<div id="oneofselect-control-container">
 				<div id={controlIconContainerClass}>
@@ -157,7 +171,6 @@ export default class OneofselectControl extends EditorControl {
 								onChange={this.handleChange}
 								onBlur={this.onBlur}
 								value={dropDown.selectedOption.label}
-								placeholder={this.props.control.additionalText}
 								ref="input"
 							/>
 						</div>

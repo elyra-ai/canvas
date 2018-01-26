@@ -12,6 +12,9 @@ import OneofselectControl from "../../../src/common-properties/editor-controls/o
 import { mount } from "enzyme";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
+import propertyUtils from "../../_utils_/property-utils";
+import oneofselectParamDef from "../../test_resources/paramDefs/oneofselect_paramDef.json";
+
 
 const controller = new Controller();
 
@@ -72,18 +75,59 @@ describe("DropdownControl renders correctly", () => {
 
 });
 
-// This test throws a TypeError: me.getRootNode is not a function
-// Removing the test from here and adding it to chimp
-// describe("condition messages renders correctly with dropDown control", () => {
-// 	it("oneofselectAnimals control should have warning message from empty selection", () => {
-// 		const wrapper = propertyUtils.createEditorForm("mount", CONDITIONS_TEST_FORM_DATA, controller);
-//
-// 		const dropdownContainer = wrapper.find("#oneofselect-control-container").at(0);
-// 		const dropdown = dropdownContainer.find(".Dropdown-control-panel");
-// 		expect(dropdown).to.have.length(1);
-// 		dropdown.find(".Dropdown-control").simulate("click");
-// 		wrapper.update();
-// 		expect(dropdownContainer.find(".validation-warning-message-icon-dropdown")).to.have.length(1);
-// 		expect(dropdownContainer.find(".validation-error-message-color-warning")).to.have.length(1);
-// 	});
-// });
+describe("oneofselect works correctly in common-properties", () => {
+	const expectedOptions = [
+		{ label: "...", value: "" },
+		{ label: "red", value: "red" },
+		{ label: "orange", value: "orange" },
+		{ label: "yellow", value: "yellow" },
+		{ label: "green", value: "green" },
+		{ label: "blue", value: "blue" },
+		{ label: "purple", value: "purple" }
+	];
+	let wrapper;
+	beforeEach(() => {
+		wrapper = propertyUtils.flyoutEditorForm(oneofselectParamDef).wrapper;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+	it("Validate oneofselect rendered correctly", () => {
+		const category = wrapper.find(".category-title-container-right-flyout-panel").at(0); // get the VALUES category
+		const dropDowns = category.find("Dropdown");
+		expect(dropDowns).to.have.length(6);
+		const options = dropDowns.at(0).prop("options"); // oneofselect
+		expect(options).to.eql(expectedOptions);
+	});
+	it("Validate oneofselect_placeholder rendered correctly", () => {
+		const category = wrapper.find(".category-title-container-right-flyout-panel").at(0); // get the VALUES category
+		const dropDowns = category.find("Dropdown");
+		expect(dropDowns).to.have.length(6);
+		const options = dropDowns.at(5).prop("options"); // oneofselect_placeholder
+		const phOptions = [
+			{ label: "None...", value: "" },
+			{ label: "red", value: "red" },
+			{ label: "orange", value: "orange" },
+			{ label: "yellow", value: "yellow" },
+			{ label: "green", value: "green" },
+			{ label: "blue", value: "blue" },
+			{ label: "purple", value: "purple" }
+		];
+		expect(options).to.eql(phOptions);
+	});
+	it("Validate oneofselect_error should have warning message when set to red", () => {
+		const category = wrapper.find(".category-title-container-right-flyout-panel").at(1); // get the CONDITIONS category
+		const newValue = { label: "red", value: "red" };
+		propertyUtils.dropDown(category, 0, newValue, expectedOptions);
+		expect(category.find(".validation-error-message-icon-dropdown")).to.have.length(1);
+		expect(category.find(".validation-error-message-color-error")).to.have.length(1);
+	});
+	it("Validate oneofselect_warning should have warning message when set to yellow", () => {
+		const category = wrapper.find(".category-title-container-right-flyout-panel").at(1); // get the CONDITIONS category
+		const newValue = { label: "yellow", value: "yellow" };
+		propertyUtils.dropDown(category, 1, newValue, expectedOptions);
+		expect(category.find(".validation-warning-message-icon-dropdown")).to.have.length(1);
+		expect(category.find(".validation-error-message-color-warning")).to.have.length(1);
+	});
+});
