@@ -63,6 +63,10 @@ export default class CommonCanvas extends React.Component {
 		this.pendingTooltip = null;
 	}
 
+	componentDidMount() {
+		document.addEventListener("mousedown", this.hideTip, true);
+	}
+
 	componentWillReceiveProps(newProps) {
 		if (newProps.toolbarConfig) {
 			const newToolbarConfig = newProps.toolbarConfig;
@@ -105,9 +109,7 @@ export default class CommonCanvas extends React.Component {
 
 	componentWillUnmount() {
 		this.unsubscribe();
-		if (this.pendingTooltip) {
-			clearTimeout(this.pendingTooltip);
-		}
+		document.removeEventListener("mousedown", this.hideTip, true);
 	}
 
 	initializeController(props) {
