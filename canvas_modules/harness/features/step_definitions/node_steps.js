@@ -895,6 +895,8 @@ module.exports = function() {
 		}
 		expect(count).toBe(0);
 
+		browser.pause(1000);
+
 		// verify that the  node is in the internal object model
 		const testUrl = getURL();
 		const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
@@ -918,7 +920,7 @@ module.exports = function() {
 
 		browser.$(".context-menu-popover").$$(".react-contextmenu-item")[0].click();
 
-
+		browser.pause(1000);
 		// verify that the link is Not in the internal object model
 		const testUrl = getURL();
 		const getCanvasUrl = testUrl + "/v1/test-harness/canvas";

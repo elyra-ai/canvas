@@ -17,6 +17,7 @@ import SVGCanvasInHandler from "../svg-canvas-in-handler.js"; // TODO - Remove t
 import SVGCanvasOutHandler from "../svg-canvas-out-handler.js"; // TODO - Remove this when WML supports PipelineFlow
 import SVGPipelineInHandler from "../svg-pipeline-in-handler.js";
 import SVGPipelineOutHandler from "../svg-pipeline-out-handler.js";
+import difference from "lodash/difference";
 import isEmpty from "lodash/isEmpty";
 import uuid4 from "uuid/v4";
 
@@ -635,6 +636,9 @@ export default class ObjectModel {
 
 		// optional handler to generate the id of object model objects
 		this.idGeneratorHandler = null;
+
+		// optional callback for notification of selection changes
+		this.selectionCallback = null;
 	}
 
 	// Standard methods
@@ -683,6 +687,10 @@ export default class ObjectModel {
 		this.idGeneratorHandler = idGeneratorHandler;
 	}
 
+	setSelectionChangeHandler(selectionChangeHandler) {
+		this.selectionChangeHandler = selectionChangeHandler;
+	}
+
 	addNodeTypeToPalette(nodeTypeObj, category, categoryLabel) {
 		const nodeTypePaletteData = {
 			"nodeType": nodeTypeObj,
@@ -725,14 +733,14 @@ export default class ObjectModel {
 
 	clearPipelineFlow() {
 		this.clearSelection();
-		this.store.dispatch({ type: "CLEAR_PIPELINE_FLOW" });
+		this.executeWithSelectionChange(this.store.dispatch, { type: "CLEAR_PIPELINE_FLOW" });
 	}
 
 	// Deprectaed TODO - Remove this method when WML Canvas supports pipeline Flow
 	// TODO - Remember to also remove declaration of ObjectModel.oldCanvas from above
 	setCanvas(canvas) {
 		this.oldCanvas = canvas; // TODO - Remember to remvove the declaration of this global when WML Canvas UI supports pipleine flow.
-		this.store.dispatch({
+		this.executeWithSelectionChange(this.store.dispatch, {
 			type: "SET_PIPELINE_FLOW",
 			data: getInitialPipelineFlow(canvas.id, canvas.diagram.id),
 			layoutinfo: this.store.getState().layoutinfo,
@@ -756,7 +764,7 @@ export default class ObjectModel {
 			return;
 		}
 
-		this.store.dispatch({
+		this.executeWithSelectionChange(this.store.dispatch, {
 			type: "SET_PIPELINE_FLOW",
 			data: newPipelineFlow,
 			layoutinfo: this.store.getState().layoutinfo,
@@ -764,7 +772,7 @@ export default class ObjectModel {
 	}
 
 	setEmptyPipelineFlow() {
-		this.store.dispatch({
+		this.executeWithSelectionChange(this.store.dispatch, {
 			type: "SET_PIPELINE_FLOW",
 			data: getInitialPipelineFlow("empty-pipeline-flow", "empty-pipeline"),
 			layoutinfo: this.store.getState().layoutinfo,
@@ -912,13 +920,19 @@ export default class ObjectModel {
 	}
 
 	deleteObjects(source) {
-		source.selectedObjectIds.forEach((selId) => {
-			this.deleteObject(selId);
-		});
+		const that = this;
+		this.executeWithSelectionChange(function(src) {
+			src.selectedObjectIds.forEach((selId) => {
+				that.store.dispatch({ type: "DELETE_OBJECT", data: selId });
+			});
+			if (that.fixedLayout !== NONE) {
+				that.autoLayout(that.fixedLayout);
+			}
+		}, source);
 	}
 
 	deleteObject(id) {
-		this.store.dispatch({ type: "DELETE_OBJECT", data: id });
+		this.executeWithSelectionChange(this.store.dispatch, { type: "DELETE_OBJECT", data: id });
 		if (this.fixedLayout !== NONE) {
 			this.autoLayout(this.fixedLayout);
 		}
@@ -1625,7 +1639,7 @@ export default class ObjectModel {
 	// Methods to handle selections
 
 	clearSelection() {
-		this.store.dispatch({ type: "CLEAR_SELECTIONS" });
+		this.executeWithSelectionChange(this.store.dispatch, { type: "CLEAR_SELECTIONS" });
 	}
 
 	getSelectedObjectIds() {
@@ -1633,7 +1647,7 @@ export default class ObjectModel {
 	}
 
 	setSelections(newSelections) {
-		this.store.dispatch({ type: "SET_SELECTIONS", data: newSelections });
+		this.executeWithSelectionChange(this.store.dispatch, { type: "SET_SELECTIONS", data: newSelections });
 	}
 
 	deleteSelectedObjects() {
@@ -1689,7 +1703,7 @@ export default class ObjectModel {
 		if (toggleSelection) {
 			// If already selected then remove otherwise add
 			if (this.isSelected(objectId)) {
-				toggleSelections = this.getSelectedObjectIds();
+				toggleSelections = this.getSelectedObjectIds().slice();
 				const index = toggleSelections.indexOf(objectId);
 				toggleSelections.splice(index, 1);
 			}	else {
@@ -1749,16 +1763,21 @@ export default class ObjectModel {
 	}
 
 	selectSubGraph(endNodeId) {
-		var selection = [endNodeId];
+		const selection = [];
 		const currentSelectedObjects = this.getSelectedObjectIds();
 
 		// get all the nodes in the path from a currently selected object to the end node
+		let foundPath = false;
 		for (const startNodeId of currentSelectedObjects) {
-			this.findNodesInSubGraph(startNodeId, endNodeId, selection);
+			foundPath = foundPath || this.findNodesInSubGraph(startNodeId, endNodeId, selection);
+		}
+		if (!foundPath) {
+			// if no subgraph found which is also the case if current selection was empty, just select endNode
+			selection.push(endNodeId);
 		}
 
 		// do not put multiple copies of a nodeId in selected nodeId list.
-		const selectedObjectIds = this.getSelectedObjectIds();
+		const selectedObjectIds = this.getSelectedObjectIds().slice();
 		for (const selected of selection) {
 			if (!this.isSelected(selected)) {
 				selectedObjectIds.push(selected);
@@ -1889,6 +1908,38 @@ export default class ObjectModel {
 		}
 		// generate v4 uuid if no custom id was generated
 		return uniqueId ? uniqueId : getUUID();
+	}
+
+	executeWithSelectionChange(func, arg) {
+		const previousSelection = {
+			nodes: this.getSelectedNodes(),
+			comments: this.getSelectedComments()
+		};
+
+		func(arg);
+
+		if (this.selectionChangeHandler) {
+			// determine delta in selected nodes and comments
+			const selectedNodes = this.getSelectedNodes();
+			const selectedComments = this.getSelectedComments();
+			const newSelection = {
+				selection: this.getSelectedObjectIds(),
+				selectedNodes: selectedNodes,
+				selectedComments: selectedComments,
+				addedNodes: difference(selectedNodes, previousSelection.nodes),
+				addedComments: difference(selectedComments, previousSelection.comments),
+				deselectedNodes: difference(previousSelection.nodes, selectedNodes),
+				deselectedComments: difference(previousSelection.comments, selectedComments)
+			};
+
+			// only trigger event if selection has changed
+			if (!isEmpty(newSelection.addedNodes) ||
+					!isEmpty(newSelection.addedComments) ||
+					!isEmpty(newSelection.deselectedNodes) ||
+					!isEmpty(newSelection.deselectedComments)) {
+				this.selectionChangeHandler(newSelection);
+			}
+		}
 	}
 
 }

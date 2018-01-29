@@ -129,6 +129,7 @@ class App extends React.Component {
 		this.extraCanvasActionHandler = this.extraCanvasActionHandler.bind(this);
 		this.clickActionHandler = this.clickActionHandler.bind(this);
 		this.decorationActionHandler = this.decorationActionHandler.bind(this);
+		this.selectionChangeHandler = this.selectionChangeHandler.bind(this);
 		this.tipHandler = this.tipHandler.bind(this);
 
 		this.applyDiagramEdit = this.applyDiagramEdit.bind(this);
@@ -699,6 +700,10 @@ class App extends React.Component {
 		this.setState({ showPropertiesDialog: true, propertiesInfo: propsInfo });
 	}
 
+	selectionChangeHandler(data) {
+		this.log("selectionChangeHandler()", data);
+	}
+
 	tipHandler(tipType, data) {
 		if (tipType === "tipTypeLink") {
 			let sourceString = "comment";
@@ -928,6 +933,7 @@ class App extends React.Component {
 				editActionHandler= {this.editActionHandler}
 				clickActionHandler= {this.clickActionHandler}
 				decorationActionHandler= {this.decorationActionHandler}
+				selectionChangeHandler={this.selectionChangeHandler}
 				tipHandler={this.tipHandler}
 				toolbarConfig={toolbarConfig}
 				toolbarMenuActionHandler={this.toolbarMenuActionHandler}

@@ -109,6 +109,7 @@ module.exports = function() {
 
 	this.Then("I delete all selected objects via the Delete key", function() {
 		browser.keys("Delete");
+		browser.pause(1000);
 	});
 
 	this.Then(/^I hover over node type "([^"]*)" in category "([^"]*)"$/, function(nodeType, category) {

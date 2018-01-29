@@ -8,6 +8,8 @@
  *******************************************************************************/
 
 import { expect } from "chai";
+import difference from "lodash/difference";
+import isEmpty from "lodash/isEmpty";
 import isEqual from "lodash/isEqual";
 import deepFreeze from "deep-freeze";
 import ObjectModel from "../src/object-model/object-model.js";
@@ -1477,9 +1479,7 @@ describe("ObjectModel handle model OK", () => {
 			data: ["node2"]
 		});
 
-
 		objectModel.selectSubGraph("node4");
-
 
 		const expectedSelections = ["node2", "node4", "node3"];
 		const actualSelections = objectModel.getSelectedObjectIds();
@@ -1487,7 +1487,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
 
-		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
+		expect(isEmpty(difference(expectedSelections, actualSelections))).to.be.true;
 	});
 
 	it("should select nodes in a fork subgraph", () => {
@@ -1526,9 +1526,7 @@ describe("ObjectModel handle model OK", () => {
 			data: ["node1"]
 		});
 
-
 		objectModel.selectSubGraph("node4");
-
 
 		const expectedSelections = ["node1", "node4", "node2"];
 		const actualSelections = objectModel.getSelectedObjectIds();
@@ -1536,7 +1534,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
 
-		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
+		expect(isEmpty(difference(expectedSelections, actualSelections))).to.be.true;
 	});
 
 	it("should select nodes in a merge subgraph", () => {
@@ -1575,9 +1573,7 @@ describe("ObjectModel handle model OK", () => {
 			data: ["node1"]
 		});
 
-
 		objectModel.selectSubGraph("node4");
-
 
 		const expectedSelections = ["node1", "node4", "node3"];
 		const actualSelections = objectModel.getSelectedObjectIds();
@@ -1585,7 +1581,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
 
-		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
+		expect(isEmpty(difference(expectedSelections, actualSelections))).to.be.true;
 	});
 
 	it("should select nodes in a simple partial subgraph", () => {
@@ -1626,9 +1622,7 @@ describe("ObjectModel handle model OK", () => {
 			data: ["node2"]
 		});
 
-
 		objectModel.selectSubGraph("node4");
-
 
 		const expectedSelections = ["node2", "node4", "node3"];
 		const actualSelections = objectModel.getSelectedObjectIds();
@@ -1636,7 +1630,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
 
-		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
+		expect(isEmpty(difference(expectedSelections, actualSelections))).to.be.true;
 	});
 
 	it("should select nodes in a complex subgraph", () => {
@@ -1697,9 +1691,7 @@ describe("ObjectModel handle model OK", () => {
 			data: ["node1"]
 		});
 
-
 		objectModel.selectSubGraph("node13");
-
 
 		const expectedSelections = ["node1", "node13", "node2", "node3", "node4", "node11", "node12",
 			"node5", "node6", "node7"];
@@ -1708,7 +1700,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Selections = " + JSON.stringify(expectedSelections));
 		// logger.info("Actual Selections   = " + JSON.stringify(actualSelections));
 
-		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
+		expect(isEmpty(difference(expectedSelections, actualSelections))).to.be.true;
 	});
 
 	it("should select nodes in a complex patial subgraph", () => {
@@ -1769,9 +1761,7 @@ describe("ObjectModel handle model OK", () => {
 			data: ["node1"]
 		});
 
-
 		objectModel.selectSubGraph("node12");
-
 
 		const expectedSelections = ["node1", "node12", "node2", "node3", "node4",
 			"node5", "node6", "node7"];
@@ -1780,7 +1770,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
 
-		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
+		expect(isEmpty(difference(expectedSelections, actualSelections))).to.be.true;
 	});
 
 	it("should select nodes in a complex single input subgraph", () => {
@@ -1841,9 +1831,7 @@ describe("ObjectModel handle model OK", () => {
 			data: ["node8"]
 		});
 
-
 		objectModel.selectSubGraph("node11");
-
 
 		const expectedSelections = ["node8", "node11", "node4", "node12"];
 		const actualSelections = objectModel.getSelectedObjectIds();
@@ -1851,7 +1839,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Selections = " + JSON.stringify(expectedSelections));
 		// logger.info("Actual Selections   = " + JSON.stringify(actualSelections));
 
-		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
+		expect(isEmpty(difference(expectedSelections, actualSelections))).to.be.true;
 	});
 
 	it("should select nodes in a complex subgraph starting with comment", () => {
@@ -1920,7 +1908,7 @@ describe("ObjectModel handle model OK", () => {
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
 
-		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
+		expect(isEmpty(difference(expectedSelections, actualSelections))).to.be.true;
 	});
 
 });
