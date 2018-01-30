@@ -12,16 +12,17 @@ import difference from "lodash/difference";
 import isEmpty from "lodash/isEmpty";
 import isEqual from "lodash/isEqual";
 import deepFreeze from "deep-freeze";
-import ObjectModel from "../src/object-model/object-model.js";
+import CanvasController from "../src/canvas-controller";
 import log4js from "log4js";
 
 const logger = log4js.getLogger("selection-test");
-const objectModel = new ObjectModel();
+const canvasController = new CanvasController();
 
 describe("Selection notification tests", () => {
 	it("Should select node and comment", () => {
 		logger.info("selection event should contain selected nodes and comments");
 
+		const objectModel = canvasController.getObjectModel();
 		const startCanvas =
 			{ zoom: 100,
 				nodes: [
@@ -44,7 +45,7 @@ describe("Selection notification tests", () => {
 		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
 			data: startCanvas,
-			layoutinfo: objectModel.getLayout()
+			layoutinfo: canvasController.getObjectModel().getLayout()
 		});
 
 		objectModel.setSelectionChangeHandler((data) => {
@@ -56,10 +57,10 @@ describe("Selection notification tests", () => {
 			expect(isEmpty(difference(data.deselectedNodes, []))).to.be.true;
 			expect(isEmpty(difference(data.deselectedComments, []))).to.be.true;
 		});
-		objectModel.setSelections(["comment1", "node3"]);
+		canvasController.setSelections(["comment1", "node3"]);
 
 		const expectedSelections = ["comment1", "node3"];
-		const actualSelections = objectModel.getSelectedObjectIds();
+		const actualSelections = canvasController.getSelectedObjectIds();
 
 		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
 
@@ -69,6 +70,7 @@ describe("Selection notification tests", () => {
 	it("should select nodes in a fork subgraph", () => {
 		logger.info("should select nodes in a fork subgraph.");
 
+		const objectModel = canvasController.getObjectModel();
 		const startCanvas =
 			{ zoom: 100,
 				nodes: [
@@ -115,7 +117,7 @@ describe("Selection notification tests", () => {
 		objectModel.selectSubGraph("node4");
 
 		const expectedSelections = ["node1", "node4", "node2"];
-		const actualSelections = objectModel.getSelectedObjectIds();
+		const actualSelections = canvasController.getSelectedObjectIds();
 
 		expect(isEmpty(difference(expectedSelections, actualSelections))).to.be.true;
 		objectModel.setSelectionChangeHandler(null);
@@ -124,6 +126,7 @@ describe("Selection notification tests", () => {
 	it("should select toggle off node", () => {
 		logger.info("should select toggle off node.");
 
+		const objectModel = canvasController.getObjectModel();
 		const startCanvas =
 			{ zoom: 100,
 				nodes: [
@@ -169,7 +172,7 @@ describe("Selection notification tests", () => {
 
 
 		const expectedSelections = ["comment1"];
-		const actualSelections = objectModel.getSelectedObjectIds();
+		const actualSelections = canvasController.getSelectedObjectIds();
 
 		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
 		objectModel.setSelectionChangeHandler(null);
@@ -178,6 +181,7 @@ describe("Selection notification tests", () => {
 	it("should deselect node", () => {
 		logger.info("should deselect node");
 
+		const objectModel = canvasController.getObjectModel();
 		const startCanvas =
 			{ zoom: 100,
 				nodes: [
@@ -217,10 +221,10 @@ describe("Selection notification tests", () => {
 			expect(isEmpty(difference(data.deselectedNodes, [objectModel.getNode("node3")]))).to.be.true;
 			expect(isEmpty(difference(data.deselectedComments, []))).to.be.true;
 		});
-		objectModel.setSelections(["comment1"]);
+		canvasController.setSelections(["comment1"]);
 
 		const expectedSelections = ["comment1"];
-		const actualSelections = objectModel.getSelectedObjectIds();
+		const actualSelections = canvasController.getSelectedObjectIds();
 
 		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
 
@@ -230,6 +234,7 @@ describe("Selection notification tests", () => {
 	it("should deselect node and comment", () => {
 		logger.info("should deselect node and comment");
 
+		const objectModel = canvasController.getObjectModel();
 		const startCanvas =
 			{ zoom: 100,
 				nodes: [
@@ -269,10 +274,10 @@ describe("Selection notification tests", () => {
 			expect(isEmpty(difference(data.deselectedNodes, [objectModel.getNode("node3")]))).to.be.true;
 			expect(isEmpty(difference(data.deselectedComments, [objectModel.getComment("comment1")]))).to.be.true;
 		});
-		objectModel.setSelections([]);
+		canvasController.setSelections([]);
 
 		const expectedSelections = [];
-		const actualSelections = objectModel.getSelectedObjectIds();
+		const actualSelections = canvasController.getSelectedObjectIds();
 
 		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
 
@@ -281,6 +286,8 @@ describe("Selection notification tests", () => {
 
 	it("should clear selection for deleted node", () => {
 		logger.info("should clear selection for deleted node");
+
+		const objectModel = canvasController.getObjectModel();
 
 		const startCanvas =
 			{ zoom: 100,
@@ -322,10 +329,10 @@ describe("Selection notification tests", () => {
 			expect(isEmpty(difference(data.deselectedNodes, [node3]))).to.be.true;
 			expect(isEmpty(difference(data.deselectedComments, []))).to.be.true;
 		});
-		objectModel.deleteObject("node3");
+		canvasController.deleteObject("node3");
 
 		const expectedSelections = ["comment1"];
-		const actualSelections = objectModel.getSelectedObjectIds();
+		const actualSelections = canvasController.getSelectedObjectIds();
 
 		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
 
@@ -335,6 +342,7 @@ describe("Selection notification tests", () => {
 	it("should clear selection for deleted objects", () => {
 		logger.info("should clear selection for deleted objects");
 
+		const objectModel = canvasController.getObjectModel();
 		const startCanvas =
 			{ zoom: 100,
 				nodes: [
@@ -376,10 +384,10 @@ describe("Selection notification tests", () => {
 			expect(isEmpty(difference(data.deselectedNodes, [node3]))).to.be.true;
 			expect(isEmpty(difference(data.deselectedComments, [comment1]))).to.be.true;
 		});
-		objectModel.deleteSelectedObjects();
+		canvasController.deleteSelectedObjects();
 
 		const expectedSelections = [];
-		const actualSelections = objectModel.getSelectedObjectIds();
+		const actualSelections = canvasController.getSelectedObjectIds();
 
 		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
 

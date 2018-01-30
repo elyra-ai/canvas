@@ -135,6 +135,10 @@ export default class CanvasController {
 		this.objectModel.setOutputPortLabel(nodeId, portId, newLabel);
 	}
 
+	setSelections(newSelection) {
+		this.objectModel.setSelections(newSelection);
+	}
+
 	moveObjects(data) {
 		this.objectModel.moveObjects(data);
 	}
@@ -145,6 +149,10 @@ export default class CanvasController {
 
 	deleteObject(id) {
 		this.objectModel.deleteObject(id);
+	}
+
+	deleteSelectedObjects() {
+		this.objectModel.deleteSelectedObjects();
 	}
 
 	disconnectNodes(source) {
@@ -290,6 +298,10 @@ export default class CanvasController {
 
 	getCommandStack() {
 		return this.commandStack;
+	}
+
+	getSelectedObjectIds() {
+		return this.objectModel.getSelectedObjectIds();
 	}
 
 	isInternalObjectModelEnabled() {
