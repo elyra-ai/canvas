@@ -331,4 +331,4 @@ CommonProperties.propTypes = {
 	actionHandler: PropTypes.func
 };
 
-export default injectIntl(CommonProperties);
+export default injectIntl(CommonProperties, { withRef: true });
