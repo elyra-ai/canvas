@@ -18,7 +18,7 @@ import { injectIntl, intlShape } from "react-intl";
 class ColumnSelectControl extends ColumnStructureTableEditor {
 
 	getRowClassName(rowIndex) {
-		const selectedRows = this.getSelectedRows();
+		const selectedRows = this.props.controller.getSelectedRows();
 		return selectedRows.indexOf(rowIndex) >= 0
 			? "column-select-table-row column-select-table-selected-row "
 			: "column-select-table-row";
@@ -107,7 +107,6 @@ class ColumnSelectControl extends ColumnStructureTableEditor {
 					tableContainer={content}
 					control={this.props.control}
 					controller={this.props.controller}
-					getSelectedRows={this.getSelectedRows}
 					setScrollToRow={this.setScrollToRow}
 					getCurrentControlValue={this.getCurrentControlValue}
 					setCurrentControlValueSelected={this.setCurrentControlValueSelected}

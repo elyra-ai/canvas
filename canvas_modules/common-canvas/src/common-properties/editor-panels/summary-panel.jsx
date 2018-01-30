@@ -33,8 +33,8 @@ class SummaryPanel extends EditorControl {
 
 	hideWideFlyout() {
 		this.setState({ showWideFlyout: false });
-		// on close clear selected rows
-		this.props.clearSelectedRows();
+		// on close clear *all* selected rows
+		this.props.controller.clearSelectedRows();
 	}
 	cancelWideFlyout() {
 		// on cancel reset back to original value
@@ -210,7 +210,6 @@ SummaryPanel.propTypes = {
 	label: PropTypes.string.isRequired,
 	controller: PropTypes.object.isRequired,
 	children: PropTypes.array,
-	clearSelectedRows: PropTypes.func.isRequired,
 	panelId: PropTypes.string.isRequired,
 	intl: intlShape
 };

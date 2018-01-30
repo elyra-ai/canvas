@@ -230,7 +230,7 @@ class FieldPicker extends EditorControl {
 			this.setReadOnlyColumnValue();
 		}
 		this.props.controller.updatePropertyValue({ name: this.props.control.name }, this.state.newControlValues);
-		this.props.updateSelectedRows(this.props.control.name, this.getNewSelections());
+		this.props.controller.updateSelectedRows(this.props.control.name, this.getNewSelections());
 		this.props.closeFieldPicker();
 	}
 
@@ -653,7 +653,6 @@ FieldPicker.propTypes = {
 	dataModel: PropTypes.object,
 	control: PropTypes.object,
 	title: PropTypes.string,
-	updateSelectedRows: PropTypes.func.isRequired,
 	controller: PropTypes.object.isRequired,
 	rightFlyout: PropTypes.bool,
 	intl: intlShape

@@ -34,7 +34,7 @@ export default class MoveableTableRows extends React.Component {
 
 	// enabled the move up and down arrows based on which row is selected
 	getTableRowMoveImages() {
-		const selected = this.props.getSelectedRows().sort();
+		const selected = this.props.controller.getSelectedRows(this.props.control.name).sort();
 		const controlValue = this.props.getCurrentControlValue();
 		const topEnabled = (selected.length !== 0 && selected[0] !== 0) && !this.props.disabled;
 		const bottomEnabled = (selected.length !== 0 && selected[selected.length - 1] !== controlValue.length - 1) && !this.props.disabled;
@@ -74,7 +74,7 @@ export default class MoveableTableRows extends React.Component {
 	}
 
 	topMoveRow(evt) {
-		var selected = this.props.getSelectedRows().sort();
+		var selected = this.props.controller.getSelectedRows(this.props.control.name).sort();
 		const controlValue = this.props.getCurrentControlValue();
 		for (var firstRow = selected[0]; firstRow > 0; firstRow--) {
 			for (var i = 0; i <= selected.length - 1; i++) {
@@ -92,7 +92,7 @@ export default class MoveableTableRows extends React.Component {
 	}
 
 	upMoveRow(evt) {
-		const selected = this.props.getSelectedRows().sort();
+		const selected = this.props.controller.getSelectedRows(this.props.control.name).sort();
 		// only move up if not already at the top especially for multiple selected
 		if (selected.length !== 0 && selected[0] !== 0) {
 			const controlValue = this.props.getCurrentControlValue();
@@ -111,7 +111,7 @@ export default class MoveableTableRows extends React.Component {
 	}
 
 	downMoveRow(evt) {
-		const selected = this.props.getSelectedRows().sort();
+		const selected = this.props.controller.getSelectedRows(this.props.control.name).sort();
 		const controlValue = this.props.getCurrentControlValue();
 		// only move down if not already at the end especially for multiple selected
 		if (selected.length !== 0 && selected[selected.length - 1] !== controlValue.length - 1) {
@@ -130,7 +130,7 @@ export default class MoveableTableRows extends React.Component {
 	}
 
 	bottomMoveRow(evt) {
-		var selected = this.props.getSelectedRows().sort();
+		var selected = this.props.controller.getSelectedRows(this.props.control.name).sort();
 		const controlValue = this.props.getCurrentControlValue();
 		for (var lastRow = selected[selected.length - 1]; lastRow < controlValue.length - 1; lastRow++) {
 			for (var i = selected.length - 1; i >= 0; i--) {
@@ -191,7 +191,6 @@ export default class MoveableTableRows extends React.Component {
 MoveableTableRows.propTypes = {
 	control: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
-	getSelectedRows: PropTypes.func.isRequired,
 	getCurrentControlValue: PropTypes.func.isRequired,
 	setCurrentControlValueSelected: PropTypes.func.isRequired,
 	setScrollToRow: PropTypes.func.isRequired,

@@ -10,7 +10,8 @@ export const SET_ERROR_MESSAGES = "SET_ERROR_MESSAGES";
 export const UPDATE_ERROR_MESSAGE = "UPDATE_ERROR_MESSAGE";
 export const CLEAR_ERROR_MESSAGE = "CLEAR_ERROR_MESSAGE";
 export const SET_DATASET_METADATA = "SET_DATASET_METADATA";
-
+export const UPDATE_SELECTED_ROWS = "UPDATE_SELECTED_ROWS";
+export const CLEAR_SELECTED_ROWS = "CLEAR_SELECTED_ROWS";
 
 /*
  * action creators
@@ -39,10 +40,19 @@ export function setErrorMessages(messages) {
 export function updateErrorMessage(message) {
 	return { type: UPDATE_ERROR_MESSAGE, message };
 }
+
 export function clearErrorMessage(message) {
 	return { type: CLEAR_ERROR_MESSAGE, message };
 }
 
 export function setDatasetMetadata(datasetMetadata) {
 	return { type: SET_DATASET_METADATA, datasetMetadata };
+}
+
+export function updateSelectedRows(info) {
+	return { type: UPDATE_SELECTED_ROWS, info };
+}
+
+export function clearSelectedRows(info) {
+	return { type: CLEAR_SELECTED_ROWS, info };
 }

@@ -339,6 +339,21 @@ export default class PropertiesController {
 		conditionsUtil.validateInput(propertyId, this, this.validationDefinitions, this.getDatasetMetadata());
 	}
 
+	//
+	// Table row selections
+	//
+	getSelectedRows(controlName) {
+		return this.propertiesStore.getSelectedRows(controlName);
+	}
+
+	updateSelectedRows(controlName, selection) {
+		this.propertiesStore.updateSelectedRows(controlName, selection);
+	}
+
+	clearSelectedRows(controlName) {
+		this.propertiesStore.clearSelectedRows(controlName);
+	}
+
 	/*
 	* Property Values Methods
 	*/

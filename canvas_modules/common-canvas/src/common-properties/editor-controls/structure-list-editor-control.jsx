@@ -59,7 +59,7 @@ class StructurelisteditorControl extends ColumnStructureTableEditor {
 
 		// Sort descending to ensure lower indices don"t get
 		// changed when values are deleted
-		const selected = this.getSelectedRows().sort(function(a, b) {
+		const selected = this.props.controller.getSelectedRows(this.props.control.name).sort(function(a, b) {
 			return b - a;
 		});
 
@@ -113,7 +113,7 @@ class StructurelisteditorControl extends ColumnStructureTableEditor {
 		</div>);
 		// stateStyle={stateStyle}
 
-		const onPanelContainer = this.getOnPanelContainer(this.getSelectedRows());
+		const onPanelContainer = this.getOnPanelContainer(this.props.controller.getSelectedRows(this.props.control.name));
 		return (
 			<div>
 				<div className="properties-structure-list-editor">
@@ -121,7 +121,6 @@ class StructurelisteditorControl extends ColumnStructureTableEditor {
 						tableContainer={tableContainer}
 						control={this.props.control}
 						controller={this.props.controller}
-						getSelectedRows={this.getSelectedRows}
 						setScrollToRow={this.setScrollToRow}
 						getCurrentControlValue={this.getCurrentControlValue}
 						setCurrentControlValueSelected={this.setCurrentControlValueSelected}

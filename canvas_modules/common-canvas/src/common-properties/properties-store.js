@@ -10,19 +10,21 @@
 import { createStore, combineReducers } from "redux";
 import { setPropertyValues, updatePropertyValue } from "./actions";
 import { setControlStates, updateControlState } from "./actions";
+import { clearSelectedRows, updateSelectedRows } from "./actions";
 import { setErrorMessages, updateErrorMessage, clearErrorMessage } from "./actions";
 import { setDatasetMetadata } from "./actions";
 import propertiesReducer from "./reducers/properties";
 import controlStatesReducer from "./reducers/control-states";
 import errorMessagesReducer from "./reducers/error-messages";
 import datasetMetadataReducer from "./reducers/dataset-metadata";
+import rowSelectionsReducer from "./reducers/row-selections";
 import isEqual from "lodash/isEqual";
 
 /* eslint max-depth: ["error", 6] */
 
 export default class PropertiesStore {
 	constructor() {
-		this.combinedReducer = combineReducers({ propertiesReducer, controlStatesReducer, errorMessagesReducer, datasetMetadataReducer });
+		this.combinedReducer = combineReducers({ propertiesReducer, controlStatesReducer, errorMessagesReducer, datasetMetadataReducer, rowSelectionsReducer });
 		this.store = createStore(this.combinedReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 	}
 
@@ -165,5 +167,24 @@ export default class PropertiesStore {
 	getDatasetMetadata() {
 		const state = this.store.getState();
 		return JSON.parse(JSON.stringify(state.datasetMetadataReducer));
+	}
+
+	/*
+	* Row Selection Methods
+	*/
+	getSelectedRows(controlName) {
+		const state = this.store.getState();
+		if (typeof state.rowSelectionsReducer[controlName] === "undefined") {
+			return [];
+		}
+		return state.rowSelectionsReducer[controlName];
+	}
+
+	updateSelectedRows(controlName, selection) {
+		this.store.dispatch(updateSelectedRows({ name: controlName, selectedRows: selection }));
+	}
+
+	clearSelectedRows(controlName) {
+		this.store.dispatch(clearSelectedRows({ name: controlName }));
 	}
 }

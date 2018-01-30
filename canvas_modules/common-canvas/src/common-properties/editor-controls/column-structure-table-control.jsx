@@ -70,7 +70,7 @@ class ColumnStructureTableControl extends ColumnStructureTableEditor {
 	// been selected by the user.
 	getSelectedColumns() {
 		// logger.info("getSelectedColumns");
-		const selected = this.getSelectedRows();
+		const selected = this.props.controller.getSelectedRows();
 		const controlValue = this.getCurrentControlValue();
 		const columns = [];
 
@@ -224,7 +224,6 @@ class ColumnStructureTableControl extends ColumnStructureTableEditor {
 					tableContainer={content}
 					control={this.props.control}
 					controller={this.props.controller}
-					getSelectedRows={this.getSelectedRows}
 					setScrollToRow={this.setScrollToRow}
 					getCurrentControlValue={this.getCurrentControlValue}
 					setCurrentControlValueSelected={this.setCurrentControlValueSelected}

@@ -63,7 +63,6 @@ class EditorForm extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			selectedRows: {},
 			showFieldPicker: false,
 			fieldPickerControl: {},
 			activeTabId: null
@@ -71,10 +70,7 @@ class EditorForm extends React.Component {
 
 		this.sharedCtrlInfo = [];
 
-		this.updateSelectedRows = this.updateSelectedRows.bind(this);
-
 		this.handleSubmit = this.handleSubmit.bind(this);
-
 		this.getControl = this.getControl.bind(this);
 
 		this.genPanel = this.genPanel.bind(this);
@@ -84,31 +80,12 @@ class EditorForm extends React.Component {
 		this.closeFieldPicker = this.closeFieldPicker.bind(this);
 		this.openFieldPicker = this.openFieldPicker.bind(this);
 		this.generateSharedControlNames = this.generateSharedControlNames.bind(this);
-		this.getSelectedRows = this.getSelectedRows.bind(this);
-		this.clearSelectedRows = this.clearSelectedRows.bind(this);
 
 		this._showCategoryPanel = this._showCategoryPanel.bind(this);
 	}
 
 	getControl(propertyName) {
 		return this.refs[propertyName];
-	}
-
-	getSelectedRows(controlName) {
-		if (!this.state.selectedRows[controlName]) {
-			this.state.selectedRows[controlName] = [];
-		}
-		return this.state.selectedRows[controlName];
-	}
-
-	updateSelectedRows(controlName, selection) {
-		const selectedRows = this.state.selectedRows;
-		selectedRows[controlName] = selection;
-		this.setState({ selectedRows: selectedRows });
-	}
-
-	clearSelectedRows() {
-		this.setState({ selectedRows: {} });
 	}
 
 	genControl(control, propertyId) {
@@ -241,8 +218,6 @@ class EditorForm extends React.Component {
 				propertyId={propertyId}
 				dataModel={this.props.controller.getFilteredDatasetMetadata(propertyId, this.sharedCtrlInfo)}
 				openFieldPicker={this.openFieldPicker}
-				updateSelectedRows={this.updateSelectedRows}
-				selectedRows={this.getSelectedRows(control.name)}
 			/>);
 		} else if (control.controlType === "structuretable") {
 			return (<ColumnStructureTableControl
@@ -251,8 +226,6 @@ class EditorForm extends React.Component {
 				controller={this.props.controller}
 				propertyId={propertyId}
 				dataModel={this.props.controller.getFilteredDatasetMetadata(propertyId, this.sharedCtrlInfo)}
-				updateSelectedRows={this.updateSelectedRows}
-				selectedRows={this.getSelectedRows(control.name)}
 				buildUIItem={this.genUIItem}
 				openFieldPicker={this.openFieldPicker}
 				customContainer={this.props.customContainer}
@@ -264,8 +237,6 @@ class EditorForm extends React.Component {
 				ref={controlRef}
 				control={control}
 				propertyId={propertyId}
-				updateSelectedRows={this.updateSelectedRows}
-				selectedRows={this.getSelectedRows(control.name)}
 				buildUIItem={this.genUIItem}
 				controller={this.props.controller}
 				rightFlyout={this.props.rightFlyout}
@@ -277,8 +248,6 @@ class EditorForm extends React.Component {
 				control={control}
 				controller={this.props.controller}
 				propertyId={propertyId}
-				updateSelectedRows={this.updateSelectedRows}
-				selectedRows={this.getSelectedRows(control.name)}
 				buildUIItem={this.genUIItem}
 				customContainer={this.props.customContainer}
 				rightFlyout={this.props.rightFlyout}
@@ -689,7 +658,6 @@ class EditorForm extends React.Component {
 						ref={panel.id}
 						controller={this.props.controller}
 						label={panel.label}
-						clearSelectedRows={this.clearSelectedRows}
 						panelId={panel.id}
 					>
 						{content}
@@ -746,7 +714,6 @@ class EditorForm extends React.Component {
 				currentControlValues={currentControlValues}
 				dataModel={filteredDataset}
 				control={this.state.fieldPickerControl}
-				updateSelectedRows={this.updateSelectedRows}
 				title={title}
 				rightFlyout={this.props.rightFlyout}
 			/>

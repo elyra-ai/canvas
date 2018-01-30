@@ -42,8 +42,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		super(props);
 		this.state = {
 			enableRemoveIcon: false,
-			hoverRemoveIcon: false,
-			selectedRows: this.props.selectedRows
+			hoverRemoveIcon: false
 		};
 
 		this.checkedAll = {};
@@ -57,8 +56,8 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		this.setCurrentControlValue = this.setCurrentControlValue.bind(this);
 		this.setCurrentControlValueSelected = this.setCurrentControlValueSelected.bind(this);
 		this.setReadOnlyColumnValue = this.setReadOnlyColumnValue.bind(this);
-		this.getSelectedRows = this.getSelectedRows.bind(this);
 		this.removeSelected = this.removeSelected.bind(this);
+		this.updateRowSelections = this.updateRowSelections.bind(this);
 
 		this.handleRowClick = this.handleRowClick.bind(this);
 		this.getRowClassName = this.getRowClassName.bind(this);
@@ -81,8 +80,9 @@ export default class ColumnStructureTableEditor extends EditorControl {
 
 		this.addOnClick = this.addOnClick.bind(this);
 
-		if (this.props.selectedRows && this.props.selectedRows.length > 0) {
-			this.scrollToRow = this.props.selectedRows[this.props.selectedRows.length - 1];
+		const selectedRows = this.props.controller.getSelectedRows(this.props.control.name);
+		if (selectedRows && selectedRows.length > 0) {
+			this.scrollToRow = selectedRows[selectedRows.length - 1];
 			this.alignTop = true;
 		}
 	}
@@ -95,11 +95,9 @@ export default class ColumnStructureTableEditor extends EditorControl {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		this.setState({
-			selectedRows: nextProps.selectedRows
-		});
-		this.selectionChanged(nextProps.selectedRows);
-		this.setState({ enableRemoveIcon: (nextProps.selectedRows.length !== 0) });
+		const selectedRows = this.props.controller.getSelectedRows(this.props.control.name);
+		this.selectionChanged(selectedRows);
+		this.setState({ enableRemoveIcon: (selectedRows.length !== 0) });
 	}
 
 	getOnPanelContainer(selectedRows) {
@@ -116,31 +114,20 @@ export default class ColumnStructureTableEditor extends EditorControl {
 
 	setCurrentControlValueSelected(controlValue, selectedRows) {
 		let updatedControlValues = controlValue;
-		var that = this;
-		this.setState({
-			selectedRows: selectedRows
-		}, function() {
-			that.updateSelectedRows(that.props.control.name, selectedRows);
-		});
-
 		if (this.props.control.subControls) {
 			updatedControlValues = this.setReadOnlyColumnValue(controlValue);
 		}
 		this.props.controller.updatePropertyValue(this.props.propertyId, updatedControlValues);
+		this.updateRowSelections(this.props.control.name, selectedRows);
 	}
 
 	setCurrentControlValue(controlValue) {
 		let updatedControlValues = controlValue;
-		var that = this;
-		this.setState({
-			selectedRows: []
-		}, function() {
-			that.updateSelectedRows(that.props.control.name, []);
-		});
 		if (this.props.control.subControls) {
 			updatedControlValues = this.setReadOnlyColumnValue(controlValue);
 		}
 		this.props.controller.updatePropertyValue(this.props.propertyId, updatedControlValues);
+		this.updateRowSelections(this.props.control.name, []);
 	}
 
 	setReadOnlyColumnValue(controlValue) {
@@ -162,10 +149,6 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		this.alignTop = alignTop;
 	}
 
-	getSelectedRows() {
-		return this.state.selectedRows;
-	}
-
 	indexOfColumn(controlId) {
 		return findIndex(this.props.control.subControls, function(columnControl) {
 			return columnControl.name === controlId;
@@ -173,22 +156,22 @@ export default class ColumnStructureTableEditor extends EditorControl {
 	}
 
 	handleRowClick(rowIndex, evt) {
-		const selection = EditorControl.handleTableRowClick(evt, rowIndex, this.state.selectedRows, this.props.control.rowSelection);
+		const selectedRows = this.props.controller.getSelectedRows(this.props.control.name);
+		const selection = EditorControl.handleTableRowClick(evt, rowIndex, selectedRows, this.props.control.rowSelection);
 		// logger.info(selection);
-		this.updateSelectedRows(this.props.control.name, selection);
+		this.updateRowSelections(this.props.control.name, selection);
 	}
 
-	updateSelectedRows(ctrlName, selection) {
-		this.props.updateSelectedRows(ctrlName, selection);
+	updateRowSelections(ctrlName, selection) {
+		this.props.controller.updateSelectedRows(ctrlName, selection);
 		this.selectionChanged(selection);
 		this.setState({ enableRemoveIcon: (selection.length !== 0) });
-
 	}
 
 	removeSelected() {
 		const rows = this.getCurrentControlValue();
 		const newRows = [];
-		const selected = this.getSelectedRows();
+		const selected = this.props.controller.getSelectedRows(this.props.control.name);
 		for (var i = 0; i < rows.length; i++) {
 			if (selected.indexOf(i) < 0) {
 				newRows.push(rows[i]);
@@ -202,7 +185,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 	}
 
 	getRowClassName(rowIndex) {
-		return this.state.selectedRows.indexOf(rowIndex) >= 0
+		return this.props.controller.getSelectedRows(this.props.control.name).indexOf(rowIndex) >= 0
 			// ? "column-structure-allocator-control-row-selected"
 			? "table-row table-selected-row "
 			: "table-row";

@@ -557,7 +557,7 @@ describe("StructureListEditorControl renders correctly", () => {
 		expect(tableBody).to.have.length(1);
 		var tableData = tableBody.find(".reactable-data").children();
 		expect(tableData).to.have.length(6);
-		tableData.at(2).simulate("click");
+		tableData.at(0).simulate("click");
 
 		// ensure removed button is enabled and select it
 		const enabledRemoveColumnButton = wrapper.find("#remove-fields-button-enabled");

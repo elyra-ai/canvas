@@ -490,6 +490,14 @@ describe("Properties Controller controls", () => {
 		const actualValue = controller.getControlType({ name: "structuretableSortOrder", col: 0 });
 		expect(actualValue).to.equal("selectcolumn");
 	});
+	it("should have a method to get the selected rows", () => {
+		reset();
+		controller.setForm(conditionForm);
+		controller.updateSelectedRows("structuretableSortOrder", [2]);
+		const selectedRows = controller.getSelectedRows("structuretableSortOrder");
+		expect(selectedRows.length === 1).to.equal(true);
+		expect(selectedRows[0]).to.equal(2);
+	});
 });
 describe("Properties Controller summary panel", () => {
 	it("should get summary panel controls", () => {
