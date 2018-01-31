@@ -52,14 +52,17 @@
       [
         1,
         1.234,
-        "Age >= 55"
+        "Ascending",
+				true
       ]
     ],
     "inlineEditingTableError2": [
       [
         1,
         1.234,
-        "Age >= 55"
+        "Age >= 55",
+        "dog",
+        "apple"
       ]
     ]
   },
@@ -221,10 +224,20 @@
           "role": "new_column"
         },
         {
-          "id": "condition",
-          "type": "string",
-          "default": "",
-          "role": "expression"
+          "id": "order",
+          "enum": [
+            "Ascending",
+            "Descending"
+          ],
+          "default": "Ascending"
+        },
+        {
+          "id": "checkbox",
+      "type": "boolean",
+      "enum": [
+        "Single Checkbox Label"
+      ],
+			"default": true
         }
       ]
     },
@@ -248,6 +261,22 @@
           "type": "string",
           "default": "",
           "role": "expression"
+        },
+        {
+          "id": "dropdown",
+          "enum": [
+            "dog",
+            "cat",
+            "pig",
+            "horse"
+          ],
+          "default": "yellow"
+        },
+        {
+          "id": "textfield",
+          "type": "string",
+          "default": "",
+          "role": "new_column"
         }
       ]
     }
@@ -310,7 +339,7 @@
           "default": "Complex table control list editor table input"
         },
         "text_before": {
-          "default": "To generated a error set both the integer Field cell value to 2 AND the double Field cell value to 2.3"
+          "default": "To generated a error: (integer field = 2 AND double field = 2.3) || order field = descending || checkbox = off "
         }
       },
       {
@@ -322,7 +351,7 @@
           "default": "Complex table control list editor table input"
         },
         "text_before": {
-          "default": "To generated a error set integer Field cell value to 2 OR the double Field cell value to 2.3"
+          "default": "To generated a error:  (integer Field = 2 OR double Field = 2.3) || condition field = help || animals field = horse || fruit field = pear"
         }
       }
     ],
@@ -556,19 +585,30 @@
             "summary": true
           },
           {
-            "parameter_ref": "condition",
-            "language": "CLEM",
+            "parameter_ref": "order",
+            "width": 16,
             "label": {
-              "resource_key": "expressionCellTable.description.label"
+              "resource_key": "sort_order.label"
             },
             "description": {
-              "resource_key": "expressionCellTable.description.desc"
+              "resource_key": "sort_order.desc"
             },
-            "width": 15,
-            "edit_style": "on_panel",
-            "place_holder_text": {
-              "default": "Enter condition expression"
-            }
+            "control": "toggletext",
+            "value_icons": [
+              "/images/up-triangle.svg",
+              "/images/down-triangle.svg"
+            ]
+          },
+          {
+            "parameter_ref": "checkbox",
+            "width": 5,
+            "label": {
+              "resource_key": "checkbox.label"
+            },
+            "description": {
+              "resource_key": "checkbox.desc"
+            },
+            "edit_style": "inline"
           }
         ]
       },
@@ -617,6 +657,28 @@
             "place_holder_text": {
               "default": "Enter condition expression"
             }
+          },
+          {
+            "parameter_ref": "dropdown",
+            "label": {
+              "resource_key": "dropdown.label"
+            },
+            "description": {
+              "resource_key": "dropdown.desc"
+            },
+            "width": 10,
+            "edit_style": "inline"
+          },
+          {
+            "parameter_ref": "textfield",
+            "label": {
+              "resource_key": "textfield.label"
+            },
+            "description": {
+              "resource_key": "textfield.desc"
+            },
+            "width": 10,
+            "edit_style": "inline"
           }
         ]
       }
@@ -696,7 +758,7 @@
             "id": "inlineEditingTableError-summary-panel",
             "type": "summaryPanel",
             "label": {
-              "default": "Configure AND Error Inline Editing Table"
+              "default": "Configure Error Inline Editing Table"
             },
             "group_info": [
               {
@@ -711,7 +773,7 @@
             "id": "inlineEditingTableError2-summary-panel",
             "type": "summaryPanel",
             "label": {
-              "default": "Configure OR Error Inline Editing Table"
+              "default": "Configure Error 2 Inline Editing Table"
             },
             "group_info": [
               {
@@ -814,6 +876,42 @@
       "validation": {
         "fail_message": {
           "type": "error",
+          "focus_parameter_ref": "inlineEditingTableError[2]",
+          "message": {
+            "default": "order cannot be descending"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "inlineEditingTableError[2]",
+            "op": "notEquals",
+            "value": "Descending"
+          }
+        }
+      }
+    },
+		{
+			"validation": {
+				"fail_message": {
+					"type": "error",
+					"focus_parameter_ref": "inlineEditingTableError[3]",
+					"message": {
+						"default": "checkbox cannot be off"
+					}
+				},
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "inlineEditingTableError[3]",
+						"op": "notEquals",
+						"value": false
+					}
+				}
+			}
+		},
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
           "focus_parameter_ref": "inlineEditingTableError2[0]",
           "message": {
             "resource_key": "invalid_subpanel_name",
@@ -837,6 +935,60 @@
               }
             }
           ]
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "inlineEditingTableError2[2]",
+          "message": {
+            "default": "expression contains help"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "inlineEditingTableError2[2]",
+            "op": "notContains",
+            "value": "help"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "inlineEditingTableError2[3]",
+          "message": {
+            "default": "animal equals horse"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "inlineEditingTableError2[3]",
+            "op": "notEquals",
+            "value": "horse"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "inlineEditingTableError2[4]",
+          "message": {
+            "default": "fruit equals pear"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "inlineEditingTableError2[4]",
+            "op": "notEquals",
+            "value": "pear"
+          }
         }
       }
     }
@@ -927,6 +1079,14 @@
     "expressionCellTable.name.desc": "Enter an integer",
     "expressionCellTable.description.label": "If This Condition Is True",
     "expressionCellTable.doubleName.label": "double Field",
-    "expressionCellTable.doubleName.desc": "Enter a double"
+    "expressionCellTable.doubleName.desc": "Enter a double",
+    "dropdown.label": "Animals",
+    "dropdown.desc": "",
+    "textfield.label": "Fruit",
+    "textfield.desc": "",
+    "sort_order.label": "Order",
+    "sort_order.desc": "Update sort order",
+		"checkbox.label": "checkbox",
+    "checkbox.desc": ""
   }
 }

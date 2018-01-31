@@ -312,6 +312,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 				control={columnDef}
 				controller={this.props.controller}
 				propertyId={propertyId}
+				tableControl
 			/>);
 		} else if (columnDef.controlType === "checkbox" && columnDef.editStyle !== "subpanel") {
 			columnStyle.paddingTop = 0;

@@ -94,9 +94,9 @@ export default class NumberfieldControl extends EditorControl {
 		};
 		const conditionState = this.getConditionMsgState(conditionProps);
 
-		const errorMessage = conditionState.message;
+		const errorMessage = this.props.tableControl ? null : conditionState.message;
 		const messageType = conditionState.messageType;
-		const icon = conditionState.icon;
+		const icon = this.props.tableControl ? <div /> : conditionState.icon;
 		const stateDisabled = conditionState.disabled;
 		const stateStyle = conditionState.style;
 
@@ -129,5 +129,6 @@ export default class NumberfieldControl extends EditorControl {
 NumberfieldControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
-	controller: PropTypes.object.isRequired
+	controller: PropTypes.object.isRequired,
+	tableControl: PropTypes.bool
 };

@@ -678,7 +678,8 @@ describe("should render with CommonProperties element", () => {
 	it("warning message generated when editing numberfield cell", () => {
 		const tableSummary = wrapper.find(".control-summary-link-buttons").at(3); // Summary link Configure Warning Inline Editing Table
 		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
-		const tableHtml = document.getElementById("flexible-table-inlineEditingTableWarning"); // needed since modal dialogs are outside `wrapper`
+		// const tableHtml = document.getElementById("flexible-table-inlineEditingTableWarning"); // needed since modal dialogs are outside `wrapper`
+		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
 		const inlineEditTable = new ReactWrapper(tableHtml, true);
 		const integerCell = inlineEditTable.find("#editor-control-valueName");
 		expect(integerCell).to.have.length(1);
@@ -700,9 +701,9 @@ describe("should render with CommonProperties element", () => {
 	});
 
 	it("error message generated on OR condition when editing numberfield cell", () => {
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(5); // Summary link Configure OR Error Inline Editing Table
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(5); // Summary link Configure Error 2 Inline Editing Table
 		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
-		const tableHtml = document.getElementById("flexible-table-inlineEditingTableError2"); // needed since modal dialogs are outside `wrapper`
+		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
 		const inlineEditTable = new ReactWrapper(tableHtml, true);
 		const doubleCell = inlineEditTable.find("#editor-control-doubleName");
 		expect(doubleCell).to.have.length(1);
@@ -725,9 +726,9 @@ describe("should render with CommonProperties element", () => {
 	});
 
 	it("error message generated on AND condition when editing numberfield cell", () => {
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(4); // Summary link Configure OR Error Inline Editing Table
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(4); // Summary link Configure Error Inline Editing Table
 		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
-		const tableHtml = document.getElementById("flexible-table-inlineEditingTableError"); // needed since modal dialogs are outside `wrapper`
+		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
 		const inlineEditTable = new ReactWrapper(tableHtml, true);
 		const doubleCell = inlineEditTable.find("#editor-control-doubleName");
 		expect(doubleCell).to.have.length(1);
@@ -750,6 +751,88 @@ describe("should render with CommonProperties element", () => {
 		};
 		const actual = renderedController.getErrorMessage({ name: "inlineEditingTableError" });
 		expect(isEqual(JSON.parse(JSON.stringify(numberfieldSeedErrorMessages)),
+			JSON.parse(JSON.stringify(actual)))).to.be.true;
+		expect(inlineEditTable.find(".validation-error-message-icon")).to.have.length(1);
+		expect(inlineEditTable.find(".form__validation--error")).to.have.length(1);
+	});
+	it("error message generated on when editing toggletext cell", () => {
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(4); // Summary link Configure Error Inline Editing Table
+		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
+		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
+		const inlineEditTable = new ReactWrapper(tableHtml, true);
+		const toggleCell = inlineEditTable.find(".toggletext_icon");
+		toggleCell.simulate("click");
+		expect(inlineEditTable.find(".toggletext_text").text()).to.equal("Descending");
+
+		const errorMessage = {
+			"type": "error",
+			"text": "order cannot be descending",
+		};
+		const actual = renderedController.getErrorMessage({ name: "inlineEditingTableError" });
+		expect(isEqual(JSON.parse(JSON.stringify(errorMessage)),
+			JSON.parse(JSON.stringify(actual)))).to.be.true;
+		expect(inlineEditTable.find(".validation-error-message-icon")).to.have.length(1);
+		expect(inlineEditTable.find(".form__validation--error")).to.have.length(1);
+	});
+	it("error message generated on when editing checkbox cell", () => {
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(4); // Summary link Configure Error Inline Editing Table
+		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
+		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
+		const inlineEditTable = new ReactWrapper(tableHtml, true);
+		const checkboxCell = inlineEditTable.find("input[type='checkbox']").at(1);
+		checkboxCell.simulate("change", { target: { checked: false, id: "string" } });
+
+		const errorMessage = {
+			"type": "error",
+			"text": "checkbox cannot be off",
+		};
+		const actual = renderedController.getErrorMessage({ name: "inlineEditingTableError" });
+		expect(isEqual(JSON.parse(JSON.stringify(errorMessage)),
+			JSON.parse(JSON.stringify(actual)))).to.be.true;
+		expect(inlineEditTable.find(".validation-error-message-icon")).to.have.length(1);
+		expect(inlineEditTable.find(".form__validation--error")).to.have.length(1);
+	});
+	it("error message generated on when editing oneofselect cell", () => {
+		const expectedOptions = [
+			{ label: "...", value: "" },
+			{ label: "dog", value: "dog" },
+			{ label: "cat", value: "cat" },
+			{ label: "pig", value: "pig" },
+			{ label: "horse", value: "horse" }
+		];
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(5); // Summary link Configure Error 2 Inline Editing Table
+		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
+		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
+		const inlineEditTable = new ReactWrapper(tableHtml, true);
+		const newValue = { label: "horse", value: "horse" };
+		propertyUtils.dropDown(inlineEditTable, 0, newValue, expectedOptions);
+
+
+		const errorMessage = {
+			"type": "error",
+			"text": "animal equals horse",
+		};
+		const actual = renderedController.getErrorMessage({ name: "inlineEditingTableError2" });
+		expect(isEqual(JSON.parse(JSON.stringify(errorMessage)),
+			JSON.parse(JSON.stringify(actual)))).to.be.true;
+		expect(inlineEditTable.find(".validation-error-message-icon")).to.have.length(1);
+		expect(inlineEditTable.find(".form__validation--error")).to.have.length(1);
+	});
+	it("error message generated on when editing textfield cell", () => {
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(5); // Summary link Configure Error 2 Inline Editing Table
+		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
+		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
+		const inlineEditTable = new ReactWrapper(tableHtml, true);
+		const textfieldCell = inlineEditTable.find("input[type='text']");
+		textfieldCell.simulate("change", { target: { value: "pear" } });
+		expect(textfieldCell.prop("value")).to.equal("pear");
+
+		const errorMessage = {
+			"type": "error",
+			"text": "fruit equals pear",
+		};
+		const actual = renderedController.getErrorMessage({ name: "inlineEditingTableError2" });
+		expect(isEqual(JSON.parse(JSON.stringify(errorMessage)),
 			JSON.parse(JSON.stringify(actual)))).to.be.true;
 		expect(inlineEditTable.find(".validation-error-message-icon")).to.have.length(1);
 		expect(inlineEditTable.find(".form__validation--error")).to.have.length(1);

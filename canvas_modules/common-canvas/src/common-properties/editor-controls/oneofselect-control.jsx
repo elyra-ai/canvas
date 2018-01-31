@@ -147,7 +147,7 @@ export default class OneofselectControl extends EditorControl {
 		};
 		const conditionState = this.getConditionMsgState(conditionProps);
 
-		const errorMessage = conditionState.message;
+		const errorMessage = this.props.tableControl ? null : conditionState.message;
 		const messageType = conditionState.messageType;
 		const icon = this.props.tableControl ? <div /> : conditionState.icon;
 		const stateDisabled = conditionState.disabled;
