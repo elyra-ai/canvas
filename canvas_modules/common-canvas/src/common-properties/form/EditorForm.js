@@ -464,6 +464,7 @@ function _makeEditStyleSubPanel(structureDef, l10nProvider) {
  * Creates a column control for the supplied property/attribute.
  */
 function _makeSubControl(parameter, l10nProvider) {
+	let separateLabel = true;
 	const additionalText = parameter.getAdditionalText(l10nProvider);
 	const orientation = parameter.orientation;
 	const controlLabel = new Label(l10nProvider.l10nLabel(parameter, parameter.name));
@@ -501,6 +502,7 @@ function _makeSubControl(parameter, l10nProvider) {
 		controlType = ControlType.PASSWORDFIELD;
 		break;
 	case Type.BOOLEAN:
+		separateLabel = false;
 		controlType = ControlType.CHECKBOX;
 		break;
 	case Type.INTEGER:
@@ -528,6 +530,7 @@ function _makeSubControl(parameter, l10nProvider) {
 
 	return new SubControl(parameter.name,
 		controlLabel,
+		separateLabel,
 		controlDesc,
 		parameter.visible,
 		parameter.columns(8),
@@ -592,3 +595,4 @@ function _parameterValueLabels(parameter, l10nProvider) {
 }
 
 module.exports.makePrimaryTab = makePrimaryTab;
+module.exports.makeControl = _makeControl;

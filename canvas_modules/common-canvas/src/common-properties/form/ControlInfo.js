@@ -10,11 +10,12 @@
 import { EditStyle } from "../constants/form-constants";
 
 class ControlDef {
-	constructor(cname, label, description, controlType, valueDef, role, additionalText,
+	constructor(cname, label, separateLabel, description, controlType, valueDef, role, additionalText,
 		orientation, values, valueLabels, valueIcons, sortable, filterable, charLimit, language,
 		summary, increment, generatedValues) {
 		this.name = cname;
 		this.label = label;
+		this.separateLabel = separateLabel;
 		if (description) {
 			this.description = description;
 		}
@@ -72,9 +73,8 @@ export class Control extends ControlDef {
 	constructor(cname, label, separateLabel, description, controlType, valueDef, role, additionalText, orientation,
 		values, valueLabels, valueIcons, sortable, filterable, charLimit, subControls, keyIndex, defaultRow,
 		childItem, moveableRows, required, language, summary, increment, rowSelection, generatedValues, addRemoveRows) {
-		super(cname, label, description, controlType, valueDef, role, additionalText, orientation, values,
+		super(cname, label, separateLabel, description, controlType, valueDef, role, additionalText, orientation, values,
 			valueLabels, valueIcons, sortable, filterable, charLimit, language, summary, increment, generatedValues);
-		this.separateLabel = separateLabel;
 		if (subControls) {
 			this.subControls = subControls;
 		}
@@ -103,10 +103,10 @@ export class Control extends ControlDef {
 }
 
 export class SubControl extends ControlDef {
-	constructor(cname, label, description, visible, width, controlType, valueDef, role, additionalText,
+	constructor(cname, label, separateLabel, description, visible, width, controlType, valueDef, role, additionalText,
 		orientation, values, valueLabels, valueIcons, sortable, filterable, charLimit, editStyle, isKeyField,
 		dmDefault, language, summary, increment, generatedValues) {
-		super(cname, label, description, controlType, valueDef, role, additionalText, orientation,
+		super(cname, label, separateLabel, description, controlType, valueDef, role, additionalText, orientation,
 			values, valueLabels, valueIcons, sortable, filterable, charLimit, language, summary, increment, generatedValues);
 		if (typeof visible === "boolean") {
 			this.visible = visible;

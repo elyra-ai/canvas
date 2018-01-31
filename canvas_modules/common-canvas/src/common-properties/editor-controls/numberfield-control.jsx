@@ -153,7 +153,7 @@ export default class NumberfieldControl extends EditorControl {
 		}
 
 		return (
-			<div className="editor_control_area" style={stateStyle}>
+			<div className="editor_control_area number-control" style={stateStyle}>
 				<div id={controlIconContainerClass}>
 					<TextField {...stateDisabled}
 						style={stateStyle}

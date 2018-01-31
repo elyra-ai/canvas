@@ -14,13 +14,6 @@ import { Tr, Td } from "reactable";
 import Button from "ap-components-react/dist/components/Button";
 import Checkbox from "ap-components-react/dist/components/Checkbox";
 import EditorControl from "./editor-control.jsx";
-import ToggletextControl from "./toggletext-control.jsx";
-import ReadonlyControl from "./readonly-control.jsx";
-import OneofselectControl from "./oneofselect-control.jsx";
-import TextfieldControl from "./textfield-control.jsx";
-import NumberfieldControl from "./numberfield-control.jsx";
-import CheckboxControl from "./checkbox-control.jsx";
-import ExpressionControl from "./expression-control.jsx";
 import FlexibleTable from "./flexible-table.jsx";
 import SubPanelCell from "../editor-panels/sub-panel-cell.jsx";
 import remove32 from "../../../assets/images/remove_32.svg";
@@ -45,7 +38,6 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			hoverRemoveIcon: false
 		};
 
-		this.checkedAll = {};
 		this.onPanelContainer = [];
 
 		this._editing_row = 0;
@@ -61,7 +53,6 @@ export default class ColumnStructureTableEditor extends EditorControl {
 
 		this.handleRowClick = this.handleRowClick.bind(this);
 		this.getRowClassName = this.getRowClassName.bind(this);
-		this.enumRenderCell = this.enumRenderCell.bind(this);
 
 		this.createTable = this.createTable.bind(this);
 		this.onFilter = this.onFilter.bind(this);
@@ -77,6 +68,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		this.makeCells = this.makeCells.bind(this);
 
 		this.checkedAllValue = this.checkedAllValue.bind(this);
+		this.checkedAll = this.checkedAll.bind(this);
 
 		this.addOnClick = this.addOnClick.bind(this);
 
@@ -191,36 +183,6 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			: "table-row";
 	}
 
-	enumRenderCell(value, columnDef) {
-		const valuesMap = {};
-		for (let i = 0; i < columnDef.values.length; ++i) {
-			valuesMap[columnDef.values[i]] = columnDef.valueLabels[i];
-		}
-
-		if (columnDef.valueDef.isList) {
-			const parsedValues = JSON.parse(value);
-			let multiRendered = "[";
-			for (let i = 0; i < parsedValues.length; ++i) {
-				const rawval = parsedValues[i];
-				if (i > 0) {
-					multiRendered += ",";
-				}
-				const val = valuesMap[rawval];
-				if (typeof val === "undefined") {
-					multiRendered += "<" + rawval + ">";
-				} else {
-					multiRendered += val;
-				}
-			}
-			return multiRendered + "]";
-		}
-		const rendered = valuesMap[value];
-		if (typeof rendered === "undefined") {
-			return "<" + value + ">";
-		}
-		return rendered;
-	}
-
 	onFilter(filterString) {
 		this.setState({ filterText: filterString });
 	}
@@ -256,92 +218,31 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			row: rowIndex,
 			col: colIndex
 		};
-		if (columnDef.controlType === "toggletext" && columnDef.editStyle !== "subpanel") {
-			cellContent = (<ToggletextControl
-				controller={this.props.controller}
-				propertyId={propertyId}
-				control={columnDef}
-				values={columnDef.values}
-				valueLabels={columnDef.valueLabels}
-				valueIcons={columnDef.valueIcons}
-				tableControl
-			/>);
-		} else if (columnDef.controlType === "oneofselect" && columnDef.editStyle !== "subpanel") {
-			cellContent = (<OneofselectControl
-				controller={this.props.controller}
-				propertyId={propertyId}
-				control={columnDef}
-				tableControl
-				rightFlyout={this.props.rightFlyout}
-			/>);
-		} else if (columnDef.valueDef.propType === "enum" && columnDef.editStyle !== "subpanel") {
-			cellContent = this.enumRenderCell(controlValue[rowIndex][colIndex], columnDef);
-		} else if (columnDef.controlType === "expression" && columnDef.editStyle === "on_panel") {
-			const expressionCellControlLabel = PropertyUtils.formatMessage(this.props.intl,
-				MESSAGE_KEYS.EXPRESSIONCELL_CONTROLLABEL, MESSAGE_KEYS_DEFAULTS.EXPRESSIONCELL_CONTROLLABEL);
-			cellContent = (<div>
-				<br />
-				<label className="control-label">{expressionCellControlLabel}</label>
-				<div>
-					<ExpressionControl
-						controller={this.props.controller}
-						propertyId={propertyId}
-						control={columnDef}
-						dataModel={this.props.dataModel}
-						tableControl
-					/>
-				</div>
-			</div>);
-		} else if (columnDef.controlType === "textfield" && columnDef.editStyle !== "subpanel") {
-			columnStyle.paddingTop = 0;
-			columnStyle.paddingBottom = 0;
-			cellContent = (<TextfieldControl
-				controller={this.props.controller}
-				propertyId={propertyId}
-				control={columnDef}
-				tableControl
-			/>);
-		} else if (columnDef.controlType === "readonly" && columnDef.editStyle !== "subpanel") {
-			cellContent = (<ReadonlyControl
-				control={columnDef}
-				controller={this.props.controller}
-				propertyId={propertyId}
-			/>);
-		} else if (columnDef.controlType === "numberfield" && columnDef.editStyle !== "subpanel") {
-			cellContent = (<NumberfieldControl
-				control={columnDef}
-				controller={this.props.controller}
-				propertyId={propertyId}
-				tableControl
-			/>);
-		} else if (columnDef.controlType === "checkbox" && columnDef.editStyle !== "subpanel") {
-			columnStyle.paddingTop = 0;
-			columnStyle.paddingBottom = 0;
-			cellContent = (
-				<CheckboxControl
-					controller={this.props.controller}
-					propertyId={propertyId}
-					control={columnDef}
-					tableControl
-				/>);
-			if (this.checkedAll[colIndex] && controlValue[rowIndex][colIndex] === false) {
-				this.checkedAll[colIndex] = false;
-			}
-		} else {
-			cellContent = controlValue[rowIndex][colIndex];
-			if (Array.isArray(cellContent)) {
-				cellContent = cellContent.join(", ");
-			}
-		}
+		const ControlFactory = this.props.controller.getControlFactory();
 		const cellDisabledClassName = disabled ? "disabled" : "";
+		cellContent = controlValue[rowIndex][colIndex];
+		if (Array.isArray(cellContent)) {
+			cellContent = cellContent.join(", ");
+		}
 		if (columnDef.editStyle === "subpanel") {
-			cell = <Td className={"table-cell " + cellDisabledClassName} key={colIndex} column={columnDef.name} style={columnStyle}><span>{cellContent}</span></Td>;
+			cell = (
+				<Td className={"table-cell " + cellDisabledClassName} key={colIndex} column={columnDef.name} style={columnStyle}>
+					<div className="table-text">
+						<span>{cellContent}</span>
+					</div>
+				</Td>);
 		} else if (columnDef.editStyle === "on_panel") {
-			cell = (<Td className={"table-cell " + cellDisabledClassName} key={colIndex} column={columnDef.name} style={columnStyle}>
-				<span>{controlValue[rowIndex][colIndex]}</span></Td>);
+			cell = (
+				<Td className={"table-cell " + cellDisabledClassName} key={colIndex} column={columnDef.name} style={columnStyle}>
+					<div className="table-text">
+						<span>{cellContent}</span>
+					</div>
+				</Td>);
 			// save the cell conent in an object
-			this.onPanelContainer[rowIndex] = cellContent;
-		} else {
+			cellContent = ControlFactory.createControlItem(columnDef, propertyId, { table: true });
+			this.onPanelContainer[rowIndex] = (<div><br /> {cellContent} </div>);
+		} else { // defaults to inline control
+			cellContent = ControlFactory.createControl(columnDef, propertyId, { table: true });
 			cell = (<Td key={colIndex} column={columnDef.name} style={columnStyle}>{cellContent}</Td>);
 		}
 		return cell;
@@ -528,6 +429,23 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		this.checkedAll[colIndex] = flexibleTableCheckedAll;
 	}
 
+	checkedAll(colIndex) {
+		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
+		if (Array.isArray(controlValue)) {
+			if (controlValue.length === 0) {
+				return false;
+			}
+			for (const rowValue of controlValue) {
+				if (rowValue[colIndex] === false) {
+					return false;
+				}
+			}
+		} else {
+			return false;
+		}
+		return true;
+	}
+
 	createTable(stateStyle, stateDisabled, tableButtonConfig) {
 		const that = this;
 		const rows = [];
@@ -537,12 +455,13 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		for (var j = 0; j < this.props.control.subControls.length; j++) {
 			const columnDef = this.props.control.subControls[j];
 			const checkboxName = this.props.control.name + j;
+
 			const columnLabel = (columnDef.controlType === "checkbox")
 				? (<div className="checkbox-container">
 					<div className="checkbox">
 						<Checkbox
 							id={checkboxName}
-							checked={Boolean(this.checkedAll[j])}
+							checked={this.checkedAll(j)}
 							onChange={this.checkedAllValue.bind(this, j)}
 						/>
 					</div>
@@ -644,15 +563,18 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		const subItemButton = this.props.buildUIItem(rowIndex, this.props.control.childItem, propertyId, this.indexOfColumn);
 		// Hack to decompose the button into our own in-table link
 		const disabled = typeof stateDisabled.disabled !== "undefined" || Object.keys(stateDisabled) > 0;
-		const subCell = (<SubPanelCell
-			label={subItemButton.props.label}
-			title={subItemButton.props.title}
-			panel={subItemButton.props.panel}
-			disabled={disabled}
-			controller={this.props.controller}
-			propertyId={this.props.propertyId}
-			rightFlyout={this.props.rightFlyout}
-		/>);
+		const subCell = (
+			<div className="table-subcell">
+				<SubPanelCell
+					label={subItemButton.props.label}
+					title={subItemButton.props.title}
+					panel={subItemButton.props.panel}
+					disabled={disabled}
+					controller={this.props.controller}
+					propertyId={this.props.propertyId}
+					rightFlyout={this.props.rightFlyout}
+				/>
+			</div>);
 		return (<Td key={subPanelColIndex} column={"subPanel"} style={columnStyle}>{subCell}</Td>);
 	}
 }

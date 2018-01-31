@@ -43,6 +43,7 @@ const control = {
 			"label": {
 				"text": "Name"
 			},
+			"separateLabel": true,
 			"controlType": "textfield",
 			"valueDef": {
 				"propType": "string",
@@ -60,6 +61,7 @@ const control = {
 			"label": {
 				"text": "Description"
 			},
+			"separateLabel": true,
 			"controlType": "textfield",
 			"valueDef": {
 				"propType": "string",
@@ -77,6 +79,7 @@ const control = {
 			"label": {
 				"text": "ReadOnly"
 			},
+			"separateLabel": true,
 			"controlType": "readonly",
 			"valueDef": {
 				"propType": "string",
@@ -245,7 +248,7 @@ describe("StructureListEditorControl renders correctly", () => {
 		expect(tableContent.find("#table-row-move-button-container")).to.have.length(1);
 		expect(tableContent.find(".table-row-move-button-disable")).to.have.length(4);
 		// checks to see of readonly controls are rendered
-		expect(tableContent.find(".editor_control_readonly")).to.have.length(6);
+		expect(tableContent.find(".readonly-control")).to.have.length(6);
 	});
 
 	it("should select no rows and all move buttons disabled `StructureListEditorControl`", () => {

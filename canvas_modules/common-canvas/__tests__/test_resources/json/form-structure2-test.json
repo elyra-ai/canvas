@@ -225,6 +225,7 @@
                           "label": {
                             "text": "Field"
                           },
+                          "separateLabel": true,
                           "controlType": "selectcolumn",
                           "valueDef": {
                             "propType": "string",
@@ -241,6 +242,7 @@
                           "label": {
                             "text": "Order"
                           },
+                          "separateLabel": true,
                           "controlType": "toggletext",
                           "valueDef": {
                             "propType": "string",

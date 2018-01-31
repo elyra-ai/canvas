@@ -1,0 +1,24 @@
+{
+  "parameters": [
+    {
+      "id": "text_field",
+      "type": "string"
+    }
+  ],
+  "uihints": {
+    "parameter_info": [
+      {
+        "parameter_ref": "text_field",
+        "label": {
+          "default": "Standard control in a customPanel"
+        },
+        "description": {
+          "default": "Enter 'hide' to hide toggles. This is a standard control in a custom panel!"
+        },
+        "place_holder_text": {
+          "default": "Enter 'hide' to hide toggles"
+        }
+      }
+    ]
+  }
+}

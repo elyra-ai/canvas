@@ -275,6 +275,7 @@
                                 "label": {
                                   "text": "Input name"
                                 },
+                                "separateLabel": true,
                                 "controlType": "selectcolumn",
                                 "valueDef": {
                                   "propType": "string",
@@ -290,6 +291,7 @@
                                 "label": {
                                   "text": "Output name"
                                 },
+                                "separateLabel": true,
                                 "controlType": "textfield",
                                 "valueDef": {
                                   "propType": "string",
@@ -307,6 +309,7 @@
                                 "label": {
                                   "text": "New Label"
                                 },
+                                "separateLabel": true,
                                 "controlType": "textfield",
                                 "valueDef": {
                                   "propType": "string",

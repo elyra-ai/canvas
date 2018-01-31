@@ -12,33 +12,9 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import ButtonToolbar from "react-bootstrap/lib/ButtonToolbar";
 import Tabs from "ap-components-react/dist/components/Tabs";
-import { TOOL_TIP_DELAY } from "../constants/constants.js";
 import PropertyUtil from "../util/property-utils.js";
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "../constants/constants";
-
-import ReactTooltip from "react-tooltip";
-
-import TextfieldControl from "./textfield-control.jsx";
-import ReadonlyControl from "./readonly-control.jsx";
-import ToggletextControl from "./toggletext-control.jsx";
-import TextareaControl from "./textarea-control.jsx";
-import ExpressionControl from "./expression-control.jsx";
-import PasswordControl from "./password-control.jsx";
-import NumberfieldControl from "./numberfield-control.jsx";
-import CheckboxControl from "./checkbox-control.jsx";
-import CheckboxsetControl from "./checkboxset-control.jsx";
-import RadiosetControl from "./radioset-control.jsx";
-import OneofselectControl from "./oneofselect-control.jsx";
-import SomeofselectControl from "./someofselect-control.jsx";
-import OneofcolumnsControl from "./oneofcolumns-control.jsx";
-import SomeofcolumnsControl from "./someofcolumns-control.jsx";
-import FieldAllocatorControl from "./field-allocator-control.jsx";
-import ColumnSelectControl from "./column-select-control.jsx";
-import ColumnStructureTableControl from "./column-structure-table-control.jsx";
-import StructureeditorControl from "./structureeditor-control.jsx";
-import StructurelisteditorControl from "./structure-list-editor-control.jsx";
 
 import SelectorPanel from "./../editor-panels/selector-panel.jsx";
 import SummaryPanel from "./../editor-panels/summary-panel.jsx";
@@ -49,7 +25,6 @@ import ButtonAction from "../actions/button-action.jsx";
 
 import SubPanelButton from "./../editor-panels/sub-panel-button.jsx";
 import FieldPicker from "./field-picker.jsx";
-import ControlItem from "./control-item.jsx";
 
 import { injectIntl, intlShape } from "react-intl";
 
@@ -68,8 +43,6 @@ class EditorForm extends React.Component {
 			activeTabId: null
 		};
 
-		this.sharedCtrlInfo = [];
-
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.getControl = this.getControl.bind(this);
 
@@ -82,275 +55,15 @@ class EditorForm extends React.Component {
 		this.generateSharedControlNames = this.generateSharedControlNames.bind(this);
 
 		this._showCategoryPanel = this._showCategoryPanel.bind(this);
+
+		// initialize ControlFactory with correct values
+		this.ControlFactory = props.controller.getControlFactory();
+		this.ControlFactory.setFunctions(this.openFieldPicker, this.genUIItem);
+		this.ControlFactory.setRightFlyout(props.rightFlyout);
 	}
 
 	getControl(propertyName) {
 		return this.refs[propertyName];
-	}
-
-	genControl(control, propertyId) {
-		// List of available controls is defined in models/editor/Control.scala
-		let controlRef = propertyId.name;
-		if (propertyId.row) {
-			controlRef += "_" + propertyId.row;
-			if (propertyId.col) {
-				controlRef += "_" + propertyId.col;
-			}
-		}
-		if (control.controlType === "textfield") {
-			return (<TextfieldControl
-				ref={controlRef}
-				control={control}
-				controller={this.props.controller}
-				propertyId={propertyId}
-			/>);
-		} else if (control.controlType === "readonly") {
-			return (<ReadonlyControl
-				ref={controlRef}
-				control={control}
-				controller={this.props.controller}
-				propertyId={propertyId}
-			/>);
-		} else if (control.controlType === "textarea") {
-			return (<TextareaControl
-				ref={controlRef}
-				control={control}
-				controller={this.props.controller}
-				propertyId={propertyId}
-			/>);
-		} else if (control.controlType === "expression") {
-			return (<ExpressionControl
-				ref={controlRef}
-				control={control}
-				controller={this.props.controller}
-				propertyId={propertyId}
-			/>);
-		} else if (control.controlType === "toggletext") {
-			return (<ToggletextControl
-				ref={controlRef}
-				control={control}
-				controller={this.props.controller}
-				propertyId={propertyId}
-				values={control.values}
-				valueLabels={control.valueLabels}
-				valueIcons={control.valueIcons}
-			/>);
-		} else if (control.controlType === "passwordfield") {
-			return (<PasswordControl
-				ref={controlRef}
-				control={control}
-				controller={this.props.controller}
-				propertyId={propertyId}
-			/>);
-		} else if (control.controlType === "numberfield") {
-			return (<NumberfieldControl
-				ref={controlRef}
-				control={control}
-				controller={this.props.controller}
-				propertyId={propertyId}
-			/>);
-		} else if (control.controlType === "spinner") {
-			return (<NumberfieldControl
-				ref={controlRef}
-				control={control}
-				controller={this.props.controller}
-				propertyId={propertyId}
-			/>);
-		} else if (control.controlType === "checkbox") {
-			return (<CheckboxControl
-				ref={controlRef}
-				control={control}
-				propertyId={propertyId}
-				controller={this.props.controller}
-			/>);
-		} else if (control.controlType === "checkboxset") {
-			return (<CheckboxsetControl
-				ref={controlRef}
-				control={control}
-				controller={this.props.controller}
-				propertyId={propertyId}
-			/>);
-		} else if (control.controlType === "radioset") {
-			return (<RadiosetControl
-				ref={controlRef}
-				control={control}
-				controller={this.props.controller}
-				propertyId={propertyId}
-			/>);
-		} else if (control.controlType === "oneofselect") {
-			return (<OneofselectControl
-				ref={controlRef}
-				control={control}
-				controller={this.props.controller}
-				propertyId={propertyId}
-				rightFlyout={this.props.rightFlyout}
-			/>);
-		} else if (control.controlType === "someofselect") {
-			return (<SomeofselectControl
-				ref={controlRef}
-				control={control}
-				controller={this.props.controller}
-				propertyId={propertyId}
-			/>);
-		} else if (control.controlType === "oneofcolumns") {
-			return (<OneofcolumnsControl
-				ref={controlRef}
-				control={control}
-				controller={this.props.controller}
-				propertyId={propertyId}
-				dataModel={this.props.controller.getFilteredDatasetMetadata(propertyId, this.sharedCtrlInfo)}
-			/>);
-		} else if (control.controlType === "someofcolumns") {
-			return (<SomeofcolumnsControl
-				ref={controlRef}
-				control={control}
-				controller={this.props.controller}
-				propertyId={propertyId}
-				dataModel={this.props.controller.getFilteredDatasetMetadata(propertyId, this.sharedCtrlInfo)}
-			/>);
-		} else if (control.controlType === "selectcolumn") {
-			// TODO should use propertyID for filteredDataset
-			return (<FieldAllocatorControl
-				ref={controlRef}
-				control={control}
-				controller={this.props.controller}
-				propertyId={propertyId}
-				dataModel={this.props.controller.getFilteredDatasetMetadata(propertyId, this.sharedCtrlInfo)}
-			/>);
-		} else if (control.controlType === "selectcolumns") {
-			return (<ColumnSelectControl
-				ref={controlRef}
-				control={control}
-				controller={this.props.controller}
-				propertyId={propertyId}
-				dataModel={this.props.controller.getFilteredDatasetMetadata(propertyId, this.sharedCtrlInfo)}
-				openFieldPicker={this.openFieldPicker}
-			/>);
-		} else if (control.controlType === "structuretable") {
-			return (<ColumnStructureTableControl
-				ref={controlRef}
-				control={control}
-				controller={this.props.controller}
-				propertyId={propertyId}
-				dataModel={this.props.controller.getFilteredDatasetMetadata(propertyId, this.sharedCtrlInfo)}
-				buildUIItem={this.genUIItem}
-				openFieldPicker={this.openFieldPicker}
-				customContainer={this.props.customContainer}
-				rightFlyout={this.props.rightFlyout}
-			/>);
-		} else if (control.controlType === "structureeditor") {
-			// logger.info("structureeditor");
-			return (<StructureeditorControl
-				ref={controlRef}
-				control={control}
-				propertyId={propertyId}
-				buildUIItem={this.genUIItem}
-				controller={this.props.controller}
-				rightFlyout={this.props.rightFlyout}
-			/>);
-		} else if (control.controlType === "structurelisteditor") {
-			// logger.info("structurelisteditor");
-			return (<StructurelisteditorControl
-				ref={controlRef}
-				control={control}
-				controller={this.props.controller}
-				propertyId={propertyId}
-				buildUIItem={this.genUIItem}
-				customContainer={this.props.customContainer}
-				rightFlyout={this.props.rightFlyout}
-			/>);
-		}
-		return <h6 key={control.name}>{control.name}</h6>;
-	}
-
-	genControlItem(key, control, inPropertyId, indexof) {
-		const propertyId = { name: control.name };
-		// Used for subpanels in tables
-		if (inPropertyId) {
-			propertyId.name = inPropertyId.name;
-			propertyId.row = inPropertyId.row;
-			propertyId.col = indexof(control.name);
-		}
-		const stateStyle = {};
-		let tooltipShow = true;
-		const controlState = this.props.controller.getControlState(propertyId);
-		if (controlState === "hidden") {
-			stateStyle.display = "none";
-			tooltipShow = false;
-		} else if (controlState === "disabled") {
-			stateStyle.color = "#D8D8D8";
-			stateStyle.pointerEvents = "none";
-			tooltipShow = false;
-		}
-
-		const that = this;
-		function generateNumber() {
-			const generator = control.label.numberGenerator;
-			const min = generator.range && generator.range.min ? generator.range.min : 10000;
-			const max = generator.range && generator.range.max ? generator.range.max : 99999;
-			const newValue = Math.floor(Math.random() * (max - min + 1) + min);
-			that.props.controller.updatePropertyValue(propertyId, newValue);
-		}
-
-		let label = <span />;
-		if (control.label && control.separateLabel) {
-			let description;
-			let tooltip;
-			if (control.description) {
-				if (control.description.placement === "on_panel") {
-					description = <div className="control-description" style={stateStyle}>{control.description.text}</div>;
-				// only show tooltip when control enabled and visible
-				} else if (tooltipShow) {
-					tooltip = control.description.text; // default to tooltip
-				}
-			}
-			let requiredIndicator;
-			if (control.required) {
-				requiredIndicator = <span className="required-control-indicator" style={stateStyle}>*</span>;
-			}
-			let numberGenerator;
-			if (control.label.numberGenerator) {
-				numberGenerator = (<label>{"\u00A0\u00A0"}<a className="number-generator" onClick={generateNumber} style={stateStyle}>
-					{control.label.numberGenerator.label.default}
-				</a></label>);
-			}
-			let hasFilter = false;
-			if (control.subControls) {
-				for (const subControl of control.subControls) {
-					if (subControl.filterable) {
-						hasFilter = true;
-						break;
-					}
-				}
-			}
-			// structuretable labels w/o descriptions and filtering are created elsewhere
-			const isStructureTable = control.controlType === "structuretable" || control.controlType === "structurelisteditor" ||
-				control.controlType === "selectcolumns";
-			if (!isStructureTable || description || hasFilter) {
-				const className = "default-label-container";
-				const tooltipId = "tooltip-label-" + control.name;
-				label = (<div className={className}>
-					<div className="properties-tooltips-container" data-tip={tooltip} data-for={tooltipId}>
-						<label className="control-label" style={stateStyle} >{control.label.text}</label>
-						{requiredIndicator}
-						{numberGenerator}
-						{description}
-					</div>
-					<ReactTooltip
-						id={tooltipId}
-						place="right"
-						type="light"
-						effect="solid"
-						border
-						className="properties-tooltips"
-						delayShow={TOOL_TIP_DELAY}
-					/>
-				</div>);
-			}
-		}
-		var controlObj = this.genControl(control, propertyId);
-		var controlItem = <ControlItem key={key} label={label} control={controlObj} />;
-		return controlItem;
 	}
 
 	_showCategoryPanel(panelid, categories) {
@@ -527,11 +240,18 @@ class EditorForm extends React.Component {
 	/*
 	*  propertyId and indexOf only used for subpanel in tables
 	*/
-	genUIItem(key, uiItem, propertyId, indexof) {
+	genUIItem(key, uiItem, inPropertyId, indexof) {
 		if (uiItem.itemType === "control") {
-			return this.genControlItem(key, uiItem.control, propertyId, indexof);
+			const propertyId = { name: uiItem.control.name };
+			// Used for subpanels in tables
+			if (inPropertyId) {
+				propertyId.name = inPropertyId.name;
+				propertyId.row = inPropertyId.row;
+				propertyId.col = indexof(uiItem.control.name);
+			}
+			return this.ControlFactory.createControlItem(uiItem.control, propertyId);
 		} else if (uiItem.itemType === "additionalLink") {
-			var subPanel = this.genPanel(key, uiItem.panel, propertyId, indexof);
+			var subPanel = this.genPanel(key, uiItem.panel, inPropertyId, indexof);
 			return (<SubPanelButton id={"sub-panel-button." + key}
 				label={uiItem.text}
 				title={uiItem.secondaryText}
@@ -551,20 +271,20 @@ class EditorForm extends React.Component {
 		} else if (uiItem.itemType === "hSeparator") {
 			return <hr key={"h-separator." + key} className="h-separator" />;
 		} else if (uiItem.itemType === "panel") {
-			return this.genPanel(key, uiItem.panel, propertyId, indexof);
+			return this.genPanel(key, uiItem.panel, inPropertyId, indexof);
 		} else if (uiItem.itemType === "subTabs") {
-			return this.genSubTabs(key, uiItem.tabs, propertyId, indexof);
+			return this.genSubTabs(key, uiItem.tabs, inPropertyId, indexof);
 		} else if (uiItem.itemType === "primaryTabs") {
-			return this.genPrimaryTabs(key, uiItem.tabs, propertyId, indexof);
+			return this.genPrimaryTabs(key, uiItem.tabs, inPropertyId, indexof);
 		} else if (uiItem.itemType === "panelSelector") {
-			return this.genPanelSelector(key, uiItem.tabs, uiItem.dependsOn, propertyId, indexof);
+			return this.genPanelSelector(key, uiItem.tabs, uiItem.dependsOn, inPropertyId, indexof);
 		} else if (uiItem.itemType === "checkboxSelector") {
-			return this.genPanel(key, uiItem.panel, propertyId, indexof);
+			return this.genPanel(key, uiItem.panel, inPropertyId, indexof);
 		} else if (uiItem.itemType === "customPanel") {
 			return this.generateCustomPanel(uiItem.panel);
 			// only generate summary panel for right side flyout
 		} else if (uiItem.itemType === "summaryPanel") {
-			return this.genPanel(key, uiItem.panel, propertyId, indexof);
+			return this.genPanel(key, uiItem.panel, inPropertyId, indexof);
 		} else if (uiItem.itemType === "action") {
 			return this.generateAction(key, uiItem.action);
 		} else if (uiItem.itemType === "textPanel" && uiItem.panel) {
@@ -610,25 +330,22 @@ class EditorForm extends React.Component {
 	}
 
 	generateSharedControlNames(panel) {
-		for (let j = 0; j < this.sharedCtrlInfo.length; j++) {
-			if (typeof this.sharedCtrlInfo[j].id !== "undefined" && this.sharedCtrlInfo[j].id === panel.id) {
+		for (const info of this.props.controller.getSharedCtrlInfo()) {
+			if (typeof info.id !== "undefined" && info.id === panel.id) {
 				return;
 			}
 		}
 		const sharedCtrlNames = [];
-		for (let i = 0; i < panel.uiItems.length; i++) {
+		for (const panelItem of panel.uiItems) {
 			// only push uiItems with controls.  Some uiItems are for display only and shouldn't be added.
-			if (panel.uiItems[i].control && panel.uiItems[i].control.name) {
-				const controlName = panel.uiItems[i].control.name;
+			if (panelItem.control && panelItem.control.name) {
+				const controlName = panelItem.control.name;
 				sharedCtrlNames.push({
 					"controlName": controlName
 				});
 			}
 		}
-		this.sharedCtrlInfo.push({
-			"id": panel.id,
-			"controlNames": sharedCtrlNames
-		});
+		this.props.controller.addSharedControls(panel.id, sharedCtrlNames);
 	}
 
 	genPanel(key, panel, propertyId, indexof) {
@@ -711,7 +428,7 @@ class EditorForm extends React.Component {
 	fieldPicker(title) {
 		const currentControlValues = this.props.controller.getPropertyValues();
 		const propertyId = { name: this.state.fieldPickerControl.name };
-		const filteredDataset = this.props.controller.getFilteredDatasetMetadata(propertyId, this.sharedCtrlInfo);
+		const filteredDataset = this.props.controller.getFilteredDatasetMetadata(propertyId);
 
 		return (<div id="field-picker-table">
 			<FieldPicker
@@ -746,16 +463,13 @@ class EditorForm extends React.Component {
 		} else if (this.state.showFieldPicker) {
 			content = this.fieldPicker(title);
 		}
-		var formButtons = [];
+
 		return (
 			<div>
 				<div className="well">
 					<form className="form-horizontal">
 						<div className="section--light">
 							{content}
-						</div>
-						<div>
-							<ButtonToolbar>{formButtons}</ButtonToolbar>
 						</div>
 					</form>
 				</div>
@@ -771,7 +485,6 @@ EditorForm.propTypes = {
 	submitMethod: PropTypes.func,
 	showPropertiesButtons: PropTypes.func,
 	customPanels: PropTypes.array,
-	customContainer: PropTypes.bool,
 	rightFlyout: PropTypes.bool,
 	intl: intlShape,
 	actionHandler: PropTypes.func

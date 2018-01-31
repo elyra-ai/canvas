@@ -38,7 +38,7 @@ export default class ReadonlyControl extends EditorControl {
 		}
 
 		return (
-			<div className="editor_control_readonly" style={stateStyle}>
+			<div className="readonly-control" style={stateStyle}>
 				<div id={controlIconContainerClass}>
 					<text {...stateDisabled} id={this.getControlID()}>
 						{controlValue}

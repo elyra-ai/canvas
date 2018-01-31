@@ -10,6 +10,7 @@
 /* eslint-disable no-empty-function */
 import React from "react";
 import CustomToggleCtrl from "./CustomToggleCtrl";
+import paramDef from "./standardControls_paramDef.json";
 
 class CustomTogglePanel {
 	static id() {
@@ -21,14 +22,21 @@ class CustomTogglePanel {
 	}
 
 	renderPanel() {
-		const controlId = this.parameters[0];
+		const controlId = this.parameters[0]; // toggle
+		let textField = (<div />);
+		if (this.parameters.length === 2) {
+			textField = this.controller.createControl({ name: this.parameters[1] }, paramDef, this.parameters[1]);
+		}
 		return (
-			<CustomToggleCtrl
-				key={controlId}
-				ref={controlId}
-				propertyId={{ name: controlId }}
-				controller={this.controller}
-			/>
+			<div key={"toggle-container-" + controlId}>
+				{textField}
+				<CustomToggleCtrl
+					key={controlId}
+					ref={controlId}
+					propertyId={{ name: controlId }}
+					controller={this.controller}
+				/>
+			</div>
 		);
 	}
 }

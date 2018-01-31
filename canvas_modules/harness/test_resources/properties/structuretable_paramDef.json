@@ -283,7 +283,7 @@
               "resource_key": "structuretableReadonlyColumnDefaultIndex.new_name.desc"
             },
             "width": 26,
-            "edit_style": "inline",
+            "edit_style": "on_panel",
             "filterable": true,
             "summary": true
           },

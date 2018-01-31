@@ -278,17 +278,11 @@
         "type": "panels",
         "group_info": [
           {
-            "id": "text_field",
-            "type": "controls",
-            "parameter_refs": [
-              "text_field"
-            ]
-          },
-          {
             "id": "custom-toggle-panel",
             "type": "customPanel",
             "parameter_refs": [
-              "custom_toggle"
+              "custom_toggle",
+              "text_field"
             ]
           },
           {

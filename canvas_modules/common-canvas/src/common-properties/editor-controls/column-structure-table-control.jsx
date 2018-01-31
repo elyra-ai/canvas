@@ -217,19 +217,24 @@ class ColumnStructureTableControl extends ColumnStructureTableEditor {
 				{errorMessage}
 			</div>
 		);
-
+		const onPanelContainer = this.getOnPanelContainer(this.props.controller.getSelectedRows(this.props.control.name));
 		return (
-			<div className="properties-column-structure">
-				<MoveableTableRows
-					tableContainer={content}
-					control={this.props.control}
-					controller={this.props.controller}
-					setScrollToRow={this.setScrollToRow}
-					getCurrentControlValue={this.getCurrentControlValue}
-					setCurrentControlValueSelected={this.setCurrentControlValueSelected}
-					stateStyle={stateStyle}
-					disabled={disabled}
-				/>
+			<div>
+				<div className="properties-column-structure">
+					<MoveableTableRows
+						tableContainer={content}
+						control={this.props.control}
+						controller={this.props.controller}
+						setScrollToRow={this.setScrollToRow}
+						getCurrentControlValue={this.getCurrentControlValue}
+						setCurrentControlValueSelected={this.setCurrentControlValueSelected}
+						stateStyle={stateStyle}
+						disabled={disabled}
+					/>
+				</div>
+				<div>
+					{onPanelContainer}
+				</div>
 			</div>
 		);
 	}

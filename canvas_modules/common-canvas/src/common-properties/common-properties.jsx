@@ -262,7 +262,6 @@ class CommonProperties extends React.Component {
 					additionalComponents={this.props.propertiesInfo.additionalComponents}
 					showPropertiesButtons={this.showPropertiesButtons}
 					customPanels={this.props.customPanels}
-					customContainer={this.props.containerType === "Custom"}
 					rightFlyout={this.props.rightFlyout}
 					actionHandler={this.props.actionHandler}
 				/>);

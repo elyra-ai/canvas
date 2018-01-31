@@ -358,7 +358,7 @@ module.exports = function() {
 		}
 	});
 	this.Then(/^I verify that readonly value is "([^"]*)"$/, function(value) {
-		const text = browser.$$(".editor_control_readonly text")[0];
+		const text = browser.$$(".readonly-control text")[0];
 		expect(value).toEqual(text.getText());
 	});
 

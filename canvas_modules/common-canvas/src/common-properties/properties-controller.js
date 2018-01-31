@@ -15,6 +15,7 @@ import conditionsUtil from "./util/conditions-utils";
 import PropertyUtils from "./util/property-utils.js";
 import { STATES, ACTIONS } from "./constants/constants.js";
 import CommandStack from "../command-stack/command-stack.js";
+import ControlFactory from "./editor-controls/control-factory";
 
 export default class PropertiesController {
 
@@ -35,6 +36,8 @@ export default class PropertiesController {
 		this.requiredParameters = []; // TODO this is needed for validateInput, will change to use this.controls later
 		this.commandStack = new CommandStack();
 		this.custPropSumPanelValues = {};
+		this.controlFactory = new ControlFactory(this);
+		this.sharedCtrlInfo = [];
 
 	}
 	subscribe(callback) {
@@ -261,15 +264,23 @@ export default class PropertiesController {
 		return this.uiItems;
 	}
 
+	addSharedControls(id, controlsNames) {
+		this.sharedCtrlInfo.push({ "id": id, "controlNames": controlsNames });
+	}
+
+	getSharedCtrlInfo() {
+		return this.sharedCtrlInfo;
+	}
+
 	/*
 	* DatasetMetadata methods
 	*/
 	getDatasetMetadata() {
 		return this.propertiesStore.getDatasetMetadata();
 	}
-	getFilteredDatasetMetadata(propertyId, sharedCtrlInfo) {
+	getFilteredDatasetMetadata(propertyId) {
 		let datasetMetadata = this.getDatasetMetadata();
-		this._filterSharedDataset(propertyId, sharedCtrlInfo, datasetMetadata);
+		this._filterSharedDataset(propertyId, datasetMetadata);
 		datasetMetadata = conditionsUtil.filterConditions(propertyId, this.filterDefinitions, this, datasetMetadata);
 		return datasetMetadata;
 	}
@@ -281,15 +292,15 @@ export default class PropertiesController {
 	 * @param propertyId Name of control to skip when checking field controls
 	 * @return Filtered dataset metadata with fields in use removed
 	 */
-	_filterSharedDataset(propertyId, sharedCtrlInfo, datasetMetadata) {
-		if (!sharedCtrlInfo || !propertyId) {
+	_filterSharedDataset(propertyId, datasetMetadata) {
+		if (!this.sharedCtrlInfo || !propertyId) {
 			return;
 		}
 		const skipControlName = propertyId.name;
 		try {
 			// gets all the controls that are shared with this property
 			let sharedCtrlNames = [];
-			for (const sharedCtrlList of sharedCtrlInfo) {
+			for (const sharedCtrlList of this.sharedCtrlInfo) {
 				for (const sharedCtrl of sharedCtrlList.controlNames) {
 					if (skipControlName === sharedCtrl.controlName) {
 						sharedCtrlNames = sharedCtrlList.controlNames;
@@ -565,5 +576,16 @@ export default class PropertiesController {
 			control.summary = true;
 			control.summaryLabel = label;
 		}
+	}
+
+	/*
+	* Used to create standard controls in customPanels
+	*/
+	createControl(propertyId, paramDef, parameter) {
+		const control = this.controlFactory.createFormControl(paramDef, parameter);
+		return this.controlFactory.createControlItem(control, propertyId);
+	}
+	getControlFactory() {
+		return this.controlFactory;
 	}
 }
