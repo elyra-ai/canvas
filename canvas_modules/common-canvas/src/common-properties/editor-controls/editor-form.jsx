@@ -149,6 +149,13 @@ class EditorForm extends React.Component {
 				controller={this.props.controller}
 				propertyId={propertyId}
 			/>);
+		} else if (control.controlType === "spinner") {
+			return (<NumberfieldControl
+				ref={controlRef}
+				control={control}
+				controller={this.props.controller}
+				propertyId={propertyId}
+			/>);
 		} else if (control.controlType === "checkbox") {
 			return (<CheckboxControl
 				ref={controlRef}

@@ -11,11 +11,14 @@ import React from "react";
 import PropTypes from "prop-types";
 import TextField from "ap-components-react/dist/components/TextField";
 import EditorControl from "./editor-control.jsx";
+import { SPINNER } from "../constants/constants.js";
 
 export default class NumberfieldControl extends EditorControl {
 	constructor(props) {
 		super(props);
 		this.handleChange = this.handleChange.bind(this);
+		this.onIncrease = this.onIncrease.bind(this);
+		this.onDecrease = this.onDecrease.bind(this);
 		this.clearValue = this.clearValue.bind(this);
 	}
 	componentWillMount() {
@@ -73,13 +76,49 @@ export default class NumberfieldControl extends EditorControl {
 
 	}
 
+	onIncrease() {
+		const originalValue = JSON.parse(JSON.stringify(this.stringValue));
+		const decimalsInOriginalValue = (originalValue.toString()).split(".")[1];
+		this.props.control.increment = this.props.control.increment ? this.props.control.increment : 1;
+		const decimalsInIncrement = (this.props.control.increment.toString()).split(".")[1];
+		const numValue = Number(originalValue) + this.props.control.increment;
+		if (decimalsInIncrement) {
+			let decimalPrecision = decimalsInIncrement.length;
+			if (decimalsInOriginalValue) {
+				decimalPrecision = decimalsInOriginalValue.length >= decimalsInIncrement.length ? decimalsInOriginalValue.length : decimalsInIncrement.length;
+			}
+			this.stringValue = numValue.toFixed(decimalPrecision);
+			this.props.controller.updatePropertyValue(this.props.propertyId, Number(numValue.toFixed(decimalPrecision)));
+		} else {
+			this.stringValue = numValue.toString();
+			this.props.controller.updatePropertyValue(this.props.propertyId, numValue);
+		}
+	}
+
+	onDecrease() {
+		const originalValue = JSON.parse(JSON.stringify(this.stringValue));
+		const decimalsInOriginalValue = (originalValue.toString()).split(".")[1];
+		const decimalsInIncrement = (this.props.control.increment.toString()).split(".")[1];
+		const numValue = Number(originalValue) - this.props.control.increment;
+		if (decimalsInIncrement) {
+			let decimalPrecision = decimalsInIncrement.length;
+			if (decimalsInOriginalValue) {
+				decimalPrecision = decimalsInOriginalValue.length >= decimalsInIncrement.length ? decimalsInOriginalValue.length : decimalsInIncrement.length;
+			}
+			this.stringValue = numValue.toFixed(decimalPrecision);
+			this.props.controller.updatePropertyValue(this.props.propertyId, Number(numValue.toFixed(decimalPrecision)));
+		} else {
+			this.stringValue = numValue.toString();
+			this.props.controller.updatePropertyValue(this.props.propertyId, numValue);
+		}
+	}
+
 	clearValue() {
 		// number values should be null of not set
 		this.props.controller.updatePropertyValue(this.props.propertyId, null);
 	}
 
 	render() {
-		// needed since in a number like 10.0 the .0 is stripped off so users couldn't enter 10.02
 		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		// we should reset the string value in case the values was updated outside of the control
 		if (parseFloat(controlValue) !== parseFloat(this.stringValue)) {
@@ -105,6 +144,14 @@ export default class NumberfieldControl extends EditorControl {
 			controlIconContainerClass = "control-icon-container-enabled";
 		}
 
+		const spinnerProps = {};
+		const that = this;
+		if (this.props.control.controlType === SPINNER) {
+			spinnerProps.numberInput = SPINNER;
+			spinnerProps.onIncrease = that.onIncrease;
+			spinnerProps.onDecrease = that.onDecrease;
+		}
+
 		return (
 			<div className="editor_control_area" style={stateStyle}>
 				<div id={controlIconContainerClass}>
@@ -116,6 +163,7 @@ export default class NumberfieldControl extends EditorControl {
 						disabledPlaceholderAnimation
 						onChange={this.handleChange}
 						value={this.stringValue}
+						{...spinnerProps}
 						onReset={() => this.clearValue()}
 					/>
 					{icon}

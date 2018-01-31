@@ -78,6 +78,8 @@ _defineConstant("DEFAULT_VALIDATION_MESSAGE", {
 	text: ""
 });
 
+_defineConstant("SPINNER", "spinner");
+
 _defineConstant("VALIDATION_MESSAGE", {
 	WARNING: "#FDD600",
 	ERROR: "#E71D32",

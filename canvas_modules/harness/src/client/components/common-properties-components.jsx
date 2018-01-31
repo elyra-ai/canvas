@@ -31,6 +31,7 @@ import {
 	READONLY_PROPS_INFO,
 	NUMBERFIELD_PROPS_INFO,
 	NUMBERFIELD_GENERATOR_PROPS_INFO,
+	SPINNER_PROPS_INFO,
 	CHECKBOX_SINGLE_PROPS_INFO,
 	CHECKBOX_SET_PROPS_INFO,
 	RADIOSET_HORIZONTAL_PROPS_INFO,
@@ -209,6 +210,7 @@ class CommonPropertiesComponents extends React.Component {
 					"--expression",
 					"--readonly",
 					"--numberfield",
+					"--spinner",
 					"--checkbox",
 					"--checkboxset",
 					"--radioset",
@@ -705,6 +707,25 @@ class CommonPropertiesComponents extends React.Component {
 										"default", "label", "resource_key", "range", "min", "max",
 										"resources", "numberGenerator.label", "numberGenerator.desc"
 									])}
+							</pre>
+						</div>
+					</div>
+				</div>
+				<div className="properties-documentation-panels-controls-component">
+					<h3 id="--spinner" className="section-subtitle">spinner</h3>
+					<p>A spinner control is rendered for a parameter of <span className="highlight">increment</span> number.</p>
+					<div className="section-row">
+						<div className="section-column">
+							<CommonProperties
+								showPropertiesDialog
+								propertiesInfo={SPINNER_PROPS_INFO}
+								containerType="Custom"
+							/>
+							{this.renderRightFlyoutButton(SPINNER_PROPS_INFO)}
+						</div>
+						<div className="section-column section-column-code">
+							<pre className="json-block">
+								{this.jsonReplacer(SPINNER_PROPS_INFO.parameterDef, "all")}
 							</pre>
 						</div>
 					</div>

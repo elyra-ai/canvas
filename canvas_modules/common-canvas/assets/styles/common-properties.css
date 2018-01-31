@@ -976,6 +976,17 @@ tbody.reactable-data .editor_control_area {
   top: 0px !important;
 }
 
+.number--dark+.number__spinnerdiv, .number--light+.number__spinnerdiv{
+	top: -11px;
+}
+
+input[type=number][disabled].number--dark+.number__spinnerdiv .numpinput__spinner__top .numinputtop,
+input[type=number][disabled].number--light+.number__spinnerdiv .numpinput__spinner__top .numinputtop,
+input[type=number][disabled].number--dark+.number__spinnerdiv .numpinput__spinner__bottom .numinputbottom,
+input[type=number][disabled].number--light+.number__spinnerdiv .numpinput__spinner__bottom .numinputbottom{
+	fill: #d8d8d8;
+}
+
 .editor_control_area {
   margin-bottom: 5px;
 }

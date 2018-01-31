@@ -16,7 +16,7 @@ export class ParameterDef {
 	constructor(cname, label, description, type, role, valueRestriction, defaultValue,
 		control, orientation, width, charLimit, placeHolderText, separator,
 		resourceKey, visible, valueIcons, sortable, filterable, editStyle, required,
-		numberGenerator, isKey, dmDefault, language, summary, textAfter, textBefore, moveableRows, generatedValues) {
+		numberGenerator, isKey, dmDefault, language, summary, increment, textAfter, textBefore, moveableRows, generatedValues) {
 		this.name = cname;
 		this.label = ResourceDef.make(label);
 		this.description = ResourceDef.make(description);
@@ -46,6 +46,7 @@ export class ParameterDef {
 			this.dmDefault = dmDefault;
 		}
 		this.summary = summary;
+		this.increment = increment;
 		this.textAfter = ResourceDef.make(textAfter);
 		this.textBefore = ResourceDef.make(textBefore);
 		this.moveableRows = moveableRows;
@@ -210,6 +211,7 @@ export class ParameterDef {
 				propertyOf(uihint)("dm_default"),
 				propertyOf(uihint)("language"),
 				propertyOf(uihint)("summary"),
+				propertyOf(uihint)("increment"),
 				propertyOf(uihint)("text_after"),
 				propertyOf(uihint)("text_before"),
 				propertyOf(uihint)("moveable_rows"),

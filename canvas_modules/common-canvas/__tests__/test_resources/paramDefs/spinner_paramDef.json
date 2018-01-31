@@ -1,0 +1,328 @@
+{
+  "titleDefinition": {
+    "title": "Spinner"
+  },
+  "current_parameters": {
+    "spinner_default": 23,
+    "spinner_int": 10,
+    "spinner_null": null,
+    "spinner_placeholder": null,
+    "spinner_random": 1234,
+    "spinner_error": -1,
+    "spinner_warning": 0.1,
+    "spinner_dbl": 11.132,
+    "disable": true,
+    "spinner_disable": 10,
+    "hide": true,
+    "spinner_hidden": 10
+  },
+  "parameters": [
+    {
+      "id": "spinner_default",
+      "type": "integer",
+      "required": true
+    },
+    {
+      "id": "spinner_int",
+      "type": "integer",
+      "required": true
+    },
+    {
+      "id": "spinner_dbl",
+      "type": "double",
+      "required": true
+    },{
+      "id": "spinner_undefined",
+      "type": "double",
+      "required": true
+    },
+    {
+      "id": "spinner_null",
+      "type": "integer",
+      "required": true
+    },
+    {
+      "id": "spinner_placeholder",
+      "type": "double"
+    },
+    {
+      "id": "spinner_random",
+      "type": "integer",
+      "required": true
+    },
+    {
+      "id": "spinner_error",
+      "type": "integer",
+      "required": true
+    },
+    {
+      "id": "spinner_warning",
+      "type": "double",
+      "required": true
+    },
+    {
+      "id": "disable",
+      "type": "boolean"
+    },
+    {
+      "id": "spinner_disable",
+      "type": "integer",
+      "required": true
+    },
+    {
+      "id": "hide",
+      "type": "boolean"
+    },
+    {
+      "id": "spinner_hidden",
+      "type": "integer",
+      "required": true
+    }
+  ],
+  "uihints": {
+    "id": "spinner",
+    "icon": "images/default.svg",
+    "label": {
+      "default": "Spinner Fields"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "spinner_default",
+        "label": {
+          "default": "Default"
+        },
+        "description": {
+          "default": "spinner without increment set.  Should default to increment=1"
+        },
+        "control" : "spinner"
+      },
+      {
+        "parameter_ref": "spinner_int",
+        "label": {
+          "default": "Integer"
+        },
+        "description": {
+          "default": "spinner with increment=3 should increment/decrement by 3"
+        },
+        "control" : "spinner",
+        "increment" : 3
+      },
+      {
+        "parameter_ref": "spinner_dbl",
+        "label": {
+          "default": "Double"
+        },
+        "description": {
+          "default": "spinner with increment=0.1 should increment/decrement by 0.1"
+        },
+        "control" : "spinner",
+        "increment" : 0.1
+      },
+      {
+        "parameter_ref": "spinner_null",
+        "label": {
+          "default": "Null"
+        },
+        "control" : "spinner",
+        "increment" : 2,
+        "description": {
+          "default": "spinner with initial null value and increment=2 should increment/decrement by 2"
+        }
+      },
+      {
+        "parameter_ref": "spinner_undefined",
+        "label": {
+          "default": "Undefined"
+        },
+        "control" : "spinner",
+        "increment" : 2,
+        "description": {
+          "default": "spinner with 'undefined' and increment=2 should increment/decrement by 2"
+        }
+      },
+      {
+        "parameter_ref": "spinner_placeholder",
+       "label": {
+         "default": "Placeholder text"
+        },
+        "control" : "spinner",
+        "increment" : 2,
+        "description": {
+          "default": "spinner with placeholder text 'Enter a number' and integer increment=2 should increment/decrement by 2"
+        },
+        "place_holder_text": {
+          "default": "Enter a number"
+        }
+      },
+      {
+       "parameter_ref": "spinner_random",
+        "label": {
+          "default": "Random"
+        },
+        "control" : "spinner",
+        "increment" : 2,
+        "description": {
+          "default": "spinner with random number generator and integer increment=2 should increment/decrement by 2"
+        },
+        "number_generator": {
+          "label": {
+            "default": "Random"
+          },
+          "range": {
+            "min": 1000000,
+            "max": 9999999
+          }
+        }
+      },
+      {
+        "parameter_ref": "spinner_error",
+        "label": {
+          "default": "Error"
+        },
+        "control" : "spinner",
+        "increment" : 1,
+        "description": {
+          "default": "spinner with error when set to less or equal to '0' with increment=1"
+        }
+      },
+      {
+        "parameter_ref": "spinner_warning",
+        "label": {
+          "default": "Warning"
+        },
+        "control" : "spinner",
+        "increment" : 0.1,
+        "description": {
+          "default": "spinner with warning when set to less or equal to '1' with incremment=0.1"
+        }
+      },
+      {
+        "parameter_ref": "disable",
+        "label": {
+          "default": "Disable 'Spinner Disabled'"
+        }
+      },
+      {
+        "parameter_ref": "spinner_disable",
+        "label": {
+          "default": "Spinner Disabled"
+        },
+        "control" : "spinner",
+        "increment" : 1
+      },
+      {
+        "parameter_ref": "hide",
+        "label": {
+          "default": "Hide 'Spinner Hidden'"
+        }
+      },
+      {
+        "parameter_ref": "spinner_hidden",
+        "label": {
+          "default": "Spinner Hidden"
+        },
+        "control" : "spinner",
+        "increment" : 1
+      }
+    ],
+    "group_info": [
+      {
+        "id": "spinner-values",
+        "label": {
+          "default": "Values"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "spinner_default",
+          "spinner_int",
+          "spinner_dbl",
+          "spinner_undefined",
+          "spinner_null",
+          "spinner_placeholder",
+          "spinner_random"
+        ]
+      },
+      {
+        "id": "spinner-values",
+        "label": {
+          "default": "Conditions"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "spinner_error",
+          "spinner_warning",
+          "disable",
+          "spinner_disable",
+          "hide",
+          "spinner_hidden"
+        ]
+      }
+    ]
+  },
+  "conditions": [
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "spinner_error",
+          "message": {
+            "default": "Needs to be greaterThan 0"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "spinner_error",
+            "op": "greaterThan",
+            "value": 0
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "spinner_warning",
+          "message": {
+            "default": "Needs to be greaterThan 1"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "spinner_warning",
+            "op": "greaterThan",
+            "value": 1
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "spinner_hidden"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hide",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "spinner_disable"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disable",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    }
+  ]
+}

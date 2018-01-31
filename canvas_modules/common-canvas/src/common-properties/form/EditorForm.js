@@ -410,6 +410,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 		required,
 		parameter.language,
 		parameter.summary,
+		parameter.increment,
 		rowSelection,
 		parameter.generatedValues,
 		addRemoveRows
@@ -546,6 +547,7 @@ function _makeSubControl(parameter, l10nProvider) {
 		parameter.dmDefault,
 		parameter.language,
 		parameter.summary,
+		parameter.increment,
 		parameter.generatedValues
 	);
 }

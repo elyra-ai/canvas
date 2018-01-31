@@ -1154,6 +1154,48 @@ _defineConstant("NUMBERFIELD_PROPS_INFO", {
 		}
 	}
 });
+_defineConstant("SPINNER_PROPS_INFO", {
+	"title": "Spinner Title",
+	"parameterDef": {
+		"current_parameters": {
+			"spinner_int": 10,
+		},
+		"parameters": [
+			{
+				"id": "spinner_int",
+				"type": "integer",
+				"required": true
+			}
+		],
+		"uihints": {
+			"id": "SpinnerControlName",
+			"parameter_info": [
+				{
+					"parameter_ref": "spinner_int",
+					"label": {
+						"default": "Integer"
+					},
+					"description": {
+						"default": "spinner with parameter value set to '10'"
+					},
+					"increment": 1
+				}
+			],
+			"group_info": [
+				{
+					"id": "Spinner Control",
+					"type": "controls",
+					"parameter_refs": [
+						"spinner_int"
+					]
+				}
+			]
+		},
+		"dataset_metadata": {
+			"fields": []
+		}
+	}
+});
 _defineConstant("NUMBERFIELD_GENERATOR_PROPS_INFO", {
 	"title": "NumberField Generator Title",
 	"parameterDef": {
