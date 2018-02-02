@@ -376,6 +376,11 @@ input.number,
   overflow: visible;
 }
 
+#field-picker-back-button > svg:not(:root) {
+	margin-right: 5px;
+	transform: translateY(4px);
+}
+
 .reactable-th-checkbox {
   padding-left: 15px;
 }

@@ -168,6 +168,12 @@
   line-height: 0.5;
 }
 
+.control-summary-link-buttons > a > svg:not(:root) {
+  line-height: 0.5;
+	margin-right: 5px;
+	transform: translateY(4px);
+}
+
 .control-summary-configured-values {
 	border-top: 1px solid #E0E0E0;
 	margin-top: 5px;
