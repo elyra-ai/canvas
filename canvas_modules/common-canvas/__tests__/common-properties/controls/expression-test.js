@@ -50,7 +50,7 @@ describe("expression-control renders correctly", () => {
 				propertyId={propertyId}
 			/>
 		);
-		const input = wrapper.find(".ReactCodeMirror");
+		const input = wrapper.find(".react-codemirror2");
 		expect(input).to.have.length(1);
 	});
 

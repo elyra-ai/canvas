@@ -57,19 +57,17 @@ describe("CommonProperties renders correctly", () => {
 
 	it("should override a reject label", () => {
 		const wrapper = createCommonProperties("Editing", localMessages);
-		const buttonLabels = wrapper.find("PropertiesButtons").find("span");
-		expect(buttonLabels.at(0).text()).to.equal("NOT");
+		expect(wrapper.find("button[id='properties-cancel-button']").text()).to.equal("NOT");
 	});
 
 	it("should override a apply label", () => {
 		const wrapper = createCommonProperties("Editing", localMessages);
-		const buttonLabels = wrapper.find("PropertiesButtons").find("span");
-		expect(buttonLabels.at(1).text()).to.equal("CONFIRM");
+		expect(wrapper.find("button[id='properties-apply-button']").text()).to.equal("CONFIRM");
 	});
 
 	it("should override a structure table add button label", () => {
 		const wrapper = createCommonProperties("Editing", localMessages);
-		const tableButton = wrapper.find("#field-picker-buttons-container").find(".button__text");
+		const tableButton = wrapper.find("#field-picker-buttons-container").find("a[id='add-fields-button']");
 		expect(tableButton.text()).to.equal("Add Some Stuff");
 	});
 

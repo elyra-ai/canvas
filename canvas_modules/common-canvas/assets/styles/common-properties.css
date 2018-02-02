@@ -417,10 +417,15 @@ input.number,
   line-height: inherit;
 }
 
-#add-fields-button > span > svg:not(:root) {
+#add-fields-button > svg:not(:root) {
   overflow: visible;
   margin: 0px;
   margin-right: 5px;
+	transform: translateY(4px);
+}
+
+.button.button--disabled > svg:not(:root)  {
+	fill: #aeaeae;
 }
 
 #reset-fields-button {
@@ -1067,7 +1072,7 @@ input[type=number][disabled].number--light+.number__spinnerdiv .numpinput__spinn
 
 .expression-validation-message { margin-top: 25px; }
 
-#ExpressionEditor {
+.expression_editor_control {
 	border: 1px solid #777677;
 }
 

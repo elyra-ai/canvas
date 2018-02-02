@@ -351,7 +351,7 @@ module.exports = function() {
 	this.Then(/^I click the "([^"]*)" action$/, function(actionName) {
 		const buttons = browser.$$(".properties-action-button .button");
 		for (const button of buttons) {
-			if (button.$("span").getText() === actionName) {
+			if (button.getText() === actionName) {
 				button.click();
 				break;
 			}

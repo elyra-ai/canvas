@@ -1,0 +1,368 @@
+{
+  "titleDefinition": {
+    "title": "Expression Tests"
+  },
+  "current_parameters": {
+    "expression": "Age >= 55",
+    "enableExpression": false,
+    "expr": "ab\ncd\nef",
+    "visibleExpression": false,
+    "hiddenExpr": "This is hidden by default"
+  },
+  "parameters": [
+    {
+      "id": "expression",
+      "type": "string",
+      "role": "expression"
+    },
+    {
+      "id": "defaultExpr",
+      "type": "string",
+      "default": "is_real(salbegin)  and  gender  = \"F\" or BP = 120\n",
+      "role": "expression",
+      "required": true
+    },
+    {
+      "id": "placeHolderExpr",
+      "type": "string",
+      "role": "expression",
+      "required": true
+    },
+    {
+      "id": "enableExpression",
+      "type": "boolean",
+      "default": ""
+    },
+    {
+      "id": "expr",
+      "type": "string",
+      "default": "",
+      "role": "expression"
+    },
+    {
+      "id": "visibleExpression",
+      "type": "boolean",
+      "default": ""
+    },
+    {
+      "id": "hiddenExpr",
+      "type": "string",
+      "default": "",
+      "role": "expression"
+    },
+    {
+      "id": "requiredExpr",
+      "type": "string",
+      "default": "",
+      "required": true,
+      "role": "expression"
+    },
+    {
+      "id": "warningExpr",
+      "type": "string",
+      "default": "",
+      "role": "expression"
+    },
+    {
+      "id": "errorExpr",
+      "type": "string",
+      "default": "",
+      "role": "expression"
+    }
+  ],
+  "complex_types": [],
+  "uihints": {
+    "id": "Expressions.test",
+    "icon": "images/modelbuildspark.svg",
+    "label": {
+      "default": "Expressions Test"
+    },
+    "description": {
+      "default": "Test expression controls"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "expression",
+        "language": "CLEM",
+        "label": {
+          "default": "Expression"
+        },
+        "description": {
+          "default": "Enter a Clem expression"
+        },
+        "text_before": {
+          "default": "Press ctrl-shift to autocomplete"
+        }
+      },
+      {
+        "parameter_ref": "defaultExpr",
+        "language": "CLEM",
+        "label": {
+          "default": "Default Expression value"
+        },
+        "description": {
+          "default": "Enter a boolean expression to use for filtering rows"
+        }
+      },
+      {
+        "parameter_ref": "placeHolderExpr",
+        "language": "text/x-hive",
+        "label": {
+          "default": "Place holder expression value"
+        },
+        "description": {
+          "default": "Enter a boolean expression"
+        },
+        "place_holder_text": {
+          "default": "Enter an SQL expression"
+        }
+      },
+      {
+        "parameter_ref": "enableExpression",
+        "label": {
+          "default": "enable"
+        },
+        "description": {
+          "default": "Enable table"
+        }
+      },
+      {
+        "parameter_ref": "expr",
+        "label": {
+          "default": "Expression"
+        },
+        "description": {
+          "default": "Expression box"
+        }
+      },
+      {
+        "parameter_ref": "visibleExpression",
+        "label": {
+          "default": "Visible"
+        },
+        "description": {
+          "default": "Visible table"
+        }
+      },
+      {
+        "parameter_ref": "hiddenExpr",
+        "label": {
+          "default": "Visible"
+        },
+        "description": {
+          "default": "Expression box"
+        }
+      },
+      {
+        "parameter_ref": "requiredExpr",
+        "label": {
+          "default": "Required"
+        },
+        "description": {
+          "default": "Expression box"
+        }
+      },
+      {
+        "parameter_ref": "errorExpr",
+        "label": {
+          "default": "Error Message"
+        },
+        "description": {
+          "default": "Expression box"
+        },
+        "text_before": {
+          "default": "Enter test to generate an error message"
+        }
+      },
+      {
+        "parameter_ref": "warningExpr",
+        "label": {
+          "default": "Warning Message"
+        },
+        "description": {
+          "default": "Expression box"
+        },
+        "text_before": {
+          "default": "Enter help to generate a warning message"
+        }
+      }
+    ],
+    "complex_type_info": [],
+    "group_info": [
+      {
+        "id": "Values",
+        "label": {
+          "default": "Values"
+        },
+        "parameter_refs": [
+          "expression",
+          "defaultExpr",
+          "placeHolderExpr"
+        ]
+      },
+      {
+        "id": "Conditions",
+        "label": {
+          "default": "Conditions"
+        },
+        "parameter_refs": [
+          "enableExpression",
+          "expr",
+          "visibleExpression",
+          "hiddenExpr",
+          "requiredExpr",
+          "warningExpr",
+          "errorExpr"
+        ]
+      }
+    ]
+  },
+  "conditions": [
+    {
+      "enabled": {
+        "parameter_refs": [
+          "expr"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "enableExpression",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "hiddenExpr"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "visibleExpression",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "message": {
+            "default": "Expression cannot contain help"
+          },
+          "focus_parameter_ref": "warningExpr"
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "warningExpr",
+            "op": "notContains",
+            "value": "help"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "message": {
+            "default": "Expression cannot contain test"
+          },
+          "focus_parameter_ref": "errorExpr"
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "errorExpr",
+            "op": "notContains",
+            "value": "test"
+          }
+        }
+      }
+    }
+  ],
+  "dataset_metadata": {
+    "fields": [
+      {
+        "name": "Age",
+        "type": "integer",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Sex",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "BP",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Cholesterol",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Na",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "K",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Drug",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Ag",
+        "type": "integer",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      }
+    ]
+  },
+  "resources": {
+    "textfield_name_not_valid_one": "Name cannot contain /",
+    "textfield_name_not_valid_two": "Name cannot contain double or single \"quotes\"",
+    "textfield_name_not_contain_password": "name cannot contain password",
+    "expression_box_not_valid": "Expression cannot contain /, double or single \"quotes\""
+  }
+}

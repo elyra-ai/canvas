@@ -89,14 +89,14 @@
           "type": "error",
           "focus_parameter_ref": "conditionExpr",
           "message": {
-            "default": "Cannot have value innerWidth"
+            "default": "Cannot have value isFinite"
           }
         },
         "evaluate": {
           "condition": {
             "parameter_ref": "conditionExpr",
             "op": "notEquals",
-            "value": "innerWidth"
+            "value": "isFinite"
           }
         }
       }

@@ -9,7 +9,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import CodeMirror from "react-codemirror";
+import { UnControlled as CodeMirror } from "react-codemirror2";
 import cm from "codemirror";
 import EditorControl from "./editor-control.jsx";
 import "codemirror/addon/hint/show-hint";
@@ -36,6 +36,8 @@ export default class ExpressionControl extends EditorControl {
 		this.origHint = "";
 
 		this.handleChange = this.handleChange.bind(this);
+		this.editorDidMount = this.editorDidMount.bind(this);
+
 
 		this.addonHints = this.addonHints.bind(this);
 		this.getDatasetFields = this.getDatasetFields.bind(this);
@@ -43,9 +45,8 @@ export default class ExpressionControl extends EditorControl {
 
 	// Save original autocomplete handler and then register our custom handler
 	// that will add data set filed names to autocomplete list.
-	componentDidMount() {
-		const codeMirrorInstance = this.codeMirror.getCodeMirror();
-		this.origHint = codeMirrorInstance.getHelper({ line: 0, ch: 0 }, "hint");
+	editorDidMount(editor, next) {
+		this.origHint = editor.getHelper({ line: 0, ch: 0 }, "hint");
 		// this next line is a hack to overcome a Codemirror problem.  To support SparkSQL, a subset of SQL,
 		// we need to register with Codemirror the language as the value of "text/x-hive". When Codemirror
 		// registers the autocomplete addon it registers is as "sql" not the subset "text/x-hive"
@@ -54,12 +55,12 @@ export default class ExpressionControl extends EditorControl {
 		cm.registerHelper("hint", language, this.addonHints);
 
 		// set the default height, should be between 4 and 20 lines
-		const editorDiv = document.getElementById("ExpressionEditor");
+		const editorDiv = document.getElementById(this.getControlId());
 		const controlWidth = (editorDiv) ? editorDiv.clientWidth : 0;
 		const charPerLine = (controlWidth > 0) ? controlWidth / pxPerChar : defaultCharPerLine;
 		const height = (this.props.control.charLimit)
 			? Math.min((this.props.control.charLimit / charPerLine) * pxPerLine, maxLineHeight) : minLineHeight;
-		codeMirrorInstance.setSize(null, Math.max(Math.floor(height), minLineHeight));
+		editor.setSize(null, Math.max(Math.floor(height), minLineHeight));
 	}
 
 	// reset to the original autocomplete handler
@@ -105,7 +106,13 @@ export default class ExpressionControl extends EditorControl {
 		return results;
 	}
 
-	handleChange(value) {
+	getControlId() {
+		const row = (typeof this.props.propertyId.row === "undefined") ? "" : "_" + this.props.propertyId.row;
+		const col = (typeof this.props.propertyId.col === "undefined") ? "" : "_" + this.props.propertyId.col;
+		return "ExpressionEditor-" + this.props.propertyId.name + row + col;
+	}
+
+	handleChange(editor, data, value) {
 		this.props.controller.updatePropertyValue(this.props.propertyId, value);
 	}
 
@@ -137,16 +144,18 @@ export default class ExpressionControl extends EditorControl {
 			readOnly: (stateDisabled.disabled) ? "nocursor" : false,
 			extraKeys: { "Ctrl-Space": "autocomplete" }
 		};
+		const controlId = this.getControlId();
 
 		return (
 			<div>
 				<div className="editor_control_area" style={stateStyle}>
 					<div id={controlIconContainerClass}>
-						<div id="ExpressionEditor" >
+						<div id={controlId} className="expression_editor_control" >
 							<CodeMirror
 								ref= { (ref) => (this.codeMirror = ref)}
 								options={mirrorOptions}
 								onChange={this.handleChange}
+								editorDidMount={this.editorDidMount}
 								value={controlValue}
 							/>
 						</div>
