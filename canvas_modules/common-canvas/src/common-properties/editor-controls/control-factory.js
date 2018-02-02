@@ -132,10 +132,12 @@ export default class ControlFactory {
 				label = (
 					<div key={"label-" + control.name} className={"default-label-container"}>
 						<div className="properties-tooltips-container" data-tip={tooltip} data-for={tooltipId}>
-							<label className="control-label" style={stateStyle} >{control.label.text}</label>
-							{requiredIndicator}
-							{numberGenerator}
-							{description}
+							<div className = "control-label-container">
+								<label className="control-label" style={stateStyle} >{control.label.text}</label>
+								{requiredIndicator}
+								{numberGenerator}
+								{description}
+							</div>
 						</div>
 						<ReactTooltip
 							id={tooltipId}

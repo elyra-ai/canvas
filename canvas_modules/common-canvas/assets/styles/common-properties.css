@@ -76,8 +76,12 @@
 }
 
 .default-label-container .control-label {
-  padding-top: 7px;
-  margin-bottom: 0px;
+  text-align: left;
+	display: inline;
+}
+
+.control-label-container{
+	padding-top: 7px;
 }
 
 /* Override for block controls */

@@ -8,6 +8,7 @@
     "number_null": null,
     "number_placeholder": null,
     "number_random": 12345,
+    "number_longControlName": 12,
     "number_error": -1,
     "number_warning": 0.1,
     "hide": true,
@@ -50,6 +51,11 @@
     },
     {
       "id": "number_random",
+      "type": "integer",
+      "required": true
+    },
+    {
+      "id": "number_longControlName",
       "type": "integer",
       "required": true
     },
@@ -175,6 +181,15 @@
         }
       },
       {
+        "parameter_ref": "number_longControlName",
+        "label": {
+          "default": "Number Field control with really long control labels"
+        },
+        "description": {
+          "default": "numberfield with long control labels"
+        }
+      },
+      {
         "parameter_ref": "number_error",
         "label": {
           "default": "Error"
@@ -261,7 +276,8 @@
           "number_undefined",
           "number_null",
           "number_placeholder",
-          "number_random"
+          "number_random",
+          "number_longControlName"
         ]
       },
       {
