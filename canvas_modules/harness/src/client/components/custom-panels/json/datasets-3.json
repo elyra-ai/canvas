@@ -1,0 +1,297 @@
+[
+	{
+		"name": "Main[Drug1n:Filter]",
+	  "json_schema": "http://www.ibm.com/ibm/wdp/flow-v1.0/datarecord-metadata-v1-schema.json",
+	  "fields": [
+	    {
+	      "name": "Age",
+	      "type": "integer",
+	      "metadata": {
+	        "description": "",
+	        "measure": "range",
+	        "modeling_role": "input"
+	      }
+	    },
+	    {
+	      "name": "Sex",
+	      "type": "string",
+	      "metadata": {
+	        "description": "",
+	        "measure": "discrete",
+	        "modeling_role": "input"
+	      }
+	    },
+	    {
+	      "name": "BP",
+	      "type": "string",
+	      "metadata": {
+	        "description": "",
+	        "measure": "discrete",
+	        "modeling_role": "input"
+	      }
+	    },
+	    {
+	      "name": "Cholesterol",
+	      "type": "string",
+	      "metadata": {
+	        "description": "",
+	        "measure": "discrete",
+	        "modeling_role": "input"
+	      }
+	    },
+	    {
+	      "name": "Na",
+	      "type": "double",
+	      "metadata": {
+	        "description": "",
+	        "measure": "range",
+	        "modeling_role": "input"
+	      }
+	    },
+	    {
+	      "name": "K",
+	      "type": "double",
+	      "metadata": {
+	        "description": "",
+	        "measure": "range",
+	        "modeling_role": "input"
+	      }
+	    },
+	    {
+	      "name": "Drug",
+	      "type": "string",
+	      "metadata": {
+	        "description": "",
+	        "measure": "discrete",
+	        "modeling_role": "input"
+	      }
+	    },
+	    {
+	      "name": "Cp",
+	      "type": "double",
+	      "metadata": {
+	        "description": "",
+	        "measure": "range",
+	        "modeling_role": "input"
+	      }
+	    },
+	    {
+	      "name": "Returns",
+	      "type": "integer",
+	      "metadata": {
+	        "description": "",
+	        "measure": "range",
+	        "modeling_role": "input"
+	      }
+	    },
+	    {
+	      "name": "Tag",
+	      "type": "string",
+	      "metadata": {
+	        "description": "",
+	        "measure": "discrete",
+	        "modeling_role": "input"
+	      }
+	    }
+	  ]
+	},
+	{
+		"name": "2[Drug1n:Select]",
+	  "fields": [
+	    {
+	      "name": "Sex",
+	      "type": "string",
+	      "metadata": {
+	        "description": "",
+	        "measure": "discrete",
+	        "modeling_role": "input"
+	      }
+	    },
+	    {
+	      "name": "BP",
+	      "type": "date",
+	      "metadata": {
+	        "description": "",
+	        "measure": "range",
+	        "modeling_role": "input"
+	      }
+	    },
+			{
+				"name": "Age",
+				"type": "integer",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"modeling_role": "input"
+				}
+			},
+			{
+				"name": "SecondaryField",
+				"type": "timestamp",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"modeling_role": "input"
+				}
+			},
+	    {
+	      "name": "Na",
+	      "type": "integer",
+	      "metadata": {
+	        "description": "",
+	        "measure": "range",
+	        "modeling_role": "input"
+	      }
+	    },
+	    {
+	      "name": "K",
+	      "type": "double",
+	      "metadata": {
+	        "description": "",
+	        "measure": "range",
+	        "modeling_role": "input"
+	      }
+	    },
+	    {
+	      "name": "Drug",
+	      "type": "string",
+	      "metadata": {
+	        "description": "",
+	        "measure": "discrete",
+	        "modeling_role": "input"
+	      }
+	    },
+	    {
+	      "name": "Cp",
+	      "type": "integer",
+	      "metadata": {
+	        "description": "",
+	        "measure": "range",
+	        "modeling_role": "input"
+	      }
+	    },
+	    {
+	      "name": "Tag",
+	      "type": "string",
+	      "metadata": {
+	        "description": "",
+	        "measure": "discrete",
+	        "modeling_role": "input"
+	      }
+	    },
+			{
+	      "name": "TertiaryField",
+	      "type": "time",
+	      "metadata": {
+	        "description": "",
+	        "measure": "range",
+	        "modeling_role": "input"
+	      }
+	    }
+	  ]
+	},
+	{
+		"name": "3[Drug1n:Merge]",
+		"fields": [
+			{
+				"name": "BP",
+				"type": "date",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"modeling_role": "input"
+				}
+			},
+			{
+				"name": "Age",
+				"type": "integer",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"modeling_role": "input"
+				}
+			},
+			{
+				"name": "Cholesterol",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "discrete",
+					"modeling_role": "input"
+				}
+			},
+			{
+				"name": "SecondaryField",
+				"type": "timestamp",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"modeling_role": "input"
+				}
+			},
+			{
+				"name": "Sex",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "discrete",
+					"modeling_role": "input"
+				}
+			},
+			{
+				"name": "Na",
+				"type": "integer",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"modeling_role": "input"
+				}
+			},
+			{
+				"name": "K",
+				"type": "double",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"modeling_role": "input"
+				}
+			},
+			{
+				"name": "Drug",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "discrete",
+					"modeling_role": "input"
+				}
+			},
+			{
+				"name": "Cp",
+				"type": "integer",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"modeling_role": "input"
+				}
+			},
+			{
+				"name": "Tag",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "discrete",
+					"modeling_role": "input"
+				}
+			},
+			{
+				"name": "QuartenaryField",
+				"type": "timestamp",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"modeling_role": "input"
+				}
+			}
+		]
+	}
+]

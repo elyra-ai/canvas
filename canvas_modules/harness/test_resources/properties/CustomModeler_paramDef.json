@@ -1,0 +1,362 @@
+
+{
+  "titleDefinition": {
+    "title": "Modeler Panels"
+  },
+  "current_parameters": {
+    "actual_value": "",
+    "predicted_value": "",
+    "cost": 1.1,
+    "custom_table_info": [["Cat", "Squirrel", 1.25]],
+    "include_from": "main",
+    "tag_records": false,
+    "tag_field_name": "Input"
+  },
+  "complex_types": [
+    {
+      "id": "table_info",
+      "parameters": [
+        {
+          "id": "actual",
+          "type": "string"
+        },
+        {
+          "id": "predicted",
+          "type": "string"
+        },
+        {
+          "id": "cost",
+          "type": "double",
+          "default": 1.0
+        }
+      ]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "actual_value",
+      "enum": [
+        "Cat",
+        "Dog",
+        "Lion",
+        "Squirrel"
+      ]
+    },
+    {
+      "id": "predicted_value",
+      "enum": [
+        "Cat",
+        "Dog",
+        "Lion",
+        "Squirrel",
+        "Hippo"
+      ]
+    },
+    {
+      "id": "cost_value",
+      "type": "double",
+      "default": 1.0
+    },
+    {
+      "id": "custom_table_info",
+      "type": "array[table_info]"
+    },
+    {
+      "id": "include_from",
+      "enum": ["main", "all"],
+      "default": "main"
+    },
+    {
+      "id": "tag_records",
+      "type": "boolean",
+      "default": false
+    },
+    {
+      "id": "tag_field_name",
+      "type": "string",
+      "default": "Input"
+    }
+  ],
+  "uihints": {
+    "id": "ibm.Custom",
+    "icon": "images/custom.svg",
+    "label": {
+      "default": "Custom Panels"
+    },
+    "description": {
+      "default": "Parameter def for custom panels"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "actual_value",
+        "label": {
+          "default": "Actual Value"
+        },
+        "description": {
+          "default": "Select an actual value"
+        },
+        "place_holder_text": {
+          "default": "Select..."
+        },
+        "control": "oneofselect",
+        "text_before": {
+          "default": "Add Misclassification Costs"
+        }
+      },
+      {
+        "parameter_ref": "predicted_value",
+        "label": {
+          "default": "Predicted Value"
+        },
+        "description": {
+          "default": "Select a predicted value"
+        },
+        "place_holder_text": {
+          "default": "Select..."
+        }
+      },
+      {
+        "parameter_ref": "cost_value",
+        "label": {
+          "default": "Cost"
+        },
+        "description": {
+          "default": "Enter a cost value"
+        },
+        "default": 1.0
+      },
+      {
+        "parameter_ref": "custom_table_info",
+        "label": {
+          "default": "Misclassification Costs"
+        },
+        "description": {
+          "default": "Add or remove costs"
+        }
+      },
+      {
+        "parameter_ref": "include_from",
+        "label": {
+          "default": "Include fields from"
+        },
+        "description": {
+          "default": "Include fields from the main or all datasets"
+        },
+        "orientation": "vertical"
+      },
+      {
+        "parameter_ref": "tag_records",
+        "label": {
+          "default": "Tag records by including source dataset in field"
+        },
+        "description": {
+          "default": "Add a tag column containing source dataset names"
+        }
+      },
+      {
+        "parameter_ref": "tag_field_name",
+        "label": {
+          "default": " "
+        },
+        "description": {
+          "default": "Enter a field name"
+        },
+        "label_visible": false
+      }
+    ],
+    "complex_type_info": [
+      {
+        "complex_type_ref": "map_info",
+        "parameters": [
+          {
+            "parameter_ref": "lat",
+            "label": {
+              "default": "Latitude"
+            }
+          },
+          {
+            "parameter_ref": "lng",
+            "label": {
+              "default": "Longitude"
+            }
+          },
+          {
+            "parameter_ref": "zoom",
+            "label": {
+              "default": "Zoom"
+            }
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "table_info",
+        "add_remove_rows": false,
+        "parameters": [
+          {
+            "parameter_ref": "actual",
+            "label": {
+              "default": "ACTUAL"
+            },
+            "control": "readonly",
+            "width": 20
+          },
+          {
+            "parameter_ref": "predicted",
+            "label": {
+              "default": "PREDICTED"
+            },
+            "control": "readonly",
+            "width": 20
+          },
+          {
+            "parameter_ref": "cost",
+            "label": {
+              "default": "COST"
+            },
+            "sortable": true,
+            "control": "readonly",
+            "width": 10
+          }
+        ]
+      }
+    ],
+    "group_info": [
+      {
+        "id": "costs-panel",
+        "label": {
+          "default": "Configure Costs"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "droplist-panel",
+            "type": "controls",
+            "parameter_refs": [
+              "actual_value",
+              "predicted_value",
+              "cost_value"
+            ]
+          },
+          {
+            "id": "custom-button-panel",
+            "type": "customPanel",
+            "parameter_refs": [],
+            "data": {
+              "parameter_ref": "custom_table_info"
+            }
+          },
+          {
+            "id": "table-panel",
+            "type": "controls",
+            "parameter_refs": [
+              "custom_table_info"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "append-panel",
+        "label": {
+          "default": "Append"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "datasets-summary-panel",
+            "label": {
+              "default": "Configure Fields"
+            },
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "custom-table-panel",
+                "type": "customPanel",
+                "parameter_refs": []
+              },
+              {
+                "id": "include-fields-panel",
+                "type": "controls",
+                "parameter_refs": [
+                  "include_from",
+                  "tag_records"
+                ]
+              },
+              {
+                "id": "indent-panel",
+                "type": "panels",
+                "group_info": [
+                  {
+                    "id": "tag-name-panel",
+                    "type": "controls",
+                    "parameter_refs": [
+                      "tag_field_name"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "conditions": [
+    {
+      "enabled": {
+        "parameter_refs": [
+          "tag_field_name"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "tag_records",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "tag_field_name",
+          "message": {
+            "default": "Enter a tag field name"
+          }
+        },
+        "evaluate": {
+          "or": [
+            {
+              "and": [
+                {
+                  "condition": {
+                    "parameter_ref": "tag_records",
+                    "op": "equals",
+                    "value": true
+                  }
+                },
+                {
+                  "condition": {
+                    "parameter_ref": "tag_field_name",
+                    "op": "isNotEmpty"
+                  }
+                }
+              ]
+            },
+            {
+              "condition": {
+                "parameter_ref": "tag_records",
+                "op": "equals",
+                "value": false
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "resources": {
+    "include_from.main.label": "Main dataset only",
+    "include_from.all.label": "All datasets"
+  }
+}

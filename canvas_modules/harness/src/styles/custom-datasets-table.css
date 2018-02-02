@@ -1,0 +1,123 @@
+/*******************************************************************************
+ * Licensed Materials - Property of IBM
+ * (c) Copyright IBM Corporation 2018. All Rights Reserved.
+ *
+ * Note to U.S. Government Users Restricted Rights:
+ * Use, duplication or disclosure restricted by GSA ADP Schedule
+ * Contract with IBM Corp.
+ *******************************************************************************/
+
+.datasets-columns-type-icon {
+  width: 15px;
+  height: 15px;
+  float: left;
+  margin-right: 5px;
+  fill: #A91560;
+}
+
+#datasets-table-container>table>tbody>.datasets-columns-rows>td {
+  padding: 5px 0 5px 0;
+}
+
+tr.datasets-columns-rows {
+  border-bottom: 1px solid #d8d8d8;
+}
+
+#datasets-table-container>table>tbody>.datasets-columns-rows>td[label=checkbox] {
+  padding-left: 15px;
+}
+
+#datasets-table-container>table>tbody>.datasets-columns-rows>td {
+  padding: 5px 0 5px 0;
+}
+
+.datasets-table-container-header-wrapper {
+  position: absolute;
+  height: 32px;
+  overflow: hidden;
+  width: 100%;
+  z-index: 1;
+  display: inline-block;
+}
+
+.datasets-table-header-container {
+  padding: 0;
+  position: absolute;
+  height: 32px;
+  z-index: 100;
+}
+
+#datasets-table-container>table>tbody>tr>td {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -ms-word-break: break-all;
+  word-break: break-word;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+#datasets-table-container {
+  height: 100%
+}
+
+#datasets-table-container>table>thead>tr>th {
+  padding: 5px;
+}
+
+#datasets-table-container-wrapper {
+  height: 230px;
+	width: 100%;
+	position: relative;
+	overflow: hidden;
+}
+
+.datasets-table-container-absolute {
+  position: relative;
+  height: fit-content;
+  border-bottom: none;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-right: 1px solid #d8d8d8;
+  border-left: 1px solid #d8d8d8;
+  border-bottom: 1px solid #d8d8d8;
+  background-color: #FFFFFF;
+}
+
+tr.datasets-table-row {
+  border-bottom: 1px solid #d8d8d8;
+}
+
+.datasets-table-selected-row {
+  background-color: #e0e0e0 !important;
+}
+
+.left-padding-15px {
+  padding-left: 15px;
+}
+
+.left-right-padding-8 {
+  padding: 0 8px 0 8px;
+}
+
+.datasets-header-border {
+  background-color: #f9f9fb;
+  border: 1px solid #d8d8d8;
+  border-bottom: 1px solid #d8d8d8;
+}
+
+.datasets-table {
+  margin-bottom: 0px;
+}
+
+.datasets-table>tbody>tr:nth-child(1)>td {
+  border-top: none;
+}
+
+.datasets-table-cell.disabled {
+  color: #D8D8D8;
+}

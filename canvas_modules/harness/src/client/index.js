@@ -18,6 +18,7 @@ import "common-canvas-styles";
 import "../styles/properties.css";
 import "../styles/App.css";
 import "../styles/index.css";
+import "../styles/custom-datasets-table.css";
 import { IntlProvider } from "react-intl";
 import { HashRouter, Route } from "react-router-dom";
 

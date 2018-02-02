@@ -2400,6 +2400,8 @@
     "numberfieldCheckpointInterval.desc": "Set checkpoint interval (>= 1) or disable checkpoint (-1). Ex) 10 means that the cache will get checkpointed every 10 iterations",
     "numberfieldImpurity.label": "Impurity",
     "numberfieldImpurity.desc": "Criterion used for information gain calculation (case-insensitive). Supported: \"entropy\" and \"gini\"",
+    "numberfieldImpurity.gini.label": "gini",
+    "numberfieldImpurity.entropy.label": "entropy",
     "numberfieldMaxBins.label": "Maximum number of bins",
     "numberfieldMaxBins.desc": "Maximum number of bins used for discretizing continuous features and for choosing how to split on features at each node. More bins give higher granularity. Must be >= 2 and >= number of categories in any categorical feature",
     "numberfieldMaxDepth.label": "Maximum depth of the tree",

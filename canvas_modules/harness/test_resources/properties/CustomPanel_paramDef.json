@@ -13,11 +13,7 @@
     ],
     "custom_toggle": true,
     "custom_toggle2": true,
-    "text_field": "",
-    "actual_value": "",
-    "predicted_value": "",
-    "cost": 1.1,
-    "custom_table_info": [["Cat", "Squirrel", 1.25]]
+    "text_field": ""
   },
   "complex_types": [
     {
@@ -34,24 +30,6 @@
         {
           "id": "zoom",
           "type": "integer"
-        }
-      ]
-    },
-    {
-      "id": "table_info",
-      "parameters": [
-        {
-          "id": "actual",
-          "type": "string"
-        },
-        {
-          "id": "predicted",
-          "type": "string"
-        },
-        {
-          "id": "cost",
-          "type": "double",
-          "default": 1.0
         }
       ]
     }
@@ -89,34 +67,6 @@
     {
       "id": "text_field",
       "type": "string"
-    },
-    {
-      "id": "actual_value",
-      "enum": [
-        "Cat",
-        "Dog",
-        "Lion",
-        "Squirrel"
-      ]
-    },
-    {
-      "id": "predicted_value",
-      "enum": [
-        "Cat",
-        "Dog",
-        "Lion",
-        "Squirrel",
-        "Hippo"
-      ]
-    },
-    {
-      "id": "cost_value",
-      "type": "double",
-      "default": 1.0
-    },
-    {
-      "id": "custom_table_info",
-      "type": "array[table_info]"
     }
   ],
   "uihints": {
@@ -164,53 +114,6 @@
         "description": {
           "default": "Latitude, longitude, and zoom setting"
         }
-      },
-      {
-        "parameter_ref": "actual_value",
-        "label": {
-          "default": "Actual Value"
-        },
-        "description": {
-          "default": "Select an actual value"
-        },
-        "place_holder_text": {
-          "default": "Select..."
-        },
-        "control": "oneofselect",
-        "text_before": {
-          "default": "Add Misclassification Costs"
-        }
-      },
-      {
-        "parameter_ref": "predicted_value",
-        "label": {
-          "default": "Predicted Value"
-        },
-        "description": {
-          "default": "Select a predicted value"
-        },
-        "place_holder_text": {
-          "default": "Select..."
-        }
-      },
-      {
-        "parameter_ref": "cost_value",
-        "label": {
-          "default": "Cost"
-        },
-        "description": {
-          "default": "Enter a cost value"
-        },
-        "default": 1.0
-      },
-      {
-        "parameter_ref": "custom_table_info",
-        "label": {
-          "default": "Misclassification Costs"
-        },
-        "description": {
-          "default": "Add or remove costs"
-        }
       }
     ],
     "complex_type_info": [
@@ -234,37 +137,6 @@
             "label": {
               "default": "Zoom"
             }
-          }
-        ]
-      },
-      {
-        "complex_type_ref": "table_info",
-        "add_remove_rows": false,
-        "parameters": [
-          {
-            "parameter_ref": "actual",
-            "label": {
-              "default": "ACTUAL"
-            },
-            "control": "readonly",
-            "width": 20
-          },
-          {
-            "parameter_ref": "predicted",
-            "label": {
-              "default": "PREDICTED"
-            },
-            "control": "readonly",
-            "width": 20
-          },
-          {
-            "parameter_ref": "cost",
-            "label": {
-              "default": "COST"
-            },
-            "sortable": true,
-            "control": "readonly",
-            "width": 10
           }
         ]
       }
@@ -333,39 +205,6 @@
                   "parameter_ref": "map_zoom"
                 }
               }
-            ]
-          }
-        ]
-      },
-      {
-        "id": "costs-panel",
-        "label": {
-          "default": "Configure Costs"
-        },
-        "type": "panels",
-        "group_info": [
-          {
-            "id": "droplist-panel",
-            "type": "controls",
-            "parameter_refs": [
-              "actual_value",
-              "predicted_value",
-              "cost_value"
-            ]
-          },
-          {
-            "id": "custom-button-panel",
-            "type": "customPanel",
-            "parameter_refs": [],
-            "data": {
-              "parameter_ref": "custom_table_info"
-            }
-          },
-          {
-            "id": "table-panel",
-            "type": "controls",
-            "parameter_refs": [
-              "custom_table_info"
             ]
           }
         ]
@@ -467,5 +306,7 @@
         }
       }
     }
-  ]
+  ],
+  "resources": {
+  }
 }

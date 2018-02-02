@@ -29,6 +29,7 @@ import CustomSliderPanel from "./components/custom-panels/CustomSliderPanel";
 import CustomTogglePanel from "./components/custom-panels/CustomTogglePanel";
 import CustomMapPanel from "./components/custom-panels/CustomMapPanel";
 import CustomButtonPanel from "./components/custom-panels/CustomButtonPanel";
+import CustomDatasetsPanel from "./components/custom-panels/CustomDatasetsPanel";
 
 import BlankCanvasImage from "../../assets/images/blank_canvas.png";
 
@@ -905,7 +906,7 @@ class App extends React.Component {
 				forceApplyProperties={this.state.forceApplyProperties}
 				propertiesInfo={this.state.propertiesInfo}
 				containerType={this.state.propertiesContainerType === FLYOUT ? CUSTOM : this.state.propertiesContainerType}
-				customPanels={[CustomSliderPanel, CustomTogglePanel, CustomMapPanel, CustomButtonPanel]}
+				customPanels={[CustomSliderPanel, CustomTogglePanel, CustomMapPanel, CustomButtonPanel, CustomDatasetsPanel]}
 				rightFlyout={this.state.propertiesContainerType === FLYOUT}
 				controllerHandler={this.propertiesControllerHandler}
 				propertyListener={this.propertyListener}
