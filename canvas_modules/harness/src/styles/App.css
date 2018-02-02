@@ -456,11 +456,12 @@
 
 .custom-slider {
 	display: flex;
+	overflow-x: hidden;
 }
 
 .custom-slider .slider {
 	display: block;
-	width: 100%;
+	width: 95%;
 }
 
 .custom-slider .icon {

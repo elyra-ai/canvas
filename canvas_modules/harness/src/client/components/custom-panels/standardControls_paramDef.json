@@ -1,12 +1,61 @@
 {
   "parameters": [
     {
+      "id": "color",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "required": true
+    },
+    {
       "id": "text_field",
       "type": "string"
+    },
+    {
+      "id": "structuretable",
+      "type": "array[structuretable]",
+      "role": "column",
+      "required": true
+    }
+  ],
+  "complex_types": [
+    {
+      "id": "structuretable",
+      "key_definition": {
+        "id": "field",
+        "type": "string",
+        "role": "column",
+        "default": ""
+      },
+      "parameters": [
+        {
+          "id": "order",
+          "enum": [
+            "Ascending",
+            "Descending"
+          ],
+          "default": "Ascending"
+        }
+      ]
     }
   ],
   "uihints": {
     "parameter_info": [
+      {
+        "parameter_ref": "color",
+        "label": {
+          "default": "color"
+        },
+        "description": {
+          "default": "color options change when slider is over 60"
+        },
+        "control": "oneofselect"
+      },
       {
         "parameter_ref": "text_field",
         "label": {
@@ -18,7 +67,54 @@
         "place_holder_text": {
           "default": "Enter 'hide' to hide toggles"
         }
+      },
+      {
+        "parameter_ref": "structuretable",
+        "required": true,
+        "label": {
+          "default": "Table"
+        },
+        "description": {
+          "default": "This is a standard table in a customPanel.",
+          "placement": "on_panel"
+        }
+      }
+    ],
+    "complex_type_info": [
+      {
+        "complex_type_ref": "structuretable",
+        "moveable_rows": true,
+        "key_definition": {
+          "parameter_ref": "field",
+          "width": 28,
+          "label": {
+            "resource_key": "structuretable.field.label"
+          },
+          "summary": true
+        },
+        "parameters": [
+          {
+            "parameter_ref": "order",
+            "width": 16,
+            "label": {
+              "resource_key": "structuretable.order.label"
+            },
+            "description": {
+              "resource_key": "structuretable.order.desc"
+            },
+            "control": "toggletext",
+            "value_icons": [
+              "/images/up-triangle.svg",
+              "/images/down-triangle.svg"
+            ]
+          }
+        ]
       }
     ]
+  },
+  "resources": {
+    "structuretable.field.label": "Field",
+    "structuretable.order.label": "Order",
+    "structuretable.order.desc": "Update order"
   }
 }

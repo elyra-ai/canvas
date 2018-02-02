@@ -10,6 +10,8 @@
 /* eslint-disable no-empty-function */
 import React from "react";
 import CustomSliderCtrl from "./CustomSliderCtrl";
+import paramDef from "./standardControls_paramDef.json";
+
 
 class CustomSliderPanel {
 	static id() {
@@ -22,12 +24,29 @@ class CustomSliderPanel {
 		this.controller.setControlInSummary(this.propertyId, "Slider", true);
 	}
 	renderPanel() {
+		let table = (<div />);
+		if (this.parameters.length >= 2) {
+			table = this.controller.createControl({ name: this.parameters[1] }, paramDef, this.parameters[1]);
+		}
+		let color = (<div />);
+		if (this.parameters.length >= 3) {
+			if (this.controller.getPropertyValue(this.propertyId) >= 60) {
+				paramDef.parameters[0].enum = ["red", "orange", "yellow"];
+			} else {
+				paramDef.parameters[0].enum = ["red", "orange", "yellow", "green", "blue", "purple"];
+			}
+			color = this.controller.createControl({ name: this.parameters[2] }, paramDef, this.parameters[2]);
+		}
 		return (
-			<CustomSliderCtrl
-				key={this.propertyId.name}
-				propertyId={this.propertyId}
-				controller={this.controller}
-			/>
+			<div>
+				<CustomSliderCtrl
+					key={"slider" + this.propertyId.name}
+					propertyId={this.propertyId}
+					controller={this.controller}
+				/>
+				{color}
+				{table}
+			</div>
 		);
 	}
 }

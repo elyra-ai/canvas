@@ -356,10 +356,8 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 					subControls.unshift(_makeSubControl(structureDef.keyDefinition, l10nProvider));
 				}
 				if (parameter.isList() || parameter.isMapValue()) {
-					if (group.groupType() === GroupType.COLUMN_ALLOCATION) {
-						controlType = ControlType.ALLOCATEDSTRUCTURES;
-					} else if (group.groupType() === GroupType.COLUMN_SELECTION ||
-							parameter.control === ControlType.STRUCTURETABLE) {
+					if (group && group.groupType() === GroupType.COLUMN_SELECTION ||
+							parameter.control === ControlType.STRUCTURETABLE || parameter.getRole() === ParamRole.COLUMN) {
 						controlType = ControlType.STRUCTURETABLE;
 						moveableRows = structureDef.moveableRows;
 						rowSelection = structureDef.rowSelection;

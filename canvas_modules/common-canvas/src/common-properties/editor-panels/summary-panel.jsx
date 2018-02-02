@@ -66,15 +66,12 @@ class SummaryPanel extends EditorControl {
 		const summaryTables = [];
 		const summaryControls = this.props.controller.getSummaryPanelControls(this.props.panelId);
 		// no controls in summary panel
-		if (!summaryControls) {
+		if (!Array.isArray(summaryControls)) {
 			return summaryTables;
 		}
-		for (const summaryControlKey in summaryControls) {
-			if (!summaryControls.hasOwnProperty(summaryControlKey)) {
-				continue;
-			}
-			const propertyId = { name: summaryControlKey };
-			const summaryControl = summaryControls[summaryControlKey];
+		for (const controlName of summaryControls) {
+			const propertyId = { name: controlName };
+			const summaryControl = this.props.controller.getControl(propertyId);
 			// get filtered controlValue (filters out hidden and disabled values)
 			let controlValue = this.props.controller.getPropertyValue(propertyId, true);
 			// let custom control set their own value to be displayed
@@ -122,8 +119,8 @@ class SummaryPanel extends EditorControl {
 				// if (typeof controlValue === "string" || typeof controlValue === "boolean" || typeof controlValue === "number") {
 				if (this.props.controller.isSummary(propertyId) || showCustom) {
 					summaryValues.push(
-						<tr key={"control-summary-table-rows-" + summaryControlKey} className={"control-summary-list-rows"}>
-							<td key={"control-summary-table-row-multi-data-" + summaryControlKey} className={"control-summary-table-row-multi-data"}>
+						<tr key={"control-summary-table-rows-" + controlName} className={"control-summary-list-rows"}>
+							<td key={"control-summary-table-row-multi-data-" + controlName} className={"control-summary-table-row-multi-data"}>
 								{ controlValue }
 							</td>
 						</tr>
@@ -134,8 +131,8 @@ class SummaryPanel extends EditorControl {
 				// }
 			}
 			if (summaryValues.length > 0) {
-				let summaryBody = (<table key={"summary-table-" + summaryControlKey} className={"control-summary-table " + disableText}>
-					<tbody key={"summary-body-" + summaryControlKey}>
+				let summaryBody = (<table key={"summary-table-" + controlName} className={"control-summary-table " + disableText}>
+					<tbody key={"summary-body-" + controlName}>
 						{summaryValues}
 					</tbody>
 				</table>);
@@ -146,8 +143,8 @@ class SummaryPanel extends EditorControl {
 					summaryBody = (<div className={"control-summary-table " + disableText}>{largeTableLabel}</div>);
 				}
 				summaryTables.push(
-					<div key={"summary-container-" + summaryControlKey} className={"control-summary-configured-values"}>
-						<span key={"summary-text-" + summaryControlKey} className={"summary-label"}>{summaryControl.summaryLabel}</span>
+					<div key={"summary-container-" + controlName} className={"control-summary-configured-values"}>
+						<span key={"summary-text-" + controlName} className={"summary-label"}>{summaryControl.summaryLabel}</span>
 						{summaryBody}
 					</div>
 				);

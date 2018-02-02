@@ -31,8 +31,7 @@ class CustomTogglePanel {
 			<div key={"toggle-container-" + controlId}>
 				{textField}
 				<CustomToggleCtrl
-					key={controlId}
-					ref={controlId}
+					key={"toggle-" + controlId}
 					propertyId={{ name: controlId }}
 					controller={this.controller}
 				/>

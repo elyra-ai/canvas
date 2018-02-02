@@ -32,8 +32,7 @@ class CustomMapPanel {
 			{ value: mapSummary, label: "Map" });
 		return (
 			<CustomMapCtrl
-				key={controlId}
-				ref={controlId}
+				key={"map-" + controlId}
 				propertyId={propertyId}
 				controller={this.controller}
 				data={this.data}

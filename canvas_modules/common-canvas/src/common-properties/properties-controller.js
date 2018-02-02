@@ -67,6 +67,7 @@ export default class PropertiesController {
 		this.form = form;
 		// set initial property values
 		if (this.form) {
+			this.setControls({});
 			this.setControlStates({}); // clear state
 			this._parseUiConditions();
 			// should be done before running any validations
@@ -124,7 +125,7 @@ export default class PropertiesController {
 			}
 			const control = this.controls[keyName];
 			const propertyId = { name: control.name };
-			var controlValue = this.getPropertyValue(propertyId);
+			let controlValue = this.getPropertyValue(propertyId);
 			if (control.controlType === "structuretable" && control.addRemoveRows === false) {
 				controlValue = this._populateFieldData(controlValue, this.getDatasetMetadata(), control);
 				this.updatePropertyValue(propertyId, controlValue);
@@ -213,7 +214,7 @@ export default class PropertiesController {
 	}
 
 	_indexOfField(fieldName, controlValue) {
-		for (var i = 0; i < controlValue.length; i++) {
+		for (let i = 0; i < controlValue.length; i++) {
 			if (controlValue[i][0] === fieldName) {
 				return i;
 			}
@@ -221,41 +222,9 @@ export default class PropertiesController {
 		return -1;
 	}
 
-	/*
-	* Saves controls in a state that get be used to retrieve them using a propertyId
-	*/
-	_saveControls(controls) {
-		var newControls = {};
-		controls.forEach((control) => {
-
-			if (typeof control.columnIndex === "undefined") {
-				newControls[control.name] = control;
-			} else {
-				newControls[control.parameterName][control.columnIndex] = control;
-			}
-		});
-		this.setControls(newControls);
-	}
-
-	_parseSummaryControls(controls) {
-		var summaryControls = {};
-		controls.forEach((control) => {
-			if (control.summaryPanelId) {
-				if (typeof summaryControls[control.summaryPanelId] === "undefined") {
-					summaryControls[control.summaryPanelId] = {};
-				}
-				if (typeof control.columnIndex === "undefined") {
-					summaryControls[control.summaryPanelId][control.name] = control;
-				} else {
-					summaryControls[control.summaryPanelId][control.parameterName] = control;
-				}
-			}
-		});
-		this.setSummaryPanelControls(summaryControls);
-	}
 	// TODO remove this
 	_parseRequiredParameters(form, controls) {
-		var requiredParameters = [];
+		let requiredParameters = [];
 		requiredParameters = UiConditionsParser.parseRequiredParameters(requiredParameters, form, controls);
 		return requiredParameters;
 	}
@@ -504,6 +473,17 @@ export default class PropertiesController {
 	/*
 	* Controls Methods
 	*/
+
+	// Saves controls in a state that get be used to retrieve them using a propertyId
+	_saveControls(controls) {
+		controls.forEach((control) => {
+			if (typeof control.columnIndex === "undefined") {
+				this.controls[control.name] = control;
+			} else {
+				this.controls[control.parameterName][control.columnIndex] = control;
+			}
+		});
+	}
 	setControls(controls) {
 		this.controls = controls;
 	}
@@ -549,6 +529,20 @@ export default class PropertiesController {
 	/*
 	* Summary Panel controls Methods
 	*/
+	_parseSummaryControls(controls) {
+		const summaryControls = {};
+		controls.forEach((control) => {
+			if (control.summaryPanelId) {
+				if (typeof summaryControls[control.summaryPanelId] === "undefined") {
+					summaryControls[control.summaryPanelId] = [];
+				}
+				if (typeof control.columnIndex === "undefined") {
+					summaryControls[control.summaryPanelId].push(control.name);
+				}
+			}
+		});
+		this.setSummaryPanelControls(summaryControls);
+	}
 	setSummaryPanelControls(summaryPanelControls) {
 		this.summaryPanelControls = summaryPanelControls;
 	}
@@ -583,6 +577,9 @@ export default class PropertiesController {
 	*/
 	createControl(propertyId, paramDef, parameter) {
 		const control = this.controlFactory.createFormControl(paramDef, parameter);
+		const controls = [];
+		UiConditionsParser.parseControl(controls, control);
+		this._saveControls(controls);
 		return this.controlFactory.createControlItem(control, propertyId);
 	}
 	getControlFactory() {

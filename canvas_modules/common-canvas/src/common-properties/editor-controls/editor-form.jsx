@@ -15,6 +15,7 @@ import PropTypes from "prop-types";
 import Tabs from "ap-components-react/dist/components/Tabs";
 import PropertyUtil from "../util/property-utils.js";
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "../constants/constants";
+import logger from "../../../utils/logger";
 
 import SelectorPanel from "./../editor-panels/selector-panel.jsx";
 import SummaryPanel from "./../editor-panels/summary-panel.jsx";
@@ -281,7 +282,7 @@ class EditorForm extends React.Component {
 		} else if (uiItem.itemType === "checkboxSelector") {
 			return this.genPanel(key, uiItem.panel, inPropertyId, indexof);
 		} else if (uiItem.itemType === "customPanel") {
-			return this.generateCustomPanel(uiItem.panel);
+			return this.generateCustomPanel(key, uiItem.panel);
 			// only generate summary panel for right side flyout
 		} else if (uiItem.itemType === "summaryPanel") {
 			return this.genPanel(key, uiItem.panel, inPropertyId, indexof);
@@ -318,11 +319,18 @@ class EditorForm extends React.Component {
 
 	}
 
-	generateCustomPanel(panel) {
+	generateCustomPanel(key, panel) {
 		if (this.props.customPanels) {
 			for (const custPanel of this.props.customPanels) {
 				if (custPanel.id() === panel.id) {
-					return new custPanel(panel.parameters, this.props.controller, panel.data).renderPanel();
+					try {
+						return (<div key={"custom." + key}>
+							{new custPanel(panel.parameters, this.props.controller, panel.data).renderPanel()}
+						</div>);
+					} catch (error) {
+						logger.warn("Error thrown creating custom panel: " + error);
+						return (<div />);
+					}
 				}
 			}
 		}

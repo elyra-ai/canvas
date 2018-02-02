@@ -240,7 +240,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 				</Td>);
 			// save the cell conent in an object
 			cellContent = ControlFactory.createControlItem(columnDef, propertyId, { table: true });
-			this.onPanelContainer[rowIndex] = (<div><br /> {cellContent} </div>);
+			this.onPanelContainer[rowIndex].push(<div key={colIndex}><br /> {cellContent} </div>);
 		} else { // defaults to inline control
 			cellContent = ControlFactory.createControl(columnDef, propertyId, { table: true });
 			cell = (<Td key={colIndex} column={columnDef.name} style={columnStyle}>{cellContent}</Td>);
@@ -531,8 +531,9 @@ export default class ColumnStructureTableEditor extends EditorControl {
 	}
 
 	makeCells(rows, controlValue, columnWidths, stateStyle, stateDisabled) {
-		for (var rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
+		for (let rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
 			const columns = [];
+			this.onPanelContainer[rowIndex] = [];
 			if (this.includeInFilter(rowIndex)) {
 				let visibleIndx = 0;
 				for (var colIndex = 0; colIndex < this.props.control.subControls.length; colIndex++) {

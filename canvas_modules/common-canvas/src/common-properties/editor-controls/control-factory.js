@@ -12,6 +12,7 @@ import React from "react";
 import ReactTooltip from "react-tooltip";
 
 import { Type, ControlType } from "../constants/form-constants";
+import { VALIDATION_MESSAGE, STATES } from "../constants/constants.js";
 import { PropertyDef } from "../form/PropertyDef";
 import { makeControl } from "../form/EditorForm";
 import { L10nProvider } from "../form/L10nProvider";
@@ -76,11 +77,11 @@ export default class ControlFactory {
 		const stateStyle = {};
 		let tooltipShow = true;
 		const controlState = this.controller.getControlState(propertyId);
-		if (controlState === "hidden") {
+		if (controlState === STATES.HIDDEN) {
 			stateStyle.display = "none";
 			tooltipShow = false;
-		} else if (controlState === "disabled") {
-			stateStyle.color = "#D8D8D8";
+		} else if (controlState === STATES.DISABLED) {
+			stateStyle.color = VALIDATION_MESSAGE.DISABLED;
 			stateStyle.pointerEvents = "none";
 			tooltipShow = false;
 		}

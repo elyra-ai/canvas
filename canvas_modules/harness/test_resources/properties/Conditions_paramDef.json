@@ -358,14 +358,12 @@
     {
       "id": "structurelisteditorListInput",
       "type": "array[structurelisteditorListInput]",
-      "role": "column",
       "required": true,
       "default": []
     },
     {
       "id": "structurelisteditorTableInput",
       "type": "array[structurelisteditorTableInput]",
-      "role": "column",
       "default": []
     },
     {

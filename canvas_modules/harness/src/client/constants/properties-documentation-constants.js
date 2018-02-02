@@ -2218,7 +2218,6 @@ _defineConstant("STRUCTURETABLE_ONPANEL_EXPRESSION_PROPS_INFO", {
 			{
 				"id": "expressionCellTable",
 				"type": "array[expressionCellTable]",
-				"role": "column",
 				"default": []
 			}
 		],
@@ -2359,7 +2358,6 @@ _defineConstant("STRUCTURETABLE_ROW_SELECTION_PROPS_INFO", {
 			{
 				"id": "expressionCellTable",
 				"type": "array[expressionCellTable]",
-				"role": "column",
 				"default": []
 			}
 		],
@@ -2496,7 +2494,6 @@ _defineConstant("STRUCTURELISTEDITOR_PROPS_INFO", {
 			{
 				"id": "structurelisteditorList",
 				"type": "array[structurelisteditorTableInput]",
-				"role": "column",
 				"default": []
 			}
 		],
@@ -2576,7 +2573,6 @@ _defineConstant("STRUCTURELISTEDITOR_ADDREMOVEROWS_PROPS_INFO", {
 			{
 				"id": "structurelisteditorList",
 				"type": "array[structurelisteditorTableInput]",
-				"role": "column",
 				"default": []
 			}
 		],

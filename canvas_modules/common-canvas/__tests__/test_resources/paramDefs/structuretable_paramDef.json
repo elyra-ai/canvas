@@ -41,6 +41,7 @@
     {
       "id": "structuretableReadonlyColumnStartValue",
       "type": "array[structuretableReadonlyColumnStartValue]",
+      "role": "column",
       "required": true
     },
     {
@@ -380,7 +381,7 @@
             "group_info": [
               {
                 "id": "structuretableReadonlyColumnStartValue",
-                "type": "columnSelection",
+                "type": "controls",
                 "label": {
                   "default": "Columns"
                 },
@@ -402,7 +403,7 @@
                 "label": {
                   "default": "Tables"
                 },
-                "type": "columnSelection",
+                "type": "controls",
                 "parameter_refs": [
                   "structuretableReadonlyColumnDefaultIndex"
                 ]
@@ -418,7 +419,7 @@
             "group_info": [
               {
                 "id": "structuretableNoButtons_panel",
-                "type": "columnSelection",
+                "type": "controls",
                 "label": {
                   "default": "Columns"
                 },
@@ -446,7 +447,7 @@
             "group_info": [
               {
                 "id": "structuretable_filter_panel",
-                "type": "columnSelection",
+                "type": "controls",
                 "parameter_refs": [
                   "structuretable_filter"
                 ]

@@ -442,9 +442,7 @@ describe("Properties Controller controls", () => {
 			"visible": true,
 			"width": 28,
 			"parameterName": "structuretableSortOrder",
-			"columnIndex": 0,
-			"summaryPanelId": "structuretableSortOrder-summary-panel",
-			"summaryLabel": "Sort by"
+			"columnIndex": 0
 		};
 		expect(isEqual(expectedValue, actualValue)).to.be.true;
 	});

@@ -67,7 +67,6 @@
     {
       "id": "expressionCellTable",
       "type": "array[expressionCellTable]",
-      "role": "column",
       "default": []
     },
     {
@@ -77,12 +76,12 @@
     },
     {
       "id": "structuretableSortOrder",
+      "role": "column",
       "type": "array[structuretableSortOrder]"
     },
     {
       "id": "structurelisteditorTableInput",
       "type": "array[structurelisteditorTableInput]",
-      "role": "column",
       "default": []
     }
   ],
@@ -325,7 +324,7 @@
             "group_info": [
               {
                 "id": "structuretableSortOrder",
-                "type": "columnSelection",
+                "type": "controls",
                 "label": {
                   "default": "Columns"
                 },

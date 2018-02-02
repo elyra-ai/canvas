@@ -92,27 +92,29 @@ function parseControls(controls, formData) {
 	return controls;
 }
 
+function parseControl(controls, control) {
+	if (control.label) {
+		control.summaryLabel = control.label.text;
+	}
+	controls.push(control);
+	if (control.subControls) {
+		for (let idx = 0; idx < control.subControls.length; idx++) {
+			const subControl = control.subControls[idx];
+			subControl.parameterName = control.name;
+			subControl.columnIndex = idx;
+			controls.push(subControl);
+		}
+	}
+}
+
 function parseUiItem(controls, uiItem, panelId) {
 	switch (uiItem.itemType) {
 	case ItemType.CONTROL: {
 		const control = uiItem.control;
 		if (panelId) {
 			control.summaryPanelId = panelId;
-			control.summaryLabel = uiItem.control.label.text;
 		}
-		controls.push(control);
-		if (uiItem.control.subControls) {
-			for (var idx = 0; idx < uiItem.control.subControls.length; idx++) {
-				const subControl = uiItem.control.subControls[idx];
-				subControl.parameterName = uiItem.control.name;
-				subControl.columnIndex = idx;
-				if (panelId) {
-					subControl.summaryPanelId = panelId;
-					subControl.summaryLabel = uiItem.control.label.text;
-				}
-				controls.push(subControl);
-			}
-		}
+		parseControl(controls, control);
 		break;
 	}
 	case ItemType.ADDITIONAL_LINK:
@@ -220,5 +222,6 @@ module.exports = {
 	parseInput: parseInput,
 	parseRequiredParameters: parseRequiredParameters,
 	parseControls: parseControls,
-	parseConditions: parseConditions
+	parseConditions: parseConditions,
+	parseControl: parseControl
 };

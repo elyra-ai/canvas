@@ -53,7 +53,7 @@
         1,
         1.234,
         "Ascending",
-				true
+        true
       ]
     ],
     "inlineEditingTableError2": [
@@ -70,37 +70,31 @@
     {
       "id": "structurelisteditorTableInput",
       "type": "array[structurelisteditorTableInput]",
-      "role": "column",
       "default": []
     },
     {
       "id": "inlineEditingTable",
       "type": "array[inlineEditingTable]",
-      "role": "column",
       "default": []
     },
     {
       "id": "inlineEditingTableNoButtons",
       "type": "array[inlineEditingTableNoButtons]",
-      "role": "column",
       "default": []
     },
     {
       "id": "inlineEditingTableWarning",
       "type": "array[inlineEditingTableWarning]",
-      "role": "column",
       "default": []
     },
     {
       "id": "inlineEditingTableError",
       "type": "array[inlineEditingTableError]",
-      "role": "column",
       "default": []
     },
     {
       "id": "inlineEditingTableError2",
       "type": "array[inlineEditingTableError2]",
-      "role": "column",
       "default": []
     }
   ],
@@ -233,11 +227,11 @@
         },
         {
           "id": "checkbox",
-      "type": "boolean",
-      "enum": [
-        "Single Checkbox Label"
-      ],
-			"default": true
+          "type": "boolean",
+          "enum": [
+            "Single Checkbox Label"
+          ],
+          "default": true
         }
       ]
     },
@@ -890,24 +884,24 @@
         }
       }
     },
-		{
-			"validation": {
-				"fail_message": {
-					"type": "error",
-					"focus_parameter_ref": "inlineEditingTableError[3]",
-					"message": {
-						"default": "checkbox cannot be off"
-					}
-				},
-				"evaluate": {
-					"condition": {
-						"parameter_ref": "inlineEditingTableError[3]",
-						"op": "notEquals",
-						"value": false
-					}
-				}
-			}
-		},
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "inlineEditingTableError[3]",
+          "message": {
+            "default": "checkbox cannot be off"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "inlineEditingTableError[3]",
+            "op": "notEquals",
+            "value": false
+          }
+        }
+      }
+    },
     {
       "validation": {
         "fail_message": {
@@ -1086,7 +1080,7 @@
     "textfield.desc": "",
     "sort_order.label": "Order",
     "sort_order.desc": "Update sort order",
-		"checkbox.label": "checkbox",
+    "checkbox.label": "checkbox",
     "checkbox.desc": ""
   }
 }

@@ -15,10 +15,14 @@ Feature: Sanity_Test_CustomControls
 		Then I click the "TOGGLE" category from flyout
 		Then I click on toggle 0
 		Then I click the "MAP AND SLIDER" category from flyout
-		Then I open the "Configure Map and Slider" summary link in the "MAP AND SLIDER" category
+		Then I open the "Configure Map" summary link in the "MAP AND SLIDER" category
 		Then I verify that a wideflyout dialog has opened
-		Then I click on slider
 		Then I show the map and go to Armonk
+		Then I click on modal OK button
+		Then I open the "Configure Slider" summary link in the "MAP AND SLIDER" category
+		Then I validate the dropdown has 7 options
+		Then I click on slider
+		Then I validate the dropdown has 4 options
 		Then I click on modal OK button
 		Then I pause for 1 seconds
 		Then I verify custom summary panel

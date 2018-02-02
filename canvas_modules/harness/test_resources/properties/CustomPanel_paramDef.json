@@ -4,6 +4,13 @@
   },
   "current_parameters": {
     "custom_slider": 9,
+    "structuretable": [
+      [
+        "BP",
+        "Ascending"
+      ]
+    ],
+    "color": "yellow",
     "map_zoom": 9,
     "map_checkbox": false,
     "custom_map_info": [
@@ -79,18 +86,6 @@
       "default": "Parameter def for custom panels"
     },
     "parameter_info": [
-      {
-        "parameter_ref": "text_field",
-        "label": {
-          "default": "Enter a value"
-        },
-        "description": {
-          "default": "Enter 'hide' to hide toggles"
-        },
-        "place_holder_text": {
-          "default": "Enter 'hide' to hide toggles"
-        }
-      },
       {
         "parameter_ref": "map_zoom",
         "label": {
@@ -174,19 +169,12 @@
         "type": "panels",
         "group_info": [
           {
-            "id": "summary-panel",
+            "id": "map-summary-panel",
             "label": {
-              "default": "Configure Map and Slider"
+              "default": "Configure Map"
             },
             "type": "summaryPanel",
             "group_info": [
-              {
-                "id": "custom-slider-panel",
-                "type": "customPanel",
-                "parameter_refs": [
-                  "custom_slider"
-                ]
-              },
               {
                 "id": "checkbox-panel",
                 "type": "controls",
@@ -204,6 +192,24 @@
                 "data": {
                   "parameter_ref": "map_zoom"
                 }
+              }
+            ]
+          },
+          {
+            "id": "slider-summary-panel",
+            "label": {
+              "default": "Configure Slider"
+            },
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "custom-slider-panel",
+                "type": "customPanel",
+                "parameter_refs": [
+                  "custom_slider",
+                  "structuretable",
+                  "color"
+                ]
               }
             ]
           }
@@ -307,6 +313,45 @@
       }
     }
   ],
-  "resources": {
-  }
+  "dataset_metadata": {
+    "fields": [
+      {
+        "name": "age",
+        "type": "integer",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "BP",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Na",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "drug",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      }
+    ]
+  },
+  "resources": {}
 }
