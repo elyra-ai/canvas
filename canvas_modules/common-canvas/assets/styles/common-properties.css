@@ -1147,7 +1147,7 @@ input[type=number][disabled].number--light+.number__spinnerdiv .numpinput__spinn
 	margin-right: 10px;
 }
 .static-text-container {
-	display: flex;
+	display: inline-flex;
 }
 .static-text {
 	cursor: text;
