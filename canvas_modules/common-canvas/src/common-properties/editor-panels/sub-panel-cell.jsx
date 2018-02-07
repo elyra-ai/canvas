@@ -88,7 +88,7 @@ class SubPanelCell extends React.Component {
 
 SubPanelCell.propTypes = {
 	label: PropTypes.string.isRequired,
-	title: PropTypes.string.isRequired,
+	title: PropTypes.string,
 	panel: PropTypes.object.isRequired,
 	disabled: PropTypes.bool,
 	controller: PropTypes.object,

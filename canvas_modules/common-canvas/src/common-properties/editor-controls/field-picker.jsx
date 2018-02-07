@@ -353,8 +353,8 @@ class FieldPicker extends EditorControl {
 				for (let i = 0; i < this.props.control.subControls.length; i++) {
 					if (i === this.dataColumnIndex) { // role===ParamRole.COLUMN
 						selectedField.push(selectedFieldName);
-					} else if (typeof this.props.control.defaultRow !== "undefined" && this.props.control.defaultRow.length > i) {
-						let defaultValue = this.props.control.defaultRow[i];
+					} else if (typeof this.props.control.defaultRow !== "undefined") {
+						let defaultValue = this._getDefaultRowValue(i);
 						if ((typeof defaultValue === "undefined" || defaultValue === null) &&
 									this.props.control.subControls[i].role === ParamRole.NEW_COLUMN) {
 							// Set the default name to the column name for role===ParamRole.NEW_COLUMN
@@ -370,6 +370,16 @@ class FieldPicker extends EditorControl {
 			}
 		}
 		return selectedField;
+	}
+
+	_getDefaultRowValue(index) {
+		if (this.props.control.subControls.length === this.props.control.defaultRow.length || index < this.dataColumnIndex) {
+			// This will handle most cases
+			return this.props.control.defaultRow[index];
+		}
+		// this will handle the case where the a map is defined and the first field has no value in defaultRow.
+		// this case is for modeler aggregate options form
+		return this.props.control.defaultRow[index - 1];
 	}
 
 	handleReset() {
