@@ -1,0 +1,238 @@
+{
+  "titleDefinition": {
+    "title": "Date Fields"
+  },
+  "current_parameters": {
+    "date_mdy": "2018-11-05T00:00:00Z",
+    "date_ymd": "2018-01-07T00:00:00Z",
+    "date_ymd_non_req": "2018-01-07T00:00:00Z",
+    "date_ymd_null": null,
+    "date_ymd_placeholder": null,
+    "date_ymd_slash_sep": "2018-01-07T00:00:00Z",
+    "date_without_a_ui_hint": "2018-01-07T00:00:00Z",
+    "hide_date_field": true,
+    "hidden_date": "2018-07-18T00:00:00Z",
+    "disable_date_field" : true,
+    "disabled_date": "2018-07-18T00:00:00Z"
+  },
+  "parameters": [
+    {
+      "id": "date_mdy",
+      "type": "date",
+      "required": true
+    },
+    {
+      "id": "date_ymd",
+      "type": "date",
+      "required": true
+    },
+    {
+      "id": "date_ymd_non_req",
+      "type": "date",
+      "required": false
+    },
+    {
+      "id": "date_ymd_null",
+      "type": "date",
+      "required": false
+    },
+    {
+      "id": "date_ymd_placeholder",
+      "type": "date",
+      "required": false
+    },
+    {
+      "id": "date_ymd_slash_sep",
+      "type": "date",
+      "required": false
+    },
+    {
+      "id": "date_without_a_ui_hint",
+      "type": "date",
+      "required": false
+    },
+    {
+      "id": "hide_date_field",
+      "type": "boolean"
+    },
+    {
+      "id": "hidden_date",
+      "type": "date",
+      "required": false
+    },
+    {
+      "id": "disable_date_field",
+      "type": "boolean"
+    },
+    {
+      "id": "disabled_date",
+      "type": "date",
+      "required": false
+    }
+  ],
+  "uihints": {
+    "id": "datefield",
+    "icon": "images/default.svg",
+    "label": {
+      "default": "Date Fields"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "date_mdy",
+        "label": {
+          "default": "Required Date M-D-Y"
+        },
+        "description": {
+          "default": "Required datefield with value set to '2018-5-11' with M-D-Y format"
+        },
+        "date_format": "M-D-Y"
+      },
+      {
+        "parameter_ref": "date_ymd",
+        "label": {
+          "default": "Required Date Y-M-D"
+        },
+        "description": {
+          "default": "Required datefield with value set to '2018-1-7' with Y-M-D format"
+        },
+        "date_format": "YYYY-M-D"
+      },
+      {
+        "parameter_ref": "date_ymd_non_req",
+        "label": {
+          "default": "Date Y-M-D"
+        },
+        "description": {
+          "default": "Optional datefield with value set to '2018-1-7' with Y-M-D format"
+        },
+        "date_format": "YYYY-M-D"
+      },
+      {
+        "parameter_ref": "date_ymd_null",
+        "label": {
+          "default": "Date Y-M-D with null"
+        },
+        "description": {
+          "default": "Optional datefield with null value"
+        },
+        "date_format": "YYYY-M-D"
+      },
+      {
+        "parameter_ref": "date_ymd_placeholder",
+        "label": {
+          "default": "Date Y-M-D with null and placeholder"
+        },
+        "description": {
+          "default": "Optional datefield with null and placeholder text"
+        },
+        "date_format": "YYYY-M-D",
+        "place_holder_text": {
+          "default": "Enter a date: YYYY-MM-DD"
+        }
+      },
+      {
+        "parameter_ref": "date_ymd_slash_sep",
+        "label": {
+          "default": "Date M/D/Y with slash separators"
+        },
+        "description": {
+          "default": "Optional datefield with slash separators"
+        },
+        "date_format": "M/D/YYYY"
+      },
+      {
+        "parameter_ref": "hide_date_field",
+        "label": {
+          "default": "Reveal hidden date"
+        }
+      },
+      {
+        "parameter_ref": "hidden_date",
+        "label": {
+          "default": "Voila!"
+        },
+        "description": {
+          "default": "Initially hidden date, revealed by clicking checkbox."
+        },
+        "date_format": "M/D/YYYY"
+      },
+      {
+        "parameter_ref": "disable_date_field",
+        "label": {
+          "default": "Enable disabled date"
+        }
+      },
+      {
+        "parameter_ref": "disabled_date",
+        "label": {
+          "default": "Enable Me!"
+        },
+        "description": {
+          "default": "Initially disbaled date, enabled by clicking checkbox."
+        },
+        "date_format": "M/D/YYYY"
+      }
+    ],
+    "group_info": [
+      {
+        "id": "datefield-values",
+        "label": {
+          "default": "Values"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "date_mdy",
+          "date_ymd",
+          "date_ymd_non_req",
+          "date_ymd_null",
+          "date_ymd_placeholder",
+          "date_ymd_slash_sep",
+          "date_without_a_ui_hint"
+        ]
+      },
+      {
+        "id": "datefield-conditions",
+        "label": {
+          "default": "Conditions"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "hide_date_field",
+          "hidden_date",
+          "disable_date_field",
+          "disabled_date"
+        ]
+      }
+    ]
+  },
+  "conditions": [
+    {
+      "visible": {
+        "parameter_refs": [
+          "hidden_date"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hide_date_field",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "disabled_date"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disable_date_field",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    }
+  ]
+}

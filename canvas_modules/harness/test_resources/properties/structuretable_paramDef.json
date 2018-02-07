@@ -16,14 +16,16 @@
         "Age",
         "Age",
         "",
-        "string"
+        "string",
+        "2018-02-16T01:13:45Z"
       ],
       [
         1,
         "BP",
         "BP-1",
         "blood pressure",
-        ""
+        "",
+        "1982-02-23T12:00:00Z"
       ]
     ],
     "structuretableNoButtons": [
@@ -119,6 +121,10 @@
             "date"
           ],
           "default": "string"
+        },
+        {
+          "id": "new_date",
+          "type": "date"
         }
       ]
     },
@@ -305,6 +311,17 @@
               "default": "Select data type"
             },
             "width": 26,
+            "edit_style": "inline"
+          },
+          {
+            "parameter_ref": "new_date",
+            "label": {
+              "default": "Date"
+            },
+            "description": {
+              "default": "Enter a date in YYYY-M-D format"
+            },
+            "width": 36,
             "edit_style": "inline"
           }
         ]

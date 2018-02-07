@@ -16,7 +16,8 @@ export class ParameterDef {
 	constructor(cname, label, description, type, role, valueRestriction, defaultValue,
 		control, orientation, width, charLimit, placeHolderText, separator,
 		resourceKey, visible, valueIcons, sortable, filterable, editStyle, required,
-		numberGenerator, isKey, dmDefault, language, summary, increment, textAfter, textBefore, moveableRows, generatedValues) {
+		numberGenerator, isKey, dmDefault, language, summary, increment, textAfter,
+		textBefore, moveableRows, generatedValues, dateFormat) {
 		this.name = cname;
 		this.label = ResourceDef.make(label);
 		this.description = ResourceDef.make(description);
@@ -51,6 +52,7 @@ export class ParameterDef {
 		this.textBefore = ResourceDef.make(textBefore);
 		this.moveableRows = moveableRows;
 		this.generatedValues = generatedValues;
+		this.dateFormat = dateFormat;
 	}
 
 	isList() {
@@ -215,7 +217,8 @@ export class ParameterDef {
 				propertyOf(uihint)("text_after"),
 				propertyOf(uihint)("text_before"),
 				propertyOf(uihint)("moveable_rows"),
-				propertyOf(uihint)("generated_values")
+				propertyOf(uihint)("generated_values"),
+				propertyOf(uihint)("date_format")
 			);
 		}
 		return null;

@@ -11,7 +11,8 @@
 
 import logger from "../../../utils/logger";
 import UiConditions from "../ui-conditions/ui-conditions.js";
-import { DEFAULT_VALIDATION_MESSAGE, STATES } from "../constants/constants.js";
+import { DEFAULT_VALIDATION_MESSAGE, STATES, DEFAULT_DATE_FORMAT } from "../constants/constants.js";
+import moment from "moment";
 
 function validateConditions(controller, visibleDefinition, enabledDefinitions, dataModel) {
 	_validateVisible(controller, visibleDefinition, dataModel);
@@ -237,7 +238,11 @@ function validateInput(propertyId, controller, validationDefinitions, datasetMet
 	}
 
 	if (!errorSet && controller.isRequired(propertyId)) {
-		_requiredValidation(propertyId, controller);
+		errorSet = _requiredValidation(propertyId, controller);
+	}
+
+	if (!errorSet && control.role === "date") {
+		_isValidDate(propertyId, controller, control.dateFormat);
 	}
 }
 
@@ -262,6 +267,7 @@ function _doGroupValidationUpdate(validation, errorMessage, output, propertyId, 
 
 function _requiredValidation(propertyId, controller) {
 	const controlValue = controller.getPropertyValue(propertyId);
+	let errorSet = false;
 	if (controlValue === null || controlValue === "" ||
 			(Array.isArray(controlValue) && controlValue.length === 0)) {
 		const errorMessage = {
@@ -269,9 +275,36 @@ function _requiredValidation(propertyId, controller) {
 			text: "Required parameter " + propertyId.name + " has no value"
 		};
 		controller.updateErrorMessage(propertyId, errorMessage);
+		errorSet = true;
 	} else {
 		controller.updateErrorMessage(propertyId, DEFAULT_VALIDATION_MESSAGE);
 	}
+	return errorSet;
+}
+
+function _isValidDate(propertyId, controller, dtFormat) {
+	const controlValue = controller.getPropertyValue(propertyId);
+	let errorSet = false;
+
+	// controlValue may not be set for a non-required field.
+	if (controlValue) {
+		const mom = moment.utc(controlValue, "YYYY-MM-DDTHH:mm:ssZ", true); // Parse as if in ISO format
+		if (!mom.isValid()) {
+			const dateFormat = dtFormat || DEFAULT_DATE_FORMAT;
+			const errorMessage = {
+				type: "error",
+				text: "Invalid date. Format should be " + dateFormat
+			};
+			controller.updateErrorMessage(propertyId, errorMessage);
+			errorSet = true;
+		}
+	}
+
+	if (errorSet === false) {
+		controller.updateErrorMessage(propertyId, DEFAULT_VALIDATION_MESSAGE);
+	}
+
+	return errorSet;
 }
 
 function _extractValidationDefinitions(propertyId, validationDefinitions) {

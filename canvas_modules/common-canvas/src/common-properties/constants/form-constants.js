@@ -67,6 +67,7 @@ const ControlType = {
 	TEXTAREA: "textarea",
 	EXPRESSION: "expression",
 	NUMBERFIELD: "numberfield",
+	DATEFIELD: "datefield",
 	CHECKBOX: "checkbox",
 	RADIOSET: "radioset",
 	CHECKBOXSET: "checkboxset",

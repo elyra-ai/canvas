@@ -31,6 +31,7 @@ import {
 	READONLY_PROPS_INFO,
 	NUMBERFIELD_PROPS_INFO,
 	NUMBERFIELD_GENERATOR_PROPS_INFO,
+	DATEFIELD_PROPS_INFO,
 	SPINNER_PROPS_INFO,
 	CHECKBOX_SINGLE_PROPS_INFO,
 	CHECKBOX_SET_PROPS_INFO,
@@ -150,6 +151,19 @@ class CommonPropertiesComponents extends React.Component {
 				"orientation"
 			];
 			break;
+		case "datefield":
+			jsonReplacer = [
+				"current_parameters",
+				"datefieldControlName",
+				"parameters",
+				"id", "type", "default",
+				"uihints",
+				"parameter_info",
+				"parameter_ref", "label",
+				"description",
+				"date_format"
+			];
+			break;
 		case "controlData":
 			jsonReplacer = [
 				"parameters", "name", "type", "role", "enum", "required", "default",
@@ -211,6 +225,7 @@ class CommonPropertiesComponents extends React.Component {
 					"--readonly",
 					"--numberfield",
 					"--spinner",
+					"--datefield",
 					"--checkbox",
 					"--checkboxset",
 					"--radioset",
@@ -726,6 +741,33 @@ class CommonPropertiesComponents extends React.Component {
 						<div className="section-column section-column-code">
 							<pre className="json-block">
 								{this.jsonReplacer(SPINNER_PROPS_INFO.parameterDef, "all")}
+							</pre>
+						</div>
+					</div>
+				</div>
+				<div className="properties-documentation-panels-controls-component">
+					<h3 id="--datefield" className="section-subtitle">datefield</h3>
+					<p>A date text field is rendered for a parameter of <span className="highlight">type</span> date.
+							The current parameter should be provided as an 8601 format date. eg 2018-02-15T00:00:00Z. This is
+							how dates are stored internally. Note that, with the ISO format, single digits are preceded by
+							a 0. So 02 not 2 for Febrauary. The date_format field in the ui_hints can be used to
+							specify what date format is required for display and entry of the date. The default is YYYY-M-D.
+							This allows single digit month and day numbers for display and entry. Other dates formats can be
+							derived from here:
+						<a href="https://momentjs.com/docs/#/displaying/format/"> Moment.js docs </a>
+					</p>
+					<div className="section-row">
+						<div className="section-column">
+							<CommonProperties
+								showPropertiesDialog
+								propertiesInfo={DATEFIELD_PROPS_INFO}
+								containerType="Custom"
+							/>
+							{this.renderRightFlyoutButton(DATEFIELD_PROPS_INFO)}
+						</div>
+						<div className="section-column section-column-code">
+							<pre className="json-block">
+								{this.jsonReplacer(DATEFIELD_PROPS_INFO.parameterDef, "datefield")}
 							</pre>
 						</div>
 					</div>

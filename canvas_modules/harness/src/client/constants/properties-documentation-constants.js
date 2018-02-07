@@ -1251,6 +1251,47 @@ _defineConstant("NUMBERFIELD_GENERATOR_PROPS_INFO", {
 		}
 	}
 });
+_defineConstant("DATEFIELD_PROPS_INFO", {
+	"title": "DateField Title",
+	"parameterDef": {
+		"current_parameters": {
+			"datefieldControlName": "2018-02-15T00:00:00Z"
+		},
+		"parameters": [
+			{
+				"id": "datefieldControlName",
+				"type": "date"
+			}
+		],
+		"uihints": {
+			"id": "datefields",
+			"parameter_info": [
+				{
+					"parameter_ref": "datefieldControlName",
+					"label": {
+						"default": "Datefield Control Name"
+					},
+					"description": {
+						"default": "Datefield test"
+					},
+					"date_format": "YYYY-M-D"
+				}
+			],
+			"group_info": [
+				{
+					"id": "Datefield Control",
+					"type": "controls",
+					"parameter_refs": [
+						"datefieldControlName"
+					]
+				}
+			]
+		},
+		"dataset_metadata": {
+			"fields": []
+		}
+	}
+});
 _defineConstant("CHECKBOX_SINGLE_PROPS_INFO", {
 	"title": "Checkbox Title",
 	"parameterDef": {

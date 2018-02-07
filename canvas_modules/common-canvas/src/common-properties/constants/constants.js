@@ -93,6 +93,8 @@ _defineConstant("DATA_TYPES", [
 	"timestamp"
 ]);
 
+_defineConstant("DEFAULT_DATE_FORMAT", "YYYY-M-D");
+
 _defineConstant("EDITOR_CONTROL", "editor-control-");
 
 _defineConstant("TOOL_TIP_DELAY", 1000);

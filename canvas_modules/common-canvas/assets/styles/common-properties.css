@@ -175,6 +175,7 @@ input[type=radio]{
 }
 
 .form__validation.validation-error-message-type-number,
+.form__validation.validation-error-message-type-date,
 .form__validation.validation-error-message-type-structure-table,
 .form__validation.validation-error-message-type-structure-list-editor,
 p.form__validation.validation-error-message-type-selection {

@@ -333,7 +333,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 			if (parameter.isList()) {
 				controlType = ControlType.TEXTAREA;
 			} else {
-				controlType = ControlType.TEXTFIELD;
+				controlType = ControlType.DATEFIELD;
 			}
 			break;
 		case Type.STRUCTURE:
@@ -411,7 +411,8 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 		parameter.increment,
 		rowSelection,
 		parameter.generatedValues,
-		addRemoveRows
+		addRemoveRows,
+		parameter.dateFormat
 	);
 }
 
@@ -514,7 +515,7 @@ function _makeSubControl(parameter, l10nProvider) {
 		break;
 	case Type.DATE:
 		role = "date";
-		controlType = ControlType.TEXTFIELD;
+		controlType = ControlType.DATEFIELD;
 		break;
 	default:
 		role = "???" + parameter.propType() + "???";
@@ -549,7 +550,8 @@ function _makeSubControl(parameter, l10nProvider) {
 		parameter.language,
 		parameter.summary,
 		parameter.increment,
-		parameter.generatedValues
+		parameter.generatedValues,
+		parameter.dateForamt
 	);
 }
 
