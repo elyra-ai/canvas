@@ -766,8 +766,15 @@ class App extends React.Component {
 	}
 
 	propertyListener(data) {
-		this.log("propertyListener() " + data.action);
+		if (data.property) {
+			this.log("propertyListener() " + data.action + ", propertyId: {name: \"" +
+				data.property.name + "\", row: \"" + data.property.row + "\", col: \"" +
+				data.property.col + "\"}, value: " + data.value);
+		} else {
+			this.log("propertyListener() " + data.action);
+		}
 	}
+
 	propertyActionHandler(actionId, appData, data) {
 		if (actionId === "increment") {
 			const propertyId = { name: data.parameter_ref };

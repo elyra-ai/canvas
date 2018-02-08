@@ -1,0 +1,115 @@
+
+{
+  "current_parameters": {
+    "actual_value": "",
+    "predicted_value": "",
+    "cost_value": 1.0
+  },
+  "parameters": [
+    {
+      "id": "actual_value",
+      "enum": [
+        "Cat",
+        "Dog",
+        "Lion",
+        "Squirrel",
+        "Aardvark",
+        "Platypus",
+        "Manticore"
+      ]
+    },
+    {
+      "id": "predicted_value",
+      "enum": [
+        "Cat",
+        "Dog",
+        "Lion",
+        "Squirrel",
+        "Aardvark",
+        "Platypus",
+        "Manticore"
+      ]
+    },
+    {
+      "id": "cost_value",
+      "type": "double",
+      "default": 1.0
+    }
+  ],
+  "uihints": {
+    "id": "ibm.Custom",
+    "parameter_info": [
+      {
+        "parameter_ref": "actual_value",
+        "label": {
+          "default": "Actual Value"
+        },
+        "description": {
+          "default": "Select an actual value"
+        },
+        "place_holder_text": {
+          "default": "Select..."
+        },
+        "control": "oneofselect",
+        "text_before": {
+          "default": "Add Misclassification Costs"
+        }
+      },
+      {
+        "parameter_ref": "predicted_value",
+        "label": {
+          "default": "Predicted Value"
+        },
+        "description": {
+          "default": "Select a predicted value"
+        },
+        "control": "oneofselect",
+        "place_holder_text": {
+          "default": "Select..."
+        }
+      },
+      {
+        "parameter_ref": "cost_value",
+        "label": {
+          "default": "Cost"
+        },
+        "description": {
+          "default": "Enter a cost value"
+        },
+        "default": 1.0
+      }
+    ],
+    "group_info": [
+      {
+        "id": "costs-panel",
+        "label": {
+          "default": "Configure Costs"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "custom-button-panel",
+            "type": "customPanel",
+            "parameter_refs": [
+              "actual_value",
+              "predicted_value",
+              "cost_value"
+            ],
+            "data": {
+              "parameter_ref": "custom_table_info"
+            }
+          },
+          {
+            "id": "table-panel",
+            "type": "controls",
+            "parameter_refs": [
+              "custom_table_info"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "resources": {
+  }
+}

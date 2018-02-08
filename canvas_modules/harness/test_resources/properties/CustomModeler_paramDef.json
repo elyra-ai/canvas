@@ -6,8 +6,8 @@
   "current_parameters": {
     "actual_value": "",
     "predicted_value": "",
-    "cost": 1.1,
-    "custom_table_info": [["Cat", "Squirrel", 1.25]],
+    "cost": 1.0,
+    "custom_table_info": [],
     "include_from": "main",
     "tag_records": false,
     "tag_field_name": "Input"
@@ -39,7 +39,10 @@
         "Cat",
         "Dog",
         "Lion",
-        "Squirrel"
+        "Squirrel",
+        "Aardvark",
+        "Platypus",
+        "Manticore"
       ]
     },
     {
@@ -49,7 +52,9 @@
         "Dog",
         "Lion",
         "Squirrel",
-        "Hippo"
+        "Aardvark",
+        "Platypus",
+        "Manticore"
       ]
     },
     {
@@ -229,18 +234,13 @@
         "type": "panels",
         "group_info": [
           {
-            "id": "droplist-panel",
-            "type": "controls",
+            "id": "custom-button-panel",
+            "type": "customPanel",
             "parameter_refs": [
               "actual_value",
               "predicted_value",
               "cost_value"
-            ]
-          },
-          {
-            "id": "custom-button-panel",
-            "type": "customPanel",
-            "parameter_refs": [],
+            ],
             "data": {
               "parameter_ref": "custom_table_info"
             }
@@ -355,6 +355,118 @@
       }
     }
   ],
+  "dataset_metadata": {
+    "fields": [
+      {
+        "name": "Field 1",
+        "type": "integer",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Field 2",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Field 3",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Field 4",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Field 5",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Field 6",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Field 7",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Field 8",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Field 9",
+        "type": "integer",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Field 10",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Animals",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "target",
+          "values": [
+            "Cat",
+            "Dog",
+            "Lion",
+            "Squirrel",
+            "Aardvark",
+            "Platypus",
+            "Manticore"
+          ]
+        }
+      }
+    ]
+  },
   "resources": {
     "include_from.main.label": "Main dataset only",
     "include_from.all.label": "All datasets"
