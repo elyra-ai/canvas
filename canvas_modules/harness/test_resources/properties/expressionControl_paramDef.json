@@ -123,7 +123,7 @@
           "default": "enable"
         },
         "description": {
-          "default": "Enable table"
+          "default": "Enable expression"
         }
       },
       {
@@ -141,7 +141,7 @@
           "default": "Visible"
         },
         "description": {
-          "default": "Visible table"
+          "default": "Visible expression"
         }
       },
       {
@@ -362,9 +362,6 @@
 	  }
 	],
   "resources": {
-    "textfield_name_not_valid_one": "Name cannot contain /",
-    "textfield_name_not_valid_two": "Name cannot contain double or single \"quotes\"",
-    "textfield_name_not_contain_password": "name cannot contain password",
     "expression_box_not_valid": "Expression cannot contain /, double or single \"quotes\""
   }
 }

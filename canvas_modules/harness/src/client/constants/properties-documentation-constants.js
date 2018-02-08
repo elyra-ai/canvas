@@ -900,6 +900,115 @@ _defineConstant("SUMMARY_PANEL_PROPS_INFO", {
 		}
 	}
 });
+_defineConstant("TWISTY_PANEL_PROPS_INFO", {
+	"title": "Panel Type: TwistyPanel",
+	"parameterDef": {
+		"current_parameters": {
+			"fromValue": 2,
+			"toValue": 1
+		},
+		"parameters": [
+			{
+				"id": "fromValue",
+				"type": "doubler",
+				"required": true
+			},
+			{
+				"id": "toValue",
+				"type": "integer",
+				"required": true
+			}
+		],
+		"complex_types": [],
+		"uihints": {
+			"id": "Twist.test",
+			"icon": "images/modelbuildspark.svg",
+			"label": {
+				"default": "Twisty Test"
+			},
+			"description": {
+				"default": "Test Twisty Panel"
+			},
+			"parameter_info": [
+				{
+					"parameter_ref": "fromValue",
+					"label": {
+						"default": "From"
+					},
+					"description": {
+						"default": "Double value for From range"
+					}
+				},
+				{
+					"parameter_ref": "toValue",
+					"label": {
+						"default": "Step"
+					},
+					"description": {
+						"default": "Step value"
+					},
+					"control": "readonly"
+				}
+			],
+			"action_info": [
+				{
+					"id": "increment",
+					"label": {
+						"resource_key": "increment"
+					},
+					"control": "button",
+					"data": {
+						"parameter_ref": "toValue"
+					}
+				}
+			],
+			"complex_type_info": [],
+			"group_info": [
+				{
+					"id": "TwistyPanel",
+					"label": {
+						"default": "Twisty Panel Test"
+					},
+					"type": "panels",
+					"group_info": [
+						{
+							"id": "TwistyPanel",
+							"label": {
+								"default": "Automatic Reclassify"
+							},
+							"type": "twistyPanel",
+							"group_info": [
+								{
+									"id": "Range-fields",
+									"type": "controls",
+									"label": {
+										"default": "Range Fields"
+									},
+									"parameter_refs": [
+										"fromValue",
+										"toValue"
+									]
+								},
+								{
+									"id": "increment-action-panel",
+									"type": "actionPanel",
+									"action_refs": [
+										"increment"
+									]
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		"conditions": [],
+		"dataset_metadata": {},
+		"resources": {
+			"increment": "Increase Step"
+		}
+	}
+});
 _defineConstant("COLUMNSELECTION_PROPS_INFO", {
 	"title": "Group Types: ColumnSelection",
 	"parameterDef": {

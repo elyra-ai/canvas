@@ -921,8 +921,7 @@ tr.reactable-column-header > th {
 
 #structure-table,
 #structure-table > tbody,
-.structure-table-content-row,
-.structure-table-content-row > td {
+.structure-table-content-row{
 	width: 100%;
 	display: inline-block;
 }
@@ -932,6 +931,7 @@ tr.reactable-column-header > th {
 }
 
 .structure-table-content-row-first-column {
+	width: calc(100% - 16px);
 	flex-shrink: 0.02;
 }
 

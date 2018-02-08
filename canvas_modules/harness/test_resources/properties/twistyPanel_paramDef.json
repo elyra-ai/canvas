@@ -1,0 +1,211 @@
+{
+  "titleDefinition": {
+    "title": "Twisty Panel Test"
+  },
+  "current_parameters": {
+    "fromValue": 2,
+    "toValue": 1,
+    "fields": [
+      "age",
+      "drug"
+    ]
+  },
+  "parameters": [
+    {
+      "id": "fromValue",
+      "type": "doubler",
+      "required": true
+    },
+    {
+      "id": "toValue",
+      "type": "integer",
+      "required": true
+    },
+    {
+      "id": "fields",
+      "type": "array[string]",
+      "role": "column",
+      "required": true
+    }
+  ],
+  "complex_types": [],
+  "uihints": {
+    "id": "Twist.test",
+    "icon": "images/modelbuildspark.svg",
+    "label": {
+      "default": "Twisty Test"
+    },
+    "description": {
+      "default": "Test Twisty Panel"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "fromValue",
+        "label": {
+          "default": "From"
+        },
+        "description": {
+          "default": "Double value for From range"
+        }
+      },
+      {
+        "parameter_ref": "toValue",
+        "label": {
+          "default": "Step"
+        },
+        "description": {
+          "default": "Step value"
+        },
+        "control": "readonly"
+      },
+      {
+        "parameter_ref": "fields",
+        "label": {
+          "default": "Fields"
+        },
+        "description": {
+          "default": "selectcolumns with parameter value set to 'age'"
+        },
+        "moveable_rows": true,
+        "summary": true
+      }
+    ],
+    "action_info": [
+      {
+        "id": "increment",
+        "label": {
+          "resource_key": "increment"
+        },
+        "control": "button",
+        "data": {
+          "parameter_ref": "toValue"
+        }
+      }
+    ],
+    "complex_type_info": [],
+    "group_info": [
+      {
+        "id": "TwistyPanel",
+        "label": {
+          "default": "Twisty Panel Test"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "TwistyPanel",
+            "label": {
+              "default": "Automatic Reclassify"
+            },
+            "type": "twistyPanel",
+            "group_info": [
+              {
+                "id": "Range-fields",
+                "type": "controls",
+                "label": {
+                  "default": "Range Fields"
+                },
+                "parameter_refs": [
+                  "fromValue",
+                  "toValue"
+                ]
+              },
+              {
+                "id": "increment-action-panel",
+                "type": "actionPanel",
+                "action_refs": [
+                  "increment"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "TableTwisty",
+            "label": {
+              "default": "Table Twisty"
+            },
+            "type": "twistyPanel",
+            "group_info": [
+              {
+                "id": "Inline editing",
+                "parameter_refs": [
+                  "fields"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "conditions": [],
+  "dataset_metadata": {
+    "fields": [
+      {
+        "name": "Age",
+        "type": "integer",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Sex",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "BP",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Cholesterol",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Na",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "K",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Drug",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      }
+    ]
+  },
+  "resources": {
+    "increment": "Increase Step"
+  }
+}

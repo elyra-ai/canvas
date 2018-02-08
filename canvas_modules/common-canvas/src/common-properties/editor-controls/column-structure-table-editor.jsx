@@ -500,7 +500,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			this.scrollToRow = null;
 		}
 
-		const topRightPanel = (this.props.control.addRemoveRows)
+		const topRightPanel = (typeof this.props.control.addRemoveRows === "undefined" || this.props.control.addRemoveRows) // default to true.
 			? this.makeAddRemoveButtonPanel(stateDisabled, tableButtonConfig)
 			: <div />;
 

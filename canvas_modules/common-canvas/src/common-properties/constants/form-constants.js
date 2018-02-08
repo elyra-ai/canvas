@@ -47,7 +47,8 @@ const GroupType = {
 	CUSTOM_PANEL: "customPanel",
 	SUMMARY_PANEL: "summaryPanel",
 	ACTION_PANEL: "actionPanel",
-	TEXT_PANEL: "textPanel"
+	TEXT_PANEL: "textPanel",
+	TWISTY_PANEL: "twistyPanel"
 };
 
 const PanelType = {
@@ -57,7 +58,8 @@ const PanelType = {
 	CHECKBOX_PANEL: "checkboxPanel",
 	CUSTOM: "custom",
 	SUMMARY: "summary",
-	ACTION_PANEL: "actionPanel"
+	ACTION_PANEL: "actionPanel",
+	TWISTY_PANEL: "twisty"
 };
 
 const ControlType = {

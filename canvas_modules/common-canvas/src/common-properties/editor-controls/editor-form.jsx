@@ -19,6 +19,7 @@ import logger from "../../../utils/logger";
 
 import SelectorPanel from "./../editor-panels/selector-panel.jsx";
 import SummaryPanel from "./../editor-panels/summary-panel.jsx";
+import TwistyPanel from "./../editor-panels/twisty-panel.jsx";
 import CheckboxSelectionPanel from "../editor-panels/checkbox-selection-panel.jsx";
 import WideFlyout from "../components/wide-flyout.jsx";
 
@@ -400,6 +401,17 @@ class EditorForm extends React.Component {
 				<div className="action-panel" key={key} >
 					{content}
 				</div>);
+		} else if (panel.panelType === "twisty") {
+			uiObject = (
+				<TwistyPanel
+					key={id}
+					ref={panel.id}
+					controller={this.props.controller}
+					label={panel.label}
+					panelId={panel.id}
+				>
+					{content}
+				</TwistyPanel>);
 		} else {
 			uiObject = (<div id={id}
 				className="control-panel"

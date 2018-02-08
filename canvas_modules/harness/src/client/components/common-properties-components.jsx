@@ -22,6 +22,7 @@ import {
 	PANEL_SELECTOR_PROPS_INFO,
 	CHECKBOX_PANEL_PROPS_INFO,
 	SUMMARY_PANEL_PROPS_INFO,
+	TWISTY_PANEL_PROPS_INFO,
 	COLUMNSELECTION_PROPS_INFO,
 	TEXT_PANEL_PROPS_INFO,
 	TEXTFIELD_PROPS_INFO,
@@ -79,6 +80,9 @@ class CommonPropertiesComponents extends React.Component {
 		this.setRightFlyoutState = this.setRightFlyoutState.bind(this);
 		this.actionHandler = this.actionHandler.bind(this);
 		this.controllerHandler = this.controllerHandler.bind(this);
+		this.twistyActionHandler = this.twistyActionHandler.bind(this);
+		this.twistyControllerHandler = this.twistyControllerHandler.bind(this);
+
 	}
 
 	componentDidMount() {
@@ -125,6 +129,17 @@ class CommonPropertiesComponents extends React.Component {
 			const propertyId = { name: data.parameter_ref };
 			let value = this.propertiesController.getPropertyValue(propertyId);
 			this.propertiesController.updatePropertyValue(propertyId, value -= 1);
+		}
+	}
+	twistyControllerHandler(propertiesController) {
+		this.twistyPropertiesController = propertiesController;
+	}
+
+	twistyActionHandler(actionId, appData, data) {
+		if (actionId === "increment") {
+			const propertyId = { name: data.parameter_ref };
+			let value = this.twistyPropertiesController.getPropertyValue(propertyId);
+			this.twistyPropertiesController.updatePropertyValue(propertyId, value += 1);
 		}
 	}
 
@@ -218,6 +233,7 @@ class CommonPropertiesComponents extends React.Component {
 					"--panelSelector",
 					"--checkboxPanel",
 					"--summaryPanel",
+					"--twistyPanel",
 					"--columnSelection",
 					"--textPanel",
 					"Controls",
@@ -523,6 +539,32 @@ class CommonPropertiesComponents extends React.Component {
 							<div className="section-column section-column-code">
 								<pre className="json-block">
 									{this.jsonReplacer(SUMMARY_PANEL_PROPS_INFO.parameterDef, "panel")}
+								</pre>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div className="properties-documentation-panels-controls-component">
+					<h3 id="--twistyPanel" className="section-subtitle">twistyPanel</h3>
+					<p>A panel that displays a link that will drop down a panel with the specified controls.
+					</p>
+					<p>The <span className="highlight">edit_style</span> value of <span className="highlight">on_panel</span> is not
+						supported with a control in a twistyPanel. </p>
+					<div className="section-row">
+						<div className="section-row">
+							<div className="section-column">
+								<CommonProperties
+									showPropertiesDialog
+									propertiesInfo={TWISTY_PANEL_PROPS_INFO}
+									actionHandler={this.twistyActionHandler}
+									controllerHandler={this.twistyControllerHandler}
+									containerType="Custom"
+								/>
+								{this.renderRightFlyoutButton(TWISTY_PANEL_PROPS_INFO)}
+							</div>
+							<div className="section-column section-column-code">
+								<pre className="json-block">
+									{this.jsonReplacer(TWISTY_PANEL_PROPS_INFO.parameterDef, "panel")}
 								</pre>
 							</div>
 						</div>
@@ -1324,7 +1366,7 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 					</div>
 					<h4 id="--add_remove_rows" className="section-row-title section-subtitle">add_remove_rows</h4>
-					<p><span className="highlight">add_remove_rowsn</span> is a boolean attribute that can be set
+					<p><span className="highlight">add_remove_rows</span> is a boolean attribute that can be set
 						in <span className="highlight">complex_type_definition</span> sections.
 						If set to true, it allows rows to be added and removed from a table through a pair of buttons
 						on the top right of the table.  If set to false the buttons are not displayed and there is no way

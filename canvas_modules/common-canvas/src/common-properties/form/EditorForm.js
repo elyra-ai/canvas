@@ -166,6 +166,15 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 		const groupDesc = l10nProvider.l10nDesc(group, group.name);
 		return UIItem.makeTextPanel(new Label(groupLabel), new Description(groupDesc));
 	}
+	case GroupType.TWISTY_PANEL: {
+		groupLabel = l10nProvider.l10nLabel(group, group.name);
+		const panSubItems = [];
+		group.subGroups.forEach(function(subGroup) {
+			groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider);
+			panSubItems.push(groupItem);
+		});
+		return UIItem.makePanel(new ControlPanel(groupName, PanelType.TWISTY_PANEL, panSubItems, groupLabel));
+	}
 	default:
 		return UIItem.makeStaticText("(Unknown group type '" + group.groupType() + "')");
 	}
