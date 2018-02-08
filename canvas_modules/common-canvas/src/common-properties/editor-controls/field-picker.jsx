@@ -9,7 +9,6 @@
 /* eslint complexity: ["error", 18] */
 /* eslint max-depth: ["error", 6] */
 
-// import logger from "../../../utils/logger";
 import React from "react";
 import PropTypes from "prop-types";
 import ReactTooltip from "react-tooltip";
@@ -52,13 +51,14 @@ class FieldPicker extends EditorControl {
 		this.state = {
 			checkedAll: false,
 			data: this.props.dataModel,
-			fields: this.props.dataModel.fields,
+			fields: this.formatSchemaFields(this.props.dataModel),
 			filterIcons: [],
 			filterList: [],
 			filterText: "",
 			initialControlValues: [],
 			newControlValues: [],
-			hoverResetIcon: false
+			hoverResetIcon: false,
+			headerWidth: 756
 		};
 
 		this.dateEnabledIcon = dateEnabledIcon;
@@ -75,7 +75,10 @@ class FieldPicker extends EditorControl {
 		this.timeDisabledIcon = timeDisabledIcon;
 		this.timestampDisabledIcon = timestampDisabledIcon;
 
+		this.updateDimensions = this.updateDimensions.bind(this);
+
 		this.filterType = this.filterType.bind(this);
+		this.formatSchemaFields = this.formatSchemaFields.bind(this);
 		this.getDefaultRow = this.getDefaultRow.bind(this);
 		this.getTableData = this.getTableData.bind(this);
 		this.getVisibleData = this.getVisibleData.bind(this);
@@ -99,26 +102,7 @@ class FieldPicker extends EditorControl {
 			this.dataColumnIndex = 0; // default to 0
 		}
 
-		const fields = this.state.data.fields;
-		const filterList = DATA_TYPES;
-		const filters = [];
-
-		for (let i = 0; i < filterList.length; i++) {
-			for (let j = 0; j < fields.length; j++) {
-				var field = fields[j];
-
-				if (filterList[i] === field.type) {
-					filters.push({
-						"type": field.type,
-						"icon": {
-							"enabled": <img src={this[field.type + "EnabledIcon"]} />,
-							"disabled": <img src={this[field.type + "DisabledIcon"]} />
-						}
-					});
-					break;
-				}
-			}
-		}
+		const filters = this.getAvailableFilters();
 
 		const controlName = this.props.control.name;
 		let controlValues = [];
@@ -132,7 +116,65 @@ class FieldPicker extends EditorControl {
 		});
 	}
 
-	getTableData() {
+	componentDidMount() {
+		this.updateDimensions();
+		window.addEventListener("resize", this.updateDimensions);
+	}
+
+	componentWillUnmount() {
+		window.removeEventListener("resize", this.updateDimensions);
+	}
+
+	updateDimensions() {
+		// This is needed for field-picker in modal dialogs. This can be removed in issue #1038
+		const table = document.getElementById("flexible-table-container-wrapper");
+		if (table !== null) {
+			const tableRect = table.getBoundingClientRect();
+			if (this.state.headerWidth !== tableRect.width) {
+				this.setState({ headerWidth: tableRect.width });
+			}
+		}
+	}
+
+	getAvailableFilters() {
+		const filters = [];
+		for (const schema of this.state.data) {
+			const fields = schema.fields;
+			const filterList = DATA_TYPES;
+
+			for (let i = 0; i < filterList.length; i++) {
+				for (let j = 0; j < fields.length; j++) {
+					var field = fields[j];
+
+					if (filterList[i] === field.type) {
+						const filter = {
+							"type": field.type,
+							"icon": {
+								"enabled": <img src={this[field.type + "EnabledIcon"]} />,
+								"disabled": <img src={this[field.type + "DisabledIcon"]} />
+							}
+						};
+
+						let duplicate = false;
+						for (const filtered of filters) {
+							if (filtered.type === filter.type) {
+								duplicate = true;
+								break;
+							}
+						}
+
+						if (!duplicate) {
+							filters.push(filter);
+						}
+						break;
+					}
+				}
+			}
+		}
+		return filters;
+	}
+
+	getTableData(checkboxWidth, fieldWidth, dataWidth) {
 		const fields = this.getVisibleData();
 		const tableData = [];
 		const newControlValues = this.state.newControlValues;
@@ -150,6 +192,14 @@ class FieldPicker extends EditorControl {
 					} else {
 						key = newControlValues[j];
 					}
+
+					if (this.multiSchema && key.indexOf(".") > -1) {
+						if (this.compareNameSchema(key, field)) {
+							checked = true;
+							break;
+						}
+					}
+
 					if (key === field.name) {
 						checked = true;
 						break;
@@ -157,21 +207,27 @@ class FieldPicker extends EditorControl {
 				}
 			}
 
-			const columns = [
-				<Td key="field-picker-column-checkbox" column="checkbox" style={{ "width": "18%" }}><div className="field-picker-checkbox">
-					<Checkbox id={"field-picker-checkbox-" + i}
-						checked={checked}
-						onChange={this.handleFieldChecked}
-						data-name={field.name}
-					/></div></Td>,
-				<Td key="field-picker-column-fieldname" column="fieldName" style={{ "width": "42%" }}>{field.name}</Td>,
-				<Td key="field-picker-column-datatype" column="dataType" style={{ "width": "40%" }}><div>
-					<div className={"field-picker-data-type-icon field-picker-data-" + field.type + "-type-icon"}>
-						<img src={this[field.type + "EnabledIcon"]} />
-					</div>
-					{field.type}
-				</div></Td>
-			];
+			const columns = [];
+			columns.push(<Td key="field-picker-column-checkbox" column="checkbox" style={{ "width": checkboxWidth }}><div className="field-picker-checkbox">
+				<Checkbox id={"field-picker-checkbox-" + i}
+					checked={checked}
+					onChange={this.handleFieldChecked}
+					data-name={field.name}
+					data-schema={field.schema}
+					data-type={field.type}
+				/></div></Td>);
+			columns.push(<Td key="field-picker-column-fieldname" column="fieldName" style={{ "width": fieldWidth }}>{field.name}</Td>);
+
+			if (this.multiSchema) {
+				columns.push(<Td key="field-picker-column-schemaname" column="schemaName" style={{ "width": fieldWidth }}>{field.schema}</Td>);
+			}
+			columns.push(<Td key="field-picker-column-datatype" column="dataType" style={{ "width": dataWidth }}><div>
+				<div className={"field-picker-data-type-icon field-picker-data-" + field.type + "-type-icon"}>
+					<img src={this[field.type + "EnabledIcon"]} />
+				</div>
+				{field.type}
+			</div></Td>);
+
 			tableData.push(<Tr key="field-picker-data-rows" className="field-picker-data-rows">{columns}</Tr>);
 		}
 		return tableData;
@@ -225,6 +281,30 @@ class FieldPicker extends EditorControl {
 		}
 	}
 
+	formatSchemaFields(dataModel) {
+		let fields = [];
+		if (dataModel.length > 1) {
+			this.multiSchema = true;
+			for (let idx = 0; idx < dataModel.length; idx++) {
+				const schemas = this.props.controller.getDatasetMetadataSchemas();
+				dataModel[idx].fields.forEach(function(field) {
+					field.schema = schemas[idx];
+				});
+				fields = fields.concat(dataModel[idx].fields);
+			}
+		} else {
+			this.multiSchema = false;
+			fields = fields.concat(dataModel[0].fields);
+		}
+		return fields;
+	}
+
+	compareNameSchema(key, field) {
+		const keyField = key.split(".");
+		return keyField[0].trim() === field.schema.toString() &&
+						keyField[1].trim() === field.name;
+	}
+
 	handleSave() {
 		if (this.props.control.subControls) {
 			this.setReadOnlyColumnValue();
@@ -249,13 +329,20 @@ class FieldPicker extends EditorControl {
 		const visibleData = this.getVisibleData();
 
 		if (evt.target.checked) {
-			for (let i = 0; i < data.length; i++) { // add already selected fields
+			for (let i = 0; i < data.length; i++) {
+				let schemaName = data[i].name;
+				if (this.state.fields.filter((field) => field.name === schemaName).length > 1) {
+					schemaName = data[i].schema + "." + schemaName;
+				}
+
+				// add already selected fields
 				const selected = (!newControlValues) ? [] : newControlValues.filter(function(element) {
 					if (that.props.control.defaultRow) {
-						return element[that.dataColumnIndex] === data[i].name;
+						return element[that.dataColumnIndex] === schemaName;
 					}
-					return element === data[i].name;
+					return element === schemaName;
 				});
+
 				if (selected.length > 0) {
 					const found = this.getDefaultRow(selected[0]);
 					if (found !== false) {
@@ -269,22 +356,30 @@ class FieldPicker extends EditorControl {
 					});
 					if (visible) {
 						if (this.props.control.defaultRow) {
-							selectAll.push(this._getRecordForRow(data[i].name));
+							selectAll.push(this._getRecordForRow(schemaName));
 						} else {
-							selectAll.push(data[i].name);
+							selectAll.push(schemaName);
 						}
 					}
 				}
 			}
 		} else if (newControlValues) {
 			for (let l = 0; l < newControlValues.length; l++) {
-				const duplicate = visibleData.some(function(element) {
+				const duplicate = visibleData.some(function(field) {
+					let key = [];
 					let found = false;
 					if (that.props.control.defaultRow) {
-						found = element.name === newControlValues[l][that.dataColumnIndex];
+						key = newControlValues[l][that.dataColumnIndex];
 					} else {
-						found = element.name === newControlValues[l];
+						key = newControlValues[l];
 					}
+
+					if (that.multiSchema && key.indexOf(".") > -1) {
+						found = that.compareNameSchema(key, field);
+					} else {
+						found = field.name === key;
+					}
+
 					return found;
 				});
 				if (!duplicate) {
@@ -315,7 +410,13 @@ class FieldPicker extends EditorControl {
 
 	handleFieldChecked(evt) {
 		const current = this.state.newControlValues;
-		const selectedFieldName = evt.currentTarget.getAttribute("data-name");
+		let selectedFieldName = evt.currentTarget.getAttribute("data-name");
+		const selectedFieldSchema = evt.currentTarget.getAttribute("data-schema");
+
+		// if more than one field with the same name, append schema name to selectedField
+		if (this.state.fields.filter((field) => field.name === selectedFieldName).length > 1) {
+			selectedFieldName = selectedFieldSchema + "." + selectedFieldName;
+		}
 		const selectedField = this._getRecordForRow(selectedFieldName);
 
 		const that = this;
@@ -384,7 +485,7 @@ class FieldPicker extends EditorControl {
 
 	handleReset() {
 		let checkedAll = false;
-		if (this.state.initialControlValues && (this.state.initialControlValues === this.state.data.fields.length)) {
+		if (this.state.initialControlValues && (this.state.initialControlValues === this.state.fields.length)) {
 			checkedAll = true;
 		}
 		this.setState({
@@ -422,7 +523,12 @@ class FieldPicker extends EditorControl {
 	onSort(spec) {
 		let controlValue = this.state.fields;
 		controlValue = sortBy(controlValue, function(field) {
-			return spec.column === "fieldName" ? field.name : field.type;
+			switch (spec.column) {
+			case "fieldName": return field.name;
+			case "dataType": return field.type;
+			case "schemaName": return field.schema;
+			default: return null;
+			}
 		});
 		if (spec.direction > 0) {
 			controlValue = controlValue.reverse();
@@ -565,41 +671,60 @@ class FieldPicker extends EditorControl {
 		// check all box should be checked if all in view is selected
 		const visibleData = this.getVisibleData();
 		const newControlValues = this.state.newControlValues;
-		if (visibleData.length > 0 && visibleData.length < this.state.data.fields.length) {
+		if (visibleData.length > 0 && visibleData.length < this.state.fields.length) {
 			// need to compare the contents to make sure the visible ones are selected
 			const sameData = newControlValues.filter(function(row) {
 				let match = false;
 				for (let k = 0; k < visibleData.length; k++) {
-					if (that.props.control.defaultRow && row[that.dataColumnIndex] === visibleData[k].name) {
+					let key = row;
+					if (that.props.control.defaultRow) {
+						key = row[that.dataColumnIndex];
+						if (key === visibleData[k].name) {
+							match = true;
+							break;
+						}
+					} else if (key === visibleData[k].name) {
 						match = true;
 						break;
-					} else if (row === visibleData[k].name) {
-						match = true;
-						break;
+					}
+
+					if (that.multiSchema && key.indexOf(".") > -1) {
+						if (that.compareNameSchema(key, visibleData[k])) {
+							match = true;
+							break;
+						}
 					}
 				}
 				return match;
 			});
 			checkedAll = sameData.length === visibleData.length;
 		} else if (this.state.newControlValues &&
-								this.state.data.fields.length === this.state.newControlValues.length) {
+								this.state.fields.length === this.state.newControlValues.length) {
 			checkedAll = true;
 		} else {
 			checkedAll = false;
 		}
 
-		let checkboxWidth = 19;
-		let fieldWidth = 46;
-		let dataWidth = 43;
+		const headerWidthSections = this.state.headerWidth / 10;
+		let checkboxWidth = Math.round(headerWidthSections);
+		let fieldWidth = Math.round(headerWidthSections * 6);
+		let dataWidth = Math.round(headerWidthSections * 3);
 
 		if (this.props.rightFlyout) {
-			checkboxWidth = 16.5;
-			fieldWidth = 39;
-			dataWidth = 37;
+			checkboxWidth = 66;
+			fieldWidth = 392;
+			dataWidth = 196;
+		}
+
+		if (this.multiSchema) {
+			fieldWidth /= 2;
 		}
 
 		const fieldColumnLabel = PropertyUtils.formatMessage(this.props.intl,
 			MESSAGE_KEYS.FIELDPICKER_FIELDCOLUMN_LABEL, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_FIELDCOLUMN_LABEL);
+		// TODO: debug why resource key not used
+		const schemaColumnLabel = PropertyUtils.formatMessage(this.props.intl,
+			MESSAGE_KEYS.FIELDPICKER_SCHEMACOLUMN_LABEL, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_SCHEMACOLUMN_LABEL);
 		const dataTypeColumnLabel = PropertyUtils.formatMessage(this.props.intl,
 			MESSAGE_KEYS.FIELDPICKER_DATATYPECOLUMN_LABEL, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_DATATYPECOLUMN_LABEL);
 
@@ -611,13 +736,16 @@ class FieldPicker extends EditorControl {
 			/>
 		</div>, "width": checkboxWidth });
 		headers.push({ "key": "fieldName", "label": fieldColumnLabel, "width": fieldWidth });
+		if (this.multiSchema) {
+			headers.push({ "key": "schemaName", "label": schemaColumnLabel, "width": fieldWidth });
+		}
 		headers.push({ "key": "dataType", "label": dataTypeColumnLabel, "width": dataWidth });
 
-		const tableData = this.getTableData();
+		const tableData = this.getTableData(checkboxWidth, fieldWidth, dataWidth);
 
 		return (
 			<FlexibleTable className="table" id="table"
-				sortable={["fieldName", "dataType"]}
+				sortable={["fieldName", "schemaName", "dataType"]}
 				filterable={["fieldName"]}
 				onFilter={this.onFilter}
 				columns={headers}
@@ -660,7 +788,7 @@ class FieldPicker extends EditorControl {
 FieldPicker.propTypes = {
 	closeFieldPicker: PropTypes.func.isRequired,
 	currentControlValues: PropTypes.object.isRequired,
-	dataModel: PropTypes.object,
+	dataModel: PropTypes.array,
 	control: PropTypes.object,
 	title: PropTypes.string,
 	controller: PropTypes.object.isRequired,

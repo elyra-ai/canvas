@@ -8,24 +8,11 @@
         "Cholesterol",
         1,
         "Ascending"
-      ]
-    ],
-    "structuretableReadonlyColumnDefaultIndex": [
-      [
-        0,
-        "Age",
-        "Age",
-        "",
-        "string",
-        "2018-02-16T01:13:45Z"
       ],
       [
-        1,
-        "BP",
-        "BP-1",
-        "blood pressure",
-        "",
-        "1982-02-23T12:00:00Z"
+        "0.Age",
+        2,
+        "Ascending"
       ]
     ],
     "structuretableNoButtons": [
@@ -38,22 +25,19 @@
         "Descending"
       ]
     ],
-    "structuretableSortableColumns": [
-      [
-        0,
-        "Age",
-        "Age",
-        "",
-        "string",
-        "string2"
-      ],
+    "structuretableSortableColumns": [],
+    "structuretable_filter": [
       [
         1,
-        "BP",
-        "BP-1",
-        "blood pressure",
-        "",
-        "string2"
+        "0.BP"
+      ],
+      [
+        2,
+        "2.BP"
+      ],
+      [
+        3,
+        "data.BP"
       ]
     ]
   },
@@ -61,14 +45,6 @@
     {
       "id": "structuretableReadonlyColumnStartValue",
       "type": "array[structuretableReadonlyColumnStartValue]",
-      "role": "column",
-      "required": true
-    },
-    {
-      "id": "structuretableReadonlyColumnDefaultIndex",
-      "type": "map[string,structuretableReadonlyColumnDefaultIndex]",
-      "role": "column",
-      "default": [],
       "required": true
     },
     {
@@ -111,45 +87,6 @@
             "Descending"
           ],
           "default": "Ascending"
-        }
-      ]
-    },
-    {
-      "id": "structuretableReadonlyColumnDefaultIndex",
-      "key_definition": {
-        "id": "structuretableRenameFields_readonly_int",
-        "type": "integer"
-      },
-      "parameters": [
-        {
-          "id": "field",
-          "type": "string",
-          "role": "column"
-        },
-        {
-          "id": "new_name",
-          "type": "string",
-          "role": "new_column"
-        },
-        {
-          "id": "new_label",
-          "type": "string",
-          "default": ""
-        },
-        {
-          "id": "new_type",
-          "enum": [
-            "string",
-            "number",
-            "boolean",
-            "time",
-            "date"
-          ],
-          "default": "string"
-        },
-        {
-          "id": "new_date",
-          "type": "date"
         }
       ]
     },
@@ -220,15 +157,7 @@
           "default": "string"
         },
         {
-          "id": "another_type",
-          "enum": [
-            "string2",
-            "number2",
-            "boolean2",
-            "time2",
-            "date2"
-          ],
-          "default": "string2"
+          "id": "schema"
         }
       ]
     }
@@ -255,21 +184,12 @@
         }
       },
       {
-        "parameter_ref": "structuretableReadonlyColumnDefaultIndex",
-        "label": {
-          "default": "Rename Field"
-        },
-        "description": {
-          "default": "The level column will be auto-populated with an integer value for each row starting at 1. Subsequent rows will be incremented by 1."
-        }
-      },
-      {
         "parameter_ref": "structuretable_filter",
         "label": {
           "default": "Filter Field"
         },
         "description": {
-          "default": "Filters fields that aren't of type 'string'"
+          "default": "Filters fields from multi schema input that aren't of type 'string'"
         }
       },
       {
@@ -284,10 +204,10 @@
       {
         "parameter_ref": "structuretableSortableColumns",
         "label": {
-          "default": "Rename Field"
+          "default": "SelectSchema Dropdown"
         },
         "description": {
-          "default": "This is to test the sortable column headers align with the table."
+          "default": "This is to test multi input schema and selectschema control in table."
         }
       }
     ],
@@ -333,76 +253,6 @@
               "/images/up-triangle.svg",
               "/images/down-triangle.svg"
             ]
-          }
-        ]
-      },
-      {
-        "complex_type_ref": "structuretableReadonlyColumnDefaultIndex",
-        "label": {
-          "default": "Rename Subpanel"
-        },
-        "key_definition": {
-          "parameter_ref": "structuretableRenameFields_readonly_int",
-          "label": {
-            "resource_key": "structuretableReadonlyColumnDefaultIndex.structuretableRenameFields_readonly_int.label"
-          },
-          "width": 15,
-          "generated_values": {
-            "operation": "index"
-          },
-          "control": "readonly"
-        },
-        "parameters": [
-          {
-            "parameter_ref": "field",
-            "label": {
-              "resource_key": "structuretableReadonlyColumnDefaultIndex.field.label"
-            },
-            "width": 26,
-            "summary": true
-          },
-          {
-            "parameter_ref": "new_name",
-            "label": {
-              "resource_key": "structuretableReadonlyColumnDefaultIndex.new_name.label"
-            },
-            "description": {
-              "resource_key": "structuretableReadonlyColumnDefaultIndex.new_name.desc"
-            },
-            "width": 26,
-            "edit_style": "inline",
-            "filterable": true,
-            "summary": true
-          },
-          {
-            "parameter_ref": "new_label",
-            "label": {
-              "default": "Label"
-            },
-            "width": 26,
-            "edit_style": "subpanel"
-          },
-          {
-            "parameter_ref": "new_type",
-            "label": {
-              "default": "Type"
-            },
-            "description": {
-              "default": "Select data type"
-            },
-            "width": 26,
-            "edit_style": "inline"
-          },
-          {
-            "parameter_ref": "new_date",
-            "label": {
-              "default": "Date"
-            },
-            "description": {
-              "default": "Enter a date in YYYY-M-D format"
-            },
-            "width": 36,
-            "edit_style": "inline"
           }
         ]
       },
@@ -500,7 +350,6 @@
             "width": 26,
             "edit_style": "inline",
             "filterable": true,
-            "summary": true,
             "sortable": true
           },
           {
@@ -525,7 +374,7 @@
             "sortable": true
           },
           {
-            "parameter_ref": "another_type",
+            "parameter_ref": "schema",
             "label": {
               "default": "Type"
             },
@@ -533,7 +382,8 @@
               "default": "Select data type"
             },
             "width": 26,
-            "edit_style": "inline",
+            "summary": true,
+            "control": "selectschema",
             "sortable": true
           }
         ]
@@ -553,31 +403,12 @@
             "group_info": [
               {
                 "id": "structuretableReadonlyColumnStartValue",
-                "type": "controls",
+                "type": "columnSelection",
                 "label": {
                   "default": "Columns"
                 },
                 "parameter_refs": [
                   "structuretableReadonlyColumnStartValue"
-                ]
-              }
-            ]
-          },
-          {
-            "id": "structuretableReadonlyColumnDefaultIndex-summary-panel",
-            "label": {
-              "default": "Configure Rename fields"
-            },
-            "type": "summaryPanel",
-            "group_info": [
-              {
-                "id": "structuretableReadonlyColumnDefaultIndex",
-                "label": {
-                  "default": "Tables"
-                },
-                "type": "controls",
-                "parameter_refs": [
-                  "structuretableReadonlyColumnDefaultIndex"
                 ]
               }
             ]
@@ -591,7 +422,7 @@
             "group_info": [
               {
                 "id": "structuretableNoButtons_panel",
-                "type": "controls",
+                "type": "columnSelection",
                 "label": {
                   "default": "Columns"
                 },
@@ -638,7 +469,7 @@
             "group_info": [
               {
                 "id": "structuretable_filter_panel",
-                "type": "controls",
+                "type": "columnSelection",
                 "parameter_refs": [
                   "structuretable_filter"
                 ]
@@ -663,83 +494,218 @@
     }
   ],
   "dataset_metadata": [
-		{
-	    "fields": [
-	      {
-	        "name": "Age",
-	        "type": "integer",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "Sex",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "discrete",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "BP",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "discrete",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "Cholesterol",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "discrete",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "Na",
-	        "type": "double",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "K",
-	        "type": "double",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "Drug",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "discrete",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "Ag",
-	        "type": "integer",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      }
-	    ]
-	  }
-	],
+    {
+      "fields": [
+        {
+          "name": "Age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Sex",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Cholesterol",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "K",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Ag",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    },
+    {
+      "name": "data",
+      "fields": [
+        {
+          "name": "Age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug2",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug3",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug4",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    },
+    {
+      "fields": [
+        {
+          "name": "Age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug2",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug3",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug4",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    }
+  ],
   "resources": {
     "structuretableReadonlyColumnStartValue.label": "Sort",
     "structuretableReadonlyColumnStartValue.field.label": "Field",
@@ -749,11 +715,6 @@
     "structuretableReadonlyColumnStartValue.structuretable_sort_order_readonly_int.desc": "Auto generated integers starting at 5",
     "structuretableReadonlyColumnStartValue.sort_order.Ascending.label": "Ascending",
     "structuretableReadonlyColumnStartValue.sort_order.Descending.label": "Descending",
-    "structuretableReadonlyColumnDefaultIndex.rename.label": "Rename Columns",
-    "structuretableReadonlyColumnDefaultIndex.field.label": "Input name",
-    "structuretableReadonlyColumnDefaultIndex.new_name.label": "Output name",
-    "structuretableReadonlyColumnDefaultIndex.new_name.desc": "New field name",
-    "structuretableReadonlyColumnDefaultIndex.structuretableRenameFields_readonly_int.label": "Level",
     "structuretableNoButtons.field.label": "Patient",
     "structuretableNoButtons.BP_trend.label": "BP Trend",
     "structuretableNoButtons.BP_trend.desc": "Patient BP historical trend",

@@ -308,13 +308,17 @@ function or(data, userInput, info) {
 }
 
 function orFilter(conditionItems, controller, datasetMetadata) {
-	const filteredData = cloneDeep(datasetMetadata);
-	filteredData.fields = [];
-	for (const item of conditionItems) {
-		const newData = evaluateFilter(item, controller, datasetMetadata);
-		filteredData.fields = unionWith(filteredData.fields, newData.fields, isEqual);
+	const filteredDataset = cloneDeep(datasetMetadata);
+	for (let idx = 0; idx < datasetMetadata.length; idx++) {
+		if (datasetMetadata[idx].fields) {
+			filteredDataset[idx].fields = [];
+			for (const item of conditionItems) {
+				const newData = evaluateFilter(item, controller, datasetMetadata[idx]);
+				filteredDataset[idx].fields = unionWith(filteredDataset[idx].fields, newData.fields, isEqual);
+			}
+		}
 	}
-	return filteredData;
+	return filteredDataset;
 }
 
 /**
@@ -339,9 +343,13 @@ function and(data, userInput, info) {
 
 function andFilter(conditionItems, controller, datasetMetadata) {
 	const filteredData = cloneDeep(datasetMetadata);
-	for (const item of conditionItems) {
-		const newData = evaluateFilter(item, controller, datasetMetadata);
-		filteredData.fields = intersectionWith(filteredData.fields, newData.fields, isEqual);
+	for (const schema of filteredData) {
+		if (schema.fields) {
+			for (const item of conditionItems) {
+				const newData = evaluateFilter(item, controller, schema);
+				schema.fields = intersectionWith(schema.fields, newData.fields, isEqual);
+			}
+		}
 	}
 	return filteredData;
 }
@@ -436,25 +444,54 @@ function conditionFilter(conditionItem, controller, datasetMetadata) {
 
 function _handleDmMeasurement(datasetMetadata, measurementValue) {
 	const filterDM = cloneDeep(datasetMetadata);
-	const filteredFields = filterDM.fields.filter(function(field) {
-		if (field.metadata.measure === measurementValue) {
-			return true;
+	// TODO: reduce dup code. recursion here needs to handle both arrays and objects
+	if (Array.isArray(filterDM)) {
+		for (const schema of filterDM) {
+			if (schema.fields) {
+				const filteredFields = schema.fields.filter(function(field) {
+					if (field.metadata.measure === measurementValue) {
+						return true;
+					}
+					return false;
+				});
+				schema.fields = filteredFields;
+			}
 		}
-		return false;
-	});
-	filterDM.fields = filteredFields;
+	} else {
+		const filteredFields = filterDM.fields.filter(function(field) {
+			if (field.metadata.measure === measurementValue) {
+				return true;
+			}
+			return false;
+		});
+		filterDM.fields = filteredFields;
+	}
 	return filterDM;
 }
 
 function _handleDmType(datasetMetadata, typeValue) {
 	const filterDM = cloneDeep(datasetMetadata);
-	const filteredFields = filterDM.fields.filter(function(field) {
-		if (field.type === typeValue) {
-			return true;
+	if (Array.isArray(filterDM)) {
+		for (const schema of filterDM) {
+			if (schema.fields) {
+				const filteredFields = schema.fields.filter(function(field) {
+					if (field.type === typeValue) {
+						return true;
+					}
+					return false;
+				});
+				schema.fields = filteredFields;
+			}
 		}
-		return false;
-	});
-	filterDM.fields = filteredFields;
+	} else {
+		const filteredFields = filterDM.fields.filter(function(field) {
+			if (field.type === typeValue) {
+				return true;
+			}
+			return false;
+		});
+		filterDM.fields = filteredFields;
+	}
 	return filterDM;
 }
 
@@ -769,9 +806,11 @@ function _handleColNotExists(paramInput, info) {
 			value = paramInput[info.cellCoordinates.rowIndex][info.cellCoordinates.colIndex];
 		}
 		if (!info.cellCoordinates || info.cellCoordinates.skipVal !== value) {
-			for (const field of info.dataModel.fields) {
-				if (field.name === value) {
-					return false;
+			for (const schema of info.dataModel) {
+				for (const field of schema.fields) {
+					if (field.name === value) {
+						return false;
+					}
 				}
 			}
 		}

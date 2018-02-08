@@ -141,22 +141,39 @@ export default class PropertiesController {
 		const rowData = [];
 		const dm = dataModel;
 		const updateCells = [];
-		for (var i = 0; i < dm.fields.length; i++) {
-			const row = [];
-			const fieldIndex = this._indexOfField(dm.fields[i].name, controlValue);
-			for (var k = 0; k < control.subControls.length; k++) {
-				if (k === control.keyIndex) {
-					row.push(dm.fields[i].name);
-				} else if (fieldIndex > -1 && controlValue.length > i && controlValue[i].length > k) {
-					row.push(controlValue[i][k]);
-				} else {
-					row.push(this._getDefaultSubControlValue(k, dm.fields[i].name, dataModel, control));
-					updateCells.push([i, k]);
+		for (let idx = 0; idx < dm.length; idx++) {
+			const schemaFields = dm[idx].fields;
+			for (let i = 0; i < schemaFields.length; i++) {
+				const row = [];
+				const schemas = this.getDatasetMetadataSchemas();
+				const schemaName = this.duplicateFieldName(dm, schemaFields[i]) ? schemas[idx] + "." + schemaFields[i].name : schemaFields[i].name;
+				const fieldIndex = this._indexOfField(schemaName, controlValue);
+				for (var k = 0; k < control.subControls.length; k++) {
+					if (k === control.keyIndex) {
+						row.push(schemaName);
+					} else if (fieldIndex > -1 && controlValue.length > i && controlValue[i].length > k) {
+						row.push(controlValue[i][k]);
+					} else {
+						row.push(this._getDefaultSubControlValue(k, schemaName, dataModel, control));
+						updateCells.push([i, k]);
+					}
 				}
+				rowData.push(row);
 			}
-			rowData.push(row);
 		}
 		return rowData;
+	}
+
+	// returns true if field name is in more than one schema
+	duplicateFieldName(dm, fieldObj) {
+		let count = 0;
+		for (let idx = 0; idx < dm.length; idx++) {
+			count += dm[idx].fields.filter((field) => field.name === fieldObj.name).length;
+			if (count > 1) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	_getDefaultSubControlValue(col, fieldName, dataModel, control) {
@@ -188,25 +205,27 @@ export default class PropertiesController {
 		let defaultValue;
 		const dmField = subControlDef.dmDefault;
 		if (fieldName) {
-			for (let i = 0; i < dataModel.fields.length; i++) {
-				if (dataModel.fields[i].name === fieldName) {
-					switch (dmField) {
-					case "type":
-						defaultValue = dataModel.fields[i].type;
-						break;
-					case "description":
-						defaultValue = dataModel.fields[i].description;
-						break;
-					case "measure":
-						defaultValue = dataModel.fields[i].measure;
-						break;
-					case "modeling_role":
-						defaultValue = dataModel.fields[i].modeling_role;
-						break;
-					default:
+			for (const schema of dataModel) {
+				for (const field of schema.fields) {
+					if (field.name === fieldName) {
+						switch (dmField) {
+						case "type":
+							defaultValue = field.type;
+							break;
+						case "description":
+							defaultValue = field.description;
+							break;
+						case "measure":
+							defaultValue = field.measure;
+							break;
+						case "modeling_role":
+							defaultValue = field.modeling_role;
+							break;
+						default:
+							break;
+						}
 						break;
 					}
-					break;
 				}
 			}
 		}
@@ -246,6 +265,28 @@ export default class PropertiesController {
 	*/
 	getDatasetMetadata() {
 		return this.propertiesStore.getDatasetMetadata();
+	}
+	getDatasetMetadataSchemas() {
+		const datasetMetadata = this.getDatasetMetadata();
+		const schemas = [];
+		for (let idx = 0; idx < datasetMetadata.length; idx++) {
+			let schemaIdentifier = datasetMetadata[idx].name ? datasetMetadata[idx].name : "";
+			const dupSchemaNames = datasetMetadata.filter((schema) => schema.name === schemaIdentifier && schemaIdentifier.length !== 0);
+			const dupSchemaNameIndex = schemas.indexOf(schemaIdentifier);
+			if (dupSchemaNameIndex > -1 || dupSchemaNames.length > 1) {
+				const separator = schemaIdentifier.length === 0 ? "" : "_";
+				schemaIdentifier += (separator + idx);
+				schemas[dupSchemaNameIndex] = schemas[dupSchemaNameIndex] + separator + dupSchemaNameIndex;
+			} else if (schemaIdentifier.length === 0) {
+				schemaIdentifier = idx.toString();
+			}
+			schemas.push(schemaIdentifier);
+		}
+		return schemas;
+	}
+	_getDatasetMetadataSchemaIndex(schemaName) {
+		const schemas = this.getDatasetMetadataSchemas();
+		return schemas.indexOf(schemaName);
 	}
 	getFilteredDatasetMetadata(propertyId) {
 		let datasetMetadata = this.getDatasetMetadata();
@@ -295,16 +336,27 @@ export default class PropertiesController {
 								usedFields.push(arrayValue);
 							}
 						}
-					} else { // simple property values
+					} else if (typeof propValue === "string") { // simple property values
 						usedFields.push(propValue);
 					}
 				}
 			}
+
 			const usedFieldsList = Array.from(new Set(usedFields)); // make all values unique
 			for (const usedField of usedFieldsList) {
-				datasetMetadata.fields = datasetMetadata.fields.filter(function(element) {
-					return element && element.name !== usedField;
-				});
+				if (usedField.indexOf(".") > -1) {
+					const schemaField = usedField.split(".");
+					const schemaIndex = this._getDatasetMetadataSchemaIndex(schemaField[0]);
+					datasetMetadata[schemaIndex].fields = datasetMetadata[schemaIndex].fields.filter(function(element) {
+						return element && element.name !== schemaField[1];
+					});
+				} else {
+					for (const schema of datasetMetadata) {
+						schema.fields = schema.fields.filter(function(element) {
+							return element && element.name !== usedField;
+						});
+					}
+				}
 			}
 		} catch (error) {
 			logger.warn("Error filtering shared controls " + error);

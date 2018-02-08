@@ -75,6 +75,7 @@ const ControlType = {
 	SOMEOFSELECT: "someofselect",
 	SELECTCOLUMN: "selectcolumn",
 	SELECTCOLUMNS: "selectcolumns",
+	SELECTSCHEMA: "selectschema",
 	ONEOFCOLUMNS: "oneofcolumns", // deprecate, replace with SELECTCOLUMN
 	SOMEOFCOLUMNS: "someofcolumns", // deprecated, replaced by SELECTCOLUMNS
 	ALLOCATEDCOLUMN: "allocatedcolumn", // deprecated, replaced by SELECTCOLUMN

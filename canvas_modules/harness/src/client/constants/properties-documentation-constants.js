@@ -29,6 +29,15 @@ const fields = [
 		}
 	},
 	{
+		"name": "AGE",
+		"type": "integer",
+		"metadata": {
+			"description": "",
+			"measure": "range",
+			"modeling_role": "input"
+		}
+	},
+	{
 		"name": "Sex",
 		"type": "string",
 		"metadata": {
@@ -128,6 +137,44 @@ const fields = [
 		}
 	}
 ];
+const fields2 = [
+	{
+		"name": "Age",
+		"type": "integer",
+		"metadata": {
+			"description": "",
+			"measure": "range",
+			"modeling_role": "input"
+		}
+	},
+	{
+		"name": "AGE",
+		"type": "integer",
+		"metadata": {
+			"description": "",
+			"measure": "range",
+			"modeling_role": "input"
+		}
+	},
+	{
+		"name": "School",
+		"type": "string",
+		"metadata": {
+			"description": "",
+			"measure": "discrete",
+			"modeling_role": "input"
+		}
+	},
+	{
+		"name": "City",
+		"type": "string",
+		"metadata": {
+			"description": "",
+			"measure": "discrete",
+			"modeling_role": "input"
+		}
+	}
+];
 
 // Public Methods ------------------------------------------------------------->
 _defineConstant("CONTAINERS_RIGHT_FLYOUT_PROPERTIES", "const rightFlyoutContent =(<CommonProperties \n" +
@@ -153,6 +200,10 @@ _defineConstant("CONTAINERS_RIGHT_FLYOUT_CANVAS", "<CommonCanvas \n" +
 _defineConstant("CONTROLS_PROPS_INFO", {
 	"title": "Group Type: controls",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Group: Controls",
+			"editable": false
+		},
 		"current_parameters": {
 			"textfieldControlName": "textfieldPlaceholderText",
 			"numberfieldControlName": -1
@@ -204,14 +255,20 @@ _defineConstant("CONTROLS_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		}
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		]
 	}
 });
 _defineConstant("TABS_PROPS_INFO", {
 	"title": "Group Type: tabs",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Group: tabs",
+			"editable": false
+		},
 		"current_parameters": {
 			"textfieldControlName": "textfieldPlaceholderText",
 			"numberfieldControlName": -1
@@ -267,14 +324,20 @@ _defineConstant("TABS_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		}
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		]
 	}
 });
 _defineConstant("SUBTABS_PROPS_INFO", {
 	"title": "Group Type: subTabs",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Group: subTabs",
+			"editable": false
+		},
 		"current_parameters": {
 			"textfieldControlName": "textfieldPlaceholderText",
 			"numberfieldControlName": -1
@@ -336,14 +399,20 @@ _defineConstant("SUBTABS_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		}
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		]
 	}
 });
 _defineConstant("PANELS_PROPS_INFO", {
 	"title": "Group Type: panels",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Group: panels",
+			"editable": false
+		},
 		"current_parameters": {
 			"textfieldControlName": "textfieldPlaceholderText",
 			"numberfieldControlName": -1
@@ -420,14 +489,20 @@ _defineConstant("PANELS_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		}
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		]
 	}
 });
 _defineConstant("PANEL_SELECTOR_PROPS_INFO", {
 	"title": "Group Type: panelSelector",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Group: panelSelector",
+			"editable": false
+		},
 		"current_parameters": {
 			"radioset": "red",
 			"strawberries": 1,
@@ -557,14 +632,20 @@ _defineConstant("PANEL_SELECTOR_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		}
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		]
 	}
 });
 _defineConstant("CHECKBOX_PANEL_PROPS_INFO", {
-	"title": "Group Type: controls",
+	"title": "Group Type: checkboxPanel",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Group: checkboxPanel",
+			"editable": false
+		},
 		"current_parameters": {
 			"textfieldControlName": "textfieldPlaceholderText",
 			"numberfieldControlName": -1
@@ -619,14 +700,20 @@ _defineConstant("CHECKBOX_PANEL_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		}
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		]
 	}
 });
 _defineConstant("SUMMARY_PANEL_PROPS_INFO", {
-	"title": "Group Type: controls",
+	"title": "Group Type: summaryPanel",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Group: summaryPanel",
+			"editable": false
+		},
 		"current_parameters": {
 			"structuretableRenameFields": [
 				[
@@ -800,9 +887,11 @@ _defineConstant("SUMMARY_PANEL_PROPS_INFO", {
 				]
 			}]
 		},
-		"dataset_metadata": {
-			"fields": fields
-		},
+		"dataset_metadata": [
+			{
+				"fields": fields
+			}
+		],
 		"resources": {
 			"structuretableRenameFields.rename.label": "Rename Columns",
 			"structuretableRenameFields.field.label": "Input name",
@@ -814,6 +903,10 @@ _defineConstant("SUMMARY_PANEL_PROPS_INFO", {
 _defineConstant("COLUMNSELECTION_PROPS_INFO", {
 	"title": "Group Types: ColumnSelection",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Group: columnSelection",
+			"editable": false
+		},
 		"current_parameters": {
 			"selectcolumnsList1": ["BP"],
 			"selectcolumnsList2": ["Age"]
@@ -865,15 +958,21 @@ _defineConstant("COLUMNSELECTION_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": fields
-		}
+		"dataset_metadata": [
+			{
+				"fields": fields
+			}
+		]
 	}
 });
 
 _defineConstant("TEXT_PANEL_PROPS_INFO", {
 	"title": "Group Types: Text Panel",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Group: textPanel",
+			"editable": false
+		},
 		"parameters": [
 		],
 		"uihints": {
@@ -899,6 +998,10 @@ _defineConstant("TEXT_PANEL_PROPS_INFO", {
 _defineConstant("TEXTFIELD_PROPS_INFO", {
 	"title": "TextField Title",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: textfield",
+			"editable": false
+		},
 		"current_parameters": {
 			"textfieldControlName": "textfieldPlaceholderText"
 		},
@@ -934,9 +1037,11 @@ _defineConstant("TEXTFIELD_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		}
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		]
 	},
 	"resources": {
 		"textfieldControlName_not_empty": "Textfield Control cannot be empty"
@@ -945,6 +1050,10 @@ _defineConstant("TEXTFIELD_PROPS_INFO", {
 _defineConstant("TEXTAREA_PROPS_INFO", {
 	"title": "Textarea Title",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: textarea",
+			"editable": false
+		},
 		"current_parameters": {
 			"textareaControlName": []
 		},
@@ -979,9 +1088,11 @@ _defineConstant("TEXTAREA_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		}
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		]
 	},
 	"resources": {
 		"textareaControlName_not_empty": "Textarea Control cannot be empty"
@@ -990,6 +1101,10 @@ _defineConstant("TEXTAREA_PROPS_INFO", {
 _defineConstant("PASSWORD_FIELD_PROPS_INFO", {
 	"title": "Password Title",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: password",
+			"editable": false
+		},
 		"current_parameters": {
 			"passwordField": ""
 		},
@@ -1024,14 +1139,20 @@ _defineConstant("PASSWORD_FIELD_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		}
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		]
 	}
 });
 _defineConstant("EXPRESSION_PROPS_INFO", {
 	"title": "Expression Title",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: Expression",
+			"editable": false
+		},
 		"current_parameters": {
 			"expressionBox": "is_real(salbegin)  and  gender  = \"F\" or BP = 120\n"
 		},
@@ -1067,14 +1188,20 @@ _defineConstant("EXPRESSION_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		}
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		]
 	}
 });
 _defineConstant("READONLY_PROPS_INFO", {
 	"title": "Readonly Title",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: readonly",
+			"editable": false
+		},
 		"current_parameters": {
 			"readonly_param": "The more I study, the more insatiable do I feel my genius for it to be. 'Ada Lovelace'"
 		},
@@ -1116,6 +1243,10 @@ _defineConstant("READONLY_PROPS_INFO", {
 _defineConstant("NUMBERFIELD_PROPS_INFO", {
 	"title": "NumberField Title",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: numberfield",
+			"editable": false
+		},
 		"current_parameters": {
 			"numberfieldControlName": 0
 		},
@@ -1149,14 +1280,20 @@ _defineConstant("NUMBERFIELD_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		}
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		]
 	}
 });
 _defineConstant("SPINNER_PROPS_INFO", {
 	"title": "Spinner Title",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: spinner",
+			"editable": false
+		},
 		"current_parameters": {
 			"spinner_int": 10,
 		},
@@ -1191,14 +1328,20 @@ _defineConstant("SPINNER_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		}
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		]
 	}
 });
 _defineConstant("NUMBERFIELD_GENERATOR_PROPS_INFO", {
 	"title": "NumberField Generator Title",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: numberfield",
+			"editable": false
+		},
 		"current_parameters": {
 			"numberfieldControlName": 0
 		},
@@ -1242,9 +1385,11 @@ _defineConstant("NUMBERFIELD_GENERATOR_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		},
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		],
 		"resources": {
 			"numberGenerator.label": "Generate",
 			"numberGenerator.desc": "Generate a random number for use as a seed value"
@@ -1295,6 +1440,10 @@ _defineConstant("DATEFIELD_PROPS_INFO", {
 _defineConstant("CHECKBOX_SINGLE_PROPS_INFO", {
 	"title": "Checkbox Title",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: checkbox",
+			"editable": false
+		},
 		"current_parameters": {
 			"checkboxSingle": false
 		},
@@ -1330,14 +1479,20 @@ _defineConstant("CHECKBOX_SINGLE_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		}
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		]
 	}
 });
 _defineConstant("CHECKBOX_SET_PROPS_INFO", {
 	"title": "Checkbox Set Title",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: checkboxSet",
+			"editable": false
+		},
 		"current_parameters": {
 			"checkboxSet": []
 		},
@@ -1376,14 +1531,20 @@ _defineConstant("CHECKBOX_SET_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		}
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		]
 	}
 });
 _defineConstant("RADIOSET_HORIZONTAL_PROPS_INFO", {
 	"title": "Radioset Title",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: radioSet",
+			"editable": false
+		},
 		"current_parameters": {
 			"radioset": ""
 		},
@@ -1421,14 +1582,20 @@ _defineConstant("RADIOSET_HORIZONTAL_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		}
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		]
 	}
 });
 _defineConstant("RADIOSET_VERTICAL_PROPS_INFO", {
 	"title": "Radioset Title",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: radioSet",
+			"editable": false
+		},
 		"current_parameters": {
 			"radioset": 2
 		},
@@ -1469,14 +1636,20 @@ _defineConstant("RADIOSET_VERTICAL_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		}
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		]
 	}
 });
 _defineConstant("ONEOFSELECT_PROPS_INFO", {
 	"title": "One of Select Title",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: oneofselect",
+			"editable": false
+		},
 		"current_parameters": {
 			"oneofselectList": ""
 		},
@@ -1517,14 +1690,20 @@ _defineConstant("ONEOFSELECT_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		}
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		]
 	}
 });
 _defineConstant("FORCED_RADIOSET_PROPS_INFO", {
 	"title": "One of Select Title",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: radioSet",
+			"editable": false
+		},
 		"current_parameters": {
 			"oneofselectList": ""
 		},
@@ -1567,14 +1746,20 @@ _defineConstant("FORCED_RADIOSET_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		}
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		]
 	}
 });
 _defineConstant("SOMEOFSELECT_PROPS_INFO", {
 	"title": "Some of Select Title",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: someofselect",
+			"editable": false
+		},
 		"current_parameters": {
 			"someofselectList": []
 		},
@@ -1615,14 +1800,20 @@ _defineConstant("SOMEOFSELECT_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		}
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		]
 	}
 });
 _defineConstant("FORCED_CHECKBOX_SET_PROPS_INFO", {
 	"title": "Forced Checkboxset Title",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: checkboxSet",
+			"editable": false
+		},
 		"current_parameters": {
 			"someofselectList": ""
 		},
@@ -1664,14 +1855,83 @@ _defineConstant("FORCED_CHECKBOX_SET_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		}
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		]
+	}
+});
+_defineConstant("SELECTSCHEMA_PROPS_INFO", {
+	"title": "SelectSchema Title",
+	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: selectschema",
+			"editable": false
+		},
+		"current_parameters": {
+			"selectschemaList": "Drugs_2"
+		},
+		"parameters": [
+			{
+				"id": "selectschemaList"
+			}
+		],
+		"uihints": {
+			"id": "selectschemaList",
+			"parameter_info": [
+				{
+					"parameter_ref": "selectschemaList",
+					"label": {
+						"default": "SelectSchema Control Name"
+					},
+					"description": {
+						"default": "SelectSchema test"
+					},
+					"control": "selectschema"
+				}
+			],
+			"group_info": [
+				{
+					"id": "SelectSchema Control",
+					"type": "controls",
+					"parameter_refs": [
+						"selectschemaList"
+					]
+				}
+			]
+		},
+		"dataset_metadata": [
+			{
+				"name": "Drugs",
+				"fields": fields
+			},
+			{
+				"name": "",
+				"fields": fields
+			},
+			{
+				"name": "Drugs",
+				"fields": fields
+			},
+			{
+				"name": "Private",
+				"fields": fields
+			},
+			{
+				"name": null,
+				"fields": fields
+			}
+		]
 	}
 });
 _defineConstant("SELECTCOLUMN_PROPS_INFO", {
 	"title": "Select Column Title",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: selectcolumn",
+			"editable": false
+		},
 		"current_parameters": {
 			"selectcolumnList": ""
 		},
@@ -1706,14 +1966,73 @@ _defineConstant("SELECTCOLUMN_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": fields
-		}
+		"dataset_metadata": [
+			{
+				"fields": fields
+			}
+		]
+	}
+});
+_defineConstant("SELECTCOLUMN_MULTI_INPUT_PROPS_INFO", {
+	"title": "Select Column Title",
+	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: selectcolumn",
+			"editable": false
+		},
+		"current_parameters": {
+			"selectcolumnList": ""
+		},
+		"parameters": [
+			{
+				"id": "selectcolumnList",
+				"type": "string",
+				"default": "",
+				"role": "column"
+			}
+		],
+		"uihints": {
+			"id": "selectcolumnList",
+			"parameter_info": [
+				{
+					"parameter_ref": "selectcolumnList",
+					"label": {
+						"default": "Select Column Control Name"
+					},
+					"description": {
+						"default": "selectcolumn test"
+					}
+				}
+			],
+			"group_info": [
+				{
+					"id": "SelectColumn Control",
+					"type": "controls",
+					"parameter_refs": [
+						"selectcolumnList"
+					]
+				}
+			]
+		},
+		"dataset_metadata": [
+			{
+				"name": "schema1",
+				"fields": fields2
+			},
+			{
+				"name": "schema2",
+				"fields": fields
+			}
+		]
 	}
 });
 _defineConstant("SELECTCOLUMNS_PROPS_INFO", {
 	"title": "SelectColumns Title",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: selectcolumns",
+			"editable": false
+		},
 		"current_parameters": {
 			"selectcolumnsList": ["BP"]
 		},
@@ -1748,14 +2067,77 @@ _defineConstant("SELECTCOLUMNS_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": fields
-		}
+		"dataset_metadata": [
+			{
+				"fields": fields
+			}
+		]
+	}
+});
+_defineConstant("SELECTCOLUMNS_MULTI_INPUT_PROPS_INFO", {
+	"title": "SelectColumns Title",
+	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: selectcolumns",
+			"editable": false
+		},
+		"current_parameters": {
+			"selectcolumnsList": ["schema1.Age", "schema1.AGE"]
+		},
+		"parameters": [
+			{
+				"id": "selectcolumnsList",
+				"type": "array[string]",
+				"default": [],
+				"role": "column"
+			}
+		],
+		"uihints": {
+			"id": "selectcolumnsList",
+			"parameter_info": [
+				{
+					"parameter_ref": "selectcolumnsList",
+					"label": {
+						"default": "SelectColumns Control Name"
+					},
+					"description": {
+						"default": "selectcolumns test"
+					}
+				}
+			],
+			"group_info": [
+				{
+					"id": "SelectColumns Control",
+					"type": "columnSelection",
+					"parameter_refs": [
+						"selectcolumnsList"
+					]
+				}
+			]
+		},
+		"dataset_metadata": [
+			{
+				"name": "schema1",
+				"fields": fields2
+			},
+			{
+				"name": "schema2",
+				"fields": fields
+			},
+			{
+				"name": "schema2",
+				"fields": fields
+			}
+		]
 	}
 });
 _defineConstant("TOGGLETEXT_PROPS_INFO", {
 	"title": "Toggletext Title",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: toggletext",
+			"editable": false
+		},
 		"current_parameters": {
 			"toggletextOption": ["On"]
 		},
@@ -1792,14 +2174,20 @@ _defineConstant("TOGGLETEXT_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		}
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		]
 	}
 });
 _defineConstant("TOGGLETEXTICONS_PROPS_INFO", {
 	"title": "Toggletext Title",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Control: toggletext",
+			"editable": false
+		},
 		"current_parameters": {
 			"toggletextOption": ["On"]
 		},
@@ -1840,15 +2228,21 @@ _defineConstant("TOGGLETEXTICONS_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		}
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		]
 	}
 });
 
 _defineConstant("STRUCTURETABLE_INLINE_TOGGLE_PROPS_INFO", {
 	"title": "StructureTableToggle Title",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Complex: structuretable",
+			"editable": false
+		},
 		"current_parameters": {
 			"structureInlineToggleList": [["Cholesterol", "Ascending"]]
 		},
@@ -1923,9 +2317,11 @@ _defineConstant("STRUCTURETABLE_INLINE_TOGGLE_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": fields
-		},
+		"dataset_metadata": [
+			{
+				"fields": fields
+			}
+		],
 		"resources": {
 			"structureInlineToggleList.field.label": "Field",
 			"structureInlineToggleList.sort_order.label": "Order",
@@ -1937,6 +2333,10 @@ _defineConstant("STRUCTURETABLE_INLINE_TOGGLE_PROPS_INFO", {
 _defineConstant("STRUCTURETABLE_INLINE_TEXTFIELD_PROPS_INFO", {
 	"title": "StructureTableInlineTextfield Title",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Attribute: inline",
+			"editable": false
+		},
 		"current_parameters": {
 			"structureInlineTextfieldList": [["BP", "BP-1"]]
 		},
@@ -2005,9 +2405,11 @@ _defineConstant("STRUCTURETABLE_INLINE_TEXTFIELD_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": fields
-		},
+		"dataset_metadata": [
+			{
+				"fields": fields
+			}
+		],
 		"resources": {
 			"structureInlineTextfield.field.label": "Input Name",
 			"structureInlineTextfield.inline_textfield.label": "OutputName"
@@ -2017,6 +2419,10 @@ _defineConstant("STRUCTURETABLE_INLINE_TEXTFIELD_PROPS_INFO", {
 _defineConstant("STRUCTURETABLE_INLINE_DROPDOWN_PROPS_INFO", {
 	"title": "StructureTableDropdown Title",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Attribute: edit_style",
+			"editable": false
+		},
 		"current_parameters": {
 			"structureInlineDropdownList": [["BP", "Integer"]]
 		},
@@ -2093,9 +2499,11 @@ _defineConstant("STRUCTURETABLE_INLINE_DROPDOWN_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": fields
-		},
+		"dataset_metadata": [
+			{
+				"fields": fields
+			}
+		],
 		"resources": {
 			"structureInlineDropdown.field.label": "Field",
 			"structureInlineDropdown.inline_dropdown.label": "Type"
@@ -2105,6 +2513,10 @@ _defineConstant("STRUCTURETABLE_INLINE_DROPDOWN_PROPS_INFO", {
 _defineConstant("STRUCTURETABLE_SUBPANEL_TEXTFIELD_PROPS_INFO", {
 	"title": "StructureTableInlineTextfield Title",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Attribute: subpanel",
+			"editable": false
+		},
 		"current_parameters": {
 			"structurelisteditorTableInputList": [["BP", "BP-1"]]
 		},
@@ -2173,73 +2585,75 @@ _defineConstant("STRUCTURETABLE_SUBPANEL_TEXTFIELD_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": [
-				{
-					"name": "Age",
-					"type": "integer",
-					"metadata": {
-						"description": "",
-						"measure": "range",
-						"modeling_role": "input"
+		"dataset_metadata": [
+			{
+				"fields": [
+					{
+						"name": "Age",
+						"type": "integer",
+						"metadata": {
+							"description": "",
+							"measure": "range",
+							"modeling_role": "input"
+						}
+					},
+					{
+						"name": "Sex",
+						"type": "string",
+						"metadata": {
+							"description": "",
+							"measure": "discrete",
+							"modeling_role": "input"
+						}
+					},
+					{
+						"name": "BP",
+						"type": "string",
+						"metadata": {
+							"description": "",
+							"measure": "discrete",
+							"modeling_role": "input"
+						}
+					},
+					{
+						"name": "Cholesterol",
+						"type": "string",
+						"metadata": {
+							"description": "",
+							"measure": "discrete",
+							"modeling_role": "input"
+						}
+					},
+					{
+						"name": "Na",
+						"type": "double",
+						"metadata": {
+							"description": "",
+							"measure": "range",
+							"modeling_role": "input"
+						}
+					},
+					{
+						"name": "K",
+						"type": "double",
+						"metadata": {
+							"description": "",
+							"measure": "range",
+							"modeling_role": "input"
+						}
+					},
+					{
+						"name": "Drug",
+						"type": "string",
+						"metadata": {
+							"description": "",
+							"measure": "discrete",
+							"modeling_role": "input"
+						}
 					}
-				},
-				{
-					"name": "Sex",
-					"type": "string",
-					"metadata": {
-						"description": "",
-						"measure": "discrete",
-						"modeling_role": "input"
-					}
-				},
-				{
-					"name": "BP",
-					"type": "string",
-					"metadata": {
-						"description": "",
-						"measure": "discrete",
-						"modeling_role": "input"
-					}
-				},
-				{
-					"name": "Cholesterol",
-					"type": "string",
-					"metadata": {
-						"description": "",
-						"measure": "discrete",
-						"modeling_role": "input"
-					}
-				},
-				{
-					"name": "Na",
-					"type": "double",
-					"metadata": {
-						"description": "",
-						"measure": "range",
-						"modeling_role": "input"
-					}
-				},
-				{
-					"name": "K",
-					"type": "double",
-					"metadata": {
-						"description": "",
-						"measure": "range",
-						"modeling_role": "input"
-					}
-				},
-				{
-					"name": "Drug",
-					"type": "string",
-					"metadata": {
-						"description": "",
-						"measure": "discrete",
-						"modeling_role": "input"
-					}
-				}
-			]
-		},
+				]
+			}
+		],
 		"resources": {
 			"structurelisteditorTableInput.field.label": "Input Name",
 			"structurelisteditorTableInput.subpanel_textfield.label": "OutputName"
@@ -2249,6 +2663,10 @@ _defineConstant("STRUCTURETABLE_SUBPANEL_TEXTFIELD_PROPS_INFO", {
 _defineConstant("STRUCTURETABLE_ONPANEL_EXPRESSION_PROPS_INFO", {
 	"title": "StructureListEditor Title",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Attribute: on_panel",
+			"editable": false
+		},
 		"current_parameters": {
 			"expressionCellTable": [
 				[
@@ -2376,9 +2794,11 @@ _defineConstant("STRUCTURETABLE_ONPANEL_EXPRESSION_PROPS_INFO", {
 				}
 			}
 		],
-		"dataset_metadata": {
-			"fields": []
-		},
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		],
 		"resources": {
 			"expressionCellTable.name.label": "Set Field To",
 			"expressionCellTable.name.desc": "value of field",
@@ -2388,8 +2808,12 @@ _defineConstant("STRUCTURETABLE_ONPANEL_EXPRESSION_PROPS_INFO", {
 	}
 });
 _defineConstant("STRUCTURETABLE_ROW_SELECTION_PROPS_INFO", {
-	"title": "StructureListEditor Title",
+	"title": "StructureTableRow Title",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Attribute: row_selection",
+			"editable": false
+		},
 		"current_parameters": {
 			"expressionCellTable": [
 				["BabyBoomer", "Age >= 55"],
@@ -2516,9 +2940,11 @@ _defineConstant("STRUCTURETABLE_ROW_SELECTION_PROPS_INFO", {
 				}
 			}
 		],
-		"dataset_metadata": {
-			"fields": []
-		},
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		],
 		"resources": {
 			"expressionCellTable.name.label": "Set Field To",
 			"expressionCellTable.name.desc": "value of field",
@@ -2530,6 +2956,10 @@ _defineConstant("STRUCTURETABLE_ROW_SELECTION_PROPS_INFO", {
 _defineConstant("STRUCTURELISTEDITOR_PROPS_INFO", {
 	"title": "StructureListEditor Title",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Complex: structurelisteditor",
+			"editable": false
+		},
 		"current_parameters": {
 			"structurelisteditorList": [["Hello", "World"]]
 		},
@@ -2597,9 +3027,11 @@ _defineConstant("STRUCTURELISTEDITOR_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		},
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		],
 		"resources": {
 			"structurelisteditorTableInput.name.label": "Name",
 			"structurelisteditorTableInput.description.label": "Description"
@@ -2609,6 +3041,10 @@ _defineConstant("STRUCTURELISTEDITOR_PROPS_INFO", {
 _defineConstant("STRUCTURELISTEDITOR_ADDREMOVEROWS_PROPS_INFO", {
 	"title": "StructureListEditor Title",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Attribute: add_remove_rows",
+			"editable": false
+		},
 		"current_parameters": {
 			"structurelisteditorList": [["Difference", 1, 0.023]]
 		},
@@ -2691,9 +3127,11 @@ _defineConstant("STRUCTURELISTEDITOR_ADDREMOVEROWS_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		},
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		],
 		"resources": {
 			"structurelisteditorTableInput.name.label": "Name",
 			"structurelisteditorTableInput.nonseasonal.label": "NonSeasonal",
@@ -2702,8 +3140,12 @@ _defineConstant("STRUCTURELISTEDITOR_ADDREMOVEROWS_PROPS_INFO", {
 	}
 });
 _defineConstant("STRUCTURETABLE_MOVEABLE_PROPS_INFO", {
-	"title": "StructureTableDropdown Title",
+	"title": "StructureTableMoveable Title",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Attribute: moveable_rows",
+			"editable": false
+		},
 		"current_parameters": {
 			"structureInlineDropdownList": [["BP", "Integer"], ["Sex", "String"], ["K", "Double"]]
 		},
@@ -2781,9 +3223,11 @@ _defineConstant("STRUCTURETABLE_MOVEABLE_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": fields
-		},
+		"dataset_metadata": [
+			{
+				"fields": fields
+			}
+		],
 		"resources": {
 			"structureInlineDropdown.field.label": "Field",
 			"structureInlineDropdown.inline_dropdown.label": "Type"
@@ -2791,8 +3235,12 @@ _defineConstant("STRUCTURETABLE_MOVEABLE_PROPS_INFO", {
 	}
 });
 _defineConstant("STRUCTURETABLE_SORTABLE_PROPS_INFO", {
-	"title": "StructureTableDropdown Title",
+	"title": "StructureTableSortable Title",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Attribute: sortable",
+			"editable": false
+		},
 		"current_parameters": {
 			"structureInlineDropdownList": [["BP", "Integer"], ["K", "String"]]
 		},
@@ -2871,9 +3319,11 @@ _defineConstant("STRUCTURETABLE_SORTABLE_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": fields
-		},
+		"dataset_metadata": [
+			{
+				"fields": fields
+			}
+		],
 		"resources": {
 			"structureInlineDropdown.field.label": "Field",
 			"structureInlineDropdown.inline_dropdown.label": "Type"
@@ -2881,8 +3331,12 @@ _defineConstant("STRUCTURETABLE_SORTABLE_PROPS_INFO", {
 	}
 });
 _defineConstant("STRUCTURETABLE_FILTERABLE_PROPS_INFO", {
-	"title": "StructureTableDropdown Title",
+	"title": "StructureTableFilterable Title",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Attribute: filterable",
+			"editable": false
+		},
 		"current_parameters": {
 			"structureInlineDropdownList": [["BP", "Integer"], ["Na", "Double"]]
 		},
@@ -2960,9 +3414,11 @@ _defineConstant("STRUCTURETABLE_FILTERABLE_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": fields
-		},
+		"dataset_metadata": [
+			{
+				"fields": fields
+			}
+		],
 		"resources": {
 			"structureInlineDropdown.field.label": "Field",
 			"structureInlineDropdown.inline_dropdown.label": "Type"
@@ -2972,6 +3428,10 @@ _defineConstant("STRUCTURETABLE_FILTERABLE_PROPS_INFO", {
 _defineConstant("SUMMARY_PROPS_INFO", {
 	"title": "Group Type: controls",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Attribute: summary",
+			"editable": false
+		},
 		"current_parameters": {
 			"textfieldControlName": "textfieldPlaceholderText",
 			"numberfieldControlName": -1,
@@ -3231,9 +3691,11 @@ _defineConstant("SUMMARY_PROPS_INFO", {
 				]
 			}]
 		},
-		"dataset_metadata": {
-			"fields": fields
-		},
+		"dataset_metadata": [
+			{
+				"fields": fields
+			}
+		],
 		"resources": {
 			"structuretableSortOrder.label": "Sort",
 			"structuretableSortOrder.field.label": "Field",
@@ -3249,8 +3711,12 @@ _defineConstant("SUMMARY_PROPS_INFO", {
 	}
 });
 _defineConstant("STRUCTURETABLE_GENERATED_VALUES_PROPS_INFO", {
-	"title": "StructureTableDropdown Title",
+	"title": "StructureTableGenerated Title",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Attribute: generatedValues",
+			"editable": false
+		},
 		"current_parameters": {
 			"structureInlineDropdownList": [[1, "BP", "Integer"], [2, "Sex", "String"], [3, "K", "Double"]]
 		},
@@ -3344,9 +3810,11 @@ _defineConstant("STRUCTURETABLE_GENERATED_VALUES_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": fields
-		},
+		"dataset_metadata": [
+			{
+				"fields": fields
+			}
+		],
 		"resources": {
 			"structureInlineDropdown.field.label": "Field",
 			"structureInlineDropdown.inline_dropdown.label": "Type"
@@ -3354,8 +3822,12 @@ _defineConstant("STRUCTURETABLE_GENERATED_VALUES_PROPS_INFO", {
 	}
 });
 _defineConstant("STRUCTURETABLE_GENERATED_VALUES_DEFAULT_PROPS_INFO", {
-	"title": "StructureTableDropdown Title",
+	"title": "StructureTableGenerated Title",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Attribute: generatedValues",
+			"editable": false
+		},
 		"current_parameters": {
 			"structureInlineDropdownList": [[1, "BP", "Integer"], [2, "Sex", "String"], [3, "K", "Double"]]
 		},
@@ -3450,9 +3922,11 @@ _defineConstant("STRUCTURETABLE_GENERATED_VALUES_DEFAULT_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": fields
-		},
+		"dataset_metadata": [
+			{
+				"fields": fields
+			}
+		],
 		"resources": {
 			"structureInlineDropdown.field.label": "Field",
 			"structureInlineDropdown.inline_dropdown.label": "Type"
@@ -3463,6 +3937,10 @@ _defineConstant("STRUCTURETABLE_GENERATED_VALUES_DEFAULT_PROPS_INFO", {
 _defineConstant("ACTION_PROPS_INFO", {
 	"title": "Actions",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Actions",
+			"editable": false
+		},
 		"current_parameters": {
 			"number": 0
 		},

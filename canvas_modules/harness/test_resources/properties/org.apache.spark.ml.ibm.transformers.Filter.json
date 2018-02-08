@@ -81,73 +81,75 @@
       }
     }
   ],
-  "dataset_metadata": {
-    "fields": [
-      {
-        "name": "age",
-        "type": "integer",
-        "metadata": {
-          "description": "",
-          "measure": "range",
-          "modeling_role": "input"
-        }
-      },
-      {
-        "name": "sex",
-        "type": "string",
-        "metadata": {
-          "description": "",
-          "measure": "discrete",
-          "modeling_role": "input"
-        }
-      },
-      {
-        "name": "BP",
-        "type": "string",
-        "metadata": {
-          "description": "",
-          "measure": "discrete",
-          "modeling_role": "input"
-        }
-      },
-      {
-        "name": "cholesterol",
-        "type": "string",
-        "metadata": {
-          "description": "",
-          "measure": "discrete",
-          "modeling_role": "input"
-        }
-      },
-      {
-        "name": "Na",
-        "type": "double",
-        "metadata": {
-          "description": "",
-          "measure": "range",
-          "modeling_role": "input"
-        }
-      },
-      {
-        "name": "K",
-        "type": "double",
-        "metadata": {
-          "description": "",
-          "measure": "range",
-          "modeling_role": "input"
-        }
-      },
-      {
-        "name": "drug",
-        "type": "string",
-        "metadata": {
-          "description": "",
-          "measure": "discrete",
-          "modeling_role": "input"
-        }
-      }
-    ]
-  },
+  "dataset_metadata": [
+		{
+	    "fields": [
+	      {
+	        "name": "age",
+	        "type": "integer",
+	        "metadata": {
+	          "description": "",
+	          "measure": "range",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "sex",
+	        "type": "string",
+	        "metadata": {
+	          "description": "",
+	          "measure": "discrete",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "BP",
+	        "type": "string",
+	        "metadata": {
+	          "description": "",
+	          "measure": "discrete",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "cholesterol",
+	        "type": "string",
+	        "metadata": {
+	          "description": "",
+	          "measure": "discrete",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "Na",
+	        "type": "double",
+	        "metadata": {
+	          "description": "",
+	          "measure": "range",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "K",
+	        "type": "double",
+	        "metadata": {
+	          "description": "",
+	          "measure": "range",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "drug",
+	        "type": "string",
+	        "metadata": {
+	          "description": "",
+	          "measure": "discrete",
+	          "modeling_role": "input"
+	        }
+	      }
+	    ]
+	  }
+	],
   "resources": {
     "org.apache.spark.ml.ibm.transformers.Filter.label": "Filter Rows",
     "org.apache.spark.ml.ibm.transformers.Filter.desc": "Filter rows according to a condition",

@@ -1,17 +1,11 @@
 {
+  "titleDefinition": {
+    "title": "Select Column"
+  },
   "current_parameters": {
-    "field": "age",
-    "field_null": null,
-    "field_empty_string": "",
-    "field_placeholder": "",
-    "field1_panel": "age",
-    "field2_panel": "BP",
-    "field_error": "BP",
-    "field_warning": "NA",
-    "hide": true,
-    "field_hidden": "drug",
-    "disable": true,
-    "field_disabled": "age",
+    "field": "0.age",
+    "field1_panel": "0.age",
+    "field2_panel": "0.BP",
     "field_filter_measurement": "",
     "field_filter_type": "",
     "field_filter_and": "",
@@ -25,36 +19,6 @@
       "required": true
     },
     {
-      "id": "field_default",
-      "type": "string",
-      "default": "BP",
-      "role": "column",
-      "required": true
-    },
-    {
-      "id": "field_undefined",
-      "type": "string",
-      "role": "column",
-      "required": true
-    },
-    {
-      "id": "field_null",
-      "type": "string",
-      "role": "column",
-      "required": true
-    },
-    {
-      "id": "field_empty_string",
-      "type": "string",
-      "role": "column",
-      "required": true
-    },
-    {
-      "id": "field_placeholder",
-      "type": "string",
-      "role": "column"
-    },
-    {
       "id": "field1_panel",
       "type": "string",
       "role": "column",
@@ -62,38 +26,6 @@
     },
     {
       "id": "field2_panel",
-      "type": "string",
-      "role": "column",
-      "required": true
-    },
-    {
-      "id": "field_error",
-      "type": "string",
-      "role": "column",
-      "required": true
-    },
-    {
-      "id": "field_warning",
-      "type": "string",
-      "role": "column",
-      "required": true
-    },
-    {
-      "id": "hide",
-      "type": "boolean"
-    },
-    {
-      "id": "field_hidden",
-      "type": "string",
-      "role": "column",
-      "required": true
-    },
-    {
-      "id": "disable",
-      "type": "boolean"
-    },
-    {
-      "id": "field_disabled",
       "type": "string",
       "role": "column",
       "required": true
@@ -132,55 +64,7 @@
           "default": "Field"
         },
         "description": {
-          "default": "selectcolumn with parameter value set to 'age'"
-        }
-      },
-      {
-        "parameter_ref": "field_null",
-        "label": {
-          "default": "Field null"
-        },
-        "description": {
-          "default": "selectcolumn with parameter value set to 'null'"
-        }
-      },
-      {
-        "parameter_ref": "field_undefined",
-        "label": {
-          "default": "Field undefined"
-        },
-        "description": {
-          "default": "selectcolumn with parameter value set to 'undefined'"
-        }
-      },
-      {
-        "parameter_ref": "field_empty_string",
-        "label": {
-          "default": "Field Empty String"
-        },
-        "description": {
-          "default": "selectcolumn with parameter value set to '\"\"'"
-        }
-      },
-      {
-        "parameter_ref": "field_placeholder",
-        "label": {
-          "default": "Field with Placeholder text"
-        },
-        "description": {
-          "default": "selectcolumn with placeholder text 'None...'"
-        },
-        "place_holder_text": {
-          "default": "None..."
-        }
-      },
-      {
-        "parameter_ref": "field_default",
-        "label": {
-          "default": "Field Default Value"
-        },
-        "description": {
-          "default": "selectcolumn with parameter value set to 'BP'"
+          "default": "selectcolumn with parameter value set to '0.age'"
         }
       },
       {
@@ -189,7 +73,8 @@
           "default": "Field1 Panel"
         },
         "description": {
-          "default": "selectcolumn with parameter shared with Field2 Panel"
+          "default": "selectcolumn with parameter shared with Field2 Panel",
+					"placement": "on_panel"
         }
       },
       {
@@ -202,54 +87,12 @@
         }
       },
       {
-        "parameter_ref": "field_error",
-        "label": {
-          "default": "Field Error"
-        },
-        "description": {
-          "default": "selectcolumn with error when set to 'age'"
-        }
-      },
-      {
-        "parameter_ref": "field_warning",
-        "label": {
-          "default": "Field Warning"
-        },
-        "description": {
-          "default": "selectcolumn with warning when set to 'age'"
-        }
-      },
-      {
-        "parameter_ref": "hide",
-        "label": {
-          "default": "Hide 'Field Hidden'"
-        }
-      },
-      {
-        "parameter_ref": "field_hidden",
-        "label": {
-          "default": "Field Hidden"
-        }
-      },
-      {
-        "parameter_ref": "disable",
-        "label": {
-          "default": "Disable 'Field Disabled'"
-        }
-      },
-      {
-        "parameter_ref": "field_disabled",
-        "label": {
-          "default": "Field Disabled"
-        }
-      },
-      {
         "parameter_ref": "field_filter_measurement",
         "label": {
           "default": "Filter by Measurement"
         },
         "description": {
-          "default": "Filters out all fields without a 'measurement' of 'discrete'.  Should be all 'BP*' fields."
+          "default": "Filters out all fields without a 'measurement' of 'discrete'.  Should be all '*BP*' and 'stringAndDiscrete' fields."
         }
       },
       {
@@ -258,7 +101,7 @@
           "default": "Filter by Type"
         },
         "description": {
-          "default": "Filters out all fields without a 'type' of 'integer'.  Should be all 'age*' fields."
+          "default": "Filters out all fields without a 'type' of 'integer'.  Should be all '*age*' and 'intAndRange' fields."
         }
       },
       {
@@ -267,7 +110,7 @@
           "default": "Filter by Type and Measurement"
         },
         "description": {
-          "default": "Filters out all fields without a 'type' of 'string' and 'measurement' of 'set'.  Should be all 'drug*' fields."
+          "default": "Filters out all fields without a 'type' of 'string' and 'measurement' of 'set'.  Should be all '*drug*' and 'stringAndSet' fields."
         }
       },
       {
@@ -276,7 +119,7 @@
           "default": "Filter by Type or Measurement"
         },
         "description": {
-          "default": "Filters out all fields without a 'type' of 'integer' or 'measurement' of 'set'.  Should be all 'drug*' and 'age*' fields."
+          "default": "Filters out all fields without a 'type' of 'integer' or 'measurement' of 'set'.  Should be all '*drug*', '*age*', 'stringAndSet', and 'intAndRange' fields."
         }
       }
     ],
@@ -306,29 +149,9 @@
             },
             "type": "controls",
             "parameter_refs": [
-              "field",
-              "field_null",
-              "field_empty_string",
-              "field_undefined",
-              "field_default",
-              "field_placeholder"
+              "field"
             ]
           }
-        ]
-      },
-      {
-        "id": "selectcolumn-conditions",
-        "label": {
-          "default": "Conditions"
-        },
-        "type": "controls",
-        "parameter_refs": [
-          "field_error",
-          "field_warning",
-          "hide",
-          "field_hidden",
-          "disable",
-          "field_disabled"
         ]
       },
       {
@@ -347,70 +170,6 @@
     ]
   },
   "conditions": [
-    {
-      "validation": {
-        "fail_message": {
-          "type": "error",
-          "focus_parameter_ref": "field_error",
-          "message": {
-            "default": "Don't select 'age'"
-          }
-        },
-        "evaluate": {
-          "condition": {
-            "parameter_ref": "field_error",
-            "op": "notEquals",
-            "value": "age"
-          }
-        }
-      }
-    },
-    {
-      "validation": {
-        "fail_message": {
-          "type": "warning",
-          "focus_parameter_ref": "field_warning",
-          "message": {
-            "default": "Shouldn't select 'age'"
-          }
-        },
-        "evaluate": {
-          "condition": {
-            "parameter_ref": "field_warning",
-            "op": "notEquals",
-            "value": "age"
-          }
-        }
-      }
-    },
-    {
-      "visible": {
-        "parameter_refs": [
-          "field_hidden"
-        ],
-        "evaluate": {
-          "condition": {
-            "parameter_ref": "hide",
-            "op": "equals",
-            "value": false
-          }
-        }
-      }
-    },
-    {
-      "enabled": {
-        "parameter_refs": [
-          "field_disabled"
-        ],
-        "evaluate": {
-          "condition": {
-            "parameter_ref": "disable",
-            "op": "equals",
-            "value": false
-          }
-        }
-      }
-    },
     {
       "filter": {
         "parameter_ref": "field_filter_type",
@@ -478,7 +237,7 @@
   ],
   "dataset_metadata": [
 		{
-	    "fields": [
+    	"fields": [
 	      {
 	        "name": "age",
 	        "type": "integer",
@@ -586,9 +345,13 @@
 	          "measure": "set",
 	          "modeling_role": "input"
 	        }
-	      },
-	      {
-	        "name": "age4",
+	      }
+	    ]
+		},
+		{
+			"fields": [
+				{
+	        "name": "age",
 	        "type": "integer",
 	        "metadata": {
 	          "description": "",
@@ -597,7 +360,7 @@
 	        }
 	      },
 	      {
-	        "name": "BP4",
+	        "name": "BP",
 	        "type": "string",
 	        "metadata": {
 	          "description": "",
@@ -606,7 +369,7 @@
 	        }
 	      },
 	      {
-	        "name": "Na4",
+	        "name": "Na",
 	        "type": "double",
 	        "metadata": {
 	          "description": "",
@@ -615,7 +378,34 @@
 	        }
 	      },
 	      {
-	        "name": "drug4",
+	        "name": "drug",
+	        "type": "string",
+	        "metadata": {
+	          "description": "",
+	          "measure": "set",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "intAndRange",
+	        "type": "integer",
+	        "metadata": {
+	          "description": "",
+	          "measure": "range",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "stringAndDiscrete",
+	        "type": "string",
+	        "metadata": {
+	          "description": "",
+	          "measure": "discrete",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "stringAndSet",
 	        "type": "string",
 	        "metadata": {
 	          "description": "",
@@ -623,7 +413,7 @@
 	          "modeling_role": "input"
 	        }
 	      }
-	    ]
-	  }
+			]
+		}
 	]
 }

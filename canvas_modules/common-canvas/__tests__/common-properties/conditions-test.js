@@ -327,53 +327,6 @@ validationDefinitions.columnSelectInputFieldList = [
 		}
 	}
 ];
-validationDefinitions.oneofcolumnsList = [
-	{
-		params: "oneofcolumnsList",
-		definition: {
-			"validation": {
-				"fail_message": {
-					"type": "error",
-					"focus_parameter_ref": "oneofcolumnsList",
-					"message": {
-						"resource_key": "one_of_columns_list_not_empty",
-						"default": "Cannot have Sex selected"
-					}
-				},
-				"evaluate": {
-					"condition": {
-						"parameter_ref": "oneofcolumnsList",
-						"op": "contains",
-						"value": "Sex"
-					}
-				}
-			}
-		}
-	}
-];
-validationDefinitions.someofcolumnsList = [
-	{
-		params: "someofcolumnsList",
-		definition: {
-			"validation": {
-				"fail_message": {
-					"type": "warning",
-					"focus_parameter_ref": "someofcolumnsList",
-					"message": {
-						"resource_key": "some_of_columns_list_not_empty",
-						"default": "Field must be selected"
-					}
-				},
-				"evaluate": {
-					"condition": {
-						"parameter_ref": "someofcolumnsList",
-						"op": "isNotEmpty"
-					}
-				}
-			}
-		}
-	}
-];
 validationDefinitions.columnSelectSharedWithInput = [
 	{
 		params: "columnSelectSharedWithInput",
@@ -975,10 +928,6 @@ describe("editor-form renders correctly with validations", () => {
 			JSON.parse(JSON.stringify(validationDefinitions.numberfieldSeed)))).to.be.true;
 		expect(isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.columnSelectInputFieldList)),
 			JSON.parse(JSON.stringify(validationDefinitions.columnSelectInputFieldList)))).to.be.true;
-		expect(isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.oneofcolumnsList)),
-			JSON.parse(JSON.stringify(validationDefinitions.oneofcolumnsList)))).to.be.true;
-		expect(isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.someofcolumnsList)),
-			JSON.parse(JSON.stringify(validationDefinitions.someofcolumnsList)))).to.be.true;
 		expect(isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.columnSelectSharedWithInput)),
 			JSON.parse(JSON.stringify(validationDefinitions.columnSelectSharedWithInput)))).to.be.true;
 		expect(isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.checkboxTypes)),
@@ -1007,40 +956,5 @@ describe("editor-form renders correctly with validations", () => {
 			JSON.parse(JSON.stringify(validationDefinitions.subpanelTextfieldName)))).to.be.true;
 
 		compareObjects({}, controller.getErrorMessages());
-	});
-});
-
-// DEPRECATED control: someofcolumns
-describe("condition messages renders correctly with someofcolumns control", () => {
-	it("someofcolumnsList control should have warning message from no selection", () => {
-		const wrapper = propertyUtils.createEditorForm("mount", CONDITIONS_TEST_FORM_DATA, controller);
-		const propertyId = { name: "someofcolumnsList" };
-		const input = wrapper.find("select[id='editor-control-someofcolumnsList']");
-		expect(input).to.have.length(1);
-
-		const optAge = document.createElement("OPTION");
-		optAge.selected = true;
-		optAge.value = "Age";
-		const options1 = [
-			optAge
-		];
-
-		expect(input.find("option")).to.have.length(7);
-		input.simulate("change", { target: { options: options1 } });
-		expect(controller.getPropertyValue(propertyId)).to.have.length(1);
-
-		optAge.selected = false;
-		input.simulate("change", { target: { options: options1 } });
-		wrapper.update();
-		expect(controller.getPropertyValue(propertyId)).to.have.length(0);
-
-		const someofcolumnsListWarningMessages = {
-			"type": "warning",
-			"text": "Field must be selected",
-		};
-		compareObjects(someofcolumnsListWarningMessages, controller.getErrorMessage(propertyId));
-
-		expect(wrapper.find(".validation-warning-message-icon-selection")).to.have.length(1);
-		expect(wrapper.find(".validation-error-message-color-warning")).to.have.length(1);
 	});
 });

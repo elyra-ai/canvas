@@ -1,0 +1,778 @@
+{
+  "titleDefinition": {
+    "title": "Select Schema"
+  },
+  "current_parameters": {
+    "selectschema": "Drugs_2",
+    "selectschema_null": null,
+    "selectschema_empty_string": "",
+    "selectschema_placeholder": "",
+    "selectschema_error": "random",
+    "selectschema_warning": "",
+    "hide": true,
+    "selectschema_hidden": "random",
+    "disable": true,
+    "selectschema_disabled": "random"
+  },
+  "parameters": [
+    {
+      "id": "selectschema",
+      "required": true
+    },
+    {
+      "id": "selectschema_default",
+      "default": "Drugs_1",
+      "required": true
+    },
+    {
+      "id": "selectschema_undefined",
+      "required": true
+    },
+    {
+      "id": "selectschema_null",
+      "required": true
+    },
+    {
+      "id": "selectschema_empty_string",
+      "required": true
+    },
+    {
+      "id": "selectschema_placeholder"
+    },
+    {
+      "id": "selectschema_error",
+      "required": true
+    },
+    {
+      "id": "selectschema_warning",
+      "required": true
+    },
+    {
+      "id": "hide",
+      "type": "boolean"
+    },
+    {
+      "id": "selectschema_hidden",
+      "required": true
+    },
+    {
+      "id": "disable",
+      "type": "boolean"
+    },
+    {
+      "id": "selectschema_disabled",
+      "required": true
+    }
+  ],
+  "uihints": {
+    "id": "selectschema",
+    "icon": "images/default.svg",
+    "label": {
+      "default": "One of Select"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "selectschema",
+        "label": {
+          "default": "selectschema"
+        },
+        "description": {
+          "default": "selectschema with parameter value set to 'Drugs_0'"
+        },
+        "control": "selectschema"
+      },
+      {
+        "parameter_ref": "selectschema_null",
+        "label": {
+          "default": "selectschema null"
+        },
+        "description": {
+          "default": "selectschema with parameter value set to 'null'"
+        },
+        "control": "selectschema"
+      },
+      {
+        "parameter_ref": "selectschema_undefined",
+        "label": {
+          "default": "selectschema undefined"
+        },
+        "description": {
+          "default": "selectschema with parameter value set to 'undefined'"
+        },
+        "control": "selectschema"
+      },
+      {
+        "parameter_ref": "selectschema_empty_string",
+        "label": {
+          "default": "selectschema Empty String"
+        },
+        "description": {
+          "default": "selectschema with parameter value set to '\"\"'"
+        },
+        "control": "selectschema"
+      },
+      {
+        "parameter_ref": "selectschema_placeholder",
+        "label": {
+          "default": "selectschema with Placeholder text"
+        },
+        "description": {
+          "default": "selectschema with placeholder text 'None...'"
+        },
+        "place_holder_text": {
+          "default": "None..."
+        },
+        "control": "selectschema"
+      },
+      {
+        "parameter_ref": "selectschema_default",
+        "label": {
+          "default": "selectschema Default Value"
+        },
+        "description": {
+          "default": "selectschema with parameter value set to 'random'"
+        },
+        "control": "selectschema"
+      },
+      {
+        "parameter_ref": "selectschema_error",
+        "label": {
+          "default": "selectschema Error"
+        },
+        "description": {
+          "default": "selectschema with error when set to 'Drugs_0'"
+        },
+        "control": "selectschema"
+      },
+      {
+        "parameter_ref": "selectschema_warning",
+        "label": {
+          "default": "selectschema Warning"
+        },
+        "description": {
+          "default": "selectschema with warning when set to 'Drugs_1'"
+        },
+        "control": "selectschema"
+      },
+      {
+        "parameter_ref": "hide",
+        "label": {
+          "default": "Hide 'selectschema Hidden'"
+        }
+      },
+      {
+        "parameter_ref": "selectschema_hidden",
+        "label": {
+          "default": "selectschema Hidden"
+        },
+        "control": "selectschema"
+      },
+      {
+        "parameter_ref": "disable",
+        "label": {
+          "default": "Disable 'selectschema Disabled'"
+        }
+      },
+      {
+        "parameter_ref": "selectschema_disabled",
+        "label": {
+          "default": "selectschema Disabled"
+        },
+        "control": "selectschema"
+      }
+    ],
+    "group_info": [
+      {
+        "id": "selectschema-values",
+        "label": {
+          "default": "Values"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "selectschema",
+          "selectschema_null",
+          "selectschema_empty_string",
+          "selectschema_undefined",
+          "selectschema_default",
+          "selectschema_placeholder"
+        ]
+      },
+      {
+        "id": "selectschema-conditions",
+        "label": {
+          "default": "Conditions"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "selectschema_error",
+          "selectschema_warning",
+          "hide",
+          "selectschema_hidden",
+          "disable",
+          "selectschema_disabled"
+        ]
+      }
+    ]
+  },
+  "conditions": [
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "selectschema_error",
+          "message": {
+            "default": "Don't select 'Drugs_0'"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "selectschema_error",
+            "op": "notEquals",
+            "value": "Drugs_0"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "selectschema_warning",
+          "message": {
+            "default": "Shouldn't select '1'"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "selectschema_warning",
+            "op": "notEquals",
+            "value": "1"
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "selectschema_hidden"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hide",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "selectschema_disabled"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disable",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    }
+  ],
+  "dataset_metadata": [
+    {
+      "name": "Drugs",
+      "fields": [
+        {
+          "name": "age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "age2",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP2",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na2",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug2",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    },
+    {
+      "name": "",
+      "fields": [
+        {
+          "name": "age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "age2",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP2",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na2",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug2",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Drugs",
+      "fields": [
+        {
+          "name": "age3",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP3",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na3",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug3",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "age4",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP4",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na4",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug4",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    },
+		{
+      "name": "Drugs",
+      "fields": [
+        {
+          "name": "age3",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP3",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na3",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug3",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "age4",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP4",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na4",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug4",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    },
+    {
+      "name": "random",
+      "fields": [
+        {
+          "name": "intAndRange",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "stringAndDiscrete",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "stringAndSet",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    },
+    {
+      "name": "",
+      "fields": [
+        {
+          "name": "age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "age2",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP2",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na2",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug2",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    },
+    {
+      "fields": [
+        {
+          "name": "age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "age2",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP2",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na2",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug2",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    }
+  ]
+}

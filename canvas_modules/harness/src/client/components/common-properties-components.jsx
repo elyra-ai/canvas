@@ -41,8 +41,11 @@ import {
 	FORCED_RADIOSET_PROPS_INFO,
 	SOMEOFSELECT_PROPS_INFO,
 	FORCED_CHECKBOX_SET_PROPS_INFO,
+	SELECTSCHEMA_PROPS_INFO,
 	SELECTCOLUMN_PROPS_INFO,
+	SELECTCOLUMN_MULTI_INPUT_PROPS_INFO,
 	SELECTCOLUMNS_PROPS_INFO,
+	SELECTCOLUMNS_MULTI_INPUT_PROPS_INFO,
 	TOGGLETEXT_PROPS_INFO,
 	TOGGLETEXTICONS_PROPS_INFO,
 	STRUCTURETABLE_INLINE_TOGGLE_PROPS_INFO,
@@ -231,6 +234,7 @@ class CommonPropertiesComponents extends React.Component {
 					"--radioset",
 					"--oneofselect",
 					"--someofselect",
+					"--selectschema",
 					"--selectcolumn",
 					"--selectcolumns",
 					"--toggletext",
@@ -951,8 +955,36 @@ class CommonPropertiesComponents extends React.Component {
 					</div>
 				</div>
 				<div className="properties-documentation-panels-controls-component">
+					<h3 id="--selectschema" className="section-subtitle">selectschema</h3>
+					<p>A dropdown control that contains the available schemas in <span className="highlight">dataset_metadata</span>.
+						The <span className="highlight">name</span> of the schema will be displayed if provided.
+						If <span className="highlight">name</span> is not provided, the index (zero-based) of the schema will
+						be used instead. If multiple schemas have the same <span className="highlight">name</span>, the index
+						of the schema will be appended with an underscore.</p>
+					<p>Specify the control type of the parameter to <span className="highlight">selectschema</span> to use this control.</p>
+					<div className="section-row">
+						<div className="section-column">
+							<CommonProperties
+								showPropertiesDialog
+								propertiesInfo={SELECTSCHEMA_PROPS_INFO}
+								containerType="Custom"
+							/>
+							{this.renderRightFlyoutButton(SELECTSCHEMA_PROPS_INFO)}
+						</div>
+						<div className="section-column section-column-code">
+							<pre className="json-block">
+								{this.jsonReplacer(SELECTSCHEMA_PROPS_INFO.parameterDef, "custom",
+									["current_parameters", "selectschemaList", "parameters",
+										"uihints", "id", "parameter_info", "parameter_ref", "label", "default", "description", "control",
+										"group_info", "type", "parameter_refs",
+										"dataset_metadata", "name"])}
+							</pre>
+						</div>
+					</div>
+				</div>
+				<div className="properties-documentation-panels-controls-component">
 					<h3 id="--selectcolumn" className="section-subtitle">selectcolumn</h3>
-					<p>A dropdown control that contains the available fields provided in <span className="highlight">dataset_metadata</span>.
+					<p>A dropdown control that contains the available fields provided in the <span className="highlight">dataset_metadata</span>.
 						The type of the parameter associated with the dropdown list must be of <span className="highlight">type</span> string
 						and the <span className="highlight">role</span> must be set to column.</p>
 					<div className="section-row">
@@ -967,6 +999,27 @@ class CommonPropertiesComponents extends React.Component {
 						<div className="section-column section-column-code">
 							<pre className="json-block">
 								{this.jsonReplacer(SELECTCOLUMN_PROPS_INFO.parameterDef, "all")}
+							</pre>
+						</div>
+					</div>
+					<p>If multiple input schemas are provided in the <span className="highlight">dataset_metadata</span>, the
+						<span className="highlight">selectcolumn</span> control will display all the fields from both schemas.
+						If there are multiple fields with the same name from different schemas, the field name will be prefixed
+						with the schema name followed by a period.
+					</p>
+					<div className="section-row">
+						<div className="section-column">
+							<CommonProperties
+								showPropertiesDialog
+								propertiesInfo={SELECTCOLUMN_MULTI_INPUT_PROPS_INFO}
+								containerType="Custom"
+							/>
+							{this.renderRightFlyoutButton(SELECTCOLUMN_MULTI_INPUT_PROPS_INFO)}
+						</div>
+						<div className="section-column section-column-code">
+							<pre className="json-block">
+								{this.jsonReplacer(SELECTCOLUMN_MULTI_INPUT_PROPS_INFO.parameterDef, "custom",
+									["dataset_metadata", "name", "fields"])}
 							</pre>
 						</div>
 					</div>
@@ -992,6 +1045,29 @@ class CommonPropertiesComponents extends React.Component {
 						<div className="section-column section-column-code">
 							<pre className="json-block">
 								{this.jsonReplacer(SELECTCOLUMNS_PROPS_INFO.parameterDef, "all")}
+							</pre>
+						</div>
+					</div>
+					<p>Similar to the <a className="properties-documentation-page-intro-link" href="#/properties#--selectcolumn">
+						selectcolumn</a> control above, if multiple input schemas are provided in
+						the <span className="highlight">dataset_metadata</span>, the <span className="highlight">selectcolumns</span> control
+						will display all the fields from both schemas. If there are multiple fields with the same name from different schemas,
+						the field name will be prefixed with the schema name followed by a period.
+						The field-picker will display an additional column that shows the schema where the field came from.
+					</p>
+					<div className="section-row">
+						<div className="section-column">
+							<CommonProperties
+								showPropertiesDialog
+								propertiesInfo={SELECTCOLUMNS_MULTI_INPUT_PROPS_INFO}
+								containerType="Custom"
+							/>
+							{this.renderRightFlyoutButton(SELECTCOLUMNS_MULTI_INPUT_PROPS_INFO)}
+						</div>
+						<div className="section-column section-column-code">
+							<pre className="json-block">
+								{this.jsonReplacer(SELECTCOLUMNS_MULTI_INPUT_PROPS_INFO.parameterDef, "custom",
+									["dataset_metadata", "name", "fields"])}
 							</pre>
 						</div>
 					</div>
@@ -1054,8 +1130,11 @@ class CommonPropertiesComponents extends React.Component {
 					<p>A complex type table control for editing lists or maps of structures that with field names
 						in the first column. The <span className="highlight">type</span> in <span className="highlight">group_info</span> needs
 						to be set to <a className="properties-documentation-page-intro-link" href="#/properties#--columnSelection">
-							columnSelection
-						</a>.</p>
+						columnSelection</a>.
+					</p>
+					<p>If multiple input schemas are provided, similar to <a className="properties-documentation-page-intro-link" href="#/properties#--selectcolumns">
+						selectcolumns</a>, the field names will be prefixed with the schema name followed by a decimal
+						for fields with the same name in different schemas.</p>
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties

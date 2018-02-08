@@ -19,6 +19,7 @@ import Controller from "../../../src/common-properties/properties-controller";
 import isEqual from "lodash/isEqual";
 
 import structuretableParamDef from "../../test_resources/paramDefs/structuretable_paramDef.json";
+import structuretableMultiInputParamDef from "../../test_resources/paramDefs/structuretable_multiInput_paramDef.json";
 
 import chai from "chai";
 import chaiEnzyme from "chai-enzyme";
@@ -467,73 +468,75 @@ const readonlyControlStartValue = {
 	"summaryLabel": "Sort by"
 };
 
-const datasetMetadata = {
-	"fields": [
-		{
-			"name": "Age",
-			"type": "integer",
-			"metadata": {
-				"description": "",
-				"measure": "range",
-				"modeling_role": "input"
+const datasetMetadata = [
+	{
+		"fields": [
+			{
+				"name": "Age",
+				"type": "integer",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"modeling_role": "input"
+				}
+			},
+			{
+				"name": "Sex",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "discrete",
+					"modeling_role": "input"
+				}
+			},
+			{
+				"name": "BP",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "discrete",
+					"modeling_role": "input"
+				}
+			},
+			{
+				"name": "Cholesterol",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "discrete",
+					"modeling_role": "input"
+				}
+			},
+			{
+				"name": "Na",
+				"type": "double",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"modeling_role": "input"
+				}
+			},
+			{
+				"name": "K",
+				"type": "double",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"modeling_role": "input"
+				}
+			},
+			{
+				"name": "Drug",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "discrete",
+					"modeling_role": "input"
+				}
 			}
-		},
-		{
-			"name": "Sex",
-			"type": "string",
-			"metadata": {
-				"description": "",
-				"measure": "discrete",
-				"modeling_role": "input"
-			}
-		},
-		{
-			"name": "BP",
-			"type": "string",
-			"metadata": {
-				"description": "",
-				"measure": "discrete",
-				"modeling_role": "input"
-			}
-		},
-		{
-			"name": "Cholesterol",
-			"type": "string",
-			"metadata": {
-				"description": "",
-				"measure": "discrete",
-				"modeling_role": "input"
-			}
-		},
-		{
-			"name": "Na",
-			"type": "double",
-			"metadata": {
-				"description": "",
-				"measure": "range",
-				"modeling_role": "input"
-			}
-		},
-		{
-			"name": "K",
-			"type": "double",
-			"metadata": {
-				"description": "",
-				"measure": "range",
-				"modeling_role": "input"
-			}
-		},
-		{
-			"name": "Drug",
-			"type": "string",
-			"metadata": {
-				"description": "",
-				"measure": "discrete",
-				"modeling_role": "input"
-			}
-		}
-	]
-};
+		]
+	}
+];
 
 const propertyId = { name: "keys" };
 const propertyIdReadonlyControl = { name: "structuretableSortOrder" };
@@ -1290,5 +1293,162 @@ describe("ColumnStructureTableControl with filtering works correctly", () => {
 		propertyUtils.fieldPicker(["Drug"], ["Sex", "BP", "Cholesterol", "Drug"]);
 		wideflyoutWrapper.find("#properties-apply-button").simulate("click");
 		expect(filterCategory.find(".control-summary-list-rows")).to.have.length(1);
+	});
+});
+
+describe("ColumnStructureTableControl with multi input schemas renders correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(structuretableMultiInputParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("should prefix the correct schema for fields selected", () => {
+		const tablesCategory = wrapper.find(".category-title-container-right-flyout-panel").at(0); // TABLES category
+		tablesCategory.find(".control-summary-link-buttons").at(0)
+			.find(".button")
+			.simulate("click");
+		const wfhtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
+		const wideflyoutWrapper = new ReactWrapper(wfhtml, true);
+		const addFieldsButtons = wideflyoutWrapper.find("Button"); // field picker buttons
+		addFieldsButtons.at(0).simulate("click"); // open filter picker
+		propertyUtils.fieldPicker([
+			{ "name": "BP", "schema": "0" },
+			{ "name": "BP", "schema": "data" },
+			{ "name": "BP", "schema": "2" }
+		]);
+		wideflyoutWrapper.find("#properties-apply-button").simulate("click");
+		const firstSummary = tablesCategory.find(".control-summary.control-panel").at(0);
+		expect(firstSummary.find(".control-summary-list-rows")).to.have.length(5);
+
+		const expectedSummary = [
+			"Cholesterol",
+			"0.Age",
+			"0.BP",
+			"data.BP",
+			"2.BP"
+		];
+
+		for (let idx = 0; idx < firstSummary.length; idx++) {
+			expect(firstSummary.find(".control-summary-list-rows").at(idx)
+				.text()).to.equal(expectedSummary[idx]);
+		}
+	});
+
+	it("should render the no buttons table with correct fields with schema", () => {
+		const tablesCategory = wrapper.find(".category-title-container-right-flyout-panel").at(0); // TABLES category
+		tablesCategory.find(".control-summary-link-buttons").at(1)
+			.find(".button")
+			.simulate("click");
+		const wfhtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
+		const wideflyoutWrapper = new ReactWrapper(wfhtml, true);
+		const tableRows = wideflyoutWrapper.find("#flexible-table-structuretableNoButtons").find(".table-row");
+		expect(tableRows).to.have.length(22);
+
+		const expectedSummary = [
+			"0.Age", "Sex", "0.BP", "Cholesterol", "0.Na", "K", "Drug", "Ag",
+			"data.Age", "data.BP", "data.Na", "data.drug", "data.drug2", "data.drug3", "data.drug4",
+			"2.Age", "2.BP", "2.Na", "2.drug", "2.drug2", "2.drug3", "2.drug4"
+		];
+
+		for (let idx = 0; idx < tableRows.length; idx++) {
+			expect(tableRows.at(idx).find("td")
+				.at(0)
+				.text()).to.equal(expectedSummary[idx]);
+		}
+	});
+
+	it("should render the selectschema control in the table", () => {
+		const tablesCategory = wrapper.find(".category-title-container-right-flyout-panel").at(0); // TABLES category
+		tablesCategory.find(".control-summary-link-buttons").at(2)
+			.find(".button")
+			.simulate("click");
+		const wfhtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
+		const wideflyoutWrapper = new ReactWrapper(wfhtml, true);
+		const addFieldsButtons = wideflyoutWrapper.find("Button"); // field picker buttons
+		addFieldsButtons.at(0).simulate("click"); // open filter picker
+
+		propertyUtils.fieldPicker([
+			{ "name": "Cholesterol", "schema": "0" },
+			{ "name": "Age", "schema": "data" }
+		]);
+
+		const tableRows = wideflyoutWrapper.find("#flexible-table-structuretableSortableColumns").find(".table-row");
+		expect(tableRows).to.have.length(2);
+
+		const rowIdx0 = tableRows.at(0).find("td");
+		expect(rowIdx0).to.have.length(8); // includes scrollbar column
+		expect(rowIdx0.at(1).text()).to.equal("Cholesterol");
+		expect(rowIdx0.at(5).find(".Dropdown-placeholder")
+			.text()).to.equal("...");
+
+		let selectschema = rowIdx0.at(5).find("Dropdown");
+		expect(selectschema).to.have.length(1);
+		const schemaOptions = selectschema.at(0).prop("options"); // by Type
+		const expectedOptions = [
+			{ label: "...", value: "" },
+			{ label: "0", value: "0" },
+			{ label: "data", value: "data" },
+			{ label: "2", value: "2" }
+		];
+		expect(schemaOptions).to.eql(expectedOptions);
+		selectschema.at(0).getNode()
+			.setValue("data", "data");
+		expect(rowIdx0.at(5).find(".Dropdown-placeholder")
+			.text()).to.equal("data");
+
+		const rowIdx1 = tableRows.at(1).find("td");
+		expect(rowIdx1).to.have.length(8); // includes scrollbar column
+		expect(rowIdx1.at(1).text()).to.equal("data.Age");
+		expect(rowIdx1.at(5).find(".Dropdown-placeholder")
+			.text()).to.equal("...");
+
+		selectschema = rowIdx1.at(5).find("Dropdown");
+		expect(selectschema).to.have.length(1);
+		selectschema.at(0).getNode()
+			.setValue("0", "0");
+
+		expect(rowIdx1.at(5).find(".Dropdown-placeholder")
+			.text()).to.equal("0");
+
+		wideflyoutWrapper.find("#properties-apply-button").simulate("click");
+		const thirdSummary = tablesCategory.find(".control-summary.control-panel").at(2);
+		expect(thirdSummary.find(".control-summary-list-rows")).to.have.length(2);
+
+		const summaryRow0 = thirdSummary.find(".control-summary-list-rows").at(0)
+			.find(".control-summary-table-row-multi-data");
+		expect(summaryRow0.at(0).text()).to.equal("Cholesterol");
+		expect(summaryRow0.at(1).text()).to.equal("data");
+
+		const summaryRow1 = thirdSummary.find(".control-summary-list-rows").at(1)
+			.find(".control-summary-table-row-multi-data");
+		expect(summaryRow1.at(0).text()).to.equal("data.Age");
+		expect(summaryRow1.at(1).text()).to.equal("0");
+	});
+
+	it("should filter fields from multi schema input that aren't type string", () => {
+		const tablesCategory = wrapper.find(".category-title-container-right-flyout-panel").at(1); // TABLES category
+		tablesCategory.find(".control-summary-link-buttons").at(0)
+			.find(".button")
+			.simulate("click");
+		const wfhtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
+		const wideflyoutWrapper = new ReactWrapper(wfhtml, true);
+		const addFieldsButtons = wideflyoutWrapper.find("Button"); // field picker buttons
+		addFieldsButtons.at(0).simulate("click"); // open filter picker
+
+		const fphtml = document.getElementById("field-picker-table"); // needed since modal dialogs are outside `wrapper`
+		const fieldpicker = new ReactWrapper(fphtml, true);
+		const tableRows = fieldpicker.find(".field-picker-data-rows");
+		expect(tableRows).to.have.length(14);
+
+		for (let i = 0; i < tableRows.length; i++) {
+			const row = tableRows.at(i);
+			expect(row.find("td").at(3)
+				.text()).to.equal("string");
+		}
 	});
 });

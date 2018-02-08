@@ -15,6 +15,7 @@ import Controller from "../../../src/common-properties/properties-controller";
 
 import propertyUtils from "../../_utils_/property-utils";
 import selectcolumnParamDef from "../../test_resources/paramDefs/selectcolumn_paramDef.json";
+import selectcolumnMultiInputParamDef from "../../test_resources/paramDefs/selectcolumn_multiInput_paramDef.json";
 
 const controller = new Controller();
 
@@ -37,43 +38,47 @@ const control = {
 	"required": true
 };
 
-const dataModel = {
-	"fields": [
-		{
-			"name": "age",
-			"type": "integer",
-			"metadata": {
-				"description": "",
-				"measure": "range",
-				"modeling_role": "input"
+const dataModel = [
+	{
+		"fields": [
+			{
+				"name": "age",
+				"type": "integer",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"modeling_role": "input"
+				}
+			},
+			{
+				"name": "BP",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "discrete",
+					"modeling_role": "input"
+				}
+			},
+			{
+				"name": "Na",
+				"type": "double",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"modeling_role": "input"
+				}
 			}
-		},
-		{
-			"name": "BP",
-			"type": "string",
-			"metadata": {
-				"description": "",
-				"measure": "discrete",
-				"modeling_role": "input"
-			}
-		},
-		{
-			"name": "Na",
-			"type": "double",
-			"metadata": {
-				"description": "",
-				"measure": "range",
-				"modeling_role": "input"
-			}
-		}
-	]
-};
+		]
+	}
+];
 
 const propertyId = { name: "targetField" };
 
-const emptyDataModel = {
-	"fields": []
-};
+const emptyDataModel = [
+	{
+		"fields": []
+	}
+];
 function setPropertyValue() {
 	controller.setPropertyValues(
 		{ "targetField": "age" }
@@ -195,6 +200,107 @@ describe("selectcolumn control filters values correctly", () => {
 			{ label: "age2", value: "age2" },
 			{ label: "age3", value: "age3" },
 			{ label: "age4", value: "age4" }
+		];
+		expect(options).to.eql(expectedOptions);
+	});
+});
+
+describe("selectcolumn control filters values correctly with multi input", () => {
+	const renderedObject = propertyUtils.flyoutEditorForm(selectcolumnMultiInputParamDef);
+	const wrapper = renderedObject.wrapper;
+
+	it("should show correct values from selectcolumn control", () => {
+		const valuesCategory = wrapper.find(".category-title-container-right-flyout-panel").at(0); // VALUES category
+		const selectColumnControls = valuesCategory.find("Dropdown");
+		expect(selectColumnControls).to.have.length(3);
+
+		const select3 = selectColumnControls.at(2);
+		expect(select3.find(".Dropdown-placeholder").text()).to.equal("0.age");
+
+		const expectedOptions = [
+			{ label: "...", value: "" },
+			{ label: "0.age", value: "0.age" },
+			{ label: "0.BP", value: "0.BP" },
+			{ label: "0.Na", value: "0.Na" },
+			{ label: "0.drug", value: "0.drug" },
+			{ label: "age2", value: "age2" },
+			{ label: "BP2", value: "BP2" },
+			{ label: "Na2", value: "Na2" },
+			{ label: "drug2", value: "drug2" },
+			{ label: "age3", value: "age3" },
+			{ label: "BP3", value: "BP3" },
+			{ label: "Na3", value: "Na3" },
+			{ label: "drug3", value: "drug3" },
+			{ label: "1.age", value: "1.age" },
+			{ label: "1.BP", value: "1.BP" },
+			{ label: "1.Na", value: "1.Na" },
+			{ label: "1.drug", value: "1.drug" },
+			{ label: "intAndRange", value: "intAndRange" },
+			{ label: "stringAndDiscrete", value: "stringAndDiscrete" },
+			{ label: "stringAndSet", value: "stringAndSet" }
+		];
+		const actualOptions = select3.prop("options");
+		expect(actualOptions).to.eql(expectedOptions);
+
+		select3.getNode().setValue("1.Na", "1.Na");
+		expect(select3.find(".Dropdown-placeholder").text()).to.equal("1.Na");
+	});
+});
+
+describe("selectcolumn control filters values correctly with multi schema input", () => {
+	const renderedObject = propertyUtils.flyoutEditorForm(selectcolumnMultiInputParamDef);
+	const wrapper = renderedObject.wrapper;
+
+	it("should filter values from selectcolumn control", () => {
+		const filterCategory = wrapper.find(".category-title-container-right-flyout-panel").at(1); // FILTER category
+		const dropDowns = filterCategory.find("Dropdown");
+		expect(dropDowns).to.have.length(4);
+		let options = dropDowns.at(0).prop("options"); // by Type
+		let expectedOptions = [
+			{ label: "...", value: "" },
+			{ label: "0.age", value: "0.age" },
+			{ label: "age2", value: "age2" },
+			{ label: "age3", value: "age3" },
+			{ label: "1.age", value: "1.age" },
+			{ label: "intAndRange", value: "intAndRange" }
+		];
+		expect(options).to.eql(expectedOptions);
+
+		options = dropDowns.at(1).prop("options"); // by Measurement
+		expectedOptions = [
+			{ label: "...", value: "" },
+			{ label: "0.BP", value: "0.BP" },
+			{ label: "BP2", value: "BP2" },
+			{ label: "BP3", value: "BP3" },
+			{ label: "1.BP", value: "1.BP" },
+			{ label: "stringAndDiscrete", value: "stringAndDiscrete" }
+		];
+		expect(options).to.eql(expectedOptions);
+
+		options = dropDowns.at(2).prop("options"); // by Type and Measurement
+		expectedOptions = [
+			{ label: "...", value: "" },
+			{ label: "0.drug", value: "0.drug" },
+			{ label: "drug2", value: "drug2" },
+			{ label: "drug3", value: "drug3" },
+			{ label: "1.drug", value: "1.drug" },
+			{ label: "stringAndSet", value: "stringAndSet" }
+		];
+		expect(options).to.eql(expectedOptions);
+
+		options = dropDowns.at(3).prop("options"); // by Type or Measurement
+		expectedOptions = [
+			{ label: "...", value: "" },
+			{ label: "0.drug", value: "0.drug" },
+			{ label: "drug2", value: "drug2" },
+			{ label: "drug3", value: "drug3" },
+			{ label: "0.age", value: "0.age" },
+			{ label: "age2", value: "age2" },
+			{ label: "age3", value: "age3" },
+			{ label: "1.drug", value: "1.drug" },
+			{ label: "stringAndSet", value: "stringAndSet" },
+			{ label: "1.age", value: "1.age" },
+			{ label: "intAndRange", value: "intAndRange" }
 		];
 		expect(options).to.eql(expectedOptions);
 	});

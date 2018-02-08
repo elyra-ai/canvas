@@ -1,0 +1,420 @@
+{
+  "titleDefinition": {
+    "title": "Field Picker Test"
+  },
+  "current_parameters": {
+    "structuretableMultiInputSchema": []
+  },
+  "parameters": [
+    {
+      "id": "structuretableMultiInputSchema",
+      "type": "map[string,structuretableMultiInputSchema]",
+      "role": "column",
+      "default": []
+    }
+  ],
+  "complex_types": [
+    {
+      "id": "structuretableMultiInputSchema",
+      "key_definition": {
+        "id": "structuretableRenameFields_readonly_int",
+        "type": "integer"
+      },
+      "parameters": [
+        {
+          "id": "field",
+          "type": "string",
+          "role": "column"
+        },
+        {
+          "id": "new_name",
+          "type": "string",
+          "role": "new_column"
+        }
+      ]
+    }
+  ],
+  "uihints": {
+    "id": "StructureTable.test",
+    "icon": "images/modelbuildspark.svg",
+    "label": {
+      "default": "StructureTable Test"
+    },
+    "description": {
+      "default": "Test field picker with multiple input schemas in a structure table"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "structuretableMultiInputSchema",
+        "label": {
+          "default": "Rename Field"
+        },
+        "description": {
+          "default": "The level column will be auto-populated with an integer value for each row starting at 1. Subsequent rows will be incremented by 1."
+        }
+      }
+    ],
+    "complex_type_info": [
+      {
+        "complex_type_ref": "structuretableMultiInputSchema",
+        "label": {
+          "default": "Rename Subpanel"
+        },
+        "key_definition": {
+          "parameter_ref": "structuretableRenameFields_readonly_int",
+          "label": {
+            "resource_key": "structuretableMultiInputSchema.structuretableRenameFields_readonly_int.label"
+          },
+          "width": 15,
+          "generated_values": {
+            "operation": "index"
+          },
+          "control": "readonly"
+        },
+        "parameters": [
+          {
+            "parameter_ref": "field",
+            "label": {
+              "resource_key": "structuretableMultiInputSchema.field.label"
+            },
+            "width": 26,
+            "summary": true
+          },
+          {
+            "parameter_ref": "new_name",
+            "label": {
+              "resource_key": "structuretableMultiInputSchema.new_name.label"
+            },
+            "description": {
+              "resource_key": "structuretableMultiInputSchema.new_name.desc"
+            },
+            "width": 26,
+            "edit_style": "inline",
+            "filterable": true
+          }
+        ]
+      }
+    ],
+    "group_info": [
+      {
+        "id": "Tables",
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "structuretableMultiInputSchema-summary-panel",
+            "label": {
+              "default": "Configure Rename fields"
+            },
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "structuretableMultiInputSchema",
+                "label": {
+                  "default": "Tables"
+                },
+                "type": "columnSelection",
+                "parameter_refs": [
+                  "structuretableMultiInputSchema"
+                ]
+              }
+            ]
+          }
+				]
+      }
+    ]
+  },
+  "dataset_metadata": [
+    {
+      "fields": [
+        {
+          "name": "Age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+				{
+          "name": "age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Sex",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Cholesterol",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+				{
+					"name": "Time",
+					"type": "time",
+					"metadata": {
+						"description": "",
+						"measure": "discrete",
+						"modeling_role": "input"
+					}
+				}
+      ]
+    },
+    {
+      "name": "data",
+      "fields": [
+        {
+          "name": "Age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "K",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+				{
+					"name": "Time",
+					"type": "time",
+					"metadata": {
+						"description": "",
+						"measure": "discrete",
+						"modeling_role": "input"
+					}
+				},
+				{
+					"name": "Timestamp",
+					"type": "timestamp",
+					"metadata": {
+						"description": "",
+						"measure": "discrete",
+						"modeling_role": "input"
+					}
+				}
+      ]
+    },
+    {
+			"name": "data",
+      "fields": [
+				{
+					"name": "Drug",
+					"type": "string",
+					"metadata": {
+						"description": "",
+						"measure": "set",
+						"modeling_role": "input"
+					}
+				},
+				{
+          "name": "drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug2",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        },
+				{
+					"name": "Time",
+					"type": "time",
+					"metadata": {
+						"description": "",
+						"measure": "discrete",
+						"modeling_role": "input"
+					}
+				},
+				{
+					"name": "Timestamp",
+					"type": "timestamp",
+					"metadata": {
+						"description": "",
+						"measure": "discrete",
+						"modeling_role": "input"
+					}
+				},
+				{
+					"name": "Date",
+					"type": "date",
+					"metadata": {
+						"description": "",
+						"measure": "discrete",
+						"modeling_role": "input"
+					}
+				}
+      ]
+    },
+    {
+			"name": "",
+      "fields": [
+        {
+          "name": "Age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug2",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug3",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    },
+    {
+			"name": "schema",
+      "fields": [
+        {
+          "name": "Age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drugs",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    }
+  ],
+  "resources": {
+    "structuretableMultiInputSchema.rename.label": "Rename Columns",
+    "structuretableMultiInputSchema.field.label": "Input name",
+    "structuretableMultiInputSchema.new_name.label": "Output name",
+    "structuretableMultiInputSchema.new_name.desc": "New field name",
+    "structuretableMultiInputSchema.structuretableRenameFields_readonly_int.label": "Index"
+  }
+}

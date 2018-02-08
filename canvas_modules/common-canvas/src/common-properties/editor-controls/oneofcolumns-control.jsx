@@ -69,7 +69,7 @@ export default class OneofcolumnsControl extends EditorControl {
 }
 
 OneofcolumnsControl.propTypes = {
-	dataModel: PropTypes.object.isRequired,
+	dataModel: PropTypes.array.isRequired,
 	control: PropTypes.object.isRequired,
 	controller: PropTypes.object,
 	propertyId: PropTypes.object

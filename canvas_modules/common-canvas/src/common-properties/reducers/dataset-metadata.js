@@ -9,10 +9,13 @@
 
 import { SET_DATASET_METADATA } from "../actions";
 
-function datasetMetadata(state = {}, action) {
+function datasetMetadata(state = [], action) {
 	switch (action.type) {
 	case SET_DATASET_METADATA:
-		return Object.assign({}, action.datasetMetadata);
+		if (typeof action.datasetMetadata === "undefined") {
+			return [];
+		}
+		return JSON.parse(JSON.stringify(action.datasetMetadata));
 	default:
 		return state;
 	}

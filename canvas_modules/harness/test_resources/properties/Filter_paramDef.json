@@ -223,100 +223,102 @@
       }
     }
   ],
-  "dataset_metadata": {
-    "fields": [
-      {
-        "name": "Field 1",
-        "type": "integer",
-        "metadata": {
-          "description": "",
-          "measure": "range",
-          "modeling_role": "input"
-        }
-      },
-      {
-        "name": "Field 2",
-        "type": "string",
-        "metadata": {
-          "description": "",
-          "measure": "discrete",
-          "modeling_role": "input"
-        }
-      },
-      {
-        "name": "Field 3",
-        "type": "string",
-        "metadata": {
-          "description": "",
-          "measure": "discrete",
-          "modeling_role": "input"
-        }
-      },
-      {
-        "name": "Field 4",
-        "type": "string",
-        "metadata": {
-          "description": "",
-          "measure": "discrete",
-          "modeling_role": "input"
-        }
-      },
-      {
-        "name": "Field 5",
-        "type": "double",
-        "metadata": {
-          "description": "",
-          "measure": "range",
-          "modeling_role": "input"
-        }
-      },
-      {
-        "name": "Field 6",
-        "type": "double",
-        "metadata": {
-          "description": "",
-          "measure": "range",
-          "modeling_role": "input"
-        }
-      },
-      {
-        "name": "Field 7",
-        "type": "string",
-        "metadata": {
-          "description": "",
-          "measure": "discrete",
-          "modeling_role": "input"
-        }
-      },
-      {
-        "name": "Field 8",
-        "type": "double",
-        "metadata": {
-          "description": "",
-          "measure": "range",
-          "modeling_role": "input"
-        }
-      },
-      {
-        "name": "Field 9",
-        "type": "integer",
-        "metadata": {
-          "description": "",
-          "measure": "range",
-          "modeling_role": "input"
-        }
-      },
-      {
-        "name": "Field 10",
-        "type": "string",
-        "metadata": {
-          "description": "",
-          "measure": "discrete",
-          "modeling_role": "input"
-        }
-      }
-    ]
-  },
+  "dataset_metadata": [
+		{
+	    "fields": [
+	      {
+	        "name": "Field 1",
+	        "type": "integer",
+	        "metadata": {
+	          "description": "",
+	          "measure": "range",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "Field 2",
+	        "type": "string",
+	        "metadata": {
+	          "description": "",
+	          "measure": "discrete",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "Field 3",
+	        "type": "string",
+	        "metadata": {
+	          "description": "",
+	          "measure": "discrete",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "Field 4",
+	        "type": "string",
+	        "metadata": {
+	          "description": "",
+	          "measure": "discrete",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "Field 5",
+	        "type": "double",
+	        "metadata": {
+	          "description": "",
+	          "measure": "range",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "Field 6",
+	        "type": "double",
+	        "metadata": {
+	          "description": "",
+	          "measure": "range",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "Field 7",
+	        "type": "string",
+	        "metadata": {
+	          "description": "",
+	          "measure": "discrete",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "Field 8",
+	        "type": "double",
+	        "metadata": {
+	          "description": "",
+	          "measure": "range",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "Field 9",
+	        "type": "integer",
+	        "metadata": {
+	          "description": "",
+	          "measure": "range",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "Field 10",
+	        "type": "string",
+	        "metadata": {
+	          "description": "",
+	          "measure": "discrete",
+	          "modeling_role": "input"
+	        }
+	      }
+	    ]
+	  }
+	],
   "resources": {
     "filter.label": "Filter",
     "field_types.label": "",

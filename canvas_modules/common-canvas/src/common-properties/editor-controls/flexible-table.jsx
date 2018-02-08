@@ -148,10 +148,7 @@ class FlexibleTable extends React.Component {
 			const columnDef = this.props.columns[j];
 			const columnStyle = { "width": columnWidths[j] };
 			const tooltipId = "tooltip-column-" + columnDef.key;
-			let className = j === 0 ? "left-padding-15" : "";
-			if (columnDef.controlType === "checkbox") {
-				className += " text-align-center";
-			}
+			const className = j === 0 ? "left-padding-15" : "";
 			let tooltip;
 			let description;
 			if (((columnDef.editStyle && columnDef.editStyle === "inline") || columnDef.controlType === "checkbox") && columnDef.description) {

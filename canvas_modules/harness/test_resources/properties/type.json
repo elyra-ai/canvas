@@ -12,7 +12,7 @@
   },
   "formData": {
     "componentId": "type",
-    "label": "Define Types",
+    "label": "Type",
     "editorSize": "large",
     "uiItems": [
       {
@@ -38,24 +38,25 @@
                           "itemType": "control",
                           "control": {
                             "name": "default_value_mode",
+                            "separateLabel": true,
                             "label": {
                               "text": "Default mode"
                             },
-                            "separateLabel": true,
-                            "controlType": "radioset",
-                            "valueDef": {
-                              "propType": "string",
-                              "isList": false,
-                              "isMap": false
-                            },
+                            "orientation": "vertical",
                             "values": [
                               "Read",
                               "Pass"
                             ],
+                            "controlType": "radioset",
                             "valueLabels": [
                               "Read metadata",
                               "Pass (do not scan)"
-                            ]
+                            ],
+                            "valueDef": {
+                              "propType": "string",
+                              "isList": false,
+                              "isMap": false
+                            }
                           }
                         }
                       ]
@@ -64,9 +65,9 @@
                   {
                     "itemType": "summaryPanel",
                     "panel": {
-                      "id": "summary-panel",
+                      "id": "settings-summary",
                       "panelType": "summary",
-                      "label": "Configure Table",
+                      "label": "Configure Types",
                       "uiItems": [
                         {
                           "itemType": "panel",
@@ -79,16 +80,239 @@
                                 "itemType": "control",
                                 "control": {
                                   "name": "metadata",
+                                  "childItem": {
+                                    "itemType": "additionalLink",
+                                    "panel": {
+                                      "id": "TypeEntry",
+                                      "panelType": "general",
+                                      "uiItems": [
+                                        {
+                                          "itemType": "control",
+                                          "control": {
+                                            "name": "measure_type",
+                                            "sortable": true,
+                                            "separateLabel": true,
+                                            "label": {
+                                              "text": "Measure"
+                                            },
+                                            "values": [
+                                              "Default",
+                                              "Range",
+                                              "Discrete",
+                                              "Flag",
+                                              "Set",
+                                              "OrderedSet",
+                                              "Typeless",
+                                              "Collection",
+                                              "Geospatial"
+                                            ],
+                                            "controlType": "oneofselect",
+                                            "valueLabels": [
+                                              "Default",
+                                              "Range",
+                                              "Discrete",
+                                              "Flag",
+                                              "Set",
+                                              "Ordered Set",
+                                              "Typeless",
+                                              "Collection",
+                                              "Geospatial"
+                                            ],
+                                            "summary": true,
+                                            "valueDef": {
+                                              "propType": "string",
+                                              "isList": false,
+                                              "isMap": false
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "itemType": "control",
+                                          "control": {
+                                            "name": "role",
+                                            "sortable": true,
+                                            "separateLabel": true,
+                                            "label": {
+                                              "text": "Role"
+                                            },
+                                            "values": [
+                                              "Input",
+                                              "Target",
+                                              "Both",
+                                              "None",
+                                              "Partition",
+                                              "Split",
+                                              "Frequency",
+                                              "RecordID"
+                                            ],
+                                            "controlType": "oneofselect",
+                                            "valueLabels": [
+                                              "Input",
+                                              "Target",
+                                              "Both",
+                                              "None",
+                                              "Partition",
+                                              "Split",
+                                              "Frequency",
+                                              "Record ID"
+                                            ],
+                                            "summary": true,
+                                            "valueDef": {
+                                              "propType": "string",
+                                              "isList": false,
+                                              "isMap": false
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "itemType": "control",
+                                          "control": {
+                                            "name": "value_mode",
+                                            "sortable": true,
+                                            "separateLabel": true,
+                                            "label": {
+                                              "text": "Value mode"
+                                            },
+                                            "values": [
+                                              "Read",
+                                              "Pass",
+                                              "Specify",
+                                              "Read+",
+                                              "Current"
+                                            ],
+                                            "controlType": "oneofselect",
+                                            "valueLabels": [
+                                              "Read",
+                                              "Pass",
+                                              "Specify",
+                                              "Extend",
+                                              "Current"
+                                            ],
+                                            "valueDef": {
+                                              "propType": "string",
+                                              "isList": false,
+                                              "isMap": false
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "itemType": "control",
+                                          "control": {
+                                            "name": "values",
+                                            "sortable": true,
+                                            "separateLabel": true,
+                                            "label": {
+                                              "text": "Values"
+                                            },
+                                            "controlType": "textarea",
+                                            "valueDef": {
+                                              "propType": "string",
+                                              "isList": true,
+                                              "isMap": false
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "itemType": "control",
+                                          "control": {
+                                            "name": "labels",
+                                            "separateLabel": true,
+                                            "label": {
+                                              "text": "Value Labels"
+                                            },
+                                            "controlType": "textarea",
+                                            "valueDef": {
+                                              "propType": "string",
+                                              "isList": true,
+                                              "isMap": false
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "itemType": "control",
+                                          "control": {
+                                            "name": "max_string_length",
+                                            "separateLabel": true,
+                                            "label": {
+                                              "text": "Max String Length"
+                                            },
+                                            "controlType": "numberfield",
+                                            "valueDef": {
+                                              "propType": "integer",
+                                              "isList": false,
+                                              "isMap": false
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "itemType": "control",
+                                          "control": {
+                                            "name": "check",
+                                            "sortable": true,
+                                            "separateLabel": true,
+                                            "label": {
+                                              "text": "Check"
+                                            },
+                                            "values": [
+                                              "None",
+                                              "Nullify",
+                                              "Coerce",
+                                              "Discard",
+                                              "Warn",
+                                              "Abort"
+                                            ],
+                                            "controlType": "oneofselect",
+                                            "valueLabels": [
+                                              "None",
+                                              "Nullify",
+                                              "Coerce",
+                                              "Discard",
+                                              "Warn",
+                                              "Abort"
+                                            ],
+                                            "valueDef": {
+                                              "propType": "string",
+                                              "isList": false,
+                                              "isMap": false
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "itemType": "control",
+                                          "control": {
+                                            "name": "description",
+                                            "separateLabel": true,
+                                            "label": {
+                                              "text": "Description"
+                                            },
+                                            "controlType": "textfield",
+                                            "valueDef": {
+                                              "propType": "string",
+                                              "isList": false,
+                                              "isMap": false
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "text": "...",
+                                    "secondaryText": "Field Definition"
+                                  },
+                                  "separateLabel": true,
                                   "label": {
                                     "text": "Types"
                                   },
-                                  "separateLabel": true,
-                                  "controlType": "structuretable",
-                                  "valueDef": {
-                                    "propType": "complex_type",
-                                    "isList": true,
-                                    "isMap": false
-                                  },
+                                  "defaultRow": [
+                                    "",
+                                    "Default",
+                                    "Input",
+                                    "Read",
+                                    [],
+                                    [],
+                                    255,
+                                    "None",
+                                    ""
+                                  ],
                                   "subControls": [
                                     {
                                       "name": "field",
@@ -98,14 +322,15 @@
                                       "separateLabel": true,
                                       "visible": true,
                                       "width": 12,
-                                      "controlType": "oneofcolumns",
+                                      "controlType": "selectcolumn",
                                       "valueDef": {
                                         "propType": "string",
                                         "isList": false,
                                         "isMap": false
                                       },
                                       "role": "column",
-                                      "sortable": true
+                                      "sortable": true,
+                                      "summary": true
                                     },
                                     {
                                       "name": "measure_type",
@@ -143,7 +368,9 @@
                                         "Collection",
                                         "Geospatial"
                                       ],
-                                      "sortable": true
+                                      "sortable": true,
+                                      "editStyle": "inline",
+                                      "summary": true
                                     },
                                     {
                                       "name": "role",
@@ -179,7 +406,9 @@
                                         "Frequency",
                                         "Record ID"
                                       ],
-                                      "sortable": true
+                                      "sortable": true,
+                                      "editStyle": "inline",
+                                      "summary": true
                                     },
                                     {
                                       "name": "value_mode",
@@ -209,7 +438,8 @@
                                         "Extend",
                                         "Current"
                                       ],
-                                      "sortable": true
+                                      "sortable": true,
+                                      "editStyle": "inline"
                                     },
                                     {
                                       "name": "values",
@@ -225,7 +455,8 @@
                                         "isList": true,
                                         "isMap": false
                                       },
-                                      "sortable": true
+                                      "sortable": true,
+                                      "editStyle": "subpanel"
                                     },
                                     {
                                       "name": "labels",
@@ -240,7 +471,8 @@
                                         "propType": "string",
                                         "isList": true,
                                         "isMap": false
-                                      }
+                                      },
+                                      "editStyle": "subpanel"
                                     },
                                     {
                                       "name": "max_string_length",
@@ -255,7 +487,8 @@
                                         "propType": "integer",
                                         "isList": false,
                                         "isMap": false
-                                      }
+                                      },
+                                      "editStyle": "subpanel"
                                     },
                                     {
                                       "name": "check",
@@ -287,7 +520,8 @@
                                         "Warn",
                                         "Abort"
                                       ],
-                                      "sortable": true
+                                      "sortable": true,
+                                      "editStyle": "inline"
                                     },
                                     {
                                       "name": "description",
@@ -302,236 +536,16 @@
                                         "propType": "string",
                                         "isList": false,
                                         "isMap": false
-                                      }
+                                      },
+                                      "editStyle": "subpanel"
                                     }
                                   ],
                                   "keyIndex": 0,
-                                  "defaultRow": [
-                                    "",
-                                    "Default",
-                                    "Input",
-                                    "Read",
-                                    [],
-                                    [],
-                                    255,
-                                    "None",
-                                    ""
-                                  ],
-                                  "childItem": {
-                                    "itemType": "additionalLink",
-                                    "panel": {
-                                      "id": "TypeEntry",
-                                      "panelType": "general",
-                                      "uiItems": [
-                                        {
-                                          "itemType": "control",
-                                          "control": {
-                                            "name": "measure_type",
-                                            "label": {
-                                              "text": "Measure"
-                                            },
-                                            "separateLabel": true,
-                                            "controlType": "oneofselect",
-                                            "valueDef": {
-                                              "propType": "string",
-                                              "isList": false,
-                                              "isMap": false
-                                            },
-                                            "values": [
-                                              "Default",
-                                              "Range",
-                                              "Discrete",
-                                              "Flag",
-                                              "Set",
-                                              "OrderedSet",
-                                              "Typeless",
-                                              "Collection",
-                                              "Geospatial"
-                                            ],
-                                            "valueLabels": [
-                                              "Default",
-                                              "Range",
-                                              "Discrete",
-                                              "Flag",
-                                              "Set",
-                                              "Ordered Set",
-                                              "Typeless",
-                                              "Collection",
-                                              "Geospatial"
-                                            ],
-                                            "sortable": true
-                                          }
-                                        },
-                                        {
-                                          "itemType": "control",
-                                          "control": {
-                                            "name": "role",
-                                            "label": {
-                                              "text": "Role"
-                                            },
-                                            "separateLabel": true,
-                                            "controlType": "oneofselect",
-                                            "valueDef": {
-                                              "propType": "string",
-                                              "isList": false,
-                                              "isMap": false
-                                            },
-                                            "values": [
-                                              "Input",
-                                              "Target",
-                                              "Both",
-                                              "None",
-                                              "Partition",
-                                              "Split",
-                                              "Frequency",
-                                              "RecordID"
-                                            ],
-                                            "valueLabels": [
-                                              "Input",
-                                              "Target",
-                                              "Both",
-                                              "None",
-                                              "Partition",
-                                              "Split",
-                                              "Frequency",
-                                              "Record ID"
-                                            ],
-                                            "sortable": true
-                                          }
-                                        },
-                                        {
-                                          "itemType": "control",
-                                          "control": {
-                                            "name": "value_mode",
-                                            "label": {
-                                              "text": "Value mode"
-                                            },
-                                            "separateLabel": true,
-                                            "controlType": "oneofselect",
-                                            "valueDef": {
-                                              "propType": "string",
-                                              "isList": false,
-                                              "isMap": false
-                                            },
-                                            "values": [
-                                              "Read",
-                                              "Pass",
-                                              "Specify",
-                                              "Read+",
-                                              "Current"
-                                            ],
-                                            "valueLabels": [
-                                              "Read",
-                                              "Pass",
-                                              "Specify",
-                                              "Extend",
-                                              "Current"
-                                            ],
-                                            "sortable": true
-                                          }
-                                        },
-                                        {
-                                          "itemType": "control",
-                                          "control": {
-                                            "name": "values",
-                                            "label": {
-                                              "text": "Values"
-                                            },
-                                            "separateLabel": true,
-                                            "controlType": "textarea",
-                                            "valueDef": {
-                                              "propType": "string",
-                                              "isList": true,
-                                              "isMap": false
-                                            },
-                                            "sortable": true
-                                          }
-                                        },
-                                        {
-                                          "itemType": "control",
-                                          "control": {
-                                            "name": "labels",
-                                            "label": {
-                                              "text": "Value Labels"
-                                            },
-                                            "separateLabel": true,
-                                            "controlType": "textarea",
-                                            "valueDef": {
-                                              "propType": "string",
-                                              "isList": true,
-                                              "isMap": false
-                                            }
-                                          }
-                                        },
-                                        {
-                                          "itemType": "control",
-                                          "control": {
-                                            "name": "max_string_length",
-                                            "label": {
-                                              "text": "Max String Length"
-                                            },
-                                            "separateLabel": true,
-                                            "controlType": "numberfield",
-                                            "valueDef": {
-                                              "propType": "integer",
-                                              "isList": false,
-                                              "isMap": false
-                                            }
-                                          }
-                                        },
-                                        {
-                                          "itemType": "control",
-                                          "control": {
-                                            "name": "check",
-                                            "label": {
-                                              "text": "Check"
-                                            },
-                                            "separateLabel": true,
-                                            "controlType": "oneofselect",
-                                            "valueDef": {
-                                              "propType": "string",
-                                              "isList": false,
-                                              "isMap": false
-                                            },
-                                            "values": [
-                                              "None",
-                                              "Nullify",
-                                              "Coerce",
-                                              "Discard",
-                                              "Warn",
-                                              "Abort"
-                                            ],
-                                            "valueLabels": [
-                                              "None",
-                                              "Nullify",
-                                              "Coerce",
-                                              "Discard",
-                                              "Warn",
-                                              "Abort"
-                                            ],
-                                            "sortable": true
-                                          }
-                                        },
-                                        {
-                                          "itemType": "control",
-                                          "control": {
-                                            "name": "description",
-                                            "label": {
-                                              "text": "Description"
-                                            },
-                                            "separateLabel": true,
-                                            "controlType": "textfield",
-                                            "valueDef": {
-                                              "propType": "string",
-                                              "isList": false,
-                                              "isMap": false
-                                            }
-                                          }
-                                        }
-                                      ]
-                                    },
-                                    "text": "...",
-                                    "secondaryText": "Field Definition"
+                                  "controlType": "structuretable",
+                                  "valueDef": {
+                                    "propType": "complex_type",
+                                    "isList": true,
+                                    "isMap": false
                                   }
                                 }
                               }
@@ -558,10 +572,10 @@
                     "itemType": "control",
                     "control": {
                       "name": "use_custom_name",
+                      "separateLabel": false,
                       "label": {
                         "text": "Custom name"
                       },
-                      "separateLabel": false,
                       "controlType": "checkbox",
                       "valueDef": {
                         "propType": "boolean",
@@ -574,10 +588,10 @@
                     "itemType": "control",
                     "control": {
                       "name": "custom_name",
+                      "separateLabel": true,
                       "label": {
                         "text": ""
                       },
-                      "separateLabel": true,
                       "controlType": "textfield",
                       "valueDef": {
                         "propType": "string",
@@ -590,10 +604,10 @@
                     "itemType": "control",
                     "control": {
                       "name": "annotation",
+                      "separateLabel": true,
                       "label": {
                         "text": "Annotation"
                       },
-                      "separateLabel": true,
                       "controlType": "textarea",
                       "valueDef": {
                         "propType": "string",

@@ -124,9 +124,11 @@ _defineConstant("TEXTFIELD_ERROR_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		},
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		],
 		"conditions": [
 			{
 				"validation": {
@@ -202,9 +204,11 @@ _defineConstant("TEXTFIELD_WARNING_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		},
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		],
 		"conditions": [
 			{
 				"validation": {
@@ -300,9 +304,11 @@ _defineConstant("TEXTFIELD_COLNOTEXISTS_PROPS_INFO", {
 				}
 			}
 		],
-		"dataset_metadata": {
-			"fields": fields
-		},
+		"dataset_metadata": [
+			{
+				"fields": fields
+			}
+		],
 		"resources": {
 			"textfieldControlName_no_quotes": "Name cannot be an existing column field name in the dataset_metadata"
 		}
@@ -345,9 +351,11 @@ _defineConstant("TEXTAREA_ERROR_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		},
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		],
 		"conditions": [
 			{
 				"validation": {
@@ -411,9 +419,11 @@ _defineConstant("TEXTAREA_WARNING_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		},
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		],
 		"conditions": [
 			{
 				"validation": {
@@ -476,9 +486,11 @@ _defineConstant("PASSWORD_FIELD_ERROR_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		},
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		],
 		"conditions": [
 			{
 				"validation": {
@@ -541,9 +553,11 @@ _defineConstant("EXPRESSION_ERROR_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		},
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		],
 		"conditions": [
 			{
 				"validation": {
@@ -625,9 +639,11 @@ _defineConstant("EXPRESSION_WARNING_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		},
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		],
 		"conditions": [
 			{
 				"validation": {
@@ -689,9 +705,11 @@ _defineConstant("NUMBERFIELD_ERROR_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		},
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		],
 		"conditions": [
 			{
 				"validation": {
@@ -811,9 +829,11 @@ _defineConstant("NUMBERFIELD_GENERATOR_WARNING_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		},
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		],
 		"conditions": [
 			{
 				"validation": {
@@ -879,9 +899,11 @@ _defineConstant("CHECKBOX_SINGLE_ERROR_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		},
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		],
 		"conditions": [
 			{
 				"validation": {
@@ -945,9 +967,11 @@ _defineConstant("CHECKBOX_SINGLE_WARNING_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		},
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		],
 		"conditions": [
 			{
 				"validation": {
@@ -1015,9 +1039,11 @@ _defineConstant("CHECKBOX_SET_ERROR_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		},
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		],
 		"conditions": [
 			{
 				"validation": {
@@ -1096,9 +1122,11 @@ _defineConstant("CHECKBOX_SET_WARNING_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		},
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		],
 		"conditions": [
 			{
 				"validation": {
@@ -1165,9 +1193,11 @@ _defineConstant("RADIOSET_HORIZONTAL_ERROR_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		},
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		],
 		"conditions": [
 			{
 				"validation": {
@@ -1235,9 +1265,11 @@ _defineConstant("RADIOSET_VERTICAL_WARNING_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		},
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		],
 		"conditions": [
 			{
 				"validation": {
@@ -1307,9 +1339,11 @@ _defineConstant("ONEOFSELECT_ERROR_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		},
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		],
 		"conditions": [
 			{
 				"validation": {
@@ -1378,9 +1412,11 @@ _defineConstant("ONEOFSELECT_WARNING_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		},
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		],
 		"conditions": [
 			{
 				"validation": {
@@ -1450,9 +1486,11 @@ _defineConstant("SOMEOFSELECT_ERROR_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		},
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		],
 		"conditions": [
 			{
 				"validation": {
@@ -1521,9 +1559,11 @@ _defineConstant("SOMEOFSELECT_WARNING_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		},
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		],
 		"conditions": [
 			{
 				"validation": {
@@ -1587,9 +1627,11 @@ _defineConstant("SELECTCOLUMN_ERROR_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": fields
-		},
+		"dataset_metadata": [
+			{
+				"fields": fields
+			}
+		],
 		"conditions": [
 			{
 				"validation": {
@@ -1653,9 +1695,11 @@ _defineConstant("SELECTCOLUMNS_ERROR_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": fields
-		},
+		"dataset_metadata": [
+			{
+				"fields": fields
+			}
+		],
 		"conditions": [
 			{
 				"validation": {
@@ -1799,9 +1843,11 @@ _defineConstant("STRUCTURETABLE_ERROR_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": fields
-		},
+		"dataset_metadata": [
+			{
+				"fields": fields
+			}
+		],
 		"conditions": [
 			{
 				"validation": {
@@ -1996,9 +2042,11 @@ _defineConstant("STRUCTURETABLE_WARNING_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": fields
-		},
+		"dataset_metadata": [
+			{
+				"fields": fields
+			}
+		],
 		"conditions": [
 			{
 				"validation": {
@@ -2144,9 +2192,11 @@ _defineConstant("STRUCTURETABLE_COLNOTEXISTS_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": fields
-		},
+		"dataset_metadata": [
+			{
+				"fields": fields
+			}
+		],
 		"conditions": [
 			{
 				"validation": {
@@ -2251,9 +2301,11 @@ _defineConstant("STRUCTURELISTEDITOR_ERROR_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		},
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		],
 		"conditions": [
 			{
 				"validation": {
@@ -2358,9 +2410,11 @@ _defineConstant("STRUCTURELISTEDITOR_WARNING_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		},
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		],
 		"conditions": [
 			{
 				"validation": {
@@ -2494,9 +2548,11 @@ _defineConstant("STRING_GROUP_ERROR_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		},
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		],
 		"conditions": [
 			{
 				"validation": {
@@ -2578,9 +2634,11 @@ _defineConstant("STRING_GROUP_WARNING_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		},
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		],
 		"conditions": [
 			{
 				"validation": {
@@ -2669,9 +2727,11 @@ _defineConstant("NUMBER_GROUP_ERROR_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		},
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		],
 		"conditions": [
 			{
 				"validation": {
@@ -2803,9 +2863,11 @@ _defineConstant("VISIBLE_GROUP_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		},
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		],
 		"conditions": [
 			{
 				"visible": {
@@ -2916,9 +2978,11 @@ _defineConstant("ENABLED_GROUP_PROPS_INFO", {
 				}
 			]
 		},
-		"dataset_metadata": {
-			"fields": []
-		},
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		],
 		"conditions": [
 			{
 				"enabled": {

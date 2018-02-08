@@ -781,7 +781,8 @@ class App extends React.Component {
 		}
 		if (actionId === "dm-update") {
 			const dm = this.propertiesController.getDatasetMetadata();
-			const newFieldName = "Added Field " + (dm.fields.length);
+			// Add field to the first schema
+			const newFieldName = "Added Field " + (dm[0].fields.length);
 			const newField = {
 				"name": newFieldName,
 				"type": "string",
@@ -791,7 +792,7 @@ class App extends React.Component {
 					"modeling_role": "target"
 				}
 			};
-			dm.fields.push(newField);
+			dm[0].fields.push(newField);
 			this.propertiesController.setDatasetMetadata(dm);
 		}
 		this.log("propertyActionHandler() " + actionId);

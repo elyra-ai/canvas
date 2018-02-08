@@ -97,10 +97,14 @@ export default class ExpressionControl extends EditorControl {
 	// get the set of dataset field names
 	getDatasetFields() {
 		var results = [];
-		const dataModel = this.props.controller.getDatasetMetadata();
-		if (dataModel) {
-			for (var i = 0; i < dataModel.fields.length; ++i) {
-				results.push(dataModel.fields[i].name);
+		const schemas = this.props.controller.getDatasetMetadata();
+		if (schemas.length > 0) {
+			for (const schema of schemas) {
+				if (schema.fields) {
+					for (var i = 0; i < schema.fields.length; ++i) {
+						results.push(schema.fields[i].name);
+					}
+				}
 			}
 		}
 		return results;

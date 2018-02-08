@@ -229,6 +229,11 @@ export default class ControlFactory {
 				dataModel={this.controller.getFilteredDatasetMetadata(propertyId)}
 				openFieldPicker={this.openFieldPicker}
 			/>);
+		} else if (control.controlType === ControlType.SELECTSCHEMA) {
+			return (<OneofselectControl
+				{...props}
+				rightFlyout={this.rightFlyout}
+			/>);
 		} else if (control.controlType === ControlType.STRUCTURETABLE && !tableInfo) {
 			return (<ColumnStructureTableControl
 				{...props}

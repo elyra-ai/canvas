@@ -42,12 +42,15 @@ export default class FieldAllocatorControl extends EditorControl {
 	onClick(evt) {
 		const me = ReactDOM.findDOMNode(this.refs.input);
 		const myRect = me.getBoundingClientRect();
-		const parentRect = me.getRootNode().getElementsByClassName("panel-container-open-right-flyout-panel")[0].getBoundingClientRect();
+		const myParent = me.getRootNode().getElementsByClassName("panel-container-open-right-flyout-panel");
 
 		let clippedClassName = "";
-		// 200 is the height of .Dropdown-menu in common-properties.css
-		if (Math.abs((parentRect.top + parentRect.height) - (myRect.top + myRect.height)) < 200) {
-			clippedClassName = "Dropdown-menu-clipped";
+		if (myParent.length > 0) {
+			const parentRect = myParent[0].getBoundingClientRect();
+			// 200 is the height of .Dropdown-menu in common-properties.css
+			if (Math.abs((parentRect.top + parentRect.height) - (myRect.top + myRect.height)) < 200) {
+				clippedClassName = "Dropdown-menu-clipped";
+			}
 		}
 		this.setState({ clippedClassName: clippedClassName });
 		this.props.controller.validateInput(this.props.propertyId);
@@ -70,18 +73,32 @@ export default class FieldAllocatorControl extends EditorControl {
 		this.props.controller.updatePropertyValue(this.props.propertyId, []);
 	}
 
-	genDropdownOptions(fields) {
+	genDropdownOptions(dataModel) {
+		const schemas = this.props.controller.getDatasetMetadataSchemas();
+		const optionsTmp = [];
+		for (let idx = 0; idx < dataModel.length; idx++) {
+			optionsTmp.push([]);
+			for (const field of dataModel[idx].fields) {
+				const duplicate = this.props.controller.duplicateFieldName(dataModel, field);
+				let schemaName = "";
+				if (duplicate) {
+					schemaName = schemas[idx] + ".";
+				}
+				optionsTmp[idx].push(schemaName + field.name);
+			}
+		}
+
 		const options = [];
 		// allow for user to not select a field
 		options.push({
 			value: "",
 			label: this.emptyLabel
 		});
-		if (fields) {
-			for (let j = 0; j < fields.length; j++) {
+		for (const schema of optionsTmp) {
+			for (const fieldName of schema) {
 				options.push({
-					value: fields[j].name,
-					label: fields[j].name
+					value: fieldName,
+					label: fieldName
 				});
 			}
 		}
@@ -95,7 +112,7 @@ export default class FieldAllocatorControl extends EditorControl {
 			controlValue = "";
 			controlLabel = this.emptyLabel;
 		}
-		const options = this.genDropdownOptions(this.props.dataModel.fields);
+		const options = this.genDropdownOptions(this.props.dataModel);
 		const conditionProps = {
 			propertyId: this.props.propertyId,
 			controlType: "selection"
@@ -137,6 +154,6 @@ export default class FieldAllocatorControl extends EditorControl {
 FieldAllocatorControl.propTypes = {
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
-	dataModel: PropTypes.object.isRequired,
+	dataModel: PropTypes.array.isRequired,
 	control: PropTypes.object.isRequired
 };

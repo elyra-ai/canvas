@@ -112,73 +112,75 @@
       }
     }
   ],
-  "dataset_metadata": {
-    "fields": [
-      {
-        "name": "Age",
-        "type": "integer",
-        "metadata": {
-          "description": "",
-          "measure": "range",
-          "modeling_role": "input"
-        }
-      },
-      {
-        "name": "Sex",
-        "type": "string",
-        "metadata": {
-          "description": "",
-          "measure": "discrete",
-          "modeling_role": "input"
-        }
-      },
-      {
-        "name": "BP",
-        "type": "string",
-        "metadata": {
-          "description": "",
-          "measure": "discrete",
-          "modeling_role": "input"
-        }
-      },
-      {
-        "name": "Cholesterol",
-        "type": "string",
-        "metadata": {
-          "description": "",
-          "measure": "discrete",
-          "modeling_role": "input"
-        }
-      },
-      {
-        "name": "Na",
-        "type": "double",
-        "metadata": {
-          "description": "",
-          "measure": "range",
-          "modeling_role": "input"
-        }
-      },
-      {
-        "name": "K",
-        "type": "double",
-        "metadata": {
-          "description": "",
-          "measure": "range",
-          "modeling_role": "input"
-        }
-      },
-      {
-        "name": "Drug",
-        "type": "string",
-        "metadata": {
-          "description": "",
-          "measure": "discrete",
-          "modeling_role": "input"
-        }
-      }
-    ]
-  },
+  "dataset_metadata": [
+		{
+	    "fields": [
+	      {
+	        "name": "Age",
+	        "type": "integer",
+	        "metadata": {
+	          "description": "",
+	          "measure": "range",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "Sex",
+	        "type": "string",
+	        "metadata": {
+	          "description": "",
+	          "measure": "discrete",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "BP",
+	        "type": "string",
+	        "metadata": {
+	          "description": "",
+	          "measure": "discrete",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "Cholesterol",
+	        "type": "string",
+	        "metadata": {
+	          "description": "",
+	          "measure": "discrete",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "Na",
+	        "type": "double",
+	        "metadata": {
+	          "description": "",
+	          "measure": "range",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "K",
+	        "type": "double",
+	        "metadata": {
+	          "description": "",
+	          "measure": "range",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "Drug",
+	        "type": "string",
+	        "metadata": {
+	          "description": "",
+	          "measure": "discrete",
+	          "modeling_role": "input"
+	        }
+	      }
+	    ]
+	  }
+	],
   "resources": {
     "org.apache.spark.ml.ibm.transformers.AddColumn.label": "Add Column",
     "org.apache.spark.ml.ibm.transformers.AddColumn.desc": "Create a new column with a computed value",

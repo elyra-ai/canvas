@@ -38,27 +38,3 @@ describe("textPanel render correctly", () => {
 		expect(descriptions.at(2).text()).to.equal("Sum: 1.04 with (number, number). Sum: 3.04 with (number, 2, number)");
 	});
 });
-describe("columnSelection panel works correctly", () => {
-	const renderedObject = propertyUtils.flyoutEditorForm(panelParamDef);
-	const wrapper = renderedObject.wrapper;
-	it("Select 'age' from 'Select Field' control", () => {
-		const columnSelectionCategory = wrapper.find(".category-title-container-right-flyout-panel").at(2); // COLUMN SELECTION category
-		const expectedOptions = [
-			{ label: "...", value: "" },
-			{ label: "age", value: "age" },
-			{ label: "BP", value: "BP" },
-			{ label: "Na", value: "Na" },
-			{ label: "drug", value: "drug" }
-		];
-		const newValue = { label: "age", value: "age" };
-		propertyUtils.dropDown(columnSelectionCategory, 0, newValue, expectedOptions);
-	});
-	it("Select 'BP' from 'Select Fields' control", () => {
-		const columnSelectionCategory = wrapper.find(".category-title-container-right-flyout-panel").at(2); // COLUMN SELECTION category
-		const addFieldsButtons = columnSelectionCategory.find("Button"); // field picker buttons
-		addFieldsButtons.at(0).simulate("click"); // open filter picker for `Select Fields` control
-		propertyUtils.fieldPicker(["BP"], ["BP", "Na", "drug"]);
-		const rows = columnSelectionCategory.find(".column-select-table-row");
-		expect(rows).to.have.length(1);
-	});
-});

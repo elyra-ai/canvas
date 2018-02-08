@@ -15,9 +15,10 @@ import sinon from "sinon";
 import propertyUtils from "../../_utils_/property-utils";
 import Controller from "../../../src/common-properties/properties-controller";
 import isEqual from "lodash/isEqual";
+import { ReactWrapper } from "enzyme";
 
 import selectcolumnsParamDef from "../../test_resources/paramDefs/selectcolumns_paramDef.json";
-
+import selectcolumnsMultiInputParamDef from "../../test_resources/paramDefs/selectcolumns_multiInput_paramDef.json";
 
 const CONDITIONS_TEST_FORM_DATA = require("../../test_resources/json/conditions-test-formData.json");
 
@@ -85,9 +86,9 @@ function updateSelectedRows(row) {
 }
 
 const openFieldPicker = sinon.spy();
-setPropertyValue();
-describe("ColumnStructureTableControl renders correctly", () => {
 
+describe("ColumnStructureTableControl renders correctly", () => {
+	setPropertyValue();
 	it("props should have been defined", () => {
 		const wrapper = mountWithIntl(
 			<ColumnSelectControl
@@ -238,10 +239,155 @@ describe("selectcolumns control filters values correctly", () => {
 	const renderedObject = propertyUtils.flyoutEditorForm(selectcolumnsParamDef);
 	const wrapper = renderedObject.wrapper;
 
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
 	it("should filter values from selectcolumn control", () => {
 		const filterCategory = wrapper.find(".category-title-container-right-flyout-panel").at(2); // get the filter category
 		const addFieldsButtons = filterCategory.find("Button"); // field picker buttons
 		addFieldsButtons.at(0).simulate("click"); // open filter picker for `Filter by Type` control
 		propertyUtils.fieldPicker(["age"], ["age", "age2", "age3", "age4"]);
+	});
+});
+
+describe("selectcolumns with multi input schemas renders correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(selectcolumnsMultiInputParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("should prefix the correct schema for fields selected", () => {
+		const valuesCategory = wrapper.find(".category-title-container-right-flyout-panel").at(0); // VALUES category
+		valuesCategory.find(".control-summary-link-buttons").at(0)
+			.find(".button")
+			.simulate("click");
+
+		const wfhtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
+		const wideflyoutWrapper = new ReactWrapper(wfhtml, true);
+		const addFieldsButtons = valuesCategory.find("#add-fields-button"); // field picker buttons
+		expect(addFieldsButtons).to.have.length(2);
+		addFieldsButtons.at(0).simulate("click");
+
+		propertyUtils.fieldPicker([], [
+			{ "name": "age", "schema": "0" },
+			{ "name": "AGE", "schema": "0" },
+			{ "name": "Na", "schema": "0" },
+			{ "name": "drug", "schema": "0" },
+			{ "name": "age2", "schema": "0" },
+			{ "name": "BP2", "schema": "0" },
+			{ "name": "Na2", "schema": "0" },
+			{ "name": "drug2", "schema": "0" },
+			{ "name": "age3", "schema": "0" },
+			{ "name": "BP3", "schema": "0" },
+			{ "name": "Na3", "schema": "0" },
+			{ "name": "drug3", "schema": "0" },
+			{ "name": "age", "schema": "1" },
+			{ "name": "AGE", "schema": "1" },
+			{ "name": "BP", "schema": "1" },
+			{ "name": "Na", "schema": "1" },
+			{ "name": "drug", "schema": "1" },
+			{ "name": "intAndRange", "schema": "1" },
+			{ "name": "stringAndDiscrete", "schema": "1" },
+			{ "name": "stringAndSet", "schema": "1" }
+		]);
+
+		wideflyoutWrapper.find("#properties-apply-button").simulate("click");
+		const summary = valuesCategory.find(".control-summary.control-panel").at(0);
+		expect(summary.find(".control-summary-list-rows")).to.have.length(2);
+		expect(summary.find(".control-summary-list-rows").at(0)
+			.text()).to.equal("1.age");
+		expect(summary.find(".control-summary-list-rows").at(1)
+			.text()).to.equal("1.AGE");
+	});
+});
+
+describe("selectcolumns control filters values correctly with multi input", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(selectcolumnsMultiInputParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("should filter by type in selectcolumns control", () => {
+		const filterCategory = wrapper.find(".category-title-container-right-flyout-panel").at(1); // get the filter category
+		const addFieldsButtons = filterCategory.find("Button"); // field picker buttons
+		expect(addFieldsButtons).to.have.length(4);
+
+		addFieldsButtons.at(0).simulate("click"); // open filter picker for `Filter by Type` control
+		const fieldTable = [
+			{ "name": "age", "schema": "0" },
+			{ "name": "AGE", "schema": "0" },
+			{ "name": "age2", "schema": "0" },
+			{ "name": "age3", "schema": "0" },
+			{ "name": "age", "schema": "1" },
+			{ "name": "AGE", "schema": "1" },
+			{ "name": "intAndRange", "schema": "1" }
+		];
+		propertyUtils.fieldPicker([], fieldTable);
+	});
+
+	it("should filter by measurement in selectcolumns control", () => {
+		const filterCategory = wrapper.find(".category-title-container-right-flyout-panel").at(1); // get the filter category
+		const addFieldsButtons = filterCategory.find("Button"); // field picker buttons
+		expect(addFieldsButtons).to.have.length(4);
+
+		addFieldsButtons.at(1).simulate("click");
+		const fieldTable = [
+			{ "name": "BP", "schema": "0" },
+			{ "name": "BP2", "schema": "0" },
+			{ "name": "BP3", "schema": "0" },
+			{ "name": "BP", "schema": "1" },
+			{ "name": "stringAndDiscrete", "schema": "1" }
+		];
+		propertyUtils.fieldPicker([], fieldTable);
+	});
+
+	it("should filter by type and measurement in selectcolumns control", () => {
+		const filterCategory = wrapper.find(".category-title-container-right-flyout-panel").at(1); // get the filter category
+		const addFieldsButtons = filterCategory.find("Button"); // field picker buttons
+		expect(addFieldsButtons).to.have.length(4);
+
+		addFieldsButtons.at(2).simulate("click");
+		const fieldTable = [
+			{ "name": "drug", "schema": "0" },
+			{ "name": "drug2", "schema": "0" },
+			{ "name": "drug3", "schema": "0" },
+			{ "name": "drug", "schema": "1" },
+			{ "name": "stringAndSet", "schema": "1" }
+		];
+		propertyUtils.fieldPicker([], fieldTable);
+	});
+
+	it("should filter by type or measurement in selectcolumns control", () => {
+		const filterCategory = wrapper.find(".category-title-container-right-flyout-panel").at(1); // get the filter category
+		const addFieldsButtons = filterCategory.find("Button"); // field picker buttons
+		expect(addFieldsButtons).to.have.length(4);
+
+		addFieldsButtons.at(3).simulate("click");
+		const fieldTable = [
+			{ "name": "drug", "schema": "0" },
+			{ "name": "drug2", "schema": "0" },
+			{ "name": "drug3", "schema": "0" },
+			{ "name": "age", "schema": "0" },
+			{ "name": "AGE", "schema": "0" },
+			{ "name": "age2", "schema": "0" },
+			{ "name": "age3", "schema": "0" },
+			{ "name": "drug", "schema": "1" },
+			{ "name": "stringAndSet", "schema": "1" },
+			{ "name": "age", "schema": "1" },
+			{ "name": "AGE", "schema": "1" },
+			{ "name": "intAndRange", "schema": "1" }
+		];
+		propertyUtils.fieldPicker([], fieldTable);
 	});
 });

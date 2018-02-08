@@ -4,7 +4,9 @@
   },
   "current_parameters": {
     "fruit-color": "red",
-    "number": 11
+    "number": 11,
+    "field1_panel": "age",
+    "field2_panel": "BP"
   },
   "parameters": [
     {
@@ -18,6 +20,18 @@
     {
       "id": "number",
       "type": "double",
+      "required": true
+    },
+    {
+      "id": "field1_panel",
+      "type": "string",
+      "role": "column",
+      "required": true
+    },
+    {
+      "id": "field2_panel",
+      "type": "string",
+      "role": "column",
       "required": true
     },
     {
@@ -59,12 +73,36 @@
         }
       },
       {
+        "parameter_ref": "field1_panel",
+        "label": {
+          "default": "Field1"
+        },
+        "description": {
+          "default": "selectcolumn parameter shared with Field2"
+        },
+        "text_before": {
+          "default": "Field1 shares values with Field2"
+        }
+      },
+      {
+        "parameter_ref": "field2_panel",
+        "label": {
+          "default": "Field2"
+        },
+        "description": {
+          "default": "selectcolumn parameter shared with Field1"
+        }
+      },
+      {
         "parameter_ref": "selectcolumn",
         "label": {
           "default": "Select Field"
         },
         "description": {
           "default": "selectcolumn control where values are shared with selectcolumns 'Select Fields'"
+        },
+        "text_before": {
+          "default": "Select Field shares values with Select Fields"
         }
       },
       {
@@ -172,52 +210,74 @@
         "label": {
           "default": "Column Selection"
         },
-        "type": "columnSelection",
-        "parameter_refs": [
-          "selectcolumn",
-          "selectcolumns"
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "selectcolumn-values",
+            "label": {
+              "default": "Values"
+            },
+            "type": "columnSelection",
+            "parameter_refs": [
+              "field1_panel",
+              "field2_panel"
+            ]
+          },
+          {
+            "id": "column-selection",
+            "label": {
+              "default": "Column Selection"
+            },
+            "type": "columnSelection",
+            "parameter_refs": [
+              "selectcolumn",
+              "selectcolumns"
+            ]
+          }
         ]
       }
     ]
   },
-  "dataset_metadata": {
-    "fields": [
-      {
-        "name": "age",
-        "type": "integer",
-        "metadata": {
-          "description": "",
-          "measure": "range",
-          "modeling_role": "input"
-        }
-      },
-      {
-        "name": "BP",
-        "type": "string",
-        "metadata": {
-          "description": "",
-          "measure": "discrete",
-          "modeling_role": "input"
-        }
-      },
-      {
-        "name": "Na",
-        "type": "double",
-        "metadata": {
-          "description": "",
-          "measure": "range",
-          "modeling_role": "input"
-        }
-      },
-      {
-        "name": "drug",
-        "type": "string",
-        "metadata": {
-          "description": "",
-          "measure": "set",
-          "modeling_role": "input"
-        }
-      }
-    ]
-  }
+  "dataset_metadata": [
+		{
+	    "fields": [
+	      {
+	        "name": "age",
+	        "type": "integer",
+	        "metadata": {
+	          "description": "",
+	          "measure": "range",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "BP",
+	        "type": "string",
+	        "metadata": {
+	          "description": "",
+	          "measure": "discrete",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "Na",
+	        "type": "double",
+	        "metadata": {
+	          "description": "",
+	          "measure": "range",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "drug",
+	        "type": "string",
+	        "metadata": {
+	          "description": "",
+	          "measure": "set",
+	          "modeling_role": "input"
+	        }
+	      }
+	    ]
+	  }
+	]
 }

@@ -238,57 +238,6 @@
                       }
                     ]
                   }
-                },
-                {
-                  "itemType": "panel",
-                  "panel": {
-                    "id": "List",
-                    "panelType": "general",
-                    "uiItems": [
-                      {
-                        "itemType": "control",
-                        "control": {
-                          "name": "oneofcolumnsList",
-                          "label": {
-                            "text": "One of Columns list"
-                          },
-                          "description": {
-                            "text": "One of Columns list"
-                          },
-                          "controlType": "oneofcolumns",
-                          "valueDef": {
-                            "propType": "string",
-                            "isList": false,
-                            "isMap": false,
-                            "defaultValue": ""
-                          },
-                          "separateLabel": true,
-                          "required": true
-                        }
-                      },
-                      {
-                        "itemType": "control",
-                        "control": {
-                          "name": "someofcolumnsList",
-                          "label": {
-                            "text": "Some of Columns list"
-                          },
-                          "description": {
-                            "text": "Some of Columns list"
-                          },
-                          "controlType": "someofcolumns",
-                          "valueDef": {
-                            "propType": "string",
-                            "isList": true,
-                            "isMap": false,
-                            "defaultValue": ""
-                          },
-                          "separateLabel": true,
-                          "required": true
-                        }
-                      }
-                    ]
-                  }
                 }
               ]
             }
@@ -1338,8 +1287,6 @@
         "Age",
         "BP"
       ],
-      "oneofcolumnsList": "",
-      "someofcolumnsList": [],
       "numberfieldCheckpointInterval": -1,
       "numberfieldImpurity": "entropy",
       "numberfieldMaxBins": null,
@@ -1436,73 +1383,75 @@
         ]
       ]
     },
-    "datasetMetadata": {
-      "fields": [
-        {
-          "name": "Age",
-          "type": "integer",
-          "metadata": {
-            "description": "",
-            "measure": "range",
-            "modeling_role": "input"
-          }
-        },
-        {
-          "name": "Sex",
-          "type": "string",
-          "metadata": {
-            "description": "",
-            "measure": "discrete",
-            "modeling_role": "input"
-          }
-        },
-        {
-          "name": "BP",
-          "type": "string",
-          "metadata": {
-            "description": "",
-            "measure": "discrete",
-            "modeling_role": "input"
-          }
-        },
-        {
-          "name": "Cholesterol",
-          "type": "string",
-          "metadata": {
-            "description": "",
-            "measure": "discrete",
-            "modeling_role": "input"
-          }
-        },
-        {
-          "name": "Na",
-          "type": "double",
-          "metadata": {
-            "description": "",
-            "measure": "range",
-            "modeling_role": "input"
-          }
-        },
-        {
-          "name": "K",
-          "type": "double",
-          "metadata": {
-            "description": "",
-            "measure": "range",
-            "modeling_role": "input"
-          }
-        },
-        {
-          "name": "Drug",
-          "type": "string",
-          "metadata": {
-            "description": "",
-            "measure": "discrete",
-            "modeling_role": "input"
-          }
-        }
-      ]
-    }
+    "datasetMetadata": [
+			{
+	      "fields": [
+	        {
+	          "name": "Age",
+	          "type": "integer",
+	          "metadata": {
+	            "description": "",
+	            "measure": "range",
+	            "modeling_role": "input"
+	          }
+	        },
+	        {
+	          "name": "Sex",
+	          "type": "string",
+	          "metadata": {
+	            "description": "",
+	            "measure": "discrete",
+	            "modeling_role": "input"
+	          }
+	        },
+	        {
+	          "name": "BP",
+	          "type": "string",
+	          "metadata": {
+	            "description": "",
+	            "measure": "discrete",
+	            "modeling_role": "input"
+	          }
+	        },
+	        {
+	          "name": "Cholesterol",
+	          "type": "string",
+	          "metadata": {
+	            "description": "",
+	            "measure": "discrete",
+	            "modeling_role": "input"
+	          }
+	        },
+	        {
+	          "name": "Na",
+	          "type": "double",
+	          "metadata": {
+	            "description": "",
+	            "measure": "range",
+	            "modeling_role": "input"
+	          }
+	        },
+	        {
+	          "name": "K",
+	          "type": "double",
+	          "metadata": {
+	            "description": "",
+	            "measure": "range",
+	            "modeling_role": "input"
+	          }
+	        },
+	        {
+	          "name": "Drug",
+	          "type": "string",
+	          "metadata": {
+	            "description": "",
+	            "measure": "discrete",
+	            "modeling_role": "input"
+	          }
+	        }
+	      ]
+	    }
+		]
   },
   "conditions": [
     {
@@ -1634,43 +1583,6 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "columnSelectInputFieldList",
-            "op": "isNotEmpty"
-          }
-        }
-      }
-    },
-    {
-      "validation": {
-        "fail_message": {
-          "type": "error",
-          "focus_parameter_ref": "oneofcolumnsList",
-          "message": {
-            "resource_key": "one_of_columns_list_not_empty",
-            "default": "Cannot have Sex selected"
-          }
-        },
-        "evaluate": {
-          "condition": {
-            "parameter_ref": "oneofcolumnsList",
-            "op": "contains",
-            "value": "Sex"
-          }
-        }
-      }
-    },
-    {
-      "validation": {
-        "fail_message": {
-          "type": "warning",
-          "focus_parameter_ref": "someofcolumnsList",
-          "message": {
-            "resource_key": "some_of_columns_list_not_empty",
-            "default": "Field must be selected"
-          }
-        },
-        "evaluate": {
-          "condition": {
-            "parameter_ref": "someofcolumnsList",
             "op": "isNotEmpty"
           }
         }

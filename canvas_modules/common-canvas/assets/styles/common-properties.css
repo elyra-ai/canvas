@@ -14,18 +14,6 @@
   overflow: scroll;
 }
 
-.properties-title {
-
-}
-
-.properties-body {
-
-}
-
-.properties-buttons {
-
-}
-
 .properties-tooltips.show {
   opacity: 1 !important;
 }
@@ -224,10 +212,6 @@ input.number,
   flex-shrink: 0;
 }
 
-.text-align-center {
-  text-align: center;
-}
-
 .validation-error-message-icon {
   width: 20px !important;
   height: 20px;
@@ -343,7 +327,7 @@ input.number,
 .rightside-modal-container #field-picker-table .flexible-table-container-absolute {
 	position: relative;
   height: fit-content;
-	border-bottom: none;
+	max-height: 500px;
 }
 
 .rightside-modal-container #field-picker-table .modal__buttons {
@@ -369,7 +353,7 @@ input.number,
   float: right;
   margin-top: 6px;
   margin-bottom: 0px;
-  width:40%;
+  width:50%;
   height: 22px;
 }
 
@@ -756,6 +740,10 @@ input.number,
 	border-bottom: 1px solid #d8d8d8;
 }
 
+#flexible-table-container-wrapper .table>tbody>tr>td {
+	border-top: 0px;
+}
+
 th div div label, td div div label {
   padding-bottom: 10px;
 }
@@ -853,15 +841,10 @@ tr.reactable-column-header {
   width: 100%;
   height: 30px;
   cursor: default;
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: space-between;
 }
 
 tr.reactable-column-header > th {
 	overflow: hidden;
-	display: flex;
-	align-items: center;
 }
 
 .flexible-table-column.properties-tooltips-container {
@@ -875,7 +858,6 @@ tr.reactable-column-header > th {
 #table-header,
 #table-header > thead {
   width: 100%;
-  display: inline-block;
 }
 
 .table {
@@ -1078,12 +1060,17 @@ input[type=number][disabled].number--light+.number__spinnerdiv .numpinput__spinn
 	border: 1px solid #777677;
 }
 
+/*
+* Checkbox Label inside table header
+*/
 .reactable-column-header .checkbox-container {
-	display: flex;;
-	align-items: center
+	display: flex;
+	align-items: center;
+	height: 30px;
 }
 .reactable-column-header .checkbox-label {
   margin-left: -9px;
+  margin-bottom: 1px;
 }
 
 /*

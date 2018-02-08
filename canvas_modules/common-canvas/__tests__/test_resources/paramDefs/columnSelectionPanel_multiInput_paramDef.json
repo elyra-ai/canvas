@@ -1,0 +1,299 @@
+{
+  "titleDefinition": {
+    "title": "Column Selection Panel"
+  },
+  "current_parameters": {
+    "field1_panel": "0.Age",
+    "field2_panel": "0.BP",
+		"selectcolumn": "",
+		"selectcolumns": "",
+		"selectcolumns2": [ "0.Age", "Drug", "2.Age" ],
+		"selectcolumns3": ""
+  },
+  "parameters": [
+    {
+      "id": "field1_panel",
+      "type": "string",
+      "role": "column",
+      "required": true
+    },
+    {
+      "id": "field2_panel",
+      "type": "string",
+      "role": "column",
+      "required": true
+    },
+    {
+      "id": "selectcolumn",
+      "type": "string",
+      "role": "column",
+      "required": true
+    },
+    {
+      "id": "selectcolumns",
+      "type": "array[string]",
+      "role": "column",
+      "required": true
+    },
+    {
+      "id": "selectcolumns2",
+      "type": "array[string]",
+      "role": "column",
+      "required": true
+    },
+    {
+      "id": "selectcolumns3",
+      "type": "array[string]",
+      "role": "column",
+      "required": true
+    }
+  ],
+  "uihints": {
+    "id": "selectcolumn",
+    "icon": "images/default.svg",
+    "label": {
+      "default": "Select Column"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "field1_panel",
+        "label": {
+          "default": "Field1"
+        },
+        "description": {
+          "default": "selectcolumn parameter shared with Field2"
+        },
+				"text_before": {
+          "default": "Field1 shares values with Field2"
+        }
+      },
+      {
+        "parameter_ref": "field2_panel",
+        "label": {
+          "default": "Field2"
+        },
+        "description": {
+          "default": "selectcolumn parameter shared with Field1"
+        }
+      },
+      {
+        "parameter_ref": "selectcolumn",
+        "label": {
+          "default": "Select Field"
+        },
+        "description": {
+          "default": "selectcolumn control where values are shared with selectcolumns 'Select Fields'"
+        },
+				"text_before": {
+          "default": "Select Field shares values with Select Fields"
+        }
+      },
+      {
+        "parameter_ref": "selectcolumns",
+        "label": {
+          "default": "Select Fields"
+        },
+        "description": {
+          "default": "selectcolumns control where values are shared with selectcolumns 'Select Field'"
+        }
+      },
+      {
+        "parameter_ref": "selectcolumns2",
+        "label": {
+          "default": "Select Columns1"
+        },
+        "description": {
+          "default": "selectcolumns control where values are shared with selectcolumns 'Select Columns2'"
+        },
+				"text_before": {
+          "default": "Select Columns1 shares values with Select Columns2"
+        }
+      },
+      {
+        "parameter_ref": "selectcolumns3",
+        "label": {
+          "default": "Select Columns2"
+        },
+        "description": {
+          "default": "selectcolumns control where values are shared with selectcolumns 'Select Columns1'"
+        }
+      }
+    ],
+    "group_info": [
+      {
+        "id": "selectcolumn-values",
+        "label": {
+          "default": "Values"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "selectcolumn-values",
+            "label": {
+              "default": "Values"
+            },
+            "type": "columnSelection",
+            "parameter_refs": [
+              "field1_panel",
+              "field2_panel"
+            ]
+          },
+		      {
+		        "id": "column-selection",
+		        "label": {
+		          "default": "Column Selection"
+		        },
+		        "type": "columnSelection",
+		        "parameter_refs": [
+		          "selectcolumn",
+		          "selectcolumns"
+		        ]
+		      },
+		      {
+		        "id": "column-selections",
+		        "label": {
+		          "default": "Column Selection"
+		        },
+		        "type": "columnSelection",
+		        "parameter_refs": [
+		          "selectcolumns2",
+		          "selectcolumns3"
+		        ]
+		      }
+        ]
+      }
+    ]
+  },
+	"dataset_metadata": [
+    {
+      "fields": [
+        {
+          "name": "Age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Sex",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug2",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    },
+    {
+      "name": "data",
+      "fields": [
+        {
+          "name": "Age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "bp",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug2",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    },
+    {
+      "fields": [
+        {
+          "name": "Age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug2",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug3",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    }
+  ]
+}

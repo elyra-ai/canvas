@@ -120,12 +120,23 @@ export default class OneofselectControl extends EditorControl {
 			value: "",
 			label: this.emptyLabel
 		});
-		for (var j = 0; j < control.values.length; j++) {
-			options.push({
-				value: control.values[j],
-				label: control.valueLabels[j]
-			});
+
+		if (Array.isArray(control)) { // selectschema
+			for (let j = 0; j < control.length; j++) {
+				options.push({
+					value: control[j],
+					label: control[j]
+				});
+			}
+		} else {
+			for (let j = 0; j < control.values.length; j++) {
+				options.push({
+					value: control.values[j],
+					label: control.valueLabels[j]
+				});
+			}
 		}
+
 		let selectedOption = [];
 		for (const option of options) {
 			if (option.value === selectedValue) {
@@ -158,7 +169,8 @@ export default class OneofselectControl extends EditorControl {
 			controlIconContainerClass = "control-icon-container-enabled";
 		}
 
-		const dropDown = this.genSelectOptions(this.props.control, controlValue);
+		const dropDownOptions = this.props.control.controlType === "selectschema" ? this.props.controller.getDatasetMetadataSchemas() : this.props.control;
+		const dropDown = this.genSelectOptions(dropDownOptions, controlValue);
 		return (
 			<div id="oneofselect-control-container">
 				<div id={controlIconContainerClass}>
