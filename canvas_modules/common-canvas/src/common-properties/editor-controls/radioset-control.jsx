@@ -18,7 +18,16 @@ export default class RadiosetControl extends EditorControl {
 	}
 
 	handleChange(evt) {
-		this.props.controller.updatePropertyValue(this.props.propertyId, evt.target.value);
+		if (this.props.control.valueDef.propType === "boolean") {
+			this.props.controller.updatePropertyValue(this.props.propertyId, (evt.target.value === "true"));
+		} else if (this.props.control.valueDef.propType === "integer" ||
+							this.props.control.valueDef.propType === "long"	||
+						this.props.control.valueDef.propType === "double") {
+			const targetNumberValue = Number(evt.target.value);
+			this.props.controller.updatePropertyValue(this.props.propertyId, targetNumberValue);
+		} else {
+			this.props.controller.updatePropertyValue(this.props.propertyId, evt.target.value);
+		}
 	}
 
 	render() {
@@ -51,6 +60,11 @@ export default class RadiosetControl extends EditorControl {
 		if (this.props.control.orientation === "vertical") {
 			cssClasses += " control-radio-block";
 			cssIndicator += " control__indicator-block";
+		}
+
+		if (!this.props.control.values && this.props.control.controlType === "radioset") {
+			this.props.control.values = [true, false];
+			this.props.control.valueLabels = ["true", "false"];
 		}
 		for (var i = 0; i < this.props.control.values.length; i++) {
 			var val = this.props.control.values[i];

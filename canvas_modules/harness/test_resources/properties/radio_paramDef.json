@@ -1,0 +1,380 @@
+{
+  "titleDefinition": {
+    "title": "Radio Set"
+  },
+  "current_parameters": {
+    "radioString": "entropy",
+    "radioBoolean" : true,
+    "radioBoolean2" : true,
+    "radioInteger" : 2,
+    "radioDouble" : 1.23,
+    "radioNull" : null,
+    "radioError" : "gini",
+    "radioWarning" : "gini",
+    "disable" : true,
+    "radioDisable" : "gini",
+    "hide" : true,
+    "radioHidden" : "gini"
+  },
+  "parameters": [
+    {
+      "id": "radioString",
+      "enum": [
+        "gini",
+        "entropy"
+      ],
+      "required": true
+    },
+    {
+      "id": "radioBoolean",
+      "enum": [
+        true,
+        false
+      ],
+      "type": "boolean",
+      "required": true
+    },
+    {
+      "id": "radioBoolean2",
+      "type": "boolean",
+      "required": true
+    },
+    {
+      "id": "radioInteger",
+      "enum": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "type": "integer",
+      "required": true
+    },
+    {
+      "id": "radioDouble",
+      "enum": [
+        2.34,
+        3.23,
+        1.23,
+        5.32
+      ],
+      "type": "double",
+      "required": true
+    },
+    {
+      "id": "radioDefault",
+      "enum": [
+        23,
+        32
+      ],
+      "default": 23,
+      "type": "integer",
+      "required": true
+    },
+    {
+      "id": "radioUndefined",
+      "enum": [
+        "gini",
+        "entropy"
+      ],
+      "required": true
+    },
+    {
+      "id": "radioNull",
+      "enum": [
+        "gini",
+        "entropy"
+      ],
+      "required": true
+    },
+    {
+      "id": "radioError",
+      "enum": [
+        "gini",
+        "entropy"
+      ],
+      "required": true
+    },
+    {
+      "id": "radioWarning",
+      "enum": [
+        "gini",
+        "entropy"
+      ],
+      "required": true
+    },
+    {
+      "id": "disable",
+      "type": "boolean"
+    },
+    {
+      "id": "radioDisable",
+      "enum": [
+        "gini",
+        "entropy"
+      ],
+      "required": true
+    },
+    {
+      "id": "hide",
+      "type": "boolean"
+    },
+    {
+      "id": "radioHidden",
+      "enum": [
+        "gini",
+        "entropy"
+      ],
+      "required": true
+    }
+  ],
+  "uihints": {
+    "id": "radioSet",
+    "icon": "images/default.svg",
+    "label": {
+      "default": "Radio Set"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "radioString",
+        "label": {
+          "default": "Radio String"
+        },
+        "description": {
+          "default": "RadioSet with enum string type"
+        },
+        "control": "radioset",
+        "resource_key": "withradioString"
+      },
+      {
+        "parameter_ref": "radioBoolean",
+        "label": {
+          "default": "Radio Boolean"
+        },
+        "description": {
+          "default": "RadioSet with enum boolean type"
+        },
+        "control": "radioset",
+        "resource_key": "withradioBoolean"
+      },
+      {
+        "parameter_ref": "radioBoolean2",
+        "label": {
+          "default": "Radio Boolean Without Enum"
+        },
+        "description": {
+          "default": "RadioSet with enum boolean type and without enum defined"
+        },
+        "control": "radioset"
+      },
+      {
+        "parameter_ref": "radioInteger",
+        "label": {
+          "default": "Radio Number"
+        },
+        "description": {
+          "default": "RadioSet with enum number type"
+        },
+        "control": "radioset"
+      },
+      {
+        "parameter_ref": "radioDouble",
+        "label": {
+          "default": "Radio Double"
+        },
+        "description": {
+          "default": "RadioSet with enum double type"
+        },
+        "control": "radioset"
+      },
+      {
+        "parameter_ref": "radioDefault",
+        "label": {
+          "default": "Radio Default"
+        },
+        "description": {
+          "default": "RadioSet with enum double type and default value"
+        },
+        "control": "radioset"
+      },
+      {
+        "parameter_ref": "radioUndefined",
+        "label": {
+          "default": "Radio Undefined"
+        },
+        "description": {
+          "default": "Undefined RadioSet with enum string type"
+        },
+        "control": "radioset"
+      },
+      {
+        "parameter_ref": "radioNull",
+        "label": {
+          "default": "Radio Null"
+        },
+        "description": {
+          "default": "Null RadioSet with enum string type"
+        },
+        "control": "radioset"
+      },
+      {
+        "parameter_ref": "radioError",
+        "label": {
+          "default": "Radio Error"
+        },
+        "description": {
+          "default": "RadioError with enum string type"
+        },
+        "control": "radioset"
+      },
+      {
+        "parameter_ref": "radioWarning",
+        "label": {
+          "default": "Radio Warning"
+        },
+        "description": {
+          "default": "RadioWarning with enum string type"
+        },
+        "control": "radioset"
+      },
+      {
+        "parameter_ref": "disable",
+        "label": {
+          "default": "Disable 'Radio Disabled'"
+        }
+      },
+      {
+        "parameter_ref": "radioDisable",
+        "label": {
+          "default": "Radio Disabled"
+        },
+        "description": {
+          "default": "Disabled RadioSet with enum string type"
+        },
+        "control": "radioset"
+      },
+      {
+        "parameter_ref": "hide",
+        "label": {
+          "default": "Hide 'Radio Hidden'"
+        }
+      },
+      {
+        "parameter_ref": "radioHidden",
+        "label": {
+          "default": "Radio Hidden"
+        },
+        "description": {
+          "default": "Hidden RadioSet with enum string type"
+        },
+        "control": "radioset"
+      }
+    ],
+    "group_info": [
+      {
+        "id": "radio-values",
+        "label": {
+          "default": "Values"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "radioString",
+          "radioBoolean",
+          "radioBoolean2",
+          "radioInteger",
+          "radioDouble",
+          "radioDefault",
+          "radioUndefined",
+          "radioNull"
+        ]
+      },
+      {
+        "id": "radio-conditions",
+        "label": {
+          "default": "Conditions"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "radioError",
+          "radioWarning",
+          "disable",
+          "radioDisable",
+          "hide",
+          "radioHidden"
+        ]
+      }
+    ]
+  },
+  "conditions": [
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "radioError",
+          "message": {
+            "default": "Needs to be gini"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "radioError",
+            "op": "equals",
+            "value": "gini"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "radioWarning",
+          "message": {
+            "default": "Needs to be gini"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "radioWarning",
+            "op": "equals",
+            "value": "gini"
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "radioHidden"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hide",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "radioDisable"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disable",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    }
+  ],
+  "resources": {
+    "withradioString.gini.label": "Gini",
+    "withradioString.entropy.label": "Entropy",
+    "withradioBoolean.true.label": "trueBoolean",
+    "withradioBoolean.false.label": "falseBoolean"
+	}
+}

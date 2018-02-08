@@ -1430,17 +1430,18 @@ _defineConstant("RADIOSET_VERTICAL_PROPS_INFO", {
 	"title": "Radioset Title",
 	"parameterDef": {
 		"current_parameters": {
-			"radioset": ""
+			"radioset": 2
 		},
 		"parameters": [
 			{
 				"id": "radioset",
 				"enum": [
-					"red",
-					"orange",
-					"yellow",
-					"green"
-				]
+					1,
+					2,
+					3,
+					4
+				],
+				"type": "integer"
 			}
 		],
 		"uihints": {
@@ -1454,6 +1455,7 @@ _defineConstant("RADIOSET_VERTICAL_PROPS_INFO", {
 					"description": {
 						"default": "radioset test"
 					},
+					"control": "radioset",
 					"orientation": "vertical"
 				}
 			],

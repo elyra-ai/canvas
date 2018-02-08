@@ -821,7 +821,9 @@ class CommonPropertiesComponents extends React.Component {
 					<p> A radio set where a parameter value is selected from up to four options.
 						For five or more options, a <a className="properties-documentation-page-intro-link" href="#/properties#--oneofselect">
 						oneofselect
-						</a> control is rendered.</p>
+						</a> control is rendered. Enums of <span className="highlight">type</span> string and number (integer, double, long) are supported.
+						If enum is not defined, a boolean radio set can be rendered by setting <span className="highlight">type</span> to boolean.
+						For type boolean and number, the control must be set to <span className="highlight">radioset</span>.</p>
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
@@ -850,13 +852,7 @@ class CommonPropertiesComponents extends React.Component {
 						</div>
 						<div className="section-column section-column-code">
 							<pre className="json-block">
-								{this.jsonReplacer(RADIOSET_VERTICAL_PROPS_INFO.parameterDef, "custom",
-									["uihints", "default", "id",
-										"parameter_info",
-										"parameter_ref", "label",
-										"description",
-										"orientation"
-									])}
+								{this.jsonReplacer(RADIOSET_VERTICAL_PROPS_INFO.parameterDef, "control")}
 							</pre>
 						</div>
 					</div>
