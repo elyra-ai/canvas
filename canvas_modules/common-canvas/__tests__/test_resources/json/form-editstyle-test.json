@@ -232,7 +232,7 @@
     "componentId": "rename",
     "label": "Form editstyle test",
     "labelEditable": true,
-    "editorSize": "large",
+    "editorSize": "small",
     "uiItems": [
       {
         "itemType": "primaryTabs",

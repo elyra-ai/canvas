@@ -13,7 +13,7 @@
   "formData": {
     "componentId": "merge",
     "label": "Merge",
-    "editorSize": "large",
+    "editorSize": "small",
     "uiItems": [
       {
         "itemType": "primaryTabs",

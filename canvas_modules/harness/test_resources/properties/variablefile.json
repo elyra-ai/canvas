@@ -13,7 +13,7 @@
   "formData": {
     "componentId": "variablefile",
     "label": "Var. File",
-    "editorSize": "large",
+    "editorSize": "small",
     "uiItems": [
       {
         "itemType": "primaryTabs",

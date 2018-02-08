@@ -2,7 +2,7 @@
   "formData": {
     "componentId": "filter",
     "label": "Filter",
-    "editorSize": "large",
+    "editorSize": "small",
     "uiItems": [
       {
         "itemType": "primaryTabs",

@@ -13,7 +13,7 @@
   "formData": {
     "componentId": "randomtrees",
     "label": "Random Trees",
-    "editorSize": "large",
+    "editorSize": "small",
     "uiItems": [
       {
         "itemType": "primaryTabs",

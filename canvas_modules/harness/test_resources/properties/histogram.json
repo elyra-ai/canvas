@@ -13,7 +13,7 @@
   "formData": {
     "componentId": "histogram",
     "label": "Histogram",
-    "editorSize": "large",
+    "editorSize": "small",
     "uiItems": [
       {
         "itemType": "primaryTabs",

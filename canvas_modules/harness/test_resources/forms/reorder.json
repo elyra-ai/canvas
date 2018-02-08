@@ -12,7 +12,7 @@
   "formData": {
     "componentId": "reorder",
     "label": "Field Reorder",
-    "editorSize": "large",
+    "editorSize": "small",
     "uiItems": [
       {
         "itemType": "primaryTabs",

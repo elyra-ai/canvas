@@ -111,6 +111,7 @@
   "uihints": {
     "id": "filter",
     "icon": "images/filter.svg",
+    "editor_size": "medium",
     "complex_type_info": [
       {
         "complex_type_ref": "fieldFilterEntry",
@@ -139,7 +140,7 @@
               "default": "",
               "resource_key": "fieldFilterEntry.exclude"
             },
-            "width": 16
+            "width": 10
           }
         ]
       }

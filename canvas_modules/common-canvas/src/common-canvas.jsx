@@ -46,6 +46,7 @@ export default class CommonCanvas extends React.Component {
 		this.openPalette = this.openPalette.bind(this);
 		this.closePalette = this.closePalette.bind(this);
 		this.initializeController = this.initializeController.bind(this);
+		this.getEditorWidth = this.getEditorWidth.bind(this);
 
 		this.canvasController = this.props.canvasController;
 		this.initializeController(props);
@@ -110,6 +111,23 @@ export default class CommonCanvas extends React.Component {
 	componentWillUnmount() {
 		this.unsubscribe();
 		document.removeEventListener("mousedown", this.hideTip, true);
+	}
+
+	getEditorWidth() {
+		let editorSize = "small";
+		if (this.props.rightFlyoutContent.props.propertiesInfo.parameterDef &&
+				this.props.rightFlyoutContent.props.propertiesInfo.parameterDef.uihints) {
+			editorSize = this.props.rightFlyoutContent.props.propertiesInfo.parameterDef.uihints.editor_size;
+		} else if (this.props.rightFlyoutContent.props.propertiesInfo.formData) {
+			editorSize = this.props.rightFlyoutContent.props.propertiesInfo.formData.editorSize;
+		}
+		let width = 318;
+		if (editorSize === "medium") {
+			width = 625;
+		} else if (editorSize === "large") {
+			width = 625; // This needs to be determined once we have a design for a large flyout
+		}
+		return width;
 	}
 
 	initializeController(props) {
@@ -336,9 +354,10 @@ export default class CommonCanvas extends React.Component {
 		if (typeof this.state.rightFlyoutContent !== "undefined" &&
 				this.state.rightFlyoutContent !== null &&
 				this.props.showRightFlyout) {
+			const width = this.getEditorWidth();
 			paletteClass += " canvas-flyout-div-open";
-			canvasStyle.minWidth = (parseFloat(canvasStyle.minWidth) + 318) + "px";
-			rightFlyout = (<div className="right-flyout-panel" style={{ width: "318px" }}>
+			canvasStyle.minWidth = (parseFloat(canvasStyle.minWidth) + width) + "px";
+			rightFlyout = (<div className="right-flyout-panel" style={{ width: width + "px" }}>
 				{this.state.rightFlyoutContent}
 			</div>);
 		}

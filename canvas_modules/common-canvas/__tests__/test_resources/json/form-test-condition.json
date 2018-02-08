@@ -77,7 +77,7 @@
     "componentId": "cond_test",
     "label": "Form condition test",
     "labelEditable": true,
-    "editorSize": "large",
+    "editorSize": "small",
     "uiItems": [
       {
         "itemType": "primaryTabs",

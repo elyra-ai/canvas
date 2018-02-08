@@ -1,7 +1,7 @@
 {
   "componentId": "Conditions.test",
   "label": "Conditions Test",
-  "editorSize": "large",
+  "editorSize": "small",
   "uiItems": [
     {
       "itemType": "primaryTabs",

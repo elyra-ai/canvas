@@ -12,7 +12,7 @@
   "formData": {
     "componentId": "cart",
     "label": "C&R Tree",
-    "editorSize": "large",
+    "editorSize": "small",
     "uiItems": [
       {
         "itemType": "primaryTabs",

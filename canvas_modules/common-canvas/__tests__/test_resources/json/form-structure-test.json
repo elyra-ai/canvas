@@ -183,7 +183,7 @@
     "componentId": "rename",
     "label": "Form structure test",
     "labelEditable": true,
-    "editorSize": "large",
+    "editorSize": "small",
     "uiItems": [
       {
         "itemType": "primaryTabs",
@@ -204,6 +204,7 @@
                       "label": {
                         "text": "Rename columns"
                       },
+                      "separateLabel": true,
                       "description": {
                         "text": "Rename columns in the active dataset"
                       },
@@ -214,7 +215,6 @@
                         "isMap": true,
                         "defaultValue": []
                       },
-                      "separateLabel": true,
                       "subControls": [
                         {
                           "name": "field",

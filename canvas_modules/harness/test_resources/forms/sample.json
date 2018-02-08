@@ -12,7 +12,7 @@
   "formData": {
     "componentId": "sample",
     "label": "Sample",
-    "editorSize": "large",
+    "editorSize": "small",
     "uiItems": [
       {
         "itemType": "primaryTabs",

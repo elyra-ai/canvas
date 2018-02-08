@@ -207,7 +207,7 @@
     "componentId": "actions",
     "label": "Form actions test",
     "labelEditable": true,
-    "editorSize": "large",
+    "editorSize": "small",
     "uiItems": [
       {
         "itemType": "primaryTabs",

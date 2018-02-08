@@ -12,7 +12,7 @@
   "formData": {
     "componentId": "derive",
     "label": "Derive",
-    "editorSize": "large",
+    "editorSize": "small",
     "uiItems": [
       {
         "itemType": "primaryTabs",

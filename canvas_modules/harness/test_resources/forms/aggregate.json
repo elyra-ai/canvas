@@ -12,7 +12,7 @@
   "formData": {
     "componentId": "aggregate",
     "label": "Aggregate",
-    "editorSize": "large",
+    "editorSize": "small",
     "uiItems": [
       {
         "itemType": "primaryTabs",

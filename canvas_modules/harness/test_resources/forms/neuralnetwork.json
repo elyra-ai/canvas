@@ -12,7 +12,7 @@
   "formData": {
     "componentId": "neuralnetwork",
     "label": "Neural Net",
-    "editorSize": "large",
+    "editorSize": "small",
     "uiItems": [
       {
         "itemType": "primaryTabs",

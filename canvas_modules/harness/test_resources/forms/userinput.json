@@ -13,7 +13,7 @@
   "formData": {
     "componentId": "userinput",
     "label": "User Input",
-    "editorSize": "large",
+    "editorSize": "small",
     "uiItems": [
       {
         "itemType": "primaryTabs",
