@@ -11,7 +11,7 @@
 
 import logger from "../../../utils/logger";
 import UiConditions from "../ui-conditions/ui-conditions.js";
-import { DEFAULT_VALIDATION_MESSAGE, STATES, DEFAULT_DATE_FORMAT } from "../constants/constants.js";
+import { DEFAULT_VALIDATION_MESSAGE, STATES, DEFAULT_DATE_FORMAT, DEFAULT_TIME_FORMAT } from "../constants/constants.js";
 import moment from "moment";
 
 function validateConditions(controller, visibleDefinition, enabledDefinitions, dataModel) {
@@ -244,6 +244,10 @@ function validateInput(propertyId, controller, validationDefinitions, datasetMet
 	if (!errorSet && control.role === "date") {
 		_isValidDate(propertyId, controller, control.dateFormat);
 	}
+
+	if (!errorSet && control.role === "time") {
+		_isValidTime(propertyId, controller, control.timeFormat);
+	}
 }
 
 function _doGroupValidationUpdate(validation, errorMessage, output, propertyId, controller) {
@@ -288,12 +292,37 @@ function _isValidDate(propertyId, controller, dtFormat) {
 
 	// controlValue may not be set for a non-required field.
 	if (controlValue) {
-		const mom = moment.utc(controlValue, "YYYY-MM-DDTHH:mm:ssZ", true); // Parse as if in ISO format
+		const mom = moment.utc(controlValue, moment.ISO_8601, true);
 		if (!mom.isValid()) {
 			const dateFormat = dtFormat || DEFAULT_DATE_FORMAT;
 			const errorMessage = {
 				type: "error",
 				text: "Invalid date. Format should be " + dateFormat
+			};
+			controller.updateErrorMessage(propertyId, errorMessage);
+			errorSet = true;
+		}
+	}
+
+	if (errorSet === false) {
+		controller.updateErrorMessage(propertyId, DEFAULT_VALIDATION_MESSAGE);
+	}
+
+	return errorSet;
+}
+
+function _isValidTime(propertyId, controller, tmFormat) {
+	const controlValue = controller.getPropertyValue(propertyId);
+	let errorSet = false;
+
+	// controlValue may not be set for a non-required field.
+	if (controlValue) {
+		const mom = moment.utc(controlValue, "HH:mm:ssZ", true);
+		if (!mom.isValid()) {
+			const timeFormat = tmFormat || DEFAULT_TIME_FORMAT;
+			const errorMessage = {
+				type: "error",
+				text: "Invalid time. Format should be " + timeFormat
 			};
 			controller.updateErrorMessage(propertyId, errorMessage);
 			errorSet = true;

@@ -75,7 +75,7 @@ describe("datefield-control renders correctly", () => {
 		);
 		const input = wrapper.find("[type='text']"); // input dom element will have type 'text' for a date field.
 		input.simulate("change", { target: { value: "2018-04-23" } });
-		expect(controller.getPropertyValue(propertyId)).to.equal("2018-04-23T00:00:00Z");
+		expect(controller.getPropertyValue(propertyId)).to.equal("2018-04-23");
 	});
 
 	it("should allow invalid format date to be entered in `DatefieldControl`", () => {
@@ -92,8 +92,8 @@ describe("datefield-control renders correctly", () => {
 
 		// When invalid dates are entered they are not rejected but accepted and a messages is displayed
 		// under the entry field to explain the error (see testcase below in next 'describe' section).
-		// Therefore the invalid date string is stored in the controller. In this case, "2-25-2016" i
-		// not correct format (because YYYY-M-D is expcted) but it will be accepted by the controller
+		// Therefore the invalid date string is stored in the controller. In this case, "2-25-2016" is
+		// not in the correct format (because YYYY-M-D is expected) but it will be accepted by the controller
 		// because invalid dates are accepted on entry.
 		expect(controller.getPropertyValue(propertyId)).to.equal("2-25-2016");
 	});
@@ -163,6 +163,40 @@ describe("error messages renders correctly for datefield controls", () => {
 
 		// Now simulate entering a valid date with the correct format.
 		input.simulate("change", { target: { value: "2012-2-25" } });
+		wrapper.update();
+
+		// Ensure the error message is no longer displayed.
+		expect(wrapper.find(".validation-error-message-icon")).to.have.length(0);
+		expect(wrapper.find(".form__validation--error")).to.have.length(0);
+	});
+
+	// This is a special case since we need special code to handle year numbers
+	// greater than 9999 because such year numbers are parsed OK in non-ISO formats
+	// but cannot be parsed as ISO format dates.
+	it("should show error message when date with year number more than 9999 is entered", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(DATEFIELD_PARAM_DEF);
+		const wrapper = renderedObject.wrapper;
+
+		// Simulate entering an invalid date information
+		const input = wrapper.find("#editor-control-date_ymd");
+		input.simulate("change", { target: { value: "10000-1-1" } });
+		wrapper.update();
+
+		// Check an error message is displayed with the expected error message.
+		const datefieldErrorMessages = {
+			"type": "error",
+			"text": "Invalid date. Format should be YYYY-M-D",
+		};
+		const actual = renderedObject.controller.getErrorMessage({ name: "date_ymd" });
+
+		expect(isEqual(JSON.parse(JSON.stringify(datefieldErrorMessages)),
+			JSON.parse(JSON.stringify(actual)))).to.be.true;
+		expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
+		expect(wrapper.find(".form__validation--error")).to.have.length(1);
+
+
+		// Now simulate entering a valid date with the correct format.
+		input.simulate("change", { target: { value: "9999-2-25" } });
 		wrapper.update();
 
 		// Ensure the error message is no longer displayed.

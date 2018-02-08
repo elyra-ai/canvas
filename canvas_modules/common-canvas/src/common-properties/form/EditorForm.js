@@ -345,6 +345,14 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 				controlType = ControlType.DATEFIELD;
 			}
 			break;
+		case Type.TIME:
+			role = Type.TIME;
+			if (parameter.isList()) {
+				controlType = ControlType.TEXTAREA;
+			} else {
+				controlType = ControlType.TIMEFIELD;
+			}
+			break;
 		case Type.STRUCTURE:
 			if (structureDef) {
 				if (structureDef.hasSubPanel()) {
@@ -421,7 +429,8 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 		rowSelection,
 		parameter.generatedValues,
 		addRemoveRows,
-		parameter.dateFormat
+		parameter.dateFormat,
+		parameter.timeFormat
 	);
 }
 
@@ -526,6 +535,10 @@ function _makeSubControl(parameter, l10nProvider) {
 		role = "date";
 		controlType = ControlType.DATEFIELD;
 		break;
+	case Type.TIME:
+		role = "time";
+		controlType = ControlType.TIMEFIELD;
+		break;
 	default:
 		role = "???" + parameter.propType() + "???";
 		controlType = ControlType.TEXTFIELD;
@@ -560,7 +573,8 @@ function _makeSubControl(parameter, l10nProvider) {
 		parameter.summary,
 		parameter.increment,
 		parameter.generatedValues,
-		parameter.dateForamt
+		parameter.dateFormat,
+		parameter.timeFormat
 	);
 }
 

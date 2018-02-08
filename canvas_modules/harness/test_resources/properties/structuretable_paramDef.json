@@ -17,7 +17,7 @@
         "Age",
         "",
         "string",
-        "2018-02-16T01:13:45Z"
+        "2018-02-16"
       ],
       [
         1,
@@ -25,7 +25,7 @@
         "BP-1",
         "blood pressure",
         "",
-        "1982-02-23T12:00:00Z"
+        "1982-02-23"
       ]
     ],
     "structuretableNoButtons": [
@@ -45,7 +45,7 @@
         "Age",
         "",
         "string",
-        "string2"
+        "01:13:45Z"
       ],
       [
         1,
@@ -53,7 +53,7 @@
         "BP-1",
         "blood pressure",
         "",
-        "string2"
+        "12:00:00Z"
       ]
     ]
   },
@@ -220,15 +220,8 @@
           "default": "string"
         },
         {
-          "id": "another_type",
-          "enum": [
-            "string2",
-            "number2",
-            "boolean2",
-            "time2",
-            "date2"
-          ],
-          "default": "string2"
+          "id": "time_type",
+          "type": "time"
         }
       ]
     }
@@ -401,7 +394,7 @@
             "description": {
               "default": "Enter a date in YYYY-M-D format"
             },
-            "width": 36,
+            "width": 30,
             "edit_style": "inline"
           }
         ]
@@ -525,16 +518,15 @@
             "sortable": true
           },
           {
-            "parameter_ref": "another_type",
+            "parameter_ref": "time_type",
             "label": {
-              "default": "Type"
+              "default": "Time"
             },
             "description": {
-              "default": "Select data type"
+              "default": "Enter a time in H:M:S"
             },
-            "width": 26,
-            "edit_style": "inline",
-            "sortable": true
+            "width": 30,
+            "edit_style": "inline"
           }
         ]
       }

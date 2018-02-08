@@ -364,7 +364,7 @@ module.exports = function() {
 
 	this.Then(/^I verify the event log for the "([^"]*)" parameter contains "([^"]*)"$/, function(parameterName, values) {
 		const lastEventLog = testUtils.getLastEventLogData();
-		// console.log(lastEventLog.data.form[parameterName]);
+		// console.log((lastEventLog.data.form[parameterName]).toString());
 		expect(values).toEqual((lastEventLog.data.form[parameterName]).toString());
 	});
 

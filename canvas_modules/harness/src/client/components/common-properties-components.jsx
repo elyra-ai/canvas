@@ -33,6 +33,7 @@ import {
 	NUMBERFIELD_PROPS_INFO,
 	NUMBERFIELD_GENERATOR_PROPS_INFO,
 	DATEFIELD_PROPS_INFO,
+	TIMEFIELD_PROPS_INFO,
 	SPINNER_PROPS_INFO,
 	CHECKBOX_SINGLE_PROPS_INFO,
 	CHECKBOX_SET_PROPS_INFO,
@@ -182,6 +183,19 @@ class CommonPropertiesComponents extends React.Component {
 				"date_format"
 			];
 			break;
+		case "timefield":
+			jsonReplacer = [
+				"current_parameters",
+				"timefieldControlName",
+				"parameters",
+				"id", "type", "default",
+				"uihints",
+				"parameter_info",
+				"parameter_ref", "label",
+				"description",
+				"time_format"
+			];
+			break;
 		case "controlData":
 			jsonReplacer = [
 				"parameters", "name", "type", "role", "enum", "required", "default",
@@ -245,6 +259,7 @@ class CommonPropertiesComponents extends React.Component {
 					"--numberfield",
 					"--spinner",
 					"--datefield",
+					"--timefield",
 					"--checkbox",
 					"--checkboxset",
 					"--radioset",
@@ -793,8 +808,8 @@ class CommonPropertiesComponents extends React.Component {
 				</div>
 				<div className="properties-documentation-panels-controls-component">
 					<h3 id="--datefield" className="section-subtitle">datefield</h3>
-					<p>A date text field is rendered for a parameter of <span className="highlight">type</span> date.
-							The current parameter should be provided as an 8601 format date. eg 2018-02-15T00:00:00Z. This is
+					<p>A date field is rendered for a parameter of <span className="highlight">type</span> date.
+							The current parameter should be provided as an 8601 format date. eg 2018-02-15. This is
 							how dates are stored internally. Note that, with the ISO format, single digits are preceded by
 							a 0. So 02 not 2 for Febrauary. The date_format field in the ui_hints can be used to
 							specify what date format is required for display and entry of the date. The default is YYYY-M-D.
@@ -814,6 +829,35 @@ class CommonPropertiesComponents extends React.Component {
 						<div className="section-column section-column-code">
 							<pre className="json-block">
 								{this.jsonReplacer(DATEFIELD_PROPS_INFO.parameterDef, "datefield")}
+							</pre>
+						</div>
+					</div>
+				</div>
+				<div className="properties-documentation-panels-controls-component">
+					<h3 id="--timefield" className="section-subtitle">timefield</h3>
+					<p>A time field is rendered for a parameter of <span className="highlight">type</span> time.
+							The current parameter should be provided as an 8601 format time. eg 09:10:05Z. This is
+							how times are stored internally. Note that, with the ISO format, single digits are
+							preceded by a 0. So 09 not 9 for nine hours. The time_format field in the ui_hints can
+							be used to specify what time format is required for display and entry of the time.
+							The default is H:m:s which is 24 hour time (for hours) and no preceding zeros on digits.
+							In the example below the default format has been overridden in the ui_hints to require
+							preceding zeros for digits in displayed and eneterd time values. Other time formats can
+							be derived from here:
+						<a href="https://momentjs.com/docs/#/displaying/format/"> Moment.js docs </a>
+					</p>
+					<div className="section-row">
+						<div className="section-column">
+							<CommonProperties
+								showPropertiesDialog
+								propertiesInfo={TIMEFIELD_PROPS_INFO}
+								containerType="Custom"
+							/>
+							{this.renderRightFlyoutButton(TIMEFIELD_PROPS_INFO)}
+						</div>
+						<div className="section-column section-column-code">
+							<pre className="json-block">
+								{this.jsonReplacer(TIMEFIELD_PROPS_INFO.parameterDef, "timefield")}
 							</pre>
 						</div>
 					</div>

@@ -1,0 +1,221 @@
+{
+  "titleDefinition": {
+    "title": "Time Fields"
+  },
+  "current_parameters": {
+    "time_hms": "2018-01-01T05:45:09Z",
+    "time_HHmmss": "2018-01-01T05:45:09Z",
+    "time_hms_non_req": "2018-01-07T06:30:00Z",
+    "time_hms_null": null,
+    "time_hms_placeholder": null,
+    "time_without_a_ui_hint": "2018-01-07T06:30:00Z",
+    "hide_time_field": true,
+    "hidden_time": "2018-01-07T06:30:00Z",
+    "disable_time_field" : true,
+    "disabled_time": "2018-01-07T06:30:00Z"
+  },
+  "parameters": [
+    {
+      "id": "time_hms",
+      "type": "time",
+      "required": true
+    },
+    {
+      "id": "time_HHmmss",
+      "type": "time",
+      "required": true
+    },
+    {
+      "id": "time_hms_non_req",
+      "type": "time",
+      "required": false
+    },
+    {
+      "id": "time_hms_null",
+      "type": "time",
+      "required": false
+    },
+    {
+      "id": "time_hms_placeholder",
+      "type": "time",
+      "required": false
+    },
+    {
+      "id": "time_without_a_ui_hint",
+      "type": "time",
+      "required": false
+    },
+    {
+      "id": "hide_time_field",
+      "type": "boolean"
+    },
+    {
+      "id": "hidden_time",
+      "type": "time",
+      "required": false
+    },
+    {
+      "id": "disable_time_field",
+      "type": "boolean"
+    },
+    {
+      "id": "disabled_time",
+      "type": "time",
+      "required": false
+    }
+  ],
+  "uihints": {
+    "id": "timefield",
+    "icon": "images/default.svg",
+    "label": {
+      "default": "Time Fields"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "time_hms",
+        "label": {
+          "default": "Required Time H:m:s"
+        },
+        "description": {
+          "default": "Required timefield with value set to '5:45:9' with H:m:s format"
+        },
+        "time_format": "H:m:s"
+      },
+      {
+        "parameter_ref": "time_HHmmss",
+        "label": {
+          "default": "Required Time HH:mm:ss"
+        },
+        "description": {
+          "default": "Required timefield with value set to '05:45:09' with HH:mm:ss format"
+        },
+        "time_format": "HH:mm:ss"
+      },
+      {
+        "parameter_ref": "time_hms_non_req",
+        "label": {
+          "default": "Time H:m:s"
+        },
+        "description": {
+          "default": "Optional timefield with value set to '6:30:0' with H:m:s format"
+        },
+        "time_format": "H:m:s"
+      },
+      {
+        "parameter_ref": "time_hms_null",
+        "label": {
+          "default": "Time H:m:s with null"
+        },
+        "description": {
+          "default": "Optional timefield with null value"
+        },
+        "time_format": "H:m:s"
+      },
+      {
+        "parameter_ref": "time_hms_placeholder",
+        "label": {
+          "default": "Time H:m:s with null and placeholder"
+        },
+        "description": {
+          "default": "Optional timefield with null and placeholder text"
+        },
+        "time_format": "H:m:s",
+        "place_holder_text": {
+          "default": "Enter a time: H:m:s"
+        }
+      },
+      {
+        "parameter_ref": "hide_time_field",
+        "label": {
+          "default": "Hide hidden time"
+        }
+      },
+      {
+        "parameter_ref": "hidden_time",
+        "label": {
+          "default": "Voila!"
+        },
+        "description": {
+          "default": "Initially hidden time, revealed by clicking checkbox."
+        },
+        "time_format": "HH:mm:ss"
+      },
+      {
+        "parameter_ref": "disable_time_field",
+        "label": {
+          "default": "Enable disabled time"
+        }
+      },
+      {
+        "parameter_ref": "disabled_time",
+        "label": {
+          "default": "Enable Me!"
+        },
+        "description": {
+          "default": "Initially disbaled time, enabled by clicking checkbox."
+        },
+        "time_format": "HH:mm:ss"
+      }
+    ],
+    "group_info": [
+      {
+        "id": "timefield-values",
+        "label": {
+          "default": "Values"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "time_hms",
+          "time_HHmmss",
+          "time_hms_non_req",
+          "time_hms_null",
+          "time_hms_placeholder",
+          "time_without_a_ui_hint"
+        ]
+      },
+      {
+        "id": "timefield-conditions",
+        "label": {
+          "default": "Conditions"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "hide_time_field",
+          "hidden_time",
+          "disable_time_field",
+          "disabled_time"
+        ]
+      }
+    ]
+  },
+  "conditions": [
+    {
+      "visible": {
+        "parameter_refs": [
+          "hidden_time"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hide_time_field",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "disabled_time"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disable_time_field",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    }
+  ]
+}

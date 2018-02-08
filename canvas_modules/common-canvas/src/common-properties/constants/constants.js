@@ -97,6 +97,8 @@ _defineConstant("DATA_TYPES", [
 
 _defineConstant("DEFAULT_DATE_FORMAT", "YYYY-M-D");
 
+_defineConstant("DEFAULT_TIME_FORMAT", "H:m:s");
+
 _defineConstant("EDITOR_CONTROL", "editor-control-");
 
 _defineConstant("TOOL_TIP_DELAY", 1000);

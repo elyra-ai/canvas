@@ -1509,7 +1509,7 @@ _defineConstant("DATEFIELD_PROPS_INFO", {
 	"title": "DateField Title",
 	"parameterDef": {
 		"current_parameters": {
-			"datefieldControlName": "2018-02-15T00:00:00Z"
+			"datefieldControlName": "2018-02-15"
 		},
 		"parameters": [
 			{
@@ -1537,6 +1537,47 @@ _defineConstant("DATEFIELD_PROPS_INFO", {
 					"type": "controls",
 					"parameter_refs": [
 						"datefieldControlName"
+					]
+				}
+			]
+		},
+		"dataset_metadata": {
+			"fields": []
+		}
+	}
+});
+_defineConstant("TIMEFIELD_PROPS_INFO", {
+	"title": "TimeField Title",
+	"parameterDef": {
+		"current_parameters": {
+			"timefieldControlName": "10:05:20Z"
+		},
+		"parameters": [
+			{
+				"id": "timefieldControlName",
+				"type": "time"
+			}
+		],
+		"uihints": {
+			"id": "timefields",
+			"parameter_info": [
+				{
+					"parameter_ref": "timefieldControlName",
+					"label": {
+						"default": "Timefield Control Name"
+					},
+					"description": {
+						"default": "Timefield test"
+					},
+					"time_format": "HH:mm:ss"
+				}
+			],
+			"group_info": [
+				{
+					"id": "Timefield Control",
+					"type": "controls",
+					"parameter_refs": [
+						"timefieldControlName"
 					]
 				}
 			]

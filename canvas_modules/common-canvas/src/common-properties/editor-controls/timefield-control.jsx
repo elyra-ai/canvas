@@ -12,9 +12,9 @@ import PropTypes from "prop-types";
 import TextField from "ap-components-react/dist/components/TextField";
 import EditorControl from "./editor-control.jsx";
 import moment from "moment";
-import { DEFAULT_DATE_FORMAT } from "../constants/constants.js";
+import { DEFAULT_TIME_FORMAT } from "../constants/constants.js";
 
-export default class DatefieldControl extends EditorControl {
+export default class TimefieldControl extends EditorControl {
 	constructor(props) {
 		super(props);
 		this.stringValue = null;
@@ -26,12 +26,10 @@ export default class DatefieldControl extends EditorControl {
 		let stringValue = null;
 
 		if (evt.target.value) {
-			const format = this.props.control.dateFormat || DEFAULT_DATE_FORMAT;
+			const format = this.props.control.timeFormat || DEFAULT_TIME_FORMAT;
 			const mom = moment.utc(evt.target.value, format, true);
-			// Catch large year numbers which are parsed OK in the specified format
-			// but cannot be parsed as the ISO format when being rendered.
-			if (mom.isValid() && mom.year() < 10000) {
-				stringValue = mom.format("YYYY-MM-DD"); // If moment is valid save as ISO format
+			if (mom.isValid()) {
+				stringValue = mom.format("HH:mm:ssZ"); // If moment is valid save as ISO format
 			} else {
 				stringValue = evt.target.value; // Otherwise just save as invalid entered string
 			}
@@ -51,7 +49,7 @@ export default class DatefieldControl extends EditorControl {
 
 		const conditionProps = {
 			propertyId: this.props.propertyId,
-			controlType: "date"
+			controlType: "time"
 		};
 		const conditionState = this.getConditionMsgState(conditionProps);
 
@@ -68,8 +66,8 @@ export default class DatefieldControl extends EditorControl {
 
 		let displayValue = "";
 		if (stringValue) {
-			const format = this.props.control.dateFormat || DEFAULT_DATE_FORMAT;
-			const mom = moment.utc(stringValue, moment.ISO_8601, true);
+			const format = this.props.control.timeFormat || DEFAULT_TIME_FORMAT;
+			const mom = moment.utc(stringValue, "HH:mm:ssZ", true);
 
 			if (mom.isValid()) {
 				try {
@@ -103,7 +101,7 @@ export default class DatefieldControl extends EditorControl {
 	}
 }
 
-DatefieldControl.propTypes = {
+TimefieldControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired

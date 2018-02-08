@@ -13,11 +13,11 @@ module.exports = function() {
 
 	this.Then(/^I select the row (\d+) in the table "([^"]*)"$/, function(rowNumber, tableControlId) {
 		// Write code here that turns the phrase above into concrete actions
-		const table = browser.$("#" + tableControlId);
-		const selectRow = table.$("#flexible-table-container")
+		const containingDiv = browser.$("#" + tableControlId);
+		const rows = containingDiv.$("#flexible-table-container")
 			.$(".reactable-data")
 			.$$("tr");
-		selectRow[Number(rowNumber) - 1].click();
+		rows[Number(rowNumber) - 1].$$("td")[0].click();
 	});
 
 	this.Then(/^I verify that "([^"]*)" is a value in the "([^"]*)" cell of row (\d+) in the table "([^"]*)"$/,
@@ -140,11 +140,11 @@ module.exports = function() {
 	});
 
 	function getCell(cellLabel, rowNumber, tableControlId) {
-		const table = browser.$("#" + tableControlId);
-		const selectRow = table.$("#flexible-table-container")
+		const containingDiv = browser.$("#" + tableControlId);
+		const rows = containingDiv.$("#flexible-table-container")
 			.$(".reactable-data")
 			.$$("tr");
-		const cells = selectRow[Number(rowNumber) - 1].$$("td");
+		const cells = rows[Number(rowNumber) - 1].$$("td");
 		var cell = null;
 		for (var idx = 0; idx < cells.length; idx++) {
 			if (cells[idx].getAttribute("label") === cellLabel) {

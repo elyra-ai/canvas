@@ -70,6 +70,7 @@ const ControlType = {
 	EXPRESSION: "expression",
 	NUMBERFIELD: "numberfield",
 	DATEFIELD: "datefield",
+	TIMEFIELD: "timefield",
 	CHECKBOX: "checkbox",
 	RADIOSET: "radioset",
 	CHECKBOXSET: "checkboxset",
@@ -115,6 +116,7 @@ const Type = {
 	STRING: "string",
 	PASSWORD: "password",
 	DATE: "date",
+	TIME: "time",
 	STRUCTURE: "structure"
 };
 

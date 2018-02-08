@@ -25,6 +25,7 @@ import ExpressionControl from "./expression-control.jsx";
 import PasswordControl from "./password-control.jsx";
 import NumberfieldControl from "./numberfield-control.jsx";
 import DatefieldControl from "./datefield-control.jsx";
+import TimefieldControl from "./timefield-control.jsx";
 import CheckboxControl from "./checkbox-control.jsx";
 import CheckboxsetControl from "./checkboxset-control.jsx";
 import RadiosetControl from "./radioset-control.jsx";
@@ -195,6 +196,8 @@ export default class ControlFactory {
 			return (<NumberfieldControl {...props} />);
 		} else if (control.controlType === ControlType.DATEFIELD) {
 			return (<DatefieldControl {...props} />);
+		} else if (control.controlType === ControlType.TIMEFIELD) {
+			return (<TimefieldControl {...props} />);
 		} else if (control.controlType === ControlType.CHECKBOX) {
 			return (<CheckboxControl {...props} />);
 		} else if (control.controlType === ControlType.CHECKBOXSET && !tableInfo) {
