@@ -224,18 +224,20 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		if (Array.isArray(cellContent)) {
 			cellContent = cellContent.join(", ");
 		}
+
+		const tableCellWidth = parseFloat(colWidth) - parseFloat(columnStyle.paddingLeft) + "px";
 		if (columnDef.editStyle === "subpanel") {
 			cell = (
 				<Td className={"table-cell " + cellDisabledClassName} key={colIndex} column={columnDef.name} style={columnStyle}>
 					<div className="table-text">
-						<span>{cellContent}</span>
+						<span style={{ "width": tableCellWidth }}>{cellContent}</span>
 					</div>
 				</Td>);
 		} else if (columnDef.editStyle === "on_panel") {
 			cell = (
 				<Td className={"table-cell " + cellDisabledClassName} key={colIndex} column={columnDef.name} style={columnStyle}>
 					<div className="table-text">
-						<span>{cellContent}</span>
+						<span style={{ "width": tableCellWidth }}>{cellContent}</span>
 					</div>
 				</Td>);
 			// save the cell conent in an object
@@ -485,7 +487,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		}
 		if (this.props.control.childItem) {
 			// set to specific size
-			headers.push({ "key": "edit", "label": "", "width": "46px" });
+			headers.push({ "key": "edit", "label": "", "width": "36px" });
 		}
 		// add extra column for overlay scrollbar
 		headers.push({ "key": "edit", "label": "", "width": "7px" });

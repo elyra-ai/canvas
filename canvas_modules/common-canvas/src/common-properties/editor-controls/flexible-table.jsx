@@ -46,7 +46,7 @@ class FlexibleTable extends React.Component {
 		for (const columnDef of columns) {
 			// if columns have specific width subtract from total width
 			if (columnDef.width && typeof columnDef.width === "string" && columnDef.width.includes("px")) {
-				tableWidth -= parseInt(10, columnDef.width);
+				tableWidth -= parseFloat(columnDef.width);
 			}
 		}
 		const widths = [];

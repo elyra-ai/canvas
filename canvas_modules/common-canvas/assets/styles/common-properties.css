@@ -507,6 +507,17 @@ input.number,
 	padding-bottom: 8px;
 }
 
+.table-row .table-text {
+	max-height: 35px;
+}
+
+.table-cell .table-text span {
+	text-overflow: ellipsis;
+	display: inline-block;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
 .table-row #oneofselect-control-container {
 	padding-top: 2px;
 }
@@ -998,6 +1009,12 @@ input[type=number][disabled].number--light+.number__spinnerdiv .numpinput__spinn
 
 .editor_control_area {
   margin-bottom: 5px;
+}
+
+/* remove the extra right padding ap-component reserves for its validation icons */
+.editor_control_area div div input[type=text],
+.editor_control_area div div input[type=number] {
+	padding-right: 0px;
 }
 
 .checkbox-panel {
