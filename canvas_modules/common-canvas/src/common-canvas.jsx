@@ -114,6 +114,10 @@ export default class CommonCanvas extends React.Component {
 	}
 
 	getEditorWidth() {
+		// @TODO: Reenable this code once WML changes their ui-hints files
+		const width = 318;
+
+		/*
 		let editorSize = "small";
 		if (this.props.rightFlyoutContent.props.propertiesInfo.parameterDef &&
 				this.props.rightFlyoutContent.props.propertiesInfo.parameterDef.uihints) {
@@ -121,12 +125,14 @@ export default class CommonCanvas extends React.Component {
 		} else if (this.props.rightFlyoutContent.props.propertiesInfo.formData) {
 			editorSize = this.props.rightFlyoutContent.props.propertiesInfo.formData.editorSize;
 		}
+
 		let width = 318;
 		if (editorSize === "medium") {
 			width = 625;
 		} else if (editorSize === "large") {
 			width = 625; // This needs to be determined once we have a design for a large flyout
 		}
+		*/
 		return width;
 	}
 

@@ -12,9 +12,10 @@
     {
       "id": "withReplacement",
       "enum": [
-        "true",
-        "false"
+        true,
+        false
       ],
+      "type": "boolean",
       "default": false,
       "required": true
     },
@@ -46,6 +47,7 @@
     "description": {
       "default": "Perform a simple sample operation on the data, with or without replacement"
     },
+    "editor_size": "small",
     "parameter_info": [
       {
         "parameter_ref": "withReplacement",
@@ -56,7 +58,8 @@
           "default": "Indicate that sampling be performed with replacement"
         },
         "control": "radioset",
-        "resource_key": "withReplace"
+        "resource_key": "withReplace",
+        "orientation": "vertical"
       },
       {
         "parameter_ref": "samplingRatio",

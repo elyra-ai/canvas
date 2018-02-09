@@ -124,9 +124,24 @@ function getTableFieldIndex(control) {
 	return -1;
 }
 
+/**
+ * Given an array of datamodels, return a composite array of all fields.
+ */
+function getAllDataModelFields(dataModelArray) {
+	if (toType(dataModelArray) !== "array") {
+		return [];
+	}
+	let fields = [];
+	for (let idx = 0; idx < dataModelArray.length; idx++) {
+		fields = fields.concat(dataModelArray[idx].fields);
+	}
+	return fields;
+}
+
 module.exports = {
 	toType: toType,
 	formatMessage: formatMessage,
 	evaluateText: evaluateText,
-	getTableFieldIndex: getTableFieldIndex
+	getTableFieldIndex: getTableFieldIndex,
+	getAllDataModelFields: getAllDataModelFields
 };

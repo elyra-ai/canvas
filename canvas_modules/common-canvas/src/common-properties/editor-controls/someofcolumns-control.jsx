@@ -12,6 +12,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import FormControl from "react-bootstrap/lib/FormControl";
 import EditorControl from "./editor-control.jsx";
+import PropertyUtils from "../util/property-utils";
 
 export default class SomeofcolumnsControl extends EditorControl {
 	constructor(props) {
@@ -49,7 +50,8 @@ export default class SomeofcolumnsControl extends EditorControl {
 			controlIconContainerClass = "some-of-column-control-icon-container-enabled";
 		}
 
-		var options = EditorControl.genColumnSelectOptions(this.props.dataModel.fields, controlValue, false);
+		const fields = PropertyUtils.getAllDataModelFields(this.props.dataModel);
+		var options = EditorControl.genColumnSelectOptions(fields, controlValue, false);
 		return (
 			<div style={stateStyle}>
 				<div id={controlIconContainerClass}>
