@@ -75,9 +75,9 @@ Feature: Sanity_Test_ColumnSelectControl
 		Then I select the "Conditions" tab in "modal"
 		Then I select the "BP" row in the "fields_error" panel
 		Then I select the "remove-fields-button-enabled" button on the "fields_error" parameter
-		Then I validate the "error" message for the "fields_error" parameter of "Required parameter fields_error has no value"
+		Then I validate the "error" message for the "fields_error" parameter of "Required parameter 'Field Error' has no value"
 		Then I select the "apply" button in "modal"
-		Then I verify the event log has the "error" message for the "fields_error" parameter of "Required parameter fields_error has no value"
+		Then I verify the event log has the "error" message for the "fields_error" parameter of "Required parameter 'Field Error' has no value"
 
 		# warning message
 		Given I have toggled the app side common-properties panel
@@ -118,9 +118,9 @@ Feature: Sanity_Test_ColumnSelectControl
 		Then I select the "Conditions" tab in "flyout"
 		Then I select the "BP" row in the "fields_error" panel
 		Then I select the "remove-fields-button-enabled" button on the "fields_error" parameter
-		Then I validate the "error" message for the "fields_error" parameter of "Required parameter fields_error has no value"
+		Then I validate the "error" message for the "fields_error" parameter of "Required parameter 'Field Error' has no value"
 		Then I select the "apply" button in "flyout"
-		Then I verify the event log has the "error" message for the "fields_error" parameter of "Required parameter fields_error has no value"
+		Then I verify the event log has the "error" message for the "fields_error" parameter of "Required parameter 'Field Error' has no value"
 
 		# warning message
 		Given I have toggled the app side common-properties panel

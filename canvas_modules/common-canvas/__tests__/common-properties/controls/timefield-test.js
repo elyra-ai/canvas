@@ -180,7 +180,7 @@ describe("error messages renders correctly for timefield controls", () => {
 		// Check an error message is displayed with the expected error message.
 		const timefieldErrorMessages = {
 			"type": "error",
-			"text": "Required parameter time_hms has no value",
+			"text": "Required parameter 'Required Time H:m:s' has no value",
 		};
 		const actual = renderedObject.controller.getErrorMessage({ name: "time_hms" });
 

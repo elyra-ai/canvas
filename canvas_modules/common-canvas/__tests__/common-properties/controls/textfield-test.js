@@ -285,7 +285,7 @@ describe("condition messages renders correctly with textfields control", () => {
 			textareaDescription:
 						{
 							type: "error",
-							text: "Required parameter textareaDescription has no value"
+							text: "Required parameter 'Description' has no value"
 						}
 		};
 		const actual = controller.getErrorMessages();

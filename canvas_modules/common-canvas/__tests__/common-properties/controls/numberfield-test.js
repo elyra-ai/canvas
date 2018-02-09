@@ -345,7 +345,7 @@ describe("condition messages renders correctly with numberfield control", () => 
 
 		const numberfieldCheckpointIntervalErrorMessages = {
 			"type": "error",
-			"text": "Required parameter numberfieldCheckpointInterval has no value",
+			"text": "Required parameter 'Checkpoint Interval' has no value",
 		};
 		const actual = controller.getErrorMessage({ name: "numberfieldCheckpointInterval" });
 		expect(isEqual(JSON.parse(JSON.stringify(numberfieldCheckpointIntervalErrorMessages)),

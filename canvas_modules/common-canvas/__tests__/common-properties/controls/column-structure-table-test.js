@@ -1123,7 +1123,7 @@ describe("condition messages renders correctly with structure table control", ()
 
 		const structuretableRenameFieldsErrorMessages = {
 			"type": "error",
-			"text": "Required parameter structuretableRenameFields has no value"
+			"text": "Required parameter 'Rename Field' has no value"
 		};
 		const actual = controller.getErrorMessage({ name: "structuretableRenameFields" });
 		expect(isEqual(JSON.parse(JSON.stringify(structuretableRenameFieldsErrorMessages)),

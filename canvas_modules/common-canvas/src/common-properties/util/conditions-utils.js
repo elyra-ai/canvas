@@ -274,9 +274,11 @@ function _requiredValidation(propertyId, controller) {
 	let errorSet = false;
 	if (controlValue === null || controlValue === "" ||
 			(Array.isArray(controlValue) && controlValue.length === 0)) {
+		const control = controller.getControl(propertyId);
+		const label = control && control.label && control.label.text ? control.label.text : propertyId.name;
 		const errorMessage = {
 			type: "error",
-			text: "Required parameter " + propertyId.name + " has no value"
+			text: "Required parameter '" + label + "' has no value"
 		};
 		controller.updateErrorMessage(propertyId, errorMessage);
 		errorSet = true;

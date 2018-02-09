@@ -216,7 +216,7 @@ describe("error messages renders correctly for datefield controls", () => {
 		// Check an error message is displayed with the expected error message.
 		const datefieldErrorMessages = {
 			"type": "error",
-			"text": "Required parameter date_mdy has no value",
+			"text": "Required parameter 'Required Date M-D-Y' has no value",
 		};
 		const actual = renderedObject.controller.getErrorMessage({ name: "date_mdy" });
 
