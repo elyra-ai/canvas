@@ -10,6 +10,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Tooltip from "../tooltip.jsx";
+import ObserveSize from "react-observe-size";
 
 import paletteDisabledIcon from "../../assets/images/canvas_toolbar_icons/palette_open_disabled.svg";
 import paletteCloseIcon from "../../assets/images/canvas_toolbar_icons/palette_close.svg";
@@ -177,8 +178,15 @@ class Toolbar extends React.Component {
 
 	updateToolbarWidth() {
 		const toolbarWidth = this.getObjectWidth("#canvas-toolbar");
+		let rightFlyoutWidth = 0;
+
+		if (this.props.rightFlyoutOpen) {
+			rightFlyoutWidth = this.getObjectWidth(".right-flyout-panel");
+		}
+
 		this.setState({
-			toolbarWidth: toolbarWidth
+			toolbarWidth: toolbarWidth,
+			rightFlyoutWidth: rightFlyoutWidth
 		});
 	}
 
@@ -347,7 +355,7 @@ class Toolbar extends React.Component {
 		}
 
 		if (this.props.rightFlyoutOpen) {
-			toolbarWidth -= 320;
+			toolbarWidth -= parseFloat(this.state.rightFlyoutWidth);
 		}
 
 		const that = this;
@@ -375,12 +383,14 @@ class Toolbar extends React.Component {
 			{zoomContainerItems}
 		</div>);
 
-		const canvasToolbar = (<div id="canvas-toolbar">
-			<ul id="toolbar-items">
-				{actionContainer}
-				{zoomContainer}
-			</ul>
-		</div>);
+		const canvasToolbar = (<ObserveSize observerFn={(element) => this.updateToolbarWidth(element.width)}>
+			<div id="canvas-toolbar">
+				<ul id="toolbar-items">
+					{actionContainer}
+					{zoomContainer}
+				</ul>
+			</div>
+		</ObserveSize>);
 
 		return canvasToolbar;
 	}

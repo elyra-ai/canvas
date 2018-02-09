@@ -116,9 +116,11 @@ export default class CommonCanvas extends React.Component {
 	getEditorWidth() {
 		// @TODO: Reenable this code once WML changes their ui-hints files
 		const width = 318;
+		const className = "canvas-flyout-div-open";
 
 		/*
 		let editorSize = "small";
+		let className = "canvas-flyout-div-open";
 		if (this.props.rightFlyoutContent.props.propertiesInfo.parameterDef &&
 				this.props.rightFlyoutContent.props.propertiesInfo.parameterDef.uihints) {
 			editorSize = this.props.rightFlyoutContent.props.propertiesInfo.parameterDef.uihints.editor_size;
@@ -129,11 +131,16 @@ export default class CommonCanvas extends React.Component {
 		let width = 318;
 		if (editorSize === "medium") {
 			width = 625;
+			className = "canvas-flyout-div-open-medium";
 		} else if (editorSize === "large") {
 			width = 625; // This needs to be determined once we have a design for a large flyout
+			className = "canvas-flyout-div-open-large";
 		}
 		*/
-		return width;
+		return {
+			width: width,
+			className: className
+		};
 	}
 
 	initializeController(props) {
@@ -360,10 +367,10 @@ export default class CommonCanvas extends React.Component {
 		if (typeof this.state.rightFlyoutContent !== "undefined" &&
 				this.state.rightFlyoutContent !== null &&
 				this.props.showRightFlyout) {
-			const width = this.getEditorWidth();
-			paletteClass += " canvas-flyout-div-open";
-			canvasStyle.minWidth = (parseFloat(canvasStyle.minWidth) + width) + "px";
-			rightFlyout = (<div className="right-flyout-panel" style={{ width: width + "px" }}>
+			const widthObj = this.getEditorWidth();
+			paletteClass += (" " + widthObj.className);
+			canvasStyle.minWidth = (parseFloat(canvasStyle.minWidth) + widthObj.width) + "px";
+			rightFlyout = (<div className="right-flyout-panel" style={{ width: widthObj.width + "px" }}>
 				{this.state.rightFlyoutContent}
 			</div>);
 		}

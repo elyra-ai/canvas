@@ -92,6 +92,11 @@
 	width: calc(100% - 320px);
 }
 
+.canvas-flyout-div-open-medium,
+.canvas-flyout-div-open-large {
+	width: calc(100% - 627px);
+}
+
 .canvas-palette-flyout-div-open.canvas-flyout-div-open {
 	width: calc(100% - 570px);
 }
