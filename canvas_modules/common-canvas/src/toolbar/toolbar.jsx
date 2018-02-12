@@ -9,7 +9,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import Tooltip from "../tooltip.jsx";
+import Tooltip from "../tooltip/tooltip.jsx";
 import ObserveSize from "react-observe-size";
 
 import paletteDisabledIcon from "../../assets/images/canvas_toolbar_icons/palette_open_disabled.svg";

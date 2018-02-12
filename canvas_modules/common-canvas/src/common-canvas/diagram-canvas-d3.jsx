@@ -15,9 +15,9 @@ import PropTypes from "prop-types";
 
 import {
 	DND_DATA_TEXT
-} from "../constants/common-constants.js";
+} from "../../constants/common-constants.js";
 
-import logger from "../utils/logger";
+import logger from "../../utils/logger";
 import CanvasD3Layout from "./svg-canvas-d3.js";
 
 export default class DiagramCanvas extends React.Component {

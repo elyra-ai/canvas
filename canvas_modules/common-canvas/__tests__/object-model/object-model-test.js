@@ -12,7 +12,7 @@ import difference from "lodash/difference";
 import isEmpty from "lodash/isEmpty";
 import isEqual from "lodash/isEqual";
 import deepFreeze from "deep-freeze";
-import ObjectModel from "../src/object-model/object-model.js";
+import ObjectModel from "../../src/object-model/object-model.js";
 import log4js from "log4js";
 
 const logger = log4js.getLogger("object-model-test");

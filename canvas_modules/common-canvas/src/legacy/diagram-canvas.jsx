@@ -20,9 +20,9 @@ import {
 	DRAG_MOVE,
 	DRAG_LINK,
 	DRAG_SELECT_REGION
-} from "../constants/common-constants.js";
-import CanvasUtils from "../utils/canvas-utils.js";
-import logger from "../utils/logger";
+} from "../../constants/common-constants.js";
+import CanvasUtils from "./canvas-utils.js";
+import logger from "../../utils/logger";
 
 const NODE_BORDER_SIZE = 2; // see common-canvas.css, .canvas-node
 // const CELL_SIZE = 48;

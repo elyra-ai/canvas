@@ -10,8 +10,8 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { DND_DATA_TEXT } from "../constants/common-constants.js";
-import logger from "../utils/logger";
+import { DND_DATA_TEXT } from "../../constants/common-constants.js";
+import logger from "../../utils/logger";
 
 
 // export default class Node extends React.Component {

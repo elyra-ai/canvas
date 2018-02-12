@@ -23,10 +23,6 @@ _defineConstant("DRAG_MOVE", "move");
 _defineConstant("DRAG_LINK", "link");
 _defineConstant("DRAG_SELECT_REGION", "selectRegion");
 
-_defineConstant("CANVAS_UI", {
-	HALO_RADIUS: 45
-});
-
 _defineConstant("TOOLBAR", {
 	ICON_WIDTH: 64,
 	DIVIDER_WIDTH: 2

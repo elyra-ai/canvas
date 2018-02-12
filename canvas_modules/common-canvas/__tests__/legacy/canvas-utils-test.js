@@ -7,7 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import CanvasUtils from "../utils/canvas-utils.js";
+import CanvasUtils from "../../src/legacy/canvas-utils.js";
 import { assert } from "chai";
 
 

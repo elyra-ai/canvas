@@ -14,9 +14,9 @@
 
 const d3 = require("d3");
 import union from "lodash/union";
-import nodeMenuStandardIcon from "../assets/images/canvas_node_icons/node-menu_standard.svg";
-import nodeMenuHoverIcon from "../assets/images/canvas_node_icons/node-menu_hover.svg";
-import { TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK } from "../constants/common-constants.js";
+import nodeMenuStandardIcon from "../../assets/images/canvas_node_icons/node-menu_standard.svg";
+import nodeMenuHoverIcon from "../../assets/images/canvas_node_icons/node-menu_hover.svg";
+import { TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK } from "../../constants/common-constants.js";
 
 const BACKSPACE_KEY = 8;
 const DELETE_KEY = 46;

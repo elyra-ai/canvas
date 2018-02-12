@@ -13,10 +13,10 @@ import { NONE, VERTICAL, DAGRE_HORIZONTAL, DAGRE_VERTICAL,
 	CLONE_NODE_LINK, CREATE_COMMENT_LINK, CLONE_COMMENT_LINK } from "../../constants/common-constants.js";
 import dagre from "dagre/dist/dagre.min.js";
 import LayoutDimensions from "./layout-dimensions.js";
-import SVGCanvasInHandler from "../svg-canvas-in-handler.js"; // TODO - Remove this when WML supports PipelineFlow
-import SVGCanvasOutHandler from "../svg-canvas-out-handler.js"; // TODO - Remove this when WML supports PipelineFlow
-import SVGPipelineInHandler from "../svg-pipeline-in-handler.js";
-import SVGPipelineOutHandler from "../svg-pipeline-out-handler.js";
+import CanvasInHandler from "./canvas-in-handler.js"; // TODO - Remove this when WML supports PipelineFlow
+import CanvasOutHandler from "./canvas-out-handler.js"; // TODO - Remove this when WML supports PipelineFlow
+import PipelineInHandler from "./pipeline-in-handler.js";
+import PipelineOutHandler from "./pipeline-out-handler.js";
 import difference from "lodash/difference";
 import isEmpty from "lodash/isEmpty";
 import uuid4 from "uuid/v4";
@@ -369,7 +369,7 @@ const canvasinfo = (state = getInitialCanvas(), action) => {
 				action.data.pipelines.length > 0) {
 			const mainPipeline = getMainPipeline(action.data);
 			if (mainPipeline) {
-				var canvasInfo = SVGPipelineInHandler.convertPipelineToCanvasInfo(mainPipeline);
+				var canvasInfo = PipelineInHandler.convertPipelineToCanvasInfo(mainPipeline);
 				canvasInfo.id = action.data.id;
 				return Object.assign({}, canvasInfo, { nodes: nodes(canvasInfo.nodes, action) });
 			}
@@ -659,7 +659,7 @@ export default class ObjectModel {
 
 	// Deprecated  TODO - Remvove this method when WML Canvas migrates to setPipelineFlowPalette() method
 	setPaletteData(paletteData) {
-		var newPalData = SVGCanvasInHandler.convertPaletteToPipelineFlowPalette(paletteData);
+		var newPalData = CanvasInHandler.convertPaletteToPipelineFlowPalette(paletteData);
 		this.store.dispatch({ type: "SET_PALETTE_DATA", data: newPalData });
 	}
 
@@ -745,14 +745,14 @@ export default class ObjectModel {
 			data: getInitialPipelineFlow(canvas.id, canvas.diagram.id),
 			layoutinfo: this.store.getState().layoutinfo,
 			currentPipelineFlow: this.store.getState().pipelineflow });
-		var canvasInfo = SVGCanvasInHandler.convertCanvasToCanvasInfo(canvas);
+		var canvasInfo = CanvasInHandler.convertCanvasToCanvasInfo(canvas);
 		this.setCanvasInfo(canvasInfo);
 	}
 
 	// Deprectaed TODO - Remove this method when WML Canvas supports pipeline Flow
 	getCanvas() {
 		if (this.oldCanvas) {
-			return SVGCanvasOutHandler.getCanvasBasedOnCanvas(this.oldCanvas, this.store.getState().canvasinfo);
+			return CanvasOutHandler.getCanvasBasedOnCanvas(this.oldCanvas, this.store.getState().canvasinfo);
 		}
 		return {};
 	}
@@ -792,7 +792,7 @@ export default class ObjectModel {
 	// with the changes to canvasinfo made by the user.
 	syncPipelineFlow(pipelineFlow, canvasInfo) {
 		var pipeline = getMainPipeline(pipelineFlow);
-		var newPipeline = SVGPipelineOutHandler.modifyPipelineWithCanvasInfo(pipeline, canvasInfo);
+		var newPipeline = PipelineOutHandler.modifyPipelineWithCanvasInfo(pipeline, canvasInfo);
 
 		if (newPipeline) {
 			var newPipelines = pipelineFlow.pipelines.map((pline) => {

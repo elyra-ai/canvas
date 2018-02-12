@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
-import CommonContextMenu from "../src/common-context-menu.jsx";
+import CommonContextMenu from "../../src/context-menu/common-context-menu.jsx";
 import { shallow, mount } from "enzyme";
 import { expect } from "chai";
 import sinon from "sinon";

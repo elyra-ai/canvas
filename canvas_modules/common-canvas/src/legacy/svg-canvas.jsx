@@ -9,7 +9,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { DRAG_LINK, DRAG_SELECT_REGION } from "../constants/common-constants.js";
+import { DRAG_LINK, DRAG_SELECT_REGION } from "../../constants/common-constants.js";
 
 export default class SVGCanvas extends React.Component {
 	constructor(props) {

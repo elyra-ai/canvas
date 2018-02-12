@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
-import Comment from "../src/comment.jsx";
+import Comment from "../../src/legacy/comment.jsx";
 import { mount } from "enzyme";
 import { expect } from "chai";
 import sinon from "sinon";

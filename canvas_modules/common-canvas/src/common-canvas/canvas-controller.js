@@ -7,21 +7,21 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import AddLinksAction from "./command-actions/addLinksAction.js";
-import ArrangeLayoutAction from "./command-actions/arrangeLayoutAction.js";
-import CloneMultipleObjectsAction from "./command-actions/cloneMultipleObjectsAction.js";
-import CommandStack from "./command-stack/command-stack.js";
-import constants from "../constants/common-constants.js";
-import CreateAutoNodeAction from "./command-actions/createAutoNodeAction.js";
-import CreateCommentAction from "./command-actions/createCommentAction.js";
-import CreateNodeAction from "./command-actions/createNodeAction.js";
-import CreateNodeOnLinkAction from "./command-actions/createNodeOnLinkAction.js";
-import DeleteLinkAction from "./command-actions/deleteLinkAction.js";
-import DeleteObjectsAction from "./command-actions/deleteObjectsAction.js";
-import DisconnectNodesAction from "./command-actions/disconnectNodesAction.js";
-import EditCommentAction from "./command-actions/editCommentAction.js";
-import MoveObjectsAction from "./command-actions/moveObjectsAction.js";
-import ObjectModel from "./object-model/object-model.js";
+import AddLinksAction from "../command-actions/addLinksAction.js";
+import ArrangeLayoutAction from "../command-actions/arrangeLayoutAction.js";
+import CloneMultipleObjectsAction from "../command-actions/cloneMultipleObjectsAction.js";
+import CommandStack from "../command-stack/command-stack.js";
+import constants from "../../constants/common-constants.js";
+import CreateAutoNodeAction from "../command-actions/createAutoNodeAction.js";
+import CreateCommentAction from "../command-actions/createCommentAction.js";
+import CreateNodeAction from "../command-actions/createNodeAction.js";
+import CreateNodeOnLinkAction from "../command-actions/createNodeOnLinkAction.js";
+import DeleteLinkAction from "../command-actions/deleteLinkAction.js";
+import DeleteObjectsAction from "../command-actions/deleteObjectsAction.js";
+import DisconnectNodesAction from "../command-actions/disconnectNodesAction.js";
+import EditCommentAction from "../command-actions/editCommentAction.js";
+import MoveObjectsAction from "../command-actions/moveObjectsAction.js";
+import ObjectModel from "../object-model/object-model.js";
 import has from "lodash/has";
 
 // Global instance ID counter

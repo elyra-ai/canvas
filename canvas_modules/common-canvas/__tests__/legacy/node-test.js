@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
-import Node from "../src/node.jsx";
+import Node from "../../src/legacy/node.jsx";
 import { mount } from "enzyme";
 import { expect } from "chai";
 import sinon from "sinon";

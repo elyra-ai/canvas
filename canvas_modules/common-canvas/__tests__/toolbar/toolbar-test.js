@@ -10,7 +10,7 @@
 import React from "react";
 import { mount } from "enzyme";
 import { expect } from "chai";
-import CanvasController from "../../src/canvas-controller";
+import CanvasController from "../../src/common-canvas/canvas-controller";
 import Toolbar from "../../src/toolbar/toolbar.jsx";
 
 const canvasController = new CanvasController();

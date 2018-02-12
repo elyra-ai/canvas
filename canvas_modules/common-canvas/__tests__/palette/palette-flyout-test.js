@@ -16,7 +16,7 @@ import PaletteFlyoutContentList from "../../src/palette/palette-content-list.jsx
 import PaletteFlyoutContentListItem from "../../src/palette/palette-content-list-item.jsx";
 import sinon from "sinon";
 import { expect } from "chai";
-import CanvasController from "../../src/canvas-controller";
+import CanvasController from "../../src/common-canvas/canvas-controller";
 
 const canvasController = new CanvasController();
 

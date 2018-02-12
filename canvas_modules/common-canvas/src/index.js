@@ -7,8 +7,8 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import CommonCanvas from "./common-canvas.jsx";
-import CanvasController from "./canvas-controller";
+import CommonCanvas from "./common-canvas/common-canvas.jsx";
+import CanvasController from "./common-canvas/canvas-controller";
 import CommonProperties from "./common-properties/common-properties.jsx";
 import CommandStack from "./command-stack/command-stack";
 import FlowValidation from "./flow-validation/validate-flow";

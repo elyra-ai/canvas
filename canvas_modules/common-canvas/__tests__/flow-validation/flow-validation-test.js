@@ -12,16 +12,16 @@ import log4js from "log4js";
 import deepFreeze from "deep-freeze";
 import { expect } from "chai";
 import isEqual from "lodash/isEqual";
-import startPipelineFlow from "./test_resources/json/startPipelineFlow.json";
+import startPipelineFlow from "../test_resources/json/startPipelineFlow.json";
 
-import ObjectModel from "../src/object-model/object-model.js";
-import FlowValidation from "../src/flow-validation/validate-flow.js";
+import ObjectModel from "../../src/object-model/object-model.js";
+import FlowValidation from "../../src/flow-validation/validate-flow.js";
 
 
 const logger = log4js.getLogger("flow-validation-test");
 const objectModel = new ObjectModel();
 
-const CONDITIONS_TEST_FORM_DATA = require("./test_resources/json/addcolumn-paramDef.json");
+const CONDITIONS_TEST_FORM_DATA = require("../test_resources/json/addcolumn-paramDef.json");
 const parameterDef = {};
 parameterDef.complex_types = CONDITIONS_TEST_FORM_DATA.complex_types;
 parameterDef.current_parameters = CONDITIONS_TEST_FORM_DATA.current_parameters;
@@ -31,7 +31,7 @@ parameterDef.resources = CONDITIONS_TEST_FORM_DATA.resources;
 parameterDef.uihints = CONDITIONS_TEST_FORM_DATA.uihints;
 parameterDef.conditions = CONDITIONS_TEST_FORM_DATA.conditions;
 
-const SAMPLE_TEST_FORM_DATA = require("./test_resources/json/derive-formData.json");
+const SAMPLE_TEST_FORM_DATA = require("../test_resources/json/derive-formData.json");
 const formData = {};
 formData.title = SAMPLE_TEST_FORM_DATA.title;
 formData.formData = SAMPLE_TEST_FORM_DATA.formData;

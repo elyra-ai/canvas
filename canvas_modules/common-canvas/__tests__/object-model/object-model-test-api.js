@@ -12,28 +12,28 @@ import log4js from "log4js";
 import deepFreeze from "deep-freeze";
 import { expect } from "chai";
 import isEqual from "lodash/isEqual";
-import initialCanvas from "./test_resources/json/startCanvas.json";
-import clonedCanvas from "./test_resources/json/canvasWithClones.json";
-import startPipelineFlow from "./test_resources/json/startPipelineFlow.json";
-import paletteJson from "./test_resources/json/testPalette.json";
-import filterNode from "./test_resources/json/filterNode.json";
-import horizontalLayoutCanvas from "./test_resources/json/horizontalLayoutCanvas.json";
-import verticalLayoutCanvas from "./test_resources/json/verticalLayoutCanvas.json";
-import addNodeHorizontalLayoutCanvas from "./test_resources/json/addNodeHorizontalLayoutCanvas.json";
-import addNodeVerticalLayoutCanvas from "./test_resources/json/addNodeVerticalLayoutCanvas.json";
-import moveVarNode from "./test_resources/json/moveVarNode.json";
-import moveNodeHorizontalLayoutCanvas from "./test_resources/json/moveNodeHorizontalLayoutCanvas.json";
-import moveNodeVerticalLayoutCanvas from "./test_resources/json/moveNodeVerticalLayoutCanvas.json";
-import nodeParameters from "./test_resources/json/nodeParameters.json";
-import nodeParameterAddedPipelineFlow from "./test_resources/json/nodeParameterAddedPipelineFlow.json";
-import pipelineFlowTest1Start from "./test_resources/json/pipelineFlowTest1Start.json";
-import pipelineFlowTest1Expected from "./test_resources/json/pipelineFlowTest1Expected.json";
+import initialCanvas from "../test_resources/json/startCanvas.json";
+import clonedCanvas from "../test_resources/json/canvasWithClones.json";
+import startPipelineFlow from "../test_resources/json/startPipelineFlow.json";
+import paletteJson from "../test_resources/json/testPalette.json";
+import filterNode from "../test_resources/json/filterNode.json";
+import horizontalLayoutCanvas from "../test_resources/json/horizontalLayoutCanvas.json";
+import verticalLayoutCanvas from "../test_resources/json/verticalLayoutCanvas.json";
+import addNodeHorizontalLayoutCanvas from "../test_resources/json/addNodeHorizontalLayoutCanvas.json";
+import addNodeVerticalLayoutCanvas from "../test_resources/json/addNodeVerticalLayoutCanvas.json";
+import moveVarNode from "../test_resources/json/moveVarNode.json";
+import moveNodeHorizontalLayoutCanvas from "../test_resources/json/moveNodeHorizontalLayoutCanvas.json";
+import moveNodeVerticalLayoutCanvas from "../test_resources/json/moveNodeVerticalLayoutCanvas.json";
+import nodeParameters from "../test_resources/json/nodeParameters.json";
+import nodeParameterAddedPipelineFlow from "../test_resources/json/nodeParameterAddedPipelineFlow.json";
+import pipelineFlowTest1Start from "../test_resources/json/pipelineFlowTest1Start.json";
+import pipelineFlowTest1Expected from "../test_resources/json/pipelineFlowTest1Expected.json";
 
 
-import ObjectModel from "../src/object-model/object-model.js";
+import ObjectModel from "../../src/object-model/object-model.js";
 import { NONE, VERTICAL, HORIZONTAL, CREATE_NODE, CLONE_NODE, CREATE_COMMENT, CLONE_COMMENT, CREATE_NODE_LINK,
-	CLONE_NODE_LINK, CREATE_COMMENT_LINK, CLONE_COMMENT_LINK } from "../constants/common-constants.js";
-import CloneMultipleObjectsAction from "../src/command-actions/cloneMultipleObjectsAction.js";
+	CLONE_NODE_LINK, CREATE_COMMENT_LINK, CLONE_COMMENT_LINK } from "../../constants/common-constants.js";
+import CloneMultipleObjectsAction from "../../src/command-actions/cloneMultipleObjectsAction.js";
 
 const logger = log4js.getLogger("object-model-test");
 const objectModel = new ObjectModel();

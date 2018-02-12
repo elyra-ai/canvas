@@ -12,14 +12,14 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import ContextMenuWrapper from "./context-menu-wrapper.jsx";
-import DiagramCanvasLegacy from "./diagram-canvas.jsx";
+import ContextMenuWrapper from "../context-menu/context-menu-wrapper.jsx";
+import DiagramCanvasLegacy from "../legacy/diagram-canvas.jsx";
 import DiagramCanvasD3 from "./diagram-canvas-d3.jsx";
-import Palette from "./palette/palette.jsx";
-import PaletteFlyout from "./palette/palette-flyout.jsx";
-import Toolbar from "./toolbar/toolbar.jsx";
-import BlankCanvasImage from "../assets/images/blank_canvas.png";
-import TooltipWrapper from "./tooltip-wrapper.jsx";
+import Palette from "../palette/palette.jsx";
+import PaletteFlyout from "../palette/palette-flyout.jsx";
+import Toolbar from "../toolbar/toolbar.jsx";
+import BlankCanvasImage from "../../assets/images/blank_canvas.png";
+import TooltipWrapper from "../tooltip/tooltip-wrapper.jsx";
 import isEmpty from "lodash/isEmpty";
 
 export default class CommonCanvas extends React.Component {

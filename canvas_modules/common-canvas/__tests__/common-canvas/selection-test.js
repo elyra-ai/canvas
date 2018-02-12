@@ -12,7 +12,7 @@ import difference from "lodash/difference";
 import isEmpty from "lodash/isEmpty";
 import isEqual from "lodash/isEqual";
 import deepFreeze from "deep-freeze";
-import CanvasController from "../src/canvas-controller";
+import CanvasController from "../../src/common-canvas/canvas-controller";
 import log4js from "log4js";
 
 const logger = log4js.getLogger("selection-test");
