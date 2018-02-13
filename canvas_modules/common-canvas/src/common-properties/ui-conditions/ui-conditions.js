@@ -132,6 +132,8 @@ function validateInput(definition, userInput, controlType, dataModel, cellCoordi
 		return enabled(data.enabled, userInput, info);
 	} else if (data.visible) {
 		return visible(data.visible, userInput, info);
+	} else if (data.filtered_enum) {
+		return filteredEnum(data.filtered_enum, userInput, info);
 	}
 	throw new Error("Invalid user input validation definition schema");
 }
@@ -259,6 +261,15 @@ function filter(filterDef, controller, datasetMetadata) {
 		return evaluateFilter(filterDef.filter.evaluate, controller, datasetMetadata);
 	}
 	return datasetMetadata;
+}
+
+function filteredEnum(filteredEnumData, userInput, info) {
+	const data = filteredEnumData;
+	info.conditionType = "filteredEnum";
+	if (data.target && data.evaluate) {
+		return evaluate(data.evaluate, userInput, info);
+	}
+	throw new Error("Invalid filteredEnum schema");
 }
 
 /**

@@ -66,8 +66,9 @@ export default class RadiosetControl extends EditorControl {
 			this.props.control.values = [true, false];
 			this.props.control.valueLabels = ["true", "false"];
 		}
-		for (var i = 0; i < this.props.control.values.length; i++) {
-			var val = this.props.control.values[i];
+		const valueSet = this.props.controller.getFilteredEnumItems(this.props.propertyId, this.props.control);
+		for (var i = 0; i < valueSet.values.length; i++) {
+			var val = valueSet.values[i];
 			var checked = val === controlValue;
 			buttons.push(
 				<label key={i} className={cssClasses}>
@@ -78,7 +79,7 @@ export default class RadiosetControl extends EditorControl {
 						onChange={this.handleChange}
 						checked={checked}
 					/>
-					{this.props.control.valueLabels[i]}
+					{valueSet.valueLabels[i]}
 					<div className={cssIndicator} />
 				</label>
 			);

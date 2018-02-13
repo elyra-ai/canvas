@@ -30,6 +30,7 @@ export default class PropertiesController {
 		this.enabledDefinitions = {};
 		this.validationDefinitions = {};
 		this.filterDefinitions = {};
+		this.filteredEnumDefinitions = {};
 		this.controls = {};
 		this.summaryPanelControls = {};
 		this.controllerHandlerCalled = false;
@@ -102,6 +103,7 @@ export default class PropertiesController {
 		this.enabledDefinitions = {};
 		this.validationDefinitions = {};
 		this.filterDefinitions = {};
+		this.filteredEnumDefinitions = {};
 		if (this.form.conditions) {
 			for (const condition of this.form.conditions) {
 				if (condition.visible) {
@@ -112,6 +114,8 @@ export default class PropertiesController {
 					UiConditionsParser.parseConditions(this.validationDefinitions, condition, "validation");
 				} else if (condition.filter) {
 					UiConditionsParser.parseConditions(this.filterDefinitions, condition, "filter");
+				} else if (condition.filtered_enum) {
+					UiConditionsParser.parseConditions(this.filteredEnumDefinitions, condition, "filtered_enum");
 				} else { // invalid
 					logger.info("Invalid definition: " + JSON.stringify(condition));
 				}
@@ -387,11 +391,45 @@ export default class PropertiesController {
 	}
 
 	/*
+	* Retrieve filtered enumeration items.
+	*
+	* @param propertyId The unique property identifier
+	* @param enumSet An object containing equal sized values and valueLabels arrays
+	* @return Either the input object or a new object containing filtered items
+	*/
+	getFilteredEnumItems(propertyId, enumSet) {
+		const replacementItems = this.propertiesStore.getFilteredEnumItems(propertyId);
+		if (replacementItems && PropertyUtils.toType(replacementItems) === "array") {
+			const newControl = {};
+			newControl.values = [];
+			newControl.valueLabels = [];
+			for (let idx = 0; idx < replacementItems.length; idx++) {
+				newControl.values.push(replacementItems[idx]);
+				let label = replacementItems[idx];
+				const index = enumSet.values.findIndex(function(value) {
+					return value === replacementItems[idx];
+				});
+				if (index > -1) {
+					label = enumSet.valueLabels[index];
+				}
+				newControl.valueLabels.push(label);
+			}
+			return newControl;
+		}
+		return enumSet;
+	}
+
+	/*
 	* Property Values Methods
 	*/
 	updatePropertyValue(propertyId, value) {
 		this.propertiesStore.updatePropertyValue(propertyId, value);
-		conditionsUtil.validateConditions(this, this.visibleDefinition, this.enabledDefinitions, this.getDatasetMetadata());
+		const definitions = {
+			visibleDefinition: this.visibleDefinition,
+			enabledDefinitions: this.enabledDefinitions,
+			filteredEnumDefinitions: this.filteredEnumDefinitions
+		};
+		conditionsUtil.validateConditions(this, definitions, this.getDatasetMetadata());
 		conditionsUtil.validateInput(propertyId, this, this.validationDefinitions, this.getDatasetMetadata());
 		if (this.handlers.propertyListener) {
 			this.handlers.propertyListener(
@@ -403,6 +441,7 @@ export default class PropertiesController {
 			);
 		}
 	}
+
 	getPropertyValue(propertyId, filterHiddenDisabled) {
 		const propertyValue = this.propertiesStore.getPropertyValue(propertyId);
 		// don't return hidden/disabled values
@@ -436,6 +475,7 @@ export default class PropertiesController {
 		}
 		return propertyValue;
 	}
+
 	getPropertyValues(filterHiddenDisabled) {
 		const propertyValues = this.propertiesStore.getPropertyValues();
 		if (filterHiddenDisabled) {
@@ -454,9 +494,15 @@ export default class PropertiesController {
 		}
 		return propertyValues;
 	}
+
 	setPropertyValues(values) {
 		this.propertiesStore.setPropertyValues(values);
-		conditionsUtil.validateConditions(this, this.visibleDefinition, this.enabledDefinitions, this.getDatasetMetadata());
+		const definitions = {
+			visibleDefinition: this.visibleDefinition,
+			enabledDefinitions: this.enabledDefinitions,
+			filteredEnumDefinitions: this.filteredEnumDefinitions
+		};
+		conditionsUtil.validateConditions(this, definitions, this.getDatasetMetadata());
 		if (this.handlers.propertyListener) {
 			this.handlers.propertyListener(
 				{

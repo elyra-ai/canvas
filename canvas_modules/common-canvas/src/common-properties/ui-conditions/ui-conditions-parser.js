@@ -191,7 +191,7 @@ function parseRequiredParameters(requiredParameters, formData, controls) {
 	});
 }
 
-// parser the condition section of the form data
+// Parse the condition section of the form data
 function parseConditions(container, uiCondition, conditionType) {
 	try {
 		var controls = parseInput(uiCondition[conditionType]);

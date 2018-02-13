@@ -16,6 +16,7 @@ import isEqual from "lodash/isEqual";
 import Controller from "../../src/common-properties/properties-controller";
 
 const CONDITIONS_TEST_FORM_DATA = require("../test_resources/json/conditions-test-formData.json");
+const FILTERED_ENUM_FORM_DATA = require("../test_resources/json/filtered-enum-test-formData.json");
 
 const additionalComponents = null;
 
@@ -877,6 +878,32 @@ validationDefinitions.subpanelTextfieldName = [
 	}
 ];
 
+const filteredEnumDefinitions = {};
+filteredEnumDefinitions.filter_radios = [
+	{
+		"params": "filter_radios",
+		"definition": {
+			"filtered_enum": {
+				"target": {
+					"parameter_ref": "radioset_filtered",
+					"values": [
+						"red",
+						"yellow",
+						"green"
+					]
+				},
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "filter_radios",
+						"op": "equals",
+						"value": true
+					}
+				}
+			}
+		}
+	}
+];
+
 const controller = new Controller();
 
 function compareObjects(expected, actual) {
@@ -956,5 +983,17 @@ describe("editor-form renders correctly with validations", () => {
 			JSON.parse(JSON.stringify(validationDefinitions.subpanelTextfieldName)))).to.be.true;
 
 		compareObjects({}, controller.getErrorMessages());
+	});
+});
+
+describe("Filtered enumerations properly filter", () => {
+	it("Filters should work", () => {
+		const wrapper = propertyUtils.createEditorForm("mount", FILTERED_ENUM_FORM_DATA, controller);
+
+		expect(wrapper.find(".control-panel")).to.have.length(4);
+		expect(wrapper.find(".control-radio-block")).to.have.length(3);
+		expect(Object.keys(controller.filteredEnumDefinitions)).to.have.length(4);
+		expect(isEqual(JSON.parse(JSON.stringify(controller.filteredEnumDefinitions.filter_radios)),
+			JSON.parse(JSON.stringify(filteredEnumDefinitions.filter_radios)))).to.be.true;
 	});
 });

@@ -14,9 +14,10 @@ import UiConditions from "../ui-conditions/ui-conditions.js";
 import { DEFAULT_VALIDATION_MESSAGE, STATES, DEFAULT_DATE_FORMAT, DEFAULT_TIME_FORMAT } from "../constants/constants.js";
 import moment from "moment";
 
-function validateConditions(controller, visibleDefinition, enabledDefinitions, dataModel) {
-	_validateVisible(controller, visibleDefinition, dataModel);
-	_validateEnabled(controller, enabledDefinitions, dataModel);
+function validateConditions(controller, definitions, dataModel) {
+	_validateVisible(controller, definitions.visibleDefinition, dataModel);
+	_validateEnabled(controller, definitions.enabledDefinitions, dataModel);
+	_validateFilteredEnums(controller, definitions.filteredEnumDefinitions, dataModel);
 }
 
 function _validateVisible(controller, visibleDefinition, dataModel) {
@@ -54,6 +55,7 @@ function _validateVisible(controller, visibleDefinition, dataModel) {
 		controller.setControlStates(newStates);
 	}
 }
+
 function _setValidateVisible(definition, propertyValues, controlType, dataModel, cellCoords, newStates) {
 	const visOutput = UiConditions.validateInput(definition, propertyValues, controlType, dataModel,
 		cellCoords);
@@ -130,7 +132,90 @@ function _setValidateEnabled(definition, propertyValues, controlType, dataModel,
 		}
 	}
 }
-// state is stored in objects rather then arrays
+
+function _validateFilteredEnums(controller, filteredEnumDefinitions, dataModel) {
+	// filtered enumerations
+	if (Object.keys(filteredEnumDefinitions).length > 0) {
+		const propertyValues = controller.getPropertyValues();
+		const newStates = controller.getControlStates();
+		for (const filteredKey in filteredEnumDefinitions) {
+			if (!filteredEnumDefinitions.hasOwnProperty(filteredKey)) {
+				continue;
+			}
+			for (const filteredDefinition of filteredEnumDefinitions[filteredKey]) {
+				const baseId = _getPropertyId(filteredKey);
+				const controlType = controller.getControlType(baseId);
+				let cellCoords = null;
+				try {
+					// Table value
+					if (baseId.col) {
+						for (let rowIdx = 0; rowIdx < propertyValues[baseId.name].length; rowIdx++) {
+							cellCoords = {
+								rowIndex: rowIdx,
+								colIndex: baseId.col
+							};
+							_setValidateFilteredEnum(filteredDefinition.definition, propertyValues, controlType, dataModel, cellCoords, newStates);
+						}
+					} else {
+						_setValidateFilteredEnum(filteredDefinition.definition, propertyValues, controlType, dataModel, cellCoords, newStates);
+					}
+
+				} catch (error) {
+					logger.warn("Error thrown in validation: " + error);
+				}
+			}
+		}
+		controller.setControlStates(newStates);
+	}
+}
+
+function _setValidateFilteredEnum(definition, propertyValues, controlType, dataModel, cellCoords, newStates) {
+	const filtered = UiConditions.validateInput(definition, propertyValues, controlType, dataModel, cellCoords);
+	if (definition.filtered_enum.target && definition.filtered_enum.target.parameter_ref) {
+		const referenceId = _getPropertyId(definition.filtered_enum.target.parameter_ref, cellCoords);
+		_updateFilteredState(definition, newStates, referenceId, filtered);
+	}
+}
+
+// Filtered state is stored in objects rather than arrays
+function _updateFilteredState(definition, refState, propertyId, filtered) {
+	let propState = refState[propertyId.name];
+	if (!propState) {
+		propState = {};
+	}
+	// First allow for table level state, then column level state, and finally cell level state
+	if (typeof propertyId.col !== "undefined") {
+		const colId = propertyId.col.toString();
+		if (!propState[colId]) {
+			propState[colId] = {};
+		}
+		if (typeof propertyId.row !== "undefined") {
+			const rowId = propertyId.row.toString();
+			if (!propState[colId][rowId]) {
+				propState[colId][rowId] = {};
+			}
+			// Cells
+			propState[colId][rowId].enumFilter = _getFilteredEnumItems(definition, filtered);
+		} else {
+			// Columns
+			propState[colId].enumFilter = _getFilteredEnumItems(definition, filtered);
+		}
+	} else {
+		// Control-level state
+		propState.enumFilter = _getFilteredEnumItems(definition, filtered);
+	}
+	refState[propertyId.name] = propState;
+}
+
+function _getFilteredEnumItems(definition, filtered) {
+	if (filtered) {
+		return definition.filtered_enum.target.values;
+	}
+	return null;
+}
+
+/*
+// state is stored in objects rather than arrays
 function _updateState(refState, propertyId, value) {
 	let propState = refState[propertyId.name];
 	if (!propState) {
@@ -144,18 +229,12 @@ function _updateState(refState, propertyId, value) {
 			if (!propState[propertyId.row.toString()][propertyId.col.toString()]) {
 				propState[propertyId.row.toString()][propertyId.col.toString()] = {};
 			}
-			propState[propertyId.row.toString()][propertyId.col.toString()] = {
-				value: value
-			};
+			propState[propertyId.row.toString()][propertyId.col.toString()].value = value;
 		} else {
-			propState[propertyId.row.toString()] = {
-				value: value
-			};
+			propState[propertyId.row.toString()].value = value;
 		}
 	} else {
-		propState = {
-			value: value
-		};
+		propState.value = value;
 	}
 	refState[propertyId.name] = propState;
 }
@@ -167,6 +246,52 @@ function _getState(refState, propertyId) {
 		propState = propState[propertyId.row.toString()];
 		if (typeof propertyId.col !== "undefined" && propState) {
 			propState = propState[propertyId.col.toString()];
+		}
+	}
+	if (propState) {
+		return propState.value;
+	}
+	return null;
+}
+*/
+
+// state is stored in objects rather than arrays
+function _updateState(refState, propertyId, value) {
+	let propState = refState[propertyId.name];
+	if (!propState) {
+		propState = {};
+	}
+	// First allow for table level state, then column level state, and finally cell level state
+	if (typeof propertyId.col !== "undefined") {
+		const colId = propertyId.col.toString();
+		if (!propState[colId]) {
+			propState[colId] = {};
+		}
+		if (typeof propertyId.row !== "undefined") {
+			const rowId = propertyId.row.toString();
+			if (!propState[colId][rowId]) {
+				propState[colId][rowId] = {};
+			}
+			// Table cell level
+			propState[colId][rowId].value = value;
+		} else {
+			// Table column level
+			propState[colId].value = value;
+		}
+	} else {
+		// Control level
+		propState.value = value;
+	}
+	refState[propertyId.name] = propState;
+}
+
+// state is stored in objects rather then arrays
+function _getState(refState, propertyId) {
+	let propState = refState[propertyId.name];
+	if (typeof propertyId.col !== "undefined" && propState) {
+		propState = propState[propertyId.col.toString()];
+		if (typeof propertyId.row !== "undefined" && propState) {
+			propState = propState[propertyId.row.toString()];
 		}
 	}
 	if (propState) {

@@ -28,6 +28,8 @@ const propValues = {
 	param_message2: []
 };
 deepFreeze(propValues);
+
+/*
 const propStates = {
 	param_int: {
 		value: "enabled"
@@ -57,6 +59,43 @@ const propStates = {
 				value: "disabled"
 			},
 			"3": {
+				value: "hidden"
+			}
+		}
+	}
+};
+*/
+const propStates = {
+	param_int: {
+		value: "enabled"
+	},
+	param_str_array: {
+		value: "hidden"
+	},
+	param_mix_table: {
+		"0": {
+			"3": {
+				value: "enabled"
+			},
+			"4": {
+				value: "disabled"
+			}
+		},
+		"1": {
+			"3": {
+				value: "hidden"
+			}
+		},
+		"2": {
+			"0": {
+				value: "disabled"
+			}
+		},
+		"3": {
+			"3": {
+				value: "visible"
+			},
+			"4": {
 				value: "hidden"
 			}
 		}
@@ -238,7 +277,6 @@ describe("Properties Controller states", () => {
 		controller.updateControlState({ name: "param_mix_table", row: 2, col: 3 }, "hidden");
 		const actualValues = controller.getControlStates();
 		const expectedValues = getCopy(propStates);
-		expectedValues.param_mix_table[2] = {};
 		expectedValues.param_mix_table[2][3] = {
 			value: "hidden"
 		};

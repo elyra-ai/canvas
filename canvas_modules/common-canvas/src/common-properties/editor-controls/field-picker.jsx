@@ -294,7 +294,9 @@ class FieldPicker extends EditorControl {
 			}
 		} else {
 			this.multiSchema = false;
-			fields = fields.concat(dataModel[0].fields);
+			if (dataModel.length > 0) {
+				fields = fields.concat(dataModel[0].fields);
+			}
 		}
 		return fields;
 	}

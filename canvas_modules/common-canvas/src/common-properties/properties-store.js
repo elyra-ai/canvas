@@ -53,9 +53,11 @@ export default class PropertiesStore {
 	setPropertyValues(values) {
 		this.store.dispatch(setPropertyValues(values));
 	}
+
 	updatePropertyValue(propertyId, value) {
 		this.store.dispatch(updatePropertyValue({ propertyId: propertyId, value: value }));
 	}
+
 	getControlState(propertyId) {
 		if (typeof propertyId === "undefined") {
 			return null;
@@ -66,10 +68,27 @@ export default class PropertiesStore {
 		if (locState && (locState.value === "hidden" || locState.value === "disabled")) {
 			return locState.value;
 		}
+
+		/*
 		if (typeof propertyId.row !== "undefined" && locState) {
 			locState = locState[propertyId.row.toString()];
 			if (typeof propertyId.col !== "undefined" && locState) {
 				locState = locState[propertyId.col.toString()];
+			}
+		}
+		*/
+
+		// First check for control-level, then column level, and finally cell level property addressing
+		const colId = typeof propertyId.col !== "undefined" ? propertyId.col.toString() : null;
+		const rowId = typeof propertyId.row !== "undefined" ? propertyId.row.toString() : null;
+		if (colId !== null && locState && locState[colId] &&
+				(typeof locState[colId].value !== "undefined" || (locState[colId][rowId] &&
+					typeof locState[colId][rowId].value !== "undefined"))) {
+			// Column level state
+			locState = locState[colId];
+			if (rowId !== null && locState && locState[rowId] && typeof locState[rowId].value !== "undefined") {
+				// Cell level state
+				locState = locState[rowId];
 			}
 		}
 		if (locState) {
@@ -77,19 +96,46 @@ export default class PropertiesStore {
 		}
 		return null;
 	}
+
 	getControlStates() {
 		const state = this.store.getState();
 		// get a copy and not direct reference
 		return JSON.parse(JSON.stringify(state.controlStatesReducer));
 	}
+
 	setControlStates(values) {
 		// check to see if values are equal before firing event
 		if (!isEqual(this.getControlStates(), values)) {
 			this.store.dispatch(setControlStates(values));
 		}
 	}
+
 	updateControlState(propertyId, value) {
 		this.store.dispatch(updateControlState({ propertyId: propertyId, value: value }));
+	}
+
+	/*
+	* Retrieves filtered enumeration values for the given propertyId.
+	*/
+	getFilteredEnumItems(propertyId) {
+		if (typeof propertyId === "undefined") {
+			return null;
+		}
+		// First check for control-level, then column level, and finally cell level property addressing
+		const state = this.store.getState();
+		var locState = state.controlStatesReducer[propertyId.name];
+		if (typeof propertyId.col !== "undefined" && locState && locState[propertyId.col.toString()]) {
+			// Column level filtering
+			locState = locState[propertyId.col.toString()];
+			if (typeof propertyId.row !== "undefined" && locState[propertyId.row.toString()]) {
+				// Cell level filtering
+				locState = locState[propertyId.row.toString()];
+			}
+		}
+		if (locState) {
+			return locState.enumFilter;
+		}
+		return null;
 	}
 
 	/*

@@ -28,6 +28,10 @@ export default class OneofselectControl extends EditorControl {
 		this.onBlur = this.onBlur.bind(this);
 	}
 
+	componentWillReceiveProps(newProps) {
+		// console.log(JSON.stringify(newProps.control));
+	}
+
 	handleChange(evt) {
 		let value = evt.value;
 		// shouldn't have to do this but when "" the label is returned instead of value
@@ -129,10 +133,12 @@ export default class OneofselectControl extends EditorControl {
 				});
 			}
 		} else {
-			for (let j = 0; j < control.values.length; j++) {
+			// Allow for enumeration replacement
+			const controlOpts = this.props.controller.getFilteredEnumItems(this.props.propertyId, control);
+			for (let j = 0; j < controlOpts.values.length; j++) {
 				options.push({
-					value: control.values[j],
-					label: control.valueLabels[j]
+					value: controlOpts.values[j],
+					label: controlOpts.valueLabels[j]
 				});
 			}
 		}

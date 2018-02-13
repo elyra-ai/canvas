@@ -21,8 +21,7 @@ import remove32hover from "../../../assets/images/remove_32_hover.svg";
 import remove32disabled from "../../../assets/images/remove_32_disabled.svg";
 import PropertyUtils from "../util/property-utils";
 
-import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "../constants/constants";
-import { TOOL_TIP_DELAY } from "../constants/constants.js";
+import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, TOOL_TIP_DELAY, STATES } from "../constants/constants";
 import findIndex from "lodash/findIndex";
 import sortBy from "lodash/sortBy";
 
@@ -458,10 +457,17 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			const columnDef = this.props.control.subControls[j];
 			const checkboxName = this.props.control.name + j;
 
+			// See if the entire column is disabled
+			const controlState = this.props.controller.getControlState({ name: this.props.control.name, col: j });
+			const disabled = controlState === STATES.DISABLED || controlState === STATES.HIDDEN
+				? { "disabled": true } : { "disabled": false };
+			const stateStyle2 = {};
+			stateStyle2.pointerEvents = controlState === STATES.DISABLED || controlState === STATES.HIDDEN
+				? "none" : "auto";
 			const columnLabel = (columnDef.controlType === "checkbox")
 				? (<div className="checkbox-container">
-					<div className="checkbox">
-						<Checkbox
+					<div className="checkbox" style={stateStyle2}>
+						<Checkbox {...disabled}
 							id={checkboxName}
 							checked={this.checkedAll(j)}
 							onChange={this.checkedAllValue.bind(this, j)}
