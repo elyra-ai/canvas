@@ -53,7 +53,7 @@ class CustomButtonPanel {
 		newRow.push(actualValue);
 		newRow.push(predictedValue);
 		newRow.push(costValue);
-		const tablePropertyId = { name: "custom_table_info" };
+		const tablePropertyId = { name: this.data.parameter_ref };
 		const tableValue = this.controller.getPropertyValue(tablePropertyId);
 		tableValue.push(newRow);
 		this.controller.updatePropertyValue(tablePropertyId, tableValue);
@@ -75,22 +75,23 @@ class CustomButtonPanel {
 	}
 
 	removeRowsAction() {
-		const tablePropertyId = { name: "custom_table_info" };
+		const tableId = this.data.parameter_ref;
+		const tablePropertyId = { name: tableId };
 		const tableValue = this.controller.getPropertyValue(tablePropertyId);
 		// Sort descending to ensure lower indices don"t get
 		// changed when values are deleted
-		const selected = this.controller.getSelectedRows("custom_table_info").sort(function(aa, bb) {
+		const selected = this.controller.getSelectedRows(tableId).sort(function(aa, bb) {
 			return bb - aa;
 		});
 		for (let ii = 0; ii < selected.length; ii++) {
 			tableValue.splice(selected[ii], 1);
 		}
 		this.controller.updatePropertyValue(tablePropertyId, tableValue);
-		this.controller.clearSelectedRows("custom_table_info");
+		this.controller.clearSelectedRows(tableId);
 	}
 
 	getRemoveDisabled() {
-		const selected = this.controller.getSelectedRows("custom_table_info");
+		const selected = this.controller.getSelectedRows(this.data.parameter_ref);
 		if (selected.length === 0) {
 			return { "disabled": true };
 		}
@@ -119,7 +120,7 @@ class CustomButtonPanel {
 	getAvailableValues(values) {
 		let retVal;
 		const paramDefCopy = JSON.parse(JSON.stringify(paramDef));
-		const propertyId = { name: "custom_table_info" };
+		const propertyId = { name: this.data.parameter_ref };
 		const tableValues = this.controller.getPropertyValue(propertyId);
 		const actuals = JSON.parse(JSON.stringify(values));
 		const predicteds = JSON.parse(JSON.stringify(values));

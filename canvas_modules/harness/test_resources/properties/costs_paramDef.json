@@ -1,0 +1,868 @@
+{
+  "titleDefinition": {
+    "title": "Costs"
+  },
+  "current_parameters": {
+    "custom_fields": false,
+    "target": "",
+    "inputs": [],
+    "continue_training_existing_model": false,
+    "objective": "standard",
+    "use_percentage": false,
+    "min_parent_records_pc": 0.0,
+    "min_child_records_pc": 0.0,
+    "min_parent_records_abs": 0,
+    "min_child_records_abs": 0,
+    "use_max_depth": false,
+    "max_depth": 3,
+    "prune_tree": false,
+    "use_std_err": false,
+    "std_err_multiplier": 1.0,
+    "max_surrogates": 5,
+    "set_ensemble_method": "Voting",
+    "range_ensemble_method": "Mean",
+    "min_impurity": 0.0,
+    "trails": 2,
+    "impurity_measure": "Gini",
+    "calculate_variable_importance": false,
+    "train_pct": 50.0,
+    "use_model_name": false,
+    "model_name": "foo",
+    "calculate_variable_importance": false,
+    "calculate_raw_propensities": false,
+    "calculate_adjusted_propensities": false,
+    "adjusted_propensity_partition": "Test",
+    "set_random_seed": true,
+    "seed": 49,
+    "costs": []
+  },
+  "parameters": [
+    {
+      "id": "custom_fields",
+      "type": "boolean"
+    },
+    {
+      "id": "target",
+      "type": "string",
+      "role": "column"
+    },
+    {
+      "id": "inputs",
+      "type": "array[string]",
+      "role": "column"
+    },
+    {
+      "id": "continue_training_existing_model",
+      "enum": [
+        "false",
+        "true"
+      ]
+    },
+    {
+      "id": "objective",
+      "enum": [
+        "standard",
+        "boosting",
+        "bagging",
+        "psm"
+      ],
+      "default": "standard"
+    },
+    {
+      "id": "use_percentage",
+      "enum": [
+        "false",
+        "true"
+      ],
+      "default": "true"
+    },
+    {
+      "id": "min_parent_records_pc",
+      "type": "double"
+    },
+    {
+      "id": "min_child_records_pc",
+      "type": "double"
+    },
+    {
+      "id": "min_parent_records_abs",
+      "type": "integer"
+    },
+    {
+      "id": "min_child_records_abs",
+      "type": "integer"
+    },
+    {
+      "id": "use_max_depth",
+      "enum": [
+        "false",
+        "true"
+      ],
+      "default": "false"
+    },
+    {
+      "id": "max_depth",
+      "type": "integer"
+    },
+    {
+      "id": "prune_tree",
+      "type": "boolean"
+    },
+    {
+      "id": "use_std_err",
+      "type": "boolean"
+    },
+    {
+      "id": "std_err_multiplier",
+      "type": "double",
+      "default":1
+    },
+    {
+      "id": "max_surrogates",
+      "type": "integer",
+      "default": 5
+    },
+    {
+      "id": "set_ensemble_method",
+      "enum": [
+        "Voting",
+        "HighestProbability",
+        "HighestMeanProbability"
+      ],
+      "default": "Voting"
+    },
+    {
+      "id": "range_ensemble_method",
+      "enum": [
+        "Mean",
+        "Median"
+      ],
+      "default": "Mean"
+    },
+    {
+      "id": "min_impurity",
+      "type": "double"
+    },
+    {
+      "id": "trails",
+      "type": "integer"
+    },
+    {
+      "id": "impurity_measure",
+      "enum": [
+        "Gini",
+        "Twoing",
+        "Ordered"
+      ]
+    },
+    {
+      "id": "calculate_variable_importance",
+      "type": "boolean"
+    },
+    {
+      "id": "train_pct",
+      "type": "double"
+    },
+    {
+      "id": "use_model_name",
+      "enum": [
+        "false",
+        "true"
+      ],
+      "default": "false"
+    },
+    {
+      "id": "model_name",
+      "type": "string"
+    },
+    {
+      "id": "calculate_variable_importance",
+      "type": "boolean"
+    },
+    {
+      "id": "calculate_raw_propensities",
+      "type": "boolean"
+    },
+    {
+      "id": "calculate_adjusted_propensities",
+      "type": "boolean"
+    },
+    {
+      "id": "adjusted_propensity_partition",
+      "enum": ["Test","Validation"]
+    },
+    {
+      "id": "set_random_seed",
+      "type": "boolean",
+      "default": true
+    },
+    {
+      "id": "seed",
+      "type": "integer"
+    },
+    {
+      "id": "costs",
+      "type": "array[cost_table]"
+    }
+  ],
+  "complex_types": [
+    {
+      "id": "cost_table",
+      "parameters": [
+        {
+          "id": "actual",
+          "type": "string"
+        },
+        {
+          "id": "predicted",
+          "type": "string"
+        },
+        {
+          "id": "cost",
+          "type": "double",
+          "default": 1.0
+        }
+      ]
+    }
+  ],
+  "uihints": {
+    "id": "cart",
+    "label": {
+      "default": "C&R Tree"
+    },
+    "description": {
+      "default": "A C&R Tree model output"
+    },
+    "icon": "images/cart.svg",
+    "editor_size": "large",
+    "parameter_info": [
+      {
+        "parameter_ref": "custom_fields",
+        "resource_key": "custom_fields"
+      },
+      {
+        "parameter_ref": "target",
+        "resource_key": "target"
+      },
+      {
+        "parameter_ref": "inputs",
+        "resource_key": "inputs"
+      },
+      {
+        "parameter_ref": "use_max_depth",
+        "resource_key": "use_max_depth",
+        "orientation": "vertical"
+      },
+      {
+        "parameter_ref": "max_depth",
+        "resource_key": "max_depth"
+      },
+      {
+        "parameter_ref": "min_impurity",
+        "resource_key": "min_impurity"
+      },
+      {
+        "parameter_ref": "impurity_measure",
+        "resource_key": "impurity_measure",
+        "orientation": "vertical"
+      },
+      {
+        "parameter_ref": "calculate_variable_importance",
+        "resource_key": "calculate_variable_importance"
+      },
+      {
+        "parameter_ref": "continue_training_existing_model",
+        "resource_key": "continue_training_existing_model",
+        "orientation": "vertical"
+      },
+      {
+        "parameter_ref": "objective",
+        "resource_key": "objective",
+        "orientation": "vertical"
+      },
+      {
+        "parameter_ref": "use_percentage",
+        "resource_key": "use_percentage",
+        "label_visible": false,
+        "orientation": "vertical"
+      },
+      {
+        "parameter_ref": "prune_tree",
+        "resource_key": "prune_tree"
+      },
+      {
+        "parameter_ref": "use_std_err",
+        "resource_key": "use_std_err"
+      },
+      {
+        "parameter_ref": "min_parent_records_pc",
+        "resource_key": "min_parent_records_pc"
+      },
+      {
+        "parameter_ref": "min_child_records_pc",
+        "resource_key": "min_child_records_pc"
+      },
+      {
+        "parameter_ref": "min_parent_records_abs",
+        "resource_key": "min_parent_records_abs"
+      },
+      {
+        "parameter_ref": "min_child_records_abs",
+        "resource_key": "min_child_records_abs"
+      },
+      {
+        "parameter_ref": "std_err_multiplier",
+        "resource_key": "std_err_multiplier"
+      },
+      {
+        "parameter_ref": "max_surrogates",
+        "resource_key": "max_surrogates"
+      },
+      {
+        "parameter_ref": "set_ensemble_method",
+        "resource_key": "set_ensemble_method",
+        "orientation": "vertical"
+      },
+      {
+        "parameter_ref": "range_ensemble_method",
+        "resource_key": "range_ensemble_method",
+        "orientation": "vertical"
+      },
+      {
+        "parameter_ref": "trails",
+        "resource_key": "trails"
+      },
+      {
+        "parameter_ref": "train_pct",
+        "resource_key": "train_pct"
+      },
+      {
+        "parameter_ref": "use_model_name",
+        "resource_key": "use_model_name",
+        "orientation": "vertical"
+      },
+      {
+        "parameter_ref": "model_name",
+        "resource_key": "model_name",
+        "label_visible": false
+      },
+      {
+        "parameter_ref": "calculate_raw_propensities",
+        "resource_key": "calculate_raw_propensities"
+      },
+      {
+        "parameter_ref": "calculate_adjusted_propensities",
+        "resource_key": "calculate_adjusted_propensities"
+      },
+      {
+        "parameter_ref": "adjusted_propensity_partition",
+        "resource_key": "adjusted_propensity_partition",
+        "orientation": "vertical"
+      },
+      {
+        "parameter_ref": "seed",
+        "number_generator": {
+          "label": {
+            "default": "Generate",
+            "resource_key": "seed_generator"
+          },
+          "range": {
+            "min": 1,
+            "max": 999999999
+          }
+        }
+      },
+      {
+        "parameter_ref": "set_random_seed",
+        "resource_key": "set_random_seed"
+      },
+      {
+        "parameter_ref": "actual_value",
+        "resource_key": "actual"
+      },
+      {
+        "parameter_ref": "predicted_value",
+        "resource_key": "predicted"
+      },
+      {
+        "parameter_ref": "cost_value",
+        "resource_key": "cost"
+      },
+      {
+        "parameter_ref": "costs",
+        "resource_key": "costs"
+      }
+    ],
+    "complex_type_info": [
+      {
+        "complex_type_ref": "cost_table",
+        "add_remove_rows": false,
+        "parameters": [
+          {
+            "parameter_ref": "actual",
+            "control": "readonly",
+            "width": 20
+          },
+          {
+            "parameter_ref": "predicted",
+            "control": "readonly",
+            "width": 20
+          },
+          {
+            "parameter_ref": "cost",
+            "sortable": true,
+            "control": "readonly",
+            "width": 10
+          }
+        ]
+      }
+    ],
+    "group_info": [
+      {
+        "id": "fields-settings",
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "use-custom",
+            "parameter_refs": [
+              "custom_fields"
+            ]
+          },
+          {
+            "id": "field-allocation",
+            "type": "columnSelection",
+            "parameter_refs": [
+              "target",
+              "inputs"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "objective-settings",
+        "parameter_refs": [
+          "continue_training_existing_model",
+          "objective"
+        ]
+      },
+      {
+        "id": "basics-settings",
+        "parameter_refs": [
+          "use_max_depth",
+          "max_depth",
+          "prune_tree",
+          "use_std_err",
+          "std_err_multiplier",
+          "max_surrogates"
+        ]
+      },
+      {
+        "id": "stoppingrules-settings",
+        "parameter_refs": [
+          "use_percentage"
+        ],
+        "group_info": [
+          {
+            "id": "stoppingrulesoption",
+            "type": "panelSelector",
+            "depends_on_ref": "use_percentage",
+            "group_info": [
+              {
+                "id": "false",
+                "parameter_refs": [
+                  "min_parent_records_abs",
+                  "min_child_records_abs"
+                ]
+              },
+              {
+                "id": "true",
+                "parameter_refs": [
+                  "min_parent_records_pc",
+                  "min_child_records_pc"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "costs-panel",
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "custom-button-panel",
+            "type": "customPanel",
+            "parameter_refs": [
+              "actual_value",
+              "predicted_value",
+              "cost_value"
+            ],
+            "data": {
+              "parameter_ref": "costs"
+            }
+          },
+          {
+            "id": "table-panel",
+            "type": "controls",
+            "parameter_refs": [
+              "costs"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "ensembles-settings",
+        "parameter_refs": [
+          "set_ensemble_method",
+          "range_ensemble_method",
+          "trails"
+        ]
+      },
+      {
+        "id": "advanced-settings",
+        "parameter_refs": [
+          "min_impurity",
+          "impurity_measure",
+          "train_pct",
+          "set_random_seed",
+          "seed"
+        ]
+      },
+      {
+        "id": "model-options-settings",
+        "parameter_refs": [
+          "use_model_name",
+          "model_name",
+          "calculate_variable_importance",
+          "calculate_raw_propensities",
+          "calculate_adjusted_propensities",
+          "adjusted_propensity_partition"
+        ]
+      }
+    ]
+  },
+  "conditions": [
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "custom_fields",
+          "message": {
+            "resource_key": "custom_fields_not_empty"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "custom_fields",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "target",
+          "message": {
+            "resource_key": "target_not_empty"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "target",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "inputs",
+          "message": {
+            "resource_key": "inputs_not_empty"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "inputs",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "target",
+          "inputs"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "custom_fields",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "max_depth"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "use_max_depth",
+            "op": "equals",
+            "value": "true"
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "model_name"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "use_model_name",
+            "op": "equals",
+            "value": "true"
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "std_err_multiplier"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "use_std_err",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "seed"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "set_random_seed",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "adjusted_propensity_partition"
+        ],
+        "evaluate": {
+          "and":[
+            {"condition": {
+              "parameter_ref": "objective",
+              "op": "equals",
+              "value": "standard"
+            }},
+            {"condition": {
+              "parameter_ref": "calculate_adjusted_propensities",
+              "op": "equals",
+              "value": true
+            }}
+          ]}
+      }
+    }
+  ],
+  "dataset_metadata": {
+    "fields": [
+      {
+        "name": "Field 1",
+        "type": "integer",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Field 2",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Field 3",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Field 4",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Field 5",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Field 6",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Field 7",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Field 8",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Field 9",
+        "type": "integer",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Field 10",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Animals",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "target",
+          "values": [
+            "Cat",
+            "Dog",
+            "Lion",
+            "Squirrel",
+            "Aardvark",
+            "Platypus",
+            "Manticore"
+          ]
+        }
+      }
+    ]
+  },
+  "resources": {
+    "fields-settings.label": "Fields",
+    "basics-settings.label": "Basics",
+    "objective-settings.label":"Objective",
+    "continue_training_existing_model.label": "What do you want to do?",
+    "continue_training_existing_model.true.label":"Continue training existing model",
+    "continue_training_existing_model.false.label":"Build a new model",
+    "objective.label":"What is your main objective?",
+    "objective.standard.label":"Build a single tree",
+    "objective.boosting.label":"Enhance model accuracy (boosting)",
+    "objective.bagging.label":"Enhance model stability (bagging)",
+    "objective.psm.label":"Create model for very large datasets (requires server) ",
+    "stoppingrules-settings.label":"Stopping Rules",
+    "use_percentage.true.label":"Use percentage",
+    "use_percentage.false.label":"Use absolute value",
+    "min_parent_records_pc.label":"Minimum records in parent branch(%):",
+    "min_child_records_pc.label":"Minimum records in child branch(%):",
+    "min_parent_records_abs.label":"Minimum records in parent branch:",
+    "min_child_records_abs.label":"Minimum records in child branch:",
+    "eval-settings.label": "Evaluation",
+    "advanced-settings.label": "Advanced",
+    "cart.label": "C&R Tree",
+    "cart.desc": "Builds a C&R Tree model",
+    "custom_fields.label": "Use custom field roles",
+    "target.label": "Target",
+    "inputs.label": "Inputs",
+    "frequency_field.label": "Frequency",
+    "weight_field.label": "Weight",
+    "calculate_variable_importance.label": "Calculate variable importance",
+    "use_max_depth.label": "Maximum Tree Depth",
+    "use_max_depth.false.label":"Default (5)",
+    "use_max_depth.true.label":"Custom",
+    "max_depth.label": "Max. depth",
+    "prune_tree.label":"Pure tree to avoid overfitting",
+    "use_std_err.label":"Set Maximum in difference in risk (in standard Errors)",
+    "std_err_multiplier.label":"Value",
+    "max_surrogates.label":"Maximum surrogates",
+    "ensembles-settings.label":"Ensembles",
+    "set_ensemble_method.label":"Default combining rules for categorical targets",
+    "set_ensemble_method.Voting.label":"Voting",
+    "set_ensemble_method.HighestProbability.label":"Highest probability wins",
+    "set_ensemble_method.HighestMeanProbability.label":"Highest mean probability",
+    "range_ensemble_method.label":"Default combining rules for continuous target",
+    "range_ensemble_method.Mean.label":"Mean",
+    "range_ensemble_method.Median.label":"Median",
+    "trails.label":"Number of component models for boosting or bagging",
+    "train_pct.label":"Overfit prevention set(%)",
+    "set_random_seed.label": "Replicate results",
+    "seed.label": "Random seed",
+    "seed_generator.label": "Generate",
+    "model-options-settings.label":"Model Option",
+    "min_impurity.label": "Minimum change in impurity",
+    "impurity_measure.label": "Impurity measure for categorical targets",
+    "impurity_measure.Gini.label": "Gini",
+    "impurity_measure.Twoing.label": "Twoing",
+    "impurity_measure.Ordered.label": "Ordered",
+    "custom_fields_not_empty": "The custom field values cannot be empty",
+    "target_not_empty": "The target value cannot be empty",
+    "inputs_not_empty": "The input values cannot be empty",
+    "use_model_name.label": "Model name",
+    "calculate_raw_propensities.label": "Calculate raw propensity scores (valid only for flag targets)",
+    "calculate_adjusted_propensities.label": "Calculate adjusted propensity scores (valid for flag targets with partitions)",
+    "adjusted_propensity_partition.label": "Based on",
+    "adjusted_propensity_partition.Test.label": "Testing partition",
+    "adjusted_propensity_partition.Validation.label": "Validation partition",
+    "use_model_name.false.label": "Auto",
+    "use_model_name.true.label": "Custom"
+  }
+}
