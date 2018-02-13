@@ -18,7 +18,7 @@ import { injectIntl, intlShape } from "react-intl";
 class ColumnSelectControl extends ColumnStructureTableEditor {
 
 	getRowClassName(rowIndex) {
-		const selectedRows = this.props.controller.getSelectedRows();
+		const selectedRows = this.props.controller.getSelectedRows(this.props.control.name);
 		return selectedRows.indexOf(rowIndex) >= 0
 			? "column-select-table-row column-select-table-selected-row "
 			: "column-select-table-row";

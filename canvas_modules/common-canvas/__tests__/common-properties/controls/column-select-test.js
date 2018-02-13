@@ -77,10 +77,6 @@ function getSelectedRows() {
 	return selectedRows;
 }
 
-function getSelectedRows2() {
-	return [0];
-}
-
 function updateSelectedRows(row) {
 	return selectedRows[row];
 }
@@ -155,7 +151,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				propertyId={propertyId}
 				openFieldPicker={openFieldPicker}
 				updateSelectedRows={updateSelectedRows}
-				selectedRows={getSelectedRows2()}
+				selectedRows={getSelectedRows()}
 			/>
 		);
 		// select the first row in the table

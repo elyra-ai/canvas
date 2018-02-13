@@ -70,7 +70,7 @@ class ColumnStructureTableControl extends ColumnStructureTableEditor {
 	// been selected by the user.
 	getSelectedColumns() {
 		// logger.info("getSelectedColumns");
-		const selected = this.props.controller.getSelectedRows();
+		const selected = this.props.controller.getSelectedRows(this.props.control.name);
 		const controlValue = this.getCurrentControlValue();
 		const columns = [];
 
