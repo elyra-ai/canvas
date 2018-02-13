@@ -19,6 +19,9 @@ import sinon from "sinon";
 import Controller from "../../../src/common-properties/properties-controller";
 import isEqual from "lodash/isEqual";
 
+import numberfieldParamDef from "../../test_resources/paramDefs/numberfield_paramDef.json";
+
+
 const CONDITIONS_TEST_FORM_DATA = require("../../test_resources/json/conditions-test-formData.json");
 
 const controller = new Controller();
@@ -32,15 +35,7 @@ const control = {
 		propType: "integer"
 	}
 };
-const controlDouble = {
-	name: "test-numberfield",
-	charLimit: 15,
-	additionalText: "Enter number",
-	valueDef: {
-		isList: false,
-		propType: "double"
-	}
-};
+
 const control2 = {
 };
 const form = {
@@ -132,11 +127,6 @@ function createEditorForm(inController) {
 
 const propertyId = { name: "test-numberfield" };
 
-function setPropertyValue() {
-	controller.setPropertyValues(
-		{ "test-numberfield": 1 }
-	);
-}
 
 describe("numberfield-control renders correctly", () => {
 
@@ -163,87 +153,6 @@ describe("numberfield-control renders correctly", () => {
 		);
 		const input = wrapper.find("[type='number']");
 		expect(input).to.have.length(1);
-	});
-
-	it("should set correct state value in `NumberfieldControl`", () => {
-		setPropertyValue();
-		const wrapper = mount(
-			<NumberfieldControl
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-			/>
-		);
-		const input = wrapper.find("[type='number']");
-		input.simulate("change", { target: { value: "44" } });
-		expect(controller.getPropertyValue(propertyId)).to.equal(44);
-	});
-
-	it("should not allow a double value in an integer type `NumberfieldControl`", () => {
-		setPropertyValue();
-		const wrapper = mount(
-			<NumberfieldControl
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-			/>
-		);
-		const input = wrapper.find("[type='number']");
-		input.simulate("change", { target: { value: "44.23" } });
-		// do not accept "44.23" so it is still the original value from setPropertyValue (1)
-		expect(controller.getPropertyValue(propertyId)).to.equal(1);
-	});
-
-	it("should allow a double value in a double type `NumberfieldControl`", () => {
-		setPropertyValue();
-		const wrapper = mount(
-			<NumberfieldControl
-				control={controlDouble}
-				controller={controller}
-				propertyId={propertyId}
-			/>
-		);
-		const input = wrapper.find("[type='number']");
-		input.simulate("change", { target: { value: "44.23" } });
-		expect(controller.getPropertyValue(propertyId)).to.equal(44.23);
-	});
-
-	it("should set correct state null in `NumberfieldControl`", () => {
-		setPropertyValue();
-		const wrapper = mount(
-			<NumberfieldControl
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-			/>
-		);
-		const input = wrapper.find("[type='number']");
-		input.simulate("change", { target: { value: "" } });
-		expect(controller.getPropertyValue(propertyId)).to.equal(null);
-	});
-
-	it("should set correct control type in `NumberfieldControl`", () => {
-		const wrapper = mount(
-			<NumberfieldControl
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-			/>
-		);
-		const input = wrapper.find("[type='number']");
-		expect(input.get(0).type).to.equal("number");
-	});
-
-	it("should set placeholder text in `NumberfieldControl`", () => {
-		const wrapper = mount(
-			<NumberfieldControl
-				control={control}
-				controller={controller}
-				propertyId={propertyId}
-			/>
-		);
-		const input = wrapper.find("[type='number']");
-		expect(input.get(0).placeholder).to.equal(control.additionalText);
 	});
 
 	it("should create a number_generator in `NumberfieldControl`", () => {
@@ -352,5 +261,80 @@ describe("condition messages renders correctly with numberfield control", () => 
 			JSON.parse(JSON.stringify(actual)))).to.be.true;
 		expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
 		expect(wrapper.find(".form__validation--error")).to.have.length(1);
+	});
+});
+
+describe("NumberField control works correctly", () => {
+	var wrapper;
+	var renderedController;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldParamDef);
+		wrapper = renderedObject.wrapper;
+		renderedController = renderedObject.controller;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("should render an integer number correctly", () => {
+		const numPropertyId = { name: "number_int" };
+		const integerNumber = wrapper.find("#editor-control-number_int");
+		expect(integerNumber).not.to.be.undefined;
+		expect(renderedController.getPropertyValue(numPropertyId)).to.equal(10);
+	});
+	it("should allow an integer value to be set in an integer field", () => {
+		const numPropertyId = { name: "number_int" };
+		const integerNumber = wrapper.find("#editor-control-number_int");
+		integerNumber.simulate("change", { target: { value: "44" } });
+		expect(renderedController.getPropertyValue(numPropertyId)).to.equal(44);
+	});
+	it("should allow a null value to be set in an integer field", () => {
+		const numPropertyId = { name: "number_int" };
+		const integerNumber = wrapper.find("#editor-control-number_int");
+		integerNumber.simulate("change", { target: { value: "" } });
+		expect(renderedController.getPropertyValue(numPropertyId)).to.equal(null);
+	});
+	it("should not allow a double value to be set in an integer field", () => {
+		const numPropertyId = { name: "number_int" };
+		const integerNumber = wrapper.find("#editor-control-number_int");
+		integerNumber.simulate("change", { target: { value: "4.4" } });
+		expect(renderedController.getPropertyValue(numPropertyId)).to.equal(10);
+	});
+	it("should render an double number correctly", () => {
+		const numPropertyId = { name: "number_dbl" };
+		const doubleNumber = wrapper.find("#editor-control-number_dbl");
+		expect(doubleNumber).not.to.be.undefined;
+		expect(renderedController.getPropertyValue(numPropertyId)).to.equal(11.012);
+	});
+	it("should allow an double value to be set in an double field", () => {
+		const numPropertyId = { name: "number_dbl" };
+		const doubleNumber = wrapper.find("#editor-control-number_dbl");
+		doubleNumber.simulate("change", { target: { value: "4.04" } });
+		expect(renderedController.getPropertyValue(numPropertyId)).to.equal(4.04);
+	});
+	it("should render the correct default value ", () => {
+		const numPropertyId = { name: "number_default" };
+		expect(renderedController.getPropertyValue(numPropertyId)).to.equal(3);
+	});
+	it("should render the correct zero value default value ", () => {
+		const numPropertyId = { name: "number_zero_default" };
+		expect(renderedController.getPropertyValue(numPropertyId)).to.equal(0);
+	});
+	it("should not render default value if control value is zero", () => {
+		const numPropertyId = { name: "number_zero" };
+		expect(renderedController.getPropertyValue(numPropertyId)).to.equal(0);
+	});
+	it("should render a null value", () => {
+		const numPropertyId = { name: "number_null" };
+		expect(renderedController.getPropertyValue(numPropertyId)).to.equal(null);
+	});
+	it("should render a undefined value as undefined", () => {
+		const numPropertyId = { name: "number_undefined" };
+		expect(renderedController.getPropertyValue(numPropertyId)).to.be.undefined;
+	});
+	it("should render a placeholder text for a undefined field", () => {
+		const phNumber = wrapper.find("#editor-control-number_placeholder");
+		expect(phNumber.get(0).placeholder).to.equal("Enter a number");
 	});
 });

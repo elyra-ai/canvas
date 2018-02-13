@@ -133,8 +133,8 @@ export default class PropertiesController {
 			if (control.controlType === "structuretable" && control.addRemoveRows === false) {
 				controlValue = this._populateFieldData(controlValue, this.getDatasetMetadata(), control);
 				this.updatePropertyValue(propertyId, controlValue);
-			} else if (control.valueDef && control.valueDef.defaultValue &&
-				control.valueDef.defaultValue !== "" && (!controlValue || controlValue === "")) {
+			} else if (typeof control.valueDef !== "undefined" && typeof control.valueDef.defaultValue !== "undefined" &&
+				control.valueDef.defaultValue !== "" && (typeof controlValue === "undefined" || controlValue === "")) {
 				controlValue = control.valueDef.defaultValue;
 				this.updatePropertyValue(propertyId, controlValue);
 			}
