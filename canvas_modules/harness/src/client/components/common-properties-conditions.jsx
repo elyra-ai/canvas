@@ -44,7 +44,8 @@ import {
 	STRING_GROUP_WARNING_PROPS_INFO,
 	NUMBER_GROUP_ERROR_PROPS_INFO,
 	VISIBLE_GROUP_PROPS_INFO,
-	ENABLED_GROUP_PROPS_INFO
+	ENABLED_GROUP_PROPS_INFO,
+	FILTERED_ENUM_INFO
 } from "../constants/conditions-documentation-constants.js";
 import { CommonProperties } from "common-canvas";
 import { Table } from "reactable";
@@ -272,11 +273,13 @@ class CommonPropertiesComponents extends React.Component {
 		const contentConditions = (<section id="Conditions" className="section conditions-documentation-content-overview-section">
 			<h2 className="properties-documentation-section-title">Conditions</h2>
 			<div className="section-description">
-				<p>There are three kinds of conditions:</p>
+				<p>There are five types of condition:</p>
 				<ul>
 					<li>visible: Hide controls if evaluates to false.</li>
 					<li>enabled: Disable controls if evaluates to false.</li>
 					<li>validation: The fail_message is displayed upon validation failure.</li>
+					<li>filter: Filters fields from datarecord-metadata.</li>
+					<li>filtered_enum: Conditionally sets enumeration values.</li>
 				</ul>
 			</div>
 			<div className="section-description">
@@ -290,8 +293,8 @@ class CommonPropertiesComponents extends React.Component {
 					for that control. If a control has both single and group conditions, group conditions should be placed
 					before single conditions in the array.
 					<br />
-					A condition fails if it evaluates to false and an error or warning will be shown to indicate that the
-					user input did not pass the test. <br /> Below is a table that describes what control supports what conditions.
+					A condition fails if it evaluates to false. For validations, an error or warning will be shown to indicate that the
+					user input did not pass the test. <br /> Below is a table that describes which conditions each control supports.
 				</p>
 				<div className="conditions-documentation-control-table-container">
 					<Table className="table conditions-documentation-control-table" id="conditions-documentation-control-table"
@@ -985,6 +988,34 @@ class CommonPropertiesComponents extends React.Component {
 									"parameter_refs", "textfieldControlName2", "radiosetColor",
 									"evaluate", "and", "or", "condition",
 									"parameter_ref", "op", "parameter_2_ref", "value"
+								])}
+							</pre>
+						</div>
+					</div>
+				</div>
+				<div className="conditions-documentation-panels-controls-component">
+					<h3 id="--filteredEnum" className="section-subtitle">Filtered Enumeration Conditions</h3>
+					<p>The <span className="highlight">filtered_enum</span> condition operates upon controls
+						whose parameter is backed by an enumerated list of options. This includes radiosets
+						and droplist controls. When the condition is true, filtered_enum conditions allow authors
+						to dynamically filter the available enumeration options based upon the state of other parameters.
+					</p>
+					<div className="section-row">
+						<div className="section-column">
+							<CommonProperties
+								showPropertiesDialog
+								propertiesInfo={FILTERED_ENUM_INFO}
+								containerType="Custom"
+							/>
+						</div>
+						<div className="section-column section-column-code">
+							<pre className="json-block">
+								{this.jsonReplacer(FILTERED_ENUM_INFO.parameterDef, "custom", [
+									"conditions", "filtered_enum", "target",
+									"parameter_ref", "radioset_filtered", "values",
+									"red", "yellow", "green",
+									"evaluate", "and", "or", "condition",
+									"parameter_ref", "op", "value"
 								])}
 							</pre>
 						</div>

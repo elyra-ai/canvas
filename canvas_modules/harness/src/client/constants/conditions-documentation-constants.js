@@ -2893,7 +2893,7 @@ _defineConstant("ENABLED_GROUP_PROPS_INFO", {
 	"parameterDef": {
 		"current_parameters": {
 			"textfieldControlName1": "hello",
-			"checkboxVisibleE": false,
+			"enablingCheckbox": false,
 			"textfieldControlName2": "world",
 			"radiosetColor": "blue"
 		},
@@ -2906,7 +2906,7 @@ _defineConstant("ENABLED_GROUP_PROPS_INFO", {
 				"required": true
 			},
 			{
-				"id": "checkboxVisibleE",
+				"id": "enablingCheckbox",
 				"type": "boolean",
 				"default": ""
 			},
@@ -2938,7 +2938,7 @@ _defineConstant("ENABLED_GROUP_PROPS_INFO", {
 					}
 				},
 				{
-					"parameter_ref": "checkboxVisibleE",
+					"parameter_ref": "enablingCheckbox",
 					"label": {
 						"default": "Advanced Options"
 					},
@@ -2971,7 +2971,7 @@ _defineConstant("ENABLED_GROUP_PROPS_INFO", {
 					"type": "controls",
 					"parameter_refs": [
 						"textfieldControlName1",
-						"checkboxVisibleE",
+						"enablingCheckbox",
 						"textfieldControlName2",
 						"radiosetColor"
 					]
@@ -2992,7 +2992,7 @@ _defineConstant("ENABLED_GROUP_PROPS_INFO", {
 					],
 					"evaluate": {
 						"condition": {
-							"parameter_ref": "checkboxVisibleE",
+							"parameter_ref": "enablingCheckbox",
 							"op": "equals",
 							"value": true
 						}
@@ -3000,5 +3000,99 @@ _defineConstant("ENABLED_GROUP_PROPS_INFO", {
 				}
 			}
 		]
+	}
+});
+
+_defineConstant("FILTERED_ENUM_INFO", {
+	"title": "Filtered Enumeration Title",
+	"parameterDef": {
+		"current_parameters": {
+			"filter_radios": false,
+			"radioset_filtered": ""
+		},
+		"parameters": [
+			{
+				"id": "filter_radios",
+				"type": "boolean"
+			},
+			{
+				"id": "radioset_filtered",
+				"enum": [
+					"red",
+					"orange",
+					"yellow",
+					"green"
+				],
+				"required": true
+			}
+		],
+		"uihints": {
+			"id": "numberfieldControlName",
+			"parameter_info": [
+				{
+					"parameter_ref": "filter_radios",
+					"label": {
+						"default": "Filter the radio buttons"
+					},
+					"description": {
+						"default": "Check this box to remove the 'Orange' radio button option"
+					}
+				},
+				{
+					"parameter_ref": "radioset_filtered",
+					"label": {
+						"default": "Filterable radio buttons"
+					},
+					"description": {
+						"default": "This set of radio buttons can be filtered"
+					},
+					"orientation": "vertical"
+				}
+			],
+			"group_info": [
+				{
+					"id": "Radiosets",
+					"label": {
+						"default": "Radios"
+					},
+					"parameter_refs": [
+						"filter_radios",
+						"radioset_filtered"
+					]
+				}
+			]
+		},
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		],
+		"conditions": [
+			{
+				"filtered_enum": {
+					"target": {
+						"parameter_ref": "radioset_filtered",
+						"values": [
+							"red",
+							"yellow",
+							"green"
+						]
+					},
+					"evaluate": {
+						"condition": {
+							"parameter_ref": "filter_radios",
+							"op": "equals",
+							"value": true
+						}
+					}
+				}
+			}
+		],
+		"resources": {
+			"radioset_filtered.red.label": "Red radio",
+			"radioset_filtered.orange.label": "Orange radio",
+			"radioset_filtered.yellow.label": "Yellow radio",
+			"radioset_filtered.green.label": "Green radio"
+		}
 	}
 });
