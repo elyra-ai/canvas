@@ -31,8 +31,8 @@ import FieldPicker from "./field-picker.jsx";
 import { injectIntl, intlShape } from "react-intl";
 
 
-import DownIcon from "../../../assets/images/down_enabled.svg";
-import UpIcon from "../../../assets/images/up_enabled.svg";
+import DownIcon from "../../../assets/images/down_caret.svg";
+import UpIcon from "../../../assets/images/up_caret.svg";
 import InfoIcon from "../../../assets/images/info.svg";
 
 class EditorForm extends React.Component {
