@@ -114,8 +114,8 @@ export default class PropertiesController {
 					UiConditionsParser.parseConditions(this.validationDefinitions, condition, "validation");
 				} else if (condition.filter) {
 					UiConditionsParser.parseConditions(this.filterDefinitions, condition, "filter");
-				} else if (condition.filtered_enum) {
-					UiConditionsParser.parseConditions(this.filteredEnumDefinitions, condition, "filtered_enum");
+				} else if (condition.enum_filter) {
+					UiConditionsParser.parseConditions(this.filteredEnumDefinitions, condition, "enum_filter");
 				} else { // invalid
 					logger.info("Invalid definition: " + JSON.stringify(condition));
 				}

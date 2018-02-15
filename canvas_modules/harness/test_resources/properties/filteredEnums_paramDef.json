@@ -324,7 +324,7 @@
       }
     },
     {
-      "filtered_enum": {
+      "enum_filter": {
         "target": {
           "parameter_ref": "oneofselect_warning",
           "values": [
@@ -345,7 +345,7 @@
       }
     },
     {
-      "filtered_enum": {
+      "enum_filter": {
         "target": {
           "parameter_ref": "filteredTable[1]",
           "values": [
@@ -362,7 +362,7 @@
       }
     },
     {
-      "filtered_enum": {
+      "enum_filter": {
         "target": {
           "parameter_ref": "filteredTable[3]",
           "values": [
@@ -382,7 +382,7 @@
       }
     },
     {
-      "filtered_enum": {
+      "enum_filter": {
         "target": {
           "parameter_ref": "radioset_filtered",
           "values": [

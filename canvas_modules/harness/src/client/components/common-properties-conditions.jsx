@@ -45,7 +45,7 @@ import {
 	NUMBER_GROUP_ERROR_PROPS_INFO,
 	VISIBLE_GROUP_PROPS_INFO,
 	ENABLED_GROUP_PROPS_INFO,
-	FILTERED_ENUM_INFO
+	ENUM_FILTER_INFO
 } from "../constants/conditions-documentation-constants.js";
 import { CommonProperties } from "common-canvas";
 import { Table } from "reactable";
@@ -279,7 +279,7 @@ class CommonPropertiesComponents extends React.Component {
 					<li>enabled: Disable controls if evaluates to false.</li>
 					<li>validation: The fail_message is displayed upon validation failure.</li>
 					<li>filter: Filters fields from datarecord-metadata.</li>
-					<li>filtered_enum: Conditionally sets enumeration values.</li>
+					<li>enum_filter: Conditionally sets enumeration values.</li>
 				</ul>
 			</div>
 			<div className="section-description">
@@ -995,23 +995,23 @@ class CommonPropertiesComponents extends React.Component {
 				</div>
 				<div className="conditions-documentation-panels-controls-component">
 					<h3 id="--filteredEnum" className="section-subtitle">Filtered Enumeration Conditions</h3>
-					<p>The <span className="highlight">filtered_enum</span> condition operates upon controls
+					<p>The <span className="highlight">enum_filter</span> condition operates upon controls
 						whose parameter is backed by an enumerated list of options. This includes radiosets
-						and droplist controls. When the condition is true, filtered_enum conditions allow authors
+						and droplist controls. When the condition is true, enum_filter conditions allow authors
 						to dynamically filter the available enumeration options based upon the state of other parameters.
 					</p>
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
 								showPropertiesDialog
-								propertiesInfo={FILTERED_ENUM_INFO}
+								propertiesInfo={ENUM_FILTER_INFO}
 								containerType="Custom"
 							/>
 						</div>
 						<div className="section-column section-column-code">
 							<pre className="json-block">
-								{this.jsonReplacer(FILTERED_ENUM_INFO.parameterDef, "custom", [
-									"conditions", "filtered_enum", "target",
+								{this.jsonReplacer(ENUM_FILTER_INFO.parameterDef, "custom", [
+									"conditions", "enum_filter", "target",
 									"parameter_ref", "radioset_filtered", "values",
 									"red", "yellow", "green",
 									"evaluate", "and", "or", "condition",

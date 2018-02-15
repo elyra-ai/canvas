@@ -16,7 +16,7 @@ import isEqual from "lodash/isEqual";
 import Controller from "../../src/common-properties/properties-controller";
 
 const CONDITIONS_TEST_FORM_DATA = require("../test_resources/json/conditions-test-formData.json");
-const FILTERED_ENUM_FORM_DATA = require("../test_resources/json/filtered-enum-test-formData.json");
+const ENUM_FILTER_FORM_DATA = require("../test_resources/json/filtered-enum-test-formData.json");
 
 const additionalComponents = null;
 
@@ -883,7 +883,7 @@ filteredEnumDefinitions.filter_radios = [
 	{
 		"params": "filter_radios",
 		"definition": {
-			"filtered_enum": {
+			"enum_filter": {
 				"target": {
 					"parameter_ref": "radioset_filtered",
 					"values": [
@@ -988,7 +988,7 @@ describe("editor-form renders correctly with validations", () => {
 
 describe("Filtered enumerations properly filter", () => {
 	it("Filters should work", () => {
-		const wrapper = propertyUtils.createEditorForm("mount", FILTERED_ENUM_FORM_DATA, controller);
+		const wrapper = propertyUtils.createEditorForm("mount", ENUM_FILTER_FORM_DATA, controller);
 
 		expect(wrapper.find(".control-panel")).to.have.length(4);
 		expect(wrapper.find(".control-radio-block")).to.have.length(3);

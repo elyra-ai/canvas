@@ -132,8 +132,8 @@ function validateInput(definition, userInput, controlType, dataModel, cellCoordi
 		return enabled(data.enabled, userInput, info);
 	} else if (data.visible) {
 		return visible(data.visible, userInput, info);
-	} else if (data.filtered_enum) {
-		return filteredEnum(data.filtered_enum, userInput, info);
+	} else if (data.enum_filter) {
+		return filteredEnum(data.enum_filter, userInput, info);
 	}
 	throw new Error("Invalid user input validation definition schema");
 }

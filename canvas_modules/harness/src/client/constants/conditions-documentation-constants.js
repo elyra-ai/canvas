@@ -3003,7 +3003,7 @@ _defineConstant("ENABLED_GROUP_PROPS_INFO", {
 	}
 });
 
-_defineConstant("FILTERED_ENUM_INFO", {
+_defineConstant("ENUM_FILTER_INFO", {
 	"title": "Filtered Enumeration Title",
 	"parameterDef": {
 		"current_parameters": {
@@ -3069,7 +3069,7 @@ _defineConstant("FILTERED_ENUM_INFO", {
 		],
 		"conditions": [
 			{
-				"filtered_enum": {
+				"enum_filter": {
 					"target": {
 						"parameter_ref": "radioset_filtered",
 						"values": [

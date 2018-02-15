@@ -171,8 +171,8 @@ function _validateFilteredEnums(controller, filteredEnumDefinitions, dataModel) 
 
 function _setValidateFilteredEnum(definition, propertyValues, controlType, dataModel, cellCoords, newStates) {
 	const filtered = UiConditions.validateInput(definition, propertyValues, controlType, dataModel, cellCoords);
-	if (definition.filtered_enum.target && definition.filtered_enum.target.parameter_ref) {
-		const referenceId = _getPropertyId(definition.filtered_enum.target.parameter_ref, cellCoords);
+	if (definition.enum_filter.target && definition.enum_filter.target.parameter_ref) {
+		const referenceId = _getPropertyId(definition.enum_filter.target.parameter_ref, cellCoords);
 		_updateFilteredState(definition, newStates, referenceId, filtered);
 	}
 }
@@ -209,7 +209,7 @@ function _updateFilteredState(definition, refState, propertyId, filtered) {
 
 function _getFilteredEnumItems(definition, filtered) {
 	if (filtered) {
-		return definition.filtered_enum.target.values;
+		return definition.enum_filter.target.values;
 	}
 	return null;
 }
