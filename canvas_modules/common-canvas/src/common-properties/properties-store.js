@@ -69,15 +69,6 @@ export default class PropertiesStore {
 			return locState.value;
 		}
 
-		/*
-		if (typeof propertyId.row !== "undefined" && locState) {
-			locState = locState[propertyId.row.toString()];
-			if (typeof propertyId.col !== "undefined" && locState) {
-				locState = locState[propertyId.col.toString()];
-			}
-		}
-		*/
-
 		// First check for control-level, then column level, and finally cell level property addressing
 		const colId = typeof propertyId.col !== "undefined" ? propertyId.col.toString() : null;
 		const rowId = typeof propertyId.row !== "undefined" ? propertyId.row.toString() : null;

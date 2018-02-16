@@ -10,6 +10,7 @@
 import { expect } from "chai";
 import propertyUtils from "../_utils_/property-utils";
 import panelParamDef from "../test_resources/paramDefs/panel_paramDef.json";
+import panelParamDefWide from "../test_resources/paramDefs/widePanel_paramDef.json";
 
 describe("textPanel render correctly", () => {
 	const renderedObject = propertyUtils.flyoutEditorForm(panelParamDef);
@@ -36,5 +37,26 @@ describe("textPanel render correctly", () => {
 		descriptions = wrapper.find(".panel-description");
 		expect(descriptions.at(1).text()).to.equal("Percent: 192.307692 with 6 decimals. Percent: 192.31 with 2 decimals");
 		expect(descriptions.at(2).text()).to.equal("Sum: 1.04 with (number, number). Sum: 3.04 with (number, 2, number)");
+	});
+});
+
+describe("Flyout editor has the correct width", () => {
+	it("should display a fly out editor at normal width", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(panelParamDef);
+		const wrapper = renderedObject.wrapper;
+		const flyout = wrapper.find("#common-properties-right-flyout-panel");
+		expect(flyout).to.have.length(1);
+		const flyoutStyle = flyout.prop("style");
+		expect(flyoutStyle).to.eql({ width: "318px" });
+		// console.log("FLYOUT NARROW: " + flyout.at(0).html());
+	});
+	it("should display a wide fly out editor at wider width", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(panelParamDefWide);
+		const wrapper = renderedObject.wrapper;
+		const flyout = wrapper.find("#common-properties-right-flyout-panel");
+		expect(flyout).to.have.length(1);
+		const flyoutStyle = flyout.prop("style");
+		expect(flyoutStyle).to.eql({ width: "625px" });
+		// console.log("FLYOUT WIDE: " + flyout.at(0).html());
 	});
 });

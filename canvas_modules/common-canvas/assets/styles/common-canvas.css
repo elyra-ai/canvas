@@ -36,7 +36,6 @@
 /* right flyout panel */
 
 .right-flyout-panel {
-	width: 0px;
 	height: 100%;
 	float: right;
 	-webkit-transition: all 0.2s;

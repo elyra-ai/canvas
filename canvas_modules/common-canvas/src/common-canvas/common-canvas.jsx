@@ -21,6 +21,8 @@ import Toolbar from "../toolbar/toolbar.jsx";
 import BlankCanvasImage from "../../assets/images/blank_canvas.png";
 import TooltipWrapper from "../tooltip/tooltip-wrapper.jsx";
 import isEmpty from "lodash/isEmpty";
+import { FLYOUT_WIDTH } from "../constants/constants";
+
 
 export default class CommonCanvas extends React.Component {
 	constructor(props) {
@@ -114,11 +116,6 @@ export default class CommonCanvas extends React.Component {
 	}
 
 	getEditorWidth() {
-		// @TODO: Reenable this code once WML changes their ui-hints files
-		const width = 318;
-		const className = "canvas-flyout-div-open";
-
-		/*
 		let editorSize = "small";
 		let className = "canvas-flyout-div-open";
 		if (this.props.rightFlyoutContent.props.propertiesInfo.parameterDef &&
@@ -127,16 +124,14 @@ export default class CommonCanvas extends React.Component {
 		} else if (this.props.rightFlyoutContent.props.propertiesInfo.formData) {
 			editorSize = this.props.rightFlyoutContent.props.propertiesInfo.formData.editorSize;
 		}
-
-		let width = 318;
+		let width = FLYOUT_WIDTH.SMALL;
 		if (editorSize === "medium") {
-			width = 625;
+			width = FLYOUT_WIDTH.MEDIUM;
 			className = "canvas-flyout-div-open-medium";
 		} else if (editorSize === "large") {
-			width = 625; // This needs to be determined once we have a design for a large flyout
+			width = FLYOUT_WIDTH.LARGE;
 			className = "canvas-flyout-div-open-large";
 		}
-		*/
 		return {
 			width: width,
 			className: className
@@ -294,7 +289,7 @@ export default class CommonCanvas extends React.Component {
 		let paletteClass = "canvas-palette-flyout-div-closed";
 		let contextMenuWrapper = null;
 		let canvasToolbar = null;
-		let rightFlyout = (<div className="right-flyout-panel" style={{ width: "0px" }} />);
+		let rightFlyout = (<div className="right-flyout-panel" />);
 		let tip = null;
 		const canvasStyle = { minWidth: "258px" };
 		const canvasJSON = this.objectModel.getCanvasInfo();
@@ -370,7 +365,7 @@ export default class CommonCanvas extends React.Component {
 			const widthObj = this.getEditorWidth();
 			paletteClass += (" " + widthObj.className);
 			canvasStyle.minWidth = (parseFloat(canvasStyle.minWidth) + widthObj.width) + "px";
-			rightFlyout = (<div className="right-flyout-panel" style={{ width: widthObj.width + "px" }}>
+			rightFlyout = (<div className="right-flyout-panel">
 				{this.state.rightFlyoutContent}
 			</div>);
 		}

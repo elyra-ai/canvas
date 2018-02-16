@@ -1,0 +1,284 @@
+{
+  "titleDefinition": {
+    "title": "Panels"
+  },
+  "current_parameters": {
+    "fruit-color": "red",
+    "number": 11,
+    "field1_panel": "age",
+    "field2_panel": "BP"
+  },
+  "parameters": [
+    {
+      "id": "fruit-color",
+      "enum": [
+        "red",
+        "blue",
+        "yellow"
+      ]
+    },
+    {
+      "id": "number",
+      "type": "double",
+      "required": true
+    },
+    {
+      "id": "field1_panel",
+      "type": "string",
+      "role": "column",
+      "required": true
+    },
+    {
+      "id": "field2_panel",
+      "type": "string",
+      "role": "column",
+      "required": true
+    },
+    {
+      "id": "selectcolumn",
+      "type": "string",
+      "role": "column",
+      "required": true
+    },
+    {
+      "id": "selectcolumns",
+      "type": "array[string]",
+      "role": "column",
+      "required": true
+    }
+  ],
+  "uihints": {
+    "id": "panels",
+    "icon": "images/default.svg",
+    "label": {
+      "default": "Panels"
+    },
+    "editor_size": "medium",
+    "parameter_info": [
+      {
+        "parameter_ref": "fruit-color",
+        "label": {
+          "default": "Fruit Color"
+        },
+        "description": {
+          "default": "Shows red, yellow, or blue values"
+        }
+      },
+      {
+        "parameter_ref": "number",
+        "label": {
+          "default": "number"
+        },
+        "description": {
+          "default": "A control between a panelSelector control.  Also used to display dynamic text in panel text."
+        }
+      },
+      {
+        "parameter_ref": "field1_panel",
+        "label": {
+          "default": "Field1"
+        },
+        "description": {
+          "default": "selectcolumn parameter shared with Field2"
+        },
+        "text_before": {
+          "default": "Field1 shares values with Field2"
+        }
+      },
+      {
+        "parameter_ref": "field2_panel",
+        "label": {
+          "default": "Field2"
+        },
+        "description": {
+          "default": "selectcolumn parameter shared with Field1"
+        }
+      },
+      {
+        "parameter_ref": "selectcolumn",
+        "label": {
+          "default": "Select Field"
+        },
+        "description": {
+          "default": "selectcolumn control where values are shared with selectcolumns 'Select Fields'"
+        },
+        "text_before": {
+          "default": "Select Field shares values with Select Fields"
+        }
+      },
+      {
+        "parameter_ref": "selectcolumns",
+        "label": {
+          "default": "Select Fields"
+        },
+        "description": {
+          "default": "selectcolumns control where values are shared with selectcolumns 'Select Field'"
+        }
+      }
+    ],
+    "group_info": [
+      {
+        "id": "panels",
+        "label": {
+          "default": "Panels"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "orange",
+            "type": "textPanel",
+            "label": {
+              "default": "Oranges"
+            },
+            "description": {
+              "default": "An orange tree can grow to reach 30 feet and live for over a hundred years."
+            }
+          }
+        ]
+      },
+      {
+        "id": "panel-selector",
+        "label": {
+          "default": "Panel Selector"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "fruit-color",
+          "number"
+        ],
+        "group_info": [
+          {
+            "id": "dynamicTextPercent",
+            "type": "textPanel",
+            "label": {
+              "default": "Dynamic Percent"
+            },
+            "description": {
+              "default": "Percent: ${percent(number, 6)} with 6 decimals. Percent: ${percent(number,2)} with 2 decimals"
+            }
+          },
+          {
+            "id": "dynamicTextSum",
+            "type": "textPanel",
+            "label": {
+              "default": "Dynamic Sum"
+            },
+            "description": {
+              "default": "Sum: ${sum(number, number)} with (number, number). Sum: ${sum(number, 2, number)} with (number, 2, number)"
+            }
+          },
+          {
+            "id": "panel-selector-fields",
+            "label": {
+              "default": "Colors"
+            },
+            "type": "panelSelector",
+            "depends_on_ref": "fruit-color",
+            "group_info": [
+              {
+                "id": "red",
+                "type": "textPanel",
+                "description": {
+                  "default": "Apples ripen six to 10 times faster at room temperature than if they are refrigerated."
+                }
+              },
+              {
+                "id": "blue",
+                "type": "textPanel",
+                "label": {
+                  "default": "Blueberries"
+                },
+                "description": {
+                  "default": "Blueberries freeze in just 4 minutes."
+                }
+              },
+              {
+                "id": "yellow",
+                "type": "textPanel",
+                "label": {
+                  "default": "Lemons"
+                },
+                "description": {
+                  "default": "Lemons are a hybrid between a sour orange and a citron."
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "column-selection",
+        "label": {
+          "default": "Column Selection"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "selectcolumn-values",
+            "label": {
+              "default": "Values"
+            },
+            "type": "columnSelection",
+            "parameter_refs": [
+              "field1_panel",
+              "field2_panel"
+            ]
+          },
+          {
+            "id": "column-selection",
+            "label": {
+              "default": "Column Selection"
+            },
+            "type": "columnSelection",
+            "parameter_refs": [
+              "selectcolumn",
+              "selectcolumns"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "dataset_metadata": [
+		{
+	    "fields": [
+	      {
+	        "name": "age",
+	        "type": "integer",
+	        "metadata": {
+	          "description": "",
+	          "measure": "range",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "BP",
+	        "type": "string",
+	        "metadata": {
+	          "description": "",
+	          "measure": "discrete",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "Na",
+	        "type": "double",
+	        "metadata": {
+	          "description": "",
+	          "measure": "range",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "drug",
+	        "type": "string",
+	        "metadata": {
+	          "description": "",
+	          "measure": "set",
+	          "modeling_role": "input"
+	        }
+	      }
+	    ]
+	  }
+	]
+}

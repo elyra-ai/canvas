@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 #common-properties-right-flyout-panel {
+	width: 0px;
 	height: 100%;
 	background-color: #FFFFFF;
 }

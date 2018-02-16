@@ -19,6 +19,8 @@ import PropertiesController from "./properties-controller";
 import logger from "../../utils/logger";
 import PropertyUtils from "./util/property-utils";
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./constants/constants";
+import { FLYOUT_WIDTH } from "../constants/constants";
+import { Size } from "./constants/form-constants";
 import isEqual from "lodash/isEqual";
 import { injectIntl, intlShape } from "react-intl";
 
@@ -46,6 +48,7 @@ class CommonProperties extends React.Component {
 		this.showPropertiesButtons = this.showPropertiesButtons.bind(this);
 		this.cancelHandler = this.cancelHandler.bind(this);
 		this.editTitleClickHandler = this.editTitleClickHandler.bind(this);
+		this.getEditorWidth = this.getEditorWidth.bind(this);
 	}
 	componentWillMount() {
 		this.setForm();
@@ -77,6 +80,17 @@ class CommonProperties extends React.Component {
 		if (newProps.forceApplyProperties) {
 			this.applyPropertiesEditing(false);
 		}
+	}
+
+	getEditorWidth() {
+		const editorSize = this.propertiesController.getForm().editorSize;
+		let width = FLYOUT_WIDTH.SMALL;
+		if (editorSize === Size.MEDIUM) {
+			width = FLYOUT_WIDTH.MEDIUM;
+		} else if (editorSize === Size.LARGE) {
+			width = FLYOUT_WIDTH.LARGE;
+		}
+		return width;
 	}
 
 	setForm() {
@@ -304,8 +318,9 @@ class CommonProperties extends React.Component {
 			}
 
 			const propertiesId = this.props.rightFlyout ? "common-properties-right-flyout-panel" : "";
+			const editorWidth = this.getEditorWidth();
 			return (
-				<div id={propertiesId}>
+				<div id={propertiesId} style={{ width: editorWidth + "px" }}>
 					{propertiesTitle}
 					{propertiesDialog}
 					{buttonsContainer}

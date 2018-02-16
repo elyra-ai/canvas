@@ -214,47 +214,6 @@ function _getFilteredEnumItems(definition, filtered) {
 	return null;
 }
 
-/*
-// state is stored in objects rather than arrays
-function _updateState(refState, propertyId, value) {
-	let propState = refState[propertyId.name];
-	if (!propState) {
-		propState = {};
-	}
-	if (typeof propertyId.row !== "undefined") {
-		if (!propState[propertyId.row.toString()]) {
-			propState[propertyId.row.toString()] = {};
-		}
-		if (typeof propertyId.col !== "undefined") {
-			if (!propState[propertyId.row.toString()][propertyId.col.toString()]) {
-				propState[propertyId.row.toString()][propertyId.col.toString()] = {};
-			}
-			propState[propertyId.row.toString()][propertyId.col.toString()].value = value;
-		} else {
-			propState[propertyId.row.toString()].value = value;
-		}
-	} else {
-		propState.value = value;
-	}
-	refState[propertyId.name] = propState;
-}
-
-// state is stored in objects rather then arrays
-function _getState(refState, propertyId) {
-	let propState = refState[propertyId.name];
-	if (typeof propertyId.row !== "undefined" && propState) {
-		propState = propState[propertyId.row.toString()];
-		if (typeof propertyId.col !== "undefined" && propState) {
-			propState = propState[propertyId.col.toString()];
-		}
-	}
-	if (propState) {
-		return propState.value;
-	}
-	return null;
-}
-*/
-
 // state is stored in objects rather than arrays
 function _updateState(refState, propertyId, value) {
 	let propState = refState[propertyId.name];
