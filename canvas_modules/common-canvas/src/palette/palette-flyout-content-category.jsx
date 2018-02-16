@@ -9,8 +9,8 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import DownIcon from "../../assets/images/down_enabled.svg";
-import UpIcon from "../../assets/images/up_enabled.svg";
+import DownIcon from "../../assets/images/down_caret.svg";
+import UpIcon from "../../assets/images/up_caret.svg";
 
 const ARROW_HEIGHT = 14;
 const ARROW_WIDTH = 14;
