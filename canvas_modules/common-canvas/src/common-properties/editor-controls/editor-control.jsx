@@ -34,16 +34,6 @@ export default class EditorControl extends React.Component {
 		return list;
 	}
 
-	static genSelectOptions(control, selectedValues) {
-		var options = [];
-		for (var i = 0; i < control.values.length; i++) {
-			options.push(
-				<option key={i} value={control.values[i]}>{control.valueLabels[i]}</option>
-			);
-		}
-		return options;
-	}
-
 	static genColumnSelectOptions(fields, selectedValues, includeEmpty) {
 		var options = [];
 		if (includeEmpty) {

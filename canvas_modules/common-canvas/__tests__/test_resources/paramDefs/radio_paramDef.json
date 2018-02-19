@@ -14,7 +14,9 @@
     "disable" : true,
     "radioDisable" : "gini",
     "hide" : true,
-    "radioHidden" : "gini"
+    "radioHidden" : "gini",
+    "filter" : false,
+    "radioFilter" : "red"
   },
   "parameters": [
     {
@@ -124,6 +126,19 @@
       "enum": [
         "gini",
         "entropy"
+      ],
+      "required": true
+    },
+    {
+      "id": "filter",
+      "type": "boolean"
+    },
+    {
+      "id": "radioFilter",
+      "enum": [
+        "red",
+        "green",
+        "blue"
       ],
       "required": true
     }
@@ -268,6 +283,25 @@
           "default": "Hidden RadioSet with enum string type"
         },
         "control": "radioset"
+      },
+      {
+        "parameter_ref": "filter",
+        "label": {
+          "default": "Filter radio set"
+        },
+        "description": {
+          "default": "Filter out the 'green' radio"
+        }
+      },
+      {
+        "parameter_ref": "radioFilter",
+        "label": {
+          "default": "Radio Filter"
+        },
+        "description": {
+          "default": "Filtered by controlling checkbox"
+        },
+        "control": "radioset"
       }
     ],
     "group_info": [
@@ -300,7 +334,9 @@
           "disable",
           "radioDisable",
           "hide",
-          "radioHidden"
+          "radioHidden",
+          "filter",
+          "radioFilter"
         ]
       }
     ]
@@ -366,6 +402,21 @@
             "parameter_ref": "disable",
             "op": "equals",
             "value": false
+          }
+        }
+      }
+    },
+    {
+      "enum_filter": {
+        "target": {
+          "parameter_ref": "radioFilter",
+          "values": ["red", "blue"]
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "filter",
+            "op": "equals",
+            "value": true
           }
         }
       }

@@ -13,6 +13,7 @@ import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import Dropdown from "react-dropdown";
 import EditorControl from "./editor-control.jsx";
+import PropertyUtil from "../util/property-utils.js";
 
 export default class OneofselectControl extends EditorControl {
 	constructor(props) {
@@ -149,6 +150,15 @@ export default class OneofselectControl extends EditorControl {
 				selectedOption = option;
 				break;
 			}
+		}
+		if (inSelectedValue && PropertyUtil.toType(selectedOption) === "array") {
+			const that = this;
+			// The current selection has been filtered out - remove it
+			// We need setTimeout here because one cannot set state changing values
+			// from methods that are invoked from the render() cycle.
+			setTimeout(function() {
+				that.props.controller.updatePropertyValue(that.props.propertyId, "");
+			}, 20);
 		}
 		return {
 			options: options,

@@ -12,11 +12,13 @@ import PropTypes from "prop-types";
 import FormControl from "react-bootstrap/lib/FormControl";
 import EditorControl from "./editor-control.jsx";
 import ReactDOM from "react-dom";
+import PropertyUtil from "../util/property-utils.js";
 
 export default class SomeofselectControl extends EditorControl {
 	constructor(props) {
 		super(props);
 		this.handleChange = this.handleChange.bind(this);
+		this.genSelectOptions = this.genSelectOptions.bind(this);
 	}
 
 	handleChange(evt) {
@@ -29,8 +31,37 @@ export default class SomeofselectControl extends EditorControl {
 		this.props.controller.updatePropertyValue(this.props.propertyId, values);
 	}
 
+	genSelectOptions(selectedValues) {
+		const options = [];
+		// Allow for enumeration replacement
+		const controlOpts = this.props.controller.getFilteredEnumItems(this.props.propertyId, this.props.control);
+		for (let i = 0; i < controlOpts.values.length; i++) {
+			options.push(
+				<option key={i} value={controlOpts.values[i]}>{controlOpts.valueLabels[i]}</option>
+			);
+		}
+		// Check for filtered selections
+		if (PropertyUtil.toType(selectedValues) === "array" && selectedValues.length) {
+			const newSelns = selectedValues.slice(0);
+			for (let i = 0; i < selectedValues.length; i++) {
+				if ((controlOpts.values.indexOf(selectedValues[i])) === -1) {
+					newSelns.splice(newSelns.indexOf(selectedValues[i]), 1);
+				}
+			}
+			if (selectedValues.length !== newSelns.length) {
+				const that = this;
+				// We need setTimeout here because one cannot set state changing values
+				// from methods that are invoked from the render() cycle.
+				setTimeout(function() {
+					that.props.controller.updatePropertyValue(that.props.propertyId, newSelns);
+				}, 20);
+			}
+		}
+		return options;
+	}
+
 	render() {
-		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
+		let controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		const conditionProps = {
 			propertyId: this.props.propertyId,
 			controlType: "selection"
@@ -43,12 +74,16 @@ export default class SomeofselectControl extends EditorControl {
 		const stateDisabled = conditionState.disabled;
 		const stateStyle = conditionState.style;
 
+		if (PropertyUtil.toType(controlValue) === "undefined" || controlValue === null) {
+			controlValue = [];
+		}
+
 		let controlIconContainerClass = "control-icon-container";
 		if (messageType !== "info") {
 			controlIconContainerClass = "control-icon-container-enabled";
 		}
 
-		var options = EditorControl.genSelectOptions(this.props.control, controlValue);
+		const options = this.genSelectOptions(controlValue);
 
 		return (
 			<div style={stateStyle}>

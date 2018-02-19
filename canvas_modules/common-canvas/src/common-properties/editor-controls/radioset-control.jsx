@@ -66,10 +66,12 @@ export default class RadiosetControl extends EditorControl {
 			this.props.control.values = [true, false];
 			this.props.control.valueLabels = ["true", "false"];
 		}
+		let wasChecked = false;
 		const valueSet = this.props.controller.getFilteredEnumItems(this.props.propertyId, this.props.control);
 		for (var i = 0; i < valueSet.values.length; i++) {
 			var val = valueSet.values[i];
 			var checked = val === controlValue;
+			wasChecked = wasChecked || checked;
 			buttons.push(
 				<label key={i} className={cssClasses}>
 					<input type="radio"
@@ -83,6 +85,15 @@ export default class RadiosetControl extends EditorControl {
 					<div className={cssIndicator} />
 				</label>
 			);
+		}
+		if (controlValue && controlValue.length > 0 && !wasChecked) {
+			const that = this;
+			// The current selection has been filtered out - remove it
+			// We need setTimeout here because one cannot set state changing values
+			// from methods that are invoked from the render() cycle.
+			setTimeout(function() {
+				that.props.controller.updatePropertyValue(that.props.propertyId, "");
+			}, 20);
 		}
 		return (
 			<div id={this.getControlID()} className="radio" style={stateStyle} >

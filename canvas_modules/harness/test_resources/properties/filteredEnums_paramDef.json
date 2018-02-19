@@ -8,7 +8,9 @@
     "filterTableCells": false,
     "filteredTable": [],
     "filter_radios": false,
-    "radioset_filtered": ""
+    "radioset_filtered": "",
+    "filter_select": false,
+    "someofselect_enum": []
   },
   "parameters": [
     {
@@ -54,6 +56,23 @@
         "orange",
         "yellow",
         "green"
+      ],
+      "required": true
+    },
+    {
+      "id": "filter_select",
+      "type": "boolean"
+    },
+    {
+      "id": "someofselect_enum",
+      "type": "array[string]",
+      "enum": [
+        "One",
+        "Two",
+        "Three",
+        "Four",
+        "Five",
+        "Six"
       ],
       "required": true
     }
@@ -157,6 +176,24 @@
         "description": {
           "default": "Filters cell droplist content"
         }
+      },
+      {
+        "parameter_ref": "filter_select",
+        "label": {
+          "default": "Filter the numbers"
+        },
+        "description": {
+          "default": "Select to filter numbers"
+        }
+      },
+      {
+        "parameter_ref": "someofselect_enum",
+        "label": {
+          "default": "Select some numbers"
+        },
+        "description": {
+          "default": "Filtered numbers"
+        }
       }
     ],
     "complex_type_info": [
@@ -247,6 +284,16 @@
             "parameter_refs": [
               "filter_radios",
               "radioset_filtered"
+            ]
+          },
+          {
+            "id": "SomeOfSelect",
+            "label": {
+              "default": "SomeOfSelect"
+            },
+            "parameter_refs": [
+              "filter_select",
+              "someofselect_enum"
             ]
           }
         ]
@@ -394,6 +441,25 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "filter_radios",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "enum_filter": {
+        "target": {
+          "parameter_ref": "someofselect_enum",
+          "values": [
+            "Two",
+            "Four",
+            "Six"
+          ]
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "filter_select",
             "op": "equals",
             "value": true
           }

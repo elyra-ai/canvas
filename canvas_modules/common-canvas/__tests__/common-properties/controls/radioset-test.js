@@ -213,4 +213,14 @@ describe("radio renders and works correctly with different enum types", () => {
 		radioHidden.simulate("change", { target: { checked: true, value: "entropy" } });
 		expect(renderedController.getPropertyValue({ name: "radioHidden" })).to.equal("entropy");
 	});
+
+	it("Validate radioFilter should have options filtered by enum_filter", () => {
+		const category = wrapper.find(".category-title-container-right-flyout-panel").at(1); // get the CONDITIONS category
+		const checkbox = category.find("#editor-control-filter").at(0);
+		const evt = { target: { checked: true } };
+		checkbox.simulate("change", evt);
+		const select = category.find("#editor-control-radioFilter").at(0);
+		const options = select.find("label");
+		expect(options).to.have.length(2);
+	});
 });
