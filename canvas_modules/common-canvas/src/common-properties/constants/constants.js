@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -36,7 +36,8 @@ _defineConstant("MESSAGE_KEYS_DEFAULTS", {
 	PROPERTIESEDIT_APPLYBUTTON_LABEL: "Save",
 	PROPERTIESEDIT_REJECTBUTTON_LABEL: "Cancel",
 	TABLE_SEARCH_PLACEHOLDER: "Search in column",
-	LONG_TABLE_SUMMARY_PLACEHOLDER: "More than ten fields..."
+	LONG_TABLE_SUMMARY_PLACEHOLDER: "More than ten fields...",
+	ALERTS_TAB_TITLE: "Alerts"
 });
 
 _defineConstant("MESSAGE_KEYS", {
@@ -60,7 +61,8 @@ _defineConstant("MESSAGE_KEYS", {
 	PROPERTIESEDIT_APPLYBUTTON_LABEL: "propertiesEdit.applyButton.label",
 	PROPERTIESEDIT_REJECTBUTTON_LABEL: "propertiesEdit.rejectButton.label",
 	TABLE_SEARCH_PLACEHOLDER: "table.search.placeholder",
-	LONG_TABLE_SUMMARY_PLACEHOLDER: "summary.longTable.placeholder"
+	LONG_TABLE_SUMMARY_PLACEHOLDER: "summary.longTable.placeholder",
+	ALERTS_TAB_TITLE: "alerts.tab.title"
 });
 
 _defineConstant("CHARACTER_LIMITS", {

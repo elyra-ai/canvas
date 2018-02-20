@@ -257,6 +257,7 @@
           {
             "parameter_ref": "index",
             "label": {
+              "default": "Index",
               "resource_key": "structurelisteditorTableInput.index.label"
             },
             "width": 15,
@@ -346,12 +347,30 @@
           "type": "warning",
           "focus_parameter_ref": "expressionCellTable",
           "message": {
-            "default": "table cannot be empty"
+            "default": "Expression cell table cannot be empty"
           }
         },
         "evaluate": {
           "condition": {
             "parameter_ref": "expressionCellTable",
+            "op": "notEquals",
+            "value": []
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "structurelisteditorTableInput",
+          "message": {
+            "default": "Structure list editor table cannot be empty"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "structurelisteditorTableInput",
             "op": "notEquals",
             "value": []
           }

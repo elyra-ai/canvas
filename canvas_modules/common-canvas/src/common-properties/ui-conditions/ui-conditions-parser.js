@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -92,9 +92,12 @@ function parseControls(controls, formData) {
 	return controls;
 }
 
-function parseControl(controls, control) {
+function parseControl(controls, control, parentCategoryId) {
 	if (control.label) {
 		control.summaryLabel = control.label.text;
+	}
+	if (parentCategoryId) {
+		control.parentCategoryId = parentCategoryId;
 	}
 	controls.push(control);
 	if (control.subControls) {
@@ -102,19 +105,25 @@ function parseControl(controls, control) {
 			const subControl = control.subControls[idx];
 			subControl.parameterName = control.name;
 			subControl.columnIndex = idx;
+			if (parentCategoryId) {
+				subControl.parentCategoryId = parentCategoryId;
+			}
 			controls.push(subControl);
 		}
 	}
 }
 
-function parseUiItem(controls, uiItem, panelId) {
+function parseUiItem(controls, uiItem, panelId, parentCategoryId) {
 	switch (uiItem.itemType) {
 	case ItemType.CONTROL: {
 		const control = uiItem.control;
 		if (panelId) {
 			control.summaryPanelId = panelId;
 		}
-		parseControl(controls, control);
+		if (parentCategoryId) {
+			control.parentCategoryId = parentCategoryId;
+		}
+		parseControl(controls, control, parentCategoryId);
 		break;
 	}
 	case ItemType.ADDITIONAL_LINK:
@@ -122,7 +131,7 @@ function parseUiItem(controls, uiItem, panelId) {
 	case ItemType.PANEL: {
 		if (uiItem.panel && uiItem.panel.uiItems) {
 			for (const panelUiItem of uiItem.panel.uiItems) {
-				parseUiItem(controls, panelUiItem, panelId);
+				parseUiItem(controls, panelUiItem, panelId, parentCategoryId);
 			}
 		}
 		break;
@@ -130,7 +139,7 @@ function parseUiItem(controls, uiItem, panelId) {
 	case ItemType.SUMMARY_PANEL: {
 		if (uiItem.panel && uiItem.panel.uiItems) {
 			for (const panelUiItem of uiItem.panel.uiItems) {
-				parseUiItem(controls, panelUiItem, uiItem.panel.id);
+				parseUiItem(controls, panelUiItem, uiItem.panel.id, parentCategoryId);
 			}
 		}
 		break;
@@ -140,7 +149,10 @@ function parseUiItem(controls, uiItem, panelId) {
 	case ItemType.SUB_TABS: {
 		if (uiItem.tabs) {
 			for (const tab of uiItem.tabs) {
-				parseUiItem(controls, tab.content, panelId);
+				parseUiItem(controls, tab.content, panelId,
+					uiItem.itemType === ItemType.PANEL_SELECTOR
+						? parentCategoryId
+						: { "group": tab.group, "text": tab.text });
 			}
 		}
 		break;
@@ -154,6 +166,9 @@ function parseUiItem(controls, uiItem, panelId) {
 				};
 				if (panelId) {
 					control.summaryPanelId = panelId;
+				}
+				if (parentCategoryId) {
+					control.parentCategoryId = parentCategoryId;
 				}
 				controls.push(control);
 			}

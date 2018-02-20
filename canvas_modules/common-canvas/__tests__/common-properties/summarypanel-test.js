@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -10,6 +10,7 @@
 import propertyUtils from "../_utils_/property-utils";
 import summarypanelParamDef from "../test_resources/paramDefs/summarypanel_paramDef.json";
 import { expect } from "chai";
+import { ReactWrapper } from "enzyme";
 
 describe("summary renders correctly", () => {
 	const renderedObject = propertyUtils.flyoutEditorForm(summarypanelParamDef);
@@ -39,5 +40,150 @@ describe("summary panel renders correctly with long table of more than ten rows"
 		const summaryPlaceholder = summaries.at(1).find(".control-summary-table");
 		expect(summaryPlaceholder).to.have.length(1);
 		expect(summaryPlaceholder.text()).to.equal("More than ten fields...");
+	});
+});
+
+describe("summary panel renders error/warning status correctly", () => {
+	var wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(JSON.parse(JSON.stringify(summarypanelParamDef)));
+		wrapper = renderedObject.wrapper;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("should show warning message in summary when removing rows", () => {
+		let tableCategory = wrapper.find(".category-title-container-right-flyout-panel").at(0); // Structure list table category
+		tableCategory.find(".control-summary-link-buttons").at(0)
+			.find(".button")
+			.simulate("click");
+
+		// select first row in derive node table
+		let wfhtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
+		let wideflyoutWrapper = new ReactWrapper(wfhtml, true);
+		const tableBody = wideflyoutWrapper.find("#flexible-table-container").at(0);
+		const tableData = tableBody.find(".reactable-data");
+		const row = tableData.childAt(0);
+		row.simulate("click");
+
+		// ensure remove button is enabled and click it
+		const enabledRemoveColumnButton = wideflyoutWrapper.find("#remove-fields-button-enabled");
+		expect(enabledRemoveColumnButton).to.have.length(1);
+		expect(enabledRemoveColumnButton.prop("id")).to.equal("remove-fields-button-enabled");
+		enabledRemoveColumnButton.simulate("click");
+
+		// close fly-out
+		wideflyoutWrapper.find("#properties-apply-button").simulate("click");
+
+		// check that Alerts tab is added
+		const alertCategory = wrapper.find(".category-title-container-right-flyout-panel").at(0); // alert category
+		expect(alertCategory.find(".category-title-right-flyout-panel").text()).to.equal("ALERTS (1)");
+		const alertList = alertCategory.find(".link-text-container");
+		expect(alertList).to.have.length(1);
+		const warningMsg = alertList.find(".warning");
+		expect(warningMsg.text()).to.equal("Expression cell table cannot be empty");
+
+		// click on the link should open up structure list table category
+		warningMsg.simulate("click");
+		tableCategory = wrapper.find(".panel-container-open-right-flyout-panel").at(0); // Structure list table category
+
+		// check that warning icon is shown in summary
+		tableCategory = wrapper.find(".category-title-container-right-flyout-panel").at(1); // Structure list table category
+		let summary = tableCategory.find(".control-summary.control-panel").at(0);
+		expect(summary.find(".validation-warning-message-icon-general")).to.have.length(1);
+
+		// add row back in tables
+		tableCategory.find(".control-summary-link-buttons").at(0)
+			.find(".button")
+			.simulate("click");
+		wfhtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
+		wideflyoutWrapper = new ReactWrapper(wfhtml, true);
+		wideflyoutWrapper.find("#add-fields-button").at(0)
+			.simulate("click");
+		// close fly-out
+		wideflyoutWrapper.find("#properties-apply-button").simulate("click");
+
+		// ensure warning message and alerts tab are gone
+		tableCategory = wrapper.find(".category-title-container-right-flyout-panel").at(0); // Structure list table category
+		summary = tableCategory.find(".control-summary.control-panel").at(0);
+		expect(summary.find(".validation-warning-message-icon-general")).to.have.length(0);
+	});
+
+	it("should show error icon in summary when both error and warning messages exist", () => {
+		let tableCategory = wrapper.find(".category-title-container-right-flyout-panel").at(0); // Structure list table category
+		tableCategory.find(".control-summary-link-buttons").at(0)
+			.find(".button")
+			.simulate("click");
+
+		// select first row in derive node table
+		let wfhtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
+		let wideflyoutWrapper = new ReactWrapper(wfhtml, true);
+		const tableBody = wideflyoutWrapper.find("#flexible-table-container").at(0);
+		const tableData = tableBody.find(".reactable-data");
+		const row = tableData.childAt(0);
+		row.simulate("click");
+
+		// ensure remove button is enabled and click it
+		const enabledRemoveColumnButton = wideflyoutWrapper.find("#remove-fields-button-enabled");
+		expect(enabledRemoveColumnButton).to.have.length(1);
+		expect(enabledRemoveColumnButton.prop("id")).to.equal("remove-fields-button-enabled");
+		enabledRemoveColumnButton.simulate("click");
+
+		// remove all rows from Table Input table
+		const tableInputBody = wideflyoutWrapper.find("#flexible-table-container").at(1);
+		const tableInputBodyData = tableInputBody.find(".reactable-data");
+		summarypanelParamDef.current_parameters.structurelisteditorTableInput.forEach((value) => {
+			const tableInputDataRow = tableInputBodyData.childAt(0);
+			tableInputDataRow.simulate("click");
+			const tableInputRemoveButton = wideflyoutWrapper.find("#remove-fields-button-enabled");
+			expect(tableInputRemoveButton).to.have.length(1);
+			tableInputRemoveButton.simulate("click");
+		});
+		// check that all rows were removed
+		expect(tableInputBody.find(".reactable-data").children()).to.have.length(0);
+
+		// close fly-out
+		wideflyoutWrapper.find("#properties-apply-button").simulate("click");
+
+		// check that Alerts tab is added and that is shows error message before warning message
+		let alertCategory = wrapper.find(".category-title-container-right-flyout-panel").at(0); // alert category
+		expect(alertCategory.find(".category-title-right-flyout-panel").text()).to.equal("ALERTS (2)");
+		let alertList = alertCategory.find(".link-text-container");
+		expect(alertList).to.have.length(2);
+		expect(alertList.at(0).text()).to.equal("Structure list editor table cannot be empty");
+		expect(alertList.at(0).find(".error")).to.have.length(1);
+		expect(alertList.at(1).text()).to.equal("Expression cell table cannot be empty");
+		expect(alertList.at(1).find(".warning")).to.have.length(1);
+
+		// check that summary icon is an error icon
+		tableCategory = wrapper.find(".category-title-container-right-flyout-panel").at(1); // Structure list table category
+		expect(tableCategory.find(".category-title-right-flyout-panel").text()).to.equal("STRUCTURE LIST TABLE (2)");
+		let summary = tableCategory.find(".control-summary.control-panel").at(0);
+		expect(summary.find(".validation-error-message-icon-general")).to.have.length(1);
+
+		// add row back into Table Input table
+		tableCategory.find(".control-summary-link-buttons").at(0)
+			.find(".button")
+			.simulate("click");
+		wfhtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
+		wideflyoutWrapper = new ReactWrapper(wfhtml, true);
+		wideflyoutWrapper.find("#add-fields-button").at(1)
+			.simulate("click");
+		// close fly-out
+		wideflyoutWrapper.find("#properties-apply-button").simulate("click");
+
+		// ensure only warning message is shown
+		alertCategory = wrapper.find(".category-title-container-right-flyout-panel").at(0); // alert category
+		expect(alertCategory.find(".category-title-right-flyout-panel").text()).to.equal("ALERTS (1)");
+		alertList = alertCategory.find(".link-text-container");
+		expect(alertList).to.have.length(1);
+		expect(alertList.at(0).text()).to.equal("Expression cell table cannot be empty");
+		expect(alertList.at(0).find(".warning")).to.have.length(1);
+		tableCategory = wrapper.find(".category-title-container-right-flyout-panel").at(1); // Structure list table category
+		expect(tableCategory.find(".category-title-right-flyout-panel").text()).to.equal("STRUCTURE LIST TABLE (1)");
+		summary = tableCategory.find(".control-summary.control-panel").at(0);
+		expect(summary.find(".validation-warning-message-icon-general")).to.have.length(1);
 	});
 });

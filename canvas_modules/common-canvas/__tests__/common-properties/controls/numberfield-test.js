@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -261,6 +261,84 @@ describe("condition messages renders correctly with numberfield control", () => 
 			JSON.parse(JSON.stringify(actual)))).to.be.true;
 		expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
 		expect(wrapper.find(".form__validation--error")).to.have.length(1);
+	});
+});
+
+describe("condition messages should add alerts tab", () => {
+	it("numberfield control should have error message from null input and generator should trigger validation", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldParamDef);
+		const wrapper = renderedObject.wrapper;
+
+		let integerInput = wrapper.find("input[id='editor-control-number_int']");
+		expect(integerInput).to.have.length(1);
+		integerInput.simulate("change", { target: { value: "" } });
+		wrapper.update();
+
+		const randomInput = wrapper.find("input[id='editor-control-number_random']");
+		expect(randomInput).to.have.length(1);
+		randomInput.simulate("change", { target: { value: "" } });
+		wrapper.update();
+
+		// get alerts tabs
+		let alertCategory = wrapper.find(".category-title-container-right-flyout-panel").at(0); // alert category
+		expect(alertCategory.find(".category-title-right-flyout-panel").text()).to.equal("ALERTS (2)");
+		alertCategory
+			.find(".category-title-right-flyout-panel")
+			.simulate("click");
+		wrapper.update();
+
+		// ensure that alert tab is open
+		const alertDiv = alertCategory.find(".panel-container-open-right-flyout-panel"); // ALERTS div
+		expect(alertDiv).to.have.length(1);
+		let alertList = alertDiv.find(".link-text-container");
+		expect(alertList).to.have.length(2);
+		expect(alertList.at(0).text()).to.equal("Required parameter 'Integer' has no value");
+		expect(alertList.at(1).text()).to.equal("Required parameter 'Random' has no value");
+
+		// go to VALUES tab by clicking on error message
+		alertList.at(0)
+			.find(".error")
+			.simulate("click");
+		wrapper.update();
+		let valuesCategory = wrapper.find(".category-title-container-right-flyout-panel").at(1); // VALUES category
+		expect(valuesCategory.find(".category-title-right-flyout-panel").text()).to.equal("VALUES (2)");
+
+		// regenerate random number should decrease alert list
+		let valuesDiv = valuesCategory.find(".panel-container-open-right-flyout-panel"); // VALUES div
+		expect(valuesDiv).to.have.length(1);
+		const generator = valuesDiv.find(".number-generator");
+		expect(generator).to.have.length(1);
+		generator.simulate("click");
+		wrapper.update();
+
+		alertCategory = wrapper.find(".category-title-container-right-flyout-panel").at(0); // alert category
+		expect(alertCategory.find(".category-title-right-flyout-panel").text()).to.equal("ALERTS (1)");
+		alertCategory
+			.find(".category-title-right-flyout-panel")
+			.simulate("click");
+		wrapper.update();
+
+		alertList = alertCategory.find(".link-text-container");
+		expect(alertList).to.have.length(1);
+		expect(alertList.at(0).text()).to.equal("Required parameter 'Integer' has no value");
+		alertList.at(0)
+			.find(".error")
+			.simulate("click");
+		wrapper.update();
+
+		// enter new integer value to remove all Alerts
+		valuesCategory = wrapper.find(".category-title-container-right-flyout-panel").at(1); // VALUES category
+		expect(valuesCategory.find(".category-title-right-flyout-panel").text()).to.equal("VALUES (1)");
+
+		valuesDiv = valuesCategory.find(".panel-container-open-right-flyout-panel").at(0); // VALUES category
+		expect(valuesDiv).to.have.length(1);
+		integerInput = valuesDiv.find("input[id='editor-control-number_int']");
+		expect(integerInput).to.have.length(1);
+		integerInput.simulate("change", { target: { value: "1" } });
+		wrapper.update();
+
+		valuesCategory = wrapper.find(".category-title-container-right-flyout-panel").at(0); // VALUES category
+		expect(valuesCategory.find(".category-title-right-flyout-panel").text()).to.equal("VALUES");
 	});
 });
 

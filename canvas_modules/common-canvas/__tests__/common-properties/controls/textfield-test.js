@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -151,7 +151,7 @@ describe("condition messages renders correctly with textfields control", () => {
 	it("test passwordfield isNotEmpty", () => {
 		const wrapper = propertyUtils.createEditorForm("mount", CONDITIONS_TEST_FORM_DATA, controller);
 
-		const passwordInput = wrapper.find("input[id='editor-control-passwordField']");
+		let passwordInput = wrapper.find("input[id='editor-control-passwordField']");
 		expect(passwordInput).to.have.length(1);
 		passwordInput.simulate("change", { target: { value: "" } });
 		wrapper.update();
@@ -168,6 +168,7 @@ describe("condition messages renders correctly with textfields control", () => {
 		expect(isEqual(JSON.parse(JSON.stringify(textfieldNameErrorMessages)),
 			JSON.parse(JSON.stringify(actual)))).to.be.true;
 
+		passwordInput = wrapper.find("input[id='editor-control-passwordField']");
 		passwordInput.simulate("change", { target: { value: "password" } });
 		wrapper.update();
 		textfieldNameErrorMessages = {

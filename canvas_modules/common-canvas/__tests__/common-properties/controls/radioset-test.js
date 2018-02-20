@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -40,7 +40,7 @@ describe("condition messages renders correctly with radioSet control", () => {
 		const propertyId = { name: "radiosetColor" };
 		const input = wrapper.find("#editor-control-radiosetColor");
 		expect(input).to.have.length(1);
-		const radios = input.find("input[type='radio']");
+		let radios = input.find("input[type='radio']");
 		expect(radios).to.have.length(3);
 		radios.forEach((radio) => {
 			// console.log("radio propsss " + JSON.stringify(radio.props()));
@@ -48,7 +48,7 @@ describe("condition messages renders correctly with radioSet control", () => {
 		});
 		expect(controller.getControlState(propertyId)).to.equal(defaultControlStates.radiosetColor);
 
-		const checkbox = wrapper.find("#editor-control-checkboxEnable");
+		let checkbox = wrapper.find("#editor-control-checkboxEnable");
 		expect(checkbox).to.have.length(1);
 		checkbox.simulate("change", { target: { checked: true, id: "Enable" } });
 		wrapper.update();
@@ -75,11 +75,13 @@ describe("condition messages renders correctly with radioSet control", () => {
 		expect(wrapper.find(".validation-warning-message-icon-checkbox")).to.have.length(1);
 		expect(wrapper.find(".validation-error-message-color-warning")).to.have.length(1);
 
+		checkbox = wrapper.find("#editor-control-checkboxEnable");
 		expect(checkbox).to.have.length(1);
 		checkbox.simulate("change", { target: { checked: false, id: "Enable" } });
 		wrapper.update();
 		expect(controller.getControlState(propertyId)).to.equal(defaultControlStates.radiosetColor);
 
+		radios = wrapper.find("#editor-control-radiosetColor").find("input[type='radio']");
 		radios.forEach((radio) => {
 			expect(radio.is("[disabled]")).to.equal(true);
 		});
@@ -163,12 +165,13 @@ describe("radio renders and works correctly with different enum types", () => {
 	it("radioset control with error", () => {
 		expect(labels.at(6).text()).to.equal("Radio Error");
 		expect(renderedController.getPropertyValue({ name: "radioError" })).to.equal("gini");
-		const radioError = wrapper.find("input[value='entropy'][name='radioError']");
+		let radioError = wrapper.find("input[value='entropy'][name='radioError']");
 		radioError.simulate("change", { target: { checked: true, value: "entropy" } });
 		expect(renderedController.getPropertyValue({ name: "radioError" })).to.equal("entropy");
 		let error = wrapper.find(".form__validation--error");
 		expect(error).to.have.length(1);
 		expect(error.at(0).text()).to.equal("Needs to be gini");
+		radioError = wrapper.find("input[value='entropy'][name='radioError']");
 		radioError.simulate("change", { target: { checked: true, value: "gini" } });
 		expect(renderedController.getPropertyValue({ name: "radioError" })).to.equal("gini");
 		wrapper.update();
@@ -179,12 +182,13 @@ describe("radio renders and works correctly with different enum types", () => {
 	it("radioset control with warning enum", () => {
 		expect(labels.at(7).text()).to.equal("Radio Warning");
 		expect(renderedController.getPropertyValue({ name: "radioWarning" })).to.equal("gini");
-		const radioWarning = wrapper.find("input[value='gini'][name='radioWarning']");
+		let radioWarning = wrapper.find("input[value='gini'][name='radioWarning']");
 		radioWarning.simulate("change", { target: { checked: true, value: "entropy" } });
 		expect(renderedController.getPropertyValue({ name: "radioWarning" })).to.equal("entropy");
 		let warning = wrapper.find(".form__validation--warning");
 		expect(warning).to.have.length(1);
 		expect(warning.at(0).text()).to.equal("Needs to be gini");
+		radioWarning = wrapper.find("input[value='gini'][name='radioWarning']");
 		radioWarning.simulate("change", { target: { checked: true, value: "gini" } });
 		expect(renderedController.getPropertyValue({ name: "radioWarning" })).to.equal("gini");
 		wrapper.update();

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2016. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2016, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -59,6 +59,7 @@ class SubPanelCell extends React.Component {
 				rightFlyout={this.props.rightFlyout}
 				applyLabel={applyLabel}
 				rejectLabel={rejectLabel}
+				controller={this.props.controller}
 			>
 				<div>
 					<div className="properties-tooltips-container" data-tip={subPanelToolTip} data-for="tooltip-subpanel-cell">

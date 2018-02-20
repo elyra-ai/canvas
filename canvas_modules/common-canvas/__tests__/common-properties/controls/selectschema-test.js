@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -111,16 +111,20 @@ describe("oneofselect works correctly in common-properties", () => {
 		expect(options).to.eql(phOptions);
 	});
 	it("Validate oneofselect_error should have warning message when set to Drugs_0", () => {
-		const category = wrapper.find(".category-title-container-right-flyout-panel").at(1); // get the CONDITIONS category
+		let category = wrapper.find(".category-title-container-right-flyout-panel").at(1); // get the CONDITIONS category
 		const newValue = { label: "Drugs_0", value: "Drugs_0" };
 		propertyUtils.dropDown(category, 0, newValue, expectedOptions);
+		// CONDITIONS category has index 2 now because alerts tab was added
+		category = wrapper.find(".category-title-container-right-flyout-panel").at(2);
 		expect(category.find(".validation-error-message-icon-dropdown")).to.have.length(1);
 		expect(category.find(".validation-error-message-color-error")).to.have.length(1);
 	});
 	it("Validate oneofselect_warning should have warning message when set to 1", () => {
-		const category = wrapper.find(".category-title-container-right-flyout-panel").at(1); // get the CONDITIONS category
+		let category = wrapper.find(".category-title-container-right-flyout-panel").at(1); // get the CONDITIONS category
 		const newValue = { label: "1", value: "1" };
 		propertyUtils.dropDown(category, 1, newValue, expectedOptions);
+		// CONDITIONS category has index 2 now because alerts tab was added
+		category = wrapper.find(".category-title-container-right-flyout-panel").at(2);
 		expect(category.find(".validation-warning-message-icon-dropdown")).to.have.length(1);
 		expect(category.find(".validation-error-message-color-warning")).to.have.length(1);
 	});

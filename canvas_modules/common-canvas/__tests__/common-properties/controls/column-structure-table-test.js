@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -1023,7 +1023,7 @@ describe("condition messages renders correctly with structure table control", ()
 	it("structuretableSortOrder control should have error message from no selection", () => {
 		// a note about this test.  structuretableSortOrder has the required = true attribute and
 		// a isNotEmpty condition.  The isNotEmpty condition error message should take precendence.
-		const wrapper = propertyUtils.createEditorForm("mount", CONDITIONS_TEST_FORM_DATA, controller);
+		const wrapper = propertyUtils.createEditorForm("mount", JSON.parse(JSON.stringify(CONDITIONS_TEST_FORM_DATA)), controller);
 		const conditionsPropertyId = { name: "structuretableSortOrder" };
 		const input = wrapper.find("#flexible-table-structuretableSortOrder").at(0);
 		expect(input).to.have.length(1);
@@ -1059,7 +1059,7 @@ describe("condition messages renders correctly with structure table control", ()
 	});
 
 	it("structuretableRenameFields control should have error message from containing 'pw'", () => {
-		const wrapper = propertyUtils.createEditorForm("mount", CONDITIONS_TEST_FORM_DATA, controller);
+		const wrapper = propertyUtils.createEditorForm("mount", JSON.parse(JSON.stringify(CONDITIONS_TEST_FORM_DATA)), controller);
 		const conditionsPropertyId = { name: "structuretableRenameFields" };
 		const input = wrapper.find("#flexible-table-structuretableRenameFields");
 		expect(input).to.have.length(1);
@@ -1087,7 +1087,7 @@ describe("condition messages renders correctly with structure table control", ()
 	});
 
 	it("required structuretableRenameTable control should have error message from no selection", () => {
-		const wrapper = propertyUtils.createEditorForm("mount", CONDITIONS_TEST_FORM_DATA, controller);
+		const wrapper = propertyUtils.createEditorForm("mount", JSON.parse(JSON.stringify(CONDITIONS_TEST_FORM_DATA)), controller);
 		const conditionsPropertyId = { name: "structuretableRenameFields" };
 
 		const input = wrapper.find("#flexible-table-structuretableRenameFields");
@@ -1105,21 +1105,26 @@ describe("condition messages renders correctly with structure table control", ()
 
 		enabledRemoveColumnButton.simulate("click");
 		wrapper.update();
-		dataRows = input.find(".reactable-data").find("tr");
+		dataRows = wrapper
+			.find("#flexible-table-structuretableRenameFields")
+			.find(".reactable-data")
+			.find("tr");
 
 		expect(dataRows).to.have.length(1);
 		expect(controller.getPropertyValue(conditionsPropertyId)).to.have.length(1);
 
 		dataRows.first().simulate("click");
 		wrapper.update();
-		enabledRemoveColumnButton.simulate("click");
+
+		wrapper.find("#remove-fields-button-enabled").simulate("click");
 		wrapper.update();
-		dataRows = input.find(".reactable-data").find("tr");
+		dataRows = wrapper
+			.find("#flexible-table-structuretableRenameFields")
+			.find(".reactable-data")
+			.find("tr");
 
 		expect(dataRows).to.have.length(0);
 		expect(controller.getPropertyValue(conditionsPropertyId)).to.have.length(0);
-
-		enabledRemoveColumnButton.simulate("blur");
 
 		const structuretableRenameFieldsErrorMessages = {
 			"type": "error",
@@ -1136,7 +1141,7 @@ describe("condition messages renders correctly with structure table control", ()
 
 describe("condition messages renders correctly with structure table cells", () => {
 	it("structuretableRenameFields control should have error message with empty renamed field", () => {
-		const wrapper = propertyUtils.createEditorForm("mount", CONDITIONS_TEST_FORM_DATA, controller);
+		const wrapper = propertyUtils.createEditorForm("mount", JSON.parse(JSON.stringify(CONDITIONS_TEST_FORM_DATA)), controller);
 		const conditionsPropertyId = { name: "structuretableRenameFields" };
 		const input = wrapper.find("#flexible-table-structuretableRenameFields");
 		expect(input).to.have.length(1);
@@ -1158,7 +1163,7 @@ describe("condition messages renders correctly with structure table cells", () =
 	});
 
 	it("structuretableRenameFields control should have disabled dropdown control", () => {
-		const wrapper = propertyUtils.createEditorForm("mount", CONDITIONS_TEST_FORM_DATA, controller);
+		const wrapper = propertyUtils.createEditorForm("mount", JSON.parse(JSON.stringify(CONDITIONS_TEST_FORM_DATA)), controller);
 		const tabs = wrapper.find(".tabs__tabpanel");
 		expect(tabs).to.have.length(6);
 		const tab = tabs.at(5);
@@ -1177,7 +1182,7 @@ describe("condition messages renders correctly with structure table cells", () =
 
 describe("Cells disable and hide correctly with structure table control", () => {
 	it("structuretable should disable cells", () => {
-		const wrapper = propertyUtils.createEditorForm("mount", CONDITIONS_TEST_FORM_DATA, controller);
+		const wrapper = propertyUtils.createEditorForm("mount", JSON.parse(JSON.stringify(CONDITIONS_TEST_FORM_DATA)), controller);
 		const storageTable = wrapper.find("#flexible-table-field_types");
 		let disabledDropdowns = storageTable.find(".Dropdown-disabled");
 		expect(disabledDropdowns).to.have.length(4);
@@ -1190,7 +1195,7 @@ describe("Cells disable and hide correctly with structure table control", () => 
 	});
 
 	it("structuretable should hide cells", () => {
-		const wrapper = propertyUtils.createEditorForm("mount", CONDITIONS_TEST_FORM_DATA, controller);
+		const wrapper = propertyUtils.createEditorForm("mount", JSON.parse(JSON.stringify(CONDITIONS_TEST_FORM_DATA)), controller);
 		const tabs = wrapper.find(".tabs__tabpanel");
 		expect(tabs).to.have.length(6);
 		const tab = tabs.at(5);

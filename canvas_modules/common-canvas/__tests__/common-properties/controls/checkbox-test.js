@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -24,7 +24,7 @@ describe("condition messages renders correctly with checkbox control", () => {
 		const input = wrapper.find("#editor-control-checkboxTypes");
 		expect(input).to.have.length(1);
 		expect(input.find("input[type='checkbox']")).to.have.length(3);
-		const checkbox = wrapper.find("input[type='checkbox']").at(1);
+		let checkbox = wrapper.find("input[type='checkbox']").at(1);
 		checkbox.simulate("change", { target: { checked: true, id: "string" } });
 		wrapper.update();
 
@@ -47,6 +47,7 @@ describe("condition messages renders correctly with checkbox control", () => {
 		expect(wrapper.find(".validation-error-message-icon-checkbox")).to.have.length(2);
 		expect(wrapper.find(".validation-error-message-color-error")).to.have.length(2);
 
+		checkbox = wrapper.find("input[type='checkbox']").at(1);
 		checkbox.simulate("change", { target: { checked: false, id: "string" } });
 		wrapper.update();
 

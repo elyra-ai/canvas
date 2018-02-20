@@ -95,14 +95,14 @@ describe("someofselect works correctly in common-properties", () => {
 		expect(options.at(3).props()).to.eql(expectedOption);
 	});
 	it("Validate someofselect_error should have warning message when set to red", () => {
-		const category = wrapper.find(".category-title-container-right-flyout-panel").at(1); // get the CONDITIONS category
 		controller1.updatePropertyValue({ name: "someofselect_error" }, ["red"]);
+		const category = wrapper.find(".category-title-container-right-flyout-panel").at(2); // get the CONDITIONS category
 		expect(category.find(".validation-error-message-icon-selection")).to.have.length(1);
 		expect(category.find(".validation-error-message-color-error")).to.have.length(1);
 	});
 	it("Validate someofselect_warning should have warning message when set to yellow", () => {
-		const category = wrapper.find(".category-title-container-right-flyout-panel").at(1); // get the CONDITIONS category
 		controller1.updatePropertyValue({ name: "someofselect_warning" }, ["yellow", "green"]);
+		const category = wrapper.find(".category-title-container-right-flyout-panel").at(2); // get the CONDITIONS category
 		expect(category.find(".validation-warning-message-icon-selection")).to.have.length(1);
 		expect(category.find(".validation-error-message-color-warning")).to.have.length(1);
 	});

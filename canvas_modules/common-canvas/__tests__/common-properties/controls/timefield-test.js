@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017 ,2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -143,7 +143,7 @@ describe("error messages renders correctly for timefield controls", () => {
 		const wrapper = renderedObject.wrapper;
 
 		// Simulate entering an invalid date information
-		const input = wrapper.find("#editor-control-time_hms");
+		let input = wrapper.find("#editor-control-time_hms");
 		input.simulate("change", { target: { value: "qqqqq" } });
 		wrapper.update();
 
@@ -160,6 +160,7 @@ describe("error messages renders correctly for timefield controls", () => {
 		expect(wrapper.find(".form__validation--error")).to.have.length(1);
 
 		// // Now simulate entering a valid time with the correct format.
+		input = wrapper.find("#editor-control-time_hms");
 		input.simulate("change", { target: { value: "10:45:9" } });
 		wrapper.update();
 
@@ -173,7 +174,7 @@ describe("error messages renders correctly for timefield controls", () => {
 		const wrapper = renderedObject.wrapper;
 
 		// Simulate entering an empty string in a required field
-		const input = wrapper.find("#editor-control-time_hms");
+		let input = wrapper.find("#editor-control-time_hms");
 		input.simulate("change", { target: { value: "" } });
 		wrapper.update();
 
@@ -192,6 +193,7 @@ describe("error messages renders correctly for timefield controls", () => {
 		expect(wrapper.find(".form__validation--error")).to.have.length(1);
 
 		// Now simulate entering a valid time with the correct format.
+		input = wrapper.find("#editor-control-time_hms");
 		input.simulate("change", { target: { value: "10:45:9" } });
 		wrapper.update();
 

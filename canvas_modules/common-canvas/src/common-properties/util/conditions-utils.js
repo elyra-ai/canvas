@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -13,6 +13,7 @@ import logger from "../../../utils/logger";
 import UiConditions from "../ui-conditions/ui-conditions.js";
 import { DEFAULT_VALIDATION_MESSAGE, STATES, DEFAULT_DATE_FORMAT, DEFAULT_TIME_FORMAT } from "../constants/constants.js";
 import moment from "moment";
+import isEmpty from "lodash/isEmpty";
 
 function validateConditions(controller, definitions, dataModel) {
 	_validateVisible(controller, definitions.visibleDefinition, dataModel);
@@ -293,7 +294,6 @@ function validateInput(propertyId, controller, validationDefinitions, datasetMet
 		try {
 			let output = false;
 			let errorMessage = DEFAULT_VALIDATION_MESSAGE;
-			let validationSet = false;
 
 			for (const validation of validations) {
 				output = UiConditions.evaluateInput(validation.definition, userInput, control, datasetMetadata, controller.getRequiredParameters(),
@@ -307,9 +307,8 @@ function validateInput(propertyId, controller, validationDefinitions, datasetMet
 						text: output.text
 					};
 				}
-				if (!validationSet || (typeof output === "object" && output.isActiveCell) || (isError && !errorSet)) {
+				if ((typeof output === "object" && output.isActiveCell) || (isError && !errorSet)) {
 					controller.updateErrorMessage(propertyId, errorMessage);
-					validationSet = true;
 					if (isError) {
 						errorSet = true;
 					}
@@ -319,6 +318,11 @@ function validateInput(propertyId, controller, validationDefinitions, datasetMet
 		} catch (error) {
 			logger.warn("Error thrown in validation: " + error);
 		}
+	}
+
+	if (!isEmpty(validations) && !errorSet && !isEmpty(controller.getErrorMessage(propertyId))) {
+		// if validations exist and if all resolve w/o error, clear out error message
+		controller.updateErrorMessage(propertyId, DEFAULT_VALIDATION_MESSAGE);
 	}
 
 	if (!errorSet && controller.isRequired(propertyId)) {

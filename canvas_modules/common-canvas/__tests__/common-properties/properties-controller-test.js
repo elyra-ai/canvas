@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -455,6 +455,10 @@ describe("Properties Controller controls", () => {
 			"separateLabel": true,
 			"required": true,
 			"summaryPanelId": "summary-panel",
+			"parentCategoryId": {
+				"group": "Numberfield",
+				"text": "Numbers"
+			},
 			"summaryLabel": "Maximum number of bins"
 		};
 		expect(isEqual(expectedValue, actualValue)).to.be.true;
@@ -480,7 +484,11 @@ describe("Properties Controller controls", () => {
 			"visible": true,
 			"width": 28,
 			"parameterName": "structuretableSortOrder",
-			"columnIndex": 0
+			"columnIndex": 0,
+			"parentCategoryId": {
+				"group": "Tables",
+				"text": "Tables"
+			}
 		};
 		expect(isEqual(expectedValue, actualValue)).to.be.true;
 	});

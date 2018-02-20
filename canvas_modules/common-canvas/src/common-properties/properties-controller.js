@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -39,7 +39,8 @@ export default class PropertiesController {
 		this.custPropSumPanelValues = {};
 		this.controlFactory = new ControlFactory(this);
 		this.sharedCtrlInfo = [];
-
+		this.isSummaryPanel = false;
+		this.visibleSubPanelCounter = 0;
 	}
 	subscribe(callback) {
 		this.propertiesStore.subscribe(callback);
@@ -70,6 +71,9 @@ export default class PropertiesController {
 		if (this.form) {
 			this.setControls({});
 			this.setControlStates({}); // clear state
+			this.setErrorMessages({}); // clear messages
+			this.isSummaryPanel = false; // when new form is set, summary panel is gone
+			this.visibleSubPanelCounter = 0;
 			this._parseUiConditions();
 			// should be done before running any validations
 			const controls = UiConditionsParser.parseControls([], this.form);
@@ -262,6 +266,26 @@ export default class PropertiesController {
 
 	getSharedCtrlInfo() {
 		return this.sharedCtrlInfo;
+	}
+
+	isSummaryPanelShowing() {
+		return this.isSummaryPanel;
+	}
+
+	setIsSummaryPanelShowing(isSummaryPanelShowing) {
+		this.isSummaryPanel = isSummaryPanelShowing;
+	}
+
+	increaseVisibleSubPanelCounter() {
+		this.visibleSubPanelCounter++;
+	}
+
+	decreaseVisibleSubPanelCounter() {
+		this.visibleSubPanelCounter--;
+	}
+
+	isSubPanelsShowing() {
+		return this.visibleSubPanelCounter > 0;
 	}
 
 	/*
@@ -676,7 +700,9 @@ export default class PropertiesController {
 	createControl(propertyId, paramDef, parameter) {
 		const control = this.controlFactory.createFormControl(paramDef, parameter);
 		const controls = [];
-		UiConditionsParser.parseControl(controls, control);
+		// need to preserve parentCategoryId which is set during initial parsing of all controls
+		const parentCategoryId = this.getControl(propertyId).parentCategoryId;
+		UiConditionsParser.parseControl(controls, control, parentCategoryId);
 		this._saveControls(controls);
 		return this.controlFactory.createControlItem(control, propertyId);
 	}

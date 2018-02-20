@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -14,7 +14,9 @@ import PropTypes from "prop-types";
 import Button from "ap-components-react/dist/components/Button";
 import WideFlyout from "../components/wide-flyout.jsx";
 import EditorControl from "../editor-controls/editor-control.jsx";
+import ValidationIcon from "../editor-controls/validation-icon.jsx";
 import { injectIntl, intlShape } from "react-intl";
+import isEmpty from "lodash/isEmpty";
 import PropertyUtils from "../util/property-utils";
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "../constants/constants";
 
@@ -32,6 +34,7 @@ class SummaryPanel extends EditorControl {
 	}
 
 	hideWideFlyout() {
+		this.props.controller.setIsSummaryPanelShowing(false);
 		this.setState({ showWideFlyout: false });
 		// on close clear *all* selected rows
 		this.props.controller.clearSelectedRows();
@@ -46,6 +49,7 @@ class SummaryPanel extends EditorControl {
 
 	handleLinkClicked() {
 		if (this.props.children) {
+			this.props.controller.setIsSummaryPanelShowing(true);
 			this.setState({ showWideFlyout: true });
 		}
 		// sets the current value for parameter.  Used on cancel
@@ -153,6 +157,23 @@ class SummaryPanel extends EditorControl {
 		return summaryTables;
 	}
 
+	_getSummaryIconState() {
+		const controls = this.props.controller.getSummaryPanelControls(this.props.panelId);
+		let msg = {};
+		controls.forEach((controlId) => {
+			const controlMsg = this.props.controller.getErrorMessage({ name: controlId });
+			if (!isEmpty(controlMsg) && (!isEmpty(msg) || msg.type !== "error")) {
+				msg = controlMsg;
+			}
+		});
+		if (!isEmpty(msg)) {
+			return (<ValidationIcon
+				validateErrorMessage={msg}
+			/>);
+		}
+		return null;
+	}
+
 	render() {
 		const propertyId = { name: this.props.panelId };
 		const conditionProps = {
@@ -162,9 +183,9 @@ class SummaryPanel extends EditorControl {
 		const conditionState = this.getConditionMsgState(conditionProps);
 		const errorMessage = conditionState.message;
 		// const messageType = conditionState.messageType;
-		const icon = conditionState.icon;
 		const stateDisabled = conditionState.disabled;
 		const stateStyle = conditionState.style;
+		const icon = this._getSummaryIconState();
 		const link = (<div className={"control-summary-link-buttons"}>
 			<Button
 				{...stateDisabled}
@@ -173,8 +194,7 @@ class SummaryPanel extends EditorControl {
 				onClick={this.handleLinkClicked}
 			>
 				{this.props.label}
-			</Button>
-			{icon}
+			</Button> {icon}
 		</div>);
 
 		const applyLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.APPLYBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.APPLYBUTTON_LABEL);

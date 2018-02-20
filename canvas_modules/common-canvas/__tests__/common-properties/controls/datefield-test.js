@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -144,7 +144,7 @@ describe("error messages renders correctly for datefield controls", () => {
 		const wrapper = renderedObject.wrapper;
 
 		// Simulate entering an invalid date information
-		const input = wrapper.find("#editor-control-date_ymd");
+		let input = wrapper.find("#editor-control-date_ymd");
 		input.simulate("change", { target: { value: "qqqqq" } });
 		wrapper.update();
 
@@ -160,8 +160,8 @@ describe("error messages renders correctly for datefield controls", () => {
 		expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
 		expect(wrapper.find(".form__validation--error")).to.have.length(1);
 
-
 		// Now simulate entering a valid date with the correct format.
+		input = wrapper.find("#editor-control-date_ymd");
 		input.simulate("change", { target: { value: "2012-2-25" } });
 		wrapper.update();
 
@@ -178,7 +178,7 @@ describe("error messages renders correctly for datefield controls", () => {
 		const wrapper = renderedObject.wrapper;
 
 		// Simulate entering an invalid date information
-		const input = wrapper.find("#editor-control-date_ymd");
+		let input = wrapper.find("#editor-control-date_ymd");
 		input.simulate("change", { target: { value: "10000-1-1" } });
 		wrapper.update();
 
@@ -196,6 +196,7 @@ describe("error messages renders correctly for datefield controls", () => {
 
 
 		// Now simulate entering a valid date with the correct format.
+		input = wrapper.find("#editor-control-date_ymd");
 		input.simulate("change", { target: { value: "9999-2-25" } });
 		wrapper.update();
 
@@ -209,7 +210,7 @@ describe("error messages renders correctly for datefield controls", () => {
 		const wrapper = renderedObject.wrapper;
 
 		// Simulate entering an empty string in a required field
-		const input = wrapper.find("#editor-control-date_mdy");
+		let input = wrapper.find("#editor-control-date_mdy");
 		input.simulate("change", { target: { value: "" } });
 		wrapper.update();
 
@@ -228,6 +229,7 @@ describe("error messages renders correctly for datefield controls", () => {
 		expect(wrapper.find(".form__validation--error")).to.have.length(1);
 
 		// Now simulate entering a valid date with the correct format.
+		input = wrapper.find("#editor-control-date_mdy");
 		input.simulate("change", { target: { value: "2-25-1958" } });
 		wrapper.update();
 

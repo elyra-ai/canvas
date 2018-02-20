@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -82,6 +82,19 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		if (this.props.control.subControls) {
 			const updatedControlValues = this.setReadOnlyColumnValue(this.getCurrentControlValue());
 			this.props.controller.updatePropertyValue(this.props.propertyId, updatedControlValues);
+			// run validation for each cell
+			const controlValues = this.getCurrentControlValue();
+			for (let rowIndex = 0; rowIndex < controlValues.length; rowIndex++) {
+				for (let colIndex = 0; colIndex < this.props.control.subControls.length; colIndex++) {
+					this.props.controller.validateInput(
+						{
+							name: this.props.control.name,
+							row: rowIndex,
+							col: colIndex
+						}
+					);
+				}
+			}
 		}
 	}
 

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2016. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2016, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -15,6 +15,8 @@ import PropTypes from "prop-types";
 import Tabs from "ap-components-react/dist/components/Tabs";
 import PropertyUtil from "../util/property-utils.js";
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "../constants/constants";
+import isEmpty from "lodash/isEmpty";
+import sortBy from "lodash/sortBy";
 import logger from "../../../utils/logger";
 
 import SelectorPanel from "./../editor-panels/selector-panel.jsx";
@@ -34,6 +36,10 @@ import { injectIntl, intlShape } from "react-intl";
 import DownIcon from "../../../assets/images/down_caret.svg";
 import UpIcon from "../../../assets/images/up_caret.svg";
 import InfoIcon from "../../../assets/images/info.svg";
+import WarningIcon from "../../../assets/images/warning.svg";
+import ErrorIcon from "../../../assets/images/error.svg";
+
+const ALERT_TAB_GROUP = "alertMsgs";
 
 class EditorForm extends React.Component {
 
@@ -57,15 +63,71 @@ class EditorForm extends React.Component {
 		this.generateSharedControlNames = this.generateSharedControlNames.bind(this);
 
 		this._showCategoryPanel = this._showCategoryPanel.bind(this);
+		this._handleMessageClick = this._handleMessageClick.bind(this);
+
+		this.stateIconList = {
+			"info": InfoIcon,
+			"warning": WarningIcon,
+			"error": ErrorIcon
+		};
+
+		this.messages = [];
 
 		// initialize ControlFactory with correct values
 		this.ControlFactory = props.controller.getControlFactory();
 		this.ControlFactory.setFunctions(this.openFieldPicker, this.genUIItem);
 		this.ControlFactory.setRightFlyout(props.rightFlyout);
+
+		// set initial tab to first tab in case of modal dialog, and in case of fly-out to
+		// first tab only if there is only one tab (otherwise all will be collapsed)
+		const tabs = props.controller.getUiItems()[0].tabs;
+		if (!this.props.rightFlyout || (this.props.rightFlyout && tabs.length === 1)) {
+			this.state.activeTabId = this._getTabId(tabs[0]);
+		}
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		if (!this.props.controller.isSummaryPanelShowing() && !this.props.controller.isSubPanelsShowing()) {
+			// only update list of error messages when no summary panel or sub-panel is shown,
+			// otherwise changes in the summary/sub panel might trigger a re-render and the
+			// summary/sub panel to disappear because the alerts tab is added/removed
+			this.messages = this._getGroupedMessages();
+		}
+		return true;
 	}
 
 	getControl(propertyName) {
 		return this.refs[propertyName];
+	}
+
+	_getMessageCountForCategory(tab) {
+		if (tab.group === ALERT_TAB_GROUP) {
+			return " (" + this.messages.length + ")";
+		}
+		let result = 0;
+		this.messages.forEach((msg) => {
+			const ctrl = this.props.controller.getControl({ "name": msg.id_ref });
+			if (ctrl && ctrl.parentCategoryId && ctrl.parentCategoryId.text === tab.text) {
+				result++;
+			}
+		});
+		return result > 0 ? " (" + result + ")" : null;
+	}
+
+	_getGroupedMessages() {
+		// returns messages grouped by type, first errors, then warnings
+		const messages = this.props.controller.getErrorMessages(true);
+		if (!isEmpty(messages)) {
+			return sortBy(messages, ["type"]);
+		}
+		return [];
+	}
+
+	_getTabId(tab) {
+		if (this.props.rightFlyout) {
+			return tab.text;
+		}
+		return "primary-tab." + tab.group;
 	}
 
 	_showCategoryPanel(panelid, categories) {
@@ -76,18 +138,23 @@ class EditorForm extends React.Component {
 		this.setState({ activeTabId: activeTab });
 	}
 
+	_handleMessageClick(controlId, ev) {
+		const control = this.props.controller.getControl(controlId);
+		if (this.props.rightFlyout) {
+			this._showCategoryPanel(this._getTabId(control.parentCategoryId));
+		} else {
+			this.setState({ activeTabId: this._getTabId(control.parentCategoryId) });
+		}
+	}
+
 	genPrimaryTabs(key, tabs, propertyId, indexof) {
 		const tabContent = [];
-		let initialTab = "";
 		for (var i = 0; i < tabs.length; i++) {
 			const tab = tabs[i];
 			const panelItems = this.genUIItem(i, tab.content, propertyId, indexof);
 			let additionalComponent = null;
 			if (this.props.additionalComponents) {
 				additionalComponent = this.props.additionalComponents[tab.group];
-			}
-			if (i === 0) {
-				initialTab = "primary-tab." + tab.group;
 			}
 
 			if (this.props.rightFlyout) {
@@ -111,7 +178,7 @@ class EditorForm extends React.Component {
 							id={"category-title-" + i + "-right-flyout-panel"}
 							className="category-title-right-flyout-panel"
 						>
-							{tab.text.toUpperCase()}
+							{tab.text.toUpperCase()}{this._getMessageCountForCategory(tab)}
 							<img className="category-icon-right-flyout-panel" src={panelArrow}	/>
 						</a>
 						{panelItemsContainer}
@@ -121,7 +188,7 @@ class EditorForm extends React.Component {
 			} else {
 				tabContent.push(
 					<Tabs.Panel
-						id={"primary-tab." + tab.group}
+						id={this._getTabId(tab)}
 						key={i}
 						title={tab.text}
 					>
@@ -146,9 +213,6 @@ class EditorForm extends React.Component {
 				defaultActiveKey={0}
 				animation={false}
 				isTabActive={function active(id) {
-					if (that.state.activeTabId === "" || that.state.activeTabId === null) {
-						return id === initialTab;
-					}
 					return id === that.state.activeTabId;
 				}}
 				onTabClickHandler={(e, id) => this.setState({ activeTabId: id })}
@@ -270,6 +334,18 @@ class EditorForm extends React.Component {
 			}
 			const text = <div className={textClass}>{PropertyUtil.evaluateText(uiItem.text, this.props.controller)}</div>;
 			return <div key={"static-text." + key} className="static-text-container">{icon}{text}</div>;
+		} else if (uiItem.itemType === "linkText") {
+			let textClass = "link-text";
+			let icon = <div />;
+			if (uiItem.textType === "warning" || uiItem.textType === "error") {
+				icon = <img className="link-text-icon" src={this.stateIconList[uiItem.textType]} />;
+				textClass = "link-text " + uiItem.textType;
+			}
+			const text = (
+				<div className={textClass} onClick={this._handleMessageClick.bind(this, uiItem.controlId)}>
+					{PropertyUtil.evaluateText(uiItem.text, this.props.controller)}
+				</div>);
+			return <div key={"link-text." + key} className="link-text-container">{icon}{text}</div>;
 		} else if (uiItem.itemType === "hSeparator") {
 			return <hr key={"h-separator." + key} className="h-separator" />;
 		} else if (uiItem.itemType === "panel") {
@@ -464,9 +540,42 @@ class EditorForm extends React.Component {
 		</div>);
 	}
 
+	genAlertsTab(messages) {
+		const msgUIItems = messages.map((msg) => (
+			{
+				"itemType": "linkText",
+				"text": msg.text,
+				"textType": msg.type,
+				"controlId": { "name": msg.id_ref }
+			}));
+
+		return {
+			"text": PropertyUtil.formatMessage(
+				this.props.intl,
+				MESSAGE_KEYS.ALERTS_TAB_TITLE,
+				MESSAGE_KEYS_DEFAULTS.ALERTS_TAB_TITLE),
+			"group": ALERT_TAB_GROUP,
+			"content":
+				{ "itemType": "panel",
+					"panel": {
+						"id": "alerts-panel",
+						"panelType": "general",
+						"uiItems": msgUIItems
+					}
+				}
+		};
+	}
+
 	render() {
-		var content = this.genUIContent(this.props.controller.getUiItems());
-		var wideFly = <div />;
+		let uiItems = this.props.controller.getUiItems();
+		if (!isEmpty(this.messages) && uiItems[0].itemType === "primaryTabs") {
+			// create a new copy for uiItems object so that alerts are not added multiple times
+			uiItems = JSON.parse(JSON.stringify(this.props.controller.getUiItems()));
+			uiItems[0].tabs.unshift(this.genAlertsTab(this.messages)); // add alerts tab to the beginning of the tabs array
+		}
+
+		let content = this.genUIContent(uiItems);
+		let wideFly = <div />;
 
 		const form = this.props.controller.getForm();
 		const title = PropertyUtil.formatMessage(this.props.intl,
