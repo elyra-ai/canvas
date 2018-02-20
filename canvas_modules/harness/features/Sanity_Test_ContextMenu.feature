@@ -28,11 +28,11 @@ Feature: Sanity_Test_ContextMenuPosition
 
 		# Test the context menu is pushed to the left when user clicks near right side of the page
 		Then I right click the canvas background at 1300, 400 to display the context menu
-		Then I verify the context menu is at 1140, 347
+		Then I verify the context menu is at 1140, 315
 
 		# Test the context menu is pushed upwards when user clicks near bottom of the page
 		Then I right click the canvas background at 1000, 500 to display the context menu
-		Then I verify the context menu is at 1000, 347
+		Then I verify the context menu is at 1000, 315
 
 		# Test the context menu is pushed to the left correctly even when the palette is open
 		Then I click the canvas background at 1, 1 to close the context menu or clear selections

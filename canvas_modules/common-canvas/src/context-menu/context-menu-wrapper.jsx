@@ -13,7 +13,7 @@ import CommonContextMenu from "./common-context-menu.jsx";
 
 // context-menu sizing
 const CONTEXT_MENU_WIDTH = 160; // see context-menu.css .react-context-menu margin
-const CONTEXT_MENU_LINK_HEIGHT = 26; // see context-menu.css .react-context-menu-item height
+const CONTEXT_MENU_LINK_HEIGHT = 30; // see context-menu.css .react-context-menu-item height
 const CONTEXT_MENU_DIVIDER_HEIGHT = 1; // see context-menu.css .react-context-menu-item height
 const CONTEXT_MENU_TOOLBAR_HEIGHT = 45; // Height of tooolbar
 const CONTEXT_MENU_BUTTON = 2;
