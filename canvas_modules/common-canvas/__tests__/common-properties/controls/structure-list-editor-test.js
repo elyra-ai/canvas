@@ -840,4 +840,184 @@ describe("should render with CommonProperties element", () => {
 		expect(inlineEditTable.find(".validation-error-message-icon")).to.have.length(1);
 		expect(inlineEditTable.find(".form__validation--error")).to.have.length(1);
 	});
+	it("Error messages should not change when adding rows", () => {
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(4); // Summary link Configure Error Inline Editing Table
+		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
+		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
+		const inlineEditTable = new ReactWrapper(tableHtml, true);
+		const checkboxCell = inlineEditTable.find("input[type='checkbox']").at(1);
+		checkboxCell.simulate("change", { target: { checked: false, id: "string" } });
+
+		const errorMessage = {
+			"type": "error",
+			"text": "checkbox cannot be off",
+		};
+		let actual = renderedController.getErrorMessage({ name: "inlineEditingTableError" });
+		expect(isEqual(JSON.parse(JSON.stringify(errorMessage)),
+			JSON.parse(JSON.stringify(actual)))).to.be.true;
+		expect(inlineEditTable.find(".validation-error-message-icon")).to.have.length(1);
+		expect(inlineEditTable.find(".form__validation--error")).to.have.length(1);
+
+		// add a row and the error message should still be there
+		const addColumnButton = inlineEditTable.find("#add-fields-button");
+		expect(addColumnButton).to.have.length(1);
+		addColumnButton.simulate("click");
+		const tableData = inlineEditTable.find(".reactable-data").children();
+		expect(tableData).to.have.length(2);
+
+		actual = renderedController.getErrorMessage({ name: "inlineEditingTableError" });
+		expect(isEqual(JSON.parse(JSON.stringify(errorMessage)),
+			JSON.parse(JSON.stringify(actual)))).to.be.true;
+		expect(inlineEditTable.find(".validation-error-message-icon")).to.have.length(1);
+		expect(inlineEditTable.find(".form__validation--error")).to.have.length(1);
+		const messages = renderedController.getErrorMessages();
+		const rowErrorMsg = { "0": { "3": { type: "error", text: "checkbox cannot be off" } } };
+		expect(isEqual(JSON.parse(JSON.stringify(messages.inlineEditingTableError)),
+			JSON.parse(JSON.stringify(rowErrorMsg)))).to.be.true;
+
+		// remove the added row
+		tableData.at(1).simulate("click");
+		const enabledRemoveColumnButton = inlineEditTable.find("#remove-fields-button-enabled");
+		expect(enabledRemoveColumnButton).to.have.length(1);
+		enabledRemoveColumnButton.simulate("click");
+
+
+	});
+	it("Error messages should not change when deleting rows", () => {
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(4); // Summary link Configure Error Inline Editing Table
+		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
+		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
+		const inlineEditTable = new ReactWrapper(tableHtml, true);
+		let tableData = inlineEditTable.find(".reactable-data").children();
+
+		// add two rows to the table.
+		const addColumnButton = inlineEditTable.find("#add-fields-button");
+		expect(addColumnButton).to.have.length(1);
+		addColumnButton.simulate("click");
+		tableData = inlineEditTable.find(".reactable-data").children();
+		expect(tableData).to.have.length(2);
+		addColumnButton.simulate("click");
+		tableData = inlineEditTable.find(".reactable-data").children();
+		expect(tableData).to.have.length(3);
+
+		// set the error in the last row
+		const checkboxCell = inlineEditTable.find("input[type='checkbox']").at(3);
+		checkboxCell.simulate("change", { target: { checked: false, id: "string" } });
+
+		const errorMessage = {
+			"type": "error",
+			"text": "checkbox cannot be off",
+		};
+		let actual = renderedController.getErrorMessage({ name: "inlineEditingTableError" });
+		expect(isEqual(JSON.parse(JSON.stringify(errorMessage)),
+			JSON.parse(JSON.stringify(actual)))).to.be.true;
+		expect(inlineEditTable.find(".validation-error-message-icon")).to.have.length(1);
+		expect(inlineEditTable.find(".form__validation--error")).to.have.length(1);
+
+		// remove the first row and ensure the error message is associated with the correct row.
+		tableData.at(0).simulate("click");
+		let enabledRemoveColumnButton = inlineEditTable.find("#remove-fields-button-enabled");
+		expect(enabledRemoveColumnButton).to.have.length(1);
+		enabledRemoveColumnButton.simulate("click");
+		const messages = renderedController.getErrorMessages();
+		const rowErrorMsg = { "1": { "3": { type: "error", text: "checkbox cannot be off" } } };
+		expect(isEqual(JSON.parse(JSON.stringify(messages.inlineEditingTableError)),
+			JSON.parse(JSON.stringify(rowErrorMsg)))).to.be.true;
+
+		// remove the error row and ensure the error message is removed from the table.
+		tableData = inlineEditTable.find(".reactable-data").children();
+		expect(tableData).to.have.length(2);
+		tableData.at(1).simulate("click");
+		enabledRemoveColumnButton = inlineEditTable.find("#remove-fields-button-enabled");
+		expect(enabledRemoveColumnButton).to.have.length(1);
+		enabledRemoveColumnButton.simulate("click");
+		actual = renderedController.getErrorMessage({ name: "inlineEditingTableError" });
+		expect(actual).to.equal(null);
+		expect(inlineEditTable.find(".validation-error-message-icon")).to.have.length(0);
+		expect(inlineEditTable.find(".form__validation--error")).to.have.length(0);
+
+	});
+	it("Error messages should not change when moving rows", () => {
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(4); // Summary link Configure Error Inline Editing Table
+		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
+		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
+		const inlineEditTable = new ReactWrapper(tableHtml, true);
+		let tableData = inlineEditTable.find(".reactable-data").children();
+
+		// add four rows to the table.
+		const addColumnButton = inlineEditTable.find("#add-fields-button");
+		expect(addColumnButton).to.have.length(1);
+		addColumnButton.simulate("click");
+		tableData = inlineEditTable.find(".reactable-data").children();
+		expect(tableData).to.have.length(2);
+		addColumnButton.simulate("click");
+		tableData = inlineEditTable.find(".reactable-data").children();
+		expect(tableData).to.have.length(3);
+		addColumnButton.simulate("click");
+		tableData = inlineEditTable.find(".reactable-data").children();
+		expect(tableData).to.have.length(4);
+		addColumnButton.simulate("click");
+		tableData = inlineEditTable.find(".reactable-data").children();
+		expect(tableData).to.have.length(5);
+
+
+		// set the checkbox error in the last row
+		const checkboxCell = inlineEditTable.find("input[type='checkbox']").last();
+		checkboxCell.simulate("change", { target: { checked: false, id: "string" } });
+		let errorMessage = {
+			"type": "error",
+			"text": "checkbox cannot be off",
+		};
+		let actual = renderedController.getErrorMessage({ name: "inlineEditingTableError" });
+		expect(isEqual(JSON.parse(JSON.stringify(errorMessage)),
+			JSON.parse(JSON.stringify(actual)))).to.be.true;
+		expect(inlineEditTable.find(".validation-error-message-icon")).to.have.length(1);
+		expect(inlineEditTable.find(".form__validation--error")).to.have.length(1);
+
+		// set the toggle text error in the first row.
+		// the table error message is always the error from the lowest row.
+		const toggleCell = inlineEditTable.find(".toggletext_icon").at(0);
+		toggleCell.simulate("click");
+		expect(inlineEditTable.find(".toggletext_text").at(0)
+			.text()).to.equal("Descending");
+		errorMessage = {
+			"type": "error",
+			"text": "order cannot be descending",
+		};
+		actual = renderedController.getErrorMessage({ name: "inlineEditingTableError" });
+		expect(isEqual(JSON.parse(JSON.stringify(errorMessage)),
+			JSON.parse(JSON.stringify(actual)))).to.be.true;
+		expect(inlineEditTable.find(".validation-error-message-icon")).to.have.length(1);
+		expect(inlineEditTable.find(".form__validation--error")).to.have.length(1);
+
+		// select the first row and move it to the bottom and make sure the error messages stay aligned.
+		tableData.at(0).simulate("click");
+		const moveRowBottom = inlineEditTable.find(".table-row-move-button").at(1);
+		moveRowBottom.simulate("click");
+		let messages = renderedController.getErrorMessages();
+		let rowErrorMsg = {
+			"3": { "3": { type: "error", text: "checkbox cannot be off" } },
+			"4": { "2": { type: "error", text: "order cannot be descending" } }
+		};
+		// console.log(messages.inlineEditingTableError);
+		expect(isEqual(JSON.parse(JSON.stringify(messages.inlineEditingTableError)),
+			JSON.parse(JSON.stringify(rowErrorMsg)))).to.be.true;
+
+
+		// select the second from the last row and move it to the top and make sure the error messages stay aligned.
+		tableData = inlineEditTable.find(".reactable-data").children();
+		expect(tableData).to.have.length(5);
+		tableData.at(3).simulate("click");
+		const moveRowTop = inlineEditTable.find(".table-row-move-button").at(0);
+		moveRowTop.simulate("click");
+
+		messages = renderedController.getErrorMessages();
+		rowErrorMsg = {
+			"0": { "3": { type: "error", text: "checkbox cannot be off" } },
+			"4": { "2": { type: "error", text: "order cannot be descending" } }
+		};
+		// console.log(messages.inlineEditingTableError);
+		expect(isEqual(JSON.parse(JSON.stringify(messages.inlineEditingTableError)),
+			JSON.parse(JSON.stringify(rowErrorMsg)))).to.be.true;
+	});
 });

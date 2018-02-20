@@ -8,6 +8,8 @@
  *******************************************************************************/
 
 import { UPDATE_ERROR_MESSAGE, SET_ERROR_MESSAGES, CLEAR_ERROR_MESSAGE } from "../actions";
+import isEmpty from "lodash/isEmpty";
+/* eslint max-depth: ["error", 6] */
 
 /*
 * Stores the state information for all controls.  States are stored as objects with keys being name, row, col.
@@ -49,7 +51,11 @@ function messages(state = {}, action) {
 					delete newState[action.message.propertyId.name][action.message.propertyId.row];
 				}
 			} else {
-				delete newState[action.message.propertyId.name];
+				delete newState[action.message.propertyId.name].type;
+				delete newState[action.message.propertyId.name].text;
+				if (isEmpty(newState[action.message.propertyId.name])) {
+					delete newState[action.message.propertyId.name];
+				}
 			}
 		}
 		return Object.assign({}, state, newState);

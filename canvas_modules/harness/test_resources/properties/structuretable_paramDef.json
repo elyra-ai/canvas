@@ -55,6 +55,13 @@
         "",
         "12:00:00Z"
       ]
+    ],
+    "structuretableErrors": [
+      [
+        "Cholesterol",
+        1,
+        "Ascending"
+      ]
     ]
   },
   "parameters": [
@@ -86,6 +93,12 @@
       "type": "map[string,structuretableSortableColumns]",
       "role": "column",
       "default": [],
+      "required": true
+    },
+    {
+      "id": "structuretableErrors",
+      "type": "array[structuretableErrors]",
+      "role": "column",
       "required": true
     }
   ],
@@ -224,6 +237,30 @@
           "type": "time"
         }
       ]
+    },
+    {
+      "id": "structuretableErrors",
+      "key_definition": {
+        "id": "field",
+        "type": "string",
+        "role": "column",
+        "default": ""
+      },
+      "parameters": [
+        {
+          "id": "structuretable_error_readonly_int",
+          "type": "integer",
+          "default": "5"
+        },
+        {
+          "id": "structuretable_error",
+          "enum": [
+            "Ascending",
+            "Descending"
+          ],
+          "default": "Ascending"
+        }
+      ]
     }
   ],
   "uihints": {
@@ -281,6 +318,17 @@
         },
         "description": {
           "default": "This is to test the sortable column headers align with the table."
+        }
+      },
+      {
+        "parameter_ref": "structuretableErrors",
+        "required": true,
+        "label": {
+          "default": "Error table"
+        },
+        "description": {
+          "default": "Set ascending to descending to generate error.",
+          "placement": "on_panel"
         }
       }
     ],
@@ -529,6 +577,50 @@
             "edit_style": "inline"
           }
         ]
+      },
+      {
+        "complex_type_ref": "structuretableErrors",
+        "moveable_rows": true,
+        "key_definition": {
+          "parameter_ref": "field",
+          "width": 28,
+          "label": {
+            "resource_key": "structuretableErrors.field.label"
+          },
+          "summary": true
+        },
+        "parameters": [
+          {
+            "parameter_ref": "structuretable_error_readonly_int",
+            "width": 16,
+            "label": {
+              "resource_key": "structuretableErrors.structuretable_sort_order_readonly_int.label"
+            },
+            "description": {
+              "resource_key": "structuretableErrors.structuretable_sort_order_readonly_int.desc"
+            },
+            "generated_values": {
+              "operation": "index",
+              "start_value": 5
+            },
+            "control": "readonly"
+          },
+          {
+            "parameter_ref": "structuretable_error",
+            "width": 16,
+            "label": {
+              "resource_key": "structuretableErrors.sort_order.label"
+            },
+            "description": {
+              "resource_key": "structuretableErrors.sort_order.desc"
+            },
+            "control": "toggletext",
+            "value_icons": [
+              "/images/up-triangle.svg",
+              "/images/down-triangle.svg"
+            ]
+          }
+        ]
       }
     ],
     "group_info": [
@@ -638,6 +730,34 @@
             ]
           }
         ]
+      },
+      {
+        "id": "conditions",
+        "type": "panels",
+        "label": {
+          "default": "Conditions"
+        },
+        "group_info": [
+          {
+            "id": "structuretableErrors-summary-panel",
+            "label": {
+              "default": "Test error table"
+            },
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "structuretableErrors",
+                "type": "controls",
+                "label": {
+                  "default": "Columns"
+                },
+                "parameter_refs": [
+                  "structuretableErrors"
+                ]
+              }
+            ]
+          }
+        ]
       }
     ]
   },
@@ -652,86 +772,139 @@
           }
         }
       }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "structuretableErrors[2]",
+          "message": {
+            "default": "order cannot be descending"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "structuretableErrors[2]",
+            "op": "notEquals",
+            "value": "Descending"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "structuretableReadonlyColumnStartValue",
+          "message": {
+            "default": "table cannot be empty"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "structuretableReadonlyColumnStartValue",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "structuretableReadonlyColumnDefaultIndex",
+          "message": {
+            "default": "The 'Output Name' field cannot contain 'pw'"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "structuretableReadonlyColumnDefaultIndex",
+            "op": "notContains",
+            "value": "pw"
+          }
+        }
+      }
     }
   ],
   "dataset_metadata": [
-		{
-	    "fields": [
-	      {
-	        "name": "Age",
-	        "type": "integer",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "Sex",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "discrete",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "BP",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "discrete",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "Cholesterol",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "discrete",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "Na",
-	        "type": "double",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "K",
-	        "type": "double",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "Drug",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "discrete",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "Ag",
-	        "type": "integer",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      }
-	    ]
-	  }
-	],
+    {
+      "fields": [
+        {
+          "name": "Age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Sex",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Cholesterol",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "K",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Ag",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    }
+  ],
   "resources": {
     "structuretableReadonlyColumnStartValue.label": "Sort",
     "structuretableReadonlyColumnStartValue.field.label": "Field",
@@ -753,6 +926,14 @@
     "structuretableSortableColumns.field.label": "Name",
     "structuretableSortableColumns.new_name.label": "Output name",
     "structuretableSortableColumns.new_name.desc": "New field name",
-    "structuretableSortableColumns.structuretableRenameFields_readonly_int.label": "Index"
+    "structuretableSortableColumns.structuretableRenameFields_readonly_int.label": "Index",
+    "structuretableErrors.label": "ErorTable",
+    "structuretableErrors.field.label": "Field",
+    "structuretableErrors.sort_order.label": "Order",
+    "structuretableErrors.sort_order.desc": "Update sort order",
+    "structuretableErrors.structuretable_sort_order_readonly_int.label": "Index From 5",
+    "structuretableErrors.structuretable_sort_order_readonly_int.desc": "Auto generated integers starting at 5",
+    "structuretableErrors.sort_order.Ascending.label": "Ascending",
+    "structuretableErrors.sort_order.Descending.label": "Descending"
   }
 }

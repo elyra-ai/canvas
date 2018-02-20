@@ -1020,28 +1020,42 @@ describe("ColumnStructureTableControl renders correctly", () => {
 });
 
 describe("condition messages renders correctly with structure table control", () => {
+	var wrapper;
+	var renderedController;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
+		wrapper = renderedObject.wrapper;
+		renderedController = renderedObject.controller;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
 	it("structuretableSortOrder control should have error message from no selection", () => {
 		// a note about this test.  structuretableSortOrder has the required = true attribute and
 		// a isNotEmpty condition.  The isNotEmpty condition error message should take precendence.
-		const wrapper = propertyUtils.createEditorForm("mount", JSON.parse(JSON.stringify(CONDITIONS_TEST_FORM_DATA)), controller);
-		const conditionsPropertyId = { name: "structuretableSortOrder" };
-		const input = wrapper.find("#flexible-table-structuretableSortOrder").at(0);
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(0); // Summary link Configure Sort Order
+		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
+		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
+		const modalWrapper = new ReactWrapper(tableHtml, true);
+		const input = modalWrapper.find("#flexible-table-structuretableReadonlyColumnStartValue");
+		const conditionsPropertyId = { name: "structuretableReadonlyColumnStartValue" };
 		expect(input).to.have.length(1);
-		expect(controller.getPropertyValue(conditionsPropertyId)).to.have.length(1);
+		expect(renderedController.getPropertyValue(conditionsPropertyId)).to.have.length(1);
 
 		let dataRows = input.find(".reactable-data").find("tr");
 		expect(dataRows).to.have.length(1);
 		dataRows.first().simulate("click");
 		wrapper.update();
 
-		const enabledRemoveColumnButton = wrapper.find("#remove-fields-button-enabled");
+		const enabledRemoveColumnButton = input.find("#remove-fields-button-enabled");
 		expect(enabledRemoveColumnButton).to.have.length(1);
 
 		enabledRemoveColumnButton.simulate("click");
 		wrapper.update();
 		dataRows = input.find(".reactable-data").find("tr");
 		expect(dataRows).to.have.length(0);
-		expect(controller.getPropertyValue(conditionsPropertyId)).to.have.length(0);
+		expect(renderedController.getPropertyValue(conditionsPropertyId)).to.have.length(0);
 
 		enabledRemoveColumnButton.simulate("blur");
 		wrapper.update();
@@ -1050,20 +1064,24 @@ describe("condition messages renders correctly with structure table control", ()
 			"type": "error",
 			"text": "table cannot be empty"
 		};
-		const actual = controller.getErrorMessage({ name: "structuretableSortOrder" });
+		const actual = renderedController.getErrorMessage(conditionsPropertyId);
 		expect(isEqual(JSON.parse(JSON.stringify(structuretableSortOrderErrorMessages)),
 			JSON.parse(JSON.stringify(actual)))).to.be.true;
 
-		expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
-		expect(wrapper.find(".form__validation--error")).to.have.length(1);
+		expect(modalWrapper.find(".validation-error-message-icon")).to.have.length(1);
+		expect(modalWrapper.find(".form__validation--error")).to.have.length(1);
 	});
 
 	it("structuretableRenameFields control should have error message from containing 'pw'", () => {
-		const wrapper = propertyUtils.createEditorForm("mount", JSON.parse(JSON.stringify(CONDITIONS_TEST_FORM_DATA)), controller);
-		const conditionsPropertyId = { name: "structuretableRenameFields" };
-		const input = wrapper.find("#flexible-table-structuretableRenameFields");
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(1); // Summary link Configure Rename fields
+		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
+		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
+		const modalWrapper = new ReactWrapper(tableHtml, true);
+		const input = modalWrapper.find("#flexible-table-structuretableReadonlyColumnDefaultIndex");
+
+		const conditionsPropertyId = { name: "structuretableReadonlyColumnDefaultIndex" };
 		expect(input).to.have.length(1);
-		expect(controller.getPropertyValue(conditionsPropertyId)).to.have.length(2);
+		expect(renderedController.getPropertyValue(conditionsPropertyId)).to.have.length(2);
 
 		const nameInput = input.find("input[id='editor-control-new_name']");
 		expect(nameInput).to.have.length(2);
@@ -1077,22 +1095,24 @@ describe("condition messages renders correctly with structure table control", ()
 			"type": "error",
 			"text": "The 'Output Name' field cannot contain 'pw'"
 		};
-		const actual = controller.getErrorMessage({ name: "structuretableRenameFields" });
+		const actual = renderedController.getErrorMessage(conditionsPropertyId);
 		expect(isEqual(JSON.parse(JSON.stringify(structuretableRenameFieldsErrorMessages)),
 			JSON.parse(JSON.stringify(actual)))).to.be.true;
-
-		expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
-		expect(wrapper.find(".form__validation--error")).to.have.length(1);
+		expect(modalWrapper.find(".validation-error-message-icon")).to.have.length(1);
+		expect(modalWrapper.find(".form__validation--error")).to.have.length(1);
 
 	});
 
 	it("required structuretableRenameTable control should have error message from no selection", () => {
-		const wrapper = propertyUtils.createEditorForm("mount", JSON.parse(JSON.stringify(CONDITIONS_TEST_FORM_DATA)), controller);
-		const conditionsPropertyId = { name: "structuretableRenameFields" };
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(1); // Summary link Configure Rename fields
+		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
+		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
+		const modalWrapper = new ReactWrapper(tableHtml, true);
+		const input = modalWrapper.find("#flexible-table-structuretableReadonlyColumnDefaultIndex");
 
-		const input = wrapper.find("#flexible-table-structuretableRenameFields");
+		const conditionsPropertyId = { name: "structuretableReadonlyColumnDefaultIndex" };
 		expect(input).to.have.length(1);
-		expect(controller.getPropertyValue(conditionsPropertyId)).to.have.length(2);
+		expect(renderedController.getPropertyValue(conditionsPropertyId)).to.have.length(2);
 
 		// remove two data row so that the table is empty
 		let dataRows = input.find(".reactable-data").find("tr");
@@ -1100,42 +1120,42 @@ describe("condition messages renders correctly with structure table control", ()
 		dataRows.first().simulate("click");
 		wrapper.update();
 
-		const enabledRemoveColumnButton = wrapper.find("#remove-fields-button-enabled");
+		const enabledRemoveColumnButton = modalWrapper.find("#remove-fields-button-enabled");
 		expect(enabledRemoveColumnButton).to.have.length(1);
 
 		enabledRemoveColumnButton.simulate("click");
 		wrapper.update();
-		dataRows = wrapper
-			.find("#flexible-table-structuretableRenameFields")
+		dataRows = modalWrapper
+			.find("#flexible-table-structuretableReadonlyColumnDefaultIndex")
 			.find(".reactable-data")
 			.find("tr");
 
 		expect(dataRows).to.have.length(1);
-		expect(controller.getPropertyValue(conditionsPropertyId)).to.have.length(1);
+		expect(renderedController.getPropertyValue(conditionsPropertyId)).to.have.length(1);
 
 		dataRows.first().simulate("click");
 		wrapper.update();
 
-		wrapper.find("#remove-fields-button-enabled").simulate("click");
+		modalWrapper.find("#remove-fields-button-enabled").simulate("click");
 		wrapper.update();
-		dataRows = wrapper
-			.find("#flexible-table-structuretableRenameFields")
+		dataRows = modalWrapper
+			.find("#flexible-table-structuretableReadonlyColumnDefaultIndex")
 			.find(".reactable-data")
 			.find("tr");
 
 		expect(dataRows).to.have.length(0);
-		expect(controller.getPropertyValue(conditionsPropertyId)).to.have.length(0);
+		expect(renderedController.getPropertyValue(conditionsPropertyId)).to.have.length(0);
 
 		const structuretableRenameFieldsErrorMessages = {
 			"type": "error",
 			"text": "Required parameter 'Rename Field' has no value"
 		};
-		const actual = controller.getErrorMessage({ name: "structuretableRenameFields" });
+		const actual = renderedController.getErrorMessage(conditionsPropertyId);
 		expect(isEqual(JSON.parse(JSON.stringify(structuretableRenameFieldsErrorMessages)),
 			JSON.parse(JSON.stringify(actual)))).to.be.true;
 
-		expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
-		expect(wrapper.find(".form__validation--error")).to.have.length(1);
+		expect(modalWrapper.find(".validation-error-message-icon")).to.have.length(1);
+		expect(modalWrapper.find(".form__validation--error")).to.have.length(1);
 	});
 });
 

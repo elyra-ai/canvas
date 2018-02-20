@@ -341,12 +341,14 @@ function validateInput(propertyId, controller, validationDefinitions, datasetMet
 function _doGroupValidationUpdate(validation, errorMessage, output, propertyId, controller) {
 	if (typeof validation.params === "object") {
 		for (const control of validation.params) {
-			let groupMessage = errorMessage;
+			let groupMessage = JSON.parse(JSON.stringify(errorMessage));
 			if (output === true) {
 				groupMessage = DEFAULT_VALIDATION_MESSAGE;
 			}
-			if (control !== propertyId.name) {
-				const controlPropertyId = { name: control };
+			// params could have control names with column notation. Remove '[]' from the control name
+			const paramName = _getPropertyId(control);
+			if (paramName.name !== propertyId.name) {
+				const controlPropertyId = { name: paramName.name };
 				controller.updateErrorMessage(controlPropertyId, groupMessage);
 				// Special case: do not remove required property error message for secondary controls if group validation does not fail
 				if (controller.isRequired(controlPropertyId) && groupMessage === DEFAULT_VALIDATION_MESSAGE) {

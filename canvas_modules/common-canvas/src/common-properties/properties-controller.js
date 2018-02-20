@@ -592,6 +592,50 @@ export default class PropertiesController {
 		}
 	}
 
+	removeErrorMessageRow(propertyId) {
+		let messages = this.propertiesStore.getErrorMessages();
+		const controlMsg = messages[propertyId.name];
+		if (typeof controlMsg !== "undefined") {
+			for (const rowIndex of Object.keys(controlMsg)) {
+				const rowNumber = parseInt(rowIndex, 10);
+				if (rowNumber === propertyId.row) {
+					delete messages[propertyId.name][rowNumber];
+				} else if (rowNumber > propertyId.row) {
+					messages = this._moveMessageRows(messages, propertyId.name, rowNumber, rowNumber - 1);
+				}
+			}
+			this.setErrorMessages(messages);
+		}
+	}
+
+	moveErrorMessageRows(controlName, firstRow, secondRow) {
+		let messages = this.propertiesStore.getErrorMessages();
+		const controlMsg = messages[controlName];
+		if (typeof controlMsg !== "undefined") {
+			const firstRowErrorMsg = controlMsg[firstRow];
+			const secondRowErrorMsg = controlMsg[secondRow];
+			if (typeof firstRowErrorMsg !== "undefined" && typeof secondRowErrorMsg !== "undefined") {
+				messages = this._moveMessageRows(messages, controlName, firstRow, secondRow);
+				// create second message because it is deleted in the changeErrorMessageRow, set it to first row number
+				messages[controlName][firstRow] = {};
+				for (const colNumber of Object.keys(secondRowErrorMsg)) {
+					messages[controlName][firstRow][colNumber] = secondRowErrorMsg[colNumber];
+				}
+			} else if (typeof firstRowErrorMsg !== "undefined") {
+				messages = this._moveMessageRows(messages, controlName, firstRow, secondRow);
+			} else if (typeof secondRowErrorMsg !== "undefined") {
+				messages = this._moveMessageRows(messages, controlName, secondRow, firstRow);
+			}
+			this.setErrorMessages(messages);
+		}
+	}
+
+	_moveMessageRows(messages, controlName, fromRow, toRow) {
+		messages[controlName][toRow] = messages[controlName][fromRow];
+		delete messages[controlName][fromRow];
+		return messages;
+	}
+
 	/*
 	* Controls Methods
 	*/

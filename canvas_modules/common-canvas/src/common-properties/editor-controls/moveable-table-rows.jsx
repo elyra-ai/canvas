@@ -83,6 +83,7 @@ export default class MoveableTableRows extends React.Component {
 				controlValue[selectedRow - 1] = controlValue[selectedRow];
 				controlValue[selectedRow] = tmpRow;
 				selected.push(selectedRow - 1);
+				this.props.controller.moveErrorMessageRows(this.props.propertyId.name, selectedRow, selectedRow - 1);
 			}
 		}
 		if (selected.length > 0) {
@@ -103,6 +104,7 @@ export default class MoveableTableRows extends React.Component {
 					controlValue[selectedRow - 1] = controlValue[selectedRow];
 					controlValue[selectedRow] = tmpRow;
 					selected.push(selectedRow - 1);
+					this.props.controller.moveErrorMessageRows(this.props.propertyId.name, selectedRow, selectedRow - 1);
 				}
 			}
 			this.props.setScrollToRow(selected[0], true);
@@ -122,6 +124,7 @@ export default class MoveableTableRows extends React.Component {
 					controlValue[selectedRow + 1] = controlValue[selectedRow];
 					controlValue[selectedRow] = tmpRow;
 					selected.unshift(selectedRow + 1);
+					this.props.controller.moveErrorMessageRows(this.props.propertyId.name, selectedRow, selectedRow + 1);
 				}
 			}
 			this.props.setScrollToRow(selected[selected.length - 1], false);
@@ -139,6 +142,7 @@ export default class MoveableTableRows extends React.Component {
 				controlValue[selectedRow + 1] = controlValue[selectedRow];
 				controlValue[selectedRow] = tmpRow;
 				selected.unshift(selectedRow + 1);
+				this.props.controller.moveErrorMessageRows(this.props.propertyId.name, selectedRow, selectedRow + 1);
 			}
 		}
 		if (selected.length > 0) {
@@ -191,6 +195,7 @@ export default class MoveableTableRows extends React.Component {
 MoveableTableRows.propTypes = {
 	control: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
+	propertyId: PropTypes.object.isRequired,
 	getCurrentControlValue: PropTypes.func.isRequired,
 	setCurrentControlValueSelected: PropTypes.func.isRequired,
 	setScrollToRow: PropTypes.func.isRequired,

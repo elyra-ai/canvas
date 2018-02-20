@@ -22,7 +22,6 @@ class StructurelisteditorControl extends ColumnStructureTableEditor {
 		super(props);
 
 		this.addRow = this.addRow.bind(this);
-		this.removeSelectedRows = this.removeSelectedRows.bind(this);
 
 		this.stopEditingRow = this.stopEditingRow.bind(this);
 	}
@@ -54,22 +53,6 @@ class StructurelisteditorControl extends ColumnStructureTableEditor {
 		this.setCurrentControlValue(rows);
 	}
 
-	removeSelectedRows() {
-		const rows = this.getCurrentControlValue();
-
-		// Sort descending to ensure lower indices don"t get
-		// changed when values are deleted
-		const selected = this.props.controller.getSelectedRows(this.props.control.name).sort(function(a, b) {
-			return b - a;
-		});
-
-		for (let i = 0; i < selected.length; i++) {
-			rows.splice(selected[i], 1);
-		}
-
-		this.setCurrentControlValue(rows);
-	}
-
 	render() {
 		const conditionProps = {
 			propertyId: this.props.propertyId,
@@ -95,7 +78,6 @@ class StructurelisteditorControl extends ColumnStructureTableEditor {
 				MESSAGE_KEYS.STRUCTURELISTEDITOR_REMOVEBUTTON_TOOLTIP, MESSAGE_KEYS_DEFAULTS.STRUCTURELISTEDITOR_REMOVEBUTTON_TOOLTIP),
 			addButtonTooltip: PropertyUtils.formatMessage(this.props.intl,
 				MESSAGE_KEYS.STRUCTURELISTEDITOR_ADDBUTTON_TOOLTIP, MESSAGE_KEYS_DEFAULTS.STRUCTURELISTEDITOR_ADDBUTTON_TOOLTIP),
-			removeButtonFunction: this.removeSelectedRows,
 			addButtonFunction: this.addRow
 		};
 
@@ -121,6 +103,7 @@ class StructurelisteditorControl extends ColumnStructureTableEditor {
 						tableContainer={tableContainer}
 						control={this.props.control}
 						controller={this.props.controller}
+						propertyId={this.props.propertyId}
 						setScrollToRow={this.setScrollToRow}
 						getCurrentControlValue={this.getCurrentControlValue}
 						setCurrentControlValueSelected={this.setCurrentControlValueSelected}

@@ -107,6 +107,7 @@ class ColumnSelectControl extends ColumnStructureTableEditor {
 					tableContainer={content}
 					control={this.props.control}
 					controller={this.props.controller}
+					propertyId={this.props.propertyId}
 					setScrollToRow={this.setScrollToRow}
 					getCurrentControlValue={this.getCurrentControlValue}
 					setCurrentControlValueSelected={this.setCurrentControlValueSelected}

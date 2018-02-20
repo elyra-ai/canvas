@@ -174,14 +174,18 @@ export default class ColumnStructureTableEditor extends EditorControl {
 
 	removeSelected() {
 		const rows = this.getCurrentControlValue();
-		const newRows = [];
-		const selected = this.props.controller.getSelectedRows(this.props.control.name);
-		for (var i = 0; i < rows.length; i++) {
-			if (selected.indexOf(i) < 0) {
-				newRows.push(rows[i]);
-			}
+		// Sort descending to ensure lower indices don"t get
+		// changed when values are deleted
+		const selected = this.props.controller.getSelectedRows(this.props.control.name).sort(function(a, b) {
+			return b - a;
+		});
+		for (let i = 0; i < selected.length; i++) {
+			rows.splice(selected[i], 1);
+			// this will remove any error messages associate with row.
+			this.props.controller.removeErrorMessageRow({ name: this.props.propertyId.name, row: selected[i] });
 		}
-		this.setCurrentControlValue(newRows);
+
+		this.setCurrentControlValue(rows);
 	}
 
 	selectionChanged(selection) {
@@ -364,7 +368,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 	makeAddRemoveButtonPanel(stateDisabled, tableButtonConfig) {
 		let removeFieldsButtonId = "remove-fields-button-enabled";
 		let removeIconImage = (<img src={remove32} />);
-		let removeOnClick = (tableButtonConfig) ? tableButtonConfig.removeButtonFunction : this.removeSelected;
+		let removeOnClick = (tableButtonConfig && tableButtonConfig.removeButtonFunction) ? tableButtonConfig.removeButtonFunction : this.removeSelected;
 		if (!this.state.enableRemoveIcon || stateDisabled.disabled) {
 			removeIconImage = (<img src={remove32disabled} />);
 			removeFieldsButtonId = "remove-fields-button-disabled";
