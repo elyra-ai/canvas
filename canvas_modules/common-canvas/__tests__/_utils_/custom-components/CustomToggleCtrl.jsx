@@ -26,15 +26,17 @@ export default class CustomToggleCtrl extends React.Component {
 	render() {
 		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		const message = this.props.controller.getErrorMessage(this.props.propertyId);
-		var messageText;
-		var icon;
-		if (message && message.text) {
+		let messageText = <div />;
+		let iconContainer = <div className="icon" />;
+		if (message && message.text && !this.props.table) {
 			messageText = message.text;
+			let icon = <div />;
 			if (message.type === "warning") {
 				icon = (<Icon type="warning" />);
 			} else if (message.type === "error") {
 				icon = (<Icon type="error-o" />);
 			}
+			iconContainer = (<div className="icon">{icon}</div>);
 		}
 		const state = this.props.controller.getControlState(this.props.propertyId);
 		var visibility;
@@ -44,19 +46,28 @@ export default class CustomToggleCtrl extends React.Component {
 		} else if (state === "disabled") {
 			disabled = true;
 		}
+		let label = <div className="text" />;
+		if (!this.props.table) {
+			label = (<div className="text">Toggle</div>);
+		}
+		let id = this.props.propertyId.name;
+		if (typeof this.props.propertyId.row !== "undefined") {
+			id += "_" + this.props.propertyId.row;
+			if (typeof this.props.propertyId.col !== "undefined") {
+				id += "_" + this.props.propertyId.col;
+			}
+		}
 		return (
 			<div style={visibility}>
 				<div className="custom-toggle" >
 					<ToggleButton
 						disabled={disabled}
-						id={this.props.propertyId.name}
+						id={id}
 						checked={controlValue}
 						onChange={this.handleChange}
 					/>
-					<div className="text">Toggle</div>
-					<div className="icon">
-						{icon}
-					</div>
+					{label}
+					{iconContainer}
 				</div>
 				{messageText}
 			</div>
@@ -66,5 +77,6 @@ export default class CustomToggleCtrl extends React.Component {
 
 CustomToggleCtrl.propTypes = {
 	controller: PropTypes.object.isRequired,
-	propertyId: PropTypes.object.isRequired
+	propertyId: PropTypes.object.isRequired,
+	table: PropTypes.bool
 };

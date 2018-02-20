@@ -32,6 +32,7 @@ export default class PropertiesController {
 		this.filterDefinitions = {};
 		this.filteredEnumDefinitions = {};
 		this.controls = {};
+		this.customControls = [];
 		this.summaryPanelControls = {};
 		this.controllerHandlerCalled = false;
 		this.requiredParameters = []; // TODO this is needed for validateInput, will change to use this.controls later
@@ -752,5 +753,24 @@ export default class PropertiesController {
 	}
 	getControlFactory() {
 		return this.controlFactory;
+	}
+
+	setCustomControls(customControls) {
+		this.customControls = customControls;
+	}
+	getCustomControl(propertyId, control, tableInfo) {
+		if (control.customControlId) {
+			for (const customCtrl of this.customControls) {
+				if (customCtrl.id() === control.customControlId) {
+					try {
+						return new customCtrl(propertyId, this, control.data, tableInfo).renderControl();
+					} catch (error) {
+						logger.warn("Error thrown creating custom control: " + error);
+						return "";
+					}
+				}
+			}
+		}
+		return "Custom control not found: " + control.customControlId;
 	}
 }

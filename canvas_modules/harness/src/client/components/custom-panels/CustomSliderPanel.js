@@ -9,7 +9,7 @@
 
 /* eslint-disable no-empty-function */
 import React from "react";
-import CustomSliderCtrl from "./CustomSliderCtrl";
+import CustomSliderCtrl from "../custom-components/CustomSliderCtrl";
 import paramDef from "./standardControls_paramDef.json";
 
 

@@ -62,6 +62,7 @@ class CommonProperties extends React.Component {
 		} else {
 			this.propertiesController.setErrorMessages({});
 		}
+		this.propertiesController.setCustomControls(this.props.customControls);
 	}
 
 	componentWillReceiveProps(newProps) {
@@ -80,6 +81,7 @@ class CommonProperties extends React.Component {
 		if (newProps.forceApplyProperties) {
 			this.applyPropertiesEditing(false);
 		}
+		this.propertiesController.setCustomControls(newProps.customControls);
 	}
 
 	getEditorWidth() {
@@ -341,7 +343,8 @@ CommonProperties.propTypes = {
 	controllerHandler: PropTypes.func,
 	intl: intlShape,
 	propertyListener: PropTypes.func,
-	actionHandler: PropTypes.func
+	actionHandler: PropTypes.func,
+	customControls: PropTypes.array // array of custom controls
 };
 
 export default injectIntl(CommonProperties, { withRef: true });

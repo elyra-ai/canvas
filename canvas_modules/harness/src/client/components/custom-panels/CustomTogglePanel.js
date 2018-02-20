@@ -7,9 +7,8 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-/* eslint-disable no-empty-function */
 import React from "react";
-import CustomToggleCtrl from "./CustomToggleCtrl";
+import CustomToggleCtrl from "../custom-components/CustomToggleCtrl";
 import paramDef from "./standardControls_paramDef.json";
 
 class CustomTogglePanel {

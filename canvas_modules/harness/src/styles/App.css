@@ -481,7 +481,9 @@
 }
 .custom-map-summary span {
 	display: block;
-
+}
+.table-row .custom-toggle {
+	padding-top: 6px;
 }
 .custom-map-summary text {
 	color: mediumblue;

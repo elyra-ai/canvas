@@ -6,13 +6,14 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
+/* eslint complexity: ["error", 30]*/
 
 import { EditStyle } from "../constants/form-constants";
 
 class ControlDef {
 	constructor(cname, label, separateLabel, description, controlType, valueDef, role, additionalText,
 		orientation, values, valueLabels, valueIcons, sortable, filterable, charLimit, language,
-		summary, increment, generatedValues, dateFormat, timeFormat) {
+		summary, increment, generatedValues, dateFormat, timeFormat, customControlId, data) {
 		this.name = cname;
 		this.label = label;
 		this.separateLabel = separateLabel;
@@ -72,6 +73,12 @@ class ControlDef {
 		if (timeFormat) {
 			this.timeFormat = timeFormat;
 		}
+		if (customControlId) {
+			this.customControlId = customControlId;
+		}
+		if (data) {
+			this.data = data;
+		}
 	}
 }
 
@@ -79,10 +86,10 @@ export class Control extends ControlDef {
 	constructor(cname, label, separateLabel, description, controlType, valueDef, role, additionalText, orientation,
 		values, valueLabels, valueIcons, sortable, filterable, charLimit, subControls, keyIndex, defaultRow,
 		childItem, moveableRows, required, language, summary, increment, rowSelection, generatedValues, addRemoveRows,
-		dateFormat, timeFormat) {
+		dateFormat, timeFormat, customControlId, data) {
 		super(cname, label, separateLabel, description, controlType, valueDef, role, additionalText, orientation, values,
 			valueLabels, valueIcons, sortable, filterable, charLimit, language, summary, increment, generatedValues,
-			dateFormat, timeFormat);
+			dateFormat, timeFormat, customControlId, data);
 		if (subControls) {
 			this.subControls = subControls;
 		}
@@ -113,10 +120,10 @@ export class Control extends ControlDef {
 export class SubControl extends ControlDef {
 	constructor(cname, label, separateLabel, description, visible, width, controlType, valueDef, role, additionalText,
 		orientation, values, valueLabels, valueIcons, sortable, filterable, charLimit, editStyle, isKeyField,
-		dmDefault, language, summary, increment, generatedValues, dateFormat, timeFormat) {
+		dmDefault, language, summary, increment, generatedValues, dateFormat, timeFormat, customControlId, data) {
 		super(cname, label, separateLabel, description, controlType, valueDef, role, additionalText, orientation,
 			values, valueLabels, valueIcons, sortable, filterable, charLimit, language, summary, increment, generatedValues,
-			dateFormat, timeFormat);
+			dateFormat, timeFormat, customControlId, data);
 		if (typeof visible === "boolean") {
 			this.visible = visible;
 		}

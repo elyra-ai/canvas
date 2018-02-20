@@ -14,6 +14,9 @@ import { mountWithIntl, shallowWithIntl } from "enzyme-react-intl";
 import { ReactWrapper } from "enzyme";
 import { expect } from "chai";
 
+import CustomTableControl from "./custom-controls/CustomTableControl";
+import CustomToggleControl from "./custom-controls/CustomToggleControl";
+
 import sinon from "sinon";
 var renderedController;
 function controllerHandler(propertyController) {
@@ -39,6 +42,7 @@ function flyoutEditorForm(paramDef) {
 			propertiesInfo={propertiesInfo}
 			containerType="Custom"
 			controllerHandler={controllerHandler}
+			customControls={[CustomTableControl, CustomToggleControl]}
 			rightFlyout
 		/>
 	);

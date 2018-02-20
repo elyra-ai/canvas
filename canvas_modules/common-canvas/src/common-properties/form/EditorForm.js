@@ -430,7 +430,9 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 		parameter.generatedValues,
 		addRemoveRows,
 		parameter.dateFormat,
-		parameter.timeFormat
+		parameter.timeFormat,
+		parameter.customControlId,
+		parameter.data
 	);
 }
 
@@ -574,7 +576,9 @@ function _makeSubControl(parameter, l10nProvider) {
 		parameter.increment,
 		parameter.generatedValues,
 		parameter.dateFormat,
-		parameter.timeFormat
+		parameter.timeFormat,
+		parameter.customControlId,
+		parameter.data
 	);
 }
 

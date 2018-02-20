@@ -25,7 +25,8 @@ const ItemType = {
 
 const EditStyle = {
 	INLINE: "inline",
-	SUBPANEL: "subpanel"
+	SUBPANEL: "subpanel",
+	ON_PANEL: "on_panel"
 };
 
 const Size = {

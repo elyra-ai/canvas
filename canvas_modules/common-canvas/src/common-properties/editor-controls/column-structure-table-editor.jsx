@@ -20,6 +20,7 @@ import remove32 from "../../../assets/images/remove_32.svg";
 import remove32hover from "../../../assets/images/remove_32_hover.svg";
 import remove32disabled from "../../../assets/images/remove_32_disabled.svg";
 import PropertyUtils from "../util/property-utils";
+import { ControlType, EditStyle } from "../constants/form-constants";
 
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, TOOL_TIP_DELAY, STATES } from "../constants/constants";
 import findIndex from "lodash/findIndex";
@@ -139,7 +140,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		for (var rowIndex = 0; rowIndex < controlValues.length; rowIndex++) {
 			for (var colIndex = 0; colIndex < this.props.control.subControls.length; colIndex++) {
 				const columnDef = this.props.control.subControls[colIndex];
-				if (columnDef.controlType === "readonly" && columnDef.generatedValues && columnDef.generatedValues.operation === "index") {
+				if (columnDef.controlType === ControlType.READONLY && columnDef.generatedValues && columnDef.generatedValues.operation === "index") {
 					const index = typeof columnDef.generatedValues.startValue !== "undefined" ? columnDef.generatedValues.startValue + rowIndex : rowIndex + 1;
 					controlValues[rowIndex][colIndex] = index;
 				}
@@ -194,7 +195,6 @@ export default class ColumnStructureTableEditor extends EditorControl {
 
 	getRowClassName(rowIndex) {
 		return this.props.controller.getSelectedRows(this.props.control.name).indexOf(rowIndex) >= 0
-			// ? "column-structure-allocator-control-row-selected"
 			? "table-row table-selected-row "
 			: "table-row";
 	}
@@ -234,36 +234,49 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			row: rowIndex,
 			col: colIndex
 		};
-		const ControlFactory = this.props.controller.getControlFactory();
 		const cellDisabledClassName = disabled ? "disabled" : "";
+		const tableInfo = { table: true };
+		// allows for custom contents in a cell
 		cellContent = controlValue[rowIndex][colIndex];
 		if (Array.isArray(cellContent)) {
 			cellContent = cellContent.join(", ");
 		}
-
+		const ControlFactory = this.props.controller.getControlFactory();
 		const tableCellWidth = parseFloat(colWidth) - parseFloat(columnStyle.paddingLeft) + "px";
-		if (columnDef.editStyle === "subpanel") {
+		if (columnDef.editStyle === EditStyle.SUBPANEL) {
+			cellContent = this._getCustomCtrlContent(propertyId, columnDef, cellContent, tableInfo);
 			cell = (
 				<Td className={"table-cell " + cellDisabledClassName} key={colIndex} column={columnDef.name} style={columnStyle}>
 					<div className="table-text">
 						<span style={{ "width": tableCellWidth }}>{cellContent}</span>
 					</div>
 				</Td>);
-		} else if (columnDef.editStyle === "on_panel") {
+		} else if (columnDef.editStyle === EditStyle.ON_PANEL) {
+			cellContent = this._getCustomCtrlContent(propertyId, columnDef, cellContent, tableInfo);
 			cell = (
 				<Td className={"table-cell " + cellDisabledClassName} key={colIndex} column={columnDef.name} style={columnStyle}>
 					<div className="table-text">
 						<span style={{ "width": tableCellWidth }}>{cellContent}</span>
 					</div>
 				</Td>);
-			// save the cell conent in an object
-			cellContent = ControlFactory.createControlItem(columnDef, propertyId, { table: true });
+			// save the cell content in an object
+			cellContent = ControlFactory.createControlItem(columnDef, propertyId);
 			this.onPanelContainer[rowIndex].push(<div key={colIndex}><br /> {cellContent} </div>);
 		} else { // defaults to inline control
-			cellContent = ControlFactory.createControl(columnDef, propertyId, { table: true });
+			tableInfo.editStyle = EditStyle.INLINE;
+			cellContent = ControlFactory.createControl(columnDef, propertyId, tableInfo);
 			cell = (<Td key={colIndex} column={columnDef.name} style={columnStyle}>{cellContent}</Td>);
 		}
 		return cell;
+	}
+	_getCustomCtrlContent(propertyId, columnDef, defaultContent, tableInfo) {
+		let cellContent = defaultContent;
+		// allow the custom control to set the cell content
+		if (columnDef.controlType === ControlType.CUSTOM) {
+			tableInfo.editStyle = "summary";
+			cellContent = this.props.controller.getCustomControl(propertyId, columnDef, tableInfo);
+		}
+		return cellContent;
 	}
 
 	_getDisabledStatus(rowIndex, colIndex, stateDisabled) {
@@ -481,7 +494,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			const stateStyle2 = {};
 			stateStyle2.pointerEvents = controlState === STATES.DISABLED || controlState === STATES.HIDDEN
 				? "none" : "auto";
-			const columnLabel = (columnDef.controlType === "checkbox")
+			const columnLabel = (columnDef.controlType === ControlType.CHECKBOX)
 				? (<div className="checkbox-container">
 					<div className="checkbox" style={stateStyle2}>
 						<Checkbox {...disabled}

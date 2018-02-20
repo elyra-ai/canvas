@@ -259,6 +259,12 @@ export default class ControlFactory {
 				customContainer={this.rightFlyout}
 				rightFlyout={this.rightFlyout}
 			/>);
+		} else if (control.controlType === ControlType.CUSTOM) {
+			return (
+				<div key={controlKey}>
+					{this.controller.getCustomControl(propertyId, control, tableInfo)}
+				</div>
+			);
 		}
 		return (<ReadonlyControl {...props} />);
 	}

@@ -31,6 +31,9 @@ import CustomMapPanel from "./components/custom-panels/CustomMapPanel";
 import CustomButtonPanel from "./components/custom-panels/CustomButtonPanel";
 import CustomDatasetsPanel from "./components/custom-panels/CustomDatasetsPanel";
 
+import CustomToggleControl from "./components/custom-controls/CustomToggleControl";
+import CustomTableControl from "./components/custom-controls/CustomTableControl";
+
 import BlankCanvasImage from "../../assets/images/blank_canvas.png";
 
 import {
@@ -919,6 +922,7 @@ class App extends React.Component {
 				controllerHandler={this.propertiesControllerHandler}
 				propertyListener={this.propertyListener}
 				actionHandler={this.propertyActionHandler}
+				customControls={[CustomToggleControl, CustomTableControl]}
 			/>);
 
 		let commonPropertiesContainer = null;

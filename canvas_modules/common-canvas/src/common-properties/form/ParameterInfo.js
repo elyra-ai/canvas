@@ -17,7 +17,7 @@ export class ParameterDef {
 		control, orientation, width, charLimit, placeHolderText, separator,
 		resourceKey, visible, valueIcons, sortable, filterable, editStyle, required,
 		numberGenerator, isKey, dmDefault, language, summary, increment, textAfter,
-		textBefore, moveableRows, generatedValues, dateFormat, timeFormat) {
+		textBefore, moveableRows, generatedValues, dateFormat, timeFormat, customControlId, data) {
 		this.name = cname;
 		this.label = ResourceDef.make(label);
 		this.description = ResourceDef.make(description);
@@ -54,6 +54,8 @@ export class ParameterDef {
 		this.generatedValues = generatedValues;
 		this.dateFormat = dateFormat;
 		this.timeFormat = timeFormat;
+		this.customControlId = customControlId;
+		this.data = data;
 	}
 
 	isList() {
@@ -220,7 +222,9 @@ export class ParameterDef {
 				propertyOf(uihint)("moveable_rows"),
 				propertyOf(uihint)("generated_values"),
 				propertyOf(uihint)("date_format"),
-				propertyOf(uihint)("time_format")
+				propertyOf(uihint)("time_format"),
+				propertyOf(uihint)("custom_control_id"),
+				propertyOf(uihint)("data")
 			);
 		}
 		return null;
