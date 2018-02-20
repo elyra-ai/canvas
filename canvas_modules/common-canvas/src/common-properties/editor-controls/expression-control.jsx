@@ -14,7 +14,7 @@ import cm from "codemirror";
 import EditorControl from "./editor-control.jsx";
 import "codemirror/addon/hint/show-hint";
 import "codemirror/addon/display/placeholder";
-
+import "codemirror/addon/display/autorefresh";
 import "codemirror/mode/javascript/javascript";
 import "codemirror/addon/hint/javascript-hint";
 import "codemirror/addon/hint/sql-hint";
@@ -146,7 +146,8 @@ export default class ExpressionControl extends EditorControl {
 			placeholder: this.props.control.additionalText,
 			theme: messageType + " default",
 			readOnly: (stateDisabled.disabled) ? "nocursor" : false,
-			extraKeys: { "Ctrl-Space": "autocomplete" }
+			extraKeys: { "Ctrl-Space": "autocomplete" },
+			autoRefresh: true
 		};
 		const controlId = this.getControlId();
 
