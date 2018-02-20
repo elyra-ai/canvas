@@ -9,6 +9,7 @@
 
 /* eslint complexity: ["error", 17] */
 /* eslint max-depth: ["error", 6] */
+/* eslint no-return-assign: "off" */
 
 import React from "react";
 import PropTypes from "prop-types";
@@ -116,21 +117,17 @@ export default class CommonCanvas extends React.Component {
 	}
 
 	getEditorWidth() {
-		let editorSize = "small";
-		let className = "canvas-flyout-div-open";
-		if (this.props.rightFlyoutContent.props.propertiesInfo.parameterDef &&
-				this.props.rightFlyoutContent.props.propertiesInfo.parameterDef.uihints) {
-			editorSize = this.props.rightFlyoutContent.props.propertiesInfo.parameterDef.uihints.editor_size;
-		} else if (this.props.rightFlyoutContent.props.propertiesInfo.formData) {
-			editorSize = this.props.rightFlyoutContent.props.propertiesInfo.formData.editorSize;
-		}
 		let width = FLYOUT_WIDTH.SMALL;
-		if (editorSize === "medium") {
-			width = FLYOUT_WIDTH.MEDIUM;
-			className = "canvas-flyout-div-open-medium";
-		} else if (editorSize === "large") {
-			width = FLYOUT_WIDTH.LARGE;
-			className = "canvas-flyout-div-open-large";
+		let className = "canvas-flyout-div-open";
+		if (this.flyoutContent) {
+			width = this.flyoutContent.offsetWidth;
+		}
+		if (width > FLYOUT_WIDTH.SMALL + 10) {
+			if (width > FLYOUT_WIDTH.MEDIUM + 10) {
+				className = "canvas-flyout-div-open-large";
+			} else {
+				className = "canvas-flyout-div-open-medium";
+			}
 		}
 		return {
 			width: width,
@@ -365,7 +362,7 @@ export default class CommonCanvas extends React.Component {
 			const widthObj = this.getEditorWidth();
 			paletteClass += (" " + widthObj.className);
 			canvasStyle.minWidth = (parseFloat(canvasStyle.minWidth) + widthObj.width) + "px";
-			rightFlyout = (<div className="right-flyout-panel">
+			rightFlyout = (<div className="right-flyout-panel" ref={ (elem) => this.flyoutContent = elem} >
 				{this.state.rightFlyoutContent}
 			</div>);
 		}
