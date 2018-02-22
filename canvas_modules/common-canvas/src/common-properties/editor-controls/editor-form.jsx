@@ -149,9 +149,13 @@ class EditorForm extends React.Component {
 
 	genPrimaryTabs(key, tabs, propertyId, indexof) {
 		const tabContent = [];
+		let hasAlertsTab = false;
 		for (var i = 0; i < tabs.length; i++) {
 			const tab = tabs[i];
-			const panelItems = this.genUIItem(i, tab.content, propertyId, indexof);
+			if (i === 0 && tab.group === ALERT_TAB_GROUP) {
+				hasAlertsTab = true;
+			}
+			const panelItems = this.genUIItem(this._getContainerIndex(hasAlertsTab, i), tab.content, propertyId, indexof);
 			let additionalComponent = null;
 			if (this.props.additionalComponents) {
 				additionalComponent = this.props.additionalComponents[tab.group];
@@ -173,9 +177,9 @@ class EditorForm extends React.Component {
 				</div>);
 
 				tabContent.push(
-					<div key={i + "-" + key} className="category-title-container-right-flyout-panel">
+					<div key={this._getContainerIndex(hasAlertsTab, i) + "-" + key} className="category-title-container-right-flyout-panel">
 						<a onClick={() => this._showCategoryPanel(tab.text, tabs.length)}
-							id={"category-title-" + i + "-right-flyout-panel"}
+							id={"category-title-" + this._getContainerIndex(hasAlertsTab, i) + "-right-flyout-panel"}
 							className="category-title-right-flyout-panel"
 						>
 							{tab.text.toUpperCase()}{this._getMessageCountForCategory(tab)}
@@ -189,7 +193,7 @@ class EditorForm extends React.Component {
 				tabContent.push(
 					<Tabs.Panel
 						id={this._getTabId(tab)}
-						key={i}
+						key={this._getContainerIndex(hasAlertsTab, i)}
 						title={tab.text}
 					>
 						{panelItems}
@@ -220,6 +224,18 @@ class EditorForm extends React.Component {
 				{tabContent}
 			</Tabs>
 		);
+	}
+
+	_getContainerIndex(hasAlertsTab, index) {
+		// need to ensure that when alert tab is rendered, the existing tabs get the same id
+		// otherwise re-render will cause controls to lose focus
+		if (hasAlertsTab && index === 0) {
+			return "alerts";
+		}
+		if (hasAlertsTab) {
+			return index - 1;
+		}
+		return index;
 	}
 
 	genSubTabs(key, tabs, propertyId, indexof) {
