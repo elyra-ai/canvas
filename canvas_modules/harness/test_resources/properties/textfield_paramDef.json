@@ -1,0 +1,301 @@
+{
+  "titleDefinition": {
+    "title": "Text Fields"
+  },
+  "current_parameters": {
+    "string": "testing",
+    "string_null": null,
+    "string_empty": "",
+    "string_placeholder": null,
+    "string_longControlName": "testing",
+    "string_error": "testing",
+    "string_warning": "testing",
+    "hide": true,
+    "string_hidden": "testing",
+    "disable": true,
+    "string_disabled": "testing"
+  },
+  "parameters": [
+    {
+      "id": "string",
+      "type": "string",
+      "required": true
+    },
+    {
+      "id": "string_default",
+      "type": "string",
+      "default": "default testing",
+      "required": true
+    },
+    {
+      "id": "string_empty",
+      "type": "string",
+      "default": "ERROR - should not be set",
+      "required": true
+    },
+    {
+      "id": "string_undefined",
+      "type": "string",
+      "required": true
+    },
+    {
+      "id": "string_null",
+      "type": "string",
+      "default": "ERROR - should not be set",
+      "required": true
+    },
+    {
+      "id": "string_placeholder",
+      "type": "string"
+    },
+    {
+      "id": "string_longControlName",
+      "type": "string",
+      "required": true
+    },
+    {
+      "id": "string_error",
+      "type": "string",
+      "required": true
+    },
+    {
+      "id": "string_warning",
+      "type": "string",
+      "required": true
+    },
+    {
+      "id": "hide",
+      "type": "boolean"
+    },
+    {
+      "id": "string_hidden",
+      "type": "string",
+      "required": true
+    },
+    {
+      "id": "disable",
+      "type": "boolean"
+    },
+    {
+      "id": "string_disabled",
+      "type": "string",
+      "required": true
+    }
+  ],
+  "uihints": {
+    "id": "textfield",
+    "icon": "images/default.svg",
+    "label": {
+      "default": "string Fields"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "string",
+        "label": {
+          "default": "string"
+        },
+        "description": {
+          "default": "textfield with parameter value set to 'testing'"
+        }
+      },
+      {
+        "parameter_ref": "string_default",
+        "label": {
+          "default": "Default"
+        },
+        "description": {
+          "default": "textfield with parameter value set to 'default testing' by default"
+        }
+      },
+      {
+        "parameter_ref": "string_empty",
+        "label": {
+          "default": "Empty"
+        },
+        "description": {
+          "default": "textfield with parameter value set to '\"\"'"
+        }
+      },
+      {
+        "parameter_ref": "string_null",
+        "label": {
+          "default": "Null"
+        },
+        "description": {
+          "default": "textfield with parameter value set to 'null'"
+        }
+      },
+      {
+        "parameter_ref": "string_undefined",
+        "label": {
+          "default": "Undefined"
+        },
+        "description": {
+          "default": "textfield with parameter value set to 'undefined'"
+        }
+      },
+      {
+        "parameter_ref": "string_placeholder",
+        "label": {
+          "default": "Placeholder text"
+        },
+        "description": {
+          "default": "textfield with placeholder text 'Enter a string'"
+        },
+        "place_holder_text": {
+          "default": "Enter a string"
+        }
+      },
+      {
+        "parameter_ref": "string_longControlName",
+        "label": {
+          "default": "string Field control with really long control labels"
+        },
+        "description": {
+          "default": "textfield with long control labels"
+        }
+      },
+      {
+        "parameter_ref": "string_error",
+        "label": {
+          "default": "Error"
+        },
+        "description": {
+          "default": "textfield with error when set to 'error'"
+        }
+      },
+      {
+        "parameter_ref": "string_warning",
+        "label": {
+          "default": "Warning"
+        },
+        "description": {
+          "default": "textfield with warning when set to 'warn'"
+        }
+      },
+      {
+        "parameter_ref": "hide",
+        "label": {
+          "default": "Hide 'string Hidden'"
+        }
+      },
+      {
+        "parameter_ref": "string_hidden",
+        "label": {
+          "default": "string Hidden"
+        }
+      },
+      {
+        "parameter_ref": "disable",
+        "label": {
+          "default": "Disable 'string Disabled'"
+        }
+      },
+      {
+        "parameter_ref": "string_disabled",
+        "label": {
+          "default": "string Disabled"
+        }
+      }
+    ],
+    "group_info": [
+      {
+        "id": "textfield-values",
+        "label": {
+          "default": "Values"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "string",
+          "string_default",
+          "string_empty",
+          "string_undefined",
+          "string_null",
+          "string_placeholder",
+          "string_longControlName"
+        ]
+      },
+      {
+        "id": "textfield-conditions",
+        "label": {
+          "default": "Conditions"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "string_error",
+          "string_warning",
+          "hide",
+          "string_hidden",
+          "disable",
+          "string_disabled"
+        ]
+      }
+    ]
+  },
+  "conditions": [
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "string_error",
+          "message": {
+            "default": "Should not be 'error'"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "string_error",
+            "op": "notEquals",
+            "value": "error"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "string_warning",
+          "message": {
+            "default": "Should not be 'warn'"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "string_warning",
+            "op": "notEquals",
+            "value": "warn"
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "parameter_refs": [
+          "string_hidden"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hide",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "string_disabled"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disable",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    }
+  ]
+}

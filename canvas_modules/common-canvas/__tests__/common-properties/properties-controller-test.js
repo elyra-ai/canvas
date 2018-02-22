@@ -25,46 +25,12 @@ const propValues = {
 		["field4", true, 10, null, ""],
 		["field5", false, 10, 0.674, null]],
 	param_message1: [],
-	param_message2: []
+	param_message2: [],
+	param_null: null,
+	param_empty: ""
 };
 deepFreeze(propValues);
 
-/*
-const propStates = {
-	param_int: {
-		value: "enabled"
-	},
-	param_str_array: {
-		value: "hidden"
-	},
-	param_mix_table: {
-		"0": {
-			"2": {
-				value: "disabled"
-			}
-		},
-		"3": {
-			"0": {
-				value: "enabled"
-			},
-			"1": {
-				value: "hidden"
-			},
-			"3": {
-				value: "visible"
-			}
-		},
-		"4": {
-			"0": {
-				value: "disabled"
-			},
-			"3": {
-				value: "hidden"
-			}
-		}
-	}
-};
-*/
 const propStates = {
 	param_int: {
 		value: "enabled"
@@ -225,12 +191,12 @@ describe("Properties Controller property values", () => {
 			["field3", false, null, 0.674, "WML"],
 			["field4", null, 10, null, ""],
 			[null, false, 10, null, null]];
-		expect(isEqual(expectedValue, actualValue)).to.be.true;
+		expect(expectedValue).to.eql(actualValue);
 	});
 	it("should get filtered property values correctly", () => {
 		reset();
-		const actualValue = controller.getPropertyValues(true);
-		const expectedValue = {
+		const actualValues = controller.getPropertyValues(true);
+		const expectedValues = {
 			param_int: 5,
 			param_str: "Testing a string parameter",
 			param_mix_table: [
@@ -240,9 +206,11 @@ describe("Properties Controller property values", () => {
 				["field4", null, 10, null, ""],
 				[null, false, 10, null, null]],
 			param_message1: [],
-			param_message2: []
+			param_message2: [],
+			param_null: null,
+			param_empty: ""
 		};
-		expect(isEqual(expectedValue, actualValue)).to.be.true;
+		expect(expectedValues).to.eql(actualValues);
 	});
 });
 

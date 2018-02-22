@@ -469,15 +469,16 @@ export default class PropertiesController {
 
 	getPropertyValue(propertyId, filterHiddenDisabled) {
 		const propertyValue = this.propertiesStore.getPropertyValue(propertyId);
+		let filteredValue;
 		// don't return hidden/disabled values
 		if (filterHiddenDisabled && propertyValue) {
 			// top level value
 			const controlState = this.getControlState(propertyId);
 			if (controlState === STATES.DISABLED || controlState === STATES.HIDDEN) {
-				return null;
+				return filteredValue;
 			}
 			// copy array to modify it and clear out disabled/hidden values
-			const filteredValue = JSON.parse(JSON.stringify(propertyValue));
+			filteredValue = JSON.parse(JSON.stringify(propertyValue));
 			if (Array.isArray(filteredValue)) {
 				for (let rowIdx = 0; rowIdx < filteredValue.length; rowIdx++) {
 					const rowValue = filteredValue[rowIdx];
@@ -511,7 +512,7 @@ export default class PropertiesController {
 				}
 				const filteredValue = this.getPropertyValue({ name: propKey }, filterHiddenDisabled);
 				// only set parameters with values
-				if (typeof filteredValue !== "undefined" && filteredValue !== null) {
+				if (typeof filteredValue !== "undefined") {
 					filteredValues[propKey] = filteredValue;
 				}
 			}
