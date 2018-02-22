@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2016. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2016, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -74,23 +74,55 @@ describe("CommonProperties renders correctly", () => {
 });
 describe("CommonProperties works correctly in flyout", () => {
 	let renderedObject;
+	let wrapper;
 	beforeEach(() => {
 		renderedObject = propertyUtils.flyoutEditorForm(propertiesInfo.parameterDef);
+		wrapper = renderedObject.wrapper;
 	});
 
 	afterEach(() => {
-		renderedObject.wrapper.unmount();
+		wrapper.unmount();
 	});
-	it("When forceApplyProperties set applyPropertyChanges should be called", () => {
+	it("When forceApplyProperties set applyPropertyChanges should be called only if values have changed", () => {
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
 		renderedObject.wrapper.setProps({ forceApplyProperties: true });
+		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
+		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
+		// make some changes
+		const tableBody = wrapper.find("#flexible-table-container").at(0);
+		const tableData = tableBody.find(".reactable-data");
+		let row = tableData.childAt(0);
+		row.simulate("click");
+
+		// ensure remove button is enabled and click it
+		const enabledRemoveColumnButton = wrapper.find("#remove-fields-button-enabled");
+		expect(enabledRemoveColumnButton).to.have.length(1);
+		enabledRemoveColumnButton.simulate("click");
+
+		// save again: should save changes
+		wrapper.setProps({ forceApplyProperties: false });
+		wrapper.setProps({ forceApplyProperties: true });
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 1);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
-		renderedObject.wrapper.setProps({ forceApplyProperties: false });
-		renderedObject.wrapper.setProps({ forceApplyProperties: true });
+
+		// force save: should not save because no additional changes happened
+		wrapper.setProps({ forceApplyProperties: false });
+		wrapper.setProps({ forceApplyProperties: true });
+		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 1);
+		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
+
+		// make more changes
+		row = tableData.childAt(0);
+		row.simulate("click");
+		enabledRemoveColumnButton.simulate("click");
+
+		// save again, should trigger a save
+		wrapper.setProps({ forceApplyProperties: false });
+		wrapper.setProps({ forceApplyProperties: true });
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 2);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
+
 	});
 });
 

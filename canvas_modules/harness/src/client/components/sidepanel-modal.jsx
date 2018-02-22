@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -53,6 +53,9 @@ export default class SidePanelModal extends React.Component {
 	}
 
 	onDropdownSelect(evt, obj) {
+		// close any existing properties before opening a new properties file
+		this.props.closePropertiesEditorDialog();
+
 		if (obj.selected === CHOOSE_FROM_LOCATION) {
 			this.setState({
 				fileChooserVisible: true,

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2016. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2016, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -17,8 +17,16 @@ import PropertyUtil from "../util/property-utils.js";
 export default class SomeofselectControl extends EditorControl {
 	constructor(props) {
 		super(props);
+		this.newSelection = null;
 		this.handleChange = this.handleChange.bind(this);
 		this.genSelectOptions = this.genSelectOptions.bind(this);
+	}
+
+	componentDidMount() {
+		if (this.newSelection) {
+			this.props.controller.updatePropertyValue(this.props.propertyId, this.newSelection);
+			this.newSelection = null;
+		}
 	}
 
 	handleChange(evt) {
@@ -49,12 +57,7 @@ export default class SomeofselectControl extends EditorControl {
 				}
 			}
 			if (selectedValues.length !== newSelns.length) {
-				const that = this;
-				// We need setTimeout here because one cannot set state changing values
-				// from methods that are invoked from the render() cycle.
-				setTimeout(function() {
-					that.props.controller.updatePropertyValue(that.props.propertyId, newSelns);
-				}, 20);
+				this.newSelection = newSelns;
 			}
 		}
 		return options;

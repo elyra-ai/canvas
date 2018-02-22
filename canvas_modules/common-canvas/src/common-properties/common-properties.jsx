@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -44,6 +44,8 @@ class CommonProperties extends React.Component {
 			this.forceUpdate();
 		});
 
+		this.currentParameters = null;
+
 		this.applyPropertiesEditing = this.applyPropertiesEditing.bind(this);
 		this.showPropertiesButtons = this.showPropertiesButtons.bind(this);
 		this.cancelHandler = this.cancelHandler.bind(this);
@@ -65,6 +67,10 @@ class CommonProperties extends React.Component {
 		this.propertiesController.setCustomControls(this.props.customControls);
 	}
 
+	componentDidMount() {
+		this.currentParameters = JSON.parse(JSON.stringify(this.propertiesController.getPropertyValues(false)));
+	}
+
 	componentWillReceiveProps(newProps) {
 		if (newProps.propertiesInfo) {
 			if (newProps.propertiesInfo.messages && !isEqual(newProps.propertiesInfo.messages, this.propertiesInfo.messages)) {
@@ -76,12 +82,19 @@ class CommonProperties extends React.Component {
 				(newProps.propertiesInfo.parameterDef && !isEqual(newProps.propertiesInfo.parameterDef, this.propertiesInfo.parameterDef))) {
 				this.propertiesInfo = newProps.propertiesInfo;
 				this.setForm();
+				this.currentParameters = null;
 			}
 		}
 		if (newProps.forceApplyProperties) {
 			this.applyPropertiesEditing(false);
 		}
 		this.propertiesController.setCustomControls(newProps.customControls);
+	}
+
+	componentDidUpdate(prevProps, prevState) {
+		if (!this.currentParameters) {
+			this.currentParameters = JSON.parse(JSON.stringify(this.propertiesController.getPropertyValues(false)));
+		}
 	}
 
 	getEditorWidth() {
@@ -118,6 +131,7 @@ class CommonProperties extends React.Component {
 		this.propertiesController.setForm(formData);
 		this.propertiesController.setAppData(this.props.propertiesInfo.appData);
 		if (formData) {
+			this.originalTitle = formData.label;
 			this.setState({
 				title: formData.label
 			});
@@ -179,36 +193,48 @@ class CommonProperties extends React.Component {
 	}
 
 	applyPropertiesEditing(closeProperties) {
-		const settings = { additionalInfo: {} };
-		settings.properties = this.propertiesController.getPropertyValues(true);
-		const errorMessages = this.propertiesController.getErrorMessages(true);
-		if (errorMessages) {
-			settings.additionalInfo.messages = errorMessages;
-		}
-		if (this.state.title) {
-			settings.additionalInfo.title = this.state.title;
-		}
-		// set initial values for undo
-		const formData = this.propertiesController.getForm();
-		const initialCurrentProperties = { additionalInfo: { messages: [] } };
-		if (formData && formData.data && formData.data.currentParameters) {
-			initialCurrentProperties.properties = JSON.parse(JSON.stringify(formData.data.currentParameters));
-		}
-		if (this.props.propertiesInfo.messages) {
-			initialCurrentProperties.additionalInfo.messages = JSON.parse(JSON.stringify(this.props.propertiesInfo.messages));
-		}
-		if (formData && formData.label) {
-			initialCurrentProperties.additionalInfo.title = formData.label;
-		}
-		// don't closed if forceApplyProperties is set by user
-		if (closeProperties) {
-			// May need to close the dialog inside the callback in
-			// case of validation errors.
+		// only save if title or parameters have changed
+		if (this.originalTitle !== this.state.title ||
+				(this.currentParameters && JSON.stringify(this.currentParameters) !==
+				JSON.stringify(this.propertiesController.getPropertyValues(false)))) {
+			const settings = { additionalInfo: {} };
+			settings.properties = this.propertiesController.getPropertyValues(true);
+			const errorMessages = this.propertiesController.getErrorMessages(true);
+			if (errorMessages) {
+				settings.additionalInfo.messages = errorMessages;
+			}
+			if (this.state.title) {
+				settings.additionalInfo.title = this.state.title;
+			}
+			// set initial values for undo
+			const formData = this.propertiesController.getForm();
+			const initialCurrentProperties = { additionalInfo: { messages: [] } };
+			if (formData && formData.data && formData.data.currentParameters) {
+				initialCurrentProperties.properties = JSON.parse(JSON.stringify(formData.data.currentParameters));
+			}
+			if (this.props.propertiesInfo.messages) {
+				initialCurrentProperties.additionalInfo.messages = JSON.parse(JSON.stringify(this.props.propertiesInfo.messages));
+			}
+			if (formData && formData.label) {
+				initialCurrentProperties.additionalInfo.title = formData.label;
+			}
+			// don't closed if forceApplyProperties is set by user
+			if (closeProperties) {
+				// May need to close the dialog inside the callback in
+				// case of validation errors.
+				this.props.propertiesInfo.closePropertiesDialog();
+			} else {
+				// forceApplyProperties was true:
+				// if we don't close the dialog, set the currentParameters to the new parameters
+				// so we don't save again unnecessarily when clicking save but no additional changes happened
+				this.currentParameters = JSON.parse(JSON.stringify(this.propertiesController.getPropertyValues(false)));
+			}
+			const command = new CommonPropertiesAction(settings, initialCurrentProperties,
+				this.props.propertiesInfo.appData, this.props.propertiesInfo.applyPropertyChanges);
+			this.propertiesController.getCommandStack().do(command);
+		} else if (closeProperties) {
 			this.props.propertiesInfo.closePropertiesDialog();
 		}
-		const command = new CommonPropertiesAction(settings, initialCurrentProperties,
-			this.props.propertiesInfo.appData, this.props.propertiesInfo.applyPropertyChanges);
-		this.propertiesController.getCommandStack().do(command);
 	}
 
 	cancelHandler() {

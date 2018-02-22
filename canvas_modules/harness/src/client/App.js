@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -91,6 +91,8 @@ class App extends React.Component {
 			},
 			extraCanvasDisplayed: false
 		};
+
+		this.currentEditorId = null;
 
 		this.openConsole = this.openConsole.bind(this);
 		this.log = this.log.bind(this);
@@ -411,9 +413,6 @@ class App extends React.Component {
 	// common-canvas
 	clickActionHandler(source) {
 		this.log("clickActionHandler()", source);
-		if (source.clickType === "DOUBLE_CLICK" && source.objectType === "node") {
-			this.editNodeHandler(source.id);
-		}
 	}
 
 	applyDiagramEdit(data, options) {
@@ -689,24 +688,50 @@ class App extends React.Component {
 
 	editNodeHandler(nodeId) {
 		this.log("action: editNode", nodeId);
-		const properties = this.getNodeForm(nodeId);
-		const messages = this.canvasController.getNodeMessages(nodeId);
+		if (nodeId && this.currentEditorId !== nodeId) {
+			// apply properties from previous node if node selection has changed w/o closing editor
+			if (this.currentEditorId) {
+				this.CommonProperties.getWrappedInstance().applyPropertiesEditing(false);
+			}
 
-		const propsInfo = {
-			title: <FormattedMessage id={ "dialog.nodePropertiesTitle" } />,
-			messages: messages,
-			formData: properties.data.formData,
-			parameterDef: properties.data,
-			applyPropertyChanges: this.applyPropertyChanges,
-			closePropertiesDialog: this.closePropertiesEditorDialog,
-			additionalComponents: properties.additionalComponents
-		};
+			this.currentEditorId = nodeId; // set new node
 
-		this.setState({ showPropertiesDialog: true, propertiesInfo: propsInfo });
+			const nodeForm = this.getNodeForm(nodeId);
+			// harness: when adding nodes via double-click, nodeForm isn't set because CreateAutoNodeAction
+			// works differently than CreateNodeAction
+			if (!nodeForm) {
+				NodeToForm.setNodeForm(nodeId, this.canvasController.getNode(nodeId).operator_id_ref);
+			}
+			const properties = this.getNodeForm(nodeId);
+			const messages = this.canvasController.getNodeMessages(nodeId);
+			const propsInfo = {
+				title: <FormattedMessage id={ "dialog.nodePropertiesTitle" } />,
+				messages: messages,
+				formData: properties.data.formData,
+				parameterDef: properties.data,
+				applyPropertyChanges: this.applyPropertyChanges,
+				closePropertiesDialog: this.closePropertiesEditorDialog,
+				additionalComponents: properties.additionalComponents
+			};
+
+			this.setState({ showPropertiesDialog: true, propertiesInfo: propsInfo });
+		}
 	}
 
 	selectionChangeHandler(data) {
-		this.log("selectionChangeHandler()", data);
+		if (data && data.selectedNodes) {
+			// only show properties if exactly one node is selected and no other elements like comments
+			if (data.selection.length === 1 && data.selectedNodes.length === 1) {
+				this.editNodeHandler(data.selectedNodes[0].id);
+				return;
+			}
+		}
+		// apply properties from previous node if node selection has to more than one node
+		if (this.currentEditorId) {
+			this.CommonProperties.getWrappedInstance().applyPropertiesEditing(false);
+			this.setState({ showPropertiesDialog: false });
+			this.currentEditorId = null;
+		}
 	}
 
 	tipHandler(tipType, data) {
@@ -749,6 +774,8 @@ class App extends React.Component {
 	}
 
 	closePropertiesEditorDialog() {
+		this.currentEditorId = null;
+		this.canvasController.setSelections([]); // clear selection
 		this.setState({ showPropertiesDialog: false, propertiesInfo: {} });
 	}
 
@@ -923,6 +950,11 @@ class App extends React.Component {
 				propertyListener={this.propertyListener}
 				actionHandler={this.propertyActionHandler}
 				customControls={[CustomToggleControl, CustomTableControl]}
+				ref={
+					(instance) => {
+						this.CommonProperties = instance;
+					}
+				}
 			/>);
 
 		let commonPropertiesContainer = null;

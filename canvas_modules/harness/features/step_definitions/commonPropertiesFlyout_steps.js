@@ -1,12 +1,13 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
 
+import isEmpty from "lodash/isEmpty";
 import testUtils from "./utilities/test-utils.js";
 
 /* global browser */
@@ -15,8 +16,12 @@ module.exports = function() {
 
 	this.Then(/^I see common properties flyout title "([^"]*)"$/, function(givenTitle) {
 		browser.pause(500);
-		var dialogTitle = browser.getValue("#node-title-editor-right-flyout-panel");
-		expect(dialogTitle).toEqual(givenTitle);
+		expect(browser.getValue("#node-title-editor-right-flyout-panel")).toEqual(givenTitle);
+	});
+
+	this.Then("I don't see the common properties flyout", function() {
+		browser.pause(500);
+		expect(isEmpty(browser.$$("#node-title-editor-right-flyout-panel"))).toBe(true);
 	});
 
 	this.Then("I click on title edit icon", function() {

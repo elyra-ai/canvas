@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2016. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2016, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -14,7 +14,15 @@ import EditorControl from "./editor-control.jsx";
 export default class RadiosetControl extends EditorControl {
 	constructor(props) {
 		super(props);
+		this.setEmptySelection = false;
 		this.handleChange = this.handleChange.bind(this);
+	}
+
+	componentDidMount() {
+		if (this.setEmptySelection) {
+			this.setEmptySelection = false;
+			this.props.controller.updatePropertyValue(this.props.propertyId, "");
+		}
 	}
 
 	handleChange(evt) {
@@ -87,13 +95,7 @@ export default class RadiosetControl extends EditorControl {
 			);
 		}
 		if (controlValue && controlValue.length > 0 && !wasChecked) {
-			const that = this;
-			// The current selection has been filtered out - remove it
-			// We need setTimeout here because one cannot set state changing values
-			// from methods that are invoked from the render() cycle.
-			setTimeout(function() {
-				that.props.controller.updatePropertyValue(that.props.propertyId, "");
-			}, 20);
+			this.setEmptySelection = true;
 		}
 		return (
 			<div id={this.getControlID()} className="radio" style={stateStyle} >

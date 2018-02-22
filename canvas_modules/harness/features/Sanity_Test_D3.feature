@@ -55,3 +55,29 @@ Feature: Sanity_Test_D3
     Then I expect the object model to be empty
 		Then I write out the event log
 		Then I pause for 2 seconds
+
+	Scenario: Sanity test selecting nodes opens properties
+		Given I am on the test harness
+		Given I have toggled the app side panel
+		Given I have selected the "Flyout" palette layout
+		Given I have uploaded predefined palette "modelerPalette.json"
+		Given I have selected the "D3" rendering engine
+		Given I have selected the "Halo" connection type
+		Given I have toggled the app side panel
+
+		Then I open the palette
+		Then I add node 1 a "Var. File" node from the "Import" category onto the canvas at 300, 200
+		Then I add node 2 a "Derive" node from the "Field Ops" category onto the canvas at 400, 200
+		Then I close the palette
+
+		Then I select node 2 the "Derive" node
+		Then I see common properties flyout title "Derive"
+		Then I select node 1 the "Var. File" node
+		Then I see common properties flyout title "Var. File"
+		Then I select all the nodes in the canvas
+		Then I don't see the common properties flyout
+		Then I click the canvas background at 1, 1 to close the context menu or clear selections
+		Then I select node 1 the "Var. File" node
+		Then I see common properties flyout title "Var. File"
+		Then I delete node 1 the "Var. File" node
+		Then I don't see the common properties flyout

@@ -21,7 +21,7 @@
     },
     {
       "id": "selectschema_default",
-      "default": "Drugs_1",
+      "default": "1",
       "required": true
     },
     {

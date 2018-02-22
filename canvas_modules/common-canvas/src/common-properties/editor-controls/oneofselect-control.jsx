@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2016, 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2016, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -21,12 +21,20 @@ export default class OneofselectControl extends EditorControl {
 		this.state = {
 			clippedClassName: ""
 		};
+		this.setEmptySelection = false;
 		this.emptyLabel = "...";
 		if (props.control.additionalText) {
 			this.emptyLabel = this.props.control.additionalText;
 		}
 		this.handleChange = this.handleChange.bind(this);
 		this.onBlur = this.onBlur.bind(this);
+	}
+
+	componentDidMount() {
+		if (this.setEmptySelection) {
+			this.setEmptySelection = false;
+			this.props.controller.updatePropertyValue(this.props.propertyId, "");
+		}
 	}
 
 	componentWillReceiveProps(newProps) {
@@ -72,7 +80,6 @@ export default class OneofselectControl extends EditorControl {
 		if (this.props.tableControl) {
 			evt.stopPropagation();
 		}
-		this.props.controller.validateInput(this.props.propertyId);
 	}
 
 	_findTopPos(me, dropdownRect) {
@@ -152,13 +159,7 @@ export default class OneofselectControl extends EditorControl {
 			}
 		}
 		if (inSelectedValue && PropertyUtil.toType(selectedOption) === "array") {
-			const that = this;
-			// The current selection has been filtered out - remove it
-			// We need setTimeout here because one cannot set state changing values
-			// from methods that are invoked from the render() cycle.
-			setTimeout(function() {
-				that.props.controller.updatePropertyValue(that.props.propertyId, "");
-			}, 20);
+			this.setEmptySelection = true;
 		}
 		return {
 			options: options,
