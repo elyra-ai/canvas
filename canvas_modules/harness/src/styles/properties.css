@@ -201,6 +201,10 @@
 	padding-right: 1em;
 }
 
+.section-column > div {
+	width: unset !important;
+}
+
 .section-column-code {
 	padding-right: 0px;
 }
