@@ -12,7 +12,7 @@ npm install
 echo "grunt build"
 grunt build
 echo "Run jest tests"
-npm test
+npm run test-coverage
 
 echo "cd $WORKING_DIR"
 cd $WORKING_DIR

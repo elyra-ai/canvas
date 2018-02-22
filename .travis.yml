@@ -25,6 +25,7 @@ before_script:
   - sleep 3 # give xvfb some time to start
 script:
   - ./canvas_modules/common-canvas/build.sh
+  - ./scripts/source_scan.sh
   - ./canvas_modules/harness/build.sh
   - ./canvas_modules/harness/functional_test.sh
 deploy:
