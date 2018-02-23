@@ -403,37 +403,40 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	if (parameter.getRole() === ParamRole.ENUM) {
 		valueLabels = _parameterValueLabels(parameter, l10nProvider);
 	}
-	return new Control(parameter.name,
-		controlLabel,
-		separateLabel,
-		controlDesc,
-		parameter.getControl(controlType),
-		ValueDef.make(parameter),
-		role, additionalText,
-		orientation,
-		parameter.getValidValues(),
-		valueLabels,
-		parameter.valueIcons,
-		parameter.sortable,
-		parameter.filterable,
-		parameter.charLimit,
-		subControls,
-		keyIndex,
-		defaultRow,
-		childItem,
-		moveableRows,
-		required,
-		parameter.language,
-		parameter.summary,
-		parameter.increment,
-		rowSelection,
-		parameter.generatedValues,
-		addRemoveRows,
-		parameter.dateFormat,
-		parameter.timeFormat,
-		parameter.customControlId,
-		parameter.data
-	);
+	const settings = {};
+	settings.name = parameter.name;
+	settings.label = controlLabel;
+	settings.separateLabel = separateLabel;
+	settings.description = controlDesc;
+	settings.controlType = parameter.getControl(controlType);
+	settings.valueDef = ValueDef.make(parameter);
+	settings.role = role;
+	settings.additionalText = additionalText;
+	settings.orientation = orientation;
+	settings.values = parameter.getValidValues();
+	settings.valueLabels = valueLabels;
+	settings.valueIcons = parameter.valueIcons;
+	settings.sortable = parameter.sortable;
+	settings.filterable = parameter.filterable;
+	settings.charLimit = parameter.charLimit;
+	settings.subControls = subControls;
+	settings.keyIndex = keyIndex;
+	settings.defaultRow = defaultRow;
+	settings.childItem = childItem;
+	settings.moveableRows = moveableRows;
+	settings.required = required;
+	settings.language = parameter.language;
+	settings.summary = parameter.summary;
+	settings.increment = parameter.increment;
+	settings.rowSelection = rowSelection;
+	settings.generatedValues = parameter.generatedValues;
+	settings.addRemoveRows = addRemoveRows;
+	settings.dateFormat = parameter.dateFormat;
+	settings.timeFormat = parameter.timeFormat;
+	settings.customControlId = parameter.customControlId;
+	settings.data = parameter.data;
+	settings.rows = parameter.rows;
+	return new Control(settings);
 }
 
 function _processListParameter(parameter, group) {
@@ -550,36 +553,36 @@ function _makeSubControl(parameter, l10nProvider) {
 	if (parameter.getRole() === ParamRole.ENUM) {
 		valueLabels = _parameterValueLabels(parameter, l10nProvider);
 	}
-
-	return new SubControl(parameter.name,
-		controlLabel,
-		separateLabel,
-		controlDesc,
-		parameter.visible,
-		parameter.columns(8),
-		parameter.getControl(controlType),
-		ValueDef.make(parameter),
-		role,
-		additionalText,
-		orientation,
-		parameter.getValidValues(),
-		valueLabels,
-		parameter.valueIcons,
-		parameter.sortable,
-		parameter.filterable,
-		parameter.charLimit,
-		parameter.editStyle,
-		parameter.isKey,
-		parameter.dmDefault,
-		parameter.language,
-		parameter.summary,
-		parameter.increment,
-		parameter.generatedValues,
-		parameter.dateFormat,
-		parameter.timeFormat,
-		parameter.customControlId,
-		parameter.data
-	);
+	const settings = {};
+	settings.name = parameter.name;
+	settings.label = controlLabel;
+	settings.separateLabel = separateLabel;
+	settings.description = controlDesc;
+	settings.visible = parameter.visible;
+	settings.width = parameter.columns(8);
+	settings.controlType = parameter.getControl(controlType);
+	settings.valueDef = ValueDef.make(parameter);
+	settings.role = role;
+	settings.additionalText = additionalText;
+	settings.orientation = orientation;
+	settings.values = parameter.getValidValues();
+	settings.valueLabels = valueLabels;
+	settings.valueIcons = parameter.valueIcons;
+	settings.sortable = parameter.sortable;
+	settings.filterable = parameter.filterable;
+	settings.charLimit = parameter.charLimit;
+	settings.editStyle = parameter.editStyle;
+	settings.isKeyField = parameter.isKey;
+	settings.dmDefault = parameter.dmDefault;
+	settings.language = parameter.language;
+	settings.summary = parameter.summary;
+	settings.increment = parameter.increment;
+	settings.generatedValues = parameter.generatedValues;
+	settings.dateFormat = parameter.dateFormat;
+	settings.timeFormat = parameter.timeFormat;
+	settings.customControlId = parameter.customControlId;
+	settings.data = parameter.data;
+	return new SubControl(settings);
 }
 
 /**

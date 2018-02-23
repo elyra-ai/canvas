@@ -1,0 +1,390 @@
+{
+  "titleDefinition": {
+    "title": "Display Rows"
+  },
+  "current_parameters": {
+    "columnSelect": [
+      "Age",
+      "Sex",
+      "BP",
+      "Cholesterol",
+      "Na",
+      "K"
+    ],
+    "structuretableSortOrder": [
+      [
+        "Cholesterol",
+        "Ascending"
+      ]
+    ],
+    "structurelisteditorListInput": [
+      [
+        "Hello",
+        "World"
+      ],
+      [
+        "one",
+        "two"
+      ],
+      [
+        "apple",
+        "orange"
+      ],
+      [
+        "ford",
+        "honda"
+      ]
+    ]
+  },
+  "parameters": [
+    {
+      "id": "columnSelect",
+      "type": "array[string]",
+      "default": [],
+      "role": "column",
+      "required": true
+    },
+    {
+      "id": "structuretableSortOrder",
+      "type": "array[structuretableSortOrder]"
+    },
+    {
+      "id": "structurelisteditorListInput",
+      "type": "array[structurelisteditorListInput]",
+      "required": true,
+      "default": []
+    }
+  ],
+  "complex_types": [
+    {
+      "id": "structuretableSortOrder",
+      "key_definition": {
+        "id": "field",
+        "type": "string",
+        "role": "column",
+        "default": ""
+      },
+      "parameters": [
+        {
+          "id": "structuretable_sort_order",
+          "enum": [
+            "Ascending",
+            "Descending"
+          ],
+          "default": "Ascending"
+        }
+      ]
+    },
+    {
+      "id": "structurelisteditorListInput",
+      "parameters": [
+        {
+          "id": "name",
+          "type": "string",
+          "role": "new_column"
+        },
+        {
+          "id": "description",
+          "type": "string",
+          "role": "new_column"
+        }
+      ]
+    }
+  ],
+  "uihints": {
+    "id": "displayRows",
+    "icon": "images/transformationspark.svg",
+    "parameter_info": [
+      {
+        "parameter_ref": "columnSelect",
+        "label": {
+          "default": "Column Select"
+        },
+        "rows": 3,
+        "text_before": {
+          "default": "The column-select control displays 3 rows"
+        }
+      },
+      {
+        "parameter_ref": "structuretableSortOrder",
+        "required": true,
+        "label": {
+          "default": "Sort by"
+        },
+        "description": {
+          "default": "Use arrows to reorder the sorting priority",
+          "placement": "on_panel"
+        },
+        "rows": 3,
+        "separator": "after",
+        "text_before": {
+          "default": "This table control specifies 3 rows for display"
+        }
+      },
+      {
+        "parameter_ref": "structurelisteditorListInput",
+        "label": {
+          "default": "Complex Table List Input"
+        },
+        "description": {
+          "default": "Complex table control list editor table input"
+        },
+        "text_before": {
+          "default": "This table control falls back on the default 4 rows"
+        }
+      }
+    ],
+    "complex_type_info": [
+      {
+        "complex_type_ref": "structuretableSortOrder",
+        "moveable_rows": true,
+        "key_definition": {
+          "parameter_ref": "field",
+          "width": 28,
+          "label": {
+            "resource_key": "structuretableSortOrder.field.label"
+          },
+          "summary": true
+        },
+        "parameters": [
+          {
+            "parameter_ref": "structuretable_sort_order",
+            "width": 16,
+            "label": {
+              "resource_key": "structuretableSortOrder.sort_order.label"
+            },
+            "description": {
+              "resource_key": "structuretableSortOrder.sort_order.desc"
+            },
+            "control": "toggletext",
+            "value_icons": [
+              "/images/up-triangle.svg",
+              "/images/down-triangle.svg"
+            ]
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "structurelisteditorListInput",
+        "moveable_rows": true,
+        "parameters": [
+          {
+            "parameter_ref": "name",
+            "filterable": true,
+            "label": {
+              "default": "Structure Name",
+              "resource_key": "structurelisteditorListInput.name.label"
+            },
+            "width": 20,
+            "edit_style": "subpanel",
+            "summary": true
+          },
+          {
+            "parameter_ref": "description",
+            "sortable": true,
+            "label": {
+              "resource_key": "structurelisteditorListInput.description.label"
+            },
+            "width": 20,
+            "edit_style": "subpanel"
+          }
+        ]
+      }
+    ],
+    "group_info": [
+      {
+        "id": "settings",
+        "label": {
+          "default": "Settings"
+        },
+        "parameter_refs": [
+          "columnSelect"
+        ],
+        "group_info": [
+          {
+            "id": "structuretableSortOrder-summary-panel",
+            "label": {
+              "default": "Configure Sort Order"
+            },
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "structuretableSortOrder",
+                "type": "columnSelection",
+                "label": {
+                  "default": "Columns"
+                },
+                "parameter_refs": [
+                  "structuretableSortOrder",
+                  "structurelisteditorListInput"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "conditions": [
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "columnSelect",
+          "message": {
+            "resource_key": "colselect_not_empty"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "columnSelect",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    }
+  ],
+  "dataset_metadata": [
+		{
+	    "fields": [
+	      {
+	        "name": "Age",
+	        "type": "integer",
+	        "metadata": {
+	          "description": "",
+	          "measure": "range",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "Sex",
+	        "type": "string",
+	        "metadata": {
+	          "description": "",
+	          "measure": "discrete",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "BP",
+	        "type": "string",
+	        "metadata": {
+	          "description": "",
+	          "measure": "discrete",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "Cholesterol",
+	        "type": "string",
+	        "metadata": {
+	          "description": "",
+	          "measure": "discrete",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "Na",
+	        "type": "double",
+	        "metadata": {
+	          "description": "",
+	          "measure": "range",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "K",
+	        "type": "double",
+	        "metadata": {
+	          "description": "",
+	          "measure": "range",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "Drug",
+	        "type": "string",
+	        "metadata": {
+	          "description": "",
+	          "measure": "discrete",
+	          "modeling_role": "input"
+	        }
+	      },
+        {
+	        "name": "Age2",
+	        "type": "integer",
+	        "metadata": {
+	          "description": "",
+	          "measure": "range",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "Sex2",
+	        "type": "string",
+	        "metadata": {
+	          "description": "",
+	          "measure": "discrete",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "BP2",
+	        "type": "string",
+	        "metadata": {
+	          "description": "",
+	          "measure": "discrete",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "Cholesterol2",
+	        "type": "string",
+	        "metadata": {
+	          "description": "",
+	          "measure": "discrete",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "Na2",
+	        "type": "double",
+	        "metadata": {
+	          "description": "",
+	          "measure": "range",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "K2",
+	        "type": "double",
+	        "metadata": {
+	          "description": "",
+	          "measure": "range",
+	          "modeling_role": "input"
+	        }
+	      },
+	      {
+	        "name": "Drug2",
+	        "type": "string",
+	        "metadata": {
+	          "description": "",
+	          "measure": "discrete",
+	          "modeling_role": "input"
+	        }
+	      }
+	    ]
+	  }
+	],
+  "resources": {
+    "colselect_not_empty": "Column select cannot be empty",
+    "structuretableSortOrder.label": "Sort",
+    "structuretableSortOrder.field.label": "Field",
+    "structuretableSortOrder.sort_order.label": "Order",
+    "structuretableSortOrder.sort_order.desc": "Update sort order",
+    "structuretableSortOrder.sort_order.Ascending.label": "Ascending",
+    "structuretableSortOrder.sort_order.Descending.label": "Descending",
+    "structurelisteditorListInput.name.label": "Name",
+    "structurelisteditorListInput.description.label": "Description"
+  }
+}

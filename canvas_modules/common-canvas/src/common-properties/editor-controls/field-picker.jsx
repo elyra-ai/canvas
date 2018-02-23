@@ -755,6 +755,7 @@ class FieldPicker extends EditorControl {
 				onSort={this.onSort}
 				filterKeyword={this.state.filterText}
 				scrollKey={this.props.control.name}
+				noAutoSize
 			/>
 		);
 	}

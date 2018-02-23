@@ -133,7 +133,8 @@
         "description": {
           "default": "Change the type of columns in the active dataset"
         },
-        "control": "structuretable"
+        "control": "structuretable",
+        "rows": 8
       }
     ],
     "group_info": [

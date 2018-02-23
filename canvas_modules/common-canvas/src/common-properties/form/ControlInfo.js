@@ -10,133 +10,135 @@
 
 import { EditStyle } from "../constants/form-constants";
 
+/* eslint complexity: ["error", 40] */
+
 class ControlDef {
-	constructor(cname, label, separateLabel, description, controlType, valueDef, role, additionalText,
-		orientation, values, valueLabels, valueIcons, sortable, filterable, charLimit, language,
-		summary, increment, generatedValues, dateFormat, timeFormat, customControlId, data) {
-		this.name = cname;
-		this.label = label;
-		this.separateLabel = separateLabel;
-		if (description) {
-			this.description = description;
+	constructor(settings) {
+		this.name = settings.name;
+		if (settings.label) {
+			this.label = settings.label;
 		}
-		this.controlType = controlType;
-		this.valueDef = valueDef;
-		if (role) {
-			this.role = role;
+		if (typeof settings.separateLabel === "boolean") {
+			this.separateLabel = settings.separateLabel;
 		}
-		if (additionalText) {
-			this.additionalText = additionalText;
+		if (settings.description) {
+			this.description = settings.description;
 		}
-		if (orientation) {
-			this.orientation = orientation;
+		if (settings.controlType) {
+			this.controlType = settings.controlType;
 		}
-		if (values) {
-			this.values = values;
+		if (settings.valueDef) {
+			this.valueDef = settings.valueDef;
 		}
-		if (valueLabels) {
-			this.valueLabels = valueLabels;
+		if (settings.role) {
+			this.role = settings.role;
 		}
-		if (valueIcons) {
-			this.valueIcons = valueIcons;
+		if (settings.additionalText) {
+			this.additionalText = settings.additionalText;
 		}
-		if (typeof sortable === "boolean") {
-			this.sortable = sortable;
+		if (settings.orientation) {
+			this.orientation = settings.orientation;
 		}
-		if (typeof filterable === "boolean") {
-			this.filterable = filterable;
+		if (settings.values) {
+			this.values = settings.values;
 		}
-		if (language) {
-			this.language = language;
+		if (settings.valueLabels) {
+			this.valueLabels = settings.valueLabels;
 		}
-		if (charLimit) {
-			this.charLimit = charLimit;
+		if (settings.valueIcons) {
+			this.valueIcons = settings.valueIcons;
 		}
-		if (summary) {
-			this.summary = summary;
+		if (typeof settings.sortable === "boolean") {
+			this.sortable = settings.sortable;
 		}
-		if (increment) {
-			this.increment = increment;
+		if (typeof settings.filterable === "boolean") {
+			this.filterable = settings.filterable;
 		}
-		if (generatedValues) {
+		if (settings.language) {
+			this.language = settings.language;
+		}
+		if (settings.charLimit) {
+			this.charLimit = settings.charLimit;
+		}
+		if (settings.summary) {
+			this.summary = settings.summary;
+		}
+		if (settings.increment) {
+			this.increment = settings.increment;
+		}
+		if (settings.generatedValues) {
 			this.generatedValues = {};
-			if (generatedValues.operation) {
-				this.generatedValues.operation = generatedValues.operation;
+			if (settings.generatedValues.operation) {
+				this.generatedValues.operation = settings.generatedValues.operation;
 			}
-			if (generatedValues.start_value) {
-				this.generatedValues.startValue = generatedValues.start_value;
+			if (settings.generatedValues.start_value) {
+				this.generatedValues.startValue = settings.generatedValues.start_value;
 			}
 		}
-		if (dateFormat) {
-			this.dateFormat = dateFormat;
+		if (settings.dateFormat) {
+			this.dateFormat = settings.dateFormat;
 		}
-		if (timeFormat) {
-			this.timeFormat = timeFormat;
+		if (settings.timeFormat) {
+			this.timeFormat = settings.timeFormat;
 		}
-		if (customControlId) {
-			this.customControlId = customControlId;
+		if (settings.customControlId) {
+			this.customControlId = settings.customControlId;
 		}
-		if (data) {
-			this.data = data;
+		if (settings.data) {
+			this.data = settings.data;
 		}
 	}
 }
 
 export class Control extends ControlDef {
-	constructor(cname, label, separateLabel, description, controlType, valueDef, role, additionalText, orientation,
-		values, valueLabels, valueIcons, sortable, filterable, charLimit, subControls, keyIndex, defaultRow,
-		childItem, moveableRows, required, language, summary, increment, rowSelection, generatedValues, addRemoveRows,
-		dateFormat, timeFormat, customControlId, data) {
-		super(cname, label, separateLabel, description, controlType, valueDef, role, additionalText, orientation, values,
-			valueLabels, valueIcons, sortable, filterable, charLimit, language, summary, increment, generatedValues,
-			dateFormat, timeFormat, customControlId, data);
-		if (subControls) {
-			this.subControls = subControls;
+	constructor(settings) {
+		super(settings);
+		if (settings.subControls) {
+			this.subControls = settings.subControls;
 		}
-		if (typeof keyIndex === "number") {
-			this.keyIndex = keyIndex;
+		if (typeof settings.keyIndex === "number") {
+			this.keyIndex = settings.keyIndex;
 		}
-		if (defaultRow) {
-			this.defaultRow = defaultRow;
+		if (settings.defaultRow) {
+			this.defaultRow = settings.defaultRow;
 		}
-		if (childItem) {
-			this.childItem = childItem;
+		if (settings.childItem) {
+			this.childItem = settings.childItem;
 		}
-		if (typeof moveableRows === "boolean") {
-			this.moveableRows = moveableRows;
+		if (typeof settings.moveableRows === "boolean") {
+			this.moveableRows = settings.moveableRows;
 		}
-		if (typeof required === "boolean") {
-			this.required = required;
+		if (typeof settings.required === "boolean") {
+			this.required = settings.required;
 		}
-		if (rowSelection) {
-			this.rowSelection = rowSelection;
+		if (settings.rowSelection) {
+			this.rowSelection = settings.rowSelection;
 		}
-		if (typeof addRemoveRows === "boolean") {
-			this.addRemoveRows = addRemoveRows;
+		if (typeof settings.addRemoveRows === "boolean") {
+			this.addRemoveRows = settings.addRemoveRows;
+		}
+		if (settings.rows) {
+			this.rows = settings.rows;
 		}
 	}
 }
 
 export class SubControl extends ControlDef {
-	constructor(cname, label, separateLabel, description, visible, width, controlType, valueDef, role, additionalText,
-		orientation, values, valueLabels, valueIcons, sortable, filterable, charLimit, editStyle, isKeyField,
-		dmDefault, language, summary, increment, generatedValues, dateFormat, timeFormat, customControlId, data) {
-		super(cname, label, separateLabel, description, controlType, valueDef, role, additionalText, orientation,
-			values, valueLabels, valueIcons, sortable, filterable, charLimit, language, summary, increment, generatedValues,
-			dateFormat, timeFormat, customControlId, data);
-		if (typeof visible === "boolean") {
-			this.visible = visible;
+	constructor(settings) {
+		super(settings);
+		if (typeof settings.visible === "boolean") {
+			this.visible = settings.visible;
 		}
-		if (typeof width === "number") {
-			this.width = width;
+		if (typeof settings.width === "number") {
+			this.width = settings.width;
 		}
-		if (editStyle) {
-			this.editStyle = editStyle;
-		} else if (!isKeyField) {
+		if (settings.editStyle) {
+			this.editStyle = settings.editStyle;
+		} else if (!settings.isKeyField) {
 			this.editStyle = EditStyle.INLINE;
 		}
-		if (dmDefault) {
-			this.dmDefault = dmDefault;
+		if (settings.dmDefault) {
+			this.dmDefault = settings.dmDefault;
 		}
 	}
 }

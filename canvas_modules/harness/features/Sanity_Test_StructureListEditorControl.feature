@@ -24,8 +24,8 @@ Feature: Sanity_Test_StructureListEditorControl
 		Then I verify that "3" is a value in the "readonly_numbered_column_index" cell of row 3 in the table "flexible-table-structurelisteditorTableInput"
 		Then I verify that "4" is a value in the "readonly_numbered_column_index" cell of row 4 in the table "flexible-table-structurelisteditorTableInput"
 		Then I click the subpanel edit button on row "4" from the "flexible-table-structurelisteditorTableInput" table
-		Then I enter text "John Doe" in the "editor-control-name" textbox control
-		Then I enter text "test" in the "editor-control-description" textbox control
+		Then I enter text "John Doe" in the "editor-control-name_3" textbox control
+		Then I enter text "test" in the "editor-control-description_3" textbox control
 		# close subpanel flyout
 		Then I click on the "OK" button
 		Then I verify that "4" is a value in the "readonly_numbered_column_index" cell of row 4 in the table "flexible-table-structurelisteditorTableInput"
@@ -43,5 +43,3 @@ Feature: Sanity_Test_StructureListEditorControl
 		# close common properties
 		Then I click on the "OK" button
 		Then I verify the event log for the "structurelisteditorTableInput" parameter contains "1,Hello,World,string,Readonly phrase,2,John Doe,test,,"
-
-	

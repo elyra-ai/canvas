@@ -557,6 +557,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 				validationStyle={stateStyle}
 				scrollKey={this.props.control.name}
 				stateDisabled={stateDisabled}
+				rows={this.props.control.rows}
 			/>);
 		setTimeout(function() {
 			that.scrollToRow = null;

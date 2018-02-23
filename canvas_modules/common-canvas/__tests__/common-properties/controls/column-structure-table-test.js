@@ -20,6 +20,7 @@ import isEqual from "lodash/isEqual";
 
 import structuretableParamDef from "../../test_resources/paramDefs/structuretable_paramDef.json";
 import structuretableMultiInputParamDef from "../../test_resources/paramDefs/structuretable_multiInput_paramDef.json";
+import rowDisplayParamDef from "../../test_resources/paramDefs/displayRows_paramDef.json";
 
 import chai from "chai";
 import chaiEnzyme from "chai-enzyme";
@@ -1083,8 +1084,8 @@ describe("condition messages renders correctly with structure table control", ()
 		expect(input).to.have.length(1);
 		expect(renderedController.getPropertyValue(conditionsPropertyId)).to.have.length(2);
 
-		const nameInput = input.find("input[id='editor-control-new_name']");
-		expect(nameInput).to.have.length(2);
+		const nameInput = input.find("input[type='text']");
+		expect(nameInput).to.have.length(6);
 		const inputControl = nameInput.at(0);
 		inputControl.simulate("change", { target: { value: "bad pw" } });
 		wrapper.update();
@@ -1170,7 +1171,7 @@ describe("condition messages renders correctly with structure table cells", () =
 		const dataRows = input.find(".reactable-data").find("tr");
 		expect(dataRows).to.have.length(2);
 		dataRows.first().simulate("click");
-		const cell = dataRows.first().find("#editor-control-new_name");
+		const cell = dataRows.first().find("#editor-control-new_name_0");
 		cell.simulate("change", { target: { value: "" } });
 		const rowValues = controller.getPropertyValue(conditionsPropertyId);
 		const expected = [
@@ -1206,9 +1207,9 @@ describe("Cells disable and hide correctly with structure table control", () => 
 		const storageTable = wrapper.find("#flexible-table-field_types");
 		let disabledDropdowns = storageTable.find(".Dropdown-disabled");
 		expect(disabledDropdowns).to.have.length(4);
-		const input = storageTable.find("#editor-control-override_field_types_0_1");
+		const input = storageTable.find("#editor-control-override_0_field_types_0_1");
 		expect(input).to.have.length(1);
-		storageTable.find("input[id='editor-control-override_field_types_0_1']").simulate("change", { target: { checked: false } });
+		storageTable.find("input[id='editor-control-override_0_field_types_0_1']").simulate("change", { target: { checked: false } });
 		wrapper.update();
 		disabledDropdowns = storageTable.find(".Dropdown-disabled");
 		expect(disabledDropdowns).to.have.length(5);
@@ -1227,9 +1228,9 @@ describe("Cells disable and hide correctly with structure table control", () => 
 		expect(hiddenDropdowns).to.have.length(2);
 
 		expect(hiddenDropdowns.at(1)).not.to.have.style("display", "none");
-		const input = row.find("#editor-control-override_field_types_0_1");
+		const input = row.find("#editor-control-override_0_field_types_0_1");
 		expect(input).to.have.length(1);
-		wrapper.find("input[id='editor-control-override_field_types_0_1']").simulate("change", { target: { checked: false } });
+		wrapper.find("input[id='editor-control-override_0_field_types_0_1']").simulate("change", { target: { checked: false } });
 		wrapper.update();
 		row = dataRows.first();
 		hiddenDropdowns = row.find(".Dropdown-control-panel");
@@ -1474,6 +1475,46 @@ describe("ColumnStructureTableControl with multi input schemas renders correctly
 			const row = tableRows.at(i);
 			expect(row.find("td").at(3)
 				.text()).to.equal("string");
+		}
+	});
+});
+
+describe("column structure table editor control displays the proper number of rows", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(JSON.parse(JSON.stringify(rowDisplayParamDef)));
+		wrapper = renderedObject.wrapper;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("should display 3 rows", () => {
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(0);
+		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
+		const tableHtml = document.getElementById("flexible-table-structuretableSortOrder"); // needed since modal dialogs are outside `wrapper`
+		const sortTable = new ReactWrapper(tableHtml, true);
+		const heightDiv = sortTable.find("#flexible-table-container-wrapper");
+		if (heightDiv.length) {
+			const heightStyle = heightDiv.at(0).prop("style");
+			// console.log("STYLE: " + JSON.stringify(heightStyle));
+			expect(isEqual(JSON.parse(JSON.stringify(heightStyle)),
+				JSON.parse(JSON.stringify({ "height": "35px" })))).to.be.true;
+		}
+	});
+
+	it("should display 4 rows by default", () => {
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(0);
+		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
+		const tableHtml = document.getElementById("flexible-table-structurelisteditorListInput"); // needed since modal dialogs are outside `wrapper`
+		const complexTable = new ReactWrapper(tableHtml, true);
+		const heightDiv = complexTable.find("#flexible-table-container-wrapper");
+		if (heightDiv.length) {
+			const heightStyle = heightDiv.at(0).prop("style");
+			// console.log("STYLE: " + JSON.stringify(heightStyle));
+			expect(isEqual(JSON.parse(JSON.stringify(heightStyle)),
+				JSON.parse(JSON.stringify({ "height": "36px" })))).to.be.true;
 		}
 	});
 });

@@ -652,7 +652,7 @@ describe("should render with CommonProperties element", () => {
 		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
 		const tableHtml = document.getElementById("flexible-table-inlineEditingTable"); // needed since modal dialogs are outside `wrapper`
 		const inlineEditTable = new ReactWrapper(tableHtml, true);
-		const integerCell = inlineEditTable.find("#editor-control-valueName");
+		const integerCell = inlineEditTable.find("#editor-control-valueName_0");
 		expect(integerCell).to.have.length(1);
 		expect(integerCell.prop("value")).to.equal("1");
 		// enter a valid integer
@@ -669,7 +669,7 @@ describe("should render with CommonProperties element", () => {
 		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
 		const tableHtml = document.getElementById("flexible-table-inlineEditingTable"); // needed since modal dialogs are outside `wrapper`
 		const inlineEditTable = new ReactWrapper(tableHtml, true);
-		const doubleCell = inlineEditTable.find("#editor-control-doubleName");
+		const doubleCell = inlineEditTable.find("#editor-control-doubleName_0");
 		expect(doubleCell).to.have.length(1);
 		expect(doubleCell.prop("value")).to.equal("1.234");
 
@@ -684,7 +684,7 @@ describe("should render with CommonProperties element", () => {
 		// const tableHtml = document.getElementById("flexible-table-inlineEditingTableWarning"); // needed since modal dialogs are outside `wrapper`
 		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
 		const inlineEditTable = new ReactWrapper(tableHtml, true);
-		const integerCell = inlineEditTable.find("#editor-control-valueName");
+		const integerCell = inlineEditTable.find("#editor-control-valueName_0");
 		expect(integerCell).to.have.length(1);
 		expect(integerCell.prop("value")).to.equal("1");
 		// enter a valid integer
@@ -708,7 +708,7 @@ describe("should render with CommonProperties element", () => {
 		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
 		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
 		const inlineEditTable = new ReactWrapper(tableHtml, true);
-		const doubleCell = inlineEditTable.find("#editor-control-doubleName");
+		const doubleCell = inlineEditTable.find("#editor-control-doubleName_0");
 		expect(doubleCell).to.have.length(1);
 		expect(doubleCell.prop("value")).to.equal("1.234");
 
@@ -733,10 +733,10 @@ describe("should render with CommonProperties element", () => {
 		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
 		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
 		const inlineEditTable = new ReactWrapper(tableHtml, true);
-		const doubleCell = inlineEditTable.find("#editor-control-doubleName");
+		const doubleCell = inlineEditTable.find("#editor-control-doubleName_0");
 		expect(doubleCell).to.have.length(1);
 		expect(doubleCell.prop("value")).to.equal("1.234");
-		const integerCell = inlineEditTable.find("#editor-control-valueName");
+		const integerCell = inlineEditTable.find("#editor-control-valueName_0");
 		expect(integerCell).to.have.length(1);
 		expect(integerCell.prop("value")).to.equal("1");
 		// enter a valid integer

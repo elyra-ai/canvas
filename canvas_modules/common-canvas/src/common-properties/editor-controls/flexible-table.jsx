@@ -6,10 +6,11 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-/* eslint complexity: ["error", 20] */
+/* eslint complexity: ["error", 25] */
 /* eslint max-depth: ["error", 5] */
 
 import React from "react";
+import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import ReactTooltip from "react-tooltip";
 import { injectIntl, intlShape } from "react-intl";
@@ -84,13 +85,28 @@ class FlexibleTable extends React.Component {
 		}
 		this.state = {
 			columnSortDir: sortDirs,
-			tableWidth: 0
+			tableWidth: 0,
+			tableHeight: 0
 		};
 
 		this.handleFilterChange = this.handleFilterChange.bind(this);
 		this.scrollToRow = this.scrollToRow.bind(this);
 		this.onSort = this.onSort.bind(this);
 		this._updateTableWidth = this._updateTableWidth.bind(this);
+		this._adjustTableHeight = this._adjustTableHeight.bind(this);
+	}
+
+	componentDidMount() {
+		this._adjustTableHeight();
+		window.addEventListener("resize", this._adjustTableHeight);
+	}
+
+	componentDidUpdate() {
+		this._adjustTableHeight();
+	}
+
+	componentWillUnmount() {
+		window.removeEventListener("resize", this._adjustTableHeight);
 	}
 
 	onSort(spec) {
@@ -99,11 +115,35 @@ class FlexibleTable extends React.Component {
 		}
 	}
 
-	_updateTableWidth(width) {
-		if (this.state.tableWidth !== width) {
+	_updateTableWidth(element) {
+		if (this.state.tableWidth !== element.width) {
 			this.setState({
-				tableWidth: width
+				tableWidth: element.width
 			});
+		}
+	}
+
+	_adjustTableHeight() {
+		if (this.props.noAutoSize) {
+			return;
+		}
+		const table = ReactDOM.findDOMNode(this.refs.table);
+		let rowHeight = 0;
+		if (table) {
+			const rowDivs = table.getElementsByClassName("table-row");
+			if (rowDivs.length > 0) {
+				rowHeight = rowDivs[0].offsetHeight + 1;
+			}
+		}
+		if (!rowHeight) {
+			rowHeight = 36;
+		}
+		const rows = this.props.rows ? this.props.rows : 4;
+		// Allow for the table header
+		const headerHeight = this.props.columns.length > 0 ? 32 : 0;
+		const newHeight = (rowHeight * rows + headerHeight);
+		if (newHeight !== this.state.tableHeight) {
+			this.setState({ tableHeight: newHeight });
 		}
 	}
 
@@ -141,7 +181,7 @@ class FlexibleTable extends React.Component {
 		const renderHeader = this.props.columns.length > 0;
 		let searchLabel = "";
 		const tableWidth = this.state.tableWidth;
-
+		const tableHeight = this.state.tableHeight;
 		const columnWidths = FlexibleTable.calculateColumnWidths(this.props.columns, null, tableWidth);
 
 		for (var j = 0; j < this.props.columns.length; j++) {
@@ -290,6 +330,7 @@ class FlexibleTable extends React.Component {
 			this.scrollToRow(this.props.alignTop);
 		}
 
+		const heightStyle = this.props.noAutoSize ? {} : { height: tableHeight + "px" };
 		const containerId = (renderHeader) ? "flexible-table-container" : "flexible-table-container-noheader";
 		const containerClass = (renderHeader) ? "flexible-table-container-absolute" : "flexible-table-container-absolute-noheader";
 		renderTable = (
@@ -297,8 +338,8 @@ class FlexibleTable extends React.Component {
 				{searchBar}
 				{this.props.label}
 				{this.props.topRightPanel}
-				<ObserveSize observerFn={(element) => this._updateTableWidth(element.width)}>
-					<div id="flexible-table-container-wrapper">
+				<ObserveSize observerFn={(element) => this._updateTableWidth(element)}>
+					<div id="flexible-table-container-wrapper" style={ heightStyle }>
 						{renderTableHeaderContents}
 						<div className={containerClass} style={tableStyle}>
 							<div id={containerId} style={{ width: tableWidth }}>
@@ -306,6 +347,7 @@ class FlexibleTable extends React.Component {
 									className="table"
 									id="table"
 									hideTableHeader
+									ref="table"
 								>
 									{this.props.data}
 								</Table>
@@ -341,7 +383,9 @@ FlexibleTable.propTypes = {
 	validationStyle: PropTypes.object,
 	scrollKey: PropTypes.string,
 	stateDisabled: PropTypes.object,
-	intl: intlShape
+	intl: intlShape,
+	rows: PropTypes.number,
+	noAutoSize: PropTypes.bool
 };
 
 export default injectIntl(FlexibleTable);

@@ -602,7 +602,8 @@
         },
         "description": {
           "default": "Select one or more input columns"
-        }
+        },
+        "rows": 3
       },
       {
         "parameter_ref": "numberfieldCheckpointInterval",
@@ -843,7 +844,8 @@
         "description": {
           "default": "Shared input list with below control",
           "placement": "on_panel"
-        }
+        },
+        "rows": 3
       },
       {
         "parameter_ref": "enableSortByTable",
@@ -863,7 +865,8 @@
         "description": {
           "default": "Use arrows to reorder the sorting priority",
           "placement": "on_panel"
-        }
+        },
+        "rows": 10
       },
       {
         "parameter_ref": "showRenameFieldsTable",
@@ -881,7 +884,8 @@
         },
         "description": {
           "default": "Complex table control with inline edit and subpanel edit"
-        }
+        },
+        "rows": 10
       },
       {
         "parameter_ref": "enableTableLists",
@@ -918,7 +922,8 @@
         "description": {
           "default": "Change the type of columns in the active dataset"
         },
-        "control": "structuretable"
+        "control": "structuretable",
+        "rows": 12
       },
       {
         "parameter_ref": "expressionCellTable",
@@ -934,7 +939,8 @@
         "label": {
           "default": "Some Dummy Types"
         },
-        "control": "structuretable"
+        "control": "structuretable",
+        "rows": 12
       },
       {
         "parameter_ref": "expPlaceHolder",
@@ -2387,7 +2393,79 @@
 	          "measure": "range",
 	          "modeling_role": "input"
 	        }
-	      }
+	      },
+        {
+          "name": "Age2",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Sex2",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP2",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Cholesterol2",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na2",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "K2",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Drug2",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Ag2",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        }
 	    ]
 	  }
 	],

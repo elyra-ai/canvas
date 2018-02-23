@@ -13,56 +13,56 @@ Feature: Sanity_Test_CommonProperties
 		Then I have selected the "Modal" properties container type
 
 		# Titles Test Case
-			Given I have uploaded JSON for common-properties "org.apache.spark.ml.ibm.transformers.AddColumn.json"
+			Given I have uploaded JSON for common-properties "spark.AddColumn.json"
 			Then I see common properties title "Add Column"
 			Then I have closed the common properties dialog by clicking on close button
 
 			Given I have toggled the app side common-properties panel
-			Given I have uploaded JSON for common-properties "org.apache.spark.ml.ibm.transformers.Distinct.json"
+			Given I have uploaded JSON for common-properties "spark.Distinct.json"
 			Then I see common properties title "Distinct"
 			Then I have closed the common properties dialog by clicking on close button
 
 			Given I have toggled the app side common-properties panel
-			Given I have uploaded JSON for common-properties "org.apache.spark.ml.ibm.transformers.Filter.json"
+			Given I have uploaded JSON for common-properties "spark.Filter.json"
 			Then I see common properties title "Filter Rows"
 			Then I have closed the common properties dialog by clicking on close button
 
 		# TextBox Test Case
 			Given I have toggled the app side common-properties panel
-			Given I have uploaded JSON for common-properties "org.apache.spark.ml.ibm.transformers.AddColumn.json"
+			Given I have uploaded JSON for common-properties "spark.AddColumn.json"
 			Then I enter text "testValue" in the "editor-control-colName" textbox control
 			Then I click on the "OK" button
 			Then I verify the event log for the "colName" parameter contains "testValue"
 
 		# Dropdown Test Case
 			Given I have toggled the app side common-properties panel
-			Given I have uploaded JSON for common-properties "org.apache.spark.ml.ibm.transformers.AddColumn.json"
+			Given I have uploaded JSON for common-properties "spark.AddColumn.json"
 			Then I select "Continuous" dropdown option
 
 		# Radio Button, Number Textbox Test Case
 			Given I have toggled the app side common-properties panel
-			Given I have uploaded JSON for common-properties "org.apache.spark.ml.classification.DecisionTreeClassifier.json"
+			Given I have uploaded JSON for common-properties "spark.DecisionTreeClassifier.json"
 			Then I select "gini" radio button for Impurity
 
 		# Checkbox, Generate TextBox Test Case
 			Given I have toggled the app side common-properties panel
-		 	Given I have uploaded JSON for common-properties "org.apache.spark.ml.ibm.transformers.Sample.json"
+		 	Given I have uploaded JSON for common-properties "spark.Sample.json"
 		 	Then I select Repeatable partition assignment checkbox and click Generate
 
 		# ToggleText, Table Reorder Rows
 			Given I have toggled the app side common-properties panel
-			Given I have uploaded JSON for common-properties "org.apache.spark.ml.ibm.transformers.Sort.json"
+			Given I have uploaded JSON for common-properties "spark.Sort.json"
 			Then I change Order for Drug field and reorder
 
 		# Validation Test Case
 			Given I have toggled the app side common-properties panel
-			Given I have uploaded JSON for common-properties "org.apache.spark.ml.classification.DecisionTreeClassifier.json"
+			Given I have uploaded JSON for common-properties "spark.DecisionTreeClassifier.json"
 			Then I check for validation error on Checkpoint Interval
 			Given I have toggled the app side common-properties panel
-			Given I have uploaded JSON for common-properties "org.apache.spark.ml.ibm.transformers.RenameColumn.json"
+			Given I have uploaded JSON for common-properties "spark.RenameColumn.json"
 			Then I check for table cell level validation
 			Given I have toggled the app side common-properties panel
-			Given I have uploaded JSON for common-properties "org.apache.spark.ml.ibm.transformers.RenameColumn.json"
+			Given I have uploaded JSON for common-properties "spark.RenameColumn.json"
 			Then I check for table validation
 			Given I have toggled the app side common-properties panel
 			Given I have uploaded JSON for common-properties "Spark_SelectStorage_paramDef.json"
@@ -74,9 +74,9 @@ Feature: Sanity_Test_CommonProperties
 			Then I select the Tab 6
 			Then I check the checkbox with id "editor-control-enableTableLists"
 			Then I click the subpanel edit button on row "1" from the "flexible-table-structurelisteditorTableInput" table
-			Then I enter text "Hellopwd" in the "editor-control-name" textbox control
+			Then I enter text "Hellopwd" in the "editor-control-name_0" textbox control
 			Then I verify that the validation error is "name should not contain pw"
-			Then I enter text "Age" in the "editor-control-name" textbox control
+			Then I enter text "Age" in the "editor-control-name_0" textbox control
 			Then I verify that the validation warning is "name cannot be an existing column name"
 			Then I close the subPanel dialog
 			Then I have closed the common properties dialog by clicking on close button

@@ -19,6 +19,7 @@ import { ReactWrapper } from "enzyme";
 
 import selectcolumnsParamDef from "../../test_resources/paramDefs/selectcolumns_paramDef.json";
 import selectcolumnsMultiInputParamDef from "../../test_resources/paramDefs/selectcolumns_multiInput_paramDef.json";
+import rowDisplayParamDef from "../../test_resources/paramDefs/displayRows_paramDef.json";
 
 const CONDITIONS_TEST_FORM_DATA = require("../../test_resources/json/conditions-test-formData.json");
 
@@ -385,5 +386,26 @@ describe("selectcolumns control filters values correctly with multi input", () =
 			{ "name": "intAndRange", "schema": "1" }
 		];
 		propertyUtils.fieldPicker([], fieldTable);
+	});
+});
+
+describe("selectcolumns control displays the proper number of rows", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(JSON.parse(JSON.stringify(rowDisplayParamDef)));
+		wrapper = renderedObject.wrapper;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("should display 3 rows", () => {
+		const columnSelect = wrapper.find(".flexible-table-control-container").at(0);
+		const heightDiv = columnSelect.find("#flexible-table-container-wrapper");
+		const heightStyle = heightDiv.at(0).prop("style");
+		// console.log("STYLE: " + JSON.stringify(heightStyle));
+		expect(isEqual(JSON.parse(JSON.stringify(heightStyle)),
+			JSON.parse(JSON.stringify({ "height": "108px" })))).to.be.true;
 	});
 });

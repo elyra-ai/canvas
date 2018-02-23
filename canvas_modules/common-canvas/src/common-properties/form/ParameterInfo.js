@@ -11,51 +11,119 @@ import { Separator } from "../constants/form-constants";
 import { Type, ParamRole, EditStyle } from "../constants/form-constants";
 import { ResourceDef } from "./L10nProvider";
 import propertyOf from "lodash/propertyOf";
+import PropertyUtil from "../util/property-utils";
+
+/* eslint complexity: ["error", 40] */
 
 export class ParameterDef {
-	constructor(cname, label, description, type, role, valueRestriction, defaultValue,
-		control, orientation, width, charLimit, placeHolderText, separator,
-		resourceKey, visible, valueIcons, sortable, filterable, editStyle, required,
-		numberGenerator, isKey, dmDefault, language, summary, increment, textAfter,
-		textBefore, moveableRows, generatedValues, dateFormat, timeFormat, customControlId, data) {
-		this.name = cname;
-		this.label = ResourceDef.make(label);
-		this.description = ResourceDef.make(description);
-		this.type = type;
-		this.role = role;
-		this.valueRestriction = valueRestriction; // enum
-		this.defaultValue = defaultValue;
-		this.control = control;
-		this.orientation = orientation;
-		this.width = width;
-		this.charLimit = charLimit;
-		this.placeHolderText = ResourceDef.make(placeHolderText); // additionalText
-		this.separator = separator;
-		this.resource_key = resourceKey;
-		this.visible = (typeof visible === "boolean" ? visible : true);
-		this.valueIcons = valueIcons;
-		this.sortable = sortable;
-		this.filterable = filterable;
-		this.language = language;
-		this.editStyle = editStyle;
-		this.required = required;
-		if (numberGenerator) {
-			this.numberGenerator = numberGenerator;
+	constructor(settings) {
+		if (settings.id) {
+			this.name = settings.id;
 		}
-		this.isKey = isKey;
-		if (dmDefault) {
-			this.dmDefault = dmDefault;
+		if (settings.label) {
+			this.label = ResourceDef.make(settings.label);
 		}
-		this.summary = summary;
-		this.increment = increment;
-		this.textAfter = ResourceDef.make(textAfter);
-		this.textBefore = ResourceDef.make(textBefore);
-		this.moveableRows = moveableRows;
-		this.generatedValues = generatedValues;
-		this.dateFormat = dateFormat;
-		this.timeFormat = timeFormat;
-		this.customControlId = customControlId;
-		this.data = data;
+		if (settings.description) {
+			this.description = ResourceDef.make(settings.description);
+		}
+		if (settings.type) {
+			this.type = settings.type;
+		}
+		if (settings.role) {
+			this.role = settings.role;
+		}
+		if (settings.valueRestriction) {
+			this.valueRestriction = settings.valueRestriction;
+		}
+		if (settings.defaultValue !== null && PropertyUtil.toType(settings.defaultValue) !== "undefined") {
+			this.defaultValue = settings.defaultValue;
+		}
+		if (settings.control) {
+			this.control = settings.control;
+		}
+		if (settings.orientation) {
+			this.orientation = settings.orientation;
+		}
+		if (settings.width) {
+			this.width = settings.width;
+		}
+		if (settings.charLimit) {
+			this.charLimit = settings.charLimit;
+		}
+		if (settings.placeHolderText) {
+			this.placeHolderText = ResourceDef.make(settings.placeHolderText);
+		}
+		if (settings.separator) {
+			this.separator = settings.separator;
+		}
+		if (settings.resource_key) {
+			this.resource_key = settings.resource_key;
+		}
+		if (PropertyUtil.toType(settings.visible) === "boolean") {
+			this.visible = settings.visible;
+		} else {
+			this.visible = true;
+		}
+		if (settings.valueIcons) {
+			this.valueIcons = settings.valueIcons;
+		}
+		if (PropertyUtil.toType(settings.sortable) === "boolean") {
+			this.sortable = settings.sortable;
+		}
+		if (PropertyUtil.toType(settings.filterable) === "boolean") {
+			this.filterable = settings.filterable;
+		}
+		if (settings.editStyle) {
+			this.editStyle = settings.editStyle;
+		}
+		if (PropertyUtil.toType(settings.required) === "boolean") {
+			this.required = settings.required;
+		}
+		if (settings.numberGenerator) {
+			this.numberGenerator = settings.numberGenerator;
+		}
+		if (settings.isKey) {
+			this.isKey = settings.isKey;
+		}
+		if (settings.dmDefault) {
+			this.dmDefault = settings.dmDefault;
+		}
+		if (settings.language) {
+			this.language = settings.language;
+		}
+		if (PropertyUtil.toType(settings.summary) === "boolean") {
+			this.summary = settings.summary;
+		}
+		if (settings.increment) {
+			this.increment = settings.increment;
+		}
+		if (settings.textAfter) {
+			this.textAfter = ResourceDef.make(settings.textAfter);
+		}
+		if (settings.textBefore) {
+			this.textBefore = ResourceDef.make(settings.textBefore);
+		}
+		if (PropertyUtil.toType(settings.moveableRows) === "boolean") {
+			this.moveableRows = settings.moveableRows;
+		}
+		if (settings.generatedValues) {
+			this.generatedValues = settings.generatedValues;
+		}
+		if (settings.dateFormat) {
+			this.dateFormat = settings.dateFormat;
+		}
+		if (settings.timeFormat) {
+			this.timeFormat = settings.timeFormat;
+		}
+		if (settings.customControlId) {
+			this.customControlId = settings.customControlId;
+		}
+		if (settings.data) {
+			this.data = settings.data;
+		}
+		if (settings.rows) {
+			this.rows = settings.rows;
+		}
 	}
 
 	isList() {
@@ -190,42 +258,43 @@ export class ParameterDef {
 
 	static makeParameterDef(param, uihint, isKey) {
 		if (param) {
-			return new ParameterDef(
-				propertyOf(param)("id"),
-				propertyOf(uihint)("label"),
-				propertyOf(uihint)("description"),
-				propertyOf(param)("type"),
-				propertyOf(param)("role"),
-				propertyOf(param)("enum"),
-				propertyOf(param)("default"),
-				propertyOf(uihint)("control"),
-				propertyOf(uihint)("orientation"),
-				propertyOf(uihint)("width"),
-				propertyOf(uihint)("char_limit"),
-				propertyOf(uihint)("place_holder_text"),
-				propertyOf(uihint)("separator"),
-				propertyOf(uihint)("resource_key"),
-				propertyOf(uihint)("visible"),
-				propertyOf(uihint)("value_icons"),
-				propertyOf(uihint)("sortable"),
-				propertyOf(uihint)("filterable"),
-				propertyOf(uihint)("edit_style"),
-				propertyOf(param)("required"),
-				propertyOf(uihint)("number_generator"),
-				isKey,
-				propertyOf(uihint)("dm_default"),
-				propertyOf(uihint)("language"),
-				propertyOf(uihint)("summary"),
-				propertyOf(uihint)("increment"),
-				propertyOf(uihint)("text_after"),
-				propertyOf(uihint)("text_before"),
-				propertyOf(uihint)("moveable_rows"),
-				propertyOf(uihint)("generated_values"),
-				propertyOf(uihint)("date_format"),
-				propertyOf(uihint)("time_format"),
-				propertyOf(uihint)("custom_control_id"),
-				propertyOf(uihint)("data")
-			);
+			return new ParameterDef({
+				"id": propertyOf(param)("id"),
+				"label": propertyOf(uihint)("label"),
+				"description": propertyOf(uihint)("description"),
+				"type": propertyOf(param)("type"),
+				"role": propertyOf(param)("role"),
+				"valueRestriction": propertyOf(param)("enum"),
+				"defaultValue": propertyOf(param)("default"),
+				"control": propertyOf(uihint)("control"),
+				"orientation": propertyOf(uihint)("orientation"),
+				"width": propertyOf(uihint)("width"),
+				"charLimit": propertyOf(uihint)("char_limit"),
+				"placeHolderText": propertyOf(uihint)("place_holder_text"),
+				"separator": propertyOf(uihint)("separator"),
+				"resource_key": propertyOf(uihint)("resource_key"),
+				"visible": propertyOf(uihint)("visible"),
+				"valueIcons": propertyOf(uihint)("value_icons"),
+				"sortable": propertyOf(uihint)("sortable"),
+				"filterable": propertyOf(uihint)("filterable"),
+				"editStyle": propertyOf(uihint)("edit_style"),
+				"required": propertyOf(param)("required"),
+				"numberGenerator": propertyOf(uihint)("number_generator"),
+				"isKey": isKey,
+				"dmDefault": propertyOf(uihint)("dm_default"),
+				"language": propertyOf(uihint)("language"),
+				"summary": propertyOf(uihint)("summary"),
+				"increment": propertyOf(uihint)("increment"),
+				"textAfter": propertyOf(uihint)("text_after"),
+				"textBefore": propertyOf(uihint)("text_before"),
+				"moveableRows": propertyOf(uihint)("moveable_rows"),
+				"generatedValues": propertyOf(uihint)("generated_values"),
+				"dateFormat": propertyOf(uihint)("date_format"),
+				"timeFormat": propertyOf(uihint)("time_format"),
+				"customControlId": propertyOf(uihint)("custom_control_id"),
+				"data": propertyOf(uihint)("data"),
+				"rows": propertyOf(uihint)("rows")
+			});
 		}
 		return null;
 	}

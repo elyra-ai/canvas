@@ -513,7 +513,7 @@ module.exports = function() {
 		"Data Audit": "",
 		"Analysis": "",
 		"Export Object Store": "",
-		"Add Column": "org.apache.spark.ml.ibm.transformers.AddColumn"
+		"Add Column": "spark.AddColumn"
 	};
 
 

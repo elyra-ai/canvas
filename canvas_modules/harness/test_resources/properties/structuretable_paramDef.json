@@ -300,7 +300,8 @@
         },
         "description": {
           "default": "Filters fields that aren't of type 'string'"
-        }
+        },
+        "rows": 12
       },
       {
         "parameter_ref": "structuretableNoButtons",
@@ -329,7 +330,8 @@
         "description": {
           "default": "Set ascending to descending to generate error.",
           "placement": "on_panel"
-        }
+        },
+        "rows": 12
       }
     ],
     "complex_type_info": [

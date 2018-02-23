@@ -89,6 +89,7 @@ class ColumnSelectControl extends ColumnStructureTableEditor {
 				validationStyle={stateStyle}
 				scrollKey={this.props.control.name}
 				stateDisabled={stateDisabled}
+				rows={this.props.control.rows}
 			/>);
 
 		var content = (

@@ -13,6 +13,7 @@ import PropTypes from "prop-types";
 import ValidationMessage from "./validation-message.jsx";
 import ValidationIcon from "./validation-icon.jsx";
 import { DEFAULT_VALIDATION_MESSAGE, VALIDATION_MESSAGE, EDITOR_CONTROL } from "../constants/constants.js";
+import PropertyUtil from "../util/property-utils.js";
 
 export default class EditorControl extends React.Component {
 
@@ -86,7 +87,12 @@ export default class EditorControl extends React.Component {
 	}
 
 	getControlID() {
-		return EDITOR_CONTROL + this.props.control.name;
+		let id = EDITOR_CONTROL + this.props.control.name;
+		if (this.props.propertyId &&
+			PropertyUtil.toType(this.props.propertyId.row) === "number") {
+			id = id + "_" + this.props.propertyId.row;
+		}
+		return id;
 	}
 
 	getConditionMsgState(conditionProps) {
@@ -173,5 +179,6 @@ export default class EditorControl extends React.Component {
 EditorControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	tableControl: PropTypes.bool,
-	controller: PropTypes.object.isRequired
+	controller: PropTypes.object.isRequired,
+	propertyId: PropTypes.object
 };
