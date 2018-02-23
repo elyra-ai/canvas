@@ -30,7 +30,7 @@ export default class ButtonAction extends React.Component {
 	render() {
 		return (
 			<div className="properties-action-button">
-				<Button semantic onClick={this.applyAction}>
+				<Button medium semantic onClick={this.applyAction}>
 					{this.props.action.label.text}
 				</Button>
 			</div>
