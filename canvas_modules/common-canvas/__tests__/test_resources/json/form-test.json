@@ -194,13 +194,13 @@
                             "label": {
                               "text": "Target label: resource"
                             },
+                            "separateLabel": true,
                             "controlType": "allocatedcolumn",
                             "valueDef": {
                               "propType": "string",
                               "isList": false,
                               "isMap": false
-                            },
-                            "separateLabel": true
+                            }
                           }
                         },
                         {
@@ -210,13 +210,13 @@
                             "label": {
                               "text": "inputs"
                             },
+                            "separateLabel": true,
                             "controlType": "allocatedcolumns",
                             "valueDef": {
                               "propType": "string",
                               "isList": true,
                               "isMap": false
-                            },
-                            "separateLabel": true
+                            }
                           }
                         }
                       ]
@@ -242,6 +242,7 @@
                       "label": {
                         "text": "Enum label: resource"
                       },
+                      "separateLabel": true,
                       "description": {
                         "text": "Enum description: default"
                       },
@@ -260,11 +261,11 @@
                       "valueLabels": [
                         "Include: resource",
                         "Discard"
-                      ],
-                      "separateLabel": true
+                      ]
                     }
                   },
                   {
+                    "id": "enum-settings",
                     "itemType": "panelSelector",
                     "tabs": [
                       {
@@ -283,6 +284,7 @@
                                   "label": {
                                     "text": "Int label: default"
                                   },
+                                  "separateLabel": true,
                                   "description": {
                                     "text": "Int description: default"
                                   },
@@ -293,8 +295,7 @@
                                     "isMap": false,
                                     "defaultValue": 1000
                                   },
-                                  "additionalText": "Int place holder: default",
-                                  "separateLabel": true
+                                  "additionalText": "Int place holder: default"
                                 }
                               },
                               {
@@ -320,14 +321,14 @@
                                   "label": {
                                     "text": "double_param"
                                   },
+                                  "separateLabel": true,
                                   "controlType": "numberfield",
                                   "valueDef": {
                                     "propType": "double",
                                     "isList": false,
                                     "isMap": false,
                                     "defaultValue": 50
-                                  },
-                                  "separateLabel": true
+                                  }
                                 }
                               }
                             ]
@@ -350,14 +351,14 @@
                             "label": {
                               "text": "boolean_param"
                             },
+                            "separateLabel": false,
                             "controlType": "checkbox",
                             "valueDef": {
                               "propType": "boolean",
                               "isList": false,
                               "isMap": false,
                               "defaultValue": false
-                            },
-                            "separateLabel": false
+                            }
                           }
                         },
                         {

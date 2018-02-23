@@ -1,0 +1,1425 @@
+{
+  "titleDefinition": {
+    "title": "Panels"
+  },
+  "current_parameters": {
+    "disableTextPanel": false,
+    "hideTextPanel": false,
+    "disablePanelSelector": true,
+    "fruit-color1": "red1",
+    "hidePanelSelector": true,
+    "fruit-color2": "red2",
+    "number": 11,
+    "disableColumnSelectionPanel": false,
+    "field1_panel": "age",
+    "field2_panel": "BP",
+    "hideColumnSelectionPanel": false,
+    "selectcolumn": "",
+    "selectcolumns": [],
+    "enableSummary": true,
+    "structuretable_summary1": [
+      [
+        1,
+        "BP"
+      ],
+      [
+        2,
+        "age"
+      ]
+    ],
+    "structuretable_summary2": [
+      [
+        1,
+        "Na"
+      ],
+      [
+        2,
+        "drug"
+      ]
+    ],
+    "hideSummary": false,
+    "structuretable_summary3": [
+      [
+        1,
+        "BP"
+      ],
+      [
+        2,
+        "age"
+      ]
+    ],
+    "disableTwistyPanel": false,
+    "numberfield1": 1,
+    "numberfield2": 2,
+    "hideTwistyPanel": false,
+    "numberfield3": 3,
+    "disablePanelLevel1": false,
+    "hidePanelLevel1": false,
+    "disablePanelLevel2": false,
+    "hidePanelLevel2": false,
+    "textfield1": 1,
+    "textfield2": 2,
+    "disablePanelLevel3": false,
+    "hidePanelLevel3": false,
+    "textfield3": 3
+  },
+  "parameters": [
+    {
+      "id": "disableTextPanel",
+      "type": "boolean"
+    },
+    {
+      "id": "hideTextPanel",
+      "type": "boolean"
+    },
+    {
+      "id": "disablePanelSelector",
+      "type": "boolean"
+    },
+    {
+      "id": "fruit-color1",
+      "enum": [
+        "red1",
+        "blue1",
+        "yellow1"
+      ]
+    },
+    {
+      "id": "hidePanelSelector",
+      "type": "boolean"
+    },
+    {
+      "id": "fruit-color2",
+      "enum": [
+        "red2",
+        "blue2",
+        "yellow2"
+      ]
+    },
+    {
+      "id": "number",
+      "type": "double",
+      "required": true
+    },
+    {
+      "id": "disableColumnSelectionPanel",
+      "type": "boolean"
+    },
+    {
+      "id": "field1_panel",
+      "type": "string",
+      "role": "column",
+      "required": true
+    },
+    {
+      "id": "field2_panel",
+      "type": "string",
+      "role": "column",
+      "required": true
+    },
+    {
+      "id": "hideColumnSelectionPanel",
+      "type": "boolean"
+    },
+    {
+      "id": "selectcolumn",
+      "type": "string",
+      "role": "column",
+      "required": true
+    },
+    {
+      "id": "selectcolumns",
+      "type": "array[string]",
+      "role": "column",
+      "required": true
+    },
+    {
+      "id": "enableSummary",
+      "type": "boolean",
+      "default": ""
+    },
+    {
+      "id": "structuretable_summary1",
+      "type": "map[string,structuretable_summary1]",
+      "role": "column",
+      "default": []
+    },
+    {
+      "id": "structuretable_summary2",
+      "type": "map[string,structuretable_summary2]",
+      "role": "column",
+      "default": []
+    },
+    {
+      "id": "hideSummary",
+      "type": "boolean",
+      "default": ""
+    },
+    {
+      "id": "structuretable_summary3",
+      "type": "map[string,structuretable_summary3]",
+      "role": "column",
+      "default": []
+    },
+    {
+      "id": "disableTwistyPanel",
+      "type": "boolean"
+    },
+    {
+      "id": "numberfield1",
+      "type": "integer"
+    },
+    {
+      "id": "numberfield2",
+      "type": "integer"
+    },
+    {
+      "id": "hideTwistyPanel",
+      "type": "boolean"
+    },
+    {
+      "id": "numberfield3",
+      "type": "integer"
+    },
+    {
+      "id": "disablePanelLevel1",
+      "type": "boolean"
+    },
+    {
+      "id": "hidePanelLevel1",
+      "type": "boolean"
+    },
+    {
+      "id": "disablePanelLevel2",
+      "type": "boolean"
+    },
+    {
+      "id": "hidePanelLevel2",
+      "type": "boolean"
+    },
+    {
+      "id": "textfield1",
+      "type": "string",
+      "role": "new_column"
+    },
+    {
+      "id": "textfield2",
+      "type": "string",
+      "role": "new_column"
+    },
+    {
+      "id": "disablePanelLevel3",
+      "type": "boolean"
+    },
+    {
+      "id": "hidePanelLevel3",
+      "type": "boolean"
+    },
+    {
+      "id": "textfield3",
+      "type": "string",
+      "role": "new_column"
+    }
+  ],
+  "complex_types": [
+    {
+      "id": "structuretable_summary1",
+      "key_definition": {
+        "id": "readonly",
+        "type": "integer"
+      },
+      "parameters": [
+        {
+          "id": "field",
+          "type": "string",
+          "role": "column"
+        }
+      ]
+    },
+    {
+      "id": "structuretable_summary2",
+      "key_definition": {
+        "id": "readonly",
+        "type": "integer"
+      },
+      "parameters": [
+        {
+          "id": "field",
+          "type": "string",
+          "role": "column"
+        }
+      ]
+    },
+    {
+      "id": "structuretable_summary3",
+      "key_definition": {
+        "id": "readonly",
+        "type": "integer"
+      },
+      "parameters": [
+        {
+          "id": "field",
+          "type": "string",
+          "role": "column"
+        }
+      ]
+    }
+  ],
+  "uihints": {
+    "id": "panels",
+    "icon": "images/default.svg",
+    "label": {
+      "default": "Panels"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "disableTextPanel",
+        "label": {
+          "default": "Disable 'Oranges' text panel"
+        },
+        "description": {
+          "default": "Disable Oranges text panel"
+        }
+      },
+      {
+        "parameter_ref": "hideTextPanel",
+        "label": {
+          "default": "Hide 'Apples' text panel"
+        },
+        "description": {
+          "default": "Hide Apples text panel"
+        }
+      },
+      {
+        "parameter_ref": "disablePanelSelector",
+        "label": {
+          "default": "Disable 'Fruit Color1' panelSelector"
+        },
+        "description": {
+          "default": "Disable Fruit Color radioset and panelselector"
+        }
+      },
+      {
+        "parameter_ref": "fruit-color1",
+        "label": {
+          "default": "Fruit Color1"
+        },
+        "description": {
+          "default": "Shows red, yellow, or blue values"
+        }
+      },
+      {
+        "parameter_ref": "hidePanelSelector",
+        "label": {
+          "default": "Hide 'Fruit Color2' panelSelector"
+        },
+        "description": {
+          "default": "Hide Fruit Color radioset and panelselector"
+        }
+      },
+      {
+        "parameter_ref": "fruit-color2",
+        "label": {
+          "default": "Fruit Color2"
+        },
+        "description": {
+          "default": "Shows red, yellow, or blue values"
+        }
+      },
+      {
+        "parameter_ref": "number",
+        "label": {
+          "default": "number"
+        },
+        "description": {
+          "default": "A control between a panelSelector control.  Also used to display dynamic text in panel text."
+        }
+      },
+      {
+        "parameter_ref": "disableColumnSelectionPanel",
+        "label": {
+          "default": "Disable 'Field1' and 'Field2'"
+        },
+        "description": {
+          "default": "Disable 'Field1' and 'Field2'"
+        }
+      },
+      {
+        "parameter_ref": "field1_panel",
+        "label": {
+          "default": "Field1"
+        },
+        "description": {
+          "default": "selectcolumn parameter shared with Field2"
+        },
+        "text_before": {
+          "default": "Field1 shares values with Field2"
+        }
+      },
+      {
+        "parameter_ref": "field2_panel",
+        "label": {
+          "default": "Field2"
+        },
+        "description": {
+          "default": "selectcolumn parameter shared with Field1"
+        }
+      },
+      {
+        "parameter_ref": "hideColumnSelectionPanel",
+        "label": {
+          "default": "Hide 'Select Field' and 'Select Fields'"
+        },
+        "description": {
+          "default": "Hide 'Select Field' and 'Select Fields'"
+        }
+      },
+      {
+        "parameter_ref": "selectcolumn",
+        "label": {
+          "default": "Select Field"
+        },
+        "description": {
+          "default": "selectcolumn control where values are shared with selectcolumns 'Select Fields'"
+        },
+        "text_before": {
+          "default": "Select Field shares values with Select Fields"
+        }
+      },
+      {
+        "parameter_ref": "selectcolumns",
+        "label": {
+          "default": "Select Fields"
+        },
+        "description": {
+          "default": "selectcolumns control where values are shared with selectcolumns 'Select Field'"
+        }
+      },
+      {
+        "parameter_ref": "enableSummary",
+        "label": {
+          "default": "enable summary"
+        },
+        "description": {
+          "default": "Enable summary"
+        }
+      },
+      {
+        "parameter_ref": "structuretable_summary1",
+        "label": {
+          "default": "Configure Fields"
+        },
+        "description": {
+          "default": "Configure fields"
+        }
+      },
+      {
+        "parameter_ref": "structuretable_summary2",
+        "label": {
+          "default": "Configure Fields"
+        },
+        "description": {
+          "default": "Configure fields"
+        }
+      },
+      {
+        "parameter_ref": "hideSummary",
+        "label": {
+          "default": "hide summary"
+        },
+        "description": {
+          "default": "Hide summary"
+        }
+      },
+      {
+        "parameter_ref": "structuretable_summary3",
+        "label": {
+          "default": "Configure Fields"
+        },
+        "description": {
+          "default": "Configure fields"
+        }
+      },
+      {
+        "parameter_ref": "disableTwistyPanel",
+        "label": {
+          "default": "Disable 'Twisty Panel1'"
+        },
+        "description": {
+          "default": "Disable 'Twisty Panel1'"
+        }
+      },
+      {
+        "parameter_ref": "numberfield1",
+        "label": {
+          "default": "numberfield1"
+        }
+      },
+      {
+        "parameter_ref": "numberfield2",
+        "label": {
+          "default": "numberfield2"
+        }
+      },
+      {
+        "parameter_ref": "hideTwistyPanel",
+        "label": {
+          "default": "Hide 'Twisty Panel2'"
+        },
+        "description": {
+          "default": "Hide 'Twisty Panel2'"
+        }
+      },
+      {
+        "parameter_ref": "numberfield3",
+        "label": {
+          "default": "numberfield3"
+        }
+      },
+      {
+        "parameter_ref": "disablePanelLevel1",
+        "label": {
+          "default": "Disable 'Level1' panel"
+        },
+        "description": {
+          "default": "Disable 'Level1' panel"
+        }
+      },
+      {
+        "parameter_ref": "hidePanelLevel1",
+        "label": {
+          "default": "Hide 'Level1' panel"
+        },
+        "description": {
+          "default": "Hide 'Level1' panel"
+        }
+      },
+      {
+        "parameter_ref": "disablePanelLevel2",
+        "label": {
+          "default": "Disable 'Level2' panel"
+        },
+        "description": {
+          "default": "Disable 'Level2' panel"
+        }
+      },
+      {
+        "parameter_ref": "hidePanelLevel2",
+        "label": {
+          "default": "Hide 'Level2' panel"
+        },
+        "description": {
+          "default": "Hide 'Level2' panel"
+        }
+      },
+      {
+        "parameter_ref": "textfield1",
+        "label": {
+          "default": "textfield1"
+        }
+      },
+      {
+        "parameter_ref": "textfield2",
+        "label": {
+          "default": "textfield2"
+        }
+      },
+      {
+        "parameter_ref": "disablePanelLevel3",
+        "label": {
+          "default": "Disable 'Level3' panel"
+        },
+        "description": {
+          "default": "Disable 'Level3' panel"
+        }
+      },
+      {
+        "parameter_ref": "hidePanelLevel3",
+        "label": {
+          "default": "Hide 'Level3' panel"
+        },
+        "description": {
+          "default": "Hide 'Level3' panel"
+        }
+      },
+      {
+        "parameter_ref": "textfield3",
+        "label": {
+          "default": "textfield3"
+        }
+      }
+    ],
+    "complex_type_info": [
+      {
+        "complex_type_ref": "structuretable_summary1",
+        "label": {
+          "default": "Configure Fields"
+        },
+        "key_definition": {
+          "parameter_ref": "readonly",
+          "label": {
+            "default": "Index"
+          },
+          "width": 15,
+          "generated_values": {
+            "operation": "index"
+          },
+          "control": "readonly",
+          "summary": true
+        },
+        "parameters": [
+          {
+            "parameter_ref": "field",
+            "label": {
+              "default": "Field"
+            },
+            "width": 26,
+            "summary": true
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "structuretable_summary2",
+        "label": {
+          "default": "Configure Fields"
+        },
+        "key_definition": {
+          "parameter_ref": "readonly",
+          "label": {
+            "default": "Index"
+          },
+          "width": 15,
+          "generated_values": {
+            "operation": "index"
+          },
+          "control": "readonly",
+          "summary": true
+        },
+        "parameters": [
+          {
+            "parameter_ref": "field",
+            "label": {
+              "default": "Field"
+            },
+            "width": 26,
+            "summary": true
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "structuretable_summary3",
+        "label": {
+          "default": "Configure Fields"
+        },
+        "key_definition": {
+          "parameter_ref": "readonly",
+          "label": {
+            "default": "Index"
+          },
+          "width": 15,
+          "generated_values": {
+            "operation": "index"
+          },
+          "control": "readonly",
+          "summary": true
+        },
+        "parameters": [
+          {
+            "parameter_ref": "field",
+            "label": {
+              "default": "Field"
+            },
+            "width": 26,
+            "summary": true
+          }
+        ]
+      }
+    ],
+    "group_info": [
+      {
+        "id": "panels",
+        "label": {
+          "default": "Text Panels"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "panels",
+            "type": "controls",
+            "parameter_refs": [
+              "disableTextPanel"
+            ],
+            "group_info": [
+              {
+                "id": "orange-panel",
+                "type": "textPanel",
+                "label": {
+                  "default": "Oranges"
+                },
+                "description": {
+                  "default": "An orange tree can grow to reach 30 feet and live for over a hundred years."
+                }
+              }
+            ]
+          },
+          {
+            "id": "panels",
+            "type": "controls",
+            "parameter_refs": [
+              "hideTextPanel"
+            ],
+            "group_info": [
+              {
+                "id": "apple-panel",
+                "type": "textPanel",
+                "label": {
+                  "default": "Apples"
+                },
+                "description": {
+                  "default": "Dwarf apple trees only grow to be between 5 and 7 feet tall and take 2 to 4 years to produce fruit."
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "panel-selectors",
+        "label": {
+          "default": "Panel Selectors"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "panel-selector1",
+            "label": {
+              "default": "Panel Selector"
+            },
+            "type": "controls",
+            "parameter_refs": [
+              "disablePanelSelector",
+              "fruit-color1",
+              "number"
+            ],
+            "group_info": [
+              {
+                "id": "dynamicTextPercent",
+                "type": "textPanel",
+                "label": {
+                  "default": "Dynamic Percent"
+                },
+                "description": {
+                  "default": "Percent: ${percent(number, 6)} with 6 decimals. Percent: ${percent(number,2)} with 2 decimals"
+                }
+              },
+              {
+                "id": "dynamicTextSum",
+                "type": "textPanel",
+                "label": {
+                  "default": "Dynamic Sum"
+                },
+                "description": {
+                  "default": "Sum: ${sum(number, number)} with (number, number). Sum: ${sum(number, 2, number)} with (number, 2, number)"
+                }
+              },
+              {
+                "id": "panel-selector-fields1",
+                "label": {
+                  "default": "Colors"
+                },
+                "type": "panelSelector",
+                "depends_on_ref": "fruit-color1",
+                "group_info": [
+                  {
+                    "id": "red1",
+                    "type": "textPanel",
+                    "description": {
+                      "default": "Apples ripen six to 10 times faster at room temperature than if they are refrigerated."
+                    }
+                  },
+                  {
+                    "id": "blue1",
+                    "type": "textPanel",
+                    "label": {
+                      "default": "Blueberries"
+                    },
+                    "description": {
+                      "default": "Blueberries freeze in just 4 minutes."
+                    }
+                  },
+                  {
+                    "id": "yellow1",
+                    "type": "textPanel",
+                    "label": {
+                      "default": "Lemons"
+                    },
+                    "description": {
+                      "default": "Lemons are a hybrid between a sour orange and a citron."
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "panel-selector2",
+            "label": {
+              "default": "Panel Selector"
+            },
+            "type": "controls",
+            "parameter_refs": [
+              "hidePanelSelector",
+              "fruit-color2"
+            ],
+            "group_info": [
+              {
+                "id": "panel-selector-fields2",
+                "label": {
+                  "default": "Colors"
+                },
+                "type": "panelSelector",
+                "depends_on_ref": "fruit-color2",
+                "group_info": [
+                  {
+                    "id": "red2",
+                    "type": "textPanel",
+                    "description": {
+                      "default": "Apples ripen six to 10 times faster at room temperature than if they are refrigerated."
+                    }
+                  },
+                  {
+                    "id": "blue2",
+                    "type": "textPanel",
+                    "label": {
+                      "default": "Blueberries"
+                    },
+                    "description": {
+                      "default": "Blueberries freeze in just 4 minutes."
+                    }
+                  },
+                  {
+                    "id": "yellow2",
+                    "type": "textPanel",
+                    "label": {
+                      "default": "Lemons"
+                    },
+                    "description": {
+                      "default": "Lemons are a hybrid between a sour orange and a citron."
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "column-selections",
+        "label": {
+          "default": "Column Selection"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "disable-selectcolumn-values",
+            "label": {
+              "default": "Values"
+            },
+            "type": "controls",
+            "parameter_refs": [
+              "disableColumnSelectionPanel"
+            ],
+            "group_info": [
+              {
+                "id": "selectcolumn-values",
+                "label": {
+                  "default": "Values"
+                },
+                "type": "columnSelection",
+                "parameter_refs": [
+                  "field1_panel",
+                  "field2_panel"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "hide-column-selection-panel",
+            "label": {
+              "default": "Column Selection"
+            },
+            "type": "controls",
+            "parameter_refs": [
+              "hideColumnSelectionPanel"
+            ],
+            "group_info": [
+              {
+                "id": "column-selection-panel",
+                "label": {
+                  "default": "Column Selection"
+                },
+                "type": "columnSelection",
+                "parameter_refs": [
+                  "selectcolumn",
+                  "selectcolumns"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "summary_panel_category",
+        "type": "panels",
+        "label": {
+          "default": "Summary Panel"
+        },
+        "group_info": [
+          {
+            "id": "summary_info",
+            "type": "textPanel",
+            "description": {
+              "default": "Configure fields link and summary will be disabled or hidden using the below checkboxes."
+            }
+          },
+          {
+            "id": "enable_summary_checkbox",
+            "type": "controls",
+            "label": {
+              "default": "Enable Summary"
+            },
+            "description": {
+              "default": "Configure fields link and summary will be disabled if checkbox is unchecked."
+            },
+            "parameter_refs": [
+              "enableSummary"
+            ]
+          },
+          {
+            "id": "structuretable-summary-panel1",
+            "label": {
+              "default": "Configure Fields"
+            },
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "structuretable_summary1_panel",
+                "type": "columnSelection",
+                "parameter_refs": [
+                  "structuretable_summary1",
+                  "structuretable_summary2"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "hide_summary_checkbox",
+            "type": "controls",
+            "label": {
+              "default": "Hide Summary"
+            },
+            "description": {
+              "default": "Configure fields link and summary will be hidden if checkbox is unchecked."
+            },
+            "parameter_refs": [
+              "hideSummary"
+            ]
+          },
+          {
+            "id": "structuretable-summary-panel2",
+            "label": {
+              "default": "Configure Fields"
+            },
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "structuretable_summary3_panel",
+                "parameter_refs": [
+                  "structuretable_summary3"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "twisty-panels",
+        "label": {
+          "default": "Twisty Panels"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "panels",
+            "type": "controls",
+            "parameter_refs": [
+              "disableTwistyPanel"
+            ],
+            "group_info": [
+              {
+                "id": "twisty-panel1",
+                "type": "twistyPanel",
+                "label": {
+                  "default": "Twisty Panel1"
+                },
+                "group_info": [
+                  {
+                    "id": "twisty-panel1-controls",
+                    "type": "controls",
+                    "parameter_refs": [
+                      "numberfield1",
+                      "numberfield2"
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "panels",
+            "type": "controls",
+            "parameter_refs": [
+              "hideTwistyPanel"
+            ],
+            "group_info": [
+              {
+                "id": "twisty-panel2",
+                "type": "twistyPanel",
+                "label": {
+                  "default": "Twisty Panel2"
+                },
+                "group_info": [
+                  {
+                    "id": "twisty-panel2-controls",
+                    "type": "controls",
+                    "parameter_refs": [
+                      "numberfield3"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "panels-in-panels",
+        "label": {
+          "default": "Panels within Panels"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "disablePanelLevel1",
+          "hidePanelLevel1"
+        ],
+        "group_info": [
+          {
+            "id": "level1",
+            "label": {
+              "default": "Level1"
+            },
+            "type": "panels",
+            "group_info": [
+              {
+                "id": "level2buttons",
+                "type": "controls",
+                "parameter_refs": [
+                  "disablePanelLevel2",
+                  "hidePanelLevel2"
+                ]
+              },
+              {
+                "id": "level2",
+				        "label": {
+				          "default": "Level2"
+				        },
+                "type": "controls",
+                "parameter_refs": [
+                  "textfield1",
+                  "textfield2",
+									"disablePanelLevel3",
+									"hidePanelLevel3"
+                ],
+                "group_info": [
+                  {
+                    "id": "level3",
+						        "label": {
+						          "default": "Level3"
+						        },
+                    "type": "panels",
+                    "group_info": [
+                      {
+                        "id": "level3control",
+                        "type": "controls",
+                        "parameter_refs": [
+                          "textfield3"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "conditions": [
+    {
+      "enabled": {
+        "group_refs": [
+          "orange-panel"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disableTextPanel",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "group_refs": [
+          "apple-panel"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hideTextPanel",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "number"
+        ],
+        "group_refs": [
+          "panel-selector-fields1",
+          "dynamicTextPercent",
+          "dynamicTextSum"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disablePanelSelector",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "group_refs": [
+          "panel-selector-fields2"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hidePanelSelector",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "group_refs": [
+          "selectcolumn-values"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disableColumnSelectionPanel",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "group_refs": [
+          "column-selection-panel"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hideColumnSelectionPanel",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "group_refs": [
+          "structuretable-summary-panel1"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "enableSummary",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "group_refs": [
+          "structuretable-summary-panel2"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hideSummary",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "group_refs": [
+          "twisty-panel1"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disableTwistyPanel",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "group_refs": [
+          "twisty-panel2"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hideTwistyPanel",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "group_refs": [
+          "level1"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disablePanelLevel1",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "group_refs": [
+          "level1"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hidePanelLevel1",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+		{
+      "enabled": {
+        "parameter_refs": [
+          "hidePanelLevel1"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disablePanelLevel1",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "group_refs": [
+          "level2"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disablePanelLevel2",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "group_refs": [
+          "level2"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hidePanelLevel2",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "group_refs": [
+          "level3"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disablePanelLevel3",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "group_refs": [
+          "level3"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hidePanelLevel3",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+		{
+			"enabled": {
+				"parameter_refs": [
+					"disablePanelLevel1"
+				],
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "hidePanelLevel1",
+						"op": "equals",
+						"value": false
+					}
+				}
+			}
+		},
+		{
+			"enabled": {
+				"parameter_refs": [
+					"hidePanelLevel2"
+				],
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "disablePanelLevel2",
+						"op": "equals",
+						"value": false
+					}
+				}
+			}
+		},
+		{
+			"enabled": {
+				"parameter_refs": [
+					"disablePanelLevel2"
+				],
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "hidePanelLevel2",
+						"op": "equals",
+						"value": false
+					}
+				}
+			}
+		},
+		{
+			"enabled": {
+				"parameter_refs": [
+					"hidePanelLevel3"
+				],
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "disablePanelLevel3",
+						"op": "equals",
+						"value": false
+					}
+				}
+			}
+		},
+		{
+			"enabled": {
+				"parameter_refs": [
+					"disablePanelLevel3"
+				],
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "hidePanelLevel3",
+						"op": "equals",
+						"value": false
+					}
+				}
+			}
+		}
+  ],
+  "dataset_metadata": [
+    {
+      "fields": [
+        {
+          "name": "age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    }
+  ]
+}

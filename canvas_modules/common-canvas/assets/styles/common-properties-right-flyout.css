@@ -172,6 +172,7 @@
 
 .control-summary-link-buttons .button {
   line-height: 0.5;
+  padding-left: 0;
 }
 
 .control-summary-link-buttons > a > svg:not(:root) {

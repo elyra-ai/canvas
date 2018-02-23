@@ -11,6 +11,7 @@
 import PropertiesStore from "./properties-store.js";
 import logger from "../../utils/logger";
 import UiConditionsParser from "./ui-conditions/ui-conditions-parser.js";
+import UiGroupsParser from "./ui-conditions/ui-groups-parser.js";
 import conditionsUtil from "./util/conditions-utils";
 import PropertyUtils from "./util/property-utils.js";
 import { STATES, ACTIONS } from "./constants/constants.js";
@@ -31,6 +32,7 @@ export default class PropertiesController {
 		this.validationDefinitions = {};
 		this.filterDefinitions = {};
 		this.filteredEnumDefinitions = {};
+		this.panelTree = {};
 		this.controls = {};
 		this.customControls = [];
 		this.summaryPanelControls = {};
@@ -84,6 +86,14 @@ export default class PropertiesController {
 				this.setDatasetMetadata(this.form.data.datasetMetadata);
 				this.setPropertyValues(this.form.data.currentParameters);
 			}
+			// get all the children for panels that have conditions. Must be run after setPropertyValues(),
+			// which generates the list of panels with conditions
+			this._parsePanelTree();
+			// Calling setPropertyValues() again after _parsePanelTree to run the conditions for the all the
+			// panel's children and set the correct states.
+			// Need to set initial to true for initial rendering of the panel's children in the correct state
+			this.setPropertyValues(this.form.data.currentParameters, true);
+
 			this.requiredParameters = this._parseRequiredParameters(this.form, controls); // TODO remove this when we switch to using this.controls in validateInput
 			// for control.type of structuretable that do not use FieldPicker, we need to add to
 			// the controlValue any missing data model fields.  We need to do it here so that
@@ -127,6 +137,37 @@ export default class PropertiesController {
 			}
 		}
 	}
+
+	_parsePanelTree() {
+		const panels = Object.keys(this.getPanelStates());
+		for (const panel of panels) {
+			this.panelTree[panel] = {
+				panels: [],
+				controls: []
+			};
+			UiGroupsParser.parseUiContent(this.panelTree, panel, this.form);
+		}
+	}
+
+	// returns true if child belongs to parent
+	isPanelParent(childPanel, parentPanel) {
+		const tree = this.panelTree;
+		if (tree[parentPanel] && tree[parentPanel].panels && tree[parentPanel].panels.indexOf(childPanel) > -1) {
+			return true;
+		}
+
+		// check if top level parent
+		if (childPanel === parentPanel) {
+			for (const panel in tree) {
+				if (panel.panels && panel.panels.indexOf(childPanel) > -1) {
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+
 	_addToControlValues() {
 		for (const keyName in this.controls) {
 			if (!this.controls.hasOwnProperty(keyName)) {
@@ -471,7 +512,7 @@ export default class PropertiesController {
 		const propertyValue = this.propertiesStore.getPropertyValue(propertyId);
 		let filteredValue;
 		// don't return hidden/disabled values
-		if (filterHiddenDisabled && propertyValue) {
+		if (filterHiddenDisabled) {
 			// top level value
 			const controlState = this.getControlState(propertyId);
 			if (controlState === STATES.DISABLED || controlState === STATES.HIDDEN) {
@@ -521,14 +562,14 @@ export default class PropertiesController {
 		return propertyValues;
 	}
 
-	setPropertyValues(values) {
+	setPropertyValues(values, initial) {
 		this.propertiesStore.setPropertyValues(values);
 		const definitions = {
 			visibleDefinition: this.visibleDefinition,
 			enabledDefinitions: this.enabledDefinitions,
 			filteredEnumDefinitions: this.filteredEnumDefinitions
 		};
-		conditionsUtil.validateConditions(this, definitions, this.getDatasetMetadata());
+		conditionsUtil.validateConditions(this, definitions, this.getDatasetMetadata(), initial);
 		if (this.handlers.propertyListener) {
 			this.handlers.propertyListener(
 				{
@@ -554,6 +595,24 @@ export default class PropertiesController {
 	}
 	getControlStates() {
 		return this.propertiesStore.getControlStates();
+	}
+
+	/**
+	 * Panel States Methods
+	 * Sets the panel state. Supported states are:
+	 * "disabled", "enabled", "hidden", "visible".
+	 */
+	setPanelStates(states) {
+		this.propertiesStore.setPanelStates(states);
+	}
+	updatePanelState(panelId, state) {
+		this.propertiesStore.updatePanelState(panelId, state);
+	}
+	getPanelState(panelId) {
+		return this.propertiesStore.getPanelState(panelId);
+	}
+	getPanelStates() {
+		return this.propertiesStore.getPanelStates();
 	}
 
 	/*

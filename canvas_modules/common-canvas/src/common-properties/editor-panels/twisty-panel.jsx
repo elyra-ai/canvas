@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -15,6 +15,7 @@ import PropTypes from "prop-types";
 import EditorControl from "../editor-controls/editor-control.jsx";
 import { injectIntl, intlShape } from "react-intl";
 import TwistyClosed from "../../../assets/images/twisty_closed.svg";
+import TwistyClosedDisabled from "../../../assets/images/twisty_closed_disabled.svg";
 
 
 class TwistyPanel extends EditorControl {
@@ -49,7 +50,7 @@ class TwistyPanel extends EditorControl {
 		const errorIcon = conditionState.icon;
 		const stateDisabled = conditionState.disabled;
 		const stateStyle = conditionState.style;
-		const icon = TwistyClosed;
+		const icon = stateDisabled.disabled ? TwistyClosedDisabled : TwistyClosed;
 		const iconClassName = (this.state.showTwistyPanel) ? "twistypanel_icon rotate" : "twistypanel_icon";
 		const link = (<div className="control-twisty-link-buttons">
 			<img className={iconClassName} src={icon} onClick={this.handleLinkClicked} {...stateDisabled} style={stateStyle} />

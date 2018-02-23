@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -12,6 +12,7 @@ import propertyOf from "lodash/propertyOf";
 
 export class UIItem {
 	constructor(elements) {
+		this.id = propertyOf(elements)("id");
 		this.itemType = propertyOf(elements)("itemType");
 		this.tabs = propertyOf(elements)("tabs"); // when PRIMARY_TABS, SUB_TABS or PANEL_SELECTOR
 		this.panel = propertyOf(elements)("panel"); // when PANEL or ADDITIONAL_LINK
@@ -37,8 +38,9 @@ export class UIItem {
 		});
 	}
 
-	static makePanelSelector(tabs, dependsOn) {
+	static makePanelSelector(groupName, tabs, dependsOn) {
 		return new UIItem({
+			id: groupName,
 			itemType: ItemType.PANEL_SELECTOR,
 			tabs: tabs,
 			dependsOn: dependsOn
@@ -89,10 +91,11 @@ export class UIItem {
 		});
 	}
 
-	static makeTextPanel(label, description) {
+	static makeTextPanel(groupName, label, description) {
 		return new UIItem({
 			itemType: ItemType.TEXT_PANEL,
 			panel: {
+				id: groupName,
 				label: label,
 				description: description
 			}

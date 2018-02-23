@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -10,11 +10,13 @@
 import { createStore, combineReducers } from "redux";
 import { setPropertyValues, updatePropertyValue } from "./actions";
 import { setControlStates, updateControlState } from "./actions";
+import { setPanelStates, updatePanelState } from "./actions";
 import { clearSelectedRows, updateSelectedRows } from "./actions";
 import { setErrorMessages, updateErrorMessage, clearErrorMessage } from "./actions";
 import { setDatasetMetadata } from "./actions";
 import propertiesReducer from "./reducers/properties";
 import controlStatesReducer from "./reducers/control-states";
+import panelStatesReducer from "./reducers/panel-states";
 import errorMessagesReducer from "./reducers/error-messages";
 import datasetMetadataReducer from "./reducers/dataset-metadata";
 import rowSelectionsReducer from "./reducers/row-selections";
@@ -24,7 +26,7 @@ import isEqual from "lodash/isEqual";
 
 export default class PropertiesStore {
 	constructor() {
-		this.combinedReducer = combineReducers({ propertiesReducer, controlStatesReducer, errorMessagesReducer, datasetMetadataReducer, rowSelectionsReducer });
+		this.combinedReducer = combineReducers({ propertiesReducer, controlStatesReducer, panelStatesReducer, errorMessagesReducer, datasetMetadataReducer, rowSelectionsReducer });
 		this.store = createStore(this.combinedReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 	}
 
@@ -103,6 +105,32 @@ export default class PropertiesStore {
 
 	updateControlState(propertyId, value) {
 		this.store.dispatch(updateControlState({ propertyId: propertyId, value: value }));
+	}
+
+	getPanelState(panelId) {
+		if (typeof panelId === "undefined") {
+			return null;
+		}
+		const state = this.store.getState();
+		const locState = state.panelStatesReducer[panelId.name];
+		if (locState && locState.value) {
+			return locState.value;
+		}
+		return null;
+	}
+	getPanelStates() {
+		const state = this.store.getState();
+		// get a copy and not direct reference
+		return JSON.parse(JSON.stringify(state.panelStatesReducer));
+	}
+	setPanelStates(values) {
+		// check to see if values are equal before firing event
+		if (!isEqual(this.getPanelStates(), values)) {
+			this.store.dispatch(setPanelStates(values));
+		}
+	}
+	updatePanelState(panelId, value) {
+		this.store.dispatch(updatePanelState({ panelId: panelId, value: value }));
 	}
 
 	/*

@@ -111,7 +111,13 @@ _defineConstant("STATES", {
 	ENABLED: "enabled",
 	DISABLED: "disabled"
 });
+
 _defineConstant("ACTIONS", {
 	SET_PROPERTIES: "SET_PROPERTIES",
 	UPDATE_PROPERTY: "UPDATE_PROPERTY"
+});
+
+_defineConstant("CONTROL_TYPE", {
+	CONTROL: "control",
+	PANEL: "panel"
 });

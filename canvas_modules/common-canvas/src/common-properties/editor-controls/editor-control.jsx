@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2016. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2016 - 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -12,7 +12,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import ValidationMessage from "./validation-message.jsx";
 import ValidationIcon from "./validation-icon.jsx";
-import { DEFAULT_VALIDATION_MESSAGE, VALIDATION_MESSAGE, EDITOR_CONTROL } from "../constants/constants.js";
+import { DEFAULT_VALIDATION_MESSAGE, VALIDATION_MESSAGE, EDITOR_CONTROL, STATES, CONTROL_TYPE } from "../constants/constants.js";
 import PropertyUtil from "../util/property-utils.js";
 
 export default class EditorControl extends React.Component {
@@ -130,10 +130,16 @@ export default class EditorControl extends React.Component {
 			default:
 			}
 		}
-		const controlState = this.props.controller.getControlState(conditionProps.propertyId);
-		if (controlState) {
-			switch (controlState) {
-			case "disabled":
+
+		let itemState = null;
+		if (conditionProps.controlType === CONTROL_TYPE.PANEL) {
+			itemState = this.props.controller.getPanelState(conditionProps.propertyId);
+		} else {
+			itemState = this.props.controller.getControlState(conditionProps.propertyId);
+		}
+		if (itemState) {
+			switch (itemState) {
+			case STATES.DISABLED:
 				stateDisabled.disabled = true;
 				stateStyle.color = VALIDATION_MESSAGE.DISABLED;
 				stateStyle.borderColor = VALIDATION_MESSAGE.DISABLED;
@@ -142,7 +148,7 @@ export default class EditorControl extends React.Component {
 				errorMessage = <div />;
 				errorIcon = <div />;
 				break;
-			case "hidden":
+			case STATES.HIDDEN:
 				stateStyle.display = "none";
 				showTooltip = false;
 				errorMessage = <div />;

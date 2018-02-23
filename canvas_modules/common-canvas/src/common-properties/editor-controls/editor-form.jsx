@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2016, 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2016 - 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -14,7 +14,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import Tabs from "ap-components-react/dist/components/Tabs";
 import PropertyUtil from "../util/property-utils.js";
-import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "../constants/constants";
+import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, STATES, VALIDATION_MESSAGE } from "../constants/constants";
 import isEmpty from "lodash/isEmpty";
 import sortBy from "lodash/sortBy";
 import logger from "../../../utils/logger";
@@ -145,6 +145,31 @@ class EditorForm extends React.Component {
 		} else {
 			this.setState({ activeTabId: this._getTabId(control.parentCategoryId) });
 		}
+	}
+
+	_getPanelState(panelId) {
+		const panelState = this.props.controller.getPanelState({ name: panelId });
+		const stateStyle = {};
+		const stateDisabled = {};
+		if (panelState) {
+			switch (panelState) {
+			case STATES.DISABLED:
+				stateDisabled.disabled = true;
+				stateStyle.color = VALIDATION_MESSAGE.DISABLED;
+				stateStyle.pointerEvents = "none";
+				break;
+			case STATES.HIDDEN:
+				stateStyle.display = "none";
+				break;
+			default:
+			}
+		}
+
+		return {
+			state: panelState,
+			disabled: stateDisabled,
+			style: stateStyle
+		};
 	}
 
 	genPrimaryTabs(key, tabs, propertyId, indexof) {
@@ -287,7 +312,8 @@ class EditorForm extends React.Component {
 		);
 	}
 
-	genPanelSelector(key, tabs, dependsOn, propertyId, indexof) {
+	genPanelSelector(key, tabs, dependsOn, propertyId, indexof, panelId) {
+		const panelConditions = this._getPanelState(panelId);
 		const subPanels = {};
 		for (let i = 0; i < tabs.length; i++) {
 			const tab = tabs[i];
@@ -303,6 +329,7 @@ class EditorForm extends React.Component {
 		}
 		return (
 			<SelectorPanel id={"selector-panel." + dependsOn}
+				style={panelConditions.style}
 				key={"selectorPanel" + key}
 				panels={subPanels}
 				dependsOn={dependsOn}
@@ -371,7 +398,7 @@ class EditorForm extends React.Component {
 		} else if (uiItem.itemType === "primaryTabs") {
 			return this.genPrimaryTabs(key, uiItem.tabs, inPropertyId, indexof);
 		} else if (uiItem.itemType === "panelSelector") {
-			return this.genPanelSelector(key, uiItem.tabs, uiItem.dependsOn, inPropertyId, indexof);
+			return this.genPanelSelector(key, uiItem.tabs, uiItem.dependsOn, inPropertyId, indexof, uiItem.id);
 		} else if (uiItem.itemType === "checkboxSelector") {
 			return this.genPanel(key, uiItem.panel, inPropertyId, indexof);
 		} else if (uiItem.itemType === "customPanel") {
@@ -382,12 +409,13 @@ class EditorForm extends React.Component {
 		} else if (uiItem.itemType === "action") {
 			return this.generateAction(key, uiItem.action);
 		} else if (uiItem.itemType === "textPanel" && uiItem.panel) {
-			const label = uiItem.panel.label ? (<div className="panel-label">{uiItem.panel.label.text}</div>) : (<div />);
+			const panelConditions = this._getPanelState(uiItem.panel.id);
+			const label = uiItem.panel.label ? (<div className="panel-label" style={panelConditions.style}>{uiItem.panel.label.text}</div>) : (<div />);
 			const description = uiItem.panel.description
-				? (<div className="panel-description">{PropertyUtil.evaluateText(uiItem.panel.description.text, this.props.controller)}</div>)
+				? (<div className="panel-description" style={panelConditions.style}>{PropertyUtil.evaluateText(uiItem.panel.description.text, this.props.controller)}</div>)
 				: (<div />);
 			return (
-				<div className="properties-text-panel" key={"text-panel-" + key}>
+				<div className="properties-text-panel" key={"text-panel-" + key} style={panelConditions.style}>
 					{label}
 					{description}
 				</div>);

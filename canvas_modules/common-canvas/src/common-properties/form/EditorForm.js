@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -132,7 +132,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 			groupLabel = l10nProvider.l10nLabel(subGroup, subGroup.name);
 			panSelSubItems.push(new EditorTab(groupLabel, subGroupName, groupItem));
 		});
-		return UIItem.makePanelSelector(panSelSubItems, group.dependsOn);
+		return UIItem.makePanelSelector(groupName, panSelSubItems, group.dependsOn);
 	}
 	case GroupType.PANELS: {
 		const panSubItems = [];
@@ -164,7 +164,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 	case GroupType.TEXT_PANEL: {
 		groupLabel = l10nProvider.l10nResource(group.label);
 		const groupDesc = l10nProvider.l10nDesc(group, group.name);
-		return UIItem.makeTextPanel(new Label(groupLabel), new Description(groupDesc));
+		return UIItem.makeTextPanel(groupName, new Label(groupLabel), new Description(groupDesc));
 	}
 	case GroupType.TWISTY_PANEL: {
 		groupLabel = l10nProvider.l10nLabel(group, group.name);

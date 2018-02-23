@@ -7,25 +7,28 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 /*	eslint max-depth: ["error", 10]*/
-
+/* eslint complexity: ["error", 27] */
 
 import logger from "../../../utils/logger";
 import UiConditions from "../ui-conditions/ui-conditions.js";
-import { DEFAULT_VALIDATION_MESSAGE, STATES, DEFAULT_DATE_FORMAT, DEFAULT_TIME_FORMAT } from "../constants/constants.js";
+import { DEFAULT_VALIDATION_MESSAGE, STATES, DEFAULT_DATE_FORMAT, DEFAULT_TIME_FORMAT, CONTROL_TYPE } from "../constants/constants.js";
 import moment from "moment";
 import isEmpty from "lodash/isEmpty";
 
-function validateConditions(controller, definitions, dataModel) {
-	_validateVisible(controller, definitions.visibleDefinition, dataModel);
-	_validateEnabled(controller, definitions.enabledDefinitions, dataModel);
+function validateConditions(controller, definitions, dataModel, initial) {
+	_validateVisible(controller, definitions.visibleDefinition, dataModel, initial);
+	_validateEnabled(controller, definitions.enabledDefinitions, dataModel, initial);
 	_validateFilteredEnums(controller, definitions.filteredEnumDefinitions, dataModel);
 }
 
-function _validateVisible(controller, visibleDefinition, dataModel) {
+function _validateVisible(controller, visibleDefinition, dataModel, initial) {
 	// visibleDefinition
 	if (Object.keys(visibleDefinition).length > 0) {
 		const propertyValues = controller.getPropertyValues();
-		const newStates = controller.getControlStates();
+		const newStates = {
+			controls: controller.getControlStates(),
+			panels: controller.getPanelStates()
+		};
 		for (const visibleKey in visibleDefinition) {
 			if (!visibleDefinition.hasOwnProperty(visibleKey)) {
 				continue;
@@ -42,10 +45,10 @@ function _validateVisible(controller, visibleDefinition, dataModel) {
 								rowIndex: rowIdx,
 								colIndex: baseId.col
 							};
-							_setValidateVisible(visDefinition.definition, propertyValues, controlType, dataModel, cellCoords, newStates);
+							_setValidateVisible(visDefinition.definition, propertyValues, controlType, dataModel, cellCoords, newStates, controller, initial);
 						}
 					} else {
-						_setValidateVisible(visDefinition.definition, propertyValues, controlType, dataModel, cellCoords, newStates);
+						_setValidateVisible(visDefinition.definition, propertyValues, controlType, dataModel, cellCoords, newStates, controller, initial);
 					}
 
 				} catch (error) {
@@ -53,37 +56,70 @@ function _validateVisible(controller, visibleDefinition, dataModel) {
 				}
 			}
 		}
-		controller.setControlStates(newStates);
+		controller.setControlStates(newStates.controls);
+		controller.setPanelStates(newStates.panels);
 	}
 }
 
-function _setValidateVisible(definition, propertyValues, controlType, dataModel, cellCoords, newStates) {
+function _setValidateVisible(definition, propertyValues, controlType, dataModel, cellCoords, newStates, controller, initial) {
 	const visOutput = UiConditions.validateInput(definition, propertyValues, controlType, dataModel,
 		cellCoords);
-	if (visOutput === true) { // control should be visible
-		for (const paramRef of definition.visible.parameter_refs) {
-			const referenceId = _getPropertyId(paramRef, cellCoords);
-			const currentState = _getState(newStates, referenceId);
-			// check for visible or enabled so we aren't resetting the state all the time
-			if (referenceId && currentState !== STATES.VISIBLE && currentState !== STATES.ENABLED) {
-				_updateState(newStates, referenceId, STATES.VISIBLE);
+	if (visOutput === true) { // control|panel should be visible
+		if (definition.visible.parameter_refs) {
+			for (const paramRef of definition.visible.parameter_refs) {
+				const visReferenceId = _getPropertyId(paramRef, cellCoords);
+				const currentState = _getState(newStates.controls, visReferenceId);
+				// check for visible or enabled so we aren't resetting the state all the time
+				if (visReferenceId && currentState !== STATES.VISIBLE && currentState !== STATES.ENABLED) {
+					_updateStateIfPanel(newStates, visReferenceId, STATES.VISIBLE);
+				}
 			}
 		}
-	} else { // control should be hidden
-		for (const paramRef of definition.visible.parameter_refs) {
-			const referenceId = _getPropertyId(paramRef, cellCoords);
-			if (referenceId) {
-				_updateState(newStates, referenceId, STATES.HIDDEN);
+		if (definition.visible.group_refs) {
+			for (const groupRef of definition.visible.group_refs) {
+				const groupVisReferenceId = _getPropertyId(groupRef);
+				const currentState = _getState(newStates.panels, groupVisReferenceId);
+				// check for visible or enabled so we aren't resetting the state all the time
+				if (groupVisReferenceId && currentState !== STATES.VISIBLE && currentState !== STATES.ENABLED) {
+					const updated = _updateStateIfParent(newStates, groupVisReferenceId, STATES.VISIBLE, controller);
+					if (updated || initial) {
+						_updatePanelChildrenState(newStates, groupVisReferenceId, STATES.VISIBLE, controller);
+					}
+				}
+			}
+		}
+	} else { // control|panel should be hidden
+		if (definition.visible.parameter_refs) {
+			for (const paramRef of definition.visible.parameter_refs) {
+				const hidReferenceId = _getPropertyId(paramRef, cellCoords);
+				if (hidReferenceId) {
+					_updateStateIfPanel(newStates, hidReferenceId, STATES.HIDDEN);
+				}
+			}
+		}
+		if (definition.visible.group_refs) {
+			for (const groupRef of definition.visible.group_refs) {
+				const groupHidReferenceId = _getPropertyId(groupRef);
+				if (groupHidReferenceId) {
+					const updated = _updateStateIfParent(newStates, groupHidReferenceId, STATES.HIDDEN, controller);
+					if (updated || initial) {
+						_updatePanelChildrenState(newStates, groupHidReferenceId, STATES.HIDDEN, controller);
+					}
+				}
 			}
 		}
 	}
 }
 
-function _validateEnabled(controller, enabledDefinitions, dataModel) {
+function _validateEnabled(controller, enabledDefinitions, dataModel, initial) {
 	// enabledDefinitions
 	if (Object.keys(enabledDefinitions).length > 0) {
 		const propertyValues = controller.getPropertyValues();
-		const newStates = controller.getControlStates();
+		const newStates = {
+			controls: controller.getControlStates(),
+			panels: controller.getPanelStates()
+		};
+
 		for (const enabledKey in enabledDefinitions) {
 			if (!enabledDefinitions.hasOwnProperty(enabledKey)) {
 				continue;
@@ -100,37 +136,134 @@ function _validateEnabled(controller, enabledDefinitions, dataModel) {
 								rowIndex: rowIdx,
 								colIndex: baseId.col
 							};
-							_setValidateEnabled(enbDefinition.definition, propertyValues, controlType, dataModel, cellCoords, newStates);
+							_setValidateEnabled(enbDefinition.definition, propertyValues, controlType, dataModel, cellCoords, newStates, controller, initial);
 						}
 					} else {
-						_setValidateEnabled(enbDefinition.definition, propertyValues, controlType, dataModel, cellCoords, newStates);
+						_setValidateEnabled(enbDefinition.definition, propertyValues, controlType, dataModel, cellCoords, newStates, controller, initial);
 					}
 				} catch (error) {
 					logger.warn("Error thrown in validation: " + error);
 				}
 			}
 		}
-		controller.setControlStates(newStates);
+		controller.setControlStates(newStates.controls);
+		controller.setPanelStates(newStates.panels);
 	}
 }
 
-function _setValidateEnabled(definition, propertyValues, controlType, dataModel, cellCoords, newStates) {
+function _setValidateEnabled(definition, propertyValues, controlType, dataModel, cellCoords, newStates, controller, initial) {
 	const enbOutput = UiConditions.validateInput(definition, propertyValues, controlType, dataModel,
 		cellCoords);
-	if (enbOutput === true) { // control should be enabled
-		for (const paramRef of definition.enabled.parameter_refs) {
-			const referenceId = _getPropertyId(paramRef, cellCoords);
-			if (paramRef && _getState(newStates, referenceId) !== STATES.HIDDEN) {
-				_updateState(newStates, referenceId, STATES.ENABLED);
+	if (enbOutput === true) { // control|panel should be enabled
+		if (definition.enabled.parameter_refs) {
+			for (const paramRef of definition.enabled.parameter_refs) {
+				const enbReferenceId = _getPropertyId(paramRef, cellCoords);
+				if (paramRef && _getState(newStates.controls, enbReferenceId) !== STATES.HIDDEN) {
+					_updateStateIfPanel(newStates, enbReferenceId, STATES.ENABLED);
+				}
 			}
 		}
-	} else { // control should be disabled
-		for (const paramRef of definition.enabled.parameter_refs) {
-			const referenceId = _getPropertyId(paramRef, cellCoords);
-			if (referenceId && _getState(newStates, referenceId) !== STATES.HIDDEN) { // if control is hidden, no need to disable it
-				_updateState(newStates, referenceId, STATES.DISABLED);
+		if (definition.enabled.group_refs) {
+			for (const groupRef of definition.enabled.group_refs) {
+				const groupEnbReferenceId = _getPropertyId(groupRef);
+				if (groupRef && _getState(newStates.panels, groupEnbReferenceId) !== STATES.HIDDEN) {
+					const updated = _updateStateIfParent(newStates, groupEnbReferenceId, STATES.ENABLED, controller);
+					if (updated || initial) {
+						_updatePanelChildrenState(newStates, groupEnbReferenceId, STATES.ENABLED, controller);
+					}
+				}
 			}
 		}
+	} else { // control|panel should be disabled
+		if (definition.enabled.parameter_refs) {
+			for (const paramRef of definition.enabled.parameter_refs) {
+				const disReferenceId = _getPropertyId(paramRef, cellCoords);
+				if (disReferenceId && _getState(newStates.controls, disReferenceId) !== STATES.HIDDEN) { // if control is hidden, no need to disable it
+					_updateStateIfPanel(newStates, disReferenceId, STATES.DISABLED);
+				}
+			}
+		}
+		if (definition.enabled.group_refs) {
+			for (const groupRef of definition.enabled.group_refs) {
+				const groupDisReferenceId = _getPropertyId(groupRef);
+				if (groupRef && _getState(newStates.panels, groupDisReferenceId) !== STATES.HIDDEN) {
+					const updated = _updateStateIfParent(newStates, groupDisReferenceId, STATES.DISABLED, controller);
+					if (updated || initial) {
+						_updatePanelChildrenState(newStates, groupDisReferenceId, STATES.DISABLED, controller);
+					}
+				}
+			}
+		}
+	}
+}
+
+function _updatePanelChildrenState(newStates, referenceId, state, controller) {
+	if (controller.panelTree[referenceId.name]) {
+		const panelTree = controller.panelTree[referenceId.name];
+		for (const panel of panelTree.panels) {
+			_updateStateIfParent(newStates, { name: panel }, state, controller, referenceId);
+		}
+		for (const control of panelTree.controls) {
+			_updateState(newStates.controls, { name: control }, state, CONTROL_TYPE.PANEL);
+		}
+	}
+}
+
+function _updateStateIfParent(newStates, panel, state, controller, referenceId) {
+	const panelName = panel.name;
+	let setBy = panel.name;
+	if (referenceId) {
+		setBy = referenceId.name;
+	}
+	if (newStates.panels[panelName]) {
+		const prevSetBy = newStates.panels[panelName].setBy;
+		const prevValue = newStates.panels[panelName].value;
+		if (controller.isPanelParent(prevSetBy, setBy) ||
+			(controller.isPanelParent(prevSetBy, setBy) === false && (prevValue === STATES.ENABLED || prevValue === STATES.VISIBLE))) {
+			// if prevState is disabled, cannot set newState to visible. if prevState is hidden, cannot set newState to enabled
+			if (((prevValue === STATES.ENABLED || prevValue === STATES.VISIBLE) && (state === STATES.DISABLED || state === STATES.HIDDEN)) ||
+				(prevValue === STATES.DISABLED && state === STATES.ENABLED) ||
+				(prevValue === STATES.HIDDEN && state === STATES.VISIBLE)) {
+				_updateState(newStates.panels, panel, state, setBy);
+				return true;
+			}
+		}
+	} else {
+		_updateState(newStates.panels, panel, state, setBy);
+		return true;
+	}
+	return false;
+}
+
+function _updateStateIfPanel(newStates, referenceId, state) {
+	const controlName = referenceId.name;
+	if (newStates.controls[controlName]) {
+		let prevSetBy = newStates.controls[controlName].setBy;
+		let prevValue = newStates.controls[controlName].value;
+		if (typeof referenceId.col !== "undefined") {
+			if (newStates.controls[controlName][referenceId.col]) {
+				if (typeof referenceId.row !== "undefined" && newStates.controls[controlName][referenceId.col][referenceId.row]) {
+					prevSetBy = newStates.controls[controlName][referenceId.col][referenceId.row].setBy;
+					prevValue = newStates.controls[controlName][referenceId.col][referenceId.row].value;
+				} else if (newStates.controls[controlName][referenceId.col].setBy) {
+					prevSetBy = newStates.controls[controlName][referenceId.col].setBy;
+					prevValue = newStates.controls[controlName][referenceId.col].value;
+				} else {
+					_updateState(newStates.controls, referenceId, state, CONTROL_TYPE.CONTROL);
+				}
+			} else {
+				_updateState(newStates.controls, referenceId, state, CONTROL_TYPE.CONTROL);
+			}
+		}
+		if (prevSetBy !== CONTROL_TYPE.PANEL || (prevSetBy === CONTROL_TYPE.PANEL && (prevValue === STATES.ENABLED || prevValue === STATES.VISIBLE))) {
+			if (((prevValue === STATES.ENABLED || prevValue === STATES.VISIBLE) && (state === STATES.DISABLED || state === STATES.HIDDEN)) ||
+				(prevValue === STATES.DISABLED && state === STATES.ENABLED) ||
+				(prevValue === STATES.HIDDEN && state === STATES.VISIBLE)) {
+				_updateState(newStates.controls, referenceId, state, CONTROL_TYPE.CONTROL);
+			}
+		}
+	} else {
+		_updateState(newStates.controls, referenceId, state, CONTROL_TYPE.CONTROL);
 	}
 }
 
@@ -216,11 +349,43 @@ function _getFilteredEnumItems(definition, filtered) {
 }
 
 // state is stored in objects rather than arrays
-function _updateState(refState, propertyId, value) {
+function _updateState(refState, propertyId, value, setBy) {
 	let propState = refState[propertyId.name];
 	if (!propState) {
 		propState = {};
 	}
+
+	const newPropState = Object.assign({}, propState);
+	switch (value) {
+	case STATES.HIDDEN:
+		newPropState.hidden = true;
+		newPropState.hiddenSetBy = setBy;
+		break;
+	case STATES.VISIBLE:
+		newPropState.hidden = false;
+		newPropState.value = STATES.VISIBLE;
+		newPropState.hiddenSetBy = "";
+		break;
+	case STATES.DISABLED:
+		newPropState.disabled = true;
+		newPropState.disabledSetBy = setBy;
+		break;
+	case STATES.ENABLED:
+		newPropState.disabled = false;
+		newPropState.value = STATES.ENABLED;
+		newPropState.disabledSetBy = "";
+		break;
+	default: logger.warn("Error while setting condition state: " + value);
+	}
+
+	if (newPropState.hidden) {
+		newPropState.value = STATES.HIDDEN;
+		newPropState.setBy = newPropState.hiddenSetBy;
+	} else if (newPropState.disabled) {
+		newPropState.value = STATES.DISABLED;
+		newPropState.setBy = newPropState.disabledSetBy;
+	}
+
 	// First allow for table level state, then column level state, and finally cell level state
 	if (typeof propertyId.col !== "undefined") {
 		const colId = propertyId.col.toString();
@@ -233,14 +398,23 @@ function _updateState(refState, propertyId, value) {
 				propState[colId][rowId] = {};
 			}
 			// Table cell level
-			propState[colId][rowId].value = value;
+			propState[colId][rowId].hidden = newPropState.hidden;
+			propState[colId][rowId].disabled = newPropState.disabled;
+			propState[colId][rowId].value = newPropState.value;
+			propState[colId][rowId].setBy = newPropState.setBy;
 		} else {
 			// Table column level
-			propState[colId].value = value;
+			propState[colId].hidden = newPropState.hidden;
+			propState[colId].disabled = newPropState.disabled;
+			propState[colId].value = newPropState.value;
+			propState[colId].setBy = newPropState.setBy;
 		}
 	} else {
 		// Control level
-		propState.value = value;
+		propState.hidden = newPropState.hidden;
+		propState.disabled = newPropState.disabled;
+		propState.value = newPropState.value;
+		propState.setBy = newPropState.setBy;
 	}
 	refState[propertyId.name] = propState;
 }

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -210,7 +210,7 @@ function validation(validationData, userInput, info) {
 function enabled(enabledData, userInput, info) {
 	const data = enabledData;
 	info.conditionType = "enabled";
-	if (data.parameter_refs && data.evaluate) {
+	if ((data.parameter_refs || data.group_refs) && data.evaluate) {
 		return evaluate(data.evaluate, userInput, info);
 	}
 	throw new Error("Invalid enabled schema");
@@ -250,7 +250,7 @@ function enabled(enabledData, userInput, info) {
 function visible(visibleData, userInput, info) {
 	const data = visibleData;
 	info.conditionType = "visible";
-	if (data.parameter_refs && data.evaluate) {
+	if ((data.parameter_refs || data.group_refs) && data.evaluate) {
 		return evaluate(data.evaluate, userInput, info);
 	}
 	throw new Error("Invalid visible schema");

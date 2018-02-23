@@ -18,7 +18,7 @@ import ValidationIcon from "../editor-controls/validation-icon.jsx";
 import { injectIntl, intlShape } from "react-intl";
 import isEmpty from "lodash/isEmpty";
 import PropertyUtils from "../util/property-utils";
-import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "../constants/constants";
+import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, CONTROL_TYPE } from "../constants/constants";
 
 
 class SummaryPanel extends EditorControl {
@@ -61,12 +61,7 @@ class SummaryPanel extends EditorControl {
 	/*
 	* Returns summary tables to be displayed in summary panel
 	*/
-	_getSummaryTables(panelStateDisabled) {
-		let disabled = false;
-		if (panelStateDisabled) {
-			disabled = panelStateDisabled.disabled;
-		}
-		const disableText = disabled ? "disabled" : "";
+	_getSummaryTables(stateStyle) {
 		const summaryTables = [];
 		const summaryControls = this.props.controller.getSummaryPanelControls(this.props.panelId);
 		// no controls in summary panel
@@ -135,7 +130,7 @@ class SummaryPanel extends EditorControl {
 				// }
 			}
 			if (summaryValues.length > 0) {
-				let summaryBody = (<table key={"summary-table-" + controlName} className={"control-summary-table " + disableText}>
+				let summaryBody = (<table key={"summary-table-" + controlName} className={"control-summary-table"}>
 					<tbody key={"summary-body-" + controlName}>
 						{summaryValues}
 					</tbody>
@@ -144,11 +139,11 @@ class SummaryPanel extends EditorControl {
 					const largeTableLabel = PropertyUtils.formatMessage(this.props.intl,
 						MESSAGE_KEYS.LONG_TABLE_SUMMARY_PLACEHOLDER,
 						MESSAGE_KEYS_DEFAULTS.LONG_TABLE_SUMMARY_PLACEHOLDER);
-					summaryBody = (<div className={"control-summary-table " + disableText}>{largeTableLabel}</div>);
+					summaryBody = (<div className={"control-summary-table"}>{largeTableLabel}</div>);
 				}
 				summaryTables.push(
 					<div key={"summary-container-" + controlName} className={"control-summary-configured-values"}>
-						<span key={"summary-text-" + controlName} className={"summary-label"}>{summaryControl.summaryLabel}</span>
+						<span key={"summary-text-" + controlName} className={"summary-label"} style={stateStyle}>{summaryControl.summaryLabel}</span>
 						{summaryBody}
 					</div>
 				);
@@ -178,7 +173,7 @@ class SummaryPanel extends EditorControl {
 		const propertyId = { name: this.props.panelId };
 		const conditionProps = {
 			propertyId: propertyId,
-			controlType: "panel"
+			controlType: CONTROL_TYPE.PANEL
 		};
 		const conditionState = this.getConditionMsgState(conditionProps);
 		const errorMessage = conditionState.message;
@@ -216,7 +211,7 @@ class SummaryPanel extends EditorControl {
 			<div className={"control-summary control-panel"} style={stateStyle}>
 				{flyout}
 				{link}
-				{this._getSummaryTables()}
+				{this._getSummaryTables(stateStyle)}
 				{errorMessage}
 			</div>
 		);
