@@ -13,6 +13,7 @@ import { makePrimaryTab } from "./EditorForm";
 import { UIItem } from "./UIItem";
 import { L10nProvider } from "./L10nProvider";
 import Conditions from "./Conditions";
+import { Size } from "../constants/form-constants";
 
 export default class Form {
 	constructor(componentId, label, labelEditable, editorSize, uiItems, buttons, data, conditions) {
@@ -28,8 +29,10 @@ export default class Form {
 
 	/**
 	* Returns a new Form
+	* @param paramDef Parameter definition
+	* @param isModal True for modal dialogs
 	*/
-	static makeForm(paramDef) {
+	static makeForm(paramDef, isModal) {
 		const propDef = PropertyDef.makePropertyDef(propertyOf(paramDef)("titleDefinition"), propertyOf(paramDef)("parameters"), propertyOf(paramDef)("complex_types"),
 			propertyOf(paramDef)("uihints"));
 		const conditions = propertyOf(paramDef)("conditions");
@@ -46,10 +49,11 @@ export default class Form {
 				currentParameters: propertyOf(paramDef)("current_parameters"),
 				datasetMetadata: propertyOf(paramDef)("dataset_metadata")
 			};
+			const editorSizeDefault = isModal ? Size.LARGE : Size.SMALL;
 			return new Form(propDef.name,
 				propDef.label,
 				propDef.labelEditable,
-				propDef.editorSizeHint(),
+				propDef.editorSizeHint(editorSizeDefault),
 				[UIItem.makePrimaryTabs(tabs)],
 				_defaultButtons(),
 				data,

@@ -31,11 +31,14 @@ export class PropertyDef {
 
 	/**
 	 * Returns the "editorSize" attribute which can be used to define how large
-	 * a node editor should be in the UI. Default to small editor.
+	 * a node editor should be in the UI. Default to small editor unless defaultValue is set.
 	 */
-	editorSizeHint() {
+	editorSizeHint(defaultValue) {
 		if (this.editorSize) {
 			return this.editorSize;
+		}
+		if (defaultValue) {
+			return defaultValue;
 		}
 		return Size.SMALL;
 	}

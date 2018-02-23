@@ -114,7 +114,7 @@ class CommonProperties extends React.Component {
 			if (this.propertiesInfo.formData && Object.keys(this.propertiesInfo.formData).length !== 0) {
 				formData = this.propertiesInfo.formData;
 			} else if (this.propertiesInfo.parameterDef) {
-				formData = Form.makeForm(this.propertiesInfo.parameterDef);
+				formData = Form.makeForm(this.propertiesInfo.parameterDef, !this.props.rightFlyout);
 			}
 			// TODO: This can be removed once the WML Play service generates datasetMetadata instead of inputDataModel
 			if (formData && formData.data && formData.data.inputDataModel && !formData.data.datasetMetadata) {
