@@ -40,7 +40,7 @@
 .column-allocator {
   display: inline;
   outline:none !important;
-  border: .25px solid #e0e0e0;
+  border: .25px solid #dfe3e6;
 	padding: 6px 2px;
   -webkit-box-shadow: none !important;
   -moz-box-shadow: none !important;
@@ -59,7 +59,7 @@
 }
 
 .column-source:focus{
-  color:#a6266e;
+  color:#3d70b2;
 }
 
 .column-structure-allocator-control-row-selected .public_fixedDataTableCell_main {
@@ -71,45 +71,43 @@
 }
 
 .form-control {
-	color: #a6266e;
+	color: #3d70b2;
 	padding: 4px 2px;
 }
 
 
 select option {
-  color: #a6266e;
+  color: #3d70b2;
   width: 100%;
 	padding-top: 2px;
 	padding-bottom: 2px;
 }
 
 select option:active {
-  color: #f9f9fb;
-  box-shadow: inset 0px 21px #aeaeae;
+  color: #f5f7fa;
 }
 
 select option:checked {
-  color: #f9f9fb;
-	box-shadow: inset 0px 21px #aeaeae;
+  color: #f5f7fa;
 }
 
 select:-internal-list-box option:checked {
-    background-color: #e0e0e0;
+    background-color: #dfe3e6;
     color: green;
 }
 
 #allocator-button {
   background-color: #ffffff;
-  color: #a6266e;
-  font-weight: bold;
-  border: #a6266e solid 2px;
+  color: #3d70b2;
+  font-weight: 600;
+  border: #3d70b2 solid 2px;
   border-radius:4px;
   transition: all .2s ease-in-out;
   margin-left:5px;
 }
 
 #allocator-button:hover {
-  background-color: #a6266e;
+  background-color: #3d70b2;
   color: #fff;
 }
 
@@ -118,7 +116,7 @@ select:-internal-list-box option:checked {
   height: 20px !important;
   cursor: pointer !important;
   margin:5px;
-  border-right: 2px solid #f9f9fb;
+  border-right: 2px solid #f5f7fa;
   transform: rotate(90deg);
 }
 
@@ -143,7 +141,7 @@ select:-internal-list-box option:checked {
   }
   .field-allocator-button:hover{
     border-bottom: none !important;
-    border-right: 2px solid #a6266e;
+    border-right: 2px solid #3d70b2;
   }
 }
 
@@ -153,12 +151,12 @@ select:-internal-list-box option:checked {
   }
   .field-allocator-button{
     width: 10px !important;
-    border-bottom: 2px solid #f9f9fb;
+    border-bottom: 2px solid #f5f7fa;
     border-right: none;
     transform: rotate(0deg);
   }
   .field-allocator-button:hover{
-    border-bottom: 2px solid #a6266e;
+    border-bottom: 2px solid #3d70b2;
     border-right: none;
   }
   #field-allocator-button-container.col-md-1 {

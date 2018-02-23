@@ -4,19 +4,14 @@
 	 viewBox="0 0 13 13" style="enable-background:new 0 0 13 13;" xml:space="preserve">
 <style type="text/css">
 
-	.st0{fill:none;stroke:#D8D8D8;stroke-miterlimit:10;}
-	.st1{fill:#FFFFFF;stroke:#D8D8D8;stroke-miterlimit:10;}
+	.st0{fill:none;stroke:#C7C7C7;stroke-miterlimit:10;}
+	.st1{fill:#FFFFFF;stroke:#C7C7C7;stroke-miterlimit:10;}
 	.st2{fill:none;}
-	.st3{fill:#D8D8D8;}
+	.st3{fill:#C7C7C7;}
 	.st4{font-family:'MyriadPro-Regular';}
 	.st5{font-size:6px;}
 </style>
-<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="4.489659e-11" y2="-1">
-	<stop  offset="0" style="stop-color:#656565"/>
-	<stop  offset="0.618" style="stop-color:#1B1B1B"/>
-	<stop  offset="0.6292" style="stop-color:#545454"/>
-	<stop  offset="0.9831" style="stop-color:#3E3E3E"/>
-</linearGradient>
+
 <line class="st0" x1="2.8" y1="3" x2="10" y2="10.2"/>
 <line class="st0" x1="10" y1="3" x2="2.8" y2="10.2"/>
 <rect x="3" y="3.1" transform="matrix(0.7071 0.7071 -0.7071 0.7071 6.5915 -2.6578)" class="st1" width="7.1" height="7.1"/>

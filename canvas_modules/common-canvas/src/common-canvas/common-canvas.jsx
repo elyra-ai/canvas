@@ -19,7 +19,7 @@ import DiagramCanvasD3 from "./diagram-canvas-d3.jsx";
 import Palette from "../palette/palette.jsx";
 import PaletteFlyout from "../palette/palette-flyout.jsx";
 import Toolbar from "../toolbar/toolbar.jsx";
-import BlankCanvasImage from "../../assets/images/blank_canvas.png";
+import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 import TooltipWrapper from "../tooltip/tooltip-wrapper.jsx";
 import isEmpty from "lodash/isEmpty";
 import { FLYOUT_WIDTH } from "../constants/constants";

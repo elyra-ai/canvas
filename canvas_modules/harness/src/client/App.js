@@ -34,7 +34,7 @@ import CustomDatasetsPanel from "./components/custom-panels/CustomDatasetsPanel"
 import CustomToggleControl from "./components/custom-controls/CustomToggleControl";
 import CustomTableControl from "./components/custom-controls/CustomTableControl";
 
-import BlankCanvasImage from "../../assets/images/blank_canvas.png";
+import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
 import {
 	SIDE_PANEL_CANVAS,

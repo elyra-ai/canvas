@@ -3,18 +3,13 @@
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 13 13" style="enable-background:new 0 0 13 13;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:#D8D8D8;}
+	.st0{fill:#C7C7C7;}
 	.st1{fill:none;}
 	.st2{fill:#FFFFFF;}
 	.st3{font-family:'HelvNeueBoldforIBM';}
 	.st4{font-size:7px;}
 </style>
-<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="4.489659e-11" y2="-1">
-	<stop  offset="0" style="stop-color:#656565"/>
-	<stop  offset="0.618" style="stop-color:#1B1B1B"/>
-	<stop  offset="0.6292" style="stop-color:#545454"/>
-	<stop  offset="0.9831" style="stop-color:#3E3E3E"/>
-</linearGradient>
+
 <rect x="1.5" y="1.5" class="st0" width="10" height="10"/>
 <rect x="4" y="3.8" class="st1" width="5" height="5.4"/>
 <text transform="matrix(1 0 0 1 4.0137 8.8187)" class="st2 st3 st4">A</text>

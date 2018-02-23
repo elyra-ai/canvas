@@ -146,7 +146,7 @@ class CommonProperties extends React.Component {
 	}
 
 	setPropertiesTitleReadOnlyMode(mode) {
-		let bottomBorderStyle = "2px solid #777677";
+		let bottomBorderStyle = "2px solid #c7c7c7";
 		if (mode) {
 			bottomBorderStyle = "none";
 		}

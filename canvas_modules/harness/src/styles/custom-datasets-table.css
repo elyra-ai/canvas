@@ -12,7 +12,7 @@
   height: 15px;
   float: left;
   margin-right: 5px;
-  fill: #A91560;
+  fill: #3d70b2;
 }
 
 #datasets-table-container>table>tbody>.datasets-columns-rows>td {
@@ -20,7 +20,7 @@
 }
 
 tr.datasets-columns-rows {
-  border-bottom: 1px solid #d8d8d8;
+  border-bottom: 1px solid #dfe3e6;
 }
 
 #datasets-table-container>table>tbody>.datasets-columns-rows>td[label=checkbox] {
@@ -82,18 +82,18 @@ tr.datasets-columns-rows {
   width: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  border-right: 1px solid #d8d8d8;
-  border-left: 1px solid #d8d8d8;
-  border-bottom: 1px solid #d8d8d8;
+  border-right: 1px solid #dfe3e6;
+  border-left: 1px solid #dfe3e6;
+  border-bottom: 1px solid #dfe3e6;
   background-color: #FFFFFF;
 }
 
 tr.datasets-table-row {
-  border-bottom: 1px solid #d8d8d8;
+  border-bottom: 1px solid #dfe3e6;
 }
 
 .datasets-table-selected-row {
-  background-color: #e0e0e0 !important;
+  background-color: #dfe3e6 !important;
 }
 
 .left-padding-15px {
@@ -105,9 +105,9 @@ tr.datasets-table-row {
 }
 
 .datasets-header-border {
-  background-color: #f9f9fb;
-  border: 1px solid #d8d8d8;
-  border-bottom: 1px solid #d8d8d8;
+  background-color: #f5f7fa;
+  border: 1px solid #dfe3e6;
+  border-bottom: 1px solid #dfe3e6;
 }
 
 .datasets-table {
@@ -119,5 +119,5 @@ tr.datasets-table-row {
 }
 
 .datasets-table-cell.disabled {
-  color: #D8D8D8;
+  color: #c7c7c7;
 }

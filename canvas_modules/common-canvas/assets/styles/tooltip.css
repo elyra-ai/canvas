@@ -8,7 +8,6 @@
  *******************************************************************************/
 
 .common-canvas_tooltip {
-	font-family: Helvetica Neue;
 	font-size: 12px;
 	position: fixed;
 	padding: 5px 10px;
@@ -16,7 +15,7 @@
 	border: 1px solid #CCCCCC;
 	font-weight: 400;
 	opacity: 90%;
-	color: #777677;
+	color: #5a6872;
 	line-height: 1.2;
 	text-align: center;
 	z-index: 8000;
@@ -60,7 +59,7 @@
 
 
 .common-canvas_tooltip #tipArrow polyline{
-	fill: #F9F9FB;
+	fill: #f5f7fa;
 	stroke-width: 0;
 }
 
@@ -93,7 +92,7 @@
 }
 
 .tip-palette-label, .tip-node-label {
-	font-weight: bold;
+	font-weight: 600;
 	color: #1B496D;
 }
 
@@ -102,7 +101,7 @@
 }
 
 .tip-palette-line, .tip-node-line {
-	background-color: #EAEAEA;
+	background-color: #f0f3f6;
 	border: 0;
 	height: 2px;
 	width: 24px;

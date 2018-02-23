@@ -12,7 +12,7 @@
 	min-width: 258px;
 	width: 100%;
 	background-color: #F9F9F9;
-	border-bottom: 2px solid #E0E0E0;
+	border-bottom: 2px solid #dfe3e6;
 	box-sizing: content-box;
 	position: relative;
 	-webkit-transition: all 0.2s;
@@ -61,11 +61,11 @@
 }
 
 .list-item:hover {
-	background-color: #EAEAEA;
+	background-color: #f0f3f6;
 }
 
 .list-item:active {
-	background-color: #D8D8D8;
+	background-color: #dfe3e6;
 }
 
 .list-item-disabled:hover {
@@ -73,7 +73,7 @@
 }
 
 .toolbar-divider {
-	border-right: 2px solid #E0E0E0;
+	border-right: 2px solid #dfe3e6;
 }
 
 #overflow-action {
@@ -81,7 +81,7 @@
 }
 
 .overflow-toolbar-divider {
-	border-bottom: 2px solid #E0E0E0;
+	border-bottom: 2px solid #dfe3e6;
 }
 
 .toolbar-item {
@@ -129,7 +129,7 @@
 }
 
 .overflow-toolbar-icon-label.disabled {
-	color: #AEAEAE;
+	color: #c7c7c7;
 }
 
 .toolbar-popover-list {
@@ -146,13 +146,13 @@
 }
 
 .toolbar-popover-list>.list-item-containers {
-	background-color: #eaeaea;
+	background-color: #f0f3f6;
 }
 
 .toolbar-popover-list>.list-item-containers>.list-item:hover {
-	background-color: #d8d8d8;
+	background-color: #dfe3e6;
 }
 
 .toolbar-popover-list>.list-item-containers>.list-item-disabled:hover {
-	background-color: #eaeaea;
+	background-color: #f0f3f6;
 }

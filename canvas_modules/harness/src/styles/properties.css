@@ -53,14 +53,14 @@
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background-color: #152935;
+  background-color: #f0f3f6;
   z-index: 4;
 }
 
 #properties-documentation-title,
 #conditions-documentation-title {
-  background-color: #152935;
-  color: #FFFFFF;
+  background-color: #f0f3f6;
+  color: #152935;
   padding: 14px;
   width:auto;
   text-decoration: none;
@@ -81,7 +81,7 @@
 .properties-documentation-navbar-li {
   float: left;
 	height: 50px;
-	background-color: #6EEDD8;
+	background-color: #5596e6;
 }
 
 .properties-documentation-navbar-li::after {
@@ -94,16 +94,16 @@
   display: block;
   text-align: center;
   padding: 14px 12px;
-  color: #FFFFFF;
+  color: #152935;
   fill:#3FB8AF;
   box-sizing: content-box;
 	font-size: 16px;
-	background-color: #152935;
+	background-color: #f0f3f6;
 	height: 22px;
 }
 
 .properties-documentation-navbar-li a:hover {
-  color: #6EEDD8;
+  color: #5596e6;
 	height: 18px;
 }
 
@@ -121,24 +121,24 @@
 
 /* Header section */
 .properties-documentation-section-header {
-	background: #A6266E;
+	background: #f5f7fa;
 	padding: 4.5em 4em 2em;
 	position: relative;
-	color: #FFFFFF;
+	color: #152935;
 }
 
 .properties-documentation-page-link {
 	text-align: center;
 	display: block;
 	margin: 1.5em 0 0;
-	color: #FFFFFF;
+	color: #152935;
 	font-size: 1em;
 	vertical-align: middle;
 	text-decoration: none;
 }
 
 .properties-documentation-page-link:hover {
-	color: #FFFFFF;
+	color: #152935;
 	text-decoration: underline;
 }
 

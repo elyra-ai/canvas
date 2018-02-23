@@ -5,17 +5,12 @@
 <style type="text/css">
 	.Drop_x0020_Shadow{fill:none;}
 	.Outer_x0020_Glow_x0020_5_x0020_pt{fill:none;}
-	.Blue_x0020_Neon{fill:none;stroke:#000000;stroke-width:14;stroke-linecap:round;stroke-linejoin:round;}
-	.Chrome_x0020_Highlight{fill:url(#SVGID_1_);stroke:#000000;stroke-width:2;stroke-miterlimit:1;}
-	.Jive_GS{fill:#FFDD00;}
-	.Alyssa_GS{fill:#A6D0E4;}
-	.st0{fill:none;stroke:#000000;stroke-width:4;stroke-miterlimit:10;}
+	.Blue_x0020_Neon{fill:none;stroke:#3D70B2;stroke-width:14;stroke-linecap:round;stroke-linejoin:round;}
+	.Chrome_x0020_Highlight{fill:url(#SVGID_1_);stroke:#3D70B2;stroke-width:2;stroke-miterlimit:1;}
+	.Jive_GS{fill:#3D70B2;}
+	.Alyssa_GS{fill:#3D70B2;}
+	.st0{fill:none;stroke:#3D70B2;stroke-width:4;stroke-miterlimit:10;}
 </style>
-<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="0.5" y1="0" x2="0.5" y2="-1">
-	<stop  offset="0" style="stop-color:#656565"/>
-	<stop  offset="0.618" style="stop-color:#1B1B1B"/>
-	<stop  offset="0.6292" style="stop-color:#545454"/>
-	<stop  offset="0.9831" style="stop-color:#3E3E3E"/>
-</linearGradient>
+
 <polyline class="st0" points="16.5,12 8.5,4 0.5,12 "/>
 </svg>

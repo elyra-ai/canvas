@@ -48,7 +48,7 @@
 }
 
 .d3-obj-selection-highlight-austin[data-selected=yes] {
-	stroke: #047CC0;
+	stroke: #5aaafa;
 	stroke-dasharray: none; /* Solid line */
 	stroke-width: 3;
 	fill: transparent;
@@ -61,15 +61,15 @@
 }
 
 .d3-node-body-outline-austin {
-	stroke: #D8D8D8;
+	stroke: #dfe3e6;
 	stroke-width: 1;
 	fill: #efefef;
 }
 
 .d3-node-body-outline-austin[hover=yes] {
-	stroke: #D8D8D8;
+	stroke: #dfe3e6;
 	stroke-width: 1;
-	fill: #eaeaea;
+	fill: #f0f3f6;
 }
 
 .d3-node-image-outline {
@@ -79,7 +79,6 @@
 }
 
 .d3-node-label {
-	font-family: sans-serif;
 	font-size: 13px;
 	/* Prevent elements from being selectable */
 	/* This stops it being dragged incorrectly.*/
@@ -91,9 +90,8 @@
 }
 
 .d3-node-label-austin {
-	font-family: Helvetica Neue;
 	font-size: 12px;
-	font-weight: bold;
+	font-weight: 600;
 	fill: #1d3458;
 	/* Prevent elements from being selectable */
 	/* This stops it being dragged incorrectly.*/
@@ -105,22 +103,22 @@
 }
 
 .d3-node-error-label {
-	fill: #E62325; /* Error red */
+	fill: #e71d32; /* Error red */
 }
 
 .d3-node-warning-label {
-	fill: gold; /* warning yellow (need to verify with design)*/
+	fill: #efc100; /* Warning yellow */
 }
 
 
 .d3-label-outline {
-	fill: #e0e0e0;
+	fill: #dfe3e6;
 	stroke: #aeaeae;
 	stroke-width: 2;
 }
 
 .d3-decorator-outline {
-	fill: #e0e0e0;
+	fill: #dfe3e6;
 	stroke: #aeaeae;
 	stroke-width: 2;
 }
@@ -137,22 +135,22 @@
 
 .d3-node-halo:hover {
 	fill: none;
-	stroke: #4178be;
+	stroke: #5aaafa;
 	stroke-width: 8;
 }
 
 /* Error indicator */
 .d3-error-circle {
-	stroke: #f3f3f3; /* Node background color */
+	stroke: #f5f7fa; /* Node background color */
 	stroke-width: 2;
-	fill: #E62325;   /* Error red */
+	fill: #e71d32;   /* Error red */
 }
 
 /* Warning indicator */
 .d3-warning-circle {
-	stroke: #f3f3f3; /* Node background color */
+	stroke: #f5f7fa; /* Node background color */
 	stroke-width: 2;
-	fill: gold;   /* Warning gold */
+	fill: #efc100;   /* Warning Yellow */
 }
 
 /* Invisible Error indicator */
@@ -164,7 +162,7 @@
 
 .d3-node-port-output {
 	stroke: #a2bde0;  /* Blue */
-	fill: #f9f9fb;    /* White */
+	fill: #f5f7fa;
 	stroke-width: 2;
 }
 
@@ -175,12 +173,12 @@
 }
 
 .d3-node-port-output:hover {
-	fill: #4178be;   /* Dark blue */
+	fill: #5aaafa;   /* Dark blue */
 }
 
 .d3-node-port-input {
 	stroke: #a2bde0;  /* Blue */
-	fill: #f9f9fb;    /* White */
+	fill: #f5f7fa;
 	stroke-width: 2;
 }
 
@@ -196,7 +194,7 @@
 }
 
 .d3-node-port-input-arrow[connected=yes] {
-	stroke: #4178be; /* Dark blue */
+	stroke: #5aaafa; /* Dark blue */
 	fill: transparent;
 }
 
@@ -244,39 +242,39 @@
 /* New connection dynamic line styles. */
 
 .d3-new-connection-line[linkType=nodeLink] {
-	stroke: #4178be;   /* Dark blue */
+	stroke: #5aaafa;   /* Dark blue */
 	stroke-width: 2;
 	stroke-dasharray: 10 10;
 	fill: none;
 }
 
 .d3-new-connection-start[linkType=nodeLink] {
-	stroke: #4178be;   /* Dark blue */
+	stroke: #5aaafa;   /* Dark blue */
 	fill: #FFFFFF;   /* White */
 }
 
 .d3-new-connection-blob[linkType=nodeLink] {
-	stroke: #4178be;   /* Dark blue */
-	fill: #4178be;   /* Dark blue */
+	stroke: #5aaafa;   /* Dark blue */
+	fill: #5aaafa;   /* Dark blue */
 }
 
 /* New connection dynamic line styles for the Austin theme. */
 
 .d3-new-connection-line-austin[linkType=nodeLink] {
-	stroke: #95C4F3; /* Cerulean 20 */
+	stroke: #5aaafa;
 	stroke-width: 2;
 	stroke-dasharray: 10 10;
 	fill: none;
 }
 
 .d3-new-connection-start-austin[linkType=nodeLink] {
-	stroke: #95C4F3; /* Cerulean 20 */
+	stroke: #5aaafa;
 	fill: #FFFFFF;   /* White */
 }
 
 .d3-new-connection-blob-austin[linkType=nodeLink] {
-	stroke: #95C4F3; /* Cerulean 20 */
-	fill: #95C4F3;   /* Cerulean 20 */
+	stroke: #5aaafa;
+	fill: #5aaafa;
 }
 
 /* New connection dynamic line styles for comment links */
@@ -337,7 +335,7 @@
 /* Style for comment background rectangle */
 .d3-comment-rect {
 	fill: #FFFFFF;
-	stroke: #C0BFC0;
+	stroke: #c7c7c7;
 	stroke-width: 1;
 
 	/* Prevent elements from being selectable */
@@ -350,7 +348,7 @@
 }
 
 .d3-comment-text {
-	fill: #777677;  /* Must be the same as color in .d3-comment-display */
+	fill: #5a6872;  /* Must be the same as color in .d3-comment-display */
 }
 
 .d3-comment-text[beingedited=yes] {
@@ -359,7 +357,6 @@
 
 /* Style for comment text when displayed as SVG text */
 .d3-comment-text-tspan {
-	font-family: Helvetica Neue; /* Must be the same as font in .comment-entry */
 	font-size: 12px;  /* Must be the same as font size in .comment-entry */
 	font-weight: 400;  /* Must be the same as font weight in .comment-entry */
 	position: absolute;
@@ -375,8 +372,7 @@
 
 /* Style for comment text entry when shown in an HTML textarea control. */
 .d3-comment-entry {
-	color: #777677;  /* Must be the same as fill in .d3-comment-text */
-	font-family: Helvetica Neue; /* Must be the same as font in .d3-comment-text-tspan */
+	color: #5a6872;  /* Must be the same as fill in .d3-comment-text */
 	font-size: 12px;  /* Must be the same as font size in .d3-comment-text-tspan */
 	font-weight: 400;  /* Must be the same as font weight in .d3-comment-text-tspan */
 	position: absolute;
@@ -401,14 +397,14 @@
 
 .d3-comment-halo:hover {
 	fill: none;
-	stroke: #4178be;
+	stroke: #5aaafa;
 	stroke-width: 8;
 }
 
 /* Link styles */
 
 .d3-comment-link {
-	stroke: #C0BFC0;
+	stroke: #c7c7c7;
 	fill: none;
 	stroke-width: 1;
 	stroke-dasharray: 7.3;
@@ -428,13 +424,13 @@
 }
 
 .d3-data-link {
-	stroke: #95C4F3; /* Cerulean 20 */
+	stroke: #5aaafa;
 	fill: none;
 	stroke-width: 2;
 }
 
 .d3-data-link-austin {
-	stroke: #95C4F3; /* Cerulean 20 */
+	stroke: #5aaafa;
 	fill: none;
 	stroke-width: 2;
 }

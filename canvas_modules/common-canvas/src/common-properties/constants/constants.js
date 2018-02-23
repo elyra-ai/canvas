@@ -83,9 +83,9 @@ _defineConstant("DEFAULT_VALIDATION_MESSAGE", {
 _defineConstant("SPINNER", "spinner");
 
 _defineConstant("VALIDATION_MESSAGE", {
-	WARNING: "#FDD600",
+	WARNING: "#efc100",
 	ERROR: "#E71D32",
-	DISABLED: "#D8D8D8"
+	DISABLED: "#c7c7c7"
 });
 
 _defineConstant("DATA_TYPES", [

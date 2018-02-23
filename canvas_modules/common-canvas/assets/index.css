@@ -8,13 +8,13 @@
  *******************************************************************************/
 
 @import "./styles/field-allocator.css";
+@import "~codemirror/lib/codemirror.css";
 @import "./styles/common-canvas.css";
 @import "./styles/common-canvas-d3.css";
 @import "./styles/common-canvas-legacy.css";
 @import "./styles/common-properties.css";
 @import "./styles/common-properties-right-flyout.css";
 @import "./styles/palette.css";
-@import "~codemirror/lib/codemirror.css";
 @import "~codemirror/addon/hint/show-hint.css";
 @import "./styles/context-menu.css";
 @import "./styles/toolbar.css";

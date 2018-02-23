@@ -506,7 +506,7 @@ class Comment extends React.Component {
 				left: bLeft,
 				width: bWidth,
 				height: bHeight,
-				border: `${7 * zoom}px solid #4178be`,
+				border: `${7 * zoom}px solid #5aaafa`,
 				position: "absolute",
 				borderRadius: "0%",
 				zIndex: 1

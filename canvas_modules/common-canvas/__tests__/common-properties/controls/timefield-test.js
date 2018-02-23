@@ -249,7 +249,7 @@ describe("error messages renders correctly for timefield controls", () => {
 
 		// First check the disbaled field is showing disabled color.
 		const input = wrapper.find("#editor-control-disabled_time");
-		expect(isEqual(input.props().style.color, "#D8D8D8")).to.be.true;
+		expect(isEqual(input.props().style.color, "#c7c7c7")).to.be.true;
 
 		// Get the 'Enable disabled time' checkbox input control.
 		const checkbox = wrapper.find("#editor-control-disable_time_field");

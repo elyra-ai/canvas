@@ -9,30 +9,6 @@
 
 @CHARSET "ISO-8859-1";
 
-@font-face {
-    font-family: IBMHLVMedium;
-    src: url(./../../node_modules/ap-components-react/dist/fonts/medium/helvetica-neue-medium.woff) format('woff');
-}
-
-@font-face {
-    font-family: IBMHLVRoman;
-    src: url(./../../node_modules/ap-components-react/dist/fonts/roman/helvetica-neue-roman.woff) format('woff');
-}
-
-@font-face {
-    font-family: IBMHLVBold;
-    src: url(./../../node_modules/ap-components-react/dist/fonts/bold/helvetica-neue-bold.woff) format('woff');
-}
-@font-face {
-    font-family: IBMHLVlight;
-    src: url(./../../node_modules/ap-components-react/dist/fonts/light/helvetica-neue-light.woff) format('woff');
-}
-
-@font-face {
-    font-family: IBMHLVLightItalic;
-    src: url(./../../node_modules/ap-components-react/dist/fonts/light-italic/helvetica-neue-light-italic.woff) format('woff');
-}
-
 /* right flyout panel */
 
 .right-flyout-panel {
@@ -41,7 +17,7 @@
 	-webkit-transition: all 0.2s;
 	transition: all 0.2s;
 	z-index: 3;
-	box-shadow: -2px 0px 2px #E0E0E0;
+	box-shadow: -2px 0px 2px #dfe3e6;
 	overflow: hidden;
 	position: absolute;
 	right: 0px;
@@ -121,9 +97,8 @@
 
 .empty-canvas-text {
 	display: block;
-	color: #1d3649;
+	color: #152935;
 	opacity: 0.2;
 	font-size: 20px;
-	font-family: IBMHLVMedium;
 	text-align:center;
 }

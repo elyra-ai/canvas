@@ -62,7 +62,8 @@ module.exports = function() {
 
 
 	this.Then("I show the map and go to Armonk", function() {
-		const showMapCheckbox = browser.$("#editor-control-map_checkbox");
+		const showMapCheckbox = browser.$(".control-contents").$(".properties-tooltips-container")
+			.$("label");
 		showMapCheckbox.click();
 		const goToArmonkButton = browser.$("#go_to_armonk");
 		goToArmonkButton.click();

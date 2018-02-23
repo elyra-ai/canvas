@@ -285,7 +285,7 @@ describe("error messages renders correctly for datefield controls", () => {
 
 		// First check the disbaled field is showing disabled color.
 		const input = wrapper.find("#editor-control-disabled_date");
-		expect(isEqual(input.props().style.color, "#D8D8D8")).to.be.true;
+		expect(isEqual(input.props().style.color, "#c7c7c7")).to.be.true;
 
 		// Get the 'Enable disabled date' checkbox input control.
 		const checkbox = wrapper.find("#editor-control-disable_date_field");

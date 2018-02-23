@@ -59,7 +59,7 @@ module.exports = function() {
 
 	this.Then(/^I verify that "([^"]*)" is disabled$/, function(parameterName) {
 		const table = browser.$("#moveablerow-table-" + parameterName).$(".structure-table-content-row");
-		expect(table.getAttribute("style")).toEqual("color: rgb(216, 216, 216); border-color: rgb(216, 216, 216); pointer-events: none;");
+		expect(table.getAttribute("style")).toEqual("color: rgb(199, 199, 199); border-color: rgb(199, 199, 199); pointer-events: none;");
 	});
 
 	this.Then(/^I verify that "([^"]*)" is enabled$/, function(parameterName) {

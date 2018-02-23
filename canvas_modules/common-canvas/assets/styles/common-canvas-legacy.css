@@ -43,7 +43,6 @@
 }
 
 .canvas-node p {
-  font-family: IBMHLVRoman;
   font-size: 10pt;
   white-space: nowrap;
   color: rgb(0,0,0);
@@ -74,7 +73,7 @@
 
 	/* For saved canvas documents when using the canvas-comment class name */
 	fill: #FFFFFF;
-	stroke: #C0BFC0;
+	stroke: #c7c7c7;
 	stroke-width: 1;
 }
 

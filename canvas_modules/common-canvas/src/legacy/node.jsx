@@ -319,7 +319,7 @@ class Node extends React.Component {
 				left: cLeft,
 				width: cWidth,
 				height: cHeight,
-				border: `${7 * zoom}px solid #4178be`,
+				border: `${7 * zoom}px solid #5aaafa`,
 				position: "absolute",
 				borderRadius: "50%",
 				zIndex: 1,

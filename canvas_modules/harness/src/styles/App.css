@@ -27,8 +27,8 @@
 }
 
 #title {
-  background-color: #1D3649;
-  color: #FFFFFF;
+  background-color: #f0f3f6;
+  color: #152935;
   width:auto;
   text-decoration: none;
 	font-size: 14px;
@@ -40,14 +40,15 @@
   margin-left:auto;
   margin-right:auto;
   display:block;
+	width: 174px;
+	height: 121px;
 }
 
 .empty-harness-link{
   display: block;
-  color: #1d3649;
+  color: #152935;
   opacity: 0.2;
   font-size: 20px;
-  font-family: IBMHLVMedium;
   text-align:center;
   text-decoration:underline;
   cursor: pointer;
@@ -56,10 +57,9 @@
 
 .empty-harness-text {
   display: block;
-  color: #1d3649;
+  color: #152935;
   opacity: 0.2;
   font-size: 20px;
-  font-family: IBMHLVMedium;
   text-align:center;
 }
 
@@ -77,7 +77,7 @@
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background-color: #1D3649;
+  background-color: #f0f3f6;
   z-index: 4;
 }
 
@@ -90,13 +90,13 @@
   text-align: center;
   padding: 14px;
   width:18px;
-  fill:#3FB8AF;
+  fill:#3d70b2;
   box-sizing: content-box;
 }
 
 .navbar-li a:hover, #palette-true a:hover {
-  background-color: #111111;
-  color: #3FB8AF;
+  background-color: #dfe3e6;
+  color: #3d70b2 ;
 }
 
 #palette-false{
@@ -108,13 +108,13 @@
 }
 
 .nav-divider {
-  border-left:1px solid #264A60;
+  border-left:2px solid #dfe3e6;
 }
 
 /*Console*/
 #app-console {
   font-size: small;
-  border-top: 1px solid #1D3649;
+  border-top: 1px solid #152935;
   background-color: rgba(243, 243, 243, 0.8);
   position:fixed;
   bottom: 0px;
@@ -145,7 +145,7 @@
 
 .console-entry:hover {
 	list-style: none;
-	background-color: #D8D8D8;
+	background-color: #dfe3e6;
 }
 
 .console-entry:hover:before {
@@ -155,14 +155,14 @@
 
 /*SidePanel*/
 #app-sidepanel {
-  background-color: #264A60;
-	top: 50px;
+  background-color: #f0f3f6;
+  top: 50px;
   position: fixed;
   right: 0;
   height: calc(100% - 50px);
   -webkit-transition:width 0.5s;
   transition: width 0.5s;
-  color: #F9F9FB;
+  color: #152935;
   overflow: auto;
   z-index: 100;
   box-sizing: border-box;
@@ -182,7 +182,7 @@
 .sidepanel-divider {
   width: 100%;
   margin: 0 0 5px 0;
-  border-bottom:1px solid #1D3649;
+  border-bottom:2px solid #dfe3e6;
   padding: 5px 0 5px 0;
 }
 
@@ -215,14 +215,18 @@
 }
 
 #properties-documentation-link a {
-	color: #FFFFFF;
+	color: #152935;
 }
 
 #properties-documentation-link a:hover {
-	color: #41D6C3;;
+	color: #3d70b2;
 }
 
 /*Override ap-components-react styles*/
+#app-sidepanel label {
+  color: #152935;
+}
+
 #app-sidepanel .button {
   line-height: 1;
   margin-top: 2px;
@@ -240,9 +244,9 @@
 
 /* Dropdown menu */
 #app-sidepanel .select__options__item {
-	border-left: 1px solid #1D3649;
-	border-right: 1px solid #1D3649;
-	border-bottom: 1px solid #1D3649;
+	border-left: 1px solid #152935;
+	border-right: 1px solid #152935;
+	border-bottom: 1px solid #152935;
 }
 
 #app-sidepanel .select > .select__button > .select__button__arrow {
@@ -487,7 +491,7 @@
 }
 .custom-map-summary text {
 	color: mediumblue;
-	font-weight: bold;
+	font-weight: 600;
 }
 
 .list-item-containers .list-item.overflow {

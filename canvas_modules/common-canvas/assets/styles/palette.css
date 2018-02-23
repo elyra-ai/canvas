@@ -15,7 +15,7 @@
   height: 100%;
 	padding-bottom: 5px;
 	z-index: 1;
-  background-color: #EAEAEA;
+  background-color: #f0f3f6;
   -webkit-transition: all 0.2s;
   transition: all 0.2s;
   cursor: default; /* This stops Chrome displaying an I-beam cursor when dragging in the canvas. */
@@ -53,11 +53,10 @@
 }
 
 .palette-flyout-content .palette-content-list {
-	border-bottom: 2px solid #E0E0E0;
+	border-bottom: 2px solid #dfe3e6;
 }
 
 .palette-flyout-content .palette-list-item .palette-list-item-text-div {
-	font-family: IBMHLVRoman;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -74,11 +73,10 @@
   border-width:0 0 0 2px;
 	height: 46px;
 	font-size: 12px;
-	font-family: IBMHLVRoman;
 	align-items: center;
 	justify-content: space-between;
 	display: flex;
-	border-bottom: 2px solid #E0E0E0;
+	border-bottom: 2px solid #dfe3e6;
 }
 .palette-flyout-text-container {
 	max-width: 205px;
@@ -91,10 +89,9 @@
 }
 .palette-flyout-category-count {
 	padding-left: 5px;
-	font-family: IBMHLVBold;
 }
 .palette-flyout-category:hover {
-  font-family: IBMHLVMedium;
+	font-weight: 600;
 }
 
 #palette-flyout-search {
@@ -105,7 +102,8 @@
 	justify-content: space-between;
 	display: flex;
 	padding-right: 16px;
-	border-bottom: 2px solid #E0E0E0;
+	border-bottom: 2px solid #dfe3e6;
+	border-top: 2px solid #dfe3e6;
 }
 
 #palette-flyout-search-bar {
@@ -150,7 +148,7 @@
   left: 35px;
   width: 48px;
   height: 48px;
-  fill: #6eedd8;
+  fill: #5596e6;
 	/* Prevent elements from being selectable */
   /* This stops it being dragged incorrectly.*/
   -webkit-user-select: none;
@@ -167,7 +165,7 @@
 .palette-topbar {
   height: 40px;
   padding: 10px;
-  background-color:#1D2C3C;
+  background-color: #f5f7fa;
 }
 
 .palette-topbar .left-navbar {
@@ -214,9 +212,8 @@
 }
 
 .palette-categories {
-  font-family: IBMHLVRoman;
-  color: #e0e0e0;
-  background-color: #284B60;
+  color: #152935;
+  background-color: #f5f7fa;
   font-size: 10pt;
   width: 130px;
   min-width: 130px; /* Set a min-width to ensure space for the scroll bar when it is displayed */
@@ -235,14 +232,14 @@
 }
 
 .palette-category:hover {
-  color: #9D005C;
+  color: #152935;
+	font-weight: 600;
 }
 
 .palette-category-selected {
-  font-family: IBMHLVRoman;
   font-size: 10pt;
-  color: #6eedd8;
-  background-color: #1C3648;
+  color: #152935;
+  font-weight: 600;
   border-color: #60C3B9;
   border-width:0 0 0 2px;
   border-style: solid;
@@ -271,7 +268,7 @@
   border-color: lightgrey;
   border-style: solid;
   font-size: 10pt;
-  fill: #9D005C;
+  fill: #5596e6;
   color: black;
   /* Prevent elements from being selectable */
   /* This stops it being dragged incorrectly.*/
@@ -283,8 +280,8 @@
 }
 
 .palette-grid-node-outer:hover {
-  border-color: #9D005C;
-  color: #9D005C;
+  border-color: #5596e6;
+  color: #5596e6;
 }
 
 .palette-grid-node-inner {
@@ -301,7 +298,6 @@
 }
 
 .palette-grid-node-text {
-  font-family: IBMHLVRoman;
   font-size: 10pt;
   width: 100%;
   padding-top: 6px;
@@ -316,7 +312,6 @@
   border-width: 1px;
   border-color: lightgrey;
   border-style: solid;
-  font-family: IBMHLVRoman;
   font-size: 10pt;
   display: flex;
   display:-webkit-flex;

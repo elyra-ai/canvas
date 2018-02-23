@@ -316,8 +316,15 @@ module.exports = function() {
 	});
 
 	this.Then(/^I select the "([^"]*)" enable button$/, function(buttonName) {
-		browser.$("#editor-control-" + buttonName)
-			.click();
+		if (buttonName === "hide") {
+			var hideCheckBox = browser.$$(".control-panel")[4].$$("label")[2];
+			hideCheckBox.click();
+		} else if (buttonName === "disable") {
+			var disableCheckBox = browser.$$(".control-panel")[4].$$("label")[4];
+			disableCheckBox.click();
+		} else {
+			browser.$("#editor-control-" + buttonName).click();
+		}
 	});
 
 	this.Then(/^I click on the "([^"]*)" button$/, function(buttonName) {

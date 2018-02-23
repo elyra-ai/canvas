@@ -1,6 +1,0 @@
-<svg width="16" height="16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 16 16" aria-labelledby="title">
-<title>Pie Chart</title>
-<path d="M9,0.1L9,0.1C8.7,0,8.3,0,8,0v1v7H1H0l0.1,1c0.5,4,3.9,7,7.9,7s7.5-3,7.9-7C16,8.7,16,8.3,16,8C16,3.9,13,0.5,9,0.1z M9,1.1
-	c3.4,0.5,6,3.4,6,6.9H9V1.1z M8,15c-3.5,0-6.4-2.6-6.9-6h13.8C14.4,12.4,11.5,15,8,15z"/>
-<path d="M6,0.2V6H0.2C1,3.2,3.2,1,6,0.2z"/>
-</svg>
