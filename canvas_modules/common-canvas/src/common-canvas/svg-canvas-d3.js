@@ -3173,16 +3173,13 @@ export default class CanvasD3Layout {
 
 		const xDiff = data.x2 - data.x1;
 		const yDiff = data.y2 - data.y1;
-		let elbowYOffset = this.layout.elbowSize;
+		let elbowYOffset = yDiff / 2;
 
 		if (yDiff > (2 * this.layout.elbowSize)) {
 			elbowYOffset = this.layout.elbowSize;
 		}
 		else if (yDiff < -(2 * this.layout.elbowSize)) {
 			elbowYOffset = -this.layout.elbowSize;
-		}
-		else {
-			elbowYOffset = yDiff / 2;
 		}
 
 		// This is a special case where the source and target handles are very
@@ -3205,9 +3202,6 @@ export default class CanvasD3Layout {
 			extraSegments = true;
 			corner2X = data.x2 - this.layout.minInitialLine;
 			elbowXOffset = -((xDiff - (2 * this.layout.minInitialLine)) / 2);
-		}
-		else {
-			elbowXOffset = this.layout.elbowSize;
 		}
 
 		let path = "M " + data.x1 + " " + data.y1;

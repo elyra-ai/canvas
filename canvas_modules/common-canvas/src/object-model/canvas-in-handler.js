@@ -134,7 +134,7 @@ export default class SVGCanvasInHandler {
 				class_name: canvasLink.className,
 				srcNodeId: canvasLink.source,
 				trgNodeId: canvasLink.target,
-				type: this.getLinkType(canvasLink, canvasComments)
+				type: this.getLinkType(canvasLink)
 			};
 			if (canvasLink.sourcePort) {
 				newLink.srcNodePortId = canvasLink.sourcePort;

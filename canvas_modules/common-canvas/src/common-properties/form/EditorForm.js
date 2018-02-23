@@ -317,19 +317,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 			controlType = ControlType.CHECKBOX;
 			break;
 		case Type.INTEGER:
-			if (parameter.isList()) {
-				controlType = ControlType.TEXTAREA;
-			} else {
-				controlType = ControlType.NUMBERFIELD;
-			}
-			break;
 		case Type.LONG:
-			if (parameter.isList()) {
-				controlType = ControlType.TEXTAREA;
-			} else {
-				controlType = ControlType.NUMBERFIELD;
-			}
-			break;
 		case Type.DOUBLE:
 			if (parameter.isList()) {
 				controlType = ControlType.TEXTAREA;

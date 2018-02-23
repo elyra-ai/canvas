@@ -556,7 +556,7 @@ export default class CanvasController {
 			this.contextMenuSource = source;
 			const menuDef = this.handlers.contextMenuHandler(source);
 			if (menuDef && menuDef.length > 0) {
-				this.openContextMenu(menuDef, this.contextMenuSource);
+				this.openContextMenu(menuDef);
 			}
 		}
 	}

@@ -31,7 +31,7 @@ function toType(obj) {
 
 function formatMessage(intl, key, defaultMessage) {
 	let formattedMessage;
-	if (typeof intl !== "undefined" || intl !== null) {
+	if (typeof intl !== "undefined" && intl !== null) {
 		formattedMessage = intl.formatMessage({ id: key, defaultMessage: defaultMessage });
 	} else {
 		formattedMessage = defaultMessage;

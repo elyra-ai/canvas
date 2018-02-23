@@ -204,7 +204,7 @@ export default class ControlFactory {
 			return (<CheckboxsetControl {...props} />);
 		} else if (control.controlType === ControlType.RADIOSET) {
 			return (<RadiosetControl {...props} />);
-		} else if (control.controlType === ControlType.ONEOFSELECT) {
+		} else if (control.controlType === ControlType.ONEOFSELECT || control.controlType === ControlType.SELECTSCHEMA) {
 			return (<OneofselectControl
 				{...props}
 				rightFlyout={this.rightFlyout}
@@ -231,11 +231,6 @@ export default class ControlFactory {
 				{...props}
 				dataModel={this.controller.getFilteredDatasetMetadata(propertyId)}
 				openFieldPicker={this.openFieldPicker}
-			/>);
-		} else if (control.controlType === ControlType.SELECTSCHEMA) {
-			return (<OneofselectControl
-				{...props}
-				rightFlyout={this.rightFlyout}
 			/>);
 		} else if (control.controlType === ControlType.STRUCTURETABLE && !tableInfo) {
 			return (<ColumnStructureTableControl

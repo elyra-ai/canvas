@@ -178,7 +178,7 @@ class EditorForm extends React.Component {
 
 				tabContent.push(
 					<div key={this._getContainerIndex(hasAlertsTab, i) + "-" + key} className="category-title-container-right-flyout-panel">
-						<a onClick={() => this._showCategoryPanel(tab.text, tabs.length)}
+						<a onClick={this._showCategoryPanel.bind(this, tab.text, tabs.length)}
 							id={"category-title-" + this._getContainerIndex(hasAlertsTab, i) + "-right-flyout-panel"}
 							className="category-title-right-flyout-panel"
 						>

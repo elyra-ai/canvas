@@ -10,11 +10,9 @@
 // CONTROL structuretable
 /* eslint max-depth: ["error", 5] */
 import React from "react";
-import ReactTooltip from "react-tooltip";
 import PropTypes from "prop-types";
 import ColumnStructureTableEditor from "./column-structure-table-editor.jsx";
 import MoveableTableRows from "./moveable-table-rows.jsx";
-import { TOOL_TIP_DELAY } from "../constants/constants";
 import { injectIntl, intlShape } from "react-intl";
 import findIndex from "lodash/findIndex";
 import reject from "lodash/reject";
@@ -22,9 +20,6 @@ import reject from "lodash/reject";
 class ColumnStructureTableControl extends ColumnStructureTableEditor {
 	constructor(props) {
 		super(props);
-
-		this._update_callback = null; // TODO is this needed anymore?
-
 		this.getSelectedColumns = this.getSelectedColumns.bind(this);
 		this.getAllocatedColumns = this.getAllocatedColumns.bind(this);
 		this.addColumns = this.addColumns.bind(this);
@@ -120,30 +115,17 @@ class ColumnStructureTableControl extends ColumnStructureTableEditor {
 		}
 
 		const rows = this.getCurrentControlValue().concat(newRows);
-
-		this._update_callback = callback;
-
 		this.setCurrentControlValue(rows);
 	}
 
 	removeColumns(columnNames, callback) {
-		// logger.info("removeColumns");
-		// logger.info(columnNames);
 
 		const rows = this.getCurrentControlValue();
 		const keyIndex = this.props.control.keyIndex;
 
 		const newRows = reject(rows, function(val) {
-			// logger.info("_reject: " + val[keyIndex]);
-			// logger.info("_reject: " + (columnNames.indexOf(val[keyIndex]) >= 0));
 			return columnNames.indexOf(val[keyIndex]) >= 0;
 		});
-
-		// logger.info(rows);
-		// logger.info(newRows);
-
-		this._update_callback = callback;
-
 		this.setCurrentControlValue(newRows);
 	}
 
@@ -154,10 +136,6 @@ class ColumnStructureTableControl extends ColumnStructureTableEditor {
 	}
 
 	render() {
-		if (this._update_callback !== null) {
-			this._update_callback();
-			this._update_callback = null;
-		}
 
 		const conditionProps = {
 			propertyId: this.props.propertyId,
@@ -179,36 +157,7 @@ class ColumnStructureTableControl extends ColumnStructureTableEditor {
 		const disabled = typeof stateDisabled.disabled !== "undefined" || Object.keys(stateDisabled) > 0;
 
 		const table = this.createTable(stateStyle, stateDisabled);
-		let label;
-		if (this.props.control.label && this.props.control.separateLabel) {
-			if (!(this.props.control.description && this.props.control.description.placement === "on_panel")) {
-				let requiredIndicator;
-				if (this.props.control.required) {
-					requiredIndicator = <span className="required-control-indicator">*</span>;
-				}
-				const tooltipId = "tooltip-" + this.props.control.name;
-				let tooltip;
-				if (this.props.control.description) {
-					tooltip = this.props.control.description.text;
-				}
-				label = (<div className={"label-container"}>
-					<div className="properties-tooltips-container" data-tip={tooltip} data-for={tooltipId}>
-						<label className="control-label">{this.props.control.label.text}</label>
-						{requiredIndicator}
-					</div>
-					<ReactTooltip
-						id={tooltipId}
-						place="right"
-						type="light"
-						effect="solid"
-						border
-						className="properties-tooltips"
-						delayShow={TOOL_TIP_DELAY}
-					/>
-				</div>);
-			}
-		}
-		var content = (
+		const content = (
 			<div>
 				<div id={controlIconContainerClass}>
 					{table}

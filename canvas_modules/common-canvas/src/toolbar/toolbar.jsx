@@ -383,7 +383,7 @@ class Toolbar extends React.Component {
 			{zoomContainerItems}
 		</div>);
 
-		const canvasToolbar = (<ObserveSize observerFn={(element) => this.updateToolbarWidth(element.width)}>
+		const canvasToolbar = (<ObserveSize observerFn={(element) => this.updateToolbarWidth()}>
 			<div id="canvas-toolbar">
 				<ul id="toolbar-items">
 					{actionContainer}

@@ -43,7 +43,7 @@ function _validateTable(validationDefinition, userInput, control, dataModel, req
 	const tableControlName = propertyId.name;
 	const rowIndex = propertyId.row;
 	const colIndex = propertyId.col;
-	const tableControlType = (propertyId.col) ? tableControl.controlType : control.controlType;
+	const tableControlType = (propertyId.col && tableControl) ? tableControl.controlType : control.controlType;
 	const fieldIndex = PropertyUtils.getTableFieldIndex(tableControl ? tableControl : control);
 
 	// only evaluate table cells if the validation definition has  condition for a cell
@@ -62,13 +62,13 @@ function _validateTable(validationDefinition, userInput, control, dataModel, req
 				var tmp = null;
 				if (columnNumbers.indexOf(col) > -1) {
 					tmp = validateInput(validationDefinition, userInput, tableControlType, dataModel,
-						coordinates, requiredParameters, controller);
+						coordinates, requiredParameters);
 				}
 
 				// only set the error for the current cell
 				const isError = PropertyUtils.toType(tmp) === "object";
 				if (PropertyUtils.toType(rowIndex) === "number" && PropertyUtils.toType(colIndex) === "number") {
-					if (row === rowIndex && col === colIndex && isError) {
+					if (row === rowIndex && col === colIndex && isError && tmp !== null) {
 						output = tmp;
 						output.isActiveCell = true;
 					}

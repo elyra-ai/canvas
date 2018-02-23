@@ -104,8 +104,7 @@ export default class DiagramCanvas extends React.Component {
 		const xDiff = data.x2 - data.x1;
 		const yDiff = data.y2 - data.y1;
 		const elbowSize = this.elbowSize();
-		let elbowYOffset = elbowSize;
-
+		let elbowYOffset;
 		if (yDiff > (2 * elbowSize)) {
 			elbowYOffset = elbowSize;
 		} else if (yDiff < -(2 * elbowSize)) {
@@ -120,7 +119,7 @@ export default class DiagramCanvas extends React.Component {
 			elbowYOffset = yDiff / 4;
 		}
 
-		let elbowXOffset = elbowSize;
+		let elbowXOffset;
 		let extraSegments = false; // Indicates need for extra elbows and lines
 
 		if (xDiff < (minInitialLine + elbowSize)) {

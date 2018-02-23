@@ -138,7 +138,7 @@ function _validateNode(formData, nodeId) {
 							validationSetError = true;
 						} else if (formData.requiredParameters.indexOf(control.name) !== -1) {
 							const controlValue = formData.form.data.currentParameters[control.name];
-							if (!controlValue || controlValue === null || controlValue === "" ||
+							if (typeof controlValue === "undefined" || controlValue === null || controlValue === "" ||
 							(Array.isArray(controlValue) && controlValue.length === 0)) {
 								error = {
 									id_ref: control.name,
