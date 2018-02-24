@@ -121,3 +121,8 @@ _defineConstant("CONTROL_TYPE", {
 	CONTROL: "control",
 	PANEL: "panel"
 });
+
+_defineConstant("ORIENTATIONS", {
+	VERTICAL: "vertical",
+	HORIZONTAL: "horizontal"
+});

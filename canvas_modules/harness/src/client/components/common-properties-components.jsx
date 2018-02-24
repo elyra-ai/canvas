@@ -20,6 +20,7 @@ import {
 	SUBTABS_PROPS_INFO,
 	PANELS_PROPS_INFO,
 	PANEL_SELECTOR_PROPS_INFO,
+	PANEL_SELECTOR_INSERT_PROPS_INFO,
 	CHECKBOX_PANEL_PROPS_INFO,
 	SUMMARY_PANEL_PROPS_INFO,
 	TWISTY_PANEL_PROPS_INFO,
@@ -153,7 +154,7 @@ class CommonPropertiesComponents extends React.Component {
 		case "panel":
 			jsonReplacer = [
 				"uihints",
-				"id", "type", "parameter_refs", "depends_on_ref",
+				"id", "type", "parameter_refs", "depends_on_ref", "insert_panels",
 				"label", "default",
 				"group_info"
 			];
@@ -490,7 +491,10 @@ class CommonPropertiesComponents extends React.Component {
 						add a nested <span className="highlight">group_info</span> object of
 						type <span className="highlight">panelSelector</span> and in there, add
 						another <span className="highlight">group_info</span> array with the sub-panels
-						for each possible selection.</p>
+						for each possible selection. The IDs of the panels in
+						the <span className="highlight">group_info</span> should match to the parameter
+						values in the enum for the radio button set.
+					</p>
 					<div className="section-row">
 						<div className="section-row">
 							<div className="section-column">
@@ -504,6 +508,32 @@ class CommonPropertiesComponents extends React.Component {
 							<div className="section-column section-column-code">
 								<pre className="json-block">
 									{this.jsonReplacer(PANEL_SELECTOR_PROPS_INFO.parameterDef, "panel")}
+								</pre>
+							</div>
+						</div>
+					</div>
+					<p>To show the panels inserted after each corresponding button in
+						the <a className="properties-documentation-page-intro-link" href="#/properties#--radioset">radio set</a>,
+						add an <span className="highlight">insert_panels</span> field to
+						the <span className="highlight">selectorPanel</span> and set
+						it to <span className="highlight">true</span>. Also, ensure
+						the <span className="highlight">orientation</span> field
+						for the radio button parameter in <span className="highlight">ui_hints.parameter_info</span> is
+						set to <span className="highlight">"vertical"</span>.
+					</p>
+					<div className="section-row">
+						<div className="section-row">
+							<div className="section-column">
+								<CommonProperties
+									showPropertiesDialog
+									propertiesInfo={PANEL_SELECTOR_INSERT_PROPS_INFO}
+									containerType="Custom"
+								/>
+								{this.renderRightFlyoutButton(PANEL_SELECTOR_INSERT_PROPS_INFO)}
+							</div>
+							<div className="section-column section-column-code">
+								<pre className="json-block">
+									{this.jsonReplacer(PANEL_SELECTOR_INSERT_PROPS_INFO.parameterDef, "panel")}
 								</pre>
 							</div>
 						</div>

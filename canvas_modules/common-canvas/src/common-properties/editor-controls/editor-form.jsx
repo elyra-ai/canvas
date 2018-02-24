@@ -314,19 +314,7 @@ class EditorForm extends React.Component {
 
 	genPanelSelector(key, tabs, dependsOn, propertyId, indexof, panelId) {
 		const panelConditions = this._getPanelState(panelId);
-		const subPanels = {};
-		for (let i = 0; i < tabs.length; i++) {
-			const tab = tabs[i];
-			let className = "control-panel";
-			if (tab.content && tab.content.itemType === "textPanel") {
-				className = "text-panel";
-			}
-			subPanels[tab.group] = (
-				<div className={className} key={tab.group + key}>
-					{this.genUIItem(i, tab.content, propertyId, indexof)}
-				</div>
-			);
-		}
+		const subPanels = this.generateAdditionalPanels(tabs, key, propertyId, indexof, false);
 		return (
 			<SelectorPanel id={"selector-panel." + dependsOn}
 				style={panelConditions.style}
@@ -336,6 +324,27 @@ class EditorForm extends React.Component {
 				controller={this.props.controller}
 			/>
 		);
+	}
+
+	generateAdditionalPanels(tabs, key, propertyId, indexof, indent) {
+		const subPanels = {};
+		for (let i = 0; i < tabs.length; i++) {
+			const tab = tabs[i];
+			let className = "control-panel";
+			if (tab.content && tab.content.itemType === "textPanel") {
+				className = "text-panel";
+			}
+			if (indent) {
+				className += " control-panel";
+			}
+			subPanels[tab.group] = (
+				<div className={className} key={tab.group + key}>
+					{this.genUIItem(i, tab.content, propertyId, indexof)}
+				</div>
+			);
+		}
+
+		return subPanels;
 	}
 
 	genUIContent(uiItems, propertyId, indexof) {
@@ -357,6 +366,10 @@ class EditorForm extends React.Component {
 				propertyId.name = inPropertyId.name;
 				propertyId.row = inPropertyId.row;
 				propertyId.col = indexof(uiItem.control.name);
+			}
+			if (uiItem.additionalItems && uiItem.additionalItems.length > 0) {
+				uiItem.control.optionalPanels =
+					this.generateAdditionalPanels(uiItem.additionalItems, key, null, indexof, true);
 			}
 			return this.ControlFactory.createControlItem(uiItem.control, propertyId);
 		} else if (uiItem.itemType === "additionalLink") {

@@ -13,6 +13,7 @@
 import { Control, SubControl } from "./ControlInfo";
 import { UIItem } from "./UIItem";
 import { GroupType, PanelType, Type, ControlType, ParamRole } from "../constants/form-constants";
+import { ORIENTATIONS } from "../constants/constants.js";
 import logger from "../../../utils/logger";
 import { StructureDef } from "./StructureInfo";
 import { Action } from "./ActionInfo";
@@ -125,13 +126,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 	}
 	case GroupType.PANEL_SELECTOR: {
 		// Defines a sub-tab group where each child group represents a sub-tab.
-		const panSelSubItems = [];
-		group.subGroups.forEach(function(subGroup) {
-			const subGroupName = subGroup.name;
-			groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider);
-			groupLabel = l10nProvider.l10nLabel(subGroup, subGroup.name);
-			panSelSubItems.push(new EditorTab(groupLabel, subGroupName, groupItem));
-		});
+		const panSelSubItems = _genPanelSelectorPanels(group, parameterMetadata, actionMetadata, structureMetadata, l10nProvider);
 		return UIItem.makePanelSelector(groupName, panSelSubItems, group.dependsOn);
 	}
 	case GroupType.PANELS: {
@@ -185,6 +180,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
  */
 function _makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider) {
 	const uiItems = [];
+	const panelInsertedFor = [];
 	group.parameterNames().forEach(function(paramName) {
 		// Assume property definition exists
 		const prop = parameterMetadata.getParameter(paramName);
@@ -207,16 +203,71 @@ function _makeControls(parameterMetadata, actionMetadata, group, structureMetada
 			if (prop.separatorAfter()) {
 				uiItems.push(UIItem.makeHSeparator());
 			}
+
+			// If this control is a vertical radio button set and any element of
+			// the associated subgroups is a panel of type panelSelector which has
+			// the insertPanels boolean set to true and has its 'depends on' field
+			// set to the name of the parameter being displayed by this radio
+			// button control, then process the subgroup in the usual way but add
+			// each to the additionalItems in the control. This allows them to be
+			// inserted into the radio button set at display time.
+			if (group.subGroups && group.subGroups.length > 0) {
+				for (var i = 0; i < group.subGroups.length; i++) {
+					if (control.control.controlType === ControlType.RADIOSET &&
+							control.control.orientation === ORIENTATIONS.VERTICAL &&
+							group.subGroups[i].type === GroupType.PANEL_SELECTOR &&
+							group.subGroups[i].insertPanels === true &&
+							group.subGroups[i].dependsOn === control.control.name) {
+						panelInsertedFor.push(group.subGroups[i].dependsOn);
+						control.additionalItems =
+							_genPanelSelectorPanels(group.subGroups[i], parameterMetadata, actionMetadata, structureMetadata, l10nProvider);
+					}
+				}
+			}
 		}
 	});
-	// panel selector groups
-	if (group.subGroups) {
-		group.subGroups.forEach(function(eachGroup) {
-			const subGroup = _makeUIItem(parameterMetadata, actionMetadata, eachGroup, structureMetadata, l10nProvider);
-			uiItems.push(subGroup);
+
+	// Process any subgroups which have not already been inserted into a
+	// radio button set (see code in loop above).
+	if (group.subGroups && group.subGroups.length > 0) {
+		group.subGroups.forEach(function(subGroup) {
+			if (!_hasPanelBeenInserted(panelInsertedFor, subGroup.dependsOn)) {
+				const uiItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider);
+				uiItems.push(uiItem);
+			}
 		});
 	}
 	return uiItems;
+}
+
+/* Returns true if the panelInsertedFor array contains the dependsOn
+ * value passed in.
+ */
+function _hasPanelBeenInserted(panelInsertedFor, dependsOn) {
+	if (dependsOn) {
+		for (var i = 0; i < panelInsertedFor.length; i++) {
+			if (panelInsertedFor[i] === dependsOn) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+/* Creates a set of panel objects for a panelSelector panel. The UIItem for
+ * each panel is wrapped in an EditorTab object which pairs together the UIItem
+ * and its ID. The ID is subsequently used by the radioset control to decide
+ * which panel is displayed with which radio button.
+ */
+function _genPanelSelectorPanels(group, parameterMetadata, actionMetadata, structureMetadata, l10nProvider) {
+	const panSelSubItems = [];
+	group.subGroups.forEach(function(subGroup) {
+		const subGroupName = subGroup.name;
+		const groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider);
+		const groupLabel = l10nProvider.l10nLabel(subGroup, subGroup.name);
+		panSelSubItems.push(new EditorTab(groupLabel, subGroupName, groupItem));
+	});
+	return panSelSubItems;
 }
 
 function _makeStringControl(parameter, group) {

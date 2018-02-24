@@ -639,6 +639,151 @@ _defineConstant("PANEL_SELECTOR_PROPS_INFO", {
 		]
 	}
 });
+_defineConstant("PANEL_SELECTOR_INSERT_PROPS_INFO", {
+	"title": "Group Type: panelSelector",
+	"parameterDef": {
+		"titleDefinition": {
+			"title": "Group: panelSelector",
+			"editable": false
+		},
+		"current_parameters": {
+			"radioset": "red",
+			"strawberries": 1,
+			"oranges": 2,
+			"lemons": 3,
+			"apples": 4
+		},
+		"parameters": [
+			{
+				"id": "radioset",
+				"enum": [
+					"red",
+					"orange",
+					"yellow",
+					"green"
+				]
+			},
+			{
+				"id": "strawberries",
+				"type": "integer",
+				"default": 1
+			},
+			{
+				"id": "oranges",
+				"type": "integer",
+				"default": 2
+			},
+			{
+				"id": "lemons",
+				"type": "double",
+				"default": 3
+			},
+			{
+				"id": "apples",
+				"type": "double",
+				"default": 4
+			}
+		],
+		"uihints": {
+			"id": "Panel Selector",
+			"parameter_info": [
+				{
+					"parameter_ref": "radioset",
+					"label": {
+						"default": "Radioset Control Name"
+					},
+					"description": {
+						"default": "radioset test"
+					},
+					"orientation": "vertical"
+				},
+				{
+					"parameter_ref": "strawberries",
+					"label": {
+						"default": "Strawberries"
+					},
+					"description": {
+						"default": "Number of Strawberries"
+					}
+				},
+				{
+					"parameter_ref": "oranges",
+					"label": {
+						"default": "Oranges"
+					},
+					"description": {
+						"default": "Number of Oranges"
+					}
+				},
+				{
+					"parameter_ref": "lemons",
+					"label": {
+						"default": "Lemons"
+					},
+					"description": {
+						"default": "Number of Lemons"
+					}
+				},
+				{
+					"parameter_ref": "apples",
+					"label": {
+						"default": "Apples"
+					},
+					"description": {
+						"default": "Number of Apples"
+					}
+				}
+			],
+			"group_info": [
+				{
+					"id": "Panel Selector",
+					"parameter_refs": [
+						"radioset"
+					],
+					"group_info": [
+						{
+							"id": "panelSelectorSettings",
+							"type": "panelSelector",
+							"depends_on_ref": "radioset",
+							"insert_panels": true,
+							"group_info": [
+								{
+									"id": "red",
+									"parameter_refs": [
+										"strawberries"
+									]
+								},
+								{
+									"id": "orange",
+									"parameter_refs": [
+										"oranges"
+									]
+								},
+								{
+									"id": "yellow",
+									"parameter_refs": [
+										"lemons"
+									]
+								},
+								{
+									"id": "green",
+									"parameter_refs": [
+										"apples"
+									]
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		"dataset_metadata": [
+			{
+				"fields": []
+			}
+		]
+	}
+});
 _defineConstant("CHECKBOX_PANEL_PROPS_INFO", {
 	"title": "Group Type: checkboxPanel",
 	"parameterDef": {

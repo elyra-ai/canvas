@@ -10,6 +10,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import EditorControl from "./editor-control.jsx";
+import { ORIENTATIONS } from "../constants/constants.js";
 
 export default class RadiosetControl extends EditorControl {
 	constructor(props) {
@@ -36,6 +37,10 @@ export default class RadiosetControl extends EditorControl {
 		} else {
 			this.props.controller.updatePropertyValue(this.props.propertyId, evt.target.value);
 		}
+	}
+
+	getOptionalPanel(val) {
+		return this.props.control.optionalPanels ? this.props.control.optionalPanels[val] : null;
 	}
 
 	render() {
@@ -65,7 +70,7 @@ export default class RadiosetControl extends EditorControl {
 		} else {
 			cssIndicator = "control__indicator";
 		}
-		if (this.props.control.orientation === "vertical") {
+		if (this.props.control.orientation === ORIENTATIONS.VERTICAL) {
 			cssClasses += " control-radio-block";
 			cssIndicator += " control__indicator-block";
 		}
@@ -80,18 +85,22 @@ export default class RadiosetControl extends EditorControl {
 			var val = valueSet.values[i];
 			var checked = val === controlValue;
 			wasChecked = wasChecked || checked;
+			var optionalPanel = this.getOptionalPanel(val);
 			buttons.push(
-				<label key={i} className={cssClasses}>
-					<input type="radio"
-						{...stateDisabled}
-						name={this.props.control.name}
-						value={val}
-						onChange={this.handleChange}
-						checked={checked}
-					/>
-					{valueSet.valueLabels[i]}
-					<div className={cssIndicator} />
-				</label>
+				<span key={i}>
+					<label key={i} className={cssClasses}>
+						<input type="radio"
+							{...stateDisabled}
+							name={this.props.control.name}
+							value={val}
+							onChange={this.handleChange}
+							checked={checked}
+						/>
+						{valueSet.valueLabels[i]}
+						<div className={cssIndicator} />
+					</label>
+					{optionalPanel}
+				</span>
 			);
 		}
 		if (controlValue && controlValue.length > 0 && !wasChecked) {

@@ -65,6 +65,7 @@
 .default-label-container .control-label {
   text-align: left;
 	display: inline;
+	padding-left: 0;
 }
 
 .control-label-container{

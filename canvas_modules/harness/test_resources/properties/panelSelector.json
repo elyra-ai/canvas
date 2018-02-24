@@ -1,0 +1,358 @@
+{
+  "titleDefinition": {
+    "title": "Panel Selector Demo"
+  },
+  "current_parameters": {
+    "fruit-color1": "red",
+    "fruit-color2": "red",
+    "fruit-color3": "red",
+    "apple-types": [],
+    "blueberry-size": "tiny",
+    "fruit-size": "bigfruit"
+  },
+  "parameters": [
+    {
+      "id": "fruit-color1",
+      "enum": [
+        "red",
+        "blue",
+        "yellow"
+      ]
+    },
+    {
+      "id": "fruit-color2",
+      "enum": [
+        "red",
+        "blue",
+        "yellow"
+      ]
+    },
+    {
+      "id": "fruit-color3",
+      "enum": [
+        "red",
+        "blue",
+        "yellow"
+      ]
+    },
+    {
+      "id": "apple-types",
+      "type": "array[string]",
+      "enum": [
+        "sweet",
+        "crunchy",
+        "ripe"
+      ],
+      "default": ""
+    },
+    {
+      "id": "blueberry-size",
+      "enum": [
+        "big",
+        "small",
+        "tiny"
+      ]
+    },
+    {
+      "id": "fruit-size",
+      "enum": [
+        "bigfruit",
+        "mediumfruit",
+        "littlefruit"
+      ]
+    }
+  ],
+  "uihints": {
+    "id": "panels",
+    "parameter_info": [
+      {
+        "parameter_ref": "fruit-color1",
+        "label": {
+          "default": "Fruit Color"
+        },
+        "description": {
+          "default": "Shows red, yellow, or blue values"
+        }
+      },
+      {
+        "parameter_ref": "fruit-color2",
+        "label": {
+          "default": "Fruit Color"
+        },
+        "description": {
+          "default": "Shows red, yellow, or blue values"
+        },
+        "orientation": "vertical"
+      },
+      {
+        "parameter_ref": "fruit-color3",
+        "label": {
+          "default": "Fruit Color"
+        },
+        "description": {
+          "default": "Shows red, yellow, or blue values"
+        },
+        "orientation": "vertical"
+      },
+      {
+        "parameter_ref": "apple-types",
+        "label": {
+          "default": "Apple Types"
+        },
+        "description": {
+          "default": "Choose what attributes of an apple you like."
+        }
+      },
+      {
+        "parameter_ref": "blueberry-size",
+        "label": {
+          "default": "Blueberry size"
+        },
+        "description": {
+          "default": "Pick a size for your blueberries."
+        }
+      },
+      {
+        "parameter_ref": "fruit-size",
+        "label": {
+          "default": "Fruit Size"
+        },
+        "description": {
+          "default": "Shows big medium and little fruits"
+        },
+        "orientation": "vertical"
+      }
+    ],
+    "group_info": [
+      {
+        "id": "panel-selector",
+        "label": {
+          "default": "Panel Selector - append panels"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "fruit-color1"
+        ],
+        "group_info": [
+          {
+            "id": "panel-selector-fields",
+            "type": "panelSelector",
+            "depends_on_ref": "fruit-color1",
+            "group_info": [
+              {
+                "id": "red",
+                "type": "textPanel",
+                "label": {
+                  "default": "Apples"
+                },
+                "description": {
+                  "default": "Apples ripen six to 10 times faster at room temperature than if they are refrigerated."
+                }
+              },
+              {
+                "id": "blue",
+                "type": "textPanel",
+                "label": {
+                  "default": "Blueberries"
+                },
+                "description": {
+                  "default": "Blueberries freeze in just 4 minutes."
+                }
+              },
+              {
+                "id": "yellow",
+                "type": "textPanel",
+                "label": {
+                  "default": "Lemons"
+                },
+                "description": {
+                  "default": "Lemons are a hybrid between a sour orange and a citron."
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "fruit-main-panel",
+        "label": {
+          "default": "Panel Selector - insert panels"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "fruit-color2"
+        ],
+        "group_info": [
+          {
+            "id": "panel-selector-fields",
+            "type": "panelSelector",
+            "depends_on_ref": "fruit-color2",
+            "insert_panels": true,
+            "group_info": [
+              {
+                "id": "red",
+                "type": "textPanel",
+                "label": {
+                  "default": "Apples"
+                },
+                "description": {
+                  "default": "Apples ripen six to 10 times faster at room temperature than if they are refrigerated."
+                }
+              },
+              {
+                "id": "blue",
+                "type": "textPanel",
+                "label": {
+                  "default": "Blueberries"
+                },
+                "description": {
+                  "default": "Blueberries freeze in just 4 minutes."
+                }
+              },
+              {
+                "id": "yellow",
+                "type": "textPanel",
+                "label": {
+                  "default": "Lemons"
+                },
+                "description": {
+                  "default": "Lemons are a hybrid between a sour orange and a citron."
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "fruit-main-panel2",
+        "label": {
+          "default": "Panel Selector - insert multi panels"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "fruit-color3",
+          "fruit-size"
+        ],
+        "group_info": [
+          {
+            "id": "panel-selector-fields",
+            "type": "panelSelector",
+            "depends_on_ref": "fruit-color3",
+            "insert_panels": true,
+            "group_info": [
+              {
+                "id": "red",
+                "type": "panels",
+                "group_info" : [
+                  {
+                    "id": "apple-text",
+                    "type": "textPanel",
+                    "label": {
+                      "default": "Apples"
+                    },
+                    "description": {
+                      "default": "Apples ripen six to 10 times faster at room temperature than if they are refrigerated."
+                    }
+                  },
+                  {
+                    "type": "controls",
+                    "parameter_refs": [
+                      "apple-types"
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "blue",
+                "type": "panels",
+                "group_info" : [
+                  {
+                    "id": "blue-text",
+                    "type": "textPanel",
+                    "label": {
+                      "default": "Blueberries"
+                    },
+                    "description": {
+                      "default": "Blueberries freeze in just 4 minutes."
+                    }
+                  },
+                  {
+                    "type": "controls",
+                    "parameter_refs": [
+                      "blueberry-size"
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "yellow",
+                "type": "textPanel",
+                "label": {
+                  "default": "Lemons"
+                },
+                "description": {
+                  "default": "Lemons are a hybrid between a sour orange and a citron."
+                }
+              }
+            ]
+          },
+          {
+            "id": "panel-selector2-fields",
+            "type": "panelSelector",
+            "depends_on_ref": "fruit-size",
+            "insert_panels": true,
+            "group_info": [
+              {
+                "id": "bigfruit",
+                "type": "textPanel",
+                "description": {
+                  "default": "If you want big fruit this is the choice for you!"
+                }
+              },
+              {
+                "id": "mediumfruit",
+                "type": "textPanel",
+                "description": {
+                  "default": "Medium fruit is the sensible choice."
+                }
+              },
+              {
+                "id": "littlefruit",
+                "type": "textPanel",
+                "description": {
+                  "default": "For those on a budget or a diet."
+                }
+              }
+            ]
+          },
+          {
+            "id": "final-fruity",
+            "type": "textPanel",
+            "label": {
+              "default": "A final fruit section"
+            },
+            "description": {
+              "default": "This is a final text panel at the end of this example to show any panels that are not panelSelector panels get displayed as regular panels."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "dataset_metadata": [
+  ],
+  "resources": {
+    "fruit-color1.red.label": "Red",
+    "fruit-color1.blue.label": "Blue",
+    "fruit-color1.yellow.label": "Yellow",
+    "fruit-color2.red.label": "Red",
+    "fruit-color2.blue.label": "Blue",
+    "fruit-color2.yellow.label": "Yellow",
+    "fruit-color3.red.label": "Red",
+    "fruit-color3.blue.label": "Blue",
+    "fruit-color3.yellow.label": "Yellow",
+		"fruit-size.bigfruit.label": "Big",
+		"fruit-size.mediumfruit.label": "Medium",
+		"fruit-size.littlefruit.label": "Little"
+  }
+}
