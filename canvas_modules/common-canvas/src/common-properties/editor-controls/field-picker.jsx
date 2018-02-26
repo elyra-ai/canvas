@@ -476,13 +476,17 @@ class FieldPicker extends EditorControl {
 	}
 
 	_getDefaultRowValue(index) {
+		// The defaultRow may not be in-sync with the columns.  In some cases, the defaultRow will not contain the key column.
+		let defaultIndex = index - 1;
 		if (this.props.control.subControls.length === this.props.control.defaultRow.length || index < this.dataColumnIndex) {
 			// This will handle most cases
-			return this.props.control.defaultRow[index];
+			defaultIndex = index;
 		}
-		// this will handle the case where the a map is defined and the first field has no value in defaultRow.
-		// this case is for modeler aggregate options form
-		return this.props.control.defaultRow[index - 1];
+		if (typeof this.props.control.defaultRow[defaultIndex] !== "undefined" && this.props.control.defaultRow[defaultIndex] !== null &&
+		this.props.control.defaultRow[defaultIndex].parameterRef) {
+			return this.props.controller.getPropertyValue({ name: this.props.control.defaultRow[defaultIndex].parameterRef });
+		}
+		return this.props.control.defaultRow[defaultIndex];
 	}
 
 	handleReset() {

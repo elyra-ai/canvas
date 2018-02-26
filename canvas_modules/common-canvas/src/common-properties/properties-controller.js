@@ -99,6 +99,10 @@ export default class PropertiesController {
 			// the controlValue any missing data model fields.  We need to do it here so that
 			// validate can run against the added fields
 			this._addToControlValues();
+			// we need to take another pass through to resolve any default values that are parameterRefs.
+			// we need to do it here because the parameter that is referenced in the parameterRef may need to have a
+			// default value set in the above loop.
+			this._addToControlValues(true);
 			this.uiItems = this.form.uiItems; // set last so properties dialog doesn't render too early
 		}
 	}
@@ -168,7 +172,7 @@ export default class PropertiesController {
 		return false;
 	}
 
-	_addToControlValues() {
+	_addToControlValues(resolveParameterRefs) {
 		for (const keyName in this.controls) {
 			if (!this.controls.hasOwnProperty(keyName)) {
 				continue;
@@ -176,11 +180,16 @@ export default class PropertiesController {
 			const control = this.controls[keyName];
 			const propertyId = { name: control.name };
 			let controlValue = this.getPropertyValue(propertyId);
-			if (control.controlType === "structuretable" && control.addRemoveRows === false) {
+			if (resolveParameterRefs) {
+				if (typeof controlValue !== "undefined" && controlValue !== null && typeof controlValue.parameterRef !== "undefined") {
+					controlValue = this.getPropertyValue({ name: controlValue.parameterRef });
+					this.updatePropertyValue(propertyId, controlValue);
+				}
+			} else if (control.controlType === "structuretable" && control.addRemoveRows === false) {
 				controlValue = this._populateFieldData(controlValue, this.getDatasetMetadata(), control);
 				this.updatePropertyValue(propertyId, controlValue);
 			} else if (typeof control.valueDef !== "undefined" && typeof control.valueDef.defaultValue !== "undefined" &&
-				control.valueDef.defaultValue !== "" && (typeof controlValue === "undefined" || controlValue === "")) {
+				(typeof controlValue === "undefined")) {
 				controlValue = control.valueDef.defaultValue;
 				this.updatePropertyValue(propertyId, controlValue);
 			}
@@ -231,6 +240,9 @@ export default class PropertiesController {
 		const subControl = control.subControls[col];
 		if (PropertyUtils.toType(subControl.valueDef.defaultValue) !== "undefined") {
 			val = subControl.valueDef.defaultValue;
+			if (val.parameterRef) {
+				val = this.getPropertyValue({ name: val.parameterRef });
+			}
 		} else if (PropertyUtils.toType(subControl.dmDefault) !== "undefined") {
 			val = this._getDMDefault(subControl, fieldName, dataModel);
 		} else if (subControl.values) {

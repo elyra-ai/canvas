@@ -1,0 +1,671 @@
+{
+  "titleDefinition": {
+    "title": "Default Fields"
+  },
+  "current_parameters": {
+    "noDefault_num": 0,
+    "noDefault_text": "",
+    "noDefault_array": [],
+    "noDefault_parameterRef": "",
+    "field_types": [
+      [
+        "Age",
+        true,
+        "integer"
+      ],
+      [
+        "Sex",
+        false,
+        "string"
+      ]
+    ],
+    "default_boolean": true,
+    "structureListEditorDefault": [
+      [
+        1,
+        1.234,
+        "Ascending",
+        true
+      ]
+    ],
+    "sLE_DefaultSortOrder": "Ascending",
+    "columnStructureTableDefault": [],
+    "CST_DefaultSortOrder": "Ascending"
+  },
+  "complex_types": [
+    {
+      "id": "FieldStorageEntry",
+      "key_definition": {
+        "id": "field",
+        "type": "string",
+        "role": "column"
+      },
+      "parameters": [
+        {
+          "id": "override",
+          "type": "boolean",
+          "default": {
+            "parameter_ref": "default_boolean"
+          }
+        },
+        {
+          "id": "storage",
+          "enum": [
+            "string",
+            "integer",
+            "double",
+            "date",
+            "time",
+            "timestamp",
+            "password",
+            "structure"
+          ],
+          "default": "password"
+        }
+      ]
+    },
+    {
+      "id": "structureListEditorDefault",
+      "parameters": [
+        {
+          "id": "valueName",
+          "type": "integer",
+          "default": 2,
+          "role": "new_column"
+        },
+        {
+          "id": "doubleName",
+          "type": "double",
+          "default": 1.2,
+          "role": "new_column"
+        },
+        {
+          "id": "order",
+          "enum": [
+            "Ascending",
+            "Descending"
+          ],
+          "default": {
+            "parameter_ref": "sLE_DefaultSortOrder"
+          }
+        },
+        {
+          "id": "checkbox",
+          "type": "boolean",
+          "enum": [
+            "Single Checkbox Label"
+          ],
+          "default": true
+        }
+      ]
+    },
+    {
+      "id": "columnStructureTableDefault",
+      "key_definition": {
+        "id": "field",
+        "type": "string",
+        "role": "column",
+        "default": ""
+      },
+      "parameters": [
+        {
+          "id": "sort_order",
+          "enum": [
+            "Ascending",
+            "Descending"
+          ],
+          "default": {
+            "parameter_ref": "CST_DefaultSortOrder"
+          }
+        }
+      ]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "default_num",
+      "type": "integer",
+      "default": 25
+    },
+    {
+      "id": "default_text",
+      "type": "string",
+      "default": "This is a default text"
+    },
+    {
+      "id": "default_undefined",
+      "type": "string",
+      "default": "This is an undefined parameter"
+    },
+    {
+      "id": "default_array",
+      "type": "array[string]",
+      "default": [
+        "a",
+        "b"
+      ]
+    },
+    {
+      "id": "default_parameterRef",
+      "type": "string",
+      "default": {
+        "parameter_ref": "default_control"
+      }
+    },
+    {
+      "id": "default_control",
+      "type": "string",
+      "default": "this is the control value"
+    },
+    {
+      "id": "noDefault_num",
+      "type": "integer",
+      "default": 25
+    },
+    {
+      "id": "noDefault_text",
+      "type": "string",
+      "default": "This is a default text"
+    },
+    {
+      "id": "noDefault_array",
+      "type": "array[string]",
+      "default": [
+        "a",
+        "b"
+      ]
+    },
+    {
+      "id": "noDefault_parameterRef",
+      "type": "string",
+      "default": {
+        "parameter_ref": "default_control"
+      }
+    },
+    {
+      "id": "field_types",
+      "type": "map[string,FieldStorageEntry]",
+      "role": "column",
+      "default": []
+    },
+    {
+      "id": "structureListEditorDefault",
+      "type": "array[structureListEditorDefault]",
+      "default": []
+    },
+    {
+      "id": "sLE_DefaultSortOrder",
+      "enum": [
+        "Ascending",
+        "Descending"
+      ],
+      "default": "Ascending"
+    },
+    {
+      "id": "columnStructureTableDefault",
+      "type": "array[columnStructureTableDefault]",
+      "role": "column"
+    },
+    {
+      "id": "CST_DefaultSortOrder",
+      "enum": [
+        "Ascending",
+        "Descending"
+      ],
+      "default": "Ascending"
+    }
+  ],
+  "uihints": {
+    "id": "default",
+    "icon": "images/default.svg",
+    "label": {
+      "default": "default Fields"
+    },
+    "complex_type_info": [
+      {
+        "complex_type_ref": "FieldStorageEntry",
+        "add_remove_rows": false,
+        "key_definition": {
+          "parameter_ref": "field",
+          "label": {
+            "default": "",
+            "resource_key": "FieldStorageEntry.field"
+          },
+          "width": 16,
+          "filterable": true,
+          "summary": true
+        },
+        "parameters": [
+          {
+            "parameter_ref": "override",
+            "label": {
+              "default": "",
+              "resource_key": "FieldStorageEntry.override"
+            },
+            "width": 26,
+            "edit_style": "inline"
+          },
+          {
+            "parameter_ref": "storage",
+            "label": {
+              "default": "",
+              "resource_key": "FieldStorageEntry.storage"
+            },
+            "width": 26,
+            "edit_style": "inline",
+            "dm_default": "type",
+            "summary": true
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "structureListEditorDefault",
+        "row_selection": "single",
+        "parameters": [
+          {
+            "parameter_ref": "valueName",
+            "label": {
+              "default": "Integer Field",
+              "resource_key": "expressionCellTable.name.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.name.desc"
+            },
+            "width": 10,
+            "edit_style": "inline",
+            "summary": true
+          },
+          {
+            "parameter_ref": "doubleName",
+            "label": {
+              "default": "Double Field",
+              "resource_key": "expressionCellTable.doubleName.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.doubleName.desc"
+            },
+            "width": 10,
+            "edit_style": "inline",
+            "summary": true
+          },
+          {
+            "parameter_ref": "order",
+            "width": 16,
+            "label": {
+              "resource_key": "sort_order.label"
+            },
+            "description": {
+              "resource_key": "sort_order.desc"
+            },
+            "control": "toggletext",
+            "value_icons": [
+              "/images/up-triangle.svg",
+              "/images/down-triangle.svg"
+            ]
+          },
+          {
+            "parameter_ref": "checkbox",
+            "width": 5,
+            "label": {
+              "resource_key": "checkbox.label"
+            },
+            "description": {
+              "resource_key": "checkbox.desc"
+            },
+            "edit_style": "inline"
+          }
+        ]
+      },
+      {
+        "id": "sLE_DefaultSortOrder",
+        "parameter_info": [
+          {
+            "parameter_ref": "sLE_DefaultSortOrder",
+            "label": {
+              "default": "Default sort order"
+            },
+            "description": {
+              "default": "default sort order"
+            },
+            "control": "radioset",
+            "orientation": "horizontal"
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "columnStructureTableDefault",
+        "moveable_rows": true,
+        "key_definition": {
+          "parameter_ref": "field",
+          "width": 28,
+          "label": {
+            "resource_key": "columnStructureTableDefault.field.label"
+          },
+          "summary": true
+        },
+        "parameters": [
+          {
+            "parameter_ref": "sort_order",
+            "width": 16,
+            "resource_key": "columnStructureTableDefault.sort_order",
+            "label": {
+              "resource_key": "columnStructureTableDefault.sort_order.label"
+            },
+            "control": "toggletext",
+            "value_icons": [
+              "/images/up-triangle.svg",
+              "/images/down-triangle.svg"
+            ],
+            "summary": true
+          }
+        ]
+      },
+      {
+        "id": "CST_DefaultSortOrder",
+        "parameter_info": [
+          {
+            "parameter_ref": "CST_DefaultSortOrder",
+            "label": {
+              "default": "Default sort order"
+            },
+            "description": {
+              "default": "default sort order"
+            },
+            "control": "radioset",
+            "orientation": "horizontal"
+          }
+        ]
+      }
+    ],
+    "parameter_info": [
+      {
+        "parameter_ref": "default_num",
+        "label": {
+          "default": "Integer: expected value 25"
+        },
+        "description": {
+          "default": "default field with parameter value set to '10'"
+        }
+      },
+      {
+        "parameter_ref": "default_text",
+        "label": {
+          "default": "String: expected value 'This is the default text'"
+        },
+        "description": {
+          "default": "default field with parameter value set to 'The more I study,...'"
+        }
+      },
+      {
+        "parameter_ref": "default_array",
+        "label": {
+          "default": "Array: expected value [a,b]"
+        },
+        "description": {
+          "default": "default field with parameter value set to 'null'"
+        }
+      },
+      {
+        "parameter_ref": "default_undefined",
+        "label": {
+          "default": "Undefined: expected value 'This is an undefined parameter'"
+        },
+        "description": {
+          "default": "default field with parameter value set to 'undefined'"
+        }
+      },
+      {
+        "parameter_ref": "default_parameterRef",
+        "label": {
+          "default": "ParameterRef: expected value 'This is the control value'"
+        },
+        "description": {
+          "default": "default field with error when set to 'Hopper'"
+        }
+      },
+      {
+        "parameter_ref": "default_control",
+        "label": {
+          "default": "Parameter Ref Control Value"
+        },
+        "description": {
+          "default": "default field with warning when set to 'Turing'"
+        }
+      },
+      {
+        "parameter_ref": "noDefault_num",
+        "label": {
+          "default": "Integer: expected value 0"
+        },
+        "description": {
+          "default": "default field with parameter value set to '10'"
+        }
+      },
+      {
+        "parameter_ref": "noDefault_text",
+        "label": {
+          "default": "String: expected value empty"
+        },
+        "description": {
+          "default": "default field with parameter value set to 'The more I study,...'"
+        }
+      },
+      {
+        "parameter_ref": "noDefault_array",
+        "label": {
+          "default": "Array: expected value empty"
+        },
+        "description": {
+          "default": "default field with parameter value set to 'null'"
+        }
+      },
+      {
+        "parameter_ref": "noDefault_parameterRef",
+        "label": {
+          "default": "ParameterRef: expected value empty"
+        },
+        "description": {
+          "default": "default field with error when set to 'Hopper'"
+        }
+      },
+      {
+        "parameter_ref": "field_types",
+        "label": {
+          "default": ""
+        },
+        "description": {
+          "default": "This table will test that the added dm field have the correct defaults for columns."
+        },
+        "control": "structuretable",
+        "text_before": {
+          "default": "The rows of BP and Cholesterol should have checkbox true and storage of password"
+        }
+      },
+      {
+        "parameter_ref": "structureListEditorDefault",
+        "label": {
+          "default": "Values"
+        },
+        "description": {
+          "default": "Test that the structure list editor has a default row value set by another parameter."
+        },
+        "text_before": {
+          "default": "Sort order of new row should have same value as 'Default sort order'"
+        }
+      },
+      {
+        "parameter_ref": "sLE_DefaultSortOrder",
+        "label": {
+          "default": "Default sort order"
+        }
+      },
+      {
+        "parameter_ref": "columnStructureTableDefault",
+        "label": {
+          "resource_key": "sort.keys.label"
+        },
+        "description": {
+          "default": "Test that the column structure table has a default row value set by another parameter."
+        },
+        "text_before": {
+          "default": "Sort order of new column should have same value as 'Default sort order'"
+        }
+      },
+      {
+        "parameter_ref": "CST_DefaultSortOrder",
+        "label": {
+          "default": "Default sort order"
+        }
+      }
+    ],
+    "group_info": [
+      {
+        "id": "default-field-values",
+        "label": {
+          "default": "Default Values"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "default_num",
+          "default_text",
+          "default_array",
+          "default_undefined",
+          "default_parameterRef",
+          "default_control"
+        ]
+      },
+      {
+        "id": "noDefault-field-values",
+        "label": {
+          "default": "Empty values: no defaults"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "noDefault_num",
+          "noDefault_text",
+          "noDefault_array",
+          "noDefault_parameterRef"
+        ]
+      },
+      {
+        "id": "table-settings",
+        "label": {
+          "default": "Table defaults"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "summary-panel",
+            "label": {
+              "default": "Default datamodel fields"
+            },
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "controls-panel",
+                "type": "controls",
+                "parameter_refs": [
+                  "field_types"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "structureListEditorDefault-summary-panel",
+            "type": "summaryPanel",
+            "label": {
+              "default": "Default Structure List Editor"
+            },
+            "group_info": [
+              {
+                "id": "structureListEditor-default",
+                "parameter_refs": [
+                  "structureListEditorDefault",
+                  "sLE_DefaultSortOrder"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "structureTableDefault-summary-panel",
+            "type": "summaryPanel",
+            "label": {
+              "default": "Default Structure Table"
+            },
+            "group_info": [
+              {
+                "id": "structureTableDefault-default",
+                "parameter_refs": [
+                  "columnStructureTableDefault",
+                  "CST_DefaultSortOrder"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "conditions": [],
+  "dataset_metadata": [
+    {
+      "fields": [
+        {
+          "name": "Age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Sex",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Cholesterol",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    }
+  ],
+  "resources": {
+    "storage.label": "Storage",
+    "field_types.label": "",
+    "FieldStorageEntry.field": "Field",
+    "FieldStorageEntry.override": "Override",
+    "FieldStorageEntry.storage": "Storage",
+    "sort_order.label": "Order",
+    "sort_order.desc": "Update sort order",
+    "checkbox.label": "checkbox",
+    "checkbox.desc": "",
+    "sort.label": "Sort",
+    "sort.desc": "Sorts the data",
+    "sort.keys.label": "Sort by",
+    "columnStructureTableDefault.label": "Sort",
+    "columnStructureTableDefault.field.label": "Field",
+    "columnStructureTableDefault.sort_order.label": "Order",
+    "columnStructureTableDefault.sort_order.Ascending.label": "Ascending",
+    "columnStructureTableDefault.sort_order.Descending.label": "Descending"
+  }
+}

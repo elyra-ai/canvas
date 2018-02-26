@@ -36,7 +36,12 @@ export class ParameterDef {
 			this.valueRestriction = settings.valueRestriction;
 		}
 		if (settings.defaultValue !== null && PropertyUtil.toType(settings.defaultValue) !== "undefined") {
-			this.defaultValue = settings.defaultValue;
+			if (settings.defaultValue.parameter_ref) {
+				this.defaultValue = {};
+				this.defaultValue.parameterRef = settings.defaultValue.parameter_ref;
+			} else {
+				this.defaultValue = settings.defaultValue;
+			}
 		}
 		if (settings.control) {
 			this.control = settings.control;
