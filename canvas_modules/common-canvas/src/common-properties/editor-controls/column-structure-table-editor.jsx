@@ -29,6 +29,7 @@ import sortBy from "lodash/sortBy";
 /* eslint-disable react/prop-types */
 /* eslint-enable react/prop-types */
 /* eslint complexity: ["error", 15] */
+/* eslint max-depth: ["error", 5] */
 
 export default class ColumnStructureTableEditor extends EditorControl {
 	constructor(props) {
@@ -577,10 +578,16 @@ export default class ColumnStructureTableEditor extends EditorControl {
 				let visibleIndx = 0;
 				for (var colIndex = 0; colIndex < this.props.control.subControls.length; colIndex++) {
 					const columnDef = this.props.control.subControls[colIndex];
-					if (columnDef.visible) {
-						columns.push(this._makeCell(columnDef, controlValue, rowIndex,
-							colIndex, columnWidths[visibleIndx], stateStyle, stateDisabled));
-						visibleIndx += 1;
+					// we need to build the on-panel container so that when the row is selected and a not visible column is on-panel
+					// the on-panel container will be available for display.
+					if (columnDef.visible || columnDef.editStyle === EditStyle.ON_PANEL) {
+						const content = this._makeCell(columnDef, controlValue, rowIndex,
+							colIndex, columnWidths[visibleIndx], stateStyle, stateDisabled);
+						// only add content if column is visible
+						if (columnDef.visible) {
+							columns.push(content);
+							visibleIndx += 1;
+						}
 					}
 				}
 				if (this.props.control.childItem) {

@@ -64,6 +64,15 @@
         "dog",
         "apple"
       ]
+    ],
+    "onPanelNotVisibleTable": [
+      [
+        1,
+        1.234,
+        "Age >= 55",
+        "dog",
+        "apple"
+      ]
     ]
   },
   "parameters": [
@@ -95,6 +104,11 @@
     {
       "id": "inlineEditingTableError2",
       "type": "array[inlineEditingTableError2]",
+      "default": []
+    },
+    {
+      "id": "onPanelNotVisibleTable",
+      "type": "array[onPanelNotVisibleTable]",
       "default": []
     }
   ],
@@ -273,6 +287,45 @@
           "role": "new_column"
         }
       ]
+    },
+    {
+      "id": "onPanelNotVisibleTable",
+      "parameters": [
+        {
+          "id": "valueName",
+          "type": "integer",
+          "default": "1",
+          "role": "new_column"
+        },
+        {
+          "id": "doubleName",
+          "type": "double",
+          "default": "1.2",
+          "role": "new_column"
+        },
+        {
+          "id": "condition",
+          "type": "string",
+          "default": "",
+          "role": "expression"
+        },
+        {
+          "id": "dropdown",
+          "enum": [
+            "dog",
+            "cat",
+            "pig",
+            "horse"
+          ],
+          "default": "yellow"
+        },
+        {
+          "id": "textfield",
+          "type": "string",
+          "default": "",
+          "role": "new_column"
+        }
+      ]
     }
   ],
   "uihints": {
@@ -346,6 +399,18 @@
         },
         "text_before": {
           "default": "To generated a error:  (integer Field = 2 OR double Field = 2.3) || condition field = help || animals field = horse || fruit field = pear"
+        }
+      },
+      {
+        "parameter_ref": "onPanelNotVisibleTable",
+        "label": {
+          "default": "Values"
+        },
+        "description": {
+          "default": "List editor table with hidden expression column."
+        },
+        "text_before": {
+          "default": "When you select a row, the expression editor control should display below the table"
         }
       }
     ],
@@ -676,6 +741,76 @@
             "edit_style": "inline"
           }
         ]
+      },
+      {
+        "complex_type_ref": "onPanelNotVisibleTable",
+        "row_selection": "single",
+        "parameters": [
+          {
+            "parameter_ref": "valueName",
+            "label": {
+              "default": "Integer Field",
+              "resource_key": "expressionCellTable.name.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.name.desc"
+            },
+            "width": 10,
+            "edit_style": "inline",
+            "summary": true
+          },
+          {
+            "parameter_ref": "doubleName",
+            "label": {
+              "default": "Double Field",
+              "resource_key": "expressionCellTable.doubleName.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.doubleName.desc"
+            },
+            "width": 10,
+            "edit_style": "inline",
+            "summary": true
+          },
+          {
+            "parameter_ref": "condition",
+            "language": "CLEM",
+            "label": {
+              "resource_key": "expressionCellTable.description.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.description.desc"
+            },
+            "width": 15,
+            "edit_style": "on_panel",
+            "visible": false,
+            "place_holder_text": {
+              "default": "Enter condition expression"
+            }
+          },
+          {
+            "parameter_ref": "dropdown",
+            "label": {
+              "resource_key": "dropdown.label"
+            },
+            "description": {
+              "resource_key": "dropdown.desc"
+            },
+            "width": 10,
+            "edit_style": "inline"
+          },
+          {
+            "parameter_ref": "textfield",
+            "label": {
+              "resource_key": "textfield.label"
+            },
+            "description": {
+              "resource_key": "textfield.desc"
+            },
+            "width": 10,
+            "edit_style": "inline"
+          }
+        ]
       }
     ],
     "group_info": [
@@ -724,6 +859,21 @@
                 "id": "Inline editing No Buttons",
                 "parameter_refs": [
                   "inlineEditingTableNoButtons"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "onPanelNotVisibleTable-summary-panel",
+            "type": "summaryPanel",
+            "label": {
+              "default": "Configure on-Panel Not Visible"
+            },
+            "group_info": [
+              {
+                "id": "onPanel Visible editing",
+                "parameter_refs": [
+                  "onPanelNotVisibleTable"
                 ]
               }
             ]

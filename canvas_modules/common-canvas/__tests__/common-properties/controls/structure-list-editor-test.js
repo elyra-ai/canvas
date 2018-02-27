@@ -203,7 +203,9 @@ function genUIItem() {
 	/>);
 }
 
-
+/***********************/
+/* rendering tests     */
+/***********************/
 describe("StructureListEditorControl renders correctly", () => {
 
 	it("props should have been defined", () => {
@@ -599,6 +601,9 @@ describe("StructureListEditorControl renders correctly", () => {
 	});
 });
 
+/***********************/
+/* error checking tests*/
+/***********************/
 describe("condition messages renders correctly with structurelisteditor table", () => {
 	it("structurelisteditor control should have error message when notEquals []", () => {
 		const wrapper = propertyUtils.createEditorForm("mount", CONDITIONS_TEST_FORM_DATA, controller);
@@ -626,13 +631,16 @@ describe("condition messages renders correctly with structurelisteditor table", 
 	});
 });
 
-describe("should render with CommonProperties element", () => {
+/***********************/
+/* rendering tests     */
+/***********************/
+describe("should render table using CommonProperties element", () => {
 	var wrapper;
-	var renderedController;
+	// var renderedController;
 	beforeEach(() => {
 		const renderedObject = propertyUtils.flyoutEditorForm(JSON.parse(JSON.stringify(structureListEditorParamDef)));
 		wrapper = renderedObject.wrapper;
-		renderedController = renderedObject.controller;
+		// renderedController = renderedObject.controller;
 	});
 
 	afterEach(() => {
@@ -646,7 +654,6 @@ describe("should render with CommonProperties element", () => {
 		const addButtons = noButtonTable.find("#field-picker-buttons-container");
 		expect(addButtons).to.have.length(0);
 	});
-
 	it("only allow integer values in integer numberfield cell", () => {
 		const tableSummary = wrapper.find(".control-summary-link-buttons").at(1); // Summary link Configure No Add Buttons Inline Editing Table
 		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
@@ -663,9 +670,8 @@ describe("should render with CommonProperties element", () => {
 		integerCell.simulate("change", { target: { value: "2.3" } });
 		expect(integerCell.prop("value")).to.equal("2");
 	});
-
 	it("only allow double values in double numberfield cell", () => {
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(1); // Summary link Configure No Add Buttons Inline Editing Table
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(1); // Summary link Configure Inline Editing Table
 		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
 		const tableHtml = document.getElementById("flexible-table-inlineEditingTable"); // needed since modal dialogs are outside `wrapper`
 		const inlineEditTable = new ReactWrapper(tableHtml, true);
@@ -677,11 +683,45 @@ describe("should render with CommonProperties element", () => {
 		doubleCell.simulate("change", { target: { value: "2.3" } });
 		expect(doubleCell.prop("value")).to.equal("2.3");
 	});
+	it("hide not visible column but display on-panel container", () => {
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(3); // Summary link Configure on-Panel Not Visible
+		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
+		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
+		const modalWrapper = new ReactWrapper(tableHtml, true);
+		const onPanelTable = modalWrapper.find("#flexible-table-onPanelNotVisibleTable");
+		const tableRows = onPanelTable.find(".reactable-data").find("tr");
+		expect(tableRows).to.have.length(1);
+		const expressionField = tableRows.at(0).find("td[label='condition']");
+		expect(expressionField).to.have.length(0);
+		// no rows are selected so should not see on panel container displayed
+		let onPanelContainer = modalWrapper.find("#ExpressionEditor-onPanelNotVisibleTable_0_2");
+		expect(onPanelContainer).to.have.length(0);
+		// select the first row and not visible expression control column displays control below table
+		tableRows.at(0).simulate("click");
+		onPanelContainer = modalWrapper.find("#ExpressionEditor-onPanelNotVisibleTable_0_2");
+		expect(onPanelContainer).to.have.length(1);
+	});
+});
+
+/***********************/
+/* error checking tests*/
+/***********************/
+describe("should render table with error checking using CommonProperties element", () => {
+	var wrapper;
+	var renderedController;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(JSON.parse(JSON.stringify(structureListEditorParamDef)));
+		wrapper = renderedObject.wrapper;
+		renderedController = renderedObject.controller;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
 
 	it("warning message generated when editing numberfield cell", () => {
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(3); // Summary link Configure Warning Inline Editing Table
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(4); // Summary link Configure Warning Inline Editing Table
 		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
-		// const tableHtml = document.getElementById("flexible-table-inlineEditingTableWarning"); // needed since modal dialogs are outside `wrapper`
 		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
 		const inlineEditTable = new ReactWrapper(tableHtml, true);
 		const integerCell = inlineEditTable.find("#editor-control-valueName_0");
@@ -704,7 +744,7 @@ describe("should render with CommonProperties element", () => {
 	});
 
 	it("error message generated on OR condition when editing numberfield cell", () => {
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(5); // Summary link Configure Error 2 Inline Editing Table
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(6); // Summary link Configure Error 2 Inline Editing Table
 		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
 		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
 		const inlineEditTable = new ReactWrapper(tableHtml, true);
@@ -729,7 +769,7 @@ describe("should render with CommonProperties element", () => {
 	});
 
 	it("error message generated on AND condition when editing numberfield cell", () => {
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(4); // Summary link Configure Error Inline Editing Table
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(5); // Summary link Configure Error Inline Editing Table
 		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
 		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
 		const inlineEditTable = new ReactWrapper(tableHtml, true);
@@ -759,7 +799,7 @@ describe("should render with CommonProperties element", () => {
 		expect(inlineEditTable.find(".form__validation--error")).to.have.length(1);
 	});
 	it("error message generated on when editing toggletext cell", () => {
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(4); // Summary link Configure Error Inline Editing Table
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(5); // Summary link Configure Error Inline Editing Table
 		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
 		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
 		const inlineEditTable = new ReactWrapper(tableHtml, true);
@@ -778,7 +818,7 @@ describe("should render with CommonProperties element", () => {
 		expect(inlineEditTable.find(".form__validation--error")).to.have.length(1);
 	});
 	it("error message generated on when editing checkbox cell", () => {
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(4); // Summary link Configure Error Inline Editing Table
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(5); // Summary link Configure Error Inline Editing Table
 		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
 		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
 		const inlineEditTable = new ReactWrapper(tableHtml, true);
@@ -803,7 +843,7 @@ describe("should render with CommonProperties element", () => {
 			{ label: "pig", value: "pig" },
 			{ label: "horse", value: "horse" }
 		];
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(5); // Summary link Configure Error 2 Inline Editing Table
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(6); // Summary link Configure Error 2 Inline Editing Table
 		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
 		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
 		const inlineEditTable = new ReactWrapper(tableHtml, true);
@@ -822,7 +862,7 @@ describe("should render with CommonProperties element", () => {
 		expect(inlineEditTable.find(".form__validation--error")).to.have.length(1);
 	});
 	it("error message generated on when editing textfield cell", () => {
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(5); // Summary link Configure Error 2 Inline Editing Table
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(6); // Summary link Configure Error 2 Inline Editing Table
 		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
 		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
 		const inlineEditTable = new ReactWrapper(tableHtml, true);
@@ -841,7 +881,7 @@ describe("should render with CommonProperties element", () => {
 		expect(inlineEditTable.find(".form__validation--error")).to.have.length(1);
 	});
 	it("Error messages should not change when adding rows", () => {
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(4); // Summary link Configure Error Inline Editing Table
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(5); // Summary link Configure Error Inline Editing Table
 		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
 		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
 		const inlineEditTable = new ReactWrapper(tableHtml, true);
@@ -884,7 +924,7 @@ describe("should render with CommonProperties element", () => {
 
 	});
 	it("Error messages should not change when deleting rows", () => {
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(4); // Summary link Configure Error Inline Editing Table
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(5); // Summary link Configure Error Inline Editing Table
 		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
 		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
 		const inlineEditTable = new ReactWrapper(tableHtml, true);
@@ -938,7 +978,7 @@ describe("should render with CommonProperties element", () => {
 
 	});
 	it("Error messages should not change when moving rows", () => {
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(4); // Summary link Configure Error Inline Editing Table
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(5); // Summary link Configure Error Inline Editing Table
 		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
 		const tableHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
 		const inlineEditTable = new ReactWrapper(tableHtml, true);
