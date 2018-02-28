@@ -25,7 +25,6 @@ export default class FieldAllocatorControl extends EditorControl {
 			this.emptyLabel = this.props.control.additionalText;
 		}
 		this.handleChange = this.handleChange.bind(this);
-		this.getAllocatedColumns = this.getAllocatedColumns.bind(this);
 		this.addColumns = this.addColumns.bind(this);
 		this.removeColumns = this.removeColumns.bind(this);
 	}
@@ -53,11 +52,6 @@ export default class FieldAllocatorControl extends EditorControl {
 			}
 		}
 		this.setState({ clippedClassName: clippedClassName });
-	}
-
-	// Allocated columns are columns that are referenced by the current control value.
-	getAllocatedColumns() {
-		return this.props.controller.getPropertyValue(this.props.propertyId);
 	}
 
 	addColumns(columnNames, callback) {

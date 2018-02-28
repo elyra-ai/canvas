@@ -106,7 +106,7 @@
           "group_info": [
             {
               "id": "field-allocation",
-              "type": "columnAllocation",
+              "type": "columnSelection",
               "parameter_refs": [
                 "target",
                 "inputs"
@@ -185,7 +185,7 @@
                     "itemType": "panel",
                     "panel": {
                       "id": "field-allocation",
-                      "panelType": "columnAllocation",
+                      "panelType": "columnSelection",
                       "uiItems": [
                         {
                           "itemType": "control",
@@ -195,7 +195,7 @@
                               "text": "Target label: resource"
                             },
                             "separateLabel": true,
-                            "controlType": "allocatedcolumn",
+                            "controlType": "selectcolumn",
                             "valueDef": {
                               "propType": "string",
                               "isList": false,
@@ -211,12 +211,13 @@
                               "text": "inputs"
                             },
                             "separateLabel": true,
-                            "controlType": "allocatedcolumns",
+                            "controlType": "selectcolumns",
                             "valueDef": {
                               "propType": "string",
                               "isList": true,
                               "isMap": false
-                            }
+                            },
+                            "role": "column"
                           }
                         }
                       ]

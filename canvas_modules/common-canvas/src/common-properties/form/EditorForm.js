@@ -270,11 +270,11 @@ function _genPanelSelectorPanels(group, parameterMetadata, actionMetadata, struc
 	return panSelSubItems;
 }
 
-function _makeStringControl(parameter, group) {
+function _makeStringControl(parameter) {
 	let controlType;
 	let role;
 	if (parameter.isList()) {
-		const controlObj = _processListParameter(parameter, group);
+		const controlObj = _processListParameter(parameter);
 		controlType = controlObj.controlType;
 		if (controlObj.role) {
 			role = controlObj.role;
@@ -292,11 +292,7 @@ function _makeStringControl(parameter, group) {
 			}
 			break;
 		case ParamRole.COLUMN:
-			if (group.groupType() === GroupType.COLUMN_ALLOCATION) {
-				controlType = ControlType.ALLOCATEDCOLUMN;
-			} else {
-				controlType = ControlType.SELECTCOLUMN;
-			}
+			controlType = ControlType.SELECTCOLUMN;
 			break;
 		case ParamRole.EXPRESSION:
 			controlType = ControlType.EXPRESSION;
@@ -356,7 +352,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	} else {
 		switch (parameter.propType()) {
 		case Type.STRING: {
-			const returnObject = _makeStringControl(parameter, group);
+			const returnObject = _makeStringControl(parameter);
 			controlType = returnObject.controlType;
 			role = returnObject.role;
 			break;
@@ -482,7 +478,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	return new Control(settings);
 }
 
-function _processListParameter(parameter, group) {
+function _processListParameter(parameter) {
 	const controlObj = {};
 	switch (parameter.getRole()) {
 	case ParamRole.TEXT:
@@ -496,12 +492,8 @@ function _processListParameter(parameter, group) {
 		}
 		break;
 	case ParamRole.COLUMN:
-		if (group.groupType() === GroupType.COLUMN_ALLOCATION) {
-			controlObj.controlType = ControlType.ALLOCATEDCOLUMNS;
-		} else {
-			controlObj.role = ParamRole.COLUMN;
-			controlObj.controlType = ControlType.SELECTCOLUMNS;
-		}
+		controlObj.role = ParamRole.COLUMN;
+		controlObj.controlType = ControlType.SELECTCOLUMNS;
 		break;
 	default:
 		controlObj.controlType = ControlType.TEXTAREA;

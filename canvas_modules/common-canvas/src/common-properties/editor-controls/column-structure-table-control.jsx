@@ -21,7 +21,6 @@ class ColumnStructureTableControl extends ColumnStructureTableEditor {
 	constructor(props) {
 		super(props);
 		this.getSelectedColumns = this.getSelectedColumns.bind(this);
-		this.getAllocatedColumns = this.getAllocatedColumns.bind(this);
 		this.addColumns = this.addColumns.bind(this);
 		this.removeColumns = this.removeColumns.bind(this);
 		this.stopEditingRow = this.stopEditingRow.bind(this);
@@ -72,19 +71,6 @@ class ColumnStructureTableControl extends ColumnStructureTableEditor {
 		for (var i = 0; i < selected.length; i++) {
 			const rowIndex = selected[i];
 			columns.push(controlValue[rowIndex][this.props.control.keyIndex]);
-		}
-		// logger.info(columns);
-		return columns;
-	}
-
-	// Allocated columns are columns that are referenced by the current control value.
-	getAllocatedColumns() {
-		// logger.info("getAllocatedColumns");
-		const controlValue = this.getCurrentControlValue();
-		const columns = [];
-		for (var i = 0; i < controlValue.length; i++) {
-			const value = controlValue[i];
-			columns.push(value[this.props.control.keyIndex]);
 		}
 		// logger.info(columns);
 		return columns;

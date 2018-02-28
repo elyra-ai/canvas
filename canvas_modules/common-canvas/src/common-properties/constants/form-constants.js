@@ -82,9 +82,6 @@ const ControlType = {
 	SELECTSCHEMA: "selectschema",
 	ONEOFCOLUMNS: "oneofcolumns", // deprecate, replace with SELECTCOLUMN
 	SOMEOFCOLUMNS: "someofcolumns", // deprecated, replaced by SELECTCOLUMNS
-	ALLOCATEDCOLUMN: "allocatedcolumn", // deprecated, replaced by SELECTCOLUMN
-	ALLOCATEDCOLUMNS: "allocatedcolumns", // deprecated, replaced by SELECTCOLUMNS
-	ALLOCATEDSTRUCTURES: "allocatedstructures", // deprecated, replaced by structuretable
 	STRUCTURETABLE: "structuretable",
 	STRUCTUREEDITOR: "structureeditor",
 	STRUCTURELISTEDITOR: "structurelisteditor",
