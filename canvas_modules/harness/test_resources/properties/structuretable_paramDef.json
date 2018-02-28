@@ -38,6 +38,16 @@
         "Descending"
       ]
     ],
+		"structuretableNoHeader": [
+      [
+        "Fred",
+        "Ascending"
+      ],
+      [
+        "Kathy",
+        "Descending"
+      ]
+    ],
     "structuretableSortableColumns": [
       [
         0,
@@ -87,6 +97,10 @@
     {
       "id": "structuretableNoButtons",
       "type": "array[structuretableNoButtons]"
+    },
+		{
+      "id": "structuretableNoHeader",
+      "type": "array[structuretableNoHeader]"
     },
     {
       "id": "structuretableSortableColumns",
@@ -182,6 +196,25 @@
     },
     {
       "id": "structuretableNoButtons",
+      "key_definition": {
+        "id": "field",
+        "type": "string",
+        "role": "column",
+        "default": ""
+      },
+      "parameters": [
+        {
+          "id": "BP_trend",
+          "enum": [
+            "Ascending",
+            "Descending"
+          ],
+          "default": "Ascending"
+        }
+      ]
+    },
+		{
+      "id": "structuretableNoHeader",
       "key_definition": {
         "id": "field",
         "type": "string",
@@ -310,6 +343,15 @@
         },
         "description": {
           "default": "Structure Table with no add-remove buttons"
+        }
+      },
+			{
+        "parameter_ref": "structuretableNoHeader",
+        "label": {
+          "default": "No Header"
+        },
+        "description": {
+          "default": "Structure Table with no column header"
         }
       },
       {
@@ -480,6 +522,35 @@
       {
         "complex_type_ref": "structuretableNoButtons",
         "add_remove_rows": false,
+        "key_definition": {
+          "parameter_ref": "field",
+          "width": 28,
+          "label": {
+            "resource_key": "structuretableNoButtons.field.label"
+          },
+          "summary": true
+        },
+        "parameters": [
+          {
+            "parameter_ref": "BP_trend",
+            "width": 16,
+            "label": {
+              "resource_key": "structuretableNoButtons.BP_trend.label"
+            },
+            "description": {
+              "resource_key": "structuretableNoButtons.BP_trend.desc"
+            },
+            "control": "toggletext",
+            "value_icons": [
+              "/images/up-triangle.svg",
+              "/images/down-triangle.svg"
+            ]
+          }
+        ]
+      },
+			{
+        "complex_type_ref": "structuretableNoHeader",
+        "header": false,
         "key_definition": {
           "parameter_ref": "field",
           "width": 28,
@@ -683,6 +754,25 @@
                 },
                 "parameter_refs": [
                   "structuretableNoButtons"
+                ]
+              }
+            ]
+          },
+					{
+            "id": "structuretableNoHeader-summary-panel",
+            "label": {
+              "default": "Configure No Header Table"
+            },
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "structuretableNoHeader_panel",
+                "type": "controls",
+                "label": {
+                  "default": "Columns"
+                },
+                "parameter_refs": [
+                  "structuretableNoHeader"
                 ]
               }
             ]

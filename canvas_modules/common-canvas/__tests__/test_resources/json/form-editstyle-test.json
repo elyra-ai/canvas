@@ -356,7 +356,8 @@
                               "text": "...",
                               "secondaryText": "RenameFieldEntry"
                             },
-                            "addRemoveRows": true
+                            "addRemoveRows": true,
+                            "header": true
                           }
                         }
                       ]

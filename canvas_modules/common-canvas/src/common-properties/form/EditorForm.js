@@ -348,6 +348,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	let moveableRows = parameter.moveableRows;
 	let rowSelection;
 	let addRemoveRows;
+	let header;
 
 	// The control type defines the basic UI element that should be used to edit the property
 	if (parameter.getRole() === ParamRole.CUSTOM) {
@@ -418,11 +419,13 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 						moveableRows = structureDef.moveableRows;
 						rowSelection = structureDef.rowSelection;
 						addRemoveRows = structureDef.addRemoveRows;
+						header = structureDef.header;
 					} else {
 						controlType = ControlType.STRUCTURELISTEDITOR;
 						moveableRows = structureDef.moveableRows;
 						rowSelection = structureDef.rowSelection;
 						addRemoveRows = structureDef.addRemoveRows;
+						header = structureDef.header;
 					}
 				} else {
 					logger.warn("Complex types should be arrays or maps.  Found: " + parameter.propType());
@@ -475,6 +478,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	settings.customControlId = parameter.customControlId;
 	settings.data = parameter.data;
 	settings.rows = parameter.rows;
+	settings.header = header;
 	return new Control(settings);
 }
 

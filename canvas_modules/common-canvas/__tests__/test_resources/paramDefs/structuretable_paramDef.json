@@ -17,8 +17,7 @@
         "Age",
         "",
         "string",
-        "2018-02-16",
-        "01:13:45Z"
+        "2018-02-16"
       ],
       [
         1,
@@ -26,8 +25,7 @@
         "BP-1",
         "blood pressure",
         "",
-        "1982-02-23",
-        "12:00:00Z"
+        "1982-02-23"
       ]
     ],
     "structuretableNoButtons": [
@@ -38,6 +36,41 @@
       [
         "Kathy",
         "Descending"
+      ]
+    ],
+		"structuretableNoHeader": [
+      [
+        "Fred",
+        "Ascending"
+      ],
+      [
+        "Kathy",
+        "Descending"
+      ]
+    ],
+    "structuretableSortableColumns": [
+      [
+        0,
+        "Age",
+        "Age",
+        "",
+        "string",
+        "01:13:45Z"
+      ],
+      [
+        1,
+        "BP",
+        "BP-1",
+        "blood pressure",
+        "",
+        "12:00:00Z"
+      ]
+    ],
+    "structuretableErrors": [
+      [
+        "Cholesterol",
+        1,
+        "Ascending"
       ]
     ]
   },
@@ -64,6 +97,23 @@
     {
       "id": "structuretableNoButtons",
       "type": "array[structuretableNoButtons]"
+    },
+		{
+      "id": "structuretableNoHeader",
+      "type": "array[structuretableNoHeader]"
+    },
+    {
+      "id": "structuretableSortableColumns",
+      "type": "map[string,structuretableSortableColumns]",
+      "role": "column",
+      "default": [],
+      "required": true
+    },
+    {
+      "id": "structuretableErrors",
+      "type": "array[structuretableErrors]",
+      "role": "column",
+      "required": true
     }
   ],
   "complex_types": [
@@ -127,10 +177,6 @@
         {
           "id": "new_date",
           "type": "date"
-        },
-        {
-          "id": "new_time",
-          "type": "time"
         }
       ]
     },
@@ -159,6 +205,88 @@
       "parameters": [
         {
           "id": "BP_trend",
+          "enum": [
+            "Ascending",
+            "Descending"
+          ],
+          "default": "Ascending"
+        }
+      ]
+    },
+		{
+      "id": "structuretableNoHeader",
+      "key_definition": {
+        "id": "field",
+        "type": "string",
+        "role": "column",
+        "default": ""
+      },
+      "parameters": [
+        {
+          "id": "BP_trend",
+          "enum": [
+            "Ascending",
+            "Descending"
+          ],
+          "default": "Ascending"
+        }
+      ]
+    },
+    {
+      "id": "structuretableSortableColumns",
+      "key_definition": {
+        "id": "structuretableSortableColumns_readonly_int",
+        "type": "integer"
+      },
+      "parameters": [
+        {
+          "id": "field",
+          "type": "string",
+          "role": "column"
+        },
+        {
+          "id": "new_name",
+          "type": "string",
+          "role": "new_column"
+        },
+        {
+          "id": "new_label",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "id": "new_type",
+          "enum": [
+            "string",
+            "number",
+            "boolean",
+            "time",
+            "date"
+          ],
+          "default": "string"
+        },
+        {
+          "id": "time_type",
+          "type": "time"
+        }
+      ]
+    },
+    {
+      "id": "structuretableErrors",
+      "key_definition": {
+        "id": "field",
+        "type": "string",
+        "role": "column",
+        "default": ""
+      },
+      "parameters": [
+        {
+          "id": "structuretable_error_readonly_int",
+          "type": "integer",
+          "default": "5"
+        },
+        {
+          "id": "structuretable_error",
           "enum": [
             "Ascending",
             "Descending"
@@ -205,7 +333,8 @@
         },
         "description": {
           "default": "Filters fields that aren't of type 'string'"
-        }
+        },
+        "rows": 12
       },
       {
         "parameter_ref": "structuretableNoButtons",
@@ -215,6 +344,36 @@
         "description": {
           "default": "Structure Table with no add-remove buttons"
         }
+      },
+			{
+        "parameter_ref": "structuretableNoHeader",
+        "label": {
+          "default": "No Header"
+        },
+        "description": {
+          "default": "Structure Table with no column header"
+        }
+      },
+      {
+        "parameter_ref": "structuretableSortableColumns",
+        "label": {
+          "default": "Rename Field"
+        },
+        "description": {
+          "default": "This is to test the sortable column headers align with the table."
+        }
+      },
+      {
+        "parameter_ref": "structuretableErrors",
+        "required": true,
+        "label": {
+          "default": "Error table"
+        },
+        "description": {
+          "default": "Set ascending to descending to generate error.",
+          "placement": "on_panel"
+        },
+        "rows": 12
       }
     ],
     "complex_type_info": [
@@ -329,17 +488,6 @@
             },
             "width": 30,
             "edit_style": "inline"
-          },
-          {
-            "parameter_ref": "new_time",
-            "label": {
-              "default": "Time"
-            },
-            "description": {
-              "default": "Enter a time in H:M:S"
-            },
-            "width": 30,
-            "edit_style": "inline"
           }
         ]
       },
@@ -391,6 +539,153 @@
             },
             "description": {
               "resource_key": "structuretableNoButtons.BP_trend.desc"
+            },
+            "control": "toggletext",
+            "value_icons": [
+              "/images/up-triangle.svg",
+              "/images/down-triangle.svg"
+            ]
+          }
+        ]
+      },
+			{
+        "complex_type_ref": "structuretableNoHeader",
+        "header": false,
+        "key_definition": {
+          "parameter_ref": "field",
+          "width": 28,
+          "label": {
+            "resource_key": "structuretableNoButtons.field.label"
+          },
+          "summary": true
+        },
+        "parameters": [
+          {
+            "parameter_ref": "BP_trend",
+            "width": 16,
+            "label": {
+              "resource_key": "structuretableNoButtons.BP_trend.label"
+            },
+            "description": {
+              "resource_key": "structuretableNoButtons.BP_trend.desc"
+            },
+            "control": "toggletext",
+            "value_icons": [
+              "/images/up-triangle.svg",
+              "/images/down-triangle.svg"
+            ]
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "structuretableSortableColumns",
+        "label": {
+          "default": "Rename Subpanel"
+        },
+        "key_definition": {
+          "parameter_ref": "structuretableSortableColumns_readonly_int",
+          "label": {
+            "resource_key": "structuretableSortableColumns.structuretableRenameFields_readonly_int.label"
+          },
+          "width": 15,
+          "generated_values": {
+            "operation": "index"
+          },
+          "control": "readonly"
+        },
+        "parameters": [
+          {
+            "parameter_ref": "field",
+            "label": {
+              "resource_key": "structuretableSortableColumns.field.label"
+            },
+            "width": 26,
+            "summary": true,
+            "sortable": true
+          },
+          {
+            "parameter_ref": "new_name",
+            "label": {
+              "resource_key": "structuretableSortableColumns.new_name.label"
+            },
+            "description": {
+              "resource_key": "structuretableSortableColumns.new_name.desc"
+            },
+            "width": 26,
+            "edit_style": "inline",
+            "filterable": true,
+            "summary": true,
+            "sortable": true
+          },
+          {
+            "parameter_ref": "new_label",
+            "label": {
+              "default": "Label"
+            },
+            "width": 26,
+            "edit_style": "subpanel",
+            "sortable": true
+          },
+          {
+            "parameter_ref": "new_type",
+            "label": {
+              "default": "Type"
+            },
+            "description": {
+              "default": "Select data type"
+            },
+            "width": 26,
+            "edit_style": "inline",
+            "sortable": true
+          },
+          {
+            "parameter_ref": "time_type",
+            "label": {
+              "default": "Time"
+            },
+            "description": {
+              "default": "Enter a time in H:M:S"
+            },
+            "width": 30,
+            "edit_style": "inline"
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "structuretableErrors",
+        "moveable_rows": true,
+        "key_definition": {
+          "parameter_ref": "field",
+          "width": 28,
+          "label": {
+            "resource_key": "structuretableErrors.field.label"
+          },
+          "summary": true
+        },
+        "parameters": [
+          {
+            "parameter_ref": "structuretable_error_readonly_int",
+            "width": 16,
+            "label": {
+              "resource_key": "structuretableErrors.structuretable_sort_order_readonly_int.label"
+            },
+            "description": {
+              "resource_key": "structuretableErrors.structuretable_sort_order_readonly_int.desc"
+            },
+            "generated_values": {
+              "operation": "index",
+              "start_value": 5
+            },
+            "control": "readonly"
+          },
+          {
+            "parameter_ref": "structuretable_error",
+            "width": 16,
+            "label": {
+              "resource_key": "structuretableErrors.sort_order.label"
+            },
+            "description": {
+              "resource_key": "structuretableErrors.sort_order.desc"
             },
             "control": "toggletext",
             "value_icons": [
@@ -462,6 +757,44 @@
                 ]
               }
             ]
+          },
+					{
+            "id": "structuretableNoHeader-summary-panel",
+            "label": {
+              "default": "Configure No Header Table"
+            },
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "structuretableNoHeader_panel",
+                "type": "controls",
+                "label": {
+                  "default": "Columns"
+                },
+                "parameter_refs": [
+                  "structuretableNoHeader"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "structuretableSortableColumns-summary-panel",
+            "label": {
+              "default": "Configure Sortable Columns"
+            },
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "structuretableSortableColumns",
+                "label": {
+                  "default": "Tables"
+                },
+                "type": "columnSelection",
+                "parameter_refs": [
+                  "structuretableSortableColumns"
+                ]
+              }
+            ]
           }
         ]
       },
@@ -484,6 +817,34 @@
                 "type": "controls",
                 "parameter_refs": [
                   "structuretable_filter"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "conditions",
+        "type": "panels",
+        "label": {
+          "default": "Conditions"
+        },
+        "group_info": [
+          {
+            "id": "structuretableErrors-summary-panel",
+            "label": {
+              "default": "Test error table"
+            },
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "structuretableErrors",
+                "type": "controls",
+                "label": {
+                  "default": "Columns"
+                },
+                "parameter_refs": [
+                  "structuretableErrors"
                 ]
               }
             ]
@@ -652,6 +1013,19 @@
     "structuretableReadonlyColumnDefaultIndex.structuretableRenameFields_readonly_int.label": "Level",
     "structuretableNoButtons.field.label": "Patient",
     "structuretableNoButtons.BP_trend.label": "BP Trend",
-    "structuretableNoButtons.BP_trend.desc": "Patient BP historical trend"
+    "structuretableNoButtons.BP_trend.desc": "Patient BP historical trend",
+    "structuretableSortableColumns.rename.label": "Rename Columns",
+    "structuretableSortableColumns.field.label": "Name",
+    "structuretableSortableColumns.new_name.label": "Output name",
+    "structuretableSortableColumns.new_name.desc": "New field name",
+    "structuretableSortableColumns.structuretableRenameFields_readonly_int.label": "Index",
+    "structuretableErrors.label": "ErorTable",
+    "structuretableErrors.field.label": "Field",
+    "structuretableErrors.sort_order.label": "Order",
+    "structuretableErrors.sort_order.desc": "Update sort order",
+    "structuretableErrors.structuretable_sort_order_readonly_int.label": "Index From 5",
+    "structuretableErrors.structuretable_sort_order_readonly_int.desc": "Auto generated integers starting at 5",
+    "structuretableErrors.sort_order.Ascending.label": "Ascending",
+    "structuretableErrors.sort_order.Descending.label": "Descending"
   }
 }

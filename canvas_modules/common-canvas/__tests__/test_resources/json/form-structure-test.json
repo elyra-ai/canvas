@@ -256,7 +256,8 @@
                         null,
                         ""
                       ],
-                      "addRemoveRows": true
+                      "addRemoveRows": true,
+                      "header": true
                     }
                   }
                 ]

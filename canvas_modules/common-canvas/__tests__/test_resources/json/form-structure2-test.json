@@ -274,7 +274,8 @@
                         "Ascending"
                       ],
                       "moveableRows": true,
-                      "addRemoveRows": true
+                      "addRemoveRows": true,
+                      "header": true
                     }
                   }
                 ]

@@ -12,7 +12,7 @@ import propertyOf from "lodash/propertyOf";
 import { ResourceDef } from "./L10nProvider";
 
 export class StructureDef {
-	constructor(cname, keyDefinition, parameterMetadata, moveableRows, label, rowSelection, addRemoveRows) {
+	constructor(cname, keyDefinition, parameterMetadata, moveableRows, label, rowSelection, addRemoveRows, header) {
 		this.name = cname;
 		this.keyDefinition = keyDefinition;
 		this.parameterMetadata = parameterMetadata;
@@ -23,6 +23,11 @@ export class StructureDef {
 			this.addRemoveRows = addRemoveRows;
 		} else {
 			this.addRemoveRows = true; // set the default value
+		}
+		if (typeof header === "boolean") {
+			this.header = header;
+		} else {
+			this.header = true; // set the default value
 		}
 
 	}
@@ -78,7 +83,8 @@ export class StructureDef {
 				propertyOf(uihints)("moveable_rows"),
 				propertyOf(uihints)("label"),
 				propertyOf(uihints)("row_selection"),
-				propertyOf(uihints)("add_remove_rows")
+				propertyOf(uihints)("add_remove_rows"),
+				propertyOf(uihints)("header")
 			);
 		}
 		return null;

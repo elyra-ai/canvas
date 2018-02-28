@@ -1085,7 +1085,7 @@ describe("condition messages renders correctly with structure table control", ()
 		expect(renderedController.getPropertyValue(conditionsPropertyId)).to.have.length(2);
 
 		const nameInput = input.find("input[type='text']");
-		expect(nameInput).to.have.length(6);
+		expect(nameInput).to.have.length(4);
 		const inputControl = nameInput.at(0);
 		inputControl.simulate("change", { target: { value: "bad pw" } });
 		wrapper.update();
@@ -1516,5 +1516,34 @@ describe("column structure table editor control displays the proper number of ro
 			expect(isEqual(JSON.parse(JSON.stringify(heightStyle)),
 				JSON.parse(JSON.stringify({ "height": "36px" })))).to.be.true;
 		}
+	});
+});
+
+describe("column structure table editor control displays with no header", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(JSON.parse(JSON.stringify(structuretableParamDef)));
+		wrapper = renderedObject.wrapper;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("should display header", () => {
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(2); // Select Configure No Header Table
+		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
+		const tableHtml = document.getElementById("flexible-table-structuretableNoButtons"); // needed since modal dialogs are outside `wrapper`
+		const table = new ReactWrapper(tableHtml, true);
+		const header = table.find(".reactable-column-header");
+		expect(header).to.have.length(1);
+	});
+	it("should display no header", () => {
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(3); // Select Configure No Header Table
+		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
+		const tableHtml = document.getElementById("flexible-table-structuretableNoHeader"); // needed since modal dialogs are outside `wrapper`
+		const table = new ReactWrapper(tableHtml, true);
+		const header = table.find(".reactable-column-header");
+		expect(header).to.have.length(0);
 	});
 });

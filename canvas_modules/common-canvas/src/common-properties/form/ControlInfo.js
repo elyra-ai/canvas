@@ -120,6 +120,9 @@ export class Control extends ControlDef {
 		if (settings.rows) {
 			this.rows = settings.rows;
 		}
+		if (typeof settings.header === "boolean") {
+			this.header = settings.header;
+		}
 	}
 }
 

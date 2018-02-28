@@ -28,7 +28,7 @@ import sortBy from "lodash/sortBy";
 
 /* eslint-disable react/prop-types */
 /* eslint-enable react/prop-types */
-/* eslint complexity: ["error", 15] */
+/* eslint complexity: ["error", 16] */
 /* eslint max-depth: ["error", 5] */
 
 export default class ColumnStructureTableEditor extends EditorControl {
@@ -481,7 +481,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 	createTable(stateStyle, stateDisabled, tableButtonConfig) {
 		const that = this;
 		const rows = [];
-		const headers = [];
+		let headers = [];
 		const sortFields = [];
 		const filterFields = [];
 		for (var j = 0; j < this.props.control.subControls.length; j++) {
@@ -537,6 +537,10 @@ export default class ColumnStructureTableEditor extends EditorControl {
 
 		if (this.props.customContainer) {
 			this.scrollToRow = null;
+		}
+
+		if (this.props.control.header === false) {
+			headers = [];
 		}
 
 		const topRightPanel = (typeof this.props.control.addRemoveRows === "undefined" || this.props.control.addRemoveRows) // default to true.
