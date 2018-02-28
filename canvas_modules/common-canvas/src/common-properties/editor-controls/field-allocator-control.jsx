@@ -53,7 +53,6 @@ export default class FieldAllocatorControl extends EditorControl {
 			}
 		}
 		this.setState({ clippedClassName: clippedClassName });
-		this.props.controller.validateInput(this.props.propertyId);
 	}
 
 	// Allocated columns are columns that are referenced by the current control value.
