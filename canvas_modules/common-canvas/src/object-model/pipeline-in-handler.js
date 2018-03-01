@@ -15,7 +15,7 @@ import has from "lodash/has";
 import isEmpty from "lodash/isEmpty";
 import isObject from "lodash/isObject";
 
-export default class SVGPipelineInHandler {
+export default class PipelineInHandler {
 
 	// Returns the 'canvas info', stored internally in the object model, by extracting
 	// that info from the pipeline provided. 'Canvas info' consists of three

@@ -9,7 +9,7 @@
 
 import isEmpty from "lodash/isEmpty";
 
-export default class SVGPipelineOutHandler {
+export default class PipelineOutHandler {
 
 	static modifyPipelineWithCanvasInfo(pipeline, canvasInfo) {
 		return Object.assign({}, pipeline, {

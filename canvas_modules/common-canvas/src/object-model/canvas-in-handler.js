@@ -9,7 +9,7 @@
 
 import has from "lodash/has";
 
-export default class SVGCanvasInHandler {
+export default class CanvasInHandler {
 
 	static convertCanvasToCanvasInfo(canvas) {
 		return {
@@ -17,7 +17,7 @@ export default class SVGCanvasInHandler {
 			sub_id: canvas.diagram.id,
 			nodes: this.getNodes(canvas.diagram.nodes),
 			comments: this.getComments(canvas.diagram.comments),
-			links: this.getLinks(canvas.diagram.links, canvas.diagram.comments)
+			links: this.getLinks(canvas.diagram.links)
 		};
 	}
 
@@ -127,7 +127,7 @@ export default class SVGCanvasInHandler {
 		);
 	}
 
-	static getLinks(canvasLinks, canvasComments) {
+	static getLinks(canvasLinks) {
 		return canvasLinks.map((canvasLink) => {
 			var newLink = {
 				id: canvasLink.id,

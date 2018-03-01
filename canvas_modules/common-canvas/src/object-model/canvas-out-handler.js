@@ -7,7 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-export default class SVGCanvasOutHandler {
+export default class CanvasOutHandler {
 
 	// ==========================================================================
 	// Functions below are returning canvasinfo in the old deprecated canvas
