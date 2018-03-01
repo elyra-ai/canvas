@@ -6,9 +6,3 @@ The `Common Canvas` exists for use in building canvas-like applications. The can
 
 [Common Canvas](https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/wiki/2.0-Common-Canvas-Documentation)  
 [Common Properties](https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/wiki/3.0-Common-Properties-documentation)
-
-### Webpack Bundle Analyzer
-Used to break down the size of each component used in common-canvas
-
-1. Build common-canvas `grunt`
-2. `npm run bundle-report`
