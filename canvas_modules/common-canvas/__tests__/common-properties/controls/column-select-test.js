@@ -233,18 +233,27 @@ describe("condition messages renders correctly with columnselect control", () =>
 });
 
 describe("selectcolumns control filters values correctly", () => {
-	const renderedObject = propertyUtils.flyoutEditorForm(selectcolumnsParamDef);
-	const wrapper = renderedObject.wrapper;
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(selectcolumnsParamDef);
+		wrapper = renderedObject.wrapper;
+	});
 
 	afterEach(() => {
 		wrapper.unmount();
 	});
 
-	it("should filter values from selectcolumn control", () => {
+	it("should filter type value from selectcolumn control", () => {
 		const filterCategory = wrapper.find(".category-title-container-right-flyout-panel").at(2); // get the filter category
 		const addFieldsButtons = filterCategory.find("Button"); // field picker buttons
 		addFieldsButtons.at(0).simulate("click"); // open filter picker for `Filter by Type` control
 		propertyUtils.fieldPicker(["age"], ["age", "age2", "age3", "age4"]);
+	});
+	it("should filter role values from selectcolumn control", () => {
+		const filterCategory = wrapper.find(".category-title-container-right-flyout-panel").at(2); // get the filter category
+		const addFieldsButtons = filterCategory.find("Button"); // field picker buttons
+		addFieldsButtons.at(2).simulate("click"); // open filter picker for `Filter by Modeling Roles` control
+		propertyUtils.fieldPicker([], ["age", "drug", "age2", "drug2", "age3", "drug3", "age4", "drug4"]);
 	});
 });
 
@@ -318,8 +327,6 @@ describe("selectcolumns control filters values correctly with multi input", () =
 	it("should filter by type in selectcolumns control", () => {
 		const filterCategory = wrapper.find(".category-title-container-right-flyout-panel").at(1); // get the filter category
 		const addFieldsButtons = filterCategory.find("Button"); // field picker buttons
-		expect(addFieldsButtons).to.have.length(4);
-
 		addFieldsButtons.at(0).simulate("click"); // open filter picker for `Filter by Type` control
 		const fieldTable = [
 			{ "name": "age", "schema": "0" },
@@ -333,12 +340,31 @@ describe("selectcolumns control filters values correctly with multi input", () =
 		propertyUtils.fieldPicker([], fieldTable);
 	});
 
+	it("should filter by types in selectcolumns control", () => {
+		const filterCategory = wrapper.find(".category-title-container-right-flyout-panel").at(1); // get the filter category
+		const addFieldsButtons = filterCategory.find("Button"); // field picker buttons
+		addFieldsButtons.at(1).simulate("click"); // open filter picker for `Filter by Types` control
+		const fieldTable = [
+			{ "name": "age", "schema": "0" },
+			{ "name": "AGE", "schema": "0" },
+			{ "name": "Na", "schema": "0" },
+			{ "name": "age2", "schema": "0" },
+			{ "name": "Na2", "schema": "0" },
+			{ "name": "age3", "schema": "0" },
+			{ "name": "Na3", "schema": "0" },
+			{ "name": "age", "schema": "1" },
+			{ "name": "AGE", "schema": "1" },
+			{ "name": "Na", "schema": "1" },
+			{ "name": "intAndRange", "schema": "1" }
+		];
+		propertyUtils.fieldPicker([], fieldTable);
+	});
+
+
 	it("should filter by measurement in selectcolumns control", () => {
 		const filterCategory = wrapper.find(".category-title-container-right-flyout-panel").at(1); // get the filter category
 		const addFieldsButtons = filterCategory.find("Button"); // field picker buttons
-		expect(addFieldsButtons).to.have.length(4);
-
-		addFieldsButtons.at(1).simulate("click");
+		addFieldsButtons.at(2).simulate("click");
 		const fieldTable = [
 			{ "name": "BP", "schema": "0" },
 			{ "name": "BP2", "schema": "0" },
@@ -349,12 +375,29 @@ describe("selectcolumns control filters values correctly with multi input", () =
 		propertyUtils.fieldPicker([], fieldTable);
 	});
 
+	it("should filter by measurements in selectcolumns control", () => {
+		const filterCategory = wrapper.find(".category-title-container-right-flyout-panel").at(1); // get the filter category
+		const addFieldsButtons = filterCategory.find("Button"); // field picker buttons
+		addFieldsButtons.at(3).simulate("click");
+		const fieldTable = [
+			{ "name": "BP", "schema": "0" },
+			{ "name": "drug", "schema": "0" },
+			{ "name": "BP2", "schema": "0" },
+			{ "name": "drug2", "schema": "0" },
+			{ "name": "BP3", "schema": "0" },
+			{ "name": "drug3", "schema": "0" },
+			{ "name": "BP", "schema": "1" },
+			{ "name": "drug", "schema": "1" },
+			{ "name": "stringAndDiscrete", "schema": "1" },
+			{ "name": "stringAndSet", "schema": "1" }
+		];
+		propertyUtils.fieldPicker([], fieldTable);
+	});
+
 	it("should filter by type and measurement in selectcolumns control", () => {
 		const filterCategory = wrapper.find(".category-title-container-right-flyout-panel").at(1); // get the filter category
 		const addFieldsButtons = filterCategory.find("Button"); // field picker buttons
-		expect(addFieldsButtons).to.have.length(4);
-
-		addFieldsButtons.at(2).simulate("click");
+		addFieldsButtons.at(4).simulate("click");
 		const fieldTable = [
 			{ "name": "drug", "schema": "0" },
 			{ "name": "drug2", "schema": "0" },
@@ -368,9 +411,7 @@ describe("selectcolumns control filters values correctly with multi input", () =
 	it("should filter by type or measurement in selectcolumns control", () => {
 		const filterCategory = wrapper.find(".category-title-container-right-flyout-panel").at(1); // get the filter category
 		const addFieldsButtons = filterCategory.find("Button"); // field picker buttons
-		expect(addFieldsButtons).to.have.length(4);
-
-		addFieldsButtons.at(3).simulate("click");
+		addFieldsButtons.at(5).simulate("click");
 		const fieldTable = [
 			{ "name": "drug", "schema": "0" },
 			{ "name": "drug2", "schema": "0" },

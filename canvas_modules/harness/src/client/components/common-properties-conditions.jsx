@@ -45,7 +45,8 @@ import {
 	NUMBER_GROUP_ERROR_PROPS_INFO,
 	VISIBLE_GROUP_PROPS_INFO,
 	ENABLED_GROUP_PROPS_INFO,
-	ENUM_FILTER_INFO
+	ENUM_FILTER_INFO,
+	FILTER_INFO
 } from "../constants/conditions-documentation-constants.js";
 import { CommonProperties } from "common-canvas";
 import { Table } from "reactable";
@@ -162,7 +163,9 @@ class CommonPropertiesComponents extends React.Component {
 					"--structurelisteditor",
 					"GroupConditions",
 					"--visible",
-					"--enabled"
+					"--enabled",
+					"--filteredEnum",
+					"--filter"
 				]}
 				compact
 				dark
@@ -1015,6 +1018,30 @@ class CommonPropertiesComponents extends React.Component {
 									"parameter_ref", "radioset_filtered", "values",
 									"red", "yellow", "green",
 									"evaluate", "and", "or", "condition",
+									"parameter_ref", "op", "value"
+								])}
+							</pre>
+						</div>
+					</div>
+				</div>
+				<div className="conditions-documentation-panels-controls-component">
+					<h3 id="--filter" className="section-subtitle">Filter Conditions</h3>
+					<p>The <span className="highlight">filter</span> condition operates upon controls
+						whose parameter is backed by a schema(s). The filter will determine which values are
+						included in the dropdown or field picker.
+					</p>
+					<div className="section-row">
+						<div className="section-column">
+							<CommonProperties
+								showPropertiesDialog
+								propertiesInfo={FILTER_INFO}
+								containerType="Custom"
+							/>
+						</div>
+						<div className="section-column section-column-code">
+							<pre className="json-block">
+								{this.jsonReplacer(FILTER_INFO.parameterDef, "custom", [
+									"conditions", "filter", "parameter_ref", "evaluate", "and", "or", "condition",
 									"parameter_ref", "op", "value"
 								])}
 							</pre>

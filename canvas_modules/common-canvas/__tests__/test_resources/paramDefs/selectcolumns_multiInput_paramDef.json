@@ -5,7 +5,7 @@
   "current_parameters": {
     "fields": [
       "1.age",
-			"1.AGE"
+      "1.AGE"
     ],
     "fields1_panel": [
       "0.age"
@@ -14,7 +14,9 @@
       "0.BP"
     ],
     "fields_filter_measurement": [],
+    "fields_filter_measurements": [],
     "fields_filter_type": [],
+    "fields_filter_types": [],
     "fields_filter_and": [],
     "fields_filter_or": []
   },
@@ -43,7 +45,17 @@
       "role": "column"
     },
     {
+      "id": "fields_filter_measurements",
+      "type": "array[string]",
+      "role": "column"
+    },
+    {
       "id": "fields_filter_type",
+      "type": "array[string]",
+      "role": "column"
+    },
+    {
+      "id": "fields_filter_types",
       "type": "array[string]",
       "role": "column"
     },
@@ -108,9 +120,27 @@
         }
       },
       {
+        "parameter_ref": "fields_filter_measurements",
+        "label": {
+          "default": "Filter by Measurements"
+        },
+        "description": {
+          "default": "Filters out all fields without a 'measurement' of 'discrete' and 'set' using 'values'.  Should be all '*BP*', 'drug*', 'stringAndSet' and 'stringAndDiscrete' fields."
+        }
+      },
+      {
         "parameter_ref": "fields_filter_type",
         "label": {
           "default": "Filter by Type"
+        },
+        "description": {
+          "default": "Filters out all fields without a 'type' of 'integer' and 'double' using 'values'.  Should be all '*age*', 'Na*' 'intAndRange' fields."
+        }
+      },
+      {
+        "parameter_ref": "fields_filter_types",
+        "label": {
+          "default": "Filter by Types"
         },
         "description": {
           "default": "Filters out all fields without a 'type' of 'integer'.  Should be all '*age*' and 'intAndRange' fields."
@@ -183,7 +213,9 @@
         "type": "controls",
         "parameter_refs": [
           "fields_filter_type",
+          "fields_filter_types",
           "fields_filter_measurement",
+          "fields_filter_measurements",
           "fields_filter_and",
           "fields_filter_or"
         ]
@@ -204,11 +236,39 @@
     },
     {
       "filter": {
+        "parameter_ref": "fields_filter_types",
+        "evaluate": {
+          "condition": {
+            "op": "dmType",
+            "values": [
+              "integer",
+              "double"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "filter": {
         "parameter_ref": "fields_filter_measurement",
         "evaluate": {
           "condition": {
             "op": "dmMeasurement",
             "value": "discrete"
+          }
+        }
+      }
+    },
+    {
+      "filter": {
+        "parameter_ref": "fields_filter_measurements",
+        "evaluate": {
+          "condition": {
+            "op": "dmMeasurement",
+            "values": [
+              "discrete",
+              "set"
+            ]
           }
         }
       }
@@ -257,205 +317,205 @@
     }
   ],
   "dataset_metadata": [
-		{
-	    "fields": [
-	      {
-	        "name": "age",
-	        "type": "integer",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      },
-				{
-	        "name": "AGE",
-	        "type": "integer",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "BP",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "discrete",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "Na",
-	        "type": "double",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "drug",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "set",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "age2",
-	        "type": "integer",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "BP2",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "discrete",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "Na2",
-	        "type": "double",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "drug2",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "set",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "age3",
-	        "type": "integer",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "BP3",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "discrete",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "Na3",
-	        "type": "double",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "drug3",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "set",
-	          "modeling_role": "input"
-	        }
-	      }
-	    ]
-	  },
-		{
-			"fields": [
-				{
-	        "name": "age",
-	        "type": "integer",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      },
-				{
-	        "name": "AGE",
-	        "type": "integer",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "BP",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "discrete",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "Na",
-	        "type": "double",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "drug",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "set",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "intAndRange",
-	        "type": "integer",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "stringAndDiscrete",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "discrete",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "stringAndSet",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "set",
-	          "modeling_role": "input"
-	        }
-	      }
-			]
-		}
-	],
-	"resources": {
-		"fieldPicker.schemaColumn.label": "Schema Name"
-	}
+    {
+      "fields": [
+        {
+          "name": "age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "AGE",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "age2",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP2",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na2",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug2",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "age3",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP3",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na3",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug3",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    },
+    {
+      "fields": [
+        {
+          "name": "age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "AGE",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "intAndRange",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "stringAndDiscrete",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "stringAndSet",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "set",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    }
+  ],
+  "resources": {
+    "fieldPicker.schemaColumn.label": "Schema Name"
+  }
 }

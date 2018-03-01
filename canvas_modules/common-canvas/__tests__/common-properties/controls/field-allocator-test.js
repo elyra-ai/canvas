@@ -171,7 +171,20 @@ describe("selectcolumn control filters values correctly", () => {
 			{ label: "age4", value: "age4" }
 		];
 		expect(options).to.eql(expectedOptions);
-		options = dropDowns.at(1).prop("options"); // by Measurement
+		options = dropDowns.at(1).prop("options"); // by Types
+		expectedOptions = [
+			{ label: "...", value: "" },
+			{ label: "age", value: "age" },
+			{ label: "Na", value: "Na" },
+			{ label: "age2", value: "age2" },
+			{ label: "Na2", value: "Na2" },
+			{ label: "age3", value: "age3" },
+			{ label: "Na3", value: "Na3" },
+			{ label: "age4", value: "age4" },
+			{ label: "Na4", value: "Na4" }
+		];
+		expect(options).to.eql(expectedOptions);
+		options = dropDowns.at(2).prop("options"); // by Measurement
 		expectedOptions = [
 			{ label: "...", value: "" },
 			{ label: "BP", value: "BP" },
@@ -180,7 +193,20 @@ describe("selectcolumn control filters values correctly", () => {
 			{ label: "BP4", value: "BP4" }
 		];
 		expect(options).to.eql(expectedOptions);
-		options = dropDowns.at(2).prop("options"); // by Type and Measurement
+		options = dropDowns.at(3).prop("options"); // by Measurements
+		expectedOptions = [
+			{ label: "...", value: "" },
+			{ label: "BP", value: "BP" },
+			{ label: "drug", value: "drug" },
+			{ label: "BP2", value: "BP2" },
+			{ label: "drug2", value: "drug2" },
+			{ label: "BP3", value: "BP3" },
+			{ label: "drug3", value: "drug3" },
+			{ label: "BP4", value: "BP4" },
+			{ label: "drug4", value: "drug4" }
+		];
+		expect(options).to.eql(expectedOptions);
+		options = dropDowns.at(4).prop("options"); // by Type and Measurement
 		expectedOptions = [
 			{ label: "...", value: "" },
 			{ label: "drug", value: "drug" },
@@ -189,7 +215,7 @@ describe("selectcolumn control filters values correctly", () => {
 			{ label: "drug4", value: "drug4" }
 		];
 		expect(options).to.eql(expectedOptions);
-		options = dropDowns.at(3).prop("options"); // by Type or Measurement
+		options = dropDowns.at(5).prop("options"); // by Type or Measurement
 		expectedOptions = [
 			{ label: "...", value: "" },
 			{ label: "drug", value: "drug" },
@@ -254,7 +280,7 @@ describe("selectcolumn control filters values correctly with multi schema input"
 	it("should filter values from selectcolumn control", () => {
 		const filterCategory = wrapper.find(".category-title-container-right-flyout-panel").at(1); // FILTER category
 		const dropDowns = filterCategory.find("Dropdown");
-		expect(dropDowns).to.have.length(4);
+		expect(dropDowns).to.have.length(5);
 		let options = dropDowns.at(0).prop("options"); // by Type
 		let expectedOptions = [
 			{ label: "...", value: "" },
@@ -277,7 +303,17 @@ describe("selectcolumn control filters values correctly with multi schema input"
 		];
 		expect(options).to.eql(expectedOptions);
 
-		options = dropDowns.at(2).prop("options"); // by Type and Measurement
+		options = dropDowns.at(2).prop("options"); // by Model Role
+		expectedOptions = [
+			{ label: "...", value: "" },
+			{ label: "0.drug", value: "0.drug" },
+			{ label: "drug2", value: "drug2" },
+			{ label: "drug3", value: "drug3" },
+			{ label: "1.drug", value: "1.drug" },
+		];
+		expect(options).to.eql(expectedOptions);
+
+		options = dropDowns.at(3).prop("options"); // by Type and Measurement
 		expectedOptions = [
 			{ label: "...", value: "" },
 			{ label: "0.drug", value: "0.drug" },
@@ -288,7 +324,7 @@ describe("selectcolumn control filters values correctly with multi schema input"
 		];
 		expect(options).to.eql(expectedOptions);
 
-		options = dropDowns.at(3).prop("options"); // by Type or Measurement
+		options = dropDowns.at(4).prop("options"); // by Type or Measurement
 		expectedOptions = [
 			{ label: "...", value: "" },
 			{ label: "0.drug", value: "0.drug" },

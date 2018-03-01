@@ -437,73 +437,107 @@ function condition(data, userInput, info) {
  * A parameter condition. Evaluates to true or false.
  * @param {Object} data.op A single operator for the properties of the condition.
  * @param {Object} data.value optional value the condition checks for
+ * @param {Object} data.values optional value the condition checks for
  * @param {Object} info optional dataset metadata and cell coordinates info
  */
 function conditionFilter(conditionItem, controller, datasetMetadata) {
 	const op = conditionItem.op;
-	const value = conditionItem.value;
+	const values = [];
+	if (typeof conditionItem.value !== "undefined" && conditionItem.value !== null) {
+		values.push(conditionItem.value);
+	} else if (Array.isArray(conditionItem.values)) {
+		values.push(...conditionItem.values); // add all values into array
+	}
 	switch (op) {
 	case "dmMeasurement":
-		return _handleDmMeasurement(datasetMetadata, value);
+		return _handleDmMeasurement(datasetMetadata, values);
 	case "dmType":
-		return _handleDmType(datasetMetadata, value);
+		return _handleDmType(datasetMetadata, values);
+	case "dmModelingRole":
+		return _handleDmModelingRole(datasetMetadata, values);
 	default:
 		logger.warn("Ignoring unknown condition operation '" + op + "'");
 		return datasetMetadata;
 	}
 }
 
-function _handleDmMeasurement(datasetMetadata, measurementValue) {
+function _handleDmMeasurement(datasetMetadata, measurementValues) {
 	const filterDM = cloneDeep(datasetMetadata);
-	// TODO: reduce dup code. recursion here needs to handle both arrays and objects
 	if (Array.isArray(filterDM)) {
 		for (const schema of filterDM) {
-			if (schema.fields) {
-				const filteredFields = schema.fields.filter(function(field) {
-					if (field.metadata.measure === measurementValue) {
-						return true;
-					}
-					return false;
-				});
-				schema.fields = filteredFields;
-			}
+			_filterDmMeasurement(schema, measurementValues);
 		}
 	} else {
-		const filteredFields = filterDM.fields.filter(function(field) {
-			if (field.metadata.measure === measurementValue) {
-				return true;
-			}
-			return false;
-		});
-		filterDM.fields = filteredFields;
+		_filterDmMeasurement(filterDM, measurementValues);
 	}
 	return filterDM;
 }
 
-function _handleDmType(datasetMetadata, typeValue) {
-	const filterDM = cloneDeep(datasetMetadata);
-	if (Array.isArray(filterDM)) {
-		for (const schema of filterDM) {
-			if (schema.fields) {
-				const filteredFields = schema.fields.filter(function(field) {
-					if (field.type === typeValue) {
-						return true;
-					}
-					return false;
-				});
-				schema.fields = filteredFields;
-			}
-		}
-	} else {
-		const filteredFields = filterDM.fields.filter(function(field) {
-			if (field.type === typeValue) {
-				return true;
+function _filterDmMeasurement(schema, measurementValues) {
+	if (schema.fields) {
+		const filteredFields = schema.fields.filter(function(field) {
+			for (const measurementValue of measurementValues) {
+				if (field.metadata && field.metadata.measure === measurementValue) {
+					// return true of any value meets condition
+					return true;
+				}
 			}
 			return false;
 		});
-		filterDM.fields = filteredFields;
+		schema.fields = filteredFields;
+	}
+}
+
+function _handleDmType(datasetMetadata, typeValues) {
+	const filterDM = cloneDeep(datasetMetadata);
+	if (Array.isArray(filterDM)) {
+		for (const schema of filterDM) {
+			_filterDmType(schema, typeValues);
+		}
+	} else {
+		_filterDmType(filterDM, typeValues);
 	}
 	return filterDM;
+}
+function _filterDmType(schema, typeValues) {
+	if (schema.fields) {
+		const filteredFields = schema.fields.filter(function(field) {
+			for (const typeValue of typeValues) {
+				if (field.type === typeValue) {
+					// return true of any value meets condition
+					return true;
+				}
+			}
+			return false;
+		});
+		schema.fields = filteredFields;
+	}
+}
+
+function _handleDmModelingRole(datasetMetadata, roleValues) {
+	const filterDM = cloneDeep(datasetMetadata);
+	if (Array.isArray(filterDM)) {
+		for (const schema of filterDM) {
+			_filterDmModelingRole(schema, roleValues);
+		}
+	} else {
+		_filterDmModelingRole(filterDM, roleValues);
+	}
+	return filterDM;
+}
+function _filterDmModelingRole(schema, roleValues) {
+	if (schema.fields) {
+		const filteredFields = schema.fields.filter(function(field) {
+			for (const roleValue of roleValues) {
+				if (field.metadata && field.metadata.modeling_role === roleValue) {
+					// return true of any value meets condition
+					return true;
+				}
+			}
+			return false;
+		});
+		schema.fields = filteredFields;
+	}
 }
 
 function _getUserInput(userInput, param, cellCoordinates) {
