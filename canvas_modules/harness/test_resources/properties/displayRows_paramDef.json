@@ -34,7 +34,9 @@
         "ford",
         "honda"
       ]
-    ]
+    ],
+    "structurelist": [],
+    "structurelist2": []
   },
   "parameters": [
     {
@@ -53,6 +55,16 @@
       "type": "array[structurelisteditorListInput]",
       "required": true,
       "default": []
+    },
+    {
+      "id": "structurelist",
+      "type": "array[structurelist_info]",
+      "required": true
+    },
+    {
+      "id": "structurelist2",
+      "type": "array[structurelist_info2]",
+      "required": true
     }
   ],
   "complex_types": [
@@ -87,6 +99,38 @@
           "id": "description",
           "type": "string",
           "role": "new_column"
+        }
+      ]
+    },
+    {
+      "id": "structurelist_info",
+      "parameters": [
+        {
+          "id": "name",
+          "type": "string"
+        },
+        {
+          "id": "fields",
+          "type": "array[string]",
+          "default": ["BP", "Na"],
+          "role": "column",
+          "required": true
+        }
+      ]
+    },
+    {
+      "id": "structurelist_info2",
+      "parameters": [
+        {
+          "id": "name2",
+          "type": "string"
+        },
+        {
+          "id": "fields2",
+          "type": "array[string]",
+          "default": ["BP", "K"],
+          "role": "column",
+          "required": true
         }
       ]
     }
@@ -132,6 +176,25 @@
         "text_before": {
           "default": "This table control falls back on the default 4 rows"
         }
+      },
+      {
+        "parameter_ref": "structurelist",
+        "label": {
+          "default": "Embedded Column Select"
+        },
+        "description": {
+          "default": "Complex table control list editor with embedded column select control"
+        }
+      },
+      {
+        "parameter_ref": "structurelist2",
+        "label": {
+          "default": "Sub-panel Column Select"
+        },
+        "description": {
+          "default": "Complex table control list editor with sub-panel column select control"
+        },
+        "rows": 12
       }
     ],
     "complex_type_info": [
@@ -189,6 +252,56 @@
             "edit_style": "subpanel"
           }
         ]
+      },
+      {
+        "complex_type_ref": "structurelist_info",
+        "parameters": [
+          {
+            "parameter_ref": "name",
+            "label": {
+              "default": "The Name"
+            },
+            "width": 20,
+            "edit_style": "inline",
+            "summary": true
+          },
+          {
+            "parameter_ref": "fields",
+            "sortable": true,
+            "label": {
+              "default": "Fields"
+            },
+            "width": 30,
+            "edit_style": "on_panel",
+            "rows": 3,
+            "summary": true
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "structurelist_info2",
+        "parameters": [
+          {
+            "parameter_ref": "name2",
+            "label": {
+              "default": "The Name"
+            },
+            "width": 20,
+            "edit_style": "subpanel",
+            "summary": true
+          },
+          {
+            "parameter_ref": "fields2",
+            "sortable": true,
+            "label": {
+              "default": "Fields"
+            },
+            "width": 30,
+            "edit_style": "subpanel",
+            "rows": 5,
+            "summary": true
+          }
+        ]
       }
     ],
     "group_info": [
@@ -217,6 +330,62 @@
                 "parameter_refs": [
                   "structuretableSortOrder",
                   "structurelisteditorListInput"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "on_panel",
+        "label": {
+          "default": "On Panel"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "structurelist-summary-panel",
+            "label": {
+              "default": "Configure Fields On Panel"
+            },
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "structuretableSortOrder",
+                "type": "controls",
+                "label": {
+                  "default": "Columns"
+                },
+                "parameter_refs": [
+                  "structurelist"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "subpanel",
+        "label": {
+          "default": "Sub-Panel"
+        },
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "structurelist-summary-panel2",
+            "label": {
+              "default": "Configure Fields in Sub-panel"
+            },
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "structuretableSortOrder2",
+                "type": "controls",
+                "label": {
+                  "default": "Columns"
+                },
+                "parameter_refs": [
+                  "structurelist2"
                 ]
               }
             ]

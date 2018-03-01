@@ -258,6 +258,7 @@
                             "label": {
                               "text": "Rename columns"
                             },
+                            "separateLabel": true,
                             "description": {
                               "text": "Rename columns in the active dataset"
                             },
@@ -268,7 +269,6 @@
                               "isMap": true,
                               "defaultValue": []
                             },
-                            "separateLabel": true,
                             "subControls": [
                               {
                                 "name": "field",
@@ -341,14 +341,14 @@
                                       "label": {
                                         "text": "Output name"
                                       },
+                                      "separateLabel": true,
                                       "controlType": "textfield",
                                       "valueDef": {
                                         "propType": "string",
                                         "isList": false,
                                         "isMap": false,
                                         "defaultValue": ""
-                                      },
-                                      "separateLabel": true
+                                      }
                                     }
                                   }
                                 ]

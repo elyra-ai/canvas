@@ -1361,7 +1361,8 @@ describe("ColumnStructureTableControl with multi input schemas renders correctly
 
 		for (let idx = 0; idx < firstSummary.length; idx++) {
 			expect(firstSummary.find(".control-summary-list-rows").at(idx)
-				.text()).to.equal(expectedSummary[idx]);
+				.text()
+				.trim()).to.equal(expectedSummary[idx]);
 		}
 	});
 
@@ -1447,13 +1448,17 @@ describe("ColumnStructureTableControl with multi input schemas renders correctly
 
 		const summaryRow0 = thirdSummary.find(".control-summary-list-rows").at(0)
 			.find(".control-summary-table-row-multi-data");
-		expect(summaryRow0.at(0).text()).to.equal("Cholesterol");
-		expect(summaryRow0.at(1).text()).to.equal("data");
+		expect(summaryRow0.at(0).text()
+			.trim()).to.equal("Cholesterol");
+		expect(summaryRow0.at(1).text()
+			.trim()).to.equal("data");
 
 		const summaryRow1 = thirdSummary.find(".control-summary-list-rows").at(1)
 			.find(".control-summary-table-row-multi-data");
-		expect(summaryRow1.at(0).text()).to.equal("data.Age");
-		expect(summaryRow1.at(1).text()).to.equal("0");
+		expect(summaryRow1.at(0).text()
+			.trim()).to.equal("data.Age");
+		expect(summaryRow1.at(1).text()
+			.trim()).to.equal("0");
 	});
 
 	it("should filter fields from multi schema input that aren't type string", () => {

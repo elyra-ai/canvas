@@ -94,9 +94,12 @@ class SummaryPanel extends EditorControl {
 								col: colIdx
 							};
 							if (this.props.controller.isSummary(colPropertyId) || showCustom) {
+								// This allows array cell content to look acceptable
+								const contentValue = JSON.stringify(rowValue[colIdx]).replace("\"", "")
+									.replace(new RegExp("\"", "g"), "") + " ";
 								rowData.push(
 									<td key={"control-summary-table-row-multi-data-" + colIdx} className={"control-summary-table-row-multi-data"}>
-										{rowValue[colIdx]}
+										{ contentValue }
 									</td>);
 							}
 						}

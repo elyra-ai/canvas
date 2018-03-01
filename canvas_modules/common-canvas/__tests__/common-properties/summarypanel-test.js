@@ -24,7 +24,8 @@ describe("summary renders correctly", () => {
 
 		const sortRow1 = sortSummaryRows.at(0);
 		expect(sortRow1.find(".control-summary-table-row-multi-data").at(0)
-			.text()).to.equal("Cholesterol");
+			.text()
+			.trim()).to.equal("Cholesterol");
 	});
 });
 

@@ -375,7 +375,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 
 	addOnClick(control) {
 		if (this.addOnClickCallback) {
-			this.addOnClickCallback(control);
+			this.addOnClickCallback(control, this.props.propertyId);
 		}
 	}
 

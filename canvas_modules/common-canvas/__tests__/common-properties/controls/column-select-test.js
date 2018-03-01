@@ -449,4 +449,24 @@ describe("selectcolumns control displays the proper number of rows", () => {
 		expect(isEqual(JSON.parse(JSON.stringify(heightStyle)),
 			JSON.parse(JSON.stringify({ "height": "108px" })))).to.be.true;
 	});
+
+	it("should display 5 rows", () => {
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(2);
+		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
+		let tableHtml = document.getElementById("moveablerow-table-structurelist2"); 	// needed since modal dialogs are outside `wrapper`
+		let complexTable = new ReactWrapper(tableHtml, true);
+		const addButton = complexTable.find("#add-fields-button").at(0);
+		addButton.simulate("click"); 		// Add a row to the table
+		const editButton = complexTable.find(".table-subcell").at(0);
+		editButton.simulate("click"); 		// Invoke the sub-sub-panel
+		tableHtml = document.getElementById("flexible-table-fields2"); 		// needed since modal dialogs are outside `wrapper`
+		complexTable = new ReactWrapper(tableHtml, true);
+		const heightDiv = complexTable.find("#flexible-table-container-wrapper");
+		if (heightDiv.length > 2) {
+			const heightStyle = heightDiv.at(2).prop("style");
+			// console.log("STYLE: " + JSON.stringify(heightStyle));
+			expect(isEqual(JSON.parse(JSON.stringify(heightStyle)),
+				JSON.parse(JSON.stringify({ "height": "180px" })))).to.be.true;
+		}
+	});
 });

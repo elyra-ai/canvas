@@ -372,8 +372,10 @@ export default class PropertiesController {
 	}
 	getFilteredDatasetMetadata(propertyId) {
 		let datasetMetadata = this.getDatasetMetadata();
-		this._filterSharedDataset(propertyId, datasetMetadata);
-		datasetMetadata = conditionsUtil.filterConditions(propertyId, this.filterDefinitions, this, datasetMetadata);
+		if (propertyId) {
+			this._filterSharedDataset(propertyId, datasetMetadata);
+			datasetMetadata = conditionsUtil.filterConditions(propertyId, this.filterDefinitions, this, datasetMetadata);
+		}
 		return datasetMetadata;
 	}
 

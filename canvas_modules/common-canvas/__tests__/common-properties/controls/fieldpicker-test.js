@@ -515,11 +515,14 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		expect(fieldSummary).to.have.length(1);
 		expect(fieldSummary.find(".control-summary-list-rows")).to.have.length(3);
 		expect(fieldSummary.find(".control-summary-list-rows").at(0)
-			.text()).to.equal("data_1.Timestamp");
+			.text()
+			.trim()).to.equal("data_1.Timestamp");
 		expect(fieldSummary.find(".control-summary-list-rows").at(1)
-			.text()).to.equal("data_2.Timestamp");
+			.text()
+			.trim()).to.equal("data_2.Timestamp");
 		expect(fieldSummary.find(".control-summary-list-rows").at(2)
-			.text()).to.equal("Date");
+			.text()
+			.trim()).to.equal("Date");
 	});
 
 	it("should be able to search 'time' and select all fields from all schemas", () => {
@@ -564,15 +567,20 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		expect(fieldSummary).to.have.length(1);
 		expect(fieldSummary.find(".control-summary-list-rows")).to.have.length(5);
 		expect(fieldSummary.find(".control-summary-list-rows").at(0)
-			.text()).to.equal("0.Time");
+			.text()
+			.trim()).to.equal("0.Time");
 		expect(fieldSummary.find(".control-summary-list-rows").at(1)
-			.text()).to.equal("data_1.Time");
+			.text()
+			.trim()).to.equal("data_1.Time");
 		expect(fieldSummary.find(".control-summary-list-rows").at(2)
-			.text()).to.equal("data_1.Timestamp");
+			.text()
+			.trim()).to.equal("data_1.Timestamp");
 		expect(fieldSummary.find(".control-summary-list-rows").at(3)
-			.text()).to.equal("data_2.Time");
+			.text()
+			.trim()).to.equal("data_2.Time");
 		expect(fieldSummary.find(".control-summary-list-rows").at(4)
-			.text()).to.equal("data_2.Timestamp");
+			.text()
+			.trim()).to.equal("data_2.Timestamp");
 	});
 
 	it("should be able to search 'time', filter 'time', and selct all fields", () => {
@@ -607,9 +615,11 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		expect(fieldSummary).to.have.length(1);
 		expect(fieldSummary.find(".control-summary-list-rows")).to.have.length(2);
 		expect(fieldSummary.find(".control-summary-list-rows").at(0)
-			.text()).to.equal("data_1.Timestamp");
+			.text()
+			.trim()).to.equal("data_1.Timestamp");
 		expect(fieldSummary.find(".control-summary-list-rows").at(1)
-			.text()).to.equal("data_2.Timestamp");
+			.text()
+			.trim()).to.equal("data_2.Timestamp");
 	});
 
 	it("should be able to select all and display schema.field names correctly in table", () => {
@@ -695,10 +705,13 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		expect(fieldSummary).to.have.length(1);
 		expect(fieldSummary.find(".control-summary-list-rows")).to.have.length(3);
 		expect(fieldSummary.find(".control-summary-list-rows").at(0)
-			.text()).to.equal("0.Age");
+			.text()
+			.trim()).to.equal("0.Age");
 		expect(fieldSummary.find(".control-summary-list-rows").at(1)
-			.text()).to.equal("age");
+			.text()
+			.trim()).to.equal("age");
 		expect(fieldSummary.find(".control-summary-list-rows").at(2)
-			.text()).to.equal("data_1.Age");
+			.text()
+			.trim()).to.equal("data_1.Age");
 	});
 });

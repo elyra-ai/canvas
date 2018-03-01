@@ -45,11 +45,10 @@ class StructurelisteditorControl extends ColumnStructureTableEditor {
 		}
 	}
 
-	addRow(control) {
+	addRow(control, propertyId) {
 		const newRow = this._getDefaultRow(control);
 		const rows = this.getCurrentControlValue();
 		rows.push(newRow);
-
 		this.setCurrentControlValue(rows);
 	}
 

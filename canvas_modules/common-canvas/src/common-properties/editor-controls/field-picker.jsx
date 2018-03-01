@@ -105,9 +105,16 @@ class FieldPicker extends EditorControl {
 		const filters = this.getAvailableFilters();
 
 		const controlName = this.props.control.name;
+		const parmName = this.props.propertyId ? this.props.propertyId.name : null;
 		let controlValues = [];
 		if (this.props.currentControlValues[controlName]) {
 			controlValues = this.props.currentControlValues[controlName];
+		} else if (parmName &&
+				PropertyUtils.toType(this.props.propertyId.col) === "number" &&
+				this.props.currentControlValues[parmName]) {
+			const rowIdx = this.props.propertyId.row;
+			const colIdx = this.props.propertyId.col;
+			controlValues = this.props.currentControlValues[parmName][rowIdx][colIdx];
 		}
 		this.setState({
 			initialControlValues: this.props.currentControlValues[controlName],
@@ -311,7 +318,8 @@ class FieldPicker extends EditorControl {
 		if (this.props.control.subControls) {
 			this.setReadOnlyColumnValue();
 		}
-		this.props.controller.updatePropertyValue({ name: this.props.control.name }, this.state.newControlValues);
+		const propertyId = this.props.propertyId;
+		this.props.controller.updatePropertyValue(propertyId, this.state.newControlValues);
 		this.props.controller.updateSelectedRows(this.props.control.name, this.getNewSelections());
 		this.props.closeFieldPicker();
 	}

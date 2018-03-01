@@ -87,6 +87,9 @@ class ControlDef {
 		if (settings.data) {
 			this.data = settings.data;
 		}
+		if (settings.rows) {
+			this.rows = settings.rows;
+		}
 	}
 }
 
@@ -116,9 +119,6 @@ export class Control extends ControlDef {
 		}
 		if (typeof settings.addRemoveRows === "boolean") {
 			this.addRemoveRows = settings.addRemoveRows;
-		}
-		if (settings.rows) {
-			this.rows = settings.rows;
 		}
 		if (typeof settings.header === "boolean") {
 			this.header = settings.header;

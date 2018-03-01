@@ -189,7 +189,8 @@ function _makeControls(parameterMetadata, actionMetadata, group, structureMetada
 			structureDef = structureMetadata.getStructure(prop.baseType());
 		}
 		if (!(group instanceof StructureDef) || (group instanceof StructureDef && prop.isSubPanelEdit())) {
-			const control = UIItem.makeControl(_makeControl(parameterMetadata, paramName, group, structureDef, l10nProvider));
+			const ctrl = _makeControl(parameterMetadata, paramName, group, structureDef, l10nProvider);
+			const control = UIItem.makeControl(ctrl);
 			if (prop.separatorBefore()) {
 				uiItems.push(UIItem.makeHSeparator());
 			}
@@ -542,7 +543,11 @@ function _makeSubControl(parameter, l10nProvider) {
 			break;
 		case ParamRole.COLUMN:
 			role = ParamRole.COLUMN;
-			controlType = ControlType.SELECTCOLUMN;
+			if (_isEmbeddedMultiOption(parameter)) {
+				controlType = ControlType.SELECTCOLUMNS;
+			} else {
+				controlType = ControlType.SELECTCOLUMN;
+			}
 			break;
 		case ParamRole.NEW_COLUMN:
 			controlType = ControlType.TEXTFIELD;
@@ -617,7 +622,18 @@ function _makeSubControl(parameter, l10nProvider) {
 	settings.timeFormat = parameter.timeFormat;
 	settings.customControlId = parameter.customControlId;
 	settings.data = parameter.data;
+	settings.rows = parameter.rows;
 	return new SubControl(settings);
+}
+
+/**
+ * Returns true if the given parameter is a multi-option type that can be embedded within a table cell.
+ */
+function _isEmbeddedMultiOption(parameter) {
+	if (parameter.isList() || parameter.isMapValue()) {
+		return parameter.editStyle === "on_panel" || parameter.editStyle === "subpanel";
+	}
+	return false;
 }
 
 /**

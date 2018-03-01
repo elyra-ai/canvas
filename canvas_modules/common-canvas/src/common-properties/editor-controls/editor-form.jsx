@@ -570,17 +570,18 @@ class EditorForm extends React.Component {
 		});
 	}
 
-	openFieldPicker(control) {
+	openFieldPicker(control, propertyId) {
 		this.props.showPropertiesButtons(false);
 		this.setState({
 			fieldPickerControl: control,
+			fieldPickerPropertyId: propertyId,
 			showFieldPicker: true
 		});
 	}
 
 	fieldPicker(title) {
 		const currentControlValues = this.props.controller.getPropertyValues();
-		const propertyId = { name: this.state.fieldPickerControl.name };
+		const propertyId = this.state.fieldPickerPropertyId;
 		const filteredDataset = this.props.controller.getFilteredDatasetMetadata(propertyId);
 
 		return (<div id="field-picker-table">
@@ -591,6 +592,7 @@ class EditorForm extends React.Component {
 				currentControlValues={currentControlValues}
 				dataModel={filteredDataset}
 				control={this.state.fieldPickerControl}
+				propertyId={propertyId}
 				title={title}
 				rightFlyout={this.props.rightFlyout}
 			/>
