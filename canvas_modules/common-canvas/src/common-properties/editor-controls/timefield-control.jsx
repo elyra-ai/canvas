@@ -58,6 +58,7 @@ export default class TimefieldControl extends EditorControl {
 		const icon = this.props.tableControl ? <div /> : conditionState.icon;
 		const stateDisabled = conditionState.disabled;
 		const stateStyle = conditionState.style;
+		stateStyle.paddingBottom = "2px";
 
 		let controlIconContainerClass = "control-icon-container";
 		if (messageType !== "info") {

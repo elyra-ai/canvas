@@ -276,7 +276,7 @@ describe("error messages renders correctly for datefield controls", () => {
 
 		// After the checkbox is unchecked there should be no in-line style
 		// applied to the date field (which makes it be hidden).
-		expect(isEqual(input.props().style, {})).to.be.true;
+		expect(isEqual(typeof input.props().style.display, "undefined")).to.be.true;
 	});
 
 	it("should enable date field when checkbox is clicked", () => {
@@ -302,6 +302,6 @@ describe("error messages renders correctly for datefield controls", () => {
 
 		// After the checkbox is unchecked there should be no in-line style
 		// applied to the date field (which makes it show as enabled).
-		expect(isEqual(input.props().style, {})).to.be.true;
+		expect(isEqual(typeof input.props().style.color, "undefined")).to.be.true;
 	});
 });
