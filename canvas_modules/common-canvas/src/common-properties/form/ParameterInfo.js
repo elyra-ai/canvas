@@ -43,6 +43,9 @@ export class ParameterDef {
 				this.defaultValue = settings.defaultValue;
 			}
 		}
+		if (typeof settings.labelVisible === "boolean") {
+			this.labelVisible = settings.labelVisible;
+		}
 		if (settings.control) {
 			this.control = settings.control;
 		}
@@ -271,6 +274,7 @@ export class ParameterDef {
 				"role": propertyOf(param)("role"),
 				"valueRestriction": propertyOf(param)("enum"),
 				"defaultValue": propertyOf(param)("default"),
+				"labelVisible": propertyOf(uihint)("label_visible"),
 				"control": propertyOf(uihint)("control"),
 				"orientation": propertyOf(uihint)("orientation"),
 				"width": propertyOf(uihint)("width"),

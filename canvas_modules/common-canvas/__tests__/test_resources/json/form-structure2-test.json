@@ -208,6 +208,7 @@
                   {
                     "itemType": "control",
                     "control": {
+                      "labelVisible": true,
                       "name": "keys",
                       "label": {
                         "text": "Sort by"
@@ -218,14 +219,13 @@
                         "isList": true,
                         "isMap": false
                       },
-                      "separateLabel": true,
                       "subControls": [
                         {
+                          "labelVisible": true,
                           "name": "field",
                           "label": {
                             "text": "Field"
                           },
-                          "separateLabel": true,
                           "controlType": "selectcolumn",
                           "valueDef": {
                             "propType": "string",
@@ -238,11 +238,11 @@
                           "width": 28
                         },
                         {
+                          "labelVisible": true,
                           "name": "sort_order",
                           "label": {
                             "text": "Order"
                           },
-                          "separateLabel": true,
                           "controlType": "toggletext",
                           "valueDef": {
                             "propType": "string",

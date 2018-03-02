@@ -40,7 +40,6 @@
                             "label": {
                               "text": "Default mode"
                             },
-                            "separateLabel": true,
                             "controlType": "radioset",
                             "valueDef": {
                               "propType": "string",
@@ -73,7 +72,6 @@
                             "label": {
                               "text": "Types"
                             },
-                            "separateLabel": true,
                             "controlType": "structuretable",
                             "valueDef": {
                               "propType": "structure",
@@ -305,7 +303,6 @@
                                       "label": {
                                         "text": "Measure"
                                       },
-                                      "separateLabel": true,
                                       "controlType": "oneofselect",
                                       "valueDef": {
                                         "propType": "string",
@@ -343,7 +340,6 @@
                                       "label": {
                                         "text": "Role"
                                       },
-                                      "separateLabel": true,
                                       "controlType": "oneofselect",
                                       "valueDef": {
                                         "propType": "string",
@@ -379,7 +375,6 @@
                                       "label": {
                                         "text": "Value mode"
                                       },
-                                      "separateLabel": true,
                                       "controlType": "oneofselect",
                                       "valueDef": {
                                         "propType": "string",
@@ -409,7 +404,6 @@
                                       "label": {
                                         "text": "Values"
                                       },
-                                      "separateLabel": true,
                                       "controlType": "textarea",
                                       "valueDef": {
                                         "propType": "string",
@@ -425,7 +419,6 @@
                                       "label": {
                                         "text": "Value Labels"
                                       },
-                                      "separateLabel": true,
                                       "controlType": "textarea",
                                       "valueDef": {
                                         "propType": "string",
@@ -441,7 +434,6 @@
                                       "label": {
                                         "text": "Max String Length"
                                       },
-                                      "separateLabel": true,
                                       "controlType": "numberfield",
                                       "valueDef": {
                                         "propType": "integer",
@@ -457,7 +449,6 @@
                                       "label": {
                                         "text": "Checking"
                                       },
-                                      "separateLabel": true,
                                       "controlType": "oneofselect",
                                       "valueDef": {
                                         "propType": "string",
@@ -489,7 +480,6 @@
                                       "label": {
                                         "text": "Description"
                                       },
-                                      "separateLabel": true,
                                       "controlType": "textfield",
                                       "valueDef": {
                                         "propType": "string",
@@ -528,7 +518,7 @@
                       "label": {
                         "text": "Custom name"
                       },
-                      "separateLabel": false,
+                      "labelVisible": false,
                       "controlType": "checkbox",
                       "valueDef": {
                         "propType": "boolean",
@@ -544,7 +534,6 @@
                       "label": {
                         "text": ""
                       },
-                      "separateLabel": true,
                       "controlType": "textfield",
                       "valueDef": {
                         "propType": "string",
@@ -560,7 +549,6 @@
                       "label": {
                         "text": "Annotation"
                       },
-                      "separateLabel": true,
                       "controlType": "textarea",
                       "valueDef": {
                         "propType": "string",

@@ -334,7 +334,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 
 	makeLabel(stateStyle) {
 		let label;
-		if (this.props.control.label && this.props.control.separateLabel && !this.hasFilter()) {
+		if (this.props.control.label && this.props.control.labelVisible !== false && !this.hasFilter()) {
 			if (!(this.props.control.description && this.props.control.description.placement === "on_panel")) {
 				let requiredIndicator;
 				if (this.props.control.required) {

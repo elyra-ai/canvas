@@ -33,7 +33,6 @@
                       "label": {
                         "text": "Derive field"
                       },
-                      "separateLabel": true,
                       "controlType": "textfield",
                       "valueDef": {
                         "propType": "string",
@@ -49,7 +48,6 @@
                       "label": {
                         "text": "Expression"
                       },
-                      "separateLabel": true,
                       "controlType": "expression",
                       "valueDef": {
                         "propType": "string",
@@ -65,7 +63,6 @@
                       "label": {
                         "text": "Measurement"
                       },
-                      "separateLabel": true,
                       "controlType": "oneofselect",
                       "valueDef": {
                         "propType": "string",
@@ -114,7 +111,7 @@
                       "label": {
                         "text": "Custom name"
                       },
-                      "separateLabel": false,
+                      "labelVisible": false,
                       "controlType": "checkbox",
                       "valueDef": {
                         "propType": "boolean",
@@ -130,7 +127,6 @@
                       "label": {
                         "text": ""
                       },
-                      "separateLabel": true,
                       "controlType": "textfield",
                       "valueDef": {
                         "propType": "string",
@@ -146,7 +142,6 @@
                       "label": {
                         "text": "Annotation"
                       },
-                      "separateLabel": true,
                       "controlType": "textarea",
                       "valueDef": {
                         "propType": "string",

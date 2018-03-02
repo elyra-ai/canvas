@@ -254,6 +254,7 @@
                         {
                           "itemType": "control",
                           "control": {
+                            "labelVisible": true,
                             "name": "renamed_fields",
                             "label": {
                               "text": "Rename columns"
@@ -271,11 +272,11 @@
                             },
                             "subControls": [
                               {
+                                "labelVisible": true,
                                 "name": "field",
                                 "label": {
                                   "text": "Input name"
                                 },
-                                "separateLabel": true,
                                 "controlType": "selectcolumn",
                                 "valueDef": {
                                   "propType": "string",
@@ -287,11 +288,11 @@
                                 "width": 26
                               },
                               {
+                                "labelVisible": true,
                                 "name": "new_name",
                                 "label": {
                                   "text": "Output name"
                                 },
-                                "separateLabel": true,
                                 "controlType": "textfield",
                                 "valueDef": {
                                   "propType": "string",
@@ -305,11 +306,11 @@
                                 "editStyle": "subpanel"
                               },
                               {
+                                "labelVisible": true,
                                 "name": "new_label",
                                 "label": {
                                   "text": "New Label"
                                 },
-                                "separateLabel": true,
                                 "controlType": "textfield",
                                 "valueDef": {
                                   "propType": "string",
@@ -337,6 +338,7 @@
                                   {
                                     "itemType": "control",
                                     "control": {
+                                      "labelVisible": true,
                                       "name": "new_name",
                                       "label": {
                                         "text": "Output name"
@@ -372,6 +374,7 @@
                         {
                           "itemType": "control",
                           "control": {
+                            "labelVisible": true,
                             "name": "samplingSize",
                             "label": {
                               "text": "Maximum sample size"
@@ -386,7 +389,6 @@
                               "isMap": false,
                               "defaultValue": -1
                             },
-                            "separateLabel": true,
                             "required": true
                           }
                         }

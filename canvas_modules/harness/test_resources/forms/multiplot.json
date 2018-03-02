@@ -34,7 +34,6 @@
                       "label": {
                         "text": "X field (continuous)"
                       },
-                      "separateLabel": true,
                       "controlType": "oneofcolumns",
                       "valueDef": {
                         "propType": "string",
@@ -50,7 +49,6 @@
                       "label": {
                         "text": "Y fields (continuous)"
                       },
-                      "separateLabel": true,
                       "controlType": "someofcolumns",
                       "valueDef": {
                         "propType": "string",
@@ -66,7 +64,6 @@
                       "label": {
                         "text": "Panel (discrete)"
                       },
-                      "separateLabel": true,
                       "controlType": "oneofcolumns",
                       "valueDef": {
                         "propType": "string",
@@ -82,7 +79,7 @@
                       "label": {
                         "text": "Normalize"
                       },
-                      "separateLabel": false,
+                      "labelVisible": false,
                       "controlType": "checkbox",
                       "valueDef": {
                         "propType": "boolean",
@@ -98,7 +95,7 @@
                       "label": {
                         "text": "Create overlay?"
                       },
-                      "separateLabel": false,
+                      "labelVisible": false,
                       "controlType": "checkbox",
                       "valueDef": {
                         "propType": "boolean",
@@ -114,7 +111,6 @@
                       "label": {
                         "text": "Overlay: y = "
                       },
-                      "separateLabel": true,
                       "controlType": "textfield",
                       "valueDef": {
                         "propType": "string",
@@ -130,7 +126,6 @@
                       "label": {
                         "text": "Record count limit"
                       },
-                      "separateLabel": true,
                       "controlType": "numberfield",
                       "valueDef": {
                         "propType": "integer",
@@ -146,7 +141,6 @@
                       "label": {
                         "text": "When limit is exceeded"
                       },
-                      "separateLabel": true,
                       "controlType": "radioset",
                       "valueDef": {
                         "propType": "string",
@@ -185,7 +179,6 @@
                       "label": {
                         "text": "Title"
                       },
-                      "separateLabel": true,
                       "controlType": "textfield",
                       "valueDef": {
                         "propType": "string",
@@ -201,7 +194,6 @@
                       "label": {
                         "text": "Subtitle"
                       },
-                      "separateLabel": true,
                       "controlType": "textfield",
                       "valueDef": {
                         "propType": "string",
@@ -217,7 +209,6 @@
                       "label": {
                         "text": "Caption"
                       },
-                      "separateLabel": true,
                       "controlType": "textfield",
                       "valueDef": {
                         "propType": "string",
@@ -233,7 +224,7 @@
                       "label": {
                         "text": "Display gridline"
                       },
-                      "separateLabel": false,
+                      "labelVisible": false,
                       "controlType": "checkbox",
                       "valueDef": {
                         "propType": "boolean",
@@ -262,7 +253,7 @@
                       "label": {
                         "text": "Custom name"
                       },
-                      "separateLabel": false,
+                      "labelVisible": false,
                       "controlType": "checkbox",
                       "valueDef": {
                         "propType": "boolean",
@@ -278,7 +269,6 @@
                       "label": {
                         "text": ""
                       },
-                      "separateLabel": true,
                       "controlType": "textfield",
                       "valueDef": {
                         "propType": "string",
@@ -294,7 +284,6 @@
                       "label": {
                         "text": "Annotation"
                       },
-                      "separateLabel": true,
                       "controlType": "textarea",
                       "valueDef": {
                         "propType": "string",

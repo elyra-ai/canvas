@@ -28,7 +28,6 @@
                           "itemType": "control",
                           "control": {
                             "name": "keys",
-                            "separateLabel": true,
                             "label": {
                               "text": "Group by"
                             },
@@ -70,7 +69,6 @@
                                           "itemType": "control",
                                           "control": {
                                             "name": "operations",
-                                            "separateLabel": true,
                                             "label": {
                                               "text": "Aggregate Operations"
                                             },
@@ -111,7 +109,6 @@
                                     },
                                     "text": "..."
                                   },
-                                  "separateLabel": true,
                                   "label": {
                                     "text": "Aggregates"
                                   },
@@ -127,7 +124,6 @@
                                       "label": {
                                         "text": "Field"
                                       },
-                                      "separateLabel": true,
                                       "visible": true,
                                       "width": 12,
                                       "controlType": "selectcolumn",
@@ -144,7 +140,6 @@
                                       "label": {
                                         "text": "Aggregate Operations"
                                       },
-                                      "separateLabel": true,
                                       "visible": true,
                                       "width": 32,
                                       "controlType": "checkboxset",
@@ -207,7 +202,7 @@
                           "itemType": "control",
                           "control": {
                             "name": "inc_record_count",
-                            "separateLabel": false,
+                            "labelVisible": false,
                             "label": {
                               "text": "Include record count"
                             },
@@ -223,7 +218,6 @@
                           "itemType": "control",
                           "control": {
                             "name": "count_field",
-                            "separateLabel": true,
                             "label": {
                               "text": "Record count field"
                             },
@@ -239,7 +233,6 @@
                           "itemType": "control",
                           "control": {
                             "name": "extension",
-                            "separateLabel": true,
                             "label": {
                               "text": "New field name extension"
                             },
@@ -255,7 +248,6 @@
                           "itemType": "control",
                           "control": {
                             "name": "add_as",
-                            "separateLabel": true,
                             "label": {
                               "text": "Add as"
                             },
@@ -306,7 +298,6 @@
                                           "itemType": "control",
                                           "control": {
                                             "name": "expression",
-                                            "separateLabel": true,
                                             "label": {
                                               "text": "Expression"
                                             },
@@ -325,7 +316,6 @@
                                     "text": "...",
                                     "secondaryText": "Aggregate Expression"
                                   },
-                                  "separateLabel": true,
                                   "label": {
                                     "text": "Aggregate Expression"
                                   },
@@ -338,7 +328,6 @@
                                       "label": {
                                         "text": "Field"
                                       },
-                                      "separateLabel": true,
                                       "visible": true,
                                       "width": 12,
                                       "controlType": "textfield",
@@ -354,7 +343,6 @@
                                       "label": {
                                         "text": "Expression"
                                       },
-                                      "separateLabel": true,
                                       "visible": true,
                                       "width": 32,
                                       "controlType": "expression",
@@ -408,7 +396,7 @@
                           "itemType": "control",
                           "control": {
                             "name": "contiguous",
-                            "separateLabel": false,
+                            "labelVisible": false,
                             "label": {
                               "text": "Keys are contiguous"
                             },
@@ -424,7 +412,7 @@
                           "itemType": "control",
                           "control": {
                             "name": "allow_approximation",
-                            "separateLabel": false,
+                            "labelVisible": false,
                             "label": {
                               "text": "Allow approximation for Median and Quartiles"
                             },
@@ -440,7 +428,6 @@
                           "itemType": "control",
                           "control": {
                             "name": "bin_count",
-                            "separateLabel": true,
                             "label": {
                               "text": "Number of bins"
                             },
@@ -472,7 +459,7 @@
                     "itemType": "control",
                     "control": {
                       "name": "use_custom_name",
-                      "separateLabel": false,
+                      "labelVisible": false,
                       "label": {
                         "text": "Custom name"
                       },
@@ -488,7 +475,6 @@
                     "itemType": "control",
                     "control": {
                       "name": "custom_name",
-                      "separateLabel": true,
                       "label": {
                         "text": ""
                       },
@@ -504,7 +490,6 @@
                     "itemType": "control",
                     "control": {
                       "name": "annotation",
-                      "separateLabel": true,
                       "label": {
                         "text": "Annotation"
                       },

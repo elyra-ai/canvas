@@ -105,8 +105,7 @@ describe("radio renders and works correctly with different enum types", () => {
 	});
 
 	it("radioset control with boolean enum", () => {
-		// ToDO Add support for label_visible attribute on parameters
-		// expect(labels.at(1).text()).to.equal("Radio Boolean");
+		expect(labels.at(1).text()).to.equal("Radio Boolean");
 		expect(renderedController.getPropertyValue({ name: "radioBoolean" })).to.equal(true);
 		const radioFalseBoolean = wrapper.find("input[value=false][name='radioBoolean']");
 		radioFalseBoolean.simulate("change", { target: { checked: true, value: false } });
@@ -114,8 +113,7 @@ describe("radio renders and works correctly with different enum types", () => {
 	});
 
 	it("radioset control for boolean without enum", () => {
-		// ToDO Add support for label_visible attribute on parameters
-		// expect(labels.at(1).text()).to.equal("Radio Boolean");
+		expect(labels.at(2).text()).to.equal("Radio Boolean Without Enum");
 		expect(renderedController.getPropertyValue({ name: "radioBoolean2" })).to.equal(true);
 		const radioFalseBoolean = wrapper.find("input[value=false][name='radioBoolean2']");
 		radioFalseBoolean.simulate("change", { target: { checked: true, value: false } });
@@ -123,7 +121,7 @@ describe("radio renders and works correctly with different enum types", () => {
 	});
 
 	it("radioset control with number enum", () => {
-		expect(labels.at(1).text()).to.equal("Radio Number");
+		expect(labels.at(3).text()).to.equal("Radio Number");
 		expect(renderedController.getPropertyValue({ name: "radioInteger" })).to.equal(2);
 		const radioIntegerOne = wrapper.find("input[value=1][name='radioInteger']");
 		radioIntegerOne.simulate("change", { target: { checked: true, value: 1 } });
@@ -131,7 +129,7 @@ describe("radio renders and works correctly with different enum types", () => {
 	});
 
 	it("radioset control with boolean enum", () => {
-		expect(labels.at(2).text()).to.equal("Radio Double");
+		expect(labels.at(4).text()).to.equal("Radio Double");
 		expect(renderedController.getPropertyValue({ name: "radioDouble" })).to.equal(1.23);
 		const radioDouble = wrapper.find("input[name='radioDouble']");
 		radioDouble.at(0).simulate("change", { target: { checked: false, value: 3.23 } });
@@ -139,7 +137,7 @@ describe("radio renders and works correctly with different enum types", () => {
 	});
 
 	it("radioset control with default value", () => {
-		expect(labels.at(3).text()).to.equal("Radio Default");
+		expect(labels.at(5).text()).to.equal("Radio Default");
 		expect(renderedController.getPropertyValue({ name: "radioDefault" })).to.equal(23);
 		const radioDefault = wrapper.find("input[value=23][name='radioDefault']");
 		radioDefault.simulate("change", { target: { checked: true, value: 32 } });
@@ -147,7 +145,7 @@ describe("radio renders and works correctly with different enum types", () => {
 	});
 
 	it("radioset control undefined", () => {
-		expect(labels.at(4).text()).to.equal("Radio Undefined");
+		expect(labels.at(6).text()).to.equal("Radio Undefined");
 		expect(renderedController.getPropertyValue({ name: "radioUndefined" })).to.equal(undefined);
 		const radioUndefined = wrapper.find("input[value='entropy'][name='radioUndefined']");
 		radioUndefined.simulate("change", { target: { checked: true, value: "entropy" } });
@@ -155,7 +153,7 @@ describe("radio renders and works correctly with different enum types", () => {
 	});
 
 	it("radioset control with null value", () => {
-		expect(labels.at(5).text()).to.equal("Radio Null");
+		expect(labels.at(7).text()).to.equal("Radio Null");
 		expect(renderedController.getPropertyValue({ name: "radioNull" })).to.equal(null);
 		const radioNull = wrapper.find("input[value='entropy'][name='radioNull']");
 		radioNull.simulate("change", { target: { checked: true, value: "entropy" } });
@@ -163,7 +161,7 @@ describe("radio renders and works correctly with different enum types", () => {
 	});
 
 	it("radioset control with error", () => {
-		expect(labels.at(6).text()).to.equal("Radio Error");
+		expect(labels.at(8).text()).to.equal("Radio Error");
 		expect(renderedController.getPropertyValue({ name: "radioError" })).to.equal("gini");
 		let radioError = wrapper.find("input[value='entropy'][name='radioError']");
 		radioError.simulate("change", { target: { checked: true, value: "entropy" } });
@@ -180,7 +178,7 @@ describe("radio renders and works correctly with different enum types", () => {
 	});
 
 	it("radioset control with warning enum", () => {
-		expect(labels.at(7).text()).to.equal("Radio Warning");
+		expect(labels.at(9).text()).to.equal("Radio Warning");
 		expect(renderedController.getPropertyValue({ name: "radioWarning" })).to.equal("gini");
 		let radioWarning = wrapper.find("input[value='gini'][name='radioWarning']");
 		radioWarning.simulate("change", { target: { checked: true, value: "entropy" } });
@@ -197,7 +195,7 @@ describe("radio renders and works correctly with different enum types", () => {
 	});
 
 	it("radioset control disabled", () => {
-		expect(labels.at(8).text()).to.equal("Radio Disabled");
+		expect(labels.at(10).text()).to.equal("Radio Disabled");
 		const checkboxDisable = wrapper.find("#editor-control-disable");
 		checkboxDisable.simulate("change", { target: { checked: false } });
 		wrapper.update();
@@ -208,7 +206,7 @@ describe("radio renders and works correctly with different enum types", () => {
 	});
 
 	it("radioset control hidden", () => {
-		expect(labels.at(9).text()).to.equal("Radio Hidden");
+		expect(labels.at(11).text()).to.equal("Radio Hidden");
 		const checkboxHide = wrapper.find("#editor-control-hide");
 		checkboxHide.simulate("change", { target: { checked: false } });
 		wrapper.update();

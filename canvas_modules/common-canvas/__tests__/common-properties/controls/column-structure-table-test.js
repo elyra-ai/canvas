@@ -35,7 +35,6 @@ const control = {
 	"label": {
 		"text": "Sort by"
 	},
-	"separateLabel": true,
 	"controlType": "structuretable",
 	"moveableRows": true,
 	"addRemoveRows": true,
@@ -189,7 +188,6 @@ const readonlyControlDefault = {
 		"isList": true,
 		"isMap": false
 	},
-	"separateLabel": true,
 	"subControls": [
 		{
 			"name": "field",
@@ -377,7 +375,6 @@ const readonlyControlStartValue = {
 		"isList": true,
 		"isMap": false
 	},
-	"separateLabel": true,
 	"subControls": [
 		{
 			"name": "structuretable_sort_order_readonly_int",

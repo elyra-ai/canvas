@@ -38,3 +38,13 @@ describe("editor-form renders correctly with correct uiItems", () => {
 		expect(separators).to.have.length(2);
 	});
 });
+
+describe("uiItemParamDef render correctly when the control label is hidden", () => {
+	const renderedObject = propertyUtils.flyoutEditorForm(uiItemParamDef);
+	const wrapper = renderedObject.wrapper;
+
+	it("should have not displayed control label when labelVisible:false", () => {
+		const controllabels = wrapper.find(".control-label");
+		expect(controllabels).to.have.length(2);
+	});
+});

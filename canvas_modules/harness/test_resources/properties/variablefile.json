@@ -34,7 +34,6 @@
                       "label": {
                         "text": "File"
                       },
-                      "separateLabel": true,
                       "controlType": "textfield",
                       "valueDef": {
                         "propType": "string",
@@ -52,7 +51,7 @@
                       "label": {
                         "text": "Read field names from file"
                       },
-                      "separateLabel": false,
+                      "labelVisible": false,
                       "controlType": "checkbox",
                       "valueDef": {
                         "propType": "boolean",
@@ -81,7 +80,7 @@
                       "label": {
                         "text": "Custom name"
                       },
-                      "separateLabel": false,
+                      "labelVisible": false,
                       "controlType": "checkbox",
                       "valueDef": {
                         "propType": "boolean",
@@ -97,7 +96,6 @@
                       "label": {
                         "text": ""
                       },
-                      "separateLabel": true,
                       "controlType": "textfield",
                       "valueDef": {
                         "propType": "string",
@@ -113,7 +111,6 @@
                       "label": {
                         "text": "Annotation"
                       },
-                      "separateLabel": true,
                       "controlType": "textarea",
                       "valueDef": {
                         "propType": "string",

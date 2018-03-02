@@ -18,11 +18,11 @@ class ControlDef {
 		if (settings.label) {
 			this.label = settings.label;
 		}
-		if (typeof settings.separateLabel === "boolean") {
-			this.separateLabel = settings.separateLabel;
-		}
 		if (settings.description) {
 			this.description = settings.description;
+		}
+		if (typeof settings.labelVisible === "boolean") {
+			this.labelVisible = settings.labelVisible;
 		}
 		if (settings.controlType) {
 			this.controlType = settings.controlType;

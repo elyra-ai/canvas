@@ -45,7 +45,6 @@
                                   "defaultValue": 32
                                 },
                                 "summary": true,
-                                "separateLabel": true,
                                 "required": true
                               }
                             },
@@ -66,8 +65,7 @@
                                   "isMap": false,
                                   "defaultValue": 5
                                 },
-                                "summary": true,
-                                "separateLabel": true
+                                "summary": true
                               }
                             },
                             {
@@ -86,8 +84,7 @@
                                   "isList": false,
                                   "isMap": false,
                                   "defaultValue": 0
-                                },
-                                "separateLabel": true
+                                }
                               }
                             },
                             {
@@ -106,8 +103,7 @@
                                   "isList": false,
                                   "isMap": false,
                                   "defaultValue": 1
-                                },
-                                "separateLabel": true
+                                }
                               }
                             }
                           ]
@@ -140,7 +136,6 @@
                             "isMap": false,
                             "defaultValue": -1
                           },
-                          "separateLabel": true,
                           "required": true
                         }
                       },
@@ -169,8 +164,7 @@
                           "valueLabels": [
                             "gini",
                             "entropy"
-                          ],
-                          "separateLabel": true
+                          ]
                         }
                       },
                       {
@@ -199,8 +193,7 @@
                             "isList": false,
                             "isMap": false,
                             "defaultValue": 12345
-                          },
-                          "separateLabel": true
+                          }
                         }
                       }
                     ]
@@ -242,7 +235,7 @@
                             "isMap": false,
                             "defaultValue": ""
                           },
-                          "separateLabel": false
+                          "labelVisible": false
                         }
                       },
                       {
@@ -262,8 +255,7 @@
                             "isList": true,
                             "isMap": false,
                             "defaultValue": []
-                          },
-                          "separateLabel": true
+                          }
                         }
                       },
                       {
@@ -282,8 +274,7 @@
                             "isList": true,
                             "isMap": false,
                             "defaultValue": []
-                          },
-                          "separateLabel": true
+                          }
                         }
                       }
                     ]
@@ -328,8 +319,7 @@
                       "integer",
                       "string",
                       "boolean"
-                    ],
-                    "separateLabel": true
+                    ]
                   }
                 },
                 {
@@ -363,8 +353,7 @@
                       "horse",
                       "tiger",
                       "monkey"
-                    ],
-                    "separateLabel": true
+                    ]
                   }
                 },
                 {
@@ -397,8 +386,7 @@
                       "fish",
                       "hamster",
                       "turtle"
-                    ],
-                    "separateLabel": true
+                    ]
                   }
                 },
                 {
@@ -441,8 +429,7 @@
                       "Eight",
                       "Nine",
                       "Ten"
-                    ],
-                    "separateLabel": true
+                    ]
                   }
                 },
                 {
@@ -461,7 +448,7 @@
                       "isList": false,
                       "isMap": false
                     },
-                    "separateLabel": false
+                    "labelVisible": false
                   }
                 },
                 {
@@ -480,7 +467,7 @@
                       "isList": false,
                       "isMap": false
                     },
-                    "separateLabel": false
+                    "labelVisible": false
                   }
                 },
                 {
@@ -499,7 +486,7 @@
                       "isList": false,
                       "isMap": false
                     },
-                    "separateLabel": false
+                    "labelVisible": false
                   }
                 },
                 {
@@ -529,8 +516,7 @@
                       "red",
                       "yellow",
                       "blue"
-                    ],
-                    "separateLabel": true
+                    ]
                   }
                 },
                 {
@@ -561,8 +547,7 @@
                                   "isList": false,
                                   "isMap": false,
                                   "defaultValue": 1000
-                                },
-                                "separateLabel": true
+                                }
                               }
                             }
                           ]
@@ -594,8 +579,7 @@
                                   "isList": false,
                                   "isMap": false,
                                   "defaultValue": 10
-                                },
-                                "separateLabel": true
+                                }
                               }
                             }
                           ]
@@ -627,8 +611,7 @@
                                   "isList": false,
                                   "isMap": false,
                                   "defaultValue": 50
-                                },
-                                "separateLabel": true
+                                }
                               }
                             }
                           ]
@@ -667,8 +650,7 @@
                       "isList": false,
                       "isMap": false,
                       "defaultValue": ""
-                    },
-                    "separateLabel": true
+                    }
                   }
                 },
                 {
@@ -687,8 +669,7 @@
                       "isList": false,
                       "isMap": false,
                       "defaultValue": ""
-                    },
-                    "separateLabel": true
+                    }
                   }
                 },
                 {
@@ -714,7 +695,7 @@
                     "valueLabels": [
                       "Add Description"
                     ],
-                    "separateLabel": false
+                    "labelVisible": false
                   }
                 },
                 {
@@ -734,7 +715,6 @@
                       "isMap": false,
                       "defaultValue": ""
                     },
-                    "separateLabel": true,
                     "required": true
                   }
                 },
@@ -754,8 +734,7 @@
                       "isList": false,
                       "isMap": false,
                       "defaultValue": ""
-                    },
-                    "separateLabel": true
+                    }
                   }
                 }
               ]
@@ -788,8 +767,7 @@
                       "isMap": false
                     },
                     "additionalText": "SELECT * FROM __THIS__",
-                    "language": "text/x-hive",
-                    "separateLabel": true
+                    "language": "text/x-hive"
                   }
                 },
                 {
@@ -809,8 +787,7 @@
                       "isMap": false,
                       "defaultValue": "SELECT * FROM __THIS__"
                     },
-                    "language": "text/x-hive",
-                    "separateLabel": true
+                    "language": "text/x-hive"
                   }
                 }
               ]
@@ -855,7 +832,7 @@
                                   "isMap": false,
                                   "defaultValue": ""
                                 },
-                                "separateLabel": false
+                                "labelVisible": false
                               }
                             },
                             {
@@ -875,7 +852,6 @@
                                   "isList": true,
                                   "isMap": false
                                 },
-                                "separateLabel": true,
                                 "subControls": [
                                   {
                                     "name": "field",
@@ -971,7 +947,7 @@
                                   "isMap": false,
                                   "defaultValue": ""
                                 },
-                                "separateLabel": false
+                                "labelVisible": false
                               }
                             },
                             {
@@ -991,7 +967,6 @@
                                   "isMap": true,
                                   "defaultValue": []
                                 },
-                                "separateLabel": true,
                                 "subControls": [
                                   {
                                     "name": "field",
@@ -1106,8 +1081,7 @@
                                             "isList": false,
                                             "isMap": false,
                                             "defaultValue": ""
-                                          },
-                                          "separateLabel": true
+                                          }
                                         }
                                       }
                                     ]
@@ -1153,7 +1127,7 @@
                                   "isMap": false,
                                   "defaultValue": ""
                                 },
-                                "separateLabel": false
+                                "labelVisible": false
                               }
                             },
                             {
@@ -1173,7 +1147,6 @@
                                   "isMap": false,
                                   "defaultValue": []
                                 },
-                                "separateLabel": true,
                                 "subControls": [
                                   {
                                     "name": "name",
@@ -1274,8 +1247,7 @@
                                             "isList": false,
                                             "isMap": false
                                           },
-                                          "summary": true,
-                                          "separateLabel": true
+                                          "summary": true
                                         }
                                       },
                                       {
@@ -1293,8 +1265,7 @@
                                             "propType": "string",
                                             "isList": false,
                                             "isMap": false
-                                          },
-                                          "separateLabel": true
+                                          }
                                         }
                                       },
                                       {
@@ -1324,8 +1295,7 @@
                                             "boolean",
                                             "time",
                                             "date"
-                                          ],
-                                          "separateLabel": true
+                                          ]
                                         }
                                       }
                                     ]
@@ -1352,7 +1322,6 @@
                                   "isMap": false,
                                   "defaultValue": []
                                 },
-                                "separateLabel": true,
                                 "subControls": [
                                   {
                                     "name": "name",
@@ -1415,8 +1384,7 @@
                                             "isMap": false
                                           },
                                           "filterable": true,
-                                          "summary": true,
-                                          "separateLabel": true
+                                          "summary": true
                                         }
                                       },
                                       {
@@ -1432,8 +1400,7 @@
                                             "isList": false,
                                             "isMap": false
                                           },
-                                          "sortable": true,
-                                          "separateLabel": true
+                                          "sortable": true
                                         }
                                       }
                                     ]
@@ -1494,7 +1461,6 @@
                                   "isMap": true,
                                   "defaultValue": []
                                 },
-                                "separateLabel": true,
                                 "subControls": [
                                   {
                                     "name": "field",
@@ -1641,7 +1607,6 @@
                                   "isMap": true,
                                   "defaultValue": []
                                 },
-                                "separateLabel": true,
                                 "subControls": [
                                   {
                                     "name": "field",
@@ -1814,7 +1779,6 @@
                                   "isMap": false,
                                   "defaultValue": []
                                 },
-                                "separateLabel": true,
                                 "subControls": [
                                   {
                                     "name": "valueName",

@@ -34,7 +34,6 @@ const control = {
 		"isMap": false,
 		"defaultValue": ""
 	},
-	"separateLabel": true,
 	"required": true
 };
 

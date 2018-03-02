@@ -33,7 +33,6 @@
                       "label": {
                         "text": "Mode"
                       },
-                      "separateLabel": true,
                       "controlType": "radioset",
                       "valueDef": {
                         "propType": "string",
@@ -58,7 +57,6 @@
                       "label": {
                         "text": "Sample"
                       },
-                      "separateLabel": true,
                       "controlType": "radioset",
                       "valueDef": {
                         "propType": "string",
@@ -97,7 +95,6 @@
                                   "label": {
                                     "text": "First n value"
                                   },
-                                  "separateLabel": true,
                                   "controlType": "numberfield",
                                   "valueDef": {
                                     "propType": "integer",
@@ -126,7 +123,6 @@
                                   "label": {
                                     "text": "One in n value"
                                   },
-                                  "separateLabel": true,
                                   "controlType": "numberfield",
                                   "valueDef": {
                                     "propType": "integer",
@@ -155,7 +151,6 @@
                                   "label": {
                                     "text": "Random % value"
                                   },
-                                  "separateLabel": true,
                                   "controlType": "numberfield",
                                   "valueDef": {
                                     "propType": "double",
@@ -187,7 +182,7 @@
                             "label": {
                               "text": "Use maximum sample size"
                             },
-                            "separateLabel": false,
+                            "labelVisible": false,
                             "controlType": "checkbox",
                             "valueDef": {
                               "propType": "boolean",
@@ -203,7 +198,6 @@
                             "label": {
                               "text": "Maximum sample size"
                             },
-                            "separateLabel": true,
                             "controlType": "numberfield",
                             "valueDef": {
                               "propType": "integer",
@@ -235,7 +229,7 @@
                       "label": {
                         "text": "Custom name"
                       },
-                      "separateLabel": false,
+                      "labelVisible": false,
                       "controlType": "checkbox",
                       "valueDef": {
                         "propType": "boolean",
@@ -251,7 +245,6 @@
                       "label": {
                         "text": ""
                       },
-                      "separateLabel": true,
                       "controlType": "textfield",
                       "valueDef": {
                         "propType": "string",
@@ -267,7 +260,6 @@
                       "label": {
                         "text": "Annotation"
                       },
-                      "separateLabel": true,
                       "controlType": "textarea",
                       "valueDef": {
                         "propType": "string",

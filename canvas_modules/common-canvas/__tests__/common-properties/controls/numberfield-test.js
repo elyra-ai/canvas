@@ -80,7 +80,6 @@ const form = {
 											"isList": false,
 											"isMap": false
 										},
-										"separateLabel": true,
 										"required": true
 									}
 								}

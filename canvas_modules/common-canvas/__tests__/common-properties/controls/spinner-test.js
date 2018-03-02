@@ -33,7 +33,6 @@ var control = {
 		"isMap": false
 	},
 	"increment": 1,
-	"separateLabel": true,
 	"required": true
 };
 
@@ -52,7 +51,6 @@ var control2 = {
 		"isMap": false
 	},
 	"increment": 0.1,
-	"separateLabel": true,
 	"required": true
 };
 
@@ -71,7 +69,6 @@ var control3 = {
 		"isMap": false
 	},
 	"control": "spinner",
-	"separateLabel": true,
 	"required": true
 };
 

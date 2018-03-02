@@ -97,7 +97,7 @@ export default class ControlFactory {
 		}
 
 		let label = <span />;
-		if (control.label && control.separateLabel) {
+		if (control.label && control.labelVisible !== false) {
 			let description;
 			let tooltip;
 			if (control.description) {

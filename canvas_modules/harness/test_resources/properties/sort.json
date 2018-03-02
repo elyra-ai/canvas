@@ -34,7 +34,6 @@
                       "label": {
                         "text": "Sort by"
                       },
-                      "separateLabel": true,
                       "controlType": "structuretable",
                       "valueDef": {
                         "propType": "structure",
@@ -97,7 +96,6 @@
                                 "label": {
                                   "text": "Order"
                                 },
-                                "separateLabel": true,
                                 "controlType": "radioset",
                                 "valueDef": {
                                   "propType": "string",
@@ -141,7 +139,7 @@
                       "label": {
                         "text": "Custom name"
                       },
-                      "separateLabel": false,
+                      "labelVisible": false,
                       "controlType": "checkbox",
                       "valueDef": {
                         "propType": "boolean",
@@ -157,7 +155,6 @@
                       "label": {
                         "text": ""
                       },
-                      "separateLabel": true,
                       "controlType": "textfield",
                       "valueDef": {
                         "propType": "string",
@@ -173,7 +170,6 @@
                       "label": {
                         "text": "Annotation"
                       },
-                      "separateLabel": true,
                       "controlType": "textarea",
                       "valueDef": {
                         "propType": "string",

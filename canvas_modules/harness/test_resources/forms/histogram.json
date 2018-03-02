@@ -34,7 +34,6 @@
                       "label": {
                         "text": "Field (continuous)"
                       },
-                      "separateLabel": true,
                       "controlType": "oneofcolumns",
                       "valueDef": {
                         "propType": "string",
@@ -50,7 +49,6 @@
                       "label": {
                         "text": "Color (discrete)"
                       },
-                      "separateLabel": true,
                       "controlType": "oneofcolumns",
                       "valueDef": {
                         "propType": "string",
@@ -66,7 +64,6 @@
                       "label": {
                         "text": "Panel (discrete)"
                       },
-                      "separateLabel": true,
                       "controlType": "oneofcolumns",
                       "valueDef": {
                         "propType": "string",
@@ -95,7 +92,6 @@
                       "label": {
                         "text": "Title"
                       },
-                      "separateLabel": true,
                       "controlType": "textfield",
                       "valueDef": {
                         "propType": "string",
@@ -111,7 +107,6 @@
                       "label": {
                         "text": "Subtitle"
                       },
-                      "separateLabel": true,
                       "controlType": "textfield",
                       "valueDef": {
                         "propType": "string",
@@ -127,7 +122,6 @@
                       "label": {
                         "text": "Caption"
                       },
-                      "separateLabel": true,
                       "controlType": "textfield",
                       "valueDef": {
                         "propType": "string",
@@ -143,7 +137,7 @@
                       "label": {
                         "text": "Display gridline"
                       },
-                      "separateLabel": false,
+                      "labelVisible": false,
                       "controlType": "checkbox",
                       "valueDef": {
                         "propType": "boolean",
@@ -172,7 +166,7 @@
                       "label": {
                         "text": "Custom name"
                       },
-                      "separateLabel": false,
+                      "labelVisible": false,
                       "controlType": "checkbox",
                       "valueDef": {
                         "propType": "boolean",
@@ -188,7 +182,6 @@
                       "label": {
                         "text": ""
                       },
-                      "separateLabel": true,
                       "controlType": "textfield",
                       "valueDef": {
                         "propType": "string",
@@ -204,7 +197,6 @@
                       "label": {
                         "text": "Annotation"
                       },
-                      "separateLabel": true,
                       "controlType": "textarea",
                       "valueDef": {
                         "propType": "string",

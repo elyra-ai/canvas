@@ -161,7 +161,7 @@
       {
         "parameter_ref": "tag_field_name",
         "label": {
-          "default": " "
+          "default": "Field Name"
         },
         "description": {
           "default": "Enter a field name"

@@ -29,7 +29,6 @@
                                        "label":{
                                           "text":"Select 'Orange' to filter the next list"
                                        },
-                                       "separateLabel":true,
                                        "description":{
                                           "text":"oneofselect with error when set to 'red'"
                                        },
@@ -66,7 +65,6 @@
                                        "label":{
                                           "text":"Replace blue and green with teal"
                                        },
-                                       "separateLabel":true,
                                        "description":{
                                           "text":"oneofselect with warning when set to 'yellow'"
                                        },
@@ -118,7 +116,7 @@
                                                 "label":{
                                                    "text":"Filter Content in the Level Column"
                                                 },
-                                                "separateLabel":false,
+                                                "labelVisible":false,
                                                 "description":{
                                                    "text":"Filter Cell Content in the Level Column"
                                                 },
@@ -140,7 +138,6 @@
                                                    "label":{
                                                       "text":"Field"
                                                    },
-                                                   "separateLabel":true,
                                                    "controlType":"selectcolumn",
                                                    "valueDef":{
                                                       "propType":"string",
@@ -160,7 +157,6 @@
                                                    "label":{
                                                       "text":"Level"
                                                    },
-                                                   "separateLabel":true,
                                                    "controlType":"oneofselect",
                                                    "valueDef":{
                                                       "propType":"string",
@@ -191,7 +187,7 @@
                                                    "label":{
                                                       "text":"Filter"
                                                    },
-                                                   "separateLabel":false,
+                                                   "labelVisible":false,
                                                    "controlType":"checkbox",
                                                    "valueDef":{
                                                       "propType":"boolean",
@@ -211,7 +207,6 @@
                                                    "label":{
                                                       "text":"Elements"
                                                    },
-                                                   "separateLabel":true,
                                                    "controlType":"oneofselect",
                                                    "valueDef":{
                                                       "propType":"string",
@@ -245,7 +240,6 @@
                                                 "label":{
                                                    "text":"Filtered Cell DropLists"
                                                 },
-                                                "separateLabel":true,
                                                 "description":{
                                                    "text":"Filters cell droplist content"
                                                 },
@@ -261,7 +255,6 @@
                                                       "label":{
                                                          "text":"Field"
                                                       },
-                                                      "separateLabel":true,
                                                       "controlType":"selectcolumn",
                                                       "valueDef":{
                                                          "propType":"string",
@@ -281,7 +274,6 @@
                                                       "label":{
                                                          "text":"Level"
                                                       },
-                                                      "separateLabel":true,
                                                       "controlType":"oneofselect",
                                                       "valueDef":{
                                                          "propType":"string",
@@ -312,7 +304,7 @@
                                                       "label":{
                                                          "text":"Filter"
                                                       },
-                                                      "separateLabel":false,
+                                                      "labelVisible":false,
                                                       "controlType":"checkbox",
                                                       "valueDef":{
                                                          "propType":"boolean",
@@ -332,7 +324,6 @@
                                                       "label":{
                                                          "text":"Elements"
                                                       },
-                                                      "separateLabel":true,
                                                       "controlType":"oneofselect",
                                                       "valueDef":{
                                                          "propType":"string",
@@ -396,7 +387,7 @@
                                        "label":{
                                           "text":"Filter the radio buttons"
                                        },
-                                       "separateLabel":false,
+                                       "labelVisible":false,
                                        "description":{
                                           "text":"Check this box to remove the 'Orange' radio button option"
                                        },
@@ -416,7 +407,6 @@
                                        "label":{
                                           "text":"Filterable radio buttons"
                                        },
-                                       "separateLabel":true,
                                        "description":{
                                           "text":"This set of radio buttons can be filtered"
                                        },

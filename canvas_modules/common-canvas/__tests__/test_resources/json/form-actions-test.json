@@ -265,6 +265,7 @@
                         {
                           "itemType": "control",
                           "control": {
+                            "labelVisible": true,
                             "name": "number",
                             "label": {
                               "text": "Integer"
@@ -277,8 +278,7 @@
                               "propType": "integer",
                               "isList": false,
                               "isMap": false
-                            },
-                            "separateLabel": true
+                            }
                           }
                         }
                       ]
@@ -326,6 +326,7 @@
                         {
                           "itemType": "control",
                           "control": {
+                            "labelVisible": true,
                             "name": "fields",
                             "label": {
                               "text": "Fields"
@@ -341,7 +342,6 @@
                             },
                             "role": "column",
                             "summary": true,
-                            "separateLabel": true,
                             "required": true
                           }
                         }

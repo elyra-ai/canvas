@@ -336,7 +336,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 
 	// The role is used to modify the behaviour of certain controls
 	let role;
-	let separateLabel = true;
+	let labelVisible = true;
 	let subControls;
 	let keyIndex;
 	let defaultRow;
@@ -362,7 +362,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 			controlType = ControlType.PASSWORDFIELD;
 			break;
 		case Type.BOOLEAN:
-			separateLabel = false;
+			labelVisible = false;
 			controlType = ControlType.CHECKBOX;
 			break;
 		case Type.INTEGER:
@@ -445,8 +445,8 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	const settings = {};
 	settings.name = parameter.name;
 	settings.label = controlLabel;
-	settings.separateLabel = separateLabel;
 	settings.description = controlDesc;
+	settings.labelVisible = typeof parameter.labelVisible === "boolean" ? parameter.labelVisible : labelVisible;
 	settings.controlType = parameter.getControl(controlType);
 	settings.valueDef = ValueDef.make(parameter);
 	settings.role = role;
@@ -522,7 +522,7 @@ function _makeEditStyleSubPanel(structureDef, l10nProvider) {
  * Creates a column control for the supplied property/attribute.
  */
 function _makeSubControl(parameter, l10nProvider) {
-	let separateLabel = true;
+	let labelVisible = true;
 	const additionalText = parameter.getAdditionalText(l10nProvider);
 	const orientation = parameter.orientation;
 	const controlLabel = new Label(l10nProvider.l10nLabel(parameter, parameter.name));
@@ -564,7 +564,7 @@ function _makeSubControl(parameter, l10nProvider) {
 		controlType = ControlType.PASSWORDFIELD;
 		break;
 	case Type.BOOLEAN:
-		separateLabel = false;
+		labelVisible = false;
 		controlType = ControlType.CHECKBOX;
 		break;
 	case Type.INTEGER:
@@ -596,7 +596,7 @@ function _makeSubControl(parameter, l10nProvider) {
 	const settings = {};
 	settings.name = parameter.name;
 	settings.label = controlLabel;
-	settings.separateLabel = separateLabel;
+	settings.labelVisible = typeof parameter.labelVisible === "boolean" ? parameter.labelVisible : labelVisible;
 	settings.description = controlDesc;
 	settings.visible = parameter.visible;
 	settings.width = parameter.columns(8);

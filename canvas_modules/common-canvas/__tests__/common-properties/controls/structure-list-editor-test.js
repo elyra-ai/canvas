@@ -35,7 +35,6 @@ const control = {
 		"isMap": false,
 		"defaultValue": []
 	},
-	"separateLabel": true,
 	"addRemoveRows": true,
 	"subControls": [
 		{
@@ -43,7 +42,6 @@ const control = {
 			"label": {
 				"text": "Name"
 			},
-			"separateLabel": true,
 			"controlType": "textfield",
 			"valueDef": {
 				"propType": "string",
@@ -61,7 +59,6 @@ const control = {
 			"label": {
 				"text": "Description"
 			},
-			"separateLabel": true,
 			"controlType": "textfield",
 			"valueDef": {
 				"propType": "string",
@@ -79,7 +76,6 @@ const control = {
 			"label": {
 				"text": "ReadOnly"
 			},
-			"separateLabel": true,
 			"controlType": "readonly",
 			"valueDef": {
 				"propType": "string",
@@ -115,8 +111,7 @@ const control = {
 							"isList": false,
 							"isMap": false
 						},
-						"filterable": true,
-						"separateLabel": true
+						"filterable": true
 					}
 				},
 				{
@@ -132,8 +127,7 @@ const control = {
 							"isList": false,
 							"isMap": false
 						},
-						"sortable": true,
-						"separateLabel": true
+						"sortable": true
 					}
 				}
 			]

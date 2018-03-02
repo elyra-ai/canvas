@@ -200,11 +200,11 @@
                   {
                     "itemType": "control",
                     "control": {
+                      "labelVisible": true,
                       "name": "renamed_fields",
                       "label": {
                         "text": "Rename columns"
                       },
-                      "separateLabel": true,
                       "description": {
                         "text": "Rename columns in the active dataset"
                       },
@@ -217,11 +217,11 @@
                       },
                       "subControls": [
                         {
+                          "labelVisible": true,
                           "name": "field",
                           "label": {
                             "text": "Input name"
                           },
-                          "separateLabel": true,
                           "controlType": "selectcolumn",
                           "valueDef": {
                             "propType": "string",
@@ -233,11 +233,11 @@
                           "width": 26
                         },
                         {
+                          "labelVisible": true,
                           "name": "new_name",
                           "label": {
                             "text": "Output name"
                           },
-                          "separateLabel": true,
                           "controlType": "textfield",
                           "valueDef": {
                             "propType": "string",

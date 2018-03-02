@@ -139,7 +139,6 @@ const fieldPickerControl = {
 	"label": {
 		"text": "Sort by"
 	},
-	"separateLabel": true,
 	"controlType": "structuretable",
 	"isRowMoveable": true,
 	"valueDef": {

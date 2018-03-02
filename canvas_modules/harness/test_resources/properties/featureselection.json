@@ -40,7 +40,7 @@
                             "label": {
                               "text": "Use custom fields"
                             },
-                            "separateLabel": false,
+                            "labelVisible": false,
                             "controlType": "checkbox",
                             "valueDef": {
                               "propType": "boolean",
@@ -65,7 +65,6 @@
                             "label": {
                               "text": "Target"
                             },
-                            "separateLabel": true,
                             "controlType": "selectcolumn",
                             "valueDef": {
                               "propType": "string",
@@ -81,7 +80,6 @@
                             "label": {
                               "text": "Inputs"
                             },
-                            "separateLabel": true,
                             "controlType": "selectcolumns",
                             "valueDef": {
                               "propType": "string",
@@ -97,7 +95,6 @@
                             "label": {
                               "text": "Partition"
                             },
-                            "separateLabel": true,
                             "controlType": "selectcolumn",
                             "valueDef": {
                               "propType": "string",
@@ -129,7 +126,7 @@
                       "label": {
                         "text": "Screen max. percentage of missing values"
                       },
-                      "separateLabel": false,
+                      "labelVisible": false,
                       "controlType": "checkbox",
                       "valueDef": {
                         "propType": "boolean",
@@ -145,7 +142,6 @@
                       "label": {
                         "text": "Max. percentage of missing values"
                       },
-                      "separateLabel": true,
                       "controlType": "numberfield",
                       "valueDef": {
                         "propType": "double",
@@ -161,7 +157,7 @@
                       "label": {
                         "text": "Screen max. percentage with single category"
                       },
-                      "separateLabel": false,
+                      "labelVisible": false,
                       "controlType": "checkbox",
                       "valueDef": {
                         "propType": "boolean",
@@ -177,7 +173,6 @@
                       "label": {
                         "text": "Max. percentage with single category"
                       },
-                      "separateLabel": true,
                       "controlType": "numberfield",
                       "valueDef": {
                         "propType": "double",
@@ -193,7 +188,7 @@
                       "label": {
                         "text": "Screen max. percentage of a single category"
                       },
-                      "separateLabel": false,
+                      "labelVisible": false,
                       "controlType": "checkbox",
                       "valueDef": {
                         "propType": "boolean",
@@ -209,7 +204,6 @@
                       "label": {
                         "text": "Max. percentage of a single category"
                       },
-                      "separateLabel": true,
                       "controlType": "numberfield",
                       "valueDef": {
                         "propType": "double",
@@ -225,7 +219,7 @@
                       "label": {
                         "text": "Screen min. coefficient of variation"
                       },
-                      "separateLabel": false,
+                      "labelVisible": false,
                       "controlType": "checkbox",
                       "valueDef": {
                         "propType": "boolean",
@@ -241,7 +235,6 @@
                       "label": {
                         "text": "Min. coefficient of variation"
                       },
-                      "separateLabel": true,
                       "controlType": "numberfield",
                       "valueDef": {
                         "propType": "double",
@@ -257,7 +250,7 @@
                       "label": {
                         "text": "Screen min. standard deviation"
                       },
-                      "separateLabel": false,
+                      "labelVisible": false,
                       "controlType": "checkbox",
                       "valueDef": {
                         "propType": "boolean",
@@ -273,7 +266,6 @@
                       "label": {
                         "text": "Min. standard deviation"
                       },
-                      "separateLabel": true,
                       "controlType": "numberfield",
                       "valueDef": {
                         "propType": "double",
@@ -302,7 +294,7 @@
                       "label": {
                         "text": "Custom name"
                       },
-                      "separateLabel": false,
+                      "labelVisible": false,
                       "controlType": "checkbox",
                       "valueDef": {
                         "propType": "boolean",
@@ -318,7 +310,6 @@
                       "label": {
                         "text": ""
                       },
-                      "separateLabel": true,
                       "controlType": "textfield",
                       "valueDef": {
                         "propType": "string",
@@ -334,7 +325,6 @@
                       "label": {
                         "text": "Annotation"
                       },
-                      "separateLabel": true,
                       "controlType": "textarea",
                       "valueDef": {
                         "propType": "string",

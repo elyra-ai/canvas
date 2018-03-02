@@ -190,11 +190,11 @@
                         {
                           "itemType": "control",
                           "control": {
+                            "labelVisible": true,
                             "name": "target",
                             "label": {
                               "text": "Target label: resource"
                             },
-                            "separateLabel": true,
                             "controlType": "selectcolumn",
                             "valueDef": {
                               "propType": "string",
@@ -206,11 +206,11 @@
                         {
                           "itemType": "control",
                           "control": {
+                            "labelVisible": true,
                             "name": "inputs",
                             "label": {
                               "text": "inputs"
                             },
-                            "separateLabel": true,
                             "controlType": "selectcolumns",
                             "valueDef": {
                               "propType": "string",
@@ -239,11 +239,11 @@
                   {
                     "itemType": "control",
                     "control": {
+                      "labelVisible": true,
                       "name": "enum_param",
                       "label": {
                         "text": "Enum label: resource"
                       },
-                      "separateLabel": true,
                       "description": {
                         "text": "Enum description: default"
                       },
@@ -281,11 +281,11 @@
                               {
                                 "itemType": "control",
                                 "control": {
+                                  "labelVisible": true,
                                   "name": "int_param",
                                   "label": {
                                     "text": "Int label: default"
                                   },
-                                  "separateLabel": true,
                                   "description": {
                                     "text": "Int description: default"
                                   },
@@ -318,11 +318,11 @@
                               {
                                 "itemType": "control",
                                 "control": {
+                                  "labelVisible": true,
                                   "name": "double_param",
                                   "label": {
                                     "text": "double_param"
                                   },
-                                  "separateLabel": true,
                                   "controlType": "numberfield",
                                   "valueDef": {
                                     "propType": "double",
@@ -352,7 +352,7 @@
                             "label": {
                               "text": "boolean_param"
                             },
-                            "separateLabel": false,
+                            "labelVisible": false,
                             "controlType": "checkbox",
                             "valueDef": {
                               "propType": "boolean",
@@ -368,6 +368,7 @@
                         {
                           "itemType": "control",
                           "control": {
+                            "labelVisible": true,
                             "name": "str_param",
                             "label": {
                               "text": "String label: default"
@@ -382,8 +383,7 @@
                               "isMap": false
                             },
                             "additionalText": "Place holder text: resource",
-                            "charLimit": 64,
-                            "separateLabel": true
+                            "charLimit": 64
                           }
                         }
                       ]

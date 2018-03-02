@@ -94,6 +94,7 @@
                   {
                     "itemType": "control",
                     "control": {
+                      "labelVisible": true,
                       "name": "int_param",
                       "label": {
                         "text": "int_param"
@@ -104,13 +105,13 @@
                         "isList": false,
                         "isMap": false
                       },
-                      "separateLabel": true,
                       "required": true
                     }
                   },
                   {
                     "itemType": "control",
                     "control": {
+                      "labelVisible": true,
                       "name": "exp_param",
                       "label": {
                         "text": "exp_param"
@@ -121,8 +122,7 @@
                         "isList": false,
                         "isMap": false,
                         "defaultValue": ""
-                      },
-                      "separateLabel": true
+                      }
                     }
                   }
                 ]

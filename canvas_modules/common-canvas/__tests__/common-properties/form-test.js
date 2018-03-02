@@ -52,7 +52,7 @@ describe("Correct form should be created", () => {
 										"label": {
 											"text": "boolean_param"
 										},
-										"separateLabel": false,
+										"labelVisible": false,
 										"controlType": "checkbox",
 										"valueDef": {
 											"propType": "boolean",
@@ -148,7 +148,7 @@ describe("Correct form should be created", () => {
 
 	it("should create a form with actions and summaryPanel", () => {
 		const generatedForm = Form.makeForm(actionResource.paramDef);
-		// console.info("Expected: " + JSON.stringify(placementResource.expectedResult));
+		// console.info("Expected: " + JSON.stringify(actionResource.expectedResult));
 		// console.info("Actual  : " + JSON.stringify(generatedForm) + "\n\n");
 		// console.info("\n\n");
 		expect(isEqual(JSON.parse(JSON.stringify(actionResource.expectedResult)), JSON.parse(JSON.stringify(generatedForm)))).to.be.true;

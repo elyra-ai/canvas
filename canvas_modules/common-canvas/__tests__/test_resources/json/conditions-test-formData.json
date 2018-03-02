@@ -31,8 +31,7 @@
                       "isMap": false,
                       "defaultValue": -1
                     },
-                    "required": true,
-                    "separateLabel": true
+                    "required": true
                   }
                 },
                 {
@@ -60,8 +59,7 @@
                     "valueLabels": [
                       "gini",
                       "entropy"
-                    ],
-                    "separateLabel": true
+                    ]
                   }
                 },
                 {
@@ -81,8 +79,7 @@
                       "isMap": false,
                       "defaultValue": 32
                     },
-                    "required": true,
-                    "separateLabel": true
+                    "required": true
                   }
                 },
                 {
@@ -101,8 +98,7 @@
                       "isList": false,
                       "isMap": false,
                       "defaultValue": 5
-                    },
-                    "separateLabel": true
+                    }
                   }
                 },
                 {
@@ -121,8 +117,7 @@
                       "isList": false,
                       "isMap": false,
                       "defaultValue": 0
-                    },
-                    "separateLabel": true
+                    }
                   }
                 },
                 {
@@ -141,8 +136,7 @@
                       "isList": false,
                       "isMap": false,
                       "defaultValue": 1
-                    },
-                    "separateLabel": true
+                    }
                   }
                 },
                 {
@@ -171,8 +165,7 @@
                       "isList": false,
                       "isMap": false,
                       "defaultValue": 12345
-                    },
-                    "separateLabel": true
+                    }
                   }
                 }
               ]
@@ -211,7 +204,6 @@
                             "isMap": false,
                             "defaultValue": []
                           },
-                          "separateLabel": true,
                           "required": false
                         }
                       },
@@ -232,7 +224,6 @@
                             "isMap": false,
                             "defaultValue": []
                           },
-                          "separateLabel": true,
                           "required": true
                         }
                       }
@@ -275,8 +266,7 @@
                       "integer",
                       "string",
                       "boolean"
-                    ],
-                    "separateLabel": true
+                    ]
                   }
                 },
                 {
@@ -310,8 +300,7 @@
                       "horse",
                       "tiger",
                       "monkey"
-                    ],
-                    "separateLabel": true
+                    ]
                   }
                 },
                 {
@@ -344,8 +333,7 @@
                       "fish",
                       "hamster",
                       "turtle"
-                    ],
-                    "separateLabel": true
+                    ]
                   }
                 },
                 {
@@ -388,8 +376,7 @@
                       "Eight",
                       "Nine",
                       "Ten"
-                    ],
-                    "separateLabel": true
+                    ]
                   }
                 },
                 {
@@ -415,7 +402,7 @@
                     "valueLabels": [
                       "Single Checkbox"
                     ],
-                    "separateLabel": false
+                    "labelVisible": false
                   }
                 },
                 {
@@ -441,7 +428,7 @@
                     "valueLabels": [
                       "Enable"
                     ],
-                    "separateLabel": false
+                    "labelVisible": false
                   }
                 },
                 {
@@ -471,8 +458,7 @@
                       "red",
                       "yellow",
                       "blue"
-                    ],
-                    "separateLabel": true
+                    ]
                   }
                 },
                 {
@@ -503,8 +489,7 @@
                                   "isList": false,
                                   "isMap": false,
                                   "defaultValue": 1000
-                                },
-                                "separateLabel": true
+                                }
                               }
                             }
                           ]
@@ -536,8 +521,7 @@
                                   "isList": false,
                                   "isMap": false,
                                   "defaultValue": 10
-                                },
-                                "separateLabel": true
+                                }
                               }
                             }
                           ]
@@ -569,8 +553,7 @@
                                   "isList": false,
                                   "isMap": false,
                                   "defaultValue": 50
-                                },
-                                "separateLabel": true
+                                }
                               }
                             }
                           ]
@@ -609,8 +592,7 @@
                       "isList": false,
                       "isMap": false,
                       "defaultValue": ""
-                    },
-                    "separateLabel": true
+                    }
                   }
                 },
                 {
@@ -630,8 +612,7 @@
                       "isMap": false,
                       "defaultValue": ""
                     },
-                    "required": true,
-                    "separateLabel": true
+                    "required": true
                   }
                 },
                 {
@@ -657,7 +638,7 @@
                     "valueLabels": [
                       "Add Description"
                     ],
-                    "separateLabel": false
+                    "labelVisible": false
                   }
                 },
                 {
@@ -677,8 +658,7 @@
                       "isMap": false,
                       "defaultValue": ""
                     },
-                    "required": true,
-                    "separateLabel": true
+                    "required": true
                   }
                 },
                 {
@@ -697,8 +677,7 @@
                       "isList": false,
                       "isMap": false,
                       "defaultValue": ""
-                    },
-                    "separateLabel": true
+                    }
                   }
                 }
               ]
@@ -734,7 +713,6 @@
                             "isMap": false
                           },
                           "required": true,
-                          "separateLabel": true,
                           "addRemoveRows": true,
                           "subControls": [
                             {
@@ -815,7 +793,6 @@
                             "defaultValue": []
                           },
                           "required": true,
-                          "separateLabel": true,
                           "addRemoveRows": true,
                           "subControls": [
                             {
@@ -923,8 +900,7 @@
                                       "isList": false,
                                       "isMap": false,
                                       "defaultValue": ""
-                                    },
-                                    "separateLabel": true
+                                    }
                                   }
                                 }
                               ]
@@ -957,7 +933,6 @@
                             "isMap": false,
                             "defaultValue": []
                           },
-                          "separateLabel": true,
                           "addRemoveRows": true,
                           "subControls": [
                             {
@@ -1048,8 +1023,7 @@
                                       "propType": "string",
                                       "isList": false,
                                       "isMap": false
-                                    },
-                                    "separateLabel": true
+                                    }
                                   }
                                 },
                                 {
@@ -1064,8 +1038,7 @@
                                       "propType": "string",
                                       "isList": false,
                                       "isMap": false
-                                    },
-                                    "separateLabel": true
+                                    }
                                   }
                                 },
                                 {
@@ -1095,8 +1068,7 @@
                                       "boolean",
                                       "time",
                                       "date"
-                                    ],
-                                    "separateLabel": true
+                                    ]
                                   }
                                 }
                               ]
@@ -1146,7 +1118,6 @@
                             "isMap": true,
                             "defaultValue": []
                           },
-                          "separateLabel": true,
                           "subControls": [
                             {
                               "name": "field",

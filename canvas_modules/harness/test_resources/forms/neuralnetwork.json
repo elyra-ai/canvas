@@ -39,7 +39,7 @@
                             "label": {
                               "text": "Use custom fields"
                             },
-                            "separateLabel": false,
+                            "labelVisible": false,
                             "controlType": "checkbox",
                             "valueDef": {
                               "propType": "boolean",
@@ -64,7 +64,6 @@
                             "label": {
                               "text": "Targets"
                             },
-                            "separateLabel": true,
                             "controlType": "selectcolumns",
                             "valueDef": {
                               "propType": "string",
@@ -80,7 +79,6 @@
                             "label": {
                               "text": "Inputs"
                             },
-                            "separateLabel": true,
                             "controlType": "selectcolumns",
                             "valueDef": {
                               "propType": "string",
@@ -118,7 +116,6 @@
                             "label": {
                               "text": "Neural net type"
                             },
-                            "separateLabel": true,
                             "controlType": "radioset",
                             "valueDef": {
                               "propType": "string",
@@ -155,7 +152,6 @@
                             "label": {
                               "text": "Overfit prevention set (%)"
                             },
-                            "separateLabel": true,
                             "controlType": "numberfield",
                             "valueDef": {
                               "propType": "double",
@@ -187,7 +183,7 @@
                       "label": {
                         "text": "Custom name"
                       },
-                      "separateLabel": false,
+                      "labelVisible": false,
                       "controlType": "checkbox",
                       "valueDef": {
                         "propType": "boolean",
@@ -203,7 +199,6 @@
                       "label": {
                         "text": ""
                       },
-                      "separateLabel": true,
                       "controlType": "textfield",
                       "valueDef": {
                         "propType": "string",
@@ -219,7 +214,6 @@
                       "label": {
                         "text": "Annotation"
                       },
-                      "separateLabel": true,
                       "controlType": "textarea",
                       "valueDef": {
                         "propType": "string",

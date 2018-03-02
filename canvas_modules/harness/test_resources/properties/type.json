@@ -38,7 +38,6 @@
                           "itemType": "control",
                           "control": {
                             "name": "default_value_mode",
-                            "separateLabel": true,
                             "label": {
                               "text": "Default mode"
                             },
@@ -91,7 +90,6 @@
                                           "control": {
                                             "name": "measure_type",
                                             "sortable": true,
-                                            "separateLabel": true,
                                             "label": {
                                               "text": "Measure"
                                             },
@@ -131,7 +129,6 @@
                                           "control": {
                                             "name": "role",
                                             "sortable": true,
-                                            "separateLabel": true,
                                             "label": {
                                               "text": "Role"
                                             },
@@ -169,7 +166,6 @@
                                           "control": {
                                             "name": "value_mode",
                                             "sortable": true,
-                                            "separateLabel": true,
                                             "label": {
                                               "text": "Value mode"
                                             },
@@ -200,7 +196,6 @@
                                           "control": {
                                             "name": "values",
                                             "sortable": true,
-                                            "separateLabel": true,
                                             "label": {
                                               "text": "Values"
                                             },
@@ -216,7 +211,6 @@
                                           "itemType": "control",
                                           "control": {
                                             "name": "labels",
-                                            "separateLabel": true,
                                             "label": {
                                               "text": "Value Labels"
                                             },
@@ -232,7 +226,6 @@
                                           "itemType": "control",
                                           "control": {
                                             "name": "max_string_length",
-                                            "separateLabel": true,
                                             "label": {
                                               "text": "Max String Length"
                                             },
@@ -249,7 +242,6 @@
                                           "control": {
                                             "name": "check",
                                             "sortable": true,
-                                            "separateLabel": true,
                                             "label": {
                                               "text": "Check"
                                             },
@@ -281,7 +273,6 @@
                                           "itemType": "control",
                                           "control": {
                                             "name": "description",
-                                            "separateLabel": true,
                                             "label": {
                                               "text": "Description"
                                             },
@@ -298,7 +289,6 @@
                                     "text": "...",
                                     "secondaryText": "Field Definition"
                                   },
-                                  "separateLabel": true,
                                   "label": {
                                     "text": "Types"
                                   },
@@ -319,7 +309,6 @@
                                       "label": {
                                         "text": "Field"
                                       },
-                                      "separateLabel": true,
                                       "visible": true,
                                       "width": 12,
                                       "controlType": "selectcolumn",
@@ -337,7 +326,6 @@
                                       "label": {
                                         "text": "Measure"
                                       },
-                                      "separateLabel": true,
                                       "visible": true,
                                       "width": 8,
                                       "controlType": "oneofselect",
@@ -377,7 +365,6 @@
                                       "label": {
                                         "text": "Role"
                                       },
-                                      "separateLabel": true,
                                       "visible": true,
                                       "width": 8,
                                       "controlType": "oneofselect",
@@ -415,7 +402,6 @@
                                       "label": {
                                         "text": "Value mode"
                                       },
-                                      "separateLabel": true,
                                       "visible": true,
                                       "width": 12,
                                       "controlType": "oneofselect",
@@ -446,7 +432,6 @@
                                       "label": {
                                         "text": "Values"
                                       },
-                                      "separateLabel": true,
                                       "visible": true,
                                       "width": 8,
                                       "controlType": "textfield",
@@ -463,7 +448,6 @@
                                       "label": {
                                         "text": "Value Labels"
                                       },
-                                      "separateLabel": true,
                                       "visible": false,
                                       "width": 8,
                                       "controlType": "textfield",
@@ -479,7 +463,6 @@
                                       "label": {
                                         "text": "Max String Length"
                                       },
-                                      "separateLabel": true,
                                       "visible": false,
                                       "width": 8,
                                       "controlType": "numberfield",
@@ -495,7 +478,6 @@
                                       "label": {
                                         "text": "Check"
                                       },
-                                      "separateLabel": true,
                                       "visible": true,
                                       "width": 8,
                                       "controlType": "oneofselect",
@@ -528,7 +510,6 @@
                                       "label": {
                                         "text": "Description"
                                       },
-                                      "separateLabel": true,
                                       "visible": false,
                                       "width": 8,
                                       "controlType": "textfield",
@@ -572,7 +553,7 @@
                     "itemType": "control",
                     "control": {
                       "name": "use_custom_name",
-                      "separateLabel": false,
+                      "labelVisible": false,
                       "label": {
                         "text": "Custom name"
                       },
@@ -588,7 +569,6 @@
                     "itemType": "control",
                     "control": {
                       "name": "custom_name",
-                      "separateLabel": true,
                       "label": {
                         "text": ""
                       },
@@ -604,7 +584,6 @@
                     "itemType": "control",
                     "control": {
                       "name": "annotation",
-                      "separateLabel": true,
                       "label": {
                         "text": "Annotation"
                       },

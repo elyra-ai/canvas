@@ -29,7 +29,7 @@
                             "label": {
                               "text": "Filter selected fields"
                             },
-                            "separateLabel": false,
+                            "labelVisible": false,
                             "controlType": "checkbox",
                             "valueDef": {
                               "propType": "boolean",
@@ -54,7 +54,6 @@
                             "label": {
                               "text": "Select Fields"
                             },
-                            "separateLabel": true,
                             "controlType": "selectcolumns",
                             "valueDef": {
                               "propType": "string",
@@ -86,7 +85,6 @@
                       "label": {
                         "text": "Rename Fields"
                       },
-                      "separateLabel": true,
                       "controlType": "structuretable",
                       "valueDef": {
                         "propType": "structure",
@@ -140,7 +138,6 @@
                                 "label": {
                                   "text": "New Name"
                                 },
-                                "separateLabel": true,
                                 "controlType": "textfield",
                                 "valueDef": {
                                   "propType": "string",
@@ -176,7 +173,7 @@
                       "label": {
                         "text": "Custom name"
                       },
-                      "separateLabel": false,
+                      "labelVisible": false,
                       "controlType": "checkbox",
                       "valueDef": {
                         "propType": "boolean",
@@ -192,7 +189,6 @@
                       "label": {
                         "text": ""
                       },
-                      "separateLabel": true,
                       "controlType": "textfield",
                       "valueDef": {
                         "propType": "string",
@@ -208,7 +204,6 @@
                       "label": {
                         "text": "Annotation"
                       },
-                      "separateLabel": true,
                       "controlType": "textarea",
                       "valueDef": {
                         "propType": "string",

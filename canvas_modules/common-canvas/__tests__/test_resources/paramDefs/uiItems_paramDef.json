@@ -49,6 +49,7 @@
         "label": {
           "default": "Simple text"
         },
+        "label_visible": false,
         "description": {
           "default": "Testing of uiItems"
         },
@@ -86,6 +87,6 @@
     ]
   },
   "resources": {
-    "textfield.text_after": "Hint: should have a separator after"
+    "textfield.text_after": "Hint: should not have the label"
   }
 }

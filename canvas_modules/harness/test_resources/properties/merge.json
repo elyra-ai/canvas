@@ -40,7 +40,6 @@
                             "label": {
                               "text": "Merge method"
                             },
-                            "separateLabel": true,
                             "controlType": "oneofselect",
                             "valueDef": {
                               "propType": "string",
@@ -101,7 +100,6 @@
                                         "label": {
                                           "text": "Keys"
                                         },
-                                        "separateLabel": true,
                                         "controlType": "selectcolumns",
                                         "valueDef": {
                                           "propType": "string",
@@ -126,7 +124,7 @@
                                         "label": {
                                           "text": "Combine duplicate key fields"
                                         },
-                                        "separateLabel": false,
+                                        "labelVisible": false,
                                         "controlType": "checkbox",
                                         "valueDef": {
                                           "propType": "boolean",
@@ -158,7 +156,7 @@
                                   "label": {
                                     "text": "Add tags to duplicate fields to avoid merge conflicts"
                                   },
-                                  "separateLabel": false,
+                                  "labelVisible": false,
                                   "controlType": "checkbox",
                                   "valueDef": {
                                     "propType": "boolean",
@@ -174,7 +172,6 @@
                                   "label": {
                                     "text": "Condition"
                                   },
-                                  "separateLabel": true,
                                   "controlType": "expression",
                                   "valueDef": {
                                     "propType": "string",
@@ -215,7 +212,6 @@
                             "label": {
                               "text": "Join"
                             },
-                            "separateLabel": true,
                             "controlType": "radioset",
                             "valueDef": {
                               "propType": "string",
@@ -259,7 +255,7 @@
                       "label": {
                         "text": "Custom name"
                       },
-                      "separateLabel": false,
+                      "labelVisible": false,
                       "controlType": "checkbox",
                       "valueDef": {
                         "propType": "boolean",
@@ -275,7 +271,6 @@
                       "label": {
                         "text": ""
                       },
-                      "separateLabel": true,
                       "controlType": "textfield",
                       "valueDef": {
                         "propType": "string",
@@ -291,7 +286,6 @@
                       "label": {
                         "text": "Annotation"
                       },
-                      "separateLabel": true,
                       "controlType": "textarea",
                       "valueDef": {
                         "propType": "string",

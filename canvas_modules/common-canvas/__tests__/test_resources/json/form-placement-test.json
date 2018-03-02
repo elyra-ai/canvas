@@ -167,6 +167,7 @@
                   {
                     "itemType": "control",
                     "control": {
+                      "labelVisible": true,
                       "name": "cols",
                       "label": {
                         "text": "Distinct"
@@ -183,7 +184,6 @@
                         "defaultValue": []
                       },
                       "role": "column",
-                      "separateLabel": true,
                       "required": true
                     }
                   }

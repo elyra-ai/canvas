@@ -169,6 +169,7 @@
         "description": {
           "default": "RadioSet with enum boolean type"
         },
+        "label_visible": true,
         "control": "radioset",
         "resource_key": "withradioBoolean"
       },
@@ -180,6 +181,7 @@
         "description": {
           "default": "RadioSet with enum boolean type and without enum defined"
         },
+        "label_visible": true,
         "control": "radioset"
       },
       {

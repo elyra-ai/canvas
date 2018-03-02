@@ -39,7 +39,6 @@
                             "label": {
                               "text": "Group by"
                             },
-                            "separateLabel": true,
                             "controlType": "selectcolumns",
                             "valueDef": {
                               "propType": "string",
@@ -55,7 +54,6 @@
                             "label": {
                               "text": "Aggregates"
                             },
-                            "separateLabel": true,
                             "controlType": "structuretable",
                             "valueDef": {
                               "propType": "structure",
@@ -133,7 +131,6 @@
                                       "label": {
                                         "text": "Aggregate Operations"
                                       },
-                                      "separateLabel": true,
                                       "controlType": "checkboxset",
                                       "valueDef": {
                                         "propType": "string",
@@ -189,7 +186,7 @@
                             "label": {
                               "text": "Include record count"
                             },
-                            "separateLabel": false,
+                            "labelVisible": false,
                             "controlType": "checkbox",
                             "valueDef": {
                               "propType": "boolean",
@@ -205,7 +202,6 @@
                             "label": {
                               "text": "Record count field"
                             },
-                            "separateLabel": true,
                             "controlType": "textfield",
                             "valueDef": {
                               "propType": "string",
@@ -237,7 +233,7 @@
                       "label": {
                         "text": "Custom name"
                       },
-                      "separateLabel": false,
+                      "labelVisible": false,
                       "controlType": "checkbox",
                       "valueDef": {
                         "propType": "boolean",
@@ -253,7 +249,6 @@
                       "label": {
                         "text": ""
                       },
-                      "separateLabel": true,
                       "controlType": "textfield",
                       "valueDef": {
                         "propType": "string",
@@ -269,7 +264,6 @@
                       "label": {
                         "text": "Annotation"
                       },
-                      "separateLabel": true,
                       "controlType": "textarea",
                       "valueDef": {
                         "propType": "string",

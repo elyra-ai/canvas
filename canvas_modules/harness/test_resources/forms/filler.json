@@ -33,7 +33,6 @@
                       "label": {
                         "text": "Fill in fields"
                       },
-                      "separateLabel": true,
                       "controlType": "someofcolumns",
                       "valueDef": {
                         "propType": "string",
@@ -49,7 +48,6 @@
                       "label": {
                         "text": "Replace"
                       },
-                      "separateLabel": true,
                       "controlType": "oneofselect",
                       "valueDef": {
                         "propType": "string",
@@ -79,7 +77,6 @@
                       "label": {
                         "text": "Condition"
                       },
-                      "separateLabel": true,
                       "controlType": "expression",
                       "valueDef": {
                         "propType": "string",
@@ -95,7 +92,6 @@
                       "label": {
                         "text": "Replace with"
                       },
-                      "separateLabel": true,
                       "controlType": "expression",
                       "valueDef": {
                         "propType": "string",
@@ -124,7 +120,7 @@
                       "label": {
                         "text": "Custom name"
                       },
-                      "separateLabel": false,
+                      "labelVisible": false,
                       "controlType": "checkbox",
                       "valueDef": {
                         "propType": "boolean",
@@ -140,7 +136,6 @@
                       "label": {
                         "text": ""
                       },
-                      "separateLabel": true,
                       "controlType": "textfield",
                       "valueDef": {
                         "propType": "string",
@@ -156,7 +151,6 @@
                       "label": {
                         "text": "Annotation"
                       },
-                      "separateLabel": true,
                       "controlType": "textarea",
                       "valueDef": {
                         "propType": "string",

@@ -41,8 +41,7 @@ const control = {
 		"isList": true,
 		"isMap": false,
 		"defaultValue": []
-	},
-	"separateLabel": true
+	}
 };
 
 const moveableRowControl = {
@@ -61,7 +60,6 @@ const moveableRowControl = {
 		"isMap": false,
 		"defaultValue": []
 	},
-	"separateLabel": true,
 	"moveableRows": true
 };
 

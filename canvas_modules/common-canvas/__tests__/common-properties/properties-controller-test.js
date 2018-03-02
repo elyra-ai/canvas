@@ -420,7 +420,6 @@ describe("Properties Controller controls", () => {
 				"defaultValue": 32
 			},
 			"summary": true,
-			"separateLabel": true,
 			"required": true,
 			"summaryPanelId": "summary-panel",
 			"parentCategoryId": {

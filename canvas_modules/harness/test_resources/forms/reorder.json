@@ -39,7 +39,6 @@
                             "label": {
                               "text": "Mode"
                             },
-                            "separateLabel": true,
                             "controlType": "radioset",
                             "valueDef": {
                               "propType": "string",
@@ -78,7 +77,6 @@
                                   "label": {
                                     "text": "Fields appearing at the start"
                                   },
-                                  "separateLabel": true,
                                   "controlType": "selectcolumns",
                                   "valueDef": {
                                     "propType": "string",
@@ -94,7 +92,6 @@
                                   "label": {
                                     "text": "Fields appearing at the end"
                                   },
-                                  "separateLabel": true,
                                   "controlType": "selectcolumns",
                                   "valueDef": {
                                     "propType": "string",
@@ -123,7 +120,6 @@
                                   "label": {
                                     "text": "Sort by"
                                   },
-                                  "separateLabel": true,
                                   "controlType": "radioset",
                                   "valueDef": {
                                     "propType": "string",
@@ -149,7 +145,7 @@
                                   "label": {
                                     "text": "Ascending?"
                                   },
-                                  "separateLabel": false,
+                                  "labelVisible": false,
                                   "controlType": "checkbox",
                                   "valueDef": {
                                     "propType": "boolean",
@@ -185,7 +181,7 @@
                       "label": {
                         "text": "Custom name"
                       },
-                      "separateLabel": false,
+                      "labelVisible": false,
                       "controlType": "checkbox",
                       "valueDef": {
                         "propType": "boolean",
@@ -201,7 +197,6 @@
                       "label": {
                         "text": ""
                       },
-                      "separateLabel": true,
                       "controlType": "textfield",
                       "valueDef": {
                         "propType": "string",
@@ -217,7 +212,6 @@
                       "label": {
                         "text": "Annotation"
                       },
-                      "separateLabel": true,
                       "controlType": "textarea",
                       "valueDef": {
                         "propType": "string",

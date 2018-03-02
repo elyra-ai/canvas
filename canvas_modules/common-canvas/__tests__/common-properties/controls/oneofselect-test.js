@@ -23,7 +23,6 @@ const control = {
 	"label": {
 		"text": "Merge method"
 	},
-	"separateLabel": true,
 	"controlType": "oneofselect",
 	"valueDef": {
 		"propType": "string",

@@ -23,7 +23,6 @@ const control = {
 	"label": {
 		"text": "selectschema"
 	},
-	"separateLabel": true,
 	"description": {
 		"text": "selectschema with parameter value set to 'Drugs_0'"
 	},
