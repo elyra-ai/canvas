@@ -8,15 +8,11 @@
  *******************************************************************************/
 /* eslint no-console: "off" */
 
-
-// import React from "react";
 import propertyUtils from "../_utils_/property-utils";
-// import { mount } from "enzyme";
 import { expect } from "chai";
 
-// import isEqual from "lodash/isEqual";
-
 const PANEL_SELECTOR_PARAM_DEF = require("../test_resources/paramDefs/panelSelector.json");
+import panelConditionsParamDef from "../test_resources/paramDefs/panelConditions_paramDef.json";
 
 
 describe("'panel selector insert' renders correctly", () => {
@@ -62,5 +58,63 @@ describe("'panel selector insert' renders correctly", () => {
 		expect(blueState).to.equal("enabled");
 		yellowState = renderedObject.controller.getPanelState({ "name": "yellow2" });
 		expect(yellowState).to.equal("disabled");
+	});
+});
+
+describe("panel selector visible and enabled conditions work correctly", () => {
+	let wrapper;
+	let panels;
+	let controller;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(JSON.parse(JSON.stringify(panelConditionsParamDef)));
+		wrapper = renderedObject.wrapper;
+		const panelSelectorCategory = wrapper.find(".category-title-container-right-flyout-panel").at(1); // TEXT PANEL category
+		panels = panelSelectorCategory.find(".control-panel");
+		controller = renderedObject.controller;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("panel selector and controls should be disabled", () => {
+		expect(panels).to.have.length(3);
+		const firstPanel = panels.at(1);
+
+		// disabled
+		const disabledCheckbox = firstPanel.find("input[type='checkbox']");
+		expect(disabledCheckbox.props().checked).to.equal(true);
+
+		expect(controller.getControlState({ name: "fruit-color1" })).to.equal("disabled");
+		expect(controller.getControlState({ name: "number" })).to.equal("disabled");
+		expect(controller.getPanelState({ name: "panel-selector-fields1" })).to.equal("disabled");
+		expect(controller.getPanelState({ name: "dynamicTextPercent" })).to.equal("disabled");
+		expect(controller.getPanelState({ name: "dynamicTextSum" })).to.equal("disabled");
+
+		// enable
+		disabledCheckbox.simulate("change", { target: { checked: false } });
+
+		expect(controller.getControlState({ name: "fruit-color1" })).to.equal("enabled");
+		expect(controller.getControlState({ name: "number" })).to.equal("enabled");
+		expect(controller.getPanelState({ name: "panel-selector-fields1" })).to.equal("enabled");
+		expect(controller.getPanelState({ name: "dynamicTextPercent" })).to.equal("enabled");
+		expect(controller.getPanelState({ name: "dynamicTextSum" })).to.equal("enabled");
+	});
+
+	it("panel selector and controls should be hidden", () => {
+		const secondPanel = panels.at(2);
+
+		// hidden
+		const hiddenCheckbox = secondPanel.find("input[type='checkbox']");
+		expect(hiddenCheckbox.props().checked).to.equal(true);
+
+		expect(controller.getControlState({ name: "fruit-color2" })).to.equal("hidden");
+		expect(controller.getPanelState({ name: "panel-selector-fields2" })).to.equal("hidden");
+
+		// visible
+		hiddenCheckbox.simulate("change", { target: { checked: false } });
+
+		expect(controller.getControlState({ name: "fruit-color2" })).to.equal("visible");
+		expect(controller.getPanelState({ name: "panel-selector-fields2" })).to.equal("visible");
 	});
 });

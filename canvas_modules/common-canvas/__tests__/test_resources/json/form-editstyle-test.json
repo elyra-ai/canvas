@@ -254,15 +254,14 @@
                         {
                           "itemType": "control",
                           "control": {
-                            "labelVisible": true,
                             "name": "renamed_fields",
                             "label": {
                               "text": "Rename columns"
                             },
-                            "separateLabel": true,
                             "description": {
                               "text": "Rename columns in the active dataset"
                             },
+                            "labelVisible": true,
                             "controlType": "structuretable",
                             "valueDef": {
                               "propType": "structure",
@@ -272,11 +271,11 @@
                             },
                             "subControls": [
                               {
-                                "labelVisible": true,
                                 "name": "field",
                                 "label": {
                                   "text": "Input name"
                                 },
+                                "labelVisible": true,
                                 "controlType": "selectcolumn",
                                 "valueDef": {
                                   "propType": "string",
@@ -288,11 +287,11 @@
                                 "width": 26
                               },
                               {
-                                "labelVisible": true,
                                 "name": "new_name",
                                 "label": {
                                   "text": "Output name"
                                 },
+                                "labelVisible": true,
                                 "controlType": "textfield",
                                 "valueDef": {
                                   "propType": "string",
@@ -306,11 +305,11 @@
                                 "editStyle": "subpanel"
                               },
                               {
-                                "labelVisible": true,
                                 "name": "new_label",
                                 "label": {
                                   "text": "New Label"
                                 },
+                                "labelVisible": true,
                                 "controlType": "textfield",
                                 "valueDef": {
                                   "propType": "string",
@@ -338,12 +337,11 @@
                                   {
                                     "itemType": "control",
                                     "control": {
-                                      "labelVisible": true,
                                       "name": "new_name",
                                       "label": {
                                         "text": "Output name"
                                       },
-                                      "separateLabel": true,
+                                      "labelVisible": true,
                                       "controlType": "textfield",
                                       "valueDef": {
                                         "propType": "string",
@@ -374,7 +372,6 @@
                         {
                           "itemType": "control",
                           "control": {
-                            "labelVisible": true,
                             "name": "samplingSize",
                             "label": {
                               "text": "Maximum sample size"
@@ -382,6 +379,7 @@
                             "description": {
                               "text": "Maximum number of rows in the sample"
                             },
+                            "labelVisible": true,
                             "controlType": "numberfield",
                             "valueDef": {
                               "propType": "long",

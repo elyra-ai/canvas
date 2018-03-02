@@ -22,7 +22,6 @@ function parseUiContent(panelTree, parentPanel, formData) {
 	return panelTree;
 }
 
-// does not work for individual textPanels or summaryPanels, they are taken care of
 function parseUiItem(panelTree, parentPanel, uiItem, parentFound) {
 	switch (uiItem.itemType) {
 	case ItemType.PRIMARY_TABS: {

@@ -14,7 +14,8 @@
 	position: relative;
 }
 
-#properties-documentation-container > .right-flyout-panel {
+#properties-documentation-container > .right-flyout-panel,
+#conditions-documentation-container > .right-flyout-panel {
 	top: 0px;
 	padding-top: 50px;
 	box-shadow: none;
@@ -22,10 +23,10 @@
 	position: fixed;
 }
 
-#properties-documentation-container >
-#right-flyout-panel >
-#common-properties-right-flyout-panel >
-.modal__buttons {
+#properties-documentation-container > .right-flyout-panel >
+#common-properties-right-flyout-panel > .modal__buttons,
+#conditions-documentation-container > .right-flyout-panel >
+#common-properties-right-flyout-panel > .modal__buttons {
 	display: none;
 }
 
@@ -71,11 +72,14 @@
 #properties-documentation-menu,
 #conditions-documentation-menu {
 	width: 200px;
+	height: 45px;
 	position: fixed;
 	right: 0;
 	z-index: 5;
 	margin-top: 5px;
 	margin-right: 10px;
+	padding-left: 10px;
+	background: #f0f3f6;
 }
 
 .properties-documentation-navbar-li {
@@ -105,18 +109,6 @@
 .properties-documentation-navbar-li a:hover {
   color: #5596e6;
 	height: 18px;
-}
-
-@media (max-width: 779px) {
-	.properties-documentation-nav-link {
-		display: none !important;
-	}
-}
-
-@media (max-width: 849px) {
-	.conditions-documentation-nav-link {
-		display: none !important;
-	}
 }
 
 /* Header section */
@@ -158,7 +150,8 @@
 	padding-bottom: 5px;
 }
 
-.properties-documentation-panels-controls-component .well {
+.properties-documentation-panels-controls-component .well,
+.conditions-documentation-panels-controls-component .well {
 	margin-bottom: 5px;
 }
 
@@ -166,8 +159,8 @@
 
 }
 
-.section-row ~ .section-row-title.section-subtitle {
-	margin-top: 20px;
+.section-subtitle {
+	margin-top: 15px;
 }
 
 .properties-documentation-section-title {

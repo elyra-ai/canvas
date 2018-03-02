@@ -10,6 +10,8 @@
 import { expect } from "chai";
 import propertyUtils from "../_utils_/property-utils";
 import uiItemParamDef from "../test_resources/paramDefs/uiItems_paramDef.json";
+import panelParamDef from "../test_resources/paramDefs/panel_paramDef.json";
+import panelParamDefWide from "../test_resources/paramDefs/widePanel_paramDef.json";
 
 describe("editor-form renders correctly with correct uiItems", () => {
 	const renderedObject = propertyUtils.flyoutEditorForm(uiItemParamDef);
@@ -46,5 +48,24 @@ describe("uiItemParamDef render correctly when the control label is hidden", () 
 	it("should have not displayed control label when labelVisible:false", () => {
 		const controllabels = wrapper.find(".control-label");
 		expect(controllabels).to.have.length(2);
+	});
+});
+
+describe("Flyout editor has the correct width", () => {
+	it("should display a fly out editor at normal width", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(panelParamDef);
+		const wrapper = renderedObject.wrapper;
+		const flyout = wrapper.find("#common-properties-right-flyout-panel");
+		expect(flyout).to.have.length(1);
+		const flyoutStyle = flyout.prop("style");
+		expect(flyoutStyle).to.eql({ width: "318px" });
+	});
+	it("should display a wide fly out editor at wider width", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(panelParamDefWide);
+		const wrapper = renderedObject.wrapper;
+		const flyout = wrapper.find("#common-properties-right-flyout-panel");
+		expect(flyout).to.have.length(1);
+		const flyoutStyle = flyout.prop("style");
+		expect(flyoutStyle).to.eql({ width: "625px" });
 	});
 });

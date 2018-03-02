@@ -24,15 +24,12 @@ import {
 	NUMBERFIELD_ERROR_PROPS_INFO,
 	NUMBERFIELD_GENERATOR_WARNING_PROPS_INFO,
 	CHECKBOX_SINGLE_ERROR_PROPS_INFO,
-	CHECKBOX_SINGLE_WARNING_PROPS_INFO,
 	CHECKBOX_SET_ERROR_PROPS_INFO,
 	CHECKBOX_SET_WARNING_PROPS_INFO,
 	RADIOSET_HORIZONTAL_ERROR_PROPS_INFO,
 	RADIOSET_VERTICAL_WARNING_PROPS_INFO,
 	ONEOFSELECT_ERROR_PROPS_INFO,
-	ONEOFSELECT_WARNING_PROPS_INFO,
 	SOMEOFSELECT_ERROR_PROPS_INFO,
-	SOMEOFSELECT_WARNING_PROPS_INFO,
 	SELECTCOLUMN_ERROR_PROPS_INFO,
 	SELECTCOLUMNS_ERROR_PROPS_INFO,
 	STRUCTURETABLE_ERROR_PROPS_INFO,
@@ -46,7 +43,19 @@ import {
 	VISIBLE_GROUP_PROPS_INFO,
 	ENABLED_GROUP_PROPS_INFO,
 	ENUM_FILTER_INFO,
-	FILTER_INFO
+	FILTER_INFO,
+	PANELS_PROPS_INFO,
+	PANELS_FLYOUT_PROPS_INFO,
+	TEXT_PANEL_PROPS_INFO,
+	TEXT_PANEL_FLYOUT_PROPS_INFO,
+	PANEL_SELECTOR_PROPS_INFO,
+	PANEL_SELECTOR_FLYOUT_PROPS_INFO,
+	COLUMNSELECTION_PROPS_INFO,
+	COLUMNSELECTION_FLYOUT_PROPS_INFO,
+	SUMMARY_PANEL_PROPS_INFO,
+	SUMMARY_PANEL_FLYOUT_PROPS_INFO,
+	TWISTY_PANEL_PROPS_INFO,
+	TWISTY_PANEL_FLYOUT_PROPS_INFO
 } from "../constants/conditions-documentation-constants.js";
 import { CommonProperties } from "common-canvas";
 import { Table } from "reactable";
@@ -55,6 +64,8 @@ class CommonPropertiesComponents extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			showRightFlyout: false,
+			rightFlyoutContent: null
 		};
 
 		this.jsonReplacer = this.jsonReplacer.bind(this);
@@ -82,6 +93,14 @@ class CommonPropertiesComponents extends React.Component {
 	onMenuDropdownSelect(evt, obj) {
 		location.href = `${"#/conditions#" + obj.selected}`;
 		document.querySelector(`#${obj.selected}`).scrollIntoView();
+	}
+
+	setRightFlyoutState(content) {
+		this.setState({
+			showRightFlyout: content !== this.state.rightFlyoutContent ||
+				(content === this.state.rightFlyoutContent && !this.state.showRightFlyout),
+			rightFlyoutContent: content
+		});
 	}
 
 	jsonReplacer(json, type, custom) {
@@ -128,6 +147,14 @@ class CommonPropertiesComponents extends React.Component {
 				"dataset_metadata", "fields", "name", "type", "metadata", "description", "measure", "modeling_role"
 			];
 			break;
+		case "conditions_panels":
+			jsonReplacer = [
+				"conditions", "validation", "enabled", "visible", "parameter_refs", "group_refs",
+				"fail_message", "type", "message", "default", "resource_key", "focus_parameter_ref",
+				"evaluate", "and", "or", "condition",
+				"parameter_ref", "op", "parameter_2_ref", "value"
+			];
+			break;
 		case "custom":
 			if (Array.isArray(custom)) {
 				jsonReplacer = custom;
@@ -137,6 +164,22 @@ class CommonPropertiesComponents extends React.Component {
 		}
 
 		return JSON.stringify(json, jsonReplacer, 2);
+	}
+
+	renderRightFlyoutButton(content) {
+		let buttonText = "View in Flyout";
+		if (this.state.showRightFlyout && content === this.state.rightFlyoutContent) {
+			buttonText = "Close Flyout";
+		}
+		const openFlyoutButton = (<button
+			className="properties-documentation-show-flyout-button button"
+			type="button"
+			onClick={() => this.setRightFlyoutState(content)}
+		>
+			{buttonText}
+		</button>);
+
+		return openFlyoutButton;
 	}
 
 	render() {
@@ -165,7 +208,14 @@ class CommonPropertiesComponents extends React.Component {
 					"--visible",
 					"--enabled",
 					"--filteredEnum",
-					"--filter"
+					"--filter",
+					"PanelConditions",
+					"--panels",
+					"--textPanel",
+					"--panelSelector",
+					"--columnSelection",
+					"--summaryPanel",
+					"--twistyPanel"
 				]}
 				compact
 				dark
@@ -181,19 +231,24 @@ class CommonPropertiesComponents extends React.Component {
 						<a id="conditions-documentation-title">WDP Common Properties Conditions</a>
 					</li>
 					<li className="properties-documentation-navbar-li nav-divider">
-						<a className="conditions-documentation-nav-link"
+						<a className="conditions-documentation-nav-link conditions-intro"
 							onClick={() => this.onMenuDropdownSelect(null, { selected: "Conditions" })}
 						>Conditions</a>
 					</li>
 					<li className="properties-documentation-navbar-li">
-						<a className="conditions-documentation-nav-link"
+						<a className="conditions-documentation-nav-link single-conditions"
 							onClick={() => this.onMenuDropdownSelect(null, { selected: "SingleConditions" })}
 						>Single Conditions</a>
 					</li>
 					<li className="properties-documentation-navbar-li">
-						<a className="conditions-documentation-nav-link"
+						<a className="conditions-documentation-nav-link group-conditions"
 							onClick={() => this.onMenuDropdownSelect(null, { selected: "GroupConditions" })}
 						>Group Conditions</a>
+					</li>
+					<li className="properties-documentation-navbar-li">
+						<a className="conditions-documentation-nav-link panels-conditions"
+							onClick={() => this.onMenuDropdownSelect(null, { selected: "PanelConditions" })}
+						>Panel Conditions</a>
 					</li>
 				</ul>
 				{dropMenu}
@@ -514,6 +569,7 @@ class CommonPropertiesComponents extends React.Component {
 						To check whether it’s checked, <span className="highlight">empty/isNotEmpty</span>&nbsp;
 						or <span className="highlight">equals/notEquals</span> can be used.
 					</p>
+					<p>The same check can be done using <span className="highlight">equals</span>.</p>
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
@@ -525,22 +581,6 @@ class CommonPropertiesComponents extends React.Component {
 						<div className="section-column section-column-code">
 							<pre className="json-block">
 								{this.jsonReplacer(CHECKBOX_SINGLE_ERROR_PROPS_INFO.parameterDef, "conditions")}
-							</pre>
-						</div>
-					</div>
-					<p>This is the same check using <span className="highlight">equals</span>.
-					</p>
-					<div className="section-row">
-						<div className="section-column">
-							<CommonProperties
-								showPropertiesDialog
-								propertiesInfo={CHECKBOX_SINGLE_WARNING_PROPS_INFO}
-								containerType="Custom"
-							/>
-						</div>
-						<div className="section-column section-column-code">
-							<pre className="json-block">
-								{this.jsonReplacer(CHECKBOX_SINGLE_WARNING_PROPS_INFO.parameterDef, "conditions")}
 							</pre>
 						</div>
 					</div>
@@ -656,22 +696,6 @@ class CommonPropertiesComponents extends React.Component {
 							</pre>
 						</div>
 					</div>
-					<p>The below example shows a warning when red is selected using the <span className="highlight">notEquals</span> condition.</p>
-					<div className="section-row">
-						<div className="section-column">
-							<CommonProperties
-								showPropertiesDialog
-								propertiesInfo={ONEOFSELECT_WARNING_PROPS_INFO}
-								containerType="Custom"
-							/>
-						</div>
-						<div className="section-column section-column-code">
-							<pre className="json-block">
-								{this.jsonReplacer(ONEOFSELECT_WARNING_PROPS_INFO.parameterDef, "conditions",
-									["uihints", "parameter_info", "control", "orientation"])}
-							</pre>
-						</div>
-					</div>
 				</div>
 				<div className="conditions-documentation-panels-controls-component">
 					<h3 id="--someofselect" className="section-subtitle">someofselect</h3>
@@ -690,23 +714,6 @@ class CommonPropertiesComponents extends React.Component {
 						<div className="section-column section-column-code">
 							<pre className="json-block">
 								{this.jsonReplacer(SOMEOFSELECT_ERROR_PROPS_INFO.parameterDef, "conditions")}
-							</pre>
-						</div>
-					</div>
-					<p>The following example shows a warning if one of the selected options does not contain "red".
-					</p>
-					<div className="section-row">
-						<div className="section-column">
-							<CommonProperties
-								showPropertiesDialog
-								propertiesInfo={SOMEOFSELECT_WARNING_PROPS_INFO}
-								containerType="Custom"
-							/>
-						</div>
-						<div className="section-column section-column-code">
-							<pre className="json-block">
-								{this.jsonReplacer(SOMEOFSELECT_WARNING_PROPS_INFO.parameterDef, "conditions",
-									["uihints", "parameter_info", "control"])}
 							</pre>
 						</div>
 					</div>
@@ -873,9 +880,11 @@ class CommonPropertiesComponents extends React.Component {
 			<h2 className="properties-documentation-section-title">Group Conditions</h2>
 			<div className="section-description">
 				<p>Group conditions validate the user's input from two controls. The following conditions are supported in group validations:
-					<li>greaterThan/lessThan</li>
-					<li>equals/notEquals</li>
-					<li>contains/notContains</li>
+					<ul>
+						<li>greaterThan/lessThan</li>
+						<li>equals/notEquals</li>
+						<li>contains/notContains</li>
+					</ul>
 					The condition will be evaluated if both
 					controls are the same data type. For example, a textfield control will not be able to validate against a numberfield control.
 					If a group condition fails, the same <span className="highlight">fail_message</span> will be shown for both controls.
@@ -1051,20 +1060,175 @@ class CommonPropertiesComponents extends React.Component {
 			</div>
 		</section>);
 
+		const contentPanelConditions = (<section id="PanelConditions" className="section conditions-documentation-content-panel-section">
+			<h2 className="properties-documentation-section-title">Panel Conditions</h2>
+			<div className="section-description">
+				<p><span className="highlight">visible</span> and <span className="highlight">enabled</span> conditions are support in panels.
+					Panel conditions are evaluated against parameters and not panels.
+				</p>
+			</div>
+			<div className="properties-documentation-section-content">
+				<div className="conditions-documentation-panels-controls-component">
+					<h3 id="--panels" className="section-subtitle">Panels</h3>
+					<p>Controls and panels can be nested within panels. To disable or hide a panel and all of its
+						children panels and controls, set a condition on the group <span className="highlight">id</span> in <span className="highlight">group_refs</span>.
+						The following example shows how to disable or hide a panel at different nested levels.
+					</p>
+					<p>Limitation: Combinations of disabling or hiding nested panels may have unexpected results if nested more than two levels deep.</p>
+					<p>The disable and hide checkboxes also have conditions to disable the other since only one of these conditions
+						may be set on a panel at a time.
+					</p>
+					<div className="section-row">
+						<div className="section-column">
+							<CommonProperties
+								showPropertiesDialog
+								propertiesInfo={PANELS_PROPS_INFO}
+								containerType="Custom"
+							/>
+							{this.renderRightFlyoutButton(PANELS_FLYOUT_PROPS_INFO)}
+						</div>
+						<div className="section-column section-column-code">
+							<pre className="json-block">
+								{this.jsonReplacer(PANELS_PROPS_INFO.parameterDef, "conditions_panels")}
+							</pre>
+						</div>
+					</div>
+				</div>
+				<div className="conditions-documentation-panels-controls-component">
+					<h3 id="--textPanel" className="section-subtitle">TextPanels</h3>
+					<p>Disabled text panels will be grayed out.</p>
+					<div className="section-row">
+						<div className="section-column">
+							<CommonProperties
+								showPropertiesDialog
+								propertiesInfo={TEXT_PANEL_PROPS_INFO}
+								containerType="Custom"
+							/>
+							{this.renderRightFlyoutButton(TEXT_PANEL_FLYOUT_PROPS_INFO)}
+						</div>
+						<div className="section-column section-column-code">
+							<pre className="json-block">
+								{this.jsonReplacer(TEXT_PANEL_PROPS_INFO.parameterDef, "conditions_panels")}
+							</pre>
+						</div>
+					</div>
+				</div>
+				<div className="conditions-documentation-panels-controls-component">
+					<h3 id="--panelSelector" className="section-subtitle">PanelSelector</h3>
+					<p>PanelSelector conditions will disable or hide the selector control as well
+						as the panels that are shown. The example below shows how to apply a condition on
+						both group_refs and parameter_refs.
+					</p>
+					<div className="section-row">
+						<div className="section-column">
+							<CommonProperties
+								showPropertiesDialog
+								propertiesInfo={PANEL_SELECTOR_PROPS_INFO}
+								containerType="Custom"
+							/>
+							{this.renderRightFlyoutButton(PANEL_SELECTOR_FLYOUT_PROPS_INFO)}
+						</div>
+						<div className="section-column section-column-code">
+							<pre className="json-block">
+								{this.jsonReplacer(PANEL_SELECTOR_PROPS_INFO.parameterDef, "conditions_panels")}
+							</pre>
+						</div>
+					</div>
+				</div>
+				<div className="conditions-documentation-panels-controls-component">
+					<h3 id="--columnSelection" className="section-subtitle">ColumnSelection</h3>
+					<p>All controls under the columnSelection panel will be disabled or hidden.</p>
+					<div className="section-row">
+						<div className="section-column">
+							<CommonProperties
+								showPropertiesDialog
+								propertiesInfo={COLUMNSELECTION_PROPS_INFO}
+								containerType="Custom"
+							/>
+							{this.renderRightFlyoutButton(COLUMNSELECTION_FLYOUT_PROPS_INFO)}
+						</div>
+						<div className="section-column section-column-code">
+							<pre className="json-block">
+								{this.jsonReplacer(COLUMNSELECTION_PROPS_INFO.parameterDef, "conditions_panels")}
+							</pre>
+						</div>
+					</div>
+				</div>
+				<div className="conditions-documentation-panels-controls-component">
+					<h3 id="--summaryPanel" className="section-subtitle">SummaryPanel</h3>
+					<p>In a modal dialog, all controls under the summaryPanel panel will be disabled or hidden.
+						In a flyout, the summary link will be disabled and the summary tables will not be shown.
+					</p>
+					<div className="section-row">
+						<div className="section-column">
+							<CommonProperties
+								showPropertiesDialog
+								propertiesInfo={SUMMARY_PANEL_PROPS_INFO}
+								containerType="Custom"
+							/>
+							{this.renderRightFlyoutButton(SUMMARY_PANEL_FLYOUT_PROPS_INFO)}
+						</div>
+						<div className="section-column section-column-code">
+							<pre className="json-block">
+								{this.jsonReplacer(SUMMARY_PANEL_PROPS_INFO.parameterDef, "conditions_panels")}
+							</pre>
+						</div>
+					</div>
+				</div>
+				<div className="conditions-documentation-panels-controls-component">
+					<h3 id="--twistyPanel" className="section-subtitle">TwistyPanel</h3>
+					<p>A twistyPanel will be disabled or hidden in its current state, whether the twisty panel is opened or closed.</p>
+					<div className="section-row">
+						<div className="section-column">
+							<CommonProperties
+								showPropertiesDialog
+								propertiesInfo={TWISTY_PANEL_PROPS_INFO}
+								containerType="Custom"
+							/>
+							{this.renderRightFlyoutButton(TWISTY_PANEL_FLYOUT_PROPS_INFO)}
+						</div>
+						<div className="section-column section-column-code">
+							<pre className="json-block">
+								{this.jsonReplacer(TWISTY_PANEL_PROPS_INFO.parameterDef, "conditions_panels")}
+							</pre>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>);
+
 		const content = (<div id="conditions-documentation-content">
 			{contentIntro}
 			{contentConditions}
 			{contentSingleConditions}
 			{contentGroupConditions}
+			{contentPanelConditions}
 		</div>);
+
+		let rightFlyoutWidth = "0px";
+		let rightFlyout = (<div className="right-flyout-panel" style={{ width: rightFlyoutWidth }} />);
+		if (this.state.showRightFlyout) {
+			rightFlyoutWidth = "318px";
+			rightFlyout = (<div className="right-flyout-panel" style={{ width: rightFlyoutWidth }}>
+				<CommonProperties
+					showPropertiesDialog
+					propertiesInfo={this.state.rightFlyoutContent}
+					containerType="Custom"
+					applyLabel="Apply"
+					rejectLabel="Reject"
+					rightFlyout
+				/>);
+			</div>);
+		}
 
 		return (
 			<div id="conditions-documentation-container">
 				{navBar}
-				<div id="conditions-documentation-container-main-content">
+				<div id="conditions-documentation-container-main-content" style={{ width: "calc(100% - " + rightFlyoutWidth + " )" }}>
 					{header}
 					{content}
 				</div>
+				{rightFlyout}
 			</div>
 		);
 	}

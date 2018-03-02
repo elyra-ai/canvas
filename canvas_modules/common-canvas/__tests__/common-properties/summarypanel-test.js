@@ -9,6 +9,7 @@
 
 import propertyUtils from "../_utils_/property-utils";
 import summarypanelParamDef from "../test_resources/paramDefs/summarypanel_paramDef.json";
+import panelConditionsParamDef from "../test_resources/paramDefs/panelConditions_paramDef.json";
 import { expect } from "chai";
 import { ReactWrapper } from "enzyme";
 
@@ -186,5 +187,62 @@ describe("summary panel renders error/warning status correctly", () => {
 		expect(tableCategory.find(".category-title-right-flyout-panel").text()).to.equal("STRUCTURE LIST TABLE (1)");
 		summary = tableCategory.find(".control-summary.control-panel").at(0);
 		expect(summary.find(".validation-warning-message-icon-general")).to.have.length(1);
+	});
+});
+
+describe("summary panel visible and enabled conditions work correctly", () => {
+	let wrapper;
+	let controller;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(JSON.parse(JSON.stringify(panelConditionsParamDef)));
+		wrapper = renderedObject.wrapper;
+		controller = renderedObject.controller;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("summary panel link should be disabled and table should be gone", () => {
+		const summaryPanelCategory = wrapper.find(".category-title-container-right-flyout-panel").at(3); // SUMMARY PANEL category
+		const summaries = summaryPanelCategory.find(".control-summary.control-panel");
+		expect(summaries).to.have.length(2);
+		const firstSummary = summaries.at(0);
+		let link = firstSummary.find(".control-summary-link-buttons").find(".button.button--hyperlink");
+		expect(link.props().disabled).to.be.undefined;
+		expect(firstSummary.find(".control-summary-configured-values")).to.have.length(2);
+		expect(controller.getPanelState({ name: "structuretable-summary-panel1" })).to.equal("enabled");
+		expect(controller.getControlState({ name: "structuretable_summary1" })).to.equal("enabled");
+		expect(controller.getControlState({ name: "structuretable_summary2" })).to.equal("enabled");
+
+		const disabledCheckbox = summaryPanelCategory.find("input[type='checkbox']").at(0);
+		expect(disabledCheckbox.props().checked).to.equal(true);
+		disabledCheckbox.simulate("change", { target: { checked: false } });
+
+		link = firstSummary.find(".control-summary-link-buttons").find(".button.button--hyperlink");
+		expect(link.props().disabled).to.be.true;
+		expect(controller.getPanelState({ name: "structuretable-summary-panel1" })).to.equal("disabled");
+		expect(controller.getControlState({ name: "structuretable_summary1" })).to.equal("disabled");
+		expect(controller.getControlState({ name: "structuretable_summary2" })).to.equal("disabled");
+		expect(firstSummary.find(".control-summary-configured-values")).to.have.length(0);
+	});
+
+	it("summary panel link should be hidden", () => {
+		const summaryPanelCategory = wrapper.find(".category-title-container-right-flyout-panel").at(3); // SUMMARY PANEL category
+		const summaries = summaryPanelCategory.find(".control-summary.control-panel");
+		expect(summaries).to.have.length(2);
+		const secondSummary = summaries.at(1);
+		const link = secondSummary.find(".control-summary-link-buttons").find(".button.button--hyperlink");
+		expect(link).to.have.length(1);
+		expect(controller.getPanelState({ name: "structuretable-summary-panel2" })).to.equal("visible");
+		expect(secondSummary.find(".control-summary-configured-values")).to.have.length(1);
+
+		const hiddenCheckbox = summaryPanelCategory.find("input[type='checkbox']").at(1);
+		expect(hiddenCheckbox.props().checked).to.equal(false);
+		hiddenCheckbox.simulate("change", { target: { checked: true } });
+
+		expect(controller.getPanelState({ name: "structuretable-summary-panel2" })).to.equal("hidden");
+		expect(controller.getControlState({ name: "structuretable_summary3" })).to.equal("hidden");
+		expect(secondSummary.find(".control-summary-configured-values")).to.have.length(0);
 	});
 });

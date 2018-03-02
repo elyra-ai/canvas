@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -10,7 +10,7 @@
 import { expect } from "chai";
 import propertyUtils from "../_utils_/property-utils";
 import panelParamDef from "../test_resources/paramDefs/panel_paramDef.json";
-import panelParamDefWide from "../test_resources/paramDefs/widePanel_paramDef.json";
+import panelConditionsParamDef from "../test_resources/paramDefs/panelConditions_paramDef.json";
 
 describe("textPanel render correctly", () => {
 	const renderedObject = propertyUtils.flyoutEditorForm(panelParamDef);
@@ -40,23 +40,45 @@ describe("textPanel render correctly", () => {
 	});
 });
 
-describe("Flyout editor has the correct width", () => {
-	it("should display a fly out editor at normal width", () => {
-		const renderedObject = propertyUtils.flyoutEditorForm(panelParamDef);
-		const wrapper = renderedObject.wrapper;
-		const flyout = wrapper.find("#common-properties-right-flyout-panel");
-		expect(flyout).to.have.length(1);
-		const flyoutStyle = flyout.prop("style");
-		expect(flyoutStyle).to.eql({ width: "318px" });
-		// console.log("FLYOUT NARROW: " + flyout.at(0).html());
+describe("text panel visible and enabled conditions work correctly", () => {
+	let wrapper;
+	let panels;
+	let controller;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(JSON.parse(JSON.stringify(panelConditionsParamDef)));
+		wrapper = renderedObject.wrapper;
+		const textPanelCategory = wrapper.find(".category-title-container-right-flyout-panel").at(0); // TEXT PANEL category
+		panels = textPanelCategory.find(".control-panel");
+		controller = renderedObject.controller;
 	});
-	it("should display a wide fly out editor at wider width", () => {
-		const renderedObject = propertyUtils.flyoutEditorForm(panelParamDefWide);
-		const wrapper = renderedObject.wrapper;
-		const flyout = wrapper.find("#common-properties-right-flyout-panel");
-		expect(flyout).to.have.length(1);
-		const flyoutStyle = flyout.prop("style");
-		expect(flyoutStyle).to.eql({ width: "625px" });
-		// console.log("FLYOUT WIDE: " + flyout.at(0).html());
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("text panel should be disabled", () => {
+		expect(panels).to.have.length(3);
+		const firstPanel = panels.at(1);
+
+		const disabledCheckbox = firstPanel.find("input[type='checkbox']").at(0);
+		expect(disabledCheckbox.props().checked).to.equal(false);
+		expect(controller.getPanelState({ name: "orange-panel" })).to.equal("enabled");
+
+		disabledCheckbox.simulate("change", { target: { checked: true } });
+
+		expect(controller.getPanelState({ name: "orange-panel" })).to.equal("disabled");
+
+	});
+
+	it("text panel should be hidden", () => {
+		const firstPanel = panels.at(2);
+
+		const hiddenCheckbox = firstPanel.find("input[type='checkbox']").at(0);
+		expect(hiddenCheckbox.props().checked).to.equal(false);
+		expect(controller.getPanelState({ name: "apple-panel" })).to.equal("visible");
+
+		hiddenCheckbox.simulate("change", { target: { checked: true } });
+
+		expect(controller.getPanelState({ name: "apple-panel" })).to.equal("hidden");
 	});
 });

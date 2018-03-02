@@ -1048,6 +1048,10 @@ _defineConstant("SUMMARY_PANEL_PROPS_INFO", {
 _defineConstant("TWISTY_PANEL_PROPS_INFO", {
 	"title": "Panel Type: TwistyPanel",
 	"parameterDef": {
+		"titleDefinition": {
+			"title": "Group: twistyPanel",
+			"editable": false
+		},
 		"current_parameters": {
 			"fromValue": 2,
 			"toValue": 1

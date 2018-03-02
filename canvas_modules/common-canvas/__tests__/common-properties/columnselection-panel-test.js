@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -10,8 +10,9 @@
 import { expect } from "chai";
 
 import propertyUtils from "../_utils_/property-utils";
-import columSelectionPanel from "../test_resources/paramDefs/columnSelectionPanel_multiInput_paramDef.json";
+import columnSelectionPanel from "../test_resources/paramDefs/columnSelectionPanel_multiInput_paramDef.json";
 import panelParamDef from "../test_resources/paramDefs/panel_paramDef.json";
+import panelConditionsParamDef from "../test_resources/paramDefs/panelConditions_paramDef.json";
 
 describe("selectcolumn and selectcolumns controls work in columnSelection panel", () => {
 	let wrapper;
@@ -80,7 +81,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 	let wrapper;
 	let panels;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(columSelectionPanel);
+		const renderedObject = propertyUtils.flyoutEditorForm(columnSelectionPanel);
 		wrapper = renderedObject.wrapper;
 		const valuesCategory = wrapper.find(".category-title-container-right-flyout-panel").at(0); // VALUES category
 		panels = valuesCategory.find(".control-panel");
@@ -262,5 +263,60 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 		];
 		propertyUtils.fieldPicker([], fieldTable);
 
+	});
+});
+
+describe("column selection panel visible and enabled conditions work correctly", () => {
+	let wrapper;
+	let panels;
+	let controller;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(panelConditionsParamDef);
+		wrapper = renderedObject.wrapper;
+		const columnSelectionCategory = wrapper.find(".category-title-container-right-flyout-panel").at(2); // COLUMN SELECTION category
+		panels = columnSelectionCategory.find(".control-panel");
+		controller = renderedObject.controller;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("controls in column selection panel should be disabled", () => {
+		expect(panels).to.have.length(5); // include nested panels
+		const firstPanel = panels.at(1);
+
+		const disabledCheckbox = firstPanel.find("input[type='checkbox']");
+		expect(disabledCheckbox.props().checked).to.equal(false);
+		expect(firstPanel.find("Dropdown")).to.have.length(2);
+		expect(controller.getPanelState({ name: "selectcolumn-values" })).to.equal("enabled");
+		expect(controller.getControlState({ name: "field1_panel" })).to.equal("enabled");
+		expect(controller.getControlState({ name: "field2_panel" })).to.equal("enabled");
+
+		disabledCheckbox.simulate("change", { target: { checked: true } });
+		const disabledDropdowns = firstPanel.find(".Dropdown-control.Dropdown-disabled");
+		expect(disabledDropdowns).to.have.length(2);
+		expect(controller.getPanelState({ name: "selectcolumn-values" })).to.equal("disabled");
+		expect(controller.getControlState({ name: "field1_panel" })).to.equal("disabled");
+		expect(controller.getControlState({ name: "field2_panel" })).to.equal("disabled");
+	});
+
+	it("controls in column selection panel should be hidden", () => {
+		const secondPanel = panels.at(3);
+
+		const hiddenCheckbox = secondPanel.find("input[type='checkbox']");
+		expect(hiddenCheckbox.props().checked).to.equal(false);
+
+		expect(secondPanel.find("Dropdown")).to.have.length(1);
+		const table = secondPanel.find(".structure-table-content-row");
+		expect(table).to.have.length(1);
+
+		expect(controller.getPanelState({ name: "column-selection-panel" })).to.equal("visible");
+
+		hiddenCheckbox.simulate("change", { target: { checked: true } });
+
+		expect(controller.getPanelState({ name: "column-selection-panel" })).to.equal("hidden");
+		expect(controller.getControlState({ name: "selectcolumn" })).to.equal("hidden");
+		expect(controller.getControlState({ name: "selectcolumns" })).to.equal("hidden");
 	});
 });
