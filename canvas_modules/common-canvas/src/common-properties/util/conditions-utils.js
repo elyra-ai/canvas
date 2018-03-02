@@ -197,6 +197,25 @@ function _setValidateEnabled(definition, propertyValues, controlType, dataModel,
 	}
 }
 
+/*
+	* Takes an array of panel IDs and updates the states of the children of
+	* the panels identified by those IDs to be the same as the states of the panels.
+	*/
+function updatePanelChildrenStatesForPanelIds(panelIds, controller) {
+	const newStates = {
+		controls: controller.getControlStates(),
+		panels: controller.getPanelStates()
+	};
+
+	for (let i = 0; i < panelIds.length; i++) {
+		const state = controller.getPanelState({ "name": panelIds[i] });
+		_updatePanelChildrenState(newStates, { "name": panelIds[i] }, state, controller);
+	}
+
+	controller.setControlStates(newStates.controls);
+	controller.setPanelStates(newStates.panels);
+}
+
 function _updatePanelChildrenState(newStates, referenceId, state, controller) {
 	if (controller.panelTree[referenceId.name]) {
 		const panelTree = controller.panelTree[referenceId.name];
@@ -637,6 +656,9 @@ function filterConditions(propertyId, filterDefinitions, controller, datasetMeta
 	return datasetMetadata;
 }
 
+
 module.exports.validateConditions = validateConditions;
 module.exports.validateInput = validateInput;
 module.exports.filterConditions = filterConditions;
+module.exports.updateState = _updateState;
+module.exports.updatePanelChildrenStatesForPanelIds = updatePanelChildrenStatesForPanelIds;

@@ -88,8 +88,9 @@ export default class PropertiesController {
 			}
 			// get all the children for panels that have conditions. Must be run after setPropertyValues(),
 			// which generates the list of panels with conditions
-			this._parsePanelTree();
-			// Calling setPropertyValues() again after _parsePanelTree to run the conditions for the all the
+			const panels = Object.keys(this.getPanelStates());
+			this.parsePanelTree(panels);
+			// Calling setPropertyValues() again after parsePanelTree to run the conditions for the all the
 			// panel's children and set the correct states.
 			// Need to set initial to true for initial rendering of the panel's children in the correct state
 			this.setPropertyValues(this.form.data.currentParameters, true);
@@ -142,8 +143,7 @@ export default class PropertiesController {
 		}
 	}
 
-	_parsePanelTree() {
-		const panels = Object.keys(this.getPanelStates());
+	parsePanelTree(panels) {
 		for (const panel of panels) {
 			this.panelTree[panel] = {
 				panels: [],

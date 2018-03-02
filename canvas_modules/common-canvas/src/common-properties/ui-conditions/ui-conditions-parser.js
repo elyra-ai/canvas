@@ -124,6 +124,14 @@ function parseUiItem(controls, uiItem, panelId, parentCategoryId) {
 			control.parentCategoryId = parentCategoryId;
 		}
 		parseControl(controls, control, parentCategoryId);
+		// If some panels from a Selector Panel have been inserted in a
+		// radio set control the control will have additionalItems which need
+		// to be parsed.
+		if (uiItem.additionalItems) {
+			for (const additionalItem of uiItem.additionalItems) {
+				parseUiItem(controls, additionalItem.content, panelId, parentCategoryId);
+			}
+		}
 		break;
 	}
 	case ItemType.ADDITIONAL_LINK:

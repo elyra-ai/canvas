@@ -367,7 +367,11 @@ class EditorForm extends React.Component {
 				propertyId.row = inPropertyId.row;
 				propertyId.col = indexof(uiItem.control.name);
 			}
+			// If the uiItem has additonalPanels, this indicates that the uiItem is
+			// a vertical radio button set followed by a SelectorPanel which has the
+			// insert_panels boolean set to true.
 			if (uiItem.additionalItems && uiItem.additionalItems.length > 0) {
+				uiItem.control.additionalItems = uiItem.additionalItems;
 				uiItem.control.optionalPanels =
 					this.generateAdditionalPanels(uiItem.additionalItems, key, null, indexof, true);
 			}

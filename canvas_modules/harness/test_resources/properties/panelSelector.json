@@ -3,36 +3,38 @@
     "title": "Panel Selector Demo"
   },
   "current_parameters": {
-    "fruit-color1": "red",
-    "fruit-color2": "red",
-    "fruit-color3": "red",
+    "fruit-color1": "red1",
+    "fruit-color2": "red2",
+    "fruit-color3": "red3",
     "apple-types": [],
     "blueberry-size": "tiny",
-    "fruit-size": "bigfruit"
+    "fruit-size": "bigfruit",
+    "radioBoolean" : true,
+    "radioDouble" : 1.23
   },
   "parameters": [
     {
       "id": "fruit-color1",
       "enum": [
-        "red",
-        "blue",
-        "yellow"
+        "red1",
+        "blue1",
+        "yellow1"
       ]
     },
     {
       "id": "fruit-color2",
       "enum": [
-        "red",
-        "blue",
-        "yellow"
+        "red2",
+        "blue2",
+        "yellow2"
       ]
     },
     {
       "id": "fruit-color3",
       "enum": [
-        "red",
-        "blue",
-        "yellow"
+        "red3",
+        "blue3",
+        "yellow3"
       ]
     },
     {
@@ -60,6 +62,21 @@
         "mediumfruit",
         "littlefruit"
       ]
+    },
+    {
+      "id": "radioBoolean",
+      "type": "boolean"
+    },
+    {
+      "id": "radioDouble",
+      "enum": [
+        2.34,
+        3.23,
+        1.23,
+        5.32
+      ],
+      "type": "double",
+      "required": true
     }
   ],
   "uihints": {
@@ -121,11 +138,33 @@
           "default": "Shows big medium and little fruits"
         },
         "orientation": "vertical"
+      },
+      {
+        "parameter_ref": "radioBoolean",
+        "label": {
+          "default": "Radio Boolean"
+        },
+        "description": {
+          "default": "RadioSet with boolean type"
+        },
+        "control": "radioset",
+        "orientation": "vertical"
+      },
+      {
+        "parameter_ref": "radioDouble",
+        "label": {
+          "default": "Double"
+        },
+        "description": {
+          "default": "Shows some doubles to choose from."
+        },
+        "control": "radioset",
+        "orientation": "vertical"
       }
     ],
     "group_info": [
       {
-        "id": "panel-selector",
+        "id": "fruit-main-panel1",
         "label": {
           "default": "Panel Selector - append panels"
         },
@@ -135,12 +174,12 @@
         ],
         "group_info": [
           {
-            "id": "panel-selector-fields",
+            "id": "panel-selector1",
             "type": "panelSelector",
             "depends_on_ref": "fruit-color1",
             "group_info": [
               {
-                "id": "red",
+                "id": "red1",
                 "type": "textPanel",
                 "label": {
                   "default": "Apples"
@@ -150,7 +189,7 @@
                 }
               },
               {
-                "id": "blue",
+                "id": "blue1",
                 "type": "textPanel",
                 "label": {
                   "default": "Blueberries"
@@ -160,57 +199,7 @@
                 }
               },
               {
-                "id": "yellow",
-                "type": "textPanel",
-                "label": {
-                  "default": "Lemons"
-                },
-                "description": {
-                  "default": "Lemons are a hybrid between a sour orange and a citron."
-                }
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "id": "fruit-main-panel",
-        "label": {
-          "default": "Panel Selector - insert panels"
-        },
-        "type": "controls",
-        "parameter_refs": [
-          "fruit-color2"
-        ],
-        "group_info": [
-          {
-            "id": "panel-selector-fields",
-            "type": "panelSelector",
-            "depends_on_ref": "fruit-color2",
-            "insert_panels": true,
-            "group_info": [
-              {
-                "id": "red",
-                "type": "textPanel",
-                "label": {
-                  "default": "Apples"
-                },
-                "description": {
-                  "default": "Apples ripen six to 10 times faster at room temperature than if they are refrigerated."
-                }
-              },
-              {
-                "id": "blue",
-                "type": "textPanel",
-                "label": {
-                  "default": "Blueberries"
-                },
-                "description": {
-                  "default": "Blueberries freeze in just 4 minutes."
-                }
-              },
-              {
-                "id": "yellow",
+                "id": "yellow1",
                 "type": "textPanel",
                 "label": {
                   "default": "Lemons"
@@ -226,6 +215,56 @@
       {
         "id": "fruit-main-panel2",
         "label": {
+          "default": "Panel Selector - insert panels"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "fruit-color2"
+        ],
+        "group_info": [
+          {
+            "id": "panel-selector2",
+            "type": "panelSelector",
+            "depends_on_ref": "fruit-color2",
+            "insert_panels": true,
+            "group_info": [
+              {
+                "id": "red2",
+                "type": "textPanel",
+                "label": {
+                  "default": "Apples"
+                },
+                "description": {
+                  "default": "Apples ripen six to 10 times faster at room temperature than if they are refrigerated."
+                }
+              },
+              {
+                "id": "blue2",
+                "type": "textPanel",
+                "label": {
+                  "default": "Blueberries"
+                },
+                "description": {
+                  "default": "Blueberries freeze in just 4 minutes."
+                }
+              },
+              {
+                "id": "yellow2",
+                "type": "textPanel",
+                "label": {
+                  "default": "Lemons"
+                },
+                "description": {
+                  "default": "Lemons are a hybrid between a sour orange and a citron."
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "fruit-main-panel3",
+        "label": {
           "default": "Panel Selector - insert multi panels"
         },
         "type": "controls",
@@ -235,13 +274,13 @@
         ],
         "group_info": [
           {
-            "id": "panel-selector-fields",
+            "id": "panel-selector3",
             "type": "panelSelector",
             "depends_on_ref": "fruit-color3",
             "insert_panels": true,
             "group_info": [
               {
-                "id": "red",
+                "id": "red3",
                 "type": "panels",
                 "group_info" : [
                   {
@@ -263,7 +302,7 @@
                 ]
               },
               {
-                "id": "blue",
+                "id": "blue3",
                 "type": "panels",
                 "group_info" : [
                   {
@@ -285,7 +324,7 @@
                 ]
               },
               {
-                "id": "yellow",
+                "id": "yellow3",
                 "type": "textPanel",
                 "label": {
                   "default": "Lemons"
@@ -336,23 +375,105 @@
             }
           }
         ]
+      },
+      {
+        "id": "fruit-number-panel4",
+        "label": {
+          "default": "Panel Selector - insert into boolean"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "radioBoolean"
+        ],
+        "group_info" : [
+          {
+            "id": "panel-selector4",
+            "type": "panelSelector",
+            "depends_on_ref": "radioBoolean",
+            "insert_panels": true,
+            "group_info": [
+              {
+                "id": "true",
+                "type": "textPanel",
+                "description": {
+                  "default": "True, Wahr, Vrai."
+                }
+              },
+              {
+                "id": "false",
+                "type": "textPanel",
+                "description": {
+                  "default": "False, Falsch, Faux."
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "fruit-number-panel5",
+        "label": {
+          "default": "Panel Selector - insert into numbers"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "radioDouble"
+        ],
+        "group_info" : [
+          {
+            "id": "panel-selector5",
+            "type": "panelSelector",
+            "depends_on_ref": "radioDouble",
+            "insert_panels": true,
+            "group_info": [
+              {
+                "id": "2.34",
+                "type": "textPanel",
+                "description": {
+                  "default": "Two point three four."
+                }
+              },
+              {
+                "id": "3.23",
+                "type": "textPanel",
+                "description": {
+                  "default": "Three point two three."
+                }
+              },
+              {
+                "id": "1.23",
+                "type": "textPanel",
+                "description": {
+                  "default": "One point two three."
+                }
+              },
+              {
+                "id": "5.32",
+                "type": "textPanel",
+                "description": {
+                  "default": "Five point three two."
+                }
+              }
+            ]
+          }
+        ]
       }
     ]
   },
   "dataset_metadata": [
   ],
   "resources": {
-    "fruit-color1.red.label": "Red",
-    "fruit-color1.blue.label": "Blue",
-    "fruit-color1.yellow.label": "Yellow",
-    "fruit-color2.red.label": "Red",
-    "fruit-color2.blue.label": "Blue",
-    "fruit-color2.yellow.label": "Yellow",
-    "fruit-color3.red.label": "Red",
-    "fruit-color3.blue.label": "Blue",
-    "fruit-color3.yellow.label": "Yellow",
-		"fruit-size.bigfruit.label": "Big",
-		"fruit-size.mediumfruit.label": "Medium",
-		"fruit-size.littlefruit.label": "Little"
+    "fruit-color1.red1.label": "Red",
+    "fruit-color1.blue1.label": "Blue",
+    "fruit-color1.yellow1.label": "Yellow",
+    "fruit-color2.red2.label": "Red",
+    "fruit-color2.blue2.label": "Blue",
+    "fruit-color2.yellow2.label": "Yellow",
+    "fruit-color3.red3.label": "Red",
+    "fruit-color3.blue3.label": "Blue",
+    "fruit-color3.yellow3.label": "Yellow",
+    "fruit-size.bigfruit.label": "Big",
+    "fruit-size.mediumfruit.label": "Medium",
+    "fruit-size.littlefruit.label": "Little"
   }
 }

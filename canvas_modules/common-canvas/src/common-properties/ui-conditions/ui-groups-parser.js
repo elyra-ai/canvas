@@ -7,7 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-/* eslint complexity: ["error", 30]*/
+/* eslint complexity: ["error", 32]*/
 
 import logger from "../../../utils/logger";
 import { ItemType } from "../constants/form-constants";
@@ -64,6 +64,14 @@ function parseUiItem(panelTree, parentPanel, uiItem, parentFound) {
 	case ItemType.CONTROL: {
 		if (parentFound && uiItem.control.name) {
 			panelTree[parentPanel].controls.push(uiItem.control.name);
+		}
+		// This is a special case for the radio button set which has panels
+		// inserted after each radio button. Those panels are provided in the
+		// additionalItems array which is an array of EditorTab objects.
+		if (uiItem.control.additionalItems) {
+			for (const editorTab of uiItem.control.additionalItems) {
+				parseUiItem(panelTree, parentPanel, editorTab.content, parentFound);
+			}
 		}
 		break;
 	}
