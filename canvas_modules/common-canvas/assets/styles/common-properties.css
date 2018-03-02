@@ -780,7 +780,10 @@ th div div label, td div div label {
   padding: 5px 0 5px 0;
 }
 
-#flexible-table-container>table>tbody>tr>td {
+.properties-structure-list-editor #flexible-table-container>table>tbody>tr>td,
+.properties-structure-list-editor #flexible-table-container-noheader>table>tbody>tr>td,
+.properties-column-structure #flexible-table-container>table>tbody>tr>td,
+.properties-column-structure #flexible-table-container-noheader>table>tbody>tr>td {
   overflow-wrap: break-word;
   word-wrap: break-word;
   -ms-word-break: break-all;
