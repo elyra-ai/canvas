@@ -146,6 +146,13 @@ module.exports = function() {
 		browser.pause(1000); // Wait for the tooltip to be displayed
 	});
 
+	this.Then(/^I verify the node with name "([^"]*)" shows in the canvas$/, function(nodeName) {
+		const nodeId = getNodeIdForLabel(nodeName);
+		const node = browser.$("#node_grp_" + nodeId);
+
+		expect(node.getText()).toEqual(nodeName);
+	});
+
 	this.Then(/^I verify the tip shows below the node "([^"]*)"$/, function(nodeName) {
 		const nodeId = getNodeIdForLabel(nodeName);
 		const tip = browser.$("#node_tip_" + nodeId);

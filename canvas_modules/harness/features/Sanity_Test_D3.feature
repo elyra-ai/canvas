@@ -81,3 +81,30 @@ Feature: Sanity_Test_D3
 		Then I see common properties flyout title "Var. File"
 		Then I delete node 1 the "Var. File" node
 		Then I don't see the common properties flyout
+
+	Scenario: Sanity test changing node names reflected in canvas
+		Given I am on the test harness
+		Given I have toggled the app side panel
+		Given I have selected the "Flyout" palette layout
+		Given I have uploaded predefined palette "modelerPalette.json"
+		Given I have selected the "D3" rendering engine
+		Given I have selected the "Ports" connection type
+		Given I have toggled the app side panel
+
+		Then I open the palette
+		Then I add node 1 a "Var. File" node from the "Import" category onto the canvas at 300, 200
+		Then I close the palette
+
+		Then I select node 1 the "Var. File" node
+		Then I see common properties flyout title "Var. File"
+		Then I click on title edit icon
+		Then I enter new title "Var File2"
+		Then I click on modal OK button
+		Then I verify the new title "Var File2"
+
+		Then I select node 1 the "Var File2" node
+		Then I see common properties flyout title "Var File2"
+		Then I click on title edit icon
+		Then I enter new title "Var File3"
+		Then I click the canvas background at 1, 1 to close the context menu or clear selections
+		Then I verify the node with name "Var File3" shows in the canvas

@@ -17,6 +17,7 @@ import ReactFileDownload from "react-file-download";
 import { IntlProvider, FormattedMessage, addLocaleData, injectIntl, intlShape } from "react-intl";
 import en from "react-intl/locale-data/en";
 var i18nData = require("../intl/en.js");
+import isEmpty from "lodash/isEmpty";
 
 import { CommonCanvas, CanvasController, CommonProperties, FlowValidation } from "common-canvas";
 
@@ -427,6 +428,13 @@ class App extends React.Component {
 			title: additionalInfo.title
 		};
 		this.log("applyPropertyChanges()", data);
+
+		if (appData && appData.nodeId) {
+			// store parameters in case properties were opened from canvas
+			this.canvasController.setNodeParameters(appData.nodeId, form);
+			this.canvasController.setNodeLabel(appData.nodeId, additionalInfo.title);
+			this.canvasController.setNodeMessages(appData.nodeId, additionalInfo.messages);
+		}
 		this.setState({ forceApplyProperties: false });
 	}
 
@@ -695,6 +703,7 @@ class App extends React.Component {
 			}
 
 			this.currentEditorId = nodeId; // set new node
+			const appData = { nodeId: nodeId };
 
 			const nodeForm = this.getNodeForm(nodeId);
 			// harness: when adding nodes via double-click, nodeForm isn't set because CreateAutoNodeAction
@@ -703,12 +712,34 @@ class App extends React.Component {
 				NodeToForm.setNodeForm(nodeId, this.canvasController.getNode(nodeId).operator_id_ref);
 			}
 			const properties = this.getNodeForm(nodeId);
+
+			// set current parameterSet
+			// get the current parameters for the node from the internal ObjectModel
+			const node = this.canvasController.getNode(nodeId);
+			if (node) {
+				if (properties.data.formData) {
+					if (!isEmpty(node.parameters)) {
+						properties.data.formData.data.currentParameters = node.parameters;
+					}
+					properties.data.formData.label = node.label;
+				} else {
+					if (!isEmpty(node.parameters)) {
+						properties.data.current_parameters = node.parameters;
+					}
+					if (!properties.data.titleDefinition) {
+						properties.data.titleDefinition = {};
+					}
+					properties.data.titleDefinition.title = node.label;
+				}
+			}
+
 			const messages = this.canvasController.getNodeMessages(nodeId);
 			const propsInfo = {
 				title: <FormattedMessage id={ "dialog.nodePropertiesTitle" } />,
 				messages: messages,
 				formData: properties.data.formData,
 				parameterDef: properties.data,
+				appData: appData,
 				applyPropertyChanges: this.applyPropertyChanges,
 				closePropertiesDialog: this.closePropertiesEditorDialog,
 				additionalComponents: properties.additionalComponents
@@ -1060,7 +1091,7 @@ class App extends React.Component {
 			{/* <IntlProvider key="IntlProvider2" locale={ locale } messages={ messages }>
 				{commonProperties}
 			</IntlProvider>*/}
-			{commonPropertiesContainer}
+			{ !isEmpty(this.state.propertiesInfo) ? commonPropertiesContainer : null }
 			<IntlProvider key="IntlProvider" locale={ locale } messages={ messages }>
 				{commonCanvas}
 			</IntlProvider>
