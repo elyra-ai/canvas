@@ -822,8 +822,14 @@ export default class CanvasD3Layout {
 					.attr("transform", `translate(${d.x_pos}, ${d.y_pos})`)
 					.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
 			});
-		} else if (this.selecting || this.regionSelect || this.commentSizing) {
+		} else {
+			// Apply selection highlighting to the 'update selection' nodes. That is,
+			// all nodes that are the same as during the last call to displayNodes().
 			nodeGroupSel.each(function(d) {
+				that.canvas.select(that.getId("#node_grp", d.id))
+					.attr("transform", `translate(${d.x_pos}, ${d.y_pos})`)
+					.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
+
 				that.canvas.select(that.getId("#node_outline", d.id))
 					.attr("data-selected", that.objectModel.isSelected(d.id) ? "yes" : "no")
 					.attr("class", that.layout.cssSelectionHighlight)
@@ -847,33 +853,6 @@ export default class CanvasD3Layout {
 							imageObj.attr("data-is-cut", null); // TODO - This should be made generic
 						}
 					});
-			});
-		} else {
-
-			// Apply selection highlighting to the 'update selection' nodes. That is,
-			// all nodes that are the same as during the last call to displayNodes().
-
-			nodeGroupSel.each(function(d) {
-
-				that.canvas.select(that.getId("#node_grp", d.id))
-					.attr("transform", `translate(${d.x_pos}, ${d.y_pos})`)
-					.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
-
-				that.canvas.select(that.getId("#node_outline", d.id))
-					.attr("data-selected", that.objectModel.isSelected(d.id) ? "yes" : "no")
-					.attr("class", that.layout.cssSelectionHighlight)
-					.datum((nd) => that.getNode(nd.id)); // Set the __data__ to the updated data
-
-				that.canvas.select(that.getId("#node_image", d.id))
-					.datum((nd) => that.getNode(nd.id)) // Set the __data__ to the updated data
-					.each(function(nd) {
-						if (nd.customAttrs) {
-							var imageObj = d3.select(this);
-							nd.customAttrs.forEach((customAttr) => {
-								imageObj.attr(customAttr, "");
-							});
-						}
-					});
 
 				that.canvas.select(that.getId("#node_label", d.id))
 					.datum((nd) => that.getNode(nd.id)) // Set the __data__ to the updated data
@@ -889,391 +868,393 @@ export default class CanvasD3Layout {
 					.attr("class", function(nd) { return "node-error-marker " + that.getMessageCircleClass(nd.messages); });
 			});
 
-			var newNodeGroups = nodeGroupSel.enter()
-				.append("g")
-				.attr("id", (d) => that.getId("node_grp", d.id))
-				.attr("class", "obj-group node-group")
-				.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
-				.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
-					if (that.layout.connectionType === "ports") {
-						that.canvas.select(that.getId("#node_body", d.id)).attr("hover", "yes");
-						d3.select(this)
-							.append("image")
-							.attr("id", that.getId("node_ellipsis"))
-							.attr("xlink:href", nodeMenuStandardIcon)
-							.attr("width", that.layout.ellipsisWidth)
-							.attr("height", that.layout.ellipsisHeight)
-							.attr("x", that.layout.ellipsisPosX)
-							.attr("y", (nd) => that.getEllipsisPosY(nd))
-							.on("mouseenter", () => {
-								that.canvas.select(that.getId("#node_ellipsis")).attr("xlink:href", nodeMenuHoverIcon);
-							})
-							.on("mouseleave", () => {
-								that.canvas.select(that.getId("#node_ellipsis")).attr("xlink:href", nodeMenuStandardIcon);
-							})
-							.on("click", () => {
-								that.stopPropagationAndPreventDefault();
-								that.openContextMenu("node", d);
-							});
-					}
-				})
-				.on("mouseleave", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
-					that.canvas.select(that.getId("#node_body", d.id)).attr("hover", "no");
-					if (that.layout.connectionType === "ports") {
-						that.canvas.selectAll(that.getId("#node_ellipsis")).remove();
-					}
-
-					that.canvasController.hideTip();
-				})
-				// Use mouse down instead of click because it gets called before drag start.
-				.on("mousedown", (d) => {
-					this.consoleLog("Node Group - mouse down");
-					this.selecting = true;
-					d3.event.stopPropagation(); // Prevent mousedown event going through to canvas
-					if (!this.objectModel.isSelected(d.id)) {
-						if (d3.event.shiftKey) {
-							this.objectModel.selectSubGraph(d.id);
-						} else {
-							this.objectModel.toggleSelection(d.id, this.isCmndCtrlPressed());
-						}
-					} else {
-						if (this.isCmndCtrlPressed()) {
-							this.objectModel.toggleSelection(d.id, this.isCmndCtrlPressed());
-						}
-					}
-					this.canvasController.clickActionHandler({
-						clickType: "SINGLE_CLICK",
-						objectType: "node",
-						id: d.id,
-						selectedObjectIds: this.objectModel.getSelectedObjectIds() });
-					this.selecting = false;
-					this.consoleLog("Node Group - finished mouse down");
-				})
-				.on("mousemove", (d) => {
-					// this.consoleLog("Node Group - mouse move");
-					// Don't stop propogation. Mouse move messages must be allowed to
-					// propagate to canvas zoom operation.
-				})
-				.on("mouseup", (d) => {
-					d3.event.stopPropagation();
-					this.consoleLog("Node Group - mouse up");
-					if (this.drawingNewLink === true) {
-						this.completeNewLink(d);
-					}
-				})
-				.on("mouseover", function(d) {
-					if (that.canShowTip(TIP_TYPE_NODE)) {
-						that.canvasController.showTip({
-							id: that.getId("node_tip", d.id),
-							type: TIP_TYPE_NODE,
-							targetObj: this,
-							pipelineId: that.canvasJSON.sub_id,
-							node: d
-						});
-					}
-				})
-				.on("dblclick", (d) => {
-					this.consoleLog("Node Group - double click");
-					d3.event.stopPropagation();
-					var selObjIds = this.objectModel.getSelectedObjectIds();
-					this.canvasController.clickActionHandler({ clickType: "DOUBLE_CLICK", objectType: "node", id: d.id, selectedObjectIds: selObjIds });
-				})
-				.on("contextmenu", (d) => {
-					this.consoleLog("Node Group - context menu");
-					this.stopPropagationAndPreventDefault();
-					that.openContextMenu("node", d);
-				})
-				.call(this.drag); // Must put drag after mousedown listener so mousedown gets called first.
-
-			// Node selection highlighting outline for new nodes, flexible properties set in next step
-			if (this.layout.nodeShape === "port-arcs") {
-				newNodeGroups.append("path")
-					.attr("id", (d) => this.getId("node_outline", d.id));
-
-				newNodeGroups.append("path")
-					.attr("id", (d) => this.getId("node_body", d.id))
-					.style("filter", `url(${this.getId("#node_drop_shadow")})`);
-
-
-			} else { // simple rectangle
-				newNodeGroups.append("rect")
-					.attr("id", (d) => this.getId("node_outline", d.id));
-
-				newNodeGroups.append("rect")
-					.attr("id", (d) => this.getId("node_body", d.id));
-
-			}
-
-			var newAndExistingNodes = nodeGroupSel.enter().merge(nodeGroupSel);
-
-			newAndExistingNodes
-				.each((d) => {
-					// Node selection highlighting: set flexible properties
-					if (this.layout.nodeShape === "port-arcs") {
-						that.canvas.select(that.getId("#node_grp", d.id)).select(that.getId("#node_outline", d.id))
-							.attr("d", (cd) => this.getNodeShapePath(cd))
-							.attr("transform", (cd) => this.getNodeHighlightOutlineTranslate(cd)) // Scale and move the shape up and to the left to account for the padding
-							.attr("data-selected", function(cd) { return that.objectModel.isSelected(cd.id) ? "yes" : "no"; })
-							.attr("class", this.layout.cssSelectionHighlight);
-					} else { // simple rectangle
-						that.canvas.select(that.getId("#node_grp", d.id)).select(that.getId("#node_outline", d.id))
-							.attr("width", (cd) => cd.width + (2 * this.layout.highlightGap))
-							.attr("height",
-								(cd) => cd.height + (2 * this.layout.highlightGap))
-							.attr("x", -this.layout.highlightGap)
-							.attr("y", -this.layout.highlightGap)
-							.attr("data-selected", function(cd) { return that.objectModel.isSelected(cd.id) ? "yes" : "no"; })
-							.attr("class", this.layout.cssSelectionHighlight);
-					}
-
-					// node layout: set flexible properties
-					if (this.layout.connectionType === "ports") {
-						// Node body updates
-						if (this.layout.nodeShape === "port-arcs") {
-							that.canvas.select(that.getId("#node_grp", d.id)).select(that.getId("#node_body", d.id))
-								.attr("d", (cd) => this.getNodeShapePath(cd))
-								.attr("class", (cd) => this.getNodeBodyClass(cd));
-						} else {
-							that.canvas.select(that.getId("#node_grp", d.id)).select(that.getId("#node_body", d.id))
-								.attr("width", (cd) => cd.width)
-								.attr("height", (cd) => cd.height)
-								.attr("x", 0)
-								.attr("y", 0)
-								.attr("class", (cd) => this.getNodeBodyClass(cd));
-						}
-
-						// Input ports
-						if (d.input_ports && d.input_ports.length > 0) {
-							const inputPortPositions = this.getPortPositions(d, "input");
-
-							var inputPortSelection = that.canvas.select(that.getId("#node_grp", d.id)).selectAll("." + this.layout.cssNodePortInput)
-								.data(d.input_ports, function(p) { return p.id; });
-
-							// input port circle
-							inputPortSelection.enter()
-								.append("circle")
-								.attr("id", (port) => this.getId("node_trg_port", d.id, port.id))
-								.attr("portId", (port) => port.id) // This is needed by getNodeInputPortAtMousePos
-								.attr("cx", 0)
-								.attr("r", this.layout.portRadius)
-								.attr("connected", "no")
-								.on("mouseover", function(port) {
-									that.stopPropagationAndPreventDefault(); // stop event propagation, otherwise node tip is shown
-									if (that.canShowTip(TIP_TYPE_PORT)) {
-										that.canvasController.hideTip();
-										that.canvasController.showTip({
-											id: that.getId("node_port_tip", port.id),
-											type: TIP_TYPE_PORT,
-											targetObj: this,
-											pipelineId: that.canvasJSON.sub_id,
-											node: d,
-											port: port
-										});
-									}
+			if (!this.selecting && !this.regionSelect && !this.commentSizing) {
+				var newNodeGroups = nodeGroupSel.enter()
+					.append("g")
+					.attr("id", (d) => that.getId("node_grp", d.id))
+					.attr("class", "obj-group node-group")
+					.attr("transform", (d) => `translate(${d.x_pos}, ${d.y_pos})`)
+					.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
+						if (that.layout.connectionType === "ports") {
+							that.canvas.select(that.getId("#node_body", d.id)).attr("hover", "yes");
+							d3.select(this)
+								.append("image")
+								.attr("id", that.getId("node_ellipsis"))
+								.attr("xlink:href", nodeMenuStandardIcon)
+								.attr("width", that.layout.ellipsisWidth)
+								.attr("height", that.layout.ellipsisHeight)
+								.attr("x", that.layout.ellipsisPosX)
+								.attr("y", (nd) => that.getEllipsisPosY(nd))
+								.on("mouseenter", () => {
+									that.canvas.select(that.getId("#node_ellipsis")).attr("xlink:href", nodeMenuHoverIcon);
 								})
-								.on("mouseout", (port) => {
-									this.canvasController.hideTip();
+								.on("mouseleave", () => {
+									that.canvas.select(that.getId("#node_ellipsis")).attr("xlink:href", nodeMenuStandardIcon);
 								})
-								.merge(inputPortSelection)	// for new and existing port circles, update cy, datum and class
-								.attr("cy", (port) => inputPortPositions[port.id])
-								.attr("class", (port) =>
-									this.layout.cssNodePortInput + (port.class_name ? " " + port.class_name : ""))
-								.datum((port) => that.getNodePort(d.id, port.id, "input"));
-
-							// input port arrow in circle
-							inputPortSelection.enter()
-								.append("path")
-								.attr("id", (port) => this.getId("node_trg_port_arrow", d.id, port.id))
-								.attr("class", this.layout.cssNodePortInputArrow)
-								.attr("connected", "no")
-								.on("mouseover", function(port) {
-									that.stopPropagationAndPreventDefault(); // stop event propagation, otherwise node tip is shown
-									if (that.canShowTip(TIP_TYPE_PORT)) {
-										that.canvasController.showTip({
-											id: that.getId("node_port_tip", port.id),
-											type: TIP_TYPE_PORT,
-											targetObj: this,
-											pipelineId: that.canvasJSON.sub_id,
-											node: d,
-											port: port
-										});
-									}
-								})
-								.on("mouseout", (port) => {
-									this.canvasController.hideTip();
+								.on("click", () => {
+									that.stopPropagationAndPreventDefault();
+									that.openContextMenu("node", d);
 								});
-
-							// update arrow in circle for new and existing ports
-							that.canvas.select(that.getId("#node_grp", d.id)).selectAll("." + this.layout.cssNodePortInputArrow)
-								.attr("d", (port) => this.getArrowShapePath(inputPortPositions[port.id]))
-								.datum((port) => this.getNodePort(d.id, port.id, "input"));
-
-							inputPortSelection.exit().remove();
+						}
+					})
+					.on("mouseleave", function(d) { // Use function keyword so 'this' pointer references the DOM text group object
+						that.canvas.select(that.getId("#node_body", d.id)).attr("hover", "no");
+						if (that.layout.connectionType === "ports") {
+							that.canvas.selectAll(that.getId("#node_ellipsis")).remove();
 						}
 
-						// Output ports
-						if (d.output_ports && d.output_ports.length > 0) {
-							const outputPortPositions = this.getPortPositions(d, "output");
-
-							var outputPortSelection = this.canvas.select(this.getId("#node_grp", d.id))
-								.selectAll("." + this.layout.cssNodePortOutput)
-								.data(d.output_ports, function(p) { return p.id; });
-
-							outputPortSelection.enter()
-								.append("circle")
-								.attr("id", (port) => this.getId("node_src_port", d.id, port.id))
-								.attr("r", this.layout.portRadius)
-								.attr("class", (port) => this.layout.cssNodePortOutput + (port.class_name ? " " + port.class_name : ""))
-								.on("mousedown", (port) => {
-									// Make sure this is just a left mouse button click - we don't want context menu click starting a line being drawn
-									if (d3.event.button === 0) {
-										this.stopPropagationAndPreventDefault(); // Stops the node drag behavior when clicking on the handle/circle
-										this.drawingNewLink = true;
-										this.drawingNewLinkSrcId = d.id;
-										this.drawingNewLinkSrcPortId = port.id;
-										this.drawingNewLinkAction = "node-node";
-										const node = this.getNodeAtMousePos();
-										this.drawingNewLinkStartPos = { x: node.x_pos + node.width, y: node.y_pos + outputPortPositions[port.id] };
-										this.drawingNewLinkArray = [];
-										this.drawNewLink();
-									}
-								})
-								.on("mouseover", function(port) {
-									that.stopPropagationAndPreventDefault(); // stop event propagation, otherwise node tip is shown
-									if (that.canShowTip(TIP_TYPE_PORT)) {
-										that.canvasController.hideTip();
-										that.canvasController.showTip({
-											id: that.getId("node_port_tip", port.id),
-											type: TIP_TYPE_PORT,
-											targetObj: this,
-											pipelineId: that.canvasJSON.sub_id,
-											node: d,
-											port: port
-										});
-									}
-								})
-								.on("mouseout", (port) => {
-									this.canvasController.hideTip();
-								})
-								.merge(outputPortSelection)	// update cx, class and cy for existing output ports
-								.attr("cx", (port) => d.width)
-								.attr("cy", (port) => outputPortPositions[port.id])
-								.attr("class", (port) => this.layout.cssNodePortOutput + (port.class_name ? " " + port.class_name : ""))
-								.datum((port) => this.getNodePort(d.id, port.id, "output"));
-
-							outputPortSelection.exit().remove();
-						}
-					}
-				});
-
-			// Image outline - this code used for debugging purposes
-			// newNodeGroups.append("rect")
-			// 	.attr("width", this.layout.imageWidth)
-			// 	.attr("height", this.layout.imageHeight)
-			// 	.attr("x", this.layout.imagePosX)
-			// 	.attr("y", this.layout.imagePosY)
-			// 	.attr("class", "d3-node-image-outline");
-
-			// Node image
-			newNodeGroups.append("image")
-				.attr("id", (d) => this.getId("node_image", d.id))
-				.attr("xlink:href", (d) => d.image)
-				.attr("width", this.layout.imageWidth)
-				.attr("height", this.layout.imageHeight)
-				.attr("x", this.layout.imagePosX)
-				.attr("class", "node-image");
-
-			// set y and custom attribures for node image in new and existing nodes
-			newNodeGroups.merge(nodeGroupSel).selectAll(".node-image")
-				.attr("y", (d) => this.getImagePosY(d))
-				.each(function(d) {
-					if (d.customAttrs) {
-						var imageObj = d3.select(this);
-						d.customAttrs.forEach((customAttr) => {
-							imageObj.attr(customAttr, "");
-						});
-					}
-				});
-
-			// Label outline - this code used for debugging purposes
-			// newNodeGroups.append("rect")
-			// 	.attr("width", this.layout.labelWidth)
-			// 	.attr("height", this.layout.labelHeight)
-			// 	.attr("x", this.layout.labelPosX)
-			// 	.attr("y", (d) => this.getLabelPosY(d))
-			// 	.attr("class", "d3-label-outline");
-
-			// Label
-			newNodeGroups.append("text")
-				.text(function(d) {
-					var textObj = d3.select(this);
-					return that.trimLabelToWidth(d.label, that.layout.labelWidth, that.layout.cssNodeLabel, textObj);
-				})
-				.attr("id", (d) => that.getId("node_label", d.id))
-				.attr("class", (d) => that.layout.cssNodeLabel + " " + that.getMessageLabelClass(d.messages))
-				.attr("x", this.layout.labelHorizontalJustification === "left" // If not "left" then "center"
-					? this.layout.labelPosX : this.layout.labelPosX + (this.layout.labelWidth / 2))
-				.attr("text-anchor", this.layout.labelHorizontalJustification === "left" ? "start" : "middle")
-				.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text object
-					const labelObj = d3.select(this);
-					if (that.layout.displayFullLabelOnHover &&
-							this.textContent.endsWith("...")) {
-						labelObj
-							.attr("abbr-label", this.textContent) // Do this before setting the new label
-							.text(d.label);
-					}
-				})
-				.on("mouseleave", function(d) { // Use function keyword so 'this' pointer references the DOM text object
-					const labelObj = d3.select(this);
-					const abbrLabel = labelObj.attr("abbr-label");
-					if (abbrLabel && abbrLabel !== "") {
-						labelObj.text(abbrLabel).attr("abbr-label", "");
-					}
-				});
-
-			// set y for node label in new and existing nodes
-			newNodeGroups.merge(nodeGroupSel).selectAll("." + this.layout.cssNodeLabel)
-				.attr("y", (d) => this.getLabelPosY(d) + this.layout.labelHeight - this.layout.labelDescent);
-
-			// Halo
-			if (this.layout.connectionType === "halo") {
-				newNodeGroups.append("circle")
-					.attr("id", (d) => this.getId("node_halo", d.id))
-					.attr("class", "d3-node-halo")
-					.attr("cx", this.layout.haloCenterX)
-					.attr("cy", this.layout.haloCenterY)
-					.attr("r", this.layout.haloRadius)
+						that.canvasController.hideTip();
+					})
+					// Use mouse down instead of click because it gets called before drag start.
 					.on("mousedown", (d) => {
-						this.consoleLog("Halo - mouse down");
+						this.consoleLog("Node Group - mouse down");
+						this.selecting = true;
+						d3.event.stopPropagation(); // Prevent mousedown event going through to canvas
+						if (!this.objectModel.isSelected(d.id)) {
+							if (d3.event.shiftKey) {
+								this.objectModel.selectSubGraph(d.id);
+							} else {
+								this.objectModel.toggleSelection(d.id, this.isCmndCtrlPressed());
+							}
+						} else {
+							if (this.isCmndCtrlPressed()) {
+								this.objectModel.toggleSelection(d.id, this.isCmndCtrlPressed());
+							}
+						}
+						this.canvasController.clickActionHandler({
+							clickType: "SINGLE_CLICK",
+							objectType: "node",
+							id: d.id,
+							selectedObjectIds: this.objectModel.getSelectedObjectIds() });
+						this.selecting = false;
+						this.consoleLog("Node Group - finished mouse down");
+					})
+					.on("mousemove", (d) => {
+						// this.consoleLog("Node Group - mouse move");
+						// Don't stop propogation. Mouse move messages must be allowed to
+						// propagate to canvas zoom operation.
+					})
+					.on("mouseup", (d) => {
 						d3.event.stopPropagation();
-						this.drawingNewLink = true;
-						this.drawingNewLinkSrcId = d.id;
-						this.drawingNewLinkAction = "node-node";
-						this.drawingNewLinkStartPos = this.getTransformedMousePos();
-						this.drawingNewLinkArray = [];
-						this.drawNewLink();
+						this.consoleLog("Node Group - mouse up");
+						if (this.drawingNewLink === true) {
+							this.completeNewLink(d);
+						}
+					})
+					.on("mouseover", function(d) {
+						if (that.canShowTip(TIP_TYPE_NODE)) {
+							that.canvasController.showTip({
+								id: that.getId("node_tip", d.id),
+								type: TIP_TYPE_NODE,
+								targetObj: this,
+								pipelineId: that.canvasJSON.sub_id,
+								node: d
+							});
+						}
+					})
+					.on("dblclick", (d) => {
+						this.consoleLog("Node Group - double click");
+						d3.event.stopPropagation();
+						var selObjIds = this.objectModel.getSelectedObjectIds();
+						this.canvasController.clickActionHandler({ clickType: "DOUBLE_CLICK", objectType: "node", id: d.id, selectedObjectIds: selObjIds });
+					})
+					.on("contextmenu", (d) => {
+						this.consoleLog("Node Group - context menu");
+						this.stopPropagationAndPreventDefault();
+						that.openContextMenu("node", d);
+					})
+					.call(this.drag); // Must put drag after mousedown listener so mousedown gets called first.
+
+				// Node selection highlighting outline for new nodes, flexible properties set in next step
+				if (this.layout.nodeShape === "port-arcs") {
+					newNodeGroups.append("path")
+						.attr("id", (d) => this.getId("node_outline", d.id));
+
+					newNodeGroups.append("path")
+						.attr("id", (d) => this.getId("node_body", d.id))
+						.style("filter", `url(${this.getId("#node_drop_shadow")})`);
+
+
+				} else { // simple rectangle
+					newNodeGroups.append("rect")
+						.attr("id", (d) => this.getId("node_outline", d.id));
+
+					newNodeGroups.append("rect")
+						.attr("id", (d) => this.getId("node_body", d.id));
+
+				}
+
+				var newAndExistingNodes = nodeGroupSel.enter().merge(nodeGroupSel);
+
+				newAndExistingNodes
+					.each((d) => {
+						// Node selection highlighting: set flexible properties
+						if (this.layout.nodeShape === "port-arcs") {
+							that.canvas.select(that.getId("#node_grp", d.id)).select(that.getId("#node_outline", d.id))
+								.attr("d", (cd) => this.getNodeShapePath(cd))
+								.attr("transform", (cd) => this.getNodeHighlightOutlineTranslate(cd)) // Scale and move the shape up and to the left to account for the padding
+								.attr("data-selected", function(cd) { return that.objectModel.isSelected(cd.id) ? "yes" : "no"; })
+								.attr("class", this.layout.cssSelectionHighlight);
+						} else { // simple rectangle
+							that.canvas.select(that.getId("#node_grp", d.id)).select(that.getId("#node_outline", d.id))
+								.attr("width", (cd) => cd.width + (2 * this.layout.highlightGap))
+								.attr("height",
+									(cd) => cd.height + (2 * this.layout.highlightGap))
+								.attr("x", -this.layout.highlightGap)
+								.attr("y", -this.layout.highlightGap)
+								.attr("data-selected", function(cd) { return that.objectModel.isSelected(cd.id) ? "yes" : "no"; })
+								.attr("class", this.layout.cssSelectionHighlight);
+						}
+
+						// node layout: set flexible properties
+						if (this.layout.connectionType === "ports") {
+							// Node body updates
+							if (this.layout.nodeShape === "port-arcs") {
+								that.canvas.select(that.getId("#node_grp", d.id)).select(that.getId("#node_body", d.id))
+									.attr("d", (cd) => this.getNodeShapePath(cd))
+									.attr("class", (cd) => this.getNodeBodyClass(cd));
+							} else {
+								that.canvas.select(that.getId("#node_grp", d.id)).select(that.getId("#node_body", d.id))
+									.attr("width", (cd) => cd.width)
+									.attr("height", (cd) => cd.height)
+									.attr("x", 0)
+									.attr("y", 0)
+									.attr("class", (cd) => this.getNodeBodyClass(cd));
+							}
+
+							// Input ports
+							if (d.input_ports && d.input_ports.length > 0) {
+								const inputPortPositions = this.getPortPositions(d, "input");
+
+								var inputPortSelection = that.canvas.select(that.getId("#node_grp", d.id)).selectAll("." + this.layout.cssNodePortInput)
+									.data(d.input_ports, function(p) { return p.id; });
+
+								// input port circle
+								inputPortSelection.enter()
+									.append("circle")
+									.attr("id", (port) => this.getId("node_trg_port", d.id, port.id))
+									.attr("portId", (port) => port.id) // This is needed by getNodeInputPortAtMousePos
+									.attr("cx", 0)
+									.attr("r", this.layout.portRadius)
+									.attr("connected", "no")
+									.on("mouseover", function(port) {
+										that.stopPropagationAndPreventDefault(); // stop event propagation, otherwise node tip is shown
+										if (that.canShowTip(TIP_TYPE_PORT)) {
+											that.canvasController.hideTip();
+											that.canvasController.showTip({
+												id: that.getId("node_port_tip", port.id),
+												type: TIP_TYPE_PORT,
+												targetObj: this,
+												pipelineId: that.canvasJSON.sub_id,
+												node: d,
+												port: port
+											});
+										}
+									})
+									.on("mouseout", (port) => {
+										this.canvasController.hideTip();
+									})
+									.merge(inputPortSelection)	// for new and existing port circles, update cy, datum and class
+									.attr("cy", (port) => inputPortPositions[port.id])
+									.attr("class", (port) =>
+										this.layout.cssNodePortInput + (port.class_name ? " " + port.class_name : ""))
+									.datum((port) => that.getNodePort(d.id, port.id, "input"));
+
+								// input port arrow in circle
+								inputPortSelection.enter()
+									.append("path")
+									.attr("id", (port) => this.getId("node_trg_port_arrow", d.id, port.id))
+									.attr("class", this.layout.cssNodePortInputArrow)
+									.attr("connected", "no")
+									.on("mouseover", function(port) {
+										that.stopPropagationAndPreventDefault(); // stop event propagation, otherwise node tip is shown
+										if (that.canShowTip(TIP_TYPE_PORT)) {
+											that.canvasController.showTip({
+												id: that.getId("node_port_tip", port.id),
+												type: TIP_TYPE_PORT,
+												targetObj: this,
+												pipelineId: that.canvasJSON.sub_id,
+												node: d,
+												port: port
+											});
+										}
+									})
+									.on("mouseout", (port) => {
+										this.canvasController.hideTip();
+									});
+
+								// update arrow in circle for new and existing ports
+								that.canvas.select(that.getId("#node_grp", d.id)).selectAll("." + this.layout.cssNodePortInputArrow)
+									.attr("d", (port) => this.getArrowShapePath(inputPortPositions[port.id]))
+									.datum((port) => this.getNodePort(d.id, port.id, "input"));
+
+								inputPortSelection.exit().remove();
+							}
+
+							// Output ports
+							if (d.output_ports && d.output_ports.length > 0) {
+								const outputPortPositions = this.getPortPositions(d, "output");
+
+								var outputPortSelection = this.canvas.select(this.getId("#node_grp", d.id))
+									.selectAll("." + this.layout.cssNodePortOutput)
+									.data(d.output_ports, function(p) { return p.id; });
+
+								outputPortSelection.enter()
+									.append("circle")
+									.attr("id", (port) => this.getId("node_src_port", d.id, port.id))
+									.attr("r", this.layout.portRadius)
+									.attr("class", (port) => this.layout.cssNodePortOutput + (port.class_name ? " " + port.class_name : ""))
+									.on("mousedown", (port) => {
+										// Make sure this is just a left mouse button click - we don't want context menu click starting a line being drawn
+										if (d3.event.button === 0) {
+											this.stopPropagationAndPreventDefault(); // Stops the node drag behavior when clicking on the handle/circle
+											this.drawingNewLink = true;
+											this.drawingNewLinkSrcId = d.id;
+											this.drawingNewLinkSrcPortId = port.id;
+											this.drawingNewLinkAction = "node-node";
+											const node = this.getNodeAtMousePos();
+											this.drawingNewLinkStartPos = { x: node.x_pos + node.width, y: node.y_pos + outputPortPositions[port.id] };
+											this.drawingNewLinkArray = [];
+											this.drawNewLink();
+										}
+									})
+									.on("mouseover", function(port) {
+										that.stopPropagationAndPreventDefault(); // stop event propagation, otherwise node tip is shown
+										if (that.canShowTip(TIP_TYPE_PORT)) {
+											that.canvasController.hideTip();
+											that.canvasController.showTip({
+												id: that.getId("node_port_tip", port.id),
+												type: TIP_TYPE_PORT,
+												targetObj: this,
+												pipelineId: that.canvasJSON.sub_id,
+												node: d,
+												port: port
+											});
+										}
+									})
+									.on("mouseout", (port) => {
+										this.canvasController.hideTip();
+									})
+									.merge(outputPortSelection)	// update cx, class and cy for existing output ports
+									.attr("cx", (port) => d.width)
+									.attr("cy", (port) => outputPortPositions[port.id])
+									.attr("class", (port) => this.layout.cssNodePortOutput + (port.class_name ? " " + port.class_name : ""))
+									.datum((port) => this.getNodePort(d.id, port.id, "output"));
+
+								outputPortSelection.exit().remove();
+							}
+						}
 					});
+
+				// Image outline - this code used for debugging purposes
+				// newNodeGroups.append("rect")
+				// 	.attr("width", this.layout.imageWidth)
+				// 	.attr("height", this.layout.imageHeight)
+				// 	.attr("x", this.layout.imagePosX)
+				// 	.attr("y", this.layout.imagePosY)
+				// 	.attr("class", "d3-node-image-outline");
+
+				// Node image
+				newNodeGroups.append("image")
+					.attr("id", (d) => this.getId("node_image", d.id))
+					.attr("xlink:href", (d) => d.image)
+					.attr("width", this.layout.imageWidth)
+					.attr("height", this.layout.imageHeight)
+					.attr("x", this.layout.imagePosX)
+					.attr("class", "node-image");
+
+				// set y and custom attribures for node image in new and existing nodes
+				newNodeGroups.merge(nodeGroupSel).selectAll(".node-image")
+					.attr("y", (d) => this.getImagePosY(d))
+					.each(function(d) {
+						if (d.customAttrs) {
+							var imageObj = d3.select(this);
+							d.customAttrs.forEach((customAttr) => {
+								imageObj.attr(customAttr, "");
+							});
+						}
+					});
+
+				// Label outline - this code used for debugging purposes
+				// newNodeGroups.append("rect")
+				// 	.attr("width", this.layout.labelWidth)
+				// 	.attr("height", this.layout.labelHeight)
+				// 	.attr("x", this.layout.labelPosX)
+				// 	.attr("y", (d) => this.getLabelPosY(d))
+				// 	.attr("class", "d3-label-outline");
+
+				// Label
+				newNodeGroups.append("text")
+					.text(function(d) {
+						var textObj = d3.select(this);
+						return that.trimLabelToWidth(d.label, that.layout.labelWidth, that.layout.cssNodeLabel, textObj);
+					})
+					.attr("id", (d) => that.getId("node_label", d.id))
+					.attr("class", (d) => that.layout.cssNodeLabel + " " + that.getMessageLabelClass(d.messages))
+					.attr("x", this.layout.labelHorizontalJustification === "left" // If not "left" then "center"
+						? this.layout.labelPosX : this.layout.labelPosX + (this.layout.labelWidth / 2))
+					.attr("text-anchor", this.layout.labelHorizontalJustification === "left" ? "start" : "middle")
+					.on("mouseenter", function(d) { // Use function keyword so 'this' pointer references the DOM text object
+						const labelObj = d3.select(this);
+						if (that.layout.displayFullLabelOnHover &&
+								this.textContent.endsWith("...")) {
+							labelObj
+								.attr("abbr-label", this.textContent) // Do this before setting the new label
+								.text(d.label);
+						}
+					})
+					.on("mouseleave", function(d) { // Use function keyword so 'this' pointer references the DOM text object
+						const labelObj = d3.select(this);
+						const abbrLabel = labelObj.attr("abbr-label");
+						if (abbrLabel && abbrLabel !== "") {
+							labelObj.text(abbrLabel).attr("abbr-label", "");
+						}
+					});
+
+				// set y for node label in new and existing nodes
+				newNodeGroups.merge(nodeGroupSel).selectAll("." + this.layout.cssNodeLabel)
+					.attr("y", (d) => this.getLabelPosY(d) + this.layout.labelHeight - this.layout.labelDescent);
+
+				// Halo
+				if (this.layout.connectionType === "halo") {
+					newNodeGroups.append("circle")
+						.attr("id", (d) => this.getId("node_halo", d.id))
+						.attr("class", "d3-node-halo")
+						.attr("cx", this.layout.haloCenterX)
+						.attr("cy", this.layout.haloCenterY)
+						.attr("r", this.layout.haloRadius)
+						.on("mousedown", (d) => {
+							this.consoleLog("Halo - mouse down");
+							d3.event.stopPropagation();
+							this.drawingNewLink = true;
+							this.drawingNewLinkSrcId = d.id;
+							this.drawingNewLinkAction = "node-node";
+							this.drawingNewLinkStartPos = this.getTransformedMousePos();
+							this.drawingNewLinkArray = [];
+							this.drawNewLink();
+						});
+				}
+
+				// Error indicator
+				newNodeGroups.append("circle")
+					.attr("id", (d) => that.getId("node_error_marker", d.id))
+					.attr("class", (d) => "node-error-marker " + that.getMessageCircleClass(d.messages))
+					.attr("cx", this.layout.errorCenterX)
+					.attr("r", this.layout.errorRadius);
+
+				// set cy for error circle in new and existing nodes
+				newNodeGroups.merge(nodeGroupSel).selectAll(".node-error-marker")
+					.attr("cy", (d) => this.getErrorPosY(d));
+
+				// Decorators
+				this.addDecorator(newNodeGroups, "topLeft", this.layout.decoratorLeftX, this.layout.decoratorTopY);
+				this.addDecorator(newNodeGroups, "topRight", this.layout.decoratorRightX, this.layout.decoratorTopY);
+				this.addDecorator(newNodeGroups, "bottomLeft", this.layout.decoratorLeftX, this.layout.decoratorBottomY);
+				this.addDecorator(newNodeGroups, "bottomRight", this.layout.decoratorRightX, this.layout.decoratorBottomY);
+
+				// Remove any nodes that are no longer in the diagram.nodes array.
+				nodeGroupSel.exit().remove();
 			}
-
-			// Error indicator
-			newNodeGroups.append("circle")
-				.attr("id", (d) => that.getId("node_error_marker", d.id))
-				.attr("class", (d) => "node-error-marker " + that.getMessageCircleClass(d.messages))
-				.attr("cx", this.layout.errorCenterX)
-				.attr("r", this.layout.errorRadius);
-
-			// set cy for error circle in new and existing nodes
-			newNodeGroups.merge(nodeGroupSel).selectAll(".node-error-marker")
-				.attr("cy", (d) => this.getErrorPosY(d));
-
-			// Decorators
-			this.addDecorator(newNodeGroups, "topLeft", this.layout.decoratorLeftX, this.layout.decoratorTopY);
-			this.addDecorator(newNodeGroups, "topRight", this.layout.decoratorRightX, this.layout.decoratorTopY);
-			this.addDecorator(newNodeGroups, "bottomLeft", this.layout.decoratorLeftX, this.layout.decoratorBottomY);
-			this.addDecorator(newNodeGroups, "bottomRight", this.layout.decoratorRightX, this.layout.decoratorBottomY);
-
-			// Remove any nodes that are no longer in the diagram.nodes array.
-			nodeGroupSel.exit().remove();
 		}
 	}
 
