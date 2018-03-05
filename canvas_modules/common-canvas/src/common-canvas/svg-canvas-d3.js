@@ -12,7 +12,10 @@
 /* eslint no-lonely-if: "off" */
 /* eslint no-console: "off" */
 
-const d3 = require("d3");
+// Import just the D3 modules that are needed. Doing this means that the
+// d3Event object needs to be explicitly imported.
+var d3 = Object.assign({}, require("d3-drag"), require("d3-selection"), require("d3-zoom"));
+import { event as d3Event } from "d3-selection";
 import union from "lodash/union";
 import nodeMenuStandardIcon from "../../assets/images/canvas_node_icons/node-menu_standard.svg";
 import nodeMenuHoverIcon from "../../assets/images/canvas_node_icons/node-menu_hover.svg";
@@ -80,7 +83,7 @@ export default class CanvasD3Layout {
 		// allow mousedown and mousemove messages to go through to the canvas to
 		// do region selection. Therefore I had to implement region selection in
 		// the zoom methods. This has the side effect that, when a region is
-		// selected, d3.event.transform.x and d3.event.transform.y are incremented
+		// selected, d3Event.transform.x and d3Event.transform.y are incremented
 		// even though the objects in the canvas have not moved. The values below
 		// are used to store the current transform x and y amounts at the beginning
 		// of the region selection and then restore those amounts at the end of
@@ -256,7 +259,7 @@ export default class CanvasD3Layout {
 	// augmentation. Also since metaKey is true when the Windows key on Windows
 	// is pressed that will also act as an augmentation key.
 	isCmndCtrlPressed() {
-		return d3.event.metaKey || d3.event.ctrlKey;
+		return d3Event.metaKey || d3Event.ctrlKey;
 	}
 
 	// Returns the current mouse posiiton transformed by the current zoom
@@ -266,13 +269,13 @@ export default class CanvasD3Layout {
 	}
 
 	// Returns the current mouse position. Note: Using d3.mouse is better than
-	// calling d3.event.offsetX and d3.event.offsetX because in Firefox d3.mouse
-	// provides an offset within the SVG area whereas in Firefox the d3.event
+	// calling d3Event.offsetX and d3Event.offsetX because in Firefox d3.mouse
+	// provides an offset within the SVG area whereas in Firefox the d3Event
 	// offset variables provide an offset from within the object the mouse is over.
 	// Note: added checks for event to prevent error in FF when building in production:
 	// TypeError: Value being assigned to SVGPoint.x is not a finite floating-point value.
 	getMousePos() {
-		if (d3.event instanceof MouseEvent || (d3.event && d3.event.sourceEvent)) {
+		if (d3Event instanceof MouseEvent || (d3Event && d3Event.sourceEvent)) {
 			const mousePos = d3.mouse(this.canvasSVG.node());
 			return { x: mousePos[0], y: mousePos[1] };
 		}
@@ -346,18 +349,18 @@ export default class CanvasD3Layout {
 				// Only catch key pressses when NOT editing because, while editing,
 				// the test area needs to receive key presses for undo, redo, delete etc.
 				if (!this.editingComment) {
-					if (d3.event.keyCode === BACKSPACE_KEY ||
-							d3.event.keyCode === DELETE_KEY) {
+					if (d3Event.keyCode === BACKSPACE_KEY ||
+							d3Event.keyCode === DELETE_KEY) {
 						this.stopPropagationAndPreventDefault(); // Some browsers interpret Delete as 'Back to previous page'. So prevent that.
 						this.canvasController.editActionHandler({ editType: "deleteSelectedObjects", selectedObjectIds: this.objectModel.getSelectedObjectIds() });
-					} else if (this.isCmndCtrlPressed() && !d3.event.shiftKey && d3.event.keyCode === Z_KEY) {
+					} else if (this.isCmndCtrlPressed() && !d3Event.shiftKey && d3Event.keyCode === Z_KEY) {
 						this.stopPropagationAndPreventDefault();
 						this.canvasController.editActionHandler({ editType: "undo" });
 					} else if (this.isCmndCtrlPressed() &&
-							((d3.event.shiftKey && d3.event.keyCode === Z_KEY) || d3.event.keyCode === Y_KEY)) {
+							((d3Event.shiftKey && d3Event.keyCode === Z_KEY) || d3Event.keyCode === Y_KEY)) {
 						this.stopPropagationAndPreventDefault();
 						this.canvasController.editActionHandler({ editType: "redo" });
-					} else if (this.isCmndCtrlPressed() && d3.event.keyCode === A_KEY) {
+					} else if (this.isCmndCtrlPressed() && d3Event.keyCode === A_KEY) {
 						this.stopPropagationAndPreventDefault();
 						this.objectModel.selectAll();
 					}
@@ -556,12 +559,12 @@ export default class CanvasD3Layout {
 	}
 
 	zoomStart() {
-		this.consoleLog("Zoom start - x = " + d3.event.transform.x + " y = " + d3.event.transform.y + " k = " + d3.event.transform.k);
+		this.consoleLog("Zoom start - x = " + d3Event.transform.x + " y = " + d3Event.transform.y + " k = " + d3Event.transform.k);
 
-		if (d3.event.sourceEvent && d3.event.sourceEvent.shiftKey) {
+		if (d3Event.sourceEvent && d3Event.sourceEvent.shiftKey) {
 			this.regionSelect = true;
-			this.regionStartTransformX = d3.event.transform.x;
-			this.regionStartTransformY = d3.event.transform.y;
+			this.regionStartTransformX = d3Event.transform.x;
+			this.regionStartTransformY = d3Event.transform.y;
 			const transPos = this.getTransformedMousePos();
 			this.region = {
 				startX: transPos.x,
@@ -571,12 +574,12 @@ export default class CanvasD3Layout {
 			};
 		} else {
 			this.canvasController.hideTip();
-			this.zoomStartPoint = { x: d3.event.transform.x, y: d3.event.transform.y, k: d3.event.transform.k };
+			this.zoomStartPoint = { x: d3Event.transform.x, y: d3Event.transform.y, k: d3Event.transform.k };
 		}
 	}
 
 	zoomAction() {
-		// this.consoleLog("Zoom action - x = " + d3.event.transform.x + " y = " + d3.event.transform.y + " k = " + d3.event.transform.k);
+		// this.consoleLog("Zoom action - x = " + d3Event.transform.x + " y = " + d3Event.transform.y + " k = " + d3Event.transform.k);
 
 		if (this.regionSelect === true) {
 			const transPos = this.getTransformedMousePos();
@@ -585,9 +588,9 @@ export default class CanvasD3Layout {
 			this.drawRegionSelector();
 
 		} else {
-			var x = d3.event.transform.x;
-			var y = d3.event.transform.y;
-			var k = d3.event.transform.k;
+			var x = d3Event.transform.x;
+			var y = d3Event.transform.y;
+			var k = d3Event.transform.k;
 
 
 			// If we are not zooming we must be dragging so, if the canvas rectangle
@@ -605,8 +608,8 @@ export default class CanvasD3Layout {
 				}
 			}
 
-			d3.event.transform.x = x;
-			d3.event.transform.y = y;
+			d3Event.transform.x = x;
+			d3Event.transform.y = y;
 
 			this.zoomTransform = d3.zoomIdentity.translate(x, y).scale(k);
 			this.canvas.attr("transform", this.zoomTransform);
@@ -619,7 +622,7 @@ export default class CanvasD3Layout {
 	}
 
 	zoomEnd() {
-		this.consoleLog("Zoom end - x = " + d3.event.transform.x + " y = " + d3.event.transform.y + " k = " + d3.event.transform.k);
+		this.consoleLog("Zoom end - x = " + d3Event.transform.x + " y = " + d3Event.transform.y + " k = " + d3Event.transform.k);
 
 		if (this.drawingNewLink) {
 			this.stopDrawingNewLink();
@@ -631,8 +634,8 @@ export default class CanvasD3Layout {
 
 			// Reset the transform x and y to what they were before the region
 			// selection action was started.
-			d3.event.transform.x = this.regionStartTransformX;
-			d3.event.transform.y = this.regionStartTransformY;
+			d3Event.transform.x = this.regionStartTransformX;
+			d3Event.transform.y = this.regionStartTransformY;
 
 			this.objectModel.clearSelection();
 
@@ -649,8 +652,8 @@ export default class CanvasD3Layout {
 		} else {
 			// If mouse hasn't moved very far we make this equivalent to a click
 			// on the canvas.
-			if (Math.abs(d3.event.transform.x - this.zoomStartPoint.x) < 2 &&
-					Math.abs(d3.event.transform.y - this.zoomStartPoint.y) < 2) {
+			if (Math.abs(d3Event.transform.x - this.zoomStartPoint.x) < 2 &&
+					Math.abs(d3Event.transform.y - this.zoomStartPoint.y) < 2) {
 				this.selecting = true;
 				this.canvasController.clickActionHandler({ clickType: "SINGLE_CLICK", objectType: "canvas", selectedObjectIds: this.objectModel.getSelectedObjectIds() });
 				// TODO - The decision to clear selection (commented out code below) is currently made by common-canvas
@@ -666,7 +669,7 @@ export default class CanvasD3Layout {
 				// from the objectmodel's canvasJSON which would remove any pending changes.
 				this.savePendingCommentChanges();
 				this.consoleLog("editActionHandler - zoomCanvas");
-				this.canvasController.editActionHandler({ editType: "zoomCanvas", value: d3.event.transform.k });
+				this.canvasController.editActionHandler({ editType: "zoomCanvas", value: d3Event.transform.k });
 			}
 		}
 	}
@@ -765,14 +768,14 @@ export default class CanvasD3Layout {
 		if (this.commentSizing) {
 			this.resizeComment();
 		} else {
-			this.dragOffsetX += d3.event.dx;
-			this.dragOffsetY += d3.event.dy;
+			this.dragOffsetX += d3Event.dx;
+			this.dragOffsetY += d3Event.dy;
 
 			var objs = this.getSelectedNodesAndComments();
 
 			objs.forEach(function(d) {
-				d.x_pos += d3.event.dx;
-				d.y_pos += d3.event.dy;
+				d.x_pos += d3Event.dx;
+				d.y_pos += d3Event.dy;
 			});
 
 			var startTime = Date.now();
@@ -909,9 +912,9 @@ export default class CanvasD3Layout {
 					.on("mousedown", (d) => {
 						this.consoleLog("Node Group - mouse down");
 						this.selecting = true;
-						d3.event.stopPropagation(); // Prevent mousedown event going through to canvas
+						d3Event.stopPropagation(); // Prevent mousedown event going through to canvas
 						if (!this.objectModel.isSelected(d.id)) {
-							if (d3.event.shiftKey) {
+							if (d3Event.shiftKey) {
 								this.objectModel.selectSubGraph(d.id);
 							} else {
 								this.objectModel.toggleSelection(d.id, this.isCmndCtrlPressed());
@@ -935,7 +938,7 @@ export default class CanvasD3Layout {
 						// propagate to canvas zoom operation.
 					})
 					.on("mouseup", (d) => {
-						d3.event.stopPropagation();
+						d3Event.stopPropagation();
 						this.consoleLog("Node Group - mouse up");
 						if (this.drawingNewLink === true) {
 							this.completeNewLink(d);
@@ -954,7 +957,7 @@ export default class CanvasD3Layout {
 					})
 					.on("dblclick", (d) => {
 						this.consoleLog("Node Group - double click");
-						d3.event.stopPropagation();
+						d3Event.stopPropagation();
 						var selObjIds = this.objectModel.getSelectedObjectIds();
 						this.canvasController.clickActionHandler({ clickType: "DOUBLE_CLICK", objectType: "node", id: d.id, selectedObjectIds: selObjIds });
 					})
@@ -1106,7 +1109,7 @@ export default class CanvasD3Layout {
 									.attr("class", (port) => this.layout.cssNodePortOutput + (port.class_name ? " " + port.class_name : ""))
 									.on("mousedown", (port) => {
 										// Make sure this is just a left mouse button click - we don't want context menu click starting a line being drawn
-										if (d3.event.button === 0) {
+										if (d3Event.button === 0) {
 											this.stopPropagationAndPreventDefault(); // Stops the node drag behavior when clicking on the handle/circle
 											this.drawingNewLink = true;
 											this.drawingNewLinkSrcId = d.id;
@@ -1225,7 +1228,7 @@ export default class CanvasD3Layout {
 						.attr("r", this.layout.haloRadius)
 						.on("mousedown", (d) => {
 							this.consoleLog("Halo - mouse down");
-							d3.event.stopPropagation();
+							d3Event.stopPropagation();
 							this.drawingNewLink = true;
 							this.drawingNewLinkSrcId = d.id;
 							this.drawingNewLinkAction = "node-node";
@@ -1399,7 +1402,7 @@ export default class CanvasD3Layout {
 	}
 
 	getDecoratorCallback(d, type) {
-		d3.event.stopPropagation();
+		d3Event.stopPropagation();
 		if (this.canvasController.decorationActionHandler) {
 			var id = this.getDecoratorId(d, type);
 			this.canvasController.decorationActionHandler(d, id);
@@ -1969,9 +1972,9 @@ export default class CanvasD3Layout {
 				.on("mousedown", (d) => {
 					this.consoleLog("Comment Group - mouse down");
 					this.selecting = true;
-					d3.event.stopPropagation(); // Prevent mousedown event going through to canvas
+					d3Event.stopPropagation(); // Prevent mousedown event going through to canvas
 					if (!this.objectModel.isSelected(d.id)) {
-						if (d3.event.shiftKey) {
+						if (d3Event.shiftKey) {
 							this.objectModel.selectSubGraph(d.id);
 						} else {
 							this.objectModel.toggleSelection(d.id, this.isCmndCtrlPressed());
@@ -2162,7 +2165,7 @@ export default class CanvasD3Layout {
 					.attr("height", (d) => d.height + (2 * this.layout.haloCommentGap))
 					.on("mousedown", (d) => {
 						this.consoleLog("Comment Halo - mouse down");
-						d3.event.stopPropagation();
+						d3Event.stopPropagation();
 						this.drawingNewLink = true;
 						this.drawingNewLinkSrcId = d.id;
 						this.drawingNewLinkSrcPortId = null;
@@ -2309,18 +2312,18 @@ export default class CanvasD3Layout {
 		var yPos = commentObj.y_pos;
 
 		if (this.commentSizingDirection.indexOf("e") > -1) {
-			width += d3.event.dx;
+			width += d3Event.dx;
 		}
 		if (this.commentSizingDirection.indexOf("s") > -1) {
-			height += d3.event.dy;
+			height += d3Event.dy;
 		}
 		if (this.commentSizingDirection.indexOf("n") > -1) {
-			yPos += d3.event.dy;
-			height -= d3.event.dy;
+			yPos += d3Event.dy;
+			height -= d3Event.dy;
 		}
 		if (this.commentSizingDirection.indexOf("w") > -1) {
-			xPos += d3.event.dx;
-			width -= d3.event.dx;
+			xPos += d3Event.dx;
+			width -= d3Event.dx;
 		}
 
 		// Don't allow the comment area to shrink below 20 pixels otherwise
@@ -2610,7 +2613,7 @@ export default class CanvasD3Layout {
 			.on("mousedown", () => {
 				// The context menu gesture will cause a mouse down event which
 				// will go through to canvas unless stopped.
-				d3.event.stopPropagation(); // Prevent mousedown event going through to canvas
+				d3Event.stopPropagation(); // Prevent mousedown event going through to canvas
 			})
 			.on("mouseup", () => {
 				this.consoleLog("Line - mouse up");
@@ -2625,7 +2628,7 @@ export default class CanvasD3Layout {
 						id: that.getId("link_tip", link.id),
 						type: TIP_TYPE_LINK,
 						targetObj: this,
-						mousePos: { x: d3.event.clientX, y: d3.event.clientY },
+						mousePos: { x: d3Event.clientX, y: d3Event.clientY },
 						pipelineId: that.canvasJSON.sub_id,
 						link: link
 					});
@@ -3237,8 +3240,8 @@ export default class CanvasD3Layout {
 	}
 
 	stopPropagationAndPreventDefault() {
-		d3.event.stopPropagation();
-		d3.event.preventDefault();
+		d3Event.stopPropagation();
+		d3Event.preventDefault();
 	}
 
 	canShowTip(tipType) {
