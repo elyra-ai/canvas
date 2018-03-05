@@ -153,17 +153,17 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				selectedRows={getSelectedRows()}
 			/>
 		);
-		// select the first row in the table
+		// select the second row in the table
 		const tableData = wrapper.find(".column-select-table-row");
 		expect(tableData).to.have.length(3);
-		tableData.at(0).simulate("click"); // TODO Doesn't actually do anything
+		tableData.at(1).simulate("click");
 		// ensure removed button is enabled and select it
 		const enabledRemoveColumnButton = wrapper.find("#remove-fields-button-enabled");
 		expect(enabledRemoveColumnButton).to.have.length(1);
 		expect(enabledRemoveColumnButton.prop("id")).to.equal("remove-fields-button-enabled");
 		enabledRemoveColumnButton.simulate("click");
-		// validate the first row is deleted
-		expect(controller.getPropertyValue(propertyId)).to.have.same.members(["BP", "K"]);
+		// validate the second row is deleted
+		expect(controller.getPropertyValue(propertyId)).to.have.same.members(["Age", "K"]);
 	});
 
 	it("should ensure moveableRows are rendered", () => {
@@ -191,21 +191,21 @@ describe("condition messages renders correctly with columnselect control", () =>
 		const input = wrapper.find("#flexible-table-columnSelectInputFieldList");
 		expect(input).to.have.length(1);
 
-		// select the first row in the table
+		// select the second row in the table
 		var tableData = input.find(".column-select-table-row");
 		expect(tableData).to.have.length(2);
-		tableData.at(0).simulate("click"); // TODO Doesn't actually do anything
+		tableData.at(1).simulate("click");
 		// ensure removed button is enabled and select it
 		var enabledRemoveColumnButton = input.find("#remove-fields-button-enabled");
 		expect(enabledRemoveColumnButton).to.have.length(1);
 		expect(enabledRemoveColumnButton.prop("id")).to.equal("remove-fields-button-enabled");
 		enabledRemoveColumnButton.simulate("click");
-		// validate the first row is deleted
-		expect(controller.getPropertyValue(conditionsPropertyId)).to.have.same.members(["BP"]);
+		// validate the second row is deleted
+		expect(controller.getPropertyValue(conditionsPropertyId)).to.have.same.members(["Age"]);
 
 		tableData = input.find(".column-select-table-row");
 		expect(tableData).to.have.length(1);
-		tableData.at(0).simulate("click"); // TODO Doesn't actually do anything
+		tableData.at(0).simulate("click");
 		// ensure removed button is enabled and select it
 		enabledRemoveColumnButton = input.find("#remove-fields-button-enabled");
 		expect(enabledRemoveColumnButton).to.have.length(1);
