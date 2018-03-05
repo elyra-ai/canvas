@@ -12,7 +12,7 @@
 import logger from "../../../utils/logger";
 import UiConditions from "../ui-conditions/ui-conditions.js";
 import { DEFAULT_VALIDATION_MESSAGE, STATES, DEFAULT_DATE_FORMAT, DEFAULT_TIME_FORMAT, CONTROL_TYPE } from "../constants/constants.js";
-import moment from "moment/min/moment.min.js";
+import moment from "moment";
 import isEmpty from "lodash/isEmpty";
 
 function validateConditions(controller, definitions, dataModel, initial) {

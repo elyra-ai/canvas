@@ -11,7 +11,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import TextField from "ap-components-react/dist/components/TextField";
 import EditorControl from "./editor-control.jsx";
-import moment from "moment/min/moment.min.js";
+import moment from "moment";
 import { DEFAULT_DATE_FORMAT } from "../constants/constants.js";
 
 export default class DatefieldControl extends EditorControl {

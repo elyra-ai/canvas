@@ -74,7 +74,8 @@ module.exports = {
 			cssProcessorOptions: { discardComments: { removeAll: true } }
 		}),
 		new BundleAnalyzerPlugin(
-			{ generateStatsFile: true, openAnalyzer: false })
+			{ generateStatsFile: true, openAnalyzer: false }),
+		new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en/)
 	],
 	resolve: {
 		modules: ["node_modules"],
