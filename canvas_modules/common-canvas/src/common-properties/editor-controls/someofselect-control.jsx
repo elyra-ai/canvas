@@ -39,13 +39,13 @@ export default class SomeofselectControl extends EditorControl {
 		this.props.controller.updatePropertyValue(this.props.propertyId, values);
 	}
 
-	genSelectOptions(selectedValues) {
+	genSelectOptions(selectedValues, style) {
 		const options = [];
 		// Allow for enumeration replacement
 		const controlOpts = this.props.controller.getFilteredEnumItems(this.props.propertyId, this.props.control);
 		for (let i = 0; i < controlOpts.values.length; i++) {
 			options.push(
-				<option key={i} value={controlOpts.values[i]}>{controlOpts.valueLabels[i]}</option>
+				<option key={i} value={controlOpts.values[i]} style={style}>{controlOpts.valueLabels[i]}</option>
 			);
 		}
 		// Check for filtered selections
@@ -86,7 +86,7 @@ export default class SomeofselectControl extends EditorControl {
 			controlIconContainerClass = "control-icon-container-enabled";
 		}
 
-		const options = this.genSelectOptions(controlValue);
+		const options = this.genSelectOptions(controlValue, stateStyle);
 
 		return (
 			<div style={stateStyle}>

@@ -74,7 +74,7 @@ describe("Multi-select renders correctly", () => {
 });
 
 describe("someofselect works correctly in common-properties", () => {
-	const expectedOption = { "value": "green", "children": "green" };
+	const expectedOption = { "value": "green", "style": {}, "children": "green" };
 	let wrapper;
 	let controller1;
 	beforeEach(() => {
