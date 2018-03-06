@@ -405,7 +405,7 @@ class EditorForm extends React.Component {
 			return <div key={"link-text." + key} className="link-text-container">{icon}{text}</div>;
 		} else if (uiItem.itemType === "hSeparator") {
 			return <hr key={"h-separator." + key} className="h-separator" />;
-		} else if (uiItem.itemType === "panel") {
+		} else if (uiItem.itemType === "panel" || uiItem.itemType === "summaryPanel") { // summaryPanel deprecated
 			return this.genPanel(key, uiItem.panel, inPropertyId, indexof);
 		} else if (uiItem.itemType === "subTabs") {
 			return this.genSubTabs(key, uiItem.tabs, inPropertyId, indexof);
@@ -418,8 +418,6 @@ class EditorForm extends React.Component {
 		} else if (uiItem.itemType === "customPanel") {
 			return this.generateCustomPanel(key, uiItem.panel);
 			// only generate summary panel for right side flyout
-		} else if (uiItem.itemType === "summaryPanel") {
-			return this.genPanel(key, uiItem.panel, inPropertyId, indexof);
 		} else if (uiItem.itemType === "action") {
 			return this.generateAction(key, uiItem.action);
 		} else if (uiItem.itemType === "textPanel" && uiItem.panel) {

@@ -151,7 +151,7 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 			groupItem = _makeUIItem(parameterMetadata, actionMetadata, subGroup, structureMetadata, l10nProvider);
 			panSubItems.push(groupItem);
 		});
-		return UIItem.makeSummaryPanel(new ControlPanel(groupName, PanelType.SUMMARY, panSubItems, groupLabel));
+		return UIItem.makePanel(new ControlPanel(groupName, PanelType.SUMMARY, panSubItems, groupLabel));
 	}
 	case GroupType.ACTION_PANEL: {
 		return UIItem.makePanel(new ActionPanel(groupName, PanelType.ACTION_PANEL, _makeActions(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider)));

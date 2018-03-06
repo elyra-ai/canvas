@@ -16,6 +16,12 @@
         "Ascending"
       ]
     ],
+    "summaryStructuretable": [
+      [
+        "Age",
+        "Controls BP"
+      ]
+    ],
     "structurelisteditorTableInput": [
       [
         1,
@@ -80,6 +86,11 @@
       "type": "array[structuretableSortOrder]"
     },
     {
+      "id": "summaryStructuretable",
+      "role": "column",
+      "type": "array[summaryStructuretable]"
+    },
+    {
       "id": "structurelisteditorTableInput",
       "type": "array[structurelisteditorTableInput]",
       "default": []
@@ -102,6 +113,22 @@
             "Descending"
           ],
           "default": "Ascending"
+        }
+      ]
+    },
+    {
+      "id": "summaryStructuretable",
+      "key_definition": {
+        "id": "field",
+        "type": "string",
+        "role": "column",
+        "default": ""
+      },
+      "parameters": [
+        {
+          "id": "input",
+          "type": "string",
+          "default": ""
         }
       ]
     },
@@ -177,6 +204,17 @@
         }
       },
       {
+        "parameter_ref": "summaryStructuretable",
+        "required": true,
+        "label": {
+          "default": "Summary Table"
+        },
+        "description": {
+          "default": "This table is 2 levels deep in a summaryPanel",
+          "placement": "on_panel"
+        }
+      },
+      {
         "parameter_ref": "structurelisteditorTableInput",
         "label": {
           "default": "Table Input"
@@ -213,6 +251,28 @@
               "/images/up-triangle.svg",
               "/images/down-triangle.svg"
             ]
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "summaryStructuretable",
+        "moveable_rows": true,
+        "key_definition": {
+          "parameter_ref": "field",
+          "width": 28,
+          "label": {
+            "default": "Field"
+          },
+          "summary": true
+        },
+        "parameters": [
+          {
+            "parameter_ref": "input",
+            "width": 16,
+            "label": {
+              "default": "Input"
+            },
+            "summary": true
           }
         ]
       },
@@ -333,6 +393,25 @@
                   "enableSortByTable",
                   "structuretableSortOrder"
                 ]
+              },
+              {
+                "id": "summaryStructuretable-summary-panel",
+                "type": "summaryPanel",
+                "label": {
+                  "default": "Configure Embedded Summary"
+                },
+                "group_info": [
+                  {
+                    "id": "summaryStructuretable-control-panel",
+                    "type": "controls",
+                    "label": {
+                      "default": "Columns"
+                    },
+                    "parameter_refs": [
+                      "summaryStructuretable"
+                    ]
+                  }
+                ]
               }
             ]
           }
@@ -424,74 +503,74 @@
     }
   ],
   "dataset_metadata": [
-		{
-	    "fields": [
-	      {
-	        "name": "Age",
-	        "type": "integer",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "Sex",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "discrete",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "BP",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "discrete",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "Cholesterol",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "discrete",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "Na",
-	        "type": "double",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "K",
-	        "type": "double",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "Drug",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "discrete",
-	          "modeling_role": "input"
-	        }
-	      }
-	    ]
-	  }
-	],
+    {
+      "fields": [
+        {
+          "name": "Age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Sex",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Cholesterol",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "K",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    }
+  ],
   "resources": {
     "structuretableSortOrder.label": "Sort",
     "structuretableSortOrder.field.label": "Field",

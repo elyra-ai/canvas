@@ -10,7 +10,7 @@
 /* eslint complexity: ["error", 30]*/
 
 import logger from "../../../utils/logger";
-import { ItemType } from "../constants/form-constants";
+import { ItemType, PanelType } from "../constants/form-constants";
 
 
 function parseInput(definition) {
@@ -136,18 +136,15 @@ function parseUiItem(controls, uiItem, panelId, parentCategoryId) {
 	}
 	case ItemType.ADDITIONAL_LINK:
 	case ItemType.CHECKBOX_SELECTOR:
+	case ItemType.SUMMARY_PANEL: // deprecated
 	case ItemType.PANEL: {
 		if (uiItem.panel && uiItem.panel.uiItems) {
-			for (const panelUiItem of uiItem.panel.uiItems) {
-				parseUiItem(controls, panelUiItem, panelId, parentCategoryId);
+			let locPanelId = panelId;
+			if (uiItem.panel.panelType === PanelType.SUMMARY) {
+				locPanelId = uiItem.panel.id;
 			}
-		}
-		break;
-	}
-	case ItemType.SUMMARY_PANEL: {
-		if (uiItem.panel && uiItem.panel.uiItems) {
 			for (const panelUiItem of uiItem.panel.uiItems) {
-				parseUiItem(controls, panelUiItem, uiItem.panel.id, parentCategoryId);
+				parseUiItem(controls, panelUiItem, locPanelId, parentCategoryId);
 			}
 		}
 		break;

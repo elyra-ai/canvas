@@ -30,11 +30,18 @@ describe("summary renders correctly", () => {
 	});
 });
 
-describe("summary panel renders correctly with long table of more than ten rows", () => {
-	const renderedObject = propertyUtils.flyoutEditorForm(summarypanelParamDef);
-	const wrapper = renderedObject.wrapper;
+describe("summary panel renders correctly", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(JSON.parse(JSON.stringify(summarypanelParamDef)));
+		wrapper = renderedObject.wrapper;
+	});
 
-	it("should have displayed placeholder in summary panel", () => {
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("should have displayed placeholder in summary panel for more then 10 fields", () => {
 		const summaries = wrapper.find(".control-summary-configured-values");
 		const summaryRows = summaries.at(1).find(".control-summary-list-rows"); // Table Input
 		expect(summaryRows).to.have.length(0);
@@ -43,10 +50,23 @@ describe("summary panel renders correctly with long table of more than ten rows"
 		expect(summaryPlaceholder).to.have.length(1);
 		expect(summaryPlaceholder.text()).to.equal("More than ten fields...");
 	});
+	it("should have a summary panel in a summary panel", () => {
+		const category = wrapper.find(".category-title-container-right-flyout-panel").at(1); // COLUMN STRUCTURE TABLE Category
+		category.find(".control-summary-link-buttons").at(0)
+			.find(".button")
+			.simulate("click");
+
+		const wfhtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
+		const wideflyoutWrapper = new ReactWrapper(wfhtml, true);
+		const summaryButton = wideflyoutWrapper.find(".control-summary-link-buttons");
+		expect(summaryButton).to.have.length(1);
+		const summaryData = wideflyoutWrapper.find(".control-summary-list-rows");
+		expect(summaryData).to.have.length(1);
+	});
 });
 
 describe("summary panel renders error/warning status correctly", () => {
-	var wrapper;
+	let wrapper;
 	beforeEach(() => {
 		const renderedObject = propertyUtils.flyoutEditorForm(JSON.parse(JSON.stringify(summarypanelParamDef)));
 		wrapper = renderedObject.wrapper;

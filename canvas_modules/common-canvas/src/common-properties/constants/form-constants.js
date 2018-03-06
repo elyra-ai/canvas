@@ -18,7 +18,7 @@ const ItemType = {
 	PANEL_SELECTOR: "panelSelector",
 	CHECKBOX_SELECTOR: "checkboxSelector",
 	CUSTOM_PANEL: "customPanel",
-	SUMMARY_PANEL: "summaryPanel",
+	SUMMARY_PANEL: "summaryPanel", // deprecated
 	ACTION: "action",
 	TEXT_PANEL: "textPanel"
 };
