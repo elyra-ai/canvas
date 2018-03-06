@@ -48,7 +48,7 @@ class EditorForm extends React.Component {
 		this.state = {
 			showFieldPicker: false,
 			fieldPickerControl: {},
-			activeTabId: null
+			activeTabId: ""
 		};
 
 		this.handleSubmit = this.handleSubmit.bind(this);
@@ -78,12 +78,9 @@ class EditorForm extends React.Component {
 		this.ControlFactory.setFunctions(this.openFieldPicker, this.genUIItem);
 		this.ControlFactory.setRightFlyout(props.rightFlyout);
 
-		// set initial tab to first tab in case of modal dialog, and in case of fly-out to
-		// first tab only if there is only one tab (otherwise all will be collapsed)
+		// set initial tab to first tab
 		const tabs = props.controller.getUiItems()[0].tabs;
-		if (!this.props.rightFlyout || (this.props.rightFlyout && tabs.length === 1)) {
-			this.state.activeTabId = this._getTabId(tabs[0]);
-		}
+		this.state.activeTabId = this._getTabId(tabs[0]);
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
@@ -130,9 +127,9 @@ class EditorForm extends React.Component {
 		return "primary-tab." + tab.group;
 	}
 
-	_showCategoryPanel(panelid, categories) {
+	_showCategoryPanel(panelid) {
 		let activeTab = panelid;
-		if ((this.state.activeTabId === null && categories === 1) || this.state.activeTabId === panelid) {
+		if (this.state.activeTabId === panelid) {
 			activeTab = "";
 		}
 		this.setState({ activeTabId: activeTab });
@@ -190,7 +187,7 @@ class EditorForm extends React.Component {
 				let panelArrow = DownIcon;
 				let panelItemsContainerClass = "closed";
 				const styleObj = {};
-				if ((tabs.length === 1 && this.state.activeTabId === null) || this.state.activeTabId === tab.text) {
+				if (this.state.activeTabId === tab.text) {
 					panelArrow = UpIcon;
 					panelItemsContainerClass = "open";
 					if (i === tabs.length - 1) {
@@ -203,7 +200,7 @@ class EditorForm extends React.Component {
 
 				tabContent.push(
 					<div key={this._getContainerIndex(hasAlertsTab, i) + "-" + key} className="category-title-container-right-flyout-panel">
-						<a onClick={this._showCategoryPanel.bind(this, tab.text, tabs.length)}
+						<a onClick={this._showCategoryPanel.bind(this, tab.text)}
 							id={"category-title-" + this._getContainerIndex(hasAlertsTab, i) + "-right-flyout-panel"}
 							className="category-title-right-flyout-panel"
 						>

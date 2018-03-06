@@ -12,7 +12,6 @@ Feature: Sanity_Test_CustomControls
 		Then I have selected the "Flyout" properties container type
 		Given I have uploaded JSON for common-properties "CustomPanel_paramDef.json"
 
-		Then I click the "TOGGLE" category from flyout
 		Then I click on toggle 0
 		Then I click the "MAP AND SLIDER" category from flyout
 		Then I open the "Configure Map" summary link in the "MAP AND SLIDER" category

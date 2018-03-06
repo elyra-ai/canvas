@@ -13,7 +13,6 @@ Feature: Sanity_Test_StructureTableControl
 
 		# generatedValues in key_definition with default of 1
 		Given I have uploaded JSON for common-properties "structuretable_paramDef.json"
-		Then I select the "TABLES" tab in "flyout"
 		Then I open the "Configure Rename fields" wide flyout panel
 		Then I click on Add Columns button to open field picker at index "0"
 		Then I select the "Na" checkbox
@@ -53,7 +52,6 @@ Feature: Sanity_Test_StructureTableControl
 
 		# generatedValues with startValue of 5
 		Given I have uploaded JSON for common-properties "structuretable_paramDef.json"
-		Then I select the "TABLES" tab in "flyout"
 		Then I open the "Configure Sort Order" wide flyout panel
 		Then I click on Add Columns button to open field picker at index "0"
 		Then I select the "Age" checkbox
@@ -89,7 +87,6 @@ Feature: Sanity_Test_StructureTableControl
 
 		# generatedValues with startValue of 5
 		Given I have uploaded JSON for common-properties "structuretable_paramDef.json"
-		Then I select the "TABLES" tab in "flyout"
 		Then I open the "Configure Sort Order" wide flyout panel
 		Then I click on Add Columns button to open field picker at index "0"
 		Then I select the "Age" checkbox

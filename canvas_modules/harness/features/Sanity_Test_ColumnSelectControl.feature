@@ -39,7 +39,6 @@ Feature: Sanity_Test_ColumnSelectControl
 		Given I have toggled the app side common-properties panel
 		Then I have selected the "Flyout" properties container type
 		Given I have uploaded JSON for common-properties "selectcolumns_paramDef.json"
-		Then I select the "Values" tab in "flyout"
 		Then I select the "add-fields-button" button on the "fields1_panel" parameter
 		Then I select the "Na" checkbox
 		Then I click on the "OK" button
@@ -52,7 +51,6 @@ Feature: Sanity_Test_ColumnSelectControl
 		Given I have toggled the app side common-properties panel
 		Then I have selected the "Flyout" properties container type
 		Given I have uploaded JSON for common-properties "selectcolumns_paramDef.json"
-		Then I select the "Values" tab in "flyout"
 		Then I select the "add-fields-button" button on the "fields2_panel" parameter
 		Then I select the "all" checkbox
 		Then I click on the "OK" button

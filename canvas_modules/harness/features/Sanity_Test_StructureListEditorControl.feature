@@ -13,7 +13,6 @@ Feature: Sanity_Test_StructureListEditorControl
 
 		# generatedValues in key_definition with default of 1
 		Given I have uploaded JSON for common-properties "structurelisteditor_paramDef.json"
-		Then I select the "Tables" tab in "flyout"
 		Then I open the "Configure Table Input" wide flyout panel
 		Then I verify that "1" is a value in the "readonly_numbered_column_index" cell of row 1 in the table "flexible-table-structurelisteditorTableInput"
 		Then I verify that "Hello" is a value in the "name" cell of row 1 in the table "flexible-table-structurelisteditorTableInput"

@@ -12,7 +12,6 @@ Feature: Sanity_Test_Actions
 		Then I have selected the "Flyout" properties container type
 		Given I have uploaded JSON for common-properties "action_paramDef.json"
 
-		Then I click the "ACTIONS" category from flyout
 		Then I click the "Increment" action
 		Then I click the "Increment" action
 		Then I click the "Increment" action

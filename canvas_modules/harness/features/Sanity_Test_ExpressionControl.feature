@@ -48,7 +48,6 @@ Feature: Sanity_Test_ExpressionControl
 		Given I have uploaded JSON for common-properties "summaryPanel_paramDef.json"
 
 		# Select an existing row in the table and change it's value in the expression control
-		Then I open the "Structure List Table" category
 		Then I open the "Configure Derive Node" summary link in the "Structure List Table" category
 		Then I select the row 1 in the table "editor-control-expressionCellTable"
 		Then I verify that the "ExpressionEditor" control is displayed
