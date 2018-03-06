@@ -17,10 +17,6 @@ function states(state = {}, action) {
 	switch (action.type) {
 	case UPDATE_PANEL_STATE: {
 		const newState = state;
-		let propState = newState[action.state.panelId.name];
-		if (typeof propState === "undefined") {
-			propState = {};
-		}
 		newState[action.state.panelId.name] = {
 			value: action.state.value
 		};
