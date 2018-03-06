@@ -24,6 +24,9 @@ import { TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK } from "../../constants/com
 const BACKSPACE_KEY = 8;
 const DELETE_KEY = 46;
 const A_KEY = 65;
+const C_KEY = 67;
+const V_KEY = 86;
+const X_KEY = 88;
 const Y_KEY = 89;
 const Z_KEY = 90;
 // TODO - Implement nudge behavior for moving nodes and comments
@@ -363,6 +366,15 @@ export default class CanvasD3Layout {
 					} else if (this.isCmndCtrlPressed() && d3Event.keyCode === A_KEY) {
 						this.stopPropagationAndPreventDefault();
 						this.objectModel.selectAll();
+					} else if (this.isCmndCtrlPressed() && d3Event.keyCode === C_KEY) {
+						this.stopPropagationAndPreventDefault();
+						this.canvasController.copyToClipboard();
+					} else if (this.isCmndCtrlPressed() && d3Event.keyCode === X_KEY) {
+						this.stopPropagationAndPreventDefault();
+						this.canvasController.cutToClipboard();
+					} else if (this.isCmndCtrlPressed() && d3Event.keyCode === V_KEY) {
+						this.stopPropagationAndPreventDefault();
+						this.canvasController.pasteFromClipboard();
 					}
 				}
 			});

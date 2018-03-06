@@ -16,6 +16,18 @@ var nconf = require("nconf");
 
 module.exports = function() {
 
+	this.Then("I press Ctrl/Cmnd+X to Cut", function() {
+		browser.keys(["Control", "x", "Control", "x"]);
+	});
+
+	this.Then("I press Ctrl/Cmnd+C to Copy", function() {
+		browser.keys(["Control", "c", "Control", "c"]);
+	});
+
+	this.Then("I press Ctrl/Cmnd+V to Paste", function() {
+		browser.keys(["Control", "v", "Control", "v"]);
+	});
+
 	this.Then("I press Ctrl/Cmnd+Z to Undo", function() {
 		clickSVGAreaAt(1, 1); // Put foucs on the SVG area, ready for key press
 		browser.keys(["Control", "z", "Control", "z"]);
