@@ -1,6 +1,7 @@
 {
   "titleDefinition": {
-    "title": "Action Test"
+    "title": "Action Test",
+    "help_available": true
   },
   "current_parameters": {
     "number": 0,

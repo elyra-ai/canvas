@@ -154,6 +154,7 @@ class App extends React.Component {
 		this.propertyActionHandler = this.propertyActionHandler.bind(this);
 		this.propertiesControllerHandler = this.propertiesControllerHandler.bind(this);
 		this.forceApplyProperties = this.forceApplyProperties.bind(this);
+		this.helpClickHandler = this.helpClickHandler.bind(this);
 
 		this.canvasController = new CanvasController();
 		this.canvasController.setEmptyPipelineFlow();
@@ -436,6 +437,10 @@ class App extends React.Component {
 			this.canvasController.setNodeMessages(appData.nodeId, additionalInfo.messages);
 		}
 		this.setState({ forceApplyProperties: false });
+	}
+
+	helpClickHandler(nodeTypeId) {
+		this.log("helpClickHandler()", nodeTypeId);
 	}
 
 	validateFlow(source) {
@@ -742,7 +747,8 @@ class App extends React.Component {
 				appData: appData,
 				applyPropertyChanges: this.applyPropertyChanges,
 				closePropertiesDialog: this.closePropertiesEditorDialog,
-				additionalComponents: properties.additionalComponents
+				additionalComponents: properties.additionalComponents,
+				helpClickHandler: this.helpClickHandler
 			};
 
 			this.setState({ showPropertiesDialog: true, propertiesInfo: propsInfo });
@@ -799,7 +805,8 @@ class App extends React.Component {
 			parameterDef: properties,
 			applyPropertyChanges: this.applyPropertyChanges,
 			closePropertiesDialog: this.closePropertiesEditorDialog,
-			additionalComponents: properties.additionalComponents
+			additionalComponents: properties.additionalComponents,
+			helpClickHandler: this.helpClickHandler
 		};
 		this.setState({ showPropertiesDialog: true, propertiesInfo: propsInfo });
 	}

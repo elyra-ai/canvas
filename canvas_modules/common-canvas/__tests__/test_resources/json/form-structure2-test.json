@@ -2,7 +2,8 @@
   "paramDef": {
     "titleDefinition": {
       "title": "Form structure2 test",
-      "editable": false
+      "editable": false,
+      "help_available": false
     },
     "current_parameters": {
       "annotation": "",
@@ -191,6 +192,7 @@
     "componentId": "sort",
     "label": "Form structure2 test",
     "labelEditable": false,
+    "helpAvailable": false,
     "editorSize": "large",
     "uiItems": [
       {

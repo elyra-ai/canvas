@@ -1,7 +1,8 @@
 {
   "titleDefinition": {
     "title": "Readonly Fields",
-    "editable": false
+    "editable": false,
+    "help_available": true
   },
   "current_parameters": {
     "readonly_num": 10,

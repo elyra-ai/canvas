@@ -232,6 +232,7 @@
     "componentId": "rename",
     "label": "Form editstyle test",
     "labelEditable": true,
+    "helpAvailable": false,
     "editorSize": "small",
     "uiItems": [
       {

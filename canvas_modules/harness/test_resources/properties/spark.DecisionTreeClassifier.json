@@ -1,6 +1,7 @@
 {
   "titleDefinition": {
-    "title": "Decision Tree Classifier"
+    "title": "Decision Tree Classifier",
+    "help_available": true
   },
   "current_parameters": {
     "targetField": [],

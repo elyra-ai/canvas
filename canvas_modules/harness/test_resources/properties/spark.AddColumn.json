@@ -1,6 +1,7 @@
 {
   "titleDefinition": {
-    "title": "Add Column"
+    "title": "Add Column",
+    "help_available": true
   },
   "current_parameters": {
     "colName": "",

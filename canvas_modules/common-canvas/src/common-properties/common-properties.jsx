@@ -28,6 +28,7 @@ import { injectIntl, intlShape } from "react-intl";
 import TextField from "ap-components-react/dist/components/TextField";
 
 import editIcon from "../../assets/images/edit.svg";
+import helpIcon from "../../assets/images/info.svg";
 
 class CommonProperties extends React.Component {
 	constructor(props) {
@@ -50,6 +51,7 @@ class CommonProperties extends React.Component {
 		this.showPropertiesButtons = this.showPropertiesButtons.bind(this);
 		this.cancelHandler = this.cancelHandler.bind(this);
 		this.editTitleClickHandler = this.editTitleClickHandler.bind(this);
+		this.helpClickHandler = this.helpClickHandler.bind(this);
 		this.getEditorWidth = this.getEditorWidth.bind(this);
 	}
 	componentWillMount() {
@@ -249,6 +251,12 @@ class CommonProperties extends React.Component {
 		this.setPropertiesTitleReadOnlyMode(false);
 	}
 
+	helpClickHandler() {
+		if (this.props.propertiesInfo.helpClickHandler) {
+			this.props.propertiesInfo.helpClickHandler(this.propertiesController.getForm().componentId);
+		}
+	}
+
 	_handleKeyPress(e) {
 		if (e.key === "Enter") {
 			this.setPropertiesTitleReadOnlyMode(true);
@@ -275,6 +283,14 @@ class CommonProperties extends React.Component {
 					/>
 				</a>);
 
+			const helpButton = formData.helpAvailable && formData.helpAvailable === true
+				? (<a id="title-help-right-flyout-panel" onClick={this.helpClickHandler}>
+					<img id="title-help-icon-right-flyout-panel"
+						src={helpIcon}
+					/>
+				</a>)
+				: <div />;
+
 			if (this.props.rightFlyout) {
 				propertiesTitle = (<div id="node-title-container-right-flyout-panel">
 					<div id="node-title-right-flyout-panel">
@@ -291,6 +307,7 @@ class CommonProperties extends React.Component {
 						/>
 					</div>
 					{propertiesTitleEdit}
+					{helpButton}
 				</div>);
 				buttonsContainer = (<PropertiesButtons
 					okHandler={this.applyPropertiesEditing.bind(this, true)}

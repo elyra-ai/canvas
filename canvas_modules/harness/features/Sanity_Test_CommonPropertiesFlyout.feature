@@ -25,6 +25,38 @@ Feature: Sanity_Test_CommonProperties_Flyout
 			Then I see common properties flyout title "Readonly Fields"
 			Then I verify there is no title edit icon
 
+		# Help Icon Test Case for param_def with help_available set to true
+			Given I have toggled the app side common-properties panel
+			Given I have uploaded JSON for common-properties "spark.DecisionTreeClassifier.json"
+			Then I click on the help icon in the fly-out panel
+			Then I verify the help icon for id "org.apache.spark.ml.classification.DecisionTreeClassifier" was clicked
+
+		# Help Icon Test Case for form with helpAvailable set to true
+			Given I have toggled the app side common-properties panel
+			Given I have uploaded JSON for common-properties "aggregate.json"
+			Then I click on the help icon in the fly-out panel
+			Then I verify the help icon for id "aggregate" was clicked
+
+		# Help Icon Test Case for param_def with help_available not specified
+			Given I have toggled the app side common-properties panel
+			Given I have uploaded JSON for common-properties "spark.Filter.json"
+			Then I verify there is no help icon in the fly-out panel
+
+		# Help Icon Test Case for form with helpAvailable not specified
+			Given I have toggled the app side common-properties panel
+			Given I have uploaded JSON for common-properties "cart.json"
+			Then I verify there is no help icon in the fly-out panel
+
+		# Help Icon Test Case for param_def with help_available set to false
+			Given I have toggled the app side common-properties panel
+			Given I have uploaded JSON for common-properties "costs_paramDef.json"
+			Then I verify there is no help icon in the fly-out panel
+
+		# Help Icon Test Case for form with helpAvailable set to false
+			Given I have toggled the app side common-properties panel
+			Given I have uploaded JSON for common-properties "derive.json"
+			Then I verify there is no help icon in the fly-out panel
+
 		# TextBox Test Case
 			Given I have toggled the app side common-properties panel
 			Given I have uploaded JSON for common-properties "spark.AddColumn.json"

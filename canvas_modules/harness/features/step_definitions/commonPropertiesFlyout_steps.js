@@ -47,6 +47,22 @@ module.exports = function() {
 		expect(newTitle).toEqual((lastEventLog.data.title).toString());
 	});
 
+	this.Then("I click on the help icon in the fly-out panel", function() {
+		const helpIcon = browser.$("#title-help-right-flyout-panel");
+		expect(helpIcon).not.toBe(null);
+		helpIcon.click();
+	});
+
+	this.Then("I verify there is no help icon in the fly-out panel", function() {
+		const helpIcon = browser.$$("#title-help-right-flyout-panel");
+		expect(helpIcon.length).toEqual(0);
+	});
+
+	this.Then(/^I verify the help icon for id "([^"]*)" was clicked$/, function(nodeTypeId) {
+		var lastEventLog = testUtils.getLastEventLogData();
+		expect(nodeTypeId).toEqual((lastEventLog.data).toString());
+	});
+
 	this.Then(/^I click the "([^"]*)" category from flyout$/, function(categoryName) {
 		const categories = browser.$("#category-parent-container-right-flyout-panel").$$(".category-title-container-right-flyout-panel");
 		for (let idx = 0; idx < categories.length; idx++) {

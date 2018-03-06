@@ -35,7 +35,7 @@
 	justify-content: space-between;
 	align-items:center;
 	padding-left: 20px;
-	padding-right: 20px;
+	padding-right: 10px;
 	background: #FFFFFF;
 }
 
@@ -53,13 +53,17 @@
 	border-bottom: none;
 }
 
-#title-edit-icon-right-flyout-panel {
+#title-edit-right-flyout-panel, #title-help-right-flyout-panel {
+	padding-left: 4px;
+}
+
+#title-edit-icon-right-flyout-panel, #title-help-icon-right-flyout-panel {
 	height: 24px;
 	width: 24px;
 	float: right;
 }
 
-#title-edit-icon-right-flyout-panel:hover {
+#title-edit-icon-right-flyout-panel:hover, #title-help-icon-right-flyout-panel:hover {
 	background-color: #EFEFEF;
 	cursor: pointer;
 }

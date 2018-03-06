@@ -2,6 +2,7 @@
   "formData": {
     "componentId": "aggregate",
     "label": "Aggregate",
+    "helpAvailable": true,
     "editorSize": "small",
     "uiItems": [
       {

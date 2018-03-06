@@ -1,7 +1,8 @@
 {
   "paramDef": {
     "titleDefinition": {
-      "title": "Form structure test"
+      "title": "Form structure test",
+      "help_available": true
     },
     "current_parameters": {
       "renamed_fields": [
@@ -183,6 +184,7 @@
     "componentId": "rename",
     "label": "Form structure test",
     "labelEditable": true,
+    "helpAvailable": true,
     "editorSize": "small",
     "uiItems": [
       {

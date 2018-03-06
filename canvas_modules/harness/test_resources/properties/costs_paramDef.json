@@ -1,6 +1,7 @@
 {
   "titleDefinition": {
-    "title": "Costs"
+    "title": "Costs",
+    "help_available": false
   },
   "current_parameters": {
     "custom_fields": false,
