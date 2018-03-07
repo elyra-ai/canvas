@@ -152,6 +152,111 @@ describe("selectcolumn control renders correctly", () => {
 		input.root.node.handleChange(evt); // TODO should use click events if possible
 		expect(controller.getPropertyValue(propertyId)).to.equal("");
 	});
+
+	it("selectcolumn control will have updated options by the controller", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(selectcolumnParamDef);
+		const wrapper = renderedObject.wrapper;
+		const selectColumnController = renderedObject.controller;
+
+		const valuesCategory = wrapper.find(".category-title-container-right-flyout-panel").at(0); // get the values category
+		const dropDowns = valuesCategory.find("Dropdown");
+
+		expect(dropDowns.at(0).find(".Dropdown-placeholder")
+			.text()).to.equal("age");
+		let field1Options = dropDowns.at(0).prop("options");	// Field1 Panel
+		const field1OptionsExpectedOptions = [
+			{ label: "...", value: "" },
+			{ label: "age", value: "age" },
+			{ label: "Na", value: "Na" },
+			{ label: "drug", value: "drug" },
+			{ label: "age2", value: "age2" },
+			{ label: "BP2", value: "BP2" },
+			{ label: "Na2", value: "Na2" },
+			{ label: "drug2", value: "drug2" },
+			{ label: "age3", value: "age3" },
+			{ label: "BP3", value: "BP3" },
+			{ label: "Na3", value: "Na3" },
+			{ label: "drug3", value: "drug3" },
+			{ label: "age4", value: "age4" },
+			{ label: "BP4", value: "BP4" },
+			{ label: "Na4", value: "Na4" },
+			{ label: "drug4", value: "drug4" }
+		];
+
+		expect(field1Options).to.eql(field1OptionsExpectedOptions);
+
+		expect(dropDowns.at(1).find(".Dropdown-placeholder")
+			.text()).to.equal("BP");
+		let field2Options = dropDowns.at(1).prop("options");	// Field2 Panel
+		const field2OptionsExpectedOptions = [
+			{ label: "...", value: "" },
+			{ label: "BP", value: "BP" },
+			{ label: "Na", value: "Na" },
+			{ label: "drug", value: "drug" },
+			{ label: "age2", value: "age2" },
+			{ label: "BP2", value: "BP2" },
+			{ label: "Na2", value: "Na2" },
+			{ label: "drug2", value: "drug2" },
+			{ label: "age3", value: "age3" },
+			{ label: "BP3", value: "BP3" },
+			{ label: "Na3", value: "Na3" },
+			{ label: "drug3", value: "drug3" },
+			{ label: "age4", value: "age4" },
+			{ label: "BP4", value: "BP4" },
+			{ label: "Na4", value: "Na4" },
+			{ label: "drug4", value: "drug4" }
+		];
+
+		expect(field2Options).to.eql(field2OptionsExpectedOptions);
+
+		const datasetMetadata = selectColumnController.getDatasetMetadata();
+
+		const newField1 = {
+			"name": "stringAndDiscrete2",
+			"type": "string",
+			"metadata": {
+				"description": "",
+				"measure": "discrete",
+				"modeling_role": "input"
+			}
+		};
+
+		const newField2 = {
+			"name": "stringAndSet2",
+			"type": "string",
+			"metadata": {
+				"description": "",
+				"measure": "set",
+				"modeling_role": "input"
+			}
+		};
+
+		datasetMetadata[0].fields.push(newField1);
+		datasetMetadata[0].fields.push(newField2);
+		selectColumnController.setDatasetMetadata(datasetMetadata);
+		field1Options = dropDowns.at(0).prop("options");
+		field2Options = dropDowns.at(1).prop("options");
+
+		const dropDownValue1 = {
+			"label": "stringAndDiscrete2",
+			"value": "stringAndDiscrete2"
+		};
+
+		const dropDownValue2 = {
+			"label": "stringAndSet2",
+			"value": "stringAndSet2"
+		};
+
+		field1OptionsExpectedOptions.push(dropDownValue1);
+		field1OptionsExpectedOptions.push(dropDownValue2);
+		field2OptionsExpectedOptions.push(dropDownValue1);
+		field2OptionsExpectedOptions.push(dropDownValue2);
+
+		expect(field1Options).to.eql(field1OptionsExpectedOptions);
+		expect(field2Options).to.eql(field2OptionsExpectedOptions);
+
+	});
+
 });
 
 describe("selectcolumn control filters values correctly", () => {
