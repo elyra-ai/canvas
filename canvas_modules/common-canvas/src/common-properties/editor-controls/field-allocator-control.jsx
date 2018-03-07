@@ -108,7 +108,7 @@ export default class FieldAllocatorControl extends EditorControl {
 		const options = this.genDropdownOptions(this.props.dataModel);
 		const conditionProps = {
 			propertyId: this.props.propertyId,
-			controlType: "selection"
+			controlType: "dropdown"
 		};
 		const conditionState = this.getConditionMsgState(conditionProps);
 

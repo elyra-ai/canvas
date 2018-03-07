@@ -62,7 +62,8 @@
   padding:20px
 }
 
-.default-label-container .control-label {
+.default-label-container .control-label,
+.label-container .control-label {
   text-align: left;
 	display: inline;
 	padding-left: 0;
@@ -163,29 +164,14 @@ input[type=radio]{
   font-size: .875rem;
 }
 
-.form__validation.validation-error-message-type-number,
-.form__validation.validation-error-message-type-date,
-.form__validation.validation-error-message-type-time,
-.form__validation.validation-error-message-type-structure-table,
-.form__validation.validation-error-message-type-structure-list-editor,
-p.form__validation.validation-error-message-type-selection {
-  margin-top: 5px;
-  width: 93%;
-}
-
 .form__validation.validation-error-message-type-textfield,
 .form__validation.validation-error-message-type-textfieldbox {
   margin-top: -20px;
-  width: 90%;
 }
 
-.form__validation.validation-error-message-type-dropdown {
-  margin-top: 3px;
-  width: 89%;
-}
-
-.form__validation.validation-error-message-type-checkbox {
-  margin-top: 0px;
+.form__validation {
+  margin-top: 2px;
+  padding-right: 0;
 }
 
 input.number,
@@ -201,7 +187,8 @@ input.number,
   width: calc(100% + 24px);
 }
 
-#control-icon-container-enabled {
+#control-icon-container-enabled,
+.flexible-table-container-icon {
   display: inline-flex;
   width: 100%;
 }
@@ -209,32 +196,56 @@ input.number,
 #control-icon-container-enabled > div:first-of-type {
   width: 100%;
 }
+.flexible-table-container-icon > .flexible-table-container-icon-first-column {
+  width: calc(100% - 25px);
+  flex-shrink: 0.2;
+}
 
-#control-icon-container-enabled > * {
+#control-icon-container-enabled > *,
+.flexible-table-container-icon > * {
   flex-shrink: 0;
+}
+
+.validation-warning-message-icon-checkboxset,
+.validation-error-message-icon-checkboxset{
+  position: relative;
+  top: 10px;
 }
 
 .validation-error-message-icon {
   width: 20px !important;
   height: 20px;
-  margin-left: 4px;
 }
 
-.validation-error-message-icon-structure-table,
-.validation-warning-message-icon-structure-table {
-  position: relative;
+.validation-error-message-icon-structure-table {
+  top: 33px;
+}
+
+.validation-error-message-icon-structure-list-editor {
   top: 35px;
 }
 
+.validation-warning-message-icon-column-select {
+  top: 25px;
+}
+
+.validation-error-message-icon-column-select,
+.validation-warning-message-icon-structure-table,
+.validation-warning-message-icon-structure-list-editor {
+  top: 30px;
+}
+
+.validation-error-message-icon-textfieldbox,
+.validation-error-message-icon-selection,
+.validation-warning-message-icon-selection,
+.validation-error-message-icon-column-select,
+.validation-warning-message-icon-column-select,
+.validation-error-message-icon-structure-table,
+.validation-warning-message-icon-structure-table,
 .validation-error-message-icon-structure-list-editor,
 .validation-warning-message-icon-structure-list-editor {
   position: relative;
-  top: 40px;
-}
-
-.form__validation.validation-error-message-type-selection {
-  margin-top: 2px;
-  width: 93%;
+  margin-left: 4px;
 }
 
 .modal__container .modal__buttons {
@@ -962,7 +973,8 @@ tr.reactable-column-header > th {
   width: 100%;
 }
 
-.structure-table-second-column {
+.structure-table-second-column,
+.flexible-table-container-icon > .flexible-table-container-icon-second-column {
   width: 16px !important;
 }
 

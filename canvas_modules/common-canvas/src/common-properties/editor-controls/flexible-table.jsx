@@ -23,7 +23,7 @@ import SortDescendingIcon from "../../../assets/images/sort_descending.svg";
 import PropertyUtils from "../util/property-utils";
 
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "../constants/constants";
-import { TOOL_TIP_DELAY } from "../constants/constants";
+import { TOOL_TIP_DELAY, CONDITION_MESSAGE_TYPE } from "../constants/constants";
 import ObserveSize from "react-observe-size";
 
 const sortDir = {
@@ -333,28 +333,38 @@ class FlexibleTable extends React.Component {
 		const heightStyle = this.props.noAutoSize ? {} : { height: tableHeight + "px" };
 		const containerId = (renderHeader) ? "flexible-table-container" : "flexible-table-container-noheader";
 		const containerClass = (renderHeader) ? "flexible-table-container-absolute" : "flexible-table-container-absolute-noheader";
+		const conditionIconClass = this.props.icon &&
+			this.props.icon.props.validateErrorMessage &&
+			this.props.icon.props.validateErrorMessage.type !== CONDITION_MESSAGE_TYPE.INFO ? "flexible-table-container-icon" : "";
 		renderTable = (
 			<div>
 				{searchBar}
 				{this.props.label}
-				{this.props.topRightPanel}
-				<ObserveSize observerFn={(element) => this._updateTableWidth(element)}>
-					<div id="flexible-table-container-wrapper" style={ heightStyle }>
-						{renderTableHeaderContents}
-						<div className={containerClass} style={tableStyle}>
-							<div id={containerId} style={{ width: tableWidth }}>
-								<Table
-									className="table"
-									id="table"
-									hideTableHeader
-									ref="table"
-								>
-									{this.props.data}
-								</Table>
+				<div className={conditionIconClass} >
+					<div className="flexible-table-container-icon-first-column">
+						{this.props.topRightPanel}
+						<ObserveSize observerFn={(element) => this._updateTableWidth(element)}>
+							<div id="flexible-table-container-wrapper" style={ heightStyle }>
+								{renderTableHeaderContents}
+								<div className={containerClass} style={tableStyle}>
+									<div id={containerId} style={{ width: tableWidth }}>
+										<Table
+											className="table"
+											id="table"
+											hideTableHeader
+											ref="table"
+										>
+											{this.props.data}
+										</Table>
+									</div>
+								</div>
 							</div>
-						</div>
+						</ObserveSize>
 					</div>
-				</ObserveSize>
+					<div className="flexible-table-container-icon-second-column">
+						{this.props.icon}
+					</div>
+				</div>
 			</div>
 		);
 
@@ -380,6 +390,7 @@ FlexibleTable.propTypes = {
 	alignTop: PropTypes.bool,
 	label: PropTypes.object,
 	topRightPanel: PropTypes.object,
+	icon: PropTypes.object,
 	validationStyle: PropTypes.object,
 	scrollKey: PropTypes.string,
 	stateDisabled: PropTypes.object,

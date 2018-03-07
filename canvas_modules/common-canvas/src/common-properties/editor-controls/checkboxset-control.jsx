@@ -37,7 +37,7 @@ export default class CheckboxsetControl extends EditorControl {
 		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		const conditionProps = {
 			propertyId: this.props.propertyId,
-			controlType: "checkbox"
+			controlType: "checkboxset"
 		};
 		const conditionState = this.getConditionMsgState(conditionProps);
 

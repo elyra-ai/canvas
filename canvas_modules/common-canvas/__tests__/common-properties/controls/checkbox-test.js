@@ -44,7 +44,8 @@ describe("condition messages renders correctly with checkbox control", () => {
 		expect(isEqual(JSON.parse(JSON.stringify(checkboxTypesMessages)),
 			JSON.parse(JSON.stringify(actualType)))).to.be.true;
 
-		expect(wrapper.find(".validation-error-message-icon-checkbox")).to.have.length(2);
+		expect(wrapper.find(".validation-error-message-icon-checkbox")).to.have.length(1);
+		expect(wrapper.find(".validation-error-message-icon-checkboxset")).to.have.length(1);
 		expect(wrapper.find(".validation-error-message-color-error")).to.have.length(2);
 
 		checkbox = wrapper.find("input[type='checkbox']").at(1);
@@ -59,7 +60,7 @@ describe("condition messages renders correctly with checkbox control", () => {
 		expect(isEqual(JSON.parse(JSON.stringify(checkboxTypesMessages)),
 			JSON.parse(JSON.stringify(actualType)))).to.be.true;
 
-		expect(wrapper.find(".validation-warning-message-icon-checkbox")).to.have.length(1);
+		expect(wrapper.find(".validation-warning-message-icon-checkboxset")).to.have.length(1);
 		expect(wrapper.find(".validation-error-message-color-warning")).to.have.length(1);
 	});
 });

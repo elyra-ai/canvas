@@ -50,7 +50,7 @@ class ColumnSelectControl extends ColumnStructureTableEditor {
 
 		const conditionProps = {
 			propertyId: this.props.propertyId,
-			controlType: "structure-list-editor"
+			controlType: "column-select"
 		};
 		const conditionState = this.getConditionMsgState(conditionProps);
 
@@ -86,6 +86,7 @@ class ColumnSelectControl extends ColumnStructureTableEditor {
 				onSort={this.onSort}
 				label={this.makeLabel(stateStyle)}
 				topRightPanel={topRightPanel}
+				icon={icon}
 				validationStyle={stateStyle}
 				scrollKey={this.props.control.name}
 				stateDisabled={stateDisabled}
@@ -96,7 +97,6 @@ class ColumnSelectControl extends ColumnStructureTableEditor {
 			<div>
 				<div id={controlIconContainerClass}>
 					{table}
-					{icon}
 				</div>
 				{errorMessage}
 			</div>

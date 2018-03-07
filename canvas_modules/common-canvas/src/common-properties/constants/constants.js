@@ -80,6 +80,12 @@ _defineConstant("DEFAULT_VALIDATION_MESSAGE", {
 	text: ""
 });
 
+_defineConstant("CONDITION_MESSAGE_TYPE", {
+	INFO: "info",
+	ERROR: "error",
+	WARNING: "warning"
+});
+
 _defineConstant("SPINNER", "spinner");
 
 _defineConstant("VALIDATION_MESSAGE", {
