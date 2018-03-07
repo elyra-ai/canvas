@@ -80,11 +80,13 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel"
 describe("selectcolumn and selectcolumns controls work in columnSelection panel with multi schema input", () => {
 	let wrapper;
 	let panels;
+	let controller;
 	beforeEach(() => {
 		const renderedObject = propertyUtils.flyoutEditorForm(columnSelectionPanel);
 		wrapper = renderedObject.wrapper;
 		const valuesCategory = wrapper.find(".category-title-container-right-flyout-panel").at(0); // VALUES category
 		panels = valuesCategory.find(".control-panel");
+		controller = renderedObject.controller;
 	});
 
 	afterEach(() => {
@@ -245,6 +247,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 				.at(0)
 				.text()).to.equal(table2Initial[idx]);
 		}
+
 		const addFieldsButton = selectColumnsTable3.find("Button"); // field picker buttons
 		expect(addFieldsButton).to.have.length(1);
 		addFieldsButton.simulate("click");
@@ -261,8 +264,63 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 			{ "name": "drug2", "schema": "2" },
 			{ "name": "drug3", "schema": "2" }
 		];
-		propertyUtils.fieldPicker([], fieldTable);
+		propertyUtils.fieldPicker(fieldTable, fieldTable);
+		wrapper.update();
 
+		const selectcolumns3 = ["Sex",
+			"0.BP",
+			"0.drug2",
+			"data.Age",
+			"data.BP",
+			"bp",
+			"data.drug2",
+			"drug",
+			"2.drug2",
+			"drug3"
+		];
+		expect(JSON.stringify(controller.getPropertyValue({ name: "selectcolumns3" }))).to.equal(JSON.stringify(selectcolumns3));
+
+		// Verify field picker from selectcolumns2 gets the correct input dataModel
+		const fieldTable2Input = [
+			{
+				"fields": [
+					{
+						"name": "Age",
+						"type": "integer",
+						"metadata": {
+							"description": "",
+							"measure": "range",
+							"modeling_role": "input"
+						}
+					},
+					{
+						"name": "Drug",
+						"type": "string",
+						"metadata": {
+							"description": "",
+							"measure": "discrete",
+							"modeling_role": "input"
+						}
+					}
+				]
+			},
+			{
+				"name": "data",
+				"fields": []
+			},
+			{
+				"fields": [{
+					"name": "Age",
+					"type": "integer",
+					"metadata": {
+						"description": "",
+						"measure": "range",
+						"modeling_role": "input"
+					}
+				}]
+			}
+		];
+		expect(JSON.stringify(controller.getFilteredDatasetMetadata({ name: "selectcolumns2" }))).to.equal(JSON.stringify(fieldTable2Input));
 	});
 });
 

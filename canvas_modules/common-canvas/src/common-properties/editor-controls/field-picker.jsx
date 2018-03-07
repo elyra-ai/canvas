@@ -94,6 +94,7 @@ class FieldPicker extends EditorControl {
 		this.onSort = this.onSort.bind(this);
 		this.onFilter = this.onFilter.bind(this);
 		this._getRecordForRow = this._getRecordForRow.bind(this);
+		this.fieldInMultipleDatasetMetadataSchemas = this.fieldInMultipleDatasetMetadataSchemas.bind(this);
 	}
 
 	componentWillMount() {
@@ -341,7 +342,8 @@ class FieldPicker extends EditorControl {
 		if (evt.target.checked) {
 			for (let i = 0; i < data.length; i++) {
 				let schemaName = data[i].name;
-				if (this.state.fields.filter((field) => field.name === schemaName).length > 1) {
+				// if more than one field with the same name in datasetMetadata, append schema to name
+				if (this.fieldInMultipleDatasetMetadataSchemas(schemaName)) {
 					schemaName = data[i].schema + "." + schemaName;
 				}
 
@@ -423,8 +425,8 @@ class FieldPicker extends EditorControl {
 		let selectedFieldName = evt.currentTarget.getAttribute("data-name");
 		const selectedFieldSchema = evt.currentTarget.getAttribute("data-schema");
 
-		// if more than one field with the same name, append schema name to selectedField
-		if (this.state.fields.filter((field) => field.name === selectedFieldName).length > 1) {
+		// if more than one field with the same name in datasetMetadata, append schema to name
+		if (this.fieldInMultipleDatasetMetadataSchemas(selectedFieldName)) {
 			selectedFieldName = selectedFieldSchema + "." + selectedFieldName;
 		}
 		const selectedField = this._getRecordForRow(selectedFieldName);
@@ -548,6 +550,21 @@ class FieldPicker extends EditorControl {
 			controlValue = controlValue.reverse();
 		}
 		this.setState({ fields: controlValue });
+	}
+
+
+	/**
+	* @return true if field name exists in more than one schema
+	*/
+	fieldInMultipleDatasetMetadataSchemas(fieldName) {
+		const schemas = this.props.controller.getDatasetMetadata();
+		let count = 0;
+		for (const schema of schemas) {
+			if (schema.fields.filter((field) => field.name === fieldName).length > 0) {
+				count++;
+			}
+		}
+		return count > 1;
 	}
 
 	_genBackButton() {
