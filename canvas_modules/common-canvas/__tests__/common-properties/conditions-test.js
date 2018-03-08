@@ -578,6 +578,7 @@ validationDefinitions.passwordField = [
 		params: "passwordField",
 		definition: {
 			"validation": {
+				"id": "PW2",
 				"fail_message": {
 					"type": "error",
 					"focus_parameter_ref": "passwordField",
@@ -601,6 +602,7 @@ validationDefinitions.passwordField = [
 		],
 		"definition": {
 			"validation": {
+				"id": "PW1",
 				"fail_message": {
 					"type": "warning",
 					"message": {
@@ -625,6 +627,7 @@ validationDefinitions.textfieldName = [
 		params: "textfieldName",
 		definition: {
 			"validation": {
+				"id": "textfieldtest1",
 				"fail_message": {
 					"type": "error",
 					"message": {
@@ -647,6 +650,7 @@ validationDefinitions.textfieldName = [
 		params: "textfieldName",
 		definition: {
 			"validation": {
+				"id": "textfieldtest2",
 				"fail_message": {
 					"type": "error",
 					"message": {
@@ -682,6 +686,7 @@ validationDefinitions.textfieldName = [
 		],
 		"definition": {
 			"validation": {
+				"id": "PW1",
 				"fail_message": {
 					"type": "warning",
 					"message": {

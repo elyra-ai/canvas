@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -9,6 +9,7 @@
 import Form from "../common-properties/form/Form";
 import UiConditionsParser from "../common-properties/ui-conditions/ui-conditions-parser";
 import UiConditions from "../common-properties/ui-conditions/ui-conditions";
+import ConditionsUtils from "../common-properties/util/conditions-utils";
 import logger from "../../utils/logger";
 import { DEFAULT_VALIDATION_MESSAGE } from "../common-properties/constants/constants.js";
 
@@ -16,6 +17,9 @@ import { DEFAULT_VALIDATION_MESSAGE } from "../common-properties/constants/const
 /* eslint max-depth: ["error", 7] */
 
 /**
+* Validate the properties values for each node in a flow.
+*
+* @param canvasController A common canvas controller object
 * @param {Function} callback function to get form | parameter data for a node
 * @param {Function} callback function to store messages data for node.
 
@@ -113,6 +117,7 @@ function _getControl(form) {
 * @param {Object} form data for a specific node
 */
 function _validateNode(formData, nodeId) {
+	// TODO need to evaluate this logic against condition-utils and make sure it works for complex structures.
 	const messages = [];
 	if (formData.controls) {
 		for (const control of formData.controls) {
@@ -133,6 +138,14 @@ function _validateNode(formData, nodeId) {
 						let error = UiConditions.evaluateInput(validationDefinition.definition, userInput,
 							control, formData.form.data.datasetMetadata, formData.requiredParameters, { name: control.name }, null);
 						if (typeof error === "object" && error !== null && error !== DEFAULT_VALIDATION_MESSAGE) {
+							let validationId = control.name;
+							if (validationDefinition.definition.validation &&
+								validationDefinition.definition.validation.fail_message &&
+								validationDefinition.definition.validation.fail_message.focus_parameter_ref) {
+								const focusPropertyId = ConditionsUtils.getPropertyId(validationDefinition.definition.validation.fail_message.focus_parameter_ref);
+								validationId = focusPropertyId.name;
+							}
+							error.validation_id = validationId;
 							error.id_ref = control.name;
 							messages.push(error);
 							validationSetError = true;

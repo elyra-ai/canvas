@@ -904,14 +904,14 @@
       "validation": {
         "fail_message": {
           "type": "error",
-          "focus_parameter_ref": "structuretableReadonlyColumnDefaultIndex",
+          "focus_parameter_ref": "structuretableReadonlyColumnDefaultIndex[2]",
           "message": {
             "default": "The 'Output Name' field cannot contain 'pw'"
           }
         },
         "evaluate": {
           "condition": {
-            "parameter_ref": "structuretableReadonlyColumnDefaultIndex",
+            "parameter_ref": "structuretableReadonlyColumnDefaultIndex[2]",
             "op": "notContains",
             "value": "pw"
           }

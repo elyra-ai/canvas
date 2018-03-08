@@ -668,6 +668,7 @@ export default class PropertiesController {
 				if (paramMessage && paramMessage.text) {
 					pipelineMessages.push({
 						id_ref: paramKey,
+						validation_id: paramMessage.validation_id,
 						type: paramMessage.type,
 						text: paramMessage.text
 					});

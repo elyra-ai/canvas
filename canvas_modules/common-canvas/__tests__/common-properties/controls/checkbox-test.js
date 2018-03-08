@@ -29,34 +29,28 @@ describe("condition messages renders correctly with checkbox control", () => {
 		wrapper.update();
 
 		const checkboxSingleMessages = {
+			"validation_id": "checkboxSingle",
 			"type": "error",
 			"text": "Checkbox single should be checked if data type is selected"
 		};
-		var checkboxTypesMessages = {
-			"type": "error",
-			"text": "Checkbox single should be checked if data type is selected"
-		};
+
 		const actual = controller.getErrorMessage({ name: "checkboxSingle" });
 		expect(isEqual(JSON.parse(JSON.stringify(checkboxSingleMessages)),
 			JSON.parse(JSON.stringify(actual)))).to.be.true;
 
-		let actualType = controller.getErrorMessage({ name: "checkboxTypes" });
-		expect(isEqual(JSON.parse(JSON.stringify(checkboxTypesMessages)),
-			JSON.parse(JSON.stringify(actualType)))).to.be.true;
-
 		expect(wrapper.find(".validation-error-message-icon-checkbox")).to.have.length(1);
-		expect(wrapper.find(".validation-error-message-icon-checkboxset")).to.have.length(1);
-		expect(wrapper.find(".validation-error-message-color-error")).to.have.length(2);
+		expect(wrapper.find(".validation-error-message-color-error")).to.have.length(1);
 
 		checkbox = wrapper.find("input[type='checkbox']").at(1);
 		checkbox.simulate("change", { target: { checked: false, id: "string" } });
 		wrapper.update();
 
-		checkboxTypesMessages = {
+		const checkboxTypesMessages = {
+			"validation_id": "checkboxTypes",
 			"type": "warning",
 			"text": "No data types are selected"
 		};
-		actualType = controller.getErrorMessage({ name: "checkboxTypes" });
+		const actualType = controller.getErrorMessage({ name: "checkboxTypes" });
 		expect(isEqual(JSON.parse(JSON.stringify(checkboxTypesMessages)),
 			JSON.parse(JSON.stringify(actualType)))).to.be.true;
 

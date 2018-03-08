@@ -65,7 +65,8 @@ describe("condition messages renders correctly with radioSet control", () => {
 		const radiosetColorWarningMessages = {
 			radiosetColor:
 						{ type: "warning",
-							text: "Are you sure you want to choose yellow?"
+							text: "Are you sure you want to choose yellow?",
+							validation_id: "radiosetColor"
 						}
 		};
 		const actual = controller.getErrorMessages();

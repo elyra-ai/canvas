@@ -1355,74 +1355,74 @@
       ]
     },
     "datasetMetadata": [
-			{
-	      "fields": [
-	        {
-	          "name": "Age",
-	          "type": "integer",
-	          "metadata": {
-	            "description": "",
-	            "measure": "range",
-	            "modeling_role": "input"
-	          }
-	        },
-	        {
-	          "name": "Sex",
-	          "type": "string",
-	          "metadata": {
-	            "description": "",
-	            "measure": "discrete",
-	            "modeling_role": "input"
-	          }
-	        },
-	        {
-	          "name": "BP",
-	          "type": "string",
-	          "metadata": {
-	            "description": "",
-	            "measure": "discrete",
-	            "modeling_role": "input"
-	          }
-	        },
-	        {
-	          "name": "Cholesterol",
-	          "type": "string",
-	          "metadata": {
-	            "description": "",
-	            "measure": "discrete",
-	            "modeling_role": "input"
-	          }
-	        },
-	        {
-	          "name": "Na",
-	          "type": "double",
-	          "metadata": {
-	            "description": "",
-	            "measure": "range",
-	            "modeling_role": "input"
-	          }
-	        },
-	        {
-	          "name": "K",
-	          "type": "double",
-	          "metadata": {
-	            "description": "",
-	            "measure": "range",
-	            "modeling_role": "input"
-	          }
-	        },
-	        {
-	          "name": "Drug",
-	          "type": "string",
-	          "metadata": {
-	            "description": "",
-	            "measure": "discrete",
-	            "modeling_role": "input"
-	          }
-	        }
-	      ]
-	    }
-		]
+      {
+        "fields": [
+          {
+            "name": "Age",
+            "type": "integer",
+            "metadata": {
+              "description": "",
+              "measure": "range",
+              "modeling_role": "input"
+            }
+          },
+          {
+            "name": "Sex",
+            "type": "string",
+            "metadata": {
+              "description": "",
+              "measure": "discrete",
+              "modeling_role": "input"
+            }
+          },
+          {
+            "name": "BP",
+            "type": "string",
+            "metadata": {
+              "description": "",
+              "measure": "discrete",
+              "modeling_role": "input"
+            }
+          },
+          {
+            "name": "Cholesterol",
+            "type": "string",
+            "metadata": {
+              "description": "",
+              "measure": "discrete",
+              "modeling_role": "input"
+            }
+          },
+          {
+            "name": "Na",
+            "type": "double",
+            "metadata": {
+              "description": "",
+              "measure": "range",
+              "modeling_role": "input"
+            }
+          },
+          {
+            "name": "K",
+            "type": "double",
+            "metadata": {
+              "description": "",
+              "measure": "range",
+              "modeling_role": "input"
+            }
+          },
+          {
+            "name": "Drug",
+            "type": "string",
+            "metadata": {
+              "description": "",
+              "measure": "discrete",
+              "modeling_role": "input"
+            }
+          }
+        ]
+      }
+    ]
   },
   "conditions": [
     {
@@ -1753,6 +1753,7 @@
     },
     {
       "validation": {
+        "id": "PW2",
         "fail_message": {
           "type": "error",
           "focus_parameter_ref": "passwordField",
@@ -1784,6 +1785,7 @@
     },
     {
       "validation": {
+        "id": "textfieldtest1",
         "fail_message": {
           "type": "error",
           "message": {
@@ -1803,6 +1805,7 @@
     },
     {
       "validation": {
+        "id": "textfieldtest2",
         "fail_message": {
           "type": "error",
           "message": {
@@ -1884,6 +1887,7 @@
     },
     {
       "validation": {
+        "id": "PW1",
         "fail_message": {
           "type": "warning",
           "message": {

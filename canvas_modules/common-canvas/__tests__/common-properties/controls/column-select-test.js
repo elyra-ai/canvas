@@ -220,6 +220,7 @@ describe("condition messages renders correctly with columnselect control", () =>
 		expect(controller.getPropertyValue(conditionsPropertyId)).to.have.length(0);
 
 		const columnSelectInputFieldListErrorMessages = {
+			"validation_id": "columnSelectInputFieldList",
 			"type": "error",
 			"text": "Select one or more input fields."
 		};

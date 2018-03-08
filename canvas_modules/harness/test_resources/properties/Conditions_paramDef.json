@@ -1943,6 +1943,7 @@
     },
     {
       "validation": {
+        "id": "textfieldtest1",
         "fail_message": {
           "type": "error",
           "message": {
@@ -1962,6 +1963,7 @@
     },
     {
       "validation": {
+        "id": "textfieldtest2",
         "fail_message": {
           "type": "error",
           "message": {
@@ -2043,13 +2045,14 @@
     },
     {
       "validation": {
+        "id": "textfieldtest3",
         "fail_message": {
           "type": "warning",
           "message": {
             "default": "Name cannot contain password",
             "resource_key": "textfield_name_not_contain_password"
           },
-          "focus_parameter_ref": "passwordField"
+          "focus_parameter_ref": "textfieldName"
         },
         "evaluate": {
           "condition": {
@@ -2214,6 +2217,7 @@
     },
     {
       "validation": {
+        "id": "tableInputTest1",
         "fail_message": {
           "type": "warning",
           "focus_parameter_ref": "structurelisteditorTableInput[0]",
@@ -2245,6 +2249,7 @@
     },
     {
       "validation": {
+        "id": "tableInputTest2",
         "fail_message": {
           "type": "error",
           "focus_parameter_ref": "structurelisteditorTableInput[0]",
@@ -2320,80 +2325,80 @@
     }
   ],
   "dataset_metadata": [
-		{
-	    "fields": [
-	      {
-	        "name": "Age",
-	        "type": "integer",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "Sex",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "discrete",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "BP",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "discrete",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "Cholesterol",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "discrete",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "Na",
-	        "type": "double",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "K",
-	        "type": "double",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "Drug",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "discrete",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "Ag",
-	        "type": "integer",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      },
+    {
+      "fields": [
+        {
+          "name": "Age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Sex",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Cholesterol",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "K",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Ag",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
         {
           "name": "Age2",
           "type": "integer",
@@ -2466,9 +2471,9 @@
             "modeling_role": "input"
           }
         }
-	    ]
-	  }
-	],
+      ]
+    }
+  ],
   "resources": {
     "columnSelectInputFieldList.label": "Column Select Input columns",
     "columnSelectInputFieldList.desc": "Select one or more input columns",
@@ -2506,7 +2511,7 @@
     "textarea_description_not_valid": "Description cannot contain /, double or single \"quotes\"",
     "textfield_name_not_valid_one": "Name cannot contain /",
     "textfield_name_not_valid_two": "Name cannot contain double or single \"quotes\"",
-    "textfield_name_not_contain_password": "name cannot contain password",
+    "textfield_name_not_contain_password": "password cannot contain name",
     "expression_box_not_valid": "Expression cannot contain /, double or single \"quotes\"",
     "columnSelectSharedWithInput.label": "Input List Shared with Below Control",
     "columnSelectSharedWithInput.desc": "Shared input list with sort by",

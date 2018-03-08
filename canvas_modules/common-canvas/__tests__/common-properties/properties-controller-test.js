@@ -102,11 +102,13 @@ const dataModel = {
 deepFreeze(dataModel);
 const errorMessages = {
 	param_int: {
+		validation_id: "param_int",
 		type: "warning",
 		text: "Bad integer value"
 	},
 	param_str_array: {
 		"2": {
+			validation_id: "param_str_array",
 			type: "error",
 			text: "Bad array value"
 		}
@@ -114,6 +116,7 @@ const errorMessages = {
 	param_mix_table: {
 		"0": {
 			"2": {
+				validation_id: "param_mix_table",
 				type: "warning",
 				text: "Bad table value"
 			}
@@ -288,12 +291,14 @@ describe("Properties Controller property messages", () => {
 	it("should update a simple property message correctly", () => {
 		reset();
 		controller.updateErrorMessage({ name: "param_int" }, {
+			validation_id: "param_int",
 			type: "error",
 			text: "Testing error messages"
 		});
 		const actualValues = controller.getErrorMessages();
 		const expectedValues = getCopy(errorMessages);
 		expectedValues.param_int = {
+			validation_id: "param_int",
 			type: "error",
 			text: "Testing error messages"
 		};
@@ -302,6 +307,7 @@ describe("Properties Controller property messages", () => {
 	it("should update a row property message correctly", () => {
 		reset();
 		controller.updateErrorMessage({ name: "param_str_array", row: 2 }, {
+			validation_id: "param_str_array",
 			type: "warning",
 			text: "warning in array"
 		});
@@ -309,6 +315,7 @@ describe("Properties Controller property messages", () => {
 		const expectedValues = getCopy(errorMessages);
 		expectedValues.param_str_array = {};
 		expectedValues.param_str_array[2] = {
+			validation_id: "param_str_array",
 			type: "warning",
 			text: "warning in array"
 		};
@@ -317,6 +324,7 @@ describe("Properties Controller property messages", () => {
 	it("should update a cell property message correctly", () => {
 		reset();
 		controller.updateErrorMessage({ name: "param_mix_table", row: 2, col: 3 }, {
+			validation_id: "param_mix_table",
 			type: "error",
 			text: "Bad cell value"
 		});
@@ -324,6 +332,7 @@ describe("Properties Controller property messages", () => {
 		const expectedValues = getCopy(errorMessages);
 		expectedValues.param_mix_table[2] = {};
 		expectedValues.param_mix_table[2][3] = {
+			validation_id: "param_mix_table",
 			type: "error",
 			text: "Bad cell value"
 		};
@@ -333,6 +342,7 @@ describe("Properties Controller property messages", () => {
 		reset();
 		const actualValue = controller.getErrorMessage({ name: "param_mix_table" });
 		const expectedValue = {
+			validation_id: "param_mix_table",
 			type: "warning",
 			text: "Bad table value"
 		};
@@ -342,6 +352,7 @@ describe("Properties Controller property messages", () => {
 		reset();
 		const actualValue = controller.getErrorMessage({ name: "param_str_array", row: 2 });
 		const expectedValue = {
+			validation_id: "param_str_array",
 			type: "error",
 			text: "Bad array value"
 		};
@@ -351,6 +362,7 @@ describe("Properties Controller property messages", () => {
 		reset();
 		const actualValue = controller.getErrorMessage({ name: "param_mix_table", row: 0, col: 2 });
 		const expectedValue = {
+			validation_id: "param_mix_table",
 			type: "warning",
 			text: "Bad table value"
 		};
@@ -362,18 +374,21 @@ describe("Properties Controller property messages", () => {
 		const expectedValues = [
 			{
 				id_ref: "param_int",
+				validation_id: "param_int",
 				type: "warning",
 				text: "Bad integer value"
 			},
 			{
-				"id_ref": "param_str_array",
-				"type": "error",
-				"text": "Bad array value"
+				id_ref: "param_str_array",
+				validation_id: "param_str_array",
+				type: "error",
+				text: "Bad array value"
 			},
 			{
-				"id_ref": "param_mix_table",
-				"type": "warning",
-				"text": "Bad table value"
+				id_ref: "param_mix_table",
+				validation_id: "param_mix_table",
+				type: "warning",
+				text: "Bad table value"
 			}
 		];
 		expect(isEqual(expectedValues, actualValues)).to.be.true;

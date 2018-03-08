@@ -53,6 +53,7 @@ function messages(state = {}, action) {
 			} else {
 				delete newState[action.message.propertyId.name].type;
 				delete newState[action.message.propertyId.name].text;
+				delete newState[action.message.propertyId.name].validation_id;
 				if (isEmpty(newState[action.message.propertyId.name])) {
 					delete newState[action.message.propertyId.name];
 				}

@@ -39,13 +39,13 @@ formData.appData = SAMPLE_TEST_FORM_DATA.appData;
 formData.additionalComponents = SAMPLE_TEST_FORM_DATA.additionalComponents;
 
 const expectedNode1Messages = [
-	{ "text": "The new column name cannot be empty", "type": "error", "id_ref": "colName" },
-	{ "text": "The computed column value cannot be empty", "type": "error", "id_ref": "col" }
+	{ "text": "The new column name cannot be empty", "type": "error", "validation_id": "colName", "id_ref": "colName" },
+	{ "text": "The computed column value cannot be empty", "type": "error", "validation_id": "col", "id_ref": "col" }
 ];
 const expectedNode2Messages = [
-	{ "text": "Field cannot be default", "type": "error", "id_ref": "formula_measure_type" },
-	{ "text": "Annotation is empty when there is a custom name", "type": "warning", "id_ref": "custom_name" },
-	{ "text": "Field cannot be empty nor contain \"quotes\"", "type": "error", "id_ref": "annotation" }
+	{ "text": "Field cannot be default", "type": "error", "validation_id": "formula_measure_type", "id_ref": "formula_measure_type" },
+	{ "text": "Annotation is empty when there is a custom name", "type": "warning", "validation_id": "custom_name", "id_ref": "custom_name" },
+	{ "text": "Field cannot be empty nor contain \"quotes\"", "type": "error", "validation_id": "annotations", "id_ref": "annotation" }
 ];
 
 
@@ -59,11 +59,11 @@ function getFormData(nodeId) {
 function setNodeMessages(nodeId, messages) {
 	if (nodeId === "idGWRVT47XDV") {
 		// logger.info("expected Node1Messages  = " + JSON.stringify(expectedNode1Messages, null, 4));
-		// logger.info("actual Node1Messages  = " + JSON.stringify(actualNode1Messages, null, 4));
+		// logger.info("actual Node1Messages  = " + JSON.stringify(messages, null, 4));
 		expect(isEqual(expectedNode1Messages, messages)).to.be.true;
 	} else {
 		// logger.info("expected Node2Messages  = " + JSON.stringify(expectedNode2Messages, null, 4));
-		// logger.info("actual Node2Messages  = " + JSON.stringify(actualNode2Messages, null, 4));
+		// logger.info("actual Node2Messages  = " + JSON.stringify(messages, null, 4));
 		expect(isEqual(expectedNode2Messages, messages)).to.be.true;
 	}
 }

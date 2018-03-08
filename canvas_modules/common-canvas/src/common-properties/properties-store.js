@@ -173,11 +173,11 @@ export default class PropertiesStore {
 				return controlMsg[propertyId.col.toString()]; // return cell message
 			}
 			if (controlMsg && controlMsg.text) {
-				return { type: controlMsg.type, text: controlMsg.text }; // return row message
+				return { validation_id: controlMsg.validation_id, type: controlMsg.type, text: controlMsg.text }; // return row message
 			}
 		}
 		if (controlMsg && controlMsg.text) {
-			return { type: controlMsg.type, text: controlMsg.text }; // return prop message
+			return { validation_id: controlMsg.validation_id, type: controlMsg.type, text: controlMsg.text }; // return prop message
 		} else if (controlMsg) {
 			// search message for param and return first message found
 			for (const rowKey in controlMsg) {
@@ -186,7 +186,7 @@ export default class PropertiesStore {
 				}
 				const rowMessage = controlMsg[rowKey];
 				if (rowMessage && rowMessage.text) {
-					return { type: rowMessage.type, text: rowMessage.text }; // return row message
+					return { validation_id: rowMessage.validation_id, type: rowMessage.type, text: rowMessage.text }; // return row message
 				} else if (rowMessage) {
 					for (const colKey in rowMessage) {
 						if (!rowMessage.hasOwnProperty(colKey)) {
@@ -194,7 +194,7 @@ export default class PropertiesStore {
 						}
 						const colMessage = rowMessage[colKey];
 						if (colMessage && colMessage.text) {
-							return { type: colMessage.type, text: colMessage.text }; // return row message
+							return { validation_id: colMessage.validation_id, type: colMessage.type, text: colMessage.text }; // return row message
 						}
 					}
 				}

@@ -158,10 +158,8 @@ describe("condition messages renders correctly with textfields control", () => {
 		let textfieldNameErrorMessages = {
 			passwordField:
 						{ type: "error",
-							text: "Password cannot be empty, enter \"password\"" },
-			textfieldName:
-						{ type: "error",
-							text: "textfieldName is missing an input value for validation."
+							text: "Password cannot be empty, enter \"password\"",
+							validation_id: "PW2"
 						}
 		};
 		let actual = controller.getErrorMessages();
@@ -172,13 +170,10 @@ describe("condition messages renders correctly with textfields control", () => {
 		passwordInput.simulate("change", { target: { value: "password" } });
 		wrapper.update();
 		textfieldNameErrorMessages = {
-			textfieldName:
-						{ type: "error",
-							text: "textfieldName is missing an input value for validation."
-						},
 			passwordField:
 						{ type: "error",
-							text: "textfieldName is missing an input value for validation."
+							text: "textfieldName is missing an input value for validation.",
+							validation_id: "PW1"
 						}
 		};
 		actual = controller.getErrorMessages();
@@ -191,11 +186,8 @@ describe("condition messages renders correctly with textfields control", () => {
 		textfieldNameErrorMessages = {
 			passwordField:
 						{ type: "warning",
-							text: "name cannot contain password"
-						},
-			textfieldName:
-						{ type: "warning",
-							text: "name cannot contain password"
+							text: "name cannot contain password",
+							validation_id: "PW1"
 						}
 		};
 		actual = controller.getErrorMessages();
@@ -229,7 +221,8 @@ describe("condition messages renders correctly with textfields control", () => {
 			textfieldName:
 						{
 							type: "error",
-							text: "Name cannot contain double or single \"quotes\""
+							text: "Name cannot contain double or single \"quotes\"",
+							validation_id: "textfieldtest2"
 						}
 		};
 		let actual = controller.getErrorMessages();
@@ -246,7 +239,8 @@ describe("condition messages renders correctly with textfields control", () => {
 			textfieldName:
 			{
 				type: "error",
-				text: "Name cannot contain /"
+				text: "Name cannot contain /",
+				validation_id: "textfieldtest1"
 			}
 		};
 		actual = controller.getErrorMessages();
@@ -285,6 +279,7 @@ describe("condition messages renders correctly with textfields control", () => {
 		const textfieldNameErrorMessages = {
 			textareaDescription:
 						{
+							validation_id: "textareaDescription",
 							type: "error",
 							text: "Required parameter 'Description' has no value"
 						}

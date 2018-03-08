@@ -508,9 +508,8 @@ function validateInput(propertyId, controller, validationDefinitions, datasetMet
 	if (Array.isArray(validations)) {
 		try {
 			let output = false;
-			let errorMessage = DEFAULT_VALIDATION_MESSAGE;
-
 			for (const validation of validations) {
+				let errorMessage = DEFAULT_VALIDATION_MESSAGE;
 				output = UiConditions.evaluateInput(validation.definition, userInput, control, datasetMetadata, controller.getRequiredParameters(),
 					propertyId, controller);
 				let isError = false;
@@ -522,22 +521,35 @@ function validateInput(propertyId, controller, validationDefinitions, datasetMet
 						text: output.text
 					};
 				}
+				let msgPropertyId = propertyId;
+				if (validation.definition.validation &&
+					validation.definition.validation.fail_message &&
+					validation.definition.validation.fail_message.focus_parameter_ref) {
+					msgPropertyId = _getPropertyId(validation.definition.validation.fail_message.focus_parameter_ref);
+					if (typeof propertyId.row !== "undefined") {
+						msgPropertyId.row = propertyId.row;
+					}
+				}
+				errorMessage.validation_id = msgPropertyId.name;
+				if (validation.definition.validation &&
+					validation.definition.validation.id) {
+					errorMessage.validation_id = validation.definition.validation.id;
+				}
 				if ((typeof output === "object" && output.isActiveCell) || (isError && !errorSet)) {
-					controller.updateErrorMessage(propertyId, errorMessage);
+					controller.updateErrorMessage(msgPropertyId, errorMessage);
 					if (isError) {
 						errorSet = true;
 					}
+				} else {
+					const msg = controller.getErrorMessage(msgPropertyId);
+					if (!isEmpty(msg) && (msg.validation_id === errorMessage.validation_id)) {
+						controller.updateErrorMessage(msgPropertyId, DEFAULT_VALIDATION_MESSAGE);
+					}
 				}
-				_doGroupValidationUpdate(validation, errorMessage, output, propertyId, controller);
 			}
 		} catch (error) {
 			logger.warn("Error thrown in validation: " + error);
 		}
-	}
-
-	if (!isEmpty(validations) && !errorSet && !isEmpty(controller.getErrorMessage(propertyId))) {
-		// if validations exist and if all resolve w/o error, clear out error message
-		controller.updateErrorMessage(propertyId, DEFAULT_VALIDATION_MESSAGE);
 	}
 
 	if (!errorSet && controller.isRequired(propertyId)) {
@@ -553,27 +565,6 @@ function validateInput(propertyId, controller, validationDefinitions, datasetMet
 	}
 }
 
-function _doGroupValidationUpdate(validation, errorMessage, output, propertyId, controller) {
-	if (typeof validation.params === "object") {
-		for (const control of validation.params) {
-			let groupMessage = JSON.parse(JSON.stringify(errorMessage));
-			if (output === true) {
-				groupMessage = DEFAULT_VALIDATION_MESSAGE;
-			}
-			// params could have control names with column notation. Remove '[]' from the control name
-			const paramName = _getPropertyId(control);
-			if (paramName.name !== propertyId.name) {
-				const controlPropertyId = { name: paramName.name };
-				controller.updateErrorMessage(controlPropertyId, groupMessage);
-				// Special case: do not remove required property error message for secondary controls if group validation does not fail
-				if (controller.isRequired(controlPropertyId) && groupMessage === DEFAULT_VALIDATION_MESSAGE) {
-					_requiredValidation(controlPropertyId, controller);
-				}
-			}
-		}
-	}
-}
-
 function _requiredValidation(propertyId, controller) {
 	const controlValue = controller.getPropertyValue(propertyId);
 	let errorSet = false;
@@ -582,6 +573,7 @@ function _requiredValidation(propertyId, controller) {
 		const control = controller.getControl(propertyId);
 		const label = control && control.label && control.label.text ? control.label.text : propertyId.name;
 		const errorMessage = {
+			validation_id: propertyId.name,
 			type: "error",
 			text: "Required parameter '" + label + "' has no value"
 		};
@@ -603,6 +595,7 @@ function _isValidDate(propertyId, controller, dtFormat) {
 		if (!mom.isValid()) {
 			const dateFormat = dtFormat || DEFAULT_DATE_FORMAT;
 			const errorMessage = {
+				validation_id: propertyId.name,
 				type: "error",
 				text: "Invalid date. Format should be " + dateFormat
 			};
@@ -628,6 +621,7 @@ function _isValidTime(propertyId, controller, tmFormat) {
 		if (!mom.isValid()) {
 			const timeFormat = tmFormat || DEFAULT_TIME_FORMAT;
 			const errorMessage = {
+				validation_id: propertyId.name,
 				type: "error",
 				text: "Invalid time. Format should be " + timeFormat
 			};
@@ -651,13 +645,11 @@ function _extractValidationDefinitions(propertyId, validationDefinitions) {
 		}
 		const baseId = _getPropertyId(validationKey);
 		if (baseId.name === propertyId.name) {
-			// TODO seems like we should go down to the col id
-			// if (typeof propertyId.col === "undefined") {
-			//	retVal = retVal.concat(validationDefinitions[validationKey]);
-			// } else if (baseId.col === propertyId.col) {
-			//	retVal = retVal.concat(validationDefinitions[validationKey]);
-			// }
-			retVal = retVal.concat(validationDefinitions[validationKey]);
+			if (typeof propertyId.col === "undefined") {
+				retVal = retVal.concat(validationDefinitions[validationKey]);
+			} else if (baseId.col === propertyId.col) {
+				retVal = retVal.concat(validationDefinitions[validationKey]);
+			}
 		}
 	}
 	return retVal;
@@ -683,4 +675,5 @@ module.exports.validateConditions = validateConditions;
 module.exports.validateInput = validateInput;
 module.exports.filterConditions = filterConditions;
 module.exports.updateState = _updateState;
+module.exports.getPropertyId = _getPropertyId;
 module.exports.updatePanelChildrenStatesForPanelIds = updatePanelChildrenStatesForPanelIds;

@@ -1066,6 +1066,7 @@ describe("condition messages renders correctly with structure table control", ()
 		wrapper.update();
 
 		const structuretableSortOrderErrorMessages = {
+			"validation_id": "structuretableReadonlyColumnStartValue",
 			"type": "error",
 			"text": "table cannot be empty"
 		};
@@ -1097,6 +1098,7 @@ describe("condition messages renders correctly with structure table control", ()
 		wrapper.update();
 
 		const structuretableRenameFieldsErrorMessages = {
+			"validation_id": "structuretableReadonlyColumnDefaultIndex",
 			"type": "error",
 			"text": "The 'Output Name' field cannot contain 'pw'"
 		};
@@ -1152,6 +1154,7 @@ describe("condition messages renders correctly with structure table control", ()
 		expect(renderedController.getPropertyValue(conditionsPropertyId)).to.have.length(0);
 
 		const structuretableRenameFieldsErrorMessages = {
+			"validation_id": "structuretableReadonlyColumnDefaultIndex",
 			"type": "error",
 			"text": "Required parameter 'Rename Field' has no value"
 		};

@@ -150,6 +150,7 @@ describe("error messages renders correctly for datefield controls", () => {
 
 		// Check an error message is displayed with the expected error message.
 		const datefieldErrorMessages = {
+			"validation_id": "date_ymd",
 			"type": "error",
 			"text": "Invalid date. Format should be YYYY-M-D",
 		};
@@ -184,6 +185,7 @@ describe("error messages renders correctly for datefield controls", () => {
 
 		// Check an error message is displayed with the expected error message.
 		const datefieldErrorMessages = {
+			"validation_id": "date_ymd",
 			"type": "error",
 			"text": "Invalid date. Format should be YYYY-M-D",
 		};
@@ -216,6 +218,7 @@ describe("error messages renders correctly for datefield controls", () => {
 
 		// Check an error message is displayed with the expected error message.
 		const datefieldErrorMessages = {
+			"validation_id": "date_mdy",
 			"type": "error",
 			"text": "Required parameter 'Required Date M-D-Y' has no value",
 		};

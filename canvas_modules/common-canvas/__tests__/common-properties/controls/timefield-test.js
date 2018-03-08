@@ -149,6 +149,7 @@ describe("error messages renders correctly for timefield controls", () => {
 
 		// Check an error message is displayed with the expected error message.
 		const timefieldErrorMessages = {
+			"validation_id": "time_hms",
 			"type": "error",
 			"text": "Invalid time. Format should be H:m:s",
 		};
@@ -180,6 +181,7 @@ describe("error messages renders correctly for timefield controls", () => {
 
 		// Check an error message is displayed with the expected error message.
 		const timefieldErrorMessages = {
+			"validation_id": "time_hms",
 			"type": "error",
 			"text": "Required parameter 'Required Time H:m:s' has no value",
 		};

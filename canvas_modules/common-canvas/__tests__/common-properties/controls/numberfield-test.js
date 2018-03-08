@@ -208,6 +208,7 @@ describe("condition messages renders correctly with numberfield control", () => 
 		wrapper.update();
 
 		const numberfieldSeedErrorMessages = {
+			"validation_id": "numberfieldSeed",
 			"type": "error",
 			"text": "Field cannot be null. This is an example of a long error message that might be entered. The message text will wrap around to the next line.",
 		};
@@ -234,6 +235,7 @@ describe("condition messages renders correctly with numberfield control", () => 
 		wrapper.update();
 
 		const numberfieldCheckpointIntervalErrorMessages = {
+			"validation_id": "numberfieldCheckpointInterval",
 			"type": "error",
 			"text": "The checkpoint interval value must either be >= 1 or -1 to disable"
 		};
@@ -252,6 +254,7 @@ describe("condition messages renders correctly with numberfield control", () => 
 		wrapper.update();
 
 		const numberfieldCheckpointIntervalErrorMessages = {
+			"validation_id": "numberfieldCheckpointInterval",
 			"type": "error",
 			"text": "Required parameter 'Checkpoint Interval' has no value",
 		};

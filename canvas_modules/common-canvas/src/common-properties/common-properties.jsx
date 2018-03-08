@@ -140,7 +140,7 @@ class CommonProperties extends React.Component {
 	setErrorMessages(messages) {
 		messages.forEach((message) => {
 			this.propertiesController.updateErrorMessage({ name: message.id_ref },
-				{ type: message.type, text: message.text });
+				{ type: message.type, text: message.text, validation_id: message.validation_id });
 		});
 	}
 

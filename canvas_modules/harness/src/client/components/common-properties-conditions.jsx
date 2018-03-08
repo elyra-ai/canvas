@@ -863,7 +863,8 @@ class CommonPropertiesComponents extends React.Component {
 					</ul>
 					The condition will be evaluated if both
 					controls are the same data type. For example, a textfield control will not be able to validate against a numberfield control.
-					If a group condition fails, the same <span className="highlight">fail_message</span> will be shown for both controls.
+					If a group condition fails, the same <span className="highlight">fail_message</span> will be shown on the control value
+					in the <span className="highlight">focus_parameter_ref</span> field.
 					&nbsp;
 					If the missing input is from the <span className="highlight">parameter_ref</span> control, an internal error will be shown.
 					If the missing input is from the <span className="highlight">parameter_2_ref</span> control, an internal warning will be shown.
