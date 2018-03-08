@@ -6,7 +6,7 @@
   "current_parameters": {
     "actual_value": "",
     "predicted_value": "",
-    "cost": 1.0,
+    "cost_value": 1.0,
     "custom_table_info": [],
     "include_from": "main",
     "tag_records": false,

@@ -28,16 +28,25 @@ class CustomButtonPanel {
 		this.getAvailableValues = this.getAvailableValues.bind(this);
 		this.getAvailableActualValues = this.getAvailableActualValues.bind(this);
 
-		// @TODO: Decide upon how the name of the target field will be conveyed to this code.
-		// For now we are simply looking for 'target' in the field modeling_role.
+		// Assume a "custom_fields" boolean to determine whether to interogate the
+		// datarecord-metadata's modeling_role or the target field when looking for
+		// the target field name.
 		//
-		// Attempt to discern the target field name from the modeling_role
-		const datasetMetadata = this.controller.getDatasetMetadata();
-		if (datasetMetadata.length > 0) {
-			for (let idx = 0; idx < datasetMetadata[0].fields.length; idx++) {
-				if (datasetMetadata[0].fields[idx].metadata.modeling_role === "target") {
-					this.targetFieldName = datasetMetadata[0].fields[idx].name;
-					break;
+		const customFields = this.controller.getPropertyValue({ name: "custom_fields" });
+		if (customFields) {
+			// Retrieve the target field name from the "target" field parameter
+			this.targetFieldName = this.controller.getPropertyValue({ name: "target" });
+		}
+
+		if (!this.targetFieldName) {
+			// Attempt to discern the target field name from the modeling_role
+			const datasetMetadata = this.controller.getDatasetMetadata();
+			if (datasetMetadata.length > 0) {
+				for (let idx = 0; idx < datasetMetadata[0].fields.length; idx++) {
+					if (datasetMetadata[0].fields[idx].metadata.modeling_role === "target") {
+						this.targetFieldName = datasetMetadata[0].fields[idx].name;
+						break;
+					}
 				}
 			}
 		}
@@ -66,11 +75,22 @@ class CustomButtonPanel {
 		const actualValue = this.controller.getPropertyValue({ name: "actual_value" });
 		const predictedValue = this.controller.getPropertyValue({ name: "predicted_value" });
 		const costValue = this.controller.getPropertyValue({ name: "cost_value" });
+
+		// Ensure that we have selections for all three controls
 		if (!actualValue || actualValue === "" ||
 				!predictedValue || predictedValue === "" ||
 				typeof costValue === "undefined" || costValue === null) {
 			return { "disabled": true };
 		}
+
+		// Disable if the current actual and predicted combination have already been used
+		const tableInfo = this.controller.getPropertyValue({ name: "custom_table_info" });
+		for (let idx = 0; idx < tableInfo.length; idx++) {
+			if (tableInfo[idx][0] === actualValue && tableInfo[idx][1] === predictedValue) {
+				return { "disabled": true };
+			}
+		}
+
 		return "";
 	}
 
@@ -183,11 +203,11 @@ class CustomButtonPanel {
 					{cost}
 				</div>
 				<br />
-				<Button semantic onClick={this.addRowAction} {...addDisabled}>
+				<Button medium semantic onClick={this.addRowAction} {...addDisabled}>
 					Add
 				</Button>
 				&nbsp; &nbsp;
-				<Button semantic onClick={this.removeRowsAction} {...removeDisabled}>
+				<Button medium semantic onClick={this.removeRowsAction} {...removeDisabled}>
 					Remove Selected
 				</Button>
 			</div>
