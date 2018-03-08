@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -11,43 +11,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import Tooltip from "../tooltip/tooltip.jsx";
 import ObserveSize from "react-observe-size";
-
-import paletteDisabledIcon from "../../assets/images/canvas_toolbar_icons/palette_open_disabled.svg";
-import paletteCloseIcon from "../../assets/images/canvas_toolbar_icons/palette_close.svg";
-import paletteOpenIcon from "../../assets/images/canvas_toolbar_icons/palette_open.svg";
-
-import runIcon from "../../assets/images/canvas_toolbar_icons/run.svg";
-import runDisabledIcon from "../../assets/images/canvas_toolbar_icons/run_disabled.svg";
-import stopIcon from "../../assets/images/canvas_toolbar_icons/stop.svg";
-import stopDisabledIcon from "../../assets/images/canvas_toolbar_icons/stop_disabled.svg";
-
-import addCommentIcon from "../../assets/images/canvas_toolbar_icons/add_comment.svg";
-import addCommentDisabledIcon from "../../assets/images/canvas_toolbar_icons/add_comment_disabled.svg";
-import copyIcon from "../../assets/images/canvas_toolbar_icons/copy.svg";
-import copyDisabledIcon from "../../assets/images/canvas_toolbar_icons/copy_disabled.svg";
-import cutIcon from "../../assets/images/canvas_toolbar_icons/cut.svg";
-import cutDisabledIcon from "../../assets/images/canvas_toolbar_icons/cut_disabled.svg";
-import deleteIcon from "../../assets/images/canvas_toolbar_icons/delete.svg";
-import deleteDisabledIcon from "../../assets/images/canvas_toolbar_icons/delete_disabled.svg";
-import pasteIcon from "../../assets/images/canvas_toolbar_icons/paste.svg";
-import pasteDisabledIcon from "../../assets/images/canvas_toolbar_icons/paste_disabled.svg";
-import redoIcon from "../../assets/images/canvas_toolbar_icons/redo.svg";
-import redoDisabledIcon from "../../assets/images/canvas_toolbar_icons/redo_disabled.svg";
-import undoIcon from "../../assets/images/canvas_toolbar_icons/undo.svg";
-import undoDisabledIcon from "../../assets/images/canvas_toolbar_icons/undo_disabled.svg";
-import arrangeHorizontallyIcon from "../../assets/images/canvas_toolbar_icons/arrange_horizontally.svg";
-import arrangeHorizontallyDisabledIcon from "../../assets/images/canvas_toolbar_icons/arrange_horizontally_disabled.svg";
-import arrangeVerticallyIcon from "../../assets/images/canvas_toolbar_icons/arrange_vertically.svg";
-import arrangeVerticallyDisabledIcon from "../../assets/images/canvas_toolbar_icons/arrange_vertically_disabled.svg";
-
-import zoomInIcon from "../../assets/images/canvas_toolbar_icons/zoom_in.svg";
-import zoomOutIcon from "../../assets/images/canvas_toolbar_icons/zoom_out.svg";
-import zoomToFitIcon from "../../assets/images/canvas_toolbar_icons/zoom_to_fit.svg";
-import zoomToFitDisabledIcon from "../../assets/images/canvas_toolbar_icons/zoom_to_fit_disabled.svg";
-
-import overflowIcon from "../../assets/images/canvas_toolbar_icons/overflow.svg";
-import overflowDisabledIcon from "../../assets/images/canvas_toolbar_icons/overflow_disabled.svg";
-
+import Icon from "../icons/Icon.jsx";
 import { TOOLBAR } from "../../constants/common-constants.js";
 
 // eslint override
@@ -65,39 +29,6 @@ class Toolbar extends React.Component {
 			dividerCount: 0,
 			showExtendedMenu: false
 		};
-		this.addCommentIcon = addCommentIcon;
-		this.addCommentDisabledIcon = addCommentDisabledIcon;
-		this.copyIcon = copyIcon;
-		this.copyDisabledIcon = copyDisabledIcon;
-		this.cutIcon = cutIcon;
-		this.cutDisabledIcon = cutDisabledIcon;
-		this.deleteIcon = deleteIcon;
-		this.deleteDisabledIcon = deleteDisabledIcon;
-		this.overflowIcon = overflowIcon;
-		this.overflowDisabledIcon = overflowDisabledIcon;
-		this.pasteIcon = pasteIcon;
-		this.pasteDisabledIcon = pasteDisabledIcon;
-		this.redoIcon = redoIcon;
-		this.redoDisabledIcon = redoDisabledIcon;
-		this.runIcon = runIcon;
-		this.runDisabledIcon = runDisabledIcon;
-		this.stopIcon = stopIcon;
-		this.stopDisabledIcon = stopDisabledIcon;
-		this.undoIcon = undoIcon;
-		this.undoDisabledIcon = undoDisabledIcon;
-		this.arrangeHorizontallyIcon = arrangeHorizontallyIcon;
-		this.arrangeHorizontallyDisabledIcon = arrangeHorizontallyDisabledIcon;
-		this.arrangeVerticallyIcon = arrangeVerticallyIcon;
-		this.arrangeVerticallyDisabledIcon = arrangeVerticallyDisabledIcon;
-
-		this.paletteDisabledIcon = paletteDisabledIcon;
-		this.paletteCloseIcon = paletteCloseIcon;
-		this.paletteOpenIcon = paletteOpenIcon;
-		this.zoomInIcon = zoomInIcon;
-		this.zoomOutIcon = zoomOutIcon;
-		this.zoomToFitIcon = zoomToFitIcon;
-		this.zoomToFitDisabledIcon = zoomToFitDisabledIcon;
-		this.overflowIcon = overflowIcon;
 
 		this.generatePaletteIcon = this.generatePaletteIcon.bind(this);
 		this.toggleShowExtendedMenu = this.toggleShowExtendedMenu.bind(this);
@@ -235,16 +166,18 @@ class Toolbar extends React.Component {
 		}
 		return utilityActions;
 	}
-
+	// TODO should be able to merge this method with generateDisabledActionIcon
 	generateEnabledActionIcon(actionObj, actionId, actionsHandler, overflow) {
 		const overflowClassName = overflow ? "overflow" : "";
 		let actionClickHandler = actionObj.callback;
 		if (typeof actionsHandler === "function") {
 			actionClickHandler = () => actionsHandler(actionObj.action);
 		}
-		let icon = this[actionObj.action + "Icon"];
+		let icon = <Icon type={actionObj.action} />;
 		if (actionObj.iconEnabled) {
-			icon = actionObj.iconEnabled;
+			icon = (<img id={"toolbar-icon-" + actionObj.action} className={"toolbar-icons " + overflowClassName}
+				src={actionObj.iconEnabled}
+			/>);
 		}
 		const tooltipId = actionId + "-" + this.props.canvasController.getInstanceId() + "-tooltip";
 		let disableTooltip = false;
@@ -256,9 +189,7 @@ class Toolbar extends React.Component {
 				<Tooltip id={tooltipId} tip={actionObj.label} disable={disableTooltip}>
 					<a onClick={actionClickHandler} className={"list-item " + overflowClassName} >
 						<div className={"toolbar-item " + overflowClassName}>
-							<img id={"toolbar-icon-" + actionObj.action} className={"toolbar-icons " + overflowClassName}
-								src={icon}
-							/>
+							{icon}
 							{this.generateLabel(false, overflow, actionObj.label)}
 						</div>
 					</a>
@@ -269,13 +200,13 @@ class Toolbar extends React.Component {
 
 	generateDisabledActionIcon(actionObj, actionId, overflow) {
 		const overflowClassName = overflow ? "overflow" : "";
-		let icon = this[actionObj.action + "DisabledIcon"];
-		if (actionObj.action.startsWith("palette")) {
-			icon = this.paletteDisabledIcon;
-		}
+		let icon = <Icon type={actionObj.action} disabled />;
 		if (actionObj.iconDisabled) {
-			icon = actionObj.iconDisabled;
+			icon = (<img id={"toolbar-icon-" + actionObj.action} className={"toolbar-icons " + overflowClassName}
+				src={actionObj.iconDisabled}
+			/>);
 		}
+
 		const tooltipId = actionId + "-" + this.props.canvasController.getInstanceId() + "-tooltip";
 		let disableTooltip = false;
 		if (overflow) {
@@ -286,9 +217,7 @@ class Toolbar extends React.Component {
 				<Tooltip id={tooltipId} tip={actionObj.label} disable={disableTooltip}>
 					<a className={"list-item list-item-disabled " + overflowClassName} >
 						<div className={"toolbar-item " + overflowClassName}>
-							<img id={"toolbar-icon-" + actionObj.action} className={"toolbar-icons " + overflowClassName}
-								src={icon}
-							/>
+							{icon}
 							{this.generateLabel(true, overflow, actionObj.label)}
 						</div>
 					</a>
@@ -318,9 +247,7 @@ class Toolbar extends React.Component {
 			<li id={"overflow-action"} key={"overflow-action"} className="list-item-containers" >
 				<a onClick={() => this.toggleShowExtendedMenu()} className="overflow-action-list-item list-item toolbar-divider">
 					<div className="toolbar-item">
-						<img id={"toolbar-icon-overflow"} className="toolbar-icons"
-							src={this.overflowIcon}
-						/>
+						<Icon type="overflow" />
 					</div>
 				</a>
 				<ul className={"toolbar-popover-list " + subMenuClassName}>

@@ -32,12 +32,7 @@ import FieldPicker from "./field-picker.jsx";
 
 import { injectIntl, intlShape } from "react-intl";
 
-
-import DownIcon from "../../../assets/images/down_caret.svg";
-import UpIcon from "../../../assets/images/up_caret.svg";
-import InfoIcon from "../../../assets/images/info.svg";
-import WarningIcon from "../../../assets/images/warning.svg";
-import ErrorIcon from "../../../assets/images/error.svg";
+import Icon from "../../icons/Icon.jsx";
 
 const ALERT_TAB_GROUP = "alertMsgs";
 
@@ -64,12 +59,6 @@ class EditorForm extends React.Component {
 
 		this._showCategoryPanel = this._showCategoryPanel.bind(this);
 		this._handleMessageClick = this._handleMessageClick.bind(this);
-
-		this.stateIconList = {
-			"info": InfoIcon,
-			"warning": WarningIcon,
-			"error": ErrorIcon
-		};
 
 		this.messages = [];
 
@@ -184,11 +173,11 @@ class EditorForm extends React.Component {
 			}
 
 			if (this.props.rightFlyout) {
-				let panelArrow = DownIcon;
+				let panelArrow = <Icon type="downCaret" />;
 				let panelItemsContainerClass = "closed";
 				const styleObj = {};
 				if (this.state.activeTabId === tab.text) {
-					panelArrow = UpIcon;
+					panelArrow = <Icon type="upCaret" />;
 					panelItemsContainerClass = "open";
 					if (i === tabs.length - 1) {
 						styleObj.borderBottom = "none";
@@ -205,7 +194,7 @@ class EditorForm extends React.Component {
 							className="category-title-right-flyout-panel"
 						>
 							{tab.text.toUpperCase()}{this._getMessageCountForCategory(tab)}
-							<img className="category-icon-right-flyout-panel" src={panelArrow}	/>
+							{panelArrow}
 						</a>
 						{panelItemsContainer}
 						{additionalComponent}
@@ -386,23 +375,23 @@ class EditorForm extends React.Component {
 			let textClass = "static-text";
 			let icon = <div />;
 			if (uiItem.textType === "info") {
-				icon = <div className="static-text-icon-container"><img className="static-text-icon" src={InfoIcon} /></div>;
+				icon = <div className="static-text-icon-container"><Icon type="info" /></div>;
 				textClass = "static-text info";
 			}
 			const text = <div className={textClass}>{PropertyUtil.evaluateText(uiItem.text, this.props.controller)}</div>;
 			return <div key={"static-text." + key} className="static-text-container">{icon}{text}</div>;
-		} else if (uiItem.itemType === "linkText") {
+		} else if (uiItem.itemType === "linkText") { // linkText used for Alerts tab. Only used internally
 			let textClass = "link-text";
 			let icon = <div />;
 			if (uiItem.textType === "warning" || uiItem.textType === "error") {
-				icon = <img className="link-text-icon" src={this.stateIconList[uiItem.textType]} />;
+				icon = <Icon type="circle" />;
 				textClass = "link-text " + uiItem.textType;
 			}
 			const text = (
 				<div className={textClass} onClick={this._handleMessageClick.bind(this, uiItem.controlId)}>
 					{PropertyUtil.evaluateText(uiItem.text, this.props.controller)}
 				</div>);
-			return <div key={"link-text." + key} className="link-text-container">{icon}{text}</div>;
+			return <div key={"link-text." + key} className={"link-text-container " + uiItem.textType} >{icon}{text}</div>;
 		} else if (uiItem.itemType === "hSeparator") {
 			return <hr key={"h-separator." + key} className="h-separator" />;
 		} else if (uiItem.itemType === "panel" || uiItem.itemType === "summaryPanel") { // summaryPanel deprecated

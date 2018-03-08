@@ -12,9 +12,14 @@
 module.exports = function() {
 
 	this.Then(/^I select the "([^"]*)" button on the "([^"]*)" parameter$/, function(buttonName, parameterName) {
-		const button = browser.$("#moveablerow-table-" + parameterName)
-			.$("#field-picker-buttons-container")
-			.$("#" + buttonName);
+		const constainer = browser.$("#moveablerow-table-" + parameterName)
+			.$("#field-picker-buttons-container");
+		let button;
+		if (buttonName === "Add") {
+			button = constainer.$("#add-fields-button");
+		} else if (buttonName === "Remove") {
+			button = constainer.$(".remove-fields-button:not([disabled])");
+		}
 		button.click();
 		browser.pause(500);
 	});

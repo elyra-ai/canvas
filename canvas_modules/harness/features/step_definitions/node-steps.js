@@ -588,10 +588,10 @@ module.exports = function() {
 
 			try {
 				var categoryIndex = categoryPosition[nodeCategory];
-				var paletteItem = browser.$$(".palette-flyout-category-arrow")[categoryIndex];
+				var paletteItem = browser.$$(".palette-flyout-category")[categoryIndex];
 				paletteItem.click();
 				const nodeIndex = nodePosition[nodeType];
-				var nodeIcon = browser.$$(".palette-list-item-icon")[nodeIndex];
+				var nodeIcon = browser.$$(".palette-list-item")[nodeIndex];
 				nodeIcon.doubleClick();
 				paletteItem.click();
 			} catch (err) {

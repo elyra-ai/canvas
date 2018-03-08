@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -11,7 +11,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import PaletteFlyoutContentCategory from "./palette-flyout-content-category.jsx";
 import PaletteContentList from "./palette-content-list.jsx";
-import search32 from "../../assets/images/search_32.svg";
+import Icon from "../icons/Icon.jsx";
 import TextField from "ap-components-react/dist/components/TextField";
 
 class PaletteFlyoutContent extends React.Component {
@@ -120,8 +120,8 @@ class PaletteFlyoutContent extends React.Component {
 		const value = this.state.filterKeyword;
 		return (
 			<div className="palette-flyout-content">
-				<div id="palette-flyout-search">
-					<div id="palette-flyout-search-bar">
+				<div className="palette-flyout-search">
+					<div className="palette-flyout-search-bar">
 						<TextField
 							key="palette-flyout-search-text"
 							type="search"
@@ -132,9 +132,7 @@ class PaletteFlyoutContent extends React.Component {
 							value={value}
 						/>
 					</div>
-					<div id="palette-flyout-search-icon">
-						<img id="palette-flyout-search-icon" src={search32} />
-					</div>
+					<Icon type="search" size="20px" />
 				</div>
 				{contentDivs}
 			</div>

@@ -51,7 +51,7 @@ module.exports = function() {
 		if (buttonName === "Add") {
 			tableDiv.$("#add-fields-button").click();
 		} else {
-			tableDiv.$("#remove-fields-button-enabled").click();
+			tableDiv.$(".remove-fields-button").click();
 		}
 	});
 
@@ -94,38 +94,38 @@ module.exports = function() {
 
 	// moveableRows
 	this.Then(/^I verify that moveable row button "([^"]*)" is "([^"]*)"$/, function(direction, enabled) {
-		const moveButtons = browser.$("#table-row-move-button-container").$$("img");
+		const moveButtons = browser.$("#table-row-move-button-container").$$("svg");
 		expect(moveButtons.length).toEqual(4);
 
 		if (direction === "top") {
 			if (enabled === "enabled") {
-				expect(moveButtons[0].getAttribute("class")).toEqual("table-row-move-button");
+				expect(moveButtons[0].getAttribute("disable")).toEqual(null);
 			} else {
-				expect(moveButtons[0].getAttribute("class")).toEqual("table-row-move-button-disable");
+				expect(moveButtons[0].getAttribute("disabled")).toEqual("true");
 			}
 		} else if (direction === "up") {
 			if (enabled === "enabled") {
-				expect(moveButtons[1].getAttribute("class")).toEqual("table-row-move-button");
+				expect(moveButtons[1].getAttribute("disabled")).toEqual(null);
 			} else {
-				expect(moveButtons[1].getAttribute("class")).toEqual("table-row-move-button-disable");
+				expect(moveButtons[1].getAttribute("disabled")).toEqual("true");
 			}
 		} else if (direction === "down") {
 			if (enabled === "enabled") {
-				expect(moveButtons[2].getAttribute("class")).toEqual("table-row-move-button");
+				expect(moveButtons[2].getAttribute("disabled")).toEqual(null);
 			} else {
-				expect(moveButtons[2].getAttribute("class")).toEqual("table-row-move-button-disable");
+				expect(moveButtons[2].getAttribute("disabled")).toEqual("true");
 			}
 		} else if (direction === "bottom") {
 			if (enabled === "enabled") {
-				expect(moveButtons[3].getAttribute("class")).toEqual("table-row-move-button");
+				expect(moveButtons[3].getAttribute("disabled")).toEqual(null);
 			} else {
-				expect(moveButtons[3].getAttribute("class")).toEqual("table-row-move-button-disable");
+				expect(moveButtons[3].getAttribute("disabled")).toEqual("true");
 			}
 		}
 	});
 
 	this.Then(/^I click on the moveable row button "([^"]*)" to move the row$/, function(direction) {
-		const moveButtons = browser.$("#table-row-move-button-container").$$("img");
+		const moveButtons = browser.$("#table-row-move-button-container").$$(".table-row-move-button");
 		expect(moveButtons.length).toEqual(4);
 
 		if (direction === "top") {

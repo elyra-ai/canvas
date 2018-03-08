@@ -203,6 +203,25 @@ function updateSelectedRows(selection) {
 	return selection;
 }
 
+function clickFilter(wrapper, type, enabled) {
+	let filters = wrapper.find(".filter-list-li.filter");
+	filters.forEach((node) => {
+		if (node.prop("data-type") === type) {
+			node.simulate("click");
+		}
+	});
+	filters = wrapper.find(".filter-list-li.filter");
+	filters.forEach((node) => {
+		if (node.prop("data-type") === type) {
+			if (enabled === true) {
+				expect(node.prop("disabled")).to.equal(false);
+			} else {
+				expect(node.prop("disabled")).to.equal(true);
+			}
+		}
+	});
+}
+
 describe("field-picker-control renders correctly", () => {
 
 	it("props should have been defined", () => {
@@ -275,9 +294,7 @@ describe("field-picker-control renders correctly", () => {
 				controller={controller}
 			/>
 		);
-		wrapper.find(".filter-list-data-integer-enabled-icon").simulate("click", { type: "integer" });
-		wrapper.update();
-		expect(wrapper.find(".filter-list-data-integer-disabled-icon")).to.have.length(1);
+		clickFilter(wrapper, "integer");
 		expect(wrapper.find(".field-picker-data-rows")).to.have.length(9);
 	});
 
@@ -297,18 +314,12 @@ describe("field-picker-control renders correctly", () => {
 		// with intl support wrapper.state() does not work.
 		// looking for equivalent confirmation in the DOM
 
-		// disable a set of icons
-		wrapper.find(".filter-list-data-integer-enabled-icon").simulate("click", { type: "integer" });
-		wrapper.find(".filter-list-data-string-enabled-icon").simulate("click", { type: "string" });
-		wrapper.find(".filter-list-data-timestamp-enabled-icon").simulate("click", { type: "timestamp" });
-		wrapper.find(".filter-list-data-time-enabled-icon").simulate("click", { type: "time" });
-		wrapper.find(".filter-list-data-date-enabled-icon").simulate("click", { type: "date" });
-		wrapper.update();
-		expect(wrapper.find(".filter-list-data-integer-disabled-icon")).to.have.length(1);
-		expect(wrapper.find(".filter-list-data-string-disabled-icon")).to.have.length(1);
-		expect(wrapper.find(".filter-list-data-timestamp-disabled-icon")).to.have.length(1);
-		expect(wrapper.find(".filter-list-data-time-disabled-icon")).to.have.length(1);
-		expect(wrapper.find(".filter-list-data-date-disabled-icon")).to.have.length(1);
+		// disable a set of icons except double
+		clickFilter(wrapper, "integer");
+		clickFilter(wrapper, "string");
+		clickFilter(wrapper, "date");
+		clickFilter(wrapper, "time");
+		clickFilter(wrapper, "timestamp");
 
 		// select the remaining rows
 		expect(wrapper.find(".field-picker-data-rows")).to.have.length(2);
@@ -316,12 +327,11 @@ describe("field-picker-control renders correctly", () => {
 		wrapper.update();
 
 		//  enable the icons so that we can get a valid count of all selected rows.
-		wrapper.find(".filter-list-data-integer-disabled-icon").simulate("click", { type: "integer" });
-		wrapper.find(".filter-list-data-string-disabled-icon").simulate("click", { type: "string" });
-		wrapper.find(".filter-list-data-timestamp-disabled-icon").simulate("click", { type: "timestamp" });
-		wrapper.find(".filter-list-data-time-disabled-icon").simulate("click", { type: "time" });
-		wrapper.find(".filter-list-data-date-disabled-icon").simulate("click", { type: "date" });
-		wrapper.update();
+		clickFilter(wrapper, "integer", true);
+		clickFilter(wrapper, "string", true);
+		clickFilter(wrapper, "date", true);
+		clickFilter(wrapper, "time", true);
+		clickFilter(wrapper, "timestamp", true);
 
 		// validate the number of rows selected
 		const checkBoxs = wrapper.find("Checkbox").filterWhere((checkBox) => checkBox.prop("checked") === true && checkBox.prop("data-name"));
@@ -480,14 +490,14 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 	});
 
 	it("should be able to filter type and select all", () => {
-		const filterIcons = fieldpicker.find(".filter-list-li-icon");
+		const filterIcons = fieldpicker.find(".filter-list-li.filter");
 		expect(filterIcons.length).to.equal(6);
 
-		filterIcons.find(".filter-list-data-integer-enabled-icon").simulate("click", { type: "integer" });
-		filterIcons.find(".filter-list-data-string-enabled-icon").simulate("click", { type: "string" });
-		filterIcons.find(".filter-list-data-time-enabled-icon").simulate("click", { type: "time" });
-		filterIcons.find(".filter-list-data-double-enabled-icon").simulate("click", { type: "double" });
-		filterIcons.find(".filter-list-data-timestamp-enabled-icon").simulate("click", { type: "timestamp" });
+		clickFilter(fieldpicker, "integer");
+		clickFilter(fieldpicker, "string");
+		clickFilter(fieldpicker, "time");
+		clickFilter(fieldpicker, "double");
+		clickFilter(fieldpicker, "timestamp");
 
 		const checkAll = fieldpicker.find("input[id='field-picker-checkbox-all']");
 		checkAll.simulate("change", { target: { checked: "true" } });
@@ -497,7 +507,7 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 			.filterWhere((checkBox) => checkBox.prop("checked") === true && checkBox.prop("data-name") && checkBox.prop("data-schema"));
 		expect(checkBoxes).to.have.length(1);
 
-		filterIcons.find(".filter-list-data-timestamp-disabled-icon").simulate("click", { type: "timestamp" });
+		clickFilter(fieldpicker, "timestamp", true);
 		expect(checkAll.prop("checked")).to.be.false;
 
 		checkAll.simulate("change", { target: { checked: "true" } });
@@ -586,8 +596,7 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		const search = fieldpicker.find("#flexible-table-search");
 		search.simulate("change", { target: { value: "time" } });
 
-		fieldpicker.find(".filter-list-data-time-enabled-icon").simulate("click", { type: "time" });
-
+		clickFilter(fieldpicker, "time");
 		const tableRows = fieldpicker.find(".field-picker-data-rows");
 		expect(tableRows.length).to.equal(2);
 

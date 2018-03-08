@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -9,11 +9,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import DownIcon from "../../assets/images/down_caret.svg";
-import UpIcon from "../../assets/images/up_caret.svg";
-
-const ARROW_HEIGHT = 14;
-const ARROW_WIDTH = 14;
+import Icon from "../icons/Icon";
 
 class PaletteFlyoutContentCategory extends React.Component {
 	constructor(props) {
@@ -31,9 +27,9 @@ class PaletteFlyoutContentCategory extends React.Component {
 	}
 
 	render() {
-		var image = <img className="palette-flyout-category-arrow" src={DownIcon} height={ARROW_HEIGHT} width={ARROW_WIDTH} />;
+		let icon = <Icon type="downCaret" />;
 		if (this.props.selectedCategory === this.props.categoryName) {
-			image = <img className="palette-flyout-category-arrow" src={UpIcon} height={ARROW_HEIGHT} width={ARROW_WIDTH} />;
+			icon = <Icon type="upCaret" />;
 		}
 		var itemCount = <div />;
 		if (this.props.itemsFiltered && this.props.itemCount > 0) {
@@ -51,7 +47,7 @@ class PaletteFlyoutContentCategory extends React.Component {
 					</span>
 					{itemCount}
 				</div>
-				{image}
+				{icon}
 			</div>
 		);
 		return content;

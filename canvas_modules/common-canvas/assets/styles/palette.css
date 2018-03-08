@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -62,12 +62,8 @@
   white-space: nowrap;
 }
 
-.palette-flyout-category-arrow {
-	height: 12px;
-	width: 12px;
-}
-
 .palette-flyout-category {
+	cursor: pointer;
   padding: 10px;
   padding-right: 18px;
   border-width:0 0 0 2px;
@@ -78,6 +74,12 @@
 	display: flex;
 	border-bottom: 2px solid #dfe3e6;
 }
+
+.palette-flyout-category > svg {
+	height: 12px;
+	width: 12px;
+}
+
 .palette-flyout-text-container {
 	max-width: 205px;
 	display: flex;
@@ -94,7 +96,7 @@
 	font-weight: 600;
 }
 
-#palette-flyout-search {
+.palette-flyout-search {
 	margin-top: 1px;
 	font-size: 16px;
 	height: 46px;
@@ -106,14 +108,17 @@
 	border-top: 2px solid #dfe3e6;
 }
 
-#palette-flyout-search-bar {
+.palette-flyout-search > svg {
+  height: 20px;
+	width: 20px;
+}
+
+.palette-flyout-search-bar {
   width: 190px;
   padding-left: 10px;
 }
 
-#palette-flyout-search-icon {
-  width: 20px;
-}
+
 
 #palette-flyout-search-text {
 	border-bottom: 0px;

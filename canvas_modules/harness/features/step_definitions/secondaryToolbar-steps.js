@@ -13,31 +13,31 @@ module.exports = function() {
 	/* global browser */
 
 	this.Then("I click on the secondary toolbar create comment button", function() {
-		browser.$("#toolbar-icon-addComment").click();
+		browser.$("#addComment-action").click();
 	});
 
 	this.Then("I click on the secondary toolbar delete button", function() {
-		browser.$("#toolbar-icon-delete").click();
+		browser.$("#delete-action").click();
 	});
 
 	this.Then("I click on the secondary toolbar horizontal layout button", function() {
-		browser.$("#toolbar-icon-arrangeHorizontally").click();
+		browser.$("#arrangeHorizontally-action").click();
 	});
 
 	this.Then("I click on the secondary toolbar vertical layout button", function() {
-		browser.$("#toolbar-icon-arrangeVertically").click();
+		browser.$("#arrangeVertically-action").click();
 	});
 
 	this.Then("I click on the secondary toolbar cut button", function() {
-		browser.$("#toolbar-icon-cut").click();
+		browser.$("#cut-action").click();
 	});
 
 	this.Then("I click on the secondary toolbar copy button", function() {
-		browser.$("#toolbar-icon-copy").click();
+		browser.$("#copy-action").click();
 	});
 
 	this.Then("I click on the secondary toolbar paste button", function() {
-		browser.$("#toolbar-icon-paste").click();
+		browser.$("#paste-action").click();
 	});
 
 	this.Then(/^I resize the window size to (\d+) width and (\d+) height$/, function(widthNumber, heightNumber) {

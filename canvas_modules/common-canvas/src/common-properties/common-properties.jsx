@@ -22,13 +22,10 @@ import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./constants/constants";
 import { FLYOUT_WIDTH } from "../constants/constants";
 import { Size } from "./constants/form-constants";
 import isEqual from "lodash/isEqual";
+import Icon from "../icons/Icon.jsx";
 import { injectIntl, intlShape } from "react-intl";
 
-
 import TextField from "ap-components-react/dist/components/TextField";
-
-import editIcon from "../../assets/images/edit.svg";
-import helpIcon from "../../assets/images/info.svg";
 
 class CommonProperties extends React.Component {
 	constructor(props) {
@@ -277,23 +274,19 @@ class CommonProperties extends React.Component {
 			let propertiesTitle = <div />;
 			let buttonsContainer = <div />;
 			const propertiesTitleEdit = formData.labelEditable === false ? <div />
-				: (<a id="title-edit-right-flyout-panel" onClick={this.editTitleClickHandler}>
-					<img id="title-edit-icon-right-flyout-panel"
-						src={editIcon}
-					/>
+				: (<a className="title-edit-right-flyout-panel" onClick={this.editTitleClickHandler}>
+					<Icon type="edit" />
 				</a>);
 
 			const helpButton = formData.helpAvailable && formData.helpAvailable === true
-				? (<a id="title-help-right-flyout-panel" onClick={this.helpClickHandler}>
-					<img id="title-help-icon-right-flyout-panel"
-						src={helpIcon}
-					/>
+				? (<a className="title-help-right-flyout-panel" onClick={this.helpClickHandler}>
+					<Icon type="info" />
 				</a>)
 				: <div />;
 
 			if (this.props.rightFlyout) {
-				propertiesTitle = (<div id="node-title-container-right-flyout-panel">
-					<div id="node-title-right-flyout-panel">
+				propertiesTitle = (<div className="node-title-container-right-flyout-panel">
+					<div className="node-title-right-flyout-panel">
 						<TextField
 							id="node-title-editor-right-flyout-panel"
 							value={this.state.title}

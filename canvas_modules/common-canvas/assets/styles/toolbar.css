@@ -46,6 +46,7 @@
 	display: flex;
 	justify-content: center;
 	box-sizing: content-box;
+	cursor: pointer;
 	/* Prevent elements from being selectable */
 	/* This stops it being dragged incorrectly.*/
 	-webkit-user-select: none;
@@ -66,6 +67,10 @@
 
 .list-item:active {
 	background-color: #dfe3e6;
+}
+
+.list-item-containers .list-item-disabled {
+	cursor: default
 }
 
 .list-item-disabled:hover {
@@ -100,7 +105,7 @@
 	justify-content: flex-start;
 }
 
-.toolbar-icons {
+.toolbar-icons, .toolbar-item > svg {
 	height: 16px;
 	width: 16px;
 	margin: auto;
@@ -112,7 +117,7 @@
 	user-drag: none;
 }
 
-.toolbar-icons.overflow {
+.toolbar-icons.overflow, .toolbar-item.overflow > svg {
 	margin-left: 8px;
 	margin-right: 8px;
 	float: left;

@@ -16,9 +16,7 @@ import Checkbox from "ap-components-react/dist/components/Checkbox";
 import EditorControl from "./editor-control.jsx";
 import FlexibleTable from "./flexible-table.jsx";
 import SubPanelCell from "../editor-panels/sub-panel-cell.jsx";
-import remove32 from "../../../assets/images/remove_32.svg";
-import remove32hover from "../../../assets/images/remove_32_hover.svg";
-import remove32disabled from "../../../assets/images/remove_32_disabled.svg";
+import Icon from "../../icons/Icon.jsx";
 import PropertyUtils from "../util/property-utils";
 import { ControlType, EditStyle } from "../constants/form-constants";
 
@@ -60,8 +58,6 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		this.onSort = this.onSort.bind(this);
 		this.setScrollToRow = this.setScrollToRow.bind(this);
 		this.includeInFilter = this.includeInFilter.bind(this);
-		this.mouseEnterRemoveButton = this.mouseEnterRemoveButton.bind(this);
-		this.mouseLeaveRemoveButton = this.mouseLeaveRemoveButton.bind(this);
 
 		this.makeAddRemoveButtonPanel = this.makeAddRemoveButtonPanel.bind(this);
 		this.makeLabel = this.makeLabel.bind(this);
@@ -365,13 +361,6 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		}
 		return label;
 	}
-	mouseEnterRemoveButton() {
-		this.setState({ hoverRemoveIcon: true });
-	}
-
-	mouseLeaveRemoveButton() {
-		this.setState({ hoverRemoveIcon: false });
-	}
 
 	addOnClick(control) {
 		if (this.addOnClickCallback) {
@@ -380,25 +369,13 @@ export default class ColumnStructureTableEditor extends EditorControl {
 	}
 
 	makeAddRemoveButtonPanel(stateDisabled, tableButtonConfig) {
-		let removeFieldsButtonId = "remove-fields-button-enabled";
-		let removeIconImage = (<img src={remove32} />);
-		let removeOnClick = (tableButtonConfig && tableButtonConfig.removeButtonFunction) ? tableButtonConfig.removeButtonFunction : this.removeSelected;
-		if (!this.state.enableRemoveIcon || stateDisabled.disabled) {
-			removeIconImage = (<img src={remove32disabled} />);
-			removeFieldsButtonId = "remove-fields-button-disabled";
-			removeOnClick = null;
-		} else if (this.state.hoverRemoveIcon) {
-			removeIconImage = (<img src={remove32hover} />);
-		}
-
-		const removeButton = (<div id={removeFieldsButtonId}
-			className="button"
+		const removeOnClick = (tableButtonConfig && tableButtonConfig.removeButtonFunction) ? tableButtonConfig.removeButtonFunction : this.removeSelected;
+		const disabled = !this.state.enableRemoveIcon || stateDisabled.disabled;
+		const removeButton = (<div className="remove-fields-button"
 			onClick={removeOnClick}
-			onMouseEnter={this.mouseEnterRemoveButton}
-			onMouseLeave={this.mouseLeaveRemoveButton}
-			disabled
+			disabled={disabled}
 		>
-			{removeIconImage}
+			<Icon type="remove" disabled={disabled} />
 		</div>);
 
 		let addButtonDisabled = false;

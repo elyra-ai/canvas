@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2016. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2016, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -11,13 +11,13 @@ import React from "react";
 import PropTypes from "prop-types";
 import Isvg from "react-inlinesvg";
 import ThreeWayIcon from "./three-way-icon.jsx";
-import Close32Icon from "../../assets/images/close_32.svg";
-import PaletteGridSelectedIcon from "../../assets/images/palette_grid_selected.svg";
-import PaletteGridHoverIcon from "../../assets/images/palette_grid_hover.svg";
-import PaletteGridDeSelectedIcon from "../../assets/images/palette_grid_deselected.svg";
-import PaletteListSelectedIcon from "../../assets/images/palette_list_selected.svg";
-import PaletteListHoverIcon from "../../assets/images/palette_list_hover.svg";
-import PaletteListDeSelectedIcon from "../../assets/images/palette_list_deselected.svg";
+import Close32Icon from "../../assets/images/palette/close_32.svg";
+import PaletteGridSelectedIcon from "../../assets/images/palette/palette_grid_selected.svg";
+import PaletteGridHoverIcon from "../../assets/images/palette/palette_grid_hover.svg";
+import PaletteGridDeSelectedIcon from "../../assets/images/palette/palette_grid_deselected.svg";
+import PaletteListSelectedIcon from "../../assets/images/palette/palette_list_selected.svg";
+import PaletteListHoverIcon from "../../assets/images/palette/palette_list_hover.svg";
+import PaletteListDeSelectedIcon from "../../assets/images/palette/palette_list_deselected.svg";
 
 class PaletteTopbar extends React.Component {
 	constructor(props) {

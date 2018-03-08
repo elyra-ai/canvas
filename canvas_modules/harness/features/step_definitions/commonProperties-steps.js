@@ -151,7 +151,7 @@ module.exports = function() {
 		var naRow = browser.$$(".reactable-data")[1].$$("tr")[0];
 		naRow.click();
 
-		var moveNaLast = browser.$$(".table-row-move-button")[1];
+		var moveNaLast = browser.$$(".table-row-move-button:not([disabled])")[1];
 		moveNaLast.click();
 
 		var testmoveNaLast1 = browser.$(".table").$(".reactable-data");
@@ -161,7 +161,7 @@ module.exports = function() {
 		var drugRow = browser.$$(".reactable-data")[1].$$("tr")[0];
 		drugRow.click();
 
-		var moveDrugDown = browser.$$(".table-row-move-button")[0];
+		var moveDrugDown = browser.$$(".table-row-move-button:not([disabled])")[0];
 		moveDrugDown.click();
 
 		var testmoveDrugDown1 = browser.$(".table").$(".reactable-data");
@@ -171,7 +171,7 @@ module.exports = function() {
 		naRow = browser.$$(".reactable-data")[1].$$("tr")[2];
 		naRow.click();
 
-		var moveNaFirst = browser.$$(".table-row-move-button")[0];
+		var moveNaFirst = browser.$$(".table-row-move-button:not([disabled])")[0];
 		moveNaFirst.click();
 
 		var testmoveNaFirst1 = browser.$(".table").$(".reactable-data");
@@ -181,7 +181,7 @@ module.exports = function() {
 		drugRow = browser.$$(".reactable-data")[1].$$("tr")[2];
 		drugRow.click();
 
-		var moveDrugUp = browser.$$(".table-row-move-button")[1];
+		var moveDrugUp = browser.$$(".table-row-move-button:not([disabled])")[1];
 		moveDrugUp.click();
 
 		var okButton = getPropertiesApplyButton();
@@ -249,11 +249,11 @@ module.exports = function() {
 	this.Then(/^I check for table validation$/, function() {
 		var tableRow1 = browser.$$("#editor-control-new_name_0")[0];
 		tableRow1.click();
-		browser.$("#remove-fields-button-enabled").click();
+		browser.$(".remove-fields-button").click();
 
 		var tableRow2 = browser.$$("#editor-control-new_name_0")[0];
 		tableRow2.click();
-		browser.$("#remove-fields-button-enabled").click();
+		browser.$(".remove-fields-button").click();
 
 		var warningMsg = browser.$(".form__validation--warning").getText();
 		expect("There are no selected columns to rename").toEqual(warningMsg);

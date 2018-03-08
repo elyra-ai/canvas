@@ -29,7 +29,7 @@
 	background-color: #FFFFFF;
 }
 
-#node-title-container-right-flyout-panel {
+.node-title-container-right-flyout-panel {
  	height: 45px;
 	display: flex;
 	justify-content: space-between;
@@ -39,7 +39,7 @@
 	background: #FFFFFF;
 }
 
-#node-title-right-flyout-panel {
+.node-title-right-flyout-panel {
 	font-size: 24px;
 	height: 45px;
 	width: 100%;
@@ -53,17 +53,16 @@
 	border-bottom: none;
 }
 
-#title-edit-right-flyout-panel, #title-help-right-flyout-panel {
+.title-edit-right-flyout-panel, .title-help-right-flyout-panel {
 	padding-left: 4px;
 }
 
-#title-edit-icon-right-flyout-panel, #title-help-icon-right-flyout-panel {
+.title-edit-right-flyout-panel > svg, .title-help-right-flyout-panel > svg {
 	height: 24px;
 	width: 24px;
-	float: right;
 }
 
-#title-edit-icon-right-flyout-panel:hover, #title-help-icon-right-flyout-panel:hover {
+.title-edit-right-flyout-panel:hover, .title-help-right-flyout-panel:hover {
 	background-color: #EFEFEF;
 	cursor: pointer;
 }
@@ -105,7 +104,7 @@
 	color: #666566;
 }
 
-.category-icon-right-flyout-panel {
+.category-title-right-flyout-panel > svg {
 	height: 12px;
 	width: 12px;
 }
@@ -244,9 +243,12 @@
 	-o-transition: all 0.5s;
 	-webkit-transition: all 0.5s;
 	transition: all 0.5s;
+	transform: translateY(-2px);
+	height: 100%;
+}
+.twistypanel_icon > svg {
 	height: 10px;
 	width: 10px;
-	transform: translateY(-2px);
 }
 
 .twistypanel_icon.rotate {
@@ -258,6 +260,7 @@
 }
 
 .control-twisty-link-buttons {
+	display: flex;
 	cursor: pointer;
 }
 

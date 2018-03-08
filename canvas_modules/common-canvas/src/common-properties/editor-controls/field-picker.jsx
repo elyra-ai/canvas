@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -25,23 +25,7 @@ import { injectIntl, intlShape } from "react-intl";
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "../constants/constants";
 import { DATA_TYPES, TOOL_TIP_DELAY } from "../constants/constants.js";
 import { ParamRole } from "../constants/form-constants";
-
-import resetIcon from "../../../assets/images/reset_32.svg";
-import resetHoverIcon from "../../../assets/images/reset_32_hover.svg";
-
-import dateEnabledIcon from "../../../assets/images/date-enabled-icon.svg";
-import integerEnabledIcon from "../../../assets/images/integer-enabled-icon.svg";
-import doubleEnabledIcon from "../../../assets/images/double-enabled-icon.svg";
-import stringEnabledIcon from "../../../assets/images/string-enabled-icon.svg";
-import timeEnabledIcon from "../../../assets/images/time-enabled-icon.svg";
-import timestampEnabledIcon from "../../../assets/images/timestamp-enabled-icon.svg";
-
-import dateDisabledIcon from "../../../assets/images/date-disabled-icon.svg";
-import integerDisabledIcon from "../../../assets/images/integer-disabled-icon.svg";
-import doubleDisabledIcon from "../../../assets/images/double-disabled-icon.svg";
-import stringDisabledIcon from "../../../assets/images/string-disabled-icon.svg";
-import timeDisabledIcon from "../../../assets/images/time-disabled-icon.svg";
-import timestampDisabledIcon from "../../../assets/images/timestamp-disabled-icon.svg";
+import Icon from "../../icons/Icon.jsx";
 
 import sortBy from "lodash/sortBy";
 
@@ -53,28 +37,12 @@ class FieldPicker extends EditorControl {
 			data: this.props.dataModel,
 			fields: this.formatSchemaFields(this.props.dataModel),
 			filterIcons: [],
-			filterList: [],
 			filterText: "",
 			initialControlValues: [],
 			newControlValues: [],
-			hoverResetIcon: false,
 			headerWidth: 756
 		};
-
-		this.dateEnabledIcon = dateEnabledIcon;
-		this.integerEnabledIcon = integerEnabledIcon;
-		this.doubleEnabledIcon = doubleEnabledIcon;
-		this.stringEnabledIcon = stringEnabledIcon;
-		this.timeEnabledIcon = timeEnabledIcon;
-		this.timestampEnabledIcon = timestampEnabledIcon;
-
-		this.dateDisabledIcon = dateDisabledIcon;
-		this.integerDisabledIcon = integerDisabledIcon;
-		this.doubleDisabledIcon = doubleDisabledIcon;
-		this.stringDisabledIcon = stringDisabledIcon;
-		this.timeDisabledIcon = timeDisabledIcon;
-		this.timestampDisabledIcon = timestampDisabledIcon;
-
+		this.filterList = [];
 		this.updateDimensions = this.updateDimensions.bind(this);
 
 		this.filterType = this.filterType.bind(this);
@@ -89,8 +57,6 @@ class FieldPicker extends EditorControl {
 		this.handleReset = this.handleReset.bind(this);
 		this.getNewSelections = this.getNewSelections.bind(this);
 		this.setReadOnlyColumnValue = this.setReadOnlyColumnValue.bind(this);
-		this.mouseEnterResetButton = this.mouseEnterResetButton.bind(this);
-		this.mouseLeaveResetButton = this.mouseLeaveResetButton.bind(this);
 		this.onSort = this.onSort.bind(this);
 		this.onFilter = this.onFilter.bind(this);
 		this._getRecordForRow = this._getRecordForRow.bind(this);
@@ -103,7 +69,7 @@ class FieldPicker extends EditorControl {
 			this.dataColumnIndex = 0; // default to 0
 		}
 
-		const filters = this.getAvailableFilters();
+		this.filterList = this.getAvailableFilters();
 
 		const controlName = this.props.control.name;
 		const parmName = this.props.propertyId ? this.props.propertyId.name : null;
@@ -119,8 +85,7 @@ class FieldPicker extends EditorControl {
 		}
 		this.setState({
 			initialControlValues: this.props.currentControlValues[controlName],
-			newControlValues: controlValues,
-			filterList: filters
+			newControlValues: controlValues
 		});
 	}
 
@@ -156,11 +121,7 @@ class FieldPicker extends EditorControl {
 
 					if (filterList[i] === field.type) {
 						const filter = {
-							"type": field.type,
-							"icon": {
-								"enabled": <img src={this[field.type + "EnabledIcon"]} />,
-								"disabled": <img src={this[field.type + "DisabledIcon"]} />
-							}
+							"type": field.type
 						};
 
 						let duplicate = false;
@@ -229,11 +190,11 @@ class FieldPicker extends EditorControl {
 			if (this.multiSchema) {
 				columns.push(<Td key="field-picker-column-schemaname" column="schemaName" style={{ "width": fieldWidth }}>{field.schema}</Td>);
 			}
-			columns.push(<Td key="field-picker-column-datatype" column="dataType" style={{ "width": dataWidth }}><div>
-				<div className={"field-picker-data-type-icon field-picker-data-" + field.type + "-type-icon"}>
-					<img src={this[field.type + "EnabledIcon"]} />
+			columns.push(<Td key="field-picker-column-datatype" column="dataType" style={{ "width": dataWidth }}><div className="field-picker-data">
+				<div className={"field-picker-data-type-icon"}>
+					<Icon type={field.type} />
 				</div>
-				{field.type}
+				<div className="field-type">{field.type}</div>
 			</div></Td>);
 
 			tableData.push(<Tr key="field-picker-data-rows" className="field-picker-data-rows">{columns}</Tr>);
@@ -524,14 +485,6 @@ class FieldPicker extends EditorControl {
 		this.setState({ filterIcons: iconsSelected });
 	}
 
-	mouseEnterResetButton() {
-		this.setState({ hoverResetIcon: true });
-	}
-
-	mouseLeaveResetButton() {
-		this.setState({ hoverResetIcon: false });
-	}
-
 	onFilter(filterString) {
 		this.setState({ filterText: filterString });
 	}
@@ -608,11 +561,6 @@ class FieldPicker extends EditorControl {
 	}
 
 	_genResetButton() {
-		let resetIconImage = (<img src={resetIcon} />);
-		if (this.state.hoverResetIcon) {
-			resetIconImage = (<img src={resetHoverIcon} />);
-		}
-
 		const resetLabel = PropertyUtils.formatMessage(this.props.intl,
 			MESSAGE_KEYS.FIELDPICKER_RESETBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_RESETBUTTON_LABEL);
 		const resetTooltip = PropertyUtils.formatMessage(this.props.intl,
@@ -628,8 +576,8 @@ class FieldPicker extends EditorControl {
 					onMouseLeave={this.mouseLeaveResetButton}
 				>
 					<div id="reset-fields-button-label">{resetLabel}</div>
-					<div id="reset-fields-button-icon">
-						{resetIconImage}
+					<div className="reset-fields-button-icon">
+						<Icon type="reset" />
 					</div>
 				</div>
 			</div>
@@ -647,7 +595,7 @@ class FieldPicker extends EditorControl {
 
 	_genFilterTypes() {
 		const that = this;
-		const filters = this.state.filterList.map(function(filter, ind) {
+		const filters = this.filterList.map(function(filter, ind) {
 			let enabled = true;
 			for (let i = 0; i < that.state.filterIcons.length; i++) {
 				if (filter.type === that.state.filterIcons[i]) {
@@ -656,18 +604,15 @@ class FieldPicker extends EditorControl {
 				}
 			}
 			const filterTooltipId = "tooltip-filters-" + ind;
-			const icon = enabled ? filter.icon.enabled : filter.icon.disabled;
-			const className = enabled
-				? "filter-list-li filter-list-li-icon filter-list-data-" + filter.type + "-enabled-icon"
-				: "filter-list-li filter-list-li-icon filter-list-data-" + filter.type + "-disabled-icon";
 			const row = (
 				<div key={"filters" + ind}>
 					<div className="properties-tooltips-filter" data-tip={filter.type} data-for={filterTooltipId}>
-						<li className={className}
+						<li className="filter-list-li filter"
 							data-type={filter.type}
 							onClick={that.filterType.bind(that)}
+							disabled={!enabled}
 						>
-							{icon}
+							<Icon type={filter.type} disabled={!enabled} />
 						</li>
 					</div>
 					<ReactTooltip

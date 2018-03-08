@@ -96,7 +96,7 @@ describe("CommonProperties works correctly in flyout", () => {
 		row.simulate("click");
 
 		// ensure remove button is enabled and click it
-		const enabledRemoveColumnButton = wrapper.find("#remove-fields-button-enabled");
+		const enabledRemoveColumnButton = wrapper.find(".remove-fields-button");
 		expect(enabledRemoveColumnButton).to.have.length(1);
 		enabledRemoveColumnButton.simulate("click");
 

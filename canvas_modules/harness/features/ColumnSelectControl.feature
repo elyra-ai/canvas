@@ -15,7 +15,7 @@ Feature: ColumnSelectControl
 		#### add fields features in modal
 		# add a single field
 		Then I select the "Values" tab in "modal"
-		Then I select the "add-fields-button" button on the "fields1_panel" parameter
+		Then I select the "Add" button on the "fields1_panel" parameter
 		Then I select the "Na" checkbox
 		Then I select the field picker "back" button to save my changes
 		Then I verify that the "fields1_panel" parameter contains the "Na" value
@@ -28,7 +28,7 @@ Feature: ColumnSelectControl
 		Then I have selected the "Modal" properties container type
 		Given I have uploaded JSON for common-properties "selectcolumns_paramDef.json"
 		Then I select the "Values" tab in "modal"
-		Then I select the "add-fields-button" button on the "fields2_panel" parameter
+		Then I select the "Add" button on the "fields2_panel" parameter
 		Then I select the "all" checkbox
 		Then I select the field picker "back" button to save my changes
 		Then I verify that the "fields2_panel" parameter has 15 values
@@ -39,7 +39,7 @@ Feature: ColumnSelectControl
 		Given I have toggled the app side common-properties panel
 		Then I have selected the "Flyout" properties container type
 		Given I have uploaded JSON for common-properties "selectcolumns_paramDef.json"
-		Then I select the "add-fields-button" button on the "fields1_panel" parameter
+		Then I select the "Add" button on the "fields1_panel" parameter
 		Then I select the "Na" checkbox
 		Then I click on the "OK" button
 		Then I verify that the "fields1_panel" parameter contains the "Na" value
@@ -51,7 +51,7 @@ Feature: ColumnSelectControl
 		Given I have toggled the app side common-properties panel
 		Then I have selected the "Flyout" properties container type
 		Given I have uploaded JSON for common-properties "selectcolumns_paramDef.json"
-		Then I select the "add-fields-button" button on the "fields2_panel" parameter
+		Then I select the "Add" button on the "fields2_panel" parameter
 		Then I select the "all" checkbox
 		Then I click on the "OK" button
 		Then I verify that the "fields2_panel" parameter has 15 values
@@ -72,7 +72,7 @@ Feature: ColumnSelectControl
 		# error message
 		Then I select the "Conditions" tab in "modal"
 		Then I select the "BP" row in the "fields_error" panel
-		Then I select the "remove-fields-button-enabled" button on the "fields_error" parameter
+		Then I select the "Remove" button on the "fields_error" parameter
 		Then I validate the "error" message for the "fields_error" parameter of "Required parameter 'Field Error' has no value"
 		Then I select the "apply" button in "modal"
 		Then I verify the event log has the "error" message for the "fields_error" parameter of "Required parameter 'Field Error' has no value"
@@ -83,8 +83,8 @@ Feature: ColumnSelectControl
 		Given I have uploaded JSON for common-properties "selectcolumns_paramDef.json"
 		Then I select the "Conditions" tab in "modal"
 		Then I select the "Na" row in the "fields_warning" panel
-		Then I select the "remove-fields-button-enabled" button on the "fields_warning" parameter
-		Then I select the "add-fields-button" button on the "fields_warning" parameter
+		Then I select the "Remove" button on the "fields_warning" parameter
+		Then I select the "Add" button on the "fields_warning" parameter
 		Then I select the "age" checkbox
 		Then I select the field picker "back" button to save my changes
 		Then I validate the "warning" message for the "fields_warning" parameter of "Shouldn't select 'age'"
@@ -115,7 +115,7 @@ Feature: ColumnSelectControl
 		# error message
 		Then I select the "Conditions" tab in "flyout"
 		Then I select the "BP" row in the "fields_error" panel
-		Then I select the "remove-fields-button-enabled" button on the "fields_error" parameter
+		Then I select the "Remove" button on the "fields_error" parameter
 		Then I validate the "error" message for the "fields_error" parameter of "Required parameter 'Field Error' has no value"
 		Then I select the "apply" button in "flyout"
 		Then I verify the event log has the "error" message for the "fields_error" parameter of "Required parameter 'Field Error' has no value"
@@ -126,8 +126,8 @@ Feature: ColumnSelectControl
 		Given I have uploaded JSON for common-properties "selectcolumns_paramDef.json"
 		Then I select the "Conditions" tab in "flyout"
 		Then I select the "Na" row in the "fields_warning" panel
-		Then I select the "remove-fields-button-enabled" button on the "fields_warning" parameter
-		Then I select the "add-fields-button" button on the "fields_warning" parameter
+		Then I select the "Remove" button on the "fields_warning" parameter
+		Then I select the "Add" button on the "fields_warning" parameter
 		Then I select the "age" checkbox
 		Then I click on the "OK" button
 		Then I validate the "warning" message for the "fields_warning" parameter of "Shouldn't select 'age'"

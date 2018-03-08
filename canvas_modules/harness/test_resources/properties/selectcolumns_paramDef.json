@@ -656,7 +656,7 @@
         },
         {
           "name": "BP4",
-          "type": "string",
+          "type": "timestamp",
           "metadata": {
             "description": "",
             "measure": "discrete",
@@ -665,7 +665,7 @@
         },
         {
           "name": "Na4",
-          "type": "double",
+          "type": "time",
           "metadata": {
             "description": "",
             "measure": "range",
@@ -674,7 +674,7 @@
         },
         {
           "name": "drug4",
-          "type": "string",
+          "type": "date",
           "metadata": {
             "description": "",
             "measure": "set",

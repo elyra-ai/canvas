@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -9,17 +9,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import TopMoveIconEnable from "../../../assets/images/top_enabled.svg";
-import UpMoveIconEnable from "../../../assets/images/up_enabled.svg";
-import DownMoveIconEnable from "../../../assets/images/down_enabled.svg";
-import BottomMoveIconEnable from "../../../assets/images/bottom_enabled.svg";
-import TopMoveIconDisable from "../../../assets/images/top_disabled.svg";
-import UpMoveIconDisable from "../../../assets/images/up_disabled.svg";
-import DownMoveIconDisable from "../../../assets/images/down_disabled.svg";
-import BottomMoveIconDisable from "../../../assets/images/bottom_disabled.svg";
-
-const ARROW_HEIGHT = 14;
-const ARROW_WIDTH = 14;
+import Icon from "../../icons/Icon.jsx";
 
 export default class MoveableTableRows extends React.Component {
 	constructor(props) {
@@ -38,38 +28,26 @@ export default class MoveableTableRows extends React.Component {
 		const controlValue = this.props.getCurrentControlValue();
 		const topEnabled = (selected.length !== 0 && selected[0] !== 0) && !this.props.disabled;
 		const bottomEnabled = (selected.length !== 0 && selected[selected.length - 1] !== controlValue.length - 1) && !this.props.disabled;
-		const topImages = topEnabled ? (
+		const topImages = (
 			<div key="topImages">
-				<div onClick={this.topMoveRow}>
-					<img className="table-row-move-button" src={TopMoveIconEnable} height={ARROW_HEIGHT} width={ARROW_WIDTH} />
+				<div className="table-row-move-button" onClick={this.topMoveRow} disabled={!topEnabled}>
+					<Icon type="moveTop" disabled={!topEnabled} />
 				</div>
-				<div onClick={this.upMoveRow}>
-					<img className="table-row-move-button" src={UpMoveIconEnable} height={ARROW_HEIGHT} width={ARROW_WIDTH} />
+				<div className="table-row-move-button" onClick={this.upMoveRow} disabled={!topEnabled}>
+					<Icon type="moveUp" disabled={!topEnabled} />
 				</div>
 			</div>
-		)
-			: (
-				<div key="topImages">
-					<img className="table-row-move-button-disable" height={ARROW_HEIGHT} width={ARROW_WIDTH} src={TopMoveIconDisable} />
-					<img className="table-row-move-button-disable" height={ARROW_HEIGHT} width={ARROW_WIDTH} src={UpMoveIconDisable} />
-				</div>
-			);
-		const bottomImages = bottomEnabled ? (
+		);
+		const bottomImages = (
 			<div key="bottomImages">
-				<div onClick={this.downMoveRow}>
-					<img className="table-row-move-button" src={DownMoveIconEnable} height={ARROW_HEIGHT} width={ARROW_WIDTH} />
+				<div className="table-row-move-button" onClick={this.downMoveRow} disabled={!bottomEnabled}>
+					<Icon type="moveDown" disabled={!bottomEnabled} />
 				</div>
-				<div onClick={this.bottomMoveRow}>
-					<img className="table-row-move-button" src={BottomMoveIconEnable} height={ARROW_HEIGHT} width={ARROW_WIDTH} />
+				<div className="table-row-move-button" onClick={this.bottomMoveRow} disabled={!bottomEnabled}>
+					<Icon type="moveBottom" disabled={!bottomEnabled} />
 				</div>
 			</div>
-		)
-			: (
-				<div key="bottomImages">
-					<img className="table-row-move-button-disable" height={ARROW_HEIGHT} width={ARROW_WIDTH} src={DownMoveIconDisable} />
-					<img className="table-row-move-button-disable" height={ARROW_HEIGHT} width={ARROW_WIDTH} src={BottomMoveIconDisable} />
-				</div>
-			);
+		);
 		return [topImages, bottomImages];
 	}
 

@@ -116,7 +116,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 			/>
 		);
 		expect(wrapper.find("#add-fields-button")).to.have.length(1);
-		expect(wrapper.find("#remove-fields-button-disabled")).to.have.length(1);
+		expect(wrapper.find(".remove-fields-button")).to.have.length(1);
 		expect(wrapper.find(".column-select-table-row")).to.have.length(3);
 	});
 
@@ -158,9 +158,9 @@ describe("ColumnStructureTableControl renders correctly", () => {
 		expect(tableData).to.have.length(3);
 		tableData.at(1).simulate("click");
 		// ensure removed button is enabled and select it
-		const enabledRemoveColumnButton = wrapper.find("#remove-fields-button-enabled");
+		const enabledRemoveColumnButton = wrapper.find(".remove-fields-button");
 		expect(enabledRemoveColumnButton).to.have.length(1);
-		expect(enabledRemoveColumnButton.prop("id")).to.equal("remove-fields-button-enabled");
+		expect(enabledRemoveColumnButton.prop("disabled")).to.be.undefined;
 		enabledRemoveColumnButton.simulate("click");
 		// validate the second row is deleted
 		expect(controller.getPropertyValue(propertyId)).to.have.same.members(["Age", "K"]);
@@ -179,7 +179,12 @@ describe("ColumnStructureTableControl renders correctly", () => {
 		);
 		// see if moveable rows container and buttons rendered and are disabled
 		expect(wrapper.find("#table-row-move-button-container")).to.have.length(1);
-		expect(wrapper.find(".table-row-move-button-disable")).to.have.length(4);
+		const moveButtons = wrapper.find(".table-row-move-button");
+		expect(moveButtons).to.have.length(4);
+		expect(moveButtons.at(0).prop("disabled")).to.equal(true);
+		expect(moveButtons.at(1).prop("disabled")).to.equal(true);
+		expect(moveButtons.at(2).prop("disabled")).to.equal(true);
+		expect(moveButtons.at(3).prop("disabled")).to.equal(true);
 	});
 
 });
@@ -196,9 +201,9 @@ describe("condition messages renders correctly with columnselect control", () =>
 		expect(tableData).to.have.length(2);
 		tableData.at(1).simulate("click");
 		// ensure removed button is enabled and select it
-		var enabledRemoveColumnButton = input.find("#remove-fields-button-enabled");
+		var enabledRemoveColumnButton = input.find(".remove-fields-button");
 		expect(enabledRemoveColumnButton).to.have.length(1);
-		expect(enabledRemoveColumnButton.prop("id")).to.equal("remove-fields-button-enabled");
+		expect(enabledRemoveColumnButton.prop("disabled")).to.be.undefined;
 		enabledRemoveColumnButton.simulate("click");
 		// validate the second row is deleted
 		expect(controller.getPropertyValue(conditionsPropertyId)).to.have.same.members(["Age"]);
@@ -207,15 +212,12 @@ describe("condition messages renders correctly with columnselect control", () =>
 		expect(tableData).to.have.length(1);
 		tableData.at(0).simulate("click");
 		// ensure removed button is enabled and select it
-		enabledRemoveColumnButton = input.find("#remove-fields-button-enabled");
+		enabledRemoveColumnButton = input.find(".remove-fields-button");
 		expect(enabledRemoveColumnButton).to.have.length(1);
-		expect(enabledRemoveColumnButton.prop("id")).to.equal("remove-fields-button-enabled");
+		expect(enabledRemoveColumnButton.prop("disabled")).to.be.undefined;
 		enabledRemoveColumnButton.simulate("click");
 		// validate the first row is deleted
 		expect(controller.getPropertyValue(conditionsPropertyId)).to.have.length(0);
-
-		input.simulate("blur");
-		wrapper.update();
 
 		const columnSelectInputFieldListErrorMessages = {
 			"type": "error",

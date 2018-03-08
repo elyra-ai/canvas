@@ -165,7 +165,7 @@ describe("FlexibleTable renders correctly", () => {
 			/>
 		);
 
-		const input = wrapper.find(".sort_icon-column");
+		const input = wrapper.find(".flexible-table-column");
 		expect(input).to.have.length(1);
 		input.simulate("click");
 		// the verification is that the onSort function gets invoked with proper column name

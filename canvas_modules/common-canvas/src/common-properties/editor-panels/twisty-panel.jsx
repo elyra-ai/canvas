@@ -14,9 +14,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import EditorControl from "../editor-controls/editor-control.jsx";
 import { injectIntl, intlShape } from "react-intl";
-import TwistyClosed from "../../../assets/images/twisty_closed.svg";
-import TwistyClosedDisabled from "../../../assets/images/twisty_closed_disabled.svg";
-
+import Icon from "../../icons/Icon.jsx";
 
 class TwistyPanel extends EditorControl {
 	constructor(props) {
@@ -45,19 +43,16 @@ class TwistyPanel extends EditorControl {
 			controlType: "panel"
 		};
 		const conditionState = this.getConditionMsgState(conditionProps);
-		const errorMessage = conditionState.message;
-		// const messageType = conditionState.messageType;
-		const errorIcon = conditionState.icon;
 		const stateDisabled = conditionState.disabled;
 		const stateStyle = conditionState.style;
-		const icon = stateDisabled.disabled ? TwistyClosedDisabled : TwistyClosed;
 		const iconClassName = (this.state.showTwistyPanel) ? "twistypanel_icon rotate" : "twistypanel_icon";
-		const link = (<div className="control-twisty-link-buttons">
-			<img className={iconClassName} src={icon} onClick={this.handleLinkClicked} {...stateDisabled} style={stateStyle} />
-			<span onClick={this.handleLinkClicked} className="twistypanel_text" {...stateDisabled} style={stateStyle}>
+		const link = (<div onClick={this.handleLinkClicked} className="control-twisty-link-buttons">
+			<div className={iconClassName} >
+				<Icon type="rightArrow" {...stateDisabled} />
+			</div>
+			<span className="twistypanel_text" {...stateDisabled} style={stateStyle}>
 				{this.props.label}
 			</span>
-			{errorIcon}
 		</div>);
 		const panelStyle = this.state.panelHeight + "px";
 		const twistyPanel = (
@@ -72,7 +67,6 @@ class TwistyPanel extends EditorControl {
 			<div className={"control-twisty twisty-control-panel"} style={stateStyle}>
 				{link}
 				{twistyPanel}
-				{errorMessage}
 			</div>
 		);
 	}

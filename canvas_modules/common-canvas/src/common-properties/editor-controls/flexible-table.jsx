@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -16,10 +16,7 @@ import ReactTooltip from "react-tooltip";
 import { injectIntl, intlShape } from "react-intl";
 import { Table, Thead, Th } from "reactable";
 import TextField from "ap-components-react/dist/components/TextField";
-import search32 from "../../../assets/images/search_32.svg";
-import search32Disabled from "../../../assets/images/search_32_disabled.svg";
-import SortAscendingIcon from "../../../assets/images/sort_ascending.svg";
-import SortDescendingIcon from "../../../assets/images/sort_descending.svg";
+import Icon from "../../icons/Icon.jsx";
 import PropertyUtils from "../util/property-utils";
 
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "../constants/constants";
@@ -30,8 +27,6 @@ const sortDir = {
 	ASC: "ASC",
 	DESC: "DESC"
 };
-const ARROW_HEIGHT = 10;
-const ARROW_WIDTH = 10;
 
 class FlexibleTable extends React.Component {
 
@@ -204,7 +199,9 @@ class FlexibleTable extends React.Component {
 				description = columnDef.description;
 			}
 			if (typeof this.state.columnSortDir[columnDef.key] !== "undefined") {
-				const arrowIcon = ((this.state.columnSortDir[columnDef.key] === sortDir.ASC) ? SortAscendingIcon : SortDescendingIcon);
+				const arrowIcon = ((this.state.columnSortDir[columnDef.key] === sortDir.ASC)
+					? <Icon type="upCaret" {...this.props.stateDisabled} />
+					: <Icon type="downCaret" {...this.props.stateDisabled} />);
 				headers.push(<Th className={className} key={"flexible-table-headers" + j} column={columnDef.key} style={columnStyle} >
 					<div
 						className="flexible-table-column properties-tooltips-container"
@@ -213,7 +210,7 @@ class FlexibleTable extends React.Component {
 						data-for={tooltipId}
 					>
 						{columnDef.label}
-						<img className="sort_icon-column"src={arrowIcon} height={ARROW_HEIGHT} width={ARROW_WIDTH} />
+						{arrowIcon}
 					</div>
 					{tooltip}
 				</Th>);
@@ -259,7 +256,6 @@ class FlexibleTable extends React.Component {
 				MESSAGE_KEYS.TABLE_SEARCH_PLACEHOLDER, MESSAGE_KEYS_DEFAULTS.TABLE_SEARCH_PLACEHOLDER) + " " + searchLabel;
 			const disabled = this.props.stateDisabled && (typeof this.props.stateDisabled.disabled !== "undefined" || Object.keys(this.props.stateDisabled) > 0);
 			const className = disabled ? "disabled" : "";
-			const searchIcon = disabled ? search32Disabled : search32;
 			searchBar = (<div className="flexible-table-search-container">
 				<div id="flexible-table-search-bar" className={"flexible-table-search-bar " + className}>
 					<TextField
@@ -274,12 +270,8 @@ class FlexibleTable extends React.Component {
 						disabled={disabled}
 					/>
 				</div>
-				<div id="flexible-table-search-icon"
-					className="flexible-table-toolbar"
-				>
-					<img id="flexible-table-search-icon"
-						src={searchIcon}
-					/>
+				<div id="flexible-table-search-icon" className="flexible-table-toolbar">
+					<Icon type="search" {...this.props.stateDisabled} />
 				</div>
 			</div>
 			);

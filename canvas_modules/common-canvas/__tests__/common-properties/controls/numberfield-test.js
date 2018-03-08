@@ -296,7 +296,7 @@ describe("condition messages should add alerts tab", () => {
 
 		// go to VALUES tab by clicking on error message
 		alertList.at(0)
-			.find(".error")
+			.find(".link-text.error")
 			.simulate("click");
 		wrapper.update();
 		let valuesCategory = wrapper.find(".category-title-container-right-flyout-panel").at(1); // VALUES category
@@ -321,7 +321,7 @@ describe("condition messages should add alerts tab", () => {
 		expect(alertList).to.have.length(1);
 		expect(alertList.at(0).text()).to.equal("Required parameter 'Integer' has no value");
 		alertList.at(0)
-			.find(".error")
+			.find(".link-text.error")
 			.simulate("click");
 		wrapper.update();
 

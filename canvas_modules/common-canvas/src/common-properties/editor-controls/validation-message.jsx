@@ -9,8 +9,6 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import Icon from "ap-components-react/dist/components/Icon";
-import warnIcon from "../../../assets/images/warn_32.svg";
 
 export default class ValidationMessage extends React.Component {
 	constructor(props) {
@@ -18,8 +16,6 @@ export default class ValidationMessage extends React.Component {
 		this.state = {
 		};
 
-		this.errorIcon = <Icon type="error-o" />;
-		this.warningIcon = <img src={warnIcon} />;
 	}
 
 	render() {

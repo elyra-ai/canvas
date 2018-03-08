@@ -19,7 +19,7 @@ describe("editor-form renders correctly with correct uiItems", () => {
 	it("should have displayed correct number of staticText elements", () => {
 		const staticText = wrapper.find(".static-text");
 		expect(staticText).to.have.length(4);
-		const staticTextIcons = wrapper.find(".static-text-icon");
+		const staticTextIcons = wrapper.find(".static-text-icon-container");
 		expect(staticTextIcons).to.have.length(1);
 		const staticTextWithIcon = wrapper.find(".static-text.info");
 		expect(staticTextWithIcon).to.have.length(1);

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -9,15 +9,15 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import Icon from "ap-components-react/dist/components/Icon";
-import warnIcon from "../../../assets/images/warn_32.svg";
+import APIcon from "ap-components-react/dist/components/Icon";
+import Icon from "../../icons/Icon.jsx";
 
 export default class ValidationIcon extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.errorIcon = <Icon type="error-o" />;
-		this.warningIcon = <img src={warnIcon} />;
+		this.errorIcon = <APIcon type="error-o" />;
+		this.warningIcon = <Icon type="warn" />;
 	}
 
 	render() {

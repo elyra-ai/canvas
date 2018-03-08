@@ -49,7 +49,7 @@ module.exports = function() {
 	});
 
 	this.Then(/^I enter "([^"]*)" into the palette search bar$/, function(filterText) {
-		browser.$("#palette-flyout-search-bar").click();
+		browser.$(".palette-flyout-search-bar").click();
 		browser.$("#palette-flyout-search-text").setValue("", filterText);
 	});
 

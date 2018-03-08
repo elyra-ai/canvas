@@ -25,13 +25,13 @@ module.exports = function() {
 	});
 
 	this.Then("I click on title edit icon", function() {
-		var editTitle = browser.$("#title-edit-right-flyout-panel");
+		var editTitle = browser.$(".title-edit-right-flyout-panel");
 		expect(editTitle).not.toBe(null);
 		editTitle.click();
 	});
 
 	this.Then("I verify there is no title edit icon", function() {
-		var editTitle = browser.$$("#title-edit-right-flyout-panel");
+		var editTitle = browser.$$(".title-edit-right-flyout-panel");
 		expect(editTitle.length).toEqual(0);
 	});
 
@@ -48,13 +48,13 @@ module.exports = function() {
 	});
 
 	this.Then("I click on the help icon in the fly-out panel", function() {
-		const helpIcon = browser.$("#title-help-right-flyout-panel");
+		const helpIcon = browser.$(".title-help-right-flyout-panel");
 		expect(helpIcon).not.toBe(null);
 		helpIcon.click();
 	});
 
 	this.Then("I verify there is no help icon in the fly-out panel", function() {
-		const helpIcon = browser.$$("#title-help-right-flyout-panel");
+		const helpIcon = browser.$$(".title-help-right-flyout-panel");
 		expect(helpIcon.length).toEqual(0);
 	});
 

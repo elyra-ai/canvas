@@ -91,10 +91,11 @@ describe("summary panel renders error/warning status correctly", () => {
 		row.simulate("click");
 
 		// ensure remove button is enabled and click it
-		const enabledRemoveColumnButton = wideflyoutWrapper.find("#remove-fields-button-enabled");
-		expect(enabledRemoveColumnButton).to.have.length(1);
-		expect(enabledRemoveColumnButton.prop("id")).to.equal("remove-fields-button-enabled");
-		enabledRemoveColumnButton.simulate("click");
+		const enabledRemoveColumnButton = wideflyoutWrapper.find(".remove-fields-button");
+		expect(enabledRemoveColumnButton).to.have.length(2);
+		expect(enabledRemoveColumnButton.at(0).prop("disabled")).to.be.undefined;
+		expect(enabledRemoveColumnButton.at(1).prop("disabled")).to.equal(true);
+		enabledRemoveColumnButton.at(0).simulate("click");
 
 		// close fly-out
 		wideflyoutWrapper.find("#properties-apply-button").simulate("click");
@@ -104,7 +105,7 @@ describe("summary panel renders error/warning status correctly", () => {
 		expect(alertCategory.find(".category-title-right-flyout-panel").text()).to.equal("ALERTS (1)");
 		const alertList = alertCategory.find(".link-text-container");
 		expect(alertList).to.have.length(1);
-		const warningMsg = alertList.find(".warning");
+		const warningMsg = alertList.find(".link-text.warning");
 		expect(warningMsg.text()).to.equal("Expression cell table cannot be empty");
 
 		// click on the link should open up structure list table category
@@ -148,10 +149,11 @@ describe("summary panel renders error/warning status correctly", () => {
 		row.simulate("click");
 
 		// ensure remove button is enabled and click it
-		const enabledRemoveColumnButton = wideflyoutWrapper.find("#remove-fields-button-enabled");
-		expect(enabledRemoveColumnButton).to.have.length(1);
-		expect(enabledRemoveColumnButton.prop("id")).to.equal("remove-fields-button-enabled");
-		enabledRemoveColumnButton.simulate("click");
+		const enabledRemoveColumnButton = wideflyoutWrapper.find(".remove-fields-button");
+		expect(enabledRemoveColumnButton).to.have.length(2);
+		expect(enabledRemoveColumnButton.at(0).prop("disabled")).to.be.undefined;
+		expect(enabledRemoveColumnButton.at(1).prop("disabled")).to.equal(true);
+		enabledRemoveColumnButton.at(0).simulate("click");
 
 		// remove all rows from Table Input table
 		const tableInputBody = wideflyoutWrapper.find("#flexible-table-container").at(1);
@@ -159,9 +161,9 @@ describe("summary panel renders error/warning status correctly", () => {
 		summarypanelParamDef.current_parameters.structurelisteditorTableInput.forEach((value) => {
 			const tableInputDataRow = tableInputBodyData.childAt(0);
 			tableInputDataRow.simulate("click");
-			const tableInputRemoveButton = wideflyoutWrapper.find("#remove-fields-button-enabled");
-			expect(tableInputRemoveButton).to.have.length(1);
-			tableInputRemoveButton.simulate("click");
+			const tableInputRemoveButton = wideflyoutWrapper.find(".remove-fields-button");
+			expect(tableInputRemoveButton).to.have.length(2);
+			tableInputRemoveButton.at(1).simulate("click");
 		});
 		// check that all rows were removed
 		expect(tableInputBody.find(".reactable-data").children()).to.have.length(0);
@@ -175,9 +177,9 @@ describe("summary panel renders error/warning status correctly", () => {
 		let alertList = alertCategory.find(".link-text-container");
 		expect(alertList).to.have.length(2);
 		expect(alertList.at(0).text()).to.equal("Structure list editor table cannot be empty");
-		expect(alertList.at(0).find(".error")).to.have.length(1);
+		expect(alertList.at(0).find(".link-text.error")).to.have.length(1);
 		expect(alertList.at(1).text()).to.equal("Expression cell table cannot be empty");
-		expect(alertList.at(1).find(".warning")).to.have.length(1);
+		expect(alertList.at(1).find(".link-text.warning")).to.have.length(1);
 
 		// check that summary icon is an error icon
 		tableCategory = wrapper.find(".category-title-container-right-flyout-panel").at(1); // Structure list table category
@@ -202,7 +204,7 @@ describe("summary panel renders error/warning status correctly", () => {
 		alertList = alertCategory.find(".link-text-container");
 		expect(alertList).to.have.length(1);
 		expect(alertList.at(0).text()).to.equal("Expression cell table cannot be empty");
-		expect(alertList.at(0).find(".warning")).to.have.length(1);
+		expect(alertList.at(0).find(".link-text.warning")).to.have.length(1);
 		tableCategory = wrapper.find(".category-title-container-right-flyout-panel").at(1); // Structure list table category
 		expect(tableCategory.find(".category-title-right-flyout-panel").text()).to.equal("STRUCTURE LIST TABLE (1)");
 		summary = tableCategory.find(".control-summary.control-panel").at(0);

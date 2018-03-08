@@ -389,15 +389,14 @@ input.number,
 
 .filter-list-li {
   float: left;
-  display: block;
   width:14px;
-  fill:#3d70b2;
   margin-right: 2px;
   padding: 2px;
 }
 
-.filter-list-li-icon:hover {
-  background-color:#f0f3f6;
+.filter-list-li.filter:hover {
+  cursor: pointer;
+	background-color:#f0f3f6;
 }
 
 #field-picker-table {
@@ -450,38 +449,47 @@ input.number,
   text-decoration: underline;
 }
 
-#reset-fields-button-icon {
+.reset-fields-button-icon {
   float: left;
-  width: 20px;
-  fill: #3d70b2;
   margin-top: -2px;
 }
+.reset-fields-button-icon > svg{
+  height: 18px;
+  width: 18px;
+}
 
-#reset-fields-button:hover #reset-fields-button-icon{
+#reset-fields-button:hover .reset-fields-button-icon > svg > path{
   fill: #FFFFFF;
 }
 
-[id^=remove-fields-button] {
-  float: right;
-  border: none !important;
-  padding-bottom: 1px !important;
-  padding: 0px;
-  padding-left: 2px;
-  padding-right: 2px;
-  padding-top: 1.5px;
-  margin-left: 0px;
-  fill: #3d70b2;
-  line-height: inherit !important;
+.remove-fields-button > svg{
+	width: 23px;
+	height: 23px;
 }
 
-[id^=remove-fields-button] > img {
-  width: 23px;
-  height: 23px;
+.remove-fields-button {
+	cursor: pointer;
+	height: 100%;
+	align-items: center;
+	display: flex;
 }
 
-#remove-fields-button-disabled {
-  background-color: transparent;
-  cursor: default;
+.remove-fields-button:hover:not([disabled]) {
+	background-color: #3d70b2;
+}
+
+.remove-fields-button:hover:not([disabled]) > svg > path {
+	fill: #FFFFFF;
+}
+
+.remove-fields-button[disabled] {
+	cursor: default;
+}
+
+.field-picker-data {
+	height: 100%;
+	display: flex;
+	align-items: center;
 }
 
 .field-picker-data-type-icon {
@@ -489,7 +497,6 @@ input.number,
   height: 15px;
   float: left;
   margin-right: 5px;
-  fill: #3d70b2;
 }
 
 /* Dropdown */
@@ -652,24 +659,19 @@ input.number,
   justify-content: center;
 }
 
-.table-row-move-button {
-  width: 10px !important;
-  border-bottom: 2px solid #f5f7fa;
-  border-right: none;
-  transform: rotate(0deg);
+.table-row-move-button:not([disabled]) {
 	cursor: pointer;
 }
 
-.table-row-move-button-disable{
-  width: 10px !important;
-  border-bottom: 2px solid #f5f7fa;
-  border-right: none;
-  transform: rotate(0deg);
+.table-row-move-button > svg {
+	height: 14px;
+	width: 14px;
+	padding-bottom: 2px;
 }
 
-.table-row-move-button:hover{
+.table-row-move-button:not([disabled]) > svg:hover{
   border-bottom: 2px solid #3d70b2;
-  border-right: none;
+	padding-bottom: 0;
 }
 
 .toggletext_control {
@@ -688,10 +690,6 @@ input.number,
 
 .toggletext_text {
   cursor: pointer;
-}
-
-.sort_icon-column {
-  padding-left: 2px;
 }
 
 /* Flexible Table */
@@ -854,8 +852,7 @@ th div div label, td div div label {
   width: 20px;
   height: 20px;
   float: left;
-  fill: #3d70b2;
-  margin-top: 4px;
+  margin-top: 8px;
 }
 
 #flexible-table-search:focus {
@@ -879,6 +876,12 @@ tr.reactable-column-header {
 
 tr.reactable-column-header > th {
 	overflow: hidden;
+}
+
+.flexible-table-column > svg {
+	padding-left: 2px;
+	width: 10px;
+	height: 10px;
 }
 
 .flexible-table-column.properties-tooltips-container {
@@ -1189,7 +1192,7 @@ input[type=number][disabled].number--light+.number__spinnerdiv .numpinput__spinn
 	justify-content: center;
 	align-items: center;
 }
-.static-text-icon {
+.static-text-icon-container > svg {
 	width: 17px;
 	height: 17px;
 	margin-right: 10px;
@@ -1214,11 +1217,19 @@ input[type=number][disabled].number--light+.number__spinnerdiv .numpinput__spinn
 	margin-bottom: 10px;
 }
 
-.link-text-icon {
+.link-text-container > svg {
 	width: 17px;
 	height: 17px;
 	margin-right: 5px;
 	margin-top: 2px;
+}
+
+.link-text-container.warning > svg {
+	fill: #FDD600;
+}
+
+.link-text-container.error > svg {
+	fill: #E62325;
 }
 
 .link-text {

@@ -242,7 +242,7 @@ describe("StructureListEditorControl renders correctly", () => {
 		const tableContent = wrapper.find(".structure-table-content-row");
 		expect(tableContent).to.have.length(1);
 		expect(tableContent.find("#table-row-move-button-container")).to.have.length(1);
-		expect(tableContent.find(".table-row-move-button-disable")).to.have.length(4);
+		expect(tableContent.find(".table-row-move-button[disabled=true]")).to.have.length(4);
 		// checks to see of readonly controls are rendered
 		expect(tableContent.find(".readonly-control")).to.have.length(6);
 	});
@@ -261,10 +261,9 @@ describe("StructureListEditorControl renders correctly", () => {
 		);
 
 		// validate the proper buttons are enabled/disabled
-		const buttonContainer = wrapper.find("#table-row-move-button-container").find("div");
-		expect(buttonContainer).to.have.length(3);
-		expect(buttonContainer.at(1).find(".table-row-move-button-disable")).to.have.length(2);
-		expect(buttonContainer.at(2).find(".table-row-move-button-disable")).to.have.length(2);
+		const buttonContainer = wrapper.find("#table-row-move-button-container > div");
+		expect(buttonContainer).to.have.length(2);
+		expect(buttonContainer.find(".table-row-move-button[disabled=true]")).to.have.length(4);
 	});
 
 	it("should select top row and move down one row", () => {
@@ -288,11 +287,13 @@ describe("StructureListEditorControl renders correctly", () => {
 		tableData.first().simulate("click");
 
 		// validate the proper buttons are enabled/disabled
-		const buttonContainer = wrapper.find("#table-row-move-button-container").find("div");
-		expect(buttonContainer).to.have.length(5);
-		expect(buttonContainer.at(1).find(".table-row-move-button-disable")).to.have.length(2);
-		expect(buttonContainer.at(2).find(".table-row-move-button")).to.have.length(2);
-		buttonContainer.at(3).simulate("click");
+		const buttonContainer = wrapper.find("#table-row-move-button-container > div");
+		expect(buttonContainer).to.have.length(2);
+		expect(buttonContainer.find(".table-row-move-button[disabled=true]")).to.have.length(2);
+		expect(buttonContainer.find(".table-row-move-button[disabled=false]")).to.have.length(2);
+		buttonContainer.find(".table-row-move-button[disabled=false]")
+			.at(0)
+			.simulate("click");
 
 		// validate the first row is moved
 		tableBody = wrapper.find("#flexible-table-container");
@@ -328,11 +329,13 @@ describe("StructureListEditorControl renders correctly", () => {
 		tableData.first().simulate("click");
 
 		// validate the proper buttons are enabled/disabled
-		const buttonContainer = wrapper.find("#table-row-move-button-container").find("div");
-		expect(buttonContainer).to.have.length(5);
-		expect(buttonContainer.at(1).find(".table-row-move-button-disable")).to.have.length(2);
-		expect(buttonContainer.at(2).find(".table-row-move-button")).to.have.length(2);
-		buttonContainer.at(4).simulate("click");
+		const buttonContainer = wrapper.find("#table-row-move-button-container > div");
+		expect(buttonContainer).to.have.length(2);
+		expect(buttonContainer.find(".table-row-move-button[disabled=true]")).to.have.length(2);
+		expect(buttonContainer.find(".table-row-move-button[disabled=false]")).to.have.length(2);
+		buttonContainer.find(".table-row-move-button[disabled=false]")
+			.at(1)
+			.simulate("click");
 
 		// validate the first row is moved
 		tableBody = wrapper.find("#flexible-table-container");
@@ -368,11 +371,13 @@ describe("StructureListEditorControl renders correctly", () => {
 		tableData.at(5).simulate("click");
 
 		// validate the proper buttons are enabled/disabled
-		const buttonContainer = wrapper.find("#table-row-move-button-container").find("div");
-		expect(buttonContainer).to.have.length(5);
-		expect(buttonContainer.at(1).find(".table-row-move-button")).to.have.length(2);
-		expect(buttonContainer.at(4).find(".table-row-move-button-disable")).to.have.length(2);
-		buttonContainer.at(3).simulate("click");
+		const buttonContainer = wrapper.find("#table-row-move-button-container > div");
+		expect(buttonContainer).to.have.length(2);
+		expect(buttonContainer.find(".table-row-move-button[disabled=false]")).to.have.length(2);
+		expect(buttonContainer.find(".table-row-move-button[disabled=true]")).to.have.length(2);
+		buttonContainer.find(".table-row-move-button[disabled=false]")
+			.at(1)
+			.simulate("click");
 
 		// validate the first row is moved
 		tableBody = wrapper.find("#flexible-table-container");
@@ -408,11 +413,13 @@ describe("StructureListEditorControl renders correctly", () => {
 		tableData.at(5).simulate("click");
 
 		// validate the proper buttons are enabled/disabled
-		const buttonContainer = wrapper.find("#table-row-move-button-container").find("div");
-		expect(buttonContainer).to.have.length(5);
-		expect(buttonContainer.at(1).find(".table-row-move-button")).to.have.length(2);
-		expect(buttonContainer.at(4).find(".table-row-move-button-disable")).to.have.length(2);
-		buttonContainer.at(2).simulate("click");
+		const buttonContainer = wrapper.find("#table-row-move-button-container > div");
+		expect(buttonContainer).to.have.length(2);
+		expect(buttonContainer.find(".table-row-move-button[disabled=false]")).to.have.length(2);
+		expect(buttonContainer.find(".table-row-move-button[disabled=true]")).to.have.length(2);
+		buttonContainer.find(".table-row-move-button[disabled=false]")
+			.at(0)
+			.simulate("click");
 
 		// validate the last row is moved
 		tableBody = wrapper.find("#flexible-table-container");
@@ -448,10 +455,10 @@ describe("StructureListEditorControl renders correctly", () => {
 		tableData.first().simulate("click");
 
 		// validate the proper buttons are enabled/disabled
-		const buttonContainer = wrapper.find("#table-row-move-button-container").find("div");
-		expect(buttonContainer).to.have.length(5);
-		expect(buttonContainer.at(1).find(".table-row-move-button-disable")).to.have.length(2);
-		expect(buttonContainer.at(2).find(".table-row-move-button")).to.have.length(2);
+		const buttonContainer = wrapper.find("#table-row-move-button-container > div");
+		expect(buttonContainer).to.have.length(2);
+		expect(buttonContainer.find(".table-row-move-button[disabled=true]")).to.have.length(2);
+		expect(buttonContainer.find(".table-row-move-button[disabled=false]")).to.have.length(2);
 	});
 
 	it("should select bottom row and correct move buttons enabled `StructureListEditorControl`", () => {
@@ -475,10 +482,10 @@ describe("StructureListEditorControl renders correctly", () => {
 		tableData.last().simulate("click");
 
 		// validate the proper buttons are enabled/disabled
-		const buttonContainer = wrapper.find("#table-row-move-button-container").find("div");
-		expect(buttonContainer).to.have.length(5);
-		expect(buttonContainer.at(1).find(".table-row-move-button")).to.have.length(2);
-		expect(buttonContainer.at(4).find(".table-row-move-button-disable")).to.have.length(2);
+		const buttonContainer = wrapper.find("#table-row-move-button-container > div");
+		expect(buttonContainer).to.have.length(2);
+		expect(buttonContainer.find(".table-row-move-button[disabled=false]")).to.have.length(2);
+		expect(buttonContainer.find(".table-row-move-button[disabled=true]")).to.have.length(2);
 	});
 
 	it("should select middle row and all move buttons enabled `StructureListEditorControl`", () => {
@@ -502,10 +509,9 @@ describe("StructureListEditorControl renders correctly", () => {
 		tableData.at(2).simulate("click");
 
 		// validate the proper buttons are enabled/disabled
-		const buttonContainer = wrapper.find("#table-row-move-button-container").find("div");
-		expect(buttonContainer).to.have.length(7);
-		expect(buttonContainer.at(1).find(".table-row-move-button")).to.have.length(2);
-		expect(buttonContainer.at(4).find(".table-row-move-button")).to.have.length(2);
+		const buttonContainer = wrapper.find("#table-row-move-button-container > div");
+		expect(buttonContainer).to.have.length(2);
+		expect(buttonContainer.find(".table-row-move-button[disabled=false]")).to.have.length(4);
 	});
 
 	it("should select add row button and new row should display", () => {
@@ -548,8 +554,8 @@ describe("StructureListEditorControl renders correctly", () => {
 		);
 
 		// ensure the remove column button is disabled
-		const removeColumnButton = wrapper.find("#remove-fields-button-disabled");
-		expect(removeColumnButton).to.have.length(1);
+		const removeColumnButton = wrapper.find(".remove-fields-button");
+		expect(removeColumnButton.prop("disabled")).to.equal(true);
 
 		// select the first row in the table
 		var tableBody = wrapper.find("#flexible-table-container");
@@ -559,9 +565,9 @@ describe("StructureListEditorControl renders correctly", () => {
 		tableData.at(0).simulate("click");
 
 		// ensure removed button is enabled and select it
-		const enabledRemoveColumnButton = wrapper.find("#remove-fields-button-enabled");
+		const enabledRemoveColumnButton = wrapper.find(".remove-fields-button");
 		expect(enabledRemoveColumnButton).to.have.length(1);
-		expect(enabledRemoveColumnButton.prop("id")).to.equal("remove-fields-button-enabled");
+		expect(enabledRemoveColumnButton.prop("disabled")).to.be.undefined;
 		enabledRemoveColumnButton.simulate("click");
 
 		// validate the first row is deleted
@@ -612,12 +618,10 @@ describe("condition messages renders correctly with structurelisteditor table", 
 		const dataRows = input.find(".table-row");
 		expect(dataRows).to.have.length(1);
 		dataRows.first().simulate("click");
-		wrapper.update();
-		const removeRowButton = wrapper.find("#remove-fields-button-enabled");
+		const removeRowButton = input.find(".remove-fields-button");
 		expect(removeRowButton).to.have.length(1);
 
 		removeRowButton.simulate("click");
-		wrapper.update();
 		expect(controller.getPropertyValue(conditionsPropertyId)).to.have.length(0);
 
 		expect(wrapper.find(".validation-warning-message-icon-structure-list-editor")).to.have.length(1);
@@ -911,7 +915,7 @@ describe("should render table with error checking using CommonProperties element
 
 		// remove the added row
 		tableData.at(1).simulate("click");
-		const enabledRemoveColumnButton = inlineEditTable.find("#remove-fields-button-enabled");
+		const enabledRemoveColumnButton = inlineEditTable.find(".remove-fields-button");
 		expect(enabledRemoveColumnButton).to.have.length(1);
 		enabledRemoveColumnButton.simulate("click");
 
@@ -950,7 +954,7 @@ describe("should render table with error checking using CommonProperties element
 
 		// remove the first row and ensure the error message is associated with the correct row.
 		tableData.at(0).simulate("click");
-		let enabledRemoveColumnButton = inlineEditTable.find("#remove-fields-button-enabled");
+		let enabledRemoveColumnButton = inlineEditTable.find(".remove-fields-button");
 		expect(enabledRemoveColumnButton).to.have.length(1);
 		enabledRemoveColumnButton.simulate("click");
 		const messages = renderedController.getErrorMessages();
@@ -962,7 +966,7 @@ describe("should render table with error checking using CommonProperties element
 		tableData = inlineEditTable.find(".reactable-data").children();
 		expect(tableData).to.have.length(2);
 		tableData.at(1).simulate("click");
-		enabledRemoveColumnButton = inlineEditTable.find("#remove-fields-button-enabled");
+		enabledRemoveColumnButton = inlineEditTable.find(".remove-fields-button");
 		expect(enabledRemoveColumnButton).to.have.length(1);
 		enabledRemoveColumnButton.simulate("click");
 		actual = renderedController.getErrorMessage({ name: "inlineEditingTableError" });
@@ -1026,7 +1030,7 @@ describe("should render table with error checking using CommonProperties element
 
 		// select the first row and move it to the bottom and make sure the error messages stay aligned.
 		tableData.at(0).simulate("click");
-		const moveRowBottom = inlineEditTable.find(".table-row-move-button").at(1);
+		const moveRowBottom = inlineEditTable.find(".table-row-move-button").at(3);
 		moveRowBottom.simulate("click");
 		let messages = renderedController.getErrorMessages();
 		let rowErrorMsg = {
