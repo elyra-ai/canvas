@@ -1637,35 +1637,16 @@ _defineConstant("STRUCTURETABLE_ERROR_PROPS_INFO", {
 					"fail_message": {
 						"type": "error",
 						"message": {
-							"default": "Must contain 'Cholesterol'. Number cannot be null. Cannot contain 'boolean'.",
+							"default": "Table must contain at least one row.",
 							"resource_key": "structureTableList_invalid"
 						},
 						"focus_parameter_ref": "structureTableList"
 					},
 					"evaluate": {
-						"and": [
-							{
-								"condition": {
-									"parameter_ref": "structureTableList",
-									"op": "contains",
-									"value": "Cholesterol"
-								}
-							},
-							{
-								"condition": {
-									"parameter_ref": "structureTableList",
-									"op": "notContains",
-									"value": "boolean"
-								}
-							},
-							{
-								"condition": {
-									"parameter_ref": "structureTableList",
-									"op": "notContains",
-									"value": null
-								}
-							}
-						]
+						"condition": {
+							"parameter_ref": "structureTableList",
+							"op": "isNotEmpty"
+						}
 					}
 				}
 			},
@@ -1683,14 +1664,14 @@ _defineConstant("STRUCTURETABLE_ERROR_PROPS_INFO", {
 						"and": [
 							{
 								"condition": {
-									"parameter_ref": "new_number",
+									"parameter_ref": "structureTableList[2]",
 									"op": "greaterThan",
 									"value": 0
 								}
 							},
 							{
 								"condition": {
-									"parameter_ref": "new_number",
+									"parameter_ref": "structureTableList[2]",
 									"op": "lessThan",
 									"value": 130
 								}
@@ -1703,158 +1684,8 @@ _defineConstant("STRUCTURETABLE_ERROR_PROPS_INFO", {
 		"resources": {
 			"structureTableList.field.label": "Field",
 			"structureTableList.sort_order.label": "Order",
-			"structureTableList_invalid": "Must contain 'Cholesterol'. Number cannot be null. Cannot contain 'boolean'.",
+			"structureTableList_invalid": "Table must contain at least one row.",
 			"new_number_invalid": "Number must be between 0 and 130."
-		}
-	}
-});
-_defineConstant("STRUCTURETABLE_WARNING_PROPS_INFO", {
-	"title": "StructureTable Title",
-	"parameterDef": {
-		"current_parameters": {
-			"structureTableList": [["Age", "Age-1", null, ""], ["BP", "BP-111", 100, "number"]]
-		},
-		"parameters": [
-			{
-				"id": "structureTableList",
-				"type": "map[string,structureTableList]",
-				"role": "column",
-				"default": []
-			}
-		],
-		"complex_types": [
-			{
-				"id": "structureTableList",
-				"key_definition": {
-					"id": "field",
-					"type": "string",
-					"role": "column"
-				},
-				"parameters": [
-					{
-						"id": "new_name",
-						"type": "string",
-						"role": "new_column"
-					},
-					{
-						"id": "new_number",
-						"type": "integer",
-						"default": null
-					},
-					{
-						"id": "new_type",
-						"enum": [
-							"string",
-							"number",
-							"boolean",
-							"time",
-							"date"
-						],
-						"default": "string"
-					}
-				]
-			}
-		],
-		"uihints": {
-			"id": "structureTableList",
-			"parameter_info": [
-				{
-					"parameter_ref": "structureTableList",
-					"label": {
-						"default": "Rename Field"
-					},
-					"description": {
-						"default": "Only select the BP column"
-					}
-				}
-			],
-			"complex_type_info": [
-				{
-					"complex_type_ref": "structureTableList",
-					"label": {
-						"default": "Rename Subpanel"
-					},
-					"key_definition": {
-						"parameter_ref": "field",
-						"label": {
-							"resource_key": "structureTableList.field.label"
-						},
-						"width": 26
-					},
-					"parameters": [
-						{
-							"parameter_ref": "new_name",
-							"label": {
-								"default": "New Name"
-							},
-							"description": {
-								"resource_key": "structureTableList.new_name.desc"
-							},
-							"width": 26,
-							"edit_style": "inline"
-						},
-						{
-							"parameter_ref": "new_number",
-							"label": {
-								"default": "Number"
-							},
-							"width": 26,
-							"edit_style": "subpanel"
-						},
-						{
-							"parameter_ref": "new_type",
-							"label": {
-								"default": "Type"
-							},
-							"description": {
-								"default": "Select data type"
-							},
-							"width": 26,
-							"edit_style": "subpanel"
-						}
-					]
-				}
-			],
-			"group_info": [
-				{
-					"id": "structureTableList",
-					"type": "columnSelection",
-					"parameter_refs": [
-						"structureTableList"
-					]
-				}
-			]
-		},
-		"dataset_metadata": [
-			{
-				"fields": fields
-			}
-		],
-		"conditions": [
-			{
-				"validation": {
-					"fail_message": {
-						"type": "error",
-						"message": {
-							"default": "Only row [\"BP\", \"BP-1\", 100, \"number\"] can be selected.",
-							"resource_key": "structureTableList_invalid"
-						},
-						"focus_parameter_ref": "structureTableList"
-					},
-					"evaluate": {
-						"condition": {
-							"parameter_ref": "structureTableList",
-							"op": "equals",
-							"value": [["BP", "BP-1", 100, "number"]]
-						}
-					}
-				}
-			}
-		],
-		"resources": {
-			"structureTableList.field.label": "Field",
-			"structureTableList.sort_order.label": "Order",
-			"structureTableList_invalid": "Only row [\"BP\", \"BP-1\", 100, \"number\"] can be selected."
 		}
 	}
 });
@@ -1989,11 +1820,11 @@ _defineConstant("STRUCTURETABLE_COLNOTEXISTS_PROPS_INFO", {
 							"default": "New Name cannot be an existing column field name in the dataset_metadata.",
 							"resource_key": "structureTableList_invalid"
 						},
-						"focus_parameter_ref": "structureTableList"
+						"focus_parameter_ref": "structureTableList[1]"
 					},
 					"evaluate": {
 						"condition": {
-							"parameter_ref": "structureTableList",
+							"parameter_ref": "structureTableList[1]",
 							"op": "colNotExists"
 						}
 					}
@@ -2017,7 +1848,6 @@ _defineConstant("STRUCTURELISTEDITOR_ERROR_PROPS_INFO", {
 			{
 				"id": "structurelisteditorList",
 				"type": "array[structurelisteditorTableInput]",
-				"role": "column",
 				"default": []
 			}
 		],
@@ -2126,7 +1956,6 @@ _defineConstant("STRUCTURELISTEDITOR_WARNING_PROPS_INFO", {
 			{
 				"id": "structurelisteditorList",
 				"type": "array[structurelisteditorTableInput]",
-				"role": "column",
 				"default": []
 			}
 		],
@@ -2225,11 +2054,11 @@ _defineConstant("STRUCTURELISTEDITOR_WARNING_PROPS_INFO", {
 							"default": "Name cannot be empty.",
 							"resource_key": "name_invalid"
 						},
-						"focus_parameter_ref": "name"
+						"focus_parameter_ref": "structurelisteditorList[0]"
 					},
 					"evaluate": {
 						"condition": {
-							"parameter_ref": "name",
+							"parameter_ref": "structurelisteditorList[0]",
 							"op": "isNotEmpty"
 						}
 					}
@@ -2243,20 +2072,20 @@ _defineConstant("STRUCTURELISTEDITOR_WARNING_PROPS_INFO", {
 							"default": "Description cannot be contain '<' and '>'.",
 							"resource_key": "description_invalid"
 						},
-						"focus_parameter_ref": "description"
+						"focus_parameter_ref": "structurelisteditorList[1]"
 					},
 					"evaluate": {
 						"or": [
 							{
 								"condition": {
-									"parameter_ref": "description",
+									"parameter_ref": "structurelisteditorList[1]",
 									"op": "notContains",
 									"value": "<"
 								}
 							},
 							{
 								"condition": {
-									"parameter_ref": "description",
+									"parameter_ref": "structurelisteditorList[1]",
 									"op": "notContains",
 									"value": ">"
 								}

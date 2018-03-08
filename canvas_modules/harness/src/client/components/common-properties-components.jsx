@@ -1235,10 +1235,24 @@ class CommonPropertiesComponents extends React.Component {
 			<div className="section-description">
 				<p>Complex types representing lists or maps of basic parameter types are supported
 					via complex type controls. Controls can appear as rows in tables or standing on
-					their own in panels. The following controls are supported for complex types:&nbsp;
-					<span className="highlight">toggletext</span>, <span className="highlight">oneofselect</span>,&nbsp;
-					<span className="highlight">enum</span>, <span className="highlight">textfield</span>,&nbsp;
-					<span className="highlight">numberField</span> and <span className="highlight">expression</span></p>
+					their own in panels. The following controls are supported for complex types:
+					<ul className="properties-documentation-list-indent">
+						<li><a className="properties-documentation-page-intro-link" href="#/properties#--textfield">textfield</a></li>
+						<li><a className="properties-documentation-page-intro-link" href="#/properties#--textarea">textarea</a></li>
+						<li><a className="properties-documentation-page-intro-link" href="#/properties#--readonly">readonly</a></li>
+						<li><a className="properties-documentation-page-intro-link" href="#/properties#--expression">expression</a></li>
+						<li><a className="properties-documentation-page-intro-link" href="#/properties#--toggletext">toggletext</a></li>
+						<li><a className="properties-documentation-page-intro-link" href="#/properties#--password">password</a></li>
+						<li><a className="properties-documentation-page-intro-link" href="#/properties#--numberfield">numberfield</a></li>
+						<li><a className="properties-documentation-page-intro-link" href="#/properties#--spinner">spinner</a></li>
+						<li><a className="properties-documentation-page-intro-link" href="#/properties#--datefield">datefield</a></li>
+						<li><a className="properties-documentation-page-intro-link" href="#/properties#--timefield">timefield</a></li>
+						<li><a className="properties-documentation-page-intro-link" href="#/properties#--checkbox">checkbox</a></li>
+						<li><a className="properties-documentation-page-intro-link" href="#/properties#--radioset">radioset</a></li>
+						<li><a className="properties-documentation-page-intro-link" href="#/properties#--oneofselect">oneofselect</a></li>
+						<li><a className="properties-documentation-page-intro-link" href="#/properties#--selectschema">selectschema</a></li>
+					</ul>
+				</p>
 			</div>
 			<div className="properties-documentation-section-content">
 				<div className="properties-documentation-panels-controls-component">

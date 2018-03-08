@@ -33,7 +33,6 @@ import {
 	SELECTCOLUMN_ERROR_PROPS_INFO,
 	SELECTCOLUMNS_ERROR_PROPS_INFO,
 	STRUCTURETABLE_ERROR_PROPS_INFO,
-	STRUCTURETABLE_WARNING_PROPS_INFO,
 	STRUCTURETABLE_COLNOTEXISTS_PROPS_INFO,
 	STRUCTURELISTEDITOR_ERROR_PROPS_INFO,
 	STRUCTURELISTEDITOR_WARNING_PROPS_INFO,
@@ -289,25 +288,24 @@ class CommonPropertiesComponents extends React.Component {
 			{ key: "greaterLessThan", label: <div>greaterThan/<br />lessThan</div> },
 			{ key: "equals", label: <div>equals/<br />notEquals</div> },
 			{ key: "contains", label: <div>contains/<br />notContains</div> },
-			{ key: "colNotExists", label: <div>colNotExists</div> },
-			{ key: "cellNotEmpty", label: <div>cellNotEmpty</div> }
+			{ key: "colNotExists", label: <div>colNotExists</div> }
 		];
 
 		const tableConditionsData = [
-			{ Control: "checkbox (boolean)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "no", colNotExists: "no", cellNotEmpty: "no" },
-			{ Control: "checkboxset ([string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", cellNotEmpty: "no" },
-			{ Control: "expression (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", cellNotEmpty: "no" },
-			{ Control: "numberfield (number)", empty: "yes", greaterLessThan: "yes", equals: "yes", contains: "no", colNotExists: "no", cellNotEmpty: "no" },
-			{ Control: "oneofselect (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", cellNotEmpty: "no" },
-			{ Control: "password (string)", empty: "yes", greaterLessThan: "no", equals: "no", contains: "no", colNotExists: "no", cellNotEmpty: "no" },
-			{ Control: "radioset (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", cellNotEmpty: "no" },
-			{ Control: "selectcolumn (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", cellNotEmpty: "no" },
-			{ Control: "selectcolumns  ([string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", cellNotEmpty: "no" },
-			{ Control: "someofselect ([string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", cellNotEmpty: "no" },
-			{ Control: "textarea (string/[string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", cellNotEmpty: "no" },
-			{ Control: "textfield (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "yes", cellNotEmpty: "no" },
-			{ Control: "structure-list-editor ([[string]])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", cellNotEmpty: "no" },
-			{ Control: "structuretable ([[primitive]])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: <div>map: yes,<br />array: no</div>, cellNotEmpty: <div>map: yes,<br />array: no</div> }
+			{ Control: "checkbox (boolean)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "no", colNotExists: "no" },
+			{ Control: "checkboxset ([string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no" },
+			{ Control: "expression (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no" },
+			{ Control: "numberfield (number)", empty: "yes", greaterLessThan: "yes", equals: "yes", contains: "no", colNotExists: "no" },
+			{ Control: "oneofselect (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no" },
+			{ Control: "password (string)", empty: "yes", greaterLessThan: "no", equals: "no", contains: "no", colNotExists: "no" },
+			{ Control: "radioset (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no" },
+			{ Control: "selectcolumn (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no" },
+			{ Control: "selectcolumns  ([string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no" },
+			{ Control: "someofselect ([string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no" },
+			{ Control: "textarea (string/[string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no" },
+			{ Control: "textfield (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "yes" },
+			{ Control: "structure-list-editor ([[string]])", empty: "yes", greaterLessThan: "no", equals: "no", contains: "no", colNotExists: "no" },
+			{ Control: "structuretable ([[primitive]])", empty: "yes", greaterLessThan: "no", equals: "no", contains: "no", colNotExists: "no" }
 		];
 
 		const tableConditionsDataTypeHeader = [
@@ -322,10 +320,9 @@ class CommonPropertiesComponents extends React.Component {
 		const tableConditionsDataTypeData = [
 			{ Conditions: "isEmpty/isNotEmpty", boolean: "yes", string: "yes", number: "yes", stringArray: "yes", doubleArray: "yes" },
 			{ Conditions: "greaterThan/lessThan", boolean: "no", string: "yes", number: "yes", stringArray: "no", doubleArray: "no" },
-			{ Conditions: "equals/notEquals", boolean: "yes", string: "yes", number: "yes", stringArray: "yes", doubleArray: "yes" },
-			{ Conditions: "contains/notContains", boolean: "no", string: "yes", number: "no", stringArray: "yes", doubleArray: "yes" },
-			{ Conditions: "colNotExists", boolean: "no", string: "yes", number: "no", stringArray: "no", doubleArray: <div> map: yes <br />array: no</div> },
-			{ Conditions: "cellNotEmpty", boolean: "no", string: "no", number: "no", stringArray: "no", doubleArray: <div> map: yes <br />array: no</div> }
+			{ Conditions: "equals/notEquals", boolean: "yes", string: "yes", number: "yes", stringArray: "yes", doubleArray: "no" },
+			{ Conditions: "contains/notContains", boolean: "no", string: "yes", number: "no", stringArray: "yes", doubleArray: "no" },
+			{ Conditions: "colNotExists", boolean: "no", string: "yes", number: "no", stringArray: "no", doubleArray: "no" }
 		];
 
 		const contentConditions = (<section id="Conditions" className="section conditions-documentation-content-overview-section">
@@ -354,8 +351,8 @@ class CommonPropertiesComponents extends React.Component {
 					A condition fails if it evaluates to false. For validations, an error or warning will be shown to indicate that the
 					user input did not pass the test. <br /> Below is a table that describes which conditions each control supports.
 				</p>
-				<div className="conditions-documentation-control-table-container">
-					<Table className="table conditions-documentation-control-table" id="conditions-documentation-control-table"
+				<div className="conditions-documentation-control-table-container" id="conditions-documentation-conditions-supported-table">
+					<Table className="table conditions-documentation-control-table"
 						sortable={["Control"]}
 						columns={tableConditionsHeader}
 						data={tableConditionsData}
@@ -365,7 +362,7 @@ class CommonPropertiesComponents extends React.Component {
 					control handles and map it to the supported conditions.
 				</p>
 				<div className="conditions-documentation-control-table-container">
-					<Table className="table conditions-documentation-control-table" id="conditions-documentation-control-table"
+					<Table className="table conditions-documentation-control-table"
 						sortable={["Conditions"]}
 						columns={tableConditionsDataTypeHeader}
 						data={tableConditionsDataTypeData}
@@ -763,16 +760,13 @@ class CommonPropertiesComponents extends React.Component {
 				<div className="conditions-documentation-panels-controls-component">
 					<h3 id="--structuretable" className="section-subtitle">structuretable</h3>
 					<p>A structuretable is a complex type control of type <span className="highlight">[[primitive]]</span>.
-						The double array data type will behave the same as single arrays for the following conditions: <span className="highlight">isEmpty</span>,&nbsp;
-						<span className="highlight">isNotEmpty</span>, <span className="highlight">equals</span> and <span className="highlight">notEquals</span>.
-						The conditions <span className="highlight">contains</span> and <span className="highlight">notContains</span> will
-						depend on the data type of the cell element. If the data type of a cell is a <span className="highlight">string</span>,&nbsp;
-						<span className="highlight">contains</span> will return true if the <span className="highlight">value</span> is a substring.
-						Other data types of a cell such as numbers or booleans will be compared to the <span className="highlight">value</span> as is.
+						Tables support the <span className="highlight">isEmpty</span> and <span className="highlight">isNotEmpty</span> conditions.
+						Other conditions are evaluated at the cell level.
+						Refer to the <a className="properties-documentation-page-intro-link" href="#/conditions#conditions-documentation-conditions-supported-table">table</a> above
+						on what conditions each control supports.
 						<br />
-						The following is an example illustrating the use of these conditions in a structuretable.
-						The user's input must <span className="highlight">contains</span> the
-						word "Cholesterol" and <span className="highlight">notContains</span> a null number, nor the word "boolean".
+						The following is an example illustrating the use of these conditions in a structuretable. The structure table
+						will display an error if no rows are selected.
 					</p>
 					<div className="section-row">
 						<div className="section-column">
@@ -782,30 +776,12 @@ class CommonPropertiesComponents extends React.Component {
 								containerType="Custom"
 							/>
 							<p>Noticed that in the subpanel, a warning will be shown when a number outside of the range 0 and 130 is entered.
-								A separte condition is defined for the numberfield control. <br />
-								Subpanel conditions are supported. Simply create a new condition and add it to the conditions array.
+								Subpanel conditions are supported and are defined at the table cell level.
 							</p>
 						</div>
 						<div className="section-column section-column-code">
 							<pre className="json-block">
 								{this.jsonReplacer(STRUCTURETABLE_ERROR_PROPS_INFO.parameterDef, "conditions")}
-							</pre>
-						</div>
-					</div>
-					<p>Below is an example of using the <span className="highlight">equals</span> condition in a structuretable control.
-						Each array within the array needs to match the condition.
-					</p>
-					<div className="section-row">
-						<div className="section-column">
-							<CommonProperties
-								showPropertiesDialog
-								propertiesInfo={STRUCTURETABLE_WARNING_PROPS_INFO}
-								containerType="Custom"
-							/>
-						</div>
-						<div className="section-column section-column-code">
-							<pre className="json-block">
-								{this.jsonReplacer(STRUCTURETABLE_WARNING_PROPS_INFO.parameterDef, "conditions")}
 							</pre>
 						</div>
 					</div>

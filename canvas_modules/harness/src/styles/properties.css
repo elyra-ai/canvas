@@ -234,6 +234,10 @@
 	display: table-cell;
 }
 
+.properties-documentation-list-indent {
+	margin-left: 10px;
+}
+
 /* min width less than then set width to 100% and flow to next line */
 
 /* Override common-properties */
