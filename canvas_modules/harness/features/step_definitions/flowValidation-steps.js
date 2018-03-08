@@ -14,20 +14,6 @@ var nconf = require("nconf");
 
 module.exports = function() {
 
-	// Then I start flow validation
-	//
-	this.Then(/^I start flow validation$/,
-		function() {
-			const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
-			// create the comment
-			if (D3RenderingEngine) {
-				browser.rightClick(".svg-area", 200, 200);
-			} else {
-				browser.rightClick(".svg-canvas", 200, 200);
-			}
-			browser.$(".context-menu-popover").$$(".react-contextmenu-item")[9].click();
-		});
-
 	// Then I verify that there are 1 nodes with a "warning" indicator
 	//
 	this.Then(/^I verify that there are (\d+) nodes with a "([^"]*)" indicator$/,

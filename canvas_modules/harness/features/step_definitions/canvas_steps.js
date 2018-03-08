@@ -47,8 +47,7 @@ module.exports = function() {
 		clickSVGAreaAt(xCoord, yCoord); // Put foucs on the SVG area, ready for key press
 	});
 
-
-	this.Then(/^I right click the canvas background at (\d+), (\d+) to display the context menu$/, function(xCoord, yCoord) {
+	this.Then(/^I right click at position (\d+), (\d+) to display the context menu$/, function(xCoord, yCoord) {
 		const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
 		if (D3RenderingEngine) {
 			browser.rightClick(".svg-area", Number(xCoord), Number(yCoord));
@@ -89,14 +88,21 @@ module.exports = function() {
 		expect(selected).toEqual(Number(numberOfSelectedObjects));
 	});
 
-	this.Then("I select all objects in the canvas via the context menu", function() {
-		const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
-		if (D3RenderingEngine) {
-			browser.rightClick(".svg-area", Number(300), Number(10));
-		} else {
-			browser.rightClick(".svg-canvas", Number(300), Number(10));
+
+	this.Then(/^I click option "([^"]*)" from the context menu$/, function(itemText) {
+		var items = browser.$(".context-menu-popover").$$(".react-contextmenu-item:not(.contextmenu-divider)");
+		// console.log("Number of context menu items " + items.length);
+		// for (let idx = 0; idx < items.length; idx++) {
+		// 	console.log("Context menu item = " + items[idx].$("span").getText());
+		// }
+
+		for (let idx = 0; idx < items.length; idx++) {
+			if (items[idx].$("span").getText() === itemText) {
+				// console.log("Context menu item clicked = " + items[idx].$("span").getText());
+				items[idx].click();
+				break;
+			}
 		}
-		browser.$(".context-menu-popover").$$(".react-contextmenu-item")[1].click();
 	});
 
 	this.Then("I select all objects in the canvas via Ctrl+A", function() {

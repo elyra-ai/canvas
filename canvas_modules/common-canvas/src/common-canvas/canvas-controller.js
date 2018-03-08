@@ -604,6 +604,15 @@ export default class CanvasController {
 			case "redo":
 				this.commandStack.redo();
 				break;
+			case "cut":
+				this.cutToClipboard();
+				break;
+			case "copy":
+				this.copyToClipboard();
+				break;
+			case "paste":
+				this.pasteFromClipboard();
+				break;
 			default:
 			}
 		}

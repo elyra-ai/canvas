@@ -164,7 +164,8 @@ Feature: Sanity_Test_undoRedo
 		Then I verify the number of data links are 5
 		Then I verify the number of comment links are 3
 
-		Then I select all objects in the canvas via the context menu
+		Then I right click at position 300, 10 to display the context menu
+		Then I click option "Select all" from the context menu
 		Then I delete node 1 the "Type" node by selecting more than 1 node
 		Then I expect the canvas to be empty
 		Then I expect the object model to be empty
@@ -188,7 +189,8 @@ Feature: Sanity_Test_undoRedo
 		Then I verify the number of nodes are 8
 		Then I verify the number of comments are 3
 
-		Then I select all objects in the canvas via the context menu
+		Then I right click at position 300, 10 to display the context menu
+		Then I click option "Select all" from the context menu
 		Then I delete all selected objects via the Delete key
 		Then I expect the canvas to be empty
 		Then I expect the object model to be empty

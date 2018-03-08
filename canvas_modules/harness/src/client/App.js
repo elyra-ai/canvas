@@ -449,8 +449,8 @@ class App extends React.Component {
 
 	contextMenuHandler(source) {
 		const EDIT_SUB_MENU = [
-			{ action: "cutSelection", label: this.getLabel("edit-context.cutSelection", "Cut") },
-			{ action: "copySelection", label: this.getLabel("edit-context.copySelection", "Copy") }
+			{ action: "cut", label: this.getLabel("edit-context.cutSelection", "Cut") },
+			{ action: "copy", label: this.getLabel("edit-context.copySelection", "Copy") }
 		];
 
 		const NODE_CONTEXT_MENU = [
@@ -510,8 +510,9 @@ class App extends React.Component {
 			{ action: "addComment", label: this.getLabel("canvas-context.addComment", "New comment") },
 			{ action: "selectAll", label: this.getLabel("canvas-context.selectAll", "Select All") },
 			{ divider: true },
-			{ action: "cutSelection", label: this.getLabel("edit-context.cutSelection", "Cut") },
-			{ action: "copySelection", label: this.getLabel("edit-context.copySelection", "Copy") },
+			{ action: "cut", label: this.getLabel("edit-context.cutSelection", "Cut") },
+			{ action: "copy", label: this.getLabel("edit-context.copySelection", "Copy") },
+			{ action: "paste", label: this.getLabel("edit-context.pasteSelection", "Paste") },
 			{ divider: true },
 			{ action: "undo", label: this.getLabel("canvas-context.undo", "Undo") },
 			{ action: "redo", label: this.getLabel("canvas-context.redo", "Redo") },
