@@ -9,7 +9,7 @@
 
 /* global browser */
 
-import { getHarnessData } from "./HTTPClient.js";
+import { getHarnessData } from "./HTTPClient-utils.js";
 import { getURL } from "./test-config.js";
 
 

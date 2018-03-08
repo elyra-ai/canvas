@@ -1,4 +1,4 @@
-Feature: Sanity_Test2
+Feature: MainLegacy2
 
   ** Make sure the test harness is running and listening to http://localhost:3001 ***
 

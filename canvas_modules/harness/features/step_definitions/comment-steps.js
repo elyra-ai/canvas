@@ -8,11 +8,12 @@
  *******************************************************************************/
 /* eslint no-console: "off" */
 
-import { getCommentIdFromObjectModelUsingText, getCommentIndexFromCanvasUsingText, getEventLogCount, getObjectModelCount } from "./utilities/validateUtil.js";
-import { getHarnessData } from "./utilities/HTTPClient.js";
+import { getCommentIdFromObjectModelUsingText, getCommentIndexFromCanvasUsingText,
+	getEventLogCount, getObjectModelCount } from "./utilities/validate-utils.js";
+import { getHarnessData } from "./utilities/HTTPClient-utils.js";
 import { getURL } from "./utilities/test-config.js";
 import isEqual from "lodash/isEqual";
-import { simulateDragDrop } from "./utilities/DragAndDrop.js";
+import { simulateDragDrop } from "./utilities/dragAndDrop-utils.js";
 
 var nconf = require("nconf");
 

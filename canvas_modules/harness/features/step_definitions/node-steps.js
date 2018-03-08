@@ -9,10 +9,10 @@
 /* eslint no-console: "off" */
 
 import { deleteLinkInObjectModel, findCategoryElement, findNodeIndexInPalette, getEventLogCount,
-	getNodeIdForLabel, getNodeIdFromObjectModel, getObjectModelCount, isObjectModelEmpty } from "./utilities/validateUtil.js";
-import { getHarnessData } from "./utilities/HTTPClient.js";
+	getNodeIdForLabel, getNodeIdFromObjectModel, getObjectModelCount, isObjectModelEmpty } from "./utilities/validate-utils.js";
+import { getHarnessData } from "./utilities/HTTPClient-utils.js";
 import { getURL } from "./utilities/test-config.js";
-import { simulateDragDrop } from "./utilities/DragAndDrop.js";
+import { simulateDragDrop } from "./utilities/dragAndDrop-utils.js";
 
 /* global browser */
 

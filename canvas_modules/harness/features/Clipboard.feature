@@ -1,4 +1,4 @@
-Feature: Sanity_Test_Clipboard.feature
+Feature: Clipboard
 
 	** Make sure the test harness is running and listening to http://localhost:3001 ***
 
@@ -6,7 +6,7 @@ Feature: Sanity_Test_Clipboard.feature
 	I want to test clipboard operations
 	So I can build a canvas and perform clipboard operations
 
-	# For clipboard tests using the keyboard see the Sanity_Test_SecondaryToolbar.feature file
+	# For clipboard tests using the keyboard see the Toolbar.feature file
 
 	Scenario: Test for clipboard Cut and Paste shortcut keys with the D3 rendering engine
 

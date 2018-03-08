@@ -7,7 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import { getAutoCompleteCount, selectAutoComplete, setTextValue } from "./utilities/codemirror_util.js";
+import { getAutoCompleteCount, selectAutoComplete, setTextValue } from "./utilities/codeMirror-utils.js";
 import testUtils from "./utilities/test-utils.js";
 
 

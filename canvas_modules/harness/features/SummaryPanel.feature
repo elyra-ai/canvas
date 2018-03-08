@@ -1,4 +1,4 @@
-Feature: Sanity_Test_SummaryPanel
+Feature: SummaryPanel
 
 	** Make sure the test harness is running and listening to http://localhost:3001 ***
 

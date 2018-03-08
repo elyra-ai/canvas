@@ -1,4 +1,4 @@
-Feature: Sanity_Test_SecondaryToolbar.feature
+Feature: Toolbar
 
 	** Make sure the test harness is running and listening to http://localhost:3001 ***
 
@@ -62,6 +62,7 @@ Feature: Sanity_Test_SecondaryToolbar.feature
 	Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
 	Given I have toggled the app side panel
 
+	Then I resize the window size to 1330 width and 660 height
 	Then I select node 3 the "C5.0" node
 	Then I click on the secondary toolbar create comment button
 	Then I edit comment 1 with the comment text "New Comment"

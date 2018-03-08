@@ -8,8 +8,8 @@
  *******************************************************************************/
 /* eslint no-console: "off" */
 
-import { findCategoryElement, findNodeIndexInPalette, getNodeIdForLabel } from "./utilities/validateUtil.js";
-import { clickSVGAreaAt } from "./utilities/validateUtil.js";
+import { clickSVGAreaAt, findCategoryElement, findNodeIndexInPalette,
+	getNodeIdForLabel } from "./utilities/validate-utils.js";
 
 /* global browser */
 var nconf = require("nconf");

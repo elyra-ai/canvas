@@ -11,9 +11,9 @@
 
 import { containLinkEvent, containLinkInObjectModel, getCommentIdFromObjectModel,
 	getCommentIdFromObjectModelUsingText, getCommentIndexFromCanvasUsingText, getNodeIdForLabel,
-	getNodeIdFromObjectModel, getObjectModelCount, getPortLinks } from "./utilities/validateUtil.js";
-import { simulateD3LinkCreation, simulateDragDrop } from "./utilities/DragAndDrop.js";
-import { getHarnessData } from "./utilities/HTTPClient.js";
+	getNodeIdFromObjectModel, getObjectModelCount, getPortLinks } from "./utilities/validate-utils.js";
+import { simulateD3LinkCreation, simulateDragDrop } from "./utilities/dragAndDrop-utils.js";
+import { getHarnessData } from "./utilities/HTTPClient-utils.js";
 import { getURL } from "./utilities/test-config.js";
 
 var nconf = require("nconf");
