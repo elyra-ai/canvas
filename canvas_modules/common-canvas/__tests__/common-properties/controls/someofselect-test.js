@@ -14,6 +14,7 @@ import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtils from "../../_utils_/property-utils";
 import SomeOfSelectParamDef from "../../test_resources/paramDefs/someofselect_paramDef.json";
+import FilteredEnumParamDef from "../../test_resources/paramDefs/filteredEnums_paramDef.json";
 
 
 const controller = new Controller();
@@ -87,7 +88,7 @@ describe("someofselect works correctly in common-properties", () => {
 		wrapper.unmount();
 	});
 	it("Validate someofselect rendered correctly", () => {
-		const category = wrapper.find(".category-title-container-right-flyout-panel").at(0); // get the VALUES category
+		const category = wrapper.find(".category-title-container-right-flyout-panel").at(0); // get the FILTERED ENUMERATIONS category
 		const controls = category.find("FormControl");
 		expect(controls).to.have.length(5);
 		const options = controls.at(0).find("option"); // someeofselect
@@ -113,5 +114,50 @@ describe("someofselect works correctly in common-properties", () => {
 		const select = category.find("#editor-control-someofselect_disabled").at(0);
 		const options = select.find("option");
 		expect(options).to.have.length(3);
+	});
+});
+
+describe("Filtered enumerations on someofselect work correctly in common-properties", () => {
+	const startingOptions = [
+		{ value: "", label: "..." },
+		{ value: "red", label: "Red" },
+		{ value: "orange", label: "Orange" },
+		{ value: "yellow", label: "Yellow" },
+		{ value: "green", label: "Green" },
+		{ value: "blue", label: "Blue" },
+		{ value: "purple", label: "Purple" }
+	];
+	const expectedOptions = [
+		{ value: "", label: "..." },
+		{ value: "red", label: "Red" },
+		{ value: "orange", label: "Orange" },
+		{ value: "yellow", label: "yellow" },
+		{ value: "teal", label: "teal" },
+		{ value: "purple", label: "Purple" }
+	];
+
+	let wrapper;
+	beforeEach(() => {
+		const form = propertyUtils.flyoutEditorForm(FilteredEnumParamDef);
+		wrapper = form.wrapper;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("Validate someofselect filtered correctly", () => {
+		const category = wrapper.find(".category-title-container-right-flyout-panel").at(0); // get the VALUES category
+		const newValue = { value: "orange", label: "Orange" };
+		propertyUtils.dropDown(category, 0, newValue, startingOptions);
+
+		const controls = category.find("FormControl");
+		expect(controls).to.have.length(1);
+		const dropDowns = category.find("Dropdown");
+		expect(dropDowns).to.have.length(2);
+
+		const options = dropDowns.at(1).prop("options");
+		// console.log("OPTIONS: " + JSON.stringify(dropDowns.at(1).prop("options")));
+		expect(JSON.stringify(options)).to.eql(JSON.stringify(expectedOptions));
 	});
 });

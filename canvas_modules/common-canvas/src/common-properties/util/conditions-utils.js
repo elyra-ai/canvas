@@ -297,6 +297,7 @@ function _updateStateIfPanel(newStates, referenceId, state) {
 
 function _validateFilteredEnums(controller, filteredEnumDefinitions, dataModel) {
 	// filtered enumerations
+	let lastKey;
 	if (Object.keys(filteredEnumDefinitions).length > 0) {
 		const propertyValues = controller.getPropertyValues();
 		const newStates = controller.getControlStates();
@@ -305,6 +306,14 @@ function _validateFilteredEnums(controller, filteredEnumDefinitions, dataModel) 
 				continue;
 			}
 			for (const filteredDefinition of filteredEnumDefinitions[filteredKey]) {
+				if (lastKey === filteredKey) {
+					const target = filteredDefinition.definition.enum_filter.target.parameter_ref;
+					if (newStates[target].enumFilter !== null) {
+						// We can skip this evaluation because a prior evaluation
+						//  for the same target already triggered a filter.
+						continue;
+					}
+				}
 				const baseId = _getPropertyId(filteredKey);
 				const controlType = controller.getControlType(baseId);
 				let cellCoords = null;
@@ -325,6 +334,7 @@ function _validateFilteredEnums(controller, filteredEnumDefinitions, dataModel) 
 				} catch (error) {
 					logger.warn("Error thrown in validation: " + error);
 				}
+				lastKey = filteredKey;
 			}
 		}
 		controller.setControlStates(newStates);

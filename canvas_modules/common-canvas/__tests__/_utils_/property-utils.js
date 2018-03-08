@@ -123,7 +123,7 @@ function dropDown(wrapper, idx, value, expectedOptions) {
 	const options = dropdown.at(idx).prop("options");
 	expect(options).to.eql(expectedOptions); // check all values available
 	dropdown.at(idx).getNode()
-		.setValue(value.label, value.value); // set the dropdown value.
+		.setValue(value.value, value.label); // set the dropdown value.
 }
 
 module.exports = {
