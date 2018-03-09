@@ -1019,9 +1019,6 @@
           },
           {
             "id": "level1",
-            "label": {
-              "default": "Level1"
-            },
             "type": "panels",
             "group_info": [
               {
@@ -1030,41 +1027,43 @@
                 "parameter_refs": [
                   "disablePanelLevel2",
                   "hidePanelLevel2"
-                ]
-              },
-              {
-                "id": "Level2",
-                "type": "textPanel"
-              },
-              {
-                "id": "level2",
-                "label": {
-                  "default": "Level2"
-                },
-                "type": "controls",
-                "parameter_refs": [
-                  "textfield1",
-                  "textfield2",
-                  "disablePanelLevel3",
-                  "hidePanelLevel3"
                 ],
                 "group_info": [
                   {
-                    "id": "Level3",
+                    "id": "Level2",
                     "type": "textPanel"
                   },
                   {
-                    "id": "level3",
-                    "label": {
-                      "default": "Level3"
-                    },
+                    "id": "level2",
                     "type": "panels",
                     "group_info": [
                       {
-                        "id": "level3control",
+                        "id": "level3buttons",
                         "type": "controls",
                         "parameter_refs": [
-                          "textfield3"
+                          "textfield1",
+                          "textfield2",
+                          "disablePanelLevel3",
+                          "hidePanelLevel3"
+                        ],
+                        "group_info": [
+                          {
+                            "id": "Level3",
+                            "type": "textPanel"
+                          },
+                          {
+                            "id": "level3",
+                            "type": "panels",
+                            "group_info": [
+                              {
+                                "id": "level3control",
+                                "type": "controls",
+                                "parameter_refs": [
+                                  "textfield3"
+                                ]
+                              }
+                            ]
+                          }
                         ]
                       }
                     ]

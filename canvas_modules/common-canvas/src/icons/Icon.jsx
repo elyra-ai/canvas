@@ -274,29 +274,12 @@ export default class Icon extends React.Component {
 			info:
 				<svg xmlns="http://www.w3.org/2000/svg"
 					viewBox="0 0 16 16"
-					clipPath="url(#SVGID_3_)"
 					className={CLASS_NAME + " fill"}
 					{...this.props}
 				>
-					<g>
-						<defs>
-							<path id="SVGID_2_" d="M10,12H6v-1h1V8H6V7h3v4h1V12z M8,4c0.6,0,1,0.4,1,1S8.6,6,8,6S7,5.6,7,5S7.4,4,8,4z M8,0C3.6,0,0,3.6,0,8
-								s3.6,8,8,8s8-3.6,8-8c0-2.1-0.8-4.2-2.3-5.7C12.2,0.8,10.1,0,8,0z"
-							/>
-						</defs>
-						<clipPath id="SVGID_3_">
-							<use xlinkHref="#SVGID_2_" overflow="visible" />
-						</clipPath>
-						<g className="st0">
-							<defs>
-								<rect id="SVGID_4_" width="16" height="16" />
-							</defs>
-							<clipPath id="SVGID_5_">
-								<use xlinkHref="#SVGID_4_" overflow="visible" />
-							</clipPath>
-							<rect x="-5" y="-5" className="st1" width="26" height="26" />
-						</g>
-					</g>
+					<path d="M10,12H6v-1h1V8H6V7h3v4h1V12z M8,4c0.6,0,1,0.4,1,1S8.6,6,8,6S7,5.6,7,5S7.4,4,8,4z M8,0C3.6,0,0,3.6,0,8
+						s3.6,8,8,8s8-3.6,8-8c0-2.1-0.8-4.2-2.3-5.7C12.2,0.8,10.1,0,8,0z"
+					/>
 				</svg>,
 			circle:
 				<svg xmlns="http://www.w3.org/2000/svg"

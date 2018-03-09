@@ -119,7 +119,7 @@
 
 .panel-container-open-right-flyout-panel {
 	height: 100%;
-	padding-left: 20px;
+	padding-left: 10px;
 	padding-right: 20px;
 	overflow-y: auto;
 	border-bottom: 2px solid #dfe3e6;
@@ -132,7 +132,7 @@
 }
 
 #sub-category-parent-container-right-flyout-panel {
-	padding: 5px 0px;
+	padding: 5px 8px;
 }
 
 .sub-category-title-right-flyout-panel {
@@ -176,6 +176,7 @@
 .control-summary-link-buttons .button {
   line-height: 0.5;
   padding-left: 0;
+  height: 40px;
 }
 
 .control-summary-link-buttons > a > svg:not(:root) {
@@ -269,6 +270,14 @@
 .control-twisty-link-buttons {
 	display: flex;
 	cursor: pointer;
+}
+
+.form-horizontal .checkbox, .form-horizontal .radio {
+	padding-top: 2px;
+}
+
+.radio, .checkbox {
+	margin-top: 5px;
 }
 
 /* Override css for wider content */

@@ -133,10 +133,10 @@ export default class ControlFactory {
 			if (!isStructureTable || description || hasFilter) {
 				const tooltipId = "tooltip_label_" + this._createElementId(propertyId);
 				label = (
-					<div key={"label-" + control.name} className={"default-label-container"}>
+					<div key={"label-" + control.name} className={"default-label-container"} style={stateStyle}>
 						<div className="properties-tooltips-container" data-tip={tooltip} data-for={tooltipId}>
 							<div className = "control-label-container">
-								<label className="control-label" style={stateStyle} >{control.label.text}</label>
+								<label className="control-label">{control.label.text}</label>
 								{requiredIndicator}
 								{numberGenerator}
 								{description}

@@ -28,7 +28,7 @@ export default class ControlItem extends React.Component {
 
 	render() {
 		return (
-			<div>
+			<div className="control-item">
 				{this.props.label}
 				{this.props.control}
 			</div>

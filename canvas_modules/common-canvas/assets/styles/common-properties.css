@@ -41,9 +41,22 @@
   float: left;
 }
 
+.h-separator {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.control-item {
+	padding: 4px 0px 0px 0px;
+}
 .control-panel {
   display: block;
-  padding: 8px 8px 8px 8px;
+  padding: 0px 4px 0px 8px;
+}
+
+.panel-container-open-right-flyout-panel > .control-panel {
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
 
 .table-editor {
@@ -70,14 +83,14 @@
 }
 
 .control-label-container{
-	padding-top: 7px;
+	padding-top: 0px;
 }
 
 /* Override for block controls */
 .control-radio-block{
   display: block;
   margin-bottom: 2px;
-  padding:5px;
+  padding: 5px 5px 0px 5px;
 }
 /* Hide default browser input */
 
@@ -85,10 +98,6 @@ input[type=radio]{
   position: absolute;
   z-index: -1;
   opacity: 0;
-}
-
-.radio {
-  padding-bottom: 10px;
 }
 
 .float_right {
@@ -146,7 +155,7 @@ input[type=radio]{
 
 /* Added for validations */
 .editor_control_area .haslabel {
-  margin: 0 0 25px 0;
+  margin: 0px;
 }
 
 .validation-error-message {
@@ -164,13 +173,23 @@ input[type=radio]{
   font-size: .875rem;
 }
 
-.form__validation.validation-error-message-type-textfield,
+.form__validation.validation-error-message-type-password {
+  margin-top: 5px;
+}
+
+.form__validation.validation-error-message-type-textfield {
+  margin-top: -20px;
+  width: calc(100% - 25px);
+}
+
 .form__validation.validation-error-message-type-textfieldbox {
   margin-top: -20px;
+  width: calc(100% - 35px);
 }
 
 .form__validation {
   margin-top: 2px;
+  margin-bottom: 2px;
   padding-right: 0;
 }
 
@@ -298,7 +317,7 @@ input.number,
 
 .rightside-modal-container .control-contents {
 	flex-grow: 1;
-	padding: 10px 10px 5px 10px;
+	padding: 5px 10px 5px 10px;
 }
 
 .rightside-modal-container .control-title {
@@ -423,6 +442,10 @@ input.number,
   margin: 0px;
   margin-right: 5px;
 	transform: translateY(4px);
+}
+
+.button svg {
+	margin: 0px;
 }
 
 .button.button--disabled > svg:not(:root)  {
@@ -1179,9 +1202,9 @@ input[type=number][disabled].number--light+.number__spinnerdiv .numpinput__spinn
 	cursor: text;
 	font-size: 14px;
 	color: #152935;
+	padding: 4px 0px;
 }
 .panel-label {
-	padding-top: 7px;
 	font-weight: 600;
 }
 .panel-description {
@@ -1213,8 +1236,8 @@ input[type=number][disabled].number--light+.number__spinnerdiv .numpinput__spinn
 
 .link-text-container {
 	display: flex;
-	margin-left: -15px;
-	margin-bottom: 10px;
+	margin-left: -5px;
+	padding: 4px 0px;
 }
 
 .link-text-container > svg {

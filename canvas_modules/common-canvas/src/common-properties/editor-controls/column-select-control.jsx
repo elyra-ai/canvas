@@ -103,7 +103,7 @@ class ColumnSelectControl extends ColumnStructureTableEditor {
 		);
 
 		return (
-			<div className="properties-column-select">
+			<div className="properties-column-select" style={stateStyle}>
 				<MoveableTableRows
 					tableContainer={content}
 					control={this.props.control}

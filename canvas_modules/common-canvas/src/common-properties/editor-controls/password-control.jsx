@@ -26,7 +26,7 @@ export default class PasswordControl extends EditorControl {
 		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		const conditionProps = {
 			propertyId: this.props.propertyId,
-			controlType: "textfield"
+			controlType: "password"
 		};
 		const conditionState = this.getConditionMsgState(conditionProps);
 
