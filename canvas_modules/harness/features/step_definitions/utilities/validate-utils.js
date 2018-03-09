@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -264,6 +264,18 @@ function findCategoryElement(nodeCategory) {
 	return null;
 }
 
+function getSummaryFromName(summaryName) {
+	const summaries = browser.$$(".control-summary-configured-values");
+	let summary = null;
+	for (let idx = 0; idx < summaries.length; idx++) {
+		if (summaries[idx].$(".summary-label").getText() === summaryName) {
+			summary = summaries[idx];
+			break;
+		}
+	}
+	return summary;
+}
+
 module.exports = {
 	containLinkEvent: containLinkEvent,
 	containLinkInObjectModel: containLinkInObjectModel,
@@ -280,5 +292,6 @@ module.exports = {
 	getNodeIdForLabel: getNodeIdForLabel,
 	clickSVGAreaAt: clickSVGAreaAt,
 	findNodeIndexInPalette: findNodeIndexInPalette,
-	findCategoryElement: findCategoryElement
+	findCategoryElement: findCategoryElement,
+	getSummaryFromName: getSummaryFromName
 };

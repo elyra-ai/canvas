@@ -79,3 +79,13 @@ Feature: SummaryPanel
 			# close wide flyout
 			Then I click on the "OK" button
 			Then I verify the "Configure Derive Node" summary in the "Structure List Table" category contains more than ten rows
+
+		Scenario: Test if tips show up for the summary table values
+			Given I am on the test harness
+			Given I have toggled the app side common-properties panel
+			Then I have selected the "flyout" properties container type
+			Given I have uploaded JSON for common-properties "summaryPanel_paramDef.json"
+			Then I hover over the text "people in generation X" in summary "Values"
+			Then I verify the tip below the text "people in generation X" in summary "Values" is "visible"
+			Then I move the mouse to coordinates 300, 100
+			Then I verify the tip below the text "people in generation X" in summary "Values" is "hidden"

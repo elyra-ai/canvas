@@ -19,6 +19,7 @@ import { injectIntl, intlShape } from "react-intl";
 import isEmpty from "lodash/isEmpty";
 import PropertyUtils from "../util/property-utils";
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, CONTROL_TYPE } from "../constants/constants";
+import uuid4 from "uuid/v4";
 
 import Tooltip from "../../tooltip/tooltip.jsx";
 
@@ -125,8 +126,8 @@ class SummaryPanel extends EditorControl {
 										style={{ width: colWidth }}
 										onMouseMove={this._onMouseMove.bind(this)}
 									>
-										<Tooltip id={summaryControl.summaryLabel + "-" + rowIdx + "-" + colIdx} tip={contentValue} mousePos={this.state.mousePos}>
-											<span>{contentValue}</span>
+										<Tooltip id={uuid4()} tip={contentValue} mousePos={this.state.mousePos}>
+											<span id={"span_" + uuid4()}>{contentValue}</span>
 										</Tooltip>
 									</td>);
 							}
@@ -134,8 +135,8 @@ class SummaryPanel extends EditorControl {
 					} else if (this.props.controller.isSummary(propertyId) || showCustom) { // only push row data if control is in summary
 						rowData.push(
 							<td key={"control-summary-table-row-multi-data-" + rowIdx} className={"control-summary-table-row-multi-data"}>
-								<Tooltip id={summaryControl.summaryLabel + "-" + rowIdx} tip={rowValue} mousePos={this.state.mousePos}>
-									<span>{rowValue}</span>
+								<Tooltip id={uuid4()} tip={rowValue} mousePos={this.state.mousePos}>
+									<span id={"span_" + uuid4()}>{rowValue}</span>
 								</Tooltip>
 							</td>);
 					}

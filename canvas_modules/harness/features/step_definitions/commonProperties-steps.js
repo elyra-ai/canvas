@@ -1,12 +1,13 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
 
+import { getSummaryFromName } from "./utilities/validate-utils.js";
 import testUtils from "./utilities/test-utils.js";
 
 /* global browser */
@@ -350,6 +351,44 @@ module.exports = function() {
 	this.Then(/^I click the dropdown menu in the "([^"]*)" container$/, function(container) {
 		const dropdown = browser.$("#" + container).$(".Dropdown-placeholder");
 		dropdown.click();
+	});
+
+	/** Hovers over the given text in the summaryPanel
+	* @param text: value displayed in summary panels
+	* @param summaryName: name of summaryPanel
+	*/
+	this.Then(/^I hover over the text "([^"]*)" in summary "([^"]*)"$/, function(text, summaryName) {
+		const summary = getSummaryFromName(summaryName);
+		if (summary !== null) {
+			const values = summary.$$("span");
+			for (let idx = 0; idx < values.length; idx++) {
+				if (values[idx].getText() === text) {
+					browser.$("#" + values[idx].getAttribute("id")).moveToObject();
+					browser.pause(1000); // Wait for the tooltip to be displayed
+					break;
+				}
+			}
+		}
+	});
+
+	/** Verify the tooltip over the given text in the summaryPanel is 'visible'
+	* @param text: value displayed in summary panels
+	* @param summaryName: name of summaryPanel
+	* @param visible: string value of 'visible' when tooltip is showing, other values for tooltip hidden
+	*/
+	this.Then(/^I verify the tip below the text "([^"]*)" in summary "([^"]*)" is "([^"]*)"$/, function(text, summaryName, visible) {
+		const summary = getSummaryFromName(summaryName);
+		const tips = summary.$$(".common-canvas_tooltip");
+		let found = false;
+		for (let idx = 0; idx < tips.length; idx++) {
+			if (tips[idx].$("span").getText() === text) {
+				found = true;
+				expect(tips[idx].getAttribute("aria-hidden") === "false").toEqual(visible === "visible");
+				break;
+			}
+		}
+		// should have found the text for the tooltip in the summary table when tooltip is visible
+		expect(found).toEqual(visible === "visible");
 	});
 
 	/*
