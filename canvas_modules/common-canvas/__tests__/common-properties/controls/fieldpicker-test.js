@@ -522,16 +522,22 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		wrapper.update();
 		const fieldSummary = wrapper.find(".control-summary-table");
 		expect(fieldSummary).to.have.length(1);
-		expect(fieldSummary.find(".control-summary-list-rows")).to.have.length(3);
-		expect(fieldSummary.find(".control-summary-list-rows").at(0)
-			.text()
-			.trim()).to.equal("data_1.Timestamp");
-		expect(fieldSummary.find(".control-summary-list-rows").at(1)
-			.text()
-			.trim()).to.equal("data_2.Timestamp");
-		expect(fieldSummary.find(".control-summary-list-rows").at(2)
-			.text()
-			.trim()).to.equal("Date");
+		const summaryRows = fieldSummary.find(".control-summary-list-rows");
+		expect(summaryRows).to.have.length(3);
+
+		const expectedSummaryRows = [
+			"data_1.Timestamp",
+			"data_2.Timestamp",
+			"Date"
+		];
+
+		for (let idx = 0; idx < summaryRows.length; idx++) {
+			expect(summaryRows.at(idx)
+				.find("span")
+				.at(0)
+				.text()
+				.trim()).to.equal(expectedSummaryRows[idx]);
+		}
 	});
 
 	it("should be able to search 'time' and select all fields from all schemas", () => {
@@ -574,22 +580,24 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		wrapper.update();
 		const fieldSummary = wrapper.find(".control-summary-table");
 		expect(fieldSummary).to.have.length(1);
-		expect(fieldSummary.find(".control-summary-list-rows")).to.have.length(5);
-		expect(fieldSummary.find(".control-summary-list-rows").at(0)
-			.text()
-			.trim()).to.equal("0.Time");
-		expect(fieldSummary.find(".control-summary-list-rows").at(1)
-			.text()
-			.trim()).to.equal("data_1.Time");
-		expect(fieldSummary.find(".control-summary-list-rows").at(2)
-			.text()
-			.trim()).to.equal("data_1.Timestamp");
-		expect(fieldSummary.find(".control-summary-list-rows").at(3)
-			.text()
-			.trim()).to.equal("data_2.Time");
-		expect(fieldSummary.find(".control-summary-list-rows").at(4)
-			.text()
-			.trim()).to.equal("data_2.Timestamp");
+		const summaryRows = fieldSummary.find(".control-summary-list-rows");
+		expect(summaryRows).to.have.length(5);
+
+		const expectedSummaryRows = [
+			"0.Time",
+			"data_1.Time",
+			"data_1.Timestamp",
+			"data_2.Time",
+			"data_2.Timestamp"
+		];
+
+		for (let idx = 0; idx < summaryRows.length; idx++) {
+			expect(summaryRows.at(idx)
+				.find("span")
+				.at(0)
+				.text()
+				.trim()).to.equal(expectedSummaryRows[idx]);
+		}
 	});
 
 	it("should be able to search 'time', filter 'time', and selct all fields", () => {
@@ -623,9 +631,13 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		expect(fieldSummary).to.have.length(1);
 		expect(fieldSummary.find(".control-summary-list-rows")).to.have.length(2);
 		expect(fieldSummary.find(".control-summary-list-rows").at(0)
+			.find("span")
+			.at(0)
 			.text()
 			.trim()).to.equal("data_1.Timestamp");
 		expect(fieldSummary.find(".control-summary-list-rows").at(1)
+			.find("span")
+			.at(0)
 			.text()
 			.trim()).to.equal("data_2.Timestamp");
 	});
@@ -711,15 +723,22 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		wrapper.update();
 		const fieldSummary = wrapper.find(".control-summary-table");
 		expect(fieldSummary).to.have.length(1);
-		expect(fieldSummary.find(".control-summary-list-rows")).to.have.length(3);
-		expect(fieldSummary.find(".control-summary-list-rows").at(0)
-			.text()
-			.trim()).to.equal("0.Age");
-		expect(fieldSummary.find(".control-summary-list-rows").at(1)
-			.text()
-			.trim()).to.equal("age");
-		expect(fieldSummary.find(".control-summary-list-rows").at(2)
-			.text()
-			.trim()).to.equal("data_1.Age");
+
+		const summaryRows = fieldSummary.find(".control-summary-list-rows");
+		expect(summaryRows).to.have.length(3);
+
+		const expectedSummaryRows = [
+			"0.Age",
+			"age",
+			"data_1.Age"
+		];
+
+		for (let idx = 0; idx < summaryRows.length; idx++) {
+			expect(summaryRows.at(idx)
+				.find("span")
+				.at(0)
+				.text()
+				.trim()).to.equal(expectedSummaryRows[idx]);
+		}
 	});
 });

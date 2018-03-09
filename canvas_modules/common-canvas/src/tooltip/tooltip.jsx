@@ -247,7 +247,7 @@ class ToolTip extends React.Component {
 		}
 
 		return (
-			<div>
+			<div className="tooltip-container">
 				{triggerContent}
 				<div id={this.props.id} className="common-canvas_tooltip" style={style} aria-hidden={!this.state.showToolTip} direction={this.props.direction}>
 					<svg id="tipArrow" x="0px" y="0px" viewBox="0 0 9.1 16.1">

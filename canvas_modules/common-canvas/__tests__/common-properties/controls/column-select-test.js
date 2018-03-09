@@ -308,8 +308,12 @@ describe("selectcolumns with multi input schemas renders correctly", () => {
 		const summary = valuesCategory.find(".control-summary.control-panel").at(0);
 		expect(summary.find(".control-summary-list-rows")).to.have.length(2);
 		expect(summary.find(".control-summary-list-rows").at(0)
+			.find("span")
+			.at(0)
 			.text()).to.equal("1.age");
 		expect(summary.find(".control-summary-list-rows").at(1)
+			.find("span")
+			.at(0)
 			.text()).to.equal("1.AGE");
 	});
 });

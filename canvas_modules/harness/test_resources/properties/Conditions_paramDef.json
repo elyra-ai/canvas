@@ -145,7 +145,16 @@
         "nominal"
       ]
     ],
-    "dummy_types": [],
+    "dummy_types": [
+      [
+        "Age",
+        true,
+        "Soccer",
+        "Don't show",
+        true,
+        "some long text description"
+      ]
+    ],
     "expressionCellTable": [
       [
         "BabyBoomer",

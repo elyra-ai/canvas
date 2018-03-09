@@ -14,8 +14,15 @@ import { expect } from "chai";
 import { ReactWrapper } from "enzyme";
 
 describe("summary renders correctly", () => {
-	const renderedObject = propertyUtils.flyoutEditorForm(summarypanelParamDef);
-	const wrapper = renderedObject.wrapper;
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(JSON.parse(JSON.stringify(summarypanelParamDef)));
+		wrapper = renderedObject.wrapper;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
 
 	it("should have displayed the initial values in the summary", () => {
 		const summaries = wrapper.find(".control-summary-configured-values");
@@ -24,7 +31,14 @@ describe("summary renders correctly", () => {
 		expect(sortSummaryRows).to.have.length(1);
 
 		const sortRow1 = sortSummaryRows.at(0);
+		const sortRow1Texts = sortRow1.find(".control-summary-table-row-multi-data").at(0)
+			.find("span");
+		expect(sortRow1Texts.at(0).text()
+			.trim()).to.equal("Cholesterol");
+
 		expect(sortRow1.find(".control-summary-table-row-multi-data").at(0)
+			.find("span")
+			.at(1)
 			.text()
 			.trim()).to.equal("Cholesterol");
 	});
@@ -87,7 +101,7 @@ describe("summary panel renders error/warning status correctly", () => {
 		let wideflyoutWrapper = new ReactWrapper(wfhtml, true);
 		const tableBody = wideflyoutWrapper.find("#flexible-table-container").at(0);
 		const tableData = tableBody.find(".reactable-data");
-		const row = tableData.childAt(0);
+		let row = tableData.childAt(1);
 		row.simulate("click");
 
 		// ensure remove button is enabled and click it
@@ -95,6 +109,11 @@ describe("summary panel renders error/warning status correctly", () => {
 		expect(enabledRemoveColumnButton).to.have.length(2);
 		expect(enabledRemoveColumnButton.at(0).prop("disabled")).to.be.undefined;
 		expect(enabledRemoveColumnButton.at(1).prop("disabled")).to.equal(true);
+		enabledRemoveColumnButton.at(0).simulate("click");
+
+		// remove second row
+		row = tableData.childAt(0);
+		row.simulate("click");
 		enabledRemoveColumnButton.at(0).simulate("click");
 
 		// close fly-out
@@ -145,7 +164,7 @@ describe("summary panel renders error/warning status correctly", () => {
 		let wideflyoutWrapper = new ReactWrapper(wfhtml, true);
 		const tableBody = wideflyoutWrapper.find("#flexible-table-container").at(0);
 		const tableData = tableBody.find(".reactable-data");
-		const row = tableData.childAt(0);
+		let row = tableData.childAt(0);
 		row.simulate("click");
 
 		// ensure remove button is enabled and click it
@@ -153,6 +172,11 @@ describe("summary panel renders error/warning status correctly", () => {
 		expect(enabledRemoveColumnButton).to.have.length(2);
 		expect(enabledRemoveColumnButton.at(0).prop("disabled")).to.be.undefined;
 		expect(enabledRemoveColumnButton.at(1).prop("disabled")).to.equal(true);
+		enabledRemoveColumnButton.at(0).simulate("click");
+
+		// remove second row
+		row = tableData.childAt(0);
+		row.simulate("click");
 		enabledRemoveColumnButton.at(0).simulate("click");
 
 		// remove all rows from Table Input table

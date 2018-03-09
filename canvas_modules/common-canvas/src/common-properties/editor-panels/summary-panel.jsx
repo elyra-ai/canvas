@@ -20,6 +20,7 @@ import isEmpty from "lodash/isEmpty";
 import PropertyUtils from "../util/property-utils";
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, CONTROL_TYPE } from "../constants/constants";
 
+import Tooltip from "../../tooltip/tooltip.jsx";
 
 class SummaryPanel extends EditorControl {
 	constructor(props) {
@@ -31,6 +32,10 @@ class SummaryPanel extends EditorControl {
 		this.hideWideFlyout = this.hideWideFlyout.bind(this);
 		this.cancelWideFlyout = this.cancelWideFlyout.bind(this);
 		this._getSummaryTables = this._getSummaryTables.bind(this);
+	}
+
+	_onMouseMove(evt) {
+		this.setState({ mousePos: { x: evt.clientX, y: evt.clientY } });
 	}
 
 	hideWideFlyout() {
@@ -83,6 +88,23 @@ class SummaryPanel extends EditorControl {
 			}
 			const summaryValues = [];
 			if (Array.isArray(controlValue)) {
+				let summaryColumns = 0;
+				if (summaryControl.subControls) {
+					for (let idx = 0; idx < summaryControl.subControls.length; idx++) {
+						const colPropertyId = {
+							name: propertyId.name,
+							col: idx
+						};
+						if (this.props.controller.isSummary(colPropertyId) || showCustom) {
+							summaryColumns++;
+						}
+					}
+				} else if (summaryControl.summary) {
+					summaryColumns = 1;
+				}
+				// subtract 2 px for some buffer between columns
+				const colWidth = summaryColumns !== 0 ? "calc((100% / " + summaryColumns + ") - 2px)" : "100%";
+
 				for (let rowIdx = 0; rowIdx < controlValue.length; rowIdx++) {
 					const rowValue = controlValue[rowIdx];
 					const rowData = [];
@@ -98,15 +120,23 @@ class SummaryPanel extends EditorControl {
 								const contentValue = JSON.stringify(rowValue[colIdx]).replace("\"", "")
 									.replace(new RegExp("\"", "g"), "") + " ";
 								rowData.push(
-									<td key={"control-summary-table-row-multi-data-" + colIdx} className={"control-summary-table-row-multi-data"}>
-										{ contentValue }
+									<td key={"control-summary-table-row-multi-data-" + colIdx}
+										className={"control-summary-table-row-multi-data"}
+										style={{ width: colWidth }}
+										onMouseMove={this._onMouseMove.bind(this)}
+									>
+										<Tooltip id={summaryControl.summaryLabel + "-" + rowIdx + "-" + colIdx} tip={contentValue} mousePos={this.state.mousePos}>
+											<span>{contentValue}</span>
+										</Tooltip>
 									</td>);
 							}
 						}
 					} else if (this.props.controller.isSummary(propertyId) || showCustom) { // only push row data if control is in summary
 						rowData.push(
 							<td key={"control-summary-table-row-multi-data-" + rowIdx} className={"control-summary-table-row-multi-data"}>
-								{rowValue}
+								<Tooltip id={summaryControl.summaryLabel + "-" + rowIdx} tip={rowValue} mousePos={this.state.mousePos}>
+									<span>{rowValue}</span>
+								</Tooltip>
 							</td>);
 					}
 					if (rowData.length > 0) {

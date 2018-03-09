@@ -1368,6 +1368,8 @@ describe("ColumnStructureTableControl with multi input schemas renders correctly
 
 		for (let idx = 0; idx < firstSummary.length; idx++) {
 			expect(firstSummary.find(".control-summary-list-rows").at(idx)
+				.find("span")
+				.at(0)
 				.text()
 				.trim()).to.equal(expectedSummary[idx]);
 		}
@@ -1455,16 +1457,28 @@ describe("ColumnStructureTableControl with multi input schemas renders correctly
 
 		const summaryRow0 = thirdSummary.find(".control-summary-list-rows").at(0)
 			.find(".control-summary-table-row-multi-data");
-		expect(summaryRow0.at(0).text()
+		expect(summaryRow0.at(0)
+			.find("span")
+			.at(0)
+			.text()
 			.trim()).to.equal("Cholesterol");
-		expect(summaryRow0.at(1).text()
+		expect(summaryRow0.at(1)
+			.find("span")
+			.at(0)
+			.text()
 			.trim()).to.equal("data");
 
 		const summaryRow1 = thirdSummary.find(".control-summary-list-rows").at(1)
 			.find(".control-summary-table-row-multi-data");
-		expect(summaryRow1.at(0).text()
+		expect(summaryRow1.at(0)
+			.find("span")
+			.at(0)
+			.text()
 			.trim()).to.equal("data.Age");
-		expect(summaryRow1.at(1).text()
+		expect(summaryRow1.at(1)
+			.find("span")
+			.at(0)
+			.text()
 			.trim()).to.equal("0");
 	});
 

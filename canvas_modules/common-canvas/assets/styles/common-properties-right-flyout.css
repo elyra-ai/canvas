@@ -190,12 +190,15 @@
 }
 
 .control-summary-table {
-	/*padding: 0px;
-	margin: 0px;*/
 	max-height: 270px;
 	overflow: auto;
-	width: 100%;
+	width: calc(100% - 10px);
 	margin-left: 10px;
+	display: flex;
+}
+
+.control-summary-table > tbody {
+	width: 100%;
 }
 
 .control-summary-table.disabled {
@@ -206,9 +209,13 @@
 	color: #5a6872;
 }
 
-.control-summary-table-rows {
-	/*list-style: none;
-	padding: 2px 0px;*/
+.control-summary-table-row-multi-data > .tooltip-container > div:first-child {
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.control-summary-list-rows {
 	display: flex;
 	justify-content: space-between;
 }

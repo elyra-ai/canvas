@@ -7,6 +7,10 @@
       [
         "BabyBoomer",
         "Age >= 55"
+      ],
+      [
+        "people in generation X",
+        "Year >= 1966 && Year <= 1976"
       ]
     ],
     "enableSortByTable": true,
