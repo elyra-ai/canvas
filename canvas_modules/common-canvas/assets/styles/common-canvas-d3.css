@@ -110,7 +110,6 @@
 	fill: #efc100; /* Warning yellow */
 }
 
-
 .d3-label-outline {
 	fill: #dfe3e6;
 	stroke: #aeaeae;
@@ -137,6 +136,16 @@
 	fill: none;
 	stroke: #5aaafa;
 	stroke-width: 8;
+}
+
+.d3-node-menu {
+	fill: #3d70b2;
+	stroke-width: 0;
+}
+
+.d3-node-menu:hover {
+	fill: #5596e6;
+	stroke-width: 0;
 }
 
 /* Error indicator */

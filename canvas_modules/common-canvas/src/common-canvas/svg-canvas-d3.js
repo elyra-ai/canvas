@@ -17,9 +17,7 @@
 var d3 = Object.assign({}, require("d3-drag"), require("d3-selection"), require("d3-zoom"));
 import { event as d3Event } from "d3-selection";
 import union from "lodash/union";
-import nodeMenuStandardIcon from "../../assets/images/canvas_node_icons/node-menu_standard.svg";
-import nodeMenuHoverIcon from "../../assets/images/canvas_node_icons/node-menu_hover.svg";
-import { TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK } from "../../constants/common-constants.js";
+import { NODE_MENU_ICON, TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK } from "../../constants/common-constants.js";
 
 const BACKSPACE_KEY = 8;
 const DELETE_KEY = 46;
@@ -893,19 +891,14 @@ export default class CanvasD3Layout {
 						if (that.layout.connectionType === "ports") {
 							that.canvas.select(that.getId("#node_body", d.id)).attr("hover", "yes");
 							d3.select(this)
-								.append("image")
+								.append("svg")
 								.attr("id", that.getId("node_ellipsis"))
-								.attr("xlink:href", nodeMenuStandardIcon)
+								.attr("class", "d3-node-menu")
+								.html(NODE_MENU_ICON)
 								.attr("width", that.layout.ellipsisWidth)
 								.attr("height", that.layout.ellipsisHeight)
 								.attr("x", that.layout.ellipsisPosX)
 								.attr("y", (nd) => that.getEllipsisPosY(nd))
-								.on("mouseenter", () => {
-									that.canvas.select(that.getId("#node_ellipsis")).attr("xlink:href", nodeMenuHoverIcon);
-								})
-								.on("mouseleave", () => {
-									that.canvas.select(that.getId("#node_ellipsis")).attr("xlink:href", nodeMenuStandardIcon);
-								})
 								.on("click", () => {
 									that.stopPropagationAndPreventDefault();
 									that.openContextMenu("node", d);
