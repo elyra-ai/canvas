@@ -16,7 +16,7 @@ import ReactTooltip from "react-tooltip";
 import { injectIntl, intlShape } from "react-intl";
 import { Table, Thead, Th } from "reactable";
 import TextField from "ap-components-react/dist/components/TextField";
-import Icon from "../../icons/Icon.jsx";
+import Icon from "../../icons/icon.jsx";
 import PropertyUtils from "../util/property-utils";
 
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "../constants/constants";

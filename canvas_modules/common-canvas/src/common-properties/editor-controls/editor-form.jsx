@@ -32,7 +32,7 @@ import FieldPicker from "./field-picker.jsx";
 
 import { injectIntl, intlShape } from "react-intl";
 
-import Icon from "../../icons/Icon.jsx";
+import Icon from "../../icons/icon.jsx";
 
 const ALERT_TAB_GROUP = "alertMsgs";
 

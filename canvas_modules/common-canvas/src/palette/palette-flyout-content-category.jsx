@@ -9,7 +9,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import Icon from "../icons/Icon";
+import Icon from "../icons/icon.jsx";
 
 class PaletteFlyoutContentCategory extends React.Component {
 	constructor(props) {

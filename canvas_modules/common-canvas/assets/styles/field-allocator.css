@@ -83,17 +83,8 @@ select option {
 	padding-bottom: 2px;
 }
 
-select option:active {
-  color: #f5f7fa;
-}
-
-select option:checked {
-  color: #f5f7fa;
-}
-
-select:-internal-list-box option:checked {
-    background-color: #dfe3e6;
-    color: green;
+select option:active, select option:checked {
+	box-shadow: inset 0px 22px #dfe3e6;
 }
 
 #allocator-button {

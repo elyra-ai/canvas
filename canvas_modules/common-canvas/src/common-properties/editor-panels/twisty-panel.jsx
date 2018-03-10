@@ -14,7 +14,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import EditorControl from "../editor-controls/editor-control.jsx";
 import { injectIntl, intlShape } from "react-intl";
-import Icon from "../../icons/Icon.jsx";
+import Icon from "../../icons/icon.jsx";
 
 class TwistyPanel extends EditorControl {
 	constructor(props) {

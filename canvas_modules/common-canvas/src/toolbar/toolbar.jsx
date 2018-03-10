@@ -11,7 +11,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import Tooltip from "../tooltip/tooltip.jsx";
 import ObserveSize from "react-observe-size";
-import Icon from "../icons/Icon.jsx";
+import Icon from "../icons/icon.jsx";
 import { TOOLBAR } from "../../constants/common-constants.js";
 
 // eslint override

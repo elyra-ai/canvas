@@ -22,7 +22,7 @@ import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./constants/constants";
 import { FLYOUT_WIDTH } from "../constants/constants";
 import { Size } from "./constants/form-constants";
 import isEqual from "lodash/isEqual";
-import Icon from "../icons/Icon.jsx";
+import Icon from "../icons/icon.jsx";
 import { injectIntl, intlShape } from "react-intl";
 
 import TextField from "ap-components-react/dist/components/TextField";

@@ -25,7 +25,7 @@ import { injectIntl, intlShape } from "react-intl";
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "../constants/constants";
 import { DATA_TYPES, TOOL_TIP_DELAY } from "../constants/constants.js";
 import { ParamRole } from "../constants/form-constants";
-import Icon from "../../icons/Icon.jsx";
+import Icon from "../../icons/icon.jsx";
 
 import sortBy from "lodash/sortBy";
 

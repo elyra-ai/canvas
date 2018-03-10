@@ -10,7 +10,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import APIcon from "ap-components-react/dist/components/Icon";
-import Icon from "../../icons/Icon.jsx";
+import Icon from "../../icons/icon.jsx";
 
 export default class ValidationIcon extends React.Component {
 	constructor(props) {

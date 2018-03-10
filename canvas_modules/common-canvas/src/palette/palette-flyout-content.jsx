@@ -11,7 +11,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import PaletteFlyoutContentCategory from "./palette-flyout-content-category.jsx";
 import PaletteContentList from "./palette-content-list.jsx";
-import Icon from "../icons/Icon.jsx";
+import Icon from "../icons/icon.jsx";
 import TextField from "ap-components-react/dist/components/TextField";
 
 class PaletteFlyoutContent extends React.Component {
