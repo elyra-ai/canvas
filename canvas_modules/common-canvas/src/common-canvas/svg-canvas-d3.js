@@ -14,7 +14,7 @@
 
 // Import just the D3 modules that are needed. Doing this means that the
 // d3Event object needs to be explicitly imported.
-var d3 = Object.assign({}, require("d3-drag"), require("d3-selection"), require("d3-zoom"));
+var d3 = Object.assign({}, require("d3-drag"), require("d3-ease"), require("d3-selection"), require("d3-zoom"));
 import { event as d3Event } from "d3-selection";
 import union from "lodash/union";
 import { NODE_MENU_ICON, TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK } from "../../constants/common-constants.js";
