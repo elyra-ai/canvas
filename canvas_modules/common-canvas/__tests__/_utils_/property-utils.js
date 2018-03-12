@@ -126,9 +126,15 @@ function dropDown(wrapper, idx, value, expectedOptions) {
 		.setValue(value.value, value.label); // set the dropdown value.
 }
 
+function selectCheckbox(wrapper, idx, id) {
+	const integerCheckbox = wrapper.find("input[type='checkbox']").at(idx);
+	integerCheckbox.simulate("change", { target: { checked: true, id: id } });
+}
+
 module.exports = {
 	flyoutEditorForm: flyoutEditorForm,
 	createEditorForm: createEditorForm,
 	fieldPicker: fieldPicker,
-	dropDown: dropDown
+	dropDown: dropDown,
+	selectCheckbox: selectCheckbox
 };

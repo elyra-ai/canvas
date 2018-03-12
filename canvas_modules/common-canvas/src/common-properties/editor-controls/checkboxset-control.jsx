@@ -20,7 +20,10 @@ export default class CheckboxsetControl extends EditorControl {
 	}
 
 	handleChange(evt) {
-		var values = this.props.controller.getPropertyValue(this.props.propertyId);
+		let values = this.props.controller.getPropertyValue(this.props.propertyId);
+		if (typeof values === "undefined" || values === null) {
+			values = [];
+		}
 		var index = values.indexOf(evt.target.id);
 		if (evt.target.checked && index < 0) {
 			// Add to values
@@ -34,7 +37,10 @@ export default class CheckboxsetControl extends EditorControl {
 	}
 
 	render() {
-		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
+		let controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
+		if (typeof controlValue === "undefined" || controlValue === null) {
+			controlValue = [];
+		}
 		const conditionProps = {
 			propertyId: this.props.propertyId,
 			controlType: "checkboxset"
