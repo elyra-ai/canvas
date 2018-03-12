@@ -42,6 +42,16 @@ describe("summary renders correctly", () => {
 			.text()
 			.trim()).to.equal("Cholesterol");
 	});
+	it("should open fieldpicker when type unknown", () => {
+		const category = wrapper.find(".category-title-container-right-flyout-panel").at(1); // COLUMN STRUCTURE TABLE category
+		const summaryButton = category.find("Button");
+		summaryButton.simulate("click");
+		const wfhtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
+		const wideflyoutWrapper = new ReactWrapper(wfhtml, true);
+		const addFieldsButtons = wideflyoutWrapper.find("#add-fields-button"); // field picker buttons
+		addFieldsButtons.at(0).simulate("click");
+		propertyUtils.fieldPicker(["Age"], ["Age", "Sex", "BP", "Cholesterol", "Na", "K", "Drug"]);
+	});
 });
 
 describe("summary panel renders correctly", () => {

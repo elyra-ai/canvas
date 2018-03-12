@@ -436,7 +436,11 @@ export default class Icon extends React.Component {
 		return types[type];
 	}
 	render() {
-		return this.getIcon(this.props.type);
+		let icon = this.getIcon(this.props.type);
+		if (!icon) {
+			icon = <div />;
+		}
+		return icon;
 	}
 }
 Icon.propTypes = {

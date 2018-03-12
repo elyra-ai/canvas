@@ -547,7 +547,7 @@
         },
         {
           "name": "Na",
-          "type": "double",
+          "type": "unknown",
           "metadata": {
             "description": "",
             "measure": "range",
