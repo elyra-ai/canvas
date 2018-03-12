@@ -82,6 +82,10 @@ class CommonPropertiesComponents extends React.Component {
 		this.setRightFlyoutState = this.setRightFlyoutState.bind(this);
 		this.actionHandler = this.actionHandler.bind(this);
 		this.controllerHandler = this.controllerHandler.bind(this);
+
+		this.flyoutActionHandler = this.flyoutActionHandler.bind(this);
+		this.flyoutControllerHandler = this.flyoutControllerHandler.bind(this);
+
 		this.twistyActionHandler = this.twistyActionHandler.bind(this);
 		this.twistyControllerHandler = this.twistyControllerHandler.bind(this);
 
@@ -121,6 +125,14 @@ class CommonPropertiesComponents extends React.Component {
 		this.propertiesController = propertiesController;
 	}
 
+	flyoutControllerHandler(propertiesController) {
+		this.flyoutController = propertiesController;
+	}
+
+	twistyControllerHandler(propertiesController) {
+		this.twistyPropertiesController = propertiesController;
+	}
+
 	actionHandler(actionId, appData, data) {
 		if (actionId === "increment") {
 			const propertyId = { name: data.parameter_ref };
@@ -133,15 +145,25 @@ class CommonPropertiesComponents extends React.Component {
 			this.propertiesController.updatePropertyValue(propertyId, value -= 1);
 		}
 	}
-	twistyControllerHandler(propertiesController) {
-		this.twistyPropertiesController = propertiesController;
-	}
 
 	twistyActionHandler(actionId, appData, data) {
 		if (actionId === "increment") {
 			const propertyId = { name: data.parameter_ref };
 			let value = this.twistyPropertiesController.getPropertyValue(propertyId);
 			this.twistyPropertiesController.updatePropertyValue(propertyId, value += 1);
+		}
+	}
+
+	flyoutActionHandler(actionId, appData, data) {
+		if (actionId === "increment") {
+			const propertyId = { name: data.parameter_ref };
+			let value = this.flyoutController.getPropertyValue(propertyId);
+			this.flyoutController.updatePropertyValue(propertyId, value += 1);
+		}
+		if (actionId === "decrement") {
+			const propertyId = { name: data.parameter_ref };
+			let value = this.flyoutController.getPropertyValue(propertyId);
+			this.flyoutController.updatePropertyValue(propertyId, value -= 1);
 		}
 	}
 
@@ -1668,6 +1690,8 @@ class CommonPropertiesComponents extends React.Component {
 				<CommonProperties
 					showPropertiesDialog
 					propertiesInfo={this.state.rightFlyoutContent}
+					actionHandler={this.flyoutActionHandler}
+					controllerHandler={this.flyoutControllerHandler}
 					containerType="Custom"
 					applyLabel="Apply"
 					rejectLabel="Reject"
