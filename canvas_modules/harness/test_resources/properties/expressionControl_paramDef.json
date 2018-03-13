@@ -91,7 +91,7 @@
           "default": "Enter a Clem expression"
         },
         "text_before": {
-          "default": "Press ctrl-shift to autocomplete"
+          "default": "Press ctrl-space to autocomplete"
         }
       },
       {

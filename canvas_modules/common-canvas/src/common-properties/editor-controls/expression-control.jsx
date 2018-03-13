@@ -34,6 +34,7 @@ export default class ExpressionControl extends EditorControl {
 		super(props);
 
 		this.origHint = "";
+		this.cursor = { line: 0, ch: 0 };
 
 		this.handleChange = this.handleChange.bind(this);
 		this.editorDidMount = this.editorDidMount.bind(this);
@@ -117,6 +118,7 @@ export default class ExpressionControl extends EditorControl {
 	}
 
 	handleChange(editor, data, value) {
+		this.cursor = editor.getCursor();
 		this.props.controller.updatePropertyValue(this.props.propertyId, value);
 	}
 
@@ -162,6 +164,7 @@ export default class ExpressionControl extends EditorControl {
 								onChange={this.handleChange}
 								editorDidMount={this.editorDidMount}
 								value={controlValue}
+								cursor={this.cursor}
 							/>
 						</div>
 						{icon}
