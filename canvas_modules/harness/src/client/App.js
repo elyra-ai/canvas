@@ -869,7 +869,7 @@ class App extends React.Component {
 				}
 			};
 			dm[0].fields.push(newField);
-			this.propertiesController.setDatasetMetadata(dm);
+			this.propertiesController.setDatasetMetadata(dm[0]);
 		}
 		this.log("propertyActionHandler() " + actionId);
 	}

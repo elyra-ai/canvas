@@ -68,7 +68,8 @@ const propStates = {
 	}
 };
 deepFreeze(propStates);
-const dataModel = {
+
+const v1DataModel = {
 	"fields": [
 		{
 			"name": "age",
@@ -99,6 +100,38 @@ const dataModel = {
 		}
 	]
 };
+deepFreeze(v1DataModel);
+const dataModel = [{
+	"fields": [
+		{
+			"name": "age",
+			"type": "integer",
+			"metadata": {
+				"description": "",
+				"measure": "range",
+				"modeling_role": "input"
+			}
+		},
+		{
+			"name": "BP",
+			"type": "string",
+			"metadata": {
+				"description": "",
+				"measure": "discrete",
+				"modeling_role": "input"
+			}
+		},
+		{
+			"name": "Na",
+			"type": "double",
+			"metadata": {
+				"description": "",
+				"measure": "range",
+				"modeling_role": "input"
+			}
+		}
+	]
+}];
 deepFreeze(dataModel);
 const errorMessages = {
 	param_int: {
@@ -276,10 +309,28 @@ describe("Properties Controller states", () => {
 });
 
 describe("Properties Controller datasetMetadata", () => {
-	it("should set datasetMetadata correctly", () => {
+	it("should set datasetMetadata correctly.", () => {
 		reset();
 		const actualValue = controller.getDatasetMetadata();
 		expect(isEqual(dataModel, actualValue)).to.be.true;
+	});
+	it("should set datasetMetadata correctly when datamodel isn't an array.", () => {
+		reset();
+		controller.setDatasetMetadata(v1DataModel);
+		const actualValue = controller.getDatasetMetadata();
+		expect(isEqual(dataModel, actualValue)).to.be.true;
+	});
+	it("should set datasetMetadata correctly when datamodel is null.", () => {
+		reset();
+		controller.setDatasetMetadata(null);
+		const actualValue = controller.getDatasetMetadata();
+		expect(actualValue).to.eql([]);
+	});
+	it("should set datasetMetadata correctly when datamodel is undefined.", () => {
+		reset();
+		controller.setDatasetMetadata();
+		const actualValue = controller.getDatasetMetadata();
+		expect(actualValue).to.eql([]);
 	});
 });
 describe("Properties Controller property messages", () => {

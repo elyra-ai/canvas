@@ -12,7 +12,7 @@ import { SET_DATASET_METADATA } from "../actions";
 function datasetMetadata(state = [], action) {
 	switch (action.type) {
 	case SET_DATASET_METADATA:
-		if (typeof action.datasetMetadata === "undefined") {
+		if (!action.datasetMetadata) {
 			return [];
 		}
 		return JSON.parse(JSON.stringify(action.datasetMetadata));

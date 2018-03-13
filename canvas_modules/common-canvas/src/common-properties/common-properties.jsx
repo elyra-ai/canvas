@@ -119,11 +119,6 @@ class CommonProperties extends React.Component {
 			if (formData && formData.data && formData.data.inputDataModel && !formData.data.datasetMetadata) {
 				formData.data.datasetMetadata = this.convertInputDataModel(formData.data.inputDataModel);
 			}
-
-			// TODO: This can be removed once we no longer support a single datarecord object
-			if (!Array.isArray(formData.data.datasetMetadata)) {
-				formData.data.datasetMetadata = [formData.data.datasetMetadata];
-			}
 		} catch (error) {
 			logger.error("Error generating form in common-properties: " + error);
 		}

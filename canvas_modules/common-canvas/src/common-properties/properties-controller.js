@@ -448,7 +448,12 @@ export default class PropertiesController {
 	}
 
 	setDatasetMetadata(datasetMetadata) {
-		return this.propertiesStore.setDatasetMetadata(datasetMetadata);
+		// in the 2.0 schema only arrays are support but we want to support both for now.  Internally everything should be an array
+		if (datasetMetadata && !Array.isArray(datasetMetadata)) {
+			this.propertiesStore.setDatasetMetadata([datasetMetadata]);
+		} else {
+			this.propertiesStore.setDatasetMetadata(datasetMetadata);
+		}
 	}
 
 	validateInput(propertyId) {
