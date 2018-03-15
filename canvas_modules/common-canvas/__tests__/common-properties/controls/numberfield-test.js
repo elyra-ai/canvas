@@ -204,7 +204,7 @@ describe("condition messages renders correctly with numberfield control", () => 
 
 		const input = wrapper.find("input[id='editor-control-numberfieldSeed']");
 		expect(input).to.have.length(1);
-		input.simulate("change", { target: { value: "" } });
+		input.simulate("change", { target: { value: "", validity: { badInput: false } } });
 		wrapper.update();
 
 		const numberfieldSeedErrorMessages = {
@@ -250,7 +250,7 @@ describe("condition messages renders correctly with numberfield control", () => 
 
 		const input = wrapper.find("input[id='editor-control-numberfieldCheckpointInterval']");
 		expect(input).to.have.length(1);
-		input.simulate("change", { target: { value: "" } });
+		input.simulate("change", { target: { value: "", validity: { badInput: false } } });
 		wrapper.update();
 
 		const numberfieldCheckpointIntervalErrorMessages = {
@@ -273,12 +273,12 @@ describe("condition messages should add alerts tab", () => {
 
 		let integerInput = wrapper.find("input[id='editor-control-number_int']");
 		expect(integerInput).to.have.length(1);
-		integerInput.simulate("change", { target: { value: "" } });
+		integerInput.simulate("change", { target: { value: "", validity: { badInput: false } } });
 		wrapper.update();
 
 		const randomInput = wrapper.find("input[id='editor-control-number_random']");
 		expect(randomInput).to.have.length(1);
-		randomInput.simulate("change", { target: { value: "" } });
+		randomInput.simulate("change", { target: { value: "", validity: { badInput: false } } });
 		wrapper.update();
 
 		// get alerts tabs
@@ -372,7 +372,7 @@ describe("NumberField control works correctly", () => {
 	it("should allow a null value to be set in an integer field", () => {
 		const numPropertyId = { name: "number_int" };
 		const integerNumber = wrapper.find("#editor-control-number_int");
-		integerNumber.simulate("change", { target: { value: "" } });
+		integerNumber.simulate("change", { target: { value: "", validity: { badInput: false } } });
 		expect(renderedController.getPropertyValue(numPropertyId)).to.equal(null);
 	});
 	it("should not allow a double value to be set in an integer field", () => {
@@ -392,6 +392,22 @@ describe("NumberField control works correctly", () => {
 		const doubleNumber = wrapper.find("#editor-control-number_dbl");
 		doubleNumber.simulate("change", { target: { value: "4.04" } });
 		expect(renderedController.getPropertyValue(numPropertyId)).to.equal(4.04);
+	});
+	it("should allow a delete of a decimal value to be set in a double field", () => {
+		// this is a special case.  It simulates a double number ".3" delete with a backspace
+		// it is a particular case handled in the code.
+		const numPropertyId = { name: "number_dbl" };
+		const doubleNumber = wrapper.find("#editor-control-number_dbl");
+		doubleNumber.simulate("change", { target: { value: ".3", validity: { badInput: false } } });
+		expect(renderedController.getPropertyValue(numPropertyId)).to.equal(0.3);
+		doubleNumber.simulate("change", { target: { value: "", validity: { badInput: true } } });
+		expect(renderedController.getPropertyValue(numPropertyId)).to.equal(null);
+	});
+	it("should not allow a bad value to be set in a field", () => {
+		const numPropertyId = { name: "number_int" };
+		const integerNumber = wrapper.find("#editor-control-number_int");
+		integerNumber.simulate("change", { target: { value: "", validity: { badInput: true } } });
+		expect(renderedController.getPropertyValue(numPropertyId)).to.equal(10);
 	});
 	it("should render the correct default value ", () => {
 		const numPropertyId = { name: "number_default" };

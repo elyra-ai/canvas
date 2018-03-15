@@ -31,49 +31,47 @@ export default class NumberfieldControl extends EditorControl {
 	}
 
 	handleChange(evt) {
+		// if an invalid character is entered then do not accept the character.
+		// if the original value starts with "." then it is a case of deleting (backspace) a double value ".2"
+		// in this case we do not want to return, we want to change the value.
+		if (evt.target.value === "" && evt.target.validity.badInput && !this._isValidStartChar(this.stringValue)) {
+			return;
+		}
+
 		var originalValue = JSON.parse(JSON.stringify(this.stringValue));
 		var numValue = null;
-		// if integer only allow signed numbers.
+		// if integer only allow signed numbers or empty.
 		if (this.props.control.valueDef && this.props.control.valueDef.propType === "integer") {
 			const signedDigits = /^[-+]?[0-9]+$/;
-			if (typeof evt.target.value === "undefined" || evt.target.value === null ||
-			evt.target.value === "") {
-				this.stringValue = "";
-			} else if (evt.target.value.match(signedDigits)) {
-				// does not contain invalid integers characters
+			if (evt.target.value.match(signedDigits) || evt.target.value === "") {
+				// contains valid integers characters or blank
 				this.stringValue = evt.target.value;
-			} else {
-				// if a non digit was entered do not accept the input (stays at the original value)
-				this.stringValue = originalValue;
 			}
 			if (this.stringValue !== "") {
 				numValue = parseInt(this.stringValue, 10);
 			}
+			// Need to do this so that the cursor acts appropately in Chrome when starting with "+"
+			evt.target.value = "";
+			evt.target.value = this.stringValue;
 		// it is a double
-		} else if (evt.target.value === "" && this.stringValue.length !== 1) {
-			// this case a NaN enter and not delete of last characters
-			// set to original value
-			this.stringValue = originalValue;
-			numValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		} else {
 			this.stringValue = evt.target.value;
 			if (this.stringValue !== "") {
 				numValue = parseFloat(this.stringValue);
 			}
-		}
-		// if an invalid character entered then do not change any values
-		if (this.stringValue !== "" && isNaN(numValue)) {
-			this.stringValue = originalValue;
-			numValue = this.props.controller.getPropertyValue(this.props.propertyId);
-		}
-
-		// Need to do this so that the cursor doesn't go to the start of the input area when deleting characters
-		if (originalValue.indexOf(".") > -1 && this.stringValue.indexOf(".") === -1) {
-			evt.target.value = "";
-			evt.target.value = this.stringValue;
+			// Need to do this so that the cursor doesn't go to the start of the input area when deleting characters
+			if (originalValue.indexOf(".") > -1 && this.stringValue.indexOf(".") === -1) {
+				// do not want to do this when "." because Chrome will remove the "." from the rendered field
+				// and you will never be able to enter a ".".
+				evt.target.value = "";
+				evt.target.value = this.stringValue;
+			}
 		}
 		this.props.controller.updatePropertyValue(this.props.propertyId, numValue);
+	}
 
+	_isValidStartChar(value) {
+		return (value.startsWith(".") || value.startsWith("-") || value.startsWith("+"));
 	}
 
 	onIncrease() {
