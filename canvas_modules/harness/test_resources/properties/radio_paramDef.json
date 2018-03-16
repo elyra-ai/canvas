@@ -9,6 +9,7 @@
     "radioInteger" : 2,
     "radioDouble" : 1.23,
     "radioNull" : null,
+    "radioLabelWrapped": "firstN",
     "radioError" : "gini",
     "radioWarning" : "gini",
     "disable" : true,
@@ -86,6 +87,15 @@
       "enum": [
         "gini",
         "entropy"
+      ],
+      "required": true
+    },
+    {
+      "id": "radioLabelWrapped",
+      "enum": [
+        "firstN",
+        "oneInN",
+        "longLabel"
       ],
       "required": true
     },
@@ -235,6 +245,17 @@
         "control": "radioset"
       },
       {
+        "parameter_ref": "radioLabelWrapped",
+        "label": {
+          "default": "Radio Label Wrapped"
+        },
+        "description": {
+          "default": "RadioSet with radio label wrapped"
+        },
+        "control": "radioset",
+        "resource_key": "withradioLabelWrapped"
+      },
+      {
         "parameter_ref": "radioError",
         "label": {
           "default": "Radio Error"
@@ -321,7 +342,8 @@
           "radioDouble",
           "radioDefault",
           "radioUndefined",
-          "radioNull"
+          "radioNull",
+          "radioLabelWrapped"
         ]
       },
       {
@@ -428,6 +450,9 @@
     "withradioString.gini.label": "Gini",
     "withradioString.entropy.label": "Entropy",
     "withradioBoolean.true.label": "trueBoolean",
-    "withradioBoolean.false.label": "falseBoolean"
+    "withradioBoolean.false.label": "falseBoolean",
+		"withradioLabelWrapped.firstN.label": "First N",
+		"withradioLabelWrapped.oneInN.label": "One in N",
+		"withradioLabelWrapped.longLabel.label": "This is really a longggggggggggggg label"
 	}
 }

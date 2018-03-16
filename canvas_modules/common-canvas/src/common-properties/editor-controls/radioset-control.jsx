@@ -114,6 +114,8 @@ export default class RadiosetControl extends EditorControl {
 		if (this.props.control.orientation === ORIENTATIONS.VERTICAL) {
 			cssClasses += " control-radio-block";
 			cssIndicator += " control__indicator-block";
+		} else {
+			cssClasses += " radio_horizontal_label";
 		}
 
 		if (!this.props.control.values && this.props.control.controlType === "radioset") {
