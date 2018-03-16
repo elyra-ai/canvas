@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2016. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2016, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -39,7 +39,6 @@ export default class ExpressionControl extends EditorControl {
 		this.handleChange = this.handleChange.bind(this);
 		this.editorDidMount = this.editorDidMount.bind(this);
 
-
 		this.addonHints = this.addonHints.bind(this);
 		this.getDatasetFields = this.getDatasetFields.bind(this);
 	}
@@ -47,6 +46,7 @@ export default class ExpressionControl extends EditorControl {
 	// Save original autocomplete handler and then register our custom handler
 	// that will add data set filed names to autocomplete list.
 	editorDidMount(editor, next) {
+		this.editor = editor;
 		this.origHint = editor.getHelper({ line: 0, ch: 0 }, "hint");
 		// this next line is a hack to overcome a Codemirror problem.  To support SparkSQL, a subset of SQL,
 		// we need to register with Codemirror the language as the value of "text/x-hive". When Codemirror
@@ -54,14 +54,15 @@ export default class ExpressionControl extends EditorControl {
 		// This hack allows use to capture the "sql" autocomplete handler and subsitute our custom handler
 		const language = (this.props.control.language === "text/x-hive") ? "sql" : this.props.control.language;
 		cm.registerHelper("hint", language, this.addonHints);
+	}
 
+	componentDidMount() {
 		// set the default height, should be between 4 and 20 lines
-		const editorDiv = document.getElementById(this.getControlId());
-		const controlWidth = (editorDiv) ? editorDiv.clientWidth : 0;
+		const controlWidth = (this.expressionEditorDiv) ? this.expressionEditorDiv.clientWidth : 0;
 		const charPerLine = (controlWidth > 0) ? controlWidth / pxPerChar : defaultCharPerLine;
 		const height = (this.props.control.charLimit)
 			? Math.min((this.props.control.charLimit / charPerLine) * pxPerLine, maxLineHeight) : minLineHeight;
-		editor.setSize(null, Math.max(Math.floor(height), minLineHeight));
+		this.editor.setSize(null, Math.max(Math.floor(height), minLineHeight));
 	}
 
 	// reset to the original autocomplete handler
@@ -151,13 +152,12 @@ export default class ExpressionControl extends EditorControl {
 			extraKeys: { "Ctrl-Space": "autocomplete" },
 			autoRefresh: true
 		};
-		const controlId = this.getControlId();
 
 		return (
 			<div>
 				<div className="editor_control_area" style={stateStyle}>
 					<div id={controlIconContainerClass}>
-						<div id={controlId} className="expression_editor_control" >
+						<div ref={ (ref) => (this.expressionEditorDiv = ref) } id={this.getControlId()} className="expression_editor_control" >
 							<CodeMirror
 								ref= { (ref) => (this.codeMirror = ref)}
 								options={mirrorOptions}
