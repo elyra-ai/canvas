@@ -1,17 +1,18 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
 
-var path = require("path");
-var webpack = require("webpack");
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
-var OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-var BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+const path = require("path");
+const webpack = require("webpack");
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+// const SassLintPlugin = require("sasslint-webpack-plugin");
+const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
 
 module.exports = {
@@ -19,7 +20,7 @@ module.exports = {
 	devtool: "source-map",
 	entry: {
 		"common-canvas": "./src/index.js",
-		"common-canvas.css": "./assets/index.css"
+		"common-canvas.css": "./assets/index.scss"
 	},
 	output: {
 		library: "Common-Canvas",
@@ -45,11 +46,12 @@ module.exports = {
 				}
 			},
 			{
-				test: /\.css$/,
+				test: /\.s*css$/,
 				use: ExtractTextPlugin.extract(
 					{
 						use: [
 							"css-loader",
+							"sass-loader",
 							"postcss-loader"
 						]
 					}
@@ -65,6 +67,14 @@ module.exports = {
 		new webpack.DefinePlugin({
 			"process.env.NODE_ENV": "'production'"
 		}),
+		// new SassLintPlugin({
+		//	configFile: ".sass-lint.yml",
+		//	context: "./assets",
+		//	glob: "**/*.scss",
+		//	quiet: false,
+		//	failOnWarning: true,
+		//	failOnError: true
+		// }),
 		new webpack.optimize.UglifyJsPlugin(), // minify everything
 		new webpack.optimize.AggressiveMergingPlugin(), // Merge chunk
 		new ExtractTextPlugin("common-canvas.css"),

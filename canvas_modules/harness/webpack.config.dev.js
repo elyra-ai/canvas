@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2016. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2016, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -10,11 +10,12 @@
 
 // Modules
 
-var path = require("path");
-var webpack = require("webpack");
-var babelOptions = require("./scripts/babel/babelOptions").babelClientOptions;
-var constants = require("./lib/constants");
-var HtmlWebpackPlugin = require("html-webpack-plugin");
+const path = require("path");
+const webpack = require("webpack");
+const babelOptions = require("./scripts/babel/babelOptions").babelClientOptions;
+const constants = require("./lib/constants");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const SassLintPlugin = require("sasslint-webpack-plugin");
 
 const isDev = process.env.NODE_ENV === "development";
 
@@ -22,14 +23,14 @@ const isDev = process.env.NODE_ENV === "development";
 
 // Entry & Output files ------------------------------------------------------------>
 
-var entry = [
+const entry = [
 	"webpack-hot-middleware/client",
 	"babel-polyfill",
 	"./src/client/index.js"
 ];
 
 
-var output = {
+const output = {
 	path: path.join(__dirname, ".build"),
 	publicPath: constants.APP_PATH,
 	filename: "js/canvasharness.js",
@@ -42,7 +43,11 @@ var output = {
 
 // Loaders ------------------------------------------------------------>
 
-var rules = [
+const rules = [
+	{
+		test: /\.json$/,
+		loader: "json-loader"
+	},
 	{
 		test: /\.js(x?)$/,
 		loader: "babel-loader",
@@ -50,10 +55,11 @@ var rules = [
 		query: babelOptions
 	},
 	{
-		test: /\.css$/,
+		test: /\.s*css$/,
 		use: [
 			{ loader: "style-loader" },
 			{ loader: "css-loader" },
+			{ loader: "sass-loader", options: { sourceMap: true } },
 			{ loader: "postcss-loader", options: { plugins: [require("autoprefixer")] } }
 		]
 	},
@@ -76,6 +82,14 @@ if (!isDev) {
 // Plugins ------------------------------------------------------------>
 
 var plugins = [
+	new SassLintPlugin({
+		configFile: ".sass-lint.yml",
+		context: "./src",
+		glob: "**/*.scss",
+		quiet: false,
+		failOnWarning: true,
+		failOnError: true
+	}),
 	new webpack.optimize.OccurrenceOrderPlugin(),
 	new webpack.NoEmitOnErrorsPlugin(),
 	// Generates an `index.html` file with the <script> injected.
@@ -87,8 +101,8 @@ var plugins = [
 ];
 
 // Exports ------------------------------------------------------------>
-var commonCanvas = "src/common-canvas.js";
-var commonCanvasStyles = "src/common-canvas-styles.js";
+let commonCanvas = "src/common-canvas.js";
+let commonCanvasStyles = "src/common-canvas-styles.js";
 if (isDev) {
 	commonCanvas = "src/common-canvas-dev.js";
 	commonCanvasStyles = "src/common-canvas-styles-dev.js";

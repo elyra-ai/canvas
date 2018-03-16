@@ -24,6 +24,7 @@ module.exports = {
 				use: [
 					"style",
 					"css",
+					"scss",
 					"postcss"
 				]
 			}

@@ -8,204 +8,204 @@
  *******************************************************************************/
 
 #app-container {
-  height: 100vh;
-  overflow: hidden;
+	height: 100vh;
+	overflow: hidden;
 }
 
 .canvas-container {
-  height: calc(100% - 52px);
-  width: 100%;
+	height: calc(100% - 52px);
+	width: 100%;
 }
 
 .canvas-container-double {
-  height: calc(100vh - 50px);
-  width: 100%;
+	height: calc(100vh - 50px);
+	width: 100%;
 }
 
 .canvas-single {
-  height: 50%;
+	height: 50%;
 }
 
 #title {
-  background-color: #f0f3f6;
-  color: #152935;
-  width:auto;
-  text-decoration: none;
+	background-color: #F0F3F6;
+	color: #152935;
+	width: auto;
+	text-decoration: none;
 	font-size: 14px;
 }
 
 /* Styles for elements displayed for empty canvas. */
 
 .empty-harness-image {
-  margin-left:auto;
-  margin-right:auto;
-  display:block;
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
 	width: 174px;
 	height: 121px;
 }
 
-.empty-harness-link{
-  display: block;
-  color: #152935;
-  opacity: 0.2;
-  font-size: 20px;
-  text-align:center;
-  text-decoration:underline;
-  cursor: pointer;
-  pointer-events:all;
+.empty-harness-link {
+	display: block;
+	color: #152935;
+	opacity: 0.2;
+	font-size: 20px;
+	text-align: center;
+	text-decoration: underline;
+	cursor: pointer;
+	pointer-events: all;
 }
 
 .empty-harness-text {
-  display: block;
-  color: #152935;
-  opacity: 0.2;
-  font-size: 20px;
-  text-align:center;
+	display: block;
+	color: #152935;
+	opacity: 0.2;
+	font-size: 20px;
+	text-align: center;
 }
 
 
 /*Navbar*/
 .app-navbar {
-  height: 50px;
+	height: 50px;
 }
 
 .app-navbar-items {
-  position:fixed;
-  width:100%;
+	position: fixed;
+	width: 100%;
 	height: 50px;
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background-color: #f0f3f6;
-  z-index: 4;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	background-color: #F0F3F6;
+	z-index: 4;
 }
 
 .navbar-li {
-  float: left;
+	float: left;
 }
 
-.navbar-li a, #palette-true a{
-  display: block;
-  text-align: center;
-  padding: 14px;
-  width:18px;
-  fill:#3d70b2;
-  box-sizing: content-box;
+.navbar-li a, #palette-true a {
+	display: block;
+	text-align: center;
+	padding: 14px;
+	width: 18px;
+	fill: #3D70B2;
+	box-sizing: content-box;
 }
 
 .navbar-li a:hover, #palette-true a:hover {
-  background-color: #dfe3e6;
-  color: #3d70b2 ;
+	background-color: #DFE3E6;
+	color: #3D70B2;
 }
 
-#palette-false{
-  display: none;
+#palette-false {
+	display: none;
 }
 
 .action-bar-sidepanel {
-  float:right;
+	float: right;
 }
 
 .nav-divider {
-  border-left:2px solid #dfe3e6;
+	border-left: 2px solid #DFE3E6;
 }
 
 /*Console*/
 #app-console {
-  font-size: small;
-  border-top: 1px solid #152935;
-  background-color: rgba(243, 243, 243, 0.8);
-  position:fixed;
-  bottom: 0px;
-  width: 100%;
-  -webkit-transition:height 2s;
-  transition: height 2s;
-  overflow-y: auto;
-  z-index: 1;
-  padding-left: 1em;
+	font-size: small;
+	border-top: 1px solid #152935;
+	background-color: rgba(243, 243, 243, 0.8);
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	-webkit-transition: height 2s;
+	transition: height 2s;
+	overflow-y: auto;
+	z-index: 1;
+	padding-left: 1em;
 	line-height: 1.1;
 	word-wrap: break-word;
 }
 
 .console-pretty-json {
-	margin: 0px 10px 10px 0px;
-	border: none;
-	border-bottom: 1px dashed #ccc;
+	margin: 0 10px 10px 0;
+	border: 0;
+	border-bottom: 1px dashed #CCC;
 }
 
 .console-entry {
 	list-style: none;
 }
 
-.console-entry:before {
+.console-entry::before {
 	content: "• ";
 	padding-right: 10px;
 }
 
 .console-entry:hover {
 	list-style: none;
-	background-color: #dfe3e6;
+	background-color: #DFE3E6;
 }
 
-.console-entry:hover:before {
+.console-entry:hover::before {
 	content: "+";
 	padding-right: 12px;
 }
 
 /*SidePanel*/
 #app-sidepanel {
-  background-color: #f0f3f6;
-  top: 50px;
-  position: fixed;
-  right: 0;
-  height: calc(100% - 50px);
-  -webkit-transition:width 0.5s;
-  transition: width 0.5s;
-  color: #152935;
-  overflow: auto;
-  z-index: 100;
-  box-sizing: border-box;
-  font-size: small;
-  overflow-x: hidden;
+	background-color: #F0F3F6;
+	top: 50px;
+	position: fixed;
+	right: 0;
+	height: calc(100% - 50px);
+	-webkit-transition: width 0.5s;
+	transition: width 0.5s;
+	color: #152935;
+	overflow: auto;
+	z-index: 100;
+	box-sizing: border-box;
+	font-size: small;
+	overflow-x: hidden;
 }
 
 .sidepanel-headers {
-  padding-bottom: 5px;
+	padding-bottom: 5px;
 }
 
 .sidepanel-children {
-  padding-left: 10px;
-  padding-right: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
 }
 
 .sidepanel-divider {
-  width: 100%;
-  margin: 0 0 5px 0;
-  border-bottom:2px solid #dfe3e6;
-  padding: 5px 0 5px 0;
+	width: 100%;
+	margin: 0 0 5px;
+	border-bottom: 2px solid #DFE3E6;
+	padding: 5px 0;
 }
 
 .sidepanel-spacer {
-  width: 100%;
-  padding: 6px 0 0 0;
+	width: 100%;
+	padding: 6px 0 0;
 }
 
 .sidepanel-list-item-icon {
-  height: 40px;
-  width: 40px;
-  min-width: 32px;
-  float: left;
+	height: 40px;
+	width: 40px;
+	min-width: 32px;
+	float: left;
 }
 
 .sidepanel-list-item-text {
-  line-height: 30px;
-  margin-left: 15px;
+	line-height: 30px;
+	margin-left: 15px;
 }
 
-#buttonOneTimeLayoutHorizontal , #buttonOneTimeLayoutVertical{
-  width: 100%;
-  text-align: center;
+#buttonOneTimeLayoutHorizontal , #buttonOneTimeLayoutVertical {
+	width: 100%;
+	text-align: center;
 }
 
 #properties-documentation-link {
@@ -219,27 +219,27 @@
 }
 
 #properties-documentation-link a:hover {
-	color: #3d70b2;
+	color: #3D70B2;
 }
 
 /*Override ap-components-react styles*/
 #app-sidepanel label {
-  color: #152935;
+	color: #152935;
 }
 
 #app-sidepanel .button {
-  line-height: 1;
-  margin-top: 2px;
-  margin-bottom: 2px;
+	line-height: 1;
+	margin-top: 2px;
+	margin-bottom: 2px;
 }
 
-.toggle__checkbox{
-  margin-top: 5px;
+.toggle__checkbox {
+	margin-top: 5px;
 }
 
 #app-sidepanel .radio--dark + label,
 #app-sidepanel .checkbox--dark + label {
-  font-weight: 100;
+	font-weight: 100;
 }
 
 /* Dropdown menu */
@@ -256,183 +256,184 @@
 /* This styles are used in the decoratorCanvas.json canvas file. */
 
 .leftDecoration {
-  border: 1px solid black;
+	border: 1px solid #000000;
 	/* For D3 rendering */
 	fill: transparent;
-	stroke: black;
+	stroke: #000000;
 }
 
 .rightDecoration {
-  border: 1px solid black;
+	border: 1px solid #000000;
 	/* For D3 rendering */
 	fill: transparent;
-	stroke: black;
+	stroke: #000000;
 }
 
 .rightDecoration:hover {
-  background-color: black;
+	background-color: #000000;
 	/* For D3 rendering */
-	fill: black;
-	stroke: black;
+	fill: #000000;
+	stroke: #000000;
 }
 
 .zoom-in-decoration {
-  background-image: url(../graphics/zoom-in_32.svg);
-  background-repeat: no-repeat;
-  background-color: yellow;
+	background-image: url("../graphics/zoom-in_32.svg");
+	background-repeat: no-repeat;
+	background-color: #FFFF00;
 	/* For D3 rendering */
-	fill: yellow;
+	fill: #FFFF00;
 }
 
 .zoom-in-decoration:hover {
-	border: 1px solid black;
+	border: 1px solid #000000;
 	/* For D3 rendering */
-	stroke: black;
+	stroke: #000000;
 }
 
 /*  Override styles for comments in linkColorCanvas.json */
 
 .custom-canvas-comment {
-  background-color: #ffff99;
-  color: #000000;
-  cursor: 'move';
-  border: 2px solid transparent;
+	background-color: #FFFF99;
+	color: #000000;
+	cursor: "move";
+	border: 2px solid transparent;
 	/* For D3 rendering engine */
-	fill: #ffff99;
+	fill: #FFFF99;
 	stroke: transparent;
 }
 
-.custom-comment-box{
-  background-color: #2be2ca;
+.custom-comment-box {
+	background-color: #2BE2CA;
 	/* For D3 rendering engine */
-	fill: #2be2ca;
+	fill: #2BE2CA;
 }
 
 
 /*  Override styles for comments in commentColorCanvas.json */
 
 .canvas-comment-1 {
-  background-color: #b98ba6;
-  color: #000;
-  border: 1px solid black;
-  text-align: center;
+	background-color: #B98BA6;
+	color: #000;
+	border: 1px solid #000000;
+	text-align: center;
 	/* For D3 rendering engine */
-	fill: #b98ba6;
-	stroke: black;
+	fill: #B98BA6;
+	stroke: #000000;
 }
 
 .canvas-comment-2 {
-  background-color: #a6c8e4;
-  color: #000;
-  border: 1px solid black;
-  text-align: center;
+	background-color: #A6C8E4;
+	color: #000;
+	border: 1px solid #000000;
+	text-align: center;
 	/* For D3 rendering engine */
-	fill: #a6c8e4;
-	stroke: black;
+	fill: #A6C8E4;
+	stroke: #000000;
 }
 
 .canvas-comment-3 {
-  background-color: #a6c8e4;
-  color: #000;
-  border: 1px solid black;
-  text-align: center;
+	background-color: #A6C8E4;
+	color: #000;
+	border: 1px solid #000000;
+	text-align: center;
 	/* For D3 rendering engine */
-	fill: #a6c8e4;
-	stroke: black;
+	fill: #A6C8E4;
+	stroke: #000000;
 }
 
 /* These styles are used in the portsColorCanvas.json canvas file. */
 
 .port-output-red {
-	stroke: deeppink;
-	fill: white;
+	stroke: #FF1493;
+	fill: #FFFFFF;
 	stroke-width: 2;
 }
 
-.port-output-red[connected=yes] {
-	stroke: fuchsia;
-	fill: fuchsia;
+.port-output-red[connected="yes"] {
+	stroke: #FF00FF;
+	fill: #FF00FF;
 	stroke-width: 2;
 }
 
 .port-output-red:hover {
-  fill: red;
+	fill: #FF0000;
 }
 
 .port-output-yellow {
-	stroke: goldenrod;
-	fill: white;
+	stroke: #DAA520;
+	fill: #FFFFFF;
 	stroke-width: 2;
 }
 
-.port-output-yellow[connected=yes] {
-	stroke: gold;
-	fill: gold;
+.port-output-yellow[connected="yes"] {
+	stroke: #FFD700;
+	fill: #FFD700;
 	stroke-width: 2;
 }
 
 .port-output-yellow:hover {
-  fill: goldenrod;
+	fill: #DAA520;
 }
 
 .port-output-green {
-	stroke: green;
-	fill: white;
+	stroke: #008000;
+	fill: #FFFFFF;
 	stroke-width: 2;
 }
 
-.port-output-green[connected=yes] {
-	stroke: teal;
-	fill: teal;
+.port-output-green[connected="yes"] {
+	stroke: #008080;
+	fill: #008080;
 	stroke-width: 2;
 }
 
 .port-output-green:hover {
-  fill: green;
+	fill: #008000;
 }
 
 .port-output-blue {
-	stroke: blue;
-	fill: white;
+	stroke: #0000FF;
+	fill: #FFFFFF;
 	stroke-width: 2;
 }
 
-.port-output-blue[connected=yes] {
-	stroke: blue;
-	fill: blue;
+.port-output-blue[connected="yes"] {
+	stroke: #0000FF;
+	fill: #0000FF;
 	stroke-width: 2;
 }
 
 .port-output-blue:hover {
-  fill: slateblue;
+	fill: #6A5ACD;
+
 }
 /* This style is used in the customAttrs.json canvas file. */
 
 .node-image[data-attr1] {
-  opacity: 0.25;
+	opacity: 0.25;
 }
 
 /* Override common-canvas styles with custom colors for customColorCanvas.json */
 .d3-data-link.error {
-  stroke: #FF4500;
+	stroke: #FF4500;
 }
 
 .d3-data-link.warning {
-  stroke: #FFFF00;
+	stroke: #FFFF00;
 }
 
 .d3-data-link.okay {
-  stroke: #008000;
+	stroke: #008000;
 }
 
 .d3-object-link.blue {
-  stroke: #0000FF;
+	stroke: #0000FF;
 }
 
-.main-comment-box{
-  background-color: #2be2ca;
+.main-comment-box {
+	background-color: #2BE2CA;
 	/* For D3 rendering engine */
-	fill: #2be2ca;
+	fill: #2BE2CA;
 }
 
 .properties-editing {
@@ -455,7 +456,7 @@
 }
 
 .custom-slider .slider .text--slider {
-	padding: .5em 25px .5em 0 !important;
+	padding: 0.5em 25px 0.5em 0;
 }
 
 .custom-slider {
@@ -473,15 +474,15 @@
 }
 
 .custom-toggle {
-  display: flex;
+	display: flex;
 }
 
 .custom-toggle .text {
-  padding-left: 10px;
+	padding-left: 10px;
 }
 
 .custom-toggle .icon {
-  margin-left: auto;
+	margin-left: auto;
 }
 .custom-map-summary span {
 	display: block;
@@ -490,7 +491,7 @@
 	padding-top: 6px;
 }
 .custom-map-summary text {
-	color: mediumblue;
+	color: #0000CD;
 	font-weight: 600;
 }
 
