@@ -10,8 +10,6 @@
 /* Palette styles */
 .palette-flyout-div {
   position: absolute;
-  overflow-y: overlay;
-  overflow-x: hidden;
   height: 100%;
 	padding-bottom: 5px;
 	z-index: 1;
@@ -32,7 +30,7 @@
 }
 
 .palette-flyout-div-closed {
-  width: 0px;
+	width: 64px;
 }
 
 .palette-flyout-content .palette-list-item {
@@ -64,8 +62,6 @@
 
 .palette-flyout-category {
 	cursor: pointer;
-  padding: 10px;
-  padding-right: 18px;
   border-width:0 0 0 2px;
 	height: 46px;
 	font-size: 12px;
@@ -75,37 +71,86 @@
 	border-bottom: 2px solid #dfe3e6;
 }
 
-.palette-flyout-category > svg {
-	height: 12px;
-	width: 12px;
+.palette-flyout-category-caret {
+	height: 13px;
+	width: 13px;
+	position: relative;
+	right: 18px;
+	background-color: #f0f3f6;
+}
+
+.palette-flyout-category-caret-closed {
+	top: 9px;
+	right: 20px;
+}
+
+.palette-flyout-category-item {
+	height: 46px;
+	font-size: 10pt;
+	display: flex;
+	display:-webkit-flex;
+	fill: #9D005C;
+	color: black;
+	/* Prevent elements from being selectable */
+	/* This stops it being dragged incorrectly.*/
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+}
+
+.palette-flyout-category-item-icon {
+	line-height: 46px; /* Must be same as containing div height plus half the icon size */
+	width: 25px;
+	margin-left: 16px;
 }
 
 .palette-flyout-text-container {
 	max-width: 205px;
 	display: flex;
+	display:-webkit-flex;
+	fill: #9D005C;
+	color: black;
+	/* Prevent elements from being selectable */
+	/* This stops it being dragged incorrectly.*/
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-o-user-select: none;
+	user-select: none;
 }
+
 .palette-flyout-category-text {
+	line-height: 46px;  /* Must be same as containing div height */
 	overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	margin-left: 10px;
 }
+
 .palette-flyout-category-count {
+	line-height: 46px;  /* Must be same as containing div height */
 	padding-left: 5px;
 }
+
 .palette-flyout-category:hover {
 	font-weight: 600;
 }
 
 .palette-flyout-search {
-	margin-top: 1px;
 	font-size: 16px;
-	height: 46px;
+	height: 47px;
 	align-items: center;
 	justify-content: space-between;
 	display: flex;
-	padding-right: 16px;
 	border-bottom: 2px solid #dfe3e6;
-	border-top: 2px solid #dfe3e6;
+	border-right: 2px solid #dfe3e6;
+	cursor: pointer;
+}
+
+.palette-flyout-search:hover {
+	background-color: #f9f9f9;
 }
 
 .palette-flyout-search > svg {
@@ -118,9 +163,32 @@
   padding-left: 10px;
 }
 
+.palette-flyout-search-icon {
+	margin: 0;
+	padding: 18px 20px 8px 22px;
+	justify-content: center;
+}
 
+.palette-flyout-search-icon > svg {
+	height: 20px;
+	width: 20px;
+	margin: auto;
+}
 
-#palette-flyout-search-text {
+/* This overrides the right padding in the TextField */
+.palette-flyout-search-bar div input {
+	padding-right: 0;
+}
+
+.palette-flyout-content-categories {
+	height: calc(100% - 48px);
+	width: 100%;
+	position: absolute;
+	overflow-x: hidden;
+	overflow-y: overlay;
+}
+
+.palette-flyout-search-text {
 	border-bottom: 0px;
 	padding: 0px;
 	font-weight: normal;
@@ -332,17 +400,15 @@
 }
 
 .palette-list-item:hover {
-  border-color: #9D005C;
-  color: #9D005C;
+	border-color: #5596e6;;
+	color: #5596e6;;
 }
 
 .palette-list-item-icon {
   line-height: 46px; /* Must be same as containing div height plus half the icon size */
   height: 32px;
   width: 32px;
-	min-width: 32px;
-  margin-left: 10px;
-  margin-right: 10px;
+  margin-left: 12px;
 }
 
 .palette-list-item-text-div {
@@ -350,6 +416,7 @@
 
 .palette-list-item-text-span {
   line-height: 46px;  /* Must be same as containing div height */
+	margin-left: 10px;
 }
 
 .palette-three-way-icon-div {

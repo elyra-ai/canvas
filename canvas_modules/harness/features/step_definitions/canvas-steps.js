@@ -91,16 +91,21 @@ module.exports = function() {
 
 	this.Then(/^I click option "([^"]*)" from the context menu$/, function(itemText) {
 		var items = browser.$(".context-menu-popover").$$(".react-contextmenu-item:not(.contextmenu-divider)");
+
 		// console.log("Number of context menu items " + items.length);
 		// for (let idx = 0; idx < items.length; idx++) {
-		// 	console.log("Context menu item = " + items[idx].$("span").getText());
+		// 	if (items[idx].$("span").type !== "NoSuchElement") { // This will skip sub-menu items that don't have a span
+		// 		console.log("Context menu item = " + items[idx].$("span").getText());
+		// 	}
 		// }
 
 		for (let idx = 0; idx < items.length; idx++) {
-			if (items[idx].$("span").getText() === itemText) {
-				// console.log("Context menu item clicked = " + items[idx].$("span").getText());
-				items[idx].click();
-				break;
+			if (items[idx].$("span").type !== "NoSuchElement") { // This will skip sub-menu items that don't have a span
+				if (items[idx].$("span").getText() === itemText) {
+					// console.log("Context menu item clicked = " + items[idx].$("span").getText());
+					items[idx].click();
+					break;
+				}
 			}
 		}
 	});

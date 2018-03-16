@@ -278,7 +278,9 @@ class Toolbar extends React.Component {
 		let toolbarWidth = window.innerWidth;
 
 		if (this.props.paletteState && this.props.paletteType !== "Modal") {
-			toolbarWidth = canvasWidth - 250;
+			toolbarWidth = canvasWidth - 250; // Subtract width of full palette
+		} else {
+			toolbarWidth = canvasWidth - 64; // Subtract width of mini-palette
 		}
 
 		if (this.props.rightFlyoutOpen) {

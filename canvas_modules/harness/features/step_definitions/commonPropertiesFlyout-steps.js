@@ -185,6 +185,7 @@ module.exports = function() {
 				break;
 			}
 		}
+		browser.pause(500);
 	});
 
 	function getPropertiesApplyButton() {

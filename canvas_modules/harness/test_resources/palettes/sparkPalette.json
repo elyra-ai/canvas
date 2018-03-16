@@ -3,6 +3,7 @@
     {
       "category": "canvas-transformation",
       "label": "Transformations",
+      "image": "/images/palette-categories/sources_open.svg",
       "nodetypes": [
         {
           "label": "Filter Rows",
@@ -171,6 +172,7 @@
     {
       "category": "canvas-modeling",
       "label": "Modeling",
+      "image": "/images/palette-categories/models_open.svg",
       "nodetypes": [
         {
           "label": "Logistic Regression",

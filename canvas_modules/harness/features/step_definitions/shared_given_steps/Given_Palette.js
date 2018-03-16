@@ -48,9 +48,13 @@ module.exports = function() {
 		browser.pause(1000);
 	});
 
+	this.Then(/^I click the Search icon to open the full palette$/, function() {
+		browser.$(".palette-flyout-search").click();
+	});
+
 	this.Then(/^I enter "([^"]*)" into the palette search bar$/, function(filterText) {
 		browser.$(".palette-flyout-search-bar").click();
-		browser.$("#palette-flyout-search-text").setValue("", filterText);
+		browser.$(".palette-flyout-search-bar div input").setValue("", filterText);
 	});
 
 	this.Then(/^I have uploaded predefined palette "([^"]*)"$/, function(paletteFile) {

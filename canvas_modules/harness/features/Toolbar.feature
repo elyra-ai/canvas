@@ -73,7 +73,6 @@ Feature: Toolbar
 	Then I click on the secondary toolbar delete button
 	Then I verify the number of comments are 0
 
-
 	Scenario: Sanity test for secondary toolbar resize with the D3 rendering engine
 
 	Given I am on the test harness
@@ -86,13 +85,13 @@ Feature: Toolbar
 
 	Then I pause for 1 seconds
 	Then I resize the window size to 500 width and 500 height
-	Then I verify the number of items in the secondary toolbar are 7
+	Then I verify the number of items in the secondary toolbar are 6
 	Then I resize the window size to 600 width and 600 height
-	Then I verify the number of items in the secondary toolbar are 9
+	Then I verify the number of items in the secondary toolbar are 8
 	Then I resize the window size to 700 width and 600 height
-	Then I verify the number of items in the secondary toolbar are 10
+	Then I verify the number of items in the secondary toolbar are 9
 	Then I resize the window size to 800 width and 600 height
-	Then I verify the number of items in the secondary toolbar are 12
+	Then I verify the number of items in the secondary toolbar are 11
 	Then I resize the window size to 1330 width and 660 height
 
 	Scenario: Sanity test for secondary toolbar horizontal and vertical layout with the D3 rendering engine

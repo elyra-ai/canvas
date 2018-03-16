@@ -38,6 +38,7 @@ _defineConstant("TIP_TYPE_NODE", "tipTypeNode");
 _defineConstant("TIP_TYPE_PORT", "tipTypePort");
 _defineConstant("TIP_TYPE_LINK", "tipTypeLink");
 _defineConstant("TIP_TYPE_PALETTE_ITEM", "tipTypePaletteItem");
+_defineConstant("TIP_TYPE_PALETTE_CATEGORY", "tipTypePaletteCategory");
 _defineConstant("TIP_TYPE_TOOLBAR_ITEM", "tipTypeToolbarItem");
 
 _defineConstant("CREATE_NODE", "create_node");

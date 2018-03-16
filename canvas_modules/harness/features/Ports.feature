@@ -7,6 +7,7 @@ Feature: Ports
 	So I can build a canvas and perform ports operations
 
 Scenario: Sanity test to check it a port to port link can be made with a new node
+	Then I resize the window size to 1400 width and 800 height
 	Given I am on the test harness
 	Given I have toggled the app side panel
 	Given I have selected the "Flyout" palette layout
@@ -37,6 +38,7 @@ Scenario: Sanity test to check it a port to port link can be made with a new nod
 	Then I verify 0 link between source node "Define Types" source port "outPort1" to target node "C5.0" target port "inPort"
 
 Scenario: Sanity test for multiple ports operations with the D3 rendering engine
+	Then I resize the window size to 1400 width and 800 height
 	Given I am on the test harness
 	Given I have toggled the app side panel
 	Given I have selected the "Flyout" palette layout
@@ -45,6 +47,7 @@ Scenario: Sanity test for multiple ports operations with the D3 rendering engine
 	Given I have uploaded palette "/test_resources/palettes/modelerPalette.json"
 	Given I have uploaded diagram "/test_resources/diagrams/multiPortsCanvas2.json"
 	Given I have toggled the app side panel
+
 
 	Then I link node "Select4" output port "outPort" to node "Merge1" input port "inPort3"
 	Then I verify the number of port data links are 4
@@ -119,6 +122,7 @@ Scenario: Sanity test for multiple ports operations with the D3 rendering engine
 	Then I verify the number of port data links are 16
 
 Scenario: Sanity test for dynamically adding ports by updating pipeline flow through API
+	Then I resize the window size to 1400 width and 800 height
 	Given I am on the test harness
 	Given I have toggled the app side panel
 	Given I have selected the "Flyout" palette layout

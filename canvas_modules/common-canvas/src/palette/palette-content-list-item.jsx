@@ -57,6 +57,18 @@ class PaletteContentListItem extends React.Component {
 	}
 
 	render() {
+		let itemText = null;
+
+		if (this.props.isPaletteOpen) {
+			itemText = (
+				<div className="palette-list-item-text-div">
+					<span className="palette-list-item-text-span">
+						{this.props.nodeTemplate.label}
+					</span>
+				</div>
+			);
+		}
+
 		return (
 			<div id={this.props.nodeTemplate.id}
 				draggable="true"
@@ -69,11 +81,7 @@ class PaletteContentListItem extends React.Component {
 				<div className="palette-list-item-icon">
 					<img src={this.props.nodeTemplate.image} draggable="false" />
 				</div>
-				<div className="palette-list-item-text-div">
-					<span className="palette-list-item-text-span">
-						{this.props.nodeTemplate.label}
-					</span>
-				</div>
+				{itemText}
 			</div>
 		);
 	}
@@ -81,7 +89,8 @@ class PaletteContentListItem extends React.Component {
 
 PaletteContentListItem.propTypes = {
 	nodeTemplate: PropTypes.object.isRequired,
-	canvasController: PropTypes.object.isRequired
+	canvasController: PropTypes.object.isRequired,
+	isPaletteOpen: PropTypes.bool.isRequired
 };
 
 export default PaletteContentListItem;

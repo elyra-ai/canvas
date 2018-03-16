@@ -11,7 +11,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import Tooltip from "./tooltip.jsx";
 import Icon from "ap-components-react/dist/components/Icon";
-import { TIP_TYPE_PALETTE_ITEM, TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK } from "../../constants/common-constants.js";
+import { TIP_TYPE_PALETTE_ITEM, TIP_TYPE_PALETTE_CATEGORY, TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK } from "../../constants/common-constants.js";
 
 export default class TooltipWrapper extends React.Component {
 	constructor(props) {
@@ -38,6 +38,7 @@ export default class TooltipWrapper extends React.Component {
 		let direction = null;
 		switch (this.props.type) {
 		case TIP_TYPE_PALETTE_ITEM:
+		case TIP_TYPE_PALETTE_CATEGORY:
 			direction = "right";
 			break;
 		case TIP_TYPE_NODE:
@@ -66,6 +67,13 @@ export default class TooltipWrapper extends React.Component {
 						</div>
 					);
 				}
+				break;
+			case TIP_TYPE_PALETTE_CATEGORY:
+				content = (
+					<div className="tip-palette-item">
+						<div className="tip-palette-label">{this.props.category.label}</div>
+					</div>
+				);
 				break;
 			case TIP_TYPE_NODE:
 				{

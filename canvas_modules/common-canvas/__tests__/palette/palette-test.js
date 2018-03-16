@@ -12,6 +12,7 @@ import { shallow } from "enzyme";
 import Palette from "../../src/palette/palette.jsx";
 import PaletteTopbar from "../../src/palette/palette-topbar.jsx";
 import PaletteContent from "../../src/palette/palette-content.jsx";
+import CanvasController from "../../src/common-canvas/canvas-controller.js";
 import sinon from "sinon";
 import { expect } from "chai";
 
@@ -76,12 +77,16 @@ function createPalette() {
 	const closePaletteCallback = sinon.spy();
 	const createTempNodeCallback = sinon.spy();
 	const deleteTempNodeCallback = sinon.spy();
+	const canvasController = new CanvasController();
 	const popupPalette = shallow(
 		<Palette paletteJSON={paletteSpec}
 			showPalette
 			closePalette={closePaletteCallback}
 			createTempNode={createTempNodeCallback}
 			deleteTempNode={deleteTempNodeCallback}
+			parentDivId="parent-div-id"
+			canvasController={canvasController}
+
 		/>
 	);
 	return popupPalette;

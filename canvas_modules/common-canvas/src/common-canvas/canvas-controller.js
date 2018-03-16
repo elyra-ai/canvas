@@ -441,9 +441,13 @@ export default class CanvasController {
 		if (this.commonCanvas && !this.isTipShowing() && this.isTipEnabled(tipConfig.type)) {
 			if (this.handlers.tipHandler) {
 				const data = {};
+				// Copy only required fields from tipConfig to data object - ignore other fields in tipConfig
 				switch (tipConfig.type) {
 				case constants.TIP_TYPE_PALETTE_ITEM:
 					data.nodeTemplate = tipConfig.nodeTemplate;
+					break;
+				case constants.TIP_TYPE_PALETTE_CATEGORY:
+					data.category = tipConfig.category;
 					break;
 				case constants.TIP_TYPE_NODE:
 					data.pipelineId = tipConfig.pipelineId;
@@ -481,6 +485,7 @@ export default class CanvasController {
 	isTipEnabled(tipType) {
 		switch (tipType) {
 		case constants.TIP_TYPE_PALETTE_ITEM:
+		case constants.TIP_TYPE_PALETTE_CATEGORY:
 			return (has(this.canvasConfig, "tipConfig.palette") ? this.canvasConfig.tipConfig.palette : this.defaultTipConfig.palette);
 		case constants.TIP_TYPE_NODE:
 			return (has(this.canvasConfig, "tipConfig.nodes") ? this.canvasConfig.tipConfig.nodes : this.defaultTipConfig.nodes);

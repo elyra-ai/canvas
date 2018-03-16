@@ -3,6 +3,7 @@
 		{
 			"category": "canvas-models",
 			"label": "MODELS",
+			"image":  "/images/palette-categories/models_open.svg",
 			"nodetypes": [
 				{
 					"label": "C50",
@@ -142,6 +143,7 @@
 		{
 			"category": "canvas-operations",
 			"label": "OPERATIONS",
+			"image":  "/images/palette-categories/operations_open.svg",
 			"nodetypes": [
 				{
 					"label": "Aggregate",

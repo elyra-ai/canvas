@@ -85,6 +85,7 @@ class PaletteContent extends React.Component {
 				<PaletteContentList show={!this.props.showGrid}
 					categoryJSON={categoryJSON}
 					canvasController={this.props.canvasController}
+					isPaletteOpen
 				/>
 			</div>
 		);

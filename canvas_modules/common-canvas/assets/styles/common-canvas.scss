@@ -53,27 +53,50 @@
 	overflow: hidden;
 }
 
+.canvas-palette-flyout-div-none {
+	left: 0;
+	width: 100%;
+}
+
+.canvas-palette-flyout-div-closed {
+	left: 64px;
+	width: calc(100% - 64px);
+}
+
 .canvas-palette-flyout-div-open {
 	left: 250px;
 	width: calc(100% - 250px);
 }
 
-.canvas-palette-flyout-div-closed {
-	left: 0px;
-	width: 100%;
+.canvas-flyout-div-closed {
+	width: calc(100% - 384px);
 }
 
 .canvas-flyout-div-open {
-	width: calc(100% - 320px);
+	width: calc(100% - 384px);
 }
 
 .canvas-flyout-div-open-medium,
 .canvas-flyout-div-open-large {
-	width: calc(100% - 627px);
+	width: calc(100% - 690px);
 }
 
 .canvas-palette-flyout-div-open.canvas-flyout-div-open {
 	width: calc(100% - 570px);
+}
+
+.canvas-palette-flyout-div-open.canvas-flyout-div-open-medium,
+.canvas-palette-flyout-div-open.canvas-flyout-div-open-large {
+	width: calc(100% - 876px);
+}
+
+.canvas-palette-flyout-div-none.canvas-flyout-div-open {
+	width: calc(100% - 320px);
+}
+
+.canvas-palette-flyout-div-none.canvas-flyout-div-open-medium,
+.canvas-palette-flyout-div-none.canvas-flyout-div-open-large {
+	width: calc(100% - 626px);
 }
 
 /* Styles for empty canvas objects */

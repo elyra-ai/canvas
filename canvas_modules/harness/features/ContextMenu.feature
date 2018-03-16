@@ -27,8 +27,8 @@ Feature: ContextMenu
 		Then I verify the context menu has a "Select all" item
 
 		# Test the context menu is pushed to the left when user clicks near right side of the page
-		Then I right click at position 1300, 400 to display the context menu
-		Then I verify the context menu is at 1140, 285
+		Then I right click at position 1230, 400 to display the context menu
+		Then I verify the context menu is at 1070, 285
 
 		# Test the context menu is pushed upwards when user clicks near bottom of the page
 		Then I right click at position 1000, 500 to display the context menu

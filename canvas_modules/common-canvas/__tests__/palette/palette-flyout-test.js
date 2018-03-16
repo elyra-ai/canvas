@@ -64,9 +64,14 @@ describe("Palette renders correctly", () => {
 		const flyoutPaletteContent = createMountedPalette().find(PaletteFlyoutContent);
 		const importCat = findCategoryElement(flyoutPaletteContent, "Import");
 		importCat.simulate("click");
-		const input = flyoutPaletteContent.find("#palette-flyout-search-text");
+		// Simulate click on search icon to open palette with search bar
+		const searchIcon = flyoutPaletteContent.find(".palette-flyout-search-icon");
+		searchIcon.simulate("click");
+
+		const input = flyoutPaletteContent.find(".palette-flyout-search-bar div input");
 		input.simulate("change", { target: { value: "Var" } });
 		expect(flyoutPaletteContent.find(PaletteFlyoutContentListItem)).to.have.length(1);
+
 		input.simulate("change", { target: { value: "VAR" } });
 		expect(flyoutPaletteContent.find(PaletteFlyoutContentListItem)).to.have.length(1);
 	});
@@ -168,6 +173,7 @@ function createPalette() {
 			createTempNode={createTempNodeCallback}
 			deleteTempNode={deleteTempNodeCallback}
 			canvasController={canvasController}
+			isPaletteOpen
 		/>
 	);
 	return popupPalette;
@@ -182,6 +188,7 @@ function createMountedPalette() {
 			createTempNode={createTempNodeCallback}
 			deleteTempNode={deleteTempNodeCallback}
 			canvasController={canvasController}
+			isPaletteOpen
 		/>
 	);
 	return popupPalette;

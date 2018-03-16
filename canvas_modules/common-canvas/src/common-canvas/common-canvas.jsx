@@ -324,6 +324,7 @@ export default class CommonCanvas extends React.Component {
 
 			if (this.objectModel.getPaletteData()) {
 				if (this.props.config.enablePaletteLayout === "Modal") {
+					paletteClass = "canvas-palette-flyout-div-none";
 					palette = (<Palette
 						paletteJSON={this.objectModel.getPaletteData()}
 						showPalette={this.state.isPaletteOpen}
@@ -339,6 +340,7 @@ export default class CommonCanvas extends React.Component {
 						paletteJSON={this.objectModel.getPaletteData()}
 						showPalette={this.state.isPaletteOpen}
 						canvasController={this.canvasController}
+						isPaletteOpen={this.state.isPaletteOpen}
 					/>);
 				}
 			}
@@ -399,6 +401,7 @@ export default class CommonCanvas extends React.Component {
 				node={this.state.tipDef.node}
 				port={this.state.tipDef.port}
 				nodeTemplate={this.state.tipDef.nodeTemplate}
+				category={this.state.tipDef.category}
 				canvasController={this.canvasController}
 			/>);
 		}

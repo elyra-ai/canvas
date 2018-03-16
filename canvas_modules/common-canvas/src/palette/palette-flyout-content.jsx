@@ -10,16 +10,15 @@
 import React from "react";
 import PropTypes from "prop-types";
 import PaletteFlyoutContentCategory from "./palette-flyout-content-category.jsx";
+import PaletteFlyoutContentSearch from "./palette-flyout-content-search.jsx";
 import PaletteContentList from "./palette-content-list.jsx";
-import Icon from "../icons/icon.jsx";
-import TextField from "ap-components-react/dist/components/TextField";
 
 class PaletteFlyoutContent extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			selectedCategory: "",
+			selectedCategoryId: "",
 			filterKeyword: ""
 		};
 
@@ -29,12 +28,22 @@ class PaletteFlyoutContent extends React.Component {
 		this.handleFilterChange = this.handleFilterChange.bind(this);
 	}
 
+	componentWillReceiveProps(newProps) {
+		if (!newProps.isPaletteOpen) {
+			this.setState({ filterKeyword: "" });
+		}
+	}
+
+	/*
+	* Returns a unique set of categories in case category labels
+	* are duplicated in the categories list.
+	*/
 	getCategories(categories) {
 		var out = [];
 		if (categories) {
 			for (const category of categories) {
 				if (out.indexOf(category.label) === -1) {
-					out.push(category.label);
+					out.push(category);
 				}
 			}
 		}
@@ -53,14 +62,15 @@ class PaletteFlyoutContent extends React.Component {
 		return out;
 	}
 
-	categorySelected(catSelEvent) {
+	categorySelected(catSelId) {
 		// Hide category if clicked again
-		if (this.state.selectedCategory !== catSelEvent) {
-			this.setState({ selectedCategory: catSelEvent });
+		if (this.state.selectedCategoryId !== catSelId) {
+			this.setState({ selectedCategoryId: catSelId });
 		} else {
-			this.setState({ selectedCategory: "" });
+			this.setState({ selectedCategoryId: "" });
 		}
 	}
+
 	filterNodeTypes(nodeTypes) {
 		var filteredNodeTypes = [];
 		if (nodeTypes) {
@@ -72,6 +82,7 @@ class PaletteFlyoutContent extends React.Component {
 		}
 		return filteredNodeTypes;
 	}
+
 	handleFilterChange(evt) {
 		this.setState({ filterKeyword: evt.target.value });
 	}
@@ -86,16 +97,17 @@ class PaletteFlyoutContent extends React.Component {
 				style = { "borderBottom": "none" };
 			}
 			var content = null;
-			const nodeTypes = this.getNodeTypesForCategory(this.props.paletteJSON.categories, category);
+			const nodeTypes = this.getNodeTypesForCategory(this.props.paletteJSON.categories, category.label);
 			const filteredNodeTypes = this.filterNodeTypes(nodeTypes);
-			if (this.state.selectedCategory === category && filteredNodeTypes.length > 0) {
+			if (this.state.selectedCategoryId === category.category && filteredNodeTypes.length > 0) {
 				content = (
 					<PaletteContentList
 						style={style}
 						show
-						key={category + "-nodes"}
+						key={category.label + "-nodes"}
 						categoryJSON={filteredNodeTypes}
 						canvasController={this.props.canvasController}
+						isPaletteOpen={this.props.isPaletteOpen}
 					/>);
 			}
 			var itemsFiltered = false;
@@ -103,38 +115,41 @@ class PaletteFlyoutContent extends React.Component {
 				itemsFiltered = true;
 			}
 			contentDivs.push(
-				<div key={category + "-container"}>
+				<div key={category.label + "-container"}>
 					<PaletteFlyoutContentCategory
-						key={category}
-						categoryName={category}
-						selectedCategory={this.state.selectedCategory}
+						key={category.category}
+						category={category}
+						selectedCategoryId={this.state.selectedCategoryId}
 						categorySelectedMethod={this.categorySelected}
 						itemCount={filteredNodeTypes.length}
 						itemsFiltered={itemsFiltered}
+						canvasController={this.props.canvasController}
+						isPaletteOpen={this.props.isPaletteOpen}
 					/>
 					{content}
 				</div>
 			);
 		}
-		const placeHolder = "Search Nodes";
-		const value = this.state.filterKeyword;
+
+		const contentCategories = (
+			<div className="palette-flyout-content-categories">
+				{contentDivs}
+			</div>
+		);
+
+		const contentSearch = (
+			<PaletteFlyoutContentSearch
+				handleFilterChange={this.handleFilterChange}
+				filterKeyword={this.state.filterKeyword}
+				isPaletteOpen={this.props.isPaletteOpen}
+				canvasController={this.props.canvasController}
+			/>
+		);
+
 		return (
 			<div className="palette-flyout-content">
-				<div className="palette-flyout-search">
-					<div className="palette-flyout-search-bar">
-						<TextField
-							key="palette-flyout-search-text"
-							type="search"
-							id="palette-flyout-search-text"
-							placeholder={placeHolder}
-							disabledPlaceholderAnimation
-							onChange={this.handleFilterChange}
-							value={value}
-						/>
-					</div>
-					<Icon type="search" size="20px" />
-				</div>
-				{contentDivs}
+				{contentSearch}
+				{contentCategories}
 			</div>
 		);
 	}
@@ -142,7 +157,8 @@ class PaletteFlyoutContent extends React.Component {
 
 PaletteFlyoutContent.propTypes = {
 	paletteJSON: PropTypes.object.isRequired,
-	canvasController: PropTypes.object.isRequired
+	canvasController: PropTypes.object.isRequired,
+	isPaletteOpen: PropTypes.bool.isRequired
 };
 
 export default PaletteFlyoutContent;

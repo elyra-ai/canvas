@@ -7,6 +7,7 @@ Feature: AutoLayout
   So I can test autoLayout operations to the canvas
 
 Scenario: Sanity test for autoLayout operations in Vertical Fixed Layout
+	Then I resize the window size to 1400 width and 800 height
 	Given I am on the test harness
 	Given I have toggled the app side panel
 	Given I have selected the "Vertical" fixed Layout
@@ -37,6 +38,7 @@ Scenario: Sanity test for autoLayout operations in Vertical Fixed Layout
 
 
 Scenario: Sanity test for autoLayout operations in Horizontal Fixed Layout
+	Then I resize the window size to 1400 width and 800 height
 	Given I am on the test harness
 	Given I have toggled the app side panel
 	Given I have selected the "Horizontal" fixed Layout
@@ -67,6 +69,7 @@ Scenario: Sanity test for autoLayout operations in Horizontal Fixed Layout
 
 
 Scenario: Sanity test for autoLayout operations in None Fixed Layout
+	Then I resize the window size to 1400 width and 800 height
 	Given I am on the test harness
 	Given I have toggled the app side panel
 	Given I have selected the "None" fixed Layout
