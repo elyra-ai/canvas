@@ -65,7 +65,7 @@ export default class PropertiesStore {
 			return null;
 		}
 		const state = this.store.getState();
-		var locState = state.controlStatesReducer[propertyId.name];
+		let locState = state.controlStatesReducer[propertyId.name];
 		// in a table return state of parent if set.
 		if (locState && (locState.value === "hidden" || locState.value === "disabled")) {
 			return locState.value;
@@ -142,7 +142,7 @@ export default class PropertiesStore {
 		}
 		// First check for control-level, then column level, and finally cell level property addressing
 		const state = this.store.getState();
-		var locState = state.controlStatesReducer[propertyId.name];
+		let locState = state.controlStatesReducer[propertyId.name];
 		if (typeof propertyId.col !== "undefined" && locState && locState[propertyId.col.toString()]) {
 			// Column level filtering
 			locState = locState[propertyId.col.toString()];
@@ -166,7 +166,7 @@ export default class PropertiesStore {
 			return null;
 		}
 		const state = this.store.getState();
-		var controlMsg = state.errorMessagesReducer[propertyId.name];
+		let controlMsg = state.errorMessagesReducer[propertyId.name];
 		if (typeof propertyId.row !== "undefined" && controlMsg) {
 			controlMsg = controlMsg[propertyId.row.toString()];
 			if (typeof propertyId.col !== "undefined" && controlMsg) {

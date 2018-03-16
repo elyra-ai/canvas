@@ -11,7 +11,7 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
 import Button from "ap-components-react/dist/components/Button";
-import paramDef from "./misclassification_paramDef.json";
+import paramDef from "./json/misclassification_paramDef.json";
 
 
 class CustomButtonPanel {

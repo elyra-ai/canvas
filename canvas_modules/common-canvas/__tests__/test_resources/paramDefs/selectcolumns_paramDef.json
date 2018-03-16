@@ -220,7 +220,7 @@
           "default": "Field Error"
         },
         "description": {
-          "default": "selectcolumns with error when set to 'age', also 3 rows displayed"
+          "default": "selectcolumns with error when 'age' is selected, also 3 rows displayed"
         },
         "rows": 3
       },
@@ -230,7 +230,7 @@
           "default": "Field Warning"
         },
         "description": {
-          "default": "selectcolumns with warning when set to 'age', also 2 rows displayed"
+          "default": "selectcolumns with warning when value is 'age', also 2 rows displayed"
         },
         "rows": 2
       },
@@ -402,8 +402,8 @@
         },
         "evaluate": {
           "condition": {
-            "parameter_ref": "fields_error[0]",
-            "op": "notEquals",
+            "parameter_ref": "fields_error",
+            "op": "notContains",
             "value": "age"
           }
         }
@@ -420,9 +420,9 @@
         },
         "evaluate": {
           "condition": {
-            "parameter_ref": "fields_warning[0]",
+            "parameter_ref": "fields_warning",
             "op": "notEquals",
-            "value": "age"
+            "value": ["age"]
           }
         }
       }

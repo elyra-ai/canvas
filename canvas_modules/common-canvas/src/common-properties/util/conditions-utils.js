@@ -14,6 +14,7 @@ import UiConditions from "../ui-conditions/ui-conditions.js";
 import { DEFAULT_VALIDATION_MESSAGE, STATES, DEFAULT_DATE_FORMAT, DEFAULT_TIME_FORMAT, CONTROL_TYPE } from "../constants/constants.js";
 import moment from "moment";
 import isEmpty from "lodash/isEmpty";
+import cloneDeep from "lodash/cloneDeep";
 
 function validateConditions(controller, definitions, dataModel, initial) {
 	_validateVisible(controller, definitions.visibleDefinition, dataModel, initial);
@@ -521,7 +522,7 @@ function validateInput(propertyId, controller, validationDefinitions, datasetMet
 						text: output.text
 					};
 				}
-				let msgPropertyId = propertyId;
+				let msgPropertyId = cloneDeep(propertyId);
 				if (validation.definition.validation &&
 					validation.definition.validation.fail_message &&
 					validation.definition.validation.fail_message.focus_parameter_ref) {
@@ -644,12 +645,9 @@ function _extractValidationDefinitions(propertyId, validationDefinitions) {
 			continue;
 		}
 		const baseId = _getPropertyId(validationKey);
-		if (baseId.name === propertyId.name) {
-			if (typeof propertyId.col === "undefined") {
-				retVal = retVal.concat(validationDefinitions[validationKey]);
-			} else if (baseId.col === propertyId.col) {
-				retVal = retVal.concat(validationDefinitions[validationKey]);
-			}
+		// baseId.col and propertyId.col can be undefined
+		if (baseId.name === propertyId.name && baseId.col === propertyId.col) {
+			retVal = retVal.concat(validationDefinitions[validationKey]);
 		}
 	}
 	return retVal;

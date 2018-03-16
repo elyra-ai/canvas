@@ -9,8 +9,8 @@
 
 /* eslint-disable no-empty-function */
 import React from "react";
-import CustomMapCtrl from "./CustomMapCtrl";
-import CustomMapSummary from "./CustomMapSummary";
+import CustomMapCtrl from "../custom-components/CustomMapCtrl";
+import CustomMapSummary from "../custom-components/CustomMapSummary";
 
 class CustomMapPanel {
 	static id() {

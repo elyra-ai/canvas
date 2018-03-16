@@ -143,6 +143,24 @@ export default class PropertiesController {
 		}
 	}
 
+	/*
+	* Used to convert a propertyId to a propertyId that always has a row.
+	* Used in complex types that aren't tables and don't have rows.  Returns original
+	* propertyId or a propertyId where col is converted to row.  Used in messages and property values since they
+	* are stored name -> row -> col
+	* @param propertyId
+	* @return propertyId
+	*/
+	_convertPropertyId(propertyId) {
+		// used for complex types that aren't tables
+		if (propertyId && typeof propertyId.col !== "undefined" && typeof propertyId.row === "undefined") {
+			return {
+				name: propertyId.name,
+				row: propertyId.col
+			};
+		}
+		return propertyId;
+	}
 	parsePanelTree(panels) {
 		for (const panel of panels) {
 			this.panelTree[panel] = {
@@ -507,7 +525,8 @@ export default class PropertiesController {
 	/*
 	* Property Values Methods
 	*/
-	updatePropertyValue(propertyId, value) {
+	updatePropertyValue(inPropertyId, value) {
+		const propertyId = this._convertPropertyId(inPropertyId);
 		this.propertiesStore.updatePropertyValue(propertyId, value);
 		const definitions = {
 			visibleDefinition: this.visibleDefinition,
@@ -520,14 +539,15 @@ export default class PropertiesController {
 			this.handlers.propertyListener(
 				{
 					action: ACTIONS.UPDATE_PROPERTY,
-					property: propertyId,
+					property: inPropertyId,
 					value: value
 				}
 			);
 		}
 	}
 
-	getPropertyValue(propertyId, filterHiddenDisabled) {
+	getPropertyValue(inPropertyId, filterHiddenDisabled) {
+		const propertyId = this._convertPropertyId(inPropertyId);
 		const propertyValue = this.propertiesStore.getPropertyValue(propertyId);
 		let filteredValue;
 		// don't return hidden/disabled values
@@ -658,7 +678,8 @@ export default class PropertiesController {
 	setErrorMessages(messages) {
 		this.propertiesStore.setErrorMessages(messages);
 	}
-	getErrorMessage(propertyId) {
+	getErrorMessage(inPropertyId) {
+		const propertyId = this._convertPropertyId(inPropertyId);
 		return this.propertiesStore.getErrorMessage(propertyId);
 	}
 	getErrorMessages(filteredPipeline) {
@@ -683,7 +704,8 @@ export default class PropertiesController {
 		}
 		return messages;
 	}
-	updateErrorMessage(propertyId, message) {
+	updateErrorMessage(inPropertyId, message) {
+		const propertyId = this._convertPropertyId(inPropertyId);
 		if (message && message.type !== "info") {
 			this.propertiesStore.updateErrorMessage(propertyId, message);
 		} else {
@@ -691,7 +713,8 @@ export default class PropertiesController {
 		}
 	}
 
-	removeErrorMessageRow(propertyId) {
+	removeErrorMessageRow(inPropertyId) {
+		const propertyId = this._convertPropertyId(inPropertyId);
 		let messages = this.propertiesStore.getErrorMessages();
 		const controlMsg = messages[propertyId.name];
 		if (typeof controlMsg !== "undefined") {
@@ -754,7 +777,7 @@ export default class PropertiesController {
 	}
 
 	getControl(propertyId) {
-		var control = this.controls[propertyId.name];
+		let control = this.controls[propertyId.name];
 		if (typeof propertyId.col !== "undefined" && control) {
 			control = this.controls[propertyId.name][propertyId.col.toString()];
 		}

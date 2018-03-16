@@ -10,7 +10,7 @@
 /* eslint-disable no-empty-function */
 import React from "react";
 import CustomSliderCtrl from "../custom-components/CustomSliderCtrl";
-import paramDef from "./standardControls_paramDef.json";
+import paramDef from "./json/standardControls_paramDef.json";
 
 
 class CustomSliderPanel {
