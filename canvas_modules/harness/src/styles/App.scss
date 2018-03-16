@@ -455,44 +455,66 @@
 	width: 40%;
 }
 
-.custom-slider .slider .text--slider {
-	padding: 0.5em 25px 0.5em 0;
-}
-
 .custom-slider {
 	display: flex;
 	overflow-x: hidden;
-}
-
-.custom-slider .slider {
-	display: block;
-	width: 95%;
-}
-
-.custom-slider .icon {
-	margin-top: 15px;
+	.icon {
+		margin-top: 15px;
+		width: 20px;
+	}
+	.slider {
+		display: block;
+		width: 100%;
+		.text--slider {
+			padding: 0.5em 25px 0.5em 0;
+		}
+		p {
+			display: none;
+		}
+	}
+	.message {
+		margin-top: -15px;
+	}
 }
 
 .custom-toggle {
 	display: flex;
+	.text {
+		padding-left: 10px;
+	}
+	.icon {
+		margin-left: auto;
+	}
 }
 
-.custom-toggle .text {
-	padding-left: 10px;
-}
-
-.custom-toggle .icon {
-	margin-left: auto;
-}
-.custom-map-summary span {
-	display: block;
-}
 .table-row .custom-toggle {
 	padding-top: 6px;
 }
-.custom-map-summary text {
-	color: #0000CD;
-	font-weight: 600;
+
+.custom-map-summary {
+	span {
+		display: block;
+	}
+	text {
+		color: #0000CD;
+		font-weight: 600;
+	}
+}
+
+.custom-map {
+	.condition {
+		margin-top: 5px;
+		margin-bottom: 10px;
+		display: flex;
+		.map-icon {
+			height: 20px;
+			width: 20px;
+			margin-right: 4px;
+		}
+	}
+	button {
+		margin-right: 4px;
+	}
 }
 
 .list-item-containers .list-item.overflow {

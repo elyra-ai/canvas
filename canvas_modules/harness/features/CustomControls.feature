@@ -16,7 +16,11 @@ Feature: CustomControls
 		Then I click the "MAP AND SLIDER" category from flyout
 		Then I open the "Configure Map" summary link in the "MAP AND SLIDER" category
 		Then I verify that a wideflyout dialog has opened
-		Then I show the map and go to Armonk
+		Then I show the map
+		Then I click on "zoom_out" button
+		Then I pause for 1 seconds
+		Then I validate map has error
+		Then I click on "go_to_armonk" button
 		Then I click on modal OK button
 		Then I open the "Configure Slider" summary link in the "MAP AND SLIDER" category
 		Then I validate the dropdown has 7 options

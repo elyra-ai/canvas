@@ -240,7 +240,7 @@
       "validation": {
         "fail_message": {
           "type": "error",
-          "focus_parameter_ref": "custom_map_info[2]",
+          "focus_parameter_ref": "custom_map_info",
           "message": {
             "default": "Map zoom too wide, please decrease"
           }

@@ -17,6 +17,7 @@ import PropertyUtils from "./util/property-utils.js";
 import { STATES, ACTIONS } from "./constants/constants.js";
 import CommandStack from "../command-stack/command-stack.js";
 import ControlFactory from "./editor-controls/control-factory";
+import { ControlType } from "./constants/form-constants";
 
 export default class PropertiesController {
 
@@ -151,7 +152,7 @@ export default class PropertiesController {
 	* @param propertyId
 	* @return propertyId
 	*/
-	_convertPropertyId(propertyId) {
+	convertPropertyId(propertyId) {
 		// used for complex types that aren't tables
 		if (propertyId && typeof propertyId.col !== "undefined" && typeof propertyId.row === "undefined") {
 			return {
@@ -526,7 +527,7 @@ export default class PropertiesController {
 	* Property Values Methods
 	*/
 	updatePropertyValue(inPropertyId, value) {
-		const propertyId = this._convertPropertyId(inPropertyId);
+		const propertyId = this.convertPropertyId(inPropertyId);
 		this.propertiesStore.updatePropertyValue(propertyId, value);
 		const definitions = {
 			visibleDefinition: this.visibleDefinition,
@@ -534,7 +535,7 @@ export default class PropertiesController {
 			filteredEnumDefinitions: this.filteredEnumDefinitions
 		};
 		conditionsUtil.validateConditions(this, definitions, this.getDatasetMetadata());
-		conditionsUtil.validateInput(propertyId, this, this.validationDefinitions, this.getDatasetMetadata());
+		conditionsUtil.validateInput(inPropertyId, this, this.validationDefinitions, this.getDatasetMetadata());
 		if (this.handlers.propertyListener) {
 			this.handlers.propertyListener(
 				{
@@ -547,7 +548,7 @@ export default class PropertiesController {
 	}
 
 	getPropertyValue(inPropertyId, filterHiddenDisabled) {
-		const propertyId = this._convertPropertyId(inPropertyId);
+		const propertyId = this.convertPropertyId(inPropertyId);
 		const propertyValue = this.propertiesStore.getPropertyValue(propertyId);
 		let filteredValue;
 		// don't return hidden/disabled values
@@ -679,7 +680,7 @@ export default class PropertiesController {
 		this.propertiesStore.setErrorMessages(messages);
 	}
 	getErrorMessage(inPropertyId) {
-		const propertyId = this._convertPropertyId(inPropertyId);
+		const propertyId = this.convertPropertyId(inPropertyId);
 		return this.propertiesStore.getErrorMessage(propertyId);
 	}
 	getErrorMessages(filteredPipeline) {
@@ -705,7 +706,7 @@ export default class PropertiesController {
 		return messages;
 	}
 	updateErrorMessage(inPropertyId, message) {
-		const propertyId = this._convertPropertyId(inPropertyId);
+		const propertyId = this.convertPropertyId(inPropertyId);
 		if (message && message.type !== "info") {
 			this.propertiesStore.updateErrorMessage(propertyId, message);
 		} else {
@@ -714,7 +715,7 @@ export default class PropertiesController {
 	}
 
 	removeErrorMessageRow(inPropertyId) {
-		const propertyId = this._convertPropertyId(inPropertyId);
+		const propertyId = this.convertPropertyId(inPropertyId);
 		let messages = this.propertiesStore.getErrorMessages();
 		const controlMsg = messages[propertyId.name];
 		if (typeof controlMsg !== "undefined") {
@@ -778,7 +779,8 @@ export default class PropertiesController {
 
 	getControl(propertyId) {
 		let control = this.controls[propertyId.name];
-		if (typeof propertyId.col !== "undefined" && control) {
+		// custom control doesn't have any subcontrols so default to parent
+		if (typeof propertyId.col !== "undefined" && control && control.controlType !== ControlType.CUSTOM) {
 			control = this.controls[propertyId.name][propertyId.col.toString()];
 		}
 		return control;

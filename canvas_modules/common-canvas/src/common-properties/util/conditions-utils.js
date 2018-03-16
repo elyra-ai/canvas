@@ -512,7 +512,7 @@ function validateInput(propertyId, controller, validationDefinitions, datasetMet
 			for (const validation of validations) {
 				let errorMessage = DEFAULT_VALIDATION_MESSAGE;
 				output = UiConditions.evaluateInput(validation.definition, userInput, control, datasetMetadata, controller.getRequiredParameters(),
-					propertyId, controller);
+					controller.convertPropertyId(propertyId), controller);
 				let isError = false;
 				// logger.info("validated input field " + JSON.stringify(propertyId) + " to be " + JSON.stringify(output));
 				if (typeof output === "object") {

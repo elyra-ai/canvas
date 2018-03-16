@@ -64,14 +64,23 @@ export default class CustomMapCtrl extends React.Component {
 	}
 
 	setInternalState(lat, lng, zoom) {
-		this.lat = lat;
-		this.lng = lng;
-		this.zoom = zoom;
-		const value = [lat, lng, zoom];
+		if (this.lat !== lat) {
+			this.props.controller.updatePropertyValue({ name: this.props.propertyId.name, col: 0 }, lat);
+			this.lat = lat;
+		}
+		if (this.lng !== lng) {
+			this.props.controller.updatePropertyValue({ name: this.props.propertyId.name, col: 1 }, lng);
+			this.lng = lng;
+		}
+		if (this.zoom !== zoom) {
+			this.zoom = zoom;
+			this.props.controller.updatePropertyValue({ name: this.props.propertyId.name, col: 2 }, zoom);
+			this.props.controller.updatePropertyValue(
+				{ name: this.props.data.parameter_ref }, zoom); // update value in another control
+		}
+
 		this.coords = this.formatCoords(lat, lng);
-		this.props.controller.updatePropertyValue(this.props.propertyId, value);
-		this.props.controller.updatePropertyValue(
-			{ name: this.props.data.parameter_ref }, zoom); // update value in another control
+
 		const mapSummary = (<CustomMapSummary lng={this.lng} lat={this.lat} zoom={this.zoom} />);
 		this.props.controller.updateCustPropSumPanelValue(this.props.propertyId,
 			{ value: mapSummary, label: "Map" });
@@ -104,6 +113,10 @@ export default class CustomMapCtrl extends React.Component {
 			lng: 238.2518
 		};
 		this.goSomewhere(SVL_POSITION, 18);
+	}
+
+	zoomOut() {
+		this.goSomewhere({ lat: this.lat, lng: this.lng }, 2);
 	}
 
 	formatCoords(lat, lng) {
@@ -141,8 +154,8 @@ export default class CustomMapCtrl extends React.Component {
 			this.resized = true;
 		}
 		const message = this.props.controller.getErrorMessage(this.props.propertyId);
-		var messageText;
-		var icon;
+		let messageText;
+		let icon;
 		if (message && message.text) {
 			messageText = message.text;
 			if (message.type === "warning") {
@@ -152,7 +165,7 @@ export default class CustomMapCtrl extends React.Component {
 			}
 		}
 		const state = this.props.controller.getControlState(this.props.propertyId);
-		var visibility;
+		let visibility;
 		if (state === "hidden") {
 			visibility = { visibility: "hidden" };
 		}
@@ -165,12 +178,13 @@ export default class CustomMapCtrl extends React.Component {
 					<div id="map" ref="map" style={{ width: 265, height: 265, border: "1px solid black" }}>
 						I should be a map!
 					</div>
-					<div style={{ "marginTop": "5px", "marginBottom": "10px" }}>
-						{icon}&nbsp;{messageText}
+					<div className="condition">
+						<div className="map-icon">{icon}</div>
+						<div>{messageText}</div>
 					</div>
-					<button id="go_to_svl" onClick={this.gotoSVL.bind(this)}>Go to SVL</button>
-					&nbsp;
-					<button id="go_to_armonk" onClick={this.gotoArmonk.bind(this)}>Go to Armonk</button>
+					<button data-id="go_to_svl" onClick={this.gotoSVL.bind(this)}>Go to SVL</button>
+					<button data-id="go_to_armonk" onClick={this.gotoArmonk.bind(this)}>Go to Armonk</button>
+					<button data-id="zoom_out" onClick={this.zoomOut.bind(this)}>Zoom Out</button>
 				</div>
 			</div>
 		);
@@ -178,8 +192,8 @@ export default class CustomMapCtrl extends React.Component {
 }
 
 function loadJS(src) {
-	var ref = window.document.getElementsByTagName("script")[0];
-	var script = window.document.createElement("script");
+	const ref = window.document.getElementsByTagName("script")[0];
+	const script = window.document.createElement("script");
 	script.src = src;
 	script.async = true;
 	return ref.parentNode.insertBefore(script, ref);

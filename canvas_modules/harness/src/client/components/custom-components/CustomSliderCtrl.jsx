@@ -62,7 +62,7 @@ export default class CustomSliderCtrl extends React.Component {
 						{icon}
 					</div>
 				</div>
-				<div style={{ "marginTop": "-15px" }}>
+				<div className="message">
 					{messageText}
 				</div>
 			</div>

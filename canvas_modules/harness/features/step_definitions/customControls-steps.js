@@ -60,12 +60,19 @@ module.exports = function() {
 		expect(2).toEqual(lastEventLog.data.messages.length);
 	});
 
+	this.Then(/^I click on "([^"]*)" button$/, function(dataId) {
+		const button = browser.$(`button[data-id='${dataId}']`);
+		button.click();
+	});
 
-	this.Then("I show the map and go to Armonk", function() {
+	this.Then("I show the map", function() {
 		const showMapCheckbox = browser.$(".control-contents").$(".properties-tooltips-container")
 			.$("label");
 		showMapCheckbox.click();
-		const goToArmonkButton = browser.$("#go_to_armonk");
-		goToArmonkButton.click();
+	});
+
+	this.Then(/^I validate map has error$/, function() {
+		const icon = browser.$$(".map-icon .icon");
+		expect(icon.length).toEqual(1);
 	});
 };
