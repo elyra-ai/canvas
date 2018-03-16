@@ -21,7 +21,6 @@
   "devDependencies": {
     "@dap/eslint-config-portal-common": "1.0.0",
     "ap-components-react": "3.7.0",
-    "@wdpx/ap-components": "3.16.11",
     "autoprefixer": "7.1.2",
     "babel-core": "6.26.0",
     "babel-jest": "20.0.3",

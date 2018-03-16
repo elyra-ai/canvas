@@ -13,8 +13,8 @@
   },
   "dependencies": {
     "@wdp/common-canvas": "file:../common-canvas",
-    "ap-components-react": "3.1.19",
-    "@wdpx/ap-components": "3.16.11",
+    "ap-components-react": "3.7.0",
+    "@wdpx/ap-components": "3.16.16",
     "body-parser": "1.17.2",
     "bootstrap": "3.3.7",
     "express": "4.15.3",
