@@ -59,6 +59,7 @@
   "conditions": [
     {
       "validation": {
+        "id": "colName1",
         "fail_message": {
           "type": "error",
           "focus_parameter_ref": "colName",
@@ -76,6 +77,7 @@
     },
     {
       "validation": {
+        "id": "colName2",
         "fail_message": {
           "type": "error",
           "focus_parameter_ref": "colName",

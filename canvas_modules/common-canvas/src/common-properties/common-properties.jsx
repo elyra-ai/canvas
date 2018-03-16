@@ -117,7 +117,7 @@ class CommonProperties extends React.Component {
 			}
 			// TODO: This can be removed once the WML Play service generates datasetMetadata instead of inputDataModel
 			if (formData && formData.data && formData.data.inputDataModel && !formData.data.datasetMetadata) {
-				formData.data.datasetMetadata = this.convertInputDataModel(formData.data.inputDataModel);
+				formData.data.datasetMetadata = PropertyUtils.convertInputDataModel(formData.data.inputDataModel);
 			}
 		} catch (error) {
 			logger.error("Error generating form in common-properties: " + error);
@@ -148,42 +148,6 @@ class CommonProperties extends React.Component {
 			propertiesTitleReadOnly: mode,
 			propertiesTitleEditStyle: { borderBottom: bottomBorderStyle }
 		});
-	}
-
-	/**
-	 * Converts old style Modeler inputDataModel into newer datasetMetadata
-	 */
-	convertInputDataModel(dataModel) {
-		const datasetMetadata = {};
-		datasetMetadata.fields = [];
-		if (dataModel && dataModel.columns) {
-			for (const column of dataModel.columns) {
-				const field = {};
-				field.name = column.name;
-				field.type = this.convertType(column.storage);
-				field.metadata = {};
-				field.metadata.description = "";
-				if (column.measure) {
-					field.metadata.measure = column.measure.toLowerCase();
-				}
-				if (column.modelingRole) {
-					field.metadata.modeling_role = column.modelingRole.toLowerCase();
-				}
-				datasetMetadata.fields.push(field);
-			}
-		}
-		return datasetMetadata;
-	}
-
-	/**
-	 * Converts from Modeler storage to WML type.
-	 */
-	convertType(storage) {
-		let retVal = storage.toLowerCase();
-		if (storage === "Real") {
-			retVal = "double";
-		}
-		return retVal;
 	}
 
 	applyPropertiesEditing(closeProperties) {

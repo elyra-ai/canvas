@@ -304,8 +304,16 @@ export default class CanvasController {
 		return this.objectModel.getSelectedObjectIds();
 	}
 
+	getFlowMessages() {
+		return this.objectModel.getFlowMessages();
+	}
+
 	isInternalObjectModelEnabled() {
 		return this.canvasConfig.enableInternalObjectModel;
+	}
+
+	isFlowValid(includeMsgTypes) {
+		return this.objectModel.isFlowValid(includeMsgTypes);
 	}
 
 	openPalette() {

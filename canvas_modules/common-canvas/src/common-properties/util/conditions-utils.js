@@ -540,7 +540,7 @@ function validateInput(propertyId, controller, validationDefinitions, datasetMet
 					if (isError) {
 						errorSet = true;
 					}
-				} else {
+				} else if (!isError) {
 					const msg = controller.getErrorMessage(msgPropertyId);
 					if (!isEmpty(msg) && (msg.validation_id === errorMessage.validation_id)) {
 						controller.updateErrorMessage(msgPropertyId, DEFAULT_VALIDATION_MESSAGE);
@@ -675,5 +675,4 @@ module.exports.validateConditions = validateConditions;
 module.exports.validateInput = validateInput;
 module.exports.filterConditions = filterConditions;
 module.exports.updateState = _updateState;
-module.exports.getPropertyId = _getPropertyId;
 module.exports.updatePanelChildrenStatesForPanelIds = updatePanelChildrenStatesForPanelIds;

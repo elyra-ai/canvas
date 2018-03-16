@@ -1,0 +1,905 @@
+{
+  "titleDefinition": {
+    "title": "StructureListEditor Test"
+  },
+  "current_parameters": {
+    "inlineEditingTableWarning": [],
+    "inlineEditingTableError": [
+      [
+        1,
+        1.234,
+        "Ascending",
+        true
+      ],
+      [
+        1,
+        1.234,
+        "Descending",
+        true
+      ],
+      [
+        1,
+        1.234,
+        "Ascending",
+        false
+      ]
+    ],
+    "inlineEditingTableError2": [
+      [
+        1,
+        1.234,
+        "Age >= 55",
+        "dog",
+        "apple"
+      ],
+      [
+        1,
+        1.234,
+        "help",
+        "dog",
+        "apple"
+      ],
+      [
+        1,
+        1.234,
+        "Age >= 55",
+        "dog",
+        "apple"
+      ]
+    ],
+    "structuretableErrors": [
+      [
+        "Age",
+        1,
+        "Ascending"
+      ],
+      [
+        "Cholesterol",
+        2,
+        "Descending"
+      ],
+      [
+        "Sex",
+        3,
+        "Ascending"
+      ]
+    ]
+  },
+  "parameters": [
+    {
+      "id": "inlineEditingTableWarning",
+      "type": "array[inlineEditingTableWarning]",
+      "default": []
+    },
+    {
+      "id": "inlineEditingTableError",
+      "type": "array[inlineEditingTableError]",
+      "default": []
+    },
+    {
+      "id": "inlineEditingTableError2",
+      "type": "array[inlineEditingTableError2]",
+      "default": []
+    },
+    {
+      "id": "fields_error",
+      "type": "array[string]",
+      "role": "column",
+      "required": true
+    },
+    {
+      "id": "structuretableErrors",
+      "type": "array[structuretableErrors]",
+      "role": "column",
+      "required": true
+    }
+  ],
+  "complex_types": [
+    {
+      "id": "inlineEditingTableWarning",
+      "parameters": [
+        {
+          "id": "valueName",
+          "type": "integer",
+          "default": 1,
+          "role": "new_column"
+        },
+        {
+          "id": "doubleName",
+          "type": "double",
+          "default": 1.2,
+          "role": "new_column"
+        },
+        {
+          "id": "condition",
+          "type": "string",
+          "default": "",
+          "role": "expression"
+        }
+      ]
+    },
+    {
+      "id": "inlineEditingTableError",
+      "parameters": [
+        {
+          "id": "valueName",
+          "type": "integer",
+          "default": 2,
+          "role": "new_column"
+        },
+        {
+          "id": "doubleName",
+          "type": "double",
+          "default": 1.2,
+          "role": "new_column"
+        },
+        {
+          "id": "order",
+          "enum": [
+            "Ascending",
+            "Descending"
+          ],
+          "default": "Ascending"
+        },
+        {
+          "id": "checkbox",
+          "type": "boolean",
+          "enum": [
+            "Single Checkbox Label"
+          ],
+          "default": true
+        }
+      ]
+    },
+    {
+      "id": "inlineEditingTableError2",
+      "parameters": [
+        {
+          "id": "valueName",
+          "type": "integer",
+          "default": "1",
+          "role": "new_column"
+        },
+        {
+          "id": "doubleName",
+          "type": "double",
+          "default": "1.2",
+          "role": "new_column"
+        },
+        {
+          "id": "condition",
+          "type": "string",
+          "default": "",
+          "role": "expression"
+        },
+        {
+          "id": "dropdown",
+          "enum": [
+            "dog",
+            "cat",
+            "pig",
+            "horse"
+          ],
+          "default": "yellow"
+        },
+        {
+          "id": "textfield",
+          "type": "string",
+          "default": "",
+          "role": "new_column"
+        }
+      ]
+    },
+    {
+      "id": "structuretableErrors",
+      "key_definition": {
+        "id": "field",
+        "type": "string",
+        "role": "column",
+        "default": ""
+      },
+      "parameters": [
+        {
+          "id": "structuretable_error_readonly_int",
+          "type": "integer",
+          "default": "5"
+        },
+        {
+          "id": "structuretable_error",
+          "enum": [
+            "Ascending",
+            "Descending"
+          ],
+          "default": "Ascending"
+        }
+      ]
+    }
+  ],
+  "uihints": {
+    "id": "StructureListEditor.test",
+    "icon": "images/modelbuildspark.svg",
+    "label": {
+      "default": "StructureListEditor Test"
+    },
+    "description": {
+      "default": "Test readonly numbered column in a structure list editor control"
+    },
+    "parameter_info": [
+      {
+        "parameter_ref": "inlineEditingTableWarning",
+        "label": {
+          "default": "Values"
+        },
+        "description": {
+          "default": "Complex table control list editor table input"
+        },
+        "text_before": {
+          "default": "To generated a warning set integer Field cell value to 3"
+        }
+      },
+      {
+        "parameter_ref": "inlineEditingTableError",
+        "label": {
+          "default": "Values"
+        },
+        "description": {
+          "default": "Complex table control list editor table input"
+        },
+        "text_before": {
+          "default": "To generated a error: (integer field = 2 AND double field = 2.3) || order field = descending || checkbox = off "
+        }
+      },
+      {
+        "parameter_ref": "inlineEditingTableError2",
+        "label": {
+          "default": "Values"
+        },
+        "description": {
+          "default": "Complex table control list editor table input"
+        },
+        "text_before": {
+          "default": "To generated a error:  (integer Field = 2 OR double Field = 2.3) || condition field = help || animals field = horse || fruit field = pear"
+        }
+      },
+      {
+        "parameter_ref": "fields_error",
+        "label": {
+          "default": "Field Error"
+        },
+        "description": {
+          "default": "selectcolumns with error when set to 'age', also 3 rows displayed"
+        },
+        "rows": 3
+      },
+      {
+        "parameter_ref": "structuretableErrors",
+        "required": true,
+        "label": {
+          "default": "Error table"
+        },
+        "description": {
+          "default": "Set ascending to descending to generate error.",
+          "placement": "on_panel"
+        },
+        "rows": 5
+      }
+    ],
+    "complex_type_info": [
+      {
+        "complex_type_ref": "inlineEditingTableWarning",
+        "row_selection": "single",
+        "parameters": [
+          {
+            "parameter_ref": "valueName",
+            "label": {
+              "default": "Integer Field",
+              "resource_key": "expressionCellTable.name.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.name.desc"
+            },
+            "width": 10,
+            "edit_style": "inline",
+            "summary": true
+          },
+          {
+            "parameter_ref": "doubleName",
+            "label": {
+              "default": "Double Field",
+              "resource_key": "expressionCellTable.doubleName.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.doubleName.desc"
+            },
+            "width": 10,
+            "edit_style": "inline",
+            "summary": true
+          },
+          {
+            "parameter_ref": "condition",
+            "language": "CLEM",
+            "label": {
+              "resource_key": "expressionCellTable.description.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.description.desc"
+            },
+            "width": 15,
+            "edit_style": "on_panel",
+            "place_holder_text": {
+              "default": "Enter condition expression"
+            }
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "inlineEditingTableError",
+        "row_selection": "single",
+        "moveable_rows": true,
+        "parameters": [
+          {
+            "parameter_ref": "valueName",
+            "label": {
+              "default": "Integer Field",
+              "resource_key": "expressionCellTable.name.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.name.desc"
+            },
+            "width": 10,
+            "edit_style": "inline",
+            "summary": true
+          },
+          {
+            "parameter_ref": "doubleName",
+            "label": {
+              "default": "Double Field",
+              "resource_key": "expressionCellTable.doubleName.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.doubleName.desc"
+            },
+            "width": 10,
+            "edit_style": "inline",
+            "summary": true
+          },
+          {
+            "parameter_ref": "order",
+            "width": 16,
+            "label": {
+              "resource_key": "sort_order.label"
+            },
+            "description": {
+              "resource_key": "sort_order.desc"
+            },
+            "control": "toggletext",
+            "value_icons": [
+              "/images/up-triangle.svg",
+              "/images/down-triangle.svg"
+            ]
+          },
+          {
+            "parameter_ref": "checkbox",
+            "width": 5,
+            "label": {
+              "resource_key": "checkbox.label"
+            },
+            "description": {
+              "resource_key": "checkbox.desc"
+            },
+            "edit_style": "inline"
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "inlineEditingTableError2",
+        "row_selection": "single",
+        "add_remove_rows": false,
+        "parameters": [
+          {
+            "parameter_ref": "valueName",
+            "label": {
+              "default": "Integer Field",
+              "resource_key": "expressionCellTable.name.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.name.desc"
+            },
+            "width": 10,
+            "edit_style": "inline",
+            "summary": true
+          },
+          {
+            "parameter_ref": "doubleName",
+            "label": {
+              "default": "Double Field",
+              "resource_key": "expressionCellTable.doubleName.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.doubleName.desc"
+            },
+            "width": 10,
+            "edit_style": "inline",
+            "summary": true
+          },
+          {
+            "parameter_ref": "condition",
+            "language": "CLEM",
+            "label": {
+              "resource_key": "expressionCellTable.description.label"
+            },
+            "description": {
+              "resource_key": "expressionCellTable.description.desc"
+            },
+            "width": 15,
+            "edit_style": "on_panel",
+            "place_holder_text": {
+              "default": "Enter condition expression"
+            }
+          },
+          {
+            "parameter_ref": "dropdown",
+            "label": {
+              "resource_key": "dropdown.label"
+            },
+            "description": {
+              "resource_key": "dropdown.desc"
+            },
+            "width": 10,
+            "edit_style": "inline"
+          },
+          {
+            "parameter_ref": "textfield",
+            "label": {
+              "resource_key": "textfield.label"
+            },
+            "description": {
+              "resource_key": "textfield.desc"
+            },
+            "width": 10,
+            "edit_style": "inline"
+          }
+        ]
+      },
+      {
+        "complex_type_ref": "structuretableErrors",
+        "moveable_rows": true,
+        "key_definition": {
+          "parameter_ref": "field",
+          "width": 28,
+          "label": {
+            "resource_key": "structuretableErrors.field.label"
+          },
+          "summary": true
+        },
+        "parameters": [
+          {
+            "parameter_ref": "structuretable_error_readonly_int",
+            "width": 16,
+            "label": {
+              "resource_key": "structuretableErrors.structuretable_sort_order_readonly_int.label"
+            },
+            "description": {
+              "resource_key": "structuretableErrors.structuretable_sort_order_readonly_int.desc"
+            },
+            "generated_values": {
+              "operation": "index",
+              "start_value": 5
+            },
+            "control": "readonly"
+          },
+          {
+            "parameter_ref": "structuretable_error",
+            "width": 16,
+            "label": {
+              "resource_key": "structuretableErrors.sort_order.label"
+            },
+            "description": {
+              "resource_key": "structuretableErrors.sort_order.desc"
+            },
+            "control": "toggletext",
+            "value_icons": [
+              "/images/up-triangle.svg",
+              "/images/down-triangle.svg"
+            ]
+          }
+        ]
+      }
+    ],
+    "group_info": [
+      {
+        "id": "Conditions",
+        "type": "panels",
+        "group_info": [
+          {
+            "id": "inlineEditingTableWarning-summary-panel",
+            "type": "summaryPanel",
+            "label": {
+              "default": "Configure Warning Inline Editing Table"
+            },
+            "group_info": [
+              {
+                "id": "Inline editing",
+                "parameter_refs": [
+                  "inlineEditingTableWarning"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "inlineEditingTableError-summary-panel",
+            "type": "summaryPanel",
+            "label": {
+              "default": "Configure Error Inline Editing Table"
+            },
+            "group_info": [
+              {
+                "id": "Inline editing",
+                "parameter_refs": [
+                  "inlineEditingTableError"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "inlineEditingTableError2-summary-panel",
+            "type": "summaryPanel",
+            "label": {
+              "default": "Configure Error 2 Inline Editing Table"
+            },
+            "group_info": [
+              {
+                "id": "Inline editing",
+                "parameter_refs": [
+                  "inlineEditingTableError2"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "structuretableErrors-summary-panel",
+            "label": {
+              "default": "Test error table"
+            },
+            "type": "summaryPanel",
+            "group_info": [
+              {
+                "id": "structuretableErrors",
+                "type": "controls",
+                "label": {
+                  "default": "Columns"
+                },
+                "parameter_refs": [
+                  "structuretableErrors"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "selectcolumns-conditions",
+        "label": {
+          "default": "Conditions"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "fields_error"
+        ]
+      }
+    ]
+  },
+  "conditions": [
+    {
+      "validation": {
+        "id": "tablewarningtest1",
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "inlineEditingTableWarning",
+          "message": {
+            "default": "table cannot be empty"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "inlineEditingTableWarning",
+            "op": "isNotEmpty"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "id": "tablewarningtest2",
+        "fail_message": {
+          "type": "warning",
+          "focus_parameter_ref": "inlineEditingTableWarning[0]",
+          "message": {
+            "resource_key": "invalid_subpanel_name",
+            "default": "field1 should not equal 3"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "inlineEditingTableWarning[0]",
+            "op": "notEquals",
+            "value": 3
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "id": "tableerrortest1",
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "inlineEditingTableError[0]",
+          "message": {
+            "resource_key": "invalid_subpanel_name",
+            "default": "fields are 2 and 2.3"
+          }
+        },
+        "evaluate": {
+          "or": [
+            {
+              "condition": {
+                "parameter_ref": "inlineEditingTableError[0]",
+                "op": "notEquals",
+                "value": 2
+              }
+            },
+            {
+              "condition": {
+                "parameter_ref": "inlineEditingTableError[1]",
+                "op": "notEquals",
+                "value": 2.3
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "validation": {
+        "id": "tableerrortest2",
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "inlineEditingTableError[2]",
+          "message": {
+            "default": "order cannot be descending"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "inlineEditingTableError[2]",
+            "op": "notEquals",
+            "value": "Descending"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "id": "tableerrortest3",
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "inlineEditingTableError[3]",
+          "message": {
+            "default": "checkbox cannot be off"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "inlineEditingTableError[3]",
+            "op": "notEquals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "id": "tableerror2test1",
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "inlineEditingTableError2[0]",
+          "message": {
+            "resource_key": "invalid_subpanel_name",
+            "default": "fields are 2 or 2.3"
+          }
+        },
+        "evaluate": {
+          "and": [
+            {
+              "condition": {
+                "parameter_ref": "inlineEditingTableError2[0]",
+                "op": "notEquals",
+                "value": 2
+              }
+            },
+            {
+              "condition": {
+                "parameter_ref": "inlineEditingTableError2[1]",
+                "op": "notEquals",
+                "value": 2.3
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "validation": {
+        "id": "tableerror2test2",
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "inlineEditingTableError2[2]",
+          "message": {
+            "default": "expression contains help"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "inlineEditingTableError2[2]",
+            "op": "notContains",
+            "value": "help"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "id": "tableerror2test3",
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "inlineEditingTableError2[3]",
+          "message": {
+            "default": "animal equals horse"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "inlineEditingTableError2[3]",
+            "op": "notEquals",
+            "value": "horse"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "id": "tableerror2test4",
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "inlineEditingTableError2[4]",
+          "message": {
+            "default": "fruit equals pear"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "inlineEditingTableError2[4]",
+            "op": "notEquals",
+            "value": "pear"
+          }
+        }
+      }
+    },
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "structuretableErrors[2]",
+          "message": {
+            "default": "order cannot be descending"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "structuretableErrors[2]",
+            "op": "notEquals",
+            "value": "Descending"
+          }
+        }
+      }
+    }
+  ],
+  "dataset_metadata": [
+    {
+      "fields": [
+        {
+          "name": "Age",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Sex",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "BP",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Cholesterol",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Na",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "K",
+          "type": "double",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Drug",
+          "type": "string",
+          "metadata": {
+            "description": "",
+            "measure": "discrete",
+            "modeling_role": "input"
+          }
+        },
+        {
+          "name": "Ag",
+          "type": "integer",
+          "metadata": {
+            "description": "",
+            "measure": "range",
+            "modeling_role": "input"
+          }
+        }
+      ]
+    }
+  ],
+  "resources": {
+    "structurelisteditorTableInput.name.label": "Name",
+    "structurelisteditorTableInput.name.desc": "Enter a name",
+    "structurelisteditorTableInput.description.label": "Description",
+    "structurelisteditorTableInput.readonly_numbered_column_index.label": "Index",
+    "structurelisteditorTableInput.description.desc": "Enter a description",
+    "expressionCellTable.name.label": "integer Field",
+    "expressionCellTable.name.desc": "Enter an integer",
+    "expressionCellTable.description.label": "If This Condition Is True",
+    "expressionCellTable.doubleName.label": "double Field",
+    "expressionCellTable.doubleName.desc": "Enter a double",
+    "dropdown.label": "Animals",
+    "dropdown.desc": "",
+    "textfield.label": "Fruit",
+    "textfield.desc": "",
+    "sort_order.label": "Order",
+    "sort_order.desc": "Update sort order",
+    "checkbox.label": "checkbox",
+    "checkbox.desc": ""
+  }
+}

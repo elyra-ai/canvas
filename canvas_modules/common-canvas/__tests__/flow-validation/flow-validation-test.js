@@ -6,90 +6,211 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-/* eslint no-console: "off" */
 
-import log4js from "log4js";
 import deepFreeze from "deep-freeze";
 import { expect } from "chai";
 import isEqual from "lodash/isEqual";
-import startPipelineFlow from "../test_resources/json/startPipelineFlow.json";
-
-import ObjectModel from "../../src/object-model/object-model.js";
+import flowValidationPipeline from "../test_resources/flow-validation/pipeline.json";
+import flowValidationNoMsgsPipeline from "../test_resources/flow-validation/noMsgsPipeline.json";
+import CanvasController from "../../src/common-canvas/canvas-controller.js";
 import FlowValidation from "../../src/flow-validation/validate-flow.js";
 
+const canvasController = new CanvasController();
+const NodeIds = {
+	FORM: "formNode",
+	PARAMDEF: "paramDefNode",
+	TABLEDEF: "tableParamDefNode",
+	NOMSG0: "paramDefNodeNoMsgs0",
+	NOMSG1: "paramDefNodeNoMsgs1",
+	NOMSG2: "paramDefNodeNoMsgs2"
+};
 
-const logger = log4js.getLogger("flow-validation-test");
-const objectModel = new ObjectModel();
-
-const CONDITIONS_TEST_FORM_DATA = require("../test_resources/json/addcolumn-paramDef.json");
-const parameterDef = {};
-parameterDef.complex_types = CONDITIONS_TEST_FORM_DATA.complex_types;
-parameterDef.current_parameters = CONDITIONS_TEST_FORM_DATA.current_parameters;
-parameterDef.dataset_metadata = CONDITIONS_TEST_FORM_DATA.dataset_metadata;
-parameterDef.parameters = CONDITIONS_TEST_FORM_DATA.parameters;
-parameterDef.resources = CONDITIONS_TEST_FORM_DATA.resources;
-parameterDef.uihints = CONDITIONS_TEST_FORM_DATA.uihints;
-parameterDef.conditions = CONDITIONS_TEST_FORM_DATA.conditions;
-
-const SAMPLE_TEST_FORM_DATA = require("../test_resources/json/derive-formData.json");
-const formData = {};
-formData.title = SAMPLE_TEST_FORM_DATA.title;
-formData.formData = SAMPLE_TEST_FORM_DATA.formData;
-formData.appData = SAMPLE_TEST_FORM_DATA.appData;
-formData.additionalComponents = SAMPLE_TEST_FORM_DATA.additionalComponents;
+const FLOW_VALIDATION_FORM_DEF = require("../test_resources/flow-validation/node_formData.json");
+const FLOW_VALIDATION_PARAM_DEF = require("../test_resources/flow-validation/node_paramDef.json");
+const FLOW_VALIDATION_TABLE_PARAM_DEF = require("../test_resources/flow-validation/node_table_paramDef.json");
+const FLOW_VALIDATION_RECORD_DEF = require("../test_resources/flow-validation/spark.AddColumn_paramDef.json");
+const FLOW_VALIDATION_MODEL_DEF = require("../test_resources/flow-validation/spark.GBTClassifier_paramDef.json");
 
 const expectedNode1Messages = [
-	{ "text": "The new column name cannot be empty", "type": "error", "validation_id": "colName", "id_ref": "colName" },
+	{ "text": "The new column name cannot be empty", "type": "error", "validation_id": "colName1", "id_ref": "colName" },
 	{ "text": "The computed column value cannot be empty", "type": "error", "validation_id": "col", "id_ref": "col" }
 ];
 const expectedNode2Messages = [
 	{ "text": "Field cannot be default", "type": "error", "validation_id": "formula_measure_type", "id_ref": "formula_measure_type" },
-	{ "text": "Annotation is empty when there is a custom name", "type": "warning", "validation_id": "custom_name", "id_ref": "custom_name" },
-	{ "text": "Field cannot be empty nor contain \"quotes\"", "type": "error", "validation_id": "annotations", "id_ref": "annotation" }
+	{ "text": "Annotation is empty when there is a custom name", "type": "warning", "validation_id": "custom_name_test_2", "id_ref": "custom_name" },
+	{ "text": "Field cannot be empty nor contain \"quotes\"", "type": "error", "validation_id": "annotation", "id_ref": "annotation" }
+];
+const expectedNode3Messages = [
+	{ "id_ref": "inlineEditingTableWarning", "validation_id": "tablewarningtest1", "type": "warning", "text": "table cannot be empty" },
+	{ "id_ref": "inlineEditingTableError", "validation_id": "tableerrortest2", "type": "error", "text": "order cannot be descending" },
+	{ "id_ref": "inlineEditingTableError2", "validation_id": "tableerror2test2", "type": "error", "text": "expression contains help" },
+	{ "id_ref": "structuretableErrors", "validation_id": "structuretableErrors", "type": "error", "text": "order cannot be descending" }
 ];
 
-
 function getFormData(nodeId) {
-	if (nodeId === "idGWRVT47XDV") {
-		return { "type": "parameterDef", "data": parameterDef };
+	let returnData;
+	switch (nodeId) {
+	case NodeIds.FORM:
+		returnData = { "type": "form", "data": FLOW_VALIDATION_FORM_DEF };
+		break;
+	case NodeIds.PARAMDEF:
+		returnData = { "type": "parameterDef", "data": FLOW_VALIDATION_PARAM_DEF };
+		break;
+	case NodeIds.TABLEDEF:
+		returnData = { "type": "parameterDef", "data": FLOW_VALIDATION_TABLE_PARAM_DEF };
+		break;
+	case NodeIds.NOMSG0:
+		returnData = { "type": "parameterDef", "data": FLOW_VALIDATION_RECORD_DEF };
+		break;
+	case NodeIds.NOMSG1:
+		returnData = { "type": "parameterDef", "data": FLOW_VALIDATION_MODEL_DEF };
+		break;
+	default:
+		expect(false).to.be.true;
 	}
-	return { "type": "form", "data": formData };
+	return returnData;
 }
 
 function setNodeMessages(nodeId, messages) {
-	if (nodeId === "idGWRVT47XDV") {
-		// logger.info("expected Node1Messages  = " + JSON.stringify(expectedNode1Messages, null, 4));
-		// logger.info("actual Node1Messages  = " + JSON.stringify(messages, null, 4));
-		expect(isEqual(expectedNode1Messages, messages)).to.be.true;
-	} else {
-		// logger.info("expected Node2Messages  = " + JSON.stringify(expectedNode2Messages, null, 4));
-		// logger.info("actual Node2Messages  = " + JSON.stringify(messages, null, 4));
+	// console.log("actual setnodeMessages for " + nodeId + " = " + JSON.stringify(messages, null, 4));
+	switch (nodeId) {
+	case NodeIds.FORM:
 		expect(isEqual(expectedNode2Messages, messages)).to.be.true;
+		break;
+	case NodeIds.PARAMDEF:
+		expect(isEqual(expectedNode1Messages, messages)).to.be.true;
+		break;
+	case NodeIds.TABLEDEF:
+		expect(isEqual(expectedNode3Messages, messages)).to.be.true;
+		break;
+	case NodeIds.NOMSG0:
+		expect(isEqual([], messages)).to.be.true;
+		break;
+	case NodeIds.NOMSG1:
+		expect(isEqual([], messages)).to.be.true;
+		break;
+	default:
+		expect(false).to.be.true;
 	}
 }
 
 describe("Flow validation API handle flows OK", () => {
+	deepFreeze(flowValidationPipeline);
+	canvasController.setPipelineFlow(flowValidationPipeline);
+	FlowValidation.validateFlow(canvasController, getFormData, setNodeMessages);
 
-	it("should save a messages for a node", () => {
-		logger.info("should save a messages for a node");
-
-		deepFreeze(startPipelineFlow);
-		objectModel.setPipelineFlow(startPipelineFlow);
-		FlowValidation.validateFlow(objectModel, getFormData, setNodeMessages);
-
-
-		const actualNode1Messages = objectModel.getNodeMessages("idGWRVT47XDV");
-		const actualNode2Messages = objectModel.getNodeMessages("id8I6RH2V91XW");
-
-		// logger.info("expected Node1Messages  = " + JSON.stringify(expectedNode1Messages, null, 4));
-		// logger.info("actual Node1Messages  = " + JSON.stringify(actualNode1Messages, null, 4));
-		// logger.info("expected Node2Messages  = " + JSON.stringify(expectedNode2Messages, null, 4));
-		// logger.info("actual Node2Messages  = " + JSON.stringify(actualNode2Messages, null, 4));
-
-		expect(isEqual(expectedNode1Messages, actualNode1Messages)).to.be.true;
-		expect(isEqual(expectedNode2Messages, actualNode2Messages)).to.be.true;
+	it("should generate errors for node with form data", () => {
+		const actualNodeMessages = canvasController.getNodeMessages(NodeIds.FORM);
+		// console.log("expected Node2Messages  = " + JSON.stringify(expectedNode2Messages, null, 4));
+		// console.log("actual NodeMessages  = " + JSON.stringify(actualNodeMessages, null, 4));
+		expect(isEqual(expectedNode2Messages, actualNodeMessages)).to.be.true;
 
 	});
 
+	it("should generate errors for node with parameterDef data", () => {
+		const actualNodeMessages = canvasController.getNodeMessages(NodeIds.PARAMDEF);
+		// console.log("expected Node1Messages  = " + JSON.stringify(expectedNode1Messages, null, 4));
+		// console.log("actual NodeMessages  = " + JSON.stringify(actualNode1Messages, null, 4));
+		expect(isEqual(expectedNode1Messages, actualNodeMessages)).to.be.true;
 
+	});
+
+	it("should generate errors for node with complex table data", () => {
+		const actualNodeMessages = canvasController.getNodeMessages(NodeIds.TABLEDEF);
+		// console.log("expected Node3Messages  = " + JSON.stringify(expectedNode1Messages, null, 4));
+		// console.log("actual Node1Messages  = " + JSON.stringify(actualNodeMessages, null, 4));
+		expect(isEqual(expectedNode3Messages, actualNodeMessages)).to.be.true;
+	});
+
+	it("should be able to get all messages for all nodes", () => {
+		const actualFlowMessages = canvasController.getFlowMessages();
+		const expectedFlowMessages = {
+			"formNode": expectedNode2Messages,
+			"paramDefNode": expectedNode1Messages,
+			"tableParamDefNode": expectedNode3Messages
+		};
+		// console.log("expected flowMessages  = " + JSON.stringify(expectedFlowMessages, null, 4));
+		// console.log("actual flowMessages  = " + JSON.stringify(actualFlowMessages, null, 4));
+		expect(isEqual(expectedFlowMessages, actualFlowMessages)).to.be.true;
+	});
+});
+describe("Flow validation API returns correct boolean value", () => {
+	it("should return false when messges are found and not filtering.", () => {
+		deepFreeze(flowValidationPipeline);
+		canvasController.setPipelineFlow(flowValidationPipeline);
+		const validFlow = FlowValidation.validateFlow(canvasController, getFormData, setNodeMessages);
+		expect(validFlow).to.be.not.true;
+	});
+	it("should return false when filtering for error types", () => {
+		deepFreeze(flowValidationPipeline);
+		canvasController.setPipelineFlow(flowValidationPipeline);
+		const validFlow = FlowValidation.validateFlow(canvasController, getFormData, setNodeMessages, ["error"]);
+		expect(validFlow).to.be.not.true;
+	});
+	it("should return false when filtering for warning types", () => {
+		deepFreeze(flowValidationPipeline);
+		canvasController.setPipelineFlow(flowValidationPipeline);
+		const validFlow = FlowValidation.validateFlow(canvasController, getFormData, setNodeMessages, ["warning"]);
+		expect(validFlow).to.be.not.true;
+	});
+	it("should return false when filtering for error and warning types", () => {
+		deepFreeze(flowValidationPipeline);
+		canvasController.setPipelineFlow(flowValidationPipeline);
+		const validFlow = FlowValidation.validateFlow(canvasController, getFormData, setNodeMessages, ["error", "warning"]);
+		expect(validFlow).to.be.not.true;
+	});
+	it("should return true when filtering for not found types", () => {
+		deepFreeze(flowValidationPipeline);
+		canvasController.setPipelineFlow(flowValidationPipeline);
+		const validFlow = FlowValidation.validateFlow(canvasController, getFormData, setNodeMessages, ["madeup"]);
+		expect(validFlow).to.be.true;
+	});
+});
+describe("isFlowValid API returns correct boolean value", () => {
+	deepFreeze(flowValidationPipeline);
+	canvasController.setPipelineFlow(flowValidationPipeline);
+	FlowValidation.validateFlow(canvasController, getFormData, setNodeMessages);
+
+	it("should return false when messges are found and not filtering.", () => {
+		expect(canvasController.isFlowValid()).to.be.not.true;
+	});
+	it("should return false when filtering for error types", () => {
+		expect(canvasController.isFlowValid(["error"])).to.be.not.true;
+	});
+	it("should return false when filtering for warning types", () => {
+		expect(canvasController.isFlowValid(["warning"])).to.be.not.true;
+	});
+	it("should return false when filtering for error and warning types", () => {
+		expect(canvasController.isFlowValid(["error", "warning"])).to.be.not.true;
+	});
+	it("should return true when filtering for not found types", () => {
+		expect(canvasController.isFlowValid(["madeup"])).to.be.true;
+	});
+});
+
+
+describe("API returns correct value when validation flow has no errors", () => {
+
+	it("validateFlow should return true.", () => {
+		deepFreeze(flowValidationNoMsgsPipeline);
+		canvasController.setPipelineFlow(flowValidationNoMsgsPipeline);
+		const validFlow = FlowValidation.validateFlow(canvasController, getFormData, setNodeMessages);
+		expect(validFlow).to.be.true;
+	});
+	it("isValidFlow API should return true.", () => {
+		deepFreeze(flowValidationNoMsgsPipeline);
+		canvasController.setPipelineFlow(flowValidationNoMsgsPipeline);
+		FlowValidation.validateFlow(canvasController, getFormData, setNodeMessages);
+		expect(canvasController.isFlowValid()).to.be.true;
+	});
+	it("getFlowMessages() should return no messages", () => {
+		deepFreeze(flowValidationNoMsgsPipeline);
+		canvasController.setPipelineFlow(flowValidationNoMsgsPipeline);
+		FlowValidation.validateFlow(canvasController, getFormData, setNodeMessages);
+		const actualFlowMessages = canvasController.getFlowMessages();
+		const expectedFlowMessages = {};
+		// console.log("expected flowMessages  = " + JSON.stringify(expectedFlowMessages, null, 4));
+		// console.log("actual flowMessages  = " + JSON.stringify(actualFlowMessages, null, 4));
+		expect(isEqual(expectedFlowMessages, actualFlowMessages)).to.be.true;
+	});
 });

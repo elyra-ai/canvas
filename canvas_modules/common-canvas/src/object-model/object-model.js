@@ -19,10 +19,12 @@ import PipelineInHandler from "./pipeline-in-handler.js";
 import PipelineOutHandler from "./pipeline-out-handler.js";
 import difference from "lodash/difference";
 import isEmpty from "lodash/isEmpty";
+import indexOf from "lodash/indexOf";
 import uuid4 from "uuid/v4";
 
 /* eslint arrow-body-style: ["error", "always"] */
 /* eslint complexity: ["error", 26] */
+
 
 const nodes = (state = [], action) => {
 	switch (action.type) {
@@ -1634,6 +1636,42 @@ export default class ObjectModel {
 			return portArray[index];
 		}
 		return null;
+	}
+
+	isFlowValid(includeMsgTypes) {
+		let validFlow = true;
+		const flowNodes = this.getNodes();
+		for (const node of flowNodes) {
+			if (validFlow) {
+				validFlow = this.isNodeValid(node, includeMsgTypes);
+			}
+		}
+		return validFlow;
+	}
+
+	isNodeValid(node, includeMsgTypes) {
+		let validNode = true;
+		if (includeMsgTypes && Array.isArray(includeMsgTypes) && includeMsgTypes.length > 0) {
+			for (const msg of node.messages) {
+				if (indexOf(includeMsgTypes, msg.type) !== -1) {
+					validNode = false;
+				}
+			}
+		} else if (node.messages && node.messages.length > 0) {
+			validNode = false;
+		}
+		return validNode;
+	}
+
+	getFlowMessages() {
+		const flowNodes = this.getNodes();
+		const nodeMsgs = {};
+		flowNodes.forEach((node) => {
+			if (node.messages && node.messages.length > 0) {
+				nodeMsgs[node.id] = node.messages;
+			}
+		});
+		return nodeMsgs;
 	}
 
 	// Methods to handle selections

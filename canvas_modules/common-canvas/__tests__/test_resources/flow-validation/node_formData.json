@@ -227,6 +227,7 @@
       },
       {
         "validation": {
+          "id": "formula_exp_test_1",
           "fail_message": {
             "type": "warning",
             "message": {
@@ -293,6 +294,7 @@
       },
       {
         "validation": {
+          "id": "formula_exp_test_2",
           "fail_message": {
             "type": "error",
             "message": {
@@ -323,6 +325,7 @@
       },
       {
         "validation": {
+          "id": "formula_exp_test_3",
           "fail_message": {
             "type": "warning",
             "message": {
@@ -361,6 +364,7 @@
       },
       {
         "validation": {
+          "id": "custom_name_test_1",
           "fail_message": {
             "type": "error",
             "message": {
@@ -397,7 +401,7 @@
               "default": "Field cannot be empty nor contain \"quotes\"",
               "resource_key": "annotation"
             },
-            "focus_parameter_ref": "annotations"
+            "focus_parameter_ref": "annotation"
           },
           "evaluate": {
             "and": [
@@ -427,6 +431,7 @@
       },
       {
         "validation": {
+          "id": "custom_name_test_2",
           "fail_message": {
             "type": "warning",
             "message": {
