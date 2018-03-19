@@ -37,11 +37,7 @@ function validateFlow(canvasController, getParameterData, setMessagesCallback, i
 			const formData = _getFormData(node.id, getParameterData);
 			const propertiesController = _getPropertiesController(formData);
 			_validateNode(formData, node.id, propertiesController);
-			const messages = propertiesController.getErrorMessages(true);
-			canvasController.setNodeMessages(node.id, messages);
-			if (setMessagesCallback) {
-				setMessagesCallback(node.id, messages);
-			}
+			_setNodeMessages(node, propertiesController, canvasController, setMessagesCallback);
 		}
 	}
 	return canvasController.isFlowValid(includeMsgTypes);
@@ -128,6 +124,17 @@ function _validateNode(formData, nodeId, propertiesController) {
 			}
 		} else {
 			ConditionsUtils.validateInput(propertyId, propertiesController, validationDefinitions, formData.data.datasetMetadata);
+		}
+	}
+}
+
+function _setNodeMessages(node, propertiesController, canvasController, setMessagesCallback) {
+	const nodeMsgs = canvasController.getNodeMessages(node.id);
+	const errorMsgs = propertiesController.getErrorMessages(true);
+	if (JSON.stringify(errorMsgs) !== JSON.stringify(nodeMsgs)) {
+		canvasController.setNodeMessages(node.id, errorMsgs);
+		if (setMessagesCallback) {
+			setMessagesCallback(node.id, errorMsgs);
 		}
 	}
 }
