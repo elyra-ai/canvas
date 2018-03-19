@@ -126,13 +126,13 @@ export default class TooltipWrapper extends React.Component {
 
 TooltipWrapper.propTypes = {
 	id: PropTypes.string.isRequired,
-	type: PropTypes.oneOf([TIP_TYPE_PALETTE_ITEM, TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK]).isRequired,
+	type: PropTypes.oneOf([TIP_TYPE_PALETTE_CATEGORY, TIP_TYPE_PALETTE_ITEM, TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK]).isRequired,
 	targetObj: PropTypes.object.isRequired,
 	mousePos: PropTypes.object,
 	customContent: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
 	node: PropTypes.object,
 	port: PropTypes.object,
 	nodeTemplate: PropTypes.object,
-	category: PropTypes.string,
+	category: PropTypes.object,
 	canvasController: PropTypes.object.isRequired
 };
