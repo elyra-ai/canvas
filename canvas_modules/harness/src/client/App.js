@@ -779,13 +779,13 @@ class App extends React.Component {
 				const srcPort = !data.link.src.output_ports ? null : data.link.src.output_ports.find(function(port) {
 					return port.id === data.link.srcPortId;
 				});
-				sourceString = `'${data.link.src.label}'` + (srcPort ? `, port '${srcPort.label}'` : "");
+				sourceString = `'${data.link.src.label}'` + (srcPort && srcPort.label ? `, port '${srcPort.label}'` : "");
 			}
 
 			const trgPort = data.link.trg.input_ports.find(function(port) {
 				return port.id === data.link.trgPortId;
 			});
-			const targetString = `'${data.link.trg.label}'` + (trgPort ? `, port '${trgPort.label}'` : "");
+			const targetString = `'${data.link.trg.label}'` + (trgPort && trgPort.label ? `, port '${trgPort.label}'` : "");
 
 			return `Link from ${sourceString} to ${targetString}`;
 		}
