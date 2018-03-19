@@ -12,6 +12,7 @@ import ConditionsUtils from "../common-properties/util/conditions-utils";
 import PropertyUtils from "../common-properties/util/property-utils";
 import PropertiesController from "../common-properties/properties-controller";
 import logger from "../../utils/logger";
+import isEqual from "lodash/isEqual";
 
 /* eslint max-depth: ["error", 7] */
 
@@ -131,7 +132,7 @@ function _validateNode(formData, nodeId, propertiesController) {
 function _setNodeMessages(node, propertiesController, canvasController, setMessagesCallback) {
 	const nodeMsgs = canvasController.getNodeMessages(node.id);
 	const errorMsgs = propertiesController.getErrorMessages(true);
-	if (JSON.stringify(errorMsgs) !== JSON.stringify(nodeMsgs)) {
+	if (!isEqual(errorMsgs, nodeMsgs)) {
 		canvasController.setNodeMessages(node.id, errorMsgs);
 		if (setMessagesCallback) {
 			setMessagesCallback(node.id, errorMsgs);

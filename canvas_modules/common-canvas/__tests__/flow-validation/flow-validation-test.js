@@ -112,6 +112,7 @@ describe("Flow validation API handle flows OK", () => {
 		expect(isEqual(expectedNode2Messages, actualNodeMessages)).to.be.true;
 
 	});
+
 	it("should generate errors for node with parameterDef data", () => {
 		const actualNodeMessages = canvasController.getNodeMessages(NodeIds.PARAMDEF);
 		// console.log("expected Node1Messages  = " + JSON.stringify(expectedNode1Messages, null, 4));
@@ -119,12 +120,14 @@ describe("Flow validation API handle flows OK", () => {
 		expect(isEqual(expectedNode1Messages, actualNodeMessages)).to.be.true;
 
 	});
+
 	it("should generate errors for node with complex table data", () => {
 		const actualNodeMessages = canvasController.getNodeMessages(NodeIds.TABLEDEF);
 		// console.log("expected Node3Messages  = " + JSON.stringify(expectedNode1Messages, null, 4));
 		// console.log("actual Node1Messages  = " + JSON.stringify(actualNodeMessages, null, 4));
 		expect(isEqual(expectedNode3Messages, actualNodeMessages)).to.be.true;
 	});
+
 	it("should be able to get all messages for all nodes", () => {
 		const actualFlowMessages = canvasController.getFlowMessages();
 		// console.log("expected flowMessages  = " + JSON.stringify(expectedFlowMessages, null, 4));
@@ -134,6 +137,7 @@ describe("Flow validation API handle flows OK", () => {
 });
 
 describe("Flow validation API performance test", () => {
+
 	it("when messages are already set, validateFlow should not call setNodeMessages callback", () => {
 		// call validateFlow two times with same CanvasController, the second time it should not
 		// invoke the callback.
@@ -152,30 +156,35 @@ describe("Flow validation API performance test", () => {
 });
 
 describe("Flow validation API returns correct boolean value", () => {
+
 	it("should return false when messges are found and not filtering.", () => {
 		deepFreeze(flowValidationPipeline);
 		canvasController.setPipelineFlow(flowValidationPipeline);
 		const validFlow = FlowValidation.validateFlow(canvasController, getFormData, setNodeMessages);
 		expect(validFlow).to.be.not.true;
 	});
+
 	it("should return false when filtering for error types", () => {
 		deepFreeze(flowValidationPipeline);
 		canvasController.setPipelineFlow(flowValidationPipeline);
 		const validFlow = FlowValidation.validateFlow(canvasController, getFormData, setNodeMessages, ["error"]);
 		expect(validFlow).to.be.not.true;
 	});
+
 	it("should return false when filtering for warning types", () => {
 		deepFreeze(flowValidationPipeline);
 		canvasController.setPipelineFlow(flowValidationPipeline);
 		const validFlow = FlowValidation.validateFlow(canvasController, getFormData, setNodeMessages, ["warning"]);
 		expect(validFlow).to.be.not.true;
 	});
+
 	it("should return false when filtering for error and warning types", () => {
 		deepFreeze(flowValidationPipeline);
 		canvasController.setPipelineFlow(flowValidationPipeline);
 		const validFlow = FlowValidation.validateFlow(canvasController, getFormData, setNodeMessages, ["error", "warning"]);
 		expect(validFlow).to.be.not.true;
 	});
+
 	it("should return true when filtering for not found types", () => {
 		deepFreeze(flowValidationPipeline);
 		canvasController.setPipelineFlow(flowValidationPipeline);
@@ -192,15 +201,19 @@ describe("isFlowValid API returns correct boolean value", () => {
 	it("should return false when messges are found and not filtering.", () => {
 		expect(canvasController.isFlowValid()).to.be.not.true;
 	});
+
 	it("should return false when filtering for error types", () => {
 		expect(canvasController.isFlowValid(["error"])).to.be.not.true;
 	});
+
 	it("should return false when filtering for warning types", () => {
 		expect(canvasController.isFlowValid(["warning"])).to.be.not.true;
 	});
+
 	it("should return false when filtering for error and warning types", () => {
 		expect(canvasController.isFlowValid(["error", "warning"])).to.be.not.true;
 	});
+
 	it("should return true when filtering for not found types", () => {
 		expect(canvasController.isFlowValid(["madeup"])).to.be.true;
 	});
@@ -208,18 +221,21 @@ describe("isFlowValid API returns correct boolean value", () => {
 
 
 describe("API returns correct value when validation flow has no errors", () => {
+
 	it("validateFlow should return true.", () => {
 		deepFreeze(flowValidationNoMsgsPipeline);
 		canvasController.setPipelineFlow(flowValidationNoMsgsPipeline);
 		const validFlow = FlowValidation.validateFlow(canvasController, getFormData, setNodeMessages);
 		expect(validFlow).to.be.true;
 	});
+
 	it("isValidFlow API should return true.", () => {
 		deepFreeze(flowValidationNoMsgsPipeline);
 		canvasController.setPipelineFlow(flowValidationNoMsgsPipeline);
 		FlowValidation.validateFlow(canvasController, getFormData, setNodeMessages);
 		expect(canvasController.isFlowValid()).to.be.true;
 	});
+
 	it("getFlowMessages() should return no messages", () => {
 		deepFreeze(flowValidationNoMsgsPipeline);
 		canvasController.setPipelineFlow(flowValidationNoMsgsPipeline);
