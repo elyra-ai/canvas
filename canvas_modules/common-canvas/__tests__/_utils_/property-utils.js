@@ -87,7 +87,6 @@ function fieldPicker(fieldsToSelect, expectedFields) {
 					.at(1)
 					.text();
 				expect(fieldName).to.equal(expectedFields[i].name);
-
 				const fieldSchema = rows.at(i).find("td")
 					.at(2)
 					.text();

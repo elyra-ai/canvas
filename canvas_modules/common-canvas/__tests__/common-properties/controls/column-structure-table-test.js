@@ -22,6 +22,7 @@ import structuretableParamDef from "../../test_resources/paramDefs/structuretabl
 import structuretableMultiInputParamDef from "../../test_resources/paramDefs/structuretable_multiInput_paramDef.json";
 import rowDisplayParamDef from "../../test_resources/paramDefs/displayRows_paramDef.json";
 
+
 import chai from "chai";
 import chaiEnzyme from "chai-enzyme";
 chai.use(chaiEnzyme()); // Need for style checking
@@ -1028,7 +1029,7 @@ describe("condition messages renders correctly with structure table control", ()
 	var wrapper;
 	var renderedController;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
+		const renderedObject = propertyUtils.flyoutEditorForm(JSON.parse(JSON.stringify(structuretableParamDef)));
 		wrapper = renderedObject.wrapper;
 		renderedController = renderedObject.controller;
 	});
@@ -1297,7 +1298,7 @@ describe("ColumnStructureTableControl with readonly numbered column renders corr
 describe("ColumnStructureTableControl with filtering works correctly", () => {
 	var wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
+		const renderedObject = propertyUtils.flyoutEditorForm(JSON.parse(JSON.stringify(structuretableParamDef)));
 		wrapper = renderedObject.wrapper;
 	});
 
@@ -1572,5 +1573,56 @@ describe("column structure table editor control displays with no header", () => 
 		const table = new ReactWrapper(tableHtml, true);
 		const header = table.find(".reactable-column-header");
 		expect(header).to.have.length(0);
+	});
+});
+
+describe("column structure table editor control handles updated data model", () => {
+	let wrapper;
+	let propController;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(JSON.parse(JSON.stringify(structuretableParamDef)));
+		wrapper = renderedObject.wrapper;
+		propController = renderedObject.controller;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+	it("dynamically add a datamodel field and add it into the table", () => {
+		// update the data model.
+		const dm = propController.getDatasetMetadata();
+		// Add field to the first schema
+		const newFieldName = "Added Field " + (dm[0].fields.length);
+		const newField = {
+			"name": newFieldName,
+			"type": "string",
+			"metadata": {
+				"description": "",
+				"measure": "discrete",
+				"modeling_role": "target"
+			}
+		};
+		dm[0].fields.push(newField);
+		propController.setDatasetMetadata(dm[0]);
+
+
+		// navigate to the summary panel
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(0); // Select Configure Sort Order
+		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
+		const wfhtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
+		const wideflyoutWrapper = new ReactWrapper(wfhtml, true);
+
+		// open field picker and select the new data model field added by the action button
+		const addFieldsButtons = wideflyoutWrapper.find("#field-picker-buttons-container Button"); // field picker buttons
+		addFieldsButtons.at(0).simulate("click"); // open filter picker
+		propertyUtils.fieldPicker(["Added Field 8"], ["Age", "Sex", "BP", "Cholesterol", "Na", "K", "Drug", "Ag", "Added Field 8"]);
+		wideflyoutWrapper.find("#properties-apply-button").simulate("click");
+		wrapper.find("#properties-apply-button").simulate("click");
+
+		// validate the new field is in the structure table and in the summary list.
+		const tableValues = propController.getPropertyValue({ name: "structuretableReadonlyColumnStartValue" });
+		expect(tableValues).to.have.length(2);
+		expect(tableValues[1][0]).to.equal("Added Field 8");
+
 	});
 });
