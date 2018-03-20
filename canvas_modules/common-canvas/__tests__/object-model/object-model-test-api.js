@@ -193,7 +193,6 @@ describe("ObjectModel API handle model OK", () => {
 		expect(isEqual(expectedParameters, actualParameters)).to.be.true;
 	});
 
-
 	it("should save parameters of a node", () => {
 		logger.info("should save parameters of a node");
 

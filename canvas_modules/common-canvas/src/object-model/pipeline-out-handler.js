@@ -212,7 +212,6 @@ export default class PipelineOutHandler {
 		var newNode = {
 			id: ciNode.id,
 			type: ciNode.type,
-			op: ciNode.operator_id_ref,
 			app_data: {
 				ui_data: {
 					image: ciNode.image,
@@ -234,6 +233,8 @@ export default class PipelineOutHandler {
 				newNode.output = this.createOutput(ciNode);
 			}
 		} else {
+			newNode.op = ciNode.operator_id_ref; // Only non-binding nodes have an 'op' field.
+
 			if (ciNode.input_ports && ciNode.input_ports.length > 0) {
 				newNode.inputs = this.createInputs(ciNode, canvasLinks);
 			}

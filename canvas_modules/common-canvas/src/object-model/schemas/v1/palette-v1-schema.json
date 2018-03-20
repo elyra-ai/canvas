@@ -1,0 +1,128 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "description": "Abstract Canvas diagram schema",
+  "id": "http://www.ibm.com/ibm/wdp/canvas/v1.0/palette-schema.json",
+  "properties": {
+    "categories": {
+      "description": "Array of palette categories",
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "description": "The palette category that the items belong within",
+            "type": "string"
+          },
+          "label": {
+            "description": "Category label",
+            "type": "string"
+          },
+          "image": {
+            "description": "Encoded image or image reference for the category",
+            "type": "string"
+          },
+          "nodetypes": {
+            "description": "Array of nodes within the current category",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "description": "Node label",
+                  "type": "string"
+                },
+                "description": {
+                  "description": "Node description",
+                  "type": "string"
+                },
+                "type": {
+                  "description": "Node classification type",
+                  "enum": [
+                    "binding",
+                    "execution_node",
+                    "super_node",
+                    "model_node"
+                  ]
+                },
+                "operator_id_ref": {
+                  "description": "Unique node type identifier",
+                  "type": "string"
+                },
+                "image": {
+                  "description": "Encoded image or image reference for the node",
+                  "type": "string"
+                },
+                "subDiagramId": {
+                  "description": "Optional sub diagram identifier.",
+                  "type": "string"
+                },
+                "input_ports": {
+                  "description": "Array of node input ports",
+                  "type": "array",
+                  "minItems": 0,
+                  "items": {
+                    "$ref": "#/definitions/port"
+                  }
+                },
+                "output_ports": {
+                  "description": "Array of node output ports",
+                  "type": "array",
+                  "minItems": 0,
+                  "items": {
+                    "$ref": "#/definitions/port"
+                  }
+                }
+              },
+              "required": [
+                "label",
+                "operator_id_ref",
+                "image"
+              ]
+            }
+          }
+        },
+        "required": [
+          "category",
+          "label"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "port": {
+      "description": "Defines a node port for links",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Port identifier",
+          "type": "string"
+        },
+        "label": {
+          "description": "Port long label",
+          "type": "string"
+        },
+        "cardinality": {
+          "description": "Property to capture how many connections are allowed for this port, e.g., min: 1, max:1 implies you must supply 1 and only 1; min:0, max:1 implies it is optional and a max of one, min:0, max:-1 means it is optional and you can may have any number of connections. The default value is 1:1 for inputs and 1:-1 for outputs.",
+          "type": "object",
+          "properties": {
+            "min": {
+              "description": "Minimum data sets that are required for this port",
+              "type": "integer",
+              "default": 1
+            },
+            "max": {
+              "description": "Maximum data sets that are allowed on this port. A negative value indicates unlimited. The default value is 1 for inputs and -1 for outputs.",
+              "type": "integer"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id"
+      ]
+    }
+  }
+}

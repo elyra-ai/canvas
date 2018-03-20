@@ -1,7 +1,7 @@
 {
   "doc_type": "pipeline",
   "version": "1.0",
-  "json_schema": "http://www.ibm.com/ibm/wdp/canvas/v1.0/pipeline-flow-v1-schema.json",
+  "json_schema": "http://www.ibm.com/ibm/wdp/flow-v1.0/pipeline-flow-v1-schema.json",
   "id": "24cc9881-f83a-4d38-b15b-8bf541e100fa",
   "primary_pipeline": "empty-pipeline",
   "pipelines": [
@@ -266,7 +266,6 @@
         {
           "id": "ff062eb5-6073-45a5-8dea-1255c5352bf1",
           "type": "model_node",
-          "op": "com.ibm.commonicons.models.linerregression",
           "app_data": {
             "ui_data": {
               "image": "/images/common_node_icons/models/model_linear_regression.svg",

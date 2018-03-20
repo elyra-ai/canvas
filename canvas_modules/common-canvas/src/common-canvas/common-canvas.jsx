@@ -148,7 +148,8 @@ export default class CommonCanvas extends React.Component {
 			tipConfig: props.config.tipConfig,
 			rightFlyoutContent: props.rightFlyoutContent,
 			showRightFlyout: props.showRightFlyout,
-			closeRightFlyout: props.closeRightFlyout
+			closeRightFlyout: props.closeRightFlyout,
+			schemaValidation: props.config.schemaValidation
 		});
 
 		this.canvasController.setHandlers({

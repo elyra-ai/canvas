@@ -1,0 +1,297 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "WDP Pipeline Flow UI Schema. Defines UI-only constructs for pipeline flow documents.",
+  "type": "object",
+  "id": "http://www.ibm.com/ibm/wdp/flow-v1.0/pipeline-flow-ui-v1-schema.json#",
+  "properties": {},
+  "additionalProperties": true,
+  "definitions": {
+    "pipeline_overview_def": {
+      "description": "Top level UI information",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "User-defined name",
+          "type": "string"
+        },
+        "description": {
+          "description": "User-defined description",
+          "type": "string"
+        },
+        "class_name": {
+          "description": "CSS class name",
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "pipeline_def": {
+      "description": "Pipeline level UI information",
+      "type": "object",
+      "properties": {
+        "zoom": {
+          "description": "Zoom factor",
+          "type": "integer"
+        },
+        "comments": {
+          "description": "Array of Comments, optionally associated with nodes",
+          "type": "array",
+          "minItems": 0,
+          "items": {
+            "$ref": "#/definitions/comment_def"
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "port_info_def": {
+      "description": "Additional UI info for ports",
+      "type": "object",
+      "properties": {
+        "cardinality": {
+          "description": "Property to capture how many data assets are allowed for this port, e.g., min: 1, max:1 implies you must supply 1 and only 1; min:0, max:1 implies it is optional and a max of one, min:0, max:-1 means it is optional and you can may have any number of data assets. The default value is 1:1 for inputs and 1:-1 for outputs.",
+          "type": "object",
+          "properties": {
+            "min": {
+              "description": "Minimum data sets that are required for this port",
+              "type": "integer",
+              "default": 1
+            },
+            "max": {
+              "description": "Maximum data sets that are allowed on this port. A negative value indicates unlimited. The default value is 1 for inputs and -1 for outputs.",
+              "type": "integer"
+            }
+          },
+          "additionalProperties": false
+        },
+        "class_name": {
+          "description": "CSS class name",
+          "type": "string"
+        },
+        "label": {
+          "description": "Port name",
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "node_info_def": {
+      "description": "object with app-specific UI-information",
+      "type": "object",
+      "properties": {
+        "label": {
+          "description": "User-defined label",
+          "type": "string"
+        },
+        "description": {
+          "description": "User-defined description",
+          "type": "string"
+        },
+        "class_name": {
+          "description": "CSS class name",
+          "type": "string"
+        },
+        "image": {
+          "description": "Image name (do not embed images inline!)",
+          "type": "string"
+        },
+        "x_pos": {
+          "description": "x-position",
+          "type": "integer"
+        },
+        "y_pos": {
+          "description": "y-position",
+          "type": "integer"
+        },
+        "attributes": {
+          "description": "additional attributes",
+          "type": "string"
+        },
+        "associations": {
+          "description": "Array of non-data node linkage",
+          "type": "array",
+          "minItems": 0,
+          "items": {
+            "$ref": "#/definitions/association_def"
+          }
+        },
+        "messages": {
+          "descriptions": "An array of messages for the node",
+          "type": "array",
+          "minItems": 0,
+          "items": {
+            "$ref": "#/definitions/message_def"
+          },
+          "uniqueItems": true
+        },
+        "decorations": {
+          "description": "Array of decorations used to decorate nodes",
+          "type": "array",
+          "minItems": 0,
+          "items": {
+            "$ref": "#/definitions/decoration_def"
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "association_def": {
+      "description": "Non-data link",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Association identifier",
+          "type": "string"
+        },
+        "node_ref": {
+          "description": "Target node id",
+          "type": "string"
+        },
+        "class_name": {
+          "description": "CSS class name for link styling",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "node_ref"
+      ],
+      "additionalProperties": false
+    },
+    "decoration_def": {
+      "description": "Decoration used to decorate a node",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "An identifier used as a token when a hotspot is used",
+          "type": "string"
+        },
+        "hotspot": {
+          "description": "Indicates whether teh decorator is a hotspot or not. ie does it send an event to consuming app. when clicked",
+          "type": "boolean"
+        },
+        "class_name": {
+          "description": "CSS class name for decoration styling",
+          "type": "string"
+        },
+        "positions": {
+          "description": "Shows where the decoration is displayed with respect to the node",
+          "enum": [
+            "topLeft",
+            "topRight",
+            "bottomLeft",
+            "bottomRight"
+          ]
+        },
+        "image": {
+          "description": "Image displayed at the decoration position",
+          "type": "string"
+        }
+      }
+    },
+    "message_def": {
+      "description": "Node message definition",
+      "type": "object",
+      "properties": {
+        "id_ref": {
+          "description": "Name of the parameter that has the message",
+          "type": "string"
+        },
+        "validation_id": {
+          "description": "Validation identifier from the fail_message validation section.",
+          "type": "string"
+        },
+        "type": {
+          "description": "Type of message",
+          "enum": [
+            "info",
+            "error",
+            "warning"
+          ]
+        },
+        "text": {
+          "description": "Message string",
+          "type": "string"
+        }
+      }
+    },
+    "comment_def": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Comment identifier. Must be unique.",
+          "type": "string"
+        },
+        "x_pos": {
+          "description": "Horizontal comment position",
+          "type": "integer",
+          "minimum": 0
+        },
+        "y_pos": {
+          "description": "Vertical comment position",
+          "type": "integer",
+          "minimum": 0
+        },
+        "width": {
+          "description": "Comment width",
+          "type": "integer",
+          "minimum": 10
+        },
+        "height": {
+          "description": "Comment height",
+          "type": "integer",
+          "minimum": 10
+        },
+        "class_name": {
+          "description": "CSS class(es) to apply to the comment",
+          "type": "string"
+        },
+        "attributes": {
+          "description": "Optional attributes to be added to this element. For example: \"attributes\": \"attr1='value1'; attr2='value2'\"",
+          "type": "string"
+        },
+        "content": {
+          "description": "Comment content",
+          "type": "string"
+        },
+        "associated_id_refs": {
+          "description": "Optional array of associated node id references",
+          "type": "array",
+          "minItems": 0,
+          "items": {
+            "$ref": "#/definitions/comment_link_def"
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "id",
+        "x_pos",
+        "y_pos",
+        "width",
+        "height"
+      ],
+      "additionalProperties": true
+    },
+    "comment_link_def": {
+      "description": "Comment link definition",
+      "type": "object",
+      "properties": {
+        "node_ref": {
+          "description": "Node reference",
+          "type": "string"
+        },
+        "class_name": {
+          "description": "CSS class name for link styling",
+          "type": "string"
+        }
+      },
+      "required": [
+        "node_ref"
+      ],
+      "additionalProperties": true
+    }
+  }
+}

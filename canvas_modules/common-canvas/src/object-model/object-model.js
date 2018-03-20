@@ -6,6 +6,8 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
+/* eslint arrow-body-style: ["error", "always"] */
+/* eslint complexity: ["error", 26] */
 
 import { createStore, combineReducers } from "redux";
 import { NONE, VERTICAL, DAGRE_HORIZONTAL, DAGRE_VERTICAL,
@@ -21,10 +23,7 @@ import difference from "lodash/difference";
 import isEmpty from "lodash/isEmpty";
 import indexOf from "lodash/indexOf";
 import uuid4 from "uuid/v4";
-
-/* eslint arrow-body-style: ["error", "always"] */
-/* eslint complexity: ["error", 26] */
-
+import { validatePipelineFlowAgainstSchema, validatePaletteAgainstSchema } from "./schema-validator.js";
 
 const nodes = (state = [], action) => {
 	switch (action.type) {
@@ -564,12 +563,13 @@ const getInitialPipelineFlow = (flowId, primaryPipelineId) => {
 	return {
 		"doc_type": "pipeline",
 		"version": "1.0",
-		"json_schema": "http://www.ibm.com/ibm/wdp/canvas/v1.0/pipeline-flow-v1-schema.json",
+		"json_schema": "http://www.ibm.com/ibm/wdp/flow-v1.0/pipeline-flow-v1-schema.json",
 		"id": newFlowId,
 		"primary_pipeline": newPrimaryPipelineId,
 		"pipelines": [
 			{
 				"id": newPrimaryPipelineId,
+				"runtime": "",
 				"nodes": []
 			},
 		],
@@ -653,6 +653,10 @@ export default class ObjectModel {
 		return this.store.subscribe(callback);
 	}
 
+	setSchemaValidation(schemaValidation) {
+		this.schemaValidation = schemaValidation;
+	}
+
 	// Palette methods
 
 	clearPaletteData() {
@@ -662,10 +666,16 @@ export default class ObjectModel {
 	// Deprecated  TODO - Remvove this method when WML Canvas migrates to setPipelineFlowPalette() method
 	setPaletteData(paletteData) {
 		var newPalData = CanvasInHandler.convertPaletteToPipelineFlowPalette(paletteData);
+		if (this.schemaValidation) {
+			validatePaletteAgainstSchema(newPalData);
+		}
 		this.store.dispatch({ type: "SET_PALETTE_DATA", data: newPalData });
 	}
 
 	setPipelineFlowPalette(paletteData) {
+		if (this.schemaValidation) {
+			validatePaletteAgainstSchema(paletteData);
+		}
 		this.store.dispatch({ type: "SET_PALETTE_DATA", data: paletteData });
 	}
 
@@ -766,6 +776,10 @@ export default class ObjectModel {
 			return;
 		}
 
+		if (this.schemaValidation) {
+			validatePipelineFlowAgainstSchema(newPipelineFlow);
+		}
+
 		this.executeWithSelectionChange(this.store.dispatch, {
 			type: "SET_PIPELINE_FLOW",
 			data: newPipelineFlow,
@@ -787,7 +801,11 @@ export default class ObjectModel {
 	// as the consuming app makes getPipelineFlow() calls which are difficult to
 	// handle when teting.
 	getPipelineFlow() {
-		return this.syncPipelineFlow(this.store.getState().pipelineflow, this.store.getState().canvasinfo);
+		const pipelineFlow = this.syncPipelineFlow(this.store.getState().pipelineflow, this.store.getState().canvasinfo);
+		if (this.schemaValidation) {
+			validatePipelineFlowAgainstSchema(pipelineFlow);
+		}
+		return pipelineFlow;
 	}
 
 	// Returns a pipeline flow based on the initial pipeline flow we were given

@@ -71,6 +71,7 @@ export default class CanvasController {
 
 	setCanvasConfig(config) {
 		this.canvasConfig = Object.assign(this.canvasConfig, config);
+		this.objectModel.setSchemaValidation(this.canvasConfig.schemaValidation);
 	}
 
 	setHandlers(inHandlers) {
