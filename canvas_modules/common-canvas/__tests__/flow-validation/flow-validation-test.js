@@ -45,7 +45,8 @@ const expectedNode3Messages = [
 	{ "id_ref": "inlineEditingTableWarning", "validation_id": "tablewarningtest1", "type": "warning", "text": "table cannot be empty" },
 	{ "id_ref": "inlineEditingTableError", "validation_id": "tableerrortest2", "type": "error", "text": "order cannot be descending" },
 	{ "id_ref": "inlineEditingTableError2", "validation_id": "tableerror2test2", "type": "error", "text": "expression contains help" },
-	{ "id_ref": "structuretableErrors", "validation_id": "structuretableErrors", "type": "error", "text": "order cannot be descending" }
+	{ "id_ref": "structuretableErrors", "validation_id": "structuretableErrors", "type": "error", "text": "order cannot be descending" },
+	{ "id_ref": "fields_error", "validation_id": "fields_error", "type": "error", "text": "Required parameter 'Field Error' has no value" }
 ];
 const expectedFlowMessages = {
 	"formNode": expectedNode2Messages,
