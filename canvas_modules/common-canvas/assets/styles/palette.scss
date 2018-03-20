@@ -149,10 +149,6 @@
 	cursor: pointer;
 }
 
-.palette-flyout-search:hover {
-	background-color: #f9f9f9;
-}
-
 .palette-flyout-search > svg {
   height: 20px;
 	width: 20px;
@@ -165,8 +161,12 @@
 
 .palette-flyout-search-icon {
 	margin: 0;
-	padding: 18px 20px 8px 22px;
+	padding: 15px 20px 5px 22px;
 	justify-content: center;
+}
+
+.palette-flyout-search-icon:hover {
+	background-color: #DFE3E6;
 }
 
 .palette-flyout-search-icon > svg {

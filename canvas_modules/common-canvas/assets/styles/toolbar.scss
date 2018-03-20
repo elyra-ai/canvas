@@ -62,7 +62,7 @@
 }
 
 .list-item:hover {
-	background-color: #f0f3f6;
+	background-color: #DFE3E6;
 }
 
 .list-item:active {
@@ -74,7 +74,7 @@
 }
 
 .list-item-disabled:hover {
-	background-color: #F9F9F9;
+	background-color: transparent;
 }
 
 .toolbar-divider {
@@ -86,7 +86,7 @@
 }
 
 .overflow-toolbar-divider {
-	border-bottom: 2px solid #dfe3e6;
+	border-bottom: 1px solid #DFE3E6;
 }
 
 .toolbar-item {

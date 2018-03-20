@@ -28,7 +28,7 @@ class PaletteFlyoutContentSearch extends React.Component {
 	}
 
 	render() {
-		const placeHolder = "Search Nodes";
+		const placeHolder = "Search Palette";
 
 		let searchField = null;
 
