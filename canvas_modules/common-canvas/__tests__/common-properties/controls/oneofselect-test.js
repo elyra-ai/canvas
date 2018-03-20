@@ -15,7 +15,6 @@ import Controller from "../../../src/common-properties/properties-controller";
 import propertyUtils from "../../_utils_/property-utils";
 import oneofselectParamDef from "../../test_resources/paramDefs/oneofselect_paramDef.json";
 
-
 const controller = new Controller();
 
 const control = {
@@ -76,7 +75,6 @@ describe("DropdownControl renders correctly", () => {
 
 describe("oneofselect works correctly in common-properties", () => {
 	const expectedOptions = [
-		{ label: "...", value: "" },
 		{ label: "red", value: "red" },
 		{ label: "orange", value: "orange" },
 		{ label: "yellow", value: "yellow" },
@@ -95,25 +93,34 @@ describe("oneofselect works correctly in common-properties", () => {
 	it("Validate oneofselect rendered correctly", () => {
 		const category = wrapper.find(".category-title-container-right-flyout-panel").at(0); // get the VALUES category
 		const dropDowns = category.find("Dropdown");
-		expect(dropDowns).to.have.length(6);
+		expect(dropDowns).to.have.length(7);
 		const options = dropDowns.at(0).prop("options"); // oneofselect
 		expect(options).to.eql(expectedOptions);
 	});
 	it("Validate oneofselect_placeholder rendered correctly", () => {
 		const category = wrapper.find(".category-title-container-right-flyout-panel").at(0); // get the VALUES category
-		const dropDowns = category.find("Dropdown");
-		expect(dropDowns).to.have.length(6);
-		const options = dropDowns.at(5).prop("options"); // oneofselect_placeholder
-		const phOptions = [
-			{ label: "None...", value: "" },
-			{ label: "red", value: "red" },
-			{ label: "orange", value: "orange" },
-			{ label: "yellow", value: "yellow" },
-			{ label: "green", value: "green" },
-			{ label: "blue", value: "blue" },
-			{ label: "purple", value: "purple" }
-		];
-		expect(options).to.eql(phOptions);
+		const dropDown = category.find("Dropdown").at(6);
+		const placeholder = dropDown.find(".Dropdown-placeholder"); // oneofselect_placeholder
+		expect(placeholder.text()).to.equals("None...");
+	});
+});
+
+describe("Conditions on oneofselect work correctly in common-properties", () => {
+	const expectedOptions = [
+		{ label: "red", value: "red" },
+		{ label: "orange", value: "orange" },
+		{ label: "yellow", value: "yellow" },
+		{ label: "green", value: "green" },
+		{ label: "blue", value: "blue" },
+		{ label: "purple", value: "purple" }
+	];
+	let wrapper;
+	beforeEach(() => {
+		wrapper = propertyUtils.flyoutEditorForm(oneofselectParamDef).wrapper;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
 	});
 	it("Validate oneofselect_error should have warning message when set to red", () => {
 		let category = wrapper.find(".category-title-container-right-flyout-panel").at(1); // get the CONDITIONS category
@@ -132,5 +139,40 @@ describe("oneofselect works correctly in common-properties", () => {
 		category = wrapper.find(".category-title-container-right-flyout-panel").at(2);
 		expect(category.find(".validation-warning-message-icon-dropdown")).to.have.length(1);
 		expect(category.find(".validation-error-message-color-warning")).to.have.length(1);
+	});
+});
+
+describe("Filtered enumerations on oneofselect work correctly in common-properties", () => {
+	let wrapper;
+	beforeEach(() => {
+		const form = propertyUtils.flyoutEditorForm(oneofselectParamDef);
+		wrapper = form.wrapper;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("Validate someofselect filtered correctly", () => {
+		const startingOptions = [
+			{ value: "orange", label: "Orange" },
+			{ value: "yellow", label: "Yellow" },
+			{ value: "green", label: "Green" },
+			{ value: "purple", label: "Purple" }
+		];
+		const expectedOptions = [
+			{ value: "red", label: "Red" },
+			{ value: "blue", label: "Blue" }
+		];
+		const category = wrapper.find(".category-title-container-right-flyout-panel").at(2); // get the FILTERS category
+		const newValue = { value: "purple", label: "Purple" };
+		propertyUtils.dropDown(category, 0, newValue, startingOptions); // validate correct start options
+
+		propertyUtils.selectCheckbox(category, 0, "editor-control-filter");
+		const dropDowns = category.find("Dropdown");
+		expect(dropDowns).to.have.length(1);
+
+		const options = dropDowns.at(0).prop("options");
+		expect(options).to.eql(expectedOptions);
 	});
 });

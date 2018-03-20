@@ -840,7 +840,6 @@ describe("should render table with error checking using CommonProperties element
 	});
 	it("error message generated on when editing oneofselect cell", () => {
 		const expectedOptions = [
-			{ label: "...", value: "" },
 			{ label: "dog", value: "dog" },
 			{ label: "cat", value: "cat" },
 			{ label: "pig", value: "pig" },

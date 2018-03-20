@@ -119,7 +119,6 @@ describe("someofselect works correctly in common-properties", () => {
 
 describe("Filtered enumerations on someofselect work correctly in common-properties", () => {
 	const startingOptions = [
-		{ value: "", label: "..." },
 		{ value: "red", label: "Red" },
 		{ value: "orange", label: "Orange" },
 		{ value: "yellow", label: "Yellow" },
@@ -128,7 +127,6 @@ describe("Filtered enumerations on someofselect work correctly in common-propert
 		{ value: "purple", label: "Purple" }
 	];
 	const expectedOptions = [
-		{ value: "", label: "..." },
 		{ value: "red", label: "Red" },
 		{ value: "orange", label: "Orange" },
 		{ value: "yellow", label: "yellow" },

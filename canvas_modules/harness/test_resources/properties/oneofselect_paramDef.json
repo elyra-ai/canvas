@@ -7,16 +7,15 @@
     "oneofselect_null": null,
     "oneofselect_empty_string": "",
     "oneofselect_placeholder": "",
+    "oneofselect_null_empty_enum": null,
     "oneofselect_error": "blue",
     "oneofselect_warning": "blue",
     "hide": true,
     "oneofselect_hidden": "blue",
     "disable": true,
     "oneofselect_disabled": "blue",
-    "oneofselect_filter_measurement": "",
-    "oneofselect_filter_type": "",
-    "oneofselect_filter_and": "",
-    "oneofselect_filter_or": ""
+    "filter": false,
+    "oneofselect_filtered": "orange"
   },
   "parameters": [
     {
@@ -79,6 +78,19 @@
         "purple"
       ],
       "required": true
+    },
+    {
+      "id": "oneofselect_null_empty_enum",
+      "enum": [
+        null,
+        "",
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ]
     },
     {
       "id": "oneofselect_placeholder",
@@ -146,6 +158,22 @@
         "purple"
       ],
       "required": true
+    },
+    {
+      "id": "filter",
+      "type": "boolean"
+    },
+    {
+      "id": "oneofselect_filtered",
+      "enum": [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "purple"
+      ],
+      "required": true
     }
   ],
   "uihints": {
@@ -189,6 +217,19 @@
         },
         "description": {
           "default": "oneofselect with parameter value set to '\"\"'"
+        }
+      },
+      {
+        "parameter_ref": "oneofselect_null_empty_enum",
+        "label": {
+          "default": "oneofselect with 'null'"
+        },
+        "resource_key": "oneofselect_null_empty_enum",
+        "description": {
+          "default": "oneofselect with 'null' and '\"\"' as an enum values."
+        },
+        "place_holder_text": {
+          "default": "..."
         }
       },
       {
@@ -253,6 +294,22 @@
         "label": {
           "default": "oneofselect Disabled"
         }
+      },
+      {
+        "parameter_ref": "filter",
+        "label": {
+          "default": "Filter 'oneofselect Filtered'"
+        }
+      },
+      {
+        "parameter_ref": "oneofselect_filtered",
+        "label": {
+          "default": "oneofselect Filtered"
+        },
+        "resource_key": "oneofselect_filtered",
+        "description": {
+          "default": "oneofselect filtered to have values 'red' and 'blue'"
+        }
       }
     ],
     "group_info": [
@@ -268,6 +325,7 @@
           "oneofselect_empty_string",
           "oneofselect_undefined",
           "oneofselect_default",
+          "oneofselect_null_empty_enum",
           "oneofselect_placeholder"
         ]
       },
@@ -284,6 +342,17 @@
           "oneofselect_hidden",
           "disable",
           "oneofselect_disabled"
+        ]
+      },
+      {
+        "id": "oneofselect-conditions",
+        "label": {
+          "default": "Filters"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "filter",
+          "oneofselect_filtered"
         ]
       }
     ]
@@ -352,6 +421,60 @@
           }
         }
       }
+    },
+    {
+      "enum_filter": {
+        "target": {
+          "parameter_ref": "oneofselect_filtered",
+          "values": [
+            "red",
+            "blue"
+          ]
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "filter",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "enum_filter": {
+        "target": {
+          "parameter_ref": "oneofselect_filtered",
+          "values": [
+            "orange",
+            "yellow",
+            "green",
+            "purple"
+          ]
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "filter",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
     }
-  ]
+  ],
+  "resources": {
+    "oneofselect_null_empty_enum.null.label": "Null...",
+    "oneofselect_null_empty_enum..label": "Empty...",
+    "oneofselect_null_empty_enum.red.label": "Red",
+    "oneofselect_null_empty_enum.orange.label": "Orange",
+    "oneofselect_null_empty_enum.yellow.label": "Yellow",
+    "oneofselect_null_empty_enum.green.label": "Green",
+    "oneofselect_null_empty_enum.purple.label": "Purple",
+    "oneofselect_null_empty_enum.blue.label": "Blue",
+    "oneofselect_filtered.red.label": "Red",
+    "oneofselect_filtered.orange.label": "Orange",
+    "oneofselect_filtered.yellow.label": "Yellow",
+    "oneofselect_filtered.green.label": "Green",
+    "oneofselect_filtered.purple.label": "Purple",
+    "oneofselect_filtered.blue.label": "Blue"
+  }
 }

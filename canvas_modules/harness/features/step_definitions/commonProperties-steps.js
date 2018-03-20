@@ -51,7 +51,7 @@ module.exports = function() {
 	this.Then(/^I select "([^"]*)" dropdown option$/, function(dropdownValue) {
 		var dropdown = browser.$(".Dropdown-placeholder");
 		dropdown.click();
-		var dropdownSelect = browser.$(".Dropdown-menu").$$(".Dropdown-option")[2];
+		var dropdownSelect = browser.$(".Dropdown-menu").$$(".Dropdown-option")[1];
 		dropdownSelect.click();
 		var okButton = getPropertiesApplyButton();
 		okButton.click();

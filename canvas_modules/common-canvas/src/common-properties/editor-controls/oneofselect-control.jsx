@@ -13,7 +13,7 @@ import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import Dropdown from "react-dropdown";
 import EditorControl from "./editor-control.jsx";
-import PropertyUtil from "../util/property-utils.js";
+import { ControlType } from "../constants/form-constants";
 
 export default class OneofselectControl extends EditorControl {
 	constructor(props) {
@@ -21,30 +21,34 @@ export default class OneofselectControl extends EditorControl {
 		this.state = {
 			clippedClassName: ""
 		};
-		this.setEmptySelection = false;
 		this.emptyLabel = "...";
 		if (props.control.additionalText) {
-			this.emptyLabel = this.props.control.additionalText;
+			this.emptyLabel = props.control.additionalText;
 		}
 		this.handleChange = this.handleChange.bind(this);
+		this.genSchemaSelectOptions = this.genSchemaSelectOptions.bind(this);
+		this.genSelectOptions = this.genSelectOptions.bind(this);
 		this.onBlur = this.onBlur.bind(this);
 	}
 
 	componentDidMount() {
-		if (this.setEmptySelection) {
-			this.setEmptySelection = false;
+		if (this.clearCurrentValue) {
+			this.clearCurrentValue = false;
 			this.props.controller.updatePropertyValue(this.props.propertyId, "");
 		}
 	}
 
-	componentWillReceiveProps(newProps) {
-		// console.log(JSON.stringify(newProps.control));
-	}
-
 	handleChange(evt) {
 		let value = evt.value;
-		// shouldn't have to do this but when "" the label is returned instead of value
-		if (value === this.emptyLabel) {
+		// shouldn't have to do this but when "" or null the label is returned instead of value
+		if (this.props.control.valueLabels) {
+			for (let j = 0; j < this.props.control.valueLabels.length; j++) {
+				if (this.props.control.valueLabels[j] === evt.label) {
+					value = this.props.control.values[j];
+					break;
+				}
+			}
+		} else if (value === this.emptyLabel) {
 			value = "";
 		}
 		this.props.controller.updatePropertyValue(this.props.propertyId, value);
@@ -121,50 +125,54 @@ export default class OneofselectControl extends EditorControl {
 		return topPos;
 	}
 
-	genSelectOptions(control, inSelectedValue) {
-		let selectedValue = inSelectedValue;
-		if (typeof selectedValue === "undefined" || selectedValue === null) {
-			selectedValue = "";
-		}
+	genSchemaSelectOptions(selectedValue) {
+		const schemaNames = this.props.controller.getDatasetMetadataSchemas();
 		const options = [];
-		// allow for user to not select a field
+		// allow for user to not select a schema
 		options.push({
 			value: "",
 			label: this.emptyLabel
 		});
-
-		if (Array.isArray(control)) { // selectschema
-			for (let j = 0; j < control.length; j++) {
+		if (Array.isArray(schemaNames)) {
+			for (const schemaName of schemaNames) {
 				options.push({
-					value: control[j],
-					label: control[j]
-				});
-			}
-		} else {
-			// Allow for enumeration replacement
-			const controlOpts = this.props.controller.getFilteredEnumItems(this.props.propertyId, control);
-			for (let j = 0; j < controlOpts.values.length; j++) {
-				options.push({
-					value: controlOpts.values[j],
-					label: controlOpts.valueLabels[j]
+					value: schemaName,
+					label: schemaName
 				});
 			}
 		}
+		const selectedOption = this.getSelectedOption(options, selectedValue);
+		return {
+			options: options,
+			selectedOption: selectedOption
+		};
+	}
 
-		let selectedOption = [];
-		for (const option of options) {
-			if (option.value === selectedValue) {
-				selectedOption = option;
-				break;
-			}
+	genSelectOptions(selectedValue) {
+		const options = [];
+		// Allow for enumeration replacement
+		const controlOpts = this.props.controller.getFilteredEnumItems(this.props.propertyId, this.props.control);
+		for (let j = 0; j < controlOpts.values.length; j++) {
+			options.push({
+				value: controlOpts.values[j],
+				label: controlOpts.valueLabels[j]
+			});
 		}
-		if (inSelectedValue && PropertyUtil.toType(selectedOption) === "array") {
-			this.setEmptySelection = true;
+		const selectedOption = this.getSelectedOption(options, selectedValue);
+		if (selectedValue && typeof selectedOption === "undefined") {
+			this.clearCurrentValue = true;
 		}
 		return {
 			options: options,
 			selectedOption: selectedOption
 		};
+	}
+
+	getSelectedOption(options, selectedValue) {
+		const selectedOption = options.find(function(option) {
+			return option.value === selectedValue;
+		});
+		return selectedOption;
 	}
 
 	render() {
@@ -186,8 +194,12 @@ export default class OneofselectControl extends EditorControl {
 			controlIconContainerClass = "control-icon-container-enabled";
 		}
 
-		const dropDownOptions = this.props.control.controlType === "selectschema" ? this.props.controller.getDatasetMetadataSchemas() : this.props.control;
-		const dropDown = this.genSelectOptions(dropDownOptions, controlValue);
+		let dropDown;
+		if (this.props.control.controlType === ControlType.SELECTSCHEMA) {
+			dropDown = this.genSchemaSelectOptions(controlValue);
+		} else {
+			dropDown = this.genSelectOptions(controlValue);
+		}
 		return (
 			<div id="oneofselect-control-container">
 				<div id={controlIconContainerClass}>
@@ -199,7 +211,8 @@ export default class OneofselectControl extends EditorControl {
 								options={dropDown.options}
 								onChange={this.handleChange}
 								onBlur={this.onBlur}
-								value={dropDown.selectedOption.label}
+								value={dropDown.selectedOption}
+								placeholder={this.emptyLabel}
 								ref="input"
 							/>
 						</div>

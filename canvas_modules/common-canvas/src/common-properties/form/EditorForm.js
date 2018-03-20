@@ -668,7 +668,7 @@ function _parameterValueLabels(parameter, l10nProvider) {
 		}
 		const paramLabels = [];
 		parameter.getValidValues().forEach(function(paramValue) {
-			paramLabels.push(l10nProvider.l10nValueLabel(key, paramValue));
+			paramLabels.push(l10nProvider.l10nValueLabel(key, String(paramValue)));
 		});
 		return paramLabels;
 	}
