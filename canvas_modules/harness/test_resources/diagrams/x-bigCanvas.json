@@ -2697,643 +2697,964 @@
         "id": "0b4184f9-6071-41f5-9083-d875ea955de9",
         "className": "canvas-data-link",
         "source": "idGWRVT47XDV",
-        "target": "0fb03f02-5b9f-403f-8457-b76538e76932"
+        "target": "0fb03f02-5b9f-403f-8457-b76538e76932",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "c2f6df05-eece-4ddc-8420-151ecd98197b",
         "className": "canvas-data-link",
         "source": "0fb03f02-5b9f-403f-8457-b76538e76932",
-        "target": "f9a31eeb-2185-49b0-b45b-a4d8ca7d7833"
+        "target": "f9a31eeb-2185-49b0-b45b-a4d8ca7d7833",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "e3b12734-0a6a-4866-a4fd-d6cad3908450",
         "className": "canvas-data-link",
         "source": "f9a31eeb-2185-49b0-b45b-a4d8ca7d7833",
-        "target": "fcab610a-d0e3-4008-9984-677e3d93b2df"
+        "target": "fcab610a-d0e3-4008-9984-677e3d93b2df",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "bdd5957b-0d7d-49c3-83e3-7d11213e3f7e",
         "className": "canvas-data-link",
         "source": "fcab610a-d0e3-4008-9984-677e3d93b2df",
-        "target": "e5441993-f5a4-43ce-a176-f58e44ecfa48"
+        "target": "e5441993-f5a4-43ce-a176-f58e44ecfa48",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "16e3b539-edc8-41ef-bae4-0acbad420db6",
         "className": "canvas-data-link",
         "source": "35a6b0c0-60a4-475a-9d7a-d095b0086a79",
-        "target": "b8652b53-60dc-4dea-a294-435642061271"
+        "target": "b8652b53-60dc-4dea-a294-435642061271",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "4d7cc87f-61eb-495f-9c59-f93d5852f29d",
         "className": "canvas-data-link",
         "source": "b8652b53-60dc-4dea-a294-435642061271",
-        "target": "a09b76b5-36db-4647-9a71-db8e594f5b18"
+        "target": "a09b76b5-36db-4647-9a71-db8e594f5b18",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "5156cd79-3e73-4f74-8e04-7f02aafc9ce3",
         "className": "canvas-data-link",
         "source": "a09b76b5-36db-4647-9a71-db8e594f5b18",
-        "target": "6a2fa566-1606-4d9b-afc5-39e51071f6c8"
+        "target": "6a2fa566-1606-4d9b-afc5-39e51071f6c8",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "a841004b-f063-40b7-9842-06eacc9dc91e",
         "className": "canvas-data-link",
         "source": "6a2fa566-1606-4d9b-afc5-39e51071f6c8",
-        "target": "20533afd-da86-4fad-882d-5678640c3b8b"
+        "target": "20533afd-da86-4fad-882d-5678640c3b8b",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "f1c6824a-87af-4607-9ea0-7717996c95f3",
         "className": "canvas-data-link",
         "source": "20533afd-da86-4fad-882d-5678640c3b8b",
-        "target": "7a44defd-719b-44d8-8080-a053ca18573a"
+        "target": "7a44defd-719b-44d8-8080-a053ca18573a",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "58aff1b7-db7e-4a9c-b662-b40aafb4bcfb",
         "className": "canvas-data-link",
         "source": "7a44defd-719b-44d8-8080-a053ca18573a",
-        "target": "1851120d-07a8-4101-bb3f-167d3760be26"
+        "target": "1851120d-07a8-4101-bb3f-167d3760be26",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "683681d6-0528-424a-828d-ac2315b273fd",
         "className": "canvas-data-link",
         "source": "1851120d-07a8-4101-bb3f-167d3760be26",
-        "target": "31553731-0e82-4017-be92-dfcfb3f4e1c6"
+        "target": "31553731-0e82-4017-be92-dfcfb3f4e1c6",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "cb3f0cce-c8ba-4aa2-b36a-3abe24426b37",
         "className": "canvas-data-link",
         "source": "e5441993-f5a4-43ce-a176-f58e44ecfa48",
-        "target": "31553731-0e82-4017-be92-dfcfb3f4e1c6"
+        "target": "31553731-0e82-4017-be92-dfcfb3f4e1c6",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "1cca9722-a46f-4e8b-ab51-2708b61cf075",
         "className": "canvas-data-link",
         "source": "31553731-0e82-4017-be92-dfcfb3f4e1c6",
-        "target": "66b2edeb-07e1-491c-9538-1bafc6c10085"
+        "target": "66b2edeb-07e1-491c-9538-1bafc6c10085",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "c9f10e42-f47e-46a5-bffc-bdd183a66d9e",
         "className": "canvas-data-link",
         "source": "66b2edeb-07e1-491c-9538-1bafc6c10085",
-        "target": "1d06f8ba-3ada-4ebc-bca4-ba8b7051c82a"
+        "target": "1d06f8ba-3ada-4ebc-bca4-ba8b7051c82a",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "861ce7a6-2662-4b30-a56b-198191c46047",
         "className": "canvas-data-link",
         "source": "1d06f8ba-3ada-4ebc-bca4-ba8b7051c82a",
-        "target": "94dce46a-bebe-41af-bb50-ffa5a637f8d6"
+        "target": "94dce46a-bebe-41af-bb50-ffa5a637f8d6",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "cda72087-466d-47a4-b1e9-6151528a692a",
         "className": "canvas-data-link",
         "source": "6bf0fef2-3ccf-4b33-b477-f3da1f0932e5",
-        "target": "f442f3d1-d9fc-4dff-bfea-4deb01ce4e29"
+        "target": "f442f3d1-d9fc-4dff-bfea-4deb01ce4e29",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "7dd9f2f9-74ab-4471-87aa-fdace0d670b6",
         "className": "canvas-data-link",
         "source": "66b2edeb-07e1-491c-9538-1bafc6c10085",
-        "target": "f442f3d1-d9fc-4dff-bfea-4deb01ce4e29"
+        "target": "f442f3d1-d9fc-4dff-bfea-4deb01ce4e29",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "216cb68c-60ef-4013-b2c2-f6c79102f2e1",
         "className": "canvas-data-link",
         "source": "94dce46a-bebe-41af-bb50-ffa5a637f8d6",
-        "target": "54d54288-0674-4913-a715-d0fd4fa94b4a"
+        "target": "54d54288-0674-4913-a715-d0fd4fa94b4a",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "8834f1b2-4c0f-494c-a8b6-2a5af6e64548",
         "className": "canvas-data-link",
         "source": "f442f3d1-d9fc-4dff-bfea-4deb01ce4e29",
-        "target": "3378406c-f215-418e-8b96-65b6db536db1"
+        "target": "3378406c-f215-418e-8b96-65b6db536db1",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "68f783cf-61e7-47f5-8086-b9db95f526e0",
         "className": "canvas-data-link",
         "source": "3378406c-f215-418e-8b96-65b6db536db1",
-        "target": "b05f9df8-66bb-4201-9a26-7323bb3829a0"
+        "target": "b05f9df8-66bb-4201-9a26-7323bb3829a0",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "635556f1-137f-42d7-9c98-0953b4f41d0f",
         "className": "canvas-data-link",
         "source": "3378406c-f215-418e-8b96-65b6db536db1",
-        "target": "7ba0a30c-fa55-4023-bc59-979a35cb36d4"
+        "target": "7ba0a30c-fa55-4023-bc59-979a35cb36d4",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "00885fa6-6b77-408a-878f-1dac61096530",
         "className": "canvas-data-link",
         "source": "7ba0a30c-fa55-4023-bc59-979a35cb36d4",
-        "target": "78f5600e-a19e-48ec-9bf1-9cd4e391fbf4"
+        "target": "78f5600e-a19e-48ec-9bf1-9cd4e391fbf4",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "225ee707-5347-4263-8922-4d03dfbb3c2d",
         "className": "canvas-data-link",
         "source": "b05f9df8-66bb-4201-9a26-7323bb3829a0",
-        "target": "3ad38837-ca80-4a46-ba5b-9230e6c92e74"
+        "target": "3ad38837-ca80-4a46-ba5b-9230e6c92e74",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "3717d1f8-112c-4903-9259-cf42adc6e4a1",
         "className": "canvas-data-link",
         "source": "78f5600e-a19e-48ec-9bf1-9cd4e391fbf4",
-        "target": "2e337f71-d2ef-40fd-915a-f73cac4e0027"
+        "target": "2e337f71-d2ef-40fd-915a-f73cac4e0027",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "7a954f58-b760-4d99-9019-0af6c2facde3",
         "className": "canvas-data-link",
         "source": "73fb6d9d-2ead-4707-bf82-726c2eef4688",
-        "target": "e96ee954-eedd-4c85-bfeb-5136f60cf70d"
+        "target": "e96ee954-eedd-4c85-bfeb-5136f60cf70d",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "91a90ad7-5778-4b46-92e0-abce329ce515",
         "className": "canvas-data-link",
         "source": "3f385d96-eef6-4565-bc96-21059dafcea0",
-        "target": "3c324fc4-f0a8-4b92-9fd2-a6e457db84e9"
+        "target": "3c324fc4-f0a8-4b92-9fd2-a6e457db84e9",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "df8c5235-477c-4b0e-892c-2f6381df4762",
         "className": "canvas-data-link",
         "source": "3c324fc4-f0a8-4b92-9fd2-a6e457db84e9",
-        "target": "7b17a32d-035f-484f-9eb5-1036f407ecf0"
+        "target": "7b17a32d-035f-484f-9eb5-1036f407ecf0",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "9db9542f-0ec6-4ab7-973b-a81a97c3a511",
         "className": "canvas-data-link",
         "source": "3c324fc4-f0a8-4b92-9fd2-a6e457db84e9",
-        "target": "7c90ed8f-a891-46bb-adca-abbe2a7e130d"
+        "target": "7c90ed8f-a891-46bb-adca-abbe2a7e130d",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "65ba6d0e-de8d-46f0-a23c-77d9d776ea74",
         "className": "canvas-data-link",
         "source": "e96ee954-eedd-4c85-bfeb-5136f60cf70d",
-        "target": "25197d84-0ba9-4bb8-9cbe-82b0fe2cd472"
+        "target": "25197d84-0ba9-4bb8-9cbe-82b0fe2cd472",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "2e87cb11-1df9-4f89-95fa-e1f19b790918",
         "className": "canvas-data-link",
         "source": "7b17a32d-035f-484f-9eb5-1036f407ecf0",
-        "target": "fa3f8411-5b57-4247-ad22-b5afe3b5e6d4"
+        "target": "fa3f8411-5b57-4247-ad22-b5afe3b5e6d4",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "78ccfa8f-3056-4feb-8f53-b8a5a18c98b3",
         "className": "canvas-data-link",
         "source": "fa3f8411-5b57-4247-ad22-b5afe3b5e6d4",
-        "target": "0c7844e7-c679-4837-b6e5-9996fa8da290"
+        "target": "0c7844e7-c679-4837-b6e5-9996fa8da290",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "9a101768-87e9-4870-9ba7-dbc4ede467b7",
         "className": "canvas-data-link",
         "source": "0c7844e7-c679-4837-b6e5-9996fa8da290",
-        "target": "893c343a-b37c-4d89-bdab-b01649e63d34"
+        "target": "893c343a-b37c-4d89-bdab-b01649e63d34",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "4b94d239-4335-4ebd-a1b9-2f2d44d562bc",
         "className": "canvas-data-link",
         "source": "7c90ed8f-a891-46bb-adca-abbe2a7e130d",
-        "target": "62b01021-d92f-4e7a-b384-04fb414f9ecd"
+        "target": "62b01021-d92f-4e7a-b384-04fb414f9ecd",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "a3d24b7b-d48f-4202-8bae-f850dddf338f",
         "className": "canvas-data-link",
         "source": "25197d84-0ba9-4bb8-9cbe-82b0fe2cd472",
-        "target": "28818107-b342-408a-a0a5-f4b82fda2f6f"
+        "target": "28818107-b342-408a-a0a5-f4b82fda2f6f",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "56471770-797f-47ef-8f9d-f74f84f19123",
         "className": "canvas-data-link",
         "source": "28818107-b342-408a-a0a5-f4b82fda2f6f",
-        "target": "2f895414-8455-4638-8c9d-3564a58cbc27"
+        "target": "2f895414-8455-4638-8c9d-3564a58cbc27",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "c83d516a-bc71-4da9-b1d7-eb51fc1c86b8",
         "className": "canvas-data-link",
         "source": "62b01021-d92f-4e7a-b384-04fb414f9ecd",
-        "target": "18f63287-551e-41a5-85dd-773aabcf8572"
+        "target": "18f63287-551e-41a5-85dd-773aabcf8572",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "63dd49a5-a4b0-481f-acbe-b5e7fcb9ba48",
         "className": "canvas-data-link",
         "source": "2f895414-8455-4638-8c9d-3564a58cbc27",
-        "target": "ad393db9-2710-480f-9f22-35ae22de2c70"
+        "target": "ad393db9-2710-480f-9f22-35ae22de2c70",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "dc19bdc2-2688-412c-862d-3426a99d37c8",
         "className": "canvas-data-link",
         "source": "18f63287-551e-41a5-85dd-773aabcf8572",
-        "target": "ad393db9-2710-480f-9f22-35ae22de2c70"
+        "target": "ad393db9-2710-480f-9f22-35ae22de2c70",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "2a57a4d4-1ac6-4a55-abe0-5c26bf0d9968",
         "className": "canvas-data-link",
         "source": "65e85b5a-b597-4ddb-ba76-1bce8528b144",
-        "target": "b8e647bd-4b66-4bd4-9324-b6cb91061e27"
+        "target": "b8e647bd-4b66-4bd4-9324-b6cb91061e27",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "5f32ec94-3890-4390-9046-b20bf91004f1",
         "className": "canvas-data-link",
         "source": "72ff3d43-adfd-4ac5-b5b8-72258d3db25e",
-        "target": "ceec2ba9-04fa-41a2-a1b3-191b30247d09"
+        "target": "ceec2ba9-04fa-41a2-a1b3-191b30247d09",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "6a24964c-f70a-4fc8-b654-185debdd541f",
         "className": "canvas-data-link",
         "source": "ceec2ba9-04fa-41a2-a1b3-191b30247d09",
-        "target": "dfa19220-22ec-4b4e-9b55-6a700ce73c1b"
+        "target": "dfa19220-22ec-4b4e-9b55-6a700ce73c1b",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "61e4364e-079a-44c2-ac35-50a9c1ed4d77",
         "className": "canvas-data-link",
         "source": "1120cdf0-cb77-4d5d-a716-6cc0815a2be0",
-        "target": "2c77f9d4-d70f-4e00-a24e-0d875b7868c0"
+        "target": "2c77f9d4-d70f-4e00-a24e-0d875b7868c0",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "6b0d52eb-aa85-4cbb-87e4-9f39ace1e1bf",
         "className": "canvas-data-link",
         "source": "2c77f9d4-d70f-4e00-a24e-0d875b7868c0",
-        "target": "b47356c1-4528-4fa7-960b-4e631f5e67fb"
+        "target": "b47356c1-4528-4fa7-960b-4e631f5e67fb",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "27355bd2-92ae-4932-9f63-5c06eb39abe0",
         "className": "canvas-data-link",
         "source": "54d54288-0674-4913-a715-d0fd4fa94b4a",
-        "target": "c91a4724-91fe-435e-a077-9c4100b95043"
+        "target": "c91a4724-91fe-435e-a077-9c4100b95043",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "7d2b92d2-fb5f-443c-9cce-52636d500e8d",
         "className": "canvas-data-link",
         "source": "3ad38837-ca80-4a46-ba5b-9230e6c92e74",
-        "target": "9b40c1e1-ca18-4746-9a23-d2dea4bede10"
+        "target": "9b40c1e1-ca18-4746-9a23-d2dea4bede10",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "e502367d-5bca-495b-86d0-fc9d9e7cd198",
         "className": "canvas-data-link",
         "source": "c91a4724-91fe-435e-a077-9c4100b95043",
-        "target": "79059d92-54bc-4545-ba5d-59954a81910a"
+        "target": "79059d92-54bc-4545-ba5d-59954a81910a",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "ed5103c1-aec5-4270-a94d-b8a31623e72c",
         "className": "canvas-data-link",
         "source": "9b40c1e1-ca18-4746-9a23-d2dea4bede10",
-        "target": "80e03f36-7bbf-480b-be4a-a81132929d8b"
+        "target": "80e03f36-7bbf-480b-be4a-a81132929d8b",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "5d941a53-9aee-42f2-9633-de9fe98db366",
         "className": "canvas-data-link",
         "source": "79059d92-54bc-4545-ba5d-59954a81910a",
-        "target": "1b6f34d4-40bf-426d-88fb-7a0b206b4fb4"
+        "target": "1b6f34d4-40bf-426d-88fb-7a0b206b4fb4",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "786dc25b-9bb9-4fe8-97ab-0f2575a52eee",
         "className": "canvas-data-link",
         "source": "80e03f36-7bbf-480b-be4a-a81132929d8b",
-        "target": "1b6f34d4-40bf-426d-88fb-7a0b206b4fb4"
+        "target": "1b6f34d4-40bf-426d-88fb-7a0b206b4fb4",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "e0fc81b0-7bf2-452c-9416-1407e5f508ae",
         "className": "canvas-data-link",
         "source": "1b6f34d4-40bf-426d-88fb-7a0b206b4fb4",
-        "target": "c41953c4-0153-4e35-a708-1a98a351628b"
+        "target": "c41953c4-0153-4e35-a708-1a98a351628b",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "d35ef312-2a60-47f4-a8d2-9e262bf5c467",
         "className": "canvas-data-link",
         "source": "ea0ea6b1-7061-4143-b6cf-10af7d41eb8d",
-        "target": "c41953c4-0153-4e35-a708-1a98a351628b"
+        "target": "c41953c4-0153-4e35-a708-1a98a351628b",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "8e7c53a9-9852-48de-85c9-357a2452018e",
         "className": "canvas-data-link",
         "source": "6e4a4fcc-1b97-4725-9198-c05c5837c43a",
-        "target": "ea0ea6b1-7061-4143-b6cf-10af7d41eb8d"
+        "target": "ea0ea6b1-7061-4143-b6cf-10af7d41eb8d",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "ed70705f-5d7a-4a30-ba77-735510c676d5",
         "className": "canvas-data-link",
         "source": "796abe32-ab49-4c32-b182-6fd3c4698c86",
-        "target": "6e4a4fcc-1b97-4725-9198-c05c5837c43a"
+        "target": "6e4a4fcc-1b97-4725-9198-c05c5837c43a",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "3e856438-c05d-4924-85fc-338cacd66c02",
         "className": "canvas-data-link",
         "source": "4d708157-d812-44fa-95a6-5d92e0ce063e",
-        "target": "796abe32-ab49-4c32-b182-6fd3c4698c86"
+        "target": "796abe32-ab49-4c32-b182-6fd3c4698c86",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "580f932b-dd75-4cb8-bd0d-f345dc168806",
         "className": "canvas-data-link",
         "source": "b47356c1-4528-4fa7-960b-4e631f5e67fb",
-        "target": "4d708157-d812-44fa-95a6-5d92e0ce063e"
+        "target": "4d708157-d812-44fa-95a6-5d92e0ce063e",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "4ba7b92d-7e2f-496c-a716-39fe13e6caee",
         "className": "canvas-data-link",
         "source": "dfa19220-22ec-4b4e-9b55-6a700ce73c1b",
-        "target": "25c037bb-2339-4c38-8615-09fe539b248a"
+        "target": "25c037bb-2339-4c38-8615-09fe539b248a",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "07daa06c-b7a5-4ced-bda8-361156e586b5",
         "className": "canvas-data-link",
         "source": "25c037bb-2339-4c38-8615-09fe539b248a",
-        "target": "c7c0d91f-0680-47e1-ad2d-21d3b3c91747"
+        "target": "c7c0d91f-0680-47e1-ad2d-21d3b3c91747",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "041bb885-25bc-4d8f-afaf-b0f90d5780bc",
         "className": "canvas-data-link",
         "source": "c7c0d91f-0680-47e1-ad2d-21d3b3c91747",
-        "target": "22c42be1-ae33-45f8-8f31-e0097b44aec8"
+        "target": "22c42be1-ae33-45f8-8f31-e0097b44aec8",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "36e2f89b-197d-4f16-8066-d90011b6a91c",
         "className": "canvas-data-link",
         "source": "b8e647bd-4b66-4bd4-9324-b6cb91061e27",
-        "target": "d5697aed-46a0-4262-b0b0-730f002b1915"
+        "target": "d5697aed-46a0-4262-b0b0-730f002b1915",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "cb530ed3-d34c-4267-b995-dc473ec4e7c3",
         "className": "canvas-data-link",
         "source": "d5697aed-46a0-4262-b0b0-730f002b1915",
-        "target": "5a9bf692-5dac-49a5-bf7d-eb97784462e8"
+        "target": "5a9bf692-5dac-49a5-bf7d-eb97784462e8",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "b9cbad94-47d4-40a9-a5f4-df047b482839",
         "className": "canvas-data-link",
         "source": "5a9bf692-5dac-49a5-bf7d-eb97784462e8",
-        "target": "bd1baaa0-5131-480d-98d8-baf9de6b9b74"
+        "target": "bd1baaa0-5131-480d-98d8-baf9de6b9b74",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "7630ff01-7a3c-4095-8fd4-c871bdbb0111",
         "className": "canvas-data-link",
         "source": "bd1baaa0-5131-480d-98d8-baf9de6b9b74",
-        "target": "7d180c58-df04-454e-9f0f-72f799571a97"
+        "target": "7d180c58-df04-454e-9f0f-72f799571a97",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "6fcdc9d3-49ee-4353-aaf0-f4d5c5af6444",
         "className": "canvas-data-link",
         "source": "22c42be1-ae33-45f8-8f31-e0097b44aec8",
-        "target": "5ea8b78d-3722-4025-98a8-efab94795ed9"
+        "target": "5ea8b78d-3722-4025-98a8-efab94795ed9",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "0074b605-47a5-4a4f-bdce-7d24029fd6bb",
         "className": "canvas-data-link",
         "source": "7d180c58-df04-454e-9f0f-72f799571a97",
-        "target": "5ea8b78d-3722-4025-98a8-efab94795ed9"
+        "target": "5ea8b78d-3722-4025-98a8-efab94795ed9",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "9fa45bbc-348e-4c8f-a001-451889530c37",
         "className": "canvas-data-link",
         "source": "5ea8b78d-3722-4025-98a8-efab94795ed9",
-        "target": "ee4f3d54-fcb6-4afe-8245-6ade3d1f6750"
+        "target": "ee4f3d54-fcb6-4afe-8245-6ade3d1f6750",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "63f2c586-e9d1-4d1e-b85f-2dba52460374",
         "className": "canvas-data-link",
         "source": "ad393db9-2710-480f-9f22-35ae22de2c70",
-        "target": "ee4f3d54-fcb6-4afe-8245-6ade3d1f6750"
+        "target": "ee4f3d54-fcb6-4afe-8245-6ade3d1f6750",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "ce9f42b0-3cf4-445e-b107-7c0902f43818",
         "className": "canvas-data-link",
         "source": "ee4f3d54-fcb6-4afe-8245-6ade3d1f6750",
-        "target": "3bd49965-8916-49f9-8092-234731c30b95"
+        "target": "3bd49965-8916-49f9-8092-234731c30b95",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "08f4fe2d-a6bf-460d-a51e-97ba9d6dab2a",
         "className": "canvas-data-link",
         "source": "ad393db9-2710-480f-9f22-35ae22de2c70",
-        "target": "3bd49965-8916-49f9-8092-234731c30b95"
+        "target": "3bd49965-8916-49f9-8092-234731c30b95",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "2104b968-99be-4470-b266-40be8bbb164c",
         "className": "canvas-data-link",
         "source": "893c343a-b37c-4d89-bdab-b01649e63d34",
-        "target": "a511ee1e-acc4-4466-b993-c777a47ac775"
+        "target": "a511ee1e-acc4-4466-b993-c777a47ac775",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "f3b66ab8-c4a2-4760-afb4-a4acd0fba92f",
         "className": "canvas-data-link",
         "source": "a511ee1e-acc4-4466-b993-c777a47ac775",
-        "target": "8748ccea-c93a-4a3b-8ece-fe804191d901"
+        "target": "8748ccea-c93a-4a3b-8ece-fe804191d901",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "db11bd6d-7a21-443b-9ee0-4976b265690a",
         "className": "canvas-data-link",
         "source": "8748ccea-c93a-4a3b-8ece-fe804191d901",
-        "target": "867ba039-c596-46b6-8da4-1e0548939bf6"
+        "target": "867ba039-c596-46b6-8da4-1e0548939bf6",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "e0aff990-8131-44ce-baf1-c072eb199124",
         "className": "canvas-data-link",
         "source": "2e337f71-d2ef-40fd-915a-f73cac4e0027",
-        "target": "7fb101e0-d839-45e7-8589-99269c77399b"
+        "target": "7fb101e0-d839-45e7-8589-99269c77399b",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "cd433124-177a-4b99-94b9-1f600cd99cee",
         "className": "canvas-data-link",
         "source": "7fb101e0-d839-45e7-8589-99269c77399b",
-        "target": "1066a1f3-e507-400f-818d-a87bae6e7d97"
+        "target": "1066a1f3-e507-400f-818d-a87bae6e7d97",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "4f22c003-c48d-4c4c-8488-33e98af39996",
         "className": "canvas-data-link",
         "source": "1066a1f3-e507-400f-818d-a87bae6e7d97",
-        "target": "5d6024fa-e82e-45a8-9a67-1f1befe408d0"
+        "target": "5d6024fa-e82e-45a8-9a67-1f1befe408d0",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "d39b3b16-dfc8-47d4-aca0-ad7aa57a3b54",
         "className": "canvas-data-link",
         "source": "5d6024fa-e82e-45a8-9a67-1f1befe408d0",
-        "target": "c0c0bb4b-fd55-434b-b602-4da2736a5129"
+        "target": "c0c0bb4b-fd55-434b-b602-4da2736a5129",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "289e8339-b151-44ad-b909-e19465c8d146",
         "className": "canvas-data-link",
         "source": "867ba039-c596-46b6-8da4-1e0548939bf6",
-        "target": "c0c0bb4b-fd55-434b-b602-4da2736a5129"
+        "target": "c0c0bb4b-fd55-434b-b602-4da2736a5129",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "e7d45bed-22e7-47fe-918f-1945c16a1e99",
         "className": "canvas-data-link",
         "source": "ee4f3d54-fcb6-4afe-8245-6ade3d1f6750",
-        "target": "9d4731f0-1aa0-4266-bf2e-bc13426e0b0b"
+        "target": "9d4731f0-1aa0-4266-bf2e-bc13426e0b0b",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "01f83810-8604-46a4-bd1e-2e9a324e23b1",
         "className": "canvas-data-link",
         "source": "9d4731f0-1aa0-4266-bf2e-bc13426e0b0b",
-        "target": "128a9fb6-463c-4fd8-a5ce-229ee656484d"
+        "target": "128a9fb6-463c-4fd8-a5ce-229ee656484d",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "a20e2348-e2ee-4473-a753-e507d3811f00",
         "className": "canvas-data-link",
         "source": "3bd49965-8916-49f9-8092-234731c30b95",
-        "target": "46e3dfce-ce2e-4af1-aa27-bbc4d3f86f23"
+        "target": "46e3dfce-ce2e-4af1-aa27-bbc4d3f86f23",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "0af1c035-a3b1-47fe-96f2-59f32ceb4ddc",
         "className": "canvas-data-link",
         "source": "46e3dfce-ce2e-4af1-aa27-bbc4d3f86f23",
-        "target": "e116e007-4f03-44c7-954e-e3aace3bb4ad"
+        "target": "e116e007-4f03-44c7-954e-e3aace3bb4ad",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "00958d6e-e311-4bab-a3de-8fccf535ae3b",
         "className": "canvas-comment-link",
         "source": "82c02d13-dd6d-44e7-a794-4a50d2723ecb",
-        "target": "22c42be1-ae33-45f8-8f31-e0097b44aec8"
+        "target": "22c42be1-ae33-45f8-8f31-e0097b44aec8",
+        "userData": {
+          "linkType": "comment"
+        }
       },
       {
         "id": "36222fd3-0c2b-4709-8a0c-240935bc2d98",
         "className": "canvas-comment-link",
         "source": "82c02d13-dd6d-44e7-a794-4a50d2723ecb",
-        "target": "c7c0d91f-0680-47e1-ad2d-21d3b3c91747"
+        "target": "c7c0d91f-0680-47e1-ad2d-21d3b3c91747",
+        "userData": {
+          "linkType": "comment"
+        }
       },
       {
         "id": "e318ac53-04c2-48ce-b367-e1a48d1a7d1a",
         "className": "canvas-comment-link",
         "source": "0be30edb-a0e7-4983-a021-9aa9ff502a67",
-        "target": "f442f3d1-d9fc-4dff-bfea-4deb01ce4e29"
+        "target": "f442f3d1-d9fc-4dff-bfea-4deb01ce4e29",
+        "userData": {
+          "linkType": "comment"
+        }
       },
       {
         "id": "5655dd43-149b-4fb6-a7dc-d46c4cf196f9",
         "className": "canvas-comment-link",
         "source": "0be30edb-a0e7-4983-a021-9aa9ff502a67",
-        "target": "3c324fc4-f0a8-4b92-9fd2-a6e457db84e9"
+        "target": "3c324fc4-f0a8-4b92-9fd2-a6e457db84e9",
+        "userData": {
+          "linkType": "comment"
+        }
       },
       {
         "id": "ffca8d48-2550-4eba-a6fb-c3c3fe742c6a",
         "className": "canvas-comment-link",
         "source": "0be30edb-a0e7-4983-a021-9aa9ff502a67",
-        "target": "7b17a32d-035f-484f-9eb5-1036f407ecf0"
+        "target": "7b17a32d-035f-484f-9eb5-1036f407ecf0",
+        "userData": {
+          "linkType": "comment"
+        }
       },
       {
         "id": "2580b94a-9af6-4e28-9e48-25c97150f52c",
         "className": "canvas-comment-link",
         "source": "a84cbac5-dbe5-45c8-8803-4a57298be297",
-        "target": "79059d92-54bc-4545-ba5d-59954a81910a"
+        "target": "79059d92-54bc-4545-ba5d-59954a81910a",
+        "userData": {
+          "linkType": "comment"
+        }
       },
       {
         "id": "a3c942fc-28f0-44c6-9af4-dd95f55783c9",
         "className": "canvas-comment-link",
         "source": "a84cbac5-dbe5-45c8-8803-4a57298be297",
-        "target": "1b6f34d4-40bf-426d-88fb-7a0b206b4fb4"
+        "target": "1b6f34d4-40bf-426d-88fb-7a0b206b4fb4",
+        "userData": {
+          "linkType": "comment"
+        }
       },
       {
         "id": "07f4a7e8-5956-4855-baf9-34244110742b",
         "className": "canvas-comment-link",
         "source": "a84cbac5-dbe5-45c8-8803-4a57298be297",
-        "target": "c91a4724-91fe-435e-a077-9c4100b95043"
+        "target": "c91a4724-91fe-435e-a077-9c4100b95043",
+        "userData": {
+          "linkType": "comment"
+        }
       },
       {
         "id": "9ea30441-a57a-4f51-beee-fadaf38e1216",
         "className": "canvas-data-link",
         "source": "6e4a4fcc-1b97-4725-9198-c05c5837c43a",
-        "target": "a5f6b6aa-bd2b-42f2-88ed-e5e7b116468e"
+        "target": "a5f6b6aa-bd2b-42f2-88ed-e5e7b116468e",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "fda32909-c1f5-481a-bb1d-eb1f77c33933",
         "className": "canvas-data-link",
         "source": "128a9fb6-463c-4fd8-a5ce-229ee656484d",
-        "target": "805c31b8-826e-4c6a-ba88-02b3780b11dc"
+        "target": "805c31b8-826e-4c6a-ba88-02b3780b11dc",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "7a10b6d6-49af-40f0-af78-a08497e2e1c6",
         "className": "canvas-data-link",
         "source": "805c31b8-826e-4c6a-ba88-02b3780b11dc",
-        "target": "7c1a8c04-505f-4e4f-9505-ae4948dd33e6"
+        "target": "7c1a8c04-505f-4e4f-9505-ae4948dd33e6",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "e0740531-b8f6-4f5d-b716-c5b762af9d75",
         "className": "canvas-data-link",
         "source": "7c1a8c04-505f-4e4f-9505-ae4948dd33e6",
-        "target": "b0677bba-3956-4e00-ad5e-e8c20875f717"
+        "target": "b0677bba-3956-4e00-ad5e-e8c20875f717",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "b14580ae-86b4-4bf3-aadb-84124923df16",
         "className": "canvas-data-link",
         "source": "b0677bba-3956-4e00-ad5e-e8c20875f717",
-        "target": "bc1de3c4-c827-4e99-a6bd-bcdf5f8922ab"
+        "target": "bc1de3c4-c827-4e99-a6bd-bcdf5f8922ab",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "63b7932e-7157-4dc1-960e-655c694b2dbd",
         "className": "canvas-data-link",
         "source": "7c1a8c04-505f-4e4f-9505-ae4948dd33e6",
-        "target": "f80bfe77-961d-4132-ac96-3fddaeee9b08"
+        "target": "f80bfe77-961d-4132-ac96-3fddaeee9b08",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "b1f17ab4-59ea-4d66-a539-98c01b7c7250",
         "className": "canvas-data-link",
         "source": "127fe709-7912-4dff-806c-1a0765118ce6",
-        "target": "f80bfe77-961d-4132-ac96-3fddaeee9b08"
+        "target": "f80bfe77-961d-4132-ac96-3fddaeee9b08",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "6dbe5fde-6a04-4a29-b2ea-56935c0ae87e",
         "className": "canvas-data-link",
         "source": "e116e007-4f03-44c7-954e-e3aace3bb4ad",
-        "target": "127fe709-7912-4dff-806c-1a0765118ce6"
+        "target": "127fe709-7912-4dff-806c-1a0765118ce6",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "1be899a8-d9c1-454a-ace4-fb6f833869ea",
         "className": "canvas-data-link",
         "source": "c0c0bb4b-fd55-434b-b602-4da2736a5129",
-        "target": "8a8008c6-434c-46cc-9ee3-682f1d7885c4"
+        "target": "8a8008c6-434c-46cc-9ee3-682f1d7885c4",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "36c52c27-7b39-4aec-a809-a909f191592d",
         "className": "canvas-data-link",
         "source": "8a8008c6-434c-46cc-9ee3-682f1d7885c4",
-        "target": "c8324069-cd5c-4caa-a6bf-931bb778f150"
+        "target": "c8324069-cd5c-4caa-a6bf-931bb778f150",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "de161e67-dcf3-4453-8499-83f2daebac52",
         "className": "canvas-data-link",
         "source": "c8324069-cd5c-4caa-a6bf-931bb778f150",
-        "target": "b96a5793-63d8-4718-b40f-75e9070a285e"
+        "target": "b96a5793-63d8-4718-b40f-75e9070a285e",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "d8d46812-5616-4390-b513-7d8d00fde53e",
         "className": "canvas-data-link",
         "source": "c41953c4-0153-4e35-a708-1a98a351628b",
-        "target": "2e4bd24b-b182-45c4-a4fe-0ca5c0f2ef92"
+        "target": "2e4bd24b-b182-45c4-a4fe-0ca5c0f2ef92",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "7a69bbcd-0140-4422-88ee-16edbc9f5a1f",
         "className": "canvas-data-link",
         "source": "2e4bd24b-b182-45c4-a4fe-0ca5c0f2ef92",
-        "target": "510fa067-0db5-4a79-8fae-47864ce6009e"
+        "target": "510fa067-0db5-4a79-8fae-47864ce6009e",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "745b1540-0c08-4fa1-b5ff-f1d9d0ad41b4",
         "className": "canvas-data-link",
         "source": "510fa067-0db5-4a79-8fae-47864ce6009e",
-        "target": "577cf543-8202-44f5-8c3b-2d1db410e38d"
+        "target": "577cf543-8202-44f5-8c3b-2d1db410e38d",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "4f4ae1cd-ddb9-496a-a854-e8ec4f097c47",
         "className": "canvas-data-link",
         "source": "577cf543-8202-44f5-8c3b-2d1db410e38d",
-        "target": "3e09c42d-d01a-49ac-87fc-4d9acc9c4b6e"
+        "target": "3e09c42d-d01a-49ac-87fc-4d9acc9c4b6e",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "e135ca62-3d3f-453d-9d04-74e309c5502b",
         "className": "canvas-data-link",
         "source": "577cf543-8202-44f5-8c3b-2d1db410e38d",
-        "target": "4f85c00e-8b95-4f28-a9cd-08f073990b1c"
+        "target": "4f85c00e-8b95-4f28-a9cd-08f073990b1c",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "9b95e842-f273-471d-af7a-27ea95e2ce76",
         "className": "canvas-data-link",
         "source": "bc1de3c4-c827-4e99-a6bd-bcdf5f8922ab",
-        "target": "5dc2e3ca-fac0-4911-b4f5-eb03c61e9a98"
+        "target": "5dc2e3ca-fac0-4911-b4f5-eb03c61e9a98",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "1a90eba2-2af5-4b5d-a844-a7eb763d3412",
         "className": "canvas-data-link",
         "source": "f80bfe77-961d-4132-ac96-3fddaeee9b08",
-        "target": "bc1de3c4-c827-4e99-a6bd-bcdf5f8922ab"
+        "target": "bc1de3c4-c827-4e99-a6bd-bcdf5f8922ab",
+        "userData": {
+          "linkType": "data"
+        }
       },
       {
         "id": "fc1f2385-2593-477a-9923-30868f80e61c",
         "className": "canvas-data-link",
         "source": "b96a5793-63d8-4718-b40f-75e9070a285e",
-        "target": "26d08180-589f-47b5-bcab-17007327800e"
+        "target": "26d08180-589f-47b5-bcab-17007327800e",
+        "userData": {
+          "linkType": "data"
+        }
       }
     ]
   },

@@ -944,7 +944,8 @@ class App extends React.Component {
 			enableInternalObjectModel: this.state.internalObjectModel,
 			enablePaletteLayout: this.state.selectedPaletteLayout,
 			emptyCanvasContent: emptyCanvasDiv,
-			tipConfig: this.state.tipConfig
+			tipConfig: this.state.tipConfig,
+			schemaValidation: true
 		};
 
 		var commonCanvasConfig2 = {

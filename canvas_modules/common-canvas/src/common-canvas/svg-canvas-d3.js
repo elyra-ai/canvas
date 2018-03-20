@@ -2788,11 +2788,11 @@ export default class CanvasD3Layout {
 			}
 
 			if (srcObj === null) {
-				this.consoleLog("Error drawing a link. A link was provided in the Canvas data that does not have a valid source node/comment.");
+				this.consoleLog("Error drawing a link. A link was specified for source " + link.srcNodeId + " in the Canvas data that does not have a valid source node/comment.");
 			}
 
 			if (trgNode === null) {
-				this.consoleLog("Error drawing a link. A link was provided in the Canvas data that does not have a valid target node.");
+				this.consoleLog("Error drawing a link. A link was specified for target " + link.trgNodeId + " in the Canvas data that does not have a valid target node.");
 			}
 
 			// Only proceed if we have a source and a target node/comment.
