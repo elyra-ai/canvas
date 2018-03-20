@@ -12,16 +12,19 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
-import ReactTooltip from "react-tooltip";
 import { injectIntl, intlShape } from "react-intl";
 import { Table, Thead, Th } from "reactable";
 import TextField from "ap-components-react/dist/components/TextField";
 import Icon from "../../icons/icon.jsx";
 import PropertyUtils from "../util/property-utils";
+import Tooltip from "../../tooltip/tooltip.jsx";
 
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "../constants/constants";
 import { TOOL_TIP_DELAY, CONDITION_MESSAGE_TYPE } from "../constants/constants";
+import isEmpty from "lodash/isEmpty";
 import ObserveSize from "react-observe-size";
+
+import uuid4 from "uuid/v4";
 
 const sortDir = {
 	ASC: "ASC",
@@ -182,21 +185,15 @@ class FlexibleTable extends React.Component {
 		for (var j = 0; j < this.props.columns.length; j++) {
 			const columnDef = this.props.columns[j];
 			const columnStyle = { "width": columnWidths[j] };
-			const tooltipId = "tooltip-column-" + columnDef.key;
+			const tooltipId = uuid4() + "-tooltip-column-" + columnDef.key;
 			const className = j === 0 ? "left-padding-15" : "";
 			let tooltip;
-			let description;
 			if (((columnDef.editStyle && columnDef.editStyle === "inline") || columnDef.controlType === "checkbox") && columnDef.description) {
-				tooltip = (<ReactTooltip
-					id={tooltipId}
-					place="right"
-					type="light"
-					effect="solid"
-					border
-					className="properties-tooltips"
-					delayShow={TOOL_TIP_DELAY}
-				/>);
-				description = columnDef.description;
+				tooltip = (
+					<div className="properties-tooltips">
+						{columnDef.description}
+					</div>
+				);
 			}
 			if (typeof this.state.columnSortDir[columnDef.key] !== "undefined") {
 				const arrowIcon = ((this.state.columnSortDir[columnDef.key] === sortDir.ASC)
@@ -206,23 +203,38 @@ class FlexibleTable extends React.Component {
 					<div
 						className="flexible-table-column properties-tooltips-container"
 						onClick={this.sortHeaderClick.bind(this, columnDef.key)}
-						data-tip={description}
-						data-for={tooltipId}
 					>
-						{columnDef.label}
+						{ isEmpty(tooltip)
+							? columnDef.label
+							: <Tooltip
+								id={tooltipId}
+								tip={tooltip}
+								direction="top"
+								delay={TOOL_TIP_DELAY}
+								className="properties-tooltips"
+							>
+								{columnDef.label}
+							</Tooltip>
+						}
 						{arrowIcon}
 					</div>
-					{tooltip}
 				</Th>);
 			} else {
 				headers.push(<Th className={className} key={"flexible-table-headers" + j} column={columnDef.key} style={columnStyle}>
-					<div
-						className="properties-tooltips-container"
-						data-tip={description} data-for={tooltipId}
-					>
-						{columnDef.label}
+					<div className="properties-tooltips-container">
+						{ isEmpty(tooltip)
+							? columnDef.label
+							: <Tooltip
+								id={tooltipId}
+								tip={tooltip}
+								direction="top"
+								delay={TOOL_TIP_DELAY}
+								className="properties-tooltips"
+							>
+								{columnDef.label}
+							</Tooltip>
+						}
 					</div>
-					{tooltip}
 				</Th>);
 			}
 			if (typeof this.props.filterable !== "undefined" && this.props.filterable[0] === columnDef.key) {

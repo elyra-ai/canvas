@@ -10,9 +10,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Button from "react-bootstrap/lib/Button";
-import ReactTooltip from "react-tooltip";
 import { injectIntl, intlShape } from "react-intl";
+import uuid4 from "uuid/v4";
 import PropertyUtils from "../util/property-utils";
+import Tooltip from "../../tooltip/tooltip.jsx";
 
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "../constants/constants";
 import { TOOL_TIP_DELAY } from "../constants/constants.js";
@@ -62,7 +63,13 @@ class SubPanelCell extends React.Component {
 				controller={this.props.controller}
 			>
 				<div>
-					<div className="properties-tooltips-container" data-tip={subPanelToolTip} data-for="tooltip-subpanel-cell">
+					<Tooltip
+						id={uuid4() + "-" + tooltipId}
+						tip={subPanelToolTip}
+						direction="left"
+						delay={TOOL_TIP_DELAY}
+						className="properties-tooltips"
+					>
 						<Button
 							style={{ "display": "inline" }}
 							bsSize="xsmall"
@@ -71,16 +78,7 @@ class SubPanelCell extends React.Component {
 						>
 							{this.props.label}
 						</Button>
-					</div>
-					<ReactTooltip
-						id={tooltipId}
-						place="right"
-						type="light"
-						effect="solid"
-						border
-						className="properties-tooltips"
-						delayShow={TOOL_TIP_DELAY}
-					/>
+					</Tooltip>
 				</div>
 			</SubPanelInvoker>
 		);

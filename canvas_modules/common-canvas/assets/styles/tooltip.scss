@@ -7,7 +7,11 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-.common-canvas_tooltip {
+.tooltip-container, .tooltip-trigger {
+	height: 100%;
+}
+
+.common-canvas-tooltip {
 	font-size: 12px;
 	position: fixed;
 	padding: 5px 10px;
@@ -15,65 +19,65 @@
 	border: 1px solid #CCCCCC;
 	font-weight: 400;
 	opacity: 90%;
-	color: #5a6872;
+	color: #5A6872;
 	line-height: 1.2;
 	text-align: center;
 	z-index: 8000;
 	pointer-events: none;
-	transition: opacity .1s ease-in-out, visibility .1s ease-in-out, transform .1s cubic-bezier(.71, 1.7, .77, 1.24);
+	transition: opacity 0.1s ease-in-out, visibility 0.1s ease-in-out, transform 0.1s cubic-bezier(0.71, 1.7, 0.77, 1.24);
 }
 
-.common-canvas_tooltip[direction=right] {
+.common-canvas-tooltip[direction="right"] {
 	transform: translate3d(-22px, 0, 0);
 }
 
-.common-canvas_tooltip[direction=top] {
+.common-canvas-tooltip[direction="top"] {
 	transform: translate3d(0, 22px, 0);
 }
 
-.common-canvas_tooltip[direction=left] {
+.common-canvas-tooltip[direction="left"] {
 	transform: translate3d(22px, 0, 0);
 }
 
-.common-canvas_tooltip[direction=bottom] {
+.common-canvas-tooltip[direction="bottom"] {
 	transform: translate3d(0, -22px, 0);
 }
 
-.common-canvas_tooltip #tipArrow {
+.common-canvas-tooltip #tipArrow {
 	position: absolute;
 	width: 10px;
 	height: 14px;
 }
 
-.common-canvas_tooltip[direction=top] #tipArrow {
+.common-canvas-tooltip[direction="top"] #tipArrow {
 	transform: rotate(-90deg);
 }
 
-.common-canvas_tooltip[direction=left] #tipArrow {
+.common-canvas-tooltip[direction="left"] #tipArrow {
 	transform: rotate(180deg);
 }
 
-.common-canvas_tooltip[direction=bottom] #tipArrow {
+.common-canvas-tooltip[direction="bottom"] #tipArrow {
 	transform: rotate(90deg);
 }
 
 
-.common-canvas_tooltip #tipArrow polyline{
-	fill: #f5f7fa;
+.common-canvas-tooltip #tipArrow polyline {
+	fill: #F9F9F9;
 	stroke-width: 0;
 }
 
-.common-canvas_tooltip #tipArrow polygon{
-	fill: #AEAEAE;
+.common-canvas-tooltip #tipArrow polygon {
+	fill: #CCCCCC;
 }
 
-.common-canvas_tooltip[aria-hidden="false"] {
+.common-canvas-tooltip[aria-hidden="false"] {
 	transform: scaleX(1) translate3d(0, 0, 0) rotate(0deg);
 	visibility: visible;
 	opacity: 100;
 }
 
-.common-canvas_tooltip[aria-hidden="true"] {
+.common-canvas-tooltip[aria-hidden="true"] {
 	visibility: hidden;
 	opacity: 0;
 }
@@ -101,11 +105,11 @@
 }
 
 .tip-palette-line, .tip-node-line {
-	background-color: #f0f3f6;
+	background-color: #F0F3F6;
 	border: 0;
 	height: 2px;
 	width: 24px;
-	margin: 0 0 4px 0;
+	margin: 0 0 4px;
 }
 
 .tip-node-status {
@@ -118,4 +122,16 @@
 
 .tip-port {
 	min-width: 90px;
+}
+
+.properties-tooltips {
+	background-color: #FFFFFF;
+	color: #152935;
+	min-width: 80px;
+	max-width: 250px;
+	padding: 5px 10px;
+}
+
+.properties-tooltips #tipArrow polyline {
+	fill: #FFFFFF;
 }

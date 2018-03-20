@@ -9,7 +9,6 @@
 // Base class for table controls
 
 import React from "react";
-import ReactTooltip from "react-tooltip";
 import { Tr, Td } from "reactable";
 import Button from "ap-components-react/dist/components/Button";
 import Checkbox from "ap-components-react/dist/components/Checkbox";
@@ -22,7 +21,11 @@ import { ControlType, EditStyle } from "../constants/form-constants";
 
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, TOOL_TIP_DELAY, STATES } from "../constants/constants";
 import findIndex from "lodash/findIndex";
+import isEmpty from "lodash/isEmpty";
 import sortBy from "lodash/sortBy";
+import Tooltip from "../../tooltip/tooltip.jsx";
+
+import uuid4 from "uuid/v4";
 
 /* eslint-disable react/prop-types */
 /* eslint-enable react/prop-types */
@@ -336,26 +339,33 @@ export default class ColumnStructureTableEditor extends EditorControl {
 				if (this.props.control.required) {
 					requiredIndicator = <span className="required-control-indicator" style={stateStyle}>*</span>;
 				}
-				const tooltipId = "tooltip-" + this.props.control.name;
-				let tooltip;
+				const tooltipId = uuid4() + "-tooltip-" + this.props.control.name;
+				let tooltip = "";
 				if (this.props.control.description) {
-					tooltip = this.props.control.description.text;
+					tooltip = (
+						<div className="properties-tooltips">
+							{this.props.control.description.text}
+						</div>
+					);
 				}
-				label = (<div className={"label-container"}>
-					<div className="properties-tooltips-container" data-tip={tooltip} data-for={tooltipId}>
-						<label className="control-label">{this.props.control.label.text}</label>
-						{requiredIndicator}
+				label = (
+					<div className={"label-container"}>
+						<div className="properties-tooltips-container">
+							<Tooltip
+								id={tooltipId}
+								tip={tooltip}
+								direction="right"
+								delay={TOOL_TIP_DELAY}
+								className="properties-tooltips"
+								disable={isEmpty(tooltip)}
+							>
+								<div>
+									<label className="control-label">{this.props.control.label.text}</label>
+									{requiredIndicator}
+								</div>
+							</Tooltip>
+						</div>
 					</div>
-					<ReactTooltip
-						id={tooltipId}
-						place="right"
-						type="light"
-						effect="solid"
-						border
-						className="properties-tooltips"
-						delayShow={TOOL_TIP_DELAY}
-					/>
-				</div>
 				);
 			}
 		}
@@ -396,33 +406,47 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			{addButtonLabel}
 		</Button>);
 
-		const tooltipId = "tooltip-add-remove-columns-" + this.props.control.name;
-		const addToolTip = (tableButtonConfig) ? tableButtonConfig.addButtonTooltip
-			: PropertyUtils.formatMessage(this.props.intl,
-				MESSAGE_KEYS.STRUCTURETABLE_ADDBUTTON_TOOLTIP, MESSAGE_KEYS_DEFAULTS.STRUCTURETABLE_ADDBUTTON_TOOLTIP);
-		const removeToolTip = (tableButtonConfig) ? tableButtonConfig.removeButtonTooltip
-			: PropertyUtils.formatMessage(this.props.intl,
-				MESSAGE_KEYS.STRUCTURETABLE_REMOVEBUTTON_TOOLTIP, MESSAGE_KEYS_DEFAULTS.STRUCTURETABLE_REMOVEBUTTON_TOOLTIP);
-
-		return (<div>
+		const addToolTip = (
+			<div className="properties-tooltips">
+				{(tableButtonConfig) ? tableButtonConfig.addButtonTooltip
+					: PropertyUtils.formatMessage(this.props.intl,
+						MESSAGE_KEYS.STRUCTURETABLE_ADDBUTTON_TOOLTIP, MESSAGE_KEYS_DEFAULTS.STRUCTURETABLE_ADDBUTTON_TOOLTIP)}
+			</div>
+		);
+		const removeToolTip = (
+			<div className="properties-tooltips">
+				{(tableButtonConfig) ? tableButtonConfig.removeButtonTooltip
+					: PropertyUtils.formatMessage(this.props.intl,
+						MESSAGE_KEYS.STRUCTURETABLE_REMOVEBUTTON_TOOLTIP, MESSAGE_KEYS_DEFAULTS.STRUCTURETABLE_REMOVEBUTTON_TOOLTIP)}
+			</div>
+		);
+		return (
 			<div id="field-picker-buttons-container">
-				<div className="properties-tooltips-container add-remove-columns" data-tip={removeToolTip} data-for={tooltipId}>
-					{removeButton}
+				<div className="properties-tooltips-container add-remove-columns">
+					<Tooltip
+						id={uuid4() + "-tooltip-remove-columns-" + this.props.control.name}
+						tip={removeToolTip}
+						direction="top"
+						delay={TOOL_TIP_DELAY}
+						className="properties-tooltips"
+						disable={disabled}
+					>
+						{removeButton}
+					</Tooltip>
 				</div>
-				<div className="properties-tooltips-container add-remove-columns" data-tip={addToolTip} data-for={tooltipId}>
-					{addButton}
+				<div className="properties-tooltips-container add-remove-columns">
+					<Tooltip
+						id={uuid4() + "-tooltip-add-columns-" + this.props.control.name}
+						tip={addToolTip}
+						direction="top"
+						delay={TOOL_TIP_DELAY}
+						className="properties-tooltips"
+					>
+						{addButton}
+					</Tooltip>
 				</div>
 			</div>
-			<ReactTooltip
-				id={tooltipId}
-				place="top"
-				type="light"
-				effect="solid"
-				border
-				className="properties-tooltips"
-				delayShow={TOOL_TIP_DELAY}
-			/>
-		</div>);
+		);
 	}
 
 	checkedAllValue(colIndex, evt) {

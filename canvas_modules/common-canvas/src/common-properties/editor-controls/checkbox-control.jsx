@@ -9,10 +9,12 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import isEmpty from "lodash/isEmpty";
 import Checkbox from "ap-components-react/dist/components/Checkbox";
 import EditorControl from "./editor-control.jsx";
 import { TOOL_TIP_DELAY } from "../constants/constants.js";
-import ReactTooltip from "react-tooltip";
+import Tooltip from "../../tooltip/tooltip.jsx";
+import uuid4 from "uuid/v4";
 
 export default class CheckboxControl extends EditorControl {
 	constructor(props) {
@@ -65,27 +67,32 @@ export default class CheckboxControl extends EditorControl {
 			onChange={this.handleChange}
 			checked={checked}
 		/>);
-		const tooltipId = "tooltip-" + this.props.control.name;
-		let tooltip;
+		const tooltipId = uuid4() + "-tooltip-" + this.props.control.name;
+		let tooltip = "";
 		if (this.props.control.description && conditionState.showTooltip && !this.props.tableControl) {
-			tooltip = this.props.control.description.text;
+			tooltip = (
+				<div className="properties-tooltips">
+					{this.props.control.description.text}
+				</div>
+			);
 		}
+
 		return (
 			<div className="checkbox editor_control_area" style={stateStyle}>
 				<div id={controlIconContainerId}>
 					<div>
-						<div className="properties-tooltips-container" data-tip={tooltip} data-for={tooltipId}>
-							{cb}
+						<div className="properties-tooltips-container">
+							<Tooltip
+								id={tooltipId}
+								tip={tooltip}
+								direction="right"
+								delay={TOOL_TIP_DELAY}
+								className="properties-tooltips"
+								disable={isEmpty(tooltip)}
+							>
+								{cb}
+							</Tooltip>
 						</div>
-						<ReactTooltip
-							id={tooltipId}
-							place="right"
-							type="light"
-							effect="solid"
-							border
-							className="properties-tooltips"
-							delayShow={TOOL_TIP_DELAY}
-						/>
 					</div>
 					{icon}
 				</div>

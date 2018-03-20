@@ -11,7 +11,6 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import ReactTooltip from "react-tooltip";
 import EditorControl from "./editor-control.jsx";
 import FlexibleTable from "./flexible-table.jsx";
 import PropertiesButtons from "../properties-buttons.jsx";
@@ -27,7 +26,12 @@ import { DATA_TYPES, TOOL_TIP_DELAY } from "../constants/constants.js";
 import { ParamRole } from "../constants/form-constants";
 import Icon from "../../icons/icon.jsx";
 
+import isEmpty from "lodash/isEmpty";
 import sortBy from "lodash/sortBy";
+
+import Tooltip from "../../tooltip/tooltip.jsx";
+
+import uuid4 from "uuid/v4";
 
 class FieldPicker extends EditorControl {
 	constructor(props) {
@@ -601,26 +605,29 @@ class FieldPicker extends EditorControl {
 
 		const saveTooltip = PropertyUtils.formatMessage(this.props.intl,
 			MESSAGE_KEYS.FIELDPICKER_SAVEBUTTON_TOOLTIP, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_SAVEBUTTON_TOOLTIP);
-		const tooltipId = "tooltip-fp-" + this.props.control.name;
+		const tooltipId = uuid4() + "-tooltip-fp-" + this.props.control.name;
+		const tooltip = (
+			<div className="properties-tooltips">
+				{saveTooltip}
+			</div>
+		);
+
 		return (
 			<div>
-				<div className="properties-tooltips-container" data-tip={saveTooltip} data-for={tooltipId}>
+				<Tooltip
+					id={tooltipId}
+					tip={tooltip}
+					direction="left"
+					delay={TOOL_TIP_DELAY}
+					className="properties-tooltips"
+				>
 					<Button
 						id="field-picker-back-button"
 						back icon="back"
 						onClick={this.handleSave}
 					/>
-				</div>
-				<label className="control-label">{this.props.title}</label>
-				<ReactTooltip
-					id={tooltipId}
-					place="top"
-					type="light"
-					effect="solid"
-					border
-					className="properties-tooltips"
-					delayShow={TOOL_TIP_DELAY}
-				/>
+					<label className="control-label">{this.props.title}</label>
+				</Tooltip>
 			</div>
 		);
 	}
@@ -630,32 +637,34 @@ class FieldPicker extends EditorControl {
 			MESSAGE_KEYS.FIELDPICKER_RESETBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_RESETBUTTON_LABEL);
 		const resetTooltip = PropertyUtils.formatMessage(this.props.intl,
 			MESSAGE_KEYS.FIELDPICKER_RESETBUTTON_TOOLTIP, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_RESETBUTTON_TOOLTIP);
-		const tooltipId = "tooltip-fp-" + this.props.control.name;
-
-		return (<div>
-			<div className="properties-tooltips-fp-reset" data-tip={resetTooltip} data-for={tooltipId}>
-				<div id="reset-fields-button"
-					className="button"
-					onClick={this.handleReset}
-					onMouseEnter={this.mouseEnterResetButton}
-					onMouseLeave={this.mouseLeaveResetButton}
-				>
-					<div id="reset-fields-button-label">{resetLabel}</div>
-					<div className="reset-fields-button-icon">
-						<Icon type="reset" />
-					</div>
-				</div>
+		const tooltipId = uuid4() + "-tooltip-fp-" + this.props.control.name;
+		const tooltip = (
+			<div className="properties-tooltips">
+				{resetTooltip}
 			</div>
-			<ReactTooltip
-				id={tooltipId}
-				place="top"
-				type="light"
-				effect="solid"
-				border
-				className="properties-tooltips"
-				delayShow={TOOL_TIP_DELAY}
-			/>
-		</div>);
+		);
+		return (
+			<div className="properties-tooltips-fp-reset">
+				<Tooltip
+					id={tooltipId}
+					tip={tooltip}
+					direction="top"
+					delay={TOOL_TIP_DELAY}
+					className="properties-tooltips"
+				>
+					<div id="reset-fields-button"
+						className="button"
+						onClick={this.handleReset}
+						onMouseEnter={this.mouseEnterResetButton}
+						onMouseLeave={this.mouseLeaveResetButton}
+					>
+						<div id="reset-fields-button-label">{resetLabel}</div>
+						<div className="reset-fields-button-icon">
+							<Icon type="reset" />
+						</div>
+					</div>
+				</Tooltip>
+			</div>);
 	}
 
 	_genFilterTypes() {
@@ -668,27 +677,32 @@ class FieldPicker extends EditorControl {
 					break;
 				}
 			}
-			const filterTooltipId = "tooltip-filters-" + ind;
+			const filterTooltipId = uuid4() + "-tooltip-filters-" + ind;
+			const tooltip = (
+				<div className="properties-tooltips">
+					{filter.type}
+				</div>
+			);
 			const row = (
 				<div key={"filters" + ind}>
-					<div className="properties-tooltips-filter" data-tip={filter.type} data-for={filterTooltipId}>
-						<li className="filter-list-li filter"
-							data-type={filter.type}
-							onClick={that.filterType.bind(that)}
-							disabled={!enabled}
+					<div className="properties-tooltips-filter">
+						<Tooltip
+							id={filterTooltipId}
+							tip={tooltip}
+							direction="top"
+							delay={TOOL_TIP_DELAY}
+							className="properties-tooltips"
+							disable={isEmpty(filter.type)}
 						>
-							<Icon type={filter.type} disabled={!enabled} />
-						</li>
+							<li className="filter-list-li filter"
+								data-type={filter.type}
+								onClick={that.filterType.bind(that)}
+								disabled={!enabled}
+							>
+								<Icon type={filter.type} disabled={!enabled} />
+							</li>
+						</Tooltip>
 					</div>
-					<ReactTooltip
-						id={filterTooltipId}
-						place="top"
-						type="light"
-						effect="solid"
-						border
-						className="properties-tooltips"
-						delayShow={TOOL_TIP_DELAY}
-					/>
 				</div>
 			);
 			return (row);

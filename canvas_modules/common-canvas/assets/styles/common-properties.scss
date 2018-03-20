@@ -18,17 +18,6 @@
   opacity: 1 !important;
 }
 
-.properties-tooltips {
-  border-radius: 0px !important;
-  background-color: #ffffff !important;
-  color: #152935 !important;
-  font-weight: 400 !important;
-  z-index: 1100 !important;
-  max-width: 250px;
-  -webkit-transition: opacity 600ms, visibility 600ms !important;
-  transition: opacity 600ms, visibility 600ms !important;
-}
-
 .properties-tooltips-container {
   display: inline-block;
 }
@@ -314,6 +303,13 @@ input.number,
 	flex-direction: column;
 	justify-content: space-between;
 	border: none;
+}
+
+/* Need to unset transform for modal dialog, otherwise fixed placement of tooltips doesn't work
+   with transform fixed positioning becomes relative to the class the transform is specified on
+   rather than the viewport. Added for tooltips.jsx. Can be removed when using diff tooltip.  */
+.modal.in .modal-dialog {
+	transform: unset;
 }
 
 .rightside-modal-container.modal.fade:not(.in) .modal-dialog {

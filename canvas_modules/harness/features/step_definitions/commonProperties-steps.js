@@ -378,7 +378,7 @@ module.exports = function() {
 	*/
 	this.Then(/^I verify the tip below the text "([^"]*)" in summary "([^"]*)" is "([^"]*)"$/, function(text, summaryName, visible) {
 		const summary = getSummaryFromName(summaryName);
-		const tips = summary.$$(".common-canvas_tooltip");
+		const tips = summary.$$(".common-canvas-tooltip");
 		let found = false;
 		for (let idx = 0; idx < tips.length; idx++) {
 			if (tips[idx].$("span").getText() === text) {

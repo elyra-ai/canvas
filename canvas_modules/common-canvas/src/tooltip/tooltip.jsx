@@ -44,6 +44,7 @@ class ToolTip extends React.Component {
 		if (!visible && this.state.pendingTooltip) {
 			clearTimeout(this.state.pendingTooltip);
 		}
+
 		this.setState({
 			showToolTip: visible,
 			pendingTooltip: null
@@ -76,8 +77,6 @@ class ToolTip extends React.Component {
 
 	updateTooltipLayout(tooltip, tooltipTrigger) {
 		const tooltipDirection = tooltip.getAttribute("direction");
-		const tooltipWidth = tooltip.offsetWidth;
-		const tooltipHeight = tooltip.offsetHeight;
 		const viewPortWidth = document.documentElement.clientWidth;
 		const viewPortHeight = document.documentElement.clientHeight;
 		const triggerLayout = tooltipTrigger.getBoundingClientRect();
@@ -91,39 +90,40 @@ class ToolTip extends React.Component {
 			// tooltip - left correction
 			if (tooltipDirection === "top" || tooltipDirection === "bottom") {
 				let tooltipLeft = triggerLayout.left;
-				if ((viewPortWidth - tooltipWidth) < triggerLayout.left) {
-					tooltipLeft = viewPortWidth - tooltipWidth; // hitting right border
-				} else if (tooltipWidth > triggerLayout.width) {
-					tooltipLeft -= (tooltipWidth - triggerLayout.width) / 2; // distribute overlap evenly left and right
+				if (tooltip.offsetWidth > triggerLayout.width) {
+					tooltipLeft -= (tooltip.offsetWidth - triggerLayout.width) / 2; // distribute overlap evenly left and right
 					if (tooltipLeft < 0) {
 						tooltipLeft = 2; // hitting left border
 					}
-				} else if (tooltipWidth < triggerLayout.width) {
-					tooltipLeft += (triggerLayout.width - tooltipWidth) / 2; // center tip within triggerLayout
+				} else if (tooltip.offsetWidth < triggerLayout.width) {
+					tooltipLeft += (triggerLayout.width - tooltip.offsetWidth) / 2; // center tip within triggerLayout
 				}
 				tooltip.style.left = tooltipLeft + "px";
+				if ((tooltip.style.left + tooltip.offsetWidth) > viewPortWidth) {
+					tooltip.style.left = viewPortWidth - tooltip.offsetWidth; // hitting right border
+				}
 			} else if (tooltipDirection === "left") {
-				tooltip.style.left = (triggerLayout.left - tooltipWidth - pointerLayout.width) + "px";
+				tooltip.style.left = (triggerLayout.left - tooltip.offsetWidth - pointerLayout.width) + "px";
 			} else if (tooltipDirection === "right") {
 				tooltip.style.left = (triggerLayout.right + pointerLayout.width) + "px";
 			}
 
 			// tooltip - top correction
 			if (tooltipDirection === "top") {
-				tooltip.style.top = (triggerLayout.top - pointerLayout.height - tooltipHeight) + "px";
+				tooltip.style.top = (triggerLayout.top - pointerLayout.height - tooltip.offsetHeight) + "px";
 			} else if (tooltipDirection === "bottom") {
 				tooltip.style.top = (triggerLayout.bottom + pointerLayout.height) + "px";
 			} else if (tooltipDirection === "left" || tooltipDirection === "right") {
 				let tooltipTop = triggerLayout.top;
-				if ((viewPortHeight - tooltipHeight) < triggerLayout.top) {
-					tooltipTop = viewPortHeight - tooltipHeight; // hitting bottom border
-				} else if (tooltipHeight > triggerLayout.height) {
-					tooltipTop -= (tooltipHeight - triggerLayout.height) / 2; // distribute overlap evenly top and bottom
+				if ((viewPortHeight - tooltip.offsetHeight) < triggerLayout.top) {
+					tooltipTop = viewPortHeight - tooltip.offsetHeight; // hitting bottom border
+				} else if (tooltip.offsetHeight > triggerLayout.height) {
+					tooltipTop -= (tooltip.offsetHeight - triggerLayout.height) / 2; // distribute overlap evenly top and bottom
 					if (tooltipTop < 0) {
 						tooltipTop = triggerLayout.top; // hitting top border
 					}
-				} else if (tooltipHeight < triggerLayout.height) {
-					tooltipTop += (triggerLayout.height - tooltipHeight) / 2; // center tip within triggerLayout
+				} else if (tooltip.offsetHeight < triggerLayout.height) {
+					tooltipTop += (triggerLayout.height - tooltip.offsetHeight) / 2; // center tip within triggerLayout
 				}
 				tooltip.style.top = tooltipTop + pointerCorrection + "px";
 			}
@@ -133,14 +133,14 @@ class ToolTip extends React.Component {
 				pointer.style.left = (triggerLayout.left - tooltip.getBoundingClientRect().left +
 					tooltipTrigger.getBoundingClientRect().width / 2 - pointerLayout.width / 2	 + pointerCorrection) + "px";
 			} else if (tooltipDirection === "left") {
-				pointer.style.left = (tooltipWidth - 3) + "px";
+				pointer.style.left = (tooltip.offsetWidth - 3) + "px";
 			} else if (tooltipDirection === "right") {
 				pointer.style.left = (-pointerLayout.width + 2) + "px";
 			}
 
 			// pointer - top correction
 			if (tooltipDirection === "top") {
-				pointer.style.top = (tooltipHeight - 5) + "px";
+				pointer.style.top = (tooltip.offsetHeight - 5) + "px";
 			} else if (tooltipDirection === "bottom") {
 				pointer.style.top = "-11px";
 			} else if (tooltipDirection === "left" || tooltipDirection === "right") {
@@ -222,7 +222,7 @@ class ToolTip extends React.Component {
 			const mouseleave = () => this.setTooltipVisible(false);
 			const mousedown = () => this.setTooltipVisible(false);
 
-			triggerContent = (<div id={this.props.id + "-trigger"} onMouseOver={mouseover} onMouseLeave={mouseleave} onMouseDown={mousedown}>
+			triggerContent = (<div id={this.props.id + "-trigger"} className="tooltip-trigger" onMouseOver={mouseover} onMouseLeave={mouseleave} onMouseDown={mousedown}>
 				{this.props.children}
 			</div>);
 		}
@@ -246,10 +246,15 @@ class ToolTip extends React.Component {
 			);
 		}
 
+		let tipClass = "common-canvas-tooltip";
+		if (this.props.className) {
+			tipClass += " " + this.props.className;
+		}
+
 		return (
 			<div className="tooltip-container">
 				{triggerContent}
-				<div id={this.props.id} className="common-canvas_tooltip" style={style} aria-hidden={!this.state.showToolTip} direction={this.props.direction}>
+				<div id={this.props.id} className={tipClass} style={style} aria-hidden={!this.state.showToolTip} direction={this.props.direction}>
 					<svg id="tipArrow" x="0px" y="0px" viewBox="0 0 9.1 16.1">
 						<polyline points="9.1,15.7 1.4,8.1 9.1,0.5" />
 						<polygon points="8.1,16.1 0,8.1 8.1,0 8.1,1.4 1.4,8.1 8.1,14.7" />
@@ -264,9 +269,10 @@ class ToolTip extends React.Component {
 ToolTip.propTypes = {
 	tip: PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired,
 	direction: PropTypes.oneOf(["left", "right", "top", "bottom"]),
-	children: PropTypes.element,
+	children: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
 	targetObj: PropTypes.object,
 	id: PropTypes.string.isRequired,
+	className: PropTypes.string,
 	mousePos: PropTypes.object,
 	disable: PropTypes.bool,
 	delay: PropTypes.number

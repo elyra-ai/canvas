@@ -9,7 +9,6 @@
 /* eslint complexity: ["error", 30] */
 
 import React from "react";
-import ReactTooltip from "react-tooltip";
 
 import { Type, ControlType } from "../constants/form-constants";
 import { VALIDATION_MESSAGE, STATES } from "../constants/constants.js";
@@ -40,7 +39,10 @@ import StructureeditorControl from "./structureeditor-control.jsx";
 import StructurelisteditorControl from "./structure-list-editor-control.jsx";
 
 import ControlItem from "./control-item.jsx";
+import Tooltip from "../../tooltip/tooltip.jsx";
 import { TOOL_TIP_DELAY } from "../constants/constants.js";
+import isEmpty from "lodash/isEmpty";
+import uuid4 from "uuid/v4";
 
 export default class ControlFactory {
 
@@ -131,26 +133,31 @@ export default class ControlFactory {
 			const isStructureTable = control.controlType === ControlType.STRUCTURETABLE || control.controlType === ControlType.STRUCTURELISTEDITOR ||
 				control.controlType === ControlType.SELECTCOLUMNS;
 			if (!isStructureTable || description || hasFilter) {
-				const tooltipId = "tooltip_label_" + this._createElementId(propertyId);
+				const tooltipId = uuid4() + "-tooltip_label_" + this._createElementId(propertyId);
+				const tipContent = (
+					<div className="properties-tooltips">
+						{tooltip}
+					</div>
+				);
 				label = (
 					<div key={"label-" + control.name} className={"default-label-container"} style={stateStyle}>
-						<div className="properties-tooltips-container" data-tip={tooltip} data-for={tooltipId}>
-							<div className = "control-label-container">
-								<label className="control-label">{control.label.text}</label>
-								{requiredIndicator}
-								{numberGenerator}
-								{description}
-							</div>
+						<div className = "properties-tooltips-container control-label-container">
+							<Tooltip
+								id={tooltipId}
+								tip={tipContent}
+								direction="right"
+								delay={TOOL_TIP_DELAY}
+								className="properties-tooltips"
+								disable={isEmpty(tooltip) || !tooltipShow}
+							>
+								<div>
+									<label className="control-label">{control.label.text}</label>
+									{requiredIndicator}
+									{numberGenerator}
+									{description}
+								</div>
+							</Tooltip>
 						</div>
-						<ReactTooltip
-							id={tooltipId}
-							place="right"
-							type="light"
-							effect="solid"
-							border
-							className="properties-tooltips"
-							delayShow={TOOL_TIP_DELAY}
-						/>
 					</div>);
 			}
 		}

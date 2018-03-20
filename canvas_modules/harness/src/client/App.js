@@ -757,6 +757,7 @@ class App extends React.Component {
 	}
 
 	selectionChangeHandler(data) {
+		this.log("selectionChangeHandler", data);
 		if (data && data.selectedNodes) {
 			// only show properties if exactly one node is selected and no other elements like comments
 			if (data.selection.length === 1 && data.selectedNodes.length === 1) {
