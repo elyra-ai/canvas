@@ -569,7 +569,7 @@ function validateInput(propertyId, controller, validationDefinitions, datasetMet
 function _requiredValidation(propertyId, controller) {
 	const controlValue = controller.getPropertyValue(propertyId);
 	let errorSet = false;
-	if (controlValue === null || controlValue === "" ||
+	if (controlValue === null || controlValue === "" || typeof controlValue === "undefined" ||
 			(Array.isArray(controlValue) && controlValue.length === 0)) {
 		const control = controller.getControl(propertyId);
 		const label = control && control.label && control.label.text ? control.label.text : propertyId.name;

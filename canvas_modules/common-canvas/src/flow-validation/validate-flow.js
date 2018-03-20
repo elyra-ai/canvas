@@ -132,7 +132,8 @@ function _validateNode(formData, nodeId, propertiesController) {
 function _setNodeMessages(node, propertiesController, canvasController, setMessagesCallback) {
 	const nodeMsgs = canvasController.getNodeMessages(node.id);
 	const errorMsgs = propertiesController.getErrorMessages(true);
-	if (!isEqual(errorMsgs, nodeMsgs)) {
+	if ((!nodeMsgs && errorMsgs.length > 0) ||
+			(nodeMsgs && !isEqual(errorMsgs, nodeMsgs))) {
 		canvasController.setNodeMessages(node.id, errorMsgs);
 		if (setMessagesCallback) {
 			setMessagesCallback(node.id, errorMsgs);
