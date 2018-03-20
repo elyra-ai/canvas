@@ -3,7 +3,30 @@
     "title": "Field Picker Test"
   },
   "current_parameters": {
-    "structuretableMultiInputSchema": []
+    "structuretableMultiInputSchema": [
+      [
+        1,
+        "BADVAR",
+        "BADVAR"
+      ],
+      [
+        2,
+        "0.BADVAR",
+        "BADVAR"
+      ],
+      [
+        3,
+        "3.Cholesterol",
+        "BADVAR"
+      ]
+    ],
+    "fields": [
+      "0.age",
+      "BADVAR",
+      "data_1.BADVAR",
+      "data_1.K",
+      "schema.drug"
+    ]
   },
   "parameters": [
     {
@@ -11,6 +34,12 @@
       "type": "map[string,structuretableMultiInputSchema]",
       "role": "column",
       "default": []
+    },
+    {
+      "id": "fields",
+      "type": "array[string]",
+      "role": "column",
+      "required": true
     }
   ],
   "complex_types": [
@@ -51,6 +80,15 @@
         },
         "description": {
           "default": "The level column will be auto-populated with an integer value for each row starting at 1. Subsequent rows will be incremented by 1."
+        }
+      },
+      {
+        "parameter_ref": "fields",
+        "label": {
+          "default": "Select Columns"
+        },
+        "description": {
+          "default": "This control filters out bad field names"
         }
       }
     ],
@@ -120,6 +158,16 @@
             ]
           }
 				]
+      },
+      {
+        "id": "selectcolumns",
+        "label": {
+          "default": "Select Columns"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "fields"
+        ]
       }
     ]
   },

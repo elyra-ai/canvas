@@ -656,28 +656,6 @@
             ""
           ],
           [
-            "Na",
-            "Default",
-            "Input",
-            "Read",
-            [],
-            [],
-            null,
-            "None",
-            null
-          ],
-          [
-            "Cholestrol",
-            "Default",
-            "Input",
-            "Read",
-            [],
-            [],
-            null,
-            "None",
-            null
-          ],
-          [
             "Sex",
             "Flag",
             "Input",
@@ -692,15 +670,18 @@
             ""
           ],
           [
-            "K",
-            "Default",
+            "BADVAR",
+            "Flag",
             "Input",
-            "Read",
+            "Specify",
+            [
+              "F",
+              "M"
+            ],
             [],
-            [],
-            null,
+            1,
             "None",
-            null
+            ""
           ],
           [
             "Age",

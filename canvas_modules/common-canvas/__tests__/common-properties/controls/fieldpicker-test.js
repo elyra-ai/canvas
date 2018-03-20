@@ -724,6 +724,9 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		const fieldSummary = wrapper.find(".control-summary-table");
 		expect(fieldSummary).to.have.length(1);
 
+		// This actually also tests for bad incoming field names. Without the proper
+		// bad field name filtering we have in the field picker, the test below would
+		// return 6 instead of 3 because of the bad input field names in the test file.
 		const summaryRows = fieldSummary.find(".control-summary-list-rows");
 		expect(summaryRows).to.have.length(3);
 
@@ -740,5 +743,38 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 				.text()
 				.trim()).to.equal(expectedSummaryRows[idx]);
 		}
+	});
+
+});
+
+describe("field-picker-control with on selectcolumns renders correctly", () => {
+	let wrapper;
+	let selectColsCategory;
+	let fieldpicker;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(fieldPickerParamDef);
+		wrapper = renderedObject.wrapper;
+
+		selectColsCategory = wrapper.find(".category-title-container-right-flyout-panel").at(1); // Select Columns category
+		// open filter picker
+		selectColsCategory.find("#field-picker-buttons-container").at(0)
+			.find(".button")
+			.simulate("click");
+		const fphtml = document.getElementById("field-picker-table"); // needed since modal dialogs are outside `wrapper`
+		fieldpicker = new ReactWrapper(fphtml, true);
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("should filter out missing field names from selectcolumns control", () => {
+		const selectRows = wrapper.find(".column-select-table-row");
+		expect(selectRows.length).to.equal(5);
+		fieldpicker.find("#properties-apply-button").simulate("click");
+		wrapper.update();
+		// The act of opening the field picker should have filtered out the bad field names
+		const selectRows2 = wrapper.find(".column-select-table-row");
+		expect(selectRows2.length).to.equal(3);
 	});
 });

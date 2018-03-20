@@ -61,6 +61,7 @@ class FieldPicker extends EditorControl {
 		this.onFilter = this.onFilter.bind(this);
 		this._getRecordForRow = this._getRecordForRow.bind(this);
 		this.fieldInMultipleDatasetMetadataSchemas = this.fieldInMultipleDatasetMetadataSchemas.bind(this);
+		this.removeInvalidFields = this.removeInvalidFields.bind(this);
 	}
 
 	componentWillMount() {
@@ -83,6 +84,8 @@ class FieldPicker extends EditorControl {
 			const colIdx = this.props.propertyId.col;
 			controlValues = this.props.currentControlValues[parmName][rowIdx][colIdx];
 		}
+		// Remove invalid input field names
+		controlValues = this.removeInvalidFields(controlValues);
 		this.setState({
 			initialControlValues: this.props.currentControlValues[controlName],
 			newControlValues: controlValues
@@ -107,6 +110,68 @@ class FieldPicker extends EditorControl {
 				this.setState({ headerWidth: tableRect.width });
 			}
 		}
+	}
+
+	/**
+	 * Removes input selections that are not present in the current set of data models.
+	 *
+	 * @param {array} controlValues: Array of current control values
+	 * @return {array} The input array minus any rows that have invalid field names
+	 */
+	removeInvalidFields(controlValues) {
+		const validFields = [];
+		const dataModels = this.props.dataModel;
+		const isTable = this.props.control.valueDef.propType === "structure";
+		for (let idx = 0; idx < controlValues.length; idx++) {
+			let prefix = "";
+			let fieldName;
+			if (isTable) {
+				fieldName = controlValues[idx][this.dataColumnIndex];
+			} else {
+				fieldName = controlValues[idx];
+			}
+			const dotIndex = fieldName.indexOf(".");
+			if (this.multiSchema && dotIndex > -1) {
+				prefix = fieldName.substr(0, dotIndex);
+				fieldName = fieldName.substr(dotIndex + 1);
+			}
+			if (this.hasDataModelField(dataModels, prefix, fieldName)) {
+				validFields.push(controlValues[idx]);
+			}
+		}
+		return validFields;
+	}
+
+	/**
+	 * Determines if the given field is present in any of the input data models.
+	 *
+	 * @param {array} dataModels: Array of available data models
+	 * @param {string} prefix: Data model identifier prefix
+	 * @param {string} fieldName: Name of a field to search for
+	 * @return {boolean} True if the field was found
+	 */
+	hasDataModelField(dataModels, prefix, fieldName) {
+		const schemas = this.props.controller.getDatasetMetadataSchemas();
+		const dmIndex = schemas.indexOf(prefix);
+		if (dmIndex > -1) {
+			const dataModel = this.props.controller.getDatasetMetadata()[dmIndex];
+			for (let field = 0; field < dataModel.fields.length; field++) {
+				if (fieldName === dataModel.fields[field].name) {
+					return true;
+				}
+			}
+		} else if (prefix === "") {
+			// Cycle all of the data model fields
+			for (let idx = 0; idx < dataModels.length; idx++) {
+				const fields = dataModels[idx].fields;
+				for (let id2 = 0; id2 < fields.length; id2++) {
+					if (fields[id2].name === fieldName) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	getAvailableFilters() {
