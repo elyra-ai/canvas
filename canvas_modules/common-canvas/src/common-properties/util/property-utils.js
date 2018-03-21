@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017. 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -124,20 +124,6 @@ function getTableFieldIndex(control) {
 	return -1;
 }
 
-/**
- * Given an array of datamodels, return a composite array of all fields.
- */
-function getAllDataModelFields(dataModelArray) {
-	if (toType(dataModelArray) !== "array") {
-		return [];
-	}
-	let fields = [];
-	for (let idx = 0; idx < dataModelArray.length; idx++) {
-		fields = fields.concat(dataModelArray[idx].fields);
-	}
-	return fields;
-}
-
 // TODO: This can be removed once the WML Play service generates datasetMetadata instead of inputDataModel
 /**
  * Converts old style Modeler inputDataModel into newer datasetMetadata
@@ -180,6 +166,5 @@ module.exports = {
 	formatMessage: formatMessage,
 	evaluateText: evaluateText,
 	getTableFieldIndex: getTableFieldIndex,
-	getAllDataModelFields: getAllDataModelFields,
 	convertInputDataModel: convertInputDataModel
 };

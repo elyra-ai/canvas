@@ -467,76 +467,6 @@ const readonlyControlStartValue = {
 	"summaryLabel": "Sort by"
 };
 
-const datasetMetadata = [
-	{
-		"fields": [
-			{
-				"name": "Age",
-				"type": "integer",
-				"metadata": {
-					"description": "",
-					"measure": "range",
-					"modeling_role": "input"
-				}
-			},
-			{
-				"name": "Sex",
-				"type": "string",
-				"metadata": {
-					"description": "",
-					"measure": "discrete",
-					"modeling_role": "input"
-				}
-			},
-			{
-				"name": "BP",
-				"type": "string",
-				"metadata": {
-					"description": "",
-					"measure": "discrete",
-					"modeling_role": "input"
-				}
-			},
-			{
-				"name": "Cholesterol",
-				"type": "string",
-				"metadata": {
-					"description": "",
-					"measure": "discrete",
-					"modeling_role": "input"
-				}
-			},
-			{
-				"name": "Na",
-				"type": "double",
-				"metadata": {
-					"description": "",
-					"measure": "range",
-					"modeling_role": "input"
-				}
-			},
-			{
-				"name": "K",
-				"type": "double",
-				"metadata": {
-					"description": "",
-					"measure": "range",
-					"modeling_role": "input"
-				}
-			},
-			{
-				"name": "Drug",
-				"type": "string",
-				"metadata": {
-					"description": "",
-					"measure": "discrete",
-					"modeling_role": "input"
-				}
-			}
-		]
-	}
-];
-
 const propertyId = { name: "keys" };
 const propertyIdReadonlyControl = { name: "structuretableSortOrder" };
 const propertyIdReadonlyControlStartValue = { name: "structuretableSortOrderStartValue" };
@@ -610,7 +540,6 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				dataModel={datasetMetadata}
 				updateSelectedRows={updateSelectedRows}
 				selectedRows={selectedRows}
 				buildUIItem={genUIItem}
@@ -618,7 +547,6 @@ describe("ColumnStructureTableControl renders correctly", () => {
 			/>
 		);
 
-		expect(wrapper.prop("dataModel")).to.equal(datasetMetadata);
 		expect(wrapper.prop("control")).to.equal(control);
 		expect(wrapper.prop("controller")).to.equal(controller);
 		expect(wrapper.prop("propertyId")).to.equal(propertyId);
@@ -634,7 +562,6 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				dataModel={datasetMetadata}
 				updateSelectedRows={updateSelectedRows}
 				selectedRows={getSelectedRows(control.name)}
 				buildUIItem={genUIItem}
@@ -660,7 +587,6 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				dataModel={datasetMetadata}
 				updateSelectedRows={updateSelectedRows}
 				selectedRows={getSelectedRows(control.name)}
 				buildUIItem={genUIItem}
@@ -681,7 +607,6 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				dataModel={datasetMetadata}
 				updateSelectedRows={updateSelectedRows}
 				selectedRows={getSelectedRowsTop(control.name)}
 				buildUIItem={genUIItem}
@@ -725,7 +650,6 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				dataModel={datasetMetadata}
 				updateSelectedRows={updateSelectedRows}
 				selectedRows={getSelectedRowsTop(control.name)}
 				buildUIItem={genUIItem}
@@ -769,7 +693,6 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				dataModel={datasetMetadata}
 				updateSelectedRows={updateSelectedRows}
 				selectedRows={getSelectedRowsBottom(control.name)}
 				buildUIItem={genUIItem}
@@ -813,7 +736,6 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				dataModel={datasetMetadata}
 				updateSelectedRows={updateSelectedRows}
 				selectedRows={getSelectedRowsBottom(control.name)}
 				buildUIItem={genUIItem}
@@ -857,7 +779,6 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				dataModel={datasetMetadata}
 				updateSelectedRows={updateSelectedRows}
 				selectedRows={getSelectedRowsTop(control.name)}
 				buildUIItem={genUIItem}
@@ -886,7 +807,6 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				dataModel={datasetMetadata}
 				updateSelectedRows={updateSelectedRows}
 				selectedRows={getSelectedRowsBottom(control.name)}
 				buildUIItem={genUIItem}
@@ -915,7 +835,6 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				dataModel={datasetMetadata}
 				updateSelectedRows={updateSelectedRows}
 				selectedRows={getSelectedRowsMiddle(control.name)}
 				buildUIItem={genUIItem}
@@ -943,7 +862,6 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				dataModel={datasetMetadata}
 				updateSelectedRows={updateSelectedRows}
 				selectedRows={getSelectedRowsTop(control.name)}
 				buildUIItem={genUIItem}
@@ -967,7 +885,6 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				dataModel={datasetMetadata}
 				updateSelectedRows={updateSelectedRows}
 				selectedRows={getSelectedRowsTop(control.name)}
 				buildUIItem={genUIItem}
@@ -1009,7 +926,6 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				dataModel={datasetMetadata}
 				updateSelectedRows={updateSelectedRows}
 				selectedRows={getSelectedRowsTop(control.name)}
 				buildUIItem={genUIItem}
@@ -1255,7 +1171,6 @@ describe("ColumnStructureTableControl with readonly numbered column renders corr
 				control={readonlyControlDefault}
 				controller={controller}
 				propertyId={propertyIdReadonlyControl}
-				dataModel={datasetMetadata}
 				updateSelectedRows={updateSelectedRows}
 				selectedRows={getSelectedRows(control.name)}
 				buildUIItem={genUIItem}
@@ -1278,7 +1193,6 @@ describe("ColumnStructureTableControl with readonly numbered column renders corr
 				control={readonlyControlStartValue}
 				controller={controller}
 				propertyId={propertyIdReadonlyControlStartValue}
-				dataModel={datasetMetadata}
 				updateSelectedRows={updateSelectedRows}
 				selectedRows={getSelectedRows(control.name)}
 				buildUIItem={genUIItem}
@@ -1350,11 +1264,7 @@ describe("ColumnStructureTableControl with multi input schemas renders correctly
 		const wideflyoutWrapper = new ReactWrapper(wfhtml, true);
 		const addFieldsButtons = wideflyoutWrapper.find("Button"); // field picker buttons
 		addFieldsButtons.at(0).simulate("click"); // open filter picker
-		propertyUtils.fieldPicker([
-			{ "name": "BP", "schema": "0" },
-			{ "name": "BP", "schema": "data" },
-			{ "name": "BP", "schema": "2" }
-		]);
+		propertyUtils.fieldPicker(["0.BP", "data.BP", "2.BP"]);
 		wideflyoutWrapper.find("#properties-apply-button").simulate("click");
 		const firstSummary = tablesCategory.find(".control-summary.control-panel").at(0);
 		expect(firstSummary.find(".control-summary-list-rows")).to.have.length(5);
@@ -1409,21 +1319,18 @@ describe("ColumnStructureTableControl with multi input schemas renders correctly
 		const addFieldsButtons = wideflyoutWrapper.find("Button"); // field picker buttons
 		addFieldsButtons.at(0).simulate("click"); // open filter picker
 
-		propertyUtils.fieldPicker([
-			{ "name": "Cholesterol", "schema": "0" },
-			{ "name": "Age", "schema": "data" }
-		]);
+		propertyUtils.fieldPicker(["data.Age", "Cholesterol"]);
 
 		const tableRows = wideflyoutWrapper.find("#flexible-table-structuretableSortableColumns").find(".table-row");
 		expect(tableRows).to.have.length(2);
 
-		const rowIdx0 = tableRows.at(0).find("td");
-		expect(rowIdx0).to.have.length(8); // includes scrollbar column
-		expect(rowIdx0.at(1).text()).to.equal("Cholesterol");
-		expect(rowIdx0.at(5).find(".Dropdown-placeholder")
+		let row = tableRows.at(1).find("td");
+		expect(row).to.have.length(8); // includes scrollbar column
+		expect(row.at(1).text()).to.equal("Cholesterol");
+		expect(row.at(5).find(".Dropdown-placeholder")
 			.text()).to.equal("...");
 
-		let selectschema = rowIdx0.at(5).find("Dropdown");
+		let selectschema = row.at(5).find("Dropdown");
 		expect(selectschema).to.have.length(1);
 		const schemaOptions = selectschema.at(0).prop("options"); // by Type
 		const expectedOptions = [
@@ -1435,48 +1342,48 @@ describe("ColumnStructureTableControl with multi input schemas renders correctly
 		expect(schemaOptions).to.eql(expectedOptions);
 		selectschema.at(0).getNode()
 			.setValue("data", "data");
-		expect(rowIdx0.at(5).find(".Dropdown-placeholder")
+		expect(row.at(5).find(".Dropdown-placeholder")
 			.text()).to.equal("data");
 
-		const rowIdx1 = tableRows.at(1).find("td");
-		expect(rowIdx1).to.have.length(8); // includes scrollbar column
-		expect(rowIdx1.at(1).text()).to.equal("data.Age");
-		expect(rowIdx1.at(5).find(".Dropdown-placeholder")
+		row = tableRows.at(0).find("td");
+		expect(row).to.have.length(8); // includes scrollbar column
+		expect(row.at(1).text()).to.equal("data.Age");
+		expect(row.at(5).find(".Dropdown-placeholder")
 			.text()).to.equal("...");
 
-		selectschema = rowIdx1.at(5).find("Dropdown");
+		selectschema = row.at(5).find("Dropdown");
 		expect(selectschema).to.have.length(1);
 		selectschema.at(0).getNode()
 			.setValue("0", "0");
 
-		expect(rowIdx1.at(5).find(".Dropdown-placeholder")
+		expect(row.at(5).find(".Dropdown-placeholder")
 			.text()).to.equal("0");
 
 		wideflyoutWrapper.find("#properties-apply-button").simulate("click");
 		const thirdSummary = tablesCategory.find(".control-summary.control-panel").at(2);
 		expect(thirdSummary.find(".control-summary-list-rows")).to.have.length(2);
 
-		const summaryRow0 = thirdSummary.find(".control-summary-list-rows").at(0)
+		let summaryRow = thirdSummary.find(".control-summary-list-rows").at(1)
 			.find(".control-summary-table-row-multi-data");
-		expect(summaryRow0.at(0)
+		expect(summaryRow.at(0)
 			.find("span")
 			.at(0)
 			.text()
 			.trim()).to.equal("Cholesterol");
-		expect(summaryRow0.at(1)
+		expect(summaryRow.at(1)
 			.find("span")
 			.at(0)
 			.text()
 			.trim()).to.equal("data");
 
-		const summaryRow1 = thirdSummary.find(".control-summary-list-rows").at(1)
+		summaryRow = thirdSummary.find(".control-summary-list-rows").at(0)
 			.find(".control-summary-table-row-multi-data");
-		expect(summaryRow1.at(0)
+		expect(summaryRow.at(0)
 			.find("span")
 			.at(0)
 			.text()
 			.trim()).to.equal("data.Age");
-		expect(summaryRow1.at(1)
+		expect(summaryRow.at(1)
 			.find("span")
 			.at(0)
 			.text()

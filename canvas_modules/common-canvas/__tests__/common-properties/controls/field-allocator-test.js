@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -37,43 +37,39 @@ const control = {
 	"required": true
 };
 
-const dataModel = [
+const fields = [
 	{
-		"fields": [
-			{
-				"name": "age",
-				"type": "integer",
-				"metadata": {
-					"description": "",
-					"measure": "range",
-					"modeling_role": "input"
-				}
-			},
-			{
-				"name": "BP",
-				"type": "string",
-				"metadata": {
-					"description": "",
-					"measure": "discrete",
-					"modeling_role": "input"
-				}
-			},
-			{
-				"name": "Na",
-				"type": "double",
-				"metadata": {
-					"description": "",
-					"measure": "range",
-					"modeling_role": "input"
-				}
-			}
-		]
+		"name": "age",
+		"type": "integer",
+		"metadata": {
+			"description": "",
+			"measure": "range",
+			"modeling_role": "input"
+		}
+	},
+	{
+		"name": "BP",
+		"type": "string",
+		"metadata": {
+			"description": "",
+			"measure": "discrete",
+			"modeling_role": "input"
+		}
+	},
+	{
+		"name": "Na",
+		"type": "double",
+		"metadata": {
+			"description": "",
+			"measure": "range",
+			"modeling_role": "input"
+		}
 	}
 ];
 
 const propertyId = { name: "targetField" };
 
-const emptyDataModel = [
+const emptyfields = [
 	{
 		"fields": []
 	}
@@ -90,26 +86,26 @@ describe("selectcolumn control renders correctly", () => {
 		const wrapper = mount(
 			<FieldAllocatorControl
 				control={control}
-				dataModel={dataModel}
+				fields={fields}
 				propertyId={propertyId}
 				controller = {controller}
 			/>
 		);
 
 		expect(wrapper.prop("control")).to.equal(control);
-		expect(wrapper.prop("dataModel")).to.equal(dataModel);
+		expect(wrapper.prop("fields")).to.equal(fields);
 		expect(wrapper.prop("propertyId")).to.equal(propertyId);
 		expect(wrapper.prop("controller")).to.equal(controller);
 	});
 
-	it("should render correctly with emptyDataModel and null value selectcolumn", () => {
+	it("should render correctly with emptyfields and null value selectcolumn", () => {
 		controller.setPropertyValues(
 			{ "targetField": null }
 		);
 		const wrapper = mount(
 			<FieldAllocatorControl
 				control={control}
-				dataModel={emptyDataModel}
+				fields={emptyfields}
 				propertyId={propertyId}
 				controller = {controller}
 			/>
@@ -123,7 +119,7 @@ describe("selectcolumn control renders correctly", () => {
 		const wrapper = mount(
 			<FieldAllocatorControl
 				control={control}
-				dataModel={emptyDataModel}
+				fields={emptyfields}
 				propertyId={propertyId}
 				controller = {controller}
 			/>
@@ -140,7 +136,7 @@ describe("selectcolumn control renders correctly", () => {
 		const wrapper = mount(
 			<FieldAllocatorControl
 				control={control}
-				dataModel={emptyDataModel}
+				fields={emptyfields}
 				propertyId={propertyId}
 				controller = {controller}
 			/>
@@ -442,6 +438,6 @@ describe("selectcolumn control filters values correctly with multi schema input"
 			{ label: "1.age", value: "1.age" },
 			{ label: "intAndRange", value: "intAndRange" }
 		];
-		expect(options).to.eql(expectedOptions);
+		expect(options).to.have.deep.members(expectedOptions);
 	});
 });

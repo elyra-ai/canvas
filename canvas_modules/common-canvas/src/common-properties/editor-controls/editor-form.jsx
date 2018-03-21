@@ -570,7 +570,7 @@ class EditorForm extends React.Component {
 	fieldPicker(title) {
 		const currentControlValues = this.props.controller.getPropertyValues();
 		const propertyId = this.state.fieldPickerPropertyId;
-		const filteredDataset = this.props.controller.getFilteredDatasetMetadata(propertyId);
+		const fields = this.props.controller.getFilteredDatasetMetadata(propertyId);
 
 		return (<div id="field-picker-table">
 			<FieldPicker
@@ -578,7 +578,7 @@ class EditorForm extends React.Component {
 				controller={this.props.controller}
 				closeFieldPicker={this.closeFieldPicker}
 				currentControlValues={currentControlValues}
-				dataModel={filteredDataset}
+				fields={fields}
 				control={this.state.fieldPickerControl}
 				propertyId={propertyId}
 				title={title}

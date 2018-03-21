@@ -1,0 +1,143 @@
+[
+	{
+		"fields": [
+			{
+				"name": "Age",
+				"type": "integer",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"modeling_role": "input"
+				}
+			},
+			{
+				"name": "age",
+				"type": "integer",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"modeling_role": "input"
+				}
+			}
+		]
+	},
+	{
+		"name": "data",
+		"fields": [
+			{
+				"name": "Age",
+				"type": "integer",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"modeling_role": "input"
+				}
+			}
+		]
+	},
+	{
+		"name": "data",
+		"fields": [
+			{
+				"name": "Drug",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "set",
+					"modeling_role": "input"
+				}
+			},
+			{
+				"name": "drug",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "set",
+					"modeling_role": "input"
+				}
+			},
+			{
+				"name": "drug2",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "set",
+					"modeling_role": "input"
+				}
+			}
+		]
+	},
+	{
+		"name": "",
+		"fields": [
+			{
+				"name": "Age",
+				"type": "integer",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"modeling_role": "input"
+				}
+			},
+			{
+				"name": "drug",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "set",
+					"modeling_role": "input"
+				}
+			},
+			{
+				"name": "drug2",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "set",
+					"modeling_role": "input"
+				}
+			},
+			{
+				"name": "drug3",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "set",
+					"modeling_role": "input"
+				}
+			}
+		]
+	},
+	{
+		"name": "schema",
+		"fields": [
+			{
+				"name": "Age",
+				"type": "integer",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"modeling_role": "input"
+				}
+			},
+			{
+				"name": "drug",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "set",
+					"modeling_role": "input"
+				}
+			},
+			{
+				"name": "drugs",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "set",
+					"modeling_role": "input"
+				}
+			}
+		]
+	}
+]

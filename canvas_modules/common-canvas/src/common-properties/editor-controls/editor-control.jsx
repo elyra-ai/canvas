@@ -35,22 +35,6 @@ export default class EditorControl extends React.Component {
 		return list;
 	}
 
-	static genColumnSelectOptions(fields, selectedValues, includeEmpty) {
-		var options = [];
-		if (includeEmpty) {
-			options.push(
-				<option key={-1} disabled value={""}>...</option>
-			);
-		}
-
-		for (var i = 0; i < fields.length; i++) {
-			options.push(
-				<option key={i} value={fields[i].name}>{fields[i].name}</option>
-			);
-		}
-		return options;
-	}
-
 	static handleTableRowClick(evt, rowIndex, selection, allowedSelection) {
 		// logger.info(selection);
 		var selected = selection;

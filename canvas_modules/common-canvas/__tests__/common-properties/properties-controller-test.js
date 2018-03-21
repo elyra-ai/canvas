@@ -12,6 +12,7 @@ import sinon from "sinon";
 import deepFreeze from "deep-freeze";
 import Controller from "../../src/common-properties/properties-controller";
 import conditionForm from "../test_resources/json/conditions-summary-form.json";
+import datasetMetadata from "../test_resources/json/datasetMetadata.json";
 
 const propValues = {
 	param_int: 5,
@@ -338,19 +339,172 @@ describe("Properties Controller datasetMetadata", () => {
 		reset();
 		controller.setDatasetMetadata(v1DataModel);
 		const actualValue = controller.getDatasetMetadata();
-		expect(dataModel).to.eql(actualValue);
+		expect(dataModel[0]).to.eql(actualValue);
 	});
 	it("should set datasetMetadata correctly when datamodel is null.", () => {
 		reset();
 		controller.setDatasetMetadata(null);
 		const actualValue = controller.getDatasetMetadata();
-		expect(actualValue).to.eql([]);
+		expect(actualValue).to.equal(null);
 	});
 	it("should set datasetMetadata correctly when datamodel is undefined.", () => {
 		reset();
 		controller.setDatasetMetadata();
 		const actualValue = controller.getDatasetMetadata();
-		expect(actualValue).to.eql([]);
+		expect(actualValue).to.be.undefined;
+	});
+	it("should set datasetMetadata correctly when multiple schemas and fields defined.", () => {
+		reset();
+		controller.setDatasetMetadata(datasetMetadata);
+		const fields = controller.getDatasetMetadataFields();
+		const expectedFields = [
+			{
+				"name": "0.Age",
+				"type": "integer",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"modeling_role": "input"
+				},
+				"schema": "0",
+				"origName": "Age"
+			},
+			{
+				"name": "age",
+				"type": "integer",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"modeling_role": "input"
+				},
+				"schema": "0",
+				"origName": "age"
+			},
+			{
+				"name": "data_1.Age",
+				"type": "integer",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"modeling_role": "input"
+				},
+				"schema": "data_1",
+				"origName": "Age"
+			},
+			{
+				"name": "Drug",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "set",
+					"modeling_role": "input"
+				},
+				"schema": "data_2",
+				"origName": "Drug"
+			},
+			{
+				"name": "data_2.drug",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "set",
+					"modeling_role": "input"
+				},
+				"schema": "data_2",
+				"origName": "drug"
+			},
+			{
+				"name": "data_2.drug2",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "set",
+					"modeling_role": "input"
+				},
+				"schema": "data_2",
+				"origName": "drug2"
+			},
+			{
+				"name": "3.Age",
+				"type": "integer",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"modeling_role": "input"
+				},
+				"schema": "3",
+				"origName": "Age"
+			},
+			{
+				"name": "3.drug",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "set",
+					"modeling_role": "input"
+				},
+				"schema": "3",
+				"origName": "drug"
+			},
+			{
+				"name": "3.drug2",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "set",
+					"modeling_role": "input"
+				},
+				"schema": "3",
+				"origName": "drug2"
+			},
+			{
+				"name": "drug3",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "set",
+					"modeling_role": "input"
+				},
+				"schema": "3",
+				"origName": "drug3"
+			},
+			{
+				"name": "schema.Age",
+				"type": "integer",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"modeling_role": "input"
+				},
+				"schema": "schema",
+				"origName": "Age"
+			},
+			{
+				"name": "schema.drug",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "set",
+					"modeling_role": "input"
+				},
+				"schema": "schema",
+				"origName": "drug"
+			},
+			{
+				"name": "drugs",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "set",
+					"modeling_role": "input"
+				},
+				"schema": "schema",
+				"origName": "drugs"
+			}
+		];
+		expect(fields).to.have.deep.members(expectedFields);
+		const schemas = controller.getDatasetMetadataSchemas();
+		expect(schemas).to.eql(["0", "data_1", "data_2", "3", "schema"]);
 	});
 });
 describe("Properties Controller property messages", () => {

@@ -80,7 +80,7 @@ function fieldPicker(fieldsToSelect, expectedFields) {
 
 	if (expectedFields) {
 		const rows = fieldpicker.find(".field-picker-data-rows");
-		// expect(rows).to.have.length(expectedFields.length);
+		expect(rows).to.have.length(expectedFields.length);
 		for (let i = 0; i < expectedFields.length; ++i) {
 			if (typeof expectedFields[i] === "object") {
 				const fieldName = rows.at(i).find("td")
@@ -101,16 +101,8 @@ function fieldPicker(fieldsToSelect, expectedFields) {
 	}
 
 	for (const field of fieldsToSelect) {
-		if (typeof field === "object") {
-			const checkbox = fieldpicker.find("input[type='checkbox']")
-				.filterWhere((checkBox) => checkBox.prop("data-name") === field.name && checkBox.prop("data-schema") === field.schema);
-			expect(checkbox).to.have.length(1);
-			checkbox.simulate("change", { target: { checked: true } });
-			expect(checkbox.prop("checked")).to.be.true;
-		} else {
-			const checkbox = fieldpicker.find(`[data-name="${field}"]`);
-			checkbox.simulate("change", { target: { checked: true } });
-		}
+		const checkbox = fieldpicker.find(`[data-name="${field}"]`);
+		checkbox.simulate("change", { target: { checked: true } });
 	}
 
 	fieldpicker.find("#properties-apply-button").simulate("click"); // applies the field picker

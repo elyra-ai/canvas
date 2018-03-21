@@ -108,7 +108,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 			{ label: "Drug", value: "Drug" },
 			{ label: "0.drug2", value: "0.drug2" },
 			{ label: "data.Age", value: "data.Age" },
-			{ label: "BP", value: "BP" }, // TODO: should this be "data.BP"?
+			{ label: "data.BP", value: "data.BP" },
 			{ label: "bp", value: "bp" },
 			{ label: "data.drug2", value: "data.drug2" },
 			{ label: "2.Age", value: "2.Age" },
@@ -148,7 +148,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 			{ label: "Drug", value: "Drug" },
 			{ label: "0.drug2", value: "0.drug2" },
 			{ label: "data.Age", value: "data.Age" },
-			{ label: "BP", value: "BP" }, // TODO: should this be data.BP?
+			{ label: "data.BP", value: "data.BP" },
 			{ label: "bp", value: "bp" },
 			{ label: "data.drug2", value: "data.drug2" },
 			{ label: "2.Age", value: "2.Age" },
@@ -208,7 +208,7 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 		let actualOptions = selectColumnControl.prop("options");
 		expect(actualOptions.length).to.equal(fieldTable.length + 1); // +1 for "..."
 
-		propertyUtils.fieldPicker([{ "name": "drug2", "schema": "0" }, { "name": "drug2", "schema": "2" }], fieldTable);
+		propertyUtils.fieldPicker(["0.drug2", "2.drug2"], fieldTable);
 
 		selectColumnControl.getNode().setValue("data.Age", "data.Age");
 
@@ -224,12 +224,12 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 			{ label: "data.Age", value: "data.Age" },
 			{ label: "data.BP", value: "data.BP" },
 			{ label: "bp", value: "bp" },
-			{ label: "drug2", value: "drug2" }, // TODO: should this be "2.drug2"?
+			{ label: "data.drug2", value: "data.drug2" },
 			{ label: "2.Age", value: "2.Age" },
 			{ label: "drug", value: "drug" },
 			{ label: "drug3", value: "drug3" }
 		];
-		expect(actualOptions).to.eql(expectedOptions);
+		expect(actualOptions).to.have.deep.members(expectedOptions);
 	});
 
 	it("should show correct values from selectcolumns controls with multi schema input", () => {
@@ -264,9 +264,6 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 			{ "name": "drug2", "schema": "2" },
 			{ "name": "drug3", "schema": "2" }
 		];
-		propertyUtils.fieldPicker(fieldTable, fieldTable);
-		wrapper.update();
-
 		const selectcolumns3 = ["Sex",
 			"0.BP",
 			"0.drug2",
@@ -278,49 +275,47 @@ describe("selectcolumn and selectcolumns controls work in columnSelection panel 
 			"2.drug2",
 			"drug3"
 		];
-		expect(JSON.stringify(controller.getPropertyValue({ name: "selectcolumns3" }))).to.equal(JSON.stringify(selectcolumns3));
+		propertyUtils.fieldPicker(selectcolumns3, fieldTable);
 
-		// Verify field picker from selectcolumns2 gets the correct input dataModel
+		expect(controller.getPropertyValue({ name: "selectcolumns3" })).to.have.deep.members(selectcolumns3);
+
+		// Verify field picker from selectcolumns2 gets the correct fields
 		const fieldTable2Input = [
 			{
-				"fields": [
-					{
-						"name": "Age",
-						"type": "integer",
-						"metadata": {
-							"description": "",
-							"measure": "range",
-							"modeling_role": "input"
-						}
-					},
-					{
-						"name": "Drug",
-						"type": "string",
-						"metadata": {
-							"description": "",
-							"measure": "discrete",
-							"modeling_role": "input"
-						}
-					}
-				]
+				"name": "0.Age",
+				"type": "integer",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"modeling_role": "input"
+				},
+				"schema": "0",
+				"origName": "Age"
 			},
 			{
-				"name": "data",
-				"fields": []
+				"name": "Drug",
+				"type": "string",
+				"metadata": {
+					"description": "",
+					"measure": "discrete",
+					"modeling_role": "input"
+				},
+				"schema": "0",
+				"origName": "Drug"
 			},
 			{
-				"fields": [{
-					"name": "Age",
-					"type": "integer",
-					"metadata": {
-						"description": "",
-						"measure": "range",
-						"modeling_role": "input"
-					}
-				}]
+				"name": "2.Age",
+				"type": "integer",
+				"metadata": {
+					"description": "",
+					"measure": "range",
+					"modeling_role": "input"
+				},
+				"schema": "2",
+				"origName": "Age"
 			}
 		];
-		expect(JSON.stringify(controller.getFilteredDatasetMetadata({ name: "selectcolumns2" }))).to.equal(JSON.stringify(fieldTable2Input));
+		expect(controller.getFilteredDatasetMetadata({ name: "selectcolumns2" })).to.have.deep.members(fieldTable2Input);
 	});
 });
 

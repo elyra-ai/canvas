@@ -40,98 +40,114 @@ const currentControlValues = {
 };
 const filteredDataset = [
 	{
-		"fields": [
-			{
-				"name": "Age",
-				"type": "integer",
-				"metadata": {
-					"description": "",
-					"measure": "range",
-					"modeling_role": "input"
-				}
-			},
-			{
-				"name": "Sex",
-				"type": "string",
-				"metadata": {
-					"description": "",
-					"measure": "discrete",
-					"modeling_role": "input"
-				}
-			},
-			{
-				"name": "BP",
-				"type": "string",
-				"metadata": {
-					"description": "",
-					"measure": "discrete",
-					"modeling_role": "input"
-				}
-			},
-			{
-				"name": "Cholesterol",
-				"type": "string",
-				"metadata": {
-					"description": "",
-					"measure": "discrete",
-					"modeling_role": "input"
-				}
-			},
-			{
-				"name": "Na",
-				"type": "double",
-				"metadata": {
-					"description": "",
-					"measure": "range",
-					"modeling_role": "input"
-				}
-			},
-			{
-				"name": "K",
-				"type": "double",
-				"metadata": {
-					"description": "",
-					"measure": "range",
-					"modeling_role": "input"
-				}
-			},
-			{
-				"name": "Drug",
-				"type": "string",
-				"metadata": {
-					"description": "",
-					"measure": "discrete",
-					"modeling_role": "input"
-				}
-			},
-			{
-				"name": "Time",
-				"type": "time",
-				"metadata": {
-					"description": "",
-					"measure": "discrete",
-					"modeling_role": "input"
-				}
-			},
-			{
-				"name": "Timestamp",
-				"type": "timestamp",
-				"metadata": {
-					"description": "",
-					"measure": "discrete",
-					"modeling_role": "input"
-				}
-			},
-			{
-				"name": "Date",
-				"type": "date",
-				"metadata": {
-					"description": "",
-					"measure": "discrete",
-					"modeling_role": "input"
-				}
-			}
-		]
+		"name": "Age",
+		"type": "integer",
+		"metadata": {
+			"description": "",
+			"measure": "range",
+			"modeling_role": "input"
+		},
+		"origName": "Age",
+		"schema": "0"
+	},
+	{
+		"name": "Sex",
+		"type": "string",
+		"metadata": {
+			"description": "",
+			"measure": "discrete",
+			"modeling_role": "input"
+		},
+		"origName": "Sex",
+		"schema": "0"
+	},
+	{
+		"name": "BP",
+		"type": "string",
+		"metadata": {
+			"description": "",
+			"measure": "discrete",
+			"modeling_role": "input"
+		},
+		"origName": "BP",
+		"schema": "0"
+	},
+	{
+		"name": "Cholesterol",
+		"type": "string",
+		"metadata": {
+			"description": "",
+			"measure": "discrete",
+			"modeling_role": "input"
+		},
+		"origName": "Cholesterol",
+		"schema": "0"
+	},
+	{
+		"name": "Na",
+		"type": "double",
+		"metadata": {
+			"description": "",
+			"measure": "range",
+			"modeling_role": "input"
+		},
+		"origName": "Na",
+		"schema": "0"
+	},
+	{
+		"name": "K",
+		"type": "double",
+		"metadata": {
+			"description": "",
+			"measure": "range",
+			"modeling_role": "input"
+		},
+		"origName": "K",
+		"schema": "0"
+	},
+	{
+		"name": "Drug",
+		"type": "string",
+		"metadata": {
+			"description": "",
+			"measure": "discrete",
+			"modeling_role": "input"
+		},
+		"origName": "Drug",
+		"schema": "0"
+	},
+	{
+		"name": "Time",
+		"type": "time",
+		"metadata": {
+			"description": "",
+			"measure": "discrete",
+			"modeling_role": "input"
+		},
+		"origName": "Time",
+		"schema": "0"
+	},
+	{
+		"name": "Timestamp",
+		"type": "timestamp",
+		"metadata": {
+			"description": "",
+			"measure": "discrete",
+			"modeling_role": "input"
+		},
+		"origName": "Timestamp",
+		"schema": "0"
+	},
+	{
+		"name": "Date",
+		"type": "date",
+		"metadata": {
+			"description": "",
+			"measure": "discrete",
+			"modeling_role": "input"
+		},
+		"origName": "Date",
+		"schema": "0"
 	}
 ];
 const fieldPickerControl = {
@@ -230,7 +246,7 @@ describe("field-picker-control renders correctly", () => {
 				key="field-picker-control"
 				closeFieldPicker={closeFieldPicker}
 				currentControlValues={currentControlValues}
-				dataModel={filteredDataset}
+				fields={filteredDataset}
 				control={fieldPickerControl}
 				updateSelectedRows={updateSelectedRows}
 				controller={controller}
@@ -239,7 +255,7 @@ describe("field-picker-control renders correctly", () => {
 
 		expect(wrapper.prop("closeFieldPicker")).to.equal(closeFieldPicker);
 		expect(wrapper.prop("currentControlValues")).to.equal(currentControlValues);
-		expect(wrapper.prop("dataModel")).to.equal(filteredDataset);
+		expect(wrapper.prop("fields")).to.equal(filteredDataset);
 		expect(wrapper.prop("control")).to.equal(fieldPickerControl);
 	});
 
@@ -249,7 +265,7 @@ describe("field-picker-control renders correctly", () => {
 				key="field-picker-control"
 				closeFieldPicker={closeFieldPicker}
 				currentControlValues={currentControlValues}
-				dataModel={filteredDataset}
+				fields={filteredDataset}
 				control={fieldPickerControl}
 				updateSelectedRows={updateSelectedRows}
 				controller={controller}
@@ -268,7 +284,7 @@ describe("field-picker-control renders correctly", () => {
 				key="field-picker-control"
 				closeFieldPicker={closeFieldPicker}
 				currentControlValues={currentControlValues}
-				dataModel={filteredDataset}
+				fields={filteredDataset}
 				control={fieldPickerControl}
 				updateSelectedRows={updateSelectedRows}
 				controller={controller}
@@ -276,7 +292,7 @@ describe("field-picker-control renders correctly", () => {
 		);
 		// with intl support wrapper.state() does not work.
 		// looking for equivalent confirmation in the DOM
-		expect(wrapper.find("#flexible-table-container").find(".field-picker-data-rows")).to.have.length(filteredDataset[0].fields.length);
+		expect(wrapper.find("#flexible-table-container").find(".field-picker-data-rows")).to.have.length(filteredDataset.length);
 		expect(wrapper.find(".properties-tooltips-filter")).to.have.length(6); // list of filters
 		const checkBoxs = wrapper.find("Checkbox").filterWhere((checkBox) => checkBox.prop("checked") === true);
 		expect(checkBoxs).to.have.length(currentControlValues.keys.length); // controlValues rendered correctly
@@ -288,7 +304,7 @@ describe("field-picker-control renders correctly", () => {
 				key="field-picker-control"
 				closeFieldPicker={closeFieldPicker}
 				currentControlValues={currentControlValues}
-				dataModel={filteredDataset}
+				fields={filteredDataset}
 				control={fieldPickerControl}
 				updateSelectedRows={updateSelectedRows}
 				controller={controller}
@@ -304,7 +320,7 @@ describe("field-picker-control renders correctly", () => {
 				key="field-picker-control"
 				closeFieldPicker={closeFieldPicker}
 				currentControlValues={currentControlValues}
-				dataModel={filteredDataset}
+				fields={filteredDataset}
 				control={fieldPickerControl}
 				updateSelectedRows={updateSelectedRows}
 				controller={controller}
@@ -344,7 +360,7 @@ describe("field-picker-control renders correctly", () => {
 				key="field-picker-control"
 				closeFieldPicker={closeFieldPicker}
 				currentControlValues={currentControlValues}
-				dataModel={filteredDataset}
+				fields={filteredDataset}
 				control={fieldPickerControl}
 				updateSelectedRows={updateSelectedRows}
 				controller={controller}
@@ -364,7 +380,7 @@ describe("field-picker-control renders correctly", () => {
 				key="field-picker-control"
 				closeFieldPicker={closeFieldPicker}
 				currentControlValues={currentControlValues}
-				dataModel={filteredDataset}
+				fields={filteredDataset}
 				control={fieldPickerControl}
 				updateSelectedRows={updateSelectedRows}
 				controller={controller}
@@ -377,7 +393,7 @@ describe("field-picker-control renders correctly", () => {
 		// looking for equivalent confirmation in the DOM
 
 		const checkBoxs = wrapper.find("Checkbox").filterWhere((checkBox) => checkBox.prop("checked") === true && checkBox.prop("data-name"));
-		expect(checkBoxs).to.have.length(filteredDataset[0].fields.length);
+		expect(checkBoxs).to.have.length(filteredDataset.length);
 	});
 
 	it("should add additional field to newControlValues in `FieldPicker`", () => {
@@ -386,7 +402,7 @@ describe("field-picker-control renders correctly", () => {
 				key="field-picker-control"
 				closeFieldPicker={closeFieldPicker}
 				currentControlValues={currentControlValues}
-				dataModel={filteredDataset}
+				fields={filteredDataset}
 				control={fieldPickerControl}
 				updateSelectedRows={updateSelectedRows}
 				controller={controller}
@@ -405,7 +421,7 @@ describe("field-picker-control renders correctly", () => {
 				key="field-picker-control"
 				closeFieldPicker={closeFieldPicker}
 				currentControlValues={currentControlValues}
-				dataModel={filteredDataset}
+				fields={filteredDataset}
 				control={fieldPickerControl}
 				updateSelectedRows={updateSelectedRows}
 				controller={controller}
@@ -504,7 +520,7 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		expect(checkAll.prop("checked")).to.be.true;
 
 		let checkBoxes = fieldpicker.find("input[type='checkbox']")
-			.filterWhere((checkBox) => checkBox.prop("checked") === true && checkBox.prop("data-name") && checkBox.prop("data-schema"));
+			.filterWhere((checkBox) => checkBox.prop("checked") === true && checkBox.prop("data-name"));
 		expect(checkBoxes).to.have.length(1);
 
 		clickFilter(fieldpicker, "timestamp", true);
@@ -514,7 +530,7 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		expect(checkAll.prop("checked")).to.be.true;
 
 		checkBoxes = fieldpicker.find("input[type='checkbox']")
-			.filterWhere((checkBox) => checkBox.prop("checked") === true && checkBox.prop("data-name") && checkBox.prop("data-schema"));
+			.filterWhere((checkBox) => checkBox.prop("checked") === true && checkBox.prop("data-name"));
 		expect(checkBoxes).to.have.length(3);
 
 		fieldpicker.find("#properties-apply-button").simulate("click");
@@ -572,7 +588,7 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		expect(checkAll.prop("checked")).to.be.true;
 
 		const checkBoxes = fieldpicker.find("input[type='checkbox']")
-			.filterWhere((checkBox) => checkBox.prop("checked") === true && checkBox.prop("data-name") && checkBox.prop("data-schema"));
+			.filterWhere((checkBox) => checkBox.prop("checked") === true && checkBox.prop("data-name"));
 		expect(checkBoxes).to.have.length(5);
 
 		fieldpicker.find("#properties-apply-button").simulate("click");
@@ -621,7 +637,7 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		expect(checkAll.prop("checked")).to.be.true;
 
 		const checkBoxes = fieldpicker.find("input[type='checkbox']")
-			.filterWhere((checkBox) => checkBox.prop("checked") === true && checkBox.prop("data-name") && checkBox.prop("data-schema"));
+			.filterWhere((checkBox) => checkBox.prop("checked") === true && checkBox.prop("data-name"));
 		expect(checkBoxes).to.have.length(2);
 
 		fieldpicker.find("#properties-apply-button").simulate("click");
@@ -648,7 +664,7 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		expect(checkAll.prop("checked")).to.be.true;
 
 		const checkBoxes = fieldpicker.find("input[type='checkbox']")
-			.filterWhere((checkBox) => checkBox.prop("checked") === true && checkBox.prop("data-name") && checkBox.prop("data-schema"));
+			.filterWhere((checkBox) => checkBox.prop("checked") === true && checkBox.prop("data-name"));
 		expect(checkBoxes).to.have.length(29);
 	});
 
@@ -713,11 +729,7 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		expect(row4Columns.at(1).text()).to.equal("Age");
 		expect(row4Columns.at(2).text()).to.equal("schema");
 
-		propertyUtils.fieldPicker([
-			{ "name": "Age", "schema": "0" },
-			{ "name": "age", "schema": "0" },
-			{ "name": "Age", "schema": "data_1" }
-		]);
+		propertyUtils.fieldPicker(["0.Age", "age", "data_1.Age"]);
 
 		wideflyoutWrapper.find("#properties-apply-button").simulate("click");
 		wrapper.update();

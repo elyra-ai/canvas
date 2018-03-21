@@ -18,6 +18,7 @@ import { STATES, ACTIONS } from "./constants/constants.js";
 import CommandStack from "../command-stack/command-stack.js";
 import ControlFactory from "./editor-controls/control-factory";
 import { ControlType } from "./constants/form-constants";
+import cloneDeep from "lodash/cloneDeep";
 
 export default class PropertiesController {
 
@@ -83,10 +84,12 @@ export default class PropertiesController {
 			const controls = UiConditionsParser.parseControls([], this.form);
 			this._saveControls(controls); // saves controls without the subcontrols
 			this._parseSummaryControls(controls);
+			let datasetMetadata;
 			if (this.form.data) {
-				this.setDatasetMetadata(this.form.data.datasetMetadata);
+				datasetMetadata = this.form.data.datasetMetadata;
 				this.setPropertyValues(this.form.data.currentParameters);
 			}
+			this.setDatasetMetadata(datasetMetadata);
 			// get all the children for panels that have conditions. Must be run after setPropertyValues(),
 			// which generates the list of panels with conditions
 			const panels = Object.keys(this.getPanelStates());
@@ -205,7 +208,7 @@ export default class PropertiesController {
 					this.updatePropertyValue(propertyId, controlValue);
 				}
 			} else if (control.controlType === "structuretable" && control.addRemoveRows === false) {
-				controlValue = this._populateFieldData(controlValue, this.getDatasetMetadata(), control);
+				controlValue = this._populateFieldData(controlValue, control);
 				this.updatePropertyValue(propertyId, controlValue);
 			} else if (typeof control.valueDef !== "undefined" && typeof control.valueDef.defaultValue !== "undefined" &&
 				(typeof controlValue === "undefined")) {
@@ -215,46 +218,29 @@ export default class PropertiesController {
 		}
 	}
 
-	_populateFieldData(controlValue, dataModel, control) {
+	_populateFieldData(controlValue, control) {
 		const rowData = [];
-		const dm = dataModel;
+		const fields = this.getDatasetMetadataFields();
 		const updateCells = [];
-		for (let idx = 0; idx < dm.length; idx++) {
-			const schemaFields = dm[idx].fields;
-			for (let i = 0; i < schemaFields.length; i++) {
-				const row = [];
-				const schemas = this.getDatasetMetadataSchemas();
-				const schemaName = this.duplicateFieldName(dm, schemaFields[i]) ? schemas[idx] + "." + schemaFields[i].name : schemaFields[i].name;
-				const fieldIndex = this._indexOfField(schemaName, controlValue);
-				for (var k = 0; k < control.subControls.length; k++) {
-					if (k === control.keyIndex) {
-						row.push(schemaName);
-					} else if (fieldIndex > -1 && controlValue.length > i && controlValue[i].length > k) {
-						row.push(controlValue[i][k]);
-					} else {
-						row.push(this._getDefaultSubControlValue(k, schemaName, dataModel, control));
-						updateCells.push([i, k]);
-					}
+		for (let i = 0; i < fields.length; i++) {
+			const row = [];
+			const fieldIndex = this._indexOfField(fields[i].name, controlValue);
+			for (let k = 0; k < control.subControls.length; k++) {
+				if (k === control.keyIndex) {
+					row.push(fields[i].name);
+				} else if (fieldIndex > -1 && controlValue.length > i && controlValue[i].length > k) {
+					row.push(controlValue[i][k]);
+				} else {
+					row.push(this._getDefaultSubControlValue(k, fields[i].name, fields, control));
+					updateCells.push([i, k]);
 				}
-				rowData.push(row);
 			}
+			rowData.push(row);
 		}
 		return rowData;
 	}
 
-	// returns true if field name is in more than one schema
-	duplicateFieldName(dm, fieldObj) {
-		let count = 0;
-		for (let idx = 0; idx < dm.length; idx++) {
-			count += dm[idx].fields.filter((field) => field.name === fieldObj.name).length;
-			if (count > 1) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	_getDefaultSubControlValue(col, fieldName, dataModel, control) {
+	_getDefaultSubControlValue(col, fieldName, fields, control) {
 		let val;
 		const subControl = control.subControls[col];
 		if (PropertyUtils.toType(subControl.valueDef.defaultValue) !== "undefined") {
@@ -263,7 +249,7 @@ export default class PropertiesController {
 				val = this.getPropertyValue({ name: val.parameterRef });
 			}
 		} else if (PropertyUtils.toType(subControl.dmDefault) !== "undefined") {
-			val = this._getDMDefault(subControl, fieldName, dataModel);
+			val = this._getDMDefault(subControl, fieldName, fields);
 		} else if (subControl.values) {
 			val = subControl.values[0];
 		} else if (subControl.valueDef.propType === "string") {
@@ -282,31 +268,29 @@ export default class PropertiesController {
 		return val;
 	}
 
-	_getDMDefault(subControlDef, fieldName, dataModel) {
+	_getDMDefault(subControlDef, fieldName, fields) {
 		let defaultValue;
 		const dmField = subControlDef.dmDefault;
 		if (fieldName) {
-			for (const schema of dataModel) {
-				for (const field of schema.fields) {
-					if (field.name === fieldName) {
-						switch (dmField) {
-						case "type":
-							defaultValue = field.type;
-							break;
-						case "description":
-							defaultValue = field.description;
-							break;
-						case "measure":
-							defaultValue = field.measure;
-							break;
-						case "modeling_role":
-							defaultValue = field.modeling_role;
-							break;
-						default:
-							break;
-						}
+			for (const field of fields) {
+				if (field.name === fieldName) {
+					switch (dmField) {
+					case "type":
+						defaultValue = field.type;
+						break;
+					case "description":
+						defaultValue = field.description;
+						break;
+					case "measure":
+						defaultValue = field.measure;
+						break;
+					case "modeling_role":
+						defaultValue = field.modeling_role;
+						break;
+					default:
 						break;
 					}
+					break;
 				}
 			}
 		}
@@ -362,40 +346,42 @@ export default class PropertiesController {
 	}
 
 	/*
-	* DatasetMetadata methods
+	* Returns datasetMetadata passed into common-properties
+	*	@return passed in value
 	*/
 	getDatasetMetadata() {
-		return this.propertiesStore.getDatasetMetadata();
+		return this.propertiesStore.getDatasetMetadata().schemas;
 	}
+
+	/*
+	* Returns a list field objects.  Based on datasetMetadata passed int common-properties
+	*	@return array[field]
+	*/
+	getDatasetMetadataFields() {
+		return this.propertiesStore.getDatasetMetadata().fields;
+	}
+
+	/**
+	* Returns a list of schema names
+	*	@return array[string]
+	*/
 	getDatasetMetadataSchemas() {
-		const datasetMetadata = this.getDatasetMetadata();
-		const schemas = [];
-		for (let idx = 0; idx < datasetMetadata.length; idx++) {
-			let schemaIdentifier = datasetMetadata[idx].name ? datasetMetadata[idx].name : "";
-			const dupSchemaNames = datasetMetadata.filter((schema) => schema.name === schemaIdentifier && schemaIdentifier.length !== 0);
-			const dupSchemaNameIndex = schemas.indexOf(schemaIdentifier);
-			if (dupSchemaNameIndex > -1 || dupSchemaNames.length > 1) {
-				const separator = schemaIdentifier.length === 0 ? "" : "_";
-				schemaIdentifier += (separator + idx);
-				schemas[dupSchemaNameIndex] = schemas[dupSchemaNameIndex] + separator + dupSchemaNameIndex;
-			} else if (schemaIdentifier.length === 0) {
-				schemaIdentifier = idx.toString();
-			}
-			schemas.push(schemaIdentifier);
-		}
-		return schemas;
+		return this.propertiesStore.getDatasetMetadata().schemaNames;
 	}
-	_getDatasetMetadataSchemaIndex(schemaName) {
-		const schemas = this.getDatasetMetadataSchemas();
-		return schemas.indexOf(schemaName);
-	}
+
+	/**
+	* Returns a list field objects filtered. These are filterd by conditions and
+	* by shared controls
+	* @param propertyId Propertied id of the control requesting the fields
+	* @return array[field]
+	*/
 	getFilteredDatasetMetadata(propertyId) {
-		let datasetMetadata = this.getDatasetMetadata();
+		let fields = this.getDatasetMetadataFields();
 		if (propertyId) {
-			this._filterSharedDataset(propertyId, datasetMetadata);
-			datasetMetadata = conditionsUtil.filterConditions(propertyId, this.filterDefinitions, this, datasetMetadata);
+			fields = this._filterSharedDataset(propertyId, fields);
+			fields = conditionsUtil.filterConditions(propertyId, this.filterDefinitions, this, fields);
 		}
-		return datasetMetadata;
+		return fields;
 	}
 
 	/**
@@ -403,11 +389,11 @@ export default class PropertiesController {
 	 * in use by other controls are already filtered out.
 	 *
 	 * @param propertyId Name of control to skip when checking field controls
-	 * @return Filtered dataset metadata with fields in use removed
+	 * @return Filtered fields with fields in use removed
 	 */
-	_filterSharedDataset(propertyId, datasetMetadata) {
+	_filterSharedDataset(propertyId, fields) {
 		if (!this.sharedCtrlInfo || !propertyId) {
-			return;
+			return fields;
 		}
 		const skipControlName = propertyId.name;
 		try {
@@ -444,39 +430,81 @@ export default class PropertiesController {
 					}
 				}
 			}
-
 			const usedFieldsList = Array.from(new Set(usedFields)); // make all values unique
-			for (const usedField of usedFieldsList) {
-				if (usedField.indexOf(".") > -1) {
-					const schemaField = usedField.split(".");
-					const schemaIndex = this._getDatasetMetadataSchemaIndex(schemaField[0]);
-					datasetMetadata[schemaIndex].fields = datasetMetadata[schemaIndex].fields.filter(function(element) {
-						return element && element.name !== schemaField[1];
-					});
-				} else {
-					for (const schema of datasetMetadata) {
-						schema.fields = schema.fields.filter(function(element) {
-							return element && element.name !== usedField;
-						});
-					}
-				}
-			}
+			const filteredFields = fields.filter(function(field) {
+				return usedFieldsList.indexOf(field.name) === -1;
+			});
+			return filteredFields;
 		} catch (error) {
 			logger.warn("Error filtering shared controls " + error);
 		}
+		return fields;
 	}
 
-	setDatasetMetadata(datasetMetadata) {
-		// in the 2.0 schema only arrays are support but we want to support both for now.  Internally everything should be an array
-		if (datasetMetadata && !Array.isArray(datasetMetadata)) {
-			this.propertiesStore.setDatasetMetadata([datasetMetadata]);
-		} else {
-			this.propertiesStore.setDatasetMetadata(datasetMetadata);
+	/**
+	 * This method parses the inDatasetMetadata into fields and schemaNames to be
+	 * used throughout common-properties
+	 *
+	 * @param inDatasetMetadata datasetMetadata schema.
+	 */
+	setDatasetMetadata(inDatasetMetadata) {
+		const schemaNames = [];
+		const fields = [];
+		if (inDatasetMetadata) {
+			let schemas = cloneDeep(inDatasetMetadata);
+			// in the 2.0 schema only arrays are support but we want to support both for now.  Internally everything should be an array
+			if (!Array.isArray(schemas)) {
+				schemas = [schemas];
+			}
+			// make sure all schemas have a name
+			for (let j = 0; j < schemas.length; j++) {
+				if (!schemas[j].name) {
+					schemas[j].name = j.toString();
+				}
+				schemas[j].idx = j; // used to set dup names
+			}
+			// make sure all schemas have a unique names
+			for (const schema of schemas) {
+				const dupNamedSchemas = schemas.filter(function(filterSchema) {
+					return filterSchema.name === schema.name;
+				});
+				if (dupNamedSchemas && dupNamedSchemas.length > 1) {
+					for (let j = 0; j < dupNamedSchemas.length; j++) {
+						dupNamedSchemas[j].name = dupNamedSchemas[j].name + "_" + dupNamedSchemas[j].idx;
+					}
+				}
+			}
+
+			// process all fields into single array
+			for (const schema of schemas) {
+				schemaNames.push(schema.name);
+				if (schema.fields) {
+					for (const field of schema.fields) {
+						field.schema = schema.name;
+						field.origName = field.name; // original name
+						fields.push(field);
+					}
+				}
+			}
+			// add schema name if there are duplicate field names
+			const isMultipleSchemas = schemas.length > 1;
+			if (isMultipleSchemas) {
+				for (const field of fields) {
+					const foundFields = fields.filter(function(elementField) {
+						return field.origName === elementField.origName;
+					});
+					if (foundFields.length > 1) {
+						field.name = field.schema + "." + field.origName;
+					}
+				}
+			}
 		}
+		// store values in redux
+		this.propertiesStore.setDatasetMetadata({ schemas: inDatasetMetadata, fields: fields, schemaNames: schemaNames });
 	}
 
 	validateInput(propertyId) {
-		conditionsUtil.validateInput(propertyId, this, this.validationDefinitions, this.getDatasetMetadata());
+		conditionsUtil.validateInput(propertyId, this, this.validationDefinitions, this.getDatasetMetadataFields());
 	}
 
 	//
@@ -494,7 +522,7 @@ export default class PropertiesController {
 		this.propertiesStore.clearSelectedRows(controlName);
 	}
 
-	/*
+	/**
 	* Retrieve filtered enumeration items.
 	*
 	* @param propertyId The unique property identifier
@@ -534,8 +562,8 @@ export default class PropertiesController {
 			enabledDefinitions: this.enabledDefinitions,
 			filteredEnumDefinitions: this.filteredEnumDefinitions
 		};
-		conditionsUtil.validateConditions(this, definitions, this.getDatasetMetadata());
-		conditionsUtil.validateInput(inPropertyId, this, this.validationDefinitions, this.getDatasetMetadata());
+		conditionsUtil.validateConditions(this, definitions, this.getDatasetMetadataFields());
+		conditionsUtil.validateInput(inPropertyId, this, this.validationDefinitions, this.getDatasetMetadataFields());
 		if (this.handlers.propertyListener) {
 			this.handlers.propertyListener(
 				{
@@ -609,7 +637,7 @@ export default class PropertiesController {
 			enabledDefinitions: this.enabledDefinitions,
 			filteredEnumDefinitions: this.filteredEnumDefinitions
 		};
-		conditionsUtil.validateConditions(this, definitions, this.getDatasetMetadata(), initial);
+		conditionsUtil.validateConditions(this, definitions, this.getDatasetMetadataFields(), initial);
 		if (this.handlers.propertyListener) {
 			this.handlers.propertyListener(
 				{
@@ -862,8 +890,11 @@ export default class PropertiesController {
 		}
 	}
 
-	/*
+	/**
 	* Used to create standard controls in customPanels
+	* @param propertyId - Property id of the controls
+	* @param paramDef - schema definition.  See paramDef schema
+	* @param parameter (string) - name of the parameter to pull out of paramDef
 	*/
 	createControl(propertyId, paramDef, parameter) {
 		const control = this.controlFactory.createFormControl(paramDef, parameter);
@@ -874,13 +905,29 @@ export default class PropertiesController {
 		this._saveControls(controls);
 		return this.controlFactory.createControlItem(control, propertyId);
 	}
+
+	/**
+	* Used to create controls
+	* @return the controlFactory instance
+	*/
 	getControlFactory() {
 		return this.controlFactory;
 	}
 
+	/**
+	* Sets the custom controls available to common-properties
+	* @param customControls
+	*/
 	setCustomControls(customControls) {
 		this.customControls = customControls;
 	}
+
+	/**
+	* Returns a rendered custom control
+	* @param propertyId
+	* @param control
+	* @param tableInfo
+	*/
 	getCustomControl(propertyId, control, tableInfo) {
 		if (control.customControlId) {
 			for (const customCtrl of this.customControls) {

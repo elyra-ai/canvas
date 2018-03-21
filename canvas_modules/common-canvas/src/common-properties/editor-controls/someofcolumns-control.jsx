@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2016. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2016. 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -12,7 +12,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import FormControl from "react-bootstrap/lib/FormControl";
 import EditorControl from "./editor-control.jsx";
-import PropertyUtils from "../util/property-utils";
 
 export default class SomeofcolumnsControl extends EditorControl {
 	constructor(props) {
@@ -29,6 +28,16 @@ export default class SomeofcolumnsControl extends EditorControl {
 			return o.value;
 		});
 		this.props.controller.updatePropertyValue(this.props.propertyId, values);
+	}
+
+	genColumnSelectOptions(selectedValues) {
+		const options = [];
+		for (let i = 0; i < this.props.fields.length; i++) {
+			options.push(
+				<option key={i} value={this.props.fields[i].name}>{this.props.fields[i].name}</option>
+			);
+		}
+		return options;
 	}
 
 	render() {
@@ -50,8 +59,7 @@ export default class SomeofcolumnsControl extends EditorControl {
 			controlIconContainerClass = "some-of-column-control-icon-container-enabled";
 		}
 
-		const fields = PropertyUtils.getAllDataModelFields(this.props.dataModel);
-		var options = EditorControl.genColumnSelectOptions(fields, controlValue, false);
+		const options = this.genColumnSelectOptions(controlValue);
 		return (
 			<div style={stateStyle}>
 				<div id={controlIconContainerClass}>
@@ -75,7 +83,7 @@ export default class SomeofcolumnsControl extends EditorControl {
 }
 
 SomeofcolumnsControl.propTypes = {
-	dataModel: PropTypes.array.isRequired,
+	fields: PropTypes.array.isRequired,
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired

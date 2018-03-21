@@ -16,13 +16,13 @@ import moment from "moment";
 import isEmpty from "lodash/isEmpty";
 import cloneDeep from "lodash/cloneDeep";
 
-function validateConditions(controller, definitions, dataModel, initial) {
-	_validateVisible(controller, definitions.visibleDefinition, dataModel, initial);
-	_validateEnabled(controller, definitions.enabledDefinitions, dataModel, initial);
-	_validateFilteredEnums(controller, definitions.filteredEnumDefinitions, dataModel);
+function validateConditions(controller, definitions, fields, initial) {
+	_validateVisible(controller, definitions.visibleDefinition, fields, initial);
+	_validateEnabled(controller, definitions.enabledDefinitions, fields, initial);
+	_validateFilteredEnums(controller, definitions.filteredEnumDefinitions, fields);
 }
 
-function _validateVisible(controller, visibleDefinition, dataModel, initial) {
+function _validateVisible(controller, visibleDefinition, fields, initial) {
 	// visibleDefinition
 	if (Object.keys(visibleDefinition).length > 0) {
 		const propertyValues = controller.getPropertyValues();
@@ -46,10 +46,10 @@ function _validateVisible(controller, visibleDefinition, dataModel, initial) {
 								rowIndex: rowIdx,
 								colIndex: baseId.col
 							};
-							_setValidateVisible(visDefinition.definition, propertyValues, controlType, dataModel, cellCoords, newStates, controller, initial);
+							_setValidateVisible(visDefinition.definition, propertyValues, controlType, fields, cellCoords, newStates, controller, initial);
 						}
 					} else {
-						_setValidateVisible(visDefinition.definition, propertyValues, controlType, dataModel, cellCoords, newStates, controller, initial);
+						_setValidateVisible(visDefinition.definition, propertyValues, controlType, fields, cellCoords, newStates, controller, initial);
 					}
 
 				} catch (error) {
@@ -62,8 +62,8 @@ function _validateVisible(controller, visibleDefinition, dataModel, initial) {
 	}
 }
 
-function _setValidateVisible(definition, propertyValues, controlType, dataModel, cellCoords, newStates, controller, initial) {
-	const visOutput = UiConditions.validateInput(definition, propertyValues, controlType, dataModel,
+function _setValidateVisible(definition, propertyValues, controlType, fields, cellCoords, newStates, controller, initial) {
+	const visOutput = UiConditions.validateInput(definition, propertyValues, controlType, fields,
 		cellCoords);
 	if (visOutput === true) { // control|panel should be visible
 		if (definition.visible.parameter_refs) {
@@ -114,7 +114,7 @@ function _setValidateVisible(definition, propertyValues, controlType, dataModel,
 	}
 }
 
-function _validateEnabled(controller, enabledDefinitions, dataModel, initial) {
+function _validateEnabled(controller, enabledDefinitions, fields, initial) {
 	// enabledDefinitions
 	if (Object.keys(enabledDefinitions).length > 0) {
 		const propertyValues = controller.getPropertyValues();
@@ -139,10 +139,10 @@ function _validateEnabled(controller, enabledDefinitions, dataModel, initial) {
 								rowIndex: rowIdx,
 								colIndex: baseId.col
 							};
-							_setValidateEnabled(enbDefinition.definition, propertyValues, controlType, dataModel, cellCoords, newStates, controller, initial);
+							_setValidateEnabled(enbDefinition.definition, propertyValues, controlType, fields, cellCoords, newStates, controller, initial);
 						}
 					} else {
-						_setValidateEnabled(enbDefinition.definition, propertyValues, controlType, dataModel, cellCoords, newStates, controller, initial);
+						_setValidateEnabled(enbDefinition.definition, propertyValues, controlType, fields, cellCoords, newStates, controller, initial);
 					}
 				} catch (error) {
 					logger.warn("Error thrown in validation: " + error);
@@ -154,8 +154,8 @@ function _validateEnabled(controller, enabledDefinitions, dataModel, initial) {
 	}
 }
 
-function _setValidateEnabled(definition, propertyValues, controlType, dataModel, cellCoords, newStates, controller, initial) {
-	const enbOutput = UiConditions.validateInput(definition, propertyValues, controlType, dataModel,
+function _setValidateEnabled(definition, propertyValues, controlType, fields, cellCoords, newStates, controller, initial) {
+	const enbOutput = UiConditions.validateInput(definition, propertyValues, controlType, fields,
 		cellCoords);
 	if (enbOutput === true) { // control|panel should be enabled
 		if (definition.enabled.parameter_refs) {
@@ -296,7 +296,7 @@ function _updateStateIfPanel(newStates, referenceId, state) {
 	}
 }
 
-function _validateFilteredEnums(controller, filteredEnumDefinitions, dataModel) {
+function _validateFilteredEnums(controller, filteredEnumDefinitions, fields) {
 	// filtered enumerations
 	let lastKey;
 	if (Object.keys(filteredEnumDefinitions).length > 0) {
@@ -326,10 +326,10 @@ function _validateFilteredEnums(controller, filteredEnumDefinitions, dataModel) 
 								rowIndex: rowIdx,
 								colIndex: baseId.col
 							};
-							_setValidateFilteredEnum(filteredDefinition.definition, propertyValues, controlType, dataModel, cellCoords, newStates);
+							_setValidateFilteredEnum(filteredDefinition.definition, propertyValues, controlType, fields, cellCoords, newStates);
 						}
 					} else {
-						_setValidateFilteredEnum(filteredDefinition.definition, propertyValues, controlType, dataModel, cellCoords, newStates);
+						_setValidateFilteredEnum(filteredDefinition.definition, propertyValues, controlType, fields, cellCoords, newStates);
 					}
 
 				} catch (error) {
@@ -342,8 +342,8 @@ function _validateFilteredEnums(controller, filteredEnumDefinitions, dataModel) 
 	}
 }
 
-function _setValidateFilteredEnum(definition, propertyValues, controlType, dataModel, cellCoords, newStates) {
-	const filtered = UiConditions.validateInput(definition, propertyValues, controlType, dataModel, cellCoords);
+function _setValidateFilteredEnum(definition, propertyValues, controlType, fields, cellCoords, newStates) {
+	const filtered = UiConditions.validateInput(definition, propertyValues, controlType, fields, cellCoords);
 	if (definition.enum_filter.target && definition.enum_filter.target.parameter_ref) {
 		const referenceId = _getPropertyId(definition.enum_filter.target.parameter_ref, cellCoords);
 		_updateFilteredState(definition, newStates, referenceId, filtered);
@@ -492,7 +492,7 @@ function _getPropertyId(paramRef, cellCoords) {
 	return baseParam;
 }
 
-function validateInput(propertyId, controller, validationDefinitions, datasetMetadata) {
+function validateInput(propertyId, controller, validationDefinitions, fields) {
 	if (!validationDefinitions) {
 		return;
 	}
@@ -511,7 +511,7 @@ function validateInput(propertyId, controller, validationDefinitions, datasetMet
 			let output = false;
 			for (const validation of validations) {
 				let errorMessage = DEFAULT_VALIDATION_MESSAGE;
-				output = UiConditions.evaluateInput(validation.definition, userInput, control, datasetMetadata, controller.getRequiredParameters(),
+				output = UiConditions.evaluateInput(validation.definition, userInput, control, fields, controller.getRequiredParameters(),
 					controller.convertPropertyId(propertyId), controller);
 				let isError = false;
 				// logger.info("validated input field " + JSON.stringify(propertyId) + " to be " + JSON.stringify(output));
@@ -656,16 +656,16 @@ function _extractValidationDefinitions(propertyId, validationDefinitions) {
 /*
 * Filters the datamodel fields for a parameter.
 */
-function filterConditions(propertyId, filterDefinitions, controller, datasetMetadata) {
+function filterConditions(propertyId, filterDefinitions, controller, fields) {
 	// filters only have 1 definition
 	if (filterDefinitions[propertyId.name] && filterDefinitions[propertyId.name][0]) {
 		try {
-			return UiConditions.filter(filterDefinitions[propertyId.name][0].definition, controller, datasetMetadata);
+			return UiConditions.filter(filterDefinitions[propertyId.name][0].definition, controller, fields);
 		} catch (error) {
 			logger.warn("Error thrown in filter: " + error);
 		}
 	}
-	return datasetMetadata;
+	return fields;
 }
 
 

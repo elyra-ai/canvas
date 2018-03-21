@@ -221,28 +221,26 @@ export default class ControlFactory {
 		} else if (control.controlType === ControlType.ONEOFCOLUMNS && !tableInfo) {
 			return (<OneofcolumnsControl
 				{...props}
-				dataModel={this.controller.getFilteredDatasetMetadata(propertyId)}
+				fields={this.controller.getFilteredDatasetMetadata(propertyId)}
 			/>);
 		} else if (control.controlType === ControlType.SOMEOFCOLUMNS && !tableInfo) {
 			return (<SomeofcolumnsControl
 				{...props}
-				dataModel={this.controller.getFilteredDatasetMetadata(propertyId)}
+				fields={this.controller.getFilteredDatasetMetadata(propertyId)}
 			/>);
 		} else if (control.controlType === ControlType.SELECTCOLUMN && !tableInfo) {
 			return (<FieldAllocatorControl
 				{...props}
-				dataModel={this.controller.getFilteredDatasetMetadata(propertyId)}
+				fields={this.controller.getFilteredDatasetMetadata(propertyId)}
 			/>);
 		} else if (control.controlType === ControlType.SELECTCOLUMNS && !tableInfo) {
 			return (<ColumnSelectControl
 				{...props}
-				dataModel={this.controller.getFilteredDatasetMetadata(propertyId)}
 				openFieldPicker={this.openFieldPicker}
 			/>);
 		} else if (control.controlType === ControlType.STRUCTURETABLE && !tableInfo) {
 			return (<ColumnStructureTableControl
 				{...props}
-				dataModel={this.controller.getFilteredDatasetMetadata(propertyId)}
 				buildUIItem={this.genUIItem}
 				openFieldPicker={this.openFieldPicker}
 				customContainer={this.rightFlyout}
@@ -271,6 +269,13 @@ export default class ControlFactory {
 		return (<ReadonlyControl {...props} />);
 	}
 
+	/**
+	* Used to create a control from a passed in paramDef.
+	* Allows users to user a standard control in a custom control/panel
+	* @param paramDef - see parameter-def schema
+	* @param parameter - name of the parameter to pull from paramDef
+	* @return control object (form schema) used to create standard react controls
+	*/
 	createFormControl(paramDef, parameter) {
 		if (!paramDef) {
 			return null;

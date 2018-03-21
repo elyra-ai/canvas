@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2016. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2016, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -25,8 +25,6 @@ export default class FieldAllocatorControl extends EditorControl {
 			this.emptyLabel = this.props.control.additionalText;
 		}
 		this.handleChange = this.handleChange.bind(this);
-		this.addColumns = this.addColumns.bind(this);
-		this.removeColumns = this.removeColumns.bind(this);
 	}
 
 	handleChange(evt) {
@@ -54,46 +52,18 @@ export default class FieldAllocatorControl extends EditorControl {
 		this.setState({ clippedClassName: clippedClassName });
 	}
 
-	addColumns(columnNames, callback) {
-		let currentColumns = this.props.controller.getPropertyValue(this.props.propertyId);
-		if (columnNames.length === 1) {
-			currentColumns = columnNames;
-		}
-		this.props.controller.updatePropertyValue(this.props.propertyId, currentColumns);
-	}
-
-	removeColumns(columnNames, callback) {
-		this.props.controller.updatePropertyValue(this.props.propertyId, []);
-	}
-
-	genDropdownOptions(dataModel) {
-		const schemas = this.props.controller.getDatasetMetadataSchemas();
-		const optionsTmp = [];
-		for (let idx = 0; idx < dataModel.length; idx++) {
-			optionsTmp.push([]);
-			for (const field of dataModel[idx].fields) {
-				const duplicate = this.props.controller.duplicateFieldName(dataModel, field);
-				let schemaName = "";
-				if (duplicate) {
-					schemaName = schemas[idx] + ".";
-				}
-				optionsTmp[idx].push(schemaName + field.name);
-			}
-		}
-
+	genDropdownOptions() {
 		const options = [];
 		// allow for user to not select a field
 		options.push({
 			value: "",
 			label: this.emptyLabel
 		});
-		for (const schema of optionsTmp) {
-			for (const fieldName of schema) {
-				options.push({
-					value: fieldName,
-					label: fieldName
-				});
-			}
+		for (const field of this.props.fields) {
+			options.push({
+				value: field.name,
+				label: field.name
+			});
 		}
 		return options;
 	}
@@ -105,7 +75,7 @@ export default class FieldAllocatorControl extends EditorControl {
 			controlValue = "";
 			controlLabel = this.emptyLabel;
 		}
-		const options = this.genDropdownOptions(this.props.dataModel);
+		const options = this.genDropdownOptions();
 		const conditionProps = {
 			propertyId: this.props.propertyId,
 			controlType: "dropdown"
@@ -147,6 +117,6 @@ export default class FieldAllocatorControl extends EditorControl {
 FieldAllocatorControl.propTypes = {
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
-	dataModel: PropTypes.array.isRequired,
+	fields: PropTypes.array.isRequired,
 	control: PropTypes.object.isRequired
 };

@@ -19,13 +19,13 @@ import isEqual from "lodash/isEqual";
 
 const ERROR = "error";
 const WARNING = "warning";
-function evaluateInput(validationDefinition, userInput, control, dataModel, requiredParameters, propertyId, controller) {
+function evaluateInput(validationDefinition, userInput, control, fields, requiredParameters, propertyId, controller) {
 	let output;
 	try {
 		if ((control.valueDef && control.valueDef.isMap) || (typeof propertyId.col !== "undefined")) {
-			output = _validateTable(validationDefinition, userInput, control, dataModel, requiredParameters, propertyId, controller);
+			output = _validateTable(validationDefinition, userInput, control, fields, requiredParameters, propertyId, controller);
 		} else {
-			output = validateInput(validationDefinition, userInput, control.controlType, dataModel,
+			output = validateInput(validationDefinition, userInput, control.controlType, fields,
 				{}, requiredParameters);
 		}
 	} catch (error) {
@@ -34,7 +34,7 @@ function evaluateInput(validationDefinition, userInput, control, dataModel, requ
 	return output;
 }
 
-function _validateTable(validationDefinition, userInput, control, dataModel, requiredParameters, propertyId, controller) {
+function _validateTable(validationDefinition, userInput, control, fields, requiredParameters, propertyId, controller) {
 	let output;
 	const coordinates = {};
 	// get the control for the table,
@@ -61,7 +61,7 @@ function _validateTable(validationDefinition, userInput, control, dataModel, req
 				// only run validation on columns defined in validation
 				var tmp = null;
 				if (columnNumbers.indexOf(col) > -1) {
-					tmp = validateInput(validationDefinition, userInput, tableControlType, dataModel,
+					tmp = validateInput(validationDefinition, userInput, tableControlType, fields,
 						coordinates, requiredParameters);
 				}
 
@@ -77,7 +77,7 @@ function _validateTable(validationDefinition, userInput, control, dataModel, req
 		}
 	} else {
 		// no table cells in defintion then evaluate the table
-		output = validateInput(validationDefinition, userInput, control.controlType, dataModel,
+		output = validateInput(validationDefinition, userInput, control.controlType, fields,
 			coordinates, requiredParameters);
 	}
 	return output;
@@ -115,14 +115,14 @@ function getColumnsFromCondition(columnNumbers, cellCondition) {
 /**
 * @param {Object} definition Condition definition
 * @param {Any} userInput Contains the control value entered by the user
-* @param {Object} dataModel Optional data model
+* @param {Object} fields Optional datasetMetadata fields
 * @param {Object} cellCoordinates Cell coordinates for tables
 */
-function validateInput(definition, userInput, controlType, dataModel, cellCoordinates, requiredParameters) {
+function validateInput(definition, userInput, controlType, fields, cellCoordinates, requiredParameters) {
 	const data = definition;
 	const info = {
 		controlType: controlType,
-		dataModel: dataModel,
+		fields: fields,
 		cellCoordinates: cellCoordinates,
 		requiredParameters: requiredParameters
 	};
@@ -164,7 +164,7 @@ function validateInput(definition, userInput, controlType, dataModel, cellCoordi
  *		 "required": ["validation"]
  *	 }
  * @param {Any} userInput Contains the control value entered by the user
- * @param {Object} info optional dataset metadata and cell coordinates info
+ * @param {Object} info optional dataset fields and cell coordinates info
  * @return {boolean} true if valid, failMessage {Object} if false.
  */
 function validation(validationData, userInput, info) {
@@ -256,11 +256,11 @@ function visible(visibleData, userInput, info) {
 	throw new Error("Invalid visible schema");
 }
 
-function filter(filterDef, controller, datasetMetadata) {
+function filter(filterDef, controller, fields) {
 	if (filterDef && filterDef.filter && filterDef.filter.evaluate) {
-		return evaluateFilter(filterDef.filter.evaluate, controller, datasetMetadata);
+		return evaluateFilter(filterDef.filter.evaluate, controller, fields);
 	}
-	return datasetMetadata;
+	return fields;
 }
 
 function filteredEnum(filteredEnumData, userInput, info) {
@@ -289,13 +289,13 @@ function evaluate(data, userInput, info) {
 /**
  * Evaluate Definition.
  */
-function evaluateFilter(conditionItem, controller, datasetMetadata) {
+function evaluateFilter(conditionItem, controller, fields) {
 	if (conditionItem.or) {
-		return orFilter(conditionItem.or, controller, datasetMetadata);
+		return orFilter(conditionItem.or, controller, fields);
 	} else if (conditionItem.and) {
-		return andFilter(conditionItem.and, controller, datasetMetadata);
+		return andFilter(conditionItem.and, controller, fields);
 	} else if (conditionItem.condition) { // condition
-		return conditionFilter(conditionItem.condition, controller, datasetMetadata);
+		return conditionFilter(conditionItem.condition, controller, fields);
 	}
 	throw new Error("Failed to parse filter definition");
 }
@@ -305,7 +305,7 @@ function evaluateFilter(conditionItem, controller, datasetMetadata) {
  * Can nest any number of additional conditional types.
  * @param {Object} data an array of items
  * @param {string} userInput User-entered value to evaluate
- * @param {Object} info optional dataset metadata and cell coordinates info
+ * @param {Object} info optional dataset fields and cell coordinates info
  * @return {boolean}
  */
 function or(data, userInput, info) {
@@ -318,18 +318,13 @@ function or(data, userInput, info) {
 	return false;
 }
 
-function orFilter(conditionItems, controller, datasetMetadata) {
-	const filteredDataset = cloneDeep(datasetMetadata);
-	for (let idx = 0; idx < datasetMetadata.length; idx++) {
-		if (datasetMetadata[idx].fields) {
-			filteredDataset[idx].fields = [];
-			for (const item of conditionItems) {
-				const newData = evaluateFilter(item, controller, datasetMetadata[idx]);
-				filteredDataset[idx].fields = unionWith(filteredDataset[idx].fields, newData.fields, isEqual);
-			}
-		}
+function orFilter(conditionItems, controller, inFields) {
+	let fields = [];
+	for (const item of conditionItems) {
+		const newFields = evaluateFilter(item, controller, inFields);
+		fields = unionWith(fields, newFields, isEqual);
 	}
-	return filteredDataset;
+	return fields;
 }
 
 /**
@@ -337,7 +332,7 @@ function orFilter(conditionItems, controller, datasetMetadata) {
  * Can nest any number of additional conditional types.
  * @param {Object} data an array of items
  * @param {string} userInput User-entered value to evaluate
- * @param {Object} info optional dataset metadata and cell coordinates info
+ * @param {Object} info optional dataset fields and cell coordinates info
  * @return {boolean}
  */
 function and(data, userInput, info) {
@@ -352,17 +347,13 @@ function and(data, userInput, info) {
 	return true;
 }
 
-function andFilter(conditionItems, controller, datasetMetadata) {
-	const filteredData = cloneDeep(datasetMetadata);
-	for (const schema of filteredData) {
-		if (schema.fields) {
-			for (const item of conditionItems) {
-				const newData = evaluateFilter(item, controller, schema);
-				schema.fields = intersectionWith(schema.fields, newData.fields, isEqual);
-			}
-		}
+function andFilter(conditionItems, controller, inFields) {
+	let fields = cloneDeep(inFields);
+	for (const item of conditionItems) {
+		const newFields = evaluateFilter(item, controller, fields);
+		fields = intersectionWith(fields, newFields, isEqual);
 	}
-	return filteredData;
+	return fields;
 }
 
 /**
@@ -371,7 +362,7 @@ function andFilter(conditionItems, controller, datasetMetadata) {
  * @param {Object} data.parameter_ref required parameter the condition checks for
  * @param {Object} data.parameter_2_ref optional parameter the condition checks for
  * @param {Object} data.value optional value the condition checks for
- * @param {Object} info optional dataset metadata and cell coordinates info
+ * @param {Object} info optional dataset fields and cell coordinates info
  * @return {boolean} true if the parameter(s) satisfy the condition
  */
 function condition(data, userInput, info) {
@@ -438,9 +429,9 @@ function condition(data, userInput, info) {
  * @param {Object} data.op A single operator for the properties of the condition.
  * @param {Object} data.value optional value the condition checks for
  * @param {Object} data.values optional value the condition checks for
- * @param {Object} info optional dataset metadata and cell coordinates info
+ * @param {Object} info optional dataset fields and cell coordinates info
  */
-function conditionFilter(conditionItem, controller, datasetMetadata) {
+function conditionFilter(conditionItem, controller, fields) {
 	const op = conditionItem.op;
 	const values = [];
 	if (typeof conditionItem.value !== "undefined" && conditionItem.value !== null) {
@@ -450,32 +441,21 @@ function conditionFilter(conditionItem, controller, datasetMetadata) {
 	}
 	switch (op) {
 	case "dmMeasurement":
-		return _handleDmMeasurement(datasetMetadata, values);
+		return _handleDmMeasurement(fields, values);
 	case "dmType":
-		return _handleDmType(datasetMetadata, values);
+		return _handleDmType(fields, values);
 	case "dmModelingRole":
-		return _handleDmModelingRole(datasetMetadata, values);
+		return _handleDmModelingRole(fields, values);
 	default:
 		logger.warn("Ignoring unknown condition operation '" + op + "'");
-		return datasetMetadata;
+		return fields;
 	}
 }
 
-function _handleDmMeasurement(datasetMetadata, measurementValues) {
-	const filterDM = cloneDeep(datasetMetadata);
-	if (Array.isArray(filterDM)) {
-		for (const schema of filterDM) {
-			_filterDmMeasurement(schema, measurementValues);
-		}
-	} else {
-		_filterDmMeasurement(filterDM, measurementValues);
-	}
-	return filterDM;
-}
-
-function _filterDmMeasurement(schema, measurementValues) {
-	if (schema.fields) {
-		const filteredFields = schema.fields.filter(function(field) {
+function _handleDmMeasurement(inFields, measurementValues) {
+	let fields = cloneDeep(inFields);
+	if (fields) {
+		fields = fields.filter(function(field) {
 			for (const measurementValue of measurementValues) {
 				if (field.metadata && field.metadata.measure === measurementValue) {
 					// return true of any value meets condition
@@ -484,24 +464,14 @@ function _filterDmMeasurement(schema, measurementValues) {
 			}
 			return false;
 		});
-		schema.fields = filteredFields;
 	}
+	return fields;
 }
 
-function _handleDmType(datasetMetadata, typeValues) {
-	const filterDM = cloneDeep(datasetMetadata);
-	if (Array.isArray(filterDM)) {
-		for (const schema of filterDM) {
-			_filterDmType(schema, typeValues);
-		}
-	} else {
-		_filterDmType(filterDM, typeValues);
-	}
-	return filterDM;
-}
-function _filterDmType(schema, typeValues) {
-	if (schema.fields) {
-		const filteredFields = schema.fields.filter(function(field) {
+function _handleDmType(inFields, typeValues) {
+	let fields = cloneDeep(inFields);
+	if (fields) {
+		fields = fields.filter(function(field) {
 			for (const typeValue of typeValues) {
 				if (field.type === typeValue) {
 					// return true of any value meets condition
@@ -510,24 +480,14 @@ function _filterDmType(schema, typeValues) {
 			}
 			return false;
 		});
-		schema.fields = filteredFields;
 	}
+	return fields;
 }
 
-function _handleDmModelingRole(datasetMetadata, roleValues) {
-	const filterDM = cloneDeep(datasetMetadata);
-	if (Array.isArray(filterDM)) {
-		for (const schema of filterDM) {
-			_filterDmModelingRole(schema, roleValues);
-		}
-	} else {
-		_filterDmModelingRole(filterDM, roleValues);
-	}
-	return filterDM;
-}
-function _filterDmModelingRole(schema, roleValues) {
-	if (schema.fields) {
-		const filteredFields = schema.fields.filter(function(field) {
+function _handleDmModelingRole(inFields, roleValues) {
+	let fields = cloneDeep(inFields);
+	if (fields) {
+		fields = fields.filter(function(field) {
 			for (const roleValue of roleValues) {
 				if (field.metadata && field.metadata.modeling_role === roleValue) {
 					// return true of any value meets condition
@@ -536,8 +496,8 @@ function _filterDmModelingRole(schema, roleValues) {
 			}
 			return false;
 		});
-		schema.fields = filteredFields;
 	}
+	return fields;
 }
 
 function _getUserInput(userInput, param, cellCoordinates) {
@@ -838,7 +798,7 @@ function _handleNotContains(param, paramInput, userInput, param2, value, info) {
 function _handleColNotExists(paramInput, info) {
 	const supportedControls = ["textfield", "structuretable", "structureeditor", "structurelisteditor"];
 	if (supportedControls.indexOf(info.controlType) >= 0) {
-		if (!info.dataModel) {
+		if (!info.fields) {
 			return true;
 		}
 		let value = paramInput;
@@ -851,13 +811,12 @@ function _handleColNotExists(paramInput, info) {
 			value = paramInput[info.cellCoordinates.rowIndex][info.cellCoordinates.colIndex];
 		}
 		if (!info.cellCoordinates || info.cellCoordinates.skipVal !== value) {
-			for (const schema of info.dataModel) {
-				for (const field of schema.fields) {
-					if (field.name === value) {
-						return false;
-					}
+			for (const field of info.fields) {
+				if (field.name === value) {
+					return false;
 				}
 			}
+
 		}
 		return true;
 	}

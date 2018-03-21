@@ -38,19 +38,19 @@ class FieldPicker extends EditorControl {
 		super(props);
 		this.state = {
 			checkedAll: false,
-			data: this.props.dataModel,
-			fields: this.formatSchemaFields(this.props.dataModel),
+			fields: props.fields,
 			filterIcons: [],
 			filterText: "",
 			initialControlValues: [],
 			newControlValues: [],
 			headerWidth: 756
 		};
+		this.multiSchema = props.controller.getDatasetMetadataSchemas() &&
+			props.controller.getDatasetMetadataSchemas().length > 1;
 		this.filterList = [];
 		this.updateDimensions = this.updateDimensions.bind(this);
 
 		this.filterType = this.filterType.bind(this);
-		this.formatSchemaFields = this.formatSchemaFields.bind(this);
 		this.getDefaultRow = this.getDefaultRow.bind(this);
 		this.getTableData = this.getTableData.bind(this);
 		this.getVisibleData = this.getVisibleData.bind(this);
@@ -64,7 +64,6 @@ class FieldPicker extends EditorControl {
 		this.onSort = this.onSort.bind(this);
 		this.onFilter = this.onFilter.bind(this);
 		this._getRecordForRow = this._getRecordForRow.bind(this);
-		this.fieldInMultipleDatasetMetadataSchemas = this.fieldInMultipleDatasetMetadataSchemas.bind(this);
 		this.removeInvalidFields = this.removeInvalidFields.bind(this);
 	}
 
@@ -124,88 +123,46 @@ class FieldPicker extends EditorControl {
 	 */
 	removeInvalidFields(controlValues) {
 		const validFields = [];
-		const dataModels = this.props.dataModel;
 		const isTable = this.props.control.valueDef.propType === "structure";
 		for (let idx = 0; idx < controlValues.length; idx++) {
-			let prefix = "";
 			let fieldName;
 			if (isTable) {
 				fieldName = controlValues[idx][this.dataColumnIndex];
 			} else {
 				fieldName = controlValues[idx];
 			}
-			const dotIndex = fieldName.indexOf(".");
-			if (this.multiSchema && dotIndex > -1) {
-				prefix = fieldName.substr(0, dotIndex);
-				fieldName = fieldName.substr(dotIndex + 1);
-			}
-			if (this.hasDataModelField(dataModels, prefix, fieldName)) {
+
+			const foundField = this.props.fields.find(function(field) {
+				return field.name === fieldName || fieldName === field.schema + "." + field.origName;
+			});
+			if (foundField) {
 				validFields.push(controlValues[idx]);
 			}
 		}
 		return validFields;
 	}
 
-	/**
-	 * Determines if the given field is present in any of the input data models.
-	 *
-	 * @param {array} dataModels: Array of available data models
-	 * @param {string} prefix: Data model identifier prefix
-	 * @param {string} fieldName: Name of a field to search for
-	 * @return {boolean} True if the field was found
-	 */
-	hasDataModelField(dataModels, prefix, fieldName) {
-		const schemas = this.props.controller.getDatasetMetadataSchemas();
-		const dmIndex = schemas.indexOf(prefix);
-		if (dmIndex > -1) {
-			const dataModel = this.props.controller.getDatasetMetadata()[dmIndex];
-			for (let field = 0; field < dataModel.fields.length; field++) {
-				if (fieldName === dataModel.fields[field].name) {
-					return true;
-				}
-			}
-		} else if (prefix === "") {
-			// Cycle all of the data model fields
-			for (let idx = 0; idx < dataModels.length; idx++) {
-				const fields = dataModels[idx].fields;
-				for (let id2 = 0; id2 < fields.length; id2++) {
-					if (fields[id2].name === fieldName) {
-						return true;
-					}
-				}
-			}
-		}
-		return false;
-	}
-
 	getAvailableFilters() {
 		const filters = [];
-		for (const schema of this.state.data) {
-			const fields = schema.fields;
-			const filterList = DATA_TYPES;
-
-			for (let i = 0; i < filterList.length; i++) {
-				for (let j = 0; j < fields.length; j++) {
-					var field = fields[j];
-
-					if (filterList[i] === field.type) {
-						const filter = {
-							"type": field.type
-						};
-
-						let duplicate = false;
-						for (const filtered of filters) {
-							if (filtered.type === filter.type) {
-								duplicate = true;
-								break;
-							}
+		const filterList = DATA_TYPES;
+		for (let i = 0; i < filterList.length; i++) {
+			for (let j = 0; j < this.props.fields.length; j++) {
+				const field = this.props.fields[j];
+				if (filterList[i] === field.type) {
+					const filter = {
+						"type": field.type
+					};
+					let duplicate = false;
+					for (const filtered of filters) {
+						if (filtered.type === filter.type) {
+							duplicate = true;
+							break;
 						}
-
-						if (!duplicate) {
-							filters.push(filter);
-						}
-						break;
 					}
+					if (!duplicate) {
+						filters.push(filter);
+					}
+					break;
 				}
 			}
 		}
@@ -217,8 +174,8 @@ class FieldPicker extends EditorControl {
 		const tableData = [];
 		const newControlValues = this.state.newControlValues;
 		for (let i = 0; i < fields.length; i++) {
-			var field = fields[i];
-			var checked = false;
+			const field = fields[i];
+			let checked = false;
 
 			if (this.state.checkedAll) {
 				checked = true;
@@ -230,15 +187,8 @@ class FieldPicker extends EditorControl {
 					} else {
 						key = newControlValues[j];
 					}
-
-					if (this.multiSchema && key.indexOf(".") > -1) {
-						if (this.compareNameSchema(key, field)) {
-							checked = true;
-							break;
-						}
-					}
-
-					if (key === field.name) {
+					// control values can be prefix by schema but don't have to be
+					if (key === field.name || key === field.schema + "." + field.origName) {
 						checked = true;
 						break;
 					}
@@ -251,10 +201,9 @@ class FieldPicker extends EditorControl {
 					checked={checked}
 					onChange={this.handleFieldChecked}
 					data-name={field.name}
-					data-schema={field.schema}
 					data-type={field.type}
 				/></div></Td>);
-			columns.push(<Td key="field-picker-column-fieldname" column="fieldName" style={{ "width": fieldWidth }}>{field.name}</Td>);
+			columns.push(<Td key="field-picker-column-fieldname" column="fieldName" style={{ "width": fieldWidth }}>{field.origName}</Td>);
 
 			if (this.multiSchema) {
 				columns.push(<Td key="field-picker-column-schemaname" column="schemaName" style={{ "width": fieldWidth }}>{field.schema}</Td>);
@@ -319,32 +268,6 @@ class FieldPicker extends EditorControl {
 		}
 	}
 
-	formatSchemaFields(dataModel) {
-		let fields = [];
-		if (dataModel.length > 1) {
-			this.multiSchema = true;
-			for (let idx = 0; idx < dataModel.length; idx++) {
-				const schemas = this.props.controller.getDatasetMetadataSchemas();
-				dataModel[idx].fields.forEach(function(field) {
-					field.schema = schemas[idx];
-				});
-				fields = fields.concat(dataModel[idx].fields);
-			}
-		} else {
-			this.multiSchema = false;
-			if (dataModel.length > 0) {
-				fields = fields.concat(dataModel[0].fields);
-			}
-		}
-		return fields;
-	}
-
-	compareNameSchema(key, field) {
-		const keyField = key.split(".");
-		return keyField[0].trim() === field.schema.toString() &&
-						keyField[1].trim() === field.name;
-	}
-
 	handleSave() {
 		if (this.props.control.subControls) {
 			this.setReadOnlyColumnValue();
@@ -371,18 +294,13 @@ class FieldPicker extends EditorControl {
 
 		if (evt.target.checked) {
 			for (let i = 0; i < data.length; i++) {
-				let schemaName = data[i].name;
-				// if more than one field with the same name in datasetMetadata, append schema to name
-				if (this.fieldInMultipleDatasetMetadataSchemas(schemaName)) {
-					schemaName = data[i].schema + "." + schemaName;
-				}
-
+				const fieldName = data[i].name;
 				// add already selected fields
 				const selected = (!newControlValues) ? [] : newControlValues.filter(function(element) {
 					if (that.props.control.defaultRow) {
-						return element[that.dataColumnIndex] === schemaName;
+						return element[that.dataColumnIndex] === fieldName;
 					}
-					return element === schemaName;
+					return element === fieldName;
 				});
 
 				if (selected.length > 0) {
@@ -398,9 +316,9 @@ class FieldPicker extends EditorControl {
 					});
 					if (visible) {
 						if (this.props.control.defaultRow) {
-							selectAll.push(this._getRecordForRow(schemaName));
+							selectAll.push(this._getRecordForRow(fieldName));
 						} else {
-							selectAll.push(schemaName);
+							selectAll.push(fieldName);
 						}
 					}
 				}
@@ -409,20 +327,12 @@ class FieldPicker extends EditorControl {
 			for (let l = 0; l < newControlValues.length; l++) {
 				const duplicate = visibleData.some(function(field) {
 					let key = [];
-					let found = false;
 					if (that.props.control.defaultRow) {
 						key = newControlValues[l][that.dataColumnIndex];
 					} else {
 						key = newControlValues[l];
 					}
-
-					if (that.multiSchema && key.indexOf(".") > -1) {
-						found = that.compareNameSchema(key, field);
-					} else {
-						found = field.name === key;
-					}
-
-					return found;
+					return field.name === key;
 				});
 				if (!duplicate) {
 					selectAll.push(newControlValues[l]);
@@ -452,13 +362,7 @@ class FieldPicker extends EditorControl {
 
 	handleFieldChecked(evt) {
 		const current = this.state.newControlValues;
-		let selectedFieldName = evt.currentTarget.getAttribute("data-name");
-		const selectedFieldSchema = evt.currentTarget.getAttribute("data-schema");
-
-		// if more than one field with the same name in datasetMetadata, append schema to name
-		if (this.fieldInMultipleDatasetMetadataSchemas(selectedFieldName)) {
-			selectedFieldName = selectedFieldSchema + "." + selectedFieldName;
-		}
+		const selectedFieldName = evt.currentTarget.getAttribute("data-name");
 		const selectedField = this._getRecordForRow(selectedFieldName);
 
 		const that = this;
@@ -562,7 +466,7 @@ class FieldPicker extends EditorControl {
 		let controlValue = this.state.fields;
 		controlValue = sortBy(controlValue, function(field) {
 			switch (spec.column) {
-			case "fieldName": return field.name;
+			case "fieldName": return field.origName;
 			case "dataType": return field.type;
 			case "schemaName": return field.schema;
 			default: return null;
@@ -572,21 +476,6 @@ class FieldPicker extends EditorControl {
 			controlValue = controlValue.reverse();
 		}
 		this.setState({ fields: controlValue });
-	}
-
-
-	/**
-	* @return true if field name exists in more than one schema
-	*/
-	fieldInMultipleDatasetMetadataSchemas(fieldName) {
-		const schemas = this.props.controller.getDatasetMetadata();
-		let count = 0;
-		for (const schema of schemas) {
-			if (schema.fields.filter((field) => field.name === fieldName).length > 0) {
-				count++;
-			}
-		}
-		return count > 1;
 	}
 
 	_genBackButton() {
@@ -742,13 +631,6 @@ class FieldPicker extends EditorControl {
 						match = true;
 						break;
 					}
-
-					if (that.multiSchema && key.indexOf(".") > -1) {
-						if (that.compareNameSchema(key, visibleData[k])) {
-							match = true;
-							break;
-						}
-					}
 				}
 				return match;
 			});
@@ -844,7 +726,7 @@ class FieldPicker extends EditorControl {
 FieldPicker.propTypes = {
 	closeFieldPicker: PropTypes.func.isRequired,
 	currentControlValues: PropTypes.object.isRequired,
-	dataModel: PropTypes.array,
+	fields: PropTypes.array,
 	control: PropTypes.object,
 	title: PropTypes.string,
 	controller: PropTypes.object.isRequired,
