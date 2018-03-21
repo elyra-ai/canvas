@@ -242,6 +242,15 @@
 	font-weight: 100;
 }
 
+.checkbox--dark + label::before, .checkbox--dark[type="checkbox"][disabled] + label::before {
+	border: 2px solid #8C9BA5;
+}
+
+.text--dark, .text--dark:focus {
+	border-color: #8C9BA5;
+	color: #152935;
+}
+
 /* Dropdown menu */
 #app-sidepanel .select__options__item {
 	border-left: 1px solid #152935;
