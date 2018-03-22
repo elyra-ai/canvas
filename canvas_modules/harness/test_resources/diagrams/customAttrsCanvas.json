@@ -1,13 +1,12 @@
 {
   "doc_type": "pipeline",
-  "version": "1.0",
-  "json_schema": "http://www.ibm.com/ibm/wdp/flow-v1.0/pipeline-flow-v1-schema.json",
+  "version": "2.0",
+  "json_schema": "http://www.ibm.com/ibm/wdp/flow-v2.0/pipeline-flow-v2-schema.json",
   "id": "153651d6-9b88-423c-b01b-861f12d01489",
   "primary_pipeline": "153651d6-9b88-423c-b01b-861f12d01489",
   "pipelines": [
     {
       "id": "153651d6-9b88-423c-b01b-861f12d01489",
-      "runtime": "",
       "nodes": [
         {
           "id": "idGWRVT47XDV",
@@ -19,7 +18,8 @@
               "x_pos": 300,
               "y_pos": 25,
               "class_name": "canvas-node",
-              "label": "No Custom Attrs"
+              "label": "No Custom Attrs",
+              "messages": []
             }
           },
           "inputs": [
@@ -49,7 +49,8 @@
                 }
               }
             }
-          ]
+          ],
+          "parameters": {}
         },
         {
           "id": "id1ZZTZ3ZMYWL",
@@ -61,7 +62,8 @@
               "x_pos": 600,
               "y_pos": 25,
               "class_name": "canvas-node",
-              "label": "Custom Attrs"
+              "label": "Custom Attrs",
+              "messages": []
             }
           },
           "inputs": [
@@ -91,7 +93,8 @@
                 }
               }
             }
-          ]
+          ],
+          "parameters": {}
         }
       ],
       "app_data": {
@@ -109,8 +112,15 @@
             }
           ]
         }
-      }
+      },
+      "runtime_ref": "test_runtime"
     }
   ],
-  "schemas": []
+  "schemas": [],
+  "runtimes": [
+    {
+      "id": "test_runtime",
+      "name": "test_runtime"
+    }
+  ]
 }

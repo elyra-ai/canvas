@@ -1,13 +1,12 @@
 {
   "doc_type": "pipeline",
-  "version": "1.0",
-  "json_schema": "http://www.ibm.com/ibm/wdp/flow-v1.0/pipeline-flow-v1-schema.json",
+  "version": "2.0",
+  "json_schema": "http://www.ibm.com/ibm/wdp/flow-v2.0/pipeline-flow-v2-schema.json",
   "id": "153651d6-9b88-423c-b01b-861f12d01489",
   "primary_pipeline": "153651d6-9b88-423c-b01b-861f12d01489",
   "pipelines": [
     {
       "id": "153651d6-9b88-423c-b01b-861f12d01489",
-      "runtime": "",
       "nodes": [
         {
           "id": "idGWRVT47XDV",
@@ -25,7 +24,8 @@
                   "position": "topLeft",
                   "class_name": "leftDecoration"
                 }
-              ]
+              ],
+              "messages": []
             }
           },
           "inputs": [
@@ -55,7 +55,8 @@
                 }
               }
             }
-          ]
+          ],
+          "parameters": {}
         },
         {
           "id": "id1ZZTZ3ZMYWL",
@@ -75,7 +76,8 @@
                   "hotspot": true,
                   "id": "topRightDecorator"
                 }
-              ]
+              ],
+              "messages": []
             }
           },
           "inputs": [
@@ -105,7 +107,8 @@
                 }
               }
             }
-          ]
+          ],
+          "parameters": {}
         },
         {
           "id": "id2PZSCTRPRIJ",
@@ -123,7 +126,8 @@
                   "position": "bottomLeft",
                   "class_name": "leftDecoration"
                 }
-              ]
+              ],
+              "messages": []
             }
           },
           "inputs": [
@@ -153,7 +157,8 @@
                 }
               }
             }
-          ]
+          ],
+          "parameters": {}
         },
         {
           "id": "id125TTEEIK7V",
@@ -173,7 +178,8 @@
                   "hotspot": true,
                   "id": "bottomRightDecorator"
                 }
-              ]
+              ],
+              "messages": []
             }
           },
           "inputs": [
@@ -203,7 +209,8 @@
                 }
               }
             }
-          ]
+          ],
+          "parameters": {}
         },
         {
           "id": "id1222222222",
@@ -215,7 +222,8 @@
               "x_pos": 303,
               "y_pos": 306,
               "class_name": "canvas-node",
-              "label": "No Decorator"
+              "label": "No Decorator",
+              "messages": []
             }
           },
           "inputs": [
@@ -245,7 +253,8 @@
                 }
               }
             }
-          ]
+          ],
+          "parameters": {}
         },
         {
           "id": "id125111111",
@@ -266,7 +275,8 @@
                   "id": "zoomInDecorator",
                   "image": "/images/decorators/zoom-in_32.svg"
                 }
-              ]
+              ],
+              "messages": []
             }
           },
           "inputs": [
@@ -296,7 +306,8 @@
                 }
               }
             }
-          ]
+          ],
+          "parameters": {}
         }
       ],
       "app_data": {
@@ -382,8 +393,15 @@
             }
           ]
         }
-      }
+      },
+      "runtime_ref": "test_runtime"
     }
   ],
-  "schemas": []
+  "schemas": [],
+  "runtimes": [
+    {
+      "id": "test_runtime",
+      "name": "test_runtime"
+    }
+  ]
 }

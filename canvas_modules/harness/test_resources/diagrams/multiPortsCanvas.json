@@ -1,13 +1,12 @@
 {
   "doc_type": "pipeline",
-  "version": "1.0",
-  "json_schema": "http://www.ibm.com/ibm/wdp/flow-v1.0/pipeline-flow-v1-schema.json",
+  "version": "2.0",
+  "json_schema": "http://www.ibm.com/ibm/wdp/flow-v2.0/pipeline-flow-v2-schema.json",
   "id": "153651d6-9b88-423c-b01b-861f12d01489",
   "primary_pipeline": "153651d6-9b88-423c-b01b-861f12d01489",
   "pipelines": [
     {
       "id": "153651d6-9b88-423c-b01b-861f12d01489",
-      "runtime": "",
       "nodes": [
         {
           "id": "idGWRVT47XDV",
@@ -20,7 +19,8 @@
               "y_pos": 219,
               "class_name": "canvas-node",
               "label": "Define Types",
-              "description": "Define Types node description"
+              "description": "Define Types node description",
+              "messages": []
             }
           },
           "inputs": [
@@ -97,7 +97,8 @@
                 }
               }
             }
-          ]
+          ],
+          "parameters": {}
         },
         {
           "id": "id2PZSCTRPRIJ",
@@ -110,7 +111,8 @@
               "y_pos": 219,
               "class_name": "canvas-node",
               "label": "Na_to_K",
-              "description": "Na_to_K node description"
+              "description": "Na_to_K node description",
+              "messages": []
             }
           },
           "inputs": [
@@ -162,7 +164,8 @@
                 }
               }
             }
-          ]
+          ],
+          "parameters": {}
         },
         {
           "id": "id8I6RH2V91XW",
@@ -174,30 +177,35 @@
               "y_pos": 151,
               "class_name": "canvas-node",
               "label": "C5.0",
-              "description": "This is a very long node description which explains what the node does."
+              "description": "This is a very long node description which explains what the node does.",
+              "messages": []
             }
           },
-          "input": {
-            "id": "inPort",
-            "app_data": {
-              "ui_data": {
-                "cardinality": {
-                  "min": 0,
-                  "max": 1
-                },
-                "label": "Input Port"
-              }
-            },
-            "link": {
-              "node_id_ref": "idGWRVT47XDV",
+          "inputs": [
+            {
+              "id": "inPort",
               "app_data": {
                 "ui_data": {
-                  "class_name": "canvas-data-link"
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
                 }
               },
-              "port_id_ref": "outPort1"
+              "links": [
+                {
+                  "node_id_ref": "idGWRVT47XDV",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "canvas-data-link"
+                    }
+                  },
+                  "port_id_ref": "outPort1"
+                }
+              ]
             }
-          }
+          ]
         },
         {
           "id": "id5KIRGGJ3FYT",
@@ -208,30 +216,35 @@
               "x_pos": 606,
               "y_pos": 310,
               "class_name": "canvas-node",
-              "label": "Neural Net"
+              "label": "Neural Net",
+              "messages": []
             }
           },
-          "input": {
-            "id": "inPort",
-            "app_data": {
-              "ui_data": {
-                "cardinality": {
-                  "min": 0,
-                  "max": 1
-                },
-                "label": "Input Port"
-              }
-            },
-            "link": {
-              "node_id_ref": "idGWRVT47XDV",
+          "inputs": [
+            {
+              "id": "inPort",
               "app_data": {
                 "ui_data": {
-                  "class_name": "canvas-data-link"
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
                 }
               },
-              "port_id_ref": "outPort2"
+              "links": [
+                {
+                  "node_id_ref": "idGWRVT47XDV",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "canvas-data-link"
+                    }
+                  },
+                  "port_id_ref": "outPort2"
+                }
+              ]
             }
-          }
+          ]
         },
         {
           "id": "id6PXRG57DGIV",
@@ -242,21 +255,24 @@
               "x_pos": 96,
               "y_pos": 219,
               "class_name": "canvas-node",
-              "label": "DRUG1n"
+              "label": "DRUG1n",
+              "messages": []
             }
           },
-          "output": {
-            "id": "outPort",
-            "app_data": {
-              "ui_data": {
-                "cardinality": {
-                  "min": 0,
-                  "max": 1
-                },
-                "label": "Output Port"
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Output Port"
+                }
               }
             }
-          }
+          ]
         },
         {
           "id": "id5RYSYN9CV1H",
@@ -268,7 +284,8 @@
               "x_pos": 328,
               "y_pos": 219,
               "class_name": "canvas-node",
-              "label": "Discard Fields"
+              "label": "Discard Fields",
+              "messages": []
             }
           },
           "inputs": [
@@ -320,7 +337,8 @@
                 }
               }
             }
-          ]
+          ],
+          "parameters": {}
         }
       ],
       "app_data": {
@@ -376,8 +394,15 @@
             }
           ]
         }
-      }
+      },
+      "runtime_ref": "test_runtime"
     }
   ],
-  "schemas": []
+  "schemas": [],
+  "runtimes": [
+    {
+      "id": "test_runtime",
+      "name": "test_runtime"
+    }
+  ]
 }

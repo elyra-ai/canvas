@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "description": "WDP Pipeline Flow Schema",
   "type": "object",
-  "id": "http://www.ibm.com/ibm/wdp/flow-v1.0/pipeline-flow-v1-schema.json",
+  "id": "http://www.ibm.com/ibm/wdp/flow-v2.0/pipeline-flow-v2-schema.json",
   "properties": {
     "doc_type": {
       "description": "Document type",
@@ -11,13 +11,13 @@
     "version": {
       "description": "Pipeline-flow schema version",
       "enum": [
-        "1.0"
+        "2.0"
       ]
     },
     "json_schema": {
       "description": "Refers to the JSON schema used to validate documents of this type",
       "enum": [
-        "http://www.ibm.com/ibm/wdp/flow-v1.0/pipeline-flow-v1-schema.json"
+        "http://www.ibm.com/ibm/wdp/flow-v2.0/pipeline-flow-v2-schema.json"
       ]
     },
     "open_with_tool": {
@@ -46,7 +46,16 @@
       "type": "array",
       "minItems": 0,
       "items": {
-        "$ref": "http://www.ibm.com/ibm/wml/datarecord-metadata/v1.0/datarecord-metadata-v1-schema.json#/definitions/record_schema"
+        "$ref": "http://www.ibm.com/ibm/wml/datarecord-metadata/v2.0/datarecord-metadata-v2-schema.json#/definitions/record_schema"
+      },
+      "uniqueItems": true
+    },
+    "runtimes": {
+      "description": "Array of runtime objects referred to in the document",
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "$ref": "#/definitions/runtime_def"
       },
       "uniqueItems": true
     },
@@ -70,8 +79,12 @@
           "description": "Unique identifier",
           "type": "string"
         },
-        "runtime": {
-          "description": "Runtime associated with the operations in the current pipeline",
+        "name": {
+          "description": "User-readable name",
+          "type": "string"
+        },
+        "runtime_ref": {
+          "description": "Reference to the id of the runtime associated with the operations in the current pipeline",
           "type": "string"
         },
         "nodes": {
@@ -99,13 +112,22 @@
           },
           "uniqueItems": true
         },
+        "external_parameters": {
+          "description": "Array of parameterized property references",
+          "type": "array",
+          "minItems": 0,
+          "items": {
+            "$ref": "http://www.ibm.com/ibm/wdp/flow-v2.0/parameters-v2-schema.json#/definitions/param_property_ref"
+          },
+          "uniqueItems": true
+        },
         "app_data": {
           "$ref": "#/definitions/app_data_def"
         }
       },
       "required": [
         "id",
-        "runtime",
+        "runtime_ref",
         "nodes"
       ],
       "additionalProperties": false
@@ -139,6 +161,10 @@
           "type": "object",
           "properties": {},
           "additionalProperties": true
+        },
+        "runtime_ref": {
+          "description": "Optional reference to the id of the runtime associated with the current node",
+          "type": "string"
         },
         "app_data": {
           "$ref": "#/definitions/app_data_def"
@@ -214,17 +240,27 @@
             "binding"
           ]
         },
-        "output": {
-          "$ref": "#/definitions/port_binding_def"
+        "outputs": {
+          "$ref": "#/definitions/ports_def"
         },
         "app_data": {
           "$ref": "#/definitions/app_data_def"
         },
-        "connection":{
-          "$ref":"http://www.ibm.com/ibm/wdp/flow-v1.0/pipeline-connection-v1-schema.json#/definitions/common_pipeline_connection_def"
+        "connection": {
+          "$ref": "http://www.ibm.com/ibm/wdp/flow-v2.0/pipeline-connection-v2-schema.json#/definitions/common_pipeline_connection_def"
         },
-        "data_asset":{
-          "$ref":"http://www.ibm.com/ibm/wdp/flow-v1.0/pipeline-connection-v1-schema.json#/definitions/common_pipeline_data_asset_def"
+        "data_asset": {
+          "$ref": "http://www.ibm.com/ibm/wdp/flow-v2.0/pipeline-connection-v2-schema.json#/definitions/common_pipeline_data_asset_def"
+        },
+        "op": {
+          "description": "Binding node type identifier",
+          "type": "string"
+        },
+        "parameters": {
+          "description": "Parameters for the binding node",
+          "type": "object",
+          "properties": {},
+          "additionalProperties": true
         }
       },
       "required": [
@@ -238,7 +274,7 @@
       "type": "object",
       "properties": {
         "id": {
-          "description": "Unique identifier for the binding",
+          "description": "Unique identifier for the binding within the current pipeline",
           "type": "string"
         },
         "type": {
@@ -247,17 +283,27 @@
             "binding"
           ]
         },
-        "input": {
-          "$ref": "#/definitions/port_binding_def"
+        "inputs": {
+          "$ref": "#/definitions/ports_def"
         },
         "app_data": {
           "$ref": "#/definitions/app_data_def"
         },
-        "connection":{
-          "$ref":"http://www.ibm.com/ibm/wdp/flow-v1.0/pipeline-connection-v1-schema.json#/definitions/common_pipeline_connection_def"
+        "connection": {
+          "$ref": "http://www.ibm.com/ibm/wdp/flow-v2.0/pipeline-connection-v2-schema.json#/definitions/common_pipeline_connection_def"
         },
-        "data_asset":{
-          "$ref":"http://www.ibm.com/ibm/wdp/flow-v1.0/pipeline-connection-v1-schema.json#/definitions/common_pipeline_data_asset_def"
+        "data_asset": {
+          "$ref": "http://www.ibm.com/ibm/wdp/flow-v2.0/pipeline-connection-v2-schema.json#/definitions/common_pipeline_data_asset_def"
+        },
+        "op": {
+          "description": "Binding node type identifier",
+          "type": "string"
+        },
+        "parameters": {
+          "description": "Parameters for the binding node",
+          "type": "object",
+          "properties": {},
+          "additionalProperties": true
         }
       },
       "required": [
@@ -296,6 +342,10 @@
           "properties": {},
           "additionalProperties": true
         },
+        "runtime_ref": {
+          "description": "Reference to the runtime associated with the current node",
+          "type": "string"
+        },
         "app_data": {
           "$ref": "#/definitions/app_data_def"
         }
@@ -327,30 +377,6 @@
             "$ref": "#/definitions/link_def"
           },
           "uniqueItems": true
-        },
-        "app_data": {
-          "$ref": "#/definitions/app_data_def"
-        }
-      },
-      "required": [
-        "id"
-      ],
-      "additionalProperties": false
-    },
-    "port_binding_def": {
-      "description": "Definition (input/output) of a binding port on a node (bound or unbound). If no binding is present the port is bound at runtime via a configuration object or wrapper document.",
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Unique identifier",
-          "type": "string"
-        },
-        "schema_ref": {
-          "description": "Optional data record schema associated with the port",
-          "type": "string"
-        },
-        "link": {
-          "$ref": "#/definitions/link_def"
         },
         "app_data": {
           "$ref": "#/definitions/app_data_def"
@@ -415,10 +441,6 @@
       "description": "Node link definition",
       "type": "object",
       "properties": {
-        "pipeline_id_ref": {
-          "description": "id of the pipeline this link connects to",
-          "type": "string"
-        },
         "node_id_ref": {
           "description": "id of a node this link connects to",
           "type": "string"
@@ -443,21 +465,49 @@
         "ui_data": {
           "anyOf": [
             {
-              "$ref": "http://www.ibm.com/ibm/wdp/canvas/v1.0/pipeline-flow-ui-schema.json#/definitions/pipeline_overview"
+              "$ref": "http://www.ibm.com/ibm/wdp/canvas/v2.0/pipeline-flow-ui-v2-schema.json#/definitions/pipeline_overview"
             },
             {
-              "$ref": "http://www.ibm.com/ibm/wdp/canvas/v1.0/pipeline-flow-ui-schema.json#/definitions/pipeline_def"
+              "$ref": "http://www.ibm.com/ibm/wdp/canvas/v2.0/pipeline-flow-ui-v2-schema.json#/definitions/pipeline_def"
             },
             {
-              "$ref": "http://www.ibm.com/ibm/wdp/canvas/v1.0/pipeline-flow-ui-schema.json#/definitions/port_info_def"
+              "$ref": "http://www.ibm.com/ibm/wdp/canvas/v2.0/pipeline-flow-ui-v2-schema.json#/definitions/port_info_def"
             },
             {
-              "$ref": "http://www.ibm.com/ibm/wdp/canvas/v1.0/pipeline-flow-ui-schema.json#/definitions/node_info_def"
+              "$ref": "http://www.ibm.com/ibm/wdp/canvas/v2.0/pipeline-flow-ui-v2-schema.json#/definitions/node_info_def"
+            },
+            {
+              "$ref": "http://www.ibm.com/ibm/wdp/canvas/v2.0/pipeline-flow-ui-v2-schema.json#/definitions/runtime_info_def"
             }
           ]
         }
       },
       "additionalProperties": true
+    },
+    "runtime_def": {
+      "description": "Runtime associated with the operations in the current pipeline",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Unique internal runtime identifier",
+          "type": "string"
+        },
+        "name": {
+          "description": "The runtime name",
+          "type": "string"
+        },
+        "version": {
+          "description": "The runtime version. When not present the latest version is assumed",
+          "type": "string"
+        },
+        "app_data": {
+          "$ref": "#/definitions/app_data_def"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
     }
   }
 }

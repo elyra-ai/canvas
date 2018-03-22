@@ -14,7 +14,6 @@ import { expect } from "chai";
 import isEqual from "lodash/isEqual";
 import initialCanvas from "../test_resources/json/startCanvas.json";
 import clonedCanvas from "../test_resources/json/canvasWithClones.json";
-import startPipelineFlow from "../test_resources/json/startPipelineFlow.json";
 import paletteJson from "../test_resources/json/testPalette.json";
 import filterNode from "../test_resources/json/filterNode.json";
 import horizontalLayoutCanvas from "../test_resources/json/horizontalLayoutCanvas.json";
@@ -25,9 +24,12 @@ import moveVarNode from "../test_resources/json/moveVarNode.json";
 import moveNodeHorizontalLayoutCanvas from "../test_resources/json/moveNodeHorizontalLayoutCanvas.json";
 import moveNodeVerticalLayoutCanvas from "../test_resources/json/moveNodeVerticalLayoutCanvas.json";
 import nodeParameters from "../test_resources/json/nodeParameters.json";
-import nodeParameterAddedPipelineFlow from "../test_resources/json/nodeParameterAddedPipelineFlow.json";
+import startPipelineFlow from "../test_resources/json/startPipelineFlow.json";
+import startPipelineFlowParamsAdded from "../test_resources/json/startPipelineFlowParamsAdded.json";
 import pipelineFlowTest1Start from "../test_resources/json/pipelineFlowTest1Start.json";
 import pipelineFlowTest1Expected from "../test_resources/json/pipelineFlowTest1Expected.json";
+import pipelineFlowV1 from "../test_resources/json/pipelineFlowV1.json";
+import pipelineFlowV2 from "../test_resources/json/pipelineFlowV2.json";
 
 
 import ObjectModel from "../../src/object-model/object-model.js";
@@ -201,7 +203,7 @@ describe("ObjectModel API handle model OK", () => {
 		objectModel.setPipelineFlow(startPipelineFlow);
 		objectModel.setNodeParameters("id8I6RH2V91XW", { "paramA": "Value for Param A", "paramB": "Value for Param B" });
 
-		const expectedCanvas = nodeParameterAddedPipelineFlow;
+		const expectedCanvas = startPipelineFlowParamsAdded;
 		const actualCanvas = objectModel.getPipelineFlow();
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
@@ -308,6 +310,22 @@ describe("ObjectModel API handle model OK", () => {
 
 		expect(isEqual(expectedClearedMessages, actualClearedMessages)).to.be.true;
 
+	});
+
+	it("should upgrade a pipelineFlow from v1 to v2", () => {
+		logger.info("should upgrade a pipelineFlow from v1 to v2");
+
+		deepFreeze(pipelineFlowV1);
+
+		objectModel.setPipelineFlow(pipelineFlowV1);
+
+		const expectedCanvas = pipelineFlowV2;
+		const actualCanvas = objectModel.getPipelineFlow();
+
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
+
+		expect(isEqual(JSON.stringify(expectedCanvas, null, 4), JSON.stringify(actualCanvas, null, 4))).to.be.true;
 	});
 
 	it("should add palette item into existing test category", () => {

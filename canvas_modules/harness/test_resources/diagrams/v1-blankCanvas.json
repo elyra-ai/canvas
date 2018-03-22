@@ -7,7 +7,7 @@
 	"pipelines": [
 		{
 			"id": "empty-pipeline",
-			"runtime": "",
+			"runtime": "test_runtime",
 			"runtime": "scala-spark-2.0.1",
 			"nodes": []
 		}

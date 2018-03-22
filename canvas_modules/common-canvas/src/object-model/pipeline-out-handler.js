@@ -23,33 +23,20 @@ export default class PipelineOutHandler {
 		pipeline.nodes.forEach((pNode) => {
 			const index = canvasInfo.nodes.findIndex((ciNode) => ciNode.id === pNode.id);
 			if (index > -1) {
-				var newNode;
-				if (pNode.type === "binding") {
-					newNode = Object.assign({}, pNode, {
-						app_data: this.getNodeAppData(pNode.app_data, canvasInfo.nodes[index]) });
-					if (pNode.input) {
-						newNode = Object.assign({}, newNode, {
-							input: this.getInput(canvasInfo.nodes[index].input_ports[0], pNode.input, canvasInfo.links, pNode.id) });
-					}
-					if (pNode.output) {
-						newNode = Object.assign({}, newNode, {
-							output: this.getOutput(canvasInfo.nodes[index].output_ports[0], pNode.output) });
-					}
-				} else {
-					newNode = Object.assign({}, pNode, {
-						app_data: this.getNodeAppData(pNode.app_data, canvasInfo.nodes[index]) });
-					if (pNode.inputs) {
-						newNode = Object.assign({}, newNode, {
-							inputs: this.getInputs(canvasInfo.nodes[index].input_ports, pNode.inputs, canvasInfo.links, pNode.id) });
-					}
-					if (pNode.outputs) {
-						newNode = Object.assign({}, newNode, {
-							outputs: this.getOutputs(canvasInfo.nodes[index].output_ports, pNode.outputs) });
-					}
-					if (canvasInfo.nodes[index].parameters) { // Only non-binding nodes have parameters
-						newNode = Object.assign({}, newNode, {
-							parameters: this.getParameters(canvasInfo.nodes[index].parameters) });
-					}
+				let newNode = Object.assign({}, pNode, {
+					app_data: this.getNodeAppData(pNode.app_data, canvasInfo.nodes[index]) });
+				if (pNode.inputs) {
+					newNode = Object.assign({}, newNode, {
+						inputs: this.getInputs(canvasInfo.nodes[index].input_ports, pNode.inputs, canvasInfo.links, pNode.id) });
+				}
+				if (pNode.outputs) {
+					newNode = Object.assign({}, newNode, {
+						outputs: this.getOutputs(canvasInfo.nodes[index].output_ports, pNode.outputs) });
+				}
+				if (canvasInfo.nodes[index].parameters &&
+						(pNode.type === "execution_node" || pNode.type === "model_node")) {
+					newNode = Object.assign({}, newNode, {
+						parameters: this.getParameters(canvasInfo.nodes[index].parameters) });
 				}
 				newNodes.push(newNode);
 			}
@@ -80,17 +67,13 @@ export default class PipelineOutHandler {
 		return { label: ciNode.label, x_pos: ciNode.x_pos, y_pos: ciNode.y_pos, messages: ciNode.messages };
 	}
 
-	static getInput(ciPort, input, canvasLinks, pNodeId) {
-		return Object.assign({}, input, { link: this.getLink(input.link, canvasLinks, pNodeId, input.id), app_data: this.getPortAppData(input.app_data, ciPort) });
-	}
-
-	static getOutput(ciPort, output) {
-		return Object.assign({}, output, { app_data: this.getPortAppData(output.app_data, ciPort) });
-	}
-
 	static getPortAppData(appData, ciPort) {
 		if (appData) {
-			return Object.assign({}, appData, { ui_data: this.getPortUiData(appData.ui_data, ciPort) });
+			const newAppData = Object.assign({}, appData);
+			if (appData.ui_data) {
+				newAppData.ui_data = this.getPortUiData(appData.ui_data, ciPort);
+			}
+			return newAppData;
 		}
 		return null;
 	}
@@ -102,58 +85,28 @@ export default class PipelineOutHandler {
 		return { label: ciPort.label };
 	}
 
-	static getLink(nodeLink, canvasLinks, pNodeId, pPortId) {
-		var filteredCanvasLinks = this.getFilteredCanvasLinks(canvasLinks, pNodeId, pPortId, 0); // 0 indictaes there is only one port
-
-		if (filteredCanvasLinks.length === 0) {
-			return {};
-		}
-
-		if (nodeLink.node_ref_id === filteredCanvasLinks[0].srcNodeId &&
-				nodeLink.port_ref_id === filteredCanvasLinks[0].srcNodePortId) {
-			return nodeLink;
-		}
-
-		var newNodeLink = Object.assign({}, nodeLink, {
-			node_id_ref: filteredCanvasLinks[0].srcNodeId,
-			port_id_ref: filteredCanvasLinks[0].srcNodePortId
-		});
-
-		if (filteredCanvasLinks[0].class_name) {
-			newNodeLink.app_data = this.getLinkAppData(nodeLink.app_data, filteredCanvasLinks[0]);
-		}
-
-		return newNodeLink;
-	}
-
-	static getLinkAppData(appData, link) {
-		if (appData) {
-			return Object.assign({}, appData, { ui_data: this.getLinkUiData(appData.ui_data, link) });
-		}
-		return { ui_data: { class_name: link.class_name } };
-	}
-
-	static getLinkUiData(uiData, link) {
-		if (uiData) {
-			return Object.assign({}, uiData, { class_name: link.class_name });
-		}
-		return { class_name: link.class_name };
-	}
-
 	static getInputs(ciInputs, inputs, canvasLinks, pNodeId) {
 		return inputs.map((input, portIndex) => {
 			const index = ciInputs.findIndex((ciInput) => ciInput.id === input.id);
-			return Object.assign({}, input, {
-				app_data: this.getPortAppData(input.app_data, ciInputs[index]),
-				links: this.getLinks(input.links, canvasLinks, pNodeId, input.id, portIndex)
-			});
+			const newInput = Object.assign({}, input);
+			if (input.app_data) {
+				newInput.app_data = this.getPortAppData(input.app_data, ciInputs[index]);
+			}
+			if (input.links) {
+				newInput.links = this.getLinks(input.links, canvasLinks, pNodeId, input.id, portIndex);
+			}
+			return newInput;
 		});
 	}
 
 	static getOutputs(ciOutputs, outputs) {
 		return outputs.map((output, portIndex) => {
 			const index = ciOutputs.findIndex((ciOutput) => ciOutput.id === output.id);
-			return Object.assign({}, output, { app_data: this.getPortAppData(output.app_data, ciOutputs[index]) });
+			const newOutput = Object.assign({}, output);
+			if (output.app_data) {
+				newOutput.app_data = this.getPortAppData(output.app_data, ciOutputs[index]);
+			}
+			return newOutput;
 		});
 	}
 
@@ -225,23 +178,19 @@ export default class PipelineOutHandler {
 			}
 		};
 
-		if (ciNode.type === "binding") {
-			if (ciNode.input_ports && ciNode.input_ports.length > 0) {
-				newNode.input = this.createInput(ciNode, canvasLinks);
-			}
-			if (ciNode.output_ports && ciNode.output_ports.length > 0) {
-				newNode.output = this.createOutput(ciNode);
-			}
-		} else {
-			newNode.op = ciNode.operator_id_ref; // Only non-binding nodes have an 'op' field.
+		if (ciNode.type === "execution_node") {
+			newNode.op = ciNode.operator_id_ref;
+		}
 
-			if (ciNode.input_ports && ciNode.input_ports.length > 0) {
-				newNode.inputs = this.createInputs(ciNode, canvasLinks);
-			}
-			if (ciNode.output_ports && ciNode.output_ports.length > 0) {
-				newNode.outputs = this.createOutputs(ciNode);
-			}
+		if (ciNode.input_ports && ciNode.input_ports.length > 0) {
+			newNode.inputs = this.createInputs(ciNode, canvasLinks);
+		}
+		if (ciNode.output_ports && ciNode.output_ports.length > 0) {
+			newNode.outputs = this.createOutputs(ciNode);
+		}
 
+		if (ciNode.type === "execution_node" ||
+				ciNode.type === "model_node") {
 			if (ciNode.parameters) {
 				newNode.parameters = ciNode.parameters;
 			}
@@ -274,44 +223,6 @@ export default class PipelineOutHandler {
 			});
 		}
 		return newDecorations;
-	}
-
-	static createInput(ciNode, canvasLinks) {
-		var newInput = {
-			id: ciNode.input_ports[0].id
-		};
-
-		if (ciNode.input_ports && ciNode.input_ports.length > 0) {
-			newInput.app_data = {
-				ui_data: {
-					cardinality: ciNode.input_ports[0].cardinality, // There should be only one input_port for a binding ndoe
-					label: ciNode.input_ports[0].label
-				}
-			};
-		}
-
-		canvasLinks.forEach((link) => {
-			if (link.type === "nodeLink" &&
-					link.trgNodeId === ciNode.id) {
-				newInput.link = this.createNewNodeLink(link);
-			}
-		});
-		return newInput;
-	}
-
-	static createOutput(ciNode) {
-		var newOutput = {
-			id: ciNode.output_ports[0].id
-		};
-		if (ciNode.output_ports && ciNode.output_ports.length > 0) {
-			newOutput.app_data = {
-				ui_data: {
-					cardinality: ciNode.output_ports[0].cardinality, // There should be only one input_port for a binding ndoe
-					label: ciNode.output_ports[0].label
-				}
-			};
-		}
-		return newOutput;
 	}
 
 	static createInputs(ciNode, canvasLinks) {

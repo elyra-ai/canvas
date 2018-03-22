@@ -65,26 +65,12 @@ export default class PipelineInHandler {
 	}
 
 	static convertOutputs(node) {
-		let outputs;
-		if (node.output) {
-			outputs = [node.output];
-		} else if (node.outputs) {
-			outputs = node.outputs;
-		} else {
-			outputs = [];
-		}
+		const outputs = node.outputs || [];
 		return outputs.map((output) => this.getPortObject(output));
 	}
 
 	static convertInputs(node) {
-		let inputs;
-		if (node.input) {
-			inputs = [node.input];
-		} else if (node.inputs) {
-			inputs = node.inputs;
-		} else {
-			inputs = [];
-		}
+		const inputs = node.inputs || [];
 		return inputs.map((input) => this.getPortObject(input));
 	}
 
@@ -143,7 +129,6 @@ export default class PipelineInHandler {
 		let id = 1;
 
 		nodes.forEach((node) => {
-			// Regular nodes have a inputs (plural) field containing links (plural)
 			if (node.inputs) {
 				node.inputs.forEach((input) => {
 					if (input.links) {
@@ -167,27 +152,6 @@ export default class PipelineInHandler {
 						});
 					}
 				});
-			}
-			// Binding nodes have a input (singular) field containing a link (singular)
-			if (node.input) {
-				if (node.input.link) {
-					if (this.isNode(nodes, node.input.link.node_id_ref)) {
-						const newLink = {
-							"id": "canvas_link_" + id++,
-							"class_name":
-								has(node, "input.link.app_data.ui_data.class_name")
-									? node.input.link.app_data.ui_data.class_name : "d3-data-link",
-							"srcNodeId": node.input.link.node_id_ref,
-							"trgNodeId": node.id,
-							"trgNodePortId": node.input.id,
-							"type": "nodeLink"
-						};
-						if (node.input.link.port_id_ref) {
-							newLink.srcNodePortId = node.input.link.port_id_ref;
-						}
-						links.push(newLink);
-					}
-				}
 			}
 
 			// association links are defined in UI data

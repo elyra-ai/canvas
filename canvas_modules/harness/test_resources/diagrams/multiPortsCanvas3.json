@@ -1,13 +1,12 @@
 {
   "doc_type": "pipeline",
-  "version": "1.0",
-  "json_schema": "http://www.ibm.com/ibm/wdp/flow-v1.0/pipeline-flow-v1-schema.json",
+  "version": "2.0",
+  "json_schema": "http://www.ibm.com/ibm/wdp/flow-v2.0/pipeline-flow-v2-schema.json",
   "id": "24cc9881-f83a-4d38-b15b-8bf541e100fa",
   "primary_pipeline": "empty-pipeline",
   "pipelines": [
     {
       "id": "empty-pipeline",
-      "runtime": "scala-spark-2.0.1",
       "nodes": [
         {
           "id": "a34ae440-0c3d-4f0e-b5a7-ddf9e45db746",
@@ -17,21 +16,24 @@
               "image": "/images/common_node_icons/sources/source_var_import.svg",
               "x_pos": 32,
               "y_pos": 62.5,
-              "label": "Var. File"
+              "label": "Var. File",
+              "messages": []
             }
           },
-          "output": {
-            "id": "outPort",
-            "app_data": {
-              "ui_data": {
-                "cardinality": {
-                  "min": 0,
-                  "max": 1
-                },
-                "label": "Output Port"
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Output Port"
+                }
               }
             }
-          }
+          ]
         },
         {
           "id": "c079dc28-f325-4caa-99f4-8c3d04987503",
@@ -42,7 +44,8 @@
               "image": "/images/common_node_icons/operations/operation_select.svg",
               "x_pos": 575,
               "y_pos": 70.5,
-              "label": "Select2"
+              "label": "Select2",
+              "messages": []
             }
           },
           "inputs": [
@@ -73,7 +76,8 @@
                 }
               }
             }
-          ]
+          ],
+          "parameters": {}
         },
         {
           "id": "b16deb33-4e84-45f1-a7d2-6a2e5d8d2618",
@@ -84,7 +88,8 @@
               "image": "/images/common_node_icons/operations/operation_select.svg",
               "x_pos": 38,
               "y_pos": 333.5,
-              "label": "Select3"
+              "label": "Select3",
+              "messages": []
             }
           },
           "inputs": [
@@ -127,7 +132,8 @@
                 }
               }
             }
-          ]
+          ],
+          "parameters": {}
         },
         {
           "id": "f43f5f8f-7fc2-4979-8c3e-461df32db739",
@@ -138,7 +144,8 @@
               "image": "/images/common_node_icons/operations/operation_select.svg",
               "x_pos": 298,
               "y_pos": 63.5,
-              "label": "Select1"
+              "label": "Select1",
+              "messages": []
             }
           },
           "inputs": [
@@ -169,7 +176,8 @@
                 }
               }
             }
-          ]
+          ],
+          "parameters": {}
         },
         {
           "id": "aae22a0a-d7e5-4162-902b-450a0147ed26",
@@ -180,7 +188,8 @@
               "image": "/images/common_node_icons/output/output_table.svg",
               "x_pos": 837,
               "y_pos": 69.5,
-              "label": "Table"
+              "label": "Table",
+              "messages": []
             }
           },
           "inputs": [
@@ -211,15 +220,23 @@
                 }
               }
             }
-          ]
+          ],
+          "parameters": {}
         }
       ],
       "app_data": {
         "ui_data": {
           "comments": []
         }
-      }
+      },
+      "runtime_ref": "scala-spark-2.0.1"
     }
   ],
-  "schemas": []
+  "schemas": [],
+  "runtimes": [
+    {
+      "id": "scala-spark-2.0.1",
+      "name": "scala-spark-2.0.1"
+    }
+  ]
 }

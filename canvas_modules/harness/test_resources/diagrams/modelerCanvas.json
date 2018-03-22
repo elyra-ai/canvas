@@ -1,13 +1,12 @@
 {
   "doc_type": "pipeline",
-  "version": "1.0",
-  "json_schema": "http://www.ibm.com/ibm/wdp/flow-v1.0/pipeline-flow-v1-schema.json",
+  "version": "2.0",
+  "json_schema": "http://www.ibm.com/ibm/wdp/flow-v2.0/pipeline-flow-v2-schema.json",
   "id": "153651d6-9b88-423c-b01b-861f12d01489",
   "primary_pipeline": "153651d6-9b88-423c-b01b-861f12d01489",
   "pipelines": [
     {
       "id": "153651d6-9b88-423c-b01b-861f12d01489",
-      "runtime": "",
       "nodes": [
         {
           "id": "idGWRVT47XDV",
@@ -19,7 +18,8 @@
               "x_pos": 482,
               "y_pos": 132.99999237060547,
               "class_name": "canvas-node",
-              "label": "Define Types"
+              "label": "Define Types",
+              "messages": []
             }
           },
           "inputs": [
@@ -59,7 +59,8 @@
                 }
               }
             }
-          ]
+          ],
+          "parameters": {}
         },
         {
           "id": "id1ZZTZ3ZMYWL",
@@ -71,7 +72,8 @@
               "x_pos": 753,
               "y_pos": 82.99999618530273,
               "class_name": "canvas-node",
-              "label": "Drug"
+              "label": "Drug",
+              "messages": []
             }
           },
           "inputs": [
@@ -111,7 +113,8 @@
                 }
               }
             }
-          ]
+          ],
+          "parameters": {}
         },
         {
           "id": "id2PZSCTRPRIJ",
@@ -123,7 +126,8 @@
               "x_pos": 227,
               "y_pos": 128.99999237060547,
               "class_name": "canvas-node",
-              "label": "Na_to_K"
+              "label": "Na_to_K",
+              "messages": []
             }
           },
           "inputs": [
@@ -163,7 +167,8 @@
                 }
               }
             }
-          ]
+          ],
+          "parameters": {}
         },
         {
           "id": "id125TTEEIK7V",
@@ -175,7 +180,8 @@
               "x_pos": 760,
               "y_pos": 230.99999237060547,
               "class_name": "canvas-node",
-              "label": "Drug"
+              "label": "Drug",
+              "messages": []
             }
           },
           "inputs": [
@@ -215,7 +221,8 @@
                 }
               }
             }
-          ]
+          ],
+          "parameters": {}
         },
         {
           "id": "id5KIRGGJ3FYT",
@@ -227,33 +234,40 @@
               "y_pos": 304.99999237060547,
               "class_name": "canvas-node",
               "label": "Drug",
-              "associations": [{
-                "id": "id5KIRGGJ3FYT.id125TTEEIK7V",
-                "node_ref": "id125TTEEIK7V",
-                "class_name": "canvas-object-link"
-              }]
+              "associations": [
+                {
+                  "id": "id5KIRGGJ3FYT.id125TTEEIK7V",
+                  "node_ref": "id125TTEEIK7V",
+                  "class_name": "canvas-object-link"
+                }
+              ],
+              "messages": []
             }
           },
-          "input": {
-            "id": "inPort",
-            "app_data": {
-              "ui_data": {
-                "cardinality": {
-                  "min": 0,
-                  "max": 1
-                },
-                "label": "Input Port"
-              }
-            },
-            "link": {
-              "node_id_ref": "idGWRVT47XDV",
+          "inputs": [
+            {
+              "id": "inPort",
               "app_data": {
                 "ui_data": {
-                  "class_name": "canvas-data-link"
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
                 }
-              }
+              },
+              "links": [
+                {
+                  "node_id_ref": "idGWRVT47XDV",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "canvas-data-link"
+                    }
+                  }
+                }
+              ]
             }
-          }
+          ]
         },
         {
           "id": "id6PXRG57DGIV",
@@ -264,21 +278,24 @@
               "x_pos": 101,
               "y_pos": 127.99999237060547,
               "class_name": "canvas-node",
-              "label": "DRUG1n"
+              "label": "DRUG1n",
+              "messages": []
             }
           },
-          "output": {
-            "id": "outPort",
-            "app_data": {
-              "ui_data": {
-                "cardinality": {
-                  "min": 0,
-                  "max": -1
-                },
-                "label": "Output Port"
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
               }
             }
-          }
+          ]
         },
         {
           "id": "id5RYSYN9CV1H",
@@ -290,7 +307,8 @@
               "x_pos": 363,
               "y_pos": 131.99998474121094,
               "class_name": "canvas-node",
-              "label": "Discard Fields"
+              "label": "Discard Fields",
+              "messages": []
             }
           },
           "inputs": [
@@ -330,7 +348,8 @@
                 }
               }
             }
-          ]
+          ],
+          "parameters": {}
         },
         {
           "id": "id8I6RH2V91XW",
@@ -343,11 +362,14 @@
               "y_pos": 22.999996185302734,
               "class_name": "canvas-node",
               "label": "Drug",
-              "associations": [{
-                "id": "id8I6RH2V91XW.id1ZZTZ3ZMYWL",
-                "node_ref": "id1ZZTZ3ZMYWL",
-                "class_name": "canvas-object-link"
-              }]
+              "associations": [
+                {
+                  "id": "id8I6RH2V91XW.id1ZZTZ3ZMYWL",
+                  "node_ref": "id1ZZTZ3ZMYWL",
+                  "class_name": "canvas-object-link"
+                }
+              ],
+              "messages": []
             }
           },
           "inputs": [
@@ -373,15 +395,23 @@
                 }
               ]
             }
-          ]
+          ],
+          "parameters": {}
         }
       ],
       "app_data": {
         "ui_data": {
           "comments": []
         }
-      }
+      },
+      "runtime_ref": "test_runtime"
     }
   ],
-  "schemas": []
+  "schemas": [],
+  "runtimes": [
+    {
+      "id": "test_runtime",
+      "name": "test_runtime"
+    }
+  ]
 }

@@ -1,13 +1,12 @@
 {
   "doc_type": "pipeline",
-  "version": "1.0",
-  "json_schema": "http://www.ibm.com/ibm/wdp/flow-v1.0/pipeline-flow-v1-schema.json",
+  "version": "2.0",
+  "json_schema": "http://www.ibm.com/ibm/wdp/flow-v2.0/pipeline-flow-v2-schema.json",
   "id": "153651d6-9b88-423c-b01b-861f12d01489",
   "primary_pipeline": "153651d6-9b88-423c-b01b-861f12d01489",
   "pipelines": [
     {
       "id": "153651d6-9b88-423c-b01b-861f12d01489",
-      "runtime": "",
       "nodes": [
         {
           "id": "idGWRVT47XDV",
@@ -19,7 +18,8 @@
               "x_pos": 462,
               "y_pos": 224,
               "class_name": "canvas-node",
-              "label": "Define Types"
+              "label": "Define Types",
+              "messages": []
             }
           },
           "inputs": [
@@ -59,7 +59,8 @@
                 }
               }
             }
-          ]
+          ],
+          "parameters": {}
         },
         {
           "id": "id2PZSCTRPRIJ",
@@ -71,7 +72,27 @@
               "x_pos": 209,
               "y_pos": 158,
               "class_name": "canvas-node",
-              "label": "Na_to_K"
+              "label": "Na_to_K",
+              "messages": [
+                {
+                  "id_ref": "formula_measure_type",
+                  "validation_id": "formula_measure_type",
+                  "type": "warning",
+                  "text": "Field cannot be default"
+                },
+                {
+                  "id_ref": "custom_name",
+                  "validation_id": "custom_name",
+                  "type": "warning",
+                  "text": "Annotation is empty when there is a custom name"
+                },
+                {
+                  "id_ref": "annotations",
+                  "validation_id": "annotations",
+                  "type": "warning",
+                  "text": "Field cannot be empty nor contain \"quotes\""
+                }
+              ]
             }
           },
           "inputs": [
@@ -111,7 +132,8 @@
                 }
               }
             }
-          ]
+          ],
+          "parameters": {}
         },
         {
           "id": "id8I6RH2V91XW",
@@ -122,29 +144,34 @@
               "x_pos": 611,
               "y_pos": 151,
               "class_name": "canvas-node",
-              "label": "Drug"
+              "label": "Drug",
+              "messages": []
             }
           },
-          "input": {
-            "id": "inPort",
-            "app_data": {
-              "ui_data": {
-                "cardinality": {
-                  "min": 0,
-                  "max": 1
-                },
-                "label": "Input Port"
-              }
-            },
-            "link": {
-              "node_id_ref": "idGWRVT47XDV",
+          "inputs": [
+            {
+              "id": "inPort",
               "app_data": {
                 "ui_data": {
-                  "class_name": "canvas-data-link"
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
                 }
-              }
+              },
+              "links": [
+                {
+                  "node_id_ref": "idGWRVT47XDV",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "canvas-data-link"
+                    }
+                  }
+                }
+              ]
             }
-          }
+          ]
         },
         {
           "id": "id5KIRGGJ3FYT",
@@ -155,29 +182,34 @@
               "x_pos": 606,
               "y_pos": 310,
               "class_name": "canvas-node",
-              "label": "Drug"
+              "label": "Drug",
+              "messages": []
             }
           },
-          "input": {
-            "id": "inPort",
-            "app_data": {
-              "ui_data": {
-                "cardinality": {
-                  "min": 0,
-                  "max": 1
-                },
-                "label": "Input Port"
-              }
-            },
-            "link": {
-              "node_id_ref": "idGWRVT47XDV",
+          "inputs": [
+            {
+              "id": "inPort",
               "app_data": {
                 "ui_data": {
-                  "class_name": "canvas-data-link"
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
                 }
-              }
+              },
+              "links": [
+                {
+                  "node_id_ref": "idGWRVT47XDV",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "canvas-data-link"
+                    }
+                  }
+                }
+              ]
             }
-          }
+          ]
         },
         {
           "id": "id6PXRG57DGIV",
@@ -188,21 +220,24 @@
               "x_pos": 87,
               "y_pos": 158,
               "class_name": "canvas-node",
-              "label": "DRUG1n"
+              "label": "DRUG1n",
+              "messages": []
             }
           },
-          "output": {
-            "id": "outPort",
-            "app_data": {
-              "ui_data": {
-                "cardinality": {
-                  "min": 0,
-                  "max": -1
-                },
-                "label": "Output Port"
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
               }
             }
-          }
+          ]
         },
         {
           "id": "id5RYSYN9CV1H",
@@ -214,7 +249,8 @@
               "x_pos": 319,
               "y_pos": 158,
               "class_name": "canvas-node",
-              "label": "Discard Fields"
+              "label": "Discard Fields",
+              "messages": []
             }
           },
           "inputs": [
@@ -254,7 +290,8 @@
                 }
               }
             }
-          ]
+          ],
+          "parameters": {}
         }
       ],
       "app_data": {
@@ -292,8 +329,15 @@
             }
           ]
         }
-      }
+      },
+      "runtime_ref": "test_runtime"
     }
   ],
-  "schemas": []
+  "schemas": [],
+  "runtimes": [
+    {
+      "id": "test_runtime",
+      "name": "test_runtime"
+    }
+  ]
 }

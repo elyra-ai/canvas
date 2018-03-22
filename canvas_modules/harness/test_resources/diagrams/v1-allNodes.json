@@ -7,7 +7,7 @@
   "pipelines": [
     {
       "id": "abc651d6-9b88-423c-b01b-861f12d01489",
-      "runtime": "",
+      "runtime": "test_runtime",
       "nodes": [
         {
           "id": "b9744353-49a3-4d55-accc-5f1c64433b1c",

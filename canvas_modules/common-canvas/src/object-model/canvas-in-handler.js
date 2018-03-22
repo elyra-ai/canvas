@@ -23,6 +23,7 @@ export default class CanvasInHandler {
 
 	static getNodes(canvasNodes) {
 		return canvasNodes.map((canvasNode) => {
+			const nodeType = this.getType(canvasNode);
 			var newNode = {
 				id: canvasNode.id,
 				image: canvasNode.image,
@@ -30,7 +31,7 @@ export default class CanvasInHandler {
 				y_pos: canvasNode.y_pos,
 				class_name: canvasNode.className,
 				label: canvasNode.objectData.label,
-				type: this.getType(canvasNode)
+				type: nodeType
 			};
 			if (canvasNode.inputPorts) {
 				newNode.input_ports = this.getInputPorts(canvasNode.inputPorts, 1);
@@ -41,11 +42,16 @@ export default class CanvasInHandler {
 			if (canvasNode.decorations) {
 				newNode.decorations = this.getDecorations(canvasNode.decorations);
 			}
-			if (canvasNode.subDiagramId) {
+			if (nodeType === "super_node") {
 				newNode.subflow_ref = { pipeline_id_ref: canvasNode.subDiagramId, url: "app_defined" };
+			}
 
-			} else if (canvasNode.userData && canvasNode.userData.typeId) {
-				newNode.operator_id_ref = canvasNode.userData.typeId;
+			if (nodeType === "execution_node") {
+				if (canvasNode.userData && canvasNode.userData.typeId) {
+					newNode.operator_id_ref = canvasNode.userData.typeId;
+				} else {
+					newNode.operator_id_ref = "";
+				}
 			}
 
 			return newNode;
@@ -53,6 +59,9 @@ export default class CanvasInHandler {
 	}
 
 	static getType(canvasNode) {
+		if (canvasNode.userData && canvasNode.userData.containsModel === true) {
+			return "model_node";
+		}
 		if (canvasNode.inputPorts && canvasNode.inputPorts.length > 0 &&
 				canvasNode.outputPorts && canvasNode.outputPorts.length > 0) {
 			if (canvasNode.subDiagramId) {

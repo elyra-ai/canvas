@@ -2,23 +2,23 @@
   "doc_type": "pipeline",
   "version": "2.0",
   "json_schema": "http://www.ibm.com/ibm/wdp/flow-v2.0/pipeline-flow-v2-schema.json",
-  "id": "24cc9881-f83a-4d38-b15b-8bf541e100fa",
-  "primary_pipeline": "empty-pipeline",
+  "id": "153651d6-9b88-423c-b01b-861f12d01489",
+  "primary_pipeline": "153651d6-9b88-423c-b01b-861f12d01489",
   "pipelines": [
     {
-      "id": "empty-pipeline",
+      "id": "153651d6-9b88-423c-b01b-861f12d01489",
       "nodes": [
         {
-          "id": "f65f884f-2a80-4f78-b32c-7644c0cca697",
+          "id": "idGWRVT47XDV",
           "type": "execution_node",
-          "op": "com.ibm.commonicons.operations.aggregate",
+          "op": "",
           "app_data": {
             "ui_data": {
-              "image": "/images/common_node_icons/operations/operation_aggregate.svg",
-              "x_pos": 313,
-              "y_pos": 216,
+              "image": "/images/node.svg",
+              "x_pos": 482,
+              "y_pos": 132.99999237060547,
               "class_name": "canvas-node",
-              "label": "Aggregate",
+              "label": "Define Types",
               "messages": []
             }
           },
@@ -36,13 +36,12 @@
               },
               "links": [
                 {
-                  "node_id_ref": "8b5ef5df-0163-484e-a766-32314b98aafb",
+                  "node_id_ref": "id5RYSYN9CV1H",
                   "app_data": {
                     "ui_data": {
                       "class_name": "canvas-data-link"
                     }
-                  },
-                  "port_id_ref": "outPort"
+                  }
                 }
               ]
             }
@@ -64,16 +63,15 @@
           "parameters": {}
         },
         {
-          "id": "9c531ba0-7a34-4a67-ab9a-c3248e0842c9",
-          "type": "execution_node",
-          "op": "com.ibm.commonicons.operations.balance",
+          "id": "id1ZZTZ3ZMYWL",
+          "type": "binding",
           "app_data": {
             "ui_data": {
-              "image": "/images/common_node_icons/operations/operation_balance.svg",
-              "x_pos": 535,
-              "y_pos": 290,
+              "image": "/images/node.svg",
+              "x_pos": 753,
+              "y_pos": 82.99999618530273,
               "class_name": "canvas-node",
-              "label": "Balance",
+              "label": "Out 2",
               "messages": []
             }
           },
@@ -91,94 +89,37 @@
               },
               "links": [
                 {
-                  "node_id_ref": "f65f884f-2a80-4f78-b32c-7644c0cca697",
+                  "node_id_ref": "idGWRVT47XDV",
                   "app_data": {
                     "ui_data": {
                       "class_name": "canvas-data-link"
                     }
-                  },
-                  "port_id_ref": "outPort"
+                  }
                 }
               ]
             }
-          ],
-          "outputs": [
-            {
-              "id": "outPort",
-              "app_data": {
-                "ui_data": {
-                  "cardinality": {
-                    "min": 0,
-                    "max": -1
-                  },
-                  "label": "Output Port"
-                }
-              }
-            }
-          ],
-          "parameters": {}
+          ]
         },
         {
-          "id": "d45c7b2c-a8bf-4a6a-926d-0ecc75809ee3",
-          "type": "execution_node",
-          "op": "com.ibm.commonicons.operations.append",
+          "id": "id2PZSCTRPRIJ",
+          "type": "super_node",
+          "subflow_ref": {
+            "pipeline_id_ref": "modeler-sub-pipeline"
+          },
           "app_data": {
             "ui_data": {
-              "image": "/images/common_node_icons/operations/operation_append.svg",
-              "x_pos": 54,
-              "y_pos": 54,
+              "image": "/images/node.svg",
+              "x_pos": 227,
+              "y_pos": 128.99999237060547,
               "class_name": "canvas-node",
-              "label": "Append",
+              "label": "SuperNode",
               "messages": []
             }
           },
           "inputs": [
             {
               "id": "inPort",
-              "app_data": {
-                "ui_data": {
-                  "cardinality": {
-                    "min": 0,
-                    "max": 1
-                  },
-                  "label": "Input Port"
-                }
-              }
-            }
-          ],
-          "outputs": [
-            {
-              "id": "outPort",
-              "app_data": {
-                "ui_data": {
-                  "cardinality": {
-                    "min": 0,
-                    "max": -1
-                  },
-                  "label": "Output Port"
-                }
-              }
-            }
-          ],
-          "parameters": {}
-        },
-        {
-          "id": "8b5ef5df-0163-484e-a766-32314b98aafb",
-          "type": "execution_node",
-          "op": "com.ibm.commonicons.operations.balance",
-          "app_data": {
-            "ui_data": {
-              "image": "/images/common_node_icons/operations/operation_balance.svg",
-              "x_pos": 170,
-              "y_pos": 130,
-              "class_name": "canvas-node",
-              "label": "Balance",
-              "messages": []
-            }
-          },
-          "inputs": [
-            {
-              "id": "inPort",
+              "subflow_node_ref": "subFlowNodeRef2",
               "app_data": {
                 "ui_data": {
                   "cardinality": {
@@ -190,13 +131,12 @@
               },
               "links": [
                 {
-                  "node_id_ref": "d45c7b2c-a8bf-4a6a-926d-0ecc75809ee3",
+                  "node_id_ref": "id6PXRG57DGIV",
                   "app_data": {
                     "ui_data": {
                       "class_name": "canvas-data-link"
                     }
-                  },
-                  "port_id_ref": "outPort"
+                  }
                 }
               ]
             }
@@ -204,6 +144,7 @@
           "outputs": [
             {
               "id": "outPort",
+              "subflow_node_ref": "subFlowNodeRef2",
               "app_data": {
                 "ui_data": {
                   "cardinality": {
@@ -214,74 +155,19 @@
                 }
               }
             }
-          ],
-          "parameters": {}
+          ]
         },
         {
-          "id": "d7a8678e-f853-4eb9-beab-3f64f4a726b9",
-          "type": "execution_node",
-          "op": "com.ibm.commonicons.operations.binning",
-          "app_data": {
-            "ui_data": {
-              "image": "/images/common_node_icons/operations/operation_binning.svg",
-              "x_pos": 803,
-              "y_pos": 193,
-              "class_name": "canvas-node",
-              "label": "Binning",
-              "messages": []
-            }
-          },
-          "inputs": [
-            {
-              "id": "inPort",
-              "app_data": {
-                "ui_data": {
-                  "cardinality": {
-                    "min": 0,
-                    "max": 1
-                  },
-                  "label": "Input Port"
-                }
-              },
-              "links": [
-                {
-                  "node_id_ref": "9c531ba0-7a34-4a67-ab9a-c3248e0842c9",
-                  "app_data": {
-                    "ui_data": {
-                      "class_name": "canvas-data-link"
-                    }
-                  },
-                  "port_id_ref": "outPort"
-                }
-              ]
-            }
-          ],
-          "outputs": [
-            {
-              "id": "outPort",
-              "app_data": {
-                "ui_data": {
-                  "cardinality": {
-                    "min": 0,
-                    "max": -1
-                  },
-                  "label": "Output Port"
-                }
-              }
-            }
-          ],
-          "parameters": {}
-        },
-        {
-          "id": "ff062eb5-6073-45a5-8dea-1255c5352bf1",
+          "id": "id125TTEEIK7V",
           "type": "model_node",
+          "model_ref": "",
           "app_data": {
             "ui_data": {
-              "image": "/images/common_node_icons/models/model_linear_regression.svg",
-              "x_pos": 1084,
-              "y_pos": 299,
+              "image": "/images/node.svg",
+              "x_pos": 623,
+              "y_pos": 304.99999237060547,
               "class_name": "canvas-node",
-              "label": "Linear Regression",
+              "label": "Model 1",
               "messages": []
             }
           },
@@ -299,15 +185,216 @@
               },
               "links": [
                 {
-                  "node_id_ref": "d7a8678e-f853-4eb9-beab-3f64f4a726b9",
+                  "node_id_ref": "idGWRVT47XDV",
                   "app_data": {
                     "ui_data": {
                       "class_name": "canvas-data-link"
                     }
-                  },
-                  "port_id_ref": "outPort"
+                  }
                 }
               ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ],
+          "parameters": {}
+        },
+        {
+          "id": "id5KIRGGJ3FYT",
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "image": "/images/node.svg",
+              "x_pos": 760,
+              "y_pos": 230.99999237060547,
+              "class_name": "canvas-node",
+              "label": "Out 1",
+              "associations": [
+                {
+                  "id": "id5KIRGGJ3FYT.id125TTEEIK7V",
+                  "node_ref": "id125TTEEIK7V",
+                  "class_name": "canvas-object-link"
+                }
+              ],
+              "messages": []
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "idGWRVT47XDV",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "canvas-data-link"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "id6PXRG57DGIV",
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "image": "/images/node.svg",
+              "x_pos": 101,
+              "y_pos": 127.99999237060547,
+              "class_name": "canvas-node",
+              "label": "DRUG1n",
+              "messages": []
+            }
+          },
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "id5RYSYN9CV1H",
+          "type": "execution_node",
+          "op": "",
+          "app_data": {
+            "ui_data": {
+              "image": "/images/node.svg",
+              "x_pos": 363,
+              "y_pos": 131.99998474121094,
+              "class_name": "canvas-node",
+              "label": "Discard Fields",
+              "messages": []
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "id2PZSCTRPRIJ",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "canvas-data-link"
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ],
+          "parameters": {}
+        },
+        {
+          "id": "id8I6RH2V91XW",
+          "type": "model_node",
+          "model_ref": "",
+          "app_data": {
+            "ui_data": {
+              "image": "/images/node.svg",
+              "x_pos": 607,
+              "y_pos": 22.999996185302734,
+              "class_name": "canvas-node",
+              "label": "Model 2",
+              "associations": [
+                {
+                  "id": "id8I6RH2V91XW.id1ZZTZ3ZMYWL",
+                  "node_ref": "id1ZZTZ3ZMYWL",
+                  "class_name": "canvas-object-link"
+                }
+              ],
+              "messages": []
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": 1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "idGWRVT47XDV",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "canvas-data-link"
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
             }
           ],
           "parameters": {}
@@ -315,17 +402,47 @@
       ],
       "app_data": {
         "ui_data": {
-          "comments": []
+          "comments": [
+            {
+              "id": "d513f210-7203-40a6-b4f5-87163e17320b",
+              "x_pos": 129,
+              "y_pos": 263,
+              "width": 128,
+              "height": 59,
+              "class_name": "custom-canvas-comment",
+              "content": "This is a link from a binding node to a supernode",
+              "associated_id_refs": [
+                {
+                  "node_ref": "id6PXRG57DGIV",
+                  "class_name": "d3-comment-link"
+                },
+                {
+                  "node_ref": "id2PZSCTRPRIJ",
+                  "class_name": "d3-comment-link"
+                }
+              ]
+            },
+            {
+              "id": "0f8167e9-abdb-44ad-9e1c-1b85d5197ec6",
+              "x_pos": 73,
+              "y_pos": 30,
+              "width": 128,
+              "height": 76,
+              "class_name": "custom-canvas-comment custom-comment-box",
+              "content": "This canvas shows a node of each type and some commments",
+              "associated_id_refs": []
+            }
+          ]
         }
       },
-      "runtime_ref": "scala-spark-2.0.1"
+      "runtime_ref": "test_runtime"
     }
   ],
   "schemas": [],
   "runtimes": [
     {
-      "id": "scala-spark-2.0.1",
-      "name": "scala-spark-2.0.1"
+      "id": "test_runtime",
+      "name": "test_runtime"
     }
   ]
 }

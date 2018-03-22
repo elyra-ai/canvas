@@ -23,7 +23,8 @@ import difference from "lodash/difference";
 import isEmpty from "lodash/isEmpty";
 import indexOf from "lodash/indexOf";
 import uuid4 from "uuid/v4";
-import { validatePipelineFlowAgainstSchema, validatePaletteAgainstSchema } from "./schema-validator.js";
+import { validatePipelineFlowAgainstSchema, validatePaletteAgainstSchema } from "./schemas-utils/schema-validator.js";
+import { upgradePipelineFlow, extractVersion, LATEST_VERSION } from "./schemas-utils/upgrade-flow.js";
 
 const nodes = (state = [], action) => {
 	switch (action.type) {
@@ -562,17 +563,18 @@ const getInitialPipelineFlow = (flowId, primaryPipelineId) => {
 
 	return {
 		"doc_type": "pipeline",
-		"version": "1.0",
-		"json_schema": "http://www.ibm.com/ibm/wdp/flow-v1.0/pipeline-flow-v1-schema.json",
+		"version": "2.0",
+		"json_schema": "http://www.ibm.com/ibm/wdp/flow-v2.0/pipeline-flow-v2-schema.json",
 		"id": newFlowId,
 		"primary_pipeline": newPrimaryPipelineId,
 		"pipelines": [
 			{
 				"id": newPrimaryPipelineId,
-				"runtime": "",
+				"runtime_ref": "empty_runtime",
 				"nodes": []
 			},
 		],
+		"runtimes": [{ "id": "empty_runtime", "name": "empty_runtime" }],
 		"schemas": []
 	};
 };
@@ -776,15 +778,33 @@ export default class ObjectModel {
 			return;
 		}
 
-		if (this.schemaValidation) {
-			validatePipelineFlowAgainstSchema(newPipelineFlow);
-		}
+		const pipelineFlow = this.validateAndUpgrade(newPipelineFlow);
 
 		this.executeWithSelectionChange(this.store.dispatch, {
 			type: "SET_PIPELINE_FLOW",
-			data: newPipelineFlow,
+			data: pipelineFlow,
 			layoutinfo: this.store.getState().layoutinfo,
 			currentPipelineFlow: this.store.getState().pipelineflow });
+	}
+
+	validateAndUpgrade(newPipelineFlow) {
+		// Clone the pipelineFlow to ensure we don't modify the incoming parameter.
+		let pipelineFlow = JSON.parse(JSON.stringify(newPipelineFlow));
+
+		const version = extractVersion(pipelineFlow);
+
+		if (this.schemaValidation) {
+			validatePipelineFlowAgainstSchema(pipelineFlow, version);
+		}
+
+		if (version !== LATEST_VERSION) {
+			pipelineFlow = upgradePipelineFlow(pipelineFlow);
+
+			if (this.schemaValidation) {
+				validatePipelineFlowAgainstSchema(pipelineFlow, LATEST_VERSION);
+			}
+		}
+		return pipelineFlow;
 	}
 
 	setEmptyPipelineFlow() {

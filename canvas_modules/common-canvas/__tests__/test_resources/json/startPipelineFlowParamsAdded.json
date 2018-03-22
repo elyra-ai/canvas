@@ -1,13 +1,12 @@
 {
   "doc_type": "pipeline",
-  "version": "1.0",
-  "json_schema": "http://www.ibm.com/ibm/wdp/flow-v1.0/pipeline-flow-v1-schema.json",
+  "version": "2.0",
+  "json_schema": "http://www.ibm.com/ibm/wdp/flow-v2.0/pipeline-flow-v2-schema.json",
   "id": "153651d6-9b88-423c-b01b-861f12d01489",
   "primary_pipeline": "153651d6-9b88-423c-b01b-861f12d01489",
   "pipelines": [
     {
       "id": "153651d6-9b88-423c-b01b-861f12d01489",
-      "runtime": "",
       "nodes": [
         {
           "id": "idGWRVT47XDV",
@@ -61,7 +60,7 @@
               }
             }
           ],
-         "parameters": {
+          "parameters": {
             "field1": "value1",
             "field2": "value2"
           }
@@ -73,8 +72,8 @@
           "app_data": {
             "ui_data": {
               "image": "/images/node.svg",
-              "x_pos": 611,
-              "y_pos": 151,
+              "x_pos": 245,
+              "y_pos": 128,
               "class_name": "canvas-node",
               "label": "C5.0",
               "messages": []
@@ -95,9 +94,23 @@
               "links": []
             }
           ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": "0",
+                    "max": "1"
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ],
           "parameters": {
-             "paramA": "Value for Param A",
-             "paramB": "Value for Param B"
+            "paramA": "Value for Param A",
+            "paramB": "Value for Param B"
           }
         }
       ],
@@ -105,8 +118,15 @@
         "ui_data": {
           "comments": []
         }
-      }
+      },
+      "runtime_ref": "test_runtime"
     }
   ],
-  "schemas": []
+  "schemas": [],
+  "runtimes": [
+    {
+      "id": "test_runtime",
+      "name": "test_runtime"
+    }
+  ]
 }
