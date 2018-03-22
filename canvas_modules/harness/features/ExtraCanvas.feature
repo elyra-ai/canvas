@@ -7,6 +7,7 @@ Feature: ExtraCanvas
 	So I can build a extra canvas and perform node operations
 
 Scenario: Sanity test to perform extra canvas node operation
+	Then I resize the window size to 1400 width and 800 height
 	Given I am on the test harness
 	Given I have toggled the app side panel
 	Given I have selected the "Flyout" palette layout

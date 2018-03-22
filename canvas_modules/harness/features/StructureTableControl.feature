@@ -7,6 +7,7 @@ Feature: StructureTableControl
 	So I can test the structure table control in common-properties
 
 	Scenario: Test generatedValues in structure table control
+		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side common-properties panel
 		Then I have selected the "Flyout" properties container type
@@ -46,6 +47,7 @@ Feature: StructureTableControl
 		Then I verify the event log for the "structuretableReadonlyColumnDefaultIndex" parameter contains "1,BP,BP-1,blood pressure,,1982-02-23,2,Na,Na,,string,,3,K,K,,string,,4,Drug,Drug,,string,"
 
 	Scenario: Test generatedValues with startValue in structure table control
+		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side common-properties panel
 		Then I have selected the "Flyout" properties container type
@@ -81,6 +83,7 @@ Feature: StructureTableControl
 		Then I verify the event log for the "structuretableReadonlyColumnStartValue" parameter contains "Age,5,Ascending,Drug,6,Ascending,Cholesterol,7,Ascending"
 
 	Scenario: Test generatedValues and moveableRows in structure table control
+		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side common-properties panel
 		Then I have selected the "Flyout" properties container type

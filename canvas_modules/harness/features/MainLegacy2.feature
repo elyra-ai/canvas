@@ -7,6 +7,7 @@ Feature: MainLegacy2
   So I can add more flow to the canvas
 
   Scenario: Sanity test from loaded file with the Legacy rendering engine
+		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "Modal" palette layout

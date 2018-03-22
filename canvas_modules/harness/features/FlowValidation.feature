@@ -7,6 +7,7 @@ Feature: FlowValidation
 	So I can verify which nodes have parameter messages
 
 	Scenario: Sanity test flow validation when open a flow
+		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "D3" rendering engine
@@ -20,6 +21,7 @@ Feature: FlowValidation
 		Then I pause for 1 seconds
 
 	Scenario: Sanity test flow validation when adding a node
+		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "Flyout" palette layout

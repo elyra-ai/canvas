@@ -7,6 +7,7 @@ Feature: UndoRedo
 	So I can build a canvas and perform undo/redo operations with various user operations
 
 	Scenario: Sanity test for Base undo/redo operations with the D3 rendering engine
+		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "Flyout" palette layout
@@ -115,6 +116,7 @@ Feature: UndoRedo
 		Then I verify the number of comment links are 3
 
 	Scenario: Sanity test for Complex undo/redo operations with the D3 rendering engine
+		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "Flyout" palette layout
@@ -210,6 +212,7 @@ Feature: UndoRedo
 		Then I click redo
 
 	Scenario: Sanity test for Complex Disconnect and Delete undo/redo operations with the D3 rendering engine
+		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "Flyout" palette layout
@@ -244,6 +247,7 @@ Feature: UndoRedo
 		Then I verify the number of data links are 4
 
 Scenario: Sanity test for Multiple undo/redo operations with the D3 rendering engine
+		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "Flyout" palette layout
@@ -288,6 +292,7 @@ Scenario: Sanity test for Multiple undo/redo operations with the D3 rendering en
 		Then I verify the number of data links are 21
 
 Scenario: Sanity test for undo/redo of layout actions with the D3 rendering engine
+		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "Flyout" palette layout

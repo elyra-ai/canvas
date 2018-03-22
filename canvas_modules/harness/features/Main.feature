@@ -7,6 +7,7 @@ Feature: Main
   So I can build a graph
 
   Scenario: Sanity test empty canvas with D3 rendering engine
+		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
     Given I have toggled the app side panel
 		Given I have selected the "Flyout" palette layout
@@ -57,6 +58,7 @@ Feature: Main
 		Then I pause for 2 seconds
 
 	Scenario: Sanity test selecting nodes opens properties
+		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "Flyout" palette layout
@@ -83,6 +85,7 @@ Feature: Main
 		Then I don't see the common properties flyout
 
 	Scenario: Sanity test changing node names reflected in canvas
+		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "Flyout" palette layout

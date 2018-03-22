@@ -7,6 +7,7 @@ Feature: SidePanel
 	So I drop a data node from side panel to common canvas
 
 Scenario: Sanity test to test drag and drop of external object to canvas
+	Then I resize the window size to 1400 width and 800 height
 	Given I am on the test harness
 	Given I have toggled the app side panel
 	Given I have selected the "Flyout" palette layout

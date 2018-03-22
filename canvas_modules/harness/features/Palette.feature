@@ -6,6 +6,7 @@ Feature: Palette
   I want to create a canvas to test the flyout palette
 
   Scenario: Sanity test empty canvas with D3 rendering engine
+		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "Flyout" palette layout
@@ -22,6 +23,7 @@ Feature: Palette
 		Then I try adding node 4 a "Sample" node from the "Record Ops" category onto the canvas at 500, 250
 
 	Scenario: Sanity test adding node type to palette Flyout Panel
+		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "Flyout" palette layout
@@ -36,6 +38,7 @@ Feature: Palette
 		Then I verify that "Custom Node Type" was added in palette category "New Category"
 
 	Scenario: Sanity test adding node type to palette Modal Panel
+		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "Modal" palette layout
@@ -50,6 +53,7 @@ Feature: Palette
 		Then I verify that "Custom Node Type" was added in palette category "New Category"
 
 	Scenario: Sanity test adding node type to existing category to palette Flyout Panel
+		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "Flyout" palette layout
@@ -64,6 +68,7 @@ Feature: Palette
 		Then I verify that "Custom Node Type" was added in palette category "Outputs"
 
 	Scenario: Sanity test adding node type to existing category to palette Flyout Panel
+		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "Modal" palette layout

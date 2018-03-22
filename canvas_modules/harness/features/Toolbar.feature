@@ -7,7 +7,7 @@ Feature: Toolbar
 	So I can build a canvas and perform secondaryToolbar operations
 
 	Scenario: Sanity test for secondary toolbar Cut and Paste buttons with the D3 rendering engine
-
+	Then I resize the window size to 1400 width and 800 height
 	Given I am on the test harness
 	Given I have toggled the app side panel
 	Given I have selected the "Flyout" palette layout
@@ -30,7 +30,7 @@ Feature: Toolbar
 	Then I validate there are 7 links on the canvas with port style
 
 	Scenario: Sanity test for secondary toolbar Copy and Paste buttons with the D3 rendering engine
-
+	Then I resize the window size to 1400 width and 800 height
 	Given I am on the test harness
 	Given I have toggled the app side panel
 	Given I have selected the "Flyout" palette layout
@@ -53,7 +53,7 @@ Feature: Toolbar
 	Then I validate there are 12 links on the canvas with port style
 
 	Scenario: Sanity test for secondary toolbar Create and Delete button with the D3 rendering engine
-
+	Then I resize the window size to 1400 width and 800 height
 	Given I am on the test harness
 	Given I have toggled the app side panel
 	Given I have selected the "Flyout" palette layout
@@ -74,7 +74,7 @@ Feature: Toolbar
 	Then I verify the number of comments are 0
 
 	Scenario: Sanity test for secondary toolbar resize with the D3 rendering engine
-
+	Then I resize the window size to 1400 width and 800 height
 	Given I am on the test harness
 	Given I have toggled the app side panel
 	Given I have selected the "Flyout" palette layout
@@ -95,7 +95,7 @@ Feature: Toolbar
 	Then I resize the window size to 1330 width and 660 height
 
 	Scenario: Sanity test for secondary toolbar horizontal and vertical layout with the D3 rendering engine
-
+	Then I resize the window size to 1400 width and 800 height
 	Given I am on the test harness
 	Given I have toggled the app side panel
 	Given I have selected the "Flyout" palette layout

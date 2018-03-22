@@ -7,6 +7,7 @@ Feature: Main2
   So I can add more flow to the canvas
 
   Scenario: Sanity test from loaded file with D3 rendering engine
+		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "Modal" palette layout
@@ -41,6 +42,7 @@ Feature: Main2
 		Then I pause for 1 seconds
 
 	Scenario: Sanity test from loaded file with D3 rendering engine
+		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "D3" rendering engine
@@ -54,6 +56,7 @@ Feature: Main2
 		Then I verify the number of comment links are 0
 
 	Scenario: Sanity test from loaded file in legacy format with D3 rendering engine
+		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "D3" rendering engine

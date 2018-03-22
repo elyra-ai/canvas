@@ -7,6 +7,7 @@ Feature: SummaryPanel
 	So I can test the summary panel controls in common-properties
 
 		Scenario: Test of summary panel and wideflyout
+			Then I resize the window size to 1400 width and 800 height
 			Given I am on the test harness
 			Given I have toggled the app side common-properties panel
 			Then I have selected the "flyout" properties container type
@@ -54,6 +55,7 @@ Feature: SummaryPanel
 			Then I verify that the summary list does not contains the value of "BP" for the "Configure Sort Order" summary link in the "Column Structure Table" category
 
 		Scenario: Test long table summaries
+			Then I resize the window size to 1400 width and 800 height
 			Given I am on the test harness
 			Given I have toggled the app side common-properties panel
 			Then I have selected the "flyout" properties container type
@@ -81,6 +83,7 @@ Feature: SummaryPanel
 			Then I verify the "Configure Derive Node" summary in the "Structure List Table" category contains more than ten rows
 
 		Scenario: Test if tips show up for the summary table values
+			Then I resize the window size to 1400 width and 800 height
 			Given I am on the test harness
 			Given I have toggled the app side common-properties panel
 			Then I have selected the "flyout" properties container type

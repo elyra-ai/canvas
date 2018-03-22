@@ -7,6 +7,7 @@ Feature: StructureListEditorControl
 	So I can test the structure list editor control in common-properties
 
 	Scenario: Test generatedValues in structure list editor control
+		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side common-properties panel
 		Then I have selected the "Flyout" properties container type

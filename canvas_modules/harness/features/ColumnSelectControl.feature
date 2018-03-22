@@ -7,6 +7,7 @@ Feature: ColumnSelectControl
 	So I can test the column select controls in common-properties
 
 	Scenario: Test of basic features of column select control
+		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side common-properties panel
 		Then I have selected the "Modal" properties container type
@@ -63,6 +64,7 @@ Feature: ColumnSelectControl
 		# remove all fields
 
 	Scenario: Test of conditions of column select control
+		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side common-properties panel
 		Then I have selected the "Modal" properties container type

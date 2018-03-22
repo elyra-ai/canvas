@@ -7,6 +7,7 @@ Feature: Tips
 	So I can get information when hovering over elements
 
 Scenario: Sanity test to check if tips show up for the palette, nodes, ports and links
+	Then I resize the window size to 1400 width and 800 height
 	Given I am on the test harness
 	Given I have toggled the app side panel
 	Given I have selected the "D3" rendering engine
@@ -43,6 +44,7 @@ Scenario: Sanity test to check if tips show up for the palette, nodes, ports and
 
 
 Scenario: Sanity test to check if tips don't show up for the palette, nodes, ports and links after disabling tips
+	Then I resize the window size to 1400 width and 800 height
 	Given I am on the test harness
 	Given I have toggled the app side panel
 	Given I have selected the "D3" rendering engine
@@ -70,6 +72,7 @@ Scenario: Sanity test to check if tips don't show up for the palette, nodes, por
 	Then I verify the tip shows doesn't show for link id "canvas_link_1"
 
 Scenario: Sanity test changing node name to update node tip
+	Then I resize the window size to 1400 width and 800 height
 	Given I am on the test harness
 	Given I have toggled the app side panel
 	Given I have selected the "D3" rendering engine
@@ -86,6 +89,7 @@ Scenario: Sanity test changing node name to update node tip
 	And I verify the tip shows below the node "New Node Label"
 
 Scenario: Sanity test changing input port name to update port tip
+	Then I resize the window size to 1400 width and 800 height
 	Given I am on the test harness
 	Given I have toggled the app side panel
 	Given I have selected the "D3" rendering engine
@@ -103,6 +107,7 @@ Scenario: Sanity test changing input port name to update port tip
 	And I verify the port name "New Port Label" shows below the input port id "inPort2" of node "Na_to_K"
 
 Scenario: Sanity test changing output port name to update port tip
+	Then I resize the window size to 1400 width and 800 height
 	Given I am on the test harness
 	Given I have toggled the app side panel
 	Given I have selected the "D3" rendering engine
