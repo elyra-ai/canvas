@@ -30,8 +30,6 @@ Delete @wdp from node_modules
 npm install
 ```
 
-## Updating "release" branch (Weekly Jenkins Job: [link](https://analytics-canvas-jenkins.swg-devops.com/view/canvas_utils/job/Abstract-Canvas_Promote-Release))
-
 ## Development environment
 
 ### Atom
