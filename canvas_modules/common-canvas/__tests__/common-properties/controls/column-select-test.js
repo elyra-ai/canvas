@@ -506,7 +506,7 @@ describe("selectcolumns control filters values correctly with multi input", () =
 describe("selectcolumns control displays the proper number of rows", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(JSON.parse(JSON.stringify(rowDisplayParamDef)));
+		const renderedObject = propertyUtils.flyoutEditorForm(rowDisplayParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 

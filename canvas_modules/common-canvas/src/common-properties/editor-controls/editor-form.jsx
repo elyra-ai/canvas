@@ -432,7 +432,6 @@ class EditorForm extends React.Component {
 						key={"action." + key}
 						action={action}
 						controller={this.props.controller}
-						actionHandler={this.props.actionHandler}
 					/>
 				);
 			}
@@ -663,8 +662,7 @@ EditorForm.propTypes = {
 	showPropertiesButtons: PropTypes.func,
 	customPanels: PropTypes.array,
 	rightFlyout: PropTypes.bool,
-	intl: intlShape,
-	actionHandler: PropTypes.func
+	intl: intlShape
 };
 
 export default injectIntl(EditorForm);

@@ -62,7 +62,6 @@ class App extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			forceApplyProperties: false,
 			consoleout: [],
 			consoleOpened: false,
 			contextMenuInfo: {},
@@ -153,7 +152,6 @@ class App extends React.Component {
 		this.propertyListener = this.propertyListener.bind(this);
 		this.propertyActionHandler = this.propertyActionHandler.bind(this);
 		this.propertiesControllerHandler = this.propertiesControllerHandler.bind(this);
-		this.forceApplyProperties = this.forceApplyProperties.bind(this);
 		this.helpClickHandler = this.helpClickHandler.bind(this);
 
 		this.canvasController = new CanvasController();
@@ -436,7 +434,6 @@ class App extends React.Component {
 			this.canvasController.setNodeLabel(appData.nodeId, additionalInfo.title);
 			this.canvasController.setNodeMessages(appData.nodeId, additionalInfo.messages);
 		}
-		this.setState({ forceApplyProperties: false });
 	}
 
 	helpClickHandler(nodeTypeId, helpData, appData) {
@@ -703,11 +700,6 @@ class App extends React.Component {
 	editNodeHandler(nodeId) {
 		this.log("action: editNode", nodeId);
 		if (nodeId && this.currentEditorId !== nodeId) {
-			// apply properties from previous node if node selection has changed w/o closing editor
-			if (this.currentEditorId) {
-				this.CommonProperties.getWrappedInstance().applyPropertiesEditing(false);
-			}
-
 			this.currentEditorId = nodeId; // set new node
 			const appData = { nodeId: nodeId };
 
@@ -746,10 +738,7 @@ class App extends React.Component {
 				formData: properties.data.formData,
 				parameterDef: properties.data,
 				appData: appData,
-				applyPropertyChanges: this.applyPropertyChanges,
-				closePropertiesDialog: this.closePropertiesEditorDialog,
-				additionalComponents: properties.additionalComponents,
-				helpClickHandler: this.helpClickHandler
+				additionalComponents: properties.additionalComponents
 			};
 
 			this.setState({ showPropertiesDialog: true, propertiesInfo: propsInfo });
@@ -767,7 +756,6 @@ class App extends React.Component {
 		}
 		// apply properties from previous node if node selection has to more than one node
 		if (this.currentEditorId) {
-			this.CommonProperties.getWrappedInstance().applyPropertiesEditing(false);
 			this.setState({ showPropertiesDialog: false });
 			this.currentEditorId = null;
 		}
@@ -805,10 +793,7 @@ class App extends React.Component {
 			title: <FormattedMessage id={ "dialog.nodePropertiesTitle" } />,
 			formData: properties.formData,
 			parameterDef: properties,
-			applyPropertyChanges: this.applyPropertyChanges,
-			closePropertiesDialog: this.closePropertiesEditorDialog,
 			additionalComponents: properties.additionalComponents,
-			helpClickHandler: this.helpClickHandler
 		};
 		this.setState({ showPropertiesDialog: true, propertiesInfo: propsInfo });
 	}
@@ -817,10 +802,6 @@ class App extends React.Component {
 		this.currentEditorId = null;
 		this.canvasController.setSelections([]); // clear selection
 		this.setState({ showPropertiesDialog: false, propertiesInfo: {} });
-	}
-
-	forceApplyProperties() {
-		this.setState({ forceApplyProperties: true });
 	}
 
 	handleEmptyCanvasLinkClick() {
@@ -979,23 +960,26 @@ class App extends React.Component {
 			{ action: "arrangeVertically", label: "Arrange Vertically", enable: layoutAction }
 		];
 
-		var commonProperties = (
+		const propertiesConfig = {
+			containerType: this.state.propertiesContainerType === FLYOUT ? CUSTOM : this.state.propertiesContainerType,
+			rightFlyout: this.state.propertiesContainerType === FLYOUT,
+			applyOnBlur: true
+		};
+		const callbacks = {
+			controllerHandler: this.propertiesControllerHandler,
+			propertyListener: this.propertyListener,
+			actionHandler: this.propertyActionHandler,
+			applyPropertyChanges: this.applyPropertyChanges,
+			closePropertiesDialog: this.closePropertiesEditorDialog,
+			helpClickHandler: this.helpClickHandler
+		};
+		const commonProperties = (
 			<CommonProperties
-				showPropertiesDialog={this.state.showPropertiesDialog}
-				forceApplyProperties={this.state.forceApplyProperties}
 				propertiesInfo={this.state.propertiesInfo}
-				containerType={this.state.propertiesContainerType === FLYOUT ? CUSTOM : this.state.propertiesContainerType}
+				propertiesConfig={propertiesConfig}
 				customPanels={[CustomSliderPanel, CustomTogglePanel, CustomMapPanel, CustomButtonPanel, CustomDatasetsPanel]}
-				rightFlyout={this.state.propertiesContainerType === FLYOUT}
-				controllerHandler={this.propertiesControllerHandler}
-				propertyListener={this.propertyListener}
-				actionHandler={this.propertyActionHandler}
+				callbacks={callbacks}
 				customControls={[CustomToggleControl, CustomTableControl]}
-				ref={
-					(instance) => {
-						this.CommonProperties = instance;
-					}
-				}
 			/>);
 
 		let commonPropertiesContainer = null;
@@ -1069,7 +1053,6 @@ class App extends React.Component {
 				closeSidePanelModal={this.closeSidePanelModal}
 				openSidepanelCanvas={this.state.openSidepanelCanvas}
 				openSidepanelModal={this.state.openSidepanelModal}
-				forceApplyProperties={this.forceApplyProperties}
 				openSidepanelAPI={this.state.openSidepanelAPI}
 				setDiagramJSON={this.setDiagramJSON}
 				setPaletteJSON={this.setPaletteJSON}

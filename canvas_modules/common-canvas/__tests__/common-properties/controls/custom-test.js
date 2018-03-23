@@ -15,7 +15,7 @@ describe("custom control renders correctly", () => {
 	var wrapper;
 	var controller;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(JSON.parse(JSON.stringify(customControlParamDef)));
+		const renderedObject = propertyUtils.flyoutEditorForm(customControlParamDef);
 		wrapper = renderedObject.wrapper;
 		controller = renderedObject.controller;
 	});

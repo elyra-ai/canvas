@@ -50,6 +50,11 @@ export default class PropertiesController {
 	subscribe(callback) {
 		this.propertiesStore.subscribe(callback);
 	}
+
+	getHandlers() {
+		return this.handlers;
+	}
+
 	setHandlers(inHandlers) {
 		this.handlers = Object.assign(this.handlers, inHandlers);
 		if (this.handlers.controllerHandler && !this.controllerHandlerCalled) {

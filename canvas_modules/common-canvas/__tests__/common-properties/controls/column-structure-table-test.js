@@ -945,7 +945,7 @@ describe("condition messages renders correctly with structure table control", ()
 	var wrapper;
 	var renderedController;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(JSON.parse(JSON.stringify(structuretableParamDef)));
+		const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
 		wrapper = renderedObject.wrapper;
 		renderedController = renderedObject.controller;
 	});
@@ -1212,7 +1212,7 @@ describe("ColumnStructureTableControl with readonly numbered column renders corr
 describe("ColumnStructureTableControl with filtering works correctly", () => {
 	var wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(JSON.parse(JSON.stringify(structuretableParamDef)));
+		const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 
@@ -1417,7 +1417,7 @@ describe("ColumnStructureTableControl with multi input schemas renders correctly
 describe("column structure table editor control displays the proper number of rows", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(JSON.parse(JSON.stringify(rowDisplayParamDef)));
+		const renderedObject = propertyUtils.flyoutEditorForm(rowDisplayParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 
@@ -1457,7 +1457,7 @@ describe("column structure table editor control displays the proper number of ro
 describe("column structure table editor control displays with no header", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(JSON.parse(JSON.stringify(structuretableParamDef)));
+		const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 
@@ -1487,7 +1487,7 @@ describe("column structure table editor control handles updated data model", () 
 	let wrapper;
 	let propController;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(JSON.parse(JSON.stringify(structuretableParamDef)));
+		const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
 		wrapper = renderedObject.wrapper;
 		propController = renderedObject.controller;
 	});

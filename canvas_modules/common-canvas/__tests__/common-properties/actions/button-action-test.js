@@ -16,6 +16,7 @@ import Controller from "../../../src/common-properties/properties-controller";
 
 const actionHandler = sinon.spy();
 const controller = new Controller();
+controller.setHandlers({ actionHandler: actionHandler });
 controller.setAppData({ nodeId: "1234" });
 
 const action = {
@@ -36,13 +37,11 @@ describe("action-button renders correctly", () => {
 			<ActionButton
 				action={action}
 				controller={controller}
-				actionHandler={actionHandler}
 			/>
 		);
 
 		expect(wrapper.prop("action")).to.equal(action);
 		expect(wrapper.prop("controller")).to.equal(controller);
-		expect(wrapper.prop("actionHandler")).to.equal(actionHandler);
 	});
 
 	it("should render a `ActionButton`", () => {
@@ -50,7 +49,6 @@ describe("action-button renders correctly", () => {
 			<ActionButton
 				action={action}
 				controller={controller}
-				actionHandler={actionHandler}
 			/>
 		);
 		const button = wrapper.find("button");
@@ -63,11 +61,11 @@ describe("action-button renders correctly", () => {
 			expect(data.parameter_ref).to.equal("number");
 			done();
 		}
+		controller.setHandlers({ actionHandler: callback });
 		const wrapper = mount(
 			<ActionButton
 				action={action}
 				controller={controller}
-				actionHandler={callback}
 			/>
 		);
 		const button = wrapper.find("button");

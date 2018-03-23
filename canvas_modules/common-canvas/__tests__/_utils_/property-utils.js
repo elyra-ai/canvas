@@ -23,27 +23,28 @@ function controllerHandler(propertyController) {
 	renderedController = propertyController;
 }
 
-function flyoutEditorForm(paramDef) {
+function flyoutEditorForm(paramDef, propertiesConfig) {
 	const applyPropertyChanges = sinon.spy();
 	const closePropertiesDialog = sinon.spy();
 	const callbacks = {
 		applyPropertyChanges: applyPropertyChanges,
-		closePropertiesDialog: closePropertiesDialog
+		closePropertiesDialog: closePropertiesDialog,
+		controllerHandler: controllerHandler
 	};
 
 	const propertiesInfo = {
-		parameterDef: paramDef,
-		applyPropertyChanges: applyPropertyChanges,
-		closePropertiesDialog: closePropertiesDialog
+		parameterDef: JSON.parse(JSON.stringify(paramDef))
 	};
+	let applyOnBlur = true;
+	if (propertiesConfig && typeof propertiesConfig.applyOnBlur !== "undefined") {
+		applyOnBlur = propertiesConfig.applyOnBlur;
+	}
 	const wrapper = mountWithIntl(
 		<CommonProperties
-			showPropertiesDialog
 			propertiesInfo={propertiesInfo}
-			containerType="Custom"
-			controllerHandler={controllerHandler}
+			propertiesConfig={{ containerType: "Custom", rightFlyout: true, applyOnBlur: applyOnBlur }}
+			callbacks={callbacks}
 			customControls={[CustomTableControl, CustomToggleControl]}
-			rightFlyout
 		/>
 	);
 

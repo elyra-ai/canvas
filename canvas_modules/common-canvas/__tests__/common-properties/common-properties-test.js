@@ -33,16 +33,19 @@ const propertiesInfo = {};
 propertiesInfo.parameterDef = editStyleResource.paramDef;
 propertiesInfo.appData = {};
 propertiesInfo.additionalComponents = {};
-propertiesInfo.applyPropertyChanges = applyPropertyChanges;
-propertiesInfo.closePropertiesDialog = closePropertiesDialog;
+
+const callbacks = {
+	applyPropertyChanges: applyPropertyChanges,
+	closePropertiesDialog: closePropertiesDialog
+};
 
 describe("CommonProperties renders correctly", () => {
 
 	it("all required props should have been defined", () => {
 		const wrapper = createCommonProperties("Modal");
-		expect(wrapper.prop("showPropertiesDialog")).to.equal(true);
 		expect(wrapper.prop("propertiesInfo")).to.equal(propertiesInfo);
-		expect(wrapper.prop("containerType")).to.equal("Modal");
+		expect(wrapper.prop("callbacks")).to.equal(callbacks);
+		expect(wrapper.prop("propertiesConfig").containerType).to.equal("Modal");
 	});
 
 	it("should render one <PropertiesDialog/> component", () => {
@@ -72,21 +75,15 @@ describe("CommonProperties renders correctly", () => {
 	});
 
 });
-describe("CommonProperties works correctly in flyout", () => {
-	let renderedObject;
-	let wrapper;
-	beforeEach(() => {
-		renderedObject = propertyUtils.flyoutEditorForm(propertiesInfo.parameterDef);
-		wrapper = renderedObject.wrapper;
-	});
 
-	afterEach(() => {
-		wrapper.unmount();
-	});
-	it("When forceApplyProperties set applyPropertyChanges should be called only if values have changed", () => {
+describe("CommonProperties works correctly in flyout", () => {
+
+	it("When applyOnBlur=true applyPropertyChanges should be called only if values have changed", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(propertiesInfo.parameterDef); // default is applyOnBlur=true
+		const wrapper = renderedObject.wrapper;
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
-		renderedObject.wrapper.setProps({ forceApplyProperties: true });
+		wrapper.find("#common-properties-right-flyout-panel").simulate("blur");
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
 		// make some changes
@@ -101,14 +98,12 @@ describe("CommonProperties works correctly in flyout", () => {
 		enabledRemoveColumnButton.simulate("click");
 
 		// save again: should save changes
-		wrapper.setProps({ forceApplyProperties: false });
-		wrapper.setProps({ forceApplyProperties: true });
+		wrapper.find("#common-properties-right-flyout-panel").simulate("blur");
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 1);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
 
-		// force save: should not save because no additional changes happened
-		wrapper.setProps({ forceApplyProperties: false });
-		wrapper.setProps({ forceApplyProperties: true });
+		// force blur should not save because no additional changes happened
+		wrapper.find("#common-properties-right-flyout-panel").simulate("blur");
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 1);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
 
@@ -118,11 +113,33 @@ describe("CommonProperties works correctly in flyout", () => {
 		enabledRemoveColumnButton.simulate("click");
 
 		// save again, should trigger a save
-		wrapper.setProps({ forceApplyProperties: false });
-		wrapper.setProps({ forceApplyProperties: true });
+		wrapper.find("#common-properties-right-flyout-panel").simulate("blur");
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 2);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
+		wrapper.unmount();
+	});
 
+	it("When applyOnBlur=false applyPropertyChanges should not be called", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(propertiesInfo.parameterDef, { applyOnBlur: false });
+		const wrapper = renderedObject.wrapper;
+		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
+		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
+		// make some changes
+		const tableBody = wrapper.find("#flexible-table-container").at(0);
+		const tableData = tableBody.find(".reactable-data");
+		const row = tableData.childAt(0);
+		row.simulate("click");
+
+		// ensure remove button is enabled and click it
+		const enabledRemoveColumnButton = wrapper.find(".remove-fields-button");
+		expect(enabledRemoveColumnButton).to.have.length(1);
+		enabledRemoveColumnButton.simulate("click");
+
+		// save again: should save changes
+		wrapper.find("#common-properties-right-flyout-panel").simulate("blur");
+		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 0);
+		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
+		wrapper.unmount();
 	});
 });
 
@@ -130,10 +147,9 @@ function createCommonProperties(container, messages) {
 	const	wrapper = mount(
 		<IntlProvider key="IntlProvider2" locale={ locale } messages={messages}>
 			<CommonProperties
-				showPropertiesDialog
 				propertiesInfo={propertiesInfo}
-				containerType={container}
-				forceApplyProperties={false}
+				propertiesConfig={{ containerType: container }}
+				callbacks={callbacks}
 			/>
 		</IntlProvider>
 	);

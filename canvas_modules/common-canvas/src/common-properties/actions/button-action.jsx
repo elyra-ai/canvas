@@ -21,8 +21,9 @@ export default class ButtonAction extends React.Component {
 
 	applyAction() {
 		// fire event and let the application determine how to handle the action
-		if (this.props.actionHandler) {
-			this.props.actionHandler(this.props.action.name,
+		const actionHandler = this.props.controller.getHandlers().actionHandler;
+		if (typeof actionHandler === "function") {
+			actionHandler(this.props.action.name,
 				this.props.controller.getAppData(), this.props.action.data);
 		}
 	}
@@ -40,6 +41,5 @@ export default class ButtonAction extends React.Component {
 
 ButtonAction.propTypes = {
 	action: PropTypes.object.isRequired,
-	controller: PropTypes.object.isRequired,
-	actionHandler: PropTypes.func
+	controller: PropTypes.object.isRequired
 };

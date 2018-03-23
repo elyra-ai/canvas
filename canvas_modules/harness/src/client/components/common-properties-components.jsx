@@ -77,9 +77,12 @@ class CommonPropertiesComponents extends React.Component {
 			rightFlyoutContent: null
 		};
 
+		this.propertiesConfig = { containerType: "Custom" };
+
 		this.jsonReplacer = this.jsonReplacer.bind(this);
 		this.onMenuDropdownSelect = this.onMenuDropdownSelect.bind(this);
 		this.setRightFlyoutState = this.setRightFlyoutState.bind(this);
+
 		this.actionHandler = this.actionHandler.bind(this);
 		this.controllerHandler = this.controllerHandler.bind(this);
 
@@ -423,9 +426,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={CONTROLS_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(CONTROLS_PROPS_INFO)}
 						</div>
@@ -444,9 +446,8 @@ class CommonPropertiesComponents extends React.Component {
 						<div className="section-row">
 							<div className="section-column">
 								<CommonProperties
-									showPropertiesDialog
 									propertiesInfo={PANELS_PROPS_INFO}
-									containerType="Custom"
+									propertiesConfig={this.propertiesConfig}
 								/>
 								{this.renderRightFlyoutButton(PANELS_PROPS_INFO)}
 							</div>
@@ -468,9 +469,8 @@ class CommonPropertiesComponents extends React.Component {
 						<div className="section-row">
 							<div className="section-column">
 								<CommonProperties
-									showPropertiesDialog
 									propertiesInfo={TABS_PROPS_INFO}
-									containerType="Custom"
+									propertiesConfig={this.propertiesConfig}
 								/>
 								{this.renderRightFlyoutButton(TABS_PROPS_INFO)}
 							</div>
@@ -491,9 +491,8 @@ class CommonPropertiesComponents extends React.Component {
 						<div className="section-row">
 							<div className="section-column">
 								<CommonProperties
-									showPropertiesDialog
 									propertiesInfo={SUBTABS_PROPS_INFO}
-									containerType="Custom"
+									propertiesConfig={this.propertiesConfig}
 								/>
 								{this.renderRightFlyoutButton(SUBTABS_PROPS_INFO)}
 							</div>
@@ -521,9 +520,8 @@ class CommonPropertiesComponents extends React.Component {
 						<div className="section-row">
 							<div className="section-column">
 								<CommonProperties
-									showPropertiesDialog
 									propertiesInfo={PANEL_SELECTOR_PROPS_INFO}
-									containerType="Custom"
+									propertiesConfig={this.propertiesConfig}
 								/>
 								{this.renderRightFlyoutButton(PANEL_SELECTOR_PROPS_INFO)}
 							</div>
@@ -547,9 +545,8 @@ class CommonPropertiesComponents extends React.Component {
 						<div className="section-row">
 							<div className="section-column">
 								<CommonProperties
-									showPropertiesDialog
 									propertiesInfo={PANEL_SELECTOR_INSERT_PROPS_INFO}
-									containerType="Custom"
+									propertiesConfig={this.propertiesConfig}
 								/>
 								{this.renderRightFlyoutButton(PANEL_SELECTOR_INSERT_PROPS_INFO)}
 							</div>
@@ -569,9 +566,8 @@ class CommonPropertiesComponents extends React.Component {
 						<div className="section-row">
 							<div className="section-column">
 								<CommonProperties
-									showPropertiesDialog
 									propertiesInfo={CHECKBOX_PANEL_PROPS_INFO}
-									containerType="Custom"
+									propertiesConfig={this.propertiesConfig}
 								/>
 								{this.renderRightFlyoutButton(CHECKBOX_PANEL_PROPS_INFO)}
 							</div>
@@ -597,9 +593,8 @@ class CommonPropertiesComponents extends React.Component {
 						<div className="section-row">
 							<div className="section-column">
 								<CommonProperties
-									showPropertiesDialog
 									propertiesInfo={SUMMARY_PANEL_PROPS_INFO}
-									containerType="Custom"
+									propertiesConfig={this.propertiesConfig}
 								/>
 								{this.renderRightFlyoutButton(SUMMARY_PANEL_PROPS_INFO)}
 							</div>
@@ -621,11 +616,9 @@ class CommonPropertiesComponents extends React.Component {
 						<div className="section-row">
 							<div className="section-column">
 								<CommonProperties
-									showPropertiesDialog
 									propertiesInfo={TWISTY_PANEL_PROPS_INFO}
-									actionHandler={this.twistyActionHandler}
-									controllerHandler={this.twistyControllerHandler}
-									containerType="Custom"
+									callbacks={{ actionHandler: this.twistyActionHandler, controllerHandler: this.twistyControllerHandler }}
+									propertiesConfig={this.propertiesConfig}
 								/>
 								{this.renderRightFlyoutButton(TWISTY_PANEL_PROPS_INFO)}
 							</div>
@@ -650,9 +643,8 @@ class CommonPropertiesComponents extends React.Component {
 						<div className="section-row">
 							<div className="section-column">
 								<CommonProperties
-									showPropertiesDialog
 									propertiesInfo={COLUMNSELECTION_PROPS_INFO}
-									containerType="Custom"
+									propertiesConfig={this.propertiesConfig}
 								/>
 								{this.renderRightFlyoutButton(COLUMNSELECTION_PROPS_INFO)}
 							</div>
@@ -672,9 +664,8 @@ class CommonPropertiesComponents extends React.Component {
 						<div className="section-row">
 							<div className="section-column">
 								<CommonProperties
-									showPropertiesDialog
 									propertiesInfo={TEXT_PANEL_PROPS_INFO}
-									containerType="Custom"
+									propertiesConfig={this.propertiesConfig}
 								/>
 								{this.renderRightFlyoutButton(TEXT_PANEL_PROPS_INFO)}
 							</div>
@@ -701,9 +692,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={TEXTFIELD_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(TEXTFIELD_PROPS_INFO)}
 						</div>
@@ -720,9 +710,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={TEXTAREA_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(TEXTAREA_PROPS_INFO)}
 						</div>
@@ -739,9 +728,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={PASSWORD_FIELD_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(PASSWORD_FIELD_PROPS_INFO)}
 						</div>
@@ -763,9 +751,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={EXPRESSION_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(EXPRESSION_PROPS_INFO)}
 						</div>
@@ -783,9 +770,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={READONLY_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(READONLY_PROPS_INFO)}
 						</div>
@@ -802,9 +788,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={NUMBERFIELD_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(NUMBERFIELD_PROPS_INFO)}
 						</div>
@@ -820,9 +805,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={NUMBERFIELD_GENERATOR_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(NUMBERFIELD_GENERATOR_PROPS_INFO)}
 						</div>
@@ -845,9 +829,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={SPINNER_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(SPINNER_PROPS_INFO)}
 						</div>
@@ -872,9 +855,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={DATEFIELD_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(DATEFIELD_PROPS_INFO)}
 						</div>
@@ -901,9 +883,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={TIMEFIELD_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(TIMEFIELD_PROPS_INFO)}
 						</div>
@@ -922,9 +903,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={CHECKBOX_SINGLE_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(CHECKBOX_SINGLE_PROPS_INFO)}
 						</div>
@@ -945,9 +925,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={CHECKBOX_SET_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(CHECKBOX_SET_PROPS_INFO)}
 						</div>
@@ -969,9 +948,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={RADIOSET_HORIZONTAL_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(RADIOSET_HORIZONTAL_PROPS_INFO)}
 						</div>
@@ -986,9 +964,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={RADIOSET_VERTICAL_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(RADIOSET_VERTICAL_PROPS_INFO)}
 						</div>
@@ -1009,9 +986,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={ONEOFSELECT_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(ONEOFSELECT_PROPS_INFO)}
 						</div>
@@ -1031,9 +1007,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={FORCED_RADIOSET_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(FORCED_RADIOSET_PROPS_INFO)}
 						</div>
@@ -1056,9 +1031,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={SOMEOFSELECT_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(SOMEOFSELECT_PROPS_INFO)}
 						</div>
@@ -1078,9 +1052,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={FORCED_CHECKBOX_SET_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(FORCED_CHECKBOX_SET_PROPS_INFO)}
 						</div>
@@ -1103,9 +1076,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={SELECTSCHEMA_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(SELECTSCHEMA_PROPS_INFO)}
 						</div>
@@ -1128,9 +1100,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={SELECTCOLUMN_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(SELECTCOLUMN_PROPS_INFO)}
 						</div>
@@ -1148,9 +1119,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={SELECTCOLUMN_MULTI_INPUT_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(SELECTCOLUMN_MULTI_INPUT_PROPS_INFO)}
 						</div>
@@ -1174,9 +1144,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={SELECTCOLUMNS_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(SELECTCOLUMNS_PROPS_INFO)}
 						</div>
@@ -1196,9 +1165,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={SELECTCOLUMNS_MULTI_INPUT_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(SELECTCOLUMNS_MULTI_INPUT_PROPS_INFO)}
 						</div>
@@ -1217,9 +1185,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={TOGGLETEXT_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(TOGGLETEXT_PROPS_INFO)}
 						</div>
@@ -1235,9 +1202,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={TOGGLETEXTICONS_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(TOGGLETEXTICONS_PROPS_INFO)}
 						</div>
@@ -1290,9 +1256,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={STRUCTURETABLE_INLINE_TOGGLE_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(STRUCTURETABLE_INLINE_TOGGLE_PROPS_INFO)}
 						</div>
@@ -1315,9 +1280,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={STRUCTURELISTEDITOR_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(STRUCTURELISTEDITOR_PROPS_INFO)}
 						</div>
@@ -1347,9 +1311,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={STRUCTURETABLE_INLINE_DROPDOWN_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(STRUCTURETABLE_INLINE_DROPDOWN_PROPS_INFO)}
 						</div>
@@ -1365,9 +1328,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={STRUCTURETABLE_INLINE_TEXTFIELD_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(STRUCTURETABLE_INLINE_TEXTFIELD_PROPS_INFO)}
 						</div>
@@ -1384,9 +1346,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={STRUCTURETABLE_SUBPANEL_TEXTFIELD_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(STRUCTURETABLE_SUBPANEL_TEXTFIELD_PROPS_INFO)}
 						</div>
@@ -1415,9 +1376,8 @@ class CommonPropertiesComponents extends React.Component {
 						<div className="section-row">
 							<div className="section-column">
 								<CommonProperties
-									showPropertiesDialog
 									propertiesInfo={STRUCTURETABLE_ONPANEL_EXPRESSION_PROPS_INFO}
-									containerType="Custom"
+									propertiesConfig={this.propertiesConfig}
 								/>
 								{this.renderRightFlyoutButton(STRUCTURETABLE_ONPANEL_EXPRESSION_PROPS_INFO)}
 							</div>
@@ -1438,9 +1398,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={STRUCTURETABLE_MOVEABLE_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(STRUCTURETABLE_MOVEABLE_PROPS_INFO)}
 						</div>
@@ -1462,9 +1421,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={STRUCTURETABLE_ROW_SELECTION_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(STRUCTURETABLE_ROW_SELECTION_PROPS_INFO)}
 						</div>
@@ -1486,9 +1444,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={STRUCTURELISTEDITOR_ADDREMOVEROWS_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(STRUCTURELISTEDITOR_ADDREMOVEROWS_PROPS_INFO)}
 						</div>
@@ -1515,9 +1472,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={STRUCTURETABLE_SORTABLE_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(STRUCTURETABLE_SORTABLE_PROPS_INFO)}
 						</div>
@@ -1543,9 +1499,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={STRUCTURETABLE_FILTERABLE_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(STRUCTURETABLE_FILTERABLE_PROPS_INFO)}
 						</div>
@@ -1584,9 +1539,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={SUMMARY_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(SUMMARY_PROPS_INFO)}
 						</div>
@@ -1604,9 +1558,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={STRUCTURETABLE_GENERATED_VALUES_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(STRUCTURETABLE_GENERATED_VALUES_PROPS_INFO)}
 						</div>
@@ -1623,9 +1576,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={STRUCTURETABLE_GENERATED_VALUES_DEFAULT_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(STRUCTURETABLE_GENERATED_VALUES_DEFAULT_PROPS_INFO)}
 						</div>
@@ -1655,11 +1607,9 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={ACTION_PROPS_INFO}
-								containerType="Custom"
-								actionHandler={this.actionHandler}
-								controllerHandler={this.controllerHandler}
+								propertiesConfig={this.propertiesConfig}
+								callbacks={{ actionHandler: this.actionHandler, controllerHandler: this.controllerHandler }}
 							/>
 							{this.renderRightFlyoutButton(ACTION_PROPS_INFO)}
 						</div>
@@ -1688,14 +1638,9 @@ class CommonPropertiesComponents extends React.Component {
 			rightFlyoutWidth = "318px";
 			rightFlyout = (<div className="right-flyout-panel" style={{ width: rightFlyoutWidth }}>
 				<CommonProperties
-					showPropertiesDialog
 					propertiesInfo={this.state.rightFlyoutContent}
-					actionHandler={this.flyoutActionHandler}
-					controllerHandler={this.flyoutControllerHandler}
-					containerType="Custom"
-					applyLabel="Apply"
-					rejectLabel="Reject"
-					rightFlyout
+					callbacks={{ actionHandler: this.flyoutActionHandler, controllerHandler: this.flyoutControllerHandler }}
+					propertiesConfig={{ containerType: "Custom", rightFlyout: true }}
 				/>);
 			</div>);
 		}

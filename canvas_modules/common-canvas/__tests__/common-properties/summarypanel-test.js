@@ -16,7 +16,7 @@ import { ReactWrapper } from "enzyme";
 describe("summary renders correctly", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(JSON.parse(JSON.stringify(summarypanelParamDef)));
+		const renderedObject = propertyUtils.flyoutEditorForm(summarypanelParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 
@@ -57,7 +57,7 @@ describe("summary renders correctly", () => {
 describe("summary panel renders correctly", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(JSON.parse(JSON.stringify(summarypanelParamDef)));
+		const renderedObject = propertyUtils.flyoutEditorForm(summarypanelParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 
@@ -92,7 +92,7 @@ describe("summary panel renders correctly", () => {
 describe("summary panel renders error/warning status correctly", () => {
 	let wrapper;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(JSON.parse(JSON.stringify(summarypanelParamDef)));
+		const renderedObject = propertyUtils.flyoutEditorForm(summarypanelParamDef);
 		wrapper = renderedObject.wrapper;
 	});
 
@@ -250,7 +250,7 @@ describe("summary panel visible and enabled conditions work correctly", () => {
 	let wrapper;
 	let controller;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(JSON.parse(JSON.stringify(panelConditionsParamDef)));
+		const renderedObject = propertyUtils.flyoutEditorForm(panelConditionsParamDef);
 		wrapper = renderedObject.wrapper;
 		controller = renderedObject.controller;
 	});

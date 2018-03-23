@@ -80,8 +80,6 @@ Feature: UndoRedo
 		Then I verify the number of comments are 0
 
 		Given I have toggled the app side common-properties panel
-		Then I have selected the "Modal" properties container type
-
 		Given I have uploaded JSON for common-properties "spark.AddColumn.json"
 		Then I pause for 1 seconds
 		Then I enter "testValue" in the textbox Column name

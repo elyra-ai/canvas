@@ -636,7 +636,7 @@ describe("should render table using CommonProperties element", () => {
 	var wrapper;
 	// var renderedController;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(JSON.parse(JSON.stringify(structureListEditorParamDef)));
+		const renderedObject = propertyUtils.flyoutEditorForm(structureListEditorParamDef);
 		wrapper = renderedObject.wrapper;
 		// renderedController = renderedObject.controller;
 	});
@@ -708,7 +708,7 @@ describe("should render table with error checking using CommonProperties element
 	var wrapper;
 	var renderedController;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(JSON.parse(JSON.stringify(structureListEditorParamDef)));
+		const renderedObject = propertyUtils.flyoutEditorForm(structureListEditorParamDef);
 		wrapper = renderedObject.wrapper;
 		renderedController = renderedObject.controller;
 	});

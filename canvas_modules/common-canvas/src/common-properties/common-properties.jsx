@@ -31,7 +31,6 @@ class CommonProperties extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			showPropertiesDialog: false,
 			showPropertiesButtons: true,
 			propertiesTitleReadOnly: true
 		};
@@ -50,13 +49,14 @@ class CommonProperties extends React.Component {
 		this.editTitleClickHandler = this.editTitleClickHandler.bind(this);
 		this.helpClickHandler = this.helpClickHandler.bind(this);
 		this.getEditorWidth = this.getEditorWidth.bind(this);
+		this.onBlur = this.onBlur.bind(this);
 	}
 	componentWillMount() {
 		this.setForm();
 		this.propertiesController.setHandlers({
-			controllerHandler: this.props.controllerHandler,
-			propertyListener: this.props.propertyListener,
-			actionHandler: this.props.actionHandler
+			controllerHandler: this.props.callbacks.controllerHandler,
+			propertyListener: this.props.callbacks.propertyListener,
+			actionHandler: this.props.callbacks.actionHandler
 		});
 		if (this.propertiesInfo.messages) {
 			this.setErrorMessages(this.propertiesInfo.messages);
@@ -84,15 +84,21 @@ class CommonProperties extends React.Component {
 				this.currentParameters = null;
 			}
 		}
-		if (newProps.forceApplyProperties) {
-			this.applyPropertiesEditing(false);
-		}
 		this.propertiesController.setCustomControls(newProps.customControls);
 	}
 
 	componentDidUpdate(prevProps, prevState) {
 		if (!this.currentParameters) {
 			this.currentParameters = JSON.parse(JSON.stringify(this.propertiesController.getPropertyValues(false)));
+		}
+	}
+	onBlur(e) {
+		// apply properties when focus leave common properties.
+		// subdialogs and summary panel causes focus to leave but shouldn't apply settings
+		if (this.props.propertiesConfig.applyOnBlur &&
+			this.commonProperties && !this.commonProperties.contains(e.relatedTarget) &&
+			!this.propertiesController.isSummaryPanelShowing() && !this.propertiesController.isSubPanelsShowing()) {
+			this.applyPropertiesEditing(false);
 		}
 	}
 
@@ -113,7 +119,7 @@ class CommonProperties extends React.Component {
 			if (this.propertiesInfo.formData && Object.keys(this.propertiesInfo.formData).length !== 0) {
 				formData = this.propertiesInfo.formData;
 			} else if (this.propertiesInfo.parameterDef) {
-				formData = Form.makeForm(this.propertiesInfo.parameterDef, !this.props.rightFlyout);
+				formData = Form.makeForm(this.propertiesInfo.parameterDef, !this.props.propertiesConfig.rightFlyout);
 			}
 			// TODO: This can be removed once the WML Play service generates datasetMetadata instead of inputDataModel
 			if (formData && formData.data && formData.data.inputDataModel && !formData.data.datasetMetadata) {
@@ -176,27 +182,28 @@ class CommonProperties extends React.Component {
 			if (formData && formData.label) {
 				initialCurrentProperties.additionalInfo.title = formData.label;
 			}
-			// don't closed if forceApplyProperties is set by user
 			if (closeProperties) {
 				// May need to close the dialog inside the callback in
 				// case of validation errors.
-				this.props.propertiesInfo.closePropertiesDialog();
+				this.props.callbacks.closePropertiesDialog();
 			} else {
-				// forceApplyProperties was true:
 				// if we don't close the dialog, set the currentParameters to the new parameters
 				// so we don't save again unnecessarily when clicking save but no additional changes happened
 				this.currentParameters = JSON.parse(JSON.stringify(this.propertiesController.getPropertyValues(false)));
 			}
 			const command = new CommonPropertiesAction(settings, initialCurrentProperties,
-				this.props.propertiesInfo.appData, this.props.propertiesInfo.applyPropertyChanges);
+				this.props.propertiesInfo.appData, this.props.callbacks.applyPropertyChanges);
 			this.propertiesController.getCommandStack().do(command);
 		} else if (closeProperties) {
-			this.props.propertiesInfo.closePropertiesDialog();
+			this.cancelHandler(); // close property editor
 		}
 	}
 
 	cancelHandler() {
-		this.propertiesInfo.closePropertiesDialog();
+		if (this.props.callbacks.closePropertiesDialog) {
+			this.props.callbacks.closePropertiesDialog();
+		}
+
 	}
 
 	showPropertiesButtons(state) {
@@ -208,8 +215,8 @@ class CommonProperties extends React.Component {
 	}
 
 	helpClickHandler() {
-		if (this.props.propertiesInfo.helpClickHandler) {
-			this.props.propertiesInfo.helpClickHandler(
+		if (this.props.callbacks.helpClickHandler) {
+			this.props.callbacks.helpClickHandler(
 				this.propertiesController.getForm().componentId,
 				this.propertiesController.getForm().help.data,
 				this.props.propertiesInfo.appData);
@@ -246,7 +253,7 @@ class CommonProperties extends React.Component {
 				</a>)
 				: <div />;
 
-			if (this.props.rightFlyout) {
+			if (this.props.propertiesConfig.rightFlyout) {
 				propertiesTitle = (<div className="node-title-container-right-flyout-panel">
 					<div className="node-title-right-flyout-panel">
 						<TextField
@@ -273,54 +280,56 @@ class CommonProperties extends React.Component {
 				/>);
 			}
 
-			if (this.props.showPropertiesDialog) {
-				const editorForm = (<EditorForm
-					ref="editorForm"
-					key="editor-form-key"
-					controller={this.propertiesController}
-					additionalComponents={this.props.propertiesInfo.additionalComponents}
-					showPropertiesButtons={this.showPropertiesButtons}
-					customPanels={this.props.customPanels}
-					rightFlyout={this.props.rightFlyout}
-					actionHandler={this.props.actionHandler}
-				/>);
+			const editorForm = (<EditorForm
+				ref="editorForm"
+				key="editor-form-key"
+				controller={this.propertiesController}
+				additionalComponents={this.props.propertiesInfo.additionalComponents}
+				showPropertiesButtons={this.showPropertiesButtons}
+				customPanels={this.props.customPanels}
+				rightFlyout={this.props.propertiesConfig.rightFlyout}
+			/>);
 
-				if (this.props.containerType === "Editing") {
-					propertiesDialog = (<PropertiesEditing
-						applyLabel={applyLabel}
-						rejectLabel={rejectLabel}
-						bsSize={size}
-						title={this.state.title}
-						okHandler={this.applyPropertiesEditing.bind(this, true)}
-						cancelHandler={this.cancelHandler}
-						showPropertiesButtons={this.state.showPropertiesButtons}
-					>
-						{editorForm}
-					</PropertiesEditing>);
-				} else if (this.props.containerType === "Custom") {
-					propertiesDialog = (<div className="custom-container">
-						{editorForm}
-					</div>);
-				} else { // Modal
-					propertiesDialog = (<PropertiesDialog
-						onHide={this.propertiesInfo.closePropertiesDialog}
-						title={this.state.title}
-						bsSize={size}
-						okHandler={this.applyPropertiesEditing.bind(this, true)}
-						cancelHandler={this.cancelHandler}
-						showPropertiesButtons={this.state.showPropertiesButtons}
-						applyLabel={applyLabel}
-						rejectLabel={rejectLabel}
-					>
-						{editorForm}
-					</PropertiesDialog>);
-				}
+			if (this.props.propertiesConfig.containerType === "Editing") {
+				propertiesDialog = (<PropertiesEditing
+					applyLabel={applyLabel}
+					rejectLabel={rejectLabel}
+					bsSize={size}
+					title={this.state.title}
+					okHandler={this.applyPropertiesEditing.bind(this, true)}
+					cancelHandler={this.cancelHandler}
+					showPropertiesButtons={this.state.showPropertiesButtons}
+				>
+					{editorForm}
+				</PropertiesEditing>);
+			} else if (this.props.propertiesConfig.containerType === "Custom") {
+				propertiesDialog = (<div className="custom-container">
+					{editorForm}
+				</div>);
+			} else { // Modal
+				propertiesDialog = (<PropertiesDialog
+					onHide={this.props.callbacks.closePropertiesDialog}
+					title={this.state.title}
+					bsSize={size}
+					okHandler={this.applyPropertiesEditing.bind(this, true)}
+					cancelHandler={this.cancelHandler}
+					showPropertiesButtons={this.state.showPropertiesButtons}
+					applyLabel={applyLabel}
+					rejectLabel={rejectLabel}
+				>
+					{editorForm}
+				</PropertiesDialog>);
 			}
-
-			const propertiesId = this.props.rightFlyout ? "common-properties-right-flyout-panel" : "";
+			const propertiesId = this.props.propertiesConfig.rightFlyout ? "common-properties-right-flyout-panel" : "";
 			const editorWidth = this.getEditorWidth();
 			return (
-				<div id={propertiesId} style={{ width: editorWidth + "px" }}>
+				<div
+					ref={ (ref) => (this.commonProperties = ref) }
+					id={propertiesId}
+					style={{ width: editorWidth + "px" }}
+					tabIndex="0"
+					onBlur={this.onBlur}
+				>
 					{propertiesTitle}
 					{propertiesDialog}
 					{buttonsContainer}
@@ -332,17 +341,22 @@ class CommonProperties extends React.Component {
 }
 
 CommonProperties.propTypes = {
-	showPropertiesDialog: PropTypes.bool.isRequired,
-	forceApplyProperties: PropTypes.bool, // used to force call to applyPropertyChanges
-	containerType: PropTypes.string,
 	propertiesInfo: PropTypes.object.isRequired,
+	propertiesConfig: PropTypes.object,
+	callbacks: PropTypes.object,
 	customPanels: PropTypes.array, // array of custom panels
-	rightFlyout: PropTypes.bool,
-	controllerHandler: PropTypes.func,
+	customControls: PropTypes.array, // array of custom controls
 	intl: intlShape,
-	propertyListener: PropTypes.func,
-	actionHandler: PropTypes.func,
-	customControls: PropTypes.array // array of custom controls
+};
+
+CommonProperties.defaultProps = {
+	propertiesConfig: {
+		containerType: "Custom",
+		rightFlyout: true,
+		applyOnBlur: false
+	},
+	callbacks: {
+	}
 };
 
 export default injectIntl(CommonProperties, { withRef: true });

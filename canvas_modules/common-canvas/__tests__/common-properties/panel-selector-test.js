@@ -32,7 +32,7 @@ describe("'panel selector insert' renders correctly", () => {
 		expect(descriptions.at(2).text()).to.equal("Lemons are a hybrid between a sour orange and a citron.");
 
 		// Check that the red(0) text panel is enabled and blue (1) and yellow (2)
-		// text panels are disabled. 
+		// text panels are disabled.
 		var redState = renderedObject.controller.getPanelState({ "name": "red2" });
 		expect(redState).to.equal("enabled");
 		var blueState = renderedObject.controller.getPanelState({ "name": "blue2" });
@@ -66,7 +66,7 @@ describe("panel selector visible and enabled conditions work correctly", () => {
 	let panels;
 	let controller;
 	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(JSON.parse(JSON.stringify(panelConditionsParamDef)));
+		const renderedObject = propertyUtils.flyoutEditorForm(panelConditionsParamDef);
 		wrapper = renderedObject.wrapper;
 		const panelSelectorCategory = wrapper.find(".category-title-container-right-flyout-panel").at(1); // TEXT PANEL category
 		panels = panelSelectorCategory.find(".control-panel");

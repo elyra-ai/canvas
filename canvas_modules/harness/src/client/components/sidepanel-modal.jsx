@@ -202,15 +202,6 @@ export default class SidePanelModal extends React.Component {
 				selected={this.props.propertiesContainerType}
 			/>
 		</div>);
-		const apply = (<div className="sidepanel-children">
-			<div className="sidepanel-headers">Apply Property Settings</div>
-			<Button data-compact dark
-				disabled={!this.props.showPropertiesDialog}
-				onClick={this.props.forceApplyProperties}
-			>
-				Apply Properties
-			</Button>
-		</div>);
 		const divider = (<div className="sidepanel-children sidepanel-divider" />);
 		return (
 			<div>
@@ -218,7 +209,6 @@ export default class SidePanelModal extends React.Component {
 				{divider}
 				{containerType}
 				{divider}
-				{apply}
 			</div>
 		);
 	}
@@ -232,6 +222,5 @@ SidePanelModal.propTypes = {
 	usePropertiesContainerType: PropTypes.func,
 	propertiesContainerType: PropTypes.string,
 	showPropertiesDialog: PropTypes.bool,
-	closeSidePanelModal: PropTypes.func,
-	forceApplyProperties: PropTypes.func
+	closeSidePanelModal: PropTypes.func
 };

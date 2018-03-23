@@ -22,7 +22,7 @@ import deriveDatasetMetadata from "../test_resources/json/deriveDatasetMetadata.
 
 const applyPropertyChanges = sinon.spy();
 const closePropertiesDialog = sinon.spy();
-var controller = null;
+let controller = null;
 function controllerHandler(inController) {
 	controller = inController;
 }
@@ -42,22 +42,23 @@ describe("CommonProperties converts property sets correctly", () => {
 });
 
 function createCommonProperties2(container) {
-	const showPropertiesDialog = true;
 	const propertiesInfo = {};
 	propertiesInfo.formData = oldForm.formData;
 	propertiesInfo.appData = {};
 	propertiesInfo.additionalComponents = {};
-	propertiesInfo.applyPropertyChanges = applyPropertyChanges;
-	propertiesInfo.closePropertiesDialog = closePropertiesDialog;
+	const callbacks = {
+		applyPropertyChanges: applyPropertyChanges,
+		closePropertiesDialog: closePropertiesDialog,
+		controllerHandler: controllerHandler
+	};
 
 	const locale = "en";
 	const wrapper = mount(
 		<IntlProvider key="IntlProvider2" locale={ locale } >
 			<CommonProperties
-				showPropertiesDialog={showPropertiesDialog}
 				propertiesInfo={propertiesInfo}
-				containerType={container}
-				controllerHandler={controllerHandler}
+				propertiesConfig={{ containerType: container }}
+				callbacks={callbacks}
 			/>
 		</IntlProvider>
 	);

@@ -66,7 +66,7 @@ class CommonPropertiesComponents extends React.Component {
 			showRightFlyout: false,
 			rightFlyoutContent: null
 		};
-
+		this.propertiesConfig = { containerType: "Custom" };
 		this.jsonReplacer = this.jsonReplacer.bind(this);
 		this.onMenuDropdownSelect = this.onMenuDropdownSelect.bind(this);
 	}
@@ -392,17 +392,15 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={TEXTFIELD_ERROR_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							<p>Below is an example of a textfield control that has a condition
 								of <span className="highlight">type: warning</span> instead of <span className="highlight">error</span>.
 							</p>
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={TEXTFIELD_WARNING_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -418,9 +416,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={TEXTFIELD_COLNOTEXISTS_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -440,9 +437,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={TEXTAREA_ERROR_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -458,9 +454,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={TEXTAREA_WARNING_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -480,9 +475,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={PASSWORD_FIELD_ERROR_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -500,17 +494,15 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={EXPRESSION_ERROR_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							<p>Below is an example of a expression control that will show a warning if the input
 								field fails the <span className="highlight">isNotEmpty</span> condition.
 							</p>
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={EXPRESSION_WARNING_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 						</div>
 						<div id="expression-section-column-code" className="section-column section-column-code">
@@ -528,9 +520,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={NUMBERFIELD_ERROR_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -548,9 +539,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={NUMBERFIELD_GENERATOR_WARNING_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -570,9 +560,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={CHECKBOX_SINGLE_ERROR_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -592,9 +581,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={CHECKBOX_SET_ERROR_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -611,9 +599,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={CHECKBOX_SET_WARNING_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -633,9 +620,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={RADIOSET_HORIZONTAL_ERROR_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -651,9 +637,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={RADIOSET_VERTICAL_WARNING_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -682,9 +667,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={ONEOFSELECT_ERROR_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -703,9 +687,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={SOMEOFSELECT_ERROR_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -725,9 +708,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={SELECTCOLUMN_ERROR_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -745,9 +727,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={SELECTCOLUMNS_ERROR_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -771,9 +752,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={STRUCTURETABLE_ERROR_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							<p>Noticed that in the subpanel, a warning will be shown when a number outside of the range 0 and 130 is entered.
 								Subpanel conditions are supported and are defined at the table cell level.
@@ -791,9 +771,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={STRUCTURETABLE_COLNOTEXISTS_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							<p>In a map, the <span className="highlight">key</span> field will be compared to the user's input for a <span className="highlight">colNotExists</span>.
 								If the user's input is the same as the <span className="highlight">key</span> field, no error or warning will be shown. If the user's
@@ -819,9 +798,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={STRUCTURELISTEDITOR_ERROR_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -837,9 +815,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={STRUCTURELISTEDITOR_WARNING_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -887,9 +864,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={STRING_GROUP_ERROR_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -902,9 +878,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={STRING_GROUP_WARNING_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -917,9 +892,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={NUMBER_GROUP_ERROR_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -939,9 +913,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={VISIBLE_GROUP_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -965,9 +938,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={ENABLED_GROUP_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -992,9 +964,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={ENUM_FILTER_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -1019,9 +990,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={FILTER_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 						</div>
 						<div className="section-column section-column-code">
@@ -1058,9 +1028,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={PANELS_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(PANELS_FLYOUT_PROPS_INFO)}
 						</div>
@@ -1077,9 +1046,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={TEXT_PANEL_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(TEXT_PANEL_FLYOUT_PROPS_INFO)}
 						</div>
@@ -1099,9 +1067,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={PANEL_SELECTOR_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(PANEL_SELECTOR_FLYOUT_PROPS_INFO)}
 						</div>
@@ -1118,9 +1085,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={COLUMNSELECTION_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(COLUMNSELECTION_FLYOUT_PROPS_INFO)}
 						</div>
@@ -1139,9 +1105,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={SUMMARY_PANEL_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(SUMMARY_PANEL_FLYOUT_PROPS_INFO)}
 						</div>
@@ -1158,9 +1123,8 @@ class CommonPropertiesComponents extends React.Component {
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties
-								showPropertiesDialog
 								propertiesInfo={TWISTY_PANEL_PROPS_INFO}
-								containerType="Custom"
+								propertiesConfig={this.propertiesConfig}
 							/>
 							{this.renderRightFlyoutButton(TWISTY_PANEL_FLYOUT_PROPS_INFO)}
 						</div>
@@ -1188,12 +1152,8 @@ class CommonPropertiesComponents extends React.Component {
 			rightFlyoutWidth = "318px";
 			rightFlyout = (<div className="right-flyout-panel" style={{ width: rightFlyoutWidth }}>
 				<CommonProperties
-					showPropertiesDialog
 					propertiesInfo={this.state.rightFlyoutContent}
-					containerType="Custom"
-					applyLabel="Apply"
-					rejectLabel="Reject"
-					rightFlyout
+					propertiesConfig={{ containerType: "Custom", rightFlyout: true }}
 				/>);
 			</div>);
 		}
