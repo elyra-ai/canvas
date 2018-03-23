@@ -13,7 +13,7 @@
     "componentId": "derive",
     "label": "Derive",
     "editorSize": "small",
-    "helpAvailable": false,
+    "help": {},
     "uiItems": [
       {
         "itemType": "primaryTabs",

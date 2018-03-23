@@ -207,7 +207,6 @@
     "componentId": "actions",
     "label": "Form actions test",
     "labelEditable": true,
-    "helpAvailable": false,
     "editorSize": "small",
     "uiItems": [
       {

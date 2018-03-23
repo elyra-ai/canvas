@@ -209,7 +209,10 @@ class CommonProperties extends React.Component {
 
 	helpClickHandler() {
 		if (this.props.propertiesInfo.helpClickHandler) {
-			this.props.propertiesInfo.helpClickHandler(this.propertiesController.getForm().componentId);
+			this.props.propertiesInfo.helpClickHandler(
+				this.propertiesController.getForm().componentId,
+				this.propertiesController.getForm().help.data,
+				this.props.propertiesInfo.appData);
 		}
 	}
 
@@ -237,7 +240,7 @@ class CommonProperties extends React.Component {
 					<Icon type="edit" />
 				</a>);
 
-			const helpButton = formData.helpAvailable && formData.helpAvailable === true
+			const helpButton = formData.help
 				? (<a className="title-help-right-flyout-panel" onClick={this.helpClickHandler}>
 					<Icon type="info" />
 				</a>)

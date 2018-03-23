@@ -26,37 +26,49 @@ Feature: CommonPropertiesFlyout
 			Then I see common properties flyout title "Readonly Fields"
 			Then I verify there is no title edit icon
 
-		# Help Icon Test Case for param_def with help_available set to true
+		# Help Icon Test Case for param_def with help object that has help data
 			Given I have toggled the app side common-properties panel
 			Given I have uploaded JSON for common-properties "spark.DecisionTreeClassifier.json"
 			Then I click on the help icon in the fly-out panel
-			Then I verify the help icon for id "org.apache.spark.ml.classification.DecisionTreeClassifier" was clicked
+			Then I verify the help icon for id "org.apache.spark.ml.classification.DecisionTreeClassifier" with help data was clicked
 
-		# Help Icon Test Case for form with helpAvailable set to true
+		# Help Icon Test Case for form with help object that has help data
 			Given I have toggled the app side common-properties panel
 			Given I have uploaded JSON for common-properties "aggregate.json"
 			Then I click on the help icon in the fly-out panel
-			Then I verify the help icon for id "aggregate" was clicked
+			Then I verify the help icon for id "aggregate" with help data was clicked
 
-		# Help Icon Test Case for param_def with help_available not specified
+		# Help Icon Test Case for param_def with no help object specified
 			Given I have toggled the app side common-properties panel
 			Given I have uploaded JSON for common-properties "spark.Filter.json"
 			Then I verify there is no help icon in the fly-out panel
 
-		# Help Icon Test Case for form with helpAvailable not specified
+		# Help Icon Test Case for form with no help object specified
 			Given I have toggled the app side common-properties panel
 			Given I have uploaded JSON for common-properties "cart.json"
 			Then I verify there is no help icon in the fly-out panel
 
-		# Help Icon Test Case for param_def with help_available set to false
+		# Help Icon Test Case for param_def with help object that has no help data
 			Given I have toggled the app side common-properties panel
 			Given I have uploaded JSON for common-properties "costs_paramDef.json"
-			Then I verify there is no help icon in the fly-out panel
+			Then I click on the help icon in the fly-out panel
+			Then I verify the help icon for id "cart" with no help data was clicked
 
-		# Help Icon Test Case for form with helpAvailable set to false
+		# Help Icon Test Case for form with help object that has no help data
 			Given I have toggled the app side common-properties panel
 			Given I have uploaded JSON for common-properties "derive.json"
-			Then I verify there is no help icon in the fly-out panel
+			Then I click on the help icon in the fly-out panel
+			Then I verify the help icon for id "derive" with no help data was clicked
+
+		# Help Icon Test Case for form with help object, help data and app_data
+			Given I have toggled the app side panel
+			Given I have selected the "D3" rendering engine
+			Given I have uploaded diagram "/test_resources/diagrams/allNodes.json"
+			Given I have toggled the app side panel
+			Then I click the "Aggregate" node to select it
+			Then I click on the help icon in the fly-out panel
+			Then I verify the help icon for id "aggregate" with help data was clicked
+			Then I verify the help data contains app data
 
 		# TextBox Test Case
 			Given I have toggled the app side common-properties panel

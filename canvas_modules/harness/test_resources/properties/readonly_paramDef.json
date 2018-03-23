@@ -1,8 +1,7 @@
 {
   "titleDefinition": {
     "title": "Readonly Fields",
-    "editable": false,
-    "help_available": true
+    "editable": false
   },
   "current_parameters": {
     "readonly_num": 10,
@@ -196,7 +195,12 @@
           "readonly_disabled"
         ]
       }
-    ]
+    ],
+    "help": {
+      "data": {
+        "url": "randomUrl"
+      }
+    }
   },
   "conditions": [
     {

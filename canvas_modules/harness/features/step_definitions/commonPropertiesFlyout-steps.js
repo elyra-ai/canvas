@@ -8,6 +8,7 @@
  *******************************************************************************/
 
 import isEmpty from "lodash/isEmpty";
+import isEqual from "lodash/isEqual";
 import testUtils from "./utilities/test-utils.js";
 
 /* global browser */
@@ -58,9 +59,27 @@ module.exports = function() {
 		expect(helpIcon.length).toEqual(0);
 	});
 
-	this.Then(/^I verify the help icon for id "([^"]*)" was clicked$/, function(nodeTypeId) {
+	this.Then(/^I verify the help icon for id "([^"]*)" with help data was clicked$/, function(nodeTypeId) {
+		const helpData = {
+			"url": "randomUrl"
+		};
 		var lastEventLog = testUtils.getLastEventLogData();
-		expect(nodeTypeId).toEqual((lastEventLog.data).toString());
+		expect(nodeTypeId).toEqual((lastEventLog.data.nodeTypeId).toString());
+		expect(isEqual(helpData, lastEventLog.data.helpData)).toBe(true);
+	});
+
+	this.Then(/^I verify the help icon for id "([^"]*)" with no help data was clicked$/, function(nodeTypeId) {
+		var lastEventLog = testUtils.getLastEventLogData();
+		expect(nodeTypeId).toEqual((lastEventLog.data.nodeTypeId).toString());
+		expect(lastEventLog.data.helpData).toBeUndefined();
+	});
+
+	this.Then(/^I verify the help data contains app data$/, function() {
+		const appData = {
+			"nodeId": "d88a86d1-a89e-42b9-a059-685ea3f4ec1a"
+		};
+		var lastEventLog = testUtils.getLastEventLogData();
+		expect(isEqual(appData, lastEventLog.data.appData)).toBe(true);
 	});
 
 	this.Then(/^I click the "([^"]*)" category from flyout$/, function(categoryName) {

@@ -1,7 +1,6 @@
 {
   "titleDefinition": {
-    "title": "Distinct",
-    "help_available": true
+    "title": "Distinct"
   },
   "current_parameters": {
     "cols": []
@@ -47,7 +46,12 @@
           "cols"
         ]
       }
-    ]
+    ],
+    "help": {
+      "data": {
+        "url": "randomUrl"
+      }
+    }
   },
   "conditions": [
     {

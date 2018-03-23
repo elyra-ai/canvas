@@ -1,7 +1,6 @@
 {
   "titleDefinition": {
-    "title": "Action Test",
-    "help_available": true
+    "title": "Action Test"
   },
   "current_parameters": {
     "number": 0,
@@ -127,7 +126,8 @@
           }
         ]
       }
-    ]
+    ],
+    "help": {}
   },
   "conditions": [],
   "dataset_metadata": [

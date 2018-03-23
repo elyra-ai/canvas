@@ -439,8 +439,8 @@ class App extends React.Component {
 		this.setState({ forceApplyProperties: false });
 	}
 
-	helpClickHandler(nodeTypeId) {
-		this.log("helpClickHandler()", nodeTypeId);
+	helpClickHandler(nodeTypeId, helpData, appData) {
+		this.log("helpClickHandler()", { nodeTypeId, helpData, appData });
 	}
 
 	validateFlow(source) {

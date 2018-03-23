@@ -11,19 +11,19 @@ import { GroupMetadata } from "./GroupInfo";
 import { ActionMetadata } from "./ActionInfo";
 import { ParameterMetadata } from "./ParameterInfo";
 import { StructureMetadata } from "./StructureInfo";
-import { DEFAULT_LABEL_EDITABLE, DEFAULT_HELP_AVAILABLE } from "../constants/constants";
+import { DEFAULT_LABEL_EDITABLE } from "../constants/constants";
 import { Size } from "../constants/form-constants";
 import { ResourceDef } from "./L10nProvider";
 import propertyOf from "lodash/propertyOf";
 
 export class PropertyDef {
-	constructor(cname, icon, editorSize, label, labelEditable, helpAvailable, description, structureMetadata, parameterMetadata, groupMetadata, actionMetadata) {
+	constructor(cname, icon, editorSize, label, labelEditable, help, description, structureMetadata, parameterMetadata, groupMetadata, actionMetadata) {
 		this.name = cname;
 		this.icon = icon;
 		this.editorSize = editorSize;
 		this.label = label;
 		this.labelEditable = labelEditable;
-		this.helpAvailable = helpAvailable;
+		this.help = help;
 		this.description = ResourceDef.make(description);
 		this.structureMetadata = structureMetadata;
 		this.parameterMetadata = parameterMetadata;
@@ -56,7 +56,6 @@ export class PropertyDef {
 
 			const label = titleDefinition && titleDefinition.title ? titleDefinition.title : "";
 			const labelEditable = titleDefinition && typeof titleDefinition.editable !== "undefined" ? titleDefinition.editable : DEFAULT_LABEL_EDITABLE;
-			const helpAvailable = titleDefinition && typeof titleDefinition.help_available !== "undefined" ? titleDefinition.help_available : DEFAULT_HELP_AVAILABLE;
 
 			return new PropertyDef(
 				propertyOf(uihints)("id"),
@@ -64,7 +63,7 @@ export class PropertyDef {
 				propertyOf(uihints)("editor_size"),
 				label,
 				labelEditable,
-				helpAvailable,
+				propertyOf(uihints)("help"),
 				propertyOf(uihints)("description"),
 				structureMetadata,
 				parameterMetadata,

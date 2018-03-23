@@ -134,4 +134,3 @@ _defineConstant("ORIENTATIONS", {
 });
 
 _defineConstant("DEFAULT_LABEL_EDITABLE", true);
-_defineConstant("DEFAULT_HELP_AVAILABLE", false);

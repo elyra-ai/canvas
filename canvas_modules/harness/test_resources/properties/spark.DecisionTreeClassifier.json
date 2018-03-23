@@ -1,7 +1,6 @@
 {
   "titleDefinition": {
-    "title": "Decision Tree Classifier",
-    "help_available": true
+    "title": "Decision Tree Classifier"
   },
   "current_parameters": {
     "targetField": [],
@@ -207,7 +206,12 @@
           "seed"
         ]
       }
-    ]
+    ],
+    "help": {
+      "data": {
+        "url": "randomUrl"
+      }
+    }
   },
   "conditions": [
     {

@@ -150,7 +150,6 @@
     "componentId": "org.apache.spark.ml.ibm.transformers.Distinct",
     "label": "Form placement test",
     "labelEditable": true,
-    "helpAvailable": false,
     "editorSize": "small",
     "uiItems": [
       {

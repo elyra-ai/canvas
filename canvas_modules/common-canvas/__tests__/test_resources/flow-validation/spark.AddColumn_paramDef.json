@@ -1,7 +1,6 @@
 {
   "titleDefinition": {
-    "title": "Add Column",
-    "help_available": true
+    "title": "Add Column"
   },
   "current_parameters": {
     "colName": "Column",
@@ -58,7 +57,8 @@
           "measurement"
         ]
       }
-    ]
+    ],
+    "help": {}
   },
   "conditions": [
     {

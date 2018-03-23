@@ -2,7 +2,11 @@
   "formData": {
     "componentId": "aggregate",
     "label": "Aggregate",
-    "helpAvailable": true,
+    "help": {
+      "data": {
+        "url": "randomUrl"
+      }
+    },
     "editorSize": "small",
     "uiItems": [
       {

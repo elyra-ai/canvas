@@ -167,7 +167,6 @@
     "componentId": "TestOp",
     "label": "TestOp label: resource",
     "labelEditable": true,
-    "helpAvailable": false,
     "editorSize": "large",
     "uiItems": [
       {

@@ -72,7 +72,8 @@ describe("Correct form should be created", () => {
 				"boolean_param": true
 			}
 		};
-		const expectedForm = new Form("TestOp", "TestOp", true, false, "small", [primaryTabs], buttons, data);
+		let help;
+		const expectedForm = new Form("TestOp", "TestOp", true, help, "small", [primaryTabs], buttons, data);
 
 		const paramSpec = {
 			"current_parameters": {

@@ -1,7 +1,6 @@
 {
   "titleDefinition": {
-    "title": "Costs",
-    "help_available": false
+    "title": "Costs"
   },
   "current_parameters": {
     "custom_fields": false,
@@ -236,6 +235,7 @@
     },
     "icon": "images/cart.svg",
     "editor_size": "large",
+    "help": {},
     "parameter_info": [
       {
         "parameter_ref": "custom_fields",

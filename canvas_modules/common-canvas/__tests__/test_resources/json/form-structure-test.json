@@ -1,8 +1,7 @@
 {
   "paramDef": {
     "titleDefinition": {
-      "title": "Form structure test",
-      "help_available": true
+      "title": "Form structure test"
     },
     "current_parameters": {
       "renamed_fields": [
@@ -85,7 +84,12 @@
             "renamed_fields"
           ]
         }
-      ]
+      ],
+      "help": {
+        "data": {
+          "url": "randomUrl"
+        }
+      }
     },
     "conditions": [
       {
@@ -184,7 +188,11 @@
     "componentId": "rename",
     "label": "Form structure test",
     "labelEditable": true,
-    "helpAvailable": true,
+    "help": {
+      "data": {
+        "url":"randomUrl"
+      }
+    },
     "editorSize": "small",
     "uiItems": [
       {
