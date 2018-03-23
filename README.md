@@ -32,12 +32,6 @@ npm install
 
 ## Updating "release" branch (Weekly Jenkins Job: [link](https://analytics-canvas-jenkins.swg-devops.com/view/canvas_utils/job/Abstract-Canvas_Promote-Release))
 
-## Committing breaking changes
-  - Increment the major version number in common-canvas/package.json ("version": "major.minor.patch")
-  - Reset the patch version to "0"
-  - In wml-canvas-ui make the required updates
-  - Update the "major" version to match common-canvas. Leave patch version as "x"
-
 ## Development environment
 
 ### Atom
