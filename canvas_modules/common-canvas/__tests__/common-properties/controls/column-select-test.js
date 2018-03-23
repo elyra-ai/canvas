@@ -187,6 +187,74 @@ describe("ColumnStructureTableControl renders correctly", () => {
 		expect(moveButtons.at(3).prop("disabled")).to.equal(true);
 	});
 
+	it("selectcolumns control will have updated options by the controller", () => {
+
+		const renderedObject = propertyUtils.flyoutEditorForm(selectcolumnsParamDef);
+		const wrapper = renderedObject.wrapper;
+		const selectColumnsController = renderedObject.controller;
+
+
+		const filterCategory = wrapper.find(".category-title-container-right-flyout-panel").at(2); // get the filter category
+		const addFieldsButtons = filterCategory.find("Button"); // field picker buttons
+
+		const datasetMetadata = selectColumnsController.getDatasetMetadata();
+
+		const newField1 = {
+			"name": "age5",
+			"type": "integer",
+			"metadata": {
+				"description": "",
+				"measure": "range",
+				"modeling_role": "both"
+			}
+		};
+
+		const newField2 = {
+			"name": "BP5",
+			"type": "string",
+			"metadata": {
+				"description": "",
+				"measure": "discrete",
+				"modeling_role": "input"
+			}
+		};
+
+		const newField3 = {
+			"name": "Na5",
+			"type": "double",
+			"metadata": {
+				"description": "",
+				"measure": "range",
+				"modeling_role": "input"
+			}
+		};
+
+		const newField4 = {
+			"name": "drug5",
+			"type": "string",
+			"metadata": {
+				"description": "",
+				"measure": "set",
+				"modeling_role": "target"
+			}
+		};
+
+		datasetMetadata[0].fields.push(newField1);
+		datasetMetadata[0].fields.push(newField2);
+		datasetMetadata[0].fields.push(newField3);
+		datasetMetadata[0].fields.push(newField4);
+
+		selectColumnsController.setDatasetMetadata(datasetMetadata);
+
+		addFieldsButtons.at(0).simulate("click"); // open filter picker for `Filter by Type` control
+
+		propertyUtils.fieldPicker([], ["age", "age2", "age3", "age4", "age5"]);
+		wrapper.find("#properties-cancel-button").simulate("click");
+
+		wrapper.unmount();
+
+	});
+
 });
 
 describe("condition messages renders correctly with columnselect control", () => {
