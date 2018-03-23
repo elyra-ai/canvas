@@ -18,8 +18,7 @@
               "x_pos": 445,
               "y_pos": 219,
               "class_name": "canvas-node",
-              "label": "Define Types",
-              "messages": []
+              "label": "Define Types"
             }
           },
           "inputs": [
@@ -59,8 +58,7 @@
                 }
               }
             }
-          ],
-          "parameters": {}
+          ]
         },
         {
           "id": "id2PZSCTRPRIJ",
@@ -132,8 +130,7 @@
                 }
               }
             }
-          ],
-          "parameters": {}
+          ]
         },
         {
           "id": "id8I6RH2V91XW",
@@ -144,8 +141,7 @@
               "x_pos": 611,
               "y_pos": 151,
               "class_name": "canvas-node",
-              "label": "C5.0",
-              "messages": []
+              "label": "C5.0"
             }
           },
           "inputs": [
@@ -182,8 +178,7 @@
               "x_pos": 606,
               "y_pos": 310,
               "class_name": "canvas-node",
-              "label": "Neural Net",
-              "messages": []
+              "label": "Neural Net"
             }
           },
           "inputs": [
@@ -220,8 +215,7 @@
               "x_pos": 96,
               "y_pos": 219,
               "class_name": "canvas-node",
-              "label": "DRUG1n",
-              "messages": []
+              "label": "DRUG1n"
             }
           },
           "outputs": [
@@ -249,8 +243,7 @@
               "x_pos": 328,
               "y_pos": 219,
               "class_name": "canvas-node",
-              "label": "Discard Fields",
-              "messages": []
+              "label": "Discard Fields"
             }
           },
           "inputs": [
@@ -290,8 +283,7 @@
                 }
               }
             }
-          ],
-          "parameters": {}
+          ]
         }
       ],
       "app_data": {

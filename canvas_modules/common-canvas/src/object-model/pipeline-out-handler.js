@@ -12,10 +12,13 @@ import isEmpty from "lodash/isEmpty";
 export default class PipelineOutHandler {
 
 	static modifyPipelineWithCanvasInfo(pipeline, canvasInfo) {
-		return Object.assign({}, pipeline, {
-			id: canvasInfo.sub_id,
-			nodes: this.getNodes(pipeline, canvasInfo),
-			app_data: this.getPipelineAppData(pipeline.app_data, canvasInfo) });
+		if (pipeline && canvasInfo) {
+			return Object.assign({}, pipeline, {
+				id: canvasInfo.sub_id,
+				nodes: this.getNodes(pipeline, canvasInfo),
+				app_data: this.getPipelineAppData(pipeline.app_data, canvasInfo) });
+		}
+		return null;
 	}
 
 	static getNodes(pipeline, canvasInfo) {
@@ -34,9 +37,12 @@ export default class PipelineOutHandler {
 						outputs: this.getOutputs(canvasInfo.nodes[index].output_ports, pNode.outputs) });
 				}
 				if (canvasInfo.nodes[index].parameters &&
+						!isEmpty(canvasInfo.nodes[index].parameters) &&
 						(pNode.type === "execution_node" || pNode.type === "model_node")) {
 					newNode = Object.assign({}, newNode, {
 						parameters: this.getParameters(canvasInfo.nodes[index].parameters) });
+				} else {
+					delete newNode.parameters;
 				}
 				newNodes.push(newNode);
 			}
@@ -61,10 +67,18 @@ export default class PipelineOutHandler {
 	}
 
 	static getNodeUiData(uiData, ciNode) {
+		let newUiData;
 		if (uiData) {
-			return Object.assign({}, uiData, { label: ciNode.label, x_pos: ciNode.x_pos, y_pos: ciNode.y_pos, messages: ciNode.messages });
+			newUiData = Object.assign({}, uiData, { label: ciNode.label, x_pos: ciNode.x_pos, y_pos: ciNode.y_pos });
+		} else {
+			newUiData = { label: ciNode.label, x_pos: ciNode.x_pos, y_pos: ciNode.y_pos };
 		}
-		return { label: ciNode.label, x_pos: ciNode.x_pos, y_pos: ciNode.y_pos, messages: ciNode.messages };
+		if (ciNode.messages && !isEmpty(ciNode.messages)) {
+			newUiData.messages = ciNode.messages;
+		} else {
+			delete newUiData.messages;
+		}
+		return newUiData;
 	}
 
 	static getPortAppData(appData, ciPort) {
@@ -171,12 +185,15 @@ export default class PipelineOutHandler {
 					x_pos: ciNode.x_pos,
 					y_pos: ciNode.y_pos,
 					class_name: ciNode.class_name,
-					messages: ciNode.messages,
 					label: ciNode.label,
 					description: ciNode.description
 				}
 			}
 		};
+
+		if (ciNode.messages && !isEmpty(ciNode.messages)) {
+			newNode.messages = ciNode.messages;
+		}
 
 		if (ciNode.type === "execution_node") {
 			newNode.op = ciNode.operator_id_ref;
@@ -191,7 +208,7 @@ export default class PipelineOutHandler {
 
 		if (ciNode.type === "execution_node" ||
 				ciNode.type === "model_node") {
-			if (ciNode.parameters) {
+			if (ciNode.parameters && !isEmpty(ciNode.parameters)) {
 				newNode.parameters = ciNode.parameters;
 			}
 		}

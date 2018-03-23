@@ -376,7 +376,8 @@ const canvasinfo = (state = getInitialCanvas(), action) => {
 				return Object.assign({}, canvasInfo, { nodes: nodes(canvasInfo.nodes, action) });
 			}
 		}
-		return null;
+
+		return { "id": "", "nodes": [], "comments": [], "links": [] };
 	}
 
 	case "SET_CANVAS_INFO":
@@ -844,7 +845,7 @@ export default class ObjectModel {
 			return Object.assign({}, pipelineFlow, { pipelines: newPipelines });
 		}
 
-		return null;
+		return Object.assign({}, pipelineFlow);
 	}
 
 	getCanvasInfo() {

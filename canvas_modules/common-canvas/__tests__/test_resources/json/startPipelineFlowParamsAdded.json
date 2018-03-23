@@ -18,8 +18,7 @@
               "x_pos": 445,
               "y_pos": 219,
               "class_name": "canvas-node",
-              "label": "Define Types",
-              "messages": []
+              "label": "Define Types"
             }
           },
           "inputs": [
@@ -75,8 +74,7 @@
               "x_pos": 245,
               "y_pos": 128,
               "class_name": "canvas-node",
-              "label": "C5.0",
-              "messages": []
+              "label": "C5.0"
             }
           },
           "inputs": [

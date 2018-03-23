@@ -48,7 +48,7 @@ export default class PipelineInHandler {
 				"x_pos": has(node, "app_data.ui_data.x_pos") ? node.app_data.ui_data.x_pos : 10,
 				"y_pos": has(node, "app_data.ui_data.y_pos") ? node.app_data.ui_data.y_pos : 10,
 				"class_name": has(node, "app_data.ui_data.class_name") ? node.app_data.ui_data.class_name : "",
-				"decorations": this.convertDecorations(node.app_data.ui_data.decorations),
+				"decorations": has(node, "app_data.ui_data.decorations") ? this.convertDecorations(node.app_data.ui_data.decorations) : [],
 				"parameters": has(node, "parameters") ? node.parameters : [],
 				"messages": has(node, "app_data.ui_data.messages") ? node.app_data.ui_data.messages : [],
 			})

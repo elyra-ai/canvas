@@ -17,8 +17,7 @@
               "x_pos": 31,
               "y_pos": 97.5,
               "class_name": "canvas-node",
-              "label": "Var. File",
-              "messages": []
+              "label": "Var. File"
             }
           },
           "outputs": [
@@ -34,8 +33,7 @@
                 }
               }
             }
-          ],
-          "parameters": {}
+          ]
         },
         {
           "id": "fb241cc4-7456-41b0-a2a3-ba2c1cc6d2ae",
@@ -47,8 +45,7 @@
               "x_pos": 168,
               "y_pos": 98.5,
               "class_name": "canvas-node",
-              "label": "Select",
-              "messages": []
+              "label": "Select"
             }
           },
           "inputs": [
@@ -84,8 +81,7 @@
                 }
               }
             }
-          ],
-          "parameters": {}
+          ]
         },
         {
           "id": "94e091d8-aef0-4833-8766-a7bae7814fb9",
@@ -96,8 +92,7 @@
               "x_pos": 320,
               "y_pos": 99.5,
               "class_name": "canvas-node",
-              "label": "Object Store",
-              "messages": []
+              "label": "Object Store"
             }
           },
           "inputs": [
@@ -119,8 +114,7 @@
                 }
               ]
             }
-          ],
-          "parameters": {}
+          ]
         }
       ],
       "app_data": {

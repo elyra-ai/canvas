@@ -18,8 +18,7 @@
               "x_pos": 482,
               "y_pos": 132.99999237060547,
               "class_name": "canvas-node",
-              "label": "Define Types",
-              "messages": []
+              "label": "Define Types"
             }
           },
           "inputs": [
@@ -59,8 +58,7 @@
                 }
               }
             }
-          ],
-          "parameters": {}
+          ]
         },
         {
           "id": "id1ZZTZ3ZMYWL",
@@ -71,8 +69,7 @@
               "x_pos": 753,
               "y_pos": 82.99999618530273,
               "class_name": "canvas-node",
-              "label": "Out 2",
-              "messages": []
+              "label": "Out 2"
             }
           },
           "inputs": [
@@ -112,8 +109,7 @@
               "x_pos": 227,
               "y_pos": 128.99999237060547,
               "class_name": "canvas-node",
-              "label": "SuperNode",
-              "messages": []
+              "label": "SuperNode"
             }
           },
           "inputs": [
@@ -167,8 +163,7 @@
               "x_pos": 623,
               "y_pos": 304.99999237060547,
               "class_name": "canvas-node",
-              "label": "Model 1",
-              "messages": []
+              "label": "Model 1"
             }
           },
           "inputs": [
@@ -208,8 +203,7 @@
                 }
               }
             }
-          ],
-          "parameters": {}
+          ]
         },
         {
           "id": "id5KIRGGJ3FYT",
@@ -227,8 +221,7 @@
                   "node_ref": "id125TTEEIK7V",
                   "class_name": "canvas-object-link"
                 }
-              ],
-              "messages": []
+              ]
             }
           },
           "inputs": [
@@ -265,8 +258,7 @@
               "x_pos": 101,
               "y_pos": 127.99999237060547,
               "class_name": "canvas-node",
-              "label": "DRUG1n",
-              "messages": []
+              "label": "DRUG1n"
             }
           },
           "outputs": [
@@ -294,8 +286,7 @@
               "x_pos": 363,
               "y_pos": 131.99998474121094,
               "class_name": "canvas-node",
-              "label": "Discard Fields",
-              "messages": []
+              "label": "Discard Fields"
             }
           },
           "inputs": [
@@ -335,8 +326,7 @@
                 }
               }
             }
-          ],
-          "parameters": {}
+          ]
         },
         {
           "id": "id8I6RH2V91XW",
@@ -355,8 +345,7 @@
                   "node_ref": "id1ZZTZ3ZMYWL",
                   "class_name": "canvas-object-link"
                 }
-              ],
-              "messages": []
+              ]
             }
           },
           "inputs": [
@@ -396,8 +385,7 @@
                 }
               }
             }
-          ],
-          "parameters": {}
+          ]
         }
       ],
       "app_data": {
