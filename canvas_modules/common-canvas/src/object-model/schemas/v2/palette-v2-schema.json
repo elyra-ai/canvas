@@ -1,8 +1,14 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
-  "description": "Abstract Canvas diagram schema",
-  "id": "http://www.ibm.com/ibm/wdp/canvas/v2.0/palette-v2-schema.json",
+  "description": "Common Canvas palette schema",
+  "id": "http://www.ibm.com/ibm/wdp/canvas/v2.0/palette-v2-schema.json#",
+  "version": {
+    "description": "Palette schema version",
+    "enum": [
+      "2.0"
+    ]
+  },
   "properties": {
     "categories": {
       "description": "Array of palette categories",
@@ -17,6 +23,10 @@
           },
           "label": {
             "description": "Category label",
+            "type": "string"
+          },
+          "image": {
+            "description": "Encoded image or image reference for the category",
             "type": "string"
           },
           "nodetypes": {
