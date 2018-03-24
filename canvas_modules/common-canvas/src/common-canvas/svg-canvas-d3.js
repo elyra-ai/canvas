@@ -891,9 +891,21 @@ export default class CanvasD3Layout {
 						if (that.layout.connectionType === "ports") {
 							that.canvas.select(that.getId("#node_body", d.id)).attr("hover", "yes");
 							d3.select(this)
+								.append("rect")
+								.attr("id", that.getId("node_ellipsis_background"))
+								.attr("class", "d3-node-ellipsis-background")
+								.attr("width", that.layout.ellipsisWidth)
+								.attr("height", that.layout.ellipsisHeight)
+								.attr("x", that.layout.ellipsisPosX)
+								.attr("y", (nd) => that.getEllipsisPosY(nd))
+								.on("click", () => {
+									that.stopPropagationAndPreventDefault();
+									that.openContextMenu("node", d);
+								});
+							d3.select(this)
 								.append("svg")
 								.attr("id", that.getId("node_ellipsis"))
-								.attr("class", "d3-node-menu")
+								.attr("class", "d3-node-ellipsis")
 								.html(NODE_MENU_ICON)
 								.attr("width", that.layout.ellipsisWidth)
 								.attr("height", that.layout.ellipsisHeight)
@@ -909,6 +921,7 @@ export default class CanvasD3Layout {
 						that.canvas.select(that.getId("#node_body", d.id)).attr("hover", "no");
 						if (that.layout.connectionType === "ports") {
 							that.canvas.selectAll(that.getId("#node_ellipsis")).remove();
+							that.canvas.selectAll(that.getId("#node_ellipsis_background")).remove();
 						}
 
 						that.canvasController.hideTip();

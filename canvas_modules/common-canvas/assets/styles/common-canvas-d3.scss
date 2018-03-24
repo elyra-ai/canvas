@@ -138,12 +138,18 @@
 	stroke-width: 8;
 }
 
-.d3-node-menu {
+.d3-node-ellipsis-background {
+	fill: transparent;
+	stroke-width: 0;
+}
+
+.d3-node-ellipsis {
 	fill: #3d70b2;
 	stroke-width: 0;
 }
 
-.d3-node-menu:hover {
+.d3-node-ellipsis:hover,
+.d3-node-ellipsis-background:hover~.d3-node-ellipsis {
 	fill: #5596e6;
 	stroke-width: 0;
 }
