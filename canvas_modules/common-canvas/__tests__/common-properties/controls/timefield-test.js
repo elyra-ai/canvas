@@ -181,7 +181,7 @@ describe("error messages renders correctly for timefield controls", () => {
 
 		// Check an error message is displayed with the expected error message.
 		const timefieldErrorMessages = {
-			"validation_id": "time_hms",
+			"validation_id": "required_time_hms_F26$7s#9)",
 			"type": "error",
 			"text": "Required parameter 'Required Time H:m:s' has no value",
 		};

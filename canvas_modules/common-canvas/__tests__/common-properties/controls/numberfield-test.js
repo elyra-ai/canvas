@@ -254,7 +254,7 @@ describe("condition messages renders correctly with numberfield control", () => 
 		wrapper.update();
 
 		const numberfieldCheckpointIntervalErrorMessages = {
-			"validation_id": "numberfieldCheckpointInterval",
+			"validation_id": "required_numberfieldCheckpointInterval_F26$7s#9)",
 			"type": "error",
 			"text": "Required parameter 'Checkpoint Interval' has no value",
 		};
@@ -263,6 +263,60 @@ describe("condition messages renders correctly with numberfield control", () => 
 			JSON.parse(JSON.stringify(actual)))).to.be.true;
 		expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
 		expect(wrapper.find(".form__validation--error")).to.have.length(1);
+	});
+});
+
+describe("condition messages renders correctly with multi-control conditions", () => {
+	it("Control should generate error message on focus_parameter_ref control only ", () => {
+		propertyUtils.createEditorForm("mount", CONDITIONS_TEST_FORM_DATA, controller);
+		const maxBinId = { name: "numberfieldMaxBins" };
+		const maxDepthId = { name: "numberfieldMaxDepth" };
+
+		// Generate the error condition
+		controller.updatePropertyValue(maxBinId, 1);
+		controller.updatePropertyValue(maxDepthId, null);
+
+		const multiControlErrorMessages = {
+			text: "Maximum number of bins must be >= 2 or Maximum depth cannot be empty",
+			type: "error",
+			validation_id: "numberfieldMaxBins"
+		};
+
+		// focus_parameter_ref max bins should have the error and max Depth should not
+		let actual = controller.getErrorMessage(maxBinId);
+		expect(isEqual(JSON.parse(JSON.stringify(multiControlErrorMessages)),
+			JSON.parse(JSON.stringify(actual)))).to.be.true;
+
+		actual = controller.getErrorMessage(maxDepthId);
+		expect(isEqual(null, actual)).to.be.true;
+	});
+
+	it.only("control should have required error message from null input in multi-control condition", () => {
+		/* eslint no-debugger: "off" */
+		debugger;
+		propertyUtils.createEditorForm("mount", CONDITIONS_TEST_FORM_DATA, controller);
+		const maxBinId = { name: "numberfieldMaxBins" };
+		const maxDepthId = { name: "numberfieldMaxDepth" };
+		// set max number of bins to empty
+		controller.updatePropertyValue(maxBinId, null);
+
+		// should create this error
+		const numberfieldMaxBinsErrorMessages = {
+			text: "Required parameter 'Maximum number of bins' has no value",
+			type: "error",
+			validation_id: "required_numberfieldMaxBins_F26$7s#9)"
+		};
+		let actual = controller.getErrorMessage(maxBinId);
+		expect(isEqual(JSON.parse(JSON.stringify(numberfieldMaxBinsErrorMessages)),
+			JSON.parse(JSON.stringify(actual)))).to.be.true;
+
+		// set max depth to null, this should not clear out the max bins error
+		controller.updatePropertyValue(maxDepthId, null);
+
+		// required parameter error should still exist
+		actual = controller.getErrorMessage(maxBinId);
+		expect(isEqual(JSON.parse(JSON.stringify(numberfieldMaxBinsErrorMessages)),
+			JSON.parse(JSON.stringify(actual)))).to.be.true;
 	});
 });
 

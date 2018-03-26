@@ -550,19 +550,22 @@ function validateInput(propertyId, controller, validationDefinitions) {
 function _requiredValidation(propertyId, controller) {
 	const controlValue = controller.getPropertyValue(propertyId);
 	let errorSet = false;
+	const errorMessage = {
+		validation_id: "required_" + propertyId.name + "_F26$7s#9)", // TODO replace suffix with random number from fixed seed.
+	};
 	if (controlValue === null || controlValue === "" || typeof controlValue === "undefined" ||
 			(Array.isArray(controlValue) && controlValue.length === 0)) {
 		const control = controller.getControl(propertyId);
 		const label = control && control.label && control.label.text ? control.label.text : propertyId.name;
-		const errorMessage = {
-			validation_id: propertyId.name,
-			type: "error",
-			text: "Required parameter '" + label + "' has no value"
-		};
+		errorMessage.type = "error";
+		errorMessage.text = "Required parameter '" + label + "' has no value";
 		controller.updateErrorMessage(propertyId, errorMessage);
 		errorSet = true;
 	} else {
-		controller.updateErrorMessage(propertyId, DEFAULT_VALIDATION_MESSAGE);
+		const msg = controller.getErrorMessage(propertyId);
+		if (!isEmpty(msg) && (msg.validation_id === errorMessage.validation_id)) {
+			controller.updateErrorMessage(propertyId, DEFAULT_VALIDATION_MESSAGE);
+		}
 	}
 	return errorSet;
 }

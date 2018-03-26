@@ -218,7 +218,7 @@ describe("error messages renders correctly for datefield controls", () => {
 
 		// Check an error message is displayed with the expected error message.
 		const datefieldErrorMessages = {
-			"validation_id": "date_mdy",
+			"validation_id": "required_date_mdy_F26$7s#9)",
 			"type": "error",
 			"text": "Required parameter 'Required Date M-D-Y' has no value",
 		};
