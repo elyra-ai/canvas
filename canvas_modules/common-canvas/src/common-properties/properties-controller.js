@@ -12,7 +12,7 @@ import PropertiesStore from "./properties-store.js";
 import logger from "../../utils/logger";
 import UiConditionsParser from "./ui-conditions/ui-conditions-parser.js";
 import UiGroupsParser from "./ui-conditions/ui-groups-parser.js";
-import conditionsUtil from "./util/conditions-utils";
+import conditionsUtil from "./ui-conditions/conditions-utils";
 import PropertyUtils from "./util/property-utils.js";
 import { STATES, ACTIONS } from "./constants/constants.js";
 import CommandStack from "../command-stack/command-stack.js";
@@ -509,7 +509,7 @@ export default class PropertiesController {
 	}
 
 	validateInput(propertyId) {
-		conditionsUtil.validateInput(propertyId, this, this.validationDefinitions, this.getDatasetMetadataFields());
+		conditionsUtil.validateInput(propertyId, this, this.validationDefinitions);
 	}
 
 	//
@@ -567,8 +567,8 @@ export default class PropertiesController {
 			enabledDefinitions: this.enabledDefinitions,
 			filteredEnumDefinitions: this.filteredEnumDefinitions
 		};
-		conditionsUtil.validateConditions(this, definitions, this.getDatasetMetadataFields());
-		conditionsUtil.validateInput(inPropertyId, this, this.validationDefinitions, this.getDatasetMetadataFields());
+		conditionsUtil.validateConditions(this, definitions);
+		conditionsUtil.validateInput(inPropertyId, this, this.validationDefinitions);
 		if (this.handlers.propertyListener) {
 			this.handlers.propertyListener(
 				{
@@ -642,7 +642,7 @@ export default class PropertiesController {
 			enabledDefinitions: this.enabledDefinitions,
 			filteredEnumDefinitions: this.filteredEnumDefinitions
 		};
-		conditionsUtil.validateConditions(this, definitions, this.getDatasetMetadataFields(), initial);
+		conditionsUtil.validateConditions(this, definitions, initial);
 		if (this.handlers.propertyListener) {
 			this.handlers.propertyListener(
 				{

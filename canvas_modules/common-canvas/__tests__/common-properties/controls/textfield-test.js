@@ -151,7 +151,7 @@ describe("condition messages renders correctly with textfields control", () => {
 	it("test passwordfield isNotEmpty", () => {
 		const wrapper = propertyUtils.createEditorForm("mount", CONDITIONS_TEST_FORM_DATA, controller);
 
-		let passwordInput = wrapper.find("input[id='editor-control-passwordField']");
+		const passwordInput = wrapper.find("input[id='editor-control-passwordField']");
 		expect(passwordInput).to.have.length(1);
 		passwordInput.simulate("change", { target: { value: "" } });
 		wrapper.update();
@@ -163,20 +163,6 @@ describe("condition messages renders correctly with textfields control", () => {
 						}
 		};
 		let actual = controller.getErrorMessages();
-		expect(isEqual(JSON.parse(JSON.stringify(textfieldNameErrorMessages)),
-			JSON.parse(JSON.stringify(actual)))).to.be.true;
-
-		passwordInput = wrapper.find("input[id='editor-control-passwordField']");
-		passwordInput.simulate("change", { target: { value: "password" } });
-		wrapper.update();
-		textfieldNameErrorMessages = {
-			passwordField:
-						{ type: "error",
-							text: "textfieldName is missing an input value for validation.",
-							validation_id: "PW1"
-						}
-		};
-		actual = controller.getErrorMessages();
 		expect(isEqual(JSON.parse(JSON.stringify(textfieldNameErrorMessages)),
 			JSON.parse(JSON.stringify(actual)))).to.be.true;
 

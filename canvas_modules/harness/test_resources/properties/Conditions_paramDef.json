@@ -45,7 +45,7 @@
     "structuretableRenameFields": [
       [
         "Age",
-        "Age",
+        "age",
         "",
         "string"
       ],

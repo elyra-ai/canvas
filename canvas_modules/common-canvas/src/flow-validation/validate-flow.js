@@ -8,7 +8,7 @@
  *******************************************************************************/
 import Form from "../common-properties/form/Form";
 import UiConditionsParser from "../common-properties/ui-conditions/ui-conditions-parser";
-import ConditionsUtils from "../common-properties/util/conditions-utils";
+import ConditionsUtils from "../common-properties/ui-conditions/conditions-utils";
 import PropertyUtils from "../common-properties/util/property-utils";
 import PropertiesController from "../common-properties/properties-controller";
 import logger from "../../utils/logger";
@@ -114,17 +114,17 @@ function _validateNode(formData, nodeId, propertiesController) {
 		const controlValue = propertiesController.getPropertyValue(propertyId);
 		if (Array.isArray(controlValue) && control.subControls) {
 			// validate the table as a whole
-			ConditionsUtils.validateInput(propertyId, propertiesController, validationDefinitions, formData.data.datasetMetadata);
+			ConditionsUtils.validateInput(propertyId, propertiesController, validationDefinitions);
 			// validate each cell
 			for (let rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
 				for (let colIndex = 0; colIndex < control.subControls.length; colIndex++) {
 					propertyId.row = rowIndex;
 					propertyId.col = colIndex;
-					ConditionsUtils.validateInput(propertyId, propertiesController, validationDefinitions, formData.data.datasetMetadata);
+					ConditionsUtils.validateInput(propertyId, propertiesController, validationDefinitions);
 				}
 			}
 		} else {
-			ConditionsUtils.validateInput(propertyId, propertiesController, validationDefinitions, formData.data.datasetMetadata);
+			ConditionsUtils.validateInput(propertyId, propertiesController, validationDefinitions);
 		}
 	}
 }

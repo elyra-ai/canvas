@@ -10,7 +10,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import EditorControl from "./editor-control.jsx";
-import ConditionsUtils from "../util/conditions-utils.js";
+import ConditionsUtils from "../ui-conditions/conditions-utils.js";
 import { ORIENTATIONS, STATES } from "../constants/constants.js";
 
 export default class RadiosetControl extends EditorControl {

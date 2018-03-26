@@ -16,13 +16,13 @@ import moment from "moment";
 import isEmpty from "lodash/isEmpty";
 import cloneDeep from "lodash/cloneDeep";
 
-function validateConditions(controller, definitions, fields, initial) {
-	_validateVisible(controller, definitions.visibleDefinition, fields, initial);
-	_validateEnabled(controller, definitions.enabledDefinitions, fields, initial);
-	_validateFilteredEnums(controller, definitions.filteredEnumDefinitions, fields);
+function validateConditions(controller, definitions, initial) {
+	_validateVisible(controller, definitions.visibleDefinition, initial);
+	_validateEnabled(controller, definitions.enabledDefinitions, initial);
+	_validateFilteredEnums(controller, definitions.filteredEnumDefinitions);
 }
 
-function _validateVisible(controller, visibleDefinition, fields, initial) {
+function _validateVisible(controller, visibleDefinition, initial) {
 	// visibleDefinition
 	if (Object.keys(visibleDefinition).length > 0) {
 		const propertyValues = controller.getPropertyValues();
@@ -36,20 +36,15 @@ function _validateVisible(controller, visibleDefinition, fields, initial) {
 			}
 			for (const visDefinition of visibleDefinition[visibleKey]) {
 				const baseId = _getPropertyId(visibleKey);
-				const controlType = controller.getControlType(baseId);
-				let cellCoords = null;
 				try {
 					// table value.  Might need to also support not table arrays
 					if (baseId.col) {
 						for (let rowIdx = 0; rowIdx < propertyValues[baseId.name].length; rowIdx++) {
-							cellCoords = {
-								rowIndex: rowIdx,
-								colIndex: baseId.col
-							};
-							_setValidateVisible(visDefinition.definition, propertyValues, controlType, fields, cellCoords, newStates, controller, initial);
+							baseId.row = rowIdx;
+							_setValidateVisible(visDefinition.definition, baseId, newStates, controller, initial);
 						}
 					} else {
-						_setValidateVisible(visDefinition.definition, propertyValues, controlType, fields, cellCoords, newStates, controller, initial);
+						_setValidateVisible(visDefinition.definition, baseId, newStates, controller, initial);
 					}
 
 				} catch (error) {
@@ -62,13 +57,12 @@ function _validateVisible(controller, visibleDefinition, fields, initial) {
 	}
 }
 
-function _setValidateVisible(definition, propertyValues, controlType, fields, cellCoords, newStates, controller, initial) {
-	const visOutput = UiConditions.validateInput(definition, propertyValues, controlType, fields,
-		cellCoords);
+function _setValidateVisible(definition, propertyId, newStates, controller, initial) {
+	const visOutput = UiConditions.validateInput(definition, propertyId, controller);
 	if (visOutput === true) { // control|panel should be visible
 		if (definition.visible.parameter_refs) {
 			for (const paramRef of definition.visible.parameter_refs) {
-				const visReferenceId = _getPropertyId(paramRef, cellCoords);
+				const visReferenceId = _getPropertyId(paramRef, {	rowIndex: propertyId.row, colIndex: propertyId.col });
 				const currentState = _getState(newStates.controls, visReferenceId);
 				// check for visible or enabled so we aren't resetting the state all the time
 				if (visReferenceId && currentState !== STATES.VISIBLE && currentState !== STATES.ENABLED) {
@@ -93,7 +87,7 @@ function _setValidateVisible(definition, propertyValues, controlType, fields, ce
 	} else { // control|panel should be hidden
 		if (definition.visible.parameter_refs) {
 			for (const paramRef of definition.visible.parameter_refs) {
-				const hidReferenceId = _getPropertyId(paramRef, cellCoords);
+				const hidReferenceId = _getPropertyId(paramRef, {	rowIndex: propertyId.row, colIndex: propertyId.col });
 				if (hidReferenceId) {
 					_updateStateIfPanel(newStates, hidReferenceId, STATES.HIDDEN);
 				}
@@ -114,7 +108,7 @@ function _setValidateVisible(definition, propertyValues, controlType, fields, ce
 	}
 }
 
-function _validateEnabled(controller, enabledDefinitions, fields, initial) {
+function _validateEnabled(controller, enabledDefinitions, initial) {
 	// enabledDefinitions
 	if (Object.keys(enabledDefinitions).length > 0) {
 		const propertyValues = controller.getPropertyValues();
@@ -129,20 +123,15 @@ function _validateEnabled(controller, enabledDefinitions, fields, initial) {
 			}
 			for (const enbDefinition of enabledDefinitions[enabledKey]) {
 				const baseId = _getPropertyId(enabledKey);
-				const controlType = controller.getControlType(baseId);
-				let cellCoords = null;
 				try {
 					// table value.  Might need to also support not table arrays
 					if (baseId.col) {
 						for (let rowIdx = 0; rowIdx < propertyValues[baseId.name].length; rowIdx++) {
-							cellCoords = {
-								rowIndex: rowIdx,
-								colIndex: baseId.col
-							};
-							_setValidateEnabled(enbDefinition.definition, propertyValues, controlType, fields, cellCoords, newStates, controller, initial);
+							baseId.row = rowIdx;
+							_setValidateEnabled(enbDefinition.definition, baseId, newStates, controller, initial);
 						}
 					} else {
-						_setValidateEnabled(enbDefinition.definition, propertyValues, controlType, fields, cellCoords, newStates, controller, initial);
+						_setValidateEnabled(enbDefinition.definition, baseId, newStates, controller, initial);
 					}
 				} catch (error) {
 					logger.warn("Error thrown in validation: " + error);
@@ -154,13 +143,12 @@ function _validateEnabled(controller, enabledDefinitions, fields, initial) {
 	}
 }
 
-function _setValidateEnabled(definition, propertyValues, controlType, fields, cellCoords, newStates, controller, initial) {
-	const enbOutput = UiConditions.validateInput(definition, propertyValues, controlType, fields,
-		cellCoords);
+function _setValidateEnabled(definition, propertyId, newStates, controller, initial) {
+	const enbOutput = UiConditions.validateInput(definition, propertyId, controller);
 	if (enbOutput === true) { // control|panel should be enabled
 		if (definition.enabled.parameter_refs) {
 			for (const paramRef of definition.enabled.parameter_refs) {
-				const enbReferenceId = _getPropertyId(paramRef, cellCoords);
+				const enbReferenceId = _getPropertyId(paramRef, {	rowIndex: propertyId.row, colIndex: propertyId.col });
 				if (paramRef && _getState(newStates.controls, enbReferenceId) !== STATES.HIDDEN) {
 					_updateStateIfPanel(newStates, enbReferenceId, STATES.ENABLED);
 				}
@@ -181,7 +169,7 @@ function _setValidateEnabled(definition, propertyValues, controlType, fields, ce
 	} else { // control|panel should be disabled
 		if (definition.enabled.parameter_refs) {
 			for (const paramRef of definition.enabled.parameter_refs) {
-				const disReferenceId = _getPropertyId(paramRef, cellCoords);
+				const disReferenceId = _getPropertyId(paramRef, {	rowIndex: propertyId.row, colIndex: propertyId.col });
 				if (disReferenceId && _getState(newStates.controls, disReferenceId) !== STATES.HIDDEN) { // if control is hidden, no need to disable it
 					_updateStateIfPanel(newStates, disReferenceId, STATES.DISABLED);
 				}
@@ -316,20 +304,15 @@ function _validateFilteredEnums(controller, filteredEnumDefinitions, fields) {
 					}
 				}
 				const baseId = _getPropertyId(filteredKey);
-				const controlType = controller.getControlType(baseId);
-				let cellCoords = null;
 				try {
 					// Table value
 					if (baseId.col) {
 						for (let rowIdx = 0; rowIdx < propertyValues[baseId.name].length; rowIdx++) {
-							cellCoords = {
-								rowIndex: rowIdx,
-								colIndex: baseId.col
-							};
-							_setValidateFilteredEnum(filteredDefinition.definition, propertyValues, controlType, fields, cellCoords, newStates);
+							baseId.row = rowIdx;
+							_setValidateFilteredEnum(filteredDefinition.definition, baseId, newStates, controller);
 						}
 					} else {
-						_setValidateFilteredEnum(filteredDefinition.definition, propertyValues, controlType, fields, cellCoords, newStates);
+						_setValidateFilteredEnum(filteredDefinition.definition, baseId, newStates, controller);
 					}
 
 				} catch (error) {
@@ -342,10 +325,10 @@ function _validateFilteredEnums(controller, filteredEnumDefinitions, fields) {
 	}
 }
 
-function _setValidateFilteredEnum(definition, propertyValues, controlType, fields, cellCoords, newStates) {
-	const filtered = UiConditions.validateInput(definition, propertyValues, controlType, fields, cellCoords);
+function _setValidateFilteredEnum(definition, propertyId, newStates, controller) {
+	const filtered = UiConditions.validateInput(definition, propertyId, controller);
 	if (definition.enum_filter.target && definition.enum_filter.target.parameter_ref) {
-		const referenceId = _getPropertyId(definition.enum_filter.target.parameter_ref, cellCoords);
+		const referenceId = _getPropertyId(definition.enum_filter.target.parameter_ref, {	rowIndex: propertyId.row, colIndex: propertyId.col });
 		_updateFilteredState(definition, newStates, referenceId, filtered);
 	}
 }
@@ -492,7 +475,7 @@ function _getPropertyId(paramRef, cellCoords) {
 	return baseParam;
 }
 
-function validateInput(propertyId, controller, validationDefinitions, fields) {
+function validateInput(propertyId, controller, validationDefinitions) {
 	if (!validationDefinitions) {
 		return;
 	}
@@ -505,14 +488,12 @@ function validateInput(propertyId, controller, validationDefinitions, fields) {
 	let errorSet = false;
 	const validations = _extractValidationDefinitions(propertyId, validationDefinitions);
 	// const validations = validationDefinitions[propertyId.name];
-	const userInput = controller.getPropertyValues();
 	if (Array.isArray(validations)) {
 		try {
 			let output = false;
 			for (const validation of validations) {
 				let errorMessage = DEFAULT_VALIDATION_MESSAGE;
-				output = UiConditions.evaluateInput(validation.definition, userInput, control, fields, controller.getRequiredParameters(),
-					controller.convertPropertyId(propertyId), controller);
+				output = UiConditions.validateInput(validation.definition, propertyId, controller);
 				let isError = false;
 				// logger.info("validated input field " + JSON.stringify(propertyId) + " to be " + JSON.stringify(output));
 				if (typeof output === "object") {

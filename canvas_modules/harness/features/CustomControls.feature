@@ -23,6 +23,7 @@ Feature: CustomControls
 		Then I validate map has error
 		Then I click on "go_to_armonk" button
 		Then I click on modal OK button
+		Then I pause for 1 seconds
 		Then I open the "Configure Slider" summary link in the "MAP AND SLIDER" category
 		Then I validate the dropdown has 6 options
 		Then I click on slider

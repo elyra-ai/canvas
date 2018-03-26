@@ -14,103 +14,8 @@ import PropertyUtils from "../util/property-utils.js";
 import cloneDeep from "lodash/cloneDeep";
 import intersectionWith from "lodash/intersectionWith";
 import unionWith from "lodash/unionWith";
-import union from "lodash/union";
+// import union from "lodash/union";
 import isEqual from "lodash/isEqual";
-
-const ERROR = "error";
-const WARNING = "warning";
-function evaluateInput(validationDefinition, userInput, control, fields, requiredParameters, propertyId, controller) {
-	let output;
-	try {
-		if ((control.valueDef && control.valueDef.isMap) || (typeof propertyId.col !== "undefined")) {
-			output = _validateTable(validationDefinition, userInput, control, fields, requiredParameters, propertyId, controller);
-		} else {
-			output = validateInput(validationDefinition, userInput, control.controlType, fields,
-				{}, requiredParameters);
-		}
-	} catch (error) {
-		logger.warn("Error thrown in validation: " + error);
-	}
-	return output;
-}
-
-function _validateTable(validationDefinition, userInput, control, fields, requiredParameters, propertyId, controller) {
-	let output;
-	const coordinates = {};
-	// get the control for the table,
-	// need to use controller.getControl({ name: propertyId.name })so it does not return the control for the cell.
-	const tableControl = (propertyId.col) ? controller.getControl({ name: propertyId.name }) : null;
-	const tableControlName = propertyId.name;
-	const rowIndex = propertyId.row;
-	const colIndex = propertyId.col;
-	const tableControlType = (propertyId.col && tableControl) ? tableControl.controlType : control.controlType;
-	const fieldIndex = PropertyUtils.getTableFieldIndex(tableControl ? tableControl : control);
-
-	// only evaluate table cells if the validation definition has  condition for a cell
-	const columnNumbers = getColumnsFromValidation(validationDefinition);
-	if (columnNumbers.length > 0) {
-		// For tables we need to evaluate all cells
-		const cellValues = userInput[tableControlName];
-		for (let row = 0; row < cellValues.length; row++) {
-			for (let col = 0; col < cellValues[row].length; col++) {
-				coordinates.rowIndex = row;
-				coordinates.colIndex = col;
-				if (fieldIndex >= 0) {
-					coordinates.skipVal = cellValues[row][fieldIndex];
-				}
-				// only run validation on columns defined in validation
-				var tmp = null;
-				if (columnNumbers.indexOf(col) > -1) {
-					tmp = validateInput(validationDefinition, userInput, tableControlType, fields,
-						coordinates, requiredParameters);
-				}
-
-				// only set the error for the current cell
-				const isError = PropertyUtils.toType(tmp) === "object";
-				if (PropertyUtils.toType(rowIndex) === "number" && PropertyUtils.toType(colIndex) === "number") {
-					if (row === rowIndex && col === colIndex && isError && tmp !== null) {
-						output = tmp;
-						output.isActiveCell = true;
-					}
-				}
-			}
-		}
-	} else {
-		// no table cells in defintion then evaluate the table
-		output = validateInput(validationDefinition, userInput, control.controlType, fields,
-			coordinates, requiredParameters);
-	}
-	return output;
-}
-
-function getColumnsFromValidation(validationDefinition) {
-	let columnNumbers = [];
-	if (validationDefinition.validation && validationDefinition.validation.evaluate) {
-		const evaluateDef = validationDefinition.validation.evaluate;
-		if (evaluateDef.condition) {
-			columnNumbers = union(columnNumbers, getColumnsFromCondition(columnNumbers, evaluateDef.condition));
-		} else if (evaluateDef.and) {
-			for (const andCondition of evaluateDef.and) {
-				columnNumbers = union(columnNumbers, getColumnsFromCondition(columnNumbers, andCondition.condition));
-			}
-		} else if (evaluateDef.or) {
-			for (const orCondition of evaluateDef.or) {
-				columnNumbers = union(columnNumbers, getColumnsFromCondition(columnNumbers, orCondition.condition));
-			}
-		}
-	}
-	return columnNumbers;
-}
-
-function getColumnsFromCondition(columnNumbers, cellCondition) {
-	if (cellCondition.parameter_ref && cellCondition.parameter_ref.indexOf("[") > -1) {
-		columnNumbers.push(_getColumnNumber(cellCondition.parameter_ref));
-	}
-	if (cellCondition.parameter_2_ref && cellCondition.parameter_2_ref.indexOf("[") > -1) {
-		columnNumbers.push(_getColumnNumber(cellCondition.parameter_2_ref));
-	}
-	return columnNumbers;
-}
 
 /**
 * @param {Object} definition Condition definition
@@ -118,22 +23,17 @@ function getColumnsFromCondition(columnNumbers, cellCondition) {
 * @param {Object} fields Optional datasetMetadata fields
 * @param {Object} cellCoordinates Cell coordinates for tables
 */
-function validateInput(definition, userInput, controlType, fields, cellCoordinates, requiredParameters) {
+
+function validateInput(definition, propertyId, controller) {
 	const data = definition;
-	const info = {
-		controlType: controlType,
-		fields: fields,
-		cellCoordinates: cellCoordinates,
-		requiredParameters: requiredParameters
-	};
 	if (data.validation) {
-		return validation(data.validation, userInput, info);
+		return validation(data.validation, propertyId, controller);
 	} else if (data.enabled) {
-		return enabled(data.enabled, userInput, info);
+		return enabled(data.enabled, propertyId, controller);
 	} else if (data.visible) {
-		return visible(data.visible, userInput, info);
+		return visible(data.visible, propertyId, controller);
 	} else if (data.enum_filter) {
-		return filteredEnum(data.enum_filter, userInput, info);
+		return filteredEnum(data.enum_filter, propertyId, controller);
 	}
 	throw new Error("Invalid user input validation definition schema");
 }
@@ -141,37 +41,13 @@ function validateInput(definition, userInput, controlType, fields, cellCoordinat
 /**
  * A single validation. The fail_message is displayed upon validation failure.
  * @param {Object} validationData contains an object that adheres to the validation_definition
- *	 "validation_definition": {
- *		 "properties": {
- *			 "validation": {
- *				 "description": "A single validation. The fail_message is displayed upon validation failure.",
- *				 "type": "object",
- *				 "properties": {
- *					 "fail_message": {
- *						 "description": "Error/warning",
- *						 "type": "object",
- *						 "$ref": "#/definitions/failMessage_definition"
- *					 },
- *					 "evaluate": {
- *						 "description": "Evaluates to a boolean result",
- *						 "type": "object",
- *						 "$ref": "#/definitions/evaluate_definition"
- *					 }
- *				 },
- *				 "required": ["fail_message", "evaluate"]
- *			 }
- *		 },
- *		 "required": ["validation"]
- *	 }
  * @param {Any} userInput Contains the control value entered by the user
  * @param {Object} info optional dataset fields and cell coordinates info
  * @return {boolean} true if valid, failMessage {Object} if false.
  */
-function validation(validationData, userInput, info) {
-	const data = validationData;
-	info.conditionType = "validation";
+function validation(data, propertyId, controller) {
 	if (data.fail_message && data.evaluate) {
-		return evaluate(data.evaluate, userInput, info) || failedMessage(data.fail_message);
+		return evaluate(data.evaluate, propertyId, controller) || failedMessage(data.fail_message);
 	}
 	throw new Error("Invalid validation schema");
 }
@@ -179,39 +55,11 @@ function validation(validationData, userInput, info) {
 /**
  * Enablement test. Disables controls if evaluate is false.
  * @param {Object} enabledData contains an object that adheres to the enabled_definition
- *	 "enabled_definition": {
- *		 "properties": {
- *			 "enabled": {
- *				 "description": "Enablement test. Disables controls if evaluate is false.",
- *				 "type": "object",
- *				 "properties": {
- *					 "parameter_refs": {
- *						 "description": "Array of parameter names affected by this operation",
- *						 "type": "array",
- *						 "minItems": 1,
- *						 "items": {
- *							 "type": "string"
- *						 },
- *						 "uniqueItems": true
- *					 },
- *					 "evaluate": {
- *						 "description": "Evaluates to a boolean result",
- *						 "type": "object",
- *						 "$ref": "#/definitions/evaluate_definition"
- *					 }
- *				 },
- *				"required": ["parameter_refs, evaluate"]
- *			 }
- *		 },
- *		"required": ["enabled"]
- *	 }
  * @return {boolean} true if valid.
  */
-function enabled(enabledData, userInput, info) {
-	const data = enabledData;
-	info.conditionType = "enabled";
+function enabled(data, propertyId, controller) {
 	if ((data.parameter_refs || data.group_refs) && data.evaluate) {
-		return evaluate(data.evaluate, userInput, info);
+		return evaluate(data.evaluate, propertyId, controller);
 	}
 	throw new Error("Invalid enabled schema");
 }
@@ -219,39 +67,11 @@ function enabled(enabledData, userInput, info) {
 /**
  * Visibility test. Hides controls if evaluate is false.
  * @param {Object} data contains an object that adheres to the visible_definition
- *	 "visible_definition": {
- *		 "properties": {
- *			 "visible": {
- *				 "description": "Visibility test. Hides controls if evaluate is false.",
- *				 "type": "object",
- *				 "properties": {
- *					 "parameter_refs": {
- *						 "description": "Array of parameter names affected by this operation",
- *						 "type": "array",
- *						 "minItems": 1,
- *						 "items": {
- *							 "type": "string"
- *						 },
- *						 "uniqueItems": true
- *					 },
- *					 "evaluate": {
- *						 "description": "Evaluates to a boolean result",
- *						 "type": "object",
- *						 "$ref": "#/definitions/evaluate_definition"
- *					 }
- *				 },
- *				"required": ["parameter_refs, evaluate"]
- *			 }
- *		 },
- *		"required": ["visible"]
- *	 }
  * @return {boolean} true if valid.
  */
-function visible(visibleData, userInput, info) {
-	const data = visibleData;
-	info.conditionType = "visible";
+function visible(data, propertyId, controller) {
 	if ((data.parameter_refs || data.group_refs) && data.evaluate) {
-		return evaluate(data.evaluate, userInput, info);
+		return evaluate(data.evaluate, propertyId, controller);
 	}
 	throw new Error("Invalid visible schema");
 }
@@ -263,11 +83,9 @@ function filter(filterDef, controller, fields) {
 	return fields;
 }
 
-function filteredEnum(filteredEnumData, userInput, info) {
-	const data = filteredEnumData;
-	info.conditionType = "filteredEnum";
+function filteredEnum(data, propertyId, controller) {
 	if (data.target && data.evaluate) {
-		return evaluate(data.evaluate, userInput, info);
+		return evaluate(data.evaluate, propertyId, controller);
 	}
 	throw new Error("Invalid filteredEnum schema");
 }
@@ -275,13 +93,13 @@ function filteredEnum(filteredEnumData, userInput, info) {
 /**
  * Evaluate Definition
  */
-function evaluate(data, userInput, info) {
+function evaluate(data, propertyId, controller) {
 	if (data.or) {
-		return or(data.or, userInput, info);
+		return or(data.or, propertyId, controller);
 	} else if (data.and) {
-		return and(data.and, userInput, info);
+		return and(data.and, propertyId, controller);
 	} else if (data.condition) { // condition
-		return condition(data.condition, userInput, info);
+		return condition(data.condition, propertyId, controller);
 	}
 	throw new Error("Failed to parse definition");
 }
@@ -308,9 +126,9 @@ function evaluateFilter(conditionItem, controller, fields) {
  * @param {Object} info optional dataset fields and cell coordinates info
  * @return {boolean}
  */
-function or(data, userInput, info) {
+function or(data, propertyId, controller) {
 	for (let i = 0; i < data.length; i++) {
-		const evaluated = evaluate(data[i], userInput, info);
+		const evaluated = evaluate(data[i], propertyId, controller);
 		if (evaluated === true) {
 			return true;
 		}
@@ -335,9 +153,9 @@ function orFilter(conditionItems, controller, inFields) {
  * @param {Object} info optional dataset fields and cell coordinates info
  * @return {boolean}
  */
-function and(data, userInput, info) {
+function and(data, propertyId, controller) {
 	for (let i = 0; i < data.length; i++) {
-		const evaluated = evaluate(data[i], userInput, info);
+		const evaluated = evaluate(data[i], propertyId, controller);
 		if (evaluated === false) {
 			return false;
 		} else if (typeof evaluated === "object") {
@@ -365,59 +183,48 @@ function andFilter(conditionItems, controller, inFields) {
  * @param {Object} info optional dataset fields and cell coordinates info
  * @return {boolean} true if the parameter(s) satisfy the condition
  */
-function condition(data, userInput, info) {
+function condition(data, propertyId, controller) {
 	const op = data.op;
 	const param = data.parameter_ref;
 	const param2 = data.parameter_2_ref;
 	const value = data.value;
 
-	// Separate any complex type sub-control reference
-	let paramName = param;
-	const offset = param.indexOf("[");
-	const row = info.cellCoordinates ? info.cellCoordinates.rowIndex : 0;
-	let column = info.cellCoordinates ? info.cellCoordinates.colIndex : 0;
-	if (offset > -1) {
-		paramName = param.substring(0, offset);
-		column = _getColumnNumber(param);
-	}
+	const paramInfo = { param: param, id: _getPropertyIdFromParam(propertyId, param) };
+	paramInfo.value = controller.getPropertyValue(paramInfo.id);
+	paramInfo.control = controller.getControl(paramInfo.id);
 
-	// validate if userInput has param's input
-	if (typeof userInput[paramName] === "undefined") {
-		// console.log("userInput: \n" + JSON.stringify(userInput));
-		throw new Error("param " + paramName + " not found in userInput");
-	}
+	let param2Info;
 
-	const paramInput = _getUserInput(userInput, paramName, { rowIndex: row, colIndex: column });
-
-	if (typeof param2 !== "undefined" && info.conditionType && info.conditionType === "validation" &&
-		op !== "isEmpty" && op !== "isNotEmpty" && op !== "cellNotEmpty") {
-		const valid = _validateParams(userInput, param, info.requiredParameters, ERROR);
-		if (typeof valid === "object") {
-			return valid;
-		}
+	if (typeof param2 !== "undefined") {
+		param2Info = {
+			param: param2,
+			id: _getPropertyIdFromParam(propertyId, param2),
+		};
+		param2Info.value = controller.getPropertyValue(param2Info.id);
+		param2Info.control = controller.getControl(param2Info.id);
 	}
 
 	switch (op) {
 	case "isEmpty":
-		return _handleEmpty(param, paramInput);
+		return _handleEmpty(paramInfo);
 	case "isNotEmpty":
-		return _handleNotEmpty(param, paramInput);
+		return _handleNotEmpty(paramInfo);
 	case "greaterThan":
-		return _handleGreaterThan(param, paramInput, userInput, param2, value, info);
+		return _handleGreaterThan(paramInfo, param2Info, value, controller);
 	case "lessThan":
-		return _handleLessThan(param, paramInput, userInput, param2, value, info);
+		return _handleLessThan(paramInfo, param2Info, value, controller);
 	case "equals":
-		return _handleEquals(param, paramInput, userInput, param2, value, info);
+		return _handleEquals(paramInfo, param2Info, value, controller);
 	case "notEquals":
-		return _handleNotEquals(param, paramInput, userInput, param2, value, info);
+		return _handleNotEquals(paramInfo, param2Info, value, controller);
 	case "contains":
-		return _handleContains(param, paramInput, userInput, param2, value, info);
+		return _handleContains(paramInfo, param2Info, value, controller);
 	case "notContains":
-		return _handleNotContains(param, paramInput, userInput, param2, value, info);
+		return _handleNotContains(paramInfo, param2Info, value, controller);
 	case "colNotExists":
-		return _handleColNotExists(paramInput, info);
+		return _handleColNotExists(paramInfo, controller);
 	case "cellNotEmpty":
-		return _handleCellNotEmpty(paramInput, info);
+		return _handleCellNotEmpty(paramInfo);
 	default:
 		logger.warn("Ignoring unknown condition operation '" + op + "' for parameter_ref " + param);
 		return true;
@@ -500,350 +307,285 @@ function _handleDmModelingRole(inFields, roleValues) {
 	return fields;
 }
 
-function _getUserInput(userInput, param, cellCoordinates) {
-	const paramInput = userInput[param];
-	if (PropertyUtils.toType(paramInput) === "array" &&
-			PropertyUtils.toType(cellCoordinates) === "object" &&
-			PropertyUtils.toType(cellCoordinates.colIndex) === "number") {
-		if (PropertyUtils.toType(cellCoordinates.rowIndex) === "number" &&
-				paramInput.length > cellCoordinates.rowIndex &&
-				paramInput[cellCoordinates.rowIndex].length > cellCoordinates.colIndex) {
-			// Tables have rows and columns
-			return paramInput[cellCoordinates.rowIndex][cellCoordinates.colIndex];
-		} else if (paramInput.length > cellCoordinates.colIndex) {
-			// Plain structures have only columns
-			return paramInput[cellCoordinates.colIndex];
-		}
-	}
-	return paramInput;
-}
 
-function _validateParams(userInput, param, requiredParameters, errorType) {
-	let failMessage;
-	if ((userInput[param] === null || userInput[param] === "") && requiredParameters.indexOf(param) !== -1) {
-		const internalError = {
-			focus_parameter_ref: param,
-			message: {
-				default: param + " is missing an input value for validation."
-			},
-			type: errorType
-		};
-		failMessage = failedMessage(internalError);
-	}
-	return failMessage;
-}
-
-function _handleEmpty(param, paramInput) {
-	const dataType = typeof paramInput;
+function _handleEmpty(paramInfo) {
+	const dataType = typeof paramInfo.value;
 	switch (dataType) {
+	case "undefined":
+		return true;
 	case "boolean":
-		return paramInput === false;
+		return paramInfo.value === false;
 	case "string":
-		return paramInput.trim().length === 0;
+		return paramInfo.value.trim().length === 0;
 	case "number":
-		return paramInput === null;
+		return paramInfo.value === null;
 	case "object":
-		return paramInput === null ? true : paramInput.length === 0;
+		return paramInfo.value === null ? true : paramInfo.value.length === 0;
 	default:
-		logger.warn("Ignoring condition operation 'isEmpty' for parameter_ref " + param + " with input data type " + dataType);
+		logger.warn("Ignoring condition operation 'isEmpty' for parameter_ref " + paramInfo.param + " with input data type " + dataType);
 		return true;
 	}
 }
 
-function _handleNotEmpty(param, paramInput) {
-	const dataType = typeof paramInput;
+function _handleNotEmpty(paramInfo) {
+	const dataType = typeof paramInfo.value;
 	switch (dataType) {
+	case "undefined":
+		return false;
 	case "boolean":
-		return paramInput === true;
+		return paramInfo.value === true;
 	case "string":
-		return paramInput.trim().length !== 0;
+		return paramInfo.value.trim().length !== 0;
 	case "number":
-		return paramInput !== null;
+		return paramInfo.value !== null;
 	case "object":
-		return paramInput === null ? false : paramInput.length !== 0;
+		return paramInfo.value === null ? false : paramInfo.value.length !== 0;
 	default:
-		logger.warn("Ignoring condition operation 'isNotEmpty' for parameter_ref " + param + " with input data type " + dataType);
+		logger.warn("Ignoring condition operation 'isNotEmpty' for parameter_ref " + paramInfo.param + " with input data type " + dataType);
 		return true;
 	}
 }
 
-function _handleGreaterThan(param, paramInput, userInput, param2, value, info) {
-	const dataType = typeof paramInput;
+function _handleGreaterThan(paramInfo, param2Info, value, controller) {
+	const dataType = typeof paramInfo.value;
 	switch (dataType) {
+	case "undefined":
 	case "number":
-		if (typeof userInput[param2] !== "undefined") {
-			const notValid = _validateParams(userInput, param2, info.requiredParameters, WARNING);
-			if (typeof notValid === "object") {
-				return notValid;
-			}
-			if (typeof userInput[param2] !== "number") {
+		if (typeof param2Info !== "undefined") {
+			if (typeof param2Info.value !== "number") {
 				return false;
 			}
-			return paramInput > userInput[param2];
+			return paramInfo.value > param2Info.value;
 		} else if (typeof value !== "undefined") {
 			if (value === "null") {
 				return true;
 			}
-			return paramInput > value;
+			return paramInfo.value > value;
 		}
 		throw new Error("Insufficient parameter for condition operation 'greaterThan'");
 	case "object":
-		if (paramInput === null || userInput[param2] === null || value === null) {
+		if (paramInfo.value === null || param2Info.value === null || value === null) {
 			return true;
 		}
 		return false;
 	default:
-		logger.warn("Ignoring condition operation 'greaterThan' for parameter_ref " + param + " with input data type " + dataType);
+		logger.warn("Ignoring condition operation 'greaterThan' for parameter_ref " + paramInfo.param + " with input data type " + dataType);
 		return true;
 	}
 }
 
-function _handleLessThan(param, paramInput, userInput, param2, value, info) {
-	const dataType = typeof paramInput;
+function _handleLessThan(paramInfo, param2Info, value, controller) {
+	const dataType = typeof paramInfo.value;
 	switch (dataType) {
+	case "undefined":
 	case "number":
-		if (typeof userInput[param2] !== "undefined") {
-			const notValid = _validateParams(userInput, param2, info.requiredParameters, WARNING);
-			if (typeof notValid === "object") {
-				return notValid;
-			}
-			if (typeof userInput[param2] !== "number") {
+		if (typeof param2Info !== "undefined") {
+			if (typeof param2Info.value !== "number") {
 				return false;
 			}
-			return paramInput < userInput[param2];
+			return paramInfo.value < param2Info.value;
 		} else if (typeof value !== "undefined") {
 			if (value === "null") {
 				return true;
 			}
-			return paramInput < value;
+			return paramInfo.value < value;
 		}
 		throw new Error("Insufficient parameter for condition operation 'lessThan'");
 	case "object":
-		if (paramInput === null || userInput[param2] === null || value === null) {
+		if (paramInfo.value === null || param2Info.value === null || value === null) {
 			return true;
 		}
 		return false;
 	default:
-		logger.warn("Ignoring condition operation 'lessThan' for parameter_ref " + param + " with input data type " + dataType);
+		logger.warn("Ignoring condition operation 'lessThan' for parameter_ref " + paramInfo.param + " with input data type " + dataType);
 		return true;
 	}
 }
 
-function _handleEquals(param, paramInput, userInput, param2, value, info) {
-	if (info.controlType !== "passwordfield") {
-		const dataType = typeof paramInput;
-		if (typeof userInput[param2] !== "undefined") {
-			const notValid = _validateParams(userInput, param2, info.requiredParameters, WARNING);
-			if (typeof notValid === "object") {
-				return notValid;
-			}
-
+function _handleEquals(paramInfo, param2Info, value, controller) {
+	if (paramInfo.control.controlType !== "passwordfield") {
+		const dataType = typeof paramInfo.value;
+		if (typeof param2Info !== "undefined") {
 			switch (dataType) {
+			case "undefined":
 			case "boolean":
 			case "number":
-				return paramInput === userInput[param2];
+				return paramInfo.value === param2Info.value;
 			case "string":
-				return paramInput.trim() === userInput[param2].trim();
+				return paramInfo.value.trim() === param2Info.value.trim();
 			case "object":
-				if (paramInput === null) {
-					return paramInput === userInput[param2];
+				if (paramInfo.value === null) {
+					return paramInfo.value === param2Info.value;
 				}
-				return JSON.stringify(paramInput) === JSON.stringify(userInput[param2]);
+				return JSON.stringify(paramInfo.value) === JSON.stringify(param2Info.value);
 			default:
-				logger.warn("Ignoring condition operation 'equals' for parameter_ref " + param + " with input data type " + dataType);
+				logger.warn("Ignoring condition operation 'equals' for parameter_ref " + paramInfo.param + " with input data type " + dataType);
 				return true;
 			}
 		} else if (typeof value !== "undefined") {
 			switch (dataType) {
+			case "undefined":
 			case "boolean":
 			case "number":
-				return paramInput === value;
+				return paramInfo.value === value;
 			case "string":
-				return paramInput.trim() === value.trim();
+				return paramInfo.value.trim() === value.trim();
 			case "object":
-				if (paramInput === null) {
-					return paramInput === value;
+				if (paramInfo.value === null) {
+					return paramInfo.value === value;
 				}
-				return JSON.stringify(paramInput) === JSON.stringify(value);
+				return JSON.stringify(paramInfo.value) === JSON.stringify(value);
 			default:
-				logger.warn("Ignoring condition operation 'equals' for parameter_ref " + param + " with input data type " + dataType);
+				logger.warn("Ignoring condition operation 'equals' for parameter_ref " + paramInfo.param + " with input data type " + dataType);
 				return true;
 			}
 		}
 		throw new Error("Insufficient parameter for condition operation equals");
 	}
-	logger.warn("Ignoring unsupported condition operation 'equals' for control type " + info.controlType);
+	logger.warn("Ignoring unsupported condition operation 'equals' for control type " + paramInfo.control.controlType);
 	return true;
 }
 
-function _handleNotEquals(param, paramInput, userInput, param2, value, info) {
-	if (info.controlType !== "passwordfield") {
-		const dataType = typeof paramInput;
-		if (typeof userInput[param2] !== "undefined") {
-			const notValid = _validateParams(userInput, param2, info.requiredParameters, WARNING);
-			if (typeof notValid === "object") {
-				return notValid;
-			}
-
+function _handleNotEquals(paramInfo, param2Info, value, controller) {
+	if (paramInfo.control.controlType !== "passwordfield") {
+		const dataType = typeof paramInfo.value;
+		if (typeof param2Info !== "undefined") {
 			switch (dataType) {
+			case "undefined":
 			case "boolean":
 			case "number":
-				return paramInput !== userInput[param2];
+				return paramInfo.value !== param2Info.value;
 			case "string":
-				return paramInput.trim() !== userInput[param2].trim();
+				return paramInfo.value.trim() !== param2Info.value.trim();
 			case "object":
-				if (paramInput === null) {
-					return paramInput !== userInput[param2];
+				if (paramInfo.value === null) {
+					return paramInfo.value !== param2Info.value;
 				}
-				return JSON.stringify(paramInput) !== JSON.stringify(userInput[param2]);
+				return JSON.stringify(paramInfo.value) !== JSON.stringify(param2Info.value);
 			default:
-				logger.warn("Ignoring condition operation 'notEquals' for parameter_ref " + param + " with input data type " + dataType);
+				logger.warn("Ignoring condition operation 'notEquals' for parameter_ref " + paramInfo.param + " with input data type " + dataType);
 				return true;
 			}
 		} else if (typeof value !== "undefined") {
 			switch (dataType) {
+			case "undefined":
 			case "boolean":
 			case "number":
-				return paramInput !== value;
+				return paramInfo.value !== value;
 			case "string":
-				return paramInput.trim() !== value.trim();
+				return paramInfo.value.trim() !== value.trim();
 			case "object":
-				if (paramInput === null) {
-					return paramInput !== value;
+				if (paramInfo.value === null) {
+					return paramInfo.value !== value;
 				}
-				return JSON.stringify(paramInput) !== JSON.stringify(value);
+				return JSON.stringify(paramInfo.value) !== JSON.stringify(value);
 			default:
-				logger.warn("Ignoring condition operation 'notEquals' for parameter_ref " + param + " with input data type " + dataType);
+				logger.warn("Ignoring condition operation 'notEquals' for parameter_ref " + paramInfo.param + " with input data type " + dataType);
 				return true;
 			}
 		}
 		throw new Error("Insufficient parameter for condition operation notEquals");
 	}
-	logger.warn("Ignoring unsupported condition operation 'notEquals' for control type " + info.controlType);
+	logger.warn("Ignoring unsupported condition operation 'notEquals' for control type " + paramInfo.control.controlType);
 	return true;
 }
 
-function _handleContains(param, paramInput, userInput, param2, value, info) {
+function _handleContains(paramInfo, param2Info, value, controller) {
 	const unsupportedControls = ["checkbox", "numberfield", "passwordfield"];
-	if (unsupportedControls.indexOf(info.controlType) < 0) {
-		const dataType = typeof paramInput;
-		if (typeof userInput[param2] !== "undefined") {
-			const notValid = _validateParams(userInput, param2, info.requiredParameters, WARNING);
-			if (typeof notValid === "object") {
-				return notValid;
-			}
-
+	if (unsupportedControls.indexOf(paramInfo.control.controlType) < 0) {
+		const dataType = typeof paramInfo.value;
+		if (typeof param2Info !== "undefined") {
 			switch (dataType) {
+			case "undefined":
+				return false;
 			case "string":
-				return paramInput.indexOf(userInput[param2]) >= 0;
+				return paramInfo.value.indexOf(param2Info.value) >= 0;
 			case "object":
-				return paramInput === null ? false : _searchInArray(paramInput, userInput[param2], false);
+				return paramInfo.value === null ? false : _searchInArray(paramInfo.value, param2Info.value, false);
 			default:
-				logger.warn("Ignoring condition operation 'contains' for parameter_ref " + param + " with input data type " + dataType);
+				logger.warn("Ignoring condition operation 'contains' for parameter_ref " + paramInfo.param + " with input data type " + dataType);
 				return true;
 			}
 		} else if (typeof value !== "undefined") {
 			switch (dataType) {
+			case "undefined":
+				return false;
 			case "string":
-				return paramInput.indexOf(value) >= 0;
+				return paramInfo.value.indexOf(value) >= 0;
 			case "object":
-				return paramInput === null ? false : _searchInArray(paramInput, value, false);
+				return paramInfo.value === null ? false : _searchInArray(paramInfo.value, value, false);
 			default:
-				logger.warn("Ignoring condition operation 'contains' for parameter_ref " + param + " with input data type " + dataType);
+				logger.warn("Ignoring condition operation 'contains' for parameter_ref " + paramInfo.param + " with input data type " + dataType);
 				return true;
 			}
 		}
 		throw new Error("Insufficient parameter for condition operation contains");
 	}
-	logger.warn("Ignoring unsupported condition operation 'contains' for control type " + info.controlType);
+	logger.warn("Ignoring unsupported condition operation 'contains' for control type " + paramInfo.control.controlType);
 	return true;
 }
 
-function _handleNotContains(param, paramInput, userInput, param2, value, info) {
+function _handleNotContains(paramInfo, param2Info, value, controller) {
 	const unsupportedControls = ["checkbox", "numberfield", "passwordfield"];
-	if (unsupportedControls.indexOf(info.controlType) < 0) {
-		const dataType = typeof paramInput;
-		if (typeof userInput[param2] !== "undefined") {
-			const notValid = _validateParams(userInput, param2, info.requiredParameters, WARNING);
-			if (typeof notValid === "object") {
-				return notValid;
-			}
-
+	if (unsupportedControls.indexOf(paramInfo.control.controlType) < 0) {
+		const dataType = typeof paramInfo.value;
+		if (typeof param2Info !== "undefined") {
 			switch (dataType) {
+			case "undefined":
+				return true;
 			case "string":
-				return paramInput.indexOf(userInput[param2]) < 0;
+				return paramInfo.value.indexOf(param2Info.value) < 0;
 			case "object":
-				return paramInput === null ? true : !_searchInArray(paramInput, userInput[param2], false);
+				return paramInfo.value === null ? true : !_searchInArray(paramInfo.value, param2Info.value, false);
 			default:
-				logger.warn("Ignoring condition operation 'notContains' for parameter_ref " + param + " with input data type " + dataType);
+				logger.warn("Ignoring condition operation 'notContains' for parameter_ref " + paramInfo.param + " with input data type " + dataType);
 				return true;
 			}
 		} else if (typeof value !== "undefined") {
 			switch (dataType) {
+			case "undefined":
+				return true;
 			case "string":
-				return paramInput.indexOf(value) < 0;
+				return paramInfo.value.indexOf(value) < 0;
 			case "object":
-				return paramInput === null ? true : !_searchInArray(paramInput, value, false);
+				return paramInfo.value === null ? true : !_searchInArray(paramInfo.value, value, false);
 			default:
-				logger.warn("Ignoring condition operation 'notContains' for parameter_ref " + param + " with input data type " + dataType);
+				logger.warn("Ignoring condition operation 'notContains' for parameter_ref " + paramInfo.param + " with input data type " + dataType);
 				return true;
 			}
 		}
 		throw new Error("Insufficient parameter for condition operation notContains");
 	}
-	logger.warn("Ignoring unsupported condition operation 'notContains' for control type " + info.controlType);
+	logger.warn("Ignoring unsupported condition operation 'notContains' for control type " + paramInfo.control.controlType);
 	return true;
 }
 
-function _handleColNotExists(paramInput, info) {
+function _handleColNotExists(paramInfo, controller) {
 	const supportedControls = ["textfield", "structuretable", "structureeditor", "structurelisteditor"];
-	if (supportedControls.indexOf(info.controlType) >= 0) {
-		if (!info.fields) {
+	if (supportedControls.indexOf(paramInfo.control.controlType) >= 0) {
+		const dataModelFields = controller.getDatasetMetadataFields();
+		if (!dataModelFields) {
 			return true;
 		}
-		let value = paramInput;
-		if (PropertyUtils.toType(paramInput) === "array" && info.cellCoordinates &&
-				PropertyUtils.toType(info.cellCoordinates.rowIndex) === "number" &&
-				PropertyUtils.toType(info.cellCoordinates.colIndex) === "number" &&
-				info.cellCoordinates.rowIndex > -1 && info.cellCoordinates.colIndex > -1 &&
-				paramInput.length > info.cellCoordinates.rowIndex &&
-				paramInput[info.cellCoordinates.rowIndex].length > info.cellCoordinates.colIndex) {
-			value = paramInput[info.cellCoordinates.rowIndex][info.cellCoordinates.colIndex];
-		}
-		if (!info.cellCoordinates || info.cellCoordinates.skipVal !== value) {
-			for (const field of info.fields) {
-				if (field.name === value) {
-					return false;
-				}
+		for (const field of dataModelFields) {
+			if (field.name === paramInfo.value) {
+				return false;
 			}
 
 		}
 		return true;
 	}
-	logger.warn("Ignoring unsupported condition operation 'colNotExists' for control type " + info.controlType);
+	logger.warn("Ignoring unsupported condition operation 'colNotExists' for control type " + paramInfo.control.controlType);
 	return true;
 }
 
-function _handleCellNotEmpty(paramInput, info) {
+function _handleCellNotEmpty(paramInfo) {
 	const supportedControls = ["structuretable", "structureeditor", "structurelisteditor"];
-	if (supportedControls.indexOf(info.controlType) >= 0) {
-		let value = paramInput;
-		if (PropertyUtils.toType(paramInput) === "array" && info.cellCoordinates) {
-			if (PropertyUtils.toType(info.cellCoordinates.rowIndex) === "number" &&
-					PropertyUtils.toType(info.cellCoordinates.colIndex) === "number" &&
-					info.cellCoordinates.rowIndex > -1 && info.cellCoordinates.colIndex > -1 &&
-					paramInput.length > info.cellCoordinates.rowIndex &&
-					paramInput[info.cellCoordinates.rowIndex].length > info.cellCoordinates.colIndex) {
-				value = (paramInput[info.cellCoordinates.rowIndex][info.cellCoordinates.colIndex]).trim();
-			} else {
-				// An empty array means there are no rows to test
-				return true;
-			}
-		}
-		const type = PropertyUtils.toType(value);
-		return type !== "undefined" && type !== "null" && String(value).length > 0;
+	if (supportedControls.indexOf(paramInfo.control.controlType) >= 0) {
+		const type = PropertyUtils.toType(paramInfo.value);
+		return type !== "undefined" && type !== "null" && String(paramInfo.value).length > 0;
 	}
-	logger.warn("Ignoring unsupported condition operation 'cellNotEmpty' for control type " + info.controlType);
+	logger.warn("Ignoring unsupported condition operation 'cellNotEmpty' for control type " + paramInfo.control.controlType);
 	return true;
 }
 
@@ -879,6 +621,17 @@ function _searchInArray(array, element, state) {
 	return found;
 }
 
+function _getPropertyIdFromParam(propertyId, param) {
+	const paramPropertyID = cloneDeep(propertyId);
+	paramPropertyID.name = param;
+	const offset = param.indexOf("[");
+	if (offset > -1) {
+		paramPropertyID.name = param.substring(0, offset);
+		paramPropertyID.col = _getColumnNumber(param);
+	}
+	return paramPropertyID;
+}
+
 // returns -1 if no column specified in parameter
 function _getColumnNumber(param) {
 	const startCol = param.indexOf("[");
@@ -893,7 +646,6 @@ function _getColumnNumber(param) {
 }
 
 module.exports = {
-	evaluateInput: evaluateInput,
 	validateInput: validateInput,
 	filter: filter
 };
