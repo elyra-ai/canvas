@@ -20,26 +20,36 @@ export default class PropertiesButtons extends Component {
 		const applyButtonLabel = (typeof this.props.applyLabel === "undefined") ? MESSAGE_KEYS_DEFAULTS.APPLYBUTTON_LABEL : this.props.applyLabel;
 		const rejectButtonLabel = (typeof this.props.rejectLabel === "undefined") ? MESSAGE_KEYS_DEFAULTS.REJECTBUTTON_LABEL : this.props.rejectLabel;
 
-		let buttons = (<div>
-			<Button id="properties-cancel-button" semantic href="" hyperlink onClick={this.props.cancelHandler}>
-				{rejectButtonLabel}
-			</Button>
-			<Button
-				id="properties-apply-button"
-				semantic href=""
-				onClick={this.props.okHandler}
-				style={{ "marginRight": "10px" }}
-			>
-				{applyButtonLabel}
-			</Button>
-		</div>);
-		if (this.props.showPropertiesButtons !== "undefined" && this.props.showPropertiesButtons === false) {
-			buttons = <div />;
+		let rejectButton;
+		let applyButton;
+		if (this.props.showPropertiesButtons !== false) {
+			if (this.props.cancelHandler) {
+				rejectButton = (
+					<Button
+						id="properties-cancel-button"
+						semantic href=""
+						hyperlink
+						onClick={this.props.cancelHandler}
+					>
+						{rejectButtonLabel}
+					</Button>
+				);
+			}
+			applyButton = (
+				<Button
+					id="properties-apply-button"
+					semantic href=""
+					onClick={this.props.okHandler}
+					style={{ "marginRight": "10px" }}
+				>
+					{applyButtonLabel}
+				</Button>
+			);
 		}
-
 		return (
 			<div className="modal__buttons">
-				{buttons}
+				{rejectButton}
+				{applyButton}
 			</div>
 		);
 	}

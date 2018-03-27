@@ -17,6 +17,7 @@ import PropTypes from "prop-types";
 import Button from "ap-components-react/dist/components/Button";
 import Dropdown from "ap-components-react/dist/components/Dropdown";
 import RadioGroup from "ap-components-react/dist/components/RadioGroup";
+import ToggleButton from "ap-components-react/dist/components/ToggleButton";
 
 import {
 	CHOOSE_FROM_LOCATION,
@@ -39,6 +40,7 @@ export default class SidePanelModal extends React.Component {
 		this.isReadyToSubmitProperties = this.isReadyToSubmitProperties.bind(this);
 		this.openPropertiesEditorDialog = this.openPropertiesEditorDialog.bind(this);
 		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
+		this.useApplyOnBlur = this.useApplyOnBlur.bind(this);
 	}
 
 	componentWillMount() {
@@ -141,6 +143,10 @@ export default class SidePanelModal extends React.Component {
 		this.props.usePropertiesContainerType(obj.selected);
 	}
 
+	useApplyOnBlur(changeEvent) {
+		this.props.useApplyOnBlur(changeEvent.target.checked);
+	}
+
 	render() {
 		// var divider = (<div
 		// 	className="sidepanel-children sidepanel-divider"
@@ -202,6 +208,16 @@ export default class SidePanelModal extends React.Component {
 				selected={this.props.propertiesContainerType}
 			/>
 		</div>);
+
+		const applyOnBlur = (
+			<div className="sidepanel-children">
+				<div className="sidepanel-headers">Apply changes on blur</div>
+				<ToggleButton dark
+					id="sidepanel-applyOnBlur-toggle"
+					checked={this.props.applyOnBlur}
+					onChange={this.useApplyOnBlur}
+				/>
+			</div>);
 		const divider = (<div className="sidepanel-children sidepanel-divider" />);
 		return (
 			<div>
@@ -209,6 +225,7 @@ export default class SidePanelModal extends React.Component {
 				{divider}
 				{containerType}
 				{divider}
+				{applyOnBlur}
 			</div>
 		);
 	}
@@ -222,5 +239,7 @@ SidePanelModal.propTypes = {
 	usePropertiesContainerType: PropTypes.func,
 	propertiesContainerType: PropTypes.string,
 	showPropertiesDialog: PropTypes.bool,
-	closeSidePanelModal: PropTypes.func
+	closeSidePanelModal: PropTypes.func,
+	applyOnBlur: PropTypes.bool,
+	useApplyOnBlur: PropTypes.func
 };

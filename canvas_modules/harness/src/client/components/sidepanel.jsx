@@ -64,7 +64,8 @@ export default class SidePanel extends React.Component {
 				usePropertiesContainerType={this.props.usePropertiesContainerType}
 				propertiesContainerType={this.props.propertiesContainerType}
 				closeSidePanelModal={this.props.closeSidePanelModal}
-				forceApplyProperties={this.props.forceApplyProperties}
+				applyOnBlur={this.props.applyOnBlur}
+				useApplyOnBlur={this.props.useApplyOnBlur}
 			/>);
 			break;
 		case SIDE_PANEL_API:
@@ -100,7 +101,6 @@ SidePanel.propTypes = {
 	openPropertiesEditorDialog: PropTypes.func,
 	openSidepanelCanvas: PropTypes.bool,
 	openSidepanelModal: PropTypes.bool,
-	forceApplyProperties: PropTypes.func,
 	openSidepanelAPI: PropTypes.bool,
 	setDiagramJSON: PropTypes.func,
 	setPaletteJSON: PropTypes.func,
@@ -128,5 +128,7 @@ SidePanel.propTypes = {
 	addNodeTypeToPalette: PropTypes.func,
 	setNodeLabel: PropTypes.func,
 	setPortLabel: PropTypes.func,
+	applyOnBlur: PropTypes.bool,
+	useApplyOnBlur: PropTypes.func,
 	log: PropTypes.func
 };

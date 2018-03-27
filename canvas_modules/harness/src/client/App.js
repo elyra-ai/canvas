@@ -89,7 +89,8 @@ class App extends React.Component {
 				"ports": true,
 				"links": true
 			},
-			extraCanvasDisplayed: false
+			extraCanvasDisplayed: false,
+			applyOnBlur: true
 		};
 
 		this.currentEditorId = null;
@@ -113,6 +114,7 @@ class App extends React.Component {
 		this.closeSidePanelModal = this.closeSidePanelModal.bind(this);
 		this.setLayoutDirection = this.setLayoutDirection.bind(this);
 		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
+		this.useApplyOnBlur = this.useApplyOnBlur.bind(this);
 		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
 		this.setRenderingEngine = this.setRenderingEngine.bind(this);
 		this.setConnectionType = this.setConnectionType.bind(this);
@@ -398,6 +400,11 @@ class App extends React.Component {
 	useInternalObjectModel(enabled) {
 		this.setState({ internalObjectModel: enabled });
 		this.log("use internal object model", enabled);
+	}
+
+	useApplyOnBlur(enabled) {
+		this.setState({ applyOnBlur: enabled });
+		this.log("apply changes on blur", enabled);
 	}
 
 	showExtraCanvas(enabled) {
@@ -963,7 +970,7 @@ class App extends React.Component {
 		const propertiesConfig = {
 			containerType: this.state.propertiesContainerType === FLYOUT ? CUSTOM : this.state.propertiesContainerType,
 			rightFlyout: this.state.propertiesContainerType === FLYOUT,
-			applyOnBlur: true
+			applyOnBlur: this.state.applyOnBlur
 		};
 		const callbacks = {
 			controllerHandler: this.propertiesControllerHandler,
@@ -1079,6 +1086,8 @@ class App extends React.Component {
 				setTipConfig={this.setTipConfig}
 				showExtraCanvas={this.showExtraCanvas}
 				extraCanvasDisplayed={this.state.extraCanvasDisplayed}
+				applyOnBlur={this.state.applyOnBlur}
+				useApplyOnBlur={this.useApplyOnBlur}
 				log={this.log}
 			/>
 			{/* <IntlProvider key="IntlProvider2" locale={ locale } messages={ messages }>

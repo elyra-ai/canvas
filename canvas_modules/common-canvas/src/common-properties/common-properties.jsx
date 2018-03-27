@@ -230,7 +230,13 @@ class CommonProperties extends React.Component {
 	}
 
 	render() {
-		const applyLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_APPLYBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.PROPERTIESEDIT_APPLYBUTTON_LABEL);
+		let cancelHandler = this.cancelHandler;
+		let applyLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_APPLYBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.PROPERTIESEDIT_APPLYBUTTON_LABEL);
+		// when onBlur cancel shouldn't be rendered.  Update apply button text to `Close`
+		if (this.props.propertiesConfig.applyOnBlur && this.props.propertiesConfig.rightFlyout) {
+			applyLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_CLOSEBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.PROPERTIESEDIT_CLOSEBUTTON_LABEL);
+			cancelHandler = null;
+		}
 		const rejectLabel = PropertyUtils.formatMessage(this.props.intl, MESSAGE_KEYS.PROPERTIESEDIT_REJECTBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.PROPERTIESEDIT_REJECTBUTTON_LABEL);
 
 		const formData = this.propertiesController.getForm();
@@ -273,7 +279,7 @@ class CommonProperties extends React.Component {
 				</div>);
 				buttonsContainer = (<PropertiesButtons
 					okHandler={this.applyPropertiesEditing.bind(this, true)}
-					cancelHandler={this.cancelHandler}
+					cancelHandler={cancelHandler}
 					applyLabel={applyLabel}
 					rejectLabel={rejectLabel}
 					showPropertiesButtons={this.state.showPropertiesButtons}
@@ -297,7 +303,7 @@ class CommonProperties extends React.Component {
 					bsSize={size}
 					title={this.state.title}
 					okHandler={this.applyPropertiesEditing.bind(this, true)}
-					cancelHandler={this.cancelHandler}
+					cancelHandler={cancelHandler}
 					showPropertiesButtons={this.state.showPropertiesButtons}
 				>
 					{editorForm}
@@ -312,7 +318,7 @@ class CommonProperties extends React.Component {
 					title={this.state.title}
 					bsSize={size}
 					okHandler={this.applyPropertiesEditing.bind(this, true)}
-					cancelHandler={this.cancelHandler}
+					cancelHandler={cancelHandler}
 					showPropertiesButtons={this.state.showPropertiesButtons}
 					applyLabel={applyLabel}
 					rejectLabel={rejectLabel}
@@ -342,8 +348,19 @@ class CommonProperties extends React.Component {
 
 CommonProperties.propTypes = {
 	propertiesInfo: PropTypes.object.isRequired,
-	propertiesConfig: PropTypes.object,
-	callbacks: PropTypes.object,
+	propertiesConfig: PropTypes.shape({
+		applyOnBlur: PropTypes.bool,
+		rightFlyout: PropTypes.bool,
+		containerType: PropTypes.string
+	}),
+	callbacks: PropTypes.shape({
+		controllerHandler: PropTypes.func,
+		propertyListener: PropTypes.func,
+		actionHandler: PropTypes.func,
+		closePropertiesDialog: PropTypes.func,
+		applyPropertyChanges: PropTypes.func,
+		helpClickHandler: PropTypes.func
+	}),
 	customPanels: PropTypes.array, // array of custom panels
 	customControls: PropTypes.array, // array of custom controls
 	intl: intlShape,

@@ -78,6 +78,14 @@ describe("CommonProperties renders correctly", () => {
 
 describe("CommonProperties works correctly in flyout", () => {
 
+	it("When applyOnBlur=true only the `Close` button should be rendered", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(propertiesInfo.parameterDef); // default is applyOnBlur=true
+		const wrapper = renderedObject.wrapper;
+		expect(wrapper.find("#properties-apply-button").text()).to.equal("Close");
+		expect(wrapper.find("#properties-cancel-button")).to.have.length(0);
+		wrapper.unmount();
+	});
+
 	it("When applyOnBlur=true applyPropertyChanges should be called only if values have changed", () => {
 		const renderedObject = propertyUtils.flyoutEditorForm(propertiesInfo.parameterDef); // default is applyOnBlur=true
 		const wrapper = renderedObject.wrapper;
@@ -116,6 +124,14 @@ describe("CommonProperties works correctly in flyout", () => {
 		wrapper.find("#common-properties-right-flyout-panel").simulate("blur");
 		expect(renderedObject.callbacks.applyPropertyChanges).to.have.property("callCount", 2);
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
+		wrapper.unmount();
+	});
+
+	it("When applyOnBlur=false `Cancel` and `Save` buttons should be rendered", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(propertiesInfo.parameterDef, { applyOnBlur: false });
+		const wrapper = renderedObject.wrapper;
+		expect(wrapper.find("#properties-apply-button").text()).to.equal("Save");
+		expect(wrapper.find("#properties-cancel-button").text()).to.equal("Cancel");
 		wrapper.unmount();
 	});
 

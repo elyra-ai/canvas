@@ -41,8 +41,7 @@ module.exports = function() {
 
 		var textbox = browser.$("#editor-control-colName");
 		textbox.setValue("", textboxValue);
-		var okButton = getPropertiesApplyButton();
-		okButton.click();
+		clickApplyButton();
 		var lastEventLog = testUtils.getLastEventLogData();
 
 		expect(textboxValue).toEqual((lastEventLog.data.form.colName).toString());
@@ -53,8 +52,7 @@ module.exports = function() {
 		dropdown.click();
 		var dropdownSelect = browser.$(".Dropdown-menu").$$(".Dropdown-option")[1];
 		dropdownSelect.click();
-		var okButton = getPropertiesApplyButton();
-		okButton.click();
+		clickApplyButton();
 
 		var lastEventLog = testUtils.getLastEventLogData();
 
@@ -109,8 +107,7 @@ module.exports = function() {
 		var radiobuttonGini = browser.$("#radioset-control-container").$$("label")[0];
 		radiobuttonGini.click();
 
-		var okButton = getPropertiesApplyButton();
-		okButton.click();
+		clickApplyButton();
 
 		var lastEventLog = testUtils.getLastEventLogData();
 
@@ -134,8 +131,7 @@ module.exports = function() {
 		var generateButton5 = generateButton4.$(".default-label-container").$$("label")[1];
 		generateButton5.click();
 
-		var okButton = getPropertiesApplyButton();
-		okButton.click();
+		clickApplyButton();
 
 		var lastEventLog = testUtils.getLastEventLogData();
 		var checkboxPartitionClicked = JSON.stringify(lastEventLog).includes("samplingSeed");
@@ -185,8 +181,8 @@ module.exports = function() {
 		var moveDrugUp = browser.$$(".table-row-move-button:not([disabled])")[1];
 		moveDrugUp.click();
 
-		var okButton = getPropertiesApplyButton();
-		okButton.click();
+		clickApplyButton();
+
 		var lastEventLog = testUtils.getLastEventLogData();
 		var naKey = (JSON.stringify(lastEventLog.data.form.keys[0])).includes("Na");
 		var drugKey = (JSON.stringify(lastEventLog.data.form.keys[1])).includes("Drug");
@@ -212,9 +208,7 @@ module.exports = function() {
 			.getText();
 		expect("The checkpoint interval value must either be >= 1 or -1 to disable").toEqual(errormessage1);
 
-		var okButton = getPropertiesApplyButton();
-		okButton.click();
-
+		clickApplyButton();
 	});
 
 	this.Then(/^I check for table cell level validation$/, function() {
@@ -228,8 +222,7 @@ module.exports = function() {
 		// var errormsg = browser.$(".form__validation--error").getText();
 
 		expect("The given column name is already in use in the current dataset").toEqual(errormsg);
-		var okButton = getPropertiesApplyButton();
-		okButton.click();
+		clickApplyButton();
 	});
 
 	this.Then(/^I check table cell enablement$/, function() {
@@ -243,8 +236,7 @@ module.exports = function() {
 		// After turning off the checkbox, there should now be one more disabled dropdown
 		disabledDropdowns = browser.$$(".Dropdown-disabled");
 		expect(disabledDropdowns.length).toEqual(10);
-		var okButton = getPropertiesApplyButton();
-		okButton.click();
+		clickApplyButton();
 	});
 
 	this.Then(/^I check for table validation$/, function() {
@@ -258,13 +250,12 @@ module.exports = function() {
 
 		var warningMsg = browser.$(".form__validation--warning").getText();
 		expect("There are no selected columns to rename").toEqual(warningMsg);
-		var okButton = getPropertiesApplyButton();
-		okButton.click();
+		clickApplyButton();
 	});
 
 
 	this.Then(/^I have closed the common properties dialog by clicking on close button$/, function() {
-		clickCancelButton();
+		clickApplyButton();
 	});
 
 	this.Then("I verify testValue is not present", function() {
@@ -312,8 +303,7 @@ module.exports = function() {
 	});
 
 	this.Then("I click on modal OK button", function() {
-		var okButton = getPropertiesApplyButton();
-		okButton.click();
+		clickApplyButton();
 	});
 
 	this.Then(/^I select the "([^"]*)" enable button$/, function(buttonName) {
@@ -330,8 +320,7 @@ module.exports = function() {
 
 	this.Then(/^I click on the "([^"]*)" button$/, function(buttonName) {
 		if (buttonName === "OK") {
-			var okButton = getPropertiesApplyButton();
-			okButton.click();
+			clickApplyButton();
 		} else {
 			clickCancelButton();
 		}
@@ -430,13 +419,14 @@ module.exports = function() {
 		expect(found).toEqual(true);
 	});
 
-	function getPropertiesApplyButton() {
+	function clickApplyButton() {
 		const applyButtons = browser.$$("#properties-apply-button");
-		return applyButtons[applyButtons.length - 1];
+		const button = applyButtons[applyButtons.length - 1];
+		button.click();
+		browser.pause(500);
 	}
 
 	function clickCancelButton() {
-		browser.pause(500);
 		const cancelButtons = browser.$$("#properties-cancel-button");
 		const button = cancelButtons[cancelButtons.length - 1];
 		button.click();

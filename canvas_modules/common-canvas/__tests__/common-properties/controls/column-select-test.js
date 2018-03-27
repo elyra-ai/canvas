@@ -82,7 +82,7 @@ function updateSelectedRows(row) {
 
 const openFieldPicker = sinon.spy();
 
-describe("ColumnStructureTableControl renders correctly", () => {
+describe("selectcolumns renders correctly", () => {
 	setPropertyValue();
 	it("props should have been defined", () => {
 		const wrapper = mountWithIntl(
@@ -193,7 +193,6 @@ describe("ColumnStructureTableControl renders correctly", () => {
 		const wrapper = renderedObject.wrapper;
 		const selectColumnsController = renderedObject.controller;
 
-
 		const filterCategory = wrapper.find(".category-title-container-right-flyout-panel").at(2); // get the filter category
 		const addFieldsButtons = filterCategory.find("Button"); // field picker buttons
 
@@ -247,12 +246,8 @@ describe("ColumnStructureTableControl renders correctly", () => {
 		selectColumnsController.setDatasetMetadata(datasetMetadata);
 
 		addFieldsButtons.at(0).simulate("click"); // open filter picker for `Filter by Type` control
-
 		propertyUtils.fieldPicker([], ["age", "age2", "age3", "age4", "age5"]);
-		wrapper.find("#properties-cancel-button").simulate("click");
-
 		wrapper.unmount();
-
 	});
 
 });
