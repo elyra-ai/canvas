@@ -156,26 +156,6 @@ function setPropertyValue() {
 	);
 }
 
-function getSelectedRows(controlName) {
-	return [];
-}
-
-function getSelectedRowsTop(controlName) {
-	return [0];
-}
-
-function getSelectedRowsBottom(controlName) {
-	return [5];
-}
-
-function getSelectedRowsMiddle(controlName) {
-	return [2];
-}
-
-function updateSelectedRows(row) {
-	return [];
-}
-
 function genUIItem() {
 	const key = "panel.___structurelisteditorList_";
 	const label = "...";
@@ -206,22 +186,19 @@ describe("StructureListEditorControl renders correctly", () => {
 
 	it("props should have been defined", () => {
 		setPropertyValue();
-		const selectedRows = getSelectedRows();
 		const wrapper = mountWithIntl(
 			<StructureListEditorControl
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				updateSelectedRows={updateSelectedRows}
-				selectedRows={selectedRows}
 				buildUIItem={genUIItem}
+				rightFlyout
 			/>
 		);
 
 		expect(wrapper.prop("control")).to.equal(control);
 		expect(wrapper.prop("controller")).to.equal(controller);
 		expect(wrapper.prop("propertyId")).to.equal(propertyId);
-		expect(wrapper.prop("selectedRows")).to.equal(selectedRows);
 		expect(wrapper.prop("buildUIItem")).to.equal(genUIItem);
 	});
 
@@ -232,9 +209,8 @@ describe("StructureListEditorControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				updateSelectedRows={updateSelectedRows}
-				selectedRows={getSelectedRows()}
 				buildUIItem={genUIItem}
+				rightFlyout
 			/>
 		);
 
@@ -256,9 +232,8 @@ describe("StructureListEditorControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				updateSelectedRows={updateSelectedRows}
-				selectedRows={getSelectedRows()}
 				buildUIItem={genUIItem}
+				rightFlyout
 			/>
 		);
 
@@ -275,9 +250,8 @@ describe("StructureListEditorControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				updateSelectedRows={updateSelectedRows}
-				selectedRows={getSelectedRowsTop()}
 				buildUIItem={genUIItem}
+				rightFlyout
 			/>
 		);
 
@@ -317,9 +291,8 @@ describe("StructureListEditorControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				updateSelectedRows={updateSelectedRows}
-				selectedRows={getSelectedRowsTop()}
 				buildUIItem={genUIItem}
+				rightFlyout
 			/>
 		);
 
@@ -359,9 +332,8 @@ describe("StructureListEditorControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				updateSelectedRows={updateSelectedRows}
-				selectedRows={getSelectedRowsBottom()}
 				buildUIItem={genUIItem}
+				rightFlyout
 			/>
 		);
 
@@ -401,9 +373,8 @@ describe("StructureListEditorControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				updateSelectedRows={updateSelectedRows}
-				selectedRows={getSelectedRowsBottom()}
 				buildUIItem={genUIItem}
+				rightFlyout
 			/>
 		);
 
@@ -443,9 +414,8 @@ describe("StructureListEditorControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				updateSelectedRows={updateSelectedRows}
-				selectedRows={getSelectedRowsTop()}
 				buildUIItem={genUIItem}
+				rightFlyout
 			/>
 		);
 
@@ -470,9 +440,8 @@ describe("StructureListEditorControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				updateSelectedRows={updateSelectedRows}
-				selectedRows={getSelectedRowsBottom()}
 				buildUIItem={genUIItem}
+				rightFlyout
 			/>
 		);
 
@@ -497,9 +466,8 @@ describe("StructureListEditorControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				updateSelectedRows={updateSelectedRows}
-				selectedRows={getSelectedRowsMiddle()}
 				buildUIItem={genUIItem}
+				rightFlyout
 			/>
 		);
 
@@ -523,9 +491,8 @@ describe("StructureListEditorControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				updateSelectedRows={updateSelectedRows}
-				selectedRows={getSelectedRowsTop()}
 				buildUIItem={genUIItem}
+				rightFlyout
 			/>
 		);
 
@@ -549,9 +516,8 @@ describe("StructureListEditorControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				updateSelectedRows={updateSelectedRows}
-				selectedRows={getSelectedRowsTop()}
 				buildUIItem={genUIItem}
+				rightFlyout
 			/>
 		);
 
@@ -589,9 +555,8 @@ describe("StructureListEditorControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				updateSelectedRows={updateSelectedRows}
-				selectedRows={getSelectedRowsTop()}
 				buildUIItem={genUIItem}
+				rightFlyout
 			/>
 		);
 		const input = wrapper.find("#flexible-table-search");
@@ -625,6 +590,7 @@ describe("condition messages renders correctly with structurelisteditor table", 
 
 		removeRowButton.simulate("click");
 		expect(controller.getPropertyValue(conditionsPropertyId)).to.have.length(0);
+		wrapper.update();
 
 		expect(wrapper.find(".validation-warning-message-icon-structure-list-editor")).to.have.length(1);
 		expect(wrapper.find(".validation-error-message-color-warning")).to.have.length(1);

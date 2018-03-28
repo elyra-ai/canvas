@@ -102,6 +102,7 @@ describe("add rows in tables with correct default values", () => {
 		const rowFour = tableRows.at(2);
 		expect(rowFour.find(".Dropdown-placeholder").text()).to.equal("password");
 	});
+
 	it("should render structure list editor table with new rows with correct default values", () => {
 		const tableSummary = wrapper.find(".control-summary-link-buttons").at(1); // Summary link Default Structure List Editor
 		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
@@ -131,8 +132,9 @@ describe("add rows in tables with correct default values", () => {
 		const rowThree = tableRows.at(2);
 		expect(rowThree.find(".toggletext_text").text()).to.equal("Descending");
 	});
+
 	it("should render column structure table with new rows with correct default values", () => {
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(2); // Summary link Default Structure Table
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(2); // Summary link Default Parameter Structure Table
 		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
 		const modelHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
 		const modalWrapper = new ReactWrapper(modelHtml, true);
@@ -155,7 +157,7 @@ describe("add rows in tables with correct default values", () => {
 		radioButton.simulate("change", { target: { checked: true, value: "Descending" } });
 		expect(renderedController.getPropertyValue({ name: "CST_DefaultSortOrder" })).to.equal("Descending");
 		addFieldsButtons.at(0).simulate("click"); // open filter picker
-		propertyUtils.fieldPicker(["Age"]);
+		propertyUtils.fieldPicker(["Sex"]);
 		modalWrapper.find("#properties-apply-button").simulate("click");
 		tableRows = table.find(".table-row");
 		expect(tableRows).to.have.length(2);
@@ -163,4 +165,33 @@ describe("add rows in tables with correct default values", () => {
 		expect(rowTwo.find(".toggletext_text").text()).to.equal("Descending");
 	});
 
+	it("should render column structure table where new rows have correct defaultRow", () => {
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(3); // Summary link Default Row Structure Table
+		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
+		const modelHtml = document.getElementsByClassName("rightside-modal-container")[0]; // needed since modal dialogs are outside `wrapper`
+		const modalWrapper = new ReactWrapper(modelHtml, true);
+		const table = modalWrapper.find("#flexible-table-columnStructureTableDefaultRow");
+		let tableRows = table.find(".table-row");
+		expect(tableRows).to.have.length(2);
+
+		// add a row
+		const addFieldsButtons = modalWrapper.find("Button"); // field picker buttons
+		addFieldsButtons.at(0).simulate("click"); // open filter picker
+		propertyUtils.fieldPicker(["Sex"]);
+		modalWrapper.find("#properties-apply-button").simulate("click");
+		tableRows = table.find(".table-row");
+		expect(tableRows).to.have.length(3);
+
+		const expectedRows = [
+			["Age", "Mean"],
+			["BP", "Mean, Min, Max"],
+			["Sex", "Min, Max"]
+		];
+
+		for (let idx = 0; idx < tableRows.length; idx++) {
+			const tableCell = tableRows.at(idx).find("td");
+			expect(tableCell.at(0).text()).to.equal(expectedRows[idx][0]);
+			expect(tableCell.at(1).text()).to.equal(expectedRows[idx][1]);
+		}
+	});
 });

@@ -310,26 +310,6 @@ function getCopy(value) {
 	return JSON.parse(JSON.stringify(value));
 }
 
-function getSelectedRows() {
-	return [];
-}
-
-function getSelectedRowsTop() {
-	return [0];
-}
-
-function getSelectedRowsBottom() {
-	return [5];
-}
-
-function getSelectedRowsMiddle() {
-	return [2];
-}
-
-function updateSelectedRows(row) {
-	return [];
-}
-
 function genUIItem() {
 	return <div />;
 }
@@ -339,26 +319,21 @@ setPropertyValue();
 describe("ColumnStructureTableControl renders correctly", () => {
 
 	it("props should have been defined", () => {
-		const selectedRows = getSelectedRows();
 		const wrapper = mountWithIntl(
 			<ColumnStructureTableControl
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				updateSelectedRows={updateSelectedRows}
-				selectedRows={selectedRows}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
+				rightFlyout
 			/>
 		);
 
 		expect(wrapper.prop("control")).to.equal(control);
 		expect(wrapper.prop("controller")).to.equal(controller);
 		expect(wrapper.prop("propertyId")).to.equal(propertyId);
-		expect(wrapper.prop("updateSelectedRows")).to.equal(updateSelectedRows);
-		expect(wrapper.prop("selectedRows")).to.equal(selectedRows);
 		expect(wrapper.prop("buildUIItem")).to.equal(genUIItem);
-		expect(wrapper.prop("openFieldPicker")).to.equal(openFieldPicker);
 	});
 
 	it("should render a `ColumnStructureTableControl`", () => {
@@ -367,10 +342,9 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				updateSelectedRows={updateSelectedRows}
-				selectedRows={getSelectedRows(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
+				rightFlyout
 			/>
 		);
 
@@ -392,10 +366,9 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				updateSelectedRows={updateSelectedRows}
-				selectedRows={getSelectedRows(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
+				rightFlyout
 			/>
 		);
 
@@ -412,10 +385,9 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				updateSelectedRows={updateSelectedRows}
-				selectedRows={getSelectedRowsTop(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
+				rightFlyout
 			/>
 		);
 
@@ -455,10 +427,9 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				updateSelectedRows={updateSelectedRows}
-				selectedRows={getSelectedRowsTop(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
+				rightFlyout
 			/>
 		);
 
@@ -498,10 +469,9 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				updateSelectedRows={updateSelectedRows}
-				selectedRows={getSelectedRowsBottom(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
+				rightFlyout
 			/>
 		);
 
@@ -541,10 +511,9 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				updateSelectedRows={updateSelectedRows}
-				selectedRows={getSelectedRowsBottom(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
+				rightFlyout
 			/>
 		);
 
@@ -584,10 +553,9 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				updateSelectedRows={updateSelectedRows}
-				selectedRows={getSelectedRowsTop(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
+				rightFlyout
 			/>
 		);
 
@@ -612,10 +580,9 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				updateSelectedRows={updateSelectedRows}
-				selectedRows={getSelectedRowsBottom(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
+				rightFlyout
 			/>
 		);
 
@@ -640,10 +607,9 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				updateSelectedRows={updateSelectedRows}
-				selectedRows={getSelectedRowsMiddle(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
+				rightFlyout
 			/>
 		);
 
@@ -667,10 +633,9 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				updateSelectedRows={updateSelectedRows}
-				selectedRows={getSelectedRowsTop(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
+				rightFlyout
 			/>
 		);
 
@@ -690,10 +655,9 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				updateSelectedRows={updateSelectedRows}
-				selectedRows={getSelectedRowsTop(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
+				rightFlyout
 			/>
 		);
 
@@ -731,10 +695,9 @@ describe("ColumnStructureTableControl renders correctly", () => {
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
-				updateSelectedRows={updateSelectedRows}
-				selectedRows={getSelectedRowsTop(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
+				rightFlyout
 			/>
 		);
 		const input = wrapper.find("#flexible-table-search");
@@ -982,10 +945,9 @@ describe("ColumnStructureTableControl with readonly numbered column renders corr
 				control={readonlyControlDefault}
 				controller={controller}
 				propertyId={propertyIdReadonlyControl}
-				updateSelectedRows={updateSelectedRows}
-				selectedRows={getSelectedRows(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
+				rightFlyout
 			/>
 		);
 
@@ -1003,10 +965,9 @@ describe("ColumnStructureTableControl with readonly numbered column renders corr
 				control={readonlyControlStartValue}
 				controller={controller}
 				propertyId={propertyIdReadonlyControlStartValue}
-				updateSelectedRows={updateSelectedRows}
-				selectedRows={getSelectedRows(control.name)}
 				buildUIItem={genUIItem}
 				openFieldPicker={openFieldPicker}
+				rightFlyout
 			/>
 		);
 

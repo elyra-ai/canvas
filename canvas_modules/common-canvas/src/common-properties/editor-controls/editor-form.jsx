@@ -42,7 +42,6 @@ class EditorForm extends React.Component {
 		super(props);
 		this.state = {
 			showFieldPicker: false,
-			fieldPickerControl: {},
 			activeTabId: ""
 		};
 
@@ -549,41 +548,63 @@ class EditorForm extends React.Component {
 		this.props.submitMethod(buttonId, this.refs.form);
 	}
 
-	closeFieldPicker() {
+	/**
+	* Close the field picker and invoke callback function
+	* @param newSelectedFields all fields selected, includes newSelections
+	* @param newSelections the newly selected rows
+	*/
+	closeFieldPicker(newSelectedFields, newSelections) {
+		if (this.closeFieldPickerCallback) {
+			this.closeFieldPickerCallback(newSelectedFields, newSelections);
+			this.closeFieldPickerCallback = null;
+		}
 		this.props.showPropertiesButtons(true);
+		this.fieldPickerControl = null;
 		this.setState({
-			fieldPickerControl: {},
 			showFieldPicker: false
 		});
 	}
 
-	openFieldPicker(control, propertyId) {
+	/**
+	* Opens the field picker
+	* @param control the control opening the field picker
+	* @param callback function to invoke when closing the field picker
+	*/
+	openFieldPicker(control, callback) {
 		this.props.showPropertiesButtons(false);
+		this.fieldPickerControl = control;
+		this.closeFieldPickerCallback = callback;
 		this.setState({
-			fieldPickerControl: control,
-			fieldPickerPropertyId: propertyId,
 			showFieldPicker: true
 		});
 	}
 
+	/**
+	* Renders the field picker with the control's current selected values and fields
+	* @param title string to display as the field picker's title
+	*/
 	fieldPicker(title) {
-		const currentControlValues = this.props.controller.getPropertyValues();
-		const propertyId = this.state.fieldPickerPropertyId;
-		const fields = this.props.controller.getFilteredDatasetMetadata(propertyId);
+		if (this.fieldPickerControl && this.fieldPickerControl.name) {
+			const controlName = this.fieldPickerControl.name;
+			const currentControlValues = this.props.controller.getPropertyValue({ name: controlName });
+			// if in columnSelectionPanel, filter out fields that are in the other controls
+			const fields = this.props.controller.getFilteredDatasetMetadata({ name: controlName });
+			// create a list of field names to be passed into the field picker
+			const formattedFieldsList = PropertyUtil.getFieldsFromControlValues(this.fieldPickerControl, currentControlValues, fields);
 
-		return (<div id="field-picker-table">
-			<FieldPicker
-				key="field-picker-control"
-				controller={this.props.controller}
-				closeFieldPicker={this.closeFieldPicker}
-				currentControlValues={currentControlValues}
-				fields={fields}
-				control={this.state.fieldPickerControl}
-				propertyId={propertyId}
-				title={title}
-				rightFlyout={this.props.rightFlyout}
-			/>
-		</div>);
+			return (<div id="field-picker-table">
+				<FieldPicker
+					key="field-picker-control"
+					controller={this.props.controller}
+					closeFieldPicker={this.closeFieldPicker}
+					currentFields={formattedFieldsList}
+					fields={fields}
+					title={title}
+					rightFlyout={this.props.rightFlyout}
+				/>
+			</div>);
+		}
+		return <div />;
 	}
 
 	genAlertsTab(messages) {

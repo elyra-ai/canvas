@@ -22,22 +22,11 @@ import fieldPickerParamDef from "../../test_resources/paramDefs/fieldpicker_para
 
 const controller = new Controller();
 
-const currentControlValues = {
-	"keys": [
-		["Na", "Ascending"],
-		["Drug", "Descending"],
-		["Cholesterol", "Ascending"]
-	],
-	"use_custom_name": [
-		"true"
-	],
-	"custom_name": [
-		""
-	],
-	"annotation": [
-		""
-	]
-};
+const currentFields = [
+	"Na",
+	"Drug",
+	"Cholesterol"
+];
 const filteredDataset = [
 	{
 		"name": "Age",
@@ -150,73 +139,8 @@ const filteredDataset = [
 		"schema": "0"
 	}
 ];
-const fieldPickerControl = {
-	"name": "keys",
-	"label": {
-		"text": "Sort by"
-	},
-	"controlType": "structuretable",
-	"isRowMoveable": true,
-	"valueDef": {
-		"propType": "structure",
-		"isList": true,
-		"isMap": false
-	},
-	"subControls": [
-		{
-			"name": "field",
-			"label": {
-				"text": "Field"
-			},
-			"visible": true,
-			"width": 28,
-			"controlType": "selectcolumn",
-			"role": "column",
-			"valueDef": {
-				"propType": "string",
-				"isList": false,
-				"isMap": false
-			}
-		},
-		{
-			"name": "sort_order",
-			"label": {
-				"text": "Order"
-			},
-			"visible": true,
-			"width": 16,
-			"controlType": "toggletext",
-			"role": "enum",
-			"valueDef": {
-				"propType": "string",
-				"isList": false,
-				"isMap": false
-			},
-			"values": [
-				"Ascending",
-				"Descending"
-			],
-			"valueLabels": [
-				"Ascending",
-				"Descending"
-			],
-			"valueIcons": [
-				"/images/up-triangle.svg",
-				"/images/down-triangle.svg"
-			]
-		}
-	],
-	"keyIndex": 0,
-	"defaultRow": [
-		"Ascending"
-	]
-};
 function closeFieldPicker() {
 	return ["Test value"];
-}
-
-function updateSelectedRows(selection) {
-	return selection;
 }
 
 function clickFilter(wrapper, type, enabled) {
@@ -245,18 +169,15 @@ describe("field-picker-control renders correctly", () => {
 			<FieldPicker
 				key="field-picker-control"
 				closeFieldPicker={closeFieldPicker}
-				currentControlValues={currentControlValues}
+				currentFields={currentFields}
 				fields={filteredDataset}
-				control={fieldPickerControl}
-				updateSelectedRows={updateSelectedRows}
 				controller={controller}
 			/>
 		);
 
 		expect(wrapper.prop("closeFieldPicker")).to.equal(closeFieldPicker);
-		expect(wrapper.prop("currentControlValues")).to.equal(currentControlValues);
+		expect(wrapper.prop("currentFields")).to.equal(currentFields);
 		expect(wrapper.prop("fields")).to.equal(filteredDataset);
-		expect(wrapper.prop("control")).to.equal(fieldPickerControl);
 	});
 
 	it("should render a `FieldPicker`", () => {
@@ -264,10 +185,8 @@ describe("field-picker-control renders correctly", () => {
 			<FieldPicker
 				key="field-picker-control"
 				closeFieldPicker={closeFieldPicker}
-				currentControlValues={currentControlValues}
+				currentFields={currentFields}
 				fields={filteredDataset}
-				control={fieldPickerControl}
-				updateSelectedRows={updateSelectedRows}
 				controller={controller}
 			/>
 		);
@@ -283,10 +202,8 @@ describe("field-picker-control renders correctly", () => {
 			<FieldPicker
 				key="field-picker-control"
 				closeFieldPicker={closeFieldPicker}
-				currentControlValues={currentControlValues}
+				currentFields={currentFields}
 				fields={filteredDataset}
-				control={fieldPickerControl}
-				updateSelectedRows={updateSelectedRows}
 				controller={controller}
 			/>
 		);
@@ -295,7 +212,46 @@ describe("field-picker-control renders correctly", () => {
 		expect(wrapper.find("#flexible-table-container").find(".field-picker-data-rows")).to.have.length(filteredDataset.length);
 		expect(wrapper.find(".properties-tooltips-filter")).to.have.length(6); // list of filters
 		const checkBoxs = wrapper.find("Checkbox").filterWhere((checkBox) => checkBox.prop("checked") === true);
-		expect(checkBoxs).to.have.length(currentControlValues.keys.length); // controlValues rendered correctly
+		expect(checkBoxs).to.have.length(currentFields.length); // controlValues rendered correctly
+	});
+
+	it("should add additional field to newControlValues in `FieldPicker`", () => {
+		const wrapper = mountWithIntl(
+			<FieldPicker
+				key="field-picker-control"
+				closeFieldPicker={closeFieldPicker}
+				currentFields={currentFields}
+				fields={filteredDataset}
+				controller={controller}
+			/>
+		);
+		wrapper.find("input[id='field-picker-checkbox-0']").simulate("change", { target: { checked: "true", name: "Age" } });
+		// with intl support wrapper.state() does not work.
+		// looking for equivalent confirmation in the DOM
+		const checkBoxs = wrapper.find("Checkbox").filterWhere((checkBox) => checkBox.prop("checked") === true && checkBox.prop("data-name"));
+		expect(checkBoxs).to.have.length(4);
+	});
+
+	it("should reset to initial values in `FieldPicker`", () => {
+		const wrapper = mountWithIntl(
+			<FieldPicker
+				key="field-picker-control"
+				closeFieldPicker={closeFieldPicker}
+				currentFields={currentFields}
+				fields={filteredDataset}
+				controller={controller}
+			/>
+		);
+		wrapper.find("input[id='field-picker-checkbox-1']").simulate("change", { target: { checked: "true", name: "Sex" } });
+		wrapper.update();
+		// with intl support wrapper.state() does not work.
+		// looking for equivalent confirmation in the DOM
+		const checkBoxs = wrapper.find("Checkbox").filterWhere((checkBox) => checkBox.prop("checked") === true && checkBox.prop("data-name"));
+		expect(checkBoxs).to.have.length(4);
+		wrapper.find("#reset-fields-button").simulate("click");
+		wrapper.update();
+		const resetBoxs = wrapper.find("Checkbox").filterWhere((checkBox) => checkBox.prop("checked") === true && checkBox.prop("data-name"));
+		expect(resetBoxs).to.have.length(3);
 	});
 
 	it("should set correct filtered type in `FieldPicker`", () => {
@@ -303,10 +259,8 @@ describe("field-picker-control renders correctly", () => {
 			<FieldPicker
 				key="field-picker-control"
 				closeFieldPicker={closeFieldPicker}
-				currentControlValues={currentControlValues}
+				currentFields={currentFields}
 				fields={filteredDataset}
-				control={fieldPickerControl}
-				updateSelectedRows={updateSelectedRows}
 				controller={controller}
 			/>
 		);
@@ -319,10 +273,8 @@ describe("field-picker-control renders correctly", () => {
 			<FieldPicker
 				key="field-picker-control"
 				closeFieldPicker={closeFieldPicker}
-				currentControlValues={currentControlValues}
+				currentFields={currentFields}
 				fields={filteredDataset}
-				control={fieldPickerControl}
-				updateSelectedRows={updateSelectedRows}
 				controller={controller}
 			/>
 		);
@@ -359,10 +311,8 @@ describe("field-picker-control renders correctly", () => {
 			<FieldPicker
 				key="field-picker-control"
 				closeFieldPicker={closeFieldPicker}
-				currentControlValues={currentControlValues}
+				currentFields={currentFields}
 				fields={filteredDataset}
-				control={fieldPickerControl}
-				updateSelectedRows={updateSelectedRows}
 				controller={controller}
 			/>
 		);
@@ -379,10 +329,8 @@ describe("field-picker-control renders correctly", () => {
 			<FieldPicker
 				key="field-picker-control"
 				closeFieldPicker={closeFieldPicker}
-				currentControlValues={currentControlValues}
+				currentFields={currentFields}
 				fields={filteredDataset}
-				control={fieldPickerControl}
-				updateSelectedRows={updateSelectedRows}
 				controller={controller}
 			/>
 		);
@@ -394,49 +342,6 @@ describe("field-picker-control renders correctly", () => {
 
 		const checkBoxs = wrapper.find("Checkbox").filterWhere((checkBox) => checkBox.prop("checked") === true && checkBox.prop("data-name"));
 		expect(checkBoxs).to.have.length(filteredDataset.length);
-	});
-
-	it("should add additional field to newControlValues in `FieldPicker`", () => {
-		const wrapper = mountWithIntl(
-			<FieldPicker
-				key="field-picker-control"
-				closeFieldPicker={closeFieldPicker}
-				currentControlValues={currentControlValues}
-				fields={filteredDataset}
-				control={fieldPickerControl}
-				updateSelectedRows={updateSelectedRows}
-				controller={controller}
-			/>
-		);
-		wrapper.find("input[id='field-picker-checkbox-0']").simulate("change", { target: { checked: "true", name: "Age" } });
-		// with intl support wrapper.state() does not work.
-		// looking for equivalent confirmation in the DOM
-		const checkBoxs = wrapper.find("Checkbox").filterWhere((checkBox) => checkBox.prop("checked") === true && checkBox.prop("data-name"));
-		expect(checkBoxs).to.have.length(4);
-	});
-
-	it("should reset to initial values in `FieldPicker`", () => {
-		const wrapper = mountWithIntl(
-			<FieldPicker
-				key="field-picker-control"
-				closeFieldPicker={closeFieldPicker}
-				currentControlValues={currentControlValues}
-				fields={filteredDataset}
-				control={fieldPickerControl}
-				updateSelectedRows={updateSelectedRows}
-				controller={controller}
-			/>
-		);
-		wrapper.find("input[id='field-picker-checkbox-1']").simulate("change", { target: { checked: "true", name: "Sex" } });
-		wrapper.update();
-		// with intl support wrapper.state() does not work.
-		// looking for equivalent confirmation in the DOM
-		const checkBoxs = wrapper.find("Checkbox").filterWhere((checkBox) => checkBox.prop("checked") === true && checkBox.prop("data-name"));
-		expect(checkBoxs).to.have.length(4);
-		wrapper.find("#reset-fields-button").simulate("click");
-		wrapper.update();
-		const resetBoxs = wrapper.find("Checkbox").filterWhere((checkBox) => checkBox.prop("checked") === true && checkBox.prop("data-name"));
-		expect(resetBoxs).to.have.length(3);
 	});
 });
 
@@ -542,9 +447,9 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		expect(summaryRows).to.have.length(3);
 
 		const expectedSummaryRows = [
+			"Date",
 			"data_1.Timestamp",
-			"data_2.Timestamp",
-			"Date"
+			"data_2.Timestamp"
 		];
 
 		for (let idx = 0; idx < summaryRows.length; idx++) {

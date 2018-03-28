@@ -42,6 +42,17 @@ class ColumnSelectControl extends ColumnStructureTableEditor {
 		return rows;
 	}
 
+	/**
+	* Callback function invoked when closing field picker
+	* @param allSelectedFields all fields selected, includes newSelections
+	* @param newSelections the newly selected rows
+	*/
+	onFieldPickerClose(allSelectedFields, newSelections) {
+		if (allSelectedFields && newSelections) {
+			this.setCurrentControlValueSelected(allSelectedFields, newSelections);
+		}
+	}
+
 	render() {
 		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		const sortFields = [];
@@ -60,6 +71,10 @@ class ColumnSelectControl extends ColumnStructureTableEditor {
 		const stateDisabled = conditionState.disabled;
 		const stateStyle = conditionState.style;
 
+		const tableButtonConfig = {
+			fieldPickerCloseFunction: this.onFieldPickerClose
+		};
+
 		let controlIconContainerClass = "column-select-control-icon-container";
 		if (messageType !== "info") {
 			controlIconContainerClass = "column-select-control-icon-container-enabled";
@@ -72,7 +87,7 @@ class ColumnSelectControl extends ColumnStructureTableEditor {
 		const disabled = typeof stateDisabled.disabled !== "undefined" || Object.keys(stateDisabled) > 0;
 
 		const rows = this.makeRows(controlValue, stateStyle);
-		const topRightPanel = this.makeAddRemoveButtonPanel(stateDisabled);
+		const topRightPanel = this.makeAddRemoveButtonPanel(stateDisabled, tableButtonConfig);
 
 		const table =	(
 			<FlexibleTable
@@ -124,6 +139,7 @@ ColumnSelectControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
+	openFieldPicker: PropTypes.func.isRequired,
 	intl: intlShape
 };
 

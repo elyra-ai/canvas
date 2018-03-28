@@ -237,6 +237,7 @@ export default class ControlFactory {
 			return (<ColumnSelectControl
 				{...props}
 				openFieldPicker={this.openFieldPicker}
+				rightFlyout={this.rightFlyout}
 			/>);
 		} else if (control.controlType === ControlType.STRUCTURETABLE && !tableInfo) {
 			return (<ColumnStructureTableControl

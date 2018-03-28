@@ -422,7 +422,7 @@ export default class PropertiesController {
 					if (Array.isArray(propValue)) {
 						for (const arrayValue of propValue) {
 							if (Array.isArray(arrayValue)) {
-								const fieldIdx = PropertyUtils.getTableFieldIndex(sharedCtr);
+								const fieldIdx = PropertyUtils.getTableFieldIndex(this.getControl({ name: ctrlName }));
 								if (fieldIdx >= 0 && fieldIdx < arrayValue.length) {
 									usedFields.push(arrayValue[fieldIdx]);
 								}

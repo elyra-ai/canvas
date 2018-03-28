@@ -45,16 +45,16 @@ class StructurelisteditorControl extends ColumnStructureTableEditor {
 		}
 	}
 
-	addRow(control, propertyId) {
-		const newRow = this._getDefaultRow(control);
+	addRow() {
+		const newRow = this._getDefaultRow();
 		const rows = this.getCurrentControlValue();
 		rows.push(newRow);
 		this.setCurrentControlValue(rows);
 	}
 
-	_getDefaultRow(control) {
+	_getDefaultRow() {
 		const row = [];
-		for (const colValue of control.defaultRow) {
+		for (const colValue of this.props.control.defaultRow) {
 			if (typeof colValue !== "undefined" && colValue !== null && colValue.parameterRef) {
 				row.push(this.props.controller.getPropertyValue({ name: colValue.parameterRef }));
 			} else {

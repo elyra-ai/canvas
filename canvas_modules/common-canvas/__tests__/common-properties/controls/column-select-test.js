@@ -150,8 +150,7 @@ describe("selectcolumns renders correctly", () => {
 				controller={controller}
 				propertyId={propertyId}
 				openFieldPicker={openFieldPicker}
-				updateSelectedRows={updateSelectedRows}
-				selectedRows={getSelectedRows()}
+				rightFlyout
 			/>
 		);
 		// select the second row in the table
@@ -174,8 +173,7 @@ describe("selectcolumns renders correctly", () => {
 				controller={controller}
 				propertyId={propertyId}
 				openFieldPicker={openFieldPicker}
-				updateSelectedRows={updateSelectedRows}
-				selectedRows={getSelectedRows()}
+				rightFlyout
 			/>
 		);
 		// see if moveable rows container and buttons rendered and are disabled
@@ -264,22 +262,26 @@ describe("condition messages renders correctly with columnselect control", () =>
 		var tableData = input.find(".column-select-table-row");
 		expect(tableData).to.have.length(2);
 		tableData.at(1).simulate("click");
+		wrapper.update();
 		// ensure removed button is enabled and select it
 		var enabledRemoveColumnButton = input.find(".remove-fields-button");
 		expect(enabledRemoveColumnButton).to.have.length(1);
 		expect(enabledRemoveColumnButton.prop("disabled")).to.be.undefined;
 		enabledRemoveColumnButton.simulate("click");
+		wrapper.update();
 		// validate the second row is deleted
 		expect(controller.getPropertyValue(conditionsPropertyId)).to.have.same.members(["Age"]);
 
 		tableData = input.find(".column-select-table-row");
 		expect(tableData).to.have.length(1);
 		tableData.at(0).simulate("click");
+		wrapper.update();
 		// ensure removed button is enabled and select it
 		enabledRemoveColumnButton = input.find(".remove-fields-button");
 		expect(enabledRemoveColumnButton).to.have.length(1);
 		expect(enabledRemoveColumnButton.prop("disabled")).to.be.undefined;
 		enabledRemoveColumnButton.simulate("click");
+		wrapper.update();
 		// validate the first row is deleted
 		expect(controller.getPropertyValue(conditionsPropertyId)).to.have.length(0);
 

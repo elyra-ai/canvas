@@ -13,6 +13,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import ColumnStructureTableEditor from "./column-structure-table-editor.jsx";
 import MoveableTableRows from "./moveable-table-rows.jsx";
+import PropertyUtils from "../util/property-utils";
+import { ParamRole } from "../constants/form-constants";
 import { injectIntl, intlShape } from "react-intl";
 import findIndex from "lodash/findIndex";
 import reject from "lodash/reject";
@@ -24,9 +26,8 @@ class ColumnStructureTableControl extends ColumnStructureTableEditor {
 		this.addColumns = this.addColumns.bind(this);
 		this.removeColumns = this.removeColumns.bind(this);
 		this.stopEditingRow = this.stopEditingRow.bind(this);
-
+		this.getDefaultRow = this.getDefaultRow.bind(this);
 		this.indexOfRow = this.indexOfRow.bind(this);
-
 	}
 
 	stopEditingRow(rowIndex, applyChanges) {
@@ -121,6 +122,70 @@ class ColumnStructureTableControl extends ColumnStructureTableEditor {
 		// this.setState({ enableRemoveIcon: (selection.length !== 0) });
 	}
 
+	/**
+	* returns the default row for the control
+	* @param field optional field to construct the defaultRow for where the parameter has role===COLUMN
+	*/
+	getDefaultRow(field) {
+		const row = [];
+		// if value is already in propertyValues, return that row
+		const currentControlValues = this.props.controller.getPropertyValue(this.props.propertyId);
+		if (currentControlValues && field) {
+			const dataColumnIndex = PropertyUtils.getTableFieldIndex(this.props.control);
+			for (let i = 0; i < currentControlValues.length; i++) {
+				if ((this.props.control.defaultRow && currentControlValues[i][dataColumnIndex] === field) ||
+						(currentControlValues[i] === field)) {
+					return currentControlValues[i];
+				}
+			}
+		}
+
+		for (let idx = 0; idx < this.props.control.subControls.length; idx++) {
+			const subControl = this.props.control.subControls[idx];
+			if (subControl.role === ParamRole.COLUMN || subControl.role === ParamRole.NEW_COLUMN) {
+				row.push(field);
+			} else if (typeof this.props.control.defaultRow !== "undefined") {
+				let defaultRowIndex = idx;
+				// defaultRow does not contain the first column field, ex: aggregate.json
+				if (this.props.control.subControls.length !== this.props.control.defaultRow.length) {
+					defaultRowIndex -= 1;
+				}
+				const defaultRowValue = this.props.control.defaultRow[defaultRowIndex];
+				// if the defaultRow value is a parameterRef, get the property value
+				if (defaultRowValue && defaultRowValue.parameterRef) {
+					row.push(this.props.controller.getPropertyValue({ name: defaultRowValue.parameterRef }));
+				} else {
+					row.push(defaultRowValue);
+				}
+			} else if (subControl.valueDef && subControl.valueDef.defaultValue) {
+				// get the defaultValue from the parameter
+				if (subControl.valueDef.defaultValue.parameterRef) {
+					row.push(this.props.controller.getPropertyValue({ name: subControl.valueDef.defaultValue.parameterRef }));
+				} else {
+					row.push(subControl.valueDef.defaultValue);
+				}
+			} else {
+				row.push(null);
+			}
+		}
+		return row;
+	}
+
+	/**
+	* Callback function invoked when closing field picker for structures
+	* @param allSelectedFields all fields selected, includes newSelections
+	* @param newSelections the newly selected rows
+	*/
+	onFieldPickerClose(allSelectedFields, newSelections) {
+		if (allSelectedFields && newSelections) {
+			const newControlValues = [];
+			for (const field of allSelectedFields) {
+				newControlValues.push(this.getDefaultRow(field));
+			}
+			this.setCurrentControlValueSelected(newControlValues, newSelections);
+		}
+	}
+
 	render() {
 
 		const conditionProps = {
@@ -135,6 +200,10 @@ class ColumnStructureTableControl extends ColumnStructureTableEditor {
 		const stateDisabled = conditionState.disabled;
 		const stateStyle = conditionState.style;
 
+		const tableButtonConfig = {
+			fieldPickerCloseFunction: this.onFieldPickerClose
+		};
+
 		let controlIconContainerClass = "control-icon-container";
 		if (messageType !== "info") {
 			controlIconContainerClass = "control-icon-container-enabled";
@@ -142,7 +211,7 @@ class ColumnStructureTableControl extends ColumnStructureTableEditor {
 
 		const disabled = typeof stateDisabled.disabled !== "undefined" || Object.keys(stateDisabled) > 0;
 
-		const table = this.createTable(stateStyle, stateDisabled);
+		const table = this.createTable(stateStyle, stateDisabled, tableButtonConfig);
 		const content = (
 			<div>
 				<div id={controlIconContainerClass}>
@@ -181,6 +250,7 @@ ColumnStructureTableControl.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
+	openFieldPicker: PropTypes.func.isRequired,
 	customContainer: PropTypes.bool,
 	intl: intlShape,
 	rightFlyout: PropTypes.bool

@@ -11,7 +11,6 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import EditorControl from "./editor-control.jsx";
 import FlexibleTable from "./flexible-table.jsx";
 import PropertiesButtons from "../properties-buttons.jsx";
 import PropertyUtils from "../util/property-utils";
@@ -23,7 +22,6 @@ import { injectIntl, intlShape } from "react-intl";
 
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "../constants/constants";
 import { DATA_TYPES, TOOL_TIP_DELAY } from "../constants/constants.js";
-import { ParamRole } from "../constants/form-constants";
 import Icon from "../../icons/icon.jsx";
 
 import isEmpty from "lodash/isEmpty";
@@ -33,25 +31,23 @@ import Tooltip from "../../tooltip/tooltip.jsx";
 
 import uuid4 from "uuid/v4";
 
-class FieldPicker extends EditorControl {
+class FieldPicker extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			checkedAll: false,
-			fields: props.fields,
+			fields: this.props.fields, // list of fields dynamically adjusted by filtered or sort criteria
 			filterIcons: [],
 			filterText: "",
-			initialControlValues: [],
-			newControlValues: [],
+			selectedFields: this.props.currentFields, // list of fields selected
 			headerWidth: 756
 		};
 		this.multiSchema = props.controller.getDatasetMetadataSchemas() &&
 			props.controller.getDatasetMetadataSchemas().length > 1;
 		this.filterList = [];
-		this.updateDimensions = this.updateDimensions.bind(this);
 
+		this.updateDimensions = this.updateDimensions.bind(this);
 		this.filterType = this.filterType.bind(this);
-		this.getDefaultRow = this.getDefaultRow.bind(this);
 		this.getTableData = this.getTableData.bind(this);
 		this.getVisibleData = this.getVisibleData.bind(this);
 		this.handleSave = this.handleSave.bind(this);
@@ -60,39 +56,12 @@ class FieldPicker extends EditorControl {
 		this.handleFieldChecked = this.handleFieldChecked.bind(this);
 		this.handleReset = this.handleReset.bind(this);
 		this.getNewSelections = this.getNewSelections.bind(this);
-		this.setReadOnlyColumnValue = this.setReadOnlyColumnValue.bind(this);
 		this.onSort = this.onSort.bind(this);
 		this.onFilter = this.onFilter.bind(this);
-		this._getRecordForRow = this._getRecordForRow.bind(this);
-		this.removeInvalidFields = this.removeInvalidFields.bind(this);
 	}
 
 	componentWillMount() {
-		this.dataColumnIndex = PropertyUtils.getTableFieldIndex(this.props.control);
-		if (this.dataColumnIndex === -1) {
-			this.dataColumnIndex = 0; // default to 0
-		}
-
 		this.filterList = this.getAvailableFilters();
-
-		const controlName = this.props.control.name;
-		const parmName = this.props.propertyId ? this.props.propertyId.name : null;
-		let controlValues = [];
-		if (this.props.currentControlValues[controlName]) {
-			controlValues = this.props.currentControlValues[controlName];
-		} else if (parmName &&
-				PropertyUtils.toType(this.props.propertyId.col) === "number" &&
-				this.props.currentControlValues[parmName]) {
-			const rowIdx = this.props.propertyId.row;
-			const colIdx = this.props.propertyId.col;
-			controlValues = this.props.currentControlValues[parmName][rowIdx][colIdx];
-		}
-		// Remove invalid input field names
-		controlValues = this.removeInvalidFields(controlValues);
-		this.setState({
-			initialControlValues: this.props.currentControlValues[controlName],
-			newControlValues: controlValues
-		});
 	}
 
 	componentDidMount() {
@@ -104,42 +73,28 @@ class FieldPicker extends EditorControl {
 		window.removeEventListener("resize", this.updateDimensions);
 	}
 
-	updateDimensions() {
-		// This is needed for field-picker in modal dialogs. This can be removed in issue #1038
-		const table = document.getElementById("flexible-table-container-wrapper");
-		if (table !== null) {
-			const tableRect = table.getBoundingClientRect();
-			if (this.state.headerWidth !== tableRect.width) {
-				this.setState({ headerWidth: tableRect.width });
-			}
-		}
+	onFilter(filterString) {
+		this.setState({ filterText: filterString });
 	}
 
 	/**
-	 * Removes input selections that are not present in the current set of data models.
-	 *
-	 * @param {array} controlValues: Array of current control values
-	 * @return {array} The input array minus any rows that have invalid field names
-	 */
-	removeInvalidFields(controlValues) {
-		const validFields = [];
-		const isTable = this.props.control.valueDef.propType === "structure";
-		for (let idx = 0; idx < controlValues.length; idx++) {
-			let fieldName;
-			if (isTable) {
-				fieldName = controlValues[idx][this.dataColumnIndex];
-			} else {
-				fieldName = controlValues[idx];
+	* Reorder the current list of fields displayed according to the sort column
+	* @param spec object with a column and direction to sort
+	*/
+	onSort(spec) {
+		let fields = Array.from(this.state.fields);
+		fields = sortBy(fields, function(field) {
+			switch (spec.column) {
+			case "fieldName": return field.origName;
+			case "dataType": return field.type;
+			case "schemaName": return field.schema;
+			default: return null;
 			}
-
-			const foundField = this.props.fields.find(function(field) {
-				return field.name === fieldName || fieldName === field.schema + "." + field.origName;
-			});
-			if (foundField) {
-				validFields.push(controlValues[idx]);
-			}
+		});
+		if (spec.direction > 0) {
+			fields = fields.reverse();
 		}
-		return validFields;
+		this.setState({ fields: fields });
 	}
 
 	getAvailableFilters() {
@@ -172,21 +127,16 @@ class FieldPicker extends EditorControl {
 	getTableData(checkboxWidth, fieldWidth, dataWidth) {
 		const fields = this.getVisibleData();
 		const tableData = [];
-		const newControlValues = this.state.newControlValues;
+		const selectedFields = this.state.selectedFields;
 		for (let i = 0; i < fields.length; i++) {
 			const field = fields[i];
 			let checked = false;
 
 			if (this.state.checkedAll) {
 				checked = true;
-			} else if (newControlValues) {
-				for (let j = 0; j < newControlValues.length; j++) {
-					let key = [];
-					if (this.props.control.defaultRow) {
-						key = newControlValues[j] && typeof newControlValues[j] !== "undefined" ? newControlValues[j][this.dataColumnIndex] : "";
-					} else {
-						key = newControlValues[j];
-					}
+			} else if (selectedFields) {
+				for (let j = 0; j < selectedFields.length; j++) {
+					const key = selectedFields[j];
 					// control values can be prefix by schema but don't have to be
 					if (key === field.name || key === field.schema + "." + field.origName) {
 						checked = true;
@@ -220,6 +170,9 @@ class FieldPicker extends EditorControl {
 		return tableData;
 	}
 
+	/**
+	* Returns list of visible fields from search or filter
+	*/
 	getVisibleData() {
 		const that = this;
 		const data = this.state.fields;
@@ -239,10 +192,10 @@ class FieldPicker extends EditorControl {
 	 */
 	getNewSelections() {
 		const deltas = [];
-		const initialValues = this.state.initialControlValues;
-		if (this.state.newControlValues) {
-			for (let i = 0; i < this.state.newControlValues.length; i++) {
-				if (typeof initialValues === "undefined" || initialValues === null || initialValues.indexOf(this.state.newControlValues[i]) < 0) {
+		const initialValues = this.props.currentFields;
+		if (this.state.selectedFields) {
+			for (let i = 0; i < this.state.selectedFields.length; i++) {
+				if (typeof initialValues === "undefined" || initialValues === null || initialValues.indexOf(this.state.selectedFields[i]) < 0) {
 					deltas.push(i);
 				}
 			}
@@ -250,32 +203,19 @@ class FieldPicker extends EditorControl {
 		return deltas;
 	}
 
-	setReadOnlyColumnValue() {
-		const controlValues = this.state.newControlValues;
-		let updatePropertyValues = false;
-		for (var rowIndex = 0; rowIndex < controlValues.length; rowIndex++) {
-			for (var colIndex = 0; colIndex < this.props.control.subControls.length; colIndex++) {
-				const columnDef = this.props.control.subControls[colIndex];
-				if (columnDef.controlType === "readonly" && columnDef.generatedValues && columnDef.generatedValues.operation === "index") {
-					updatePropertyValues = true;
-					const index = typeof columnDef.generatedValues.startValue !== "undefined" ? columnDef.generatedValues.startValue + rowIndex : rowIndex + 1;
-					controlValues[rowIndex][colIndex] = index;
-				}
+	updateDimensions() {
+		// This is needed for field-picker in modal dialogs. This can be removed in issue #1038
+		const table = document.getElementById("flexible-table-container-wrapper");
+		if (table !== null) {
+			const tableRect = table.getBoundingClientRect();
+			if (this.state.headerWidth !== tableRect.width) {
+				this.setState({ headerWidth: tableRect.width });
 			}
-		}
-		if (updatePropertyValues) {
-			this.setState({ newControlValues: controlValues });
 		}
 	}
 
 	handleSave() {
-		if (this.props.control.subControls) {
-			this.setReadOnlyColumnValue();
-		}
-		const propertyId = this.props.propertyId;
-		this.props.controller.updatePropertyValue(propertyId, this.state.newControlValues);
-		this.props.controller.updateSelectedRows(this.props.control.name, this.getNewSelections());
-		this.props.closeFieldPicker();
+		this.props.closeFieldPicker(this.state.selectedFields, this.getNewSelections());
 	}
 
 	handleCancel() {
@@ -284,162 +224,58 @@ class FieldPicker extends EditorControl {
 	}
 
 	handleCheckAll(evt) {
-		const selectAll = [];
-		const that = this;
-
-		const data = this.state.fields;
-		const newControlValues = this.state.newControlValues;
-
+		let selectAll = [];
+		const selectedFields = this.state.selectedFields;
 		const visibleData = this.getVisibleData();
 
 		if (evt.target.checked) {
-			for (let i = 0; i < data.length; i++) {
-				const fieldName = data[i].name;
-				// add already selected fields
-				const selected = (!newControlValues) ? [] : newControlValues.filter(function(element) {
-					if (that.props.control.defaultRow) {
-						return element[that.dataColumnIndex] === fieldName;
-					}
-					return element === fieldName;
-				});
-
-				if (selected.length > 0) {
-					const found = this.getDefaultRow(selected[0]);
-					if (found !== false) {
-						selectAll.push(found);
-					} else {
-						selectAll.push(selected[0]);
-					}
-				} else { // if data is in visibleData, add it
-					const visible = visibleData.some(function(element) {
-						return element.name === data[i].name;
-					});
-					if (visible) {
-						if (this.props.control.defaultRow) {
-							selectAll.push(this._getRecordForRow(fieldName));
-						} else {
-							selectAll.push(fieldName);
-						}
-					}
-				}
+			selectAll = Array.from(this.state.selectedFields);
+			for (const field of visibleData) {
+				selectAll.push(field.name);
 			}
-		} else if (newControlValues) {
-			for (let l = 0; l < newControlValues.length; l++) {
+			selectAll = Array.from(new Set(selectAll));
+		} else if (selectedFields) {
+			for (const selectedValue of selectedFields) {
 				const duplicate = visibleData.some(function(field) {
-					let key = [];
-					if (that.props.control.defaultRow) {
-						key = newControlValues[l][that.dataColumnIndex];
-					} else {
-						key = newControlValues[l];
-					}
-					return field.name === key;
+					return field.name === selectedValue;
 				});
 				if (!duplicate) {
-					selectAll.push(newControlValues[l]);
+					selectAll.push(selectedValue);
 				}
 			}
 		}
 
 		this.setState({
-			newControlValues: selectAll,
-			checkedAll: selectAll.length === data.length
+			selectedFields: selectAll,
+			checkedAll: selectAll.length === this.state.fields.length
 		});
 	}
 
-	getDefaultRow(field) {
-		const initialControlValues = this.state.initialControlValues;
-		if (!initialControlValues) {
-			return false;
-		}
-		for (let i = 0; i < initialControlValues.length; i++) {
-			if ((this.props.control.defaultRow && initialControlValues[i][this.dataColumnIndex] === field) ||
-					(initialControlValues[i] === field)) {
-				return initialControlValues[i];
-			}
-		}
-		return false;
-	}
-
 	handleFieldChecked(evt) {
-		const current = this.state.newControlValues;
+		const current = this.state.selectedFields;
 		const selectedFieldName = evt.currentTarget.getAttribute("data-name");
-		const selectedField = this._getRecordForRow(selectedFieldName);
 
-		const that = this;
 		if (evt.target.checked) {
-			const newValue = this.props.control.defaultRow ? [selectedField] : selectedField;
-			this.setState({ newControlValues: current.concat(newValue) });
+			this.setState({ selectedFields: current.concat(selectedFieldName) });
 		} else if (current) {
 			const modified = current.filter(function(element) {
-				if (that.props.control.defaultRow) {
-					return element[that.dataColumnIndex] !== selectedField[that.dataColumnIndex];
-				}
 				return element !== selectedFieldName;
 			});
 
 			this.setState({
-				newControlValues: modified,
+				selectedFields: modified,
 				checkedAll: false
 			});
 		}
 	}
 
-	_getRecordForRow(selectedFieldName) {
-		let selectedField = [];
-		// if selectedField is in the original list, grab that row instead of generating new selectedField
-		const found = this.getDefaultRow(selectedFieldName);
-		if (found !== false) {
-			selectedField = found;
-			if (this.props.control.valueDef.isMap) {
-				selectedField[this.dataColumnIndex] = selectedFieldName;
-			}
-		}
-
-		if (selectedField.length === 0) {
-			if (this.props.control.subControls) {
-				for (let i = 0; i < this.props.control.subControls.length; i++) {
-					if (i === this.dataColumnIndex) { // role===ParamRole.COLUMN
-						selectedField.push(selectedFieldName);
-					} else if (typeof this.props.control.defaultRow !== "undefined") {
-						let defaultValue = this._getDefaultRowValue(i);
-						if ((typeof defaultValue === "undefined" || defaultValue === null) &&
-									this.props.control.subControls[i].role === ParamRole.NEW_COLUMN) {
-							// Set the default name to the column name for role===ParamRole.NEW_COLUMN
-							defaultValue = selectedFieldName;
-						}
-						selectedField.push(defaultValue);
-					} else {
-						selectedField.push(null);
-					}
-				}
-			} else {
-				selectedField.push(selectedFieldName);
-			}
-		}
-		return selectedField;
-	}
-
-	_getDefaultRowValue(index) {
-		// The defaultRow may not be in-sync with the columns.  In some cases, the defaultRow will not contain the key column.
-		let defaultIndex = index - 1;
-		if (this.props.control.subControls.length === this.props.control.defaultRow.length || index < this.dataColumnIndex) {
-			// This will handle most cases
-			defaultIndex = index;
-		}
-		if (typeof this.props.control.defaultRow[defaultIndex] !== "undefined" && this.props.control.defaultRow[defaultIndex] !== null &&
-		this.props.control.defaultRow[defaultIndex].parameterRef) {
-			return this.props.controller.getPropertyValue({ name: this.props.control.defaultRow[defaultIndex].parameterRef });
-		}
-		return this.props.control.defaultRow[defaultIndex];
-	}
-
 	handleReset() {
 		let checkedAll = false;
-		if (this.state.initialControlValues && (this.state.initialControlValues === this.state.fields.length)) {
+		if (this.props.currentFields && (this.props.currentFields === this.state.fields.length)) {
 			checkedAll = true;
 		}
 		this.setState({
-			newControlValues: this.state.initialControlValues,
+			selectedFields: this.props.currentFields,
 			filterIcons: [],
 			filterText: "",
 			checkedAll: checkedAll
@@ -448,7 +284,7 @@ class FieldPicker extends EditorControl {
 
 	filterType(evt) {
 		const type = evt.currentTarget.getAttribute("data-type");
-		const iconsSelected = this.state.filterIcons;
+		const iconsSelected = Array.from(this.state.filterIcons);
 		const index = iconsSelected.indexOf(type);
 		if (index < 0) {
 			iconsSelected.push(type);
@@ -456,26 +292,6 @@ class FieldPicker extends EditorControl {
 			iconsSelected.splice(index, 1);
 		}
 		this.setState({ filterIcons: iconsSelected });
-	}
-
-	onFilter(filterString) {
-		this.setState({ filterText: filterString });
-	}
-
-	onSort(spec) {
-		let controlValue = this.state.fields;
-		controlValue = sortBy(controlValue, function(field) {
-			switch (spec.column) {
-			case "fieldName": return field.origName;
-			case "dataType": return field.type;
-			case "schemaName": return field.schema;
-			default: return null;
-			}
-		});
-		if (spec.direction > 0) {
-			controlValue = controlValue.reverse();
-		}
-		this.setState({ fields: controlValue });
 	}
 
 	_genBackButton() {
@@ -486,7 +302,7 @@ class FieldPicker extends EditorControl {
 			return (<PropertiesButtons
 				okHandler={this.handleSave}
 				cancelHandler={this.handleCancel}
-				showPropertiesButtons={this.props.showPropertiesButtons}
+				showPropertiesButtons
 				applyLabel={applyLabel}
 				rejectLabel={rejectLabel}
 			/>);
@@ -494,7 +310,7 @@ class FieldPicker extends EditorControl {
 
 		const saveTooltip = PropertyUtils.formatMessage(this.props.intl,
 			MESSAGE_KEYS.FIELDPICKER_SAVEBUTTON_TOOLTIP, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_SAVEBUTTON_TOOLTIP);
-		const tooltipId = uuid4() + "-tooltip-fp-" + this.props.control.name;
+		const tooltipId = uuid4() + "-tooltip-fp";
 		const tooltip = (
 			<div className="properties-tooltips">
 				{saveTooltip}
@@ -510,12 +326,14 @@ class FieldPicker extends EditorControl {
 					delay={TOOL_TIP_DELAY}
 					className="properties-tooltips"
 				>
-					<Button
-						id="field-picker-back-button"
-						back icon="back"
-						onClick={this.handleSave}
-					/>
-					<label className="control-label">{this.props.title}</label>
+					<div>
+						<Button
+							id="field-picker-back-button"
+							back icon="back"
+							onClick={this.handleSave}
+						/>
+						<label className="control-label">{this.props.title}</label>
+					</div>
 				</Tooltip>
 			</div>
 		);
@@ -526,7 +344,7 @@ class FieldPicker extends EditorControl {
 			MESSAGE_KEYS.FIELDPICKER_RESETBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_RESETBUTTON_LABEL);
 		const resetTooltip = PropertyUtils.formatMessage(this.props.intl,
 			MESSAGE_KEYS.FIELDPICKER_RESETBUTTON_TOOLTIP, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_RESETBUTTON_TOOLTIP);
-		const tooltipId = uuid4() + "-tooltip-fp-" + this.props.control.name;
+		const tooltipId = uuid4() + "-tooltip-fp";
 		const tooltip = (
 			<div className="properties-tooltips">
 				{resetTooltip}
@@ -610,24 +428,16 @@ class FieldPicker extends EditorControl {
 	}
 
 	_genTable() {
-		const that = this;
 		let checkedAll = this.state.checkedAll;
 		// check all box should be checked if all in view is selected
 		const visibleData = this.getVisibleData();
-		const newControlValues = this.state.newControlValues;
+		const selectedFields = this.state.selectedFields;
 		if (visibleData.length > 0 && visibleData.length < this.state.fields.length) {
 			// need to compare the contents to make sure the visible ones are selected
-			const sameData = newControlValues.filter(function(row) {
+			const sameData = selectedFields.filter(function(row) {
 				let match = false;
 				for (let k = 0; k < visibleData.length; k++) {
-					let key = row;
-					if (that.props.control.defaultRow) {
-						key = row[that.dataColumnIndex];
-						if (key === visibleData[k].name) {
-							match = true;
-							break;
-						}
-					} else if (key === visibleData[k].name) {
+					if (row === visibleData[k].name) {
 						match = true;
 						break;
 					}
@@ -635,8 +445,7 @@ class FieldPicker extends EditorControl {
 				return match;
 			});
 			checkedAll = sameData.length === visibleData.length;
-		} else if (this.state.newControlValues &&
-								this.state.fields.length === this.state.newControlValues.length) {
+		} else if (this.state.selectedFields && this.state.fields.length === this.state.selectedFields.length) {
 			checkedAll = true;
 		} else {
 			checkedAll = false;
@@ -689,7 +498,7 @@ class FieldPicker extends EditorControl {
 				data={tableData}
 				onSort={this.onSort}
 				filterKeyword={this.state.filterText}
-				scrollKey={this.props.control.name}
+				scrollKey="field-picker"
 				noAutoSize
 			/>
 		);
@@ -725,9 +534,8 @@ class FieldPicker extends EditorControl {
 
 FieldPicker.propTypes = {
 	closeFieldPicker: PropTypes.func.isRequired,
-	currentControlValues: PropTypes.object.isRequired,
+	currentFields: PropTypes.array.isRequired,
 	fields: PropTypes.array,
-	control: PropTypes.object,
 	title: PropTypes.string,
 	controller: PropTypes.object.isRequired,
 	rightFlyout: PropTypes.bool,

@@ -170,7 +170,10 @@ export default class ColumnStructureTableEditor extends EditorControl {
 	updateRowSelections(ctrlName, selection) {
 		this.props.controller.updateSelectedRows(ctrlName, selection);
 		this.selectionChanged(selection);
-		this.setState({ enableRemoveIcon: (selection.length !== 0) });
+		// react throws warning when modal because the button does not exist at this moment
+		if (this.props.rightFlyout) {
+			this.setState({ enableRemoveIcon: (selection.length !== 0) });
+		}
 	}
 
 	removeSelected() {
@@ -374,12 +377,18 @@ export default class ColumnStructureTableEditor extends EditorControl {
 
 	addOnClick(control) {
 		if (this.addOnClickCallback) {
-			this.addOnClickCallback(control, this.props.propertyId);
+			this.addOnClickCallback(control, this.onFieldPickerCloseCallback);
 		}
 	}
 
 	makeAddRemoveButtonPanel(stateDisabled, tableButtonConfig) {
-		const removeOnClick = (tableButtonConfig && tableButtonConfig.removeButtonFunction) ? tableButtonConfig.removeButtonFunction : this.removeSelected;
+		this.onFieldPickerCloseCallback = (tableButtonConfig && tableButtonConfig.fieldPickerCloseFunction)
+			? tableButtonConfig.fieldPickerCloseFunction.bind(this)
+			: null;
+
+		const removeOnClick = (tableButtonConfig && tableButtonConfig.removeButtonFunction)
+			? tableButtonConfig.removeButtonFunction
+			: this.removeSelected;
 		const disabled = !this.state.enableRemoveIcon || stateDisabled.disabled;
 		const removeButton = (<div className="remove-fields-button"
 			onClick={removeOnClick}
@@ -389,8 +398,10 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		</div>);
 
 		let addButtonDisabled = false;
-		this.addOnClickCallback = (tableButtonConfig) ? tableButtonConfig.addButtonFunction : this.props.openFieldPicker;
-		const addButtonLabel = (tableButtonConfig) ? tableButtonConfig.addButtonLabel
+		this.addOnClickCallback = (tableButtonConfig && tableButtonConfig.addButtonFunction)
+			? tableButtonConfig.addButtonFunction
+			: this.props.openFieldPicker;
+		const addButtonLabel = (tableButtonConfig && tableButtonConfig.addButtonLabel) ? tableButtonConfig.addButtonLabel
 			: PropertyUtils.formatMessage(this.props.intl,
 				MESSAGE_KEYS.STRUCTURETABLE_ADDBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.STRUCTURETABLE_ADDBUTTON_LABEL);
 		if (stateDisabled.disabled) {
@@ -408,14 +419,14 @@ export default class ColumnStructureTableEditor extends EditorControl {
 
 		const addToolTip = (
 			<div className="properties-tooltips">
-				{(tableButtonConfig) ? tableButtonConfig.addButtonTooltip
+				{(tableButtonConfig && tableButtonConfig.addButtonTooltip) ? tableButtonConfig.addButtonTooltip
 					: PropertyUtils.formatMessage(this.props.intl,
 						MESSAGE_KEYS.STRUCTURETABLE_ADDBUTTON_TOOLTIP, MESSAGE_KEYS_DEFAULTS.STRUCTURETABLE_ADDBUTTON_TOOLTIP)}
 			</div>
 		);
 		const removeToolTip = (
 			<div className="properties-tooltips">
-				{(tableButtonConfig) ? tableButtonConfig.removeButtonTooltip
+				{(tableButtonConfig && tableButtonConfig.removeButtonTooltip) ? tableButtonConfig.removeButtonTooltip
 					: PropertyUtils.formatMessage(this.props.intl,
 						MESSAGE_KEYS.STRUCTURETABLE_REMOVEBUTTON_TOOLTIP, MESSAGE_KEYS_DEFAULTS.STRUCTURETABLE_REMOVEBUTTON_TOOLTIP)}
 			</div>
