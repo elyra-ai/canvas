@@ -350,10 +350,7 @@ export default class CommonCanvas extends React.Component {
 				this.configureToolbarButtonsState();
 				canvasToolbar = (<Toolbar
 					config={this.state.toolbarConfig}
-					renderingEngine={this.props.config.enableRenderingEngine}
 					paletteState={this.state.isPaletteOpen}
-					paletteType={this.props.config.enablePaletteLayout}
-					rightFlyoutOpen={this.props.showRightFlyout}
 					canvasController={this.canvasController}
 				/>);
 			}

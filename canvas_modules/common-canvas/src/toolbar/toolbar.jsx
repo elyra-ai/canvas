@@ -32,21 +32,13 @@ class Toolbar extends React.Component {
 
 		this.generatePaletteIcon = this.generatePaletteIcon.bind(this);
 		this.toggleShowExtendedMenu = this.toggleShowExtendedMenu.bind(this);
-		this.updateToolbarWidth = this.updateToolbarWidth.bind(this);
 		this.toolbarMenuActionHandler = this.toolbarMenuActionHandler.bind(this);
 	}
 
 	componentDidMount() {
-		this.updateToolbarWidth();
-		window.addEventListener("resize", this.updateToolbarWidth);
-
 		if (this.props.config) {
 			this.calculateMaxToolbarWidth(this.props.config);
 		}
-	}
-
-	componentWillUnmount() {
-		window.removeEventListener("resize", this.updateToolbarWidth);
 	}
 
 	getObjectWidth(classOrId) {
@@ -105,20 +97,6 @@ class Toolbar extends React.Component {
 			return items;
 		}
 		return numObjects;
-	}
-
-	updateToolbarWidth() {
-		const toolbarWidth = this.getObjectWidth("#canvas-toolbar");
-		let rightFlyoutWidth = 0;
-
-		if (this.props.rightFlyoutOpen) {
-			rightFlyoutWidth = this.getObjectWidth(".right-flyout-panel");
-		}
-
-		this.setState({
-			toolbarWidth: toolbarWidth,
-			rightFlyoutWidth: rightFlyoutWidth
-		});
 	}
 
 	generateActionItems(definition, displayItems, actionsHandler, overflow) {
@@ -274,19 +252,11 @@ class Toolbar extends React.Component {
 	}
 
 	render() {
-		const canvasWidth = window.innerWidth;
-		let toolbarWidth = window.innerWidth;
-
-		if (this.props.paletteState && this.props.paletteType !== "Modal") {
-			toolbarWidth = canvasWidth - 250; // Subtract width of full palette
-		} else {
-			toolbarWidth = canvasWidth - 64; // Subtract width of mini-palette
-		}
-
-		if (this.props.rightFlyoutOpen) {
-			toolbarWidth -= parseFloat(this.state.rightFlyoutWidth);
-		}
-
+		// Get width for toolbar from itemsContainerDivId container in common-canvas. The
+		// container doesn't include the palette or fly-out, so no calculation has to be done for the toolbar
+		const toolbarWidth = this.props.canvasController.commonCanvas
+			? parseFloat(this.getObjectWidth("#" + this.props.canvasController.commonCanvas.itemsContainerDivId))
+			: window.innerWidth; // in Jest tests, no common-canvas set
 		const that = this;
 		let actionContainer = <div />;
 		if (this.state.config && this.state.config.length > 0) {
@@ -312,7 +282,7 @@ class Toolbar extends React.Component {
 			{zoomContainerItems}
 		</div>);
 
-		const canvasToolbar = (<ObserveSize observerFn={(element) => this.updateToolbarWidth()}>
+		const canvasToolbar = (<ObserveSize observerFn={(element) => this.setState({})}>
 			<div id="canvas-toolbar">
 				<ul id="toolbar-items">
 					{actionContainer}
@@ -328,9 +298,7 @@ class Toolbar extends React.Component {
 Toolbar.propTypes = {
 	config: PropTypes.array,
 	paletteState: PropTypes.bool,
-	paletteType: PropTypes.string,
-	rightFlyoutOpen: PropTypes.bool,
-	canvasController: PropTypes.object
+	canvasController: PropTypes.object.isRequired
 };
 
 export default Toolbar;
