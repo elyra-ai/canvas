@@ -94,87 +94,6 @@ const control = {
 };
 
 const readonlyControlDefault = {
-	"0": {
-		"name": "field",
-		"label": {
-			"text": "Field"
-		},
-		"controlType": "selectcolumn",
-		"valueDef": {
-			"propType": "string",
-			"isList": false,
-			"isMap": false,
-			"defaultValue": ""
-		},
-		"role": "column",
-		"summary": true,
-		"visible": true,
-		"width": 28,
-		"parameterName": "structuretableSortOrder",
-		"columnIndex": 0,
-		"summaryPanelId": "structuretableSortOrder-summary-panel",
-		"summaryLabel": "Sort by"
-	},
-	"1": {
-		"name": "structuretable_sort_order_readonly_int",
-		"label": {
-			"text": "Index"
-		},
-		"description": {
-			"text": "Auto generated integers starting at 1"
-		},
-		"controlType": "readonly",
-		"valueDef": {
-			"propType": "integer",
-			"isList": false,
-			"isMap": false,
-			"defaultValue": "5"
-		},
-		"summary": true,
-		"generatedValues": {
-			"operation": "index"
-		},
-		"visible": true,
-		"width": 16,
-		"editStyle": "inline",
-		"parameterName": "structuretableSortOrder",
-		"columnIndex": 1,
-		"summaryPanelId": "structuretableSortOrder-summary-panel",
-		"summaryLabel": "Sort by"
-	},
-	"2": {
-		"name": "structuretable_sort_order",
-		"label": {
-			"text": "Order"
-		},
-		"description": {
-			"text": "Update sort order"
-		},
-		"controlType": "toggletext",
-		"valueDef": {
-			"propType": "string",
-			"isList": false,
-			"isMap": false,
-			"defaultValue": "Ascending"
-		},
-		"role": "enum",
-		"values": [
-			"Ascending", "Descending"
-		],
-		"valueLabels": [
-			"Ascending", "Descending"
-		],
-		"valueIcons": [
-			"/images/up-triangle.svg", "/images/down-triangle.svg"
-		],
-		"visible": true,
-		"width": 16,
-		"editStyle": "inline",
-		"parameterName": "structuretableSortOrder",
-		"columnIndex": 2,
-		"summaryPanelId": "structuretableSortOrder-summary-panel",
-		"summaryLabel": "Sort by"
-	},
 	"name": "structuretableSortOrder",
 	"label": {
 		"text": "Sort by"
@@ -206,10 +125,6 @@ const readonlyControlDefault = {
 			"summary": true,
 			"visible": true,
 			"width": 28,
-			"parameterName": "structuretableSortOrder",
-			"columnIndex": 0,
-			"summaryPanelId": "structuretableSortOrder-summary-panel",
-			"summaryLabel": "Sort by"
 		}, {
 			"name": "structuretable_sort_order_readonly_int",
 			"label": {
@@ -232,10 +147,6 @@ const readonlyControlDefault = {
 			"visible": true,
 			"width": 16,
 			"editStyle": "inline",
-			"parameterName": "structuretableSortOrder",
-			"columnIndex": 1,
-			"summaryPanelId": "structuretableSortOrder-summary-panel",
-			"summaryLabel": "Sort by"
 		}, {
 			"name": "structuretable_sort_order",
 			"label": {
@@ -264,10 +175,6 @@ const readonlyControlDefault = {
 			"visible": true,
 			"width": 16,
 			"editStyle": "inline",
-			"parameterName": "structuretableSortOrder",
-			"columnIndex": 2,
-			"summaryPanelId": "structuretableSortOrder-summary-panel",
-			"summaryLabel": "Sort by"
 		}
 	],
 	"keyIndex": 0,
@@ -275,93 +182,9 @@ const readonlyControlDefault = {
 		"", "5", "Ascending"
 	],
 	"moveableRows": true,
-	"summaryPanelId": "structuretableSortOrder-summary-panel",
-	"summaryLabel": "Sort by"
 };
 
 const readonlyControlStartValue = {
-	"0": {
-		"name": "structuretable_sort_order_readonly_int",
-		"label": {
-			"text": "From 3"
-		},
-		"description": {
-			"text": "Auto generated integers starting at 3"
-		},
-		"controlType": "readonly",
-		"valueDef": {
-			"propType": "integer",
-			"isList": false,
-			"isMap": false,
-			"defaultValue": "5"
-		},
-		"summary": true,
-		"generatedValues": {
-			"operation": "index",
-			"startValue": 3
-		},
-		"visible": true,
-		"width": 16,
-		"parameterName": "structuretableSortOrderStartValue",
-		"columnIndex": 0,
-		"summaryPanelId": "structuretableSortOrderStartValue-summary-panel",
-		"summaryLabel": "Sort by"
-	},
-	"1": {
-		"name": "field",
-		"label": {
-			"text": "Field"
-		},
-		"controlType": "selectcolumn",
-		"valueDef": {
-			"propType": "string",
-			"isList": false,
-			"isMap": false,
-			"defaultValue": ""
-		},
-		"role": "column",
-		"summary": true,
-		"visible": true,
-		"width": 28,
-		"editStyle": "inline",
-		"parameterName": "structuretableSortOrderStartValue",
-		"columnIndex": 1,
-		"summaryPanelId": "structuretableSortOrderStartValue-summary-panel",
-		"summaryLabel": "Sort by"
-	},
-	"2": {
-		"name": "structuretable_sort_order",
-		"label": {
-			"text": "Order"
-		},
-		"description": {
-			"text": "Update sort order"
-		},
-		"controlType": "toggletext",
-		"valueDef": {
-			"propType": "string",
-			"isList": false,
-			"isMap": false,
-			"defaultValue": "Ascending"
-		},
-		"role": "enum",
-		"values": [
-			"Ascending", "Descending"
-		],
-		"valueLabels": [
-			"Ascending", "Descending"
-		],
-		"valueIcons": [
-			"/images/up-triangle.svg", "/images/down-triangle.svg"
-		],
-		"visible": true,
-		"width": 16,
-		"editStyle": "inline",
-		"parameterName": "structuretableSortOrderStartValue",
-		"columnIndex": 2,
-		"summaryPanelId": "structuretableSortOrderStartValue-summary-panel",
-		"summaryLabel": "Sort by"
-	},
 	"name": "structuretableSortOrderStartValue",
 	"label": {
 		"text": "Sort by"
@@ -399,10 +222,6 @@ const readonlyControlStartValue = {
 			},
 			"visible": true,
 			"width": 16,
-			"parameterName": "structuretableSortOrderStartValue",
-			"columnIndex": 0,
-			"summaryPanelId": "structuretableSortOrderStartValue-summary-panel",
-			"summaryLabel": "Sort by"
 		}, {
 			"name": "field",
 			"label": {
@@ -420,10 +239,6 @@ const readonlyControlStartValue = {
 			"visible": true,
 			"width": 28,
 			"editStyle": "inline",
-			"parameterName": "structuretableSortOrderStartValue",
-			"columnIndex": 1,
-			"summaryPanelId": "structuretableSortOrderStartValue-summary-panel",
-			"summaryLabel": "Sort by"
 		}, {
 			"name": "structuretable_sort_order",
 			"label": {
@@ -452,10 +267,6 @@ const readonlyControlStartValue = {
 			"visible": true,
 			"width": 16,
 			"editStyle": "inline",
-			"parameterName": "structuretableSortOrderStartValue",
-			"columnIndex": 2,
-			"summaryPanelId": "structuretableSortOrderStartValue-summary-panel",
-			"summaryLabel": "Sort by"
 		}
 	],
 	"keyIndex": 0,
@@ -463,46 +274,40 @@ const readonlyControlStartValue = {
 		"5", "", "Ascending"
 	],
 	"moveableRows": true,
-	"summaryPanelId": "structuretableSortOrderStartValue-summary-panel",
-	"summaryLabel": "Sort by"
+};
+const propValues = {
+	structuretableSortOrder: [
+		["Cholesterol", 1, "Ascending"],
+		["Age", 11, "Descending"],
+		["Drug", 111, "Ascending"]
+	],
+	structuretableSortOrderStartValue: [
+		[0, "Cholesterol", "Ascending"],
+		[5, "Age", "Descending"],
+		[8, "Drug", "Ascending"]
+	],
+	keys: [
+		["Na", "Ascending"],
+		["Drug", "Descending"],
+		["Sex", "Ascending"],
+		["Age", "Descending"],
+		["BP", "Ascending"],
+		["Cholesterol", "Ascending"]
+	]
 };
 
 const propertyId = { name: "keys" };
 const propertyIdReadonlyControl = { name: "structuretableSortOrder" };
 const propertyIdReadonlyControlStartValue = { name: "structuretableSortOrderStartValue" };
 
-function setPropertyValue(type) {
-	switch (type) {
-	case "readonlyControlDefault":
-		controller.setPropertyValues(
-			{ "structuretableSortOrder": [
-				["Cholesterol", 1, "Ascending"],
-				["Age", 11, "Descending"],
-				["Drug", 111, "Ascending"]
-			] }
-		);
-		break;
-	case "readonlyControlStartValue":
-		controller.setPropertyValues(
-			{ "structuretableSortOrderStartValue": [
-				[0, "Cholesterol", "Ascending"],
-				[5, "Age", "Descending"],
-				[8, "Drug", "Ascending"]
-			] }
-		);
-		break;
-	default:
-		controller.setPropertyValues(
-			{ "keys": [
-				["Na", "Ascending"],
-				["Drug", "Descending"],
-				["Sex", "Ascending"],
-				["Age", "Descending"],
-				["BP", "Ascending"],
-				["Cholesterol", "Ascending"]
-			] }
-		);
-	}
+propertyUtils.setControls(controller, [control, readonlyControlDefault, readonlyControlStartValue]);
+
+function setPropertyValue() {
+	controller.setPropertyValues(getCopy(propValues));
+}
+
+function getCopy(value) {
+	return JSON.parse(JSON.stringify(value));
 }
 
 function getSelectedRows() {
@@ -1086,18 +891,19 @@ describe("condition messages renders correctly with structure table control", ()
 
 describe("condition messages renders correctly with structure table cells", () => {
 	it("structuretableRenameFields control should have error message with empty renamed field", () => {
-		const wrapper = propertyUtils.createEditorForm("mount", JSON.parse(JSON.stringify(CONDITIONS_TEST_FORM_DATA)), controller);
+		const locController = new Controller();
+		const wrapper = propertyUtils.createEditorForm("mount", JSON.parse(JSON.stringify(CONDITIONS_TEST_FORM_DATA)), locController);
 		const conditionsPropertyId = { name: "structuretableRenameFields" };
 		const input = wrapper.find("#flexible-table-structuretableRenameFields");
 		expect(input).to.have.length(1);
-		expect(controller.getPropertyValue(conditionsPropertyId)).to.have.length(2);
+		expect(locController.getPropertyValue(conditionsPropertyId)).to.have.length(2);
 
 		const dataRows = input.find(".reactable-data").find("tr");
 		expect(dataRows).to.have.length(2);
 		dataRows.first().simulate("click");
 		const cell = dataRows.first().find("#editor-control-new_name_0");
 		cell.simulate("change", { target: { value: "" } });
-		const rowValues = controller.getPropertyValue(conditionsPropertyId);
+		const rowValues = locController.getPropertyValue(conditionsPropertyId);
 		const expected = [
 			["Age", ""],
 			["BP", "BP-1"]
@@ -1108,7 +914,8 @@ describe("condition messages renders correctly with structure table cells", () =
 	});
 
 	it("structuretableRenameFields control should have disabled dropdown control", () => {
-		const wrapper = propertyUtils.createEditorForm("mount", JSON.parse(JSON.stringify(CONDITIONS_TEST_FORM_DATA)), controller);
+		const locController = new Controller();
+		const wrapper = propertyUtils.createEditorForm("mount", JSON.parse(JSON.stringify(CONDITIONS_TEST_FORM_DATA)), locController);
 		const tabs = wrapper.find(".tabs__tabpanel");
 		expect(tabs).to.have.length(6);
 		const tab = tabs.at(5);
@@ -1127,7 +934,8 @@ describe("condition messages renders correctly with structure table cells", () =
 
 describe("Cells disable and hide correctly with structure table control", () => {
 	it("structuretable should disable cells", () => {
-		const wrapper = propertyUtils.createEditorForm("mount", JSON.parse(JSON.stringify(CONDITIONS_TEST_FORM_DATA)), controller);
+		const locController = new Controller();
+		const wrapper = propertyUtils.createEditorForm("mount", JSON.parse(JSON.stringify(CONDITIONS_TEST_FORM_DATA)), locController);
 		const storageTable = wrapper.find("#flexible-table-field_types");
 		let disabledDropdowns = storageTable.find(".Dropdown-disabled");
 		expect(disabledDropdowns).to.have.length(4);
@@ -1140,7 +948,8 @@ describe("Cells disable and hide correctly with structure table control", () => 
 	});
 
 	it("structuretable should hide cells", () => {
-		const wrapper = propertyUtils.createEditorForm("mount", JSON.parse(JSON.stringify(CONDITIONS_TEST_FORM_DATA)), controller);
+		const locController = new Controller();
+		const wrapper = propertyUtils.createEditorForm("mount", JSON.parse(JSON.stringify(CONDITIONS_TEST_FORM_DATA)), locController);
 		const tabs = wrapper.find(".tabs__tabpanel");
 		expect(tabs).to.have.length(6);
 		const tab = tabs.at(5);
@@ -1164,8 +973,10 @@ describe("Cells disable and hide correctly with structure table control", () => 
 });
 
 describe("ColumnStructureTableControl with readonly numbered column renders correctly", () => {
+	beforeEach(() => {
+		setPropertyValue();
+	});
 	it("should have displayed the correct generatedValues with default index values", () => {
-		setPropertyValue("readonlyControlDefault");
 		const wrapper = mountWithIntl(
 			<ColumnStructureTableControl
 				control={readonlyControlDefault}
@@ -1187,7 +998,6 @@ describe("ColumnStructureTableControl with readonly numbered column renders corr
 	});
 
 	it("should have displayed the correct generatedValues with startValue", () => {
-		setPropertyValue("readonlyControlStartValue");
 		const wrapper = mountWithIntl(
 			<ColumnStructureTableControl
 				control={readonlyControlStartValue}

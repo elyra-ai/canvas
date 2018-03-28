@@ -24,7 +24,7 @@ const CONDITIONS_TEST_FORM_DATA = require("../../test_resources/json/conditions-
 const controller = new Controller();
 
 const control = {
-	"name": "structurelisteditorList",
+	"name": "keys",
 	"label": {
 		"text": "structurelisteditorList"
 	},
@@ -140,6 +140,8 @@ const control = {
 };
 
 const propertyId = { name: "keys" };
+
+propertyUtils.setControls(controller, [control]);
 
 function setPropertyValue() {
 	controller.setPropertyValues(

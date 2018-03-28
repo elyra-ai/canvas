@@ -110,6 +110,10 @@ function _validateNode(formData, nodeId, propertiesController) {
 	const controls = _getControlsFromForm(formData);
 	const validationDefinitions = _getValidationDefinitions(formData);
 	for (const control of controls) {
+		// control is a subcontrol
+		if (control.parameterName) {
+			continue;
+		}
 		const propertyId = { name: control.name };
 		const controlValue = propertiesController.getPropertyValue(propertyId);
 		if (Array.isArray(controlValue) && control.subControls) {

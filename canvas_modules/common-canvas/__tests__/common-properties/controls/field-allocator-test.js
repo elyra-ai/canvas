@@ -66,7 +66,7 @@ const fields = [
 		}
 	}
 ];
-
+propertyUtils.setControls(controller, [control]);
 const propertyId = { name: "targetField" };
 
 const emptyfields = [

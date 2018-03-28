@@ -13,6 +13,7 @@ import deepFreeze from "deep-freeze";
 import Controller from "../../src/common-properties/properties-controller";
 import conditionForm from "../test_resources/json/conditions-summary-form.json";
 import datasetMetadata from "../test_resources/json/datasetMetadata.json";
+import testUtils from "../_utils_/property-utils";
 
 const propValues = {
 	param_int: 5,
@@ -31,6 +32,115 @@ const propValues = {
 	param_complex: [3, "col in complex type", "zoom"]
 };
 deepFreeze(propValues);
+
+// dummy set of controls to prevent warnings
+const controls = [
+	{
+		name: "param_int",
+		valueDef: {
+			isList: false,
+			propType: "integer"
+		}
+	},
+	{
+		"name": "param_complex",
+		"controlType": "structureeditor",
+		"valueDef": {
+			"propType": "structure",
+			"isList": false,
+			"isMap": false,
+		},
+		"subControls": [
+			{
+				"name": "zoom_value",
+				"controlType": "numberfield",
+				"valueDef": {
+					"propType": "double",
+					"isList": false,
+					"isMap": false
+				}
+			},
+			{
+				"name": "zoom_desc",
+				"controlType": "textfield",
+				"valueDef": {
+					"propType": "string",
+					"isList": false,
+					"isMap": false
+				}
+			},
+			{
+				"name": "zoom_label",
+				"controlType": "textfield",
+				"valueDef": {
+					"propType": "string",
+					"isList": false,
+					"isMap": false
+				}
+			}
+		]
+	},
+	{
+		"name": "param_mix_table",
+		"controlType": "structurelisteditor",
+		"valueDef": {
+			"propType": "structure",
+			"isList": true,
+			"isMap": false,
+			"defaultValue": []
+		},
+		"subControls": [
+			{
+				"name": "field",
+				"controlType": "textfield",
+				"valueDef": {
+					"propType": "string",
+					"isList": false,
+					"isMap": false
+				}
+			},
+			{
+				"name": "boolean_param",
+				"controlType": "checkbox",
+				"valueDef": {
+					"propType": "boolean",
+					"isList": false,
+					"isMap": false
+				}
+			},
+			{
+				"name": "number_param",
+				"controlType": "numberfield",
+				"valueDef": {
+					"propType": "integer",
+					"isList": false,
+					"isMap": false
+				}
+			},
+			{
+				"name": "double_param",
+				"controlType": "numberfield",
+				"valueDef": {
+					"propType": "double",
+					"isList": false,
+					"isMap": false
+				}
+			},
+			{
+				"name": "str_param",
+				"controlType": "textfield",
+				"valueDef": {
+					"propType": "string",
+					"isList": false,
+					"isMap": false
+				}
+			}
+		],
+		"keyIndex": -1,
+		"defaultRow": []
+	}
+];
+
 
 const propStates = {
 	param_int: {
@@ -174,6 +284,7 @@ function reset() {
 	// setting of states needs to be done after property values.
 	// conditions are ran on each set and update of property values
 	controller = new Controller();
+	testUtils.setControls(controller, controls);
 	controller.setPropertyValues(getCopy(propValues));
 	controller.setDatasetMetadata(getCopy(dataModel));
 	controller.setErrorMessages(getCopy(errorMessages));
@@ -652,13 +763,16 @@ describe("Properties Controller property messages", () => {
 	});
 });
 describe("Properties Controller handlers", () => {
-	const controller2 = new Controller();
 	const propertyListener = sinon.spy();
-	controller2.setHandlers({
-		propertyListener: propertyListener
+	beforeEach(() => {
+		reset();
+		controller.setHandlers({
+			propertyListener: propertyListener
+		});
 	});
+
 	it("should fire event on setPropertyValues", () => {
-		controller2.setPropertyValues({
+		controller.setPropertyValues({
 			param_str: "Testing listener",
 			param_int: "5"
 		}
@@ -666,7 +780,7 @@ describe("Properties Controller handlers", () => {
 		expect(propertyListener).to.have.property("callCount", 1);
 	});
 	it("should fire event on updatePropertyValue", () => {
-		controller2.updatePropertyValue({ name: "param_int" }, 10);
+		controller.updatePropertyValue({ name: "param_int" }, 10);
 		expect(propertyListener).to.have.property("callCount", 2);
 	});
 });

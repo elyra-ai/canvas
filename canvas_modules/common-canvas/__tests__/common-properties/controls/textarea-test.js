@@ -13,11 +13,12 @@ import { CHARACTER_LIMITS } from "../../../src/common-properties/constants/const
 import { mount } from "enzyme";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
+import propertyUtils from "../../_utils_/property-utils";
 
 const controller = new Controller();
 
 const control = {
-	name: "test-areafield",
+	name: "test-textarea",
 	charLimit: 256,
 	additionalText: "Add comment",
 	valueDef: {
@@ -27,6 +28,7 @@ const control = {
 const control2 = {
 };
 const propertyId = { name: "test-textarea" };
+propertyUtils.setControls(controller, [control]);
 
 function setPropertyValue() {
 	controller.setPropertyValues(

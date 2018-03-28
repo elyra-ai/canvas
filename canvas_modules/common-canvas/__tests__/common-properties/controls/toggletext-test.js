@@ -12,11 +12,12 @@ import ToggletextControl from "../../../src/common-properties/editor-controls/to
 import { mount } from "enzyme";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
+import propertyUtils from "../../_utils_/property-utils";
 
 const controller = new Controller();
 
 const control = {
-	"name": "sort_order",
+	"name": "toggle",
 	"label": {
 		"text": "Order"
 	},
@@ -41,6 +42,7 @@ const control = {
 		"/images/down-triangle.svg"
 	]
 };
+propertyUtils.setControls(controller, [control]);
 
 const propertyId = { name: "toggle" };
 

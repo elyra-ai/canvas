@@ -291,9 +291,7 @@ describe("condition messages renders correctly with multi-control conditions", (
 		expect(isEqual(null, actual)).to.be.true;
 	});
 
-	it.only("control should have required error message from null input in multi-control condition", () => {
-		/* eslint no-debugger: "off" */
-		debugger;
+	it("control should have required error message from null input in multi-control condition", () => {
 		propertyUtils.createEditorForm("mount", CONDITIONS_TEST_FORM_DATA, controller);
 		const maxBinId = { name: "numberfieldMaxBins" };
 		const maxDepthId = { name: "numberfieldMaxDepth" };

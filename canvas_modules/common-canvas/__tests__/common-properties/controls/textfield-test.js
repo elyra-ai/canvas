@@ -39,7 +39,7 @@ const defaultControlStates = {
 const controller = new Controller();
 
 const control = {
-	name: "test-textfield",
+	name: "test-text",
 	charLimit: 15,
 	additionalText: "Enter file name",
 	valueDef: {
@@ -48,6 +48,7 @@ const control = {
 };
 const control2 = {
 };
+propertyUtils.setControls(controller, [control]);
 const propertyId = { name: "test-text" };
 
 function setPropertyValue() {

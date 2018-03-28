@@ -16,9 +16,9 @@ import propertyUtils from "../../_utils_/property-utils";
 import spinnerParamDef from "../../test_resources/paramDefs/spinner_paramDef.json";
 
 
-var controller = new Controller();
+const controller = new Controller();
 
-var control = {
+const control = {
 	"name": "spinner_int",
 	"label": {
 		"text": "Integer"
@@ -36,7 +36,7 @@ var control = {
 	"required": true
 };
 
-var control2 = {
+const control2 = {
 	"name": "spinner_dbl",
 	"label": {
 		"text": "Double"
@@ -54,7 +54,7 @@ var control2 = {
 	"required": true
 };
 
-var control3 = {
+const control3 = {
 	"name": "spinner_default",
 	"label": {
 		"text": "Integer Default"
@@ -71,7 +71,7 @@ var control3 = {
 	"control": "spinner",
 	"required": true
 };
-
+propertyUtils.setControls(controller, [control, control2, control3]);
 const propertyId = { "name": "spinner_int" };
 const propertyId2 = { "name": "spinner_dbl" };
 const propertyId3 = { "name": "spinner_default" };

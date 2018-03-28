@@ -28,7 +28,7 @@ const control = {
 		propType: "date"
 	}
 };
-
+propertyUtils.setControls(controller, [control]);
 const propertyId = { name: "test-datefield" };
 
 function setPropertyValue() {

@@ -79,7 +79,7 @@ export default class PropertiesController {
 		this.form = form;
 		// set initial property values
 		if (this.form) {
-			this.setControls({});
+			this.controls = {};
 			this.setControlStates({}); // clear state
 			this.setErrorMessages({}); // clear messages
 			this.isSummaryPanel = false; // when new form is set, summary panel is gone
@@ -87,7 +87,7 @@ export default class PropertiesController {
 			this._parseUiConditions();
 			// should be done before running any validations
 			const controls = UiConditionsParser.parseControls([], this.form);
-			this._saveControls(controls); // saves controls without the subcontrols
+			this.saveControls(controls); // saves controls without the subcontrols
 			this._parseSummaryControls(controls);
 			let datasetMetadata;
 			if (this.form.data) {
@@ -797,7 +797,7 @@ export default class PropertiesController {
 	*/
 
 	// Saves controls in a state that get be used to retrieve them using a propertyId
-	_saveControls(controls) {
+	saveControls(controls) {
 		controls.forEach((control) => {
 			if (typeof control.columnIndex === "undefined") {
 				this.controls[control.name] = control;
@@ -805,9 +805,6 @@ export default class PropertiesController {
 				this.controls[control.parameterName][control.columnIndex] = control;
 			}
 		});
-	}
-	setControls(controls) {
-		this.controls = controls;
 	}
 
 	getControl(propertyId) {
@@ -907,7 +904,7 @@ export default class PropertiesController {
 		// need to preserve parentCategoryId which is set during initial parsing of all controls
 		const parentCategoryId = this.getControl(propertyId).parentCategoryId;
 		UiConditionsParser.parseControl(controls, control, parentCategoryId);
-		this._saveControls(controls);
+		this.saveControls(controls);
 		return this.controlFactory.createControlItem(control, propertyId);
 	}
 

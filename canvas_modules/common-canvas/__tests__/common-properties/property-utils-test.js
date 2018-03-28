@@ -9,12 +9,36 @@
 
 import { expect } from "chai";
 import PropertyUtils from "../../src/common-properties/util/property-utils.js";
+import testUtils from "../_utils_/property-utils";
 import Controller from "../../src/common-properties/properties-controller";
 
+const controller = new Controller();
+const controls = [
+	{
+		name: "int",
+		valueDef: {
+			isList: false,
+			propType: "integer"
+		}
+	},
+	{
+		name: "int2",
+		valueDef: {
+			isList: false,
+			propType: "integer"
+		}
+	},
+	{
+		name: "str",
+		valueDef: {
+			isList: false,
+			propType: "string"
+		}
+	}
+];
+testUtils.setControls(controller, controls);
 
 describe("dynamic text with expressions", () => {
-	const controller = new Controller();
-
 	it("test sum expression", () => {
 		let result = PropertyUtils.evaluateText("Sum: ${sum(1,2,3,4)}", controller);
 		expect(result).to.equal("Sum: 10");

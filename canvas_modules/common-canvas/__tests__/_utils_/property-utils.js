@@ -10,6 +10,7 @@
 import React from "react";
 import CommonProperties from "../../src/common-properties/common-properties.jsx";
 import EditorForm from "../../src/common-properties/editor-controls/editor-form.jsx";
+import UiConditionsParser from "../../src/common-properties/ui-conditions/ui-conditions-parser.js";
 import { mountWithIntl, shallowWithIntl } from "enzyme-react-intl";
 import { ReactWrapper } from "enzyme";
 import { expect } from "chai";
@@ -123,10 +124,19 @@ function selectCheckbox(wrapper, idx, id) {
 	integerCheckbox.simulate("change", { target: { checked: true, id: id } });
 }
 
+function setControls(controller, controls) {
+	const parsedControls = [];
+	for (const control of controls) {
+		UiConditionsParser.parseControl(parsedControls, control);
+	}
+	controller.saveControls(parsedControls);
+}
+
 module.exports = {
 	flyoutEditorForm: flyoutEditorForm,
 	createEditorForm: createEditorForm,
 	fieldPicker: fieldPicker,
 	dropDown: dropDown,
-	selectCheckbox: selectCheckbox
+	selectCheckbox: selectCheckbox,
+	setControls: setControls
 };

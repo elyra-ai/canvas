@@ -45,7 +45,7 @@ const control = {
 };
 
 const moveableRowControl = {
-	"name": "test-columnSelect",
+	"name": "test-moveableRows-columnSelect",
 	"label": {
 		"text": "Input List Shared with Below Control"
 	},
@@ -63,6 +63,7 @@ const moveableRowControl = {
 	"moveableRows": true
 };
 
+propertyUtils.setControls(controller, [control, moveableRowControl]);
 const propertyId = { name: "test-columnSelect" };
 
 function setPropertyValue() {

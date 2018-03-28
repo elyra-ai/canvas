@@ -28,7 +28,7 @@ const control = {
 		propType: "time"
 	}
 };
-
+propertyUtils.setControls(controller, [control]);
 const propertyId = { name: "test-timefield" };
 
 function setPropertyValue() {
