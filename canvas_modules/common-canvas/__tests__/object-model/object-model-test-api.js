@@ -411,6 +411,54 @@ describe("ObjectModel API handle model OK", () => {
 		expect(isEqual(actualPipelineFlow, expectedPipelineFlow)).to.be.true;
 	});
 
+	it("should return custom app_data and ui_data for links", () => {
+		logger.info("should return custom app_data and ui_data for links");
+
+		const startPipelineFlowLinkAppData = JSON.parse(JSON.stringify(startPipelineFlow));
+		// add app_data and ui_data to existing link
+		startPipelineFlowLinkAppData.pipelines[0].nodes[0].inputs[0].links[0].app_data.myData = "myValue";
+		startPipelineFlowLinkAppData.pipelines[0].nodes[0].inputs[0].links[0].app_data.ui_data.myData2 = "myValue2";
+		deepFreeze(startPipelineFlowLinkAppData);
+
+		objectModel.setPipelineFlow(startPipelineFlowLinkAppData);
+
+		const expectedCanvas = startPipelineFlowLinkAppData;
+		const actualCanvas = objectModel.getPipelineFlow();
+
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
+
+		expect(isEqual(JSON.stringify(expectedCanvas, null, 4), JSON.stringify(actualCanvas, null, 4))).to.be.true;
+	});
+
+	it("should add links for existing nodes", () => {
+		logger.info("should add links for existing nodes");
+
+		const startPipelineFlowNoLinks = JSON.parse(JSON.stringify(startPipelineFlow));
+		// remove existing link array
+		delete startPipelineFlowNoLinks.pipelines[0].nodes[0].inputs[0].links;
+		deepFreeze(startPipelineFlowNoLinks);
+
+		objectModel.setPipelineFlow(startPipelineFlowNoLinks);
+
+		const expectedCanvas = startPipelineFlow;
+
+		const linkData = {
+			"editType": "linkNodes",
+			"nodes": [{ "id": "id8I6RH2V91XW" }],
+			"targetNodes": [{ "id": "idGWRVT47XDV" }],
+			"linkType": "data"
+		};
+		const nodeLinks = objectModel.createNodeLinks(linkData);
+		objectModel.addLinks(nodeLinks);
+		const actualCanvas = objectModel.getPipelineFlow();
+
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
+
+		expect(isEqual(JSON.stringify(expectedCanvas, null, 4), JSON.stringify(actualCanvas, null, 4))).to.be.true;
+	});
+
 	it("should update label for a node", () => {
 		logger.info("should update label for a node");
 
@@ -651,4 +699,5 @@ describe("ObjectModel API handle model OK", () => {
 
 		expect(isEqual(objectModel.getCanvasInfo(), clonedCanvas)).to.be.true;
 	});
+
 });

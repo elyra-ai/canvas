@@ -38,7 +38,7 @@
                   "node_id_ref": "id8I6RH2V91XW",
                   "app_data": {
                     "ui_data": {
-                      "class_name": "canvas-data-link"
+                      "class_name": "d3-data-link"
                     }
                   }
                 }
@@ -88,8 +88,7 @@
                   },
                   "label": "Input Port"
                 }
-              },
-              "links": []
+              }
             }
           ],
           "outputs": [

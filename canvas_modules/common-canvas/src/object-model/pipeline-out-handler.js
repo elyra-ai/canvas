@@ -106,9 +106,12 @@ export default class PipelineOutHandler {
 			if (input.app_data) {
 				newInput.app_data = this.getPortAppData(input.app_data, ciInputs[index]);
 			}
-			if (input.links) {
-				newInput.links = this.getLinks(input.links, canvasLinks, pNodeId, input.id, portIndex);
+			// always call getLinks because new links might have been added for existing nodes that have no links yet
+			const links = this.getLinks(input.links, canvasLinks, pNodeId, input.id, portIndex);
+			if (!isEmpty(links)) {
+				newInput.links = links;
 			}
+
 			return newInput;
 		});
 	}
@@ -138,20 +141,25 @@ export default class PipelineOutHandler {
 		// Loop through each filtered link and see if that link already has an
 		// equivalent link in the set of links for the node. If it does we can
 		// leave it 'as is' and just return it. If there is no equivalent link
-		// wee need to create a new link to be returned.
+		// we need to create a new link to be returned.
 		filteredCanvasLinks.forEach((filteredCanvasLink) => {
 			var index = -1;
 			if (nodeLinks) {
-				index = nodeLinks.findIndex((nodeLink) => nodeLink.node_ref_id === filteredCanvasLink.srcNodeId && nodeLink.port_ref_id === filteredCanvasLink.srcNodePortId);
+				index = nodeLinks.findIndex((nodeLink) =>
+					nodeLink.node_id_ref === filteredCanvasLink.srcNodeId &&
+					nodeLink.port_id_ref === filteredCanvasLink.srcNodePortId);
 			}
 
 			// If filteredLink does not match an existing link in the pipeline create a new link
 			if (index === -1) {
 				newLinks.push(this.createNewNodeLink(filteredCanvasLink));
 
-			// If filteredLink matches an existing link in the pipeline just return it
+			// If filteredLink matches an existing link in the pipeline, return it
+			// but merge app_data and ui_data because we add a class_name for the link in ui_data
 			} else {
-				newLinks.push(nodeLinks[index]);
+				const link = Object.assign({}, nodeLinks[index], {
+					app_data: this.getLinkAppData(nodeLinks[index].app_data, filteredCanvasLink) });
+				newLinks.push(link);
 			}
 		});
 
@@ -173,6 +181,20 @@ export default class PipelineOutHandler {
 			}
 			return false;
 		});
+	}
+
+	static getLinkAppData(appData, ciLink) {
+		if (appData) {
+			return Object.assign({}, appData, { ui_data: this.getLinkUiData(appData.ui_data, ciLink) });
+		}
+		return { ui_data: { class_name: ciLink.class_name } };
+	}
+
+	static getLinkUiData(uiData, ciLink) {
+		if (uiData) {
+			return Object.assign({}, uiData, { class_name: ciLink.class_name });
+		}
+		return { class_name: ciLink.class_name };
 	}
 
 	static createNode(ciNode, canvasLinks) {
