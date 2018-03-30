@@ -7,7 +7,7 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import { getSummaryFromName } from "./utilities/validate-utils.js";
+import { getControlContainerFromName, getSummaryFromName } from "./utilities/validate-utils.js";
 import testUtils from "./utilities/test-utils.js";
 
 /* global browser */
@@ -360,6 +360,10 @@ module.exports = function() {
 		}
 	});
 
+	this.Then(/^I move the mouse to coordinates (\d+), (\d+) in common-properties$/, function(mouseX, mouseY) {
+		browser.moveToObject("#common-properties-right-flyout-panel", Number(mouseX), Number(mouseY));
+	});
+
 	/** Verify the tooltip over the given text in the summaryPanel is 'visible'
 	* @param text: value displayed in summary panels
 	* @param summaryName: name of summaryPanel
@@ -378,6 +382,25 @@ module.exports = function() {
 		}
 		// should have found the text for the tooltip in the summary table when tooltip is visible
 		expect(found).toEqual(visible === "visible");
+	});
+
+	/** Verify the tooltip over the given text in the container is 'visible'
+	* @param label: label of the container shown in the UI
+	*/
+	this.Then(/^I verify the tip for label "([^"]*)" is visible on the "([^"]*)"$/, function(label, location) {
+		browser.pause(1000);
+		const container = getControlContainerFromName(label);
+		const tip = container.$(".common-canvas-tooltip");
+		if (tip) {
+			expect(tip.getAttribute("aria-hidden") === "false").toEqual(true);
+			const containerLeft = container.getLocation().x;
+			const tipLeft = tip.getLocation().x;
+			if (location === "left") {
+				expect(tipLeft).toBeLessThan(containerLeft);
+			} else if (location === "right") {
+				expect(tipLeft).toBeGreaterThan(containerLeft);
+			}
+		}
 	});
 
 	/*

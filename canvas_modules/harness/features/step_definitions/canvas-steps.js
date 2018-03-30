@@ -176,15 +176,18 @@ module.exports = function() {
 		expect(node.getText()).toEqual(nodeName);
 	});
 
-	this.Then(/^I verify the tip shows below the node "([^"]*)"$/, function(nodeName) {
+	this.Then(/^I verify the tip shows "([^"]*)" the node "([^"]*)"$/, function(location, nodeName) {
 		const nodeId = getNodeIdForLabel(nodeName);
 		const tip = browser.$("#node_tip_" + nodeId);
 		expect(tip.value).not.toEqual(null);
 
 		const node = browser.$("#node_grp_" + nodeId);
-		const nodeBottom = node.getLocation().y + node.getElementSize().height;
 		const tipTop = tip.getLocation().y;
-		expect(tipTop).toBeGreaterThan(nodeBottom);
+		if (location === "below") {
+			expect(tipTop).toBeGreaterThan(node.getLocation().y + node.getElementSize().height);
+		} else if (location === "above") {
+			expect(tipTop).toBeLessThan(node.getLocation().y);
+		}
 
 		const tipLabel = tip.$(".tip-node-label").getText();
 		expect(tipLabel).toEqual(nodeName);

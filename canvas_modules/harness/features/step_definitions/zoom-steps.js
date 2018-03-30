@@ -20,6 +20,10 @@ module.exports = function() {
 		browser.$("#zoomOut-action").click();
 	});
 
+	this.Then("I click zoom to fit", function() {
+		browser.$("#zoomToFit-action").click();
+	});
+
 
 	this.Then(/^I verify zoom transform value is "([^"]*)"$/, function(givenZoomTransform) {
 		var actualZoomTransform = browser.$(".svg-area").$$("g")[0].getAttribute("transform");

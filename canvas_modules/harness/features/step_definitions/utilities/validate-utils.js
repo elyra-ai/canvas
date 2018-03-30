@@ -276,6 +276,18 @@ function getSummaryFromName(summaryName) {
 	return summary;
 }
 
+function getControlContainerFromName(name) {
+	const containers = browser.$$(".control-label-container");
+	let container = null;
+	for (let idx = 0; idx < containers.length; idx++) {
+		if (containers[idx].$(".control-label").getText() === name) {
+			container = containers[idx];
+			break;
+		}
+	}
+	return container;
+}
+
 module.exports = {
 	containLinkEvent: containLinkEvent,
 	containLinkInObjectModel: containLinkInObjectModel,
@@ -293,5 +305,6 @@ module.exports = {
 	clickSVGAreaAt: clickSVGAreaAt,
 	findNodeIndexInPalette: findNodeIndexInPalette,
 	findCategoryElement: findCategoryElement,
-	getSummaryFromName: getSummaryFromName
+	getSummaryFromName: getSummaryFromName,
+	getControlContainerFromName: getControlContainerFromName
 };

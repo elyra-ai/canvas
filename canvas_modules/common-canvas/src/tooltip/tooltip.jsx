@@ -10,7 +10,7 @@
 	This code is a modified version from portal-common-api for the common-canvas toolbar
 	https://github.ibm.com/dap/portal-common-api/blob/master/src/js/nav/v2/nav.js
 */
-/* eslint complexity: ["error", 26] */
+/* eslint complexity: ["error", 27] */
 import React from "react";
 import PropTypes from "prop-types";
 
@@ -45,21 +45,45 @@ class ToolTip extends React.Component {
 			clearTimeout(this.state.pendingTooltip);
 		}
 
+		const tooltip = document.getElementById(this.props.id);
 		this.setState({
 			showToolTip: visible,
 			pendingTooltip: null
 		});
 		// updates the tooltip display
-		const tooltip = document.getElementById(this.props.id);
-		let tooltipTrigger = null;
-		if (this.props.targetObj) {
-			tooltipTrigger = this.props.targetObj;
-		} else {
-			tooltipTrigger = document.getElementById(this.props.id + "-trigger");
+		if (visible) {
+			let tooltipTrigger = null;
+			if (this.props.targetObj) {
+				tooltipTrigger = this.props.targetObj;
+			} else {
+				tooltipTrigger = document.getElementById(this.props.id + "-trigger");
+			}
+			if (tooltipTrigger && tooltip) {
+				this.updateTooltipLayout(tooltip, tooltipTrigger, tooltip.getAttribute("direction"));
+			}
 		}
-		if (tooltipTrigger && tooltip && visible) {
-			this.updateTooltipLayout(tooltip, tooltipTrigger);
+	}
+
+	getStyleValue(value) {
+		return value + "px";
+	}
+
+	getNewDirection(currentDirection) {
+		let newDirection;
+		switch (currentDirection) {
+		case "top":
+			newDirection = "bottom";
+			break;
+		case "bottom":
+			newDirection = "top";
+			break;
+		case "left":
+			newDirection = "right";
+			break;
+		default:
+			newDirection = "left";
 		}
+		return newDirection;
 	}
 
 	showTooltipWithDelay() {
@@ -75,8 +99,8 @@ class ToolTip extends React.Component {
 
 	}
 
-	updateTooltipLayout(tooltip, tooltipTrigger) {
-		const tooltipDirection = tooltip.getAttribute("direction");
+	updateTooltipLayout(tooltip, tooltipTrigger, direction) {
+		const tooltipDirection = direction;
 		const viewPortWidth = document.documentElement.clientWidth;
 		const viewPortHeight = document.documentElement.clientHeight;
 		const triggerLayout = tooltipTrigger.getBoundingClientRect();
@@ -84,8 +108,12 @@ class ToolTip extends React.Component {
 		const pointerLayout = pointer.getBoundingClientRect();
 		const pointerCorrection = 1;
 
+		// always initialize tooltip location so it's all visible to ensure adjustments are done on the right size
+		tooltip.style.left = this.getStyleValue(triggerLayout.left);
+		tooltip.style.top = this.getStyleValue(triggerLayout.top);
+
 		if (this.props.mousePos) {
-			this.updateLocationBasedOnMousePos(tooltip, this.props.mousePos);
+			this.updateLocationBasedOnMousePos(tooltip, this.props.mousePos, direction);
 		} else { // tooltip relativ to element
 			// tooltip - left correction
 			if (tooltipDirection === "top" || tooltipDirection === "bottom") {
@@ -98,21 +126,21 @@ class ToolTip extends React.Component {
 				} else if (tooltip.offsetWidth < triggerLayout.width) {
 					tooltipLeft += (triggerLayout.width - tooltip.offsetWidth) / 2; // center tip within triggerLayout
 				}
-				tooltip.style.left = tooltipLeft + "px";
-				if ((tooltip.style.left + tooltip.offsetWidth) > viewPortWidth) {
-					tooltip.style.left = viewPortWidth - tooltip.offsetWidth; // hitting right border
+				tooltip.style.left = this.getStyleValue(tooltipLeft);
+				if ((tooltipLeft + tooltip.offsetWidth) > viewPortWidth) {
+					tooltip.style.left = this.getStyleValue(viewPortWidth - tooltip.offsetWidth); // hitting right border
 				}
 			} else if (tooltipDirection === "left") {
-				tooltip.style.left = (triggerLayout.left - tooltip.offsetWidth - pointerLayout.width) + "px";
+				tooltip.style.left = this.getStyleValue(triggerLayout.left - tooltip.offsetWidth - pointerLayout.width);
 			} else if (tooltipDirection === "right") {
-				tooltip.style.left = (triggerLayout.right + pointerLayout.width) + "px";
+				tooltip.style.left = this.getStyleValue(triggerLayout.right + pointerLayout.width);
 			}
 
 			// tooltip - top correction
 			if (tooltipDirection === "top") {
-				tooltip.style.top = (triggerLayout.top - pointerLayout.height - tooltip.offsetHeight) + "px";
+				tooltip.style.top = this.getStyleValue(triggerLayout.top - pointerLayout.height - tooltip.offsetHeight);
 			} else if (tooltipDirection === "bottom") {
-				tooltip.style.top = (triggerLayout.bottom + pointerLayout.height) + "px";
+				tooltip.style.top = this.getStyleValue(triggerLayout.bottom + pointerLayout.height);
 			} else if (tooltipDirection === "left" || tooltipDirection === "right") {
 				let tooltipTop = triggerLayout.top;
 				if ((viewPortHeight - tooltip.offsetHeight) < triggerLayout.top) {
@@ -125,35 +153,43 @@ class ToolTip extends React.Component {
 				} else if (tooltip.offsetHeight < triggerLayout.height) {
 					tooltipTop += (triggerLayout.height - tooltip.offsetHeight) / 2; // center tip within triggerLayout
 				}
-				tooltip.style.top = tooltipTop + pointerCorrection + "px";
+				tooltip.style.top = this.getStyleValue(tooltipTop + pointerCorrection);
 			}
 
 			// pointer - left correction
 			if (tooltipDirection === "top" || tooltipDirection === "bottom") {
-				pointer.style.left = (triggerLayout.left - tooltip.getBoundingClientRect().left +
-					tooltipTrigger.getBoundingClientRect().width / 2 - pointerLayout.width / 2	 + pointerCorrection) + "px";
+				pointer.style.left = this.getStyleValue(triggerLayout.left - tooltip.getBoundingClientRect().left +
+					tooltipTrigger.getBoundingClientRect().width / 2 - pointerLayout.width / 2	 + pointerCorrection);
 			} else if (tooltipDirection === "left") {
-				pointer.style.left = (tooltip.offsetWidth - 3) + "px";
+				pointer.style.left = this.getStyleValue(tooltip.offsetWidth - 3);
 			} else if (tooltipDirection === "right") {
-				pointer.style.left = (-pointerLayout.width + 2) + "px";
+				pointer.style.left = this.getStyleValue(-pointerLayout.width + 2);
 			}
 
 			// pointer - top correction
 			if (tooltipDirection === "top") {
-				pointer.style.top = (tooltip.offsetHeight - 5) + "px";
+				pointer.style.top = this.getStyleValue(tooltip.offsetHeight - 5);
 			} else if (tooltipDirection === "bottom") {
 				pointer.style.top = "-11px";
 			} else if (tooltipDirection === "left" || tooltipDirection === "right") {
-				pointer.style.top = (triggerLayout.top - tooltip.getBoundingClientRect().top +
-					tooltipTrigger.offsetHeight / 2 - pointerLayout.height / 2) + "px";
+				pointer.style.top = this.getStyleValue(triggerLayout.top - tooltip.getBoundingClientRect().top +
+					tooltipTrigger.offsetHeight / 2 - pointerLayout.height / 2);
 			}
+		}
+
+		// check if out-of-bounds at the end and if so, trigger new layout on opposite site if not already re-rendered already
+		if (this.isOutOfBounds(tooltip) && tooltip.getAttribute("direction") === tooltipDirection) {
+			const newDirection = this.getNewDirection(tooltipDirection);
+			this.updateTooltipLayout(tooltip, tooltipTrigger, newDirection);
+			// update class name directly, otherwise setState triggers re-render loop in canvas
+			// also call after updateTooltipLayout, otherwise the newDirection and class of trigger are the same
+			tooltip.setAttribute("direction", newDirection);
+			return;
 		}
 	}
 
-	updateLocationBasedOnMousePos(tooltip, mousePos) {
-		const tooltipDirection = tooltip.getAttribute("direction");
-		const tooltipWidth = tooltip.offsetWidth;
-		const tooltipHeight = tooltip.offsetHeight;
+	updateLocationBasedOnMousePos(tooltip, mousePos, direction) {
+		const tooltipDirection = direction;
 		const viewPortWidth = document.documentElement.clientWidth;
 		const viewPortHeight = document.documentElement.clientHeight;
 		const pointer = tooltip.querySelector("svg");
@@ -166,51 +202,60 @@ class ToolTip extends React.Component {
 
 		// tooltip - left correction
 		if (tooltipDirection === "top" || tooltipDirection === "bottom") {
-			let tooltipLeft = mouseX - tooltipWidth / 2;
-			if ((viewPortWidth - tooltipWidth) < tooltipLeft) {
-				tooltipLeft = viewPortWidth - tooltipWidth; // hitting right border
+			let tooltipLeft = mouseX - tooltip.offsetWidth / 2;
+			if ((viewPortWidth - tooltip.offsetWidth) < tooltipLeft) {
+				tooltipLeft = viewPortWidth - tooltip.offsetWidth; // hitting right border
 			} else if (tooltipLeft < 0) {
 				tooltipLeft = 2; // hitting left border
 			}
-			tooltip.style.left = tooltipLeft + "px";
+			tooltip.style.left = this.getStyleValue(tooltipLeft);
 		} else if (tooltipDirection === "left") {
-			tooltip.style.left = (mouseX - tooltipWidth - pointerLayout.width - 5) + "px";
+			tooltip.style.left = this.getStyleValue(mouseX - tooltip.offsetWidth - pointerLayout.width - 5);
 		} else if (tooltipDirection === "right") {
-			tooltip.style.left = (mouseX + pointerLayout.width + 5) + "px";
+			tooltip.style.left = this.getStyleValue(mouseX + pointerLayout.width + 5);
 		}
 
 		// tooltip - top correction
 		if (tooltipDirection === "top") {
-			tooltip.style.top = (mouseY - pointerLayout.height - tooltipHeight) + "px";
+			tooltip.style.top = this.getStyleValue(mouseY - pointerLayout.height - tooltip.offsetHeight);
 		} else if (tooltipDirection === "bottom") {
-			tooltip.style.top = (mouseY + 2 * pointerLayout.height) + "px";
+			tooltip.style.top = this.getStyleValue(mouseY + 2 * pointerLayout.height);
 		} else if (tooltipDirection === "left" || tooltipDirection === "right") {
-			let tooltipTop = mouseY - tooltipHeight / 2;
-			if ((viewPortHeight - tooltipHeight) < tooltipTop) {
-				tooltipTop = viewPortHeight - tooltipHeight; // hitting bottom border
+			let tooltipTop = mouseY - tooltip.offsetHeight / 2;
+			if ((viewPortHeight - tooltip.offsetHeight) < tooltipTop) {
+				tooltipTop = viewPortHeight - tooltip.offsetHeight; // hitting bottom border
 			} else if (tooltipTop < 0) {
 				tooltipTop = 2; // hitting top border
 			}
-			tooltip.style.top = tooltipTop + pointerCorrection + "px";
+			tooltip.style.top = this.getStyleValue(tooltipTop + pointerCorrection);
 		}
 
 		// pointer - left correction
 		if (tooltipDirection === "top" || tooltipDirection === "bottom") {
-			pointer.style.left = (mouseX - tooltip.getBoundingClientRect().left - pointerLayout.width / 2) + "px";
+			pointer.style.left = this.getStyleValue(mouseX - tooltip.getBoundingClientRect().left - pointerLayout.width / 2);
 		} else if (tooltipDirection === "left") {
-			pointer.style.left = (tooltipWidth - 3) + "px";
+			pointer.style.left = this.getStyleValue(tooltip.offsetWidth - 3);
 		} else if (tooltipDirection === "right") {
-			pointer.style.left = (-pointerLayout.width + 2) + "px";
+			pointer.style.left = this.getStyleValue(-pointerLayout.width + 2);
 		}
 
 		// pointer - top correction
 		if (tooltipDirection === "top") {
-			pointer.style.top = (tooltipHeight - 5) + "px";
+			pointer.style.top = this.getStyleValue(tooltip.offsetHeight - 5);
 		} else if (tooltipDirection === "bottom") {
 			pointer.style.top = "-11px";
 		} else if (tooltipDirection === "left" || tooltipDirection === "right") {
-			pointer.style.top = (mouseY - tooltip.getBoundingClientRect().top - pointerLayout.height / 2) + "px";
+			pointer.style.top = this.getStyleValue(mouseY - tooltip.getBoundingClientRect().top - pointerLayout.height / 2);
 		}
+	}
+
+	isOutOfBounds(tooltip) {
+		const tooltipLeft = parseFloat(tooltip.style.left);
+		const tooltipTop = parseFloat(tooltip.style.top);
+		return (((tooltipLeft + tooltip.offsetWidth) > document.documentElement.clientWidth) || // to the right
+				(tooltipLeft < 0) || // to the left
+				(tooltipTop < 0) || // to the top
+				((tooltipTop + tooltip.offsetHeight) > document.documentElement.clientHeight)); // to the bottom
 	}
 
 	render() {
