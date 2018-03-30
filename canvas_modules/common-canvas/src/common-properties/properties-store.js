@@ -14,19 +14,22 @@ import { setPanelStates, updatePanelState } from "./actions";
 import { clearSelectedRows, updateSelectedRows } from "./actions";
 import { setErrorMessages, updateErrorMessage, clearErrorMessage } from "./actions";
 import { setDatasetMetadata } from "./actions";
+import { setTitle } from "./actions";
 import propertiesReducer from "./reducers/properties";
 import controlStatesReducer from "./reducers/control-states";
 import panelStatesReducer from "./reducers/panel-states";
 import errorMessagesReducer from "./reducers/error-messages";
 import datasetMetadataReducer from "./reducers/dataset-metadata";
 import rowSelectionsReducer from "./reducers/row-selections";
+import componentMetadataReducer from "./reducers/component-metadata";
 import isEqual from "lodash/isEqual";
 
 /* eslint max-depth: ["error", 6] */
 
 export default class PropertiesStore {
 	constructor() {
-		this.combinedReducer = combineReducers({ propertiesReducer, controlStatesReducer, panelStatesReducer, errorMessagesReducer, datasetMetadataReducer, rowSelectionsReducer });
+		this.combinedReducer = combineReducers({ propertiesReducer, controlStatesReducer, panelStatesReducer,
+			errorMessagesReducer, datasetMetadataReducer, rowSelectionsReducer, componentMetadataReducer });
 		this.store = createStore(this.combinedReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 	}
 
@@ -50,7 +53,7 @@ export default class PropertiesStore {
 	}
 	getPropertyValues() {
 		const state = this.store.getState();
-		return state.propertiesReducer;
+		return JSON.parse(JSON.stringify(state.propertiesReducer));
 	}
 	setPropertyValues(values) {
 		this.store.dispatch(setPropertyValues(values));
@@ -251,5 +254,14 @@ export default class PropertiesStore {
 
 	clearSelectedRows(controlName) {
 		this.store.dispatch(clearSelectedRows({ name: controlName }));
+	}
+
+	setTitle(title) {
+		this.store.dispatch(setTitle(title));
+	}
+
+	getTitle() {
+		const state = this.store.getState();
+		return state.componentMetadataReducer.title;
 	}
 }

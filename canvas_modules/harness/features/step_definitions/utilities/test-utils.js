@@ -35,7 +35,32 @@ function getLastEventLogData(override) {
 	return lastEventLog;
 }
 
+function getLastLogOfType(logType) {
+	browser.timeouts("script", 3000);
+	let eventLogData = browser.executeAsync(getHarnessData, getEventLogUrl);
+	let eventLog = JSON.parse(eventLogData.value);
+	let lastEventLog;
+	for (const log of eventLog) {
+		if (log.event === logType) {
+			lastEventLog = log;
+		}
+	}
+	// try again if data isn't found
+	if (!lastEventLog) {
+		browser.pause(500);
+		eventLogData = browser.executeAsync(getHarnessData, getEventLogUrl);
+		eventLog = JSON.parse(eventLog.value);
+		for (const log of eventLog) {
+			if (log.event === logType) {
+				lastEventLog = log.event;
+			}
+		}
+	}
+	return lastEventLog;
+}
+
 
 module.exports = {
-	getLastEventLogData: getLastEventLogData
+	getLastEventLogData: getLastEventLogData,
+	getLastLogOfType: getLastLogOfType
 };

@@ -244,7 +244,7 @@ Feature: UndoRedo
 		Then I verify the number of nodes are 7
 		Then I verify the number of data links are 4
 
-Scenario: Sanity test for Multiple undo/redo operations with the D3 rendering engine
+	Scenario: Sanity test for Multiple undo/redo operations with the D3 rendering engine
 		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
@@ -289,7 +289,7 @@ Scenario: Sanity test for Multiple undo/redo operations with the D3 rendering en
 		Then I verify the number of nodes are 23
 		Then I verify the number of data links are 21
 
-Scenario: Sanity test for undo/redo of layout actions with the D3 rendering engine
+	Scenario: Sanity test for undo/redo of layout actions with the D3 rendering engine
 		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
@@ -343,4 +343,28 @@ Scenario: Sanity test for undo/redo of layout actions with the D3 rendering engi
 		Then I verify the node 5 position is "translate(120, 50)"
 		Then I verify the node 6 position is "translate(120, 342)"
 
+	Scenario: Test undo/redo property values and title in common-properties
+		Then I resize the window size to 1400 width and 800 height
+		Given I am on the test harness
+		Given I have toggled the app side panel
+		Given I have selected the "Flyout" palette layout
+		Given I have uploaded predefined palette "modelerPalette.json"
+		Given I have selected the "D3" rendering engine
+		Given I have toggled the app side panel
+		Then I open the palette
+		Then I add node 1 a "C5.0" node from the "Modeling" category onto the canvas at 350, 200
+		Then I select node 1 the "C5.0" node
+		Then I click on title edit icon
+		Then I enter new title "My C5.0 model"
+		Then I send "Backspace" to the "editor-control-samplingRatio" textbox control
+		Then I click on the "Save" button
+		Then I verify the event log for the "samplingRatio" parameter contains "null"
+		Then I verify the event log has the "error" message for the "samplingRatio" parameter of "Select a sampling ratio"
+		Then I verify the event log title is "My C5.0 model"
 		Then I pause for 1 seconds
+		Then I select node 1 the "C5.0" node
+		Then I click undo
+		Then I click on the "Save" button
+		Then I verify the event log for the "samplingRatio" parameter contains "1"
+		Then I verify the event log has no error messages
+		Then I verify the event log title is "C5.0"

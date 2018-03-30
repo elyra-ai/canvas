@@ -14,6 +14,7 @@ export const CLEAR_ERROR_MESSAGE = "CLEAR_ERROR_MESSAGE";
 export const SET_DATASET_METADATA = "SET_DATASET_METADATA";
 export const UPDATE_SELECTED_ROWS = "UPDATE_SELECTED_ROWS";
 export const CLEAR_SELECTED_ROWS = "CLEAR_SELECTED_ROWS";
+export const SET_TITLE = "SET_TITLE";
 
 /*
  * action creators
@@ -65,4 +66,8 @@ export function updateSelectedRows(info) {
 
 export function clearSelectedRows(info) {
 	return { type: CLEAR_SELECTED_ROWS, info };
+}
+
+export function setTitle(title) {
+	return { type: SET_TITLE, title };
 }

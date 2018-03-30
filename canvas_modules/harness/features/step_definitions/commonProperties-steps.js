@@ -37,6 +37,12 @@ module.exports = function() {
 		textbox.setValue("", textValue);
 	});
 
+	this.Then(/^I send "([^"]*)" to the "([^"]*)" textbox control$/, function(key, controlId) {
+		const textbox = browser.$("#" + controlId);
+		textbox.click();
+		textbox.keys("Backspace");
+	});
+
 	this.Then(/^I enter "([^"]*)" in the textbox Column name$/, function(textboxValue) {
 
 		var textbox = browser.$("#editor-control-colName");
@@ -319,7 +325,7 @@ module.exports = function() {
 	});
 
 	this.Then(/^I click on the "([^"]*)" button$/, function(buttonName) {
-		if (buttonName === "OK") {
+		if (buttonName === "OK" || buttonName === "Save") {
 			clickApplyButton();
 		} else {
 			clickCancelButton();
@@ -420,14 +426,25 @@ module.exports = function() {
 		expect(value).toEqual(text.getText());
 	});
 
+	this.Then(/^I verify the event log title is "([^"]*)"$/, function(title) {
+		const lastEventLog = testUtils.getLastLogOfType("applyPropertyChanges()");
+		expect(title).toEqual(lastEventLog.data.title);
+	});
+
 	this.Then(/^I verify the event log for the "([^"]*)" parameter contains "([^"]*)"$/, function(parameterName, values) {
-		const lastEventLog = testUtils.getLastEventLogData();
+		const lastEventLog = testUtils.getLastLogOfType("applyPropertyChanges()");
 		// console.log((lastEventLog.data.form[parameterName]).toString());
-		expect(values).toEqual((lastEventLog.data.form[parameterName]).toString());
+		expect(values).toEqual((String(lastEventLog.data.form[parameterName])));
+	});
+
+	this.Then(/^I verify the event log has no error messages$/, function() {
+		const lastEventLog = testUtils.getLastLogOfType("applyPropertyChanges()");
+		// console.log(lastEventLog.data.messages);
+		expect(lastEventLog.data.messages.length).toEqual(0);
 	});
 
 	this.Then(/^I verify the event log has the "([^"]*)" message for the "([^"]*)" parameter of "([^"]*)"$/, function(msgType, parameterName, msg) {
-		const lastEventLog = testUtils.getLastEventLogData();
+		const lastEventLog = testUtils.getLastLogOfType("applyPropertyChanges()");
 		// console.log(lastEventLog.data.messages);
 		expect(lastEventLog.data.messages.length).not.toEqual(0);
 		var found = false;

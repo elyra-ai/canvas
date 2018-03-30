@@ -426,7 +426,7 @@ class App extends React.Component {
 		this.log("applyDiagramEdit()", data.editType);
 	}
 
-	applyPropertyChanges(form, appData, additionalInfo) {
+	applyPropertyChanges(form, appData, additionalInfo, undoInfo) {
 		const data = {
 			form: form,
 			appData: appData,
@@ -440,6 +440,12 @@ class App extends React.Component {
 			this.canvasController.setNodeParameters(appData.nodeId, form);
 			this.canvasController.setNodeLabel(appData.nodeId, additionalInfo.title);
 			this.canvasController.setNodeMessages(appData.nodeId, additionalInfo.messages);
+			// undo/redo was clicked so reapply settings
+			if (appData.nodeId === this.currentEditorId) {
+				this.propertiesController.setPropertyValues(undoInfo.properties);
+				this.propertiesController.setErrorMessages(undoInfo.messages);
+				this.propertiesController.setTitle(additionalInfo.title);
+			}
 		}
 	}
 
@@ -707,6 +713,10 @@ class App extends React.Component {
 	editNodeHandler(nodeId) {
 		this.log("action: editNode", nodeId);
 		if (nodeId && this.currentEditorId !== nodeId) {
+			// apply properties from previous node if node selection has changed w/o closing editor
+			if (this.currentEditorId && this.canvasController.getNode(this.currentEditorId)) {
+				this.CommonProperties.getWrappedInstance().applyPropertiesEditing(false);
+			}
 			this.currentEditorId = nodeId; // set new node
 			const appData = { nodeId: nodeId };
 
@@ -763,6 +773,10 @@ class App extends React.Component {
 		}
 		// apply properties from previous node if node selection has to more than one node
 		if (this.currentEditorId) {
+			// don't apply changes if node has been removed
+			if (this.canvasController.getNode(this.currentEditorId)) {
+				this.CommonProperties.getWrappedInstance().applyPropertiesEditing(false);
+			}
 			this.setState({ showPropertiesDialog: false });
 			this.currentEditorId = null;
 		}
@@ -982,6 +996,9 @@ class App extends React.Component {
 		};
 		const commonProperties = (
 			<CommonProperties
+				ref={(instance) => {
+					this.CommonProperties = instance;
+				} }
 				propertiesInfo={this.state.propertiesInfo}
 				propertiesConfig={propertiesConfig}
 				customPanels={[CustomSliderPanel, CustomTogglePanel, CustomMapPanel, CustomButtonPanel, CustomDatasetsPanel]}

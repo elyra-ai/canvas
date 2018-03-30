@@ -22,17 +22,15 @@ import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./constants/constants";
 import { FLYOUT_WIDTH } from "../constants/constants";
 import { Size } from "./constants/form-constants";
 import isEqual from "lodash/isEqual";
-import Icon from "../icons/icon.jsx";
-import { injectIntl, intlShape } from "react-intl";
+import TitleEditor from "./components/title-editor.jsx";
 
-import TextField from "ap-components-react/dist/components/TextField";
+import { injectIntl, intlShape } from "react-intl";
 
 class CommonProperties extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			showPropertiesButtons: true,
-			propertiesTitleReadOnly: true
+			showPropertiesButtons: true
 		};
 		this.propertiesInfo = this.props.propertiesInfo;
 		this.propertiesController = new PropertiesController();
@@ -42,12 +40,11 @@ class CommonProperties extends React.Component {
 		});
 
 		this.currentParameters = null;
+		// values used for undo/redo
 
 		this.applyPropertiesEditing = this.applyPropertiesEditing.bind(this);
 		this.showPropertiesButtons = this.showPropertiesButtons.bind(this);
 		this.cancelHandler = this.cancelHandler.bind(this);
-		this.editTitleClickHandler = this.editTitleClickHandler.bind(this);
-		this.helpClickHandler = this.helpClickHandler.bind(this);
 		this.getEditorWidth = this.getEditorWidth.bind(this);
 		this.onBlur = this.onBlur.bind(this);
 	}
@@ -58,38 +55,32 @@ class CommonProperties extends React.Component {
 			propertyListener: this.props.callbacks.propertyListener,
 			actionHandler: this.props.callbacks.actionHandler
 		});
-		if (this.propertiesInfo.messages) {
-			this.setErrorMessages(this.propertiesInfo.messages);
-		} else {
-			this.propertiesController.setErrorMessages({});
-		}
+		this.propertiesController.setPipelineErrorMessages(this.propertiesInfo.messages);
 		this.propertiesController.setCustomControls(this.props.customControls);
 	}
 
 	componentDidMount() {
-		this.currentParameters = JSON.parse(JSON.stringify(this.propertiesController.getPropertyValues(false)));
+		this.currentParameters = this.propertiesController.getPropertyValues();
 	}
 
 	componentWillReceiveProps(newProps) {
 		if (newProps.propertiesInfo) {
-			if (newProps.propertiesInfo.messages && !isEqual(newProps.propertiesInfo.messages, this.propertiesInfo.messages)) {
-				this.propertiesInfo.messages = newProps.propertiesInfo.messages;
-				this.setErrorMessages(newProps.propertiesInfo.messages);
-			}
 			if (!isEqual(Object.keys(newProps.propertiesInfo), Object.keys(this.propertiesInfo)) ||
 				(newProps.propertiesInfo.formData && !isEqual(newProps.propertiesInfo.formData, this.propertiesInfo.formData)) ||
 				(newProps.propertiesInfo.parameterDef && !isEqual(newProps.propertiesInfo.parameterDef, this.propertiesInfo.parameterDef))) {
 				this.propertiesInfo = newProps.propertiesInfo;
 				this.setForm();
 				this.currentParameters = null;
+				this.propertiesController.setPipelineErrorMessages(this.propertiesInfo.messages);
+				this.propertiesController.setAppData(this.propertiesInfo.appData);
+				this.propertiesController.setCustomControls(this.props.customControls);
 			}
 		}
-		this.propertiesController.setCustomControls(newProps.customControls);
 	}
 
 	componentDidUpdate(prevProps, prevState) {
 		if (!this.currentParameters) {
-			this.currentParameters = JSON.parse(JSON.stringify(this.propertiesController.getPropertyValues(false)));
+			this.currentParameters = this.propertiesController.getPropertyValues();
 		}
 	}
 	onBlur(e) {
@@ -129,72 +120,52 @@ class CommonProperties extends React.Component {
 			logger.error("Error generating form in common-properties: " + error);
 		}
 		this.propertiesController.setForm(formData);
-		this.propertiesController.setAppData(this.props.propertiesInfo.appData);
 		if (formData) {
 			this.originalTitle = formData.label;
-			this.setState({
-				title: formData.label
-			});
+			this.propertiesController.setTitle(formData.label);
 		}
-	}
-
-	setErrorMessages(messages) {
-		messages.forEach((message) => {
-			this.propertiesController.updateErrorMessage({ name: message.id_ref },
-				{ type: message.type, text: message.text, validation_id: message.validation_id });
-		});
-	}
-
-	setPropertiesTitleReadOnlyMode(mode) {
-		let bottomBorderStyle = "2px solid #c7c7c7";
-		if (mode) {
-			bottomBorderStyle = "none";
+		// set initial values for undo
+		this.initialValueInfo = { additionalInfo: { messages: [] }, undoInfo: {} };
+		if (formData && formData.data && formData.data.currentParameters) {
+			this.initialValueInfo.properties = JSON.parse(JSON.stringify(formData.data.currentParameters));
 		}
-		this.setState({
-			propertiesTitleReadOnly: mode,
-			propertiesTitleEditStyle: { borderBottom: bottomBorderStyle }
-		});
+		if (this.propertiesInfo.messages) {
+			this.initialValueInfo.additionalInfo.messages = JSON.parse(JSON.stringify(this.propertiesInfo.messages));
+		}
+		this.initialValueInfo.undoInfo.properties = this.propertiesController.getPropertyValues(); // used for undoing when node editor open
+		this.initialValueInfo.undoInfo.messages = this.propertiesController.getErrorMessages(); // used for undoing when node editor open
+		this.initialValueInfo.additionalInfo.title = this.propertiesController.getTitle();
 	}
 
 	applyPropertiesEditing(closeProperties) {
 		// only save if title or parameters have changed
-		if (this.originalTitle !== this.state.title ||
+		if (this.originalTitle !== this.propertiesController.getTitle() ||
 				(this.currentParameters && JSON.stringify(this.currentParameters) !==
 				JSON.stringify(this.propertiesController.getPropertyValues(false)))) {
-			const settings = { additionalInfo: {} };
-			settings.properties = this.propertiesController.getPropertyValues(true);
+
+			// set current values
+			const valueInfo = { additionalInfo: {}, undoInfo: {} };
+			valueInfo.properties = this.propertiesController.getPropertyValues(true);
+			valueInfo.undoInfo.properties = this.propertiesController.getPropertyValues();
 			const errorMessages = this.propertiesController.getErrorMessages(true);
 			if (errorMessages) {
-				settings.additionalInfo.messages = errorMessages;
+				valueInfo.additionalInfo.messages = errorMessages;
 			}
-			if (this.state.title) {
-				settings.additionalInfo.title = this.state.title;
+			valueInfo.undoInfo.messages = this.propertiesController.getErrorMessages();
+			if (this.propertiesController.getTitle()) {
+				valueInfo.additionalInfo.title = this.propertiesController.getTitle();
 			}
-			// set initial values for undo
-			const formData = this.propertiesController.getForm();
-			const initialCurrentProperties = { additionalInfo: { messages: [] } };
-			if (formData && formData.data && formData.data.currentParameters) {
-				initialCurrentProperties.properties = JSON.parse(JSON.stringify(formData.data.currentParameters));
-			}
-			if (this.props.propertiesInfo.messages) {
-				initialCurrentProperties.additionalInfo.messages = JSON.parse(JSON.stringify(this.props.propertiesInfo.messages));
-			}
-			if (formData && formData.label) {
-				initialCurrentProperties.additionalInfo.title = formData.label;
-			}
-			if (closeProperties) {
-				// May need to close the dialog inside the callback in
-				// case of validation errors.
-				this.props.callbacks.closePropertiesDialog();
-			} else {
-				// if we don't close the dialog, set the currentParameters to the new parameters
-				// so we don't save again unnecessarily when clicking save but no additional changes happened
-				this.currentParameters = JSON.parse(JSON.stringify(this.propertiesController.getPropertyValues(false)));
-			}
-			const command = new CommonPropertiesAction(settings, initialCurrentProperties,
-				this.props.propertiesInfo.appData, this.props.callbacks.applyPropertyChanges);
+			const command = new CommonPropertiesAction(valueInfo, this.initialValueInfo,
+				this.propertiesInfo.appData, this.props.callbacks.applyPropertyChanges);
 			this.propertiesController.getCommandStack().do(command);
-		} else if (closeProperties) {
+
+			// if we don't close the dialog, set the currentParameters to the new parameters
+			// so we don't save again unnecessarily when clicking save but no additional changes happened
+			this.currentParameters = this.propertiesController.getPropertyValues();
+			// reset undo values
+			this.initialValueInfo = JSON.parse(JSON.stringify(valueInfo));
+		}
+		if (closeProperties) {
 			this.cancelHandler(); // close property editor
 		}
 	}
@@ -203,30 +174,10 @@ class CommonProperties extends React.Component {
 		if (this.props.callbacks.closePropertiesDialog) {
 			this.props.callbacks.closePropertiesDialog();
 		}
-
 	}
 
 	showPropertiesButtons(state) {
 		this.setState({ showPropertiesButtons: state });
-	}
-
-	editTitleClickHandler() {
-		this.setPropertiesTitleReadOnlyMode(false);
-	}
-
-	helpClickHandler() {
-		if (this.props.callbacks.helpClickHandler) {
-			this.props.callbacks.helpClickHandler(
-				this.propertiesController.getForm().componentId,
-				this.propertiesController.getForm().help.data,
-				this.props.propertiesInfo.appData);
-		}
-	}
-
-	_handleKeyPress(e) {
-		if (e.key === "Enter") {
-			this.setPropertiesTitleReadOnlyMode(true);
-		}
 	}
 
 	render() {
@@ -241,42 +192,20 @@ class CommonProperties extends React.Component {
 
 		const formData = this.propertiesController.getForm();
 		if (formData !== null) {
-			// console.log("formData " + JSON.stringify(formData));
 			let propertiesDialog = [];
 
 			const size = formData.editorSize;
 
 			let propertiesTitle = <div />;
 			let buttonsContainer = <div />;
-			const propertiesTitleEdit = formData.labelEditable === false ? <div />
-				: (<a className="title-edit-right-flyout-panel" onClick={this.editTitleClickHandler}>
-					<Icon type="edit" />
-				</a>);
-
-			const helpButton = formData.help
-				? (<a className="title-help-right-flyout-panel" onClick={this.helpClickHandler}>
-					<Icon type="info" />
-				</a>)
-				: <div />;
 
 			if (this.props.propertiesConfig.rightFlyout) {
-				propertiesTitle = (<div className="node-title-container-right-flyout-panel">
-					<div className="node-title-right-flyout-panel">
-						<TextField
-							id="node-title-editor-right-flyout-panel"
-							value={this.state.title}
-							onChange={(e) => this.setState({
-								title: e.target.value
-							})}
-							onBlur={(e) => this.setPropertiesTitleReadOnlyMode(true)}
-							onKeyPress={(e) => this._handleKeyPress(e)}
-							readOnly={this.state.propertiesTitleReadOnly}
-							style={this.state.propertiesTitleEditStyle}
-						/>
-					</div>
-					{propertiesTitleEdit}
-					{helpButton}
-				</div>);
+				propertiesTitle = (<TitleEditor
+					labelEditable={formData.labelEditable}
+					help={formData.help}
+					controller={this.propertiesController}
+					helpClickHandler={this.props.callbacks.helpClickHandler}
+				/>);
 				buttonsContainer = (<PropertiesButtons
 					okHandler={this.applyPropertiesEditing.bind(this, true)}
 					cancelHandler={cancelHandler}
@@ -290,7 +219,7 @@ class CommonProperties extends React.Component {
 				ref="editorForm"
 				key="editor-form-key"
 				controller={this.propertiesController}
-				additionalComponents={this.props.propertiesInfo.additionalComponents}
+				additionalComponents={this.propertiesInfo.additionalComponents}
 				showPropertiesButtons={this.showPropertiesButtons}
 				customPanels={this.props.customPanels}
 				rightFlyout={this.props.propertiesConfig.rightFlyout}
@@ -301,7 +230,7 @@ class CommonProperties extends React.Component {
 					applyLabel={applyLabel}
 					rejectLabel={rejectLabel}
 					bsSize={size}
-					title={this.state.title}
+					title={this.propertiesController.getTitle()}
 					okHandler={this.applyPropertiesEditing.bind(this, true)}
 					cancelHandler={cancelHandler}
 					showPropertiesButtons={this.state.showPropertiesButtons}
@@ -315,7 +244,7 @@ class CommonProperties extends React.Component {
 			} else { // Modal
 				propertiesDialog = (<PropertiesDialog
 					onHide={this.props.callbacks.closePropertiesDialog}
-					title={this.state.title}
+					title={this.propertiesController.getTitle()}
 					bsSize={size}
 					okHandler={this.applyPropertiesEditing.bind(this, true)}
 					cancelHandler={cancelHandler}

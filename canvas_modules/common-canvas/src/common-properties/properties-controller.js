@@ -152,7 +152,7 @@ export default class PropertiesController {
 		}
 	}
 
-	/*
+	/**
 	* Used to convert a propertyId to a propertyId that always has a row.
 	* Used in complex types that aren't tables and don't have rows.  Returns original
 	* propertyId or a propertyId where col is converted to row.  Used in messages and property values since they
@@ -350,7 +350,23 @@ export default class PropertiesController {
 		return this.visibleSubPanelCounter > 0;
 	}
 
-	/*
+	/**
+	* Returns title
+	*	@return string
+	*/
+	getTitle() {
+		return this.propertiesStore.getTitle();
+	}
+
+	/**
+	* Sets title for common-properties
+	*	@param title string
+	*/
+	setTitle(title) {
+		return this.propertiesStore.setTitle(title);
+	}
+
+	/**
 	* Returns datasetMetadata passed into common-properties
 	*	@return passed in value
 	*/
@@ -358,7 +374,7 @@ export default class PropertiesController {
 		return this.propertiesStore.getDatasetMetadata().schemas;
 	}
 
-	/*
+	/**
 	* Returns a list field objects.  Based on datasetMetadata passed int common-properties
 	*	@return array[field]
 	*/
@@ -394,6 +410,7 @@ export default class PropertiesController {
 	 * in use by other controls are already filtered out.
 	 *
 	 * @param propertyId Name of control to skip when checking field controls
+	 * @param fields array of available fields to be filtered
 	 * @return Filtered fields with fields in use removed
 	 */
 	_filterSharedDataset(propertyId, fields) {
@@ -706,16 +723,44 @@ export default class PropertiesController {
 		return this.propertiesStore.getPanelStates();
 	}
 
-	/*
+	/**
 	* Error Messages Methods
+	* @param messages object with keys being property name
 	*/
 	setErrorMessages(messages) {
 		this.propertiesStore.setErrorMessages(messages);
 	}
+
+	/**
+	*	Converts pipeline-flow error messages to messages common-properties can handle
+	* @param messages array of messages in pipeline-flow schema format
+	*/
+	setPipelineErrorMessages(messages) {
+		this.setErrorMessages({});
+		if (Array.isArray(messages)) {
+			messages.forEach((message) => {
+				this.updateErrorMessage({ name: message.id_ref },
+					{ type: message.type, text: message.text, validation_id: message.validation_id });
+			});
+		}
+	}
+
+	/**
+	* returns a single error message for a propertyId
+	* @param inPropertyId boolean
+	* @return error message object
+	*/
 	getErrorMessage(inPropertyId) {
 		const propertyId = this.convertPropertyId(inPropertyId);
 		return this.propertiesStore.getErrorMessage(propertyId);
 	}
+
+	/**
+	*	Used to return all error messages.  Will either return internally stored messages
+	* or formatted list to store in pipeline-flow
+	* @param filteredPipeline boolean
+	* @return object when filteredPipeline=false or array when filteredPipeline=true
+	*/
 	getErrorMessages(filteredPipeline) {
 		const messages = this.propertiesStore.getErrorMessages();
 		if (filteredPipeline) {

@@ -44,7 +44,7 @@ module.exports = function() {
 	});
 
 	this.Then(/^I verify the new title "([^"]*)"$/, function(newTitle) {
-		var lastEventLog = testUtils.getLastEventLogData();
+		const lastEventLog = testUtils.getLastLogOfType("applyPropertyChanges()");
 		expect(newTitle).toEqual((lastEventLog.data.title).toString());
 	});
 
