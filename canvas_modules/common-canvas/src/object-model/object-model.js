@@ -25,6 +25,7 @@ import indexOf from "lodash/indexOf";
 import uuid4 from "uuid/v4";
 import { validatePipelineFlowAgainstSchema, validatePaletteAgainstSchema } from "./schemas-utils/schema-validator.js";
 import { upgradePipelineFlow, extractVersion, LATEST_VERSION } from "./schemas-utils/upgrade-flow.js";
+import { upgradePalette, extractPaletteVersion, LATEST_PALETTE_VERSION } from "./schemas-utils/upgrade-palette.js";
 
 const nodes = (state = [], action) => {
 	switch (action.type) {
@@ -669,17 +670,23 @@ export default class ObjectModel {
 	// Deprecated  TODO - Remvove this method when WML Canvas migrates to setPipelineFlowPalette() method
 	setPaletteData(paletteData) {
 		var newPalData = CanvasInHandler.convertPaletteToPipelineFlowPalette(paletteData);
-		if (this.schemaValidation) {
-			validatePaletteAgainstSchema(newPalData);
-		}
 		this.store.dispatch({ type: "SET_PALETTE_DATA", data: newPalData });
 	}
 
 	setPipelineFlowPalette(paletteData) {
-		if (this.schemaValidation) {
-			validatePaletteAgainstSchema(paletteData);
+		if (!paletteData || isEmpty(paletteData)) {
+			this.store.dispatch({ type: "SET_PALETTE_DATA", data: {} });
+			return;
 		}
-		this.store.dispatch({ type: "SET_PALETTE_DATA", data: paletteData });
+		// TODO - this method is called by App.js test harness. Remove this check and
+		// code when we remove the x-* example palette files after WML Canvas migrates to use v2.0 palette.
+		if (CanvasInHandler.isVersion0Palette(paletteData)) {
+			this.setPaletteData(paletteData);
+			return;
+		}
+
+		const newPalData = this.validateAndUpgradePalette(paletteData);
+		this.store.dispatch({ type: "SET_PALETTE_DATA", data: newPalData });
 	}
 
 	getPaletteData() {
@@ -806,6 +813,26 @@ export default class ObjectModel {
 			}
 		}
 		return pipelineFlow;
+	}
+
+	validateAndUpgradePalette(newPalette) {
+		// Clone the palette to ensure we don't modify the incoming parameter.
+		let pal = JSON.parse(JSON.stringify(newPalette));
+
+		const version = extractPaletteVersion(pal);
+
+		if (this.schemaValidation) {
+			validatePaletteAgainstSchema(pal, version);
+		}
+
+		if (version !== LATEST_PALETTE_VERSION) {
+			pal = upgradePalette(pal);
+
+			if (this.schemaValidation) {
+				validatePaletteAgainstSchema(pal, LATEST_PALETTE_VERSION);
+			}
+		}
+		return pal;
 	}
 
 	setEmptyPipelineFlow() {

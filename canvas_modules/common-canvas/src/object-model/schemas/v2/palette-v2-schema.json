@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
   "description": "Common Canvas palette schema",
-  "id": "http://www.ibm.com/ibm/wdp/canvas/v2.0/palette-v2-schema.json#",
+  "id": "http://www.ibm.com/ibm/wdp/canvas/v2.0/palette-v2-schema.json",
   "version": {
     "description": "Palette schema version",
     "enum": [

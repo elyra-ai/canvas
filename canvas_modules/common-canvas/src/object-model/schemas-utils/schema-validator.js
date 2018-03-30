@@ -18,7 +18,7 @@ import pipelineFlowV2Schema from "../schemas/v2/pipeline-flow-v2-schema.json";
 import pipelineFlowUIV2Schema from "../schemas/v2/pipeline-flow-ui-v2-schema.json";
 import pipelineConnectionV2Schema from "../schemas/v2/pipeline-connection-v2-schema.json";
 import dataRecordMetadataV2Schema from "../schemas/v2/datarecord-metadata-v2-schema.json";
-// import paletteV2Schema from "./schemas/v2/palette-v2-schema.json";
+import paletteV2Schema from "../schemas/v2/palette-v2-schema.json";
 
 var SchemaValidator = require("jsonschema").Validator;
 var validator1 = new SchemaValidator();
@@ -51,8 +51,16 @@ function validatePipelineFlowAgainstSchema(pipelineFlow, version) {
 	}
 }
 
-function validatePaletteAgainstSchema(paletteData) {
-	validateAgainstSchema(paletteData, paletteV1Schema, "palette", new SchemaValidator());
+function validatePaletteAgainstSchema(paletteData, version) {
+	switch (version) {
+	case 1:
+		validateAgainstSchema(paletteData, paletteV1Schema, "palette", new SchemaValidator());
+		break;
+	case 2:
+	default:
+		validateAgainstSchema(paletteData, paletteV2Schema, "palette", new SchemaValidator());
+	}
+
 }
 
 // Validates the data provided, against the schema provided, using the validator

@@ -176,6 +176,7 @@ export default class CanvasInHandler {
 
 	static convertPaletteToPipelineFlowPalette(canvasPalette) {
 		return {
+			version: "2.0",
 			categories: this.getCategories(canvasPalette.categories)
 		};
 	}
@@ -185,6 +186,7 @@ export default class CanvasInHandler {
 			({
 				category: cat.category,
 				label: cat.label,
+				image: cat.image,
 				nodetypes: this.convertNodeTypes(cat.nodetypes)
 			})
 		);
@@ -225,4 +227,20 @@ export default class CanvasInHandler {
 		};
 	}
 
+	// ==========================================================================
+	// Functions below are for detecting if the palette data is version 0 or not.
+	// ==========================================================================
+
+	static isVersion0Palette(palette) {
+		let isVersion0Palette = true;
+
+		for (let idx = 0; idx < palette.categories.length; idx++) {
+			if (palette.categories[idx].nodetypes.length > 0 &&
+					palette.categories[idx].nodetypes[0].operator_id_ref) {
+				isVersion0Palette = false;
+				break;
+			}
+		}
+		return isVersion0Palette;
+	}
 }
