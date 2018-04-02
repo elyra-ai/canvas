@@ -208,7 +208,7 @@ module.exports = function() {
 
 		const checkpointIntervalTextBoxTest = browser.$("#editor-control-checkpointInterval");
 		checkpointIntervalTextBoxTest.setValue("", 0);
-		var errormessage1 = browser.$$(".editor_control_area")[1]
+		var errormessage1 = browser.$$(".editor_control_area")[0]
 			.$(".validation-error-message")
 			.$("span")
 			.getText();

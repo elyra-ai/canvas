@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
-import FieldAllocatorControl from "../../../src/common-properties/editor-controls/field-allocator-control.jsx";
+import OneofselectControl from "../../../src/common-properties/editor-controls/oneofselect-control.jsx";
 import { mount } from "enzyme";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
@@ -84,7 +84,7 @@ describe("selectcolumn control renders correctly", () => {
 
 	it("props should have been defined", () => {
 		const wrapper = mount(
-			<FieldAllocatorControl
+			<OneofselectControl
 				control={control}
 				fields={fields}
 				propertyId={propertyId}
@@ -103,7 +103,7 @@ describe("selectcolumn control renders correctly", () => {
 			{ "targetField": null }
 		);
 		const wrapper = mount(
-			<FieldAllocatorControl
+			<OneofselectControl
 				control={control}
 				fields={emptyfields}
 				propertyId={propertyId}
@@ -117,7 +117,7 @@ describe("selectcolumn control renders correctly", () => {
 	it("should render a empty selectcolumn and update the dropdown value", () => {
 		setPropertyValue();
 		const wrapper = mount(
-			<FieldAllocatorControl
+			<OneofselectControl
 				control={control}
 				fields={emptyfields}
 				propertyId={propertyId}
@@ -134,7 +134,7 @@ describe("selectcolumn control renders correctly", () => {
 	it("should allow empty string to be set as valid field in control", () => {
 		setPropertyValue();
 		const wrapper = mount(
-			<FieldAllocatorControl
+			<OneofselectControl
 				control={control}
 				fields={emptyfields}
 				propertyId={propertyId}

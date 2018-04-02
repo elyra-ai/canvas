@@ -29,6 +29,7 @@ export default class OneofselectControl extends EditorControl {
 		this.genSchemaSelectOptions = this.genSchemaSelectOptions.bind(this);
 		this.genSelectOptions = this.genSelectOptions.bind(this);
 		this.onBlur = this.onBlur.bind(this);
+		this.genFieldSelectOptions = this.genFieldSelectOptions.bind(this);
 	}
 
 	componentDidMount() {
@@ -91,15 +92,14 @@ export default class OneofselectControl extends EditorControl {
 		if (this.props.rightFlyout) {
 			// dropdown control is in wide-flyout
 			if (document.querySelector(".rightside-modal-container") !== null) {
-				const modalRect = document.querySelector(".rightside-modal-container").getBoundingClientRect();
-				topPos = dropdownRect.bottom - modalRect.top;
+				topPos = dropdownRect.bottom;
 			} else { // dropdown control is in flyout, not within the wide-flyout
+				topPos = String(dropdownRect.top + dropdownRect.height);
 				let tableParent = false;
 				let elem = me.parentElement;
 				while (!tableParent) {
 					if (elem.parentElement.id && elem.parentElement.id === "flexible-table-container") {
-						// dropdown control is in flyout as a standalone control, outside a table
-						topPos += 50;
+						// dropdown control is in flyout inside a table
 						tableParent = true;
 					}
 					elem = elem.parentElement;
@@ -107,7 +107,6 @@ export default class OneofselectControl extends EditorControl {
 						break;
 					}
 				}
-
 				// dropdown control is not in table
 				if (!tableParent) {
 					topPos = null;
@@ -121,6 +120,17 @@ export default class OneofselectControl extends EditorControl {
 				const modalRect = modal.getBoundingClientRect();
 				topPos -= modalRect.top;
 			}
+		}
+		// Ensure that the menu is not clipped at the bottom
+		const menuHeight = document.querySelector(".Dropdown-menu").getBoundingClientRect().height;
+		const maxBottom = window.innerHeight;
+		let numericTop = parseFloat(topPos);
+		if (Number.isNaN(numericTop)) {
+			numericTop = 0;
+		}
+		if (numericTop + menuHeight > maxBottom) {
+			numericTop -= Math.max(numericTop + menuHeight - maxBottom, 0);
+			topPos = String(numericTop);
 		}
 		return topPos;
 	}
@@ -140,6 +150,26 @@ export default class OneofselectControl extends EditorControl {
 					label: schemaName
 				});
 			}
+		}
+		const selectedOption = this.getSelectedOption(options, selectedValue);
+		return {
+			options: options,
+			selectedOption: selectedOption
+		};
+	}
+
+	genFieldSelectOptions(selectedValue) {
+		const options = [];
+		// allow for user to not select a field
+		options.push({
+			value: "",
+			label: this.emptyLabel
+		});
+		for (const field of this.props.fields) {
+			options.push({
+				value: field.name,
+				label: field.name
+			});
 		}
 		const selectedOption = this.getSelectedOption(options, selectedValue);
 		return {
@@ -197,6 +227,8 @@ export default class OneofselectControl extends EditorControl {
 		let dropDown;
 		if (this.props.control.controlType === ControlType.SELECTSCHEMA) {
 			dropDown = this.genSchemaSelectOptions(controlValue);
+		} else if (this.props.control.controlType === ControlType.SELECTCOLUMN) {
+			dropDown = this.genFieldSelectOptions(controlValue);
 		} else {
 			dropDown = this.genSelectOptions(controlValue);
 		}
@@ -230,5 +262,6 @@ OneofselectControl.propTypes = {
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
 	tableControl: PropTypes.bool,
-	rightFlyout: PropTypes.bool
+	rightFlyout: PropTypes.bool,
+	fields: PropTypes.array
 };

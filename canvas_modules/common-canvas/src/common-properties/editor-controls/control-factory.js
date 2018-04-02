@@ -32,7 +32,6 @@ import OneofselectControl from "./oneofselect-control.jsx";
 import SomeofselectControl from "./someofselect-control.jsx";
 import OneofcolumnsControl from "./oneofcolumns-control.jsx";
 import SomeofcolumnsControl from "./someofcolumns-control.jsx";
-import FieldAllocatorControl from "./field-allocator-control.jsx";
 import ColumnSelectControl from "./column-select-control.jsx";
 import ColumnStructureTableControl from "./column-structure-table-control.jsx";
 import StructureeditorControl from "./structureeditor-control.jsx";
@@ -216,6 +215,12 @@ export default class ControlFactory {
 				{...props}
 				rightFlyout={this.rightFlyout}
 			/>);
+		} else if (control.controlType === ControlType.SELECTCOLUMN && !tableInfo) {
+			return (<OneofselectControl
+				{...props}
+				rightFlyout={this.rightFlyout}
+				fields={this.controller.getFilteredDatasetMetadata(propertyId)}
+			/>);
 		} else if (control.controlType === ControlType.SOMEOFSELECT && !tableInfo) {
 			return (<SomeofselectControl {...props} />);
 		} else if (control.controlType === ControlType.ONEOFCOLUMNS && !tableInfo) {
@@ -225,11 +230,6 @@ export default class ControlFactory {
 			/>);
 		} else if (control.controlType === ControlType.SOMEOFCOLUMNS && !tableInfo) {
 			return (<SomeofcolumnsControl
-				{...props}
-				fields={this.controller.getFilteredDatasetMetadata(propertyId)}
-			/>);
-		} else if (control.controlType === ControlType.SELECTCOLUMN && !tableInfo) {
-			return (<FieldAllocatorControl
 				{...props}
 				fields={this.controller.getFilteredDatasetMetadata(propertyId)}
 			/>);
