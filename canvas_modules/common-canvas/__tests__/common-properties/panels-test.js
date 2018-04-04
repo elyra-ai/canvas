@@ -50,12 +50,13 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getControlState({ name: "textfield3" })).to.equal("enabled");
 
 		expect(controller.getPanelState({ name: "Level1" })).to.be.null;
+
 		expect(controller.getPanelState({ name: "Level2" })).to.equal("enabled");
 		expect(controller.getPanelState({ name: "Level3" })).to.equal("enabled");
 
-		expect(controller.getPanelState({ name: "level1" })).to.equal("visible");
-		expect(controller.getPanelState({ name: "level2" })).to.equal("visible");
-		expect(controller.getPanelState({ name: "level3" })).to.equal("visible");
+		expect(controller.getPanelState({ name: "level1" })).to.equal("enabled");
+		expect(controller.getPanelState({ name: "level2" })).to.equal("enabled");
+		expect(controller.getPanelState({ name: "level3" })).to.equal("enabled");
 
 		expect(controller.getPanelState({ name: "level2buttons" })).to.equal("enabled");
 		expect(controller.getPanelState({ name: "level3control" })).to.equal("enabled");
@@ -145,7 +146,7 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getPanelState({ name: "Level2" })).to.equal("enabled");
 		expect(controller.getPanelState({ name: "Level3" })).to.equal("disabled");
 
-		expect(controller.getPanelState({ name: "level1" })).to.equal("visible");
+		expect(controller.getPanelState({ name: "level1" })).to.equal("enabled");
 		expect(controller.getPanelState({ name: "level2" })).to.equal("disabled");
 		expect(controller.getPanelState({ name: "level3" })).to.equal("disabled");
 
@@ -178,7 +179,7 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getPanelState({ name: "Level2" })).to.equal("enabled");
 		expect(controller.getPanelState({ name: "Level3" })).to.equal("hidden");
 
-		expect(controller.getPanelState({ name: "level1" })).to.equal("visible");
+		expect(controller.getPanelState({ name: "level1" })).to.equal("enabled");
 		expect(controller.getPanelState({ name: "level2" })).to.equal("hidden");
 		expect(controller.getPanelState({ name: "level3" })).to.equal("hidden");
 
@@ -212,8 +213,8 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getPanelState({ name: "Level2" })).to.equal("enabled");
 		expect(controller.getPanelState({ name: "Level3" })).to.equal("enabled");
 
-		expect(controller.getPanelState({ name: "level1" })).to.equal("visible");
-		expect(controller.getPanelState({ name: "level2" })).to.equal("visible");
+		expect(controller.getPanelState({ name: "level1" })).to.equal("enabled");
+		expect(controller.getPanelState({ name: "level2" })).to.equal("enabled");
 		expect(controller.getPanelState({ name: "level3" })).to.equal("disabled");
 
 		expect(controller.getPanelState({ name: "level2buttons" })).to.equal("enabled");
@@ -245,8 +246,8 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getPanelState({ name: "Level2" })).to.equal("enabled");
 		expect(controller.getPanelState({ name: "Level3" })).to.equal("enabled");
 
-		expect(controller.getPanelState({ name: "level1" })).to.equal("visible");
-		expect(controller.getPanelState({ name: "level2" })).to.equal("visible");
+		expect(controller.getPanelState({ name: "level1" })).to.equal("enabled");
+		expect(controller.getPanelState({ name: "level2" })).to.equal("enabled");
 		expect(controller.getPanelState({ name: "level3" })).to.equal("hidden");
 
 		expect(controller.getPanelState({ name: "level2buttons" })).to.equal("enabled");
@@ -281,8 +282,8 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getPanelState({ name: "Level2" })).to.equal("enabled");
 		expect(controller.getPanelState({ name: "Level3" })).to.equal("enabled");
 
-		expect(controller.getPanelState({ name: "level1" })).to.equal("visible");
-		expect(controller.getPanelState({ name: "level2" })).to.equal("visible");
+		expect(controller.getPanelState({ name: "level1" })).to.equal("enabled");
+		expect(controller.getPanelState({ name: "level2" })).to.equal("enabled");
 		expect(controller.getPanelState({ name: "level3" })).to.equal("disabled");
 
 		expect(controller.getPanelState({ name: "level2buttons" })).to.equal("enabled");
@@ -306,7 +307,7 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getPanelState({ name: "Level2" })).to.equal("enabled");
 		expect(controller.getPanelState({ name: "Level3" })).to.equal("disabled");
 
-		expect(controller.getPanelState({ name: "level1" })).to.equal("visible");
+		expect(controller.getPanelState({ name: "level1" })).to.equal("enabled");
 		expect(controller.getPanelState({ name: "level2" })).to.equal("disabled");
 		expect(controller.getPanelState({ name: "level3" })).to.equal("disabled");
 
@@ -396,8 +397,8 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getPanelState({ name: "Level2" })).to.equal("enabled");
 		expect(controller.getPanelState({ name: "Level3" })).to.equal("enabled");
 
-		expect(controller.getPanelState({ name: "level1" })).to.equal("visible");
-		expect(controller.getPanelState({ name: "level2" })).to.equal("visible");
+		expect(controller.getPanelState({ name: "level1" })).to.equal("enabled");
+		expect(controller.getPanelState({ name: "level2" })).to.equal("enabled");
 		expect(controller.getPanelState({ name: "level3" })).to.equal("hidden");
 
 		expect(controller.getPanelState({ name: "level2buttons" })).to.equal("enabled");
@@ -421,7 +422,7 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getPanelState({ name: "Level2" })).to.equal("enabled");
 		expect(controller.getPanelState({ name: "Level3" })).to.equal("hidden");
 
-		expect(controller.getPanelState({ name: "level1" })).to.equal("visible");
+		expect(controller.getPanelState({ name: "level1" })).to.equal("enabled");
 		expect(controller.getPanelState({ name: "level2" })).to.equal("hidden");
 		expect(controller.getPanelState({ name: "level3" })).to.equal("hidden");
 
@@ -464,9 +465,9 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getControlState({ name: "disablePanelLevel1" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "hidePanelLevel1" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "disablePanelLevel2" })).to.equal("enabled");
-		expect(controller.getControlState({ name: "hidePanelLevel2" })).to.equal("visible");
+		expect(controller.getControlState({ name: "hidePanelLevel2" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "disablePanelLevel3" })).to.equal("disabled");
-		expect(controller.getControlState({ name: "hidePanelLevel3" })).to.equal("visible");
+		expect(controller.getControlState({ name: "hidePanelLevel3" })).to.equal("enabled");
 
 		expect(controller.getControlState({ name: "textfield1" })).to.equal("visible");
 		expect(controller.getControlState({ name: "textfield2" })).to.equal("visible");
@@ -513,8 +514,8 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getPanelState({ name: "Level2" })).to.equal("enabled");
 		expect(controller.getPanelState({ name: "Level3" })).to.equal("enabled");
 
-		expect(controller.getPanelState({ name: "level1" })).to.equal("visible");
-		expect(controller.getPanelState({ name: "level2" })).to.equal("visible");
+		expect(controller.getPanelState({ name: "level1" })).to.equal("enabled");
+		expect(controller.getPanelState({ name: "level2" })).to.equal("enabled");
 		expect(controller.getPanelState({ name: "level3" })).to.equal("disabled");
 
 		expect(controller.getPanelState({ name: "level2buttons" })).to.equal("enabled");
@@ -537,12 +538,12 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getPanelState({ name: "Level2" })).to.equal("enabled");
 		expect(controller.getPanelState({ name: "Level3" })).to.equal("hidden");
 
-		expect(controller.getPanelState({ name: "level1" })).to.equal("visible");
+		expect(controller.getPanelState({ name: "level1" })).to.equal("enabled");
 		expect(controller.getPanelState({ name: "level2" })).to.equal("hidden");
-		expect(controller.getPanelState({ name: "level3" })).to.equal("disabled"); // should be hidden
+		expect(controller.getPanelState({ name: "level3" })).to.equal("hidden"); // should be hidden
 
 		expect(controller.getPanelState({ name: "level2buttons" })).to.equal("enabled");
-		expect(controller.getPanelState({ name: "level3control" })).to.equal("disabled"); // should be hidden
+		expect(controller.getPanelState({ name: "level3control" })).to.equal("hidden"); // should be hidden
 
 		// disable level1
 		lvl1DisabledCheckbox.simulate("change", { target: { checked: true } });
@@ -563,10 +564,10 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 
 		expect(controller.getPanelState({ name: "level1" })).to.equal("disabled");
 		expect(controller.getPanelState({ name: "level2" })).to.equal("hidden");
-		expect(controller.getPanelState({ name: "level3" })).to.equal("disabled");
+		expect(controller.getPanelState({ name: "level3" })).to.equal("hidden");
 
 		expect(controller.getPanelState({ name: "level2buttons" })).to.equal("disabled");
-		expect(controller.getPanelState({ name: "level3control" })).to.equal("disabled");
+		expect(controller.getPanelState({ name: "level3control" })).to.equal("hidden");
 
 		expect(lvl2HiddenCheckbox.props().checked).to.be.true;
 		expect(lvl3DisabledCheckbox.props().checked).to.be.true;
@@ -590,10 +591,10 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 
 		expect(controller.getPanelState({ name: "level1" })).to.equal("enabled");
 		expect(controller.getPanelState({ name: "level2" })).to.equal("hidden");
-		expect(controller.getPanelState({ name: "level3" })).to.equal("disabled");
+		expect(controller.getPanelState({ name: "level3" })).to.equal("hidden");
 
 		expect(controller.getPanelState({ name: "level2buttons" })).to.equal("enabled");
-		expect(controller.getPanelState({ name: "level3control" })).to.equal("disabled");
+		expect(controller.getPanelState({ name: "level3control" })).to.equal("hidden");
 
 		expect(lvl2HiddenCheckbox.props().checked).to.be.true;
 		expect(lvl3DisabledCheckbox.props().checked).to.be.true;
@@ -604,7 +605,7 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getControlState({ name: "hidePanelLevel1" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "disablePanelLevel2" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "hidePanelLevel2" })).to.equal("enabled");
-		expect(controller.getControlState({ name: "disablePanelLevel3" })).to.equal("visible");
+		expect(controller.getControlState({ name: "disablePanelLevel3" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "hidePanelLevel3" })).to.equal("disabled");
 
 		expect(controller.getControlState({ name: "textfield1" })).to.equal("visible");
@@ -630,7 +631,7 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getControlState({ name: "hidePanelLevel1" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "disablePanelLevel2" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "hidePanelLevel2" })).to.equal("enabled");
-		expect(controller.getControlState({ name: "disablePanelLevel3" })).to.equal("visible");
+		expect(controller.getControlState({ name: "disablePanelLevel3" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "hidePanelLevel3" })).to.equal("enabled");
 
 		expect(controller.getControlState({ name: "textfield1" })).to.equal("visible");
@@ -673,8 +674,8 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getPanelState({ name: "Level2" })).to.equal("enabled");
 		expect(controller.getPanelState({ name: "Level3" })).to.equal("enabled");
 
-		expect(controller.getPanelState({ name: "level1" })).to.equal("visible");
-		expect(controller.getPanelState({ name: "level2" })).to.equal("visible");
+		expect(controller.getPanelState({ name: "level1" })).to.equal("enabled");
+		expect(controller.getPanelState({ name: "level2" })).to.equal("enabled");
 		expect(controller.getPanelState({ name: "level3" })).to.equal("hidden");
 
 		expect(controller.getPanelState({ name: "level2buttons" })).to.equal("enabled");
@@ -697,7 +698,7 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		expect(controller.getPanelState({ name: "Level2" })).to.equal("enabled");
 		expect(controller.getPanelState({ name: "Level3" })).to.equal("disabled");
 
-		expect(controller.getPanelState({ name: "level1" })).to.equal("visible");
+		expect(controller.getPanelState({ name: "level1" })).to.equal("enabled");
 		expect(controller.getPanelState({ name: "level2" })).to.equal("disabled");
 		expect(controller.getPanelState({ name: "level3" })).to.equal("hidden");
 
@@ -719,11 +720,10 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 
 		expect(controller.getPanelState({ name: "Level1" })).to.be.null;
 		expect(controller.getPanelState({ name: "Level2" })).to.equal("hidden");
-		// TODO: bug, uncomment after https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/1261 is fixed
-		// expect(controller.getPanelState({ name: "Level3" })).to.equal("hidden");
+		expect(controller.getPanelState({ name: "Level3" })).to.equal("hidden");
 
 		expect(controller.getPanelState({ name: "level1" })).to.equal("hidden");
-		expect(controller.getPanelState({ name: "level2" })).to.equal("disabled");
+		expect(controller.getPanelState({ name: "level2" })).to.equal("hidden");
 		expect(controller.getPanelState({ name: "level3" })).to.equal("hidden");
 
 		expect(controller.getPanelState({ name: "level2buttons" })).to.equal("hidden");
@@ -733,11 +733,10 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		lvl1HiddenCheckbox.simulate("change", { target: { checked: false } });
 		expect(controller.getControlState({ name: "disablePanelLevel1" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "hidePanelLevel1" })).to.equal("enabled");
-		expect(controller.getControlState({ name: "disablePanelLevel2" })).to.equal("visible");
+		expect(controller.getControlState({ name: "disablePanelLevel2" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "hidePanelLevel2" })).to.equal("disabled");
 		expect(controller.getControlState({ name: "disablePanelLevel3" })).to.equal("disabled");
-		// TODO: bug, uncomment after https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/issues/1261 is fixed
-		// expect(controller.getControlState({ name: "hidePanelLevel3" })).to.equal("disabled");
+		expect(controller.getControlState({ name: "hidePanelLevel3" })).to.equal("disabled");
 
 		expect(controller.getControlState({ name: "textfield1" })).to.equal("disabled");
 		expect(controller.getControlState({ name: "textfield2" })).to.equal("disabled");
@@ -758,7 +757,7 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		lvl2DisabledCheckbox.simulate("change", { target: { checked: false } });
 		expect(controller.getControlState({ name: "disablePanelLevel1" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "hidePanelLevel1" })).to.equal("enabled");
-		expect(controller.getControlState({ name: "disablePanelLevel2" })).to.equal("visible");
+		expect(controller.getControlState({ name: "disablePanelLevel2" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "hidePanelLevel2" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "disablePanelLevel3" })).to.equal("disabled");
 		expect(controller.getControlState({ name: "hidePanelLevel3" })).to.equal("enabled");
@@ -782,7 +781,7 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 		lvl3HiddenCheckbox.simulate("change", { target: { checked: false } });
 		expect(controller.getControlState({ name: "disablePanelLevel1" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "hidePanelLevel1" })).to.equal("enabled");
-		expect(controller.getControlState({ name: "disablePanelLevel2" })).to.equal("visible");
+		expect(controller.getControlState({ name: "disablePanelLevel2" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "hidePanelLevel2" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "disablePanelLevel3" })).to.equal("enabled");
 		expect(controller.getControlState({ name: "hidePanelLevel3" })).to.equal("enabled");
@@ -801,5 +800,137 @@ describe("nested panels visible and enabled conditions work correctly", () => {
 
 		expect(controller.getPanelState({ name: "level2buttons" })).to.equal("visible");
 		expect(controller.getPanelState({ name: "level3control" })).to.equal("visible");
+	});
+});
+describe("complex nested panels visible and enabled conditions work correctly", () => {
+	let wrapper;
+	let category;
+	let controller;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(panelConditionsParamDef);
+		wrapper = renderedObject.wrapper;
+		category = wrapper.find(".category-title-container-right-flyout-panel").at(6); // PANElS WITHIN PANELS (2) category
+		controller = renderedObject.controller;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("Init properties at disable hide and disable different levels of panels", () => {
+		const checkboxes = category.find("input[type='checkbox']");
+		expect(checkboxes).to.have.length(6);
+
+		const lvl1DisabledCheckbox = checkboxes.at(0);
+		const lvl2HiddenCheckbox = checkboxes.at(3);
+		const lvl3DisabledCheckbox = checkboxes.at(4);
+
+		// the initial state at load is disable, hide disable.
+		// verify that all conditions are at that state.
+		expect(lvl1DisabledCheckbox.props().checked).to.equal(true);
+		expect(lvl2HiddenCheckbox.props().checked).to.equal(true);
+		expect(lvl3DisabledCheckbox.props().checked).to.equal(true);
+
+		expect(controller.getControlState({ name: "disableInit1PanelLevel1" })).to.equal("enabled");
+		expect(controller.getControlState({ name: "hideInit1PanelLevel1" })).to.equal("disabled");
+		expect(controller.getControlState({ name: "disableInit1PanelLevel2" })).to.equal("disabled");
+		expect(controller.getControlState({ name: "hideInit1PanelLevel2" })).to.equal("disabled");
+		expect(controller.getControlState({ name: "disableInit1PanelLevel3" })).to.equal("hidden");
+		expect(controller.getControlState({ name: "hideInit1PanelLevel3" })).to.equal("hidden");
+
+		expect(controller.getControlState({ name: "textfieldInit11" })).to.equal("hidden");
+		expect(controller.getControlState({ name: "textfieldInit12" })).to.equal("hidden");
+		expect(controller.getControlState({ name: "textfieldInit13" })).to.equal("hidden");
+
+		expect(controller.getPanelState({ name: "init1Level1" })).to.be.null;
+		expect(controller.getPanelState({ name: "init1Level2" })).to.equal("disabled");
+		expect(controller.getPanelState({ name: "init1Level3" })).to.equal("hidden");
+
+		expect(controller.getPanelState({ name: "init1level1" })).to.equal("disabled");
+		expect(controller.getPanelState({ name: "init1level2" })).to.equal("hidden");
+		expect(controller.getPanelState({ name: "init1level3" })).to.equal("hidden");
+
+		expect(controller.getPanelState({ name: "init1level2buttons" })).to.equal("disabled");
+		expect(controller.getPanelState({ name: "init1level3control" })).to.equal("hidden");
+
+		expect(lvl2HiddenCheckbox.props().checked).to.be.true;
+		expect(lvl3DisabledCheckbox.props().checked).to.be.true;
+
+		// ensure mid level still hidden even when top level is enabled
+		lvl1DisabledCheckbox.simulate("change", { target: { checked: false } });
+		expect(controller.getControlState({ name: "disableInit1PanelLevel1" })).to.equal("enabled");
+		expect(controller.getControlState({ name: "hideInit1PanelLevel1" })).to.equal("enabled");
+		expect(controller.getControlState({ name: "disableInit1PanelLevel2" })).to.equal("disabled");
+		expect(controller.getControlState({ name: "hideInit1PanelLevel2" })).to.equal("enabled");
+		expect(controller.getControlState({ name: "disableInit1PanelLevel3" })).to.equal("hidden");
+		expect(controller.getControlState({ name: "hideInit1PanelLevel3" })).to.equal("hidden");
+
+		expect(controller.getControlState({ name: "textfieldInit11" })).to.equal("hidden");
+		expect(controller.getControlState({ name: "textfieldInit12" })).to.equal("hidden");
+		expect(controller.getControlState({ name: "textfieldInit13" })).to.equal("hidden");
+
+		expect(controller.getPanelState({ name: "init1Level1" })).to.be.null;
+		expect(controller.getPanelState({ name: "init1Level2" })).to.equal("enabled");
+		expect(controller.getPanelState({ name: "init1Level3" })).to.equal("hidden");
+
+		expect(controller.getPanelState({ name: "init1level1" })).to.equal("enabled");
+		expect(controller.getPanelState({ name: "init1level2" })).to.equal("hidden");
+		expect(controller.getPanelState({ name: "init1level3" })).to.equal("hidden");
+
+		expect(controller.getPanelState({ name: "init1level2buttons" })).to.equal("enabled");
+		expect(controller.getPanelState({ name: "init1level3control" })).to.equal("hidden");
+
+		expect(lvl2HiddenCheckbox.props().checked).to.be.true;
+		expect(lvl3DisabledCheckbox.props().checked).to.be.true;
+
+		// ensure mid level is visible after enabling mid level
+		lvl2HiddenCheckbox.simulate("change", { target: { checked: false } });
+		expect(controller.getControlState({ name: "disableInit1PanelLevel1" })).to.equal("enabled");
+		expect(controller.getControlState({ name: "hideInit1PanelLevel1" })).to.equal("enabled");
+		expect(controller.getControlState({ name: "disableInit1PanelLevel2" })).to.equal("enabled");
+		expect(controller.getControlState({ name: "hideInit1PanelLevel2" })).to.equal("enabled");
+		expect(controller.getControlState({ name: "disableInit1PanelLevel3" })).to.equal("enabled");
+		expect(controller.getControlState({ name: "hideInit1PanelLevel3" })).to.equal("disabled");
+
+		expect(controller.getControlState({ name: "textfieldInit11" })).to.equal("visible");
+		expect(controller.getControlState({ name: "textfieldInit12" })).to.equal("visible");
+		expect(controller.getControlState({ name: "textfieldInit13" })).to.equal("disabled");
+
+		expect(controller.getPanelState({ name: "init1Level1" })).to.be.null;
+		expect(controller.getPanelState({ name: "init1Level2" })).to.equal("enabled");
+		expect(controller.getPanelState({ name: "init1Level3" })).to.equal("visible");
+
+		expect(controller.getPanelState({ name: "init1level1" })).to.equal("enabled");
+		expect(controller.getPanelState({ name: "init1level2" })).to.equal("visible");
+		expect(controller.getPanelState({ name: "init1level3" })).to.equal("disabled");
+
+		expect(controller.getPanelState({ name: "init1level2buttons" })).to.equal("enabled");
+		expect(controller.getPanelState({ name: "init1level3control" })).to.equal("disabled");
+
+		expect(lvl3DisabledCheckbox.props().checked).to.be.true;
+
+		// ensure all are enabled after enabling lower level
+		lvl3DisabledCheckbox.simulate("change", { target: { checked: false } });
+		expect(controller.getControlState({ name: "disableInit1PanelLevel1" })).to.equal("enabled");
+		expect(controller.getControlState({ name: "hideInit1PanelLevel1" })).to.equal("enabled");
+		expect(controller.getControlState({ name: "disableInit1PanelLevel2" })).to.equal("enabled");
+		expect(controller.getControlState({ name: "hideInit1PanelLevel2" })).to.equal("enabled");
+		expect(controller.getControlState({ name: "disableInit1PanelLevel3" })).to.equal("enabled");
+		expect(controller.getControlState({ name: "hideInit1PanelLevel3" })).to.equal("enabled");
+
+		expect(controller.getControlState({ name: "textfieldInit11" })).to.equal("visible");
+		expect(controller.getControlState({ name: "textfieldInit12" })).to.equal("visible");
+		expect(controller.getControlState({ name: "textfieldInit13" })).to.equal("enabled");
+
+		expect(controller.getPanelState({ name: "init1Level1" })).to.be.null;
+		expect(controller.getPanelState({ name: "init1Level2" })).to.equal("enabled");
+		expect(controller.getPanelState({ name: "init1Level3" })).to.equal("visible");
+
+		expect(controller.getPanelState({ name: "init1level1" })).to.equal("enabled");
+		expect(controller.getPanelState({ name: "init1level2" })).to.equal("visible");
+		expect(controller.getPanelState({ name: "init1level3" })).to.equal("enabled");
+
+		expect(controller.getPanelState({ name: "init1level2buttons" })).to.equal("enabled");
+		expect(controller.getPanelState({ name: "init1level3control" })).to.equal("enabled");
 	});
 });

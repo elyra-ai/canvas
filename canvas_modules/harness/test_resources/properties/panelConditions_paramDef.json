@@ -61,7 +61,16 @@
     "textfield2": 2,
     "disablePanelLevel3": false,
     "hidePanelLevel3": false,
-    "textfield3": 3
+    "textfield3": 3,
+    "disableInit1PanelLevel1": true,
+    "hideInit1PanelLevel1": false,
+    "disableInit1PanelLevel2": false,
+    "hideInit1PanelLevel2": true,
+    "disableInit1PanelLevel3": true,
+    "hideInit1PanelLevel3": false,
+    "textfieldInit11": 1,
+    "textfieldInit12": 2,
+    "textfieldInit13": 3
   },
   "parameters": [
     {
@@ -217,6 +226,45 @@
     },
     {
       "id": "textfield3",
+      "type": "string",
+      "role": "new_column"
+    },
+    {
+      "id": "disableInit1PanelLevel1",
+      "type": "boolean"
+    },
+    {
+      "id": "hideInit1PanelLevel1",
+      "type": "boolean"
+    },
+    {
+      "id": "disableInit1PanelLevel2",
+      "type": "boolean"
+    },
+    {
+      "id": "hideInit1PanelLevel2",
+      "type": "boolean"
+    },
+    {
+      "id": "disableInit1PanelLevel3",
+      "type": "boolean"
+    },
+    {
+      "id": "hideInit1PanelLevel3",
+      "type": "boolean"
+    },
+    {
+      "id": "textfieldInit11",
+      "type": "string",
+      "role": "new_column"
+    },
+    {
+      "id": "textfieldInit12",
+      "type": "string",
+      "role": "new_column"
+    },
+    {
+      "id": "textfieldInit13",
       "type": "string",
       "role": "new_column"
     }
@@ -547,6 +595,78 @@
         "label": {
           "default": "textfield3"
         }
+      },
+      {
+        "parameter_ref": "disableInit1PanelLevel1",
+        "label": {
+          "default": "Disable 'Level1' panel"
+        },
+        "description": {
+          "default": "Disable 'Level1' panel"
+        }
+      },
+      {
+        "parameter_ref": "hideInit1PanelLevel1",
+        "label": {
+          "default": "Hide 'Level1' panel"
+        },
+        "description": {
+          "default": "Hide 'Level1' panel"
+        }
+      },
+      {
+        "parameter_ref": "disableInit1PanelLevel2",
+        "label": {
+          "default": "Disable 'Level2' panel"
+        },
+        "description": {
+          "default": "Disable 'Level2' panel"
+        }
+      },
+      {
+        "parameter_ref": "hideInit1PanelLevel2",
+        "label": {
+          "default": "Hide 'Level2' panel"
+        },
+        "description": {
+          "default": "Hide 'Level2' panel"
+        }
+      },
+      {
+        "parameter_ref": "disableInit1PanelLevel3",
+        "label": {
+          "default": "Disable 'Level3' panel"
+        },
+        "description": {
+          "default": "Disable 'Level3' panel"
+        }
+      },
+      {
+        "parameter_ref": "hideInit1PanelLevel3",
+        "label": {
+          "default": "Hide 'Level3' panel"
+        },
+        "description": {
+          "default": "Hide 'Level3' panel"
+        }
+      },
+      {
+        "parameter_ref": "textfieldInit11",
+        "label": {
+          "default": "textfieldInit11"
+        }
+      },
+      {
+        "parameter_ref": "textfieldInit12",
+        "label": {
+          "default": "textfieldInit12"
+        }
+      },
+      {
+        "parameter_ref": "textfieldInit13",
+        "label": {
+          "default": "textfieldInit13"
+        }
       }
     ],
     "complex_type_info": [
@@ -644,7 +764,7 @@
         "type": "panels",
         "group_info": [
           {
-            "id": "panels",
+            "id": "textpanels",
             "type": "controls",
             "parameter_refs": [
               "disableTextPanel"
@@ -663,7 +783,7 @@
             ]
           },
           {
-            "id": "panels",
+            "id": "textpanelsctrl",
             "type": "controls",
             "parameter_refs": [
               "hideTextPanel"
@@ -950,7 +1070,7 @@
         "type": "panels",
         "group_info": [
           {
-            "id": "panels",
+            "id": "disabletwistypanels",
             "type": "controls",
             "parameter_refs": [
               "disableTwistyPanel"
@@ -976,7 +1096,7 @@
             ]
           },
           {
-            "id": "panels",
+            "id": "hidetwistypanels",
             "type": "controls",
             "parameter_refs": [
               "hideTwistyPanel"
@@ -1060,6 +1180,78 @@
                                 "type": "controls",
                                 "parameter_refs": [
                                   "textfield3"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "init-panels-in-panels",
+        "label": {
+          "default": "Panels within Panels (2)"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "disableInit1PanelLevel1",
+          "hideInit1PanelLevel1"
+        ],
+        "group_info": [
+          {
+            "id": "init1Level1",
+            "type": "textPanel"
+          },
+          {
+            "id": "init1level1",
+            "type": "panels",
+            "group_info": [
+              {
+                "id": "init1level2buttons",
+                "type": "controls",
+                "parameter_refs": [
+                  "disableInit1PanelLevel2",
+                  "hideInit1PanelLevel2"
+                ],
+                "group_info": [
+                  {
+                    "id": "init1Level2",
+                    "type": "textPanel"
+                  },
+                  {
+                    "id": "init1level2",
+                    "type": "panels",
+                    "group_info": [
+                      {
+                        "id": "init1level3buttons",
+                        "type": "controls",
+                        "parameter_refs": [
+                          "textfieldInit11",
+                          "textfieldInit12",
+                          "disableInit1PanelLevel3",
+                          "hideInit1PanelLevel3"
+                        ],
+                        "group_info": [
+                          {
+                            "id": "init1Level3",
+                            "type": "textPanel"
+                          },
+                          {
+                            "id": "init1level3",
+                            "type": "panels",
+                            "group_info": [
+                              {
+                                "id": "init1level3control",
+                                "type": "controls",
+                                "parameter_refs": [
+                                  "textfieldInit13"
                                 ]
                               }
                             ]
@@ -1384,6 +1576,174 @@
         "evaluate": {
           "condition": {
             "parameter_ref": "hidePanelLevel3",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "group_refs": [
+          "init1level1"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disableInit1PanelLevel1",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "group_refs": [
+          "init1level1"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hideInit1PanelLevel1",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "hideInit1PanelLevel1"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disableInit1PanelLevel1",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "group_refs": [
+          "init1level2"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disableInit1PanelLevel2",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "group_refs": [
+          "init1level2"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hideInit1PanelLevel2",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "group_refs": [
+          "init1level3"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disableInit1PanelLevel3",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "visible": {
+        "group_refs": [
+          "init1level3"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hideInit1PanelLevel3",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "disableInit1PanelLevel1"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hideInit1PanelLevel1",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "hideInit1PanelLevel2"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disableInit1PanelLevel2",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "disableInit1PanelLevel2"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hideInit1PanelLevel2",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "hideInit1PanelLevel3"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "disableInit1PanelLevel3",
+            "op": "equals",
+            "value": false
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "parameter_refs": [
+          "disableInit1PanelLevel3"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "hideInit1PanelLevel3",
             "op": "equals",
             "value": false
           }

@@ -92,7 +92,7 @@
         "type": "panels",
         "group_info": [
           {
-            "id": "TwistyPanel",
+            "id": "TwistyPanel1",
             "label": {
               "default": "Automatic Reclassify"
             },

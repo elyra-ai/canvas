@@ -9,8 +9,8 @@
     "apple-types": [],
     "blueberry-size": "tiny",
     "fruit-size": "bigfruit",
-    "radioBoolean" : true,
-    "radioDouble" : 1.23
+    "radioBoolean": true,
+    "radioDouble": 1.23
   },
   "parameters": [
     {
@@ -282,7 +282,7 @@
               {
                 "id": "red3",
                 "type": "panels",
-                "group_info" : [
+                "group_info": [
                   {
                     "id": "apple-text",
                     "type": "textPanel",
@@ -294,6 +294,7 @@
                     }
                   },
                   {
+                    "id": "apple-types-ctl",
                     "type": "controls",
                     "parameter_refs": [
                       "apple-types"
@@ -304,7 +305,7 @@
               {
                 "id": "blue3",
                 "type": "panels",
-                "group_info" : [
+                "group_info": [
                   {
                     "id": "blue-text",
                     "type": "textPanel",
@@ -316,6 +317,7 @@
                     }
                   },
                   {
+                    "id": "blueberry-size-ctl",
                     "type": "controls",
                     "parameter_refs": [
                       "blueberry-size"
@@ -385,7 +387,7 @@
         "parameter_refs": [
           "radioBoolean"
         ],
-        "group_info" : [
+        "group_info": [
           {
             "id": "panel-selector4",
             "type": "panelSelector",
@@ -419,7 +421,7 @@
         "parameter_refs": [
           "radioDouble"
         ],
-        "group_info" : [
+        "group_info": [
           {
             "id": "panel-selector5",
             "type": "panelSelector",
@@ -460,8 +462,7 @@
       }
     ]
   },
-  "dataset_metadata": [
-  ],
+  "dataset_metadata": [],
   "resources": {
     "fruit-color1.red1.label": "Red",
     "fruit-color1.blue1.label": "Blue",

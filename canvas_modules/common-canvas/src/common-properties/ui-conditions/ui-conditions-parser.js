@@ -219,23 +219,32 @@ function parseConditions(container, uiCondition, conditionType) {
 			"params": controls,
 			"definition": uiCondition
 		};
-		if (Array.isArray(controls) === true) {
-			for (let j = 0; j < controls.length; j++) {
-				if (typeof container[controls[j]] === "undefined") {
-					container[controls[j]] = [];
-				}
-				container[controls[j]].push(groupDef);
-			}
-		} else { // single control
-			if (typeof container[controls] === "undefined") {
-				container[controls] = [];
-			}
-			container[controls].push(groupDef);
+		_setDefinitions(container.controls, controls, groupDef);
+		const refs = (uiCondition[conditionType].group_refs) ? uiCondition[conditionType].group_refs
+			: uiCondition[conditionType].parameter_refs;
+		if (refs) {
+			_setDefinitions(container.refs, refs, groupDef);
 		}
 	} catch (error) { // invalid
 		logger.info("Error parsing ui conditions: " + error);
 	}
 	return container;
+}
+
+function _setDefinitions(container, controls, groupDef) {
+	if (Array.isArray(controls) === true) {
+		for (let j = 0; j < controls.length; j++) {
+			if (typeof container[controls[j]] === "undefined") {
+				container[controls[j]] = [];
+			}
+			container[controls[j]].push(groupDef);
+		}
+	} else { // single control
+		if (typeof container[controls] === "undefined") {
+			container[controls] = [];
+		}
+		container[controls].push(groupDef);
+	}
 }
 
 module.exports = {

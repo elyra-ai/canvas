@@ -14,7 +14,7 @@ import UiConditionsParser from "./ui-conditions/ui-conditions-parser.js";
 import UiGroupsParser from "./ui-conditions/ui-groups-parser.js";
 import conditionsUtil from "./ui-conditions/conditions-utils";
 import PropertyUtils from "./util/property-utils.js";
-import { STATES, ACTIONS } from "./constants/constants.js";
+import { STATES, ACTIONS, CONDITION_TYPE, PANEL_TREE_ROOT } from "./constants/constants.js";
 import CommandStack from "../command-stack/command-stack.js";
 import ControlFactory from "./editor-controls/control-factory";
 import { ControlType } from "./constants/form-constants";
@@ -29,7 +29,7 @@ export default class PropertiesController {
 			controllerHandler: null,
 			actionHandler: null
 		};
-		this.visibleDefinition = {};
+		this.visibleDefinitions = {};
 		this.enabledDefinitions = {};
 		this.validationDefinitions = {};
 		this.filterDefinitions = {};
@@ -39,7 +39,6 @@ export default class PropertiesController {
 		this.customControls = [];
 		this.summaryPanelControls = {};
 		this.controllerHandlerCalled = false;
-		this.requiredParameters = []; // TODO this is needed for validateInput, will change to use this.controls later
 		this.commandStack = new CommandStack();
 		this.custPropSumPanelValues = {};
 		this.controlFactory = new ControlFactory(this);
@@ -77,9 +76,11 @@ export default class PropertiesController {
 	//
 	setForm(form) {
 		this.form = form;
+		// console.log(JSON.stringify(form, null, 2));
 		// set initial property values
 		if (this.form) {
 			this.controls = {};
+			this.panelTree = {};
 			this.setControlStates({}); // clear state
 			this.setErrorMessages({}); // clear messages
 			this.isSummaryPanel = false; // when new form is set, summary panel is gone
@@ -89,22 +90,13 @@ export default class PropertiesController {
 			const controls = UiConditionsParser.parseControls([], this.form);
 			this.saveControls(controls); // saves controls without the subcontrols
 			this._parseSummaryControls(controls);
+			this.parsePanelTree();
 			let datasetMetadata;
 			if (this.form.data) {
 				datasetMetadata = this.form.data.datasetMetadata;
 				this.setPropertyValues(this.form.data.currentParameters);
 			}
 			this.setDatasetMetadata(datasetMetadata);
-			// get all the children for panels that have conditions. Must be run after setPropertyValues(),
-			// which generates the list of panels with conditions
-			const panels = Object.keys(this.getPanelStates());
-			this.parsePanelTree(panels);
-			// Calling setPropertyValues() again after parsePanelTree to run the conditions for the all the
-			// panel's children and set the correct states.
-			// Need to set initial to true for initial rendering of the panel's children in the correct state
-			this.setPropertyValues(this.form.data.currentParameters, true);
-
-			this.requiredParameters = this._parseRequiredParameters(this.form, controls); // TODO remove this when we switch to using this.controls in validateInput
 			// for control.type of structuretable that do not use FieldPicker, we need to add to
 			// the controlValue any missing data model fields.  We need to do it here so that
 			// validate can run against the added fields
@@ -128,23 +120,23 @@ export default class PropertiesController {
 	}
 
 	_parseUiConditions() {
-		this.visibleDefinition = {};
-		this.enabledDefinitions = {};
-		this.validationDefinitions = {};
-		this.filterDefinitions = {};
-		this.filteredEnumDefinitions = {};
+		this.visibleDefinitions = { controls: {}, refs: {} };
+		this.enabledDefinitions = { controls: {}, refs: {} };
+		this.validationDefinitions = { controls: {}, refs: {} };
+		this.filterDefinitions = { controls: {}, refs: {} };
+		this.filteredEnumDefinitions = { controls: {}, refs: {} };
 		if (this.form.conditions) {
 			for (const condition of this.form.conditions) {
 				if (condition.visible) {
-					UiConditionsParser.parseConditions(this.visibleDefinition, condition, "visible");
+					UiConditionsParser.parseConditions(this.visibleDefinitions, condition, CONDITION_TYPE.VISIBLE);
 				} else if (condition.enabled) {
-					UiConditionsParser.parseConditions(this.enabledDefinitions, condition, "enabled");
+					UiConditionsParser.parseConditions(this.enabledDefinitions, condition, CONDITION_TYPE.ENABLED);
 				} else if (condition.validation) {
-					UiConditionsParser.parseConditions(this.validationDefinitions, condition, "validation");
+					UiConditionsParser.parseConditions(this.validationDefinitions, condition, CONDITION_TYPE.VALIDATION);
 				} else if (condition.filter) {
-					UiConditionsParser.parseConditions(this.filterDefinitions, condition, "filter");
+					UiConditionsParser.parseConditions(this.filterDefinitions, condition, CONDITION_TYPE.FILTER);
 				} else if (condition.enum_filter) {
-					UiConditionsParser.parseConditions(this.filteredEnumDefinitions, condition, "enum_filter");
+					UiConditionsParser.parseConditions(this.filteredEnumDefinitions, condition, CONDITION_TYPE.FILTEREDENUM);
 				} else { // invalid
 					logger.info("Invalid definition: " + JSON.stringify(condition));
 				}
@@ -152,7 +144,52 @@ export default class PropertiesController {
 		}
 	}
 
-	/**
+	/*
+	* This function will get all definitions of the input definition type (visible, enabled,
+	* filteredEnum and validation) and the definition index (controls, refs) that are
+	* referenced by the propertyId.  The definition types visible and enabled have two indexes.
+	* Controls indexes are  all definitions that have the propertyId as an operand in the evaluate.
+	* Refs are all definitions that have the propertyId as something that is set as a result of the evaluate.
+	*
+	*/
+	getDefinitions(propertyId, dfnType, dfnIndex) {
+		let conditionDefinitions;
+		switch (dfnType) {
+		case CONDITION_TYPE.VISIBLE:
+			conditionDefinitions = this.visibleDefinitions[dfnIndex];
+			break;
+		case CONDITION_TYPE.ENABLED:
+			conditionDefinitions = this.enabledDefinitions[dfnIndex];
+			break;
+		case CONDITION_TYPE.FILTEREDENUM:
+			conditionDefinitions = this.filteredEnumDefinitions[dfnIndex];
+			break;
+		case CONDITION_TYPE.VALIDATION:
+			conditionDefinitions = this.validationDefinitions[dfnIndex];
+			break;
+		default:
+			break;
+		}
+
+		// only return definitions that reference the propertyId
+		let retCond = [];
+		for (const conditionKey in conditionDefinitions) {
+			if (!conditionDefinitions.hasOwnProperty(conditionKey)) {
+				continue;
+			}
+			// the definition may have a column indicator, build a propertyID
+			// with the the name and col set from the definition ref.
+			const baseId = conditionsUtil.getParamRefPropertyId(conditionKey);
+			// baseId.col and propertyId.col can be undefined
+			if (baseId.name === propertyId.name && baseId.col === propertyId.col) {
+				retCond = retCond.concat(conditionDefinitions[conditionKey]);
+			}
+		}
+		return retCond;
+
+	}
+
+	/*
 	* Used to convert a propertyId to a propertyId that always has a row.
 	* Used in complex types that aren't tables and don't have rows.  Returns original
 	* propertyId or a propertyId where col is converted to row.  Used in messages and property values since they
@@ -170,33 +207,9 @@ export default class PropertiesController {
 		}
 		return propertyId;
 	}
-	parsePanelTree(panels) {
-		for (const panel of panels) {
-			this.panelTree[panel] = {
-				panels: [],
-				controls: []
-			};
-			UiGroupsParser.parseUiContent(this.panelTree, panel, this.form);
-		}
-	}
-
-	// returns true if child belongs to parent
-	isPanelParent(childPanel, parentPanel) {
-		const tree = this.panelTree;
-		if (tree[parentPanel] && tree[parentPanel].panels && tree[parentPanel].panels.indexOf(childPanel) > -1) {
-			return true;
-		}
-
-		// check if top level parent
-		if (childPanel === parentPanel) {
-			for (const panel in tree) {
-				if (panel.panels && panel.panels.indexOf(childPanel) > -1) {
-					return false;
-				}
-			}
-			return true;
-		}
-		return false;
+	parsePanelTree() {
+		this.panelTree[PANEL_TREE_ROOT] = { controls: [], panels: [] };
+		UiGroupsParser.parseUiContent(this.panelTree, this.form, PANEL_TREE_ROOT);
 	}
 
 	_addToControlValues(resolveParameterRefs) {
@@ -311,13 +324,6 @@ export default class PropertiesController {
 		return -1;
 	}
 
-	// TODO remove this
-	_parseRequiredParameters(form, controls) {
-		let requiredParameters = [];
-		requiredParameters = UiConditionsParser.parseRequiredParameters(requiredParameters, form, controls);
-		return requiredParameters;
-	}
-
 	getUiItems() {
 		return this.uiItems;
 	}
@@ -400,7 +406,7 @@ export default class PropertiesController {
 		let fields = this.getDatasetMetadataFields();
 		if (propertyId) {
 			fields = this._filterSharedDataset(propertyId, fields);
-			fields = conditionsUtil.filterConditions(propertyId, this.filterDefinitions, this, fields);
+			fields = conditionsUtil.filterConditions(propertyId, this.filterDefinitions.controls, this, fields);
 		}
 		return fields;
 	}
@@ -525,8 +531,21 @@ export default class PropertiesController {
 		this.propertiesStore.setDatasetMetadata({ schemas: inDatasetMetadata, fields: fields, schemaNames: schemaNames });
 	}
 
+	/**
+	* This public API will validate a single property input value.
+	*
+	* @param {object} propertyId. required.
+	*/
 	validateInput(propertyId) {
 		conditionsUtil.validateInput(propertyId, this, this.validationDefinitions);
+	}
+
+	/**
+	* This public API will validate all properties input values.
+	*
+	*/
+	validatePropertiesValues() {
+		conditionsUtil.validatePropertiesValues(this);
 	}
 
 	//
@@ -579,13 +598,8 @@ export default class PropertiesController {
 	updatePropertyValue(inPropertyId, value) {
 		const propertyId = this.convertPropertyId(inPropertyId);
 		this.propertiesStore.updatePropertyValue(propertyId, value);
-		const definitions = {
-			visibleDefinition: this.visibleDefinition,
-			enabledDefinitions: this.enabledDefinitions,
-			filteredEnumDefinitions: this.filteredEnumDefinitions
-		};
-		conditionsUtil.validateConditions(this, definitions);
-		conditionsUtil.validateInput(inPropertyId, this, this.validationDefinitions);
+		conditionsUtil.validateConditions(inPropertyId, this);
+		conditionsUtil.validateInput(inPropertyId, this);
 		if (this.handlers.propertyListener) {
 			this.handlers.propertyListener(
 				{
@@ -652,14 +666,10 @@ export default class PropertiesController {
 		return propertyValues;
 	}
 
-	setPropertyValues(values, initial) {
+	setPropertyValues(values) {
 		this.propertiesStore.setPropertyValues(values);
-		const definitions = {
-			visibleDefinition: this.visibleDefinition,
-			enabledDefinitions: this.enabledDefinitions,
-			filteredEnumDefinitions: this.filteredEnumDefinitions
-		};
-		conditionsUtil.validateConditions(this, definitions, initial);
+
+		conditionsUtil.validatePropertiesConditions(this);
 		if (this.handlers.propertyListener) {
 			this.handlers.propertyListener(
 				{
@@ -683,7 +693,6 @@ export default class PropertiesController {
 	 * hidden: boolean value indicating if this control should be hidden
 	 * disabled: boolean value indicating if this control should be disabled
 	 * value: required string value of either "hidden", "disabled", "visible", or "enabled"
-	 * setBy: required string value of either "panel" or "control", determined by the attribute 'value'
 	 * (hidden and disabled attributes are needed in the case where multiple panels/controls set different states on the control)
 	*/
 	updateControlState(propertyId, state) {
@@ -710,7 +719,6 @@ export default class PropertiesController {
 	 * hidden: boolean value indicating if this panel should be hidden
 	 * disabled: boolean value indicating if this panel should be disabled
 	 * value: required string value of either "hidden", "disabled", "visible", or "enabled"
-	 * setBy: required string value of the panel id who set the attribute 'value', or "" if set by a control
 	 * (hidden and disabled attributes are needed in the case where multiple panels/controls set different states on the control)
 	*/
 	updatePanelState(panelId, state) {
@@ -861,8 +869,8 @@ export default class PropertiesController {
 		return control;
 	}
 
-	getRequiredParameters() {
-		return this.requiredParameters;
+	getControls() {
+		return this.controls;
 	}
 
 	isRequired(propertyId) {

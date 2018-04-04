@@ -7,8 +7,6 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 import Form from "../common-properties/form/Form";
-import UiConditionsParser from "../common-properties/ui-conditions/ui-conditions-parser";
-import ConditionsUtils from "../common-properties/ui-conditions/conditions-utils";
 import PropertyUtils from "../common-properties/util/property-utils";
 import PropertiesController from "../common-properties/properties-controller";
 import logger from "../../utils/logger";
@@ -37,7 +35,7 @@ function validateFlow(canvasController, getParameterData, setMessagesCallback, i
 		if (node.type === "execution_node" || node.type === "binding") {
 			const formData = _getFormData(node.id, getParameterData);
 			const propertiesController = _getPropertiesController(formData);
-			_validateNode(formData, node.id, propertiesController);
+			propertiesController.validatePropertiesValues();
 			_setNodeMessages(node, propertiesController, canvasController, setMessagesCallback);
 		}
 	}
@@ -72,65 +70,6 @@ function _getPropertiesController(formData) {
 	const propertiesController = new PropertiesController();
 	propertiesController.setForm(formData);
 	return propertiesController;
-}
-
-/**
-* Extract the set of evaluation definitions from the form.
-* @param {Object} form data for a specific node
-*/
-function _getValidationDefinitions(form) {
-	var validationDefinitions = {};
-	if (form.conditions) {
-		const uiConditions = form.conditions;
-		for (let i = 0; i < uiConditions.length; i++) {
-			if (uiConditions[i].validation) {
-				validationDefinitions = UiConditionsParser.parseConditions(validationDefinitions, uiConditions[i], "validation");
-			}
-		}
-	}
-	return validationDefinitions;
-}
-
-
-/**
-* Extract the control from the form.
-* @param {Object} form data for a specific node
-*/
-function _getControlsFromForm(form) {
-	var controls = [];
-	controls = UiConditionsParser.parseControls(controls, form);
-	return controls;
-}
-
-/**
-* Validate the parameters associated with a node
-* @param {Object} form data for a specific node
-*/
-function _validateNode(formData, nodeId, propertiesController) {
-	const controls = _getControlsFromForm(formData);
-	const validationDefinitions = _getValidationDefinitions(formData);
-	for (const control of controls) {
-		// control is a subcontrol
-		if (control.parameterName) {
-			continue;
-		}
-		const propertyId = { name: control.name };
-		const controlValue = propertiesController.getPropertyValue(propertyId);
-		if (Array.isArray(controlValue) && control.subControls) {
-			// validate the table as a whole
-			ConditionsUtils.validateInput(propertyId, propertiesController, validationDefinitions);
-			// validate each cell
-			for (let rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
-				for (let colIndex = 0; colIndex < control.subControls.length; colIndex++) {
-					propertyId.row = rowIndex;
-					propertyId.col = colIndex;
-					ConditionsUtils.validateInput(propertyId, propertiesController, validationDefinitions);
-				}
-			}
-		} else {
-			ConditionsUtils.validateInput(propertyId, propertiesController, validationDefinitions);
-		}
-	}
 }
 
 function _setNodeMessages(node, propertiesController, canvasController, setMessagesCallback) {

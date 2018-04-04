@@ -11,9 +11,9 @@
 import propertyUtils from "../_utils_/property-utils";
 import { expect } from "chai";
 
-const PANEL_SELECTOR_PARAM_DEF = require("../test_resources/paramDefs/panelSelector.json");
+// const PANEL_SELECTOR_PARAM_DEF = require("../test_resources/paramDefs/panelSelector.json");
 import panelConditionsParamDef from "../test_resources/paramDefs/panelConditions_paramDef.json";
-
+import PANEL_SELECTOR_PARAM_DEF from "../test_resources/paramDefs/panelSelector.json";
 
 describe("'panel selector insert' renders correctly", () => {
 	it("it should have 3 text panels", () => {
@@ -116,5 +116,70 @@ describe("panel selector visible and enabled conditions work correctly", () => {
 
 		expect(controller.getControlState({ name: "fruit-color2" })).to.equal("visible");
 		expect(controller.getPanelState({ name: "panel-selector-fields2" })).to.equal("visible");
+	});
+});
+describe("mulit-panel selector visible and enabled conditions work correctly", () => {
+	let wrapper;
+	let controller;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(PANEL_SELECTOR_PARAM_DEF);
+		wrapper = renderedObject.wrapper;
+		controller = renderedObject.controller;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("all panels for selected type should be enabled", () => {
+
+		expect(controller.getPropertyValue({ name: "fruit-color3" })).to.equal("red3");
+		expect(controller.getPanelState({ name: "red3" })).to.equal("enabled");
+		expect(controller.getPanelState({ name: "blue3" })).to.equal("disabled");
+		expect(controller.getPanelState({ name: "yellow3" })).to.equal("disabled");
+		expect(controller.getPanelState({ name: "apple-text" })).to.equal("enabled");
+		expect(controller.getPanelState({ name: "apple-types-ctl" })).to.equal("enabled");
+		expect(controller.getControlState({ name: "apple-types" })).to.equal("enabled");
+		expect(controller.getPanelState({ name: "blue-text" })).to.equal("disabled");
+		expect(controller.getPanelState({ name: "blueberry-size-ctl" })).to.equal("disabled");
+		expect(controller.getControlState({ name: "blueberry-size" })).to.equal("disabled");
+
+		// change selection
+		const input = wrapper.find("#editor-control-fruit-color3");
+		expect(input).to.have.length(1);
+		const radios = input.find("input[type='radio']");
+		expect(radios).to.have.length(6);
+
+		const radioBlue = radios.find("input[value='blue3']");
+		radioBlue.simulate("change", { target: { checked: true, value: "blue3" } });
+		wrapper.update();
+
+		expect(controller.getPropertyValue({ name: "fruit-color3" })).to.equal("blue3");
+		expect(controller.getPanelState({ name: "red3" })).to.equal("disabled");
+		expect(controller.getPanelState({ name: "blue3" })).to.equal("enabled");
+		expect(controller.getPanelState({ name: "yellow3" })).to.equal("disabled");
+		expect(controller.getPanelState({ name: "apple-text" })).to.equal("disabled");
+		expect(controller.getPanelState({ name: "apple-types-ctl" })).to.equal("disabled");
+		expect(controller.getControlState({ name: "apple-types" })).to.equal("disabled");
+		expect(controller.getPanelState({ name: "blue-text" })).to.equal("enabled");
+		expect(controller.getPanelState({ name: "blueberry-size-ctl" })).to.equal("enabled");
+		expect(controller.getControlState({ name: "blueberry-size" })).to.equal("enabled");
+
+		// change selection
+		const radioYellow = radios.find("input[value='yellow3']");
+		radioYellow.simulate("change", { target: { checked: true, value: "yellow3" } });
+		wrapper.update();
+
+		expect(controller.getPropertyValue({ name: "fruit-color3" })).to.equal("yellow3");
+		expect(controller.getPanelState({ name: "red3" })).to.equal("disabled");
+		expect(controller.getPanelState({ name: "blue3" })).to.equal("disabled");
+		expect(controller.getPanelState({ name: "yellow3" })).to.equal("enabled");
+		expect(controller.getPanelState({ name: "apple-text" })).to.equal("disabled");
+		expect(controller.getPanelState({ name: "apple-types-ctl" })).to.equal("disabled");
+		expect(controller.getControlState({ name: "apple-types" })).to.equal("disabled");
+		expect(controller.getPanelState({ name: "blue-text" })).to.equal("disabled");
+		expect(controller.getPanelState({ name: "blueberry-size-ctl" })).to.equal("disabled");
+		expect(controller.getControlState({ name: "blueberry-size" })).to.equal("disabled");
+
 	});
 });

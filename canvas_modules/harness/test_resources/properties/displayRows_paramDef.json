@@ -322,7 +322,7 @@
             "type": "summaryPanel",
             "group_info": [
               {
-                "id": "structuretableSortOrder",
+                "id": "structuretableSortOrder1",
                 "type": "columnSelection",
                 "label": {
                   "default": "Columns"
@@ -351,7 +351,7 @@
             "type": "summaryPanel",
             "group_info": [
               {
-                "id": "structuretableSortOrder",
+                "id": "structuretableSortOrder2",
                 "type": "controls",
                 "label": {
                   "default": "Columns"
@@ -379,7 +379,7 @@
             "type": "summaryPanel",
             "group_info": [
               {
-                "id": "structuretableSortOrder2",
+                "id": "structuretableSortOrder3",
                 "type": "controls",
                 "label": {
                   "default": "Columns"

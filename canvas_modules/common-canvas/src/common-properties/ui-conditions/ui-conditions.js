@@ -499,6 +499,9 @@ function _handleContains(paramInfo, param2Info, value, controller) {
 			case "undefined":
 				return false;
 			case "string":
+				if (param2Info.value === "") {
+					return false;
+				}
 				return paramInfo.value.indexOf(param2Info.value) >= 0;
 			case "object":
 				return paramInfo.value === null ? false : _searchInArray(paramInfo.value, param2Info.value, false);
@@ -534,6 +537,9 @@ function _handleNotContains(paramInfo, param2Info, value, controller) {
 			case "undefined":
 				return true;
 			case "string":
+				if (param2Info.value === "") {
+					return true;
+				}
 				return paramInfo.value.indexOf(param2Info.value) < 0;
 			case "object":
 				return paramInfo.value === null ? true : !_searchInArray(paramInfo.value, param2Info.value, false);

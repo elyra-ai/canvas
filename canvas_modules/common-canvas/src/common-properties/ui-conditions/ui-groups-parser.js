@@ -13,22 +13,21 @@ import logger from "../../../utils/logger";
 import { ItemType } from "../constants/form-constants";
 
 // Parse the set of panelTree from the form data
-function parseUiContent(panelTree, parentPanel, formData) {
+function parseUiContent(panelTree, formData, panelTreeRoot) {
 	if (formData.uiItems) {
 		for (const uiItem of formData.uiItems) {
-			parseUiItem(panelTree, parentPanel, uiItem);
+			parseUiItem(panelTree, uiItem, panelTreeRoot);
 		}
 	}
 	return panelTree;
 }
 
-function parseUiItem(panelTree, parentPanel, uiItem, parentFound) {
+function parseUiItem(panelTree, uiItem, currentPanel) {
 	switch (uiItem.itemType) {
 	case ItemType.PRIMARY_TABS: {
-		const currentPanelIsParent = parentFound || false;
 		if (uiItem.tabs) {
 			for (const tab of uiItem.tabs) {
-				parseUiItem(panelTree, parentPanel, tab.content, currentPanelIsParent);
+				parseUiItem(panelTree, tab.content, currentPanel);
 			}
 		}
 		break;
@@ -36,65 +35,55 @@ function parseUiItem(panelTree, parentPanel, uiItem, parentFound) {
 	case ItemType.SUB_TABS: {
 		if (uiItem.tabs) {
 			for (const tab of uiItem.tabs) {
-				parseUiItem(panelTree, parentPanel, tab.content);
+				parseUiItem(panelTree, tab.content, currentPanel);
 			}
 		}
 		break;
 	}
+	case ItemType.TEXT_PANEL:
 	case ItemType.PANEL:
 	case ItemType.SUMMARY_PANEL:
 	case ItemType.CUSTOM_PANEL:
 	case ItemType.ADDITIONAL_LINK:
 	case ItemType.CHECKBOX_SELECTOR: {
-		if (uiItem.panel && uiItem.panel.uiItems) {
-			let currentPanelIsParent = parentFound;
-			if (uiItem.panel.id && uiItem.panel.id === parentPanel) {
-				currentPanelIsParent = true;
-			}
-			if (parentFound && uiItem.panel.id !== parentPanel) {
-				panelTree[parentPanel].panels.push(uiItem.panel.id);
-			}
-			for (const panelUiItem of uiItem.panel.uiItems) {
-				parseUiItem(panelTree, parentPanel, panelUiItem, currentPanelIsParent);
+		if (uiItem.panel && uiItem.panel.id) {
+			panelTree[currentPanel].panels.push(uiItem.panel.id);
+			_newPanelTreeObject(panelTree, uiItem.panel.id);
+			if (uiItem.panel.uiItems) {
+				for (const panelUiItem of uiItem.panel.uiItems) {
+					parseUiItem(panelTree, panelUiItem, uiItem.panel.id);
+				}
 			}
 		}
 		break;
 	}
 	case ItemType.CONTROL: {
-		if (parentFound && uiItem.control.name) {
-			panelTree[parentPanel].controls.push(uiItem.control.name);
-		}
+		panelTree[currentPanel].controls.push(uiItem.control.name);
 		// This is a special case for the radio button set which has panels
 		// inserted after each radio button. Those panels are provided in the
 		// additionalItems array which is an array of EditorTab objects.
 		if (uiItem.control.additionalItems) {
 			for (const editorTab of uiItem.control.additionalItems) {
-				parseUiItem(panelTree, parentPanel, editorTab.content, parentFound);
+				parseUiItem(panelTree, editorTab.content, currentPanel);
 			}
 		}
 		break;
 	}
 	case ItemType.PANEL_SELECTOR: {
-		let currentPanelIsParent = parentFound;
-		if (uiItem.id && uiItem.id === parentPanel) {
-			currentPanelIsParent = true;
-		}
-		if ((parentFound || currentPanelIsParent) && uiItem.dependsOn) {
-			panelTree[parentPanel].controls.push(uiItem.dependsOn);
+		panelTree[currentPanel].panels.push(uiItem.id);
+		_newPanelTreeObject(panelTree, uiItem.id);
+		if (uiItem.dependsOn) {
+			panelTree[uiItem.id].controls.push(uiItem.dependsOn);
 		}
 		if (uiItem.tabs) {
 			for (const tab of uiItem.tabs) {
-				parseUiItem(panelTree, parentPanel, tab.content, currentPanelIsParent);
+				parseUiItem(panelTree, tab.content, uiItem.id);
 			}
 		}
+
 		break;
 	}
-	case ItemType.TEXT_PANEL: {
-		if (parentFound && uiItem.panel.id) {
-			panelTree[parentPanel].panels.push(uiItem.panel.id);
-		}
-		break;
-	}
+
 	case ItemType.ACTION:
 	case ItemType.STATIC_TEXT:
 	case ItemType.HORIZONTAL_SEPARATOR: {
@@ -104,6 +93,13 @@ function parseUiItem(panelTree, parentPanel, uiItem, parentFound) {
 		logger.warn("Unknown UiItem type when parsing ui conditions: " + uiItem.itemType);
 		break;
 	}
+}
+
+function _newPanelTreeObject(panelTree, panelId) {
+	if (panelTree.hasOwnProperty(panelId)) {
+		logger.warn("Duplicate panel ids, each panel id must be unique.  Panel id = " + panelId);
+	}
+	panelTree[panelId] = { controls: [], panels: [] };
 }
 
 module.exports = {

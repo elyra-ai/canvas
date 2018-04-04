@@ -150,34 +150,37 @@ describe("textfield-control renders correctly", () => {
 
 describe("condition messages renders correctly with textfields control", () => {
 	it("test passwordfield isNotEmpty", () => {
-		const wrapper = propertyUtils.createEditorForm("mount", CONDITIONS_TEST_FORM_DATA, controller);
-
-		const passwordInput = wrapper.find("input[id='editor-control-passwordField']");
-		expect(passwordInput).to.have.length(1);
-		passwordInput.simulate("change", { target: { value: "" } });
-		wrapper.update();
-		let textfieldNameErrorMessages = {
+		propertyUtils.createEditorForm("mount", CONDITIONS_TEST_FORM_DATA, controller);
+		const passwdFieldPropId = { name: "passwordField" };
+		const textFieldPropId = { name: "textfieldName" };
+		controller.updatePropertyValue(textFieldPropId, "test");
+		controller.updatePropertyValue(passwdFieldPropId, "");
+		const passwdFieldErrorMessages = {
 			passwordField:
 						{ type: "error",
 							text: "Password cannot be empty, enter \"password\"",
 							validation_id: "PW2"
 						}
 		};
-		let actual = controller.getErrorMessages();
-		expect(isEqual(JSON.parse(JSON.stringify(textfieldNameErrorMessages)),
+		const actual = controller.getErrorMessages();
+		expect(isEqual(JSON.parse(JSON.stringify(passwdFieldErrorMessages)),
 			JSON.parse(JSON.stringify(actual)))).to.be.true;
+	});
 
-		const textfieldNameInput = wrapper.find("#editor-control-textfieldName");
-		textfieldNameInput.simulate("change", { target: { value: "entering a name that contains the password" } });
-		wrapper.update();
-		textfieldNameErrorMessages = {
+	it("test textfield cannot contain passwordfield value", () => {
+		propertyUtils.createEditorForm("mount", CONDITIONS_TEST_FORM_DATA, controller);
+		const passwdFieldPropId = { name: "passwordField" };
+		const textFieldPropId = { name: "textfieldName" };
+		controller.updatePropertyValue(passwdFieldPropId, "test");
+		controller.updatePropertyValue(textFieldPropId, "entering a name that contains test");
+		const textfieldNameErrorMessages = {
 			passwordField:
 						{ type: "warning",
 							text: "name cannot contain password",
 							validation_id: "PW1"
 						}
 		};
-		actual = controller.getErrorMessages();
+		const actual = controller.getErrorMessages();
 		expect(isEqual(JSON.parse(JSON.stringify(textfieldNameErrorMessages)),
 			JSON.parse(JSON.stringify(actual)))).to.be.true;
 	});

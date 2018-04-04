@@ -120,6 +120,22 @@ _defineConstant("STATES", {
 	DISABLED: "disabled"
 });
 
+_defineConstant("PANEL_TREE_ROOT", "PanelTreeRoot");
+
+
+_defineConstant("CONDITION_TYPE", {
+	VISIBLE: "visible",
+	ENABLED: "enabled",
+	FILTEREDENUM: "enum_filter",
+	FILTER: "filter",
+	VALIDATION: "validation"
+});
+
+_defineConstant("CONDITION_DEFINITION_INDEX", {
+	CONTROLS: "controls",
+	REFS: "refs"
+});
+
 _defineConstant("ACTIONS", {
 	SET_PROPERTIES: "SET_PROPERTIES",
 	UPDATE_PROPERTY: "UPDATE_PROPERTY"

@@ -174,7 +174,7 @@
         "type": "panels",
         "group_info": [
           {
-            "id": "selectcolumns-values",
+            "id": "selectcolumns-values1",
             "label": {
               "default": "Values"
             },
@@ -185,7 +185,7 @@
             ]
           },
           {
-            "id": "selectcolumns-values",
+            "id": "selectcolumns-values2",
             "label": {
               "default": "configure fields"
             },

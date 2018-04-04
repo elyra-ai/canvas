@@ -5,10 +5,14 @@
   "current_parameters": {
     "field1_panel": "0.Age",
     "field2_panel": "0.BP",
-		"selectcolumn": "",
-		"selectcolumns": "",
-		"selectcolumns2": [ "0.Age", "Drug", "2.Age" ],
-		"selectcolumns3": ""
+    "selectcolumn": "",
+    "selectcolumns": "",
+    "selectcolumns2": [
+      "0.Age",
+      "Drug",
+      "2.Age"
+    ],
+    "selectcolumns3": ""
   },
   "parameters": [
     {
@@ -63,7 +67,7 @@
         "description": {
           "default": "selectcolumn parameter shared with Field2"
         },
-				"text_before": {
+        "text_before": {
           "default": "Field1 shares values with Field2"
         }
       },
@@ -84,7 +88,7 @@
         "description": {
           "default": "selectcolumn control where values are shared with selectcolumns 'Select Fields'"
         },
-				"text_before": {
+        "text_before": {
           "default": "Select Field shares values with Select Fields"
         }
       },
@@ -105,7 +109,7 @@
         "description": {
           "default": "selectcolumns control where values are shared with selectcolumns 'Select Columns2'"
         },
-				"text_before": {
+        "text_before": {
           "default": "Select Columns1 shares values with Select Columns2"
         }
       },
@@ -128,7 +132,7 @@
         "type": "panels",
         "group_info": [
           {
-            "id": "selectcolumn-values",
+            "id": "selectcolumn-values1",
             "label": {
               "default": "Values"
             },
@@ -138,33 +142,33 @@
               "field2_panel"
             ]
           },
-		      {
-		        "id": "column-selection",
-		        "label": {
-		          "default": "Column Selection"
-		        },
-		        "type": "columnSelection",
-		        "parameter_refs": [
-		          "selectcolumn",
-		          "selectcolumns"
-		        ]
-		      },
-		      {
-		        "id": "column-selections",
-		        "label": {
-		          "default": "Column Selection"
-		        },
-		        "type": "columnSelection",
-		        "parameter_refs": [
-		          "selectcolumns2",
-		          "selectcolumns3"
-		        ]
-		      }
+          {
+            "id": "column-selection",
+            "label": {
+              "default": "Column Selection"
+            },
+            "type": "columnSelection",
+            "parameter_refs": [
+              "selectcolumn",
+              "selectcolumns"
+            ]
+          },
+          {
+            "id": "column-selections",
+            "label": {
+              "default": "Column Selection"
+            },
+            "type": "columnSelection",
+            "parameter_refs": [
+              "selectcolumns2",
+              "selectcolumns3"
+            ]
+          }
         ]
       }
     ]
   },
-	"dataset_metadata": [
+  "dataset_metadata": [
     {
       "fields": [
         {

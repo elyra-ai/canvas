@@ -24,7 +24,7 @@
                       {
                         "itemType": "panel",
                         "panel": {
-                          "id": "Numberfield",
+                          "id": "Numberfield1",
                           "panelType": "general",
                           "uiItems": [
                             {
@@ -116,7 +116,7 @@
                 {
                   "itemType": "panel",
                   "panel": {
-                    "id": "Numberfield",
+                    "id": "Numberfield2",
                     "panelType": "general",
                     "uiItems": [
                       {
@@ -1590,7 +1590,7 @@
                       {
                         "itemType": "panel",
                         "panel": {
-                          "id": "group1",
+                          "id": "group11",
                           "panelType": "columnSelection",
                           "uiItems": [
                             {

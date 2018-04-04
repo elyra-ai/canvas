@@ -64,7 +64,8 @@ export default class RadiosetControl extends EditorControl {
 
 			// This populates the control.panelTree with the panels passed in and
 			// associates them with any children they have.
-			this.props.controller.parsePanelTree(valueSet.values);
+			this.props.controller.parsePanelTree();
+
 
 			for (let i = 0; i < valueSet.values.length; i++) {
 				const val = valueSet.values[i];
