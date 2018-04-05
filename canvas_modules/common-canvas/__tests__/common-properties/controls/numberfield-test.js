@@ -9,9 +9,9 @@
 
 import React from "react";
 import propertyUtils from "../../_utils_/property-utils";
-import NumberfieldControl from "../../../src/common-properties/editor-controls/numberfield-control.jsx";
+import NumberfieldControl from "../../../src/common-properties/controls/numberfield";
 import EditorForm from "../../../src/common-properties/editor-controls/editor-form.jsx";
-import ControlItem from "../../../src/common-properties/editor-controls/control-item.jsx";
+import ControlItem from "../../../src/common-properties/components/control-item";
 import { mount } from "enzyme";
 import { mountWithIntl } from "enzyme-react-intl";
 import { expect } from "chai";

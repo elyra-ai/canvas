@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
-import TextAreaControl from "../../../src/common-properties/editor-controls/textarea-control.jsx";
+import TextAreaControl from "../../../src/common-properties/controls/textarea";
 import { CHARACTER_LIMITS } from "../../../src/common-properties/constants/constants.js";
 import { mount } from "enzyme";
 import { expect } from "chai";

@@ -16,7 +16,7 @@ import conditionsUtil from "./ui-conditions/conditions-utils";
 import PropertyUtils from "./util/property-utils.js";
 import { STATES, ACTIONS, CONDITION_TYPE, PANEL_TREE_ROOT } from "./constants/constants.js";
 import CommandStack from "../command-stack/command-stack.js";
-import ControlFactory from "./editor-controls/control-factory";
+import ControlFactory from "./controls/control-factory";
 import { ControlType } from "./constants/form-constants";
 import cloneDeep from "lodash/cloneDeep";
 

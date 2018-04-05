@@ -10,7 +10,7 @@
 
 import React from "react";
 import propertyUtils from "../../_utils_/property-utils";
-import TimefieldControl from "../../../src/common-properties/editor-controls/timefield-control.jsx";
+import TimefieldControl from "../../../src/common-properties/controls/timefield";
 import { mount } from "enzyme";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";

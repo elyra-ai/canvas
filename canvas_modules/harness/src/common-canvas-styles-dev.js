@@ -7,4 +7,4 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import "../../common-canvas/assets/index.scss";
+import "./../../common-canvas/src/index.scss";

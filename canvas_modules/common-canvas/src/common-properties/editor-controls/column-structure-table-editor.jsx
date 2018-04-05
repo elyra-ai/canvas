@@ -14,8 +14,8 @@ import Button from "ap-components-react/dist/components/Button";
 import Checkbox from "ap-components-react/dist/components/Checkbox";
 import EditorControl from "./editor-control.jsx";
 import FlexibleTable from "./flexible-table.jsx";
-import SubPanelCell from "../editor-panels/sub-panel-cell.jsx";
-import Icon from "../../icons/icon.jsx";
+import SubPanelCell from "./../panels/sub-panel/cell.jsx";
+import Icon from "./../../icons/icon.jsx";
 import PropertyUtils from "../util/property-utils";
 import { ControlType, EditStyle } from "../constants/form-constants";
 

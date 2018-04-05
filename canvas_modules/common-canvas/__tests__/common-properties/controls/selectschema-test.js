@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
-import OneofselectControl from "../../../src/common-properties/editor-controls/oneofselect-control.jsx";
+import SelectSchemaControl from "../../../src/common-properties/controls/dropdown";
 import { mount } from "enzyme";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
@@ -41,7 +41,7 @@ describe("selectschema renders correctly", () => {
 
 	it("props should have been defined", () => {
 		const wrapper = mount(
-			<OneofselectControl
+			<SelectSchemaControl
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -54,7 +54,7 @@ describe("selectschema renders correctly", () => {
 
 	it("selectschema should render a DropdownControl", () => {
 		const wrapper = mount(
-			<OneofselectControl
+			<SelectSchemaControl
 				control={control}
 				controller={controller}
 				propertyId={propertyId}

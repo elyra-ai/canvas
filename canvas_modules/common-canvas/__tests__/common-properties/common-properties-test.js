@@ -9,8 +9,8 @@
 
 import React from "react";
 import CommonProperties from "../../src/common-properties/common-properties.jsx";
-import PropertiesDialog from "../../src/common-properties/properties-dialog.jsx";
-import PropertiesEditing from "../../src/common-properties/properties-editing.jsx";
+import PropertiesDialog from "../../src/common-properties/components/properties-modal";
+import PropertiesEditing from "../../src/common-properties/components/properties-editor";
 import propertyUtils from "../_utils_/property-utils";
 import { mount } from "enzyme";
 import { expect } from "chai";

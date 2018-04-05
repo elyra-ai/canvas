@@ -18,6 +18,7 @@ import { ParamRole } from "../constants/form-constants";
 import { injectIntl, intlShape } from "react-intl";
 import findIndex from "lodash/findIndex";
 import reject from "lodash/reject";
+import ControlUtils from "../util/control-utils";
 
 class ColumnStructureTableControl extends ColumnStructureTableEditor {
 	constructor(props) {
@@ -192,7 +193,7 @@ class ColumnStructureTableControl extends ColumnStructureTableEditor {
 			propertyId: this.props.propertyId,
 			controlType: "structure-table"
 		};
-		const conditionState = this.getConditionMsgState(conditionProps);
+		const conditionState = ControlUtils.getConditionMsgState(this.props.controller, conditionProps);
 
 		const errorMessage = conditionState.message;
 		const messageType = conditionState.messageType;

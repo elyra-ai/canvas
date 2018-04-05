@@ -9,20 +9,20 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import PropertiesDialog from "./properties-dialog.jsx";
-import PropertiesEditing from "./properties-editing.jsx";
-import PropertiesButtons from "./properties-buttons.jsx";
+import PropertiesModal from "./components/properties-modal";
+import PropertiesEditor from "./components/properties-editor";
+import PropertiesButtons from "./components/properties-buttons";
 import EditorForm from "./editor-controls/editor-form.jsx";
 import Form from "./form/Form";
-import CommonPropertiesAction from "../command-actions/commonPropertiesAction";
+import CommonPropertiesAction from "./../command-actions/commonPropertiesAction";
 import PropertiesController from "./properties-controller";
 import logger from "../../utils/logger";
 import PropertyUtils from "./util/property-utils";
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./constants/constants";
-import { FLYOUT_WIDTH } from "../constants/constants";
+import { FLYOUT_WIDTH } from "./../constants/constants";
 import { Size } from "./constants/form-constants";
 import isEqual from "lodash/isEqual";
-import TitleEditor from "./components/title-editor.jsx";
+import TitleEditor from "./components/title-editor";
 
 import { injectIntl, intlShape } from "react-intl";
 
@@ -226,7 +226,7 @@ class CommonProperties extends React.Component {
 			/>);
 
 			if (this.props.propertiesConfig.containerType === "Editing") {
-				propertiesDialog = (<PropertiesEditing
+				propertiesDialog = (<PropertiesEditor
 					applyLabel={applyLabel}
 					rejectLabel={rejectLabel}
 					bsSize={size}
@@ -236,13 +236,13 @@ class CommonProperties extends React.Component {
 					showPropertiesButtons={this.state.showPropertiesButtons}
 				>
 					{editorForm}
-				</PropertiesEditing>);
+				</PropertiesEditor>);
 			} else if (this.props.propertiesConfig.containerType === "Custom") {
 				propertiesDialog = (<div className="custom-container">
 					{editorForm}
 				</div>);
 			} else { // Modal
-				propertiesDialog = (<PropertiesDialog
+				propertiesDialog = (<PropertiesModal
 					onHide={this.props.callbacks.closePropertiesDialog}
 					title={this.propertiesController.getTitle()}
 					bsSize={size}
@@ -253,7 +253,7 @@ class CommonProperties extends React.Component {
 					rejectLabel={rejectLabel}
 				>
 					{editorForm}
-				</PropertiesDialog>);
+				</PropertiesModal>);
 			}
 			const propertiesId = this.props.propertiesConfig.rightFlyout ? "common-properties-right-flyout-panel" : "";
 			const editorWidth = this.getEditorWidth();

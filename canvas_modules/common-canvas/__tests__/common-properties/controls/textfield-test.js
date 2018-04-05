@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
-import TextfieldControl from "../../../src/common-properties/editor-controls/textfield-control.jsx";
+import TextfieldControl from "../../../src/common-properties/controls/textfield";
 import Controller from "../../../src/common-properties/properties-controller";
 import { CHARACTER_LIMITS } from "../../../src/common-properties/constants/constants.js";
 import { mount } from "enzyme";

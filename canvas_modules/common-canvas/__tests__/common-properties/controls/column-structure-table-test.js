@@ -902,9 +902,9 @@ describe("Cells disable and hide correctly with structure table control", () => 
 		const storageTable = wrapper.find("#flexible-table-field_types");
 		let disabledDropdowns = storageTable.find(".Dropdown-disabled");
 		expect(disabledDropdowns).to.have.length(4);
-		const input = storageTable.find("#editor-control-override_0_field_types_0_1");
+		const input = storageTable.find("#editor-control-override_0");
 		expect(input).to.have.length(1);
-		storageTable.find("input[id='editor-control-override_0_field_types_0_1']").simulate("change", { target: { checked: false } });
+		storageTable.find("input[id='editor-control-override_0']").simulate("change", { target: { checked: false } });
 		wrapper.update();
 		disabledDropdowns = storageTable.find(".Dropdown-disabled");
 		expect(disabledDropdowns).to.have.length(5);
@@ -924,9 +924,9 @@ describe("Cells disable and hide correctly with structure table control", () => 
 		expect(hiddenDropdowns).to.have.length(2);
 
 		expect(hiddenDropdowns.at(1)).not.to.have.style("display", "none");
-		const input = row.find("#editor-control-override_0_field_types_0_1");
+		const input = row.find("#editor-control-override_0");
 		expect(input).to.have.length(1);
-		wrapper.find("input[id='editor-control-override_0_field_types_0_1']").simulate("change", { target: { checked: false } });
+		wrapper.find("input[id='editor-control-override_0']").simulate("change", { target: { checked: false } });
 		wrapper.update();
 		row = dataRows.first();
 		hiddenDropdowns = row.find(".Dropdown-control-panel");

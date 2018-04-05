@@ -146,9 +146,4 @@ _defineConstant("CONTROL_TYPE", {
 	PANEL: "panel"
 });
 
-_defineConstant("ORIENTATIONS", {
-	VERTICAL: "vertical",
-	HORIZONTAL: "horizontal"
-});
-
 _defineConstant("DEFAULT_LABEL_EDITABLE", true);

@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
-import OneofselectControl from "../../../src/common-properties/editor-controls/oneofselect-control.jsx";
+import OneofselectControl from "../../../src/common-properties/controls/dropdown";
 import { mount } from "enzyme";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
@@ -44,7 +44,7 @@ const control = {
 
 const propertyId = { name: "test-oneofselect" };
 
-describe("DropdownControl renders correctly", () => {
+describe("oneofselect renders correctly", () => {
 
 	it("props should have been defined", () => {
 		const wrapper = mount(
@@ -59,7 +59,7 @@ describe("DropdownControl renders correctly", () => {
 		expect(wrapper.prop("propertyId")).to.equal(propertyId);
 	});
 
-	it("should render a DropdownControl", () => {
+	it("should render a oneofselect", () => {
 		const wrapper = mount(
 			<OneofselectControl
 				control={control}
@@ -97,7 +97,7 @@ describe("oneofselect works correctly in common-properties", () => {
 		const options = dropDowns.at(0).prop("options"); // oneofselect
 		expect(options).to.eql(expectedOptions);
 	});
-	it("Validate oneofselect_placeholder rendered correctly", () => {
+	it("Validate oneofselect placeholder rendered correctly", () => {
 		const category = wrapper.find(".category-title-container-right-flyout-panel").at(0); // get the VALUES category
 		const dropDown = category.find("Dropdown").at(6);
 		const placeholder = dropDown.find(".Dropdown-placeholder"); // oneofselect_placeholder

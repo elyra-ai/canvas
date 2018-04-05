@@ -7,7 +7,6 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-// import CheckboxControl from "../../../src/common-properties/editor-controls/checkbox-control.jsx";
 import { expect } from "chai";
 import propertyUtils from "../../_utils_/property-utils";
 import Controller from "../../../src/common-properties/properties-controller";

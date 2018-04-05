@@ -13,7 +13,7 @@
 import { Control, SubControl } from "./ControlInfo";
 import { UIItem } from "./UIItem";
 import { GroupType, PanelType, Type, ControlType, ParamRole } from "../constants/form-constants";
-import { ORIENTATIONS } from "../constants/constants.js";
+import { ORIENTATIONS } from "../constants/form-constants.js";
 import logger from "../../../utils/logger";
 import { StructureDef } from "./StructureInfo";
 import { Action } from "./ActionInfo";

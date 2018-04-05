@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
-import Expression from "../../../src/common-properties/editor-controls/expression-control.jsx";
+import Expression from "../../../src/common-properties/controls/expression";
 import { mount } from "enzyme";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";

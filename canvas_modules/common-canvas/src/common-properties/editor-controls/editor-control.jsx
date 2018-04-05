@@ -10,8 +10,8 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import ValidationMessage from "./validation-message.jsx";
-import ValidationIcon from "./validation-icon.jsx";
+import ValidationMessage from "../components/validation-message";
+import ValidationIcon from "../components/validation-icon";
 import { DEFAULT_VALIDATION_MESSAGE, VALIDATION_MESSAGE, EDITOR_CONTROL, STATES, CONTROL_TYPE } from "../constants/constants.js";
 import PropertyUtil from "../util/property-utils.js";
 

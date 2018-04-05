@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
-import NumberfieldControl from "../../../src/common-properties/editor-controls/numberfield-control.jsx";
+import SpinnerControl from "../../../src/common-properties/controls/numberfield";
 import { mount } from "enzyme";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";
@@ -80,7 +80,7 @@ describe("spinner-control renders correctly", () => {
 
 	it("props should have been defined", () => {
 		const wrapper = mount(
-			<NumberfieldControl
+			<SpinnerControl
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -93,7 +93,7 @@ describe("spinner-control renders correctly", () => {
 
 	it("should set correct state value when integer increment in `SpinnerControl`", () => {
 		const wrapper = mount(
-			<NumberfieldControl
+			<SpinnerControl
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -112,7 +112,7 @@ describe("spinner-control renders correctly", () => {
 
 	it("should set correct state value when integer decrement in `SpinnerControl`", () => {
 		const wrapper = mount(
-			<NumberfieldControl
+			<SpinnerControl
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -130,7 +130,7 @@ describe("spinner-control renders correctly", () => {
 
 	it("should set correct state value when double increment in `SpinnerControl`", () => {
 		const wrapper = mount(
-			<NumberfieldControl
+			<SpinnerControl
 				control={control2}
 				controller={controller}
 				propertyId={propertyId2}
@@ -148,7 +148,7 @@ describe("spinner-control renders correctly", () => {
 
 	it("should set correct state value when double decrement in `SpinnerControl`", () => {
 		const wrapper = mount(
-			<NumberfieldControl
+			<SpinnerControl
 				control={control2}
 				controller={controller}
 				propertyId={propertyId2}
@@ -167,7 +167,7 @@ describe("spinner-control renders correctly", () => {
 	it("should set correct state value when complex double increment in `SpinnerControl`", () => {
 		control2.increment = 0.0022;
 		const wrapper = mount(
-			<NumberfieldControl
+			<SpinnerControl
 				control={control2}
 				controller={controller}
 				propertyId={propertyId2}
@@ -186,7 +186,7 @@ describe("spinner-control renders correctly", () => {
 	it("should set correct state value when complex double decrement in `SpinnerControl`", () => {
 		control2.increment = 0.0022;
 		const wrapper = mount(
-			<NumberfieldControl
+			<SpinnerControl
 				control={control2}
 				controller={controller}
 				propertyId={propertyId2}
@@ -213,7 +213,7 @@ describe("spinner-control renders correctly", () => {
 
 	it("should set correct state value for default spinner with default increment in `SpinnerControl`", () => {
 		const wrapper = mount(
-			<NumberfieldControl
+			<SpinnerControl
 				control={control3}
 				controller={controller}
 				propertyId={propertyId3}

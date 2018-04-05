@@ -10,7 +10,7 @@
 
 import React from "react";
 import propertyUtils from "../../_utils_/property-utils";
-import DatefieldControl from "../../../src/common-properties/editor-controls/datefield-control.jsx";
+import DatefieldControl from "../../../src/common-properties/controls/datefield";
 import { mount } from "enzyme";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";

@@ -123,6 +123,11 @@ const Separator = {
 	AFTER: "after"
 };
 
+const ORIENTATIONS = {
+	VERTICAL: "vertical",
+	HORIZONTAL: "horizontal"
+};
+
 function hasValue(Enum, value) {
 	for (var key in Enum) {
 		if (value === Enum[key]) {
@@ -132,4 +137,4 @@ function hasValue(Enum, value) {
 	return false;
 }
 
-export { GroupType, PanelType, Type, ParamRole, ControlType, hasValue, EditStyle, Size, ItemType, Separator };
+export { GroupType, PanelType, Type, ParamRole, ControlType, hasValue, EditStyle, Size, ItemType, Separator, ORIENTATIONS };

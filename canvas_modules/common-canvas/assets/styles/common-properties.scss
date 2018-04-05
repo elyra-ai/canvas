@@ -37,9 +37,6 @@
 	margin-bottom: 15px;
 }
 
-.control-item {
-	padding: 4px 0 0;
-}
 .control-panel {
 	display: block;
 	padding: 0 4px 0 8px;
@@ -1155,40 +1152,6 @@ input[type="number"][disabled].number--light+.number__spinnerdiv .numpinput__spi
 .reactable-column-header .checkbox-label {
 	margin-left: -9px;
 	margin-bottom: 1px;
-}
-
-/*
-* Override for current version of ap-components
-* Fixed in new versions
-*/
-.properties-action-button .button:focus {
-	background-color: transparent;
-	color: #3D70B2;
-	cursor: pointer;
-	text-decoration: none;
-	outline: none;
-}
-
-.properties-action-button .button:focus .icon {
-	fill: none;
-}
-
-.properties-action-button .button:active {
-	background-color: #3D70B2;
-	border-color: #3D70B2;
-	color: #F5F7FA;
-	cursor: pointer;
-	text-decoration: none;
-	outline: none;
-}
-
-.properties-action-button .button:active .icon {
-	fill: #FFF;
-}
-/**************************/
-
-.properties-action-button {
-	padding: 1px 2px;
 }
 
 .action-panel {

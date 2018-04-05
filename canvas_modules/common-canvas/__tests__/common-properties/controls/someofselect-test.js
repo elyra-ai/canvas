@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
-import SomeOfSelectControl from "../../../src/common-properties/editor-controls/someofselect-control.jsx";
+import SomeOfSelectControl from "../../../src/common-properties/controls/someofselect";
 import { mount } from "enzyme";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";

@@ -14,6 +14,7 @@ import FlexibleTable from "./flexible-table.jsx";
 import MoveableTableRows from "./moveable-table-rows.jsx";
 import ColumnStructureTableEditor from "./column-structure-table-editor.jsx";
 import { injectIntl, intlShape } from "react-intl";
+import ControlUtils from "../util/control-utils";
 
 class ColumnSelectControl extends ColumnStructureTableEditor {
 
@@ -63,7 +64,7 @@ class ColumnSelectControl extends ColumnStructureTableEditor {
 			propertyId: this.props.propertyId,
 			controlType: "column-select"
 		};
-		const conditionState = this.getConditionMsgState(conditionProps);
+		const conditionState = ControlUtils.getConditionMsgState(this.props.controller, conditionProps);
 
 		const errorMessage = conditionState.message;
 		const messageType = conditionState.messageType;

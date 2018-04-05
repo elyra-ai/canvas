@@ -8,31 +8,30 @@
  *******************************************************************************/
 
 /* eslint complexity: ["error", 28] */
-/* eslint max-depth: ["error", 9] */
 
 import React from "react";
 import PropTypes from "prop-types";
 import Tabs from "ap-components-react/dist/components/Tabs";
-import PropertyUtil from "../util/property-utils.js";
-import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, STATES, VALIDATION_MESSAGE } from "../constants/constants";
+import PropertyUtil from "./../util/property-utils.js";
+import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, STATES, VALIDATION_MESSAGE } from "./../constants/constants";
 import isEmpty from "lodash/isEmpty";
 import sortBy from "lodash/sortBy";
-import logger from "../../../utils/logger";
+import logger from "./../../../utils/logger";
 
-import SelectorPanel from "./../editor-panels/selector-panel.jsx";
-import SummaryPanel from "./../editor-panels/summary-panel.jsx";
-import TwistyPanel from "./../editor-panels/twisty-panel.jsx";
-import CheckboxSelectionPanel from "../editor-panels/checkbox-selection-panel.jsx";
-import WideFlyout from "../components/wide-flyout.jsx";
+import SelectorPanel from "./../panels/selector";
+import SummaryPanel from "./../panels/summary";
+import TwistyPanel from "./../panels/twisty";
+import CheckboxSelectionPanel from "./../panels/checkbox-selection";
+import SubPanelButton from "./../panels/sub-panel/button.jsx";
 
-import ButtonAction from "../actions/button-action.jsx";
+import WideFlyout from "./../components/wide-flyout";
+import FieldPicker from "./../components/field-picker";
 
-import SubPanelButton from "./../editor-panels/sub-panel-button.jsx";
-import FieldPicker from "./field-picker.jsx";
+import ButtonAction from "./../actions/button";
 
 import { injectIntl, intlShape } from "react-intl";
 
-import Icon from "../../icons/icon.jsx";
+import Icon from "./../../icons/icon.jsx";
 
 const ALERT_TAB_GROUP = "alertMsgs";
 

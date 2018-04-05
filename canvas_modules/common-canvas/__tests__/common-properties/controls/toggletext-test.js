@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
-import ToggletextControl from "../../../src/common-properties/editor-controls/toggletext-control.jsx";
+import ToggletextControl from "../../../src/common-properties/controls/toggletext";
 import { mount } from "enzyme";
 import { expect } from "chai";
 import Controller from "../../../src/common-properties/properties-controller";

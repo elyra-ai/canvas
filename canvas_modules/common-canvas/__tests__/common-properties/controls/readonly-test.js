@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
-import ReadonlyControl from "../../../src/common-properties/editor-controls/readonly-control.jsx";
+import ReadonlyControl from "../../../src/common-properties/controls/readonly";
 import Controller from "../../../src/common-properties/properties-controller";
 import { mount } from "enzyme";
 import { expect } from "chai";

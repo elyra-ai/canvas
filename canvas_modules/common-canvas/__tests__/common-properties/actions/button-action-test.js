@@ -8,11 +8,11 @@
  *******************************************************************************/
 
 import React from "react";
-import ActionButton from "../../../src/common-properties/actions/button-action.jsx";
+import ActionButton from "./../../../src/common-properties/actions/button";
 import { mount } from "enzyme";
 import { expect } from "chai";
 import sinon from "sinon";
-import Controller from "../../../src/common-properties/properties-controller";
+import Controller from "./../../../src/common-properties/properties-controller";
 
 const actionHandler = sinon.spy();
 const controller = new Controller();

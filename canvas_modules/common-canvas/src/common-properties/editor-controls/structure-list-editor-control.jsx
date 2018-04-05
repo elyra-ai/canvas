@@ -14,7 +14,7 @@ import MoveableTableRows from "./moveable-table-rows.jsx";
 import PropertyUtils from "../util/property-utils";
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "../constants/constants";
 import { injectIntl, intlShape } from "react-intl";
-
+import ControlUtils from "../util/control-utils";
 
 class StructurelisteditorControl extends ColumnStructureTableEditor {
 
@@ -69,7 +69,7 @@ class StructurelisteditorControl extends ColumnStructureTableEditor {
 			propertyId: this.props.propertyId,
 			controlType: "structure-list-editor"
 		};
-		const conditionState = this.getConditionMsgState(conditionProps);
+		const conditionState = ControlUtils.getConditionMsgState(this.props.controller, conditionProps);
 
 		const errorMessage = conditionState.message;
 		const messageType = conditionState.messageType;
@@ -95,7 +95,7 @@ class StructurelisteditorControl extends ColumnStructureTableEditor {
 		const table = this.createTable(stateStyle, stateDisabled, tableButtonConfig);
 
 		const disabled = typeof stateDisabled.disabled !== "undefined" || Object.keys(stateDisabled) > 0;
-		const tableContainer = (<div id={this.getControlID()}>
+		const tableContainer = (<div id={ControlUtils.getControlID(this.props.control, this.props.propertyId)}>
 			<div id={controlIconContainerClass}>
 				<div id="structure-list-editor-table-buttons" className="structure-list-editor">
 					{table}

@@ -20,7 +20,7 @@ module.exports = {
 	devtool: "source-map",
 	entry: {
 		"common-canvas": "./src/index.js",
-		"common-canvas.css": "./assets/index.scss"
+		"common-canvas.css": "./src/index.scss"
 	},
 	output: {
 		library: "Common-Canvas",
