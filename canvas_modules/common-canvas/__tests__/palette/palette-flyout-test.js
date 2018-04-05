@@ -14,7 +14,6 @@ import PaletteFlyoutContent from "../../src/palette/palette-flyout-content.jsx";
 import PaletteFlyoutContentCategory from "../../src/palette/palette-flyout-content-category.jsx";
 import PaletteFlyoutContentList from "../../src/palette/palette-content-list.jsx";
 import PaletteFlyoutContentListItem from "../../src/palette/palette-content-list-item.jsx";
-import sinon from "sinon";
 import { expect } from "chai";
 import CanvasController from "../../src/common-canvas/canvas-controller";
 
@@ -74,6 +73,30 @@ describe("Palette renders correctly", () => {
 
 		input.simulate("change", { target: { value: "VAR" } });
 		expect(flyoutPaletteContent.find(PaletteFlyoutContentListItem)).to.have.length(1);
+	});
+
+	it("should show narrow palette", () => {
+		const config = {
+			showNarrowPalette: true,
+			showPalette: false
+		};
+		const wrapper = createMountedPalette(config);
+		const palette = wrapper.find(".palette-flyout-div-closed");
+		expect(palette).to.have.length(1);
+	});
+
+	it("should show wide palette", () => {
+		const palette = createMountedPalette().find(".palette-flyout-div-open");
+		expect(palette).to.have.length(1);
+	});
+
+	it("palette should be hidden", () => {
+		const config = {
+			showNarrowPalette: false,
+			showPalette: false
+		};
+		const palette = createMountedPalette(config).find(".palette-flyout-div-none");
+		expect(palette).to.have.length(1);
 	});
 });
 
@@ -164,35 +187,30 @@ const paletteSpec = {
 };
 
 function createPalette() {
-	const createTempNodeCallback = sinon.spy();
-	const deleteTempNodeCallback = sinon.spy();
 	const popupPalette = shallow(
 		<PaletteFlyout
 			paletteJSON={paletteSpec}
 			showPalette
-			createTempNode={createTempNodeCallback}
-			deleteTempNode={deleteTempNodeCallback}
 			canvasController={canvasController}
-			isPaletteOpen
 		/>
 	);
 	return popupPalette;
 }
-function createMountedPalette() {
-	const createTempNodeCallback = sinon.spy();
-	const deleteTempNodeCallback = sinon.spy();
+function createMountedPalette(config) {
+	const showPalette = config ? config.showPalette : true;
+	const showNarrowPalette = config ? config.showNarrowPalette : true;
+
 	const popupPalette = mount(
 		<PaletteFlyout
 			paletteJSON={paletteSpec}
-			showPalette
-			createTempNode={createTempNodeCallback}
-			deleteTempNode={deleteTempNodeCallback}
+			showPalette={showPalette}
 			canvasController={canvasController}
-			isPaletteOpen
+			showNarrowPalette={showNarrowPalette}
 		/>
 	);
 	return popupPalette;
 }
+
 
 function findCategoryElement(flyoutPaletteContent, categoryName) {
 	var categories = flyoutPaletteContent.find(".palette-flyout-category");

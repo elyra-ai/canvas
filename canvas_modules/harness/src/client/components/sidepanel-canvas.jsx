@@ -84,6 +84,7 @@ export default class SidePanelForms extends React.Component {
 		this.paletteLayoutOptionChange = this.paletteLayoutOptionChange.bind(this);
 		this.tipConfigChange = this.tipConfigChange.bind(this);
 		this.extraCanvasChange = this.extraCanvasChange.bind(this);
+		this.narrowPalette = this.narrowPalette.bind(this);
 		this.onDragStart = this.onDragStart.bind(this);
 
 	}
@@ -409,6 +410,10 @@ export default class SidePanelForms extends React.Component {
 		this.setState({ extraCanvasOptions: changeEvent.target.checked });
 	}
 
+	narrowPalette(changeEvent) {
+		this.props.setNarrowPalette(changeEvent.target.checked);
+	}
+
 	renderingEngineOptionChange(evt, obj) {
 		this.props.setRenderingEngine(obj.selected);
 	}
@@ -680,6 +685,14 @@ export default class SidePanelForms extends React.Component {
 				]}
 				selected={FLYOUT}
 			/>
+			<div className="sidepanel-headers">Show Narrow Palette</div>
+			<div>
+				<ToggleButton dark
+					id="sidepanel-narrow-flyout"
+					checked={this.props.narrowPalette}
+					onChange={this.narrowPalette}
+				/>
+			</div>
 		</div>);
 
 		var tipConfig = (<div className="sidepanel-children" id="sidepanel-tip-config">
@@ -793,5 +806,7 @@ SidePanelForms.propTypes = {
 	showExtraCanvas: PropTypes.func,
 	log: PropTypes.func,
 	setPaletteLayout: PropTypes.func,
-	setTipConfig: PropTypes.func
+	setTipConfig: PropTypes.func,
+	narrowPalette: PropTypes.bool,
+	setNarrowPalette: PropTypes.func
 };

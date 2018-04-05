@@ -51,6 +51,8 @@ export default class SidePanel extends React.Component {
 				setTipConfig={this.props.setTipConfig}
 				extraCanvasDisplayed={this.props.extraCanvasDisplayed}
 				showExtraCanvas={this.props.showExtraCanvas}
+				narrowPalette={this.props.narrowPalette}
+				setNarrowPalette={this.props.setNarrowPalette}
 				log={this.props.log}
 			/>);
 			break;
@@ -130,5 +132,7 @@ SidePanel.propTypes = {
 	setPortLabel: PropTypes.func,
 	applyOnBlur: PropTypes.bool,
 	useApplyOnBlur: PropTypes.func,
+	narrowPalette: PropTypes.bool,
+	setNarrowPalette: PropTypes.func,
 	log: PropTypes.func
 };

@@ -25,8 +25,10 @@ class PaletteFlyout extends React.Component {
 		// hide side panel
 		if (this.props.showPalette) {
 			className += " palette-flyout-div-open";
-		} else {
+		} else if (this.props.showNarrowPalette) {
 			className += " palette-flyout-div-closed";
+		} else {
+			className += " palette-flyout-div-none";
 		}
 
 		return (
@@ -34,7 +36,7 @@ class PaletteFlyout extends React.Component {
 				<PaletteFlyoutContent
 					paletteJSON={this.props.paletteJSON}
 					canvasController={this.props.canvasController}
-					isPaletteOpen={this.props.isPaletteOpen}
+					isPaletteOpen={this.props.showPalette}
 				/>
 			</div>
 		);
@@ -43,9 +45,9 @@ class PaletteFlyout extends React.Component {
 
 PaletteFlyout.propTypes = {
 	paletteJSON: PropTypes.object.isRequired,
+	showNarrowPalette: PropTypes.bool,
 	showPalette: PropTypes.bool.isRequired,
 	canvasController: PropTypes.object.isRequired,
-	isPaletteOpen: PropTypes.bool.isRequired
 };
 
 export default PaletteFlyout;

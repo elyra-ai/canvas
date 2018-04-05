@@ -90,7 +90,8 @@ class App extends React.Component {
 				"links": true
 			},
 			extraCanvasDisplayed: false,
-			applyOnBlur: true
+			applyOnBlur: true,
+			narrowPalette: true
 		};
 
 		this.currentEditorId = null;
@@ -115,6 +116,7 @@ class App extends React.Component {
 		this.setLayoutDirection = this.setLayoutDirection.bind(this);
 		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
 		this.useApplyOnBlur = this.useApplyOnBlur.bind(this);
+		this.setNarrowPalette = this.setNarrowPalette.bind(this);
 		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
 		this.setRenderingEngine = this.setRenderingEngine.bind(this);
 		this.setConnectionType = this.setConnectionType.bind(this);
@@ -272,6 +274,11 @@ class App extends React.Component {
 	setPaletteLayout(selectedPaletteLayout) {
 		this.setState({ selectedPaletteLayout: selectedPaletteLayout });
 		this.log("Palette Layout selected", selectedPaletteLayout);
+	}
+
+	setNarrowPalette(enabled) {
+		this.setState({ narrowPalette: enabled });
+		this.log("show narrow palette", enabled);
 	}
 
 	setPipelineFlow(flow) {
@@ -948,7 +955,8 @@ class App extends React.Component {
 			enablePaletteLayout: this.state.selectedPaletteLayout,
 			emptyCanvasContent: emptyCanvasDiv,
 			tipConfig: this.state.tipConfig,
-			schemaValidation: true
+			schemaValidation: true,
+			enableNarrowPalette: this.state.narrowPalette
 		};
 
 		var commonCanvasConfig2 = {
@@ -959,7 +967,8 @@ class App extends React.Component {
 			enableInternalObjectModel: this.state.internalObjectModel,
 			enablePaletteLayout: this.state.selectedPaletteLayout,
 			emptyCanvasContent: emptyCanvasDiv,
-			tipConfig: this.state.tipConfig
+			tipConfig: this.state.tipConfig,
+			enableNarrowPalette: this.state.narrowPalette
 		};
 
 		var layoutAction = this.state.selectedLayout === NONE;
@@ -1105,6 +1114,8 @@ class App extends React.Component {
 				extraCanvasDisplayed={this.state.extraCanvasDisplayed}
 				applyOnBlur={this.state.applyOnBlur}
 				useApplyOnBlur={this.useApplyOnBlur}
+				narrowPalette={this.state.narrowPalette}
+				setNarrowPalette={this.setNarrowPalette}
 				log={this.log}
 			/>
 			{/* <IntlProvider key="IntlProvider2" locale={ locale } messages={ messages }>

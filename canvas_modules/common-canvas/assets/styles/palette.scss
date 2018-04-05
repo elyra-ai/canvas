@@ -25,10 +25,21 @@
 
 .palette-flyout-div-open {
 	width: 250px;
+	.palette-flyout-search-icon {
+		pointer-events: none;
+		cursor: default;
+	}
 }
 
 .palette-flyout-div-closed {
 	width: 64px;
+}
+
+.palette-flyout-div-none {
+	width: 0;
+	.palette-flyout-search {
+		display: none;
+	}
 }
 
 .palette-flyout-content .palette-list-item {
@@ -138,7 +149,6 @@
 	display: flex;
 	border-bottom: 2px solid #DFE3E6;
 	border-right: 2px solid #DFE3E6;
-	cursor: pointer;
 }
 
 .palette-flyout-search > svg {
@@ -159,6 +169,7 @@
 	margin: 0;
 	padding: 15px 20px 5px 22px;
 	justify-content: center;
+	cursor: pointer;
 }
 
 .palette-flyout-search-icon:hover {

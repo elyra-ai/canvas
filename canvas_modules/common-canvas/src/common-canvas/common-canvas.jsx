@@ -284,7 +284,8 @@ export default class CommonCanvas extends React.Component {
 	render() {
 		let canvas = null;
 		let palette = null;
-		let paletteClass = "canvas-palette-flyout-div-closed";
+		const showNarrowPalette = this.props.config.enableNarrowPalette || typeof this.props.config.enableNarrowPalette === "undefined";
+		let paletteClass = showNarrowPalette ? "canvas-palette-flyout-div-closed" : "canvas-palette-flyout-div-none";
 		let contextMenuWrapper = null;
 		let canvasToolbar = null;
 		let rightFlyout = (<div className="right-flyout-panel" />);
@@ -341,7 +342,7 @@ export default class CommonCanvas extends React.Component {
 						paletteJSON={this.objectModel.getPaletteData()}
 						showPalette={this.state.isPaletteOpen}
 						canvasController={this.canvasController}
-						isPaletteOpen={this.state.isPaletteOpen}
+						showNarrowPalette={showNarrowPalette}
 					/>);
 				}
 			}
@@ -420,7 +421,7 @@ export default class CommonCanvas extends React.Component {
 }
 
 CommonCanvas.propTypes = {
-	config: PropTypes.object,
+	config: PropTypes.object.isRequired,
 	contextMenuHandler: PropTypes.func,
 	contextMenuActionHandler: PropTypes.func,
 	editActionHandler: PropTypes.func,
