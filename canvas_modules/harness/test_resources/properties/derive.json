@@ -102,7 +102,7 @@
             "content": {
               "itemType": "panel",
               "panel": {
-                "id": "annotations",
+                "id": "annotation",
                 "panelType": "general",
                 "uiItems": [
                   {
@@ -398,7 +398,7 @@
               "default": "Field cannot be empty nor contain \"quotes\"",
               "resource_key": "annotation"
             },
-            "focus_parameter_ref": "annotations"
+            "focus_parameter_ref": "annotation"
           },
           "evaluate": {
             "and": [

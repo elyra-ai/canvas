@@ -138,10 +138,16 @@ class CommonProperties extends React.Component {
 	}
 
 	applyPropertiesEditing(closeProperties) {
-		// only save if title or parameters have changed
+		// validate all the input values.
+		const previousErrorMessages = this.propertiesController.getErrorMessages();
+		this.propertiesController.validatePropertiesValues();
+		const newErrorMessages = this.propertiesController.getErrorMessages();
+
+		// only save if title or parameters have changed or new error messages
 		if (this.originalTitle !== this.propertiesController.getTitle() ||
 				(this.currentParameters && JSON.stringify(this.currentParameters) !==
-				JSON.stringify(this.propertiesController.getPropertyValues(false)))) {
+				JSON.stringify(this.propertiesController.getPropertyValues(false))) ||
+				(JSON.stringify(previousErrorMessages) !== JSON.stringify(newErrorMessages))) {
 
 			// set current values
 			const valueInfo = { additionalInfo: {}, undoInfo: {} };

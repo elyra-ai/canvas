@@ -80,7 +80,6 @@ export default class PropertiesController {
 		// set initial property values
 		if (this.form) {
 			this.controls = {};
-			this.panelTree = {};
 			this.setControlStates({}); // clear state
 			this.setErrorMessages({}); // clear messages
 			this.isSummaryPanel = false; // when new form is set, summary panel is gone
@@ -208,6 +207,7 @@ export default class PropertiesController {
 		return propertyId;
 	}
 	parsePanelTree() {
+		this.panelTree = {};
 		this.panelTree[PANEL_TREE_ROOT] = { controls: [], panels: [] };
 		UiGroupsParser.parseUiContent(this.panelTree, this.form, PANEL_TREE_ROOT);
 	}
@@ -595,11 +595,13 @@ export default class PropertiesController {
 	/*
 	* Property Values Methods
 	*/
-	updatePropertyValue(inPropertyId, value) {
+	updatePropertyValue(inPropertyId, value, skipValidateInput) {
 		const propertyId = this.convertPropertyId(inPropertyId);
 		this.propertiesStore.updatePropertyValue(propertyId, value);
 		conditionsUtil.validateConditions(inPropertyId, this);
-		conditionsUtil.validateInput(inPropertyId, this);
+		if (!skipValidateInput) {
+			conditionsUtil.validateInput(inPropertyId, this);
+		}
 		if (this.handlers.propertyListener) {
 			this.handlers.propertyListener(
 				{

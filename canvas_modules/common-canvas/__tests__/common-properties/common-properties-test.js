@@ -16,6 +16,7 @@ import { mount } from "enzyme";
 import { expect } from "chai";
 import sinon from "sinon";
 import editStyleResource from "../test_resources/json/form-editstyle-test.json";
+import numberfieldResource from "../test_resources/paramDefs/numberfield_paramDef.json";
 import { IntlProvider } from "react-intl";
 
 
@@ -27,6 +28,29 @@ const localMessages = {
 	"structureTable.addButton.label": "Add Some Stuff",
 	"propertiesEdit.applyButton.label": "CONFIRM",
 	"propertiesEdit.rejectButton.label": "NOT"
+};
+
+const validationErroMessages = {
+	"number_undefined": {
+		"validation_id": "required_number_undefined_F26$7s#9)",
+		"type": "error",
+		"text": "Required parameter 'Undefined' has no value"
+	},
+	"number_null": {
+		"validation_id": "required_number_null_F26$7s#9)",
+		"type": "error",
+		"text": "Required parameter 'Null' has no value"
+	},
+	"number_error": {
+		"type": "error",
+		"text": "Needs to be greaterThan 0",
+		"validation_id": "number_error"
+	},
+	"number_warning": {
+		"type": "warning",
+		"text": "Needs to be greaterThan 1",
+		"validation_id": "number_warning"
+	}
 };
 
 const propertiesInfo = {};
@@ -157,6 +181,66 @@ describe("CommonProperties works correctly in flyout", () => {
 		expect(renderedObject.callbacks.closePropertiesDialog).to.have.property("callCount", 0);
 		wrapper.unmount();
 	});
+});
+
+
+describe("CommonProperties validates on close in flyout", () => {
+	it("Validate input when applyOnBlur=true the `Close` button pressed", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource); // default is applyOnBlur=true
+		const wrapper = renderedObject.wrapper;
+		const controller = renderedObject.controller;
+		// should not have any messages to start
+		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify({}));
+		// click close and expect validation error messsages
+		wrapper.find("#properties-apply-button")
+			.at(0)
+			.simulate("click");
+		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify(validationErroMessages));
+		wrapper.unmount();
+	});
+
+	it("Validate input when applyOnBlur=true and focus changes", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource); // default is applyOnBlur=true
+		const wrapper = renderedObject.wrapper;
+		const controller = renderedObject.controller;
+		// should not have any messages to start
+		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify({}));
+
+		// similate blur with no changes, expect validation error messages
+		wrapper.find("#common-properties-right-flyout-panel").simulate("blur");
+		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify(validationErroMessages));
+		wrapper.unmount();
+	});
+
+
+	it("Validate input when applyOnBlur=false the `Save` button pressed", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource, { applyOnBlur: false });
+		const wrapper = renderedObject.wrapper;
+		const controller = renderedObject.controller;
+		// should not have any messages to start
+		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify({}));
+		// click save and expect validation error messsages
+		wrapper.find("#properties-apply-button")
+			.at(0)
+			.simulate("click");
+		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify(validationErroMessages));
+		wrapper.unmount();
+	});
+
+	it("Do not validate input when applyOnBlur=false the `Cancel` button pressed", () => {
+		const renderedObject = propertyUtils.flyoutEditorForm(numberfieldResource, { applyOnBlur: false });
+		const wrapper = renderedObject.wrapper;
+		const controller = renderedObject.controller;
+		// should not have any messages to start
+		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify({}));
+		// click cancel and expect validation error messsages
+		wrapper.find("#properties-cancel-button")
+			.at(0)
+			.simulate("click");
+		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify({}));
+		wrapper.unmount();
+	});
+
 });
 
 function createCommonProperties(container, messages) {

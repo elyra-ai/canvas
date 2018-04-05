@@ -20,22 +20,22 @@ Feature: UndoRedo
 
 		Then I open the palette
 		Then I add node 1 a "Var. File" node from the "Import" category onto the canvas at 350, 200
-		Then I add node 2 a "Derive" node from the "Field Ops" category onto the canvas at 450, 200
+		Then I add node 2 a "Select" node from the "Record Ops" category onto the canvas at 450, 200
 		Then I close the palette
 		Then I click undo
 		Then I verify the number of nodes are 1
 		Then I click redo
 		Then I verify the number of nodes are 2
 
-		Then I link node 1 the "Var. File" node to node 2 the "Derive" node for link 1 on the canvas
+		Then I link node 1 the "Var. File" node to node 2 the "Select" node for link 1 on the canvas
 		Then I press Ctrl/Cmnd+Z to Undo
 		Then I verify the number of data links are 0
 		Then I click redo
 		Then I verify the number of data links are 1
 
-		Then I select node 2 the "Derive" node
+		Then I select node 2 the "Select" node
 
-		Then I add comment 1 at location 350, 250 with the text "This comment box should be linked to the derive node."
+		Then I add comment 1 at location 350, 250 with the text "This comment box should be linked to the Select node."
 		Then I click undo
 		Then I click undo
 		Then I verify the number of comments are 0
@@ -55,7 +55,7 @@ Feature: UndoRedo
 		Then I click redo
 		Then I verify the node move was done
 
-		Then I move comment 1 with text " This comment box should be linked to the derive node." onto the canvas by 100, 100
+		Then I move comment 1 with text " This comment box should be linked to the Select node." onto the canvas by 100, 100
 		Then I click undo
 		Then I verify the comment move was not done
 		Then I click redo
@@ -63,7 +63,7 @@ Feature: UndoRedo
 
 		Then I edit comment 1 with the comment text "This comment box should be edited."
 		Then I click undo
-		Then I verify comment 1 with the comment text "This comment box should be linked to the derive node."
+		Then I verify comment 1 with the comment text "This comment box should be linked to the Select node."
 		Then I click redo
 		Then I verify comment 1 with the comment text "This comment box should be edited."
 
@@ -73,7 +73,7 @@ Feature: UndoRedo
 		Then I click redo
 		Then I verify the number of nodes are 1
 
-		Then I delete comment 1 linked to the "Derive" node with the comment text "This comment box should be edited."
+		Then I delete comment 1 linked to the "Select" node with the comment text "This comment box should be edited."
 		Then I click undo
 		Then I verify the number of comments are 1
 		Then I click redo

@@ -71,26 +71,7 @@
               "y_pos": 219,
               "class_name": "canvas-node",
               "label": "Na_to_K",
-              "messages": [
-                {
-                  "id_ref": "formula_measure_type",
-                  "validation_id": "formula_measure_type",
-                  "type": "warning",
-                  "text": "Field cannot be default"
-                },
-                {
-                  "id_ref": "custom_name",
-                  "validation_id": "custom_name",
-                  "type": "warning",
-                  "text": "Annotation is empty when there is a custom name"
-                },
-                {
-                  "id_ref": "annotations",
-                  "validation_id": "annotations",
-                  "type": "warning",
-                  "text": "Field cannot be empty nor contain \"quotes\""
-                }
-              ]
+              "messages": []
             }
           },
           "inputs": [

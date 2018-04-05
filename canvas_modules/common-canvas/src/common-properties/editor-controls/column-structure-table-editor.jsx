@@ -82,20 +82,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 	componentDidMount() {
 		if (this.props.control.subControls) {
 			const updatedControlValues = this.setReadOnlyColumnValue(this.getCurrentControlValue());
-			this.props.controller.updatePropertyValue(this.props.propertyId, updatedControlValues);
-			// run validation for each cell
-			const controlValues = this.getCurrentControlValue();
-			for (let rowIndex = 0; rowIndex < controlValues.length; rowIndex++) {
-				for (let colIndex = 0; colIndex < this.props.control.subControls.length; colIndex++) {
-					this.props.controller.validateInput(
-						{
-							name: this.props.control.name,
-							row: rowIndex,
-							col: colIndex
-						}
-					);
-				}
-			}
+			this.props.controller.updatePropertyValue(this.props.propertyId, updatedControlValues, true);
 		}
 	}
 

@@ -70,21 +70,7 @@ function validatePropertiesListValues(controller, controls) {
 				continue;
 			}
 			const propertyId = control.name ? { name: control.name } : { name: control };
-			const controlValue = controller.getPropertyValue(propertyId);
-			if (Array.isArray(controlValue) && control.subControls) {
-			// validate the table as a whole
-				validateInput(propertyId, controller);
-				// validate each cell
-				for (let rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
-					for (let colIndex = 0; colIndex < control.subControls.length; colIndex++) {
-						propertyId.row = rowIndex;
-						propertyId.col = colIndex;
-						validateInput(propertyId, controller);
-					}
-				}
-			} else {
-				validateInput(propertyId, controller);
-			}
+			validateInput(propertyId, controller);
 		}
 	}
 }
@@ -132,73 +118,32 @@ function validatePropertiesListConditions(controller, controls, newStates) {
 
 /**
 * This function will validate a single properties value.
+* If the proeprtyId is a table it will also validate each cell in the table
 *
 * @param {object} propertyId. required
 * @param {object} properties controller. required
 */
-function validateInput(propertyId, controller) {
-	const control = controller.getControl(propertyId);
+function validateInput(inPropertyId, controller) {
+	const control = controller.getControl(inPropertyId);
 	if (!control) {
-		logger.warn("Control not found for " + propertyId.name);
+		logger.warn("Control not found for " + inPropertyId.name);
 		return;
 	}
-	let errorSet = false;
-	const validations = controller.getDefinitions(propertyId, CONDITION_TYPE.VALIDATION, CONDITION_DEFINITION_INDEX.CONTROLS);
-	if (validations.length > 0) {
-		try {
-			let output = false;
-			for (const validation of validations) {
-				let errorMessage = DEFAULT_VALIDATION_MESSAGE;
-				output = UiConditions.validateInput(validation.definition, propertyId, controller);
-				let isError = false;
-				if (typeof output === "object") {
-					isError = true;
-					errorMessage = {
-						type: output.type,
-						text: output.text
-					};
-				}
-				let msgPropertyId = cloneDeep(propertyId);
-				if (validation.definition.validation &&
-					validation.definition.validation.fail_message &&
-					validation.definition.validation.fail_message.focus_parameter_ref) {
-					msgPropertyId = getParamRefPropertyId(validation.definition.validation.fail_message.focus_parameter_ref);
-					if (typeof propertyId.row !== "undefined") {
-						msgPropertyId.row = propertyId.row;
-					}
-				}
-				errorMessage.validation_id = msgPropertyId.name;
-				if (validation.definition.validation &&
-					validation.definition.validation.id) {
-					errorMessage.validation_id = validation.definition.validation.id;
-				}
-				if ((typeof output === "object") || (isError && !errorSet)) {
-					controller.updateErrorMessage(msgPropertyId, errorMessage);
-					if (isError) {
-						errorSet = true;
-					}
-				} else if (!isError) {
-					const msg = controller.getErrorMessage(msgPropertyId);
-					if (!isEmpty(msg) && (msg.validation_id === errorMessage.validation_id)) {
-						controller.updateErrorMessage(msgPropertyId, DEFAULT_VALIDATION_MESSAGE);
-					}
-				}
+	const propertyId = cloneDeep(inPropertyId);
+	const controlValue = controller.getPropertyValue(propertyId);
+	if (Array.isArray(controlValue) && control.subControls) {
+	// validate the table as a whole
+		_validateInput(propertyId, controller, control);
+		// validate each cell
+		for (let rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
+			for (let colIndex = 0; colIndex < control.subControls.length; colIndex++) {
+				propertyId.row = rowIndex;
+				propertyId.col = colIndex;
+				_validateInput(propertyId, controller, control);
 			}
-		} catch (error) {
-			logger.warn("Error thrown in validation: " + error);
 		}
-	}
-
-	if (!errorSet && controller.isRequired(propertyId)) {
-		errorSet = _requiredValidation(propertyId, controller);
-	}
-
-	if (!errorSet && control.role === "date") {
-		_isValidDate(propertyId, controller, control.dateFormat);
-	}
-
-	if (!errorSet && control.role === "time") {
-		_isValidTime(propertyId, controller, control.timeFormat);
+	} else {
+		_validateInput(propertyId, controller, control);
 	}
 }
 
@@ -386,6 +331,65 @@ function 	_propagateParentPanelStates(panelTree, newStates, currentPanel, disabl
 			}
 			_propagateParentPanelStates(panelTree, newStates, panel, disabledOnly);
 		}
+	}
+}
+
+// This will validate a single propertyID value
+function _validateInput(propertyId, controller, control) {
+	let errorSet = false;
+	const validations = controller.getDefinitions(propertyId, CONDITION_TYPE.VALIDATION, CONDITION_DEFINITION_INDEX.CONTROLS);
+	if (validations.length > 0) {
+		try {
+			let output = false;
+			for (const validation of validations) {
+				let errorMessage = DEFAULT_VALIDATION_MESSAGE;
+				output = UiConditions.validateInput(validation.definition, propertyId, controller);
+				let isError = false;
+				if (typeof output === "object") {
+					isError = true;
+					errorMessage = {
+						type: output.type,
+						text: output.text
+					};
+				}
+				let msgPropertyId = cloneDeep(propertyId);
+				if (validation.definition.validation &&
+					validation.definition.validation.fail_message &&
+					validation.definition.validation.fail_message.focus_parameter_ref) {
+					msgPropertyId = getParamRefPropertyId(validation.definition.validation.fail_message.focus_parameter_ref, msgPropertyId);
+				}
+				errorMessage.validation_id = msgPropertyId.name;
+				if (validation.definition.validation &&
+					validation.definition.validation.id) {
+					errorMessage.validation_id = validation.definition.validation.id;
+				}
+				if (isError && !errorSet) {
+					controller.updateErrorMessage(msgPropertyId, errorMessage);
+					if (isError) {
+						errorSet = true;
+					}
+				} else if (!isError) {
+					const msg = controller.getErrorMessage(msgPropertyId);
+					if (!isEmpty(msg) && (msg.validation_id === errorMessage.validation_id)) {
+						controller.updateErrorMessage(msgPropertyId, DEFAULT_VALIDATION_MESSAGE);
+					}
+				}
+			}
+		} catch (error) {
+			logger.warn("Error thrown in validation: " + error);
+		}
+	}
+
+	if (!errorSet && controller.isRequired(propertyId)) {
+		errorSet = _requiredValidation(propertyId, controller);
+	}
+
+	if (!errorSet && control.role === "date") {
+		_isValidDate(propertyId, controller, control.dateFormat);
+	}
+
+	if (!errorSet && control.role === "time") {
+		_isValidTime(propertyId, controller, control.timeFormat);
 	}
 }
 

@@ -534,7 +534,7 @@
             },
             "group_info": [
               {
-                "id": "Inline editing",
+                "id": "Inline editing2",
                 "parameter_refs": [
                   "inlineEditingTableError"
                 ]
@@ -549,7 +549,7 @@
             },
             "group_info": [
               {
-                "id": "Inline editing",
+                "id": "Inline editing3",
                 "parameter_refs": [
                   "inlineEditingTableError2"
                 ]

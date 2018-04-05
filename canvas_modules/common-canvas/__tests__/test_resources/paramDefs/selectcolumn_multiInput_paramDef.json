@@ -147,7 +147,7 @@
         "type": "panels",
         "group_info": [
           {
-            "id": "selectcolumn-values",
+            "id": "selectcolumn-values1",
             "label": {
               "default": "Values"
             },
@@ -158,7 +158,7 @@
             ]
           },
           {
-            "id": "selectcolumn-values",
+            "id": "selectcolumn-values2",
             "label": {
               "default": "Values"
             },
