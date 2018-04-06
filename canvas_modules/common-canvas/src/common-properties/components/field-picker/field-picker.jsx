@@ -15,12 +15,11 @@ import FlexibleTable from "./../../editor-controls/flexible-table.jsx";
 import PropertiesButtons from "./../properties-buttons";
 import PropertyUtils from "./../../util/property-utils";
 
-import { Tr, Td } from "reactable";
 import Button from "ap-components-react/dist/components/Button";
 import Checkbox from "ap-components-react/dist/components/Checkbox";
 import { injectIntl, intlShape } from "react-intl";
 
-import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, DATA_TYPES, TOOL_TIP_DELAY } from "./../../constants/constants";
+import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, DATA_TYPES, TOOL_TIP_DELAY, FP_CHECKBOX_WIDTH } from "./../../constants/constants";
 import Icon from "./../../../icons/icon.jsx";
 
 import isEmpty from "lodash/isEmpty";
@@ -38,14 +37,12 @@ class FieldPicker extends React.Component {
 			fields: this.props.fields, // list of fields dynamically adjusted by filtered or sort criteria
 			filterIcons: [],
 			filterText: "",
-			selectedFields: this.props.currentFields, // list of fields selected
-			headerWidth: 756
+			selectedFields: this.props.currentFields // list of fields selected
 		};
 		this.multiSchema = props.controller.getDatasetMetadataSchemas() &&
 			props.controller.getDatasetMetadataSchemas().length > 1;
 		this.filterList = [];
 
-		this.updateDimensions = this.updateDimensions.bind(this);
 		this.filterType = this.filterType.bind(this);
 		this.getTableData = this.getTableData.bind(this);
 		this.getVisibleData = this.getVisibleData.bind(this);
@@ -61,15 +58,6 @@ class FieldPicker extends React.Component {
 
 	componentWillMount() {
 		this.filterList = this.getAvailableFilters();
-	}
-
-	componentDidMount() {
-		this.updateDimensions();
-		window.addEventListener("resize", this.updateDimensions);
-	}
-
-	componentWillUnmount() {
-		window.removeEventListener("resize", this.updateDimensions);
 	}
 
 	onFilter(filterString) {
@@ -123,7 +111,7 @@ class FieldPicker extends React.Component {
 		return filters;
 	}
 
-	getTableData(checkboxWidth, fieldWidth, dataWidth) {
+	getTableData() {
 		const fields = this.getVisibleData();
 		const tableData = [];
 		const selectedFields = this.state.selectedFields;
@@ -145,26 +133,33 @@ class FieldPicker extends React.Component {
 			}
 
 			const columns = [];
-			columns.push(<Td key="field-picker-column-checkbox" column="checkbox" style={{ "width": checkboxWidth }}><div className="field-picker-checkbox">
-				<Checkbox id={"field-picker-checkbox-" + i}
-					checked={checked}
-					onChange={this.handleFieldChecked}
-					data-name={field.name}
-					data-type={field.type}
-				/></div></Td>);
-			columns.push(<Td key="field-picker-column-fieldname" column="fieldName" style={{ "width": fieldWidth }}>{field.origName}</Td>);
-
+			columns.push({
+				column: "checkbox",
+				width: FP_CHECKBOX_WIDTH,
+				content: (<div className="field-picker-checkbox">
+					<Checkbox id={"field-picker-checkbox-" + i}
+						checked={checked}
+						onChange={this.handleFieldChecked}
+						data-name={field.name}
+						data-type={field.type}
+					/></div>)
+			});
+			columns.push({ column: "fieldName", content: field.origName });
 			if (this.multiSchema) {
-				columns.push(<Td key="field-picker-column-schemaname" column="schemaName" style={{ "width": fieldWidth }}>{field.schema}</Td>);
+				columns.push({ column: "schemaName", content: field.schema });
 			}
-			columns.push(<Td key="field-picker-column-datatype" column="dataType" style={{ "width": dataWidth }}><div className="field-picker-data">
-				<div className={"field-picker-data-type-icon"}>
-					<Icon type={field.type} />
-				</div>
-				<div className="field-type">{field.type}</div>
-			</div></Td>);
+			columns.push({
+				column: "dataType",
+				content: (<div className="field-picker-data">
+					<div className={"field-picker-data-type-icon"}>
+						<Icon type={field.type} />
+					</div>
+					<div className="field-type">{field.type}</div>
+				</div>),
+				value: field.type
+			});
 
-			tableData.push(<Tr key="field-picker-data-rows" className="field-picker-data-rows">{columns}</Tr>);
+			tableData.push({ className: "field-picker-data-rows", columns: columns });
 		}
 		return tableData;
 	}
@@ -200,17 +195,6 @@ class FieldPicker extends React.Component {
 			}
 		}
 		return deltas;
-	}
-
-	updateDimensions() {
-		// This is needed for field-picker in modal dialogs. This can be removed in issue #1038
-		const table = document.getElementById("flexible-table-container-wrapper");
-		if (table !== null) {
-			const tableRect = table.getBoundingClientRect();
-			if (this.state.headerWidth !== tableRect.width) {
-				this.setState({ headerWidth: tableRect.width });
-			}
-		}
 	}
 
 	handleSave() {
@@ -450,21 +434,6 @@ class FieldPicker extends React.Component {
 			checkedAll = false;
 		}
 
-		const headerWidthSections = this.state.headerWidth / 10;
-		let checkboxWidth = Math.round(headerWidthSections);
-		let fieldWidth = Math.round(headerWidthSections * 6);
-		let dataWidth = Math.round(headerWidthSections * 3);
-
-		if (this.props.rightFlyout) {
-			checkboxWidth = 66;
-			fieldWidth = 392;
-			dataWidth = 196;
-		}
-
-		if (this.multiSchema) {
-			fieldWidth /= 2;
-		}
-
 		const fieldColumnLabel = PropertyUtils.formatMessage(this.props.intl,
 			MESSAGE_KEYS.FIELDPICKER_FIELDCOLUMN_LABEL, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_FIELDCOLUMN_LABEL);
 		// TODO: debug why resource key not used
@@ -479,14 +448,14 @@ class FieldPicker extends React.Component {
 				onChange={this.handleCheckAll}
 				checked={checkedAll}
 			/>
-		</div>, "width": checkboxWidth });
-		headers.push({ "key": "fieldName", "label": fieldColumnLabel, "width": fieldWidth });
+		</div>, "width": FP_CHECKBOX_WIDTH });
+		headers.push({ "key": "fieldName", "label": fieldColumnLabel });
 		if (this.multiSchema) {
-			headers.push({ "key": "schemaName", "label": schemaColumnLabel, "width": fieldWidth });
+			headers.push({ "key": "schemaName", "label": schemaColumnLabel });
 		}
-		headers.push({ "key": "dataType", "label": dataTypeColumnLabel, "width": dataWidth });
+		headers.push({ "key": "dataType", "label": dataTypeColumnLabel });
 
-		const tableData = this.getTableData(checkboxWidth, fieldWidth, dataWidth);
+		const tableData = this.getTableData();
 
 		return (
 			<FlexibleTable className="table" id="table"

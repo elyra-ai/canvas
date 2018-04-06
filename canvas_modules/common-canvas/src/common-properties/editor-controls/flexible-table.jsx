@@ -13,7 +13,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import { injectIntl, intlShape } from "react-intl";
-import { Table, Thead, Th } from "reactable";
+import { Table, Thead, Th, Tr, Td } from "reactable";
 import TextField from "ap-components-react/dist/components/TextField";
 import Icon from "../../icons/icon.jsx";
 import PropertyUtils from "../util/property-utils";
@@ -33,44 +33,6 @@ const sortDir = {
 
 class FlexibleTable extends React.Component {
 
-	static calculateColumnWidths(columns, elementId, parentTableWidth) {
-		// get the parent table width
-		let tableWidth = parentTableWidth;
-		if (elementId !== null) {
-			const table = document.getElementById(elementId);
-			if (table) {
-				tableWidth = parseInt(window.getComputedStyle(table, null).getPropertyValue("width"), 10);
-			}
-		}
-		for (const columnDef of columns) {
-			// if columns have specific width subtract from total width
-			if (columnDef.width && typeof columnDef.width === "string" && columnDef.width.includes("px")) {
-				tableWidth -= parseFloat(columnDef.width);
-			}
-		}
-		const widths = [];
-		let totalWidth = 0;
-		// only calculate column widths that don't have "px"
-		for (const columnDef of columns) {
-			if (!columnDef.width) {
-				totalWidth += 30; // set default width of 30 if nothing provided
-			} else if (typeof columnDef.width !== "string") {
-				totalWidth += columnDef.width;
-			}
-		}
-		const pxMultiplier = Math.floor(tableWidth / totalWidth);
-		for (const columnDef of columns) {
-			// push actual size with "px" already set
-			if (columnDef.width && typeof columnDef.width === "string" && columnDef.width.includes("px")) {
-				widths.push(columnDef.width);
-			} else {
-				const size = columnDef.width ? columnDef.width : 30;
-				widths.push(size * pxMultiplier + "px");
-			}
-		}
-		return widths;
-	}
-
 	constructor(props) {
 		super(props);
 
@@ -87,6 +49,7 @@ class FlexibleTable extends React.Component {
 			tableHeight: 0
 		};
 
+		this.calculateColumnWidths = this.calculateColumnWidths.bind(this);
 		this.handleFilterChange = this.handleFilterChange.bind(this);
 		this.scrollToRow = this.scrollToRow.bind(this);
 		this.onSort = this.onSort.bind(this);
@@ -113,10 +76,83 @@ class FlexibleTable extends React.Component {
 		}
 	}
 
+	/**
+	* Calculate the width for each column to fit within the table
+	* Widths provided in columns without 'px' are 'weighted' and will be scaled
+	* Widths provided in columns with 'px' are used as is without scaling
+	*   if width is provided with 'px', subtract that from the total available table width
+	*   if width is provided, divide the column 'weighted' width with the max width from columns
+	*     return the scaled factor
+	*     multiply each column 'weighted' width with the scaled factor to get the actual width in pixels
+	* @param columns column definitions
+	* @param parentTableWidth
+	*/
+	calculateColumnWidths(columns, parentTableWidth) {
+		let tableWidth = parentTableWidth - 15; // subtract 15 for the left padding scss $flexible-table-first-column-left-padding
+		let remainingColumns = columns.length; // keep track of how many columns to calculate width for
+		let maxWeight = 0;
+
+		for (const columnDef of columns) {
+			// if columns have specific width subtract from total width
+			if (columnDef.width) {
+				if (typeof columnDef.width === "string" && columnDef.width.includes("px")) {
+					tableWidth -= parseInt(columnDef.width, 10);
+					remainingColumns--;
+				} else {
+					maxWeight = Math.max(maxWeight, columnDef.width); // keep track of which column has highest width provided
+				}
+			}
+		}
+
+		const widths = [];
+		const defaultWidth = Math.floor(tableWidth / remainingColumns); // use default width for columns without a weight
+		const weightedWidths = [];
+		let sumWeightedWidths = 0;
+
+		// scale weight of columns with width provided
+		for (const columnDef of columns) {
+			if (columnDef.width && !isNaN(columnDef.width)) {
+				weightedWidths.push(columnDef.width / maxWeight);
+				sumWeightedWidths += (columnDef.width / maxWeight);
+			} else {
+				weightedWidths.push(null);
+			}
+		}
+
+		const scaledWidth = tableWidth / sumWeightedWidths; // scaled width multiplier for each column with width provided
+
+		let sumColumnWidth = 0;
+		for (let idx = 0; idx < columns.length; idx++) {
+			const columnDef = columns[idx];
+			if (columnDef.width) {
+				// use the width provided with 'px' as is
+				if (typeof columnDef.width === "string" && columnDef.width.includes("px")) {
+					widths.push(Math.floor(parseInt(columnDef.width, 10)) + "px");
+					sumColumnWidth += parseInt(columnDef.width, 10);
+				} else { // multiply the width provided by the scaled width
+					const calculatedWidth = Math.floor(weightedWidths[idx] * scaledWidth);
+					widths.push(calculatedWidth + "px");
+					sumColumnWidth += calculatedWidth;
+				}
+			} else { // if no width provided, use the defaultWidth
+				widths.push(defaultWidth);
+				sumColumnWidth += defaultWidth;
+			}
+		}
+
+		// if any columns had decimals floored, allocate additional space to the first column
+		if (sumColumnWidth < parentTableWidth) {
+			const firstColWith = parseInt(widths[0], 10);
+			widths[0] = firstColWith + parentTableWidth - sumColumnWidth + "px";
+		}
+
+		return widths;
+	}
+
 	_updateTableWidth(element) {
 		if (this.state.tableWidth !== element.width) {
 			this.setState({
-				tableWidth: element.width
+				tableWidth: Math.floor(element.width - 2) // subtract 2 px for the borders
 			});
 		}
 	}
@@ -172,26 +208,36 @@ class FlexibleTable extends React.Component {
 		}
 	}
 
-	render() {
-		// go through the header and add the sort direction and convert to use reactable.Th element
+	/**
+	* Generate the table header from this.props.columns
+	* this.props.columns: array of objects
+	* [
+	*   {
+	*     "key": string,
+	*     "label": string,
+	*     "width": integer or string if containts 'px',
+	*     "description": optional string
+	*   }
+	* ]
+	* @param columnWidths
+	*/
+	generateTableHeaderRow(columnWidths) {
 		const headers = [];
-		// some controls do not want a header
-		const renderHeader = this.props.columns.length > 0;
 		let searchLabel = "";
-		const tableWidth = this.state.tableWidth;
-		const tableHeight = this.state.tableHeight;
-		const columnWidths = FlexibleTable.calculateColumnWidths(this.props.columns, null, tableWidth);
-
 		for (var j = 0; j < this.props.columns.length; j++) {
 			const columnDef = this.props.columns[j];
 			const columnStyle = { "width": columnWidths[j] };
 			const tooltipId = uuid4() + "-tooltip-column-" + columnDef.key;
-			const className = j === 0 ? "left-padding-15" : "";
+			const className = "";
+
+			// uncomment the or clause to create tooltips for header labels
+			//   wrap the label in a tooltip in case it overflows
+			const tooltipText = columnDef.description; // || (typeof columnDef.label === "string" ? columnDef.label : null);
 			let tooltip;
-			if (((columnDef.editStyle && columnDef.editStyle === "inline") || columnDef.controlType === "checkbox") && columnDef.description) {
+			if (tooltipText) {
 				tooltip = (
 					<div className="properties-tooltips">
-						{columnDef.description}
+						{tooltipText}
 					</div>
 				);
 			}
@@ -241,28 +287,83 @@ class FlexibleTable extends React.Component {
 				searchLabel = columnDef.label;
 			}
 		}
+		return {
+			headers: headers,
+			searchLabel: searchLabel
+		};
+	}
 
-		let headerStyle = {};
-		let tableStyle = {};
-		if (this.props.validationStyle && this.props.validationStyle.borderColor) {
-			headerStyle = {
-				borderTopColor: this.props.validationStyle.borderColor,
-				borderLeftColor: this.props.validationStyle.borderColor,
-				borderRightColor: this.props.validationStyle.borderColor
-			};
-			tableStyle = {
-				borderBottomColor: this.props.validationStyle.borderColor,
-				borderLeftColor: this.props.validationStyle.borderColor,
-				borderRightColor: this.props.validationStyle.borderColor
-			};
-			if (!renderHeader) {
-				tableStyle.borderTopColor = this.props.validationStyle.borderColor;
+	/**
+	* Generate the table body from this.props.data
+	* this.props.data: object of columns
+	* {
+	*   className: string,
+	*   onClickCallback: function,
+	*   columns: array of objects where each object corresponds to a row in the table
+	* }
+	*
+	* columns: array of objects
+	* [
+	*   {
+	*     column: columnDef.name,
+	*     width: columnDef.width,
+	*     content: cellContent,
+	*     className: cellClassName
+	*   }
+	* ]
+	* @param columnWidths
+	*/
+	generateTableRows(columnWidths) {
+		const tableRows = [];
+		for (let ridx = 0; ridx < this.props.data.length; ridx++) {
+			const row = this.props.data[ridx];
+			const tableRowColumns = [];
+			const onClickCallback = row.onClickCallback ? { onClick: row.onClickCallback } : null;
+			const rowClassName = row.className ? row.className : "";
+
+			if (row.columns) {
+				for (let cidx = 0; cidx < row.columns.length; cidx++) {
+					const column = row.columns[cidx];
+					const colWidth = { width: columnWidths[cidx] };
+					const value = column.value ? { value: column.value } : {};
+
+					tableRowColumns.push(<Td
+						key={this.props.scrollKey + "-row-" + ridx + "-col-" + cidx}
+						column={column.column}
+						data-label={column.column}
+						style={colWidth}
+						className={column.className ? column.className : ""}
+						{...value}
+					>{column.content}</Td>);
+				}
 			}
+
+			tableRows.push(<Tr
+				{...onClickCallback}
+				key={this.props.scrollKey + "-row-" + ridx}
+				className={rowClassName}
+			>{tableRowColumns}</Tr>);
 		}
+		return tableRows;
+	}
+
+	render() {
+		const renderHeader = this.props.columns.length > 0; // some controls do not want a header
+		const hideTableHeader = renderHeader ? {} : { "hideTableHeader": true };
+
+		const tableWidth = this.state.tableWidth;
+		const tableHeight = this.state.tableHeight;
+		const columnWidths = this.calculateColumnWidths(this.props.columns, tableWidth);
+
+		const headerInfo = this.generateTableHeaderRow(columnWidths);
+		const headers = headerInfo.headers;
+		const searchLabel = headerInfo.searchLabel;
+		const tableContent = this.generateTableRows(columnWidths);
 
 		let renderTable = "";
-		let renderTableHeaderContents = "";
 		let searchBar = null;
+		let filterProps = {};
+
 		if (typeof this.props.filterable !== "undefined" && this.props.filterable.length !== 0) {
 			const placeHolder = PropertyUtils.formatMessage(this.props.intl,
 				MESSAGE_KEYS.TABLE_SEARCH_PLACEHOLDER, MESSAGE_KEYS_DEFAULTS.TABLE_SEARCH_PLACEHOLDER) + " " + searchLabel;
@@ -289,47 +390,14 @@ class FlexibleTable extends React.Component {
 			);
 
 			if (renderHeader) {
-				renderTableHeaderContents = (
-					<div className="flexible-table-container-header-wrapper">
-						<div className="flexible-table-header" style={{ width: tableWidth }}>
-							<Table className="filter-header-border"
-								style={headerStyle}
-								key="flexible-table"
-								id="table-header"
-								sortable={this.props.sortable}
-								filterable={this.props.filterable}
-								hideFilterInput
-								filterBy={this.props.filterKeyword}
-								onSort={this.onSort}
-								onFilter={this.onFilter}
-							>
-								<Thead key="flexible-table-thead">
-									{headers}
-								</Thead>
-							</Table>
-						</div>);
-					</div>);
+				filterProps = {
+					filterable: this.props.filterable,
+					hideFilterInput: true,
+					filterBy: this.props.filterKeyword
+				};
 			}
-
-		} else if (renderHeader) {
-			renderTableHeaderContents = (
-				<div className="flexible-table-container-header-wrapper">
-					<div className="flexible-table-header-container" style={{ width: tableWidth }}>
-						<Table className="filter-header-border"
-							style={headerStyle}
-							id="table-header"
-							sortable={this.props.sortable}
-							onSort={this.onSort}
-							onFilter={this.onFilter}
-						>
-							<Thead key="flexible-table-thead">
-								{headers}
-							</Thead>
-						</Table>
-					</div>
-				</div>
-			);
 		}
+
 		if (typeof this.props.scrollToRow !== "undefined" && this.props.scrollToRow !== null) {
 			this.scrollToRow(this.props.alignTop);
 		}
@@ -340,6 +408,14 @@ class FlexibleTable extends React.Component {
 		const conditionIconClass = this.props.icon &&
 			this.props.icon.props.validateErrorMessage &&
 			this.props.icon.props.validateErrorMessage.type !== CONDITION_MESSAGE_TYPE.INFO ? "flexible-table-container-icon" : "";
+
+		let tableStyle = {};
+		if (this.props.validationStyle && this.props.validationStyle.borderColor) {
+			tableStyle = {
+				borderColor: this.props.validationStyle.borderColor
+			};
+		}
+
 		renderTable = (
 			<div>
 				{searchBar}
@@ -349,16 +425,20 @@ class FlexibleTable extends React.Component {
 						{this.props.topRightPanel}
 						<ObserveSize observerFn={(element) => this._updateTableWidth(element)}>
 							<div id="flexible-table-container-wrapper" style={ heightStyle }>
-								{renderTableHeaderContents}
 								<div className={containerClass} style={tableStyle}>
 									<div id={containerId} style={{ width: tableWidth }}>
-										<Table
-											className="table"
+										<Table {...filterProps}
+											className={"table flexible-table"}
 											id="table"
-											hideTableHeader
 											ref="table"
+											sortable={this.props.sortable}
+											onSort={this.onSort}
+											{...hideTableHeader}
 										>
-											{this.props.data}
+											<Thead key="flexible-table-thead">
+												{headers}
+											</Thead>
+											{tableContent}
 										</Table>
 									</div>
 								</div>

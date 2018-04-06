@@ -1,0 +1,25 @@
+/*******************************************************************************
+ * Licensed Materials - Property of IBM
+ * (c) Copyright IBM Corporation 2018. All Rights Reserved.
+ *
+ * Note to U.S. Government Users Restricted Rights:
+ * Use, duplication or disclosure restricted by GSA ADP Schedule
+ * Contract with IBM Corp.
+ *******************************************************************************/
+
+.rightside-modal-container #field-picker-table #flexible-table-container-wrapper {
+	height: 100%;
+	overflow-y: auto;
+}
+
+.rightside-modal-container #field-picker-table .flexible-table-container-absolute {
+	height: 498px;
+}
+
+.field-picker-checkbox {
+	width: 20px;
+}
+
+tr.field-picker-data-rows {
+	border-bottom: 1px solid #DFE3E6;
+}

@@ -581,30 +581,67 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		const tableRows = fieldpicker.find(".field-picker-data-rows");
 		expect(tableRows.length).to.equal(29);
 
-		let row0Columns = tableRows.at(0).find("td");
-		expect(row0Columns.at(1).text()).to.equal("drugs");
-		expect(row0Columns.at(2).text()).to.equal("schema");
+		const expectedOrder = [
+			"0", "0", "0", "0", "0", "0",
+			"3", "3", "3", "3", "3", "3",
+			"data_1", "data_1", "data_1", "data_1", "data_1", "data_1",
+			"data_2", "data_2", "data_2", "data_2", "data_2", "data_2",
+			"schema", "schema", "schema", "schema", "schema"
+		];
 
-		const row5Columns = tableRows.at(5).find("td");
-		expect(row5Columns.at(1).text()).to.equal("Date");
-		expect(row5Columns.at(2).text()).to.equal("data_2");
-
-		const row11Columns = tableRows.at(11).find("td");
-		expect(row11Columns.at(1).text()).to.equal("Timestamp");
-		expect(row11Columns.at(2).text()).to.equal("data_1");
+		for (let idx = 0; idx < tableRows.length; idx++) {
+			expect(tableRows.at(idx).find("td")
+				.at(2)
+				.text())
+				.to.equal(expectedOrder[idx]);
+		}
 
 		sortable.at(1).simulate("click");
-		row0Columns = tableRows.at(0).find("td");
-		expect(row0Columns.at(1).text()).to.equal("Time");
-		expect(row0Columns.at(2).text()).to.equal("0");
+		let reverseIdx = tableRows.length - 1;
+		for (let idx = 0; idx < tableRows.length; idx++) {
+			expect(tableRows.at(idx).find("td")
+				.at(2)
+				.text())
+				.to.equal(expectedOrder[reverseIdx]);
+			reverseIdx--;
+		}
+	});
 
-		const row6Columns = tableRows.at(6).find("td");
-		expect(row6Columns.at(1).text()).to.equal("drug3");
-		expect(row6Columns.at(2).text()).to.equal("3");
+	it("should be able to sort by data type", () => {
+		const sortable = fieldpicker.find(".reactable-header-sortable");
+		expect(sortable).to.have.length(3);
 
-		const row12Columns = tableRows.at(12).find("td");
-		expect(row12Columns.at(1).text()).to.equal("Timestamp");
-		expect(row12Columns.at(2).text()).to.equal("data_1");
+		sortable.at(2).simulate("click");
+		const tableRows = fieldpicker.find(".field-picker-data-rows");
+		expect(tableRows.length).to.equal(29);
+
+		const expectedOrder = [
+			"date",
+			"double", "double", "double", "double",
+			"integer", "integer", "integer", "integer", "integer",
+			"string", "string", "string", "string", "string", "string", "string", "string", "string", "string", "string", "string", "string", "string",
+			"time", "time", "time",
+			"timestamp", "timestamp"
+		];
+
+		for (let idx = 0; idx < tableRows.length; idx++) {
+			expect(tableRows.at(idx).find("td")
+				.at(3)
+				.find(".field-type")
+				.text())
+				.to.equal(expectedOrder[idx]);
+		}
+
+		sortable.at(2).simulate("click");
+		let reverseIdx = tableRows.length - 1;
+		for (let idx = 0; idx < tableRows.length; idx++) {
+			expect(tableRows.at(idx).find("td")
+				.at(3)
+				.find(".field-type")
+				.text())
+				.to.equal(expectedOrder[reverseIdx]);
+			reverseIdx--;
+		}
 	});
 
 	it("should be able to select the same field name from different schemas", () => {

@@ -147,7 +147,7 @@ module.exports = function() {
 		const cells = rows[Number(rowNumber) - 1].$$("td");
 		var cell = null;
 		for (var idx = 0; idx < cells.length; idx++) {
-			if (cells[idx].getAttribute("label") === cellLabel) {
+			if (cells[idx].getAttribute("data-label") === cellLabel) {
 				cell = cells[idx];
 				break;
 			}

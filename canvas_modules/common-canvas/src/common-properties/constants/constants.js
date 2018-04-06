@@ -147,3 +147,9 @@ _defineConstant("CONTROL_TYPE", {
 });
 
 _defineConstant("DEFAULT_LABEL_EDITABLE", true);
+
+_defineConstant("FP_CHECKBOX_WIDTH", "40px");
+
+_defineConstant("TABLE_SUBPANEL_BUTTON_WIDTH", "36px");
+
+_defineConstant("TABLE_SCROLLBAR_WIDTH", "15px");

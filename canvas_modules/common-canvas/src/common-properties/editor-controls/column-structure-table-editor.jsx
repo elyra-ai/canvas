@@ -9,7 +9,6 @@
 // Base class for table controls
 
 import React from "react";
-import { Tr, Td } from "reactable";
 import Button from "ap-components-react/dist/components/Button";
 import Checkbox from "ap-components-react/dist/components/Checkbox";
 import EditorControl from "./editor-control.jsx";
@@ -19,7 +18,8 @@ import Icon from "./../../icons/icon.jsx";
 import PropertyUtils from "../util/property-utils";
 import { ControlType, EditStyle } from "../constants/form-constants";
 
-import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, TOOL_TIP_DELAY, STATES } from "../constants/constants";
+import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, TOOL_TIP_DELAY, STATES,
+	TABLE_SCROLLBAR_WIDTH, TABLE_SUBPANEL_BUTTON_WIDTH } from "../constants/constants";
 import findIndex from "lodash/findIndex";
 import isEmpty from "lodash/isEmpty";
 import sortBy from "lodash/sortBy";
@@ -213,11 +213,8 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		}
 	}
 
-	_makeCell(columnDef, controlValue, rowIndex, colIndex, colWidth, stateStyle, stateDisabled) {
-		let cell;
+	_makeCell(columnDef, controlValue, rowIndex, colIndex, stateStyle, stateDisabled) {
 		let cellContent;
-		const columnStyle = { "width": colWidth };
-		columnStyle.paddingLeft = colIndex === 0 ? "15px" : "0";
 		const disabled = this._getDisabledStatus(rowIndex, colIndex, stateDisabled);
 		const propertyId = {
 			name: this.props.control.name,
@@ -231,33 +228,27 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		if (Array.isArray(cellContent)) {
 			cellContent = cellContent.join(", ");
 		}
+		let cellClassName = "";
 		const ControlFactory = this.props.controller.getControlFactory();
-		const tableCellWidth = parseFloat(colWidth) - parseFloat(columnStyle.paddingLeft) + "px";
-		if (columnDef.editStyle === EditStyle.SUBPANEL) {
-			cellContent = this._getCustomCtrlContent(propertyId, columnDef, cellContent, tableInfo);
-			cell = (
-				<Td className={"table-cell " + cellDisabledClassName} key={colIndex} column={columnDef.name} style={columnStyle}>
-					<div className="table-text">
-						<span style={{ "width": tableCellWidth }}>{cellContent}</span>
-					</div>
-				</Td>);
-		} else if (columnDef.editStyle === EditStyle.ON_PANEL) {
-			cellContent = this._getCustomCtrlContent(propertyId, columnDef, cellContent, tableInfo);
-			cell = (
-				<Td className={"table-cell " + cellDisabledClassName} key={colIndex} column={columnDef.name} style={columnStyle}>
-					<div className="table-text">
-						<span style={{ "width": tableCellWidth }}>{cellContent}</span>
-					</div>
-				</Td>);
-			// save the cell content in an object
-			cellContent = ControlFactory.createControlItem(columnDef, propertyId);
-			this.onPanelContainer[rowIndex].push(<div key={colIndex}><br /> {cellContent} </div>);
+		if (columnDef.editStyle === EditStyle.SUBPANEL || columnDef.editStyle === EditStyle.ON_PANEL) {
+			cellContent = (<div className="table-text">
+				<span>{this._getCustomCtrlContent(propertyId, columnDef, cellContent, tableInfo)}</span>
+			</div>);
+			cellClassName = "table-cell " + cellDisabledClassName;
+			if (columnDef.editStyle === EditStyle.ON_PANEL) {
+				// save the cell content in an object
+				this.onPanelContainer[rowIndex].push(<div key={colIndex}><br />{ControlFactory.createControlItem(columnDef, propertyId)}</div>);
+			}
 		} else { // defaults to inline control
 			tableInfo.editStyle = EditStyle.INLINE;
 			cellContent = ControlFactory.createControl(columnDef, propertyId, tableInfo);
-			cell = (<Td key={colIndex} column={columnDef.name} style={columnStyle}>{cellContent}</Td>);
 		}
-		return cell;
+		return {
+			column: columnDef.name,
+			width: columnDef.width,
+			content: cellContent,
+			className: cellClassName
+		};
 	}
 	_getCustomCtrlContent(propertyId, columnDef, defaultContent, tableInfo) {
 		let cellContent = defaultContent;
@@ -513,8 +504,6 @@ export default class ColumnStructureTableEditor extends EditorControl {
 					"key": columnDef.name,
 					"label": columnLabel,
 					"width": columnDef.width,
-					"editStyle": columnDef.editStyle,
-					"controlType": columnDef.controlType,
 					"description": (columnDef.description ? columnDef.description.text : null) });
 				if (columnDef.filterable) {
 					filterFields.push(columnDef.name);
@@ -523,16 +512,14 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		}
 		if (this.props.control.childItem) {
 			// set to specific size
-			headers.push({ "key": "edit", "label": "", "width": "36px" });
+			headers.push({ "key": "subpanel", "label": "", "width": TABLE_SUBPANEL_BUTTON_WIDTH });
 		}
 		// add extra column for overlay scrollbar
-		headers.push({ "key": "edit", "label": "", "width": "7px" });
+		headers.push({ "key": "scrollbar", "label": "", "width": TABLE_SCROLLBAR_WIDTH });
 		this.filterFields = filterFields;
 
 		const controlValue = this.getCurrentControlValue();
-		// calculate for all columns except the last which is used for the scroll bar
-		const columnWidths = FlexibleTable.WrappedComponent.calculateColumnWidths(headers, "flexible-table-" + this.props.control.name, 0);
-		this.makeCells(rows, controlValue, columnWidths, stateStyle, stateDisabled);
+		this.makeCells(rows, controlValue, stateStyle, stateDisabled);
 
 		if (this.props.customContainer) {
 			this.scrollToRow = null;
@@ -573,43 +560,48 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		);
 	}
 
-	makeCells(rows, controlValue, columnWidths, stateStyle, stateDisabled) {
+	makeCells(rows, controlValue, stateStyle, stateDisabled) {
 		for (let rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
 			const columns = [];
 			this.onPanelContainer[rowIndex] = [];
 			if (this.includeInFilter(rowIndex)) {
-				let visibleIndx = 0;
 				for (var colIndex = 0; colIndex < this.props.control.subControls.length; colIndex++) {
 					const columnDef = this.props.control.subControls[colIndex];
 					// we need to build the on-panel container so that when the row is selected and a not visible column is on-panel
 					// the on-panel container will be available for display.
 					if (columnDef.visible || columnDef.editStyle === EditStyle.ON_PANEL) {
 						const content = this._makeCell(columnDef, controlValue, rowIndex,
-							colIndex, columnWidths[visibleIndx], stateStyle, stateDisabled);
+							colIndex, stateStyle, stateDisabled);
 						// only add content if column is visible
 						if (columnDef.visible) {
 							columns.push(content);
-							visibleIndx += 1;
 						}
 					}
 				}
 				if (this.props.control.childItem) {
-					const cell = this.buildChildItem(columnWidths, rowIndex, stateDisabled);
+					const cell = this.buildChildItem(rowIndex, stateDisabled);
 					columns.push(cell);
 				}
-				// add extra 7px cell for overlay scrollbar
-				columns.push(<Td key={columns.length} column={"scrollbar"} style={{ "width": "7px", "padding": "0 0 0 0" }}><div /></Td>);
-				rows.push(<Tr key={rowIndex} onClick={this.handleRowClick.bind(this, rowIndex)} className={this.getRowClassName(rowIndex)}>{columns}</Tr>);
+				// add padding for scrollbar
+				columns.push({
+					key: rowIndex + "-1-scrollbar",
+					column: "scrollbar",
+					width: TABLE_SCROLLBAR_WIDTH,
+					content: <div />
+				});
+				rows.push({
+					className: this.getRowClassName(rowIndex),
+					onClickCallback: this.handleRowClick.bind(this, rowIndex),
+					columns: columns
+				});
 			}
 		}
 	}
 
-	buildChildItem(columnWidths, rowIndex, stateDisabled) {
+	buildChildItem(rowIndex, stateDisabled) {
 		// Assumes the child item is an "ADDITIONAL_LINK" object.
 		// However, we will extract information from the and will create our own Cell-based invoker.
 		const propertyId = { name: this.props.propertyId.name, row: rowIndex };
-		const subPanelColIndex = this.props.control.subControls.length;
-		const columnStyle = { "width": columnWidths[subPanelColIndex] };
 		const subItemButton = this.props.buildUIItem(rowIndex, this.props.control.childItem, propertyId, this.indexOfColumn);
 		// Hack to decompose the button into our own in-table link
 		const disabled = typeof stateDisabled.disabled !== "undefined" || Object.keys(stateDisabled) > 0;
@@ -625,7 +617,11 @@ export default class ColumnStructureTableEditor extends EditorControl {
 					rightFlyout={this.props.rightFlyout}
 				/>
 			</div>);
-		return (<Td key={subPanelColIndex} column={"subPanel"} style={columnStyle}>{subCell}</Td>);
+		return {
+			column: "subpanel",
+			width: TABLE_SUBPANEL_BUTTON_WIDTH,
+			content: subCell
+		};
 	}
 }
 

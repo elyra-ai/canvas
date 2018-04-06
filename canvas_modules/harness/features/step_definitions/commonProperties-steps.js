@@ -77,7 +77,7 @@ module.exports = function() {
 	});
 
 	this.Then(/^I verify "([^"]*)" is not present second input control$/, function(firstInput) {
-		var checkSecondTablefields = browser.$$(".reactable-data")[1].$$("tr");
+		var checkSecondTablefields = browser.$(".reactable-data").$$("tr");
 		var fieldFlag = true;
 
 		checkSecondTablefields.forEach(function(checkSecondTablefield) {
@@ -90,7 +90,7 @@ module.exports = function() {
 	});
 
 	this.Then(/^I verify "([^"]*)" is not present first input control$/, function(secondInput) {
-		var checkFirstTablefields = browser.$$(".reactable-data")[1].$$("tr");
+		var checkFirstTablefields = browser.$(".reactable-data").$$("tr");
 		var fieldFlag = true;
 
 		checkFirstTablefields.forEach(function(checkFirstTablefield) {
@@ -151,7 +151,7 @@ module.exports = function() {
 		var drugOrder = browser.$$(".toggletext_text")[1];
 		drugOrder.click();
 
-		var naRow = browser.$$(".reactable-data")[1].$$("tr")[0];
+		var naRow = browser.$(".reactable-data").$$("tr")[0];
 		naRow.click();
 
 		var moveNaLast = browser.$$(".table-row-move-button:not([disabled])")[1];
@@ -161,7 +161,7 @@ module.exports = function() {
 		var testmoveNaLast2 = testmoveNaLast1.$(".table-selected-row").$$("td")[0].getText();
 		expect("Na").toEqual(testmoveNaLast2);
 
-		var drugRow = browser.$$(".reactable-data")[1].$$("tr")[0];
+		var drugRow = browser.$(".reactable-data").$$("tr")[0];
 		drugRow.click();
 
 		var moveDrugDown = browser.$$(".table-row-move-button:not([disabled])")[0];
@@ -171,7 +171,7 @@ module.exports = function() {
 		var testmoveDrugDown2 = testmoveDrugDown1.$(".table-selected-row").$$("td")[0].getText();
 		expect("Drug").toEqual(testmoveDrugDown2);
 
-		naRow = browser.$$(".reactable-data")[1].$$("tr")[2];
+		naRow = browser.$(".reactable-data").$$("tr")[2];
 		naRow.click();
 
 		var moveNaFirst = browser.$$(".table-row-move-button:not([disabled])")[0];
@@ -181,7 +181,7 @@ module.exports = function() {
 		var testmoveNaFirst2 = testmoveNaFirst1.$(".table-selected-row").$$("td")[0].getText();
 		expect("Na").toEqual(testmoveNaFirst2);
 
-		drugRow = browser.$$(".reactable-data")[1].$$("tr")[2];
+		drugRow = browser.$(".reactable-data").$$("tr")[2];
 		drugRow.click();
 
 		var moveDrugUp = browser.$$(".table-row-move-button:not([disabled])")[1];

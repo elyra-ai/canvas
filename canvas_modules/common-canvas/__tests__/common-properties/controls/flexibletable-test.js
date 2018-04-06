@@ -11,7 +11,6 @@ import React from "react";
 import FlexibleTable from "../../../src/common-properties/editor-controls/flexible-table.jsx";
 // import { mount } from "enzyme";
 import { mountWithIntl } from "enzyme-react-intl";
-import { Tr, Td } from "reactable";
 import { expect } from "chai";
 import chai from "chai";
 import chaiEnzyme from "chai-enzyme";
@@ -21,42 +20,66 @@ chai.use(chaiEnzyme()); // Note the invocation at the end
 const handleRowClick = sinon.spy();
 
 const rows = [
-	<Tr key={0} onClick={handleRowClick}>
-		<Td key={0} column="fields">"Na"</Td>
-		<Td key={1} column="sortOrder">"Ascending"</Td>
-		<Td key={2} column="junk">"one"</Td>
-		<Td key={3} column="last">"five"</Td>
-	</Tr>,
-	<Tr key={0} onClick={handleRowClick}>
-		<Td key={0} column="fields">"Age"</Td>
-		<Td key={1} column="sortOrder">"Descending"</Td>
-		<Td key={2} column="junk">"two"</Td>
-		<Td key={3} column="last">"four"</Td>
-	</Tr>,
-	<Tr key={0} onClick={handleRowClick}>
-		<Td key={0} column="fields">"Sex"</Td>
-		<Td key={1} column="sortOrder">"Descending"</Td>
-		<Td key={2} column="junk">"three"</Td>
-		<Td key={3} column="last">"three"</Td>
-	</Tr>,
-	<Tr key={0} onClick={handleRowClick}>
-		<Td key={0} column="fields">"Gender"</Td>
-		<Td key={1} column="sortOrder">"Ascending"</Td>
-		<Td key={2} column="junk">"four"</Td>
-		<Td key={3} column="last">"two"</Td>
-	</Tr>,
-	<Tr key={0} onClick={handleRowClick}>
-		<Td key={0} column="fields">"Occupation"</Td>
-		<Td key={1} column="sortOrder">"Descending"</Td>
-		<Td key={2} column="junk">"five"</Td>
-		<Td key={3} column="last">"one"</Td>
-	</Tr>,
-	<Tr key={0} onClick={handleRowClick}>
-		<Td key={0} column="fields">"Age"</Td>
-		<Td key={1} column="sortOrder">"Descending"</Td>
-		<Td key={2} column="junk">"two"</Td>
-		<Td key={3} column="last">"four"</Td>
-	</Tr>
+	{
+		className: "table-row",
+		onClickCallback: handleRowClick,
+		columns: [
+			{ column: "fields", content: "Na" },
+			{ column: "sortOrder", content: "Ascending" },
+			{ column: "junk", content: "one" },
+			{ column: "last", content: "five" }
+		]
+	},
+	{
+		className: "table-row",
+		onClickCallback: handleRowClick,
+		columns: [
+			{ column: "fields", content: "Age" },
+			{ column: "sortOrder", content: "Descending" },
+			{ column: "junk", content: "two" },
+			{ column: "last", content: "four" }
+		]
+	},
+	{
+		className: "table-row",
+		onClickCallback: handleRowClick,
+		columns: [
+			{ column: "fields", content: "Sex" },
+			{ column: "sortOrder", content: "Descending" },
+			{ column: "junk", content: "three" },
+			{ column: "last", content: "three" }
+		]
+	},
+	{
+		className: "table-row",
+		onClickCallback: handleRowClick,
+		columns: [
+			{ column: "fields", content: "Gender" },
+			{ column: "sortOrder", content: "Ascending" },
+			{ column: "junk", content: "four" },
+			{ column: "last", content: "two" }
+		]
+	},
+	{
+		className: "table-row",
+		onClickCallback: handleRowClick,
+		columns: [
+			{ column: "fields", content: "Occupation" },
+			{ column: "sortOrder", content: "Descending" },
+			{ column: "junk", content: "five" },
+			{ column: "last", content: "one" }
+		]
+	},
+	{
+		className: "table-row",
+		onClickCallback: handleRowClick,
+		columns: [
+			{ column: "fields", content: "Age" },
+			{ column: "sortOrder", content: "Descending" },
+			{ column: "junk", content: "two" },
+			{ column: "last", content: "four" }
+		]
+	}
 ];
 
 const headers = [
@@ -121,13 +144,11 @@ describe("FlexibleTable renders correctly", () => {
 			/>
 		);
 
-		expect(wrapper.find("#table-header")).to.have.length(1);
-		expect(wrapper.find(".flexible-table-header")).to.have.length(1);
-		const tableBody = wrapper.find("#flexible-table-container");
-		expect(tableBody).to.have.length(1);
-		const tableData = tableBody.find(".reactable-data");
-		expect(tableData).to.have.length(1);
-		expect(tableData.find("tr")).to.have.length(6);
+		const table = wrapper.find("#flexible-table-container");
+		expect(table).to.have.length(1);
+		expect(table.find(".reactable-column-header")).to.have.length(1);
+		expect(table.find(".reactable-data")).to.have.length(1);
+		expect(table.find(".reactable-data").find("tr")).to.have.length(6);
 
 	});
 

@@ -646,7 +646,7 @@
           },
           {
             "parameter_ref": "order",
-            "width": 16,
+            "width": 10,
             "label": {
               "resource_key": "sort_order.label"
             },
@@ -661,7 +661,7 @@
           },
           {
             "parameter_ref": "checkbox",
-            "width": 5,
+            "width": 8,
             "label": {
               "resource_key": "checkbox.label"
             },
