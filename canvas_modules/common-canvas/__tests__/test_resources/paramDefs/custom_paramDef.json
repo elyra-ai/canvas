@@ -1,6 +1,6 @@
 {
   "titleDefinition": {
-    "title": "Custom Controls"
+    "title": "Custom Controls and Operators"
   },
   "current_parameters": {
     "custom_toggle": true,
@@ -21,7 +21,8 @@
           "high"
         ]
       ]
-    ]
+    ],
+    "custom_op_num": 0
   },
   "parameters": [
     {
@@ -33,6 +34,10 @@
       "type": "array[structuretable]",
       "role": "column",
       "required": true
+    },
+    {
+      "id": "custom_op_num",
+      "type": "integer"
     }
   ],
   "complex_types": [
@@ -54,8 +59,8 @@
           "id": "sub-structuretable",
           "type": "array[sub-structuretable]",
           "default": [
-              0,
-              "Value..."
+            0,
+            "Value..."
           ]
         }
       ]
@@ -101,6 +106,15 @@
         "description": {
           "default": "This table has a custom control.",
           "placement": "on_panel"
+        }
+      },
+      {
+        "parameter_ref": "custom_op_num",
+        "label": {
+          "default": "Integer"
+        },
+        "description": {
+          "default": "numberfield with an error when value > 100 using a custom operator called `customMax`"
         }
       }
     ],
@@ -170,17 +184,46 @@
       {
         "id": "custom-panel",
         "label": {
-          "default": "Custom"
+          "default": "Custom Controls"
         },
         "type": "controls",
         "parameter_refs": [
           "custom_toggle",
           "structuretable"
         ]
+      },
+      {
+        "id": "custom-ops",
+        "label": {
+          "default": "Custom Operators"
+        },
+        "type": "controls",
+        "parameter_refs": [
+          "custom_op_num"
+        ]
       }
     ]
   },
-  "conditions": [],
+  "conditions": [
+    {
+      "validation": {
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "custom_op_num",
+          "message": {
+            "default": "Value needs to be less than 100"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "custom_op_num",
+            "op": "customMax",
+            "value": 100
+          }
+        }
+      }
+    }
+  ],
   "dataset_metadata": [
     {
       "fields": [

@@ -34,6 +34,8 @@ class CommonProperties extends React.Component {
 		};
 		this.propertiesInfo = this.props.propertiesInfo;
 		this.propertiesController = new PropertiesController();
+		this.propertiesController.setCustomControls(props.customControls);
+		this.propertiesController.setConditionOps(props.customConditionOps);
 
 		this.propertiesController.subscribe(() => {
 			this.forceUpdate();
@@ -56,7 +58,6 @@ class CommonProperties extends React.Component {
 			actionHandler: this.props.callbacks.actionHandler
 		});
 		this.propertiesController.setPipelineErrorMessages(this.propertiesInfo.messages);
-		this.propertiesController.setCustomControls(this.props.customControls);
 	}
 
 	componentDidMount() {
@@ -73,7 +74,8 @@ class CommonProperties extends React.Component {
 				this.currentParameters = null;
 				this.propertiesController.setPipelineErrorMessages(this.propertiesInfo.messages);
 				this.propertiesController.setAppData(this.propertiesInfo.appData);
-				this.propertiesController.setCustomControls(this.props.customControls);
+				this.propertiesController.setCustomControls(newProps.customControls);
+				this.propertiesController.setConditionOps(newProps.customConditionOps);
 			}
 		}
 	}
@@ -298,6 +300,7 @@ CommonProperties.propTypes = {
 	}),
 	customPanels: PropTypes.array, // array of custom panels
 	customControls: PropTypes.array, // array of custom controls
+	customConditionOps: PropTypes.array, // array of custom condition ops
 	intl: intlShape,
 };
 

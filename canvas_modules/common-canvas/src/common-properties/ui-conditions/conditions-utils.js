@@ -731,6 +731,23 @@ function _isValidTime(propertyId, controller, tmFormat) {
 	return errorSet;
 }
 
+function searchInArray(array, element, state) {
+	let found = state;
+	for (let i = 0; i < array.length; i++) {
+		if (Array.isArray(array[i])) {
+			found = searchInArray(array[i], element, found);
+		} else if (typeof array[i] === "string" && array[i].indexOf(element) >= 0) {
+			found = true;
+		} else if (array[i] === element) { // compare whole cell
+			found = true;
+		}
+		if (found) {
+			return true;
+		}
+	}
+	return found;
+}
+
 
 module.exports.validatePropertiesValues = validatePropertiesValues;
 module.exports.validateConditions = validateConditions;
@@ -740,3 +757,4 @@ module.exports.filterConditions = filterConditions;
 module.exports.updateState = updateState;
 module.exports.getParamRefPropertyId = getParamRefPropertyId;
 module.exports.updatePanelChildrenStatesForPanelIds = updatePanelChildrenStatesForPanelIds;
+module.exports.searchInArray = searchInArray;

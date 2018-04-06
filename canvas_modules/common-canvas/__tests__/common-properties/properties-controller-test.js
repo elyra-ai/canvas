@@ -15,6 +15,10 @@ import conditionForm from "../test_resources/json/conditions-summary-form.json";
 import datasetMetadata from "../test_resources/json/datasetMetadata.json";
 import testUtils from "../_utils_/property-utils";
 
+import EqualsOverride from "../_utils_/custom-condition-ops/equals-override";
+import CustomInvalidOp from "../_utils_/custom-condition-ops/customInvalid";
+import CustomMax from "../_utils_/custom-condition-ops/customMax";
+
 const propValues = {
 	param_int: 5,
 	param_str: "Testing a string parameter",
@@ -279,7 +283,7 @@ deepFreeze(errorMessages);
 function getCopy(value) {
 	return JSON.parse(JSON.stringify(value));
 }
-var controller;
+var controller = new Controller();
 function reset() {
 	// setting of states needs to be done after property values.
 	// conditions are ran on each set and update of property values
@@ -902,5 +906,46 @@ describe("Properties Controller summary panel", () => {
 		controller.setForm(conditionForm);
 		const actualValues = controller.getSummaryPanelControls("summary-panel");
 		expect(Object.keys(actualValues).length).to.equal(4);
+	});
+});
+
+describe("Properties Controller operators", () => {
+	const standardOpCount = Object.keys(controller.getConditionOps()).length;
+	it("set an invalid custom operator", () => {
+		reset();
+		// this will print out a warn message to the console
+		controller.setConditionOps([CustomInvalidOp]);
+		expect(standardOpCount).to.equal(Object.keys(controller.getConditionOps()).length);
+	});
+	it("overwrite an existing operator", () => {
+		reset();
+		controller.setConditionOps([EqualsOverride]);
+		expect(standardOpCount).to.equal(Object.keys(controller.getConditionOps()).length);
+		const newOp = controller.getConditionOp("equals");
+		expect(newOp()).to.equal("testing");
+	});
+	it("add a custom operator", () => {
+		reset();
+		controller.setConditionOps([CustomMax]);
+		expect(standardOpCount + 1).to.equal(Object.keys(controller.getConditionOps()).length);
+		const paramInfo = {
+			control: {
+				controlType: "numberfield"
+			},
+			value: 101
+		};
+		const newOp = controller.getConditionOp("customMax");
+		expect(newOp(paramInfo, null, 100, controller)).to.equal(false);
+		expect(newOp(paramInfo, null, 102, controller)).to.equal(true);
+	});
+	it("set operators with no custom operators", () => {
+		reset();
+		controller.setConditionOps();
+		expect(standardOpCount).to.equal(Object.keys(controller.getConditionOps()).length);
+	});
+	it("set operators without array", () => {
+		reset();
+		controller.setConditionOps(CustomMax);
+		expect(standardOpCount).to.equal(Object.keys(controller.getConditionOps()).length);
 	});
 });

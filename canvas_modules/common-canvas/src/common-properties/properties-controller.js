@@ -19,6 +19,7 @@ import CommandStack from "../command-stack/command-stack.js";
 import ControlFactory from "./controls/control-factory";
 import { ControlType } from "./constants/form-constants";
 import cloneDeep from "lodash/cloneDeep";
+import ConditionOps from "./ui-conditions/condition-ops/condition-ops";
 
 export default class PropertiesController {
 
@@ -45,6 +46,7 @@ export default class PropertiesController {
 		this.sharedCtrlInfo = [];
 		this.isSummaryPanel = false;
 		this.visibleSubPanelCounter = 0;
+		this.conditionOps = ConditionOps.getConditionOps();
 	}
 	subscribe(callback) {
 		this.propertiesStore.subscribe(callback);
@@ -370,6 +372,33 @@ export default class PropertiesController {
 	*/
 	setTitle(title) {
 		return this.propertiesStore.setTitle(title);
+	}
+
+	/**
+	* Sets all ops supported in common-properties.  Both standard and custom
+	*	@param custOps object
+	*/
+	setConditionOps(custOps) {
+		this.conditionOps = ConditionOps.getConditionOps(custOps);
+	}
+
+	/**
+	* Returns the op to run
+	*	@param op string
+	* @return op method to run
+	*/
+	getConditionOp(op) {
+		if (this.conditionOps) {
+			return this.conditionOps[op];
+		}
+		return null;
+	}
+
+	/**
+	*	@return a map of condition ops
+	*/
+	getConditionOps() {
+		return this.conditionOps;
 	}
 
 	/**

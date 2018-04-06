@@ -35,6 +35,8 @@ import CustomDatasetsPanel from "./components/custom-panels/CustomDatasetsPanel"
 import CustomToggleControl from "./components/custom-controls/CustomToggleControl";
 import CustomTableControl from "./components/custom-controls/CustomTableControl";
 
+import CustomOpMax from "./custom/condition-ops/customMax";
+
 import BlankCanvasImage from "../../assets/images/blank_canvas.svg";
 
 import {
@@ -1021,6 +1023,7 @@ class App extends React.Component {
 				customPanels={[CustomSliderPanel, CustomTogglePanel, CustomMapPanel, CustomButtonPanel, CustomDatasetsPanel]}
 				callbacks={callbacks}
 				customControls={[CustomToggleControl, CustomTableControl]}
+				customConditionOps={[CustomOpMax]}
 			/>);
 
 		let commonPropertiesContainer = null;

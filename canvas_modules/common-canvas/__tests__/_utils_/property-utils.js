@@ -17,6 +17,7 @@ import { expect } from "chai";
 
 import CustomTableControl from "./custom-controls/CustomTableControl";
 import CustomToggleControl from "./custom-controls/CustomToggleControl";
+import CustomOpMax from "./custom-condition-ops/customMax";
 
 import sinon from "sinon";
 var renderedController;
@@ -46,6 +47,7 @@ function flyoutEditorForm(paramDef, propertiesConfig) {
 			propertiesConfig={{ containerType: "Custom", rightFlyout: true, applyOnBlur: applyOnBlur }}
 			callbacks={callbacks}
 			customControls={[CustomTableControl, CustomToggleControl]}
+			customConditionOps={[CustomOpMax]}
 		/>
 	);
 
