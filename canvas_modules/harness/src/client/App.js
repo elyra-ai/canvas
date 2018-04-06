@@ -91,7 +91,8 @@ class App extends React.Component {
 			},
 			extraCanvasDisplayed: false,
 			applyOnBlur: true,
-			narrowPalette: true
+			narrowPalette: true,
+			schemaValidationEnabled: false
 		};
 
 		this.currentEditorId = null;
@@ -117,6 +118,7 @@ class App extends React.Component {
 		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
 		this.useApplyOnBlur = this.useApplyOnBlur.bind(this);
 		this.setNarrowPalette = this.setNarrowPalette.bind(this);
+		this.schemaValidation = this.schemaValidation.bind(this);
 		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
 		this.setRenderingEngine = this.setRenderingEngine.bind(this);
 		this.setConnectionType = this.setConnectionType.bind(this);
@@ -311,6 +313,11 @@ class App extends React.Component {
 			this.canvasController.setOutputPortLabel(nodeId, portId, newLabel);
 		}
 		this.log("Set new port label", { nodeId: nodeId, portLabel: newLabel, portType: portType });
+	}
+
+	schemaValidation(enabled) {
+		this.setState({ schemaValidationEnabled: enabled });
+		this.log("Schema validation enabled ", enabled);
 	}
 
 	addNodeTypeToPalette(nodeTypeObj, category, categoryLabel) {
@@ -955,7 +962,7 @@ class App extends React.Component {
 			enablePaletteLayout: this.state.selectedPaletteLayout,
 			emptyCanvasContent: emptyCanvasDiv,
 			tipConfig: this.state.tipConfig,
-			schemaValidation: true,
+			schemaValidation: this.state.schemaValidationEnabled,
 			enableNarrowPalette: this.state.narrowPalette
 		};
 
@@ -968,6 +975,7 @@ class App extends React.Component {
 			enablePaletteLayout: this.state.selectedPaletteLayout,
 			emptyCanvasContent: emptyCanvasDiv,
 			tipConfig: this.state.tipConfig,
+			schemaValidation: this.state.schemaValidationEnabled,
 			enableNarrowPalette: this.state.narrowPalette
 		};
 
@@ -1116,6 +1124,8 @@ class App extends React.Component {
 				useApplyOnBlur={this.useApplyOnBlur}
 				narrowPalette={this.state.narrowPalette}
 				setNarrowPalette={this.setNarrowPalette}
+				schemaValidation={this.schemaValidation}
+				schemaValidationEnabled={this.state.schemaValidationEnabled}
 				log={this.log}
 			/>
 			{/* <IntlProvider key="IntlProvider2" locale={ locale } messages={ messages }>

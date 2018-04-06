@@ -84,6 +84,7 @@ export default class SidePanelForms extends React.Component {
 		this.paletteLayoutOptionChange = this.paletteLayoutOptionChange.bind(this);
 		this.tipConfigChange = this.tipConfigChange.bind(this);
 		this.extraCanvasChange = this.extraCanvasChange.bind(this);
+		this.schemaValidationChange = this.schemaValidationChange.bind(this);
 		this.narrowPalette = this.narrowPalette.bind(this);
 		this.onDragStart = this.onDragStart.bind(this);
 
@@ -408,6 +409,10 @@ export default class SidePanelForms extends React.Component {
 	extraCanvasChange(changeEvent) {
 		this.props.showExtraCanvas(changeEvent.target.checked);
 		this.setState({ extraCanvasOptions: changeEvent.target.checked });
+	}
+
+	schemaValidationChange(changeEvent) {
+		this.props.schemaValidation(changeEvent.target.checked);
 	}
 
 	narrowPalette(changeEvent) {
@@ -756,6 +761,19 @@ export default class SidePanelForms extends React.Component {
 			</form>
 		</div>);
 
+		var schemaValidation = (<div className="sidepanel-children" id="sidepanel-schemaValidation">
+			<form>
+				<div className="sidepanel-headers">Schema Validation</div>
+				<div>
+					<ToggleButton dark
+						id="sidepanel-schema-validation"
+						checked={this.props.schemaValidationEnabled}
+						onChange={this.schemaValidationChange}
+					/>
+				</div>
+			</form>
+		</div>);
+
 		return (
 			<div>
 				{canvasInput}
@@ -779,6 +797,8 @@ export default class SidePanelForms extends React.Component {
 				{tipConfig}
 				{divider}
 				{nodeDraggable}
+				{divider}
+				{schemaValidation}
 				{divider}
 				{extraCanvas}
 				{canvasInput2}
@@ -804,9 +824,11 @@ SidePanelForms.propTypes = {
 	setLinkType: PropTypes.func,
 	extraCanvasDisplayed: PropTypes.bool,
 	showExtraCanvas: PropTypes.func,
+	schemaValidationEnabled: PropTypes.bool,
+	schemaValidation: PropTypes.func,
 	log: PropTypes.func,
 	setPaletteLayout: PropTypes.func,
 	setTipConfig: PropTypes.func,
 	narrowPalette: PropTypes.bool,
-	setNarrowPalette: PropTypes.func
+	setNarrowPalette: PropTypes.func,
 };

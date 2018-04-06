@@ -219,6 +219,9 @@ export default class PipelineOutHandler {
 
 		if (ciNode.type === "execution_node") {
 			newNode.op = ciNode.operator_id_ref;
+		} else if (ciNode.operator_id_ref) {
+			// This is required before schema v3 because streams relies upon it for supernodes
+			newNode.op = ciNode.operator_id_ref;
 		}
 
 		if (ciNode.input_ports && ciNode.input_ports.length > 0) {

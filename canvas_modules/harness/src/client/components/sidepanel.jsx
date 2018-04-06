@@ -53,6 +53,8 @@ export default class SidePanel extends React.Component {
 				showExtraCanvas={this.props.showExtraCanvas}
 				narrowPalette={this.props.narrowPalette}
 				setNarrowPalette={this.props.setNarrowPalette}
+				schemaValidation={this.props.schemaValidation}
+				schemaValidationEnabled={this.props.schemaValidationEnabled}
 				log={this.props.log}
 			/>);
 			break;
@@ -134,5 +136,7 @@ SidePanel.propTypes = {
 	useApplyOnBlur: PropTypes.func,
 	narrowPalette: PropTypes.bool,
 	setNarrowPalette: PropTypes.func,
+	schemaValidationEnabled: PropTypes.bool,
+	schemaValidation: PropTypes.func,
 	log: PropTypes.func
 };
