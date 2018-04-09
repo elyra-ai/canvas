@@ -32,9 +32,9 @@ import Dropdown from "./dropdown";
 import SomeofselectControl from "./someofselect";
 import OneofcolumnsControl from "./oneofcolumns";
 import SomeofcolumnsControl from "./someofcolumns";
-import ColumnSelectControl from "./../editor-controls/column-select-control.jsx";
-import ColumnStructureTableControl from "./../editor-controls/column-structure-table-control.jsx";
-import StructurelisteditorControl from "./../editor-controls/structure-list-editor-control.jsx";
+import SelectColumnsControl from "./selectcolumns";
+import StructureTableControl from "./structuretable";
+import StructurelisteditorControl from "./structurelisteditor";
 
 import ControlItem from "./../components/control-item";
 import Tooltip from "./../../tooltip/tooltip.jsx";
@@ -233,24 +233,22 @@ export default class ControlFactory {
 				fields={this.controller.getFilteredDatasetMetadata(propertyId)}
 			/>);
 		} else if (control.controlType === ControlType.SELECTCOLUMNS && !tableInfo) {
-			return (<ColumnSelectControl
+			return (<SelectColumnsControl
 				{...props}
 				openFieldPicker={this.openFieldPicker}
 				rightFlyout={this.rightFlyout}
 			/>);
 		} else if (control.controlType === ControlType.STRUCTURETABLE && !tableInfo) {
-			return (<ColumnStructureTableControl
+			return (<StructureTableControl
 				{...props}
 				buildUIItem={this.genUIItem}
 				openFieldPicker={this.openFieldPicker}
-				customContainer={this.rightFlyout}
 				rightFlyout={this.rightFlyout}
 			/>);
 		} else if (control.controlType === ControlType.STRUCTURELISTEDITOR && !tableInfo) {
 			return (<StructurelisteditorControl
 				{...props}
 				buildUIItem={this.genUIItem}
-				customContainer={this.rightFlyout}
 				rightFlyout={this.rightFlyout}
 			/>);
 		} else if (control.controlType === ControlType.CUSTOM) {

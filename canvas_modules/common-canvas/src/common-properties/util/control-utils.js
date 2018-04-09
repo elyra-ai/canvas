@@ -13,54 +13,6 @@ import ValidationMessage from "./../components/validation-message";
 import ValidationIcon from "./../components/validation-icon";
 import { DEFAULT_VALIDATION_MESSAGE, VALIDATION_MESSAGE, EDITOR_CONTROL, STATES, CONTROL_TYPE } from "./../constants/constants.js";
 
-function splitNewlines(text) {
-	if (text.length > 0) {
-		const split = text.split("\n");
-		if (Array.isArray(split)) {
-			return split;
-		}
-		return [split];
-	}
-	return [];
-}
-
-function joinNewlines(list) {
-	if (Array.isArray(list)) {
-		return list.length === 0 ? [] : list.join("\n");
-	}
-	return list;
-}
-
-function handleTableRowClick(evt, rowIndex, selection, allowedSelection) {
-	// logger.info(selection);
-	var selected = selection;
-	const index = selected.indexOf(rowIndex);
-
-	if (allowedSelection === "single") {
-		selected = [rowIndex];
-	} else if (evt.metaKey === true || evt.ctrlKey === true) {
-		// If already selected then remove otherwise add
-		if (index >= 0) {
-			selected.splice(index, 1);
-		} else {
-			selected = selected.concat(rowIndex);
-		}
-	} else if (evt.shiftKey === true) {
-		const anchor = selected.length > 0 ? selected[0] : rowIndex;
-		const start = anchor > rowIndex ? rowIndex : anchor;
-		const end = (anchor > rowIndex ? anchor : rowIndex) + 1;
-		const newSelns = [];
-		for (let i = start; i < end; i++) {
-			newSelns.push(i);
-		}
-		selected = newSelns;
-	} else {
-		selected = [rowIndex];
-	}
-	return selected;
-}
-
-
 function	getControlID(control, propertyId) {
 	let id = EDITOR_CONTROL + control.name;
 	if (propertyId && typeof propertyId.row !== "undefined") {
@@ -152,8 +104,5 @@ function	getCharLimit(control, defaultLimit) {
 module.exports = {
 	getCharLimit: getCharLimit,
 	getControlID: getControlID,
-	splitNewlines: splitNewlines,
-	joinNewlines: joinNewlines,
-	handleTableRowClick: handleTableRowClick,
 	getConditionMsgState: getConditionMsgState
 };

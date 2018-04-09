@@ -12,7 +12,7 @@ import PropTypes from "prop-types";
 import PropertiesModal from "./components/properties-modal";
 import PropertiesEditor from "./components/properties-editor";
 import PropertiesButtons from "./components/properties-buttons";
-import EditorForm from "./editor-controls/editor-form.jsx";
+import EditorForm from "./components/editor-form";
 import Form from "./form/Form";
 import CommonPropertiesAction from "./../command-actions/commonPropertiesAction";
 import PropertiesController from "./properties-controller";

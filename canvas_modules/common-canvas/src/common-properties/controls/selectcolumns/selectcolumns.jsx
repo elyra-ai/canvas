@@ -9,14 +9,14 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import FlexibleTable from "./flexible-table.jsx";
-import MoveableTableRows from "./moveable-table-rows.jsx";
-import ColumnStructureTableEditor from "./column-structure-table-editor.jsx";
+import FlexibleTable from "./../../components/flexible-table";
+import MoveableTableRows from "./../../components/moveable-table-rows";
+import AbstractTable from "./../abstract-table.jsx";
 import { injectIntl, intlShape } from "react-intl";
-import ControlUtils from "../util/control-utils";
-import { TABLE_SCROLLBAR_WIDTH } from "../constants/constants";
+import ControlUtils from "./../../util/control-utils";
+import { TABLE_SCROLLBAR_WIDTH } from "./../../constants/constants";
 
-class ColumnSelectControl extends ColumnStructureTableEditor {
+class SelectColoumns extends AbstractTable {
 
 	getRowClassName(rowIndex) {
 		const selectedRows = this.props.controller.getSelectedRows(this.props.control.name);
@@ -137,7 +137,6 @@ class ColumnSelectControl extends ColumnStructureTableEditor {
 					controller={this.props.controller}
 					propertyId={this.props.propertyId}
 					setScrollToRow={this.setScrollToRow}
-					getCurrentControlValue={this.getCurrentControlValue}
 					setCurrentControlValueSelected={this.setCurrentControlValueSelected}
 					stateStyle={stateStyle}
 					disabled={disabled}
@@ -147,7 +146,7 @@ class ColumnSelectControl extends ColumnStructureTableEditor {
 	}
 }
 
-ColumnSelectControl.propTypes = {
+SelectColoumns.propTypes = {
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
@@ -155,4 +154,4 @@ ColumnSelectControl.propTypes = {
 	intl: intlShape
 };
 
-export default injectIntl(ColumnSelectControl);
+export default injectIntl(SelectColoumns);

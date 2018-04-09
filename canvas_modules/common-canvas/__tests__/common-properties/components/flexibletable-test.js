@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
-import FlexibleTable from "../../../src/common-properties/editor-controls/flexible-table.jsx";
+import FlexibleTable from "../../../src/common-properties/components/flexible-table";
 // import { mount } from "enzyme";
 import { mountWithIntl } from "enzyme-react-intl";
 import { expect } from "chai";

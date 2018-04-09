@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
-import ColumnSelectControl from "../../../src/common-properties/editor-controls/column-select-control.jsx";
+import SelectColumns from "../../../src/common-properties/controls/selectcolumns";
 import { mountWithIntl } from "enzyme-react-intl";
 import { expect } from "chai";
 import sinon from "sinon";
@@ -87,7 +87,7 @@ describe("selectcolumns renders correctly", () => {
 	setPropertyValue();
 	it("props should have been defined", () => {
 		const wrapper = mountWithIntl(
-			<ColumnSelectControl
+			<SelectColumns
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -105,9 +105,9 @@ describe("selectcolumns renders correctly", () => {
 		expect(wrapper.prop("selectedRows")).to.equal(selectedRows);
 	});
 
-	it("should render a `ColumnSelectControl`", () => {
+	it("should render a `selectcolumns` control", () => {
 		const wrapper = mountWithIntl(
-			<ColumnSelectControl
+			<SelectColumns
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -123,7 +123,7 @@ describe("selectcolumns renders correctly", () => {
 
 	it("should select add columns button and openFieldPicker should be invoked", () => {
 		const wrapper = mountWithIntl(
-			<ColumnSelectControl
+			<SelectColumns
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -145,7 +145,7 @@ describe("selectcolumns renders correctly", () => {
 	it("should select row and remove button row should be removed", () => {
 		setPropertyValue();
 		const wrapper = mountWithIntl(
-			<ColumnSelectControl
+			<SelectColumns
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -168,7 +168,7 @@ describe("selectcolumns renders correctly", () => {
 
 	it("should ensure moveableRows are rendered", () => {
 		const wrapper = mountWithIntl(
-			<ColumnSelectControl
+			<SelectColumns
 				control={moveableRowControl}
 				controller={controller}
 				propertyId={propertyId}

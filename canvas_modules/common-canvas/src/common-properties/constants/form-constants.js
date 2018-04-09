@@ -83,7 +83,7 @@ const ControlType = {
 	ONEOFCOLUMNS: "oneofcolumns", // deprecate, replace with SELECTCOLUMN
 	SOMEOFCOLUMNS: "someofcolumns", // deprecated, replaced by SELECTCOLUMNS
 	STRUCTURETABLE: "structuretable",
-	STRUCTUREEDITOR: "structureeditor",
+	STRUCTUREEDITOR: "structureeditor", // deprecated, no longer supported
 	STRUCTURELISTEDITOR: "structurelisteditor",
 	TOGGLETEXT: "toggletext",
 	READONLY: "readonly",

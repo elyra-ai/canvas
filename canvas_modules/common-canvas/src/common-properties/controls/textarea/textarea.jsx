@@ -23,9 +23,27 @@ export default class TextareaControl extends React.Component {
 	handleChange(evt) {
 		let input = evt.target.value;
 		if (this.props.control.valueDef && this.props.control.valueDef.isList) { // array
-			input = ControlUtils.splitNewlines(evt.target.value);
+			input = this.splitNewlines(evt.target.value);
 		}
 		this.props.controller.updatePropertyValue(this.props.propertyId, input);
+	}
+
+	splitNewlines(text) {
+		if (text.length > 0) {
+			const split = text.split("\n");
+			if (Array.isArray(split)) {
+				return split;
+			}
+			return [split];
+		}
+		return [];
+	}
+
+	joinNewlines(list) {
+		if (Array.isArray(list)) {
+			return list.length === 0 ? [] : list.join("\n");
+		}
+		return list;
 	}
 
 	render() {
@@ -47,7 +65,7 @@ export default class TextareaControl extends React.Component {
 			controlIconContainerClass = "control-icon-container-enabled";
 		}
 
-		let value = ControlUtils.joinNewlines(controlValue);
+		let value = this.joinNewlines(controlValue);
 		if (value && value.toString() === "") {
 			value = "";
 		}

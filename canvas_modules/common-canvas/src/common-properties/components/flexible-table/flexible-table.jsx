@@ -15,12 +15,10 @@ import PropTypes from "prop-types";
 import { injectIntl, intlShape } from "react-intl";
 import { Table, Thead, Th, Tr, Td } from "reactable";
 import TextField from "ap-components-react/dist/components/TextField";
-import Icon from "../../icons/icon.jsx";
-import PropertyUtils from "../util/property-utils";
-import Tooltip from "../../tooltip/tooltip.jsx";
-
-import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "../constants/constants";
-import { TOOL_TIP_DELAY, CONDITION_MESSAGE_TYPE } from "../constants/constants";
+import Icon from "./../../../icons/icon.jsx";
+import PropertyUtils from "./../../util/property-utils";
+import Tooltip from "./../../../tooltip/tooltip.jsx";
+import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, TOOL_TIP_DELAY, CONDITION_MESSAGE_TYPE } from "./../../constants/constants";
 import isEmpty from "lodash/isEmpty";
 import ObserveSize from "react-observe-size";
 

@@ -9,7 +9,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import Icon from "../../icons/icon.jsx";
+import Icon from "./../../../icons/icon.jsx";
 
 export default class MoveableTableRows extends React.Component {
 	constructor(props) {
@@ -25,7 +25,7 @@ export default class MoveableTableRows extends React.Component {
 	// enabled the move up and down arrows based on which row is selected
 	getTableRowMoveImages() {
 		const selected = this.props.controller.getSelectedRows(this.props.control.name).sort();
-		const controlValue = this.props.getCurrentControlValue();
+		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		const topEnabled = (selected.length !== 0 && selected[0] !== 0) && !this.props.disabled;
 		const bottomEnabled = (selected.length !== 0 && selected[selected.length - 1] !== controlValue.length - 1) && !this.props.disabled;
 		const topImages = (
@@ -53,7 +53,7 @@ export default class MoveableTableRows extends React.Component {
 
 	topMoveRow(evt) {
 		var selected = this.props.controller.getSelectedRows(this.props.control.name).sort();
-		const controlValue = this.props.getCurrentControlValue();
+		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		for (var firstRow = selected[0]; firstRow > 0; firstRow--) {
 			for (var i = 0; i <= selected.length - 1; i++) {
 				const selectedRow = selected.shift();
@@ -74,7 +74,7 @@ export default class MoveableTableRows extends React.Component {
 		const selected = this.props.controller.getSelectedRows(this.props.control.name).sort();
 		// only move up if not already at the top especially for multiple selected
 		if (selected.length !== 0 && selected[0] !== 0) {
-			const controlValue = this.props.getCurrentControlValue();
+			const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
 			for (var i = 0; i <= selected.length - 1; i++) {
 				const selectedRow = selected.shift();
 				if (selectedRow !== 0) {
@@ -92,7 +92,7 @@ export default class MoveableTableRows extends React.Component {
 
 	downMoveRow(evt) {
 		const selected = this.props.controller.getSelectedRows(this.props.control.name).sort();
-		const controlValue = this.props.getCurrentControlValue();
+		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		// only move down if not already at the end especially for multiple selected
 		if (selected.length !== 0 && selected[selected.length - 1] !== controlValue.length - 1) {
 			for (var i = selected.length - 1; i >= 0; i--) {
@@ -112,7 +112,7 @@ export default class MoveableTableRows extends React.Component {
 
 	bottomMoveRow(evt) {
 		var selected = this.props.controller.getSelectedRows(this.props.control.name).sort();
-		const controlValue = this.props.getCurrentControlValue();
+		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		for (var lastRow = selected[selected.length - 1]; lastRow < controlValue.length - 1; lastRow++) {
 			for (var i = selected.length - 1; i >= 0; i--) {
 				const selectedRow = selected.pop();
@@ -174,7 +174,6 @@ MoveableTableRows.propTypes = {
 	control: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
-	getCurrentControlValue: PropTypes.func.isRequired,
 	setCurrentControlValueSelected: PropTypes.func.isRequired,
 	setScrollToRow: PropTypes.func.isRequired,
 	tableContainer: PropTypes.object.isRequired,

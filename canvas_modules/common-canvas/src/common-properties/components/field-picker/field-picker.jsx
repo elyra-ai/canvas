@@ -11,7 +11,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import FlexibleTable from "./../../editor-controls/flexible-table.jsx";
+import FlexibleTable from "./../flexible-table";
 import PropertiesButtons from "./../properties-buttons";
 import PropertyUtils from "./../../util/property-utils";
 

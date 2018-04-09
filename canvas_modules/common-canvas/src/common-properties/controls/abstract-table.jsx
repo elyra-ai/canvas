@@ -9,30 +9,28 @@
 // Base class for table controls
 
 import React from "react";
+import PropTypes from "prop-types";
 import Button from "ap-components-react/dist/components/Button";
 import Checkbox from "ap-components-react/dist/components/Checkbox";
-import EditorControl from "./editor-control.jsx";
-import FlexibleTable from "./flexible-table.jsx";
+import FlexibleTable from "./../components/flexible-table";
 import SubPanelCell from "./../panels/sub-panel/cell.jsx";
 import Icon from "./../../icons/icon.jsx";
-import PropertyUtils from "../util/property-utils";
-import { ControlType, EditStyle } from "../constants/form-constants";
-
+import PropertyUtils from "./../util/property-utils";
+import { ControlType, EditStyle } from "./../constants/form-constants";
+import Tooltip from "./../../tooltip/tooltip.jsx";
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, TOOL_TIP_DELAY, STATES,
-	TABLE_SCROLLBAR_WIDTH, TABLE_SUBPANEL_BUTTON_WIDTH } from "../constants/constants";
+	TABLE_SCROLLBAR_WIDTH, TABLE_SUBPANEL_BUTTON_WIDTH } from "./../constants/constants";
+
 import findIndex from "lodash/findIndex";
 import isEmpty from "lodash/isEmpty";
 import sortBy from "lodash/sortBy";
-import Tooltip from "../../tooltip/tooltip.jsx";
+import { intlShape } from "react-intl";
 
 import uuid4 from "uuid/v4";
 
-/* eslint-disable react/prop-types */
-/* eslint-enable react/prop-types */
-/* eslint complexity: ["error", 16] */
 /* eslint max-depth: ["error", 5] */
 
-export default class ColumnStructureTableEditor extends EditorControl {
+export default class AbstractTable extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -42,12 +40,8 @@ export default class ColumnStructureTableEditor extends EditorControl {
 
 		this.onPanelContainer = [];
 
-		this._editing_row = 0;
-
 		this.indexOfColumn = this.indexOfColumn.bind(this);
 
-		this.getCurrentControlValue = this.getCurrentControlValue.bind(this);
-		this.setCurrentControlValue = this.setCurrentControlValue.bind(this);
 		this.setCurrentControlValueSelected = this.setCurrentControlValueSelected.bind(this);
 		this.setReadOnlyColumnValue = this.setReadOnlyColumnValue.bind(this);
 		this.removeSelected = this.removeSelected.bind(this);
@@ -81,112 +75,14 @@ export default class ColumnStructureTableEditor extends EditorControl {
 
 	componentDidMount() {
 		if (this.props.control.subControls) {
-			const updatedControlValues = this.setReadOnlyColumnValue(this.getCurrentControlValue());
+			const updatedControlValues = this.setReadOnlyColumnValue();
 			this.props.controller.updatePropertyValue(this.props.propertyId, updatedControlValues, true);
 		}
 	}
 
 	componentWillReceiveProps(nextProps) {
 		const selectedRows = this.props.controller.getSelectedRows(this.props.control.name);
-		this.selectionChanged(selectedRows);
 		this.setState({ enableRemoveIcon: (selectedRows.length !== 0) });
-	}
-
-	getOnPanelContainer(selectedRows) {
-		if (this.onPanelContainer.length === 0 || selectedRows.length === 0) {
-			return (<div />);
-		}
-
-		return (<div>{this.onPanelContainer[selectedRows[0]]}</div>);
-	}
-
-	getCurrentControlValue() {
-		return this.props.controller.getPropertyValue(this.props.propertyId);
-	}
-
-	setCurrentControlValueSelected(controlValue, selectedRows) {
-		let updatedControlValues = controlValue;
-		if (this.props.control.subControls) {
-			updatedControlValues = this.setReadOnlyColumnValue(controlValue);
-		}
-		this.props.controller.updatePropertyValue(this.props.propertyId, updatedControlValues);
-		this.updateRowSelections(this.props.control.name, selectedRows);
-	}
-
-	setCurrentControlValue(controlValue) {
-		let updatedControlValues = controlValue;
-		if (this.props.control.subControls) {
-			updatedControlValues = this.setReadOnlyColumnValue(controlValue);
-		}
-		this.props.controller.updatePropertyValue(this.props.propertyId, updatedControlValues);
-		this.updateRowSelections(this.props.control.name, []);
-	}
-
-	setReadOnlyColumnValue(controlValue) {
-		const controlValues = controlValue ? controlValue : this.getCurrentControlValue();
-		for (var rowIndex = 0; rowIndex < controlValues.length; rowIndex++) {
-			for (var colIndex = 0; colIndex < this.props.control.subControls.length; colIndex++) {
-				const columnDef = this.props.control.subControls[colIndex];
-				if (columnDef.controlType === ControlType.READONLY && columnDef.generatedValues && columnDef.generatedValues.operation === "index") {
-					const index = typeof columnDef.generatedValues.startValue !== "undefined" ? columnDef.generatedValues.startValue + rowIndex : rowIndex + 1;
-					controlValues[rowIndex][colIndex] = index;
-				}
-			}
-		}
-		return controlValues;
-	}
-
-	setScrollToRow(row, alignTop) {
-		this.scrollToRow = row;
-		this.alignTop = alignTop;
-	}
-
-	indexOfColumn(controlId) {
-		return findIndex(this.props.control.subControls, function(columnControl) {
-			return columnControl.name === controlId;
-		});
-	}
-
-	handleRowClick(rowIndex, evt) {
-		const selectedRows = this.props.controller.getSelectedRows(this.props.control.name);
-		const selection = EditorControl.handleTableRowClick(evt, rowIndex, selectedRows, this.props.control.rowSelection);
-		// logger.info(selection);
-		this.updateRowSelections(this.props.control.name, selection);
-	}
-
-	updateRowSelections(ctrlName, selection) {
-		this.props.controller.updateSelectedRows(ctrlName, selection);
-		this.selectionChanged(selection);
-		// react throws warning when modal because the button does not exist at this moment
-		if (this.props.rightFlyout) {
-			this.setState({ enableRemoveIcon: (selection.length !== 0) });
-		}
-	}
-
-	removeSelected() {
-		const rows = this.getCurrentControlValue();
-		// Sort descending to ensure lower indices don"t get
-		// changed when values are deleted
-		const selected = this.props.controller.getSelectedRows(this.props.control.name).sort(function(a, b) {
-			return b - a;
-		});
-		for (let i = 0; i < selected.length; i++) {
-			rows.splice(selected[i], 1);
-			// this will remove any error messages associate with row.
-			this.props.controller.removeErrorMessageRow({ name: this.props.propertyId.name, row: selected[i] });
-		}
-
-		this.setCurrentControlValue(rows);
-	}
-
-	selectionChanged(selection) {
-		// A no-op in this class
-	}
-
-	getRowClassName(rowIndex) {
-		return this.props.controller.getSelectedRows(this.props.control.name).indexOf(rowIndex) >= 0
-			? "table-row table-selected-row "
-			: "table-row";
 	}
 
 	onFilter(filterString) {
@@ -194,7 +90,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 	}
 
 	onSort(spec) {
-		let controlValue = this.getCurrentControlValue();
+		let controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		let col = -1;
 		for (var colIndex = 0; colIndex < this.props.control.subControls.length; colIndex++) {
 			if (this.props.control.subControls[colIndex].name === spec.column) {
@@ -211,6 +107,106 @@ export default class ColumnStructureTableEditor extends EditorControl {
 			}
 			this.setCurrentControlValueSelected(controlValue, []);
 		}
+	}
+
+	getOnPanelContainer(selectedRows) {
+		if (this.onPanelContainer.length === 0 || selectedRows.length === 0) {
+			return (<div />);
+		}
+
+		return (<div>{this.onPanelContainer[selectedRows[0]]}</div>);
+	}
+
+	getRowClassName(rowIndex) {
+		return this.props.controller.getSelectedRows(this.props.control.name).indexOf(rowIndex) >= 0
+			? "table-row table-selected-row "
+			: "table-row";
+	}
+
+	setScrollToRow(row, alignTop) {
+		this.scrollToRow = row;
+		this.alignTop = alignTop;
+	}
+
+	setCurrentControlValueSelected(controlValue, inSelectedRows) {
+		let updatedControlValues = controlValue;
+		if (this.props.control.subControls) {
+			updatedControlValues = this.setReadOnlyColumnValue(controlValue);
+		}
+		this.props.controller.updatePropertyValue(this.props.propertyId, updatedControlValues);
+		const selectedRows = Array.isArray(inSelectedRows) ? inSelectedRows : [];
+		this.updateRowSelections(this.props.control.name, selectedRows);
+	}
+
+	setReadOnlyColumnValue(controlValue) {
+		const controlValues = controlValue ? controlValue : this.props.controller.getPropertyValue(this.props.propertyId);
+		for (var rowIndex = 0; rowIndex < controlValues.length; rowIndex++) {
+			for (var colIndex = 0; colIndex < this.props.control.subControls.length; colIndex++) {
+				const columnDef = this.props.control.subControls[colIndex];
+				if (columnDef.controlType === ControlType.READONLY && columnDef.generatedValues && columnDef.generatedValues.operation === "index") {
+					const index = typeof columnDef.generatedValues.startValue !== "undefined" ? columnDef.generatedValues.startValue + rowIndex : rowIndex + 1;
+					controlValues[rowIndex][colIndex] = index;
+				}
+			}
+		}
+		return controlValues;
+	}
+
+	indexOfColumn(controlId) {
+		return findIndex(this.props.control.subControls, function(columnControl) {
+			return columnControl.name === controlId;
+		});
+	}
+
+	handleRowClick(rowIndex, evt) {
+		let selectedRows = this.props.controller.getSelectedRows(this.props.control.name);
+		if (this.props.control.rowSelection === "single") {
+			selectedRows = [rowIndex];
+		} else if (evt.metaKey === true || evt.ctrlKey === true) {
+			// If already selected then remove otherwise add
+			const index = selectedRows.indexOf(rowIndex);
+			if (index >= 0) {
+				selectedRows.splice(index, 1);
+			} else {
+				selectedRows = selectedRows.concat(rowIndex);
+			}
+		} else if (evt.shiftKey === true) {
+			const anchor = selectedRows.length > 0 ? selectedRows[0] : rowIndex;
+			const start = anchor > rowIndex ? rowIndex : anchor;
+			const end = (anchor > rowIndex ? anchor : rowIndex) + 1;
+			const newSelns = [];
+			for (let i = start; i < end; i++) {
+				newSelns.push(i);
+			}
+			selectedRows = newSelns;
+		} else {
+			selectedRows = [rowIndex];
+		}
+		this.updateRowSelections(this.props.control.name, selectedRows);
+	}
+
+	updateRowSelections(ctrlName, selection) {
+		this.props.controller.updateSelectedRows(ctrlName, selection);
+		// react throws warning when modal because the button does not exist at this moment
+		if (this.props.rightFlyout) {
+			this.setState({ enableRemoveIcon: (selection.length !== 0) });
+		}
+	}
+
+	removeSelected() {
+		const rows = this.props.controller.getPropertyValue(this.props.propertyId);
+		// Sort descending to ensure lower indices don"t get
+		// changed when values are deleted
+		const selected = this.props.controller.getSelectedRows(this.props.control.name).sort(function(a, b) {
+			return b - a;
+		});
+		for (let i = 0; i < selected.length; i++) {
+			rows.splice(selected[i], 1);
+			// this will remove any error messages associate with row.
+			this.props.controller.removeErrorMessageRow({ name: this.props.propertyId.name, row: selected[i] });
+		}
+
+		this.setCurrentControlValueSelected(rows);
 	}
 
 	_makeCell(columnDef, controlValue, rowIndex, colIndex, stateStyle, stateDisabled) {
@@ -283,7 +279,7 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		if (!this.state.filterText || this.state.filterText.length === 0) {
 			return true;
 		}
-		const controlValue = this.getCurrentControlValue();
+		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		for (let i = 0; i < this.filterFields.length; i++) {
 			for (var colIndex = 0; colIndex < this.props.control.subControls.length; colIndex++) {
 				const columnDef = this.props.control.subControls[colIndex];
@@ -440,7 +436,8 @@ export default class ColumnStructureTableEditor extends EditorControl {
 
 	checkedAllValue(colIndex, evt) {
 		const flexibleTableCheckedAll = evt.target.checked;
-		for (let i = 0; i < this.getCurrentControlValue().length; i++) {
+		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
+		for (let i = 0; i < controlValue.length; i++) {
 			const propertyId = {
 				name: this.props.control.name,
 				row: i,
@@ -518,10 +515,10 @@ export default class ColumnStructureTableEditor extends EditorControl {
 		headers.push({ "key": "scrollbar", "label": "", "width": TABLE_SCROLLBAR_WIDTH });
 		this.filterFields = filterFields;
 
-		const controlValue = this.getCurrentControlValue();
+		const controlValue = this.props.controller.getPropertyValue(this.props.propertyId);
 		this.makeCells(rows, controlValue, stateStyle, stateDisabled);
 
-		if (this.props.customContainer) {
+		if (this.props.rightFlyout) {
 			this.scrollToRow = null;
 		}
 
@@ -625,4 +622,12 @@ export default class ColumnStructureTableEditor extends EditorControl {
 	}
 }
 
-ColumnStructureTableEditor.propTypes = {};
+AbstractTable.propTypes = {
+	buildUIItem: PropTypes.func,
+	control: PropTypes.object.isRequired,
+	propertyId: PropTypes.object.isRequired,
+	controller: PropTypes.object.isRequired,
+	openFieldPicker: PropTypes.func.isRequired,
+	rightFlyout: PropTypes.bool,
+	intl: intlShape,
+};

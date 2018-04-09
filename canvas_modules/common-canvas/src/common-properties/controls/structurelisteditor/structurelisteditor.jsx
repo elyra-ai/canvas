@@ -9,47 +9,25 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import ColumnStructureTableEditor from "./column-structure-table-editor.jsx";
-import MoveableTableRows from "./moveable-table-rows.jsx";
-import PropertyUtils from "../util/property-utils";
-import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "../constants/constants";
+import AbstractTable from "./../abstract-table.jsx";
+import MoveableTableRows from "./../../components/moveable-table-rows";
+import PropertyUtils from "./../../util/property-utils";
+import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./../../constants/constants";
 import { injectIntl, intlShape } from "react-intl";
-import ControlUtils from "../util/control-utils";
+import ControlUtils from "./../../util/control-utils";
 
-class StructurelisteditorControl extends ColumnStructureTableEditor {
+class StructurelisteditorControl extends AbstractTable {
 
 	constructor(props) {
 		super(props);
-
 		this.addRow = this.addRow.bind(this);
-
-		this.stopEditingRow = this.stopEditingRow.bind(this);
-	}
-
-	stopEditingRow(rowIndex, applyChanges) {
-		if (applyChanges) {
-			const subControlId = this.getSubControlId();
-			const allValues = this.getCurrentControlValue();
-			for (var i = 0; i < this.props.control.subControls.length; i++) {
-				const columnControl = this.props.control.subControls[i];
-				const lookupKey = subControlId + columnControl.name;
-				// logger.info("Accessing sub-control " + lookupKey);
-				const control = this.refs[lookupKey];
-				if (typeof control !== "undefined") {
-					const controlValue = control.getControlValue();
-					// logger.info("Control value=" + controlValue);
-					allValues[rowIndex][i] = controlValue;
-				}
-			}
-			this.setCurrentControlValue(allValues);
-		}
 	}
 
 	addRow() {
 		const newRow = this._getDefaultRow();
-		const rows = this.getCurrentControlValue();
+		const rows = this.props.controller.getPropertyValue(this.props.propertyId);
 		rows.push(newRow);
-		this.setCurrentControlValue(rows);
+		this.setCurrentControlValueSelected(rows);
 	}
 
 	_getDefaultRow() {
@@ -116,7 +94,6 @@ class StructurelisteditorControl extends ColumnStructureTableEditor {
 						controller={this.props.controller}
 						propertyId={this.props.propertyId}
 						setScrollToRow={this.setScrollToRow}
-						getCurrentControlValue={this.getCurrentControlValue}
 						setCurrentControlValueSelected={this.setCurrentControlValueSelected}
 						stateStyle={stateStyle}
 						disabled={disabled}

@@ -9,7 +9,7 @@
 
 import React from "react";
 import CommonProperties from "../../src/common-properties/common-properties.jsx";
-import EditorForm from "../../src/common-properties/editor-controls/editor-form.jsx";
+import EditorForm from "../../src/common-properties/components/editor-form";
 import UiConditionsParser from "../../src/common-properties/ui-conditions/ui-conditions-parser.js";
 import { mountWithIntl, shallowWithIntl } from "enzyme-react-intl";
 import { ReactWrapper } from "enzyme";

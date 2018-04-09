@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -8,74 +8,31 @@
  *******************************************************************************/
 
 // CONTROL structuretable
-/* eslint max-depth: ["error", 5] */
 import React from "react";
 import PropTypes from "prop-types";
-import ColumnStructureTableEditor from "./column-structure-table-editor.jsx";
-import MoveableTableRows from "./moveable-table-rows.jsx";
-import PropertyUtils from "../util/property-utils";
-import { ParamRole } from "../constants/form-constants";
+import AbstractTable from "./../abstract-table.jsx";
+import MoveableTableRows from "./../../components/moveable-table-rows";
+import PropertyUtils from "./../../util/property-utils";
+import { ParamRole } from "./../../constants/form-constants";
 import { injectIntl, intlShape } from "react-intl";
 import findIndex from "lodash/findIndex";
 import reject from "lodash/reject";
-import ControlUtils from "../util/control-utils";
+import ControlUtils from "./../../util/control-utils";
 
-class ColumnStructureTableControl extends ColumnStructureTableEditor {
+class StructureTableControl extends AbstractTable {
 	constructor(props) {
 		super(props);
-		this.getSelectedColumns = this.getSelectedColumns.bind(this);
 		this.addColumns = this.addColumns.bind(this);
 		this.removeColumns = this.removeColumns.bind(this);
-		this.stopEditingRow = this.stopEditingRow.bind(this);
 		this.getDefaultRow = this.getDefaultRow.bind(this);
 		this.indexOfRow = this.indexOfRow.bind(this);
 	}
 
-	stopEditingRow(rowIndex, applyChanges) {
-		// logger.info("stopEditingRow: row=" + rowIndex + ", applyChanges=" + applyChanges);
-
-		if (applyChanges) {
-			const subControlId = this.getSubControlId();
-			const allValues = this.getCurrentControlValue();
-			for (var i = 0; i < this.props.control.subControls.length; i++) {
-				if (i !== this.props.control.keyIndex) {
-					const columnControl = this.props.control.subControls[i];
-					const lookupKey = subControlId + columnControl.name;
-					// logger.info("Accessing sub-control " + lookupKey);
-					const control = this.refs[lookupKey];
-					// logger.info(control);
-					if (typeof control !== "undefined") {
-						const controlValue = control.getControlValue();
-						// logger.info("Control value=" + controlValue);
-						allValues[rowIndex][i] = controlValue;
-					}
-				}
-			}
-			this.setCurrentControlValue(allValues);
-		}
-	}
-
 	indexOfRow(columnName) {
 		const keyIndex = this.props.control.keyIndex;
-		return findIndex(this.getCurrentControlValue(), function(row) {
+		return findIndex(this.props.controller.getPropertyValue(this.props.propertyId), function(row) {
 			return row[keyIndex] === columnName;
 		});
-	}
-
-	// Selected columns are those that are referenced by values in the control that have
-	// been selected by the user.
-	getSelectedColumns() {
-		// logger.info("getSelectedColumns");
-		const selected = this.props.controller.getSelectedRows(this.props.control.name);
-		const controlValue = this.getCurrentControlValue();
-		const columns = [];
-
-		for (var i = 0; i < selected.length; i++) {
-			const rowIndex = selected[i];
-			columns.push(controlValue[rowIndex][this.props.control.keyIndex]);
-		}
-		// logger.info(columns);
-		return columns;
 	}
 
 	addColumns(columnNames, callback) {
@@ -102,25 +59,19 @@ class ColumnStructureTableControl extends ColumnStructureTableEditor {
 			}
 		}
 
-		const rows = this.getCurrentControlValue().concat(newRows);
-		this.setCurrentControlValue(rows);
+		const rows = this.props.controller.getPropertyValue(this.props.propertyId).concat(newRows);
+		this.setCurrentControlValueSelected(rows);
 	}
 
 	removeColumns(columnNames, callback) {
 
-		const rows = this.getCurrentControlValue();
+		const rows = this.props.controller.getPropertyValue(this.props.propertyId);
 		const keyIndex = this.props.control.keyIndex;
 
 		const newRows = reject(rows, function(val) {
 			return columnNames.indexOf(val[keyIndex]) >= 0;
 		});
-		this.setCurrentControlValue(newRows);
-	}
-
-
-	selectionChanged(selection) {
-		ColumnStructureTableEditor.prototype.selectionChanged.call(this, selection);
-		// this.setState({ enableRemoveIcon: (selection.length !== 0) });
+		this.setCurrentControlValueSelected(newRows);
 	}
 
 	/**
@@ -232,7 +183,6 @@ class ColumnStructureTableControl extends ColumnStructureTableEditor {
 						controller={this.props.controller}
 						propertyId={this.props.propertyId}
 						setScrollToRow={this.setScrollToRow}
-						getCurrentControlValue={this.getCurrentControlValue}
 						setCurrentControlValueSelected={this.setCurrentControlValueSelected}
 						stateStyle={stateStyle}
 						disabled={disabled}
@@ -246,15 +196,14 @@ class ColumnStructureTableControl extends ColumnStructureTableEditor {
 	}
 }
 
-ColumnStructureTableControl.propTypes = {
+StructureTableControl.propTypes = {
 	buildUIItem: PropTypes.func,
 	control: PropTypes.object.isRequired,
 	propertyId: PropTypes.object.isRequired,
 	controller: PropTypes.object.isRequired,
 	openFieldPicker: PropTypes.func.isRequired,
-	customContainer: PropTypes.bool,
 	intl: intlShape,
 	rightFlyout: PropTypes.bool
 };
 
-export default injectIntl(ColumnStructureTableControl);
+export default injectIntl(StructureTableControl);

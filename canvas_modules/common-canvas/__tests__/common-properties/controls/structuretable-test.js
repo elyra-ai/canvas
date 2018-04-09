@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
-import ColumnStructureTableControl from "../../../src/common-properties/editor-controls/column-structure-table-control.jsx";
+import StructureTableControl from "../../../src/common-properties/controls/structuretable";
 import { mountWithIntl } from "enzyme-react-intl";
 import { ReactWrapper } from "enzyme";
 
@@ -316,11 +316,11 @@ function genUIItem() {
 
 const openFieldPicker = sinon.spy();
 setPropertyValue();
-describe("ColumnStructureTableControl renders correctly", () => {
+describe("structuretable control renders correctly", () => {
 
 	it("props should have been defined", () => {
 		const wrapper = mountWithIntl(
-			<ColumnStructureTableControl
+			<StructureTableControl
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -336,9 +336,9 @@ describe("ColumnStructureTableControl renders correctly", () => {
 		expect(wrapper.prop("buildUIItem")).to.equal(genUIItem);
 	});
 
-	it("should render a `ColumnStructureTableControl`", () => {
+	it("should render a `structuretable` control", () => {
 		const wrapper = mountWithIntl(
-			<ColumnStructureTableControl
+			<StructureTableControl
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -360,9 +360,9 @@ describe("ColumnStructureTableControl renders correctly", () => {
 		expect(tableContent.find(".table-row-move-button[disabled=true]")).to.have.length(4);
 	});
 
-	it("should select no rows and all move buttons disabled `ColumnStructureTableControl`", () => {
+	it("should select no rows and all move buttons disabled `structuretable` control", () => {
 		const wrapper = mountWithIntl(
-			<ColumnStructureTableControl
+			<StructureTableControl
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -381,7 +381,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 	it("should select top row and move down one row", () => {
 		setPropertyValue();
 		const wrapper = mountWithIntl(
-			<ColumnStructureTableControl
+			<StructureTableControl
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -423,7 +423,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 	it("should select top row and move down to bottom row", () => {
 		setPropertyValue();
 		const wrapper = mountWithIntl(
-			<ColumnStructureTableControl
+			<StructureTableControl
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -465,7 +465,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 	it("should select bottom row and move up one row", () => {
 		setPropertyValue();
 		const wrapper = mountWithIntl(
-			<ColumnStructureTableControl
+			<StructureTableControl
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -507,7 +507,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 	it("should select bottom row and move up to top row", () => {
 		setPropertyValue();
 		const wrapper = mountWithIntl(
-			<ColumnStructureTableControl
+			<StructureTableControl
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -546,10 +546,10 @@ describe("ColumnStructureTableControl renders correctly", () => {
 			.text()).to.equal("BP");
 	});
 
-	it("should select top row and correct move buttons enabled `ColumnStructureTableControl`", () => {
+	it("should select top row and correct move buttons enabled `structuretable` control", () => {
 		setPropertyValue();
 		const wrapper = mountWithIntl(
-			<ColumnStructureTableControl
+			<StructureTableControl
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -573,10 +573,10 @@ describe("ColumnStructureTableControl renders correctly", () => {
 		expect(buttonContainer.find(".table-row-move-button[disabled=true]")).to.have.length(2);
 	});
 
-	it("should select bottom row and correct move buttons enabled `ColumnStructureTableControl`", () => {
+	it("should select bottom row and correct move buttons enabled `structuretable` control", () => {
 		setPropertyValue();
 		const wrapper = mountWithIntl(
-			<ColumnStructureTableControl
+			<StructureTableControl
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -600,10 +600,10 @@ describe("ColumnStructureTableControl renders correctly", () => {
 		expect(buttonContainer.find(".table-row-move-button[disabled=true]")).to.have.length(2);
 	});
 
-	it("should select middle row and all move buttons enabled `ColumnStructureTableControl`", () => {
+	it("should select middle row and all move buttons enabled `structuretable` control", () => {
 		setPropertyValue();
 		const wrapper = mountWithIntl(
-			<ColumnStructureTableControl
+			<StructureTableControl
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -629,7 +629,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 	it("should select add columns button and field picker should display", () => {
 		setPropertyValue();
 		const wrapper = mountWithIntl(
-			<ColumnStructureTableControl
+			<StructureTableControl
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -651,7 +651,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 	it("should select row and remove button row should be removed", () => {
 		setPropertyValue();
 		const wrapper = mountWithIntl(
-			<ColumnStructureTableControl
+			<StructureTableControl
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -691,7 +691,7 @@ describe("ColumnStructureTableControl renders correctly", () => {
 	it("should search correct keyword in table", () => {
 		setPropertyValue();
 		const wrapper = mountWithIntl(
-			<ColumnStructureTableControl
+			<StructureTableControl
 				control={control}
 				controller={controller}
 				propertyId={propertyId}
@@ -935,13 +935,13 @@ describe("Cells disable and hide correctly with structure table control", () => 
 	});
 });
 
-describe("ColumnStructureTableControl with readonly numbered column renders correctly", () => {
+describe("structuretable control with readonly numbered column renders correctly", () => {
 	beforeEach(() => {
 		setPropertyValue();
 	});
 	it("should have displayed the correct generatedValues with default index values", () => {
 		const wrapper = mountWithIntl(
-			<ColumnStructureTableControl
+			<StructureTableControl
 				control={readonlyControlDefault}
 				controller={controller}
 				propertyId={propertyIdReadonlyControl}
@@ -961,7 +961,7 @@ describe("ColumnStructureTableControl with readonly numbered column renders corr
 
 	it("should have displayed the correct generatedValues with startValue", () => {
 		const wrapper = mountWithIntl(
-			<ColumnStructureTableControl
+			<StructureTableControl
 				control={readonlyControlStartValue}
 				controller={controller}
 				propertyId={propertyIdReadonlyControlStartValue}
@@ -980,7 +980,7 @@ describe("ColumnStructureTableControl with readonly numbered column renders corr
 	});
 });
 
-describe("ColumnStructureTableControl with filtering works correctly", () => {
+describe("structuretable control with filtering works correctly", () => {
 	var wrapper;
 	beforeEach(() => {
 		const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
@@ -1015,7 +1015,7 @@ describe("ColumnStructureTableControl with filtering works correctly", () => {
 	});
 });
 
-describe("ColumnStructureTableControl with multi input schemas renders correctly", () => {
+describe("structuretable control with multi input schemas renders correctly", () => {
 	let wrapper;
 	beforeEach(() => {
 		const renderedObject = propertyUtils.flyoutEditorForm(structuretableMultiInputParamDef);
@@ -1185,7 +1185,7 @@ describe("ColumnStructureTableControl with multi input schemas renders correctly
 	});
 });
 
-describe("column structure table editor control displays the proper number of rows", () => {
+describe("structuretable control displays the proper number of rows", () => {
 	let wrapper;
 	beforeEach(() => {
 		const renderedObject = propertyUtils.flyoutEditorForm(rowDisplayParamDef);
@@ -1225,7 +1225,7 @@ describe("column structure table editor control displays the proper number of ro
 	});
 });
 
-describe("column structure table editor control displays with no header", () => {
+describe("structuretable control displays with no header", () => {
 	let wrapper;
 	beforeEach(() => {
 		const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
@@ -1254,7 +1254,7 @@ describe("column structure table editor control displays with no header", () => 
 	});
 });
 
-describe("column structure table editor control handles updated data model", () => {
+describe("structuretable control handles updated data model", () => {
 	let wrapper;
 	let propController;
 	beforeEach(() => {

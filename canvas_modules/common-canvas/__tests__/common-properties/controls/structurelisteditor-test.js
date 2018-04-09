@@ -8,7 +8,7 @@
  *******************************************************************************/
 
 import React from "react";
-import StructureListEditorControl from "../../../src/common-properties/editor-controls/structure-list-editor-control.jsx";
+import StructureListEditorControl from "../../../src/common-properties/controls/structurelisteditor";
 import SubPanelButton from "../../../src/common-properties/panels/sub-panel/button.jsx";
 import { mountWithIntl } from "enzyme-react-intl";
 import { ReactWrapper } from "enzyme";

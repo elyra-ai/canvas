@@ -8,15 +8,15 @@
  *******************************************************************************/
 /* global document */
 
-import propertyUtils from "../_utils_/property-utils";
+import propertyUtils from "./../../_utils_/property-utils";
 
 import { expect } from "chai";
 import isEqual from "lodash/isEqual";
 
-import Controller from "../../src/common-properties/properties-controller";
+import Controller from "./../../../src/common-properties/properties-controller";
 
-const CONDITIONS_TEST_FORM_DATA = require("../test_resources/json/conditions-test-formData.json");
-const ENUM_FILTER_FORM_DATA = require("../test_resources/json/filtered-enum-test-formData.json");
+const CONDITIONS_TEST_FORM_DATA = require("./../../test_resources/json/conditions-test-formData.json");
+const ENUM_FILTER_FORM_DATA = require("./../../test_resources/json/filtered-enum-test-formData.json");
 
 const additionalComponents = null;
 
