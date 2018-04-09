@@ -21,7 +21,7 @@ import isEqual from "lodash/isEqual";
 import structuretableParamDef from "../../test_resources/paramDefs/structuretable_paramDef.json";
 import structuretableMultiInputParamDef from "../../test_resources/paramDefs/structuretable_multiInput_paramDef.json";
 import rowDisplayParamDef from "../../test_resources/paramDefs/displayRows_paramDef.json";
-
+import filterColumnParamDef from "../../test_resources/paramDefs/Filter_paramDef.json";
 
 import chai from "chai";
 import chaiEnzyme from "chai-enzyme";
@@ -1253,6 +1253,62 @@ describe("structuretable control displays with no header", () => {
 		expect(header).to.have.length(0);
 	});
 });
+
+describe("structuretable control displays with checkbox header", () => {
+	let wrapper;
+	let renderedController;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(filterColumnParamDef);
+		wrapper = renderedObject.wrapper;
+		renderedController = renderedObject.controller;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+
+	it("should display header with checkbox", () => {
+		const tableCheckboxHeader = wrapper.find("#field_types2"); // find the table header
+		expect(tableCheckboxHeader).to.have.length(1);
+		expect(tableCheckboxHeader.prop("type")).to.equal("checkbox");
+	});
+	it("checkbox header on should select column value for all rows", () => {
+		const colPropertyId = { name: "field_types" };
+		// validate the original state
+		let columnValues = renderedController.getPropertyValue(colPropertyId);
+		expect(columnValues).to.have.length(3);
+		expect(columnValues[0][2]).to.be.equal(false);
+		expect(columnValues[1][2]).to.be.equal(true);
+		expect(columnValues[2][2]).to.be.equal(false);
+		// set the column header checkbox to true
+		const tableCheckboxHeader = wrapper.find("input[type='checkbox']").at(0); // find the table header checkbox
+		tableCheckboxHeader.simulate("change", { target: { checked: true, id: "field_types2" } });
+		// validate all rows checkboxes are true
+		columnValues = renderedController.getPropertyValue(colPropertyId);
+		expect(columnValues[0][2]).to.be.equal(true);
+		expect(columnValues[1][2]).to.be.equal(true);
+		expect(columnValues[2][2]).to.be.equal(true);
+	});
+	it("checkbox header off should un-select column value for all rows", () => {
+		const colPropertyId = { name: "field_types" };
+		// validate the original state
+		let columnValues = renderedController.getPropertyValue(colPropertyId);
+		expect(columnValues).to.have.length(3);
+		expect(columnValues[0][2]).to.be.equal(false);
+		expect(columnValues[1][2]).to.be.equal(true);
+		expect(columnValues[2][2]).to.be.equal(false);
+		// set the column header checkbox to true
+		const tableCheckboxHeader = wrapper.find("input[type='checkbox']").at(0); // find the table header checkbox
+		tableCheckboxHeader.simulate("change", { target: { checked: false, id: "field_types2" } });
+		// validate all rows checkboxes are true
+		columnValues = renderedController.getPropertyValue(colPropertyId);
+		expect(columnValues[0][2]).to.be.equal(false);
+		expect(columnValues[1][2]).to.be.equal(false);
+		expect(columnValues[2][2]).to.be.equal(false);
+	});
+
+});
+
 
 describe("structuretable control handles updated data model", () => {
 	let wrapper;

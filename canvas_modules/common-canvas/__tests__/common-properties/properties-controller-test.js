@@ -909,6 +909,32 @@ describe("Properties Controller summary panel", () => {
 	});
 });
 
+describe("Properties Controller updatePropertyValue validation", () => {
+	it("should get skip[ validation on update", () => {
+		reset();
+		controller.setForm(conditionForm);
+		// no error messages to start with
+		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify({}));
+
+		// skip validation on update, no error messages
+		controller.updatePropertyValue({ name: "numberfieldCheckpointInterval" }, -2, true);
+		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify({}));
+
+		// validate on update, generate an error messages
+		controller.updatePropertyValue({ name: "numberfieldCheckpointInterval" }, -2);
+		const errorMessage = {
+			numberfieldCheckpointInterval:
+			{
+				type: "error",
+				text: "The checkpoint interval value must either be >= 1 or -1 to disable",
+				validation_id: "numberfieldCheckpointInterval"
+			}
+		};
+		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify(errorMessage));
+	});
+});
+
+
 describe("Properties Controller operators", () => {
 	const standardOpCount = Object.keys(controller.getConditionOps()).length;
 	it("set an invalid custom operator", () => {
