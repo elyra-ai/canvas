@@ -145,10 +145,6 @@ export default class MoveableTableRows extends React.Component {
 
 		const tableKey = "moveablerow-table-" + this.props.control.name;
 		var content = (<table id="structure-table">
-			<colgroup>
-				<col className="structure-table-first-column" />
-				<col className="structure-table-second-column" />
-			</colgroup>
 			<tbody>
 				<tr className="structure-table-content-row" style={this.props.stateStyle}>
 					<td className="structure-table-content-row-first-column">

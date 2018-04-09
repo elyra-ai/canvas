@@ -12,18 +12,45 @@
 $flexible-table-header-row-height: 32px;
 $flexible-table-first-column-left-padding: 15px;
 
+#flexible-table-container-wrapper {
+	height: 200px;
+	width: 100%;
+	position: relative;
+	overflow: hidden;
+}
+
+// selectcolumns and tables without headers
+.flexible-table-container-absolute-noheader {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	overflow-y: auto;
+	overflow-x: hidden;
+	border: 1px solid #DFE3E6;
+	background-color: #FFFFFF;
+	tr {
+		border-bottom: 1px solid #DFE3E6;
+	}
+}
+
 .flexible-table-container-absolute {
 	height: 100%;
 	width: 100%;
 	border: 1px solid #DFE3E6;
 	background-color: #FFFFFF;
+
+	#flexible-table-container {
+		height: 100%;
+	}
+
 	thead {
 		background-color: #F5F7FA;
+		border-bottom: 1px solid #DDDDDD;
 		display: inline-flex;
 		th {
 			display: inline-flex;
 			height: $flexible-table-header-row-height;
-			border-bottom: 1px solid #DDDDDD !important; // this line can be removed once bootstrap css is gone
+			border-bottom: 0 !important; // this line can be removed once bootstrap css is gone
 			align-items: center;
 
 			// sort icon in header
@@ -70,23 +97,39 @@ $flexible-table-first-column-left-padding: 15px;
 		.reactable-th-scrollbar {
 			padding: 0;
 		}
+
+		tr {
+			height: $flexible-table-header-row-height; // needed for chrome in windows
+		}
 	}
 	tbody {
-		height: calc(100% - #{$flexible-table-header-row-height} + 1px); // 1px for the border
+		height: calc(100% - #{$flexible-table-header-row-height} + 2px); // 2px for the border
 		width: 100%;
 		position: absolute;
 		overflow-y: auto;
+		overflow-x: hidden; // address scrollbar with mouse issue
+		display: flex; // address scrollbar with mouse issue
+		flex-direction: column; // address scrollbar with mouse issue
+		tr {
+			border-bottom: 1px solid #DFE3E6;
+		}
 		.field-picker-data-rows td {
 			padding-top: 5px;
 			padding-bottom: 5px;
 		}
 		td {
 			padding: 0;
+			border-top: 0;
 		}
 		td:first-of-type {
 			padding-left: $flexible-table-first-column-left-padding;
 		}
 	}
+}
+
+.flexible-table {
+	margin-bottom: 0;
+	overflow: hidden;
 }
 
 // this section can be removed once bootstrap css is gone
@@ -97,17 +140,7 @@ $flexible-table-first-column-left-padding: 15px;
 	padding-top: 0;
 	padding-bottom: 0;
 	padding-right: 0;
-}
-
-#control-icon-container-enabled,
-.flexible-table-container-icon {
-	display: inline-flex;
-	width: 100%;
-}
-
-// allow condition icon to display on the right of table
-.flexible-table-container-icon > .flexible-table-container-icon-first-column {
-	width: calc(100% - 25px);
+	border-top: 0;
 }
 
 .table-row .table-text, .readonly-control, .toggletext_control, .table-subcell {
@@ -115,6 +148,7 @@ $flexible-table-first-column-left-padding: 15px;
 	padding-bottom: 8px;
 }
 
+// text overflow in cell to truncate with ellipsis
 .table-row .table-text {
 	width: inherit;
 	margin-left: -$flexible-table-first-column-left-padding; // this is needed so the content will not expand the column width
@@ -128,26 +162,20 @@ $flexible-table-first-column-left-padding: 15px;
 	}
 }
 
+// vertical align dropdown within table cells
 .table-row #oneofselect-control-container {
-	padding-top: 2px;
+	padding-top: 4px;
 }
 
-/* Column Select */
+// highlight selected rows in tables
 .table-selected-row {
-	background-color: #DFE3E6 !important;
-}
-
-.column-select-table-row {
-	font-weight: 500;
-	color: #3D70B2;
-}
-.column-select-table-selected-row {
 	background-color: #DFE3E6;
 }
 
+// vertical align row reorder buttons in moveable tables
 #table-row-move-button-container {
-	width: 16px !important;
-	margin-left: 7px;
+	width: 16px;
+	padding-left: 5px;
 	height: 100%;
 	display: flex;
 	flex-direction: column;
@@ -156,6 +184,10 @@ $flexible-table-first-column-left-padding: 15px;
 
 .table-row-move-button:not([disabled]) {
 	cursor: pointer;
+	svg:hover {
+		border-bottom: 2px solid #3D70B2;
+		padding-bottom: 0;
+	}
 }
 
 .table-row-move-button > svg {
@@ -164,79 +196,9 @@ $flexible-table-first-column-left-padding: 15px;
 	padding-bottom: 2px;
 }
 
-.table-row-move-button:not([disabled]) > svg:hover {
-	border-bottom: 2px solid #3D70B2;
-	padding-bottom: 0;
-}
-
-/* Flexible Table */
-#flexible-table-container-wrapper {
-	height: 200px;
-	width: 100%;
-	position: relative;
-	overflow: hidden;
-}
-
-#flexible-table-container {
-	height: 100%;
-	// width: 726px;
-	position: relative;
-	background-color: #FFFFFF;
-	padding: 0;
-	color: #000000;
-}
-
-.flexible-table-header,
-.flexible-table-header-container {
-	padding: 0;
-	position: absolute;
-	height: 32px;
-	z-index: 100;
-}
-
-// selectcolumns and tables without headers
-.flexible-table-container-absolute-noheader {
-	position: absolute;
-	height: 100%;
-	width: 100%;
-	overflow-y: auto;
-	overflow-x: hidden;
-	border: 1px solid #DFE3E6;
-	background-color: #FFFFFF;
-}
-
-.flexible-table-control-container {
-	width: 100%;
-}
-
-#flexible-table-container-noheader {
-	width: 726px;
-	position: relative;
-	background-color: #FFFFFF;
-	padding: 0;
-	color: #000000;
-}
-
-.filter-header-border {
-	background-color: #F5F7FA;
-	border: 1px solid #DFE3E6;
-	border-bottom: 1px solid #DFE3E6;
-}
-
-#flexible-table-container-wrapper .table>tbody>tr>td {
-	border-top: 0;
-}
-
-th div div label, td div div label {
-	padding-bottom: 10px;
-}
-
+// disable blue outline from header on focus
 .reactable-header-sortable:focus {
 	outline: none;
-}
-
-.properties-column-select #flexible-table-container-wrapper {
-	height: 150px;
 }
 
 .flexible-table-search-container {
@@ -245,101 +207,67 @@ th div div label, td div div label {
 	float: left;
 	top: -5px;
 	position: relative;
-	display: flex;
+	.flexible-table-search-bar {
+		width: 90%;
+		float: left;
+		margin: 5px 0 2px 5px;
+
+		&.disabled * {
+			border-bottom-color: #C7C7C7;
+			&::placeholder {
+				color: #C7C7C7;
+			}
+		}
+
+		input {
+			padding-bottom: 2px;
+			border-bottom: 1px solid #8C9BA5;
+			text-overflow: ellipsis;
+		}
+	}
+
+	#flexible-table-search-icon {
+		width: 20px;
+		height: 20px;
+		float: left;
+		margin-top: 8px;
+	}
 }
 
-.flexible-table-search-bar.disabled * {
-	color: #C7C7C7;
-	border-bottom-color: #C7C7C7;
-}
-
-#flexible-table-search-bar {
-	height: 32px;
-	width: 90%;
-	float: left;
-	margin: 5px 0 2px 5px;
-}
-
-#flexible-table-search {
-	width: 100%;
-	float: left;
-	padding-bottom: 2px;
-	border-bottom-width: 1px;
-	text-overflow: ellipsis;
-}
-
-#flexible-table-search-icon {
-	width: 20px;
-	height: 20px;
-	float: left;
-	margin-top: 8px;
-}
-
-#flexible-table-search:focus {
-	border-bottom: 2px solid #C7C7C7;
-}
-
-.flexible-table-header {
-	width: 100%;
-	padding: 0;
-}
-
-.table>tbody>tr:nth-child(1)>td {
-	border-top: 0;
-}
-
-tr.reactable-column-header {
-	height: $flexible-table-header-row-height;
-}
-
-#table-header,
-#table-header > thead {
-	width: 100%;
-}
-
-.table {
-	margin-bottom: 0;
-}
-
-.table-cell.disabled {
-	color: #C7C7C7;
-}
-
-.public_fixedDataTable_header .public_fixedDataTableCell_main {
-	background-color: #F5F7FA !important;
-	border-top-style: none;
-	border-bottom-style: none;
-}
-
-.fixed-data-table-container.disabled * {
-	color: #C7C7C7;
-}
-
-#structure-table,
-#structure-table > tbody,
-.structure-table-content-row {
+// layout tables to allow room for condition icon
+#structure-table {
 	width: 100%;
 	display: inline-block;
+	> tbody {
+		width: 100%;
+		display: inline-block;
+
+		.structure-table-content-row {
+			width: 100%;
+			display: flex;
+
+			.structure-table-content-row-first-column {
+				width: calc(100% - 16px);
+			}
+		}
+	}
 }
 
-.structure-table-content-row {
-	display: flex;
-}
-
-.structure-table-content-row-first-column {
-	width: calc(100% - 16px);
-	flex-shrink: 0.02;
-}
-
-.structure-table-first-column {
+.flexible-table-control-container {
 	width: 100%;
-}
 
-.structure-table-second-column,
-.flexible-table-container-icon > .flexible-table-container-icon-second-column {
-	width: 16px !important;
-}
+	.flexible-table-container-icon {
+		display: inline-flex;
+		width: 100%;
 
-tr.table-row {
-	border-bottom: 1px solid #DFE3E6;
+		.flexible-table-container-icon-first-column {
+			width: calc(100% - 25px);
+			flex-shrink: 0.02;
+		}
+
+		.flexible-table-container-icon-second-column {
+			width: 16px !important;
+			flex-shrink: 0;
+		}
+	}
 }

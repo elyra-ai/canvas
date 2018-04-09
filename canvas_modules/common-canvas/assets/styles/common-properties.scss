@@ -202,6 +202,14 @@ input.number,
 	width: 100%;
 }
 
+#control-icon-container-enabled {
+	display: inline-flex;
+	width: 100%;
+	* {
+		flex-shrink: 0;
+	}
+}
+
 .validation-warning-message-icon-checkboxset,
 .validation-error-message-icon-checkboxset {
 	position: relative;
@@ -364,10 +372,6 @@ input.number,
 	transform: translateY(4px);
 }
 
-.reactable-th-checkbox {
-	padding-left: 15px;
-}
-
 #filter-list-title {
 	width: auto;
 	height: 32px;
@@ -474,19 +478,6 @@ input.number,
 
 .remove-fields-button[disabled] {
 	cursor: default;
-}
-
-.field-picker-data {
-	height: 100%;
-	display: flex;
-	align-items: center;
-}
-
-.field-picker-data-type-icon {
-	width: 15px;
-	height: 15px;
-	float: left;
-	margin-right: 5px;
 }
 
 /* Dropdown */

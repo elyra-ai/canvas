@@ -1221,7 +1221,7 @@
             "label": {
               "resource_key": "DummyEntry.override.label"
             },
-            "width": 5,
+            "width": 6,
             "edit_style": "inline"
           },
           {
@@ -1243,6 +1243,7 @@
             "label": {
               "default": "Invisible Field"
             },
+            "width": 10,
             "edit_style": "inline",
             "visible": false
           },

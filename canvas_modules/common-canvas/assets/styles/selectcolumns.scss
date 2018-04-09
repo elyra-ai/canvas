@@ -1,0 +1,31 @@
+/*******************************************************************************
+ * Licensed Materials - Property of IBM
+ * (c) Copyright IBM Corporation 2018. All Rights Reserved.
+ *
+ * Note to U.S. Government Users Restricted Rights:
+ * Use, duplication or disclosure restricted by GSA ADP Schedule
+ * Contract with IBM Corp.
+ *******************************************************************************/
+
+// overwrite flexible-table.scss: .flexible-table-container-absolute-noheader tr
+.properties-column-select #flexible-table-container tbody>tr,
+.properties-column-select #flexible-table-container-noheader tbody>tr {
+	border-bottom: 0;
+
+	// this section can be removed once bootstrap css is gone
+	td {
+		border-top: 0;
+	}
+}
+
+.column-select-table-row {
+	font-weight: 500;
+	color: #3D70B2;
+}
+.column-select-table-selected-row {
+	background-color: #DFE3E6;
+}
+
+.properties-column-select #flexible-table-container-wrapper {
+	height: 150px;
+}

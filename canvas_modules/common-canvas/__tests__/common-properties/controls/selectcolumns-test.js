@@ -518,7 +518,7 @@ describe("selectcolumns control displays the proper number of rows", () => {
 		const heightStyle = heightDiv.at(0).prop("style");
 		// console.log("STYLE: " + JSON.stringify(heightStyle));
 		expect(isEqual(JSON.parse(JSON.stringify(heightStyle)),
-			JSON.parse(JSON.stringify({ "height": "108px" })))).to.be.true;
+			JSON.parse(JSON.stringify({ "height": "106px" })))).to.be.true;
 	});
 
 	it("should display 5 rows", () => {

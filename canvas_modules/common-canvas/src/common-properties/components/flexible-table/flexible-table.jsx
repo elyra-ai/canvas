@@ -310,8 +310,9 @@ class FlexibleTable extends React.Component {
 	*   }
 	* ]
 	* @param columnWidths
+	* @param tableWidth
 	*/
-	generateTableRows(columnWidths) {
+	generateTableRows(columnWidths, tableWidth) {
 		const tableRows = [];
 		for (let ridx = 0; ridx < this.props.data.length; ridx++) {
 			const row = this.props.data[ridx];
@@ -336,10 +337,12 @@ class FlexibleTable extends React.Component {
 				}
 			}
 
+			// need to assign width to table row so scrollbar from mouse will not push contents
 			tableRows.push(<Tr
 				{...onClickCallback}
 				key={this.props.scrollKey + "-row-" + ridx}
 				className={rowClassName}
+				style={{ width: tableWidth }}
 			>{tableRowColumns}</Tr>);
 		}
 		return tableRows;
@@ -350,13 +353,13 @@ class FlexibleTable extends React.Component {
 		const hideTableHeader = renderHeader ? {} : { "hideTableHeader": true };
 
 		const tableWidth = this.state.tableWidth;
-		const tableHeight = this.state.tableHeight;
+		const tableHeight = this.state.tableHeight - 2; // subtract 2 px for the borders
 		const columnWidths = this.calculateColumnWidths(this.props.columns, tableWidth);
 
 		const headerInfo = this.generateTableHeaderRow(columnWidths);
 		const headers = headerInfo.headers;
 		const searchLabel = headerInfo.searchLabel;
-		const tableContent = this.generateTableRows(columnWidths);
+		const tableContent = this.generateTableRows(columnWidths, tableWidth);
 
 		let renderTable = "";
 		let searchBar = null;
@@ -368,7 +371,7 @@ class FlexibleTable extends React.Component {
 			const disabled = this.props.stateDisabled && (typeof this.props.stateDisabled.disabled !== "undefined" || Object.keys(this.props.stateDisabled) > 0);
 			const className = disabled ? "disabled" : "";
 			searchBar = (<div className="flexible-table-search-container">
-				<div id="flexible-table-search-bar" className={"flexible-table-search-bar " + className}>
+				<div className={"flexible-table-search-bar " + className}>
 					<TextField
 						key="flexible-table-search-bar"
 						type="search"

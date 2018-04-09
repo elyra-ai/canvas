@@ -1206,7 +1206,7 @@ describe("structuretable control displays the proper number of rows", () => {
 			const heightStyle = heightDiv.at(0).prop("style");
 			// console.log("STYLE: " + JSON.stringify(heightStyle));
 			expect(isEqual(JSON.parse(JSON.stringify(heightStyle)),
-				JSON.parse(JSON.stringify({ "height": "35px" })))).to.be.true;
+				JSON.parse(JSON.stringify({ "height": "33px" })))).to.be.true;
 		}
 	});
 
@@ -1220,7 +1220,7 @@ describe("structuretable control displays the proper number of rows", () => {
 			const heightStyle = heightDiv.at(0).prop("style");
 			// console.log("STYLE: " + JSON.stringify(heightStyle));
 			expect(isEqual(JSON.parse(JSON.stringify(heightStyle)),
-				JSON.parse(JSON.stringify({ "height": "36px" })))).to.be.true;
+				JSON.parse(JSON.stringify({ "height": "34px" })))).to.be.true;
 		}
 	});
 });
