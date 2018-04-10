@@ -6,6 +6,7 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
+/* eslint global-require:0 */
 
 const path = require("path");
 const webpack = require("webpack");
@@ -26,8 +27,7 @@ module.exports = {
 		library: "Common-Canvas",
 		libraryTarget: "commonjs2",
 		filename: "[name].js",
-		path: path.join(__dirname, "/dist"),
-		sourceMapFilename: "[file].map"
+		path: path.join(__dirname, "/dist")
 	},
 	module: {
 		rules: [
@@ -49,10 +49,11 @@ module.exports = {
 				test: /\.s*css$/,
 				use: ExtractTextPlugin.extract(
 					{
+						fallback: "style-loader",
 						use: [
-							"css-loader",
-							"sass-loader",
-							"postcss-loader"
+							{ loader: "css-loader" },
+							{ loader: "postcss-loader", options: { ident: "postcss", plugins: [require("autoprefixer")] } },
+							{ loader: "sass-loader" }
 						]
 					}
 				)
@@ -75,7 +76,7 @@ module.exports = {
 		//	failOnWarning: true,
 		//	failOnError: true
 		// }),
-		new webpack.optimize.UglifyJsPlugin(), // minify everything
+		new webpack.optimize.UglifyJsPlugin({ sourceMap: true }), // minify everything
 		new webpack.optimize.AggressiveMergingPlugin(), // Merge chunk
 		new ExtractTextPlugin("common-canvas.css"),
 		new ExtractTextPlugin("common-canvas.min.css"),
