@@ -219,10 +219,8 @@ class FieldPicker extends React.Component {
 			selectAll = Array.from(new Set(selectAll));
 		} else if (selectedFields) {
 			for (const selectedValue of selectedFields) {
-				const duplicate = visibleData.some(function(field) {
-					return field.name === selectedValue;
-				});
-				if (!duplicate) {
+				// if selectedValue is already checked, don't re-check it
+				if (!this.isFieldInList(visibleData, selectedValue)) {
 					selectAll.push(selectedValue);
 				}
 			}
@@ -231,6 +229,17 @@ class FieldPicker extends React.Component {
 		this.setState({
 			selectedFields: selectAll,
 			checkedAll: selectAll.length === this.state.fields.length
+		});
+	}
+
+	/**
+	* Returns true if field is found in list, else false
+	* @param list array of fields to search through
+	* @param fieldName field name to find in data
+	*/
+	isFieldInList(list, fieldName) {
+		return list.some(function(field) {
+			return field.name === fieldName;
 		});
 	}
 

@@ -24,14 +24,7 @@ function parseUiContent(panelTree, formData, panelTreeRoot) {
 
 function parseUiItem(panelTree, uiItem, currentPanel) {
 	switch (uiItem.itemType) {
-	case ItemType.PRIMARY_TABS: {
-		if (uiItem.tabs) {
-			for (const tab of uiItem.tabs) {
-				parseUiItem(panelTree, tab.content, currentPanel);
-			}
-		}
-		break;
-	}
+	case ItemType.PRIMARY_TABS:
 	case ItemType.SUB_TABS: {
 		if (uiItem.tabs) {
 			for (const tab of uiItem.tabs) {
