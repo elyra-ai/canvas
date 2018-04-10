@@ -285,7 +285,7 @@ export default class CommonCanvas extends React.Component {
 		let canvas = null;
 		let palette = null;
 		const showNarrowPalette = this.props.config.enableNarrowPalette || typeof this.props.config.enableNarrowPalette === "undefined";
-		let paletteClass = showNarrowPalette ? "canvas-palette-flyout-div-closed" : "canvas-palette-flyout-div-none";
+		let paletteClass = showNarrowPalette ? "canvas-palette-flyout-div-closed-narrow" : "canvas-palette-flyout-div-closed-none";
 		let contextMenuWrapper = null;
 		let canvasToolbar = null;
 		let rightFlyout = (<div className="right-flyout-panel" />);
@@ -326,7 +326,7 @@ export default class CommonCanvas extends React.Component {
 
 			if (this.objectModel.getPaletteData()) {
 				if (this.props.config.enablePaletteLayout === "Modal") {
-					paletteClass = "canvas-palette-flyout-div-none";
+					paletteClass = "canvas-palette-flyout-div-closed-none";
 					palette = (<Palette
 						paletteJSON={this.objectModel.getPaletteData()}
 						showPalette={this.state.isPaletteOpen}

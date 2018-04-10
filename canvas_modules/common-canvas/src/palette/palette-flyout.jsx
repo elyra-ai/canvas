@@ -26,9 +26,9 @@ class PaletteFlyout extends React.Component {
 		if (this.props.showPalette) {
 			className += " palette-flyout-div-open";
 		} else if (this.props.showNarrowPalette) {
-			className += " palette-flyout-div-closed";
+			className += " palette-flyout-div-closed-narrow";
 		} else {
-			className += " palette-flyout-div-none";
+			className += " palette-flyout-div-closed-none";
 		}
 
 		return (
