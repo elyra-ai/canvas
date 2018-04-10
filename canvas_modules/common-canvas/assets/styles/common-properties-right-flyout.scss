@@ -29,44 +29,6 @@
 	background-color: #FFFFFF;
 }
 
-.node-title-container-right-flyout-panel {
-	height: 45px;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding-left: 20px;
-	padding-right: 10px;
-	background: #FFFFFF;
-}
-
-.node-title-right-flyout-panel {
-	font-size: 24px;
-	height: 45px;
-	width: 100%;
-	overflow-y: auto;
-	align-items: center;
-}
-
-#node-title-editor-right-flyout-panel {
-	margin: 0;
-	padding: 0;
-	border-bottom: 0;
-}
-
-.title-edit-right-flyout-panel, .title-help-right-flyout-panel {
-	padding-left: 4px;
-}
-
-.title-edit-right-flyout-panel > svg, .title-help-right-flyout-panel > svg {
-	height: 24px;
-	width: 24px;
-}
-
-.title-edit-right-flyout-panel:hover, .title-help-right-flyout-panel:hover {
-	background-color: #EFEFEF;
-	cursor: pointer;
-}
-
 #common-properties-right-flyout-panel .well {
 	height: 100%;
 	background-color: #FFFFFF;

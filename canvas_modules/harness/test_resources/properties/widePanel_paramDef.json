@@ -53,6 +53,7 @@
     "label": {
       "default": "Panels"
     },
+		"help": {},
     "editor_size": "medium",
     "parameter_info": [
       {

@@ -9,44 +9,34 @@
 
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import ReactDOM from "react-dom";
 import Icon from "./../../../icons/icon.jsx";
 import TextField from "ap-components-react/dist/components/TextField";
 
 export default class TitleEditor extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			propertiesTitleReadOnly: true
-		};
 		this.editTitleClickHandler = this.editTitleClickHandler.bind(this);
 		this.helpClickHandler = this.helpClickHandler.bind(this);
-	}
-	setPropertiesTitleReadOnlyMode(mode) {
-		let bottomBorderStyle = "2px solid #c7c7c7"; // TODO should be in css
-		if (mode) {
-			bottomBorderStyle = "none";
-		}
-		this.setState({
-			propertiesTitleReadOnly: mode,
-			propertiesTitleEditStyle: { borderBottom: bottomBorderStyle }
-		});
 	}
 
 	_handleKeyPress(e) {
 		if (e.key === "Enter") {
-			this.setPropertiesTitleReadOnlyMode(true);
+			ReactDOM.findDOMNode(this).querySelector("input")
+				.blur();
 		}
 	}
 
 	editTitleClickHandler() {
-		this.setPropertiesTitleReadOnlyMode(false);
+		ReactDOM.findDOMNode(this).querySelector("input")
+			.focus();
 	}
 
 	helpClickHandler() {
 		if (this.props.helpClickHandler) {
 			this.props.helpClickHandler(
 				this.props.controller.getForm().componentId,
-				this.props.controller.getForm().help.data,
+				this.props.help.data,
 				this.props.controller.getAppData());
 		}
 	}
@@ -69,10 +59,8 @@ export default class TitleEditor extends Component {
 						id="node-title-editor-right-flyout-panel"
 						value={this.props.controller.getTitle()}
 						onChange={(e) => this.props.controller.setTitle(e.target.value)}
-						onBlur={(e) => this.setPropertiesTitleReadOnlyMode(true)}
 						onKeyPress={(e) => this._handleKeyPress(e)}
-						readOnly={this.state.propertiesTitleReadOnly}
-						style={this.state.propertiesTitleEditStyle}
+						readOnly={this.props.labelEditable === false}
 					/>
 				</div>
 				{propertiesTitleEdit}
