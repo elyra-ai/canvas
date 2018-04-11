@@ -1,0 +1,86 @@
+{
+  "categories": [
+    {
+      "category": "canvas-no-image",
+      "label": "Category1",
+      "nodetypes": [
+        {
+          "label": "Image",
+          "description": "Testing a node with an image",
+          "operator_id_ref": "with.image",
+          "type": "execution_node",
+          "image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjE4IC0xOC4yIDUyLjIgNTIuMiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAxOCAtMTguMiA1Mi4yIDUyLjI7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+DQoJLnN0MHtmaWxsOiNFQUVBRUE7fQ0KCS5zdDF7ZmlsbDojREZERkRGO30NCgkuc3Qye2ZpbGw6bm9uZTtzdHJva2U6IzFEMzY0OTtzdHJva2Utd2lkdGg6MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0M3tmaWxsOm5vbmU7c3Ryb2tlOiMxRDM2NDk7c3Ryb2tlLXdpZHRoOjM7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KCS5zdDR7ZmlsbDojMUQzNjQ5O30NCgkuc3Q1e2ZpbGw6bm9uZTt9DQoJLnN0NntmaWxsOiM1QUFBRkE7fQ0KCS5zdDd7Zm9udC1mYW1pbHk6J0hlbHZOZXVlUm9tYW5mb3JJQk0nO30NCgkuc3Q4e2ZvbnQtc2l6ZToxMnB4O30NCjwvc3R5bGU+DQo8Zz4NCgkNCgkJPGltYWdlIHN0eWxlPSJvdmVyZmxvdzp2aXNpYmxlO29wYWNpdHk6MC42NjsiIHdpZHRoPSI1NCIgaGVpZ2h0PSI0NyIgeGxpbms6aHJlZj0iMjk0RjczMzgwMDYzQTc5Qy5wbmciICB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIDE3IC0xNSkiPg0KCTwvaW1hZ2U+DQoJPGc+DQoJCTxwb2x5Z29uIGNsYXNzPSJzdDAiIHBvaW50cz0iMzEuMSwyNyAxOS40LDYuNSAzMS4xLC0xNCA1NC42LC0xNCA2Ni40LDYuNSA1NC42LDI3IAkJIi8+DQoJPC9nPg0KPC9nPg0KPHBvbHlnb24gY2xhc3M9InN0MSIgcG9pbnRzPSIyOCwyMS41IDMxLjEsMjcgNTQuNiwyNyA2Ni40LDYuNSA1Ny42LC04LjYgIi8+DQo8Zz4NCgkNCgkJPGltYWdlIHN0eWxlPSJvdmVyZmxvdzp2aXNpYmxlO29wYWNpdHk6MC42NjsiIHdpZHRoPSI1NiIgaGVpZ2h0PSI0OSIgeGxpbms6aHJlZj0iMjk0RjczMzgwMDYzQTc5RC5wbmciICB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIDE2IC0xNikiPg0KCTwvaW1hZ2U+DQoJPGc+DQoJCTxwb2x5Z29uIGNsYXNzPSJzdDIiIHBvaW50cz0iMzEuMSwyNyAxOS40LDYuNSAzMS4xLC0xNCA1NC42LC0xNCA2Ni40LDYuNSA1NC42LDI3IAkJIi8+DQoJPC9nPg0KPC9nPg0KPGxpbmUgY2xhc3M9InN0MyIgeDE9IjMxIiB5MT0iLTMuNSIgeDI9IjQ2IiB5Mj0iLTMuNSIvPg0KPHBvbHlnb24gY2xhc3M9InN0NCIgcG9pbnRzPSI1MCwtMC42IDUwLC0yIDQ2LC0yIDQ2LC01IDUwLC01IDUwLC03LjMgNTUuOCwtNCAiLz4NCjxsaW5lIGNsYXNzPSJzdDMiIHgxPSIzMSIgeTE9IjYuNSIgeDI9IjQ2IiB5Mj0iNi41Ii8+DQo8bGluZSBjbGFzcz0ic3QzIiB4MT0iNDEiIHkxPSIxNi41IiB4Mj0iNDYiIHkyPSIxNi41Ii8+DQo8cG9seWdvbiBjbGFzcz0ic3Q0IiBwb2ludHM9IjUwLDkuNCA1MCw4IDQ2LDggNDYsNSA1MCw1IDUwLDIuNyA1NS44LDYgIi8+DQo8cG9seWdvbiBjbGFzcz0ic3Q0IiBwb2ludHM9IjUwLDE5LjQgNTAsMTggNDYsMTggNDYsMTUgNTAsMTUgNTAsMTIuNyA1NS44LDE2ICIvPg0KPHJlY3QgeD0iMzMuMSIgeT0iMTEuMyIgY2xhc3M9InN0NSIgd2lkdGg9IjYuNyIgaGVpZ2h0PSI5LjQiLz4NCjx0ZXh0IHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIDEgMzMuMTM1NiAxOS44NjkzKSIgY2xhc3M9InN0NiBzdDcgc3Q4Ij4/PC90ZXh0Pg0KPC9zdmc+DQo=",
+          "input_ports": [
+            {
+              "id": "inPort",
+              "label": "Input Port",
+              "cardinality": {
+                "min": 0,
+                "max": 1
+              }
+            }
+          ],
+          "output_ports": [
+            {
+              "id": "outPort",
+              "label": "Output Port",
+              "cardinality": {
+                "min": 0,
+                "max": -1
+              }
+            }
+          ]
+        },
+        {
+          "label": "No Image",
+          "description": "Testing a node without an image",
+          "operator_id_ref": "without.image",
+          "type": "execution_node",
+          "input_ports": [
+            {
+              "id": "inPort",
+              "label": "Input Port",
+              "cardinality": {
+                "min": 0,
+                "max": 1
+              }
+            }
+          ],
+          "output_ports": [
+            {
+              "id": "outPort",
+              "label": "Output Port",
+              "cardinality": {
+                "min": 0,
+                "max": -1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "category-image",
+      "label": "Category2",
+      "image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjE3MSA5MC42IDUyLjIgNTIuMiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAxNzEgOTAuNiA1Mi4yIDUyLjI7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+DQoJLnN0MHtmaWxsOiNFQUVBRUE7fQ0KCS5zdDF7ZmlsbDojREZERkRGO30NCgkuc3Qye2ZpbGw6bm9uZTtzdHJva2U6IzFEMzY0OTtzdHJva2Utd2lkdGg6MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0M3tmaWxsOm5vbmU7c3Ryb2tlOiM1QUFBRkE7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KPC9zdHlsZT4NCjxnPg0KCQ0KCQk8aW1hZ2Ugc3R5bGU9Im92ZXJmbG93OnZpc2libGU7b3BhY2l0eTowLjY2OyIgd2lkdGg9IjUwIiBoZWlnaHQ9IjQ4IiB4bGluazpocmVmPSI5NTQwMzlBN0QyNkUzOEY5LnBuZyIgIHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIDEgMTczIDkyKSI+DQoJPC9pbWFnZT4NCgk8Zz4NCgkJPHBvbHlnb24gY2xhc3M9InN0MCIgcG9pbnRzPSIxODMuNiwxMzUgMTc1LjQsMTA5LjMgMTk2LjksOTMuNSAyMTguNCwxMDkuNCAyMTAuMSwxMzUgCQkiLz4NCgk8L2c+DQo8L2c+DQo8cG9seWdvbiBjbGFzcz0ic3QxIiBwb2ludHM9IjIxMC4yLDEwMy4zIDE4Mi41LDEzMS42IDE4My42LDEzNSAyMTAuMSwxMzUgMjE4LjQsMTA5LjQgIi8+DQo8Zz4NCgkNCgkJPGltYWdlIHN0eWxlPSJvdmVyZmxvdzp2aXNpYmxlO29wYWNpdHk6MC42NjsiIHdpZHRoPSI1MiIgaGVpZ2h0PSI1MCIgeGxpbms6aHJlZj0iOTU0MDM5QTdEMjZFMzhGQi5wbmciICB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIDE3MiA5MSkiPg0KCTwvaW1hZ2U+DQoJPGc+DQoJCTxwb2x5Z29uIGNsYXNzPSJzdDIiIHBvaW50cz0iMTgzLjYsMTM1IDE3NS40LDEwOS4zIDE5Ni45LDkzLjUgMjE4LjQsMTA5LjQgMjEwLjEsMTM1IAkJIi8+DQoJPC9nPg0KPC9nPg0KPHBhdGggY2xhc3M9InN0MyIgZD0iTTE4OC41LDEyMy4zYzEuMSwwLjIsMy4xLDAuNCw1LjQtMC41YzAuNy0wLjMsMS40LTAuNiwyLjItMS4zYzEuMy0xLjIsMS4zLTIuMywyLjUtNS42DQoJYzAuOS0yLjQsMS4zLTMuNSwyLjEtNC40YzEuNS0xLjUsMy41LTIsNS0yLjEiLz4NCjxsaW5lIGNsYXNzPSJzdDIiIHgxPSIxODgiIHkxPSIxMDgiIHgyPSIxODgiIHkyPSIxMjQiLz4NCjxsaW5lIGNsYXNzPSJzdDIiIHgxPSIxODciIHkxPSIxMjUiIHgyPSIyMDYiIHkyPSIxMjUiLz4NCjwvc3ZnPg0K",
+      "nodetypes": [
+        {
+          "label": "Node",
+          "operator_id_ref": "node.op",
+          "type": "execution_node",
+          "image": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOS4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjE3MSA5MC42IDUyLjIgNTIuMiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAxNzEgOTAuNiA1Mi4yIDUyLjI7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+DQoJLnN0MHtmaWxsOiNFQUVBRUE7fQ0KCS5zdDF7ZmlsbDojREZERkRGO30NCgkuc3Qye2ZpbGw6bm9uZTtzdHJva2U6IzFEMzY0OTtzdHJva2Utd2lkdGg6MjtzdHJva2UtbWl0ZXJsaW1pdDoxMDt9DQoJLnN0M3tmaWxsOm5vbmU7c3Ryb2tlOiM1QUFBRkE7c3Ryb2tlLW1pdGVybGltaXQ6MTA7fQ0KPC9zdHlsZT4NCjxnPg0KCQ0KCQk8aW1hZ2Ugc3R5bGU9Im92ZXJmbG93OnZpc2libGU7b3BhY2l0eTowLjY2OyIgd2lkdGg9IjUwIiBoZWlnaHQ9IjQ4IiB4bGluazpocmVmPSI5NTQwMzlBN0QyNkUzOEY5LnBuZyIgIHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIDEgMTczIDkyKSI+DQoJPC9pbWFnZT4NCgk8Zz4NCgkJPHBvbHlnb24gY2xhc3M9InN0MCIgcG9pbnRzPSIxODMuNiwxMzUgMTc1LjQsMTA5LjMgMTk2LjksOTMuNSAyMTguNCwxMDkuNCAyMTAuMSwxMzUgCQkiLz4NCgk8L2c+DQo8L2c+DQo8cG9seWdvbiBjbGFzcz0ic3QxIiBwb2ludHM9IjIxMC4yLDEwMy4zIDE4Mi41LDEzMS42IDE4My42LDEzNSAyMTAuMSwxMzUgMjE4LjQsMTA5LjQgIi8+DQo8Zz4NCgkNCgkJPGltYWdlIHN0eWxlPSJvdmVyZmxvdzp2aXNpYmxlO29wYWNpdHk6MC42NjsiIHdpZHRoPSI1MiIgaGVpZ2h0PSI1MCIgeGxpbms6aHJlZj0iOTU0MDM5QTdEMjZFMzhGQi5wbmciICB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIDE3MiA5MSkiPg0KCTwvaW1hZ2U+DQoJPGc+DQoJCTxwb2x5Z29uIGNsYXNzPSJzdDIiIHBvaW50cz0iMTgzLjYsMTM1IDE3NS40LDEwOS4zIDE5Ni45LDkzLjUgMjE4LjQsMTA5LjQgMjEwLjEsMTM1IAkJIi8+DQoJPC9nPg0KPC9nPg0KPHBhdGggY2xhc3M9InN0MyIgZD0iTTE4OC41LDEyMy4zYzEuMSwwLjIsMy4xLDAuNCw1LjQtMC41YzAuNy0wLjMsMS40LTAuNiwyLjItMS4zYzEuMy0xLjIsMS4zLTIuMywyLjUtNS42DQoJYzAuOS0yLjQsMS4zLTMuNSwyLjEtNC40YzEuNS0xLjUsMy41LTIsNS0yLjEiLz4NCjxsaW5lIGNsYXNzPSJzdDIiIHgxPSIxODgiIHkxPSIxMDgiIHgyPSIxODgiIHkyPSIxMjQiLz4NCjxsaW5lIGNsYXNzPSJzdDIiIHgxPSIxODciIHkxPSIxMjUiIHgyPSIyMDYiIHkyPSIxMjUiLz4NCjwvc3ZnPg0K",
+          "input_ports": [
+            {
+              "id": "inPort",
+              "label": "Input Port",
+              "cardinality": {
+                "min": 0,
+                "max": 1
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
