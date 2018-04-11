@@ -9,7 +9,7 @@
   },
   "engines": {
     "node": "8.11",
-    "npm": "4.6.1"
+    "npm": "5.6"
   },
   "dependencies": {
     "@wdp/common-canvas": "file:../common-canvas",

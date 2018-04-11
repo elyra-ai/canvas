@@ -23,6 +23,6 @@ echo "---Posting to slack channel ${SLACK_CHANNEL}. Specifying Jenkins job URL a
 
 PRETEXT="Release branch creation failed in Jenkins"
 COLOR="danger"
-TEXT="*JENKINS JOB  URL*: ${JENKINS_JOB_URL}\n*Error*: Release branch failed to create.  Build wasn't pushed to Whitewater NPM."
+TEXT="*JENKINS JOB  URL*: ${JENKINS_JOB_URL}\n*Error*: Release branch failed to create.  Build wasn't pushed to Artifactory NPM."
 
 curl -X POST --data-urlencode "payload={\"attachments\": [{\"pretext\": \"${PRETEXT}\",\"color\": \"${COLOR}\",\"title\": \"Details\",\"text\": \"${TEXT}\",\"mrkdwn_in\":[\"text\", \"pretext\"]}]}" $SLACK_URL

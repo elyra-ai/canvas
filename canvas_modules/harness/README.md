@@ -2,6 +2,11 @@
 
 ### Environment setup
 
+Install Nodejs `node 8.11`
+
+Artifactory setup
+See [here](https://github.ibm.com/wdpx/developers-guide/blob/master/guide/Artifactory.md#what-changes-are-required-to-our-deployments)
+
 Build common-canvas project
 ```sh
 ./canvas_modules/common-canvas/build.sh
@@ -43,12 +48,4 @@ npm test -- --browser=firefox
 ```
 
 ### Webpack Bundle Analyzer
-Used to break down the size of each component used by the test harness
-
-```sh
-export NODE_ENV=production
-# Build the test harness
-grunt
-# Start the analyzer tool
-npm run bundle-report
-```
+See [wiki](https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/wiki/Branches-and-Builds#webpack-bundle-analyzer)

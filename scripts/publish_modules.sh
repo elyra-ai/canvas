@@ -77,8 +77,8 @@ if [[ ${TRAVIS_BRANCH} == ${RELEASE} ]]; then
 	cd $WORKING_DIR
 	checkout_branch ${RELEASE}
 
-	echo "Publishing common-canvas $RELEASE_BUILD to Whitewater NPM"
+	echo "Publishing common-canvas $RELEASE_BUILD to Artifactory NPM"
 	cd ./canvas_modules/common-canvas
-	npm publish --registry https://npm-registry.whitewater.ibm.com/
+	npm publish
 	cd $WORKING_DIR
 fi
