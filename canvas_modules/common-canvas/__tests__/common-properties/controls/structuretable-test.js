@@ -839,7 +839,7 @@ describe("condition messages renders correctly with structure table control", ()
 		expect(renderedController.getPropertyValue(conditionsPropertyId)).to.have.length(0);
 
 		const structuretableRenameFieldsErrorMessages = {
-			"validation_id": "required_structuretableReadonlyColumnDefaultIndex_F26$7s#9)",
+			"validation_id": "required_structuretableReadonlyColumnDefaultIndex_14.984105999808826",
 			"type": "error",
 			"text": "Required parameter 'Rename Field' has no value"
 		};

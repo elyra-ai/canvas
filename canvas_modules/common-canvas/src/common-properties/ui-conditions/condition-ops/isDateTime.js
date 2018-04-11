@@ -7,28 +7,20 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-import logger from "./../../../../utils/logger";
+import moment from "moment";
+
 
 function op() {
-	return "isNotEmpty";
+	return "isDateTime";
 }
+
 function evaluate(paramInfo, param2Info, value, controller) {
-	const dataType = typeof paramInfo.value;
-	switch (dataType) {
-	case "undefined":
-		return false;
-	case "boolean":
-		return true;
-	case "string":
-		return paramInfo.value.trim().length !== 0;
-	case "number":
-		return paramInfo.value !== null;
-	case "object":
-		return paramInfo.value === null ? false : paramInfo.value.length !== 0;
-	default:
-		logger.warn("Ignoring condition operation 'isNotEmpty' for parameter_ref " + paramInfo.param + " with input data type " + dataType);
-		return true;
+	if (paramInfo.value) { // only check if there is a value.
+		const format = (value === "time") ? "HH:mm:ssZ" : moment.ISO_8601;
+		const mom = moment.utc(paramInfo.value, format, true);
+		return (mom.isValid());
 	}
+	return true;
 }
 
 // Public Methods ------------------------------------------------------------->

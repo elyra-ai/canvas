@@ -18,6 +18,8 @@ import isNotEmpty from "./isNotEmpty";
 import lessThan from "./lessThan";
 import notContains from "./notContains";
 import notEquals from "./notEquals";
+import isDateTime from "./isDateTime";
+
 
 /**
 * @param customOps - Array of custom operators to be added to standard operators
@@ -34,6 +36,8 @@ function getConditionOps(customOps) {
 	ops[lessThan.op()] = lessThan.evaluate;
 	ops[notContains.op()] = notContains.evaluate;
 	ops[notEquals.op()] = notEquals.evaluate;
+	ops[isDateTime.op()] = isDateTime.evaluate;
+
 
 	if (Array.isArray(customOps)) {
 		for (const custOp of customOps) {

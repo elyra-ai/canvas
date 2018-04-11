@@ -19,7 +19,7 @@ function evaluate(paramInfo, param2Info, value, controller) {
 	case "undefined":
 		return true;
 	case "boolean":
-		return paramInfo.value === false;
+		return false;
 	case "string":
 		return paramInfo.value.trim().length === 0;
 	case "number":

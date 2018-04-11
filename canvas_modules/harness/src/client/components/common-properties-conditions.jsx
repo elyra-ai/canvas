@@ -288,24 +288,28 @@ class CommonPropertiesComponents extends React.Component {
 			{ key: "greaterLessThan", label: <div>greaterThan/<br />lessThan</div> },
 			{ key: "equals", label: <div>equals/<br />notEquals</div> },
 			{ key: "contains", label: <div>contains/<br />notContains</div> },
-			{ key: "colNotExists", label: <div>colNotExists</div> }
+			{ key: "colNotExists", label: <div>colNotExists</div> },
+			{ key: "isDateTime", label: <div>isDateTime</div> }
 		];
 
 		const tableConditionsData = [
-			{ Control: "checkbox (boolean)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "no", colNotExists: "no" },
-			{ Control: "checkboxset ([string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no" },
-			{ Control: "expression (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no" },
-			{ Control: "numberfield (number)", empty: "yes", greaterLessThan: "yes", equals: "yes", contains: "no", colNotExists: "no" },
-			{ Control: "oneofselect (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no" },
-			{ Control: "password (string)", empty: "yes", greaterLessThan: "no", equals: "no", contains: "no", colNotExists: "no" },
-			{ Control: "radioset (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no" },
-			{ Control: "selectcolumn (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no" },
-			{ Control: "selectcolumns  ([string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no" },
-			{ Control: "someofselect ([string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no" },
-			{ Control: "textarea (string/[string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no" },
-			{ Control: "textfield (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "yes" },
-			{ Control: "structure-list-editor ([[string]])", empty: "yes", greaterLessThan: "no", equals: "no", contains: "no", colNotExists: "no" },
-			{ Control: "structuretable ([[primitive]])", empty: "yes", greaterLessThan: "no", equals: "no", contains: "no", colNotExists: "no" }
+			{ Control: "checkbox (boolean)", empty: "no", greaterLessThan: "no", equals: "yes", contains: "no", colNotExists: "no", isDateTime: "no" },
+			{ Control: "checkboxset ([string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "no" },
+			{ Control: "expression (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "no" },
+			{ Control: "numberfield (number)", empty: "yes", greaterLessThan: "yes", equals: "yes", contains: "no", colNotExists: "no", isDateTime: "no" },
+			{ Control: "oneofselect (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "no" },
+			{ Control: "timeField (time)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "yes" },
+			{ Control: "dateField (date)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "yes" },
+			{ Control: "password (string)", empty: "yes", greaterLessThan: "no", equals: "no", contains: "no", colNotExists: "no", isDateTime: "no" },
+			{ Control: "radioset (boolean|number|string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "no" },
+			{ Control: "selectcolumn (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "no" },
+			{ Control: "selectcolumns  ([string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "no" },
+			{ Control: "someofselect ([string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "no" },
+			{ Control: "textarea (string/[string])", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "no", isDateTime: "no" },
+			{ Control: "textfield (string)", empty: "yes", greaterLessThan: "no", equals: "yes", contains: "yes", colNotExists: "yes", isDateTime: "no" },
+			{ Control: "structure-list-editor ([[string]])", empty: "yes", greaterLessThan: "no", equals: "no", contains: "no", colNotExists: "no", isDateTime: "no" },
+			{ Control: "structuretable ([[primitive]])", empty: "yes", greaterLessThan: "no", equals: "no", contains: "no", colNotExists: "no", isDateTime: "no" }
+
 		];
 
 		const tableConditionsDataTypeHeader = [
@@ -313,16 +317,19 @@ class CommonPropertiesComponents extends React.Component {
 			{ key: "boolean", label: "boolean" },
 			{ key: "string", label: "string" },
 			{ key: "number", label: "number" },
+			{ key: "date_time", label: "date/time" },
 			{ key: "stringArray", label: "[string]" },
 			{ key: "doubleArray", label: "[[primitive]]" }
 		];
 
 		const tableConditionsDataTypeData = [
-			{ Conditions: "isEmpty/isNotEmpty", boolean: "yes", string: "yes", number: "yes", stringArray: "yes", doubleArray: "yes" },
-			{ Conditions: "greaterThan/lessThan", boolean: "no", string: "yes", number: "yes", stringArray: "no", doubleArray: "no" },
-			{ Conditions: "equals/notEquals", boolean: "yes", string: "yes", number: "yes", stringArray: "yes", doubleArray: "no" },
-			{ Conditions: "contains/notContains", boolean: "no", string: "yes", number: "no", stringArray: "yes", doubleArray: "no" },
-			{ Conditions: "colNotExists", boolean: "no", string: "yes", number: "no", stringArray: "no", doubleArray: "no" }
+			{ Conditions: "isEmpty/isNotEmpty", boolean: "yes", string: "yes", number: "yes", date_time: "yes", stringArray: "yes", doubleArray: "yes" },
+			{ Conditions: "greaterThan/lessThan", boolean: "no", string: "yes", number: "yes", date_time: "no", stringArray: "no", doubleArray: "no" },
+			{ Conditions: "equals/notEquals", boolean: "yes", string: "yes", number: "yes", date_time: "yes", stringArray: "yes", doubleArray: "no" },
+			{ Conditions: "contains/notContains", boolean: "no", string: "yes", number: "no", date_time: "yes", stringArray: "yes", doubleArray: "no" },
+			{ Conditions: "colNotExists", boolean: "no", string: "yes", number: "no", date_time: "no", stringArray: "no", doubleArray: "no" },
+			{ Conditions: "isDateTime", boolean: "no", string: "no", number: "no", date_time: "yes", stringArray: "no", doubleArray: "no" }
+
 		];
 
 		const contentConditions = (<section id="Conditions" className="section conditions-documentation-content-overview-section">
@@ -370,6 +377,11 @@ class CommonPropertiesComponents extends React.Component {
 				</div>
 				<p>Ensure the condition is accurate by verifying that the data type of the control is the same as the data type of the value.
 					A textfield control of type string cannot be compared to a value of type number.
+				</p>
+				<p>The <span className="highlight">isDateTime</span> operator is a special case operator. It is used to
+					validate the format of a <span className="highlight">date</span> or <span className="highlight">time</span> control.  A validation
+					definition using the <span className="highlight">isDateTime</span> operator is automatically generated
+					for a <span className="highlight">date</span> and <span className="highlight">time</span> control.
 				</p>
 			</div>
 		</section>);
@@ -553,10 +565,9 @@ class CommonPropertiesComponents extends React.Component {
 				<div className="conditions-documentation-panels-controls-component">
 					<h3 id="--checkbox" className="section-subtitle">checkbox</h3>
 					<p>A checkbox control is of type <span className="highlight">boolean</span>.
-						To check whether it’s checked, <span className="highlight">empty/isNotEmpty</span>&nbsp;
-						or <span className="highlight">equals/notEquals</span> can be used.
+						To check whether it’s checked &nbsp;
+						<span className="highlight">equals/notEquals</span> can be used.
 					</p>
-					<p>The same check can be done using <span className="highlight">equals</span>.</p>
 					<div className="section-row">
 						<div className="section-column">
 							<CommonProperties

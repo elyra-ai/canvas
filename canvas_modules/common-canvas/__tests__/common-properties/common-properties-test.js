@@ -30,16 +30,16 @@ const localMessages = {
 	"propertiesEdit.rejectButton.label": "NOT"
 };
 
-const validationErroMessages = {
+const validationErrorMessages = {
 	"number_undefined": {
-		"validation_id": "required_number_undefined_F26$7s#9)",
 		"type": "error",
-		"text": "Required parameter 'Undefined' has no value"
+		"text": "Required parameter 'Undefined' has no value",
+		"validation_id": "required_number_undefined_272.9520234285945"
 	},
 	"number_null": {
-		"validation_id": "required_number_null_F26$7s#9)",
 		"type": "error",
-		"text": "Required parameter 'Null' has no value"
+		"text": "Required parameter 'Null' has no value",
+		"validation_id": "required_number_null_401.11526920064296"
 	},
 	"number_error": {
 		"type": "error",
@@ -195,7 +195,7 @@ describe("CommonProperties validates on close in flyout", () => {
 		wrapper.find("#properties-apply-button")
 			.at(0)
 			.simulate("click");
-		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify(validationErroMessages));
+		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify(validationErrorMessages));
 		wrapper.unmount();
 	});
 
@@ -208,7 +208,7 @@ describe("CommonProperties validates on close in flyout", () => {
 
 		// similate blur with no changes, expect validation error messages
 		wrapper.find("#common-properties-right-flyout-panel").simulate("blur");
-		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify(validationErroMessages));
+		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify(validationErrorMessages));
 		wrapper.unmount();
 	});
 
@@ -223,7 +223,7 @@ describe("CommonProperties validates on close in flyout", () => {
 		wrapper.find("#properties-apply-button")
 			.at(0)
 			.simulate("click");
-		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify(validationErroMessages));
+		expect(JSON.stringify(controller.getErrorMessages())).to.equal(JSON.stringify(validationErrorMessages));
 		wrapper.unmount();
 	});
 

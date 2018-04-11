@@ -11,11 +11,13 @@
 
 import logger from "../../../utils/logger";
 import UiConditions from "../ui-conditions/ui-conditions.js";
-import { DEFAULT_VALIDATION_MESSAGE, STATES, DEFAULT_DATE_FORMAT, DEFAULT_TIME_FORMAT } from "../constants/constants.js";
+import { DEFAULT_VALIDATION_MESSAGE, STATES } from "../constants/constants.js";
 import { PANEL_TREE_ROOT, CONDITION_TYPE, CONDITION_DEFINITION_INDEX } from "../constants/constants.js";
-import moment from "moment";
+import { DEFAULT_DATE_FORMAT, DEFAULT_TIME_FORMAT } from "../constants/constants.js";
 import isEmpty from "lodash/isEmpty";
 import cloneDeep from "lodash/cloneDeep";
+import seedrandom from "seedrandom";
+
 
 // ========= APIs ==================
 // ========= Validate all properties
@@ -293,6 +295,53 @@ function getParamRefPropertyId(paramRef, controlPropertyId) {
 	return baseParam;
 }
 
+/**
+* This function will inject validation definitions for controls with the following attributes.
+*    Required: validation definition to ensure that the required parameter is not is not empty.
+*    Date format: validation definition to ensure parameter has a proper date format.
+*    Time format: validation definition to ensure parameter has a propert time format.
+*
+* @param {object} a list of control objects. required.
+* @param {object} a list of validation definition objects. required.
+* @return {object} a modified validation defintion object with any injected definitions.
+*/
+function injectDefaultValidations(controls, validationDefinitions) {
+	for (const keyName in controls) {
+		if (!controls.hasOwnProperty(keyName)) {
+			continue;
+		}
+		const control = controls[keyName];
+		// for the validation id we need a repeatable random number to ensure uniqueness within the form.
+		const rng = seedrandom(keyName);
+		const controlValId = 1000 * rng();
+
+		if (control.required === true) {
+			_injectRequiredDefinition(control, validationDefinitions, keyName, controlValId);
+		}
+		if (control.role === "date" || control.role === "time") {
+			_injectDateTimeDefinition(control, validationDefinitions, keyName, controlValId);
+		}
+	}
+}
+
+function searchInArray(array, element, state) {
+	let found = state;
+	for (let i = 0; i < array.length; i++) {
+		if (Array.isArray(array[i])) {
+			found = searchInArray(array[i], element, found);
+		} else if (typeof array[i] === "string" && array[i].indexOf(element) >= 0) {
+			found = true;
+		} else if (array[i] === element) { // compare whole cell
+			found = true;
+		}
+		if (found) {
+			return true;
+		}
+	}
+	return found;
+}
+
+
 // ========= internal functions
 
 // This function will travers the panel tree and propogate the state so that a higher order
@@ -302,7 +351,7 @@ function 	_propagateParentPanelStates(panelTree, newStates, currentPanel, disabl
 	const currentPanelState = newStates.panels[currentPanel];
 	const allowUpdate = (disabledOnly) ? (currentPanelState && (currentPanelState.value === STATES.DISABLED))
 		: (currentPanelState && (currentPanelState.value === STATES.HIDDEN || currentPanelState.value === STATES.DISABLED));
-	// only propagate if parent panel is hidden or disabled
+		// only propagate if parent panel is hidden or disabled
 	if (allowUpdate) {
 		// propagate panel state to children controls
 		if (panelTree[currentPanel] && panelTree[currentPanel].controls) {
@@ -368,7 +417,7 @@ function _validateInput(propertyId, controller, control) {
 					if (isError) {
 						errorSet = true;
 					}
-				} else if (!isError) {
+				} else if (!isError && !errorSet) {
 					const msg = controller.getErrorMessage(msgPropertyId);
 					if (!isEmpty(msg) && (msg.validation_id === errorMessage.validation_id)) {
 						controller.updateErrorMessage(msgPropertyId, DEFAULT_VALIDATION_MESSAGE);
@@ -378,18 +427,6 @@ function _validateInput(propertyId, controller, control) {
 		} catch (error) {
 			logger.warn("Error thrown in validation: " + error);
 		}
-	}
-
-	if (!errorSet && controller.isRequired(propertyId)) {
-		errorSet = _requiredValidation(propertyId, controller);
-	}
-
-	if (!errorSet && control.role === "date") {
-		_isValidDate(propertyId, controller, control.dateFormat);
-	}
-
-	if (!errorSet && control.role === "time") {
-		_isValidTime(propertyId, controller, control.timeFormat);
 	}
 }
 
@@ -520,11 +557,11 @@ function _updateFilteredState(definition, inPropertyId, newState, filtered) {
 				// Cells
 				propState[colId][rowId].enumFilter = _getFilteredEnumItems(definition, filtered);
 			} else {
-			// Columns
+				// Columns
 				propState[colId].enumFilter = _getFilteredEnumItems(definition, filtered);
 			}
 		} else {
-		// Control-level state
+			// Control-level state
 			propState.enumFilter = _getFilteredEnumItems(definition, filtered);
 		}
 		refState[propertyId.name] = propState;
@@ -656,96 +693,71 @@ function _getState(refState, propertyId) {
 	return null;
 }
 
-function _requiredValidation(propertyId, controller) {
-	const controlValue = controller.getPropertyValue(propertyId);
-	let errorSet = false;
-	const errorMessage = {
-		validation_id: "required_" + propertyId.name + "_F26$7s#9)", // TODO replace suffix with random number from fixed seed.
+function _injectRequiredDefinition(control, valDefinitions, keyName, controlValId) {
+	// inject required validation definition
+	const label = (control.label && control.label.text) ? control.label.text : keyName;
+	const injectedDefinition = {
+		params: keyName,
+		definition: {
+			validation: {
+				id: "required_" + keyName + "_" + controlValId,
+				fail_message: {
+					type: "error",
+					message: {
+						default: "Required parameter '" + label + "' has no value"
+					},
+					focus_parameter_ref: keyName
+				},
+				evaluate: {
+					condition: {
+						parameter_ref: keyName,
+						op: "isNotEmpty"
+					}
+				}
+			}
+		}
 	};
-	if (controlValue === null || controlValue === "" || typeof controlValue === "undefined" ||
-			(Array.isArray(controlValue) && controlValue.length === 0)) {
-		const control = controller.getControl(propertyId);
-		const label = control && control.label && control.label.text ? control.label.text : propertyId.name;
-		errorMessage.type = "error";
-		errorMessage.text = "Required parameter '" + label + "' has no value";
-		controller.updateErrorMessage(propertyId, errorMessage);
-		errorSet = true;
+		// add the new definition to the set of validation definitions for this control.
+	if (valDefinitions.controls[keyName]) {
+		valDefinitions.controls[keyName].push(injectedDefinition);
 	} else {
-		const msg = controller.getErrorMessage(propertyId);
-		if (!isEmpty(msg) && (msg.validation_id === errorMessage.validation_id)) {
-			controller.updateErrorMessage(propertyId, DEFAULT_VALIDATION_MESSAGE);
-		}
+		valDefinitions.controls[keyName] = [injectedDefinition];
 	}
-	return errorSet;
 }
 
-function _isValidDate(propertyId, controller, dtFormat) {
-	const controlValue = controller.getPropertyValue(propertyId);
-	let errorSet = false;
-
-	// controlValue may not be set for a non-required field.
-	if (controlValue) {
-		const mom = moment.utc(controlValue, moment.ISO_8601, true);
-		if (!mom.isValid()) {
-			const dateFormat = dtFormat || DEFAULT_DATE_FORMAT;
-			const errorMessage = {
-				validation_id: propertyId.name,
-				type: "error",
-				text: "Invalid date. Format should be " + dateFormat
-			};
-			controller.updateErrorMessage(propertyId, errorMessage);
-			errorSet = true;
+function _injectDateTimeDefinition(control, valDefinitions, keyName, controlValId) {
+	// inject date format validation definition
+	const format = (control.dateFormat) ? control.dateFormat : control.timeFormat;
+	const defaultFormat = (control.dateFormat) ? DEFAULT_DATE_FORMAT : DEFAULT_TIME_FORMAT;
+	const dtFormat = (format) ? format : defaultFormat;
+	const injectedDefinition = {
+		params: keyName,
+		definition: {
+			validation: {
+				id: "Format_" + keyName + "_" + controlValId,
+				fail_message: {
+					type: "error",
+					message: {
+						default: "Invalid " + control.role + ". Format should be " + dtFormat
+					},
+					focus_parameter_ref: keyName
+				},
+				evaluate: {
+					condition: {
+						parameter_ref: keyName,
+						op: "isDateTime",
+						value: control.role
+					}
+				}
+			}
 		}
+	};
+		// add the new definition to the set of validation definitions for this control.
+	if (valDefinitions.controls[keyName]) {
+		valDefinitions.controls[keyName].push(injectedDefinition);
+	} else {
+		valDefinitions.controls[keyName] = [injectedDefinition];
 	}
-
-	if (errorSet === false) {
-		controller.updateErrorMessage(propertyId, DEFAULT_VALIDATION_MESSAGE);
-	}
-
-	return errorSet;
-}
-
-function _isValidTime(propertyId, controller, tmFormat) {
-	const controlValue = controller.getPropertyValue(propertyId);
-	let errorSet = false;
-
-	// controlValue may not be set for a non-required field.
-	if (controlValue) {
-		const mom = moment.utc(controlValue, "HH:mm:ssZ", true);
-		if (!mom.isValid()) {
-			const timeFormat = tmFormat || DEFAULT_TIME_FORMAT;
-			const errorMessage = {
-				validation_id: propertyId.name,
-				type: "error",
-				text: "Invalid time. Format should be " + timeFormat
-			};
-			controller.updateErrorMessage(propertyId, errorMessage);
-			errorSet = true;
-		}
-	}
-
-	if (errorSet === false) {
-		controller.updateErrorMessage(propertyId, DEFAULT_VALIDATION_MESSAGE);
-	}
-
-	return errorSet;
-}
-
-function searchInArray(array, element, state) {
-	let found = state;
-	for (let i = 0; i < array.length; i++) {
-		if (Array.isArray(array[i])) {
-			found = searchInArray(array[i], element, found);
-		} else if (typeof array[i] === "string" && array[i].indexOf(element) >= 0) {
-			found = true;
-		} else if (array[i] === element) { // compare whole cell
-			found = true;
-		}
-		if (found) {
-			return true;
-		}
-	}
-	return found;
 }
 
 
@@ -756,5 +768,6 @@ module.exports.validateInput = validateInput;
 module.exports.filterConditions = filterConditions;
 module.exports.updateState = updateState;
 module.exports.getParamRefPropertyId = getParamRefPropertyId;
+module.exports.injectDefaultValidations = injectDefaultValidations;
 module.exports.updatePanelChildrenStatesForPanelIds = updatePanelChildrenStatesForPanelIds;
 module.exports.searchInArray = searchInArray;

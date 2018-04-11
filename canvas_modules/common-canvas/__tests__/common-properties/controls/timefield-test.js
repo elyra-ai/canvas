@@ -149,12 +149,11 @@ describe("error messages renders correctly for timefield controls", () => {
 
 		// Check an error message is displayed with the expected error message.
 		const timefieldErrorMessages = {
-			"validation_id": "time_hms",
+			"validation_id": "Format_time_hms_594.9764123314005",
 			"type": "error",
 			"text": "Invalid time. Format should be H:m:s",
 		};
 		const actual = renderedObject.controller.getErrorMessage({ name: "time_hms" });
-
 		expect(isEqual(JSON.parse(JSON.stringify(timefieldErrorMessages)),
 			JSON.parse(JSON.stringify(actual)))).to.be.true;
 		expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
@@ -181,7 +180,7 @@ describe("error messages renders correctly for timefield controls", () => {
 
 		// Check an error message is displayed with the expected error message.
 		const timefieldErrorMessages = {
-			"validation_id": "required_time_hms_F26$7s#9)",
+			"validation_id": "required_time_hms_594.9764123314005",
 			"type": "error",
 			"text": "Required parameter 'Required Time H:m:s' has no value",
 		};

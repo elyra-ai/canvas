@@ -918,7 +918,8 @@ _defineConstant("CHECKBOX_SINGLE_ERROR_PROPS_INFO", {
 					"evaluate": {
 						"condition": {
 							"parameter_ref": "checkboxSingle",
-							"op": "isNotEmpty"
+							"op": "equals",
+							"value": true
 						}
 					}
 				}

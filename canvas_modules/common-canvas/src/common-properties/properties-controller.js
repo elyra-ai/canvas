@@ -92,6 +92,7 @@ export default class PropertiesController {
 			this.saveControls(controls); // saves controls without the subcontrols
 			this._parseSummaryControls(controls);
 			this.parsePanelTree();
+			conditionsUtil.injectDefaultValidations(this.controls, this.validationDefinitions);
 			let datasetMetadata;
 			if (this.form.data) {
 				datasetMetadata = this.form.data.datasetMetadata;
@@ -208,6 +209,9 @@ export default class PropertiesController {
 		}
 		return propertyId;
 	}
+
+	// This function will traverse the form and build a tree representation of panels.
+	// Each panel entry will have an array of children controls and children panels.
 	parsePanelTree() {
 		this.panelTree = {};
 		this.panelTree[PANEL_TREE_ROOT] = { controls: [], panels: [] };

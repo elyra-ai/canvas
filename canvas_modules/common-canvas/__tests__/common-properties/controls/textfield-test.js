@@ -269,7 +269,7 @@ describe("condition messages renders correctly with textfields control", () => {
 		const textfieldNameErrorMessages = {
 			textareaDescription:
 						{
-							validation_id: "required_textareaDescription_F26$7s#9)",
+							validation_id: "required_textareaDescription_708.576019526482",
 							type: "error",
 							text: "Required parameter 'Description' has no value"
 						}

@@ -127,6 +127,27 @@ validationDefinitions.numberfieldCheckpointInterval = [
 				}
 			}
 		}
+	},
+	{
+		"params": "numberfieldCheckpointInterval",
+		"definition": {
+			"validation": {
+				"id": "required_numberfieldCheckpointInterval_605.6368461289118",
+				"fail_message": {
+					"type": "error",
+					"message": {
+						"default": "Required parameter 'Checkpoint Interval' has no value"
+					},
+					"focus_parameter_ref": "numberfieldCheckpointInterval"
+				},
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "numberfieldCheckpointInterval",
+						"op": "isNotEmpty"
+					}
+				}
+			}
+		}
 	}
 ];
 validationDefinitions.numberfieldImpurity = [
@@ -185,6 +206,27 @@ validationDefinitions.numberfieldMaxBins = [
 							}
 						}
 					]
+				}
+			}
+		}
+	},
+	{
+		"params": "numberfieldMaxBins",
+		"definition": {
+			"validation": {
+				"id": "required_numberfieldMaxBins_823.4996625010101",
+				"fail_message": {
+					"type": "error",
+					"message": {
+						"default": "Required parameter 'Maximum number of bins' has no value"
+					},
+					"focus_parameter_ref": "numberfieldMaxBins"
+				},
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "numberfieldMaxBins",
+						"op": "isNotEmpty"
+					}
 				}
 			}
 		}
@@ -326,6 +368,27 @@ validationDefinitions.columnSelectInputFieldList = [
 				}
 			}
 		}
+	},
+	{
+		"params": "columnSelectInputFieldList",
+		"definition": {
+			"validation": {
+				"id": "required_columnSelectInputFieldList_19.516368410342054",
+				"fail_message": {
+					"type": "error",
+					"message": {
+						"default": "Required parameter 'Column Select Input' has no value"
+					},
+					"focus_parameter_ref": "columnSelectInputFieldList"
+				},
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "columnSelectInputFieldList",
+						"op": "isNotEmpty"
+					}
+				}
+			}
+		}
 	}
 ];
 validationDefinitions.columnSelectSharedWithInput = [
@@ -393,7 +456,8 @@ validationDefinitions.checkboxTypes = [
 						{
 							"condition": {
 								"parameter_ref": "checkboxSingle",
-								"op": "isNotEmpty"
+								"op": "equals",
+								"value": true
 							}
 						},
 						{
@@ -407,7 +471,8 @@ validationDefinitions.checkboxTypes = [
 								{
 									"condition": {
 										"parameter_ref": "checkboxSingle",
-										"op": "isEmpty"
+										"op": "equals",
+										"value": false
 									}
 								}
 							]
@@ -524,7 +589,8 @@ validationDefinitions.checkboxSingle = [
 						{
 							"condition": {
 								"parameter_ref": "checkboxSingle",
-								"op": "isNotEmpty"
+								"op": "equals",
+								"value": true
 							}
 						},
 						{
@@ -538,7 +604,8 @@ validationDefinitions.checkboxSingle = [
 								{
 									"condition": {
 										"parameter_ref": "checkboxSingle",
-										"op": "isEmpty"
+										"op": "equals",
+										"value": false
 									}
 								}
 							]
@@ -704,6 +771,27 @@ validationDefinitions.textfieldName = [
 				}
 			}
 		}
+	},
+	{
+		"params": "textfieldName",
+		"definition": {
+			"validation": {
+				"id": "required_textfieldName_462.6946539987652",
+				"fail_message": {
+					"type": "error",
+					"message": {
+						"default": "Required parameter 'Name' has no value"
+					},
+					"focus_parameter_ref": "textfieldName"
+				},
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "textfieldName",
+						"op": "isNotEmpty"
+					}
+				}
+			}
+		}
 	}
 ];
 validationDefinitions.textareaDescription = [
@@ -746,6 +834,27 @@ validationDefinitions.textareaDescription = [
 				}
 			}
 		}
+	},
+	{
+		"params": "textareaDescription",
+		"definition": {
+			"validation": {
+				"id": "required_textareaDescription_708.576019526482",
+				"fail_message": {
+					"type": "error",
+					"message": {
+						"default": "Required parameter 'Description' has no value"
+					},
+					"focus_parameter_ref": "textareaDescription"
+				},
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "textareaDescription",
+						"op": "isNotEmpty"
+					}
+				}
+			}
+		}
 	}
 ];
 validationDefinitions.structuretableSortOrder = [
@@ -759,6 +868,27 @@ validationDefinitions.structuretableSortOrder = [
 					"message": {
 						"default": "table cannot be empty"
 					}
+				},
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "structuretableSortOrder",
+						"op": "isNotEmpty"
+					}
+				}
+			}
+		}
+	},
+	{
+		"params": "structuretableSortOrder",
+		"definition": {
+			"validation": {
+				"id": "required_structuretableSortOrder_155.4428691845365",
+				"fail_message": {
+					"type": "error",
+					"message": {
+						"default": "Required parameter 'Sort by' has no value"
+					},
+					"focus_parameter_ref": "structuretableSortOrder"
 				},
 				"evaluate": {
 					"condition": {
@@ -788,6 +918,27 @@ validationDefinitions.structuretableRenameFields = [
 						"parameter_ref": "structuretableRenameFields",
 						"op": "notContains",
 						"value": "pw"
+					}
+				}
+			}
+		}
+	},
+	{
+		"params": "structuretableRenameFields",
+		"definition": {
+			"validation": {
+				"id": "required_structuretableRenameFields_330.40852731641877",
+				"fail_message": {
+					"type": "error",
+					"message": {
+						"default": "Required parameter 'Rename Field' has no value"
+					},
+					"focus_parameter_ref": "structuretableRenameFields"
+				},
+				"evaluate": {
+					"condition": {
+						"parameter_ref": "structuretableRenameFields",
+						"op": "isNotEmpty"
 					}
 				}
 			}
@@ -943,7 +1094,6 @@ describe("editor-form renders correctly with validations", () => {
 
 		compareObjects(visibleDefinitions.oneofselectAnimals, controller.visibleDefinitions.controls.oneofselectAnimals);
 		compareObjects(visibleDefinitions.checkboxEnableDesc, controller.visibleDefinitions.controls.checkboxEnableDesc);
-
 		expect(isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.controls.numberfieldCheckpointInterval)),
 			JSON.parse(JSON.stringify(validationDefinitions.numberfieldCheckpointInterval)))).to.be.true;
 		expect(isEqual(JSON.parse(JSON.stringify(controller.validationDefinitions.controls.numberfieldImpurity)),

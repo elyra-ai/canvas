@@ -46,7 +46,7 @@ const expectedNode3Messages = [
 	{ "id_ref": "inlineEditingTableError", "validation_id": "tableerrortest2", "type": "error", "text": "order cannot be descending" },
 	{ "id_ref": "inlineEditingTableError2", "validation_id": "tableerror2test2", "type": "error", "text": "expression contains help" },
 	{ "id_ref": "structuretableErrors", "validation_id": "structuretableErrors", "type": "error", "text": "order cannot be descending" },
-	{ "id_ref": "fields_error", "validation_id": "required_fields_error_F26$7s#9)", "type": "error", "text": "Required parameter 'Field Error' has no value" }
+	{ "id_ref": "fields_error", "validation_id": "required_fields_error_501.6009623394123", "type": "error", "text": "Required parameter 'Field Error' has no value" }
 ];
 const expectedFlowMessages = {
 	"formNode": expectedNode2Messages,
@@ -79,7 +79,7 @@ function getFormData(nodeId) {
 }
 
 function setNodeMessages(nodeId, messages) {
-	// console.log("actual setnodeMessages for " + nodeId + " = " + JSON.stringify(messages, null, 4));
+	// console.log("actual setnodeMessages for " + nodeId + " = " + JSON.stringify(messages, null, 2));
 	switch (nodeId) {
 	case NodeIds.FORM:
 		expect(isEqual(expectedNode2Messages, messages)).to.be.true;

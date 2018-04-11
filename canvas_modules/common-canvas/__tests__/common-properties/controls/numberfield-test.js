@@ -254,7 +254,7 @@ describe("condition messages renders correctly with numberfield control", () => 
 		wrapper.update();
 
 		const numberfieldCheckpointIntervalErrorMessages = {
-			"validation_id": "required_numberfieldCheckpointInterval_F26$7s#9)",
+			"validation_id": "required_numberfieldCheckpointInterval_605.6368461289118",
 			"type": "error",
 			"text": "Required parameter 'Checkpoint Interval' has no value",
 		};
@@ -302,7 +302,7 @@ describe("condition messages renders correctly with multi-control conditions", (
 		const numberfieldMaxBinsErrorMessages = {
 			text: "Required parameter 'Maximum number of bins' has no value",
 			type: "error",
-			validation_id: "required_numberfieldMaxBins_F26$7s#9)"
+			validation_id: "required_numberfieldMaxBins_823.4996625010101"
 		};
 		let actual = controller.getErrorMessage(maxBinId);
 		expect(isEqual(JSON.parse(JSON.stringify(numberfieldMaxBinsErrorMessages)),

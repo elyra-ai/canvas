@@ -150,12 +150,11 @@ describe("error messages renders correctly for datefield controls", () => {
 
 		// Check an error message is displayed with the expected error message.
 		const datefieldErrorMessages = {
-			"validation_id": "date_ymd",
+			"validation_id": "Format_date_ymd_60.39173748626829",
 			"type": "error",
 			"text": "Invalid date. Format should be YYYY-M-D",
 		};
 		const actual = renderedObject.controller.getErrorMessage({ name: "date_ymd" });
-
 		expect(isEqual(JSON.parse(JSON.stringify(datefieldErrorMessages)),
 			JSON.parse(JSON.stringify(actual)))).to.be.true;
 		expect(wrapper.find(".validation-error-message-icon")).to.have.length(1);
@@ -185,7 +184,7 @@ describe("error messages renders correctly for datefield controls", () => {
 
 		// Check an error message is displayed with the expected error message.
 		const datefieldErrorMessages = {
-			"validation_id": "date_ymd",
+			"validation_id": "Format_date_ymd_60.39173748626829",
 			"type": "error",
 			"text": "Invalid date. Format should be YYYY-M-D",
 		};
@@ -218,7 +217,7 @@ describe("error messages renders correctly for datefield controls", () => {
 
 		// Check an error message is displayed with the expected error message.
 		const datefieldErrorMessages = {
-			"validation_id": "required_date_mdy_F26$7s#9)",
+			"validation_id": "required_date_mdy_202.02932392909872",
 			"type": "error",
 			"text": "Required parameter 'Required Date M-D-Y' has no value",
 		};

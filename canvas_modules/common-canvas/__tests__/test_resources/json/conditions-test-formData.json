@@ -1681,7 +1681,8 @@
             {
               "condition": {
                 "parameter_ref": "checkboxSingle",
-                "op": "isNotEmpty"
+                "op": "equals",
+                "value": true
               }
             },
             {
@@ -1695,7 +1696,8 @@
                 {
                   "condition": {
                     "parameter_ref": "checkboxSingle",
-                    "op": "isEmpty"
+                    "op": "equals",
+                    "value": false
                   }
                 }
               ]
