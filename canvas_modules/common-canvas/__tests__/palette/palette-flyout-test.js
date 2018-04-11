@@ -17,6 +17,8 @@ import PaletteFlyoutContentListItem from "../../src/palette/palette-content-list
 import { expect } from "chai";
 import CanvasController from "../../src/common-canvas/canvas-controller";
 
+import testPalette from "../test_resources/palettes/image-test-palette.json";
+
 const canvasController = new CanvasController();
 
 
@@ -81,7 +83,7 @@ describe("Palette renders correctly", () => {
 			showPalette: false
 		};
 		const wrapper = createMountedPalette(config);
-		const palette = wrapper.find(".palette-flyout-div-closed");
+		const palette = wrapper.find(".palette-flyout-div-closed-narrow");
 		expect(palette).to.have.length(1);
 	});
 
@@ -95,8 +97,43 @@ describe("Palette renders correctly", () => {
 			showNarrowPalette: false,
 			showPalette: false
 		};
-		const palette = createMountedPalette(config).find(".palette-flyout-div-none");
+		const palette = createMountedPalette(config).find(".palette-flyout-div-closed-none");
 		expect(palette).to.have.length(1);
+	});
+	it("open palette should show correct values for category and node with and without an image", () => {
+		const config = {
+			showNarrowPalette: true,
+			showPalette: true,
+			palette: testPalette
+		};
+		const palette = createMountedPalette(config);
+		// 2 categories should be rendered
+		const categories = palette.find(PaletteFlyoutContentCategory);
+		expect(categories).to.have.length(2);
+		const category = findCategoryElement(palette, "Category1");
+		category.simulate("click");
+		// 2 nodes should be rendered
+		expect(palette.find(PaletteFlyoutContentListItem)).to.have.length(2);
+	});
+	it("narrow palette should show correct values for category and node with and without an image", () => {
+		const config = {
+			showNarrowPalette: true,
+			showPalette: false,
+			palette: testPalette
+		};
+		const palette = createMountedPalette(config);
+		// 2 categories should be rendered
+		const categories = palette.find(PaletteFlyoutContentCategory);
+		expect(categories).to.have.length(2);
+		// Category1 should show `Cat` when no image provided
+		const category = findCategoryElement(palette, "Category1");
+		expect(category.find("span").text()).to.equal("Cat");
+		category.simulate("click");
+		// 2 nodes should be rendered
+		expect(palette.find(PaletteFlyoutContentListItem)).to.have.length(2);
+		// Category2 should show image when provided
+		const category2 = findCategoryElement(palette, "Category2");
+		expect(category2.find("img")).to.have.length(1);
 	});
 });
 
@@ -199,10 +236,10 @@ function createPalette() {
 function createMountedPalette(config) {
 	const showPalette = config ? config.showPalette : true;
 	const showNarrowPalette = config ? config.showNarrowPalette : true;
-
+	const palette = (config && config.palette) ? config.palette : paletteSpec;
 	const popupPalette = mount(
 		<PaletteFlyout
-			paletteJSON={paletteSpec}
+			paletteJSON={palette}
 			showPalette={showPalette}
 			canvasController={canvasController}
 			showNarrowPalette={showNarrowPalette}
