@@ -102,12 +102,6 @@ export class UIItem {
 		});
 	}
 
-	static makeCheckboxPanel(panel) {
-		return new UIItem({
-			itemType: ItemType.CHECKBOX_SELECTOR,
-			panel: panel
-		});
-	}
 	static makeCustomPanel(panel) {
 		return new UIItem({
 			itemType: ItemType.CUSTOM_PANEL,

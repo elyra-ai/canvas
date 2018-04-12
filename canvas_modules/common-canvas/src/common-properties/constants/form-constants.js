@@ -16,7 +16,6 @@ const ItemType = {
 	SUB_TABS: "subTabs",
 	PRIMARY_TABS: "primaryTabs",
 	PANEL_SELECTOR: "panelSelector",
-	CHECKBOX_SELECTOR: "checkboxSelector",
 	CUSTOM_PANEL: "customPanel",
 	SUMMARY_PANEL: "summaryPanel", // deprecated
 	ACTION: "action",
@@ -44,7 +43,6 @@ const GroupType = {
 	COLUMN_ALLOCATION: "columnAllocation", // deprecated
 	COLUMN_SELECTION: "columnSelection",
 	PANEL_SELECTOR: "panelSelector",
-	CHECKBOX_PANEL: "checkboxPanel",
 	CUSTOM_PANEL: "customPanel",
 	SUMMARY_PANEL: "summaryPanel",
 	ACTION_PANEL: "actionPanel",
@@ -56,7 +54,6 @@ const PanelType = {
 	GENERAL: "general",
 	COLUMN_ALLOCATION: "columnAllocation", // deprecated
 	COLUMN_SELECTION: "columnSelection",
-	CHECKBOX_PANEL: "checkboxPanel",
 	CUSTOM: "custom",
 	SUMMARY: "summary",
 	ACTION_PANEL: "actionPanel",

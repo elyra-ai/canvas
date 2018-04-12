@@ -116,28 +116,6 @@ module.exports = function() {
 
 	});
 
-	this.Then(/^I select Repeatable partition assignment checkbox and click Generate from flyout$/, function() {
-
-		const labels = browser.$$("label");
-		for (let idx = 0; idx < labels.length; idx++) {
-			if (labels[idx].getAttribute("for") === "sample-seed") {
-				labels[idx].click(); // click Repeatable partition assignment checkbox
-				break;
-			}
-		}
-
-		const numberGenerator = browser.$(".number-generator");
-		numberGenerator.click();
-
-		var okButton = getPropertiesApplyButton();
-		okButton.click();
-
-		var lastEventLog = testUtils.getLastEventLogData();
-		var checkboxPartitionClicked = JSON.stringify(lastEventLog).includes("samplingSeed");
-		expect(true).toEqual(checkboxPartitionClicked);
-		expect("-1").not.toEqual((lastEventLog.data.form.samplingSeed).toString());
-	});
-
 	this.Then(/^I check for validation error on Checkpoint Interval from flyout$/, function() {
 		var checkpointIntervalTextBoxTest = browser.$("#editor-control-checkpointInterval");
 		checkpointIntervalTextBoxTest.setValue("", 0);

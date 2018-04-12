@@ -92,7 +92,7 @@ Feature: CommonPropertiesFlyout
 		# Checkbox, Generate TextBox Test Case
 			Given I have toggled the app side common-properties panel
 			Given I have uploaded JSON for common-properties "spark.Sample.json"
-			Then I select Repeatable partition assignment checkbox and click Generate from flyout
+			Then I select Repeatable partition assignment checkbox and click Generate
 
 		# ToggleText, Table Reorder Rows
 			Given I have toggled the app side common-properties panel

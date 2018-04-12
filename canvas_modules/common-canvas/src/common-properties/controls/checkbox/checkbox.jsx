@@ -69,7 +69,7 @@ export default class CheckboxControl extends React.Component {
 		}
 
 		return (
-			<div className="checkbox editor_control_area" style={stateStyle}>
+			<div className="checkbox editor_control_area" data-id={ControlUtils.getDataId(this.props.propertyId)} style={stateStyle}>
 				<div id={controlIconContainerId}>
 					<div>
 						<div className="properties-tooltips-container">

@@ -784,74 +784,7 @@ _defineConstant("PANEL_SELECTOR_INSERT_PROPS_INFO", {
 		]
 	}
 });
-_defineConstant("CHECKBOX_PANEL_PROPS_INFO", {
-	"title": "Group Type: checkboxPanel",
-	"parameterDef": {
-		"titleDefinition": {
-			"title": "Group: checkboxPanel",
-			"editable": false
-		},
-		"current_parameters": {
-			"textfieldControlName": "textfieldPlaceholderText",
-			"numberfieldControlName": -1
-		},
-		"parameters": [
-			{
-				"id": "textfieldControlName",
-				"type": "string",
-				"default": "textfieldControlNamePlaceholderText",
-				"role": "new_column",
-				"required": true
-			},
-			{
-				"id": "numberfieldControlName",
-				"type": "integer",
-				"default": 0
-			}
-		],
-		"uihints": {
-			"id": "ControlsPanel",
-			"parameter_info": [
-				{
-					"parameter_ref": "textfieldControlName",
-					"label": {
-						"default": "Textfield Control Name"
-					},
-					"description": {
-						"default": "Textfield test"
-					}
-				},
-				{
-					"parameter_ref": "numberfieldControlName",
-					"label": {
-						"default": "Numberfield Control Name"
-					},
-					"description": {
-						"default": "Numberfield test"
-					}
-				}
-			],
-			"group_info": [
-				{
-					"id": "Controls Panel",
-					"type": "checkboxPanel",
-					"label": {
-						"default": "Enable Controls"
-					},
-					"parameter_refs": [
-						"textfieldControlName",
-						"numberfieldControlName"
-					]
-				}
-			]
-		},
-		"dataset_metadata": [
-			{
-				"fields": []
-			}
-		]
-	}
-});
+
 _defineConstant("SUMMARY_PANEL_PROPS_INFO", {
 	"title": "Group Type: summaryPanel",
 	"parameterDef": {

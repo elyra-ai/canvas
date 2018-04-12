@@ -665,10 +665,6 @@ input.number,
 	font-weight: 600;
 }
 
-.checkbox-panel label {
-	margin-bottom: 0 !important;
-}
-
 .label-container {
 	float: left;
 	clear: both;
@@ -724,14 +720,6 @@ input[type="number"][disabled].number--light+.number__spinnerdiv .numpinput__spi
 .editor_control_area div div input[type="text"],
 .editor_control_area div div input[type="number"] {
 	padding-right: 0;
-}
-
-.checkbox-panel {
-	padding-top: 18px;
-}
-
-.checkbox-controls {
-	padding-left: 5px;
 }
 
 .number-generator {

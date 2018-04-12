@@ -45,12 +45,6 @@
         "type": "map[string,RenameFieldEntry]",
         "role": "column",
         "default": []
-      },
-      {
-        "id": "samplingSize",
-        "type": "long",
-        "default": -1,
-        "required": true
       }
     ],
     "uihints": {
@@ -95,15 +89,6 @@
           "description": {
             "default": "Rename columns in the active dataset"
           }
-        },
-        {
-          "parameter_ref": "samplingSize",
-          "label": {
-            "default": "Maximum sample size"
-          },
-          "description": {
-            "default": "Maximum number of rows in the sample"
-          }
         }
       ],
       "group_info": [
@@ -118,16 +103,6 @@
               "type": "columnSelection",
               "parameter_refs": [
                 "renamed_fields"
-              ]
-            },
-            {
-              "id": "sample-size",
-              "type": "checkboxPanel",
-              "label": {
-                "default": "Use maximum sample size"
-              },
-              "parameter_refs": [
-                "samplingSize"
               ]
             }
           ]
@@ -361,39 +336,6 @@
                           }
                         }
                       ]
-                    }
-                  },
-                  {
-                    "itemType": "checkboxSelector",
-                    "panel": {
-                      "id": "sample-size",
-                      "panelType": "checkboxPanel",
-                      "uiItems": [
-                        {
-                          "itemType": "control",
-                          "control": {
-                            "name": "samplingSize",
-                            "label": {
-                              "text": "Maximum sample size"
-                            },
-                            "description": {
-                              "text": "Maximum number of rows in the sample"
-                            },
-                            "labelVisible": true,
-                            "controlType": "numberfield",
-                            "valueDef": {
-                              "propType": "long",
-                              "isList": false,
-                              "isMap": false,
-                              "defaultValue": -1
-                            },
-                            "required": true
-                          }
-                        }
-                      ],
-                      "label": {
-                        "text": "Use maximum sample size"
-                      }
                     }
                   }
                 ]

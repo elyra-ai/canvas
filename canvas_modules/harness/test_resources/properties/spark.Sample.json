@@ -5,16 +5,19 @@
   "current_parameters": {
     "withReplacement": false,
     "samplingRatio": 1,
+    "useSamplingSize": false,
     "samplingSize": -1,
+    "useSamplingSeed": false,
     "samplingSeed": -1
   },
   "parameters": [
     {
       "id": "withReplacement",
       "enum": [
-        "true",
-        "false"
+        true,
+        false
       ],
+      "type": "boolean",
       "default": false,
       "required": true
     },
@@ -25,10 +28,20 @@
       "required": true
     },
     {
+      "id": "useSamplingSize",
+      "type": "boolean",
+      "default": false
+    },
+    {
       "id": "samplingSize",
       "type": "long",
       "default": -1,
       "required": true
+    },
+    {
+      "id": "useSamplingSeed",
+      "type": "boolean",
+      "default": false
     },
     {
       "id": "samplingSeed",
@@ -56,7 +69,8 @@
           "default": "Indicate that sampling be performed with replacement"
         },
         "control": "radioset",
-        "resource_key": "withReplace"
+        "resource_key": "withReplace",
+        "orientation": "vertical"
       },
       {
         "parameter_ref": "samplingRatio",
@@ -68,12 +82,24 @@
         }
       },
       {
+        "parameter_ref": "useSamplingSize",
+        "label": {
+          "sample-size.label": "Use maximum sample size"
+        }
+      },
+      {
         "parameter_ref": "samplingSize",
         "label": {
           "default": "Maximum sample size"
         },
         "description": {
           "default": "Maximum number of rows in the sample"
+        }
+      },
+      {
+        "parameter_ref": "useSamplingSeed",
+        "label": {
+          "resource_key": "sample-seed.label"
         }
       },
       {
@@ -113,23 +139,43 @@
             ]
           },
           {
-            "id": "sample-size",
-            "type": "checkboxPanel",
-            "label": {
-              "default": "Use maximum sample size"
-            },
+            "id": "use-sampling-size",
+            "type": "controls",
             "parameter_refs": [
-              "samplingSize"
+              "useSamplingSize"
             ]
           },
           {
-            "id": "sample-seed",
-            "type": "checkboxPanel",
-            "label": {
-              "default": "Repeatable partition assignment"
-            },
+            "id": "sample-size-panel",
+            "type": "panels",
+            "group_info": [
+              {
+                "id": "sample-size-control",
+                "type": "controls",
+                "parameter_refs": [
+                  "samplingSize"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "use-sampling-seed",
+            "type": "controls",
             "parameter_refs": [
-              "samplingSeed"
+              "useSamplingSeed"
+            ]
+          },
+          {
+            "id": "sample-seed-panel",
+            "type": "panels",
+            "group_info": [
+              {
+                "id": "sample-seed-control",
+                "type": "controls",
+                "parameter_refs": [
+                  "samplingSeed"
+                ]
+              }
             ]
           }
         ]
@@ -170,77 +216,103 @@
           }
         }
       }
+    },
+    {
+      "enabled": {
+        "group_refs": [
+          "sample-seed-panel"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "useSamplingSeed",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
+    },
+    {
+      "enabled": {
+        "group_refs": [
+          "sample-size-panel"
+        ],
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "useSamplingSize",
+            "op": "equals",
+            "value": true
+          }
+        }
+      }
     }
   ],
-  "dataset_metadata": [
-		{
-	    "fields": [
-	      {
-	        "name": "Age",
-	        "type": "integer",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "Sex",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "discrete",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "BP",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "discrete",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "Cholesterol",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "discrete",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "Na",
-	        "type": "double",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "K",
-	        "type": "double",
-	        "metadata": {
-	          "description": "",
-	          "measure": "range",
-	          "modeling_role": "input"
-	        }
-	      },
-	      {
-	        "name": "Drug",
-	        "type": "string",
-	        "metadata": {
-	          "description": "",
-	          "measure": "discrete",
-	          "modeling_role": "input"
-	        }
-	      }
-	    ]
-	  }
-	],
+  "dataset_metadata": {
+    "fields": [
+      {
+        "name": "Age",
+        "type": "integer",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Sex",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "BP",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Cholesterol",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Na",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "K",
+        "type": "double",
+        "metadata": {
+          "description": "",
+          "measure": "range",
+          "modeling_role": "input"
+        }
+      },
+      {
+        "name": "Drug",
+        "type": "string",
+        "metadata": {
+          "description": "",
+          "measure": "discrete",
+          "modeling_role": "input"
+        }
+      }
+    ]
+  },
   "resources": {
     "org.apache.spark.ml.ibm.transformers.Sample.label": "Sample Rows",
     "org.apache.spark.ml.ibm.transformers.Sample.desc": "Perform a simple sample operation on the data, with or without replacement",

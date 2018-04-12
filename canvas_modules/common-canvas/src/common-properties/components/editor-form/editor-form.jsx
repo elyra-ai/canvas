@@ -21,7 +21,6 @@ import logger from "./../../../../utils/logger";
 import SelectorPanel from "./../../panels/selector";
 import SummaryPanel from "./../../panels/summary";
 import TwistyPanel from "./../../panels/twisty";
-import CheckboxSelectionPanel from "./../../panels/checkbox-selection";
 import SubPanelButton from "./../../panels/sub-panel/button.jsx";
 
 import WideFlyout from "./../wide-flyout";
@@ -43,9 +42,6 @@ class EditorForm extends React.Component {
 			showFieldPicker: false,
 			activeTabId: ""
 		};
-
-		this.handleSubmit = this.handleSubmit.bind(this);
-		this.getControl = this.getControl.bind(this);
 
 		this.genPanel = this.genPanel.bind(this);
 		this.genUIContent = this.genUIContent.bind(this);
@@ -489,18 +485,7 @@ class EditorForm extends React.Component {
 			>
 				{content}
 			</div>);
-		} else if (panel.panelType === "checkboxPanel") {
-			uiObject = (<CheckboxSelectionPanel
-				id={id}
-				key={key}
-				panel={panel}
-				controller={this.props.controller}
-				controlAccessor={this.getControl}
-			>
-				{content}
-			</CheckboxSelectionPanel>);
 		} else if (panel.panelType === "summary") {
-			//
 			uiObject = content;
 			if (this.props.rightFlyout) {
 				uiObject = (
@@ -540,11 +525,6 @@ class EditorForm extends React.Component {
 		}
 
 		return uiObject;
-	}
-
-	handleSubmit(buttonId) {
-		// logger.info(buttonId);
-		this.props.submitMethod(buttonId, this.refs.form);
 	}
 
 	/**
@@ -678,7 +658,6 @@ class EditorForm extends React.Component {
 EditorForm.propTypes = {
 	controller: PropTypes.object.isRequired,
 	additionalComponents: PropTypes.object,
-	submitMethod: PropTypes.func,
 	showPropertiesButtons: PropTypes.func,
 	customPanels: PropTypes.array,
 	rightFlyout: PropTypes.bool,

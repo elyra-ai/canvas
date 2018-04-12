@@ -137,10 +137,6 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 		});
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.GENERAL, panSubItems));
 	}
-	case GroupType.CHECKBOX_PANEL: {
-		return UIItem.makeCheckboxPanel(new ControlPanel(groupName, PanelType.CHECKBOX_PANEL,
-			_makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider), new Label(l10nProvider.l10nLabel(group, group.name))));
-	}
 	case GroupType.CUSTOM_PANEL: {
 		return UIItem.makeCustomPanel(new CustomControlPanel(groupName, PanelType.CUSTOM, group.parameterNames(), group.data));
 	}

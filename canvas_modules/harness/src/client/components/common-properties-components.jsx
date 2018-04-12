@@ -21,7 +21,6 @@ import {
 	PANELS_PROPS_INFO,
 	PANEL_SELECTOR_PROPS_INFO,
 	PANEL_SELECTOR_INSERT_PROPS_INFO,
-	CHECKBOX_PANEL_PROPS_INFO,
 	SUMMARY_PANEL_PROPS_INFO,
 	TWISTY_PANEL_PROPS_INFO,
 	COLUMNSELECTION_PROPS_INFO,
@@ -271,7 +270,6 @@ class CommonPropertiesComponents extends React.Component {
 					"--tabs",
 					"--subtabs",
 					"--panelSelector",
-					"--checkboxPanel",
 					"--summaryPanel",
 					"--twistyPanel",
 					"--columnSelection",
@@ -553,27 +551,6 @@ class CommonPropertiesComponents extends React.Component {
 							<div className="section-column section-column-code">
 								<pre className="json-block">
 									{this.jsonReplacer(PANEL_SELECTOR_INSERT_PROPS_INFO.parameterDef, "panel")}
-								</pre>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div className="properties-documentation-panels-controls-component">
-					<h3 id="--checkboxPanel" className="section-subtitle">checkboxPanel</h3>
-					<p>A panel with a controlling checkbox that enables child controls when selected
-						and disables child controls when deselected.</p>
-					<div className="section-row">
-						<div className="section-row">
-							<div className="section-column">
-								<CommonProperties
-									propertiesInfo={CHECKBOX_PANEL_PROPS_INFO}
-									propertiesConfig={this.propertiesConfig}
-								/>
-								{this.renderRightFlyoutButton(CHECKBOX_PANEL_PROPS_INFO)}
-							</div>
-							<div className="section-column section-column-code">
-								<pre className="json-block">
-									{this.jsonReplacer(CHECKBOX_PANEL_PROPS_INFO.parameterDef, "panel")}
 								</pre>
 							</div>
 						</div>

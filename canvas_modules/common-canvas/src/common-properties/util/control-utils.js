@@ -21,6 +21,17 @@ function	getControlID(control, propertyId) {
 	return id;
 }
 
+function getDataId(propertyId) {
+	let id = propertyId.name;
+	if (propertyId.row) {
+		id += "_" + propertyId.row;
+		if (propertyId.col) {
+			id += "_" + propertyId.col;
+		}
+	}
+	return "properties-" + id;
+}
+
 function	getConditionMsgState(controller, conditionProps) {
 	let message = DEFAULT_VALIDATION_MESSAGE;
 	message = controller.getErrorMessage(conditionProps.propertyId);
@@ -104,5 +115,6 @@ function	getCharLimit(control, defaultLimit) {
 module.exports = {
 	getCharLimit: getCharLimit,
 	getControlID: getControlID,
+	getDataId: getDataId,
 	getConditionMsgState: getConditionMsgState
 };

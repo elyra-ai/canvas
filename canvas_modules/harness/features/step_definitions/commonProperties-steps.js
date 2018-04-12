@@ -125,17 +125,11 @@ module.exports = function() {
 	this.Then(/^I select Repeatable partition assignment checkbox and click Generate$/, function() {
 
 		// Splitting into different options due to ESLint errors
-		var checkboxPartition1 = browser.$(".tabs").$("div");
-		var checkboxPartition2 = checkboxPartition1.$(".tabs__tabpanel");
-		var checkboxPartition3 = checkboxPartition2.$(".control-panel").$$(".checkbox-panel")[1].$$("div")[0].$("label");
-		checkboxPartition3.click();
+		const checkboxControl = browser.$("div[data-id=\"properties-useSamplingSeed\"]").$("label");
+		checkboxControl.click();
 
-		var generateButton1 = browser.$(".tabs").$("div");
-		var generateButton2 = generateButton1.$(".tabs__tabpanel");
-		var generateButton3 = generateButton2.$(".control-panel").$$(".checkbox-panel")[1];
-		var generateButton4 = generateButton3.$$("div")[1].$("div").$("div");
-		var generateButton5 = generateButton4.$(".default-label-container").$$("label")[1];
-		generateButton5.click();
+		const numberGenerator = browser.$(".number-generator");
+		numberGenerator.click();
 
 		clickApplyButton();
 
