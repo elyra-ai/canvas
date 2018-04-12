@@ -1026,13 +1026,20 @@ export default class ObjectModel {
 			node.id = this.getUniqueId(CREATE_NODE, { "nodeType": nodeType });
 			node.label = nodeType.label;
 			node.type = nodeType.type;
-			node.operator_id_ref = nodeType.operator_id_ref;
 			node.image = nodeType.image;
 			node.class_name = "d3-node-body";
 			node.input_ports = nodeType.input_ports || [];
 			node.output_ports = nodeType.output_ports || [];
 			node.x_pos = data.offsetX;
 			node.y_pos = data.offsetY;
+
+			if (nodeType.operator_id_ref) {
+				node.operator_id_ref = nodeType.operator_id_ref;
+			}
+
+			if (nodeType.subflow_ref) {
+				node.subflow_ref = nodeType.subflow_ref;
+			}
 
 			// Add node height and width and, if appropriate, inputPortsHeight
 			// and outputPortsHeight
