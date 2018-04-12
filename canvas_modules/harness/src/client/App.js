@@ -94,7 +94,7 @@ class App extends React.Component {
 			extraCanvasDisplayed: false,
 			applyOnBlur: true,
 			narrowPalette: true,
-			schemaValidationEnabled: false
+			schemaValidationEnabled: true
 		};
 
 		this.currentEditorId = null;
@@ -232,13 +232,13 @@ class App extends React.Component {
 
 	setPaletteJSON(paletteJson) {
 		this.canvasController.setPipelineFlowPalette(paletteJson);
-		this.canvasController.getPipelineFlow();
+		this.getPipelineFlow();
 		this.log("Palette set");
 	}
 
 	setPaletteJSON2(paletteJson) {
 		this.canvasController2.setPipelineFlowPalette(paletteJson);
-		this.canvasController2.getPipelineFlow();
+		this.getPipelineFlow(this.canvasController2);
 		this.log("Palette set 2");
 	}
 
@@ -290,8 +290,14 @@ class App extends React.Component {
 		this.log("Updated pipeline flow");
 	}
 
-	getPipelineFlow() {
-		return this.canvasController.getPipelineFlow();
+	getPipelineFlow(canvController) {
+		const canvasController = canvController ? canvController : this.canvasController;
+		try {
+			return canvasController.getPipelineFlow();
+		} catch (err) {
+			this.log("Schema validation error");
+			return "Schema validation error";
+		}
 	}
 
 	getCanvasInfo() {
@@ -393,7 +399,7 @@ class App extends React.Component {
 	}
 
 	download() {
-		var canvas = JSON.stringify(this.canvasController.getPipelineFlow(), null, 2);
+		var canvas = JSON.stringify(this.getPipelineFlow(), null, 2);
 		ReactFileDownload(canvas, "canvas.json");
 	}
 

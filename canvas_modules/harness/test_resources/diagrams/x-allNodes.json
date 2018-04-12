@@ -343,6 +343,14 @@
         "objectData": {
           "description": "",
           "label": "Derive"
+        },
+        "userData": {
+          "typeId": "derive",
+          "enabled": true,
+          "cacheState": "disabled",
+          "containsModel": false,
+          "created": 1488399036030,
+          "updated": 1420358068497
         }
       },
       {

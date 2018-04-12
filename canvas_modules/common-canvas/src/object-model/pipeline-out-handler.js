@@ -214,7 +214,7 @@ export default class PipelineOutHandler {
 		};
 
 		if (ciNode.messages && !isEmpty(ciNode.messages)) {
-			newNode.messages = ciNode.messages;
+			newNode.app_data.ui_data.messages = ciNode.messages;
 		}
 
 		if (ciNode.type === "execution_node" ||

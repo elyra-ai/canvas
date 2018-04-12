@@ -72,9 +72,7 @@ function validateAgainstSchema(data, schema, type, validator) {
 	console.log("Schema " + type + " validation result:");
 	console.log(valResult);
 	if (valResult && valResult.errors && valResult.errors.length > 0) {
-		// Temporary fix until validation can be fixed for supernodes
-		console.error("SCHEMA VALIDATION FAILED");
-		// throw valResult;
+		throw valResult;
 	}
 }
 

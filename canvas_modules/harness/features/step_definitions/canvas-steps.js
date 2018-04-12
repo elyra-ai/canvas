@@ -10,7 +10,7 @@
 
 import { clickSVGAreaAt, findCategoryElement, findNodeIndexInPalette,
 	getNodeIdForLabel } from "./utilities/validate-utils.js";
-
+import { isSchemaValidationError } from "./utilities/test-utils.js";
 /* global browser */
 var nconf = require("nconf");
 
@@ -54,6 +54,11 @@ module.exports = function() {
 		} else {
 			browser.rightClick(".svg-canvas", Number(xCoord), Number(yCoord));
 		}
+	});
+
+	this.Then("I verify there were no schema validation errors", function() {
+		const schemaValErr = isSchemaValidationError();
+		expect(schemaValErr).toEqual(false);
 	});
 
 	this.Then(/^I verify the context menu is at (\d+), (\d+)$/, function(xCoord, yCoord) {

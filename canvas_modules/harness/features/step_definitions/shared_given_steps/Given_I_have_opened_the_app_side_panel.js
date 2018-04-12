@@ -31,4 +31,8 @@ module.exports = function() {
 			.click();
 	});
 
+	this.Then("I click the download button", function() {
+		browser.$("[data-tip=download]").click();
+	});
+
 };
