@@ -71,6 +71,10 @@ export default class DiagramCanvas extends React.Component {
 		return null;
 	}
 
+	getSvgViewportOffset() {
+		return this.canvasD3Layout.getSvgViewportOffset();
+	}
+
 	mouseCoords(event) {
 		const rect = event.currentTarget.getBoundingClientRect();
 

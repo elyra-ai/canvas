@@ -3268,6 +3268,26 @@ export default class CanvasD3Layout {
 			!this.commentSizing && !this.drawingNewLink;
 	}
 
+	// Return the x,y coordinates of the svg group relative to the window's viewport
+	getSvgViewportOffset() {
+		let xPos = this.layout.addCommentOffset;
+		let yPos = this.layout.addCommentOffset;
+
+		if (this.zoomTransform) {
+			xPos = this.zoomTransform.x / this.zoomTransform.k;
+			yPos = this.zoomTransform.y / this.zoomTransform.k;
+
+			// The window's viewport is in the opposite direction of zoomTransform
+			xPos = -xPos + this.layout.addCommentOffset;
+			yPos = -yPos + this.layout.addCommentOffset;
+		}
+
+		return {
+			x_pos: xPos,
+			y_pos: yPos
+		};
+	}
+
 	consoleLog(msg) {
 		console.log(msg);
 	}

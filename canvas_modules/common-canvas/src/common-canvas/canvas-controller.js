@@ -664,7 +664,8 @@ export default class CanvasController {
 				this.commonCanvas.configureToolbarButtonsState();
 				break;
 			case "addComment": {
-				const comPos = this.objectModel.getNewCommentPosition();
+				const svgPos = this.commonCanvas.getSvgViewportOffset();
+				const comPos = this.objectModel.getNewCommentPosition(svgPos);
 				source.mousePos = {
 					x: comPos.x_pos,
 					y: comPos.y_pos

@@ -135,6 +135,10 @@ export default class CommonCanvas extends React.Component {
 		};
 	}
 
+	getSvgViewportOffset() {
+		return this.refs.canvas.getSvgViewportOffset();
+	}
+
 	initializeController(props) {
 		this.canvasController.setCanvasConfig({
 			enableRenderingEngine: props.config.enableRenderingEngine,

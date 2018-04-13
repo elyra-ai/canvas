@@ -117,6 +117,10 @@ const haloLayout = {
 	autoLayoutVerticalSpacing: 80,
 	autoLayoutHorizontalSpacing: 80,
 
+	// Add comment toolbar action, default offset from viewport
+	addCommentOffset: 10,
+
+	// Everything below is unique for halo
 	// Comment Halo size
 	haloCommentGap: 11, // Gap between comment rectangle and its halo
 
@@ -235,6 +239,10 @@ const portsHorizontal = {
 	autoLayoutVerticalSpacing: 80,
 	autoLayoutHorizontalSpacing: 80,
 
+	// Add comment toolbar action, default offset from viewport
+	addCommentOffset: 10,
+
+	// Everything below is unique for portsHorizontal
 	// Radius of the port circle
 	portRadius: 3,
 
@@ -369,6 +377,10 @@ const portsVertical = {
 	autoLayoutVerticalSpacing: 80,
 	autoLayoutHorizontalSpacing: 80,
 
+	// Add comment toolbar action, default offset from viewport
+	addCommentOffset: 10,
+
+	// Everything below is unique for portsVertical
 	// Radius of the port circle
 	portRadius: 6,
 

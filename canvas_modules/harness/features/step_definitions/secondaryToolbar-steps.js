@@ -16,6 +16,10 @@ module.exports = function() {
 		browser.$("#addComment-action").click();
 	});
 
+	this.Then("I click on the extra canvas secondary toolbar create comment button", function() {
+		browser.$$("#addComment-action")[1].click();
+	});
+
 	this.Then("I click on the secondary toolbar delete button", function() {
 		browser.$("#delete-action").click();
 	});

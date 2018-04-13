@@ -24,10 +24,26 @@ module.exports = function() {
 		browser.$("#zoomToFit-action").click();
 	});
 
+	this.Then("I click extra canvas zoom in", function() {
+		browser.$$("#zoomIn-action")[1].click();
+	});
+
+	this.Then("I click extra canvas zoom out", function() {
+		browser.$$("#zoomOut-action")[1].click();
+	});
+
+	this.Then("I click extra canvas zoom to fit", function() {
+		browser.$$("#zoomToFit-action")[1].click();
+	});
+
 
 	this.Then(/^I verify zoom transform value is "([^"]*)"$/, function(givenZoomTransform) {
 		var actualZoomTransform = browser.$(".svg-area").$$("g")[0].getAttribute("transform");
 		expect(String(actualZoomTransform)).toEqual(givenZoomTransform);
 	});
 
+	this.Then(/^I verify extra canvas zoom transform value is "([^"]*)"$/, function(givenZoomTransform) {
+		var actualZoomTransform = browser.$$(".svg-area")[1].$$("g")[0].getAttribute("transform");
+		expect(String(actualZoomTransform)).toEqual(givenZoomTransform);
+	});
 };

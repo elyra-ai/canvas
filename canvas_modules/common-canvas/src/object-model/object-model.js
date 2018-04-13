@@ -1171,8 +1171,8 @@ export default class ObjectModel {
 	// Returns a position for a new comment added by clicking the 'add comment'
 	// button on the toolbar. It searches for a position that is not already
 	// occupied by an existing comment.
-	getNewCommentPosition() {
-		var pos = { x_pos: 50, y_pos: 50 };
+	getNewCommentPosition(svgPos) {
+		const pos = { x_pos: svgPos.x_pos, y_pos: svgPos.y_pos };
 
 		while (this.exactlyOverlaps(null, [pos])) {
 			pos.x_pos += 10;
