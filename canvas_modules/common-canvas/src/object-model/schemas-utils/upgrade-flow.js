@@ -76,7 +76,7 @@ function _update0to1(pipelineFlow) {
  */
 function _update1to2(pipelineFlow) {
 	pipelineFlow.version = "2.0";
-	pipelineFlow.json_schema = "http://www.ibm.com/ibm/wdp/flow-v2.0/pipeline-flow-v2-schema.json";
+	pipelineFlow.json_schema = "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v2-schema.json";
 
 	// --> Changed the binding node. Instead of just a single input or output port,
 	// binding nodes can have either an array of input ports or an array of output ports.

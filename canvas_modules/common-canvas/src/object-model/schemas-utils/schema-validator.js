@@ -31,14 +31,15 @@ validator1.addSchema(pipelineConnectionV1Schema, "http://www.ibm.com/ibm/wdp/flo
 validator1.addSchema(dataRecordMetadataV1Schema, "http://www.ibm.com/ibm/wml/datarecord-metadata/v1.0/datarecord-metadata-v1-schema.json#/definitions/record_schema");
 
 var validator2 = new SchemaValidator();
-validator2.addSchema(pipelineFlowUIV2Schema, "http://www.ibm.com/ibm/wdp/canvas/v2.0/pipeline-flow-ui-v2-schema.json#/definitions/pipeline_overview");
-validator2.addSchema(pipelineFlowUIV2Schema, "http://www.ibm.com/ibm/wdp/canvas/v2.0/pipeline-flow-ui-v2-schema.json#/definitions/pipeline_def");
-validator2.addSchema(pipelineFlowUIV2Schema, "http://www.ibm.com/ibm/wdp/canvas/v2.0/pipeline-flow-ui-v2-schema.json#/definitions/port_info_def");
-validator2.addSchema(pipelineFlowUIV2Schema, "http://www.ibm.com/ibm/wdp/canvas/v2.0/pipeline-flow-ui-v2-schema.json#/definitions/node_info_def");
-validator2.addSchema(pipelineFlowUIV2Schema, "http://www.ibm.com/ibm/wdp/canvas/v2.0/pipeline-flow-ui-v2-schema.json#/definitions/runtime_info_def");
-validator2.addSchema(pipelineConnectionV2Schema, "http://www.ibm.com/ibm/wdp/flow-v2.0/pipeline-connection-v2-schema.json#/definitions/common_pipeline_connection_def");
-validator2.addSchema(pipelineConnectionV2Schema, "http://www.ibm.com/ibm/wdp/flow-v2.0/pipeline-connection-v2-schema.json#/definitions/common_pipeline_data_asset_def");
-validator2.addSchema(dataRecordMetadataV2Schema, "http://www.ibm.com/ibm/wml/datarecord-metadata/v2.0/datarecord-metadata-v2-schema.json#/definitions/record_schema");
+const prefix = "http://api.dataplatform.ibm.com/schemas/common-pipeline/";
+validator2.addSchema(pipelineFlowUIV2Schema, prefix + "pipeline-flow/pipeline-flow-ui-v2-schema.json#/definitions/pipeline_overview");
+validator2.addSchema(pipelineFlowUIV2Schema, prefix + "pipeline-flow/pipeline-flow-ui-v2-schema.json#/definitions/pipeline_def");
+validator2.addSchema(pipelineFlowUIV2Schema, prefix + "pipeline-flow/pipeline-flow-ui-v2-schema.json#/definitions/port_info_def");
+validator2.addSchema(pipelineFlowUIV2Schema, prefix + "pipeline-flow/pipeline-flow-ui-v2-schema.json#/definitions/node_info_def");
+validator2.addSchema(pipelineFlowUIV2Schema, prefix + "pipeline-flow/pipeline-flow-ui-v2-schema.json#/definitions/runtime_info_def");
+validator2.addSchema(pipelineConnectionV2Schema, prefix + "pipeline-connection/pipeline-connection-v2-schema.json#/definitions/common_pipeline_connection_def");
+validator2.addSchema(pipelineConnectionV2Schema, prefix + "pipeline-connection/pipeline-connection-v2-schema.json#/definitions/common_pipeline_data_asset_def");
+validator2.addSchema(dataRecordMetadataV2Schema, prefix + "datarecord-metadata/datarecord-metadata-v2-schema.json#/definitions/record_schema");
 
 function validatePipelineFlowAgainstSchema(pipelineFlow, version) {
 	switch (version) {

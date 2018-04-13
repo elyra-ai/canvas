@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "id": "http://www.ibm.com/ibm/wdp/flow-v2.0/pipeline-connection-v2-schema.json",
+  "id": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-connection/pipeline-connection-v2-schema.json",
   "title": "Watson Data Platform Pipeline Connection Schema",
   "description": "Connection schema for pipelines in the Watson Data Platform",
   "definitions": {
@@ -12,7 +12,7 @@
           "type": "string"
         },
         "app_data": {
-          "$ref": "http://www.ibm.com/ibm/wml/pipeline-flow/pipeline-flow-v2-schema.json#/definitions/app_data_def"
+          "$ref": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v2-schema.json#/definitions/app_data_def"
         },
         "ref": {
           "description": "A reference to a connection by ID.",
@@ -43,7 +43,7 @@
       "description": "Details of the data asset contained in a catalog or project to use for a pipeline binding node.",
       "properties": {
         "app_data": {
-          "$ref": "http://www.ibm.com/ibm/wml/pipeline-flow/pipeline-flow-v2-schema.json#/definitions/app_data_def"
+          "$ref": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v2-schema.json#/definitions/app_data_def"
         },
         "ref": {
           "description": "A reference to a data asset by ID.",

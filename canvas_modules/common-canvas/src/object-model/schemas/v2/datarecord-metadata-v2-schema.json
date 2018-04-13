@@ -1,6 +1,6 @@
 {
    "$schema":"http://json-schema.org/draft-04/schema#",
-   "id":"http://www.ibm.com/ibm/wdp/flow-v2.0/datarecord-metadata-v2-schema.json",
+   "id":"http://api.dataplatform.ibm.com/schemas/common-pipeline/datarecord-metadata/datarecord-metadata-v2-schema.json",
    "title":"Watson Data Platform Datarecord Metadata Schema",
    "description":"Metadata schema for datarecords in the Watson Data Platform",
    "definitions":{
@@ -18,7 +18,7 @@
            },
            "json_schema": {
              "description": "Refers to the JSON schema used to validate documents of this type",
-             "enum": ["http://www.ibm.com/ibm/wdp/flow-v2.0/datarecord-metadata-v2-schema.json"],
+             "enum": ["http://api.dataplatform.ibm.com/schemas/common-pipeline/datarecord-metadata/datarecord-metadata-v2-schema.json"],
              "type":"string"
            },
             "type":{

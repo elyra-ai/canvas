@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "description": "WDP Pipeline Flow UI Schema. Defines UI-only constructs for pipeline flow documents.",
   "type": "object",
-  "id": "http://www.ibm.com/ibm/wdp/flow-v2.0/pipeline-flow-ui-v2-schema.json#",
+  "id": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-ui-v2-schema.json#",
   "properties": {},
   "additionalProperties": true,
   "definitions": {

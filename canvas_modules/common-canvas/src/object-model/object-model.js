@@ -566,7 +566,7 @@ const getInitialPipelineFlow = (flowId, primaryPipelineId) => {
 	return {
 		"doc_type": "pipeline",
 		"version": "2.0",
-		"json_schema": "http://www.ibm.com/ibm/wdp/flow-v2.0/pipeline-flow-v2-schema.json",
+		"json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v2-schema.json",
 		"id": newFlowId,
 		"primary_pipeline": newPrimaryPipelineId,
 		"pipelines": [
