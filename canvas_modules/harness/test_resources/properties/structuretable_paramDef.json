@@ -23,7 +23,7 @@
         1,
         "BP",
         "BP-1",
-        "blood pressure",
+        "blood pressure plus additional characters to test display_chars and the default limit of the number of characters.",
         "",
         "1982-02-23"
       ]
@@ -38,7 +38,7 @@
         "Descending"
       ]
     ],
-		"structuretableNoHeader": [
+    "structuretableNoHeader": [
       [
         "Fred",
         "Ascending"
@@ -61,7 +61,7 @@
         1,
         "BP",
         "BP-1",
-        "blood pressure",
+        "blood pressure plus additional characters to test display_chars and the set limit of the number of characters.",
         "",
         "12:00:00Z"
       ]
@@ -98,7 +98,7 @@
       "id": "structuretableNoButtons",
       "type": "array[structuretableNoButtons]"
     },
-		{
+    {
       "id": "structuretableNoHeader",
       "type": "array[structuretableNoHeader]"
     },
@@ -213,7 +213,7 @@
         }
       ]
     },
-		{
+    {
       "id": "structuretableNoHeader",
       "key_definition": {
         "id": "field",
@@ -345,7 +345,7 @@
           "default": "Structure Table with no add-remove buttons"
         }
       },
-			{
+      {
         "parameter_ref": "structuretableNoHeader",
         "label": {
           "default": "No Header"
@@ -548,7 +548,7 @@
           }
         ]
       },
-			{
+      {
         "complex_type_ref": "structuretableNoHeader",
         "header": false,
         "key_definition": {
@@ -623,6 +623,7 @@
               "default": "Label"
             },
             "width": 26,
+            "display_chars": 10,
             "edit_style": "subpanel",
             "sortable": true
           },
@@ -758,7 +759,7 @@
               }
             ]
           },
-					{
+          {
             "id": "structuretableNoHeader-summary-panel",
             "label": {
               "default": "Configure No Header Table"

@@ -132,6 +132,9 @@ export class ParameterDef {
 		if (settings.rows) {
 			this.rows = settings.rows;
 		}
+		if (settings.displayChars) {
+			this.displayChars = settings.displayChars;
+		}
 	}
 
 	isList() {
@@ -302,7 +305,8 @@ export class ParameterDef {
 				"timeFormat": propertyOf(uihint)("time_format"),
 				"customControlId": propertyOf(uihint)("custom_control_id"),
 				"data": propertyOf(uihint)("data"),
-				"rows": propertyOf(uihint)("rows")
+				"rows": propertyOf(uihint)("rows"),
+				"displayChars": propertyOf(uihint)("display_chars")
 			});
 		}
 		return null;

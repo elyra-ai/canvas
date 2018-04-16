@@ -74,22 +74,6 @@ $flexible-table-first-column-left-padding: 15px;
 				display: inline-flex;
 				align-items: center;
 			}
-
-			// truncate text-overflow in header columns
-			// .properties-tooltips-container {
-			// 	width: inherit;
-			// 	height: inherit;
-			// 	padding: 5px 0; // works with parents 'align-items: center' to center the header labels vertically
-			// 	.tooltip-container {
-			// 		width: inherit;
-			// 		.tooltip-trigger {
-			// 			text-overflow: ellipsis;
-			// 			overflow: hidden;
-			// 			white-space: nowrap;
-			// 			width: calc(100% - 3px);
-			// 		}
-			// 	}
-			// }
 		}
 		th:first-of-type {
 			padding-left: $flexible-table-first-column-left-padding;
@@ -154,9 +138,7 @@ $flexible-table-first-column-left-padding: 15px;
 	margin-left: -$flexible-table-first-column-left-padding; // this is needed so the content will not expand the column width
 	display: inline-flex;
 	span {
-		text-overflow: ellipsis;
-		overflow: hidden;
-		white-space: nowrap;
+		word-wrap: break-word;
 		width: inherit;
 		padding-left: $flexible-table-first-column-left-padding;
 	}

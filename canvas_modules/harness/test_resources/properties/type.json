@@ -441,6 +441,7 @@
                                         "isMap": false
                                       },
                                       "sortable": true,
+                                      "displayChars": 10,
                                       "editStyle": "subpanel"
                                     },
                                     {

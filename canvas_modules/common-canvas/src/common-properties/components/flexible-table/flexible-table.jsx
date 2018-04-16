@@ -228,9 +228,8 @@ class FlexibleTable extends React.Component {
 			const tooltipId = uuid4() + "-tooltip-column-" + columnDef.key;
 			const className = "";
 
-			// uncomment the or clause to create tooltips for header labels
 			//   wrap the label in a tooltip in case it overflows
-			const tooltipText = columnDef.description; // || (typeof columnDef.label === "string" ? columnDef.label : null);
+			const tooltipText = columnDef.description;
 			let tooltip;
 			if (tooltipText) {
 				tooltip = (

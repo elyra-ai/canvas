@@ -109,6 +109,10 @@ _defineConstant("DEFAULT_DATE_FORMAT", "YYYY-M-D");
 
 _defineConstant("DEFAULT_TIME_FORMAT", "H:m:s");
 
+_defineConstant("ELLIPSIS_STRING", "...");
+
+_defineConstant("DISPLAY_CHARS_DEFAULT", 64);
+
 _defineConstant("EDITOR_CONTROL", "editor-control-");
 
 _defineConstant("TOOL_TIP_DELAY", 1000);

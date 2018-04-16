@@ -19,7 +19,7 @@ import PropertyUtils from "./../util/property-utils";
 import { ControlType, EditStyle } from "./../constants/form-constants";
 import Tooltip from "./../../tooltip/tooltip.jsx";
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS, TOOL_TIP_DELAY, STATES,
-	TABLE_SCROLLBAR_WIDTH, TABLE_SUBPANEL_BUTTON_WIDTH } from "./../constants/constants";
+	TABLE_SCROLLBAR_WIDTH, TABLE_SUBPANEL_BUTTON_WIDTH, ELLIPSIS_STRING, DISPLAY_CHARS_DEFAULT } from "./../constants/constants";
 
 import findIndex from "lodash/findIndex";
 import isEmpty from "lodash/isEmpty";
@@ -227,6 +227,10 @@ export default class AbstractTable extends React.Component {
 		let cellClassName = "";
 		const ControlFactory = this.props.controller.getControlFactory();
 		if (columnDef.editStyle === EditStyle.SUBPANEL || columnDef.editStyle === EditStyle.ON_PANEL) {
+			const displayCharLimit = (typeof columnDef.displayChars !== "undefined") ? columnDef.displayChars : DISPLAY_CHARS_DEFAULT;
+			if (typeof cellContent === "string" && cellContent.length > displayCharLimit) {
+				cellContent = cellContent.substr(0, displayCharLimit - 1) + ELLIPSIS_STRING;
+			}
 			cellContent = (<div className="table-text">
 				<span>{this._getCustomCtrlContent(propertyId, columnDef, cellContent, tableInfo)}</span>
 			</div>);

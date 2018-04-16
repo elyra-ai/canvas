@@ -90,6 +90,9 @@ class ControlDef {
 		if (settings.rows) {
 			this.rows = settings.rows;
 		}
+		if (settings.displayChars) {
+			this.displayChars = settings.displayChars;
+		}
 	}
 }
 

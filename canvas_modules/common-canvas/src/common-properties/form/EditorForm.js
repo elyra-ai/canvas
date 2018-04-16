@@ -471,6 +471,7 @@ function _makeControl(parameterMetadata, paramName, group, structureDef, l10nPro
 	settings.customControlId = parameter.customControlId;
 	settings.data = parameter.data;
 	settings.rows = parameter.rows;
+	settings.displayChars = parameter.displayChars;
 	settings.header = header;
 	return new Control(settings);
 }
@@ -619,6 +620,7 @@ function _makeSubControl(parameter, l10nProvider) {
 	settings.customControlId = parameter.customControlId;
 	settings.data = parameter.data;
 	settings.rows = parameter.rows;
+	settings.displayChars = parameter.displayChars;
 	return new SubControl(settings);
 }
 

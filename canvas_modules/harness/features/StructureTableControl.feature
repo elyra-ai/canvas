@@ -44,7 +44,7 @@ Feature: StructureTableControl
 		Then I click on the "OK" button
 		# close common properties
 		Then I click on the "OK" button
-		Then I verify the event log for the "structuretableReadonlyColumnDefaultIndex" parameter contains "1,BP,BP-1,blood pressure,,1982-02-23,2,Na,Na,,string,,3,K,K,,string,,4,Drug,Drug,,string,"
+		Then I verify the event log for the "structuretableReadonlyColumnDefaultIndex" parameter contains "1,BP,BP-1,blood pressure plus additional characters to test display_chars and the default limit of the number of characters.,,1982-02-23,2,Na,Na,,string,,3,K,K,,string,,4,Drug,Drug,,string,"
 
 	Scenario: Test generatedValues with startValue in structure table control
 		Then I resize the window size to 1400 width and 800 height
