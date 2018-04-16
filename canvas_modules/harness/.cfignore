@@ -1,10 +1,8 @@
 /node_modules/*
-!/node_modules/@wdp
-/node_modules/@wdp/*
-!/node_modules/@wdp/common-canvas
 /test/
 /.git/
 /.gitignore
 /.project
 /README.md
 /features
+/package-lock.json
