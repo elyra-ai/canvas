@@ -218,7 +218,7 @@ export default class PipelineOutHandler {
 		}
 
 		if (ciNode.type === "execution_node" ||
-				ciNode.type === "super_node") {
+				ciNode.type === "binding") {
 			newNode.op = ciNode.operator_id_ref;
 		}
 
