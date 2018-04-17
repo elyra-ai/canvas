@@ -15,6 +15,11 @@ import { expect } from "chai";
 import chai from "chai";
 import chaiEnzyme from "chai-enzyme";
 import sinon from "sinon";
+import propertyUtils from "../../_utils_/property-utils";
+import { ReactWrapper } from "enzyme";
+
+import structuretableParamDef from "../../test_resources/paramDefs/structuretable_paramDef.json";
+
 chai.use(chaiEnzyme()); // Note the invocation at the end
 
 const handleRowClick = sinon.spy();
@@ -211,6 +216,39 @@ describe("FlexibleTable renders correctly", () => {
 		const row = tableData.childAt(0);
 		row.simulate("click");
 		expect(handleRowClick).to.have.property("callCount", 1);
+	});
+
+});
+
+describe("text cells should display limited text", () => {
+	let wrapper;
+	beforeEach(() => {
+		const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
+		wrapper = renderedObject.wrapper;
+	});
+
+	afterEach(() => {
+		wrapper.unmount();
+	});
+	it("Cell text field display default limited amount", () => {
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(1); // Configure Rename fields
+		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
+		const tableHtml = document.getElementById("flexible-table-structuretableReadonlyColumnDefaultIndex"); // needed since modal dialogs are outside `wrapper`
+		const renameTable = new ReactWrapper(tableHtml, true);
+		// verify the display value is the default limit
+		const labelCells = renameTable.find("td[data-label='new_label']");
+		expect(labelCells).to.have.length(2);
+		expect(labelCells.at(1).text()).to.equal("blood pressure plus additional characters to test display_chars...");
+	});
+	it("Cell text field display specified limited amount", () => {
+		const tableSummary = wrapper.find(".control-summary-link-buttons").at(4); // Configure Sortable Columns
+		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
+		const tableHtml = document.getElementById("flexible-table-structuretableSortableColumns"); // needed since modal dialogs are outside `wrapper`
+		const renameTable = new ReactWrapper(tableHtml, true);
+		// verify the display value is the default limit
+		const labelCells = renameTable.find("td[data-label='new_label']");
+		expect(labelCells).to.have.length(2);
+		expect(labelCells.at(1).text()).to.equal("blood pre...");
 	});
 
 });

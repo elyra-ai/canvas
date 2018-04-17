@@ -58,10 +58,12 @@ class FlexibleTable extends React.Component {
 	componentDidMount() {
 		this._adjustTableHeight();
 		window.addEventListener("resize", this._adjustTableHeight);
+		this._setHeaderElement();
 	}
 
 	componentDidUpdate() {
 		this._adjustTableHeight();
+		this._setHeaderElement();
 	}
 
 	componentWillUnmount() {
@@ -172,11 +174,31 @@ class FlexibleTable extends React.Component {
 		}
 		const rows = this.props.rows ? this.props.rows : 4;
 		// Allow for the table header
-		const headerHeight = this.props.columns.length > 0 ? 32 : 0;
+		let headerHeight = 0;
+		if (this.props.columns.length > 0 && this.theadNode) { // if there is a header
+			headerHeight = this.theadNode.clientHeight;
+		}
 		const newHeight = (rowHeight * rows + headerHeight);
 		if (newHeight !== this.state.tableHeight) {
 			this.setState({ tableHeight: newHeight });
 		}
+	}
+
+	/**
+	* This function will find the header elements in the table.  This is needed to be able to set the height style
+	* on the tbody element so the scroll bar will display correctly.
+	* TODO if we replace reactable with a carbon equivalent this code should be deleted.
+	*/
+	_setHeaderElement() {
+		const tbodyNodes = (this.flexibleTableDiv) ? this.flexibleTableDiv.getElementsByTagName("tbody") : [];
+		const theadNodes = (this.flexibleTableDiv) ? this.flexibleTableDiv.getElementsByTagName("thead") : [];
+		if (tbodyNodes.length > 0) {
+			this.tbodyNode = tbodyNodes[0];
+		}
+		if (theadNodes.length > 0) {
+			this.theadNode = theadNodes[0];
+		}
+
 	}
 
 	sortHeaderClick(columnName, evt) {
@@ -227,7 +249,6 @@ class FlexibleTable extends React.Component {
 			const columnStyle = { "width": columnWidths[j] };
 			const tooltipId = uuid4() + "-tooltip-column-" + columnDef.key;
 			const className = "";
-
 			//   wrap the label in a tooltip in case it overflows
 			const tooltipText = columnDef.description;
 			let tooltip;
@@ -354,8 +375,8 @@ class FlexibleTable extends React.Component {
 		const tableWidth = this.state.tableWidth;
 		const tableHeight = this.state.tableHeight - 2; // subtract 2 px for the borders
 		const columnWidths = this.calculateColumnWidths(this.props.columns, tableWidth);
-
 		const headerInfo = this.generateTableHeaderRow(columnWidths);
+
 		const headers = headerInfo.headers;
 		const searchLabel = headerInfo.searchLabel;
 		const tableContent = this.generateTableRows(columnWidths, tableWidth);
@@ -402,9 +423,16 @@ class FlexibleTable extends React.Component {
 			this.scrollToRow(this.props.alignTop);
 		}
 
+
+		// adjust the height of the body so it can scroll correctly
+		if (this.tbodyNode) {
+			this.tbodyNode.style.height = (this.theadNode) ? (this.flexibleTableDiv.clientHeight - this.theadNode.clientHeight + 4) + "px"
+				: "auto";
+		}
+
 		const heightStyle = this.props.noAutoSize ? {} : { height: tableHeight + "px" };
-		const containerId = (renderHeader) ? "flexible-table-container" : "flexible-table-container-noheader";
-		const containerClass = (renderHeader) ? "flexible-table-container-absolute" : "flexible-table-container-absolute-noheader";
+		const containerId = renderHeader ? "flexible-table-container" : "flexible-table-container-noheader";
+		const containerClass = renderHeader ? "flexible-table-container-absolute" : "flexible-table-container-absolute-noheader";
 		const conditionIconClass = this.props.icon &&
 			this.props.icon.props.validateErrorMessage &&
 			this.props.icon.props.validateErrorMessage.type !== CONDITION_MESSAGE_TYPE.INFO ? "flexible-table-container-icon" : "";
@@ -426,7 +454,7 @@ class FlexibleTable extends React.Component {
 						<ObserveSize observerFn={(element) => this._updateTableWidth(element)}>
 							<div id="flexible-table-container-wrapper" style={ heightStyle }>
 								<div className={containerClass} style={tableStyle}>
-									<div id={containerId} style={{ width: tableWidth }}>
+									<div ref={ (ref) => (this.flexibleTableDiv = ref) } id={containerId} style={{ width: tableWidth }}>
 										<Table {...filterProps}
 											className={"table flexible-table"}
 											id="table"

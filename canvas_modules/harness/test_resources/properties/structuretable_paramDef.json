@@ -1013,7 +1013,7 @@
     "structuretableReadonlyColumnDefaultIndex.new_name.desc": "New field name",
     "structuretableReadonlyColumnDefaultIndex.structuretableRenameFields_readonly_int.label": "Level",
     "structuretableNoButtons.field.label": "Patient",
-    "structuretableNoButtons.BP_trend.label": "BP Trend",
+    "structuretableNoButtons.BP_trend.label": "BP Trend. This is to test a long three line column header label in this column.",
     "structuretableNoButtons.BP_trend.desc": "Patient BP historical trend",
     "structuretableSortableColumns.rename.label": "Rename Columns",
     "structuretableSortableColumns.field.label": "Name",

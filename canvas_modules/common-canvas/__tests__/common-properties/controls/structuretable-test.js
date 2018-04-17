@@ -20,7 +20,6 @@ import isEqual from "lodash/isEqual";
 
 import structuretableParamDef from "../../test_resources/paramDefs/structuretable_paramDef.json";
 import structuretableMultiInputParamDef from "../../test_resources/paramDefs/structuretable_multiInput_paramDef.json";
-import rowDisplayParamDef from "../../test_resources/paramDefs/displayRows_paramDef.json";
 import filterColumnParamDef from "../../test_resources/paramDefs/Filter_paramDef.json";
 
 import chai from "chai";
@@ -1185,45 +1184,6 @@ describe("structuretable control with multi input schemas renders correctly", ()
 	});
 });
 
-describe("structuretable control displays the proper number of rows", () => {
-	let wrapper;
-	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(rowDisplayParamDef);
-		wrapper = renderedObject.wrapper;
-	});
-
-	afterEach(() => {
-		wrapper.unmount();
-	});
-
-	it("should display 3 rows", () => {
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(0);
-		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
-		const tableHtml = document.getElementById("flexible-table-structuretableSortOrder"); // needed since modal dialogs are outside `wrapper`
-		const sortTable = new ReactWrapper(tableHtml, true);
-		const heightDiv = sortTable.find("#flexible-table-container-wrapper");
-		if (heightDiv.length) {
-			const heightStyle = heightDiv.at(0).prop("style");
-			// console.log("STYLE: " + JSON.stringify(heightStyle));
-			expect(isEqual(JSON.parse(JSON.stringify(heightStyle)),
-				JSON.parse(JSON.stringify({ "height": "33px" })))).to.be.true;
-		}
-	});
-
-	it("should display 4 rows by default", () => {
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(0);
-		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
-		const tableHtml = document.getElementById("flexible-table-structurelisteditorListInput"); // needed since modal dialogs are outside `wrapper`
-		const complexTable = new ReactWrapper(tableHtml, true);
-		const heightDiv = complexTable.find("#flexible-table-container-wrapper");
-		if (heightDiv.length) {
-			const heightStyle = heightDiv.at(0).prop("style");
-			// console.log("STYLE: " + JSON.stringify(heightStyle));
-			expect(isEqual(JSON.parse(JSON.stringify(heightStyle)),
-				JSON.parse(JSON.stringify({ "height": "34px" })))).to.be.true;
-		}
-	});
-});
 
 describe("structuretable control displays with no header", () => {
 	let wrapper;
@@ -1359,37 +1319,4 @@ describe("structuretable control handles updated data model", () => {
 		expect(tableValues[1][0]).to.equal("Added Field 8");
 
 	});
-});
-
-describe("text cells should display limited text", () => {
-	let wrapper;
-	beforeEach(() => {
-		const renderedObject = propertyUtils.flyoutEditorForm(structuretableParamDef);
-		wrapper = renderedObject.wrapper;
-	});
-
-	afterEach(() => {
-		wrapper.unmount();
-	});
-	it("Cell text field display default limited amount", () => {
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(1); // Configure Rename fields
-		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
-		const tableHtml = document.getElementById("flexible-table-structuretableReadonlyColumnDefaultIndex"); // needed since modal dialogs are outside `wrapper`
-		const renameTable = new ReactWrapper(tableHtml, true);
-		// verify the display value is the default limit
-		const labelCells = renameTable.find("td[data-label='new_label']");
-		expect(labelCells).to.have.length(2);
-		expect(labelCells.at(1).text()).to.equal("blood pressure plus additional characters to test display_chars...");
-	});
-	it("Cell text field display specified limited amount", () => {
-		const tableSummary = wrapper.find(".control-summary-link-buttons").at(4); // Configure Sortable Columns
-		tableSummary.find("a").simulate("click"); // open the summary panel (modal)
-		const tableHtml = document.getElementById("flexible-table-structuretableSortableColumns"); // needed since modal dialogs are outside `wrapper`
-		const renameTable = new ReactWrapper(tableHtml, true);
-		// verify the display value is the default limit
-		const labelCells = renameTable.find("td[data-label='new_label']");
-		expect(labelCells).to.have.length(2);
-		expect(labelCells.at(1).text()).to.equal("blood pre...");
-	});
-
 });

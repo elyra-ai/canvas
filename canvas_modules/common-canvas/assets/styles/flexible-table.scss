@@ -48,8 +48,8 @@ $flexible-table-first-column-left-padding: 15px;
 		border-bottom: 1px solid #DDDDDD;
 		display: inline-flex;
 		th {
+			height: 100%;
 			display: inline-flex;
-			height: $flexible-table-header-row-height;
 			border-bottom: 0 !important; // this line can be removed once bootstrap css is gone
 			align-items: center;
 
@@ -81,13 +81,8 @@ $flexible-table-first-column-left-padding: 15px;
 		.reactable-th-scrollbar {
 			padding: 0;
 		}
-
-		tr {
-			height: $flexible-table-header-row-height; // needed for chrome in windows
-		}
 	}
 	tbody {
-		height: calc(100% - #{$flexible-table-header-row-height} + 2px); // 2px for the border
 		width: 100%;
 		position: absolute;
 		overflow-y: auto;
