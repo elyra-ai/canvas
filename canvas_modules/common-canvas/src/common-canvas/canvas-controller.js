@@ -726,7 +726,8 @@ export default class CanvasController {
 		}
 	}
 
-	editActionHandler(data) {
+	editActionHandler(cmndData) {
+		let data = cmndData;
 		if (this.canvasConfig.enableInternalObjectModel) {
 			switch (data.editType) {
 			case "createNode": {
@@ -744,6 +745,7 @@ export default class CanvasController {
 			}
 			case "createAutoNode": {
 				const command = new CreateAutoNodeAction(data, this.objectModel);
+				data = command.getData();
 				this.commandStack.do(command);
 				break;
 			}

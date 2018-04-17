@@ -13,16 +13,29 @@ export default class CreateAutoNodeAction extends Action {
 		super(data);
 		this.data = data;
 		this.objectModel = objectModel;
+		this.srcNode = this.objectModel.getAutoSourceNode();
+		this.newNode = this.objectModel.createAutoNode(data, this.srcNode);
+		this.newLink = null;
+		if (this.objectModel.isLinkNeededWithAutoNode(this.newNode, this.srcNode)) {
+			this.newLink = this.objectModel.createLink(this.newNode, this.srcNode);
+		}
+	}
 
-		this.sourceNode = this.objectModel.getAutoSourceNode();
-		this.trgPosition = this.objectModel.getAutoPositionOfTarget(this.sourceNode);
-		this.newNode = this.objectModel.createNodeAtPosition(data, this.trgPosition);
-
+	// Returns data to be passed to the host app.
+	getData() {
+		this.data.sourceNode = this.srcNode;
+		this.data.newNode = this.newNode;
+		this.data.newLink = this.newLink;
+		return this.data;
 	}
 
 	// Standard methods
 	do() {
-		this.objectModel.addAutoNode(this.newNode, this.sourceNode);
+		if (this.newLink) {
+			this.objectModel.addAutoNodeAndLink(this.newNode, this.newLink);
+		} else {
+			this.objectModel.addNode(this.newNode);
+		}
 		this.objectModel.setSelections([this.newNode.id]);
 	}
 
@@ -31,7 +44,6 @@ export default class CreateAutoNodeAction extends Action {
 	}
 
 	redo() {
-		this.objectModel.addAutoNode(this.newNode, this.sourceNode);
-		this.objectModel.setSelections([this.newNode.id]);
+		this.do();
 	}
 }

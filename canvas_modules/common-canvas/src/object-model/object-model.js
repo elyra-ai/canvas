@@ -326,24 +326,9 @@ const links = (state = [], action) => {
 	}
 
 	case "ADD_AUTO_NODE": {
-		var newAutoLink = {
-			id: action.data.linkId,
-			class_name: "d3-data-link",
-			srcNodeId: action.data.srcNode.id,
-			trgNodeId: action.data.newNode.id,
-			type: "nodeLink"
-		};
-
-		if (action.data.srcNode.output_ports && action.data.srcNode.output_ports.length > 0) {
-			newAutoLink = Object.assign(newAutoLink, { "srcNodePortId": action.data.srcNode.output_ports[0].id });
-		}
-		if (action.data.newNode.input_ports && action.data.newNode.input_ports.length > 0) {
-			newAutoLink = Object.assign(newAutoLink, { "trgNodePortId": action.data.newNode.input_ports[0].id });
-		}
-
 		return [
 			...state,
-			newAutoLink
+			action.data.newLink
 		];
 	}
 
@@ -1086,13 +1071,18 @@ export default class ObjectModel {
 		return sourceNode;
 	}
 
-	getAutoPositionOfTarget(sourceNode) {
+	// Returns a newly created 'auto node' whose position is based on the
+	// source node (if one is provided) and the the other nodes on the canvas.
+	createAutoNode(data, sourceNode) {
 		var x = 0;
 		var y = 0;
 
 		const initialMarginX = this.store.getState().layoutinfo.autoLayoutInitialMarginX;
 		const initialMarginY = this.store.getState().layoutinfo.autoLayoutInitialMarginY;
 		const horizontalSpacing = this.store.getState().layoutinfo.autoLayoutHorizontalSpacing;
+		const verticalSpacing = this.store.getState().layoutinfo.autoLayoutVerticalSpacing;
+
+		const newNode = this.createNode(data);
 
 		if (sourceNode === null) {
 			x = initialMarginX;
@@ -1101,22 +1091,12 @@ export default class ObjectModel {
 			x = sourceNode.x_pos + sourceNode.width + horizontalSpacing;
 			y = sourceNode.y_pos;
 		}
-		return { x: x, y: y };
-	}
 
-	createNodeAtPosition(data, trgPosition) {
-		data.offsetX = trgPosition.x;
-		data.offsetY = trgPosition.y;
-		return this.createNode(data);
-	}
+		newNode.x_pos = x;
+		newNode.y_pos = y;
 
-	addAutoNode(newNode, srcNode) {
-		const initialMarginX = this.store.getState().layoutinfo.autoLayoutInitialMarginX;
-		const verticalSpacing = this.store.getState().layoutinfo.autoLayoutVerticalSpacing;
-
-		if ((this.getNodes()).length > 0) {
-			var newSourceNode = this.isIntialBindingNode(newNode);
-			if (newSourceNode) {
+		if (this.getNodes().length > 0) {
+			if (this.isIntialBindingNode(newNode)) {
 				newNode.x_pos = initialMarginX;
 				newNode.y_pos += newNode.height + verticalSpacing;
 			}
@@ -1131,32 +1111,37 @@ export default class ObjectModel {
 			}
 		}
 
-		if (srcNode === null) {
-			this.addNode(newNode);
+		return newNode;
+	}
 
-		} else if ((newNode.input_ports).length === 1 && (srcNode.output_ports).length === 1) {
-			var cardinalityExceeded = this.isCardinalityExceeded(srcNode.output_ports[0].id, newNode.input_ports[0].id, srcNode, newNode);
+	// Returns true if a new link needs to be created with the newly created
+	// auto node. A link is required when there IS a source node and the source
+	// and target nodes each have a single port and the cardinality is not
+	// exceeded for the ports.
+	isLinkNeededWithAutoNode(newNode, srcNode) {
+		let isLinkNeededWithAutoNode = false;
 
-			if (cardinalityExceeded) {
-				this.addNode(newNode);
-			} else {	// Node Link is created in this case only
-				this.addAutoNodeSrcNodeAndLink(newNode, srcNode);
-			}
-
-		} else {
-			this.addNode(newNode);
+		if (newNode &&
+				srcNode &&
+				newNode.input_ports &&
+				srcNode.output_ports &&
+				newNode.input_ports.length === 1 &&
+				srcNode.output_ports.length === 1 &&
+				!this.isCardinalityExceeded(srcNode.output_ports[0].id, newNode.input_ports[0].id, srcNode, newNode)) {
+			isLinkNeededWithAutoNode = true;
 		}
+
+		return isLinkNeededWithAutoNode;
 	}
 
 	isIntialBindingNode(node) {
-		if ((node.input_ports).length === 0) {
+		if (node.input_ports.length === 0) {
 			return true;
 		}
 		return false;
 	}
 
 	isNodeOverlappingOthers(node) {
-
 		var index = this.getNodes().findIndex((arrayNode) => {
 			return this.isSourceOverlappingTarget(arrayNode, node);
 		});
@@ -1254,10 +1239,10 @@ export default class ObjectModel {
 		}
 	}
 
-	addAutoNodeSrcNodeAndLink(node, srcNode) {
+	addAutoNodeAndLink(newNode, newLink) {
 		this.store.dispatch({ type: "ADD_AUTO_NODE", data: {
-			newNode: node, srcNode: srcNode,
-			linkId: this.getUniqueId(CREATE_NODE_LINK, { "sourceNode": srcNode, "targetNode": node }) } });
+			newNode: newNode,
+			newLink: newLink } });
 	}
 
 	deleteNode(id) {
@@ -1408,6 +1393,26 @@ export default class ObjectModel {
 	}
 
 	// Link methods
+
+	createLink(newNode, srcNode) {
+		const linkId = this.getUniqueId(CREATE_NODE_LINK, { "sourceNode": srcNode, "targetNode": newNode });
+		let newLink = {
+			id: linkId,
+			class_name: "d3-data-link",
+			srcNodeId: srcNode.id,
+			trgNodeId: newNode.id,
+			type: "nodeLink"
+		};
+
+		if (srcNode.output_ports && srcNode.output_ports.length > 0) {
+			newLink = Object.assign(newLink, { "srcNodePortId": srcNode.output_ports[0].id });
+		}
+		if (newNode.input_ports && newNode.input_ports.length > 0) {
+			newLink = Object.assign(newLink, { "trgNodePortId": newNode.input_ports[0].id });
+		}
+
+		return newLink;
+	}
 
 	deleteLink(source) {
 		this.store.dispatch({ type: "DELETE_LINK", data: source });
