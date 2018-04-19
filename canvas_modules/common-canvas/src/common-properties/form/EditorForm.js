@@ -104,8 +104,6 @@ function _makeUIItem(parameterMetadata, actionMetadata, group, structureMetadata
 	switch (group.groupType()) {
 	case GroupType.CONTROLS:
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.GENERAL, _makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider)));
-	case GroupType.COLUMN_ALLOCATION:
-		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_ALLOCATION, _makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider)));
 	case GroupType.COLUMN_SELECTION:
 		return UIItem.makePanel(new ControlPanel(groupName, PanelType.COLUMN_SELECTION, _makeControls(parameterMetadata, actionMetadata, group, structureMetadata, l10nProvider)));
 	case GroupType.ADDITIONAL: {

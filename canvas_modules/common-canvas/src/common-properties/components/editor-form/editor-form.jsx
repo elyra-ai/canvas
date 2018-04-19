@@ -388,7 +388,7 @@ class EditorForm extends React.Component {
 			return <div key={"link-text." + key} className={"link-text-container " + uiItem.textType} >{icon}{text}</div>;
 		} else if (uiItem.itemType === "hSeparator") {
 			return <hr key={"h-separator." + key} className="h-separator" />;
-		} else if (uiItem.itemType === "panel" || uiItem.itemType === "summaryPanel") { // summaryPanel deprecated
+		} else if (uiItem.itemType === "panel") {
 			return this.genPanel(key, uiItem.panel, inPropertyId, indexof);
 		} else if (uiItem.itemType === "subTabs") {
 			return this.genSubTabs(key, uiItem.tabs, inPropertyId, indexof);

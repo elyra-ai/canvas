@@ -30,8 +30,6 @@ import CheckboxsetControl from "./checkboxset";
 import RadiosetControl from "./radioset";
 import Dropdown from "./dropdown";
 import SomeofselectControl from "./someofselect";
-import OneofcolumnsControl from "./oneofcolumns";
-import SomeofcolumnsControl from "./someofcolumns";
 import SelectColumnsControl from "./selectcolumns";
 import StructureTableControl from "./structuretable";
 import StructurelisteditorControl from "./structurelisteditor";
@@ -222,16 +220,6 @@ export default class ControlFactory {
 			/>);
 		} else if (control.controlType === ControlType.SOMEOFSELECT && !tableInfo) {
 			return (<SomeofselectControl {...props} />);
-		} else if (control.controlType === ControlType.ONEOFCOLUMNS && !tableInfo) {
-			return (<OneofcolumnsControl
-				{...props}
-				fields={this.controller.getFilteredDatasetMetadata(propertyId)}
-			/>);
-		} else if (control.controlType === ControlType.SOMEOFCOLUMNS && !tableInfo) {
-			return (<SomeofcolumnsControl
-				{...props}
-				fields={this.controller.getFilteredDatasetMetadata(propertyId)}
-			/>);
 		} else if (control.controlType === ControlType.SELECTCOLUMNS && !tableInfo) {
 			return (<SelectColumnsControl
 				{...props}

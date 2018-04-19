@@ -136,7 +136,6 @@ function parseUiItem(controls, uiItem, panelId, parentCategoryId) {
 	}
 	case ItemType.ADDITIONAL_LINK:
 	case ItemType.CHECKBOX_SELECTOR:
-	case ItemType.SUMMARY_PANEL: // deprecated
 	case ItemType.PANEL: {
 		if (uiItem.panel && uiItem.panel.uiItems) {
 			let locPanelId = panelId;

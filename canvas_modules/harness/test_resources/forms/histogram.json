@@ -34,7 +34,7 @@
                       "label": {
                         "text": "Field (continuous)"
                       },
-                      "controlType": "oneofcolumns",
+                      "controlType": "selectcolumn",
                       "valueDef": {
                         "propType": "string",
                         "isList": false,
@@ -49,7 +49,7 @@
                       "label": {
                         "text": "Color (discrete)"
                       },
-                      "controlType": "oneofcolumns",
+                      "controlType": "selectcolumn",
                       "valueDef": {
                         "propType": "string",
                         "isList": false,
@@ -64,7 +64,7 @@
                       "label": {
                         "text": "Panel (discrete)"
                       },
-                      "controlType": "oneofcolumns",
+                      "controlType": "selectcolumn",
                       "valueDef": {
                         "propType": "string",
                         "isList": false,

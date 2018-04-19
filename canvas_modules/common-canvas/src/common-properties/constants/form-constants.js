@@ -17,7 +17,6 @@ const ItemType = {
 	PRIMARY_TABS: "primaryTabs",
 	PANEL_SELECTOR: "panelSelector",
 	CUSTOM_PANEL: "customPanel",
-	SUMMARY_PANEL: "summaryPanel", // deprecated
 	ACTION: "action",
 	TEXT_PANEL: "textPanel"
 };
@@ -40,7 +39,6 @@ const GroupType = {
 	SUB_TABS: "subTabs",
 	PANELS: "panels",
 	ADDITIONAL: "additional",
-	COLUMN_ALLOCATION: "columnAllocation", // deprecated
 	COLUMN_SELECTION: "columnSelection",
 	PANEL_SELECTOR: "panelSelector",
 	CUSTOM_PANEL: "customPanel",
@@ -52,7 +50,6 @@ const GroupType = {
 
 const PanelType = {
 	GENERAL: "general",
-	COLUMN_ALLOCATION: "columnAllocation", // deprecated
 	COLUMN_SELECTION: "columnSelection",
 	CUSTOM: "custom",
 	SUMMARY: "summary",
@@ -77,8 +74,6 @@ const ControlType = {
 	SELECTCOLUMN: "selectcolumn",
 	SELECTCOLUMNS: "selectcolumns",
 	SELECTSCHEMA: "selectschema",
-	ONEOFCOLUMNS: "oneofcolumns", // deprecate, replace with SELECTCOLUMN
-	SOMEOFCOLUMNS: "someofcolumns", // deprecated, replaced by SELECTCOLUMNS
 	STRUCTURETABLE: "structuretable",
 	STRUCTUREEDITOR: "structureeditor", // deprecated, no longer supported
 	STRUCTURELISTEDITOR: "structurelisteditor",

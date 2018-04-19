@@ -99,7 +99,7 @@
                           },
                           "visible": true,
                           "width": 22,
-                          "controlType": "oneofcolumns",
+                          "controlType": "selectcolumn",
                           "valueDef": {
                             "propType": "string",
                             "isList": false,

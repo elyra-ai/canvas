@@ -33,7 +33,7 @@
                       "label": {
                         "text": "Fill in fields"
                       },
-                      "controlType": "someofcolumns",
+                      "controlType": "selectcolumns",
                       "valueDef": {
                         "propType": "string",
                         "isList": true,

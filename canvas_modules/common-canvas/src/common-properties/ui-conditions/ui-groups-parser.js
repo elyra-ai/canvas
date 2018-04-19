@@ -35,7 +35,6 @@ function parseUiItem(panelTree, uiItem, currentPanel) {
 	}
 	case ItemType.TEXT_PANEL:
 	case ItemType.PANEL:
-	case ItemType.SUMMARY_PANEL:
 	case ItemType.CUSTOM_PANEL:
 	case ItemType.ADDITIONAL_LINK:
 	case ItemType.CHECKBOX_SELECTOR: {

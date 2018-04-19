@@ -51,7 +51,7 @@ const control = {
 			},
 			"visible": true,
 			"width": 28,
-			"controlType": "oneofcolumns",
+			"controlType": "selectcolumn",
 			"valueDef": {
 				"propType": "string",
 				"isList": false,
