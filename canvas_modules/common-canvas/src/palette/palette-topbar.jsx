@@ -9,7 +9,6 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import Isvg from "react-inlinesvg";
 import ThreeWayIcon from "./three-way-icon.jsx";
 import Close32Icon from "../../assets/images/palette/close_32.svg";
 import PaletteGridSelectedIcon from "../../assets/images/palette/palette_grid_selected.svg";
@@ -72,7 +71,7 @@ class PaletteTopbar extends React.Component {
 				</span>
 				<span className="right-navbar">
 					<a className="secondary-action" onClick={this.close}>
-						<Isvg src={Close32Icon} className="close-icon" />
+						<img src={Close32Icon} draggable="false" className="close-icon" />
 					</a>
 				</span>
 			</div>

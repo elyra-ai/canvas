@@ -7,20 +7,27 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
+/* eslint global-require: 0 */
+
 import React from "react";
 import PropTypes from "prop-types";
 import { UnControlled as CodeMirror } from "react-codemirror2";
-import cm from "codemirror";
 import ControlUtils from "./../../util/control-utils";
-import "codemirror/addon/hint/show-hint";
-import "codemirror/addon/display/placeholder";
-import "codemirror/addon/display/autorefresh";
-import "codemirror/mode/javascript/javascript";
-import "codemirror/addon/hint/javascript-hint";
-import "codemirror/addon/hint/sql-hint";
-import "codemirror/mode/sql/sql";
-import "./languages/CLEM";
-import "./languages/CLEM-hint";
+
+// required for server side rendering.
+let cm = null;
+if (typeof window !== "undefined" && typeof window.navigator !== "undefined") {
+	cm = require("codemirror");
+	require("codemirror/addon/hint/show-hint");
+	require("codemirror/addon/display/placeholder");
+	require("codemirror/addon/display/autorefresh");
+	require("codemirror/mode/javascript/javascript");
+	require("codemirror/addon/hint/javascript-hint");
+	require("codemirror/addon/hint/sql-hint");
+	require("codemirror/mode/sql/sql");
+	require("./languages/CLEM");
+	require("./languages/CLEM-hint");
+}
 
 const pxPerChar = 8.5;
 const pxPerLine = 26;
@@ -50,11 +57,12 @@ export default class ExpressionControl extends React.Component {
 		const height = (this.props.control.charLimit)
 			? Math.min((this.props.control.charLimit / charPerLine) * pxPerLine, maxLineHeight) : minLineHeight;
 		this.editor.setSize(null, Math.max(Math.floor(height), minLineHeight));
+
 	}
 
 	// reset to the original autocomplete handler
 	componentWillUnmount() {
-		if (this.origHint) {
+		if (this.origHint && cm) {
 			cm.registerHelper("hint", this.props.control.language, this.origHint);
 		}
 	}
@@ -109,7 +117,9 @@ export default class ExpressionControl extends React.Component {
 		// registers the autocomplete addon it registers is as "sql" not the subset "text/x-hive"
 		// This hack allows use to capture the "sql" autocomplete handler and subsitute our custom handler
 		const language = (this.props.control.language === "text/x-hive") ? "sql" : this.props.control.language;
-		cm.registerHelper("hint", language, this.addonHints);
+		if (cm) {
+			cm.registerHelper("hint", language, this.addonHints);
+		}
 	}
 
 	handleChange(editor, data, value) {

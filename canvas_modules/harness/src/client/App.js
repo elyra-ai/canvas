@@ -164,11 +164,9 @@ class App extends React.Component {
 
 		this.canvasController = new CanvasController();
 		this.canvasController.setEmptyPipelineFlow();
-		this.canvasController.setPipelineFlowPalette({});
 
 		this.canvasController2 = new CanvasController();
 		this.canvasController2.setEmptyPipelineFlow();
-		this.canvasController2.setPipelineFlowPalette({});
 	}
 
 	componentDidMount() {

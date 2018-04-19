@@ -44,9 +44,11 @@ class Toolbar extends React.Component {
 	getObjectWidth(classOrId) {
 		const firstChar = classOrId.charAt(0);
 		const remaining = classOrId.substring(1);
-		const elem = (firstChar === "#") ? document.getElementById(remaining) : document.getElementsByClassName(remaining)[0];
-		if (elem !== null) {
-			return window.getComputedStyle(elem, null).getPropertyValue("width");
+		if (typeof document !== "undefined") {
+			const elem = (firstChar === "#") ? document.getElementById(remaining) : document.getElementsByClassName(remaining)[0];
+			if (elem !== null) {
+				return window.getComputedStyle(elem, null).getPropertyValue("width");
+			}
 		}
 		return null;
 	}

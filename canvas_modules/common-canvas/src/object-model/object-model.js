@@ -424,7 +424,7 @@ const pipelineflow = (state = getInitialPipelineFlow(), action) => {
 const palette = (state = {}, action) => {
 	switch (action.type) {
 	case "CLEAR_PALETTE_DATA":
-		return null;
+		return {};
 
 	case "SET_PALETTE_DATA":
 		return Object.assign({}, action.data);
@@ -613,7 +613,10 @@ export default class ObjectModel {
 		// Also put layoutinfo reducer before canvas info becuase node heights and width are calculated
 		// based on layoutinfo.
 		var combinedReducer = combineReducers({ selections, layoutinfo, canvasinfo, pipelineflow, palette });
-		this.store = createStore(combinedReducer);
+		const initialState = {
+			palette: {}
+		};
+		this.store = createStore(combinedReducer, initialState);
 
 		this.store.dispatch({ type: "CLEAR_CANVAS" });
 		this.store.dispatch({ type: "CLEAR_PALETTE_DATA" });

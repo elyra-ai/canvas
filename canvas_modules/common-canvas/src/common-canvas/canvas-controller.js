@@ -399,7 +399,7 @@ export default class CanvasController {
 	}
 
 	isClipboardEmpty() {
-		return !localStorage.canvasClipboard || localStorage.canvasClipboard === "";
+		return typeof localStorage === "undefined" || !localStorage.canvasClipboard || localStorage.canvasClipboard === "";
 	}
 
 	pasteFromClipboard() {
