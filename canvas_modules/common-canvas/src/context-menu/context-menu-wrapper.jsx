@@ -55,8 +55,8 @@ export default class ContextMenuWrapper extends React.Component {
 		}
 	}
 
-	// Returns a new position for the context menu based on the current mouse position
-	// and whether the menu would appear outside the edges of the page.
+	// Returns a new position and the canvas rectangle for the context menu based on the current
+	// mouse position and whether the menu would appear outside the edges of the page.
 	repositionContextMenu(mousePos, menuSize) {
 		const pos = {};
 		pos.x = mousePos.x;
@@ -86,7 +86,7 @@ export default class ContextMenuWrapper extends React.Component {
 			pos.x = mousePos.x - menuSize.width;
 		}
 
-		return pos;
+		return { pos: pos, rect: commonCanvasRect };
 	}
 
 	calculateContextMenuSize(menu) {
@@ -113,7 +113,10 @@ export default class ContextMenuWrapper extends React.Component {
 	render() {
 		// Reposition contextMenu so that it does not show off the screen
 		var menuSize = this.calculateContextMenuSize(this.props.contextMenuDef);
-		const pos = this.repositionContextMenu(this.props.canvasController.getContextMenuPos(), menuSize);
+		const posAndRect = this.repositionContextMenu(this.props.canvasController.getContextMenuPos(), menuSize);
+		const pos = posAndRect.pos;
+		const canvasRect = posAndRect.rect;
+		const menuRect = { left: pos.x, top: pos.y, width: menuSize.width, height: menuSize.height };
 
 		const posStyle = {
 			left: pos.x + "px",
@@ -123,6 +126,8 @@ export default class ContextMenuWrapper extends React.Component {
 		const contextMenu = (<CommonContextMenu
 			menuDefinition={this.props.contextMenuDef}
 			contextHandler={this.contextMenuClicked}
+			menuRect={menuRect}
+			canvasRect={canvasRect}
 		/>);
 
 		return (

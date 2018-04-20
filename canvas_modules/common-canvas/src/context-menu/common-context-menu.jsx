@@ -34,6 +34,16 @@ class CommonContextMenu extends React.Component {
 			className: "contextmenu-divider"
 		};
 
+		let rtl = false;
+		if (this.props.canvasRect && this.props.menuRect) {
+			const rightBound = this.props.canvasRect.width;
+			const rect = this.props.menuRect;
+			// Here we make sure that the combined menu position, plus the menu width,
+			//  plus the submenu width, does not exceed the viewport bounds.
+			if (rect.left + rect.width + rect.width > rightBound) {
+				rtl = true;
+			}
+		}
 		const menuItems = [];
 		for (let i = 0; i < menuDefinition.length; ++i) {
 			const divider = menuDefinition[i].divider;
@@ -43,7 +53,7 @@ class CommonContextMenu extends React.Component {
 			} else if (submenu) {
 				const submenuItems = this.buildMenu(menuDefinition[i].menu);
 				menuItems.push(
-					<SubMenu title={menuDefinition[i].label} key={i + 1} classNames="contextmenu-submenu">
+					<SubMenu title={menuDefinition[i].label} key={i + 1} className="contextmenu-submenu" rtl={rtl}>
 						{submenuItems}
 					</SubMenu>
 				);
@@ -71,7 +81,9 @@ class CommonContextMenu extends React.Component {
 
 CommonContextMenu.propTypes = {
 	contextHandler: PropTypes.func,
-	menuDefinition: PropTypes.array
+	menuDefinition: PropTypes.array,
+	menuRect: PropTypes.object,
+	canvasRect: PropTypes.object
 };
 
 export default CommonContextMenu;
