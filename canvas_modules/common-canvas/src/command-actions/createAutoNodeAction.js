@@ -21,7 +21,8 @@ export default class CreateAutoNodeAction extends Action {
 		}
 	}
 
-	// Returns data to be passed to the host app.
+	// Return augmented command object which will be passed to the
+	// client app.
 	getData() {
 		this.data.sourceNode = this.srcNode;
 		this.data.newNode = this.newNode;

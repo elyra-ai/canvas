@@ -1,6 +1,40 @@
 {
     "editType": "createNode",
-    "operator_id_ref": "filter",
+    "nodeTemplate": {
+			"label": "Filter",
+			"type": "execution_node",
+			"operator_id_ref": "filter",
+			"image": "/images/filter.svg",
+			"class_name": "d3-node-body",
+			"input_ports": [
+				{
+					"id": "inPort",
+					"label": "Input Port",
+					"cardinality": {
+						"min": 0,
+						"max": 1
+					}
+				}
+			],
+			"output_ports": [
+				{
+					"id": "outPort",
+					"label": "Output Port",
+					"cardinality": {
+						"min": 0,
+						"max": 1
+					}
+				},
+				{
+					"id": "outPort",
+					"label": "Output Port",
+					"cardinality": {
+						"min": 0,
+						"max": 1
+					}
+				}
+			]
+		},
     "label": "Filter",
     "offsetX": 319,
     "offsetY": 152

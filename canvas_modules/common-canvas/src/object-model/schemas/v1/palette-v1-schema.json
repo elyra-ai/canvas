@@ -77,7 +77,6 @@
               },
               "required": [
                 "label",
-                "operator_id_ref",
                 "image"
               ]
             }

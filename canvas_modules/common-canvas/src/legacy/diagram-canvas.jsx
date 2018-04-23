@@ -321,7 +321,7 @@ export default class DiagramCanvas extends React.Component {
 				const mousePos2 = this.mouseCoords(event);
 				// logger.info(targetPos);
 				// logger.info(mousePos2);
-				this.props.canvasController.createNodeFromTemplateAt(jsVal.operator_id_ref, jsVal.label,
+				this.props.canvasController.createNodeFromTemplateAt(jsVal.nodeTemplate,
 					Math.round((mousePos2.x - (NODE_WIDTH / 2)) / zoom),
 					Math.round((mousePos2.y - (NODE_HEIGHT / 2)) / zoom));
 			} else if (jsVal.operation === "createFromObject") {

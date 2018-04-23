@@ -1008,26 +1008,14 @@ export default class ObjectModel {
 	// Node methods
 
 	createNode(data) {
-		const nodeType = this.getPaletteNode(data.operator_id_ref);
+		const nodeTemplate = data.nodeTemplate;
 		let node = {};
-		if (nodeType !== null) {
-			node.id = this.getUniqueId(CREATE_NODE, { "nodeType": nodeType });
-			node.label = nodeType.label;
-			node.type = nodeType.type;
-			node.image = nodeType.image;
-			node.class_name = "d3-node-body";
-			node.input_ports = nodeType.input_ports || [];
-			node.output_ports = nodeType.output_ports || [];
-			node.x_pos = data.offsetX;
-			node.y_pos = data.offsetY;
-
-			if (nodeType.operator_id_ref) {
-				node.operator_id_ref = nodeType.operator_id_ref;
-			}
-
-			if (nodeType.subflow_ref) {
-				node.subflow_ref = nodeType.subflow_ref;
-			}
+		if (nodeTemplate !== null) {
+			node = Object.assign({}, nodeTemplate, {
+				"id": this.getUniqueId(CREATE_NODE, { "nodeType": nodeTemplate }),
+				"x_pos": data.offsetX,
+				"y_pos": data.offsetY
+			});
 
 			// Add node height and width and, if appropriate, inputPortsHeight
 			// and outputPortsHeight
@@ -1077,15 +1065,13 @@ export default class ObjectModel {
 	// Returns a newly created 'auto node' whose position is based on the
 	// source node (if one is provided) and the the other nodes on the canvas.
 	createAutoNode(data, sourceNode) {
-		var x = 0;
-		var y = 0;
-
 		const initialMarginX = this.store.getState().layoutinfo.autoLayoutInitialMarginX;
 		const initialMarginY = this.store.getState().layoutinfo.autoLayoutInitialMarginY;
 		const horizontalSpacing = this.store.getState().layoutinfo.autoLayoutHorizontalSpacing;
 		const verticalSpacing = this.store.getState().layoutinfo.autoLayoutVerticalSpacing;
 
-		const newNode = this.createNode(data);
+		var x = 0;
+		var y = 0;
 
 		if (sourceNode === null) {
 			x = initialMarginX;
@@ -1095,11 +1081,13 @@ export default class ObjectModel {
 			y = sourceNode.y_pos;
 		}
 
-		newNode.x_pos = x;
-		newNode.y_pos = y;
+		data.offsetX = x;
+		data.offsetY = y;
+
+		const newNode = this.createNode(data);
 
 		if (this.getNodes().length > 0) {
-			if (this.isIntialBindingNode(newNode)) {
+			if (this.isEntryBindingNode(newNode)) {
 				newNode.x_pos = initialMarginX;
 				newNode.y_pos += newNode.height + verticalSpacing;
 			}
@@ -1137,11 +1125,11 @@ export default class ObjectModel {
 		return isLinkNeededWithAutoNode;
 	}
 
-	isIntialBindingNode(node) {
-		if (node.input_ports.length === 0) {
-			return true;
+	isEntryBindingNode(node) {
+		if (node.input_ports && node.input_ports.length > 0) {
+			return false;
 		}
-		return false;
+		return true;
 	}
 
 	isNodeOverlappingOthers(node) {
@@ -1318,8 +1306,7 @@ export default class ObjectModel {
 		this.store.dispatch({ type: "REMOVE_NODE_ATTR", data: { objIds: objIds, attrName: attrName } });
 	}
 
-	canNodeBeDroppedOnLink(operatorIdRef) {
-		const nodeType = this.getPaletteNode(operatorIdRef);
+	canNodeBeDroppedOnLink(nodeType) {
 		if (nodeType.input_ports && nodeType.input_ports.length > 0 &&
 				nodeType.output_ports && nodeType.output_ports.length > 0) {
 			return true;

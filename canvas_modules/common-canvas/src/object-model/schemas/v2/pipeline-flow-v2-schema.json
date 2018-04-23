@@ -28,6 +28,12 @@
       "description": "Document identifier, GUID recommended",
       "type": "string"
     },
+    "parameters": {
+      "description": "Parameters for the flow document",
+      "type": "object",
+      "properties": {},
+      "additionalProperties": true
+    },
     "primary_pipeline": {
       "description": "Reference to the primary (main) pipeline flow within the document",
       "type": "string"
@@ -120,6 +126,12 @@
             ]
           },
           "uniqueItems": true
+        },
+        "parameters": {
+          "description": "Parameters for the pipeline",
+          "type": "object",
+          "properties": {},
+          "additionalProperties": true
         },
         "app_data": {
           "$ref": "#/definitions/app_data_def"
@@ -214,6 +226,12 @@
         "outputs": {
           "$ref": "#/definitions/bound_ports_def"
         },
+        "parameters": {
+          "description": "Input parameters for the supernode",
+          "type": "object",
+          "properties": {},
+          "additionalProperties": true
+        },
         "app_data": {
           "$ref": "#/definitions/app_data_def"
         }
@@ -257,7 +275,7 @@
           "type": "string"
         },
         "parameters": {
-          "description": "Parameters for the binding node",
+          "description": "Parameters for the entry binding node",
           "type": "object",
           "properties": {},
           "additionalProperties": true
@@ -300,7 +318,7 @@
           "type": "string"
         },
         "parameters": {
-          "description": "Parameters for the binding node",
+          "description": "Parameters for the binding exit node",
           "type": "object",
           "properties": {},
           "additionalProperties": true
@@ -378,6 +396,12 @@
           },
           "uniqueItems": true
         },
+        "parameters": {
+          "description": "Parameters for the port",
+          "type": "object",
+          "properties": {},
+          "additionalProperties": true
+        },
         "app_data": {
           "$ref": "#/definitions/app_data_def"
         }
@@ -427,6 +451,12 @@
         "subflow_node_ref": {
           "description": "Optional node id binding within the current document.",
           "type": "string"
+        },
+        "parameters": {
+          "description": "Parameters for the binding port",
+          "type": "object",
+          "properties": {},
+          "additionalProperties": true
         },
         "app_data": {
           "$ref": "#/definitions/app_data_def"

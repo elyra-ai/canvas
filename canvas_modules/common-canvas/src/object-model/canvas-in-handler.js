@@ -231,13 +231,30 @@ export default class CanvasInHandler {
 	// Functions below are for detecting if the palette data is version 0 or not.
 	// ==========================================================================
 
+	// Returns true if the palette passed in is version 0.  Version 0 is indicated
+	// if any node in the categories of the palette has a 'typeId' field.
 	static isVersion0Palette(palette) {
-		let isVersion0Palette = true;
+		let isVersion0Palette = false;
 
 		for (let idx = 0; idx < palette.categories.length; idx++) {
-			if (palette.categories[idx].nodetypes.length > 0 &&
-					palette.categories[idx].nodetypes[0].operator_id_ref) {
-				isVersion0Palette = false;
+			if (palette.categories[idx].nodetypes.length > 0) {
+				if (this.isVersion0Category(palette.categories[idx])) {
+					isVersion0Palette = true;
+					break;
+				}
+			}
+		}
+		return isVersion0Palette;
+	}
+
+	// If a category has a node that has a 'typeId' field then it indicates
+	// a version 0 category.
+	static isVersion0Category(category) {
+		let isVersion0Palette = false;
+
+		for (let idx = 0; idx < category.nodetypes.length; idx++) {
+			if (category.nodetypes[idx].typeId) {
+				isVersion0Palette = true;
 				break;
 			}
 		}

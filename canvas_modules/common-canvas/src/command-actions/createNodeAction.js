@@ -13,19 +13,26 @@ export default class CreateNodeAction extends Action {
 		super(data);
 		this.data = data;
 		this.objectModel = objectModel;
+		this.newNode = this.objectModel.createNode(data);
+	}
+
+	// Return augmented command object which will be passed to the
+	// client app.
+	getData() {
+		this.data.newNode = this.newNode;
+		return this.data;
 	}
 
 	// Standard methods
 	do() {
-		this.objectModel.addNode(this.data);
+		this.objectModel.addNode(this.newNode);
 	}
 
 	undo() {
-		this.objectModel.deleteNode(this.data.id);
+		this.objectModel.deleteNode(this.newNode.id);
 	}
 
 	redo() {
-		this.objectModel.addNode(this.data);
+		this.objectModel.addNode(this.newNode);
 	}
-
 }

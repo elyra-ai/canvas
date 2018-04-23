@@ -502,21 +502,17 @@ export default class CanvasController {
 	createAutoNode(nodeTemplate) {
 		var data = {
 			editType: "createAutoNode",
-			label: nodeTemplate.label, // label is provided for the external object model
-			operator_id_ref: nodeTemplate.operator_id_ref,
-			nodeTypeId: nodeTemplate.operator_id_ref // TODO - Remove this when WML Canvas migrates to pipeline flow
+			nodeTemplate: nodeTemplate
 		};
 
 		this.editActionHandler(data);
 	}
 
 	// Called when a node is dragged from the palette onto the canvas
-	createNodeFromTemplateAt(operatorIdRef, label, x, y) {
+	createNodeFromTemplateAt(nodeTemplate, x, y) {
 		var data = {
 			editType: "createNode",
-			label: label, // label will be passed through to the external object model
-			operator_id_ref: operatorIdRef,
-			nodeTypeId: operatorIdRef, // TODO - Remove this when WML Canvas migrates to pipeline flow
+			nodeTemplate: nodeTemplate,
 			offsetX: x,
 			offsetY: y
 		};
@@ -526,12 +522,10 @@ export default class CanvasController {
 
 	// Called when a node is dragged from the palette onto the canvas and dropped
 	// onto an existing link between two data nodes.
-	createNodeFromTemplateOnLinkAt(operatorIdRef, link, label, x, y) {
+	createNodeFromTemplateOnLinkAt(nodeTemplate, link, x, y) {
 		var data = {
 			editType: "createNodeOnLink",
-			label: label, // label will be passed through to the external object model
-			operator_id_ref: operatorIdRef,
-			nodeTypeId: operatorIdRef, // TODO - Remove this when WML Canvas migrates to pipeline flow
+			nodeTemplate: nodeTemplate,
 			offsetX: x,
 			offsetY: y,
 			link: link
@@ -731,27 +725,28 @@ export default class CanvasController {
 		if (this.canvasConfig.enableInternalObjectModel) {
 			switch (data.editType) {
 			case "createNode": {
-				const node = this.objectModel.createNode(data);
-				const command = new CreateNodeAction(node, this.objectModel);
+				const command = new CreateNodeAction(data, this.objectModel);
 				this.commandStack.do(command);
-				// need to pass the nodeid along to any this.props.editActionHandlers
-				data.nodeId = node.id;
+				data = command.getData();
+				data = this.addHistoricalFields(data);
 				break;
 			}
 			case "createNodeOnLink": {
 				const command = new CreateNodeOnLinkAction(data, this.objectModel);
 				this.commandStack.do(command);
+				data = command.getData();
 				break;
 			}
 			case "createAutoNode": {
 				const command = new CreateAutoNodeAction(data, this.objectModel);
-				data = command.getData();
 				this.commandStack.do(command);
+				data = command.getData();
 				break;
 			}
 			case "cloneMultipleObjects": {
 				const command = new CloneMultipleObjectsAction(data, this.objectModel);
 				this.commandStack.do(command);
+				data = command.getData();
 				break;
 			}
 			case "moveObjects": {
@@ -807,5 +802,15 @@ export default class CanvasController {
 		if (this.handlers.editActionHandler) {
 			this.handlers.editActionHandler(data);
 		}
+	}
+
+	// These fields are added to the data object because historically we've
+	// passed this information to the consuming app in these fields.
+	addHistoricalFields(data) {
+		data.nodeId = data.newNode.id;
+		data.label = data.newNode.label;
+		data.operator_id_ref = data.newNode.operator_id_ref;
+		data.nodeTypeId = data.newNode.operator_id_ref; // TODO - Remove this when WML Canvas migrates to pipeline flow
+		return data;
 	}
 }

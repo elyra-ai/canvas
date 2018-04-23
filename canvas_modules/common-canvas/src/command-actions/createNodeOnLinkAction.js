@@ -32,7 +32,15 @@ export default class CreateNodeOnLinkAction extends Action {
 			id: data.link.trgNodeId,
 			portId: data.link.trgNodePortId
 		};
+	}
 
+	// Return augmented command object which will be passed to the
+	// client app.
+	getData() {
+		this.data.newNode = this.newNode;
+		this.data.newFirstLink = this.firstLink;
+		this.data.newSecondLink = this.secondLink;
+		return this.data;
 	}
 
 	// Standard methods

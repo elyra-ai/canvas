@@ -100,11 +100,11 @@ export default class DiagramCanvas extends React.Component {
 		if (jsVal !== null) {
 			if (jsVal.operation === "createFromTemplate") {
 				if (link &&
-						this.props.canvasController.canNodeBeDroppedOnLink(jsVal.operator_id_ref) &&
+						this.props.canvasController.canNodeBeDroppedOnLink(jsVal.nodeTemplate) &&
 						this.props.canvasController.isInternalObjectModelEnabled()) {
-					this.props.canvasController.createNodeFromTemplateOnLinkAt(jsVal.operator_id_ref, link, jsVal.label, transPos.x, transPos.y);
+					this.props.canvasController.createNodeFromTemplateOnLinkAt(jsVal.nodeTemplate, link, transPos.x, transPos.y);
 				} else {
-					this.props.canvasController.createNodeFromTemplateAt(jsVal.operator_id_ref, jsVal.label, transPos.x, transPos.y);
+					this.props.canvasController.createNodeFromTemplateAt(jsVal.nodeTemplate, transPos.x, transPos.y);
 				}
 
 			} else if (jsVal.operation === "createFromObject") {

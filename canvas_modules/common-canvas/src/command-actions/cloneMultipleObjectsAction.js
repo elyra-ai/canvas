@@ -50,6 +50,15 @@ export default class CloneMultipleObjectsAction extends Action {
 		}
 	}
 
+	// Return augmented command object which will be passed to the
+	// client app.
+	getData() {
+		this.data.clonedNodesInfo = this.clonedNodesInfo;
+		this.data.clonedCommentsInfo = this.clonedCommentsInfo;
+		this.data.clonedLinks = this.links;
+		return this.data;
+	}
+
 	// Standard methods
 	do() {
 		const addedObjectIds = [];

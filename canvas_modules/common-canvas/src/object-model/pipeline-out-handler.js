@@ -37,8 +37,7 @@ export default class PipelineOutHandler {
 						outputs: this.getOutputs(canvasInfo.nodes[index].output_ports, pNode.outputs) });
 				}
 				if (canvasInfo.nodes[index].parameters &&
-						!isEmpty(canvasInfo.nodes[index].parameters) &&
-						(pNode.type === "execution_node" || pNode.type === "model_node")) {
+						!isEmpty(canvasInfo.nodes[index].parameters)) {
 					newNode = Object.assign({}, newNode, {
 						parameters: this.getParameters(canvasInfo.nodes[index].parameters) });
 				} else {
@@ -234,6 +233,7 @@ export default class PipelineOutHandler {
 		}
 
 		if (ciNode.type === "execution_node" ||
+				ciNode.type === "super_node" ||
 				ciNode.type === "model_node") {
 			if (ciNode.parameters && !isEmpty(ciNode.parameters)) {
 				newNode.parameters = ciNode.parameters;
