@@ -15,8 +15,6 @@ import { getURL } from "./utilities/test-config.js";
 import isEqual from "lodash/isEqual";
 import { simulateDragDrop } from "./utilities/dragAndDrop-utils.js";
 
-var nconf = require("nconf");
-
 /* global browser */
 
 module.exports = function() {
@@ -25,41 +23,24 @@ module.exports = function() {
 	//
 	this.Then(/^I add comment (\d+) at location (\d+), (\d+) with the text "([^"]*)"$/,
 		function(commentIndex, canvasX, canvasY, comment) {
-			const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
-
 			var specificComment;
 
 			// create the comment
-			if (D3RenderingEngine) {
-				const previousComments = browser.$$(".comment-group");
-				browser.rightClick(".svg-area", Number(canvasX), Number(canvasY));
-				browser.$(".context-menu-popover").$$(".react-contextmenu-item")[0].click(); // Click 'Add Comment' option
-				const newComments = browser.$$(".comment-group");
+			const previousComments = browser.$$(".comment-group");
+			browser.rightClick(".svg-area", Number(canvasX), Number(canvasY));
+			browser.$(".context-menu-popover").$$(".react-contextmenu-item")[0].click(); // Click 'Add Comment' option
+			const newComments = browser.$$(".comment-group");
 
-				// Find the new comment that was added by comparing new comment list with old (previous)
-				for (let idx = 0; idx < newComments.length; idx++) {
-					const index = previousComments.findIndex((prevCom) => isEqual(prevCom, newComments[idx]));
-					if (index === -1) {
-						specificComment = newComments[idx];
-					}
+			// Find the new comment that was added by comparing new comment list with old (previous)
+			for (let idx = 0; idx < newComments.length; idx++) {
+				const index = previousComments.findIndex((prevCom) => isEqual(prevCom, newComments[idx]));
+				if (index === -1) {
+					specificComment = newComments[idx];
 				}
-				specificComment.click(); // Need to select the comment to allow the double click to work in next step
-
-			} else {
-				browser.rightClick(".svg-canvas", Number(canvasX), Number(canvasY));
-				browser.$(".context-menu-popover").$$(".react-contextmenu-item")[0].click();
-				const index = Number(commentIndex) - 1;
-				specificComment = browser.$$("textarea")[index];
 			}
-
+			specificComment.click(); // Need to select the comment to allow the double click to work in next step
 			specificComment.doubleClick();
-
-			if (D3RenderingEngine) {
-				specificComment.$("textarea").keys(comment); // For D3, the text area is created by the double click
-			} else {
-				specificComment.click();
-				specificComment.setValue("", comment);
-			}
+			specificComment.$("textarea").keys(comment); // The text area is created by double click
 
 			browser.leftClick("#common-canvas-items-container-0", 400, 400);
 
@@ -67,16 +48,11 @@ module.exports = function() {
 			browser.pause(500);
 			// verify commentis in the canvas DOM
 			var commentValue;
-			if (D3RenderingEngine) {
-				// For D3, we cannot rely on index position of comments because they get messed up
-				// when pushing comments to be underneath nodes and links. Therefore we look for the
-				// text of the comment being deleted.
-				var comIndex = getCommentIndexFromCanvasUsingText(comment);
-				commentValue = browser.$("#common-canvas-items-container-0").$$(".comment-group")[comIndex].getAttribute("textContent");
-			} else {
-				const index = Number(commentIndex) - 1;
-				commentValue = browser.$("#common-canvas-items-container-0").$$("textarea")[index].getValue();
-			}
+			// We cannot rely on index position of comments because they get messed up
+			// when pushing comments to be underneath nodes and links. Therefore we look for the
+			// text of the comment being deleted.
+			var comIndex = getCommentIndexFromCanvasUsingText(comment);
+			commentValue = browser.$("#common-canvas-items-container-0").$$(".comment-group")[comIndex].getAttribute("textContent");
 			expect(commentValue).toEqual(comment);
 
 			// verify that the comment is in the internal object model
@@ -99,16 +75,11 @@ module.exports = function() {
 	this.Then(/^I delete comment (\d+) linked to the "([^"]*)" node with the comment text "([^"]*)"$/,
 		function(commentIndex, nodeName, commentText) {
 			var commentNumber = commentIndex - 1;
-			const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
-			if (D3RenderingEngine) {
-				// For D3, we cannot rely on index position of comments because they get messed up
-				// when pushing comments to be underneath nodes and links. Therefore we look for the
-				// text of the comment being deleted.
-				var index = getCommentIndexFromCanvasUsingText(commentText);
-				browser.$("#common-canvas-items-container-0").$$(".comment-group")[index].rightClick();
-			} else {
-				browser.$("#common-canvas-items-container-0").$$(".comment-inner-box")[commentNumber].rightClick();
-			}
+			// We cannot rely on index position of comments because they get messed up
+			// when pushing comments to be underneath nodes and links. Therefore we look for the
+			// text of the comment being deleted.
+			var index = getCommentIndexFromCanvasUsingText(commentText);
+			browser.$("#common-canvas-items-container-0").$$(".comment-group")[index].rightClick();
 			browser.$(".context-menu-popover").$$(".react-contextmenu-item")[0].click();
 
 			// Start Validation
@@ -116,20 +87,10 @@ module.exports = function() {
 			// verify comment is not in the canvas DOM
 			var count = 0;
 			var commentElements;
-
-			if (D3RenderingEngine) {
-				commentElements = browser.$("#common-canvas-items-container-0").$$(".comment-group");
-				for (let idx = 0; idx < commentElements.length; idx++) {
-					if (commentElements[idx].getAttribute("textContent") === commentText) {
-						count++;
-					}
-				}
-			} else {
-				commentElements = browser.$("#common-canvas-items-container-0").$$("textarea");
-				for (let idx = 0; idx < commentElements.length; idx++) {
-					if (commentElements[idx] === commentText) {
-						count++;
-					}
+			commentElements = browser.$("#common-canvas-items-container-0").$$(".comment-group");
+			for (let idx = 0; idx < commentElements.length; idx++) {
+				if (commentElements[idx].getAttribute("textContent") === commentText) {
+					count++;
 				}
 			}
 
@@ -155,17 +116,11 @@ module.exports = function() {
 	//
 	this.Then(/^I move comment (\d+) with text "([^"]*)" onto the canvas by -?(\d+), -?(\d+)$/,
 		function(commentIndex, commentText, canvasX, canvasY) {
-			var commentNumber = commentIndex - 1;
-			const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
-			if (D3RenderingEngine) {
-				// For D3, we cannot rely on index position of comments because they get messed up
-				// when pushing comments to be underneath nodes and links. Therefore we look for the
-				// text of the comment being deleted.
-				var index = getCommentIndexFromCanvasUsingText(commentText);
-				browser.execute(simulateDragDrop, ".comment-group", index, "#canvas-div-0", 0, canvasX, canvasY);
-			} else {
-				browser.execute(simulateDragDrop, ".comment-inner-box", commentNumber, "#canvas-div-0", 0, canvasX, canvasY);
-			}
+			// We cannot rely on index position of comments because they get messed up
+			// when pushing comments to be underneath nodes and links. Therefore we look for the
+			// text of the comment being deleted.
+			var index = getCommentIndexFromCanvasUsingText(commentText);
+			browser.execute(simulateDragDrop, ".comment-group", index, "#canvas-div-0", 0, canvasX, canvasY);
 		});
 
 	// Then I edit comment 1 linked to the "Derive" node with the comment text "This comment box should be linked to the derive node."
@@ -173,24 +128,16 @@ module.exports = function() {
 	this.Then(/^I edit comment (\d+) with the comment text "([^"]*)"$/,
 		function(commentNumber, commentText) {
 			try {
-				var commentIndex = commentNumber - 1;
 				var comment;
-				const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
-				if (D3RenderingEngine) {
-					comment = browser.$$(".comment-group")[0];
-					comment.click();
-					comment.doubleClick();
-					// workaround since setValue isn't working with comments.
-					// keys is deprecated and might not work in latest version of firefox
-					for (let indx = 0; indx < 60; ++indx) {
-						comment.$("textarea").keys("Backspace");
-					}
-					comment.$("textarea").keys(commentText);
-				} else {
-					comment = browser.$$("textarea")[commentIndex];
-					comment.doubleClick();
-					comment.setValue("", commentText);
+				comment = browser.$$(".comment-group")[0];
+				comment.click();
+				comment.doubleClick();
+				// workaround since setValue isn't working with comments.
+				// keys is deprecated and might not work in latest version of firefox
+				for (let indx = 0; indx < 60; ++indx) {
+					comment.$("textarea").keys("Backspace");
 				}
+				comment.$("textarea").keys(commentText);
 
 				browser.pause(1500);
 				browser.leftClick("#common-canvas-items-container-0", 400, 400);

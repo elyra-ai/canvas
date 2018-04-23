@@ -62,7 +62,6 @@ Feature: CommonPropertiesFlyout
 
 		# Help Icon Test Case for form with help object, help data and app_data
 			Given I have toggled the app side panel
-			Given I have selected the "D3" rendering engine
 			Given I have uploaded diagram "/test_resources/diagrams/allNodes.json"
 			Given I have toggled the app side panel
 			Then I click the "Aggregate" node to select it

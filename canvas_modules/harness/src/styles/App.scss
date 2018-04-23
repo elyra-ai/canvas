@@ -266,55 +266,37 @@
 /* This styles are used in the decoratorCanvas.json canvas file. */
 
 .leftDecoration {
-	border: 1px solid #000000;
-	/* For D3 rendering */
 	fill: transparent;
 	stroke: #000000;
 }
 
 .rightDecoration {
-	border: 1px solid #000000;
-	/* For D3 rendering */
 	fill: transparent;
 	stroke: #000000;
 }
 
 .rightDecoration:hover {
-	background-color: #000000;
-	/* For D3 rendering */
 	fill: #000000;
 	stroke: #000000;
 }
 
 .zoom-in-decoration {
-	background-image: url("../graphics/zoom-in_32.svg");
-	background-repeat: no-repeat;
-	background-color: #FFFF00;
-	/* For D3 rendering */
 	fill: #FFFF00;
 }
 
 .zoom-in-decoration:hover {
-	border: 1px solid #000000;
-	/* For D3 rendering */
 	stroke: #000000;
 }
 
 /*  Override styles for comments in linkColorCanvas.json */
 
 .custom-canvas-comment {
-	background-color: #FFFF99;
-	color: #000000;
 	cursor: "move";
-	border: 2px solid transparent;
-	/* For D3 rendering engine */
 	fill: #FFFF99;
 	stroke: transparent;
 }
 
 .custom-comment-box {
-	background-color: #2BE2CA;
-	/* For D3 rendering engine */
 	fill: #2BE2CA;
 }
 
@@ -322,31 +304,16 @@
 /*  Override styles for comments in commentColorCanvas.json */
 
 .canvas-comment-1 {
-	background-color: #B98BA6;
-	color: #000;
-	border: 1px solid #000000;
-	text-align: center;
-	/* For D3 rendering engine */
 	fill: #B98BA6;
 	stroke: #000000;
 }
 
 .canvas-comment-2 {
-	background-color: #A6C8E4;
-	color: #000;
-	border: 1px solid #000000;
-	text-align: center;
-	/* For D3 rendering engine */
 	fill: #A6C8E4;
 	stroke: #000000;
 }
 
 .canvas-comment-3 {
-	background-color: #A6C8E4;
-	color: #000;
-	border: 1px solid #000000;
-	text-align: center;
-	/* For D3 rendering engine */
 	fill: #A6C8E4;
 	stroke: #000000;
 }
@@ -441,8 +408,6 @@
 }
 
 .main-comment-box {
-	background-color: #2BE2CA;
-	/* For D3 rendering engine */
 	fill: #2BE2CA;
 }
 

@@ -10,7 +10,6 @@ Scenario: Sanity test to check if tips show up for the palette, nodes, ports and
 	Then I resize the window size to 1400 width and 800 height
 	Given I am on the test harness
 	Given I have toggled the app side panel
-	Given I have selected the "D3" rendering engine
 	Given I have selected the "Ports" connection type
 	Given I have selected the "Flyout" palette layout
 	Given I have uploaded palette "/test_resources/palettes/modelerPalette.json"
@@ -47,7 +46,6 @@ Scenario: Sanity test to check if tips don't show up for the palette, nodes, por
 	Then I resize the window size to 1400 width and 800 height
 	Given I am on the test harness
 	Given I have toggled the app side panel
-	Given I have selected the "D3" rendering engine
 	Given I have selected the "Ports" connection type
 	Given I have selected the "Flyout" palette layout
 	Given I have uploaded palette "/test_resources/palettes/modelerPalette.json"
@@ -75,7 +73,6 @@ Scenario: Sanity test changing node name to update node tip
 	Then I resize the window size to 1400 width and 800 height
 	Given I am on the test harness
 	Given I have toggled the app side panel
-	Given I have selected the "D3" rendering engine
 	Given I have selected the "Ports" connection type
 	Given I have selected the "Flyout" palette layout
 	Given I have uploaded diagram "/test_resources/diagrams/multiPortsCanvas.json"
@@ -92,7 +89,6 @@ Scenario: Sanity test changing input port name to update port tip
 	Then I resize the window size to 1400 width and 800 height
 	Given I am on the test harness
 	Given I have toggled the app side panel
-	Given I have selected the "D3" rendering engine
 	Given I have selected the "Ports" connection type
 	Given I have selected the "Flyout" palette layout
 	Given I have uploaded diagram "/test_resources/diagrams/multiPortsCanvas.json"
@@ -110,7 +106,6 @@ Scenario: Sanity test changing output port name to update port tip
 	Then I resize the window size to 1400 width and 800 height
 	Given I am on the test harness
 	Given I have toggled the app side panel
-	Given I have selected the "D3" rendering engine
 	Given I have selected the "Ports" connection type
 	Given I have selected the "Flyout" palette layout
 	Given I have uploaded diagram "/test_resources/diagrams/multiPortsCanvas.json"
@@ -128,7 +123,6 @@ Scenario: Sanity test tip location adjusted based on boundaries of canvas
 	Then I resize the window size to 1400 width and 800 height
 	Given I am on the test harness
 	Given I have toggled the app side panel
-	Given I have selected the "D3" rendering engine
 	Given I have selected the "Ports" connection type
 	Given I have selected the "Flyout" palette layout
 	Given I have uploaded diagram "/test_resources/diagrams/allNodes.json"

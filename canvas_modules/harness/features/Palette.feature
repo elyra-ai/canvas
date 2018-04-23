@@ -5,13 +5,12 @@ Feature: Palette
   As a human
   I want to create a canvas to test the flyout palette
 
-  Scenario: Sanity test empty canvas with D3 rendering engine
+  Scenario: Sanity test adding nodes into empty canvas
 		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "Flyout" palette layout
 		Given I have uploaded predefined palette "modelerPalette.json"
-		Given I have selected the "D3" rendering engine
 		Given I have toggled the app side panel
 
 		Then I open the palette
@@ -27,7 +26,6 @@ Feature: Palette
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "Flyout" palette layout
-		Given I have selected the "D3" rendering engine
 		Given I open the palette
 		Given I have toggled the app side api panel
 		Given I have selected the "Add PaletteItem" API
@@ -42,7 +40,6 @@ Feature: Palette
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "Modal" palette layout
-		Given I have selected the "D3" rendering engine
 		Given I open the palette
 		Given I have toggled the app side api panel
 		Given I have selected the "Add PaletteItem" API
@@ -58,7 +55,6 @@ Feature: Palette
 		Given I have toggled the app side panel
 		Given I have selected the "Flyout" palette layout
 		Given I have uploaded predefined palette "modelerPalette.json"
-		Given I have selected the "D3" rendering engine
 		Given I open the palette
 		Given I have toggled the app side api panel
 		Given I have selected the "Add PaletteItem" API
@@ -73,7 +69,6 @@ Feature: Palette
 		Given I have toggled the app side panel
 		Given I have selected the "Modal" palette layout
 		Given I have uploaded predefined palette "modelerPalette.json"
-		Given I have selected the "D3" rendering engine
 		Given I open the palette
 		Given I have toggled the app side api panel
 		Given I have selected the "Add PaletteItem" API

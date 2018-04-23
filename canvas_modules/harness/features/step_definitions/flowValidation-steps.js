@@ -8,8 +8,6 @@
  *******************************************************************************/
 /* eslint no-console: "off" */
 
-var nconf = require("nconf");
-
 /* global browser */
 
 module.exports = function() {
@@ -19,12 +17,7 @@ module.exports = function() {
 	this.Then(/^I verify that there are (\d+) nodes with a "([^"]*)" indicator$/,
 		function(numberNodes, msgIndicator) {
 			const messageClassName = ".d3-" + msgIndicator + "-circle";
-			const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
-			if (D3RenderingEngine) {
-				expect(Number(numberNodes)).toEqual(browser.$("#common-canvas-items-container-0").$$(messageClassName).length);
-			} else {
-				// flow validation message indicator not supported in legacy rendering
-			}
+			expect(Number(numberNodes)).toEqual(browser.$("#common-canvas-items-container-0").$$(messageClassName).length);
 		});
 
 };

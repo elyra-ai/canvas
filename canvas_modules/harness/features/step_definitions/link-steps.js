@@ -12,11 +12,10 @@
 import { containLinkEvent, containLinkInObjectModel, getCommentIdFromObjectModel,
 	getCommentIdFromObjectModelUsingText, getCommentIndexFromCanvasUsingText, getNodeIdForLabel,
 	getNodeIdFromObjectModel, getObjectModelCount, getPortLinks } from "./utilities/validate-utils.js";
-import { simulateD3LinkCreation, simulateDragDrop } from "./utilities/dragAndDrop-utils.js";
 import { getHarnessData } from "./utilities/HTTPClient-utils.js";
 import { getURL } from "./utilities/test-config.js";
+import { simulateD3LinkCreation } from "./utilities/dragAndDrop-utils.js";
 
-var nconf = require("nconf");
 
 /* global browser */
 
@@ -29,23 +28,15 @@ module.exports = function() {
 	//
 	this.Then(/^I link node (\d+) the "([^"]*)" node to node (\d+) the "([^"]*)" node for link (\d+) on the canvas$/,
 		function(srcNodeIndex, srcNodeName, destNodeIndex, destNodeName, canvasLinks) {
-			const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
 			try {
 				var orgNodeNumber = srcNodeIndex - 1;
 				var destNodeNumber = destNodeIndex - 1;
 
 				var linkCount = Number(canvasLinks);
 
-				if (D3RenderingEngine) {
-					browser.execute(simulateD3LinkCreation, ".d3-node-halo", orgNodeNumber, ".node-group", destNodeNumber, 1, 1);
-					var links = browser.$$(".d3-selectable-link").length / 2; // Divide by 2 because the line and arrow head use this class
-					expect(links).toEqual(linkCount);
-				} else {
-					browser.execute(simulateDragDrop, ".node-circle", orgNodeNumber, ".node-inner-circle", destNodeNumber, 1, 1);
-					var dataLinks = browser.$$(".canvas-data-link").length / 2;
-					var commentLinks = browser.$$(".canvas-comment-link").length / 2;
-					expect(dataLinks + commentLinks).toEqual(linkCount);
-				}
+				browser.execute(simulateD3LinkCreation, ".d3-node-halo", orgNodeNumber, ".node-group", destNodeNumber, 1, 1);
+				var links = browser.$$(".d3-selectable-link").length / 2; // Divide by 2 because the line and arrow head use this class
+				expect(links).toEqual(linkCount);
 
 				// verify that the link is in the internal object model
 				const testUrl = getURL();
@@ -74,26 +65,17 @@ module.exports = function() {
 	//
 	this.Then(/^I link comment (\d+) with text "([^"]*)" to node (\d+) the "([^"]*)" node for link (\d+) on the canvas$/,
 		function(commentNumber, commentText, nodeNumber, nodeName, canvasLinks) {
-			const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
 			var commentIndex = commentNumber - 1;
 			var nodeIndex = nodeNumber - 1;
 			var linkCount = Number(canvasLinks);
 
-			if (D3RenderingEngine) {
-				// For D3, we cannot rely on index position of comments because they get messed up
-				// when pushing comments to be underneath nodes and links. Therefore we look for the
-				// text of the comment being deleted.
-				commentIndex = getCommentIndexFromCanvasUsingText(commentText);
-				browser.execute(simulateD3LinkCreation, ".d3-comment-halo", commentIndex, ".node-group", nodeIndex, 1, 1);
-				var links = browser.$$(".d3-selectable-link").length / 2; // Divide by 2 because the line and arrow head use this class
-				expect(links).toEqual(linkCount);
-			} else {
-				browser.execute(simulateDragDrop, ".comment-box", commentIndex, ".node-inner-circle", nodeIndex, 1, 1);
-				// verify link is in the canvas DOM
-				var dataLinks = browser.$$(".canvas-data-link").length / 2;
-				var commentLinks = browser.$$(".canvas-comment-link").length / 2;
-				expect(dataLinks + commentLinks).toEqual(linkCount);
-			}
+			// We cannot rely on index position of comments because they get messed up
+			// when pushing comments to be underneath nodes and links. Therefore we look for the
+			// text of the comment being deleted.
+			commentIndex = getCommentIndexFromCanvasUsingText(commentText);
+			browser.execute(simulateD3LinkCreation, ".d3-comment-halo", commentIndex, ".node-group", nodeIndex, 1, 1);
+			var links = browser.$$(".d3-selectable-link").length / 2; // Divide by 2 because the line and arrow head use this class
+			expect(links).toEqual(linkCount);
 
 			// verify that the link is in the internal object model
 			const testUrl = getURL();
@@ -157,9 +139,9 @@ module.exports = function() {
 			expect(returnVal.value).toBe(0);
 		});
 
-	// I delete d3 link at 205, 248
+	// I delete link at 205, 248
 	//
-	this.Then(/^I delete d3 link at (\d+), (\d+)$/,
+	this.Then(/^I delete link at (\d+), (\d+)$/,
 		function(linkX, linkY) {
 			browser.rightClick(".d3-svg-canvas-div", Number(linkX), Number(linkY));
 			browser.$(".context-menu-popover").$$(".react-contextmenu-item")[0].click();

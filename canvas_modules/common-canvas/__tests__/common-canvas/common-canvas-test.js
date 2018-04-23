@@ -10,7 +10,7 @@
 import React from "react";
 import CanvasController from "../../src/common-canvas/canvas-controller";
 import CommonCanvas from "../../src/common-canvas/common-canvas.jsx";
-import DiagramCanvas from "../../src/legacy/diagram-canvas.jsx";
+import DiagramCanvasD3 from "../../src/common-canvas/diagram-canvas-d3.jsx";
 import Palette from "../../src/palette/palette.jsx";
 import PaletteFlyout from "../../src/palette/palette-flyout.jsx";
 import Toolbar from "../../src/toolbar/toolbar.jsx";
@@ -23,10 +23,10 @@ const canvasController = new CanvasController();
 
 describe("CommonCanvas renders correctly", () => {
 
-	it("should render one <DialogCanvas/> component", () => {
+	it("should render one <DialogCanvasD3/> component", () => {
 		const config = { enableAutoLayout: "none", canvasController: canvasController };
 		const wrapper = createCommonCanvas(config);
-		expect(wrapper.find(DiagramCanvas)).to.have.length(1);
+		expect(wrapper.find(DiagramCanvasD3)).to.have.length(1);
 	});
 
 	it("should render one <Palette/> component when Palette is enabled", () => {

@@ -10,10 +10,7 @@
 
 /* global browser */
 
-var nconf = require("nconf");
-
-// find the number of link events in event log
-//
+// Find the number of link events in event log
 function containLinkEvent(eventLog, srcNodeId, destNodeId, eventType) {
 	var count = 0;
 	var elJson = JSON.parse(eventLog);
@@ -76,7 +73,7 @@ function getCommentIdFromObjectModelUsingText(objectModel, commentText) {
 	return id;
 }
 
-// For D3, we cannot rely on index position of comments because they get messed up
+// We cannot rely on index position of comments because they get messed up
 // when pushing comments to be underneath nodes and links. Therefore we look for the
 // text of the comment being deleted.
 function getCommentIndexFromCanvasUsingText(commentText) {
@@ -235,12 +232,7 @@ function getNodeIdForLabel(nodeText) {
 }
 
 function clickSVGAreaAt(xCoord, yCoord) {
-	const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
-	if (D3RenderingEngine) {
-		browser.click(".svg-area", Number(xCoord), Number(yCoord));
-	} else {
-		browser.click(".svg-canvas", Number(xCoord), Number(yCoord));
-	}
+	browser.click(".svg-area", Number(xCoord), Number(yCoord));
 }
 
 function findNodeIndexInPalette(nodeType) {

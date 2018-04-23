@@ -43,7 +43,6 @@ import {
 	SIDE_PANEL_CANVAS,
 	SIDE_PANEL_MODAL,
 	SIDE_PANEL_API,
-	D3_ENGINE,
 	PORTS_CONNECTION,
 	VERTICAL_FORMAT,
 	CURVE_LINKS,
@@ -78,7 +77,6 @@ class App extends React.Component {
 			propertiesJson: null,
 			selectedPanel: null,
 			selectedLayout: NONE,
-			selectedRenderingEngine: D3_ENGINE,
 			selectedConnectionType: PORTS_CONNECTION,
 			selectedNodeFormat: VERTICAL_FORMAT,
 			selectedLinkType: CURVE_LINKS,
@@ -122,7 +120,6 @@ class App extends React.Component {
 		this.setNarrowPalette = this.setNarrowPalette.bind(this);
 		this.schemaValidation = this.schemaValidation.bind(this);
 		this.usePropertiesContainerType = this.usePropertiesContainerType.bind(this);
-		this.setRenderingEngine = this.setRenderingEngine.bind(this);
 		this.setConnectionType = this.setConnectionType.bind(this);
 		this.setNodeFormatType = this.setNodeFormatType.bind(this);
 		this.setLinkType = this.setLinkType.bind(this);
@@ -251,11 +248,6 @@ class App extends React.Component {
 		this.canvasController2.fixedAutoLayout(selectedLayout);
 		this.setState({ selectedLayout: selectedLayout });
 		this.log("Layout selected", selectedLayout);
-	}
-
-	setRenderingEngine(selectedEngine) {
-		this.setState({ selectedRenderingEngine: selectedEngine });
-		this.log("Rendering Engine selected", selectedEngine);
 	}
 
 	setConnectionType(selectedConnectionType) {
@@ -579,7 +571,7 @@ class App extends React.Component {
 		if (source.type === "canvas") {
 			menuDefinition = EMPTY_CLIPBOARD_CANVAS_CONTEXT_MENU;
 		} else if (source.type === "link") {
-			if (!source.targetObject || source.targetObject.type !== "associationLink") { // targetObject is not provided in the legacy rendering engine
+			if (!source.targetObject || source.targetObject.type !== "associationLink") {
 				menuDefinition = LINK_CONTEXT_MENU;
 			}
 		} else if (source.type === "node") {
@@ -960,7 +952,6 @@ class App extends React.Component {
 			</div>);
 
 		var commonCanvasConfig = {
-			enableRenderingEngine: this.state.selectedRenderingEngine,
 			enableConnectionType: this.state.selectedConnectionType,
 			enableNodeFormatType: this.state.selectedNodeFormat,
 			enableLinkType: this.state.selectedLinkType,
@@ -973,7 +964,6 @@ class App extends React.Component {
 		};
 
 		var commonCanvasConfig2 = {
-			enableRenderingEngine: this.state.selectedRenderingEngine,
 			enableConnectionType: this.state.selectedConnectionType,
 			enableNodeFormatType: this.state.selectedNodeFormat,
 			enableLinkType: this.state.selectedLinkType,
@@ -1116,7 +1106,6 @@ class App extends React.Component {
 				useInternalObjectModel={this.useInternalObjectModel}
 				usePropertiesContainerType={this.usePropertiesContainerType}
 				propertiesContainerType={this.state.propertiesContainerType}
-				setRenderingEngine={this.setRenderingEngine}
 				setConnectionType={this.setConnectionType}
 				setNodeFormatType={this.setNodeFormatType}
 				setLinkType={this.setLinkType}

@@ -6,12 +6,11 @@ Feature: Zoom
 	I want to test zoom operations
 	So I can build a canvas and perform zoom operations
 
-	Scenario: Sanity test for zoom operations with the D3 rendering engine
+	Scenario: Sanity test for zoom operations
 		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "Flyout" palette layout
-		Given I have selected the "D3" rendering engine
 		Given I have uploaded palette "/test_resources/palettes/modelerPalette.json"
 		Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
 		Given I have toggled the app side panel

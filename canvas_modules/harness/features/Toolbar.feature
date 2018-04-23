@@ -6,12 +6,11 @@ Feature: Toolbar
 	I want to test secondaryToolbar operations
 	So I can build a canvas and perform secondaryToolbar operations
 
-	Scenario: Sanity test for secondary toolbar Cut and Paste buttons with the D3 rendering engine
+	Scenario: Sanity test for secondary toolbar Cut and Paste buttons
 		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "Flyout" palette layout
-		Given I have selected the "D3" rendering engine
 		Given I have uploaded palette "/test_resources/palettes/modelerPalette.json"
 		Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
 		Given I have toggled the app side panel
@@ -29,12 +28,11 @@ Feature: Toolbar
 		 # There are 7 links because a data link has disappeared during the cut and paste
 		Then I validate there are 7 links on the canvas with port style
 
-	Scenario: Sanity test for secondary toolbar Copy and Paste buttons with the D3 rendering engine
+	Scenario: Sanity test for secondary toolbar Copy and Paste buttons
 		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "Flyout" palette layout
-		Given I have selected the "D3" rendering engine
 		Given I have uploaded palette "/test_resources/palettes/modelerPalette.json"
 		Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
 		Given I have toggled the app side panel
@@ -52,12 +50,11 @@ Feature: Toolbar
 		 # There are 12 links because 2 new data link and 2 new comment links were created during the copy and paste
 		Then I validate there are 12 links on the canvas with port style
 
-	Scenario: Sanity test for secondary toolbar Create and Delete button with the D3 rendering engine
+	Scenario: Sanity test for secondary toolbar Create and Delete button
 		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "Flyout" palette layout
-		Given I have selected the "D3" rendering engine
 		Given I have uploaded palette "/test_resources/palettes/modelerPalette.json"
 		Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
 		Given I have toggled the app side panel
@@ -73,12 +70,11 @@ Feature: Toolbar
 		Then I click on the secondary toolbar delete button
 		Then I verify the number of comments are 0
 
-	Scenario: Sanity test for secondary toolbar resize with the D3 rendering engine
+	Scenario: Sanity test for secondary toolbar resize
 		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "Flyout" palette layout
-		Given I have selected the "D3" rendering engine
 		Given I have uploaded palette "/test_resources/palettes/modelerPalette.json"
 		Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
 		Given I have toggled the app side panel
@@ -94,12 +90,11 @@ Feature: Toolbar
 		Then I verify the number of items in the secondary toolbar are 11
 		Then I resize the window size to 1330 width and 660 height
 
-	Scenario: Sanity test for secondary toolbar horizontal and vertical layout with the D3 rendering engine
+	Scenario: Sanity test for secondary toolbar horizontal and vertical layout
 		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "Flyout" palette layout
-		Given I have selected the "D3" rendering engine
 		Given I have uploaded palette "/test_resources/palettes/modelerPalette.json"
 		Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
 		Given I have toggled the app side panel
@@ -151,12 +146,11 @@ Feature: Toolbar
 		Then I verify the node 5 position is "translate(50, 127.5)"
 		Then I verify the node 6 position is "translate(350, 127.5)"
 
-	Scenario: Sanity test for secondary toolbar add comment with the D3 rendering engine
+	Scenario: Sanity test for secondary toolbar add comment
 		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "Flyout" palette layout
-		Given I have selected the "D3" rendering engine
 		Given I have toggled the app side panel
 		Then I resize the window size to 1330 width and 660 height
 

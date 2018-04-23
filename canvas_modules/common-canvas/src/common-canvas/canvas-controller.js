@@ -38,7 +38,6 @@ export default class CanvasController {
 		};
 
 		this.canvasConfig = {
-			enableRenderingEngine: "D3",
 			enableConnectionType: "Ports",
 			enableNodeFormatType: "Horizontal",
 			enableLinkType: "Curve",

@@ -11,7 +11,6 @@ Scenario: Sanity test to check it a port to port link can be made with a new nod
 	Given I am on the test harness
 	Given I have toggled the app side panel
 	Given I have selected the "Flyout" palette layout
-	Given I have selected the "D3" rendering engine
 	Given I have selected the "Ports" connection type
 	Given I have uploaded palette "/test_resources/palettes/modelerPalette.json"
 	Given I have uploaded diagram "/test_resources/diagrams/multiPortsCanvas.json"
@@ -37,12 +36,11 @@ Scenario: Sanity test to check it a port to port link can be made with a new nod
 	Then I verify the number of port data links are 3
 	Then I verify 0 link between source node "Define Types" source port "outPort1" to target node "C5.0" target port "inPort"
 
-Scenario: Sanity test for multiple ports operations with the D3 rendering engine
+Scenario: Sanity test for multiple ports operations
 	Then I resize the window size to 1400 width and 800 height
 	Given I am on the test harness
 	Given I have toggled the app side panel
 	Given I have selected the "Flyout" palette layout
-	Given I have selected the "D3" rendering engine
 	Given I have selected the "Ports" connection type
 	Given I have uploaded palette "/test_resources/palettes/modelerPalette.json"
 	Given I have uploaded diagram "/test_resources/diagrams/multiPortsCanvas2.json"
@@ -126,7 +124,6 @@ Scenario: Sanity test for dynamically adding ports by updating pipeline flow thr
 	Given I am on the test harness
 	Given I have toggled the app side panel
 	Given I have selected the "Flyout" palette layout
-	Given I have selected the "D3" rendering engine
 	Given I have selected the "Ports" connection type
 	Given I have uploaded diagram "/test_resources/diagrams/multiPortsCanvas3.json"
 	Given I have toggled the app side api panel

@@ -8,12 +8,11 @@ Feature: Clipboard
 
 	# For clipboard tests using the keyboard see the Toolbar.feature file
 
-	Scenario: Test for clipboard Cut and Paste shortcut keys with the D3 rendering engine
+	Scenario: Test for clipboard Cut and Paste shortcut keys
 	Then I resize the window size to 1400 width and 800 height
 	Given I am on the test harness
 	Given I have toggled the app side panel
 	Given I have selected the "Flyout" palette layout
-	Given I have selected the "D3" rendering engine
 	Given I have uploaded palette "/test_resources/palettes/modelerPalette.json"
 	Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
 	Given I have toggled the app side panel
@@ -31,12 +30,11 @@ Feature: Clipboard
 	 # There are 7 links because a data link has disappeared during the cut and paste
 	Then I validate there are 7 links on the canvas with port style
 
-	Scenario: Test for clipboard Copy and Paste shortcut keys with the D3 rendering engine
+	Scenario: Test for clipboard Copy and Paste shortcut keys
 	Then I resize the window size to 1400 width and 800 height
 	Given I am on the test harness
 	Given I have toggled the app side panel
 	Given I have selected the "Flyout" palette layout
-	Given I have selected the "D3" rendering engine
 	Given I have uploaded palette "/test_resources/palettes/modelerPalette.json"
 	Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
 	Given I have toggled the app side panel
@@ -54,12 +52,11 @@ Feature: Clipboard
 	 # There are 12 links because 2 new data link and 2 new comment links were created during the copy and paste
 	Then I validate there are 12 links on the canvas with port style
 
-	Scenario: Test for clipboard Cut and Paste context menu items with the D3 rendering engine
+	Scenario: Test for clipboard Cut and Paste context menu items
 	Then I resize the window size to 1400 width and 800 height
 	Given I am on the test harness
 	Given I have toggled the app side panel
 	Given I have selected the "Flyout" palette layout
-	Given I have selected the "D3" rendering engine
 	Given I have uploaded palette "/test_resources/palettes/modelerPalette.json"
 	Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
 	Given I have toggled the app side panel
@@ -79,12 +76,11 @@ Feature: Clipboard
 	 # There are 7 links because a data link has disappeared during the cut and paste
 	Then I validate there are 7 links on the canvas with port style
 
-	Scenario: Test for clipboard Copy and Paste context menu items with the D3 rendering engine
+	Scenario: Test for clipboard Copy and Paste context menu items
 	Then I resize the window size to 1400 width and 800 height
 	Given I am on the test harness
 	Given I have toggled the app side panel
 	Given I have selected the "Flyout" palette layout
-	Given I have selected the "D3" rendering engine
 	Given I have uploaded palette "/test_resources/palettes/modelerPalette.json"
 	Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
 	Given I have toggled the app side panel

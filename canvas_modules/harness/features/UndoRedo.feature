@@ -6,13 +6,12 @@ Feature: UndoRedo
 	I want to test undo/redo operations
 	So I can build a canvas and perform undo/redo operations with various user operations
 
-	Scenario: Sanity test for Base undo/redo operations with the D3 rendering engine
+	Scenario: Sanity test for Base undo/redo operations
 		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "Flyout" palette layout
 		Given I have uploaded predefined palette "modelerPalette.json"
-		Given I have selected the "D3" rendering engine
 		Given I have selected the "Halo" connection type
 		Given I have toggled the app side panel
 
@@ -99,28 +98,27 @@ Feature: UndoRedo
 		Then I click redo
 		Then I verify the number of comment links are 4
 
-		Then I delete d3 link at 205, 248
+		Then I delete link at 205, 248
 		Then I verify the number of data links are 4
 		Then I click undo
 		Then I verify the number of data links are 5
 		Then I click redo
 		Then I verify the number of data links are 4
 
-		Then I delete d3 link at 225, 188
+		Then I delete link at 225, 188
 		Then I verify the number of comment links are 3
 		Then I click undo
 		Then I verify the number of comment links are 4
 		Then I click redo
 		Then I verify the number of comment links are 3
 
-	Scenario: Sanity test for Complex undo/redo operations with the D3 rendering engine
+	Scenario: Sanity test for Complex undo/redo operations
 		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "Flyout" palette layout
 		Given I have uploaded predefined palette "modelerPalette.json"
 		Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
-		Given I have selected the "D3" rendering engine
 		Given I have selected the "Halo" connection type
 		Given I have toggled the app side panel
 
@@ -209,14 +207,13 @@ Feature: UndoRedo
 		Then I verify the comment move was not done
 		Then I click redo
 
-	Scenario: Sanity test for Complex Disconnect and Delete undo/redo operations with the D3 rendering engine
+	Scenario: Sanity test for Complex Disconnect and Delete undo/redo operations
 		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "Flyout" palette layout
 		Given I have uploaded predefined palette "modelerPalette.json"
 		Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
-		Given I have selected the "D3" rendering engine
 		Given I have selected the "Halo" connection type
 		Given I have toggled the app side panel
 
@@ -244,14 +241,13 @@ Feature: UndoRedo
 		Then I verify the number of nodes are 7
 		Then I verify the number of data links are 4
 
-	Scenario: Sanity test for Multiple undo/redo operations with the D3 rendering engine
+	Scenario: Sanity test for Multiple undo/redo operations
 		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "Flyout" palette layout
 		Given I have uploaded predefined palette "modelerPalette.json"
 		Given I have uploaded diagram "/test_resources/diagrams/radialCanvas.json"
-		Given I have selected the "D3" rendering engine
 		Given I have selected the "Halo" connection type
 		Given I have toggled the app side panel
 
@@ -289,14 +285,13 @@ Feature: UndoRedo
 		Then I verify the number of nodes are 23
 		Then I verify the number of data links are 21
 
-	Scenario: Sanity test for undo/redo of layout actions with the D3 rendering engine
+	Scenario: Sanity test for undo/redo of layout actions
 		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "Flyout" palette layout
 		Given I have uploaded predefined palette "modelerPalette.json"
 		Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
-		Given I have selected the "D3" rendering engine
 		Given I have selected the "Halo" connection type
 		Given I have toggled the app side panel
 		Then I resize the window size to 1330 width and 660 height
@@ -349,7 +344,6 @@ Feature: UndoRedo
 		Given I have toggled the app side panel
 		Given I have selected the "Flyout" palette layout
 		Given I have uploaded predefined palette "modelerPalette.json"
-		Given I have selected the "D3" rendering engine
 		Given I have toggled the app side panel
 		Then I open the palette
 		Then I add node 1 a "C5.0" node from the "Modeling" category onto the canvas at 350, 200

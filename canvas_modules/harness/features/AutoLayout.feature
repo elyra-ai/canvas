@@ -12,7 +12,6 @@ Scenario: Sanity test for autoLayout operations in Vertical Fixed Layout
 	Given I have toggled the app side panel
 	Given I have selected the "Vertical" fixed Layout
 	Given I have selected the "Flyout" palette layout
-	Given I have selected the "D3" rendering engine
 	Given I have selected the "Halo" connection type
 	Given I have uploaded palette "/test_resources/palettes/modelerPalette.json"
 	Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
@@ -43,7 +42,6 @@ Scenario: Sanity test for autoLayout operations in Horizontal Fixed Layout
 	Given I have toggled the app side panel
 	Given I have selected the "Horizontal" fixed Layout
 	Given I have selected the "Flyout" palette layout
-	Given I have selected the "D3" rendering engine
 	Given I have selected the "Halo" connection type
 	Given I have uploaded palette "/test_resources/palettes/modelerPalette.json"
 	Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
@@ -74,7 +72,6 @@ Scenario: Sanity test for autoLayout operations in None Fixed Layout
 	Given I have toggled the app side panel
 	Given I have selected the "None" fixed Layout
 	Given I have selected the "Flyout" palette layout
-	Given I have selected the "D3" rendering engine
 	Given I have selected the "Halo" connection type
 	Given I have uploaded palette "/test_resources/palettes/modelerPalette.json"
 	Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"

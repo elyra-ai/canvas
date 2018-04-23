@@ -525,7 +525,6 @@ module.exports = function() {
 	//
 	this.Then(/^I add node (\d+) a "([^"]*)" node from the "([^"]*)" category onto the canvas at (\d+), (\d+)$/,
 		function(inNodeIndex, nodeType, nodeCategory, canvasX, canvasY) {
-			const D3RenderingEngine = (nconf.get("renderingEngine") === "D3");
 			try {
 				if (nconf.get("paletteLayout") === "Modal") {
 					// select import categories
@@ -549,12 +548,7 @@ module.exports = function() {
 				var nodeNumber = inNodeIndex - 1;
 
 				// verify node is in the canvas DOM
-				var imageName;
-				if (D3RenderingEngine) {
-					imageName = browser.$("#canvas-div-0").$$(".node-image")[nodeNumber].getAttribute("href");
-				} else {
-					imageName = browser.$("#canvas-div-0").$$(".node-inner-circle")[nodeNumber].$("img").getAttribute("src");
-				}
+				var imageName = browser.$("#canvas-div-0").$$(".node-image")[nodeNumber].getAttribute("href");
 
 				expect(imageName).toEqual(expectedImages[nodeType]);
 
@@ -618,13 +612,8 @@ module.exports = function() {
 	// Then I select node 4 the "Type" node
 	//
 	this.Then(/^I select node (\d+) the "([^"]*)" node$/, function(nodeIndex, nodeName) {
-		const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
 		var nodeNumber = nodeIndex - 1;
-		if (D3RenderingEngine) {
-			browser.$("#canvas-div-0").$$(".node-group")[nodeNumber].click();
-		} else {
-			browser.$("#canvas-div-0").$$(".node-inner-circle")[nodeNumber].click();
-		}
+		browser.$("#canvas-div-0").$$(".node-group")[nodeNumber].click();
 	});
 
 	// Then I double click the "Type" node to open its properties
@@ -655,13 +644,7 @@ module.exports = function() {
 	//
 	this.Then(/^I disconnect links for node (\d+) a "([^"]*)" on the canvas$/, function(nodeIndex, nodeName) {
 		var nodeNumber = nodeIndex - 1;
-		const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
-		if (D3RenderingEngine) {
-			browser.$("#canvas-div-0").$$(".node-group")[nodeNumber].rightClick();
-		} else {
-			browser.$("#canvas-div-0").$$(".node-inner-circle")[nodeNumber].rightClick();
-		}
-
+		browser.$("#canvas-div-0").$$(".node-group")[nodeNumber].rightClick();
 		browser.$(".context-menu-popover").$$(".react-contextmenu-item")[1].click();
 
 
@@ -680,14 +663,8 @@ module.exports = function() {
 	// Then I delete node 1 the "Var. File" node
 	//
 	this.Then(/^I delete node (\d+) the "([^"]*)" node$/, function(nodeIndex, nodeType) {
-		const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
 		var nodeNumber = nodeIndex - 1;
-		var nodeSelector;
-		if (D3RenderingEngine) {
-			nodeSelector = ".node-group";
-		} else {
-			nodeSelector = ".node-inner-circle";
-		}
+		var nodeSelector = ".node-group";
 		browser.$("#canvas-div-0").$$(nodeSelector)[nodeNumber].rightClick();
 
 		const contextMenu = browser.$(".context-menu-popover").$$(".react-contextmenu-item");
@@ -709,12 +686,7 @@ module.exports = function() {
 		var count = 0;
 		var nodeList = browser.$("#canvas-div-0").$$(nodeSelector);
 		for (var idx = 0; idx < nodeList.length; idx++) {
-			var imageName;
-			if (D3RenderingEngine) {
-				imageName = browser.$("#canvas-div-0").$$(nodeSelector)[idx].$("image").getAttribute("href");
-			} else {
-				imageName = browser.$("#canvas-div-0").$$(nodeSelector)[idx].$("img").getAttribute("src");
-			}
+			var imageName = browser.$("#canvas-div-0").$$(nodeSelector)[idx].$("image").getAttribute("href");
 
 			// console.log("Image # = " + idx + " image = " + imageName);
 			if (imageName === expectedImages[nodeType]) {
@@ -742,14 +714,8 @@ module.exports = function() {
 	// Then I delete node 1 the "Var. File" node
 	//
 	this.Then(/^I delete node (\d+) the "([^"]*)" node by pressing Delete$/, function(nodeIndex, nodeType) {
-		const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
 		var nodeNumber = nodeIndex - 1;
-		var nodeSelector;
-		if (D3RenderingEngine) {
-			nodeSelector = ".node-group";
-		} else {
-			nodeSelector = ".node-inner-circle";
-		}
+		var nodeSelector = ".node-group";
 		browser.$("#canvas-div-0").$$(nodeSelector)[nodeNumber].click();
 		browser.keys("Delete");
 
@@ -757,12 +723,7 @@ module.exports = function() {
 		var count = 0;
 		var nodeList = browser.$("#canvas-div-0").$$(nodeSelector);
 		for (var idx = 0; idx < nodeList.length; idx++) {
-			var imageName;
-			if (D3RenderingEngine) {
-				imageName = browser.$("#canvas-div-0").$$(nodeSelector)[idx].$("image").getAttribute("href");
-			} else {
-				imageName = browser.$("#canvas-div-0").$$(nodeSelector)[idx].$("img").getAttribute("src");
-			}
+			var imageName = browser.$("#canvas-div-0").$$(nodeSelector)[idx].$("image").getAttribute("href");
 
 			// console.log("Image # = " + idx + " image = " + imageName);
 			if (imageName === expectedImages[nodeType]) {
@@ -788,20 +749,9 @@ module.exports = function() {
 	});
 
 	this.Then("I expect the canvas to be empty", function() {
-		const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
-		var nodeSelector;
-		var commentSelector;
-		var linkSelector;
-
-		if (D3RenderingEngine) {
-			nodeSelector = ".node-group";
-			commentSelector = ".comment-group";
-			linkSelector = ".link-group";
-		} else {
-			nodeSelector = ".node-inner-circle";
-			commentSelector = ".comment-box";
-			linkSelector = ".canvas-background-link";
-		}
+		var nodeSelector = ".node-group";
+		var commentSelector = ".comment-group";
+		var linkSelector = ".link-group";
 
 		var nodeList = browser.$("#canvas-div-0").$$(nodeSelector);
 		expect(nodeList.length).toBe(0);
@@ -819,13 +769,8 @@ module.exports = function() {
 	//
 	this.Then(/^I move node (\d+) a "([^"]*)" node onto the canvas by -?(\d+), -?(\d+)$/,
 		function(nodeIndex, nodeName, canvasX, canvasY) {
-			const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
 			var nodeNumber = nodeIndex - 1;
-			if (D3RenderingEngine) {
-				browser.execute(simulateDragDrop, ".node-group", nodeNumber, "#canvas-div-0", 0, canvasX, canvasY);
-			} else {
-				browser.execute(simulateDragDrop, ".node-inner-circle", nodeNumber, "#canvas-div-0", 0, canvasX, canvasY);
-			}
+			browser.execute(simulateDragDrop, ".node-group", nodeNumber, "#canvas-div-0", 0, canvasX, canvasY);
 		});
 
 	// Then I expect the object model to be empty
@@ -866,14 +811,8 @@ module.exports = function() {
 	// Then I delete node 1 the "Var. File" node by selecting more than 1 node
 	//
 	this.Then(/^I delete node (\d+) the "([^"]*)" node by selecting more than 1 node$/, function(nodeIndex, nodeType) {
-		const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
 		var nodeNumber = nodeIndex - 1;
-		var nodeSelector;
-		if (D3RenderingEngine) {
-			nodeSelector = ".node-group";
-		} else {
-			nodeSelector = ".node-inner-circle";
-		}
+		var nodeSelector = ".node-group";
 		browser.$("#canvas-div-0").$$(nodeSelector)[nodeNumber].rightClick();
 		browser.$(".context-menu-popover").$$(".react-contextmenu-item")[9].click();
 
@@ -881,12 +820,7 @@ module.exports = function() {
 		var count = 0;
 		var nodeList = browser.$("#canvas-div-0").$$(nodeSelector);
 		for (var idx = 0; idx < nodeList.length; idx++) {
-			var imageName;
-			if (D3RenderingEngine) {
-				imageName = browser.$("#canvas-div-0").$$(nodeSelector)[idx].$("image").getAttribute("href");
-			} else {
-				imageName = browser.$("#canvas-div-0").$$(nodeSelector)[idx].$("img").getAttribute("src");
-			}
+			var imageName = browser.$("#canvas-div-0").$$(nodeSelector)[idx].$("image").getAttribute("href");
 
 			// console.log("Image # = " + idx + " image = " + imageName);
 			if (imageName === expectedImages[nodeType]) {
@@ -911,15 +845,8 @@ module.exports = function() {
 	//
 	this.Then(/^I disconnect links for node (\d+) a "([^"]*)" on the canvas by selecting more than 1 node$/, function(nodeIndex, nodeName) {
 		var nodeNumber = nodeIndex - 1;
-		const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
-		if (D3RenderingEngine) {
-			browser.$("#canvas-div-0").$$(".node-group")[nodeNumber].rightClick();
-		} else {
-			browser.$("#canvas-div-0").$$(".node-inner-circle")[nodeNumber].rightClick();
-		}
-
+		browser.$("#canvas-div-0").$$(".node-group")[nodeNumber].rightClick();
 		browser.$(".context-menu-popover").$$(".react-contextmenu-item")[0].click();
-
 		browser.pause(1000);
 		// verify that the link is Not in the internal object model
 		const testUrl = getURL();

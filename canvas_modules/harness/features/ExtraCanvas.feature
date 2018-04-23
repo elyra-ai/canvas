@@ -11,7 +11,6 @@ Scenario: Sanity test to perform extra canvas node operation
 	Given I am on the test harness
 	Given I have toggled the app side panel
 	Given I have selected the "Flyout" palette layout
-	Given I have selected the "D3" rendering engine
 	Given I have selected the "Ports" connection type
 
 	Then I click on extra canvas toggle

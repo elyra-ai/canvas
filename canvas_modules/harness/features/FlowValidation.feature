@@ -10,7 +10,6 @@ Feature: FlowValidation
 		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
-		Given I have selected the "D3" rendering engine
 		Given I have selected the "Halo" connection type
 		Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
 		Given I have toggled the app side panel
@@ -25,7 +24,6 @@ Feature: FlowValidation
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "Flyout" palette layout
-		Given I have selected the "D3" rendering engine
 		Given I have selected the "Halo" connection type
 		Given I have uploaded palette "/test_resources/palettes/sparkPalette.json"
 		Given I have toggled the app side panel

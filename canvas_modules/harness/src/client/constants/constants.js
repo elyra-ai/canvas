@@ -36,9 +36,6 @@ _defineConstant("NONE", "none");
 _defineConstant("HORIZONTAL", "horizontal");
 _defineConstant("VERTICAL", "vertical");
 
-_defineConstant("LEGACY_ENGINE", "Legacy");
-_defineConstant("D3_ENGINE", "D3");
-
 _defineConstant("PORTS_CONNECTION", "Ports");
 _defineConstant("HALO_CONNECTION", "Halo");
 

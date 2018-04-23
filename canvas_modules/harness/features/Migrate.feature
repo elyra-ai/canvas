@@ -13,7 +13,6 @@ Feature: Migrate
 		Given I have selected the "Flyout" palette layout
 		Given I have uploaded predefined palette "modelerPalette.json"
 		Given I have uploaded diagram "/test_resources/diagrams/x-allNodes.json"
-		Given I have selected the "D3" rendering engine
 		Then I click the download button
 		Then I verify there were no schema validation errors
 
@@ -60,7 +59,6 @@ Feature: Migrate
 		Given I have selected the "Flyout" palette layout
 		Given I have uploaded predefined palette "modelerPalette.json"
 		Given I have uploaded diagram "/test_resources/diagrams/v1-allNodes.json"
-		Given I have selected the "D3" rendering engine
 		Then I click the download button
 		Then I verify there were no schema validation errors
 

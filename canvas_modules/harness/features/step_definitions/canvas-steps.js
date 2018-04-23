@@ -11,8 +11,8 @@
 import { clickSVGAreaAt, findCategoryElement, findNodeIndexInPalette,
 	getNodeIdForLabel } from "./utilities/validate-utils.js";
 import { isSchemaValidationError } from "./utilities/test-utils.js";
+
 /* global browser */
-var nconf = require("nconf");
 
 module.exports = function() {
 
@@ -48,12 +48,7 @@ module.exports = function() {
 	});
 
 	this.Then(/^I right click at position (\d+), (\d+) to display the context menu$/, function(xCoord, yCoord) {
-		const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
-		if (D3RenderingEngine) {
-			browser.rightClick(".svg-area", Number(xCoord), Number(yCoord));
-		} else {
-			browser.rightClick(".svg-canvas", Number(xCoord), Number(yCoord));
-		}
+		browser.rightClick(".svg-area", Number(xCoord), Number(yCoord));
 	});
 
 	this.Then("I verify there were no schema validation errors", function() {
@@ -116,22 +111,12 @@ module.exports = function() {
 	});
 
 	this.Then("I select all objects in the canvas via Ctrl+A", function() {
-		const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
-		if (D3RenderingEngine) {
-			browser.click(".svg-area", Number(10), Number(10));
-		} else {
-			browser.click(".svg-canvas", Number(10), Number(10));
-		}
+		browser.click(".svg-area", Number(10), Number(10));
 		browser.keys(["Control", "A", "A", "Control"]);
 	});
 
 	this.Then("I select all objects in the canvas via Cmd+A", function() {
-		const D3RenderingEngine = nconf.get("renderingEngine") === "D3";
-		if (D3RenderingEngine) {
-			browser.click(".svg-area", Number(10), Number(10));
-		} else {
-			browser.click(".svg-canvas", Number(10), Number(10));
-		}
+		browser.click(".svg-area", Number(10), Number(10));
 		browser.keys(["Meta", "A", "A", "Meta"]);
 	});
 

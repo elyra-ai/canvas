@@ -6,12 +6,11 @@ Feature: Main2
   I want to load a canvas
   So I can add more flow to the canvas
 
-  Scenario: Sanity test from loaded file with D3 rendering engine
+  Scenario: Sanity test adding nodes and comments
 		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
 		Given I have selected the "Modal" palette layout
-		Given I have selected the "D3" rendering engine
 		Given I have selected the "Halo" connection type
 		Given I have uploaded palette "/test_resources/palettes/modelerPalette.json"
 		Given I have uploaded diagram "/test_resources/diagrams/commentColorCanvas.json"
@@ -41,11 +40,10 @@ Feature: Main2
 		Then I move comment 3 with text " comment 3 sample comment text" onto the canvas by 100, 100
 		Then I pause for 1 seconds
 
-	Scenario: Sanity test from loaded file with D3 rendering engine
+	Scenario: Sanity test from loaded file
 		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
-		Given I have selected the "D3" rendering engine
 		Given I have selected the "Ports" connection type
 		Given I have uploaded diagram "/test_resources/diagrams/modelerCanvas.json"
 		Given I have toggled the app side panel
@@ -55,11 +53,10 @@ Feature: Main2
 		Then I verify the number of port data links are 7
 		Then I verify the number of comment links are 0
 
-	Scenario: Sanity test from loaded file in legacy format with D3 rendering engine
+	Scenario: Sanity test from loaded file in legacy format
 		Then I resize the window size to 1400 width and 800 height
 		Given I am on the test harness
 		Given I have toggled the app side panel
-		Given I have selected the "D3" rendering engine
 		Given I have selected the "Ports" connection type
 		Given I have uploaded diagram "/test_resources/diagrams/x-modelerCanvas.json"
 		Given I have toggled the app side panel

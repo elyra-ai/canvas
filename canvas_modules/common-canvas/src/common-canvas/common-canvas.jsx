@@ -14,7 +14,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import ContextMenuWrapper from "../context-menu/context-menu-wrapper.jsx";
-import DiagramCanvasLegacy from "../legacy/diagram-canvas.jsx";
 import DiagramCanvasD3 from "./diagram-canvas-d3.jsx";
 import Palette from "../palette/palette.jsx";
 import PaletteFlyout from "../palette/palette-flyout.jsx";
@@ -141,7 +140,6 @@ export default class CommonCanvas extends React.Component {
 
 	initializeController(props) {
 		this.canvasController.setCanvasConfig({
-			enableRenderingEngine: props.config.enableRenderingEngine,
 			enableConnectionType: props.config.enableConnectionType,
 			enableNodeFormatType: props.config.enableNodeFormatType,
 			enableLinkType: props.config.enableLinkType,
@@ -306,27 +304,16 @@ export default class CommonCanvas extends React.Component {
 				/>);
 			}
 
-			if (this.props.config.enableRenderingEngine === "D3") {
-				canvas = (<DiagramCanvasD3
-					ref="canvas"
-					canvas={canvasJSON}
-					config={this.props.config}
-					canvasController={this.canvasController}
-				>
-					<div>
-						{contextMenuWrapper}
-					</div>
-				</DiagramCanvasD3>);
-			} else {
-				canvas = (<DiagramCanvasLegacy
-					ref="canvas"
-					canvas={canvasJSON}
-					parentDivId={this.itemsContainerDivId}
-					canvasController={this.canvasController}
-				>
+			canvas = (<DiagramCanvasD3
+				ref="canvas"
+				canvas={canvasJSON}
+				config={this.props.config}
+				canvasController={this.canvasController}
+			>
+				<div>
 					{contextMenuWrapper}
-				</DiagramCanvasLegacy>);
-			}
+				</div>
+			</DiagramCanvasD3>);
 
 			if (this.objectModel.getPaletteData()) {
 				if (this.props.config.enablePaletteLayout === "Modal") {

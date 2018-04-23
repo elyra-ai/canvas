@@ -25,8 +25,6 @@ import {
 	HORIZONTAL,
 	VERTICAL,
 	CHOOSE_FROM_LOCATION,
-	LEGACY_ENGINE,
-	D3_ENGINE,
 	VERTICAL_FORMAT,
 	HORIZONTAL_FORMAT,
 	HALO_CONNECTION,
@@ -77,7 +75,6 @@ export default class SidePanelForms extends React.Component {
 
 		this.layoutDirectionOptionChange = this.layoutDirectionOptionChange.bind(this);
 		this.useInternalObjectModel = this.useInternalObjectModel.bind(this);
-		this.renderingEngineOptionChange = this.renderingEngineOptionChange.bind(this);
 		this.connectionTypeOptionChange = this.connectionTypeOptionChange.bind(this);
 		this.nodeFormatTypeOptionChange = this.nodeFormatTypeOptionChange.bind(this);
 		this.linkTypeOptionChange = this.linkTypeOptionChange.bind(this);
@@ -419,10 +416,6 @@ export default class SidePanelForms extends React.Component {
 		this.props.setNarrowPalette(changeEvent.target.checked);
 	}
 
-	renderingEngineOptionChange(evt, obj) {
-		this.props.setRenderingEngine(obj.selected);
-	}
-
 	render() {
 		var divider = (<div className="sidepanel-children sidepanel-divider" />);
 		var space = (<div className="sidepanel-spacer" />);
@@ -621,22 +614,8 @@ export default class SidePanelForms extends React.Component {
 			</form>
 		</div>);
 
-		var renderingEngine = (<div className="sidepanel-children" id="sidepanel-rendering-engine">
-			<div className="sidepanel-headers">Rendering Engine</div>
-			<RadioGroup
-				name="rendering_radio"
-				dark
-				onChange={this.renderingEngineOptionChange}
-				choices={[
-					D3_ENGINE,
-					LEGACY_ENGINE
-				]}
-				selected={D3_ENGINE}
-			/>
-		</div>);
-
 		var connectionType = (<div className="sidepanel-children" id="sidepanel-connection-type">
-			<div className="sidepanel-headers">Connection Type (for 'D3')</div>
+			<div className="sidepanel-headers">Connection Type</div>
 			<RadioGroup
 				name="connection_type_radio"
 				dark
@@ -784,8 +763,6 @@ export default class SidePanelForms extends React.Component {
 				{divider}
 				{enableObjectModel}
 				{divider}
-				{renderingEngine}
-				{divider}
 				{connectionType}
 				{divider}
 				{nodeFormatType}
@@ -818,7 +795,6 @@ SidePanelForms.propTypes = {
 	setPaletteJSON2: PropTypes.func,
 	setLayoutDirection: PropTypes.func,
 	useInternalObjectModel: PropTypes.func,
-	setRenderingEngine: PropTypes.func,
 	setConnectionType: PropTypes.func,
 	setNodeFormatType: PropTypes.func,
 	setLinkType: PropTypes.func,
