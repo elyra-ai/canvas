@@ -283,6 +283,7 @@ deepFreeze(errorMessages);
 function getCopy(value) {
 	return JSON.parse(JSON.stringify(value));
 }
+
 var controller = new Controller();
 function reset() {
 	// setting of states needs to be done after property values.
@@ -363,6 +364,16 @@ describe("Properties Controller property values", () => {
 			["field4", null, 10, null, ""],
 			[null, false, 10, null, null]];
 		expect(expectedValue).to.eql(actualValue);
+	});
+	it("should get filtered `undefined` property value correctly", () => {
+		reset();
+		const actualValue = controller.getPropertyValue({ name: "param_undefined" }, true);
+		expect(actualValue).to.be.undefined;
+	});
+	it("should get filtered `null` property value correctly", () => {
+		reset();
+		const actualValue = controller.getPropertyValue({ name: "param_null" }, true);
+		expect(actualValue).to.equal(null);
 	});
 	it("should get filtered property values correctly", () => {
 		reset();
@@ -622,6 +633,7 @@ describe("Properties Controller datasetMetadata", () => {
 		expect(schemas).to.eql(["0", "data_1", "data_2", "3", "schema"]);
 	});
 });
+
 describe("Properties Controller property messages", () => {
 	it("should set property messages correctly", () => {
 		reset();
@@ -766,6 +778,7 @@ describe("Properties Controller property messages", () => {
 		expect(expectedValues).to.eql(actualValues);
 	});
 });
+
 describe("Properties Controller handlers", () => {
 	const propertyListener = sinon.spy();
 	beforeEach(() => {
@@ -774,7 +787,6 @@ describe("Properties Controller handlers", () => {
 			propertyListener: propertyListener
 		});
 	});
-
 	it("should fire event on setPropertyValues", () => {
 		controller.setPropertyValues({
 			param_str: "Testing listener",
@@ -788,12 +800,12 @@ describe("Properties Controller handlers", () => {
 		expect(propertyListener).to.have.property("callCount", 2);
 	});
 });
+
 describe("Properties Controller controls", () => {
 	it("should get simple control", () => {
 		reset();
 		controller.setForm(conditionForm);
 		const actualValue = controller.getControl({ name: "numberfieldMaxBins" });
-
 		const expectedValue = {
 			"name": "numberfieldMaxBins",
 			"label": {
@@ -900,6 +912,7 @@ describe("Properties Controller controls", () => {
 		expect(selectedRows[0]).to.equal(2);
 	});
 });
+
 describe("Properties Controller summary panel", () => {
 	it("should get summary panel controls", () => {
 		reset();

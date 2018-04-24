@@ -29,6 +29,13 @@ function toType(obj) {
 	return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
 }
 
+function copy(obj) {
+	if (typeof obj !== "undefined") {
+		return JSON.parse(JSON.stringify(obj));
+	}
+	return obj;
+}
+
 function formatMessage(intl, key, defaultMessage) {
 	let formattedMessage;
 	if (typeof intl !== "undefined" && intl !== null) {
@@ -204,5 +211,6 @@ module.exports = {
 	getTableFieldIndex: getTableFieldIndex,
 	convertInputDataModel: convertInputDataModel,
 	getFieldsFromControlValues: getFieldsFromControlValues,
-	isValidField: isValidField
+	isValidField: isValidField,
+	copy: copy
 };

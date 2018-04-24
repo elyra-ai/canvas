@@ -62,7 +62,7 @@
                     }
                   },
                   {
-                    "itemType": "summaryPanel",
+                    "itemType": "panel",
                     "panel": {
                       "id": "settings-summary",
                       "panelType": "summary",

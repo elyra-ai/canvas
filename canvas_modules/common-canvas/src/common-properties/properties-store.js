@@ -22,6 +22,7 @@ import errorMessagesReducer from "./reducers/error-messages";
 import datasetMetadataReducer from "./reducers/dataset-metadata";
 import rowSelectionsReducer from "./reducers/row-selections";
 import componentMetadataReducer from "./reducers/component-metadata";
+import PropertyUtils from "./util/property-utils.js";
 import isEqual from "lodash/isEqual";
 
 /* eslint max-depth: ["error", 6] */
@@ -53,7 +54,7 @@ export default class PropertiesStore {
 	}
 	getPropertyValues() {
 		const state = this.store.getState();
-		return JSON.parse(JSON.stringify(state.propertiesReducer));
+		return PropertyUtils.copy(state.propertiesReducer);
 	}
 	setPropertyValues(values) {
 		this.store.dispatch(setPropertyValues(values));
@@ -96,7 +97,7 @@ export default class PropertiesStore {
 	getControlStates() {
 		const state = this.store.getState();
 		// get a copy and not direct reference
-		return JSON.parse(JSON.stringify(state.controlStatesReducer));
+		return PropertyUtils.copy(state.controlStatesReducer);
 	}
 
 	setControlStates(values) {
@@ -124,7 +125,7 @@ export default class PropertiesStore {
 	getPanelStates() {
 		const state = this.store.getState();
 		// get a copy and not direct reference
-		return JSON.parse(JSON.stringify(state.panelStatesReducer));
+		return PropertyUtils.copy(state.panelStatesReducer);
 	}
 	setPanelStates(values) {
 		// check to see if values are equal before firing event
@@ -207,7 +208,7 @@ export default class PropertiesStore {
 	}
 	getErrorMessages() {
 		const state = this.store.getState();
-		return JSON.parse(JSON.stringify(state.errorMessagesReducer));
+		return PropertyUtils.copy(state.errorMessagesReducer);
 	}
 	setErrorMessages(values) {
 		// check to see if values are equal before firing event
@@ -234,7 +235,7 @@ export default class PropertiesStore {
 	}
 	getDatasetMetadata() {
 		const state = this.store.getState();
-		return JSON.parse(JSON.stringify(state.datasetMetadataReducer));
+		return PropertyUtils.copy(state.datasetMetadataReducer);
 	}
 
 	/*

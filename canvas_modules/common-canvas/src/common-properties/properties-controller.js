@@ -658,7 +658,7 @@ export default class PropertiesController {
 				return filteredValue;
 			}
 			// copy array to modify it and clear out disabled/hidden values
-			filteredValue = JSON.parse(JSON.stringify(propertyValue));
+			filteredValue = PropertyUtils.copy(propertyValue);
 			if (Array.isArray(filteredValue)) {
 				for (let rowIdx = 0; rowIdx < filteredValue.length; rowIdx++) {
 					const rowValue = filteredValue[rowIdx];

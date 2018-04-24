@@ -415,7 +415,7 @@ class EditorForm extends React.Component {
 					{description}
 				</div>);
 		}
-		return <div>Unknown: {uiItem.itemType}</div>;
+		return <div key={"unknown." + key}>Unknown: {uiItem.itemType}</div>;
 	}
 
 	generateAction(key, action) {

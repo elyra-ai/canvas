@@ -140,6 +140,9 @@ export default class AbstractTable extends React.Component {
 
 	setReadOnlyColumnValue(controlValue) {
 		const controlValues = controlValue ? controlValue : this.props.controller.getPropertyValue(this.props.propertyId);
+		if (!Array.isArray(controlValues)) {
+			return controlValues;
+		}
 		for (var rowIndex = 0; rowIndex < controlValues.length; rowIndex++) {
 			for (var colIndex = 0; colIndex < this.props.control.subControls.length; colIndex++) {
 				const columnDef = this.props.control.subControls[colIndex];
@@ -569,6 +572,9 @@ export default class AbstractTable extends React.Component {
 	}
 
 	makeCells(rows, controlValue, stateStyle, stateDisabled) {
+		if (!Array.isArray(controlValue)) {
+			return;
+		}
 		for (let rowIndex = 0; rowIndex < controlValue.length; rowIndex++) {
 			const columns = [];
 			this.onPanelContainer[rowIndex] = [];

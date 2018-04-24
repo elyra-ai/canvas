@@ -48,7 +48,7 @@
                     }
                   },
                   {
-                    "itemType": "summaryPanel",
+                    "itemType": "panel",
                     "panel": {
                       "id": "aggregates-summary",
                       "panelType": "summary",
@@ -276,7 +276,7 @@
                     }
                   },
                   {
-                    "itemType": "summaryPanel",
+                    "itemType": "panel",
                     "panel": {
                       "id": "aggregate-exprs-summary",
                       "panelType": "summary",
