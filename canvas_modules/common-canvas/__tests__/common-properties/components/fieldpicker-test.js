@@ -154,9 +154,9 @@ function clickFilter(wrapper, type, enabled) {
 	filters.forEach((node) => {
 		if (node.prop("data-type") === type) {
 			if (enabled === true) {
-				expect(node.prop("disabled")).to.equal(false);
+				expect(node.find("svg").prop("disabled")).to.equal(false);
 			} else {
-				expect(node.prop("disabled")).to.equal(true);
+				expect(node.find("svg").prop("disabled")).to.equal(true);
 			}
 		}
 	});

@@ -351,7 +351,7 @@ class FieldPicker extends React.Component {
 					delay={TOOL_TIP_DELAY}
 					className="properties-tooltips"
 				>
-					<div id="reset-fields-button"
+					<button type="button" id="reset-fields-button"
 						className="button"
 						onClick={this.handleReset}
 						onMouseEnter={this.mouseEnterResetButton}
@@ -361,13 +361,15 @@ class FieldPicker extends React.Component {
 						<div className="reset-fields-button-icon">
 							<Icon type="reset" />
 						</div>
-					</div>
+					</button>
 				</Tooltip>
 			</div>);
 	}
 
 	_genFilterTypes() {
 		const that = this;
+		const filterLabel = PropertyUtils.formatMessage(this.props.intl,
+			MESSAGE_KEYS.FIELDPICKER_FILTER_LABEL, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_FILTER_LABEL);
 		const filters = this.filterList.map(function(filter, ind) {
 			let enabled = true;
 			for (let i = 0; i < that.state.filterIcons.length; i++) {
@@ -393,22 +395,19 @@ class FieldPicker extends React.Component {
 							className="properties-tooltips"
 							disable={isEmpty(filter.type)}
 						>
-							<li className="filter-list-li filter"
+							<button type="button" className="filter-list-li filter"
 								data-type={filter.type}
 								onClick={that.filterType.bind(that)}
-								disabled={!enabled}
+								aria-label={filterLabel + " " + filter.type}
 							>
 								<Icon type={filter.type} disabled={!enabled} />
-							</li>
+							</button>
 						</Tooltip>
 					</div>
 				</div>
 			);
 			return (row);
 		});
-
-		const filterLabel = PropertyUtils.formatMessage(this.props.intl,
-			MESSAGE_KEYS.FIELDPICKER_FILTER_LABEL, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_FILTER_LABEL);
 		return (
 			<ul id="field-picker-filter-list">
 				<li id="filter-list-title" className="filter-list-li">

@@ -112,9 +112,9 @@ export default class ControlFactory {
 			}
 			let numberGenerator;
 			if (control.label.numberGenerator) {
-				numberGenerator = (<label>{"\u00A0\u00A0"}<a className="number-generator" onClick={generateNumber} style={stateStyle}>
+				numberGenerator = (<label>{"\u00A0\u00A0"}<button type="button" className="number-generator" onClick={generateNumber} style={stateStyle}>
 					{control.label.numberGenerator.label.default}
-				</a></label>);
+				</button></label>);
 			}
 			let hasFilter = false;
 			if (control.subControls) {

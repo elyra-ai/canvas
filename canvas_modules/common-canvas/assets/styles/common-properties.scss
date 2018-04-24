@@ -343,61 +343,6 @@ input.number,
 	z-index: 1;
 }
 
-/* Field Picker */
-
-#field-picker-back-button {
-	height: 32px;
-	width: 32px;
-	border: 0;
-	padding: 0;
-	padding-top: 2px;
-	padding-left: 4px;
-}
-
-#field-picker-filter-list {
-	list-style-type: none;
-	float: right;
-	margin-top: 6px;
-	margin-bottom: 0;
-	width: 50%;
-	height: 22px;
-}
-
-#field-picker-back-button svg.icon {
-	overflow: visible;
-}
-
-#field-picker-back-button > svg:not(:root) {
-	margin-right: 5px;
-	transform: translateY(4px);
-}
-
-#filter-list-title {
-	width: auto;
-	height: 32px;
-}
-
-.filter-list-li {
-	float: left;
-	width: 14px;
-	margin-right: 2px;
-	padding: 2px;
-}
-
-.filter-list-li.filter:hover {
-	cursor: pointer;
-	background-color: #F0F3F6;
-}
-
-#field-picker-table {
-	width: 100%;
-}
-
-#field-picker-buttons-container {
-	display: flex;
-	float: right;
-	justify-content: space-between;
-}
 
 #add-fields-button {
 	border: 0;
@@ -425,35 +370,6 @@ input.number,
 
 .button .button__text {
 	padding-bottom: 6px;
-}
-
-#reset-fields-button {
-	border: 0;
-	float: right;
-	height: 32px;
-	width: 90px;
-	padding-right: 0;
-	line-height: 0.5;
-}
-
-#reset-fields-button-label {
-	float: left;
-	padding-top: 5px;
-	padding-right: 5px;
-	text-decoration: underline;
-}
-
-.reset-fields-button-icon {
-	float: left;
-	margin-top: -5px;
-}
-.reset-fields-button-icon > svg {
-	height: 18px;
-	width: 18px;
-}
-
-#reset-fields-button:hover .reset-fields-button-icon > svg > path {
-	fill: #FFFFFF;
 }
 
 .remove-fields-button > svg {
@@ -720,12 +636,6 @@ input[type="number"][disabled].number--light+.number__spinnerdiv .numpinput__spi
 .editor_control_area div div input[type="text"],
 .editor_control_area div div input[type="number"] {
 	padding-right: 0;
-}
-
-.number-generator {
-	color: #AEAEAE;
-	text-decoration: underline;
-	cursor: pointer;
 }
 
 .left-padding-15 {

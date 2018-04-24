@@ -38,6 +38,10 @@
 	align-items: center;
 	height: 100%;
 	width: 45px;
+	-webkit-appearance: none;
+	border: 0;
+	outline: none;
+	padding: 0;
 	&:hover {
 		background-color: #EFEFEF;
 		cursor: pointer;

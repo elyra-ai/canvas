@@ -368,12 +368,17 @@ export default class AbstractTable extends React.Component {
 			? tableButtonConfig.removeButtonFunction
 			: this.removeSelected;
 		const disabled = !this.state.enableRemoveIcon || stateDisabled.disabled;
-		const removeButton = (<div className="remove-fields-button"
+		const removeButtonLabel = PropertyUtils.formatMessage(this.props.intl,
+			MESSAGE_KEYS.STRUCTURETABLE_REMOVEBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.STRUCTURETABLE_REMOVEBUTTON_LABEL);
+		const removeButton = (<a className="remove-fields-button"
+			href="#"
 			onClick={removeOnClick}
 			disabled={disabled}
+			role="button"
+			aria-label={removeButtonLabel}
 		>
 			<Icon type="remove" disabled={disabled} />
-		</div>);
+		</a>);
 
 		let addButtonDisabled = false;
 		this.addOnClickCallback = (tableButtonConfig && tableButtonConfig.addButtonFunction)
@@ -388,7 +393,9 @@ export default class AbstractTable extends React.Component {
 		}
 		const addButton = (<Button
 			id="add-fields-button"
+			role="button"
 			icon="plus"
+			href="#"
 			onClick={this.addOnClick.bind(this, this.props.control)}
 			disabled={addButtonDisabled}
 		>

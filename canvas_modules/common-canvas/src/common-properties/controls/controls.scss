@@ -7,10 +7,14 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-/*
-* Override for current version of ap-components
-* Fixed in new versions
-*/
-.properties-action-button  {
-	padding: 1px 2px;
+@import "./selectcolumns/selectcolumns.scss";
+
+.number-generator {
+	color: #3D70B2;
+	text-decoration: underline;
+	cursor: pointer;
+	-webkit-appearance: none;
+	border: 0;
+	padding: 0;
+	background-color: inherit;
 }

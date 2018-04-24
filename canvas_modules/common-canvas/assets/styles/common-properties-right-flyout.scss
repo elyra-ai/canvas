@@ -58,8 +58,14 @@
 	align-items: center;
 	padding-left: 20px;
 	padding-right: 20px;
+	border: 0; // override for button styling
 	border-bottom: 2px solid #DFE3E6;
 	cursor: pointer;
+	-webkit-appearance: none;
+	outline: none;
+	&:focus {
+		border: 1px solid #5596E6;
+	}
 }
 
 .category-title-right-flyout-panel:hover {

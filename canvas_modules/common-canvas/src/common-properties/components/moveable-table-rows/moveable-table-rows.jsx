@@ -30,22 +30,22 @@ export default class MoveableTableRows extends React.Component {
 		const bottomEnabled = (selected.length !== 0 && selected[selected.length - 1] !== controlValue.length - 1) && !this.props.disabled;
 		const topImages = (
 			<div key="topImages">
-				<div className="table-row-move-button" onClick={this.topMoveRow} disabled={!topEnabled}>
+				<button type="button" className="table-row-move-button" onClick={this.topMoveRow} disabled={!topEnabled}>
 					<Icon type="moveTop" disabled={!topEnabled} />
-				</div>
-				<div className="table-row-move-button" onClick={this.upMoveRow} disabled={!topEnabled}>
+				</button>
+				<button type="button" className="table-row-move-button" onClick={this.upMoveRow} disabled={!topEnabled}>
 					<Icon type="moveUp" disabled={!topEnabled} />
-				</div>
+				</button>
 			</div>
 		);
 		const bottomImages = (
 			<div key="bottomImages">
-				<div className="table-row-move-button" onClick={this.downMoveRow} disabled={!bottomEnabled}>
+				<button type="button" className="table-row-move-button" onClick={this.downMoveRow} disabled={!bottomEnabled}>
 					<Icon type="moveDown" disabled={!bottomEnabled} />
-				</div>
-				<div className="table-row-move-button" onClick={this.bottomMoveRow} disabled={!bottomEnabled}>
+				</button>
+				<button type="button" className="table-row-move-button" onClick={this.bottomMoveRow} disabled={!bottomEnabled}>
 					<Icon type="moveBottom" disabled={!bottomEnabled} />
-				</div>
+				</button>
 			</div>
 		);
 		return [topImages, bottomImages];

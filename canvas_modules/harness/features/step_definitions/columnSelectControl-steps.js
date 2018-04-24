@@ -46,12 +46,15 @@ module.exports = function() {
 	this.Then(/^I select the "([^"]*)" row in the "([^"]*)" panel$/, function(fieldName, parameterName) {
 		const tableRows = browser.$("#flexible-table-" + parameterName).$$(".column-select-table-row");
 		expect(tableRows.length).not.toEqual(0);
+		let found = false;
 		for (var idx = 0; idx < tableRows.length; idx++) {
 			if (tableRows[idx].getText() === fieldName) {
 				tableRows[idx].click();
+				found = true;
 				break;
 			}
 		}
+		expect(found).toBe(true);
 	});
 
 	this.Then(/^I validate the "([^"]*)" message for the "([^"]*)" parameter of "([^"]*)"$/, function(msgType, parameterName, msg) {

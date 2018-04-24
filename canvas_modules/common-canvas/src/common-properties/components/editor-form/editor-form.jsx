@@ -183,13 +183,13 @@ class EditorForm extends React.Component {
 
 				tabContent.push(
 					<div key={this._getContainerIndex(hasAlertsTab, i) + "-" + key} className="category-title-container-right-flyout-panel">
-						<a onClick={this._showCategoryPanel.bind(this, tab.text)}
+						<button type="button" onClick={this._showCategoryPanel.bind(this, tab.text)}
 							id={"category-title-" + this._getContainerIndex(hasAlertsTab, i) + "-right-flyout-panel"}
 							className="category-title-right-flyout-panel"
 						>
 							{tab.text.toUpperCase()}{this._getMessageCountForCategory(tab)}
 							{panelArrow}
-						</a>
+						</button>
 						{panelItemsContainer}
 						{additionalComponent}
 					</div>
@@ -382,9 +382,9 @@ class EditorForm extends React.Component {
 				textClass = "link-text " + uiItem.textType;
 			}
 			const text = (
-				<div className={textClass} onClick={this._handleMessageClick.bind(this, uiItem.controlId)}>
+				<a href="#" className={textClass} onClick={this._handleMessageClick.bind(this, uiItem.controlId)}>
 					{PropertyUtil.evaluateText(uiItem.text, this.props.controller)}
-				</div>);
+				</a>);
 			return <div key={"link-text." + key} className={"link-text-container " + uiItem.textType} >{icon}{text}</div>;
 		} else if (uiItem.itemType === "hSeparator") {
 			return <hr key={"h-separator." + key} className="h-separator" />;

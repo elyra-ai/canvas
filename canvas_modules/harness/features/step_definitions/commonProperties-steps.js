@@ -18,7 +18,7 @@ module.exports = function() {
 		const labelName = (mode === "flyout") ? tabName.toUpperCase() : tabName;
 		const tabList = (mode === "flyout") ? browser.$$(".category-title-container-right-flyout-panel") : browser.$(".tabs__list").$$("li");
 		for (var idx = 0; idx < tabList.length; idx++) {
-			const tabLabel = (mode === "flyout") ? tabList[idx].$("a") : tabList[idx];
+			const tabLabel = (mode === "flyout") ? tabList[idx].$("button") : tabList[idx];
 			if (tabLabel.getText() === labelName) {
 				tabLabel.click();
 				break;

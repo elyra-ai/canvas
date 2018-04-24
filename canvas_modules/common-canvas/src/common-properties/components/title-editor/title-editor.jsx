@@ -43,14 +43,14 @@ export default class TitleEditor extends Component {
 
 	render() {
 		const propertiesTitleEdit = this.props.labelEditable === false ? <div />
-			: (<a className="title-edit-right-flyout-panel" onClick={this.editTitleClickHandler}>
+			: (<button type="button" className="title-edit-right-flyout-panel" onClick={this.editTitleClickHandler}>
 				<Icon type="edit" />
-			</a>);
+			</button>);
 
 		const helpButton = this.props.help
-			? (<a className="title-help-right-flyout-panel" onClick={this.helpClickHandler}>
+			? (<button type="button" className="title-help-right-flyout-panel" onClick={this.helpClickHandler}>
 				<Icon type="info" />
-			</a>)
+			</button>)
 			: <div />;
 		return (
 			<div className="node-title-container-right-flyout-panel">
