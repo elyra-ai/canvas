@@ -80,7 +80,7 @@
     }
   ],
   "uihints": {
-    "id": "ibm.Custom",
+    "id": "IBM.Custom.Controls",
     "icon": "images/custom.svg",
     "label": {
       "default": "Custom Controls"
