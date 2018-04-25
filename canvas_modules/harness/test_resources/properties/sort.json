@@ -53,7 +53,8 @@
                             "propType": "string",
                             "isList": false,
                             "isMap": false
-                          }
+                          },
+                          "role": "column"
                         },
                         {
                           "name": "sort_order",
@@ -205,87 +206,105 @@
         "use_custom_name": false,
         "custom_name": "",
         "keys": [
-					["Na","Ascending"],
-					["Drug","Descending"],
-					["Sex","Ascending"],
-					["Age","Descending"],
-					["BP","Ascending"],
-					["Cholesterol","Ascending"]
-				]
+          [
+            "Na",
+            "Ascending"
+          ],
+          [
+            "Drug",
+            "Descending"
+          ],
+          [
+            "Sex",
+            "Ascending"
+          ],
+          [
+            "Age",
+            "Descending"
+          ],
+          [
+            "BP",
+            "Ascending"
+          ],
+          [
+            "Cholesterol",
+            "Ascending"
+          ]
+        ]
       },
-			"datasetMetadata": {
+      "datasetMetadata": {
         "fields": [
           {
             "name": "Age",
             "type": "integer",
-						"metadata": {
-							"description": "",
-            	"measure": "range",
-            	"modeling_role": "input"
-						}
+            "metadata": {
+              "description": "",
+              "measure": "range",
+              "modeling_role": "input"
+            }
           },
           {
             "name": "Sex",
             "type": "string",
-						"metadata": {
-							"description": "",
-            	"measure": "discrete",
-            	"modeling_role": "input"
-						}
+            "metadata": {
+              "description": "",
+              "measure": "discrete",
+              "modeling_role": "input"
+            }
           },
           {
             "name": "BP",
             "type": "string",
-						"metadata": {
-							"description": "",
-            	"measure": "discrete",
-            	"modeling_role": "input"
-						}
+            "metadata": {
+              "description": "",
+              "measure": "discrete",
+              "modeling_role": "input"
+            }
           },
           {
             "name": "Cholesterol",
             "type": "string",
-						"metadata": {
-							"description": "",
-            	"measure": "discrete",
-            	"modeling_role": "input"
-						}
+            "metadata": {
+              "description": "",
+              "measure": "discrete",
+              "modeling_role": "input"
+            }
           },
           {
             "name": "Na",
             "type": "double",
-						"metadata": {
-							"description": "",
-            	"measure": "range",
-            	"modeling_role": "input"
-						}
+            "metadata": {
+              "description": "",
+              "measure": "range",
+              "modeling_role": "input"
+            }
           },
           {
             "name": "K",
             "type": "double",
-						"metadata": {
-							"description": "",
-            	"measure": "range",
-            	"modeling_role": "input"
-						}
+            "metadata": {
+              "description": "",
+              "measure": "range",
+              "modeling_role": "input"
+            }
           },
           {
             "name": "Drug",
             "type": "string",
-						"metadata": {
-							"description": "",
-            	"measure": "discrete",
-            	"modeling_role": "input"
-						}
+            "metadata": {
+              "description": "",
+              "measure": "discrete",
+              "modeling_role": "input"
+            }
           },
           {
             "name": "Na_to_K",
             "type": "double",
-						"metadata": {
-							"description": "",
-            	"measure": "range",
-            	"modeling_role": "input"
-						}
+            "metadata": {
+              "description": "",
+              "measure": "range",
+              "modeling_role": "input"
+            }
           }
         ]
       }
