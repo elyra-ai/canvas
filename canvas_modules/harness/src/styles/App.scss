@@ -12,14 +12,12 @@
 	overflow: hidden;
 }
 
-.canvas-container {
+.canvas-container,
+.canvas-container.double {
 	height: calc(100% - 52px);
-	width: 100%;
-}
-
-.canvas-container-double {
-	height: calc(100vh - 50px);
-	width: 100%;
+	// width: 100%;
+	-webkit-transition: width 0.5s;
+	transition: width 0.5s;
 }
 
 .canvas-single {
@@ -430,6 +428,8 @@
 	width: 40%;
 }
 
+/* These are used in custom common-properties */
+
 .custom-slider {
 	display: flex;
 	overflow-x: hidden;
@@ -494,4 +494,14 @@
 
 .list-item-containers .list-item.overflow {
 	width: 170px;
+}
+
+/* These are used for customizaing messages in the notification panel */
+.sidepanel-notification-timestamp {
+	img {
+		width: 10px;
+		height: 10px;
+		margin-top: -3px;
+		margin-right: 5px;
+	}
 }

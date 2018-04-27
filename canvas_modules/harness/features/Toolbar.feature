@@ -64,6 +64,7 @@ Feature: Toolbar
 		Then I click on the secondary toolbar create comment button
 		Then I edit comment 1 with the comment text "New Comment"
 		Then I select node 5 the "Var. File" node
+		Then I click on the secondary toolbar overflow button
 		Then I click on the secondary toolbar delete button
 		Then I verify the number of nodes are 5
 		Then I select all the comments in the canvas
@@ -179,20 +180,20 @@ Feature: Toolbar
 		Then I verify the comment 5 position is "translate(10, 10)"
 		Then I click extra canvas zoom in
 		Then I click extra canvas zoom in
-		Then I verify extra canvas zoom transform value is "translate(515.025,92.49) scale(1.2100000000000002)"
+		Then I verify extra canvas zoom transform value is "translate(515.025,91.99) scale(1.2100000000000002)"
 		Then I click on the extra canvas secondary toolbar create comment button
-		Then I verify the comment 6 position is "translate(-415.6404958677685, -66.4380165289256)"
+		Then I verify the comment 6 position is "translate(-415.6404958677685, -66.02479338842974)"
 		Then I click extra canvas zoom out
 		Then I click extra canvas zoom out
 		Then I click extra canvas zoom out
 		Then I click extra canvas zoom out
-		Then I verify extra canvas zoom transform value is "translate(728.3059900280034,135.96612253261387) scale(0.8264462809917354)"
+		Then I verify extra canvas zoom transform value is "translate(728.3059900280034,135.29536916877262) scale(0.8264462809917354)"
 		Then I click on the extra canvas secondary toolbar create comment button
-		Then I verify the comment 7 position is "translate(-871.2502479338842, -154.5190082644628)"
+		Then I verify the comment 7 position is "translate(-871.2502479338842, -153.70739669421488)"
 		Then I click on the extra canvas secondary toolbar create comment button
-		Then I verify the comment 8 position is "translate(-861.2502479338842, -144.5190082644628)"
+		Then I verify the comment 8 position is "translate(-861.2502479338842, -143.70739669421488)"
 
 		# Add 5th comment to first canvas
 		Then I click zoom to fit
 		Then I click on the secondary toolbar create comment button
-		Then I verify the comment 5 position is "translate(-1502.8052000953594, -404.4373140495868)"
+		Then I verify the comment 5 position is "translate(-1507.3213393854303, -404.4373140495868)"

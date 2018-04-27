@@ -9,7 +9,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { DND_DATA_TEXT, TIP_TYPE_PALETTE_ITEM } from "../../constants/common-constants.js";
+import { DND_DATA_TEXT, TIP_TYPE_PALETTE_ITEM } from "../common-canvas/constants/canvas-constants.js";
 
 class PaletteContentNode extends React.Component {
 	constructor(props) {

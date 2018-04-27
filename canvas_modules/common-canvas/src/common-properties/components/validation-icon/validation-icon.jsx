@@ -9,14 +9,13 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import APIcon from "ap-components-react/dist/components/Icon";
 import Icon from "./../../../icons/icon.jsx";
 
 export default class ValidationIcon extends React.Component {
 	constructor(props) {
 		super(props);
-		this.errorIcon = <APIcon type="error-o" />;
-		this.warningIcon = <Icon type="warn" />;
+		this.errorIcon = <Icon type="error" />;
+		this.warningIcon = <Icon type="warning" />;
 	}
 
 	render() {

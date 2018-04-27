@@ -60,6 +60,7 @@ _defineConstant("API_ADD_PALETTE_ITEM", "Add PaletteItem");
 _defineConstant("API_SET_NODE_LABEL", "Set Node Label");
 _defineConstant("API_SET_INPUT_PORT_LABEL", "Set Input Port Label");
 _defineConstant("API_SET_OUTPUT_PORT_LABEL", "Set Output Port Label");
+_defineConstant("API_ADD_NOTIFICATION_MESSAGE", "Add Notification Message");
 _defineConstant("INPUT_PORT", "inputPort");
 _defineConstant("OUTPUT_PORT", "outputPort");
 
@@ -67,3 +68,8 @@ _defineConstant("TIP_PALETTE", "Palette");
 _defineConstant("TIP_NODES", "Nodes");
 _defineConstant("TIP_PORTS", "Ports");
 _defineConstant("TIP_LINKS", "Links");
+
+_defineConstant("ERROR", "error");
+_defineConstant("WARNING", "warning");
+_defineConstant("READY", "ready");
+_defineConstant("OTHER", "other");

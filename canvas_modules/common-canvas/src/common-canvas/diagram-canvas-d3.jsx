@@ -15,7 +15,7 @@ import PropTypes from "prop-types";
 
 import {
 	DND_DATA_TEXT
-} from "../../constants/common-constants.js";
+} from "./constants/canvas-constants";
 
 import logger from "../../utils/logger";
 import CanvasD3Layout from "./svg-canvas-d3.js";

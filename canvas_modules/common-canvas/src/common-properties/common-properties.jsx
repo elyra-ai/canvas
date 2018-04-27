@@ -19,12 +19,13 @@ import PropertiesController from "./properties-controller";
 import logger from "../../utils/logger";
 import PropertyUtils from "./util/property-utils";
 import { MESSAGE_KEYS, MESSAGE_KEYS_DEFAULTS } from "./constants/constants";
-import { FLYOUT_WIDTH } from "./../constants/constants";
 import { Size } from "./constants/form-constants";
 import isEqual from "lodash/isEqual";
 import TitleEditor from "./components/title-editor";
 
 import { injectIntl, intlShape } from "react-intl";
+
+import globalStyles from "../../assets/styles/global.scss";
 
 class CommonProperties extends React.Component {
 	constructor(props) {
@@ -97,11 +98,11 @@ class CommonProperties extends React.Component {
 
 	getEditorWidth() {
 		const editorSize = this.propertiesController.getForm().editorSize;
-		let width = FLYOUT_WIDTH.SMALL;
+		let width = parseInt(globalStyles.smallFlyoutWidth, 10);
 		if (editorSize === Size.MEDIUM) {
-			width = FLYOUT_WIDTH.MEDIUM;
+			width = parseInt(globalStyles.mediumFlyoutWidth, 10);
 		} else if (editorSize === Size.LARGE) {
-			width = FLYOUT_WIDTH.LARGE;
+			width = parseInt(globalStyles.mediumFlyoutWidth, 10);
 		}
 		return width;
 	}

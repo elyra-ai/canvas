@@ -6,7 +6,7 @@
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
-
+/* eslint no-console: "off" */
 /* global browser */
 
 var nconf = require("nconf");
@@ -127,6 +127,58 @@ module.exports = function() {
 		node.inputs.push(newInputPort);
 		node.outputs.push(newOutputPort);
 		textField.setValue(JSON.stringify(pipelineFlow));
+	});
+
+	this.Then(/^I click on the toggle with label "([^"]*)" in the api sidepanel$/, function(toggleLabel) {
+		const apiSidePanel = browser.$("#sidepanel-api-notificationMessages");
+		const labels = apiSidePanel.$$("label");
+		let toggleFound = false;
+		for (const label of labels) {
+			if (label.getAttribute("for") === toggleLabel) {
+				label.click();
+				toggleFound = true;
+				break;
+			}
+		}
+		expect(toggleFound).toEqual(true);
+	});
+
+	this.Then(/^I have selected the "([^"]*)" message type in the api sidepanel$/, function(messageType) {
+		const apiSidePanel = browser.$("#sidepanel-api-notificationMessages");
+		const radioOptions = apiSidePanel.$$("div")[5].$$("label");
+
+		try {
+			if (messageType === "ready") {
+				const ready = radioOptions[0];
+				ready.scroll();
+				browser.pause(500);
+				ready.click();
+			} else if (messageType === "warning") {
+				const warning = radioOptions[1];
+				warning.scroll();
+				browser.pause(500);
+				warning.click();
+			} else if (messageType === "error") {
+				const error = radioOptions[2];
+				error.scroll();
+				browser.pause(500);
+				error.click();
+			} else if (messageType === "other") {
+				const other = radioOptions[3];
+				other.scroll();
+				browser.pause(500);
+				other.click();
+			}
+		} catch (err) {
+			console.log("Err = " + err);
+			throw err;
+		}
+	});
+
+	this.When(/^I enter "([^"]*)" into the message details field$/, function(textboxValue) {
+		const apiSidePanel = browser.$("#sidepanel-api-notificationMessages");
+		const textbox = apiSidePanel.$("#messageDetails");
+		textbox.setValue("", textboxValue);
 	});
 
 	function getAPISubmitButton() {

@@ -12,7 +12,7 @@ import PropTypes from "prop-types";
 import Tooltip from "../tooltip/tooltip.jsx";
 import ObserveSize from "react-observe-size";
 import Icon from "../icons/icon.jsx";
-import { TOOLBAR } from "../../constants/common-constants.js";
+import { TOOLBAR } from "../common-canvas/constants/canvas-constants.js";
 
 // eslint override
 /* global window document */
@@ -24,13 +24,15 @@ class Toolbar extends React.Component {
 
 		this.state = {
 			config: this.props.config,
-			defaultToolbarWidth: 256, // width of toolbar with default zoom icons
-			maxToolbarWidth: 0, // width of toolbar if displaying all icons and dividers
+			notificationConfig: this.props.notificationConfig,
+			defaultToolbarWidth: TOOLBAR.ICON_WIDTH * 5, // Width of toolbar with palette, zoom, and notification icons
+			maxToolbarWidth: 0, // Width of toolbar if displaying all icons and dividers
 			dividerCount: 0,
 			showExtendedMenu: false
 		};
 
 		this.generatePaletteIcon = this.generatePaletteIcon.bind(this);
+		this.generateNotificationIcon = this.generateNotificationIcon.bind(this);
 		this.toggleShowExtendedMenu = this.toggleShowExtendedMenu.bind(this);
 		this.toolbarMenuActionHandler = this.toolbarMenuActionHandler.bind(this);
 	}
@@ -38,6 +40,21 @@ class Toolbar extends React.Component {
 	componentDidMount() {
 		if (this.props.config) {
 			this.calculateMaxToolbarWidth(this.props.config);
+		}
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.notificationConfig) {
+			const newAction = this.props.canvasController.determineNotificationBellIconState(nextProps.notificationConfig.enable);
+
+			if (this.state.notificationConfig && ((this.state.notificationConfig.action !== newAction) ||
+					(this.state.notificationConfig.label !== nextProps.notificationConfig.label) ||
+					(this.state.notificationConfig.enable !== nextProps.notificationConfig.enable) ||
+					(typeof nextProps.notificationConfig.callback === "undefined"))) {
+				const newConfig = Object.assign({}, nextProps.notificationConfig);
+				newConfig.action = newAction;
+				this.setState({ notificationConfig: newConfig });
+			}
 		}
 	}
 
@@ -51,6 +68,12 @@ class Toolbar extends React.Component {
 			}
 		}
 		return null;
+	}
+
+	// Need to set a className for notification bell icon in the DOM
+	// to be used in notification-panel.jsx: handleNotificationPanelClickOutside()
+	getActionClassName(action) {
+		return action.indexOf("bell") > -1 ? "notificationBellIcon" : action;
 	}
 
 	calculateMaxToolbarWidth(list) {
@@ -116,6 +139,8 @@ class Toolbar extends React.Component {
 					if (actionObj.enable === true) {
 						if (actionObj.action.startsWith("palette")) {
 							return that.generatePaletteIcon(actionObj, overflow);
+						} else if (actionObj.action.startsWith("bell")) {
+							return that.generateNotificationIcon(actionObj, overflow);
 						}
 						return that.generateEnabledActionIcon(actionObj, actionId, actionsHandler, overflow);
 					}
@@ -165,7 +190,7 @@ class Toolbar extends React.Component {
 			disableTooltip = true;
 		}
 		return (
-			<li id={actionId} key={actionId} className={"list-item-containers " + overflowClassName}>
+			<li id={actionId} key={actionId} className={"list-item-containers " + overflowClassName + " " + this.getActionClassName(actionObj.action)}>
 				<Tooltip id={tooltipId} tip={actionObj.label} disable={disableTooltip}>
 					<a onClick={actionClickHandler} className={"list-item " + overflowClassName} >
 						<div className={"toolbar-item " + overflowClassName}>
@@ -193,7 +218,7 @@ class Toolbar extends React.Component {
 			disableTooltip = true;
 		}
 		return (
-			<li id={actionId} key={actionId} className={"list-item-containers " + overflowClassName}>
+			<li id={actionId} key={actionId} className={"list-item-containers " + overflowClassName + " " + this.getActionClassName(actionObj.action)}>
 				<Tooltip id={tooltipId} tip={actionObj.label} disable={disableTooltip}>
 					<a className={"list-item list-item-disabled " + overflowClassName} >
 						<div className={"toolbar-item " + overflowClassName}>
@@ -211,12 +236,23 @@ class Toolbar extends React.Component {
 		actionObj.callback = this.props.canvasController.openPalette.bind(this.props.canvasController);
 		let palette = this.generateEnabledActionIcon(actionObj, "palette-open-action", null, overflow);
 
-		if (this.props.paletteState) {
+		if (this.props.isPaletteOpen) {
 			actionObj.action = "paletteClose";
 			actionObj.callback = this.props.canvasController.closePalette.bind(this.props.canvasController);
 			palette = this.generateEnabledActionIcon(actionObj, "palette-close-action", null, overflow);
 		}
 		return palette;
+	}
+
+	generateNotificationIcon(actionObj, overflow) {
+		actionObj.callback = this.props.canvasController.openNotificationPanel.bind(this.props.canvasController);
+		let notification = this.generateEnabledActionIcon(actionObj, "notification-open-action", null, overflow);
+
+		if (this.props.isNotificationOpen) {
+			actionObj.callback = this.props.canvasController.closeNotificationPanel.bind(this.props.canvasController);
+			notification = this.generateEnabledActionIcon(actionObj, "notification-close-action", null, overflow);
+		}
+		return notification;
 	}
 
 	generatedExtendedMenu(actions, displayItems, actionsHandler) {
@@ -274,21 +310,32 @@ class Toolbar extends React.Component {
 			</div>);
 		}
 
-		const zoomActionItems = [
+		let rightAlignedActionItems = [
 			{ action: "zoomIn", label: "Zoom In", enable: true, callback: this.props.canvasController.zoomIn.bind(this.props.canvasController) },
 			{ action: "zoomOut", label: "Zoom Out", enable: true, callback: this.props.canvasController.zoomOut.bind(this.props.canvasController) },
 			{ action: "zoomToFit", label: "Zoom to Fit", enable: true, callback: this.props.canvasController.zoomToFit.bind(this.props.canvasController) }
 		];
-		const zoomContainerItems = this.generateActionItems(zoomActionItems, zoomActionItems.length, null, "");
-		const zoomContainer = (<div id="zoom-actions-container" className="toolbar-items-container">
-			{zoomContainerItems}
+
+		if (this.props.notificationConfig &&
+			typeof this.props.notificationConfig.action !== "undefined" &&
+			typeof this.props.notificationConfig.enable !== "undefined") {
+			const notificationBell = [
+				{ divider: true },
+				this.state.notificationConfig
+			];
+			rightAlignedActionItems = rightAlignedActionItems.concat(notificationBell);
+		}
+
+		const rightAlignedContainerItems = this.generateActionItems(rightAlignedActionItems, rightAlignedActionItems.length, null, "");
+		const rightAlignedContainer = (<div id="zoom-actions-container" className="toolbar-items-container">
+			{rightAlignedContainerItems}
 		</div>);
 
 		const canvasToolbar = (<ObserveSize observerFn={(element) => this.setState({})}>
 			<div id="canvas-toolbar">
 				<ul id="toolbar-items">
 					{actionContainer}
-					{zoomContainer}
+					{rightAlignedContainer}
 				</ul>
 			</div>
 		</ObserveSize>);
@@ -299,7 +346,9 @@ class Toolbar extends React.Component {
 
 Toolbar.propTypes = {
 	config: PropTypes.array,
-	paletteState: PropTypes.bool,
+	isPaletteOpen: PropTypes.bool,
+	isNotificationOpen: PropTypes.bool,
+	notificationConfig: PropTypes.object,
 	canvasController: PropTypes.object.isRequired
 };
 

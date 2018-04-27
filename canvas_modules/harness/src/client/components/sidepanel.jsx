@@ -34,52 +34,56 @@ export default class SidePanel extends React.Component {
 		switch (this.props.selectedPanel) {
 		case SIDE_PANEL_CANVAS:
 			view = (<SidePanelCanvas
-				canvasConfig={this.props.canvasConfig}
-				enableNavPalette={this.props.enableNavPalette}
-				internalObjectModel={this.props.internalObjectModel}
-				setDiagramJSON={this.props.setDiagramJSON}
-				setPaletteJSON={this.props.setPaletteJSON}
-				setDiagramJSON2={this.props.setDiagramJSON2}
-				setPaletteJSON2={this.props.setPaletteJSON2}
-				setLayoutDirection={this.props.setLayoutDirection}
-				useInternalObjectModel={this.props.useInternalObjectModel}
-				setConnectionType={this.props.setConnectionType}
-				setNodeFormatType={this.props.setNodeFormatType}
-				setLinkType={this.props.setLinkType}
-				setPaletteLayout={this.props.setPaletteLayout}
-				setTipConfig={this.props.setTipConfig}
-				extraCanvasDisplayed={this.props.extraCanvasDisplayed}
-				showExtraCanvas={this.props.showExtraCanvas}
-				narrowPalette={this.props.narrowPalette}
-				setNarrowPalette={this.props.setNarrowPalette}
-				schemaValidation={this.props.schemaValidation}
-				schemaValidationEnabled={this.props.schemaValidationEnabled}
+				canvasConfig={this.props.canvasConfig.canvasConfig}
+				enableNavPalette={this.props.canvasConfig.enableNavPalette}
+				internalObjectModel={this.props.canvasConfig.internalObjectModel}
+				setDiagramJSON={this.props.canvasConfig.setDiagramJSON}
+				setPaletteJSON={this.props.canvasConfig.setPaletteJSON}
+				setDiagramJSON2={this.props.canvasConfig.setDiagramJSON2}
+				setPaletteJSON2={this.props.canvasConfig.setPaletteJSON2}
+				setLayoutDirection={this.props.canvasConfig.setLayoutDirection}
+				useInternalObjectModel={this.props.canvasConfig.useInternalObjectModel}
+				setRenderingEngine={this.props.canvasConfig.setRenderingEngine}
+				setConnectionType={this.props.canvasConfig.setConnectionType}
+				setNodeFormatType={this.props.canvasConfig.setNodeFormatType}
+				setLinkType={this.props.canvasConfig.setLinkType}
+				setPaletteLayout={this.props.canvasConfig.setPaletteLayout}
+				setTipConfig={this.props.canvasConfig.setTipConfig}
+				extraCanvasDisplayed={this.props.canvasConfig.extraCanvasDisplayed}
+				showExtraCanvas={this.props.canvasConfig.showExtraCanvas}
+				narrowPalette={this.props.canvasConfig.narrowPalette}
+				setNarrowPalette={this.props.canvasConfig.setNarrowPalette}
+				schemaValidation={this.props.canvasConfig.schemaValidation}
+				schemaValidationEnabled={this.props.canvasConfig.schemaValidationEnabled}
 				log={this.props.log}
 			/>);
 			break;
 		case SIDE_PANEL_MODAL:
 			view = (<SidePanelModal
 				log={this.props.log}
-				closePropertiesEditorDialog={this.props.closePropertiesEditorDialog}
-				openPropertiesEditorDialog={this.props.openPropertiesEditorDialog}
-				setPropertiesJSON={this.props.setPropertiesJSON}
-				showPropertiesDialog={this.props.showPropertiesDialog}
-				usePropertiesContainerType={this.props.usePropertiesContainerType}
-				propertiesContainerType={this.props.propertiesContainerType}
-				closeSidePanelModal={this.props.closeSidePanelModal}
-				applyOnBlur={this.props.applyOnBlur}
-				useApplyOnBlur={this.props.useApplyOnBlur}
+				closePropertiesEditorDialog={this.props.propertiesConfig.closePropertiesEditorDialog}
+				openPropertiesEditorDialog={this.props.propertiesConfig.openPropertiesEditorDialog}
+				setPropertiesJSON={this.props.propertiesConfig.setPropertiesJSON}
+				showPropertiesDialog={this.props.propertiesConfig.showPropertiesDialog}
+				usePropertiesContainerType={this.props.propertiesConfig.usePropertiesContainerType}
+				propertiesContainerType={this.props.propertiesConfig.propertiesContainerType}
+				closeSidePanelModal={this.props.propertiesConfig.closeSidePanelModal}
+				applyOnBlur={this.props.propertiesConfig.applyOnBlur}
+				useApplyOnBlur={this.props.propertiesConfig.useApplyOnBlur}
 			/>);
 			break;
 		case SIDE_PANEL_API:
 			view = (<SidePanelAPI
 				log={this.props.log}
-				getCanvasInfo={this.props.getCanvasInfo}
-				getPipelineFlow={this.props.getPipelineFlow}
-				setPipelineFlow={this.props.setPipelineFlow}
-				addNodeTypeToPalette={this.props.addNodeTypeToPalette}
-				setNodeLabel={this.props.setNodeLabel}
-				setPortLabel={this.props.setPortLabel}
+				getCanvasInfo={this.props.apiConfig.getCanvasInfo}
+				getPipelineFlow={this.props.apiConfig.getPipelineFlow}
+				setPipelineFlow={this.props.apiConfig.setPipelineFlow}
+				addNodeTypeToPalette={this.props.apiConfig.addNodeTypeToPalette}
+				setNodeLabel={this.props.apiConfig.setNodeLabel}
+				setPortLabel={this.props.apiConfig.setPortLabel}
+				setNotificationMessages={this.props.apiConfig.setNotificationMessages}
+				appendNotificationMessages={this.props.apiConfig.appendNotificationMessages}
+				disableNotification={this.props.apiConfig.disableNotification}
 			/>);
 			break;
 		default:
@@ -96,45 +100,54 @@ export default class SidePanel extends React.Component {
 }
 
 SidePanel.propTypes = {
-	canvasConfig: PropTypes.object,
-	enableNavPalette: PropTypes.func,
-	internalObjectModel: PropTypes.bool,
-	closePropertiesEditorDialog: PropTypes.func,
-	closeSidePanelModal: PropTypes.func,
-	openPropertiesEditorDialog: PropTypes.func,
+	canvasConfig: PropTypes.shape({
+		canvasConfig: PropTypes.object,
+		enableNavPalette: PropTypes.func,
+		internalObjectModel: PropTypes.bool,
+		setDiagramJSON: PropTypes.func,
+		setPaletteJSON: PropTypes.func,
+		setDiagramJSON2: PropTypes.func,
+		setPaletteJSON2: PropTypes.func,
+		setLayoutDirection: PropTypes.func,
+		useInternalObjectModel: PropTypes.func,
+		setRenderingEngine: PropTypes.func,
+		setConnectionType: PropTypes.func,
+		setNodeFormatType: PropTypes.func,
+		setLinkType: PropTypes.func,
+		setPaletteLayout: PropTypes.func,
+		setTipConfig: PropTypes.func,
+		extraCanvasDisplayed: PropTypes.bool,
+		showExtraCanvas: PropTypes.func,
+		narrowPalette: PropTypes.bool,
+		setNarrowPalette: PropTypes.func,
+		schemaValidation: PropTypes.func,
+		schemaValidationEnabled: PropTypes.bool,
+	}),
+	propertiesConfig: PropTypes.shape({
+		closePropertiesEditorDialog: PropTypes.func,
+		openPropertiesEditorDialog: PropTypes.func,
+		setPropertiesJSON: PropTypes.func,
+		showPropertiesDialog: PropTypes.bool,
+		usePropertiesContainerType: PropTypes.func,
+		propertiesContainerType: PropTypes.string,
+		closeSidePanelModal: PropTypes.func,
+		applyOnBlur: PropTypes.bool,
+		useApplyOnBlur: PropTypes.func
+	}),
+	apiConfig: PropTypes.shape({
+		getCanvasInfo: PropTypes.func,
+		getPipelineFlow: PropTypes.func,
+		setPipelineFlow: PropTypes.func,
+		addNodeTypeToPalette: PropTypes.func,
+		setNodeLabel: PropTypes.func,
+		setPortLabel: PropTypes.func,
+		setNotificationMessages: PropTypes.func,
+		appendNotificationMessages: PropTypes.func,
+		disableNotification: PropTypes.func
+	}),
 	openSidepanelCanvas: PropTypes.bool,
 	openSidepanelModal: PropTypes.bool,
 	openSidepanelAPI: PropTypes.bool,
-	setDiagramJSON: PropTypes.func,
-	setPaletteJSON: PropTypes.func,
-	setDiagramJSON2: PropTypes.func,
-	setPaletteJSON2: PropTypes.func,
-	setPropertiesJSON: PropTypes.func,
-	setLayoutDirection: PropTypes.func,
 	selectedPanel: PropTypes.string,
-	showPropertiesDialog: PropTypes.bool,
-	useInternalObjectModel: PropTypes.func,
-	modalPropertiesDialog: PropTypes.bool,
-	usePropertiesContainerType: PropTypes.func,
-	propertiesContainerType: PropTypes.string,
-	setConnectionType: PropTypes.func,
-	setNodeFormatType: PropTypes.func,
-	setLinkType: PropTypes.func,
-	setPaletteLayout: PropTypes.func,
-	getPipelineFlow: PropTypes.func,
-	setPipelineFlow: PropTypes.func,
-	getCanvasInfo: PropTypes.func,
-	setTipConfig: PropTypes.func,
-	extraCanvasDisplayed: PropTypes.bool,
-	showExtraCanvas: PropTypes.func,
-	addNodeTypeToPalette: PropTypes.func,
-	setNodeLabel: PropTypes.func,
-	setPortLabel: PropTypes.func,
-	applyOnBlur: PropTypes.bool,
-	useApplyOnBlur: PropTypes.func,
-	narrowPalette: PropTypes.bool,
-	setNarrowPalette: PropTypes.func,
-	schemaValidationEnabled: PropTypes.bool,
-	schemaValidation: PropTypes.func,
 	log: PropTypes.func
 };

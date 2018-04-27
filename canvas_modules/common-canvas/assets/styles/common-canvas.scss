@@ -1,26 +1,46 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2017. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
 
+@import "./global.scss";
+
 @CHARSET "ISO-8859-1";
+
+$transition-speed: 0.2s;
+
+$toolbar-icon-width: 64px; // TOOLBAR.ICON_WIDTH from canvas-constants.js
+$common-canvas-toolbar-min-width: $toolbar-icon-width * 5; // 5 icons in toolbar by default
+
+$canvas-palette-flyout-width: 250px;
+$canvas-palette-narrow-flyout-width: $toolbar-icon-width;
+
+$common-canvas-min-width: $common-canvas-toolbar-min-width + $canvas-palette-narrow-flyout-width;
+
+// sass-lint:disable no-misspelled-properties
+:export {
+	toolbarIconWidth: $toolbar-icon-width;
+	paletteFlyoutWidth: $canvas-palette-flyout-width;
+	canvasMinWidth: $common-canvas-min-width;
+}
+// sass-lint:enable no-misspelled-properties
 
 /* right flyout panel */
 
 .right-flyout-panel {
 	height: 100%;
 	float: right;
-	-webkit-transition: all 0.2s;
-	transition: all 0.2s;
+	-webkit-transition: $transition-speed;
+	transition: $transition-speed;
 	z-index: 3;
-	box-shadow: -2px 0px 2px #dfe3e6;
+	box-shadow: -2px 0 2px #DFE3E6;
 	overflow: hidden;
 	position: absolute;
-	right: 0px;
+	right: 0;
 }
 
 /* SVG Canvas styles */
@@ -30,15 +50,15 @@
 	width: 100%;
 	cursor: default;
 	position: relative;
-	-webkit-transition: all 0.2s;
-	transition: all 0.2s;
+	-webkit-transition: $transition-speed;
+	transition: $transition-speed;
 }
 
 .common-canvas-items-container {
 	height: 100%;
 	position: absolute;
-	-webkit-transition: all 0.2s;
-	transition: all 0.2s;
+	-webkit-transition: $transition-speed;
+	transition: $transition-speed;
 }
 
 .common-canvas-drop-div {
@@ -48,10 +68,12 @@
 	position: absolute;
 	cursor: default;
 	top: 47px;
-	-webkit-transition: all 0.2s;
-	transition: all 0.2s;
+	-webkit-transition: $transition-speed;
+	transition: $transition-speed;
 	overflow: hidden;
 }
+
+/* Size of common-canvas-items-container */
 
 .canvas-palette-flyout-div-closed-none {
 	left: 0;
@@ -59,44 +81,44 @@
 }
 
 .canvas-palette-flyout-div-closed-narrow {
-	left: 64px;
-	width: calc(100% - 64px);
+	left: $canvas-palette-narrow-flyout-width;
+	width: calc(100% - #{$canvas-palette-narrow-flyout-width});
 }
 
 .canvas-palette-flyout-div-open {
-	left: 250px;
-	width: calc(100% - 250px);
+	left: $canvas-palette-flyout-width;
+	width: calc(100% - #{$canvas-palette-flyout-width});
 }
 
 .canvas-flyout-div-closed {
-	width: calc(100% - 384px);
+	width: calc(100% - #{$common-canvas-min-width});
 }
 
 .canvas-flyout-div-open {
-	width: calc(100% - 384px);
+	width: calc(100% - #{$common-canvas-min-width});
 }
 
 .canvas-flyout-div-open-medium,
 .canvas-flyout-div-open-large {
-	width: calc(100% - 690px);
+	width: calc(100% - #{$common-properties-medium-flyout-width} - #{$toolbar-icon-width});
 }
 
 .canvas-palette-flyout-div-open.canvas-flyout-div-open {
-	width: calc(100% - 570px);
+	width: calc(100% - #{$common-canvas-toolbar-min-width} - #{$canvas-palette-flyout-width});
 }
 
 .canvas-palette-flyout-div-open.canvas-flyout-div-open-medium,
 .canvas-palette-flyout-div-open.canvas-flyout-div-open-large {
-	width: calc(100% - 876px);
+	width: calc(100% - #{$common-properties-medium-flyout-width} - #{$canvas-palette-flyout-width});
 }
 
 .canvas-palette-flyout-div-closed-none.canvas-flyout-div-open {
-	width: calc(100% - 320px);
+	width: calc(100% - #{$common-canvas-toolbar-min-width});
 }
 
 .canvas-palette-flyout-div-closed-none.canvas-flyout-div-open-medium,
 .canvas-palette-flyout-div-closed-none.canvas-flyout-div-open-large {
-	width: calc(100% - 626px);
+	width: calc(100% - #{$common-properties-medium-flyout-width});
 }
 
 /* Styles for empty canvas objects */
@@ -107,15 +129,15 @@
 	top: 48%;
 	cursor: default;
 	transform: translate(-50%, -50%);
-	-webkit-transition: all 0.2s;
-	transition: all 0.2s;
+	-webkit-transition: $transition-speed;
+	transition: $transition-speed;
 	pointer-events: none;
 }
 
 .empty-canvas-image {
-	margin-left:auto;
-	margin-right:auto;
-	display:block;
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
 }
 
 .empty-canvas-text {
@@ -123,5 +145,5 @@
 	color: #152935;
 	opacity: 0.2;
 	font-size: 20px;
-	text-align:center;
+	text-align: center;
 }

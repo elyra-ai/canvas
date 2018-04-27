@@ -11,7 +11,7 @@ import AddLinksAction from "../command-actions/addLinksAction.js";
 import ArrangeLayoutAction from "../command-actions/arrangeLayoutAction.js";
 import CloneMultipleObjectsAction from "../command-actions/cloneMultipleObjectsAction.js";
 import CommandStack from "../command-stack/command-stack.js";
-import constants from "../../constants/common-constants.js";
+import constants from "./constants/canvas-constants";
 import CreateAutoNodeAction from "../command-actions/createAutoNodeAction.js";
 import CreateCommentAction from "../command-actions/createCommentAction.js";
 import CreateNodeAction from "../command-actions/createNodeAction.js";
@@ -66,6 +66,8 @@ export default class CanvasController {
 		// Increment the global instance ID by 1 each time a new
 		// canvas controller is created.
 		this.instanceId = commonCanvasControllerInstanceId++;
+
+		this.notificationMessages = [];
 	}
 
 	setCanvasConfig(config) {
@@ -137,6 +139,48 @@ export default class CanvasController {
 
 	setSelections(newSelection) {
 		this.objectModel.setSelections(newSelection);
+	}
+
+	// Sets notificationMessages to newMessages.
+	// This will overwrite any existing messages in notificationMessages
+	setNotificationMessages(newMessages) {
+		this.notificationMessages = newMessages;
+		// Update the bell icon to the correct state
+		this.setNotificationBellIconState(this.determineNotificationBellIconState(false));
+	}
+
+	// Append newMessages to list of notificationMessages
+	appendNotificationMessages(newMessages) {
+		this.notificationMessages = this.notificationMessages.concat(newMessages);
+		// Update the bell icon to the correct state
+		this.setNotificationBellIconState(this.determineNotificationBellIconState(false));
+	}
+
+	// Sets the state of the notification bell icon in the toolbar
+	setNotificationBellIconState(newState) {
+		this.commonCanvas.configureToolbarBellIconState(newState);
+	}
+
+	// Available states are in constants.NOTIFICATION_BELL_ICON
+	determineNotificationBellIconState(bellIconEnabled) {
+		const errors = this.notificationMessages.filter(function(message) {
+			return message.type === constants.ERROR;
+		});
+
+		const warnings = this.notificationMessages.filter(function(message) {
+			return message.type === constants.WARNING;
+		});
+
+		if (bellIconEnabled) {
+			if (errors.length > 0) {
+				return constants.NOTIFICATION_BELL_ICON.ERROR;
+			} else if (warnings.length > 0) {
+				return constants.NOTIFICATION_BELL_ICON.WARNING;
+			} else if (this.notificationMessages.length > 0) {
+				return constants.NOTIFICATION_BELL_ICON.READY;
+			}
+		}
+		return constants.NOTIFICATION_BELL_ICON.DEFAULT;
 	}
 
 	moveObjects(data) {
@@ -308,6 +352,10 @@ export default class CanvasController {
 		return this.objectModel.getFlowMessages();
 	}
 
+	getNotificationMessages() {
+		return this.notificationMessages;
+	}
+
 	isInternalObjectModelEnabled() {
 		return this.canvasConfig.enableInternalObjectModel;
 	}
@@ -338,6 +386,18 @@ export default class CanvasController {
 		this.contextMenuSource = null;
 		if (this.commonCanvas) {
 			this.commonCanvas.closeContextMenu();
+		}
+	}
+
+	openNotificationPanel() {
+		if (this.commonCanvas) {
+			this.commonCanvas.openNotificationPanel();
+		}
+	}
+
+	closeNotificationPanel() {
+		if (this.commonCanvas) {
+			this.commonCanvas.closeNotificationPanel();
 		}
 	}
 

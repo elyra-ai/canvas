@@ -34,7 +34,7 @@ import pipelineFlowV2 from "../test_resources/json/pipelineFlowV2.json";
 
 import ObjectModel from "../../src/object-model/object-model.js";
 import { NONE, VERTICAL, HORIZONTAL, CREATE_NODE, CLONE_NODE, CREATE_COMMENT, CLONE_COMMENT, CREATE_NODE_LINK,
-	CLONE_NODE_LINK, CREATE_COMMENT_LINK, CLONE_COMMENT_LINK } from "../../constants/common-constants.js";
+	CLONE_NODE_LINK, CREATE_COMMENT_LINK, CLONE_COMMENT_LINK } from "../../src/common-canvas/constants/canvas-constants.js";
 import CloneMultipleObjectsAction from "../../src/command-actions/cloneMultipleObjectsAction.js";
 
 const logger = log4js.getLogger("object-model-test");

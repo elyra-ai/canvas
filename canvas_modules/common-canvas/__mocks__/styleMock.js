@@ -1,16 +1,16 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2018. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2017. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
  * Contract with IBM Corp.
  *******************************************************************************/
 
-const FLYOUT_WIDTH = {
-	SMALL: 318,
-	MEDIUM: 625,
-	LARGE: 625		// This needs to be determined once we have a design for a large flyout
-};
+// This file allows jest tests to run. It should contain any exported variables
+// from *.scss files which are used in the code
 
-export { FLYOUT_WIDTH };
+module.exports = {
+	smallFlyoutWidth: "318px", // This variable is taken from global.scss
+	mediumFlyoutWidth: "625px" // This variable is taken from global.scss
+};

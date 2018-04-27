@@ -10,7 +10,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Icon from "../icons/icon.jsx";
-import { TIP_TYPE_PALETTE_CATEGORY } from "../../constants/common-constants.js";
+import { TIP_TYPE_PALETTE_CATEGORY } from "../common-canvas/constants/canvas-constants.js";
 
 class PaletteFlyoutContentCategory extends React.Component {
 	constructor(props) {

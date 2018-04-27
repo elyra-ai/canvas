@@ -15,14 +15,21 @@ import isEmpty from "lodash/isEmpty";
 import Button from "ap-components-react/dist/components/Button";
 import Dropdown from "ap-components-react/dist/components/Dropdown";
 import TextField from "ap-components-react/dist/components/TextField";
+import RadioGroup from "ap-components-react/dist/components/RadioGroup";
+import ToggleButton from "ap-components-react/dist/components/ToggleButton";
 import {
 	API_SET_PIPELINEFLOW,
 	API_ADD_PALETTE_ITEM,
 	API_SET_NODE_LABEL,
 	API_SET_INPUT_PORT_LABEL,
 	API_SET_OUTPUT_PORT_LABEL,
+	API_ADD_NOTIFICATION_MESSAGE,
 	INPUT_PORT,
-	OUTPUT_PORT
+	OUTPUT_PORT,
+	ERROR,
+	WARNING,
+	READY,
+	OTHER
 } from "../constants/constants.js";
 
 const defaultNodeType = {
@@ -68,8 +75,17 @@ export default class SidePanelAPI extends React.Component {
 			portId: "",
 			newLabel: "",
 			nodes: [],
-			ports: []
+			ports: [],
+			appendNotifications: true,
+			appendTimestamp: false,
+			attachCallback: false,
+			appendLink: false,
+			notificationMessage: "",
+			notificationType: READY
 		};
+
+		this.createNotificationMessage = this.createNotificationMessage.bind(this);
+		this.notificationMessageCallback = this.notificationMessageCallback.bind(this);
 	}
 
 	onOperationSelect(evt, obj) {
@@ -195,6 +211,30 @@ export default class SidePanelAPI extends React.Component {
 		this.setState(stateObj);
 	}
 
+	onDisableNotificationToggle(changeEvent) {
+		this.props.disableNotification(changeEvent.target.checked);
+	}
+
+	onNotificationMessageTypeChange(evt, obj) {
+		this.setState({ notificationType: obj.selected });
+	}
+
+	onAppendNotificationToggle(changeEvent) {
+		this.setState({ appendNotifications: changeEvent.target.checked });
+	}
+
+	onAppendTimestampToggle(changeEvent) {
+		this.setState({ appendTimestamp: changeEvent.target.checked });
+	}
+
+	onAttachCallback(changeEvent) {
+		this.setState({ attachCallback: changeEvent.target.checked });
+	}
+
+	onAppendLinkToggle(changeEvent) {
+		this.setState({ appendLink: changeEvent.target.checked });
+	}
+
 	getNodePortList(items) {
 		return items.map(function(item) {
 			return ({ label: item.label, value: item.id });
@@ -218,6 +258,8 @@ export default class SidePanelAPI extends React.Component {
 		case API_SET_INPUT_PORT_LABEL:
 		case API_SET_OUTPUT_PORT_LABEL:
 			return (this.state.nodeId && this.state.portId && this.state.newLabel.length > 0);
+		case API_ADD_NOTIFICATION_MESSAGE:
+			return this.state.notificationMessage.length > 0;
 		default:
 			return false;
 		}
@@ -262,15 +304,60 @@ export default class SidePanelAPI extends React.Component {
 			this.setState({ ports: this.getNodePortList(existingNode.output_ports) });
 			break;
 		}
+		case API_ADD_NOTIFICATION_MESSAGE: {
+			const message = this.createNotificationMessage();
+			if (this.state.appendNotifications) {
+				this.props.appendNotificationMessages(message);
+			} else {
+				this.props.setNotificationMessages(message);
+			}
+			break;
+		}
 		default:
 		}
 	}
 
-	render() {
-		var divider = (<div className="sidepanel-children sidepanel-divider" />);
-		var space = (<div className="sidepanel-spacer" />);
+	createNotificationMessage() {
+		let messageTimestamp = <div />;
+		let messageLink = <div />;
 
-		var operationSelection =
+		if (this.state.appendTimestamp) {
+			messageTimestamp = (<div className="sidepanel-notification-timestamp">
+				<img draggable="false" src="/images/timestamp.svg" />
+				{Date().toString()}
+			</div>);
+		}
+
+		if (this.state.appendLink) {
+			messageLink = (<div>
+				<a href="https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/wiki/2.1-Config-Objects" target="_blank">Visit Canvas Wiki!</a>
+			</div>);
+		}
+
+		const messageDetails = (<div>
+			{this.state.notificationMessage}
+			{messageTimestamp}
+			{messageLink}
+		</div>);
+
+		return [
+			{
+				type: this.state.notificationType,
+				message: messageDetails,
+				callback: this.state.attachCallback ? this.notificationMessageCallback : null
+			}
+		];
+	}
+
+	notificationMessageCallback() {
+		this.props.log("Notification Message Callback", "Message received: " + this.state.notificationMessage);
+	}
+
+	render() {
+		const divider = (<div className="sidepanel-children sidepanel-divider" />);
+		const space = (<div className="sidepanel-spacer" />);
+
+		const operationSelection =
 			(<div className="sidepanel-children" id="sidepanel-api-list">
 				<Dropdown
 					name="operationDropdown"
@@ -283,13 +370,14 @@ export default class SidePanelAPI extends React.Component {
 						API_ADD_PALETTE_ITEM,
 						API_SET_NODE_LABEL,
 						API_SET_INPUT_PORT_LABEL,
-						API_SET_OUTPUT_PORT_LABEL]}
+						API_SET_OUTPUT_PORT_LABEL,
+						API_ADD_NOTIFICATION_MESSAGE]}
 					onSelect={this.onOperationSelect.bind(this)}
 					value={this.state.selectedOperation}
 				/>
 			</div>);
 
-		var submit =
+		const submit =
 			(<div className="sidepanel-children" id="sidepanel-api-submit">
 				<Button dark
 					id="canvasFileSubmit"
@@ -301,7 +389,7 @@ export default class SidePanelAPI extends React.Component {
 			</div>);
 
 
-		var setPipelineFlow = <div />;
+		let setPipelineFlow = <div />;
 		if (this.state.selectedOperation === API_SET_PIPELINEFLOW) {
 			setPipelineFlow = (<div className="sidepanel-children" id="sidepanel-api-pipelineFlow">
 				<TextField dark
@@ -320,7 +408,7 @@ export default class SidePanelAPI extends React.Component {
 			</div>);
 		}
 
-		var addItemToPaletteSection = <div />;
+		let addItemToPaletteSection = <div />;
 		if (this.state.selectedOperation === API_ADD_PALETTE_ITEM) {
 			addItemToPaletteSection = (<div className="sidepanel-children" id="sidepanel-api-paletteItem">
 				<TextField dark
@@ -348,7 +436,7 @@ export default class SidePanelAPI extends React.Component {
 			</div>);
 		}
 
-		var setNodePortLabelSection = <div />;
+		let setNodePortLabelSection = <div />;
 		if (this.state.selectedOperation === API_SET_NODE_LABEL ||
 				this.state.selectedOperation === API_SET_INPUT_PORT_LABEL ||
 				this.state.selectedOperation === API_SET_OUTPUT_PORT_LABEL) {
@@ -391,6 +479,67 @@ export default class SidePanelAPI extends React.Component {
 			</div>);
 		}
 
+		let setNotificationMessages = <div />;
+		if (this.state.selectedOperation === API_ADD_NOTIFICATION_MESSAGE) {
+			setNotificationMessages = (<div className="sidepanel-children" id="sidepanel-api-notificationMessages">
+				<div className="sidepanel-headers">Disable Notifications</div>
+				<ToggleButton dark
+					id="sidepanel-api-notification-disable"
+					checked={this.state.disableNotification}
+					onChange={this.onDisableNotificationToggle.bind(this)}
+				/>
+				<div className="sidepanel-headers">Message Details</div>
+				<TextField dark
+					id="messageDetails"
+					type="textarea"
+					rows={5}
+					placeholder="Message"
+					onChange={this.onFieldChange.bind(this, "notificationMessage")}
+					value={this.state.notificationMessage}
+				/>
+				<div className="sidepanel-headers">Message Type</div>
+				<RadioGroup
+					name="notification_message_type"
+					id="notification_message_type"
+					dark
+					onChange={this.onNotificationMessageTypeChange.bind(this)}
+					choices={[
+						READY,
+						WARNING,
+						ERROR,
+						OTHER
+					]}
+					selected={READY}
+				/>
+				<div className="sidepanel-headers">Append Message to Notification Panel</div>
+				<ToggleButton dark
+					id="sidepanel-api-notification-append"
+					checked={this.state.appendNotifications}
+					onChange={this.onAppendNotificationToggle.bind(this)}
+				/>
+				<div className="sidepanel-headers">Add Timestamp to Message</div>
+				<ToggleButton dark
+					id="sidepanel-api-notification-timestamp"
+					checked={this.state.appendTimestamp}
+					onChange={this.onAppendTimestampToggle.bind(this)}
+				/>
+				<div className="sidepanel-headers">
+					Add Callback to Message for logging the message in the test harness console
+				</div>
+				<ToggleButton dark
+					id="sidepanel-api-notification-callback"
+					checked={this.state.attachCallback}
+					onChange={this.onAttachCallback.bind(this)}
+				/>
+				<div className="sidepanel-headers">Add Link to Wiki</div>
+				<ToggleButton dark
+					id="sidepanel-api-notification-link"
+					checked={this.state.appendLink}
+					onChange={this.onAppendLinkToggle.bind(this)}
+				/>
+			</div>);
+		}
+
 		return (
 			<div>
 				{space}
@@ -399,6 +548,7 @@ export default class SidePanelAPI extends React.Component {
 				{setPipelineFlow}
 				{addItemToPaletteSection}
 				{setNodePortLabelSection}
+				{setNotificationMessages}
 				{divider}
 				{submit}
 			</div>
@@ -413,5 +563,8 @@ SidePanelAPI.propTypes = {
 	setPipelineFlow: PropTypes.func,
 	addNodeTypeToPalette: PropTypes.func,
 	setNodeLabel: PropTypes.func,
-	setPortLabel: PropTypes.func
+	setPortLabel: PropTypes.func,
+	setNotificationMessages: PropTypes.func,
+	appendNotificationMessages: PropTypes.func,
+	disableNotification: PropTypes.func,
 };

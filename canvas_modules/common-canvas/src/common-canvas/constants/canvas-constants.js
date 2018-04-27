@@ -9,8 +9,10 @@
 
 // Private Methods ------------------------------------------------------------>
 
-function _defineConstant(name, value) {
-	Object.defineProperty(module.exports, name, {
+import styles from "../../../assets/styles/common-canvas.scss";
+
+function _defineConstant(constName, value) {
+	Object.defineProperty(module.exports, constName, {
 		value: value,
 		enumerable: true,
 		writable: false
@@ -24,9 +26,19 @@ _defineConstant("DRAG_LINK", "link");
 _defineConstant("DRAG_SELECT_REGION", "selectRegion");
 
 _defineConstant("TOOLBAR", {
-	ICON_WIDTH: 64,
+	ICON_WIDTH: parseInt(styles.toolbarIconWidth, 10),
 	DIVIDER_WIDTH: 2
 });
+
+_defineConstant("NOTIFICATION_BELL_ICON", {
+	DEFAULT: "bell",
+	ERROR: "bellError",
+	WARNING: "bellWarning",
+	READY: "bellReady"
+});
+
+_defineConstant("ERROR", "error");
+_defineConstant("WARNING", "warning");
 
 _defineConstant("NONE", "none");
 _defineConstant("HORIZONTAL", "horizonal");

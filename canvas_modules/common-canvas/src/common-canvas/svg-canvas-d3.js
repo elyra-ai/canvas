@@ -17,7 +17,7 @@
 var d3 = Object.assign({}, require("d3-drag"), require("d3-ease"), require("d3-selection"), require("d3-zoom"));
 import { event as d3Event } from "d3-selection";
 import union from "lodash/union";
-import { NODE_MENU_ICON, TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK } from "../../constants/common-constants.js";
+import { NODE_MENU_ICON, TIP_TYPE_NODE, TIP_TYPE_PORT, TIP_TYPE_LINK } from "./constants/canvas-constants";
 
 const BACKSPACE_KEY = 8;
 const DELETE_KEY = 46;

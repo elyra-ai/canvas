@@ -89,6 +89,8 @@ Feature: SummaryPanel
 			Then I have selected the "flyout" properties container type
 			Given I have uploaded JSON for common-properties "summaryPanel_paramDef.json"
 			Then I hover over the text "people in generation X" in summary "Values"
+			Then I pause for 1 seconds
 			Then I verify the tip below the text "people in generation X" in summary "Values" is "visible"
 			Then I move the mouse to coordinates 300, 100
+			Then I pause for 1 seconds
 			Then I verify the tip below the text "people in generation X" in summary "Values" is "hidden"

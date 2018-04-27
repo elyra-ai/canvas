@@ -43,6 +43,7 @@ import {
 	SIDE_PANEL_CANVAS,
 	SIDE_PANEL_MODAL,
 	SIDE_PANEL_API,
+	SIDE_PANEL,
 	PORTS_CONNECTION,
 	VERTICAL_FORMAT,
 	CURVE_LINKS,
@@ -50,7 +51,9 @@ import {
 	FLYOUT,
 	NONE,
 	INPUT_PORT,
-	OUTPUT_PORT
+	OUTPUT_PORT,
+	ERROR,
+	WARNING
 } from "./constants/constants.js";
 
 import listview32 from "../graphics/list-view_32.svg";
@@ -92,7 +95,8 @@ class App extends React.Component {
 			extraCanvasDisplayed: false,
 			applyOnBlur: true,
 			narrowPalette: true,
-			schemaValidationEnabled: true
+			schemaValidationEnabled: true,
+			disableNotification: false
 		};
 
 		this.currentEditorId = null;
@@ -109,6 +113,12 @@ class App extends React.Component {
 		this.setDiagramJSON2 = this.setDiagramJSON2.bind(this);
 		this.setPaletteJSON2 = this.setPaletteJSON2.bind(this);
 		this.setPropertiesJSON = this.setPropertiesJSON.bind(this);
+		this.setFlowNotificationMessages = this.setFlowNotificationMessages.bind(this);
+		this.setFlowNotificationMessages2 = this.setFlowNotificationMessages2.bind(this);
+		this.setNotificationMessages = this.setNotificationMessages.bind(this);
+		this.setNotificationMessages2 = this.setNotificationMessages2.bind(this);
+		this.appendNotificationMessages = this.appendNotificationMessages.bind(this);
+		this.disableNotification = this.disableNotification.bind(this);
 
 		this.sidePanelCanvas = this.sidePanelCanvas.bind(this);
 		this.sidePanelModal = this.sidePanelModal.bind(this);
@@ -201,6 +211,7 @@ class App extends React.Component {
 			this.canvasController.setPipelineFlow(canvasJson);
 			NodeToForm.setNodeForms(this.canvasController.getNodes());
 			FlowValidation.validateFlow(this.canvasController, this.getNodeForm);
+			this.setFlowNotificationMessages();
 			TestService.postCanvas(canvasJson);
 			this.log("Canvas diagram set");
 		} else {
@@ -217,6 +228,7 @@ class App extends React.Component {
 			this.canvasController2.setPipelineFlow(canvasJson);
 			NodeToForm.setNodeForms(this.canvasController2.getNodes());
 			FlowValidation.validateFlow(this.canvasController2, this.getNodeForm);
+			this.setFlowNotificationMessages2();
 			TestService.postCanvas2(canvasJson);
 			this.log("Canvas diagram set 2");
 		} else {
@@ -224,6 +236,89 @@ class App extends React.Component {
 		}
 	}
 
+	setFlowNotificationMessages() {
+		const notificationMessages = [];
+		const nodeMessages = this.canvasController.getFlowMessages();
+		for (const nodeId in nodeMessages) {
+			if (nodeMessages.hasOwnProperty(nodeId)) {
+				const node = nodeMessages[nodeId];
+				const errors = node.filter(function(message) {
+					return message.type === ERROR;
+				});
+
+				const warnings = node.filter(function(message) {
+					return message.type === WARNING;
+				});
+
+				const type = errors.length > 0 ? ERROR : WARNING;
+				let generatedMessage = this.canvasController.getNode(nodeId).label + " node has ";
+				if (errors.length > 0) {
+					generatedMessage += errors.length + " errors";
+					if (warnings.length > 0) {
+						generatedMessage += " and ";
+					}
+				}
+				if (warnings.length > 0) {
+					generatedMessage += warnings.length + " warnings";
+				}
+
+				const summarizedMessage = {
+					type: type,
+					message: generatedMessage
+				};
+
+				notificationMessages.push(summarizedMessage);
+			}
+		}
+		this.setNotificationMessages(notificationMessages);
+	}
+
+	setNotificationMessages(messages) {
+		this.canvasController.setNotificationMessages(messages);
+		this.log("Set Notification Message", "Set " + messages.length + " notification messages");
+	}
+
+	setFlowNotificationMessages2() {
+		const notificationMessages = [];
+		const nodeMessages = this.canvasController2.getFlowMessages();
+		for (const nodeId in nodeMessages) {
+			if (nodeMessages.hasOwnProperty(nodeId)) {
+				const node = nodeMessages[nodeId];
+				const errors = node.filter(function(message) {
+					return message.type === ERROR;
+				});
+
+				const warnings = node.filter(function(message) {
+					return message.type === WARNING;
+				});
+
+				const type = errors.length > 0 ? ERROR : WARNING;
+				let generatedMessage = this.canvasController2.getNode(nodeId).label + " node has ";
+				if (errors.length > 0) {
+					generatedMessage += errors.length + " errors";
+					if (warnings.length > 0) {
+						generatedMessage += " and ";
+					}
+				}
+				if (warnings.length > 0) {
+					generatedMessage += warnings.length + " warnings";
+				}
+
+				const summarizedMessage = {
+					type: type,
+					message: generatedMessage
+				};
+
+				notificationMessages.push(summarizedMessage);
+			}
+		}
+		this.setNotificationMessages2(notificationMessages);
+	}
+
+	setNotificationMessages2(messages) {
+		this.canvasController2.setNotificationMessages(messages);
+		this.log("Set Notification Message", "Canvas2 Set " + messages.length + " notification messages");
+	}
 
 	setPaletteJSON(paletteJson) {
 		this.canvasController.setPipelineFlowPalette(paletteJson);
@@ -318,9 +413,20 @@ class App extends React.Component {
 		this.log("Schema validation enabled ", enabled);
 	}
 
+	appendNotificationMessages(messages) {
+		this.canvasController.appendNotificationMessages(messages);
+		this.log("Appended Notification Message", "Appended " + messages.length + " notification messages");
+	}
+
 	addNodeTypeToPalette(nodeTypeObj, category, categoryLabel) {
 		this.canvasController.addNodeTypeToPalette(nodeTypeObj, category, categoryLabel);
 		this.log("Added nodeType to palette", { nodeTypeObj: nodeTypeObj, category: category, categoryLabel: categoryLabel });
+	}
+
+	disableNotification(newState) {
+		if (this.state.disableNotification !== newState) {
+			this.setState({ disableNotification: newState });
+		}
 	}
 
 	sidePanelCanvas() {
@@ -348,6 +454,10 @@ class App extends React.Component {
 			openSidepanelModal: false,
 			selectedPanel: SIDE_PANEL_API
 		});
+	}
+
+	isSidePanelOpen() {
+		return this.state.openSidepanelCanvas || this.state.openSidepanelModal || this.state.openSidepanelAPI;
 	}
 
 	closeSidePanelModal() {
@@ -467,6 +577,7 @@ class App extends React.Component {
 
 	validateFlow(source) {
 		FlowValidation.validateFlow(this.canvasController, this.getNodeForm);
+		this.setFlowNotificationMessages();
 	}
 
 	contextMenuHandler(source) {
@@ -994,6 +1105,9 @@ class App extends React.Component {
 			{ action: "arrangeVertically", label: "Arrange Vertically", enable: layoutAction }
 		];
 
+		const notificationConfig = { action: "notification", label: "Notifications", enable: !this.state.disableNotification };
+		const notificationConfig2 = { action: "notification", label: "Notifications", enable: true };
+
 		const propertiesConfig = {
 			containerType: this.state.propertiesContainerType === FLYOUT ? CUSTOM : this.state.propertiesContainerType,
 			rightFlyout: this.state.propertiesContainerType === FLYOUT,
@@ -1045,6 +1159,7 @@ class App extends React.Component {
 				selectionChangeHandler={this.selectionChangeHandler}
 				tipHandler={this.tipHandler}
 				toolbarConfig={toolbarConfig}
+				notificationConfig={notificationConfig}
 				toolbarMenuActionHandler={this.toolbarMenuActionHandler}
 				rightFlyoutContent={rightFlyoutContent}
 				showRightFlyout={showRightFlyoutProperties}
@@ -1052,10 +1167,12 @@ class App extends React.Component {
 				canvasController={this.canvasController}
 			/>);
 
+		const canvasContainerWidth = this.isSidePanelOpen() === false ? "100%" : "calc(100% - " + SIDE_PANEL.MAXIMIXED + ")";
+
 		var commonCanvas;
 		if (this.state.extraCanvasDisplayed === true) {
 			commonCanvas = (
-				<div className="canvas-container-double">
+				<div className="canvas-container double" style={{ width: canvasContainerWidth }}>
 					<div className="canvas-single">
 						{firstCanvas}
 					</div>
@@ -1068,60 +1185,76 @@ class App extends React.Component {
 							clickActionHandler= {this.extraCanvasActionHandler}
 							toolbarConfig={toolbarConfig}
 							canvasController={this.canvasController2}
+							notificationConfig={notificationConfig2}
 						/>
 					</div>
 				</div>);
 		} else {
 			commonCanvas = (
-				<div className="canvas-container">
+				<div className="canvas-container" style={{ width: canvasContainerWidth }}>
 					{firstCanvas}
 				</div>);
 		}
 
-		var mainView = (<div id="app-container">
+		const sidePanelCanvasConfig = {
+			canvasConfig: commonCanvasConfig,
+			enableNavPalette: this.enableNavPalette,
+			internalObjectModel: this.state.internalObjectModel,
+			setDiagramJSON: this.setDiagramJSON,
+			setPaletteJSON: this.setPaletteJSON,
+			setDiagramJSON2: this.setDiagramJSON2,
+			setPaletteJSON2: this.setPaletteJSON2,
+			setLayoutDirection: this.setLayoutDirection,
+			useInternalObjectModel: this.useInternalObjectModel,
+			setRenderingEngine: this.setRenderingEngine,
+			setConnectionType: this.setConnectionType,
+			setNodeFormatType: this.setNodeFormatType,
+			setLinkType: this.setLinkType,
+			setPaletteLayout: this.setPaletteLayout,
+			setTipConfig: this.setTipConfig,
+			extraCanvasDisplayed: this.state.extraCanvasDisplayed,
+			showExtraCanvas: this.showExtraCanvas,
+			narrowPalette: this.state.narrowPalette,
+			setNarrowPalette: this.setNarrowPalette,
+			schemaValidation: this.schemaValidation,
+			schemaValidationEnabled: this.state.schemaValidationEnabled
+		};
+
+		const sidePanelPropertiesConfig = {
+			closePropertiesEditorDialog: this.closePropertiesEditorDialog,
+			openPropertiesEditorDialog: this.openPropertiesEditorDialog,
+			setPropertiesJSON: this.setPropertiesJSON,
+			showPropertiesDialog: this.state.showPropertiesDialog,
+			usePropertiesContainerType: this.usePropertiesContainerType,
+			propertiesContainerType: this.state.propertiesContainerType,
+			closeSidePanelModal: this.closeSidePanelModal,
+			applyOnBlur: this.state.applyOnBlur,
+			useApplyOnBlur: this.useApplyOnBlur
+
+		};
+
+		const sidePanelAPIConfig = {
+			getCanvasInfo: this.getCanvasInfo,
+			getPipelineFlow: this.getPipelineFlow,
+			setPipelineFlow: this.setPipelineFlow,
+			addNodeTypeToPalette: this.addNodeTypeToPalette,
+			setNodeLabel: this.setNodeLabel,
+			setPortLabel: this.setPortLabel,
+			setNotificationMessages: this.setNotificationMessages,
+			appendNotificationMessages: this.appendNotificationMessages,
+			disableNotification: this.disableNotification
+		};
+
+		const mainView = (<div id="app-container">
 			{navBar}
 			<SidePanel
-				canvasConfig={commonCanvasConfig}
-				selectedPanel={this.state.selectedPanel}
-				enableNavPalette={this.enableNavPalette}
-				internalObjectModel={this.state.internalObjectModel}
-				propertiesContainerType={this.state.propertiesContainerType}
-				openPropertiesEditorDialog={this.openPropertiesEditorDialog}
-				closePropertiesEditorDialog={this.closePropertiesEditorDialog}
-				closeSidePanelModal={this.closeSidePanelModal}
+				canvasConfig={sidePanelCanvasConfig}
+				propertiesConfig={sidePanelPropertiesConfig}
+				apiConfig={sidePanelAPIConfig}
 				openSidepanelCanvas={this.state.openSidepanelCanvas}
 				openSidepanelModal={this.state.openSidepanelModal}
 				openSidepanelAPI={this.state.openSidepanelAPI}
-				setDiagramJSON={this.setDiagramJSON}
-				setPaletteJSON={this.setPaletteJSON}
-				setDiagramJSON2={this.setDiagramJSON2}
-				setPaletteJSON2={this.setPaletteJSON2}
-				setPropertiesJSON={this.setPropertiesJSON}
-				setLayoutDirection={this.setLayoutDirection}
-				setPipelineFlow={this.setPipelineFlow}
-				addNodeTypeToPalette={this.addNodeTypeToPalette}
-				setNodeLabel={this.setNodeLabel}
-				setPortLabel={this.setPortLabel}
-				showPropertiesDialog={this.state.showPropertiesDialog}
-				useInternalObjectModel={this.useInternalObjectModel}
-				usePropertiesContainerType={this.usePropertiesContainerType}
-				propertiesContainerType={this.state.propertiesContainerType}
-				setConnectionType={this.setConnectionType}
-				setNodeFormatType={this.setNodeFormatType}
-				setLinkType={this.setLinkType}
-				setPaletteLayout={this.setPaletteLayout}
-				getPipelineFlow={this.getPipelineFlow}
-				setPipelineFlow={this.setPipelineFlow}
-				getCanvasInfo={this.getCanvasInfo}
-				setTipConfig={this.setTipConfig}
-				showExtraCanvas={this.showExtraCanvas}
-				extraCanvasDisplayed={this.state.extraCanvasDisplayed}
-				applyOnBlur={this.state.applyOnBlur}
-				useApplyOnBlur={this.useApplyOnBlur}
-				narrowPalette={this.state.narrowPalette}
-				setNarrowPalette={this.setNarrowPalette}
-				schemaValidation={this.schemaValidation}
-				schemaValidationEnabled={this.state.schemaValidationEnabled}
+				selectedPanel={this.state.selectedPanel}
 				log={this.log}
 			/>
 			{/* <IntlProvider key="IntlProvider2" locale={ locale } messages={ messages }>

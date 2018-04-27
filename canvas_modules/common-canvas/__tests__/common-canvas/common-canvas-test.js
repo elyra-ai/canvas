@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Licensed Materials - Property of IBM
- * (c) Copyright IBM Corporation 2016. All Rights Reserved.
+ * (c) Copyright IBM Corporation 2016, 2018. All Rights Reserved.
  *
  * Note to U.S. Government Users Restricted Rights:
  * Use, duplication or disclosure restricted by GSA ADP Schedule
@@ -14,6 +14,7 @@ import DiagramCanvasD3 from "../../src/common-canvas/diagram-canvas-d3.jsx";
 import Palette from "../../src/palette/palette.jsx";
 import PaletteFlyout from "../../src/palette/palette-flyout.jsx";
 import Toolbar from "../../src/toolbar/toolbar.jsx";
+import NotificationPanel from "../../src/notification-panel/notification-panel.jsx";
 import { shallow } from "enzyme";
 import { expect } from "chai";
 import sinon from "sinon";
@@ -65,27 +66,42 @@ describe("CommonCanvas renders correctly", () => {
 		const wrapper = createCommonCanvas(config);
 		expect(wrapper.find(Toolbar)).to.have.length(0);
 	});
+
+	it("should render one <NotificationPanel/> component", () => {
+		const toolbarConfig = [{ action: "palette", label: "Palette", enable: true }];
+		const notificationConfig = { action: "notification", label: "Notifications", enable: true };
+		const config = { enableAutoLayout: "none", canvasController: canvasController };
+		const wrapper = createCommonCanvas(config, toolbarConfig, notificationConfig);
+		expect(wrapper.find(Toolbar)).to.have.length(1);
+		expect(wrapper.find(NotificationPanel)).to.have.length(1);
+	});
 });
 
-function createCommonCanvas(config, toolbarConfig) {
+function createCommonCanvas(config, toolbarConfig, notificationConfig) {
 	canvasController.getObjectModel().setEmptyPipelineFlow();
 	canvasController.getObjectModel().setPipelineFlowPalette({});
 	const contextMenuHandler = sinon.spy();
 	const contextMenuActionHandler = sinon.spy();
-	const editDiagramHandler = sinon.spy();
-	const clickHandler = sinon.spy();
+	const editActionHandler = sinon.spy();
+	const clickActionHandler = sinon.spy();
 	const decorationActionHandler = sinon.spy();
+	const selectionChangeHandler = sinon.spy();
+	const tipHandler = sinon.spy();
 	const toolbarMenuActionHandler = sinon.spy();
 	const wrapper = shallow(
 		<CommonCanvas
 			config={config}
 			contextMenuHandler={contextMenuHandler}
 			contextMenuActionHandler={contextMenuActionHandler}
-			editDiagramHandler={editDiagramHandler}
-			clickHandler={clickHandler}
+			editActionHandler={editActionHandler}
+			clickActionHandler={clickActionHandler}
 			decorationActionHandler={decorationActionHandler}
-			toolbarMenuActionHandler={toolbarMenuActionHandler}
+			selectionChangeHandler={selectionChangeHandler}
+			tipHandler={tipHandler}
 			toolbarConfig={toolbarConfig}
+			notificationConfig={notificationConfig}
+			showRightFlyout={false}
+			toolbarMenuActionHandler={toolbarMenuActionHandler}
 			canvasController={canvasController}
 		/>
 	);
