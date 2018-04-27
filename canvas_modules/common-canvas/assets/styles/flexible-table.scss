@@ -154,6 +154,13 @@ $flexible-table-first-column-left-padding: 15px;
 	outline: none;
 }
 
+.reactable-column-header {
+	.checkbox {
+		margin-top: 0;
+		margin-bottom: 0;
+	}
+}
+
 .flexible-table-search-container {
 	width: 50%;
 	height: 30px;
