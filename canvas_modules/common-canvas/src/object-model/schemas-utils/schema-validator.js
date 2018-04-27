@@ -9,15 +9,15 @@
 /* eslint no-console: "off" */
 
 import pipelineFlowV1Schema from "../schemas/v1/pipeline-flow-v1-schema.json";
-import pipelineFlowUIV1Schema from "../schemas/v1/pipeline-flow-ui-v1-schema.json";
-import pipelineConnectionV1Schema from "../schemas/v1/pipeline-connection-v1-schema.json";
-import dataRecordMetadataV1Schema from "../schemas/v1/datarecord-metadata-v1-schema.json";
+import pipelineFlowUIV1Schema from "@wdp/pipeline-schemas/common-pipeline/pipeline-flow/pipeline-flow-ui-v1-schema.json";
+import pipelineConnectionV1Schema from "@wdp/pipeline-schemas/common-pipeline/pipeline-connection/pipeline-connection-v1-schema.json";
+import dataRecordMetadataV1Schema from "@wdp/pipeline-schemas/common-pipeline/datarecord-metadata/datarecord-metadata-v1-schema.json";
 import paletteV1Schema from "../schemas/v1/palette-v1-schema.json";
 
 import pipelineFlowV2Schema from "../schemas/v2/pipeline-flow-v2-schema.json";
-import pipelineFlowUIV2Schema from "../schemas/v2/pipeline-flow-ui-v2-schema.json";
-import pipelineConnectionV2Schema from "../schemas/v2/pipeline-connection-v2-schema.json";
-import dataRecordMetadataV2Schema from "../schemas/v2/datarecord-metadata-v2-schema.json";
+import pipelineFlowUIV2Schema from "@wdp/pipeline-schemas/common-pipeline/pipeline-flow/pipeline-flow-ui-v2-schema.json";
+import pipelineConnectionV2Schema from "@wdp/pipeline-schemas/common-pipeline/pipeline-connection/pipeline-connection-v2-schema.json";
+import dataRecordMetadataV2Schema from "@wdp/pipeline-schemas/common-pipeline/datarecord-metadata/datarecord-metadata-v2-schema.json";
 import paletteV2Schema from "../schemas/v2/palette-v2-schema.json";
 
 var SchemaValidator = require("jsonschema").Validator;

@@ -18,6 +18,7 @@
     "debug": "node --inspect-brk node_modules/.bin/jest --runInBand"
   },
   "dependencies": {
+    "@wdp/pipeline-schemas": "^2.0.1",
     "ap-components-react": "3.7.0",
     "codemirror": "5.33",
     "d3": "4.10.0",
