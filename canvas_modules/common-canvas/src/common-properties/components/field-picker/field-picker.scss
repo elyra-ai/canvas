@@ -16,11 +16,11 @@
 
 .rightside-modal-container #field-picker-table #flexible-table-container-wrapper {
 	height: 100%;
+}
 
-	// this can be removed after bootstrap.css is gone
-	.field-picker-data-rows td {
-		border-top: 0;
-	}
+// this can be removed after bootstrap.css is gone
+#field-picker-table #flexible-table-container-wrapper .field-picker-data-rows td {
+	border-top: 0;
 }
 
 .rightside-modal-container #field-picker-table .flexible-table-container-absolute {
@@ -101,6 +101,11 @@
 
 #field-picker-table {
 	width: 100%;
+
+	// Set a height for the thead so the body height can be calculated accordingly
+	thead {
+		height: 35px;
+	}
 }
 
 #field-picker-buttons-container {

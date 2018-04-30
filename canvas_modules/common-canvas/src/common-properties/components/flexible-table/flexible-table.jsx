@@ -426,7 +426,7 @@ class FlexibleTable extends React.Component {
 
 		// adjust the height of the body so it can scroll correctly
 		if (this.tbodyNode) {
-			this.tbodyNode.style.height = (this.theadNode) ? (this.flexibleTableDiv.clientHeight - this.theadNode.clientHeight + 4) + "px"
+			this.tbodyNode.style.height = (this.theadNode) ? (this.flexibleTableDiv.clientHeight - this.theadNode.clientHeight) + "px"
 				: "auto";
 		}
 
