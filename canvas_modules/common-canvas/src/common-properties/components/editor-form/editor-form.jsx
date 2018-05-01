@@ -382,7 +382,7 @@ class EditorForm extends React.Component {
 				textClass = "link-text " + uiItem.textType;
 			}
 			const text = (
-				<a href="#" className={textClass} onClick={this._handleMessageClick.bind(this, uiItem.controlId)}>
+				<a className={textClass} onClick={this._handleMessageClick.bind(this, uiItem.controlId)}>
 					{PropertyUtil.evaluateText(uiItem.text, this.props.controller)}
 				</a>);
 			return <div key={"link-text." + key} className={"link-text-container " + uiItem.textType} >{icon}{text}</div>;

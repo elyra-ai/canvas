@@ -218,7 +218,6 @@ class SummaryPanel extends React.Component {
 		const link = (<div className={"control-summary-link-buttons"}>
 			<Button
 				{...stateDisabled}
-				href="#"
 				hyperlink
 				icon="plus"
 				onClick={this.handleLinkClicked}

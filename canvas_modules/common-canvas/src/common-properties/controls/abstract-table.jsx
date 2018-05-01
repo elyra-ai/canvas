@@ -374,7 +374,6 @@ export default class AbstractTable extends React.Component {
 		const removeButtonLabel = PropertyUtils.formatMessage(this.props.intl,
 			MESSAGE_KEYS.STRUCTURETABLE_REMOVEBUTTON_LABEL, MESSAGE_KEYS_DEFAULTS.STRUCTURETABLE_REMOVEBUTTON_LABEL);
 		const removeButton = (<a className="remove-fields-button"
-			href="#"
 			onClick={removeOnClick}
 			disabled={disabled}
 			role="button"
@@ -398,7 +397,6 @@ export default class AbstractTable extends React.Component {
 			id="add-fields-button"
 			role="button"
 			icon="plus"
-			href="#"
 			onClick={this.addOnClick.bind(this, this.props.control)}
 			disabled={addButtonDisabled}
 		>
