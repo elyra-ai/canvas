@@ -7,15 +7,17 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-@import "./readonly/readonly.scss";
-@import "./selectcolumns/selectcolumns.scss";
+.readonly-control-text {
+	width: 100%;
+	padding-bottom: 2px;
+	height: 21px;
+	border-bottom: 2px solid #FFFFFF;
+}
 
-.number-generator {
-	color: #3D70B2;
-	text-decoration: underline;
-	cursor: pointer;
-	-webkit-appearance: none;
-	border: 0;
-	padding: 0;
-	background-color: inherit;
+.table-selected-row .readonly-control-text {
+	border-color: #DFE3E6;
+}
+
+.table-row .readonly-control {
+	padding-top: 8px;
 }

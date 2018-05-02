@@ -10,6 +10,7 @@ import logger from "./../../../../utils/logger";
 
 import cellNotEmpty from "./cellNotEmpty";
 import colNotExists from "./colNotExists";
+import colDoesExists from "./colDoesExists";
 import contains from "./contains";
 import equals from "./equals";
 import greaterThan from "./greaterThan";
@@ -28,6 +29,7 @@ function getConditionOps(customOps) {
 	const ops = {};
 	ops[cellNotEmpty.op()] = cellNotEmpty.evaluate;
 	ops[colNotExists.op()] = colNotExists.evaluate;
+	ops[colDoesExists.op()] = colDoesExists.evaluate;
 	ops[contains.op()] = contains.evaluate;
 	ops[equals.op()] = equals.evaluate;
 	ops[greaterThan.op()] = greaterThan.evaluate;

@@ -1083,7 +1083,7 @@ describe("editor-form renders correctly with validations", () => {
 		expect(wrapper.find(".form-horizontal")).to.have.length(1);
 		expect(wrapper.find(".section--light")).to.have.length(1);
 		expect(wrapper.find(".tabs__tabpanel")).to.have.length(6);
-		expect(wrapper.find(".editor_control_area")).to.have.length(23);
+		expect(wrapper.find(".editor_control_area")).to.have.length(33);
 	});
 
 	it("should initialize correct values in `Properties-Controller`", () => {

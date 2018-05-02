@@ -24,6 +24,7 @@ import rowSelectionsReducer from "./reducers/row-selections";
 import componentMetadataReducer from "./reducers/component-metadata";
 import PropertyUtils from "./util/property-utils.js";
 import isEqual from "lodash/isEqual";
+import { CONDITION_MESSAGE_TYPE } from "./constants/constants.js";
 
 /* eslint max-depth: ["error", 6] */
 
@@ -163,7 +164,8 @@ export default class PropertiesStore {
 
 	/*
 	* Returns the message for a propertyId.  Iterates over row and cell level messages
-	* and returns the first message is finds to show for a table error.
+	* and returns the first error message it finds to show for a table. If no error,
+	* returns the first warning message it finds
 	*/
 	getErrorMessage(propertyId) {
 		if (typeof propertyId === "undefined") {
@@ -183,26 +185,36 @@ export default class PropertiesStore {
 		if (controlMsg && controlMsg.text) {
 			return { validation_id: controlMsg.validation_id, type: controlMsg.type, text: controlMsg.text }; // return prop message
 		} else if (controlMsg) {
-			// search message for param and return first message found
+			// search message for param and return first error message found, else first warning
+			let firstError = null;
 			for (const rowKey in controlMsg) {
 				if (!controlMsg.hasOwnProperty(rowKey)) {
 					continue;
 				}
 				const rowMessage = controlMsg[rowKey];
 				if (rowMessage && rowMessage.text) {
-					return { validation_id: rowMessage.validation_id, type: rowMessage.type, text: rowMessage.text }; // return row message
-				} else if (rowMessage) {
+					firstError = { validation_id: rowMessage.validation_id, type: rowMessage.type, text: rowMessage.text }; // return row message
+				} else if (rowMessage) { // table cell
 					for (const colKey in rowMessage) {
 						if (!rowMessage.hasOwnProperty(colKey)) {
 							continue;
 						}
 						const colMessage = rowMessage[colKey];
 						if (colMessage && colMessage.text) {
-							return { validation_id: colMessage.validation_id, type: colMessage.type, text: colMessage.text }; // return row message
+							firstError = { validation_id: colMessage.validation_id, type: colMessage.type, text: colMessage.text }; // return row message
+						}
+
+						if (colMessage.type === CONDITION_MESSAGE_TYPE.ERROR) {
+							return firstError;
 						}
 					}
 				}
+
+				if (rowMessage.type === CONDITION_MESSAGE_TYPE.ERROR) {
+					return firstError;
+				}
 			}
+			return firstError;
 		}
 		return null;
 	}

@@ -111,7 +111,7 @@ class FieldPicker extends React.Component {
 		return filters;
 	}
 
-	getTableData() {
+	getTableData(checkedAll) {
 		const fields = this.getVisibleData();
 		const tableData = [];
 		const selectedFields = this.state.selectedFields;
@@ -119,13 +119,12 @@ class FieldPicker extends React.Component {
 			const field = fields[i];
 			let checked = false;
 
-			if (this.state.checkedAll) {
+			if (checkedAll) {
 				checked = true;
 			} else if (selectedFields) {
 				for (let j = 0; j < selectedFields.length; j++) {
 					const key = selectedFields[j];
-					// control values can be prefix by schema but don't have to be
-					if (key === field.name || key === field.schema + "." + field.origName) {
+					if (key === field.name) {
 						checked = true;
 						break;
 					}
@@ -228,7 +227,7 @@ class FieldPicker extends React.Component {
 
 		this.setState({
 			selectedFields: selectAll,
-			checkedAll: selectAll.length === this.state.fields.length
+			checkedAll: evt.target.checked
 		});
 	}
 
@@ -423,24 +422,19 @@ class FieldPicker extends React.Component {
 		// check all box should be checked if all in view is selected
 		const visibleData = this.getVisibleData();
 		const selectedFields = this.state.selectedFields;
-		if (visibleData.length > 0 && visibleData.length < this.state.fields.length) {
-			// need to compare the contents to make sure the visible ones are selected
-			const sameData = selectedFields.filter(function(row) {
-				let match = false;
-				for (let k = 0; k < visibleData.length; k++) {
-					if (row === visibleData[k].name) {
-						match = true;
-						break;
-					}
+		// need to always compare contents to make sure the visible ones are selected
+		// because selectedFields may contain invalid fields
+		const sameData = selectedFields.filter(function(row) {
+			let match = false;
+			for (let k = 0; k < visibleData.length; k++) {
+				if (row === visibleData[k].name) {
+					match = true;
+					break;
 				}
-				return match;
-			});
-			checkedAll = sameData.length === visibleData.length;
-		} else if (this.state.selectedFields && this.state.fields.length === this.state.selectedFields.length) {
-			checkedAll = true;
-		} else {
-			checkedAll = false;
-		}
+			}
+			return match;
+		});
+		checkedAll = sameData.length === visibleData.length;
 
 		const fieldColumnLabel = PropertyUtils.formatMessage(this.props.intl,
 			MESSAGE_KEYS.FIELDPICKER_FIELDCOLUMN_LABEL, MESSAGE_KEYS_DEFAULTS.FIELDPICKER_FIELDCOLUMN_LABEL);
@@ -463,7 +457,7 @@ class FieldPicker extends React.Component {
 		}
 		headers.push({ "key": "dataType", "label": dataTypeColumnLabel });
 
-		const tableData = this.getTableData();
+		const tableData = this.getTableData(checkedAll);
 
 		return (
 			<FlexibleTable className="table" id="table"

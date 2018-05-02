@@ -21,10 +21,10 @@
       ]
     ],
     "fields": [
-      "0.age",
+      "age",
       "BADVAR",
       "data_1.BADVAR",
-      "data_1.K",
+      "K",
       "schema.drug"
     ]
   },
@@ -171,6 +171,26 @@
       }
     ]
   },
+  "conditions": [
+    {
+      "validation": {
+        "id": "colNotExistsTest1",
+        "fail_message": {
+          "type": "error",
+          "focus_parameter_ref": "structuretableMultiInputSchema[2]",
+          "message": {
+            "default": "name cannot be an existing column name"
+          }
+        },
+        "evaluate": {
+          "condition": {
+            "parameter_ref": "structuretableMultiInputSchema[2]",
+            "op": "colNotExists"
+          }
+        }
+      }
+    }
+  ],
   "dataset_metadata": [
     {
       "fields": [

@@ -181,28 +181,11 @@ function getFieldsFromControlValues(control, controlValues, fields) {
 	if (controlValues) {
 		for (const controlValue of controlValues) {
 			const fieldName = Array.isArray(controlValue) ? controlValue[dataColumnIndex] : controlValue;
-			if (isValidField(fieldName, fields)) {
-				outputList.push(fieldName);
-			}
+			outputList.push(fieldName);
 		}
 	}
 	return outputList;
 }
-
-/**
- * Return the field if the field name is found in the data model, else undefined
- *
- * @param field current control value name
- * @param fields the filtered list of fields from the data model
- * @return field
- */
-function isValidField(field, fields) {
-	const foundField = fields.find(function(value) {
-		return value.name === field || field === value.schema + "." + value.origName;
-	});
-	return foundField;
-}
-
 
 module.exports = {
 	toType: toType,
@@ -211,6 +194,5 @@ module.exports = {
 	getTableFieldIndex: getTableFieldIndex,
 	convertInputDataModel: convertInputDataModel,
 	getFieldsFromControlValues: getFieldsFromControlValues,
-	isValidField: isValidField,
 	copy: copy
 };

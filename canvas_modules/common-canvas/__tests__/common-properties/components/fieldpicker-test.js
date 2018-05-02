@@ -14,6 +14,7 @@ import propertyUtils from "./../../_utils_/property-utils";
 import { mountWithIntl } from "enzyme-react-intl";
 import { ReactWrapper } from "enzyme";
 import { expect } from "chai";
+import isEqual from "lodash/isEqual";
 import chai from "chai";
 import chaiEnzyme from "chai-enzyme";
 chai.use(chaiEnzyme()); // Note the invocation at the end
@@ -444,9 +445,12 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		const fieldSummary = wrapper.find(".control-summary-table");
 		expect(fieldSummary).to.have.length(1);
 		const summaryRows = fieldSummary.find(".control-summary-list-rows");
-		expect(summaryRows).to.have.length(3);
+		expect(summaryRows).to.have.length(6);
 
 		const expectedSummaryRows = [
+			"BADVAR",
+			"0.BADVAR",
+			"3.Cholesterol",
 			"Date",
 			"data_1.Timestamp",
 			"data_2.Timestamp"
@@ -502,9 +506,12 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		const fieldSummary = wrapper.find(".control-summary-table");
 		expect(fieldSummary).to.have.length(1);
 		const summaryRows = fieldSummary.find(".control-summary-list-rows");
-		expect(summaryRows).to.have.length(5);
+		expect(summaryRows).to.have.length(8);
 
 		const expectedSummaryRows = [
+			"BADVAR",
+			"0.BADVAR",
+			"3.Cholesterol",
 			"0.Time",
 			"data_1.Time",
 			"data_1.Timestamp",
@@ -548,19 +555,22 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		fieldpicker.find("#properties-apply-button").simulate("click");
 		wideflyoutWrapper.find("#properties-apply-button").simulate("click");
 		wrapper.update();
-		const fieldSummary = wrapper.find(".control-summary-table");
-		expect(fieldSummary).to.have.length(1);
-		expect(fieldSummary.find(".control-summary-list-rows")).to.have.length(2);
-		expect(fieldSummary.find(".control-summary-list-rows").at(0)
-			.find("span")
-			.at(0)
-			.text()
-			.trim()).to.equal("data_1.Timestamp");
-		expect(fieldSummary.find(".control-summary-list-rows").at(1)
-			.find("span")
-			.at(0)
-			.text()
-			.trim()).to.equal("data_2.Timestamp");
+		const fieldSummary = wrapper.find(".control-summary-table").find(".control-summary-list-rows");
+		const expectedSummaryRows = [
+			"BADVAR",
+			"0.BADVAR",
+			"3.Cholesterol",
+			"data_1.Timestamp",
+			"data_2.Timestamp"
+		];
+
+		for (let idx = 0; idx < fieldSummary.length; idx++) {
+			expect(fieldSummary.at(idx)
+				.find("span")
+				.at(0)
+				.text()
+				.trim()).to.equal(expectedSummaryRows[idx]);
+		}
 	});
 
 	it("should be able to select all and display schema.field names correctly in table", () => {
@@ -682,9 +692,12 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 		// bad field name filtering we have in the field picker, the test below would
 		// return 6 instead of 3 because of the bad input field names in the test file.
 		const summaryRows = fieldSummary.find(".control-summary-list-rows");
-		expect(summaryRows).to.have.length(3);
+		expect(summaryRows).to.have.length(6);
 
 		const expectedSummaryRows = [
+			"BADVAR",
+			"0.BADVAR",
+			"3.Cholesterol",
 			"0.Age",
 			"age",
 			"data_1.Age"
@@ -703,11 +716,13 @@ describe("field-picker-control with multi input schemas renders correctly", () =
 
 describe("field-picker-control with on selectcolumns renders correctly", () => {
 	let wrapper;
+	let renderedController;
 	let selectColsCategory;
 	let fieldpicker;
 	beforeEach(() => {
 		const renderedObject = propertyUtils.flyoutEditorForm(fieldPickerParamDef);
 		wrapper = renderedObject.wrapper;
+		renderedController = renderedObject.controller;
 
 		selectColsCategory = wrapper.find(".category-title-container-right-flyout-panel").at(1); // Select Columns category
 		// open filter picker
@@ -722,13 +737,22 @@ describe("field-picker-control with on selectcolumns renders correctly", () => {
 		wrapper.unmount();
 	});
 
-	it("should filter out missing field names from selectcolumns control", () => {
+	it("should show warning from invalid field names in the selectcolumns control", () => {
 		const selectRows = wrapper.find(".column-select-table-row");
 		expect(selectRows.length).to.equal(5);
 		fieldpicker.find("#properties-apply-button").simulate("click");
 		wrapper.update();
-		// The act of opening the field picker should have filtered out the bad field names
 		const selectRows2 = wrapper.find(".column-select-table-row");
-		expect(selectRows2.length).to.equal(3);
+		expect(selectRows2.length).to.equal(5);
+
+		const warningMessage = {
+			validation_id: "validField_fields_294.69762842919897",
+			type: "warning",
+			text: "Invalid Select Columns, field not found in schema"
+		};
+
+		const actual = renderedController.getErrorMessage({ name: "fields" });
+		expect(isEqual(JSON.parse(JSON.stringify(warningMessage)),
+			JSON.parse(JSON.stringify(actual)))).to.be.true;
 	});
 });

@@ -16,7 +16,7 @@ Feature: FlowValidation
 
 		Then I pause for 1 seconds
 
-		Then I verify that there are 1 nodes with a "warning" indicator
+		Then I verify that there are 2 nodes with a "warning" indicator
 		Then I pause for 1 seconds
 
 	Scenario: Sanity test flow validation when adding a node

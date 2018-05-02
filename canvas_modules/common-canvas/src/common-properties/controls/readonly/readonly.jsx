@@ -38,9 +38,14 @@ export default class ReadonlyControl extends React.Component {
 		}
 
 		return (
-			<div className="readonly-control" style={stateStyle}>
+			<div className="readonly-control editor_control_area">
 				<div id={controlIconContainerClass}>
-					<text {...stateDisabled} id={ControlUtils.getControlID(this.props.control, this.props.propertyId)}>
+					<text
+						{...stateDisabled}
+						style={stateStyle}
+						id={ControlUtils.getControlID(this.props.control, this.props.propertyId)}
+						className="readonly-control-text"
+					>
 						{controlValue}
 					</text>
 					{icon}

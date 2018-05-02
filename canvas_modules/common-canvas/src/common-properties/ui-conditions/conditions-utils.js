@@ -321,6 +321,18 @@ function injectDefaultValidations(controls, validationDefinitions) {
 		if (control.role === "date" || control.role === "time") {
 			_injectDateTimeDefinition(control, validationDefinitions, keyName, controlValId);
 		}
+		if (control.role === "column") {
+			_injectInvalidFieldDefinition(control, validationDefinitions, keyName, controlValId);
+		}
+
+		if (control.subControls) {
+			const subControls = {};
+			for (let idx = 0; idx < control.subControls.length; idx++) {
+				const subKeyName = keyName + "[" + idx + "]";
+				subControls[subKeyName] = control.subControls[idx];
+			}
+			injectDefaultValidations(subControls, validationDefinitions);
+		}
 	}
 }
 
@@ -747,6 +759,38 @@ function _injectDateTimeDefinition(control, valDefinitions, keyName, controlValI
 						parameter_ref: keyName,
 						op: "isDateTime",
 						value: control.role
+					}
+				}
+			}
+		}
+	};
+	// add the new definition to the set of validation definitions for this control.
+	if (valDefinitions.controls[keyName]) {
+		valDefinitions.controls[keyName].push(injectedDefinition);
+	} else {
+		valDefinitions.controls[keyName] = [injectedDefinition];
+	}
+}
+
+function _injectInvalidFieldDefinition(control, valDefinitions, keyName, controlValId) {
+	// inject invalid field validation definition
+	const label = (control.label && control.label.text) ? control.label.text : keyName;
+	const injectedDefinition = {
+		params: keyName,
+		definition: {
+			validation: {
+				id: "validField_" + keyName + "_" + controlValId,
+				fail_message: {
+					type: "warning",
+					message: {
+						default: "Invalid " + label + ", field not found in schema"
+					},
+					focus_parameter_ref: keyName
+				},
+				evaluate: {
+					condition: {
+						parameter_ref: keyName,
+						op: "colDoesExists"
 					}
 				}
 			}
