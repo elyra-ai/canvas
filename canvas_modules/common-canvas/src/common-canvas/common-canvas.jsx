@@ -326,9 +326,9 @@ export default class CommonCanvas extends React.Component {
 		let tip = null;
 		let commonCanvasWidth = parseInt(canvasStyles.canvasMinWidth, 10); // ParseInt to remove "px"
 		const paletteFlyoutWidth = parseInt(canvasStyles.paletteFlyoutWidth, 10); // ParseInt to remove "px"
-		const canvasJSON = this.objectModel.getCanvasInfo();
+		const canvasInfoPipeline = this.objectModel.getCanvasInfoPipeline();
 
-		if (canvasJSON !== null) {
+		if (canvasInfoPipeline !== null) {
 			if (this.state.showContextMenu) {
 				contextMenuWrapper = (<ContextMenuWrapper
 					containingDivId={this.itemsContainerDivId}
@@ -337,16 +337,17 @@ export default class CommonCanvas extends React.Component {
 				/>);
 			}
 
-			canvas = (<DiagramCanvasD3
-				ref="canvas"
-				canvas={canvasJSON}
-				config={this.props.config}
-				canvasController={this.canvasController}
-			>
-				<div>
-					{contextMenuWrapper}
-				</div>
-			</DiagramCanvasD3>);
+			canvas = (
+				<DiagramCanvasD3
+					ref="canvas"
+					canvas={canvasInfoPipeline}
+					config={this.props.config}
+					canvasController={this.canvasController}
+				>
+					<div>
+						{contextMenuWrapper}
+					</div>
+				</DiagramCanvasD3>);
 
 			if (this.objectModel.getPaletteData()) {
 				if (this.props.config.enablePaletteLayout === "Modal") {
@@ -402,9 +403,9 @@ export default class CommonCanvas extends React.Component {
 
 		let emptyCanvas = null;
 
-		if (canvasJSON === null ||
-				(canvasJSON.nodes.length === 0 &&
-					canvasJSON.comments.length === 0)) {
+		if (canvasInfoPipeline === null ||
+				(canvasInfoPipeline.nodes.length === 0 &&
+					canvasInfoPipeline.comments.length === 0)) {
 			if (this.props.config.emptyCanvasContent) {
 				emptyCanvas = (
 					<div className="empty-canvas">

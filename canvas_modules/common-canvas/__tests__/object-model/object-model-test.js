@@ -16,17 +16,17 @@ import ObjectModel from "../../src/object-model/object-model.js";
 import log4js from "log4js";
 
 const logger = log4js.getLogger("object-model-test");
-const objectModel = new ObjectModel();
 
 describe("ObjectModel handle model OK", () => {
 
 	it("should create a canvas", () => {
 		logger.info("should create a canvas");
+		const objectModel = new ObjectModel();
 
 		const expectedCanvas =
-			{	nodes: [{ id: "node1", name: "Node 1" },
+			[{	nodes: [{ id: "node1", name: "Node 1" },
 				{ id: "node2", name: "Node 2" }]
-			};
+			}];
 
 		deepFreeze(expectedCanvas);
 
@@ -39,11 +39,11 @@ describe("ObjectModel handle model OK", () => {
 		const actualCanvas = objectModel.getCanvasInfo();
 
 		// Remove transient data before comparing with expected
-		for (var i = 0; i < actualCanvas.nodes.length; i++) {
-			delete actualCanvas.nodes[i].width;
-			delete actualCanvas.nodes[i].height;
-			delete actualCanvas.nodes[i].outputPortsHeight;
-			delete actualCanvas.nodes[i].inputPortsHeight;
+		for (var i = 0; i < actualCanvas[0].nodes.length; i++) {
+			delete actualCanvas[0].nodes[i].width;
+			delete actualCanvas[0].nodes[i].height;
+			delete actualCanvas[0].nodes[i].outputPortsHeight;
+			delete actualCanvas[0].nodes[i].inputPortsHeight;
 		}
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas));
@@ -55,20 +55,24 @@ describe("ObjectModel handle model OK", () => {
 
 	it("should clear a canvas", () => {
 		logger.info("should clear a canvas");
+		const objectModel = new ObjectModel();
 
 		const startCanvas =
-			{ diagram:
-			{ nodes: [
-				{ id: "node1", x_pos: 10, y_pos: 10 },
-				{ id: "node2", x_pos: 20, y_pos: 20 },
-				{ id: "node3", x_pos: 30, y_pos: 30 }
-			],
-			comments: [
-				{ id: "comment1", x_pos: 50, y_pos: 50 },
-				{ id: "comment2", x_pos: 60, y_pos: 60 }
-			]
-			}
-			};
+			[
+				{ diagram:
+					{
+						nodes: [
+							{ id: "node1", x_pos: 10, y_pos: 10 },
+							{ id: "node2", x_pos: 20, y_pos: 20 },
+							{ id: "node3", x_pos: 30, y_pos: 30 }
+						],
+						comments: [
+							{ id: "comment1", x_pos: 50, y_pos: 50 },
+							{ id: "comment2", x_pos: 60, y_pos: 60 }
+						]
+					}
+				}
+			];
 
 		deepFreeze(startCanvas);
 
@@ -91,8 +95,9 @@ describe("ObjectModel handle model OK", () => {
 
 	it("should add a node", () => {
 		logger.info("should add a node");
+		const objectModel = new ObjectModel();
 
-		const startCanvas =
+		const startCanvas = [
 			{ nodes: [
 				{ id: "node1", x_pos: 10, y_pos: 10 },
 				{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -102,7 +107,8 @@ describe("ObjectModel handle model OK", () => {
 				{ id: "comment1", x_pos: 50, y_pos: 50 },
 				{ id: "comment2", x_pos: 60, y_pos: 60 }
 			]
-			};
+			}
+		];
 
 		deepFreeze(startCanvas);
 
@@ -126,7 +132,7 @@ describe("ObjectModel handle model OK", () => {
 		});
 
 
-		const expectedCanvas =
+		const expectedCanvas = [
 			{
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
@@ -141,17 +147,18 @@ describe("ObjectModel handle model OK", () => {
 				comments: [
 					{ id: "comment1", x_pos: 50, y_pos: 50 },
 					{ id: "comment2", x_pos: 60, y_pos: 60 }
-				]
-			};
+				],
+				links: []
+			}];
 
 		const actualCanvas = objectModel.getCanvasInfo();
 
 		// Remove transient data before comparing with expected
-		for (var i = 0; i < actualCanvas.nodes.length; i++) {
-			delete actualCanvas.nodes[i].width;
-			delete actualCanvas.nodes[i].height;
-			delete actualCanvas.nodes[i].outputPortsHeight;
-			delete actualCanvas.nodes[i].inputPortsHeight;
+		for (var i = 0; i < actualCanvas[0].nodes.length; i++) {
+			delete actualCanvas[0].nodes[i].width;
+			delete actualCanvas[0].nodes[i].height;
+			delete actualCanvas[0].nodes[i].outputPortsHeight;
+			delete actualCanvas[0].nodes[i].inputPortsHeight;
 		}
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
@@ -162,8 +169,9 @@ describe("ObjectModel handle model OK", () => {
 
 	it("should move a node", () => {
 		logger.info("should move a node");
+		const objectModel = new ObjectModel();
 
-		const startCanvas =
+		const startCanvas = [
 			{ nodes: [
 				{ id: "node1", x_pos: 10, y_pos: 10 },
 				{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -174,7 +182,7 @@ describe("ObjectModel handle model OK", () => {
 				{ id: "comment2", x_pos: 60, y_pos: 60 }
 			],
 			links: []
-			};
+			}];
 
 		deepFreeze(startCanvas);
 
@@ -191,7 +199,7 @@ describe("ObjectModel handle model OK", () => {
 				offsetY: 7 }
 		});
 
-		const expectedCanvas =
+		const expectedCanvas = [
 			{ nodes: [
 				{ id: "node1", x_pos: 15, y_pos: 17 },
 				{ id: "node2", x_pos: 25, y_pos: 27 },
@@ -202,16 +210,16 @@ describe("ObjectModel handle model OK", () => {
 				{ id: "comment2", x_pos: 60, y_pos: 60 }
 			],
 			links: []
-			};
+			}];
 
 		const actualCanvas = objectModel.getCanvasInfo();
 
 		// Remove transient data before comparing with expected
-		for (var i = 0; i < actualCanvas.nodes.length; i++) {
-			delete actualCanvas.nodes[i].width;
-			delete actualCanvas.nodes[i].height;
-			delete actualCanvas.nodes[i].outputPortsHeight;
-			delete actualCanvas.nodes[i].inputPortsHeight;
+		for (var i = 0; i < actualCanvas[0].nodes.length; i++) {
+			delete actualCanvas[0].nodes[i].width;
+			delete actualCanvas[0].nodes[i].height;
+			delete actualCanvas[0].nodes[i].outputPortsHeight;
+			delete actualCanvas[0].nodes[i].inputPortsHeight;
 		}
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
@@ -222,8 +230,9 @@ describe("ObjectModel handle model OK", () => {
 
 	it("should delete a node", () => {
 		logger.info("should delete a node");
+		const objectModel = new ObjectModel();
 
-		const startCanvas =
+		const startCanvas = [
 			{ zoom: 100,
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
@@ -234,7 +243,7 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "comment1", x_pos: 50, y_pos: 50 },
 					{ id: "comment2", x_pos: 60, y_pos: 60 }
 				]
-			};
+			}];
 
 		deepFreeze(startCanvas);
 
@@ -251,15 +260,15 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.dispatch({
 			type: "DELETE_OBJECT",
-			data: "node1"
+			data: { id: "node1" }
 		});
 
 		objectModel.dispatch({
 			type: "DELETE_OBJECT",
-			data: "node3"
+			data: { id: "node3" }
 		});
 
-		const expectedCanvas =
+		const expectedCanvas = [
 			{ zoom: 100,
 				nodes: [
 					{ id: "node2", x_pos: 20, y_pos: 20 }
@@ -269,28 +278,29 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "comment2", x_pos: 60, y_pos: 60 }
 				],
 				links: []
-			};
+			}];
 
 		const actualCanvas = objectModel.getCanvasInfo();
 
 		// Remove transient data before comparing with expected
-		for (var i = 0; i < actualCanvas.nodes.length; i++) {
-			delete actualCanvas.nodes[i].width;
-			delete actualCanvas.nodes[i].height;
-			delete actualCanvas.nodes[i].outputPortsHeight;
-			delete actualCanvas.nodes[i].inputPortsHeight;
+		for (var i = 0; i < actualCanvas[0].nodes.length; i++) {
+			delete actualCanvas[0].nodes[i].width;
+			delete actualCanvas[0].nodes[i].height;
+			delete actualCanvas[0].nodes[i].outputPortsHeight;
+			delete actualCanvas[0].nodes[i].inputPortsHeight;
 		}
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas));
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 4));
 
 		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
 	});
 
 	it("should disconnect a node", () => {
 		logger.info("should disconnect a node");
+		const objectModel = new ObjectModel();
 
-		const startCanvas =
+		const startCanvas = [
 			{ zoom: 100,
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
@@ -305,7 +315,7 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			};
+			}];
 
 		deepFreeze(startCanvas);
 
@@ -320,7 +330,7 @@ describe("ObjectModel handle model OK", () => {
 			data: { selectedNodeIds: ["node1"] }
 		});
 
-		const expectedCanvas =
+		const expectedCanvas = [
 			{ zoom: 100,
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
@@ -334,16 +344,16 @@ describe("ObjectModel handle model OK", () => {
 				links: [
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			};
+			}];
 
 		const actualCanvas = objectModel.getCanvasInfo();
 
 		// Remove transient data before comparing with expected
-		for (var i = 0; i < actualCanvas.nodes.length; i++) {
-			delete actualCanvas.nodes[i].width;
-			delete actualCanvas.nodes[i].height;
-			delete actualCanvas.nodes[i].outputPortsHeight;
-			delete actualCanvas.nodes[i].inputPortsHeight;
+		for (var i = 0; i < actualCanvas[0].nodes.length; i++) {
+			delete actualCanvas[0].nodes[i].width;
+			delete actualCanvas[0].nodes[i].height;
+			delete actualCanvas[0].nodes[i].outputPortsHeight;
+			delete actualCanvas[0].nodes[i].inputPortsHeight;
 		}
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
@@ -354,8 +364,9 @@ describe("ObjectModel handle model OK", () => {
 
 	it("should add node attr", () => {
 		logger.info("should add node attr");
+		const objectModel = new ObjectModel();
 
-		const startCanvas =
+		const startCanvas = [
 			{ zoom: 100,
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
@@ -370,7 +381,7 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			};
+			}];
 
 		deepFreeze(startCanvas);
 
@@ -386,7 +397,7 @@ describe("ObjectModel handle model OK", () => {
 				attrName: "bgcolor" }
 		});
 
-		const expectedCanvas =
+		const expectedCanvas = [
 			{ zoom: 100,
 				nodes: [
 					{ "id": "node1", "x_pos": 10, "y_pos": 10, "customAttrs": ["bgcolor"] },
@@ -401,16 +412,16 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			};
+			}];
 
 		const actualCanvas = objectModel.getCanvasInfo();
 
 		// Remove transient data before comparing with expected
-		for (var i = 0; i < actualCanvas.nodes.length; i++) {
-			delete actualCanvas.nodes[i].width;
-			delete actualCanvas.nodes[i].height;
-			delete actualCanvas.nodes[i].outputPortsHeight;
-			delete actualCanvas.nodes[i].inputPortsHeight;
+		for (var i = 0; i < actualCanvas[0].nodes.length; i++) {
+			delete actualCanvas[0].nodes[i].width;
+			delete actualCanvas[0].nodes[i].height;
+			delete actualCanvas[0].nodes[i].outputPortsHeight;
+			delete actualCanvas[0].nodes[i].inputPortsHeight;
 		}
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
@@ -421,8 +432,9 @@ describe("ObjectModel handle model OK", () => {
 
 	it("should remove node attr", () => {
 		logger.info("should remove node attr");
+		const objectModel = new ObjectModel();
 
-		const startCanvas =
+		const startCanvas = [
 			{ zoom: 100,
 				nodes: [
 					{ "id": "node1", "x_pos": 10, "y_pos": 10, "customAttrs": ["bgcolor"] },
@@ -437,7 +449,7 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			};
+			}];
 
 		deepFreeze(startCanvas);
 
@@ -453,7 +465,7 @@ describe("ObjectModel handle model OK", () => {
 				attrName: "bgcolor" }
 		});
 
-		const expectedCanvas =
+		const expectedCanvas = [
 			{ zoom: 100,
 				nodes: [
 					{ "id": "node1", "x_pos": 10, "y_pos": 10, "customAttrs": [] },
@@ -468,16 +480,16 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			};
+			}];
 
 		const actualCanvas = objectModel.getCanvasInfo();
 
 		// Remove transient data before comparing with expected
-		for (var i = 0; i < actualCanvas.nodes.length; i++) {
-			delete actualCanvas.nodes[i].width;
-			delete actualCanvas.nodes[i].height;
-			delete actualCanvas.nodes[i].outputPortsHeight;
-			delete actualCanvas.nodes[i].inputPortsHeight;
+		for (var i = 0; i < actualCanvas[0].nodes.length; i++) {
+			delete actualCanvas[0].nodes[i].width;
+			delete actualCanvas[0].nodes[i].height;
+			delete actualCanvas[0].nodes[i].outputPortsHeight;
+			delete actualCanvas[0].nodes[i].inputPortsHeight;
 		}
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
@@ -488,9 +500,9 @@ describe("ObjectModel handle model OK", () => {
 
 	it("should add a comment", () => {
 		logger.info("should add a comment");
+		const objectModel = new ObjectModel();
 
-
-		const startCanvas =
+		const startCanvas = [
 			{ zoom: 100,
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
@@ -501,7 +513,7 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "comment1", x_pos: 50, y_pos: 50 },
 					{ id: "comment2", x_pos: 60, y_pos: 60 }
 				]
-			};
+			}];
 
 		deepFreeze(startCanvas);
 
@@ -525,7 +537,7 @@ describe("ObjectModel handle model OK", () => {
 			data: { id: "comment3",	x_pos: 200,	y_pos: 300,	selectedObjectIds: []	}
 		});
 
-		const expectedCanvas =
+		const expectedCanvas = [
 			{ zoom: 100,
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
@@ -538,17 +550,17 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "comment3",	x_pos: 200,	y_pos: 300 }
 				],
 				links: []
-			};
+			}];
 
 
 		const actualCanvas = objectModel.getCanvasInfo();
 
 		// Remove transient data before comparing with expected
-		for (var i = 0; i < actualCanvas.nodes.length; i++) {
-			delete actualCanvas.nodes[i].width;
-			delete actualCanvas.nodes[i].height;
-			delete actualCanvas.nodes[i].outputPortsHeight;
-			delete actualCanvas.nodes[i].inputPortsHeight;
+		for (var i = 0; i < actualCanvas[0].nodes.length; i++) {
+			delete actualCanvas[0].nodes[i].width;
+			delete actualCanvas[0].nodes[i].height;
+			delete actualCanvas[0].nodes[i].outputPortsHeight;
+			delete actualCanvas[0].nodes[i].inputPortsHeight;
 		}
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
@@ -559,9 +571,9 @@ describe("ObjectModel handle model OK", () => {
 
 	it("should edit a comment", () => {
 		logger.info("should edit a comment");
+		const objectModel = new ObjectModel();
 
-
-		const startCanvas =
+		const startCanvas = [
 			{ zoom: 100,
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
@@ -572,7 +584,7 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "comment1", x_pos: 50, y_pos: 50 },
 					{ id: "comment2", x_pos: 60, y_pos: 60 }
 				]
-			};
+			}];
 
 		deepFreeze(startCanvas);
 
@@ -587,7 +599,7 @@ describe("ObjectModel handle model OK", () => {
 			data: { nodes: ["comment2"], offsetX: 425, offsetY: 125, height: 45, width: 250, label: "this is a new comment string" }
 		});
 
-		const expectedCanvas =
+		const expectedCanvas = [
 			{ zoom: 100,
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
@@ -602,17 +614,18 @@ describe("ObjectModel handle model OK", () => {
 						content: "this is a new comment string",
 						height: 45,
 						width: 250 }
-				]
-			};
+				],
+				links: []
+			}];
 
 		const actualCanvas = objectModel.getCanvasInfo();
 
 		// Remove transient data before comparing with expected
-		for (var i = 0; i < actualCanvas.nodes.length; i++) {
-			delete actualCanvas.nodes[i].width;
-			delete actualCanvas.nodes[i].height;
-			delete actualCanvas.nodes[i].outputPortsHeight;
-			delete actualCanvas.nodes[i].inputPortsHeight;
+		for (var i = 0; i < actualCanvas[0].nodes.length; i++) {
+			delete actualCanvas[0].nodes[i].width;
+			delete actualCanvas[0].nodes[i].height;
+			delete actualCanvas[0].nodes[i].outputPortsHeight;
+			delete actualCanvas[0].nodes[i].inputPortsHeight;
 		}
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
@@ -623,8 +636,9 @@ describe("ObjectModel handle model OK", () => {
 
 	it("should move a comment", () => {
 		logger.info("should move a comment");
+		const objectModel = new ObjectModel();
 
-		const startCanvas =
+		const startCanvas = [
 			{ zoom: 100,
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
@@ -636,7 +650,7 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "comment2", x_pos: 60, y_pos: 60 }
 				],
 				links: []
-			};
+			}];
 
 		deepFreeze(startCanvas);
 
@@ -653,7 +667,7 @@ describe("ObjectModel handle model OK", () => {
 				offsetY: 7 }
 		});
 
-		const expectedCanvas =
+		const expectedCanvas = [
 			{ zoom: 100,
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
@@ -665,16 +679,16 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "comment2", x_pos: 65, y_pos: 67 }
 				],
 				links: []
-			};
+			}];
 
 		const actualCanvas = objectModel.getCanvasInfo();
 
 		// Remove transient data before comparing with expected
-		for (var i = 0; i < actualCanvas.nodes.length; i++) {
-			delete actualCanvas.nodes[i].width;
-			delete actualCanvas.nodes[i].height;
-			delete actualCanvas.nodes[i].outputPortsHeight;
-			delete actualCanvas.nodes[i].inputPortsHeight;
+		for (var i = 0; i < actualCanvas[0].nodes.length; i++) {
+			delete actualCanvas[0].nodes[i].width;
+			delete actualCanvas[0].nodes[i].height;
+			delete actualCanvas[0].nodes[i].outputPortsHeight;
+			delete actualCanvas[0].nodes[i].inputPortsHeight;
 		}
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas));
@@ -685,7 +699,9 @@ describe("ObjectModel handle model OK", () => {
 
 	it("should delete a comment", () => {
 		logger.info("should delete a comment");
-		const startCanvas =
+		const objectModel = new ObjectModel();
+
+		const startCanvas = [
 			{ "zoom": 100,
 				"nodes": [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
@@ -698,7 +714,7 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "comment3", x_pos: 70, y_pos: 70 }
 				],
 				"links": []
-			};
+			}];
 		deepFreeze(startCanvas);
 		objectModel.dispatch({
 			type: "SET_CANVAS_INFO",
@@ -713,15 +729,15 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.dispatch({
 			type: "DELETE_OBJECT",
-			data: "comment1"
+			data: { id: "comment1" }
 		});
 
 		objectModel.dispatch({
 			type: "DELETE_OBJECT",
-			data: "comment2"
+			data: { id: "comment2" }
 		});
 
-		const expectedCanvas =
+		const expectedCanvas = [
 			{ "zoom": 100,
 				"nodes": [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
@@ -732,16 +748,16 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "comment3", x_pos: 70, y_pos: 70 }
 				],
 				"links": []
-			};
+			}];
 
 		const actualCanvas = objectModel.getCanvasInfo();
 
 		// Remove transient data before comparing with expected
-		for (var i = 0; i < actualCanvas.nodes.length; i++) {
-			delete actualCanvas.nodes[i].width;
-			delete actualCanvas.nodes[i].height;
-			delete actualCanvas.nodes[i].outputPortsHeight;
-			delete actualCanvas.nodes[i].inputPortsHeight;
+		for (var i = 0; i < actualCanvas[0].nodes.length; i++) {
+			delete actualCanvas[0].nodes[i].width;
+			delete actualCanvas[0].nodes[i].height;
+			delete actualCanvas[0].nodes[i].outputPortsHeight;
+			delete actualCanvas[0].nodes[i].inputPortsHeight;
 		}
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
@@ -753,8 +769,9 @@ describe("ObjectModel handle model OK", () => {
 
 	it("should add comment attr", () => {
 		logger.info("should add comment attr");
+		const objectModel = new ObjectModel();
 
-		const startCanvas =
+		const startCanvas = [
 			{ zoom: 100,
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
@@ -769,7 +786,7 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			};
+			}];
 
 		deepFreeze(startCanvas);
 
@@ -785,7 +802,7 @@ describe("ObjectModel handle model OK", () => {
 				attrName: "bgcolor" }
 		});
 
-		const expectedCanvas =
+		const expectedCanvas = [
 			{ zoom: 100,
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
@@ -800,16 +817,16 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			};
+			}];
 
 		const actualCanvas = objectModel.getCanvasInfo();
 
 		// Remove transient data before comparing with expected
-		for (var i = 0; i < actualCanvas.nodes.length; i++) {
-			delete actualCanvas.nodes[i].width;
-			delete actualCanvas.nodes[i].height;
-			delete actualCanvas.nodes[i].outputPortsHeight;
-			delete actualCanvas.nodes[i].inputPortsHeight;
+		for (var i = 0; i < actualCanvas[0].nodes.length; i++) {
+			delete actualCanvas[0].nodes[i].width;
+			delete actualCanvas[0].nodes[i].height;
+			delete actualCanvas[0].nodes[i].outputPortsHeight;
+			delete actualCanvas[0].nodes[i].inputPortsHeight;
 		}
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
@@ -820,8 +837,9 @@ describe("ObjectModel handle model OK", () => {
 
 	it("should remove comment attr", () => {
 		logger.info("should remove comment attr");
+		const objectModel = new ObjectModel();
 
-		const startCanvas =
+		const startCanvas = [
 			{ zoom: 100,
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
@@ -836,7 +854,7 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			};
+			}];
 
 		deepFreeze(startCanvas);
 
@@ -852,7 +870,7 @@ describe("ObjectModel handle model OK", () => {
 				attrName: "bgcolor" }
 		});
 
-		const expectedCanvas =
+		const expectedCanvas = [
 			{ zoom: 100,
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
@@ -867,16 +885,16 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			};
+			}];
 
 		const actualCanvas = objectModel.getCanvasInfo();
 
 		// Remove transient data before comparing with expected
-		for (var i = 0; i < actualCanvas.nodes.length; i++) {
-			delete actualCanvas.nodes[i].width;
-			delete actualCanvas.nodes[i].height;
-			delete actualCanvas.nodes[i].outputPortsHeight;
-			delete actualCanvas.nodes[i].inputPortsHeight;
+		for (var i = 0; i < actualCanvas[0].nodes.length; i++) {
+			delete actualCanvas[0].nodes[i].width;
+			delete actualCanvas[0].nodes[i].height;
+			delete actualCanvas[0].nodes[i].outputPortsHeight;
+			delete actualCanvas[0].nodes[i].inputPortsHeight;
 		}
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
@@ -887,8 +905,9 @@ describe("ObjectModel handle model OK", () => {
 
 	it("should add a link", () => {
 		logger.info("should add a link");
+		const objectModel = new ObjectModel();
 
-		const startCanvas =
+		const startCanvas = [
 			{ zoom: 100,
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
@@ -903,7 +922,7 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			};
+			}];
 
 		deepFreeze(startCanvas);
 
@@ -927,7 +946,7 @@ describe("ObjectModel handle model OK", () => {
 		});
 
 
-		const expectedCanvas =
+		const expectedCanvas = [
 			{ zoom: 100,
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
@@ -947,16 +966,16 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link4", class_name: "canvas-comment-link",
 						srcNodeId: "comment1", trgNodeId: "node2", type: "commentLink" }
 				]
-			};
+			}];
 
 		const actualCanvas = objectModel.getCanvasInfo();
 
 		// Remove transient data before comparing with expected
-		for (var i = 0; i < actualCanvas.nodes.length; i++) {
-			delete actualCanvas.nodes[i].width;
-			delete actualCanvas.nodes[i].height;
-			delete actualCanvas.nodes[i].outputPortsHeight;
-			delete actualCanvas.nodes[i].inputPortsHeight;
+		for (var i = 0; i < actualCanvas[0].nodes.length; i++) {
+			delete actualCanvas[0].nodes[i].width;
+			delete actualCanvas[0].nodes[i].height;
+			delete actualCanvas[0].nodes[i].outputPortsHeight;
+			delete actualCanvas[0].nodes[i].inputPortsHeight;
 		}
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
@@ -979,8 +998,9 @@ describe("ObjectModel handle model OK", () => {
 
 	it("should delete a link", () => {
 		logger.info("should delete a link");
+		const objectModel = new ObjectModel();
 
-		const startCanvas =
+		const startCanvas = [
 			{ zoom: 100,
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
@@ -995,7 +1015,7 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			};
+			}];
 
 		deepFreeze(startCanvas);
 
@@ -1010,7 +1030,7 @@ describe("ObjectModel handle model OK", () => {
 			data: { id: "link1" }
 		});
 
-		const expectedCanvas =
+		const expectedCanvas = [
 			{ zoom: 100,
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
@@ -1024,16 +1044,16 @@ describe("ObjectModel handle model OK", () => {
 				links: [
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			};
+			}];
 
 		const actualCanvas = objectModel.getCanvasInfo();
 
 		// Remove transient data before comparing with expected
-		for (var i = 0; i < actualCanvas.nodes.length; i++) {
-			delete actualCanvas.nodes[i].width;
-			delete actualCanvas.nodes[i].height;
-			delete actualCanvas.nodes[i].outputPortsHeight;
-			delete actualCanvas.nodes[i].inputPortsHeight;
+		for (var i = 0; i < actualCanvas[0].nodes.length; i++) {
+			delete actualCanvas[0].nodes[i].width;
+			delete actualCanvas[0].nodes[i].height;
+			delete actualCanvas[0].nodes[i].outputPortsHeight;
+			delete actualCanvas[0].nodes[i].inputPortsHeight;
 		}
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
@@ -1044,8 +1064,9 @@ describe("ObjectModel handle model OK", () => {
 
 	it("should delete a link when a node is deleted", () => {
 		logger.info("should delete a link when a node is deleted.");
+		const objectModel = new ObjectModel();
 
-		const startCanvas =
+		const startCanvas = [
 			{ zoom: 100,
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
@@ -1060,7 +1081,7 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			};
+			}];
 
 		deepFreeze(startCanvas);
 
@@ -1072,10 +1093,10 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.dispatch({
 			type: "DELETE_OBJECT",
-			data: "node1"
+			data: { id: "node1" }
 		});
 
-		const expectedCanvas =
+		const expectedCanvas = [
 			{ zoom: 100,
 				nodes: [
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1088,16 +1109,16 @@ describe("ObjectModel handle model OK", () => {
 				links: [
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			};
+			}];
 
 		const actualCanvas = objectModel.getCanvasInfo();
 
 		// Remove transient data before comparing with expected
-		for (var i = 0; i < actualCanvas.nodes.length; i++) {
-			delete actualCanvas.nodes[i].width;
-			delete actualCanvas.nodes[i].height;
-			delete actualCanvas.nodes[i].outputPortsHeight;
-			delete actualCanvas.nodes[i].inputPortsHeight;
+		for (var i = 0; i < actualCanvas[0].nodes.length; i++) {
+			delete actualCanvas[0].nodes[i].width;
+			delete actualCanvas[0].nodes[i].height;
+			delete actualCanvas[0].nodes[i].outputPortsHeight;
+			delete actualCanvas[0].nodes[i].inputPortsHeight;
 		}
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
@@ -1108,8 +1129,9 @@ describe("ObjectModel handle model OK", () => {
 
 	it("should delete a link when a comment is deleted", () => {
 		logger.info("should delete a link when a comment is deleted.");
+		const objectModel = new ObjectModel();
 
-		const startCanvas =
+		const startCanvas = [
 			{ zoom: 100,
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
@@ -1124,7 +1146,7 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			};
+			}];
 
 		deepFreeze(startCanvas);
 
@@ -1136,10 +1158,10 @@ describe("ObjectModel handle model OK", () => {
 
 		objectModel.dispatch({
 			type: "DELETE_OBJECT",
-			data: "comment1"
+			data: { id: "comment1" }
 		});
 
-		const expectedCanvas =
+		const expectedCanvas = [
 			{ zoom: 100,
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
@@ -1152,16 +1174,16 @@ describe("ObjectModel handle model OK", () => {
 				links: [
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" }
 				]
-			};
+			}];
 
 		const actualCanvas = objectModel.getCanvasInfo();
 
 		// Remove transient data before comparing with expected
-		for (var i = 0; i < actualCanvas.nodes.length; i++) {
-			delete actualCanvas.nodes[i].width;
-			delete actualCanvas.nodes[i].height;
-			delete actualCanvas.nodes[i].outputPortsHeight;
-			delete actualCanvas.nodes[i].inputPortsHeight;
+		for (var i = 0; i < actualCanvas[0].nodes.length; i++) {
+			delete actualCanvas[0].nodes[i].width;
+			delete actualCanvas[0].nodes[i].height;
+			delete actualCanvas[0].nodes[i].outputPortsHeight;
+			delete actualCanvas[0].nodes[i].inputPortsHeight;
 		}
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 4));
@@ -1172,8 +1194,9 @@ describe("ObjectModel handle model OK", () => {
 
 	it("should select an object", () => {
 		logger.info("should select an object.");
+		const objectModel = new ObjectModel();
 
-		const startCanvas =
+		const startCanvas = [
 			{ zoom: 100,
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
@@ -1188,7 +1211,7 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			};
+			}];
 
 		deepFreeze(startCanvas);
 
@@ -1214,8 +1237,9 @@ describe("ObjectModel handle model OK", () => {
 
 	it("should clear current selections", () => {
 		logger.info("should clear current selections.");
+		const objectModel = new ObjectModel();
 
-		const startCanvas =
+		const startCanvas = [
 			{ zoom: 100,
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
@@ -1230,7 +1254,7 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			};
+			}];
 
 		deepFreeze(startCanvas);
 
@@ -1261,9 +1285,11 @@ describe("ObjectModel handle model OK", () => {
 
 	it("should select toggle off comment", () => {
 		logger.info("should select toggle off comment.");
+		const objectModel = new ObjectModel();
 
-		const startCanvas =
+		const startCanvas = [
 			{ zoom: 100,
+				sub_id: "empty-pipeline",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1277,7 +1303,7 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			};
+			}];
 
 		deepFreeze(startCanvas);
 
@@ -1292,24 +1318,24 @@ describe("ObjectModel handle model OK", () => {
 			data: ["comment1", "node3"]
 		});
 
-
 		objectModel.toggleSelection("comment1", true);
-
 
 		const expectedSelections = ["node3"];
 		const actualSelections = objectModel.getSelectedObjectIds();
 
-		// logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
-		// logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
+		logger.info("Expected Canvas = " + JSON.stringify(expectedSelections, null, 4));
+		logger.info("Actual Canvas   = " + JSON.stringify(actualSelections, null, 4));
 
 		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
 	});
 
 	it("should select toggle on comment", () => {
 		logger.info("should select toggle on comment.");
+		const objectModel = new ObjectModel();
 
-		const startCanvas =
+		const startCanvas = [
 			{ zoom: 100,
+				sub_id: "empty-pipeline",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1323,7 +1349,7 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			};
+			}];
 
 		deepFreeze(startCanvas);
 
@@ -1353,9 +1379,11 @@ describe("ObjectModel handle model OK", () => {
 
 	it("should select toggle off node", () => {
 		logger.info("should select toggle off node.");
+		const objectModel = new ObjectModel();
 
-		const startCanvas =
+		const startCanvas = [
 			{ zoom: 100,
+				sub_id: "empty-pipeline",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1369,7 +1397,7 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			};
+			}];
 
 		deepFreeze(startCanvas);
 
@@ -1399,9 +1427,11 @@ describe("ObjectModel handle model OK", () => {
 
 	it("should select toggle on node", () => {
 		logger.info("should select toggle on node.");
+		const objectModel = new ObjectModel();
 
-		const startCanvas =
+		const startCanvas = [
 			{ zoom: 100,
+				sub_id: "empty-pipeline",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1415,7 +1445,7 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			};
+			}];
 
 		deepFreeze(startCanvas);
 
@@ -1430,9 +1460,7 @@ describe("ObjectModel handle model OK", () => {
 			data: ["comment1"]
 		});
 
-
 		objectModel.toggleSelection("node3", true);
-
 
 		const expectedSelections = ["comment1", "node3"];
 		const actualSelections = objectModel.getSelectedObjectIds();
@@ -1445,9 +1473,11 @@ describe("ObjectModel handle model OK", () => {
 
 	it("should select nodes in a simple subgraph", () => {
 		logger.info("should select nodes in a simple subgraph.");
+		const objectModel = new ObjectModel();
 
-		const startCanvas =
+		const startCanvas = [
 			{ zoom: 100,
+				sub_id: "empty-pipeline",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1464,7 +1494,7 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link3", srcNodeId: "node3", trgNodeId: "node4" },
 					{ id: "link4", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			};
+			}];
 
 		deepFreeze(startCanvas);
 
@@ -1492,9 +1522,11 @@ describe("ObjectModel handle model OK", () => {
 
 	it("should select nodes in a fork subgraph", () => {
 		logger.info("should select nodes in a fork subgraph.");
+		const objectModel = new ObjectModel();
 
-		const startCanvas =
+		const startCanvas = [
 			{ zoom: 100,
+				sub_id: "empty-pipeline",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1511,7 +1543,7 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link3", srcNodeId: "node2", trgNodeId: "node4" },
 					{ id: "link4", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			};
+			}];
 
 		deepFreeze(startCanvas);
 
@@ -1539,9 +1571,11 @@ describe("ObjectModel handle model OK", () => {
 
 	it("should select nodes in a merge subgraph", () => {
 		logger.info("should select nodes in a merge subgraph.");
+		const objectModel = new ObjectModel();
 
-		const startCanvas =
+		const startCanvas = [
 			{ zoom: 100,
+				sub_id: "empty-pipeline",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1558,7 +1592,7 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link3", srcNodeId: "node3", trgNodeId: "node4" },
 					{ id: "link4", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			};
+			}];
 
 		deepFreeze(startCanvas);
 
@@ -1586,9 +1620,11 @@ describe("ObjectModel handle model OK", () => {
 
 	it("should select nodes in a simple partial subgraph", () => {
 		logger.info("should select nodes in a simple partial subgraph.");
+		const objectModel = new ObjectModel();
 
-		const startCanvas =
+		const startCanvas = [
 			{ zoom: 100,
+				sub_id: "empty-pipeline",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1607,7 +1643,7 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link5", srcNodeId: "node4", trgNodeId: "node5" },
 					{ id: "link4", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			};
+			}];
 
 		deepFreeze(startCanvas);
 
@@ -1635,9 +1671,11 @@ describe("ObjectModel handle model OK", () => {
 
 	it("should select nodes in a complex subgraph", () => {
 		logger.info("should select nodes in a complex subgraph.");
+		const objectModel = new ObjectModel();
 
-		const startCanvas =
+		const startCanvas = [
 			{ zoom: 100,
+				sub_id: "empty-pipeline",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1676,7 +1714,7 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link16", srcNodeId: "node7", trgNodeId: "node4" },
 					{ id: "link17", srcNodeId: "node6", trgNodeId: "node4" }
 				]
-			};
+			}];
 
 		deepFreeze(startCanvas);
 
@@ -1705,9 +1743,11 @@ describe("ObjectModel handle model OK", () => {
 
 	it("should select nodes in a complex patial subgraph", () => {
 		logger.info("should select nodes in a complex partial subgraph.");
+		const objectModel = new ObjectModel();
 
-		const startCanvas =
+		const startCanvas = [
 			{ zoom: 100,
+				sub_id: "empty-pipeline",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1746,7 +1786,7 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link16", srcNodeId: "node7", trgNodeId: "node4" },
 					{ id: "link17", srcNodeId: "node6", trgNodeId: "node4" }
 				]
-			};
+			}];
 
 		deepFreeze(startCanvas);
 
@@ -1775,9 +1815,11 @@ describe("ObjectModel handle model OK", () => {
 
 	it("should select nodes in a complex single input subgraph", () => {
 		logger.info("should select nodes in a complex single input subgraph.");
+		const objectModel = new ObjectModel();
 
-		const startCanvas =
+		const startCanvas = [
 			{ zoom: 100,
+				sub_id: "empty-pipeline",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1816,7 +1858,7 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link16", srcNodeId: "node7", trgNodeId: "node4" },
 					{ id: "link17", srcNodeId: "node6", trgNodeId: "node4" }
 				]
-			};
+			}];
 
 		deepFreeze(startCanvas);
 
@@ -1844,9 +1886,11 @@ describe("ObjectModel handle model OK", () => {
 
 	it("should select nodes in a complex subgraph starting with comment", () => {
 		logger.info("should select nodes in a complex subgraph starting with comment.");
+		const objectModel = new ObjectModel();
 
-		const startCanvas =
+		const startCanvas = [
 			{ zoom: 100,
+				sub_id: "empty-pipeline",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -1885,7 +1929,7 @@ describe("ObjectModel handle model OK", () => {
 					{ id: "link16", srcNodeId: "node7", trgNodeId: "node4" },
 					{ id: "link17", srcNodeId: "node6", trgNodeId: "node4" }
 				]
-			};
+			}];
 
 		deepFreeze(startCanvas);
 

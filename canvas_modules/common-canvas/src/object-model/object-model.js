@@ -37,6 +37,10 @@ const nodes = (state = [], action) => {
 		];
 	}
 
+	case "REPLACE_NODES": {
+		return action.data;
+	}
+
 	case "MOVE_OBJECTS":
 		// action.data.nodes contains an array of node and comment Ids
 		if (action.data.nodes) {
@@ -55,7 +59,7 @@ const nodes = (state = [], action) => {
 
 	case "DELETE_OBJECT":
 		return state.filter((node) => {
-			return node.id !== action.data; // filter will return all objects NOT found
+			return node.id !== action.data.id; // filter will return all objects NOT found
 		});
 
 	case "SET_NODE_PARAMETERS":
@@ -205,7 +209,7 @@ const comments = (state = [], action) => {
 
 	case "DELETE_OBJECT":
 		return state.filter((node) => {
-			return node.id !== action.data; // filter will return all objects NOT found
+			return node.id !== action.data.id; // filter will return all objects NOT found
 		});
 
 	case "ADD_COMMENT": {
@@ -279,8 +283,8 @@ const links = (state = [], action) => {
 	switch (action.type) {
 	case "DELETE_OBJECT":
 		return state.filter((link) => {
-			return (link.srcNodeId !== action.data && // If node being deleted is either source or target of link remove this link
-				link.trgNodeId !== action.data);
+			return (link.srcNodeId !== action.data.id && // If node being deleted is either source or target of link remove this link
+				link.trgNodeId !== action.data.id);
 		});
 
 	case "ADD_LINK": {
@@ -347,74 +351,82 @@ const links = (state = [], action) => {
 	}
 };
 
-const canvasinfo = (state = getInitialCanvas(), action) => {
+const canvasinfo = (state = [], action) => {
 	switch (action.type) {
 	case "CLEAR_PIPELINE_FLOW":
 		return null;
 
+	// Convert incoming pipeline flow pipelines to be canvasInfo pipelines and
+	// make sure node dimensions are calculated for all nodes in all current
+	// pipelines.
 	case "SET_PIPELINE_FLOW": {
-		if (action.data.pipelines &&
-				action.data.pipelines.length > 0) {
-			const mainPipeline = getMainPipeline(action.data);
-			if (mainPipeline) {
-				var canvasInfo = PipelineInHandler.convertPipelineToCanvasInfo(mainPipeline);
-				canvasInfo.id = action.data.id;
-				return Object.assign({}, canvasInfo, { nodes: nodes(canvasInfo.nodes, action) });
-			}
+		if (action.data.pipelines) {
+			return action.data.pipelines.map((pFlowPipline) => {
+				const pipeline = PipelineInHandler.convertPipelineToCanvasInfoPipeline(pFlowPipline);
+				return Object.assign({}, pipeline, { nodes: nodes(pipeline.nodes, action) });
+			});
 		}
-
-		return { "id": "", "nodes": [], "comments": [], "links": [] };
+		return [];
 	}
 
+	// Save incoming pipelines as our current (state) pipelines and make sure
+	// node dimensions are calculated for all nodes in all current
+	// pipelines. This will replace all pipelines with the incomming ones.
 	case "SET_CANVAS_INFO":
-		return Object.assign({}, action.data, { nodes: nodes(action.data.nodes, action) });
+		return action.data.map((pipeline) => {
+			return Object.assign({}, pipeline, { nodes: nodes(pipeline.nodes, action) });
+		});
+
+	// Ensure node dimensions are calculated for all nodes in all current
+	// pipelines when layout info is changed.
+	case "SET_LAYOUT_INFO":
+		return state.map((pipeline) => {
+			return Object.assign({}, pipeline, { nodes: nodes(pipeline.nodes, action) });
+		});
 
 	case "ADD_NODE":
+	case "ADD_AUTO_NODE":
+	case "REPLACE_NODES":
 	case "SET_NODE_PARAMETERS":
 	case "SET_NODE_MESSAGE":
 	case "SET_NODE_MESSAGES":
 	case "ADD_NODE_ATTR":
 	case "REMOVE_NODE_ATTR":
-	case "SET_LAYOUT_INFO":
 	case "SET_NODE_LABEL":
 	case "SET_INPUT_PORT_LABEL":
 	case "SET_OUTPUT_PORT_LABEL":
-		return Object.assign({}, state, { nodes: nodes(state.nodes, action) });
-
-	case "ADD_AUTO_NODE":
-		return Object.assign({}, state, { nodes: nodes(state.nodes, action), links: links(state.links, action) });
-
 	case "MOVE_OBJECTS":
-		return Object.assign({}, state, { nodes: nodes(state.nodes, action), comments: comments(state.comments, action) });
-
 	case "DELETE_OBJECT":
-		return Object.assign({}, state, { nodes: nodes(state.nodes, action), comments: comments(state.comments, action), links: links(state.links, action) });
-
 	case "ADD_LINK":
 	case "DELETE_LINK":
 	case "DISCONNECT_NODES":
-		return Object.assign({}, state, { links: links(state.links, action) });
-
 	case "ADD_COMMENT":
-		return Object.assign({}, state, { comments: comments(state.comments, action), links: links(state.links, action) });
-
 	case "EDIT_COMMENT":
 	case "ADD_COMMENT_ATTR":
 	case "REMOVE_COMMENT_ATTR":
-		return Object.assign({}, state, { comments: comments(state.comments, action) });
+		return state.map((pipeline) => {
+			if (pipeline.sub_id === action.pipelineId) {
+				return Object.assign({}, pipeline, {
+					nodes: nodes(pipeline.nodes, action),
+					comments: comments(pipeline.comments, action),
+					links: links(pipeline.links, action) });
+			}
+			return pipeline;
+		});
 
 	default:
 		return state;
 	}
 };
 
-const pipelineflow = (state = getInitialPipelineFlow(), action) => {
+
+const pipelineflow = (state = {}, action) => {
 	switch (action.type) {
 	case "CLEAR_PIPELINE_FLOW":
 		return null;
 
 	case "SET_PIPELINE_FLOW":
-		return Object.assign({}, action.data);
+		return Object.assign({}, action.data, { pipelines: [] }); // Pipelines will be restored by pipeline-out-handler
 
 	default:
 		return state;
@@ -512,7 +524,7 @@ const selections = (state = [], action) => {
 
 	case "DELETE_OBJECT":
 		return state.filter((objId) => {
-			return action.data !== objId;
+			return action.data.id !== objId;
 		});
 
 	default:
@@ -531,14 +543,7 @@ const layoutinfo = (state = LayoutDimensions.getLayout(), action) => {
 	}
 };
 
-const getInitialCanvas = () => {
-	const newPipelineUuid = getUUID();
-
-	return { "id": newPipelineUuid, "nodes": [], "comments": [], "links": [] };
-};
-
 const getInitialPipelineFlow = (flowId, primaryPipelineId) => {
-
 	var newFlowId = flowId;
 	if (!flowId) {
 		newFlowId = getUUID();
@@ -559,22 +564,11 @@ const getInitialPipelineFlow = (flowId, primaryPipelineId) => {
 				"id": newPrimaryPipelineId,
 				"runtime_ref": "empty_runtime",
 				"nodes": []
-			},
+			}
 		],
 		"runtimes": [{ "id": "empty_runtime", "name": "empty_runtime" }],
 		"schemas": []
 	};
-};
-
-const getMainPipeline = (pipelineFlow) => {
-	if (pipelineFlow.pipelines) {
-		const mainPipeline = pipelineFlow.pipelines.find((p) => {
-			return p.id === pipelineFlow.primary_pipeline;
-		});
-		return mainPipeline;
-	}
-
-	return null;
 };
 
 // Returns a copy of the node passed in with additional fields which contains
@@ -614,13 +608,20 @@ export default class ObjectModel {
 		// based on layoutinfo.
 		var combinedReducer = combineReducers({ selections, layoutinfo, canvasinfo, pipelineflow, palette });
 		const initialState = {
+			selections: [],
+			layoutinfo: LayoutDimensions.getLayout(),
+			canvasinfo: [
+				{
+					sub_id: "empty-pipeline",
+					nodes: [],
+					comments: [],
+					links: []
+				}
+			],
+			pipelineflow: getInitialPipelineFlow("empty-pipeline-flow", "empty-pipeline"),
 			palette: {}
 		};
 		this.store = createStore(combinedReducer, initialState);
-
-		this.store.dispatch({ type: "CLEAR_CANVAS" });
-		this.store.dispatch({ type: "CLEAR_PALETTE_DATA" });
-		this.store.dispatch({ type: "SET_LAYOUT_INFO", layoutinfo: LayoutDimensions.getLayout() });
 
 		// Default value for fixed layout behavior
 		this.fixedLayout = NONE;
@@ -637,6 +638,7 @@ export default class ObjectModel {
 
 	// Standard methods
 
+	// Only used for testing
 	dispatch(action) {
 		this.store.dispatch(action);
 	}
@@ -682,15 +684,15 @@ export default class ObjectModel {
 	}
 
 	setNodeLabel(nodeId, newLabel) {
-		this.store.dispatch({ type: "SET_NODE_LABEL", data: { nodeId: nodeId, label: newLabel } });
+		this.store.dispatch({ type: "SET_NODE_LABEL", data: { nodeId: nodeId, label: newLabel }, pipelineId: this.getActivePipeline() });
 	}
 
 	setInputPortLabel(nodeId, portId, newLabel) {
-		this.store.dispatch({ type: "SET_INPUT_PORT_LABEL", data: { nodeId: nodeId, portId: portId, label: newLabel } });
+		this.store.dispatch({ type: "SET_INPUT_PORT_LABEL", data: { nodeId: nodeId, portId: portId, label: newLabel }, pipelineId: this.getActivePipeline() });
 	}
 
 	setOutputPortLabel(nodeId, portId, newLabel) {
-		this.store.dispatch({ type: "SET_OUTPUT_PORT_LABEL", data: { nodeId: nodeId, portId: portId, label: newLabel } });
+		this.store.dispatch({ type: "SET_OUTPUT_PORT_LABEL", data: { nodeId: nodeId, portId: portId, label: newLabel }, pipelineId: this.getActivePipeline() });
 	}
 
 	setIdGeneratorHandler(idGeneratorHandler) {
@@ -762,7 +764,7 @@ export default class ObjectModel {
 	// Deprectaed TODO - Remove this method when WML Canvas supports pipeline Flow
 	getCanvas() {
 		if (this.oldCanvas) {
-			return CanvasOutHandler.getCanvasBasedOnCanvas(this.oldCanvas, this.store.getState().canvasinfo);
+			return CanvasOutHandler.getCanvasBasedOnCanvas(this.oldCanvas, this.getCanvasInfo());
 		}
 		return {};
 	}
@@ -781,6 +783,11 @@ export default class ObjectModel {
 			data: pipelineFlow,
 			layoutinfo: this.store.getState().layoutinfo,
 			currentPipelineFlow: this.store.getState().pipelineflow });
+	}
+
+	getPrimaryPipelineId() {
+		const pipelineFlow = this.store.getState().pipelineflow;
+		return pipelineFlow.primary_pipeline;
 	}
 
 	validateAndUpgrade(newPipelineFlow) {
@@ -835,36 +842,35 @@ export default class ObjectModel {
 	// with the changes to canvasinfo made by the user. We don't do this in the
 	// redux code because that would result is continuous update of the pipelineflow
 	// as the consuming app makes getPipelineFlow() calls which are difficult to
-	// handle when teting.
+	// handle when testing.
 	getPipelineFlow() {
-		const pipelineFlow = this.syncPipelineFlow(this.store.getState().pipelineflow, this.store.getState().canvasinfo);
+		const pipelineFlow =
+			PipelineOutHandler.createPipelineFlow(this.store.getState().pipelineflow, this.getCanvasInfo());
 		if (this.schemaValidation) {
 			validatePipelineFlowAgainstSchema(pipelineFlow);
 		}
 		return pipelineFlow;
 	}
 
-	// Returns a pipeline flow based on the initial pipeline flow we were given
-	// with the changes to canvasinfo made by the user.
-	syncPipelineFlow(pipelineFlow, canvasInfo) {
-		var pipeline = getMainPipeline(pipelineFlow);
-		var newPipeline = PipelineOutHandler.modifyPipelineWithCanvasInfo(pipeline, canvasInfo);
-
-		if (newPipeline) {
-			var newPipelines = pipelineFlow.pipelines.map((pline) => {
-				if (pline.id === newPipeline.id) {
-					return newPipeline;
-				}
-				return pline;
-			});
-			return Object.assign({}, pipelineFlow, { pipelines: newPipelines });
-		}
-
-		return Object.assign({}, pipelineFlow);
-	}
-
 	getCanvasInfo() {
 		return this.store.getState().canvasinfo;
+	}
+
+	getCanvasInfoPipeline(pipelineId) {
+		const pId = pipelineId || this.getPrimaryPipelineId();
+		const pipelines = this.getCanvasInfo();
+		const p = pipelines.find((pipeline) => {
+			return pipeline.sub_id === pId;
+		});
+		return (typeof p === "undefined") ? null : p;
+	}
+
+	setActivePipeline(pipelineId) {
+		this.activePipelineId = pipelineId;
+	}
+
+	getActivePipeline() {
+		return this.activePipelineId ? this.activePipelineId : this.getPrimaryPipelineId();
 	}
 
 	setCanvasInfo(canvasInfo) {
@@ -885,19 +891,25 @@ export default class ObjectModel {
 	}
 
 	autoLayout(layoutDirection) {
-		var canvasData = this.getCanvasInfo();
+		var canvasInfoPipeline = this.getCanvasInfoPipeline();
 		var lookup = {};
 		if (layoutDirection === VERTICAL) {
-			lookup = this.dagreAutolayout(DAGRE_VERTICAL, canvasData);
+			lookup = this.dagreAutolayout(DAGRE_VERTICAL, canvasInfoPipeline);
 		} else {
-			lookup = this.dagreAutolayout(DAGRE_HORIZONTAL, canvasData);
+			lookup = this.dagreAutolayout(DAGRE_HORIZONTAL, canvasInfoPipeline);
 		}
-		var newNodes = canvasData.nodes.map((node) => {
+		var newNodes = canvasInfoPipeline.nodes.map((node) => {
 			return Object.assign({}, node, { x_pos: lookup[node.id].value.x, y_pos: lookup[node.id].value.y });
 		});
 
-		var newCanvasData = Object.assign({}, canvasData, { nodes: newNodes });
-		this.setCanvasInfo(newCanvasData);
+		const newCanvasInfo = this.getCanvasInfo().map((ciPipeline) => {
+			if (ciPipeline.sub_id === canvasInfoPipeline.sub_id) {
+				return Object.assign({}, canvasInfoPipeline, { nodes: newNodes });
+			}
+			return ciPipeline;
+		});
+
+		this.setCanvasInfo(newCanvasInfo);
 	}
 
 	dagreAutolayout(direction, canvasData) {
@@ -956,9 +968,9 @@ export default class ObjectModel {
 		var maxWidth = this.store.getState().layoutinfo.defaultNodeWidth;
 		var maxHeight = this.store.getState().layoutinfo.defaultNodeHeight;
 
-		if (this.store.getState().canvasinfo &&
-				this.store.getState().canvasinfo.nodes) {
-			this.store.getState().canvasinfo.nodes.forEach((node) => {
+		if (this.getCanvasInfo() &&
+				this.getNodes()) {
+			this.getNodes().forEach((node) => {
 				maxWidth = Math.max(maxWidth, node.width);
 				maxHeight = Math.max(maxHeight, node.height);
 			});
@@ -971,24 +983,23 @@ export default class ObjectModel {
 
 	moveObjects(data) {
 		if (this.fixedLayout === NONE) {
-			this.store.dispatch({ type: "MOVE_OBJECTS", data: data });
+			this.store.dispatch({ type: "MOVE_OBJECTS", data: data, pipelineId: this.getActivePipeline() });
 		}
 	}
 
 	deleteObjects(source) {
-		const that = this;
-		this.executeWithSelectionChange(function(src) {
+		this.executeWithSelectionChange((src) => {
 			src.selectedObjectIds.forEach((selId) => {
-				that.store.dispatch({ type: "DELETE_OBJECT", data: selId });
+				this.store.dispatch({ type: "DELETE_OBJECT", data: { id: selId }, pipelineId: this.getActivePipeline() });
 			});
-			if (that.fixedLayout !== NONE) {
-				that.autoLayout(that.fixedLayout);
+			if (this.fixedLayout !== NONE) {
+				this.autoLayout(this.fixedLayout);
 			}
 		}, source);
 	}
 
 	deleteObject(id) {
-		this.executeWithSelectionChange(this.store.dispatch, { type: "DELETE_OBJECT", data: id });
+		this.executeWithSelectionChange(this.store.dispatch, { type: "DELETE_OBJECT", data: { id: id }, pipelineId: this.getActivePipeline() });
 		if (this.fixedLayout !== NONE) {
 			this.autoLayout(this.fixedLayout);
 		}
@@ -997,9 +1008,9 @@ export default class ObjectModel {
 	disconnectNodes(source) {
 		// We only disconnect links to data nodes (not links to comments).
 		const selectedNodeIds = this.filterDataNodes(source.selectedObjectIds);
-
 		const newSource = Object.assign({}, source, { selectedNodeIds: selectedNodeIds });
-		this.store.dispatch({ type: "DISCONNECT_NODES", data: newSource });
+
+		this.store.dispatch({ type: "DISCONNECT_NODES", data: newSource, pipelineId: this.getActivePipeline() });
 		if (this.fixedLayout !== NONE) {
 			this.autoLayout(this.fixedLayout);
 		}
@@ -1103,6 +1114,16 @@ export default class ObjectModel {
 		}
 
 		return newNode;
+	}
+
+	cloneNodes() {
+		return this.getNodes().map(function(node) {
+			return Object.assign({}, node);
+		});
+	}
+
+	replaceNodes(replacementNodes) {
+		this.store.dispatch({ type: "REPLACE_NODES", data: replacementNodes, pipelineId: this.getActivePipeline() });
 	}
 
 	// Returns true if a new link needs to be created with the newly created
@@ -1223,7 +1244,7 @@ export default class ObjectModel {
 	}
 
 	addNode(newNode) {
-		this.store.dispatch({ type: "ADD_NODE", data: { newNode: newNode } });
+		this.store.dispatch({ type: "ADD_NODE", data: { newNode: newNode }, pipelineId: this.getActivePipeline() });
 
 		if (this.fixedLayout !== NONE) {
 			this.autoLayout(this.fixedLayout);
@@ -1233,7 +1254,8 @@ export default class ObjectModel {
 	addAutoNodeAndLink(newNode, newLink) {
 		this.store.dispatch({ type: "ADD_AUTO_NODE", data: {
 			newNode: newNode,
-			newLink: newLink } });
+			newLink: newLink },
+		pipelineId: this.getActivePipeline() });
 	}
 
 	deleteNode(id) {
@@ -1241,7 +1263,7 @@ export default class ObjectModel {
 	}
 
 	getNodes() {
-		return this.getCanvasInfo().nodes;
+		return this.getCanvasInfoPipeline().nodes;
 	}
 
 	getNodeParameters(nodeId) {
@@ -1287,23 +1309,23 @@ export default class ObjectModel {
 	}
 
 	setNodeMessage(nodeId, message) {
-		this.store.dispatch({ type: "SET_NODE_MESSAGE", data: { nodeId: nodeId, message: message } });
+		this.store.dispatch({ type: "SET_NODE_MESSAGE", data: { nodeId: nodeId, message: message }, pipelineId: this.getActivePipeline() });
 	}
 
 	setNodeMessages(nodeId, messages) {
-		this.store.dispatch({ type: "SET_NODE_MESSAGES", data: { nodeId: nodeId, messages: messages } });
+		this.store.dispatch({ type: "SET_NODE_MESSAGES", data: { nodeId: nodeId, messages: messages }, pipelineId: this.getActivePipeline() });
 	}
 
 	setNodeParameters(nodeId, parameters) {
-		this.store.dispatch({ type: "SET_NODE_PARAMETERS", data: { nodeId: nodeId, parameters: parameters } });
+		this.store.dispatch({ type: "SET_NODE_PARAMETERS", data: { nodeId: nodeId, parameters: parameters }, pipelineId: this.getActivePipeline() });
 	}
 
 	addCustomAttrToNodes(objIds, attrName, attrValue) {
-		this.store.dispatch({ type: "ADD_NODE_ATTR", data: { objIds: objIds, attrName: attrName, attrValue: attrValue } });
+		this.store.dispatch({ type: "ADD_NODE_ATTR", data: { objIds: objIds, attrName: attrName, attrValue: attrValue }, pipelineId: this.getActivePipeline() });
 	}
 
 	removeCustomAttrFromNodes(objIds, attrName, attrValue) {
-		this.store.dispatch({ type: "REMOVE_NODE_ATTR", data: { objIds: objIds, attrName: attrName } });
+		this.store.dispatch({ type: "REMOVE_NODE_ATTR", data: { objIds: objIds, attrName: attrName }, pipelineId: this.getActivePipeline() });
 	}
 
 	canNodeBeDroppedOnLink(nodeType) {
@@ -1341,11 +1363,11 @@ export default class ObjectModel {
 		return Object.assign({}, inComment, { id: this.getUniqueId(CLONE_COMMENT, { "comment": inComment }) });
 	}
 
-	addComment(info) {
-		if (typeof info.selectedObjectIds === "undefined") {
-			info.selectedObjectIds = [];
+	addComment(data) {
+		if (typeof data.selectedObjectIds === "undefined") {
+			data.selectedObjectIds = [];
 		}
-		this.store.dispatch({ type: "ADD_COMMENT", data: info });
+		this.store.dispatch({ type: "ADD_COMMENT", data: data, pipelineId: this.getActivePipeline() });
 		if (this.fixedLayout !== NONE) {
 			this.autoLayout(this.fixedLayout);
 		}
@@ -1356,11 +1378,11 @@ export default class ObjectModel {
 	}
 
 	getComments() {
-		return this.getCanvasInfo().comments;
+		return this.getCanvasInfoPipeline().comments;
 	}
 
 	editComment(data) {
-		this.store.dispatch({ type: "EDIT_COMMENT", data: data });
+		this.store.dispatch({ type: "EDIT_COMMENT", data: data, pipelineId: this.getActivePipeline() });
 	}
 
 	// use updateComment when you have the comment structure from the state object.
@@ -1371,15 +1393,15 @@ export default class ObjectModel {
 		data.offsetX = data.x_pos;
 		data.offsetY = data.y_pos;
 		data.label = data.content;
-		this.store.dispatch({ type: "EDIT_COMMENT", data: data });
+		this.editComment(data);
 	}
 
 	addCustomAttrToComments(objIds, attrName, attrValue) {
-		this.store.dispatch({ type: "ADD_COMMENT_ATTR", data: { objIds: objIds, attrName: attrName, attrValue: attrValue } });
+		this.store.dispatch({ type: "ADD_COMMENT_ATTR", data: { objIds: objIds, attrName: attrName, attrValue: attrValue }, pipelineId: this.getActivePipeline() });
 	}
 
 	removeCustomAttrFromComments(objIds, attrName) {
-		this.store.dispatch({ type: "REMOVE_COMMENT_ATTR", data: { objIds: objIds, attrName: attrName } });
+		this.store.dispatch({ type: "REMOVE_COMMENT_ATTR", data: { objIds: objIds, attrName: attrName }, pipelineId: this.getActivePipeline() });
 	}
 
 	// Link methods
@@ -1404,8 +1426,8 @@ export default class ObjectModel {
 		return newLink;
 	}
 
-	deleteLink(source) {
-		this.store.dispatch({ type: "DELETE_LINK", data: source });
+	deleteLink(link) {
+		this.store.dispatch({ type: "DELETE_LINK", data: link, pipelineId: this.getActivePipeline() });
 		if (this.fixedLayout !== NONE) {
 			this.autoLayout(this.fixedLayout);
 		}
@@ -1453,7 +1475,7 @@ export default class ObjectModel {
 
 	addLinks(linkList) {
 		linkList.forEach((link) => {
-			this.store.dispatch({ type: "ADD_LINK", data: link });
+			this.store.dispatch({ type: "ADD_LINK", data: link, pipelineId: this.getActivePipeline() });
 		});
 
 		if (this.fixedLayout !== NONE) {
@@ -1489,10 +1511,14 @@ export default class ObjectModel {
 		};
 	}
 
+	getLinks() {
+		return this.getCanvasInfoPipeline().links;
+	}
+
 	// Returns an array of links from canvas info links which link
 	// any of the nodes or comments passed in.
 	getLinksBetween(inNodes, inComments) {
-		const linksList = this.getCanvasInfo().links;
+		const linksList = this.getLinks();
 		const filteredLinks = linksList.filter((link) => {
 			// All links must point to a node so look for target node first
 			if (this.isNodeIdInNodes(link.trgNodeId, inNodes)) {
@@ -1508,7 +1534,7 @@ export default class ObjectModel {
 	}
 
 	getLinksContainingId(id) {
-		const linksList = this.getCanvasInfo().links;
+		const linksList = this.getLinks();
 		const linksContaining = linksList.filter((link) => {
 			return (link.srcNodeId === id || link.trgNodeId === id);
 		});
@@ -1542,21 +1568,21 @@ export default class ObjectModel {
 	// Utility functions
 
 	getNode(nodeId) {
-		const diagramNodes = this.getCanvasInfo().nodes;
+		const diagramNodes = this.getNodes();
 		return diagramNodes.find((node) => {
 			return (node.id === nodeId);
 		});
 	}
 
 	getComment(commentId) {
-		const diagramComments = this.getCanvasInfo().comments;
+		const diagramComments = this.getComments();
 		return diagramComments.find((comment) => {
 			return (comment.id === commentId);
 		});
 	}
 
 	getLink(linkId) {
-		const diagramLinks = this.getCanvasInfo().links;
+		const diagramLinks = this.getLinks();
 		return diagramLinks.find((link) => {
 			return (link.id === linkId);
 		});
@@ -1610,7 +1636,7 @@ export default class ObjectModel {
 	linkAlreadyExists(srcNodeInfo, trgNodeInfo) {
 		let exists = false;
 
-		const diagramLinks = this.getCanvasInfo().links;
+		const diagramLinks = this.getLinks();
 
 		diagramLinks.forEach((link) => {
 			if (link.srcNodeId === srcNodeInfo.id &&
@@ -1626,7 +1652,7 @@ export default class ObjectModel {
 	commentLinkAlreadyExists(srcNodeId, trgNodeId) {
 		let exists = false;
 
-		const diagramLinks = this.getCanvasInfo().links;
+		const diagramLinks = this.getLinks();
 
 		diagramLinks.forEach((link) => {
 			if (link.srcNodeId === srcNodeId &&
@@ -1638,7 +1664,7 @@ export default class ObjectModel {
 	}
 
 	isCardinalityExceeded(srcPortId, trgPortId, srcNode, trgNode) {
-		const diagramLinks = this.getCanvasInfo().links;
+		const diagramLinks = this.getLinks();
 
 		var srcCount = 0;
 		var trgCount = 0;
@@ -1762,11 +1788,11 @@ export default class ObjectModel {
 
 	getAllObjectIds() {
 		var objIds = [];
-		this.getCanvasInfo().nodes.forEach((node) => {
+		this.getNodes().forEach((node) => {
 			objIds.push(node.id);
 		});
 
-		this.getCanvasInfo().comments.forEach((comment) => {
+		this.getComments().forEach((comment) => {
 			objIds.push(comment.id);
 		});
 
@@ -1849,7 +1875,7 @@ export default class ObjectModel {
 		if (startNodeId === endNodeId) {
 			retval = true;
 		} else {
-			const diagramLinks = this.getCanvasInfo().links;
+			const diagramLinks = this.getLinks();
 			for (const link of diagramLinks) {
 				if (link.srcNodeId === startNodeId) {
 					const newRetval = this.findNodesInSubGraph(link.trgNodeId, endNodeId, selection);
@@ -1937,7 +1963,7 @@ export default class ObjectModel {
 
 	getSelectedNodes() {
 		var objs = [];
-		this.getCanvasInfo().nodes.forEach((node) => {
+		this.getNodes().forEach((node) => {
 			if (this.getSelectedObjectIds().includes(node.id)) {
 				objs.push(node);
 			}
@@ -1948,7 +1974,7 @@ export default class ObjectModel {
 
 	getSelectedComments() {
 		var objs = [];
-		this.getCanvasInfo().comments.forEach((comment) => {
+		this.getComments().forEach((comment) => {
 			if (this.getSelectedObjectIds().includes(comment.id)) {
 				objs.push(comment);
 			}
@@ -1959,13 +1985,13 @@ export default class ObjectModel {
 
 	getNoneSelectedNodesAndComments() {
 		var objs = [];
-		this.getCanvasInfo().nodes.forEach((node) => {
+		this.getNodes().forEach((node) => {
 			if (!this.getSelectedObjectIds().includes(node.id)) {
 				objs.push(node);
 			}
 		});
 
-		this.getCanvasInfo().comments.forEach((comment) => {
+		this.getComments().forEach((comment) => {
 			if (!this.getSelectedObjectIds().includes(comment.id)) {
 				objs.push(comment);
 			}
@@ -1975,11 +2001,11 @@ export default class ObjectModel {
 
 	getNodesAndComments() {
 		var objs = [];
-		this.getCanvasInfo().nodes.forEach((node) => {
+		this.getNodes().forEach((node) => {
 			objs.push(node);
 		});
 
-		this.getCanvasInfo().comments.forEach((comment) => {
+		this.getComments().forEach((comment) => {
 			objs.push(comment);
 		});
 		return objs;

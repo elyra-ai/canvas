@@ -12,13 +12,17 @@ import has from "lodash/has";
 export default class CanvasInHandler {
 
 	static convertCanvasToCanvasInfo(canvas) {
-		return {
+		const canvasInfo = [];
+		const canvasInfoPipeline = {
 			id: canvas.id,
 			sub_id: canvas.diagram.id,
 			nodes: this.getNodes(canvas.diagram.nodes),
 			comments: this.getComments(canvas.diagram.comments),
-			links: this.getLinks(canvas.diagram.links)
+			links: this.getLinks(canvas.diagram.links),
+			runtime_ref: ""
 		};
+		canvasInfo.push(canvasInfoPipeline);
+		return canvasInfo;
 	}
 
 	static getNodes(canvasNodes) {

@@ -13,11 +13,10 @@
           "type": "binding",
           "app_data": {
             "ui_data": {
+              "label": "Var. File",
               "image": "/images/common_node_icons/sources/source_var_import.svg",
               "x_pos": 32,
-              "y_pos": 62.5,
-              "label": "Var. File",
-              "messages": []
+              "y_pos": 62.5
             }
           },
           "outputs": [
@@ -41,11 +40,10 @@
           "op": "",
           "app_data": {
             "ui_data": {
+              "label": "Select2",
               "image": "/images/common_node_icons/operations/operation_select.svg",
               "x_pos": 575,
-              "y_pos": 70.5,
-              "label": "Select2",
-              "messages": []
+              "y_pos": 70.5
             }
           },
           "inputs": [
@@ -59,8 +57,7 @@
                   },
                   "label": "Input Port"
                 }
-              },
-              "links": []
+              }
             }
           ],
           "outputs": [
@@ -76,8 +73,7 @@
                 }
               }
             }
-          ],
-          "parameters": {}
+          ]
         },
         {
           "id": "b16deb33-4e84-45f1-a7d2-6a2e5d8d2618",
@@ -85,11 +81,10 @@
           "op": "",
           "app_data": {
             "ui_data": {
+              "label": "Select3",
               "image": "/images/common_node_icons/operations/operation_select.svg",
               "x_pos": 38,
-              "y_pos": 333.5,
-              "label": "Select3",
-              "messages": []
+              "y_pos": 333.5
             }
           },
           "inputs": [
@@ -103,8 +98,7 @@
                   },
                   "label": "Input Port"
                 }
-              },
-              "links": []
+              }
             }
           ],
           "outputs": [
@@ -132,8 +126,7 @@
                 }
               }
             }
-          ],
-          "parameters": {}
+          ]
         },
         {
           "id": "f43f5f8f-7fc2-4979-8c3e-461df32db739",
@@ -141,11 +134,10 @@
           "op": "",
           "app_data": {
             "ui_data": {
+              "label": "Select1",
               "image": "/images/common_node_icons/operations/operation_select.svg",
               "x_pos": 298,
-              "y_pos": 63.5,
-              "label": "Select1",
-              "messages": []
+              "y_pos": 63.5
             }
           },
           "inputs": [
@@ -159,8 +151,7 @@
                   },
                   "label": "Input Port"
                 }
-              },
-              "links": []
+              }
             }
           ],
           "outputs": [
@@ -176,8 +167,7 @@
                 }
               }
             }
-          ],
-          "parameters": {}
+          ]
         },
         {
           "id": "aae22a0a-d7e5-4162-902b-450a0147ed26",
@@ -185,11 +175,10 @@
           "op": "",
           "app_data": {
             "ui_data": {
+              "label": "Table",
               "image": "/images/common_node_icons/output/output_table.svg",
               "x_pos": 837,
-              "y_pos": 69.5,
-              "label": "Table",
-              "messages": []
+              "y_pos": 69.5
             }
           },
           "inputs": [
@@ -203,8 +192,7 @@
                   },
                   "label": "Input Port"
                 }
-              },
-              "links": []
+              }
             }
           ],
           "outputs": [
@@ -220,8 +208,7 @@
                 }
               }
             }
-          ],
-          "parameters": {}
+          ]
         }
       ],
       "app_data": {

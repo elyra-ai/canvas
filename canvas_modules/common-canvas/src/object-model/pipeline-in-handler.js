@@ -7,20 +7,18 @@
  * Contract with IBM Corp.
  *******************************************************************************/
 
-/* eslint no-invalid-this: "off" */
-/* eslint brace-style: "off" */
-/* eslint no-lonely-if: "off" */
-
 import has from "lodash/has";
 import isEmpty from "lodash/isEmpty";
 import isObject from "lodash/isObject";
+import uuid4 from "uuid/v4";
 
 export default class PipelineInHandler {
 
-	// Returns the 'canvas info', stored internally in the object model, by extracting
-	// that info from the pipeline provided. 'Canvas info' consists of three
-	// arrays: nodes, comments and links.
-	static convertPipelineToCanvasInfo(pipeline) {
+	// Returns the 'canvas info' pipeline, stored internally in the object model,
+	// by extracting that info from the pipeline-flow pipeline provided. A
+	// 'canvas info' pipeline consists of an ID and three arrays: nodes,
+	// comments and links.
+	static convertPipelineToCanvasInfoPipeline(pipeline) {
 		const nodes = has(pipeline, "nodes") ? pipeline.nodes : [];
 		const comments = has(pipeline, "app_data.ui_data.comments") ? pipeline.app_data.ui_data.comments : [];
 
@@ -29,6 +27,9 @@ export default class PipelineInHandler {
 			"nodes": this.convertNodes(nodes),
 			"comments": this.convertComments(comments),
 			"links": this.convertLinks(nodes, comments),
+			"runtime_ref": pipeline.runtime_ref,
+			"app_data": pipeline.app_data,
+			"parameters": pipeline.parameters
 		};
 
 		return canvas;
@@ -42,7 +43,7 @@ export default class PipelineInHandler {
 				"operator_id_ref": node.op,
 				"output_ports": this.convertOutputs(node),
 				"input_ports": this.convertInputs(node),
-				"label": this.getLabel(node),
+				"label": this.convertLabel(node),
 				"description": has(node, "app_data.ui_data.description") ? node.app_data.ui_data.description : "",
 				"image": has(node, "app_data.ui_data.image") ? node.app_data.ui_data.image : "",
 				"x_pos": has(node, "app_data.ui_data.x_pos") ? node.app_data.ui_data.x_pos : 10,
@@ -51,11 +52,14 @@ export default class PipelineInHandler {
 				"decorations": has(node, "app_data.ui_data.decorations") ? this.convertDecorations(node.app_data.ui_data.decorations) : [],
 				"parameters": has(node, "parameters") ? node.parameters : [],
 				"messages": has(node, "app_data.ui_data.messages") ? node.app_data.ui_data.messages : [],
+				"app_data": has(node, "app_data") ? this.removeUiDataFromAppData(node.app_data) : [],
+				"subflow_ref": has(node, "subflow_ref") ? node.subflow_ref : {},
+				"model_ref": has(node, "model_ref") ? node.model_ref : ""
 			})
 		);
 	}
 
-	static getLabel(obj) {
+	static convertLabel(obj) {
 		// node label in pipeline-flow-ui schema is not a resource_def anymore, but just a string
 		const label = has(obj, "app_data.ui_data.label") ? obj.app_data.ui_data.label : "";
 		if (isObject(label) && label.default) {
@@ -66,19 +70,26 @@ export default class PipelineInHandler {
 
 	static convertOutputs(node) {
 		const outputs = node.outputs || [];
-		return outputs.map((output) => this.getPortObject(output));
+		return outputs.map((output) => this.convertPortObject(output));
 	}
 
 	static convertInputs(node) {
 		const inputs = node.inputs || [];
-		return inputs.map((input) => this.getPortObject(input));
+		return inputs.map((input) => this.convertPortObject(input));
 	}
 
-	static getPortObject(port) {
+	static convertPortObject(port) {
 		const portObj = {
 			"id": port.id,
-			"label": this.getLabel(port)
+			"label": this.convertLabel(port)
 		};
+
+		if (has(port, "subflow_node_ref")) {
+			portObj.subflow_node_ref = port.subflow_node_ref;
+		}
+		if (has(port, "schema_ref")) {
+			portObj.schema_ref = port.schema_ref;
+		}
 		if (has(port, "app_data.ui_data.cardinality")) {
 			portObj.cardinality = {
 				"min": port.app_data.ui_data.cardinality.min,
@@ -88,6 +99,13 @@ export default class PipelineInHandler {
 		if (has(port, "app_data.ui_data.class_name")) {
 			portObj.class_name = port.app_data.ui_data.class_name;
 		}
+		if (has(port, "parameters")) {
+			portObj.parameters = port.parameters;
+		}
+		if (port.app_data) {
+			portObj.app_data = this.removeUiDataFromAppData(port.app_data);
+		}
+
 		return portObj;
 	}
 
@@ -126,7 +144,6 @@ export default class PipelineInHandler {
 
 	static convertLinks(nodes, comments) {
 		const links = [];
-		let id = 1;
 
 		nodes.forEach((node) => {
 			if (node.inputs) {
@@ -135,7 +152,9 @@ export default class PipelineInHandler {
 						input.links.forEach((link) => {
 							if (this.isNode(nodes, link.node_id_ref)) {
 								const newLink = {
-									"id": "canvas_link_" + id++,
+									"id":
+										has(link, "app_data.ui_data.id")
+											? link.app_data.ui_data.id : this.getUUID(),
 									"class_name":
 										has(link, "app_data.ui_data.class_name")
 											? link.app_data.ui_data.class_name : "d3-data-link",
@@ -144,6 +163,9 @@ export default class PipelineInHandler {
 									"trgNodePortId": input.id,
 									"type": "nodeLink"
 								};
+								if (link.app_data) {
+									newLink.app_data = this.removeUiDataFromAppData(link.app_data);
+								}
 								if (link.port_id_ref) { // according to the spec, port_id_ref is optional for links
 									newLink.srcNodePortId = link.port_id_ref;
 								}
@@ -159,7 +181,7 @@ export default class PipelineInHandler {
 				node.app_data.ui_data.associations.forEach((association) => {
 					if (this.isNode(nodes, association.node_ref)) {
 						const newLink = {
-							"id": "canvas_link_" + id++,
+							"id": association.id ? association.id : this.getUUID(),
 							"class_name": association.class_name ? association.class_name : "d3-object-link",
 							"srcNodeId": node.id,
 							"trgNodeId": association.node_ref,
@@ -177,7 +199,7 @@ export default class PipelineInHandler {
 				comment.associated_id_refs.forEach((assocRef) => {
 					if (this.isNode(nodes, assocRef.node_ref)) {
 						const newLink = {
-							"id": "canvas_link_" + id++,
+							"id": assocRef.id ? assocRef.id : this.getUUID(),
 							"class_name":
 								has(assocRef, "class_name")
 									? assocRef.class_name : "d3-comment-link",
@@ -200,5 +222,20 @@ export default class PipelineInHandler {
 			return false;
 		}
 		return true;
+	}
+
+	static getUUID() {
+		return uuid4();
+	}
+
+	// Removes ui_data field from appData passed in and returns the resulting
+	// object or returns undefined if no appData is provided.
+	static removeUiDataFromAppData(appData) {
+		let newAppData;
+		if (appData) {
+			newAppData = JSON.parse(JSON.stringify(appData));
+			delete newAppData.ui_data;
+		}
+		return newAppData;
 	}
 }

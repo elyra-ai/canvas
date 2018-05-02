@@ -12,7 +12,7 @@ import log4js from "log4js";
 import deepFreeze from "deep-freeze";
 import { expect } from "chai";
 import isEqual from "lodash/isEqual";
-import initialCanvas from "../test_resources/json/startCanvas.json";
+import startCanvas from "../test_resources/json/startCanvas.json";
 import clonedCanvas from "../test_resources/json/canvasWithClones.json";
 import paletteJson from "../test_resources/json/testPalette.json";
 import filterNode from "../test_resources/json/filterNode.json";
@@ -30,6 +30,7 @@ import pipelineFlowTest1Start from "../test_resources/json/pipelineFlowTest1Star
 import pipelineFlowTest1Expected from "../test_resources/json/pipelineFlowTest1Expected.json";
 import pipelineFlowV1 from "../test_resources/json/pipelineFlowV1.json";
 import pipelineFlowV2 from "../test_resources/json/pipelineFlowV2.json";
+import addAppDataToLinksFlowExpected from "../test_resources/json/addAppDataToLinksFlowExpected.json";
 
 
 import ObjectModel from "../../src/object-model/object-model.js";
@@ -45,8 +46,6 @@ describe("ObjectModel API handle model OK", () => {
 	it("should layout a canvas horiziontally", () => {
 		logger.info("should layout a canvas horiziontally");
 
-		const startCanvas = initialCanvas;
-
 		deepFreeze(startCanvas);
 
 		objectModel.setCanvasInfo(startCanvas);
@@ -56,7 +55,7 @@ describe("ObjectModel API handle model OK", () => {
 		objectModel.addNode(node);
 
 		const expectedCanvas = addNodeHorizontalLayoutCanvas;
-		const actualCanvas = objectModel.getCanvasInfo();
+		const actualCanvas = objectModel.getCanvasInfoPipeline();
 
 		// Delete ID because IDs are generated at runtime and therefore won't be
 		// the same between expected and actual.
@@ -71,8 +70,6 @@ describe("ObjectModel API handle model OK", () => {
 	it("should layout a canvas vertically", () => {
 		logger.info("should layout a canvas vertically");
 
-		const startCanvas = initialCanvas;
-
 		deepFreeze(startCanvas);
 
 		objectModel.setCanvasInfo(startCanvas);
@@ -82,7 +79,7 @@ describe("ObjectModel API handle model OK", () => {
 		objectModel.addNode(node);
 
 		const expectedCanvas = addNodeVerticalLayoutCanvas;
-		const actualCanvas = objectModel.getCanvasInfo();
+		const actualCanvas = objectModel.getCanvasInfoPipeline();
 
 		// Delete ID because IDs are generated at runtime and therefore won't be
 		// the same between expected and actual.
@@ -97,8 +94,6 @@ describe("ObjectModel API handle model OK", () => {
 	it("should oneTimeLayout a canvas horiziontally", () => {
 		logger.info("should oneTimeLayout a canvas horiziontally");
 
-		const startCanvas = initialCanvas;
-
 		deepFreeze(startCanvas);
 
 		objectModel.setCanvasInfo(startCanvas);
@@ -106,7 +101,7 @@ describe("ObjectModel API handle model OK", () => {
 
 		const expectedCanvas = horizontalLayoutCanvas;
 
-		const actualCanvas = objectModel.getCanvasInfo();
+		const actualCanvas = objectModel.getCanvasInfoPipeline();
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
@@ -118,8 +113,6 @@ describe("ObjectModel API handle model OK", () => {
 	it("should oneTimeLayout a canvas vertically", () => {
 		logger.info("should oneTimeLayout a canvas vertically");
 
-		const startCanvas = initialCanvas;
-
 		deepFreeze(startCanvas);
 
 		objectModel.setCanvasInfo(startCanvas);
@@ -127,7 +120,7 @@ describe("ObjectModel API handle model OK", () => {
 
 		const expectedCanvas = verticalLayoutCanvas;
 
-		const actualCanvas = objectModel.getCanvasInfo();
+		const actualCanvas = objectModel.getCanvasInfoPipeline();
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
@@ -138,8 +131,6 @@ describe("ObjectModel API handle model OK", () => {
 	it("should move a node after oneTimeLayout horiziontally", () => {
 		logger.info("should move a node after oneTimeLayout horiziontally");
 
-		const startCanvas = initialCanvas;
-
 		deepFreeze(startCanvas);
 
 		objectModel.setCanvasInfo(startCanvas);
@@ -149,7 +140,7 @@ describe("ObjectModel API handle model OK", () => {
 		objectModel.moveObjects(moveVarNode);
 
 		const expectedCanvas = moveNodeHorizontalLayoutCanvas;
-		const actualCanvas = objectModel.getCanvasInfo();
+		const actualCanvas = objectModel.getCanvasInfoPipeline();
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
@@ -160,8 +151,6 @@ describe("ObjectModel API handle model OK", () => {
 	it("should move a node after oneTimeLayout vertically", () => {
 		logger.info("should move a node after oneTimeLayout vertically");
 
-		const startCanvas = initialCanvas;
-
 		deepFreeze(startCanvas);
 
 		objectModel.setCanvasInfo(startCanvas);
@@ -170,7 +159,7 @@ describe("ObjectModel API handle model OK", () => {
 		objectModel.moveObjects(moveVarNode);
 
 		const expectedCanvas = moveNodeVerticalLayoutCanvas;
-		const actualCanvas = objectModel.getCanvasInfo();
+		const actualCanvas = objectModel.getCanvasInfoPipeline();
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
@@ -408,7 +397,7 @@ describe("ObjectModel API handle model OK", () => {
 		// logger.info("Expected Messages = " + JSON.stringify(expectedPipelineFlow, null, 2));
 		// logger.info("Actual messages   = " + JSON.stringify(actualPipelineFlow, null, 2));
 
-		expect(isEqual(actualPipelineFlow, expectedPipelineFlow)).to.be.true;
+		expect(isEqual(JSON.stringify(actualPipelineFlow, null, 2), JSON.stringify(expectedPipelineFlow, null, 2))).to.be.true;
 	});
 
 	it("should return custom app_data and ui_data for links", () => {
@@ -417,18 +406,17 @@ describe("ObjectModel API handle model OK", () => {
 		const startPipelineFlowLinkAppData = JSON.parse(JSON.stringify(startPipelineFlow));
 		// add app_data and ui_data to existing link
 		startPipelineFlowLinkAppData.pipelines[0].nodes[0].inputs[0].links[0].app_data.myData = "myValue";
-		startPipelineFlowLinkAppData.pipelines[0].nodes[0].inputs[0].links[0].app_data.ui_data.myData2 = "myValue2";
 		deepFreeze(startPipelineFlowLinkAppData);
 
 		objectModel.setPipelineFlow(startPipelineFlowLinkAppData);
 
-		const expectedCanvas = startPipelineFlowLinkAppData;
+		const expectedCanvas = addAppDataToLinksFlowExpected;
 		const actualCanvas = objectModel.getPipelineFlow();
 
 		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
 		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
 
-		expect(isEqual(JSON.stringify(expectedCanvas, null, 4), JSON.stringify(actualCanvas, null, 4))).to.be.true;
+		expect(isEqual(JSON.stringify(actualCanvas, null, 2), JSON.stringify(expectedCanvas, null, 2))).to.be.true;
 	});
 
 	it("should add links for existing nodes", () => {
@@ -498,10 +486,9 @@ describe("ObjectModel API handle model OK", () => {
 		logger.info("should create node with fixed node id");
 		const uniqueNodeId = "myUniqueNodeId";
 
-		const startCanvas = initialCanvas;
-
 		deepFreeze(startCanvas);
 
+		objectModel.setEmptyPipelineFlow();
 		objectModel.setIdGeneratorHandler((action, data) => {
 			if (action === CREATE_NODE) {
 				return uniqueNodeId;
@@ -516,32 +503,33 @@ describe("ObjectModel API handle model OK", () => {
 
 		const expectedCanvas = addNodeVerticalLayoutCanvas;
 		expectedCanvas.nodes[3].id = uniqueNodeId;
-		const actualCanvas = objectModel.getCanvasInfo();
+		const actualCanvas = objectModel.getCanvasInfoPipeline();
+
+		// logger.info("Expected Canvas = " + JSON.stringify(expectedCanvas, null, 2));
+		// logger.info("Actual Canvas   = " + JSON.stringify(actualCanvas, null, 2));
 
 		expect(isEqual(expectedCanvas, actualCanvas)).to.be.true;
 	});
 
 	it("should create node with non-null node id", () => {
 		logger.info("should create node with non-null node id");
-		const startCanvas = initialCanvas;
 
 		deepFreeze(startCanvas);
 
+		objectModel.setEmptyPipelineFlow();
 		objectModel.setIdGeneratorHandler(() => null);
 		objectModel.setEmptyPipelineFlow();
 		objectModel.setPipelineFlowPalette(paletteJson);
 		const node = objectModel.createNode(filterNode);
 		objectModel.addNode(node);
 
-		expect(objectModel.getCanvasInfo().nodes[0].id).not.to.be.null;
+		expect(objectModel.getCanvasInfoPipeline().nodes[0].id).not.to.be.null;
 	});
 
 	it("should create node links with fixed id", () => {
 		logger.info("should create node links with fixed id");
 		const uniqueNodeId = "myUniqueNodeId";
 		const uniqueNodeLink = "myUniqueLinkId";
-
-		const startCanvas = initialCanvas;
 
 		deepFreeze(startCanvas);
 
@@ -587,8 +575,6 @@ describe("ObjectModel API handle model OK", () => {
 		logger.info("should create comment with fixed comment id");
 		const uniqueCommentId = "myUniqueCommentId";
 		const uniqueCommentLinkId = "myUniqueCommentLinkId";
-
-		const startCanvas = initialCanvas;
 
 		deepFreeze(startCanvas);
 		objectModel.setCanvasInfo(startCanvas);
@@ -645,9 +631,8 @@ describe("ObjectModel API handle model OK", () => {
 		const uniqueClonedCommentId = "myUniqueClonedCommentId";
 		const uniqueClonedCommentLinkId = "myUniqueClonedCommentLinkId";
 
-		const startCanvas = initialCanvas;
-
 		deepFreeze(startCanvas);
+		objectModel.setEmptyPipelineFlow();
 		objectModel.setCanvasInfo(startCanvas);
 
 		objectModel.setIdGeneratorHandler((action, data) => {
@@ -697,7 +682,10 @@ describe("ObjectModel API handle model OK", () => {
 		const cloneAction = new CloneMultipleObjectsAction(cloneData, objectModel);
 		cloneAction.do();
 
-		expect(isEqual(objectModel.getCanvasInfo(), clonedCanvas)).to.be.true;
+		// logger.info("Expected Canvas = " + JSON.stringify(clonedCanvas, null, 2));
+		// logger.info("Actual Canvas   = " + JSON.stringify(objectModel.getCanvasInfoPipeline(), null, 2));
+
+		expect(isEqual(objectModel.getCanvasInfoPipeline(), clonedCanvas)).to.be.true;
 	});
 
 });

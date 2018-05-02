@@ -19,9 +19,433 @@
   "pipelines": [
     {
       "id": "primary-pipeline",
+      "nodes": [
+        {
+          "id": "entryID1PE",
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "entryID1PE",
+              "image": "/images/nodes/varfile.svg",
+              "x_pos": 100,
+              "y_pos": 170,
+              "class_name": "canvas-node",
+              "description": {
+                "default": "EntryID1PE"
+              }
+            }
+          },
+          "outputs": [
+            {
+              "id": "entryPort1PE",
+              "app_data": {
+                "ui_data": {
+                  "label": "entryID1PE"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "entryID2PE",
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "entryID2PE",
+              "image": "/images/nodes/varfile.svg",
+              "x_pos": 100,
+              "y_pos": 270,
+              "class_name": "canvas-node",
+              "description": {
+                "default": "entryID2PE"
+              }
+            }
+          },
+          "outputs": [
+            {
+              "id": "entryPort2PE",
+              "app_data": {
+                "ui_data": {
+                  "label": "entryPort2PE"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "entryID3PE",
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "entryID3PE",
+              "image": "/images/nodes/varfile.svg",
+              "x_pos": 100,
+              "y_pos": 370,
+              "class_name": "canvas-node",
+              "description": {
+                "default": "entryID3PE"
+              }
+            }
+          },
+          "outputs": [
+            {
+              "id": "entryPort3PE",
+              "app_data": {
+                "ui_data": {
+                  "label": "entryPort3PE"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "nodeID1PE",
+          "type": "execution_node",
+          "op": "org.apache.spark.ml.ibm.transformers.Join",
+          "app_data": {
+            "ui_data": {
+              "label": "nodeID1PE",
+              "image": "/images/nodes/derive.svg",
+              "x_pos": 250,
+              "y_pos": 170,
+              "class_name": "canvas-node",
+              "description": {
+                "default": "nodeID1PE - Join two or more datasets"
+              }
+            },
+            "wml_data": {
+              "typeId": "Join"
+            }
+          },
+          "inputs": [
+            {
+              "id": "input1NodeID1PE",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 1,
+                    "max": 1
+                  },
+                  "label": "input1NodeID1PE"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "entryID1PE",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "canvas-data-link"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "id": "input2NodeID1PE",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 1,
+                    "max": 1
+                  },
+                  "label": "input2NodeID1PE"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "entryID2PE",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "canvas-data-link"
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "output1NodeID1PE",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 1,
+                    "max": -1
+                  },
+                  "label": "output1NodeID1PE"
+                }
+              }
+            }
+          ],
+          "parameters": {
+            "join-type": "inner",
+            "key1": "inputDS1.NAME",
+            "key2": "inputDS2.name"
+          }
+        },
+        {
+          "id": "nodeIDSuperNodePE",
+          "type": "super_node",
+          "subflow_ref": {
+            "pipeline_id_ref": "modeler-sub-pipeline"
+          },
+          "app_data": {
+            "ui_data": {
+              "label": "nodeIDSuperNodePE",
+              "image": "/images/nodes/derive.svg",
+              "x_pos": 400,
+              "y_pos": 170,
+              "class_name": "canvas-node",
+              "description": {
+                "default": "nodeIDSuperNodePE"
+              }
+            }
+          },
+          "inputs": [
+            {
+              "id": "input1SuperNodePE",
+              "subflow_node_ref": "entryID1SE",
+              "schema_ref": "schema3",
+              "app_data": {
+                "ui_data": {
+                  "label": "input1SuperNodePE"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "nodeID1PE",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "canvas-data-link"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "id": "input2SuperNodePE",
+              "subflow_node_ref": "entryID2SE",
+              "schema_ref": "schema2",
+              "app_data": {
+                "ui_data": {
+                  "label": "input2SuperNodePE"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "entryID3PE",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "canvas-data-link"
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "output1SuperNodePE",
+              "subflow_node_ref": "exitID1SE",
+              "schema_ref": "schema2",
+              "app_data": {
+                "ui_data": {
+                  "label": "output1SuperNodePE"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "nodeID2PE",
+          "type": "execution_node",
+          "op": "org.apache.spark.ml.ibm.transformers.Filter",
+          "app_data": {
+            "ui_data": {
+              "label": "nodeID2PE",
+              "image": "/images/nodes/derive.svg",
+              "x_pos": 700,
+              "y_pos": 170,
+              "class_name": "canvas-node",
+              "description": {
+                "default": "nodeID2PE - Filter record data"
+              }
+            },
+            "wml_data": {
+              "typeId": "filter-records"
+            }
+          },
+          "inputs": [
+            {
+              "id": "input1NodeID2PE",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 1,
+                    "max": 1
+                  },
+                  "label": "input1NodeID2PE"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "nodeIDSuperNodePE",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "canvas-data-link"
+                    }
+                  },
+                  "port_id_ref": "output1SuperNodePE"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "output1NodeID2PE",
+              "app_data": {
+                "ui_data": {
+                  "label": "output1NodeID2PE"
+                }
+              }
+            }
+          ],
+          "parameters": {
+            "conditionExpr": "Age > 20"
+          }
+        },
+        {
+          "id": "nodeID3PE",
+          "type": "execution_node",
+          "op": "org.apache.spark.ml.ibm.transformers.Filter",
+          "app_data": {
+            "ui_data": {
+              "label": "nodeID3PE",
+              "image": "/images/nodes/derive.svg",
+              "x_pos": 700,
+              "y_pos": 270,
+              "class_name": "canvas-node",
+              "description": {
+                "default": "nodeID3PE - Filter record data"
+              }
+            },
+            "wml_data": {
+              "typeId": "filter-records"
+            }
+          },
+          "inputs": [
+            {
+              "id": "input1NodeID3PE",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 1,
+                    "max": -1
+                  },
+                  "label": "input1NodeID3PE"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "nodeIDSuperNodePE",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "canvas-data-link"
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "output1NodeID3PE",
+              "app_data": {
+                "ui_data": {
+                  "label": "output1NodeID3PE"
+                }
+              }
+            }
+          ],
+          "parameters": {
+            "conditionExpr": "Age > ${age}"
+          }
+        },
+        {
+          "id": "exitID1PE",
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "exitID1PE",
+              "image": "/images/nodes/derive.svg",
+              "x_pos": 800,
+              "y_pos": 170,
+              "class_name": "canvas-node",
+              "description": {
+                "default": "exitID1PE"
+              }
+            }
+          },
+          "inputs": [
+            {
+              "id": "exitPort1PE",
+              "app_data": {
+                "ui_data": {
+                  "label": ""
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "nodeID2PE",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "canvas-data-link"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "exitID2PE",
+          "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "exitID2PE",
+              "image": "/images/nodes/derive.svg",
+              "x_pos": 800,
+              "y_pos": 270,
+              "class_name": "canvas-node",
+              "description": {
+                "default": "exitID2PE"
+              }
+            }
+          },
+          "inputs": [
+            {
+              "id": "exitPort2PE",
+              "app_data": {
+                "ui_data": {
+                  "label": "exitPort2PE"
+                }
+              },
+              "links": [
+                {
+                  "node_id_ref": "nodeID3PE",
+                  "app_data": {
+                    "ui_data": {
+                      "class_name": "canvas-data-link"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
       "app_data": {
         "ui_data": {
-          "zoom": 100,
           "comments": [
             {
               "id": "4e32ba0a-b234-3e33-b321-d693bf8f8452",
@@ -55,484 +479,52 @@
           ]
         }
       },
-      "nodes": [
-        {
-          "id": "entryID1PE",
-          "type": "binding",
-          "app_data": {
-            "ui_data": {
-              "label": "entryID1PE",
-              "description": {
-                "default": "EntryID1PE"
-              },
-              "image": "/images/nodes/varfile.svg",
-              "x_pos": 100,
-              "y_pos": 170,
-              "class_name": "canvas-node",
-              "messages": []
-            }
-          },
-          "outputs": [
-            {
-              "id": "entryPort1PE",
-              "schema_ref": "schema1",
-              "app_data": {
-                "ui_data": {
-                  "label": "entryID1PE"
-                }
-              }
-            }
-          ]
-        },
-        {
-          "id": "entryID2PE",
-          "type": "binding",
-          "app_data": {
-            "ui_data": {
-              "label": "entryID2PE",
-              "description": {
-                "default": "entryID2PE"
-              },
-              "image": "/images/nodes/varfile.svg",
-              "x_pos": 100,
-              "y_pos": 270,
-              "class_name": "canvas-node",
-              "messages": []
-            }
-          },
-          "outputs": [
-            {
-              "id": "entryPort2PE",
-              "schema_ref": "schema2",
-              "app_data": {
-                "ui_data": {
-                  "label": "entryPort2PE"
-                }
-              }
-            }
-          ]
-        },
-        {
-          "id": "entryID3PE",
-          "type": "binding",
-          "connection": {
-            "ref": "d7c75790-90fc-4883-a5fc-3bb589166a52",
-            "project_ref": "0a0a20e8-e8a8-4710-b90a-6df3ff775b04",
-            "properties": {
-              "schema_name": "GOSALES",
-              "table_name": "PRODUCT_NAME_LOOKUP"
-            }
-          },
-          "app_data": {
-            "ui_data": {
-              "label": "entryID3PE",
-              "description": {
-                "default": "entryID3PE"
-              },
-              "image": "/images/nodes/varfile.svg",
-              "x_pos": 100,
-              "y_pos": 370,
-              "class_name": "canvas-node",
-              "messages": []
-            }
-          },
-          "outputs": [
-            {
-              "id": "entryPort3PE",
-              "schema_ref": "schema2",
-              "app_data": {
-                "ui_data": {
-                  "label": "entryPort3PE"
-                }
-              }
-            }
-          ]
-        },
-        {
-          "id": "nodeID1PE",
-          "type": "execution_node",
-          "op": "org.apache.spark.ml.ibm.transformers.Join",
-          "inputs": [
-            {
-              "id": "input1NodeID1PE",
-              "links": [
-                {
-                  "node_id_ref": "entryID1PE",
-                  "app_data": {
-                    "ui_data": {
-                      "class_name": "canvas-data-link"
-                    }
-                  }
-                }
-              ],
-              "schema_ref": "schema1",
-              "app_data": {
-                "ui_data": {
-                  "cardinality": {
-                    "min": 1,
-                    "max": 1
-                  },
-                  "label": "input1NodeID1PE"
-                }
-              }
-            },
-            {
-              "id": "input2NodeID1PE",
-              "links": [
-                {
-                  "node_id_ref": "entryID2PE",
-                  "app_data": {
-                    "ui_data": {
-                      "class_name": "canvas-data-link"
-                    }
-                  }
-                }
-              ],
-              "schema_ref": "schema2",
-              "app_data": {
-                "ui_data": {
-                  "cardinality": {
-                    "min": 1,
-                    "max": 1
-                  },
-                  "label": "input2NodeID1PE"
-                }
-              }
-            }
-          ],
-          "outputs": [
-            {
-              "id": "output1NodeID1PE",
-              "schema_ref": "schema3",
-              "app_data": {
-                "ui_data": {
-                  "cardinality": {
-                    "min": 1,
-                    "max": -1
-                  },
-                  "label": "output1NodeID1PE"
-                }
-              }
-            }
-          ],
-          "parameters": {
-            "join-type": "inner",
-            "key1": "inputDS1.NAME",
-            "key2": "inputDS2.name"
-          },
-          "app_data": {
-            "ui_data": {
-              "label": "nodeID1PE",
-              "description": {
-                "default": "nodeID1PE - Join two or more datasets"
-              },
-              "image": "/images/nodes/derive.svg",
-              "x_pos": 250,
-              "y_pos": 170,
-              "class_name": "canvas-node",
-              "attributes": "attr1='value1'; attr2='value2'",
-              "messages": []
-            },
-            "wml_data": {
-              "typeId": "Join"
-            }
-          }
-        },
-        {
-          "id": "nodeIDSuperNodePE",
-          "type": "super_node",
-          "subflow_ref": {
-            "pipeline_id_ref": "modeler-sub-pipeline"
-          },
-          "inputs": [
-            {
-              "id": "input1SuperNodePE",
-              "links": [
-                {
-                  "node_id_ref": "nodeID1PE",
-                  "app_data": {
-                    "ui_data": {
-                      "class_name": "canvas-data-link"
-                    }
-                  }
-                }
-              ],
-              "subflow_node_ref": "entryID1SE",
-              "schema_ref": "schema3",
-              "app_data": {
-                "ui_data": {
-                  "label": "input1SuperNodePE"
-                }
-              }
-            },
-            {
-              "id": "input2SuperNodePE",
-              "links": [
-                {
-                  "node_id_ref": "entryID3PE",
-                  "app_data": {
-                    "ui_data": {
-                      "class_name": "canvas-data-link"
-                    }
-                  }
-                }
-              ],
-              "subflow_node_ref": "entryID2SE",
-              "schema_ref": "schema2",
-              "app_data": {
-                "ui_data": {
-                  "label": "input2SuperNodePE"
-                }
-              }
-            }
-          ],
-          "outputs": [
-            {
-              "id": "output1SuperNodePE",
-              "schema_ref": "schema2",
-              "subflow_node_ref": "exitID1SE",
-              "app_data": {
-                "ui_data": {
-                  "label": "output1SuperNodePE"
-                }
-              }
-            }
-          ],
-          "app_data": {
-            "ui_data": {
-              "label": "nodeIDSuperNodePE",
-              "description": {
-                "default": "nodeIDSuperNodePE"
-              },
-              "image": "/images/nodes/derive.svg",
-              "x_pos": 400,
-              "y_pos": 170,
-              "class_name": "canvas-node",
-              "messages": []
-            }
-          }
-        },
-        {
-          "id": "nodeID2PE",
-          "type": "execution_node",
-          "op": "org.apache.spark.ml.ibm.transformers.Filter",
-          "inputs": [
-            {
-              "id": "input1NodeID2PE",
-              "links": [
-                {
-                  "node_id_ref": "nodeIDSuperNodePE",
-                  "app_data": {
-                    "ui_data": {
-                      "class_name": "canvas-data-link"
-                    }
-                  },
-                  "port_id_ref": "output1SuperNodePE"
-                }
-              ],
-              "schema_ref": "schema2",
-              "app_data": {
-                "ui_data": {
-                  "cardinality": {
-                    "min": 1,
-                    "max": 1
-                  },
-                  "label": "input1NodeID2PE"
-                }
-              }
-            }
-          ],
-          "outputs": [
-            {
-              "id": "output1NodeID2PE",
-              "schema_ref": "schema3",
-              "app_data": {
-                "ui_data": {
-                  "label": "output1NodeID2PE"
-                }
-              }
-            }
-          ],
-          "parameters": {
-            "conditionExpr": "Age > 20"
-          },
-          "app_data": {
-            "ui_data": {
-              "label": "nodeID2PE",
-              "description": {
-                "default": "nodeID2PE - Filter record data"
-              },
-              "image": "/images/nodes/derive.svg",
-              "x_pos": 700,
-              "y_pos": 170,
-              "class_name": "canvas-node",
-              "messages": []
-            },
-            "wml_data": {
-              "typeId": "filter-records"
-            }
-          }
-        },
-        {
-          "id": "nodeID3PE",
-          "type": "execution_node",
-          "op": "org.apache.spark.ml.ibm.transformers.Filter",
-          "inputs": [
-            {
-              "id": "input1NodeID3PE",
-              "links": [
-                {
-                  "node_id_ref": "nodeIDSuperNodePE",
-                  "app_data": {
-                    "ui_data": {
-                      "class_name": "canvas-data-link"
-                    }
-                  }
-                }
-              ],
-              "schema_ref": "schema2",
-              "app_data": {
-                "ui_data": {
-                  "cardinality": {
-                    "min": 1,
-                    "max": -1
-                  },
-                  "label": "input1NodeID3PE"
-                }
-              }
-            }
-          ],
-          "outputs": [
-            {
-              "id": "output1NodeID3PE",
-              "schema_ref": "schema3",
-              "app_data": {
-                "ui_data": {
-                  "label": "output1NodeID3PE"
-                }
-              }
-            }
-          ],
-          "parameters": {
-            "conditionExpr": "Age > ${age}"
-          },
-          "app_data": {
-            "ui_data": {
-              "label": "nodeID3PE",
-              "description": {
-                "default": "nodeID3PE - Filter record data"
-              },
-              "image": "/images/nodes/derive.svg",
-              "x_pos": 700,
-              "y_pos": 270,
-              "class_name": "canvas-node",
-              "messages": []
-            },
-            "wml_data": {
-              "typeId": "filter-records"
-            }
-          }
-        },
-        {
-          "id": "exitID1PE",
-          "type": "binding",
-          "app_data": {
-            "ui_data": {
-              "label": "exitID1PE",
-              "description": {
-                "default": "exitID1PE"
-              },
-              "image": "/images/nodes/derive.svg",
-              "x_pos": 800,
-              "y_pos": 170,
-              "class_name": "canvas-node",
-              "messages": []
-            }
-          },
-          "inputs": [
-            {
-              "id": "exitPort1PE",
-              "schema_ref": "schema3",
-              "links": [
-                {
-                  "node_id_ref": "nodeID2PE",
-                  "app_data": {
-                    "ui_data": {
-                      "class_name": "canvas-data-link"
-                    }
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "id": "exitID2PE",
-          "type": "binding",
-          "app_data": {
-            "ui_data": {
-              "label": "exitID2PE",
-              "description": {
-                "default": "exitID2PE"
-              },
-              "image": "/images/nodes/derive.svg",
-              "x_pos": 800,
-              "y_pos": 270,
-              "class_name": "canvas-node",
-              "messages": []
-            }
-          },
-          "inputs": [
-            {
-              "id": "exitPort2PE",
-              "schema_ref": "schema3",
-              "app_data": {
-                "ui_data": {
-                  "label": "exitPort2PE"
-                }
-              },
-              "links": [
-                {
-                  "node_id_ref": "nodeID3PE",
-                  "app_data": {
-                    "ui_data": {
-                      "class_name": "canvas-data-link"
-                    }
-                  }
-                }
-              ]
-            }
-          ]
-        }
-      ],
       "runtime_ref": "scala-spark-2.0.1"
     },
     {
       "id": "modeler-sub-pipeline",
-      "app_data": {
-        "ui_data": {
-          "zoom": 150,
-          "comments": []
-        }
-      },
       "nodes": [
         {
           "id": "entryID1SE",
           "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "",
+              "image": "",
+              "x_pos": 10,
+              "y_pos": 10
+            }
+          },
           "outputs": [
             {
               "id": "entryPort1SE",
-              "schema_ref": "schema3"
+              "app_data": {
+                "ui_data": {
+                  "label": ""
+                }
+              }
             }
           ]
         },
         {
           "id": "entryID2SE",
           "type": "binding",
+          "app_data": {
+            "ui_data": {
+              "label": "",
+              "image": "",
+              "x_pos": 10,
+              "y_pos": 10
+            }
+          },
           "outputs": [
             {
               "id": "entryPort2SE",
-              "schema_ref": "schema2"
+              "app_data": {
+                "ui_data": {
+                  "label": ""
+                }
+              }
             }
           ]
         },
@@ -540,9 +532,29 @@
           "id": "nodeID1SE",
           "type": "execution_node",
           "op": "org.apache.spark.ml.ibm.transformers.Filter",
+          "app_data": {
+            "wml_data": {
+              "typeId": "filter-records"
+            },
+            "ui_data": {
+              "label": "Filter",
+              "image": "/images/nodes/derive.svg",
+              "x_pos": 784,
+              "y_pos": 202,
+              "class_name": "nodes",
+              "description": {
+                "default": "Filter record data"
+              }
+            }
+          },
           "inputs": [
             {
               "id": "input1nodeID1SE",
+              "app_data": {
+                "ui_data": {
+                  "label": "input1nodeID1SE"
+                }
+              },
               "links": [
                 {
                   "node_id_ref": "entryID1SE",
@@ -552,19 +564,12 @@
                     }
                   }
                 }
-              ],
-              "schema_ref": "schema3",
-              "app_data": {
-                "ui_data": {
-                  "label": "input1nodeID1SE"
-                }
-              }
+              ]
             }
           ],
           "outputs": [
             {
               "id": "output1nodeID1SE",
-              "schema_ref": "schema3",
               "app_data": {
                 "ui_data": {
                   "label": "output1nodeID1SE"
@@ -574,30 +579,39 @@
           ],
           "parameters": {
             "conditionExpr": "Age > ${age}"
-          },
-          "app_data": {
-            "ui_data": {
-              "label": "Filter",
-              "description": {
-                "default": "Filter record data"
-              },
-              "image": "/images/nodes/derive.svg",
-              "x_pos": 784,
-              "y_pos": 202,
-              "class_name": "nodes"
-            },
-            "wml_data": {
-              "typeId": "filter-records"
-            }
           }
         },
         {
           "id": "nodeID2SE",
           "type": "execution_node",
           "op": "org.apache.spark.ml.ibm.transformers.Join",
+          "app_data": {
+            "wml_data": {
+              "typeId": "Join"
+            },
+            "ui_data": {
+              "label": "nodeID2SE",
+              "image": "/images/nodes/derive.svg",
+              "x_pos": 651,
+              "y_pos": 70,
+              "class_name": "nodes",
+              "description": {
+                "default": "nodeID2SE Join two or more datasets"
+              }
+            }
+          },
           "inputs": [
             {
               "id": "input1NodeID2SE",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 1,
+                    "max": 1
+                  },
+                  "label": "input1NodeID2SE"
+                }
+              },
               "links": [
                 {
                   "node_id_ref": "nodeID1SE",
@@ -607,20 +621,19 @@
                     }
                   }
                 }
-              ],
-              "schema_ref": "schema3",
+              ]
+            },
+            {
+              "id": "input2NodeID2SE",
               "app_data": {
                 "ui_data": {
                   "cardinality": {
                     "min": 1,
                     "max": 1
                   },
-                  "label": "input1NodeID2SE"
+                  "label": "input2NodeID2SE"
                 }
-              }
-            },
-            {
-              "id": "input2NodeID2SE",
+              },
               "links": [
                 {
                   "node_id_ref": "entryID2SE",
@@ -630,23 +643,12 @@
                     }
                   }
                 }
-              ],
-              "schema_ref": "schema2",
-              "app_data": {
-                "ui_data": {
-                  "cardinality": {
-                    "min": 1,
-                    "max": 1
-                  },
-                  "label": "input2NodeID2SE"
-                }
-              }
+              ]
             }
           ],
           "outputs": [
             {
               "id": "output1NodeID2SE",
-              "schema_ref": "schema2",
               "app_data": {
                 "ui_data": {
                   "label": "output1NodeID2SE"
@@ -658,22 +660,6 @@
             "join-type": "inner",
             "key1": "inputDS1.NAME",
             "key2": "inputDS2.name"
-          },
-          "app_data": {
-            "ui_data": {
-              "label": "nodeID2SE",
-              "description": {
-                "default": "nodeID2SE Join two or more datasets"
-              },
-              "image": "/images/nodes/derive.svg",
-              "x_pos": 651,
-              "y_pos": 70,
-              "class_name": "nodes",
-              "attributes": "attr1='value1'; attr2='value2'"
-            },
-            "wml_data": {
-              "typeId": "Join"
-            }
           }
         },
         {
@@ -682,20 +668,18 @@
           "app_data": {
             "ui_data": {
               "label": "exitID1SE",
-              "description": {
-                "default": "exitID1SE"
-              },
               "image": "/images/nodes/derive.svg",
               "x_pos": 651,
               "y_pos": 170,
               "class_name": "nodes",
-              "attributes": "attr1='value1'; attr2='value2'"
+              "description": {
+                "default": "exitID1SE"
+              }
             }
           },
           "inputs": [
             {
               "id": "exitPort1SE",
-              "schema_ref": "schema2",
               "app_data": {
                 "ui_data": {
                   "label": "exitPort1SE"
@@ -715,6 +699,11 @@
           ]
         }
       ],
+      "app_data": {
+        "ui_data": {
+          "comments": []
+        }
+      },
       "runtime_ref": "SPSS-Modeler"
     }
   ],

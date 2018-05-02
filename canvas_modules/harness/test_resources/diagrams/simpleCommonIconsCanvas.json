@@ -14,12 +14,11 @@
           "op": "com.ibm.commonicons.operations.aggregate",
           "app_data": {
             "ui_data": {
+              "label": "Aggregate",
               "image": "/images/common_node_icons/operations/operation_aggregate.svg",
               "x_pos": 313,
               "y_pos": 216,
-              "class_name": "canvas-node",
-              "label": "Aggregate",
-              "messages": []
+              "class_name": "canvas-node"
             }
           },
           "inputs": [
@@ -60,8 +59,7 @@
                 }
               }
             }
-          ],
-          "parameters": {}
+          ]
         },
         {
           "id": "9c531ba0-7a34-4a67-ab9a-c3248e0842c9",
@@ -69,12 +67,11 @@
           "op": "com.ibm.commonicons.operations.balance",
           "app_data": {
             "ui_data": {
+              "label": "Balance",
               "image": "/images/common_node_icons/operations/operation_balance.svg",
               "x_pos": 535,
               "y_pos": 290,
-              "class_name": "canvas-node",
-              "label": "Balance",
-              "messages": []
+              "class_name": "canvas-node"
             }
           },
           "inputs": [
@@ -115,8 +112,7 @@
                 }
               }
             }
-          ],
-          "parameters": {}
+          ]
         },
         {
           "id": "d45c7b2c-a8bf-4a6a-926d-0ecc75809ee3",
@@ -124,12 +120,11 @@
           "op": "com.ibm.commonicons.operations.append",
           "app_data": {
             "ui_data": {
+              "label": "Append",
               "image": "/images/common_node_icons/operations/operation_append.svg",
               "x_pos": 54,
               "y_pos": 54,
-              "class_name": "canvas-node",
-              "label": "Append",
-              "messages": []
+              "class_name": "canvas-node"
             }
           },
           "inputs": [
@@ -159,8 +154,7 @@
                 }
               }
             }
-          ],
-          "parameters": {}
+          ]
         },
         {
           "id": "8b5ef5df-0163-484e-a766-32314b98aafb",
@@ -168,12 +162,11 @@
           "op": "com.ibm.commonicons.operations.balance",
           "app_data": {
             "ui_data": {
+              "label": "Balance",
               "image": "/images/common_node_icons/operations/operation_balance.svg",
               "x_pos": 170,
               "y_pos": 130,
-              "class_name": "canvas-node",
-              "label": "Balance",
-              "messages": []
+              "class_name": "canvas-node"
             }
           },
           "inputs": [
@@ -214,8 +207,7 @@
                 }
               }
             }
-          ],
-          "parameters": {}
+          ]
         },
         {
           "id": "d7a8678e-f853-4eb9-beab-3f64f4a726b9",
@@ -223,12 +215,11 @@
           "op": "com.ibm.commonicons.operations.binning",
           "app_data": {
             "ui_data": {
+              "label": "Binning",
               "image": "/images/common_node_icons/operations/operation_binning.svg",
               "x_pos": 803,
               "y_pos": 193,
-              "class_name": "canvas-node",
-              "label": "Binning",
-              "messages": []
+              "class_name": "canvas-node"
             }
           },
           "inputs": [
@@ -269,20 +260,19 @@
                 }
               }
             }
-          ],
-          "parameters": {}
+          ]
         },
         {
           "id": "ff062eb5-6073-45a5-8dea-1255c5352bf1",
           "type": "model_node",
+          "model_ref": "",
           "app_data": {
             "ui_data": {
+              "label": "Linear Regression",
               "image": "/images/common_node_icons/models/model_linear_regression.svg",
               "x_pos": 1084,
               "y_pos": 299,
-              "class_name": "canvas-node",
-              "label": "Linear Regression",
-              "messages": []
+              "class_name": "canvas-node"
             }
           },
           "inputs": [
@@ -309,8 +299,7 @@
                 }
               ]
             }
-          ],
-          "parameters": {}
+          ]
         }
       ],
       "app_data": {

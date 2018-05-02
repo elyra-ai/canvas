@@ -11,6 +11,7 @@
         {
           "id": "cbd72bd7-2a97-4bfa-ab93-8a8e6ed45b88",
           "type": "binding",
+          "op": "var_file",
           "app_data": {
             "ui_data": {
               "image": "/images/node.svg",

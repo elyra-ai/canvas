@@ -8,12 +8,12 @@
     {
       "id": "empty-pipeline",
       "nodes": [],
-      "runtime_ref": "scala-spark-2.0.1",
       "app_data": {
         "ui_data": {
           "comments": []
         }
-      }
+      },
+      "runtime_ref": "scala-spark-2.0.1"
     }
   ],
   "schemas": [],

@@ -36,10 +36,10 @@ Scenario: Sanity test to check if tips show up for the palette, nodes, ports and
 	Then I verify the tip doesn't show for input port id "inPort2"
 
 	Then I hover over the link at 420, 260
-	Then I verify the tip shows below 260 for link id "canvas_link_1" between node "Discard Fields", port "Output Port Two" and node "Define Types", port "Input Port 2"
+	Then I verify the tip shows below 260 for link between node "Discard Fields", port "Output Port Two" and node "Define Types", port "Input Port 2"
 
 	Then I move the mouse to coordinates 300, 100
-	Then I verify the tip shows doesn't show for link id "canvas_link_1"
+	Then I verify the tip shows doesn't show for link
 
 
 Scenario: Sanity test to check if tips don't show up for the palette, nodes, ports and links after disabling tips
@@ -67,7 +67,7 @@ Scenario: Sanity test to check if tips don't show up for the palette, nodes, por
 	Then I verify the tip doesn't show for input port id "inPort2"
 
 	Then I hover over the link at 420, 260
-	Then I verify the tip shows doesn't show for link id "canvas_link_1"
+	Then I verify the tip shows doesn't show for link
 
 Scenario: Sanity test changing node name to update node tip
 	Then I resize the window size to 1400 width and 800 height

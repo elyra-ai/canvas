@@ -169,11 +169,15 @@ class App extends React.Component {
 		this.propertiesControllerHandler = this.propertiesControllerHandler.bind(this);
 		this.helpClickHandler = this.helpClickHandler.bind(this);
 
-		this.canvasController = new CanvasController();
-		this.canvasController.setEmptyPipelineFlow();
+		try {
+			this.canvasController = new CanvasController();
+			this.canvasController.setEmptyPipelineFlow();
 
-		this.canvasController2 = new CanvasController();
-		this.canvasController2.setEmptyPipelineFlow();
+			this.canvasController2 = new CanvasController();
+			this.canvasController2.setEmptyPipelineFlow();
+		} catch (err) {
+			console.error("Error setting up canvas controllers: " + err);
+		}
 	}
 
 	componentDidMount() {
@@ -380,13 +384,13 @@ class App extends React.Component {
 		try {
 			return canvasController.getPipelineFlow();
 		} catch (err) {
-			this.log("Schema validation error");
+			this.log("Schema validation error: " + err);
 			return "Schema validation error";
 		}
 	}
 
 	getCanvasInfo() {
-		return this.canvasController.getCanvasInfo();
+		return this.canvasController.getObjectModel().getCanvasInfoPipeline();
 	}
 
 	setTipConfig(newTipConfig) {

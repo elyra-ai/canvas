@@ -8,10 +8,9 @@
  *******************************************************************************/
 /* eslint no-console: "off" */
 
+import { getCanvasData, getEventLogData } from "./utilities/test-utils.js";
 import { getCommentIdFromObjectModelUsingText, getCommentIndexFromCanvasUsingText,
 	getEventLogCount, getObjectModelCount } from "./utilities/validate-utils.js";
-import { getHarnessData } from "./utilities/HTTPClient-utils.js";
-import { getURL } from "./utilities/test-config.js";
 import isEqual from "lodash/isEqual";
 import { simulateDragDrop } from "./utilities/dragAndDrop-utils.js";
 
@@ -56,17 +55,13 @@ module.exports = function() {
 			expect(commentValue).toEqual(comment);
 
 			// verify that the comment is in the internal object model
-			const testUrl = getURL();
-			const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
-			const getEventLogUrl = testUrl + "/v1/test-harness/events";
-			browser.timeouts("script", 5000);
-			var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
-			var returnVal = browser.execute(getObjectModelCount, objectModel.value, "comments", comment);
+			var objectModel = getCanvasData();
+			var returnVal = browser.execute(getObjectModelCount, objectModel, "comments", comment);
 			expect(returnVal.value).toBe(1);
 
 			// verify that an event for a new comment is in the external object model event log
-			var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
-			returnVal = browser.execute(getEventLogCount, eventLog.value, "editActionHandler() editComment", comment);
+			var eventLog = getEventLogData();
+			returnVal = browser.execute(getEventLogCount, eventLog, "editActionHandler() editComment", comment);
 			expect(returnVal.value).toBe(1);
 		});
 
@@ -97,17 +92,13 @@ module.exports = function() {
 			expect(count).toEqual(commentNumber);
 
 			// verify that the comment is in the internal object model
-			const testUrl = getURL();
-			const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
-			const getEventLogUrl = testUrl + "/v1/test-harness/events";
-			browser.timeouts("script", 5000);
-			var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
-			var returnVal = browser.execute(getObjectModelCount, objectModel.value, "comments", commentText);
+			var objectModel = getCanvasData();
+			var returnVal = browser.execute(getObjectModelCount, objectModel, "comments", commentText);
 			expect(returnVal.value).toBe(0);
 
 			// verify that an event for a deleted comment is in the external object model event log
-			var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
-			returnVal = browser.execute(getEventLogCount, eventLog.value, "action: deleteObjects", 	commentText);
+			var eventLog = getEventLogData();
+			returnVal = browser.execute(getEventLogCount, eventLog, "action: deleteObjects", 	commentText);
 			expect(returnVal.value).toBe(1);
 		});
 
@@ -143,12 +134,9 @@ module.exports = function() {
 				browser.leftClick("#common-canvas-items-container-0", 400, 400);
 
 				// verify the comment is in the internal object model
-				const testUrl = getURL();
-				const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
-
 				browser.timeouts("script", 5000);
-				var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
-				var returnVal = browser.execute(getCommentIdFromObjectModelUsingText, objectModel.value, commentText);
+				var objectModel = getCanvasData();
+				var returnVal = browser.execute(getCommentIdFromObjectModelUsingText, objectModel, commentText);
 				expect(returnVal.value).not.toBe(-1);
 
 
@@ -165,12 +153,9 @@ module.exports = function() {
 			expect(Number(comments)).toEqual(commentsLength);
 
 			// verify the number of comments is in the internal object model
-			const testUrl = getURL();
-			const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
-
 			browser.timeouts("script", 5000);
-			var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
-			var returnVal = browser.execute(getObjectModelCount, objectModel.value, "comments", "");
+			var objectModel = getCanvasData();
+			var returnVal = browser.execute(getObjectModelCount, objectModel, "comments", "");
 			expect(returnVal.value).toBe(Number(comments));
 		} catch (err) {
 			console.log("Error = " + err);
@@ -205,12 +190,9 @@ module.exports = function() {
 			expect(commentText).toEqual(commentContentTxt);
 
 			// verify the comment is in the internal object model
-			const testUrl = getURL();
-			const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
-
 			browser.timeouts("script", 5000);
-			var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
-			var returnVal = browser.execute(getCommentIdFromObjectModelUsingText, objectModel.value, commentText);
+			var objectModel = getCanvasData();
+			var returnVal = browser.execute(getCommentIdFromObjectModelUsingText, objectModel, commentText);
 			expect(returnVal.value).not.toBe(-1);
 		} catch (err) {
 			console.log("Error = " + err);

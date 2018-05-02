@@ -232,9 +232,9 @@ module.exports = function() {
 		browser.pause(1000); // Wait for the tooltip to be displayed
 	});
 
-	this.Then(/^I verify the tip shows below (\d+) for link id "([^"]*)" between node "([^"]*)", port "([^"]*)" and node "([^"]*)", port "([^"]*)"$/,
-		function(mouseY, linkId, sourceNode, sourcePort, targetNode, targetPort) {
-			const tip = browser.$("#link_tip_0_" + linkId);
+	this.Then(/^I verify the tip shows below (\d+) for link between node "([^"]*)", port "([^"]*)" and node "([^"]*)", port "([^"]*)"$/,
+		function(mouseY, sourceNode, sourcePort, targetNode, targetPort) {
+			const tip = browser.$("[id*=link_tip_0_]"); // Find tip with id that starts with 'link_tip_0_'
 			expect(tip.value).not.toEqual(null);
 
 			const tipTop = tip.getLocation().y;
@@ -263,8 +263,8 @@ module.exports = function() {
 		expect(tip.value).toEqual(null);
 	});
 
-	this.Then(/^I verify the tip shows doesn't show for link id "([^"]*)"$/, function(linkId) {
-		const tip = browser.$("#link_tip_0_" + linkId);
+	this.Then("I verify the tip shows doesn't show for link", function() {
+		const tip = browser.$("[id*=link_tip_0_]"); // Find tip with id that starts with 'link_tip_0_'
 		expect(tip.value).toEqual(null);
 	});
 

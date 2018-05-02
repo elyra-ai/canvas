@@ -11,210 +11,46 @@ import isEmpty from "lodash/isEmpty";
 
 export default class PipelineOutHandler {
 
-	static modifyPipelineWithCanvasInfo(pipeline, canvasInfo) {
-		if (pipeline && canvasInfo) {
-			return Object.assign({}, pipeline, {
-				id: canvasInfo.sub_id,
-				nodes: this.getNodes(pipeline, canvasInfo),
-				app_data: this.getPipelineAppData(pipeline.app_data, canvasInfo) });
+	static createPipelineFlow(pipelineFlow, canvasInfo) {
+		const copyPipelineFlow = JSON.parse(JSON.stringify(pipelineFlow));
+		const copyCanvasInfo = JSON.parse(JSON.stringify(canvasInfo));
+		copyPipelineFlow.pipelines = this.createPipelinesFromCanvasInfo(copyCanvasInfo);
+		return copyPipelineFlow;
+	}
+
+	static createPipelinesFromCanvasInfo(canvasInfo) {
+		if (canvasInfo) {
+			return canvasInfo.map((canvasInfoPipeline) => this.createPipeline(canvasInfoPipeline));
 		}
-		return null;
+		return [];
 	}
 
-	static getNodes(pipeline, canvasInfo) {
-		var newNodes = [];
-		pipeline.nodes.forEach((pNode) => {
-			const index = canvasInfo.nodes.findIndex((ciNode) => ciNode.id === pNode.id);
-			if (index > -1) {
-				let newNode = Object.assign({}, pNode, {
-					app_data: this.getNodeAppData(pNode.app_data, canvasInfo.nodes[index]) });
-				if (pNode.inputs) {
-					newNode = Object.assign({}, newNode, {
-						inputs: this.getInputs(canvasInfo.nodes[index].input_ports, pNode.inputs, canvasInfo.links, pNode.id) });
-				}
-				if (pNode.outputs) {
-					newNode = Object.assign({}, newNode, {
-						outputs: this.getOutputs(canvasInfo.nodes[index].output_ports, pNode.outputs) });
-				}
-				if (canvasInfo.nodes[index].parameters &&
-						!isEmpty(canvasInfo.nodes[index].parameters)) {
-					newNode = Object.assign({}, newNode, {
-						parameters: this.getParameters(canvasInfo.nodes[index].parameters) });
-				} else {
-					delete newNode.parameters;
-				}
-				newNodes.push(newNode);
-			}
-		});
-
-		canvasInfo.nodes.forEach((ciNode) => {
-			var index = pipeline.nodes.findIndex((pNode) => ciNode.id === pNode.id);
-			if (index === -1) {
-				var newNode = this.createNode(ciNode, canvasInfo.links);
-				newNodes.push(newNode);
-			}
-		});
-
-		return newNodes;
-	}
-
-	static getNodeAppData(appData, ciNode) {
-		if (appData) {
-			return Object.assign({}, appData, { ui_data: this.getNodeUiData(appData.ui_data, ciNode) });
-		}
-		return { ui_data: { x_pos: ciNode.x_pos, y_pos: ciNode.y_pos } };
-	}
-
-	static getNodeUiData(uiData, ciNode) {
-		let newUiData;
-		if (uiData) {
-			newUiData = Object.assign({}, uiData, { label: ciNode.label, x_pos: ciNode.x_pos, y_pos: ciNode.y_pos });
-		} else {
-			newUiData = { label: ciNode.label, x_pos: ciNode.x_pos, y_pos: ciNode.y_pos };
-		}
-		if (ciNode.messages && !isEmpty(ciNode.messages)) {
-			newUiData.messages = ciNode.messages;
-		} else {
-			delete newUiData.messages;
-		}
-		return newUiData;
-	}
-
-	static getPortAppData(appData, ciPort) {
-		if (appData) {
-			const newAppData = Object.assign({}, appData);
-			if (appData.ui_data) {
-				newAppData.ui_data = this.getPortUiData(appData.ui_data, ciPort);
-			}
-			return newAppData;
-		}
-		return null;
-	}
-
-	static getPortUiData(uiData, ciPort) {
-		if (uiData) {
-			return Object.assign({}, uiData, { label: ciPort.label });
-		}
-		return { label: ciPort.label };
-	}
-
-	static getInputs(ciInputs, inputs, canvasLinks, pNodeId) {
-		return inputs.map((input, portIndex) => {
-			const index = ciInputs.findIndex((ciInput) => ciInput.id === input.id);
-			const newInput = Object.assign({}, input);
-			if (input.app_data) {
-				newInput.app_data = this.getPortAppData(input.app_data, ciInputs[index]);
-			}
-			// always call getLinks because new links might have been added for existing nodes that have no links yet
-			const links = this.getLinks(input.links, canvasLinks, pNodeId, input.id, portIndex);
-			if (!isEmpty(links)) {
-				newInput.links = links;
-			}
-
-			return newInput;
-		});
-	}
-
-	static getOutputs(ciOutputs, outputs) {
-		return outputs.map((output, portIndex) => {
-			const index = ciOutputs.findIndex((ciOutput) => ciOutput.id === output.id);
-			const newOutput = Object.assign({}, output);
-			if (output.app_data) {
-				newOutput.app_data = this.getPortAppData(output.app_data, ciOutputs[index]);
-			}
-			return newOutput;
-		});
-	}
-
-	static getParameters(parameters) {
-		return Object.assign({}, parameters);
-	}
-
-	// Returns the links that point to the target node info passed in.
-	static getLinks(nodeLinks, canvasLinks, pNodeId, pPortId, portIndex) {
-		var newLinks = [];
-
-		// First get the subset of the links that are applicable to the target node info.
-		var filteredCanvasLinks = this.getFilteredCanvasLinks(canvasLinks, pNodeId, pPortId, portIndex);
-
-		// Loop through each filtered link and see if that link already has an
-		// equivalent link in the set of links for the node. If it does we can
-		// leave it 'as is' and just return it. If there is no equivalent link
-		// we need to create a new link to be returned.
-		filteredCanvasLinks.forEach((filteredCanvasLink) => {
-			var index = -1;
-			if (nodeLinks) {
-				index = nodeLinks.findIndex((nodeLink) =>
-					nodeLink.node_id_ref === filteredCanvasLink.srcNodeId &&
-					nodeLink.port_id_ref === filteredCanvasLink.srcNodePortId);
-			}
-
-			// If filteredLink does not match an existing link in the pipeline create a new link
-			if (index === -1) {
-				newLinks.push(this.createNewNodeLink(filteredCanvasLink));
-
-			// If filteredLink matches an existing link in the pipeline, return it
-			// but merge app_data and ui_data because we add a class_name for the link in ui_data
-			} else {
-				const link = Object.assign({}, nodeLinks[index], {
-					app_data: this.getLinkAppData(nodeLinks[index].app_data, filteredCanvasLink) });
-				newLinks.push(link);
-			}
-		});
-
-		return newLinks;
-	}
-
-	// Returns the canvas links that are aplicable for the target node info passed in.
-	static getFilteredCanvasLinks(canvasLinks, pNodeId, pPortId, portIndex) {
-		return canvasLinks.filter((canvasLink) => {
-			if (canvasLink.type === "nodeLink" &&
-					canvasLink.trgNodeId === pNodeId) {
-				if (canvasLink.trgNodePortId) {
-					if (canvasLink.trgNodePortId === pPortId) {
-						return true;
-					}
-				} else if (portIndex === 0) { // If port info is unknown make this link only for the first port
-					return true;
-				}
-			}
-			return false;
-		});
-	}
-
-	static getLinkAppData(appData, ciLink) {
-		if (appData) {
-			return Object.assign({}, appData, { ui_data: this.getLinkUiData(appData.ui_data, ciLink) });
-		}
-		return { ui_data: { class_name: ciLink.class_name } };
-	}
-
-	static getLinkUiData(uiData, ciLink) {
-		if (uiData) {
-			return Object.assign({}, uiData, { class_name: ciLink.class_name });
-		}
-		return { class_name: ciLink.class_name };
-	}
-
-	static createNode(ciNode, canvasLinks) {
-		var newNode = {
-			id: ciNode.id,
-			type: ciNode.type,
-			app_data: {
-				ui_data: {
-					image: ciNode.image,
-					x_pos: ciNode.x_pos,
-					y_pos: ciNode.y_pos,
-					class_name: ciNode.class_name,
-					label: ciNode.label,
-					description: ciNode.description
-				}
-			}
+	static createPipeline(canvasInfoPipeline) {
+		const newPipeline = {
+			id: canvasInfoPipeline.sub_id,
+			nodes: this.createNodes(canvasInfoPipeline),
+			app_data: this.createPipelineAppData(canvasInfoPipeline),
+			runtime_ref: canvasInfoPipeline.runtime_ref
 		};
 
-		if (ciNode.messages && !isEmpty(ciNode.messages)) {
-			newNode.app_data.ui_data.messages = ciNode.messages;
+		if (canvasInfoPipeline.parameters) {
+			newPipeline.parameters = canvasInfoPipeline.parameters;
 		}
+
+		return newPipeline;
+	}
+
+	static createNodes(canvasInfoPipeline) {
+		return canvasInfoPipeline.nodes.map((canvasInfoNode) =>
+			this.createNode(canvasInfoNode, canvasInfoPipeline.links)
+		);
+	}
+
+	static createNode(ciNode, ciLinks) {
+		var newNode = {
+			id: ciNode.id,
+			type: ciNode.type
+		};
 
 		if (ciNode.type === "execution_node" ||
 				ciNode.type === "binding") {
@@ -225,19 +61,26 @@ export default class PipelineOutHandler {
 			newNode.subflow_ref = ciNode.subflow_ref;
 		}
 
+		if (ciNode.type === "model_node") {
+			newNode.model_ref = ciNode.model_ref;
+		}
+
+		newNode.app_data =
+			Object.assign({}, ciNode.app_data, { ui_data: this.createNodeUiData(ciNode) });
+
+		if (ciNode.messages && !isEmpty(ciNode.messages)) {
+			newNode.app_data.ui_data.messages = ciNode.messages;
+		}
+
 		if (ciNode.input_ports && ciNode.input_ports.length > 0) {
-			newNode.inputs = this.createInputs(ciNode, canvasLinks);
+			newNode.inputs = this.createInputs(ciNode, ciLinks);
 		}
 		if (ciNode.output_ports && ciNode.output_ports.length > 0) {
 			newNode.outputs = this.createOutputs(ciNode);
 		}
 
-		if (ciNode.type === "execution_node" ||
-				ciNode.type === "super_node" ||
-				ciNode.type === "model_node") {
-			if (ciNode.parameters && !isEmpty(ciNode.parameters)) {
-				newNode.parameters = ciNode.parameters;
-			}
+		if (ciNode.parameters && !isEmpty(ciNode.parameters)) {
+			newNode.parameters = ciNode.parameters;
 		}
 
 		var newDecorations = this.createDecorations(ciNode.decorations);
@@ -245,12 +88,29 @@ export default class PipelineOutHandler {
 			newNode.app_data.ui_data.decorations = newDecorations;
 		}
 
-		const assocationLinks = this.getAssociationLinks(ciNode, canvasLinks);
+		const assocationLinks = this.createAssociationLinks(ciNode, ciLinks);
 		if (!isEmpty(assocationLinks)) {
 			newNode.app_data.ui_data.associations = assocationLinks;
 		}
 
 		return newNode;
+	}
+
+	static createNodeUiData(ciNode) {
+		const uiData = {
+			label: ciNode.label,
+			image: ciNode.image,
+			x_pos: ciNode.x_pos,
+			y_pos: ciNode.y_pos
+		};
+		if (ciNode.class_name) {
+			uiData.class_name = ciNode.class_name;
+		}
+
+		if (ciNode.description) {
+			uiData.description = ciNode.description;
+		}
+		return uiData;
 	}
 
 	static createDecorations(decorations) {
@@ -271,21 +131,31 @@ export default class PipelineOutHandler {
 
 	static createInputs(ciNode, canvasLinks) {
 		var newInputs = [];
-		ciNode.input_ports.forEach((inPort, portIndex) => {
-			var newInput = {
-				id: inPort.id,
-				app_data: {
-					ui_data: {
-						cardinality: inPort.cardinality,
-						class_name: inPort.class_name,
-						label: inPort.label
-					}
-				}
+		ciNode.input_ports.forEach((ciInputPort, portIndex) => {
+			const newInput = {
+				id: ciInputPort.id
 			};
 
-			var newLinks = this.createLinks(canvasLinks, ciNode.id, inPort.id, portIndex);
+			if (ciNode.type === "super_node") {
+				if (ciInputPort.subflow_node_ref) {
+					newInput.subflow_node_ref = ciInputPort.subflow_node_ref;
+				}
+
+				if (ciInputPort.schema_ref) {
+					newInput.schema_ref = ciInputPort.schema_ref;
+				}
+			}
+
+			newInput.app_data =
+				Object.assign({}, ciInputPort.app_data, { ui_data: this.createPortUiData(ciInputPort) });
+
+			var newLinks = this.createLinks(canvasLinks, ciNode.id, ciInputPort.id, portIndex);
 			if (newLinks.length > 0) {
 				newInput.links = newLinks;
+			}
+
+			if (ciInputPort.parameters) {
+				newInput.parameters = ciInputPort.parameters;
 			}
 
 			newInputs.push(newInput);
@@ -293,11 +163,48 @@ export default class PipelineOutHandler {
 		return newInputs;
 	}
 
-	static createLinks(canvasLinks, ciNodeId, inPortId, portIndex) {
+	static createOutputs(ciNode) {
+		var newOutputs = [];
+		ciNode.output_ports.forEach((ciOutputPort) => {
+			var newOutput = {
+				id: ciOutputPort.id
+			};
+
+			if (ciNode.type === "super_node") {
+				if (ciOutputPort.subflow_node_ref) {
+					newOutput.subflow_node_ref = ciOutputPort.subflow_node_ref;
+				}
+
+				if (ciOutputPort.schema_ref) {
+					newOutput.schema_ref = ciOutputPort.schema_ref;
+				}
+			}
+
+			newOutput.app_data =
+				Object.assign({}, ciOutputPort.app_data, { ui_data: this.createPortUiData(ciOutputPort) });
+
+			if (ciOutputPort.parameters) {
+				newOutput.parameters = ciOutputPort.parameters;
+			}
+
+			newOutputs.push(newOutput);
+		});
+		return newOutputs;
+	}
+
+	static createPortUiData(ciPort) {
+		return {
+			cardinality: ciPort.cardinality,
+			class_name: ciPort.class_name,
+			label: ciPort.label
+		};
+	}
+
+	static createLinks(ciLinks, ciNodeId, ciInputPortId, portIndex) {
 		var newLinks = [];
-		if (canvasLinks) {
-			// Returns the canvas links that are aplicable for the target node info passed in.
-			var filteredCanvasLinks = this.getFilteredCanvasLinks(canvasLinks, ciNodeId, inPortId, portIndex);
+		if (ciLinks) {
+			// Returns the canvas links that are applicable for the target node info passed in.
+			var filteredCanvasLinks = this.getFilteredCanvasLinks(ciLinks, ciNodeId, ciInputPortId, portIndex);
 
 			filteredCanvasLinks.forEach((link) => {
 				newLinks.push(this.createNewNodeLink(link));
@@ -306,23 +213,21 @@ export default class PipelineOutHandler {
 		return newLinks;
 	}
 
-	static createOutputs(ciNode) {
-		var newOutputs = [];
-		ciNode.output_ports.forEach((outPort) => {
-			var newOutput = {
-				id: outPort.id,
-				app_data: {
-					ui_data: {
-						cardinality: outPort.cardinality,
-						class_name: outPort.class_name,
-						label: outPort.label
+	// Returns the canvas links that are applicable for the target node info passed in.
+	static getFilteredCanvasLinks(ciLinks, ciNodeId, ciInputPortId, portIndex) {
+		return ciLinks.filter((canvasLink) => {
+			if (canvasLink.type === "nodeLink" &&
+					canvasLink.trgNodeId === ciNodeId) {
+				if (canvasLink.trgNodePortId) {
+					if (canvasLink.trgNodePortId === ciInputPortId) {
+						return true;
 					}
+				} else if (portIndex === 0) { // If port info is unknown, make this link only for the first port
+					return true;
 				}
-			};
-
-			newOutputs.push(newOutput);
+			}
+			return false;
 		});
-		return newOutputs;
 	}
 
 	static createNewNodeLink(link) {
@@ -330,12 +235,18 @@ export default class PipelineOutHandler {
 			node_id_ref: link.srcNodeId
 		};
 
+		let uiData = {};
+
 		if (link.class_name) {
-			newNodeLink.app_data = {
-				ui_data: {
-					class_name: link.class_name
-				}
+			uiData = {
+				class_name: link.class_name
 			};
+		}
+
+		const appData = Object.assign({}, link.app_data, { ui_data: uiData });
+
+		if (!isEmpty(appData)) {
+			newNodeLink.app_data = appData;
 		}
 
 		if (link.srcNodePortId) {
@@ -344,22 +255,19 @@ export default class PipelineOutHandler {
 		return newNodeLink;
 	}
 
-	static getPipelineAppData(appData, canvasInfo) {
-		if (appData) {
-			return Object.assign({}, appData, { ui_data: this.getPipelineUiData(appData.ui_data, canvasInfo) });
+	static createPipelineAppData(canvasInfoPipeline) {
+		if (canvasInfoPipeline.appData) {
+			return Object.assign({}, canvasInfoPipeline.appData, { ui_data: this.createPipelineUiData(canvasInfoPipeline) });
 		}
-		return { ui_data: { comments: this.getComments(canvasInfo) } };
+		return { ui_data: this.createPipelineUiData(canvasInfoPipeline) };
 	}
 
-	static getPipelineUiData(uiData, canvasInfo) {
-		if (uiData) {
-			return Object.assign({}, uiData, { comments: this.getComments(canvasInfo) });
-		}
-		return { comments: this.getComments(canvasInfo) };
+	static createPipelineUiData(canvasInfoPipeline) {
+		return { comments: this.createComments(canvasInfoPipeline.comments, canvasInfoPipeline.links) };
 	}
 
-	static getComments(canvasInfo) {
-		return canvasInfo.comments.map((comment) =>
+	static createComments(canvasInfoComments, canvasInfoLinks) {
+		return canvasInfoComments.map((comment) =>
 			({
 				id: comment.id,
 				x_pos: comment.x_pos,
@@ -368,14 +276,14 @@ export default class PipelineOutHandler {
 				height: comment.height,
 				class_name: comment.class_name,
 				content: comment.content,
-				associated_id_refs: this.getCommentLinks(canvasInfo, comment.id)
+				associated_id_refs: this.createCommentLinks(canvasInfoLinks, comment.id)
 			})
 		);
 	}
 
-	static getCommentLinks(canvasInfo, commentId) {
+	static createCommentLinks(canvasInfoLinks, commentId) {
 		var newLinks = [];
-		canvasInfo.links.forEach((link) => {
+		canvasInfoLinks.forEach((link) => {
 			if (link.type === "commentLink" &&
 					link.srcNodeId === commentId) {
 				newLinks.push({ node_ref: link.trgNodeId, class_name: link.class_name });
@@ -384,11 +292,11 @@ export default class PipelineOutHandler {
 		return newLinks;
 	}
 
-	static getAssociationLinks(node, canvasLinks) {
+	static createAssociationLinks(ciNode, ciLinks) {
 		const associationsLinks = [];
-		canvasLinks.forEach((link) => {
+		ciLinks.forEach((link) => {
 			if (link.type === "associationLink" &&
-					link.srcNodeId === node.id) {
+					link.srcNodeId === ciNode.id) {
 				associationsLinks.push({
 					id: link.id,
 					node_ref: link.trgNodeId,

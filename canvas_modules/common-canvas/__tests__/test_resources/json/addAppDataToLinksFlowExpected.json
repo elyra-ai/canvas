@@ -2,50 +2,22 @@
   "doc_type": "pipeline",
   "version": "2.0",
   "json_schema": "http://www.ibm.com/ibm/wdp/flow-v2.0/pipeline-flow-v2-schema.json",
-  "id": "test-pipeline-flow",
-  "primary_pipeline": "test-pipeline",
+  "id": "153651d6-9b88-423c-b01b-861f12d01489",
+  "primary_pipeline": "153651d6-9b88-423c-b01b-861f12d01489",
   "pipelines": [
     {
-      "id": "test-pipeline",
+      "id": "153651d6-9b88-423c-b01b-861f12d01489",
       "nodes": [
         {
-          "id": "cbd72bd7-2a97-4bfa-ab93-8a8e6ed45b88",
-          "type": "binding",
-          "op": "var_file",
-          "app_data": {
-            "ui_data": {
-              "label": "Var. File",
-              "image": "/images/node.svg",
-              "x_pos": 31,
-              "y_pos": 97.5,
-              "class_name": "canvas-node"
-            }
-          },
-          "outputs": [
-            {
-              "id": "outPort",
-              "app_data": {
-                "ui_data": {
-                  "cardinality": {
-                    "min": 0,
-                    "max": -1
-                  },
-                  "label": "Output Port"
-                }
-              }
-            }
-          ]
-        },
-        {
-          "id": "fb241cc4-7456-41b0-a2a3-ba2c1cc6d2ae",
+          "id": "idGWRVT47XDV",
           "type": "execution_node",
-          "op": "select",
+          "op": "",
           "app_data": {
             "ui_data": {
-              "label": "Select",
+              "label": "Define Types",
               "image": "/images/node.svg",
-              "x_pos": 168,
-              "y_pos": 98.5,
+              "x_pos": 445,
+              "y_pos": 219,
               "class_name": "canvas-node"
             }
           },
@@ -55,21 +27,21 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": 0,
-                    "max": 1
+                    "min": "0",
+                    "max": "1"
                   },
                   "label": "Input Port"
                 }
               },
               "links": [
                 {
-                  "node_id_ref": "cbd72bd7-2a97-4bfa-ab93-8a8e6ed45b88",
+                  "node_id_ref": "id8I6RH2V91XW",
                   "app_data": {
+                    "myData": "myValue",
                     "ui_data": {
                       "class_name": "d3-data-link"
                     }
-                  },
-                  "port_id_ref": "outPort"
+                  }
                 }
               ]
             }
@@ -80,24 +52,29 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": 0,
-                    "max": -1
+                    "min": "0",
+                    "max": "1"
                   },
                   "label": "Output Port"
                 }
               }
             }
-          ]
+          ],
+          "parameters": {
+            "field1": "value1",
+            "field2": "value2"
+          }
         },
         {
-          "id": "94e091d8-aef0-4833-8766-a7bae7814fb9",
-          "type": "binding",
+          "id": "id8I6RH2V91XW",
+          "type": "execution_node",
+          "op": "",
           "app_data": {
             "ui_data": {
-              "label": "Object Store",
+              "label": "C5.0",
               "image": "/images/node.svg",
-              "x_pos": 320,
-              "y_pos": 99.5,
+              "x_pos": 245,
+              "y_pos": 128,
               "class_name": "canvas-node"
             }
           },
@@ -107,23 +84,26 @@
               "app_data": {
                 "ui_data": {
                   "cardinality": {
-                    "min": 0,
-                    "max": 1
+                    "min": "0",
+                    "max": "1"
                   },
                   "label": "Input Port"
                 }
-              },
-              "links": [
-                {
-                  "node_id_ref": "fb241cc4-7456-41b0-a2a3-ba2c1cc6d2ae",
-                  "app_data": {
-                    "ui_data": {
-                      "class_name": "d3-data-link"
-                    }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": "0",
+                    "max": "1"
                   },
-                  "port_id_ref": "outPort"
+                  "label": "Output Port"
                 }
-              ]
+              }
             }
           ]
         }

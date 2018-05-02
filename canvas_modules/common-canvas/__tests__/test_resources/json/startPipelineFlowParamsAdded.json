@@ -14,11 +14,11 @@
           "op": "",
           "app_data": {
             "ui_data": {
+              "label": "Define Types",
               "image": "/images/node.svg",
               "x_pos": 445,
               "y_pos": 219,
-              "class_name": "canvas-node",
-              "label": "Define Types"
+              "class_name": "canvas-node"
             }
           },
           "inputs": [
@@ -70,11 +70,11 @@
           "op": "",
           "app_data": {
             "ui_data": {
+              "label": "C5.0",
               "image": "/images/node.svg",
               "x_pos": 245,
               "y_pos": 128,
-              "class_name": "canvas-node",
-              "label": "C5.0"
+              "class_name": "canvas-node"
             }
           },
           "inputs": [

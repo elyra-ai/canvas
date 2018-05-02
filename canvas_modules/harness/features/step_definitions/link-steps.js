@@ -12,8 +12,7 @@
 import { containLinkEvent, containLinkInObjectModel, getCommentIdFromObjectModel,
 	getCommentIdFromObjectModelUsingText, getCommentIndexFromCanvasUsingText, getNodeIdForLabel,
 	getNodeIdFromObjectModel, getObjectModelCount, getPortLinks } from "./utilities/validate-utils.js";
-import { getHarnessData } from "./utilities/HTTPClient-utils.js";
-import { getURL } from "./utilities/test-config.js";
+import { getCanvasData, getEventLogData } from "./utilities/test-utils.js";
 import { simulateD3LinkCreation } from "./utilities/dragAndDrop-utils.js";
 
 
@@ -39,20 +38,16 @@ module.exports = function() {
 				expect(links).toEqual(linkCount);
 
 				// verify that the link is in the internal object model
-				const testUrl = getURL();
-				const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
-				const getEventLogUrl = testUrl + "/v1/test-harness/events";
-				browser.timeouts("script", 5000);
-				var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
-				var srcNodeId = browser.execute(getNodeIdFromObjectModel, objectModel.value, orgNodeNumber);
-				var destNodeId = browser.execute(getNodeIdFromObjectModel, objectModel.value, destNodeNumber);
-				var returnVal = browser.execute(containLinkInObjectModel, objectModel.value, srcNodeId.value, destNodeId.value);
+				var objectModel = getCanvasData();
+				var srcNodeId = browser.execute(getNodeIdFromObjectModel, objectModel, orgNodeNumber);
+				var destNodeId = browser.execute(getNodeIdFromObjectModel, objectModel, destNodeNumber);
+				var returnVal = browser.execute(containLinkInObjectModel, objectModel, srcNodeId.value, destNodeId.value);
 				browser.pause(500);
 				expect(returnVal.value).toBe(1);
 
 				// verify that an event for a new link is in the external object model event log
-				var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
-				returnVal = browser.execute(containLinkEvent, eventLog.value, srcNodeId.value, destNodeId.value,
+				var eventLog = getEventLogData();
+				returnVal = browser.execute(containLinkEvent, eventLog, srcNodeId.value, destNodeId.value,
 					"editActionHandler() linkNodes");
 				expect(returnVal.value).toBe(1);
 			} catch (err) {
@@ -78,19 +73,15 @@ module.exports = function() {
 			expect(links).toEqual(linkCount);
 
 			// verify that the link is in the internal object model
-			const testUrl = getURL();
-			const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
-			const getEventLogUrl = testUrl + "/v1/test-harness/events";
-			browser.timeouts("script", 5000);
-			var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
-			var srcNodeId = browser.execute(getCommentIdFromObjectModelUsingText, objectModel.value, commentText);
-			var destNodeId = browser.execute(getNodeIdFromObjectModel, objectModel.value, nodeIndex);
-			var returnVal = browser.execute(containLinkInObjectModel, objectModel.value, srcNodeId.value, destNodeId.value);
+			var objectModel = getCanvasData();
+			var srcNodeId = browser.execute(getCommentIdFromObjectModelUsingText, objectModel, commentText);
+			var destNodeId = browser.execute(getNodeIdFromObjectModel, objectModel, nodeIndex);
+			var returnVal = browser.execute(containLinkInObjectModel, objectModel, srcNodeId.value, destNodeId.value);
 			expect(returnVal.value).toBe(1);
 
 			// verify that an event for a new link is in the external object model event log
-			var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
-			returnVal = browser.execute(containLinkEvent, eventLog.value, srcNodeId.value,
+			var eventLog = getEventLogData();
+			returnVal = browser.execute(containLinkEvent, eventLog, srcNodeId.value,
 				destNodeId.value, "editActionHandler() linkComment");
 			expect(returnVal.value).toBe(1);
 		});
@@ -107,13 +98,10 @@ module.exports = function() {
 			browser.$(".context-menu-popover").$$(".react-contextmenu-item")[0].click();
 
 			// verify that the link is Not in the internal object model
-			const testUrl = getURL();
-			const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
-			browser.timeouts("script", 5000);
-			var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
-			var srcNodeId = browser.execute(getCommentIdFromObjectModel, objectModel.value, commentIndex);
-			var destNodeId = browser.execute(getNodeIdFromObjectModel, objectModel.value, nodeIndex);
-			var returnVal = browser.execute(containLinkInObjectModel, objectModel.value, srcNodeId.value, destNodeId.value);
+			var objectModel = getCanvasData();
+			var srcNodeId = browser.execute(getCommentIdFromObjectModel, objectModel, commentIndex);
+			var destNodeId = browser.execute(getNodeIdFromObjectModel, objectModel, nodeIndex);
+			var returnVal = browser.execute(containLinkInObjectModel, objectModel, srcNodeId.value, destNodeId.value);
 			expect(returnVal.value).toBe(0);
 		});
 
@@ -129,13 +117,10 @@ module.exports = function() {
 			browser.$(".context-menu-popover").$$(".react-contextmenu-item")[0].click();
 
 			// verify that the link is Not in the internal object model
-			const testUrl = getURL();
-			const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
-			browser.timeouts("script", 5000);
-			var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
-			var srcNodeId = browser.execute(getCommentIdFromObjectModel, objectModel.value, srcNodeIndex);
-			var destNodeId = browser.execute(getNodeIdFromObjectModel, objectModel.value, destNodeIndex);
-			var returnVal = browser.execute(containLinkInObjectModel, objectModel.value, srcNodeId.value, destNodeId.value);
+			var objectModel = getCanvasData();
+			var srcNodeId = browser.execute(getCommentIdFromObjectModel, objectModel, srcNodeIndex);
+			var destNodeId = browser.execute(getNodeIdFromObjectModel, objectModel, destNodeIndex);
+			var returnVal = browser.execute(containLinkInObjectModel, objectModel, srcNodeId.value, destNodeId.value);
 			expect(returnVal.value).toBe(0);
 		});
 
@@ -158,11 +143,8 @@ module.exports = function() {
 		expect(dataLinks + commentLinks + associationLinks).toEqual(linkCount);
 
 		// verify that the link is in the internal object model
-		const testUrl = getURL();
-		const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
-		browser.timeouts("script", 5000);
-		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
-		var returnVal = browser.execute(getObjectModelCount, objectModel.value, "links", linkCount);
+		var objectModel = getCanvasData();
+		var returnVal = browser.execute(getObjectModelCount, objectModel, "links", linkCount);
 		expect(returnVal.value).toBe(linkCount);
 
 	});
@@ -173,12 +155,8 @@ module.exports = function() {
 			expect(Number(dataLinks)).toEqual(dataLinksOnCanvas);
 
 			// verify the number of data-links is in the internal object model
-			const testUrl = getURL();
-			const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
-
-			browser.timeouts("script", 5000);
-			var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
-			var returnVal = browser.execute(getObjectModelCount, objectModel.value, "datalinks", "");
+			var objectModel = getCanvasData();
+			var returnVal = browser.execute(getObjectModelCount, objectModel, "datalinks", "");
 			expect(returnVal.value).toBe(Number(dataLinks));
 		} catch (err) {
 			console.log("Error = " + err);
@@ -193,12 +171,8 @@ module.exports = function() {
 			expect(Number(commentLinks)).toEqual(commentLinksOnCanvas);
 
 			// verify the number of data-links is in the internal object model
-			const testUrl = getURL();
-			const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
-
-			browser.timeouts("script", 5000);
-			var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
-			var returnVal = browser.execute(getObjectModelCount, objectModel.value, "commentLinks", "");
+			var objectModel = getCanvasData();
+			var returnVal = browser.execute(getObjectModelCount, objectModel, "commentLinks", "");
 			expect(returnVal.value).toBe(Number(commentLinks));
 		} catch (err) {
 			console.log("Error = " + err);
@@ -246,12 +220,8 @@ module.exports = function() {
 			expect(Number(portLinks)).toEqual(portLinksOnCanvas);
 
 			// verify the number of port-links is in the internal object model
-			const testUrl = getURL();
-			const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
-
-			browser.timeouts("script", 5000);
-			var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
-			var returnVal = browser.execute(getObjectModelCount, objectModel.value, "datalinks", "");
+			var objectModel = getCanvasData();
+			var returnVal = browser.execute(getObjectModelCount, objectModel, "datalinks", "");
 			expect(returnVal.value).toBe(Number(portLinks));
 		} catch (err) {
 			console.log("Error = " + err);
@@ -263,10 +233,8 @@ module.exports = function() {
 	// Then I verify 1 link between source node "Field Reorder" source port "outPort" to target node "Na_to_K" target port "inPort"
 	this.Then(/^I verify (\d+) link between source node "([^"]*)" source port "([^"]*)" to target node "([^"]*)" target port "([^"]*)"$/, function(linkCount, srcNode, srcPort, trgNode, trgPort) {
 		try {
-			const testUrl = getURL();
-			const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
-			var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
-			var returnVal = getPortLinks(objectModel.value, srcNode, srcPort, trgNode, trgPort);
+			var objectModel = getCanvasData();
+			var returnVal = getPortLinks(objectModel, srcNode, srcPort, trgNode, trgPort);
 			expect(returnVal).toBe(Number(linkCount));
 		} catch (err) {
 			console.log("Error = " + err);

@@ -14,11 +14,11 @@
           "op": "",
           "app_data": {
             "ui_data": {
+              "label": "Define Types",
               "image": "/images/node.svg",
               "x_pos": 482,
               "y_pos": 132.99999237060547,
-              "class_name": "canvas-node",
-              "label": "Define Types"
+              "class_name": "canvas-node"
             }
           },
           "inputs": [
@@ -65,11 +65,11 @@
           "type": "binding",
           "app_data": {
             "ui_data": {
+              "label": "Out 2",
               "image": "/images/node.svg",
               "x_pos": 753,
               "y_pos": 82.99999618530273,
-              "class_name": "canvas-node",
-              "label": "Out 2"
+              "class_name": "canvas-node"
             }
           },
           "inputs": [
@@ -105,11 +105,11 @@
           },
           "app_data": {
             "ui_data": {
+              "label": "SuperNode",
               "image": "/images/node.svg",
               "x_pos": 227,
               "y_pos": 128.99999237060547,
-              "class_name": "canvas-node",
-              "label": "SuperNode"
+              "class_name": "canvas-node"
             }
           },
           "inputs": [
@@ -159,11 +159,11 @@
           "model_ref": "",
           "app_data": {
             "ui_data": {
+              "label": "Model 1",
               "image": "/images/node.svg",
               "x_pos": 623,
               "y_pos": 304.99999237060547,
-              "class_name": "canvas-node",
-              "label": "Model 1"
+              "class_name": "canvas-node"
             }
           },
           "inputs": [
@@ -210,11 +210,11 @@
           "type": "binding",
           "app_data": {
             "ui_data": {
+              "label": "Out 1",
               "image": "/images/node.svg",
               "x_pos": 760,
               "y_pos": 230.99999237060547,
               "class_name": "canvas-node",
-              "label": "Out 1",
               "associations": [
                 {
                   "id": "id5KIRGGJ3FYT.id125TTEEIK7V",
@@ -254,11 +254,11 @@
           "type": "binding",
           "app_data": {
             "ui_data": {
+              "label": "DRUG1n",
               "image": "/images/node.svg",
               "x_pos": 101,
               "y_pos": 127.99999237060547,
-              "class_name": "canvas-node",
-              "label": "DRUG1n"
+              "class_name": "canvas-node"
             }
           },
           "outputs": [
@@ -282,11 +282,11 @@
           "op": "",
           "app_data": {
             "ui_data": {
+              "label": "Discard Fields",
               "image": "/images/node.svg",
               "x_pos": 363,
               "y_pos": 131.99998474121094,
-              "class_name": "canvas-node",
-              "label": "Discard Fields"
+              "class_name": "canvas-node"
             }
           },
           "inputs": [
@@ -334,11 +334,11 @@
           "model_ref": "",
           "app_data": {
             "ui_data": {
+              "label": "Model 2",
               "image": "/images/node.svg",
               "x_pos": 607,
               "y_pos": 22.999996185302734,
               "class_name": "canvas-node",
-              "label": "Model 2",
               "associations": [
                 {
                   "id": "id8I6RH2V91XW.id1ZZTZ3ZMYWL",

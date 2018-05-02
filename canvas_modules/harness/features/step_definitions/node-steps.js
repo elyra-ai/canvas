@@ -10,8 +10,7 @@
 
 import { deleteLinkInObjectModel, findCategoryElement, findNodeIndexInPalette, getEventLogCount,
 	getNodeIdForLabel, getNodeIdFromObjectModel, getObjectModelCount, isObjectModelEmpty } from "./utilities/validate-utils.js";
-import { getHarnessData } from "./utilities/HTTPClient-utils.js";
-import { getURL } from "./utilities/test-config.js";
+import { getCanvasData, getCanvasDataForSecondCanvas, getEventLogData } from "./utilities/test-utils.js";
 import { simulateDragDrop } from "./utilities/dragAndDrop-utils.js";
 
 /* global browser */
@@ -543,7 +542,6 @@ module.exports = function() {
 					categoryElem.click(); // close category
 				}
 
-
 				// Start validation
 				var nodeNumber = inNodeIndex - 1;
 
@@ -553,20 +551,15 @@ module.exports = function() {
 				expect(imageName).toEqual(expectedImages[nodeType]);
 
 				// verify that the  node is in the internal object model
-				const testUrl = getURL();
-				const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
-				const getEventLogUrl = testUrl + "/v1/test-harness/events";
-
-				browser.timeouts("script", 5000);
-				var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
-				var returnVal = browser.execute(getObjectModelCount, objectModel.value, "nodes", expectedImages[nodeType]);
+				var objectModel = getCanvasData();
+				var returnVal = browser.execute(getObjectModelCount, objectModel, "nodes", expectedImages[nodeType]);
 				expect(returnVal.value).toBe(1);
 
 				// verify that an event for a new  node is in the external object model event log
-				var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
-				returnVal = browser.execute(getEventLogCount, eventLog.value, "editActionHandler() createNode", expectedEventData[nodeType]);
+				var eventLog = getEventLogData();
+				returnVal = browser.execute(getEventLogCount, eventLog, "editActionHandler() createNode", expectedEventData[nodeType]);
 				if (returnVal.value !== 1) {
-					// console.log(eventLog.value);
+					// console.log(eventLog);
 				}
 				expect(returnVal.value).toBe(1);
 			} catch (err) {
@@ -649,13 +642,9 @@ module.exports = function() {
 
 
 		// verify that the link is Not in the internal object model
-		const testUrl = getURL();
-		const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
-
-		browser.timeouts("script", 5000);
-		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
-		var nodeId = browser.execute(getNodeIdFromObjectModel, objectModel.value, nodeNumber);
-		var returnVal = browser.execute(deleteLinkInObjectModel, objectModel.value, nodeId.value);
+		var objectModel = getCanvasData();
+		var nodeId = browser.execute(getNodeIdFromObjectModel, objectModel, nodeNumber);
+		var returnVal = browser.execute(deleteLinkInObjectModel, objectModel, nodeId.value);
 		expect(returnVal.value).toBe(0);
 	});
 
@@ -696,18 +685,13 @@ module.exports = function() {
 		expect(count).toBe(0);
 
 		// verify that the  node is in the internal object model
-		const testUrl = getURL();
-		const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
-		const getEventLogUrl = testUrl + "/v1/test-harness/events";
-
-		browser.timeouts("script", 5000);
-		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
-		var returnVal = browser.execute(getObjectModelCount, objectModel.value, "nodes", expectedImages[nodeType]);
+		var objectModel = getCanvasData();
+		var returnVal = browser.execute(getObjectModelCount, objectModel, "nodes", expectedImages[nodeType]);
 		expect(returnVal.value).toBe(0);
 
 		// verify that an event for a new  node is in the external object model event log
-		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
-		returnVal = browser.execute(getEventLogCount, eventLog.value, "action: deleteObjects", nodeType);
+		var eventLog = getEventLogData();
+		returnVal = browser.execute(getEventLogCount, eventLog, "action: deleteObjects", nodeType);
 		expect(returnVal.value).toBe(1);
 	});
 
@@ -733,18 +717,13 @@ module.exports = function() {
 		expect(count).toBe(0);
 
 		// verify that the  node is in the internal object model
-		const testUrl = getURL();
-		const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
-		const getEventLogUrl = testUrl + "/v1/test-harness/events";
-
-		browser.timeouts("script", 5000);
-		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
-		var returnVal = browser.execute(getObjectModelCount, objectModel.value, "nodes", expectedImages[nodeType]);
+		var objectModel = getCanvasData();
+		var returnVal = browser.execute(getObjectModelCount, objectModel, "nodes", expectedImages[nodeType]);
 		expect(returnVal.value).toBe(0);
 
 		// verify that an event for a new  node is in the external object model event log
-		var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
-		returnVal = browser.execute(getEventLogCount, eventLog.value, "editActionHandler() deleteSelectedObjects", "");
+		var eventLog = getEventLogData();
+		returnVal = browser.execute(getEventLogCount, eventLog, "editActionHandler() deleteSelectedObjects", "");
 		expect(returnVal.value).toBe(1);
 	});
 
@@ -777,12 +756,8 @@ module.exports = function() {
 	//
 	this.Then(/^I expect the object model to be empty$/, function() {
 		// verify that the  node is in the internal object model
-		const testUrl = getURL();
-		const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
-
-		browser.timeouts("script", 5000);
-		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
-		var returnVal = browser.execute(isObjectModelEmpty, objectModel.value);
+		var objectModel = getCanvasData();
+		var returnVal = browser.execute(isObjectModelEmpty, objectModel);
 		expect(returnVal.value).toBe(0);
 	});
 
@@ -790,16 +765,16 @@ module.exports = function() {
 	//
 	this.Then(/^I write out the object model$/, function() {
 		browser.timeouts("script", 5000);
-		// var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
-		// console.log("warn Object Model: " + objectModel.value);
+		// var objectModel = getCanvasData();
+		// console.log("warn Object Model: " + objectModel);
 	});
 
 	// Then I write out the event log
 	//
 	this.Then(/^I write out the event log$/, function() {
 		browser.timeouts("script", 5000);
-		// var eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
-		// console.log("warn event Log: " + eventLog.value);
+		// var eventLog = getEventLogData();
+		// console.log("warn event Log: " + eventLog);
 	});
 
 	// Then I pause for 5 seconds
@@ -832,12 +807,8 @@ module.exports = function() {
 		browser.pause(1000);
 
 		// verify that the  node is in the internal object model
-		const testUrl = getURL();
-		const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
-
-		browser.timeouts("script", 5000);
-		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
-		var returnVal = browser.execute(getObjectModelCount, objectModel.value, "nodes", expectedImages[nodeType]);
+		var objectModel = getCanvasData();
+		var returnVal = browser.execute(getObjectModelCount, objectModel, "nodes", expectedImages[nodeType]);
 		expect(returnVal.value).toBe(0);
 	});
 
@@ -848,14 +819,11 @@ module.exports = function() {
 		browser.$("#canvas-div-0").$$(".node-group")[nodeNumber].rightClick();
 		browser.$(".context-menu-popover").$$(".react-contextmenu-item")[0].click();
 		browser.pause(1000);
-		// verify that the link is Not in the internal object model
-		const testUrl = getURL();
-		const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
 
-		browser.timeouts("script", 5000);
-		var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
-		var nodeId = browser.execute(getNodeIdFromObjectModel, objectModel.value, nodeNumber);
-		var returnVal = browser.execute(deleteLinkInObjectModel, objectModel.value, nodeId.value);
+		// verify that the link is Not in the internal object model
+		var objectModel = getCanvasData();
+		var nodeId = browser.execute(getNodeIdFromObjectModel, objectModel, nodeNumber);
+		var returnVal = browser.execute(deleteLinkInObjectModel, objectModel, nodeId.value);
 		expect(returnVal.value).toBe(0);
 	});
 
@@ -865,12 +833,8 @@ module.exports = function() {
 			expect(Number(nodes)).toEqual(nodesInCanvas);
 
 			// verify the number of nodes is in the internal object model
-			const testUrl = getURL();
-			const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
-
-			browser.timeouts("script", 5000);
-			var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
-			var returnVal = browser.execute(getObjectModelCount, objectModel.value, "nodes", "");
+			var objectModel = getCanvasData();
+			var returnVal = browser.execute(getObjectModelCount, objectModel, "nodes", "");
 			expect(returnVal.value).toBe(Number(nodes));
 		} catch (err) {
 			console.log("Error = " + err);
@@ -921,12 +885,8 @@ module.exports = function() {
 			expect(Number(nodes)).toEqual(nodesInCanvas);
 
 			// verify the number of nodes is in the internal object model
-			const testUrl = getURL();
-			const getCanvasUrl = testUrl + "/v1/test-harness/canvas2";
-
-			browser.timeouts("script", 5000);
-			var objectModel = browser.executeAsync(getHarnessData, getCanvasUrl);
-			var returnVal = browser.execute(getObjectModelCount, objectModel.value, "nodes", "");
+			var objectModel = getCanvasDataForSecondCanvas();
+			var returnVal = browser.execute(getObjectModelCount, objectModel, "nodes", "");
 			expect(returnVal.value).toBe(Number(nodes));
 		} catch (err) {
 			console.log("Error = " + err);

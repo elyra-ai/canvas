@@ -12,21 +12,36 @@
 import { getHarnessData } from "./HTTPClient-utils.js";
 import { getURL } from "./test-config.js";
 
-
 const testUrl = getURL();
+const getCanvasUrl = testUrl + "/v1/test-harness/canvas";
+const getCanvasUrl2 = testUrl + "/v1/test-harness/canvas2";
 const getEventLogUrl = testUrl + "/v1/test-harness/events";
 
+function getCanvasData() {
+	const canvasData = getServerData(getCanvasUrl);
+	return canvasData[0]; // Canvas info returned is an array of pipelines. Return the first.
+}
+
+function getCanvasDataForSecondCanvas() {
+	const canvasData = getServerData(getCanvasUrl2);
+	return canvasData[0]; // Canvas info returned is an array of pipelines. Return the first.
+}
+
 function getEventLogData() {
+	return getServerData(getEventLogUrl);
+}
+
+function getServerData(url) {
 	browser.timeouts("script", 3000);
-	let eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
-	let eventLogJSON = JSON.parse(eventLog.value);
+	let data = browser.executeAsync(getHarnessData, url);
+	let dataObj = JSON.parse(data.value);
 	// try again if data isn't found
-	if (!eventLogJSON.data) {
+	if (!dataObj.data) {
 		browser.pause(500);
-		eventLog = browser.executeAsync(getHarnessData, getEventLogUrl);
-		eventLogJSON = JSON.parse(eventLog.value);
+		data = browser.executeAsync(getHarnessData, url);
+		dataObj = JSON.parse(data.value);
 	}
-	return eventLogJSON;
+	return dataObj;
 }
 
 function getLastEventLogData(override) {
@@ -61,6 +76,9 @@ function isSchemaValidationError() {
 
 
 module.exports = {
+	getCanvasData: getCanvasData,
+	getCanvasDataForSecondCanvas: getCanvasDataForSecondCanvas,
+	getEventLogData: getEventLogData,
 	getLastEventLogData: getLastEventLogData,
 	getLastLogOfType: getLastLogOfType,
 	isSchemaValidationError: isSchemaValidationError

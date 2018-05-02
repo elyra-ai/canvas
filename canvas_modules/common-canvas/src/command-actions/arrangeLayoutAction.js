@@ -13,26 +13,19 @@ export default class ArrangeLayoutAction extends Action {
 		super(layoutDirection);
 		this.layoutDirection = layoutDirection;
 		this.objectModel = objectModel;
-		this.existingNodesData = {};
+		this.existingNodes = this.objectModel.cloneNodes();
 	}
 
 	// Standard methods
 	do() {
-		var currentNodes = this.objectModel.getNodes().map(function(node) {
-			return Object.assign({}, node);
-		});
-		this.existingNodesData = currentNodes;
 		this.objectModel.autoLayout(this.layoutDirection);
 	}
 
 	undo() {
-		const currentCanvasData = this.objectModel.getCanvasInfo();
-		const newCanvasData = Object.assign({}, currentCanvasData, { nodes: this.existingNodesData });
-		this.objectModel.setCanvasInfo(newCanvasData);
+		this.objectModel.replaceNodes(this.existingNodes);
 	}
 
 	redo() {
 		this.objectModel.autoLayout(this.layoutDirection);
 	}
-
 }

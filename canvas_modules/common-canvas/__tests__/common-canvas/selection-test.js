@@ -23,8 +23,9 @@ describe("Selection notification tests", () => {
 		logger.info("selection event should contain selected nodes and comments");
 
 		const objectModel = canvasController.getObjectModel();
-		const startCanvas =
+		const startCanvas = [
 			{ zoom: 100,
+				sub_id: "empty-pipeline",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -38,7 +39,7 @@ describe("Selection notification tests", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			};
+			}];
 
 		deepFreeze(startCanvas);
 
@@ -49,7 +50,7 @@ describe("Selection notification tests", () => {
 		});
 
 		objectModel.setSelectionChangeHandler((data) => {
-			expect(isEmpty(difference(data.getSelectedObjectIds, ["comment1", "node3"]))).to.be.true;
+			expect(isEmpty(difference(data.selection, ["comment1", "node3"]))).to.be.true;
 			expect(isEmpty(difference(data.selectedNodes, objectModel.getSelectedNodes()))).to.be.true;
 			expect(isEmpty(difference(data.selectedComments, objectModel.getSelectedComments()))).to.be.true;
 			expect(isEmpty(difference(data.addedNodes, [objectModel.getNode("node3")]))).to.be.true;
@@ -71,8 +72,9 @@ describe("Selection notification tests", () => {
 		logger.info("should select nodes in a fork subgraph.");
 
 		const objectModel = canvasController.getObjectModel();
-		const startCanvas =
+		const startCanvas = [
 			{ zoom: 100,
+				sub_id: "empty-pipeline",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -89,7 +91,7 @@ describe("Selection notification tests", () => {
 					{ id: "link3", srcNodeId: "node2", trgNodeId: "node4" },
 					{ id: "link4", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			};
+			}];
 
 		deepFreeze(startCanvas);
 
@@ -105,7 +107,7 @@ describe("Selection notification tests", () => {
 		});
 
 		objectModel.setSelectionChangeHandler((data) => {
-			expect(isEmpty(difference(data.getSelectedObjectIds, ["node1", "node4", "node2"]))).to.be.true;
+			expect(isEmpty(difference(data.selection, ["node1", "node4", "node2"]))).to.be.true;
 			expect(isEmpty(difference(data.selectedNodes, objectModel.getSelectedNodes()))).to.be.true;
 			expect(isEmpty(difference(data.selectedComments, []))).to.be.true;
 			expect(isEmpty(difference(data.addedNodes, [objectModel.getNode("node2"), objectModel.getNode("node4")]))).to.be.true;
@@ -127,8 +129,9 @@ describe("Selection notification tests", () => {
 		logger.info("should select toggle off node.");
 
 		const objectModel = canvasController.getObjectModel();
-		const startCanvas =
+		const startCanvas = [
 			{ zoom: 100,
+				sub_id: "empty-pipeline",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -142,7 +145,7 @@ describe("Selection notification tests", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			};
+			}];
 
 		deepFreeze(startCanvas);
 
@@ -159,7 +162,7 @@ describe("Selection notification tests", () => {
 
 
 		objectModel.setSelectionChangeHandler((data) => {
-			expect(isEmpty(difference(data.getSelectedObjectIds, ["comment1"]))).to.be.true;
+			expect(isEmpty(difference(data.selection, ["comment1"]))).to.be.true;
 			expect(isEmpty(difference(data.selectedNodes, []))).to.be.true;
 			expect(isEmpty(difference(data.selectedComments, objectModel.getSelectedComments()))).to.be.true;
 			expect(isEmpty(difference(data.addedNodes, []))).to.be.true;
@@ -182,8 +185,9 @@ describe("Selection notification tests", () => {
 		logger.info("should deselect node");
 
 		const objectModel = canvasController.getObjectModel();
-		const startCanvas =
+		const startCanvas = [
 			{ zoom: 100,
+				sub_id: "empty-pipeline",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -197,7 +201,7 @@ describe("Selection notification tests", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			};
+			}];
 
 		deepFreeze(startCanvas);
 
@@ -213,7 +217,7 @@ describe("Selection notification tests", () => {
 		});
 
 		objectModel.setSelectionChangeHandler((data) => {
-			expect(isEmpty(difference(data.getSelectedObjectIds, ["comment1"]))).to.be.true;
+			expect(isEmpty(difference(data.selection, ["comment1"]))).to.be.true;
 			expect(isEmpty(difference(data.selectedNodes, []))).to.be.true;
 			expect(isEmpty(difference(data.selectedComments, [objectModel.getComment("comment1")]))).to.be.true;
 			expect(isEmpty(difference(data.addedNodes, []))).to.be.true;
@@ -235,8 +239,9 @@ describe("Selection notification tests", () => {
 		logger.info("should deselect node and comment");
 
 		const objectModel = canvasController.getObjectModel();
-		const startCanvas =
+		const startCanvas = [
 			{ zoom: 100,
+				sub_id: "empty-pipeline",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -250,7 +255,7 @@ describe("Selection notification tests", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			};
+			}];
 
 		deepFreeze(startCanvas);
 
@@ -266,7 +271,7 @@ describe("Selection notification tests", () => {
 		});
 
 		objectModel.setSelectionChangeHandler((data) => {
-			expect(isEmpty(difference(data.getSelectedObjectIds, []))).to.be.true;
+			expect(isEmpty(difference(data.selection, []))).to.be.true;
 			expect(isEmpty(difference(data.selectedNodes, []))).to.be.true;
 			expect(isEmpty(difference(data.selectedComments, []))).to.be.true;
 			expect(isEmpty(difference(data.addedNodes, []))).to.be.true;
@@ -289,8 +294,9 @@ describe("Selection notification tests", () => {
 
 		const objectModel = canvasController.getObjectModel();
 
-		const startCanvas =
+		const startCanvas = [
 			{ zoom: 100,
+				sub_id: "empty-pipeline",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -304,7 +310,7 @@ describe("Selection notification tests", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			};
+			}];
 
 		deepFreeze(startCanvas);
 
@@ -321,7 +327,7 @@ describe("Selection notification tests", () => {
 
 		const node3 = objectModel.getNode("node3");
 		objectModel.setSelectionChangeHandler((data) => {
-			expect(isEmpty(difference(data.getSelectedObjectIds, ["node3"]))).to.be.true;
+			expect(isEmpty(difference(data.selection, ["comment1"]))).to.be.true;
 			expect(isEmpty(difference(data.selectedNodes, []))).to.be.true;
 			expect(isEmpty(difference(data.selectedComments, [objectModel.getComment("comment1")]))).to.be.true;
 			expect(isEmpty(difference(data.addedNodes, []))).to.be.true;
@@ -343,8 +349,9 @@ describe("Selection notification tests", () => {
 		logger.info("should clear selection for deleted objects");
 
 		const objectModel = canvasController.getObjectModel();
-		const startCanvas =
+		const startCanvas = [
 			{ zoom: 100,
+				sub_id: "empty-pipeline",
 				nodes: [
 					{ id: "node1", x_pos: 10, y_pos: 10 },
 					{ id: "node2", x_pos: 20, y_pos: 20 },
@@ -358,7 +365,7 @@ describe("Selection notification tests", () => {
 					{ id: "link1", srcNodeId: "node1", trgNodeId: "node2" },
 					{ id: "link2", srcNodeId: "comment1", trgNodeId: "node2" }
 				]
-			};
+			}];
 
 		deepFreeze(startCanvas);
 
@@ -375,8 +382,9 @@ describe("Selection notification tests", () => {
 
 		const node3 = objectModel.getNode("node3");
 		const comment1 = objectModel.getComment("comment1");
+
 		objectModel.setSelectionChangeHandler((data) => {
-			expect(isEmpty(difference(data.getSelectedObjectIds, []))).to.be.true;
+			expect(isEmpty(difference(data.selection, []))).to.be.true;
 			expect(isEmpty(difference(data.selectedNodes, []))).to.be.true;
 			expect(isEmpty(difference(data.selectedComments, []))).to.be.true;
 			expect(isEmpty(difference(data.addedNodes, []))).to.be.true;
@@ -388,6 +396,9 @@ describe("Selection notification tests", () => {
 
 		const expectedSelections = [];
 		const actualSelections = canvasController.getSelectedObjectIds();
+
+		// logger.info("Expected Selections = " + JSON.stringify(expectedSelections, null, 2));
+		// logger.info("Actual Selections   = " + JSON.stringify(actualSelections, null, 2));
 
 		expect(isEqual(expectedSelections, actualSelections)).to.be.true;
 

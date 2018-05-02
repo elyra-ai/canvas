@@ -13,11 +13,10 @@
 // Find the number of link events in event log
 function containLinkEvent(eventLog, srcNodeId, destNodeId, eventType) {
 	var count = 0;
-	var elJson = JSON.parse(eventLog);
 	var eventData = srcNodeId + " to " + destNodeId;
-	for (var idx = 0; idx < elJson.length; idx++) {
-		if (elJson[idx].event === eventType &&
-			(elJson[idx].data === eventData)) {
+	for (var idx = 0; idx < eventLog.length; idx++) {
+		if (eventLog[idx].event === eventType &&
+			(eventLog[idx].data === eventData)) {
 			count++;
 		}
 	}
@@ -28,8 +27,7 @@ function containLinkEvent(eventLog, srcNodeId, destNodeId, eventType) {
 //
 function containLinkInObjectModel(objectModel, srcNodeId, destNodeId) {
 	var count = 0;
-	var omJson = JSON.parse(objectModel);
-	var links = omJson.links;
+	var links = objectModel.links;
 	for (var lidx = 0; lidx < links.length; lidx++) {
 		if (links[lidx].srcNodeId === srcNodeId &&
 				links[lidx].trgNodeId === destNodeId) {
@@ -43,8 +41,7 @@ function containLinkInObjectModel(objectModel, srcNodeId, destNodeId) {
 //
 function deleteLinkInObjectModel(objectModel, nodeId) {
 	var count = 0;
-	var omJson = JSON.parse(objectModel);
-	var links = omJson.links;
+	var links = objectModel.links;
 	for (var lidx = 0; lidx < links.length; lidx++) {
 		if (links[lidx].srcNodeId === nodeId) {
 			count++;
@@ -56,16 +53,14 @@ function deleteLinkInObjectModel(objectModel, nodeId) {
 // return the comment id from the object model
 //
 function getCommentIdFromObjectModel(objectModel, commentIndex) {
-	var omJson = JSON.parse(objectModel);
-	return omJson.comments[commentIndex].id;
+	return objectModel.comments[commentIndex].id;
 }
 
 // return the comment id from the object model
 //
 function getCommentIdFromObjectModelUsingText(objectModel, commentText) {
-	var omJson = JSON.parse(objectModel);
 	var id = -1;
-	omJson.comments.forEach(function(com) {
+	objectModel.comments.forEach(function(com) {
 		if (com.content === commentText) {
 			id = com.id;
 		}
@@ -92,11 +87,10 @@ function getCommentIndexFromCanvasUsingText(commentText) {
 //
 function getEventLogCount(eventLog, eventType, eventData) {
 	var count = 0;
-	var elJson = JSON.parse(eventLog);
-	for (var idx = 0; idx < elJson.length; idx++) {
-		if (elJson[idx].event === eventType &&
-			(elJson[idx].data === eventData ||
-			elJson[idx].content === eventData)) {
+	for (var idx = 0; idx < eventLog.length; idx++) {
+		if (eventLog[idx].event === eventType &&
+			(eventLog[idx].data === eventData ||
+			eventLog[idx].content === eventData)) {
 			count++;
 		}
 	}
@@ -106,10 +100,9 @@ function getEventLogCount(eventLog, eventType, eventData) {
 // count the number of link event types in the event log
 //
 function getLinkEventCount(eventLog, eventType) {
-	var elJson = JSON.parse(eventLog);
 	var count = 0;
-	for (var idx = 0; idx < elJson.length; idx++) {
-		if (elJson[idx].event === eventType) {
+	for (var idx = 0; idx < eventLog.length; idx++) {
+		if (eventLog[idx].event === eventType) {
 			count++;
 		}
 	}
@@ -119,8 +112,7 @@ function getLinkEventCount(eventLog, eventType) {
 // get the node id from the object model
 //
 function getNodeIdFromObjectModel(objectModel, nodeIndex) {
-	var omJson = JSON.parse(objectModel);
-	return omJson.nodes[nodeIndex].id;
+	return objectModel.nodes[nodeIndex].id;
 }
 
 // get a count of the number of object types in the object model
@@ -128,9 +120,8 @@ function getNodeIdFromObjectModel(objectModel, nodeIndex) {
 /* eslint complexity: [2, 15] */
 function getObjectModelCount(objectModel, type, compare) {
 	var count = 0;
-	var omJson = JSON.parse(objectModel);
 	if (type === "nodes") {
-		var nodes = omJson.nodes;
+		var nodes = objectModel.nodes;
 		if (compare !== "") {
 			for (var idx = 0; idx < nodes.length; idx++) {
 				if (nodes[idx].image === compare) {
@@ -141,7 +132,7 @@ function getObjectModelCount(objectModel, type, compare) {
 			count = nodes.length;
 		}
 	} else if (type === "comments") {
-		var comments = omJson.comments;
+		var comments = objectModel.comments;
 		if (compare !== "") {
 			for (var cidx = 0; cidx < comments.length; cidx++) {
 				if (comments[cidx].content === compare) {
@@ -152,10 +143,10 @@ function getObjectModelCount(objectModel, type, compare) {
 			count = comments.length;
 		}
 	} else if (type === "links") {
-		var links = omJson.links;
+		var links = objectModel.links;
 		count = links.length;
 	} else if (type === "datalinks") {
-		var datalinks = omJson.links;
+		var datalinks = objectModel.links;
 		datalinks.forEach(function(datalink) {
 			if (datalink.class_name === "d3-data-link" ||
 					datalink.class_name === "canvas-data-link") { // For legacy rendering engine
@@ -163,7 +154,7 @@ function getObjectModelCount(objectModel, type, compare) {
 			}
 		});
 	} else if (type === "commentLinks") {
-		var commentlinks = omJson.links;
+		var commentlinks = objectModel.links;
 		commentlinks.forEach(function(commentlink) {
 			if (commentlink.class_name === "d3-comment-link" ||
 					commentlink.class_name === "canvas-comment-link") { // For legacy rendering engine
@@ -176,10 +167,8 @@ function getObjectModelCount(objectModel, type, compare) {
 
 function getPortLinks(objectModel, srcNode, srcPort, trgNode, trgPort) {
 	var count = 0;
-
-	var omJson = JSON.parse(objectModel);
-	var nodes = omJson.nodes;
-	var links = omJson.links;
+	var nodes = objectModel.nodes;
+	var links = objectModel.links;
 	var srcNodeID;
 	var trgNodeID;
 
@@ -205,10 +194,9 @@ function getPortLinks(objectModel, srcNode, srcPort, trgNode, trgPort) {
 // determine if all the nodes, comments and links are empty in the object model
 //
 function isObjectModelEmpty(objectModel) {
-	var omJson = JSON.parse(objectModel);
-	var count = omJson.nodes.length +
-							omJson.comments.length +
-							omJson.links.length;
+	var count = objectModel.nodes.length +
+							objectModel.comments.length +
+							objectModel.links.length;
 	return count;
 }
 
