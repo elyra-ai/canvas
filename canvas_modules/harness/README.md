@@ -1,39 +1,37 @@
-## Test Harness
+# Test Harness
 
-### Environment setup
+## Environment setup
+- Nodejs `node 8.11`
 
-Install Nodejs `node 8.11`
+#### Artifactory setup
+ <https://github.ibm.com/wdpx/developers-guide/blob/master/guide/Artifactory.md#what-changes-are-required-to-our-deployments>
 
-Artifactory setup
-See [here](https://github.ibm.com/wdpx/developers-guide/blob/master/guide/Artifactory.md#what-changes-are-required-to-our-deployments)
+#### Development setup
+```sh
+export NODE_ENV=development
+./canvas_modules/common-canvas/build.sh
+cd canvas_modules/harness
+npm install
+grunt
+npm start
+```
 
-Build common-canvas project
+#### Production setup
+
 ```sh
 ./canvas_modules/common-canvas/build.sh
 cd canvas_modules/harness
 npm install
+export NODE_ENV=production
+grunt
 npm start
 ```
-Connect to canvas:
-```
-http://localhost:3001
-```
 
-Testing updates to common-canvas module
-```sh
-npm stop
-./canvas_modules/common-canvas/build.sh
-./update-local-env.sh
-npm start
-# harness will automatically pick up changes so npm stop/npm start should not be needed
-```
-Testing without rebuilding.  Harness references common-canvas directly
-```sh
-export NODE_ENV=development
-# changes to common-canvas or harness will automatically be picked up by webpack
-```
+#### Connect to canvas:
+<http://localhost:3001>
 
-### UI test
+
+## UI test
 
 Ensure that the test harness is running.  The default location is http://localhost:3001.  
 ```sh
@@ -46,6 +44,3 @@ The Firefox version that will be used is located in the default folder.  On Mac 
 cd <base dir>/canvas_modules/harness
 npm test -- --browser=firefox
 ```
-
-### Webpack Bundle Analyzer
-See [wiki](https://github.ibm.com/NGP-TWC/wdp-abstract-canvas/wiki/Branches-and-Builds#webpack-bundle-analyzer)

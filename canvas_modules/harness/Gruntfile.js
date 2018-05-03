@@ -64,6 +64,38 @@ module.exports = function(grunt) {
 					],
 					dest: ".build"
 				}]
+			},
+			plexFonts: {
+				files: [{
+					expand: true,
+					flatten: false,
+					cwd: "./node_modules/@wdpx/ap-components/dist",
+					src: ["fonts/**/*"],
+					dest: ".build"
+				}]
+			},
+			styleguide: {
+				files: [{
+					expand: true,
+					flatten: false,
+					cwd: "./node_modules/@wdpx/ap-components/dist",
+					src: ["ap-components*.css"],
+					dest: ".build"
+				},
+				{
+					expand: true,
+					flatten: false,
+					cwd: "./node_modules/bootstrap/dist/css",
+					src: ["bootstrap*.css"],
+					dest: ".build"
+				},
+				{
+					expand: true,
+					flatten: false,
+					cwd: "./node_modules/@wdp/common-canvas/dist",
+					src: ["common-canvas*.css"],
+					dest: ".build"
+				}]
 			}
 		},
 		webpack: {
@@ -80,7 +112,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks("grunt-contrib-copy");
 	grunt.registerTask("lint", ["eslint", "jsonlint", "yamllint", "sasslint"]);
 
-	var buildTasks = ["clean", "lint", "copy:graphics"];
+	var buildTasks = ["clean", "lint", "copy:graphics", "copy:styleguide", "copy:plexFonts"];
 	if (IS_PRODUCTION) {
 		buildTasks = buildTasks.concat(["webpack"]);
 	}

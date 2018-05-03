@@ -9,16 +9,14 @@
 
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./App";
+
 import CommonPropertiesComponents from "./components/common-properties-components.jsx";
 import CommonPropertiesConditions from "./components/common-properties-conditions.jsx";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "@wdpx/ap-components/dist/ap-components.min.css";
-import "common-canvas-styles";
 import "../styles/properties.scss";
 import "../styles/App.scss";
 import "../styles/index.scss";
 import "../styles/custom-datasets-table.scss";
+import App from "./App";
 import { IntlProvider } from "react-intl";
 import { HashRouter, Route } from "react-router-dom";
 

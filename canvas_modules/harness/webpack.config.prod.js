@@ -19,7 +19,7 @@ const constants = require("./lib/constants");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CompressionPlugin = require("compression-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
-
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 // Entry & Output files ------------------------------------------------------------>
 
 const entry = {
@@ -46,12 +46,16 @@ const rules = [
 	},
 	{
 		test: /\.s*css$/,
-		use: [
-			{ loader: "style-loader" },
-			{ loader: "css-loader" },
-			{ loader: "postcss-loader", options: { plugins: [require("autoprefixer")] } },
-			{ loader: "sass-loader" }
-		]
+		use: ExtractTextPlugin.extract(
+			{
+				fallback: "style-loader",
+				use: [
+					{ loader: "css-loader" },
+					{ loader: "postcss-loader", options: { plugins: [require("autoprefixer")] } },
+					{ loader: "sass-loader" }
+				]
+			}
+		)
 	},
 	{
 		test: /\.(?:png|jpg|svg|woff|ttf|woff2|eot)$/,
@@ -76,6 +80,7 @@ const plugins = [
 	new webpack.optimize.OccurrenceOrderPlugin(),
 	new webpack.optimize.UglifyJsPlugin(), // minify everything
 	new webpack.optimize.AggressiveMergingPlugin(), // Merge chunk
+	new ExtractTextPlugin("styles/harness.css"),
 	new webpack.optimize.CommonsChunkPlugin({
 		name: "vendor"
 	}),
@@ -111,7 +116,6 @@ module.exports = {
 			"react": "node_modules/react",
 			"react-dom": "node_modules/react-dom",
 			"common-canvas": "src/common-canvas.js",
-			"common-canvas-styles": "src/common-canvas-styles.js"
 		},
 		extensions: [".js", ".jsx", ".json"]
 	},

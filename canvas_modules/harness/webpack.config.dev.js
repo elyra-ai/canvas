@@ -95,17 +95,15 @@ var plugins = [
 	// Generates an `index.html` file with the <script> injected.
 	new HtmlWebpackPlugin({
 		inject: true,
-		template: "index.html"
+		template: "index-dev.html"
 	}),
 	new webpack.HotModuleReplacementPlugin()
 ];
 
 // Exports ------------------------------------------------------------>
 let commonCanvas = "src/common-canvas.js";
-let commonCanvasStyles = "src/common-canvas-styles.js";
 if (isDev) {
 	commonCanvas = "src/common-canvas-dev.js";
-	commonCanvasStyles = "src/common-canvas-styles-dev.js";
 }
 
 module.exports = {
@@ -120,7 +118,6 @@ module.exports = {
 			"react": "node_modules/react",
 			"react-dom": "node_modules/react-dom",
 			"common-canvas": commonCanvas,
-			"common-canvas-styles": commonCanvasStyles
 		},
 		extensions: [".js", ".jsx", ".json"]
 	},
